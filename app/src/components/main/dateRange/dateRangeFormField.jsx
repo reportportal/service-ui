@@ -25,7 +25,7 @@ export const DateRangeFormField = ({ input }) => {
   };
 
   const endDateChangeHandler = (endDate) => {
-    onChange({ startDate: value?.startDate, endDate });
+    onChange({ startDate: value?.startDate || endDate, endDate });
   };
 
   return (

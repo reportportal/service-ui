@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@use '../../../../common/css/mixins';
+
 .test-plans {
   &__table-container {
     display: flex;
@@ -22,8 +24,6 @@
   }
 
   &__table-row {
-    cursor: pointer;
-
     &:hover {
       border-radius: 4px;
       box-shadow: var(--rp-ui-base-shadow-hover);
@@ -38,8 +38,22 @@
     font-weight: 500;
   }
 
-  &__table-cell-icon {
+  &__table-cell-clickable {
     display: flex;
     justify-content: center;
+    cursor: pointer;
+    border: none;
+    background-color: inherit;
+    font-family: $FONT-ROBOTO-MEDIUM;
+    font-weight: 500;
+
+    &:hover {
+      color: var(--rp-ui-base-topaz-hover);
+    }
+
+    &:hover svg path,
+    &:focus svg path {
+      fill: var(--rp-ui-base-topaz-hover);
+    }
   }
 }

@@ -15,3 +15,4 @@
  */
 
 export { OrganizationsPage } from './organizationsPage';
+export { CreateOrganizationModal } from './modals/createOrganizationModal';

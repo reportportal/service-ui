@@ -21,7 +21,7 @@ import { referenceDictionary } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { NumerableBlock } from 'pages/common/numerableBlock';
-import { useCreateTestPlanModal } from '../hooks';
+import { useCreateTestPlanModal } from '../testPlanModals';
 import { commonMessages } from '../commonMessages';
 import { messages } from './messages';
 import styles from './emptyTestPlans.scss';
@@ -65,7 +65,7 @@ export const EmptyTestPlans = () => {
     <div className={cx('empty-test-plans')}>
       <EmptyStatePage
         title={formatMessage(messages.pageHeader)}
-        description={Parser(formatMessage(messages.pageDescription))}
+        description={formatMessage(messages.pageDescription)}
         imageType="flag"
         documentationLink={referenceDictionary.rpDoc}
         buttons={getAvailableActions()}

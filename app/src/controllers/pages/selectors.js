@@ -284,11 +284,11 @@ export const testCaseLibraryBreadcrumbsSelector = ({ mainTitle, testTitle, pageT
           title: testTitle,
           ...(pageTitle && {
             link: {
-              type: TEST_CASE_DETAILS_PAGE,
+              type: TEST_CASE_LIBRARY_PAGE,
               payload: {
                 organizationSlug,
                 projectSlug,
-                testCasePageRoute: `folder/${folderId}/test-cases/${testCaseSlug}`,
+                testCasePageRoute: `test-cases/${testCaseSlug}`,
               },
             },
           }),

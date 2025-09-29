@@ -31,7 +31,6 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { InputSearch } from 'components/inputs/inputSearch';
 import { validate, bindMessageToValidator } from 'common/utils/validation';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import PermissionMapIcon from 'common/img/permission-inline.svg';
 import InviteUserIcon from 'common/img/invite-inline.svg';
 import styles from './membersPageToolbar.scss';
@@ -104,12 +103,10 @@ export class MembersPageToolbar extends React.Component {
   };
 
   showInviteUserModal = () => {
-    this.props.tracking.trackEvent(MEMBERS_PAGE_EVENTS.INVITE_USER_CLICK);
     this.props.showModalAction({ id: 'inviteUserModal', data: { onInvite: this.props.onInvite } });
   };
 
   showPermissionMapModal = () => {
-    this.props.tracking.trackEvent(MEMBERS_PAGE_EVENTS.PERMISSION_MAP_CLICK);
     this.props.showModalAction({ id: 'permissionMapModal' });
   };
 

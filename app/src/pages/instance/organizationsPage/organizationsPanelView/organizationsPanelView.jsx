@@ -1,5 +1,5 @@
 /*!
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,24 +16,20 @@
 
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
-import { DEFAULT_PAGINATION, PAGE_KEY, withPagination } from 'controllers/pagination';
+import { DEFAULT_PAGINATION, PAGE_KEY } from 'controllers/pagination';
 import { PaginationWrapper } from 'components/main/paginationWrapper';
-import { organizationsListPaginationSelector } from 'controllers/instance/organizations';
+import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import {
   DEFAULT_LIMITATION,
   DEFAULT_PAGE_SIZE_OPTIONS,
-  NAMESPACE,
-  ORGANIZATIONS_DEFAULT_SORT_COLUMN,
-  SORTING_KEY,
 } from 'controllers/instance/organizations/constants';
-import styles from './organizationsPanelView.scss';
 import { OrganizationsPanels } from './organizationsPanels';
 import { OrganizationsTable } from './organizationsTable';
+import styles from './organizationsPanelView.scss';
 
 const cx = classNames.bind(styles);
 
-const OrganizationsPanelViewWrapped = ({
+export const OrganizationsPanelView = ({
   organizationsList,
   pageSize,
   activePage,
@@ -47,7 +43,7 @@ const OrganizationsPanelViewWrapped = ({
   onChangeSorting,
 }) => (
   <PaginationWrapper
-    showPagination={organizationsList.length > 0}
+    showPagination={itemCount > 0}
     pageSize={pageSize}
     activePage={activePage}
     totalItems={itemCount}
@@ -56,6 +52,7 @@ const OrganizationsPanelViewWrapped = ({
     changePage={onChangePage}
     changePageSize={onChangePageSize}
     className={cx('organizations-pagination-wrapper')}
+    changePageSizeEvent={ORGANIZATION_PAGE_EVENTS.getChangePageSizeEvent('all_organizations')}
   >
     {isOpenTableView ? (
       <OrganizationsTable
@@ -70,7 +67,7 @@ const OrganizationsPanelViewWrapped = ({
   </PaginationWrapper>
 );
 
-OrganizationsPanelViewWrapped.propTypes = {
+OrganizationsPanelView.propTypes = {
   organizationsList: PropTypes.array,
   pageSize: PropTypes.number,
   activePage: PropTypes.number,
@@ -84,20 +81,8 @@ OrganizationsPanelViewWrapped.propTypes = {
   onChangeSorting: PropTypes.func,
 };
 
-OrganizationsPanelViewWrapped.defaultProps = {
+OrganizationsPanelView.defaultProps = {
   organizationsList: [],
   pageSize: DEFAULT_LIMITATION,
   activePage: DEFAULT_PAGINATION[PAGE_KEY],
 };
-
-export const OrganizationsPanelView = withSortingURL({
-  defaultDirection: SORTING_ASC,
-  defaultFields: [ORGANIZATIONS_DEFAULT_SORT_COLUMN],
-  sortingKey: SORTING_KEY,
-  namespace: NAMESPACE,
-})(
-  withPagination({
-    paginationSelector: organizationsListPaginationSelector,
-    namespace: NAMESPACE,
-  })(OrganizationsPanelViewWrapped),
-);

@@ -63,6 +63,14 @@ const messages = defineMessages({
     id: 'ProjectsPage.deleteProjectSuccess',
     defaultMessage: "The project ''{name}'' has been successfully deleted",
   },
+  deleteOrganizationError: {
+    id: 'OrganizationsPage.deleteOrganizationError',
+    defaultMessage: 'An error occurred during deleting the organization',
+  },
+  deleteOrganizationSuccess: {
+    id: 'OrganizationsPage.deleteOrganizationSuccess',
+    defaultMessage: 'The organization has been deleted successfully',
+  },
   updateProjectSuccess: {
     id: 'ProjectsPage.updateProjectSuccess',
     defaultMessage: 'The project has been updated successfully',
@@ -90,6 +98,14 @@ const messages = defineMessages({
   projectExists: {
     id: 'ProjectsPage.projectExists',
     defaultMessage: "Project with the same name ''{name}'' already exists in this organization",
+  },
+  createOrganizationSuccess: {
+    id: 'OrganizationsPage.createOrganizationSuccess',
+    defaultMessage: 'The organization has been created successfully',
+  },
+  organizationExists: {
+    id: 'OrganizationsPage.organizationExists',
+    defaultMessage: "Organization with the same name ''{name}'' already exists on the instance",
   },
   resetToGlobalSuccess: {
     id: 'InstancesSection.resetToGlobalSuccess',
@@ -188,6 +204,10 @@ const messages = defineMessages({
     id: 'OrganizationSettingsPage.updateSettingsSuccess',
     defaultMessage: 'Organization settings have been updated successfully',
   },
+  updateOrganizationNameSuccess: {
+    id: 'OrganizationsPage.updateOrganizationNameSuccess',
+    defaultMessage: 'Organization name has been updated successfully',
+  },
   testCaseFolderCreatedSuccess: {
     id: 'TestCaseLibraryPage.testCaseFolderCreatedSuccess',
     defaultMessage: 'Folder has been created successfully.',
@@ -195,6 +215,10 @@ const messages = defineMessages({
   testCaseFolderDeletedSuccess: {
     id: 'TestCaseLibraryPage.testCaseFolderDeletedSuccess',
     defaultMessage: 'Folder has been deleted successfully.',
+  },
+  testCaseFolderRenamedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseFolderRenamedSuccess',
+    defaultMessage: 'Folder has been renamed successfully.',
   },
   testCaseCreatedSuccess: {
     id: 'TestCaseLibraryPage.testCaseCreatedSuccess',
@@ -212,21 +236,34 @@ const messages = defineMessages({
     id: 'TestCaseLibraryPage.testCasesAddingToTestPlanFailed',
     defaultMessage: 'Failed to add selected Test Cases to the Test Plan.',
   },
-  testCaseLoadingFailed: {
-    id: 'TestCaseLibraryPage.testCaseLoadingFailed',
+  errorOccurredTryAgain: {
+    id: 'Common.errorOccurredTryAgain',
     defaultMessage: 'An error occurred. Please try again later.',
+  },
+  redirectWarningMessage: {
+    id: 'TestCaseLibraryPage.redirectWarningMessage',
+    defaultMessage:
+      'The item you are trying to access may have been deleted or doesn’t exist. You have been redirected to the Test Case Library.',
   },
   testPlanCreatedSuccess: {
     id: 'TestPlansPage.testPlanCreatedSuccess',
     defaultMessage: 'Test Plan has been created successfully.',
   },
-  testPlanCreationFailed: {
-    id: 'TestPlansPage.testPlanCreationFailed',
-    defaultMessage: 'Failed to create Test Plan.',
-  },
   testPlanLoadingFailed: {
     id: 'TestPlansPage.testPlanLoadingFailed',
     defaultMessage: 'Failed to load Test Plans.',
+  },
+  testPlanUpdatedSuccess: {
+    id: 'TestPlansPage.testPlanUpdatedSuccess',
+    defaultMessage: 'Test Plan has been updated successfully.',
+  },
+  testPlanDuplicatedSuccess: {
+    id: 'TestPlansPage.testPlanDuplicatedSuccess',
+    defaultMessage: 'Test Plan has been duplicated successfully.',
+  },
+  testPlanDeletedSuccess: {
+    id: 'TestPlansPage.testPlanDeletedSuccess',
+    defaultMessage: 'Test Plan has been deleted successfully.',
   },
 });
 
@@ -251,24 +288,28 @@ export class NotificationList extends PureComponent {
     return (
       <div className={cx('notification-list')} data-automation-id="notificationsContainer">
         <TransitionGroup>
-          {this.props.notifications.map(({ uid, type, messageId, values, message }) => (
-            <CSSTransition key={uid} timeout={1000} classNames="notification-transition">
-              <div className={cx('notification-item-wrapper')}>
-                <SystemAlert
-                  type={type}
-                  title={Parser(
-                    DOMPurify.sanitize(
-                      messageId ? formatMessage(messages[messageId], values) : message,
-                      { ADD_ATTR: ['target'] },
-                    ),
-                  )}
-                  onClose={() => this.props.hideNotification(uid)}
-                  className={cx('notification-item')}
-                  dataAutomationId="notificationItem"
-                />
-              </div>
-            </CSSTransition>
-          ))}
+          {this.props.notifications.map(
+            ({ uid, type, duration, typographyColor, messageId, values, message }) => (
+              <CSSTransition key={uid} timeout={1000} classNames="notification-transition">
+                <div className={cx('notification-item-wrapper')}>
+                  <SystemAlert
+                    type={type}
+                    typographyColor={typographyColor}
+                    duration={duration}
+                    title={Parser(
+                      DOMPurify.sanitize(
+                        messageId ? formatMessage(messages[messageId], values) : message,
+                        { ADD_ATTR: ['target'] },
+                      ),
+                    )}
+                    onClose={() => this.props.hideNotification(uid)}
+                    className={cx('notification-item')}
+                    dataAutomationId="notificationItem"
+                  />
+                </div>
+              </CSSTransition>
+            ),
+          )}
         </TransitionGroup>
       </div>
     );

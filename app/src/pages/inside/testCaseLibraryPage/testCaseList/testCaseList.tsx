@@ -21,7 +21,7 @@ import { BubblesLoader, FilterOutlineIcon, Table } from '@reportportal/ui-kit';
 import { SearchField } from 'components/fields/searchField';
 import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { useDispatch, useSelector } from 'react-redux';
-import { xor } from 'lodash';
+import { xor } from 'es-toolkit';
 import { TestCase } from '../types';
 import { TestCaseNameCell } from './testCaseNameCell';
 import { TestCaseExecutionCell } from './testCaseExecutionCell';
@@ -130,7 +130,7 @@ export const TestCaseList = memo(
               dispatch({
                 type: TEST_CASE_LIBRARY_PAGE,
                 payload: {
-                  testCasePageRoute: `folder/${testCase.testFolder.id}/test-cases/${testCase.id}`,
+                  testCasePageRoute: `test-cases/${testCase.id}`,
                   organizationSlug,
                   projectSlug,
                 },

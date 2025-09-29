@@ -34,7 +34,7 @@ export const rallyUrl = composeValidators([
   regex(/^(https:\/\/rally1.rallydev.com).*/),
 ]);
 export const email = composeValidators([
-  regex(/^(?![.])[a-z0-9.+_-]+@[a-z0-9_.-]+?\.[a-z0-9]{2,}$/i),
+  regex(/^(?![.])[a-z0-9._-]+@[a-z0-9_.-]+?\.[a-z0-9]{2,}$/i),
 ]);
 export const requiredEmail = composeValidators([isNotEmpty, email]);
 export const login = composeValidators([isNotEmpty, email]);
@@ -155,3 +155,8 @@ export const deleteAccountFeedbackOtherValue = maxLength(128);
 export const anyOptionSelected = (options) => Object.values(options).some((option) => !!option);
 export const keywordMatcher = (keyword) => (value) =>
   keyword.toLowerCase().trim() === value?.toLowerCase()?.trim();
+export const organizationNamePattern = composeValidators([
+  isNotEmpty,
+  regex(/^[0-9a-zA-Z-'_. ]+$/),
+]);
+export const organizationNameLength = composeValidators([isNotEmpty, lengthRange(3, 60)]);

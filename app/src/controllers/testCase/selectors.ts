@@ -19,11 +19,11 @@ import { Folder, TransformedFolder } from './types';
 import { InitialStateType } from './reducer';
 import { TestCaseBasicInfo } from 'pages/inside/testCaseLibraryPage/types';
 
-interface TestCaseState {
+export interface TestCaseState {
   folders?: {
     data?: Folder[];
     isCreatingFolder?: boolean;
-    isDeletingFolder?: boolean;
+    isLoadingFolder?: boolean;
     loading?: boolean;
   };
   testCases?: {
@@ -52,8 +52,8 @@ export const foldersSelector = (state: RootState): Folder[] =>
 export const isCreatingFolderSelector = (state: RootState): boolean =>
   testCaseSelector(state).folders?.isCreatingFolder || false;
 
-export const isDeletingFolderSelector = (state: RootState): boolean =>
-  testCaseSelector(state).folders?.isDeletingFolder || false;
+export const isLoadingFolderSelector = (state: RootState): boolean =>
+  testCaseSelector(state).folders?.isLoadingFolder || false;
 
 export const isLoadingTestCasesSelector = (state: RootState) =>
   state.testCase?.testCases?.isLoading || false;

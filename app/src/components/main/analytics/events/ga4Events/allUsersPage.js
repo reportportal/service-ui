@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { getBasicClickEventParameters } from '../common/ga4Utils';
+import { getBasicChooseEventParameters, getBasicClickEventParameters } from '../common/ga4Utils';
 
 const ALL_USERS_PAGE = 'all_users';
 
@@ -76,5 +76,11 @@ export const ALL_USERS_PAGE_EVENTS = {
     element_name: 'create',
     modal: 'create_user',
     condition: adminRights ? 'provide_admin_rights' : 'no_provide_admin_rights',
+  }),
+  changePageSize: (pageSize) => ({
+    ...getBasicChooseEventParameters(ALL_USERS_PAGE),
+    element_name: 'page_size_control',
+    number: pageSize,
+    place: 'all_users',
   }),
 };

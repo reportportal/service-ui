@@ -18,7 +18,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { isEmpty } from 'lodash';
+import { isEmpty } from 'es-toolkit/compat';
 import { Button, MeatballMenuIcon, Pagination, Selection } from '@reportportal/ui-kit';
 
 import { TestCaseList } from 'pages/inside/testCaseLibraryPage/testCaseList';

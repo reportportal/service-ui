@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { Button, BaseIconButton, SearchIcon, PlusIcon } from '@reportportal/ui-kit';
 import { useDispatch, useSelector } from 'react-redux';
-import { isEmpty } from 'lodash';
+import { isEmpty } from 'es-toolkit/compat';
 
 import {
   transformedFoldersSelector,
@@ -29,6 +29,7 @@ import {
   getTestCaseByFolderIdAction,
   isLoadingTestCasesSelector,
   testCasesSelector,
+  foldersSelector,
 } from 'controllers/testCase';
 
 import { ScrollWrapper } from 'components/main/scrollWrapper';
@@ -45,6 +46,12 @@ import {
 } from 'controllers/pages';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import styles from './expandedOptions.scss';
+import {
+  NOTIFICATION_TYPES,
+  NOTIFICATION_TYPOGRAPHY_COLOR_TYPES,
+  WARNING_NOTIFICATION_DURATION,
+  showNotification,
+} from 'controllers/notification';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -57,18 +64,38 @@ export const ExpandedOptions = () => {
   const testCases = useSelector(testCasesSelector);
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const projectSlug = useSelector(urlProjectSlugSelector);
+  const initialFolders = useSelector(foldersSelector);
   const folders = useSelector(transformedFoldersSelector);
   const areFoldersLoading = useSelector(areFoldersLoadingSelector);
   const { canCreateTestCaseFolder } = useUserPermissions();
   const folderIdNumber = Number(folderId);
 
+  const currentFolder = useMemo(() => {
+    return initialFolders.find(({ id }) => id === Number(folderId));
+  }, [folderId, initialFolders]);
+
   useEffect(() => {
-    if (folderId !== '' && Number.isFinite(folderIdNumber)) {
+    if (folderId && !currentFolder) {
+      setAllTestCases();
+
+      dispatch(
+        showNotification({
+          messageId: 'redirectWarningMessage',
+          type: NOTIFICATION_TYPES.WARNING,
+          typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
+          duration: WARNING_NOTIFICATION_DURATION,
+        }),
+      );
+    }
+  }, [currentFolder, folderId]);
+
+  useEffect(() => {
+    if (currentFolder && folderId !== '' && Number.isFinite(folderIdNumber)) {
       dispatch(getTestCaseByFolderIdAction({ folderId: folderIdNumber }));
-    } else {
+    } else if (!currentFolder && folderId === '') {
       dispatch(getAllTestCasesAction());
     }
-  }, [folderId, folderIdNumber, dispatch]);
+  }, [currentFolder, folderId, folderIdNumber, dispatch]);
 
   useEffect(() => {
     setActiveFolder(folderId ? folderIdNumber : null);

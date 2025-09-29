@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
-import { isEmpty } from 'lodash';
+import { isEmpty } from 'es-toolkit/compat';
 import { Button } from '@reportportal/ui-kit';
 
 import {

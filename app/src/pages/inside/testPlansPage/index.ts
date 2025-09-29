@@ -15,4 +15,15 @@
  */
 
 export { TestPlansPage } from './testPlansPage';
-export { CREATE_TEST_PLAN_MODAL_KEY } from './createTestPlanModal';
+export { TestPlanDetailsPage } from './testPlanDetailsPage';
+export {
+  CREATE_TEST_PLAN_MODAL_KEY,
+  EDIT_TEST_PLAN_MODAL_KEY,
+  DUPLICATE_TEST_PLAN_MODAL_KEY,
+  TestPlanModal,
+  CreateTestPlanModal,
+  EditTestPlanModal,
+  DuplicateTestPlanModal,
+  type TestPlanFormValues,
+  type Attribute,
+} from './testPlanModals';

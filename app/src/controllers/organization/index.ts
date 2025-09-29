@@ -19,6 +19,7 @@ export {
   fetchOrganizationBySlugAction,
   setActiveOrganizationAction,
   updateOrganizationSettingsAction,
+  createOrganizationAction,
 } from './actionCreators';
 export { organizationReducer } from './reducer';
 export {

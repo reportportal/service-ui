@@ -30,11 +30,7 @@ import { PopoverControl } from 'pages/common/popoverControl';
 import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { REVERSED_DATE_FORMAT } from 'common/constants/timeDateFormat';
-import {
-  TEST_CASE_LIBRARY_PAGE,
-  urlFolderIdSelector,
-  urlOrganizationAndProjectSelector,
-} from 'controllers/pages';
+import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
@@ -73,7 +69,6 @@ export const TestCaseDetailsHeader = ({
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
-  const folderId = useSelector(urlFolderIdSelector);
   const dispatch = useDispatch();
 
   const breadcrumbsTitles = {
@@ -89,7 +84,7 @@ export const TestCaseDetailsHeader = ({
       payload: {
         organizationSlug,
         projectSlug,
-        testCasePageRoute: `folder/${folderId}/test-cases/${testCase.id}/historyOfActions`,
+        testCasePageRoute: `test-cases/${testCase.id}/historyOfActions`,
       },
     });
   };

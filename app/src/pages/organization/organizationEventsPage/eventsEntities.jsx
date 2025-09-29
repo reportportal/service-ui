@@ -81,6 +81,12 @@ import {
   FINISH_IMPORT,
   MARK_LAUNCH_AS_IMPORTANT,
   UNMARK_LAUNCH_AS_IMPORTANT,
+  CREATE_NOTIFICATION_RULE,
+  UPDATE_NOTIFICATION_SETTINGS,
+  UPDATE_NOTIFICATION_RULE,
+  DELETE_NOTIFICATION_RULE,
+  NOTIFICATION_RULE,
+  ACTIONS_WITH_NOTIFICATIONS,
 } from 'common/constants/actionTypes';
 import {
   DASHBOARD,
@@ -93,9 +99,7 @@ import {
   USER,
   ITEM_ISSUE,
   INTEGRATION,
-  EMAIL_CONFIG,
   PATTERN_RULE,
-  EMAIL_CONFIG_FILTERING_OPTION,
   DEFECT_TYPE_FILTERING_OPTION,
   ITEM_ISSUE_FILTERING_OPTION,
   PATTERN_RULE_FILTERING_OPTION,
@@ -104,6 +108,8 @@ import {
   INVITATION_LINK_FILTERING_OPTION,
   APPLICATION,
   RULE,
+  EMAIL_CONFIG_FILTERING_OPTION,
+  NOTIFICATION_RULE_FILTERING_OPTION,
 } from 'common/constants/eventsObjectTypes';
 import {
   actionMessages,
@@ -342,6 +348,22 @@ export const EventsEntities = (props) => {
               value: MATCHED_PATTERN,
             },
             {
+              label: formatMessage(actionMessages[UPDATE_NOTIFICATION_SETTINGS]),
+              value: UPDATE_NOTIFICATION_SETTINGS,
+            },
+            {
+              label: formatMessage(actionMessages[CREATE_NOTIFICATION_RULE]),
+              value: CREATE_NOTIFICATION_RULE,
+            },
+            {
+              label: formatMessage(actionMessages[UPDATE_NOTIFICATION_RULE]),
+              value: UPDATE_NOTIFICATION_RULE,
+            },
+            {
+              label: formatMessage(actionMessages[DELETE_NOTIFICATION_RULE]),
+              value: DELETE_NOTIFICATION_RULE,
+            },
+            {
               label: formatMessage(actionMessages[CREATE_PROJECT]),
               value: CREATE_PROJECT,
             },
@@ -373,6 +395,10 @@ export const EventsEntities = (props) => {
         active: true,
         removable: false,
         customProps: {
+          actionToGroup: {
+            [EMAIL_CONFIG_FILTERING_OPTION]: ACTIONS_WITH_NOTIFICATIONS,
+            [NOTIFICATION_RULE_FILTERING_OPTION]: ACTIONS_WITH_NOTIFICATIONS,
+          },
           multiple: true,
           selectAll: true,
           options: [
@@ -422,8 +448,8 @@ export const EventsEntities = (props) => {
             },
             { label: formatMessage(objectTypesMessages[INDEX]), value: INDEX },
             {
-              label: formatMessage(objectTypesMessages[EMAIL_CONFIG]),
-              value: EMAIL_CONFIG_FILTERING_OPTION,
+              label: formatMessage(objectTypesMessages[NOTIFICATION_RULE]),
+              value: ACTIONS_WITH_NOTIFICATIONS,
             },
             {
               label: formatMessage(objectTypesMessages[PATTERN_RULE]),

@@ -16,17 +16,19 @@
 
 import { useState, useCallback, MouseEvent as ReactMouseEvent, useEffect } from 'react';
 import classNames from 'classnames/bind';
-import { isEmpty } from 'lodash';
+import { compact, isEmpty } from 'es-toolkit/compat';
 import { ChevronDownDropdownIcon, MeatballMenuIcon } from '@reportportal/ui-kit';
 
 import { TransformedFolder } from 'controllers/testCase';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import styles from './folder.scss';
-import { PopoverControl } from 'pages/common/popoverControl';
+import { PopoverControl, PopoverItem } from 'pages/common/popoverControl';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useIntl } from 'react-intl';
 import { commonMessages } from '../../commonMessages';
-import { DELETE_FOLDER_MODAL_KEY } from '../deleteFolderModal';
-import { showModalAction } from 'controllers/modal';
-import { useDispatch } from 'react-redux';
+import { useDeleteFolderModal } from '../deleteFolderModal';
+import { useRenameFolderModal } from '../renameFolderModal';
+import { useDuplicateFolderModal } from '../duplicateFolderModal';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -38,12 +40,16 @@ interface FolderProps {
 }
 
 export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder }: FolderProps) => {
-  const dispatch = useDispatch();
   const { formatMessage } = useIntl();
+  const { openModal: openDeleteModal } = useDeleteFolderModal();
+  const { openModal: openRenameModal } = useRenameFolderModal();
+  const { openModal: openDuplicateModal } = useDuplicateFolderModal();
   const [isOpen, setIsOpen] = useState(false);
   const [areToolsShown, setAreToolsShown] = useState(false);
   const [areToolsOpen, setAreToolsOpen] = useState(false);
   const [isBlockHovered, setIsBlockHovered] = useState(false);
+  const { canDeleteTestCaseFolder, canDuplicateTestCaseFolder, canRenameTestCaseFolder } =
+    useUserPermissions();
 
   useEffect(() => {
     setAreToolsShown(areToolsOpen || isBlockHovered);
@@ -62,27 +68,46 @@ export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder 
     [setActiveFolder, folder.id],
   );
 
-  const openDeleteModal = () => {
-    dispatch(
-      showModalAction({
-        id: DELETE_FOLDER_MODAL_KEY,
-        data: {
-          folderId: folder.id,
-          folderName: folder.name,
-          activeFolderId: activeFolder,
-          setAllTestCases,
-        },
-      }),
-    );
+  const handleDeleteFolder = () => {
+    openDeleteModal({
+      folderId: folder.id,
+      folderName: folder.name,
+      activeFolderId: activeFolder,
+      setAllTestCases,
+    });
   };
 
-  const toolItems = [
-    {
+  const handleRenameFolder = () => {
+    openRenameModal({
+      folderId: folder.id,
+      folderName: folder.name,
+    });
+  };
+
+  const handleDuplicateFolder = () => {
+    openDuplicateModal({
+      folderId: folder.id,
+      folderName: folder.name,
+      parentFolderId: folder.parentFolderId,
+    });
+  };
+
+  const toolItems: PopoverItem[] = compact([
+    canRenameTestCaseFolder && {
+      label: formatMessage(COMMON_LOCALE_KEYS.RENAME),
+      onClick: handleRenameFolder,
+    },
+    canDuplicateTestCaseFolder && {
+      label: formatMessage(commonMessages.duplicateFolder),
+      variant: 'text' as const,
+      onClick: handleDuplicateFolder,
+    },
+    canDeleteTestCaseFolder && {
       label: formatMessage(commonMessages.deleteFolder),
       variant: 'destructive' as const,
-      onClick: openDeleteModal,
+      onClick: handleDeleteFolder,
     },
-  ];
+  ]);
 
   return (
     <li
@@ -108,28 +133,34 @@ export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder 
           <span className={cx('folders-tree__item-title--text')} title={folder.name}>
             {folder.name}
           </span>
-          <button
-            className={cx('folders-tree__tools', {
-              'folders-tree__tools--shown': areToolsShown,
-            })}
-            onClick={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
+          {!isEmpty(toolItems) && (
+            <button
+              className={cx('folders-tree__tools', {
+                'folders-tree__tools--shown': areToolsShown,
+              })}
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
 
-              setAreToolsOpen(true);
-            }}
-          >
-            <PopoverControl
-              items={toolItems}
-              isOpened={areToolsOpen}
-              setIsOpened={setAreToolsOpen}
-              placement="bottom-end"
+                setAreToolsOpen(true);
+              }}
             >
-              <div className={cx('folders-tree__meatball')}>
-                <MeatballMenuIcon />
-              </div>
-            </PopoverControl>
-          </button>
+              <PopoverControl
+                items={toolItems}
+                isOpened={areToolsOpen}
+                setIsOpened={setAreToolsOpen}
+                placement="bottom-end"
+              >
+                <div
+                  className={cx('folders-tree__meatball', {
+                    'folders-tree__meatball--active': areToolsOpen,
+                  })}
+                >
+                  <MeatballMenuIcon />
+                </div>
+              </PopoverControl>
+            </button>
+          )}
           <span className={cx('folders-tree__item-title--counter')}>{folder.testsCount || 0}</span>
         </div>
       </div>

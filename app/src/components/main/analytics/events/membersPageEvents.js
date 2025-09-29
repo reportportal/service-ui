@@ -22,31 +22,6 @@ export const MEMBERS_PAGE_VIEWS = {
   },
 };
 export const MEMBERS_PAGE_EVENTS = {
-  ENTER_SEARCH_PARAM: {
-    category: MEMBERS_PAGE,
-    action: 'Enter parameter for search',
-    label: 'Show member by parameter',
-  },
-  PERMISSION_MAP_CLICK: {
-    category: MEMBERS_PAGE,
-    action: 'Click on Btn Permission map',
-    label: 'Show Permission map',
-  },
-  INVITE_USER_CLICK: {
-    category: MEMBERS_PAGE,
-    action: 'Click on Btn Invite user',
-    label: 'Arise Modal Invite user',
-  },
-  CHANGE_PROJECT_ROLE: {
-    category: MEMBERS_PAGE,
-    action: 'Edit input Project role',
-    label: 'Change Project role',
-  },
-  UNASSIGN_BTN_CLICK: {
-    category: MEMBERS_PAGE,
-    action: 'Click on Btn Unassign',
-    label: 'Unassign user',
-  },
   CLOSE_ICON_INVITE_USER_MODAL: {
     category: MEMBERS_PAGE,
     action: 'Click on icon Close on Modal Invite user',

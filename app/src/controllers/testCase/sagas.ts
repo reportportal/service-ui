@@ -22,8 +22,12 @@ import { fetch, delayedPut } from 'common/utils';
 import { fetchSuccessAction, fetchErrorAction } from 'controllers/fetch';
 import { FETCH_START } from 'controllers/fetch/constants';
 import {
+  NOTIFICATION_TYPES,
+  NOTIFICATION_TYPOGRAPHY_COLOR_TYPES,
+  WARNING_NOTIFICATION_DURATION,
   showDefaultErrorNotification,
   showErrorNotification,
+  showNotification,
   showSuccessNotification,
 } from 'controllers/notification';
 import { projectKeySelector } from 'controllers/project';
@@ -40,26 +44,34 @@ import {
   GET_TEST_CASE_DETAILS_FAILURE,
   GET_TEST_CASE_DETAILS_SUCCESS,
   NAMESPACE,
+  RENAME_FOLDER,
 } from './constants';
 import { Folder } from './types';
 import {
   createFoldersSuccessAction,
   startCreatingFolderAction,
   stopCreatingFolderAction,
-  startDeletingFolderAction,
-  stopDeletingFolderAction,
+  startLoadingFolderAction,
+  stopLoadingFolderAction,
   GetTestCasesParams,
   CreateFolderParams,
   DeleteFolderParams,
+  RenameFolderParams,
   GetTestCasesByFolderIdParams,
   startLoadingTestCasesAction,
   stopLoadingTestCasesAction,
   setTestCasesAction,
   deleteFolderSuccessAction,
+  renameFolderSuccessAction,
 } from './actionCreators';
 import { getAllFolderIdsToDelete } from './utils';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { foldersSelector } from 'controllers/testCase/selectors';
+import {
+  TEST_CASE_LIBRARY_PAGE,
+  urlOrganizationSlugSelector,
+  urlProjectSlugSelector,
+} from 'controllers/pages';
 
 interface GetTestCasesAction extends Action<typeof GET_TEST_CASES> {
   payload?: GetTestCasesParams;
@@ -75,6 +87,10 @@ interface CreateFolderAction extends Action<typeof CREATE_FOLDER> {
 
 interface DeleteFolderAction extends Action<typeof DELETE_FOLDER> {
   payload: DeleteFolderParams;
+}
+
+interface RenameFolderAction extends Action<typeof RENAME_FOLDER> {
+  payload: RenameFolderParams;
 }
 
 interface TestCaseDetailsAction extends Action<typeof GET_TEST_CASE_DETAILS> {
@@ -107,7 +123,7 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
     yield put(setTestCasesAction([]));
     yield put(
       showErrorNotification({
-        messageId: 'testCaseLoadingFailed',
+        messageId: 'errorOccurredTryAgain',
       }),
     );
   } finally {
@@ -128,14 +144,28 @@ function* getTestCaseDetails(action: TestCaseDetailsAction) {
       payload: testCaseDetails,
     });
   } catch {
+    const organizationSlug = (yield select(urlOrganizationSlugSelector)) as string;
+    const projectSlug = (yield select(urlProjectSlugSelector)) as string;
+
+    yield put({
+      type: TEST_CASE_LIBRARY_PAGE,
+      payload: {
+        organizationSlug,
+        projectSlug,
+      },
+    });
+
     yield put({
       type: GET_TEST_CASE_DETAILS_FAILURE,
-      error: 'testCaseLoadingFailed',
+      error: 'errorOccurredTryAgain',
     });
 
     yield put(
-      showErrorNotification({
-        messageId: 'testCaseLoadingFailed',
+      showNotification({
+        messageId: 'redirectWarningMessage',
+        type: NOTIFICATION_TYPES.WARNING,
+        typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
+        duration: WARNING_NOTIFICATION_DURATION,
       }),
     );
   }
@@ -155,7 +185,7 @@ function* getAllTestCases(): Generator {
     yield put(setTestCasesAction([]));
     yield put(
       showErrorNotification({
-        messageId: 'testCaseLoadingFailed',
+        messageId: 'errorOccurredTryAgain',
       }),
     );
   } finally {
@@ -274,7 +304,7 @@ function* createFolder(action: CreateFolderAction) {
 
 function* deleteFolder(action: DeleteFolderAction) {
   try {
-    yield put(startDeletingFolderAction());
+    yield put(startLoadingFolderAction());
     const projectKey = (yield select(projectKeySelector)) as string;
     const folders = (yield select(foldersSelector)) as Folder[];
     const { folderId, activeFolderId, setAllTestCases } = action.payload;
@@ -307,7 +337,42 @@ function* deleteFolder(action: DeleteFolderAction) {
       }),
     );
   } finally {
-    yield put(stopDeletingFolderAction());
+    yield put(stopLoadingFolderAction());
+  }
+}
+
+function* renameFolder(action: RenameFolderAction) {
+  try {
+    yield put(startLoadingFolderAction());
+    const projectKey = (yield select(projectKeySelector)) as string;
+    const { folderId, folderName } = action.payload;
+
+    yield call(fetch, URLS.deleteFolder(projectKey, folderId), {
+      method: 'PATCH',
+      data: {
+        name: folderName,
+      },
+    });
+
+    yield put(renameFolderSuccessAction({ folderId, folderName }));
+    yield put(hideModalAction());
+    yield put(
+      showSuccessNotification({
+        message: null,
+        messageId: 'testCaseFolderRenamedSuccess',
+        values: {},
+      }),
+    );
+  } catch (error: unknown) {
+    yield put(
+      showErrorNotification({
+        message: (error as { error?: string })?.error,
+        messageId: null,
+        values: {},
+      }),
+    );
+  } finally {
+    yield put(stopLoadingFolderAction());
   }
 }
 
@@ -344,5 +409,6 @@ export function* testCaseSagas() {
     watchGetTestCasesByFolderId(),
     watchGetAllTestCases(),
     takeEvery(DELETE_FOLDER, deleteFolder),
+    takeEvery(RENAME_FOLDER, renameFolder),
   ]);
 }

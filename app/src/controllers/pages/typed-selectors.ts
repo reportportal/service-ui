@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { isString } from 'lodash';
+import { isString } from 'es-toolkit';
 
 type LocationInfo = {
   payload: {
-    testCasePageRoute: string | string[];
+    testCasePageRoute: string;
     organizationSlug: string;
     projectSlug: string;
   };
@@ -37,9 +37,9 @@ export const urlTestCaseSlugSelector = (state: State): string => {
   let testCaseId: string | undefined;
 
   if (testCasePageRoute && isString(testCasePageRoute)) {
-    testCaseId = testCasePageRoute.split('/')[3];
-  } else if (Array.isArray(testCasePageRoute)) {
-    testCaseId = testCasePageRoute?.[3];
+    const match = testCasePageRoute.match(/test-cases\/(\d+)/);
+
+    testCaseId = match ? match[1] : null;
   }
 
   return testCaseId ? String(testCaseId) : '';
@@ -50,8 +50,6 @@ export const urlFolderIdSelector = (state: State): string => {
 
   if (testCasePageRoute && isString(testCasePageRoute)) {
     return testCasePageRoute.split('/')[1];
-  } else if (Array.isArray(testCasePageRoute)) {
-    return testCasePageRoute?.[1];
   }
 
   return '';

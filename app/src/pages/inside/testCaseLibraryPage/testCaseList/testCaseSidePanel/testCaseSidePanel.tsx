@@ -27,7 +27,7 @@ import {
   RerunIcon,
   DurationIcon,
 } from '@reportportal/ui-kit';
-import { isEmpty } from 'lodash';
+import { isEmpty } from 'es-toolkit/compat';
 import { useOnClickOutside } from 'common/hooks';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
@@ -140,7 +140,7 @@ export const TestCaseSidePanel = memo(
         payload: {
           organizationSlug,
           projectSlug,
-          testCasePageRoute: `folder/${testCase.testFolder.id}/test-cases/${testCase.id}`,
+          testCasePageRoute: `test-cases/${testCase.id}`,
         },
       });
     };

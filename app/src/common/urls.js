@@ -157,6 +157,7 @@ export const URLS = {
     `${urlCommonBase}organizations/${organizationId}/projects/${projectId}`,
   organizationSettings: (organizationId) =>
     `${urlCommonBase}organizations/${organizationId}/settings`,
+  organizationById: (organizationId) => `${urlCommonBase}organizations/${organizationId}`,
 
   projectByName: (projectKey) => `${urlBase}project/${projectKey}`,
   project: (ids = []) => `${urlBase}project?ids=${ids.join(',')}`,
@@ -384,6 +385,8 @@ export const URLS = {
     `${urlBase}project/${projectKey}/tms/test-plan${getQueryParams(query)}`,
   testPlanTestCasesBatch: (projectKey, testPlanId) =>
     `${urlBase}project/${projectKey}/tms/test-plan/${testPlanId}/test-case/batch`,
+  testPlanById: (projectKey, testPlanId) =>
+    `${urlBase}project/${projectKey}/tms/test-plan/${testPlanId}`,
   testFolders: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/folder${getQueryParams(query)}`,
   deleteFolder: (projectKey, folderId) => `${urlBase}project/${projectKey}/tms/folder/${folderId}`,

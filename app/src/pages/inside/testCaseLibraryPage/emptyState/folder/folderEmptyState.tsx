@@ -22,6 +22,7 @@ import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import ImportIcon from 'common/img/import-thin-inline.svg';
 import PlusIconInline from 'common/img/plus-button-inline.svg';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { useCreateTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
 
 import { messages } from '../messages';
 import { commonMessages } from '../../commonMessages';
@@ -38,6 +39,7 @@ interface FolderEmptyStateProps {
 export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
   const { formatMessage } = useIntl();
   const { canCreateTestCase, canImportTestCases } = useUserPermissions();
+  const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
 
   const getAvailableButtons = () => {
     const buttons: ActionButton[] = [];
@@ -48,13 +50,13 @@ export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
         dataAutomationId: 'createTestCaseButton',
         icon: PlusIconInline,
         isCompact: true,
-        handleButton: () => {},
+        handleButton: openCreateTestCaseModal,
       });
     }
 
     if (canImportTestCases) {
       buttons.push({
-        name: formatMessage(messages.importTestCases),
+        name: formatMessage(commonMessages.importTestCases),
         dataAutomationId: 'importTestCaseButton',
         variant: 'ghost',
         icon: ImportIcon,

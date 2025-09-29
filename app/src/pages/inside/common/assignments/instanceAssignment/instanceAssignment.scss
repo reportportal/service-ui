@@ -33,11 +33,6 @@
     position: relative;
     flex: 1;
 
-    .autocomplete-label {
-      margin-bottom: 4px;
-      font-weight: var(--rp-ui-base-fw-medium);
-    }
-
     .autocomplete-checkbox {
       font-weight: var(--rp-ui-base-fw-regular);
       margin-top: 8px;
@@ -83,6 +78,10 @@
   gap: 8px;
 }
 
+.controls-hint {
+  margin-bottom: 20px;
+}
+
 .tooltip {
   width: fit-content;
 }
@@ -90,4 +89,8 @@
 .add-button {
   align-self: self-start;
   margin-top: 8px;
+}
+
+.can-edit-hint {
+  margin-top: 28px;
 }

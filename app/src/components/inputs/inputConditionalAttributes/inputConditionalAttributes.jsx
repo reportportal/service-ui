@@ -16,7 +16,7 @@
 
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { isEmpty } from 'lodash';
+import { isEmpty } from 'es-toolkit/compat';
 import classNames from 'classnames/bind';
 import {
   CONDITION_HAS,

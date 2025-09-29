@@ -20,10 +20,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import DOMPurify from 'dompurify';
 import classNames from 'classnames/bind';
-import { getFormValues, reduxForm } from 'redux-form';
+import { getFormValues, reduxForm, FieldArray } from 'redux-form';
 import { Modal, FieldText, SystemMessage, Checkbox } from '@reportportal/ui-kit';
 import { fetch } from 'common/utils';
-import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { ClipboardButton } from 'components/buttons/copyClipboardButton';
@@ -33,20 +32,22 @@ import { withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { InstanceAssignment } from 'pages/inside/common/assignments/instanceAssignment';
 import { hideModalAction } from 'controllers/modal';
+import { fetchAllUsersAction } from 'controllers/instance/allUsers';
 import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
 import { URLS } from 'common/urls';
 import { ADMINISTRATOR, USER } from 'common/constants/accountRoles';
 import { OrganizationType } from 'controllers/organization';
+import {
+  CREATE_USER_FORM,
+  ORGANIZATIONS,
+  ADMIN_RIGHTS,
+  PASSWORD_FIELD,
+  EMAIL_FIELD,
+  FULL_NAME_FIELD,
+} from './constants';
 import styles from './createUserModal.scss';
 
 const cx = classNames.bind(styles);
-
-const FULL_NAME_FIELD = 'fullName';
-const EMAIL_FIELD = 'email';
-const PASSWORD_FIELD = 'password';
-const ADMIN_RIGHTS = 'adminRights';
-const CREATE_USER_FORM = 'createUserForm';
-const ORGANIZATIONS = 'organizations';
 
 const messages = defineMessages({
   createUserTitle: {
@@ -108,10 +109,9 @@ const messages = defineMessages({
 
 export const CreateUserModal = ({ handleSubmit, invalid }) => {
   const { trackEvent } = useTracking();
-  const formValues = useSelector((state) => getFormValues(CREATE_USER_FORM)(state)) || {};
-  const fields = useSelector((state) => state.form[CREATE_USER_FORM]?.fields) || {};
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
+  const formValues = useSelector((state) => getFormValues(CREATE_USER_FORM)(state)) || {};
 
   const hideModal = () => dispatch(hideModalAction());
 
@@ -172,6 +172,8 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
           assignOrganization({ email, organization }),
         );
         await Promise.all(assignPromises);
+
+        dispatch(fetchAllUsersAction());
       }
     } catch {
       /* empty */
@@ -179,9 +181,6 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
   };
 
   const isSomeFieldFilled = Object.values(formValues).some((value) => !!value);
-  const isTouched = Object.keys(fields).some(
-    (field) => field !== ADMIN_RIGHTS && fields[field].touched,
-  );
 
   return (
     <Modal
@@ -191,7 +190,8 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
         onClick: () => {
           handleSubmit(onCreateUser)();
         },
-        disabled: isTouched && invalid,
+        disabled: invalid,
+        tooltipNode: invalid && formatMessage(COMMON_LOCALE_KEYS.VALIDATION_TOOLTIP),
       }}
       cancelButton={{
         children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -218,6 +218,7 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
               label={formatMessage(messages.fullName)}
               defaultWidth={false}
               placeholder={formatMessage(messages.fullNamePlaceholder)}
+              isRequired
             />
           </FieldErrorHint>
         </FieldProvider>
@@ -229,6 +230,7 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
                   label={formatMessage(messages.email)}
                   defaultWidth={false}
                   placeholder={formatMessage(messages.emailPlaceholder)}
+                  isRequired
                 />
               </FieldErrorHint>
             </FieldProvider>
@@ -244,6 +246,7 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
                   type="password"
                   helpText={formatMessage(messages.passwordValidateMessage)}
                   classNameHelpText={cx('help-text')}
+                  isRequired
                 />
               </FieldErrorHint>
             </FieldProvider>
@@ -256,9 +259,15 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
             {formatMessage(messages.inviteDescription)}
           </span>
         </div>
-        <FieldElement name={ORGANIZATIONS}>
-          <InstanceAssignment />
-        </FieldElement>
+        <FieldArray
+          name={ORGANIZATIONS}
+          component={InstanceAssignment}
+          props={{
+            formName: CREATE_USER_FORM,
+            formNamespace: 'organization',
+            isOrganizationRequired: true,
+          }}
+        />
       </form>
     </Modal>
   );
@@ -266,22 +275,32 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
 
 CreateUserModal.propTypes = {
   handleSubmit: PropTypes.func,
-  invalid: PropTypes.bool.isRequired,
+  invalid: PropTypes.bool,
 };
 
 export default withModal('createUserModal')(
   reduxForm({
     form: CREATE_USER_FORM,
-    validate: ({ fullName, email, password }) => {
-      return {
-        [FULL_NAME_FIELD]: commonValidators.createPatternCreateUserNameValidator()(
-          fullName?.trim(),
-        ),
-        [EMAIL_FIELD]: commonValidators.emailCreateUserValidator()(email?.trim()),
-        [PASSWORD_FIELD]: commonValidators.createPatternCreateUserPasswordValidator()(
-          password?.trim(),
-        ),
-      };
+    validate: ({ fullName, email, password, organization, organizations = [] }) => {
+      const errors = {};
+
+      errors[FULL_NAME_FIELD] = commonValidators.createPatternCreateUserNameValidator()(
+        fullName?.trim(),
+      );
+      errors[EMAIL_FIELD] = commonValidators.emailCreateUserValidator()(email?.trim());
+      errors[PASSWORD_FIELD] = commonValidators.createPatternCreateUserPasswordValidator()(
+        password?.trim(),
+      );
+
+      if (organizations.length === 0) {
+        errors.organizations = commonValidators.requiredField();
+
+        if (!organization?.name) {
+          errors.organization = { name: commonValidators.requiredField() };
+        }
+      }
+
+      return errors;
     },
   })(CreateUserModal),
 );

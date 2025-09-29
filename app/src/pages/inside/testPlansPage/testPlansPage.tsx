@@ -15,28 +15,25 @@
  */
 
 import { useIntl } from 'react-intl';
-import classNames from 'classnames/bind';
-import { isEmpty } from 'lodash';
+import { isEmpty, isNull } from 'es-toolkit/compat';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-import { BreadcrumbsTreeIcon, BubblesLoader, Button, RefreshIcon } from '@reportportal/ui-kit';
+import { Button, RefreshIcon } from '@reportportal/ui-kit';
 
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { ProjectDetails } from 'pages/organization/constants';
 import { EmptyTestPlans } from 'pages/inside/testPlansPage/emptyTestPlans';
-import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { projectNameSelector } from 'controllers/project';
 import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { getTestPlansAction, testPlansSelector, isLoadingSelector } from 'controllers/testPlan';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { useCreateTestPlanModal } from './hooks';
+
+import { useCreateTestPlanModal } from './testPlanModals';
 import { TestPlansTable } from './testPlansTable';
+import { TestPlansHeader } from './testPlansHeader';
+import { PageLoader } from './pageLoader';
 import { commonMessages } from './commonMessages';
-
-import styles from './testPlansPage.scss';
-
-const cx = classNames.bind(styles) as typeof classNames;
 
 export const TestPlansPage = () => {
   const { formatMessage } = useIntl();
@@ -53,19 +50,17 @@ export const TestPlansPage = () => {
   const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
 
   useEffect(() => {
-    dispatch(getTestPlansAction());
-  }, [dispatch]);
+    if (isNull(testPlans) && !isLoading) {
+      dispatch(getTestPlansAction());
+    }
+  }, [dispatch, testPlans, isLoading]);
 
   const renderContent = () => {
     if (isLoading) {
-      return (
-        <div className={cx('test-plans-page__loading')}>
-          <BubblesLoader />
-        </div>
-      );
+      return <PageLoader />;
     }
 
-    if (!isEmpty(testPlans)) {
+    if (testPlans && !isEmpty(testPlans)) {
       return <TestPlansTable testPlans={testPlans} />;
     }
 
@@ -75,35 +70,34 @@ export const TestPlansPage = () => {
   return (
     <SettingsLayout>
       <ScrollWrapper resetRequired>
-        <header className={cx('test-plans-page__header')}>
-          <div className={cx('test-plans-page__breadcrumb')}>
-            <BreadcrumbsTreeIcon />
-            <Breadcrumbs descriptors={breadcrumbDescriptors} />
-          </div>
-          <h1>{formatMessage(commonMessages.pageTitle)}</h1>
-          {!isEmpty(testPlans) && (
-            <div className={cx('test-plans-page__actions')}>
-              <Button
-                variant="text"
-                data-automation-id="refreshPageButton"
-                icon={<RefreshIcon />}
-                disabled={isLoading}
-                onClick={() => dispatch(getTestPlansAction())}
-              >
-                {formatMessage(commonMessages.refreshPage)}
-              </Button>
-              {canCreateTestPlan && (
+        <TestPlansHeader
+          title={formatMessage(commonMessages.pageTitle)}
+          breadcrumbDescriptors={breadcrumbDescriptors}
+          {...(!isEmpty(testPlans) && {
+            actions: (
+              <>
                 <Button
-                  variant="ghost"
-                  data-automation-id="createTestPlanButton"
-                  onClick={openModal}
+                  variant="text"
+                  data-automation-id="refreshPageButton"
+                  icon={<RefreshIcon />}
+                  disabled={isLoading}
+                  onClick={() => dispatch(getTestPlansAction())}
                 >
-                  {formatMessage(commonMessages.createTestPlan)}
+                  {formatMessage(commonMessages.refreshPage)}
                 </Button>
-              )}
-            </div>
-          )}
-        </header>
+                {canCreateTestPlan && (
+                  <Button
+                    variant="ghost"
+                    data-automation-id="createTestPlanButton"
+                    onClick={openModal}
+                  >
+                    {formatMessage(commonMessages.createTestPlan)}
+                  </Button>
+                )}
+              </>
+            ),
+          })}
+        />
         {renderContent()}
       </ScrollWrapper>
     </SettingsLayout>

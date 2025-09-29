@@ -39,6 +39,8 @@ const cx = classNames.bind(styles) as typeof classNames;
 
 export const CREATE_TEST_CASE_MODAL_KEY = 'createTestCaseModalKey';
 
+export type ManualScenarioType = 'STEPS' | 'TEXT';
+
 export interface CreateTestCaseFormData {
   name: string;
   description?: string;
@@ -46,9 +48,11 @@ export interface CreateTestCaseFormData {
   priority?: TestCasePriority;
   linkToRequirements?: string;
   executionEstimationTime?: number;
-  manualScenarioType: 'STEPS' | 'TEXT';
+  manualScenarioType: ManualScenarioType;
   precondition?: string;
   steps?: TestStep[];
+  instructions?: string;
+  expectedResult?: string;
   tags?: string[];
 }
 

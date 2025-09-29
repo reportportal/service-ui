@@ -36,11 +36,6 @@ export const ADMIN_ALL_USERS_PAGE_EVENTS = {
     action: 'Click on Btn Delete on Modal "Delete user"',
     label: 'Delete user',
   },
-  UNASSIGN_BTN_CLICK: {
-    category: ADMIN_ALL_USERS_PAGE,
-    action: 'Click on Btn Unassign',
-    label: 'Arise Modal Unassign User',
-  },
   CLOSE_ICON_UNASSIGN_USER_MODAL: {
     category: ADMIN_ALL_USERS_PAGE,
     action: 'Click on Close Icon in Modal Unassign User',
@@ -56,11 +51,6 @@ export const ADMIN_ALL_USERS_PAGE_EVENTS = {
     action: 'Click on Btn Unassign on Modal Unassign User',
     label: 'Unassign user',
   },
-  CHANGE_PROJECT_ROLE: {
-    category: ADMIN_ALL_USERS_PAGE,
-    action: 'Edit input Project role',
-    label: 'Change Project role',
-  },
   EXPORT_BTN: {
     category: ADMIN_ALL_USERS_PAGE,
     action: 'Click on Export',
@@ -70,11 +60,6 @@ export const ADMIN_ALL_USERS_PAGE_EVENTS = {
     category: ADMIN_ALL_USERS_PAGE,
     action: 'Click on Btn Delete',
     label: 'Arise Modal Delete User',
-  },
-  INVITE_USER_BTN: {
-    category: ADMIN_ALL_USERS_PAGE,
-    action: 'Click on Btn Invite User',
-    label: 'Arise Modal Invite User',
   },
   ADD_USER_BTN: {
     category: ADMIN_ALL_USERS_PAGE,
