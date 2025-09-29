@@ -1,3 +1,19 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { reduxForm } from 'redux-form';
 import { messages } from './messages';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -12,25 +28,24 @@ import styles from './addTestCasesToTestPlanModal.module.scss';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { useAddTestCasesToTestPlan } from './useAddTestCasesToTestPlan';
 import { AsyncAutocomplete } from 'componentLibrary/autocompletes/asyncAutocomplete';
+import { TestPlanDto } from 'controllers/testPlan';
+import { default as size } from 'lodash/size';
+import { hideModalAction } from 'controllers/modal';
+import { useDispatch } from 'react-redux';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
 export const ADD_TO_TEST_PLAN_MODAL_KEY = 'addToTestPlanModalKey';
 
-interface TestPlan {
-  id: number;
-  name: string;
-}
-
-export const AddTestCasesToTestPlanModal = reduxForm<
-  unknown,
-  { selectedTestCases: (number | string)[] }
->({
+export const AddTestCasesToTestPlanModal = reduxForm<unknown, { selectedTestCaseIds: number[] }>({
   form: 'add-to-test-plan-modal-form',
-})(({ selectedTestCases }) => {
+})(({ selectedTestCaseIds }) => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
 
   const projectKey = useSelector(projectKeySelector);
+
+  const selectedTestCasesLength = size(selectedTestCaseIds);
 
   const {
     isAddTestCasesToTestPlanLoading,
@@ -38,31 +53,33 @@ export const AddTestCasesToTestPlanModal = reduxForm<
     selectedTestPlan,
     addTestCasesToTestPlan,
   } = useAddTestCasesToTestPlan({
-    selectedTestCases,
+    selectedTestCaseIds,
   });
 
-  const makeTestPlansOptions = (response: { content: TestPlan[] }) => response.content;
+  const makeTestPlansOptions = (response: { content: TestPlanDto[] }) => response.content;
 
   const description = useMemo(() => {
     return (
       <p className={cx('description')}>
         <span>{formatMessage(messages.descriptionStart)}</span>
-        <b className={cx('selected-test-cases')}>{selectedTestCases?.length || 0}</b>
+        <b className={cx('selected-test-cases')}>{selectedTestCasesLength || 0}</b>
         <span>
           {formatMessage(
-            selectedTestCases?.length > 1
+            selectedTestCasesLength > 1
               ? messages.addSelectedTestCases
               : messages.addSelectedTestCase,
           )}
         </span>
       </p>
     );
-  }, [formatMessage, selectedTestCases?.length]);
+  }, [formatMessage, selectedTestCasesLength]);
+
+  const retrieveTestPlans = () => URLS.testPlan(projectKey);
 
   return (
     <Modal
-      title={messages.addToTestPlan.defaultMessage}
-      onClose={() => {}}
+      title={formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
+      onClose={() => dispatch(hideModalAction())}
       okButton={{
         children: (
           <LoadingSubmitButton isLoading={isAddTestCasesToTestPlanLoading}>
@@ -72,21 +89,23 @@ export const AddTestCasesToTestPlanModal = reduxForm<
         onClick: () => addTestCasesToTestPlan(),
         disabled: !selectedTestPlan,
       }}
-      cancelButton={{ children: formatMessage(COMMON_LOCALE_KEYS.CANCEL), onClick: () => {} }}
+      cancelButton={{
+        children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+        onClick: () => hideModalAction(),
+      }}
     >
       <div>
         {description}
-        <div style={{ position: 'relative' }}>
+        <div className={cx('autocomplete-wrapper')}>
           <AsyncAutocomplete
             placeholder={formatMessage(messages.selectedTestPlanPlaceholder)}
-            getURI={() => URLS.testPlan(projectKey)}
+            getURI={retrieveTestPlans}
             value={selectedTestPlan}
             getRequestParams={() => {}}
-            optionVariant="key-variant"
             makeOptions={makeTestPlansOptions}
             onChange={setSelectedTestPlan}
-            parseValueToString={(value: TestPlan) => value?.name}
-            getUniqKey={(value: TestPlan) => value?.id}
+            parseValueToString={(value: TestPlanDto) => value?.name}
+            getUniqKey={(value: TestPlanDto) => value?.id}
             createWithoutConfirmation={false}
           />
         </div>

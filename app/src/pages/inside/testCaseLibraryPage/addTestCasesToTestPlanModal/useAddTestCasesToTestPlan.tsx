@@ -1,3 +1,19 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { useDispatch, useSelector } from 'react-redux';
 import { projectKeySelector } from 'controllers/project';
 import { fetch } from 'common/utils';
@@ -5,8 +21,8 @@ import { useDebouncedSpinner } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { hideModalAction } from 'controllers/modal';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
-import { getTestCasesAction } from 'controllers/testCase';
 import { useState } from 'react';
+import { TestPlanDto } from 'controllers/testPlan';
 
 export interface TestStep {
   instructions: string;
@@ -14,12 +30,10 @@ export interface TestStep {
   attachments?: string[];
 }
 
-const testFolderId = 1;
-
 export const useAddTestCasesToTestPlan = ({
-  selectedTestCases,
+  selectedTestCaseIds,
 }: {
-  selectedTestCases: (string | number)[];
+  selectedTestCaseIds: number[];
 }) => {
   const {
     isLoading: isAddTestCasesToTestPlanLoading,
@@ -29,22 +43,17 @@ export const useAddTestCasesToTestPlan = ({
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
 
-  const [selectedTestPlan, setSelectedTestPlan] = useState<{ id: number; name: string } | null>(
-    null,
-  );
+  const [selectedTestPlan, setSelectedTestPlan] = useState<TestPlanDto | null>(null);
 
   const addTestCasesToTestPlan = () => {
     showSpinner();
 
-    const fetchPath: string = URLS.testPlanTestCasesBatch(
-      projectKey,
-      selectedTestPlan.id,
-    ) as unknown as string;
+    const fetchPath = URLS.testPlanTestCasesBatch(projectKey, selectedTestPlan.id);
 
     fetch(fetchPath, {
       method: 'post',
       data: {
-        testCaseIds: selectedTestCases,
+        testCaseIds: selectedTestCaseIds,
       },
     })
       .then(() => {
@@ -54,7 +63,6 @@ export const useAddTestCasesToTestPlan = ({
             messageId: 'testCasesAddingToTestPlanSuccess',
           }),
         );
-        dispatch(getTestCasesAction({ testFolderId }));
       })
       .catch((error) => {
         dispatch(

@@ -49,6 +49,7 @@ import { ScenariosList } from './scenariosList';
 import { messages } from './messages';
 import { StepData } from '../../createTestCaseModal/testCaseDetails';
 import styles from './testCaseSidePanel.scss';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -270,7 +271,7 @@ export const TestCaseSidePanel = memo(
               onClick={handleAddToTestPlanClick}
               data-automation-id="test-case-add-to-test-plan"
             >
-              {formatMessage(messages.addToTestPlan)}
+              {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
             </Button>
           )}
         </div>

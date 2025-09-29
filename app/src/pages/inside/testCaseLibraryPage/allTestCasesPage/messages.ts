@@ -65,10 +65,6 @@ export const messages = defineMessages({
     id: 'TestCaseLibraryPage.addToLaunch',
     defaultMessage: 'Add to Launch',
   },
-  addToTestPlan: {
-    id: 'TestCaseLibraryPage.addToTestPlan',
-    defaultMessage: 'Add to Test Plan',
-  },
   allTestCasesTitle: {
     id: 'TestCaseLibraryPage.allTestCasesTitle',
     defaultMessage: 'All test cases',

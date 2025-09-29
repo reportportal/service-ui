@@ -17,10 +17,6 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  addToTestPlan: {
-    id: 'TestCaseLibraryPage.addToTestPlanModal.addToTestPlan',
-    defaultMessage: 'Add to Test Plan',
-  },
   selectedTestPlanPlaceholder: {
     id: 'TestCaseLibraryPage.addToTestPlanModal.selectedTestPlanPlaceholder',
     defaultMessage: 'Select the Test Plan',

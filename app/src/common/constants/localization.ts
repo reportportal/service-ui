@@ -131,6 +131,10 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.add',
     defaultMessage: 'Add',
   },
+  ADD_TO_TEST_PLAN: {
+    id: 'Common.addToTestPlan',
+    defaultMessage: 'Add to Test Plan',
+  },
   NO_RESULTS: {
     id: 'Common.noResults',
     defaultMessage: 'No results found',

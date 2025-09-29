@@ -57,7 +57,7 @@ export const AllTestCasesPage = ({
   const { formatMessage } = useIntl();
   const [activePage, setActivePage] = useState<number>(DEFAULT_CURRENT_PAGE);
   const [pageSize, setPageSize] = useState<number>(DEFAULT_ITEMS_PER_PAGE);
-  const [selectedRowIds, setSelectedRowIds] = useState<(number | string)[]>([]);
+  const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
   const folderId = useSelector(urlFolderIdSelector);
   const folders = useSelector(foldersSelector);
   const isAnyRowSelected = !isEmpty(selectedRowIds);
@@ -68,7 +68,7 @@ export const AllTestCasesPage = ({
   }, [folderId, folders, formatMessage]);
 
   const { openModal: openAddToTestPlanModal } = useAddTestCasesToTestPlanModal({
-    selectedTestCases: selectedRowIds,
+    selectedTestCaseIds: selectedRowIds,
   });
 
   // Calculate pagination values
@@ -166,7 +166,7 @@ export const AllTestCasesPage = ({
               <Button variant="ghost">{formatMessage(messages.moveToFolder)}</Button>
               <Button variant="ghost">{formatMessage(messages.addToLaunch)}</Button>
               <Button onClick={openAddToTestPlanModal}>
-                {formatMessage(messages.addToTestPlan)}
+                {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
               </Button>
             </div>
           </div>
