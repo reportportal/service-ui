@@ -259,7 +259,6 @@ export const URLS = {
   bulkLastLogs: (activeProject) => `${urlBase}${activeProject}/log/under`,
   users: (ids = []) => `${urlCommonBase}users?ids=${ids.join(',')}`,
   userRegistration: () => `${urlCommonBase}users/registration`,
-  userValidateRegistrationInfo: () => `${urlCommonBase}users/registration/info`,
   userPasswordReset: () => `${urlCommonBase}users/password/reset`,
   userPasswordResetToken: (token) => `${urlCommonBase}users/password/reset/${token}`,
   userPasswordRestore: () => `${urlCommonBase}users/password/restore`,

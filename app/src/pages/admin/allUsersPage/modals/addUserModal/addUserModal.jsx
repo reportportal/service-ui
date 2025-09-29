@@ -24,7 +24,7 @@ import { reduxForm, formValueSelector } from 'redux-form';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
-import { commonValidators, validateAsync } from 'common/utils/validation';
+import { commonValidators } from 'common/utils/validation';
 import { passwordMinLengthSelector } from 'controllers/appInfo';
 import { URLS } from 'common/urls';
 import { ADMIN_ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -131,36 +131,6 @@ const generatePassword = (passwordMinLength) => {
       defaultProject: commonValidators.requiredField(defaultProject),
     };
   },
-  asyncValidate: ({ login, email }, dispatch, { asyncErrors }, currentField) => {
-    switch (currentField) {
-      case 'login':
-        return validateAsync.loginUnique(login).then(({ is: isExists }) => {
-          const errors = {
-            ...asyncErrors,
-            login: undefined,
-          };
-          if (isExists) {
-            errors.login = 'loginDuplicateHint';
-          }
-          throw errors;
-        });
-      case 'email':
-        return validateAsync.emailUnique(email).then(({ is: isExists }) => {
-          const errors = {
-            ...asyncErrors,
-            email: undefined,
-          };
-          if (isExists) {
-            errors.email = 'emailDuplicateHint';
-          }
-          throw errors;
-        });
-      default:
-        return Promise.resolve();
-    }
-  },
-  asyncChangeFields: ['login', 'email'],
-  asyncBlurFields: ['login', 'email'], // validate on blur in case of copy-paste value
 })
 @track()
 export class AddUserModal extends Component {
@@ -223,8 +193,7 @@ export class AddUserModal extends Component {
           danger: false,
           onClick: (closeModal) => {
             handleSubmit((values) => {
-              onSubmit(values);
-              closeModal();
+              onSubmit(values, closeModal);
             })();
           },
           eventInfo: ADMIN_ALL_USERS_PAGE_EVENTS.ADD_BTN_ADD_USER_MODAL,
