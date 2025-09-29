@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-import { ChangeEvent, useState, MouseEvent, useMemo, HtmlHTMLAttributes } from 'react';
+import { ChangeEvent, useState, useMemo, HtmlHTMLAttributes } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
-import { reduxForm, registerField, unregisterField, InjectedFormProps } from 'redux-form';
+import {
+  reduxForm,
+  registerField,
+  unregisterField,
+  InjectedFormProps,
+  formValueSelector,
+} from 'redux-form';
 import classNames from 'classnames/bind';
-import { Modal, FieldText, Toggle } from '@reportportal/ui-kit';
+import { Modal, FieldText, Toggle, FieldLabel } from '@reportportal/ui-kit';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction, withModal } from 'controllers/modal';
@@ -34,7 +40,7 @@ import { commonMessages } from '../../commonMessages';
 
 import styles from './createFolderModal.scss';
 import { SingleAutocomplete } from 'componentLibrary/autocompletes/singleAutocomplete';
-import { traverseFolders } from './utils';
+import { buildFoldersMap, traverseFolders } from './utils';
 import { FolderWithFullPath } from './types';
 import { AutocompleteOption } from 'componentLibrary/autocompletes/common/autocompleteOption';
 
@@ -78,15 +84,22 @@ const CreateFolderModalComponent = ({
   handleSubmit,
   change,
   untouch,
-  initialValues,
 }: CreateFolderModalProps & InjectedFormProps<CreateFolderFormValues, CreateFolderModalProps>) => {
+  const currentFormSelector = formValueSelector('create-folder-modal-form');
   const dispatch = useDispatch();
+  const parentFolderName = useSelector<CreateFolderFormValues>((state) =>
+    currentFormSelector(state, 'parentFolderName'),
+  );
+  const folderName = useSelector<CreateFolderFormValues>((state) =>
+    currentFormSelector(state, 'folderName'),
+  );
   const isCreatingFolder = useSelector(isCreatingFolderSelector);
   const folders = useSelector(foldersSelector);
   const { formatMessage } = useIntl();
 
+  const selectedFolder = folders.find((folder) => folder.id === parentFolderName);
+
   const [isSubfolderToggled, setIsSubfolderToggled] = useState(false);
-  const [selectedFolder, setSelectedFolder] = useState<FolderWithFullPath | null>(null);
 
   // Going to be resolved to id by folder name with UI search control
   // Currently directly accepts id from name input
@@ -98,11 +111,11 @@ const CreateFolderModalComponent = ({
 
   const hideModal = () => dispatch(hideModalAction());
 
-  const handleSelectedFolder = (item: { selectedItem: FolderWithFullPath }) => {
-    setSelectedFolder(item.selectedItem);
+  const handleSelectedFolder = ({ selectedItem }: { selectedItem: FolderWithFullPath }) => {
+    change('parentFolderName', selectedItem?.id || '');
   };
 
-  const mappedFolders = useMemo(() => traverseFolders(folders), [folders]);
+  const mappedFolders = useMemo(() => traverseFolders(buildFoldersMap(folders)), [folders]);
 
   const renderOption = (
     option: FolderWithFullPath,
@@ -115,50 +128,37 @@ const CreateFolderModalComponent = ({
       item: FolderWithFullPath;
       index: number;
     }) => HtmlHTMLAttributes<HTMLDivElement>,
-  ) =>
-    String(option?.id) !== 'EMPTY' ? (
-      <AutocompleteOption
-        isActive={true}
-        isSelected={true}
-        disabled={false}
-        optionVariant={'key-variant'}
-        variant="light"
-        {...getItemProps({ item: option, index })}
-        key={option.id}
-        isNew={false}
-        parseValueToString={(item: FolderWithFullPath) => item.description || ''}
-      >
-        <>
-          <p className={cx('create-folder-modal__folder__name')}>
-            {option.description || option.name}
-          </p>
-          <p className={cx('create-folder-modal__folder__path')}>{option.fullPath}</p>
-        </>
-      </AutocompleteOption>
-    ) : (
-      <div>
-        <p className={cx('create-folder-modal__folder__path')}>
-          {formatMessage(commonMessages.noTestPlanCreated)}
+  ) => (
+    <AutocompleteOption
+      isActive={true}
+      isSelected={true}
+      disabled={false}
+      optionVariant=""
+      variant="light"
+      {...getItemProps({ item: option, index })}
+      key={option.id}
+      isNew={false}
+      parseValueToString={(item: FolderWithFullPath) => item.description || ''}
+    >
+      <>
+        <p className={cx('create-folder-modal__folder__name')}>
+          {option.description || option.name}
         </p>
-      </div>
-    );
-
-  const renderEmptyOption = () => (
-    <div>
-      <p className={cx('create-folder-modal__folder__path')}>
-        {formatMessage(commonMessages.noTestPlanCreated)}
-      </p>
-    </div>
+        <p className={cx('create-folder-modal__folder__path')}>{option.fullPath}</p>
+      </>
+    </AutocompleteOption>
   );
 
-  const onSubmit = (values: CreateFolderFormValues) => {
-    const idFromNameInput = coerceToNumericId(values.parentFolderName);
+  const onSubmit = () => {
+    const idFromNameInput = coerceToNumericId(parentFolderName);
+
     dispatch(
       createFoldersAction({
-        folderName: values.folderName,
+        folderName: folderName as string,
         ...(idFromNameInput !== undefined ? { parentFolderId: idFromNameInput } : {}),
       }),
     );
+    hideModal();
   };
 
   const handleToggle = ({ target }: ChangeEvent<HTMLInputElement>) => {
@@ -171,17 +171,14 @@ const CreateFolderModalComponent = ({
     setIsSubfolderToggled(target.checked);
   };
 
-  const handleParentFolderNameClear = () => {
-    change('parentFolderName', initialValues.parentFolderName);
-  };
-
   const okButton = {
     children: (
       <LoadingSubmitButton isLoading={isCreatingFolder}>
         {formatMessage(COMMON_LOCALE_KEYS.CREATE)}
       </LoadingSubmitButton>
     ),
-    onClick: handleSubmit(onSubmit) as (event: MouseEvent<HTMLButtonElement>) => void,
+    type: 'submit' as const,
+    onClick: onSubmit,
     disabled: isCreatingFolder,
     'data-automation-id': 'submitButton',
   };
@@ -223,29 +220,29 @@ const CreateFolderModalComponent = ({
         )}
         {isSubfolderToggled && (
           <>
-            <SingleAutocomplete
-              optionVariant="key-variant"
-              createWithoutConfirmation={true}
-              onStateChange={handleSelectedFolder}
-              options={mappedFolders}
-              renderOption={mappedFolders?.length > 0 ? renderOption : renderEmptyOption}
-              parseValueToString={(option: FolderWithFullPath) =>
-                (option?.description || option?.name)?.toString() || ''
-              }
-            />
             <FieldProvider
               name="parentFolderName"
               className={cx('create-folder-modal__parent-folder')}
               placeholder={formatMessage(messages.searchFolderToSelect)}
             >
               <FieldErrorHint provideHint={false}>
-                <FieldText
-                  label={formatMessage(messages.parentFolder)}
-                  defaultWidth={false}
-                  maxLength={MAX_FIELD_LENGTH}
-                  onClear={handleParentFolderNameClear}
-                  clearable
-                />
+                <>
+                  <FieldLabel isRequired={false}>{formatMessage(messages.parentFolder)}</FieldLabel>
+                  <SingleAutocomplete
+                    name="parentFolderName"
+                    value={selectedFolder || ''}
+                    optionVariant="key-variant"
+                    createWithoutConfirmation={false}
+                    onStateChange={handleSelectedFolder}
+                    placeholder={formatMessage(messages.searchFolderToSelect)}
+                    options={mappedFolders}
+                    customEmptyListMessage={formatMessage(commonMessages.noTestPlanCreated)}
+                    renderOption={renderOption}
+                    parseValueToString={(option: FolderWithFullPath) =>
+                      (option?.description || option?.name)?.toString() || ''
+                    }
+                  />
+                </>
               </FieldErrorHint>
             </FieldProvider>
           </>
