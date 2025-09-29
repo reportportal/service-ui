@@ -29,7 +29,6 @@ import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { useAddTestCasesToTestPlan } from './useAddTestCasesToTestPlan';
 import { AsyncAutocomplete } from 'componentLibrary/autocompletes/asyncAutocomplete';
 import { TestPlanDto } from 'controllers/testPlan';
-import { default as size } from 'lodash/size';
 import { hideModalAction } from 'controllers/modal';
 import { useDispatch } from 'react-redux';
 
@@ -45,7 +44,7 @@ export const AddTestCasesToTestPlanModal = reduxForm<unknown, { selectedTestCase
 
   const projectKey = useSelector(projectKeySelector);
 
-  const selectedTestCasesLength = size(selectedTestCaseIds);
+  const selectedTestCasesLength = selectedTestCaseIds?.length || 0;
 
   const {
     isAddTestCasesToTestPlanLoading,
@@ -62,7 +61,7 @@ export const AddTestCasesToTestPlanModal = reduxForm<unknown, { selectedTestCase
     return (
       <p className={cx('description')}>
         <span>{formatMessage(messages.descriptionStart)}</span>
-        <b className={cx('selected-test-cases')}>{selectedTestCasesLength || 0}</b>
+        <b className={cx('selected-test-cases')}>{selectedTestCasesLength}</b>
         <span>
           {formatMessage(
             selectedTestCasesLength > 1

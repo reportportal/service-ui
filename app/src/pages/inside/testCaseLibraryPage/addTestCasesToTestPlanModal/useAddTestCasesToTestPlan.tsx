@@ -48,7 +48,7 @@ export const useAddTestCasesToTestPlan = ({
   const addTestCasesToTestPlan = () => {
     showSpinner();
 
-    const fetchPath = URLS.testPlanTestCasesBatch(projectKey, selectedTestPlan.id);
+    const fetchPath: string = URLS.testPlanTestCasesBatch(projectKey, selectedTestPlan.id);
 
     fetch(fetchPath, {
       method: 'post',
