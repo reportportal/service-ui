@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { FolderNameField } from './folderNameField';
+export { TestCaseFolders } from './testCaseFolders';
