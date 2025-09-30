@@ -16,7 +16,6 @@
 
 import { memo, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import Parser from 'html-react-parser';
@@ -29,6 +28,8 @@ import {
   DurationIcon,
 } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
+
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useOnClickOutside } from 'common/hooks';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
