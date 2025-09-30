@@ -16,6 +16,7 @@
  */
 
 import classNames from 'classnames/bind';
+import { size } from 'es-toolkit/compat';
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { InjectedFormProps, reduxForm } from 'redux-form';
@@ -56,7 +57,7 @@ export const AddTestCasesToTestPlanModal = ({
 
   const projectKey = useSelector(projectKeySelector);
 
-  const selectedTestCasesLength = selectedTestCaseIds?.length || 0;
+  const selectedTestCasesLength = size(selectedTestCaseIds);
 
   const {
     isAddTestCasesToTestPlanLoading,

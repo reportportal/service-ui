@@ -70,9 +70,9 @@ export const useAddTestCasesToTestPlan = ({
 
   const addTestCasesToTestPlan = (values: AddTestCasesToTestPlanFormData) => {
     const testPlan = values?.[SELECTED_TEST_PLAN_FIELD_NAME];
-    showSpinner();
-
     const fetchPath: string = URLS.testPlanTestCasesBatch(projectKey, testPlan.id);
+
+    showSpinner();
 
     fetch(fetchPath, {
       method: 'post',
