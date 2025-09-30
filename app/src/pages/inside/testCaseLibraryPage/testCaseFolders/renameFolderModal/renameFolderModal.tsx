@@ -28,7 +28,7 @@ import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { commonValidators } from 'common/utils/validation';
 import { renameFolderAction } from 'controllers/testCase/actionCreators';
 import { isLoadingFolderSelector } from 'controllers/testCase';
-import { FolderNameField } from '../folderNameField';
+import { FolderNameField } from '../shared/FolderFormFields';
 
 import styles from './renameFolderModal.scss';
 
