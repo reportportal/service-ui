@@ -32,7 +32,7 @@ import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'contr
 import { areFoldersLoadingSelector, foldersSelector } from 'controllers/testCase';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 
-import { ExpandedOptions } from './expandedOptions';
+import { TestCaseFolders } from './testCaseFolders';
 import { MainPageEmptyState } from './emptyState/mainPage';
 import { commonMessages } from './commonMessages';
 import { useCreateTestCaseModal } from './createTestCaseModal';
@@ -65,7 +65,7 @@ export const TestCaseLibraryPage = () => {
     }
 
     if (hasFolders) {
-      return <ExpandedOptions />;
+      return <TestCaseFolders />;
     }
 
     return <MainPageEmptyState />;

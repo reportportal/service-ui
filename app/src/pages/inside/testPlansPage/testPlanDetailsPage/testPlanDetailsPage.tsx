@@ -35,6 +35,7 @@ import {
   useTestPlanId,
   useActiveTestPlanLoading,
   useTestPlanById,
+  useTestPlanFolders,
 } from 'hooks/useTypedSelector';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 
@@ -49,6 +50,7 @@ import {
   useDuplicateTestPlanModal,
   useDeleteTestPlanModal,
 } from '../testPlanModals';
+import { TestPlanFolders } from './testPlanFolders';
 
 import styles from './testPlanDetailsPage.scss';
 
@@ -62,6 +64,7 @@ export const TestPlanDetailsPage = () => {
   const testPlanId = useTestPlanId();
   const testPlan = useTestPlanById(testPlanId);
   const isLoading = useActiveTestPlanLoading();
+  const testPlanFolders = useTestPlanFolders();
   const { openModal: openEditModal } = useEditTestPlanModal();
   const { openModal: openDuplicateModal } = useDuplicateTestPlanModal({
     onSuccess: (newTestPlanId) =>
@@ -132,7 +135,7 @@ export const TestPlanDetailsPage = () => {
         onDuplicate={openActionModal('duplicate')}
         onDelete={openActionModal('delete')}
       />
-      {!isEmpty(testPlan?.totalTestCases) && (
+      {!isEmpty(testPlanFolders) && (
         <>
           {canAddTestCaseToTestPlan && (
             <Button variant="ghost" data-automation-id="addTestsFromLibraryButton">
@@ -158,11 +161,11 @@ export const TestPlanDetailsPage = () => {
   }
 
   const renderContent = () => {
-    if (!testPlan?.totalTestCases) {
+    if (!testPlan?.totalTestCases && isEmpty(testPlanFolders)) {
       return <EmptyTestPlan />;
     }
 
-    return <div>Test cases are present</div>;
+    return <TestPlanFolders />;
   };
 
   return (

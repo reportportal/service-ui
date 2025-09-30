@@ -16,19 +16,15 @@
 
 import { useState, useCallback, MouseEvent as ReactMouseEvent, useEffect } from 'react';
 import classNames from 'classnames/bind';
-import { compact, isEmpty } from 'es-toolkit/compat';
+import { isEmpty } from 'es-toolkit/compat';
 import { ChevronDownDropdownIcon, MeatballMenuIcon } from '@reportportal/ui-kit';
 
+import { PopoverControl } from 'pages/common/popoverControl';
 import { TransformedFolder } from 'controllers/testCase';
-import { useUserPermissions } from 'hooks/useUserPermissions';
+
+import { INSTANCE_KEYS, useFolderTooltipItems } from './useFolderTooltipItems';
+
 import styles from './folder.scss';
-import { PopoverControl, PopoverItem } from 'pages/common/popoverControl';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { useIntl } from 'react-intl';
-import { commonMessages } from '../../commonMessages';
-import { useDeleteFolderModal } from '../deleteFolderModal';
-import { useRenameFolderModal } from '../renameFolderModal';
-import { useDuplicateFolderModal } from '../duplicateFolderModal';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -37,19 +33,26 @@ interface FolderProps {
   activeFolder: number | null;
   setActiveFolder: (id: number) => void;
   setAllTestCases: () => void;
+  instanceKey: INSTANCE_KEYS;
 }
 
-export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder }: FolderProps) => {
-  const { formatMessage } = useIntl();
-  const { openModal: openDeleteModal } = useDeleteFolderModal();
-  const { openModal: openRenameModal } = useRenameFolderModal();
-  const { openModal: openDuplicateModal } = useDuplicateFolderModal();
+export const Folder = ({
+  folder,
+  setActiveFolder,
+  setAllTestCases,
+  activeFolder,
+  instanceKey,
+}: FolderProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [areToolsShown, setAreToolsShown] = useState(false);
   const [areToolsOpen, setAreToolsOpen] = useState(false);
   const [isBlockHovered, setIsBlockHovered] = useState(false);
-  const { canDeleteTestCaseFolder, canDuplicateTestCaseFolder, canRenameTestCaseFolder } =
-    useUserPermissions();
+  const tooltipItems = useFolderTooltipItems({
+    folder,
+    activeFolder,
+    setAllTestCases,
+    instanceKey,
+  });
 
   useEffect(() => {
     setAreToolsShown(areToolsOpen || isBlockHovered);
@@ -67,47 +70,6 @@ export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder 
     },
     [setActiveFolder, folder.id],
   );
-
-  const handleDeleteFolder = () => {
-    openDeleteModal({
-      folderId: folder.id,
-      folderName: folder.name,
-      activeFolderId: activeFolder,
-      setAllTestCases,
-    });
-  };
-
-  const handleRenameFolder = () => {
-    openRenameModal({
-      folderId: folder.id,
-      folderName: folder.name,
-    });
-  };
-
-  const handleDuplicateFolder = () => {
-    openDuplicateModal({
-      folderId: folder.id,
-      folderName: folder.name,
-      parentFolderId: folder.parentFolderId,
-    });
-  };
-
-  const toolItems: PopoverItem[] = compact([
-    canRenameTestCaseFolder && {
-      label: formatMessage(COMMON_LOCALE_KEYS.RENAME),
-      onClick: handleRenameFolder,
-    },
-    canDuplicateTestCaseFolder && {
-      label: formatMessage(commonMessages.duplicateFolder),
-      variant: 'text' as const,
-      onClick: handleDuplicateFolder,
-    },
-    canDeleteTestCaseFolder && {
-      label: formatMessage(commonMessages.deleteFolder),
-      variant: 'destructive' as const,
-      onClick: handleDeleteFolder,
-    },
-  ]);
 
   return (
     <li
@@ -133,7 +95,7 @@ export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder 
           <span className={cx('folders-tree__item-title--text')} title={folder.name}>
             {folder.name}
           </span>
-          {!isEmpty(toolItems) && (
+          {!isEmpty(tooltipItems) && (
             <button
               className={cx('folders-tree__tools', {
                 'folders-tree__tools--shown': areToolsShown,
@@ -146,7 +108,7 @@ export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder 
               }}
             >
               <PopoverControl
-                items={toolItems}
+                items={tooltipItems}
                 isOpened={areToolsOpen}
                 setIsOpened={setAreToolsOpen}
                 placement="bottom-end"
@@ -174,6 +136,7 @@ export const Folder = ({ folder, setActiveFolder, setAllTestCases, activeFolder 
               activeFolder={activeFolder}
               setActiveFolder={setActiveFolder}
               setAllTestCases={setAllTestCases}
+              instanceKey={instanceKey}
             />
           ))}
         </ul>
