@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
+import { formValueSelector, InjectedFormProps } from 'redux-form';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { projectKeySelector } from 'controllers/project';
 import { fetch } from 'common/utils';
 import { useDebouncedSpinner } from 'common/hooks';
@@ -27,7 +29,6 @@ import {
   AddTestCasesToTestPlanModalData,
   AddTestCasesToTestPlanModalProps,
 } from './types';
-import { formValueSelector, InjectedFormProps } from 'redux-form';
 import {
   ADD_TO_TEST_PLAN_MODAL_FORM,
   SELECTED_TEST_PLAN_FIELD_NAME,
@@ -35,8 +36,8 @@ import {
 
 interface ReduxFormState {
   form: {
-    [ADD_TO_TEST_PLAN_MODAL_FORM]?: {
-      values?: {
+    [ADD_TO_TEST_PLAN_MODAL_FORM]: {
+      values: {
         selectedTestPlan?: TestPlanDto;
       };
     };

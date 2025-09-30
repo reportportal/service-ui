@@ -33,10 +33,10 @@ import { projectKeySelector } from 'controllers/project';
 import { TestPlanDto } from 'controllers/testPlan';
 import { URLS } from 'common/urls';
 
+import { AddTestCasesToTestPlanFormData, AddTestCasesToTestPlanModalProps } from './types';
 import { useAddTestCasesToTestPlan } from './useAddTestCasesToTestPlan';
 
 import styles from './addTestCasesToTestPlanModal.module.scss';
-import { AddTestCasesToTestPlanFormData, AddTestCasesToTestPlanModalProps } from './types';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
