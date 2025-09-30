@@ -67,9 +67,7 @@ export const AllTestCasesPage = ({
     return selectedFolder?.name || formatMessage(messages.allTestCasesTitle);
   }, [folderId, folders, formatMessage]);
 
-  const { openModal: openAddToTestPlanModal } = useAddTestCasesToTestPlanModal({
-    selectedTestCaseIds: selectedRowIds,
-  });
+  const { openModal: openAddToTestPlanModal } = useAddTestCasesToTestPlanModal();
 
   // Calculate pagination values
   const totalItems = testCases.length;
@@ -90,6 +88,10 @@ export const AllTestCasesPage = ({
       variant: 'destructive',
     },
   ];
+
+  const handleOpenAddToTestPlanModal = useCallback(() => {
+    openAddToTestPlanModal({ selectedTestCaseIds: selectedRowIds });
+  }, [selectedRowIds, openAddToTestPlanModal]);
 
   const handleSearchChange = useCallback(
     (targetSearchValue: string) => {
@@ -165,7 +167,7 @@ export const AllTestCasesPage = ({
               </PopoverControl>
               <Button variant="ghost">{formatMessage(messages.moveToFolder)}</Button>
               <Button variant="ghost">{formatMessage(messages.addToLaunch)}</Button>
-              <Button onClick={openAddToTestPlanModal}>
+              <Button onClick={handleOpenAddToTestPlanModal}>
                 {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
               </Button>
             </div>

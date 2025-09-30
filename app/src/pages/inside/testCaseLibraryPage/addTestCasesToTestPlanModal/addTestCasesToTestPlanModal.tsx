@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /*
  * Copyright 2025 EPAM Systems
  *
@@ -17,31 +18,39 @@
 import classNames from 'classnames/bind';
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { reduxForm } from 'redux-form';
+import { InjectedFormProps, reduxForm } from 'redux-form';
 import { useIntl } from 'react-intl';
 
 import { Modal } from '@reportportal/ui-kit';
 
-import { messages } from './messages';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { URLS } from 'common/urls';
-import { projectKeySelector } from 'controllers/project';
-import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { AsyncAutocomplete } from 'componentLibrary/autocompletes/asyncAutocomplete';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { commonValidators } from 'common/utils/validation';
+import { hideModalAction, withModal } from 'controllers/modal';
+import { LoadingSubmitButton } from 'components/loadingSubmitButton';
+import { messages } from './messages';
+import { projectKeySelector } from 'controllers/project';
 import { TestPlanDto } from 'controllers/testPlan';
-import { hideModalAction } from 'controllers/modal';
+import { URLS } from 'common/urls';
 
 import { useAddTestCasesToTestPlan } from './useAddTestCasesToTestPlan';
 
 import styles from './addTestCasesToTestPlanModal.module.scss';
+import { AddTestCasesToTestPlanFormData, AddTestCasesToTestPlanModalProps } from './types';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
 export const ADD_TO_TEST_PLAN_MODAL_KEY = 'addToTestPlanModalKey';
+export const ADD_TO_TEST_PLAN_MODAL_FORM = 'add-to-test-plan-form';
+export const SELECTED_TEST_PLAN_FIELD_NAME = 'selectedTestPlan';
 
-export const AddTestCasesToTestPlanModal = reduxForm<unknown, { selectedTestCaseIds: number[] }>({
-  form: 'add-to-test-plan-modal-form',
-})(({ selectedTestCaseIds }) => {
+export const AddTestCasesToTestPlanModal = ({
+  change,
+  handleSubmit,
+  data,
+}: AddTestCasesToTestPlanModalProps &
+  InjectedFormProps<AddTestCasesToTestPlanFormData, AddTestCasesToTestPlanModalProps>) => {
+  const { selectedTestCaseIds } = data;
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
@@ -56,6 +65,7 @@ export const AddTestCasesToTestPlanModal = reduxForm<unknown, { selectedTestCase
     addTestCasesToTestPlan,
   } = useAddTestCasesToTestPlan({
     selectedTestCaseIds,
+    change,
   });
 
   const makeTestPlansOptions = (response: { content: TestPlanDto[] }) => response.content;
@@ -82,7 +92,8 @@ export const AddTestCasesToTestPlanModal = reduxForm<unknown, { selectedTestCase
             {formatMessage(COMMON_LOCALE_KEYS.ADD)}
           </LoadingSubmitButton>
         ),
-        onClick: () => addTestCasesToTestPlan(),
+        type: 'submit',
+        onClick: handleSubmit(addTestCasesToTestPlan),
         disabled: !selectedTestPlan,
       }}
       cancelButton={{
@@ -90,21 +101,34 @@ export const AddTestCasesToTestPlanModal = reduxForm<unknown, { selectedTestCase
         onClick: () => hideModalAction(),
       }}
     >
-      <div>
-        {description}
-        <div className={cx('autocomplete-wrapper')}>
-          <AsyncAutocomplete
-            placeholder={formatMessage(messages.selectedTestPlanPlaceholder)}
-            getURI={retrieveTestPlans}
-            value={selectedTestPlan}
-            makeOptions={makeTestPlansOptions}
-            onChange={setSelectedTestPlan}
-            parseValueToString={(value: TestPlanDto) => value?.name}
-            getUniqKey={(value: TestPlanDto) => value?.id}
-            createWithoutConfirmation={false}
-          />
+      <form onSubmit={handleSubmit(addTestCasesToTestPlan)}>
+        <div>
+          {description}
+          <div className={cx('autocomplete-wrapper')}>
+            <AsyncAutocomplete
+              placeholder={formatMessage(messages.selectedTestPlanPlaceholder)}
+              getURI={retrieveTestPlans}
+              value={selectedTestPlan}
+              makeOptions={makeTestPlansOptions}
+              onChange={setSelectedTestPlan}
+              parseValueToString={(value: TestPlanDto) => value?.name}
+              getUniqKey={(value: TestPlanDto) => value?.id}
+              createWithoutConfirmation={false}
+            />
+          </div>
         </div>
-      </div>
+      </form>
     </Modal>
   );
-});
+};
+
+export default withModal(ADD_TO_TEST_PLAN_MODAL_KEY)(
+  reduxForm<AddTestCasesToTestPlanFormData, AddTestCasesToTestPlanModalProps>({
+    form: ADD_TO_TEST_PLAN_MODAL_FORM,
+    destroyOnUnmount: true,
+    shouldValidate: () => true, // need this to force validation on destinationFolderName after re-registering it
+    validate: ({ selectedTestPlan }) => ({
+      selectedTestPlan: commonValidators.requiredField(selectedTestPlan),
+    }),
+  })(AddTestCasesToTestPlanModal),
+);

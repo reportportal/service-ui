@@ -14,31 +14,15 @@
  * limitations under the License.
  */
 
-import { showModalAction } from 'controllers/modal';
-import { useDispatch } from 'react-redux';
+import { useModal } from 'common/hooks';
 import {
   ADD_TO_TEST_PLAN_MODAL_KEY,
-  AddTestCasesToTestPlanModal,
+  default as AddTestCasesToTestPlanModal,
 } from './addTestCasesToTestPlanModal';
+import { AddTestCasesToTestPlanModalData } from './types';
 
-export const useAddTestCasesToTestPlanModal = ({
-  selectedTestCaseIds,
-}: {
-  selectedTestCaseIds: number[];
-}) => {
-  const dispatch = useDispatch();
-
-  const openModal = () => {
-    dispatch(
-      showModalAction({
-        id: ADD_TO_TEST_PLAN_MODAL_KEY,
-        data: null,
-        component: <AddTestCasesToTestPlanModal selectedTestCaseIds={selectedTestCaseIds} />,
-      }),
-    );
-  };
-
-  return {
-    openModal,
-  };
-};
+export const useAddTestCasesToTestPlanModal = () =>
+  useModal<AddTestCasesToTestPlanModalData>({
+    modalKey: ADD_TO_TEST_PLAN_MODAL_KEY,
+    renderModal: (data) => <AddTestCasesToTestPlanModal data={data} />,
+  });

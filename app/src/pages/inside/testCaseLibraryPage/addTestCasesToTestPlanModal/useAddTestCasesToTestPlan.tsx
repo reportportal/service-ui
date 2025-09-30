@@ -21,14 +21,36 @@ import { useDebouncedSpinner } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { hideModalAction } from 'controllers/modal';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
-import { useState } from 'react';
 import { TestPlanDto } from 'controllers/testPlan';
+import {
+  AddTestCasesToTestPlanFormData,
+  AddTestCasesToTestPlanModalData,
+  AddTestCasesToTestPlanModalProps,
+} from './types';
+import { formValueSelector, InjectedFormProps } from 'redux-form';
+import {
+  ADD_TO_TEST_PLAN_MODAL_FORM,
+  SELECTED_TEST_PLAN_FIELD_NAME,
+} from './addTestCasesToTestPlanModal';
+
+interface ReduxFormState {
+  form: {
+    [ADD_TO_TEST_PLAN_MODAL_FORM]?: {
+      values?: {
+        selectedTestPlan?: TestPlanDto;
+      };
+    };
+  };
+}
 
 export const useAddTestCasesToTestPlan = ({
   selectedTestCaseIds,
-}: {
-  selectedTestCaseIds: number[];
-}) => {
+  change,
+}: AddTestCasesToTestPlanModalData &
+  Pick<
+    InjectedFormProps<AddTestCasesToTestPlanFormData, AddTestCasesToTestPlanModalProps>,
+    'change'
+  >) => {
   const {
     isLoading: isAddTestCasesToTestPlanLoading,
     showSpinner,
@@ -36,13 +58,20 @@ export const useAddTestCasesToTestPlan = ({
   } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+  const formSelector = formValueSelector(ADD_TO_TEST_PLAN_MODAL_FORM);
+  const selectedTestPlan = useSelector(
+    (state: ReduxFormState) => formSelector(state, SELECTED_TEST_PLAN_FIELD_NAME) as TestPlanDto,
+  );
 
-  const [selectedTestPlan, setSelectedTestPlan] = useState<TestPlanDto | null>(null);
+  const setSelectedTestPlan = (value: TestPlanDto | null) => {
+    change(SELECTED_TEST_PLAN_FIELD_NAME, value);
+  };
 
-  const addTestCasesToTestPlan = () => {
+  const addTestCasesToTestPlan = (values: AddTestCasesToTestPlanFormData) => {
+    const testPlan = values?.[SELECTED_TEST_PLAN_FIELD_NAME];
     showSpinner();
 
-    const fetchPath: string = URLS.testPlanTestCasesBatch(projectKey, selectedTestPlan.id);
+    const fetchPath: string = URLS.testPlanTestCasesBatch(projectKey, testPlan.id);
 
     fetch(fetchPath, {
       method: 'post',
@@ -72,8 +101,8 @@ export const useAddTestCasesToTestPlan = ({
   };
 
   return {
-    selectedTestPlan,
     isAddTestCasesToTestPlanLoading,
+    selectedTestPlan,
     addTestCasesToTestPlan,
     setSelectedTestPlan,
   };
