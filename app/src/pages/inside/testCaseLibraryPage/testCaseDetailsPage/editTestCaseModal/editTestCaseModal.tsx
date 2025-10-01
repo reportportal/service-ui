@@ -4,28 +4,25 @@ import { useIntl } from 'react-intl';
 import { InjectedFormProps, reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import { FieldText, Modal } from '@reportportal/ui-kit';
+
 import { hideModalAction, withModal } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { commonValidators } from 'common/utils/validation';
-import { FieldProvider } from 'components/fields';
-import { useUpdateTestCase } from './useUpdateTestCase';
+import { FieldErrorHint, FieldProvider } from 'components/fields';
+import { UpdateTestCasePayload, useUpdateTestCase } from './useUpdateTestCase';
 import { messages } from '../messages';
+import { commonMessages } from '../../commonMessages';
 import { PrioritySelect } from '../../prioritySelect/prioritySelect';
+
 import styles from './editTestCaseModal.scss';
 
 export const EDIT_TEST_CASE_MODAL_KEY = 'editTestCaseModalKey';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
-interface FormData {
-  name: string;
-  priority: string;
-  testFolderId: number;
-}
-
 interface EditTestCaseModalProps {
   data: {
-    initialValues: FormData;
+    initialValues: UpdateTestCasePayload;
     testCaseId: number;
   };
 }
@@ -35,13 +32,13 @@ const EditTestCaseModal = ({
   pristine,
   invalid,
   data: { testCaseId },
-}: InjectedFormProps<FormData> & EditTestCaseModalProps) => {
+}: InjectedFormProps<UpdateTestCasePayload> & EditTestCaseModalProps) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { updateTestCase, isUpdateTestCaseLoading } = useUpdateTestCase();
 
   const hideModal = () => dispatch(hideModalAction());
-  const handleUpdate = (formData: FormData) => updateTestCase(testCaseId, formData);
+  const handleUpdate = (formData: UpdateTestCasePayload) => updateTestCase(testCaseId, formData);
 
   const okButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.SAVE),
@@ -63,7 +60,13 @@ const EditTestCaseModal = ({
     >
       <form>
         <FieldProvider name="name" placeholder={formatMessage(messages.enterTestCaseName)}>
-          <FieldText label={formatMessage(messages.testCaseName)} defaultWidth={false} isRequired />
+          <FieldErrorHint provideHint={false}>
+            <FieldText
+              label={formatMessage(commonMessages.testCaseName)}
+              defaultWidth={false}
+              isRequired
+            />
+          </FieldErrorHint>
         </FieldProvider>
 
         <div className={cx('priority-select')}>

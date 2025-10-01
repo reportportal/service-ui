@@ -18,7 +18,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { isEmpty } from 'es-toolkit/compat';
+import { isEmpty, noop } from 'lodash';
 import { Button, MeatballMenuIcon, Pagination, Selection } from '@reportportal/ui-kit';
 
 import { TestCaseList } from 'pages/inside/testCaseLibraryPage/testCaseList';
@@ -75,7 +75,7 @@ export const AllTestCasesPage = ({
   const popoverItems: PopoverItem[] = [
     {
       label: formatMessage(messages.duplicateToFolder),
-      onClick: () => {},
+      onClick: noop,
     },
     {
       label: formatMessage(messages.changePriority),
@@ -94,12 +94,12 @@ export const AllTestCasesPage = ({
     },
     {
       label: formatMessage(messages.editTags),
-      onClick: () => {},
+      onClick: noop,
     },
     {
       label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
       variant: 'destructive',
-      onClick: () => {},
+      onClick: noop,
     },
   ];
 
@@ -168,7 +168,7 @@ export const AllTestCasesPage = ({
                 <Button
                   variant="ghost"
                   adjustWidthOn="content"
-                  onClick={() => {}}
+                  onClick={noop}
                   className={cx('selection-controls__more-button')}
                 >
                   <MeatballMenuIcon />

@@ -2,12 +2,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { hideModalAction } from 'controllers/modal';
 import { projectKeySelector } from 'controllers/project';
-import { GET_TEST_CASE_DETAILS, getAllTestCasesAction } from 'controllers/testCase';
+import {
+  GET_TEST_CASE_DETAILS,
+  getAllTestCasesAction,
+  getTestCaseByFolderIdAction,
+} from 'controllers/testCase';
 import { useDebouncedSpinner } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 
-interface UpdateTestCasePayload {
+export interface UpdateTestCasePayload {
   name: string;
   priority: string;
   testFolderId: number;
@@ -16,6 +20,7 @@ interface UpdateTestCasePayload {
 interface BulkUpdateTestCasesPayload {
   testCaseIds: number[];
   priority: string;
+  folderId?: string;
 }
 
 export const useUpdateTestCase = () => {
@@ -29,7 +34,7 @@ export const useUpdateTestCase = () => {
 
       await fetch(URLS.testCaseDetails(projectKey, testCaseId), {
         method: 'patch',
-        data: { ...payload },
+        data: payload,
       });
 
       dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId } });
@@ -52,7 +57,7 @@ export const useUpdateTestCase = () => {
 
   const bulkUpdateTestCases = async (
     payload: BulkUpdateTestCasesPayload,
-    clearSelection: () => void,
+    onSuccess: () => void,
   ) => {
     try {
       showSpinner();
@@ -62,8 +67,12 @@ export const useUpdateTestCase = () => {
         data: { ...payload },
       });
 
-      clearSelection();
-      dispatch(getAllTestCasesAction());
+      onSuccess();
+      if (payload.folderId) {
+        dispatch(getTestCaseByFolderIdAction({ folderId: Number(payload.folderId) }));
+      } else {
+        dispatch(getAllTestCasesAction());
+      }
       dispatch(hideModalAction());
       dispatch(
         showSuccessNotification({

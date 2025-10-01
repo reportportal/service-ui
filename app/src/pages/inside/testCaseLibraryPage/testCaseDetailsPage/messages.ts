@@ -37,10 +37,6 @@ export const messages = defineMessages({
     id: 'EditTestCasePage.editTestCase',
     defaultMessage: 'Edit Test Case',
   },
-  testCaseName: {
-    id: 'EditTestCasePage.testCaseName',
-    defaultMessage: 'Test case name',
-  },
   enterTestCaseName: {
     id: 'TestCaseLibraryPage.enterTestCaseName',
     defaultMessage: 'Enter test case name',

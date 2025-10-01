@@ -3,7 +3,7 @@ import classNames from 'classnames/bind';
 
 import { DropdownWithDescription } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/dropdownWithDescription';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
-import { messages } from './messages';
+import { messages } from '../createTestCaseModal/basicInformation/messages';
 
 import styles from './prioritySelect.scss';
 
