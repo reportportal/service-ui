@@ -15,10 +15,10 @@
  */
 
 import { useState, useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { isEmpty } from 'es-toolkit/compat';
+import { isEmpty, noop } from 'es-toolkit/compat';
 import { Button, MeatballMenuIcon, Pagination, Selection } from '@reportportal/ui-kit';
 
 import { TestCaseList } from 'pages/inside/testCaseLibraryPage/testCaseList';
@@ -29,10 +29,12 @@ import {
 } from 'pages/inside/testCaseLibraryPage/testCaseList/configUtils';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
+import { showModalAction } from 'controllers/modal';
 import { urlFolderIdSelector } from 'controllers/pages';
 import { foldersSelector } from 'controllers/testCase';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
+import { CHANGE_PRIORITY_MODAL_KEY } from './changePriorityModal';
 import { messages } from './messages';
 import { FolderEmptyState } from '../emptyState/folder/folderEmptyState';
 
@@ -59,6 +61,7 @@ export const AllTestCasesPage = ({
   const [selectedRowIds, setSelectedRowIds] = useState<(number | string)[]>([]);
   const folderId = useSelector(urlFolderIdSelector);
   const folders = useSelector(foldersSelector);
+  const dispatch = useDispatch();
   const isAnyRowSelected = !isEmpty(selectedRowIds);
 
   const folderTitle = useMemo(() => {
@@ -69,20 +72,34 @@ export const AllTestCasesPage = ({
   // Calculate pagination values
   const totalItems = testCases.length;
   const totalPages = Math.ceil(totalItems / pageSize);
-
   const popoverItems: PopoverItem[] = [
     {
       label: formatMessage(messages.duplicateToFolder),
+      onClick: noop,
     },
     {
       label: formatMessage(messages.changePriority),
+      onClick: () => {
+        dispatch(
+          showModalAction({
+            id: CHANGE_PRIORITY_MODAL_KEY,
+            data: {
+              priority: 'unspecified',
+              selectedRowIds,
+              onClearSelection,
+            },
+          }),
+        );
+      },
     },
     {
       label: formatMessage(messages.editTags),
+      onClick: noop,
     },
     {
       label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
       variant: 'destructive',
+      onClick: noop,
     },
   ];
 
@@ -102,6 +119,8 @@ export const AllTestCasesPage = ({
   if (isEmpty(testCases) && !loading) {
     return <FolderEmptyState folderTitle={folderTitle} />;
   }
+
+  const onClearSelection = () => setSelectedRowIds([]);
 
   return (
     <>
@@ -143,16 +162,13 @@ export const AllTestCasesPage = ({
         )}
         {isAnyRowSelected && (
           <div className={cx('selection')}>
-            <Selection
-              selectedCount={selectedRowIds.length}
-              onClearSelection={() => setSelectedRowIds([])}
-            />
+            <Selection selectedCount={selectedRowIds.length} onClearSelection={onClearSelection} />
             <div className={cx('selection-controls')}>
               <PopoverControl items={popoverItems} placement="bottom-end">
                 <Button
                   variant="ghost"
                   adjustWidthOn="content"
-                  onClick={() => {}}
+                  onClick={noop}
                   className={cx('selection-controls__more-button')}
                 >
                   <MeatballMenuIcon />

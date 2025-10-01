@@ -73,4 +73,8 @@ export const messages = defineMessages({
     id: 'TestCaseLibraryPage.allTestCasesTitle',
     defaultMessage: 'All test cases',
   },
+  changePriorityTitle: {
+    id: 'TestCaseLibraryPage.changePriorityTitle',
+    defaultMessage: 'Change Priority',
+  },
 });
