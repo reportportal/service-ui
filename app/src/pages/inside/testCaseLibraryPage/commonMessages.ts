@@ -126,4 +126,8 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'TestCaseLibraryPage.enterFolderName',
     defaultMessage: 'Enter folder name',
   },
+  testCaseName: {
+    id: 'TestCaseLibraryPage.testCaseName',
+    defaultMessage: 'Test case name',
+  },
 });
