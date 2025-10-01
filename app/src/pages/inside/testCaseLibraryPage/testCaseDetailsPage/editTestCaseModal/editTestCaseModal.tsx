@@ -1,4 +1,20 @@
-import { MouseEventHandler } from 'react';
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { MouseEventHandler, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { InjectedFormProps, reduxForm } from 'redux-form';
@@ -31,7 +47,8 @@ const EditTestCaseModal = ({
   handleSubmit,
   pristine,
   invalid,
-  data: { testCaseId },
+  initialize,
+  data: { testCaseId, initialValues },
 }: InjectedFormProps<UpdateTestCasePayload> & EditTestCaseModalProps) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -39,6 +56,10 @@ const EditTestCaseModal = ({
 
   const hideModal = () => dispatch(hideModalAction());
   const handleUpdate = (formData: UpdateTestCasePayload) => updateTestCase(testCaseId, formData);
+
+  useEffect(() => {
+    initialize(initialValues);
+  }, [initialValues, initialize]);
 
   const okButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.SAVE),
@@ -79,15 +100,12 @@ const EditTestCaseModal = ({
   );
 };
 
-const FormHOC = reduxForm({
-  form: 'edit-test-case-form',
-  enableReinitialize: true,
-  shouldValidate: () => true,
-  validate: ({ name }: { name: string }) => ({
-    name: commonValidators.requiredField(name),
-  }),
-})(EditTestCaseModal);
-
-export default withModal(EDIT_TEST_CASE_MODAL_KEY)((props: EditTestCaseModalProps) => (
-  <FormHOC {...props} initialValues={props.data?.initialValues} />
-));
+export default withModal(EDIT_TEST_CASE_MODAL_KEY)(
+  reduxForm<UpdateTestCasePayload, EditTestCaseModalProps>({
+    form: 'edit-test-case-form',
+    shouldValidate: () => true,
+    validate: ({ name }: { name: string }) => ({
+      name: commonValidators.requiredField(name),
+    }),
+  })(EditTestCaseModal),
+);
