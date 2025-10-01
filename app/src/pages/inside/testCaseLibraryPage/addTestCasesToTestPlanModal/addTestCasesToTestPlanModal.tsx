@@ -17,7 +17,7 @@
 
 import classNames from 'classnames/bind';
 import { size } from 'es-toolkit/compat';
-import { useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { InjectedFormProps, reduxForm } from 'redux-form';
 import { useIntl } from 'react-intl';
@@ -75,7 +75,8 @@ export const AddTestCasesToTestPlanModal = ({
     return (
       <p className={cx('description')}>
         {formatMessage(messages.description, {
-          testPlansQuantity: <b className={cx('selected-test-cases')}>{selectedTestCasesLength}</b>,
+          testPlansQuantity: selectedTestCasesLength,
+          bold: (value: ReactNode) => <b className={cx('selected-test-cases')}>{value}</b>,
         })}
       </p>
     );
@@ -99,7 +100,7 @@ export const AddTestCasesToTestPlanModal = ({
       }}
       cancelButton={{
         children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-        onClick: () => hideModalAction(),
+        onClick: () => dispatch(hideModalAction()),
       }}
     >
       <form onSubmit={handleSubmit(addTestCasesToTestPlan)}>
@@ -127,7 +128,6 @@ export default withModal(ADD_TO_TEST_PLAN_MODAL_KEY)(
   reduxForm<AddTestCasesToTestPlanFormData, AddTestCasesToTestPlanModalProps>({
     form: ADD_TO_TEST_PLAN_MODAL_FORM,
     destroyOnUnmount: true,
-    shouldValidate: () => true, // need this to force validation on destinationFolderName after re-registering it
     validate: ({ selectedTestPlan }) => ({
       selectedTestPlan: commonValidators.requiredField(selectedTestPlan),
     }),
