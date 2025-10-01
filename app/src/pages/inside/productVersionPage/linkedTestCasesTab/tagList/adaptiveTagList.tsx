@@ -18,7 +18,7 @@ import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { Button } from '@reportportal/ui-kit';
-import { isEmpty } from 'lodash';
+import { isEmpty } from 'es-toolkit/compat';
 import styles from './tagList.scss';
 import { messages } from './messages';
 import {
@@ -154,7 +154,6 @@ export const AdaptiveTagList = ({
       }
     }, delay);
 
-    // eslint-disable-next-line consistent-return
     return () => clearTimeout(timeoutId);
   }, [
     listRef,

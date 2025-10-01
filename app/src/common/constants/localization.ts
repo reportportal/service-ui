@@ -331,9 +331,22 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.export',
     defaultMessage: 'Export',
   },
+  VALIDATION_TOOLTIP: {
+    id: 'Common.validationTooltip',
+    defaultMessage:
+      'Please ensure all required fields are filled and validation errors are resolved before proceeding',
+  },
   NAME: {
     id: 'Common.name',
     defaultMessage: 'Name',
+  },
+  NO_AVAILABLE_OPTIONS: {
+    id: 'Common.noAvailableOptions',
+    defaultMessage: 'No available options',
+  },
+  MO_MATCHES_FOUND: {
+    id: 'Common.noMatchesFound',
+    defaultMessage: 'No matches found',
   },
 });
 

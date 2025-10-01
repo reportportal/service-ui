@@ -20,7 +20,7 @@ import {
   IMPORT_GROUP_TYPE,
   NOTIFICATION_GROUP_TYPE,
 } from 'common/constants/pluginsGroupTypes';
-import { EMAIL } from 'common/constants/pluginNames';
+import { EMAIL, ORGANIZATION } from 'common/constants/pluginNames';
 import {
   filterAvailablePlugins,
   sortItemsByGroupType,
@@ -42,6 +42,8 @@ export const pluginByNameSelector = (state, name) =>
 
 export const enabledPluginSelector = (state, name) =>
   pluginByNameSelector(state, name)?.enabled || false;
+
+export const organizationPluginSelector = (state) => pluginByNameSelector(state, ORGANIZATION);
 
 export const notificationPluginsSelector = createSelector(pluginsSelector, (plugins) => {
   return plugins.filter((item) => item.groupType === NOTIFICATION_GROUP_TYPE);

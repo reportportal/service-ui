@@ -104,11 +104,6 @@ export const HISTORY_PAGE_EVENTS = {
     action: 'Click on icon "close" on selected item',
     label: 'Remove item from the selected items',
   },
-  CLICK_CLOSE_ICON_ALL_SELECTION: {
-    category: HISTORY_PAGE,
-    action: 'Click on Close Icon of all selection',
-    label: 'Close panel with selected items',
-  },
   // EDIT_DEFECT_MODAL
   SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL:
     getEditToInvestigateSelectAllSimilarItemsEvent(HISTORY_PAGE),

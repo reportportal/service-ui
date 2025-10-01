@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import { Component } from 'react';
 import Downshift from 'downshift';
 import PropTypes from 'prop-types';
 import { Manager, Reference, Popper } from 'react-popper';
-import { FieldText } from 'componentLibrary/fieldText';
+import { FieldText } from '@reportportal/ui-kit';
 import { ENTER_KEY_CODE, TAB_KEY_CODE } from 'common/constants/keyCodes';
 import { AutocompleteMenu } from '../common/autocompleteMenu';
 import { autocompleteVariantType, singleAutocompleteOptionVariantType } from '../common/propTypes';

@@ -51,7 +51,6 @@ export class InputTimeDateRange extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    events: PropTypes.object,
   };
 
   static defaultProps = {
@@ -61,7 +60,6 @@ export class InputTimeDateRange extends Component {
     onFocus: () => {},
     onBlur: () => {},
     withoutDynamic: false,
-    events: {},
   };
 
   state = {
@@ -103,14 +101,6 @@ export class InputTimeDateRange extends Component {
 
   handleClickOutside = (e) => {
     if (this.node && !this.node.contains(e.target) && this.state.opened) {
-      const {
-        tracking,
-        events,
-        value: { start, end },
-      } = this.props;
-      const days = Math.floor(moment.duration(end - start).asDays());
-      this.state.customRangeVisited &&
-        tracking.trackEvent(events.getStartTimeCustomRange(`${days + 1}`));
       this.setState({ opened: false, customRangeVisited: false });
       this.props.onBlur();
     }
@@ -143,7 +133,6 @@ export class InputTimeDateRange extends Component {
       end: end || DEFAULT_DISPLAY_END_DATE,
       dynamic: e.target.checked,
     });
-    this.props.tracking.trackEvent(this.props.events.getStartTimeDynamicUpdate(e.target.checked));
     this.setState({ customRangeVisited: false });
   };
 

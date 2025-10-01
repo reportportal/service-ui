@@ -157,6 +157,7 @@ export const URLS = {
     `${urlCommonBase}organizations/${organizationId}/projects/${projectId}`,
   organizationSettings: (organizationId) =>
     `${urlCommonBase}organizations/${organizationId}/settings`,
+  organizationById: (organizationId) => `${urlCommonBase}organizations/${organizationId}`,
 
   projectByName: (projectKey) => `${urlBase}project/${projectKey}`,
   project: (ids = []) => `${urlBase}project?ids=${ids.join(',')}`,
@@ -377,6 +378,7 @@ export const URLS = {
     `${urlBase}project/${projectKey}/tms/test-case${getQueryParams(query)}`,
   testCaseDetails: (projectKey, testCaseId) =>
     `${urlBase}project/${projectKey}/tms/test-case/${testCaseId}`,
+  bulkUpdateTestCases: (projectKey) => `${urlBase}project/${projectKey}/tms/test-case/batch`,
   testCasesByFolderId: (projectKey, folderId) =>
     `${urlBase}project/${projectKey}/tms/test-case?testFolderId=${folderId}`,
   allTestCases: (projectKey) => `${urlBase}project/${projectKey}/tms/test-case`,

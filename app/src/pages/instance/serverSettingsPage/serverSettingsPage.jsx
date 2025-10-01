@@ -18,6 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { ServerSettingsTabs } from './serverSettingsTabs';
 
 const messages = defineMessages({
@@ -41,12 +42,14 @@ export class ServerSettingsPage extends Component {
 
   render() {
     return (
-      <PageLayout>
-        <PageHeader breadcrumbs={this.getBreadcrumbs()} />
-        <PageSection>
-          <ServerSettingsTabs />
-        </PageSection>
-      </PageLayout>
+      <ScrollWrapper>
+        <PageLayout>
+          <PageHeader breadcrumbs={this.getBreadcrumbs()} />
+          <PageSection>
+            <ServerSettingsTabs />
+          </PageSection>
+        </PageLayout>
+      </ScrollWrapper>
     );
   }
 }

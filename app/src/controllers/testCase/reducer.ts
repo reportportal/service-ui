@@ -22,8 +22,8 @@ import { TEST_CASE_LIBRARY_PAGE } from 'controllers/pages';
 import {
   START_CREATING_FOLDER,
   STOP_CREATING_FOLDER,
-  START_DELETING_FOLDER,
-  STOP_DELETING_FOLDER,
+  START_LOADING_FOLDER,
+  STOP_LOADING_FOLDER,
   NAMESPACE,
   START_LOADING_TEST_CASES,
   STOP_LOADING_TEST_CASES,
@@ -33,17 +33,18 @@ import {
   GET_TEST_CASE_DETAILS,
   GET_TEST_CASE_DETAILS_SUCCESS,
   GET_TEST_CASE_DETAILS_FAILURE,
+  RENAME_FOLDER_SUCCESS,
 } from 'controllers/testCase/constants';
 import { Folder } from './types';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { queueReducers } from 'common/utils';
-import { DeleteFolderSuccessParams } from './actionCreators';
+import { DeleteFolderSuccessParams, RenameFolderParams } from './actionCreators';
 
 export type InitialStateType = {
   folders: {
     data: Folder[];
     isCreatingFolder: boolean;
-    isDeletingFolder: boolean;
+    isLoadingFolder: boolean;
     loading: boolean;
   };
   testCases: {
@@ -56,7 +57,7 @@ export const INITIAL_STATE: InitialStateType = {
   folders: {
     data: [],
     isCreatingFolder: false,
-    isDeletingFolder: false,
+    isLoadingFolder: false,
     loading: false,
   },
   testCases: {
@@ -73,6 +74,7 @@ const INITIAL_DETAILS_STATE = {
 
 type FolderActions =
   | { type: typeof DELETE_FOLDER_SUCCESS; payload: DeleteFolderSuccessParams }
+  | { type: typeof RENAME_FOLDER_SUCCESS; payload: RenameFolderParams }
   | { type: typeof CREATE_FOLDER_SUCCESS; payload: Folder };
 
 const isCreatingFolderReducer = (
@@ -89,14 +91,14 @@ const isCreatingFolderReducer = (
   }
 };
 
-const isDeletingFolderReducer = (
-  state = INITIAL_STATE.folders.isDeletingFolder,
+const isLoadingFolderReducer = (
+  state = INITIAL_STATE.folders.isLoadingFolder,
   action: { type: string },
 ) => {
   switch (action.type) {
-    case START_DELETING_FOLDER:
+    case START_LOADING_FOLDER:
       return true;
-    case STOP_DELETING_FOLDER:
+    case STOP_LOADING_FOLDER:
       return false;
     default:
       return state;
@@ -133,6 +135,15 @@ const folderReducer = (state = INITIAL_STATE.folders.data, action: FolderActions
     case DELETE_FOLDER_SUCCESS: {
       return state.filter(({ id }) => !action.payload.deletedFolderIds.includes(id));
     }
+    case RENAME_FOLDER_SUCCESS: {
+      return state.map((folder) => {
+        if (folder.id !== action.payload.folderId) {
+          return folder;
+        }
+
+        return { ...folder, name: action.payload.folderName };
+      });
+    }
     case CREATE_FOLDER_SUCCESS: {
       return [...state, action.payload];
     }
@@ -165,7 +176,7 @@ const reducer = combineReducers({
       folderReducer,
     ),
     isCreatingFolder: isCreatingFolderReducer,
-    isDeletingFolder: isDeletingFolderReducer,
+    isLoadingFolder: isLoadingFolderReducer,
     loading: loadingReducer(NAMESPACE),
   }),
   testCases: testCasesReducer,

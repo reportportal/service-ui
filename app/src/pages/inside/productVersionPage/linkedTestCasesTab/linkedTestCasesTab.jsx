@@ -16,7 +16,7 @@
 
 import React, { useState } from 'react';
 import classNames from 'classnames/bind';
-import { isEmpty } from 'lodash';
+import { isEmpty } from 'es-toolkit/compat';
 import { useIntl } from 'react-intl';
 import { Table } from '@reportportal/ui-kit';
 
@@ -30,6 +30,7 @@ import { FilterBlock } from './filterBlock';
 import { HeaderConfig } from './headerConfig';
 import { getData } from './tagList';
 import { messages } from './messages';
+import { commonMessages } from '../../testCaseLibraryPage/commonMessages';
 
 import styles from './linkedTestCasesTab.scss';
 
@@ -47,7 +48,7 @@ export const LinkedTestCasesTab = () => {
 
   const primaryColumn = {
     key: 'testCaseName',
-    header: formatMessage(messages.testCaseName),
+    header: formatMessage(commonMessages.testCaseName),
     width: 520,
     align: 'left',
   };

@@ -47,11 +47,15 @@ export {
   canSeeSidebarOptions,
   canCreateOrganization,
   canUpdateOrganizationSettings,
+  canSeeOrganizationMembers,
   canWorkWithOrganizationsSorting,
   canUpdateUserInstanceRole,
   canExportOrganizations,
   canInviteUserToOrganization,
   canSeeActivityOption,
+  canDeleteOrganization,
+  canSeeInstanceLevelPluginsPages,
+  canRenameOrganization,
   // MANUAL LAUNCH
   canCreateManualLaunch,
   // TEST CASE
@@ -68,6 +72,8 @@ export {
   canMoveTestCase,
   canCreateTestCaseFolder,
   canDeleteTestCaseFolder,
+  canDuplicateTestCaseFolder,
+  canRenameTestCaseFolder,
   // TEST CASES
   canImportTestCases,
   // TEST PLAN

@@ -14,26 +14,12 @@
  * limitations under the License.
  */
 
-import { useDispatch } from 'react-redux';
-
-import { showModalAction } from 'controllers/modal';
+import { useModal } from 'common/hooks';
 
 import { CREATE_TEST_CASE_MODAL_KEY, CreateTestCaseModal } from './createTestCaseModal';
 
-export const useCreateTestCaseModal = () => {
-  const dispatch = useDispatch();
-
-  const openModal = () => {
-    dispatch(
-      showModalAction({
-        id: CREATE_TEST_CASE_MODAL_KEY,
-        data: null,
-        component: <CreateTestCaseModal />,
-      }),
-    );
-  };
-
-  return {
-    openModal,
-  };
-};
+export const useCreateTestCaseModal = () =>
+  useModal({
+    modalKey: CREATE_TEST_CASE_MODAL_KEY,
+    renderModal: () => <CreateTestCaseModal />,
+  });

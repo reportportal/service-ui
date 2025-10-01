@@ -54,12 +54,13 @@
 
   &__floating-button {
     position: absolute;
-    box-shadow: var(--rp-ui-base-shadow);
+    box-shadow: 0 0 8px 0 rgba(55, 67, 98, 0.12);
     background: var(--rp-ui-base-bg-000);
     border-radius: 16px;
     padding: 0 8px;
     z-index: 1;
     opacity: 0;
     visibility: hidden;
+    height: 24px;
   }
 }

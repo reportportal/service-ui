@@ -21,18 +21,23 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { fetchSuccessAction, fetchErrorAction } from 'controllers/fetch';
 import { FETCH_START } from 'controllers/fetch/constants';
+import { BaseAppState } from 'types/store';
 import { showErrorNotification } from 'controllers/notification';
 import { projectKeySelector } from 'controllers/project';
+import { PROJECT_TEST_PLANS_PAGE } from 'controllers/pages';
 
 import {
   GET_TEST_PLANS,
   GET_TEST_PLAN,
   TEST_PLANS_NAMESPACE,
   TestPlanDto,
+  TestPlanFoldersDto,
   defaultQueryParams,
   ACTIVE_TEST_PLAN_NAMESPACE,
+  TEST_PLAN_FOLDERS_NAMESPACE,
 } from './constants';
 import { GetTestPlansParams, GetTestPlanParams } from './actionCreators';
+import { mockTestPlanFolders } from './mockData';
 
 interface GetTestPlansAction extends Action<typeof GET_TEST_PLANS> {
   payload?: GetTestPlansParams;
@@ -84,10 +89,28 @@ function* getTestPlan(action: GetTestPlanAction): Generator {
     });
 
     const data = (yield call(fetch, URLS.testPlanById(projectKey, testPlanId))) as TestPlanDto;
+    const planFolders = (yield call(
+      fetch,
+      URLS.testFolders(projectKey, { testPlanId }),
+    )) as TestPlanFoldersDto;
 
     yield put(fetchSuccessAction(ACTIVE_TEST_PLAN_NAMESPACE, data));
-  } catch {
-    yield put(fetchErrorAction(ACTIVE_TEST_PLAN_NAMESPACE));
+    yield put(
+      fetchSuccessAction(TEST_PLAN_FOLDERS_NAMESPACE, {
+        ...planFolders,
+        content: mockTestPlanFolders,
+      }),
+    );
+  } catch (error) {
+    const locationPayload = (yield select(
+      (state: BaseAppState) => state.location?.payload,
+    )) as BaseAppState['location']['payload'];
+
+    yield put(fetchErrorAction(ACTIVE_TEST_PLAN_NAMESPACE, error));
+    yield put({
+      type: PROJECT_TEST_PLANS_PAGE,
+      payload: locationPayload,
+    });
   }
 }
 

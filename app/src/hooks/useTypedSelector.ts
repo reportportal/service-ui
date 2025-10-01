@@ -70,3 +70,6 @@ export const useActiveTestPlanLoading = () =>
 
 export const useTestPlanById = (testPlanId: string) =>
   useTestPlanSelector(testPlanByIdSelector(testPlanId));
+
+export const useTestPlanFolders = () =>
+  useTestPlanSelector((state) => state.testPlan?.testPlanFolders?.content || []);

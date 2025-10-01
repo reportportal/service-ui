@@ -201,6 +201,15 @@ const messages = defineMessages({
     id: 'ProjectsPage.projectDuplicateHint',
     defaultMessage: 'Project with the same name already exists in this organization',
   },
+  organizationNameLengthHint: {
+    id: 'OrganizationsPage.organizationNameLengthHint',
+    defaultMessage: "Organization name should have size from '3' to '60' characters",
+  },
+  organizationNamePatternHint: {
+    id: 'OrganizationsPage.organizationNamePatternHint',
+    defaultMessage:
+      'Organization name may contain only Latin, numeric characters, hyphen, underscore, apostrophe, dot. Space is permitted',
+  },
   btsIntegrationNameHint: {
     id: 'BtsCommonMessages.btsIntegrationNameHint',
     defaultMessage: 'Integration name should have size from 1 to 55 characters',
@@ -384,6 +393,14 @@ export class FieldErrorHint extends Component {
             error: error && messages[error] ? intl.formatMessage(messages[error]) : error,
             active,
             ...rest,
+            onChange: (...args) => {
+              if (typeof rest.onChange === 'function') {
+                rest.onChange(...args);
+              }
+              if (typeof children.props.onChange === 'function') {
+                children.props.onChange(...args);
+              }
+            },
           })}
         {provideHint && (
           <div

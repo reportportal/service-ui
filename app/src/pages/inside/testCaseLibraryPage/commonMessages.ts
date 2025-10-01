@@ -33,14 +33,6 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'TestCaseLibraryPage.importTestCases',
     defaultMessage: 'Import Test Cases',
   },
-  allTestCases: {
-    id: 'TestCaseLibraryPage.allTestCases',
-    defaultMessage: 'All Test Cases',
-  },
-  folders: {
-    id: 'TestCaseLibraryPage.folders',
-    defaultMessage: 'Folders',
-  },
   testCaseLibraryBreadcrumb: {
     id: 'TestCaseLibraryPage.testCaseLibraryBreadcrumb',
     defaultMessage: 'Test Case Library',
@@ -60,5 +52,17 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
   noTestPlanCreated: {
     id: 'TestCaseLibraryPage.noTestPlanCreated',
     defaultMessage: 'No test plan created yet',
+  },
+  duplicateFolder: {
+    id: 'TestCaseLibraryPage.duplicateFolder',
+    defaultMessage: 'Duplicate folder',
+  },
+  enterFolderName: {
+    id: 'TestCaseLibraryPage.enterFolderName',
+    defaultMessage: 'Enter folder name',
+  },
+  testCaseName: {
+    id: 'TestCaseLibraryPage.testCaseName',
+    defaultMessage: 'Test case name',
   },
 });

@@ -23,10 +23,13 @@ import { autocompleteVariantType, singleAutocompleteOptionVariantType } from './
 import { AutocompletePrompt } from './autocompletePrompt';
 import { AutocompleteOption } from './autocompleteOption';
 import styles from './autocompleteOptions.scss';
+import { isEmpty } from 'es-toolkit/compat';
+import { injectIntl } from 'react-intl';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 const cx = classNames.bind(styles);
 
-export class AutocompleteOptions extends Component {
+export class AutocompleteOptionsComponent extends Component {
   static propTypes = {
     children: PropTypes.func,
     options: PropTypes.array,
@@ -40,6 +43,7 @@ export class AutocompleteOptions extends Component {
     createWithoutConfirmation: PropTypes.bool,
     variant: autocompleteVariantType,
     customEmptyListMessage: PropTypes.string,
+    intl: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
@@ -122,11 +126,15 @@ export class AutocompleteOptions extends Component {
   };
 
   renderEmptyList = () => {
-    return (
-      <div className={cx('empty-list-message')}>
-        {this.props.customEmptyListMessage || 'No options available'}
-      </div>
-    );
+    const {
+      intl: { formatMessage },
+    } = this.props;
+
+    const message = isEmpty(this.props.options)
+      ? this.props.customEmptyListMessage || formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_OPTIONS)
+      : formatMessage(COMMON_LOCALE_KEYS.MO_MATCHES_FOUND);
+
+    return <div className={cx('empty-list-message')}>{message}</div>;
   };
 
   render() {
@@ -137,12 +145,12 @@ export class AutocompleteOptions extends Component {
     return (
       <div className={cx('container')}>
         <ScrollWrapper autoHeight autoHeightMax={140}>
-          {availableOptions?.length > 0
-            ? this.renderItems(availableOptions)
-            : this.renderEmptyList()}
+          {!isEmpty(availableOptions) ? this.renderItems(availableOptions) : this.renderEmptyList()}
         </ScrollWrapper>
         {!createWithoutConfirmation && this.renderNewItem(availableOptions)}
       </div>
     );
   }
 }
+
+export const AutocompleteOptions = injectIntl(AutocompleteOptionsComponent);

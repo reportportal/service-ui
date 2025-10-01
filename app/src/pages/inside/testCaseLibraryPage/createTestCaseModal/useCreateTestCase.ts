@@ -1,3 +1,19 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { useDispatch, useSelector } from 'react-redux';
 import { SubmissionError } from 'redux-form';
 import { useIntl } from 'react-intl';
@@ -10,7 +26,7 @@ import { hideModalAction } from 'controllers/modal';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { getTestCasesAction } from 'controllers/testCase';
 
-import { CreateTestCaseFormData } from './createTestCaseModal';
+import { CreateTestCaseFormData, ManualScenarioType } from './createTestCaseModal';
 import { messages } from './basicInformation/messages';
 
 export interface TestStep {
@@ -19,7 +35,27 @@ export interface TestStep {
   attachments?: string[];
 }
 
-const testFolderId = 1;
+const testFolderId = 85;
+
+interface ManualScenarioCommon {
+  executionEstimationTime: number;
+  linkToRequirements: string;
+  manualScenarioType: ManualScenarioType;
+  preconditions?: {
+    value: string;
+  };
+}
+
+interface ManualScenarioSteps extends ManualScenarioCommon {
+  steps: TestStep[];
+}
+
+interface ManualScenarioText extends ManualScenarioCommon {
+  instructions?: string;
+  expectedResult?: string;
+}
+
+type ManualScenarioDto = ManualScenarioSteps | ManualScenarioText;
 
 export const useCreateTestCase = () => {
   const { isLoading: isCreateTestCaseLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
@@ -31,26 +67,35 @@ export const useCreateTestCase = () => {
     try {
       showSpinner();
 
+      const commonData = {
+        executionEstimationTime: payload.executionEstimationTime,
+        linkToRequirements: payload.linkToRequirements,
+        manualScenarioType: payload.manualScenarioType,
+        preconditions: {
+          value: payload.precondition,
+        },
+      };
+
+      const manualScenario: ManualScenarioDto =
+        payload.manualScenarioType === 'TEXT'
+          ? {
+              ...commonData,
+              instructions: payload.instructions,
+              expectedResult: payload.expectedResult,
+            }
+          : {
+              ...commonData,
+              steps: Object.values(payload?.steps ?? {}),
+            };
+
       await fetch(URLS.testCase(projectKey), {
         method: 'post',
-        description: payload.description,
         data: {
+          description: payload.description,
           name: payload.name,
-          testFolder: {
-            id: testFolderId,
-          },
+          testFolderId,
           priority: payload.priority.toUpperCase(),
-          defaultVersion: {
-            manualScenario: {
-              executionEstimationTime: payload.executionEstimationTime,
-              linkToRequirements: payload.linkToRequirements,
-              manualScenarioType: payload.manualScenarioType,
-              preconditions: {
-                value: payload.precondition,
-              },
-              steps: Object.values(payload?.steps ?? {}),
-            },
-          },
+          manualScenario,
         },
       });
 

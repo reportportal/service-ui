@@ -5,7 +5,7 @@ import { useIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import classNames from 'classnames/bind';
 import { messages } from './messages';
-import { isString } from 'lodash';
+import { isString } from 'es-toolkit';
 
 import Link from 'redux-first-router-link';
 import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';

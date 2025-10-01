@@ -15,15 +15,20 @@
  */
 
 import { createSelector } from 'reselect';
-import { Folder, TransformedFolder } from './types';
+
+import {
+  transformFoldersToDisplay,
+  transformFoldersWithFullPath,
+} from 'controllers/testCase/utils';
+import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { Folder } from './types';
 import { InitialStateType } from './reducer';
-import { TestCaseBasicInfo } from 'pages/inside/testCaseLibraryPage/types';
 
 export interface TestCaseState {
   folders?: {
     data?: Folder[];
     isCreatingFolder?: boolean;
-    isDeletingFolder?: boolean;
+    isLoadingFolder?: boolean;
     loading?: boolean;
   };
   testCases?: {
@@ -31,7 +36,7 @@ export interface TestCaseState {
     list?: unknown[];
   };
   details?: {
-    data?: TestCaseBasicInfo;
+    data?: TestCase;
   };
 }
 
@@ -44,16 +49,19 @@ export const testCaseSelector = (state: RootState): TestCaseState => state.testC
 export const areFoldersLoadingSelector = (state: RootState): boolean =>
   testCaseSelector(state).folders?.loading || false;
 
-const EMPTY_FOLDERS: Folder[] = [];
+export const EMPTY_FOLDERS: Folder[] = [];
 
 export const foldersSelector = (state: RootState): Folder[] =>
+  testCaseSelector(state).folders?.data || EMPTY_FOLDERS;
+
+export const foldersWithFullPathSelector = (state: RootState): Folder[] =>
   testCaseSelector(state).folders?.data || EMPTY_FOLDERS;
 
 export const isCreatingFolderSelector = (state: RootState): boolean =>
   testCaseSelector(state).folders?.isCreatingFolder || false;
 
-export const isDeletingFolderSelector = (state: RootState): boolean =>
-  testCaseSelector(state).folders?.isDeletingFolder || false;
+export const isLoadingFolderSelector = (state: RootState): boolean =>
+  testCaseSelector(state).folders?.isLoadingFolder || false;
 
 export const isLoadingTestCasesSelector = (state: RootState) =>
   state.testCase?.testCases?.isLoading || false;
@@ -64,45 +72,12 @@ export const testCaseDetailsSelector = (state: RootState) => state.testCase?.det
 
 export const transformedFoldersSelector = createSelector(
   foldersSelector,
-  (folders): TransformedFolder[] => {
-    if (folders.length === 0) {
-      return [];
-    }
+  transformFoldersToDisplay,
+);
 
-    const folderMap = new Map<number | null, TransformedFolder>();
-
-    // Add virtual root folder
-    folderMap.set(null, { id: 0, name: '', testsCount: 0, parentFolderId: null, folders: [] });
-
-    folders.forEach((folder) => {
-      folderMap.set(folder.id, {
-        name: folder.name,
-        testsCount: folder.countOfTestCases || 0,
-        description: folder.description,
-        id: folder.id,
-        parentFolderId: folder.parentFolderId,
-        folders: [],
-      });
-    });
-
-    folders.forEach((folder) => {
-      const transformedFolder = folderMap.get(folder.id);
-      if (!transformedFolder) return;
-
-      let parentFolder = folderMap.get(folder.parentFolderId);
-
-      if (!parentFolder) {
-        console.warn(
-          `Parent folder with ID ${folder.parentFolderId} not found for folder ID ${folder.id} (${folder.name}). Moving to root level.`,
-        );
-        parentFolder = folderMap.get(null);
-      }
-
-      parentFolder.folders.push(transformedFolder);
-    });
-
-    return folderMap.get(null).folders;
-  },
+export const transformedFoldersWithFullPathSelector = createSelector(
+  foldersSelector,
+  transformFoldersWithFullPath,
 );
 
 export const needsToLoadFoldersSelector = createSelector(

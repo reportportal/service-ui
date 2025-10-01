@@ -62,7 +62,7 @@ export const Notifications = () => {
 
   useEffect(() => {
     dispatch(fetchProjectNotificationsAction());
-  }, []);
+  }, [dispatch]);
 
   const toggleNotificationsEnabled = (isEnabled) => {
     trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.SWITCH_ALL_NOTIFICATIONS(isEnabled));

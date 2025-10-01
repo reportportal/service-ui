@@ -74,21 +74,24 @@ export const Sidebar = ({
         </div>
         {items.length > 0 && (
           <div className={cx('items-block')}>
-            {items.map(
-              ({ icon, link, onClick, message, name, component }) =>
-                component || (
-                  <SidebarButton
-                    key={component ? name : link.type}
-                    icon={icon}
-                    link={link}
-                    onClick={() => {
-                      onClick(getIsSidebarCollapsed());
-                      onLeaveSidebar();
-                    }}
-                    message={message}
-                  />
-                ),
-            )}
+            {items.map(({ icon, link, onClick, message, component }) => {
+              const handleClick = () => {
+                onClick(getIsSidebarCollapsed());
+                onLeaveSidebar();
+              };
+
+              return component ? (
+                <div onClick={handleClick}>{component}</div>
+              ) : (
+                <SidebarButton
+                  key={link.type}
+                  icon={icon}
+                  link={link}
+                  onClick={handleClick}
+                  message={message}
+                />
+              );
+            })}
           </div>
         )}
         <div className={cx('footer-block')}>

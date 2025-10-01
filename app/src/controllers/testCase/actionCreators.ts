@@ -23,13 +23,15 @@ import {
   STOP_CREATING_FOLDER,
   DELETE_FOLDER,
   DELETE_FOLDER_SUCCESS,
-  START_DELETING_FOLDER,
-  STOP_DELETING_FOLDER,
+  START_LOADING_FOLDER,
+  STOP_LOADING_FOLDER,
   GET_TEST_CASES_BY_FOLDER_ID,
   GET_ALL_TEST_CASES,
   START_LOADING_TEST_CASES,
   STOP_LOADING_TEST_CASES,
   SET_TEST_CASES,
+  RENAME_FOLDER,
+  RENAME_FOLDER_SUCCESS,
 } from './constants';
 import { Folder } from './types';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
@@ -60,6 +62,11 @@ export interface DeleteFolderParams {
 
 export interface DeleteFolderSuccessParams {
   deletedFolderIds: number[];
+}
+
+export interface RenameFolderParams {
+  folderId: number;
+  folderName: string;
 }
 
 export const getTestCasesAction = (params?: GetTestCasesParams) => ({
@@ -122,10 +129,20 @@ export const deleteFolderSuccessAction = (deletedFolderIds: DeleteFolderSuccessP
   payload: deletedFolderIds,
 });
 
-export const startDeletingFolderAction = () => ({
-  type: START_DELETING_FOLDER,
+export const startLoadingFolderAction = () => ({
+  type: START_LOADING_FOLDER,
 });
 
-export const stopDeletingFolderAction = () => ({
-  type: STOP_DELETING_FOLDER,
+export const stopLoadingFolderAction = () => ({
+  type: STOP_LOADING_FOLDER,
+});
+
+export const renameFolderAction = (folderInfo: RenameFolderParams) => ({
+  type: RENAME_FOLDER,
+  payload: folderInfo,
+});
+
+export const renameFolderSuccessAction = (folderId: RenameFolderParams) => ({
+  type: RENAME_FOLDER_SUCCESS,
+  payload: folderId,
 });

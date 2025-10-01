@@ -17,7 +17,6 @@
 import PropTypes from 'prop-types';
 import moment from 'moment/moment';
 import { FormattedMessage } from 'react-intl';
-import track from 'react-tracking';
 import { getMinutesFromTimestamp, parseDateTimeRange } from 'common/utils';
 import { FieldFilterEntity } from 'components/fields/fieldFilterEntity';
 import { InputTimeDateRange } from 'components/inputs/inputTimeDateRange';
@@ -25,10 +24,10 @@ import { CONDITION_BETWEEN } from 'components/filterEntities/constants';
 
 const endOfToday = moment().add(1, 'days').startOf('day').valueOf();
 
-export const getTimeDateRangePresets = (tracking, events) => [
+export const getTimeDateRangePresets = () => [
   {
     label: (
-      <div onClick={() => tracking.trackEvent(events.getChosenDate('Today'))}>
+      <div>
         <FormattedMessage id="EntityItemStartTime.today" defaultMessage="Today" />
       </div>
     ),
@@ -40,7 +39,7 @@ export const getTimeDateRangePresets = (tracking, events) => [
   },
   {
     label: (
-      <div onClick={() => tracking.trackEvent(events.getChosenDate('Last 2 days'))}>
+      <div>
         <FormattedMessage id="EntityItemStartTime.last2days" defaultMessage="Last 2 days" />
       </div>
     ),
@@ -52,7 +51,7 @@ export const getTimeDateRangePresets = (tracking, events) => [
   },
   {
     label: (
-      <div onClick={() => tracking.trackEvent(events.getChosenDate('Last 7 days'))}>
+      <div>
         <FormattedMessage id="EntityItemStartTime.last7days" defaultMessage="Last 7 days" />
       </div>
     ),
@@ -64,7 +63,7 @@ export const getTimeDateRangePresets = (tracking, events) => [
   },
   {
     label: (
-      <div onClick={() => tracking.trackEvent(events.getChosenDate('Last 30 days'))}>
+      <div>
         <FormattedMessage id="EntityItemStartTime.last30days" defaultMessage="Last 30 days" />
       </div>
     ),
@@ -85,26 +84,33 @@ const formatValue = ({ start, end, dynamic }) => {
   return `${getMinutesFromTimestamp(start)};${getMinutesFromTimestamp(end)};${utcString}`;
 };
 
-export const EntityItemStartTime = track()(
-  ({ onRemove, onChange, removable, title, smallSize, value, vertical, customProps, tracking }) => (
-    <FieldFilterEntity
-      title={title}
-      smallSize={smallSize}
-      removable={removable}
-      onRemove={onRemove}
-      vertical={vertical}
-    >
-      <InputTimeDateRange
-        presets={getTimeDateRangePresets(tracking, customProps.events)}
-        onChange={(val) => {
-          onChange({ condition: CONDITION_BETWEEN, value: formatValue({ ...val }) });
-        }}
-        value={parseDateTimeRange(value)}
-        withoutDynamic={customProps.withoutDynamic}
-        events={customProps.events}
-      />
-    </FieldFilterEntity>
-  ),
+export const EntityItemStartTime = ({
+  onRemove,
+  onChange,
+  removable,
+  title,
+  smallSize,
+  value,
+  vertical,
+  customProps,
+}) => (
+  <FieldFilterEntity
+    title={title}
+    smallSize={smallSize}
+    removable={removable}
+    onRemove={onRemove}
+    vertical={vertical}
+  >
+    <InputTimeDateRange
+      presets={getTimeDateRangePresets()}
+      onChange={(val) => {
+        onChange({ condition: CONDITION_BETWEEN, value: formatValue({ ...val }) });
+      }}
+      value={parseDateTimeRange(value)}
+      withoutDynamic={customProps.withoutDynamic}
+      events={customProps.events}
+    />
+  </FieldFilterEntity>
 );
 EntityItemStartTime.propTypes = {
   value: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),

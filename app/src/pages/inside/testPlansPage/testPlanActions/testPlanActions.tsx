@@ -16,8 +16,8 @@
 import { useState } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
-import { compact, noop } from 'es-toolkit';
 import { isEmpty } from 'es-toolkit/compat';
+import { compact, noop } from 'es-toolkit';
 import { MeatballMenuIcon, Button } from '@reportportal/ui-kit';
 
 import { useUserPermissions } from 'hooks/useUserPermissions';

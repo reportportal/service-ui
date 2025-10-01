@@ -15,8 +15,8 @@
  */
 
 import { defineMessages, useIntl } from 'react-intl';
-import { noop } from 'lodash';
 import classNames from 'classnames/bind';
+import { noop } from 'es-toolkit';
 import { FieldNumber } from '@reportportal/ui-kit';
 
 import { FieldProvider } from 'components/fields';
@@ -75,10 +75,8 @@ export const Template = () => {
       <FieldProvider name="manualScenarioType">
         <DropdownWithDescription
           label={formatMessage(messages.template)}
-          selectedItem={templateOptions[0]}
           options={templateOptions}
           className={cx('template__dropdown')}
-          onChange={noop}
         />
       </FieldProvider>
       <FieldProvider name="executionEstimationTime">

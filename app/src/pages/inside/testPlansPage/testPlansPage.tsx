@@ -29,7 +29,7 @@ import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'contr
 import { getTestPlansAction, testPlansSelector, isLoadingSelector } from 'controllers/testPlan';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 
-import { useCreateTestPlanModal } from './hooks';
+import { useCreateTestPlanModal } from './testPlanModals';
 import { TestPlansTable } from './testPlansTable';
 import { TestPlansHeader } from './testPlansHeader';
 import { PageLoader } from './pageLoader';

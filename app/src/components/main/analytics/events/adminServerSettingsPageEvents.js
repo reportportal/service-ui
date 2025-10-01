@@ -49,6 +49,11 @@ export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
     element_name: 'sso',
     switcher: switcherValue ? 'on' : 'off',
   }),
+  togglePersonalOrganizations: (switcherValue) => ({
+    ...basicClickEventParametersAdminServerSettingsPage,
+    element_name: 'create_personal_organizations',
+    switcher: switcherValue ? 'on' : 'off',
+  }),
   toggleImportantLaunches: (switcherValue) => ({
     ...basicClickEventParametersAdminServerSettingsPage,
     element_name: 'important_launches',

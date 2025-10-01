@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,67 +14,6 @@
  * limitations under the License.
  */
 
-.form-group {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 25px;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    flex-direction: column;
-    align-items: flex-start;
-    margin-bottom: 15px;
-  }
-}
-
-.form-group-label {
-  min-width: 210px;
-  width: 210px;
-  padding-right: 4px;
-  text-align: right;
-  font-size: 13px;
-  line-height: 13px;
-  color: $COLOR--charcoal-grey;
-  box-sizing: border-box;
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    min-width: 150px;
-    width: 150px;
-  }
-  @media (max-width: $SCREEN_XS_MAX) {
-    width: 100%;
-    margin-bottom: 8px;
-    padding: 0;
-    text-align: left;
-  }
-}
-
-.form-group-content {
-  flex: 1;
-  padding: 0 15px;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    padding: 0;
-    width: 100%;
-  }
-}
-
-.input-container {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  min-height: 36px;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-
-.description {
-  width: 300px;
-  font-size: 12px;
-  line-height: 1.5;
-  color: $COLOR--gray-60;
+.tooltip {
+  max-width: 360px;
 }

@@ -18,22 +18,24 @@ import { useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
-import { isEmpty } from 'lodash';
+import { isEmpty } from 'es-toolkit/compat';
 import { Button } from '@reportportal/ui-kit';
 
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { PROJECT_TEST_PLANS_PAGE } from 'controllers/pages';
+import { PROJECT_TEST_PLANS_PAGE, PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
 import {
   showNotification,
   NOTIFICATION_TYPES,
   NOTIFICATION_TYPOGRAPHY_COLOR_TYPES,
+  WARNING_NOTIFICATION_DURATION,
 } from 'controllers/notification';
 import {
   useProjectDetails,
   useTestPlanId,
   useActiveTestPlanLoading,
   useTestPlanById,
+  useTestPlanFolders,
 } from 'hooks/useTypedSelector';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 
@@ -43,6 +45,12 @@ import { EmptyTestPlan } from './emptyTestPlan';
 import { TestPlanActions } from '../testPlanActions';
 import { messages } from './messages';
 import { commonMessages } from '../commonMessages';
+import {
+  useEditTestPlanModal,
+  useDuplicateTestPlanModal,
+  useDeleteTestPlanModal,
+} from '../testPlanModals';
+import { TestPlanFolders } from './testPlanFolders';
 
 import styles from './testPlanDetailsPage.scss';
 
@@ -56,6 +64,34 @@ export const TestPlanDetailsPage = () => {
   const testPlanId = useTestPlanId();
   const testPlan = useTestPlanById(testPlanId);
   const isLoading = useActiveTestPlanLoading();
+  const testPlanFolders = useTestPlanFolders();
+  const { openModal: openEditModal } = useEditTestPlanModal();
+  const { openModal: openDuplicateModal } = useDuplicateTestPlanModal({
+    onSuccess: (newTestPlanId) =>
+      dispatch({
+        type: PROJECT_TEST_PLAN_DETAILS_PAGE,
+        payload: { organizationSlug, projectSlug, testPlanId: newTestPlanId },
+      }),
+  });
+  const { openModal: openDeleteModal } = useDeleteTestPlanModal({
+    onSuccess: () =>
+      dispatch({
+        type: PROJECT_TEST_PLANS_PAGE,
+        payload: { organizationSlug, projectSlug },
+      }),
+  });
+
+  const actionsMap = {
+    edit: openEditModal,
+    duplicate: openDuplicateModal,
+    delete: openDeleteModal,
+  };
+
+  const openActionModal = (action: keyof typeof actionsMap) => () => {
+    if (testPlan) {
+      actionsMap[action](testPlan);
+    }
+  };
 
   useEffect(() => {
     if (!isLoading && isEmpty(testPlan)) {
@@ -64,6 +100,7 @@ export const TestPlanDetailsPage = () => {
           type: NOTIFICATION_TYPES.WARNING,
           message: formatMessage(messages.testPlanNotFoundRedirect),
           typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
+          duration: WARNING_NOTIFICATION_DURATION,
         }),
       );
 
@@ -91,8 +128,14 @@ export const TestPlanDetailsPage = () => {
       <div className={cx('test-plan-details-page__header-id')}>
         {formatMessage(messages.testPlanId, { testPlanId })}
       </div>
-      <TestPlanActions testPlanId={testPlanId} variant="header" />
-      {!isEmpty(testPlan?.totalTestCases) && (
+      <TestPlanActions
+        testPlanId={testPlanId}
+        variant="header"
+        onEdit={openActionModal('edit')}
+        onDuplicate={openActionModal('duplicate')}
+        onDelete={openActionModal('delete')}
+      />
+      {!isEmpty(testPlanFolders) && (
         <>
           {canAddTestCaseToTestPlan && (
             <Button variant="ghost" data-automation-id="addTestsFromLibraryButton">
@@ -118,11 +161,11 @@ export const TestPlanDetailsPage = () => {
   }
 
   const renderContent = () => {
-    if (!testPlan?.totalTestCases) {
+    if (!testPlan?.totalTestCases && isEmpty(testPlanFolders)) {
       return <EmptyTestPlan />;
     }
 
-    return <div>Test cases are present</div>;
+    return <TestPlanFolders />;
   };
 
   return (

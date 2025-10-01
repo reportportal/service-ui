@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { ChangeEvent, PropsWithChildren, useCallback, useRef, useState } from 'react';
+import { PropsWithChildren } from 'react';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { isNumber, isEmpty, noop } from 'lodash';
-import Dropzone from 'react-dropzone';
+import { isNumber } from 'es-toolkit/compat';
+import { noop } from 'es-toolkit';
 import {
   Button,
   PlusIcon,
@@ -27,38 +27,33 @@ import {
   DeleteIcon,
   ArrowDownIcon,
   ArrowUpIcon,
-  AttachedFile,
+  FileDropArea,
+  AddImageIcon,
 } from '@reportportal/ui-kit';
+import type { MimeType } from '@reportportal/ui-kit/dist/components/fileDropArea/types';
+import type { AttachmentFile } from '@reportportal/ui-kit/dist/components/fileDropArea/attachedFilesList';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { uniqueId } from 'common/utils';
-import { downloadFileFromBlob, validateFile } from 'common/utils/fileUtils';
+import { useFileProcessing } from 'common/hooks/useFileProcessing';
 
-import { messages } from './messages';
+import { messages as commonMessages } from '../messages';
+import { messages as attachmentAreaMessages } from './messages';
+import { MAX_FILE_SIZE } from '../constants';
 
 import styles from './attachmentArea.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
-interface AttachmentFile {
-  id: string;
-  file: File;
-  fileName: string;
-  size: number;
-  uploadingProgress: number;
-  isUploadFailed: boolean;
-  isUploading: boolean;
-  uploaded: boolean;
-}
-
 interface AttachmentAreaProps {
   isDraggable?: boolean;
   index?: number;
-  isNumberable?: boolean;
+  isNumerable?: boolean;
   isDragAndDropIconVisible?: boolean;
   isAttachmentBlockVisible?: boolean;
   maxFileSize?: number;
-  acceptFileMimeTypes?: string[];
+  acceptFileMimeTypes?: MimeType[];
+  dropZoneDescription?: string;
+  fileSizeMessage?: string;
   totalCount?: number;
   onRemove?: () => void;
   onFilesChange?: (files: AttachmentFile[]) => void;
@@ -68,247 +63,115 @@ interface AttachmentAreaProps {
 export const AttachmentArea = ({
   isDraggable = false,
   index,
-  isNumberable = true,
+  isNumerable = true,
   children,
   isDragAndDropIconVisible = true,
   isAttachmentBlockVisible = true,
-  maxFileSize = 134217728, // 128MB default
+  maxFileSize = MAX_FILE_SIZE,
   acceptFileMimeTypes = [],
+  dropZoneDescription,
+  fileSizeMessage,
   totalCount,
   onRemove,
   onFilesChange,
   onMove = noop,
 }: PropsWithChildren<AttachmentAreaProps>) => {
   const { formatMessage } = useIntl();
-  const [attachedFiles, setAttachedFiles] = useState<AttachmentFile[]>([]);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { attachedFiles, addFiles, removeFile, downloadFile } = useFileProcessing<AttachmentFile>({
+    onFilesChange,
+  });
 
   const areaNumber = isNumber(index) ? index + 1 : '';
-
   const isMoveUpDisabled = index === 0;
   const isMoveDownDisabled = totalCount ? index === totalCount - 1 : false;
 
-  const handleFilesChange = useCallback(
-    (files: AttachmentFile[]) => {
-      setAttachedFiles(files);
-      onFilesChange?.(files);
-    },
-    [onFilesChange],
-  );
-
-  const simulateFileUpload = useCallback((fileId: string) => {
-    const interval = setInterval(() => {
-      setAttachedFiles((prev) =>
-        prev.map((file) =>
-          file.id === fileId
-            ? { ...file, uploadingProgress: Math.min(file.uploadingProgress + 5, 100) }
-            : file,
-        ),
-      );
-    }, 500);
-
-    setTimeout(() => {
-      clearInterval(interval);
-      setAttachedFiles((prev) =>
-        prev.map((file) =>
-          file.id === fileId
-            ? { ...file, isUploading: false, uploaded: true, uploadingProgress: 100 }
-            : file,
-        ),
-      );
-    }, 1000);
-  }, []);
-
-  const addFile = useCallback(
-    (file: File) => {
-      const newFile: AttachmentFile = {
-        id: uniqueId(),
-        file,
-        fileName: file.name,
-        size: Math.max(1, Math.round(file.size / (1024 * 1024))), // Convert to MB, minimum 1MB
-        uploadingProgress: 0,
-        isUploadFailed: false,
-        isUploading: true,
-        uploaded: false,
-      };
-
-      setAttachedFiles((prevFiles) => {
-        const updatedFiles = [...prevFiles, newFile];
-        handleFilesChange(updatedFiles);
-        return updatedFiles;
-      });
-
-      simulateFileUpload(newFile.id);
-    },
-    [handleFilesChange, simulateFileUpload],
-  );
-
-  const removeFile = useCallback(
-    (fileId: string) => {
-      const updatedFiles = attachedFiles.filter((file) => file.id !== fileId);
-
-      handleFilesChange(updatedFiles);
-    },
-    [attachedFiles, handleFilesChange],
-  );
-
-  const downloadFile = useCallback((file: AttachmentFile) => {
-    downloadFileFromBlob(file.file, file.fileName);
-  }, []);
-
-  const onDrop = useCallback(
-    (acceptedFiles: File[], _rejectedFiles: File[]) => {
-      acceptedFiles.forEach((file) => {
-        const errors = validateFile(
-          file,
-          { maxFileSize, acceptFileMimeTypes },
-          formatMessage,
-          messages,
-        );
-
-        if (isEmpty(errors)) {
-          addFile(file);
-          return;
-        }
-        console.error('File rejected:', errors);
-      });
-    },
-    [addFile, maxFileSize, acceptFileMimeTypes, formatMessage],
-  );
-
-  const handleAddButtonClick = useCallback(() => {
-    fileInputRef.current?.click();
-  }, []);
-
-  const handleFileInputChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      const { files } = event.target;
-
-      if (files) {
-        Array.from(files).forEach((file) => {
-          const errors = validateFile(
-            file,
-            { maxFileSize, acceptFileMimeTypes },
-            formatMessage,
-            messages,
-          );
-
-          if (isEmpty(errors)) {
-            addFile(file);
-          }
-        });
-      }
-
-      const target = event.target as HTMLInputElement;
-
-      if (target) {
-        target.value = '';
-      }
-    },
-    [addFile, maxFileSize, acceptFileMimeTypes, formatMessage],
-  );
-
   return (
-    <div className={cx('attachment-area')}>
-      {isNumberable && (
-        <div className={cx('attachment-area__number')}>
-          <div className={cx('attachment-area__drag')}>
-            {areaNumber}
-            {isDraggable && (
-              <>
-                <Button
-                  variant="text"
-                  adjustWidthOn="content"
-                  aria-label={formatMessage(messages.moveUp)}
-                  onClick={() => onMove('up')}
-                  disabled={isMoveUpDisabled}
-                >
-                  <ArrowUpIcon />
+    <div className={cx('dropzone-wrapper')}>
+      <FileDropArea
+        variant="overlay"
+        maxFileSize={maxFileSize}
+        acceptFileMimeTypes={acceptFileMimeTypes}
+        onFilesAdded={addFiles}
+        isDisabled={!isAttachmentBlockVisible}
+        messages={{
+          incorrectFileSize: formatMessage(commonMessages.fileSizeInfo),
+          incorrectFileFormat: formatMessage(commonMessages.incorrectFileFormat),
+        }}
+      >
+        <div className={cx('attachment-area')}>
+          {isNumerable && (
+            <div className={cx('attachment-area__number')}>
+              <div className={cx('attachment-area__drag')}>
+                {areaNumber}
+                {isDraggable && (
+                  <>
+                    <Button
+                      variant="text"
+                      adjustWidthOn="content"
+                      aria-label={formatMessage(attachmentAreaMessages.moveUp)}
+                      onClick={() => onMove('up')}
+                      disabled={isMoveUpDisabled}
+                    >
+                      <ArrowUpIcon />
+                    </Button>
+                    <Button variant="text" adjustWidthOn="content">
+                      <DragNDropIcon />
+                    </Button>
+                    <Button
+                      variant="text"
+                      adjustWidthOn="content"
+                      aria-label={formatMessage(attachmentAreaMessages.moveDown)}
+                      onClick={() => onMove('down')}
+                      disabled={isMoveDownDisabled}
+                    >
+                      <ArrowDownIcon />
+                    </Button>
+                  </>
+                )}
+              </div>
+              {onRemove && (
+                <Button variant="text" adjustWidthOn="content" onClick={onRemove}>
+                  <DeleteIcon />
                 </Button>
-                <Button variant="text" adjustWidthOn="content">
-                  <DragNDropIcon />
-                </Button>
-                <Button
-                  variant="text"
-                  adjustWidthOn="content"
-                  aria-label={formatMessage(messages.moveDown)}
-                  onClick={() => onMove('down')}
-                  disabled={isMoveDownDisabled}
-                >
-                  <ArrowDownIcon />
-                </Button>
-              </>
+              )}
+            </div>
+          )}
+          <div className={cx('attachment-area__fields-container')}>
+            <div className={cx('attachment-area__fields')}>{children}</div>
+            {isAttachmentBlockVisible && (
+              <div className={cx('attachment-area__attachments-container')}>
+                <div className={cx('attachment-area__attachment')}>
+                  <div className={cx('attachment-header')}>
+                    <span className={cx('attachment-area__attachment-title')}>
+                      {formatMessage(commonMessages.attachments)}
+                    </span>
+                    <div className={cx('attachment-area__add-attachment')}>
+                      <span className={cx('attachment-area__dropzone-text')}>
+                        {isDragAndDropIconVisible && <DragAndDropIcon />}
+                        {formatMessage(attachmentAreaMessages.dropFilesHere)}
+                      </span>
+                      <FileDropArea.BrowseButton icon={<PlusIcon />}>
+                        {formatMessage(COMMON_LOCALE_KEYS.ADD)}
+                      </FileDropArea.BrowseButton>
+                    </div>
+                  </div>
+                </div>
+                <FileDropArea.AttachedFilesList
+                  files={attachedFiles}
+                  className={cx('attachment-area__files-list')}
+                  onRemoveFile={removeFile}
+                  onDownloadFile={downloadFile}
+                />
+              </div>
             )}
           </div>
-          {onRemove && (
-            <Button variant="text" adjustWidthOn="content" onClick={onRemove}>
-              <DeleteIcon />
-            </Button>
-          )}
         </div>
-      )}
-      <div className={cx('attachment-area__fields-container')}>
-        <div className={cx('attachment-area__fields')}>{children}</div>
-        {isAttachmentBlockVisible && (
-          <div className={cx('attachment-area__attachment')}>
-            <Dropzone
-              className={cx('dropzone-area')}
-              activeClassName={cx('dropzone-area--active')}
-              onDrop={onDrop}
-              multiple
-              maxSize={maxFileSize}
-              accept={acceptFileMimeTypes.join(',')}
-            >
-              <div className={cx('attachment-header')}>
-                <span className={cx('attachment-area__attachment-title')}>
-                  {formatMessage(messages.attachments)}
-                </span>
-                <div className={cx('attachment-area__add-attachment')}>
-                  <span className={cx('attachment-area__dropzone-text')}>
-                    {isDragAndDropIconVisible && <DragAndDropIcon />}{' '}
-                    {formatMessage(messages.dropFilesHere)}
-                  </span>
-                  <Button
-                    variant="text"
-                    icon={<PlusIcon />}
-                    adjustWidthOn="content"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      handleAddButtonClick();
-                    }}
-                  >
-                    {formatMessage(COMMON_LOCALE_KEYS.ADD)}
-                  </Button>
-                </div>
-              </div>
-            </Dropzone>
-            <input
-              ref={fileInputRef}
-              type="file"
-              multiple
-              className={cx('hidden-file-input')}
-              onChange={handleFileInputChange}
-              accept={acceptFileMimeTypes.join(',')}
-            />
-          </div>
-        )}
-        {!isEmpty(attachedFiles) && (
-          <div className={cx('attachment-area__files-list')}>
-            {attachedFiles.map((file) => (
-              <AttachedFile
-                key={file.id}
-                fileName={file.fileName}
-                size={file.size}
-                uploadingProgress={file.uploadingProgress}
-                isUploadFailed={file.isUploadFailed}
-                isUploading={file.isUploading}
-                onRemove={() => removeFile(file.id)}
-                onDownload={() => downloadFile(file)}
-              />
-            ))}
-          </div>
-        )}
-      </div>
+        <FileDropArea.DropZone
+          icon={<AddImageIcon />}
+          description={dropZoneDescription}
+          fileSizeMessage={fileSizeMessage}
+        />
+      </FileDropArea>
     </div>
   );
 };
