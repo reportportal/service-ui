@@ -87,7 +87,7 @@ export class AutocompleteOptions extends Component {
       renderOption(item, index, isNew, getItemProps)
     ) : (
       <AutocompleteOption
-        key={this.props.getUniqKey(item) || this.props.parseValueToString(item)}
+        key={this.props.getUniqKey?.(item) || this.props.parseValueToString(item)}
         optionVariant={optionVariant}
         {...getItemProps({ item, index })}
         isNew={isNew}

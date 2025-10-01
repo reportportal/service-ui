@@ -61,12 +61,14 @@ export const useAddTestCasesToTestPlan = ({
   const projectKey = useSelector(projectKeySelector);
   const formSelector = formValueSelector(ADD_TO_TEST_PLAN_MODAL_FORM);
   const selectedTestPlan = useSelector(
-    (state: ReduxFormState) => formSelector(state, SELECTED_TEST_PLAN_FIELD_NAME) as TestPlanDto,
+    (state: ReduxFormState) => formSelector(state, SELECTED_TEST_PLAN_FIELD_NAME) as string,
   );
 
-  const setSelectedTestPlan = (value: TestPlanDto | null) => {
-    change(SELECTED_TEST_PLAN_FIELD_NAME, value);
-  };
+  function setSelectedTestPlan(value: TestPlanDto | null);
+  function setSelectedTestPlan(value: string | null);
+  function setSelectedTestPlan(value: TestPlanDto | string | null) {
+    change(SELECTED_TEST_PLAN_FIELD_NAME, value || null);
+  }
 
   const addTestCasesToTestPlan = (values: AddTestCasesToTestPlanFormData) => {
     const testPlan = values?.[SELECTED_TEST_PLAN_FIELD_NAME];

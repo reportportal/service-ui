@@ -29,11 +29,11 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { commonValidators } from 'common/utils/validation';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
-import { messages } from './messages';
 import { projectKeySelector } from 'controllers/project';
 import { TestPlanDto } from 'controllers/testPlan';
 import { URLS } from 'common/urls';
 
+import { messages } from './messages';
 import { AddTestCasesToTestPlanFormData, AddTestCasesToTestPlanModalProps } from './types';
 import { useAddTestCasesToTestPlan } from './useAddTestCasesToTestPlan';
 
@@ -114,8 +114,8 @@ export const AddTestCasesToTestPlanModal = ({
               makeOptions={makeTestPlansOptions}
               onChange={setSelectedTestPlan}
               parseValueToString={(value: TestPlanDto) => value?.name}
-              getUniqKey={(value: TestPlanDto) => value?.id}
               createWithoutConfirmation={false}
+              skipOptionCreation
             />
           </div>
         </div>
