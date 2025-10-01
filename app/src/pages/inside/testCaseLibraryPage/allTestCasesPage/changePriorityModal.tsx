@@ -45,7 +45,7 @@ const ChangePriorityModal = ({ data }: ChangePriorityModalProps) => {
 
   const hideModal = () => dispatch(hideModalAction());
 
-  const onSave = async () => {
+  const handleSave = async () => {
     await bulkUpdateTestCases(
       {
         testCaseIds: data.selectedRowIds,
@@ -58,7 +58,7 @@ const ChangePriorityModal = ({ data }: ChangePriorityModalProps) => {
 
   const okButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.SAVE),
-    onClick: onSave,
+    onClick: handleSave,
   };
 
   const cancelButton = {
