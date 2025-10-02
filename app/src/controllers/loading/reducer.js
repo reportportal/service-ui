@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-import { FETCH_START, FETCH_SUCCESS, FETCH_ERROR, CONCAT_FETCH_SUCCESS } from 'controllers/fetch';
+import {
+  FETCH_START,
+  FETCH_SUCCESS,
+  FETCH_ERROR,
+  CONCAT_FETCH_SUCCESS,
+  PREPEND_FETCH_SUCCESS,
+} from 'controllers/fetch';
 
 export const loadingReducer = (namespace) => (state = false, { type = '', meta = {} }) => {
   if (meta?.namespace !== namespace) {
@@ -27,8 +33,63 @@ export const loadingReducer = (namespace) => (state = false, { type = '', meta =
       return false;
     case CONCAT_FETCH_SUCCESS:
       return false;
+    case PREPEND_FETCH_SUCCESS:
+      return false;
     case FETCH_ERROR:
       return false;
+    default:
+      return state;
+  }
+};
+
+export const loadingDirectionReducer = (namespace) => (
+  state = null,
+  { type = '', payload = {}, meta = {} },
+) => {
+  if (meta?.namespace !== namespace) {
+    return state;
+  }
+
+  switch (type) {
+    case FETCH_START:
+      return payload?.direction ?? null;
+    case FETCH_SUCCESS:
+    case FETCH_ERROR:
+    case CONCAT_FETCH_SUCCESS:
+    case PREPEND_FETCH_SUCCESS:
+      return null;
+    default:
+      return state;
+  }
+};
+
+export const pageRangeReducer = (namespace) => (
+  state = { start: 1, end: 1 },
+  { type, payload, meta },
+) => {
+  if (meta?.namespace !== namespace) {
+    return state;
+  }
+
+  switch (type) {
+    case FETCH_SUCCESS: {
+      const pageNumber = payload?.page?.number || 1;
+      return { start: pageNumber, end: pageNumber };
+    }
+    case CONCAT_FETCH_SUCCESS: {
+      const newEnd = state.end + 1;
+      return {
+        ...state,
+        end: newEnd,
+      };
+    }
+    case PREPEND_FETCH_SUCCESS: {
+      const newStart = Math.max(1, state.start - 1);
+      return {
+        ...state,
+        start: newStart,
+      };
+    }
     default:
       return state;
   }

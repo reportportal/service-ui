@@ -63,6 +63,7 @@ export class GridRow extends Component {
       className: PropTypes.string,
     }),
     expanded: PropTypes.bool,
+    setHighlighting: PropTypes.func,
   };
 
   static defaultProps = {
@@ -89,6 +90,7 @@ export class GridRow extends Component {
     itemIntoViewRef: null,
     itemIntoViewId: null,
     expanded: false,
+    setHighlighting: () => {},
   };
 
   state = {
@@ -163,11 +165,13 @@ export class GridRow extends Component {
   descriptionRef = React.createRef();
 
   highLightGridRow() {
+    this.props.setHighlighting(true);
     this.rowRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     const { onGridRowHighlighted } = this.props.rowHighlightingConfig;
     onGridRowHighlighted &&
       setTimeout(() => {
         onGridRowHighlighted();
+        this.props.setHighlighting(false);
       }, LOG_MESSAGE_HIGHLIGHT_TIMEOUT);
   }
 

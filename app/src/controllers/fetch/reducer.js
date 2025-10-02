@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-import { FETCH_SUCCESS, DEFAULT_OPTIONS, FETCH_ERROR, CONCAT_FETCH_SUCCESS } from './constants';
+import {
+  FETCH_SUCCESS,
+  DEFAULT_OPTIONS,
+  FETCH_ERROR,
+  CONCAT_FETCH_SUCCESS,
+  PREPEND_FETCH_SUCCESS,
+} from './constants';
 
 const computeInitialState = (options) => {
   if (!Object.prototype.hasOwnProperty.call(options, 'initialState')) {
@@ -39,6 +45,14 @@ export const fetchReducer = (namespace, options = DEFAULT_OPTIONS) => (
 
       if (data instanceof Array && concat) {
         return state.concat(data);
+      }
+      return data;
+    }
+    case PREPEND_FETCH_SUCCESS: {
+      const data = contentPath ? payload[contentPath] : payload;
+
+      if (data instanceof Array) {
+        return [...data, ...state];
       }
       return data;
     }

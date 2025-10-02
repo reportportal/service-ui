@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
+import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './spinningPreloader.scss';
 
 const cx = classNames.bind(styles);
 
-export const SpinningPreloader = () => (
-  <div className={cx('spinning-preloader')}>
+export const SpinningPreloader = ({ wrapperClassName }) => (
+  <div className={cx('spinning-preloader', wrapperClassName)}>
     <div className={cx('preloader')}>
       <div className={cx('preloader-part')} />
       <div className={cx('preloader-part')} />
@@ -28,3 +29,11 @@ export const SpinningPreloader = () => (
     </div>
   </div>
 );
+
+SpinningPreloader.propTypes = {
+  wrapperClassName: PropTypes.string,
+};
+
+SpinningPreloader.defaultProps = {
+  wrapperClassName: '',
+};

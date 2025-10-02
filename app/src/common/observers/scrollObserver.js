@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,8 @@
  * limitations under the License.
  */
 
-import { createNamespacedActionPredicate } from 'common/utils/createNamespacedActionPredicate';
-import {
-  FETCH_ERROR,
-  FETCH_SUCCESS,
-  CONCAT_FETCH_SUCCESS,
-  PREPEND_FETCH_SUCCESS,
-} from './constants';
+import ReactObserver from 'react-event-observer';
 
-export const createFetchPredicate = (namespace) =>
-  createNamespacedActionPredicate(namespace, [
-    FETCH_ERROR,
-    FETCH_SUCCESS,
-    CONCAT_FETCH_SUCCESS,
-    PREPEND_FETCH_SUCCESS,
-  ]);
+export const scrollEventObserver = ReactObserver();
+
+export const BACK_TO_TOP_EVENT = 'backToTop';

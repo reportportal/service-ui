@@ -14,16 +14,25 @@
  * limitations under the License.
  */
 
-import { Fragment } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { LOADING_DIRECTIONS } from 'common/constants/loadingDirections';
 import { GridHeader } from './gridHeader';
 import { GridBody } from './gridBody';
 import { columnPropTypes } from './propTypes';
 import styles from './grid.scss';
 
 const cx = classNames.bind(styles);
+
+const Loader = ({ className }) => (
+  <div className={cx('spinner-block', className)}>
+    <SpinningPreloader wrapperClassName={cx('loader')} />
+  </div>
+);
+
+const { PREVIOUS, NEXT } = LOADING_DIRECTIONS;
 
 const isAllItemsSelected = (items, selectedItems, excludeFromSelection) => {
   const excludedIds = excludeFromSelection.map((item) => item.id);
@@ -54,51 +63,105 @@ export const Grid = ({
   headerClassName,
   nestedStepHeader,
   nestedView,
+  loadNext,
+  loadPrevious,
+  loadingDirection,
   ...rest
-}) => (
-  <Fragment>
-    <div className={cx('grid', className)}>
-      <GridHeader
-        columns={columns}
-        sortingColumn={sortingColumn}
-        sortingDirection={sortingDirection}
-        onChangeSorting={onChangeSorting}
-        onFilterClick={onFilterClick}
-        selectable={selectable}
-        allSelected={
-          !!selectedItems.length && isAllItemsSelected(data, selectedItems, excludeFromSelection)
-        }
-        onToggleSelectAll={onToggleSelectAll}
-        hideHeaderForMobile={changeOnlyMobileLayout}
-        headerClassName={headerClassName}
-      />
-      {!loading && (
-        <GridBody
+}) => {
+  const gridRef = useRef(null);
+  const topRef = useRef(null);
+  const bottomRef = useRef(null);
+  const [highlighting, setHighlighting] = useState(false);
+
+  useEffect(() => {
+    if ((!loadNext && !loadPrevious) || !gridRef.current) {
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !highlighting) {
+            if (entry.target === topRef.current && loadPrevious) {
+              loadPrevious();
+            } else if (entry.target === bottomRef.current && loadNext) {
+              loadNext();
+            }
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: '200px',
+        threshold: 0,
+      },
+    );
+
+    [topRef.current, bottomRef.current].filter(Boolean).forEach((sentinel) => {
+      observer.observe(sentinel);
+    });
+
+    return () => observer.disconnect();
+  }, [highlighting, loadNext, loadPrevious]);
+
+  return (
+    <Fragment>
+      <div ref={gridRef} className={cx('grid', className)}>
+        <GridHeader
           columns={columns}
-          data={data}
+          sortingColumn={sortingColumn}
+          sortingDirection={sortingDirection}
+          onChangeSorting={onChangeSorting}
+          onFilterClick={onFilterClick}
           selectable={selectable}
-          selectedItems={selectedItems}
-          onToggleSelection={onToggleSelection}
-          changeOnlyMobileLayout={changeOnlyMobileLayout}
-          rowClassMapper={rowClassMapper}
-          groupHeader={groupHeader}
-          groupFunction={groupFunction}
-          grouped={grouped}
-          excludeFromSelection={excludeFromSelection}
-          gridRowClassName={gridRowClassName}
-          nestedStepHeader={nestedStepHeader}
-          nestedView={nestedView}
-          {...rest}
+          allSelected={
+            !!selectedItems.length && isAllItemsSelected(data, selectedItems, excludeFromSelection)
+          }
+          onToggleSelectAll={onToggleSelectAll}
+          hideHeaderForMobile={changeOnlyMobileLayout}
+          headerClassName={headerClassName}
         />
-      )}
-    </div>
-    {loading && (
-      <div className={cx('spinner-block')}>
-        <SpinningPreloader />
+
+        {loadPrevious && loadingDirection === PREVIOUS && <Loader className={cx('inner')} />}
+        {loadPrevious && !loading && <div ref={topRef} className={cx('sentinel', 'top')} />}
+
+        {!(loading && !loadingDirection) && (
+          <GridBody
+            columns={columns}
+            data={data}
+            selectable={selectable}
+            selectedItems={selectedItems}
+            onToggleSelection={onToggleSelection}
+            changeOnlyMobileLayout={changeOnlyMobileLayout}
+            rowClassMapper={rowClassMapper}
+            groupHeader={groupHeader}
+            groupFunction={groupFunction}
+            grouped={grouped}
+            excludeFromSelection={excludeFromSelection}
+            gridRowClassName={gridRowClassName}
+            nestedStepHeader={nestedStepHeader}
+            nestedView={nestedView}
+            setHighlighting={setHighlighting}
+            {...rest}
+          />
+        )}
+
+        {loadNext && loadingDirection === NEXT && <Loader className={cx('inner')} />}
+        {loadNext && !loading && <div ref={bottomRef} className={cx('sentinel', 'bottom')} />}
       </div>
-    )}
-  </Fragment>
-);
+
+      {loading && !loadingDirection && <Loader />}
+    </Fragment>
+  );
+};
+
+Loader.propTypes = {
+  className: PropTypes.string,
+};
+Loader.defaultProps = {
+  className: '',
+};
+
 Grid.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.shape(columnPropTypes)),
   data: PropTypes.arrayOf(PropTypes.object),
@@ -128,6 +191,9 @@ Grid.propTypes = {
   gridRowClassName: PropTypes.string,
   headerClassName: PropTypes.string,
   nestedView: PropTypes.bool,
+  loadNext: PropTypes.func,
+  loadPrevious: PropTypes.func,
+  loadingDirection: PropTypes.string,
 };
 Grid.defaultProps = {
   columns: [],
@@ -154,4 +220,5 @@ Grid.defaultProps = {
   headerClassName: '',
   nestedStepHeader: null,
   nestedView: false,
+  loadingDirection: null,
 };

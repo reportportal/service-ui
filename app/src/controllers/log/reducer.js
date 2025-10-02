@@ -19,7 +19,7 @@ import { queueReducers } from 'common/utils/queueReducers';
 import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { fetchReducer } from 'controllers/fetch';
 import { paginationReducer } from 'controllers/pagination';
-import { loadingReducer } from 'controllers/loading';
+import { loadingReducer, loadingDirectionReducer, pageRangeReducer } from 'controllers/loading';
 import { PROJECT_LOG_PAGE, PROJECT_USERDEBUG_LOG_PAGE } from 'controllers/pages';
 import {
   LOG_ITEMS_NAMESPACE,
@@ -116,6 +116,8 @@ const reducer = combineReducers({
   shouldShowLoadMore: shouldShowLoadMoreReducer,
   includeAllLaunches: includeAllLaunchesReducer,
   logItems: fetchReducer(LOG_ITEMS_NAMESPACE, { contentPath: 'content' }),
+  pageRange: pageRangeReducer(LOG_ITEMS_NAMESPACE),
+  loadingDirection: loadingDirectionReducer(LOG_ITEMS_NAMESPACE),
   pagination: paginationReducer(LOG_ITEMS_NAMESPACE),
   loading: loadingReducer(LOG_ITEMS_NAMESPACE),
   pageLoading: pageLoadingReducer,

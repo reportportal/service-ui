@@ -18,15 +18,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import { ModalLayout } from 'components/main/modal';
 import { setLogsPaginationAction } from 'controllers/user';
-import { NAMESPACE } from 'controllers/log';
+import { NAMESPACE, refreshLogPageData } from 'controllers/log';
+import { querySelector } from 'controllers/log/selectors';
 import { updatePagePropertiesAction } from 'controllers/pages';
 import { createNamespacedQuery } from 'common/utils/routingUtils';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { messages } from '../messages';
 import styles from './paginationModal.scss';
 
@@ -36,11 +38,15 @@ export const PaginationModal = ({ paginationOn }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
+  const currentQuery = useSelector((state) => querySelector(state, NAMESPACE));
 
   const handleConfirm = (closeModal) => {
+    const { [PAGE_KEY]: _page, [SIZE_KEY]: _size, ...newQuery } = currentQuery;
+
     trackEvent(LOG_PAGE_EVENTS.getTogglePaginationEvent(paginationOn));
     dispatch(setLogsPaginationAction(paginationOn));
-    dispatch(updatePagePropertiesAction(createNamespacedQuery({}, NAMESPACE)));
+    dispatch(updatePagePropertiesAction(createNamespacedQuery(newQuery, NAMESPACE)));
+    dispatch(refreshLogPageData());
     closeModal();
   };
 

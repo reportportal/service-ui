@@ -18,6 +18,7 @@ import { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { scrollEventObserver, BACK_TO_TOP_EVENT } from 'common/observers/scrollObserver';
 import { connectRouter, getStorageItem, removeStorageItem } from 'common/utils';
 import {
   logItemsSelector,
@@ -38,6 +39,12 @@ import {
   fetchErrorLog,
   RETRY_ID,
   ERROR_LOG_INDEX_KEY,
+  loadMoreLogsAction,
+  fetchLogItemsForPageAction,
+  loadedPagesRangeSelector,
+  loadingDirectionSelector,
+  NEXT,
+  PREVIOUS,
 } from 'controllers/log';
 import { withFilter } from 'controllers/filter';
 import { withPagination, PAGE_KEY, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
@@ -59,8 +66,10 @@ import { calculateNextIndex } from './utils';
     isNestedStepView: isLogPageWithNestedSteps(state),
     errorLogs: errorLogsItemsSelector(state),
     logsPagination: logsPaginationSelector(state),
+    loadedPagesRange: loadedPagesRangeSelector(state),
+    loadingDirection: loadingDirectionSelector(state),
   }),
-  { fetchErrorLog },
+  { fetchErrorLog, loadMoreLogsAction, fetchLogItemsForPageAction },
 )
 @withSortingURL({
   defaultFields: ['logTime'],
@@ -142,6 +151,10 @@ export class LogsGridWrapper extends Component {
     errorLogs: PropTypes.array,
     fetchErrorLog: PropTypes.func,
     logsPagination: PropTypes.bool,
+    loadedPagesRange: PropTypes.object,
+    loadMoreLogsAction: PropTypes.func,
+    fetchLogItemsForPageAction: PropTypes.func,
+    loadingDirection: PropTypes.string,
   };
 
   static defaultProps = {
@@ -174,6 +187,10 @@ export class LogsGridWrapper extends Component {
     errorLogs: [],
     fetchErrorLog: () => {},
     logsPagination: true,
+    loadedPagesRange: { start: 1, end: 1 },
+    loadMoreLogsAction: () => {},
+    fetchLogItemsForPageAction: () => {},
+    loadingDirection: null,
   };
 
   state = {
@@ -194,6 +211,8 @@ export class LogsGridWrapper extends Component {
         this.props.fetchErrorLog(errorLogs[errorLogIndex], fetchErrorLogCb);
       }
     }
+
+    scrollEventObserver.subscribe(BACK_TO_TOP_EVENT, this.handleBackToTop);
   }
 
   componentDidUpdate(prevProps) {
@@ -215,6 +234,10 @@ export class LogsGridWrapper extends Component {
     }
   }
 
+  componentWillUnmount() {
+    scrollEventObserver.unsubscribe(BACK_TO_TOP_EVENT, this.handleBackToTop);
+  }
+
   highlightErrorLog = (direction) => {
     this.props.tracking.trackEvent(LOG_PAGE_EVENTS.getClickOnHighlightErrorLogEvent(!!direction));
 
@@ -226,6 +249,26 @@ export class LogsGridWrapper extends Component {
       this.setState({ skipHighlightOnRender: false, errorLogIndex: nextErrorLogIndex });
 
     this.props.fetchErrorLog(errorLogs[nextErrorLogIndex], fetchErrorLogCb);
+  };
+
+  handleBackToTop = () => {
+    if (!this.props.logsPagination) {
+      this.props.fetchLogItemsForPageAction(1);
+    }
+  };
+
+  getLoadNextCb = () => {
+    const { logsPagination, loadedPagesRange, pageCount } = this.props;
+    return !logsPagination && loadedPagesRange.end < pageCount
+      ? () => this.props.loadMoreLogsAction(NEXT)
+      : undefined;
+  };
+
+  getLoadPreviousCb = () => {
+    const { logsPagination, loadedPagesRange } = this.props;
+    return !logsPagination && loadedPagesRange.start > 1
+      ? () => this.props.loadMoreLogsAction(PREVIOUS)
+      : undefined;
   };
 
   render() {
@@ -259,6 +302,7 @@ export class LogsGridWrapper extends Component {
       isSauceLabsIntegrationView,
       errorLogs,
       logsPagination,
+      loadingDirection,
     } = this.props;
     const rowHighlightingConfig = {
       highlightedRowId: this.props.errorLogs[this.state.errorLogIndex]?.id,
@@ -307,10 +351,13 @@ export class LogsGridWrapper extends Component {
                   isNestedStepView={isNestedStepView}
                   rowHighlightingConfig={rowHighlightingConfig}
                   rawHeaderCellStylesConfig={rawHeaderCellStylesConfig}
+                  loadNext={this.getLoadNextCb()}
+                  loadPrevious={this.getLoadPreviousCb()}
+                  loadingDirection={loadingDirection}
                 />
               )}
             </LogsGridToolbar>
-            {!!pageCount && logItems && !!logItems.length && !loading && logsPagination && (
+            {logsPagination && !!pageCount && logItems && !!logItems.length && !loading && (
               <PaginationToolbar
                 activePage={activePage}
                 itemCount={itemCount}

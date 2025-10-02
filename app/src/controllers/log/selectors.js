@@ -279,3 +279,8 @@ export const isLogPageWithNestedSteps = createSelector(
   isLogPageWithoutNestedSteps,
   (value) => !value,
 );
+
+export const loadedPagesRangeSelector = (state) =>
+  logSelector(state).pageRange || { start: 1, end: 1 };
+
+export const loadingDirectionSelector = (state) => logSelector(state).loadingDirection;

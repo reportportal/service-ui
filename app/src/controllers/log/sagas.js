@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { all, call, cancelled, put, select, take, takeEvery } from 'redux-saga/effects';
+import { all, call, cancelled, put, select, take, takeEvery, throttle } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import {
   fetchParentItems,
@@ -23,14 +23,20 @@ import {
   logPageOffsetSelector,
 } from 'controllers/testItem';
 import { URLS } from 'common/urls';
-import { activeProjectSelector } from 'controllers/user';
+import { activeProjectSelector, logsPaginationSelector } from 'controllers/user';
 import {
   logItemIdSelector,
   pathnameChangedSelector,
   updatePagePropertiesAction,
 } from 'controllers/pages';
 import { debugModeSelector } from 'controllers/launch';
-import { createFetchPredicate, fetchDataAction, handleError } from 'controllers/fetch';
+import {
+  createFetchPredicate,
+  fetchDataAction,
+  concatFetchDataAction,
+  prependFetchDataAction,
+  handleError,
+} from 'controllers/fetch';
 import { fetch } from 'common/utils';
 import {
   FETCH_NESTED_STEP_ERROR,
@@ -38,6 +44,7 @@ import {
   CLEAR_NESTED_STEPS,
 } from 'controllers/log/nestedSteps/constants';
 import { PAGE_KEY } from 'controllers/pagination';
+import { totalPagesSelector } from 'controllers/pagination/selectors';
 import {
   loadMoreNestedStepAction,
   toggleNestedStepAction,
@@ -64,6 +71,8 @@ import {
   includeAllLaunchesSelector,
   historyItemsSelector,
   activeLogSelector,
+  loadedPagesRangeSelector,
+  logPaginationSelector,
 } from './selectors';
 import {
   HISTORY_LINE_DEFAULT_VALUE,
@@ -83,6 +92,10 @@ import {
   FETCH_ERROR_LOGS,
   ERROR_LOGS_NAMESPACE,
   FETCH_ERROR_LOG,
+  LOAD_MORE_LOGS,
+  FETCH_LOG_ITEMS_FOR_PAGE,
+  NEXT,
+  PREVIOUS,
 } from './constants';
 import { collectLogPayload } from './sagaUtils';
 import {
@@ -106,21 +119,36 @@ function* fetchActivity() {
 
 function* fetchLogItems(payload = {}) {
   const { activeProject, filterLevel, activeLogItemId, query } = yield call(collectLogPayload);
+  const logsPagination = yield select(logsPaginationSelector);
   const namespace = payload.namespace || LOG_ITEMS_NAMESPACE;
   const logLevel = payload.level || filterLevel;
+  const { direction, targetPage } = payload;
   const fetchParams = {
     ...payload.params,
     ...query,
   };
+
+  if (targetPage) {
+    fetchParams[PAGE_KEY] = targetPage;
+  }
+
   const isLaunchLog = yield select(isLaunchLogSelector);
   const url = isLaunchLog
     ? URLS.launchLogs(activeProject, activeLogItemId, logLevel)
     : URLS.logItems(activeProject, activeLogItemId, logLevel);
-  yield put(
-    fetchDataAction(namespace)(url, {
-      params: fetchParams,
-    }),
-  );
+
+  if (!logsPagination) {
+    if (direction === NEXT) {
+      yield put(concatFetchDataAction(namespace, true)(url, { params: fetchParams }, direction));
+    } else if (direction === PREVIOUS) {
+      yield put(prependFetchDataAction(namespace)(url, { params: fetchParams }, direction));
+    } else {
+      yield put(fetchDataAction(namespace)(url, { params: fetchParams }, direction));
+    }
+  } else {
+    yield put(fetchDataAction(namespace)(url, { params: fetchParams }));
+  }
+
   yield take(createFetchPredicate(namespace));
 }
 
@@ -217,22 +245,54 @@ function* navigateToErrorLogPage(query, initialPage) {
   yield take(createFetchPredicate(LOG_ITEMS_NAMESPACE));
 }
 
+function* fetchLogItemsForPage({ payload: targetPage }) {
+  const loadedPagesRange = yield select(loadedPagesRangeSelector);
+
+  if (targetPage >= loadedPagesRange.start && targetPage <= loadedPagesRange.end) {
+    return;
+  }
+
+  if (targetPage === loadedPagesRange.start - 1) {
+    yield call(fetchLogItems, { direction: PREVIOUS, targetPage });
+  } else if (targetPage === loadedPagesRange.end + 1) {
+    yield call(fetchLogItems, { direction: NEXT, targetPage });
+  } else {
+    yield call(fetchLogItems, { targetPage });
+    if (targetPage > 1) {
+      yield call(fetchLogItems, { direction: PREVIOUS, targetPage: targetPage - 1 });
+    }
+  }
+}
+
 function* fetchErrorLog({ payload: { errorLogInfo, callback } }) {
   const { id: errorLogId, pagesLocation } = errorLogInfo;
   const { query } = yield call(collectLogPayload);
   const [initialPage] = Object.values(pagesLocation[0]);
+  const logsPagination = yield select(logsPaginationSelector);
   // format location as first item props reference to main page
   const formattedPageLocation = getFormattedPageLocation(pagesLocation);
   const skipIds = [];
 
+  if (!logsPagination) {
+    const logItems = yield select(logItemsSelector);
+    const isLogAlreadyLoaded = logItems.find((log) => +log.id === +errorLogId);
+
+    if (isLogAlreadyLoaded) {
+      yield callback?.();
+      return;
+    }
+
+    yield call(fetchLogItemsForPage, { payload: initialPage });
+  }
+
   // single log. highlight or move to another page
   if (pagesLocation.length === 1) {
-    if (+query[PAGE_KEY] !== +initialPage) {
+    if (logsPagination && +query[PAGE_KEY] !== +initialPage) {
       yield navigateToErrorLogPage(query, initialPage);
     }
   } else {
     // change page if initial page is not the same
-    if (+query[PAGE_KEY] !== +initialPage) {
+    if (logsPagination && +query[PAGE_KEY] !== +initialPage) {
       yield navigateToErrorLogPage(query, initialPage);
       // check is first nested step is FAILED
       const logItems = yield select(logItemsSelector);
@@ -408,6 +468,34 @@ function* fetchHistoryItemsWithLoading() {
   yield put(setPageLoadingAction(false));
 }
 
+function* loadMoreLogs({ payload: { direction } }) {
+  try {
+    const loadedPagesRange = yield select(loadedPagesRangeSelector);
+    const totalPages = yield select(totalPagesSelector(logPaginationSelector));
+
+    let targetPage;
+    if (direction === NEXT) {
+      targetPage = loadedPagesRange.end + 1;
+    } else if (direction === PREVIOUS) {
+      targetPage = loadedPagesRange.start - 1;
+    } else {
+      return;
+    }
+
+    if (direction === PREVIOUS && loadedPagesRange.start <= 1) {
+      return;
+    }
+
+    if (direction === NEXT && targetPage > totalPages) {
+      return;
+    }
+
+    yield call(fetchLogItems, { direction, targetPage });
+  } catch (error) {
+    yield call(handleError, error);
+  }
+}
+
 function* watchFetchLogPageData() {
   yield takeEvery(FETCH_LOG_PAGE_DATA, fetchLogPageData);
 }
@@ -432,6 +520,14 @@ function* watchUpdateItemStatus() {
   yield takeEvery(FETCH_HISTORY_ITEMS_WITH_LOADING, fetchHistoryItemsWithLoading);
 }
 
+function* watchLoadMoreLogs() {
+  yield throttle(1000, LOAD_MORE_LOGS, loadMoreLogs);
+}
+
+function* watchFetchLogItemsForPage() {
+  yield takeEvery(FETCH_LOG_ITEMS_FOR_PAGE, fetchLogItemsForPage);
+}
+
 export function* logSagas() {
   yield all([
     watchFetchLogPageData(),
@@ -443,5 +539,7 @@ export function* logSagas() {
     sauceLabsSagas(),
     nestedStepSagas(),
     watchUpdateItemStatus(),
+    watchLoadMoreLogs(),
+    watchFetchLogItemsForPage(),
   ]);
 }

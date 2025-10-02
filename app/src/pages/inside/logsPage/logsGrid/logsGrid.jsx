@@ -173,6 +173,9 @@ export class LogsGrid extends Component {
     }),
     rawHeaderCellStylesConfig: PropTypes.object,
     noLogsCollapsing: PropTypes.bool,
+    loadNext: PropTypes.func,
+    loadPrevious: PropTypes.func,
+    loadingDirection: PropTypes.string,
   };
 
   static defaultProps = {
@@ -191,6 +194,7 @@ export class LogsGrid extends Component {
     rowHighlightingConfig: {},
     rawHeaderCellStylesConfig: {},
     noLogsCollapsing: false,
+    loadingDirection: null,
   };
 
   getConsoleViewColumns = () => [
@@ -364,6 +368,9 @@ export class LogsGrid extends Component {
       sortingDirection,
       onChangeSorting,
       rowHighlightingConfig,
+      loadNext,
+      loadPrevious,
+      loadingDirection,
     } = this.props;
 
     return (
@@ -382,6 +389,9 @@ export class LogsGrid extends Component {
           nestedView
           eventsInfo={LOGS_GRID_EVENTS_INFO}
           expanded={noLogsCollapsing}
+          loadNext={loadNext}
+          loadPrevious={loadPrevious}
+          loadingDirection={loadingDirection}
         />
         {!logItems.length && !loading && (
           <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />

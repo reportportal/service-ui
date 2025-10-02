@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-export { FETCH_SUCCESS, FETCH_START, FETCH_ERROR, CONCAT_FETCH_SUCCESS } from './constants';
+export {
+  FETCH_SUCCESS,
+  FETCH_START,
+  FETCH_ERROR,
+  CONCAT_FETCH_SUCCESS,
+  PREPEND_FETCH_SUCCESS,
+} from './constants';
 export { fetchReducer } from './reducer';
 export { fetchSagas, handleError } from './sagas';
 export {
@@ -24,5 +30,7 @@ export {
   bulkFetchDataAction,
   concatFetchDataAction,
   concatFetchSuccessAction,
+  prependFetchDataAction,
+  prependFetchSuccessAction,
 } from './actionCreators';
 export { createFetchPredicate } from './utils';

@@ -30,6 +30,8 @@ export {
   updateHistoryItemLaunchAttributesAction,
   setActiveTabIdAction,
   fetchHistoryItemsWithLoadingAction,
+  loadMoreLogsAction,
+  fetchLogItemsForPageAction,
 } from './actionCreators';
 export { logReducer } from './reducer';
 export {
@@ -57,6 +59,7 @@ export {
   NEXT,
   ALL,
   ERROR_LOG_INDEX_KEY,
+  LOAD_MORE_PAGE_SIZE,
 } from './constants';
 export {
   historyItemsSelector,
@@ -88,5 +91,7 @@ export {
   includeAllLaunchesSelector,
   shouldShowLoadMoreSelector,
   activeTabIdSelector,
+  loadedPagesRangeSelector,
+  loadingDirectionSelector,
 } from './selectors';
 export { getLogLevel, setLogLevel, getLogViewMode, setLogViewMode } from './storageUtils';
