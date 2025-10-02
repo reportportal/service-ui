@@ -470,23 +470,15 @@ function* fetchHistoryItemsWithLoading() {
 
 function* loadMoreLogs({ payload: { direction } }) {
   try {
+    if (![NEXT, PREVIOUS].includes(direction)) {
+      return;
+    }
+
     const loadedPagesRange = yield select(loadedPagesRangeSelector);
     const totalPages = yield select(totalPagesSelector(logPaginationSelector));
+    const targetPage = direction === NEXT ? loadedPagesRange.end + 1 : loadedPagesRange.start - 1;
 
-    let targetPage;
-    if (direction === NEXT) {
-      targetPage = loadedPagesRange.end + 1;
-    } else if (direction === PREVIOUS) {
-      targetPage = loadedPagesRange.start - 1;
-    } else {
-      return;
-    }
-
-    if (direction === PREVIOUS && loadedPagesRange.start <= 1) {
-      return;
-    }
-
-    if (direction === NEXT && targetPage > totalPages) {
+    if (targetPage < 1 || targetPage > totalPages) {
       return;
     }
 

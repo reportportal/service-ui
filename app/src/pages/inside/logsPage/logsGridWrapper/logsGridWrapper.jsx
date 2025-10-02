@@ -197,6 +197,7 @@ export class LogsGridWrapper extends Component {
     errorLogIndex: null,
     skipHighlightOnRender: false,
     isSauceLabsIntegrationView: false,
+    backToTopListener: null,
   };
 
   componentDidMount() {
@@ -212,7 +213,11 @@ export class LogsGridWrapper extends Component {
       }
     }
 
-    scrollEventObserver.subscribe(BACK_TO_TOP_EVENT, this.handleBackToTop);
+    this.backToTopListener = scrollEventObserver.subscribe(BACK_TO_TOP_EVENT, () => {
+      if (!this.props.logsPagination) {
+        this.props.fetchLogItemsForPageAction(1);
+      }
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -235,7 +240,9 @@ export class LogsGridWrapper extends Component {
   }
 
   componentWillUnmount() {
-    scrollEventObserver.unsubscribe(BACK_TO_TOP_EVENT, this.handleBackToTop);
+    if (this.backToTopListener) {
+      this.backToTopListener.unsubscribe();
+    }
   }
 
   highlightErrorLog = (direction) => {
@@ -249,12 +256,6 @@ export class LogsGridWrapper extends Component {
       this.setState({ skipHighlightOnRender: false, errorLogIndex: nextErrorLogIndex });
 
     this.props.fetchErrorLog(errorLogs[nextErrorLogIndex], fetchErrorLogCb);
-  };
-
-  handleBackToTop = () => {
-    if (!this.props.logsPagination) {
-      this.props.fetchLogItemsForPageAction(1);
-    }
   };
 
   getLoadNextCb = () => {
