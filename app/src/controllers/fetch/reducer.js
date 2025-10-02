@@ -43,7 +43,7 @@ export const fetchReducer = (namespace, options = DEFAULT_OPTIONS) => (
     case CONCAT_FETCH_SUCCESS: {
       const data = contentPath ? payload[contentPath] : payload;
 
-      if (data instanceof Array && concat) {
+      if (Array.isArray(data) && concat) {
         return state.concat(data);
       }
       return data;
@@ -51,7 +51,7 @@ export const fetchReducer = (namespace, options = DEFAULT_OPTIONS) => (
     case PREPEND_FETCH_SUCCESS: {
       const data = contentPath ? payload[contentPath] : payload;
 
-      if (data instanceof Array) {
+      if (Array.isArray(data)) {
         return [...data, ...state];
       }
       return data;

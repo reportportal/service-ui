@@ -197,7 +197,6 @@ export class LogsGridWrapper extends Component {
     errorLogIndex: null,
     skipHighlightOnRender: false,
     isSauceLabsIntegrationView: false,
-    backToTopListener: null,
   };
 
   componentDidMount() {

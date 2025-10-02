@@ -63,10 +63,7 @@ export const loadingDirectionReducer = (namespace) => (
   }
 };
 
-export const pageRangeReducer = (namespace) => (
-  state = { start: 1, end: 1 },
-  { type, payload, meta },
-) => {
+export const pageRangeReducer = (namespace) => (state = null, { type, payload, meta }) => {
   if (meta?.namespace !== namespace) {
     return state;
   }

@@ -44,10 +44,10 @@ export const PaginationControl = ({ closeDropdown }) => {
   };
 
   return (
-    <div className={cx('pagination-option')} onClick={handleTogglePagination}>
+    <button className={cx('pagination-option')} onClick={handleTogglePagination}>
       {logsPagination ? formatMessage(messages.turnOff) : formatMessage(messages.turnOn)}
       <span>...</span>
-    </div>
+    </button>
   );
 };
 

@@ -15,9 +15,15 @@
  */
 
 .pagination-option {
+  width: 100%;
+  text-align: left;
   font-size: 13px;
   line-height: 20px;
   padding: 5px 0;
+  font-family: $FONT-REGULAR;
   color: $COLOR--charcoal-grey;
+  background: none;
+  border: none;
+  outline: none;
   cursor: pointer;
 }

@@ -137,16 +137,15 @@ function* fetchLogItems(payload = {}) {
     ? URLS.launchLogs(activeProject, activeLogItemId, logLevel)
     : URLS.logItems(activeProject, activeLogItemId, logLevel);
 
-  if (!logsPagination) {
-    if (direction === NEXT) {
-      yield put(concatFetchDataAction(namespace, true)(url, { params: fetchParams }, direction));
-    } else if (direction === PREVIOUS) {
-      yield put(prependFetchDataAction(namespace)(url, { params: fetchParams }, direction));
-    } else {
-      yield put(fetchDataAction(namespace)(url, { params: fetchParams }, direction));
-    }
-  } else {
+  if (logsPagination) {
     yield put(fetchDataAction(namespace)(url, { params: fetchParams }));
+  } else {
+    const actionMap = {
+      [NEXT]: concatFetchDataAction(namespace, true),
+      [PREVIOUS]: prependFetchDataAction(namespace),
+    };
+    const action = actionMap[direction] || fetchDataAction(namespace);
+    yield put(action(url, { params: fetchParams }, direction));
   }
 
   yield take(createFetchPredicate(namespace));

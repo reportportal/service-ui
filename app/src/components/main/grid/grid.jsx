@@ -81,7 +81,7 @@ export const Grid = ({
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && !highlighting) {
+          if (entry.isIntersecting && !highlighting && !loading) {
             if (entry.target === topRef.current && loadPrevious) {
               loadPrevious();
             } else if (entry.target === bottomRef.current && loadNext) {
@@ -97,12 +97,15 @@ export const Grid = ({
       },
     );
 
-    [topRef.current, bottomRef.current].filter(Boolean).forEach((sentinel) => {
-      observer.observe(sentinel);
-    });
+    if (topRef.current) {
+      observer.observe(topRef.current);
+    }
+    if (bottomRef.current) {
+      observer.observe(bottomRef.current);
+    }
 
     return () => observer.disconnect();
-  }, [highlighting, loadNext, loadPrevious]);
+  }, [highlighting, loadNext, loadPrevious, loading]);
 
   return (
     <Fragment>
@@ -123,7 +126,7 @@ export const Grid = ({
         />
 
         {loadPrevious && loadingDirection === PREVIOUS && <Loader className={cx('inner')} />}
-        {loadPrevious && !loading && <div ref={topRef} className={cx('sentinel', 'top')} />}
+        {loadPrevious && <div ref={topRef} className={cx('sentinel', 'top')} />}
 
         {!(loading && !loadingDirection) && (
           <GridBody
@@ -147,7 +150,7 @@ export const Grid = ({
         )}
 
         {loadNext && loadingDirection === NEXT && <Loader className={cx('inner')} />}
-        {loadNext && !loading && <div ref={bottomRef} className={cx('sentinel', 'bottom')} />}
+        {loadNext && <div ref={bottomRef} className={cx('sentinel', 'bottom')} />}
       </div>
 
       {loading && !loadingDirection && <Loader />}
