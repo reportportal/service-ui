@@ -24,6 +24,6 @@ export const messages = defineMessages({
   description: {
     id: 'TestCaseLibraryPage.addToTestPlanModal.description',
     defaultMessage:
-      '{testPlansQuantity, plural, one {You are about to add <bold>{testPlansQuantity, number}</bold> selected test case to the Test Plan.} other {You are about to add <bold>{testPlansQuantity, number}</bold> selected test cases to the Test Plan.}}',
+      'You are about to add <bold>{testPlansQuantity, number}</bold> selected {testPlansQuantity, plural, one {test case} other {test cases}} to the Test Plan.',
   },
 });
