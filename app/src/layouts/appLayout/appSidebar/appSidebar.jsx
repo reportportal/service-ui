@@ -26,7 +26,6 @@ import {
 } from 'controllers/user';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { FormattedMessage } from 'react-intl';
-import { CUSTOMER } from 'common/constants/projectRoles';
 import { canSeeMembers } from 'common/utils/permissions';
 import { ALL } from 'common/constants/reservedFilterIds';
 import {
@@ -137,10 +136,7 @@ export class AppSidebar extends Component {
         icon: FiltersIcon,
         message: <FormattedMessage id={'Sidebar.filtersBtn'} defaultMessage={'Filters'} />,
       },
-    ];
-
-    if (projectRole !== CUSTOMER) {
-      topItems.push({
+      {
         onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_DEBUG_BTN),
         link: {
           type: PROJECT_USERDEBUG_PAGE,
@@ -148,8 +144,8 @@ export class AppSidebar extends Component {
         },
         icon: DebugIcon,
         message: <FormattedMessage id={'Sidebar.debugBtn'} defaultMessage={'Debug'} />,
-      });
-    }
+      },
+    ];
 
     if (canSeeMembers(accountRole, projectRole)) {
       topItems.push({

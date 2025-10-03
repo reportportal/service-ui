@@ -106,12 +106,12 @@ export class MoveToDebugModal extends Component {
         let errorMessage;
         if (ids.length > 1) {
           errorMessage = debugMode
-            ? messages.moveToAllMultipleErrorMessage
-            : messages.moveToDebugMultipleErrorMessage;
+            ? messages.moveToAllMultipleFailedMessage
+            : messages.moveToDebugMultipleFailedMessage;
         } else {
           errorMessage = debugMode
-            ? messages.moveToAllErrorMessage
-            : messages.moveToDebugErrorMessage;
+            ? messages.moveToAllFailedMessage
+            : messages.moveToDebugFailedMessage;
         }
         this.props.showNotification({
           message: this.props.intl.formatMessage(errorMessage, {
