@@ -191,28 +191,26 @@ export const Hamburger = ({ launch, customProps }) => {
       </button>
       <div className={cx('hamburger-menu', { shown: menuShown })}>
         <div className={cx('hamburger-menu-actions')}>
-          <Fragment>
-            {launch.mode === 'DEFAULT' ? (
-              <HamburgerMenuItem
-                title={getMoveToDebugTooltip()}
-                text={formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_DEBUG)}
-                disabled={!canMoveToDebug(accountRole, projectRole, userId === launch.owner)}
-                onClick={() => {
-                  trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MOVE_TO_DEBUG_LAUNCH_MENU);
-                  customProps.onMove(launch);
-                }}
-              />
-            ) : (
-              <HamburgerMenuItem
-                text={formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_ALL_LAUNCHES)}
-                title={getMoveToDebugTooltip()}
-                disabled={!canMoveToDebug(accountRole, projectRole, userId === launch.owner)}
-                onClick={() => {
-                  customProps.onMove(launch);
-                }}
-              />
-            )}
-          </Fragment>
+          {launch.mode === 'DEFAULT' ? (
+            <HamburgerMenuItem
+              title={getMoveToDebugTooltip()}
+              text={formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_DEBUG)}
+              disabled={!canMoveToDebug(accountRole, projectRole, userId === launch.owner)}
+              onClick={() => {
+                trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MOVE_TO_DEBUG_LAUNCH_MENU);
+                customProps.onMove(launch);
+              }}
+            />
+          ) : (
+            <HamburgerMenuItem
+              text={formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_ALL_LAUNCHES)}
+              title={getMoveToDebugTooltip()}
+              disabled={!canMoveToDebug(accountRole, projectRole, userId === launch.owner)}
+              onClick={() => {
+                customProps.onMove(launch);
+              }}
+            />
+          )}
           <HamburgerMenuItem
             text={formatMessage(COMMON_LOCALE_KEYS.FORCE_FINISH)}
             title={getForceFinishTooltip()}
