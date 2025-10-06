@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { HtmlHTMLAttributes } from 'react';
+import { ComponentProps } from 'react';
 import { useIntl } from 'react-intl';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import classNames from 'classnames/bind';
@@ -87,17 +87,11 @@ const CreateFolderModalComponent = ({
     }: {
       item: FolderWithFullPath;
       index: number;
-    }) => HtmlHTMLAttributes<HTMLDivElement>,
+    }) => ComponentProps<typeof AutocompleteOption>,
   ) => (
     <AutocompleteOption
-      isActive
-      isSelected
-      disabled={false}
-      optionVariant=""
-      variant="light"
       {...getItemProps({ item: option, index })}
       key={option.id}
-      isNew={false}
       parseValueToString={(item: FolderWithFullPath) => item.description || ''}
       skipOptionCreation
     >
