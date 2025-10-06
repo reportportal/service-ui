@@ -14,21 +14,25 @@
  * limitations under the License.
  */
 
+import { ComponentProps } from 'react';
 import { useIntl } from 'react-intl';
-import { reduxForm, InjectedFormProps } from 'redux-form';
+import { reduxForm, InjectedFormProps, SubmitHandler } from 'redux-form';
 import classNames from 'classnames/bind';
-import { Modal } from '@reportportal/ui-kit';
+import { FieldLabel, Modal } from '@reportportal/ui-kit';
 
 import { withModal } from 'controllers/modal';
+import { FolderWithFullPath } from 'controllers/testCase';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { commonValidators } from 'common/utils/validation';
+import { AutocompleteOption } from 'componentLibrary/autocompletes/common/autocompleteOption';
+import { SingleAutocomplete } from 'componentLibrary/autocompletes/singleAutocomplete';
 
 import { commonMessages } from '../../commonMessages';
 import { useFolderModal } from '../shared/useFolderModal';
-import { FolderNameField, ParentFolderToggle, ParentFolderField } from '../shared/FolderFormFields';
+import { FolderNameField, ParentFolderToggle } from '../shared/FolderFormFields';
 import { sharedFolderMessages } from '../shared/sharedMessages';
-import { CREATE_FORM_NAME, PARENT_FIELD_NAME } from '../shared/commonConstants';
+import { CREATE_FORM_NAME, PARENT_FOLDER_FIELD } from '../shared/commonConstants';
 import { FolderFormValues } from '../shared/types';
 
 import styles from '../shared/folderFormFields.scss';
@@ -36,6 +40,8 @@ import styles from '../shared/folderFormFields.scss';
 const cx = classNames.bind(styles) as typeof classNames;
 
 export const CREATE_FOLDER_MODAL_KEY = 'createFolderModalKey';
+
+type CreateFolderSubmitHandler = SubmitHandler<FolderFormValues, CreateFolderModalProps>;
 
 interface CreateFolderModalProps {
   data: {
@@ -49,28 +55,54 @@ const CreateFolderModalComponent = ({
   handleSubmit,
   change,
   untouch,
-  initialValues,
 }: CreateFolderModalProps & InjectedFormProps<FolderFormValues, CreateFolderModalProps>) => {
   const { formatMessage } = useIntl();
 
   const {
     isCreatingFolder,
+    folders,
     isToggled: isSubfolderToggled,
     hideModal,
     onSubmit,
     handleToggle,
-    handleParentFieldClear,
     createOkButton,
     createCancelButton,
   } = useFolderModal({
     formName: CREATE_FORM_NAME,
-    parentFieldName: PARENT_FIELD_NAME,
+    parentFieldName: PARENT_FOLDER_FIELD,
   });
 
   const handleToggleChange = handleToggle(change, untouch);
-  const handleParentFolderNameClear = handleParentFieldClear(
-    change,
-    initialValues.parentFolderName,
+
+  const handleSelectedFolder = ({ selectedItem }: { selectedItem: FolderWithFullPath }) => {
+    change(PARENT_FOLDER_FIELD, selectedItem);
+  };
+
+  const renderOption = (
+    option: FolderWithFullPath,
+    index: number,
+    _isNew: boolean,
+    getItemProps: ({
+      item,
+      index,
+    }: {
+      item: FolderWithFullPath;
+      index: number;
+    }) => ComponentProps<typeof AutocompleteOption>,
+  ) => (
+    <AutocompleteOption
+      {...getItemProps({ item: option, index })}
+      key={option.id}
+      parseValueToString={(item: FolderWithFullPath) => item.description || ''}
+      skipOptionCreation
+    >
+      <>
+        <p className={cx('folder-modal__parent-folder__name')}>
+          {option.description || option.name}
+        </p>
+        <p className={cx('folder-modal__parent-folder__path')}>{option.fullPath}</p>
+      </>
+    </AutocompleteOption>
   );
 
   const okButton = {
@@ -92,8 +124,10 @@ const CreateFolderModalComponent = ({
       allowCloseOutside={!dirty}
       onClose={hideModal}
     >
-      {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
-      <form onSubmit={handleSubmit(onSubmit)} className={cx('folder-modal__form')}>
+      <form
+        onSubmit={handleSubmit(onSubmit) as CreateFolderSubmitHandler}
+        className={cx('folder-modal__form')}
+      >
         <FolderNameField />
         {shouldRenderToggle && (
           <ParentFolderToggle
@@ -104,12 +138,25 @@ const CreateFolderModalComponent = ({
           />
         )}
         {isSubfolderToggled && (
-          <ParentFolderField
-            name={PARENT_FIELD_NAME}
-            label={formatMessage(sharedFolderMessages.parentFolder)}
-            onClear={handleParentFolderNameClear}
-            className={cx('folder-modal__parent-folder')}
-          />
+          <div className={cx('folder-modal__parent-folder')}>
+            <FieldLabel isRequired={false}>
+              {formatMessage(sharedFolderMessages.parentFolder)}
+            </FieldLabel>
+            <SingleAutocomplete
+              name={PARENT_FOLDER_FIELD}
+              createWithoutConfirmation={true}
+              optionVariant="key-value"
+              onStateChange={handleSelectedFolder}
+              placeholder={formatMessage(sharedFolderMessages.searchFolderToSelect)}
+              options={folders}
+              customEmptyListMessage={formatMessage(commonMessages.noTestPlanCreated)}
+              renderOption={renderOption}
+              parseValueToString={(option: FolderWithFullPath) =>
+                option?.description || option?.name || ''
+              }
+              skipOptionCreation
+            />
+          </div>
         )}
         <ModalLoadingOverlay isVisible={isCreatingFolder} />
       </form>
@@ -122,13 +169,13 @@ export default withModal(CREATE_FOLDER_MODAL_KEY)(
     form: CREATE_FORM_NAME,
     initialValues: {
       folderName: '',
-      parentFolderName: '',
+      parentFolder: null,
     },
     shouldValidate: () => true, // need this to force validation on parentFolderName after re-registering it
-    validate: ({ folderName, parentFolderName }) => {
+    validate: ({ folderName, parentFolder }) => {
       return {
         folderName: commonValidators.requiredField(folderName),
-        parentFolderName: commonValidators.requiredField(parentFolderName),
+        parentFolderName: commonValidators.requiredField(parentFolder),
       };
     },
   })(CreateFolderModalComponent),

@@ -344,6 +344,14 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.name',
     defaultMessage: 'Name',
   },
+  NO_AVAILABLE_OPTIONS: {
+    id: 'Common.noAvailableOptions',
+    defaultMessage: 'No available options',
+  },
+  MO_MATCHES_FOUND: {
+    id: 'Common.noMatchesFound',
+    defaultMessage: 'No matches found',
+  },
 });
 
 export const months = [
