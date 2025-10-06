@@ -71,11 +71,11 @@ export const transformFoldersToDisplay = (folders: Folder[]): TransformedFolder[
 const addSubfoldersToFolder = (folder: Folder, otherPlainFolders: Folder[]): Folder => {
   const subFolders = otherPlainFolders.filter(({ parentFolderId }) => parentFolderId === folder.id);
 
-  folder.subFolders = subFolders.map((subFolder) =>
+  const mappedSubFolders = subFolders.map((subFolder) =>
     addSubfoldersToFolder(subFolder, otherPlainFolders),
   );
 
-  return folder;
+  return { ...folder, subFolders: mappedSubFolders };
 };
 
 const buildFoldersPath = (folderName: string, parentFolderName?: string) =>
