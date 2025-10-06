@@ -22,14 +22,18 @@ import { registerField, unregisterField } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction } from 'controllers/modal';
 import { createFoldersAction } from 'controllers/testCase/actionCreators';
-import { isCreatingFolderSelector } from 'controllers/testCase';
-import { coerceToNumericId } from 'pages/inside/testCaseLibraryPage/utils';
+import {
+  isCreatingFolderSelector,
+  transformedFoldersWithFullPathSelector,
+} from 'controllers/testCase';
+
 import {
   FolderFormValues,
   BoundChangeFunction,
   BoundUntouchFunction,
   HandleSubmitFunction,
 } from './types';
+import { coerceToNumericId } from '../../utils';
 
 export interface UseFolderModalProps {
   formName: string;
@@ -44,6 +48,8 @@ export const useFolderModal = ({
 }: UseFolderModalProps) => {
   const dispatch = useDispatch();
   const isCreatingFolder = useSelector(isCreatingFolderSelector);
+
+  const folders = useSelector(transformedFoldersWithFullPathSelector);
   const { formatMessage } = useIntl();
 
   const [isToggled, setIsToggled] = useState(false);
@@ -51,12 +57,12 @@ export const useFolderModal = ({
   const hideModal = () => dispatch(hideModalAction());
 
   const defaultOnSubmit = (values: FolderFormValues) => {
-    const parentFieldValue = values[parentFieldName];
-    const idFromNameInput = coerceToNumericId(parentFieldValue as string);
+    const parentFieldValue = values?.parentFolder;
+    const parentFolderId = coerceToNumericId(parentFieldValue?.id);
     dispatch(
       createFoldersAction({
         folderName: values.folderName,
-        ...(idFromNameInput !== undefined ? { parentFolderId: idFromNameInput } : {}),
+        ...(parentFolderId ? { parentFolderId } : {}),
       }),
     );
   };
@@ -90,12 +96,14 @@ export const useFolderModal = ({
   const createCancelButton = () => ({
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
     disabled: isCreatingFolder,
+    onClick: hideModal,
     'data-automation-id': 'cancelButton',
   });
 
   return {
     isCreatingFolder,
     isToggled,
+    folders,
     setIsToggled,
     hideModal,
     onSubmit,

@@ -16,15 +16,17 @@
 
 import { MouseEvent } from 'react';
 
+import { FolderWithFullPath } from 'controllers/testCase';
+
 export type FormFieldValue = string | boolean | number | null | undefined;
 
 export interface BaseFormValues {
   [key: string]: FormFieldValue;
 }
 
-export interface FolderFormValues extends BaseFormValues {
+export interface FolderFormValues {
   folderName: string;
-  parentFolderName?: string;
+  parentFolder?: FolderWithFullPath | null;
   isToggled?: boolean;
 }
 
