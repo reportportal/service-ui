@@ -90,14 +90,12 @@ export const useFolderModal = ({
     changeFunc(parentFieldName, initialValue || '');
   };
 
-  const createOkButton = (handleSubmit: HandleSubmitFunction) => {
-    return {
-      children: formatMessage(COMMON_LOCALE_KEYS.CREATE),
-      onClick: handleSubmit(onSubmit),
-      disabled: isCreatingFolder,
-      'data-automation-id': 'submitButton',
-    };
-  };
+  const createOkButton = (handleSubmit: HandleSubmitFunction) => ({
+    children: formatMessage(COMMON_LOCALE_KEYS.CREATE),
+    onClick: handleSubmit(onSubmit),
+    disabled: isCreatingFolder,
+    'data-automation-id': 'submitButton',
+  });
 
   const createCancelButton = () => ({
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
