@@ -28,6 +28,8 @@ import {
   DurationIcon,
 } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
+
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useOnClickOutside } from 'common/hooks';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
@@ -270,7 +272,7 @@ export const TestCaseSidePanel = memo(
               onClick={handleAddToTestPlanClick}
               data-automation-id="test-case-add-to-test-plan"
             >
-              {formatMessage(messages.addToTestPlan)}
+              {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
             </Button>
           )}
         </div>

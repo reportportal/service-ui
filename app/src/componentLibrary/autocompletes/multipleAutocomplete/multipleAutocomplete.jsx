@@ -280,6 +280,7 @@ MultipleAutocomplete.propTypes = {
   }),
   variant: autocompleteVariantType,
   customizeNewSelectedValue: PropTypes.func,
+  getUniqKey: PropTypes.func,
 };
 
 MultipleAutocomplete.defaultProps = {

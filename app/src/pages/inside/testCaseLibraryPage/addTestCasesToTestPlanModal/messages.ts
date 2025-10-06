@@ -17,16 +17,13 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  addToLaunch: {
-    id: 'EditTestCasePage.addToLaunch',
-    defaultMessage: 'Add to Launch',
+  selectedTestPlanPlaceholder: {
+    id: 'TestCaseLibraryPage.addToTestPlanModal.selectedTestPlanPlaceholder',
+    defaultMessage: 'Select the Test Plan',
   },
-  created: {
-    id: 'EditTestCasePage.created',
-    defaultMessage: 'Created:',
-  },
-  id: {
-    id: 'EditTestCasePage.id',
-    defaultMessage: 'ID:',
+  description: {
+    id: 'TestCaseLibraryPage.addToTestPlanModal.description',
+    defaultMessage:
+      'You are about to add <bold>{testPlansQuantity, number}</bold> selected {testPlansQuantity, plural, one {test case} other {test cases}} to the Test Plan.',
   },
 });

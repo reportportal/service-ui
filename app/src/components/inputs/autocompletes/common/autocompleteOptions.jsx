@@ -29,6 +29,7 @@ export class AutocompleteOptions extends Component {
     createNewOption: PropTypes.func,
     creatable: PropTypes.bool,
     parseValueToString: PropTypes.func,
+    getUniqKey: PropTypes.func,
     isValidNewOption: PropTypes.func,
     getItemProps: PropTypes.func,
     renderOption: PropTypes.func,
@@ -105,7 +106,7 @@ export class AutocompleteOptions extends Component {
       renderOption(item, index, isNew, getItemProps)
     ) : (
       <AutocompleteOption
-        key={this.props.parseValueToString(item)}
+        key={this.props.getUniqKey?.(item) || this.props.parseValueToString(item)}
         {...getItemProps({ item, index })}
         isNew={isNew}
       >

@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
+import { useModal } from 'common/hooks';
+import {
+  ADD_TO_TEST_PLAN_MODAL_KEY,
+  default as AddTestCasesToTestPlanModal,
+} from './addTestCasesToTestPlanModal';
+import { AddTestCasesToTestPlanModalData } from './types';
 
-export const messages = defineMessages({
-  addToLaunch: {
-    id: 'EditTestCasePage.addToLaunch',
-    defaultMessage: 'Add to Launch',
-  },
-  created: {
-    id: 'EditTestCasePage.created',
-    defaultMessage: 'Created:',
-  },
-  id: {
-    id: 'EditTestCasePage.id',
-    defaultMessage: 'ID:',
-  },
-});
+export const useAddTestCasesToTestPlanModal = () =>
+  useModal<AddTestCasesToTestPlanModalData>({
+    modalKey: ADD_TO_TEST_PLAN_MODAL_KEY,
+    renderModal: (data) => <AddTestCasesToTestPlanModal data={data} />,
+  });

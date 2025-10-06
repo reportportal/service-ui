@@ -37,6 +37,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { CHANGE_PRIORITY_MODAL_KEY } from './changePriorityModal';
 import { messages } from './messages';
 import { FolderEmptyState } from '../emptyState/folder/folderEmptyState';
+import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 
 import styles from './allTestCasesPage.scss';
 
@@ -58,7 +59,7 @@ export const AllTestCasesPage = ({
   const { formatMessage } = useIntl();
   const [activePage, setActivePage] = useState<number>(DEFAULT_CURRENT_PAGE);
   const [pageSize, setPageSize] = useState<number>(DEFAULT_ITEMS_PER_PAGE);
-  const [selectedRowIds, setSelectedRowIds] = useState<(number | string)[]>([]);
+  const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
   const folderId = useSelector(urlFolderIdSelector);
   const folders = useSelector(foldersSelector);
   const dispatch = useDispatch();
@@ -68,6 +69,8 @@ export const AllTestCasesPage = ({
     const selectedFolder = folders.find((folder) => String(folder.id) === String(folderId));
     return selectedFolder?.name || formatMessage(messages.allTestCasesTitle);
   }, [folderId, folders, formatMessage]);
+
+  const { openModal: openAddToTestPlanModal } = useAddTestCasesToTestPlanModal();
 
   // Calculate pagination values
   const totalItems = testCases.length;
@@ -102,6 +105,10 @@ export const AllTestCasesPage = ({
       onClick: noop,
     },
   ];
+
+  const handleOpenAddToTestPlanModal = useCallback(() => {
+    openAddToTestPlanModal({ selectedTestCaseIds: selectedRowIds });
+  }, [selectedRowIds, openAddToTestPlanModal]);
 
   const handleSearchChange = useCallback(
     (targetSearchValue: string) => {
@@ -176,7 +183,9 @@ export const AllTestCasesPage = ({
               </PopoverControl>
               <Button variant="ghost">{formatMessage(messages.moveToFolder)}</Button>
               <Button variant="ghost">{formatMessage(messages.addToLaunch)}</Button>
-              <Button>{formatMessage(messages.addToTestPlan)}</Button>
+              <Button onClick={handleOpenAddToTestPlanModal}>
+                {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
+              </Button>
             </div>
           </div>
         )}
