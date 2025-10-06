@@ -58,7 +58,6 @@ const CreateFolderModalComponent = ({
 
   const {
     isCreatingFolder,
-    parentFolder,
     folders,
     isToggled: isSubfolderToggled,
     hideModal,
@@ -141,7 +140,6 @@ const CreateFolderModalComponent = ({
             </FieldLabel>
             <SingleAutocomplete
               name={PARENT_FOLDER_FIELD}
-              value={parentFolder || ''}
               createWithoutConfirmation={true}
               optionVariant="key-value"
               onStateChange={handleSelectedFolder}
@@ -150,7 +148,7 @@ const CreateFolderModalComponent = ({
               customEmptyListMessage={formatMessage(commonMessages.noTestPlanCreated)}
               renderOption={renderOption}
               parseValueToString={(option: FolderWithFullPath) =>
-                (option?.description || option?.name)?.toString() || ''
+                option?.description || option?.name || ''
               }
               skipOptionCreation
             />

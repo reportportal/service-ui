@@ -17,7 +17,7 @@
 import { ChangeEvent, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { formValueSelector, registerField, unregisterField } from 'redux-form';
+import { registerField, unregisterField } from 'redux-form';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction } from 'controllers/modal';
@@ -32,7 +32,6 @@ import {
   BoundChangeFunction,
   BoundUntouchFunction,
   HandleSubmitFunction,
-  FolderFormState,
 } from './types';
 import { coerceToNumericId } from '../../utils';
 
@@ -49,10 +48,7 @@ export const useFolderModal = ({
 }: UseFolderModalProps) => {
   const dispatch = useDispatch();
   const isCreatingFolder = useSelector(isCreatingFolderSelector);
-  const formSelector = formValueSelector(formName);
-  const parentFolder = useSelector(
-    (state: FolderFormState) => formSelector(state, parentFieldName) as number,
-  );
+
   const folders = useSelector(transformedFoldersWithFullPathSelector);
   const { formatMessage } = useIntl();
 
@@ -108,7 +104,6 @@ export const useFolderModal = ({
     isCreatingFolder,
     isToggled,
     folders,
-    parentFolder,
     setIsToggled,
     hideModal,
     onSubmit,
