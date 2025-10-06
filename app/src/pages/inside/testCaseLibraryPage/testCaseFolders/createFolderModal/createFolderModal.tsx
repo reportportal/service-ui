@@ -16,7 +16,7 @@
 
 import { ComponentProps } from 'react';
 import { useIntl } from 'react-intl';
-import { reduxForm, InjectedFormProps } from 'redux-form';
+import { reduxForm, InjectedFormProps, SubmitHandler } from 'redux-form';
 import classNames from 'classnames/bind';
 import { FieldLabel, Modal } from '@reportportal/ui-kit';
 
@@ -40,6 +40,8 @@ import styles from '../shared/folderFormFields.scss';
 const cx = classNames.bind(styles) as typeof classNames;
 
 export const CREATE_FOLDER_MODAL_KEY = 'createFolderModalKey';
+
+type CreateFolderSubmitHandler = SubmitHandler<FolderFormValues, CreateFolderModalProps>;
 
 interface CreateFolderModalProps {
   data: {
@@ -122,8 +124,10 @@ const CreateFolderModalComponent = ({
       allowCloseOutside={!dirty}
       onClose={hideModal}
     >
-      {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
-      <form onSubmit={handleSubmit(onSubmit)} className={cx('folder-modal__form')}>
+      <form
+        onSubmit={handleSubmit(onSubmit) as CreateFolderSubmitHandler}
+        className={cx('folder-modal__form')}
+      >
         <FolderNameField />
         {shouldRenderToggle && (
           <ParentFolderToggle

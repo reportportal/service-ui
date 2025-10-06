@@ -18,8 +18,6 @@ import { MouseEvent } from 'react';
 
 import { FolderWithFullPath } from 'controllers/testCase';
 
-import { PARENT_FIELD_NAME } from './commonConstants';
-
 export type FormFieldValue = string | boolean | number | null | undefined;
 
 export interface BaseFormValues {
@@ -45,14 +43,4 @@ export type BoundUntouchFunction = (field: string) => void;
 
 export interface HandleSubmitFunction {
   (onSubmit: (values: FolderFormValues) => void): (event: MouseEvent<HTMLButtonElement>) => void;
-}
-
-export interface FolderFormState {
-  form: {
-    [PARENT_FIELD_NAME]: {
-      values: {
-        parentFolder?: FolderWithFullPath;
-      };
-    };
-  };
 }
