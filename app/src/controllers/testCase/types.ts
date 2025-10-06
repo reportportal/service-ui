@@ -31,3 +31,10 @@ export type TransformedFolder = {
   parentFolderId: number | null;
   folders: TransformedFolder[];
 };
+
+export interface FolderWithFullPath {
+  id: number;
+  description: string;
+  name: string;
+  fullPath: string;
+}

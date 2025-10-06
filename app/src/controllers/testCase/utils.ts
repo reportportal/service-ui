@@ -16,7 +16,7 @@
 
 import { isEmpty } from 'es-toolkit/compat';
 
-import { Folder, TransformedFolder } from './types';
+import { Folder, FolderWithFullPath, TransformedFolder } from './types';
 
 export const getAllFolderIdsToDelete = (targetId: number, folderList: Folder[]): number[] => {
   const idsToDelete: number[] = [];
@@ -67,3 +67,55 @@ export const transformFoldersToDisplay = (folders: Folder[]): TransformedFolder[
 
   return folderMap.get(null).folders;
 };
+
+const addSubfoldersToFolder = (folder: Folder, otherPlainFolders: Folder[]): Folder => {
+  const subFolders = otherPlainFolders.filter(({ parentFolderId }) => parentFolderId === folder.id);
+
+  const mappedSubFolders = subFolders.map((subFolder) =>
+    addSubfoldersToFolder(subFolder, otherPlainFolders),
+  );
+
+  return { ...folder, subFolders: mappedSubFolders };
+};
+
+const buildFoldersPath = (folderName: string, parentFolderName?: string) =>
+  parentFolderName ? `${parentFolderName} / ${folderName}` : folderName;
+
+export const buildFoldersMap = (folders: Folder[], parentFolders: Folder[] = []): Folder[] => {
+  return folders.reduce((mergedFolders: Folder[], folder) => {
+    if (!folder.parentFolderId) {
+      const folderWithSubfolders = addSubfoldersToFolder(folder, folders);
+      mergedFolders.push(folderWithSubfolders);
+    }
+
+    return mergedFolders;
+  }, parentFolders);
+};
+
+export const traverseFolders = (
+  folders: Folder[],
+  parentFolderName?: string,
+  parentFolders: FolderWithFullPath[] = [],
+): FolderWithFullPath[] => {
+  return folders.reduce((mergedFolders: FolderWithFullPath[], folder: Folder) => {
+    if (!isEmpty(folder.subFolders)) {
+      traverseFolders(
+        folder.subFolders,
+        buildFoldersPath(folder.name, parentFolderName),
+        parentFolders,
+      );
+    }
+
+    parentFolders.push({
+      id: folder.id,
+      description: folder.description,
+      name: folder.name,
+      fullPath: buildFoldersPath(folder.name, parentFolderName),
+    });
+
+    return mergedFolders;
+  }, parentFolders);
+};
+
+export const transformFoldersWithFullPath = (folders: Folder[]): FolderWithFullPath[] =>
+  traverseFolders(buildFoldersMap(folders));
