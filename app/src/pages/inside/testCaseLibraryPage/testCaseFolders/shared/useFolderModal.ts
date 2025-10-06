@@ -53,7 +53,7 @@ export const useFolderModal = ({
   const parentFolder = useSelector(
     (state: FolderFormState) => formSelector(state, parentFieldName) as number,
   );
-  const folders = useSelector((state) => transformedFoldersWithFullPathSelector(state));
+  const folders = useSelector(transformedFoldersWithFullPathSelector);
   const { formatMessage } = useIntl();
 
   const [isToggled, setIsToggled] = useState(false);
