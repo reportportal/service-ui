@@ -22,7 +22,10 @@ import { formValueSelector, registerField, unregisterField } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction } from 'controllers/modal';
 import { createFoldersAction } from 'controllers/testCase/actionCreators';
-import { foldersWithFullPathSelector, isCreatingFolderSelector } from 'controllers/testCase';
+import {
+  isCreatingFolderSelector,
+  transformedFoldersWithFullPathSelector,
+} from 'controllers/testCase';
 
 import {
   FolderFormValues,
@@ -50,7 +53,7 @@ export const useFolderModal = ({
   const parentFolder = useSelector(
     (state: FolderFormState) => formSelector(state, parentFieldName) as number,
   );
-  const folders = useSelector(foldersWithFullPathSelector);
+  const folders = useSelector((state) => transformedFoldersWithFullPathSelector(state));
   const { formatMessage } = useIntl();
 
   const [isToggled, setIsToggled] = useState(false);

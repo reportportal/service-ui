@@ -68,10 +68,9 @@ export const transformFoldersToDisplay = (folders: Folder[]): TransformedFolder[
   return folderMap.get(null).folders;
 };
 
-const addSubfoldersToFolder = (folder: Folder, otherPlainFolders: Folder[]) => {
-  const subFolders = otherPlainFolders.filter(
-    ({ id: plainFolderId }) => plainFolderId === folder.id,
-  );
+const addSubfoldersToFolder = (folder: Folder, otherPlainFolders: Folder[]): Folder => {
+  const subFolders = otherPlainFolders.filter(({ parentFolderId }) => parentFolderId === folder.id);
+
   folder.subFolders = subFolders.map((subFolder) =>
     addSubfoldersToFolder(subFolder, otherPlainFolders),
   );

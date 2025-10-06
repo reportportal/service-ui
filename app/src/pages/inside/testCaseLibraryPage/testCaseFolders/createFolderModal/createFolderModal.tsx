@@ -25,6 +25,8 @@ import { FolderWithFullPath } from 'controllers/testCase';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { commonValidators } from 'common/utils/validation';
+import { AutocompleteOption } from 'componentLibrary/autocompletes/common/autocompleteOption';
+import { SingleAutocomplete } from 'componentLibrary/autocompletes/singleAutocomplete';
 
 import { commonMessages } from '../../commonMessages';
 import { useFolderModal } from '../shared/useFolderModal';
@@ -32,10 +34,6 @@ import { FolderNameField, ParentFolderToggle } from '../shared/FolderFormFields'
 import { sharedFolderMessages } from '../shared/sharedMessages';
 import { CREATE_FORM_NAME, PARENT_FOLDER_FIELD } from '../shared/commonConstants';
 import { FolderFormValues } from '../shared/types';
-
-import { SingleAutocomplete } from 'componentLibrary/autocompletes/singleAutocomplete';
-
-import { AutocompleteOption } from 'componentLibrary/autocompletes/common/autocompleteOption';
 
 import styles from '../shared/folderFormFields.scss';
 
@@ -151,6 +149,7 @@ const CreateFolderModalComponent = ({
               name={PARENT_FOLDER_FIELD}
               value={parentFolder || ''}
               createWithoutConfirmation={true}
+              optionVariant="key-value"
               onStateChange={handleSelectedFolder}
               placeholder={formatMessage(sharedFolderMessages.searchFolderToSelect)}
               options={folders}
