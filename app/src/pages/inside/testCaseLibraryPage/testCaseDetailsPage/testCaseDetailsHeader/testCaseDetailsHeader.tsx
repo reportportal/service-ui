@@ -30,14 +30,16 @@ import { PopoverControl } from 'pages/common/popoverControl';
 import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { REVERSED_DATE_FORMAT } from 'common/constants/timeDateFormat';
+import { showModalAction } from 'controllers/modal';
 import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { testCaseLibraryBreadcrumbsSelector } from 'controllers/pages/selectors';
-import { TestCaseBasicInfo } from '../../types';
+import { TestCase } from '../../types';
 import { messages } from './messages';
 import { commonMessages } from '../../commonMessages';
+import { EDIT_TEST_CASE_MODAL_KEY } from '../editTestCaseModal/editTestCaseModal';
 
 import styles from './testCaseDetailsHeader.scss';
 
@@ -45,7 +47,7 @@ const cx = classNames.bind(styles) as typeof classNames;
 
 interface TestCaseDetailsHeaderProps {
   className?: string;
-  testCase: TestCaseBasicInfo;
+  testCase: TestCase;
   onAddToLaunch: () => void;
   onAddToTestPlan: () => void;
   onMenuAction?: () => void;
@@ -117,6 +119,22 @@ export const TestCaseDetailsHeader = ({
     return items;
   };
 
+  const openEditTestCaseModal = () => {
+    dispatch(
+      showModalAction({
+        id: EDIT_TEST_CASE_MODAL_KEY,
+        data: {
+          initialValues: {
+            name: testCase.name,
+            priority: testCase.priority.toLowerCase(),
+            testFolderId: testCase.testFolder.id,
+          },
+          testCaseId: testCase.id,
+        },
+      }),
+    );
+  };
+
   return (
     <div className={cx('header', className)}>
       <div className={cx('header__breadcrumb')}>
@@ -130,7 +148,11 @@ export const TestCaseDetailsHeader = ({
         />
         {testCase.name}
         {canEditTestCase && (
-          <button type="button" className={cx('header__edit-button')}>
+          <button
+            type="button"
+            className={cx('header__edit-button')}
+            onClick={openEditTestCaseModal}
+          >
             {Parser(PencilIcon as unknown as string)}
           </button>
         )}

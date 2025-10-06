@@ -228,6 +228,14 @@ const messages = defineMessages({
     id: 'TestCaseLibraryPage.testCasesAddedToTestPlanSuccess',
     defaultMessage: 'Selected Test Cases have been added to the Test Plan successfully.',
   },
+  testCaseUpdatedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseUpdatedSuccess',
+    defaultMessage: 'Test Case has been updated successfully.',
+  },
+  testCaseBulkUpdateSuccess: {
+    id: 'TestCaseLibraryPage.testCaseBulkUpdateSuccess',
+    defaultMessage: 'Test Cases have been updated successfully.',
+  },
   testCaseCreationFailed: {
     id: 'TestCaseLibraryPage.testCaseCreationFailed',
     defaultMessage: 'Failed to create Test Case.',

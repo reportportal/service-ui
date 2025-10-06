@@ -15,10 +15,11 @@
  */
 
 import { createSelector } from 'reselect';
+
+import { transformFoldersToDisplay } from 'controllers/testCase/utils';
+import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Folder } from './types';
 import { InitialStateType } from './reducer';
-import { TestCaseBasicInfo } from 'pages/inside/testCaseLibraryPage/types';
-import { transformFoldersToDisplay } from 'controllers/testCase/utils';
 
 export interface TestCaseState {
   folders?: {
@@ -32,7 +33,7 @@ export interface TestCaseState {
     list?: unknown[];
   };
   details?: {
-    data?: TestCaseBasicInfo;
+    data?: TestCase;
   };
 }
 
