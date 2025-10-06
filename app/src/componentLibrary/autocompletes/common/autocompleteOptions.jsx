@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-import { Component } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { isEmpty } from 'es-toolkit/compat';
+import PropTypes from 'prop-types';
+import { Component } from 'react';
+import { injectIntl } from 'react-intl';
+
 import { BubblesLoader } from '@reportportal/ui-kit';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+
 import { autocompleteVariantType, singleAutocompleteOptionVariantType } from './propTypes';
 import { AutocompletePrompt } from './autocompletePrompt';
 import { AutocompleteOption } from './autocompleteOption';
+
 import styles from './autocompleteOptions.scss';
-import { isEmpty } from 'es-toolkit/compat';
-import { injectIntl } from 'react-intl';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 const cx = classNames.bind(styles);
 

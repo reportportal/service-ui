@@ -37,13 +37,13 @@
     margin-top: 14px;
 
     &__name {
-      font-family: $FONT-REGULAR;
-      color: $COLOR--almost-black;
+      font-family: var(--rp-ui-base-font-family);
+      color: var(--rp-ui-color-text);
     }
 
     &__path {
-      font-family: $FONT-REGULAR;
-      color: $COLOR--e-400;
+      font-family: var(--rp-ui-base-font-family);
+      color: var(--rp-ui-color-text-secondary);
     }
   }
 }

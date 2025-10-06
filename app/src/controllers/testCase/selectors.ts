@@ -54,9 +54,6 @@ export const EMPTY_FOLDERS: Folder[] = [];
 export const foldersSelector = (state: RootState): Folder[] =>
   testCaseSelector(state).folders?.data || EMPTY_FOLDERS;
 
-export const foldersWithFullPathSelector = (state: RootState): Folder[] =>
-  testCaseSelector(state).folders?.data || EMPTY_FOLDERS;
-
 export const isCreatingFolderSelector = (state: RootState): boolean =>
   testCaseSelector(state).folders?.isCreatingFolder || false;
 
