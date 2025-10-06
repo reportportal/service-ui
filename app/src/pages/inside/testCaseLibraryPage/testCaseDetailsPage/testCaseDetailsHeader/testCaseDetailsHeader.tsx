@@ -190,7 +190,7 @@ export const TestCaseDetailsHeader = ({
           )}
           {canAddTestCaseToTestPlan && (
             <Button onClick={onAddToTestPlan} variant="ghost">
-              {formatMessage(messages.addToTestPlan)}
+              {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
             </Button>
           )}
         </div>

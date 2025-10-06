@@ -47,6 +47,7 @@ export class AutocompleteOptionsComponent extends Component {
     variant: autocompleteVariantType,
     customEmptyListMessage: PropTypes.string,
     intl: PropTypes.object.isRequired,
+    getUniqKey: PropTypes.func,
   };
 
   static defaultProps = {
@@ -94,7 +95,7 @@ export class AutocompleteOptionsComponent extends Component {
       renderOption(item, index, isNew, getItemProps)
     ) : (
       <AutocompleteOption
-        key={this.props.parseValueToString(item)}
+        key={this.props.getUniqKey?.(item) || this.props.parseValueToString(item)}
         optionVariant={optionVariant}
         {...getItemProps({ item, index })}
         isNew={isNew}

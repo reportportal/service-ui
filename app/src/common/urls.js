@@ -384,6 +384,8 @@ export const URLS = {
   allTestCases: (projectKey) => `${urlBase}project/${projectKey}/tms/test-case`,
   testPlan: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-plan${getQueryParams(query)}`,
+  testPlanTestCasesBatch: (projectKey, testPlanId) =>
+    `${urlBase}project/${projectKey}/tms/test-plan/${testPlanId}/test-case/batch`,
   testPlanById: (projectKey, testPlanId) =>
     `${urlBase}project/${projectKey}/tms/test-plan/${testPlanId}`,
   testFolders: (projectKey, query = {}) =>

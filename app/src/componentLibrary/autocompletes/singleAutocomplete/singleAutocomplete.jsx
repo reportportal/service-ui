@@ -56,6 +56,8 @@ export class SingleAutocomplete extends Component {
     variant: autocompleteVariantType,
     useFixedPositioning: PropTypes.bool,
     customEmptyListMessage: PropTypes.string,
+    getUniqKey: PropTypes.func,
+    skipOptionCreation: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -86,6 +88,7 @@ export class SingleAutocomplete extends Component {
     stateReducer: (state, changes) => changes,
     variant: 'light',
     useFixedPositioning: false,
+    skipOptionCreation: false,
   };
 
   getOptionProps =
@@ -132,6 +135,7 @@ export class SingleAutocomplete extends Component {
       stateReducer,
       variant,
       useFixedPositioning,
+      skipOptionCreation,
       ...props
     } = this.props;
     return (
@@ -177,12 +181,14 @@ export class SingleAutocomplete extends Component {
                         onBlur: (e) => {
                           const newValue = (inputValue || '').trim();
 
-                          if (!createWithoutConfirmation && !newValue) {
-                            selectItem(newValue);
-                          }
+                          if (!skipOptionCreation) {
+                            if (!createWithoutConfirmation && !newValue) {
+                              selectItem(newValue);
+                            }
 
-                          if (createWithoutConfirmation) {
-                            selectItem(newValue);
+                            if (createWithoutConfirmation) {
+                              selectItem(newValue);
+                            }
                           }
 
                           onBlur(e);

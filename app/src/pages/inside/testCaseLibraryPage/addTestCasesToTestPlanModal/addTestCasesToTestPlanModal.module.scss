@@ -14,19 +14,14 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
+.description {
+  padding: 16px 0;
+}
 
-export const messages = defineMessages({
-  addToLaunch: {
-    id: 'EditTestCasePage.addToLaunch',
-    defaultMessage: 'Add to Launch',
-  },
-  created: {
-    id: 'EditTestCasePage.created',
-    defaultMessage: 'Created:',
-  },
-  id: {
-    id: 'EditTestCasePage.id',
-    defaultMessage: 'ID:',
-  },
-});
+.selected-test-cases {
+  font-family: $FONT-ROBOTO-BOLD;
+}
+
+.autocomplete-wrapper {
+  position: relative;
+}
