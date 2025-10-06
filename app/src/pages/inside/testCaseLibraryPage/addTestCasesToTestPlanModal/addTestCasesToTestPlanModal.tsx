@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 /*
  * Copyright 2025 EPAM Systems
  *
@@ -20,7 +18,7 @@ import classNames from 'classnames/bind';
 import { size } from 'es-toolkit/compat';
 import { ReactNode, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { InjectedFormProps, reduxForm } from 'redux-form';
+import { InjectedFormProps, reduxForm, SubmitHandler } from 'redux-form';
 import { useIntl } from 'react-intl';
 
 import { Modal } from '@reportportal/ui-kit';
@@ -39,6 +37,12 @@ import { AddTestCasesToTestPlanFormData, AddTestCasesToTestPlanModalProps } from
 import { useAddTestCasesToTestPlan } from './useAddTestCasesToTestPlan';
 
 import styles from './addTestCasesToTestPlanModal.module.scss';
+
+type AddTestCasesSubmitHandler = SubmitHandler<
+  AddTestCasesToTestPlanFormData,
+  AddTestCasesToTestPlanModalProps,
+  string
+>;
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -93,15 +97,15 @@ export const AddTestCasesToTestPlanModal = ({
           </LoadingSubmitButton>
         ),
         type: 'submit',
-        onClick: () => handleSubmit(addTestCasesToTestPlan),
-        disabled: invalid,
+        onClick: handleSubmit(addTestCasesToTestPlan) as AddTestCasesSubmitHandler,
+        disabled: invalid || isAddTestCasesToTestPlanLoading,
       }}
       cancelButton={{
         children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
         onClick: () => dispatch(hideModalAction()),
       }}
     >
-      <form onSubmit={handleSubmit(addTestCasesToTestPlan)}>
+      <form onSubmit={handleSubmit(addTestCasesToTestPlan) as AddTestCasesSubmitHandler}>
         <div>
           {description}
           <div className={cx('autocomplete-wrapper')}>
