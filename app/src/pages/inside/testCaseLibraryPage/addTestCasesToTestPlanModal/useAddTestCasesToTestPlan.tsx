@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { formValueSelector, InjectedFormProps } from 'redux-form';
+import { InjectedFormProps } from 'redux-form';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { projectKeySelector } from 'controllers/project';
@@ -29,20 +29,7 @@ import {
   AddTestCasesToTestPlanModalData,
   AddTestCasesToTestPlanModalProps,
 } from './types';
-import {
-  ADD_TO_TEST_PLAN_MODAL_FORM,
-  SELECTED_TEST_PLAN_FIELD_NAME,
-} from './addTestCasesToTestPlanModal';
-
-interface ReduxFormState {
-  form: {
-    [ADD_TO_TEST_PLAN_MODAL_FORM]: {
-      values: {
-        selectedTestPlan?: TestPlanDto;
-      };
-    };
-  };
-}
+import { SELECTED_TEST_PLAN_FIELD_NAME } from './addTestCasesToTestPlanModal';
 
 export const useAddTestCasesToTestPlan = ({
   selectedTestCaseIds,
@@ -59,18 +46,15 @@ export const useAddTestCasesToTestPlan = ({
   } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
-  const formSelector = formValueSelector(ADD_TO_TEST_PLAN_MODAL_FORM);
-  const selectedTestPlan = useSelector(
-    (state: ReduxFormState) => formSelector(state, SELECTED_TEST_PLAN_FIELD_NAME) as string,
-  );
 
   const setSelectedTestPlan = (value: TestPlanDto | null) => {
     change(SELECTED_TEST_PLAN_FIELD_NAME, value || null);
   };
 
-  const addTestCasesToTestPlan = (values: AddTestCasesToTestPlanFormData) => {
+  const addTestCasesToTestPlan = (values: AddTestCasesToTestPlanFormData): void => {
     const testPlan = values?.[SELECTED_TEST_PLAN_FIELD_NAME];
-    const fetchPath: string = URLS.testPlanTestCasesBatch(projectKey, testPlan.id);
+
+    const fetchPath: string = URLS.testPlanTestCasesBatch?.(projectKey, testPlan.id);
 
     showSpinner();
 
@@ -103,7 +87,6 @@ export const useAddTestCasesToTestPlan = ({
 
   return {
     isAddTestCasesToTestPlanLoading,
-    selectedTestPlan,
     addTestCasesToTestPlan,
     setSelectedTestPlan,
   };

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /*
  * Copyright 2025 EPAM Systems
  *
@@ -49,6 +50,7 @@ export const AddTestCasesToTestPlanModal = ({
   change,
   handleSubmit,
   data,
+  invalid,
 }: AddTestCasesToTestPlanModalProps &
   InjectedFormProps<AddTestCasesToTestPlanFormData, AddTestCasesToTestPlanModalProps>) => {
   const { selectedTestCaseIds } = data;
@@ -59,15 +61,11 @@ export const AddTestCasesToTestPlanModal = ({
 
   const selectedTestCasesLength = size(selectedTestCaseIds);
 
-  const {
-    isAddTestCasesToTestPlanLoading,
-    setSelectedTestPlan,
-    selectedTestPlan,
-    addTestCasesToTestPlan,
-  } = useAddTestCasesToTestPlan({
-    selectedTestCaseIds,
-    change,
-  });
+  const { isAddTestCasesToTestPlanLoading, setSelectedTestPlan, addTestCasesToTestPlan } =
+    useAddTestCasesToTestPlan({
+      selectedTestCaseIds,
+      change,
+    });
 
   const makeTestPlansOptions = (response: { content: TestPlanDto[] }) => response.content;
 
@@ -95,8 +93,8 @@ export const AddTestCasesToTestPlanModal = ({
           </LoadingSubmitButton>
         ),
         type: 'submit',
-        onClick: handleSubmit(addTestCasesToTestPlan),
-        disabled: !selectedTestPlan,
+        onClick: () => handleSubmit(addTestCasesToTestPlan),
+        disabled: invalid,
       }}
       cancelButton={{
         children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -110,7 +108,6 @@ export const AddTestCasesToTestPlanModal = ({
             <AsyncAutocomplete
               placeholder={formatMessage(messages.selectedTestPlanPlaceholder)}
               getURI={retrieveTestPlans}
-              value={selectedTestPlan}
               makeOptions={makeTestPlansOptions}
               onChange={setSelectedTestPlan}
               parseValueToString={(value: TestPlanDto) => value?.name}
