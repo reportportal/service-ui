@@ -116,7 +116,7 @@ export const AddTestCasesToTestPlanModal = ({
               makeOptions={makeTestPlansOptions}
               onChange={setSelectedTestPlan}
               parseValueToString={(value: TestPlanDto) => value?.name}
-              createWithoutConfirmation={true}
+              createWithoutConfirmation
               skipOptionCreation
             />
           </div>
