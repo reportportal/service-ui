@@ -20,14 +20,8 @@ import { AppHeader } from './appHeader';
 import { AppSidebar } from './appSidebar';
 import { AppBanner } from './appBanner';
 
-export const AppLayout = ({ children, rawContent, ...rest }) => (
-  <Layout
-    Header={AppHeader}
-    Sidebar={AppSidebar}
-    Banner={AppBanner}
-    rawContent={rawContent}
-    {...rest}
-  >
+export const AppLayout = ({ children, rawContent }) => (
+  <Layout Header={AppHeader} Sidebar={AppSidebar} Banner={AppBanner} rawContent={rawContent}>
     {children}
   </Layout>
 );

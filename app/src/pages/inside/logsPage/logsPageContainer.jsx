@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,20 @@
  * limitations under the License.
  */
 
-export { LogsPage } from './logsPage';
-export { LogsPageContainer } from './logsPageContainer';
-export { CopySendDefectModal, AttachmentCodeModal, AttachmentHarFileModal } from './modals';
+import React from 'react';
+import classNames from 'classnames/bind';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { LogsPage } from './logsPage';
+import styles from './logsPageContainer.scss';
+
+const cx = classNames.bind(styles);
+
+export const LogsPageContainer = () => (
+  <ScrollWrapper withBackToTop withFooter backToTopEventEnabled>
+    <div className={cx('scrolling-content')}>
+      <div className={cx('page-container')}>
+        <LogsPage />
+      </div>
+    </div>
+  </ScrollWrapper>
+);

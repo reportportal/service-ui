@@ -41,7 +41,7 @@ import { LoginPage } from 'pages/outside/loginPage';
 import { NotFoundPage } from 'pages/outside/notFoundPage';
 import { RegistrationPage } from 'pages/outside/registrationPage';
 import { TestItemPage } from 'pages/inside/testItemPage';
-import { LogsPage } from 'pages/inside/logsPage';
+import { LogsPageContainer } from 'pages/inside/logsPage';
 import {
   TEST_ITEM_PAGE,
   PROJECT_LOG_PAGE,
@@ -117,11 +117,11 @@ export const pageRendering = {
   PLUGINS_PAGE: { component: PluginsPage, layout: AdminLayout, access: ADMIN_ACCESS },
   PLUGINS_TAB_PAGE: { component: PluginsPage, layout: AdminLayout, access: ADMIN_ACCESS },
   [TEST_ITEM_PAGE]: { component: TestItemPage, layout: AppLayout },
-  [PROJECT_LOG_PAGE]: { component: LogsPage, layout: AppLayout, backToTopEventEnabled: true },
+  [PROJECT_LOG_PAGE]: { component: LogsPageContainer, layout: AppLayout, rawContent: true },
   [PROJECT_USERDEBUG_LOG_PAGE]: {
-    component: LogsPage,
+    component: LogsPageContainer,
     layout: AppLayout,
-    backToTopEventEnabled: true,
+    rawContent: true,
   },
   [HISTORY_PAGE]: { component: HistoryPage, layout: AppLayout },
   [UNIQUE_ERRORS_PAGE]: { component: UniqueErrorsPage, layout: AppLayout },

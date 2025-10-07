@@ -41,9 +41,7 @@ export const PaginationModal = ({ isPaginationOn }) => {
   const currentQuery = useSelector((state) => querySelector(state, NAMESPACE));
 
   const handleConfirm = (closeModal) => {
-    const newQuery = { ...currentQuery };
-    delete newQuery[PAGE_KEY];
-    delete newQuery[SIZE_KEY];
+    const { [PAGE_KEY]: _page, [SIZE_KEY]: _size, ...newQuery } = currentQuery;
 
     trackEvent(LOG_PAGE_EVENTS.getTogglePaginationEvent(isPaginationOn));
     dispatch(setLogsPaginationEnabledAction(isPaginationOn));

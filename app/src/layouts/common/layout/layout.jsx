@@ -45,7 +45,6 @@ export class Layout extends Component {
     isExtensionPage: PropTypes.bool,
     sessionExpirationConfig: PropTypes.number.isRequired,
     logout: PropTypes.func.isRequired,
-    backToTopEventEnabled: PropTypes.bool,
   };
   static defaultProps = {
     children: null,
@@ -54,7 +53,6 @@ export class Layout extends Component {
     Sidebar: null,
     rawContent: false,
     isExtensionPage: false,
-    backToTopEventEnabled: false,
   };
 
   state = {
@@ -165,7 +163,6 @@ export class Layout extends Component {
                 withFooter
                 resetRequired={this.state.resetScroll}
                 onReset={this.unmarkScrollToReset}
-                backToTopEventEnabled={this.props.backToTopEventEnabled}
               >
                 <div className={cx('scrolling-content')}>
                   {header}
