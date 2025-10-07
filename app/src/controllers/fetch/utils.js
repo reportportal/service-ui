@@ -15,7 +15,17 @@
  */
 
 import { createNamespacedActionPredicate } from 'common/utils/createNamespacedActionPredicate';
-import { FETCH_ERROR, FETCH_SUCCESS, CONCAT_FETCH_SUCCESS } from './constants';
+import {
+  FETCH_ERROR,
+  FETCH_SUCCESS,
+  CONCAT_FETCH_SUCCESS,
+  PREPEND_FETCH_SUCCESS,
+} from './constants';
 
 export const createFetchPredicate = (namespace) =>
-  createNamespacedActionPredicate(namespace, [FETCH_ERROR, FETCH_SUCCESS, CONCAT_FETCH_SUCCESS]);
+  createNamespacedActionPredicate(namespace, [
+    FETCH_ERROR,
+    FETCH_SUCCESS,
+    CONCAT_FETCH_SUCCESS,
+    PREPEND_FETCH_SUCCESS,
+  ]);

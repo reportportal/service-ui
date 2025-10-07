@@ -17,6 +17,7 @@
 import * as logLevels from 'common/constants/logLevels';
 import { SORTING_ASC } from 'controllers/sorting/constants';
 import { formatSortingString } from 'controllers/sorting/utils';
+import { LOADING_DIRECTIONS } from 'common/constants/loadingDirections';
 
 export const NAMESPACE = 'log';
 export const LOG_ITEMS_NAMESPACE = `${NAMESPACE}/logItems`;
@@ -56,6 +57,9 @@ export const SET_ACTIVE_TAB_ID = 'SET_ACTIVE_TAB_ID';
 export const FETCH_HISTORY_ITEMS_WITH_LOADING = 'ON_UPDATE_ITEM_STATUS';
 export const FETCH_ERROR_LOGS = 'fetchErrorLogs';
 export const FETCH_ERROR_LOG = 'fetchErrorLog';
+export const LOAD_MORE_PAGE_SIZE = 50;
+export const LOAD_MORE_LOGS = 'LOAD_MORE_LOGS';
+export const FETCH_LOG_ITEMS_FOR_PAGE = 'FETCH_LOG_ITEMS_FOR_PAGE';
 
 export const LOG_LEVELS = [
   {
@@ -90,7 +94,7 @@ export const LOG_LEVELS = [
   },
 ];
 
-export const PREVIOUS = 'previous';
-export const NEXT = 'next';
+export const PREVIOUS = LOADING_DIRECTIONS.PREVIOUS;
+export const NEXT = LOADING_DIRECTIONS.NEXT;
 export const ALL = 'all';
 export const ERROR_LOG_INDEX_KEY = 'errorLogIndex';

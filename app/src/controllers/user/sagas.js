@@ -22,7 +22,11 @@ import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { getLogTimeFormatFromStorage } from 'controllers/log/storageUtils';
 import { userIdSelector, userInfoSelector, activeProjectSelector } from './selectors';
-import { getUserProjectSettingsFromStorage, setNoLogsCollapsingInStorage } from './storageUtils';
+import {
+  getUserProjectSettingsFromStorage,
+  setNoLogsCollapsingInStorage,
+  setLogsPaginationEnabledInStorage,
+} from './storageUtils';
 import {
   ASSIGN_TO_PROJECT,
   UNASSIGN_FROM_PROJECT,
@@ -33,7 +37,9 @@ import {
   FETCH_USER,
   DELETE_USER_ACCOUNT,
   SET_NO_LOGS_COLLAPSING,
+  SET_LOGS_PAGINATION_ENABLED,
   NO_LOGS_COLLAPSING_KEY,
+  LOGS_PAGINATION_ENABLED_KEY,
 } from './constants';
 import {
   assignToProjectSuccessAction,
@@ -162,6 +168,15 @@ function* setNoLogsCollapsing({ payload }) {
   yield put(updateActiveProjectSettingsAction({ [NO_LOGS_COLLAPSING_KEY]: value }));
 }
 
+function* setLogsPaginationEnabled({ payload }) {
+  const { value } = payload;
+  const userId = yield select(userIdSelector);
+  const projectId = yield select(activeProjectSelector);
+
+  yield call(setLogsPaginationEnabledInStorage, userId, projectId, value);
+  yield put(updateActiveProjectSettingsAction({ [LOGS_PAGINATION_ENABLED_KEY]: value }));
+}
+
 function* addApiKey({ payload = {} }) {
   const { name, successMessage, errorMessage, onSuccess } = payload;
   const user = yield select(userInfoSelector);
@@ -288,6 +303,10 @@ function* watchSetNoLogsCollapsing() {
   yield takeEvery(SET_NO_LOGS_COLLAPSING, setNoLogsCollapsing);
 }
 
+function* watchSetLogsPagination() {
+  yield takeEvery(SET_LOGS_PAGINATION_ENABLED, setLogsPaginationEnabled);
+}
+
 function* watchFetchUser() {
   yield takeEvery(FETCH_USER, fetchUserWorker);
 }
@@ -307,6 +326,7 @@ export function* userSagas() {
     watchFetchUser(),
     watchSetActiveProject(),
     watchSetNoLogsCollapsing(),
+    watchSetLogsPagination(),
     watchAddApiKey(),
     watchFetchApiKeys(),
     watchDeleteApiKey(),

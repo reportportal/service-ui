@@ -61,7 +61,7 @@ export default class PageSwitcher extends React.Component {
 
     const { component: PageComponent, layout: Layout, rawContent = false } = pageRendering[page];
 
-    if (!PageComponent) throw new Error(`Page ${page} does not exist`);
+    if (!PageComponent) throw new Error(`Page ${page} does not exfist`);
     if (!Layout) throw new Error(`Page ${page} is missing layout`);
 
     const mode = process.env.NODE_ENV;

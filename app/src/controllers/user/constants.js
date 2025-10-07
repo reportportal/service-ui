@@ -50,9 +50,12 @@ export const DELETE_USER_ACCOUNT = 'deleteUserAccount';
 export const SET_ACTIVE_PROJECT_SETTINGS = 'setActiveProjectSettings';
 export const UPDATE_ACTIVE_PROJECT_SETTINGS = 'updateActiveProjectSettings';
 export const SET_NO_LOGS_COLLAPSING = 'setNoLogsCollapsing';
+export const SET_LOGS_PAGINATION_ENABLED = 'setLogsPaginationEnabled';
 
 export const NO_LOGS_COLLAPSING_KEY = 'noLogsCollapsing';
+export const LOGS_PAGINATION_ENABLED_KEY = 'logsPaginationEnabled';
 
 export const ACTIVE_PROJECT_SETTINGS_INITIAL_STATE = {
   [NO_LOGS_COLLAPSING_KEY]: false,
+  [LOGS_PAGINATION_ENABLED_KEY]: true,
 };

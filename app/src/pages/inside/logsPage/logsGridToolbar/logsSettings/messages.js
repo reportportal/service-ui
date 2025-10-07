@@ -25,4 +25,8 @@ export const messages = defineMessages({
     id: 'LogsSettings.noLogsCollapsing',
     defaultMessage: 'No logs collapsing',
   },
+  pagination: {
+    id: 'LogsSettings.pagination',
+    defaultMessage: 'Pagination',
+  },
 });
