@@ -111,13 +111,14 @@ export const AddTestCasesToTestPlanModal = ({
           {isSingleTestCaseMode ? null : description}
           <FieldLabel>{formatMessage(messages.label)}</FieldLabel>
           <div className={cx('autocomplete-wrapper')}>
+            <FieldLabel>{formatMessage(messages.label)}</FieldLabel>
             <AsyncAutocomplete
               placeholder={formatMessage(messages.selectedTestPlanPlaceholder)}
               getURI={retrieveTestPlans}
               makeOptions={makeTestPlansOptions}
               onChange={setSelectedTestPlan}
               parseValueToString={(value: TestPlanDto) => value?.name}
-              createWithoutConfirmation={false}
+              createWithoutConfirmation
               skipOptionCreation
             />
           </div>
