@@ -29,14 +29,15 @@ import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCases
 import { Button, EditIcon, PlusIcon } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+
 import { testCaseDetailsSelector } from 'controllers/testCase';
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
 import { messages } from './messages';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
 import { mockedTestCaseDescription } from '../testCaseList/mockData';
+import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 
 import styles from './testCaseDetailsPage.scss';
-import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
