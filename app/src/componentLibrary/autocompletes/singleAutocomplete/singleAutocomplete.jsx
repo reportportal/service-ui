@@ -58,6 +58,7 @@ export class SingleAutocomplete extends Component {
     customEmptyListMessage: PropTypes.string,
     getUniqKey: PropTypes.func,
     skipOptionCreation: PropTypes.bool,
+    newItemButtonText: PropTypes.string,
   };
 
   static defaultProps = {
@@ -89,6 +90,7 @@ export class SingleAutocomplete extends Component {
     variant: 'light',
     useFixedPositioning: false,
     skipOptionCreation: false,
+    newItemButtonText: null,
   };
 
   getOptionProps =
@@ -136,6 +138,7 @@ export class SingleAutocomplete extends Component {
       variant,
       useFixedPositioning,
       skipOptionCreation,
+      newItemButtonText,
       ...props
     } = this.props;
     return (
@@ -232,6 +235,7 @@ export class SingleAutocomplete extends Component {
                     className={menuClassName}
                     options={options}
                     variant={variant}
+                    newItemButtonText={newItemButtonText}
                     {...props}
                   />
                 )}

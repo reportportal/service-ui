@@ -37,4 +37,8 @@ export const messages = defineMessages({
     id: 'CreateFolderAutocomplete.noFoldersFound',
     defaultMessage: 'No folders found',
   },
+  createNew: {
+    id: 'CreateFolderAutocomplete.createNew',
+    defaultMessage: 'Create new',
+  },
 });

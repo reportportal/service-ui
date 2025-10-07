@@ -48,6 +48,7 @@ export class AutocompleteOptionsComponent extends Component {
     customEmptyListMessage: PropTypes.string,
     intl: PropTypes.object.isRequired,
     getUniqKey: PropTypes.func,
+    newItemButtonText: PropTypes.string,
   };
 
   static defaultProps = {
@@ -62,6 +63,7 @@ export class AutocompleteOptionsComponent extends Component {
     optionVariant: '',
     createWithoutConfirmation: false,
     variant: 'light',
+    newItemButtonText: null,
   };
 
   filterStaticOptions = () => {
@@ -111,7 +113,7 @@ export class AutocompleteOptionsComponent extends Component {
   };
 
   renderNewItem = (options) => {
-    const { inputValue, getItemProps, optionVariant, variant } = this.props;
+    const { inputValue, getItemProps, optionVariant, variant, newItemButtonText } = this.props;
     const index = options.length;
     const isNew = true;
     return (
@@ -122,6 +124,7 @@ export class AutocompleteOptionsComponent extends Component {
           {...getItemProps({ item: inputValue, index })}
           isNew={isNew}
           variant={variant}
+          newItemButtonText={newItemButtonText}
         >
           {this.props.parseValueToString(inputValue)}
         </AutocompleteOption>

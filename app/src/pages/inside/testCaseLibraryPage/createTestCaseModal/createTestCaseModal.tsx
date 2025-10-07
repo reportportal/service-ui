@@ -27,6 +27,7 @@ import { commonValidators } from 'common/utils/validation';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
+import { FolderWithFullPath } from 'controllers/testCase';
 
 import { commonMessages } from '../commonMessages';
 import { BasicInformation } from './basicInformation';
@@ -44,7 +45,7 @@ export type ManualScenarioType = 'STEPS' | 'TEXT';
 export interface CreateTestCaseFormData {
   name: string;
   description?: string;
-  folder: string;
+  folder: FolderWithFullPath | string;
   priority?: TestCasePriority;
   linkToRequirements?: string;
   executionEstimationTime?: number;

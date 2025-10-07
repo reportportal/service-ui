@@ -55,6 +55,7 @@ export const BasicInformation = ({ className }: BasicInformationProps) => {
             name="folder"
             label={formatMessage(messages.folder)}
             placeholder={formatMessage(messages.selectOrCreateFolder)}
+            createWithoutConfirmation={false}
             isRequired
           />
         </FieldErrorHint>

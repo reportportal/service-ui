@@ -115,6 +115,7 @@ const CreateFolderModalComponent = ({
             customEmptyListMessage={formatMessage(commonMessages.noTestPlanCreated)}
             onStateChange={handleSelectedFolder}
             className={cx('folder-modal__parent-folder')}
+            createWithoutConfirmation={true}
           />
         )}
         <ModalLoadingOverlay isVisible={isCreatingFolder} />

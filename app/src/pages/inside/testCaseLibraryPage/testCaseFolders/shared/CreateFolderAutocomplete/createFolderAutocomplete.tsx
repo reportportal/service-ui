@@ -41,6 +41,7 @@ interface CreateFolderAutocompleteProps {
   value?: FolderWithFullPath | null;
   error?: string;
   touched?: boolean;
+  createWithoutConfirmation?: boolean;
 }
 
 export const CreateFolderAutocomplete = ({
@@ -55,43 +56,43 @@ export const CreateFolderAutocomplete = ({
   value,
   error,
   touched,
+  createWithoutConfirmation = true,
 }: CreateFolderAutocompleteProps) => {
   const { formatMessage } = useIntl();
   const folders = useSelector(transformedFoldersWithFullPathSelector);
 
   const renderOption = (
-    option: FolderWithFullPath,
+    option: FolderWithFullPath | string,
     index: number,
-    _isNew: boolean,
+    isNew: boolean,
     getItemProps: ({
       item,
       index,
     }: {
-      item: FolderWithFullPath;
+      item: FolderWithFullPath | string;
       index: number;
     }) => ComponentProps<typeof AutocompleteOption>,
-  ) => (
-    <AutocompleteOption
-      {...getItemProps({ item: option, index })}
-      key={option.id}
-      parseValueToString={(item: FolderWithFullPath) => item.description || ''}
-      skipOptionCreation
-    >
-      <>
-        <p className={cx('create-folder-autocomplete__folder-name')}>
-          {option.description || option.name}
-        </p>
-        <p className={cx('create-folder-autocomplete__folder-path')}>{option.fullPath}</p>
-      </>
-    </AutocompleteOption>
-  );
+  ) => {
+    const folder = option as FolderWithFullPath;
+
+    return (
+      <AutocompleteOption {...getItemProps({ item: option, index })} key={folder.id} isNew={false}>
+        <>
+          <p className={cx('create-folder-autocomplete__folder-name')}>
+            {folder.description || folder.name}
+          </p>
+          <p className={cx('create-folder-autocomplete__folder-path')}>{folder.fullPath}</p>
+        </>
+      </AutocompleteOption>
+    );
+  };
 
   return (
     <div className={cx('create-folder-autocomplete', className)}>
       {label && <FieldLabel isRequired={isRequired}>{label}</FieldLabel>}
       <SingleAutocomplete
         name={name}
-        createWithoutConfirmation={true}
+        createWithoutConfirmation={createWithoutConfirmation}
         optionVariant="key-value"
         onStateChange={onStateChange}
         onChange={onChange}
@@ -102,10 +103,10 @@ export const CreateFolderAutocomplete = ({
         options={folders}
         customEmptyListMessage={customEmptyListMessage || formatMessage(messages.noFoldersFound)}
         renderOption={renderOption}
-        parseValueToString={(option: FolderWithFullPath) =>
-          option?.description || option?.name || ''
+        parseValueToString={(option: FolderWithFullPath | string) =>
+          typeof option === 'string' ? option : option?.description || option?.name || ''
         }
-        skipOptionCreation
+        newItemButtonText={formatMessage(messages.createNew)}
       />
     </div>
   );
