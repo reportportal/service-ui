@@ -41,6 +41,7 @@ import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
+
 import { TestCase, IScenario } from '../../types';
 import { TestCaseMenuAction } from '../types';
 import { formatTimestamp, formatDuration, getExcludedActionsFromPermissionMap } from '../utils';
@@ -50,8 +51,9 @@ import { StepsList } from '../../createTestCaseModal/stepsList';
 import { ScenariosList } from './scenariosList';
 import { messages } from './messages';
 import { StepData } from '../../createTestCaseModal/testCaseDetails';
-import styles from './testCaseSidePanel.scss';
 import { useAddTestCasesToTestPlanModal } from '../../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
+
+import styles from './testCaseSidePanel.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
