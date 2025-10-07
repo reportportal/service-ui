@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { InjectedFormProps, reduxForm, SubmitHandler } from 'redux-form';
 import { useIntl } from 'react-intl';
 
-import { Modal } from '@reportportal/ui-kit';
+import { FieldLabel, Modal } from '@reportportal/ui-kit';
 
 import { AsyncAutocomplete } from 'componentLibrary/autocompletes/asyncAutocomplete';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -109,6 +109,7 @@ export const AddTestCasesToTestPlanModal = ({
         <div>
           {description}
           <div className={cx('autocomplete-wrapper')}>
+            <FieldLabel>{formatMessage(messages.label)}</FieldLabel>
             <AsyncAutocomplete
               placeholder={formatMessage(messages.selectedTestPlanPlaceholder)}
               getURI={retrieveTestPlans}
