@@ -21,7 +21,7 @@ import { useTracking } from 'react-tracking';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import { ModalLayout } from 'components/main/modal';
-import { setLogsPaginationAction } from 'controllers/user';
+import { setLogsPaginationEnabledAction } from 'controllers/user';
 import { NAMESPACE, refreshLogPageData } from 'controllers/log';
 import { querySelector } from 'controllers/log/selectors';
 import { updatePagePropertiesAction } from 'controllers/pages';
@@ -34,7 +34,7 @@ import styles from './paginationModal.scss';
 
 const cx = classNames.bind(styles);
 
-export const PaginationModal = ({ paginationOn }) => {
+export const PaginationModal = ({ isPaginationOn }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
@@ -45,8 +45,8 @@ export const PaginationModal = ({ paginationOn }) => {
     delete newQuery[PAGE_KEY];
     delete newQuery[SIZE_KEY];
 
-    trackEvent(LOG_PAGE_EVENTS.getTogglePaginationEvent(paginationOn));
-    dispatch(setLogsPaginationAction(paginationOn));
+    trackEvent(LOG_PAGE_EVENTS.getTogglePaginationEvent(isPaginationOn));
+    dispatch(setLogsPaginationEnabledAction(isPaginationOn));
     dispatch(updatePagePropertiesAction(createNamespacedQuery(newQuery, NAMESPACE)));
     dispatch(refreshLogPageData());
     closeModal();
@@ -54,9 +54,9 @@ export const PaginationModal = ({ paginationOn }) => {
 
   return (
     <ModalLayout
-      title={paginationOn ? formatMessage(messages.turnOn) : formatMessage(messages.turnOff)}
+      title={isPaginationOn ? formatMessage(messages.turnOn) : formatMessage(messages.turnOff)}
       okButton={{
-        text: paginationOn
+        text: isPaginationOn
           ? formatMessage(messages.turnOnAndReload)
           : formatMessage(messages.turnOffAndReload),
         onClick: handleConfirm,
@@ -67,16 +67,16 @@ export const PaginationModal = ({ paginationOn }) => {
     >
       <div className={cx('content')}>
         <p>
-          {paginationOn
+          {isPaginationOn
             ? formatMessage(messages.turnOnDescription)
             : formatMessage(messages.turnOffDescription)}
         </p>
-        {!paginationOn && <p>{formatMessage(messages.turnOffNote)}</p>}
+        {!isPaginationOn && <p>{formatMessage(messages.turnOffNote)}</p>}
       </div>
     </ModalLayout>
   );
 };
 
 PaginationModal.propTypes = {
-  paginationOn: PropTypes.bool.isRequired,
+  isPaginationOn: PropTypes.bool.isRequired,
 };

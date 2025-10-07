@@ -62,32 +62,3 @@ export const loadingDirectionReducer = (namespace) => (
       return state;
   }
 };
-
-export const pageRangeReducer = (namespace) => (state = null, { type, payload, meta }) => {
-  if (meta?.namespace !== namespace) {
-    return state;
-  }
-
-  switch (type) {
-    case FETCH_SUCCESS: {
-      const pageNumber = payload?.page?.number || 1;
-      return { start: pageNumber, end: pageNumber };
-    }
-    case CONCAT_FETCH_SUCCESS: {
-      const newEnd = state.end + 1;
-      return {
-        ...state,
-        end: newEnd,
-      };
-    }
-    case PREPEND_FETCH_SUCCESS: {
-      const newStart = Math.max(1, state.start - 1);
-      return {
-        ...state,
-        start: newStart,
-      };
-    }
-    default:
-      return state;
-  }
-};

@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { loadingReducer, loadingDirectionReducer, pageRangeReducer } from './reducer';
+export { loadingReducer, loadingDirectionReducer } from './reducer';

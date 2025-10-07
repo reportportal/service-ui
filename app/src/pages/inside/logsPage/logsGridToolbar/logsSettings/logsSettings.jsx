@@ -119,7 +119,7 @@ export const LogsSettings = ({ isConsoleViewMode }) => {
                 <div className={cx('separator')} />
                 <SettingsBlock header={formatMessage(messages.pagination)}>
                   <div className={cx('item')}>
-                    <PaginationControl closeDropdown={closeDropdown} />
+                    <PaginationControl onToggle={closeDropdown} />
                   </div>
                 </SettingsBlock>
               </div>

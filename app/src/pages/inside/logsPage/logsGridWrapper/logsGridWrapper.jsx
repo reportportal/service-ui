@@ -49,9 +49,10 @@ import {
 import { withFilter } from 'controllers/filter';
 import { withPagination, PAGE_KEY, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
 import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
-import { logsPaginationSelector, userIdSelector } from 'controllers/user';
+import { logsPaginationEnabledSelector, userIdSelector } from 'controllers/user';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
+import { FIRST_PAGE } from './constants';
 import { LogsGrid } from '../logsGrid';
 import { LogsGridToolbar } from '../logsGridToolbar';
 import { SauceLabsSection } from '../sauceLabsSection';
@@ -65,7 +66,7 @@ import { calculateNextIndex } from './utils';
     logViewMode: logViewModeSelector(state),
     isNestedStepView: isLogPageWithNestedSteps(state),
     errorLogs: errorLogsItemsSelector(state),
-    logsPagination: logsPaginationSelector(state),
+    logsPaginationEnabled: logsPaginationEnabledSelector(state),
     loadedPagesRange: loadedPagesRangeSelector(state),
     loadingDirection: loadingDirectionSelector(state),
   }),
@@ -150,7 +151,7 @@ export class LogsGridWrapper extends Component {
     isSauceLabsIntegrationView: PropTypes.bool.isRequired,
     errorLogs: PropTypes.array,
     fetchErrorLog: PropTypes.func,
-    logsPagination: PropTypes.bool,
+    logsPaginationEnabled: PropTypes.bool,
     loadedPagesRange: PropTypes.object,
     loadMoreLogsAction: PropTypes.func,
     fetchLogItemsForPageAction: PropTypes.func,
@@ -186,7 +187,7 @@ export class LogsGridWrapper extends Component {
     retryId: undefined,
     errorLogs: [],
     fetchErrorLog: () => {},
-    logsPagination: true,
+    logsPaginationEnabled: true,
     loadedPagesRange: { start: 1, end: 1 },
     loadMoreLogsAction: () => {},
     fetchLogItemsForPageAction: () => {},
@@ -213,8 +214,8 @@ export class LogsGridWrapper extends Component {
     }
 
     this.backToTopListener = scrollEventObserver.subscribe(BACK_TO_TOP_EVENT, () => {
-      if (!this.props.logsPagination) {
-        this.props.fetchLogItemsForPageAction(1);
+      if (!this.props.logsPaginationEnabled) {
+        this.props.fetchLogItemsForPageAction(FIRST_PAGE);
       }
     });
   }
@@ -258,15 +259,15 @@ export class LogsGridWrapper extends Component {
   };
 
   getLoadNextCb = () => {
-    const { logsPagination, loadedPagesRange, pageCount } = this.props;
-    return !logsPagination && loadedPagesRange.end < pageCount
+    const { logsPaginationEnabled, loadedPagesRange, pageCount } = this.props;
+    return !logsPaginationEnabled && loadedPagesRange.end < pageCount
       ? () => this.props.loadMoreLogsAction(NEXT)
       : undefined;
   };
 
   getLoadPreviousCb = () => {
-    const { logsPagination, loadedPagesRange } = this.props;
-    return !logsPagination && loadedPagesRange.start > 1
+    const { logsPaginationEnabled, loadedPagesRange } = this.props;
+    return !logsPaginationEnabled && loadedPagesRange.start > 1
       ? () => this.props.loadMoreLogsAction(PREVIOUS)
       : undefined;
   };
@@ -301,7 +302,7 @@ export class LogsGridWrapper extends Component {
       hidePassedLogs,
       isSauceLabsIntegrationView,
       errorLogs,
-      logsPagination,
+      logsPaginationEnabled,
       loadingDirection,
     } = this.props;
     const rowHighlightingConfig = {
@@ -357,7 +358,7 @@ export class LogsGridWrapper extends Component {
                 />
               )}
             </LogsGridToolbar>
-            {logsPagination && !!pageCount && logItems && !!logItems.length && !loading && (
+            {logsPaginationEnabled && !!pageCount && logItems && !!logItems.length && !loading && (
               <PaginationToolbar
                 activePage={activePage}
                 itemCount={itemCount}

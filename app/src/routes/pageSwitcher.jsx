@@ -59,9 +59,11 @@ export default class PageSwitcher extends React.Component {
 
     if (!page || !isInitialDispatchDone) return null;
 
-    const { component: PageComponent, layout: Layout, rawContent = false } = pageRendering[page];
+    const { component: PageComponent, layout: Layout, rawContent = false, ...rest } = pageRendering[
+      page
+    ];
 
-    if (!PageComponent) throw new Error(`Page ${page} does not exist`);
+    if (!PageComponent) throw new Error(`Page ${page} does not exfist`);
     if (!Layout) throw new Error(`Page ${page} is missing layout`);
 
     const mode = process.env.NODE_ENV;
@@ -69,7 +71,7 @@ export default class PageSwitcher extends React.Component {
     return (
       <div className={cx('page-switcher')}>
         <ThemeProvider>
-          <Layout rawContent={rawContent}>
+          <Layout rawContent={rawContent} {...rest}>
             {mode === 'development' && <LocalizationSwitcher />}
             <PageErrorBoundary key={page}>
               <DndProvider backend={HTML5Backend}>

@@ -23,7 +23,7 @@ import {
   logPageOffsetSelector,
 } from 'controllers/testItem';
 import { URLS } from 'common/urls';
-import { activeProjectSelector, logsPaginationSelector } from 'controllers/user';
+import { activeProjectSelector, logsPaginationEnabledSelector } from 'controllers/user';
 import {
   logItemIdSelector,
   pathnameChangedSelector,
@@ -119,7 +119,7 @@ function* fetchActivity() {
 
 function* fetchLogItems(payload = {}) {
   const { activeProject, filterLevel, activeLogItemId, query } = yield call(collectLogPayload);
-  const logsPagination = yield select(logsPaginationSelector);
+  const logsPaginationEnabled = yield select(logsPaginationEnabledSelector);
   const namespace = payload.namespace || LOG_ITEMS_NAMESPACE;
   const logLevel = payload.level || filterLevel;
   const { direction, targetPage } = payload;
@@ -137,7 +137,7 @@ function* fetchLogItems(payload = {}) {
     ? URLS.launchLogs(activeProject, activeLogItemId, logLevel)
     : URLS.logItems(activeProject, activeLogItemId, logLevel);
 
-  if (logsPagination) {
+  if (logsPaginationEnabled) {
     yield put(fetchDataAction(namespace)(url, { params: fetchParams }));
   } else {
     const actionMap = {
@@ -267,12 +267,12 @@ function* fetchErrorLog({ payload: { errorLogInfo, callback } }) {
   const { id: errorLogId, pagesLocation } = errorLogInfo;
   const { query } = yield call(collectLogPayload);
   const [initialPage] = Object.values(pagesLocation[0]);
-  const logsPagination = yield select(logsPaginationSelector);
+  const logsPaginationEnabled = yield select(logsPaginationEnabledSelector);
   // format location as first item props reference to main page
   const formattedPageLocation = getFormattedPageLocation(pagesLocation);
   const skipIds = [];
 
-  if (!logsPagination) {
+  if (!logsPaginationEnabled) {
     const logItems = yield select(logItemsSelector);
     const isLogAlreadyLoaded = logItems.find((log) => +log.id === +errorLogId);
 
@@ -286,12 +286,12 @@ function* fetchErrorLog({ payload: { errorLogInfo, callback } }) {
 
   // single log. highlight or move to another page
   if (pagesLocation.length === 1) {
-    if (logsPagination && +query[PAGE_KEY] !== +initialPage) {
+    if (logsPaginationEnabled && +query[PAGE_KEY] !== +initialPage) {
       yield navigateToErrorLogPage(query, initialPage);
     }
   } else {
     // change page if initial page is not the same
-    if (logsPagination && +query[PAGE_KEY] !== +initialPage) {
+    if (logsPaginationEnabled && +query[PAGE_KEY] !== +initialPage) {
       yield navigateToErrorLogPage(query, initialPage);
       // check is first nested step is FAILED
       const logItems = yield select(logItemsSelector);

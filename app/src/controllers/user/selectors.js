@@ -20,7 +20,7 @@ import { INTERNAL } from 'common/constants/accountType';
 import { projectInfoSelector } from 'controllers/project/selectors';
 import {
   NO_LOGS_COLLAPSING_KEY,
-  LOGS_PAGINATION_KEY,
+  LOGS_PAGINATION_ENABLED_KEY,
   START_TIME_FORMAT_ABSOLUTE,
   START_TIME_FORMAT_RELATIVE,
 } from './constants';
@@ -72,5 +72,5 @@ export const activeProjectSettingsSelector = (state) =>
 export const noLogsCollapsingSelector = (state) =>
   activeProjectSettingsSelector(state)?.[NO_LOGS_COLLAPSING_KEY] || false;
 
-export const logsPaginationSelector = (state) =>
-  activeProjectSettingsSelector(state)?.[LOGS_PAGINATION_KEY] ?? true;
+export const logsPaginationEnabledSelector = (state) =>
+  activeProjectSettingsSelector(state)?.[LOGS_PAGINATION_ENABLED_KEY] ?? true;

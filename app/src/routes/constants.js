@@ -117,8 +117,12 @@ export const pageRendering = {
   PLUGINS_PAGE: { component: PluginsPage, layout: AdminLayout, access: ADMIN_ACCESS },
   PLUGINS_TAB_PAGE: { component: PluginsPage, layout: AdminLayout, access: ADMIN_ACCESS },
   [TEST_ITEM_PAGE]: { component: TestItemPage, layout: AppLayout },
-  [PROJECT_LOG_PAGE]: { component: LogsPage, layout: AppLayout },
-  [PROJECT_USERDEBUG_LOG_PAGE]: { component: LogsPage, layout: AppLayout },
+  [PROJECT_LOG_PAGE]: { component: LogsPage, layout: AppLayout, backToTopEventEnabled: true },
+  [PROJECT_USERDEBUG_LOG_PAGE]: {
+    component: LogsPage,
+    layout: AppLayout,
+    backToTopEventEnabled: true,
+  },
   [HISTORY_PAGE]: { component: HistoryPage, layout: AppLayout },
   [UNIQUE_ERRORS_PAGE]: { component: UniqueErrorsPage, layout: AppLayout },
   [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: {

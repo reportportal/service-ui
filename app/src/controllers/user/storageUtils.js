@@ -15,7 +15,7 @@
  */
 
 import { getStorageItem, updateStorageItem } from 'common/utils/storageUtils';
-import { NO_LOGS_COLLAPSING_KEY, LOGS_PAGINATION_KEY } from './constants';
+import { NO_LOGS_COLLAPSING_KEY, LOGS_PAGINATION_ENABLED_KEY } from './constants';
 
 export const getUserSettingsFromStorage = (userId) => getStorageItem(`${userId}_settings`) || {};
 
@@ -43,7 +43,7 @@ export const setNoLogsCollapsingInStorage = (userId, projectId, value) =>
     [NO_LOGS_COLLAPSING_KEY]: value,
   });
 
-export const setLogsPaginationInStorage = (userId, projectId, value) =>
+export const setLogsPaginationEnabledInStorage = (userId, projectId, value) =>
   updateUserProjectSettingsInStorage(userId, projectId, {
-    [LOGS_PAGINATION_KEY]: value,
+    [LOGS_PAGINATION_ENABLED_KEY]: value,
   });

@@ -21,7 +21,7 @@ import { useTracking } from 'react-tracking';
 import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
 import { showModalAction } from 'controllers/modal';
-import { logsPaginationSelector } from 'controllers/user';
+import { logsPaginationEnabledSelector } from 'controllers/user';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { messages } from './messages';
 import { PaginationModal } from './paginationModal/paginationModal';
@@ -29,28 +29,28 @@ import styles from './paginationControl.scss';
 
 const cx = classNames.bind(styles);
 
-export const PaginationControl = ({ closeDropdown }) => {
+export const PaginationControl = ({ onToggle }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
-  const logsPagination = useSelector(logsPaginationSelector);
+  const logsPaginationEnabled = useSelector(logsPaginationEnabledSelector);
 
   const handleTogglePagination = () => {
-    const newValue = !logsPagination;
+    const newValue = !logsPaginationEnabled;
 
-    dispatch(showModalAction({ component: <PaginationModal paginationOn={newValue} /> }));
+    dispatch(showModalAction({ component: <PaginationModal isPaginationOn={newValue} /> }));
     trackEvent(LOG_PAGE_EVENTS.getClickPaginationOptionEvent(newValue));
-    closeDropdown();
+    onToggle();
   };
 
   return (
     <button className={cx('pagination-option')} onClick={handleTogglePagination}>
-      {logsPagination ? formatMessage(messages.turnOff) : formatMessage(messages.turnOn)}
+      {logsPaginationEnabled ? formatMessage(messages.turnOff) : formatMessage(messages.turnOn)}
       <span>...</span>
     </button>
   );
 };
 
 PaginationControl.propTypes = {
-  closeDropdown: PropTypes.func.isRequired,
+  onToggle: PropTypes.func.isRequired,
 };

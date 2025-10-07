@@ -58,6 +58,7 @@ export class ScrollWrapper extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    backToTopEventEnabled: PropTypes.bool,
   };
   static defaultProps = {
     initialScrollRight: false,
@@ -82,6 +83,7 @@ export class ScrollWrapper extends Component {
     withFooter: false,
     resetRequired: false,
     onReset: () => {},
+    backToTopEventEnabled: false,
   };
   state = {
     showButton: false,
@@ -139,7 +141,9 @@ export class ScrollWrapper extends Component {
     this.spring.setCurrentValue(scrollTop).setAtRest();
     this.spring.setEndValue(0);
 
-    scrollEventObserver.publish(BACK_TO_TOP_EVENT);
+    if (this.props.backToTopEventEnabled) {
+      scrollEventObserver.publish(BACK_TO_TOP_EVENT);
+    }
   };
 
   handleScrollFrame = ({ scrollTop, scrollLeft, top }) => {

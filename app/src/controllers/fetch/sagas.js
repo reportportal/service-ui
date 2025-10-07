@@ -47,30 +47,27 @@ function* bulkFetchData({ payload, meta }) {
   }
 }
 
-function* concatFetchData({ payload, meta }) {
-  const { namespace } = meta;
-  const { url, options, concat } = payload;
-
-  try {
-    yield put(fetchStartAction(namespace, payload));
-    const response = yield call(fetch, url, options);
-    yield put(concatFetchSuccessAction(namespace, response, concat));
-  } catch (err) {
-    yield put(fetchErrorAction(namespace, err));
-  }
-}
-
-function* prependFetchData({ payload, meta }) {
+function* commonFetchData({ payload, meta }, successCallback) {
   const { namespace } = meta;
   const { url, options } = payload;
 
   try {
     yield put(fetchStartAction(namespace, payload));
     const response = yield call(fetch, url, options);
-    yield put(prependFetchSuccessAction(namespace, response));
+    yield put(successCallback(namespace, response));
   } catch (err) {
     yield put(fetchErrorAction(namespace, err));
   }
+}
+
+function* concatFetchData({ payload, meta }) {
+  const successCallback = (namespace, response) =>
+    concatFetchSuccessAction(namespace, response, payload.concat);
+  yield* commonFetchData({ payload, meta }, successCallback);
+}
+
+function* prependFetchData({ payload, meta }) {
+  yield* commonFetchData({ payload, meta }, prependFetchSuccessAction);
 }
 
 function* fetchData({ payload, meta }) {
