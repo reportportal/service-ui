@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { InjectedFormProps, reduxForm } from 'redux-form';
 import { useIntl } from 'react-intl';
 
-import { Modal } from '@reportportal/ui-kit';
+import { FieldLabel, Modal } from '@reportportal/ui-kit';
 
 import { AsyncAutocomplete } from 'componentLibrary/autocompletes/asyncAutocomplete';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -51,7 +51,7 @@ export const AddTestCasesToTestPlanModal = ({
   data,
 }: AddTestCasesToTestPlanModalProps &
   InjectedFormProps<AddTestCasesToTestPlanFormData, AddTestCasesToTestPlanModalProps>) => {
-  const { selectedTestCaseIds } = data;
+  const { selectedTestCaseIds, isSingleTestCaseMode } = data;
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
@@ -66,6 +66,7 @@ export const AddTestCasesToTestPlanModal = ({
     addTestCasesToTestPlan,
   } = useAddTestCasesToTestPlan({
     selectedTestCaseIds,
+    isSingleTestCaseMode,
     change,
   });
 
@@ -105,8 +106,9 @@ export const AddTestCasesToTestPlanModal = ({
     >
       <form onSubmit={handleSubmit(addTestCasesToTestPlan)}>
         <div>
-          {description}
+          {isSingleTestCaseMode ? description : null}
           <div className={cx('autocomplete-wrapper')}>
+            <FieldLabel>{formatMessage(messages.label)}</FieldLabel>
             <AsyncAutocomplete
               placeholder={formatMessage(messages.selectedTestPlanPlaceholder)}
               getURI={retrieveTestPlans}

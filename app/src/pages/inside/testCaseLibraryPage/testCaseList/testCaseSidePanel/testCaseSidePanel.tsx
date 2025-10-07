@@ -51,6 +51,7 @@ import { ScenariosList } from './scenariosList';
 import { messages } from './messages';
 import { StepData } from '../../createTestCaseModal/testCaseDetails';
 import styles from './testCaseSidePanel.scss';
+import { useAddTestCasesToTestPlanModal } from '../../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -111,6 +112,7 @@ export const TestCaseSidePanel = memo(
     const { formatMessage } = useIntl();
     const sidePanelRef = useRef<HTMLDivElement>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { openModal } = useAddTestCasesToTestPlanModal();
 
     useOnClickOutside(sidePanelRef, onClose);
 
@@ -151,7 +153,7 @@ export const TestCaseSidePanel = memo(
     };
 
     const handleAddToTestPlanClick = () => {
-      // TODO: Implement add to test plan functionality
+      openModal({ selectedTestCaseIds: [testCase.id], isSingleTestCaseMode: true });
     };
 
     const handleCopyId = async () => {
