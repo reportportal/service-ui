@@ -14,19 +14,16 @@
  * limitations under the License.
  */
 
-import { ComponentProps } from 'react';
 import { useIntl } from 'react-intl';
 import { reduxForm, InjectedFormProps, SubmitHandler } from 'redux-form';
 import classNames from 'classnames/bind';
-import { FieldLabel, Modal } from '@reportportal/ui-kit';
+import { Modal } from '@reportportal/ui-kit';
 
 import { withModal } from 'controllers/modal';
 import { FolderWithFullPath } from 'controllers/testCase';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { commonValidators } from 'common/utils/validation';
-import { AutocompleteOption } from 'componentLibrary/autocompletes/common/autocompleteOption';
-import { SingleAutocomplete } from 'componentLibrary/autocompletes/singleAutocomplete';
 
 import { commonMessages } from '../../commonMessages';
 import { useFolderModal } from '../shared/useFolderModal';
@@ -34,6 +31,7 @@ import { FolderNameField, ParentFolderToggle } from '../shared/FolderFormFields'
 import { sharedFolderMessages } from '../shared/sharedMessages';
 import { CREATE_FORM_NAME, PARENT_FOLDER_FIELD } from '../shared/commonConstants';
 import { FolderFormValues } from '../shared/types';
+import { CreateFolderAutocomplete } from '../shared/CreateFolderAutocomplete';
 
 import styles from '../shared/folderFormFields.scss';
 
@@ -60,7 +58,6 @@ const CreateFolderModalComponent = ({
 
   const {
     isCreatingFolder,
-    folders,
     isToggled: isSubfolderToggled,
     hideModal,
     onSubmit,
@@ -77,33 +74,6 @@ const CreateFolderModalComponent = ({
   const handleSelectedFolder = ({ selectedItem }: { selectedItem: FolderWithFullPath }) => {
     change(PARENT_FOLDER_FIELD, selectedItem);
   };
-
-  const renderOption = (
-    option: FolderWithFullPath,
-    index: number,
-    _isNew: boolean,
-    getItemProps: ({
-      item,
-      index,
-    }: {
-      item: FolderWithFullPath;
-      index: number;
-    }) => ComponentProps<typeof AutocompleteOption>,
-  ) => (
-    <AutocompleteOption
-      {...getItemProps({ item: option, index })}
-      key={option.id}
-      parseValueToString={(item: FolderWithFullPath) => item.description || ''}
-      skipOptionCreation
-    >
-      <>
-        <p className={cx('folder-modal__parent-folder__name')}>
-          {option.description || option.name}
-        </p>
-        <p className={cx('folder-modal__parent-folder__path')}>{option.fullPath}</p>
-      </>
-    </AutocompleteOption>
-  );
 
   const okButton = {
     ...createOkButton(handleSubmit),
@@ -138,25 +108,14 @@ const CreateFolderModalComponent = ({
           />
         )}
         {isSubfolderToggled && (
-          <div className={cx('folder-modal__parent-folder')}>
-            <FieldLabel isRequired={false}>
-              {formatMessage(sharedFolderMessages.parentFolder)}
-            </FieldLabel>
-            <SingleAutocomplete
-              name={PARENT_FOLDER_FIELD}
-              createWithoutConfirmation={true}
-              optionVariant="key-value"
-              onStateChange={handleSelectedFolder}
-              placeholder={formatMessage(sharedFolderMessages.searchFolderToSelect)}
-              options={folders}
-              customEmptyListMessage={formatMessage(commonMessages.noTestPlanCreated)}
-              renderOption={renderOption}
-              parseValueToString={(option: FolderWithFullPath) =>
-                option?.description || option?.name || ''
-              }
-              skipOptionCreation
-            />
-          </div>
+          <CreateFolderAutocomplete
+            name={PARENT_FOLDER_FIELD}
+            label={formatMessage(sharedFolderMessages.parentFolder)}
+            placeholder={formatMessage(sharedFolderMessages.searchFolderToSelect)}
+            customEmptyListMessage={formatMessage(commonMessages.noTestPlanCreated)}
+            onStateChange={handleSelectedFolder}
+            className={cx('folder-modal__parent-folder')}
+          />
         )}
         <ModalLoadingOverlay isVisible={isCreatingFolder} />
       </form>

@@ -21,6 +21,7 @@ import { FieldText, FieldTextFlex } from '@reportportal/ui-kit';
 
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { EditableTagsSection } from 'pages/inside/testCaseLibraryPage/editableTagsSection';
+import { CreateFolderAutocomplete } from 'pages/inside/testCaseLibraryPage/testCaseFolders/shared/CreateFolderAutocomplete';
 
 import { messages } from './messages';
 import { commonMessages } from '../../commonMessages';
@@ -50,7 +51,12 @@ export const BasicInformation = ({ className }: BasicInformationProps) => {
       </FieldProvider>
       <FieldProvider name="folder" placeholder={formatMessage(messages.selectOrCreateFolder)}>
         <FieldErrorHint provideHint={false} className={cx('basic-information__field')}>
-          <FieldText label={formatMessage(messages.folder)} defaultWidth={false} isRequired />
+          <CreateFolderAutocomplete
+            name="folder"
+            label={formatMessage(messages.folder)}
+            placeholder={formatMessage(messages.selectOrCreateFolder)}
+            isRequired
+          />
         </FieldErrorHint>
       </FieldProvider>
       <FieldProvider name="priority">
