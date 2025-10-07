@@ -108,7 +108,7 @@ export const AddTestCasesToTestPlanModal = ({
     >
       <form onSubmit={handleSubmit(addTestCasesToTestPlan) as AddTestCasesSubmitHandler}>
         <div>
-          {isSingleTestCaseMode ? null : description}
+          {!isSingleTestCaseMode && description}
           <FieldLabel>{formatMessage(messages.label)}</FieldLabel>
           <div className={cx('autocomplete-wrapper')}>
             <FieldLabel>{formatMessage(messages.label)}</FieldLabel>

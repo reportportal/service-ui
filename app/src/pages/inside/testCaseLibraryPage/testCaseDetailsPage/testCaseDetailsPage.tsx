@@ -36,6 +36,7 @@ import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
 import { mockedTestCaseDescription } from '../testCaseList/mockData';
 
 import styles from './testCaseDetailsPage.scss';
+import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -96,6 +97,7 @@ export const TestCaseDetailsPage = () => {
   const [isTagsAdded, setIsTagsAdded] = useState(false);
   const [isDescriptionAdded, setIsDescriptionAdded] = useState(false);
   const { canEditTestCaseTag, canEditTestCaseDescription } = useUserPermissions();
+  const { openModal } = useAddTestCasesToTestPlanModal();
 
   const testCaseDetails = useSelector(testCaseDetailsSelector);
 
@@ -111,6 +113,10 @@ export const TestCaseDetailsPage = () => {
 
   const handleEditDescription = () => {
     setIsDescriptionAdded(false);
+  };
+
+  const onAddToTestPlan = () => {
+    openModal({ selectedTestCaseIds: [testCaseDetails.id], isSingleTestCaseMode: true });
   };
 
   // TODO: Remove mock data after integration
@@ -133,7 +139,7 @@ export const TestCaseDetailsPage = () => {
             className={cx('page__header')}
             testCase={testCaseDetails}
             onAddToLaunch={noop}
-            onAddToTestPlan={noop}
+            onAddToTestPlan={onAddToTestPlan}
             onMenuAction={noop}
           />
           <div className={cx('page__sidebar')}>
