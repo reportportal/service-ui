@@ -16,7 +16,10 @@
 
 import { createSelector } from 'reselect';
 
-import { transformFoldersToDisplay } from 'controllers/testCase/utils';
+import {
+  transformFoldersToDisplay,
+  transformFoldersWithFullPath,
+} from 'controllers/testCase/utils';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Folder } from './types';
 import { InitialStateType } from './reducer';
@@ -67,6 +70,11 @@ export const testCaseDetailsSelector = (state: RootState) => state.testCase?.det
 export const transformedFoldersSelector = createSelector(
   foldersSelector,
   transformFoldersToDisplay,
+);
+
+export const transformedFoldersWithFullPathSelector = createSelector(
+  foldersSelector,
+  transformFoldersWithFullPath,
 );
 
 export const needsToLoadFoldersSelector = createSelector(

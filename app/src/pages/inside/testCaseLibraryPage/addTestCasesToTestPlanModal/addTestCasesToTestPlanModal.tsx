@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /*
  * Copyright 2025 EPAM Systems
  *
@@ -19,10 +18,10 @@ import classNames from 'classnames/bind';
 import { size } from 'es-toolkit/compat';
 import { ReactNode, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { InjectedFormProps, reduxForm } from 'redux-form';
+import { InjectedFormProps, reduxForm, SubmitHandler } from 'redux-form';
 import { useIntl } from 'react-intl';
 
-import { FieldLabel, Modal } from '@reportportal/ui-kit';
+import { Modal } from '@reportportal/ui-kit';
 
 import { AsyncAutocomplete } from 'componentLibrary/autocompletes/asyncAutocomplete';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -39,6 +38,12 @@ import { useAddTestCasesToTestPlan } from './useAddTestCasesToTestPlan';
 
 import styles from './addTestCasesToTestPlanModal.module.scss';
 
+type AddTestCasesSubmitHandler = SubmitHandler<
+  AddTestCasesToTestPlanFormData,
+  AddTestCasesToTestPlanModalProps,
+  string
+>;
+
 const cx = classNames.bind(styles) as typeof classNames;
 
 export const ADD_TO_TEST_PLAN_MODAL_KEY = 'addToTestPlanModalKey';
@@ -49,9 +54,10 @@ export const AddTestCasesToTestPlanModal = ({
   change,
   handleSubmit,
   data,
+  invalid,
 }: AddTestCasesToTestPlanModalProps &
   InjectedFormProps<AddTestCasesToTestPlanFormData, AddTestCasesToTestPlanModalProps>) => {
-  const { selectedTestCaseIds, isSingleTestCaseMode } = data;
+  const { selectedTestCaseIds } = data;
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
@@ -59,16 +65,11 @@ export const AddTestCasesToTestPlanModal = ({
 
   const selectedTestCasesLength = size(selectedTestCaseIds);
 
-  const {
-    isAddTestCasesToTestPlanLoading,
-    setSelectedTestPlan,
-    selectedTestPlan,
-    addTestCasesToTestPlan,
-  } = useAddTestCasesToTestPlan({
-    selectedTestCaseIds,
-    isSingleTestCaseMode,
-    change,
-  });
+  const { isAddTestCasesToTestPlanLoading, setSelectedTestPlan, addTestCasesToTestPlan } =
+    useAddTestCasesToTestPlan({
+      selectedTestCaseIds,
+      change,
+    });
 
   const makeTestPlansOptions = (response: { content: TestPlanDto[] }) => response.content;
 
@@ -96,23 +97,21 @@ export const AddTestCasesToTestPlanModal = ({
           </LoadingSubmitButton>
         ),
         type: 'submit',
-        onClick: handleSubmit(addTestCasesToTestPlan),
-        disabled: !selectedTestPlan,
+        onClick: handleSubmit(addTestCasesToTestPlan) as AddTestCasesSubmitHandler,
+        disabled: invalid || isAddTestCasesToTestPlanLoading,
       }}
       cancelButton={{
         children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
         onClick: () => dispatch(hideModalAction()),
       }}
     >
-      <form onSubmit={handleSubmit(addTestCasesToTestPlan)}>
+      <form onSubmit={handleSubmit(addTestCasesToTestPlan) as AddTestCasesSubmitHandler}>
         <div>
-          {isSingleTestCaseMode ? description : null}
+          {description}
           <div className={cx('autocomplete-wrapper')}>
-            <FieldLabel>{formatMessage(messages.label)}</FieldLabel>
             <AsyncAutocomplete
               placeholder={formatMessage(messages.selectedTestPlanPlaceholder)}
               getURI={retrieveTestPlans}
-              value={selectedTestPlan}
               makeOptions={makeTestPlansOptions}
               onChange={setSelectedTestPlan}
               parseValueToString={(value: TestPlanDto) => value?.name}
