@@ -66,11 +66,11 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     defaultMessage: 'Test case name',
   },
   folder: {
-    id: 'CreateTestCaseModal.folder',
+    id: 'TestCaseLibraryPage.folder',
     defaultMessage: 'Folder',
   },
   searchFolderToSelect: {
-    id: 'CreateFolderAutocomplete.searchFolderToSelect',
+    id: 'TestCaseLibraryPage.searchFolderToSelect',
     defaultMessage: 'Search folder to select',
   },
 });
