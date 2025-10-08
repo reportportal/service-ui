@@ -21,7 +21,6 @@ import { FieldText, Toggle } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { commonMessages } from '../../commonMessages';
-import { sharedFolderMessages } from './sharedMessages';
 
 const MAX_FIELD_LENGTH = 48;
 
@@ -93,7 +92,7 @@ export const ParentFolderField = ({
     <FieldProvider
       name={name}
       className={className}
-      placeholder={placeholder || formatMessage(sharedFolderMessages.searchFolderToSelect)}
+      placeholder={placeholder || formatMessage(commonMessages.searchFolderToSelect)}
     >
       <FieldErrorHint provideHint={false}>
         <FieldText
