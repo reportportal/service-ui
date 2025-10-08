@@ -53,7 +53,7 @@ export const BasicInformation = ({ className }: BasicInformationProps) => {
         <FieldErrorHint provideHint={false} className={cx('basic-information__field')}>
           <CreateFolderAutocomplete
             name="folder"
-            label={formatMessage(messages.folder)}
+            label={formatMessage(commonMessages.folder)}
             placeholder={formatMessage(messages.selectOrCreateFolder)}
             createWithoutConfirmation={false}
             isRequired

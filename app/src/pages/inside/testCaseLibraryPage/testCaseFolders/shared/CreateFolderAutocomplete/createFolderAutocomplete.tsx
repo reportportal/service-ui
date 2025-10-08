@@ -19,6 +19,7 @@ import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import { FieldLabel } from '@reportportal/ui-kit';
+import { isString } from 'es-toolkit/compat';
 
 import { FolderWithFullPath, transformedFoldersWithFullPathSelector } from 'controllers/testCase';
 import { AutocompleteOption } from 'componentLibrary/autocompletes/common/autocompleteOption';
@@ -26,7 +27,7 @@ import { SingleAutocomplete } from 'componentLibrary/autocompletes/singleAutocom
 
 import { messages } from './messages';
 import styles from './createFolderAutocomplete.scss';
-import isString from 'es-toolkit/compat/isString';
+import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -63,26 +64,24 @@ export const CreateFolderAutocomplete = ({
   const folders = useSelector(transformedFoldersWithFullPathSelector);
 
   const renderOption = (
-    option: FolderWithFullPath | string,
+    option: FolderWithFullPath,
     index: number,
     _isNew: boolean,
     getItemProps: ({
       item,
       index,
     }: {
-      item: FolderWithFullPath | string;
+      item: FolderWithFullPath;
       index: number;
     }) => ComponentProps<typeof AutocompleteOption>,
   ) => {
-    const folder = option as FolderWithFullPath;
+    const { description, name, fullPath } = option;
 
     return (
-      <AutocompleteOption {...getItemProps({ item: option, index })} key={folder.id} isNew={false}>
+      <AutocompleteOption {...getItemProps({ item: option, index })} key={option.id} isNew={false}>
         <>
-          <p className={cx('create-folder-autocomplete__folder-name')}>
-            {folder.description || folder.name}
-          </p>
-          <p className={cx('create-folder-autocomplete__folder-path')}>{folder.fullPath}</p>
+          <p className={cx('create-folder-autocomplete__folder-name')}>{description || name}</p>
+          <p className={cx('create-folder-autocomplete__folder-path')}>{fullPath}</p>
         </>
       </AutocompleteOption>
     );
@@ -100,7 +99,7 @@ export const CreateFolderAutocomplete = ({
         value={value}
         error={error}
         touched={touched}
-        placeholder={placeholder || formatMessage(messages.searchFolderToSelect)}
+        placeholder={placeholder || formatMessage(commonMessages.searchFolderToSelect)}
         options={folders}
         customEmptyListMessage={customEmptyListMessage || formatMessage(messages.noFoldersFound)}
         renderOption={renderOption}

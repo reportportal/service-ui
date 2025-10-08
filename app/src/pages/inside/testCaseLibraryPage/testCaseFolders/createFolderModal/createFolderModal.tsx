@@ -111,11 +111,10 @@ const CreateFolderModalComponent = ({
           <CreateFolderAutocomplete
             name={PARENT_FOLDER_FIELD}
             label={formatMessage(sharedFolderMessages.parentFolder)}
-            placeholder={formatMessage(sharedFolderMessages.searchFolderToSelect)}
+            placeholder={formatMessage(commonMessages.searchFolderToSelect)}
             customEmptyListMessage={formatMessage(commonMessages.noTestPlanCreated)}
             onStateChange={handleSelectedFolder}
             className={cx('folder-modal__parent-folder')}
-            createWithoutConfirmation
           />
         )}
         <ModalLoadingOverlay isVisible={isCreatingFolder} />

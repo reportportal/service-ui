@@ -9,10 +9,6 @@ export const messages = defineMessages({
     id: 'CreateTestCaseModal.enterNameForTestCase',
     defaultMessage: 'Enter name for the test case',
   },
-  folder: {
-    id: 'CreateTestCaseModal.folder',
-    defaultMessage: 'Folder',
-  },
   selectOrCreateFolder: {
     id: 'CreateTestCaseModal.selectOrCreateFolder',
     defaultMessage: 'Select or create the folder',

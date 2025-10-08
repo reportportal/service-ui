@@ -25,16 +25,12 @@ export const sharedFolderMessages = defineMessages({
     id: 'TestCaseLibraryPage.moveToRootDirectory',
     defaultMessage: 'Move to root directory',
   },
-  parentFolder: {
-    id: 'TestCaseLibraryPage.parentFolder',
-    defaultMessage: 'Parent folder',
-  },
   folderDestination: {
     id: 'TestCaseLibraryPage.folderDestination',
     defaultMessage: 'Folder destination',
   },
-  searchFolderToSelect: {
-    id: 'TestCaseLibraryPage.searchFolderToSelect',
-    defaultMessage: 'Search folder to select',
+  parentFolder: {
+    id: 'TestCaseLibraryPage.parentFolder',
+    defaultMessage: 'Parent folder',
   },
 });

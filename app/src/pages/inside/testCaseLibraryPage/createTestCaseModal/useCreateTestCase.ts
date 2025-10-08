@@ -17,6 +17,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { SubmissionError } from 'redux-form';
 import { useIntl } from 'react-intl';
+import { isString } from 'es-toolkit/compat';
 
 import { projectKeySelector } from 'controllers/project';
 import { fetch } from 'common/utils';
@@ -29,7 +30,6 @@ import { createFoldersSuccessAction } from 'controllers/testCase/actionCreators'
 
 import { CreateTestCaseFormData, ManualScenarioType } from './createTestCaseModal';
 import { messages } from './basicInformation/messages';
-import isString from 'es-toolkit/compat/isString';
 
 export interface TestStep {
   instructions: string;
