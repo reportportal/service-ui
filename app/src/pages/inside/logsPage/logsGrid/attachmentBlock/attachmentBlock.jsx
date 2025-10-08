@@ -91,9 +91,9 @@ export class AttachmentBlock extends Component {
     return (
       <div className={cx('attachment-block')}>
         {consoleView || logsSize === LOGS_SIZE.SMALL ? (
-          <div onClick={this.downloadAttachment} className={cx('attachment-icon')}>
+          <button onClick={this.downloadAttachment} className={cx('attachment-icon')}>
             {Parser(AttachIcon)}
-          </div>
+          </button>
         ) : (
           <Fragment>
             <Image
