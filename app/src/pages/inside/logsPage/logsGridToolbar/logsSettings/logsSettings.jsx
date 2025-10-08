@@ -24,8 +24,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Manager, Reference, Popper } from 'react-popper';
 import { useOnClickOutside } from 'common/hooks';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
+import { InputRadioGroup } from 'components/inputs/inputRadioGroup';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
-import { noLogsCollapsingSelector, setNoLogsCollapsingAction } from 'controllers/user';
+import { LOGS_SIZE } from 'common/constants/logsSettings';
+import {
+  noLogsCollapsingSelector,
+  setNoLogsCollapsingAction,
+  logsSizeSelector,
+  setLogsSizeAction,
+} from 'controllers/user';
 import SettingsIcon from 'common/img/settings-icon-inline.svg';
 import { PaginationControl } from './paginationControl';
 import { messages } from './messages';
@@ -45,12 +52,18 @@ export const LogsSettings = ({ isConsoleViewMode }) => {
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const noLogsCollapsing = useSelector(noLogsCollapsingSelector);
+  const logsSize = useSelector(logsSizeSelector);
   const [isOpened, setOpened] = useState(false);
   const containerRef = useRef(null);
 
   const closeDropdown = () => {
     setOpened(false);
   };
+  const logsSizeOptions = [
+    { ownValue: LOGS_SIZE.SMALL, label: formatMessage(messages.logsSizeSmall) },
+    { ownValue: LOGS_SIZE.MEDIUM, label: formatMessage(messages.logsSizeMedium) },
+    { ownValue: LOGS_SIZE.LARGE, label: formatMessage(messages.logsSizeLarge) },
+  ];
 
   const handleClickOutside = () => {
     if (isOpened) {
@@ -70,6 +83,11 @@ export const LogsSettings = ({ isConsoleViewMode }) => {
 
     dispatch(setNoLogsCollapsingAction(newValue));
     closeDropdown();
+  };
+
+  const handleLogsSizeChange = (newValue) => {
+    trackEvent(LOG_PAGE_EVENTS.getLogsSizeChangeEvent(newValue));
+    dispatch(setLogsSizeAction(newValue));
   };
 
   return (
@@ -122,6 +140,16 @@ export const LogsSettings = ({ isConsoleViewMode }) => {
                     <PaginationControl onToggle={closeDropdown} />
                   </div>
                 </SettingsBlock>
+                <div className={cx('separator')} />
+                <SettingsBlock header={formatMessage(messages.logsSize)}>
+                  <InputRadioGroup
+                    options={logsSizeOptions}
+                    value={logsSize}
+                    onChange={handleLogsSizeChange}
+                    inputGroupClassName={cx('items-group')}
+                    size="medium"
+                  />
+                </SettingsBlock>
               </div>
             )}
           </Popper>
@@ -129,6 +157,11 @@ export const LogsSettings = ({ isConsoleViewMode }) => {
       </div>
     </Manager>
   );
+};
+
+SettingsBlock.propTypes = {
+  header: PropTypes.string.isRequired,
+  children: PropTypes.node,
 };
 
 SettingsBlock.propTypes = {

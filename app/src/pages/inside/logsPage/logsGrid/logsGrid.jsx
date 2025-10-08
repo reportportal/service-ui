@@ -24,9 +24,10 @@ import { Grid } from 'components/main/grid';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ERROR, FATAL } from 'common/constants/logLevels';
-import { noLogsCollapsingSelector } from 'controllers/user';
+import { logsSizeSelector, noLogsCollapsingSelector } from 'controllers/user';
 import ArrowIcon from 'common/img/arrow-down-inline.svg';
 import { NoItemMessage } from 'components/main/noItemMessage';
+import { DEFAULT_LOGS_SIZE } from 'common/constants/logsSettings';
 import { FlexibleLogTime } from './flexibleLogTime';
 import { LogMessageSearch } from './logMessageSearch';
 import { LogMessageBlock } from './logMessageBlock';
@@ -63,6 +64,7 @@ const MessageColumn = ({ className, value, ...rest }) => (
   <div
     className={cx('message-column', `level-${value.level}`, className, {
       console: rest.customProps.consoleView,
+      [`column-size-${rest.customProps.logsSize}`]: rest.customProps.logsSize,
     })}
   >
     <LogMessageBlock value={value} {...rest} />
@@ -83,6 +85,7 @@ const AttachmentColumn = ({ className, value, customProps }) => (
     className={cx('attachment-column', className, {
       mobile: customProps.mobile,
       console: customProps.consoleView,
+      [`column-size-${customProps.logsSize}`]: customProps.logsSize,
     })}
   >
     {value.binaryContent?.contentType && (
@@ -100,13 +103,18 @@ AttachmentColumn.defaultProps = {
   value: {},
 };
 
-const StatusColumn = ({ className }) => <div className={className} />;
+const StatusColumn = ({ className, customProps: { logsSize } }) => (
+  <div className={cx(className, { [`column-size-${logsSize}`]: logsSize })} />
+);
 StatusColumn.propTypes = {
   className: PropTypes.string.isRequired,
+  customProps: PropTypes.shape({
+    logsSize: PropTypes.string,
+  }),
 };
 
-const TimeColumn = ({ className, value, customProps: { mobile } }) => (
-  <div className={cx('time-column', className, { mobile })}>
+const TimeColumn = ({ className, value, customProps: { mobile, logsSize } }) => (
+  <div className={cx('time-column', className, { mobile, [`column-size-${logsSize}`]: logsSize })}>
     <FlexibleLogTime time={value.time} />
   </div>
 );
@@ -149,6 +157,7 @@ LogStatusCell.defaultProps = {
 
 @connect((state) => ({
   noLogsCollapsing: noLogsCollapsingSelector(state),
+  logsSize: logsSizeSelector(state),
 }))
 @injectIntl
 export class LogsGrid extends Component {
@@ -176,6 +185,7 @@ export class LogsGrid extends Component {
     loadNext: PropTypes.func,
     loadPrevious: PropTypes.func,
     loadingDirection: PropTypes.string,
+    logsSize: PropTypes.string,
   };
 
   static defaultProps = {
@@ -195,51 +205,51 @@ export class LogsGrid extends Component {
     rawHeaderCellStylesConfig: {},
     noLogsCollapsing: false,
     loadingDirection: null,
+    logsSize: DEFAULT_LOGS_SIZE,
   };
 
-  getConsoleViewColumns = () => [
-    {
-      id: 'attachment',
-      component: AttachmentColumn,
-      customProps: {
-        consoleView: true,
-        rawHeaderCellStylesConfig: this.props.rawHeaderCellStylesConfig,
+  getConsoleViewColumns = () => {
+    const { logsSize } = this.props;
+    return [
+      {
+        id: 'attachment',
+        component: AttachmentColumn,
+        customProps: {
+          consoleView: true,
+          rawHeaderCellStylesConfig: this.props.rawHeaderCellStylesConfig,
+          logsSize,
+          gridHeaderCellStyles: cx('header', `column-size-${logsSize}`),
+        },
       },
-    },
-    {
-      id: TIME_COLUMN_ID,
-      sortable: true,
-      title: {
-        component: this.renderConsoleViewHeader,
+      {
+        id: TIME_COLUMN_ID,
+        sortable: true,
+        title: {
+          component: this.renderConsoleViewHeader,
+        },
+        customProps: {
+          consoleView: true,
+          rawHeaderCellStylesConfig: this.props.rawHeaderCellStylesConfig,
+          logsSize,
+          gridHeaderCellStyles: cx('header', `column-size-${logsSize}`),
+        },
+        component: MessageColumn,
       },
-      customProps: {
-        consoleView: true,
-        rawHeaderCellStylesConfig: this.props.rawHeaderCellStylesConfig,
+      {
+        id: 'mobileTime',
+        component: TimeColumn,
+        customProps: {
+          mobile: true,
+          rawHeaderCellStylesConfig: this.props.rawHeaderCellStylesConfig,
+          logsSize,
+          gridHeaderCellStyles: cx('header', `column-size-${logsSize}`),
+        },
       },
-      component: MessageColumn,
-    },
-    {
-      id: 'mobileTime',
-      component: TimeColumn,
-      customProps: {
-        mobile: true,
-        rawHeaderCellStylesConfig: this.props.rawHeaderCellStylesConfig,
-      },
-    },
-    {
-      id: 'mobileAttachment',
-      component: AttachmentColumn,
-      title: {
-        component: () => <div className={cx('no-header')} />,
-      },
-      customProps: {
-        mobile: true,
-      },
-    },
-  ];
+    ];
+  };
 
   getDefaultViewColumns = () => {
-    const { isNestedStepView, rawHeaderCellStylesConfig } = this.props;
+    const { isNestedStepView, rawHeaderCellStylesConfig, logsSize } = this.props;
     const statusColumn = {
       id: STATUS_COLUMN_ID,
       title: {
@@ -253,6 +263,10 @@ export class LogsGrid extends Component {
       },
       sortable: true,
       component: StatusColumn,
+      customProps: {
+        logsSize,
+        gridHeaderCellStyles: cx('header', `column-size-${logsSize}`),
+      },
     };
     const columns = [
       {
@@ -270,6 +284,8 @@ export class LogsGrid extends Component {
         component: MessageColumn,
         customProps: {
           markdownMode: this.props.markdownMode,
+          logsSize,
+          gridHeaderCellStyles: cx('header', `column-size-${logsSize}`),
         },
       },
       {
@@ -277,6 +293,8 @@ export class LogsGrid extends Component {
         component: AttachmentColumn,
         customProps: {
           rawHeaderCellStylesConfig,
+          logsSize,
+          gridHeaderCellStyles: cx('header', `column-size-${logsSize}`),
         },
       },
       {
@@ -289,16 +307,8 @@ export class LogsGrid extends Component {
         sortingEventInfo: LOG_PAGE_EVENTS.TIME_SORTING,
         customProps: {
           rawHeaderCellStylesConfig,
-        },
-      },
-      {
-        id: 'mobileAttachment',
-        title: {
-          component: () => <div className={cx('no-header')} />,
-        },
-        component: AttachmentColumn,
-        customProps: {
-          mobile: true,
+          logsSize,
+          gridHeaderCellStyles: cx('header', `column-size-${logsSize}`),
         },
       },
     ];
@@ -355,7 +365,11 @@ export class LogsGrid extends Component {
   };
 
   renderNestedStepHeader = (props) => (
-    <NestedStepHeader {...props} markdownMode={this.props.markdownMode} />
+    <NestedStepHeader
+      {...props}
+      markdownMode={this.props.markdownMode}
+      logsSize={this.props.logsSize}
+    />
   );
 
   render() {

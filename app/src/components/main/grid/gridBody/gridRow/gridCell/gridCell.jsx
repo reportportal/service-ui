@@ -46,6 +46,8 @@ export class GridCell extends PureComponent {
     expanded: PropTypes.bool,
     toggleExpand: PropTypes.func,
     rowSpan: PropTypes.number,
+    className: PropTypes.string,
+    level: PropTypes.number,
   };
 
   static defaultProps = {
@@ -58,6 +60,8 @@ export class GridCell extends PureComponent {
     expanded: false,
     toggleExpand: () => {},
     rowSpan: 1,
+    className: '',
+    level: 0,
   };
 
   render() {
@@ -73,11 +77,18 @@ export class GridCell extends PureComponent {
       expanded,
       toggleExpand,
       rowSpan,
+      className,
+      level,
     } = this.props;
     const CellComponent = component;
     return (
       <CellComponent
-        className={cx('grid-cell', { [`align-${align}`]: align })}
+        className={cx(
+          'grid-cell',
+          { [`align-${align}`]: align },
+          { [`level-${level}`]: level !== 0 },
+          className,
+        )}
         refFunction={refFunction}
         title={title}
         value={formatter(value)}

@@ -18,7 +18,9 @@ import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { createSelector } from 'reselect';
 import { INTERNAL } from 'common/constants/accountType';
 import { projectInfoSelector } from 'controllers/project/selectors';
+import { DEFAULT_LOGS_SIZE } from 'common/constants/logsSettings';
 import {
+  LOGS_SIZE_KEY,
   NO_LOGS_COLLAPSING_KEY,
   LOGS_PAGINATION_ENABLED_KEY,
   START_TIME_FORMAT_ABSOLUTE,
@@ -74,3 +76,6 @@ export const noLogsCollapsingSelector = (state) =>
 
 export const logsPaginationEnabledSelector = (state) =>
   activeProjectSettingsSelector(state)?.[LOGS_PAGINATION_ENABLED_KEY] ?? true;
+
+export const logsSizeSelector = (state) =>
+  activeProjectSettingsSelector(state)?.[LOGS_SIZE_KEY] || DEFAULT_LOGS_SIZE;

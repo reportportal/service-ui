@@ -29,4 +29,20 @@ export const messages = defineMessages({
     id: 'LogsSettings.pagination',
     defaultMessage: 'Pagination',
   },
+  logsSize: {
+    id: 'LogsSettings.logsSize',
+    defaultMessage: 'Log size',
+  },
+  logsSizeSmall: {
+    id: 'LogsSettings.logsSizeSmall',
+    defaultMessage: 'Small',
+  },
+  logsSizeMedium: {
+    id: 'LogsSettings.logsSizeMedium',
+    defaultMessage: 'Medium',
+  },
+  logsSizeLarge: {
+    id: 'LogsSettings.logsSizeLarge',
+    defaultMessage: 'Large',
+  },
 });

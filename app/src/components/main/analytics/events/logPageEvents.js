@@ -266,6 +266,12 @@ export const LOG_PAGE_EVENTS = {
     modal: isEnabled ? 'turn_on_pagination' : 'turn_off_pagination',
     element_name: isEnabled ? 'turn_on_reload' : 'turn_off_reload',
   }),
+  getLogsSizeChangeEvent: (logsSize) => ({
+    ...basicLogPageClickEventParameters,
+    element_name: 'console_mode_log_size',
+    place: 'settings',
+    condition: logsSize,
+  }),
   // GA3 events
   DEFECT_TYPE_TAG: {
     category: LOG_PAGE,

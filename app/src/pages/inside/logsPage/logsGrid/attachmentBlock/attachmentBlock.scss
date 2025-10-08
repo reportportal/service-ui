@@ -32,16 +32,25 @@
 .attachment {
   display: inline-block;
   width: 100%;
-  min-width: 60px;
-  min-height: 35px;
-  max-width: 65px;
+  min-width: 40px;
+  min-height: 25px;
+  max-width: 40px;
   max-height: 100%;
   cursor: pointer;
+
+  &.attachment-size-large {
+    min-width: 60px;
+    min-height: 35px;
+    max-width: 65px;
+  }
 }
 
-.console-view {
-  min-width: 7px;
-  min-height: 7px;
+.attachment-icon {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  height: 20px;
+
   svg {
     width: 7px;
     height: 13px;

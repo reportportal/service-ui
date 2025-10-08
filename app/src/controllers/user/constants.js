@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { DEFAULT_LOGS_SIZE } from 'common/constants/logsSettings';
+
 export const FETCH_USER = 'FETCH_USER';
 export const FETCH_USER_ERROR = 'fetchUserError';
 export const FETCH_USER_SUCCESS = 'fetchUserSuccess';
@@ -51,11 +53,14 @@ export const SET_ACTIVE_PROJECT_SETTINGS = 'setActiveProjectSettings';
 export const UPDATE_ACTIVE_PROJECT_SETTINGS = 'updateActiveProjectSettings';
 export const SET_NO_LOGS_COLLAPSING = 'setNoLogsCollapsing';
 export const SET_LOGS_PAGINATION_ENABLED = 'setLogsPaginationEnabled';
+export const SET_LOGS_SIZE = 'setlogsSize';
 
 export const NO_LOGS_COLLAPSING_KEY = 'noLogsCollapsing';
 export const LOGS_PAGINATION_ENABLED_KEY = 'logsPaginationEnabled';
+export const LOGS_SIZE_KEY = 'logsSize';
 
 export const ACTIVE_PROJECT_SETTINGS_INITIAL_STATE = {
   [NO_LOGS_COLLAPSING_KEY]: false,
   [LOGS_PAGINATION_ENABLED_KEY]: true,
+  [LOGS_SIZE_KEY]: DEFAULT_LOGS_SIZE,
 };

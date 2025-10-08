@@ -92,3 +92,14 @@
   margin: 4px 12px;
   background-color: $COLOR--gray-91;
 }
+
+.items-group {
+  display: flex;
+  flex-direction: column;
+
+  & > div {
+    padding: 0 12px;
+    height: 30px;
+    box-sizing: border-box;
+  }
+}

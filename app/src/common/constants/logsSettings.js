@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,10 @@
  * limitations under the License.
  */
 
-.log-message-search {
-  position: relative;
-  height: 50px;
-  padding-top: 6px;
-  box-sizing: border-box;
-}
+export const LOGS_SIZE = {
+  SMALL: 'small',
+  MEDIUM: 'medium',
+  LARGE: 'large',
+};
 
-.search-title {
-  position: relative;
-  top: 3px;
-  color: $COLOR--gray-47;
-  font-family: $FONT-SEMIBOLD;
-  font-size: 12px;
-  text-transform: uppercase;
-}
-
-.input-search-wrapper {
-  display: inline-block;
-  width: 200px;
-}
-
-.input-search {
-  background-color: transparent;
-  padding-right: 30px;
-}
+export const DEFAULT_LOGS_SIZE = LOGS_SIZE.MEDIUM;

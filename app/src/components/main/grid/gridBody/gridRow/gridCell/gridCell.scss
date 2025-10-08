@@ -14,6 +14,24 @@
  * limitations under the License.
  */
 
+$LEVEL_OFFSET_STEP: 20px;
+
+@mixin levels-desktop {
+  @for $level from 1 to 20 {
+    &.level-#{$level} {
+      border-left-width: $level * $LEVEL_OFFSET_STEP;
+      @media (max-width: $SCREEN_XS_MAX) {
+        border-left-width: 0;
+      }
+      &.change-mobile {
+        @media (max-width: $SCREEN_SM_MAX) {
+          border-left-width: $level * $LEVEL_OFFSET_STEP;
+        }
+      }
+    }
+  }
+}
+
 .grid-cell {
   padding: 15px 10px;
   display: table-cell;
@@ -22,6 +40,10 @@
   color: $COLOR--charcoal-grey;
   font-family: $FONT-REGULAR;
   word-break: break-all;
+  border-left-color: $COLOR--primary-gray;
+  border-left-style: solid;
+  border-left-width: 0px;
+  @include levels-desktop;
 
   @supports (word-break: break-word) {
     word-break: break-word;

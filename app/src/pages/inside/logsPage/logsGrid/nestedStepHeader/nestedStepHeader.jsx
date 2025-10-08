@@ -21,12 +21,13 @@ import track from 'react-tracking';
 import { FAILED } from 'common/constants/testStatuses';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { DurationBlock } from 'pages/inside/common/durationBlock';
-import ArrowIcon from 'common/img/arrow-right-inline.svg';
+import ArrowIcon from 'common/img/arrow-down-inline.svg';
 import AttachmentIcon from 'common/img/attachment-inline.svg';
 import { TestItemStatus } from 'pages/inside/common/testItemStatus';
 import { MarkdownViewer } from 'components/main/markdown';
 import classNames from 'classnames/bind';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { DEFAULT_LOGS_SIZE } from 'common/constants/logsSettings';
 import styles from './nestedStepHeader.scss';
 
 const cx = classNames.bind(styles);
@@ -45,6 +46,7 @@ export class NestedStepHeader extends Component {
     }).isRequired,
     markdownMode: PropTypes.bool,
     additionalNameCellBlock: PropTypes.node,
+    logsSize: PropTypes.string,
   };
 
   static defaultProps = {
@@ -55,6 +57,7 @@ export class NestedStepHeader extends Component {
     loading: false,
     markdownMode: false,
     additionalNameCellBlock: null,
+    logsSize: DEFAULT_LOGS_SIZE,
   };
 
   componentDidMount() {
@@ -93,7 +96,11 @@ export class NestedStepHeader extends Component {
       markdownMode,
       additionalNameCellBlock,
     } = this.props;
-    const name = markdownMode ? <MarkdownViewer value={data.name} /> : data.name;
+    const name = markdownMode ? (
+      <MarkdownViewer value={data.name} className={cx('markdown-viewer')} />
+    ) : (
+      data.name
+    );
     if (hasContent) {
       return (
         <div
@@ -118,9 +125,9 @@ export class NestedStepHeader extends Component {
   };
 
   render() {
-    const { data, level } = this.props;
+    const { data, level, logsSize } = this.props;
     return (
-      <div className={cx('header-container')}>
+      <div className={cx('header-container', { [`header-size-${logsSize}`]: true })}>
         <div
           className={cx('row', {
             [`level-${level}`]: level !== 0,
