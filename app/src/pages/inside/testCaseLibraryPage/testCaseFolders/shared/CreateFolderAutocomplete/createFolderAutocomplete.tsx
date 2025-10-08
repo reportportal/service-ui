@@ -26,6 +26,7 @@ import { SingleAutocomplete } from 'componentLibrary/autocompletes/singleAutocom
 
 import { messages } from './messages';
 import styles from './createFolderAutocomplete.scss';
+import isString from 'es-toolkit/compat/isString';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -64,7 +65,7 @@ export const CreateFolderAutocomplete = ({
   const renderOption = (
     option: FolderWithFullPath | string,
     index: number,
-    isNew: boolean,
+    _isNew: boolean,
     getItemProps: ({
       item,
       index,
@@ -104,7 +105,7 @@ export const CreateFolderAutocomplete = ({
         customEmptyListMessage={customEmptyListMessage || formatMessage(messages.noFoldersFound)}
         renderOption={renderOption}
         parseValueToString={(option: FolderWithFullPath | string) =>
-          typeof option === 'string' ? option : option?.description || option?.name || ''
+          isString(option) ? option : option?.description || option?.name || ''
         }
         newItemButtonText={formatMessage(messages.createNew)}
       />

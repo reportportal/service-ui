@@ -63,7 +63,7 @@ export class AutocompleteOptionsComponent extends Component {
     optionVariant: '',
     createWithoutConfirmation: false,
     variant: 'light',
-    newItemButtonText: null,
+    newItemButtonText: '',
   };
 
   filterStaticOptions = () => {

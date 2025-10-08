@@ -37,7 +37,10 @@ export const AutocompleteOption = ({
   ...props
 }) => {
   const getButtonText = () => {
-    if (newItemButtonText) return newItemButtonText;
+    if (newItemButtonText) {
+      return newItemButtonText;
+    }
+
     return optionVariant === 'key-variant' ? 'New key' : 'New value';
   };
 
@@ -94,5 +97,5 @@ AutocompleteOption.defaultProps = {
   disabled: false,
   optionVariant: '',
   variant: 'light',
-  newItemButtonText: null,
+  newItemButtonText: '',
 };

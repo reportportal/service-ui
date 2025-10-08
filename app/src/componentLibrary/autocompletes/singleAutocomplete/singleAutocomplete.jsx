@@ -90,7 +90,7 @@ export class SingleAutocomplete extends Component {
     variant: 'light',
     useFixedPositioning: false,
     skipOptionCreation: false,
-    newItemButtonText: null,
+    newItemButtonText: '',
   };
 
   getOptionProps =

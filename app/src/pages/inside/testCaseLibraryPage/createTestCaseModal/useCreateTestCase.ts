@@ -29,6 +29,7 @@ import { createFoldersSuccessAction } from 'controllers/testCase/actionCreators'
 
 import { CreateTestCaseFormData, ManualScenarioType } from './createTestCaseModal';
 import { messages } from './basicInformation/messages';
+import isString from 'es-toolkit/compat/isString';
 
 export interface TestStep {
   instructions: string;
@@ -76,15 +77,11 @@ export const useCreateTestCase = () => {
   };
 
   const resolveFolderId = async (folder: string | { id: number } | undefined): Promise<number> => {
-    if (typeof folder === 'string') {
+    if (isString(folder)) {
       return createFolder(folder);
     }
 
-    if (folder?.id) {
-      return folder.id;
-    }
-
-    return testFolderId;
+    return folder?.id || testFolderId;
   };
 
   const createTestCase = async (payload: CreateTestCaseFormData) => {
