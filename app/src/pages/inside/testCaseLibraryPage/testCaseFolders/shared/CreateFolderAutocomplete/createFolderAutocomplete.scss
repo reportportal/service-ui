@@ -14,23 +14,20 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
+.create-folder-autocomplete {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 
-export const sharedFolderMessages = defineMessages({
-  createAsSubfolder: {
-    id: 'TestCaseLibraryPage.createAsSubfolder',
-    defaultMessage: 'Create as subfolder',
-  },
-  moveToRootDirectory: {
-    id: 'TestCaseLibraryPage.moveToRootDirectory',
-    defaultMessage: 'Move to root directory',
-  },
-  folderDestination: {
-    id: 'TestCaseLibraryPage.folderDestination',
-    defaultMessage: 'Folder destination',
-  },
-  parentFolder: {
-    id: 'TestCaseLibraryPage.parentFolder',
-    defaultMessage: 'Parent folder',
-  },
-});
+  &__folder-name {
+    font-weight: 500;
+    color: var(--rp-ui-base-almost-black);
+    margin-bottom: 4px;
+  }
+
+  &__folder-path {
+    font-size: 12px;
+    color: var(--rp-ui-base-e-400);
+    margin: 0;
+  }
+}

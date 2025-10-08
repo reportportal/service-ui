@@ -14,23 +14,5 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
-
-export const sharedFolderMessages = defineMessages({
-  createAsSubfolder: {
-    id: 'TestCaseLibraryPage.createAsSubfolder',
-    defaultMessage: 'Create as subfolder',
-  },
-  moveToRootDirectory: {
-    id: 'TestCaseLibraryPage.moveToRootDirectory',
-    defaultMessage: 'Move to root directory',
-  },
-  folderDestination: {
-    id: 'TestCaseLibraryPage.folderDestination',
-    defaultMessage: 'Folder destination',
-  },
-  parentFolder: {
-    id: 'TestCaseLibraryPage.parentFolder',
-    defaultMessage: 'Parent folder',
-  },
-});
+export { CreateFolderAutocomplete } from './createFolderAutocomplete';
+export { messages as createFolderAutocompleteMessages } from './messages';

@@ -16,21 +16,17 @@
 
 import { defineMessages } from 'react-intl';
 
-export const sharedFolderMessages = defineMessages({
-  createAsSubfolder: {
-    id: 'TestCaseLibraryPage.createAsSubfolder',
-    defaultMessage: 'Create as subfolder',
+export const messages = defineMessages({
+  selectOrCreateFolder: {
+    id: 'CreateFolderAutocomplete.selectOrCreateFolder',
+    defaultMessage: 'Select or create folder',
   },
-  moveToRootDirectory: {
-    id: 'TestCaseLibraryPage.moveToRootDirectory',
-    defaultMessage: 'Move to root directory',
+  noFoldersFound: {
+    id: 'CreateFolderAutocomplete.noFoldersFound',
+    defaultMessage: 'No folders found',
   },
-  folderDestination: {
-    id: 'TestCaseLibraryPage.folderDestination',
-    defaultMessage: 'Folder destination',
-  },
-  parentFolder: {
-    id: 'TestCaseLibraryPage.parentFolder',
-    defaultMessage: 'Parent folder',
+  createNew: {
+    id: 'CreateFolderAutocomplete.createNew',
+    defaultMessage: 'Create new',
   },
 });

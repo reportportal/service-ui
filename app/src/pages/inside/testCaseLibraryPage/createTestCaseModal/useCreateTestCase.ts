@@ -17,6 +17,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { SubmissionError } from 'redux-form';
 import { useIntl } from 'react-intl';
+import { isString } from 'es-toolkit/compat';
 
 import { projectKeySelector } from 'controllers/project';
 import { fetch } from 'common/utils';
@@ -24,7 +25,8 @@ import { useDebouncedSpinner } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { hideModalAction } from 'controllers/modal';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
-import { getTestCasesAction } from 'controllers/testCase';
+import { getTestCasesAction, Folder } from 'controllers/testCase';
+import { createFoldersSuccessAction } from 'controllers/testCase/actionCreators';
 
 import { CreateTestCaseFormData, ManualScenarioType } from './createTestCaseModal';
 import { messages } from './basicInformation/messages';
@@ -63,9 +65,30 @@ export const useCreateTestCase = () => {
   const projectKey = useSelector(projectKeySelector);
   const { formatMessage } = useIntl();
 
+  const createFolder = async (folderName: string): Promise<number> => {
+    const createdFolder = await fetch<Folder>(URLS.testFolders(projectKey), {
+      method: 'POST',
+      data: { name: folderName },
+    });
+
+    dispatch(createFoldersSuccessAction({ ...createdFolder, countOfTestCases: 0 }));
+
+    return createdFolder.id;
+  };
+
+  const resolveFolderId = async (folder: string | { id: number } | undefined): Promise<number> => {
+    if (isString(folder)) {
+      return createFolder(folder);
+    }
+
+    return folder?.id || testFolderId;
+  };
+
   const createTestCase = async (payload: CreateTestCaseFormData) => {
     try {
       showSpinner();
+
+      const folderId = await resolveFolderId(payload.folder);
 
       const commonData = {
         executionEstimationTime: payload.executionEstimationTime,
@@ -93,7 +116,7 @@ export const useCreateTestCase = () => {
         data: {
           description: payload.description,
           name: payload.name,
-          testFolderId,
+          testFolderId: folderId,
           priority: payload.priority.toUpperCase(),
           manualScenario,
         },
@@ -105,7 +128,7 @@ export const useCreateTestCase = () => {
           messageId: 'testCaseCreatedSuccess',
         }),
       );
-      dispatch(getTestCasesAction({ testFolderId }));
+      dispatch(getTestCasesAction({ testFolderId: folderId }));
     } catch (error: unknown) {
       if (error instanceof Error && error?.message?.includes('tms_test_case_name_folder_unique')) {
         throw new SubmissionError({
