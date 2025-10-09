@@ -26,6 +26,7 @@ import {
   getUserProjectSettingsFromStorage,
   setNoLogsCollapsingInStorage,
   setLogsPaginationEnabledInStorage,
+  setLogsSizeInStorage,
 } from './storageUtils';
 import {
   ASSIGN_TO_PROJECT,
@@ -38,6 +39,8 @@ import {
   DELETE_USER_ACCOUNT,
   SET_NO_LOGS_COLLAPSING,
   SET_LOGS_PAGINATION_ENABLED,
+  SET_LOGS_SIZE,
+  LOGS_SIZE_KEY,
   NO_LOGS_COLLAPSING_KEY,
   LOGS_PAGINATION_ENABLED_KEY,
 } from './constants';
@@ -159,22 +162,37 @@ function* saveActiveProject({ payload: project }) {
   yield put(setActiveProjectSettingsAction(projectSettings));
 }
 
-function* setNoLogsCollapsing({ payload }) {
+function* updateLogsSetting({ payload, setInStorage, settingKey }) {
   const { value } = payload;
   const userId = yield select(userIdSelector);
   const projectId = yield select(activeProjectSelector);
 
-  yield call(setNoLogsCollapsingInStorage, userId, projectId, value);
-  yield put(updateActiveProjectSettingsAction({ [NO_LOGS_COLLAPSING_KEY]: value }));
+  yield call(setInStorage, userId, projectId, value);
+  yield put(updateActiveProjectSettingsAction({ [settingKey]: value }));
+}
+
+function* setNoLogsCollapsing({ payload }) {
+  yield call(updateLogsSetting, {
+    payload,
+    setInStorage: setNoLogsCollapsingInStorage,
+    settingKey: NO_LOGS_COLLAPSING_KEY,
+  });
 }
 
 function* setLogsPaginationEnabled({ payload }) {
-  const { value } = payload;
-  const userId = yield select(userIdSelector);
-  const projectId = yield select(activeProjectSelector);
+  yield call(updateLogsSetting, {
+    payload,
+    setInStorage: setLogsPaginationEnabledInStorage,
+    settingKey: LOGS_PAGINATION_ENABLED_KEY,
+  });
+}
 
-  yield call(setLogsPaginationEnabledInStorage, userId, projectId, value);
-  yield put(updateActiveProjectSettingsAction({ [LOGS_PAGINATION_ENABLED_KEY]: value }));
+function* setLogsSize({ payload }) {
+  yield call(updateLogsSetting, {
+    payload,
+    setInStorage: setLogsSizeInStorage,
+    settingKey: LOGS_SIZE_KEY,
+  });
 }
 
 function* addApiKey({ payload = {} }) {
@@ -307,6 +325,10 @@ function* watchSetLogsPagination() {
   yield takeEvery(SET_LOGS_PAGINATION_ENABLED, setLogsPaginationEnabled);
 }
 
+function* watchSetLogsSize() {
+  yield takeEvery(SET_LOGS_SIZE, setLogsSize);
+}
+
 function* watchFetchUser() {
   yield takeEvery(FETCH_USER, fetchUserWorker);
 }
@@ -327,6 +349,7 @@ export function* userSagas() {
     watchSetActiveProject(),
     watchSetNoLogsCollapsing(),
     watchSetLogsPagination(),
+    watchSetLogsSize(),
     watchAddApiKey(),
     watchFetchApiKeys(),
     watchDeleteApiKey(),
