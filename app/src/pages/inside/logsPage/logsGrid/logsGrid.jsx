@@ -60,16 +60,23 @@ const LOGS_GRID_EVENTS_INFO = {
   clickOnLoadCurrentStep: LOG_PAGE_EVENTS.LOAD_CURRENT_STEP,
 };
 
-const MessageColumn = ({ className, value, ...rest }) => (
-  <div
-    className={cx('message-column', `level-${value.level}`, className, {
-      console: rest.customProps.consoleView,
-      [`column-size-${rest.customProps.logsSize}`]: rest.customProps.logsSize,
-    })}
-  >
-    <LogMessageBlock value={value} {...rest} />
-  </div>
-);
+const MessageColumn = ({ className, value, customProps, ...rest }) => {
+  const { consoleView: console, logsSize = DEFAULT_LOGS_SIZE } = customProps;
+
+  return (
+    <div
+      className={cx(
+        'message-column',
+        `level-${value.level}`,
+        `column-size-${logsSize}`,
+        className,
+        { console },
+      )}
+    >
+      <LogMessageBlock value={value} customProps={customProps} {...rest} />
+    </div>
+  );
+};
 MessageColumn.propTypes = {
   className: PropTypes.string.isRequired,
   customProps: PropTypes.object,
@@ -80,19 +87,19 @@ MessageColumn.defaultProps = {
   value: {},
 };
 
-const AttachmentColumn = ({ className, value, customProps }) => (
-  <div
-    className={cx('attachment-column', className, {
-      mobile: customProps.mobile,
-      console: customProps.consoleView,
-      [`column-size-${customProps.logsSize}`]: customProps.logsSize,
-    })}
-  >
-    {value.binaryContent?.contentType && (
-      <AttachmentBlock customProps={customProps} value={value.binaryContent} />
-    )}
-  </div>
-);
+const AttachmentColumn = ({ className, value, customProps }) => {
+  const { mobile, consoleView: console, logsSize = DEFAULT_LOGS_SIZE } = customProps;
+
+  return (
+    <div
+      className={cx('attachment-column', `column-size-${logsSize}`, className, { mobile, console })}
+    >
+      {value.binaryContent?.contentType && (
+        <AttachmentBlock customProps={customProps} value={value.binaryContent} />
+      )}
+    </div>
+  );
+};
 AttachmentColumn.propTypes = {
   className: PropTypes.string.isRequired,
   customProps: PropTypes.object,
@@ -103,21 +110,28 @@ AttachmentColumn.defaultProps = {
   value: {},
 };
 
-const StatusColumn = ({ className, customProps: { logsSize } }) => (
-  <div className={cx(className, { [`column-size-${logsSize}`]: logsSize })} />
-);
+const StatusColumn = ({ className, customProps }) => {
+  const { logsSize = DEFAULT_LOGS_SIZE } = customProps;
+
+  return <div className={cx(className, `column-size-${logsSize}`)} />;
+};
 StatusColumn.propTypes = {
   className: PropTypes.string.isRequired,
-  customProps: PropTypes.shape({
-    logsSize: PropTypes.string,
-  }),
+  customProps: PropTypes.object,
+};
+StatusColumn.defaultProps = {
+  customProps: {},
 };
 
-const TimeColumn = ({ className, value, customProps: { mobile, logsSize } }) => (
-  <div className={cx('time-column', className, { mobile, [`column-size-${logsSize}`]: logsSize })}>
-    <FlexibleLogTime time={value.time} />
-  </div>
-);
+const TimeColumn = ({ className, value, customProps }) => {
+  const { mobile, logsSize = DEFAULT_LOGS_SIZE } = customProps;
+
+  return (
+    <div className={cx('time-column', className, `column-size-${logsSize}`, { mobile })}>
+      <FlexibleLogTime time={value.time} />
+    </div>
+  );
+};
 TimeColumn.propTypes = {
   className: PropTypes.string.isRequired,
   customProps: PropTypes.object,

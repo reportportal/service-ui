@@ -180,7 +180,7 @@ export class StackTrace extends Component {
           designMode={designMode}
           eventsInfo={eventsInfo}
         >
-          <div className={cx('message-container', { [`container-size-${logsSize}`]: logsSize })}>
+          <div className={cx('message-container', `container-size-${logsSize}`)}>
             <div className={cx('cell', 'message-cell')}>{item.message}</div>
             {!hideAdditionalCells && (
               <>

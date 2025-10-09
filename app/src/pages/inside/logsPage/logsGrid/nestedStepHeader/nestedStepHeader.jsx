@@ -127,7 +127,7 @@ export class NestedStepHeader extends Component {
   render() {
     const { data, level, logsSize } = this.props;
     return (
-      <div className={cx('header-container', { [`header-size-${logsSize}`]: true })}>
+      <div className={cx('header-container', `header-size-${logsSize}`)}>
         <div
           className={cx('row', {
             [`level-${level}`]: level !== 0,
