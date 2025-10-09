@@ -164,11 +164,6 @@ SettingsBlock.propTypes = {
   children: PropTypes.node,
 };
 
-SettingsBlock.propTypes = {
-  header: PropTypes.string.isRequired,
-  children: PropTypes.node,
-};
-
 LogsSettings.propTypes = {
   isConsoleViewMode: PropTypes.bool,
 };
