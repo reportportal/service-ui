@@ -272,6 +272,12 @@ export const LOG_PAGE_EVENTS = {
     place: 'settings',
     condition: logsSize,
   }),
+  getToggleFullWidthModeEvent: (isEnabled) => ({
+    ...basicLogPageClickEventParameters,
+    element_name: 'full_width_size',
+    place: 'settings',
+    status: isEnabled ? 'enabled' : 'disabled',
+  }),
   // GA3 events
   DEFECT_TYPE_TAG: {
     category: LOG_PAGE,

@@ -1341,6 +1341,7 @@
   "LogsGridToolbar.markdownMode": "Modo markdown",
   "LogsGridToolbar.showErrorLog": "Mostrar",
   "LogsGridToolbar.withAttachments": "Logs con archivos adjuntos",
+  "LogsSettings.fullWidthMode": "Full-width mode",
   "LogsSettings.logAppearance": "Log appearance",
   "LogsSettings.logsSize": "Log size",
   "LogsSettings.logsSizeLarge": "Large",

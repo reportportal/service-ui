@@ -25,6 +25,10 @@ export const messages = defineMessages({
     id: 'LogsSettings.noLogsCollapsing',
     defaultMessage: 'No logs collapsing',
   },
+  fullWidthMode: {
+    id: 'LogsSettings.fullWidthMode',
+    defaultMessage: 'Full-width mode',
+  },
   pagination: {
     id: 'LogsSettings.pagination',
     defaultMessage: 'Pagination',

@@ -156,6 +156,7 @@ export class LogsGridWrapper extends Component {
     loadMoreLogsAction: PropTypes.func,
     fetchLogItemsForPageAction: PropTypes.func,
     loadingDirection: PropTypes.string,
+    className: PropTypes.string,
   };
 
   static defaultProps = {
@@ -192,6 +193,7 @@ export class LogsGridWrapper extends Component {
     loadMoreLogsAction: () => {},
     fetchLogItemsForPageAction: () => {},
     loadingDirection: null,
+    className: '',
   };
 
   state = {
@@ -304,6 +306,7 @@ export class LogsGridWrapper extends Component {
       errorLogs,
       logsPaginationEnabled,
       loadingDirection,
+      className,
     } = this.props;
     const rowHighlightingConfig = {
       highlightedRowId: this.props.errorLogs[this.state.errorLogIndex]?.id,
@@ -314,7 +317,7 @@ export class LogsGridWrapper extends Component {
     };
 
     return (
-      <>
+      <div className={className}>
         {isSauceLabsIntegrationView ? (
           <SauceLabsSection />
         ) : (
@@ -370,7 +373,7 @@ export class LogsGridWrapper extends Component {
             )}
           </Fragment>
         )}
-      </>
+      </div>
     );
   }
 }
