@@ -1341,6 +1341,7 @@
   "LogsGridToolbar.markdownMode": "降价模式",
   "LogsGridToolbar.showErrorLog": "显示",
   "LogsGridToolbar.withAttachments": "带附件的日志",
+  "LogsSettings.fullWidthMode": "Full-width mode",
   "LogsSettings.logAppearance": "Log appearance",
   "LogsSettings.logsSize": "Log size",
   "LogsSettings.logsSizeLarge": "Large",

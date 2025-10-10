@@ -27,6 +27,7 @@ export {
   NO_LOGS_COLLAPSING_KEY,
   LOGS_PAGINATION_ENABLED_KEY,
   LOGS_SIZE_KEY,
+  LOGS_FULL_WIDTH_MODE_KEY,
 } from './constants';
 export {
   fetchUserAction,
@@ -49,6 +50,7 @@ export {
   setNoLogsCollapsingAction,
   setLogsPaginationEnabledAction,
   setLogsSizeAction,
+  setLogsFullWidthModeAction,
 } from './actionCreators';
 export { userReducer } from './reducer';
 export {
@@ -71,6 +73,7 @@ export {
   noLogsCollapsingSelector,
   logsPaginationEnabledSelector,
   logsSizeSelector,
+  logsFullWidthModeSelector,
 } from './selectors';
 export { userSagas } from './sagas';
 export {
@@ -81,4 +84,5 @@ export {
   setNoLogsCollapsingInStorage,
   setLogsPaginationEnabledInStorage,
   setLogsSizeInStorage,
+  setLogsFullWidthModeInStorage,
 } from './storageUtils';

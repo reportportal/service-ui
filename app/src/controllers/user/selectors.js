@@ -23,6 +23,7 @@ import {
   LOGS_SIZE_KEY,
   NO_LOGS_COLLAPSING_KEY,
   LOGS_PAGINATION_ENABLED_KEY,
+  LOGS_FULL_WIDTH_MODE_KEY,
   START_TIME_FORMAT_ABSOLUTE,
   START_TIME_FORMAT_RELATIVE,
 } from './constants';
@@ -79,3 +80,6 @@ export const logsPaginationEnabledSelector = (state) =>
 
 export const logsSizeSelector = (state) =>
   activeProjectSettingsSelector(state)?.[LOGS_SIZE_KEY] || DEFAULT_LOGS_SIZE;
+
+export const logsFullWidthModeSelector = (state) =>
+  activeProjectSettingsSelector(state)?.[LOGS_FULL_WIDTH_MODE_KEY] || false;

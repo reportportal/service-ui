@@ -32,6 +32,8 @@ import {
   setNoLogsCollapsingAction,
   logsSizeSelector,
   setLogsSizeAction,
+  logsFullWidthModeSelector,
+  setLogsFullWidthModeAction,
 } from 'controllers/user';
 import SettingsIcon from 'common/img/settings-icon-inline.svg';
 import { PaginationControl } from './paginationControl';
@@ -53,6 +55,7 @@ export const LogsSettings = ({ isConsoleViewMode }) => {
   const dispatch = useDispatch();
   const noLogsCollapsing = useSelector(noLogsCollapsingSelector);
   const logsSize = useSelector(logsSizeSelector);
+  const logsFullWidthMode = useSelector(logsFullWidthModeSelector);
   const [isOpened, setOpened] = useState(false);
   const containerRef = useRef(null);
 
@@ -80,7 +83,6 @@ export const LogsSettings = ({ isConsoleViewMode }) => {
   const toggleNoLogsCollapsing = () => {
     const newValue = !noLogsCollapsing;
     trackEvent(LOG_PAGE_EVENTS.getToggleNoLogsCollapsingEvent(newValue));
-
     dispatch(setNoLogsCollapsingAction(newValue));
     closeDropdown();
   };
@@ -88,6 +90,13 @@ export const LogsSettings = ({ isConsoleViewMode }) => {
   const handleLogsSizeChange = (newValue) => {
     trackEvent(LOG_PAGE_EVENTS.getLogsSizeChangeEvent(newValue));
     dispatch(setLogsSizeAction(newValue));
+  };
+
+  const toggleFullWidthMode = () => {
+    const newValue = !logsFullWidthMode;
+    trackEvent(LOG_PAGE_EVENTS.getToggleFullWidthModeEvent(newValue));
+    dispatch(setLogsFullWidthModeAction(newValue));
+    closeDropdown();
   };
 
   return (
@@ -133,6 +142,11 @@ export const LogsSettings = ({ isConsoleViewMode }) => {
                       </InputCheckbox>
                     </div>
                   )}
+                  <div className={cx('item')}>
+                    <InputCheckbox value={logsFullWidthMode} onChange={toggleFullWidthMode}>
+                      {formatMessage(messages.fullWidthMode)}
+                    </InputCheckbox>
+                  </div>
                 </SettingsBlock>
                 <div className={cx('separator')} />
                 <SettingsBlock header={formatMessage(messages.pagination)}>

@@ -1341,6 +1341,7 @@
   "LogsGridToolbar.markdownMode": "Режим розмітки",
   "LogsGridToolbar.showErrorLog": "Показати",
   "LogsGridToolbar.withAttachments": "Логи з вкладеннями",
+  "LogsSettings.fullWidthMode": "Повнорозмірний варіант",
   "LogsSettings.logAppearance": "Вигляд логів",
   "LogsSettings.logsSize": "Розмір лога",
   "LogsSettings.logsSizeLarge": "Великий",

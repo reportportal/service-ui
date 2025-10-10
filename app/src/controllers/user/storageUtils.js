@@ -15,7 +15,12 @@
  */
 
 import { getStorageItem, updateStorageItem } from 'common/utils/storageUtils';
-import { LOGS_SIZE_KEY, NO_LOGS_COLLAPSING_KEY, LOGS_PAGINATION_ENABLED_KEY } from './constants';
+import {
+  LOGS_SIZE_KEY,
+  NO_LOGS_COLLAPSING_KEY,
+  LOGS_PAGINATION_ENABLED_KEY,
+  LOGS_FULL_WIDTH_MODE_KEY,
+} from './constants';
 
 export const getUserSettingsFromStorage = (userId) => getStorageItem(`${userId}_settings`) || {};
 
@@ -51,4 +56,9 @@ export const setLogsPaginationEnabledInStorage = (userId, projectId, value) =>
 export const setLogsSizeInStorage = (userId, projectId, value) =>
   updateUserProjectSettingsInStorage(userId, projectId, {
     [LOGS_SIZE_KEY]: value,
+  });
+
+export const setLogsFullWidthModeInStorage = (userId, projectId, value) =>
+  updateUserProjectSettingsInStorage(userId, projectId, {
+    [LOGS_FULL_WIDTH_MODE_KEY]: value,
   });

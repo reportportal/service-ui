@@ -39,6 +39,7 @@ import {
   SET_NO_LOGS_COLLAPSING,
   SET_LOGS_PAGINATION_ENABLED,
   SET_LOGS_SIZE,
+  SET_LOGS_FULL_WIDTH_MODE,
 } from './constants';
 
 export const fetchUserSuccessAction = (user) => ({
@@ -151,5 +152,10 @@ export const setLogsPaginationEnabledAction = (value) => ({
 
 export const setLogsSizeAction = (value) => ({
   type: SET_LOGS_SIZE,
+  payload: { value },
+});
+
+export const setLogsFullWidthModeAction = (value) => ({
+  type: SET_LOGS_FULL_WIDTH_MODE,
   payload: { value },
 });
