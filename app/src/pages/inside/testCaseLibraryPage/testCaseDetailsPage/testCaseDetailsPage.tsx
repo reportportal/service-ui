@@ -29,11 +29,13 @@ import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCases
 import { Button, EditIcon, PlusIcon } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+
 import { testCaseDetailsSelector } from 'controllers/testCase';
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
 import { messages } from './messages';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
 import { mockedTestCaseDescription } from '../testCaseList/mockData';
+import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 
 import styles from './testCaseDetailsPage.scss';
 
@@ -96,6 +98,7 @@ export const TestCaseDetailsPage = () => {
   const [isTagsAdded, setIsTagsAdded] = useState(false);
   const [isDescriptionAdded, setIsDescriptionAdded] = useState(false);
   const { canEditTestCaseTag, canEditTestCaseDescription } = useUserPermissions();
+  const { openModal } = useAddTestCasesToTestPlanModal();
 
   const testCaseDetails = useSelector(testCaseDetailsSelector);
 
@@ -111,6 +114,10 @@ export const TestCaseDetailsPage = () => {
 
   const handleEditDescription = () => {
     setIsDescriptionAdded(false);
+  };
+
+  const onAddToTestPlan = () => {
+    openModal({ selectedTestCaseIds: [testCaseDetails.id], isSingleTestCaseMode: true });
   };
 
   // TODO: Remove mock data after integration
@@ -133,7 +140,7 @@ export const TestCaseDetailsPage = () => {
             className={cx('page__header')}
             testCase={testCaseDetails}
             onAddToLaunch={noop}
-            onAddToTestPlan={noop}
+            onAddToTestPlan={onAddToTestPlan}
             onMenuAction={noop}
           />
           <div className={cx('page__sidebar')}>

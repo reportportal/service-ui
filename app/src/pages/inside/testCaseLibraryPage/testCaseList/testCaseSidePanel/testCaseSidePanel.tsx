@@ -41,6 +41,7 @@ import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
+
 import { TestCase, IScenario } from '../../types';
 import { TestCaseMenuAction } from '../types';
 import { formatTimestamp, formatDuration, getExcludedActionsFromPermissionMap } from '../utils';
@@ -50,6 +51,8 @@ import { StepsList } from '../../createTestCaseModal/stepsList';
 import { ScenariosList } from './scenariosList';
 import { messages } from './messages';
 import { StepData } from '../../createTestCaseModal/testCaseDetails';
+import { useAddTestCasesToTestPlanModal } from '../../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
+
 import styles from './testCaseSidePanel.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
@@ -111,6 +114,7 @@ export const TestCaseSidePanel = memo(
     const { formatMessage } = useIntl();
     const sidePanelRef = useRef<HTMLDivElement>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { openModal } = useAddTestCasesToTestPlanModal();
 
     useOnClickOutside(sidePanelRef, onClose);
 
@@ -151,7 +155,7 @@ export const TestCaseSidePanel = memo(
     };
 
     const handleAddToTestPlanClick = () => {
-      // TODO: Implement add to test plan functionality
+      openModal({ selectedTestCaseIds: [testCase.id], isSingleTestCaseMode: true });
     };
 
     const handleCopyId = async () => {

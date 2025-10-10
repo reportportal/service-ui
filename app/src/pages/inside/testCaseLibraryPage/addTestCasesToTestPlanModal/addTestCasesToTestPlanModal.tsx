@@ -57,7 +57,7 @@ export const AddTestCasesToTestPlanModal = ({
   invalid,
 }: AddTestCasesToTestPlanModalProps &
   InjectedFormProps<AddTestCasesToTestPlanFormData, AddTestCasesToTestPlanModalProps>) => {
-  const { selectedTestCaseIds } = data;
+  const { selectedTestCaseIds, isSingleTestCaseMode } = data;
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
@@ -68,6 +68,7 @@ export const AddTestCasesToTestPlanModal = ({
   const { isAddTestCasesToTestPlanLoading, setSelectedTestPlan, addTestCasesToTestPlan } =
     useAddTestCasesToTestPlan({
       selectedTestCaseIds,
+      isSingleTestCaseMode,
       change,
     });
 
@@ -107,7 +108,8 @@ export const AddTestCasesToTestPlanModal = ({
     >
       <form onSubmit={handleSubmit(addTestCasesToTestPlan) as AddTestCasesSubmitHandler}>
         <div>
-          {description}
+          {!isSingleTestCaseMode && description}
+          <FieldLabel>{formatMessage(messages.label)}</FieldLabel>
           <div className={cx('autocomplete-wrapper')}>
             <FieldLabel>{formatMessage(messages.label)}</FieldLabel>
             <AsyncAutocomplete

@@ -33,6 +33,7 @@ import { SELECTED_TEST_PLAN_FIELD_NAME } from './addTestCasesToTestPlanModal';
 
 export const useAddTestCasesToTestPlan = ({
   selectedTestCaseIds,
+  isSingleTestCaseMode,
   change,
 }: AddTestCasesToTestPlanModalData &
   Pick<
@@ -70,14 +71,18 @@ export const useAddTestCasesToTestPlan = ({
         dispatch(hideModalAction());
         dispatch(
           showSuccessNotification({
-            messageId: 'testCasesAddingToTestPlanSuccess',
+            messageId: isSingleTestCaseMode
+              ? 'testCaseAddingToTestPlanSuccess'
+              : 'testCasesAddingToTestPlanSuccess',
           }),
         );
       })
       .catch((error) => {
         dispatch(
           showErrorNotification({
-            messageId: 'testCasesAddingToTestPlanFailed',
+            messageId: isSingleTestCaseMode
+              ? 'testCaseAddingToTestPlanFailed'
+              : 'testCasesAddingToTestPlanFailed',
           }),
         );
         console.error(error);
