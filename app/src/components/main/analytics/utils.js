@@ -31,12 +31,6 @@ export const normalizeEventString = (string = '') =>
     .replace(/\s+|-/g, '_')
     .toLowerCase();
 
-export const getAppVersion = (buildVersion) =>
-  buildVersion
-    ?.split('.')
-    .splice(0, 2)
-    .join('.');
-
 export const provideEcGA = ({ eventName, baseEventParameters, additionalParameters }) => {
   const {
     instanceId,
@@ -51,7 +45,7 @@ export const provideEcGA = ({ eventName, baseEventParameters, additionalParamete
 
   const eventParameters = {
     instanceID: instanceId,
-    version: getAppVersion(buildVersion),
+    version: buildVersion,
     uid: `${userId}|${instanceId}`,
     auto_analysis: getAutoAnalysisEventValue(isAnalyzerAvailable, isAutoAnalyzerEnabled),
     pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled),
