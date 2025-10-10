@@ -73,10 +73,10 @@ export class StackTraceMessageBlock extends Component {
   getContentHeight = () => Number((this.props.maxHeight - TOGGLER_HEIGHT).toFixed());
 
   setupAccordion = () => {
-    this.setState({
+    this.setState((prevState) => ({
       withAccordion: true,
-      maxHeight: this.state.expanded ? null : `${this.getContentHeight()}px`,
-    });
+      maxHeight: prevState.expanded ? null : `${this.getContentHeight()}px`,
+    }));
   };
 
   removeAccordion = () => {
