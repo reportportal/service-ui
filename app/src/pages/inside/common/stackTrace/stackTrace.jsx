@@ -105,6 +105,7 @@ export class StackTrace extends Component {
     retryId: PropTypes.number.isRequired,
     extensions: PropTypes.arrayOf(extensionType),
     logsSize: PropTypes.string,
+    expanded: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -121,6 +122,7 @@ export class StackTrace extends Component {
     eventsInfo: {},
     extensions: [],
     logsSize: DEFAULT_LOGS_SIZE,
+    expanded: false,
   };
 
   componentDidMount() {
@@ -168,7 +170,7 @@ export class StackTrace extends Component {
   };
 
   createStackTraceItem = (item, { extraRow, extraCell } = {}) => {
-    const { intl, hideAdditionalCells, designMode, eventsInfo, logsSize } = this.props;
+    const { intl, hideAdditionalCells, designMode, eventsInfo, logsSize, expanded } = this.props;
     const maxRowHeight = this.getMaxRowHeight();
 
     return (
@@ -179,6 +181,7 @@ export class StackTrace extends Component {
           maxHeight={maxRowHeight}
           designMode={designMode}
           eventsInfo={eventsInfo}
+          expanded={expanded}
         >
           <div className={cx('message-container', `container-size-${logsSize}`)}>
             <div className={cx('cell', 'message-cell')}>{item.message}</div>
