@@ -29,7 +29,6 @@ export const getAutoAnalysisEventValue = (isAnalyzerAvailable, value) => {
 export const normalizeEventString = (string = '') =>
   string.trim().replace(/\s+|-/g, '_').toLowerCase();
 
-
 export const provideEcGA = ({ eventName, baseEventParameters, additionalParameters }) => {
   const {
     instanceId,
