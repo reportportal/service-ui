@@ -108,6 +108,7 @@
   );
   background-size: 8px 100%;
   background-position: 1px 0;
+  background-repeat: no-repeat;
   padding-left: 26px;
   &.level-fatal {
     border-left: 3px solid $COLOR--darkmode-fatal;
