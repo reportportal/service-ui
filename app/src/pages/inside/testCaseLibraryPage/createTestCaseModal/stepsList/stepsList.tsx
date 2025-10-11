@@ -17,13 +17,13 @@
 import classNames from 'classnames/bind';
 import { AttachmentArea } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/attachmentArea';
 import { Step } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/testCaseDetails/steps/step';
-import { StepData } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/testCaseDetails';
+import { Step as StepType } from 'pages/inside/testCaseLibraryPage/types';
 import styles from './stepsList.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
 interface StepsListProps {
-  steps: StepData[];
+  steps: StepType[];
 }
 
 export const StepsList = ({ steps }: StepsListProps) => {

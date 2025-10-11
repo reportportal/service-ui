@@ -16,6 +16,7 @@ import { Precondition } from './precondition';
 import { Steps } from './steps';
 import { TextTemplate } from './textTemplate';
 import { ManualScenarioType } from '../createTestCaseModal';
+import { Step } from 'pages/inside/testCaseLibraryPage/types';
 
 import styles from './testCaseDetails.scss';
 
@@ -32,14 +33,7 @@ const messages = defineMessages({
   },
 });
 
-export interface StepData {
-  id: string;
-  instructions: string;
-  expectedResult: string;
-  attachments?: string[];
-}
-
-const createEmptyStep = (): StepData => ({
+const createEmptyStep = (): Step => ({
   id: `step_${Date.now()}`,
   instructions: '',
   expectedResult: '',
@@ -53,7 +47,7 @@ interface TestCaseDetailsProps {
 const selector = formValueSelector('create-test-case-modal-form');
 
 export const TestCaseDetails = ({ className }: TestCaseDetailsProps) => {
-  const [steps, setSteps] = useState<StepData[]>([createEmptyStep()]);
+  const [steps, setSteps] = useState<Step[]>([createEmptyStep()]);
   const { formatMessage } = useIntl();
   const manualScenarioType = useSelector(
     (state: AppState) => selector(state, 'manualScenarioType') as ManualScenarioType,
