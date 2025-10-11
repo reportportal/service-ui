@@ -15,7 +15,7 @@ export interface IAttachment {
 }
 
 export interface Step {
-  id: number | string;
+  id: number;
   instructions: string;
   expectedResult: string;
   attachments?: Attachment[];

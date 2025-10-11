@@ -77,19 +77,17 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
     // TEXT test case
   } else {
     return (
-      <>
-        <div className={cx('scenario', 'full-view')}>
-          <FieldSection title={formatMessage(messages.precondition)}>
-            <div className={cx('precondition-text')}>{scenario.preconditions?.value}</div>
-          </FieldSection>
-          <FieldSection title={formatMessage(messages.instructions)}>
-            <div className={cx('precondition-text')}>{scenario.instructions}</div>
-          </FieldSection>
-          <FieldSection title={formatMessage(messages.expectedResult)}>
-            <div className={cx('precondition-text')}>{scenario.expectedResult}</div>
-          </FieldSection>
-        </div>
-      </>
+      <div className={cx('scenario', 'full-view')}>
+        <FieldSection title={formatMessage(messages.precondition)}>
+          <div className={cx('precondition-text')}>{scenario.preconditions?.value}</div>
+        </FieldSection>
+        <FieldSection title={formatMessage(messages.instructions)}>
+          <div className={cx('precondition-text')}>{scenario.instructions}</div>
+        </FieldSection>
+        <FieldSection title={formatMessage(messages.expectedResult)}>
+          <div className={cx('precondition-text')}>{scenario.expectedResult}</div>
+        </FieldSection>
+      </div>
     );
   }
 };
