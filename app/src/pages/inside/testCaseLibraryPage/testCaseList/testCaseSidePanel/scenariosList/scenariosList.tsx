@@ -22,15 +22,13 @@ import styles from './scenariosList.scss';
 const cx = classNames.bind(styles) as typeof classNames;
 
 interface ScenariosListProps {
-  scenarios: IScenario[];
+  scenario: IScenario;
 }
 
-export const ScenariosList = ({ scenarios }: ScenariosListProps) => {
+export const ScenariosList = ({ scenario }: ScenariosListProps) => {
   return (
     <div className={cx('scenarios-list')}>
-      {scenarios.map((scenario) => (
-        <Scenario key={scenario.id} scenario={scenario} />
-      ))}
+      <Scenario key={scenario.id} scenario={scenario} />
     </div>
   );
 };

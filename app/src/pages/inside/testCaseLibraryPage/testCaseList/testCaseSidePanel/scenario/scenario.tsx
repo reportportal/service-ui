@@ -19,11 +19,11 @@ import classNames from 'classnames/bind';
 import { AttachedFile } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
-import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { IScenario } from '../../../types';
-import { FieldSection } from './fieldSection';
+import { FieldSection } from '../../../fieldSection';
 import { messages } from './messages';
-
+import { StepsList } from '../../../createTestCaseModal/stepsList';
+import { TestCaseManualScenario } from 'pages/inside/testCaseLibraryPage/testCaseList/types';
 import styles from './scenario.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
@@ -34,55 +34,62 @@ interface ScenarioProps {
 
 export const Scenario = ({ scenario }: ScenarioProps) => {
   const { formatMessage } = useIntl();
+  const isStepsManualScenario = scenario.manualScenarioType === TestCaseManualScenario.STEPS;
 
-  const hasInstructions = !isEmpty(scenario.instruction);
-  const hasExpectedResult = !isEmpty(scenario.expectedResult);
-  const hasAttachments = !isEmpty(scenario.attachments);
+  // STEPS test case
+  if (isStepsManualScenario) {
+    const isPreconditionAttachments = !isEmpty(scenario.preconditions?.attachments);
 
-  if (hasInstructions && hasExpectedResult) {
     return (
-      <div className={cx('scenario', 'full-view')}>
-        <FieldSection title={formatMessage(messages.precondition)} variant="full-view">
-          <ExpandedTextSection text={scenario.precondition} />
-        </FieldSection>
-        <FieldSection title={formatMessage(messages.instructions)} variant="full-view">
-          <ExpandedTextSection text={scenario.instruction} />
-        </FieldSection>
-        <FieldSection title={formatMessage(messages.expectedResult)} variant="full-view">
-          <ExpandedTextSection text={scenario.expectedResult} />
-        </FieldSection>
-      </div>
+      <>
+        <div className={cx('scenario', 'steps-scenario', 'with-attachments')}>
+          <FieldSection title={formatMessage(messages.precondition)}>
+            <div className={cx('precondition-text')}>{scenario.preconditions?.value}</div>
+          </FieldSection>
+          {isPreconditionAttachments ? (
+            <>
+              <div className={cx('section-border')} />
+              <FieldSection
+                title={`${formatMessage(messages.attachments)} ${scenario.preconditions.attachments?.length}`}
+              >
+                <div className={cx('attachments-list')}>
+                  {scenario.preconditions.attachments.map((attachment) => (
+                    <AttachedFile
+                      key={attachment.id}
+                      fileName={attachment.fileName}
+                      size={attachment.fileSize}
+                      isFullWidth
+                    />
+                  ))}
+                </div>
+              </FieldSection>
+            </>
+          ) : null}
+        </div>
+        <span className={cx('section-name')}>Steps</span>
+        {isEmpty(scenario?.steps) ? (
+          <div className={cx('empty-section')}>{formatMessage(messages.noSteps)}</div>
+        ) : (
+          <StepsList steps={scenario.steps} />
+        )}
+      </>
+    );
+    // TEXT test case
+  } else {
+    return (
+      <>
+        <div className={cx('scenario', 'full-view')}>
+          <FieldSection title={formatMessage(messages.precondition)}>
+            <div className={cx('precondition-text')}>{scenario.preconditions?.value}</div>
+          </FieldSection>
+          <FieldSection title={formatMessage(messages.instructions)}>
+            <div className={cx('precondition-text')}>{scenario.instructions}</div>
+          </FieldSection>
+          <FieldSection title={formatMessage(messages.expectedResult)}>
+            <div className={cx('precondition-text')}>{scenario.expectedResult}</div>
+          </FieldSection>
+        </div>
+      </>
     );
   }
-  if (hasAttachments) {
-    return (
-      <div className={cx('scenario', 'with-attachments')}>
-        <FieldSection title={formatMessage(messages.precondition)}>
-          <div className={cx('precondition-text')}>{scenario.precondition}</div>
-        </FieldSection>
-        <div className={cx('section-border')} />
-        <FieldSection
-          title={`${formatMessage(messages.attachments)} ${scenario.attachments.length}`}
-        >
-          <div className={cx('attachments-list')}>
-            {scenario.attachments.map((attachment) => (
-              <AttachedFile
-                key={attachment.fileName}
-                fileName={attachment.fileName}
-                size={attachment.size}
-                isFullWidth
-              />
-            ))}
-          </div>
-        </FieldSection>
-      </div>
-    );
-  }
-  return (
-    <div className={cx('scenario', 'simple-view')}>
-      <FieldSection title={formatMessage(messages.precondition)}>
-        <div className={cx('precondition-text')}>{scenario.precondition}</div>
-      </FieldSection>
-    </div>
-  );
 };

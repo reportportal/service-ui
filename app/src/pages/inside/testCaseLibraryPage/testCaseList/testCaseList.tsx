@@ -115,7 +115,7 @@ export const TestCaseList = memo(
             <TestCaseNameCell
               priority={testCase.priority?.toLowerCase() as TestCasePriority}
               name={testCase.name}
-              tags={testCase.tags?.map(({ key }) => key)}
+              tags={testCase.manualScenario?.attributes?.map(({ key }) => key)} // todo should it be testCase.attributes
             />
           </button>
         ),

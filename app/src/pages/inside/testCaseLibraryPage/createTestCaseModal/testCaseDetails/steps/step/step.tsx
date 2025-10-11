@@ -15,10 +15,13 @@
  */
 
 import { defineMessages, useIntl } from 'react-intl';
-import { FieldText } from '@reportportal/ui-kit';
+import { AttachedFile, FieldText } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { FieldErrorHint, FieldProvider } from 'components/fields';
+import { Attachment } from 'pages/inside/testCaseLibraryPage/types';
+import { FieldSection } from '../../../../fieldSection';
 
 import styles from './step.scss';
 
@@ -41,6 +44,10 @@ const messages = defineMessages({
     id: 'CreateTestCaseModal.enterExpectedResult',
     defaultMessage: 'Enter expected result',
   },
+  attachments: {
+    id: 'CreateTestCaseModal.attachments',
+    defaultMessage: 'Attachments',
+  },
 });
 
 interface StepProps {
@@ -48,9 +55,16 @@ interface StepProps {
   isReadMode?: boolean;
   instructions?: string;
   expectedResult?: string;
+  attachments?: Attachment[];
 }
 
-export const Step = ({ stepId, isReadMode = false, instructions, expectedResult }: StepProps) => {
+export const Step = ({
+  stepId,
+  isReadMode = false,
+  instructions,
+  expectedResult,
+  attachments,
+}: StepProps) => {
   const { formatMessage } = useIntl();
 
   if (isReadMode) {
@@ -67,6 +81,23 @@ export const Step = ({ stepId, isReadMode = false, instructions, expectedResult 
             <span className={cx('field-label')}>{formatMessage(messages.expectedResult)}</span>
             <div className={cx('field-value')}>{expectedResult}</div>
           </div>
+        )}
+        {!isEmpty(attachments) && (
+          <>
+            <div className={cx('section-border')} />
+            <FieldSection title={`${formatMessage(messages.attachments)} ${attachments.length}`}>
+              <div className={cx('attachments-list')}>
+                {attachments.map((attachment) => (
+                  <AttachedFile
+                    key={attachment.id}
+                    fileName={attachment.fileName}
+                    size={attachment.fileSize}
+                    isFullWidth
+                  />
+                ))}
+              </div>
+            </FieldSection>
+          </>
         )}
       </div>
     );

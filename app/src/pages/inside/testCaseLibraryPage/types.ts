@@ -1,5 +1,6 @@
 import { FC, SVGProps } from 'react';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
+import { TestCaseManualScenario } from './testCaseList/types';
 
 type Tag = {
   key: string;
@@ -13,12 +14,31 @@ export interface IAttachment {
   size: number;
 }
 
-export interface IScenario {
-  id: string;
-  precondition: string;
-  instruction: string;
+export interface Step {
+  id: number;
+  instructions: string;
   expectedResult: string;
-  attachments: IAttachment[];
+}
+
+export interface Attachment {
+  fileName: string;
+  fileSize: number;
+  id: number;
+  fileType: string;
+}
+
+export interface IScenario {
+  id: number;
+  preconditions: {
+    value: string;
+    attachments: Attachment[];
+  };
+  steps: Step[];
+  manualScenarioType: TestCaseManualScenario;
+  attributes?: Tag[];
+  instructions?: string;
+  expectedResult?: string;
+  attachments?: Attachment[];
 }
 
 export interface TestCase {
@@ -28,12 +48,16 @@ export interface TestCase {
   createdAt: number;
   description?: string;
   path: string[];
-  tags: Tag[];
+  attributes?: Tag[];
   updatedAt: number;
   durationTime?: number;
-  scenarios?: IScenario[];
+  manualScenario?: IScenario;
   testFolder: {
     id: number;
+  };
+  lastExecution?: {
+    startedAt: string;
+    duration: number;
   };
 }
 

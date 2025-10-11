@@ -41,6 +41,10 @@ export const messages = defineMessages({
     id: 'TestCaseSidePanel.scenarioTitle',
     defaultMessage: 'Scenario',
   },
+  attachmentsTitle: {
+    id: 'TestCaseSidePanel.attachmentsTitle',
+    defaultMessage: 'Attachments',
+  },
   descriptionTitle: {
     id: 'TestCaseSidePanel.descriptionTitle',
     defaultMessage: 'Description',
@@ -56,6 +60,10 @@ export const messages = defineMessages({
   noDetailsForScenario: {
     id: 'TestCaseSidePanel.noDetailsForScenario',
     defaultMessage: 'No details for this scenario yet',
+  },
+  noAttachmentsAdded: {
+    id: 'TestCaseSidePanel.noAttachmentsAdded',
+    defaultMessage: 'No attachments added',
   },
   descriptionNotSpecified: {
     id: 'TestCaseSidePanel.descriptionNotSpecified',

@@ -26,6 +26,7 @@ import {
   CopyIcon,
   RerunIcon,
   DurationIcon,
+  AttachedFile,
 } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
@@ -43,53 +44,81 @@ import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'contr
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 
 import { TestCase, IScenario } from '../../types';
-import { TestCaseMenuAction } from '../types';
-import { formatTimestamp, formatDuration, getExcludedActionsFromPermissionMap } from '../utils';
+import { TestCaseManualScenario, TestCaseMenuAction } from '../types';
+import {
+  formatTimestamp,
+  formatDuration,
+  getExcludedActionsFromPermissionMap,
+  buildBreadcrumbs,
+} from '../utils';
 import { createTestCaseMenuItems } from '../configUtils';
-import { mockedTestCaseDescription, mockedScenarios, mockedStepsData } from '../mockData';
-import { StepsList } from '../../createTestCaseModal/stepsList';
 import { ScenariosList } from './scenariosList';
 import { messages } from './messages';
-import { StepData } from '../../createTestCaseModal/testCaseDetails';
 import { useAddTestCasesToTestPlanModal } from '../../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
+import { foldersSelector } from 'controllers/testCase';
 
 import styles from './testCaseSidePanel.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
 const COLLAPSIBLE_SECTIONS_CONFIG = ({
-  tags,
-  scenarios,
-  steps,
+  attributes,
+  scenario,
   testCaseDescription,
 }: {
-  tags: string[];
-  scenarios: IScenario[];
-  steps: StepData[];
+  attributes: string[];
+  scenario: IScenario;
   testCaseDescription: string;
-}) =>
-  [
+}) => {
+  const isStepsManualScenario = scenario.manualScenarioType === TestCaseManualScenario.STEPS;
+  const isScenarioDataHidden = isStepsManualScenario
+    ? isEmpty(scenario?.preconditions?.value) && isEmpty(scenario?.steps)
+    : isEmpty(scenario?.preconditions?.value) &&
+      !scenario?.instructions &&
+      !scenario?.expectedResult;
+
+  return [
     {
       titleKey: 'tagsTitle',
       defaultMessageKey: 'noTagsAdded',
-      childComponent: isEmpty(tags) ? null : <AdaptiveTagList tags={tags} isShowAllView />,
+      childComponent: isEmpty(attributes) ? null : (
+        <AdaptiveTagList tags={attributes} isShowAllView />
+      ),
     },
     {
       titleKey: 'scenarioTitle',
       defaultMessageKey: 'noDetailsForScenario',
-      childComponent: isEmpty(scenarios) ? null : <ScenariosList scenarios={scenarios} />,
+      childComponent: isScenarioDataHidden ? null : <ScenariosList scenario={scenario} />,
     },
-    {
-      titleKey: 'stepTitle',
-      defaultMessageKey: 'noStepsAdded',
-      childComponent: isEmpty(steps) ? null : <StepsList steps={steps} />,
-    },
+    ...(scenario.manualScenarioType === TestCaseManualScenario.TEXT
+      ? [
+          {
+            titleKey: 'attachmentsTitle',
+            defaultMessageKey: 'noAttachmentsAdded',
+            childComponent: isEmpty(scenario?.attachments) ? null : (
+              <div className={cx('attachments-list')}>
+                {scenario.attachments.map((attachment) => (
+                  <AttachedFile
+                    key={attachment.id}
+                    fileName={attachment.fileName}
+                    size={attachment.fileSize}
+                    isFullWidth
+                  />
+                ))}
+              </div>
+            ),
+          },
+        ]
+      : []),
     {
       titleKey: 'descriptionTitle',
       defaultMessageKey: 'descriptionNotSpecified',
-      childComponent: <ExpandedTextSection text={testCaseDescription} defaultVisibleLines={5} />,
+      childComponent: testCaseDescription ? (
+        <ExpandedTextSection text={testCaseDescription} defaultVisibleLines={5} />
+      ) : null,
     },
   ] as const;
+};
 
 interface TestCaseSidePanelProps {
   testCase: TestCase | null;
@@ -111,10 +140,13 @@ export const TestCaseSidePanel = memo(
     const { organizationSlug, projectSlug } = useSelector(
       urlOrganizationAndProjectSelector,
     ) as ProjectDetails;
+    const folders = useSelector(foldersSelector);
     const { formatMessage } = useIntl();
     const sidePanelRef = useRef<HTMLDivElement>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { openModal } = useAddTestCasesToTestPlanModal();
+    const folderId = testCase?.testFolder?.id;
+    const path = buildBreadcrumbs(folders, folderId);
 
     useOnClickOutside(sidePanelRef, onClose);
 
@@ -180,7 +212,7 @@ export const TestCaseSidePanel = memo(
               {Parser(CrossIcon as unknown as string)}
             </button>
           </div>
-          {!isEmpty(testCase.path) && <PathBreadcrumb path={testCase.path} />}
+          {!isEmpty(path) && <PathBreadcrumb path={path} />}
           <div className={cx('header-meta')}>
             <div className={cx('meta-row')}>
               <div className={cx('meta-item-row', 'id-row')}>
@@ -203,16 +235,20 @@ export const TestCaseSidePanel = memo(
               </div>
             </div>
             <div className={cx('meta-row')}>
-              {!!testCase.updatedAt && (
+              {!!testCase?.lastExecution?.startedAt && (
                 <div className={cx('meta-item-row')}>
                   <RerunIcon />
-                  <span className={cx('meta-value')}>{formatTimestamp(testCase.updatedAt)}</span>
+                  <span className={cx('meta-value')}>
+                    {formatTimestamp(testCase.lastExecution.startedAt)}
+                  </span>
                 </div>
               )}
-              {!!testCase.durationTime && (
+              {!!testCase?.lastExecution?.duration && (
                 <div className={cx('meta-item-row')}>
                   <DurationIcon />
-                  <span className={cx('meta-value')}>{formatDuration(testCase.durationTime)}</span>
+                  <span className={cx('meta-value')}>
+                    {formatDuration(testCase.lastExecution.duration)}
+                  </span>
                 </div>
               )}
             </div>
@@ -220,10 +256,9 @@ export const TestCaseSidePanel = memo(
         </div>
         <div className={cx('content')}>
           {COLLAPSIBLE_SECTIONS_CONFIG({
-            tags: testCase.tags?.map(({ key }) => key),
-            scenarios: mockedScenarios,
-            steps: mockedStepsData,
-            testCaseDescription: mockedTestCaseDescription,
+            attributes: testCase?.manualScenario?.attributes?.map(({ key }) => key), // todo: discuss the place in response of attributes
+            scenario: testCase?.manualScenario,
+            testCaseDescription: testCase.description,
           }).map(({ titleKey, defaultMessageKey, childComponent }) => (
             <CollapsibleSection
               key={titleKey}

@@ -30,7 +30,7 @@ export const StepsList = ({ steps }: StepsListProps) => {
   return (
     <div className={cx('steps-list')}>
       {steps.map((step, index) => {
-        const { instructions, expectedResult, id } = step;
+        const { instructions, expectedResult, id, attachments } = step;
         return (
           <div key={id} className={cx('step-item')}>
             <AttachmentArea
@@ -44,6 +44,7 @@ export const StepsList = ({ steps }: StepsListProps) => {
                 isReadMode
                 instructions={instructions}
                 expectedResult={expectedResult}
+                attachments={attachments}
               />
             </AttachmentArea>
           </div>
