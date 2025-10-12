@@ -21,18 +21,17 @@ import classNames from 'classnames/bind';
 import { isEmpty, noop } from 'es-toolkit/compat';
 import { Button, MeatballMenuIcon, Pagination, Selection } from '@reportportal/ui-kit';
 
-import { TestCaseList } from 'pages/inside/testCaseLibraryPage/testCaseList';
-import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/testCaseLibraryPage/testCaseList/mockData';
-import {
-  DEFAULT_CURRENT_PAGE,
-  DEFAULT_ITEMS_PER_PAGE,
-} from 'pages/inside/testCaseLibraryPage/testCaseList/configUtils';
+import { TestCaseList } from 'pages/inside/common/testCaseList';
+import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
+import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/common/testCaseList/mockData';
+import { DEFAULT_CURRENT_PAGE } from 'pages/inside/common/testCaseList/configUtils';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { showModalAction } from 'controllers/modal';
 import { urlFolderIdSelector } from 'controllers/pages';
 import { foldersSelector } from 'controllers/testCase';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { usePagination } from 'hooks/usePagination';
 
 import { CHANGE_PRIORITY_MODAL_KEY } from './changePriorityModal';
 import { messages } from './messages';
@@ -47,6 +46,7 @@ interface AllTestCasesPageProps {
   testCases: TestCase[];
   loading: boolean;
   searchValue: string;
+  instanceKey: INSTANCE_KEYS;
   setSearchValue: (value: string) => void;
 }
 
@@ -55,10 +55,13 @@ export const AllTestCasesPage = ({
   loading,
   searchValue,
   setSearchValue,
+  instanceKey,
 }: AllTestCasesPageProps) => {
   const { formatMessage } = useIntl();
-  const [activePage, setActivePage] = useState<number>(DEFAULT_CURRENT_PAGE);
-  const [pageSize, setPageSize] = useState<number>(DEFAULT_ITEMS_PER_PAGE);
+  const { captions, activePage, pageSize, totalPages, setActivePage, changePageSize } =
+    usePagination({
+      totalItems: testCases.length,
+    });
   const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
   const folderId = useSelector(urlFolderIdSelector);
   const folders = useSelector(foldersSelector);
@@ -67,14 +70,11 @@ export const AllTestCasesPage = ({
 
   const folderTitle = useMemo(() => {
     const selectedFolder = folders.find((folder) => String(folder.id) === String(folderId));
-    return selectedFolder?.name || formatMessage(messages.allTestCasesTitle);
+    return selectedFolder?.name || formatMessage(COMMON_LOCALE_KEYS.ALL_TEST_CASES_TITLE);
   }, [folderId, folders, formatMessage]);
 
   const { openModal: openAddToTestPlanModal } = useAddTestCasesToTestPlanModal();
 
-  // Calculate pagination values
-  const totalItems = testCases.length;
-  const totalPages = Math.ceil(totalItems / pageSize);
   const popoverItems: PopoverItem[] = [
     {
       label: formatMessage(messages.duplicateToFolder),
@@ -118,11 +118,6 @@ export const AllTestCasesPage = ({
     [setSearchValue],
   );
 
-  const changePageSize = (size: number) => {
-    setPageSize(size);
-    setActivePage(DEFAULT_CURRENT_PAGE);
-  };
-
   if (isEmpty(testCases) && !loading) {
     return <FolderEmptyState folderTitle={folderTitle} />;
   }
@@ -142,28 +137,22 @@ export const AllTestCasesPage = ({
           selectedRowIds={selectedRowIds}
           handleSelectedRowIds={setSelectedRowIds}
           folderTitle={folderTitle}
+          instanceKey={instanceKey}
         />
       </div>
 
       <div className={cx('sticky-wrapper')}>
-        {totalItems > 0 && (
+        {!isEmpty(testCases) && (
           <div className={cx('pagination')}>
             <Pagination
               pageSize={pageSize}
               activePage={activePage}
-              totalItems={totalItems}
+              totalItems={testCases.length}
               totalPages={totalPages}
               pageSizeOptions={ITEMS_PER_PAGE_OPTIONS}
               changePage={setActivePage}
               changePageSize={changePageSize}
-              captions={{
-                items: formatMessage(messages.items),
-                of: formatMessage(messages.of),
-                page: formatMessage(messages.page),
-                goTo: formatMessage(messages.goToPage),
-                goAction: formatMessage(messages.go),
-                perPage: formatMessage(messages.perPage),
-              }}
+              captions={captions}
             />
           </div>
         )}

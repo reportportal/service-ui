@@ -15,8 +15,11 @@
  */
 
 import classNames from 'classnames/bind';
+
+import { IScenario } from 'pages/inside/testCaseLibraryPage/types';
+
 import { Scenario } from '../scenario';
-import { IScenario } from '../../../types';
+
 import styles from './scenariosList.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;

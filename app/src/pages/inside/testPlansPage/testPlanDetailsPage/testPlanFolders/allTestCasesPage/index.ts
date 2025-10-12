@@ -14,27 +14,4 @@
  * limitations under the License.
  */
 
-.test-plan-details-page {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-
-  &__header-id {
-    display: flex;
-    align-items: center;
-    font-family: $FONT-ROBOTO-REGULAR;
-    font-size: 11px;
-    color: var(--rp-ui-base-e-400);
-    margin-right: 28px;
-  }
-
-  &__content {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    gap: 80px;
-    justify-content: center;
-    padding: 0;
-  }
-}
+export { AllTestCasesPage } from './allTestCasesPage';

@@ -48,6 +48,28 @@
   overflow-wrap: break-word;
   white-space: normal;
   hyphens: auto;
+
+  &--full-width {
+    max-width: none;
+  }
+}
+/* stylelint-disable color-no-hex */
+$COLOR--temporary-purple: #8866aa;
+
+.covered-manually {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: -8px;
+  padding-top: 14px;
+  font-size: 11px;
+  color: $COLOR--temporary-purple;
+
+  svg {
+    width: 14px;
+    height: 14px;
+    fill: $COLOR--temporary-purple;
+  }
 }
 
 .duration-time {

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+import { IScenario } from 'pages/inside/testCaseLibraryPage/types';
+import { StepData } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/testCaseDetails';
 import { FilterOption } from './types';
-import { IScenario } from '../types';
-import { StepData } from '../createTestCaseModal/testCaseDetails';
 
 export const STATUS_TYPES = {
   BLOCKER: 'blocker',
