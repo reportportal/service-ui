@@ -14,10 +14,26 @@
  * limitations under the License.
  */
 
-export { CREATE_TEST_CASE_MODAL_KEY, CreateTestCaseModal } from './createTestCaseModal';
-export { EDIT_SELECTED_TEST_CASE_MODAL_KEY } from './editTestCaseModal';
-export { useCreateTestCase } from './useCreateTestCase';
-export { useEditTestCase } from './useEditTestCase';
-export { useCreateTestCaseModal } from './useCreateTestCaseModal';
-export { useEditTestCaseModal } from './useEditTestCaseModal';
-import './editTestCaseModal';
+import { useDispatch } from 'react-redux';
+import { showModalAction } from 'controllers/modal';
+import { EDIT_SELECTED_TEST_CASE_MODAL_KEY } from './editTestCaseModal';
+import { TestCase } from '../types';
+
+interface UseEditTestCaseModalOptions {
+  testCase: TestCase;
+}
+
+export const useEditTestCaseModal = () => {
+  const dispatch = useDispatch();
+
+  const openModal = (data: UseEditTestCaseModalOptions) => {
+    dispatch(
+      showModalAction({
+        id: EDIT_SELECTED_TEST_CASE_MODAL_KEY,
+        data,
+      }),
+    );
+  };
+
+  return { openModal };
+};

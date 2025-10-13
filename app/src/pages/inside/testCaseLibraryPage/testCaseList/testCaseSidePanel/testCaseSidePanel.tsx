@@ -52,6 +52,7 @@ import { ScenariosList } from './scenariosList';
 import { messages } from './messages';
 import { StepData } from '../../createTestCaseModal/testCaseDetails';
 import { useAddTestCasesToTestPlanModal } from '../../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
+import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/useEditTestCaseModal';
 
 import styles from './testCaseSidePanel.scss';
 
@@ -115,12 +116,17 @@ export const TestCaseSidePanel = memo(
     const sidePanelRef = useRef<HTMLDivElement>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { openModal } = useAddTestCasesToTestPlanModal();
+    const { openModal: openEditTestCaseModal } = useEditTestCaseModal();
 
     useOnClickOutside(sidePanelRef, onClose);
 
     if (!isVisible || !testCase) {
       return null;
     }
+
+    const handleEditTestCase = () => {
+      openEditTestCaseModal({ testCase });
+    };
 
     const permissionMap = [
       { isAllowed: canEditTestCase, action: TestCaseMenuAction.EDIT },
@@ -131,7 +137,9 @@ export const TestCaseSidePanel = memo(
 
     const menuItems = createTestCaseMenuItems(
       formatMessage,
-      {},
+      {
+        [TestCaseMenuAction.EDIT]: handleEditTestCase,
+      },
       getExcludedActionsFromPermissionMap(permissionMap),
     );
 

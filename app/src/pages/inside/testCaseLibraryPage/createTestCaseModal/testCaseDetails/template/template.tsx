@@ -24,6 +24,7 @@ import { FieldProvider } from 'components/fields';
 import { DropdownWithDescription } from '../../dropdownWithDescription';
 
 import styles from './template.scss';
+import { ManualScenarioType } from 'pages/inside/testCaseLibraryPage/types';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -59,12 +60,12 @@ export const Template = () => {
 
   const templateOptions = [
     {
-      value: 'STEPS',
+      value: ManualScenarioType.STEPS,
       label: formatMessage(messages.steps),
       description: formatMessage(messages.idealForDetailed),
     },
     {
-      value: 'TEXT',
+      value: ManualScenarioType.TEXT,
       label: formatMessage(messages.text),
       description: formatMessage(messages.idealForSimple),
     },

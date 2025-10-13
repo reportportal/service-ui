@@ -42,14 +42,12 @@ export const createTestCaseMenuItems = (
     },
   ];
 
-  if (isEmpty(excludedActions)) {
-    return allMenuItems;
-  }
+  const filteredItems = isEmpty(excludedActions)
+    ? allMenuItems
+    : allMenuItems.filter((item) => !excludedActions.includes(item.action));
 
-  return allMenuItems
-    .filter((item) => !excludedActions.includes(item.action))
-    .map((item) => ({
-      ...item,
-      onClick: actions?.[item.action],
-    }));
+  return filteredItems.map((item) => ({
+    ...item,
+    onClick: actions?.[item.action],
+  }));
 };

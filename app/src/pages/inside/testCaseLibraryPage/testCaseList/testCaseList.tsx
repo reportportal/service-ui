@@ -19,8 +19,6 @@ import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { BubblesLoader, FilterOutlineIcon, Table } from '@reportportal/ui-kit';
 import { SearchField } from 'components/fields/searchField';
-import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
-import { useDispatch, useSelector } from 'react-redux';
 import { xor } from 'es-toolkit';
 import { TestCase } from '../types';
 import { TestCaseNameCell } from './testCaseNameCell';
@@ -28,9 +26,9 @@ import { TestCaseExecutionCell } from './testCaseExecutionCell';
 import { TestCaseSidePanel } from './testCaseSidePanel';
 import { DEFAULT_CURRENT_PAGE } from './configUtils';
 import { messages } from './messages';
-import { ProjectDetails } from 'pages/organization/constants';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { useEditTestCaseModal } from '../createTestCaseModal/useEditTestCaseModal';
 import styles from './testCaseList.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
@@ -62,11 +60,8 @@ export const TestCaseList = memo(
     const { formatMessage } = useIntl();
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<number | null>(null);
 
-    const dispatch = useDispatch();
     const { canDoTestCaseBulkActions } = useUserPermissions();
-    const { organizationSlug, projectSlug } = useSelector(
-      urlOrganizationAndProjectSelector,
-    ) as ProjectDetails;
+    const { openModal: openEditTestCaseModal } = useEditTestCaseModal();
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -102,6 +97,10 @@ export const TestCaseList = memo(
 
     const selectedTestCase = testCases.find((testCase) => testCase.id === selectedTestCaseId);
 
+    const handleEditTestCase = (testCase: TestCase) => {
+      openEditTestCaseModal({ testCase });
+    };
+
     const tableData = currentData.map((testCase) => ({
       id: testCase.id,
       name: {
@@ -126,16 +125,7 @@ export const TestCaseList = memo(
           <TestCaseExecutionCell
             lastExecution={testCase.updatedAt}
             onRowClick={() => setSelectedTestCaseId(testCase.id)}
-            onEditTestCase={() =>
-              dispatch({
-                type: TEST_CASE_LIBRARY_PAGE,
-                payload: {
-                  testCasePageRoute: `test-cases/${testCase.id}`,
-                  organizationSlug,
-                  projectSlug,
-                },
-              })
-            }
+            onEditTestCase={() => handleEditTestCase(testCase)}
           />
         ),
       },

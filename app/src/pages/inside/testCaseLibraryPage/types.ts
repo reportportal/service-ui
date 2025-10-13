@@ -1,5 +1,7 @@
 import { FC, SVGProps } from 'react';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
+import { TestStep } from './createTestCaseModal/useCreateTestCase';
+import { FolderWithFullPath } from 'controllers/testCase/types';
 
 type Tag = {
   key: string;
@@ -21,6 +23,35 @@ export interface IScenario {
   attachments: IAttachment[];
 }
 
+export enum ManualScenarioType {
+  STEPS = 'STEPS',
+  TEXT = 'TEXT',
+}
+
+interface ManualScenarioCommon {
+  executionEstimationTime: number;
+  linkToRequirements: string;
+  manualScenarioType: ManualScenarioType;
+  preconditions?: {
+    value: string;
+  };
+}
+
+interface ManualScenarioSteps extends ManualScenarioCommon {
+  steps: {
+    instructions: string;
+    expectedResult: string;
+    attachments?: string[];
+  }[];
+}
+
+interface ManualScenarioText extends ManualScenarioCommon {
+  instructions?: string;
+  expectedResult?: string;
+}
+
+export type ManualScenarioDto = ManualScenarioSteps | ManualScenarioText;
+
 export interface TestCase {
   id: number;
   name: string;
@@ -32,6 +63,7 @@ export interface TestCase {
   updatedAt: number;
   durationTime?: number;
   scenarios?: IScenario[];
+  manualScenario?: ManualScenarioDto;
   testFolder: {
     id: number;
   };
@@ -44,4 +76,19 @@ export interface ActionButton {
   isCompact: boolean;
   variant?: string;
   handleButton: () => void;
+}
+
+export interface CreateTestCaseFormData {
+  name: string;
+  description?: string;
+  folder: FolderWithFullPath | string | { id: number };
+  priority?: TestCasePriority;
+  linkToRequirements?: string;
+  executionEstimationTime?: number;
+  manualScenarioType: ManualScenarioType;
+  precondition?: string;
+  steps?: TestStep[];
+  instructions?: string;
+  expectedResult?: string;
+  tags?: string[];
 }

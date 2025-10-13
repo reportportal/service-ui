@@ -25,22 +25,14 @@ import { useDebouncedSpinner } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { hideModalAction } from 'controllers/modal';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
-import { getTestCasesAction, Folder } from 'controllers/testCase';
+import { getTestCaseByFolderIdAction, Folder } from 'controllers/testCase';
 import { createFoldersSuccessAction } from 'controllers/testCase/actionCreators';
 
 import { messages } from './basicInformation/messages';
 import { ManualScenarioDto, ManualScenarioType, CreateTestCaseFormData } from '../types';
 
-export interface TestStep {
-  instructions: string;
-  expectedResult: string;
-  attachments?: string[];
-}
-
-const testFolderId = 85;
-
-export const useCreateTestCase = () => {
-  const { isLoading: isCreateTestCaseLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
+export const useEditTestCase = (testCaseId?: number) => {
+  const { isLoading: isEditTestCaseLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const { formatMessage } = useIntl();
@@ -56,19 +48,31 @@ export const useCreateTestCase = () => {
     return createdFolder.id;
   };
 
-  const resolveFolderId = async (folder: string | { id: number } | undefined): Promise<number> => {
+  const resolveFolderId = async (
+    folder: string | { id: number } | undefined,
+    currentFolderId?: number,
+  ): Promise<number> => {
     if (isString(folder)) {
       return createFolder(folder);
     }
 
-    return folder?.id || testFolderId;
+    return folder?.id || currentFolderId || 0;
   };
 
-  const createTestCase = async (payload: CreateTestCaseFormData) => {
+  const editTestCase = async (payload: CreateTestCaseFormData, currentFolderId?: number) => {
+    if (!testCaseId) {
+      dispatch(
+        showErrorNotification({
+          messageId: 'testCaseUpdateFailed',
+        }),
+      );
+      return;
+    }
+
     try {
       showSpinner();
 
-      const folderId = await resolveFolderId(payload.folder);
+      const folderId = await resolveFolderId(payload.folder, currentFolderId);
 
       const commonData = {
         executionEstimationTime: payload.executionEstimationTime,
@@ -91,13 +95,14 @@ export const useCreateTestCase = () => {
               steps: Object.values(payload?.steps ?? {}),
             };
 
-      await fetch(URLS.testCase(projectKey), {
-        method: 'post',
+      await fetch(URLS.testCaseDetails(projectKey, testCaseId.toString()), {
+        method: 'PUT',
         data: {
           description: payload.description,
           name: payload.name,
           testFolderId: folderId,
           priority: payload.priority.toUpperCase(),
+          tags: payload.tags || [],
           manualScenario,
         },
       });
@@ -105,10 +110,10 @@ export const useCreateTestCase = () => {
       dispatch(hideModalAction());
       dispatch(
         showSuccessNotification({
-          messageId: 'testCaseCreatedSuccess',
+          messageId: 'testCaseUpdatedSuccess',
         }),
       );
-      dispatch(getTestCasesAction({ testFolderId: folderId }));
+      dispatch(getTestCaseByFolderIdAction({ folderId }));
     } catch (error: unknown) {
       if (error instanceof Error && error?.message?.includes('tms_test_case_name_folder_unique')) {
         throw new SubmissionError({
@@ -117,7 +122,7 @@ export const useCreateTestCase = () => {
       } else {
         dispatch(
           showErrorNotification({
-            messageId: 'testCaseCreationFailed',
+            messageId: 'testCaseUpdateFailed',
           }),
         );
       }
@@ -127,7 +132,7 @@ export const useCreateTestCase = () => {
   };
 
   return {
-    isCreateTestCaseLoading,
-    createTestCase,
+    isEditTestCaseLoading,
+    editTestCase,
   };
 };

@@ -15,7 +15,7 @@ import { AttachmentArea } from '../attachmentArea';
 import { Precondition } from './precondition';
 import { Steps } from './steps';
 import { TextTemplate } from './textTemplate';
-import { ManualScenarioType } from '../createTestCaseModal';
+import { ManualScenarioType } from '../../types';
 
 import styles from './testCaseDetails.scss';
 
@@ -93,7 +93,7 @@ export const TestCaseDetails = ({ className }: TestCaseDetailsProps) => {
     });
   };
 
-  const isTextTemplate = manualScenarioType === 'TEXT';
+  const isTextTemplate = manualScenarioType === ManualScenarioType.TEXT;
 
   return (
     <div className={cx('test-case-details', className)}>
