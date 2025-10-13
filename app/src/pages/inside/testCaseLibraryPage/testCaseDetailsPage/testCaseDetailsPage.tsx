@@ -20,21 +20,22 @@ import { isEmpty } from 'es-toolkit/compat';
 import { noop } from 'es-toolkit';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
+import { Button, EditIcon, PlusIcon } from '@reportportal/ui-kit';
 
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { CollapsibleSectionWithHeaderControl } from 'components/collapsibleSection';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
-import { Button, EditIcon, PlusIcon } from '@reportportal/ui-kit';
+import { mockedTestCaseDescription } from 'pages/inside/common/testCaseList/mockData';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-
 import { testCaseDetailsSelector } from 'controllers/testCase';
+
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
-import { messages } from './messages';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
-import { mockedTestCaseDescription } from '../testCaseList/mockData';
+import { messages } from './messages';
+
 import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 
 import styles from './testCaseDetailsPage.scss';

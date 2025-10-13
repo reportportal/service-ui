@@ -48,6 +48,30 @@
   overflow-wrap: break-word;
   white-space: normal;
   hyphens: auto;
+
+  &--full-width {
+    max-width: none;
+  }
+}
+
+.covered-manually {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: -8px;
+  padding-top: 14px;
+  font-size: 11px;
+  color: var(--rp-ui-base-purple-600);
+
+  svg {
+    width: 14px;
+    height: 14px;
+
+    path,
+    rect {
+      fill: var(--rp-ui-base-purple-600);
+    }
+  }
 }
 
 .duration-time {

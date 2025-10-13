@@ -20,7 +20,8 @@ import { AttachedFile } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
-import { IScenario } from '../../../types';
+import { IScenario } from 'pages/inside/testCaseLibraryPage/types';
+
 import { FieldSection } from './fieldSection';
 import { messages } from './messages';
 

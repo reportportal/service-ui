@@ -25,6 +25,7 @@ import {
   ACTIVE_TEST_PLAN_NAMESPACE,
   TEST_PLAN_FOLDERS_NAMESPACE,
   TEST_PLANS_NAMESPACE,
+  TEST_PLAN_TEST_CASES_NAMESPACE,
 } from './constants';
 
 const reducer = combineReducers({
@@ -32,6 +33,7 @@ const reducer = combineReducers({
   isLoading: loadingReducer(TEST_PLANS_NAMESPACE),
   activeTestPlan: fetchReducer(ACTIVE_TEST_PLAN_NAMESPACE, { initialState: null }),
   testPlanFolders: fetchReducer(TEST_PLAN_FOLDERS_NAMESPACE, { initialState: null }),
+  testPlanTestCases: fetchReducer(TEST_PLAN_TEST_CASES_NAMESPACE, { initialState: null }),
   isLoadingActive: loadingReducer(ACTIVE_TEST_PLAN_NAMESPACE),
 });
 

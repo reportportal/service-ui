@@ -171,12 +171,14 @@ export const TestPlanDetailsPage = () => {
   return (
     <SettingsLayout>
       <ScrollWrapper resetRequired>
-        <TestPlansHeader
-          title={testPlan?.name || ''}
-          breadcrumbDescriptors={breadcrumbDescriptors}
-          actions={renderActions()}
-        />
-        {renderContent()}
+        <div className={cx('test-plan-details-page')}>
+          <TestPlansHeader
+            title={testPlan?.name || ''}
+            breadcrumbDescriptors={breadcrumbDescriptors}
+            actions={renderActions()}
+          />
+          <div className={cx('test-plan-details-page__content')}>{renderContent()}</div>
+        </div>
       </ScrollWrapper>
     </SettingsLayout>
   );

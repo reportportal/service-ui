@@ -18,53 +18,52 @@ import { useState } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
-import { PopoverControl } from 'pages/common/popoverControl';
-import { MeatballMenuIcon } from '@reportportal/ui-kit';
-import { handleEnterOrSpaceKey } from 'common/utils/helperUtils/event.utils';
+import { MeatballMenuIcon, CoveredManuallyIcon } from '@reportportal/ui-kit';
 
-import { useUserPermissions } from 'hooks/useUserPermissions';
-import { formatRelativeTime, getExcludedActionsFromPermissionMap } from '../utils';
-import { createTestCaseMenuItems } from '../configUtils';
-import { TestCaseMenuAction } from '../types';
+import { PopoverControl } from 'pages/common/popoverControl';
+import { handleEnterOrSpaceKey } from 'common/utils/helperUtils/event.utils';
+import { useTooltipItems } from 'pages/inside/common/testCaseList/testCaseExecutionCell/useTooltipItems';
+import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
+
+import { formatRelativeTime } from '../utils';
+import { messages } from '../messages';
+
 import styles from './testCaseExecutionCell.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
 interface TestCaseExecutionCellProps {
   lastExecution: number;
+  instanceKey: INSTANCE_KEYS;
   onRowClick: () => void;
-  onEditTestCase: () => void;
 }
 
 export const TestCaseExecutionCell = ({
   lastExecution,
   onRowClick,
-  onEditTestCase,
+  instanceKey,
 }: TestCaseExecutionCellProps) => {
   const { formatMessage, locale } = useIntl();
+  const tooltipItems = useTooltipItems({ instanceKey });
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const { canDeleteTestCase, canDuplicateTestCase, canEditTestCase, canMoveTestCase } =
-    useUserPermissions();
-
-  const permissionMap = [
-    { isAllowed: canDuplicateTestCase, action: TestCaseMenuAction.DUPLICATE },
-    { isAllowed: canEditTestCase, action: TestCaseMenuAction.EDIT },
-    { isAllowed: canMoveTestCase, action: TestCaseMenuAction.MOVE },
-    { isAllowed: canDeleteTestCase, action: TestCaseMenuAction.DELETE },
-  ];
-
-  const menuItems = createTestCaseMenuItems(
-    formatMessage,
-    {
-      [TestCaseMenuAction.EDIT]: onEditTestCase,
-    },
-    getExcludedActionsFromPermissionMap(permissionMap),
-  );
 
   return (
     <button type="button" className={cx('execution-content')} onClick={onRowClick}>
-      <div className={cx('execution-time')}>{formatRelativeTime(lastExecution, locale)}</div>
-      {!isEmpty(menuItems) && (
+      <div>
+        {instanceKey === INSTANCE_KEYS.TEST_PLAN && (
+          <div className={cx('covered-manually')}>
+            <CoveredManuallyIcon /> {formatMessage(messages.coveredManually)}
+          </div>
+        )}
+        <div
+          className={cx('execution-time', {
+            'execution-time--full-width': instanceKey === INSTANCE_KEYS.TEST_PLAN,
+          })}
+        >
+          {formatRelativeTime(lastExecution, locale)}
+        </div>
+      </div>
+      {!isEmpty(tooltipItems) && (
         <div
           role="menuitem"
           tabIndex={0}
@@ -73,7 +72,7 @@ export const TestCaseExecutionCell = ({
           onKeyDown={handleEnterOrSpaceKey}
         >
           <PopoverControl
-            items={menuItems}
+            items={tooltipItems}
             placement="bottom-end"
             isOpened={isMenuOpen}
             setIsOpened={setIsMenuOpen}
