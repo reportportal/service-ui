@@ -160,6 +160,10 @@ const messages = defineMessages({
     id: 'LinkIssueModal.issueIdHint',
     defaultMessage: 'Issue ID should have size from 1 to 128',
   },
+  requirementsLinkHint: {
+    id: 'Common.requirementsLinkHint',
+    defaultMessage: 'Please enter a valid URL using the format: https://example.com.',
+  },
   requiredFieldHint: {
     id: 'Common.requiredFieldHint',
     defaultMessage: 'Field is required',
