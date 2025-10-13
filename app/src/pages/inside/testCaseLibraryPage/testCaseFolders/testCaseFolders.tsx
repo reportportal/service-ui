@@ -87,7 +87,7 @@ export const TestCaseFolders = () => {
         }),
       );
     }
-  }, [currentFolder, folderId, dispatch]);
+  }, [currentFolder, folderId]);
 
   useEffect(() => {
     if (currentFolder && folderId !== '' && Number.isFinite(folderIdNumber)) {
