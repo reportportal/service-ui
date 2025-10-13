@@ -14,4 +14,9 @@
  * limitations under the License.
  */
 
-export { ScenariosList } from './scenariosList';
+.attachments-list {
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+  gap: 8px;
+}

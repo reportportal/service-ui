@@ -5,10 +5,9 @@ import { formValueSelector } from 'redux-form';
 import classNames from 'classnames/bind';
 import { isNumber } from 'es-toolkit/compat';
 import { FieldText } from '@reportportal/ui-kit';
-
 import { FieldErrorHint, FieldProvider } from 'components/fields';
-
 import type { AppState } from 'types/store';
+import { Step } from 'pages/inside/testCaseLibraryPage/types';
 
 import { Template } from './template';
 import { AttachmentArea } from '../attachmentArea';
@@ -32,14 +31,7 @@ const messages = defineMessages({
   },
 });
 
-export interface StepData {
-  id: string;
-  instructions: string;
-  expectedResult: string;
-  attachments?: string[];
-}
-
-const createEmptyStep = (): StepData => ({
+const createEmptyStep = (): Step => ({
   id: `step_${Date.now()}`,
   instructions: '',
   expectedResult: '',
@@ -53,7 +45,7 @@ interface TestCaseDetailsProps {
 const selector = formValueSelector('create-test-case-modal-form');
 
 export const TestCaseDetails = ({ className }: TestCaseDetailsProps) => {
-  const [steps, setSteps] = useState<StepData[]>([createEmptyStep()]);
+  const [steps, setSteps] = useState<Step[]>([createEmptyStep()]);
   const { formatMessage } = useIntl();
   const manualScenarioType = useSelector(
     (state: AppState) => selector(state, 'manualScenarioType') as ManualScenarioType,

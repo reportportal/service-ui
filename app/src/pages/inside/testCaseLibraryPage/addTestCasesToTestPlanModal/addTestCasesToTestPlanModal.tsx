@@ -40,8 +40,7 @@ import styles from './addTestCasesToTestPlanModal.module.scss';
 
 type AddTestCasesSubmitHandler = SubmitHandler<
   AddTestCasesToTestPlanFormData,
-  AddTestCasesToTestPlanModalProps,
-  string
+  AddTestCasesToTestPlanModalProps
 >;
 
 const cx = classNames.bind(styles) as typeof classNames;
@@ -85,7 +84,8 @@ export const AddTestCasesToTestPlanModal = ({
     );
   }, [formatMessage, selectedTestCasesLength]);
 
-  const retrieveTestPlans = () => URLS.testPlan(projectKey);
+  const retrieveTestPlans = (value: string) =>
+    `${URLS.testPlan(projectKey)}?filter.fts.search=${value}`;
 
   return (
     <Modal
@@ -109,7 +109,6 @@ export const AddTestCasesToTestPlanModal = ({
       <form onSubmit={handleSubmit(addTestCasesToTestPlan) as AddTestCasesSubmitHandler}>
         <div>
           {!isSingleTestCaseMode && description}
-          <FieldLabel>{formatMessage(messages.label)}</FieldLabel>
           <div className={cx('autocomplete-wrapper')}>
             <FieldLabel>{formatMessage(messages.label)}</FieldLabel>
             <AsyncAutocomplete

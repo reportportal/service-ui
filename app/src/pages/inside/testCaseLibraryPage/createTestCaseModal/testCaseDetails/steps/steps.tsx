@@ -19,7 +19,7 @@ import { defineMessages, useIntl } from 'react-intl';
 import { Button, PlusIcon, MIME_TYPES } from '@reportportal/ui-kit';
 
 import { AttachmentArea } from '../../attachmentArea';
-import { StepData } from '../testCaseDetails';
+import { Step as StepType } from 'pages/inside/testCaseLibraryPage/types';
 import { Step } from './step';
 import { CREATE_TEST_CASE_FORM_NAME } from '../../createTestCaseModal';
 import { messages as commonMessages } from '../../messages';
@@ -29,7 +29,7 @@ import styles from './steps.scss';
 const cx = classNames.bind(styles) as typeof classNames;
 
 interface StepsProps {
-  steps: StepData[];
+  steps: StepType[];
   onAddStep: (index?: number) => void;
   onRemoveStep: (stepId: string) => void;
   onMoveStep: ({ stepId, direction }: { stepId: string; direction: 'up' | 'down' }) => void;

@@ -1,5 +1,22 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { FC, SVGProps } from 'react';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
+import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 
 type Tag = {
   key: string;
@@ -13,12 +30,18 @@ export interface IAttachment {
   size: number;
 }
 
-export interface IScenario {
+export interface Step {
   id: string;
-  precondition: string;
-  instruction: string;
+  instructions: string;
   expectedResult: string;
-  attachments: IAttachment[];
+  attachments?: Attachment[];
+}
+
+export interface Attachment {
+  fileName: string;
+  fileSize: number;
+  id: number;
+  fileType: string;
 }
 
 export interface TestCase {
@@ -28,31 +51,32 @@ export interface TestCase {
   createdAt: number;
   description?: string;
   path: string[];
-  tags: Tag[];
+  attributes?: Tag[];
   updatedAt: number;
   durationTime?: number;
-  scenarios?: IScenario[];
   testFolder: {
     id: number;
   };
+  lastExecution?: {
+    startedAt: string;
+    duration: number;
+  };
 }
 
-interface ManualScenario {
-  manualScenarioType: string;
+export interface ManualScenario {
+  manualScenarioType: TestCaseManualScenario;
   id: number;
   executionEstimationTime: number;
   linkToRequirements: string;
   preconditions: {
     value: string;
-    attachments: [];
+    attachments: Attachment[];
   };
-  attributes: [];
-  steps: {
-    id: number;
-    instructions: string;
-    expectedResult: string;
-    attachments: [];
-  }[];
+  attributes?: Tag[];
+  steps: Step[];
+  instructions?: string;
+  expectedResult?: string;
+  attachments?: Attachment[];
 }
 
 export interface ExtendedTestCase extends TestCase {

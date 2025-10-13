@@ -115,7 +115,7 @@ export const AllTestCasesPage = ({
       setSearchValue(targetSearchValue);
       setActivePage(DEFAULT_CURRENT_PAGE);
     },
-    [setSearchValue],
+    [setSearchValue, setActivePage],
   );
 
   if (isEmpty(testCases) && !loading) {

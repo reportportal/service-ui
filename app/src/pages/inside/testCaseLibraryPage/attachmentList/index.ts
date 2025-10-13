@@ -14,26 +14,4 @@
  * limitations under the License.
  */
 
-import classNames from 'classnames/bind';
-
-import { IScenario } from 'pages/inside/testCaseLibraryPage/types';
-
-import { Scenario } from '../scenario';
-
-import styles from './scenariosList.scss';
-
-const cx = classNames.bind(styles) as typeof classNames;
-
-interface ScenariosListProps {
-  scenarios: IScenario[];
-}
-
-export const ScenariosList = ({ scenarios }: ScenariosListProps) => {
-  return (
-    <div className={cx('scenarios-list')}>
-      {scenarios.map((scenario) => (
-        <Scenario key={scenario.id} scenario={scenario} />
-      ))}
-    </div>
-  );
-};
+export { AttachmentList } from './attachmentList';

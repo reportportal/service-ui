@@ -43,5 +43,11 @@
       line-height: 20px;
       min-height: 20px;
     }
+
+    .section-border {
+      height: 1px;
+      background-color: var(--rp-ui-base-e-100);
+      margin: 0 -16px -16px;
+    }
   }
 }

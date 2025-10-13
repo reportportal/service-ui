@@ -45,5 +45,5 @@ const iconMap = {
 } as const;
 
 export const PriorityIcon = ({ priority, className }: PriorityIconProps) => (
-  <div className={cx('priority-icon', className)}>{iconMap[priority]}</div>
+  <div className={cx('priority-icon', className)}>{iconMap[priority.toLowerCase()]}</div>
 );

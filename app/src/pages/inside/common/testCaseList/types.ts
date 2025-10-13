@@ -26,3 +26,8 @@ export enum TestCaseMenuAction {
   HISTORY = 'history',
   DELETE = 'delete',
 }
+
+export enum TestCaseManualScenario {
+  TEXT = 'TEXT',
+  STEPS = 'STEPS',
+}

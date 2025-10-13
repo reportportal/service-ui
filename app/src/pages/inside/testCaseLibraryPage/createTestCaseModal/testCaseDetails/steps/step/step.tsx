@@ -17,8 +17,12 @@
 import { defineMessages, useIntl } from 'react-intl';
 import { FieldText } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { FieldErrorHint, FieldProvider } from 'components/fields';
+import { Attachment } from 'pages/inside/testCaseLibraryPage/types';
+import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
+import { FieldSection } from 'pages/inside/common/fieldSection';
 
 import styles from './step.scss';
 
@@ -41,6 +45,10 @@ const messages = defineMessages({
     id: 'CreateTestCaseModal.enterExpectedResult',
     defaultMessage: 'Enter expected result',
   },
+  attachments: {
+    id: 'CreateTestCaseModal.attachments',
+    defaultMessage: 'Attachments',
+  },
 });
 
 interface StepProps {
@@ -48,9 +56,16 @@ interface StepProps {
   isReadMode?: boolean;
   instructions?: string;
   expectedResult?: string;
+  attachments?: Attachment[];
 }
 
-export const Step = ({ stepId, isReadMode = false, instructions, expectedResult }: StepProps) => {
+export const Step = ({
+  stepId,
+  isReadMode = false,
+  instructions,
+  expectedResult,
+  attachments,
+}: StepProps) => {
   const { formatMessage } = useIntl();
 
   if (isReadMode) {
@@ -67,6 +82,14 @@ export const Step = ({ stepId, isReadMode = false, instructions, expectedResult 
             <span className={cx('field-label')}>{formatMessage(messages.expectedResult)}</span>
             <div className={cx('field-value')}>{expectedResult}</div>
           </div>
+        )}
+        {!isEmpty(attachments) && (
+          <>
+            <div className={cx('section-border')} />
+            <FieldSection title={`${formatMessage(messages.attachments)} ${attachments.length}`}>
+              <AttachmentList attachments={attachments} />
+            </FieldSection>
+          </>
         )}
       </div>
     );
