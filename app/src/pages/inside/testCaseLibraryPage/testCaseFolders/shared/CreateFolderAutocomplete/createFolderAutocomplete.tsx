@@ -99,6 +99,7 @@ export const CreateFolderAutocomplete = ({
         value={value}
         error={error}
         touched={touched}
+        skipOptionCreation
         placeholder={placeholder || formatMessage(commonMessages.searchFolderToSelect)}
         options={folders}
         customEmptyListMessage={customEmptyListMessage || formatMessage(messages.noFoldersFound)}
