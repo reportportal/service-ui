@@ -31,10 +31,14 @@ import { createFoldersSuccessAction } from 'controllers/testCase/actionCreators'
 import { CreateTestCaseFormData, ManualScenarioType } from './createTestCaseModal';
 import { messages } from './basicInformation/messages';
 
+export interface Attachment {
+  id: string;
+}
+
 export interface TestStep {
   instructions: string;
   expectedResult: string;
-  attachments?: string[];
+  attachments?: Attachment[];
 }
 
 const testFolderId = 85;
@@ -43,8 +47,9 @@ interface ManualScenarioCommon {
   executionEstimationTime: number;
   linkToRequirements: string;
   manualScenarioType: ManualScenarioType;
-  preconditions?: {
+  preconditions: {
     value: string;
+    attachments?: Attachment[];
   };
 }
 
@@ -55,6 +60,7 @@ interface ManualScenarioSteps extends ManualScenarioCommon {
 interface ManualScenarioText extends ManualScenarioCommon {
   instructions?: string;
   expectedResult?: string;
+  attachments?: Attachment[];
 }
 
 type ManualScenarioDto = ManualScenarioSteps | ManualScenarioText;
@@ -96,6 +102,7 @@ export const useCreateTestCase = () => {
         manualScenarioType: payload.manualScenarioType,
         preconditions: {
           value: payload.precondition,
+          attachments: payload.preconditionAttachments ?? [],
         },
       };
 
@@ -105,10 +112,15 @@ export const useCreateTestCase = () => {
               ...commonData,
               instructions: payload.instructions,
               expectedResult: payload.expectedResult,
+              attachments: payload.textAttachments ?? [],
             }
           : {
               ...commonData,
-              steps: Object.values(payload?.steps ?? {}),
+              steps: Object.values(payload?.steps ?? {}).map((step) => ({
+                instructions: step.instructions,
+                expectedResult: step.expectedResult,
+                attachments: step.attachments ?? [],
+              })),
             };
 
       await fetch(URLS.testCase(projectKey), {

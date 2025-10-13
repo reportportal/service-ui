@@ -32,13 +32,14 @@ import { FolderWithFullPath } from 'controllers/testCase';
 import { commonMessages } from '../commonMessages';
 import { BasicInformation } from './basicInformation';
 import { TestCaseDetails } from './testCaseDetails';
-import { TestStep, useCreateTestCase } from './useCreateTestCase';
+import { Attachment, TestStep, useCreateTestCase } from './useCreateTestCase';
 
 import styles from './createTestCaseModal.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
 export const CREATE_TEST_CASE_MODAL_KEY = 'createTestCaseModalKey';
+export const CREATE_TEST_CASE_FORM_NAME: string = 'create-test-case-modal-form';
 
 export type ManualScenarioType = 'STEPS' | 'TEXT';
 
@@ -51,22 +52,25 @@ export interface CreateTestCaseFormData {
   executionEstimationTime?: number;
   manualScenarioType: ManualScenarioType;
   precondition?: string;
+  preconditionAttachments?: Attachment[];
   steps?: TestStep[];
   instructions?: string;
   expectedResult?: string;
+  textAttachments?: Attachment[];
   tags?: string[];
 }
 
 export const CreateTestCaseModal = reduxForm<CreateTestCaseFormData>({
-  form: 'create-test-case-modal-form',
+  form: CREATE_TEST_CASE_FORM_NAME,
   initialValues: {
     priority: 'unspecified',
     manualScenarioType: 'STEPS',
     executionEstimationTime: 5,
   },
-  validate: ({ name, folder }) => ({
+  validate: ({ name, folder, linkToRequirements }) => ({
     name: commonValidators.requiredField(name),
     folder: commonValidators.requiredField(folder),
+    linkToRequirements: commonValidators.optionalUrl(linkToRequirements),
   }),
 })(({ dirty, handleSubmit }) => {
   const { formatMessage } = useIntl();

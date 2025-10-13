@@ -17,9 +17,10 @@
 .create-test-case-modal {
   max-width: 1020px;
   width: 100%;
-  margin-top: 5% !important;
-  margin-bottom: 5% !important;
+  margin-top: 5vh !important;
+  margin-bottom: 5vh !important;
   padding-right: 24px;
+  max-height: 90vh;
 
   &__content-wrapper {
     position: relative;
@@ -33,7 +34,7 @@
   &__scrollable-section {
     flex: 1;
     min-width: 0;
-    max-height: 500px;
+    max-height: 65vh;
     overflow-y: auto;
     overflow-x: hidden;
   }
