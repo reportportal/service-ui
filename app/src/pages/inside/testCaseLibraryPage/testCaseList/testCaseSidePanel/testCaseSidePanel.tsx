@@ -16,7 +16,7 @@
 
 import { memo, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
-import { useIntl } from 'react-intl';
+import { useIntl, MessageDescriptor } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import Parser from 'html-react-parser';
 import {
@@ -60,6 +60,15 @@ import { foldersSelector } from 'controllers/testCase';
 import styles from './testCaseSidePanel.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
+
+const safeGetMessage = (
+  key: string,
+  messages: Record<string, MessageDescriptor>,
+  formatMessage: (descriptor: MessageDescriptor) => string,
+): string => {
+  const messageDescriptor = messages[key];
+  return messageDescriptor ? formatMessage(messageDescriptor) : key;
+};
 
 const COLLAPSIBLE_SECTIONS_CONFIG = ({
   attributes,
@@ -262,8 +271,8 @@ export const TestCaseSidePanel = memo(
           }).map(({ titleKey, defaultMessageKey, childComponent }) => (
             <CollapsibleSection
               key={titleKey}
-              title={formatMessage(messages[titleKey])}
-              defaultMessage={formatMessage(messages[defaultMessageKey])}
+              title={safeGetMessage(titleKey, messages, formatMessage)}
+              defaultMessage={safeGetMessage(defaultMessageKey, messages, formatMessage)}
             >
               {childComponent}
             </CollapsibleSection>
