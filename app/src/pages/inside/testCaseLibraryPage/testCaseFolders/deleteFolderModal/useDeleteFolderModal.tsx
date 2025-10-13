@@ -16,14 +16,10 @@
 
 import { useModal } from 'common/hooks';
 
-import DeleteFolderModal, { DELETE_FOLDER_MODAL_KEY } from './deleteFolderModal';
-
-interface DeleteFolderModalData {
-  folderId: number;
-  folderName: string;
-  activeFolderId: number | null;
-  setAllTestCases: () => void;
-}
+import DeleteFolderModal, {
+  DELETE_FOLDER_MODAL_KEY,
+  DeleteFolderModalData,
+} from './deleteFolderModal';
 
 export const useDeleteFolderModal = () =>
   useModal<DeleteFolderModalData>({

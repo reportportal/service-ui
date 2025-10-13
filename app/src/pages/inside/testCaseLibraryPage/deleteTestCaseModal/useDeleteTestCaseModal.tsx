@@ -16,13 +16,15 @@
 
 import { useModal } from 'common/hooks';
 
-import DuplicateFolderModal, {
-  DUPLICATE_FOLDER_MODAL_KEY,
-  DuplicateFolderModalData,
-} from './duplicateFolderModal';
+import { TestCase } from '../types';
+import DeleteFolderModal, { DELETE_TEST_CASE_MODAL_KEY } from './deleteTestCaseModal';
 
-export const useDuplicateFolderModal = () =>
-  useModal<DuplicateFolderModalData>({
-    modalKey: DUPLICATE_FOLDER_MODAL_KEY,
-    renderModal: (data) => <DuplicateFolderModal data={data} />,
+interface DeleteTestCaseModalData {
+  testCase: TestCase;
+}
+
+export const useDeleteTestCaseModal = () =>
+  useModal<DeleteTestCaseModalData>({
+    modalKey: DELETE_TEST_CASE_MODAL_KEY,
+    renderModal: (data) => <DeleteFolderModal data={data} />,
   });

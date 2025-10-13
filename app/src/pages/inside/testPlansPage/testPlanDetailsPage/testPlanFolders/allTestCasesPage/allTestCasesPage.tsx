@@ -21,7 +21,7 @@ import { isEmpty } from 'es-toolkit/compat';
 import { Pagination } from '@reportportal/ui-kit';
 
 import { TestCaseList } from 'pages/inside/common/testCaseList';
-import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/common/testCaseList/mockData';
+import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/common/testCaseList/constants';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';

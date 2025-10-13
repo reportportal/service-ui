@@ -27,7 +27,7 @@ import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { commonValidators } from 'common/utils/validation';
 import { renameFolderAction } from 'controllers/testCase/actionCreators';
-import { isLoadingFolderSelector } from 'controllers/testCase';
+import { isLoadingFolderSelector, TransformedFolder } from 'controllers/testCase';
 import { FolderNameField } from '../shared/FolderFormFields';
 
 import styles from './renameFolderModal.scss';
@@ -45,15 +45,16 @@ export const RENAME_FOLDER_MODAL_KEY = 'renameFolderModalKey';
 
 import { FolderFormValues } from '../shared/types';
 
+export interface RenameFolderModalData {
+  folder: TransformedFolder;
+}
+
 interface RenameFolderModalProps {
-  data: {
-    folderId: number;
-    folderName: string;
-  };
+  data: RenameFolderModalData;
 }
 
 const RenameFolderModalComponent = ({
-  data: { folderId, folderName },
+  data: { folder },
   dirty,
   invalid,
   anyTouched,
@@ -65,8 +66,8 @@ const RenameFolderModalComponent = ({
   const { formatMessage } = useIntl();
 
   useEffect(() => {
-    initialize({ folderName });
-  }, [folderName, initialize]);
+    initialize({ folderName: folder.name });
+  }, [folder.name, initialize]);
 
   const hideModal = () => dispatch(hideModalAction());
 
@@ -74,7 +75,7 @@ const RenameFolderModalComponent = ({
     dispatch(
       renameFolderAction({
         folderName: values.folderName,
-        folderId,
+        folderId: folder.id,
       }),
     );
   };

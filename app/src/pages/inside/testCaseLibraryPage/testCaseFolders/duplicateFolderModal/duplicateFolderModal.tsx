@@ -22,6 +22,7 @@ import classNames from 'classnames/bind';
 import { Modal } from '@reportportal/ui-kit';
 
 import { hideModalAction, withModal } from 'controllers/modal';
+import { TransformedFolder } from 'controllers/testCase';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { commonValidators } from 'common/utils/validation';
@@ -41,12 +42,13 @@ import styles from '../shared/folderFormFields.scss';
 const cx = classNames.bind(styles) as typeof classNames;
 
 export const DUPLICATE_FOLDER_MODAL_KEY = 'duplicateFolderModalKey';
+
+export interface DuplicateFolderModalData {
+  folder: TransformedFolder;
+}
+
 interface DuplicateFolderModalProps {
-  data: {
-    folderId: number;
-    folderName: string;
-    parentFolderId?: number | null;
-  };
+  data: DuplicateFolderModalData;
 }
 
 const CreateFolderModalComponent = ({
@@ -55,7 +57,9 @@ const CreateFolderModalComponent = ({
   change,
   untouch,
   initialize,
-  data: { folderId, folderName, parentFolderId },
+  data: {
+    folder: { id: folderId, name: folderName, parentFolderId },
+  },
 }: DuplicateFolderModalProps &
   InjectedFormProps<DuplicateFolderFormValues, DuplicateFolderModalProps>) => {
   const { formatMessage } = useIntl();

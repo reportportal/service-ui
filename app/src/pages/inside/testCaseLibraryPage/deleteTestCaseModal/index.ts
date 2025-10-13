@@ -14,15 +14,5 @@
  * limitations under the License.
  */
 
-import { useModal } from 'common/hooks';
-
-import DuplicateFolderModal, {
-  DUPLICATE_FOLDER_MODAL_KEY,
-  DuplicateFolderModalData,
-} from './duplicateFolderModal';
-
-export const useDuplicateFolderModal = () =>
-  useModal<DuplicateFolderModalData>({
-    modalKey: DUPLICATE_FOLDER_MODAL_KEY,
-    renderModal: (data) => <DuplicateFolderModal data={data} />,
-  });
+export { DELETE_TEST_CASE_MODAL_KEY } from './deleteTestCaseModal';
+export { useDeleteTestCaseModal } from './useDeleteTestCaseModal';

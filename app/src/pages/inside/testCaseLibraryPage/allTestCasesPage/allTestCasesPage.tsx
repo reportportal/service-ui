@@ -23,7 +23,7 @@ import { Button, MeatballMenuIcon, Pagination, Selection } from '@reportportal/u
 
 import { TestCaseList } from 'pages/inside/common/testCaseList';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
-import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/common/testCaseList/mockData';
+import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/common/testCaseList/constants';
 import { DEFAULT_CURRENT_PAGE } from 'pages/inside/common/testCaseList/configUtils';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';

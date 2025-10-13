@@ -40,6 +40,7 @@ import { TestCase } from '../../types';
 import { messages } from './messages';
 import { commonMessages } from '../../commonMessages';
 import { EDIT_TEST_CASE_MODAL_KEY } from '../editTestCaseModal/editTestCaseModal';
+import { useDeleteTestCaseModal } from '../../deleteTestCaseModal';
 
 import styles from './testCaseDetailsHeader.scss';
 
@@ -72,6 +73,7 @@ export const TestCaseDetailsHeader = ({
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
   const dispatch = useDispatch();
+  const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
 
   const breadcrumbsTitles = {
     mainTitle: formatMessage(commonMessages.testCaseLibraryBreadcrumb),
@@ -90,6 +92,8 @@ export const TestCaseDetailsHeader = ({
       },
     });
   };
+
+  const handleDeleteTestCase = () => openDeleteTestCaseModal({ testCase });
 
   const getCreationDate = (timestamp: number) => {
     const date = new Date(timestamp);
@@ -113,6 +117,7 @@ export const TestCaseDetailsHeader = ({
       items.push({
         label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
         variant: 'destructive',
+        onClick: handleDeleteTestCase,
       });
     }
 

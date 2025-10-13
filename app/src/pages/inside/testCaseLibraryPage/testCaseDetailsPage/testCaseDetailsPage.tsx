@@ -27,7 +27,7 @@ import { SettingsLayout } from 'layouts/settingsLayout';
 import { CollapsibleSectionWithHeaderControl } from 'components/collapsibleSection';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
-import { mockedTestCaseDescription } from 'pages/inside/common/testCaseList/mockData';
+import { mockedTestCaseDescription } from 'pages/inside/common/testCaseList/constants';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { testCaseDetailsSelector } from 'controllers/testCase';
@@ -99,7 +99,7 @@ export const TestCaseDetailsPage = () => {
   const [isTagsAdded, setIsTagsAdded] = useState(false);
   const [isDescriptionAdded, setIsDescriptionAdded] = useState(false);
   const { canEditTestCaseTag, canEditTestCaseDescription } = useUserPermissions();
-  const { openModal } = useAddTestCasesToTestPlanModal();
+  const { openModal: openAddTestCasesToTestPlanModal } = useAddTestCasesToTestPlanModal();
 
   const testCaseDetails = useSelector(testCaseDetailsSelector);
 
@@ -117,8 +117,11 @@ export const TestCaseDetailsPage = () => {
     setIsDescriptionAdded(false);
   };
 
-  const onAddToTestPlan = () => {
-    openModal({ selectedTestCaseIds: [testCaseDetails.id], isSingleTestCaseMode: true });
+  const handleAddToTestPlan = () => {
+    openAddTestCasesToTestPlanModal({
+      selectedTestCaseIds: [testCaseDetails.id],
+      isSingleTestCaseMode: true,
+    });
   };
 
   // TODO: Remove mock data after integration
@@ -141,7 +144,7 @@ export const TestCaseDetailsPage = () => {
             className={cx('page__header')}
             testCase={testCaseDetails}
             onAddToLaunch={noop}
-            onAddToTestPlan={onAddToTestPlan}
+            onAddToTestPlan={handleAddToTestPlan}
             onMenuAction={noop}
           />
           <div className={cx('page__sidebar')}>

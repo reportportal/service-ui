@@ -45,6 +45,7 @@ import {
   GET_TEST_CASE_DETAILS_SUCCESS,
   NAMESPACE,
   RENAME_FOLDER,
+  DELETE_TEST_CASE,
 } from './constants';
 import { Folder } from './types';
 import {
@@ -54,6 +55,7 @@ import {
   startLoadingFolderAction,
   stopLoadingFolderAction,
   GetTestCasesParams,
+  DeleteTestCaseParams,
   CreateFolderParams,
   DeleteFolderParams,
   RenameFolderParams,
@@ -63,6 +65,9 @@ import {
   setTestCasesAction,
   deleteFolderSuccessAction,
   renameFolderSuccessAction,
+  stopDeletingTestCaseAction,
+  startDeletingTestCaseAction,
+  deleteTestCaseSuccessAction,
 } from './actionCreators';
 import { getAllFolderIdsToDelete } from './utils';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
@@ -87,6 +92,10 @@ interface CreateFolderAction extends Action<typeof CREATE_FOLDER> {
 
 interface DeleteFolderAction extends Action<typeof DELETE_FOLDER> {
   payload: DeleteFolderParams;
+}
+
+interface DeleteTestCaseAction extends Action<typeof DELETE_TEST_CASE> {
+  payload: DeleteTestCaseParams;
 }
 
 interface RenameFolderAction extends Action<typeof RENAME_FOLDER> {
@@ -341,6 +350,38 @@ function* deleteFolder(action: DeleteFolderAction) {
   }
 }
 
+function* deleteTestCase(action: DeleteTestCaseAction) {
+  try {
+    yield put(startDeletingTestCaseAction());
+    const projectKey = (yield select(projectKeySelector)) as string;
+    const { testCase } = action.payload;
+
+    yield call(fetch, URLS.testCaseDetails(projectKey, testCase.id), {
+      method: 'DELETE',
+    });
+
+    yield put(deleteTestCaseSuccessAction({ testCase }));
+    yield put(hideModalAction());
+    yield put(
+      showSuccessNotification({
+        message: null,
+        messageId: 'testCaseDeletedSuccess',
+        values: {},
+      }),
+    );
+  } catch (error: unknown) {
+    yield put(
+      showErrorNotification({
+        message: (error as { error?: string })?.error,
+        messageId: null,
+        values: {},
+      }),
+    );
+  } finally {
+    yield put(stopDeletingTestCaseAction());
+  }
+}
+
 function* renameFolder(action: RenameFolderAction) {
   try {
     yield put(startLoadingFolderAction());
@@ -409,6 +450,7 @@ export function* testCaseSagas() {
     watchGetTestCasesByFolderId(),
     watchGetAllTestCases(),
     takeEvery(DELETE_FOLDER, deleteFolder),
+    takeEvery(DELETE_TEST_CASE, deleteTestCase),
     takeEvery(RENAME_FOLDER, renameFolder),
   ]);
 }

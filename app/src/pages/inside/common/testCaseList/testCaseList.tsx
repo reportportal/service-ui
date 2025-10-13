@@ -33,6 +33,7 @@ import { DEFAULT_CURRENT_PAGE } from './configUtils';
 import { messages } from './messages';
 
 import styles from './testCaseList.scss';
+import { isEmpty } from 'es-toolkit/compat';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -121,7 +122,7 @@ export const TestCaseList = memo(
         content: testCase.updatedAt,
         component: (
           <TestCaseExecutionCell
-            lastExecution={testCase.updatedAt}
+            testCase={testCase}
             instanceKey={instanceKey}
             onRowClick={() => setSelectedTestCaseId(testCase.id)}
           />
@@ -144,8 +145,6 @@ export const TestCaseList = memo(
         align: 'left' as const,
       },
     ];
-
-    const isEmptyList = (value: ExtendedTestCase[]) => !value.length || value.length === 0;
 
     return (
       <div className={cx('test-case-list')}>
@@ -176,7 +175,7 @@ export const TestCaseList = memo(
           </div>
         ) : (
           <>
-            {!isEmptyList(currentData) ? (
+            {!isEmpty(currentData) ? (
               <Table
                 selectable={selectable && canDoTestCaseBulkActions}
                 onToggleRowSelection={handleRowSelect}

@@ -45,6 +45,7 @@ import { foldersSelector } from 'controllers/testCase';
 import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
 import { ManualScenario, ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
+import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
 
 import { TestCaseMenuAction, TestCaseManualScenario } from '../types';
 import {
@@ -143,7 +144,9 @@ export const TestCaseSidePanel = memo(
     const { formatMessage } = useIntl();
     const sidePanelRef = useRef<HTMLDivElement>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const { openModal } = useAddTestCasesToTestPlanModal();
+    const { openModal: openAddTestCasesToTestPlanModal } = useAddTestCasesToTestPlanModal();
+    const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
+
     const folderId = testCase?.testFolder?.id;
     const path = buildBreadcrumbs(folders, folderId);
 
@@ -162,7 +165,7 @@ export const TestCaseSidePanel = memo(
 
     const menuItems = createTestCaseMenuItems(
       formatMessage,
-      {},
+      { [TestCaseMenuAction.DELETE]: () => openDeleteTestCaseModal({ testCase }) },
       getExcludedActionsFromPermissionMap(permissionMap),
     );
 
@@ -186,7 +189,10 @@ export const TestCaseSidePanel = memo(
     };
 
     const handleAddToTestPlanClick = () => {
-      openModal({ selectedTestCaseIds: [testCase.id], isSingleTestCaseMode: true });
+      openAddTestCasesToTestPlanModal({
+        selectedTestCaseIds: [testCase.id],
+        isSingleTestCaseMode: true,
+      });
     };
 
     const handleCopyId = async () => {
