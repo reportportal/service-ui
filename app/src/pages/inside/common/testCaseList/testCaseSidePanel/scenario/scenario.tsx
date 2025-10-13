@@ -22,7 +22,7 @@ import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList'
 import { FieldSection } from '../../../fieldSection';
 import { ManualScenario } from 'pages/inside/testCaseLibraryPage/types';
 import { messages } from './messages';
-import { StepsList } from '../../../../testCaseLibraryPage/createTestCaseModal/stepsList';
+import { StepsList } from '../../stepsList';
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 
 import styles from './scenario.scss';
