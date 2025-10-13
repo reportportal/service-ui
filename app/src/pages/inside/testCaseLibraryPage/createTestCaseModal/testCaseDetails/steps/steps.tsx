@@ -21,6 +21,7 @@ import { Button, PlusIcon, MIME_TYPES } from '@reportportal/ui-kit';
 import { AttachmentArea } from '../../attachmentArea';
 import { Step as StepType } from 'pages/inside/testCaseLibraryPage/types';
 import { Step } from './step';
+import { CREATE_TEST_CASE_FORM_NAME } from '../../createTestCaseModal';
 import { messages as commonMessages } from '../../messages';
 
 import styles from './steps.scss';
@@ -77,10 +78,12 @@ export const Steps = ({ steps, onAddStep, onRemoveStep, onMoveStep }: StepsProps
             isDraggable
             index={index}
             totalCount={steps.length}
+            formName={CREATE_TEST_CASE_FORM_NAME}
             acceptFileMimeTypes={[MIME_TYPES.jpeg, MIME_TYPES.png]}
             dropZoneDescription={formatMessage(commonMessages.dropFileDescription, {
               browseButton: formatMessage(commonMessages.browseText),
             })}
+            attachmentFieldName={`steps.${step.id}.attachments`}
             fileSizeMessage={formatMessage(commonMessages.fileSizeInfo)}
             onRemove={() => onRemoveStep(step.id)}
             onMove={(direction) => onMoveStep({ stepId: step.id, direction })}

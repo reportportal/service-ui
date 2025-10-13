@@ -14,7 +14,7 @@ import { AttachmentArea } from '../attachmentArea';
 import { Precondition } from './precondition';
 import { Steps } from './steps';
 import { TextTemplate } from './textTemplate';
-import { ManualScenarioType } from '../createTestCaseModal';
+import { CREATE_TEST_CASE_FORM_NAME, ManualScenarioType } from '../createTestCaseModal';
 
 import styles from './testCaseDetails.scss';
 
@@ -27,7 +27,7 @@ const messages = defineMessages({
   },
   enterLink: {
     id: 'createTestCaseModal.enterLink',
-    defaultMessage: 'Enter link to requirements',
+    defaultMessage: 'Enter link to requirements (e.g. https://example.com)',
   },
 });
 
@@ -102,7 +102,11 @@ export const TestCaseDetails = ({ className }: TestCaseDetailsProps) => {
         </>
       ) : (
         <>
-          <AttachmentArea isNumerable={false}>
+          <AttachmentArea
+            isNumerable={false}
+            attachmentFieldName="preconditionAttachments"
+            formName={CREATE_TEST_CASE_FORM_NAME}
+          >
             <Precondition />
           </AttachmentArea>
           <FieldProvider name="steps">

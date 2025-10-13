@@ -43,9 +43,10 @@ import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'contr
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import { foldersSelector } from 'controllers/testCase';
 import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
+import { ManualScenario, ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 
-import { TestCase, IScenario } from '../../types';
-import { TestCaseManualScenario, TestCaseMenuAction } from '../types';
+import { TestCaseMenuAction, TestCaseManualScenario } from '../types';
 import {
   formatTimestamp,
   formatDuration,
@@ -55,7 +56,6 @@ import {
 import { createTestCaseMenuItems } from '../configUtils';
 import { Scenario } from './scenario';
 import { messages } from './messages';
-import { useAddTestCasesToTestPlanModal } from '../../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 
 import styles from './testCaseSidePanel.scss';
 
@@ -76,7 +76,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
   testCaseDescription,
 }: {
   attributes: string[];
-  scenario: IScenario;
+  scenario: ManualScenario;
   testCaseDescription: string;
 }) => {
   const isStepsManualScenario = scenario.manualScenarioType === TestCaseManualScenario.STEPS;
@@ -120,7 +120,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
 };
 
 interface TestCaseSidePanelProps {
-  testCase: TestCase | null;
+  testCase: ExtendedTestCase | null;
   isVisible: boolean;
   onClose: () => void;
 }

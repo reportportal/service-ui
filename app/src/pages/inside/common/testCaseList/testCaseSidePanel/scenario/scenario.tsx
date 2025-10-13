@@ -19,17 +19,18 @@ import classNames from 'classnames/bind';
 import { isEmpty } from 'es-toolkit/compat';
 import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
 
-import { IScenario } from '../../../types';
 import { FieldSection } from '../../../fieldSection';
+import { ManualScenario } from 'pages/inside/testCaseLibraryPage/types';
 import { messages } from './messages';
-import { StepsList } from '../../../createTestCaseModal/stepsList';
-import { TestCaseManualScenario } from 'pages/inside/testCaseLibraryPage/testCaseList/types';
+import { StepsList } from '../../../../testCaseLibraryPage/createTestCaseModal/stepsList';
+import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
+
 import styles from './scenario.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
 interface ScenarioProps {
-  scenario: IScenario;
+  scenario: ManualScenario;
 }
 
 export const Scenario = ({ scenario }: ScenarioProps) => {

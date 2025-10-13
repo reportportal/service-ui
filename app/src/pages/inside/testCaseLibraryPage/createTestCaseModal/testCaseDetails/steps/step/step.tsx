@@ -22,7 +22,7 @@ import { isEmpty } from 'es-toolkit/compat';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { Attachment } from 'pages/inside/testCaseLibraryPage/types';
 import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
-import { FieldSection } from '../../../../fieldSection';
+import { FieldSection } from 'pages/inside/common/fieldSection';
 
 import styles from './step.scss';
 

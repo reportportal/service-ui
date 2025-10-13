@@ -38,6 +38,7 @@ export const StepsList = ({ steps }: StepsListProps) => {
               isDragAndDropIconVisible={false}
               isAttachmentBlockVisible={false}
               index={index}
+              canAttachFiles={false}
             >
               <Step
                 stepId={id}

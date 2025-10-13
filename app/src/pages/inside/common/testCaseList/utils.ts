@@ -16,8 +16,8 @@
 
 import { formatDistanceToNow, format } from 'date-fns';
 import { enUS, ru, es, de } from 'date-fns/locale';
-import { TestCaseMenuAction } from 'pages/inside/testCaseLibraryPage/testCaseList/types';
 import { Folder } from 'controllers/testCase';
+import { TestCaseMenuAction } from 'pages/inside/common/testCaseList/types';
 
 const dateFnsLocales: Record<string, Locale> = {
   en: enUS,

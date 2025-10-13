@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+
 import { EMPTY_FOLDERS } from '../testCase';
 import { transformFoldersToDisplay } from '../testCase/utils';
-import { TestPlanDto, TestPlanFoldersDto } from './constants';
+import { TestPlanDto, TestPlanFoldersDto, TestPlanTestCaseDto } from './constants';
 
 export interface TestPlanState {
   data: TestPlanDto[] | null;
   isLoading?: boolean;
   activeTestPlan?: TestPlanDto | null;
   testPlanFolders?: TestPlanFoldersDto | null;
+  testPlanTestCases?: TestPlanTestCaseDto | null;
   isLoadingActive?: boolean;
 }
 
@@ -44,6 +47,11 @@ export const isLoadingActiveSelector = (state: RootState) =>
 
 export const testPlanFoldersSelector = (state: RootState) =>
   testPlanSelector(state).testPlanFolders?.content || EMPTY_FOLDERS;
+
+export const EMPTY_TEST_CASES: ExtendedTestCase[] = [];
+
+export const testPlanTestCasesSelector = (state: RootState) =>
+  testPlanSelector(state).testPlanTestCases?.content || EMPTY_TEST_CASES;
 
 export const testPlanTransformedFoldersSelector = (state: RootState) =>
   transformFoldersToDisplay(testPlanFoldersSelector(state));

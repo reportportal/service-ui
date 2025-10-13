@@ -87,7 +87,7 @@ export const TestCaseFolders = () => {
         }),
       );
     }
-  }, [currentFolder, folderId]);
+  }, [currentFolder, folderId, dispatch]);
 
   useEffect(() => {
     if (currentFolder && folderId !== '' && Number.isFinite(folderIdNumber)) {
@@ -158,13 +158,14 @@ export const TestCaseFolders = () => {
       folders={folders}
       onFolderClick={handleFolderClick}
       renderCreateFolderButton={renderCreateFolderButton}
-      instanceKey={INSTANCE_KEYS.TEST_CASE_FOLDER}
+      instanceKey={INSTANCE_KEYS.TEST_CASE}
     >
       <AllTestCasesPage
         testCases={testCases}
         searchValue=""
         setSearchValue={noop}
         loading={isLoadingTestCases || areFoldersLoading}
+        instanceKey={INSTANCE_KEYS.TEST_CASE}
       />
     </ExpandedOptions>
   );
