@@ -41,7 +41,7 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
     const isPreconditionAttachments = !isEmpty(scenario.preconditions?.attachments);
 
     return (
-      <>
+      <div className={cx('scenario-wrapper')}>
         <div className={cx('scenario', 'steps-scenario', 'with-attachments')}>
           <FieldSection title={formatMessage(messages.precondition)}>
             <div className={cx('precondition-text')}>{scenario.preconditions?.value}</div>
@@ -72,21 +72,23 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
         ) : (
           <StepsList steps={scenario.steps} />
         )}
-      </>
+      </div>
     );
     // TEXT test case
   } else {
     return (
-      <div className={cx('scenario', 'full-view')}>
-        <FieldSection title={formatMessage(messages.precondition)}>
-          <div className={cx('precondition-text')}>{scenario.preconditions?.value}</div>
-        </FieldSection>
-        <FieldSection title={formatMessage(messages.instructions)}>
-          <div className={cx('precondition-text')}>{scenario.instructions}</div>
-        </FieldSection>
-        <FieldSection title={formatMessage(messages.expectedResult)}>
-          <div className={cx('precondition-text')}>{scenario.expectedResult}</div>
-        </FieldSection>
+      <div className={cx('scenario-wrapper')}>
+        <div className={cx('scenario', 'full-view')}>
+          <FieldSection title={formatMessage(messages.precondition)}>
+            <div className={cx('precondition-text')}>{scenario.preconditions?.value}</div>
+          </FieldSection>
+          <FieldSection title={formatMessage(messages.instructions)}>
+            <div className={cx('precondition-text')}>{scenario.instructions}</div>
+          </FieldSection>
+          <FieldSection title={formatMessage(messages.expectedResult)}>
+            <div className={cx('precondition-text')}>{scenario.expectedResult}</div>
+          </FieldSection>
+        </div>
       </div>
     );
   }

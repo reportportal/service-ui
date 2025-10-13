@@ -52,7 +52,7 @@ import {
   buildBreadcrumbs,
 } from '../utils';
 import { createTestCaseMenuItems } from '../configUtils';
-import { ScenariosList } from './scenariosList';
+import { Scenario } from './scenario';
 import { messages } from './messages';
 import { useAddTestCasesToTestPlanModal } from '../../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { foldersSelector } from 'controllers/testCase';
@@ -97,7 +97,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
     {
       titleKey: 'scenarioTitle',
       defaultMessageKey: 'noDetailsForScenario',
-      childComponent: isScenarioDataHidden ? null : <ScenariosList scenario={scenario} />,
+      childComponent: isScenarioDataHidden ? null : <Scenario scenario={scenario} />,
     },
     ...(scenario.manualScenarioType === TestCaseManualScenario.TEXT
       ? [
