@@ -26,7 +26,6 @@ import {
   CopyIcon,
   RerunIcon,
   DurationIcon,
-  AttachedFile,
 } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
@@ -42,6 +41,8 @@ import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
+import { foldersSelector } from 'controllers/testCase';
+import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
 
 import { TestCase, IScenario } from '../../types';
 import { TestCaseManualScenario, TestCaseMenuAction } from '../types';
@@ -55,7 +56,6 @@ import { createTestCaseMenuItems } from '../configUtils';
 import { Scenario } from './scenario';
 import { messages } from './messages';
 import { useAddTestCasesToTestPlanModal } from '../../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
-import { foldersSelector } from 'controllers/testCase';
 
 import styles from './testCaseSidePanel.scss';
 
@@ -80,11 +80,10 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
   testCaseDescription: string;
 }) => {
   const isStepsManualScenario = scenario.manualScenarioType === TestCaseManualScenario.STEPS;
+  const isEmptyPreconditions = isEmpty(scenario?.preconditions?.value);
   const isScenarioDataHidden = isStepsManualScenario
-    ? isEmpty(scenario?.preconditions?.value) && isEmpty(scenario?.steps)
-    : isEmpty(scenario?.preconditions?.value) &&
-      !scenario?.instructions &&
-      !scenario?.expectedResult;
+    ? isEmptyPreconditions && isEmpty(scenario?.steps)
+    : isEmptyPreconditions && !scenario?.instructions && !scenario?.expectedResult;
 
   return [
     {
@@ -105,16 +104,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
             titleKey: 'attachmentsTitle',
             defaultMessageKey: 'noAttachmentsAdded',
             childComponent: isEmpty(scenario?.attachments) ? null : (
-              <div className={cx('attachments-list')}>
-                {scenario.attachments.map((attachment) => (
-                  <AttachedFile
-                    key={attachment.id}
-                    fileName={attachment.fileName}
-                    size={attachment.fileSize}
-                    isFullWidth
-                  />
-                ))}
-              </div>
+              <AttachmentList attachments={scenario.attachments} />
             ),
           },
         ]

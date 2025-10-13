@@ -16,8 +16,8 @@
 
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { AttachedFile } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
+import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
 
 import { IScenario } from '../../../types';
 import { FieldSection } from '../../../fieldSection';
@@ -36,7 +36,6 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
   const { formatMessage } = useIntl();
   const isStepsManualScenario = scenario.manualScenarioType === TestCaseManualScenario.STEPS;
 
-  // STEPS test case
   if (isStepsManualScenario) {
     const isPreconditionAttachments = !isEmpty(scenario.preconditions?.attachments);
 
@@ -52,16 +51,7 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
               <FieldSection
                 title={`${formatMessage(messages.attachments)} ${scenario.preconditions.attachments?.length}`}
               >
-                <div className={cx('attachments-list')}>
-                  {scenario.preconditions.attachments.map((attachment) => (
-                    <AttachedFile
-                      key={attachment.id}
-                      fileName={attachment.fileName}
-                      size={attachment.fileSize}
-                      isFullWidth
-                    />
-                  ))}
-                </div>
+                <AttachmentList attachments={scenario.preconditions.attachments} />
               </FieldSection>
             </>
           ) : null}
@@ -74,22 +64,21 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
         )}
       </div>
     );
-    // TEXT test case
-  } else {
-    return (
-      <div className={cx('scenario-wrapper')}>
-        <div className={cx('scenario', 'full-view')}>
-          <FieldSection title={formatMessage(messages.precondition)}>
-            <div className={cx('precondition-text')}>{scenario.preconditions?.value}</div>
-          </FieldSection>
-          <FieldSection title={formatMessage(messages.instructions)}>
-            <div className={cx('precondition-text')}>{scenario.instructions}</div>
-          </FieldSection>
-          <FieldSection title={formatMessage(messages.expectedResult)}>
-            <div className={cx('precondition-text')}>{scenario.expectedResult}</div>
-          </FieldSection>
-        </div>
-      </div>
-    );
   }
+
+  return (
+    <div className={cx('scenario-wrapper')}>
+      <div className={cx('scenario', 'full-view')}>
+        <FieldSection title={formatMessage(messages.precondition)}>
+          <div className={cx('precondition-text')}>{scenario.preconditions?.value}</div>
+        </FieldSection>
+        <FieldSection title={formatMessage(messages.instructions)}>
+          <div className={cx('precondition-text')}>{scenario.instructions}</div>
+        </FieldSection>
+        <FieldSection title={formatMessage(messages.expectedResult)}>
+          <div className={cx('precondition-text')}>{scenario.expectedResult}</div>
+        </FieldSection>
+      </div>
+    </div>
+  );
 };

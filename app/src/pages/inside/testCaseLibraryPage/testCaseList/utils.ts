@@ -77,7 +77,7 @@ export const getExcludedActionsFromPermissionMap = (
   permissionMap.filter(({ isAllowed }) => !isAllowed).map(({ action }) => action);
 
 export function buildBreadcrumbs(folders: Folder[], folderId: number): string[] {
-  const folder = folders.find((f) => f.id === folderId);
+  const folder = folders.find(({ id }) => id === folderId);
 
   if (!folder) {
     return [];

@@ -14,40 +14,9 @@
  * limitations under the License.
  */
 
-.step {
+.attachments-list {
   display: flex;
   flex-direction: column;
-  row-gap: 16px;
-
-  &.read-mode {
-    font-size: 13px;
-    font-weight: 400;
-
-    .field-group {
-      display: flex;
-      flex-direction: column;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-    }
-
-    .field-label {
-      color: var(--rp-ui-base-e-400);
-      line-height: 16px;
-      margin-bottom: 4px;
-    }
-
-    .field-value {
-      color: var(--rp-ui-base-almost-black);
-      line-height: 20px;
-      min-height: 20px;
-    }
-
-    .section-border {
-      height: 1px;
-      background-color: var(--rp-ui-base-e-100);
-      margin: 0 -16px -16px;
-    }
-  }
+  margin-top: 8px;
+  gap: 8px;
 }

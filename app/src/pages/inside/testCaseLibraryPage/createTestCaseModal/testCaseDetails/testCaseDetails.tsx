@@ -5,10 +5,9 @@ import { formValueSelector } from 'redux-form';
 import classNames from 'classnames/bind';
 import { isNumber } from 'es-toolkit/compat';
 import { FieldText } from '@reportportal/ui-kit';
-
 import { FieldErrorHint, FieldProvider } from 'components/fields';
-
 import type { AppState } from 'types/store';
+import { Step } from 'pages/inside/testCaseLibraryPage/types';
 
 import { Template } from './template';
 import { AttachmentArea } from '../attachmentArea';
@@ -16,7 +15,6 @@ import { Precondition } from './precondition';
 import { Steps } from './steps';
 import { TextTemplate } from './textTemplate';
 import { ManualScenarioType } from '../createTestCaseModal';
-import { Step } from 'pages/inside/testCaseLibraryPage/types';
 
 import styles from './testCaseDetails.scss';
 
