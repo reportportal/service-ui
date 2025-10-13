@@ -109,7 +109,7 @@ export class AppSidebar extends Component {
         link: { type: PROJECT_DASHBOARD_PAGE, payload: { projectId: activeProject } },
         icon: DashboardIcon,
         message: <FormattedMessage id={'Sidebar.dashboardsBtn'} defaultMessage={'Dashboards'} />,
-        menuOrder: menuCounter+=menuStep,
+        menuOrder: (menuCounter += menuStep),
       },
       {
         onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_LAUNCH_ICON),
@@ -119,14 +119,14 @@ export class AppSidebar extends Component {
         },
         icon: LaunchesIcon,
         message: <FormattedMessage id={'Sidebar.launchesBtn'} defaultMessage={'Launches'} />,
-        menuOrder: menuCounter+=menuStep,
+        menuOrder: (menuCounter += menuStep),
       },
       {
         onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_FILTERS_BTN),
         link: { type: PROJECT_FILTERS_PAGE, payload: { projectId: activeProject } },
         icon: FiltersIcon,
         message: <FormattedMessage id={'Sidebar.filtersBtn'} defaultMessage={'Filters'} />,
-        menuOrder: menuCounter+=menuStep,
+        menuOrder: (menuCounter += menuStep),
       },
       {
         onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_DEBUG_BTN),
@@ -136,7 +136,7 @@ export class AppSidebar extends Component {
         },
         icon: DebugIcon,
         message: <FormattedMessage id={'Sidebar.debugBtn'} defaultMessage={'Debug'} />,
-        menuOrder: menuCounter+=menuStep,
+        menuOrder: (menuCounter += menuStep),
       },
     ];
 
@@ -149,7 +149,7 @@ export class AppSidebar extends Component {
         },
         icon: MembersIcon,
         message: <FormattedMessage id={'Sidebar.membersBnt'} defaultMessage={'Project members'} />,
-        menuOrder: menuCounter+=menuStep,
+        menuOrder: (menuCounter += menuStep),
       });
     }
 
@@ -161,7 +161,7 @@ export class AppSidebar extends Component {
       },
       icon: SettingsIcon,
       message: <FormattedMessage id={'Sidebar.settingsBnt'} defaultMessage={'Project settings'} />,
-      menuOrder: menuCounter+=menuStep,
+      menuOrder: (menuCounter += menuStep),
     });
     projectPageExtensions.forEach(({ payload }) => {
       if (payload.icon) {
@@ -173,7 +173,7 @@ export class AppSidebar extends Component {
           },
           icon: <RemotePluginIcon icon={payload.icon} />,
           message: payload.title,
-          menuOrder: payload.menuOrder || (menuCounter+=menuStep),
+          menuOrder: payload.menuOrder || (menuCounter += menuStep),
         });
       }
     });
