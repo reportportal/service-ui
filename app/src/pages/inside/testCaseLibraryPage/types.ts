@@ -16,7 +16,7 @@
 
 import { FC, SVGProps } from 'react';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
-import { TestCaseManualScenario } from 'common/testCaseList/types';
+import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 
 type Tag = {
   key: string;
