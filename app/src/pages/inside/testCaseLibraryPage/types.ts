@@ -135,6 +135,28 @@ export interface ExtendedTestCase extends TestCase {
   executions?: Execution[];
 }
 
+interface ManualScenario {
+  manualScenarioType: string;
+  id: number;
+  executionEstimationTime: number;
+  linkToRequirements: string;
+  preconditions: {
+    value: string;
+    attachments: [];
+  };
+  attributes: [];
+  steps: {
+    id: number;
+    instructions: string;
+    expectedResult: string;
+    attachments: [];
+  }[];
+}
+
+export interface ExtendedTestCase extends TestCase {
+  manualScenario?: ManualScenario;
+}
+
 export interface ActionButton {
   name: string;
   dataAutomationId: string;

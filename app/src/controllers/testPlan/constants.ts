@@ -60,3 +60,13 @@ export type TestPlanTestCaseDto = {
   content: ExtendedTestCase[];
   page: PageInfo;
 };
+
+export type TestPlanTestCaseDto = {
+  content: ExtendedTestCase[];
+  page: {
+    number: number;
+    size: number;
+    totalElements: number;
+    totalPages: number;
+  };
+};
