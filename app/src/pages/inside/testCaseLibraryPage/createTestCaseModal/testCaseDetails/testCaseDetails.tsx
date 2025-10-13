@@ -34,7 +34,7 @@ const messages = defineMessages({
 });
 
 const createEmptyStep = (): Step => ({
-  id: Date.now(),
+  id: `step_${Date.now()}`,
   instructions: '',
   expectedResult: '',
   attachments: [],

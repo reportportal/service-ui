@@ -256,7 +256,7 @@ export const TestCaseSidePanel = memo(
         </div>
         <div className={cx('content')}>
           {COLLAPSIBLE_SECTIONS_CONFIG({
-            attributes: testCase?.manualScenario?.attributes?.map(({ key }) => key), // todo: discuss the place in response of attributes
+            attributes: testCase?.attributes?.map(({ key }) => key),
             scenario: testCase?.manualScenario,
             testCaseDescription: testCase.description,
           }).map(({ titleKey, defaultMessageKey, childComponent }) => (
