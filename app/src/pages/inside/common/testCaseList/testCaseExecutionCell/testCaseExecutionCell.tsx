@@ -18,7 +18,7 @@ import { useState } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
-import { MeatballMenuIcon, PlusIcon } from '@reportportal/ui-kit';
+import { MeatballMenuIcon, CoveredManuallyIcon } from '@reportportal/ui-kit';
 
 import { PopoverControl } from 'pages/common/popoverControl';
 import { handleEnterOrSpaceKey } from 'common/utils/helperUtils/event.utils';
@@ -52,7 +52,7 @@ export const TestCaseExecutionCell = ({
       <div>
         {instanceKey === INSTANCE_KEYS.TEST_PLAN && (
           <div className={cx('covered-manually')}>
-            <PlusIcon /> {formatMessage(messages.coveredManually)}
+            <CoveredManuallyIcon /> {formatMessage(messages.coveredManually)}
           </div>
         )}
         <div

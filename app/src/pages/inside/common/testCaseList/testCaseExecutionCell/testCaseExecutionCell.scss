@@ -53,8 +53,6 @@
     max-width: none;
   }
 }
-/* stylelint-disable color-no-hex */
-$COLOR--temporary-purple: #8866aa;
 
 .covered-manually {
   display: flex;
@@ -63,12 +61,16 @@ $COLOR--temporary-purple: #8866aa;
   margin-bottom: -8px;
   padding-top: 14px;
   font-size: 11px;
-  color: $COLOR--temporary-purple;
+  color: var(--rp-ui-base-purple-600);
 
   svg {
     width: 14px;
     height: 14px;
-    fill: $COLOR--temporary-purple;
+
+    path,
+    rect {
+      fill: var(--rp-ui-base-purple-600);
+    }
   }
 }
 

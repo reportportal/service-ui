@@ -67,7 +67,6 @@ export const AllTestCasesPage = ({
           instanceKey={instanceKey}
         />
       </div>
-
       <div className={cx('sticky-wrapper')}>
         {!isEmpty(testCases) && (
           <div className={cx('pagination')}>
