@@ -41,18 +41,18 @@ import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
+import { IScenario, ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { StepsList } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/stepsList';
+import { StepData } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/testCaseDetails';
+import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
+import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
 
-import { TestCase, IScenario } from '../../types';
 import { TestCaseMenuAction } from '../types';
 import { formatTimestamp, formatDuration, getExcludedActionsFromPermissionMap } from '../utils';
 import { createTestCaseMenuItems } from '../configUtils';
 import { mockedTestCaseDescription, mockedScenarios, mockedStepsData } from '../mockData';
-import { StepsList } from '../../createTestCaseModal/stepsList';
 import { ScenariosList } from './scenariosList';
 import { messages } from './messages';
-import { StepData } from '../../createTestCaseModal/testCaseDetails';
-import { useAddTestCasesToTestPlanModal } from '../../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
-import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/useEditTestCaseModal';
 
 import styles from './testCaseSidePanel.scss';
 
@@ -93,7 +93,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
   ] as const;
 
 interface TestCaseSidePanelProps {
-  testCase: TestCase | null;
+  testCase: ExtendedTestCase | null;
   isVisible: boolean;
   onClose: () => void;
 }

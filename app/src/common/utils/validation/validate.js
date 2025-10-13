@@ -101,6 +101,7 @@ export const descriptionStepLevelEntity = composeValidators([
 
 export const port = range(1, 65535);
 
+export const optionalUrl = (value) => !value || regex(/^(ftp|http|https):\/\/[^ "]+$/)(value);
 export const searchFilter = (value) =>
   !value || composeValidators([isNotOnlySpaces, minLength(3)])(value);
 export const searchMembers = (value) => !value || isNotOnlySpaces(value);

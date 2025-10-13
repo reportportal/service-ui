@@ -1,6 +1,6 @@
 import { FC, SVGProps } from 'react';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
-import { TestStep } from './createTestCaseModal/useCreateTestCase';
+import { Attachment, TestStep } from './createTestCaseModal/useCreateTestCase';
 import { FolderWithFullPath } from 'controllers/testCase/types';
 
 type Tag = {
@@ -38,16 +38,13 @@ interface ManualScenarioCommon {
 }
 
 interface ManualScenarioSteps extends ManualScenarioCommon {
-  steps: {
-    instructions: string;
-    expectedResult: string;
-    attachments?: string[];
-  }[];
+  steps: TestStep[];
 }
 
 interface ManualScenarioText extends ManualScenarioCommon {
   instructions?: string;
   expectedResult?: string;
+  attachments?: Attachment[];
 }
 
 export type ManualScenarioDto = ManualScenarioSteps | ManualScenarioText;
@@ -69,6 +66,28 @@ export interface TestCase {
   };
 }
 
+interface ManualScenario {
+  manualScenarioType: string;
+  id: number;
+  executionEstimationTime: number;
+  linkToRequirements: string;
+  preconditions: {
+    value: string;
+    attachments: Attachment[];
+  };
+  attributes: Attachment[];
+  steps: {
+    id: number;
+    instructions: string;
+    expectedResult: string;
+    attachments: Attachment[];
+  }[];
+}
+
+export interface ExtendedTestCase extends TestCase {
+  manualScenario?: ManualScenario;
+}
+
 export interface ActionButton {
   name: string;
   dataAutomationId: string;
@@ -81,14 +100,16 @@ export interface ActionButton {
 export interface CreateTestCaseFormData {
   name: string;
   description?: string;
-  folder: FolderWithFullPath | string | { id: number };
+  folder: FolderWithFullPath | string;
   priority?: TestCasePriority;
   linkToRequirements?: string;
   executionEstimationTime?: number;
   manualScenarioType: ManualScenarioType;
   precondition?: string;
+  preconditionAttachments?: Attachment[];
   steps?: TestStep[];
   instructions?: string;
   expectedResult?: string;
+  textAttachments?: Attachment[];
   tags?: string[];
 }

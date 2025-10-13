@@ -17,10 +17,10 @@
 import { useDispatch } from 'react-redux';
 import { showModalAction } from 'controllers/modal';
 import { EDIT_SELECTED_TEST_CASE_MODAL_KEY } from './editTestCaseModal';
-import { TestCase } from '../types';
+import { ExtendedTestCase } from '../types';
 
 interface UseEditTestCaseModalOptions {
-  testCase: TestCase;
+  testCase: ExtendedTestCase;
 }
 
 export const useEditTestCaseModal = () => {

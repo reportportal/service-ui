@@ -38,17 +38,19 @@ import { CreateTestCaseFormData, ManualScenarioType } from '../types';
 const cx = classNames.bind(styles) as typeof classNames;
 
 export const CREATE_TEST_CASE_MODAL_KEY = 'createTestCaseModalKey';
+export const CREATE_TEST_CASE_FORM_NAME: string = 'create-test-case-modal-form';
 
 export const CreateTestCaseModal = reduxForm<CreateTestCaseFormData>({
-  form: 'create-test-case-modal-form',
+  form: CREATE_TEST_CASE_FORM_NAME,
   initialValues: {
     priority: 'unspecified',
     manualScenarioType: ManualScenarioType.STEPS,
     executionEstimationTime: 5,
   },
-  validate: ({ name, folder }) => ({
+  validate: ({ name, folder, linkToRequirements }) => ({
     name: commonValidators.requiredField(name),
     folder: commonValidators.requiredField(folder),
+    linkToRequirements: commonValidators.optionalUrl(linkToRequirements),
   }),
 })(({ dirty, handleSubmit }) => {
   const { formatMessage } = useIntl();

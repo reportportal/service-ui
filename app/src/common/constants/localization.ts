@@ -352,6 +352,10 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.noMatchesFound',
     defaultMessage: 'No matches found',
   },
+  ALL_TEST_CASES_TITLE: {
+    id: 'Common.allTestCasesTitle',
+    defaultMessage: 'All test cases',
+  },
 });
 
 export const months = [

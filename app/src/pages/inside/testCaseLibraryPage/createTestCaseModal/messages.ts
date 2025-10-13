@@ -37,4 +37,8 @@ export const messages = defineMessages({
     id: 'createTestCaseModal.attachments',
     defaultMessage: 'Attachments',
   },
+  uploadFailed: {
+    id: 'createTestCaseModal.uploadFailed',
+    defaultMessage: 'Upload failed',
+  },
 });

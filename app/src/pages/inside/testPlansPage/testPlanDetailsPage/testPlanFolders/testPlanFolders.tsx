@@ -17,13 +17,19 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-import { testPlanTransformedFoldersSelector } from 'controllers/testPlan';
+import {
+  testPlanTransformedFoldersSelector,
+  testPlanTestCasesSelector,
+} from 'controllers/testPlan';
+import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 
 import { ExpandedOptions } from '../../../common/expandedOptions';
+import { AllTestCasesPage } from './allTestCasesPage';
 
 export const TestPlanFolders = () => {
   const [activeFolder, setActiveFolder] = useState<number | null>(null);
   const folders = useSelector(testPlanTransformedFoldersSelector);
+  const testCases = useSelector(testPlanTestCasesSelector);
 
   useEffect(() => {
     setActiveFolder(null);
@@ -44,7 +50,12 @@ export const TestPlanFolders = () => {
       onFolderClick={handleFolderClick}
       setAllTestCases={setAllTestCases}
     >
-      Test cases
+      <AllTestCasesPage
+        testCases={testCases}
+        searchValue=""
+        loading={false}
+        instanceKey={INSTANCE_KEYS.TEST_PLAN}
+      />
     </ExpandedOptions>
   );
 };

@@ -27,12 +27,12 @@ import { commonValidators } from 'common/utils/validation';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
+import { ExtendedTestCase, ManualScenarioType, CreateTestCaseFormData } from '../types';
 
 import { commonMessages } from '../commonMessages';
 import { BasicInformation } from './basicInformation';
 import { TestCaseDetails } from './testCaseDetails';
 import { useEditTestCase } from './useEditTestCase';
-import { TestCase, ManualScenarioType, CreateTestCaseFormData } from '../types';
 
 import styles from './createTestCaseModal.scss';
 
@@ -42,7 +42,7 @@ export const EDIT_SELECTED_TEST_CASE_MODAL_KEY = 'editSelectedTestCaseModalKey';
 
 interface EditSelectedTestCaseModalProps extends InjectedFormProps<CreateTestCaseFormData> {
   data?: {
-    testCase?: TestCase;
+    testCase?: ExtendedTestCase;
   };
 }
 

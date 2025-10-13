@@ -391,4 +391,7 @@ export const URLS = {
   testFolders: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/folder${getQueryParams(query)}`,
   deleteFolder: (projectKey, folderId) => `${urlBase}project/${projectKey}/tms/folder/${folderId}`,
+  tmsAttachmentUpload: (projectKey) => `${urlBase}project/${projectKey}/tms/attachment/upload`,
+  tmsAttachmentDownload: (projectKey, attachmentId) =>
+    `${urlBase}project/${projectKey}/tms/attachment/${attachmentId}`,
 };

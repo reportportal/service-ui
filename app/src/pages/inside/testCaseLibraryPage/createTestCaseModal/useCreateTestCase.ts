@@ -31,10 +31,14 @@ import { createFoldersSuccessAction } from 'controllers/testCase/actionCreators'
 import { messages } from './basicInformation/messages';
 import { ManualScenarioDto, ManualScenarioType, CreateTestCaseFormData } from '../types';
 
+export interface Attachment {
+  id: string;
+}
+
 export interface TestStep {
   instructions: string;
   expectedResult: string;
-  attachments?: string[];
+  attachments?: Attachment[];
 }
 
 const testFolderId = 85;
@@ -76,6 +80,7 @@ export const useCreateTestCase = () => {
         manualScenarioType: payload.manualScenarioType,
         preconditions: {
           value: payload.precondition,
+          attachments: payload.preconditionAttachments ?? [],
         },
       };
 
@@ -85,10 +90,15 @@ export const useCreateTestCase = () => {
               ...commonData,
               instructions: payload.instructions,
               expectedResult: payload.expectedResult,
+              attachments: payload.textAttachments ?? [],
             }
           : {
               ...commonData,
-              steps: Object.values(payload?.steps ?? {}),
+              steps: Object.values(payload?.steps ?? {}).map((step) => ({
+                instructions: step.instructions,
+                expectedResult: step.expectedResult,
+                attachments: step.attachments ?? [],
+              })),
             };
 
       await fetch(URLS.testCase(projectKey), {
