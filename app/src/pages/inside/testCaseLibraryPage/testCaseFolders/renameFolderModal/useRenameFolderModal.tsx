@@ -16,12 +16,10 @@
 
 import { useModal } from 'common/hooks';
 
-import RenameFolderModal, { RENAME_FOLDER_MODAL_KEY } from './renameFolderModal';
-
-interface RenameFolderModalData {
-  folderId: number;
-  folderName: string;
-}
+import RenameFolderModal, {
+  RENAME_FOLDER_MODAL_KEY,
+  RenameFolderModalData,
+} from './renameFolderModal';
 
 export const useRenameFolderModal = () =>
   useModal<RenameFolderModalData>({
