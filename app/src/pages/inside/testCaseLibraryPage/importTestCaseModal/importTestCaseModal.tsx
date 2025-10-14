@@ -1,39 +1,110 @@
-import { useState, ChangeEvent } from 'react';
-import { useIntl } from 'react-intl';
-import Parser from 'html-react-parser';
-import Link from 'redux-first-router-link';
-import { isString } from 'es-toolkit';
-import { FieldText, Modal, FileDropArea, AddCsvIcon } from '@reportportal/ui-kit';
-
-import { createClassnames } from 'common/utils';
+import { useState, ChangeEvent, useMemo, useEffect } from 'react';
+import { FieldText, Modal, FileDropArea, AddCsvIcon, AttachedFile } from '@reportportal/ui-kit';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
+import { useIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';
-
+import classNames from 'classnames/bind';
 import { messages } from './messages';
+import { isString } from 'lodash';
+import { useImportTestCase } from './useImportTestCase';
 
+import Link from 'redux-first-router-link';
+import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';
+import Parser from 'html-react-parser';
 import styles from './importTestCaseModal.scss';
+import type { MimeType } from '@reportportal/ui-kit/dist/components/fileDropArea/types';
 
 export const IMPORT_TEST_CASE_MODAL_KEY = 'importTestCaseModalKey';
 
-const MAX_FILE_SIZE_MB = 50;
+const MAX_FILE_SIZE_MB = 10;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
-const cx = createClassnames(styles);
+const cx = classNames.bind(styles) as typeof classNames;
+
+type LocalFile = { id: string; file: File };
+type FileLike = File | { file: File };
+type FileInput = FileLike | FileLike[];
+
+const genId = () => globalThis.crypto?.randomUUID?.() ?? Math.random().toString(8).slice(2);
+
+const extractFolderIdFromHash = (hash: string) => {
+  const m = hash.match(/\/testLibrary\/folder\/(\d+)/i);
+  return m ? Number(m[1]) : undefined;
+};
+
+const toMB = (bytes: number) => +(bytes / (1024 * 1024)).toFixed(2);
 
 export const ImportTestCaseModal = () => {
   const { formatMessage } = useIntl();
   const [folderName, setFolderName] = useState('');
+  const [file, setFile] = useState<LocalFile | null>(null); // single file
+  const [folderIdFromUrl, setFolderIdFromUrl] = useState<number | undefined>(() =>
+    extractFolderIdFromHash(window.location.hash),
+  );
+  const { isImportingTestCases, importTestCases } = useImportTestCase();
+
+  useEffect(() => {
+    const onHashChange = () => setFolderIdFromUrl(extractFolderIdFromHash(window.location.hash));
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
+
+  const handleImport = () => {
+    if (!file) {
+      return;
+    }
+    if (folderIdFromUrl != null) {
+      return importTestCases({
+        file: file.file,
+        testFolderId: folderIdFromUrl,
+      });
+    }
+    return importTestCases({
+      file: file.file,
+      testFolderName: folderName,
+    });
+  };
 
   const handleFolderNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setFolderName(event.target.value);
   };
 
+  const acceptFileMimeTypes = useMemo<MimeType[]>(
+    () => ['text/csv', 'application/vnd.ms-excel', 'text/plain'],
+    [],
+  );
+
+  const handleFilesAdded = (incoming: FileInput) => {
+    const items = Array.isArray(incoming) ? incoming : [incoming];
+    if (!items.length) return;
+
+    const file = items[0] instanceof File ? items[0] : items[0].file;
+    setFile({ id: genId(), file });
+  };
+
+  const handleRemove = () => setFile(null);
+
+  const handleDownload = () => {
+    if (!file) return;
+    const url = URL.createObjectURL(file.file);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = file.file.name;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  };
+
   const okButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.IMPORT),
+    onClick: handleImport,
+    disabled: isImportingTestCases || !file,
   };
 
   const cancelButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    disabled: isImportingTestCases,
   };
 
   const iconMarkup = isString(ExternalLinkIcon) ? Parser(ExternalLinkIcon) : null;
@@ -55,15 +126,15 @@ export const ImportTestCaseModal = () => {
             <i className={cx('import-test-case-modal__external-icon')}>{iconMarkup}</i>
           </Link>
         </section>
-        <div>
+        <div className={cx('import-test-case-modal__uploader')}>
           <FileDropArea
             messages={{
               incorrectFileFormat: formatMessage(messages.incorrectFileFormat),
               incorrectFileSize: formatMessage(messages.incorrectFileSize),
             }}
-            onFilesAdded={() => {}}
-            acceptFileMimeTypes={[]}
-            maxFileSize={MAX_FILE_SIZE_MB}
+            onFilesAdded={handleFilesAdded}
+            acceptFileMimeTypes={acceptFileMimeTypes}
+            maxFileSize={MAX_FILE_SIZE_BYTES}
           >
             <div className={cx('import-test-case-modal__drop-wrap')}>
               <FileDropArea.DropZone
@@ -85,15 +156,39 @@ export const ImportTestCaseModal = () => {
               <FileDropArea.Error />
             </div>
           </FileDropArea>
+          {file && (
+            <div className={cx('import-test-case-modal__files')}>
+              <AttachedFile
+                key={file.id}
+                fileName={file.file.name}
+                size={toMB(file.file.size)}
+                isFullWidth
+                onRemove={handleRemove}
+                onDownload={handleDownload}
+              />
+            </div>
+          )}
         </div>
         <div className={cx('import-test-case-modal__input-control')}>
-          <FieldText
-            label={formatMessage(messages.importFolderNameLabel)}
-            defaultWidth={false}
-            value={folderName}
-            onChange={handleFolderNameChange}
-            helpText={formatMessage(messages.importFolderNameDescription)}
-          />
+          {folderIdFromUrl != null ? (
+            <>
+              <label className={cx('import-test-case-modal__label')}>
+                {formatMessage(messages.importFolderNameLabel)}
+              </label>
+              <div className={cx('import-test-case-modal__static-value')}>
+                <span>Accessibility compliance</span>
+              </div>
+            </>
+          ) : (
+            <FieldText
+              label={formatMessage(messages.importFolderNameLabel)}
+              defaultWidth={false}
+              value={folderName}
+              onChange={handleFolderNameChange}
+              helpText={formatMessage(messages.importFolderNameDescription)}
+              disabled={isImportingTestCases}
+            />
+          )}
         </div>
       </div>
     </Modal>
