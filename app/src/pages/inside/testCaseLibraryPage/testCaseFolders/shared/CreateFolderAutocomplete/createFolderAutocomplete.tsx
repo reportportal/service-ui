@@ -17,10 +17,10 @@
 import { ComponentProps } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
-import classNames from 'classnames/bind';
 import { FieldLabel } from '@reportportal/ui-kit';
 import { isString } from 'es-toolkit/compat';
 
+import { createClassnames } from 'common/utils';
 import { FolderWithFullPath, transformedFoldersWithFullPathSelector } from 'controllers/testCase';
 import { AutocompleteOption } from 'componentLibrary/autocompletes/common/autocompleteOption';
 import { SingleAutocomplete } from 'componentLibrary/autocompletes/singleAutocomplete';
@@ -29,7 +29,7 @@ import { messages } from './messages';
 import styles from './createFolderAutocomplete.scss';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface CreateFolderAutocompleteProps {
   name: string;

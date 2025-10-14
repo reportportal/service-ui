@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-import classNames from 'classnames/bind';
 import { AttachedFile } from '@reportportal/ui-kit';
+
+import { createClassnames } from 'common/utils';
 import { Attachment } from 'pages/inside/testCaseLibraryPage/types';
 
 import styles from './attachmentsList.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface AttachmentsListProps {
   attachments: Attachment[];

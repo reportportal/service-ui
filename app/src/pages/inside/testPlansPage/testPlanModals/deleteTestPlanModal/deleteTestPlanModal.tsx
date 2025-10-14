@@ -16,10 +16,10 @@
 
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
-import classNames from 'classnames/bind';
 import { noop } from 'es-toolkit';
 import { Modal } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { TestPlanDto } from 'controllers/testPlan';
 import { hideModalAction } from 'controllers/modal';
@@ -30,7 +30,7 @@ import { messages } from './messages';
 
 import styles from './deleteTestPlanModal.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export const DELETE_TEST_PLAN_MODAL_KEY = 'deleteTestPlanModalKey';
 

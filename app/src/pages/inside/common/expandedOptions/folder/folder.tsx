@@ -15,10 +15,10 @@
  */
 
 import { useState, useCallback, MouseEvent as ReactMouseEvent, useEffect } from 'react';
-import classNames from 'classnames/bind';
 import { isEmpty } from 'es-toolkit/compat';
 import { ChevronDownDropdownIcon, MeatballMenuIcon } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { TransformedFolder } from 'controllers/testCase';
 
@@ -26,7 +26,7 @@ import { INSTANCE_KEYS, useFolderTooltipItems } from './useFolderTooltipItems';
 
 import styles from './folder.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface FolderProps {
   folder: TransformedFolder;

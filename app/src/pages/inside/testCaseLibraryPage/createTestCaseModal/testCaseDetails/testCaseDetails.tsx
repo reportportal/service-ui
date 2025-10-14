@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { formValueSelector } from 'redux-form';
-import classNames from 'classnames/bind';
 import { isNumber } from 'es-toolkit/compat';
 import { FieldText } from '@reportportal/ui-kit';
+
+import { createClassnames } from 'common/utils';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import type { AppState } from 'types/store';
 import { Step } from 'pages/inside/testCaseLibraryPage/types';
@@ -18,7 +19,7 @@ import { CREATE_TEST_CASE_FORM_NAME, ManualScenarioType } from '../createTestCas
 
 import styles from './testCaseDetails.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 const messages = defineMessages({
   requirementsLink: {

@@ -1,16 +1,19 @@
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
-import classNames from 'classnames/bind';
 import { Checkbox, InfoIcon, Tooltip } from '@reportportal/ui-kit';
+
+import { createClassnames } from 'common/utils';
 import { ssoUsersOnlySelector } from 'controllers/appInfo';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { messages } from 'common/constants/localization/invitationsLocalization';
+
 import { InviteUserEmailField } from '../inviteUserEmailField';
 import { Level } from '../constants';
 import { getFormName } from '../utils';
+
 import styles from './inviteUserProjectForm.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export interface InviteUserProjectFormData {
   email: string;

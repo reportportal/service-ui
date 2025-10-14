@@ -14,19 +14,5 @@
  * limitations under the License.
  */
 
-import { createClassnames } from 'common/utils';
-
-import styles from './infoBlock.scss';
-
-const cx = createClassnames(styles);
-
-interface InfoBlockProps {
-  label: string;
-  className?: string;
-}
-
-export const InfoBlock = ({ label, className = '' }: InfoBlockProps) => (
-  <div className={cx('info-block', className)}>
-    <span className={cx('info-block__label')}>{label}</span>
-  </div>
-);
+export { DELETE_TEST_CASE_MODAL_KEY } from './deleteTestCaseModal';
+export { useDeleteTestCaseModal } from './useDeleteTestCaseModal';

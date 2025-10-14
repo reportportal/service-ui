@@ -15,10 +15,10 @@
  */
 
 import { ReactNode } from 'react';
-import classNames from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { BaseIconButton, SearchIcon } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 import { TransformedFolder } from 'controllers/testCase';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
@@ -27,7 +27,7 @@ import { Folder } from './folder';
 
 import styles from './expandedOptions.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 const messages = defineMessages({
   allTestCases: {

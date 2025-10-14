@@ -15,12 +15,15 @@
  */
 
 import { forwardRef } from 'react';
-import classNames from 'classnames/bind';
+
+import { createClassnames } from 'common/utils';
 import { SortingDirection } from 'controllers/sorting/types';
+
 import { DirectionIcon } from '../directionIcon';
+
 import styles from './dropdownSortingOption.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface DropdownSortingOptionProps {
   label: string;

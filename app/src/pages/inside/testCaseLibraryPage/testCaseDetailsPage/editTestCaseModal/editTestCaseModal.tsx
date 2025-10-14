@@ -18,13 +18,15 @@ import { MouseEventHandler, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { InjectedFormProps, reduxForm } from 'redux-form';
-import classNames from 'classnames/bind';
 import { FieldText, Modal } from '@reportportal/ui-kit';
 
+import { UseModalData } from 'common/hooks';
+import { createClassnames } from 'common/utils';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { commonValidators } from 'common/utils/validation';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
+
 import { UpdateTestCasePayload, useUpdateTestCase } from './useUpdateTestCase';
 import { messages } from '../messages';
 import { commonMessages } from '../../commonMessages';
@@ -34,14 +36,12 @@ import styles from './editTestCaseModal.scss';
 
 export const EDIT_TEST_CASE_MODAL_KEY = 'editTestCaseModalKey';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
-interface EditTestCaseModalProps {
-  data: {
-    initialValues: UpdateTestCasePayload;
-    testCaseId: number;
-  };
-}
+type EditTestCaseModalProps = UseModalData<{
+  initialValues: UpdateTestCasePayload;
+  testCaseId: number;
+}>;
 
 const EditTestCaseModal = ({
   handleSubmit,

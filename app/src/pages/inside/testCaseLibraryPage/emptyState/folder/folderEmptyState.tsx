@@ -16,8 +16,8 @@
 
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
-import classNames from 'classnames/bind';
 
+import { createClassnames } from 'common/utils';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import ImportIcon from 'common/img/import-thin-inline.svg';
 import PlusIconInline from 'common/img/plus-button-inline.svg';
@@ -30,7 +30,7 @@ import { ActionButton } from '../../types';
 
 import styles from './folderEmptyState.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface FolderEmptyStateProps {
   folderTitle: string;

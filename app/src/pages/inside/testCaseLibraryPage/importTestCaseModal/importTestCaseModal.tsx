@@ -1,22 +1,24 @@
 import { useState, ChangeEvent } from 'react';
-import { FieldText, Modal, FileDropArea, AddCsvIcon } from '@reportportal/ui-kit';
-import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 import { useIntl } from 'react-intl';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import classNames from 'classnames/bind';
-import { messages } from './messages';
-import { isString } from 'es-toolkit';
-
-import Link from 'redux-first-router-link';
-import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';
 import Parser from 'html-react-parser';
+import Link from 'redux-first-router-link';
+import { isString } from 'es-toolkit';
+import { FieldText, Modal, FileDropArea, AddCsvIcon } from '@reportportal/ui-kit';
+
+import { createClassnames } from 'common/utils';
+import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';
+
+import { messages } from './messages';
+
 import styles from './importTestCaseModal.scss';
 
 export const IMPORT_TEST_CASE_MODAL_KEY = 'importTestCaseModalKey';
 
 const MAX_FILE_SIZE_MB = 50;
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export const ImportTestCaseModal = () => {
   const { formatMessage } = useIntl();

@@ -48,27 +48,15 @@ export const useTestCaseFolderMenu = ({
 
   const handleDeleteFolder = () => {
     openDeleteModal({
-      folderId: folder.id,
-      folderName: folder.name,
+      folder,
       activeFolderId: activeFolder,
       setAllTestCases,
     });
   };
 
-  const handleRenameFolder = () => {
-    openRenameModal({
-      folderId: folder.id,
-      folderName: folder.name,
-    });
-  };
+  const handleRenameFolder = () => openRenameModal({ folder });
 
-  const handleDuplicateFolder = () => {
-    openDuplicateModal({
-      folderId: folder.id,
-      folderName: folder.name,
-      parentFolderId: folder.parentFolderId,
-    });
-  };
+  const handleDuplicateFolder = () => openDuplicateModal({ folder });
 
   const testCaseFolderTooltipItems: PopoverItem[] = compact([
     canRenameTestCaseFolder && {

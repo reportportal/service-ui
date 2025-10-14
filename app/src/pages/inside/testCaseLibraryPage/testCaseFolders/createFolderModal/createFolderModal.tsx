@@ -16,9 +16,10 @@
 
 import { useIntl } from 'react-intl';
 import { reduxForm, InjectedFormProps, SubmitHandler } from 'redux-form';
-import classNames from 'classnames/bind';
 import { Modal } from '@reportportal/ui-kit';
 
+import { UseModalData } from 'common/hooks';
+import { createClassnames } from 'common/utils';
 import { withModal } from 'controllers/modal';
 import { FolderWithFullPath } from 'controllers/testCase';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
@@ -35,17 +36,13 @@ import { CreateFolderAutocomplete } from '../shared/CreateFolderAutocomplete';
 
 import styles from '../shared/folderFormFields.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export const CREATE_FOLDER_MODAL_KEY = 'createFolderModalKey';
 
 type CreateFolderSubmitHandler = SubmitHandler<FolderFormValues, CreateFolderModalProps>;
 
-interface CreateFolderModalProps {
-  data: {
-    shouldRenderToggle: boolean;
-  };
-}
+type CreateFolderModalProps = UseModalData<{ shouldRenderToggle: boolean }>;
 
 const CreateFolderModalComponent = ({
   data: { shouldRenderToggle },

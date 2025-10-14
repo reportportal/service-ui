@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-import classNames from 'classnames/bind';
-import styles from './projectItems.scss';
-import { BaseIconButton, CloseIcon, Dropdown, Tooltip } from '@reportportal/ui-kit';
-import { EDITOR, VIEWER } from 'common/constants/projectRoles';
 import { useIntl } from 'react-intl';
+
+import { BaseIconButton, CloseIcon, Dropdown, Tooltip } from '@reportportal/ui-kit';
+import { createClassnames } from 'common/utils';
+import { EDITOR, VIEWER } from 'common/constants/projectRoles';
 import { getRoleTitle } from 'common/utils/permissions';
 import { messages } from 'common/constants/localization/invitationsLocalization';
 
-const cx = classNames.bind(styles) as typeof classNames;
+import styles from './projectItems.scss';
+
+const cx = createClassnames(styles);
 
 export interface Project {
   id: number;

@@ -15,11 +15,11 @@
  */
 
 import { memo, SetStateAction, useState } from 'react';
-import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { xor } from 'es-toolkit';
 import { BubblesLoader, FilterOutlineIcon, Table } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { SearchField } from 'components/fields/searchField';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
@@ -33,8 +33,9 @@ import { DEFAULT_CURRENT_PAGE } from './configUtils';
 import { messages } from './messages';
 
 import styles from './testCaseList.scss';
+import { isEmpty } from 'es-toolkit/compat';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface TestCaseListProps {
   testCases: ExtendedTestCase[];
@@ -121,7 +122,7 @@ export const TestCaseList = memo(
         content: testCase.updatedAt,
         component: (
           <TestCaseExecutionCell
-            lastExecution={testCase.updatedAt}
+            testCase={testCase}
             instanceKey={instanceKey}
             onRowClick={() => setSelectedTestCaseId(testCase.id)}
           />
@@ -144,8 +145,6 @@ export const TestCaseList = memo(
         align: 'left' as const,
       },
     ];
-
-    const isEmptyList = (value: ExtendedTestCase[]) => !value.length || value.length === 0;
 
     return (
       <div className={cx('test-case-list')}>
@@ -176,7 +175,15 @@ export const TestCaseList = memo(
           </div>
         ) : (
           <>
-            {!isEmptyList(currentData) ? (
+            {isEmpty(currentData) ? (
+              <div className={cx('no-results')}>
+                <div className={cx('no-results-message')}>
+                  {searchValue
+                    ? formatMessage(messages.noResultsFilteredMessage)
+                    : formatMessage(messages.noResultsEmptyMessage)}
+                </div>
+              </div>
+            ) : (
               <Table
                 selectable={selectable && canDoTestCaseBulkActions}
                 onToggleRowSelection={handleRowSelect}
@@ -189,14 +196,6 @@ export const TestCaseList = memo(
                 className={cx('test-case-table')}
                 rowClassName={cx('test-case-table-row')}
               />
-            ) : (
-              <div className={cx('no-results')}>
-                <div className={cx('no-results-message')}>
-                  {searchValue
-                    ? formatMessage(messages.noResultsFilteredMessage)
-                    : formatMessage(messages.noResultsEmptyMessage)}
-                </div>
-              </div>
             )}
             <TestCaseSidePanel
               testCase={selectedTestCase}

@@ -15,11 +15,12 @@
  */
 
 import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
-import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
-import { Button } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
-import styles from './tagList.scss';
+import { Button } from '@reportportal/ui-kit';
+
+import { createClassnames } from 'common/utils';
+
 import { messages } from './messages';
 import {
   DEFAULT_VISIBLE_LINES,
@@ -30,7 +31,9 @@ import {
   OFFSET_TOLERANCE,
 } from './constants';
 
-const cx = classNames.bind(styles) as typeof classNames;
+import styles from './tagList.scss';
+
+const cx = createClassnames(styles);
 
 interface AdaptiveTagListProps {
   tags: string[];

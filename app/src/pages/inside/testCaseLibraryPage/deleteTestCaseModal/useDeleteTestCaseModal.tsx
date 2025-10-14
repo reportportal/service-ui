@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-import { createClassnames } from 'common/utils';
+import { useModal } from 'common/hooks';
 
-import styles from './infoBlock.scss';
+import DeleteTestCaseModal, {
+  DELETE_TEST_CASE_MODAL_KEY,
+  DeleteTestCaseModalData,
+} from './deleteTestCaseModal';
 
-const cx = createClassnames(styles);
-
-interface InfoBlockProps {
-  label: string;
-  className?: string;
-}
-
-export const InfoBlock = ({ label, className = '' }: InfoBlockProps) => (
-  <div className={cx('info-block', className)}>
-    <span className={cx('info-block__label')}>{label}</span>
-  </div>
-);
+export const useDeleteTestCaseModal = () =>
+  useModal<DeleteTestCaseModalData>({
+    modalKey: DELETE_TEST_CASE_MODAL_KEY,
+    renderModal: (data) => <DeleteTestCaseModal data={data} />,
+  });

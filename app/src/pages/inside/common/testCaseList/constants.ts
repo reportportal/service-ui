@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import { FilterOption } from './types';
-
 export const STATUS_TYPES = {
   BLOCKER: 'blocker',
   CRITICAL: 'critical',
@@ -26,16 +24,6 @@ export const STATUS_TYPES = {
 } as const;
 
 export const ITEMS_PER_PAGE_OPTIONS: number[] = [10, 25, 50, 100];
-
-export const FILTER_OPTIONS: FilterOption[] = [
-  { label: 'All Priorities', value: 'all' },
-  { label: 'Blocker', value: STATUS_TYPES.BLOCKER },
-  { label: 'Critical', value: STATUS_TYPES.CRITICAL },
-  { label: 'High Priority', value: STATUS_TYPES.HIGH },
-  { label: 'Medium Priority', value: STATUS_TYPES.MEDIUM },
-  { label: 'Low Priority', value: STATUS_TYPES.LOW },
-  { label: 'Unspecified', value: STATUS_TYPES.UNSPECIFIED },
-];
 
 export const mockedTestCaseDescription =
   'Ideally you should have a test method for each separate unit of work so you can always immediately view where things are going wrong. In this example there is a basic method called getUserById() which will return a user and there is a total of 3 unit of works. Ideally you should have a test method for each separate unit of work so you can always immediately view where things are going wrong. In this example there is a basic method called getUserById() which will return a user and there is a total of 3 unit of works';
