@@ -15,7 +15,7 @@
  */
 
 import { MouseEvent } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { Modal } from '@reportportal/ui-kit';
@@ -23,9 +23,8 @@ import { Modal } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
-import { deleteTestCaseAction } from 'controllers/testCase/actionCreators';
-import { isDeletingTestCaseSelector } from 'controllers/testCase';
 import { TestCase } from '../types';
+import { useDeleteTestCase } from './useDeleteTestCase';
 
 import styles from './deleteTestCaseModal.scss';
 
@@ -45,18 +44,25 @@ const cx = classNames.bind(styles) as typeof classNames;
 
 export const DELETE_TEST_CASE_MODAL_KEY = 'deleteTestCaseModalKey';
 
-interface DeleteTestCaseModalProps {
-  data: { testCase: TestCase };
+export interface DeleteTestCaseModalData {
+  testCase: TestCase;
+  isDetailsPage?: boolean;
 }
 
-const DeleteTestCaseModalComponent = ({ data: { testCase } }: DeleteTestCaseModalProps) => {
+interface DeleteTestCaseModalProps {
+  data: DeleteTestCaseModalData;
+}
+
+const DeleteTestCaseModalComponent = ({
+  data: { testCase, isDetailsPage = false },
+}: DeleteTestCaseModalProps) => {
   const dispatch = useDispatch();
-  const isLoading = useSelector(isDeletingTestCaseSelector);
   const { formatMessage } = useIntl();
+  const { deleteTestCase, isLoading } = useDeleteTestCase({ isDetailsPage });
 
   const hideModal = () => dispatch(hideModalAction());
 
-  const onSubmit = () => dispatch(deleteTestCaseAction(testCase));
+  const onSubmit = () => deleteTestCase(testCase);
 
   const okButton = {
     children: (

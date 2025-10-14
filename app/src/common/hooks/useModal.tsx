@@ -37,7 +37,5 @@ export const useModal = <T,>({ modalKey, renderModal }: UseModalOptions<T>) => {
     );
   };
 
-  return {
-    openModal,
-  };
+  return { openModal };
 };

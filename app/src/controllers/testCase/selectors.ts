@@ -33,7 +33,6 @@ export interface TestCaseState {
   };
   testCases?: {
     isLoading?: boolean;
-    isDeletingTestCase?: boolean;
     list?: unknown[];
   };
   details?: {
@@ -60,9 +59,6 @@ export const isCreatingFolderSelector = (state: RootState): boolean =>
 
 export const isLoadingFolderSelector = (state: RootState): boolean =>
   testCaseSelector(state).folders?.isLoadingFolder || false;
-
-export const isDeletingTestCaseSelector = (state: RootState) =>
-  Boolean(testCaseSelector(state).testCases?.isDeletingTestCase);
 
 export const isLoadingTestCasesSelector = (state: RootState) =>
   state.testCase?.testCases?.isLoading || false;

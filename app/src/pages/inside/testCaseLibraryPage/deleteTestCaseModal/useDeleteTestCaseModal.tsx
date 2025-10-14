@@ -16,12 +16,10 @@
 
 import { useModal } from 'common/hooks';
 
-import { TestCase } from '../types';
-import DeleteFolderModal, { DELETE_TEST_CASE_MODAL_KEY } from './deleteTestCaseModal';
-
-interface DeleteTestCaseModalData {
-  testCase: TestCase;
-}
+import DeleteFolderModal, {
+  DELETE_TEST_CASE_MODAL_KEY,
+  DeleteTestCaseModalData,
+} from './deleteTestCaseModal';
 
 export const useDeleteTestCaseModal = () =>
   useModal<DeleteTestCaseModalData>({

@@ -35,8 +35,6 @@ import {
   GET_TEST_CASE_DETAILS,
   GET_TEST_CASE_DETAILS_SUCCESS,
   GET_TEST_CASE_DETAILS_FAILURE,
-  START_DELETING_TEST_CASE,
-  STOP_DELETING_TEST_CASE,
 } from 'controllers/testCase/constants';
 import { Folder } from './types';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
@@ -56,7 +54,6 @@ export type InitialStateType = {
   };
   testCases: {
     isLoading: boolean;
-    isDeletingTestCase: boolean;
     list: TestCase[];
   };
 };
@@ -70,7 +67,6 @@ export const INITIAL_STATE: InitialStateType = {
   },
   testCases: {
     isLoading: false,
-    isDeletingTestCase: false,
     list: [],
   },
 };
@@ -118,9 +114,7 @@ type TestCasesAction =
   | { type: typeof SET_TEST_CASES; payload?: TestCase[] }
   | { type: typeof DELETE_TEST_CASE_SUCCESS; payload: DeleteTestCaseParams }
   | { type: typeof START_LOADING_TEST_CASES }
-  | { type: typeof STOP_LOADING_TEST_CASES }
-  | { type: typeof START_DELETING_TEST_CASE }
-  | { type: typeof STOP_DELETING_TEST_CASE };
+  | { type: typeof STOP_LOADING_TEST_CASES };
 
 const testCasesReducer = (state = INITIAL_STATE.testCases, action: TestCasesAction) => {
   switch (action.type) {
@@ -144,16 +138,6 @@ const testCasesReducer = (state = INITIAL_STATE.testCases, action: TestCasesActi
       return {
         ...state,
         isLoading: false,
-      };
-    case START_DELETING_TEST_CASE:
-      return {
-        ...state,
-        isDeletingTestCase: true,
-      };
-    case STOP_DELETING_TEST_CASE:
-      return {
-        ...state,
-        isDeletingTestCase: false,
       };
     default:
       return state;

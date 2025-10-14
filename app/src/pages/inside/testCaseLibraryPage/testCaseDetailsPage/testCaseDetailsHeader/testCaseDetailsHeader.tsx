@@ -93,7 +93,7 @@ export const TestCaseDetailsHeader = ({
     });
   };
 
-  const handleDeleteTestCase = () => openDeleteTestCaseModal({ testCase });
+  const handleDeleteTestCase = () => openDeleteTestCaseModal({ testCase, isDetailsPage: true });
 
   const getCreationDate = (timestamp: number) => {
     const date = new Date(timestamp);

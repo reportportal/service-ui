@@ -33,9 +33,6 @@ import {
   RENAME_FOLDER,
   RENAME_FOLDER_SUCCESS,
   DELETE_TEST_CASE_SUCCESS,
-  START_DELETING_TEST_CASE,
-  STOP_DELETING_TEST_CASE,
-  DELETE_TEST_CASE,
 } from './constants';
 import { Folder } from './types';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
@@ -104,11 +101,6 @@ export const setTestCasesAction = (testCases: TestCase[]) => ({
   payload: testCases,
 });
 
-export const deleteTestCaseAction = (testCase: TestCase) => ({
-  type: DELETE_TEST_CASE,
-  payload: { testCase },
-});
-
 export const startCreatingFolderAction = () => ({
   type: START_CREATING_FOLDER,
 });
@@ -153,14 +145,6 @@ export const stopLoadingFolderAction = () => ({
 export const deleteTestCaseSuccessAction = ({ testCase }: DeleteTestCaseParams) => ({
   type: DELETE_TEST_CASE_SUCCESS,
   payload: { testCase },
-});
-
-export const startDeletingTestCaseAction = () => ({
-  type: START_DELETING_TEST_CASE,
-});
-
-export const stopDeletingTestCaseAction = () => ({
-  type: STOP_DELETING_TEST_CASE,
 });
 
 export const renameFolderAction = (folderInfo: RenameFolderParams) => ({
