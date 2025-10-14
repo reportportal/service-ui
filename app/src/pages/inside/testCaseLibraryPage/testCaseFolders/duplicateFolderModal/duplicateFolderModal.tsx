@@ -18,9 +18,10 @@ import { ChangeEvent, useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { reduxForm, registerField, unregisterField, InjectedFormProps } from 'redux-form';
-import classNames from 'classnames/bind';
 import { Modal } from '@reportportal/ui-kit';
 
+import { UseModalData } from 'common/hooks';
+import { createClassnames } from 'common/utils';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { TransformedFolder } from 'controllers/testCase';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
@@ -28,8 +29,8 @@ import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { commonValidators } from 'common/utils/validation';
 import { createFoldersAction } from 'controllers/testCase/actionCreators';
 import { coerceToNumericId } from 'pages/inside/testCaseLibraryPage/utils';
-
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
+
 import { useFolderModal } from '../shared/useFolderModal';
 import { FolderNameField, ParentFolderToggle, ParentFolderField } from '../shared/FolderFormFields';
 import { sharedFolderMessages } from '../shared/sharedMessages';
@@ -39,7 +40,7 @@ import { DuplicateFolderFormValues } from '../shared/types';
 
 import styles from '../shared/folderFormFields.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export const DUPLICATE_FOLDER_MODAL_KEY = 'duplicateFolderModalKey';
 
@@ -47,9 +48,7 @@ export interface DuplicateFolderModalData {
   folder: TransformedFolder;
 }
 
-interface DuplicateFolderModalProps {
-  data: DuplicateFolderModalData;
-}
+type DuplicateFolderModalProps = UseModalData<DuplicateFolderModalData>;
 
 const CreateFolderModalComponent = ({
   dirty,
@@ -96,7 +95,7 @@ const CreateFolderModalComponent = ({
     dispatch(
       createFoldersAction({
         folderName: values.folderName,
-        ...(idFromNameInput !== undefined ? { parentFolderId: idFromNameInput } : {}),
+        ...(idFromNameInput === undefined ? {} : { parentFolderId: idFromNameInput }),
       }),
     );
   };

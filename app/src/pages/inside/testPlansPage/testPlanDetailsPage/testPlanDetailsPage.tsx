@@ -17,10 +17,10 @@
 import { useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
-import classNames from 'classnames/bind';
 import { isEmpty } from 'es-toolkit/compat';
 import { Button } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { PROJECT_TEST_PLANS_PAGE, PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
@@ -54,7 +54,7 @@ import { TestPlanFolders } from './testPlanFolders';
 
 import styles from './testPlanDetailsPage.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export const TestPlanDetailsPage = () => {
   const { formatMessage } = useIntl();

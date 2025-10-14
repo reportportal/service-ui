@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-import classNames from 'classnames/bind';
+import { createClassnames } from 'common/utils';
 import { AttachmentArea } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/attachmentArea';
 import { Step } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/testCaseDetails/steps/step';
 import { Step as StepType } from 'pages/inside/testCaseLibraryPage/types';
+
 import styles from './stepsList.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface StepsListProps {
   steps: StepType[];

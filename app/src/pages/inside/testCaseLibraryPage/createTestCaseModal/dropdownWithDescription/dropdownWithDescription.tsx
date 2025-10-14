@@ -15,12 +15,13 @@
  */
 
 import { ReactNode } from 'react';
-import classNames from 'classnames/bind';
 import { Dropdown } from '@reportportal/ui-kit';
+
+import { createClassnames } from 'common/utils';
 
 import styles from './dropdownWithDescription.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface DropdownOption {
   value: string;

@@ -15,11 +15,11 @@
  */
 
 import { useState } from 'react';
-import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
 import { MeatballMenuIcon, CoveredManuallyIcon } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { handleEnterOrSpaceKey } from 'common/utils/helperUtils/event.utils';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
@@ -31,7 +31,7 @@ import { messages } from '../messages';
 
 import styles from './testCaseExecutionCell.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface TestCaseExecutionCellProps {
   testCase: ExtendedTestCase;

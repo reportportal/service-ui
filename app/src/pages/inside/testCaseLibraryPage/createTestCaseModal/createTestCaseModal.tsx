@@ -18,12 +18,11 @@ import { FormEvent, MouseEvent } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { reduxForm } from 'redux-form';
-import classNames from 'classnames/bind';
 import { Modal } from '@reportportal/ui-kit';
 
+import { createClassnames, commonValidators } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction } from 'controllers/modal';
-import { commonValidators } from 'common/utils/validation';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
@@ -36,7 +35,7 @@ import { Attachment, TestStep, useCreateTestCase } from './useCreateTestCase';
 
 import styles from './createTestCaseModal.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export const CREATE_TEST_CASE_MODAL_KEY = 'createTestCaseModalKey';
 export const CREATE_TEST_CASE_FORM_NAME: string = 'create-test-case-modal-form';

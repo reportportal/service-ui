@@ -16,7 +16,6 @@
 
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import classNames from 'classnames/bind';
 import {
   WrappedFieldArrayProps,
   formValueSelector,
@@ -25,8 +24,6 @@ import {
   getFormMeta,
 } from 'redux-form';
 import { defineMessages, useIntl } from 'react-intl';
-import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { FieldProvider } from 'components/fields/fieldProvider';
 import {
   Button,
   Checkbox,
@@ -35,6 +32,10 @@ import {
   InfoIcon,
   Tooltip,
 } from '@reportportal/ui-kit';
+
+import { createClassnames } from 'common/utils';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
+import { FieldProvider } from 'components/fields/fieldProvider';
 import {
   Organization,
   OrganizationAssignment,
@@ -59,9 +60,10 @@ import {
   CREATE_USER_FORM,
   ORGANIZATIONS,
 } from 'pages/instance/allUsersPage/allUsersHeader/createUserModal/constants';
+
 import styles from './instanceAssignment.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 const messages = defineMessages({
   organization: {

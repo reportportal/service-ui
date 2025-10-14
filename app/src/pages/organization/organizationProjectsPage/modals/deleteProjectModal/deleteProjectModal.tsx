@@ -16,21 +16,24 @@
 
 import { FC } from 'react';
 import { useIntl } from 'react-intl';
+import { useDispatch } from 'react-redux';
 import { InjectedFormProps, reduxForm } from 'redux-form';
+import { Modal, FieldText } from '@reportportal/ui-kit';
+
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { commonValidators } from 'common/utils/validation';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { BoundValidator } from 'common/utils/validation/types';
-import { Modal, FieldText } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
 import { ModalButtonProps } from 'types/common';
-import { useDispatch } from 'react-redux';
-import classNames from 'classnames/bind';
+import { createClassnames } from 'common/utils';
+
 import { messages } from '../../messages';
+
 import styles from './deleteProjectModal.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 const PROJECT_NAME_FIELD = 'projectName';
 const DELETE_PROJECT_FORM = 'deleteProjectForm';

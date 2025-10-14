@@ -15,7 +15,6 @@
  */
 
 import { memo, useRef, useState } from 'react';
-import classNames from 'classnames/bind';
 import { useIntl, MessageDescriptor } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import Parser from 'html-react-parser';
@@ -29,6 +28,7 @@ import {
 } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
+import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useOnClickOutside } from 'common/hooks';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
@@ -60,7 +60,7 @@ import { messages } from './messages';
 
 import styles from './testCaseSidePanel.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 const safeGetMessage = (
   key: string,

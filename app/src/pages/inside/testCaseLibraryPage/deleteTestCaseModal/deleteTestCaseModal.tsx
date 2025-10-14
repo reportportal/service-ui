@@ -17,12 +17,14 @@
 import { MouseEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
-import classNames from 'classnames/bind';
 import { Modal } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
+import { UseModalData } from 'common/hooks';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
+
 import { TestCase } from '../types';
 import { useDeleteTestCase } from './useDeleteTestCase';
 
@@ -40,7 +42,7 @@ const messages = defineMessages({
   },
 });
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export const DELETE_TEST_CASE_MODAL_KEY = 'deleteTestCaseModalKey';
 
@@ -49,13 +51,9 @@ export interface DeleteTestCaseModalData {
   isDetailsPage?: boolean;
 }
 
-interface DeleteTestCaseModalProps {
-  data: DeleteTestCaseModalData;
-}
-
 const DeleteTestCaseModalComponent = ({
   data: { testCase, isDetailsPage = false },
-}: DeleteTestCaseModalProps) => {
+}: UseModalData<DeleteTestCaseModalData>) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const { deleteTestCase, isLoading } = useDeleteTestCase({ isDetailsPage });

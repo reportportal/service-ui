@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-import classNames from 'classnames/bind';
+import { createClassnames } from 'common/utils';
+
 import styles from './infoBlock.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface InfoBlockProps {
   label: string;

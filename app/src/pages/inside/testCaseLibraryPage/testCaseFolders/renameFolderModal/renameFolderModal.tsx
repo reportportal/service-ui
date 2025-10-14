@@ -18,16 +18,17 @@ import { MouseEvent, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import { reduxForm, InjectedFormProps } from 'redux-form';
-import classNames from 'classnames/bind';
 import { Modal } from '@reportportal/ui-kit';
 
+import { createClassnames, commonValidators } from 'common/utils';
+import { UseModalData } from 'common/hooks';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
-import { commonValidators } from 'common/utils/validation';
 import { renameFolderAction } from 'controllers/testCase/actionCreators';
 import { isLoadingFolderSelector, TransformedFolder } from 'controllers/testCase';
+
 import { FolderNameField } from '../shared/FolderFormFields';
 
 import styles from './renameFolderModal.scss';
@@ -39,7 +40,7 @@ const messages = defineMessages({
   },
 });
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export const RENAME_FOLDER_MODAL_KEY = 'renameFolderModalKey';
 
@@ -49,9 +50,7 @@ export interface RenameFolderModalData {
   folder: TransformedFolder;
 }
 
-interface RenameFolderModalProps {
-  data: RenameFolderModalData;
-}
+type RenameFolderModalProps = UseModalData<RenameFolderModalData>;
 
 const RenameFolderModalComponent = ({
   data: { folder },

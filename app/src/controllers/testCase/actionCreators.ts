@@ -34,7 +34,7 @@ import {
   RENAME_FOLDER_SUCCESS,
   DELETE_TEST_CASE_SUCCESS,
 } from './constants';
-import { Folder } from './types';
+import { Folder, TransformedFolder } from './types';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 
 export interface GetTestCasesParams {
@@ -56,7 +56,7 @@ export interface GetFoldersParams {
 }
 
 export interface DeleteFolderParams {
-  folderId: number;
+  folder: TransformedFolder;
   activeFolderId: number;
   setAllTestCases: () => void;
 }

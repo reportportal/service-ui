@@ -15,13 +15,13 @@
  */
 
 import { useIntl } from 'react-intl';
-import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { BreadcrumbsTreeIcon, Button, MeatballMenuIcon } from '@reportportal/ui-kit';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
+import { createClassnames } from 'common/utils';
 import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
@@ -36,6 +36,7 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { testCaseLibraryBreadcrumbsSelector } from 'controllers/pages/selectors';
+
 import { TestCase } from '../../types';
 import { messages } from './messages';
 import { commonMessages } from '../../commonMessages';
@@ -44,7 +45,7 @@ import { useDeleteTestCaseModal } from '../../deleteTestCaseModal';
 
 import styles from './testCaseDetailsHeader.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface TestCaseDetailsHeaderProps {
   className?: string;

@@ -16,9 +16,9 @@
 
 import { defineMessages, useIntl } from 'react-intl';
 import { FieldText } from '@reportportal/ui-kit';
-import classNames from 'classnames/bind';
 import { isEmpty } from 'es-toolkit/compat';
 
+import { createClassnames } from 'common/utils';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { Attachment } from 'pages/inside/testCaseLibraryPage/types';
 import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
@@ -26,7 +26,7 @@ import { FieldSection } from 'pages/inside/common/fieldSection';
 
 import styles from './step.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 const messages = defineMessages({
   instructions: {

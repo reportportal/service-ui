@@ -15,13 +15,13 @@
  */
 
 import { useState } from 'react';
-import classNames from 'classnames/bind';
 import { isEmpty } from 'es-toolkit/compat';
 import { noop } from 'es-toolkit';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { Button, EditIcon, PlusIcon } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { CollapsibleSectionWithHeaderControl } from 'components/collapsibleSection';
@@ -34,13 +34,12 @@ import { testCaseDetailsSelector } from 'controllers/testCase';
 
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
-import { messages } from './messages';
-
 import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
+import { messages } from './messages';
 
 import styles from './testCaseDetailsPage.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 const COLLAPSIBLE_SECTIONS_CONFIG = ({
   canEditTestCaseTag,
