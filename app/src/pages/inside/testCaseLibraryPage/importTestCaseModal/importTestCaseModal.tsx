@@ -62,13 +62,23 @@ export const ImportTestCaseModal = () => {
   }, []);
 
   const handleImport = () => {
-    if (!file) return;
-    if (folderIdFromUrl != null) {
-      return importTestCases({ file, testFolderId: folderIdFromUrl });
+    if (!file) {
+      return;
     }
-    return importTestCases({ file, testFolderName: folderName });
+    if (folderIdFromUrl != null) {
+      return importTestCases({
+        file,
+        testFolderId: folderIdFromUrl,
+      });
+    }
+    if (!folderName.trim()) {
+      return;
+    }
+    return importTestCases({
+      file,
+      testFolderName: folderName,
+    });
   };
-
   const handleFolderNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setFolderName(event.target.value);
   };
@@ -100,7 +110,7 @@ export const ImportTestCaseModal = () => {
   const okButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.IMPORT),
     onClick: handleImport,
-    disabled: isImportingTestCases || !file,
+    disabled: isImportingTestCases || !file || (folderIdFromUrl == null && !folderName.trim()),
   };
 
   const cancelButton = {
