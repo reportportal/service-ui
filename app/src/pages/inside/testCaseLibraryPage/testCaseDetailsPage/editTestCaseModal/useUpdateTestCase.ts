@@ -16,14 +16,13 @@
 
 import { useDispatch, useSelector } from 'react-redux';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
-import { hideModalAction } from 'controllers/modal';
 import { projectKeySelector } from 'controllers/project';
 import {
   GET_TEST_CASE_DETAILS,
   getAllTestCasesAction,
   getTestCaseByFolderIdAction,
 } from 'controllers/testCase';
-import { useDebouncedSpinner } from 'common/hooks';
+import { useDebouncedSpinnerFormSubmit } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 
@@ -40,72 +39,68 @@ interface BulkUpdateTestCasesPayload {
 }
 
 export const useUpdateTestCase = () => {
-  const { isLoading: isUpdateTestCaseLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
 
-  const updateTestCase = async (testCaseId: number, payload: UpdateTestCasePayload) => {
-    try {
-      showSpinner();
+  const { isLoading: isUpdateTestCaseLoading, submit: updateTestCase } =
+    useDebouncedSpinnerFormSubmit({
+      requestFn: async (testCaseId: number, payload: UpdateTestCasePayload) => {
+        await fetch(URLS.testCaseDetails(projectKey, testCaseId), {
+          method: 'patch',
+          data: payload,
+        });
 
-      await fetch(URLS.testCaseDetails(projectKey, testCaseId), {
-        method: 'patch',
-        data: payload,
-      });
+        return testCaseId;
+      },
+      successMessageId: 'testCaseUpdatedSuccess',
+      onSuccess: (testCaseId) => {
+        dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId } });
+      },
+      onError: (error: unknown) => {
+        dispatch(
+          showErrorNotification({
+            message: (error as Error).message,
+          }),
+        );
+      },
+    });
 
-      dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId } });
-      dispatch(hideModalAction());
-      dispatch(
-        showSuccessNotification({
-          messageId: 'testCaseUpdatedSuccess',
-        }),
-      );
-    } catch (error: unknown) {
-      dispatch(
-        showErrorNotification({
-          message: (error as Error).message,
-        }),
-      );
-    } finally {
-      hideSpinner();
-    }
-  };
-
-  const bulkUpdateTestCases = async (
-    payload: BulkUpdateTestCasesPayload,
-    onSuccess: () => void,
-  ) => {
-    try {
-      showSpinner();
-
+  const { submit: bulkUpdateTestCasesExecute } = useDebouncedSpinnerFormSubmit({
+    requestFn: async (payload: BulkUpdateTestCasesPayload, onSuccessCallback: () => void) => {
       await fetch(URLS.bulkUpdateTestCases(projectKey), {
         method: 'patch',
         data: { ...payload },
       });
 
-      onSuccess();
+      onSuccessCallback();
       if (payload.folderId) {
         dispatch(getTestCaseByFolderIdAction({ folderId: Number(payload.folderId) }));
       } else {
         dispatch(getAllTestCasesAction());
       }
-      dispatch(hideModalAction());
+
+      return payload;
+    },
+    onSuccess: (payload) => {
       dispatch(
         showSuccessNotification({
           messageId:
             payload.testCaseIds.length > 1 ? 'testCaseBulkUpdateSuccess' : 'testCaseUpdatedSuccess',
         }),
       );
-    } catch (error: unknown) {
+    },
+    onError: (error: unknown) => {
       dispatch(
         showErrorNotification({
           message: (error as Error).message,
         }),
       );
-    } finally {
-      hideSpinner();
-    }
-  };
+    },
+  });
 
-  return { isUpdateTestCaseLoading, updateTestCase, bulkUpdateTestCases };
+  return {
+    isUpdateTestCaseLoading,
+    updateTestCase,
+    bulkUpdateTestCases: bulkUpdateTestCasesExecute,
+  };
 };

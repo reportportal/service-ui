@@ -18,10 +18,8 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import { useDebouncedSpinner } from 'common/hooks';
+import { useDebouncedSpinnerFormSubmit } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
-import { hideModalAction } from 'controllers/modal';
-import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import { getTestPlansAction, getTestPlanAction } from 'controllers/testPlan';
 
 import { TestPlanFormValues } from '../testPlanModal';
@@ -31,14 +29,11 @@ interface EditTestPlanFormValues extends TestPlanFormValues {
 }
 
 export const useEditTestPlan = () => {
-  const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
 
-  const submitTestPlan = async (payload: EditTestPlanFormValues) => {
-    try {
-      showSpinner();
-
+  const { isLoading, submit } = useDebouncedSpinnerFormSubmit({
+    requestFn: async (payload: EditTestPlanFormValues) => {
       await fetch(URLS.testPlanById(projectKey, payload.id), {
         method: 'put',
         data: {
@@ -47,27 +42,15 @@ export const useEditTestPlan = () => {
         },
       });
 
-      dispatch(hideModalAction());
-      dispatch(
-        showSuccessNotification({
-          messageId: 'testPlanUpdatedSuccess',
-        }),
-      );
       dispatch(getTestPlansAction());
       dispatch(getTestPlanAction({ testPlanId: payload.id }));
-    } catch {
-      dispatch(
-        showErrorNotification({
-          messageId: 'errorOccurredTryAgain',
-        }),
-      );
-    } finally {
-      hideSpinner();
-    }
-  };
+    },
+    successMessageId: 'testPlanUpdatedSuccess',
+    errorMessageId: 'errorOccurredTryAgain',
+  });
 
   return {
     isLoading,
-    submitTestPlan,
+    submitTestPlan: submit,
   };
 };

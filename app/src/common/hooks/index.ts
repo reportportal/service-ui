@@ -21,3 +21,4 @@ export { useModal } from './useModal';
 export { useFileUploadProgressSimulation } from './useFileUploadProgressSimulation';
 export { useFileProcessing } from './useFileProcessing';
 export type { BaseAttachmentFile } from './useFileProcessing';
+export { useDebouncedSpinnerFormSubmit } from './useDebouncedSpinnerFormSubmit';

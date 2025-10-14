@@ -21,10 +21,9 @@ import { isString } from 'es-toolkit/compat';
 
 import { projectKeySelector } from 'controllers/project';
 import { fetch } from 'common/utils';
-import { useDebouncedSpinner } from 'common/hooks';
+import { useDebouncedSpinnerFormSubmit } from 'common/hooks';
 import { URLS } from 'common/urls';
-import { hideModalAction } from 'controllers/modal';
-import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
+import { showErrorNotification } from 'controllers/notification';
 import { getTestCasesAction, Folder } from 'controllers/testCase';
 import { createFoldersSuccessAction } from 'controllers/testCase/actionCreators';
 
@@ -66,7 +65,6 @@ interface ManualScenarioText extends ManualScenarioCommon {
 type ManualScenarioDto = ManualScenarioSteps | ManualScenarioText;
 
 export const useCreateTestCase = () => {
-  const { isLoading: isCreateTestCaseLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const { formatMessage } = useIntl();
@@ -90,10 +88,8 @@ export const useCreateTestCase = () => {
     return folder?.id || testFolderId;
   };
 
-  const createTestCase = async (payload: CreateTestCaseFormData) => {
-    try {
-      showSpinner();
-
+  const { isLoading: isCreateTestCaseLoading, submit } = useDebouncedSpinnerFormSubmit({
+    requestFn: async (payload: CreateTestCaseFormData) => {
       const folderId = await resolveFolderId(payload.folder);
 
       const commonData = {
@@ -134,14 +130,13 @@ export const useCreateTestCase = () => {
         },
       });
 
-      dispatch(hideModalAction());
-      dispatch(
-        showSuccessNotification({
-          messageId: 'testCaseCreatedSuccess',
-        }),
-      );
+      return folderId;
+    },
+    successMessageId: 'testCaseCreatedSuccess',
+    onSuccess: (folderId) => {
       dispatch(getTestCasesAction({ testFolderId: folderId }));
-    } catch (error: unknown) {
+    },
+    onError: (error: unknown) => {
       if (error instanceof Error && error?.message?.includes('tms_test_case_name_folder_unique')) {
         throw new SubmissionError({
           name: formatMessage(messages.duplicateTestCaseName),
@@ -153,13 +148,11 @@ export const useCreateTestCase = () => {
           }),
         );
       }
-    } finally {
-      hideSpinner();
-    }
-  };
+    },
+  });
 
   return {
     isCreateTestCaseLoading,
-    createTestCase,
+    createTestCase: submit,
   };
 };

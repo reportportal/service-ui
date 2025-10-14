@@ -17,12 +17,10 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { noop } from 'es-toolkit';
 
-import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import { useDebouncedSpinner } from 'common/hooks';
+import { useDebouncedSpinnerFormSubmit } from 'common/hooks/useDebouncedSpinnerFormSubmit';
+import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
-import { hideModalAction } from 'controllers/modal';
-import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import { getTestPlansAction, TestPlanDto } from 'controllers/testPlan';
 
 import { TestPlanFormValues } from '../testPlanModal';
@@ -38,14 +36,11 @@ export const useCreateTestPlan = ({
   errorMessageId,
   onSuccess = noop,
 }: UseCreateTestPlanOptions) => {
-  const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
 
-  const submitTestPlan = async (payload: TestPlanFormValues) => {
-    try {
-      showSpinner();
-
+  const { isLoading, submit } = useDebouncedSpinnerFormSubmit({
+    requestFn: async (payload: TestPlanFormValues): Promise<TestPlanDto> => {
       const response = await fetch<TestPlanDto>(URLS.testPlan(projectKey), {
         method: 'post',
         data: {
@@ -54,27 +49,19 @@ export const useCreateTestPlan = ({
         },
       });
 
-      dispatch(hideModalAction());
-      dispatch(
-        showSuccessNotification({
-          messageId: successMessageId,
-        }),
-      );
       dispatch(getTestPlansAction());
+
+      return response;
+    },
+    successMessageId,
+    errorMessageId,
+    onSuccess: (response: TestPlanDto) => {
       onSuccess(response.id);
-    } catch {
-      dispatch(
-        showErrorNotification({
-          messageId: errorMessageId,
-        }),
-      );
-    } finally {
-      hideSpinner();
-    }
-  };
+    },
+  });
 
   return {
     isLoading,
-    submitTestPlan,
+    submitTestPlan: submit,
   };
 };

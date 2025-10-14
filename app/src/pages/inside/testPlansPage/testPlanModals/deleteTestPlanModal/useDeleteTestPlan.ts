@@ -20,10 +20,8 @@ import { VoidFn } from '@reportportal/ui-kit/dist/common/types';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import { useDebouncedSpinner } from 'common/hooks';
+import { useDebouncedSpinnerFormSubmit } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
-import { hideModalAction } from 'controllers/modal';
-import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import { getTestPlansAction } from 'controllers/testPlan';
 
 interface UseDeleteTestPlanOptions {
@@ -31,39 +29,24 @@ interface UseDeleteTestPlanOptions {
 }
 
 export const useDeleteTestPlan = ({ onSuccess = noop }: UseDeleteTestPlanOptions = {}) => {
-  const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
 
-  const deleteTestPlan = async (testPlanId: number) => {
-    try {
-      showSpinner();
-
+  const { isLoading, submit } = useDebouncedSpinnerFormSubmit({
+    requestFn: async (testPlanId: number) => {
       await fetch(URLS.testPlanById(projectKey, testPlanId), {
         method: 'delete',
       });
 
-      dispatch(hideModalAction());
-      dispatch(
-        showSuccessNotification({
-          messageId: 'testPlanDeletedSuccess',
-        }),
-      );
       dispatch(getTestPlansAction());
-      onSuccess();
-    } catch {
-      dispatch(
-        showErrorNotification({
-          messageId: 'errorOccurredTryAgain',
-        }),
-      );
-    } finally {
-      hideSpinner();
-    }
-  };
+    },
+    successMessageId: 'testPlanDeletedSuccess',
+    errorMessageId: 'errorOccurredTryAgain',
+    onSuccess,
+  });
 
   return {
     isLoading,
-    deleteTestPlan,
+    deleteTestPlan: submit,
   };
 };
