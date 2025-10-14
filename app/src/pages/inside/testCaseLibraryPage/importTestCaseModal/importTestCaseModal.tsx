@@ -36,11 +36,8 @@ const CSV_MIME_TYPES = [MIME_PART.csv, MIME_PART.xls, MIME_PART.plain] as const;
 
 const cx = createClassnames(styles);
 
-type LocalFile = { id: string; file: File };
 type FileLike = File | { file: File };
 type FileInput = FileLike | FileLike[];
-
-const genId = () => globalThis.crypto?.randomUUID?.() ?? Math.random().toString(8).slice(2);
 
 const extractFolderIdFromHash = (hash: string) => {
   const m = hash.match(/\/testLibrary\/folder\/(\d+)/i);
@@ -52,7 +49,7 @@ const toMB = (bytes: number) => +(bytes / (1024 * 1024)).toFixed(2);
 export const ImportTestCaseModal = () => {
   const { formatMessage } = useIntl();
   const [folderName, setFolderName] = useState('');
-  const [file, setFile] = useState<LocalFile | null>(null);
+  const [file, setFile] = useState<File | null>(null);
   const [folderIdFromUrl, setFolderIdFromUrl] = useState<number | undefined>(() =>
     extractFolderIdFromHash(window.location.hash),
   );
@@ -65,19 +62,11 @@ export const ImportTestCaseModal = () => {
   }, []);
 
   const handleImport = () => {
-    if (!file) {
-      return;
-    }
+    if (!file) return;
     if (folderIdFromUrl != null) {
-      return importTestCases({
-        file: file.file,
-        testFolderId: folderIdFromUrl,
-      });
+      return importTestCases({ file, testFolderId: folderIdFromUrl });
     }
-    return importTestCases({
-      file: file.file,
-      testFolderName: folderName,
-    });
+    return importTestCases({ file, testFolderName: folderName });
   };
 
   const handleFolderNameChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -90,18 +79,18 @@ export const ImportTestCaseModal = () => {
     const items = Array.isArray(incoming) ? incoming : [incoming];
     if (!items.length) return;
 
-    const file = items[0] instanceof File ? items[0] : items[0].file;
-    setFile({ id: genId(), file });
+    const next = items[0] instanceof File ? items[0] : items[0].file;
+    setFile(next);
   };
 
   const handleRemove = () => setFile(null);
 
   const handleDownload = () => {
     if (!file) return;
-    const url = URL.createObjectURL(file.file);
+    const url = URL.createObjectURL(file);
     const link = document.createElement('a');
     link.href = url;
-    link.download = file.file.name;
+    link.download = file.name;
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -171,9 +160,8 @@ export const ImportTestCaseModal = () => {
           {file && (
             <div className={cx('import-test-case-modal__files')}>
               <AttachedFile
-                key={file.id}
-                fileName={file.file.name}
-                size={toMB(file.file.size)}
+                fileName={file.name}
+                size={toMB(file.size)}
                 isFullWidth
                 onRemove={handleRemove}
                 onDownload={handleDownload}
