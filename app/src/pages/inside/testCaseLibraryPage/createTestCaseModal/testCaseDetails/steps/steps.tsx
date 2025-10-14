@@ -74,6 +74,7 @@ export const Steps = ({ steps, onAddStep, onRemoveStep, onMoveStep }: StepsProps
       <span className={cx('steps__label')}>{formatMessage(messages.steps)}</span>
       {steps.map((step, index) => {
         const { id, instructions, expectedResult } = step;
+
         return (
           <div key={id} className={cx('steps__step-container')}>
             <AttachmentArea

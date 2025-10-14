@@ -1,14 +1,11 @@
 import { useEffect, useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
-import { formValueSelector } from 'redux-form';
 import classNames from 'classnames/bind';
 import { isNumber } from 'es-toolkit/compat';
 import { FieldText } from '@reportportal/ui-kit';
 
 import { FieldErrorHint, FieldProvider } from 'components/fields';
-
-import type { AppState } from 'types/store';
 
 import { Template } from './template';
 import { AttachmentArea } from '../attachmentArea';
@@ -17,6 +14,7 @@ import { Steps } from './steps';
 import { TextTemplate } from './textTemplate';
 import { ManualScenarioType } from '../../types';
 import { CREATE_TEST_CASE_FORM_NAME } from '../createTestCaseModal';
+import { manualScenarioTypeSelector, stepsDataSelector } from '../selectors';
 
 import styles from './testCaseDetails.scss';
 
@@ -37,7 +35,7 @@ export interface StepData {
   id: number;
   instructions: string;
   expectedResult: string;
-  attachments?: string[];
+  attachments?: Array<{ id: string; fileName?: string; size?: number }>;
 }
 
 const createEmptyStep = (): StepData => ({
@@ -49,20 +47,21 @@ const createEmptyStep = (): StepData => ({
 
 interface TestCaseDetailsProps {
   className?: string;
-  stepsData?: StepData[];
 }
 
-const selector = formValueSelector('create-test-case-modal-form');
-
-export const TestCaseDetails = ({ className, stepsData }: TestCaseDetailsProps) => {
+export const TestCaseDetails = ({ className }: TestCaseDetailsProps) => {
   const [steps, setSteps] = useState<StepData[]>([]);
   const { formatMessage } = useIntl();
-  const manualScenarioType = useSelector(
-    (state: AppState) => selector(state, 'manualScenarioType') as ManualScenarioType,
-  );
+  const manualScenarioType = useSelector(manualScenarioTypeSelector);
+  const stepsData = useSelector(stepsDataSelector);
 
   useEffect(() => {
-    setSteps(stepsData || [createEmptyStep()]);
+    if (stepsData) {
+      const stepsArray = Object.values(stepsData) as StepData[];
+      setSteps(stepsArray);
+    } else {
+      setSteps([createEmptyStep()]);
+    }
   }, [stepsData]);
 
   const handleAddStep = (index?: number) => {

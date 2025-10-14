@@ -80,7 +80,6 @@ export const Step = ({ stepId, isReadMode = false, instructions, expectedResult 
             label={formatMessage(messages.instructions)}
             placeholder={formatMessage(messages.enterInstruction)}
             defaultWidth={false}
-            value={instructions}
           />
         </FieldErrorHint>
       </FieldProvider>
@@ -90,7 +89,6 @@ export const Step = ({ stepId, isReadMode = false, instructions, expectedResult 
             label={formatMessage(messages.expectedResult)}
             placeholder={formatMessage(messages.enterExpectedResult)}
             defaultWidth={false}
-            value={expectedResult}
           />
         </FieldErrorHint>
       </FieldProvider>

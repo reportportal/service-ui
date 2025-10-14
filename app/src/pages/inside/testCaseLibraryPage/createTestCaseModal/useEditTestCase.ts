@@ -80,6 +80,7 @@ export const useEditTestCase = (testCaseId?: number) => {
         manualScenarioType: payload.manualScenarioType,
         preconditions: {
           value: payload.precondition,
+          attachments: payload.preconditionAttachments ?? [],
         },
       };
 
@@ -89,6 +90,7 @@ export const useEditTestCase = (testCaseId?: number) => {
               ...commonData,
               instructions: payload.instructions,
               expectedResult: payload.expectedResult,
+              attachments: payload.textAttachments ?? [],
             }
           : {
               ...commonData,

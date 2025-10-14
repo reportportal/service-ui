@@ -16,12 +16,14 @@
 
 import { useCallback, useEffect } from 'react';
 import { useIntl } from 'react-intl';
-import { useDispatch } from 'react-redux';
-import { change } from 'redux-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { change, formValueSelector } from 'redux-form';
 
 import { useFileProcessing, BaseAttachmentFile } from 'common/hooks';
 import { useAttachmentUpload } from './useAttachmentUpload';
 import { messages } from './messages';
+import type { AppState } from 'types/store';
+import { isEmpty } from 'es-toolkit/compat';
 
 interface UseTmsFileUploadOptions {
   formName: string;
@@ -32,6 +34,12 @@ export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOption
   const dispatch = useDispatch();
   const { uploadAttachment } = useAttachmentUpload();
   const { formatMessage } = useIntl();
+
+  const selector = formValueSelector(formName);
+  const initialAttachments =
+    useSelector<AppState, BaseAttachmentFile[] | undefined>(
+      (state) => selector(state, fieldName) as BaseAttachmentFile[] | undefined,
+    ) || [];
 
   const handleUpload = useCallback(
     async (file: File) => {
@@ -50,10 +58,26 @@ export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOption
     [formatMessage, uploadAttachment],
   );
 
-  const { attachedFiles, addFiles, removeFile, downloadFile } =
+  const { attachedFiles, addFiles, removeFile, downloadFile, setAttachedFiles } =
     useFileProcessing<BaseAttachmentFile>({
       onUpload: handleUpload,
     });
+
+  useEffect(() => {
+    if (!isEmpty(initialAttachments) && attachedFiles.length === 0) {
+      const backendFiles: BaseAttachmentFile[] = initialAttachments.map((attachment) => ({
+        id: attachment.id,
+        fileName: attachment.fileName || 'Attachment',
+        file: new File([], attachment.fileName || 'attachment'),
+        size: attachment.size || 0,
+        attachmentId: attachment.id,
+        isUploading: false,
+        uploadingProgress: 100,
+      }));
+
+      setAttachedFiles(backendFiles);
+    }
+  }, [initialAttachments, attachedFiles.length, setAttachedFiles, fieldName]);
 
   useEffect(() => {
     const attachments = attachedFiles

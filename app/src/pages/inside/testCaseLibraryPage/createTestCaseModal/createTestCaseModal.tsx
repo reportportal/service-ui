@@ -65,6 +65,7 @@ const CreateTestCaseModalComponent = ({ dirty, handleSubmit, data }: CreateTestC
     if (testCase) {
       const manualScenario = testCase?.manualScenario;
       const manualScenarioData = manualScenario as unknown as Record<string, unknown> | undefined;
+
       const stepsObject = convertStepsArrayToObject(manualScenarioData?.steps as StepData[]);
 
       const formData = {
@@ -77,6 +78,7 @@ const CreateTestCaseModalComponent = ({ dirty, handleSubmit, data }: CreateTestC
         executionEstimationTime: manualScenario?.executionEstimationTime || 5,
         linkToRequirements: manualScenario?.linkToRequirements,
         precondition: manualScenario?.preconditions?.value,
+        preconditionAttachments: manualScenario?.preconditions?.attachments || [],
         ...(stepsObject && {
           steps: stepsObject,
         }),
@@ -85,6 +87,9 @@ const CreateTestCaseModalComponent = ({ dirty, handleSubmit, data }: CreateTestC
         }),
         ...(manualScenarioData?.expectedResult && {
           expectedResult: manualScenarioData?.expectedResult,
+        }),
+        ...(manualScenarioData?.attachments && {
+          textAttachments: manualScenarioData?.attachments,
         }),
       };
 
@@ -128,10 +133,7 @@ const CreateTestCaseModalComponent = ({ dirty, handleSubmit, data }: CreateTestC
         <form onSubmit={handleSubmit(handleAction) as (event: FormEvent) => void}>
           <div className={cx('create-test-case-modal__container')}>
             <BasicInformation className={cx('create-test-case-modal__scrollable-section')} />
-            <TestCaseDetails
-              className={cx('create-test-case-modal__scrollable-section')}
-              stepsData={testCase?.manualScenario?.steps as StepData[] | undefined}
-            />
+            <TestCaseDetails className={cx('create-test-case-modal__scrollable-section')} />
           </div>
         </form>
         <ModalLoadingOverlay isVisible={isLoading} />
