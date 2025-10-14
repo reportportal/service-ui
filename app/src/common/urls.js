@@ -394,4 +394,6 @@ export const URLS = {
   tmsAttachmentDownload: (projectKey, attachmentId) =>
     `${urlBase}project/${projectKey}/tms/attachment/${attachmentId}`,
   manualLaunchesList: (projectKey) => `${urlBase}/${projectKey}/launch`,
+  importTestCase: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/test-case/import${getQueryParams(query)}`,
 };

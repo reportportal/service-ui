@@ -5,6 +5,12 @@
     gap: 16px;
   }
 
+  &__uploader {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
   &__info-block {
     position: relative;
     overflow: hidden;
@@ -29,6 +35,16 @@
         var(--rp-ui-base-e-200) 48px
       );
     }
+  }
+
+  &__label {
+    font-size: 13px;
+    line-height: 20px;
+    font-weight: 500;
+  }
+
+  &__static-value {
+    margin-top: 8px;
   }
 
   &__info-text {
