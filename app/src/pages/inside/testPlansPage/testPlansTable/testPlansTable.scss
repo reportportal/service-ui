@@ -45,6 +45,10 @@
       border: 1px solid transparent;
       padding: 1px;
     }
+
+    div + div {
+      align-self: center;
+    }
   }
 
   &__table-cell-coverage {
