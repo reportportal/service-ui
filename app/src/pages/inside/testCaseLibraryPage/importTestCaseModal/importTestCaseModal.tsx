@@ -1,25 +1,27 @@
 import { useState, ChangeEvent, useMemo, useEffect } from 'react';
-import { FieldText, Modal, FileDropArea, AddCsvIcon, AttachedFile } from '@reportportal/ui-kit';
-import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 import { useIntl } from 'react-intl';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import classNames from 'classnames/bind';
-import { messages } from './messages';
-import { isString } from 'lodash';
-import { useImportTestCase } from './useImportTestCase';
-
-import Link from 'redux-first-router-link';
-import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';
 import Parser from 'html-react-parser';
-import styles from './importTestCaseModal.scss';
+import Link from 'redux-first-router-link';
+import { isString } from 'es-toolkit';
+import { FieldText, Modal, FileDropArea, AddCsvIcon, AttachedFile } from '@reportportal/ui-kit';
 import type { MimeType } from '@reportportal/ui-kit/dist/components/fileDropArea/types';
+
+import { createClassnames } from 'common/utils';
+import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { useImportTestCase } from './useImportTestCase';
+import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';
+
+import { messages } from './messages';
+
+import styles from './importTestCaseModal.scss';
 
 export const IMPORT_TEST_CASE_MODAL_KEY = 'importTestCaseModalKey';
 
 const MAX_FILE_SIZE_MB = 10;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 type LocalFile = { id: string; file: File };
 type FileLike = File | { file: File };
@@ -37,7 +39,7 @@ const toMB = (bytes: number) => +(bytes / (1024 * 1024)).toFixed(2);
 export const ImportTestCaseModal = () => {
   const { formatMessage } = useIntl();
   const [folderName, setFolderName] = useState('');
-  const [file, setFile] = useState<LocalFile | null>(null); // single file
+  const [file, setFile] = useState<LocalFile | null>(null);
   const [folderIdFromUrl, setFolderIdFromUrl] = useState<number | undefined>(() =>
     extractFolderIdFromHash(window.location.hash),
   );
