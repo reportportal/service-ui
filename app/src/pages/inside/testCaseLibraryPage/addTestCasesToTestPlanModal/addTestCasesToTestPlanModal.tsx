@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import classNames from 'classnames/bind';
 import { size } from 'es-toolkit/compat';
 import { ReactNode, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,6 +22,7 @@ import { useIntl } from 'react-intl';
 
 import { FieldLabel, Modal } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { AsyncAutocomplete } from 'componentLibrary/autocompletes/asyncAutocomplete';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { commonValidators } from 'common/utils/validation';
@@ -43,7 +43,7 @@ type AddTestCasesSubmitHandler = SubmitHandler<
   AddTestCasesToTestPlanModalProps
 >;
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export const ADD_TO_TEST_PLAN_MODAL_KEY = 'addToTestPlanModalKey';
 export const ADD_TO_TEST_PLAN_MODAL_FORM = 'add-to-test-plan-form';

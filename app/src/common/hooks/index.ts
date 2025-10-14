@@ -18,6 +18,7 @@ export { useWindowResize } from './useWindowResize';
 export { useOnClickOutside } from './useOnClickOutside';
 export { useDebouncedSpinner } from './useDebouncedSpinner';
 export { useModal } from './useModal';
+export type { UseModalData } from './useModal';
 export { useFileUploadProgressSimulation } from './useFileUploadProgressSimulation';
 export { useFileProcessing } from './useFileProcessing';
 export type { BaseAttachmentFile } from './useFileProcessing';

@@ -17,7 +17,8 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { Modal } from '@reportportal/ui-kit';
-import classNames from 'classnames/bind';
+
+import { createClassnames } from 'common/utils';
 import { hideModalAction } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalButtonProps } from 'types/common';
@@ -26,9 +27,10 @@ import { messages } from 'common/constants/localization/assignmentsLocalization'
 import { unassignFromOrganizationAction } from 'controllers/organization/users';
 import { Organization } from 'controllers/organization';
 import { useHandleUnassignSuccess } from 'pages/inside/common/assignments';
+
 import styles from './unassignOrganizationModal.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface UnassignOrganizationModalProps {
   user: UserInfo;

@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import classNames from 'classnames/bind';
 import { BubblesLoader } from '@reportportal/ui-kit';
+
+import { createClassnames } from 'common/utils';
 
 import styles from './pageLoader.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export const PageLoader = () => (
   <div className={cx('page-loader')}>

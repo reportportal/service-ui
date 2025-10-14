@@ -18,9 +18,9 @@ import { FormEvent, MouseEvent, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { InjectedFormProps, reduxForm } from 'redux-form';
-import classNames from 'classnames/bind';
 import { Modal, FieldText, FieldTextFlex } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction } from 'controllers/modal';
 import { commonValidators } from 'common/utils/validation';
@@ -33,7 +33,7 @@ import { messages } from './messages';
 
 import styles from './testPlanModal.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export interface Attribute {
   value: string;

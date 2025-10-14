@@ -15,8 +15,9 @@
  */
 
 import { useIntl } from 'react-intl';
-import classNames from 'classnames/bind';
 import { isEmpty } from 'es-toolkit/compat';
+
+import { createClassnames } from 'common/utils';
 import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
 
 import { FieldSection } from '../../../fieldSection';
@@ -27,7 +28,7 @@ import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 
 import styles from './scenario.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface ScenarioProps {
   scenario: ManualScenario;

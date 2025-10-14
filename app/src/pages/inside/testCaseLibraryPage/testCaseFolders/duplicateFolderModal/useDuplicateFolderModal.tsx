@@ -16,13 +16,10 @@
 
 import { useModal } from 'common/hooks';
 
-import DuplicateFolderModal, { DUPLICATE_FOLDER_MODAL_KEY } from './duplicateFolderModal';
-
-interface DuplicateFolderModalData {
-  folderId: number;
-  folderName: string;
-  parentFolderId?: number | null;
-}
+import DuplicateFolderModal, {
+  DUPLICATE_FOLDER_MODAL_KEY,
+  DuplicateFolderModalData,
+} from './duplicateFolderModal';
 
 export const useDuplicateFolderModal = () =>
   useModal<DuplicateFolderModalData>({

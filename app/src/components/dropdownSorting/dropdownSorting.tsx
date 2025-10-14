@@ -16,17 +16,20 @@
 
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Popover, DropdownIcon } from '@reportportal/ui-kit';
+import { useIntl } from 'react-intl';
+
+import { createClassnames } from 'common/utils';
 import { SORTING_ASC, SORTING_DESC } from 'controllers/sorting';
 import { SortingDirection } from 'controllers/sorting/types';
-import classNames from 'classnames/bind';
 import { Keys } from 'common/constants/keyCodes';
-import { useIntl } from 'react-intl';
+
 import { DropdownSortingOption } from './dropdownSortingOption';
 import { DirectionIcon } from './directionIcon';
 import { messages } from './messages';
+
 import styles from './dropdownSorting.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface SortParams {
   value: string;

@@ -15,13 +15,13 @@
  */
 
 import { ComponentProps, ReactElement, ReactNode } from 'react';
-import classNames from 'classnames/bind';
 
 import { Popover } from '@reportportal/ui-kit';
+import { createClassnames } from 'common/utils';
 
 import styles from './popoverControl.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export interface PopoverItem {
   label: string;

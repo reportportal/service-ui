@@ -15,14 +15,14 @@
  */
 
 import { ReactNode } from 'react';
-import classNames from 'classnames/bind';
 import { BreadcrumbsTreeIcon } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 
 import styles from './testPlansHeader.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface BreadcrumbDescriptor {
   id: string;

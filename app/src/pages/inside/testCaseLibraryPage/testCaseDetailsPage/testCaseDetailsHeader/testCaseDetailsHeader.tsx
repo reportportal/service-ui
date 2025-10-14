@@ -15,13 +15,13 @@
  */
 
 import { useIntl } from 'react-intl';
-import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { BreadcrumbsTreeIcon, Button, MeatballMenuIcon } from '@reportportal/ui-kit';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
+import { createClassnames } from 'common/utils';
 import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
@@ -36,14 +36,16 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { testCaseLibraryBreadcrumbsSelector } from 'controllers/pages/selectors';
+
 import { TestCase } from '../../types';
 import { messages } from './messages';
 import { commonMessages } from '../../commonMessages';
 import { EDIT_TEST_CASE_MODAL_KEY } from '../editTestCaseModal/editTestCaseModal';
+import { useDeleteTestCaseModal } from '../../deleteTestCaseModal';
 
 import styles from './testCaseDetailsHeader.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface TestCaseDetailsHeaderProps {
   className?: string;
@@ -72,6 +74,7 @@ export const TestCaseDetailsHeader = ({
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
   const dispatch = useDispatch();
+  const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
 
   const breadcrumbsTitles = {
     mainTitle: formatMessage(commonMessages.testCaseLibraryBreadcrumb),
@@ -90,6 +93,8 @@ export const TestCaseDetailsHeader = ({
       },
     });
   };
+
+  const handleDeleteTestCase = () => openDeleteTestCaseModal({ testCase, isDetailsPage: true });
 
   const getCreationDate = (timestamp: number) => {
     const date = new Date(timestamp);
@@ -113,6 +118,7 @@ export const TestCaseDetailsHeader = ({
       items.push({
         label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
         variant: 'destructive',
+        onClick: handleDeleteTestCase,
       });
     }
 

@@ -15,11 +15,13 @@
  */
 
 import { ReactNode, useState } from 'react';
-import classNames from 'classnames/bind';
 import { ChevronDownDropdownIcon } from '@reportportal/ui-kit';
+
+import { createClassnames } from 'common/utils';
+
 import styles from './collapsibleSection.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface CollapsibleSectionProps {
   title: string;

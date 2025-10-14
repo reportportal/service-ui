@@ -14,12 +14,12 @@
  */
 
 import { useState } from 'react';
-import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
 import { compact, noop } from 'es-toolkit';
 import { MeatballMenuIcon, Button } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl';
 
@@ -27,7 +27,7 @@ import { commonMessages } from '../commonMessages';
 
 import styles from './testPlanActions.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 type ActionFn = (testPlanId: string | number) => void;
 

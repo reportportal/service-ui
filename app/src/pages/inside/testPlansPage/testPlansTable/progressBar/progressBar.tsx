@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-import classNames from 'classnames/bind';
+import { createClassnames } from 'common/utils';
+
 import styles from './progressBar.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface ProgressBarProps {
   progress: number;

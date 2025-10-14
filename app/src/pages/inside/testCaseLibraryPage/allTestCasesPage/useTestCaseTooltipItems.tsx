@@ -19,13 +19,19 @@ import { useIntl } from 'react-intl';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TestCaseMenuAction } from 'pages/inside/common/testCaseList/types';
 import { createTestCaseMenuItems } from 'pages/inside/common/testCaseList/configUtils';
+import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
 import { getExcludedActionsFromPermissionMap } from 'pages/inside/common/testCaseList/utils';
+import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 
-export const useTestCaseTooltipItems = () => {
+interface TestCaseTooltipItemsProps {
+  testCase: ExtendedTestCase;
+}
+
+export const useTestCaseTooltipItems = ({ testCase }: TestCaseTooltipItemsProps) => {
   const { formatMessage } = useIntl();
-
   const { canDeleteTestCase, canDuplicateTestCase, canEditTestCase, canMoveTestCase } =
     useUserPermissions();
+  const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
 
   const permissionMap = [
     { isAllowed: canDuplicateTestCase, action: TestCaseMenuAction.DUPLICATE },
@@ -36,7 +42,7 @@ export const useTestCaseTooltipItems = () => {
 
   return createTestCaseMenuItems(
     formatMessage,
-    null,
+    { [TestCaseMenuAction.DELETE]: () => openDeleteTestCaseModal({ testCase }) },
     getExcludedActionsFromPermissionMap(permissionMap),
   );
 };

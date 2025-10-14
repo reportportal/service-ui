@@ -15,7 +15,7 @@
  */
 
 import { MouseEvent } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import { Modal } from '@reportportal/ui-kit';
 
@@ -24,77 +24,74 @@ import { UseModalData } from 'common/hooks';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
-import { deleteFolderAction, DeleteFolderParams } from 'controllers/testCase/actionCreators';
-import { isLoadingFolderSelector } from 'controllers/testCase';
 
-import styles from './deleteFolderModal.scss';
+import { TestCase } from '../types';
+import { useDeleteTestCase } from './useDeleteTestCase';
+
+import styles from './deleteTestCaseModal.scss';
 
 const messages = defineMessages({
-  deleteFolderTitle: {
-    id: 'TestCaseLibraryPage.deleteFolderTitle',
-    defaultMessage: 'Delete Folder',
+  deleteTestCaseTitle: {
+    id: 'TestCaseLibraryPage.deleteTestCaseTitle',
+    defaultMessage: 'Delete Test Case',
   },
-  deleteFolderText: {
-    id: 'TestCaseLibraryPage.deleteFolderText',
+  deleteTestCaseText: {
+    id: 'TestCaseLibraryPage.deleteTestCaseText',
     defaultMessage:
-      'Are you sure you want to delete folder <b>{name}</b>? This action is irreversible and will also permanently remove all test cases and subfolders, if any.',
+      'Are you sure you want to delete test case <b>{name}</b>? This irreversible action will delete it’s all test case data.',
   },
 });
 
 const cx = createClassnames(styles);
 
-export const DELETE_FOLDER_MODAL_KEY = 'deleteFolderModalKey';
+export const DELETE_TEST_CASE_MODAL_KEY = 'deleteTestCaseModalKey';
 
-const DeleteFolderModalComponent = ({
-  data: { folder, activeFolderId, setAllTestCases },
-}: UseModalData<DeleteFolderParams>) => {
+export interface DeleteTestCaseModalData {
+  testCase: TestCase;
+  isDetailsPage?: boolean;
+}
+
+const DeleteTestCaseModalComponent = ({
+  data: { testCase, isDetailsPage = false },
+}: UseModalData<DeleteTestCaseModalData>) => {
   const dispatch = useDispatch();
-  const isLoadingFolder = useSelector(isLoadingFolderSelector);
   const { formatMessage } = useIntl();
+  const { deleteTestCase, isLoading } = useDeleteTestCase({ isDetailsPage });
 
   const hideModal = () => dispatch(hideModalAction());
 
-  const onSubmit = () => {
-    dispatch(
-      deleteFolderAction({
-        folder,
-        activeFolderId,
-        setAllTestCases,
-      }),
-    );
-  };
+  const onSubmit = () => deleteTestCase(testCase);
 
   const okButton = {
     children: (
-      <LoadingSubmitButton isLoading={isLoadingFolder}>
+      <LoadingSubmitButton isLoading={isLoading}>
         {formatMessage(COMMON_LOCALE_KEYS.DELETE)}
       </LoadingSubmitButton>
     ),
     onClick: onSubmit as (event: MouseEvent<HTMLButtonElement>) => void,
-    disabled: isLoadingFolder,
+    disabled: isLoading,
     variant: 'danger' as const,
     'data-automation-id': 'submitButton',
   };
-
   const cancelButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-    disabled: isLoadingFolder,
+    disabled: isLoading,
     'data-automation-id': 'cancelButton',
   };
 
   return (
     <Modal
-      title={formatMessage(messages.deleteFolderTitle)}
+      title={formatMessage(messages.deleteTestCaseTitle)}
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={hideModal}
     >
-      {formatMessage(messages.deleteFolderText, {
-        b: (data) => <span className={cx('delete-folder-modal__text--bold')}>{data}</span>,
-        name: folder.name,
+      {formatMessage(messages.deleteTestCaseText, {
+        b: (data) => <span className={cx('delete-test-case-modal__text--bold')}>{data}</span>,
+        name: testCase.name,
       })}
     </Modal>
   );
 };
 
-export default withModal(DELETE_FOLDER_MODAL_KEY)(DeleteFolderModalComponent);
+export default withModal(DELETE_TEST_CASE_MODAL_KEY)(DeleteTestCaseModalComponent);

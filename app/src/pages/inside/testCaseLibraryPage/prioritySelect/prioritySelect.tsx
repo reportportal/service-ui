@@ -15,15 +15,16 @@
  */
 
 import { useIntl } from 'react-intl';
-import classNames from 'classnames/bind';
 
+import { createClassnames } from 'common/utils';
 import { DropdownWithDescription } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/dropdownWithDescription';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
+
 import { messages } from '../createTestCaseModal/basicInformation/messages';
 
 import styles from './prioritySelect.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface PrioritySelectProps {
   value?: string;

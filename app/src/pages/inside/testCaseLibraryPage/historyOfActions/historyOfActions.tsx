@@ -15,10 +15,10 @@
  */
 
 import { useState } from 'react';
-import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { Table } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
@@ -30,7 +30,7 @@ import { messages } from './messages';
 
 import styles from './historyOfActions.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export const HistoryOfActions = () => {
   const { formatMessage } = useIntl();

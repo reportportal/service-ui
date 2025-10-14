@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import classNames from 'classnames/bind';
 import {
   PriorityBlockerIcon,
   PriorityCriticalIcon,
@@ -24,11 +23,13 @@ import {
   PriorityUnspecifiedIcon,
 } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
+
 import { TestCasePriority } from './types';
 
 import styles from './priorityIcon.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface PriorityIconProps {
   priority: TestCasePriority;
