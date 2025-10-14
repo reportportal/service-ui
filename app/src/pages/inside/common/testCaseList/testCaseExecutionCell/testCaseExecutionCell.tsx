@@ -24,6 +24,7 @@ import { PopoverControl } from 'pages/common/popoverControl';
 import { handleEnterOrSpaceKey } from 'common/utils/helperUtils/event.utils';
 import { useTooltipItems } from 'pages/inside/common/testCaseList/testCaseExecutionCell/useTooltipItems';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
+import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 
 import { formatRelativeTime } from '../utils';
 import { messages } from '../messages';
@@ -33,20 +34,22 @@ import styles from './testCaseExecutionCell.scss';
 const cx = classNames.bind(styles) as typeof classNames;
 
 interface TestCaseExecutionCellProps {
+  testCase: ExtendedTestCase;
   lastExecution: number;
   instanceKey: INSTANCE_KEYS;
   onRowClick: () => void;
-  onEditTestCase: () => void;
+  onEdit?: (testCase: ExtendedTestCase) => void;
 }
 
 export const TestCaseExecutionCell = ({
+  testCase,
   lastExecution,
   onRowClick,
   instanceKey,
-  onEditTestCase,
+  onEdit,
 }: TestCaseExecutionCellProps) => {
   const { formatMessage, locale } = useIntl();
-  const tooltipItems = useTooltipItems({ instanceKey });
+  const tooltipItems = useTooltipItems({ instanceKey, testCase, onEdit });
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   return (
@@ -74,13 +77,7 @@ export const TestCaseExecutionCell = ({
           onKeyDown={handleEnterOrSpaceKey}
         >
           <PopoverControl
-            items={[
-              ...tooltipItems,
-              {
-                label: formatMessage(messages.editTestCase),
-                onClick: onEditTestCase,
-              },
-            ]}
+            items={tooltipItems}
             placement="bottom-end"
             isOpened={isMenuOpen}
             setIsOpened={setIsMenuOpen}

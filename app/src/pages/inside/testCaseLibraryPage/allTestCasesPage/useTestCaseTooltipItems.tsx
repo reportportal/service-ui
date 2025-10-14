@@ -20,8 +20,17 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TestCaseMenuAction } from 'pages/inside/common/testCaseList/types';
 import { createTestCaseMenuItems } from 'pages/inside/common/testCaseList/configUtils';
 import { getExcludedActionsFromPermissionMap } from 'pages/inside/common/testCaseList/utils';
+import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 
-export const useTestCaseTooltipItems = () => {
+interface UseTestCaseTooltipItemsProps {
+  testCase?: ExtendedTestCase;
+  onEdit?: (testCase: ExtendedTestCase) => void;
+}
+
+export const useTestCaseTooltipItems = ({
+  testCase,
+  onEdit,
+}: UseTestCaseTooltipItemsProps = {}) => {
   const { formatMessage } = useIntl();
 
   const { canDeleteTestCase, canDuplicateTestCase, canEditTestCase, canMoveTestCase } =
@@ -34,9 +43,13 @@ export const useTestCaseTooltipItems = () => {
     { isAllowed: canDeleteTestCase, action: TestCaseMenuAction.DELETE },
   ];
 
+  const actions = {
+    [TestCaseMenuAction.EDIT]: testCase && onEdit ? () => onEdit(testCase) : undefined,
+  };
+
   return createTestCaseMenuItems(
     formatMessage,
-    null,
+    actions,
     getExcludedActionsFromPermissionMap(permissionMap),
   );
 };

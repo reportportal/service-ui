@@ -127,10 +127,11 @@ export const TestCaseList = memo(
         content: testCase.updatedAt,
         component: (
           <TestCaseExecutionCell
+            testCase={testCase}
             lastExecution={testCase.updatedAt}
             instanceKey={instanceKey}
             onRowClick={() => setSelectedTestCaseId(testCase.id)}
-            onEditTestCase={() => handleEditTestCase(testCase)}
+            onEdit={handleEditTestCase}
           />
         ),
       },

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { formValueSelector } from 'redux-form';
@@ -34,14 +34,14 @@ const messages = defineMessages({
 });
 
 export interface StepData {
-  id: string;
+  id: number;
   instructions: string;
   expectedResult: string;
   attachments?: string[];
 }
 
 const createEmptyStep = (): StepData => ({
-  id: `step_${Date.now()}`,
+  id: Date.now(),
   instructions: '',
   expectedResult: '',
   attachments: [],
@@ -49,16 +49,21 @@ const createEmptyStep = (): StepData => ({
 
 interface TestCaseDetailsProps {
   className?: string;
+  stepsData?: StepData[];
 }
 
 const selector = formValueSelector('create-test-case-modal-form');
 
-export const TestCaseDetails = ({ className }: TestCaseDetailsProps) => {
-  const [steps, setSteps] = useState<StepData[]>([createEmptyStep()]);
+export const TestCaseDetails = ({ className, stepsData }: TestCaseDetailsProps) => {
+  const [steps, setSteps] = useState<StepData[]>([]);
   const { formatMessage } = useIntl();
   const manualScenarioType = useSelector(
     (state: AppState) => selector(state, 'manualScenarioType') as ManualScenarioType,
   );
+
+  useEffect(() => {
+    setSteps(stepsData || [createEmptyStep()]);
+  }, [stepsData]);
 
   const handleAddStep = (index?: number) => {
     setSteps((prevState) => {
@@ -72,10 +77,10 @@ export const TestCaseDetails = ({ className }: TestCaseDetailsProps) => {
     });
   };
 
-  const handleRemoveStep = (stepId: string) =>
+  const handleRemoveStep = (stepId: number) =>
     setSteps((prevState) => prevState.filter((step) => step.id !== stepId));
 
-  const handleMoveStep = ({ stepId, direction }: { stepId: string; direction: 'up' | 'down' }) => {
+  const handleMoveStep = ({ stepId, direction }: { stepId: number; direction: 'up' | 'down' }) => {
     setSteps((prevState) => {
       const currentIndex = prevState.findIndex((step) => step.id === stepId);
       const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;

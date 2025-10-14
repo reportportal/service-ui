@@ -31,8 +31,8 @@ const cx = classNames.bind(styles) as typeof classNames;
 interface StepsProps {
   steps: StepData[];
   onAddStep: (index?: number) => void;
-  onRemoveStep: (stepId: string) => void;
-  onMoveStep: ({ stepId, direction }: { stepId: string; direction: 'up' | 'down' }) => void;
+  onRemoveStep: (stepId: number) => void;
+  onMoveStep: ({ stepId, direction }: { stepId: number; direction: 'up' | 'down' }) => void;
 }
 
 const messages = defineMessages({
@@ -72,27 +72,30 @@ export const Steps = ({ steps, onAddStep, onRemoveStep, onMoveStep }: StepsProps
   return (
     <div className={cx('steps')}>
       <span className={cx('steps__label')}>{formatMessage(messages.steps)}</span>
-      {steps.map((step, index) => (
-        <div key={step.id} className={cx('steps__step-container')}>
-          <AttachmentArea
-            isDraggable
-            index={index}
-            totalCount={steps.length}
-            formName={CREATE_TEST_CASE_FORM_NAME}
-            acceptFileMimeTypes={[MIME_TYPES.jpeg, MIME_TYPES.png]}
-            dropZoneDescription={formatMessage(commonMessages.dropFileDescription, {
-              browseButton: formatMessage(commonMessages.browseText),
-            })}
-            attachmentFieldName={`steps.${step.id}.attachments`}
-            fileSizeMessage={formatMessage(commonMessages.fileSizeInfo)}
-            onRemove={() => onRemoveStep(step.id)}
-            onMove={(direction) => onMoveStep({ stepId: step.id, direction })}
-          >
-            <Step stepId={step.id} />
-          </AttachmentArea>
-          {renderBetweenStepsArea(index)}
-        </div>
-      ))}
+      {steps.map((step, index) => {
+        const { id, instructions, expectedResult } = step;
+        return (
+          <div key={id} className={cx('steps__step-container')}>
+            <AttachmentArea
+              isDraggable
+              index={index}
+              totalCount={steps.length}
+              formName={CREATE_TEST_CASE_FORM_NAME}
+              acceptFileMimeTypes={[MIME_TYPES.jpeg, MIME_TYPES.png]}
+              dropZoneDescription={formatMessage(commonMessages.dropFileDescription, {
+                browseButton: formatMessage(commonMessages.browseText),
+              })}
+              attachmentFieldName={`steps.${id}.attachments`}
+              fileSizeMessage={formatMessage(commonMessages.fileSizeInfo)}
+              onRemove={() => onRemoveStep(id)}
+              onMove={(direction) => onMoveStep({ stepId: id, direction })}
+            >
+              <Step stepId={id} instructions={instructions} expectedResult={expectedResult} />
+            </AttachmentArea>
+            {renderBetweenStepsArea(index)}
+          </div>
+        );
+      })}
       <div>
         <Button
           icon={<PlusIcon />}

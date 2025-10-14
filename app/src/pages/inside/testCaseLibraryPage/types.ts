@@ -60,7 +60,6 @@ export interface TestCase {
   updatedAt: number;
   durationTime?: number;
   scenarios?: IScenario[];
-  manualScenario?: ManualScenarioDto;
   testFolder: {
     id: number;
   };
@@ -73,14 +72,14 @@ interface ManualScenario {
   linkToRequirements: string;
   preconditions: {
     value: string;
-    attachments: Attachment[];
+    attachments: [];
   };
-  attributes: Attachment[];
+  attributes: [];
   steps: {
     id: number;
     instructions: string;
     expectedResult: string;
-    attachments: Attachment[];
+    attachments: [];
   }[];
 }
 
