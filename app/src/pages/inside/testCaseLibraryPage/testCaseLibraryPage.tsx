@@ -100,7 +100,7 @@ export const TestCaseLibraryPage = () => {
                   <Button
                     variant="ghost"
                     data-automation-id="createTestCase"
-                    onClick={openCreateTestCaseModal}
+                    onClick={() => openCreateTestCaseModal()}
                   >
                     {formatMessage(commonMessages.createTestCase)}
                   </Button>
