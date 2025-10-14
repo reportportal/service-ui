@@ -56,17 +56,22 @@
     margin-top: 8px;
 
     .table-cell {
-      &__name {
-        padding: 10px 0;
+      &__name-title {
+        margin-bottom: 8px;
+      }
 
-        &-title {
-          margin-bottom: 8px;
-        }
+      &__default-button {
+        padding: 0;
+        line-height: 20px;
       }
     }
 
     &-row {
       height: auto;
+
+      :global([class*='table-row-content']) {
+        padding: 12px 0 16px;
+      }
     }
   }
 }

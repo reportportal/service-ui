@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { isEmpty } from 'es-toolkit/compat';
 import { MessageDescriptor } from 'react-intl';
 
 import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
@@ -41,10 +40,6 @@ export const createTestCaseMenuItems = (
       action: TestCaseMenuAction.DELETE,
     },
   ];
-
-  if (isEmpty(excludedActions)) {
-    return allMenuItems;
-  }
 
   return allMenuItems
     .filter((item) => !excludedActions.includes(item.action))

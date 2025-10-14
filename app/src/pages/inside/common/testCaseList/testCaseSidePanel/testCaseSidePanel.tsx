@@ -162,7 +162,18 @@ export const TestCaseSidePanel = memo(
 
     const menuItems = createTestCaseMenuItems(
       formatMessage,
-      {},
+      {
+        [TestCaseMenuAction.HISTORY]: () => {
+          dispatch({
+            type: TEST_CASE_LIBRARY_PAGE,
+            payload: {
+              organizationSlug,
+              projectSlug,
+              testCasePageRoute: `test-cases/${testCase.id}/historyOfActions`,
+            },
+          });
+        },
+      },
       getExcludedActionsFromPermissionMap(permissionMap),
     );
 
