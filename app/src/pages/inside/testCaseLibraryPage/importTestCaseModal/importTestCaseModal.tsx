@@ -3,7 +3,14 @@ import { useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import Link from 'redux-first-router-link';
 import { isString } from 'es-toolkit';
-import { FieldText, Modal, FileDropArea, AddCsvIcon, AttachedFile } from '@reportportal/ui-kit';
+import {
+  FieldText,
+  Modal,
+  FileDropArea,
+  AddCsvIcon,
+  AttachedFile,
+  MIME_TYPES,
+} from '@reportportal/ui-kit';
 import type { MimeType } from '@reportportal/ui-kit/dist/components/fileDropArea/types';
 
 import { createClassnames } from 'common/utils';
@@ -20,6 +27,12 @@ export const IMPORT_TEST_CASE_MODAL_KEY = 'importTestCaseModalKey';
 
 const MAX_FILE_SIZE_MB = 10;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
+const MIME_PART = MIME_TYPES as unknown as {
+  csv: MimeType;
+  xls: MimeType;
+  plain: MimeType;
+};
+const CSV_MIME_TYPES = [MIME_PART.csv, MIME_PART.xls, MIME_PART.plain] as const;
 
 const cx = createClassnames(styles);
 
@@ -71,10 +84,7 @@ export const ImportTestCaseModal = () => {
     setFolderName(event.target.value);
   };
 
-  const acceptFileMimeTypes = useMemo<MimeType[]>(
-    () => ['text/csv', 'application/vnd.ms-excel', 'text/plain'],
-    [],
-  );
+  const acceptFileMimeTypes = useMemo<MimeType[]>(() => [...CSV_MIME_TYPES], []);
 
   const handleFilesAdded = (incoming: FileInput) => {
     const items = Array.isArray(incoming) ? incoming : [incoming];
