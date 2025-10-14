@@ -78,28 +78,28 @@ export const mockedScenarios: IScenario[] = [
 
 export const mockedStepsData: StepData[] = [
   {
-    id: '1',
+    id: 1,
     instructions: 'Open the web application login page in a supported browser',
     expectedResult: 'The login page loads correctly with fields for username and password visible',
   },
   {
-    id: '2',
+    id: 2,
     instructions: 'Enter a valid username in the username field',
     expectedResult: 'The username appears in the field as entered, with no input errors',
   },
   {
-    id: '3',
+    id: 3,
     instructions: 'Enter a valid password in the password field',
     expectedResult: '',
   },
   {
-    id: '4',
+    id: 4,
     instructions: "Click the 'Login' button",
     expectedResult:
       'The system processes the input and navigates to the user dashboard if the credentials are correct',
   },
   {
-    id: '5',
+    id: 5,
     instructions: '',
     expectedResult:
       'The user dashboard loads and displays the correct personalized information without errors the basic functionality',
