@@ -29,7 +29,6 @@ export {
   canEditOwnAccount,
   canEditLaunch,
   canBulkEditItems,
-  canForceFinishLaunch,
   canStartAnalysis,
   canDeleteTestItem,
   canMoveToDebug,

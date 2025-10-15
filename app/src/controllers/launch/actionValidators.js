@@ -16,12 +16,7 @@
 
 import { userRolesSelector } from 'controllers/pages';
 import { IN_PROGRESS } from 'common/constants/launchStatuses';
-import {
-  canMergeLaunches,
-  canForceFinishLaunch,
-  canMoveToDebug,
-  canEditLaunch,
-} from 'common/utils/permissions';
+import { canMergeLaunches, canMoveToDebug, canEditLaunch } from 'common/utils/permissions';
 
 export const validateMergeLaunch = (launch, launches, state) => {
   if (launches.length < 2) {
@@ -46,9 +41,11 @@ export const validateFinishForceLaunch = (launch, launches, state) => {
   }
 
   const userRoles = userRolesSelector(state);
-  if (!canForceFinishLaunch(userRoles)) {
+
+  if (!canEditLaunch(userRoles)) {
     return 'notYourOwnLaunch';
   }
+
   return null;
 };
 

@@ -44,13 +44,8 @@ export const Hamburger = ({ launch, customProps }) => {
   const [menuShown, setMenuShown] = useState(false);
   const [disableEventTrack, setDisableEventTrack] = useState(false);
   const iconRef = useRef(null);
-  const {
-    canForceFinishLaunch,
-    canMoveToDebug,
-    canEditLaunch,
-    canSeeRowActionMenu,
-    canStartAnalysis,
-  } = useUserPermissions();
+  const { canMoveToDebug, canEditLaunch, canSeeRowActionMenu, canStartAnalysis } =
+    useUserPermissions();
   const projectKey = useSelector(projectKeySelector);
   const enabledPatterns = useSelector(enabledPattersSelector);
   const analyzerExtensions = useSelector(analyzerExtensionsSelector);
@@ -91,7 +86,7 @@ export const Hamburger = ({ launch, customProps }) => {
   const getForceFinishTooltip = () => {
     let forceFinishTitle = '';
 
-    if (!canForceFinishLaunch) {
+    if (!canEditLaunch) {
       forceFinishTitle = formatMessage(messages.noPermissions);
     }
     if (!isLaunchInProgress) {
@@ -208,7 +203,7 @@ export const Hamburger = ({ launch, customProps }) => {
               <HamburgerMenuItem
                 text={formatMessage(COMMON_LOCALE_KEYS.FORCE_FINISH)}
                 title={getForceFinishTooltip()}
-                disabled={!canForceFinishLaunch || !isLaunchInProgress}
+                disabled={!canEditLaunch || !isLaunchInProgress}
                 onClick={() => {
                   trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_FORCE_FINISH_LAUNCH_MENU);
                   customProps.onForceFinish(launch);
