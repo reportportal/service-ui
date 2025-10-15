@@ -140,7 +140,7 @@ interface TestCaseSidePanelProps {
 export const TestCaseSidePanel = memo(
   ({ testCase, isVisible, onClose }: TestCaseSidePanelProps) => {
     const dispatch = useDispatch();
-    const { canEditTestCase, canMoveTestCase } = useUserPermissions();
+    const { canEditTestCase } = useUserPermissions();
     const { organizationSlug, projectSlug } = useSelector(
       urlOrganizationAndProjectSelector,
     ) as ProjectDetails;
@@ -166,12 +166,17 @@ export const TestCaseSidePanel = memo(
       openEditTestCaseModal({ testCase });
     };
 
-    const permissionMap = [
-      { isAllowed: canEditTestCase, action: TestCaseMenuAction.EDIT },
-      { isAllowed: canEditTestCase, action: TestCaseMenuAction.DELETE },
-      { isAllowed: canEditTestCase, action: TestCaseMenuAction.DUPLICATE },
-      { isAllowed: canMoveTestCase, action: TestCaseMenuAction.MOVE },
+    const actions = [
+      TestCaseMenuAction.EDIT,
+      TestCaseMenuAction.DELETE,
+      TestCaseMenuAction.DUPLICATE,
+      TestCaseMenuAction.MOVE,
     ];
+
+    const permissionMap = actions.map((action) => ({
+      isAllowed: canEditTestCase,
+      action,
+    }));
 
     const menuItems = createTestCaseMenuItems(
       formatMessage,

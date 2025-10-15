@@ -61,7 +61,6 @@ export {
   // TEST CASE
   canDoTestCaseBulkActions,
   canEditTestCase,
-  canMoveTestCase,
   // TEST CASES
   canImportTestCases,
   // TEST PLAN
