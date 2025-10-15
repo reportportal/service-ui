@@ -59,7 +59,6 @@ export const canViewInfoBilling = checkPermission(ACTIONS.VIEW_INFO_BILLING);
 export const canUpdateSettings = checkPermission(ACTIONS.UPDATE_SETTINGS);
 export const canSeeSettings = checkPermission(ACTIONS.SEE_SETTINGS);
 export const canManageUsers = checkPermission(ACTIONS.MANAGE_USERS);
-export const canDeleteUser = checkPermission(ACTIONS.DELETE_USER);
 export const canSeeMembers = checkPermission(ACTIONS.SEE_MEMBERS);
 export const canEditOwnAccount = checkPermission(ACTIONS.EDIT_OWN_ACCOUNT);
 export const canEditLaunch = checkPermission(ACTIONS.EDIT_LAUNCH);

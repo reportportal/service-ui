@@ -45,7 +45,6 @@ export const ACTIONS: Record<string, string> = {
 
   // USERS_MANAGEMENT
   MANAGE_USERS: 'MANAGE_USERS',
-  DELETE_USER: 'DELETE_USER',
 
   // LAUNCHES
   EDIT_LAUNCH: 'EDIT_LAUNCH',

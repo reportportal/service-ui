@@ -15,11 +15,11 @@
  */
 
 import { userRolesSelector } from 'controllers/pages';
-import { canDeleteUser } from 'common/utils/permissions';
+import { canManageUsers } from 'common/utils/permissions';
 
 export const validateDeleteUser = (user, users, state) => {
   const userRoles = userRolesSelector(state);
-  if (!canDeleteUser(userRoles)) {
+  if (!canManageUsers(userRoles)) {
     return 'cantDeleteYourSelf';
   }
   return null;
