@@ -193,7 +193,6 @@ export const PERMISSIONS_MAP: PermissionsMap = {
       [ACTIONS.DUPLICATE_TEST_PLAN]: true,
       [ACTIONS.EDIT_TEST_PLAN]: true,
       // TEST CASE FOLDER
-      [ACTIONS.DUPLICATE_TEST_CASE_FOLDER]: true,
       [ACTIONS.RENAME_TEST_CASE_FOLDER]: true,
     },
   },

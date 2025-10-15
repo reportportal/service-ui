@@ -50,8 +50,7 @@ export const useTestCaseFolderMenu = ({
   const { openModal: openImportTestCaseModal } = useImportTestCaseModal();
   const { openModal: openCreateSubfolderModal } = useCreateSubfolderModal();
 
-  const { canEditTestCase, canDuplicateTestCaseFolder, canRenameTestCaseFolder } =
-    useUserPermissions();
+  const { canEditTestCase, canRenameTestCaseFolder } = useUserPermissions();
 
   const handleDeleteFolder = () => {
     openDeleteModal({
@@ -86,7 +85,7 @@ export const useTestCaseFolderMenu = ({
       variant: 'text' as const,
       onClick: handleMoveFolder,
     },
-    canDuplicateTestCaseFolder && {
+    canEditTestCase && {
       label: formatMessage(commonMessages.duplicateFolder),
       variant: 'text' as const,
       onClick: handleDuplicateFolder,
