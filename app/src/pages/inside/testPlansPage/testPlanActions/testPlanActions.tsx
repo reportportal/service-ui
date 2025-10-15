@@ -48,7 +48,7 @@ export const TestPlanActions = ({
 }: TestPlanActionsProps) => {
   const { formatMessage } = useIntl();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { canEditTestPlan, canDuplicateTestPlan, canDeleteTestPlan } = useUserPermissions();
+  const { canEditTestPlan, canDuplicateTestPlan } = useUserPermissions();
 
   const isHeader = variant === 'header';
   const menuItems: PopoverItem[] = compact([
@@ -60,7 +60,7 @@ export const TestPlanActions = ({
       label: formatMessage(commonMessages.duplicateTestPlan),
       onClick: () => onDuplicate(testPlanId),
     },
-    canDeleteTestPlan && {
+    canEditTestPlan && {
       label: formatMessage(commonMessages.deleteTestPlan),
       variant: 'danger',
       onClick: () => onDelete(testPlanId),

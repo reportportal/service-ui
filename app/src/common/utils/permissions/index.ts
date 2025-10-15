@@ -62,7 +62,6 @@ export {
   canEditTestCase,
   // TEST PLAN
   canEditTestPlan,
-  canDeleteTestPlan,
   canDuplicateTestPlan,
   canCreateTestPlan,
 } from './permissions';
