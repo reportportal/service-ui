@@ -20,7 +20,7 @@ export {
   canDeleteProject,
   canUpdateSettings,
   canSeeSettings,
-  canCreateInternalUser,
+  canManageUsers,
   canInviteInternalUser,
   canAssignUnassignInternalUser,
   canChangeUserRole,
