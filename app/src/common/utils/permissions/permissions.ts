@@ -103,7 +103,7 @@ export const canExportOrganizations = checkPermission(ACTIONS.EXPORT_ORGANIZATIO
 export const canSeeActivityOption = checkPermission(ACTIONS.ACTIVITY_OPTION);
 export const canSeeInstanceLevelPluginsPages = checkPermission(ACTIONS.INSTANCE_LEVEL_PLUGIN_PAGES);
 // MANUAL LAUNCHES
-export const canCreateManualLaunch = checkPermission(ACTIONS.CREATE_MANUAL_LAUNCH);
+export const canEditManualLaunch = checkPermission(ACTIONS.EDIT_MANUAL_LAUNCH);
 // TEST CASE
 export const canEditTestCase = checkPermission(ACTIONS.EDIT_TEST_CASE);
 // TEST PLAN

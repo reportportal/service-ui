@@ -57,7 +57,7 @@ export {
   canSeeInstanceLevelPluginsPages,
   canRenameOrganization,
   // MANUAL LAUNCH
-  canCreateManualLaunch,
+  canEditManualLaunch,
   // TEST CASE
   canEditTestCase,
   // TEST PLAN

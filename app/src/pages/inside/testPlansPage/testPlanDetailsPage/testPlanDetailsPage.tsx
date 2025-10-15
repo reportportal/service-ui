@@ -61,7 +61,7 @@ export const TestPlanDetailsPage = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { organizationSlug, projectSlug } = useProjectDetails();
-  const { canEditTestCase, canCreateManualLaunch } = useUserPermissions();
+  const { canEditTestCase, canEditManualLaunch } = useUserPermissions();
   const testPlanId = useTestPlanId();
   const testPlan = useTestPlanById(testPlanId);
   const isLoading = useActiveTestPlanLoading();
@@ -144,7 +144,7 @@ export const TestPlanDetailsPage = () => {
               {formatMessage(commonMessages.addTestsFromLibrary)}
             </Button>
           )}
-          {canCreateManualLaunch && (
+          {canEditManualLaunch && (
             <Button variant="primary" data-automation-id="createLaunchButton">
               {formatMessage(messages.createLaunch)}
             </Button>
