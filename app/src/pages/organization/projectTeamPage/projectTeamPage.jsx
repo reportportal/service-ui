@@ -40,7 +40,7 @@ export const ProjectTeamPage = () => {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const { canInviteInternalUser } = useUserPermissions();
+  const { canManageUsers } = useUserPermissions();
   const members = useSelector(membersSelector);
   const isMembersLoading = useSelector(loadingSelector);
   const projectKey = useSelector(projectKeySelector);
@@ -68,7 +68,7 @@ export const ProjectTeamPage = () => {
     return searchValue === null ? (
       <EmptyMembersPageState
         isLoading={isMembersLoading}
-        hasPermission={canInviteInternalUser}
+        hasPermission={canManageUsers}
         showInviteUserModal={showInviteUserModal}
       />
     ) : (
@@ -84,7 +84,7 @@ export const ProjectTeamPage = () => {
   return (
     <div className={cx('project-team-page')}>
       <ProjectTeamPageHeader
-        hasPermission={canInviteInternalUser}
+        hasPermission={canManageUsers}
         onInvite={showInviteUserModal}
         isMembersLoading={isMembersLoading}
         searchValue={searchValue}
