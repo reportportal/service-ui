@@ -110,6 +110,16 @@ export const HistoryOfActions = () => {
     },
   ];
 
+  const handleToggleRowExpansion = (id: string | number) => {
+    const newExpandedRows = new Set(expandedRows);
+    if (newExpandedRows.has(id)) {
+      newExpandedRows.delete(id);
+    } else {
+      newExpandedRows.add(id);
+    }
+    setExpandedRows(newExpandedRows);
+  };
+
   return (
     <SettingsLayout>
       <ScrollWrapper resetRequired={false}>
@@ -129,15 +139,7 @@ export const HistoryOfActions = () => {
               isRowsExpandable
               setExpandedRowIds={setExpandedRows}
               expandedRowIds={[...expandedRows]}
-              onToggleRowExpansion={(id) => {
-                const newExpandedRows = new Set(expandedRows);
-                if (newExpandedRows.has(id)) {
-                  newExpandedRows.delete(id);
-                } else {
-                  newExpandedRows.add(id);
-                }
-                setExpandedRows(newExpandedRows);
-              }}
+              onToggleRowExpansion={handleToggleRowExpansion}
             />
           </div>
         </div>
