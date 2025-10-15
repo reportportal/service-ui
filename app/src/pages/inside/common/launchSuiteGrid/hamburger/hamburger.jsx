@@ -44,8 +44,7 @@ export const Hamburger = ({ launch, customProps }) => {
   const [menuShown, setMenuShown] = useState(false);
   const [disableEventTrack, setDisableEventTrack] = useState(false);
   const iconRef = useRef(null);
-  const { canMoveToDebug, canEditLaunch, canSeeRowActionMenu, canStartAnalysis } =
-    useUserPermissions();
+  const { canEditLaunch, canSeeRowActionMenu, canStartAnalysis } = useUserPermissions();
   const projectKey = useSelector(projectKeySelector);
   const enabledPatterns = useSelector(enabledPattersSelector);
   const analyzerExtensions = useSelector(analyzerExtensionsSelector);
@@ -96,7 +95,7 @@ export const Hamburger = ({ launch, customProps }) => {
   };
 
   const getMoveToDebugTooltip = () => {
-    return !canMoveToDebug ? formatMessage(messages.noPermissions) : '';
+    return !canEditLaunch ? formatMessage(messages.noPermissions) : '';
   };
 
   const getDeleteItemTooltip = () => {
@@ -184,7 +183,7 @@ export const Hamburger = ({ launch, customProps }) => {
                 <HamburgerMenuItem
                   title={getMoveToDebugTooltip()}
                   text={formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_DEBUG)}
-                  disabled={!canMoveToDebug}
+                  disabled={!canEditLaunch}
                   onClick={() => {
                     trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MOVE_TO_DEBUG_LAUNCH_MENU);
                     customProps.onMove(launch);
@@ -194,7 +193,7 @@ export const Hamburger = ({ launch, customProps }) => {
                 <HamburgerMenuItem
                   text={formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_ALL_LAUNCHES)}
                   title={getMoveToDebugTooltip()}
-                  disabled={!canMoveToDebug}
+                  disabled={!canEditLaunch}
                   onClick={() => {
                     customProps.onMove(launch);
                   }}

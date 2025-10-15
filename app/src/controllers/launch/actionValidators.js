@@ -16,14 +16,14 @@
 
 import { userRolesSelector } from 'controllers/pages';
 import { IN_PROGRESS } from 'common/constants/launchStatuses';
-import { canMergeLaunches, canMoveToDebug, canEditLaunch } from 'common/utils/permissions';
+import { canEditLaunch } from 'common/utils/permissions';
 
 export const validateMergeLaunch = (launch, launches, state) => {
   if (launches.length < 2) {
     return 'selectMoreItems';
   }
   const userRoles = userRolesSelector(state);
-  if (!canMergeLaunches(userRoles)) {
+  if (!canEditLaunch(userRoles)) {
     return 'notYourOwnLaunch';
   }
   if (launch.status && launch.status.toLowerCase() === IN_PROGRESS) {
@@ -51,7 +51,7 @@ export const validateFinishForceLaunch = (launch, launches, state) => {
 
 export const validateMoveLaunch = (launch, launches, state) => {
   const userRoles = userRolesSelector(state);
-  if (!canMoveToDebug(userRoles)) {
+  if (!canEditLaunch(userRoles)) {
     return 'notYourOwnLaunch';
   }
   return null;

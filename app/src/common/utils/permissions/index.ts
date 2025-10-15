@@ -31,7 +31,6 @@ export {
   canBulkEditItems,
   canStartAnalysis,
   canDeleteTestItem,
-  canMoveToDebug,
   canWorkWithFilters,
   canWorkWithOrganizationFilter,
   canReadData,

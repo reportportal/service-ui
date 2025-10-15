@@ -69,7 +69,6 @@ export const canEditLaunch = checkPermission(ACTIONS.EDIT_LAUNCH);
 export const canBulkEditItems = checkPermission(ACTIONS.BULK_EDIT_ITEMS);
 export const canStartAnalysis = checkPermission(ACTIONS.START_ANALYSIS);
 export const canDeleteTestItem = checkPermission(ACTIONS.DELETE_TEST_ITEM);
-export const canMoveToDebug = checkPermission(ACTIONS.MOVE_TO_DEBUG);
 export const canChangeTestItemStatus = checkPermission(ACTIONS.CHANGE_TEST_ITEM_STATUS);
 export const canMakeDecision = checkPermission(ACTIONS.MAKE_DECISION);
 export const canManageBTSIssues = checkPermission(ACTIONS.MANAGE_BTS_ISSUES);
