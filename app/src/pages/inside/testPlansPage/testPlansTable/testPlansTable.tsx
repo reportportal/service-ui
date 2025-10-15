@@ -17,7 +17,7 @@
 import { ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
-import { Table, ChevronRightBreadcrumbsIcon } from '@reportportal/ui-kit';
+import { Table, ChevronDownDropdownIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -116,7 +116,7 @@ export const TestPlansTable = ({ testPlans }: TestPlansTableProps) => {
           ),
         },
         icon: {
-          component: getOpenTestPlanDetailsButton(id, name, <ChevronRightBreadcrumbsIcon />),
+          component: getOpenTestPlanDetailsButton(id, name, <ChevronDownDropdownIcon />),
         },
       };
     },
