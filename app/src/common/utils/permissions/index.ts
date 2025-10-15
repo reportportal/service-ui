@@ -67,7 +67,6 @@ export {
   canEditTestCaseScenario,
   canEditTestCaseTag,
   canMoveTestCase,
-  canCreateTestCaseFolder,
   canDeleteTestCaseFolder,
   canDuplicateTestCaseFolder,
   canRenameTestCaseFolder,
