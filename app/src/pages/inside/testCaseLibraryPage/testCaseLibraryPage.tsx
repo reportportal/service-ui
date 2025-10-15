@@ -59,7 +59,7 @@ export const TestCaseLibraryPage = () => {
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
   const { openModal: openImportFolderModal } = useImportTestCaseModal();
 
-  const { canEditTestCase, canImportTestCases } = useUserPermissions();
+  const { canEditTestCase } = useUserPermissions();
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
   const hasFolders = !isEmpty(folders);
 
@@ -96,25 +96,25 @@ export const TestCaseLibraryPage = () => {
             </div>
             {hasFolders && (
               <div className={cx('test-case-library-page__actions')}>
-                {canImportTestCases && (
-                  <Button
-                    variant="text"
-                    icon={Parser(ImportIcon as unknown as string)}
-                    data-automation-id="importTestCase"
-                    adjustWidthOn="content"
-                    onClick={() => openImportFolderModal({ folderName: currentFolderName ?? '' })}
-                  >
-                    {formatMessage(COMMON_LOCALE_KEYS.IMPORT)}
-                  </Button>
-                )}
                 {canEditTestCase && (
-                  <Button
-                    variant="ghost"
-                    data-automation-id="createTestCase"
-                    onClick={() => openCreateTestCaseModal()}
-                  >
-                    {formatMessage(commonMessages.createTestCase)}
-                  </Button>
+                  <>
+                    <Button
+                      variant="text"
+                      icon={Parser(ImportIcon as unknown as string)}
+                      data-automation-id="importTestCase"
+                      adjustWidthOn="content"
+                      onClick={() => openImportFolderModal({ folderName: currentFolderName ?? '' })}
+                    >
+                      {formatMessage(COMMON_LOCALE_KEYS.IMPORT)}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      data-automation-id="createTestCase"
+                      onClick={() => openCreateTestCaseModal()}
+                    >
+                      {formatMessage(commonMessages.createTestCase)}
+                    </Button>
+                  </>
                 )}
               </div>
             )}

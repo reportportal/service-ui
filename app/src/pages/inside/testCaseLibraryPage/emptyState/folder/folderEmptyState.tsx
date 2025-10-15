@@ -39,33 +39,30 @@ interface FolderEmptyStateProps {
 
 export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
   const { formatMessage } = useIntl();
-  const { canEditTestCase, canImportTestCases } = useUserPermissions();
+  const { canEditTestCase } = useUserPermissions();
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
   const { openModal: openImportTestCaseModal } = useImportTestCaseModal();
 
   const getAvailableButtons = () => {
-    const buttons: ActionButton[] = [];
-
-    if (canEditTestCase) {
-      buttons.push({
-        name: formatMessage(commonMessages.createTestCase),
-        dataAutomationId: 'createTestCaseButton',
-        icon: PlusIconInline,
-        isCompact: true,
-        handleButton: openCreateTestCaseModal,
-      });
-    }
-
-    if (canImportTestCases) {
-      buttons.push({
-        name: formatMessage(commonMessages.importTestCases),
-        dataAutomationId: 'importTestCaseButton',
-        variant: 'ghost',
-        icon: ImportIcon,
-        isCompact: true,
-        handleButton: () => openImportTestCaseModal({ folderName: folderTitle ?? '' }),
-      });
-    }
+    const buttons: ActionButton[] = canEditTestCase
+      ? [
+          {
+            name: formatMessage(commonMessages.createTestCase),
+            dataAutomationId: 'createTestCaseButton',
+            icon: PlusIconInline,
+            isCompact: true,
+            handleButton: openCreateTestCaseModal,
+          },
+          {
+            name: formatMessage(commonMessages.importTestCases),
+            dataAutomationId: 'importTestCaseButton',
+            variant: 'ghost',
+            icon: ImportIcon,
+            isCompact: true,
+            handleButton: () => openImportTestCaseModal({ folderName: folderTitle ?? '' }),
+          },
+        ]
+      : [];
 
     return buttons;
   };

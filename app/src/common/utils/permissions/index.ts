@@ -60,8 +60,6 @@ export {
   canCreateManualLaunch,
   // TEST CASE
   canEditTestCase,
-  // TEST CASES
-  canImportTestCases,
   // TEST PLAN
   canEditTestPlan,
   canDeleteTestPlan,

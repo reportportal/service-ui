@@ -16,7 +16,6 @@
 
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
-import { compact } from 'es-toolkit/compat';
 
 import { NumerableBlock } from 'pages/common/numerableBlock';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
@@ -32,7 +31,7 @@ import { useImportTestCaseModal } from '../../importTestCaseModal';
 
 export const MainPageEmptyState = () => {
   const { formatMessage } = useIntl();
-  const { canEditTestCase, canCreateTestCaseFolder, canImportTestCases } = useUserPermissions();
+  const { canEditTestCase } = useUserPermissions();
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
   const { openModal: openImportTestCaseModal } = useImportTestCaseModal();
   const { openModal: openCreateFolderModal } = useCreateFolderModal();
@@ -41,28 +40,30 @@ export const MainPageEmptyState = () => {
     (translation) => Parser(formatMessage(translation, {}, { ignoreTag: true })),
   );
 
-  const buttons = compact([
-    canCreateTestCaseFolder && {
-      name: formatMessage(commonMessages.createFolder),
-      dataAutomationId: 'createFolderButton',
-      isCompact: true,
-      handleButton: openCreateFolderModal,
-    },
-    canEditTestCase && {
-      name: formatMessage(commonMessages.createTestCase),
-      dataAutomationId: 'createTestCaseButton',
-      isCompact: true,
-      variant: 'ghost',
-      handleButton: openCreateTestCaseModal,
-    },
-    canImportTestCases && {
-      name: formatMessage(COMMON_LOCALE_KEYS.IMPORT),
-      dataAutomationId: 'importTestCaseButton',
-      isCompact: false,
-      variant: 'ghost',
-      handleButton: openImportTestCaseModal,
-    },
-  ]);
+  const buttons = canEditTestCase
+    ? [
+        {
+          name: formatMessage(commonMessages.createFolder),
+          dataAutomationId: 'createFolderButton',
+          isCompact: true,
+          handleButton: openCreateFolderModal,
+        },
+        {
+          name: formatMessage(commonMessages.createTestCase),
+          dataAutomationId: 'createTestCaseButton',
+          isCompact: true,
+          variant: 'ghost',
+          handleButton: openCreateTestCaseModal,
+        },
+        {
+          name: formatMessage(COMMON_LOCALE_KEYS.IMPORT),
+          dataAutomationId: 'importTestCaseButton',
+          isCompact: false,
+          variant: 'ghost',
+          handleButton: openImportTestCaseModal,
+        },
+      ]
+    : [];
 
   return (
     <>

@@ -91,8 +91,6 @@ export const ACTIONS: Record<string, string> = {
 
   // TEST CASE
   EDIT_TEST_CASE: 'EDIT_TEST_CASE',
-  // TEST CASES
-  IMPORT_TEST_CASES: 'IMPORT_TEST_CASES',
   // TEST PLAN
   CREATE_TEST_PLAN: 'CREATE_TEST_PLAN',
   DELETE_TEST_PLAN: 'DELETE_TEST_PLAN',
@@ -178,8 +176,6 @@ export const PERMISSIONS_MAP: PermissionsMap = {
       [ACTIONS.CREATE_MANUAL_LAUNCH]: true,
       // TEST CASE
       [ACTIONS.EDIT_TEST_CASE]: true,
-      // TEST CASES
-      [ACTIONS.IMPORT_TEST_CASES]: true,
       // TEST PLAN
       [ACTIONS.CREATE_TEST_PLAN]: true,
       [ACTIONS.DELETE_TEST_PLAN]: true,
