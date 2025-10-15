@@ -45,7 +45,6 @@ export const ACTIONS: Record<string, string> = {
 
   // USERS_MANAGEMENT
   MANAGE_USERS: 'MANAGE_USERS',
-  CHANGE_USER_ROLE: 'CHANGE_USER_ROLE',
   DELETE_USER: 'DELETE_USER',
 
   // LAUNCHES
@@ -92,7 +91,6 @@ export const PERMISSIONS_MAP: PermissionsMap = {
     [ACTIONS.UPDATE_SETTINGS]: true,
     [ACTIONS.MANAGE_USERS]: true,
     [ACTIONS.SEE_MEMBERS]: true,
-    [ACTIONS.CHANGE_USER_ROLE]: true,
     [ACTIONS.REPORT_LAUNCHES]: true,
     [ACTIONS.EDIT_LAUNCH]: true,
     [ACTIONS.BULK_EDIT_ITEMS]: true,
@@ -129,7 +127,6 @@ export const PERMISSIONS_MAP: PermissionsMap = {
       [ACTIONS.UPDATE_SETTINGS]: true,
       [ACTIONS.MANAGE_USERS]: true,
       [ACTIONS.SEE_MEMBERS]: true,
-      [ACTIONS.CHANGE_USER_ROLE]: true,
       [ACTIONS.REPORT_LAUNCHES]: true,
       [ACTIONS.EDIT_LAUNCH]: true,
       [ACTIONS.BULK_EDIT_ITEMS]: true,
