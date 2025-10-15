@@ -108,5 +108,4 @@ export const canCreateManualLaunch = checkPermission(ACTIONS.CREATE_MANUAL_LAUNC
 export const canEditTestCase = checkPermission(ACTIONS.EDIT_TEST_CASE);
 // TEST PLAN
 export const canCreateTestPlan = checkPermission(ACTIONS.CREATE_TEST_PLAN);
-export const canDuplicateTestPlan = checkPermission(ACTIONS.DUPLICATE_TEST_PLAN);
 export const canEditTestPlan = checkPermission(ACTIONS.EDIT_TEST_PLAN);
