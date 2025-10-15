@@ -62,8 +62,7 @@ export const TestCaseDetailsHeader = ({
   onMenuAction = () => {},
 }: TestCaseDetailsHeaderProps) => {
   const { formatMessage } = useIntl();
-  const { canDeleteTestCase, canDuplicateTestCase, canEditTestCase, canAddTestCaseToTestPlan } =
-    useUserPermissions();
+  const { canDeleteTestCase, canDuplicateTestCase, canEditTestCase } = useUserPermissions();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
@@ -183,15 +182,15 @@ export const TestCaseDetailsHeader = ({
             </Button>
           </PopoverControl>
           {canEditTestCase && (
-            <AddToLaunchButton
-              manualScenario={testCase?.manualScenario}
-              testCaseName={testCase.name}
-            />
-          )}
-          {canAddTestCaseToTestPlan && (
-            <Button onClick={onAddToTestPlan} variant="ghost">
-              {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
-            </Button>
+            <>
+              <AddToLaunchButton
+                manualScenario={testCase?.manualScenario}
+                testCaseName={testCase.name}
+              />
+              <Button onClick={onAddToTestPlan} variant="ghost">
+                {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
+              </Button>
+            </>
           )}
         </div>
       </div>

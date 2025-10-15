@@ -140,13 +140,8 @@ interface TestCaseSidePanelProps {
 export const TestCaseSidePanel = memo(
   ({ testCase, isVisible, onClose }: TestCaseSidePanelProps) => {
     const dispatch = useDispatch();
-    const {
-      canEditTestCase,
-      canDeleteTestCase,
-      canDuplicateTestCase,
-      canMoveTestCase,
-      canAddTestCaseToTestPlan,
-    } = useUserPermissions();
+    const { canEditTestCase, canDeleteTestCase, canDuplicateTestCase, canMoveTestCase } =
+      useUserPermissions();
     const { organizationSlug, projectSlug } = useSelector(
       urlOrganizationAndProjectSelector,
     ) as ProjectDetails;
@@ -326,20 +321,20 @@ export const TestCaseSidePanel = memo(
             {formatMessage(messages.openDetails)}
           </Button>
           {canEditTestCase && (
-            <AddToLaunchButton
-              manualScenario={testCase?.manualScenario}
-              testCaseName={testCase.name}
-            />
-          )}
-          {canAddTestCaseToTestPlan && (
-            <Button
-              variant="primary"
-              className={cx('action-button', 'last-button')}
-              onClick={handleAddToTestPlanClick}
-              data-automation-id="test-case-add-to-test-plan"
-            >
-              {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
-            </Button>
+            <>
+              <AddToLaunchButton
+                manualScenario={testCase?.manualScenario}
+                testCaseName={testCase.name}
+              />
+              <Button
+                variant="primary"
+                className={cx('action-button', 'last-button')}
+                onClick={handleAddToTestPlanClick}
+                data-automation-id="test-case-add-to-test-plan"
+              >
+                {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
+              </Button>
+            </>
           )}
         </div>
       </div>
