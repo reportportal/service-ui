@@ -29,7 +29,6 @@ export {
   canEditOwnAccount,
   canEditLaunch,
   canBulkEditItems,
-  canStartAnalysis,
   canDeleteTestItem,
   canWorkWithFilters,
   canWorkWithOrganizationFilter,

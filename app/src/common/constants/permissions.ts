@@ -52,7 +52,6 @@ export const ACTIONS: Record<string, string> = {
 
   // LAUNCHES
   EDIT_LAUNCH: 'EDIT_LAUNCH',
-  START_ANALYSIS: 'START_ANALYSIS',
 
   BULK_EDIT_ITEMS: 'BULK_EDIT_ITEMS', // for what? launche?
   MAKE_DECISION: 'MAKE_DECISION',
@@ -99,7 +98,6 @@ export const PERMISSIONS_MAP: PermissionsMap = {
     [ACTIONS.CHANGE_USER_ROLE]: true,
     [ACTIONS.REPORT_LAUNCHES]: true,
     [ACTIONS.EDIT_LAUNCH]: true,
-    [ACTIONS.START_ANALYSIS]: true,
     [ACTIONS.BULK_EDIT_ITEMS]: true,
     [ACTIONS.CHANGE_TEST_ITEM_STATUS]: true,
     [ACTIONS.DELETE_TEST_ITEM]: true,
@@ -138,7 +136,6 @@ export const PERMISSIONS_MAP: PermissionsMap = {
       [ACTIONS.CHANGE_USER_ROLE]: true,
       [ACTIONS.REPORT_LAUNCHES]: true,
       [ACTIONS.EDIT_LAUNCH]: true,
-      [ACTIONS.START_ANALYSIS]: true,
       [ACTIONS.BULK_EDIT_ITEMS]: true,
       [ACTIONS.DELETE_TEST_ITEM]: true,
       [ACTIONS.CHANGE_TEST_ITEM_STATUS]: true,

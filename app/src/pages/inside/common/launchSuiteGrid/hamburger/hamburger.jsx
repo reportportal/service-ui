@@ -44,7 +44,7 @@ export const Hamburger = ({ launch, customProps }) => {
   const [menuShown, setMenuShown] = useState(false);
   const [disableEventTrack, setDisableEventTrack] = useState(false);
   const iconRef = useRef(null);
-  const { canEditLaunch, canSeeRowActionMenu, canStartAnalysis } = useUserPermissions();
+  const { canEditLaunch, canSeeRowActionMenu } = useUserPermissions();
   const projectKey = useSelector(projectKeySelector);
   const enabledPatterns = useSelector(enabledPattersSelector);
   const analyzerExtensions = useSelector(analyzerExtensionsSelector);
@@ -227,7 +227,7 @@ export const Hamburger = ({ launch, customProps }) => {
               />
               {launch.mode === 'DEFAULT' && (
                 <HamburgerMenuItem
-                  disabled={!canStartAnalysis}
+                  disabled={!canEditLaunch}
                   text={formatMessage(messages.analysis)}
                   onClick={() => {
                     trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ANALYSIS_LAUNCH_MENU);
@@ -236,7 +236,7 @@ export const Hamburger = ({ launch, customProps }) => {
                 />
               )}
               <HamburgerMenuItem
-                disabled={!!clusterTitle || !canStartAnalysis}
+                disabled={!!clusterTitle || !canEditLaunch}
                 title={clusterTitle}
                 text={formatMessage(messages.uniqueErrorAnalysis)}
                 onClick={() => {
