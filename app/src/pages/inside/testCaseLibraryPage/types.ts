@@ -1,6 +1,5 @@
 import { FC, SVGProps } from 'react';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
-import { Attachment, TestStep } from './createTestCaseModal/useCreateTestCase';
 import { FolderWithFullPath } from 'controllers/testCase/types';
 
 type Tag = {
@@ -111,4 +110,14 @@ export interface CreateTestCaseFormData {
   expectedResult?: string;
   textAttachments?: Attachment[];
   tags?: string[];
+}
+
+export interface Attachment {
+  id: string;
+}
+
+export interface TestStep {
+  instructions: string;
+  expectedResult: string;
+  attachments?: Attachment[];
 }

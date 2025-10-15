@@ -31,16 +31,6 @@ import { CreateTestCaseFormData } from '../types';
 import { createFolder, buildManualScenario, handleTestCaseError } from './testCaseUtils';
 import { isString } from 'es-toolkit';
 
-export interface Attachment {
-  id: string;
-}
-
-export interface TestStep {
-  instructions: string;
-  expectedResult: string;
-  attachments?: Attachment[];
-}
-
 const DEFAULT_FOLDER_ID = 85;
 
 export const useCreateTestCase = () => {
@@ -71,7 +61,7 @@ export const useCreateTestCase = () => {
           description: payload.description,
           name: payload.name,
           testFolderId: folderId,
-          priority: payload.priority.toUpperCase(),
+          priority: payload.priority?.toUpperCase(),
           manualScenario,
         },
       });

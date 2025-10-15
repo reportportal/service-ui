@@ -45,7 +45,6 @@ import {
   GET_TEST_CASE_DETAILS_SUCCESS,
   NAMESPACE,
   RENAME_FOLDER,
-  UPDATE_TEST_CASE,
 } from './constants';
 import { Folder } from './types';
 import {
@@ -64,8 +63,6 @@ import {
   setTestCasesAction,
   deleteFolderSuccessAction,
   renameFolderSuccessAction,
-  UpdateTestCaseParams,
-  updateTestCaseSuccessAction,
 } from './actionCreators';
 import { getAllFolderIdsToDelete } from './utils';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
@@ -94,10 +91,6 @@ interface DeleteFolderAction extends Action<typeof DELETE_FOLDER> {
 
 interface RenameFolderAction extends Action<typeof RENAME_FOLDER> {
   payload: RenameFolderParams;
-}
-
-interface UpdateTestCaseAction extends Action<typeof UPDATE_TEST_CASE> {
-  payload: UpdateTestCaseParams;
 }
 
 interface TestCaseDetailsAction extends Action<typeof GET_TEST_CASE_DETAILS> {
@@ -383,37 +376,6 @@ function* renameFolder(action: RenameFolderAction) {
   }
 }
 
-function* updateTestCase(action: UpdateTestCaseAction) {
-  try {
-    const projectKey = (yield select(projectKeySelector)) as string;
-    const { testCaseId, data } = action.payload;
-
-    const updatedTestCase = (yield call(
-      fetch,
-      URLS.testCaseDetails(projectKey, testCaseId.toString()),
-      {
-        method: 'PUT',
-        data,
-      },
-    )) as TestCase;
-
-    yield put(updateTestCaseSuccessAction(updatedTestCase));
-    yield put(hideModalAction());
-    yield put(
-      showSuccessNotification({
-        messageId: 'testCaseUpdatedSuccess',
-      }),
-    );
-  } catch (error: unknown) {
-    console.error(error);
-    yield put(
-      showErrorNotification({
-        messageId: 'testCaseUpdateFailed',
-      }),
-    );
-  }
-}
-
 function* watchGetFolders() {
   yield takeEvery(GET_FOLDERS, getFolders);
 }
@@ -438,10 +400,6 @@ function* watchGetTestCaseDetails() {
   yield takeEvery(GET_TEST_CASE_DETAILS, getTestCaseDetails);
 }
 
-function* watchUpdateTestCase() {
-  yield takeEvery(UPDATE_TEST_CASE, updateTestCase);
-}
-
 export function* testCaseSagas() {
   yield all([
     watchGetTestCases(),
@@ -450,7 +408,6 @@ export function* testCaseSagas() {
     watchCreateFolder(),
     watchGetTestCasesByFolderId(),
     watchGetAllTestCases(),
-    watchUpdateTestCase(),
     takeEvery(DELETE_FOLDER, deleteFolder),
     takeEvery(RENAME_FOLDER, renameFolder),
   ]);

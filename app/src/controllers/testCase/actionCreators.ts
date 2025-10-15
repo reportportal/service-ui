@@ -32,8 +32,6 @@ import {
   SET_TEST_CASES,
   RENAME_FOLDER,
   RENAME_FOLDER_SUCCESS,
-  UPDATE_TEST_CASE,
-  UPDATE_TEST_CASE_SUCCESS,
 } from './constants';
 import { Folder } from './types';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
@@ -147,19 +145,4 @@ export const renameFolderAction = (folderInfo: RenameFolderParams) => ({
 export const renameFolderSuccessAction = (folderId: RenameFolderParams) => ({
   type: RENAME_FOLDER_SUCCESS,
   payload: folderId,
-});
-
-export interface UpdateTestCaseParams {
-  testCaseId: number;
-  data: TestCase;
-}
-
-export const updateTestCaseAction = (params: UpdateTestCaseParams) => ({
-  type: UPDATE_TEST_CASE,
-  payload: params,
-});
-
-export const updateTestCaseSuccessAction = (testCase: TestCase) => ({
-  type: UPDATE_TEST_CASE_SUCCESS,
-  payload: testCase,
 });

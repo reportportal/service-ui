@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
-import { isNumber } from 'es-toolkit/compat';
+import { isNumber, isEmpty } from 'es-toolkit/compat';
 import { FieldText } from '@reportportal/ui-kit';
 
 import { FieldErrorHint, FieldProvider } from 'components/fields';
@@ -57,7 +57,7 @@ export const TestCaseDetails = ({ className }: TestCaseDetailsProps) => {
   const stepsData = useSelector(stepsDataSelector);
 
   useEffect(() => {
-    if (stepsData) {
+    if (!isEmpty(stepsData)) {
       const stepsArray = Object.values(stepsData) as StepData[];
       setSteps(stepsArray);
     } else {

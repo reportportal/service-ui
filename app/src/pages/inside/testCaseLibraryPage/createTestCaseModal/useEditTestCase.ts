@@ -68,7 +68,7 @@ export const useEditTestCase = (testCaseId?: number) => {
           description: payload.description,
           name: payload.name,
           testFolderId: folderId,
-          priority: payload.priority.toUpperCase(),
+          priority: payload.priority?.toUpperCase(),
           tags: payload.tags || [],
           manualScenario,
         },
