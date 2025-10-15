@@ -64,9 +64,7 @@ const CreateTestCaseModalComponent = ({ dirty, handleSubmit, data }: CreateTestC
   useEffect(() => {
     if (testCase) {
       const manualScenario = testCase?.manualScenario;
-      const manualScenarioData = manualScenario as unknown as Record<string, unknown> | undefined;
-
-      const stepsObject = convertStepsArrayToObject(manualScenarioData?.steps as StepData[]);
+      const stepsObject = convertStepsArrayToObject(manualScenario?.steps as StepData[]);
 
       const formData = {
         name: testCase.name,
@@ -81,15 +79,6 @@ const CreateTestCaseModalComponent = ({ dirty, handleSubmit, data }: CreateTestC
         preconditionAttachments: manualScenario?.preconditions?.attachments || [],
         ...(stepsObject && {
           steps: stepsObject,
-        }),
-        ...(manualScenarioData?.instructions && {
-          instructions: manualScenarioData?.instructions,
-        }),
-        ...(manualScenarioData?.expectedResult && {
-          expectedResult: manualScenarioData?.expectedResult,
-        }),
-        ...(manualScenarioData?.attachments && {
-          textAttachments: manualScenarioData?.attachments,
         }),
       };
 

@@ -15,9 +15,7 @@
  */
 
 import { useDispatch, useSelector } from 'react-redux';
-import { SubmissionError } from 'redux-form';
 import { useIntl } from 'react-intl';
-import { isString } from 'es-toolkit/compat';
 
 import { projectKeySelector } from 'controllers/project';
 import { fetch } from 'common/utils';
@@ -25,39 +23,19 @@ import { useDebouncedSpinner } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { hideModalAction } from 'controllers/modal';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
-import { getTestCaseByFolderIdAction, Folder } from 'controllers/testCase';
+import { getTestCaseByFolderIdAction } from 'controllers/testCase';
 import { createFoldersSuccessAction } from 'controllers/testCase/actionCreators';
 
 import { messages } from './basicInformation/messages';
-import { ManualScenarioDto, ManualScenarioType, CreateTestCaseFormData } from '../types';
+import { CreateTestCaseFormData } from '../types';
+import { createFolder, buildManualScenario, handleTestCaseError } from './testCaseUtils';
+import { isString } from 'es-toolkit';
 
 export const useEditTestCase = (testCaseId?: number) => {
   const { isLoading: isEditTestCaseLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const { formatMessage } = useIntl();
-
-  const createFolder = async (folderName: string): Promise<number> => {
-    const createdFolder = await fetch<Folder>(URLS.testFolders(projectKey), {
-      method: 'POST',
-      data: { name: folderName },
-    });
-
-    dispatch(createFoldersSuccessAction({ ...createdFolder, countOfTestCases: 0 }));
-
-    return createdFolder.id;
-  };
-
-  const resolveFolderId = async (
-    folder: string | { id: number } | undefined,
-    currentFolderId?: number,
-  ): Promise<number> => {
-    if (isString(folder)) {
-      return createFolder(folder);
-    }
-
-    return folder?.id || currentFolderId || 0;
-  };
 
   const editTestCase = async (payload: CreateTestCaseFormData, currentFolderId?: number) => {
     if (!testCaseId) {
@@ -72,30 +50,17 @@ export const useEditTestCase = (testCaseId?: number) => {
     try {
       showSpinner();
 
-      const folderId = await resolveFolderId(payload.folder, currentFolderId);
+      let folderId: number;
 
-      const commonData = {
-        executionEstimationTime: payload.executionEstimationTime,
-        linkToRequirements: payload.linkToRequirements,
-        manualScenarioType: payload.manualScenarioType,
-        preconditions: {
-          value: payload.precondition,
-          attachments: payload.preconditionAttachments ?? [],
-        },
-      };
+      if (isString(payload.folder)) {
+        const folder = await createFolder(projectKey, payload.folder);
+        dispatch(createFoldersSuccessAction({ ...folder, countOfTestCases: 0 }));
+        folderId = folder.id;
+      } else {
+        folderId = payload.folder?.id || currentFolderId || 0;
+      }
 
-      const manualScenario: ManualScenarioDto =
-        payload.manualScenarioType === ManualScenarioType.TEXT
-          ? {
-              ...commonData,
-              instructions: payload.instructions,
-              expectedResult: payload.expectedResult,
-              attachments: payload.textAttachments ?? [],
-            }
-          : {
-              ...commonData,
-              steps: Object.values(payload?.steps ?? {}),
-            };
+      const manualScenario = buildManualScenario(payload);
 
       await fetch(URLS.testCaseDetails(projectKey, testCaseId.toString()), {
         method: 'PUT',
@@ -117,11 +82,9 @@ export const useEditTestCase = (testCaseId?: number) => {
       );
       dispatch(getTestCaseByFolderIdAction({ folderId }));
     } catch (error: unknown) {
-      if (error instanceof Error && error?.message?.includes('tms_test_case_name_folder_unique')) {
-        throw new SubmissionError({
-          name: formatMessage(messages.duplicateTestCaseName),
-        });
-      } else {
+      try {
+        handleTestCaseError(error, formatMessage, messages.duplicateTestCaseName);
+      } catch {
         dispatch(
           showErrorNotification({
             messageId: 'testCaseUpdateFailed',

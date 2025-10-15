@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { memo, SetStateAction, useState } from 'react';
+import { memo, SetStateAction, useCallback, useState } from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { xor } from 'es-toolkit';
@@ -101,9 +101,14 @@ export const TestCaseList = memo(
 
     const selectedTestCase = testCases.find((testCase) => testCase.id === selectedTestCaseId);
 
-    const handleEditTestCase = (testCase: ExtendedTestCase) => {
-      openEditTestCaseModal({ testCase });
-    };
+    const handleEditTestCase = useCallback(
+      (testCaseId: number) => {
+        const testCase = testCases.find((testCase) => testCase.id === testCaseId);
+
+        openEditTestCaseModal({ testCase });
+      },
+      [testCases, openEditTestCaseModal],
+    );
 
     const tableData = currentData.map((testCase) => ({
       id: testCase.id,
@@ -127,7 +132,7 @@ export const TestCaseList = memo(
         content: testCase.updatedAt,
         component: (
           <TestCaseExecutionCell
-            testCase={testCase}
+            testCaseId={testCase.id}
             lastExecution={testCase.updatedAt}
             instanceKey={instanceKey}
             onRowClick={() => setSelectedTestCaseId(testCase.id)}

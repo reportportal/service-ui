@@ -20,15 +20,14 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TestCaseMenuAction } from 'pages/inside/common/testCaseList/types';
 import { createTestCaseMenuItems } from 'pages/inside/common/testCaseList/configUtils';
 import { getExcludedActionsFromPermissionMap } from 'pages/inside/common/testCaseList/utils';
-import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 
 interface UseTestCaseTooltipItemsProps {
-  testCase?: ExtendedTestCase;
-  onEdit?: (testCase: ExtendedTestCase) => void;
+  testCaseId?: number;
+  onEdit?: (testCaseId: number) => void;
 }
 
 export const useTestCaseTooltipItems = ({
-  testCase,
+  testCaseId,
   onEdit,
 }: UseTestCaseTooltipItemsProps = {}) => {
   const { formatMessage } = useIntl();
@@ -44,7 +43,7 @@ export const useTestCaseTooltipItems = ({
   ];
 
   const actions = {
-    [TestCaseMenuAction.EDIT]: testCase && onEdit ? () => onEdit(testCase) : undefined,
+    [TestCaseMenuAction.EDIT]: () => onEdit?.(testCaseId),
   };
 
   return createTestCaseMenuItems(

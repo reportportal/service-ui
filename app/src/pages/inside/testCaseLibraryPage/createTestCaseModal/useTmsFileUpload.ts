@@ -18,12 +18,13 @@ import { useCallback, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { change, formValueSelector } from 'redux-form';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { useFileProcessing, BaseAttachmentFile } from 'common/hooks';
+import type { AppState } from 'types/store';
+
 import { useAttachmentUpload } from './useAttachmentUpload';
 import { messages } from './messages';
-import type { AppState } from 'types/store';
-import { isEmpty } from 'es-toolkit/compat';
 
 interface UseTmsFileUploadOptions {
   formName: string;

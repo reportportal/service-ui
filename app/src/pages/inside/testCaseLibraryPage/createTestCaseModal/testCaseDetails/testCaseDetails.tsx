@@ -17,6 +17,7 @@ import { CREATE_TEST_CASE_FORM_NAME } from '../createTestCaseModal';
 import { manualScenarioTypeSelector, stepsDataSelector } from '../selectors';
 
 import styles from './testCaseDetails.scss';
+import { BaseAttachmentFile } from 'common/hooks';
 
 const cx = classNames.bind(styles) as typeof classNames;
 
@@ -35,7 +36,7 @@ export interface StepData {
   id: number;
   instructions: string;
   expectedResult: string;
-  attachments?: Array<{ id: string; fileName?: string; size?: number }>;
+  attachments?: Partial<BaseAttachmentFile>[];
 }
 
 const createEmptyStep = (): StepData => ({
