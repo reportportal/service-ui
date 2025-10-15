@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import { compact } from 'es-toolkit/compat';
 import { useIntl } from 'react-intl';
 
@@ -50,7 +49,7 @@ export const useTestCaseFolderMenu = ({
   const { openModal: openImportTestCaseModal } = useImportTestCaseModal();
   const { openModal: openCreateSubfolderModal } = useCreateSubfolderModal();
 
-  const { canEditTestCase, canRenameTestCaseFolder } = useUserPermissions();
+  const { canEditTestCase } = useUserPermissions();
 
   const handleDeleteFolder = () => {
     openDeleteModal({
@@ -76,7 +75,7 @@ export const useTestCaseFolderMenu = ({
       label: formatMessage(commonMessages.createSubfolder),
       onClick: handleCreateSubfolder,
     },
-    canRenameTestCaseFolder && {
+    canEditTestCase && {
       label: formatMessage(COMMON_LOCALE_KEYS.RENAME),
       onClick: handleRenameFolder,
     },

@@ -63,7 +63,6 @@ export {
   canEditTestCase,
   canEditTestCaseTag,
   canMoveTestCase,
-  canRenameTestCaseFolder,
   // TEST CASES
   canImportTestCases,
   // TEST PLAN
