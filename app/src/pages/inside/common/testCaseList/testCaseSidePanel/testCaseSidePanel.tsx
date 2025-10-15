@@ -145,7 +145,6 @@ export const TestCaseSidePanel = memo(
       canDeleteTestCase,
       canDuplicateTestCase,
       canMoveTestCase,
-      canAddTestCaseToLaunch,
       canAddTestCaseToTestPlan,
     } = useUserPermissions();
     const { organizationSlug, projectSlug } = useSelector(
@@ -326,7 +325,7 @@ export const TestCaseSidePanel = memo(
           >
             {formatMessage(messages.openDetails)}
           </Button>
-          {canAddTestCaseToLaunch && (
+          {canEditTestCase && (
             <AddToLaunchButton
               manualScenario={testCase?.manualScenario}
               testCaseName={testCase.name}

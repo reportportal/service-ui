@@ -62,13 +62,8 @@ export const TestCaseDetailsHeader = ({
   onMenuAction = () => {},
 }: TestCaseDetailsHeaderProps) => {
   const { formatMessage } = useIntl();
-  const {
-    canDeleteTestCase,
-    canDuplicateTestCase,
-    canEditTestCase,
-    canAddTestCaseToLaunch,
-    canAddTestCaseToTestPlan,
-  } = useUserPermissions();
+  const { canDeleteTestCase, canDuplicateTestCase, canEditTestCase, canAddTestCaseToTestPlan } =
+    useUserPermissions();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
@@ -187,7 +182,7 @@ export const TestCaseDetailsHeader = ({
               <MeatballMenuIcon />
             </Button>
           </PopoverControl>
-          {canAddTestCaseToLaunch && (
+          {canEditTestCase && (
             <AddToLaunchButton
               manualScenario={testCase?.manualScenario}
               testCaseName={testCase.name}
