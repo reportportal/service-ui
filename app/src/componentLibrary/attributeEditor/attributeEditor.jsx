@@ -69,7 +69,7 @@ export const AttributeEditor = ({
 
   const getValidationErrors = (key, value) => ({
     key: attributeKeyValidator(key),
-    value: attribute.edited && valueTouched && getAttributeValueValidator(value),
+    value: getAttributeValueValidator(value),
   });
 
   const keyEditorRef = useRef(null);
@@ -81,7 +81,11 @@ export const AttributeEditor = ({
     isKeyEdited: false,
   });
 
-  const clearInputValues = () => setState({ key: '', value: '', errors: '', isKeyEdited: false });
+  const clearInputValues = () => {
+    setState({ key: '', value: '', errors: getValidationErrors('', ''), isKeyEdited: false });
+    setTouchValue(false);
+    setTouchKey(false);
+  };
 
   useEffect(() => {
     if (keyEditorRef.current) {
