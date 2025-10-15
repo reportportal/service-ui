@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { FormEvent, MouseEvent } from 'react';
+import { FormEvent, MouseEvent, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
-import { reduxForm } from 'redux-form';
+import { reduxForm, InjectedFormProps } from 'redux-form';
 import { Modal } from '@reportportal/ui-kit';
 
 import { createClassnames, commonValidators } from 'common/utils';
@@ -59,22 +59,39 @@ export interface CreateTestCaseFormData {
   tags?: string[];
 }
 
-export const CreateTestCaseModal = reduxForm<CreateTestCaseFormData>({
+interface CreateTestCaseModalProps {
+  data?: {
+    folder?: FolderWithFullPath;
+  };
+}
+
+export const CreateTestCaseModal = reduxForm<CreateTestCaseFormData, CreateTestCaseModalProps>({
   form: CREATE_TEST_CASE_FORM_NAME,
-  initialValues: {
-    priority: 'unspecified',
-    manualScenarioType: 'STEPS',
-    executionEstimationTime: 5,
-  },
   validate: ({ name, folder, linkToRequirements }) => ({
     name: commonValidators.requiredField(name),
     folder: commonValidators.requiredField(folder),
     linkToRequirements: commonValidators.optionalUrl(linkToRequirements),
   }),
-})(({ dirty, handleSubmit }) => {
+})(({
+  data,
+  dirty,
+  initialize,
+  handleSubmit,
+}: InjectedFormProps<CreateTestCaseFormData, CreateTestCaseModalProps> &
+  CreateTestCaseModalProps) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { isCreateTestCaseLoading, createTestCase } = useCreateTestCase();
+
+  useEffect(() => {
+    initialize({
+      priority: 'unspecified',
+      manualScenarioType: 'STEPS',
+      executionEstimationTime: 5,
+      folder: data?.folder,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const okButton = {
     children: (
