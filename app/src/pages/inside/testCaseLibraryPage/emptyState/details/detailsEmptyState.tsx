@@ -24,10 +24,10 @@ import { messages } from '../messages';
 
 export const DetailsEmptyState = () => {
   const { formatMessage } = useIntl();
-  const { canEditTestCaseScenario } = useUserPermissions();
+  const { canEditTestCase } = useUserPermissions();
 
   const getActionButtons = () =>
-    canEditTestCaseScenario
+    canEditTestCase
       ? [
           {
             isCompact: true,
