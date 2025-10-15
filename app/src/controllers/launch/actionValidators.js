@@ -20,7 +20,7 @@ import {
   canMergeLaunches,
   canForceFinishLaunch,
   canMoveToDebug,
-  canDeleteLaunch,
+  canEditLaunch,
 } from 'common/utils/permissions';
 
 export const validateMergeLaunch = (launch, launches, state) => {
@@ -62,7 +62,7 @@ export const validateMoveLaunch = (launch, launches, state) => {
 
 export const validateDeleteLaunch = (launch, launches, state) => {
   const userRoles = userRolesSelector(state);
-  if (!canDeleteLaunch(userRoles)) {
+  if (!canEditLaunch(userRoles)) {
     return 'notYourOwnLaunch';
   }
   if (launch.status && launch.status.toLowerCase() === IN_PROGRESS) {

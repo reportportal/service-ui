@@ -27,7 +27,6 @@ export {
   canDeleteUser,
   canSeeMembers,
   canEditOwnAccount,
-  canDeleteLaunch,
   canEditLaunch,
   canBulkEditItems,
   canForceFinishLaunch,

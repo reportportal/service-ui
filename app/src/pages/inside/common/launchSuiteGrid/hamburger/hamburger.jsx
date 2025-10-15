@@ -47,7 +47,7 @@ export const Hamburger = ({ launch, customProps }) => {
   const {
     canForceFinishLaunch,
     canMoveToDebug,
-    canDeleteLaunch,
+    canEditLaunch,
     canSeeRowActionMenu,
     canStartAnalysis,
   } = useUserPermissions();
@@ -105,7 +105,7 @@ export const Hamburger = ({ launch, customProps }) => {
   };
 
   const getDeleteItemTooltip = () => {
-    if (!canDeleteLaunch) {
+    if (!canEditLaunch) {
       return formatMessage(messages.notYourLaunch);
     }
     if (isLaunchInProgress) {
@@ -166,7 +166,7 @@ export const Hamburger = ({ launch, customProps }) => {
   const getImportantLaunchesTitle = () => {
     if (!areImportantLaunchesEnabled) {
       return formatMessage(messages.importantControlsDisabledTooltip);
-    } else if (!canDeleteLaunch) {
+    } else if (!canEditLaunch) {
       return formatMessage(messages.noPermissions);
     }
     return '';
@@ -261,7 +261,7 @@ export const Hamburger = ({ launch, customProps }) => {
               />
               <HamburgerMenuItem
                 text={formatMessage(COMMON_LOCALE_KEYS.DELETE)}
-                disabled={!canDeleteLaunch || isLaunchInProgress}
+                disabled={!canEditLaunch || isLaunchInProgress}
                 onClick={() => {
                   trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_DELETE_LAUNCH_MENU);
                   customProps.onDeleteItem(launch);
