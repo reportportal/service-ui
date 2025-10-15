@@ -43,7 +43,6 @@ import styles from './testCaseDetailsPage.scss';
 const cx = createClassnames(styles);
 
 const COLLAPSIBLE_SECTIONS_CONFIG = ({
-  canEditTestCaseTag,
   canEditTestCase,
   tags,
   testCaseDescription,
@@ -51,7 +50,6 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
   handleAddTags,
   handleDescriptionModal,
 }: {
-  canEditTestCaseTag: boolean;
   canEditTestCase: boolean;
   tags: string[];
   testCaseDescription: string;
@@ -64,7 +62,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
       titleKey: 'tags',
       defaultMessage: commonMessages.noTagsAdded,
       childComponent: !isEmpty(tags) && <AdaptiveTagList tags={tags} isShowAllView />,
-      headerControl: canEditTestCaseTag && (
+      headerControl: canEditTestCase && (
         <Button variant="text" adjustWidthOn="content" onClick={handleAddTags} icon={<PlusIcon />}>
           {headerControlKeys.ADD}
         </Button>
@@ -95,7 +93,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
 export const TestCaseDetailsPage = () => {
   const { formatMessage } = useIntl();
   const [isTagsAdded, setIsTagsAdded] = useState(false);
-  const { canEditTestCaseTag, canEditTestCase, canEditTestCaseDescription } = useUserPermissions();
+  const { canEditTestCase } = useUserPermissions();
   const { openModal: openAddTestCasesToTestPlanModal } = useAddTestCasesToTestPlanModal();
   const { openModal: openDescriptionModal } = useDescriptionModal();
 
@@ -144,8 +142,7 @@ export const TestCaseDetailsPage = () => {
               headerControlKeys: { ADD: formatMessage(COMMON_LOCALE_KEYS.ADD) },
               testCaseDescription: testCaseDetails.description,
               tags: tags.map(({ key }) => key),
-              canEditTestCaseTag,
-              canEditTestCaseDescription,
+              canEditTestCase,
             }).map(({ titleKey, defaultMessage, childComponent, headerControl }) => (
               <CollapsibleSectionWithHeaderControl
                 key={titleKey}
