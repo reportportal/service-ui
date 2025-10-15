@@ -59,7 +59,6 @@ export {
   // MANUAL LAUNCH
   canCreateManualLaunch,
   // TEST CASE
-  canCreateTestCase,
   canDeleteTestCase,
   canDoTestCaseBulkActions,
   canDuplicateTestCase,

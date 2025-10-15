@@ -32,7 +32,7 @@ import { useImportTestCaseModal } from '../../importTestCaseModal';
 
 export const MainPageEmptyState = () => {
   const { formatMessage } = useIntl();
-  const { canCreateTestCase, canCreateTestCaseFolder, canImportTestCases } = useUserPermissions();
+  const { canEditTestCase, canCreateTestCaseFolder, canImportTestCases } = useUserPermissions();
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
   const { openModal: openImportTestCaseModal } = useImportTestCaseModal();
   const { openModal: openCreateFolderModal } = useCreateFolderModal();
@@ -48,7 +48,7 @@ export const MainPageEmptyState = () => {
       isCompact: true,
       handleButton: openCreateFolderModal,
     },
-    canCreateTestCase && {
+    canEditTestCase && {
       name: formatMessage(commonMessages.createTestCase),
       dataAutomationId: 'createTestCaseButton',
       isCompact: true,

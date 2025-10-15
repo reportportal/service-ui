@@ -59,7 +59,7 @@ export const TestCaseLibraryPage = () => {
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
   const { openModal: openImportFolderModal } = useImportTestCaseModal();
 
-  const { canCreateTestCase, canImportTestCases } = useUserPermissions();
+  const { canEditTestCase, canImportTestCases } = useUserPermissions();
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
   const hasFolders = !isEmpty(folders);
 
@@ -107,7 +107,7 @@ export const TestCaseLibraryPage = () => {
                     {formatMessage(COMMON_LOCALE_KEYS.IMPORT)}
                   </Button>
                 )}
-                {canCreateTestCase && (
+                {canEditTestCase && (
                   <Button
                     variant="ghost"
                     data-automation-id="createTestCase"
