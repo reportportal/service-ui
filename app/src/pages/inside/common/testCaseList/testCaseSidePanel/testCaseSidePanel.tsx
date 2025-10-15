@@ -140,7 +140,7 @@ interface TestCaseSidePanelProps {
 export const TestCaseSidePanel = memo(
   ({ testCase, isVisible, onClose }: TestCaseSidePanelProps) => {
     const dispatch = useDispatch();
-    const { canEditTestCase, canDuplicateTestCase, canMoveTestCase } = useUserPermissions();
+    const { canEditTestCase, canMoveTestCase } = useUserPermissions();
     const { organizationSlug, projectSlug } = useSelector(
       urlOrganizationAndProjectSelector,
     ) as ProjectDetails;
@@ -169,7 +169,7 @@ export const TestCaseSidePanel = memo(
     const permissionMap = [
       { isAllowed: canEditTestCase, action: TestCaseMenuAction.EDIT },
       { isAllowed: canEditTestCase, action: TestCaseMenuAction.DELETE },
-      { isAllowed: canDuplicateTestCase, action: TestCaseMenuAction.DUPLICATE },
+      { isAllowed: canEditTestCase, action: TestCaseMenuAction.DUPLICATE },
       { isAllowed: canMoveTestCase, action: TestCaseMenuAction.MOVE },
     ];
 

@@ -62,7 +62,7 @@ export const TestCaseDetailsHeader = ({
   onMenuAction = () => {},
 }: TestCaseDetailsHeaderProps) => {
   const { formatMessage } = useIntl();
-  const { canDuplicateTestCase, canEditTestCase } = useUserPermissions();
+  const { canEditTestCase } = useUserPermissions();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
@@ -96,24 +96,25 @@ export const TestCaseDetailsHeader = ({
   };
 
   const getMenuItems = () => {
-    const items: PopoverItem[] = [
-      {
-        label: formatMessage(commonMessages.historyOfActions),
-        onClick: handleHistoryOfActions,
-      },
-    ];
-
-    if (canDuplicateTestCase) {
-      items.unshift({ label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE) });
-    }
-
-    if (canEditTestCase) {
-      items.push({
-        label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-        variant: 'destructive',
-        onClick: handleDeleteTestCase,
-      });
-    }
+    const items: PopoverItem[] = canEditTestCase
+      ? [
+          { label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE) },
+          {
+            label: formatMessage(commonMessages.historyOfActions),
+            onClick: handleHistoryOfActions,
+          },
+          {
+            label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+            variant: 'destructive',
+            onClick: handleDeleteTestCase,
+          },
+        ]
+      : [
+          {
+            label: formatMessage(commonMessages.historyOfActions),
+            onClick: handleHistoryOfActions,
+          },
+        ];
 
     return items;
   };
