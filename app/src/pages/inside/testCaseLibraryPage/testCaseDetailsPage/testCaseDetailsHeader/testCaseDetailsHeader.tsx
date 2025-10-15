@@ -62,7 +62,7 @@ export const TestCaseDetailsHeader = ({
   onMenuAction = () => {},
 }: TestCaseDetailsHeaderProps) => {
   const { formatMessage } = useIntl();
-  const { canDeleteTestCase, canDuplicateTestCase, canEditTestCase } = useUserPermissions();
+  const { canDuplicateTestCase, canEditTestCase } = useUserPermissions();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
@@ -107,7 +107,7 @@ export const TestCaseDetailsHeader = ({
       items.unshift({ label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE) });
     }
 
-    if (canDeleteTestCase) {
+    if (canEditTestCase) {
       items.push({
         label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
         variant: 'destructive',

@@ -105,7 +105,6 @@ export const canSeeInstanceLevelPluginsPages = checkPermission(ACTIONS.INSTANCE_
 // MANUAL LAUNCHES
 export const canCreateManualLaunch = checkPermission(ACTIONS.CREATE_MANUAL_LAUNCH);
 // TEST CASE
-export const canDeleteTestCase = checkPermission(ACTIONS.DELETE_TEST_CASE);
 export const canDuplicateTestCase = checkPermission(ACTIONS.DUPLICATE_TEST_CASE);
 export const canEditTestCase = checkPermission(ACTIONS.EDIT_TEST_CASE);
 export const canEditTestCaseDescription = checkPermission(ACTIONS.EDIT_TEST_CASE_DESCRIPTION);
