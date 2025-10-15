@@ -21,7 +21,6 @@ export {
   canUpdateSettings,
   canSeeSettings,
   canManageUsers,
-  canAssignUnassignInternalUser,
   canChangeUserRole,
   canDeleteUser,
   canSeeMembers,

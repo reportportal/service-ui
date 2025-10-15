@@ -40,12 +40,8 @@ interface ProjectActionMenuProps {
 export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
   const { projectName, projectKey, projectId, projectSlug, projectRole, organizationSlug } =
     details;
-  const {
-    canRenameProject,
-    canInviteUserToProject,
-    canDeleteProject,
-    canAssignUnassignInternalUser,
-  } = useUserPermissions();
+  const { canRenameProject, canInviteUserToProject, canDeleteProject, canManageUsers } =
+    useUserPermissions();
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const user = useSelector(userInfoSelector) as UserInfo;
@@ -133,7 +129,7 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
           ? formatMessage(COMMON_LOCALE_KEYS.UNASSIGN)
           : formatMessage(COMMON_LOCALE_KEYS.ASSIGN),
         onClick: isAssigned ? handleUnassignClick : handleAssignClick,
-        hasPermission: canAssignUnassignInternalUser,
+        hasPermission: canManageUsers,
       },
       {
         label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
@@ -150,7 +146,7 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
     canInviteUserToProject,
     handleUnassignClick,
     handleAssignClick,
-    canAssignUnassignInternalUser,
+    canManageUsers,
     handleDeleteProjectClick,
     canDeleteProject,
   ]);

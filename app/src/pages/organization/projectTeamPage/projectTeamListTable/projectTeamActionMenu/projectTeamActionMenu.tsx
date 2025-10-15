@@ -19,7 +19,6 @@ import { useCallback, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { idSelector } from 'controllers/user';
 import { redirect } from 'redux-first-router';
-import { canAssignUnassignInternalUser } from 'common/utils/permissions/permissions';
 import { urlOrganizationSlugSelector, userRolesSelector } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { ActionMenu } from 'components/actionMenu';
@@ -37,6 +36,7 @@ import { fetchMembersAction } from 'controllers/members';
 import { ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages/constants';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { MANAGER } from 'common/constants/projectRoles';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 
 interface User {
   id: number;
@@ -57,6 +57,7 @@ export const ProjectTeamActionMenu = ({ user }: ProjectTeamActionMenuProps) => {
   const projectName = useSelector(projectNameSelector);
   const projectKey = useSelector(projectKeySelector);
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
+  const { canManageUsers } = useUserPermissions();
 
   const handleUnassignClick = useCallback(() => {
     const isCurrentUser = currentUserId === user.id;
@@ -106,10 +107,10 @@ export const ProjectTeamActionMenu = ({ user }: ProjectTeamActionMenuProps) => {
       {
         label: formatMessage(COMMON_LOCALE_KEYS.UNASSIGN),
         onClick: handleUnassignClick,
-        hasPermission: canAssignUnassignInternalUser(roles),
+        hasPermission: canManageUsers,
       },
     ];
-  }, [roles, formatMessage, handleUnassignClick]);
+  }, [canManageUsers, formatMessage, handleUnassignClick]);
 
   return <ActionMenu actions={actions} />;
 };

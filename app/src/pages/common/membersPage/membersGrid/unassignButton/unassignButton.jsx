@@ -24,7 +24,7 @@ import { showModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { canAssignUnassignInternalUser } from 'common/utils/permissions';
+import { canManageUsers } from 'common/utils/permissions';
 import { urlProjectSlugSelector, userRolesSelector } from 'controllers/pages';
 import { userRolesType } from 'common/constants/projectRoles';
 import { userIdSelector, assignedProjectsSelector } from 'controllers/user';
@@ -113,7 +113,7 @@ export class UnassignButton extends Component {
       return this.props.intl.formatMessage(messages.unAssignTitlePersonal);
     } else if (this.props.currentUser === this.props.userId) {
       return this.props.intl.formatMessage(messages.unAssignTitleYou);
-    } else if (!canAssignUnassignInternalUser(this.props.userRoles)) {
+    } else if (!canManageUsers(this.props.userRoles)) {
       return this.props.intl.formatMessage(messages.unAssignTitleNoPermission);
     }
     return this.props.intl.formatMessage(messages.unAssignTitle);
@@ -167,7 +167,7 @@ export class UnassignButton extends Component {
         onClick={this.showUnassignModal}
         title={this.getUnAssignTitle()}
         disabled={
-          !canAssignUnassignInternalUser(this.props.userRoles) ||
+          !canManageUsers(this.props.userRoles) ||
           this.props.currentUser === this.props.userId ||
           this.isPersonalProject()
         }
