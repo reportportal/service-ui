@@ -62,7 +62,6 @@ export {
   canEditTestCase,
   // TEST PLAN
   canEditTestPlan,
-  canCreateTestPlan,
 } from './permissions';
 
 export { getRoleTitle, getRoleBadgesData, getOrgRoleTitle } from './getRoleTitle';
