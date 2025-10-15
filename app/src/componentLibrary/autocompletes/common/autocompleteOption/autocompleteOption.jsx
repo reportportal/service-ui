@@ -51,8 +51,8 @@ export const AutocompleteOption = ({
           {...(!disabled ? props : {})}
           className={cx({ 'button-active': isActive })}
           icon={Parser(PlusIcon)}
-          variant={'text'}
-          adjustWidthOn='content'
+          variant="text"
+          adjustWidthOn="content"
         >
           {optionVariant === 'key-variant' ? 'New key' : 'New value'}
         </Button>
