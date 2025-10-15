@@ -52,7 +52,6 @@ export const ACTIONS: Record<string, string> = {
 
   // LAUNCHES
   EDIT_LAUNCH: 'EDIT_LAUNCH',
-  MERGE_LAUNCHES: 'MERGE_LAUNCHES',
   MOVE_TO_DEBUG: 'MOVE_TO_DEBUG',
   START_ANALYSIS: 'START_ANALYSIS',
 
@@ -101,7 +100,6 @@ export const PERMISSIONS_MAP: PermissionsMap = {
     [ACTIONS.CHANGE_USER_ROLE]: true,
     [ACTIONS.REPORT_LAUNCHES]: true,
     [ACTIONS.MOVE_TO_DEBUG]: true,
-    [ACTIONS.MERGE_LAUNCHES]: true,
     [ACTIONS.EDIT_LAUNCH]: true,
     [ACTIONS.START_ANALYSIS]: true,
     [ACTIONS.BULK_EDIT_ITEMS]: true,
@@ -142,7 +140,6 @@ export const PERMISSIONS_MAP: PermissionsMap = {
       [ACTIONS.CHANGE_USER_ROLE]: true,
       [ACTIONS.REPORT_LAUNCHES]: true,
       [ACTIONS.MOVE_TO_DEBUG]: true,
-      [ACTIONS.MERGE_LAUNCHES]: true,
       [ACTIONS.EDIT_LAUNCH]: true,
       [ACTIONS.START_ANALYSIS]: true,
       [ACTIONS.BULK_EDIT_ITEMS]: true,

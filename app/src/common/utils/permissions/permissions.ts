@@ -73,7 +73,6 @@ export const canMoveToDebug = checkPermission(ACTIONS.MOVE_TO_DEBUG);
 export const canChangeTestItemStatus = checkPermission(ACTIONS.CHANGE_TEST_ITEM_STATUS);
 export const canMakeDecision = checkPermission(ACTIONS.MAKE_DECISION);
 export const canManageBTSIssues = checkPermission(ACTIONS.MANAGE_BTS_ISSUES);
-export const canMergeLaunches = checkPermission(ACTIONS.MERGE_LAUNCHES);
 export const canWorkWithFilters = checkPermission(ACTIONS.WORK_WITH_FILTERS);
 export const canWorkWithOrganizationFilter = checkPermission(ACTIONS.WORK_WITH_ORGANIZATION_FILTER);
 export const canReadData = checkPermission(ACTIONS.READ_DATA);

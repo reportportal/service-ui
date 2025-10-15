@@ -32,7 +32,6 @@ export {
   canStartAnalysis,
   canDeleteTestItem,
   canMoveToDebug,
-  canMergeLaunches,
   canWorkWithFilters,
   canWorkWithOrganizationFilter,
   canReadData,
