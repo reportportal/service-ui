@@ -44,7 +44,7 @@ const cx = createClassnames(styles);
 
 const COLLAPSIBLE_SECTIONS_CONFIG = ({
   canEditTestCaseTag,
-  canEditTestCaseDescription,
+  canEditTestCase,
   tags,
   testCaseDescription,
   headerControlKeys,
@@ -52,7 +52,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
   handleDescriptionModal,
 }: {
   canEditTestCaseTag: boolean;
-  canEditTestCaseDescription: boolean;
+  canEditTestCase: boolean;
   tags: string[];
   testCaseDescription: string;
   headerControlKeys: { ADD: string };
@@ -76,7 +76,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
       childComponent: !isEmpty(testCaseDescription) && (
         <ExpandedTextSection text={testCaseDescription} defaultVisibleLines={5} />
       ),
-      headerControl: canEditTestCaseDescription && (
+      headerControl: canEditTestCase && (
         <Button
           variant="text"
           adjustWidthOn="content"
@@ -95,7 +95,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
 export const TestCaseDetailsPage = () => {
   const { formatMessage } = useIntl();
   const [isTagsAdded, setIsTagsAdded] = useState(false);
-  const { canEditTestCaseTag, canEditTestCaseDescription } = useUserPermissions();
+  const { canEditTestCaseTag, canEditTestCase, canEditTestCaseDescription } = useUserPermissions();
   const { openModal: openAddTestCasesToTestPlanModal } = useAddTestCasesToTestPlanModal();
   const { openModal: openDescriptionModal } = useDescriptionModal();
 
