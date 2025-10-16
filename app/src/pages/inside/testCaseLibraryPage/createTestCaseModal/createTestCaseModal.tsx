@@ -14,27 +14,17 @@
  * limitations under the License.
  */
 
-import { FormEvent, MouseEvent, useMemo, useCallback } from 'react';
 import { useIntl } from 'react-intl';
-import { useDispatch } from 'react-redux';
 import { reduxForm, InjectedFormProps } from 'redux-form';
-import { Modal } from '@reportportal/ui-kit';
 
-import { createClassnames, commonValidators } from 'common/utils';
+import { commonValidators } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { hideModalAction, withModal } from 'controllers/modal';
-import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
-import { LoadingSubmitButton } from 'components/loadingSubmitButton';
+import { withModal } from 'controllers/modal';
 
 import { commonMessages } from '../commonMessages';
 import { CreateTestCaseFormData, ManualScenarioType } from '../types';
-import { BasicInformation } from './basicInformation';
-import { TestCaseDetails } from './testCaseDetails';
+import { TestCaseModal } from './testCaseModal/testCaseModal';
 import { useCreateTestCase } from './useCreateTestCase';
-
-import styles from './testCaseModal.scss';
-
-const cx = createClassnames(styles);
 
 export const CREATE_TEST_CASE_MODAL_KEY = 'createTestCaseModalKey';
 export const CREATE_TEST_CASE_FORM_NAME: string = 'create-test-case-modal-form';
@@ -43,61 +33,18 @@ type CreateTestCaseModalProps = InjectedFormProps<CreateTestCaseFormData>;
 
 const CreateTestCaseModalComponent = ({ dirty, handleSubmit }: CreateTestCaseModalProps) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
   const { isCreateTestCaseLoading, createTestCase } = useCreateTestCase();
 
-  const okButton = useMemo(
-    () => ({
-      children: (
-        <LoadingSubmitButton isLoading={isCreateTestCaseLoading}>
-          {formatMessage(COMMON_LOCALE_KEYS.CREATE)}
-        </LoadingSubmitButton>
-      ),
-      onClick: handleSubmit(createTestCase) as (event: MouseEvent<HTMLButtonElement>) => void,
-      disabled: isCreateTestCaseLoading,
-    }),
-    [isCreateTestCaseLoading, formatMessage, handleSubmit, createTestCase],
-  );
-
-  const cancelButton = useMemo(
-    () => ({
-      children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      disabled: isCreateTestCaseLoading,
-    }),
-    [formatMessage, isCreateTestCaseLoading],
-  );
-
-  const handleClose = useCallback(() => {
-    dispatch(hideModalAction());
-  }, [dispatch]);
-
-  const handleFormSubmit = useMemo(
-    () => handleSubmit(createTestCase) as (event: FormEvent) => void,
-    [handleSubmit, createTestCase],
-  );
-
   return (
-    <Modal
+    <TestCaseModal
+      dirty={dirty}
+      handleSubmit={handleSubmit}
       title={formatMessage(commonMessages.createTestCase)}
-      okButton={okButton}
-      className={cx('test-case-modal')}
-      cancelButton={cancelButton}
-      allowCloseOutside={!dirty}
-      onClose={handleClose}
-    >
-      <div className={cx('test-case-modal__content-wrapper')}>
-        <form onSubmit={handleFormSubmit}>
-          <div className={cx('test-case-modal__container')}>
-            <BasicInformation className={cx('test-case-modal__scrollable-section')} />
-            <TestCaseDetails
-              className={cx('test-case-modal__scrollable-section')}
-              formName={CREATE_TEST_CASE_FORM_NAME}
-            />
-          </div>
-        </form>
-        <ModalLoadingOverlay isVisible={isCreateTestCaseLoading} />
-      </div>
-    </Modal>
+      submitButtonText={formatMessage(COMMON_LOCALE_KEYS.CREATE)}
+      isLoading={isCreateTestCaseLoading}
+      onSubmitHandler={createTestCase}
+      formName={CREATE_TEST_CASE_FORM_NAME}
+    />
   );
 };
 

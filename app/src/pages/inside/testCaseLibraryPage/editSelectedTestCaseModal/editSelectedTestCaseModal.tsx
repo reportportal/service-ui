@@ -14,29 +14,20 @@
  * limitations under the License.
  */
 
-import { FormEvent, MouseEvent, useEffect, useMemo, useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useIntl } from 'react-intl';
-import { useDispatch } from 'react-redux';
 import { reduxForm, InjectedFormProps } from 'redux-form';
-import { Modal } from '@reportportal/ui-kit';
 
-import { createClassnames, commonValidators } from 'common/utils';
+import { commonValidators } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { hideModalAction, withModal } from 'controllers/modal';
+import { withModal } from 'controllers/modal';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
-import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
-import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 
 import { commonMessages } from '../commonMessages';
 import { ExtendedTestCase, CreateTestCaseFormData, ManualScenarioType } from '../types';
 import { convertStepsArrayToObject } from '../utils';
-import { BasicInformation } from '../createTestCaseModal/basicInformation';
-import { TestCaseDetails } from '../createTestCaseModal/testCaseDetails';
+import { TestCaseModal } from '../createTestCaseModal/testCaseModal/testCaseModal';
 import { useEditTestCase } from './useEditTestCase';
-
-import styles from '../createTestCaseModal/testCaseModal.scss';
-
-const cx = createClassnames(styles);
 
 export const EDIT_SELECTED_TEST_CASE_MODAL_KEY = 'editSelectedTestCaseModalKey';
 export const EDIT_TEST_CASE_FORM_NAME: string = 'edit-test-case-modal-form';
@@ -48,15 +39,14 @@ interface EditTestCaseModalProps extends InjectedFormProps<CreateTestCaseFormDat
 }
 
 const EditTestCaseModalComponent = ({
-  dirty,
-  handleSubmit,
   data,
   initialize,
+  dirty,
+  handleSubmit,
 }: EditTestCaseModalProps) => {
   const testCase = data?.testCase;
 
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
   const { isEditTestCaseLoading, editTestCase } = useEditTestCase(testCase?.id);
 
   useEffect(() => {
@@ -91,58 +81,16 @@ const EditTestCaseModalComponent = ({
     [editTestCase, testCase?.testFolder?.id],
   );
 
-  const okButton = useMemo(
-    () => ({
-      children: (
-        <LoadingSubmitButton isLoading={isEditTestCaseLoading}>
-          {formatMessage(COMMON_LOCALE_KEYS.SAVE)}
-        </LoadingSubmitButton>
-      ),
-      onClick: handleSubmit(handleUpdate) as (event: MouseEvent<HTMLButtonElement>) => void,
-      disabled: isEditTestCaseLoading,
-    }),
-    [isEditTestCaseLoading, formatMessage, handleSubmit, handleUpdate],
-  );
-
-  const cancelButton = useMemo(
-    () => ({
-      children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      disabled: isEditTestCaseLoading,
-    }),
-    [formatMessage, isEditTestCaseLoading],
-  );
-
-  const handleClose = useCallback(() => {
-    dispatch(hideModalAction());
-  }, [dispatch]);
-
-  const handleFormSubmit = useMemo(
-    () => handleSubmit(handleUpdate) as (event: FormEvent) => void,
-    [handleSubmit, handleUpdate],
-  );
-
   return (
-    <Modal
+    <TestCaseModal
+      dirty={dirty}
+      handleSubmit={handleSubmit}
       title={formatMessage(commonMessages.editTestCase)}
-      okButton={okButton}
-      className={cx('test-case-modal')}
-      cancelButton={cancelButton}
-      allowCloseOutside={!dirty}
-      onClose={handleClose}
-    >
-      <div className={cx('test-case-modal__content-wrapper')}>
-        <form onSubmit={handleFormSubmit}>
-          <div className={cx('test-case-modal__container')}>
-            <BasicInformation className={cx('test-case-modal__scrollable-section')} />
-            <TestCaseDetails
-              className={cx('test-case-modal__scrollable-section')}
-              formName={EDIT_TEST_CASE_FORM_NAME}
-            />
-          </div>
-        </form>
-        <ModalLoadingOverlay isVisible={isEditTestCaseLoading} />
-      </div>
-    </Modal>
+      submitButtonText={formatMessage(COMMON_LOCALE_KEYS.SAVE)}
+      isLoading={isEditTestCaseLoading}
+      onSubmitHandler={handleUpdate}
+      formName={EDIT_TEST_CASE_FORM_NAME}
+    />
   );
 };
 
