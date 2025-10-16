@@ -96,8 +96,8 @@ export const LogTypesTable = ({ logTypes, isEditable }) => {
           {columns.map((column) => {
             const CellComponent = column.component;
             return (
-              <div className={cx('cell', `cell-${column.id}`)}>
-                <CellComponent key={column.id} logType={logType} isEditable={isEditable} />
+              <div key={column.id} className={cx('cell', `cell-${column.id}`)}>
+                <CellComponent logType={logType} isEditable={isEditable} />
               </div>
             );
           })}
