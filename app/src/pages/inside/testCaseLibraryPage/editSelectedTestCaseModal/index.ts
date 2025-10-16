@@ -14,28 +14,10 @@
  * limitations under the License.
  */
 
-.create-test-case-modal {
-  max-width: 1020px;
-  width: 100%;
-  margin-top: 5vh !important;
-  margin-bottom: 5vh !important;
-  padding-right: 24px;
-  max-height: 90vh;
-
-  &__content-wrapper {
-    position: relative;
-  }
-
-  &__container {
-    display: flex;
-    column-gap: 24px;
-  }
-
-  &__scrollable-section {
-    flex: 1;
-    min-width: 0;
-    max-height: 65vh;
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-}
+export {
+  EDIT_SELECTED_TEST_CASE_MODAL_KEY,
+  EditSelectedTestCaseModal,
+} from './editSelectedTestCaseModal';
+export { useEditTestCase } from './useEditTestCase';
+export { useEditTestCaseModal } from './useEditTestCaseModal';
+import './editSelectedTestCaseModal';

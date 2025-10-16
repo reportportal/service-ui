@@ -17,6 +17,7 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
+import { isString } from 'es-toolkit';
 
 import { projectKeySelector } from 'controllers/project';
 import { fetch } from 'common/utils';
@@ -27,10 +28,13 @@ import { showErrorNotification, showSuccessNotification } from 'controllers/noti
 import { getTestCaseByFolderIdAction } from 'controllers/testCase';
 import { createFoldersSuccessAction } from 'controllers/testCase/actionCreators';
 
-import { messages } from './basicInformation/messages';
+import { messages } from '../createTestCaseModal/basicInformation/messages';
 import { CreateTestCaseFormData } from '../types';
-import { createFolder, buildManualScenario, handleTestCaseError } from './testCaseUtils';
-import { isString } from 'es-toolkit';
+import {
+  createFolder,
+  buildManualScenario,
+  handleTestCaseError,
+} from '../createTestCaseModal/testCaseUtils';
 
 export const useEditTestCase = (testCaseId?: number) => {
   const { isLoading: isEditTestCaseLoading, showSpinner, hideSpinner } = useDebouncedSpinner();

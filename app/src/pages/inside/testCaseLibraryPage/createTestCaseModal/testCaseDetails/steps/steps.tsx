@@ -22,7 +22,6 @@ import { createClassnames } from 'common/utils';
 import { AttachmentArea } from '../../attachmentArea';
 import { Step as StepType } from 'pages/inside/testCaseLibraryPage/types';
 import { Step } from './step';
-import { CREATE_TEST_CASE_FORM_NAME } from '../../createTestCaseModal';
 import { messages as commonMessages } from '../../messages';
 
 import styles from './steps.scss';
@@ -34,6 +33,7 @@ interface StepsProps {
   onAddStep: (index?: number) => void;
   onRemoveStep: (stepId: number) => void;
   onMoveStep: ({ stepId, direction }: { stepId: number; direction: 'up' | 'down' }) => void;
+  formName: string;
 }
 
 const messages = defineMessages({
@@ -47,7 +47,7 @@ const messages = defineMessages({
   },
 });
 
-export const Steps = ({ steps, onAddStep, onRemoveStep, onMoveStep }: StepsProps) => {
+export const Steps = ({ steps, onAddStep, onRemoveStep, onMoveStep, formName }: StepsProps) => {
   const { formatMessage } = useIntl();
 
   const renderBetweenStepsArea = (index: number) => {
@@ -82,7 +82,7 @@ export const Steps = ({ steps, onAddStep, onRemoveStep, onMoveStep }: StepsProps
               isDraggable
               index={index}
               totalCount={steps.length}
-              formName={CREATE_TEST_CASE_FORM_NAME}
+              formName={formName}
               acceptFileMimeTypes={[MIME_TYPES.jpeg, MIME_TYPES.png]}
               dropZoneDescription={formatMessage(commonMessages.dropFileDescription, {
                 browseButton: formatMessage(commonMessages.browseText),

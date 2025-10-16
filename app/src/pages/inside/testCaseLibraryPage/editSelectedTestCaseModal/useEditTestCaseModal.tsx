@@ -16,7 +16,7 @@
 
 import { useDispatch } from 'react-redux';
 import { showModalAction } from 'controllers/modal';
-import { EDIT_SELECTED_TEST_CASE_MODAL_KEY } from './createTestCaseModal';
+import { EDIT_SELECTED_TEST_CASE_MODAL_KEY } from './editSelectedTestCaseModal';
 import { ExtendedTestCase } from '../types';
 
 interface UseEditTestCaseModalOptions {

@@ -22,7 +22,7 @@ import { createTestCaseMenuItems } from 'pages/inside/common/testCaseList/config
 import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
 import { getExcludedActionsFromPermissionMap } from 'pages/inside/common/testCaseList/utils';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
-import { useEditTestCaseModal } from '../createTestCaseModal/useEditTestCaseModal';
+import { useEditTestCaseModal } from '../editSelectedTestCaseModal';
 
 interface TestCaseTooltipItemsProps {
   testCase: ExtendedTestCase;

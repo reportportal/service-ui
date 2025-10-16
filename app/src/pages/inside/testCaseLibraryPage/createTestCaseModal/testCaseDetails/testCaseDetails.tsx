@@ -14,7 +14,6 @@ import { Precondition } from './precondition';
 import { Steps } from './steps';
 import { TextTemplate } from './textTemplate';
 import { ManualScenarioType } from '../../types';
-import { CREATE_TEST_CASE_FORM_NAME } from '../createTestCaseModal';
 import { manualScenarioTypeSelector, stepsDataSelector } from '../selectors';
 
 import styles from './testCaseDetails.scss';
@@ -41,13 +40,14 @@ const createEmptyStep = (): Step => ({
 
 interface TestCaseDetailsProps {
   className?: string;
+  formName: string;
 }
 
-export const TestCaseDetails = ({ className }: TestCaseDetailsProps) => {
+export const TestCaseDetails = ({ className, formName }: TestCaseDetailsProps) => {
   const [steps, setSteps] = useState<Step[]>([createEmptyStep()]);
   const { formatMessage } = useIntl();
-  const manualScenarioType = useSelector(manualScenarioTypeSelector);
-  const stepsData = useSelector(stepsDataSelector);
+  const manualScenarioType = useSelector(manualScenarioTypeSelector(formName));
+  const stepsData = useSelector(stepsDataSelector(formName));
 
   useEffect(() => {
     if (!isEmpty(stepsData)) {
@@ -103,14 +103,14 @@ export const TestCaseDetails = ({ className }: TestCaseDetailsProps) => {
       {isTextTemplate ? (
         <>
           <Precondition />
-          <TextTemplate />
+          <TextTemplate formName={formName} />
         </>
       ) : (
         <>
           <AttachmentArea
             isNumerable={false}
             attachmentFieldName="preconditionAttachments"
-            formName={CREATE_TEST_CASE_FORM_NAME}
+            formName={formName}
           >
             <Precondition />
           </AttachmentArea>
@@ -120,6 +120,7 @@ export const TestCaseDetails = ({ className }: TestCaseDetailsProps) => {
               onAddStep={handleAddStep}
               onRemoveStep={handleRemoveStep}
               onMoveStep={handleMoveStep}
+              formName={formName}
             />
           </FieldProvider>
         </>

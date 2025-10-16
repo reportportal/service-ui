@@ -14,16 +14,28 @@
  * limitations under the License.
  */
 
-import { formValueSelector } from 'redux-form';
-import type { AppState } from 'types/store';
-import { ManualScenarioType } from '../types';
+.test-case-modal {
+  max-width: 1020px;
+  width: 100%;
+  margin-top: 5vh !important;
+  margin-bottom: 5vh !important;
+  padding-right: 24px;
+  max-height: 90vh;
 
-export const manualScenarioTypeSelector = (formName: string) => (state: AppState) => {
-  const formSelector = formValueSelector(formName);
-  return formSelector(state, 'manualScenarioType') as ManualScenarioType;
-};
+  &__content-wrapper {
+    position: relative;
+  }
 
-export const stepsDataSelector = (formName: string) => (state: AppState) => {
-  const formSelector = formValueSelector(formName);
-  return formSelector(state, 'steps') as Record<string, unknown> | undefined;
-};
+  &__container {
+    display: flex;
+    column-gap: 24px;
+  }
+
+  &__scrollable-section {
+    flex: 1;
+    min-width: 0;
+    max-height: 65vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}

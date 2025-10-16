@@ -14,108 +14,57 @@
  * limitations under the License.
  */
 
-import { FormEvent, MouseEvent, useEffect, useMemo, useCallback } from 'react';
+import { FormEvent, MouseEvent, useMemo, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
-import { reduxForm, InjectedFormProps, initialize } from 'redux-form';
+import { reduxForm, InjectedFormProps } from 'redux-form';
 import { Modal } from '@reportportal/ui-kit';
 
 import { createClassnames, commonValidators } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction, withModal } from 'controllers/modal';
-import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 
 import { commonMessages } from '../commonMessages';
-import { ExtendedTestCase, CreateTestCaseFormData, ManualScenarioType } from '../types';
-import { convertStepsArrayToObject } from '../utils';
+import { CreateTestCaseFormData, ManualScenarioType } from '../types';
 import { BasicInformation } from './basicInformation';
 import { TestCaseDetails } from './testCaseDetails';
 import { useCreateTestCase } from './useCreateTestCase';
-import { useEditTestCase } from './useEditTestCase';
 
-import styles from './createTestCaseModal.scss';
+import styles from './testCaseModal.scss';
 
 const cx = createClassnames(styles);
 
 export const CREATE_TEST_CASE_MODAL_KEY = 'createTestCaseModalKey';
-export const EDIT_SELECTED_TEST_CASE_MODAL_KEY = 'editSelectedTestCaseModalKey';
 export const CREATE_TEST_CASE_FORM_NAME: string = 'create-test-case-modal-form';
 
-interface CreateTestCaseModalProps extends InjectedFormProps<CreateTestCaseFormData> {
-  data?: {
-    testCase?: ExtendedTestCase;
-  };
-}
+type CreateTestCaseModalProps = InjectedFormProps<CreateTestCaseFormData>;
 
-const CreateTestCaseModalComponent = ({ dirty, handleSubmit, data }: CreateTestCaseModalProps) => {
-  const testCase = data?.testCase;
-  const isEditMode = !!testCase;
-
+const CreateTestCaseModalComponent = ({ dirty, handleSubmit }: CreateTestCaseModalProps) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { isCreateTestCaseLoading, createTestCase } = useCreateTestCase();
-  const { isEditTestCaseLoading, editTestCase } = useEditTestCase(testCase?.id);
-
-  const isLoading = isEditMode ? isEditTestCaseLoading : isCreateTestCaseLoading;
-
-  useEffect(() => {
-    if (testCase) {
-      const manualScenario = testCase?.manualScenario;
-      const stepsObject = convertStepsArrayToObject(manualScenario?.steps);
-
-      const formData = {
-        name: testCase.name,
-        description: testCase.description,
-        folder: testCase.testFolder,
-        priority: (testCase.priority?.toLowerCase() || 'unspecified') as TestCasePriority,
-        tags: testCase.tags?.map((tag: { key: string }) => tag.key),
-        manualScenarioType: manualScenario?.manualScenarioType || ManualScenarioType.STEPS,
-        executionEstimationTime: manualScenario?.executionEstimationTime || 5,
-        linkToRequirements: manualScenario?.linkToRequirements,
-        precondition: manualScenario?.preconditions?.value,
-        preconditionAttachments: manualScenario?.preconditions?.attachments || [],
-        ...(stepsObject && {
-          steps: stepsObject,
-        }),
-      };
-
-      dispatch(initialize(CREATE_TEST_CASE_FORM_NAME, formData));
-    }
-  }, [testCase, dispatch]);
-
-  const handleUpdate = useCallback(
-    (formData: CreateTestCaseFormData) => {
-      return editTestCase(formData, testCase?.testFolder?.id);
-    },
-    [editTestCase, testCase?.testFolder?.id],
-  );
-
-  const handleAction = useMemo(
-    () => (isEditMode ? handleUpdate : createTestCase),
-    [isEditMode, handleUpdate, createTestCase],
-  );
 
   const okButton = useMemo(
     () => ({
       children: (
-        <LoadingSubmitButton isLoading={isLoading}>
-          {formatMessage(isEditMode ? COMMON_LOCALE_KEYS.SAVE : COMMON_LOCALE_KEYS.CREATE)}
+        <LoadingSubmitButton isLoading={isCreateTestCaseLoading}>
+          {formatMessage(COMMON_LOCALE_KEYS.CREATE)}
         </LoadingSubmitButton>
       ),
-      onClick: handleSubmit(handleAction) as (event: MouseEvent<HTMLButtonElement>) => void,
-      disabled: isLoading,
+      onClick: handleSubmit(createTestCase) as (event: MouseEvent<HTMLButtonElement>) => void,
+      disabled: isCreateTestCaseLoading,
     }),
-    [isLoading, formatMessage, isEditMode, handleSubmit, handleAction],
+    [isCreateTestCaseLoading, formatMessage, handleSubmit, createTestCase],
   );
 
   const cancelButton = useMemo(
     () => ({
       children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      disabled: isLoading,
+      disabled: isCreateTestCaseLoading,
     }),
-    [formatMessage, isLoading],
+    [formatMessage, isCreateTestCaseLoading],
   );
 
   const handleClose = useCallback(() => {
@@ -123,29 +72,30 @@ const CreateTestCaseModalComponent = ({ dirty, handleSubmit, data }: CreateTestC
   }, [dispatch]);
 
   const handleFormSubmit = useMemo(
-    () => handleSubmit(handleAction) as (event: FormEvent) => void,
-    [handleSubmit, handleAction],
+    () => handleSubmit(createTestCase) as (event: FormEvent) => void,
+    [handleSubmit, createTestCase],
   );
 
   return (
     <Modal
-      title={formatMessage(
-        isEditMode ? commonMessages.editTestCase : commonMessages.createTestCase,
-      )}
+      title={formatMessage(commonMessages.createTestCase)}
       okButton={okButton}
-      className={cx('create-test-case-modal')}
+      className={cx('test-case-modal')}
       cancelButton={cancelButton}
       allowCloseOutside={!dirty}
       onClose={handleClose}
     >
-      <div className={cx('create-test-case-modal__content-wrapper')}>
+      <div className={cx('test-case-modal__content-wrapper')}>
         <form onSubmit={handleFormSubmit}>
-          <div className={cx('create-test-case-modal__container')}>
-            <BasicInformation className={cx('create-test-case-modal__scrollable-section')} />
-            <TestCaseDetails className={cx('create-test-case-modal__scrollable-section')} />
+          <div className={cx('test-case-modal__container')}>
+            <BasicInformation className={cx('test-case-modal__scrollable-section')} />
+            <TestCaseDetails
+              className={cx('test-case-modal__scrollable-section')}
+              formName={CREATE_TEST_CASE_FORM_NAME}
+            />
           </div>
         </form>
-        <ModalLoadingOverlay isVisible={isLoading} />
+        <ModalLoadingOverlay isVisible={isCreateTestCaseLoading} />
       </div>
     </Modal>
   );
@@ -168,8 +118,3 @@ const ReduxFormComponent = reduxForm<CreateTestCaseFormData, CreateTestCaseModal
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 export const CreateTestCaseModal = withModal(CREATE_TEST_CASE_MODAL_KEY)(ReduxFormComponent);
-
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-export const EditSelectedTestCaseModal = withModal(EDIT_SELECTED_TEST_CASE_MODAL_KEY)(
-  ReduxFormComponent,
-);

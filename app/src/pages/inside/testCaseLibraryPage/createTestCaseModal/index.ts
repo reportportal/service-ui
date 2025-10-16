@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-export {
-  CREATE_TEST_CASE_MODAL_KEY,
-  EDIT_SELECTED_TEST_CASE_MODAL_KEY,
-  CreateTestCaseModal,
-  EditSelectedTestCaseModal,
-} from './createTestCaseModal';
+export { CREATE_TEST_CASE_MODAL_KEY, CreateTestCaseModal } from './createTestCaseModal';
 export { useCreateTestCase } from './useCreateTestCase';
-export { useEditTestCase } from './useEditTestCase';
 export { useCreateTestCaseModal } from './useCreateTestCaseModal';
-export { useEditTestCaseModal } from './useEditTestCaseModal';
+export {
+  EDIT_SELECTED_TEST_CASE_MODAL_KEY,
+  EditSelectedTestCaseModal,
+  useEditTestCase,
+  useEditTestCaseModal,
+} from '../editSelectedTestCaseModal';
 import './createTestCaseModal';

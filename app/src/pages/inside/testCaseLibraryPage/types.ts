@@ -18,7 +18,6 @@ import { FC, SVGProps } from 'react';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { FolderWithFullPath } from 'controllers/testCase/types';
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
-import { BaseAttachmentFile } from 'common/hooks/useFileProcessing';
 
 export type Tag = {
   key: string;
@@ -36,7 +35,7 @@ export interface Step {
   id: number;
   instructions: string;
   expectedResult: string;
-  attachments?: Partial<BaseAttachmentFile>[];
+  attachments?: Attachment[];
 }
 
 export interface Attachment {
@@ -136,10 +135,6 @@ export interface CreateTestCaseFormData {
   expectedResult?: string;
   textAttachments?: Attachment[];
   tags?: Tag[];
-}
-
-export interface Attachment {
-  id: number;
 }
 
 export interface TestStep {
