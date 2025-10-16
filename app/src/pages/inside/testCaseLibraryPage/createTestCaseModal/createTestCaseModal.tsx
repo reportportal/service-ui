@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { FormEvent, MouseEvent, useEffect } from 'react';
+import { FormEvent, MouseEvent, useEffect, useMemo, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { reduxForm, InjectedFormProps, initialize } from 'redux-form';
@@ -86,26 +86,47 @@ const CreateTestCaseModalComponent = ({ dirty, handleSubmit, data }: CreateTestC
     }
   }, [testCase, dispatch]);
 
-  const handleUpdate = (formData: CreateTestCaseFormData) => {
-    return editTestCase(formData, testCase?.testFolder?.id);
-  };
+  const handleUpdate = useCallback(
+    (formData: CreateTestCaseFormData) => {
+      return editTestCase(formData, testCase?.testFolder?.id);
+    },
+    [editTestCase, testCase?.testFolder?.id],
+  );
 
-  const handleAction = isEditMode ? handleUpdate : createTestCase;
+  const handleAction = useMemo(
+    () => (isEditMode ? handleUpdate : createTestCase),
+    [isEditMode, handleUpdate, createTestCase],
+  );
 
-  const okButton = {
-    children: (
-      <LoadingSubmitButton isLoading={isLoading}>
-        {formatMessage(isEditMode ? COMMON_LOCALE_KEYS.SAVE : COMMON_LOCALE_KEYS.CREATE)}
-      </LoadingSubmitButton>
-    ),
-    onClick: handleSubmit(handleAction) as (event: MouseEvent<HTMLButtonElement>) => void,
-    disabled: isLoading,
-  };
+  const okButton = useMemo(
+    () => ({
+      children: (
+        <LoadingSubmitButton isLoading={isLoading}>
+          {formatMessage(isEditMode ? COMMON_LOCALE_KEYS.SAVE : COMMON_LOCALE_KEYS.CREATE)}
+        </LoadingSubmitButton>
+      ),
+      onClick: handleSubmit(handleAction) as (event: MouseEvent<HTMLButtonElement>) => void,
+      disabled: isLoading,
+    }),
+    [isLoading, formatMessage, isEditMode, handleSubmit, handleAction],
+  );
 
-  const cancelButton = {
-    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-    disabled: isLoading,
-  };
+  const cancelButton = useMemo(
+    () => ({
+      children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      disabled: isLoading,
+    }),
+    [formatMessage, isLoading],
+  );
+
+  const handleClose = useCallback(() => {
+    dispatch(hideModalAction());
+  }, [dispatch]);
+
+  const handleFormSubmit = useMemo(
+    () => handleSubmit(handleAction) as (event: FormEvent) => void,
+    [handleSubmit, handleAction],
+  );
 
   return (
     <Modal
@@ -116,10 +137,10 @@ const CreateTestCaseModalComponent = ({ dirty, handleSubmit, data }: CreateTestC
       className={cx('create-test-case-modal')}
       cancelButton={cancelButton}
       allowCloseOutside={!dirty}
-      onClose={() => dispatch(hideModalAction())}
+      onClose={handleClose}
     >
       <div className={cx('create-test-case-modal__content-wrapper')}>
-        <form onSubmit={handleSubmit(handleAction) as (event: FormEvent) => void}>
+        <form onSubmit={handleFormSubmit}>
           <div className={cx('create-test-case-modal__container')}>
             <BasicInformation className={cx('create-test-case-modal__scrollable-section')} />
             <TestCaseDetails className={cx('create-test-case-modal__scrollable-section')} />

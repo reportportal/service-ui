@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 
@@ -37,64 +38,67 @@ export const useEditTestCase = (testCaseId?: number) => {
   const projectKey = useSelector(projectKeySelector);
   const { formatMessage } = useIntl();
 
-  const editTestCase = async (payload: CreateTestCaseFormData, currentFolderId?: number) => {
-    if (!testCaseId) {
-      dispatch(
-        showErrorNotification({
-          messageId: 'testCaseUpdateFailed',
-        }),
-      );
-      return;
-    }
-
-    try {
-      showSpinner();
-
-      let folderId: number;
-
-      if (isString(payload.folder)) {
-        const folder = await createFolder(projectKey, payload.folder);
-        dispatch(createFoldersSuccessAction({ ...folder, countOfTestCases: 0 }));
-        folderId = folder.id;
-      } else {
-        folderId = payload.folder?.id || currentFolderId || 0;
-      }
-
-      const manualScenario = buildManualScenario(payload);
-
-      await fetch(URLS.testCaseDetails(projectKey, testCaseId.toString()), {
-        method: 'PUT',
-        data: {
-          description: payload.description,
-          name: payload.name,
-          testFolderId: folderId,
-          priority: payload.priority?.toUpperCase(),
-          tags: payload.tags || [],
-          manualScenario,
-        },
-      });
-
-      dispatch(hideModalAction());
-      dispatch(
-        showSuccessNotification({
-          messageId: 'testCaseUpdatedSuccess',
-        }),
-      );
-      dispatch(getTestCaseByFolderIdAction({ folderId }));
-    } catch (error: unknown) {
-      try {
-        handleTestCaseError(error, formatMessage, messages.duplicateTestCaseName);
-      } catch {
+  const editTestCase = useCallback(
+    async (payload: CreateTestCaseFormData, currentFolderId?: number) => {
+      if (!testCaseId) {
         dispatch(
           showErrorNotification({
             messageId: 'testCaseUpdateFailed',
           }),
         );
+        return;
       }
-    } finally {
-      hideSpinner();
-    }
-  };
+
+      try {
+        showSpinner();
+
+        let folderId: number;
+
+        if (isString(payload.folder)) {
+          const folder = await createFolder(projectKey, payload.folder);
+          dispatch(createFoldersSuccessAction({ ...folder, countOfTestCases: 0 }));
+          folderId = folder.id;
+        } else {
+          folderId = payload.folder?.id || currentFolderId || 0;
+        }
+
+        const manualScenario = buildManualScenario(payload);
+
+        await fetch(URLS.testCaseDetails(projectKey, testCaseId.toString()), {
+          method: 'PUT',
+          data: {
+            description: payload.description,
+            name: payload.name,
+            testFolderId: folderId,
+            priority: payload.priority?.toUpperCase(),
+            tags: payload.tags || [],
+            manualScenario,
+          },
+        });
+
+        dispatch(hideModalAction());
+        dispatch(
+          showSuccessNotification({
+            messageId: 'testCaseUpdatedSuccess',
+          }),
+        );
+        dispatch(getTestCaseByFolderIdAction({ folderId }));
+      } catch (error: unknown) {
+        try {
+          handleTestCaseError(error, formatMessage, messages.duplicateTestCaseName);
+        } catch {
+          dispatch(
+            showErrorNotification({
+              messageId: 'testCaseUpdateFailed',
+            }),
+          );
+        }
+      } finally {
+        hideSpinner();
+      }
+    },
+    [testCaseId, projectKey, dispatch, formatMessage, showSpinner, hideSpinner],
+  );
 
   return {
     isEditTestCaseLoading,

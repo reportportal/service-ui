@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 
@@ -37,54 +38,57 @@ export const useCreateTestCase = () => {
   const projectKey = useSelector(projectKeySelector);
   const { formatMessage } = useIntl();
 
-  const createTestCase = async (payload: CreateTestCaseFormData) => {
-    try {
-      showSpinner();
-
-      let folderId: number;
-
-      if (isString(payload.folder)) {
-        const folder = await createFolder(projectKey, payload.folder);
-        dispatch(createFoldersSuccessAction({ ...folder, countOfTestCases: 0 }));
-        folderId = folder.id;
-      } else {
-        folderId = payload.folder?.id;
-      }
-
-      const manualScenario = buildManualScenario(payload);
-
-      await fetch(URLS.testCase(projectKey), {
-        method: 'post',
-        data: {
-          description: payload.description,
-          name: payload.name,
-          testFolderId: folderId,
-          priority: payload.priority?.toUpperCase(),
-          manualScenario,
-        },
-      });
-
-      dispatch(hideModalAction());
-      dispatch(
-        showSuccessNotification({
-          messageId: 'testCaseCreatedSuccess',
-        }),
-      );
-      dispatch(getTestCasesAction({ testFolderId: folderId }));
-    } catch (error: unknown) {
+  const createTestCase = useCallback(
+    async (payload: CreateTestCaseFormData) => {
       try {
-        handleTestCaseError(error, formatMessage, messages.duplicateTestCaseName);
-      } catch {
+        showSpinner();
+
+        let folderId: number;
+
+        if (isString(payload.folder)) {
+          const folder = await createFolder(projectKey, payload.folder);
+          dispatch(createFoldersSuccessAction({ ...folder, countOfTestCases: 0 }));
+          folderId = folder.id;
+        } else {
+          folderId = payload.folder?.id;
+        }
+
+        const manualScenario = buildManualScenario(payload);
+
+        await fetch(URLS.testCase(projectKey), {
+          method: 'post',
+          data: {
+            description: payload.description,
+            name: payload.name,
+            testFolderId: folderId,
+            priority: payload.priority?.toUpperCase(),
+            manualScenario,
+          },
+        });
+
+        dispatch(hideModalAction());
         dispatch(
-          showErrorNotification({
-            messageId: 'testCaseCreationFailed',
+          showSuccessNotification({
+            messageId: 'testCaseCreatedSuccess',
           }),
         );
+        dispatch(getTestCasesAction({ testFolderId: folderId }));
+      } catch (error: unknown) {
+        try {
+          handleTestCaseError(error, formatMessage, messages.duplicateTestCaseName);
+        } catch {
+          dispatch(
+            showErrorNotification({
+              messageId: 'testCaseCreationFailed',
+            }),
+          );
+        }
+      } finally {
+        hideSpinner();
       }
-    } finally {
-      hideSpinner();
-    }
-  };
+    },
+    [projectKey, dispatch, formatMessage, showSpinner, hideSpinner],
+  );
 
   return {
     isCreateTestCaseLoading,
