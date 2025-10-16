@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-export const GENERAL = 'general';
-export const NOTIFICATIONS = 'notifications';
-export const INTEGRATIONS = 'integrations';
-export const DEFECT = 'defect';
-export const ANALYSIS = 'analyzer';
-export const DEMO_DATA = 'demoData';
-export const AUTHORIZATION_CONFIGURATION = 'authConfiguration';
-export const FEATURES = 'features';
-export const ANALYTICS = 'analytics';
-export const LINKS_AND_BRANDING = 'linksAndBranding';
-export const PATTERN_ANALYSIS = 'patternAnalysis';
-export const LOG_TYPES = 'logTypes';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Toggle } from '@reportportal/ui-kit';
+
+export const ShowInFilterCell = ({ logType, isEditable }) => {
+  const handleToggle = () => {
+    // TODO: Implement toggle functionality
+  };
+
+  return <Toggle value={logType.is_filterable} disabled={!isEditable} onChange={handleToggle} />;
+};
+
+ShowInFilterCell.propTypes = {
+  logType: PropTypes.object,
+  isEditable: PropTypes.bool,
+};

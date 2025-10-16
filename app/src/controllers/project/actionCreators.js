@@ -48,6 +48,7 @@ import {
   UPDATE_PROJECT_NOTIFICATION_SUCCESS,
   SET_PROJECT_NOTIFICATION_LOADING,
   FETCH_EXISTING_LAUNCH_NAMES_SUCCESS,
+  FETCH_LOG_TYPES,
 } from './constants';
 
 export const fetchProjectSuccessAction = (project) => ({
@@ -212,4 +213,9 @@ export const setProjectNotificationsLoadingAction = (loading) => ({
 export const fetchExistingLaunchNamesSuccessAction = (payload) => ({
   type: FETCH_EXISTING_LAUNCH_NAMES_SUCCESS,
   payload,
+});
+
+export const fetchLogTypesAction = (projectId) => ({
+  type: FETCH_LOG_TYPES,
+  payload: projectId,
 });
