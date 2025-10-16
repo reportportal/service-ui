@@ -23,4 +23,3 @@ export {
   useEditTestCase,
   useEditTestCaseModal,
 } from '../editSelectedTestCaseModal';
-import './createTestCaseModal';

@@ -20,4 +20,3 @@ export {
 } from './editSelectedTestCaseModal';
 export { useEditTestCase } from './useEditTestCase';
 export { useEditTestCaseModal } from './useEditTestCaseModal';
-import './editSelectedTestCaseModal';
