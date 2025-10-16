@@ -64,7 +64,7 @@ export const LogTypes = ({ setHeaderTitleNode }) => {
 
   const filteredLogTypes = useMemo(
     () =>
-      logTypes
+      [...logTypes]
         .filter((logType) => logType.level !== UNKNOWN_LOG_TYPE_LEVEL)
         .sort((a, b) => b.level - a.level),
     [logTypes],
