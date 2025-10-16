@@ -17,13 +17,13 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import classNames from 'classnames/bind';
 import { isEmpty, noop } from 'es-toolkit/compat';
 import { Button, MeatballMenuIcon, Pagination, Selection } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { TestCaseList } from 'pages/inside/common/testCaseList';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
-import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/common/testCaseList/mockData';
+import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/common/testCaseList/constants';
 import { DEFAULT_CURRENT_PAGE } from 'pages/inside/common/testCaseList/configUtils';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
@@ -40,7 +40,7 @@ import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/u
 
 import styles from './allTestCasesPage.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface AllTestCasesPageProps {
   testCases: TestCase[];
@@ -115,7 +115,7 @@ export const AllTestCasesPage = ({
       setSearchValue(targetSearchValue);
       setActivePage(DEFAULT_CURRENT_PAGE);
     },
-    [setSearchValue],
+    [setSearchValue, setActivePage],
   );
 
   if (isEmpty(testCases) && !loading) {

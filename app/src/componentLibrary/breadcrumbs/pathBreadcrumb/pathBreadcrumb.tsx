@@ -15,11 +15,13 @@
  */
 
 import { memo } from 'react';
-import classNames from 'classnames/bind';
 import { ChevronRightBreadcrumbsIcon, MoveToFolderIcon } from '@reportportal/ui-kit';
+
+import { createClassnames } from 'common/utils';
+
 import styles from './pathBreadcrumb.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface PathBreadcrumbProps {
   path: string[];

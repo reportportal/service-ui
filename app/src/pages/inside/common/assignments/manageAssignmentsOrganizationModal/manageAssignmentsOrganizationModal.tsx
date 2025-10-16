@@ -19,18 +19,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useIntl, MessageDescriptor } from 'react-intl';
 import { Modal, Button, Tooltip } from '@reportportal/ui-kit';
 import { useTracking } from 'react-tracking';
-import classNames from 'classnames/bind';
+
+import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { UserInfo, idSelector } from 'controllers/user';
 import { unassignFromOrganizationAction } from 'controllers/organization/users';
 import { Organization, OrganizationType } from 'controllers/organization';
 import { messages } from 'common/constants/localization/assignmentsLocalization';
-import { useHandleUnassignSuccess } from '../index';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { UPSA } from 'common/constants/accountType';
+
+import { useHandleUnassignSuccess } from '..';
+
 import styles from './manageAssignmentsOrganizationModal.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface ManageAssignmentsOrganizationModalProps {
   user: UserInfo;

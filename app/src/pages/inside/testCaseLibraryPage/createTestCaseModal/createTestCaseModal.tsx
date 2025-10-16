@@ -18,12 +18,11 @@ import { FormEvent, MouseEvent, useEffect, useMemo, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { reduxForm, InjectedFormProps, initialize } from 'redux-form';
-import classNames from 'classnames/bind';
 import { Modal } from '@reportportal/ui-kit';
 
+import { createClassnames, commonValidators } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction, withModal } from 'controllers/modal';
-import { commonValidators } from 'common/utils/validation';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
@@ -32,13 +31,13 @@ import { commonMessages } from '../commonMessages';
 import { ExtendedTestCase, CreateTestCaseFormData, ManualScenarioType } from '../types';
 import { convertStepsArrayToObject } from '../utils';
 import { BasicInformation } from './basicInformation';
-import { StepData, TestCaseDetails } from './testCaseDetails';
+import { TestCaseDetails } from './testCaseDetails';
 import { useCreateTestCase } from './useCreateTestCase';
 import { useEditTestCase } from './useEditTestCase';
 
 import styles from './createTestCaseModal.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export const CREATE_TEST_CASE_MODAL_KEY = 'createTestCaseModalKey';
 export const EDIT_SELECTED_TEST_CASE_MODAL_KEY = 'editSelectedTestCaseModalKey';
@@ -64,7 +63,7 @@ const CreateTestCaseModalComponent = ({ dirty, handleSubmit, data }: CreateTestC
   useEffect(() => {
     if (testCase) {
       const manualScenario = testCase?.manualScenario;
-      const stepsObject = convertStepsArrayToObject(manualScenario?.steps as StepData[]);
+      const stepsObject = convertStepsArrayToObject(manualScenario?.steps);
 
       const formData = {
         name: testCase.name,

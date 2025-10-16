@@ -17,13 +17,14 @@
 import { MouseEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
-import classNames from 'classnames/bind';
 import { Modal } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
+import { UseModalData } from 'common/hooks';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
-import { deleteFolderAction } from 'controllers/testCase/actionCreators';
+import { deleteFolderAction, DeleteFolderParams } from 'controllers/testCase/actionCreators';
 import { isLoadingFolderSelector } from 'controllers/testCase';
 
 import styles from './deleteFolderModal.scss';
@@ -40,22 +41,13 @@ const messages = defineMessages({
   },
 });
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export const DELETE_FOLDER_MODAL_KEY = 'deleteFolderModalKey';
 
-interface DeleteFolderModalProps {
-  data: {
-    folderId: number;
-    folderName: string;
-    activeFolderId: number;
-    setAllTestCases: () => void;
-  };
-}
-
 const DeleteFolderModalComponent = ({
-  data: { folderId, folderName, activeFolderId, setAllTestCases },
-}: DeleteFolderModalProps) => {
+  data: { folder, activeFolderId, setAllTestCases },
+}: UseModalData<DeleteFolderParams>) => {
   const dispatch = useDispatch();
   const isLoadingFolder = useSelector(isLoadingFolderSelector);
   const { formatMessage } = useIntl();
@@ -65,7 +57,7 @@ const DeleteFolderModalComponent = ({
   const onSubmit = () => {
     dispatch(
       deleteFolderAction({
-        folderId,
+        folder,
         activeFolderId,
         setAllTestCases,
       }),
@@ -99,7 +91,7 @@ const DeleteFolderModalComponent = ({
     >
       {formatMessage(messages.deleteFolderText, {
         b: (data) => <span className={cx('delete-folder-modal__text--bold')}>{data}</span>,
-        name: folderName,
+        name: folder.name,
       })}
     </Modal>
   );

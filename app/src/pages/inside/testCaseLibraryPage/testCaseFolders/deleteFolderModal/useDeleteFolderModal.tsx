@@ -15,18 +15,12 @@
  */
 
 import { useModal } from 'common/hooks';
+import { DeleteFolderParams } from 'controllers/testCase/actionCreators';
 
 import DeleteFolderModal, { DELETE_FOLDER_MODAL_KEY } from './deleteFolderModal';
 
-interface DeleteFolderModalData {
-  folderId: number;
-  folderName: string;
-  activeFolderId: number | null;
-  setAllTestCases: () => void;
-}
-
 export const useDeleteFolderModal = () =>
-  useModal<DeleteFolderModalData>({
+  useModal<DeleteFolderParams>({
     modalKey: DELETE_FOLDER_MODAL_KEY,
     renderModal: (data) => <DeleteFolderModal data={data} />,
   });

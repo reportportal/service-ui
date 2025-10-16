@@ -17,16 +17,16 @@
 import { useTestCaseTooltipItems } from 'pages/inside/testCaseLibraryPage/allTestCasesPage/useTestCaseTooltipItems';
 import { useTestPlanTooltipItems } from 'pages/inside/testPlansPage/testPlanDetailsPage/testPlanFolders/allTestCasesPage/useTestPlanTooltipItems';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
+import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 
 interface UseTooltipItemsProps {
   instanceKey: INSTANCE_KEYS;
-  testCaseId?: number;
-  onEdit?: (testCaseId: number) => void;
+  testCase: ExtendedTestCase;
 }
 
-export const useTooltipItems = ({ instanceKey, testCaseId, onEdit }: UseTooltipItemsProps) => {
+export const useTooltipItems = ({ instanceKey, testCase }: UseTooltipItemsProps) => {
   const testPlanTooltipItems = useTestPlanTooltipItems();
-  const testCaseTooltipItems = useTestCaseTooltipItems({ testCaseId, onEdit });
+  const testCaseTooltipItems = useTestCaseTooltipItems({ testCase });
 
   const tooltipItemsByInstance: Record<INSTANCE_KEYS, typeof testPlanTooltipItems> = {
     [INSTANCE_KEYS.TEST_PLAN]: testPlanTooltipItems,

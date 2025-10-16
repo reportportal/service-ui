@@ -15,10 +15,10 @@
  */
 
 import { defineMessages, useIntl } from 'react-intl';
-import classNames from 'classnames/bind';
 import { noop } from 'es-toolkit';
 import { FieldNumber } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { FieldProvider } from 'components/fields';
 
 import { DropdownWithDescription } from '../../dropdownWithDescription';
@@ -26,7 +26,7 @@ import { DropdownWithDescription } from '../../dropdownWithDescription';
 import styles from './template.scss';
 import { ManualScenarioType } from 'pages/inside/testCaseLibraryPage/types';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 const messages = defineMessages({
   template: {

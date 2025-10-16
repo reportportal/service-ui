@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-import { memo, SetStateAction, useCallback, useState } from 'react';
-import classNames from 'classnames/bind';
+import { memo, SetStateAction, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { xor } from 'es-toolkit';
 import { BubblesLoader, FilterOutlineIcon, Table } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { SearchField } from 'components/fields/searchField';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/useEditTestCaseModal';
 
 import { TestCaseNameCell } from './testCaseNameCell';
 import { TestCaseExecutionCell } from './testCaseExecutionCell';
@@ -34,8 +33,9 @@ import { DEFAULT_CURRENT_PAGE } from './configUtils';
 import { messages } from './messages';
 
 import styles from './testCaseList.scss';
+import { isEmpty } from 'es-toolkit/compat';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface TestCaseListProps {
   testCases: ExtendedTestCase[];
@@ -69,7 +69,6 @@ export const TestCaseList = memo(
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<number | null>(null);
 
     const { canDoTestCaseBulkActions } = useUserPermissions();
-    const { openModal: openEditTestCaseModal } = useEditTestCaseModal();
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -101,15 +100,6 @@ export const TestCaseList = memo(
 
     const selectedTestCase = testCases.find((testCase) => testCase.id === selectedTestCaseId);
 
-    const handleEditTestCase = useCallback(
-      (testCaseId: number) => {
-        const testCase = testCases.find((testCase) => testCase.id === testCaseId);
-
-        openEditTestCaseModal({ testCase });
-      },
-      [testCases, openEditTestCaseModal],
-    );
-
     const tableData = currentData.map((testCase) => ({
       id: testCase.id,
       name: {
@@ -123,7 +113,7 @@ export const TestCaseList = memo(
             <TestCaseNameCell
               priority={testCase.priority?.toLowerCase() as TestCasePriority}
               name={testCase.name}
-              tags={testCase.tags?.map(({ key }) => key)}
+              tags={testCase?.attributes?.map(({ key }) => key)}
             />
           </button>
         ),
@@ -132,11 +122,9 @@ export const TestCaseList = memo(
         content: testCase.updatedAt,
         component: (
           <TestCaseExecutionCell
-            testCaseId={testCase.id}
-            lastExecution={testCase.updatedAt}
+            testCase={testCase}
             instanceKey={instanceKey}
             onRowClick={() => setSelectedTestCaseId(testCase.id)}
-            onEdit={handleEditTestCase}
           />
         ),
       },
@@ -157,8 +145,6 @@ export const TestCaseList = memo(
         align: 'left' as const,
       },
     ];
-
-    const isEmptyList = (value: ExtendedTestCase[]) => !value.length || value.length === 0;
 
     return (
       <div className={cx('test-case-list')}>
@@ -189,7 +175,15 @@ export const TestCaseList = memo(
           </div>
         ) : (
           <>
-            {!isEmptyList(currentData) ? (
+            {isEmpty(currentData) ? (
+              <div className={cx('no-results')}>
+                <div className={cx('no-results-message')}>
+                  {searchValue
+                    ? formatMessage(messages.noResultsFilteredMessage)
+                    : formatMessage(messages.noResultsEmptyMessage)}
+                </div>
+              </div>
+            ) : (
               <Table
                 selectable={selectable && canDoTestCaseBulkActions}
                 onToggleRowSelection={handleRowSelect}
@@ -202,14 +196,6 @@ export const TestCaseList = memo(
                 className={cx('test-case-table')}
                 rowClassName={cx('test-case-table-row')}
               />
-            ) : (
-              <div className={cx('no-results')}>
-                <div className={cx('no-results-message')}>
-                  {searchValue
-                    ? formatMessage(messages.noResultsFilteredMessage)
-                    : formatMessage(messages.noResultsEmptyMessage)}
-                </div>
-              </div>
             )}
             <TestCaseSidePanel
               testCase={selectedTestCase}

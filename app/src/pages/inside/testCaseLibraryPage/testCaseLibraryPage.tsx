@@ -16,11 +16,11 @@
 
 import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { isEmpty } from 'es-toolkit/compat';
 import { BreadcrumbsTreeIcon, BubblesLoader, Button } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { ProjectDetails } from 'pages/organization/constants';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
@@ -40,7 +40,7 @@ import { useImportTestCaseModal } from './importTestCaseModal';
 
 import styles from './testCaseLibraryPage.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export const TestCaseLibraryPage = () => {
   const { formatMessage } = useIntl();
@@ -100,7 +100,7 @@ export const TestCaseLibraryPage = () => {
                   <Button
                     variant="ghost"
                     data-automation-id="createTestCase"
-                    onClick={openCreateTestCaseModal}
+                    onClick={() => openCreateTestCaseModal()}
                   >
                     {formatMessage(commonMessages.createTestCase)}
                   </Button>

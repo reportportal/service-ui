@@ -15,11 +15,12 @@
  */
 
 import { ReactNode } from 'react';
-import classNames from 'classnames/bind';
+import { createClassnames } from 'common/utils';
 import { FieldProvider } from 'components/fields';
+
 import styles from './fieldElement.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface FieldElementProps {
   children: ReactNode;

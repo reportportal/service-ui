@@ -16,7 +16,6 @@
 
 import { PropsWithChildren } from 'react';
 import { useIntl } from 'react-intl';
-import classNames from 'classnames/bind';
 import { isNumber } from 'es-toolkit/compat';
 import { noop } from 'es-toolkit';
 import {
@@ -32,6 +31,7 @@ import {
 } from '@reportportal/ui-kit';
 import type { MimeType } from '@reportportal/ui-kit/dist/components/fileDropArea/types';
 
+import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 import { messages as commonMessages } from '../messages';
@@ -41,7 +41,7 @@ import { useTmsFileUpload } from '../useTmsFileUpload';
 
 import styles from './attachmentArea.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface AttachmentAreaProps {
   formName?: string;

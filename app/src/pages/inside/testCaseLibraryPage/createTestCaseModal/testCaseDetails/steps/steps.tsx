@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 
-import classNames from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { Button, PlusIcon, MIME_TYPES } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
+
 import { AttachmentArea } from '../../attachmentArea';
-import { StepData } from '../testCaseDetails';
+import { Step as StepType } from 'pages/inside/testCaseLibraryPage/types';
 import { Step } from './step';
 import { CREATE_TEST_CASE_FORM_NAME } from '../../createTestCaseModal';
 import { messages as commonMessages } from '../../messages';
 
 import styles from './steps.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface StepsProps {
-  steps: StepData[];
+  steps: StepType[];
   onAddStep: (index?: number) => void;
   onRemoveStep: (stepId: number) => void;
   onMoveStep: ({ stepId, direction }: { stepId: number; direction: 'up' | 'down' }) => void;

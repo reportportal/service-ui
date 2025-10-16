@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import classNames from 'classnames/bind';
 import { size } from 'es-toolkit/compat';
 import { ReactNode, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,6 +22,7 @@ import { useIntl } from 'react-intl';
 
 import { FieldLabel, Modal } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { AsyncAutocomplete } from 'componentLibrary/autocompletes/asyncAutocomplete';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { commonValidators } from 'common/utils/validation';
@@ -40,11 +40,10 @@ import styles from './addTestCasesToTestPlanModal.module.scss';
 
 type AddTestCasesSubmitHandler = SubmitHandler<
   AddTestCasesToTestPlanFormData,
-  AddTestCasesToTestPlanModalProps,
-  string
+  AddTestCasesToTestPlanModalProps
 >;
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export const ADD_TO_TEST_PLAN_MODAL_KEY = 'addToTestPlanModalKey';
 export const ADD_TO_TEST_PLAN_MODAL_FORM = 'add-to-test-plan-form';
@@ -85,7 +84,8 @@ export const AddTestCasesToTestPlanModal = ({
     );
   }, [formatMessage, selectedTestCasesLength]);
 
-  const retrieveTestPlans = () => URLS.testPlan(projectKey);
+  const retrieveTestPlans = (value: string) =>
+    `${URLS.testPlan(projectKey)}?filter.fts.search=${value}`;
 
   return (
     <Modal
@@ -109,7 +109,6 @@ export const AddTestCasesToTestPlanModal = ({
       <form onSubmit={handleSubmit(addTestCasesToTestPlan) as AddTestCasesSubmitHandler}>
         <div>
           {!isSingleTestCaseMode && description}
-          <FieldLabel>{formatMessage(messages.label)}</FieldLabel>
           <div className={cx('autocomplete-wrapper')}>
             <FieldLabel>{formatMessage(messages.label)}</FieldLabel>
             <AsyncAutocomplete

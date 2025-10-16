@@ -14,4 +14,5 @@
  * limitations under the License.
  */
 
-export { ScenariosList } from './scenariosList';
+export { DELETE_TEST_CASE_MODAL_KEY } from './deleteTestCaseModal';
+export { useDeleteTestCaseModal } from './useDeleteTestCaseModal';

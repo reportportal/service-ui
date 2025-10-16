@@ -307,11 +307,15 @@ function* deleteFolder(action: DeleteFolderAction) {
     yield put(startLoadingFolderAction());
     const projectKey = (yield select(projectKeySelector)) as string;
     const folders = (yield select(foldersSelector)) as Folder[];
-    const { folderId, activeFolderId, setAllTestCases } = action.payload;
-    const deletedFolderIds = getAllFolderIdsToDelete(folderId, folders);
-    const isActiveFolder = folderId === activeFolderId;
+    const {
+      folder: { id },
+      activeFolderId,
+      setAllTestCases,
+    } = action.payload;
+    const deletedFolderIds = getAllFolderIdsToDelete(id, folders);
+    const isActiveFolder = id === activeFolderId;
 
-    yield call(fetch, URLS.deleteFolder(projectKey, folderId), {
+    yield call(fetch, URLS.deleteFolder(projectKey, id), {
       method: 'DELETE',
     });
 

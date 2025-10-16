@@ -15,8 +15,7 @@
  */
 
 import { memo, useRef, useState } from 'react';
-import classNames from 'classnames/bind';
-import { useIntl } from 'react-intl';
+import { useIntl, MessageDescriptor } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import Parser from 'html-react-parser';
 import {
@@ -29,6 +28,7 @@ import {
 } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
+import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useOnClickOutside } from 'common/hooks';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
@@ -41,56 +41,85 @@ import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
-import { IScenario, ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
-import { StepsList } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/stepsList';
-import { StepData } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/testCaseDetails';
+import { foldersSelector } from 'controllers/testCase';
+import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
+import { ManualScenario, ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
+import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
 
-import { TestCaseMenuAction } from '../types';
-import { formatTimestamp, formatDuration, getExcludedActionsFromPermissionMap } from '../utils';
+import { TestCaseMenuAction, TestCaseManualScenario } from '../types';
+import {
+  formatTimestamp,
+  formatDuration,
+  getExcludedActionsFromPermissionMap,
+  buildBreadcrumbs,
+} from '../utils';
 import { createTestCaseMenuItems } from '../configUtils';
-import { mockedTestCaseDescription, mockedScenarios, mockedStepsData } from '../mockData';
-import { ScenariosList } from './scenariosList';
+import { Scenario } from './scenario';
 import { messages } from './messages';
 
 import styles from './testCaseSidePanel.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
+
+const safeGetMessage = (
+  key: string,
+  messages: Record<string, MessageDescriptor>,
+  formatMessage: (descriptor: MessageDescriptor) => string,
+): string => {
+  const messageDescriptor = messages[key];
+  return messageDescriptor ? formatMessage(messageDescriptor) : key;
+};
 
 const COLLAPSIBLE_SECTIONS_CONFIG = ({
-  tags,
-  scenarios,
-  steps,
+  attributes,
+  scenario,
   testCaseDescription,
 }: {
-  tags: string[];
-  scenarios: IScenario[];
-  steps: StepData[];
+  attributes: string[];
+  scenario: ManualScenario;
   testCaseDescription: string;
-}) =>
-  [
+}) => {
+  const isStepsManualScenario = scenario.manualScenarioType === TestCaseManualScenario.STEPS;
+  const isEmptyPreconditions = isEmpty(scenario?.preconditions?.value);
+  const isScenarioDataHidden = isStepsManualScenario
+    ? isEmptyPreconditions && isEmpty(scenario?.steps)
+    : isEmptyPreconditions && !scenario?.instructions && !scenario?.expectedResult;
+
+  return [
     {
       titleKey: 'tagsTitle',
       defaultMessageKey: 'noTagsAdded',
-      childComponent: isEmpty(tags) ? null : <AdaptiveTagList tags={tags} isShowAllView />,
+      childComponent: isEmpty(attributes) ? null : (
+        <AdaptiveTagList tags={attributes} isShowAllView />
+      ),
     },
     {
       titleKey: 'scenarioTitle',
       defaultMessageKey: 'noDetailsForScenario',
-      childComponent: isEmpty(scenarios) ? null : <ScenariosList scenarios={scenarios} />,
+      childComponent: isScenarioDataHidden ? null : <Scenario scenario={scenario} />,
     },
-    {
-      titleKey: 'stepTitle',
-      defaultMessageKey: 'noStepsAdded',
-      childComponent: isEmpty(steps) ? null : <StepsList steps={steps} />,
-    },
+    ...(scenario.manualScenarioType === TestCaseManualScenario.TEXT
+      ? [
+          {
+            titleKey: 'attachmentsTitle',
+            defaultMessageKey: 'noAttachmentsAdded',
+            childComponent: isEmpty(scenario?.attachments) ? null : (
+              <AttachmentList attachments={scenario.attachments} />
+            ),
+          },
+        ]
+      : []),
     {
       titleKey: 'descriptionTitle',
       defaultMessageKey: 'descriptionNotSpecified',
-      childComponent: <ExpandedTextSection text={testCaseDescription} defaultVisibleLines={5} />,
+      childComponent: testCaseDescription ? (
+        <ExpandedTextSection text={testCaseDescription} defaultVisibleLines={5} />
+      ) : null,
     },
   ] as const;
+};
 
 interface TestCaseSidePanelProps {
   testCase: ExtendedTestCase | null;
@@ -112,11 +141,16 @@ export const TestCaseSidePanel = memo(
     const { organizationSlug, projectSlug } = useSelector(
       urlOrganizationAndProjectSelector,
     ) as ProjectDetails;
+    const folders = useSelector(foldersSelector);
     const { formatMessage } = useIntl();
     const sidePanelRef = useRef<HTMLDivElement>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const { openModal } = useAddTestCasesToTestPlanModal();
     const { openModal: openEditTestCaseModal } = useEditTestCaseModal();
+    const { openModal: openAddTestCasesToTestPlanModal } = useAddTestCasesToTestPlanModal();
+    const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
+
+    const folderId = testCase?.testFolder?.id;
+    const path = buildBreadcrumbs(folders, folderId);
 
     useOnClickOutside(sidePanelRef, onClose);
 
@@ -139,6 +173,17 @@ export const TestCaseSidePanel = memo(
       formatMessage,
       {
         [TestCaseMenuAction.EDIT]: handleEditTestCase,
+        [TestCaseMenuAction.DELETE]: () => openDeleteTestCaseModal({ testCase }),
+        [TestCaseMenuAction.HISTORY]: () => {
+          dispatch({
+            type: TEST_CASE_LIBRARY_PAGE,
+            payload: {
+              organizationSlug,
+              projectSlug,
+              testCasePageRoute: `test-cases/${testCase.id}/historyOfActions`,
+            },
+          });
+        },
       },
       getExcludedActionsFromPermissionMap(permissionMap),
     );
@@ -163,7 +208,10 @@ export const TestCaseSidePanel = memo(
     };
 
     const handleAddToTestPlanClick = () => {
-      openModal({ selectedTestCaseIds: [testCase.id], isSingleTestCaseMode: true });
+      openAddTestCasesToTestPlanModal({
+        selectedTestCaseIds: [testCase.id],
+        isSingleTestCaseMode: true,
+      });
     };
 
     const handleCopyId = async () => {
@@ -188,7 +236,7 @@ export const TestCaseSidePanel = memo(
               {Parser(CrossIcon as unknown as string)}
             </button>
           </div>
-          {!isEmpty(testCase.path) && <PathBreadcrumb path={testCase.path} />}
+          {!isEmpty(path) && <PathBreadcrumb path={path} />}
           <div className={cx('header-meta')}>
             <div className={cx('meta-row')}>
               <div className={cx('meta-item-row', 'id-row')}>
@@ -211,16 +259,20 @@ export const TestCaseSidePanel = memo(
               </div>
             </div>
             <div className={cx('meta-row')}>
-              {!!testCase.updatedAt && (
+              {!!testCase?.lastExecution?.startedAt && (
                 <div className={cx('meta-item-row')}>
                   <RerunIcon />
-                  <span className={cx('meta-value')}>{formatTimestamp(testCase.updatedAt)}</span>
+                  <span className={cx('meta-value')}>
+                    {formatTimestamp(testCase.lastExecution.startedAt)}
+                  </span>
                 </div>
               )}
-              {!!testCase.durationTime && (
+              {!!testCase?.lastExecution?.duration && (
                 <div className={cx('meta-item-row')}>
                   <DurationIcon />
-                  <span className={cx('meta-value')}>{formatDuration(testCase.durationTime)}</span>
+                  <span className={cx('meta-value')}>
+                    {formatDuration(testCase.lastExecution.duration)}
+                  </span>
                 </div>
               )}
             </div>
@@ -228,15 +280,14 @@ export const TestCaseSidePanel = memo(
         </div>
         <div className={cx('content')}>
           {COLLAPSIBLE_SECTIONS_CONFIG({
-            tags: testCase.tags?.map(({ key }) => key),
-            scenarios: mockedScenarios,
-            steps: mockedStepsData,
-            testCaseDescription: mockedTestCaseDescription,
+            attributes: testCase?.attributes?.map(({ key }) => key),
+            scenario: testCase?.manualScenario,
+            testCaseDescription: testCase.description,
           }).map(({ titleKey, defaultMessageKey, childComponent }) => (
             <CollapsibleSection
               key={titleKey}
-              title={formatMessage(messages[titleKey])}
-              defaultMessage={formatMessage(messages[defaultMessageKey])}
+              title={safeGetMessage(titleKey, messages, formatMessage)}
+              defaultMessage={safeGetMessage(defaultMessageKey, messages, formatMessage)}
             >
               {childComponent}
             </CollapsibleSection>

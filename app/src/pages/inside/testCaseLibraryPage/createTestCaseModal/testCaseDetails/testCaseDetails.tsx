@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
-import classNames from 'classnames/bind';
 import { isNumber, isEmpty } from 'es-toolkit/compat';
 import { FieldText } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
+import { Step } from 'pages/inside/testCaseLibraryPage/types';
 
 import { Template } from './template';
 import { AttachmentArea } from '../attachmentArea';
@@ -17,9 +18,8 @@ import { CREATE_TEST_CASE_FORM_NAME } from '../createTestCaseModal';
 import { manualScenarioTypeSelector, stepsDataSelector } from '../selectors';
 
 import styles from './testCaseDetails.scss';
-import { BaseAttachmentFile } from 'common/hooks';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 const messages = defineMessages({
   requirementsLink: {
@@ -32,14 +32,7 @@ const messages = defineMessages({
   },
 });
 
-export interface StepData {
-  id: number;
-  instructions: string;
-  expectedResult: string;
-  attachments?: Partial<BaseAttachmentFile>[];
-}
-
-const createEmptyStep = (): StepData => ({
+const createEmptyStep = (): Step => ({
   id: Date.now(),
   instructions: '',
   expectedResult: '',
@@ -51,14 +44,14 @@ interface TestCaseDetailsProps {
 }
 
 export const TestCaseDetails = ({ className }: TestCaseDetailsProps) => {
-  const [steps, setSteps] = useState<StepData[]>([createEmptyStep()]);
+  const [steps, setSteps] = useState<Step[]>([createEmptyStep()]);
   const { formatMessage } = useIntl();
   const manualScenarioType = useSelector(manualScenarioTypeSelector);
   const stepsData = useSelector(stepsDataSelector);
 
   useEffect(() => {
     if (!isEmpty(stepsData)) {
-      const stepsArray = Object.values(stepsData) as StepData[];
+      const stepsArray = Object.values(stepsData) as Step[];
       setSteps(stepsArray);
     }
   }, [stepsData]);

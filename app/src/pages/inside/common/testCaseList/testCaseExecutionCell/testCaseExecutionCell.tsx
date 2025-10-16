@@ -15,56 +15,55 @@
  */
 
 import { useState } from 'react';
-import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
 import { MeatballMenuIcon, CoveredManuallyIcon } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { handleEnterOrSpaceKey } from 'common/utils/helperUtils/event.utils';
-import { useTooltipItems } from 'pages/inside/common/testCaseList/testCaseExecutionCell/useTooltipItems';
+import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 
+import { useTooltipItems } from '../testCaseExecutionCell/useTooltipItems';
 import { formatRelativeTime } from '../utils';
 import { messages } from '../messages';
 
 import styles from './testCaseExecutionCell.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface TestCaseExecutionCellProps {
-  testCaseId: number;
-  lastExecution: number;
+  testCase: ExtendedTestCase;
   instanceKey: INSTANCE_KEYS;
   onRowClick: () => void;
-  onEdit?: (testCaseId: number) => void;
 }
 
 export const TestCaseExecutionCell = ({
-  testCaseId,
-  lastExecution,
+  testCase,
   onRowClick,
   instanceKey,
-  onEdit,
 }: TestCaseExecutionCellProps) => {
   const { formatMessage, locale } = useIntl();
-  const tooltipItems = useTooltipItems({ instanceKey, testCaseId, onEdit });
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const tooltipItems = useTooltipItems({ instanceKey, testCase });
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const isTestPlan = instanceKey === INSTANCE_KEYS.TEST_PLAN;
 
   return (
     <button type="button" className={cx('execution-content')} onClick={onRowClick}>
       <div>
-        {instanceKey === INSTANCE_KEYS.TEST_PLAN && (
+        {isTestPlan && (
           <div className={cx('covered-manually')}>
             <CoveredManuallyIcon /> {formatMessage(messages.coveredManually)}
           </div>
         )}
         <div
           className={cx('execution-time', {
-            'execution-time--full-width': instanceKey === INSTANCE_KEYS.TEST_PLAN,
+            'execution-time--full-width': isTestPlan,
           })}
         >
-          {formatRelativeTime(lastExecution, locale)}
+          {formatRelativeTime(testCase.updatedAt, locale)}
         </div>
       </div>
       {!isEmpty(tooltipItems) && (
@@ -72,7 +71,7 @@ export const TestCaseExecutionCell = ({
           role="menuitem"
           tabIndex={0}
           className={cx('menu-section')}
-          onClick={(e) => e.stopPropagation()}
+          onClick={(event) => event.stopPropagation()}
           onKeyDown={handleEnterOrSpaceKey}
         >
           <PopoverControl

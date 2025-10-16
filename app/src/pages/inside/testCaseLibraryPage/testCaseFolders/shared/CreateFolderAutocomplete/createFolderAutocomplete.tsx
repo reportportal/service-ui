@@ -17,10 +17,10 @@
 import { ComponentProps } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
-import classNames from 'classnames/bind';
 import { FieldLabel } from '@reportportal/ui-kit';
 import { isString } from 'es-toolkit/compat';
 
+import { createClassnames } from 'common/utils';
 import { FolderWithFullPath, transformedFoldersWithFullPathSelector } from 'controllers/testCase';
 import { AutocompleteOption } from 'componentLibrary/autocompletes/common/autocompleteOption';
 import { SingleAutocomplete } from 'componentLibrary/autocompletes/singleAutocomplete';
@@ -30,7 +30,7 @@ import styles from './createFolderAutocomplete.scss';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 import { findFolderById } from 'pages/inside/testCaseLibraryPage/utils';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface CreateFolderAutocompleteProps {
   name: string;
@@ -102,6 +102,7 @@ export const CreateFolderAutocomplete = ({
         value={targetFolder}
         error={error}
         touched={touched}
+        skipOptionCreation
         placeholder={placeholder || formatMessage(commonMessages.searchFolderToSelect)}
         options={folders}
         customEmptyListMessage={customEmptyListMessage || formatMessage(messages.noFoldersFound)}

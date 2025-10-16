@@ -1,8 +1,26 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { FC, SVGProps } from 'react';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { FolderWithFullPath } from 'controllers/testCase/types';
+import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
+import { BaseAttachmentFile } from 'common/hooks/useFileProcessing';
 
-type Tag = {
+export type Tag = {
   key: string;
   value?: string;
   id: number;
@@ -14,12 +32,18 @@ export interface IAttachment {
   size: number;
 }
 
-export interface IScenario {
-  id: string;
-  precondition: string;
-  instruction: string;
+export interface Step {
+  id: number;
+  instructions: string;
   expectedResult: string;
-  attachments: IAttachment[];
+  attachments?: Partial<BaseAttachmentFile>[];
+}
+
+export interface Attachment {
+  fileName: string;
+  fileSize: number;
+  id: number;
+  fileType: string;
 }
 
 export enum ManualScenarioType {
@@ -55,31 +79,33 @@ export interface TestCase {
   createdAt: number;
   description?: string;
   path: string[];
-  tags: Tag[];
+  attributes?: Tag[];
   updatedAt: number;
   durationTime?: number;
-  scenarios?: IScenario[];
   testFolder: {
     id: number;
   };
+  lastExecution?: {
+    startedAt: string;
+    duration: number;
+  };
+  tags?: { key: string }[];
 }
 
-interface ManualScenario {
-  manualScenarioType: string;
+export interface ManualScenario {
+  manualScenarioType: TestCaseManualScenario;
   id: number;
   executionEstimationTime: number;
   linkToRequirements: string;
   preconditions: {
     value: string;
-    attachments: [];
+    attachments: Attachment[];
   };
-  attributes: [];
-  steps: {
-    id: number;
-    instructions: string;
-    expectedResult: string;
-    attachments: [];
-  }[];
+  attributes?: Tag[];
+  steps: Step[];
+  instructions?: string;
+  expectedResult?: string;
+  attachments?: Attachment[];
 }
 
 export interface ExtendedTestCase extends TestCase {
@@ -109,11 +135,11 @@ export interface CreateTestCaseFormData {
   instructions?: string;
   expectedResult?: string;
   textAttachments?: Attachment[];
-  tags?: string[];
+  tags?: Tag[];
 }
 
 export interface Attachment {
-  id: string;
+  id: number;
 }
 
 export interface TestStep {

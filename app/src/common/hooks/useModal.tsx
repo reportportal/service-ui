@@ -24,6 +24,10 @@ interface UseModalOptions<T = void> {
   renderModal: (data?: T) => ReactElement;
 }
 
+export interface UseModalData<T> {
+  data: T;
+}
+
 export const useModal = <T,>({ modalKey, renderModal }: UseModalOptions<T>) => {
   const dispatch = useDispatch();
 
@@ -37,7 +41,5 @@ export const useModal = <T,>({ modalKey, renderModal }: UseModalOptions<T>) => {
     );
   };
 
-  return {
-    openModal,
-  };
+  return { openModal };
 };

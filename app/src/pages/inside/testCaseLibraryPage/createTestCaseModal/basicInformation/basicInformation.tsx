@@ -16,9 +16,9 @@
 
 import { useIntl } from 'react-intl';
 import { noop } from 'es-toolkit';
-import classNames from 'classnames/bind';
 import { FieldText, FieldTextFlex } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { EditableTagsSection } from 'pages/inside/testCaseLibraryPage/editableTagsSection';
 import { CreateFolderAutocomplete } from 'pages/inside/testCaseLibraryPage/testCaseFolders/shared/CreateFolderAutocomplete';
@@ -29,7 +29,7 @@ import { PrioritySelect } from '../../prioritySelect/prioritySelect';
 
 import styles from './basicInformation.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface BasicInformationProps {
   className?: string;

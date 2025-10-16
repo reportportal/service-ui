@@ -14,8 +14,15 @@
  * limitations under the License.
  */
 
-.scenarios-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
+import { useModal } from 'common/hooks';
+
+import DeleteTestCaseModal, {
+  DELETE_TEST_CASE_MODAL_KEY,
+  DeleteTestCaseModalData,
+} from './deleteTestCaseModal';
+
+export const useDeleteTestCaseModal = () =>
+  useModal<DeleteTestCaseModalData>({
+    modalKey: DELETE_TEST_CASE_MODAL_KEY,
+    renderModal: (data) => <DeleteTestCaseModal data={data} />,
+  });

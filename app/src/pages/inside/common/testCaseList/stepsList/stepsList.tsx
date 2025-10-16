@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
-import classNames from 'classnames/bind';
+import { createClassnames } from 'common/utils';
 import { AttachmentArea } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/attachmentArea';
 import { Step } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/testCaseDetails/steps/step';
-import { StepData } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/testCaseDetails';
+import { Step as StepType } from 'pages/inside/testCaseLibraryPage/types';
+
 import styles from './stepsList.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface StepsListProps {
-  steps: StepData[];
+  steps: StepType[];
 }
 
 export const StepsList = ({ steps }: StepsListProps) => {
   return (
     <div className={cx('steps-list')}>
       {steps.map((step, index) => {
-        const { instructions, expectedResult, id } = step;
+        const { instructions, expectedResult, id, attachments } = step;
         return (
           <div key={id} className={cx('step-item')}>
             <AttachmentArea
@@ -45,6 +46,7 @@ export const StepsList = ({ steps }: StepsListProps) => {
                 isReadMode
                 instructions={instructions}
                 expectedResult={expectedResult}
+                attachments={attachments}
               />
             </AttachmentArea>
           </div>

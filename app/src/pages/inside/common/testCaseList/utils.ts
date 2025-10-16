@@ -16,6 +16,7 @@
 
 import { formatDistanceToNow, format } from 'date-fns';
 import { enUS, ru, es, de } from 'date-fns/locale';
+import { Folder } from 'controllers/testCase';
 import { TestCaseMenuAction } from 'pages/inside/common/testCaseList/types';
 
 const dateFnsLocales: Record<string, Locale> = {
@@ -36,7 +37,7 @@ type PermissionMapEntry = {
  * @param timestamp - Timestamp in milliseconds
  * @returns Formatted date string in YYYY-MM-DD HH:MM:SS format
  */
-export const formatTimestamp = (timestamp: number): string => {
+export const formatTimestamp = (timestamp: number | string): string => {
   return format(new Date(timestamp), 'yyyy-MM-dd HH:mm:ss');
 };
 
@@ -74,3 +75,17 @@ export const getExcludedActionsFromPermissionMap = (
   permissionMap: PermissionMapEntry[],
 ): TestCaseMenuAction[] =>
   permissionMap.filter(({ isAllowed }) => !isAllowed).map(({ action }) => action);
+
+export function buildBreadcrumbs(folders: Folder[], folderId: number): string[] {
+  const folder = folders.find(({ id }) => id === folderId);
+
+  if (!folder) {
+    return [];
+  }
+
+  if (folder.parentFolderId) {
+    return [...buildBreadcrumbs(folders, folder.parentFolderId), folder.name];
+  }
+
+  return [folder.name];
+}

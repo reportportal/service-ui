@@ -30,6 +30,7 @@ export const GET_ALL_TEST_CASES = 'getAllTestCases' as const;
 export const START_LOADING_TEST_CASES = 'startLoadingTestCases' as const;
 export const STOP_LOADING_TEST_CASES = 'stopLoadingTestCases' as const;
 export const SET_TEST_CASES = 'setTestCases' as const;
+export const DELETE_TEST_CASE_SUCCESS = 'deleteTestCaseSuccess' as const;
 export const GET_TEST_CASE_DETAILS = 'getTestCaseDetails' as const;
 export const GET_TEST_CASE_DETAILS_SUCCESS = 'getTestCaseDetailsSuccess' as const;
 export const GET_TEST_CASE_DETAILS_FAILURE = 'getTestCaseDetailsFailure' as const;
