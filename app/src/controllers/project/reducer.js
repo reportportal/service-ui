@@ -17,6 +17,8 @@
 import { combineReducers } from 'redux';
 import { ADD_FILTER, REMOVE_FILTER, UPDATE_FILTER_SUCCESS } from 'controllers/filter/constants';
 import { updateFilter } from 'controllers/filter/utils';
+import { fetchReducer } from 'controllers/fetch';
+import { loadingReducer } from 'controllers/loading';
 import {
   PROJECT_INFO_INITIAL_STATE,
   PROJECT_PREFERENCES_INITIAL_STATE,
@@ -36,6 +38,7 @@ import {
   UPDATE_PROJECT_NOTIFICATION_SUCCESS,
   SET_PROJECT_NOTIFICATION_LOADING,
   FETCH_EXISTING_LAUNCH_NAMES_SUCCESS,
+  LOG_TYPES_NAMESPACE,
 } from './constants';
 
 export const projectInfoReducer = (
@@ -204,4 +207,6 @@ export const projectReducer = combineReducers({
   preferences: projectPreferencesReducer,
   infoLoading: projectInfoLoadingReducer,
   notifications: projectNotificationsReducer,
+  logTypes: fetchReducer(LOG_TYPES_NAMESPACE, { contentPath: 'items' }),
+  logTypesLoading: loadingReducer(LOG_TYPES_NAMESPACE),
 });

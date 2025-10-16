@@ -66,3 +66,6 @@ export const NAMESPACE = 'project';
 export const HIDE_FILTER_ON_LAUNCHES = 'hideFilterOnLaunches';
 export const SHOW_FILTER_ON_LAUNCHES = 'showFilterOnLaunches';
 export const UPDATE_PROJECT_FILTER_PREFERENCES = 'updateProjectFilterPreferences';
+
+export const LOG_TYPES_NAMESPACE = 'logTypes';
+export const FETCH_LOG_TYPES = 'fetchLogTypes';

@@ -181,3 +181,6 @@ export const PAStateSelector = (state) =>
 export const enabledPattersSelector = createSelector(patternsSelector, (patterns) =>
   patterns.filter((pattern) => pattern.enabled),
 );
+
+export const logTypesSelector = (state) => projectSelector(state).logTypes || [];
+export const logTypesLoadingSelector = (state) => projectSelector(state).logTypesLoading || false;

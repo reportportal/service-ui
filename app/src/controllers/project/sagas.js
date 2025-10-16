@@ -33,6 +33,7 @@ import {
   removeFilterAction,
   activeFilterSelector,
 } from 'controllers/filter';
+import { fetchDataAction } from 'controllers/fetch';
 
 import {
   UPDATE_DEFECT_TYPE,
@@ -48,6 +49,8 @@ import {
   FETCH_CONFIGURATION_ATTRIBUTES,
   HIDE_FILTER_ON_LAUNCHES,
   SHOW_FILTER_ON_LAUNCHES,
+  FETCH_LOG_TYPES,
+  LOG_TYPES_NAMESPACE,
   UPDATE_PROJECT_FILTER_PREFERENCES,
   ADD_PROJECT_NOTIFICATION,
   NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY,
@@ -482,6 +485,14 @@ function* watchUpdateProjectFilterPreferences() {
   yield takeEvery(UPDATE_PROJECT_FILTER_PREFERENCES, updateProjectFilterPreferences);
 }
 
+function* fetchLogTypes({ payload: projectId }) {
+  yield put(fetchDataAction(LOG_TYPES_NAMESPACE)(URLS.projectLogTypes(projectId)));
+}
+
+function* watchFetchLogTypes() {
+  yield takeEvery(FETCH_LOG_TYPES, fetchLogTypes);
+}
+
 export function* projectSagas() {
   yield all([
     watchUpdateDefectType(),
@@ -502,5 +513,6 @@ export function* projectSagas() {
     watchUpdateProjectNotification(),
     watchDeleteProjectNotification(),
     watchFetchProjectNotifications(),
+    watchFetchLogTypes(),
   ]);
 }

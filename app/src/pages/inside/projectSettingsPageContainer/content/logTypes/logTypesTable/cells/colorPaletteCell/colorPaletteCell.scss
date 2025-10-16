@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,30 @@
  * limitations under the License.
  */
 
-export const GENERAL = 'general';
-export const NOTIFICATIONS = 'notifications';
-export const INTEGRATIONS = 'integrations';
-export const DEFECT = 'defect';
-export const ANALYSIS = 'analyzer';
-export const DEMO_DATA = 'demoData';
-export const AUTHORIZATION_CONFIGURATION = 'authConfiguration';
-export const FEATURES = 'features';
-export const ANALYTICS = 'analytics';
-export const LINKS_AND_BRANDING = 'linksAndBranding';
-export const PATTERN_ANALYSIS = 'patternAnalysis';
-export const LOG_TYPES = 'logTypes';
+.sample-container {
+  width: 100%;
+  background-color: var(--rp-ui-base-bg-000);
+  border-radius: 5px;
+  padding: 9px 12px 8px;
+
+  .log-sample {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 20px;
+    padding-left: 15px;
+    border-left: 6px solid var(--rp-ui-base-e-400);
+    border-radius: 2px;
+    box-sizing: border-box;
+
+    .log-text {
+      font-size: 12px;
+      line-height: 18px;
+
+      p {
+        line-height: inherit;
+        font-weight: inherit;
+      }
+    }
+  }
+}
