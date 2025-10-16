@@ -17,7 +17,7 @@
 import { FormEvent, MouseEvent, useEffect, useMemo, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
-import { reduxForm, InjectedFormProps, initialize } from 'redux-form';
+import { reduxForm, InjectedFormProps } from 'redux-form';
 import { Modal } from '@reportportal/ui-kit';
 
 import { createClassnames, commonValidators } from 'common/utils';
@@ -47,7 +47,12 @@ interface EditTestCaseModalProps extends InjectedFormProps<CreateTestCaseFormDat
   };
 }
 
-const EditTestCaseModalComponent = ({ dirty, handleSubmit, data }: EditTestCaseModalProps) => {
+const EditTestCaseModalComponent = ({
+  dirty,
+  handleSubmit,
+  data,
+  initialize,
+}: EditTestCaseModalProps) => {
   const testCase = data?.testCase;
 
   const { formatMessage } = useIntl();
@@ -75,9 +80,9 @@ const EditTestCaseModalComponent = ({ dirty, handleSubmit, data }: EditTestCaseM
         }),
       };
 
-      dispatch(initialize(EDIT_TEST_CASE_FORM_NAME, formData));
+      initialize({ ...formData } as unknown as Partial<CreateTestCaseFormData>);
     }
-  }, [testCase, dispatch]);
+  }, [testCase, initialize]);
 
   const handleUpdate = useCallback(
     (formData: CreateTestCaseFormData) => {
