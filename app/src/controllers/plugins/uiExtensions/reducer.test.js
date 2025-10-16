@@ -21,13 +21,13 @@ describe('uiExtensionsReducer - UPDATE_EXTENSION_MANIFEST upsert', () => {
   it('replaces existing manifest by pluginName', () => {
     const initialState = {
       extensionManifests: [
-        { pluginName: 'plugin-a', url: 'http://old', scope: 'scope-a', extensions: [] },
+        { pluginName: 'plugin-a', url: 'https://old', scope: 'scope-a', extensions: [] },
       ],
     };
 
     const updatedManifest = {
       pluginName: 'plugin-a',
-      url: 'http://new',
+      url: 'https://new',
       scope: 'scope-a',
       extensions: [{ name: 'ext', type: 'uiExtension:projectPage' }],
     };
@@ -43,7 +43,7 @@ describe('uiExtensionsReducer - UPDATE_EXTENSION_MANIFEST upsert', () => {
 
     const newManifest = {
       pluginName: 'plugin-b',
-      url: 'http://new',
+      url: 'https://new',
       scope: 'scope-b',
       extensions: [{ name: 'page', type: 'uiExtension:projectPage' }],
     };
