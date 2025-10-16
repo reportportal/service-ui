@@ -23,9 +23,14 @@ import Parser from 'html-react-parser';
 import { projectIdSelector } from 'controllers/pages';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { Button } from '@reportportal/ui-kit';
-import { logTypesSelector, fetchLogTypesAction } from 'controllers/project';
+import {
+  logTypesSelector,
+  logTypesLoadingSelector,
+  fetchLogTypesAction,
+} from 'controllers/project';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { docsReferences, createExternalLink } from 'common/utils';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { LogTypesTable } from './logTypesTable';
 import { messages } from './messages';
 import { UNKNOWN_LOG_TYPE_LEVEL } from './constants';
@@ -38,6 +43,7 @@ export const LogTypes = ({ setHeaderTitleNode }) => {
   const dispatch = useDispatch();
   const projectId = useSelector(projectIdSelector);
   const logTypes = useSelector(logTypesSelector);
+  const loading = useSelector(logTypesLoadingSelector);
   const userAccountRole = useSelector(userAccountRoleSelector);
   const userProjectRole = useSelector(activeProjectRoleSelector);
   const isEditable = canUpdateSettings(userAccountRole, userProjectRole);
@@ -70,7 +76,9 @@ export const LogTypes = ({ setHeaderTitleNode }) => {
     [logTypes],
   );
 
-  return (
+  return loading ? (
+    <SpinningPreloader />
+  ) : (
     <div className={cx('content')}>
       <div className={cx('description')}>
         {Parser(

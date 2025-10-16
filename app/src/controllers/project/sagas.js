@@ -33,7 +33,7 @@ import {
   removeFilterAction,
   activeFilterSelector,
 } from 'controllers/filter';
-import { fetchSuccessAction } from 'controllers/fetch';
+import { fetchDataAction } from 'controllers/fetch';
 
 import {
   UPDATE_DEFECT_TYPE,
@@ -486,12 +486,7 @@ function* watchUpdateProjectFilterPreferences() {
 }
 
 function* fetchLogTypes({ payload: projectId }) {
-  try {
-    const response = yield call(fetch, URLS.projectLogTypes(projectId));
-    yield put(fetchSuccessAction(LOG_TYPES_NAMESPACE, response));
-  } catch (error) {
-    yield put(showDefaultErrorNotification(error));
-  }
+  yield put(fetchDataAction(LOG_TYPES_NAMESPACE)(URLS.projectLogTypes(projectId)));
 }
 
 function* watchFetchLogTypes() {

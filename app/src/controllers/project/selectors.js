@@ -183,3 +183,4 @@ export const enabledPattersSelector = createSelector(patternsSelector, (patterns
 );
 
 export const logTypesSelector = (state) => projectSelector(state).logTypes || [];
+export const logTypesLoadingSelector = (state) => projectSelector(state).logTypesLoading || false;
