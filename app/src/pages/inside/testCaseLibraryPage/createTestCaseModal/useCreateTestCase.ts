@@ -31,8 +31,6 @@ import { CreateTestCaseFormData } from '../types';
 import { createFolder, buildManualScenario, handleTestCaseError } from './testCaseUtils';
 import { isString } from 'es-toolkit';
 
-const DEFAULT_FOLDER_ID = 85;
-
 export const useCreateTestCase = () => {
   const { isLoading: isCreateTestCaseLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
@@ -50,7 +48,7 @@ export const useCreateTestCase = () => {
         dispatch(createFoldersSuccessAction({ ...folder, countOfTestCases: 0 }));
         folderId = folder.id;
       } else {
-        folderId = payload.folder?.id || DEFAULT_FOLDER_ID;
+        folderId = payload.folder?.id;
       }
 
       const manualScenario = buildManualScenario(payload);
