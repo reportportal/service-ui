@@ -51,7 +51,7 @@ interface TestCaseDetailsProps {
 }
 
 export const TestCaseDetails = ({ className }: TestCaseDetailsProps) => {
-  const [steps, setSteps] = useState<StepData[]>([]);
+  const [steps, setSteps] = useState<StepData[]>([createEmptyStep()]);
   const { formatMessage } = useIntl();
   const manualScenarioType = useSelector(manualScenarioTypeSelector);
   const stepsData = useSelector(stepsDataSelector);
@@ -60,8 +60,6 @@ export const TestCaseDetails = ({ className }: TestCaseDetailsProps) => {
     if (!isEmpty(stepsData)) {
       const stepsArray = Object.values(stepsData) as StepData[];
       setSteps(stepsArray);
-    } else {
-      setSteps([createEmptyStep()]);
     }
   }, [stepsData]);
 
