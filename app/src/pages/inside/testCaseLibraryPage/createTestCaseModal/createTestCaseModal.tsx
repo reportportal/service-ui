@@ -22,9 +22,10 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal } from 'controllers/modal';
 
 import { commonMessages } from '../commonMessages';
-import { CreateTestCaseFormData, ManualScenarioType } from '../types';
+import { CreateTestCaseFormData } from '../types';
 import { TestCaseModal } from './testCaseModal/testCaseModal';
-import { useCreateTestCase } from './useCreateTestCase';
+import { useTestCase } from './useTestCase';
+import { TEST_CASE_FORM_INITIAL_VALUES } from './constants';
 
 export const CREATE_TEST_CASE_MODAL_KEY = 'createTestCaseModalKey';
 export const CREATE_TEST_CASE_FORM_NAME: string = 'create-test-case-modal-form';
@@ -33,7 +34,7 @@ type CreateTestCaseModalProps = InjectedFormProps<CreateTestCaseFormData>;
 
 const CreateTestCaseModalComponent = ({ dirty, handleSubmit }: CreateTestCaseModalProps) => {
   const { formatMessage } = useIntl();
-  const { isCreateTestCaseLoading, createTestCase } = useCreateTestCase();
+  const { isLoading: isCreateTestCaseLoading, createTestCase } = useTestCase();
 
   return (
     <TestCaseModal
@@ -50,11 +51,7 @@ const CreateTestCaseModalComponent = ({ dirty, handleSubmit }: CreateTestCaseMod
 
 const ReduxFormComponent = reduxForm<CreateTestCaseFormData, CreateTestCaseModalProps>({
   form: CREATE_TEST_CASE_FORM_NAME,
-  initialValues: {
-    priority: 'unspecified',
-    manualScenarioType: ManualScenarioType.STEPS,
-    executionEstimationTime: 5,
-  },
+  initialValues: TEST_CASE_FORM_INITIAL_VALUES,
   validate: ({ name, folder, linkToRequirements }) => ({
     name: commonValidators.requiredField(name),
     folder: commonValidators.requiredField(folder),

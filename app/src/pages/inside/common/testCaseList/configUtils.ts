@@ -15,12 +15,12 @@
  */
 
 import { MessageDescriptor } from 'react-intl';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 import { messages } from './messages';
 import { TestCaseMenuAction } from './types';
-import { isEmpty } from 'es-toolkit/compat';
 
 export const DEFAULT_CURRENT_PAGE = 1;
 export const DEFAULT_ITEMS_PER_PAGE = 10;

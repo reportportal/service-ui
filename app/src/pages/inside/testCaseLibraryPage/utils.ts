@@ -34,18 +34,3 @@ export const findFolderById = (
 
   return folders.find((folder) => folder.id === folderId);
 };
-
-/**
- * Converts steps array to object keyed by id for redux-form.
- * Backend format: [{ id: 1, instructions: "...", ... }]
- * Form format: { 1: { id: 1, instructions: "...", ... }, 2: { ... } }
- */
-export const convertStepsArrayToObject = <T extends { id: number | string }>(
-  steps?: T[],
-): Record<string | number, T> | undefined => {
-  if (!steps || !Array.isArray(steps)) {
-    return undefined;
-  }
-
-  return steps.reduce((acc, step) => ({ ...acc, [step.id]: step }), {});
-};

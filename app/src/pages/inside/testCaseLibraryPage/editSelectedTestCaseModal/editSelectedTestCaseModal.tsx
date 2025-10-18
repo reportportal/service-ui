@@ -17,25 +17,25 @@
 import { useEffect, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { reduxForm, InjectedFormProps } from 'redux-form';
+import { keyBy } from 'es-toolkit';
 
 import { commonValidators } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal } from 'controllers/modal';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
+import { UseModalData } from 'common/hooks';
 
 import { commonMessages } from '../commonMessages';
-import { ExtendedTestCase, CreateTestCaseFormData, ManualScenarioType } from '../types';
-import { convertStepsArrayToObject } from '../utils';
+import { ExtendedTestCase, CreateTestCaseFormData } from '../types';
 import { TestCaseModal } from '../createTestCaseModal/testCaseModal/testCaseModal';
-import { useEditTestCase } from './useEditTestCase';
+import { useTestCase } from '../createTestCaseModal/useTestCase';
+import { TEST_CASE_FORM_INITIAL_VALUES } from '../createTestCaseModal/constants';
 
 export const EDIT_SELECTED_TEST_CASE_MODAL_KEY = 'editSelectedTestCaseModalKey';
 export const EDIT_TEST_CASE_FORM_NAME: string = 'edit-test-case-modal-form';
 
-interface EditTestCaseModalProps extends InjectedFormProps<CreateTestCaseFormData> {
-  data?: {
-    testCase?: ExtendedTestCase;
-  };
+interface EditTestCaseModalProps {
+  testCase?: ExtendedTestCase;
 }
 
 const EditTestCaseModalComponent = ({
@@ -43,25 +43,32 @@ const EditTestCaseModalComponent = ({
   initialize,
   dirty,
   handleSubmit,
-}: EditTestCaseModalProps) => {
+}: UseModalData<EditTestCaseModalProps> &
+  InjectedFormProps<CreateTestCaseFormData, EditTestCaseModalProps>) => {
   const testCase = data?.testCase;
 
   const { formatMessage } = useIntl();
-  const { isEditTestCaseLoading, editTestCase } = useEditTestCase(testCase?.id);
+  const { isLoading: isEditTestCaseLoading, editTestCase } = useTestCase(testCase?.id);
 
   useEffect(() => {
     if (testCase) {
       const manualScenario = testCase?.manualScenario;
-      const stepsObject = convertStepsArrayToObject(manualScenario?.steps);
+      const stepsObject = manualScenario?.steps
+        ? keyBy(manualScenario.steps, (step) => step.id)
+        : undefined;
 
       const formData = {
         name: testCase.name,
         description: testCase.description,
         folder: testCase.testFolder,
-        priority: (testCase.priority?.toLowerCase() || 'unspecified') as TestCasePriority,
+        priority: (testCase.priority?.toLowerCase() ||
+          TEST_CASE_FORM_INITIAL_VALUES.priority) as TestCasePriority,
         tags: testCase.tags?.map((tag: { key: string }) => tag.key),
-        manualScenarioType: manualScenario?.manualScenarioType || ManualScenarioType.STEPS,
-        executionEstimationTime: manualScenario?.executionEstimationTime || 5,
+        manualScenarioType:
+          manualScenario?.manualScenarioType || TEST_CASE_FORM_INITIAL_VALUES.manualScenarioType,
+        executionEstimationTime:
+          manualScenario?.executionEstimationTime ||
+          TEST_CASE_FORM_INITIAL_VALUES.executionEstimationTime,
         linkToRequirements: manualScenario?.linkToRequirements,
         precondition: manualScenario?.preconditions?.value,
         preconditionAttachments: manualScenario?.preconditions?.attachments || [],
@@ -96,11 +103,7 @@ const EditTestCaseModalComponent = ({
 
 const ReduxFormComponent = reduxForm<CreateTestCaseFormData, EditTestCaseModalProps>({
   form: EDIT_TEST_CASE_FORM_NAME,
-  initialValues: {
-    priority: 'unspecified',
-    manualScenarioType: ManualScenarioType.STEPS,
-    executionEstimationTime: 5,
-  },
+  initialValues: TEST_CASE_FORM_INITIAL_VALUES,
   validate: ({ name, folder, linkToRequirements }) => ({
     name: commonValidators.requiredField(name),
     folder: commonValidators.requiredField(folder),

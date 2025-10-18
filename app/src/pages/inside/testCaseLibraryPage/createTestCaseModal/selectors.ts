@@ -16,7 +16,8 @@
 
 import { formValueSelector } from 'redux-form';
 import type { AppState } from 'types/store';
-import { ManualScenarioType } from '../types';
+
+import { ManualScenarioType, Step } from '../types';
 
 export const manualScenarioTypeSelector = (formName: string) => (state: AppState) => {
   const formSelector = formValueSelector(formName);
@@ -25,5 +26,5 @@ export const manualScenarioTypeSelector = (formName: string) => (state: AppState
 
 export const stepsDataSelector = (formName: string) => (state: AppState) => {
   const formSelector = formValueSelector(formName);
-  return formSelector(state, 'steps') as Record<string, unknown> | undefined;
+  return formSelector(state, 'steps') as Step[];
 };

@@ -21,15 +21,13 @@ import { URLS } from 'common/urls';
 import { Folder } from 'controllers/testCase';
 
 import { ManualScenarioDto, ManualScenarioType, CreateTestCaseFormData } from '../types';
+import { messages } from './basicInformation/messages';
 
-export const createFolder = async (projectKey: string, folderName: string): Promise<Folder> => {
-  const createdFolder = await fetch<Folder>(URLS.testFolders(projectKey), {
+export const createFolder = (projectKey: string, folderName: string) =>
+  fetch<Folder>(URLS.testFolders(projectKey), {
     method: 'POST',
     data: { name: folderName },
   });
-
-  return createdFolder;
-};
 
 export const buildManualScenario = (payload: CreateTestCaseFormData): ManualScenarioDto => {
   const commonData = {
@@ -64,11 +62,10 @@ export const buildManualScenario = (payload: CreateTestCaseFormData): ManualScen
 export const handleTestCaseError = (
   error: unknown,
   formatMessage: (message: unknown) => string,
-  duplicateMessageKey: { id: string; defaultMessage: string },
 ) => {
   if (error instanceof Error && error?.message?.includes('tms_test_case_name_folder_unique')) {
     throw new SubmissionError({
-      name: formatMessage(duplicateMessageKey),
+      name: formatMessage(messages.duplicateTestCaseName),
     });
   }
   throw error;

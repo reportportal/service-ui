@@ -51,8 +51,7 @@ export const TestCaseDetails = ({ className, formName }: TestCaseDetailsProps) =
 
   useEffect(() => {
     if (!isEmpty(stepsData)) {
-      const stepsArray = Object.values(stepsData) as Step[];
-      setSteps(stepsArray);
+      setSteps(Object.values(stepsData));
     }
   }, [stepsData]);
 

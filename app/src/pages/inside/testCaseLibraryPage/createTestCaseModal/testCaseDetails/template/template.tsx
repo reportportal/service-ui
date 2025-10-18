@@ -20,11 +20,11 @@ import { FieldNumber } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { FieldProvider } from 'components/fields';
+import { ManualScenarioType } from 'pages/inside/testCaseLibraryPage/types';
 
 import { DropdownWithDescription } from '../../dropdownWithDescription';
 
 import styles from './template.scss';
-import { ManualScenarioType } from 'pages/inside/testCaseLibraryPage/types';
 
 const cx = createClassnames(styles);
 

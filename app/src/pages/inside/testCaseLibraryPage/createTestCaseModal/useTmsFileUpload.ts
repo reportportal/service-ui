@@ -35,8 +35,7 @@ export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOption
   const dispatch = useDispatch();
   const { uploadAttachment } = useAttachmentUpload();
   const { formatMessage } = useIntl();
-  const hasInitialized = useRef(false);
-
+  const isInitializedRef = useRef(false);
   const selector = formValueSelector(formName);
   const initialAttachments =
     useSelector<AppState, BaseAttachmentFile[] | undefined>(
@@ -66,8 +65,8 @@ export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOption
     });
 
   useEffect(() => {
-    if (!isEmpty(initialAttachments) && isEmpty(attachedFiles) && !hasInitialized.current) {
-      const backendFiles: BaseAttachmentFile[] = initialAttachments
+    if (!isEmpty(initialAttachments) && isEmpty(attachedFiles) && !isInitializedRef.current) {
+      const backendAttachments: BaseAttachmentFile[] = initialAttachments
         .filter((attachment) => attachment.id && attachment.fileName)
         .map((attachment) => ({
           id: attachment.id,
@@ -79,8 +78,8 @@ export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOption
           uploadingProgress: 100,
         }));
 
-      setAttachedFiles(backendFiles);
-      hasInitialized.current = true;
+      setAttachedFiles(backendAttachments);
+      isInitializedRef.current = true;
     }
   }, [initialAttachments, attachedFiles.length, setAttachedFiles, fieldName]);
 
