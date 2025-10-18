@@ -124,7 +124,6 @@ export const useTestCase = (testCaseId?: number) => {
     },
     [testCaseId, projectKey, dispatch, formatMessage, showSpinner, hideSpinner, handleFolder],
   );
-
   return {
     isLoading,
     createTestCase,
