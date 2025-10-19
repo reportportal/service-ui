@@ -16,13 +16,13 @@
 
 import { userRolesSelector } from 'controllers/pages';
 import { IN_PROGRESS } from 'common/constants/launchStatuses';
-import { canDeleteTestItem } from 'common/utils/permissions';
+import { canEditTestItem } from 'common/utils/permissions';
 import { launchSelector } from './selectors';
 
 export const validateDeleteItem = (item, items, state) => {
   const userRoles = userRolesSelector(state);
   const currentLaunch = launchSelector(state) || {};
-  if (!canDeleteTestItem(userRoles)) {
+  if (!canEditTestItem(userRoles)) {
     return 'notYourOwnLaunch';
   }
   if (currentLaunch.status && currentLaunch.status.toLowerCase() === IN_PROGRESS) {

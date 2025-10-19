@@ -24,7 +24,6 @@ export {
   canSeeMembers,
   canEditOwnAccount,
   canEditLaunch,
-  canDeleteTestItem,
   canWorkWithFilters,
   canWorkWithOrganizationFilter,
   canReadData,
@@ -46,6 +45,8 @@ export {
   canDeleteOrganization,
   canSeeInstanceLevelPluginsPages,
   canRenameOrganization,
+  // TEST ITEM
+  canEditTestItem,
   // MANUAL LAUNCH
   canEditManualLaunch,
   // TEST CASE
