@@ -21,30 +21,6 @@ export const messages = defineMessages({
     id: 'TestCaseLibraryPage.copySuffix',
     defaultMessage: '(Copy)',
   },
-  items: {
-    id: 'TestCaseLibraryPage.items',
-    defaultMessage: 'items',
-  },
-  of: {
-    id: 'TestCaseLibraryPage.of',
-    defaultMessage: 'of',
-  },
-  page: {
-    id: 'TestCaseLibraryPage.page',
-    defaultMessage: 'Page',
-  },
-  goToPage: {
-    id: 'TestCaseLibraryPage.goToPage',
-    defaultMessage: 'Go to page',
-  },
-  go: {
-    id: 'TestCaseLibraryPage.go',
-    defaultMessage: 'Go',
-  },
-  perPage: {
-    id: 'TestCaseLibraryPage.perPage',
-    defaultMessage: 'per page',
-  },
   duplicateToFolder: {
     id: 'TestCaseLibraryPage.duplicateToFolder',
     defaultMessage: 'Duplicate to folder',
@@ -65,12 +41,8 @@ export const messages = defineMessages({
     id: 'TestCaseLibraryPage.addToLaunch',
     defaultMessage: 'Add to Launch',
   },
-  addToTestPlan: {
-    id: 'TestCaseLibraryPage.addToTestPlan',
-    defaultMessage: 'Add to Test Plan',
-  },
-  allTestCasesTitle: {
-    id: 'TestCaseLibraryPage.allTestCasesTitle',
-    defaultMessage: 'All test cases',
+  changePriorityTitle: {
+    id: 'TestCaseLibraryPage.changePriorityTitle',
+    defaultMessage: 'Change Priority',
   },
 });

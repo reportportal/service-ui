@@ -16,20 +16,22 @@
 
 import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
+import { Modal } from '@reportportal/ui-kit';
+
 import { hideModalAction } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalButtonProps } from 'types/common';
-import { Modal } from '@reportportal/ui-kit';
-import classNames from 'classnames/bind';
-import styles from './updateUserInstanceRoleModal.scss';
+import { createClassnames } from 'common/utils';
 import { ADMINISTRATOR, USER } from 'common/constants/accountRoles';
 import { messages } from './messages';
 import { updateUserInfoAction } from 'controllers/user';
 import { showSuccessNotification } from 'controllers/notification';
-import { useTracking } from 'react-tracking';
 import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
 
-const cx = classNames.bind(styles) as typeof classNames;
+import styles from './updateUserInstanceRoleModal.scss';
+
+const cx = createClassnames(styles);
 
 interface UpdateUserInstanceRoleModalProps {
   user: {

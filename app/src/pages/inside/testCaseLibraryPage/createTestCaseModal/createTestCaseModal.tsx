@@ -14,63 +14,84 @@
  * limitations under the License.
  */
 
-import { FormEvent, MouseEvent } from 'react';
+import { FormEvent, MouseEvent, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
-import { reduxForm } from 'redux-form';
-import classNames from 'classnames/bind';
+import { reduxForm, InjectedFormProps } from 'redux-form';
 import { Modal } from '@reportportal/ui-kit';
 
+import { createClassnames, commonValidators } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction } from 'controllers/modal';
-import { commonValidators } from 'common/utils/validation';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
+import { FolderWithFullPath } from 'controllers/testCase';
 
 import { commonMessages } from '../commonMessages';
 import { BasicInformation } from './basicInformation';
 import { TestCaseDetails } from './testCaseDetails';
-import { TestStep, useCreateTestCase } from './useCreateTestCase';
+import { Attachment, TestStep, useCreateTestCase } from './useCreateTestCase';
 
 import styles from './createTestCaseModal.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export const CREATE_TEST_CASE_MODAL_KEY = 'createTestCaseModalKey';
+export const CREATE_TEST_CASE_FORM_NAME: string = 'create-test-case-modal-form';
 
 export type ManualScenarioType = 'STEPS' | 'TEXT';
 
 export interface CreateTestCaseFormData {
   name: string;
   description?: string;
-  folder: string;
+  folder: FolderWithFullPath | string;
   priority?: TestCasePriority;
   linkToRequirements?: string;
   executionEstimationTime?: number;
   manualScenarioType: ManualScenarioType;
   precondition?: string;
+  preconditionAttachments?: Attachment[];
   steps?: TestStep[];
   instructions?: string;
   expectedResult?: string;
+  textAttachments?: Attachment[];
   tags?: string[];
 }
 
-export const CreateTestCaseModal = reduxForm<CreateTestCaseFormData>({
-  form: 'create-test-case-modal-form',
-  initialValues: {
-    priority: 'unspecified',
-    manualScenarioType: 'STEPS',
-    executionEstimationTime: 5,
-  },
-  validate: ({ name, folder }) => ({
+interface CreateTestCaseModalProps {
+  data?: {
+    folder?: FolderWithFullPath;
+  };
+}
+
+export const CreateTestCaseModal = reduxForm<CreateTestCaseFormData, CreateTestCaseModalProps>({
+  form: CREATE_TEST_CASE_FORM_NAME,
+  validate: ({ name, folder, linkToRequirements }) => ({
     name: commonValidators.requiredField(name),
     folder: commonValidators.requiredField(folder),
+    linkToRequirements: commonValidators.optionalUrl(linkToRequirements),
   }),
-})(({ dirty, handleSubmit }) => {
+})(({
+  data,
+  dirty,
+  initialize,
+  handleSubmit,
+}: InjectedFormProps<CreateTestCaseFormData, CreateTestCaseModalProps> &
+  CreateTestCaseModalProps) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { isCreateTestCaseLoading, createTestCase } = useCreateTestCase();
+
+  useEffect(() => {
+    initialize({
+      priority: 'unspecified',
+      manualScenarioType: 'STEPS',
+      executionEstimationTime: 5,
+      folder: data?.folder,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const okButton = {
     children: (

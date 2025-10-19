@@ -15,10 +15,14 @@
  */
 
 import { createSelector } from 'reselect';
+
+import {
+  transformFoldersToDisplay,
+  transformFoldersWithFullPath,
+} from 'controllers/testCase/utils';
+import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Folder } from './types';
 import { InitialStateType } from './reducer';
-import { TestCaseBasicInfo } from 'pages/inside/testCaseLibraryPage/types';
-import { transformFoldersToDisplay } from 'controllers/testCase/utils';
 
 export interface TestCaseState {
   folders?: {
@@ -32,7 +36,7 @@ export interface TestCaseState {
     list?: unknown[];
   };
   details?: {
-    data?: TestCaseBasicInfo;
+    data?: TestCase;
   };
 }
 
@@ -66,6 +70,11 @@ export const testCaseDetailsSelector = (state: RootState) => state.testCase?.det
 export const transformedFoldersSelector = createSelector(
   foldersSelector,
   transformFoldersToDisplay,
+);
+
+export const transformedFoldersWithFullPathSelector = createSelector(
+  foldersSelector,
+  transformFoldersWithFullPath,
 );
 
 export const needsToLoadFoldersSelector = createSelector(

@@ -49,6 +49,10 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'TestCaseLibraryPage.deleteFolder',
     defaultMessage: 'Delete folder',
   },
+  noTestPlanCreated: {
+    id: 'TestCaseLibraryPage.noTestPlanCreated',
+    defaultMessage: 'No test plan created yet',
+  },
   duplicateFolder: {
     id: 'TestCaseLibraryPage.duplicateFolder',
     defaultMessage: 'Duplicate folder',
@@ -56,5 +60,17 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
   enterFolderName: {
     id: 'TestCaseLibraryPage.enterFolderName',
     defaultMessage: 'Enter folder name',
+  },
+  testCaseName: {
+    id: 'TestCaseLibraryPage.testCaseName',
+    defaultMessage: 'Test case name',
+  },
+  folder: {
+    id: 'TestCaseLibraryPage.folder',
+    defaultMessage: 'Folder',
+  },
+  searchFolderToSelect: {
+    id: 'TestCaseLibraryPage.searchFolderToSelect',
+    defaultMessage: 'Search folder to select',
   },
 });

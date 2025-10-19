@@ -15,12 +15,14 @@
  */
 
 import { useState, useRef, useEffect } from 'react';
-import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
+
+import { createClassnames } from 'common/utils';
 import { messages } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList/messages';
+
 import styles from './expandedTextSection.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 const OFFSET_COEFFICIENT = 1.4;
 

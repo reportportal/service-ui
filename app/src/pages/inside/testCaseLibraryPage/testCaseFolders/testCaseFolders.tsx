@@ -15,12 +15,12 @@
  */
 
 import { useState, useEffect, useMemo } from 'react';
-import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
-import { Button, PlusIcon } from '@reportportal/ui-kit';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty, noop } from 'es-toolkit/compat';
+import { Button, PlusIcon } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import {
   transformedFoldersSelector,
   areFoldersLoadingSelector,
@@ -53,7 +53,7 @@ import { AllTestCasesPage } from '../allTestCasesPage';
 
 import styles from './testCaseFolders.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export const TestCaseFolders = () => {
   const [activeFolder, setActiveFolder] = useState<number | null>(null);
@@ -87,7 +87,7 @@ export const TestCaseFolders = () => {
         }),
       );
     }
-  }, [currentFolder, folderId]);
+  }, [currentFolder, folderId, dispatch]);
 
   useEffect(() => {
     if (currentFolder && folderId !== '' && Number.isFinite(folderIdNumber)) {
@@ -158,13 +158,14 @@ export const TestCaseFolders = () => {
       folders={folders}
       onFolderClick={handleFolderClick}
       renderCreateFolderButton={renderCreateFolderButton}
-      instanceKey={INSTANCE_KEYS.TEST_CASE_FOLDER}
+      instanceKey={INSTANCE_KEYS.TEST_CASE}
     >
       <AllTestCasesPage
         testCases={testCases}
         searchValue=""
         setSearchValue={noop}
         loading={isLoadingTestCases || areFoldersLoading}
+        instanceKey={INSTANCE_KEYS.TEST_CASE}
       />
     </ExpandedOptions>
   );

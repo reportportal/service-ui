@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-import { useCallback, useState, useRef, useEffect } from 'react';
-import { isEmpty } from 'es-toolkit/compat';
+import { useCallback, useState, useEffect } from 'react';
+import { defineMessages, useIntl } from 'react-intl';
+import { isEmpty, keyBy } from 'es-toolkit/compat';
 import { noop } from 'es-toolkit';
-
-import { uniqueId } from 'common/utils';
-import { downloadFileFromBlob } from 'common/utils/fileUtils';
-
 import type {
   FileWithValidation,
   FileValidationError,
 } from '@reportportal/ui-kit/dist/components/fileDropArea/types';
+
+import { uniqueId } from 'common/utils';
+import { downloadFileFromBlob, getFileKey } from 'common/utils/fileUtils';
+
+import { useFileUploadProgressSimulation } from './useFileUploadProgressSimulation';
 
 export interface BaseAttachmentFile {
   id: string;
@@ -34,19 +36,43 @@ export interface BaseAttachmentFile {
   uploadingProgress?: number;
   isUploading?: boolean;
   validationErrors?: FileValidationError[];
+  customErrorMessage?: string;
+  attachmentId?: string;
+  uploadError?: string;
+}
+
+export interface UploadResult {
+  attachmentId?: string;
+  uploadError?: string;
 }
 
 interface UseFileProcessingOptions<T extends BaseAttachmentFile> {
   onFilesChange?: (files: T[]) => void;
+  onUpload?: (file: File) => Promise<UploadResult>;
 }
+
+const messages = defineMessages({
+  fileAlreadyExists: {
+    id: 'fileProcessing.fileAlreadyExists',
+    defaultMessage: 'File already exists',
+  },
+});
+
+const PROGRESS_END = 100;
 
 export const useFileProcessing = <T extends BaseAttachmentFile = BaseAttachmentFile>({
   onFilesChange = noop,
+  onUpload,
 }: UseFileProcessingOptions<T> = {}) => {
+  const { formatMessage } = useIntl();
   const [attachedFiles, setAttachedFiles] = useState<T[]>([]);
-  const activeUploadsRef = useRef<
-    Record<string, { interval: NodeJS.Timeout; timeout: NodeJS.Timeout } | undefined>
-  >({});
+  const { startSimulation, stopSimulation, stopAllSimulations } = useFileUploadProgressSimulation();
+
+  const updateFileById = useCallback((fileId: string, updates: Partial<T>) => {
+    setAttachedFiles((prev) =>
+      prev.map((file) => (file.id === fileId ? { ...file, ...updates } : file)),
+    );
+  }, []);
 
   const updateFileProgress = useCallback((fileId: string) => {
     setAttachedFiles((prev) =>
@@ -58,45 +84,64 @@ export const useFileProcessing = <T extends BaseAttachmentFile = BaseAttachmentF
         const currentProgress = file.uploadingProgress ?? 0;
         const progressIncrement = 5;
 
-        return { ...file, uploadingProgress: Math.min(currentProgress + progressIncrement, 100) };
-      }),
-    );
-  }, []);
-
-  const completeFileUpload = useCallback((fileId: string) => {
-    setAttachedFiles((prev) =>
-      prev.map((file) => {
-        if (file.id !== fileId) {
-          return file;
-        }
-
         return {
           ...file,
-          isUploading: false,
-          uploadingProgress: 100,
+          uploadingProgress: Math.min(currentProgress + progressIncrement, PROGRESS_END),
         };
       }),
     );
   }, []);
 
-  const simulateFileUpload = useCallback(
+  const completeFileUpload = useCallback(
     (fileId: string) => {
-      const interval = setInterval(() => updateFileProgress(fileId), 60);
-
-      const timeout = setTimeout(() => {
-        clearInterval(interval);
-        activeUploadsRef.current[fileId] = undefined;
-        completeFileUpload(fileId);
-      }, 3000);
-
-      activeUploadsRef.current[fileId] = { interval, timeout };
+      updateFileById(fileId, {
+        isUploading: false,
+        uploadingProgress: PROGRESS_END,
+      } as Partial<T>);
     },
-    [updateFileProgress, completeFileUpload],
+    [updateFileById],
+  );
+
+  const uploadFile = useCallback(
+    async (fileToUpload: T) => {
+      if (!fileToUpload.file) {
+        return;
+      }
+
+      startSimulation({
+        fileId: fileToUpload.id,
+        onProgressUpdate: updateFileProgress,
+        onComplete: completeFileUpload,
+      });
+
+      if (!onUpload) {
+        return;
+      }
+
+      const uploadedFile = await onUpload(fileToUpload.file);
+
+      stopSimulation(fileToUpload.id);
+
+      updateFileById(fileToUpload.id, {
+        attachmentId: uploadedFile.attachmentId,
+        isUploading: false,
+        uploadingProgress: uploadedFile.attachmentId ? PROGRESS_END : 0,
+        customErrorMessage: uploadedFile.uploadError,
+      } as Partial<T>);
+    },
+    [
+      onUpload,
+      startSimulation,
+      stopSimulation,
+      updateFileProgress,
+      completeFileUpload,
+      updateFileById,
+    ],
   );
 
   const createFileFromValidation = useCallback(
     ({ file, validationErrors }: FileWithValidation): T => {
-      const size = Math.round((file.size / (1024 * 1024)) * 100) / 100;
+      const size = Math.round((file.size / (1000 * 1000)) * 100) / 100;
       const hasValidationErrors = !isEmpty(validationErrors);
 
       return {
@@ -122,60 +167,57 @@ export const useFileProcessing = <T extends BaseAttachmentFile = BaseAttachmentF
 
   const addFiles = useCallback(
     (filesWithValidation: FileWithValidation[]) => {
-      const newFiles = filesWithValidation.map(createFileFromValidation);
-
       setAttachedFiles((prevFiles) => {
+        const existingFileKeys = keyBy(prevFiles, getFileKey);
+
+        const newFiles = filesWithValidation.map((fileWithValidation) => {
+          const newFile = createFileFromValidation(fileWithValidation);
+          const fileKey = getFileKey(newFile);
+
+          if (existingFileKeys[fileKey]) {
+            return {
+              ...newFile,
+              customErrorMessage: formatMessage(messages.fileAlreadyExists),
+              isUploading: false,
+              uploadingProgress: undefined,
+            };
+          }
+
+          return newFile;
+        });
+
         const updatedFiles = [...prevFiles, ...newFiles];
 
         onFilesChange(updatedFiles);
 
+        newFiles.forEach((file) => {
+          if (file.isUploading) {
+            uploadFile(file).catch(noop);
+          }
+        });
+
         return updatedFiles;
       });
-
-      newFiles.forEach((file) => {
-        if (file.isUploading) {
-          simulateFileUpload(file.id);
-        }
-      });
     },
-    [createFileFromValidation, onFilesChange, simulateFileUpload],
+    [onFilesChange, createFileFromValidation, formatMessage, uploadFile],
   );
 
   const removeFile = useCallback(
     (fileId: string) => {
-      const activeUpload = activeUploadsRef.current[fileId];
-
-      if (activeUpload) {
-        clearInterval(activeUpload.interval);
-        clearTimeout(activeUpload.timeout);
-        activeUploadsRef.current[fileId] = undefined;
-      }
+      stopSimulation(fileId);
 
       const updatedFiles = attachedFiles.filter((file) => file.id !== fileId);
 
       handleFilesChange(updatedFiles);
     },
-    [attachedFiles, handleFilesChange],
+    [attachedFiles, handleFilesChange, stopSimulation],
   );
 
   const downloadFile = useCallback((file: T) => {
     downloadFileFromBlob(file.file, file.fileName);
   }, []);
 
-  useEffect(() => {
-    const activeUploads = activeUploadsRef.current;
-
-    return () => {
-      Object.entries(activeUploads).forEach(([key, uploadData]) => {
-        if (uploadData) {
-          clearInterval(uploadData.interval);
-          clearTimeout(uploadData.timeout);
-        }
-
-        activeUploads[key] = undefined;
-      });
-    };
-  }, []);
+  useEffect(() => stopAllSimulations, [stopAllSimulations]);
 
   return {
     attachedFiles,

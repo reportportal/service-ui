@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { Pagination } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
+
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { messages } from './messages';
+import { usePagination } from 'hooks/usePagination';
+
 import styles from './paginationWrapper.scss';
 
 const cx = classNames.bind(styles);
@@ -33,7 +34,7 @@ export const PaginationWrapper = ({
   changePageSizeEvent,
   ...paginationProps
 }) => {
-  const { formatMessage } = useIntl();
+  const { captions } = usePagination({});
   const { trackEvent } = useTracking();
 
   const changePageSizeHandle = (newSize) => {
@@ -50,14 +51,7 @@ export const PaginationWrapper = ({
         <div className={cx('pagination')}>
           <Pagination
             changePageSize={changePageSizeHandle}
-            captions={{
-              items: formatMessage(messages.items),
-              of: formatMessage(messages.of),
-              page: formatMessage(messages.page),
-              goTo: formatMessage(messages.goToPage),
-              goAction: formatMessage(messages.go),
-              perPage: formatMessage(messages.perPage),
-            }}
+            captions={captions}
             {...paginationProps}
           />
         </div>

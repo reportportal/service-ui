@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 
+import { createClassnames } from 'common/utils';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
+
 import { messages } from './messages';
 import { commonMessages } from '../../commonMessages';
 
 import styles from './emptyTestPlan.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export const EmptyTestPlan = () => {
   const { formatMessage } = useIntl();

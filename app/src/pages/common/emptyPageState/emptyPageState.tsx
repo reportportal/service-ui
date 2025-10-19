@@ -15,12 +15,14 @@
  */
 
 import { ReactNode } from 'react';
-import classNames from 'classnames/bind';
 import { Button, Tooltip } from '@reportportal/ui-kit';
 import Parser from 'html-react-parser';
+
+import { createClassnames } from 'common/utils';
+
 import styles from './emptyPageState.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface EmptyPageStateProps {
   emptyIcon: string;

@@ -15,10 +15,10 @@
  */
 
 import { defineMessages, useIntl } from 'react-intl';
-import classNames from 'classnames/bind';
+import { createClassnames } from 'common/utils';
 import styles from './ownerBlock.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 const messages = defineMessages({
   ownerTitle: {

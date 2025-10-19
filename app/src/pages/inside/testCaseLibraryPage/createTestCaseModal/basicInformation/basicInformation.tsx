@@ -16,19 +16,20 @@
 
 import { useIntl } from 'react-intl';
 import { noop } from 'es-toolkit';
-import classNames from 'classnames/bind';
 import { FieldText, FieldTextFlex } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { EditableTagsSection } from 'pages/inside/testCaseLibraryPage/editableTagsSection';
-import { DropdownWithDescription } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/dropdownWithDescription';
+import { CreateFolderAutocomplete } from 'pages/inside/testCaseLibraryPage/testCaseFolders/shared/CreateFolderAutocomplete';
 
-import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { messages } from './messages';
+import { commonMessages } from '../../commonMessages';
+import { PrioritySelect } from '../../prioritySelect/prioritySelect';
 
 import styles from './basicInformation.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface BasicInformationProps {
   className?: string;
@@ -41,78 +42,27 @@ export const BasicInformation = ({ className }: BasicInformationProps) => {
     <div className={cx('basic-information', className)}>
       <FieldProvider name="name" placeholder={formatMessage(messages.enterNameForTestCase)}>
         <FieldErrorHint provideHint={false} className={cx('basic-information__field')}>
-          <FieldText label={formatMessage(messages.testCaseName)} defaultWidth={false} isRequired />
+          <FieldText
+            label={formatMessage(commonMessages.testCaseName)}
+            defaultWidth={false}
+            isRequired
+          />
         </FieldErrorHint>
       </FieldProvider>
       <FieldProvider name="folder" placeholder={formatMessage(messages.selectOrCreateFolder)}>
         <FieldErrorHint provideHint={false} className={cx('basic-information__field')}>
-          <FieldText label={formatMessage(messages.folder)} defaultWidth={false} isRequired />
+          <CreateFolderAutocomplete
+            name="folder"
+            label={formatMessage(commonMessages.folder)}
+            placeholder={formatMessage(messages.selectOrCreateFolder)}
+            createWithoutConfirmation={false}
+            isRequired
+          />
         </FieldErrorHint>
       </FieldProvider>
       <FieldProvider name="priority">
         <FieldErrorHint provideHint={false} className={cx('basic-information__field')}>
-          <DropdownWithDescription
-            label={formatMessage(messages.priority)}
-            options={[
-              {
-                label: formatMessage(messages.priorityBlocker),
-                value: 'blocker',
-                icon: (
-                  <PriorityIcon
-                    priority="blocker"
-                    className={cx('basic-information__priority-icon')}
-                  />
-                ),
-              },
-              {
-                label: formatMessage(messages.priorityCritical),
-                value: 'critical',
-                icon: (
-                  <PriorityIcon
-                    priority="critical"
-                    className={cx('basic-information__priority-icon')}
-                  />
-                ),
-              },
-              {
-                label: formatMessage(messages.priorityHigh),
-                value: 'high',
-                icon: (
-                  <PriorityIcon
-                    priority="high"
-                    className={cx('basic-information__priority-icon')}
-                  />
-                ),
-              },
-              {
-                label: formatMessage(messages.priorityMedium),
-                value: 'medium',
-                icon: (
-                  <PriorityIcon
-                    priority="medium"
-                    className={cx('basic-information__priority-icon')}
-                  />
-                ),
-              },
-              {
-                label: formatMessage(messages.priorityLow),
-                value: 'low',
-                icon: (
-                  <PriorityIcon priority="low" className={cx('basic-information__priority-icon')} />
-                ),
-              },
-              {
-                label: formatMessage(messages.priorityUnspecified),
-                value: 'unspecified',
-                icon: (
-                  <PriorityIcon
-                    priority="unspecified"
-                    className={cx('basic-information__priority-icon')}
-                  />
-                ),
-              },
-            ]}
-          />
+          <PrioritySelect />
         </FieldErrorHint>
       </FieldProvider>
       <FieldProvider name="description" placeholder={formatMessage(messages.addDetailsOrContext)}>

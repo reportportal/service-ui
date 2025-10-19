@@ -1,15 +1,17 @@
-import classNames from 'classnames/bind';
+import { createClassnames } from 'common/utils';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import {
   Organization,
   OrganizationAssignment,
 } from 'pages/inside/common/assignments/organizationAssignment';
+
 import { InviteUserEmailField } from '../inviteUserEmailField';
 import { getFormName } from '../utils';
 import { Level } from '../constants';
+
 import styles from './inviteUserOrganizationForm.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export interface InviteUserOrganizationFormData {
   email: string;

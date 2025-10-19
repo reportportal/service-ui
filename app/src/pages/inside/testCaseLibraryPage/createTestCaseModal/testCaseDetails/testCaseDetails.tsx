@@ -2,24 +2,24 @@ import { useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { formValueSelector } from 'redux-form';
-import classNames from 'classnames/bind';
 import { isNumber } from 'es-toolkit/compat';
 import { FieldText } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
-
 import type { AppState } from 'types/store';
+import { Step } from 'pages/inside/testCaseLibraryPage/types';
 
 import { Template } from './template';
 import { AttachmentArea } from '../attachmentArea';
 import { Precondition } from './precondition';
 import { Steps } from './steps';
 import { TextTemplate } from './textTemplate';
-import { ManualScenarioType } from '../createTestCaseModal';
+import { CREATE_TEST_CASE_FORM_NAME, ManualScenarioType } from '../createTestCaseModal';
 
 import styles from './testCaseDetails.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 const messages = defineMessages({
   requirementsLink: {
@@ -28,18 +28,11 @@ const messages = defineMessages({
   },
   enterLink: {
     id: 'createTestCaseModal.enterLink',
-    defaultMessage: 'Enter link to requirements',
+    defaultMessage: 'Enter link to requirements (e.g. https://example.com)',
   },
 });
 
-export interface StepData {
-  id: string;
-  instructions: string;
-  expectedResult: string;
-  attachments?: string[];
-}
-
-const createEmptyStep = (): StepData => ({
+const createEmptyStep = (): Step => ({
   id: `step_${Date.now()}`,
   instructions: '',
   expectedResult: '',
@@ -53,7 +46,7 @@ interface TestCaseDetailsProps {
 const selector = formValueSelector('create-test-case-modal-form');
 
 export const TestCaseDetails = ({ className }: TestCaseDetailsProps) => {
-  const [steps, setSteps] = useState<StepData[]>([createEmptyStep()]);
+  const [steps, setSteps] = useState<Step[]>([createEmptyStep()]);
   const { formatMessage } = useIntl();
   const manualScenarioType = useSelector(
     (state: AppState) => selector(state, 'manualScenarioType') as ManualScenarioType,
@@ -110,7 +103,11 @@ export const TestCaseDetails = ({ className }: TestCaseDetailsProps) => {
         </>
       ) : (
         <>
-          <AttachmentArea isNumerable={false}>
+          <AttachmentArea
+            isNumerable={false}
+            attachmentFieldName="preconditionAttachments"
+            formName={CREATE_TEST_CASE_FORM_NAME}
+          >
             <Precondition />
           </AttachmentArea>
           <FieldProvider name="steps">

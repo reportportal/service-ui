@@ -15,11 +15,12 @@
  */
 
 import { ReactNode } from 'react';
-import classNames from 'classnames/bind';
+
+import { createClassnames } from 'common/utils';
 
 import styles from './sectionWithHeader.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface SectionWithHeaderProps {
   title: string;

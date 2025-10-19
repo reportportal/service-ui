@@ -15,13 +15,15 @@
  */
 
 import { FC } from 'react';
-import classNames from 'classnames/bind';
+
+import { createClassnames } from 'common/utils';
 import { URLS } from 'common/urls';
 import DefaultUserImage from 'common/img/default-user-avatar.png';
 import { Image } from 'components/main/image';
+
 import styles from './userAvatar.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface UserAvatarProps {
   userId: string | number;

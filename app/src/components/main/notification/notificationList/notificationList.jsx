@@ -216,6 +216,10 @@ const messages = defineMessages({
     id: 'TestCaseLibraryPage.testCaseFolderDeletedSuccess',
     defaultMessage: 'Folder has been deleted successfully.',
   },
+  testCaseDeletedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseDeletedSuccess',
+    defaultMessage: 'Test case has been deleted successfully.',
+  },
   testCaseFolderRenamedSuccess: {
     id: 'TestCaseLibraryPage.testCaseFolderRenamedSuccess',
     defaultMessage: 'Folder has been renamed successfully.',
@@ -224,9 +228,33 @@ const messages = defineMessages({
     id: 'TestCaseLibraryPage.testCaseCreatedSuccess',
     defaultMessage: 'Test Case has been created successfully.',
   },
+  testCasesAddingToTestPlanSuccess: {
+    id: 'TestCaseLibraryPage.testCasesAddedToTestPlanSuccess',
+    defaultMessage: 'Selected Test Cases have been added to the Test Plan successfully.',
+  },
+  testCaseAddingToTestPlanSuccess: {
+    id: 'TestCaseLibraryPage.testCaseAddedToTestPlanSuccess',
+    defaultMessage: 'Selected Test Case has been added to the Test Plan successfully.',
+  },
+  testCaseUpdatedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseUpdatedSuccess',
+    defaultMessage: 'Test Case has been updated successfully.',
+  },
+  testCaseBulkUpdateSuccess: {
+    id: 'TestCaseLibraryPage.testCaseBulkUpdateSuccess',
+    defaultMessage: 'Test Cases have been updated successfully.',
+  },
   testCaseCreationFailed: {
     id: 'TestCaseLibraryPage.testCaseCreationFailed',
     defaultMessage: 'Failed to create Test Case.',
+  },
+  testCasesAddingToTestPlanFailed: {
+    id: 'TestCaseLibraryPage.testCasesAddingToTestPlanFailed',
+    defaultMessage: 'Failed to add selected Test Cases to the Test Plan.',
+  },
+  testCaseAddingToTestPlanFailed: {
+    id: 'TestCaseLibraryPage.testCaseAddingToTestPlanFailed',
+    defaultMessage: 'Failed to add selected Test Case to the Test Plan.',
   },
   errorOccurredTryAgain: {
     id: 'Common.errorOccurredTryAgain',

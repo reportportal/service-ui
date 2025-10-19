@@ -15,35 +15,38 @@
  */
 
 import { useState, useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import classNames from 'classnames/bind';
-import { isEmpty } from 'es-toolkit/compat';
+import { isEmpty, noop } from 'es-toolkit/compat';
 import { Button, MeatballMenuIcon, Pagination, Selection } from '@reportportal/ui-kit';
 
-import { TestCaseList } from 'pages/inside/testCaseLibraryPage/testCaseList';
-import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/testCaseLibraryPage/testCaseList/mockData';
-import {
-  DEFAULT_CURRENT_PAGE,
-  DEFAULT_ITEMS_PER_PAGE,
-} from 'pages/inside/testCaseLibraryPage/testCaseList/configUtils';
+import { createClassnames } from 'common/utils';
+import { TestCaseList } from 'pages/inside/common/testCaseList';
+import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
+import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/common/testCaseList/constants';
+import { DEFAULT_CURRENT_PAGE } from 'pages/inside/common/testCaseList/configUtils';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
+import { showModalAction } from 'controllers/modal';
 import { urlFolderIdSelector } from 'controllers/pages';
 import { foldersSelector } from 'controllers/testCase';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { usePagination } from 'hooks/usePagination';
 
+import { CHANGE_PRIORITY_MODAL_KEY } from './changePriorityModal';
 import { messages } from './messages';
 import { FolderEmptyState } from '../emptyState/folder/folderEmptyState';
+import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 
 import styles from './allTestCasesPage.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface AllTestCasesPageProps {
   testCases: TestCase[];
   loading: boolean;
   searchValue: string;
+  instanceKey: INSTANCE_KEYS;
   setSearchValue: (value: string) => void;
 }
 
@@ -52,56 +55,74 @@ export const AllTestCasesPage = ({
   loading,
   searchValue,
   setSearchValue,
+  instanceKey,
 }: AllTestCasesPageProps) => {
   const { formatMessage } = useIntl();
-  const [activePage, setActivePage] = useState<number>(DEFAULT_CURRENT_PAGE);
-  const [pageSize, setPageSize] = useState<number>(DEFAULT_ITEMS_PER_PAGE);
-  const [selectedRowIds, setSelectedRowIds] = useState<(number | string)[]>([]);
+  const { captions, activePage, pageSize, totalPages, setActivePage, changePageSize } =
+    usePagination({
+      totalItems: testCases.length,
+    });
+  const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
   const folderId = useSelector(urlFolderIdSelector);
   const folders = useSelector(foldersSelector);
+  const dispatch = useDispatch();
   const isAnyRowSelected = !isEmpty(selectedRowIds);
 
   const folderTitle = useMemo(() => {
     const selectedFolder = folders.find((folder) => String(folder.id) === String(folderId));
-    return selectedFolder?.name || formatMessage(messages.allTestCasesTitle);
+    return selectedFolder?.name || formatMessage(COMMON_LOCALE_KEYS.ALL_TEST_CASES_TITLE);
   }, [folderId, folders, formatMessage]);
 
-  // Calculate pagination values
-  const totalItems = testCases.length;
-  const totalPages = Math.ceil(totalItems / pageSize);
+  const { openModal: openAddToTestPlanModal } = useAddTestCasesToTestPlanModal();
 
   const popoverItems: PopoverItem[] = [
     {
       label: formatMessage(messages.duplicateToFolder),
+      onClick: noop,
     },
     {
       label: formatMessage(messages.changePriority),
+      onClick: () => {
+        dispatch(
+          showModalAction({
+            id: CHANGE_PRIORITY_MODAL_KEY,
+            data: {
+              priority: 'unspecified',
+              selectedRowIds,
+              onClearSelection,
+            },
+          }),
+        );
+      },
     },
     {
       label: formatMessage(messages.editTags),
+      onClick: noop,
     },
     {
       label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
       variant: 'destructive',
+      onClick: noop,
     },
   ];
+
+  const handleOpenAddToTestPlanModal = useCallback(() => {
+    openAddToTestPlanModal({ selectedTestCaseIds: selectedRowIds });
+  }, [selectedRowIds, openAddToTestPlanModal]);
 
   const handleSearchChange = useCallback(
     (targetSearchValue: string) => {
       setSearchValue(targetSearchValue);
       setActivePage(DEFAULT_CURRENT_PAGE);
     },
-    [setSearchValue],
+    [setSearchValue, setActivePage],
   );
-
-  const changePageSize = (size: number) => {
-    setPageSize(size);
-    setActivePage(DEFAULT_CURRENT_PAGE);
-  };
 
   if (isEmpty(testCases) && !loading) {
     return <FolderEmptyState folderTitle={folderTitle} />;
   }
+
+  const onClearSelection = () => setSelectedRowIds([]);
 
   return (
     <>
@@ -116,43 +137,34 @@ export const AllTestCasesPage = ({
           selectedRowIds={selectedRowIds}
           handleSelectedRowIds={setSelectedRowIds}
           folderTitle={folderTitle}
+          instanceKey={instanceKey}
         />
       </div>
 
       <div className={cx('sticky-wrapper')}>
-        {totalItems > 0 && (
+        {!isEmpty(testCases) && (
           <div className={cx('pagination')}>
             <Pagination
               pageSize={pageSize}
               activePage={activePage}
-              totalItems={totalItems}
+              totalItems={testCases.length}
               totalPages={totalPages}
               pageSizeOptions={ITEMS_PER_PAGE_OPTIONS}
               changePage={setActivePage}
               changePageSize={changePageSize}
-              captions={{
-                items: formatMessage(messages.items),
-                of: formatMessage(messages.of),
-                page: formatMessage(messages.page),
-                goTo: formatMessage(messages.goToPage),
-                goAction: formatMessage(messages.go),
-                perPage: formatMessage(messages.perPage),
-              }}
+              captions={captions}
             />
           </div>
         )}
         {isAnyRowSelected && (
           <div className={cx('selection')}>
-            <Selection
-              selectedCount={selectedRowIds.length}
-              onClearSelection={() => setSelectedRowIds([])}
-            />
+            <Selection selectedCount={selectedRowIds.length} onClearSelection={onClearSelection} />
             <div className={cx('selection-controls')}>
               <PopoverControl items={popoverItems} placement="bottom-end">
                 <Button
                   variant="ghost"
                   adjustWidthOn="content"
-                  onClick={() => {}}
+                  onClick={noop}
                   className={cx('selection-controls__more-button')}
                 >
                   <MeatballMenuIcon />
@@ -160,7 +172,9 @@ export const AllTestCasesPage = ({
               </PopoverControl>
               <Button variant="ghost">{formatMessage(messages.moveToFolder)}</Button>
               <Button variant="ghost">{formatMessage(messages.addToLaunch)}</Button>
-              <Button>{formatMessage(messages.addToTestPlan)}</Button>
+              <Button onClick={handleOpenAddToTestPlanModal}>
+                {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
+              </Button>
             </div>
           </div>
         )}

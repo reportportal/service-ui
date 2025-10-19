@@ -16,7 +16,6 @@
 
 import { PropsWithChildren } from 'react';
 import { useIntl } from 'react-intl';
-import classNames from 'classnames/bind';
 import { isNumber } from 'es-toolkit/compat';
 import { noop } from 'es-toolkit';
 import {
@@ -31,20 +30,21 @@ import {
   AddImageIcon,
 } from '@reportportal/ui-kit';
 import type { MimeType } from '@reportportal/ui-kit/dist/components/fileDropArea/types';
-import type { AttachmentFile } from '@reportportal/ui-kit/dist/components/fileDropArea/attachedFilesList';
 
+import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { useFileProcessing } from 'common/hooks/useFileProcessing';
 
 import { messages as commonMessages } from '../messages';
 import { messages as attachmentAreaMessages } from './messages';
 import { MAX_FILE_SIZE } from '../constants';
+import { useTmsFileUpload } from '../useTmsFileUpload';
 
 import styles from './attachmentArea.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface AttachmentAreaProps {
+  formName?: string;
   isDraggable?: boolean;
   index?: number;
   isNumerable?: boolean;
@@ -55,12 +55,14 @@ interface AttachmentAreaProps {
   dropZoneDescription?: string;
   fileSizeMessage?: string;
   totalCount?: number;
+  attachmentFieldName?: string;
+  canAttachFiles?: boolean;
   onRemove?: () => void;
-  onFilesChange?: (files: AttachmentFile[]) => void;
   onMove?: (direction: 'up' | 'down') => void;
 }
 
 export const AttachmentArea = ({
+  formName = '',
   isDraggable = false,
   index,
   isNumerable = true,
@@ -72,13 +74,15 @@ export const AttachmentArea = ({
   dropZoneDescription,
   fileSizeMessage,
   totalCount,
+  attachmentFieldName = 'attachments',
+  canAttachFiles = true,
   onRemove,
-  onFilesChange,
   onMove = noop,
 }: PropsWithChildren<AttachmentAreaProps>) => {
   const { formatMessage } = useIntl();
-  const { attachedFiles, addFiles, removeFile, downloadFile } = useFileProcessing<AttachmentFile>({
-    onFilesChange,
+  const { attachedFiles, addFiles, removeFile, downloadFile } = useTmsFileUpload({
+    formName,
+    fieldName: attachmentFieldName,
   });
 
   const areaNumber = isNumber(index) ? index + 1 : '';
@@ -166,11 +170,13 @@ export const AttachmentArea = ({
             )}
           </div>
         </div>
-        <FileDropArea.DropZone
-          icon={<AddImageIcon />}
-          description={dropZoneDescription}
-          fileSizeMessage={fileSizeMessage}
-        />
+        {canAttachFiles && (
+          <FileDropArea.DropZone
+            icon={<AddImageIcon />}
+            description={dropZoneDescription}
+            fileSizeMessage={fileSizeMessage}
+          />
+        )}
       </FileDropArea>
     </div>
   );

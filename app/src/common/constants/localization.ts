@@ -131,6 +131,10 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.add',
     defaultMessage: 'Add',
   },
+  ADD_TO_TEST_PLAN: {
+    id: 'Common.addToTestPlan',
+    defaultMessage: 'Add to Test Plan',
+  },
   NO_RESULTS: {
     id: 'Common.noResults',
     defaultMessage: 'No results found',
@@ -359,6 +363,18 @@ export const COMMON_LOCALE_KEYS = defineMessages({
   NOT_APPLICABLE: {
     id: 'Common.notApplicable',
     defaultMessage: 'n/a',
+  },
+  NO_AVAILABLE_OPTIONS: {
+    id: 'Common.noAvailableOptions',
+    defaultMessage: 'No available options',
+  },
+  MO_MATCHES_FOUND: {
+    id: 'Common.noMatchesFound',
+    defaultMessage: 'No matches found',
+  },
+  ALL_TEST_CASES_TITLE: {
+    id: 'Common.allTestCasesTitle',
+    defaultMessage: 'All test cases',
   },
 });
 

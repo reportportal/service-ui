@@ -18,7 +18,8 @@ import { TransformedFolder } from 'controllers/testCase';
 import { useTestCaseFolderMenu } from 'pages/inside/testCaseLibraryPage/testCaseFolders/shared/useTestCaseFolderMenu';
 
 export enum INSTANCE_KEYS {
-  TEST_CASE_FOLDER = 'testCaseFolder',
+  TEST_CASE = 'testCase',
+  TEST_PLAN = 'testPlan',
 }
 
 interface UseFolderTooltipProps {
@@ -31,9 +32,10 @@ interface UseFolderTooltipProps {
 export const useFolderTooltipItems = (props: UseFolderTooltipProps) => {
   const { testCaseFolderTooltipItems } = useTestCaseFolderMenu(props);
 
-  const tooltipItemsByInstance: Record<INSTANCE_KEYS, typeof testCaseFolderTooltipItems> = {
-    [INSTANCE_KEYS.TEST_CASE_FOLDER]: testCaseFolderTooltipItems,
-  };
+  const tooltipItemsByInstance: Partial<Record<INSTANCE_KEYS, typeof testCaseFolderTooltipItems>> =
+    {
+      [INSTANCE_KEYS.TEST_CASE]: testCaseFolderTooltipItems,
+    };
 
   return tooltipItemsByInstance[props.instanceKey];
 };

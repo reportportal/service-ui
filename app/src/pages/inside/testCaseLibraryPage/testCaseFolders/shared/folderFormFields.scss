@@ -24,10 +24,6 @@
     margin-top: 16px;
   }
 
-  &__parent-folder {
-    margin-top: 14px;
-  }
-
   &__text {
     margin-bottom: 24px;
     margin-top: -10px;
@@ -35,5 +31,19 @@
 
   &__text--bold {
     font-weight: 600;
+  }
+
+  &__parent-folder {
+    margin-top: 14px;
+
+    &__name {
+      font-family: var(--rp-ui-base-font-family);
+      color: var(--rp-ui-color-text);
+    }
+
+    &__path {
+      font-family: var(--rp-ui-base-font-family);
+      color: var(--rp-ui-color-text-secondary);
+    }
   }
 }

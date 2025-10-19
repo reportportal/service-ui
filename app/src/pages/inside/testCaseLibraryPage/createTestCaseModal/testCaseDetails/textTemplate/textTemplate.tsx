@@ -15,7 +15,6 @@
  */
 
 import { useIntl } from 'react-intl';
-import classNames from 'classnames/bind';
 import {
   AddImageIcon,
   FieldTextFlex,
@@ -23,22 +22,26 @@ import {
   FileDropArea,
   MIME_TYPES,
 } from '@reportportal/ui-kit';
-import type { AttachmentFile } from '@reportportal/ui-kit/dist/components/fileDropArea/attachedFilesList';
 
-import { useFileProcessing } from 'common/hooks/useFileProcessing';
+import { createClassnames } from 'common/utils';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 
 import { messages as commonMessages } from '../../messages';
 import { messages } from './messages';
 import { MAX_FILE_SIZE } from '../../constants';
+import { useTmsFileUpload } from '../../useTmsFileUpload';
+import { CREATE_TEST_CASE_FORM_NAME } from '../../createTestCaseModal';
 
 import styles from './textTemplate.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export const TextTemplate = () => {
   const { formatMessage } = useIntl();
-  const { attachedFiles, addFiles, removeFile, downloadFile } = useFileProcessing<AttachmentFile>();
+  const { attachedFiles, addFiles, removeFile, downloadFile } = useTmsFileUpload({
+    formName: CREATE_TEST_CASE_FORM_NAME,
+    fieldName: 'textAttachments',
+  });
 
   return (
     <div className={cx('text-template')}>
