@@ -119,7 +119,7 @@ export const DefectDetails = ({ fetchFunc, debugMode, logItem }) => {
   const isBtsPluginsExist = useSelector(isBtsPluginsExistSelector);
   const enabledBtsPlugins = useSelector(enabledBtsPluginsSelector);
   const [expanded, setExpanded] = useState(false);
-  const { canChangeTestItemStatus, canEditTestItem, canManageBTSIssues } = useUserPermissions();
+  const { canEditTestItem, canManageBTSIssues } = useUserPermissions();
 
   const isDefectTypeVisible = logItem.issue?.issueType;
   const getIssueActionTitle = (noIssueMessage, isPostIssueUnavailable) => {
@@ -343,7 +343,7 @@ export const DefectDetails = ({ fetchFunc, debugMode, logItem }) => {
             fetchFunc={() => dispatch(fetchHistoryItemsWithLoadingAction())}
             onChange={onChangeStatus}
             withIndicator
-            readOnly={!canChangeTestItemStatus}
+            readOnly={!canEditTestItem}
           />
         </span>
         {isDefectTypeVisible && (
