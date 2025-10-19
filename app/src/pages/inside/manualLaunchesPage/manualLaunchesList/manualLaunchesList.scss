@@ -19,6 +19,7 @@
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
+
   &-table {
     margin: 24px auto 0 auto;
     padding: 0 32px 32px 32px;
@@ -29,31 +30,58 @@
       &-count {
         padding: 8px 0;
       }
+
       &-time {
         display: flex;
         align-items: center;
+        height: 100%;
       }
+
       &-status {
         padding: 0;
       }
+
       &-failed-tests {
         color: var(--rp-ui-base-error)
       }
+
       &-tests-to-run {
         min-width: 80px;
       }
     }
 
-    &-row {
-      & > div {
-        padding: 0!important;
-        align-items: center!important;
-        > div {
-          white-space: normal !important;
+    // select column headers
+    > div {
+      grid-template-columns:  32px 80px minmax(100px, 1fr) 155px 80px 110px 100px 80px 48px !important;
 
+      & > button:nth-of-type(1) {
+        flex: 0 0 auto;
+      }
+
+      & > button:nth-of-type(2) {
+        flex: 1 1 320px;
+        font-weight: var(--rp-ui-base-fw-medium);
+        text-align: left;
+        padding-left: 0;
+      }
+    }
+
+    &-row {
+      // select row
+      & > div + div > div {
+        grid-template-columns:  80px minmax(100px, 1fr) 155px 80px 110px 100px 80px 48px !important;
+        padding: 0 !important;
+
+        //select cells
+        > div {
+          height: 100%;
+          display: flex;
+          align-content: center;
+          align-items: center;
           &:first-child {
             flex: 0 0 auto;
           }
+
           // name cell
           &:nth-child(2) {
             flex: 1 1 320px;
@@ -62,24 +90,23 @@
             text-align: left;
             padding-left: 0;
           }
+
+          // total tests cell
+          &:nth-child(4) {
+            justify-content: flex-end;
+          }
+
           // statusBar cell
           &:nth-child(5) {
             padding: 0;
           }
+
+          // tests to run button cell
           &:nth-child(7) {
             padding: 0;
           }
         }
       }
-    }
-    > div > button:nth-of-type(1) {
-      flex: 0 0 auto;
-    }
-    > div > button:nth-of-type(2) {
-      flex: 1 1 320px;
-      font-weight: var(--rp-ui-base-fw-medium);
-      text-align: left;
-      padding-left: 0;
     }
   }
 }
@@ -102,6 +129,7 @@
 
     &__more-button {
       padding: 7px 12px;
+
       svg {
         width: 16px;
         height: 16px;
