@@ -70,9 +70,9 @@ export const useManualLaunchesTableData = (data: ManualTestCase[]): RowData[] =>
             component: (
               <StatusBar
                 data={[
-                  { status: Status.Passed, value: successTests },
-                  { status: Status.Failed, value: failedTests },
-                  { status: Status.Skipped, value: skippedTests },
+                  { status: Status.Passed, value: successTests ?? 0 },
+                  { status: Status.Failed, value: failedTests ?? 0 },
+                  { status: Status.Skipped, value: skippedTests ?? 0 },
                 ]}
                 customClass={cx('manual-launches-list-table-cell-status')}
               />

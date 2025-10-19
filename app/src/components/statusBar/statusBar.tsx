@@ -35,12 +35,14 @@ export const StatusBar: FC<StatusBarProps> = ({
   );
 
   const statusLines = useMemo(() => {
+    if (!filteredData.length || total <= 0) {
+      return null;
+    }
+    const minPct = Math.max(0, Math.min(100, minWidthPercentage));
     let totalWidth = 0;
     const calculatedWidths = filteredData.map((item) => {
       const widthPercentage = (item.value / total) * 100;
-
-      const calculatedWidth =
-        widthPercentage < minWidthPercentage ? minWidthPercentage : widthPercentage;
+      const calculatedWidth = widthPercentage < minPct ? minPct : widthPercentage;
 
       totalWidth += calculatedWidth;
 
@@ -48,7 +50,7 @@ export const StatusBar: FC<StatusBarProps> = ({
     });
 
     // Adjust widths to ensure they add up to 100%
-    const adjustmentFactor = 100 / totalWidth;
+    const adjustmentFactor = totalWidth ? 100 / totalWidth : 0;
     const adjustedWidths = calculatedWidths.map((width) => width * adjustmentFactor);
 
     return filteredData.map((item, index) => (

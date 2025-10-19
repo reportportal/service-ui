@@ -25,7 +25,6 @@
   .status-line {
     height: 4px;
     border-radius: 1px;
-    background-color: black;
     &.passed {
       background-color: var(--rp-ui-base-test-execution-status-passed);
     }
@@ -36,5 +35,4 @@
       background-color: var(--rp-ui-base-e-200);
     }
   }
-
 }
