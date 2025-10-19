@@ -40,6 +40,7 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
 
   if (isStepsManualScenario) {
     const isPreconditionAttachments = !isEmpty(scenario.preconditions?.attachments);
+    const firstStep = scenario?.steps?.[0];
 
     return (
       <div className={cx('scenario-wrapper')}>
@@ -59,7 +60,7 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
           ) : null}
         </div>
         <span className={cx('section-name')}>Steps</span>
-        {isEmpty(scenario?.steps) ? (
+        {isEmpty(firstStep?.expectedResult || firstStep?.instructions) ? (
           <div className={cx('empty-section')}>{formatMessage(messages.noSteps)}</div>
         ) : (
           <StepsList steps={scenario.steps} />
