@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-import { ButtonProps } from '@reportportal/ui-kit/dist/components/button';
-
-export interface ModalButtonProps extends ButtonProps {
-  text?: string;
-  'data-automation-id'?: string;
+export enum Status {
+  Passed = 'passed',
+  Failed = 'failed',
+  Skipped = 'skipped',
 }
 
-export type QueryParams = Record<string, string | number>;
+export type StatusData = {
+  value: number;
+  status: Status;
+};
 
-export enum ButtonVariants {
-  primary = 'primary',
-  ghost = 'ghost',
-  danger = 'danger',
-  text = 'text',
-  ghostDanger = 'ghost-danger',
-  textDanger = 'text-danger',
+export interface StatusBarProps {
+  data: StatusData[];
+  customClass?: string;
+  minWidthPercentage?: number;
 }

@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-import { ButtonProps } from '@reportportal/ui-kit/dist/components/button';
+import { Buttons } from './useManualLaunchesEmptyStateButtons.types';
+import { PROJECT_TEST_PLANS_PAGE, TEST_CASE_LIBRARY_PAGE } from 'controllers/pages';
 
-export interface ModalButtonProps extends ButtonProps {
-  text?: string;
-  'data-automation-id'?: string;
-}
-
-export type QueryParams = Record<string, string | number>;
-
-export enum ButtonVariants {
-  primary = 'primary',
-  ghost = 'ghost',
-  danger = 'danger',
-  text = 'text',
-  ghostDanger = 'ghost-danger',
-  textDanger = 'text-danger',
-}
+export const EMPTY_STATE_BUTTONS: Buttons[] = [
+  {
+    name: 'testPlansLink',
+    type: PROJECT_TEST_PLANS_PAGE,
+  },
+  {
+    name: 'testLibraryLink',
+    type: TEST_CASE_LIBRARY_PAGE,
+  },
+];

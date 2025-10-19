@@ -14,20 +14,15 @@
  * limitations under the License.
  */
 
-import { ButtonProps } from '@reportportal/ui-kit/dist/components/button';
+import { messages } from 'pages/inside/manualLaunchesPage/messages';
 
-export interface ModalButtonProps extends ButtonProps {
-  text?: string;
-  'data-automation-id'?: string;
-}
+export type Buttons = {
+  name: keyof typeof messages;
+  type: string;
+};
 
-export type QueryParams = Record<string, string | number>;
-
-export enum ButtonVariants {
-  primary = 'primary',
-  ghost = 'ghost',
-  danger = 'danger',
-  text = 'text',
-  ghostDanger = 'ghost-danger',
-  textDanger = 'text-danger',
-}
+// temp type, remove after src/controllers/user/selectors.js will be converted to TS
+export type ActiveProject = {
+  organizationSlug: string;
+  projectSlug: string;
+};

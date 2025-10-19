@@ -14,20 +14,14 @@
  * limitations under the License.
  */
 
-import { ButtonProps } from '@reportportal/ui-kit/dist/components/button';
-
-export interface ModalButtonProps extends ButtonProps {
-  text?: string;
-  'data-automation-id'?: string;
-}
-
-export type QueryParams = Record<string, string | number>;
-
-export enum ButtonVariants {
-  primary = 'primary',
-  ghost = 'ghost',
-  danger = 'danger',
-  text = 'text',
-  ghostDanger = 'ghost-danger',
-  textDanger = 'text-danger',
-}
+export type ManualTestCase = {
+  id: number;
+  count: number;
+  name: string;
+  startTime: number;
+  totalTests: number;
+  successTests: number;
+  failedTests: number;
+  skippedTests: number;
+  testsToRun: number;
+};

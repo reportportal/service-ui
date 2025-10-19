@@ -14,20 +14,6 @@
  * limitations under the License.
  */
 
-import { ButtonProps } from '@reportportal/ui-kit/dist/components/button';
+import { defineMessages } from 'react-intl';
 
-export interface ModalButtonProps extends ButtonProps {
-  text?: string;
-  'data-automation-id'?: string;
-}
-
-export type QueryParams = Record<string, string | number>;
-
-export enum ButtonVariants {
-  primary = 'primary',
-  ghost = 'ghost',
-  danger = 'danger',
-  text = 'text',
-  ghostDanger = 'ghost-danger',
-  textDanger = 'text-danger',
-}
+export const messages = defineMessages({});

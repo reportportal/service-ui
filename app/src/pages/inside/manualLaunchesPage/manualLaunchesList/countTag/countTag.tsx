@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-import { ButtonProps } from '@reportportal/ui-kit/dist/components/button';
+import classNames from 'classnames/bind';
+import styles from './countTag.scss';
 
-export interface ModalButtonProps extends ButtonProps {
-  text?: string;
-  'data-automation-id'?: string;
+const cx = classNames.bind(styles) as typeof classNames;
+
+export interface CountTagProps {
+  count: number;
+  customClass?: string;
 }
 
-export type QueryParams = Record<string, string | number>;
-
-export enum ButtonVariants {
-  primary = 'primary',
-  ghost = 'ghost',
-  danger = 'danger',
-  text = 'text',
-  ghostDanger = 'ghost-danger',
-  textDanger = 'text-danger',
-}
+export const CountTag = ({ count, customClass }: CountTagProps) => {
+  return (
+    <div className={cx(customClass)}>
+      <div className={cx('count-tag')}>{count}</div>
+    </div>
+  );
+};

@@ -14,20 +14,27 @@
  * limitations under the License.
  */
 
-import { ButtonProps } from '@reportportal/ui-kit/dist/components/button';
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
 
-export interface ModalButtonProps extends ButtonProps {
-  text?: string;
-  'data-automation-id'?: string;
-}
+  .count {
+    margin-right: 10px;
+  }
+  .status-line {
+    height: 4px;
+    border-radius: 1px;
+    background-color: black;
+    &.passed {
+      background-color: var(--rp-ui-base-test-execution-status-passed);
+    }
+    &.failed {
+      background-color: var(--rp-ui-base-error);
+    }
+    &.skipped {
+      background-color: var(--rp-ui-base-e-200);
+    }
+  }
 
-export type QueryParams = Record<string, string | number>;
-
-export enum ButtonVariants {
-  primary = 'primary',
-  ghost = 'ghost',
-  danger = 'danger',
-  text = 'text',
-  ghostDanger = 'ghost-danger',
-  textDanger = 'text-danger',
 }

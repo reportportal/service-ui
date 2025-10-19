@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-import { ButtonProps } from '@reportportal/ui-kit/dist/components/button';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { useMemo } from 'react';
+import { useIntl } from 'react-intl';
+import { ActionItem } from 'components/actionMenu';
 
-export interface ModalButtonProps extends ButtonProps {
-  text?: string;
-  'data-automation-id'?: string;
-}
+export const useManualLaunchesListRowActions = (): ActionItem[] => {
+  const { formatMessage } = useIntl();
 
-export type QueryParams = Record<string, string | number>;
-
-export enum ButtonVariants {
-  primary = 'primary',
-  ghost = 'ghost',
-  danger = 'danger',
-  text = 'text',
-  ghostDanger = 'ghost-danger',
-  textDanger = 'text-danger',
-}
+  return useMemo(
+    () => [
+      {
+        label: formatMessage(COMMON_LOCALE_KEYS.EDIT),
+        onClick: () => {},
+      },
+    ],
+    [formatMessage],
+  );
+};
