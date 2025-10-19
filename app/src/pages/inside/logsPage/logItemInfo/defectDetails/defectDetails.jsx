@@ -119,7 +119,7 @@ export const DefectDetails = ({ fetchFunc, debugMode, logItem }) => {
   const isBtsPluginsExist = useSelector(isBtsPluginsExistSelector);
   const enabledBtsPlugins = useSelector(enabledBtsPluginsSelector);
   const [expanded, setExpanded] = useState(false);
-  const { canChangeTestItemStatus, canMakeDecision, canManageBTSIssues } = useUserPermissions();
+  const { canChangeTestItemStatus, canEditTestItem, canManageBTSIssues } = useUserPermissions();
 
   const isDefectTypeVisible = logItem.issue?.issueType;
   const getIssueActionTitle = (noIssueMessage, isPostIssueUnavailable) => {
@@ -356,7 +356,7 @@ export const DefectDetails = ({ fetchFunc, debugMode, logItem }) => {
             />
           </span>
         )}
-        {!debugMode && canMakeDecision && (
+        {!debugMode && canEditTestItem && (
           <div className={cx('make-decision-action')}>
             <GhostButton
               color="white"
