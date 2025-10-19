@@ -66,7 +66,7 @@ export const TestItemActionPanel = ({
   const level = useSelector(levelSelector);
   const btsIntegrations = useSelector(availableBtsIntegrationsSelector);
   const userRoles = useSelector(userRolesSelector);
-  const { canBulkEditItems, canWorkWithTests } = useUserPermissions();
+  const { canEditLaunch, canWorkWithTests } = useUserPermissions();
   const isBtsPluginsExist = useSelector(isBtsPluginsExistSelector);
   const enabledBtsPlugins = useSelector(enabledBtsPluginsSelector);
   const { formatMessage } = useIntl();
@@ -130,7 +130,7 @@ export const TestItemActionPanel = ({
     {
       label: formatMessage(COMMON_LOCALE_KEYS.EDIT_ITEMS),
       value: 'action-edit',
-      hidden: !canBulkEditItems,
+      hidden: !canEditLaunch,
       onClick: onEditItems,
     },
     {

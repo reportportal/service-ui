@@ -62,7 +62,6 @@ export const canManageUsers = checkPermission(ACTIONS.MANAGE_USERS);
 export const canSeeMembers = checkPermission(ACTIONS.SEE_MEMBERS);
 export const canEditOwnAccount = checkPermission(ACTIONS.EDIT_OWN_ACCOUNT);
 export const canEditLaunch = checkPermission(ACTIONS.EDIT_LAUNCH);
-export const canBulkEditItems = checkPermission(ACTIONS.BULK_EDIT_ITEMS);
 export const canDeleteTestItem = checkPermission(ACTIONS.DELETE_TEST_ITEM);
 export const canChangeTestItemStatus = checkPermission(ACTIONS.CHANGE_TEST_ITEM_STATUS);
 export const canMakeDecision = checkPermission(ACTIONS.MAKE_DECISION);

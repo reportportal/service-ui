@@ -24,7 +24,6 @@ export {
   canSeeMembers,
   canEditOwnAccount,
   canEditLaunch,
-  canBulkEditItems,
   canDeleteTestItem,
   canWorkWithFilters,
   canWorkWithOrganizationFilter,
