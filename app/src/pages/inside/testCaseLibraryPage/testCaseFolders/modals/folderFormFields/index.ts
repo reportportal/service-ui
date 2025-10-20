@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { CREATE_FOLDER_MODAL_KEY } from './createFolderModal';
+export { FolderNameField, ParentFolderToggle } from './folderFormFields';

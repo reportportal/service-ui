@@ -14,10 +14,36 @@
  * limitations under the License.
  */
 
-export const DUPLICATE_FORM_NAME = 'duplicate-folder-modal-form';
+.folder-modal {
+  &__form {
+    position: relative;
+  }
 
-export const CREATE_FORM_NAME = 'create-folder-modal-form';
+  &__toggle {
+    width: fit-content;
+    margin-top: 16px;
+  }
 
-export const PARENT_FIELD_NAME = 'parentFolderName';
+  &__text {
+    margin-bottom: 24px;
+    margin-top: -10px;
+  }
 
-export const PARENT_FOLDER_FIELD = 'parentFolder';
+  &__text--bold {
+    font-weight: 600;
+  }
+
+  &__parent-folder {
+    margin-top: 14px;
+
+    &__name {
+      font-family: var(--rp-ui-base-font-family);
+      color: var(--rp-ui-color-text);
+    }
+
+    &__path {
+      font-family: var(--rp-ui-base-font-family);
+      color: var(--rp-ui-color-text-secondary);
+    }
+  }
+}

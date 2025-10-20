@@ -14,15 +14,9 @@
  * limitations under the License.
  */
 
-import { MouseEvent } from 'react';
-
 import { FolderWithFullPath } from 'controllers/testCase';
 
 export type FormFieldValue = string | boolean | number | null | undefined;
-
-export interface BaseFormValues {
-  [key: string]: FormFieldValue;
-}
 
 export interface FolderFormValues {
   folderName: string;
@@ -30,17 +24,9 @@ export interface FolderFormValues {
   isToggled?: boolean;
 }
 
-export interface DuplicateFolderFormValues extends BaseFormValues {
+export interface DuplicateFolderFormValues {
   folderName: string;
-  destinationFolderName?: string;
+  destinationFolder?: FolderWithFullPath | null;
   initialParentFolderId?: number | null;
-  isParentFolderToggled?: boolean;
-}
-
-export type BoundChangeFunction = (field: string, value: FormFieldValue) => void;
-
-export type BoundUntouchFunction = (field: string) => void;
-
-export interface HandleSubmitFunction {
-  (onSubmit: (values: FolderFormValues) => void): (event: MouseEvent<HTMLButtonElement>) => void;
+  moveToRoot?: boolean;
 }

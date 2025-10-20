@@ -20,7 +20,7 @@ import { FieldText, Toggle } from '@reportportal/ui-kit';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
-import { commonMessages } from '../../commonMessages';
+import { commonMessages } from '../../../commonMessages';
 
 const MAX_FIELD_LENGTH = 48;
 
@@ -68,41 +68,3 @@ export const ParentFolderToggle = ({
     {label}
   </Toggle>
 );
-
-interface ParentFolderFieldProps {
-  name: string;
-  label: string;
-  placeholder?: string;
-  onClear?: () => void;
-  clearable?: boolean;
-  className?: string;
-}
-
-export const ParentFolderField = ({
-  name,
-  label,
-  placeholder,
-  onClear,
-  clearable = true,
-  className,
-}: ParentFolderFieldProps) => {
-  const { formatMessage } = useIntl();
-
-  return (
-    <FieldProvider
-      name={name}
-      className={className}
-      placeholder={placeholder || formatMessage(commonMessages.searchFolderToSelect)}
-    >
-      <FieldErrorHint provideHint={false}>
-        <FieldText
-          label={label}
-          defaultWidth={false}
-          maxLength={MAX_FIELD_LENGTH}
-          onClear={onClear}
-          clearable={clearable}
-        />
-      </FieldErrorHint>
-    </FieldProvider>
-  );
-};

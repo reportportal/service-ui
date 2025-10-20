@@ -213,7 +213,7 @@ function* getFolders() {
       meta: { namespace: NAMESPACE },
     });
 
-    const pageSize = 20;
+    const pageSize = 1000;
     let pageNumber = 1;
     let totalPages = 1;
     const aggregated: Folder[] = [];

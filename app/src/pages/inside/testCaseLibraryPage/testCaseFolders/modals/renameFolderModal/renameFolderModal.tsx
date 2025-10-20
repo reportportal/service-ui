@@ -29,7 +29,8 @@ import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { renameFolderAction } from 'controllers/testCase/actionCreators';
 import { isLoadingFolderSelector, TransformedFolder } from 'controllers/testCase';
 
-import { FolderNameField } from '../shared/FolderFormFields';
+import { FolderNameField } from '../folderFormFields';
+import { FolderFormValues } from '../types';
 
 import styles from './renameFolderModal.scss';
 
@@ -43,8 +44,6 @@ const messages = defineMessages({
 const cx = createClassnames(styles);
 
 export const RENAME_FOLDER_MODAL_KEY = 'renameFolderModalKey';
-
-import { FolderFormValues } from '../shared/types';
 
 export interface RenameFolderModalData {
   folder: TransformedFolder;

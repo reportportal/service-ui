@@ -17,7 +17,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
-import { isEmpty, noop } from 'es-toolkit/compat';
+import { noop } from 'es-toolkit/compat';
 import { Button, PlusIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
@@ -43,12 +43,11 @@ import {
   showNotification,
 } from 'controllers/notification';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
-import { showModalAction } from 'controllers/modal';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 
 import { ExpandedOptions } from '../../common/expandedOptions';
 import { commonMessages } from '../commonMessages';
-import { CREATE_FOLDER_MODAL_KEY } from './createFolderModal';
+import { useCreateFolderModal } from './modals/createFolderModal';
 import { AllTestCasesPage } from '../allTestCasesPage';
 
 import styles from './testCaseFolders.scss';
@@ -59,6 +58,7 @@ export const TestCaseFolders = () => {
   const [activeFolder, setActiveFolder] = useState<number | null>(null);
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { openModal: openCreateFolderModal } = useCreateFolderModal();
   const folderId = useSelector(urlFolderIdSelector);
   const isLoadingTestCases = useSelector(isLoadingTestCasesSelector);
   const testCases = useSelector(testCasesSelector);
@@ -125,26 +125,14 @@ export const TestCaseFolders = () => {
     });
   };
 
-  const showCreateFolderModal = () => {
-    dispatch(
-      showModalAction({
-        id: CREATE_FOLDER_MODAL_KEY,
-        data: {
-          shouldRenderToggle: !isEmpty(folders),
-        },
-        component: null,
-      }),
-    );
-  };
-
   const renderCreateFolderButton = () => {
     return canCreateTestCaseFolder ? (
       <Button
-        onClick={showCreateFolderModal}
         variant="text"
         icon={<PlusIcon />}
         className={cx('sidebar-actions__create')}
         adjustWidthOn="content"
+        onClick={openCreateFolderModal}
       >
         {formatMessage(commonMessages.createFolder)}
       </Button>

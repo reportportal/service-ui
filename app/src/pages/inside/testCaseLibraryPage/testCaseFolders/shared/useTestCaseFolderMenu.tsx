@@ -22,9 +22,9 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PopoverItem } from 'pages/common/popoverControl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
-import { useDeleteFolderModal } from '../../testCaseFolders/deleteFolderModal';
-import { useRenameFolderModal } from '../../testCaseFolders/renameFolderModal';
-import { useDuplicateFolderModal } from '../../testCaseFolders/duplicateFolderModal';
+import { useDeleteFolderModal } from '../../testCaseFolders/modals/deleteFolderModal';
+import { useRenameFolderModal } from '../../testCaseFolders/modals/renameFolderModal';
+import { useDuplicateFolderModal } from '../../testCaseFolders/modals/duplicateFolderModal';
 import { commonMessages } from '../../commonMessages';
 
 interface UseTestCaseFolderMenuProps {
