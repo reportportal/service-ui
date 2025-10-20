@@ -28,8 +28,21 @@ import { showErrorNotification, showSuccessNotification } from 'controllers/noti
 import { getTestCasesAction, getTestCaseByFolderIdAction } from 'controllers/testCase';
 import { createFoldersSuccessAction } from 'controllers/testCase/actionCreators';
 
-import { CreateTestCaseFormData } from '../types';
+import { CreateTestCaseFormData, ManualScenarioDto } from '../types';
 import { createFolder, buildManualScenario, handleTestCaseError } from './testCaseUtils';
+
+const buildTestCaseData = (
+  payload: CreateTestCaseFormData,
+  folderId: number,
+  manualScenario: ManualScenarioDto,
+) => ({
+  description: payload.description,
+  name: payload.name,
+  testFolderId: folderId,
+  priority: payload.priority?.toUpperCase(),
+  tags: payload.tags || [],
+  manualScenario,
+});
 
 export const useTestCase = (testCaseId?: number) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
@@ -41,7 +54,9 @@ export const useTestCase = (testCaseId?: number) => {
     async (payload: CreateTestCaseFormData, currentFolderId?: number): Promise<number> => {
       if (isString(payload.folder)) {
         const folder = await createFolder(projectKey, payload.folder);
+
         dispatch(createFoldersSuccessAction({ ...folder, countOfTestCases: 0 }));
+
         return folder.id;
       }
       return payload.folder?.id || currentFolderId;
@@ -58,14 +73,8 @@ export const useTestCase = (testCaseId?: number) => {
         const manualScenario = buildManualScenario(payload);
 
         await fetch(URLS.testCase(projectKey), {
-          method: 'post',
-          data: {
-            description: payload.description,
-            name: payload.name,
-            testFolderId: folderId,
-            priority: payload.priority?.toUpperCase(),
-            manualScenario,
-          },
+          method: 'POST',
+          data: buildTestCaseData(payload, folderId, manualScenario),
         });
 
         dispatch(hideModalAction());
@@ -99,14 +108,7 @@ export const useTestCase = (testCaseId?: number) => {
 
         await fetch(URLS.testCaseDetails(projectKey, testCaseId.toString()), {
           method: 'PUT',
-          data: {
-            description: payload.description,
-            name: payload.name,
-            testFolderId: folderId,
-            priority: payload.priority?.toUpperCase(),
-            tags: payload.tags || [],
-            manualScenario,
-          },
+          data: buildTestCaseData(payload, folderId, manualScenario),
         });
 
         dispatch(hideModalAction());
