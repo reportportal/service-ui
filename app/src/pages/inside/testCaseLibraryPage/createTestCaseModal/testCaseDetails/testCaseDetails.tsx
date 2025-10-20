@@ -1,13 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
-import { formValueSelector } from 'redux-form';
-import { isNumber } from 'es-toolkit/compat';
+import { isNumber, isEmpty } from 'es-toolkit/compat';
 import { FieldText } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
-import type { AppState } from 'types/store';
 import { Step } from 'pages/inside/testCaseLibraryPage/types';
 
 import { Template } from './template';
@@ -15,7 +13,8 @@ import { AttachmentArea } from '../attachmentArea';
 import { Precondition } from './precondition';
 import { Steps } from './steps';
 import { TextTemplate } from './textTemplate';
-import { CREATE_TEST_CASE_FORM_NAME, ManualScenarioType } from '../createTestCaseModal';
+import { ManualScenarioType } from '../../types';
+import { manualScenarioTypeSelector, stepsDataSelector } from '../selectors';
 
 import styles from './testCaseDetails.scss';
 
@@ -33,7 +32,7 @@ const messages = defineMessages({
 });
 
 const createEmptyStep = (): Step => ({
-  id: `step_${Date.now()}`,
+  id: Date.now(),
   instructions: '',
   expectedResult: '',
   attachments: [],
@@ -41,16 +40,20 @@ const createEmptyStep = (): Step => ({
 
 interface TestCaseDetailsProps {
   className?: string;
+  formName: string;
 }
 
-const selector = formValueSelector('create-test-case-modal-form');
-
-export const TestCaseDetails = ({ className }: TestCaseDetailsProps) => {
+export const TestCaseDetails = ({ className, formName }: TestCaseDetailsProps) => {
   const [steps, setSteps] = useState<Step[]>([createEmptyStep()]);
   const { formatMessage } = useIntl();
-  const manualScenarioType = useSelector(
-    (state: AppState) => selector(state, 'manualScenarioType') as ManualScenarioType,
-  );
+  const manualScenarioType = useSelector(manualScenarioTypeSelector(formName));
+  const stepsData = useSelector(stepsDataSelector(formName));
+
+  useEffect(() => {
+    if (!isEmpty(stepsData)) {
+      setSteps(Object.values(stepsData));
+    }
+  }, [stepsData]);
 
   const handleAddStep = (index?: number) => {
     setSteps((prevState) => {
@@ -64,10 +67,10 @@ export const TestCaseDetails = ({ className }: TestCaseDetailsProps) => {
     });
   };
 
-  const handleRemoveStep = (stepId: string) =>
+  const handleRemoveStep = (stepId: number) =>
     setSteps((prevState) => prevState.filter((step) => step.id !== stepId));
 
-  const handleMoveStep = ({ stepId, direction }: { stepId: string; direction: 'up' | 'down' }) => {
+  const handleMoveStep = ({ stepId, direction }: { stepId: number; direction: 'up' | 'down' }) => {
     setSteps((prevState) => {
       const currentIndex = prevState.findIndex((step) => step.id === stepId);
       const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
@@ -86,7 +89,7 @@ export const TestCaseDetails = ({ className }: TestCaseDetailsProps) => {
     });
   };
 
-  const isTextTemplate = manualScenarioType === 'TEXT';
+  const isTextTemplate = manualScenarioType === ManualScenarioType.TEXT;
 
   return (
     <div className={cx('test-case-details', className)}>
@@ -99,14 +102,14 @@ export const TestCaseDetails = ({ className }: TestCaseDetailsProps) => {
       {isTextTemplate ? (
         <>
           <Precondition />
-          <TextTemplate />
+          <TextTemplate formName={formName} />
         </>
       ) : (
         <>
           <AttachmentArea
             isNumerable={false}
             attachmentFieldName="preconditionAttachments"
-            formName={CREATE_TEST_CASE_FORM_NAME}
+            formName={formName}
           >
             <Precondition />
           </AttachmentArea>
@@ -116,6 +119,7 @@ export const TestCaseDetails = ({ className }: TestCaseDetailsProps) => {
               onAddStep={handleAddStep}
               onRemoveStep={handleRemoveStep}
               onMoveStep={handleMoveStep}
+              formName={formName}
             />
           </FieldProvider>
         </>

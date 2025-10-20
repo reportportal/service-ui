@@ -45,6 +45,7 @@ import { foldersSelector } from 'controllers/testCase';
 import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
 import { ManualScenario, ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
+import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
 import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
 
 import { TestCaseMenuAction, TestCaseManualScenario } from '../types';
@@ -144,6 +145,7 @@ export const TestCaseSidePanel = memo(
     const { formatMessage } = useIntl();
     const sidePanelRef = useRef<HTMLDivElement>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { openModal: openEditTestCaseModal } = useEditTestCaseModal();
     const { openModal: openAddTestCasesToTestPlanModal } = useAddTestCasesToTestPlanModal();
     const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
 
@@ -156,6 +158,10 @@ export const TestCaseSidePanel = memo(
       return null;
     }
 
+    const handleEditTestCase = () => {
+      openEditTestCaseModal({ testCase });
+    };
+
     const permissionMap = [
       { isAllowed: canEditTestCase, action: TestCaseMenuAction.EDIT },
       { isAllowed: canDeleteTestCase, action: TestCaseMenuAction.DELETE },
@@ -166,6 +172,7 @@ export const TestCaseSidePanel = memo(
     const menuItems = createTestCaseMenuItems(
       formatMessage,
       {
+        [TestCaseMenuAction.EDIT]: handleEditTestCase,
         [TestCaseMenuAction.DELETE]: () => openDeleteTestCaseModal({ testCase }),
         [TestCaseMenuAction.HISTORY]: () => {
           dispatch({

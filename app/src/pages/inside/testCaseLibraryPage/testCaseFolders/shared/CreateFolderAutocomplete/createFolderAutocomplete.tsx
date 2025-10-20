@@ -28,6 +28,7 @@ import { SingleAutocomplete } from 'componentLibrary/autocompletes/singleAutocom
 import { messages } from './messages';
 import styles from './createFolderAutocomplete.scss';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
+import { findFolderById } from 'pages/inside/testCaseLibraryPage/utils';
 
 const cx = createClassnames(styles);
 
@@ -63,6 +64,8 @@ export const CreateFolderAutocomplete = ({
   const { formatMessage } = useIntl();
   const folders = useSelector(transformedFoldersWithFullPathSelector);
 
+  const targetFolder = findFolderById(folders, value?.id);
+
   const renderOption = (
     option: FolderWithFullPath,
     index: number,
@@ -96,7 +99,7 @@ export const CreateFolderAutocomplete = ({
         optionVariant="key-value"
         onStateChange={onStateChange}
         onChange={onChange}
-        value={value}
+        value={targetFolder}
         error={error}
         touched={touched}
         skipOptionCreation

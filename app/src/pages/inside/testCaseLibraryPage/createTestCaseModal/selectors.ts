@@ -14,11 +14,17 @@
  * limitations under the License.
  */
 
-export { CREATE_TEST_CASE_MODAL_KEY, CreateTestCaseModal } from './createTestCaseModal';
-export { useTestCase } from './useTestCase';
-export { useCreateTestCaseModal } from './useCreateTestCaseModal';
-export {
-  EDIT_SELECTED_TEST_CASE_MODAL_KEY,
-  EditSelectedTestCaseModal,
-  useEditTestCaseModal,
-} from '../editSelectedTestCaseModal';
+import { formValueSelector } from 'redux-form';
+import type { AppState } from 'types/store';
+
+import { ManualScenarioType, Step } from '../types';
+
+export const manualScenarioTypeSelector = (formName: string) => (state: AppState) => {
+  const formSelector = formValueSelector(formName);
+  return formSelector(state, 'manualScenarioType') as ManualScenarioType;
+};
+
+export const stepsDataSelector = (formName: string) => (state: AppState) => {
+  const formSelector = formValueSelector(formName);
+  return formSelector(state, 'steps') as Step[];
+};

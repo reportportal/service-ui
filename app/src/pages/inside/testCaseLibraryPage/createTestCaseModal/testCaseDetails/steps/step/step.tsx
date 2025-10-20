@@ -52,7 +52,7 @@ const messages = defineMessages({
 });
 
 interface StepProps {
-  stepId: string;
+  stepId: number;
   isReadMode?: boolean;
   instructions?: string;
   expectedResult?: string;

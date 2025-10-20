@@ -14,11 +14,20 @@
  * limitations under the License.
  */
 
-export { CREATE_TEST_CASE_MODAL_KEY, CreateTestCaseModal } from './createTestCaseModal';
-export { useTestCase } from './useTestCase';
-export { useCreateTestCaseModal } from './useCreateTestCaseModal';
-export {
-  EDIT_SELECTED_TEST_CASE_MODAL_KEY,
+import { useModal } from 'common/hooks';
+
+import { ExtendedTestCase } from '../types';
+import {
   EditSelectedTestCaseModal,
-  useEditTestCaseModal,
-} from '../editSelectedTestCaseModal';
+  EDIT_SELECTED_TEST_CASE_MODAL_KEY,
+} from './editSelectedTestCaseModal';
+
+interface UseEditTestCaseModalOptions {
+  testCase: ExtendedTestCase;
+}
+
+export const useEditTestCaseModal = () =>
+  useModal<UseEditTestCaseModalOptions>({
+    modalKey: EDIT_SELECTED_TEST_CASE_MODAL_KEY,
+    renderModal: (data) => <EditSelectedTestCaseModal data={data} />,
+  });

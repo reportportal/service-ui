@@ -20,6 +20,7 @@ import { FieldNumber } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { FieldProvider } from 'components/fields';
+import { ManualScenarioType } from 'pages/inside/testCaseLibraryPage/types';
 
 import { DropdownWithDescription } from '../../dropdownWithDescription';
 
@@ -59,12 +60,12 @@ export const Template = () => {
 
   const templateOptions = [
     {
-      value: 'STEPS',
+      value: ManualScenarioType.STEPS,
       label: formatMessage(messages.steps),
       description: formatMessage(messages.idealForDetailed),
     },
     {
-      value: 'TEXT',
+      value: ManualScenarioType.TEXT,
       label: formatMessage(messages.text),
       description: formatMessage(messages.idealForSimple),
     },
