@@ -4,32 +4,29 @@ import { useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import Link from 'redux-first-router-link';
 import { isString } from 'es-toolkit';
-import { Modal, FileDropArea, AddCsvIcon, AttachedFile, MIME_TYPES } from '@reportportal/ui-kit';
+import { Modal, FileDropArea, AddCsvIcon, MIME_TYPES } from '@reportportal/ui-kit';
 import type { MimeType } from '@reportportal/ui-kit/dist/components/fileDropArea/types';
 import { useImportTestCase } from './useImportTestCase';
-import { FolderNameField } from '../../testCaseLibraryPage/testCaseFolders/shared/FolderFormFields';
 import { withModal } from 'controllers/modal';
+import { FolderNameField } from 'pages/inside/testCaseLibraryPage/testCaseFolders/modals/folderFormFields';
 
 import { commonValidators, createClassnames } from 'common/utils';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { downloadFileFromBlob } from 'common/utils/fileUtils';
 import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';
 
 import { messages } from './messages';
 
 import styles from './importTestCaseModal.scss';
+import { AttachmentFile } from '@reportportal/ui-kit/dist/components/fileDropArea/attachedFilesList';
 
 export const IMPORT_TEST_CASE_MODAL_KEY = 'importTestCaseModalKey';
 export const IMPORT_TEST_CASE_FORM_NAME: string = 'import-test-case-modal-form';
 
 const MAX_FILE_SIZE_MB = 10;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
-const MIME_PART = MIME_TYPES as unknown as {
-  csv: MimeType;
-  xls: MimeType;
-  plain: MimeType;
-};
-const CSV_MIME_TYPES = [MIME_PART.csv, MIME_PART.xls, MIME_PART.plain] as const;
+const CSV_MIME_TYPES: MimeType[] = [MIME_TYPES.csv, MIME_TYPES.xls, MIME_TYPES.plain];
 
 const cx = createClassnames(styles);
 
@@ -74,6 +71,17 @@ export const ImportTestCaseModal = ({
     }
   };
 
+  const attachedFiles: AttachmentFile[] = file
+    ? [
+        {
+          id: crypto.randomUUID(),
+          fileName: file.name,
+          file,
+          size: toMB(file.size),
+        },
+      ]
+    : [];
+
   const handleFilesAdded = (incoming: FileInput) => {
     const items = Array.isArray(incoming) ? incoming : [incoming];
 
@@ -92,15 +100,7 @@ export const ImportTestCaseModal = ({
       return;
     }
 
-    const url = URL.createObjectURL(file);
-    try {
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = file.name || 'download';
-      link.click();
-    } finally {
-      setTimeout(() => URL.revokeObjectURL(url), 0);
-    }
+    downloadFileFromBlob(file);
   };
 
   const okButton = {
@@ -163,19 +163,18 @@ export const ImportTestCaseModal = ({
                   })}
                 />
                 <FileDropArea.Error />
+                {file && (
+                  <div className={cx('import-test-case-modal__files')}>
+                    <FileDropArea.AttachedFilesList
+                      className={cx('import-test-case-modal__files')}
+                      files={attachedFiles}
+                      onRemoveFile={handleRemove}
+                      onDownloadFile={handleDownload}
+                    />
+                  </div>
+                )}
               </div>
             </FileDropArea>
-            {file && (
-              <div className={cx('import-test-case-modal__files')}>
-                <AttachedFile
-                  fileName={file.name}
-                  size={toMB(file.size)}
-                  isFullWidth
-                  onRemove={handleRemove}
-                  onDownload={handleDownload}
-                />
-              </div>
-            )}
           </div>
           <div className={cx('import-test-case-modal__input-control')}>
             {folderIdFromUrl ? (
