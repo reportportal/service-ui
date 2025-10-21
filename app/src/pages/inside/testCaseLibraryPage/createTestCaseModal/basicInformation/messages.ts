@@ -41,8 +41,4 @@ export const messages = defineMessages({
     id: 'CreateTestCaseModal.priorityUnspecified',
     defaultMessage: 'Unspecified',
   },
-  duplicateTestCaseName: {
-    id: 'CreateTestCaseModal.duplicateTestCaseName',
-    defaultMessage: 'Test case with this name already exists',
-  },
 });
