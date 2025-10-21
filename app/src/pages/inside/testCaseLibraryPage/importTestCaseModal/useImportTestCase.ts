@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { projectKeySelector } from 'controllers/project';
 import { fetch } from 'common/utils';
+import { isEmpty, isNumber } from 'es-toolkit/compat';
 import { useDebouncedSpinner } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { hideModalAction } from 'controllers/modal';
@@ -8,6 +9,7 @@ import { showErrorNotification, showSuccessNotification } from 'controllers/noti
 import { getTestCasesAction } from 'controllers/testCase';
 import { useIntl } from 'react-intl';
 import { messages } from './messages';
+import { SubmissionError } from 'redux-form';
 
 type ImportPayload = {
   file: File;
@@ -22,17 +24,27 @@ export const useImportTestCase = () => {
   const { formatMessage } = useIntl();
 
   const importTestCases = async ({ file, testFolderId, testFolderName }: ImportPayload) => {
-    if (!file) return;
-    const hasId = typeof testFolderId === 'number';
-    const hasName = !!testFolderName?.trim();
+    if (!file) {
+      return;
+    }
 
+    const hasId = isNumber(testFolderId);
+    const hasName = !isEmpty(testFolderName?.trim());
     const query: { testFolderId?: number; testFolderName?: string } = {};
-    if (hasId && !hasName) query.testFolderId = testFolderId!;
-    if (!hasId && hasName) query.testFolderName = testFolderName;
+
+    if (hasId && !hasName) {
+      query.testFolderId = testFolderId;
+    }
+
+    if (!hasId && hasName) {
+      query.testFolderName = testFolderName;
+    }
 
     if (!query.testFolderId && !query.testFolderName) {
       return;
     }
+
+    const { testFolderId: resolvedFolderId, testFolderName: resolvedFolderName } = query;
 
     showSpinner();
     try {
@@ -44,30 +56,24 @@ export const useImportTestCase = () => {
         data: formData,
       });
 
-      const folderDisplay = query.testFolderName;
-
       dispatch(hideModalAction());
       dispatch(
         showSuccessNotification({
-          messageId: 'importSuccessToFolder',
-          values: { folderName: folderDisplay },
+          messageId: resolvedFolderName ? 'importSuccessToFolder' : 'importSuccess',
+          values: resolvedFolderName ? { folderName: resolvedFolderName } : undefined,
         }),
       );
 
-      if (query.testFolderId) {
-        dispatch(getTestCasesAction({ testFolderId: query.testFolderId }));
+      if (resolvedFolderId) {
+        dispatch(getTestCasesAction({ testFolderId: resolvedFolderId }));
       } else {
         dispatch(getTestCasesAction({}));
       }
     } catch (error: unknown) {
       if (error instanceof Error && error?.message?.includes('tms_test_case_name_folder_unique')) {
-        const message = formatMessage(messages.duplicateTestCaseName);
-        return {
-          ok: false,
-          code: 'DUPLICATE_NAME',
-          message,
-          fieldErrors: { name: message },
-        };
+        throw new SubmissionError({
+          name: formatMessage(messages.duplicateTestCaseName),
+        });
       } else {
         dispatch(
           showErrorNotification({
