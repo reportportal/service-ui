@@ -38,4 +38,8 @@ export const messages = defineMessages({
     id: 'ImportTestCaseModal.duplicateTestCaseName',
     defaultMessage: 'Test case with this name already exists',
   },
+  selectedFolderName: {
+    id: 'ImportTestCaseModal.selectedFolderName',
+    defaultMessage: 'Accessibility compliance',
+  },
 });

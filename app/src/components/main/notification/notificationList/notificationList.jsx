@@ -295,7 +295,11 @@ const messages = defineMessages({
   },
   importSuccessToFolder: {
     id: 'ImportTestCaseModal.importSuccessToFolder',
-    defaultMessage: "Test cases have been imported successfully to folder ''{folderName}''.",
+    defaultMessage: 'Test cases have been imported successfully to folder {folderName}.',
+  },
+  importSuccess: {
+    id: 'ImportTestCaseModal.importSuccess',
+    defaultMessage: 'Test cases have been imported successfully.',
   },
   importTestCaseFailed: {
     id: 'ImportTestCaseModal.testCaseImportFailed',
