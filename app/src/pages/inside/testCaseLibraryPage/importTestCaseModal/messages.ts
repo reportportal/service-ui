@@ -34,10 +34,6 @@ export const messages = defineMessages({
     id: 'ImportTestCaseModal.fileSizeMessage',
     defaultMessage: 'File size should be up to {size} MB',
   },
-  duplicateTestCaseName: {
-    id: 'ImportTestCaseModal.duplicateTestCaseName',
-    defaultMessage: 'Test case with this name already exists',
-  },
   selectedFolderName: {
     id: 'ImportTestCaseModal.selectedFolderName',
     defaultMessage: 'Accessibility compliance',

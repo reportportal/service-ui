@@ -1,6 +1,5 @@
 import { useModal } from 'common/hooks';
-
-import { IMPORT_TEST_CASE_MODAL_KEY, ImportTestCaseModal } from './importTestCaseModal';
+import ImportTestCaseModal, { IMPORT_TEST_CASE_MODAL_KEY } from './importTestCaseModal';
 
 export const useImportTestCaseModal = () =>
   useModal({

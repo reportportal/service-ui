@@ -77,4 +77,8 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'TestCaseLibraryPage.editTestCase',
     defaultMessage: 'Edit Test Case',
   },
+  duplicateTestCaseName: {
+    id: 'TestCaseLibraryPage.duplicateTestCaseName',
+    defaultMessage: 'Test case with this name already exists',
+  },
 });

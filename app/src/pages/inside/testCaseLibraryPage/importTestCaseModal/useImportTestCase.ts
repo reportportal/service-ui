@@ -8,8 +8,8 @@ import { hideModalAction } from 'controllers/modal';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { getTestCasesAction } from 'controllers/testCase';
 import { useIntl } from 'react-intl';
-import { messages } from './messages';
 import { SubmissionError } from 'redux-form';
+import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 
 type ImportPayload = {
   file: File;
@@ -72,7 +72,7 @@ export const useImportTestCase = () => {
     } catch (error: unknown) {
       if (error instanceof Error && error?.message?.includes('tms_test_case_name_folder_unique')) {
         throw new SubmissionError({
-          name: formatMessage(messages.duplicateTestCaseName),
+          name: formatMessage(commonMessages.duplicateTestCaseName),
         });
       } else {
         dispatch(
