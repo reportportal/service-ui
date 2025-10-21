@@ -58,4 +58,8 @@ export const messages = defineMessages({
     id: 'ImportTestCaseModal.typeToSearchOrSelect',
     defaultMessage: 'Type to search or select a folder from the suggestions…',
   },
+  selectedFolderName: {
+    id: 'ImportTestCaseModal.selectedFolderName',
+    defaultMessage: 'Accessibility compliance',
+  },
 });
