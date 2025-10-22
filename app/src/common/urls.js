@@ -236,6 +236,12 @@ export const URLS = {
     `${urlBase}${activeProject}/log/locations/${itemId}${getQueryParams({
       'filter.gte.level': level,
     })}`,
+  searchLogs: (activeProject, itemId, level) =>
+    `${urlBase}${activeProject}/log/locations/${itemId}${getQueryParams({
+      excludeLogContent: false,
+      includeSearchFilter: true,
+      'filter.gte.level': level,
+    })}`,
   logsUnderPath: (activeProject, path, excludedRetryParentId) =>
     `${urlBase}${activeProject}/log${getQueryParams({
       'filter.under.path': path,

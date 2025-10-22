@@ -23,7 +23,7 @@
   order: 1;
 
   &.console::before {
-    left: -35px;
+    left: -35.5px;
   }
 
   @media (max-width: $SCREEN_XS_MAX) {
@@ -90,6 +90,10 @@
 
 .attachment-column {
   order: 3;
+
+  &.console {
+    min-width: 35.5px;
+  }
 }
 
 .time-column {

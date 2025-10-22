@@ -26,6 +26,7 @@ import {
   loadingSelector,
   NAMESPACE,
   LOG_LEVEL_FILTER_KEY,
+  LOG_MESSAGE_FILTER_KEY,
   WITH_ATTACHMENTS_FILTER_KEY,
   HIDE_PASSED_LOGS,
   HIDE_EMPTY_STEPS,
@@ -36,7 +37,7 @@ import {
   LOG_STATUS_FILTER_KEY,
   isLogPageWithNestedSteps,
   errorLogsItemsSelector,
-  fetchErrorLog,
+  fetchLog,
   RETRY_ID,
   ERROR_LOG_INDEX_KEY,
   loadMoreLogsAction,
@@ -48,6 +49,7 @@ import {
 } from 'controllers/log';
 import { withFilter } from 'controllers/filter';
 import { withPagination, PAGE_KEY, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
+import { updatePagePropertiesAction } from 'controllers/pages';
 import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
 import { logsPaginationEnabledSelector, userIdSelector } from 'controllers/user';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
@@ -70,7 +72,7 @@ import { calculateNextIndex } from './utils';
     loadedPagesRange: loadedPagesRangeSelector(state),
     loadingDirection: loadingDirectionSelector(state),
   }),
-  { fetchErrorLog, loadMoreLogsAction, fetchLogItemsForPageAction },
+  { fetchLog, loadMoreLogsAction, fetchLogItemsForPageAction, updatePagePropertiesAction },
 )
 @withSortingURL({
   defaultFields: ['logTime'],
@@ -78,7 +80,7 @@ import { calculateNextIndex } from './utils';
   namespace: NAMESPACE,
 })
 @withFilter({
-  filterKey: 'filter.cnt.message',
+  filterKey: LOG_MESSAGE_FILTER_KEY,
   namespace: NAMESPACE,
 })
 @withPagination({
@@ -87,6 +89,7 @@ import { calculateNextIndex } from './utils';
 })
 @connectRouter(
   (query) => ({
+    query,
     logLevelId: query[LOG_LEVEL_FILTER_KEY],
     logStatus: query[LOG_STATUS_FILTER_KEY],
     withAttachments: query[WITH_ATTACHMENTS_FILTER_KEY],
@@ -150,13 +153,15 @@ export class LogsGridWrapper extends Component {
     retryId: PropTypes.string,
     isSauceLabsIntegrationView: PropTypes.bool.isRequired,
     errorLogs: PropTypes.array,
-    fetchErrorLog: PropTypes.func,
+    fetchLog: PropTypes.func,
     logsPaginationEnabled: PropTypes.bool,
     loadedPagesRange: PropTypes.object,
     loadMoreLogsAction: PropTypes.func,
     fetchLogItemsForPageAction: PropTypes.func,
     loadingDirection: PropTypes.string,
     className: PropTypes.string,
+    query: PropTypes.object,
+    updatePagePropertiesAction: PropTypes.func,
   };
 
   static defaultProps = {
@@ -187,7 +192,7 @@ export class LogsGridWrapper extends Component {
     hidePassedLogs: undefined,
     retryId: undefined,
     errorLogs: [],
-    fetchErrorLog: () => {},
+    fetchLog: () => {},
     logsPaginationEnabled: true,
     loadedPagesRange: { start: 1, end: 1 },
     loadMoreLogsAction: () => {},
@@ -198,7 +203,8 @@ export class LogsGridWrapper extends Component {
 
   state = {
     errorLogIndex: null,
-    skipHighlightOnRender: false,
+    highlightedRowId: null,
+    isGridRowHighlighted: false,
     isSauceLabsIntegrationView: false,
   };
 
@@ -209,9 +215,13 @@ export class LogsGridWrapper extends Component {
         const { errorLogs } = this.props;
         const errorLogIndex = errorLogs.findIndex(({ id }) => id === errorLogId);
         removeStorageItem(ERROR_LOG_INDEX_KEY);
-        const fetchErrorLogCb = () =>
-          this.setState({ skipHighlightOnRender: false, errorLogIndex });
-        this.props.fetchErrorLog(errorLogs[errorLogIndex], fetchErrorLogCb);
+        const fetchLogCb = () =>
+          this.setState({
+            errorLogIndex,
+            highlightedRowId: errorLogs[errorLogIndex]?.id,
+            isGridRowHighlighted: true,
+          });
+        this.props.fetchLog(errorLogs[errorLogIndex], fetchLogCb);
       }
     }
 
@@ -236,7 +246,7 @@ export class LogsGridWrapper extends Component {
         this.props.pageSize !== prevProps.pageSize
       ) {
         // eslint-disable-next-line react/no-did-update-set-state
-        this.setState({ errorLogIndex: null, skipHighlightOnRender: false });
+        this.setState({ errorLogIndex: null, highlightedRowId: null, isGridRowHighlighted: false });
       }
     }
   }
@@ -254,10 +264,26 @@ export class LogsGridWrapper extends Component {
     const { errorLogIndex } = this.state;
     const nextErrorLogIndex = calculateNextIndex(errorLogs, errorLogIndex, direction);
 
-    const fetchErrorLogCb = () =>
-      this.setState({ skipHighlightOnRender: false, errorLogIndex: nextErrorLogIndex });
+    const fetchLogCb = () =>
+      this.setState({
+        errorLogIndex: nextErrorLogIndex,
+        highlightedRowId: errorLogs[nextErrorLogIndex]?.id,
+        isGridRowHighlighted: true,
+      });
 
-    this.props.fetchErrorLog(errorLogs[nextErrorLogIndex], fetchErrorLogCb);
+    this.props.fetchLog(errorLogs[nextErrorLogIndex], fetchLogCb);
+  };
+
+  handleJumpToLog = (logItem) => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.clickJumpToLog('log_message'));
+
+    const fetchLogCb = () =>
+      this.setState({
+        highlightedRowId: logItem.id,
+        isGridRowHighlighted: true,
+      });
+
+    this.props.fetchLog(logItem, fetchLogCb, true);
   };
 
   getLoadNextCb = () => {
@@ -309,11 +335,10 @@ export class LogsGridWrapper extends Component {
       className,
     } = this.props;
     const rowHighlightingConfig = {
-      highlightedRowId: this.props.errorLogs[this.state.errorLogIndex]?.id,
-      isGridRowHighlighted: true,
-      onGridRowHighlighted: () => this.setState(() => ({ skipHighlightOnRender: true })),
+      highlightedRowId: this.state.highlightedRowId,
+      isGridRowHighlighted: this.state.isGridRowHighlighted,
+      onGridRowHighlighted: () => this.setState({ isGridRowHighlighted: false }),
       highlightErrorRow: true,
-      skipHighlightOnRender: this.state.skipHighlightOnRender,
     };
 
     return (
@@ -358,6 +383,7 @@ export class LogsGridWrapper extends Component {
                   loadNext={this.getLoadNextCb()}
                   loadPrevious={this.getLoadPreviousCb()}
                   loadingDirection={loadingDirection}
+                  onJumpToLog={this.handleJumpToLog}
                 />
               )}
             </LogsGridToolbar>
