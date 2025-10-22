@@ -2053,7 +2053,7 @@
   "TestExecutionsPage.emptyState.noResults": "无结果",
   "TestExecutionsPage.emptyState.noResultsDescription": "没有与所选过滤器匹配的测试执行结果。",
   "TestExecutionsPage.exportTooltip": "No items to export",
-  "TestExecutionsPage.filters.addAttributeButton": "+ Add Attribute",
+  "TestExecutionsPage.filters.addAttributeButton": "Add Attribute",
   "TestExecutionsPage.filters.attributesLabel": "Test execution attributes",
   "TestExecutionsPage.filters.keyPlaceholder": "Specify key",
   "TestExecutionsPage.filters.last2days": "Last 2 Days",
