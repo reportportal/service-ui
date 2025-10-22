@@ -49,7 +49,6 @@ import {
 } from 'controllers/log';
 import { withFilter } from 'controllers/filter';
 import { withPagination, PAGE_KEY, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
-import { updatePagePropertiesAction } from 'controllers/pages';
 import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
 import { logsPaginationEnabledSelector, userIdSelector } from 'controllers/user';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
@@ -72,7 +71,7 @@ import { calculateNextIndex } from './utils';
     loadedPagesRange: loadedPagesRangeSelector(state),
     loadingDirection: loadingDirectionSelector(state),
   }),
-  { fetchLog, loadMoreLogsAction, fetchLogItemsForPageAction, updatePagePropertiesAction },
+  { fetchLog, loadMoreLogsAction, fetchLogItemsForPageAction },
 )
 @withSortingURL({
   defaultFields: ['logTime'],
@@ -89,7 +88,6 @@ import { calculateNextIndex } from './utils';
 })
 @connectRouter(
   (query) => ({
-    query,
     logLevelId: query[LOG_LEVEL_FILTER_KEY],
     logStatus: query[LOG_STATUS_FILTER_KEY],
     withAttachments: query[WITH_ATTACHMENTS_FILTER_KEY],
@@ -160,8 +158,6 @@ export class LogsGridWrapper extends Component {
     fetchLogItemsForPageAction: PropTypes.func,
     loadingDirection: PropTypes.string,
     className: PropTypes.string,
-    query: PropTypes.object,
-    updatePagePropertiesAction: PropTypes.func,
   };
 
   static defaultProps = {
