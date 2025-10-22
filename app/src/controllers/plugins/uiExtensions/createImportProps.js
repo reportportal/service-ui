@@ -159,6 +159,7 @@ import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
 import { DependentFieldsControl } from 'components/main/dependentFieldsControl';
 import { SidebarButton } from 'components/buttons/sidebarButton';
 import { GeneralTab } from 'pages/inside/projectSettingsPageContainer/generalTab';
+import { TestItemStatus } from 'pages/inside/common/testItemStatus';
 import { RuleList, ItemContent } from 'components/main/ruleList';
 import { RuleListHeader } from 'components/main/ruleListHeader';
 import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
@@ -281,6 +282,7 @@ export const createImportProps = (pluginName) => ({
     ProjectName,
     ScrollWrapper,
     AbsRelTime,
+    TestItemStatus,
     MarkdownEditor,
     MarkdownViewer,
     GeneralTab,
