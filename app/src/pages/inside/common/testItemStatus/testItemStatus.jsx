@@ -35,4 +35,6 @@ TestItemStatus.propTypes = {
 
 TestItemStatus.defaultProps = {
   status: '',
+  className: '',
+  captionClassName: '',
 };
