@@ -150,11 +150,11 @@ export const LOG_PAGE_EVENTS = {
     element_name: 'microseconds',
     switcher: isActive ? 'on' : 'off',
   }),
-  CLICK_JUMP_TO_ERROR_LOG: {
+  clickJumpToLog: (place = 'stack_trace') => ({
     ...basicLogPageClickEventParameters,
-    place: 'stack_trace',
+    place,
     icon_name: 'jump_to',
-  },
+  }),
   NESTED_STEP_EXPAND: {
     ...basicNestedStepsClickEventParameters,
     icon_name: 'expand_nested_step',
@@ -278,6 +278,11 @@ export const LOG_PAGE_EVENTS = {
     place: 'settings',
     status: isEnabled ? 'enabled' : 'disabled',
   }),
+  ENTER_LOG_MSG_FILTER: {
+    ...basicLogPageClickEventParameters,
+    place: 'all_logs',
+    element_name: 'search',
+  },
   // GA3 events
   DEFECT_TYPE_TAG: {
     category: LOG_PAGE,
@@ -293,11 +298,6 @@ export const LOG_PAGE_EVENTS = {
     category: LOG_PAGE,
     action: 'Click on Btn Next Log message page',
     label: 'Transition to next log message page',
-  },
-  ENTER_LOG_MSG_FILTER: {
-    category: LOG_PAGE,
-    action: 'Enter filter parameter in Log message input',
-    label: 'Filter log messages by parameter',
   },
   UNLINK_ISSUES_ACTION: getUnlinkIssueActionEvent(LOG_PAGE),
   // EDIT_DEFECT_MODAL

@@ -23,7 +23,6 @@ import Parser from 'html-react-parser';
 import { Grid } from 'components/main/grid';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
-import { ERROR, FATAL } from 'common/constants/logLevels';
 import { logsSizeSelector, noLogsCollapsingSelector } from 'controllers/user';
 import ArrowIcon from 'common/img/arrow-down-inline.svg';
 import { NoItemMessage } from 'components/main/noItemMessage';
@@ -200,6 +199,7 @@ export class LogsGrid extends Component {
     loadPrevious: PropTypes.func,
     loadingDirection: PropTypes.string,
     logsSize: PropTypes.string,
+    onJumpToLog: PropTypes.func,
   };
 
   static defaultProps = {
@@ -220,10 +220,11 @@ export class LogsGrid extends Component {
     noLogsCollapsing: false,
     loadingDirection: null,
     logsSize: DEFAULT_LOGS_SIZE,
+    onJumpToLog: null,
   };
 
   getConsoleViewColumns = () => {
-    const { logsSize } = this.props;
+    const { logsSize, onJumpToLog } = this.props;
     return [
       {
         id: 'attachment',
@@ -246,6 +247,7 @@ export class LogsGrid extends Component {
           rawHeaderCellStylesConfig: this.props.rawHeaderCellStylesConfig,
           logsSize,
           gridHeaderCellStyles: cx('header', `column-size-${logsSize}`),
+          onJumpToLog,
         },
         component: MessageColumn,
       },
@@ -256,14 +258,14 @@ export class LogsGrid extends Component {
           mobile: true,
           rawHeaderCellStylesConfig: this.props.rawHeaderCellStylesConfig,
           logsSize,
-          gridHeaderCellStyles: cx('header', `column-size-${logsSize}`),
+          gridHeaderCellStyles: cx('header', 'mobile', `column-size-${logsSize}`),
         },
       },
     ];
   };
 
   getDefaultViewColumns = () => {
-    const { isNestedStepView, rawHeaderCellStylesConfig, logsSize } = this.props;
+    const { isNestedStepView, rawHeaderCellStylesConfig, logsSize, onJumpToLog } = this.props;
     const statusColumn = {
       id: STATUS_COLUMN_ID,
       title: {
@@ -300,6 +302,7 @@ export class LogsGrid extends Component {
           markdownMode: this.props.markdownMode,
           logsSize,
           gridHeaderCellStyles: cx('header', `column-size-${logsSize}`),
+          onJumpToLog,
         },
       },
       {
@@ -335,16 +338,12 @@ export class LogsGrid extends Component {
   getColumns = () =>
     this.props.consoleView ? this.getConsoleViewColumns() : this.getDefaultViewColumns();
 
-  getLogRowClasses = (value) => {
-    const { consoleView, rowHighlightingConfig } = this.props;
-    const isHighlightedErrorLog = rowHighlightingConfig.highlightedRowId === value.id;
+  getLogRowClasses = () => {
+    const { consoleView } = this.props;
 
     return {
       log: true,
-      'error-row':
-        !consoleView && (value.level === ERROR || value.level === FATAL) && !isHighlightedErrorLog,
       'row-console': consoleView,
-      'highlight-error-row': isHighlightedErrorLog,
     };
   };
 

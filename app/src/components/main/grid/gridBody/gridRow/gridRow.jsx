@@ -53,7 +53,6 @@ export class GridRow extends Component {
       isGridRowHighlighted: PropTypes.bool,
       highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       highlightErrorRow: PropTypes.bool,
-      skipHighlightOnRender: PropTypes.bool,
     }),
     excludeFromSelection: PropTypes.arrayOf(PropTypes.object),
     gridRowClassName: PropTypes.string,
@@ -81,7 +80,6 @@ export class GridRow extends Component {
       isGridRowHighlighted: false,
       highlightedRowId: '',
       highlightErrorRow: false,
-      skipHighlightOnRender: false,
     },
     excludeFromSelection: [],
     gridRowClassName: '',
@@ -114,10 +112,7 @@ export class GridRow extends Component {
       });
     }
 
-    if (
-      this.checkIfTheHighlightNeeded() &&
-      !this.props.rowHighlightingConfig.skipHighlightOnRender
-    ) {
+    if (this.checkIfTheHighlightNeeded()) {
       this.highLightGridRow();
     }
   }

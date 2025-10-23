@@ -17,8 +17,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import Parser from 'html-react-parser';
 import { dateFormat } from 'common/utils';
 import { MarkdownViewer } from 'components/main/markdown';
+import NavigateArrowIcon from 'common/img/navigate-arrow-inline.svg';
 import styles from './logMessageBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -37,21 +39,33 @@ export class LogMessageBlock extends Component {
     refFunction: null,
   };
 
+  handleJumpToLog = () => {
+    this.props.customProps.onJumpToLog(this.props.value);
+  };
+
   render() {
     const { value, refFunction, customProps } = this.props;
     const messageWithoutMarkdown = value.message.replace(MARKDOWN_MODE_REG_EXP, '');
+    const showJumpTo = value.pagesLocation?.length && !!customProps.onJumpToLog;
 
     return (
       <div ref={refFunction} className={cx('log-message-block')}>
         {customProps.markdownMode ? (
           <MarkdownViewer value={messageWithoutMarkdown} className={cx('markdown-viewer')} />
         ) : (
-          <div className={cx('log-message')}>
-            {customProps.consoleView && (
-              <span className={cx('time')}>{`${dateFormat(value.time)} - `}</span>
-            )}
-            {messageWithoutMarkdown}
+          <div className={cx('log-message-container')}>
+            <div className={cx('log-message')}>
+              {customProps.consoleView && (
+                <span className={cx('time')}>{`${dateFormat(value.time)} - `}</span>
+              )}
+              {messageWithoutMarkdown}
+            </div>
           </div>
+        )}
+        {showJumpTo && (
+          <button type="button" className={cx('navigate-btn')} onClick={this.handleJumpToLog}>
+            <i className={cx('navigate-icon')}>{Parser(NavigateArrowIcon)}</i>
+          </button>
         )}
       </div>
     );

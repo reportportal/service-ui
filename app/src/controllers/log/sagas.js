@@ -21,6 +21,7 @@ import {
   itemsSelector,
   fetchTestItemsAction,
   logPageOffsetSelector,
+  parentItemSelector,
 } from 'controllers/testItem';
 import { URLS } from 'common/urls';
 import { activeProjectSelector, logsPaginationEnabledSelector } from 'controllers/user';
@@ -91,11 +92,12 @@ import {
   NUMBER_OF_ITEMS_TO_LOAD,
   FETCH_ERROR_LOGS,
   ERROR_LOGS_NAMESPACE,
-  FETCH_ERROR_LOG,
+  FETCH_LOG,
   LOAD_MORE_LOGS,
   FETCH_LOG_ITEMS_FOR_PAGE,
   NEXT,
   PREVIOUS,
+  LOG_MESSAGE_FILTER_KEY,
 } from './constants';
 import { collectLogPayload } from './sagaUtils';
 import {
@@ -108,6 +110,23 @@ import { domainSelector as nestedStepsSelector, nestedStepSelector } from './nes
 import { nestedStepSagas } from './nestedSteps/sagas';
 import { getFormattedPageLocation } from './utils';
 
+function* getLogItemsUrl(payload = {}) {
+  const { activeProject, activeLogItemId, query, filterLevel } = yield call(collectLogPayload);
+  const logLevel = payload.level || filterLevel;
+  const isLaunchLog = yield select(isLaunchLogSelector);
+  const parentItem = yield select(parentItemSelector);
+  const hasChildren = parentItem?.hasChildren;
+  const searchFilter = query[LOG_MESSAGE_FILTER_KEY];
+
+  if (searchFilter && !hasChildren && !isLaunchLog) {
+    return URLS.searchLogs(activeProject, activeLogItemId, logLevel);
+  }
+
+  return isLaunchLog
+    ? URLS.launchLogs(activeProject, activeLogItemId, logLevel)
+    : URLS.logItems(activeProject, activeLogItemId, logLevel);
+}
+
 function* fetchActivity() {
   const activeProject = yield select(activeProjectSelector);
   const activeLogItemId = yield select(activeLogIdSelector);
@@ -118,11 +137,11 @@ function* fetchActivity() {
 }
 
 function* fetchLogItems(payload = {}) {
-  const { activeProject, filterLevel, activeLogItemId, query } = yield call(collectLogPayload);
+  const { query } = yield call(collectLogPayload);
   const logsPaginationEnabled = yield select(logsPaginationEnabledSelector);
   const namespace = payload.namespace || LOG_ITEMS_NAMESPACE;
-  const logLevel = payload.level || filterLevel;
   const { direction, targetPage } = payload;
+  const url = yield call(getLogItemsUrl, payload);
   const fetchParams = {
     ...payload.params,
     ...query,
@@ -131,11 +150,6 @@ function* fetchLogItems(payload = {}) {
   if (targetPage) {
     fetchParams[PAGE_KEY] = targetPage;
   }
-
-  const isLaunchLog = yield select(isLaunchLogSelector);
-  const url = isLaunchLog
-    ? URLS.launchLogs(activeProject, activeLogItemId, logLevel)
-    : URLS.logItems(activeProject, activeLogItemId, logLevel);
 
   if (logsPaginationEnabled) {
     yield put(fetchDataAction(namespace)(url, { params: fetchParams }));
@@ -235,7 +249,7 @@ function* waitLoadAllNestedSteps() {
   }
 }
 
-function* navigateToErrorLogPage(query, initialPage) {
+function* navigateToLogPage(query, initialPage) {
   yield put(
     updatePagePropertiesAction(
       createNamespacedQuery({ ...query, [PAGE_KEY]: initialPage }, NAMESPACE),
@@ -263,8 +277,17 @@ function* fetchLogItemsForPage({ payload: targetPage }) {
   }
 }
 
-function* fetchErrorLog({ payload: { errorLogInfo, callback } }) {
-  const { id: errorLogId, pagesLocation } = errorLogInfo;
+function* fetchLog({ payload: { logInfo, callback, shouldClearSearchFilter = false } }) {
+  const { id: logId, pagesLocation } = logInfo;
+
+  if (shouldClearSearchFilter) {
+    const { query } = yield call(collectLogPayload);
+    const { [LOG_MESSAGE_FILTER_KEY]: _messageFilter, ...newQuery } = query;
+
+    yield put(updatePagePropertiesAction(createNamespacedQuery(newQuery, NAMESPACE)));
+    yield take(createFetchPredicate(LOG_ITEMS_NAMESPACE));
+  }
+
   const { query } = yield call(collectLogPayload);
   const [initialPage] = Object.values(pagesLocation[0]);
   const logsPaginationEnabled = yield select(logsPaginationEnabledSelector);
@@ -274,7 +297,7 @@ function* fetchErrorLog({ payload: { errorLogInfo, callback } }) {
 
   if (!logsPaginationEnabled) {
     const logItems = yield select(logItemsSelector);
-    const isLogAlreadyLoaded = logItems.find((log) => +log.id === +errorLogId);
+    const isLogAlreadyLoaded = logItems.find((log) => +log.id === +logId);
 
     if (isLogAlreadyLoaded) {
       yield callback?.();
@@ -287,12 +310,12 @@ function* fetchErrorLog({ payload: { errorLogInfo, callback } }) {
   // single log. highlight or move to another page
   if (pagesLocation.length === 1) {
     if (logsPaginationEnabled && +query[PAGE_KEY] !== +initialPage) {
-      yield navigateToErrorLogPage(query, initialPage);
+      yield navigateToLogPage(query, initialPage);
     }
   } else {
     // change page if initial page is not the same
     if (logsPaginationEnabled && +query[PAGE_KEY] !== +initialPage) {
-      yield navigateToErrorLogPage(query, initialPage);
+      yield navigateToLogPage(query, initialPage);
       // check is first nested step is FAILED
       const logItems = yield select(logItemsSelector);
       const [parentId] = formattedPageLocation[0];
@@ -319,7 +342,7 @@ function* fetchErrorLog({ payload: { errorLogInfo, callback } }) {
       const [id, page] = formattedPageLocation[i];
       const { initial, content } = yield select(nestedStepSelector, id);
       const nextLocation = formattedPageLocation[i + 1];
-      const wantedId = nextLocation ? nextLocation[0] : errorLogId;
+      const wantedId = nextLocation ? nextLocation[0] : logId;
       const isLogLoaded = content.find((log) => +log.id === +wantedId);
 
       if (initial || !isLogLoaded) {
@@ -499,8 +522,8 @@ function* watchFetchErrorLogs() {
   yield takeEvery(FETCH_ERROR_LOGS, fetchAllErrorLogs);
 }
 
-function* watchFetchErrorLog() {
-  yield takeEvery(FETCH_ERROR_LOG, fetchErrorLog);
+function* watchFetchLog() {
+  yield takeEvery(FETCH_LOG, fetchLog);
 }
 
 function* watchFetchLineHistory() {
@@ -524,7 +547,7 @@ export function* logSagas() {
     watchFetchLogPageData(),
     watchFetchLogPageStackTrace(),
     watchFetchErrorLogs(),
-    watchFetchErrorLog(),
+    watchFetchLog(),
     watchFetchLineHistory(),
     attachmentSagas(),
     sauceLabsSagas(),
