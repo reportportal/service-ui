@@ -32,8 +32,10 @@ export const defaultSortParam = 'createdDate,desc';
 export type TestPlanDto = {
   id: number;
   name: string;
-  totalTestCases: number;
-  coveredTestCases: number;
+  executionStatistic: {
+    covered: number;
+    total: number;
+  };
   description?: string;
 };
 

@@ -161,7 +161,7 @@ export const TestPlanDetailsPage = () => {
   }
 
   const renderContent = () => {
-    if (!testPlan?.totalTestCases && isEmpty(testPlanFolders)) {
+    if (!testPlan?.executionStatistic.total && isEmpty(testPlanFolders)) {
       return <EmptyTestPlan />;
     }
 
