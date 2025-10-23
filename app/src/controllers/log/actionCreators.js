@@ -68,9 +68,9 @@ export const fetchErrorLogs = (logItem) => ({
   payload: logItem,
 });
 
-export const fetchLog = (logInfo, callback, clearSearchFilter = false) => ({
+export const fetchLog = (logInfo, callback, shouldClearSearchFilter = false) => ({
   type: FETCH_LOG,
-  payload: { logInfo, callback, clearSearchFilter },
+  payload: { logInfo, callback, shouldClearSearchFilter },
 });
 
 export const setPageLoadingAction = (isLoading) => ({

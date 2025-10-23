@@ -277,10 +277,10 @@ function* fetchLogItemsForPage({ payload: targetPage }) {
   }
 }
 
-function* fetchLog({ payload: { logInfo, callback, clearSearchFilter = false } }) {
+function* fetchLog({ payload: { logInfo, callback, shouldClearSearchFilter = false } }) {
   const { id: logId, pagesLocation } = logInfo;
 
-  if (clearSearchFilter) {
+  if (shouldClearSearchFilter) {
     const { query } = yield call(collectLogPayload);
     const { [LOG_MESSAGE_FILTER_KEY]: _messageFilter, ...newQuery } = query;
 
