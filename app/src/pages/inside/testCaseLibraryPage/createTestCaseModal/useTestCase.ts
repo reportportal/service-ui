@@ -25,7 +25,11 @@ import { useDebouncedSpinner } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { hideModalAction } from 'controllers/modal';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
-import { getTestCasesAction, getTestCaseByFolderIdAction } from 'controllers/testCase';
+import {
+  getTestCasesAction,
+  getTestCaseByFolderIdAction,
+  testCasesPageSelector,
+} from 'controllers/testCase';
 import { createFoldersSuccessAction } from 'controllers/testCase/actionCreators';
 
 import { CreateTestCaseFormData, ManualScenarioDto } from '../types';
@@ -48,6 +52,7 @@ export const useTestCase = (testCaseId?: number) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+  const testCasesPageData = useSelector(testCasesPageSelector);
   const { formatMessage } = useIntl();
 
   const handleFolder = useCallback(
@@ -113,7 +118,15 @@ export const useTestCase = (testCaseId?: number) => {
 
         dispatch(hideModalAction());
         dispatch(showSuccessNotification({ messageId: 'testCaseUpdatedSuccess' }));
-        dispatch(getTestCaseByFolderIdAction({ folderId }));
+        dispatch(
+          getTestCaseByFolderIdAction({
+            folderId,
+            offset: testCasesPageData
+              ? (testCasesPageData?.number - 1) * testCasesPageData?.size
+              : 0,
+            limit: testCasesPageData?.size,
+          }),
+        );
       } catch (error: unknown) {
         try {
           handleTestCaseError(error, formatMessage);
@@ -124,7 +137,16 @@ export const useTestCase = (testCaseId?: number) => {
         hideSpinner();
       }
     },
-    [testCaseId, projectKey, dispatch, formatMessage, showSpinner, hideSpinner, handleFolder],
+    [
+      testCaseId,
+      projectKey,
+      dispatch,
+      formatMessage,
+      showSpinner,
+      hideSpinner,
+      handleFolder,
+      testCasesPageData,
+    ],
   );
   return {
     isLoading,

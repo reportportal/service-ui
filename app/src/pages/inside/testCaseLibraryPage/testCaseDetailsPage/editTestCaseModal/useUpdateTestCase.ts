@@ -22,6 +22,7 @@ import {
   GET_TEST_CASE_DETAILS,
   getAllTestCasesAction,
   getTestCaseByFolderIdAction,
+  testCasesPageSelector,
 } from 'controllers/testCase';
 import { useDebouncedSpinner } from 'common/hooks';
 import { URLS } from 'common/urls';
@@ -43,6 +44,7 @@ export const useUpdateTestCase = () => {
   const { isLoading: isUpdateTestCaseLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+  const testCasesPageData = useSelector(testCasesPageSelector);
 
   const updateTestCase = async (testCaseId: number, payload: UpdateTestCasePayload) => {
     try {
@@ -84,10 +86,27 @@ export const useUpdateTestCase = () => {
       });
 
       onSuccess();
+
+      const offset = testCasesPageData
+        ? (testCasesPageData?.number - 1) * testCasesPageData?.size
+        : 0;
+      const limit = testCasesPageData?.size;
+
       if (payload.folderId) {
-        dispatch(getTestCaseByFolderIdAction({ folderId: Number(payload.folderId) }));
+        dispatch(
+          getTestCaseByFolderIdAction({
+            folderId: Number(payload.folderId),
+            offset,
+            limit,
+          }),
+        );
       } else {
-        dispatch(getAllTestCasesAction());
+        dispatch(
+          getAllTestCasesAction({
+            offset,
+            limit,
+          }),
+        );
       }
       dispatch(hideModalAction());
       dispatch(

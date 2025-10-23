@@ -41,7 +41,7 @@ interface TestCaseListProps {
   testCases: ExtendedTestCase[];
   loading?: boolean;
   currentPage?: number;
-  itemsPerPage: number;
+  itemsPerPage?: number;
   folderTitle: string;
   searchValue?: string;
   selectedRowIds: (number | string)[];
@@ -70,9 +70,16 @@ export const TestCaseList = memo(
 
     const { canDoTestCaseBulkActions } = useUserPermissions();
 
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const currentData = testCases.slice(startIndex, endIndex);
+    let currentData: ExtendedTestCase[];
+
+    if (currentPage && itemsPerPage) {
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+
+      currentData = testCases.slice(startIndex, endIndex);
+    } else {
+      currentData = testCases;
+    }
 
     const handleCloseSidePanel = () => {
       setSelectedTestCaseId(null);
@@ -84,7 +91,9 @@ export const TestCaseList = memo(
 
     const handleAllSelect = () => {
       handleSelectedRowIds((prevSelectedRowIds) => {
-        const currentDataIds: (string | number)[] = currentData.map((row) => row.id);
+        const currentDataIds: (string | number)[] = currentData.map(
+          (row: { id: string | number }) => row.id,
+        );
         if (currentDataIds.every((rowId) => prevSelectedRowIds.includes(rowId))) {
           return prevSelectedRowIds.filter(
             (selectedRowId) => !currentDataIds.includes(selectedRowId),

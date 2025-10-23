@@ -29,6 +29,7 @@ import {
   isLoadingTestCasesSelector,
   testCasesSelector,
   foldersSelector,
+  testCasesPageSelector,
 } from 'controllers/testCase';
 import {
   TEST_CASE_LIBRARY_PAGE,
@@ -44,6 +45,7 @@ import {
 } from 'controllers/notification';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
 
 import { ExpandedOptions } from '../../common/expandedOptions';
 import { commonMessages } from '../commonMessages';
@@ -62,6 +64,7 @@ export const TestCaseFolders = () => {
   const folderId = useSelector(urlFolderIdSelector);
   const isLoadingTestCases = useSelector(isLoadingTestCasesSelector);
   const testCases = useSelector(testCasesSelector);
+  const testCasesPageData = useSelector(testCasesPageSelector);
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const projectSlug = useSelector(urlProjectSlugSelector);
   const initialFolders = useSelector(foldersSelector);
@@ -73,6 +76,16 @@ export const TestCaseFolders = () => {
   const currentFolder = useMemo(() => {
     return initialFolders.find(({ id }) => id === Number(folderId));
   }, [folderId, initialFolders]);
+  const setAllTestCases = () => {
+    setActiveFolder(null);
+    dispatch({
+      type: TEST_CASE_LIBRARY_PAGE,
+      payload: {
+        organizationSlug,
+        projectSlug,
+      },
+    });
+  };
 
   useEffect(() => {
     if (folderId && !currentFolder) {
@@ -87,34 +100,40 @@ export const TestCaseFolders = () => {
         }),
       );
     }
-  }, [currentFolder, folderId, dispatch]);
+  }, [currentFolder, folderId, dispatch, setAllTestCases]);
 
   useEffect(() => {
     if (currentFolder && folderId !== '' && Number.isFinite(folderIdNumber)) {
-      dispatch(getTestCaseByFolderIdAction({ folderId: folderIdNumber }));
+      dispatch(
+        getTestCaseByFolderIdAction({
+          folderId: folderIdNumber,
+          limit: testCasesPageData?.size || TestCasePageDefaultValues.limit,
+          offset: TestCasePageDefaultValues.offset,
+        }),
+      );
     } else if (!currentFolder && folderId === '') {
-      dispatch(getAllTestCasesAction());
+      dispatch(
+        getAllTestCasesAction({
+          offset: TestCasePageDefaultValues.offset,
+          limit: testCasesPageData?.size || TestCasePageDefaultValues.limit,
+        }),
+      );
     }
-  }, [currentFolder, folderId, folderIdNumber, dispatch]);
+  }, [currentFolder, folderId, folderIdNumber, dispatch, testCasesPageData?.size]);
 
   useEffect(() => {
     setActiveFolder(folderId ? folderIdNumber : null);
   }, [folderId, folderIdNumber]);
 
-  const setAllTestCases = () => {
-    setActiveFolder(null);
-    dispatch({
-      type: TEST_CASE_LIBRARY_PAGE,
-      payload: {
-        organizationSlug,
-        projectSlug,
-      },
-    });
-  };
-
   const handleFolderClick = (id: number) => {
     setActiveFolder(id);
-    dispatch(getTestCaseByFolderIdAction({ folderId: id }));
+    dispatch(
+      getTestCaseByFolderIdAction({
+        folderId: id,
+        limit: testCasesPageData?.size || TestCasePageDefaultValues.limit,
+        offset: TestCasePageDefaultValues.offset,
+      }),
+    );
     dispatch({
       type: TEST_CASE_LIBRARY_PAGE,
       payload: {
@@ -150,6 +169,7 @@ export const TestCaseFolders = () => {
     >
       <AllTestCasesPage
         testCases={testCases}
+        testCasesPageData={testCasesPageData}
         searchValue=""
         setSearchValue={noop}
         loading={isLoadingTestCases || areFoldersLoading}
