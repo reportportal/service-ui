@@ -127,7 +127,7 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
     const projectKey = (yield select(projectKeySelector)) as string;
     const result = (yield call(
       fetch,
-      URLS.testCasesByFolderId(projectKey, { 'filter.eq.testFolderId': folderId, offset, limit }),
+      URLS.testCases(projectKey, { 'filter.eq.testFolderId': folderId, offset, limit }),
     )) as {
       content: TestCase[];
       page: Page;
@@ -135,7 +135,6 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
 
     yield put(setTestCasesAction(result));
   } catch {
-    yield put(setTestCasesAction({ content: [], page: null }));
     yield put(
       showErrorNotification({
         messageId: 'errorOccurredTryAgain',
@@ -192,13 +191,12 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
   try {
     const { offset, limit } = action.payload;
     const projectKey = (yield select(projectKeySelector)) as string;
-    const result = (yield call(fetch, URLS.allTestCases(projectKey, { offset, limit }))) as {
+    const result = (yield call(fetch, URLS.testCases(projectKey, { offset, limit }))) as {
       content: TestCase[];
       page: Page;
     };
     yield put(setTestCasesAction(result));
   } catch {
-    yield put(setTestCasesAction({ content: [], page: null }));
     yield put(
       showErrorNotification({
         messageId: 'errorOccurredTryAgain',

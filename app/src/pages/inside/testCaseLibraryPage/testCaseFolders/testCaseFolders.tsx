@@ -72,6 +72,10 @@ export const TestCaseFolders = () => {
   const areFoldersLoading = useSelector(areFoldersLoadingSelector);
   const { canCreateTestCaseFolder } = useUserPermissions();
   const folderIdNumber = Number(folderId);
+  const actionParams = {
+    limit: testCasesPageData?.size || TestCasePageDefaultValues.limit,
+    offset: TestCasePageDefaultValues.offset,
+  };
 
   const currentFolder = useMemo(() => {
     return initialFolders.find(({ id }) => id === Number(folderId));
@@ -107,17 +111,11 @@ export const TestCaseFolders = () => {
       dispatch(
         getTestCaseByFolderIdAction({
           folderId: folderIdNumber,
-          limit: testCasesPageData?.size || TestCasePageDefaultValues.limit,
-          offset: TestCasePageDefaultValues.offset,
+          ...actionParams,
         }),
       );
     } else if (!currentFolder && folderId === '') {
-      dispatch(
-        getAllTestCasesAction({
-          offset: TestCasePageDefaultValues.offset,
-          limit: testCasesPageData?.size || TestCasePageDefaultValues.limit,
-        }),
-      );
+      dispatch(getAllTestCasesAction(actionParams));
     }
   }, [currentFolder, folderId, folderIdNumber, dispatch, testCasesPageData?.size]);
 
@@ -130,8 +128,7 @@ export const TestCaseFolders = () => {
     dispatch(
       getTestCaseByFolderIdAction({
         folderId: id,
-        limit: testCasesPageData?.size || TestCasePageDefaultValues.limit,
-        offset: TestCasePageDefaultValues.offset,
+        ...actionParams,
       }),
     );
     dispatch({

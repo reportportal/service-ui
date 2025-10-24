@@ -31,6 +31,7 @@ import {
   testCasesPageSelector,
 } from 'controllers/testCase';
 import { createFoldersSuccessAction } from 'controllers/testCase/actionCreators';
+import { getTestCaseRequestParams } from 'pages/inside/testCaseLibraryPage/utils';
 
 import { CreateTestCaseFormData, ManualScenarioDto } from '../types';
 import { createFolder, buildManualScenario, handleTestCaseError } from './testCaseUtils';
@@ -121,10 +122,7 @@ export const useTestCase = (testCaseId?: number) => {
         dispatch(
           getTestCaseByFolderIdAction({
             folderId,
-            offset: testCasesPageData
-              ? (testCasesPageData?.number - 1) * testCasesPageData?.size
-              : 0,
-            limit: testCasesPageData?.size,
+            ...getTestCaseRequestParams(testCasesPageData),
           }),
         );
       } catch (error: unknown) {

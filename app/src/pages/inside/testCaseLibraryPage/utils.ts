@@ -15,6 +15,8 @@
  */
 
 import { FolderWithFullPath } from 'controllers/testCase/types';
+import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
+import { Page } from 'pages/inside/testCaseLibraryPage/types';
 
 // Going to be resolved to id by folder name with UI search control
 // Currently directly accepts id from name input
@@ -33,4 +35,23 @@ export const findFolderById = (
   }
 
   return folders.find((folder) => folder.id === folderId);
+};
+
+export const getTestCaseRequestParams = (
+  testCasesPageData: Page,
+): {
+  offset: number;
+  limit: number;
+} => {
+  if (testCasesPageData) {
+    return {
+      offset: (testCasesPageData?.number - 1) * testCasesPageData?.size,
+      limit: testCasesPageData?.size,
+    };
+  }
+
+  return {
+    offset: TestCasePageDefaultValues.offset,
+    limit: TestCasePageDefaultValues.limit,
+  };
 };

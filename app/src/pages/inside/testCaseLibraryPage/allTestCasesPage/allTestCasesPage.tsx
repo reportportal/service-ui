@@ -140,44 +140,40 @@ export const AllTestCasesPage = ({
   const onClearSelection = () => setSelectedRowIds([]);
 
   const setTestCasesPage = (page: number): void => {
-    const offset = (page - 1) * testCasesPageData.size;
+    const params = {
+      limit: pageSize,
+      offset: (page - 1) * testCasesPageData.size,
+    };
 
     if (folderId) {
       dispatch(
         getTestCaseByFolderIdAction({
           folderId: Number(folderId),
-          limit: pageSize,
-          offset,
+          ...params,
         }),
       );
     } else {
-      dispatch(
-        getAllTestCasesAction({
-          limit: pageSize,
-          offset,
-        }),
-      );
+      dispatch(getAllTestCasesAction(params));
     }
 
     setActivePage(page);
   };
 
   const setTestCasesPageSize = (pageSize: number): void => {
+    const params = {
+      limit: pageSize,
+      offset: TestCasePageDefaultValues.offset,
+    };
+
     if (folderId) {
       dispatch(
         getTestCaseByFolderIdAction({
           folderId: Number(folderId),
-          limit: pageSize,
-          offset: TestCasePageDefaultValues.offset,
+          ...params,
         }),
       );
     } else {
-      dispatch(
-        getAllTestCasesAction({
-          limit: pageSize,
-          offset: TestCasePageDefaultValues.offset,
-        }),
-      );
+      dispatch(getAllTestCasesAction(params));
     }
 
     changePageSize(pageSize);

@@ -27,6 +27,7 @@ import {
 import { useDebouncedSpinner } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import { getTestCaseRequestParams } from 'pages/inside/testCaseLibraryPage/utils';
 
 export interface UpdateTestCasePayload {
   name: string;
@@ -87,26 +88,17 @@ export const useUpdateTestCase = () => {
 
       onSuccess();
 
-      const offset = testCasesPageData
-        ? (testCasesPageData?.number - 1) * testCasesPageData?.size
-        : 0;
-      const limit = testCasesPageData?.size;
+      const testCaseRequestParams = getTestCaseRequestParams(testCasesPageData);
 
       if (payload.folderId) {
         dispatch(
           getTestCaseByFolderIdAction({
             folderId: Number(payload.folderId),
-            offset,
-            limit,
+            ...testCaseRequestParams,
           }),
         );
       } else {
-        dispatch(
-          getAllTestCasesAction({
-            offset,
-            limit,
-          }),
-        );
+        dispatch(getAllTestCasesAction(testCaseRequestParams));
       }
       dispatch(hideModalAction());
       dispatch(
