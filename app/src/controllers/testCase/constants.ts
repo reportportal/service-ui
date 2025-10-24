@@ -37,3 +37,4 @@ export const GET_TEST_CASE_DETAILS_FAILURE = 'getTestCaseDetailsFailure' as cons
 export const RENAME_FOLDER = 'renameFolder' as const;
 export const RENAME_FOLDER_SUCCESS = 'renameFolderSuccess' as const;
 export const DUPLICATE_FOLDER = 'duplicateFolder' as const;
+export const UPDATE_FOLDER_COUNTER = 'updateFolderCounter' as const;

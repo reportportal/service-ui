@@ -22,6 +22,7 @@ type LocationInfo = {
     organizationSlug: string;
     projectSlug: string;
   };
+  type?: string;
 };
 
 type State = {
