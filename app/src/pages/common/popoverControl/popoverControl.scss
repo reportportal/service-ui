@@ -23,14 +23,14 @@
     column-gap: 8px;
     font-family: $FONT-ROBOTO-REGULAR;
     color: var(--rp-ui-base-almost-black);
-    width: max-content;
+    width: 100%;
+    min-width: max-content;
     padding: 8px 16px;
     border-radius: 0;
     border: none;
     background: none;
     text-align: left;
     cursor: pointer;
-    width: 100%;
 
     &:hover,
     &:active,
