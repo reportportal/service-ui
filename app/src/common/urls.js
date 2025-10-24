@@ -223,24 +223,24 @@ export const URLS = {
   logItem: (activeProject, itemId, level) =>
     `${urlBase}${activeProject}/log${getQueryParams({
       'filter.eq.item': itemId,
-      'filter.gte.level': level,
+      ...(level && { 'filter.gte.level': level }),
       'page.page': 1,
       'page.size': 1,
       'page.sort': 'logTime,DESC',
     })}`,
   logItems: (activeProject, itemId, level) =>
     `${urlBase}${activeProject}/log/nested/${itemId}${getQueryParams({
-      'filter.gte.level': level,
+      ...(level && { 'filter.gte.level': level }),
     })}`,
   errorLogs: (activeProject, itemId, level) =>
     `${urlBase}${activeProject}/log/locations/${itemId}${getQueryParams({
-      'filter.gte.level': level,
+      ...(level && { 'filter.gte.level': level }),
     })}`,
   searchLogs: (activeProject, itemId, level) =>
     `${urlBase}${activeProject}/log/locations/${itemId}${getQueryParams({
       excludeLogContent: false,
       includeSearchFilter: true,
-      'filter.gte.level': level,
+      ...(level && { 'filter.gte.level': level }),
     })}`,
   logsUnderPath: (activeProject, path, excludedRetryParentId) =>
     `${urlBase}${activeProject}/log${getQueryParams({
@@ -250,7 +250,7 @@ export const URLS = {
   launchLogs: (activeProject, itemId, level) =>
     `${urlBase}${activeProject}/log${getQueryParams({
       'filter.eq.launch': itemId,
-      'filter.gte.level': level,
+      ...(level && { 'filter.gte.level': level }),
     })}`,
   logItemActivity: (activeProject, itemId) =>
     removeTrailingSlash(`${urlBase}${activeProject}/activity/item/${itemId}`),

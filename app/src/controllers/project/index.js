@@ -73,6 +73,7 @@ export {
   projectNotificationsStateSelector,
   logTypesSelector,
   logTypesLoadingSelector,
+  filterableLogTypesSelector,
 } from './selectors';
 export { normalizeAttributesWithPrefix } from './utils';
 export { projectSagas } from './sagas';

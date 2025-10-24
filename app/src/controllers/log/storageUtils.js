@@ -19,11 +19,10 @@ import { LOG_TIME_FORMAT_ABSOLUTE } from 'controllers/user/constants';
 import { getUserSettingsFromStorage, updateUserSettingsInStorage } from 'controllers/user';
 import {
   LOG_LEVEL_STORAGE_KEY,
-  LOG_LEVELS,
-  DEFAULT_LOG_LEVEL,
   LOG_VIEW_MODE_STORAGE_KEY,
   LOG_TIME_FORMAT_STORAGE_KEY,
 } from './constants';
+import { isLogLevelsEqual, isDefaultLogLevel } from './utils';
 
 const getLogLevelFromStorage = (userId) =>
   getUserSettingsFromStorage(userId)[LOG_LEVEL_STORAGE_KEY];
@@ -37,19 +36,25 @@ export const setLogTimeFormatInStorage = (userId, format) =>
 const getLogViewModeFromStorage = (userId) =>
   getUserSettingsFromStorage(userId)[LOG_VIEW_MODE_STORAGE_KEY];
 
-export const getLogLevelById = (logLevelId) =>
-  LOG_LEVELS.find((logLevel) => logLevel.id === logLevelId);
+export const getLogLevelByName = (logLevelName, filterableLogLevels = []) => {
+  if (!logLevelName || filterableLogLevels.length === 0) {
+    return undefined;
+  }
 
-const getDefaultLogLevel = () => getLogLevelById(DEFAULT_LOG_LEVEL);
+  return filterableLogLevels.find((logLevel) => isLogLevelsEqual(logLevel, { name: logLevelName }));
+};
 
-export const getLogLevel = (userId, logLevelId) =>
-  getLogLevelById(logLevelId) ||
-  getLogLevelById(getLogLevelFromStorage(userId)) ||
-  getDefaultLogLevel() ||
-  LOG_LEVELS[LOG_LEVELS.length - 1];
+const getDefaultLogLevel = (filterableLogLevels = []) => {
+  return filterableLogLevels.find((logLevel) => isDefaultLogLevel(logLevel));
+};
+
+export const getLogLevel = (userId, filterableLogLevels, logLevelName) =>
+  getLogLevelByName(logLevelName, filterableLogLevels) ||
+  getLogLevelByName(getLogLevelFromStorage(userId), filterableLogLevels) ||
+  getDefaultLogLevel(filterableLogLevels);
 
 export const setLogLevel = (userId, logLevel) =>
-  updateUserSettingsInStorage(userId, { [LOG_LEVEL_STORAGE_KEY]: logLevel.id });
+  updateUserSettingsInStorage(userId, { [LOG_LEVEL_STORAGE_KEY]: logLevel.name });
 
 export const getLogViewMode = (userId) => getLogViewModeFromStorage(userId) || MARKDOWN;
 

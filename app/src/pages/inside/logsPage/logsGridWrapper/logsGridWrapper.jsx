@@ -47,10 +47,13 @@ import {
   NEXT,
   PREVIOUS,
 } from 'controllers/log';
+import { isDefaultLogLevel } from 'controllers/log/utils';
 import { withFilter } from 'controllers/filter';
 import { withPagination, PAGE_KEY, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
 import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
 import { logsPaginationEnabledSelector, userIdSelector } from 'controllers/user';
+import { fetchLogTypesAction, filterableLogTypesSelector } from 'controllers/project';
+import { projectIdSelector } from 'controllers/pages';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { FIRST_PAGE } from './constants';
@@ -70,8 +73,10 @@ import { calculateNextIndex } from './utils';
     logsPaginationEnabled: logsPaginationEnabledSelector(state),
     loadedPagesRange: loadedPagesRangeSelector(state),
     loadingDirection: loadingDirectionSelector(state),
+    filterableLogLevels: filterableLogTypesSelector(state),
+    projectId: projectIdSelector(state),
   }),
-  { fetchLog, loadMoreLogsAction, fetchLogItemsForPageAction },
+  { fetchLog, loadMoreLogsAction, fetchLogItemsForPageAction, fetchLogTypesAction },
 )
 @withSortingURL({
   defaultFields: ['logTime'],
@@ -88,7 +93,7 @@ import { calculateNextIndex } from './utils';
 })
 @connectRouter(
   (query) => ({
-    logLevelId: query[LOG_LEVEL_FILTER_KEY],
+    logLevelName: query[LOG_LEVEL_FILTER_KEY],
     logStatus: query[LOG_STATUS_FILTER_KEY],
     withAttachments: query[WITH_ATTACHMENTS_FILTER_KEY],
     hideEmptySteps: query[HIDE_EMPTY_STEPS],
@@ -98,7 +103,10 @@ import { calculateNextIndex } from './utils';
   {
     onChangeLogLevel: (userId, logLevel) => {
       setLogLevel(userId, logLevel);
-      return { [LOG_LEVEL_FILTER_KEY]: logLevel.id, [PAGE_KEY]: 1 };
+      return {
+        [LOG_LEVEL_FILTER_KEY]: isDefaultLogLevel(logLevel) ? undefined : logLevel.name,
+        [PAGE_KEY]: 1,
+      };
     },
     onChangeWithAttachments: (withAttachments) => {
       return { [WITH_ATTACHMENTS_FILTER_KEY]: withAttachments || undefined };
@@ -143,7 +151,7 @@ export class LogsGridWrapper extends Component {
     logViewMode: PropTypes.string,
     onChangeLogStatusFilter: PropTypes.func,
     isNestedStepView: PropTypes.bool,
-    logLevelId: PropTypes.string,
+    logLevelName: PropTypes.string,
     logStatus: PropTypes.string,
     withAttachments: PropTypes.string,
     hideEmptySteps: PropTypes.string,
@@ -158,6 +166,9 @@ export class LogsGridWrapper extends Component {
     fetchLogItemsForPageAction: PropTypes.func,
     loadingDirection: PropTypes.string,
     className: PropTypes.string,
+    filterableLogLevels: PropTypes.array,
+    projectId: PropTypes.string,
+    fetchLogTypesAction: PropTypes.func,
   };
 
   static defaultProps = {
@@ -181,7 +192,7 @@ export class LogsGridWrapper extends Component {
     logViewMode: DETAILED_LOG_VIEW,
     onChangeLogStatusFilter: () => {},
     isNestedStepView: false,
-    logLevelId: null,
+    logLevelName: null,
     logStatus: null,
     withAttachments: undefined,
     hideEmptySteps: undefined,
@@ -195,6 +206,8 @@ export class LogsGridWrapper extends Component {
     fetchLogItemsForPageAction: () => {},
     loadingDirection: null,
     className: '',
+    filterableLogLevels: [],
+    fetchLogTypesAction: () => {},
   };
 
   state = {
@@ -226,12 +239,14 @@ export class LogsGridWrapper extends Component {
         this.props.fetchLogItemsForPageAction(FIRST_PAGE);
       }
     });
+
+    this.props.fetchLogTypesAction(this.props.projectId);
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.logViewMode === DETAILED_LOG_VIEW) {
       if (
-        this.props.logLevelId !== prevProps.logLevelId ||
+        this.props.logLevelName !== prevProps.logLevelName ||
         this.props.logStatus !== prevProps.logStatus ||
         this.props.withAttachments !== prevProps.withAttachments ||
         this.props.hideEmptySteps !== prevProps.hideEmptySteps ||
@@ -244,6 +259,10 @@ export class LogsGridWrapper extends Component {
         // eslint-disable-next-line react/no-did-update-set-state
         this.setState({ errorLogIndex: null, highlightedRowId: null, isGridRowHighlighted: false });
       }
+    }
+
+    if (this.props.projectId !== prevProps.projectId) {
+      this.props.fetchLogTypesAction(this.props.projectId);
     }
   }
 
@@ -308,7 +327,7 @@ export class LogsGridWrapper extends Component {
       onChangePageSize,
       loading,
       filter,
-      logLevelId,
+      logLevelName,
       onFilterChange,
       sortingColumn,
       sortingDirection,
@@ -329,6 +348,7 @@ export class LogsGridWrapper extends Component {
       logsPaginationEnabled,
       loadingDirection,
       className,
+      filterableLogLevels,
     } = this.props;
     const rowHighlightingConfig = {
       highlightedRowId: this.state.highlightedRowId,
@@ -347,7 +367,7 @@ export class LogsGridWrapper extends Component {
               activePage={activePage}
               pageCount={pageCount}
               onChangePage={onChangePage}
-              logLevel={getLogLevel(userId, logLevelId)}
+              logLevel={getLogLevel(userId, filterableLogLevels, logLevelName)}
               onChangeLogLevel={onChangeLogLevel}
               withAttachments={Boolean(withAttachments)}
               isEmptyStepsHidden={Boolean(hideEmptySteps)}
@@ -359,6 +379,7 @@ export class LogsGridWrapper extends Component {
               errorLogs={errorLogs}
               highlightErrorLog={this.highlightErrorLog}
               errorLogIndex={this.state.errorLogIndex}
+              logLevels={filterableLogLevels}
             >
               {({ markdownMode, consoleView, rawHeaderCellStylesConfig }) => (
                 <LogsGrid

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-export const ERROR = 'ERROR';
-export const FATAL = 'FATAL';
-export const DEBUG = 'DEBUG';
-export const WARN = 'WARN';
-export const INFO = 'INFO';
-export const TRACE = 'TRACE';
-export const ALL = 'ALL';
+export const isString = (value) => {
+  return typeof value === 'string';
+};
+
+export const capitalize = (str) => {
+  if (!isString(str)) {
+    return str;
+  }
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+};

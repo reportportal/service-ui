@@ -1346,6 +1346,7 @@
   "LogsGridToolbar.errorLogs": "{count, plural, =0 {No hay logs de error} one {{currentItem} log de error} other {{currentItem} de {totalItems} logs de error}}",
   "LogsGridToolbar.hideEmptySteps": "Ocultar pasos vacíos",
   "LogsGridToolbar.hidePassedLogs": "Ocultar logs pasados",
+  "LogsGridToolbar.logLevelsSliderInfoMessage": "All logs are currently displayed. To adjust filtering, update <a>Log Types</a> settings.",
   "LogsGridToolbar.markdownMode": "Modo markdown",
   "LogsGridToolbar.showErrorLog": "Mostrar",
   "LogsGridToolbar.withAttachments": "Logs con archivos adjuntos",
