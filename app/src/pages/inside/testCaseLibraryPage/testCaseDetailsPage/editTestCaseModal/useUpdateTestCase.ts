@@ -22,10 +22,12 @@ import {
   GET_TEST_CASE_DETAILS,
   getAllTestCasesAction,
   getTestCaseByFolderIdAction,
+  testCasesPageSelector,
 } from 'controllers/testCase';
 import { useDebouncedSpinner } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import { getTestCaseRequestParams } from 'pages/inside/testCaseLibraryPage/utils';
 
 export interface UpdateTestCasePayload {
   name: string;
@@ -43,6 +45,7 @@ export const useUpdateTestCase = () => {
   const { isLoading: isUpdateTestCaseLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+  const testCasesPageData = useSelector(testCasesPageSelector);
 
   const updateTestCase = async (testCaseId: number, payload: UpdateTestCasePayload) => {
     try {
@@ -84,10 +87,18 @@ export const useUpdateTestCase = () => {
       });
 
       onSuccess();
+
+      const testCaseRequestParams = getTestCaseRequestParams(testCasesPageData);
+
       if (payload.folderId) {
-        dispatch(getTestCaseByFolderIdAction({ folderId: Number(payload.folderId) }));
+        dispatch(
+          getTestCaseByFolderIdAction({
+            folderId: Number(payload.folderId),
+            ...testCaseRequestParams,
+          }),
+        );
       } else {
-        dispatch(getAllTestCasesAction());
+        dispatch(getAllTestCasesAction(testCaseRequestParams));
       }
       dispatch(hideModalAction());
       dispatch(

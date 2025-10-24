@@ -196,3 +196,10 @@ export interface TestStep {
   attachments?: Attachment[];
   position?: number;
 }
+
+export interface Page {
+  number: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}
