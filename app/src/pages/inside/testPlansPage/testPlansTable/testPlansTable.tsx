@@ -81,15 +81,15 @@ export const TestPlansTable = ({ testPlans }: TestPlansTableProps) => {
   );
 
   const currentTestPlans = testPlans.map(
-    ({ id, name, totalTestCases = 0, coveredTestCases = 0 }) => {
-      const coverage = totalTestCases === 0 ? 0 : coveredTestCases / totalTestCases;
+    ({ id, name, executionStatistic: { total = 0, covered = 0 } }) => {
+      const coverage = total === 0 ? 0 : covered / total;
 
       return {
         id,
         testPlanName: {
           component: getOpenTestPlanDetailsButton(id, name, name),
         },
-        coveredTotal: `${coveredTestCases} / ${totalTestCases}`,
+        coveredTotal: `${covered} / ${total}`,
         coverage: {
           component: (
             <div className={cx('test-plans__table-cell-coverage')}>

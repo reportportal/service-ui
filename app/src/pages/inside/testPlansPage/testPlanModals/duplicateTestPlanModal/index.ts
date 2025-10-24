@@ -15,4 +15,5 @@
  */
 
 export { DUPLICATE_TEST_PLAN_MODAL_KEY, DuplicateTestPlanModal } from './duplicateTestPlanModal';
+export { useDuplicateTestPlan } from './useDuplicateTestPlan';
 export { useDuplicateTestPlanModal } from './useDuplicateTestPlanModal';

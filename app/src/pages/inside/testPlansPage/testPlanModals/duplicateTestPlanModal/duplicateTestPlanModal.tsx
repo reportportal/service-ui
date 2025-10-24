@@ -19,9 +19,9 @@ import { useIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { TestPlanDto } from 'controllers/testPlan';
 
-import { TestPlanModal, TestPlanFormValues } from '../testPlanModal';
+import { TestPlanModal } from '../testPlanModal';
 import { commonMessages } from '../../commonMessages';
-import { useCreateTestPlan } from '../createTestPlanModal/useCreateTestPlan';
+import { useDuplicateTestPlan } from './useDuplicateTestPlan';
 
 export const DUPLICATE_TEST_PLAN_MODAL_KEY = 'duplicateTestPlanModalKey';
 
@@ -32,15 +32,10 @@ interface DuplicateTestPlanModalProps {
 
 export const DuplicateTestPlanModal = ({ data, onSuccess }: DuplicateTestPlanModalProps) => {
   const { formatMessage } = useIntl();
-  const { isLoading, submitTestPlan } = useCreateTestPlan({
-    successMessageId: 'testPlanDuplicatedSuccess',
-    errorMessageId: 'errorOccurredTryAgain',
+  const { isLoading, duplicateTestPlan } = useDuplicateTestPlan({
+    testPlanId: data.id,
     onSuccess,
   });
-
-  const handleSubmit = async (formValues: TestPlanFormValues) => {
-    return submitTestPlan(formValues);
-  };
 
   return (
     <TestPlanModal
@@ -53,7 +48,7 @@ export const DuplicateTestPlanModal = ({ data, onSuccess }: DuplicateTestPlanMod
         description: data.description,
         attributes: [],
       }}
-      onSubmit={handleSubmit}
+      onSubmit={duplicateTestPlan}
     />
   );
 };
