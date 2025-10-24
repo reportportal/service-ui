@@ -73,7 +73,6 @@ export const FolderModal = ({
   onSubmit,
 }: FolderModalProps) => {
   const { formatMessage } = useIntl();
-
   const dispatch = useDispatch();
   const hideModal = () => dispatch(hideModalAction());
   const folders = useSelector(transformedFoldersWithFullPathSelector);
