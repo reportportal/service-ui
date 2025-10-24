@@ -127,7 +127,7 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
     const projectKey = (yield select(projectKeySelector)) as string;
     const result = (yield call(
       fetch,
-      URLS.testCasesByFolderId(projectKey, folderId, offset, limit),
+      URLS.testCasesByFolderId(projectKey, { 'filter.eq.testFolderId': folderId, offset, limit }),
     )) as {
       content: TestCase[];
       page: Page;
@@ -192,7 +192,7 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
   try {
     const { offset, limit } = action.payload;
     const projectKey = (yield select(projectKeySelector)) as string;
-    const result = (yield call(fetch, URLS.allTestCases(projectKey, offset, limit))) as {
+    const result = (yield call(fetch, URLS.allTestCases(projectKey, { offset, limit }))) as {
       content: TestCase[];
       page: Page;
     };

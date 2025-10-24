@@ -89,19 +89,12 @@ export const getTestCasesAction = (params?: GetTestCasesParams) => ({
 
 export const getTestCaseByFolderIdAction = (params: GetTestCasesByFolderIdParams) => ({
   type: GET_TEST_CASES_BY_FOLDER_ID,
-  payload: {
-    folderId: params.folderId,
-    offset: params.offset,
-    limit: params.limit,
-  },
+  payload: params,
 });
 
 export const getAllTestCasesAction = (params: GetAllTestCases) => ({
   type: GET_ALL_TEST_CASES,
-  payload: {
-    offset: params.offset,
-    limit: params.limit,
-  },
+  payload: params,
 });
 
 export const startLoadingTestCasesAction = () => ({

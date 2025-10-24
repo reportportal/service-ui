@@ -140,19 +140,21 @@ export const AllTestCasesPage = ({
   const onClearSelection = () => setSelectedRowIds([]);
 
   const setTestCasesPage = (page: number): void => {
+    const offset = (page - 1) * testCasesPageData.size;
+
     if (folderId) {
       dispatch(
         getTestCaseByFolderIdAction({
           folderId: Number(folderId),
           limit: pageSize,
-          offset: (page - 1) * testCasesPageData.size,
+          offset,
         }),
       );
     } else {
       dispatch(
         getAllTestCasesAction({
           limit: pageSize,
-          offset: (page - 1) * testCasesPageData.size,
+          offset,
         }),
       );
     }

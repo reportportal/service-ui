@@ -17,7 +17,6 @@
 import { stringify } from 'qs';
 import { CSV } from 'common/constants/fileTypes';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
-import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
 
 export const UAT_API_PATH = '/uat';
 
@@ -380,18 +379,10 @@ export const URLS = {
   testCaseDetails: (projectKey, testCaseId) =>
     `${urlBase}project/${projectKey}/tms/test-case/${testCaseId}`,
   bulkUpdateTestCases: (projectKey) => `${urlBase}project/${projectKey}/tms/test-case/batch`,
-  testCasesByFolderId: (
-    projectKey,
-    folderId,
-    offset = TestCasePageDefaultValues.offset,
-    limit = TestCasePageDefaultValues.limit,
-  ) =>
-    `${urlBase}project/${projectKey}/tms/test-case?filter.eq.testFolderId=${folderId}&offset=${offset}&limit=${limit}`,
-  allTestCases: (
-    projectKey,
-    offset = TestCasePageDefaultValues.offset,
-    limit = TestCasePageDefaultValues.limit,
-  ) => `${urlBase}project/${projectKey}/tms/test-case?offset=${offset}&limit=${limit}`,
+  testCasesByFolderId: (projectKey, query) =>
+    `${urlBase}project/${projectKey}/tms/test-case${getQueryParams(query)}`,
+  allTestCases: (projectKey, query) =>
+    `${urlBase}project/${projectKey}/tms/test-case${getQueryParams(query)}`,
   testPlan: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-plan${getQueryParams(query)}`,
   testPlanTestCasesBatch: (projectKey, testPlanId) =>
