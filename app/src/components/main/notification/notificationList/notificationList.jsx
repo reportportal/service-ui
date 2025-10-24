@@ -216,6 +216,10 @@ const messages = defineMessages({
     id: 'TestCaseLibraryPage.testCaseFolderDeletedSuccess',
     defaultMessage: 'Folder has been deleted successfully.',
   },
+  testCaseFolderDuplicatedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseFolderDuplicatedSuccess',
+    defaultMessage: 'Folder has been duplicated successfully.',
+  },
   testCaseDeletedSuccess: {
     id: 'TestCaseLibraryPage.testCaseDeletedSuccess',
     defaultMessage: 'Test case has been deleted successfully.',
