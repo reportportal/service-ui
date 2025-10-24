@@ -24,7 +24,7 @@ import { createClassnames } from 'common/utils';
 import { withModal } from 'controllers/modal';
 import { TransformedFolder, transformedFoldersWithFullPathSelector } from 'controllers/testCase';
 import { commonValidators } from 'common/utils/validation';
-import { createFoldersAction } from 'controllers/testCase/actionCreators';
+import { duplicateFolderAction } from 'controllers/testCase/actionCreators';
 import { isCreatingFolderSelector } from 'controllers/testCase/selectors';
 import { coerceToNumericId } from 'pages/inside/testCaseLibraryPage/utils';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
@@ -97,7 +97,7 @@ const DuplicateFolderModal = reduxForm<DuplicateFolderFormValues, DuplicateFolde
       : coerceToNumericId(values.destinationFolder?.id);
 
     dispatch(
-      createFoldersAction({
+      duplicateFolderAction({
         folderName: values.folderName,
         ...(parentFolderId ? { parentFolderId } : {}),
       }),

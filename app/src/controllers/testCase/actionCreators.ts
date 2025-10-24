@@ -33,6 +33,7 @@ import {
   RENAME_FOLDER,
   RENAME_FOLDER_SUCCESS,
   DELETE_TEST_CASE_SUCCESS,
+  DUPLICATE_FOLDER,
 } from './constants';
 import { Folder, TransformedFolder } from './types';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
@@ -155,4 +156,9 @@ export const renameFolderAction = (folderInfo: RenameFolderParams) => ({
 export const renameFolderSuccessAction = (folderId: RenameFolderParams) => ({
   type: RENAME_FOLDER_SUCCESS,
   payload: folderId,
+});
+
+export const duplicateFolderAction = (folder: CreateFolderParams) => ({
+  type: DUPLICATE_FOLDER,
+  payload: folder,
 });
