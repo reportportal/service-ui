@@ -271,7 +271,7 @@ export class LogsGridWrapper extends Component {
   };
 
   handleJumpToLog = (logItem) => {
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.clickJumpToLog('log_message'));
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.clickJumpToLog('all_logs'));
 
     const fetchLogCb = () =>
       this.setState({
