@@ -36,7 +36,7 @@ export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOption
   const { uploadAttachment } = useAttachmentUpload();
   const { formatMessage } = useIntl();
   const isInitializedRef = useRef(false);
-  const selector = formValueSelector(formName);
+  const selector = formValueSelector(formName || 'no-form');
   const initialAttachments =
     useSelector<AppState, BaseAttachmentFile[] | undefined>(
       (state) => selector(state, fieldName) as BaseAttachmentFile[] | undefined,

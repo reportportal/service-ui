@@ -15,6 +15,7 @@
  */
 
 import { useDispatch, useSelector } from 'react-redux';
+import { noop } from 'es-toolkit';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -26,16 +27,24 @@ import { getTestPlansAction, TestPlanDto } from 'controllers/testPlan';
 
 import { TestPlanFormValues } from '../testPlanModal';
 
-export const useCreateTestPlan = () => {
+interface UseDuplicateTestPlanOptions {
+  testPlanId: number;
+  onSuccess?: (testPlanId: number) => void;
+}
+
+export const useDuplicateTestPlan = ({
+  testPlanId,
+  onSuccess = noop,
+}: UseDuplicateTestPlanOptions) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
 
-  const submitTestPlan = async (payload: TestPlanFormValues) => {
+  const duplicateTestPlan = async (payload: TestPlanFormValues) => {
     try {
       showSpinner();
 
-      await fetch<TestPlanDto>(URLS.testPlan(projectKey), {
+      const response = await fetch<TestPlanDto>(URLS.testPlanDuplicate(projectKey, testPlanId), {
         method: 'post',
         data: {
           name: payload.name,
@@ -46,10 +55,11 @@ export const useCreateTestPlan = () => {
       dispatch(hideModalAction());
       dispatch(
         showSuccessNotification({
-          messageId: 'testPlanCreatedSuccess',
+          messageId: 'testPlanDuplicatedSuccess',
         }),
       );
       dispatch(getTestPlansAction());
+      onSuccess(response.id);
     } catch {
       dispatch(
         showErrorNotification({
@@ -63,6 +73,6 @@ export const useCreateTestPlan = () => {
 
   return {
     isLoading,
-    submitTestPlan,
+    duplicateTestPlan,
   };
 };

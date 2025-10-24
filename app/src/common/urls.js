@@ -387,6 +387,8 @@ export const URLS = {
     `${urlBase}project/${projectKey}/tms/test-plan/${testPlanId}/test-case/batch`,
   testPlanById: (projectKey, testPlanId) =>
     `${urlBase}project/${projectKey}/tms/test-plan/${testPlanId}`,
+  testPlanDuplicate: (projectKey, testPlanId) =>
+    `${urlBase}project/${projectKey}/tms/test-plan/${testPlanId}/duplicate`,
   testFolders: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/folder${getQueryParams(query)}`,
   deleteFolder: (projectKey, folderId) => `${urlBase}project/${projectKey}/tms/folder/${folderId}`,

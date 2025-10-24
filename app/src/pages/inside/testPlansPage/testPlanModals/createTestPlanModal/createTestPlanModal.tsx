@@ -26,10 +26,7 @@ export const CREATE_TEST_PLAN_MODAL_KEY = 'createTestPlanModalKey';
 
 export const CreateTestPlanModal = () => {
   const { formatMessage } = useIntl();
-  const { isLoading, submitTestPlan } = useCreateTestPlan({
-    successMessageId: 'testPlanCreatedSuccess',
-    errorMessageId: 'errorOccurredTryAgain',
-  });
+  const { isLoading, submitTestPlan } = useCreateTestPlan();
 
   return (
     <TestPlanModal
