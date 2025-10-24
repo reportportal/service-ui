@@ -45,6 +45,7 @@ import {
   GET_TEST_CASE_DETAILS_SUCCESS,
   NAMESPACE,
   RENAME_FOLDER,
+  DUPLICATE_FOLDER,
 } from './constants';
 import { Folder } from './types';
 import {
@@ -96,6 +97,10 @@ interface DeleteFolderAction extends Action<typeof DELETE_FOLDER> {
 
 interface RenameFolderAction extends Action<typeof RENAME_FOLDER> {
   payload: RenameFolderParams;
+}
+
+interface DuplicateFolderAction extends Action<typeof DUPLICATE_FOLDER> {
+  payload: CreateFolderParams;
 }
 
 interface TestCaseDetailsAction extends Action<typeof GET_TEST_CASE_DETAILS> {
@@ -271,7 +276,10 @@ function* getFolders() {
   }
 }
 
-function* createFolder(action: CreateFolderAction) {
+function* handleFolderCreation(
+  folderParams: CreateFolderParams,
+  successMessageId: string,
+): Generator {
   try {
     const projectKey = (yield select(projectKeySelector)) as string;
     const spinnerTask = (yield fork(
@@ -282,10 +290,8 @@ function* createFolder(action: CreateFolderAction) {
     const folder = (yield call(fetch, URLS.testFolders(projectKey), {
       method: 'POST',
       data: {
-        name: action.payload.folderName,
-        ...(action.payload.parentFolderId
-          ? { parentTestFolderId: action.payload.parentFolderId }
-          : {}),
+        name: folderParams.folderName,
+        ...(folderParams.parentFolderId ? { parentTestFolderId: folderParams.parentFolderId } : {}),
       },
     })) as Folder;
 
@@ -296,7 +302,7 @@ function* createFolder(action: CreateFolderAction) {
     yield put(
       showSuccessNotification({
         message: null,
-        messageId: 'testCaseFolderCreatedSuccess',
+        messageId: successMessageId,
         values: {},
       }),
     );
@@ -311,6 +317,10 @@ function* createFolder(action: CreateFolderAction) {
   } finally {
     yield put(stopCreatingFolderAction());
   }
+}
+
+function* createFolder(action: CreateFolderAction) {
+  yield call(handleFolderCreation, action.payload, 'testCaseFolderCreatedSuccess');
 }
 
 function* deleteFolder(action: DeleteFolderAction) {
@@ -391,6 +401,10 @@ function* renameFolder(action: RenameFolderAction) {
   }
 }
 
+function* duplicateFolder(action: DuplicateFolderAction) {
+  yield call(handleFolderCreation, action.payload, 'testCaseFolderDuplicatedSuccess');
+}
+
 function* watchGetFolders() {
   yield takeEvery(GET_FOLDERS, getFolders);
 }
@@ -425,5 +439,6 @@ export function* testCaseSagas() {
     watchGetAllTestCases(),
     takeEvery(DELETE_FOLDER, deleteFolder),
     takeEvery(RENAME_FOLDER, renameFolder),
+    takeEvery(DUPLICATE_FOLDER, duplicateFolder),
   ]);
 }
