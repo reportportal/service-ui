@@ -192,7 +192,7 @@ export class LogsGridWrapper extends Component {
     logViewMode: DETAILED_LOG_VIEW,
     onChangeLogStatusFilter: () => {},
     isNestedStepView: false,
-    logLevelName: null,
+    logLevelName: '',
     logStatus: null,
     withAttachments: undefined,
     hideEmptySteps: undefined,

@@ -48,7 +48,7 @@ const getDefaultLogLevel = (filterableLogLevels = []) => {
   return filterableLogLevels.find((logLevel) => isDefaultLogLevel(logLevel));
 };
 
-export const getLogLevel = (userId, filterableLogLevels, logLevelName) =>
+export const getLogLevel = (userId, filterableLogLevels, logLevelName = '') =>
   getLogLevelByName(logLevelName, filterableLogLevels) ||
   getLogLevelByName(getLogLevelFromStorage(userId), filterableLogLevels) ||
   getDefaultLogLevel(filterableLogLevels);
