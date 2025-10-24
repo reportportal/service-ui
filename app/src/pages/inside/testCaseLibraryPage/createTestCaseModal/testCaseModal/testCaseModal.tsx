@@ -39,10 +39,11 @@ interface TestCaseModalProps {
   isLoading: boolean;
   onSubmitHandler: (formData: CreateTestCaseFormData) => void | Promise<void>;
   formName: string;
-  dirty?: boolean;
+  pristine?: boolean;
   handleSubmit: (
     handler: (formData: CreateTestCaseFormData) => void | Promise<void>,
   ) => (event: FormEvent) => void;
+  hideFolderField?: boolean;
 }
 
 export const TestCaseModal = ({
@@ -51,8 +52,9 @@ export const TestCaseModal = ({
   isLoading,
   onSubmitHandler,
   formName,
-  dirty,
+  pristine,
   handleSubmit,
+  hideFolderField = false,
 }: TestCaseModalProps) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -61,9 +63,9 @@ export const TestCaseModal = ({
     () => ({
       children: <LoadingSubmitButton isLoading={isLoading}>{submitButtonText}</LoadingSubmitButton>,
       onClick: handleSubmit(onSubmitHandler) as (event: MouseEvent<HTMLButtonElement>) => void,
-      disabled: isLoading,
+      disabled: isLoading || pristine,
     }),
-    [isLoading, submitButtonText, handleSubmit, onSubmitHandler],
+    [isLoading, pristine, submitButtonText, handleSubmit, onSubmitHandler],
   );
 
   const cancelButton = useMemo(
@@ -89,13 +91,16 @@ export const TestCaseModal = ({
       okButton={okButton}
       className={cx('test-case-modal')}
       cancelButton={cancelButton}
-      allowCloseOutside={!dirty}
+      allowCloseOutside={pristine}
       onClose={handleClose}
     >
       <div className={cx('test-case-modal__content-wrapper')}>
         <form onSubmit={handleFormSubmit}>
           <div className={cx('test-case-modal__container')}>
-            <BasicInformation className={cx('test-case-modal__scrollable-section')} />
+            <BasicInformation
+              className={cx('test-case-modal__scrollable-section')}
+              hideFolderField={hideFolderField}
+            />
             <TestCaseDetails
               className={cx('test-case-modal__scrollable-section')}
               formName={formName}

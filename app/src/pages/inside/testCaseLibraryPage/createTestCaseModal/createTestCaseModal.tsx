@@ -32,13 +32,13 @@ export const CREATE_TEST_CASE_FORM_NAME: string = 'create-test-case-modal-form';
 
 type CreateTestCaseModalProps = InjectedFormProps<CreateTestCaseFormData>;
 
-const CreateTestCaseModalComponent = ({ dirty, handleSubmit }: CreateTestCaseModalProps) => {
+const CreateTestCaseModalComponent = ({ pristine, handleSubmit }: CreateTestCaseModalProps) => {
   const { formatMessage } = useIntl();
   const { isLoading: isCreateTestCaseLoading, createTestCase } = useTestCase();
 
   return (
     <TestCaseModal
-      dirty={dirty}
+      pristine={pristine}
       handleSubmit={handleSubmit}
       title={formatMessage(commonMessages.createTestCase)}
       submitButtonText={formatMessage(COMMON_LOCALE_KEYS.CREATE)}

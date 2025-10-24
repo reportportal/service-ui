@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { keyBy } from 'es-toolkit';
@@ -41,11 +41,13 @@ interface EditTestCaseModalProps {
 const EditTestCaseModalComponent = ({
   data,
   initialize,
-  dirty,
+  pristine,
   handleSubmit,
+  reset,
 }: UseModalData<EditTestCaseModalProps> &
   InjectedFormProps<CreateTestCaseFormData, EditTestCaseModalProps>) => {
   const testCase = data?.testCase;
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const { formatMessage } = useIntl();
   const { isLoading: isEditTestCaseLoading, editTestCase } = useTestCase(testCase?.id);
@@ -78,8 +80,13 @@ const EditTestCaseModalComponent = ({
       };
 
       initialize({ ...formData } as unknown as Partial<CreateTestCaseFormData>);
+
+      setTimeout(() => {
+        reset();
+        setIsInitialized(true);
+      }, 0);
     }
-  }, [testCase, initialize]);
+  }, [testCase, initialize, reset]);
 
   const handleUpdate = useCallback(
     (formData: CreateTestCaseFormData) => {
@@ -90,13 +97,14 @@ const EditTestCaseModalComponent = ({
 
   return (
     <TestCaseModal
-      dirty={dirty}
+      pristine={!isInitialized || pristine}
       handleSubmit={handleSubmit}
       title={formatMessage(commonMessages.editTestCase)}
       submitButtonText={formatMessage(COMMON_LOCALE_KEYS.SAVE)}
       isLoading={isEditTestCaseLoading}
       onSubmitHandler={handleUpdate}
       formName={EDIT_TEST_CASE_FORM_NAME}
+      hideFolderField
     />
   );
 };
@@ -104,9 +112,8 @@ const EditTestCaseModalComponent = ({
 const ReduxFormComponent = reduxForm<CreateTestCaseFormData, EditTestCaseModalProps>({
   form: EDIT_TEST_CASE_FORM_NAME,
   initialValues: TEST_CASE_FORM_INITIAL_VALUES,
-  validate: ({ name, folder, linkToRequirements }) => ({
+  validate: ({ name, linkToRequirements }) => ({
     name: commonValidators.requiredField(name),
-    folder: commonValidators.requiredField(folder),
     linkToRequirements: commonValidators.optionalUrl(linkToRequirements),
   }),
   enableReinitialize: false,
