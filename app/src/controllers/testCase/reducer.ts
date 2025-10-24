@@ -37,7 +37,7 @@ import {
   GET_TEST_CASE_DETAILS_FAILURE,
 } from 'controllers/testCase/constants';
 import { Folder } from './types';
-import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { TestCase, Page } from 'pages/inside/testCaseLibraryPage/types';
 import { queueReducers } from 'common/utils';
 import {
   DeleteFolderSuccessParams,
@@ -55,6 +55,7 @@ export type InitialStateType = {
   testCases: {
     isLoading: boolean;
     list: TestCase[];
+    page: Page[];
   };
 };
 
@@ -68,6 +69,7 @@ export const INITIAL_STATE: InitialStateType = {
   testCases: {
     isLoading: false,
     list: [],
+    page: null,
   },
 };
 
@@ -111,7 +113,7 @@ const isLoadingFolderReducer = (
 };
 
 type TestCasesAction =
-  | { type: typeof SET_TEST_CASES; payload?: TestCase[] }
+  | { type: typeof SET_TEST_CASES; payload?: { content: TestCase[]; page: Page } }
   | { type: typeof DELETE_TEST_CASE_SUCCESS; payload: DeleteTestCaseParams }
   | { type: typeof START_LOADING_TEST_CASES }
   | { type: typeof STOP_LOADING_TEST_CASES };
@@ -121,7 +123,8 @@ const testCasesReducer = (state = INITIAL_STATE.testCases, action: TestCasesActi
     case SET_TEST_CASES:
       return {
         ...state,
-        list: Array.isArray(action.payload) ? action.payload : [],
+        list: Array.isArray(action.payload?.content) ? action.payload.content : [],
+        page: action.payload?.page || null,
       };
     case DELETE_TEST_CASE_SUCCESS: {
       return {

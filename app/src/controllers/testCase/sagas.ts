@@ -64,9 +64,10 @@ import {
   setTestCasesAction,
   deleteFolderSuccessAction,
   renameFolderSuccessAction,
+  GetAllTestCases,
 } from './actionCreators';
 import { getAllFolderIdsToDelete } from './utils';
-import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { Page, TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { foldersSelector } from 'controllers/testCase/selectors';
 import {
   TEST_CASE_LIBRARY_PAGE,
@@ -80,6 +81,10 @@ interface GetTestCasesAction extends Action<typeof GET_TEST_CASES> {
 
 interface GetTestCasesByFolderIdAction extends Action<typeof GET_TEST_CASES_BY_FOLDER_ID> {
   payload: GetTestCasesByFolderIdParams;
+}
+
+interface GetAllTestCasesAction extends Action<typeof GET_ALL_TEST_CASES> {
+  payload: GetAllTestCases;
 }
 
 interface CreateFolderAction extends Action<typeof CREATE_FOLDER> {
@@ -118,14 +123,18 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
   yield put(startLoadingTestCasesAction());
 
   try {
+    const { folderId, offset, limit } = action.payload;
     const projectKey = (yield select(projectKeySelector)) as string;
-    const result = (yield call(fetch, URLS.testCasesByFolderId(projectKey, action.payload))) as {
+    const result = (yield call(
+      fetch,
+      URLS.testCases(projectKey, { 'filter.eq.testFolderId': folderId, offset, limit }),
+    )) as {
       content: TestCase[];
+      page: Page;
     };
 
-    yield put(setTestCasesAction(result.content));
+    yield put(setTestCasesAction(result));
   } catch {
-    yield put(setTestCasesAction([]));
     yield put(
       showErrorNotification({
         messageId: 'errorOccurredTryAgain',
@@ -176,18 +185,18 @@ function* getTestCaseDetails(action: TestCaseDetailsAction) {
   }
 }
 
-function* getAllTestCases(): Generator {
+function* getAllTestCases(action: GetAllTestCasesAction): Generator {
   yield put(startLoadingTestCasesAction());
 
   try {
+    const { offset, limit } = action.payload;
     const projectKey = (yield select(projectKeySelector)) as string;
-    const result = (yield call(fetch, URLS.allTestCases(projectKey))) as {
+    const result = (yield call(fetch, URLS.testCases(projectKey, { offset, limit }))) as {
       content: TestCase[];
+      page: Page;
     };
-
-    yield put(setTestCasesAction(result.content));
+    yield put(setTestCasesAction(result));
   } catch {
-    yield put(setTestCasesAction([]));
     yield put(
       showErrorNotification({
         messageId: 'errorOccurredTryAgain',

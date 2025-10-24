@@ -142,3 +142,10 @@ export interface TestStep {
   expectedResult: string;
   attachments?: Attachment[];
 }
+
+export interface Page {
+  number: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}

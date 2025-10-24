@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { isEmpty, noop } from 'es-toolkit/compat';
@@ -23,13 +23,20 @@ import { Button, MeatballMenuIcon, Pagination, Selection } from '@reportportal/u
 import { createClassnames } from 'common/utils';
 import { TestCaseList } from 'pages/inside/common/testCaseList';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
-import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/common/testCaseList/constants';
+import {
+  ITEMS_PER_PAGE_OPTIONS,
+  TestCasePageDefaultValues,
+} from 'pages/inside/common/testCaseList/constants';
 import { DEFAULT_CURRENT_PAGE } from 'pages/inside/common/testCaseList/configUtils';
-import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { TestCase, Page } from 'pages/inside/testCaseLibraryPage/types';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { showModalAction } from 'controllers/modal';
 import { urlFolderIdSelector } from 'controllers/pages';
-import { foldersSelector } from 'controllers/testCase';
+import {
+  foldersSelector,
+  getAllTestCasesAction,
+  getTestCaseByFolderIdAction,
+} from 'controllers/testCase';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { usePagination } from 'hooks/usePagination';
 
@@ -44,11 +51,14 @@ const cx = createClassnames(styles);
 
 interface AllTestCasesPageProps {
   testCases: TestCase[];
+  testCasesPageData: Page;
   loading: boolean;
   searchValue: string;
   instanceKey: INSTANCE_KEYS;
   setSearchValue: (value: string) => void;
 }
+
+const FIRST_PAGE_NUMBER = 1;
 
 export const AllTestCasesPage = ({
   testCases,
@@ -56,17 +66,22 @@ export const AllTestCasesPage = ({
   searchValue,
   setSearchValue,
   instanceKey,
+  testCasesPageData,
 }: AllTestCasesPageProps) => {
   const { formatMessage } = useIntl();
   const { captions, activePage, pageSize, totalPages, setActivePage, changePageSize } =
     usePagination({
-      totalItems: testCases.length,
+      totalItems: testCasesPageData?.totalElements,
     });
   const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
   const folderId = useSelector(urlFolderIdSelector);
   const folders = useSelector(foldersSelector);
   const dispatch = useDispatch();
   const isAnyRowSelected = !isEmpty(selectedRowIds);
+
+  useEffect(() => {
+    setActivePage(FIRST_PAGE_NUMBER);
+  }, [folderId, setActivePage]);
 
   const folderTitle = useMemo(() => {
     const selectedFolder = folders.find((folder) => String(folder.id) === String(folderId));
@@ -124,14 +139,52 @@ export const AllTestCasesPage = ({
 
   const onClearSelection = () => setSelectedRowIds([]);
 
+  const setTestCasesPage = (page: number): void => {
+    const params = {
+      limit: pageSize,
+      offset: (page - 1) * testCasesPageData.size,
+    };
+
+    if (folderId) {
+      dispatch(
+        getTestCaseByFolderIdAction({
+          folderId: Number(folderId),
+          ...params,
+        }),
+      );
+    } else {
+      dispatch(getAllTestCasesAction(params));
+    }
+
+    setActivePage(page);
+  };
+
+  const setTestCasesPageSize = (pageSize: number): void => {
+    const params = {
+      limit: pageSize,
+      offset: TestCasePageDefaultValues.offset,
+    };
+
+    if (folderId) {
+      dispatch(
+        getTestCaseByFolderIdAction({
+          folderId: Number(folderId),
+          ...params,
+        }),
+      );
+    } else {
+      dispatch(getAllTestCasesAction(params));
+    }
+
+    changePageSize(pageSize);
+  };
+
   return (
     <>
       <div className={cx('all-test-cases-page')}>
         <TestCaseList
           testCases={testCases}
           loading={loading}
-          currentPage={activePage}
-          itemsPerPage={pageSize}
           searchValue={searchValue}
           onSearchChange={handleSearchChange}
           selectedRowIds={selectedRowIds}
@@ -142,16 +195,16 @@ export const AllTestCasesPage = ({
       </div>
 
       <div className={cx('sticky-wrapper')}>
-        {!isEmpty(testCases) && (
+        {Boolean(testCasesPageData?.totalElements) && (
           <div className={cx('pagination')}>
             <Pagination
               pageSize={pageSize}
               activePage={activePage}
-              totalItems={testCases.length}
+              totalItems={testCasesPageData.totalElements}
               totalPages={totalPages}
               pageSizeOptions={ITEMS_PER_PAGE_OPTIONS}
-              changePage={setActivePage}
-              changePageSize={changePageSize}
+              changePage={setTestCasesPage}
+              changePageSize={setTestCasesPageSize}
               captions={captions}
             />
           </div>

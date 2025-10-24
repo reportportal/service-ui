@@ -36,7 +36,7 @@ import {
   DUPLICATE_FOLDER,
 } from './constants';
 import { Folder, TransformedFolder } from './types';
-import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { Page, TestCase } from 'pages/inside/testCaseLibraryPage/types';
 
 export interface GetTestCasesParams {
   search?: string;
@@ -45,6 +45,13 @@ export interface GetTestCasesParams {
 
 export interface GetTestCasesByFolderIdParams {
   folderId: number;
+  offset: number;
+  limit: number;
+}
+
+export interface GetAllTestCases {
+  offset: number;
+  limit: number;
 }
 
 export interface CreateFolderParams {
@@ -82,11 +89,12 @@ export const getTestCasesAction = (params?: GetTestCasesParams) => ({
 
 export const getTestCaseByFolderIdAction = (params: GetTestCasesByFolderIdParams) => ({
   type: GET_TEST_CASES_BY_FOLDER_ID,
-  payload: params.folderId,
+  payload: params,
 });
 
-export const getAllTestCasesAction = () => ({
+export const getAllTestCasesAction = (params: GetAllTestCases) => ({
   type: GET_ALL_TEST_CASES,
+  payload: params,
 });
 
 export const startLoadingTestCasesAction = () => ({
@@ -97,7 +105,7 @@ export const stopLoadingTestCasesAction = () => ({
   type: STOP_LOADING_TEST_CASES,
 });
 
-export const setTestCasesAction = (testCases: TestCase[]) => ({
+export const setTestCasesAction = (testCases: { content: TestCase[]; page: Page | null }) => ({
   type: SET_TEST_CASES,
   payload: testCases,
 });
