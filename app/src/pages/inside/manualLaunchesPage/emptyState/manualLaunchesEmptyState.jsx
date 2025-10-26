@@ -17,7 +17,7 @@ export const ManualLaunchesEmptyState = () => {
 
   const descriptionMessage = canCreateManualLaunch
     ? formatMessage(messages.noLaunchesDescription)
-    : '';
+    : undefined;
 
   const buttons = useManualLaunchesEmptyStateButtons();
 

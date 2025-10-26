@@ -28,7 +28,9 @@ export interface CountTagProps {
 export const CountTag = ({ count, className }: CountTagProps) => {
   return (
     <div className={cx(className)}>
-      <div className={cx('count-tag')}>{count}</div>
+      <div className={cx('count-tag')} aria-label="manual-launch-test-count">
+        {count}
+      </div>
     </div>
   );
 };

@@ -62,6 +62,8 @@ export const SegmentedStatusBar = ({
         style={{
           width: `${adjustedWidths[index]}%`,
         }}
+        title={`${item.status}: ${item.value}`}
+        aria-label={`${item.status}: ${item.value}`}
       />
     ));
   }, [filteredData, total, minWidthPercentage]);

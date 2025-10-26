@@ -29,10 +29,13 @@ const cx = createClassnames(styles);
 
 export interface ManualLaunchesPageContentProps {
   isLoading: boolean;
-  data: ManualTestCase[];
+  data?: ManualTestCase[];
 }
 
-export const ManualLaunchesPageContent = ({ isLoading, data }: ManualLaunchesPageContentProps) => {
+export const ManualLaunchesPageContent = ({
+  isLoading,
+  data = [],
+}: ManualLaunchesPageContentProps) => {
   if (isLoading) {
     return (
       <div className={cx('loading')}>

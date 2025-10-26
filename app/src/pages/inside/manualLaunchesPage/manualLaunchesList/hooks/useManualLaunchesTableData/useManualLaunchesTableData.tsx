@@ -64,7 +64,9 @@ export const useManualLaunchesTableData = (data: ManualTestCase[]): RowData[] =>
                 customClass={cx('manual-launches-list-table-cell-time')}
               />
             ) : (
-              <span>{formatMessage(COMMON_LOCALE_KEYS.NOT_APPLICABLE)}</span>
+              <span aria-label={formatMessage(COMMON_LOCALE_KEYS.NOT_APPLICABLE)}>
+                {formatMessage(COMMON_LOCALE_KEYS.NOT_APPLICABLE)}
+              </span>
             ),
           },
           totalTests,

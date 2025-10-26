@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -22,51 +23,57 @@ import { messages } from 'pages/inside/manualLaunchesPage/messages';
 export const useManualLaunchesColumns = () => {
   const { formatMessage } = useIntl();
 
-  const primaryColumn = {
-    key: 'count',
-    header: '#',
-    width: 80,
-    align: 'center' as const,
-  };
-
-  const fixedColumns = [
-    {
-      key: 'name',
-      header: formatMessage(COMMON_LOCALE_KEYS.NAME),
-      width: 164,
-      align: 'left' as const,
-    },
-    {
-      key: 'startTime',
-      header: formatMessage(COMMON_LOCALE_KEYS.START_TIME),
-      width: 155,
-      align: 'left' as const,
-    },
-    {
-      key: 'totalTests',
-      header: formatMessage(COMMON_LOCALE_KEYS.TOTAL),
-      width: 80,
-      align: 'right' as const,
-    },
-    {
-      key: 'testRunStatus',
-      header: '',
-      width: 110,
-      align: 'left' as const,
-    },
-    {
-      key: 'failedTests',
-      header: formatMessage(COMMON_LOCALE_KEYS.FAILED),
-      width: 100,
-      align: 'left' as const,
-    },
-    {
-      key: 'testsToRun',
-      header: formatMessage(messages.toRun),
+  const primaryColumn = useMemo(
+    () => ({
+      key: 'count',
+      header: '#',
       width: 80,
       align: 'center' as const,
-    },
-  ];
+    }),
+    [],
+  );
+
+  const fixedColumns = useMemo(
+    () => [
+      {
+        key: 'name',
+        header: formatMessage(COMMON_LOCALE_KEYS.NAME),
+        width: 164,
+        align: 'left' as const,
+      },
+      {
+        key: 'startTime',
+        header: formatMessage(COMMON_LOCALE_KEYS.START_TIME),
+        width: 155,
+        align: 'left' as const,
+      },
+      {
+        key: 'totalTests',
+        header: formatMessage(COMMON_LOCALE_KEYS.TOTAL),
+        width: 80,
+        align: 'right' as const,
+      },
+      {
+        key: 'testRunStatus',
+        header: '',
+        width: 110,
+        align: 'left' as const,
+      },
+      {
+        key: 'failedTests',
+        header: formatMessage(COMMON_LOCALE_KEYS.FAILED),
+        width: 100,
+        align: 'left' as const,
+      },
+      {
+        key: 'testsToRun',
+        header: formatMessage(messages.toRun),
+        width: 80,
+        align: 'center' as const,
+      },
+    ],
+    [formatMessage],
+  );
 
   return { primaryColumn, fixedColumns };
 };

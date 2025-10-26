@@ -14,4 +14,8 @@
  * limitations under the License.
  */
 
+/**
+ * Maximum test count to display in the TestRunButton.
+ * When exceeded, shows "9999+" instead of the actual count.
+ */
 export const MAX_TEST_COUNT_TO_RUN = 9999;

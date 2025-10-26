@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
 import { xor } from 'es-toolkit';
@@ -44,9 +44,9 @@ export const ManualLaunchesList = ({ data }: { data: ManualTestCase[] }) => {
   const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
   const isAnyRowSelected = !isEmpty(selectedRowIds);
 
-  const handleRowSelect = (id: number) => {
+  const handleRowSelect = useCallback((id: number) => {
     setSelectedRowIds((selectedRows) => xor(selectedRows, [id]));
-  };
+  }, []);
 
   const handleSelectAll = () => {
     setSelectedRowIds((prevSelectedRowIds) => {
