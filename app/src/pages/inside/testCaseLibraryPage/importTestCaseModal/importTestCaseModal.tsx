@@ -1,32 +1,33 @@
 import { useState, useMemo } from 'react';
-import { reduxForm, InjectedFormProps, FormErrors } from 'redux-form';
+import { reduxForm, InjectedFormProps, FormErrors, SubmitHandler } from 'redux-form';
 import { useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import Link from 'redux-first-router-link';
 import { isString } from 'es-toolkit';
+
 import { Modal, FileDropArea, AddCsvIcon, MIME_TYPES } from '@reportportal/ui-kit';
 import type { MimeType } from '@reportportal/ui-kit/dist/components/fileDropArea/types';
-import { useImportTestCase } from './useImportTestCase';
+import { AttachmentFile } from '@reportportal/ui-kit/dist/components/fileDropArea/attachedFilesList';
 import { withModal } from 'controllers/modal';
-import { FolderNameField } from 'pages/inside/testCaseLibraryPage/testCaseFolders/modals/folderFormFields';
 
 import { commonValidators, createClassnames } from 'common/utils';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { downloadFileFromBlob } from 'common/utils/fileUtils';
+import { useImportTestCase } from './useImportTestCase';
+import { FolderNameField } from 'pages/inside/testCaseLibraryPage/testCaseFolders/modals/folderFormFields';
 import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';
 
 import { messages } from './messages';
 
 import styles from './importTestCaseModal.scss';
-import { AttachmentFile } from '@reportportal/ui-kit/dist/components/fileDropArea/attachedFilesList';
 
 export const IMPORT_TEST_CASE_MODAL_KEY = 'importTestCaseModalKey';
-export const IMPORT_TEST_CASE_FORM_NAME: string = 'import-test-case-modal-form';
+export const IMPORT_TEST_CASE_FORM_NAME = 'import-test-case-modal-form';
 
 const MAX_FILE_SIZE_MB = 10;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
-const CSV_MIME_TYPES: MimeType[] = [MIME_TYPES.csv, MIME_TYPES.xls, MIME_TYPES.plain];
+const CSV_MIME_TYPES = [MIME_TYPES.csv, MIME_TYPES.xls, MIME_TYPES.plain];
 
 const cx = createClassnames(styles);
 
@@ -35,6 +36,9 @@ type FileInput = FileLike | FileLike[];
 type ImportTestCaseFormValues = {
   folderName: string;
 };
+type ImportModalData = { data?: string };
+
+type ImportTestCaseSubmitHandler = SubmitHandler<ImportTestCaseFormValues, ImportModalData>;
 
 const extractFolderIdFromHash = (hash: string): number | undefined => {
   const match = /\/testLibrary\/folder\/(\d+)/i.exec(hash);
@@ -45,7 +49,8 @@ const toMB = (bytes: number) => +(bytes / (1024 * 1024)).toFixed(2);
 
 export const ImportTestCaseModal = ({
   handleSubmit,
-}: InjectedFormProps<ImportTestCaseFormValues>) => {
+  data,
+}: InjectedFormProps<ImportTestCaseFormValues, ImportModalData> & ImportModalData) => {
   const { formatMessage } = useIntl();
   const [file, setFile] = useState<File | null>(null);
   const [folderIdFromUrl] = useState<number | undefined>(() =>
@@ -123,8 +128,7 @@ export const ImportTestCaseModal = ({
       cancelButton={cancelButton}
       className={cx('import-test-case-modal')}
     >
-      {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
-      <form onSubmit={handleSubmit(handleImport)}>
+      <form onSubmit={handleSubmit(handleImport) as ImportTestCaseSubmitHandler}>
         <div className={cx('import-test-case-modal__content')}>
           <section className={cx('import-test-case-modal__info-block')}>
             <p className={cx('import-test-case-modal__info-text')}>
@@ -163,16 +167,14 @@ export const ImportTestCaseModal = ({
                   })}
                 />
                 <FileDropArea.Error />
-                {file && (
-                  <div className={cx('import-test-case-modal__files')}>
-                    <FileDropArea.AttachedFilesList
-                      className={cx('import-test-case-modal__files')}
-                      files={attachedFiles}
-                      onRemoveFile={handleRemove}
-                      onDownloadFile={handleDownload}
-                    />
-                  </div>
-                )}
+                <div className={cx('import-test-case-modal__files')}>
+                  <FileDropArea.AttachedFilesList
+                    className={cx('import-test-case-modal__files')}
+                    files={attachedFiles}
+                    onRemoveFile={handleRemove}
+                    onDownloadFile={handleDownload}
+                  />
+                </div>
               </div>
             </FileDropArea>
           </div>
@@ -183,7 +185,7 @@ export const ImportTestCaseModal = ({
                   {formatMessage(messages.importFolderNameLabel)}
                 </label>
                 <div className={cx('import-test-case-modal__static-value')}>
-                  <span>{formatMessage(messages.selectedFolderName)}</span>
+                  <span>{data}</span>
                 </div>
               </>
             ) : (

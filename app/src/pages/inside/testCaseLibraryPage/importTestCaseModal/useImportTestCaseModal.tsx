@@ -4,5 +4,7 @@ import ImportTestCaseModal, { IMPORT_TEST_CASE_MODAL_KEY } from './importTestCas
 export const useImportTestCaseModal = () =>
   useModal({
     modalKey: IMPORT_TEST_CASE_MODAL_KEY,
-    renderModal: () => <ImportTestCaseModal />,
+    renderModal: (data) => {
+      return <ImportTestCaseModal data={data} />;
+    },
   });
