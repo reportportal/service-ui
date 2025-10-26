@@ -14,35 +14,37 @@
  * limitations under the License.
  */
 
-import classNames from 'classnames/bind';
-import styles from './statusBar.scss';
-import { useMemo, FC } from 'react';
-import { MIN_WIDTH_PERCENTAGE } from './statusBar.constants';
-import { StatusBarProps } from './statusBar.types';
+import { useMemo } from 'react';
+import { isEmpty, sumBy } from 'es-toolkit/compat';
 
-const cx = classNames.bind(styles) as typeof classNames;
+import { createClassnames } from 'common/utils';
 
-export const StatusBar: FC<StatusBarProps> = ({
+import { MIN_WIDTH_PERCENTAGE } from './constants';
+import { SegmentStatusBarProps } from './types';
+
+import styles from './segmentedStatusBar.scss';
+
+const cx = createClassnames(styles);
+
+export const SegmentedStatusBar = ({
   data,
-  customClass,
+  className,
   minWidthPercentage = MIN_WIDTH_PERCENTAGE,
-}) => {
+}: SegmentStatusBarProps) => {
   const filteredData = useMemo(() => data.filter((item) => item.value >= 1), [data]);
 
-  const total = useMemo(
-    () => filteredData.reduce((sum, item) => sum + item.value, 0),
-    [filteredData],
-  );
+  const total = useMemo(() => sumBy(filteredData, (data) => data.value), [filteredData]);
 
   const statusLines = useMemo(() => {
-    if (!filteredData.length || total <= 0) {
+    if (isEmpty(filteredData) || total <= 0) {
       return null;
     }
-    const minPct = Math.max(0, Math.min(100, minWidthPercentage));
+
     let totalWidth = 0;
     const calculatedWidths = filteredData.map((item) => {
       const widthPercentage = (item.value / total) * 100;
-      const calculatedWidth = widthPercentage < minPct ? minPct : widthPercentage;
+      const calculatedWidth =
+        widthPercentage < minWidthPercentage ? minWidthPercentage : widthPercentage;
 
       totalWidth += calculatedWidth;
 
@@ -64,9 +66,5 @@ export const StatusBar: FC<StatusBarProps> = ({
     ));
   }, [filteredData, total, minWidthPercentage]);
 
-  return (
-    <div className={cx('status-bar', customClass)} style={{ display: 'flex', width: '100%' }}>
-      {statusLines}
-    </div>
-  );
+  return <div className={cx('status-bar', className)}>{statusLines}</div>;
 };

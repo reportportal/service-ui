@@ -14,22 +14,25 @@
  * limitations under the License.
  */
 
-import { Button, Selection, Table } from '@reportportal/ui-kit';
-import { useUserPermissions } from 'hooks/useUserPermissions';
-import { useManualLaunchesColumns } from './hooks/useManualLaunchesColumns/useManualLaunchesColumns';
-import classNames from 'classnames/bind';
-import styles from './manualLaunchesList.scss';
-import { ActionMenu } from 'components/actionMenu';
 import { useState } from 'react';
+import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
 import { xor } from 'es-toolkit';
+import { Button, Selection, Table } from '@reportportal/ui-kit';
+
+import { createClassnames } from 'common/utils';
+import { useUserPermissions } from 'hooks/useUserPermissions';
+import { ActionMenu } from 'components/actionMenu';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { ManualTestCase } from '../manualLaunchesPage.types';
-import { useIntl } from 'react-intl';
+
+import { useManualLaunchesColumns } from './hooks/useManualLaunchesColumns/useManualLaunchesColumns';
+import { ManualTestCase } from '../types';
 import { useManualLaunchesListRowActions } from './hooks/useManualLaunchesListRowActions';
 import { useManualLaunchesTableData } from './hooks/useManualLaunchesTableData';
 
-const cx = classNames.bind(styles) as typeof classNames;
+import styles from './manualLaunchesList.scss';
+
+const cx = createClassnames(styles);
 
 export const ManualLaunchesList = ({ data }: { data: ManualTestCase[] }) => {
   const { formatMessage } = useIntl();

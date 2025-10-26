@@ -14,16 +14,30 @@
  * limitations under the License.
  */
 
-import { Buttons } from './useManualLaunchesEmptyStateButtons.types';
-import { PROJECT_TEST_PLANS_PAGE, TEST_CASE_LIBRARY_PAGE } from 'controllers/pages';
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  width: 100%;
 
-export const EMPTY_STATE_BUTTONS: Buttons[] = [
-  {
-    name: 'testPlansLink',
-    type: PROJECT_TEST_PLANS_PAGE,
-  },
-  {
-    name: 'testLibraryLink',
-    type: TEST_CASE_LIBRARY_PAGE,
-  },
-];
+  .count {
+    margin-right: 10px;
+  }
+
+  .status-line {
+    height: 4px;
+    border-radius: 1px;
+
+    &.passed {
+      background-color: var(--rp-ui-base-test-execution-status-passed);
+    }
+
+    &.failed {
+      background-color: var(--rp-ui-base-error);
+    }
+
+    &.skipped {
+      background-color: var(--rp-ui-base-e-200);
+    }
+  }
+}

@@ -14,25 +14,6 @@
  * limitations under the License.
  */
 
-.status-bar {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-
-  .count {
-    margin-right: 10px;
-  }
-  .status-line {
-    height: 4px;
-    border-radius: 1px;
-    &.passed {
-      background-color: var(--rp-ui-base-test-execution-status-passed);
-    }
-    &.failed {
-      background-color: var(--rp-ui-base-error);
-    }
-    &.skipped {
-      background-color: var(--rp-ui-base-e-200);
-    }
-  }
+export interface TestRunButtonType {
+  count: number;
 }

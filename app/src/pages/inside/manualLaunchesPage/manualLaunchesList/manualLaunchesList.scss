@@ -15,14 +15,16 @@
  */
 
 .manual-launches-list {
+  --manual-launches-list-grid: 80px minmax(100px, 1fr) 155px 80px 110px 100px 80px 48px;
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
 
   &-table {
-    margin: 24px auto 0 auto;
-    padding: 0 32px 32px 32px;
+    margin: 24px auto 0;
+    padding: 0 32px 32px;
     max-width: 1264px;
     box-sizing: border-box;
 
@@ -52,7 +54,7 @@
 
     // select column headers
     > div {
-      grid-template-columns: 32px 80px minmax(100px, 1fr) 155px 80px 110px 100px 80px 48px !important;
+      grid-template-columns: 32px var(--manual-launches-list-grid) !important;
 
       & > button:nth-of-type(1) {
         flex: 0 0 auto;
@@ -69,7 +71,7 @@
     &-row {
       // select row
       & > div + div > div {
-        grid-template-columns: 80px minmax(100px, 1fr) 155px 80px 110px 100px 80px 48px !important;
+        grid-template-columns: var(--manual-launches-list-grid) !important;
         padding: 0 !important;
 
         //select cells
@@ -78,6 +80,7 @@
           display: flex;
           align-content: center;
           align-items: center;
+
           &:first-child {
             flex: 0 0 auto;
           }

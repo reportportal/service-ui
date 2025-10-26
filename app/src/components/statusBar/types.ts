@@ -14,6 +14,19 @@
  * limitations under the License.
  */
 
-export interface TestRunButtonProps {
-  count: number;
+export enum SegmentStatus {
+  Passed = 'passed',
+  Failed = 'failed',
+  Skipped = 'skipped',
+}
+
+export interface SegmentStatusBarData {
+  value: number;
+  status: SegmentStatus;
+}
+
+export interface SegmentStatusBarProps {
+  data: SegmentStatusBarData[];
+  className?: string;
+  minWidthPercentage?: number;
 }

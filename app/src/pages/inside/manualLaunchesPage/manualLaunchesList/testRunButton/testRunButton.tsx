@@ -14,31 +14,36 @@
  * limitations under the License.
  */
 
-import { MAX_TEST_COUNT_TO_RUN } from '../manualLaunchesList.constants';
 import { Button } from '@reportportal/ui-kit';
-import classNames from 'classnames/bind';
-import styles from '../manualLaunchesList.scss';
-import { useMemo, FC } from 'react';
-import { TestRunButtonProps } from './testRunButton.types';
+import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
+
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { createClassnames } from 'common/utils';
 
-const cx = classNames.bind(styles) as typeof classNames;
+import { MAX_TEST_COUNT_TO_RUN } from '../contants';
+import { TestRunButtonType } from './types';
 
-export const TestRunButton: FC<TestRunButtonProps> = ({ count }) => {
+import styles from '../manualLaunchesList.scss';
+
+const cx = createClassnames(styles);
+
+export const TestRunButton = ({ count }: TestRunButtonType) => {
   const { formatMessage } = useIntl();
 
-  const isNoTestsToRun = count === 0;
+  const areTestsToRunAvailable = count > 0;
 
   const content = useMemo(() => {
-    if (isNoTestsToRun) return formatMessage(COMMON_LOCALE_KEYS.DONE);
+    if (!areTestsToRunAvailable) {
+      return formatMessage(COMMON_LOCALE_KEYS.DONE);
+    }
 
     return count > MAX_TEST_COUNT_TO_RUN ? `${MAX_TEST_COUNT_TO_RUN}+` : count;
-  }, [isNoTestsToRun, count, formatMessage]);
+  }, [areTestsToRunAvailable, count, formatMessage]);
 
   return (
     <Button
-      disabled={isNoTestsToRun}
+      disabled={!areTestsToRunAvailable}
       className={cx('manual-launches-list-table-cell-tests-to-run')}
     >
       {content}

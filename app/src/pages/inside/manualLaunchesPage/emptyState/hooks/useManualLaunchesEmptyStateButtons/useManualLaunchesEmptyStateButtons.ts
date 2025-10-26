@@ -14,32 +14,34 @@
  * limitations under the License.
  */
 
+import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { activeProjectSelector } from 'controllers/user';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { messages } from 'pages/inside/manualLaunchesPage/messages';
-import { useMemo } from 'react';
-import { EMPTY_STATE_BUTTONS } from './useManualLaunchesEmptyStateButtons.constants';
-import { ButtonVariants } from '../../../../../../types/common';
-import { ActiveProject } from './useManualLaunchesEmptyStateButtons.types';
+
+import { EMPTY_STATE_BUTTONS } from './constants';
+import { ButtonVariant } from '../../../../../../types/common';
+import { ActiveProject } from './types';
 
 export const useManualLaunchesEmptyStateButtons = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const { organizationSlug, projectSlug } = useSelector<ActiveProject, ActiveProject>(
-    activeProjectSelector,
-  );
+  const { organizationSlug, projectSlug } = useSelector(activeProjectSelector) as ActiveProject;
   const { canCreateManualLaunch } = useUserPermissions();
 
   return useMemo(() => {
     const payload = { organizationSlug, projectSlug };
 
-    if (!canCreateManualLaunch) return [];
+    if (!canCreateManualLaunch) {
+      return [];
+    }
 
     return EMPTY_STATE_BUTTONS.map(({ name, type }) => ({
       name: formatMessage(messages[name]),
-      variant: ButtonVariants.text,
+      variant: ButtonVariant.text,
       handleButton: () => dispatch({ type, payload }),
     }));
   }, [organizationSlug, projectSlug, dispatch, canCreateManualLaunch, formatMessage]);

@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
+
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ActionItem } from 'components/actionMenu';
 
 export const useManualLaunchesListRowActions = (): ActionItem[] => {

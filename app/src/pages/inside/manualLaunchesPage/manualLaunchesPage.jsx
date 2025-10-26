@@ -15,17 +15,20 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import classNames from 'classnames/bind';
 import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
+
 import { projectNameSelector } from 'controllers/project';
 import { activeOrganizationNameSelector } from 'controllers/organization';
 import { LocationHeaderLayout } from 'layouts/locationHeaderLayout';
+
 import { messages } from './messages';
 import styles from './manualLaunchesPage.scss';
 import { ManualLaunchesPageContent } from './manualLaunchesPageContent';
 
-const cx = classNames.bind(styles);
+import { createClassnames } from 'common/utils';
+
+const cx = createClassnames(styles);
 
 // Temp mock data, remove after integration 1/4
 const mockData = [

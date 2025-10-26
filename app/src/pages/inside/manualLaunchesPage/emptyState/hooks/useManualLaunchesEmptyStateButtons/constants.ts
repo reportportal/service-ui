@@ -14,19 +14,16 @@
  * limitations under the License.
  */
 
-export enum Status {
-  Passed = 'passed',
-  Failed = 'failed',
-  Skipped = 'skipped',
-}
+import { Buttons } from './types';
+import { PROJECT_TEST_PLANS_PAGE, TEST_CASE_LIBRARY_PAGE } from 'controllers/pages';
 
-export type StatusData = {
-  value: number;
-  status: Status;
-};
-
-export interface StatusBarProps {
-  data: StatusData[];
-  customClass?: string;
-  minWidthPercentage?: number;
-}
+export const EMPTY_STATE_BUTTONS: Buttons[] = [
+  {
+    name: 'testPlansLink',
+    type: PROJECT_TEST_PLANS_PAGE,
+  },
+  {
+    name: 'testLibraryLink',
+    type: TEST_CASE_LIBRARY_PAGE,
+  },
+];

@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-export { StatusBar } from './statusBar';
-export { Status } from './statusBar.types';
+export { SegmentedStatusBar } from './segmentedStatusBar';
+export { SegmentStatus } from './types';

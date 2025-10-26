@@ -15,6 +15,7 @@
  */
 
 import { useIntl } from 'react-intl';
+
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { messages } from 'pages/inside/manualLaunchesPage/messages';
 

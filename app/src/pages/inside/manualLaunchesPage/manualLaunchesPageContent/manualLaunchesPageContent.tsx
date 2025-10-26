@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-import { ManualLaunchesEmptyState } from '../emptyState/manualLaunchesEmptyState';
+import { isEmpty } from 'es-toolkit/compat';
 import { BubblesLoader } from '@reportportal/ui-kit';
-import classNames from 'classnames/bind';
-import styles from '../manualLaunchesPage.scss';
-import { ManualLaunchesList } from '../manualLaunchesList';
-import { ManualTestCase } from '../manualLaunchesPage.types';
 
-const cx = classNames.bind(styles) as typeof classNames;
+import { createClassnames } from 'common/utils';
+
+import { ManualLaunchesEmptyState } from '../emptyState/manualLaunchesEmptyState';
+import { ManualLaunchesList } from '../manualLaunchesList';
+import { ManualTestCase } from '../types';
+
+import styles from '../manualLaunchesPage.scss';
+
+const cx = createClassnames(styles);
 
 export interface ManualLaunchesPageContentProps {
   isLoading: boolean;
@@ -37,7 +41,7 @@ export const ManualLaunchesPageContent = ({ isLoading, data }: ManualLaunchesPag
     );
   }
 
-  if (!data.length) {
+  if (isEmpty(data)) {
     return <ManualLaunchesEmptyState />;
   }
 

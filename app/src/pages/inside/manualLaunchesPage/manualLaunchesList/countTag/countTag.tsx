@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-import classNames from 'classnames/bind';
+import { createClassnames } from 'common/utils';
+
 import styles from './countTag.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export interface CountTagProps {
   count: number;
-  customClass?: string;
+  className?: string;
 }
 
-export const CountTag = ({ count, customClass }: CountTagProps) => {
+export const CountTag = ({ count, className }: CountTagProps) => {
   return (
-    <div className={cx(customClass)}>
+    <div className={cx(className)}>
       <div className={cx('count-tag')}>{count}</div>
     </div>
   );

@@ -15,18 +15,21 @@
  */
 
 import { RowData } from '@reportportal/ui-kit/dist/components/table/types';
-import { AbsRelTime } from 'components/main/absRelTime/absRelTime';
-import { CountTag } from '../../countTag';
-import { StatusBar, Status } from 'components/statusBar';
-import classNames from 'classnames/bind';
-import styles from '../../manualLaunchesList.scss';
-import { TestRunButton } from '../../testRunButton/testRunButton';
-import { ManualTestCase } from '../../../manualLaunchesPage.types';
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
+
+import { AbsRelTime } from 'components/main/absRelTime/absRelTime';
+import { SegmentStatus, SegmentedStatusBar } from 'components/statusBar';
+import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
-const cx = classNames.bind(styles) as typeof classNames;
+import { TestRunButton } from '../../testRunButton/testRunButton';
+import { CountTag } from '../../countTag';
+import { ManualTestCase } from '../../../types';
+
+import styles from '../../manualLaunchesList.scss';
+
+const cx = createClassnames(styles);
 
 export const useManualLaunchesTableData = (data: ManualTestCase[]): RowData[] => {
   const { formatMessage } = useIntl();
@@ -49,7 +52,7 @@ export const useManualLaunchesTableData = (data: ManualTestCase[]): RowData[] =>
           count: {
             content: count,
             component: (
-              <CountTag count={count} customClass={cx('manual-launches-list-table-cell-count')} />
+              <CountTag count={count} className={cx('manual-launches-list-table-cell-count')} />
             ),
           },
           name,
@@ -68,13 +71,13 @@ export const useManualLaunchesTableData = (data: ManualTestCase[]): RowData[] =>
           testRunStatus: {
             content: testsToRun,
             component: (
-              <StatusBar
+              <SegmentedStatusBar
                 data={[
-                  { status: Status.Passed, value: successTests ?? 0 },
-                  { status: Status.Failed, value: failedTests ?? 0 },
-                  { status: Status.Skipped, value: skippedTests ?? 0 },
+                  { status: SegmentStatus.Passed, value: successTests ?? 0 },
+                  { status: SegmentStatus.Failed, value: failedTests ?? 0 },
+                  { status: SegmentStatus.Skipped, value: skippedTests ?? 0 },
                 ]}
-                customClass={cx('manual-launches-list-table-cell-status')}
+                className={cx('manual-launches-list-table-cell-status')}
               />
             ),
           },

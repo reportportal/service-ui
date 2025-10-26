@@ -23,7 +23,7 @@ export interface ModalButtonProps extends ButtonProps {
 
 export type QueryParams = Record<string, string | number>;
 
-export enum ButtonVariants {
+export enum ButtonVariant {
   primary = 'primary',
   ghost = 'ghost',
   danger = 'danger',
