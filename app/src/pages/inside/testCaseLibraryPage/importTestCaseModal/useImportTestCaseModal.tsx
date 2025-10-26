@@ -8,5 +8,7 @@ import ImportTestCaseModal, {
 export const useImportTestCaseModal = () =>
   useModal<ImportTestCaseFormValues>({
     modalKey: IMPORT_TEST_CASE_MODAL_KEY,
-    renderModal: () => <ImportTestCaseModal />,
+    renderModal: (data) => {
+      return <ImportTestCaseModal data={data} />;
+    },
   });
