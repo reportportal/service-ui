@@ -24,14 +24,24 @@ import { activeRetryIdSelector, querySelector } from 'controllers/log/selectors'
 import { LOG_LEVEL_FILTER_KEY, NAMESPACE, LOAD_MORE_PAGE_SIZE } from 'controllers/log/constants';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { getLogLevel } from 'controllers/log/storageUtils';
+import { filterableLogTypesSelector } from 'controllers/project/selectors';
+import { isDefaultLogLevel } from 'controllers/log/utils';
 
 export function* collectLogPayload() {
   const activeProject = yield select(activeProjectSelector);
   const userId = yield select(userIdSelector);
   const query = yield select(querySelector, NAMESPACE);
-  const filterLevel = query[LOG_LEVEL_FILTER_KEY] || getLogLevel(userId).id;
+  const filterableLogLevels = yield select(filterableLogTypesSelector);
   const activeLogItemId = yield select(activeRetryIdSelector);
   const logsPaginationEnabled = yield select(logsPaginationEnabledSelector);
+  let filterLevel = query[LOG_LEVEL_FILTER_KEY];
+
+  if (!filterLevel) {
+    const savedLogLevel = getLogLevel(userId, filterableLogLevels);
+    if (savedLogLevel && !isDefaultLogLevel(savedLogLevel)) {
+      filterLevel = savedLogLevel.name;
+    }
+  }
 
   if (!logsPaginationEnabled) {
     query[SIZE_KEY] = LOAD_MORE_PAGE_SIZE;

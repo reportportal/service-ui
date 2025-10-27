@@ -24,13 +24,11 @@ import Parser from 'html-react-parser';
 import { MARKDOWN, CONSOLE, DEFAULT } from 'common/constants/logViewModes';
 import { logsPaginationEnabledSelector, userIdSelector } from 'controllers/user';
 import {
-  LOG_LEVELS,
   getLogViewMode,
   setLogViewMode,
   DETAILED_LOG_VIEW,
   isLogPageWithNestedSteps,
 } from 'controllers/log';
-import { InputSlider } from 'components/inputs/inputSlider';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import ConsoleIcon from 'common/img/console-inline.svg';
@@ -38,6 +36,7 @@ import MarkdownIcon from 'common/img/markdown-inline.svg';
 import { ErrorLogsControl } from './errorLogsControl';
 import { Pagination } from './pagination';
 import { LogsSettings } from './logsSettings';
+import { LogLevelsSlider } from './logLevelsSlider';
 import styles from './logsGridToolbar.scss';
 
 const cx = classNames.bind(styles);
@@ -91,6 +90,7 @@ export class LogsGridToolbar extends Component {
     logLevel: PropTypes.shape({
       id: PropTypes.string.isRequired,
       label: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
     }).isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -110,6 +110,7 @@ export class LogsGridToolbar extends Component {
     highlightErrorLog: PropTypes.func,
     errorLogIndex: PropTypes.number,
     logsPaginationEnabled: PropTypes.bool,
+    logLevels: PropTypes.array,
   };
 
   static defaultProps = {
@@ -127,6 +128,7 @@ export class LogsGridToolbar extends Component {
     highlightErrorLog: () => {},
     errorLogIndex: null,
     logsPaginationEnabled: true,
+    logLevels: [],
   };
 
   state = {
@@ -151,20 +153,6 @@ export class LogsGridToolbar extends Component {
   toggleMarkdownMode = () => this.toggleLogViewMode(MARKDOWN);
 
   toggleConsoleView = () => this.toggleLogViewMode(CONSOLE);
-
-  changeLogLevel = (newLogLevel) => {
-    const { onChangeLogLevel, userId, logLevel: activeLogLevel } = this.props;
-
-    if (newLogLevel.id !== activeLogLevel.id) {
-      onChangeLogLevel(userId, newLogLevel);
-    }
-  };
-
-  trackLogLevelFilterClick = (newLogLevel) => {
-    this.props.tracking.trackEvent(
-      LOG_PAGE_EVENTS.getClickOnLogLevelFilterEvent(newLogLevel.trackingName),
-    );
-  };
 
   toggleWithAttachments = () => {
     const { onChangeWithAttachments, withAttachments } = this.props;
@@ -212,6 +200,8 @@ export class LogsGridToolbar extends Component {
       highlightErrorLog,
       errorLogIndex,
       logsPaginationEnabled,
+      logLevels,
+      onChangeLogLevel,
     } = this.props;
     const { logViewMode } = this.state;
     const stickyOffsetTop = this.panelRef.current ? this.panelRef.current.clientHeight : 0;
@@ -220,14 +210,11 @@ export class LogsGridToolbar extends Component {
       <div className={cx('container')}>
         <div ref={this.panelRef} className={cx('panel')}>
           <div className={cx('aside')}>
-            <div className={cx('log-level')}>
-              <InputSlider
-                options={LOG_LEVELS}
-                value={logLevel}
-                onChange={this.changeLogLevel}
-                trackChange={this.trackLogLevelFilterClick}
-              />
-            </div>
+            <LogLevelsSlider
+              logLevel={logLevel}
+              logLevels={logLevels}
+              onChangeLogLevel={onChangeLogLevel}
+            />
             {logPageMode === DETAILED_LOG_VIEW && (
               <div className={cx('aside-element')}>
                 <ErrorLogsControl

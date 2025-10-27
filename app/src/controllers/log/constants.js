@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import * as logLevels from 'common/constants/logLevels';
 import { SORTING_ASC } from 'controllers/sorting/constants';
 import { formatSortingString } from 'controllers/sorting/utils';
 import { LOADING_DIRECTIONS } from 'common/constants/loadingDirections';
@@ -28,7 +27,6 @@ export const FETCH_LOG_PAGE_DATA = 'fetchLogPageData';
 export const FETCH_LOG_PAGE_STACK_TRACE = 'fetchLogPageStackTrace';
 export const DEFAULT_HISTORY_DEPTH = 12;
 export const HISTORY_DEPTH_LIMIT = 30;
-export const DEFAULT_LOG_LEVEL = logLevels.TRACE;
 export const LOG_LEVEL_STORAGE_KEY = 'logFilteringLevel';
 export const LOG_TIME_FORMAT_STORAGE_KEY = 'logTimeFormat';
 export const LOG_LEVEL_FILTER_KEY = 'filter.gte.level';
@@ -61,39 +59,6 @@ export const FETCH_LOG = 'fetchLog';
 export const LOAD_MORE_PAGE_SIZE = 50;
 export const LOAD_MORE_LOGS = 'LOAD_MORE_LOGS';
 export const FETCH_LOG_ITEMS_FOR_PAGE = 'FETCH_LOG_ITEMS_FOR_PAGE';
-
-export const LOG_LEVELS = [
-  {
-    id: logLevels.FATAL,
-    label: 'Fatal',
-    trackingName: 'fatal',
-  },
-  {
-    id: logLevels.ERROR,
-    label: 'Error',
-    trackingName: 'error',
-  },
-  {
-    id: logLevels.WARN,
-    label: 'Warn',
-    trackingName: 'warn',
-  },
-  {
-    id: logLevels.INFO,
-    label: 'Info',
-    trackingName: 'info',
-  },
-  {
-    id: logLevels.DEBUG,
-    label: 'Debug',
-    trackingName: 'debug',
-  },
-  {
-    id: logLevels.TRACE,
-    label: 'Trace',
-    trackingName: 'trace',
-  },
-];
 
 export const PREVIOUS = LOADING_DIRECTIONS.PREVIOUS;
 export const NEXT = LOADING_DIRECTIONS.NEXT;
