@@ -15,6 +15,7 @@
  */
 export { isEmptyObject } from './isEmptyObject';
 export { referenceDictionary, docsReferences } from './referenceDictionary';
+export { isString } from './stringUtils';
 export { fetch, ERROR_CANCELED, ERROR_UNAUTHORIZED } from './fetch';
 export {
   getStorageItem,
