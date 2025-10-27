@@ -21,7 +21,10 @@ import { projectKeySelector } from 'controllers/project';
 import { useDebouncedSpinner } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import { deleteTestCaseSuccessAction } from 'controllers/testCase/actionCreators';
+import {
+  deleteTestCaseSuccessAction,
+  updateFolderCounterAction,
+} from 'controllers/testCase/actionCreators';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import {
   TEST_CASE_LIBRARY_PAGE,
@@ -45,6 +48,7 @@ export const useDeleteTestCase = ({ isDetailsPage = false } = {}) => {
       });
 
       dispatch(deleteTestCaseSuccessAction({ testCase }));
+      dispatch(updateFolderCounterAction({ folderId: testCase.testFolder.id, delta: -1 }));
       dispatch(hideModalAction());
       dispatch(showSuccessNotification({ messageId: 'testCaseDeletedSuccess' }));
 

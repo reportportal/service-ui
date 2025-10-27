@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
+import { useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 
 import { commonValidators } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { withModal } from 'controllers/modal';
+import { FolderWithFullPath } from 'controllers/testCase';
 
 import { commonMessages } from '../commonMessages';
 import { CreateTestCaseFormData } from '../types';
@@ -30,11 +31,29 @@ import { TEST_CASE_FORM_INITIAL_VALUES } from './constants';
 export const CREATE_TEST_CASE_MODAL_KEY = 'createTestCaseModalKey';
 export const CREATE_TEST_CASE_FORM_NAME: string = 'create-test-case-modal-form';
 
-type CreateTestCaseModalProps = InjectedFormProps<CreateTestCaseFormData>;
+interface CreateTestCaseModalData {
+  folder?: FolderWithFullPath;
+}
 
-const CreateTestCaseModalComponent = ({ pristine, handleSubmit }: CreateTestCaseModalProps) => {
+interface CreateTestCaseModalOwnProps {
+  data?: CreateTestCaseModalData;
+}
+
+type CreateTestCaseModalProps = CreateTestCaseModalOwnProps &
+  InjectedFormProps<CreateTestCaseFormData, CreateTestCaseModalOwnProps>;
+
+const CreateTestCaseModalComponent = ({
+  data,
+  pristine,
+  initialize,
+  handleSubmit,
+}: CreateTestCaseModalProps) => {
   const { formatMessage } = useIntl();
   const { isLoading: isCreateTestCaseLoading, createTestCase } = useTestCase();
+
+  useEffect(() => {
+    initialize({ ...TEST_CASE_FORM_INITIAL_VALUES, folder: data?.folder });
+  }, [data, initialize]);
 
   return (
     <TestCaseModal
@@ -49,7 +68,7 @@ const CreateTestCaseModalComponent = ({ pristine, handleSubmit }: CreateTestCase
   );
 };
 
-const ReduxFormComponent = reduxForm<CreateTestCaseFormData, CreateTestCaseModalProps>({
+export const CreateTestCaseModal = reduxForm<CreateTestCaseFormData, CreateTestCaseModalOwnProps>({
   form: CREATE_TEST_CASE_FORM_NAME,
   initialValues: TEST_CASE_FORM_INITIAL_VALUES,
   validate: ({ name, folder, linkToRequirements }) => ({
@@ -59,6 +78,3 @@ const ReduxFormComponent = reduxForm<CreateTestCaseFormData, CreateTestCaseModal
   }),
   enableReinitialize: false,
 })(CreateTestCaseModalComponent);
-
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-export const CreateTestCaseModal = withModal(CREATE_TEST_CASE_MODAL_KEY)(ReduxFormComponent);

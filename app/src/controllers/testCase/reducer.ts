@@ -35,6 +35,7 @@ import {
   GET_TEST_CASE_DETAILS,
   GET_TEST_CASE_DETAILS_SUCCESS,
   GET_TEST_CASE_DETAILS_FAILURE,
+  UPDATE_FOLDER_COUNTER,
 } from 'controllers/testCase/constants';
 import { Folder } from './types';
 import { TestCase, Page } from 'pages/inside/testCaseLibraryPage/types';
@@ -43,6 +44,7 @@ import {
   DeleteFolderSuccessParams,
   DeleteTestCaseParams,
   RenameFolderParams,
+  UpdateFolderCounterParams,
 } from './actionCreators';
 
 export type InitialStateType = {
@@ -82,7 +84,8 @@ const INITIAL_DETAILS_STATE = {
 type FolderAction =
   | { type: typeof DELETE_FOLDER_SUCCESS; payload: DeleteFolderSuccessParams }
   | { type: typeof RENAME_FOLDER_SUCCESS; payload: RenameFolderParams }
-  | { type: typeof CREATE_FOLDER_SUCCESS; payload: Folder };
+  | { type: typeof CREATE_FOLDER_SUCCESS; payload: Folder }
+  | { type: typeof UPDATE_FOLDER_COUNTER; payload: UpdateFolderCounterParams };
 
 const isCreatingFolderReducer = (
   state = INITIAL_STATE.folders.isCreatingFolder,
@@ -163,6 +166,15 @@ const folderReducer = (state = INITIAL_STATE.folders.data, action: FolderAction)
     }
     case CREATE_FOLDER_SUCCESS: {
       return [...state, action.payload];
+    }
+    case UPDATE_FOLDER_COUNTER: {
+      return state.map((folder) => {
+        if (folder.id !== action.payload.folderId) {
+          return folder;
+        }
+
+        return { ...folder, countOfTestCases: folder.countOfTestCases + action.payload.delta };
+      });
     }
     default:
       return state;

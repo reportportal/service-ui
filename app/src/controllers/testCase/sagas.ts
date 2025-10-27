@@ -207,10 +207,14 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
   }
 }
 
-type FoldersPage = { content: Folder[]; page?: { totalPages?: number } };
-const isFoldersPage = (value: unknown): value is FoldersPage => {
-  if (!value || typeof value !== 'object') return false;
-  return Array.isArray((value as Partial<FoldersPage>).content);
+type FoldersDto = {
+  content: Folder[];
+  page: {
+    number: number;
+    size: number;
+    totalElements: number;
+    totalPages: number;
+  };
 };
 
 function* getFolders() {
@@ -227,41 +231,31 @@ function* getFolders() {
       meta: { namespace: NAMESPACE },
     });
 
-    const pageSize = 1000;
-    let pageNumber = 1;
-    let totalPages = 1;
-    const aggregated: Folder[] = [];
+    const limit = 1000;
+    let offset = 0;
+    const allFolders: Folder[] = [];
+    let totalElements = Infinity;
 
-    while (pageNumber <= totalPages) {
-      const responseUnknown: unknown = yield call(
+    while (offset < totalElements) {
+      const response = (yield call(
         fetch,
         URLS.testFolders(projectKey, {
-          'page.page': pageNumber,
-          'page.size': pageSize,
-          'page.sort': 'id,ASC',
+          offset,
+          limit,
+          sort: 'id,ASC',
         }),
-      );
+      )) as FoldersDto;
 
-      if (!isFoldersPage(responseUnknown)) {
-        throw new Error('Invalid folders response');
-      }
+      const { content, page } = response;
 
-      const content: Folder[] = responseUnknown.content;
-      aggregated.push(...content);
-      const respTotalPages = responseUnknown.page?.totalPages ?? 1;
-      totalPages = respTotalPages;
-      pageNumber += 1;
+      allFolders.push(...content);
+      totalElements = page.totalElements;
+      offset += limit;
     }
 
     yield put(
       fetchSuccessAction(NAMESPACE, {
-        content: aggregated,
-        page: {
-          number: 0,
-          size: aggregated.length,
-          totalElements: aggregated.length,
-          totalPages: 1,
-        },
+        content: allFolders,
       }),
     );
   } catch (error) {

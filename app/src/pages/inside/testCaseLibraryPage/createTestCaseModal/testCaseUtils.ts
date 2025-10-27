@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-import { SubmissionError } from 'redux-form';
-
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { Folder } from 'controllers/testCase';
 
 import { ManualScenarioDto, ManualScenarioType, CreateTestCaseFormData } from '../types';
-import { messages } from './basicInformation/messages';
 
 export const createFolder = (projectKey: string, folderName: string) =>
   fetch<Folder>(URLS.testFolders(projectKey), {
@@ -59,14 +56,12 @@ export const buildManualScenario = (payload: CreateTestCaseFormData): ManualScen
   };
 };
 
-export const handleTestCaseError = (
-  error: unknown,
-  formatMessage: (message: unknown) => string,
-) => {
-  if (error instanceof Error && error?.message?.includes('tms_test_case_name_folder_unique')) {
-    throw new SubmissionError({
-      name: formatMessage(messages.duplicateTestCaseName),
-    });
+export const isDuplicateTestCaseError = (error: unknown) => {
+  if (error && typeof error === 'object' && 'message' in error) {
+    const message = error.message;
+
+    return typeof message === 'string' && message.includes('tms_test_case_name_folder_unique');
   }
-  throw error;
+
+  return false;
 };

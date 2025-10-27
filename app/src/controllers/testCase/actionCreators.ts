@@ -34,6 +34,7 @@ import {
   RENAME_FOLDER_SUCCESS,
   DELETE_TEST_CASE_SUCCESS,
   DUPLICATE_FOLDER,
+  UPDATE_FOLDER_COUNTER,
 } from './constants';
 import { Folder, TransformedFolder } from './types';
 import { Page, TestCase } from 'pages/inside/testCaseLibraryPage/types';
@@ -80,6 +81,11 @@ export interface DeleteFolderSuccessParams {
 export interface RenameFolderParams {
   folderId: number;
   folderName: string;
+}
+
+export interface UpdateFolderCounterParams {
+  folderId: number;
+  delta: number;
 }
 
 export const getTestCasesAction = (params?: GetTestCasesParams) => ({
@@ -169,4 +175,9 @@ export const renameFolderSuccessAction = (folderId: RenameFolderParams) => ({
 export const duplicateFolderAction = (folder: CreateFolderParams) => ({
   type: DUPLICATE_FOLDER,
   payload: folder,
+});
+
+export const updateFolderCounterAction = (params: UpdateFolderCounterParams) => ({
+  type: UPDATE_FOLDER_COUNTER,
+  payload: params,
 });
