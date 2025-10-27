@@ -41,13 +41,13 @@ const createEmptyStep = (): Step => ({
 interface TestCaseDetailsProps {
   className?: string;
   formName: string;
-  disableTemplateField?: boolean;
+  isTemplateFieldDisabled?: boolean;
 }
 
 export const TestCaseDetails = ({
   className,
   formName,
-  disableTemplateField = false,
+  isTemplateFieldDisabled = false,
 }: TestCaseDetailsProps) => {
   const [steps, setSteps] = useState<Step[]>([createEmptyStep()]);
   const { formatMessage } = useIntl();
@@ -100,7 +100,7 @@ export const TestCaseDetails = ({
 
   return (
     <div className={cx('test-case-details', className)}>
-      <Template disableTemplateField={disableTemplateField} />
+      <Template isTemplateFieldDisabled={isTemplateFieldDisabled} />
       <FieldProvider name="linkToRequirements" placeholder={formatMessage(messages.enterLink)}>
         <FieldErrorHint provideHint={false}>
           <FieldText label={formatMessage(messages.requirementsLink)} defaultWidth={false} />

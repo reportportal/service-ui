@@ -56,10 +56,10 @@ const messages = defineMessages({
 });
 
 interface TemplateProps {
-  disableTemplateField?: boolean;
+  isTemplateFieldDisabled?: boolean;
 }
 
-export const Template = ({ disableTemplateField = false }: TemplateProps) => {
+export const Template = ({ isTemplateFieldDisabled = false }: TemplateProps) => {
   const { formatMessage } = useIntl();
 
   const templateOptions = [
@@ -82,7 +82,7 @@ export const Template = ({ disableTemplateField = false }: TemplateProps) => {
           label={formatMessage(messages.template)}
           options={templateOptions}
           className={cx('template__dropdown')}
-          disabled={disableTemplateField}
+          disabled={isTemplateFieldDisabled}
         />
       </FieldProvider>
       <FieldProvider name="executionEstimationTime">

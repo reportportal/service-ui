@@ -105,7 +105,7 @@ const EditTestCaseModalComponent = ({
       onSubmitHandler={handleUpdate}
       formName={EDIT_TEST_CASE_FORM_NAME}
       hideFolderField
-      disableTemplateField
+      isTemplateFieldDisabled
     />
   );
 };
