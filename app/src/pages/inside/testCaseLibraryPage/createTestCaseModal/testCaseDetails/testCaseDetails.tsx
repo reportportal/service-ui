@@ -53,12 +53,12 @@ export const TestCaseDetails = ({
   const { formatMessage } = useIntl();
   const manualScenarioType = useSelector(manualScenarioTypeSelector(formName));
   const stepsData = useSelector(stepsDataSelector(formName));
-  const isEditMode = useRef(!isEmpty(stepsData));
+  const isEditModeRef = useRef(!isEmpty(stepsData));
 
   useEffect(() => {
-    if (isEditMode.current && !isEmpty(stepsData)) {
+    if (isEditModeRef.current && !isEmpty(stepsData)) {
       setSteps(Object.values(stepsData));
-      isEditMode.current = false;
+      isEditModeRef.current = false;
     }
   }, [stepsData]);
 
