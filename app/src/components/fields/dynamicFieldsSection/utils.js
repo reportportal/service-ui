@@ -86,7 +86,7 @@ export const getFieldComponent = (field) => {
 
   if (field.fieldType === MULTILINE_TEXT_TYPE) {
     fieldType = MULTILINE_TEXT_TYPE;
-  } else if (field.fieldType === ARRAY_TYPE && field.definedValues?.length) {
+  } else if (field.fieldType === ARRAY_TYPE) {
     fieldType = ARRAY_TYPE;
   } else if (field.fieldType === DATE_TYPE || field.fieldType.toLowerCase() === 'datetime') {
     fieldType = DATE_TYPE;
