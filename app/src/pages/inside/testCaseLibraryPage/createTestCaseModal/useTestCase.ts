@@ -18,6 +18,7 @@ import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { isString } from 'es-toolkit';
+import { SubmissionError } from 'redux-form';
 
 import { projectKeySelector } from 'controllers/project';
 import { fetch } from 'common/utils';
@@ -26,15 +27,20 @@ import { URLS } from 'common/urls';
 import { hideModalAction } from 'controllers/modal';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import {
-  getTestCasesAction,
   getTestCaseByFolderIdAction,
+  getAllTestCasesAction,
   testCasesPageSelector,
 } from 'controllers/testCase';
-import { createFoldersSuccessAction } from 'controllers/testCase/actionCreators';
+import {
+  createFoldersSuccessAction,
+  updateFolderCounterAction,
+} from 'controllers/testCase/actionCreators';
+import { urlFolderIdSelector, TEST_CASE_LIBRARY_PAGE } from 'controllers/pages';
 import { getTestCaseRequestParams } from 'pages/inside/testCaseLibraryPage/utils';
 
 import { CreateTestCaseFormData, ManualScenarioDto } from '../types';
-import { createFolder, buildManualScenario, handleTestCaseError } from './testCaseUtils';
+import { createFolder, buildManualScenario, isDuplicateTestCaseError } from './testCaseUtils';
+import { messages } from './basicInformation/messages';
 
 const buildTestCaseData = (
   payload: CreateTestCaseFormData,
@@ -54,6 +60,10 @@ export const useTestCase = (testCaseId?: number) => {
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const testCasesPageData = useSelector(testCasesPageSelector);
+  const urlFolderId = useSelector(urlFolderIdSelector);
+  const isOnTestCaseLibraryPage = useSelector(
+    (state: { location: { type?: string } }) => state.location.type === TEST_CASE_LIBRARY_PAGE,
+  );
   const { formatMessage } = useIntl();
 
   const handleFolder = useCallback(
@@ -68,6 +78,42 @@ export const useTestCase = (testCaseId?: number) => {
       return payload.folder?.id || currentFolderId;
     },
     [projectKey, dispatch],
+  );
+
+  const refetchTestCases = useCallback(
+    (folderId: number, prevFolderId?: number) => {
+      if (!isOnTestCaseLibraryPage) {
+        return;
+      }
+
+      const paginationParams = getTestCaseRequestParams(testCasesPageData);
+      const isViewingTestCaseFolder = Number(urlFolderId) === folderId;
+      const isTestCaseMovedAndViewingPrevFolder =
+        prevFolderId && prevFolderId !== folderId && Number(urlFolderId) === prevFolderId;
+
+      if (!urlFolderId) {
+        dispatch(getAllTestCasesAction(paginationParams));
+      }
+
+      if (isViewingTestCaseFolder) {
+        dispatch(
+          getTestCaseByFolderIdAction({
+            folderId,
+            ...paginationParams,
+          }),
+        );
+      }
+
+      if (isTestCaseMovedAndViewingPrevFolder) {
+        dispatch(
+          getTestCaseByFolderIdAction({
+            folderId: prevFolderId,
+            ...paginationParams,
+          }),
+        );
+      }
+    },
+    [isOnTestCaseLibraryPage, testCasesPageData, urlFolderId, dispatch],
   );
 
   const createTestCase = useCallback(
@@ -85,18 +131,21 @@ export const useTestCase = (testCaseId?: number) => {
 
         dispatch(hideModalAction());
         dispatch(showSuccessNotification({ messageId: 'testCaseCreatedSuccess' }));
-        dispatch(getTestCasesAction({ testFolderId: folderId }));
+        dispatch(updateFolderCounterAction({ folderId, delta: 1 }));
+        refetchTestCases(folderId);
       } catch (error: unknown) {
-        try {
-          handleTestCaseError(error, formatMessage);
-        } catch {
-          dispatch(showErrorNotification({ messageId: 'testCaseCreationFailed' }));
+        if (isDuplicateTestCaseError(error)) {
+          throw new SubmissionError({
+            name: formatMessage(messages.duplicateTestCaseName),
+          });
         }
+
+        dispatch(showErrorNotification({ messageId: 'testCaseCreationFailed' }));
       } finally {
         hideSpinner();
       }
     },
-    [projectKey, dispatch, formatMessage, showSpinner, hideSpinner, handleFolder],
+    [projectKey, dispatch, formatMessage, showSpinner, hideSpinner, handleFolder, refetchTestCases],
   );
 
   const editTestCase = useCallback(
@@ -119,18 +168,23 @@ export const useTestCase = (testCaseId?: number) => {
 
         dispatch(hideModalAction());
         dispatch(showSuccessNotification({ messageId: 'testCaseUpdatedSuccess' }));
-        dispatch(
-          getTestCaseByFolderIdAction({
-            folderId,
-            ...getTestCaseRequestParams(testCasesPageData),
-          }),
-        );
-      } catch (error: unknown) {
-        try {
-          handleTestCaseError(error, formatMessage);
-        } catch {
-          dispatch(showErrorNotification({ messageId: 'testCaseUpdateFailed' }));
+
+        const isTestCaseMoved = currentFolderId && currentFolderId !== folderId;
+
+        if (isTestCaseMoved) {
+          dispatch(updateFolderCounterAction({ folderId: currentFolderId, delta: -1 }));
+          dispatch(updateFolderCounterAction({ folderId, delta: 1 }));
         }
+
+        refetchTestCases(folderId, currentFolderId);
+      } catch (error: unknown) {
+        if (isDuplicateTestCaseError(error)) {
+          throw new SubmissionError({
+            name: formatMessage(messages.duplicateTestCaseName),
+          });
+        }
+
+        dispatch(showErrorNotification({ messageId: 'testCaseUpdateFailed' }));
       } finally {
         hideSpinner();
       }
@@ -143,7 +197,7 @@ export const useTestCase = (testCaseId?: number) => {
       showSpinner,
       hideSpinner,
       handleFolder,
-      testCasesPageData,
+      refetchTestCases,
     ],
   );
   return {

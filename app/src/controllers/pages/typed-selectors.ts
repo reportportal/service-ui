@@ -37,6 +37,7 @@ export type LocationInfo = {
     payload?: LocationPayload;
     query?: LocationQuery;
   };
+  type?: string;
 };
 
 type State = {
