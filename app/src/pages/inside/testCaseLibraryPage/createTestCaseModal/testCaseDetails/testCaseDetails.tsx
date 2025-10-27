@@ -50,6 +50,7 @@ export const TestCaseDetails = ({
   isTemplateFieldDisabled = false,
 }: TestCaseDetailsProps) => {
   const [steps, setSteps] = useState<Step[]>([createEmptyStep()]);
+  const [isEditMode, setIsEditMode] = useState(false);
   const { formatMessage } = useIntl();
   const manualScenarioType = useSelector(manualScenarioTypeSelector(formName));
   const stepsData = useSelector(stepsDataSelector(formName));
@@ -58,6 +59,7 @@ export const TestCaseDetails = ({
   useEffect(() => {
     if (isEditModeRef.current && !isEmpty(stepsData)) {
       setSteps(Object.values(stepsData));
+      setIsEditMode(true);
       isEditModeRef.current = false;
     }
   }, [stepsData]);
@@ -127,6 +129,7 @@ export const TestCaseDetails = ({
               onRemoveStep={handleRemoveStep}
               onMoveStep={handleMoveStep}
               formName={formName}
+              isKeyById={isEditMode}
             />
           </FieldProvider>
         </>
