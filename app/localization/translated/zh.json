@@ -1350,7 +1350,6 @@
   "LogsGridToolbar.errorLogs": "{count, plural, =0 {No Error Logs} one {{totalItems} Error Log} other {{currentItem} of {totalItems} Error Logs}}",
   "LogsGridToolbar.hideEmptySteps": "隐藏空步骤",
   "LogsGridToolbar.hidePassedLogs": "隐藏所有通过测试的日志",
-  "LogsGridToolbar.logLevelsSliderInfoMessage": "All logs are currently displayed. To adjust filtering, update <a>Log Types</a> settings.",
   "LogsGridToolbar.markdownMode": "降价模式",
   "LogsGridToolbar.showErrorLog": "显示",
   "LogsGridToolbar.withAttachments": "带附件的日志",
