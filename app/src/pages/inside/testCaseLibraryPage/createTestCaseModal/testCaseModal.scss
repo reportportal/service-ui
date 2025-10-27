@@ -20,7 +20,10 @@
   margin-top: 5vh !important;
   margin-bottom: 5vh !important;
   padding-right: 24px;
-  max-height: 90vh;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 
   &__content-wrapper {
     position: relative;

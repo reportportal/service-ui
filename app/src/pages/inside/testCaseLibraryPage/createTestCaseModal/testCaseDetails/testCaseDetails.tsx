@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { isNumber, isEmpty } from 'es-toolkit/compat';
@@ -41,17 +41,24 @@ const createEmptyStep = (): Step => ({
 interface TestCaseDetailsProps {
   className?: string;
   formName: string;
+  disableTemplateField?: boolean;
 }
 
-export const TestCaseDetails = ({ className, formName }: TestCaseDetailsProps) => {
+export const TestCaseDetails = ({
+  className,
+  formName,
+  disableTemplateField = false,
+}: TestCaseDetailsProps) => {
   const [steps, setSteps] = useState<Step[]>([createEmptyStep()]);
   const { formatMessage } = useIntl();
   const manualScenarioType = useSelector(manualScenarioTypeSelector(formName));
   const stepsData = useSelector(stepsDataSelector(formName));
+  const isEditMode = useRef(!isEmpty(stepsData));
 
   useEffect(() => {
-    if (!isEmpty(stepsData)) {
+    if (isEditMode.current && !isEmpty(stepsData)) {
       setSteps(Object.values(stepsData));
+      isEditMode.current = false;
     }
   }, [stepsData]);
 
@@ -93,7 +100,7 @@ export const TestCaseDetails = ({ className, formName }: TestCaseDetailsProps) =
 
   return (
     <div className={cx('test-case-details', className)}>
-      <Template />
+      <Template disableTemplateField={disableTemplateField} />
       <FieldProvider name="linkToRequirements" placeholder={formatMessage(messages.enterLink)}>
         <FieldErrorHint provideHint={false}>
           <FieldText label={formatMessage(messages.requirementsLink)} defaultWidth={false} />

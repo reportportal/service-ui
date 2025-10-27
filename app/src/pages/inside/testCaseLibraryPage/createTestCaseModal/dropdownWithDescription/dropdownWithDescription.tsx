@@ -39,6 +39,7 @@ interface DropdownWithDescriptionProps {
   error?: string;
   touched?: boolean;
   selectedItem?: DropdownOption;
+  disabled?: boolean;
 }
 
 export const DropdownWithDescription = ({
@@ -50,6 +51,7 @@ export const DropdownWithDescription = ({
   selectedItem,
   error,
   touched,
+  disabled,
 }: DropdownWithDescriptionProps) => {
   const currentValue = value || selectedItem?.value || '';
   const currentIcon =
@@ -84,6 +86,7 @@ export const DropdownWithDescription = ({
       error={error}
       touched={touched}
       onChange={onChange}
+      disabled={disabled}
     />
   );
 };
