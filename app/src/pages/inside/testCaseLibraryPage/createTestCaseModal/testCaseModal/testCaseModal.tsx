@@ -44,6 +44,7 @@ interface TestCaseModalProps {
     handler: (formData: CreateTestCaseFormData) => void | Promise<void>,
   ) => (event: FormEvent) => void;
   hideFolderField?: boolean;
+  isTemplateFieldDisabled?: boolean;
 }
 
 export const TestCaseModal = ({
@@ -55,6 +56,7 @@ export const TestCaseModal = ({
   pristine,
   handleSubmit,
   hideFolderField = false,
+  isTemplateFieldDisabled = false,
 }: TestCaseModalProps) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -104,6 +106,7 @@ export const TestCaseModal = ({
             <TestCaseDetails
               className={cx('test-case-modal__scrollable-section')}
               formName={formName}
+              isTemplateFieldDisabled={isTemplateFieldDisabled}
             />
           </div>
         </form>
