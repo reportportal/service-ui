@@ -34,6 +34,7 @@ interface StepsProps {
   onRemoveStep: (stepId: number) => void;
   onMoveStep: ({ stepId, direction }: { stepId: number; direction: 'up' | 'down' }) => void;
   formName: string;
+  isKeyById?: boolean;
 }
 
 const messages = defineMessages({
@@ -47,7 +48,14 @@ const messages = defineMessages({
   },
 });
 
-export const Steps = ({ steps, onAddStep, onRemoveStep, onMoveStep, formName }: StepsProps) => {
+export const Steps = ({
+  steps,
+  onAddStep,
+  onRemoveStep,
+  onMoveStep,
+  formName,
+  isKeyById = false,
+}: StepsProps) => {
   const { formatMessage } = useIntl();
 
   const renderBetweenStepsArea = (index: number) => {
@@ -75,6 +83,7 @@ export const Steps = ({ steps, onAddStep, onRemoveStep, onMoveStep, formName }: 
       <span className={cx('steps__label')}>{formatMessage(messages.steps)}</span>
       {steps.map((step, index) => {
         const { id, instructions, expectedResult } = step;
+        const fieldKey = isKeyById ? id : index;
 
         return (
           <div key={id} className={cx('steps__step-container')}>
@@ -87,12 +96,12 @@ export const Steps = ({ steps, onAddStep, onRemoveStep, onMoveStep, formName }: 
               dropZoneDescription={formatMessage(commonMessages.dropFileDescription, {
                 browseButton: formatMessage(commonMessages.browseText),
               })}
-              attachmentFieldName={`steps.${id}.attachments`}
+              attachmentFieldName={`steps.${fieldKey}.attachments`}
               fileSizeMessage={formatMessage(commonMessages.fileSizeInfo)}
               onRemove={() => onRemoveStep(id)}
               onMove={(direction) => onMoveStep({ stepId: id, direction })}
             >
-              <Step stepId={id} instructions={instructions} expectedResult={expectedResult} />
+              <Step stepId={fieldKey} instructions={instructions} expectedResult={expectedResult} />
             </AttachmentArea>
             {renderBetweenStepsArea(index)}
           </div>
