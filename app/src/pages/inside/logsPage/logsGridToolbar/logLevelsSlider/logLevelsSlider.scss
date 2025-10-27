@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,44 +34,5 @@
     &.levels-#{$i} {
       width: calc((#{$i} - 1) * 52px + 30px);
     }
-  }
-}
-
-.info-message {
-  width: 285px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: $FONT-ROBOTO-REGULAR;
-  font-size: 13px;
-  line-height: 15px;
-  color: $COLOR--e-300;
-}
-
-.info-icon {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  align-self: flex-start;
-  width: 16px;
-  height: 16px;
-
-  svg path {
-    fill: $COLOR--e-300;
-  }
-}
-
-.info-text {
-  word-wrap: break-word;
-  align-self: flex-start;
-}
-
-.log-types-link {
-  color: $COLOR--topaz;
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
   }
 }

@@ -17,30 +17,16 @@
 import { useRef, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { useIntl, defineMessages } from 'react-intl';
 import { useTracking } from 'react-tracking';
-import Link from 'redux-first-router-link';
 import classNames from 'classnames/bind';
-import Parser from 'html-react-parser';
 import { InputSlider } from 'components/inputs/inputSlider';
-import { LOG_TYPES } from 'common/constants/settingsTabs';
-import { PROJECT_SETTINGS_TAB_PAGE, projectIdSelector } from 'controllers/pages';
 import { userIdSelector } from 'controllers/user';
 import { isDefaultLogLevel, isLogLevelsEqual } from 'controllers/log/utils';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
-import InfoIcon from 'common/img/info-inline.svg';
 import { logTypesLoadingSelector } from 'controllers/project';
 import styles from './logLevelsSlider.scss';
 
 const cx = classNames.bind(styles);
-
-const messages = defineMessages({
-  logLevelsSliderInfoMessage: {
-    id: 'LogsGridToolbar.logLevelsSliderInfoMessage',
-    defaultMessage:
-      'All logs are currently displayed. To adjust filtering, update <a>Log Types</a> settings.',
-  },
-});
 
 const MarkComponent = ({ item }) => {
   const markRef = useRef(null);
@@ -68,21 +54,12 @@ const MarkComponent = ({ item }) => {
 };
 
 export const LogLevelsSlider = ({ logLevel, logLevels, onChangeLogLevel }) => {
-  const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const userId = useSelector(userIdSelector);
-  const projectId = useSelector(projectIdSelector);
   const logTypesLoading = useSelector(logTypesLoadingSelector);
 
-  const shouldShowInfoMessage = () => {
+  const shouldHideSlider = () => {
     return logLevels.length === 1 && isDefaultLogLevel(logLevels[0]);
-  };
-
-  const createLogTypesLink = () => {
-    return {
-      type: PROJECT_SETTINGS_TAB_PAGE,
-      payload: { projectId, settingsTab: LOG_TYPES },
-    };
   };
 
   const changeLogLevel = (newLogLevel) => {
@@ -95,31 +72,8 @@ export const LogLevelsSlider = ({ logLevel, logLevels, onChangeLogLevel }) => {
     trackEvent(LOG_PAGE_EVENTS.getClickOnLogLevelFilterEvent(newLogLevel.name));
   };
 
-  const renderInfoMessage = () => {
-    const logTypesLink = createLogTypesLink();
-
-    return (
-      <div className={cx('info-message')}>
-        <div className={cx('info-icon')}>{Parser(InfoIcon)}</div>
-        <div className={cx('info-text')}>
-          {formatMessage(messages.logLevelsSliderInfoMessage, {
-            a: (chunks) => (
-              <Link to={logTypesLink} className={cx('log-types-link')}>
-                {chunks}
-              </Link>
-            ),
-          })}
-        </div>
-      </div>
-    );
-  };
-
-  if (logTypesLoading) {
+  if (logTypesLoading || shouldHideSlider()) {
     return null;
-  }
-
-  if (shouldShowInfoMessage()) {
-    return renderInfoMessage();
   }
 
   return (
