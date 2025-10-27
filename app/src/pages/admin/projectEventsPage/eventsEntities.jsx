@@ -66,6 +66,9 @@ import {
   CREATE_DEFECT,
   UPDATE_DEFECT,
   DELETE_DEFECT,
+  CREATE_LOG_TYPE,
+  UPDATE_LOG_TYPE,
+  DELETE_LOG_TYPE,
   ACTIONS_WITH_IMPORT,
   UPDATE_ITEM,
   LINK_ISSUE_AA,
@@ -94,6 +97,7 @@ import {
   IMPORT,
   PROJECT,
   DEFECT_TYPE,
+  LOG_TYPE,
   USER,
   ITEM_ISSUE,
   INTEGRATION,
@@ -101,6 +105,7 @@ import {
   PATTERN_RULE,
   EMAIL_CONFIG_FILTERING_OPTION,
   DEFECT_TYPE_FILTERING_OPTION,
+  LOG_TYPE_FILTERING_OPTION,
   ITEM_ISSUE_FILTERING_OPTION,
   PATTERN_RULE_FILTERING_OPTION,
   INDEX,
@@ -222,6 +227,18 @@ export class EventsEntities extends Component {
             {
               label: intl.formatMessage(actionMessages[DELETE_DEFECT]),
               value: DELETE_DEFECT,
+            },
+            {
+              label: intl.formatMessage(actionMessages[CREATE_LOG_TYPE]),
+              value: CREATE_LOG_TYPE,
+            },
+            {
+              label: intl.formatMessage(actionMessages[UPDATE_LOG_TYPE]),
+              value: UPDATE_LOG_TYPE,
+            },
+            {
+              label: intl.formatMessage(actionMessages[DELETE_LOG_TYPE]),
+              value: DELETE_LOG_TYPE,
             },
             {
               label: intl.formatMessage(actionMessages[CREATE_INTEGRATION]),
@@ -385,6 +402,10 @@ export class EventsEntities extends Component {
             {
               label: intl.formatMessage(objectTypesMessages[LAUNCH]),
               value: LAUNCH,
+            },
+            {
+              label: intl.formatMessage(objectTypesMessages[LOG_TYPE]),
+              value: LOG_TYPE_FILTERING_OPTION,
             },
             {
               label: intl.formatMessage(objectTypesMessages[INTEGRATION]),

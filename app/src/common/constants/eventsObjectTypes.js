@@ -23,6 +23,7 @@ export const PROJECT = 'project';
 export const ITEM_ISSUE = 'itemIssue';
 export const INTEGRATION = 'integration';
 export const DEFECT_TYPE = 'defectType';
+export const LOG_TYPE = 'logType';
 export const USER = 'user';
 export const EMAIL_CONFIG = 'emailConfig';
 export const PATTERN_RULE = 'pattern';
@@ -31,6 +32,7 @@ export const INVITATION_LINK = 'invitationLink';
 
 export const EMAIL_CONFIG_FILTERING_OPTION = 'EMAIL_CONFIG';
 export const DEFECT_TYPE_FILTERING_OPTION = 'DEFECT_TYPE';
+export const LOG_TYPE_FILTERING_OPTION = 'LOG_TYPE';
 export const ITEM_ISSUE_FILTERING_OPTION = 'ITEM_ISSUE';
 export const PATTERN_RULE_FILTERING_OPTION = 'PATTERN';
 export const INVITATION_LINK_FILTERING_OPTION = 'INVITATION_LINK';
