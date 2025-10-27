@@ -25,12 +25,15 @@ import { useDebouncedSpinner } from 'common/hooks';
 
 import { Launch, LaunchesResponse, ManualTestCase } from './types';
 
-const transformLaunchToManualTestCase = (launch: Launch): ManualTestCase => {
-  const totalTests = launch.statistics?.executions?.total ?? 0;
-  const successTests = launch.statistics?.executions?.passed ?? 0;
-  const failedTests = launch.statistics?.executions?.failed ?? 0;
-  const skippedTests = launch.statistics?.executions?.skipped ?? 0;
+const getExecutionStatistics = (launch: Launch) => ({
+  total: launch.statistics?.executions?.total ?? 0,
+  passed: launch.statistics?.executions?.passed ?? 0,
+  failed: launch.statistics?.executions?.failed ?? 0,
+  skipped: launch.statistics?.executions?.skipped ?? 0,
+});
 
+const transformLaunchToManualTestCase = (launch: Launch): ManualTestCase => {
+  const { total, passed, failed, skipped } = getExecutionStatistics(launch);
   const { id, number, name, startTime } = launch;
 
   return {
@@ -38,10 +41,10 @@ const transformLaunchToManualTestCase = (launch: Launch): ManualTestCase => {
     count: number,
     name,
     startTime: new Date(startTime).getTime(),
-    totalTests,
-    successTests,
-    failedTests,
-    skippedTests,
+    totalTests: total,
+    successTests: passed,
+    failedTests: failed,
+    skippedTests: skipped,
     testsToRun: 0,
   };
 };
@@ -57,13 +60,13 @@ export const useManualLaunches = () => {
       showSpinner();
 
       const response = await fetch<LaunchesResponse>(URLS.manualLaunchesList(projectKey));
-
       const transformedData = response.content.map(transformLaunchToManualTestCase);
+
       setLaunches(transformedData);
-    } catch (error) {
+    } catch {
       dispatch(
         showErrorNotification({
-          message: (error as Error).message,
+          messageId: 'errorOccurredTryAgain',
         }),
       );
     } finally {

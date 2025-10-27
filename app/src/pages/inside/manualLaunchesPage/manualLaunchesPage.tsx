@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
+import { useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
+import { isEmpty } from 'es-toolkit/compat';
+import { Button, RefreshIcon } from '@reportportal/ui-kit';
 
 import { projectNameSelector } from 'controllers/project';
 import { activeOrganizationNameSelector } from 'controllers/organization';
@@ -26,6 +29,7 @@ import { messages } from './messages';
 import styles from './manualLaunchesPage.scss';
 import { ManualLaunchesPageContent } from './manualLaunchesPageContent';
 import { useManualLaunches } from './useManualLaunches';
+import { commonMessages } from '../testPlansPage/commonMessages';
 
 const cx = createClassnames(styles);
 
@@ -33,7 +37,11 @@ export const ManualLaunchesPage = () => {
   const { formatMessage } = useIntl();
   const projectName = useSelector(projectNameSelector);
   const organizationName = useSelector(activeOrganizationNameSelector) as string;
-  const { launches, isLoading } = useManualLaunches();
+  const { launches, isLoading, refetch } = useManualLaunches();
+
+  const handleRefresh = useCallback(() => {
+    void refetch();
+  }, [refetch]);
 
   return (
     <div className={cx('manual-launches-page')}>
@@ -41,7 +49,19 @@ export const ManualLaunchesPage = () => {
         title={formatMessage(messages.manualLaunchesTitle)}
         organizationName={organizationName}
         projectName={projectName}
-      />
+      >
+        {!isEmpty(launches) && (
+          <Button
+            variant="text"
+            data-automation-id="refreshPageButton"
+            icon={<RefreshIcon />}
+            disabled={isLoading}
+            onClick={handleRefresh}
+          >
+            {formatMessage(commonMessages.refreshPage)}
+          </Button>
+        )}
+      </LocationHeaderLayout>
       <ManualLaunchesPageContent data={launches} isLoading={isLoading} />
     </div>
   );
