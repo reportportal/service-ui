@@ -48,11 +48,13 @@ export const buildManualScenario = (payload: CreateTestCaseFormData): ManualScen
 
   return {
     ...commonData,
-    steps: Object.values(payload?.steps ?? {}).map((step) => ({
-      instructions: step.instructions,
-      expectedResult: step.expectedResult,
-      attachments: step.attachments ?? [],
-    })),
+    steps: Object.values(payload?.steps ?? {})
+      .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+      .map((step) => ({
+        instructions: step.instructions,
+        expectedResult: step.expectedResult,
+        attachments: step.attachments ?? [],
+      })),
   };
 };
 
