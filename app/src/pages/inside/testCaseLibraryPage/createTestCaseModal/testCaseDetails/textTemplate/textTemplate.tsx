@@ -15,13 +15,8 @@
  */
 
 import { useIntl } from 'react-intl';
-import {
-  AddImageIcon,
-  FieldTextFlex,
-  FieldLabel,
-  FileDropArea,
-  MIME_TYPES,
-} from '@reportportal/ui-kit';
+import { AddImageIcon, FieldTextFlex, FieldLabel, FileDropArea } from '@reportportal/ui-kit';
+import { MIME_TYPES } from '@reportportal/ui-kit/fileDropArea';
 
 import { createClassnames } from 'common/utils';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
