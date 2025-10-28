@@ -143,6 +143,7 @@ export const AllTestCasesPage = ({
     const params = {
       limit: pageSize,
       offset: (page - 1) * testCasesPageData.size,
+      setPageData: () => setActivePage(page),
     };
 
     if (folderId) {
@@ -155,14 +156,15 @@ export const AllTestCasesPage = ({
     } else {
       dispatch(getAllTestCasesAction(params));
     }
-
-    setActivePage(page);
   };
 
   const setTestCasesPageSize = (pageSize: number): void => {
     const params = {
       limit: pageSize,
       offset: TestCasePageDefaultValues.offset,
+      setPageData: () => {
+        changePageSize(pageSize);
+      },
     };
 
     if (folderId) {
@@ -175,8 +177,6 @@ export const AllTestCasesPage = ({
     } else {
       dispatch(getAllTestCasesAction(params));
     }
-
-    changePageSize(pageSize);
   };
 
   return (
@@ -196,7 +196,7 @@ export const AllTestCasesPage = ({
 
       <div className={cx('sticky-wrapper')}>
         {Boolean(testCasesPageData?.totalElements) && (
-          <div className={cx('pagination')}>
+          <div className={cx('pagination', isAnyRowSelected ? 'pagination-with-panel' : '')}>
             <Pagination
               pageSize={pageSize}
               activePage={activePage}

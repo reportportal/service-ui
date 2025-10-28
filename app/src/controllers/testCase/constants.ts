@@ -23,7 +23,6 @@ export const START_CREATING_FOLDER = 'startCreatingFolder' as const;
 export const STOP_CREATING_FOLDER = 'stopCreatingFolder' as const;
 export const START_LOADING_FOLDER = 'startLoadingFolder' as const;
 export const STOP_LOADING_FOLDER = 'stopLoadingFolder' as const;
-export const GET_TEST_CASES = 'getTestCases' as const;
 export const NAMESPACE = 'testCase' as const;
 export const GET_TEST_CASES_BY_FOLDER_ID = 'getTestCasesByFolderId' as const;
 export const GET_ALL_TEST_CASES = 'getAllTestCases' as const;

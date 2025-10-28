@@ -15,7 +15,6 @@
  */
 
 import {
-  GET_TEST_CASES,
   GET_FOLDERS,
   CREATE_FOLDER,
   CREATE_FOLDER_SUCCESS,
@@ -39,20 +38,17 @@ import {
 import { Folder, TransformedFolder } from './types';
 import { Page, TestCase } from 'pages/inside/testCaseLibraryPage/types';
 
-export interface GetTestCasesParams {
-  search?: string;
-  testFolderId?: number;
-}
-
 export interface GetTestCasesByFolderIdParams {
   folderId: number;
   offset: number;
   limit: number;
+  setPageData?: () => void;
 }
 
 export interface GetAllTestCases {
   offset: number;
   limit: number;
+  setPageData?: () => void;
 }
 
 export interface CreateFolderParams {
@@ -87,11 +83,6 @@ export interface UpdateFolderCounterParams {
   folderId: number;
   delta: number;
 }
-
-export const getTestCasesAction = (params?: GetTestCasesParams) => ({
-  type: GET_TEST_CASES,
-  payload: params,
-});
 
 export const getTestCaseByFolderIdAction = (params: GetTestCasesByFolderIdParams) => ({
   type: GET_TEST_CASES_BY_FOLDER_ID,
