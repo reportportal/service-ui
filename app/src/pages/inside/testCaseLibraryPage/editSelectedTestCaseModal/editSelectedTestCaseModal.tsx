@@ -84,7 +84,7 @@ const EditTestCaseModalComponent = ({
       setTimeout(() => {
         reset();
         setIsInitialized(true);
-      }, 0);
+      }, 100);
     }
   }, [testCase, initialize, reset]);
 
