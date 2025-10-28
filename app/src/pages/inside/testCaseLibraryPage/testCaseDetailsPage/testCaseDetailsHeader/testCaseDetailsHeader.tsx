@@ -37,20 +37,21 @@ import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { testCaseLibraryBreadcrumbsSelector } from 'controllers/pages/selectors';
 
-import { TestCase } from '../../types';
+import { ExtendedTestCase } from '../../types';
 import { messages } from './messages';
 import { commonMessages } from '../../commonMessages';
 import { EDIT_TEST_CASE_MODAL_KEY } from '../editTestCaseModal/editTestCaseModal';
 import { useDeleteTestCaseModal } from '../../deleteTestCaseModal';
+import { AddToLaunchButton } from '../../addToLaunchButton';
 
 import styles from './testCaseDetailsHeader.scss';
+import { isEmpty } from 'es-toolkit/compat';
 
 const cx = createClassnames(styles);
 
 interface TestCaseDetailsHeaderProps {
   className?: string;
-  testCase: TestCase;
-  onAddToLaunch: () => void;
+  testCase: ExtendedTestCase;
   onAddToTestPlan: () => void;
   onMenuAction?: () => void;
 }
@@ -58,7 +59,6 @@ interface TestCaseDetailsHeaderProps {
 export const TestCaseDetailsHeader = ({
   className,
   testCase,
-  onAddToLaunch,
   onAddToTestPlan,
   onMenuAction = () => {},
 }: TestCaseDetailsHeaderProps) => {
@@ -188,11 +188,11 @@ export const TestCaseDetailsHeader = ({
               <MeatballMenuIcon />
             </Button>
           </PopoverControl>
-
           {canAddTestCaseToLaunch && (
-            <Button onClick={onAddToLaunch} variant="ghost" disabled>
-              {formatMessage(messages.addToLaunch)}
-            </Button>
+            <AddToLaunchButton
+              isButtonDisabled={isEmpty(testCase?.manualScenario?.preconditions?.value)}
+              testCaseId={testCase.id}
+            />
           )}
           {canAddTestCaseToTestPlan && (
             <Button onClick={onAddToTestPlan} variant="ghost">

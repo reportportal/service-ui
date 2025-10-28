@@ -47,6 +47,7 @@ import { ManualScenario, ExtendedTestCase } from 'pages/inside/testCaseLibraryPa
 import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
 import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
+import { AddToLaunchButton } from 'pages/inside/testCaseLibraryPage/addToLaunchButton';
 
 import { TestCaseMenuAction, TestCaseManualScenario } from '../types';
 import {
@@ -203,10 +204,6 @@ export const TestCaseSidePanel = memo(
       });
     };
 
-    const handleAddToLaunchClick = () => {
-      // TODO: Implement add to launch functionality
-    };
-
     const handleAddToTestPlanClick = () => {
       openAddTestCasesToTestPlanModal({
         selectedTestCaseIds: [testCase.id],
@@ -319,14 +316,10 @@ export const TestCaseSidePanel = memo(
             {formatMessage(messages.openDetails)}
           </Button>
           {canAddTestCaseToLaunch && (
-            <Button
-              variant="ghost"
-              className={cx('action-button')}
-              onClick={handleAddToLaunchClick}
-              data-automation-id="test-case-add-to-launch"
-            >
-              {formatMessage(messages.addToLaunch)}
-            </Button>
+            <AddToLaunchButton
+              isButtonDisabled={isEmpty(testCase?.manualScenario?.preconditions?.value)}
+              testCaseId={testCase.id}
+            />
           )}
           {canAddTestCaseToTestPlan && (
             <Button

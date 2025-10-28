@@ -25,10 +25,6 @@ export const messages = defineMessages({
     id: 'TestCaseSidePanel.openDetails',
     defaultMessage: 'Open Details',
   },
-  addToLaunch: {
-    id: 'TestCaseSidePanel.addToLaunch',
-    defaultMessage: 'Add to Launch',
-  },
   moreActionsTooltip: {
     id: 'TestCaseSidePanel.moreActionsTooltip',
     defaultMessage: 'Add scenario details to be able to add this test case to launch',
