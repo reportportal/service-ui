@@ -9,6 +9,7 @@ import { Modal, FileDropArea, AddCsvIcon, MIME_TYPES } from '@reportportal/ui-ki
 import type { MimeType } from '@reportportal/ui-kit/dist/components/fileDropArea/types';
 import { AttachmentFile } from '@reportportal/ui-kit/dist/components/fileDropArea/attachedFilesList';
 import { withModal } from 'controllers/modal';
+import { hideModalAction } from 'controllers/modal';
 
 import { commonValidators, createClassnames } from 'common/utils';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
@@ -21,6 +22,7 @@ import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';
 import { messages } from './messages';
 
 import styles from './importTestCaseModal.scss';
+import { useDispatch } from 'react-redux';
 
 export const IMPORT_TEST_CASE_MODAL_KEY = 'importTestCaseModalKey';
 export const IMPORT_TEST_CASE_FORM_NAME = 'import-test-case-modal-form';
@@ -36,7 +38,7 @@ type FileInput = FileLike | FileLike[];
 type ImportTestCaseFormValues = {
   folderName: string;
 };
-type ImportModalData = { data?: string };
+type ImportModalData = { data?: { folderName?: string } };
 
 type ImportTestCaseSubmitHandler = SubmitHandler<ImportTestCaseFormValues, ImportModalData>;
 
@@ -56,7 +58,14 @@ export const ImportTestCaseModal = ({
   const [folderIdFromUrl] = useState<number | undefined>(() =>
     extractFolderIdFromHash(window.location.hash),
   );
+  const dispatch = useDispatch();
+  const selectedFolderName = data?.folderName ?? '';
+
   const { isImportingTestCases, importTestCases } = useImportTestCase();
+
+  const handleCancel = () => {
+    dispatch(hideModalAction());
+  };
 
   const acceptFileMimeTypes = useMemo<MimeType[]>(() => [...CSV_MIME_TYPES], []);
 
@@ -117,6 +126,7 @@ export const ImportTestCaseModal = ({
   const cancelButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
     disabled: isImportingTestCases,
+    onClick: handleCancel,
   };
 
   const iconMarkup = isString(ExternalLinkIcon) ? Parser(ExternalLinkIcon) : null;
@@ -126,6 +136,7 @@ export const ImportTestCaseModal = ({
       title={formatMessage(commonMessages.importTestCases)}
       okButton={okButton}
       cancelButton={cancelButton}
+      onClose={handleCancel}
       className={cx('import-test-case-modal')}
     >
       <form onSubmit={handleSubmit(handleImport) as ImportTestCaseSubmitHandler}>
@@ -185,7 +196,7 @@ export const ImportTestCaseModal = ({
                   {formatMessage(messages.importFolderNameLabel)}
                 </label>
                 <div className={cx('import-test-case-modal__static-value')}>
-                  <span>{data}</span>
+                  <span>{selectedFolderName}</span>
                 </div>
               </>
             ) : (
@@ -204,6 +215,7 @@ export const ImportTestCaseModal = ({
 export default withModal(IMPORT_TEST_CASE_MODAL_KEY)(
   reduxForm<ImportTestCaseFormValues>({
     form: IMPORT_TEST_CASE_FORM_NAME,
+    destroyOnUnmount: true,
     initialValues: {
       folderName: '',
     },
