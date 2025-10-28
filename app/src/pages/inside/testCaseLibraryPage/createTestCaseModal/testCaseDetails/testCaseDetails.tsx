@@ -86,7 +86,7 @@ export const TestCaseDetails = ({
     (updatedSteps: Step[]) => {
       const stepsObject = buildStepsObjectWithPositions(updatedSteps);
 
-      // Strategy: Force a detectable change by unsetting/resetting the field
+      // Force a detectable change by unsetting/resetting the field
       dispatch(untouch(formName, 'steps'));
       dispatch(change(formName, 'steps', stepsObject));
       dispatch(touch(formName, 'steps'));
