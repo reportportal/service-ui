@@ -17,6 +17,7 @@
 export const GET_FOLDERS = 'getFolders' as const;
 export const CREATE_FOLDER = 'createFolder' as const;
 export const CREATE_FOLDER_SUCCESS = 'createFolderSuccess' as const;
+export const CREATE_FOLDERS_BATCH_SUCCESS = 'createFoldersBatchSuccess' as const;
 export const DELETE_FOLDER = 'deleteFolder' as const;
 export const DELETE_FOLDER_SUCCESS = 'deleteFolderSuccess' as const;
 export const START_CREATING_FOLDER = 'startCreatingFolder' as const;
@@ -35,5 +36,4 @@ export const GET_TEST_CASE_DETAILS_SUCCESS = 'getTestCaseDetailsSuccess' as cons
 export const GET_TEST_CASE_DETAILS_FAILURE = 'getTestCaseDetailsFailure' as const;
 export const RENAME_FOLDER = 'renameFolder' as const;
 export const RENAME_FOLDER_SUCCESS = 'renameFolderSuccess' as const;
-export const DUPLICATE_FOLDER = 'duplicateFolder' as const;
 export const UPDATE_FOLDER_COUNTER = 'updateFolderCounter' as const;
