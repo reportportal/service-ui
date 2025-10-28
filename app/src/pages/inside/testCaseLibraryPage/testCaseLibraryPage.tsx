@@ -102,7 +102,7 @@ export const TestCaseLibraryPage = () => {
                     icon={Parser(ImportIcon as unknown as string)}
                     data-automation-id="importTestCase"
                     adjustWidthOn="content"
-                    onClick={() => openImportFolderModal(currentFolderName)}
+                    onClick={() => openImportFolderModal({ folderName: currentFolderName ?? '' })}
                   >
                     {formatMessage(COMMON_LOCALE_KEYS.IMPORT)}
                   </Button>
