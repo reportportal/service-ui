@@ -135,9 +135,9 @@ $LEVEL_OFFSET_STEP: 20px;
 .accordion-block {
   position: absolute;
   display: flex;
-  left: 8px;
+  left: 16px;
   bottom: 0;
-  width: calc(100% - 8px);
+  width: calc(100% - 24px);
   height: 20px;
   background-color: $COLOR--white-two;
   box-shadow: 0 -15px 20px 0px $COLOR--white-two;

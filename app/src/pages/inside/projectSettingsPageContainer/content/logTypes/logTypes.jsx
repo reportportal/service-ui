@@ -69,10 +69,7 @@ export const LogTypes = ({ setHeaderTitleNode }) => {
   }, [formatMessage, setHeaderTitleNode, isEditable]);
 
   const filteredLogTypes = useMemo(
-    () =>
-      [...logTypes]
-        .filter((logType) => logType.level !== UNKNOWN_LOG_TYPE_LEVEL)
-        .sort((a, b) => b.level - a.level),
+    () => logTypes.filter((logType) => logType.level !== UNKNOWN_LOG_TYPE_LEVEL),
     [logTypes],
   );
 
