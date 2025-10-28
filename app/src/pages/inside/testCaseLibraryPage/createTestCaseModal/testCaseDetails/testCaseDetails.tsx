@@ -97,7 +97,7 @@ export const TestCaseDetails = ({
   const syncCreateModeSteps = useCallback(
     (updatedSteps: Step[]) => {
       updatedSteps.forEach((step, newIndex) => {
-        const oldIndex = steps.findIndex((s) => s.id === step.id);
+        const oldIndex = steps.findIndex(({ id }) => id === step.id);
         const stepData = getStepDataFromFormState(step, oldIndex);
         dispatch(change(formName, `steps.${newIndex}`, stepData));
       });
