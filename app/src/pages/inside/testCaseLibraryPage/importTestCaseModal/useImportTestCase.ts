@@ -6,7 +6,6 @@ import { useDebouncedSpinner } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { hideModalAction } from 'controllers/modal';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
-import { getTestCasesAction } from 'controllers/testCase';
 import { useIntl } from 'react-intl';
 import { SubmissionError } from 'redux-form';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
@@ -44,7 +43,7 @@ export const useImportTestCase = () => {
       return;
     }
 
-    const { testFolderId: resolvedFolderId, testFolderName: resolvedFolderName } = query;
+    const { testFolderName: resolvedFolderName } = query;
 
     showSpinner();
     try {
@@ -63,12 +62,6 @@ export const useImportTestCase = () => {
           values: resolvedFolderName ? { folderName: resolvedFolderName } : undefined,
         }),
       );
-
-      if (resolvedFolderId) {
-        dispatch(getTestCasesAction({ testFolderId: resolvedFolderId }));
-      } else {
-        dispatch(getTestCasesAction({}));
-      }
     } catch (error: unknown) {
       if (error instanceof Error && error?.message?.includes('tms_test_case_name_folder_unique')) {
         throw new SubmissionError({
