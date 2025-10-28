@@ -374,12 +374,10 @@ export const URLS = {
   onboarding: (page = 'GENERAL') => `${urlBase}onboarding?page=${page}`,
   instanceSettings: () => `${urlBase}settings`,
 
-  testCase: (projectKey, query = {}) =>
-    `${urlBase}project/${projectKey}/tms/test-case${getQueryParams(query)}`,
   testCaseDetails: (projectKey, testCaseId) =>
     `${urlBase}project/${projectKey}/tms/test-case/${testCaseId}`,
   bulkUpdateTestCases: (projectKey) => `${urlBase}project/${projectKey}/tms/test-case/batch`,
-  testCases: (projectKey, query) =>
+  testCases: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-case${getQueryParams(query)}`,
   testPlan: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-plan${getQueryParams(query)}`,

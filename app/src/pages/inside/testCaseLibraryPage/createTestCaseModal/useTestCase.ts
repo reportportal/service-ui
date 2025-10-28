@@ -124,15 +124,18 @@ export const useTestCase = (testCaseId?: number) => {
         const folderId = await handleFolder(payload);
         const manualScenario = buildManualScenario(payload);
 
-        await fetch(URLS.testCase(projectKey), {
+        const createdTestCase = await fetch(URLS.testCases(projectKey), {
           method: 'POST',
           data: buildTestCaseData(payload, folderId, manualScenario),
         });
 
         dispatch(hideModalAction());
-        dispatch(showSuccessNotification({ messageId: 'testCaseCreatedSuccess' }));
-        dispatch(updateFolderCounterAction({ folderId, delta: 1 }));
-        refetchTestCases(folderId);
+
+        if (createdTestCase) {
+          dispatch(showSuccessNotification({ messageId: 'testCaseCreatedSuccess' }));
+          dispatch(updateFolderCounterAction({ folderId, delta: 1 }));
+          refetchTestCases(folderId);
+        }
       } catch (error: unknown) {
         if (isDuplicateTestCaseError(error)) {
           throw new SubmissionError({
