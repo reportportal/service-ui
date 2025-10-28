@@ -1,7 +1,7 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
-import { change } from 'redux-form';
+import { change, touch, untouch } from 'redux-form';
 import { isNumber, isEmpty, keyBy } from 'es-toolkit/compat';
 import { FieldText } from '@reportportal/ui-kit';
 
@@ -58,6 +58,69 @@ export const TestCaseDetails = ({
   const stepsData = useSelector(stepsDataSelector(formName));
   const isEditModeRef = useRef(!isEmpty(stepsData));
 
+  const buildStepsObjectWithPositions = useCallback(
+    (updatedSteps: Step[]) =>
+      keyBy(
+        updatedSteps.map((step, idx) => ({
+          ...(stepsData?.[step.id] || step),
+          id: step.id,
+          position: idx,
+        })),
+        (step) => step.id,
+      ),
+    [stepsData],
+  );
+
+  const getStepDataFromFormState = useCallback(
+    (step: Step, oldIndex: number): Step => {
+      if (isEditMode) {
+        return stepsData?.[step.id] || step;
+      }
+
+      return (Array.isArray(stepsData) ? stepsData[oldIndex] : undefined) || step;
+    },
+    [isEditMode, stepsData],
+  );
+
+  const syncEditModeSteps = useCallback(
+    (updatedSteps: Step[]) => {
+      const stepsObject = buildStepsObjectWithPositions(updatedSteps);
+
+      // Strategy: Force a detectable change by unsetting/resetting the field
+      dispatch(untouch(formName, 'steps'));
+      dispatch(change(formName, 'steps', stepsObject));
+      dispatch(touch(formName, 'steps'));
+    },
+    [formName, dispatch, buildStepsObjectWithPositions],
+  );
+
+  const syncCreateModeSteps = useCallback(
+    (updatedSteps: Step[]) => {
+      updatedSteps.forEach((step, newIndex) => {
+        const oldIndex = steps.findIndex((s) => s.id === step.id);
+        const stepData = getStepDataFromFormState(step, oldIndex);
+        dispatch(change(formName, `steps.${newIndex}`, stepData));
+      });
+
+      // Clear removed step indices
+      for (let i = updatedSteps.length; i < steps.length; i += 1) {
+        dispatch(change(formName, `steps.${i}`, undefined));
+      }
+    },
+    [steps, formName, dispatch, getStepDataFromFormState],
+  );
+
+  const syncStepsToForm = useCallback(
+    (updatedSteps: Step[]) => {
+      if (isEditMode) {
+        syncEditModeSteps(updatedSteps);
+      } else {
+        syncCreateModeSteps(updatedSteps);
+      }
+    },
+    [isEditMode, syncEditModeSteps, syncCreateModeSteps],
+  );
+
   useEffect(() => {
     if (isEditModeRef.current && !isEmpty(stepsData)) {
       setSteps(Object.values(stepsData));
@@ -66,47 +129,47 @@ export const TestCaseDetails = ({
     }
   }, [stepsData]);
 
-  const handleAddStep = (index?: number) => {
-    setSteps((prevState) => {
+  const handleAddStep = useCallback(
+    (index?: number) => {
       const newStep = createEmptyStep();
+      const updatedSteps = isNumber(index)
+        ? [...steps.slice(0, index + 1), newStep, ...steps.slice(index + 1)]
+        : [...steps, newStep];
 
-      if (isNumber(index)) {
-        return [...prevState.slice(0, index + 1), newStep, ...prevState.slice(index + 1)];
-      }
+      setSteps(updatedSteps);
+      syncStepsToForm(updatedSteps);
+    },
+    [steps, syncStepsToForm],
+  );
 
-      return [...prevState, newStep];
-    });
-  };
+  const handleRemoveStep = useCallback(
+    (stepId: number) => {
+      const updatedSteps = steps.filter((step) => step.id !== stepId);
 
-  const handleRemoveStep = (stepId: number) =>
-    setSteps((prevState) => prevState.filter((step) => step.id !== stepId));
+      setSteps(updatedSteps);
+      syncStepsToForm(updatedSteps);
+    },
+    [steps, syncStepsToForm],
+  );
 
-  const handleMoveStep = ({ stepId, direction }: { stepId: number; direction: 'up' | 'down' }) => {
-    setSteps((prevState) => {
-      const currentIndex = prevState.findIndex((step) => step.id === stepId);
+  const handleMoveStep = useCallback(
+    ({ stepId, direction }: { stepId: number; direction: 'up' | 'down' }) => {
+      const currentIndex = steps.findIndex((step) => step.id === stepId);
       const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
-      const shouldNotMove = newIndex < 0 || newIndex >= prevState.length;
 
-      if (currentIndex === -1 || shouldNotMove) {
-        return prevState;
+      if (currentIndex === -1 || newIndex < 0 || newIndex >= steps.length) {
+        return;
       }
 
-      const reorderedSteps = [...prevState];
+      const reorderedSteps = [...steps];
       const [movedStep] = reorderedSteps.splice(currentIndex, 1);
-
       reorderedSteps.splice(newIndex, 0, movedStep);
 
-      const stepsWithPosition = reorderedSteps.map((step, index) => ({
-        ...step,
-        position: index,
-      }));
-      const reorderedStepsObject = keyBy(stepsWithPosition, (step) => step.id);
-
-      dispatch(change(formName, 'steps', reorderedStepsObject));
-
-      return reorderedSteps;
-    });
-  };
+      setSteps(reorderedSteps);
+      syncStepsToForm(reorderedSteps);
+    },
+    [steps, syncStepsToForm],
+  );
 
   const isTextTemplate = manualScenarioType === ManualScenarioType.TEXT;
 
