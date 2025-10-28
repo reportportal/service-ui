@@ -81,6 +81,7 @@ const EditTestCaseModalComponent = ({
 
       initialize({ ...formData } as unknown as Partial<CreateTestCaseFormData>);
 
+      // Delay reset() to ensure form is fully initialized before resetting pristine state
       setTimeout(() => {
         reset();
         setIsInitialized(true);
