@@ -66,7 +66,7 @@ const MessageColumn = ({ className, value, customProps, ...rest }) => {
     <div
       className={cx(
         'message-column',
-        `level-${value.level}`,
+        `level-${value.level?.toLowerCase()}`,
         `column-size-${logsSize}`,
         className,
         { console },

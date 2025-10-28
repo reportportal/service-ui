@@ -184,14 +184,15 @@ export const enabledPattersSelector = createSelector(patternsSelector, (patterns
   patterns.filter((pattern) => pattern.enabled),
 );
 
-export const logTypesSelector = (state) => projectSelector(state).logTypes || [];
+export const logTypesSelector = (state) =>
+  [...(projectSelector(state).logTypes || [])].sort((a, b) => b.level - a.level);
 export const logTypesLoadingSelector = (state) => projectSelector(state).logTypesLoading || false;
 export const filterableLogTypesSelector = createSelector(logTypesSelector, (logTypes) => {
   const filterableLogTypes = logTypes
     .filter((logType) => logType.is_filterable)
     .map((logType) => ({
       ...logType,
-      label: capitalize(logType.name),
+      label: logType.is_system ? capitalize(logType.name) : logType.name,
     }));
 
   filterableLogTypes.push({

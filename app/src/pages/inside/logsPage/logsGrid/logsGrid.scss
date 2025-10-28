@@ -44,33 +44,34 @@
     display: block;
     width: 8px;
     border-bottom: 1px solid $COLOR--primary-gray;
+    background-color: $COLOR--e-100;
   }
-  &.level-FATAL {
+  &.level-fatal {
     &:before {
       background-color: $COLOR--fatal;
     }
   }
-  &.level-ERROR {
+  &.level-error {
     &:before {
       background-color: $COLOR--orange-red;
     }
   }
-  &.level-WARN {
+  &.level-warn {
     &:before {
       background-color: $COLOR--to-investigate;
     }
   }
-  &.level-TRACE {
+  &.level-trace {
     &:before {
       background-color: $COLOR--gray-91;
     }
   }
-  &.level-INFO {
+  &.level-info {
     &:before {
       background-color: $COLOR--topaz;
     }
   }
-  &.level-DEBUG {
+  &.level-debug {
     &:before {
       background-color: $COLOR--gray-60;
     }
