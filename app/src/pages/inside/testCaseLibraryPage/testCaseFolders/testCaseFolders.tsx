@@ -107,7 +107,7 @@ export const TestCaseFolders = () => {
   }, [currentFolder, folderId, dispatch, setAllTestCases]);
 
   useEffect(() => {
-    if (currentFolder && folderId !== '' && Number.isFinite(folderIdNumber)) {
+    if (currentFolder && activeFolder !== folderIdNumber) {
       dispatch(
         getTestCaseByFolderIdAction({
           folderId: folderIdNumber,

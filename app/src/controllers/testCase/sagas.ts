@@ -37,7 +37,6 @@ import {
   GET_FOLDERS,
   CREATE_FOLDER,
   DELETE_FOLDER,
-  GET_TEST_CASES,
   GET_TEST_CASES_BY_FOLDER_ID,
   GET_ALL_TEST_CASES,
   GET_TEST_CASE_DETAILS,
@@ -54,7 +53,6 @@ import {
   stopCreatingFolderAction,
   startLoadingFolderAction,
   stopLoadingFolderAction,
-  GetTestCasesParams,
   CreateFolderParams,
   DeleteFolderParams,
   RenameFolderParams,
@@ -74,10 +72,6 @@ import {
   urlOrganizationSlugSelector,
   urlProjectSlugSelector,
 } from 'controllers/pages';
-
-interface GetTestCasesAction extends Action<typeof GET_TEST_CASES> {
-  payload?: GetTestCasesParams;
-}
 
 interface GetTestCasesByFolderIdAction extends Action<typeof GET_TEST_CASES_BY_FOLDER_ID> {
   payload: GetTestCasesByFolderIdParams;
@@ -109,21 +103,11 @@ interface TestCaseDetailsAction extends Action<typeof GET_TEST_CASE_DETAILS> {
   };
 }
 
-function* getTestCases(action: GetTestCasesAction) {
-  try {
-    const projectKey = (yield select(projectKeySelector)) as string;
-
-    yield call(fetch, URLS.testCase(projectKey, action.payload));
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generator {
   yield put(startLoadingTestCasesAction());
 
   try {
-    const { folderId, offset, limit } = action.payload;
+    const { folderId, offset, limit, setPageData } = action.payload;
     const projectKey = (yield select(projectKeySelector)) as string;
     const result = (yield call(
       fetch,
@@ -134,6 +118,10 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
     };
 
     yield put(setTestCasesAction(result));
+
+    if (setPageData) {
+      setPageData();
+    }
   } catch {
     yield put(
       showErrorNotification({
@@ -189,13 +177,17 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
   yield put(startLoadingTestCasesAction());
 
   try {
-    const { offset, limit } = action.payload;
+    const { offset, limit, setPageData } = action.payload;
     const projectKey = (yield select(projectKeySelector)) as string;
     const result = (yield call(fetch, URLS.testCases(projectKey, { offset, limit }))) as {
       content: TestCase[];
       page: Page;
     };
     yield put(setTestCasesAction(result));
+
+    if (setPageData) {
+      setPageData();
+    }
   } catch {
     yield put(
       showErrorNotification({
@@ -405,10 +397,6 @@ function* watchCreateFolder() {
   yield takeEvery(CREATE_FOLDER, createFolder);
 }
 
-function* watchGetTestCases() {
-  yield takeEvery(GET_TEST_CASES, getTestCases);
-}
-
 function* watchGetTestCasesByFolderId() {
   yield takeLatest(GET_TEST_CASES_BY_FOLDER_ID, getTestCasesByFolderId);
 }
@@ -423,7 +411,6 @@ function* watchGetTestCaseDetails() {
 
 export function* testCaseSagas() {
   yield all([
-    watchGetTestCases(),
     watchGetTestCaseDetails(),
     watchGetFolders(),
     watchCreateFolder(),
