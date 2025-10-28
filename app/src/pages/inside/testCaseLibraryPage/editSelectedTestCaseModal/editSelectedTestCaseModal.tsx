@@ -56,7 +56,10 @@ const EditTestCaseModalComponent = ({
     if (testCase) {
       const manualScenario = testCase?.manualScenario;
       const stepsObject = manualScenario?.steps
-        ? keyBy(manualScenario.steps, (step) => step.id)
+        ? keyBy(
+            manualScenario.steps.map((step, index) => ({ ...step, position: index })),
+            (step) => step.id,
+          )
         : undefined;
 
       const formData = {
