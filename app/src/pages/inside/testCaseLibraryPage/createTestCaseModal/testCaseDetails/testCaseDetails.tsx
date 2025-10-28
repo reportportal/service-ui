@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
-import { isNumber, isEmpty } from 'es-toolkit/compat';
+import { useSelector, useDispatch } from 'react-redux';
+import { change } from 'redux-form';
+import { isNumber, isEmpty, keyBy } from 'es-toolkit/compat';
 import { FieldText } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
@@ -52,6 +53,7 @@ export const TestCaseDetails = ({
   const [steps, setSteps] = useState<Step[]>([createEmptyStep()]);
   const [isEditMode, setIsEditMode] = useState(false);
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
   const manualScenarioType = useSelector(manualScenarioTypeSelector(formName));
   const stepsData = useSelector(stepsDataSelector(formName));
   const isEditModeRef = useRef(!isEmpty(stepsData));
@@ -93,6 +95,14 @@ export const TestCaseDetails = ({
       const [movedStep] = reorderedSteps.splice(currentIndex, 1);
 
       reorderedSteps.splice(newIndex, 0, movedStep);
+
+      const stepsWithPosition = reorderedSteps.map((step, index) => ({
+        ...step,
+        position: index,
+      }));
+      const reorderedStepsObject = keyBy(stepsWithPosition, (step) => step.id);
+
+      dispatch(change(formName, 'steps', reorderedStepsObject));
 
       return reorderedSteps;
     });

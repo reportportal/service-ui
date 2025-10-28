@@ -36,6 +36,7 @@ export interface Step {
   instructions: string;
   expectedResult: string;
   attachments?: Attachment[];
+  position?: number;
 }
 
 export interface Attachment {
@@ -141,6 +142,7 @@ export interface TestStep {
   instructions: string;
   expectedResult: string;
   attachments?: Attachment[];
+  position?: number;
 }
 
 export interface Page {
