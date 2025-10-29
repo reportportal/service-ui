@@ -124,10 +124,12 @@ RuleItem.propTypes = {
   isPreview: PropTypes.bool,
   className: PropTypes.string,
   classNames: PropTypes.object,
+  itemClassNames: PropTypes.object,
 };
 RuleItem.defaultProps = {
   ...ruleItemDefaultProps,
   isPreview: false,
   className: '',
   classNames: {},
+  itemClassNames: {},
 };

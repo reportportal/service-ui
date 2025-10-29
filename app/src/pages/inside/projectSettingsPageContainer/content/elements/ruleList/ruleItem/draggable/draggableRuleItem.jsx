@@ -32,7 +32,7 @@ export const DraggableRuleItem = ({
   dragControlTooltipContent,
   disabled,
   className,
-  itemClassNames,
+  itemClassNames = {},
   ...restRuleItemProps
 }) => {
   const [isDragging, setIsDragging] = useState(false);
