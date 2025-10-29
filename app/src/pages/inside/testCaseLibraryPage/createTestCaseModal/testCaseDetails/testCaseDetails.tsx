@@ -99,6 +99,7 @@ export const TestCaseDetails = ({
       updatedSteps.forEach((step, newIndex) => {
         const oldIndex = steps.findIndex(({ id }) => id === step.id);
         const stepData = getStepDataFromFormState(step, oldIndex);
+
         dispatch(change(formName, `steps.${newIndex}`, stepData));
       });
 
@@ -129,6 +130,14 @@ export const TestCaseDetails = ({
     }
   }, [stepsData]);
 
+  const setUpdatedSteps = useCallback(
+    (updatedSteps: Step[]) => {
+      setSteps(updatedSteps);
+      syncStepsToForm(updatedSteps);
+    },
+    [syncStepsToForm],
+  );
+
   const handleAddStep = useCallback(
     (index?: number) => {
       const newStep = createEmptyStep();
@@ -136,8 +145,7 @@ export const TestCaseDetails = ({
         ? [...steps.slice(0, index + 1), newStep, ...steps.slice(index + 1)]
         : [...steps, newStep];
 
-      setSteps(updatedSteps);
-      syncStepsToForm(updatedSteps);
+      setUpdatedSteps(updatedSteps);
     },
     [steps, syncStepsToForm],
   );
@@ -146,8 +154,7 @@ export const TestCaseDetails = ({
     (stepId: number) => {
       const updatedSteps = steps.filter((step) => step.id !== stepId);
 
-      setSteps(updatedSteps);
-      syncStepsToForm(updatedSteps);
+      setUpdatedSteps(updatedSteps);
     },
     [steps, syncStepsToForm],
   );
