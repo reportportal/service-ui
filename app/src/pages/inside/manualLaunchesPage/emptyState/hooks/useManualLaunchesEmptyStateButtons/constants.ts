@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-.manual-launches-page {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-}
+import { Buttons } from './types';
+import { PROJECT_TEST_PLANS_PAGE, TEST_CASE_LIBRARY_PAGE } from 'controllers/pages';
 
-.loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 400px;
-}
+export const EMPTY_STATE_BUTTONS: Buttons[] = [
+  {
+    name: 'testPlansLink',
+    type: PROJECT_TEST_PLANS_PAGE,
+  },
+  {
+    name: 'testLibraryLink',
+    type: TEST_CASE_LIBRARY_PAGE,
+  },
+];

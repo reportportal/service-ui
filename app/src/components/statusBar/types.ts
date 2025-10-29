@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-.manual-launches-page {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
+export enum SegmentStatus {
+  Passed = 'passed',
+  Failed = 'failed',
+  Skipped = 'skipped',
 }
 
-.loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 400px;
+export interface SegmentStatusBarData {
+  value: number;
+  status: SegmentStatus;
+}
+
+export interface SegmentStatusBarProps {
+  data: SegmentStatusBarData[];
+  className?: string;
+  minWidthPercentage?: number;
 }

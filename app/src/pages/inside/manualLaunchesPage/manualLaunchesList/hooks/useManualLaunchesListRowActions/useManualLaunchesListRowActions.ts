@@ -14,16 +14,22 @@
  * limitations under the License.
  */
 
-.manual-launches-page {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-}
+import { useMemo } from 'react';
+import { useIntl } from 'react-intl';
 
-.loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 400px;
-}
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { ActionItem } from 'components/actionMenu';
+
+export const useManualLaunchesListRowActions = (): ActionItem[] => {
+  const { formatMessage } = useIntl();
+
+  return useMemo(
+    () => [
+      {
+        label: formatMessage(COMMON_LOCALE_KEYS.EDIT),
+        onClick: () => {},
+      },
+    ],
+    [formatMessage],
+  );
+};

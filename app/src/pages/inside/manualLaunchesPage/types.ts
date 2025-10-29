@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-.manual-launches-page {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-}
-
-.loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 400px;
-}
+export type ManualTestCase = {
+  id: number;
+  count: number;
+  name: string;
+  startTime: number;
+  totalTests: number;
+  successTests: number;
+  failedTests: number;
+  skippedTests: number;
+  testsToRun: number;
+};

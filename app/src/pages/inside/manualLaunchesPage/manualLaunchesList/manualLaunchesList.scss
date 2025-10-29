@@ -1,0 +1,142 @@
+/*!
+ * Copyright 2024 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.manual-launches-list {
+  --manual-launches-list-grid: 80px minmax(100px, 1fr) 155px 80px 110px 100px 80px 48px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+
+  &-table {
+    margin: 24px auto 0;
+    padding: 0 32px 32px;
+    max-width: 1264px;
+    box-sizing: border-box;
+
+    &-cell {
+      &-count {
+        padding: 8px 0;
+      }
+
+      &-time {
+        display: flex;
+        align-items: center;
+        height: 100%;
+      }
+
+      &-status {
+        padding: 0;
+      }
+
+      &-failed-tests {
+        color: var(--rp-ui-base-error);
+      }
+
+      &-tests-to-run {
+        min-width: 80px;
+      }
+    }
+
+    // select column headers
+    > div {
+      grid-template-columns: 32px var(--manual-launches-list-grid) !important;
+
+      & > button:nth-of-type(1) {
+        flex: 0 0 auto;
+      }
+
+      & > button:nth-of-type(2) {
+        flex: 1 1 320px;
+        font-weight: var(--rp-ui-base-fw-medium);
+        text-align: left;
+        padding-left: 0;
+      }
+    }
+
+    &-row {
+      // select row
+      & > div + div > div {
+        grid-template-columns: var(--manual-launches-list-grid) !important;
+        padding: 0 !important;
+
+        //select cells
+        > div {
+          height: 100%;
+          display: flex;
+          align-content: center;
+          align-items: center;
+
+          &:first-child {
+            flex: 0 0 auto;
+          }
+
+          // name cell
+          &:nth-child(2) {
+            flex: 1 1 320px;
+            font-family: var(--rp-ui-base-font-family);
+            font-weight: var(--rp-ui-base-fw-medium);
+            text-align: left;
+            padding-left: 0;
+          }
+
+          // total tests cell
+          &:nth-child(4) {
+            justify-content: flex-end;
+          }
+
+          // statusBar cell
+          &:nth-child(5) {
+            padding: 0;
+          }
+
+          // tests to run button cell
+          &:nth-child(7) {
+            padding: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+.selection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  background: var(--rp-ui-base-bg-000);
+  padding: 12px 32px;
+  border-top: 1px solid var(--rp-ui-base-e-100);
+  margin-top: auto;
+  height: 64px;
+
+  &-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &__more-button {
+      padding: 7px 12px;
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+}

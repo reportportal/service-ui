@@ -14,16 +14,8 @@
  * limitations under the License.
  */
 
-.manual-launches-page {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-}
-
-.loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 400px;
-}
+/**
+ * Maximum test count to display in the TestRunButton.
+ * When exceeded, shows "9999+" instead of the actual count.
+ */
+export const MAX_TEST_COUNT_TO_RUN = 9999;

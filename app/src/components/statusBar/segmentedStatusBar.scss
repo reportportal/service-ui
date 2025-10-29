@@ -14,16 +14,30 @@
  * limitations under the License.
  */
 
-.manual-launches-page {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-}
-
-.loading {
+.status-bar {
   display: flex;
   align-items: center;
-  justify-content: center;
-  min-height: 400px;
+  gap: 2px;
+  width: 100%;
+
+  .count {
+    margin-right: 10px;
+  }
+
+  .status-line {
+    height: 4px;
+    border-radius: 1px;
+
+    &.passed {
+      background-color: var(--rp-ui-base-test-execution-status-passed);
+    }
+
+    &.failed {
+      background-color: var(--rp-ui-base-error);
+    }
+
+    &.skipped {
+      background-color: var(--rp-ui-base-e-200);
+    }
+  }
 }

@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-.manual-launches-page {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-}
+import { messages } from 'pages/inside/manualLaunchesPage/messages';
 
-.loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 400px;
-}
+export type Buttons = {
+  name: keyof typeof messages;
+  type: string;
+};
+
+// temp type, remove after src/controllers/user/selectors.js will be converted to TS
+export type ActiveProject = {
+  organizationSlug: string;
+  projectSlug: string;
+};

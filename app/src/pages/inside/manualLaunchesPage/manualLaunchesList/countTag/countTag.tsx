@@ -14,16 +14,23 @@
  * limitations under the License.
  */
 
-.manual-launches-page {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
+import { createClassnames } from 'common/utils';
+
+import styles from './countTag.scss';
+
+const cx = createClassnames(styles);
+
+export interface CountTagProps {
+  count: number;
+  className?: string;
 }
 
-.loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 400px;
-}
+export const CountTag = ({ count, className }: CountTagProps) => {
+  return (
+    <div className={cx(className)}>
+      <div className={cx('count-tag')} aria-label="manual-launch-test-count">
+        {count}
+      </div>
+    </div>
+  );
+};
