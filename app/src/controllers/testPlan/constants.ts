@@ -32,27 +32,26 @@ export const defaultSortParam = 'createdDate,desc';
 export type TestPlanDto = {
   id: number;
   name: string;
-  totalTestCases: number;
-  coveredTestCases: number;
+  executionStatistic: {
+    covered: number;
+    total: number;
+  };
   description?: string;
 };
 
+export interface PageInfo {
+  number: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}
+
 export type TestPlanFoldersDto = {
   content: Folder[];
-  page: {
-    number: number;
-    size: number;
-    totalElements: number;
-    totalPages: number;
-  };
+  page: PageInfo;
 };
 
 export type TestPlanTestCaseDto = {
   content: ExtendedTestCase[];
-  page: {
-    number: number;
-    size: number;
-    totalElements: number;
-    totalPages: number;
-  };
+  page: PageInfo;
 };

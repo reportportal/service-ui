@@ -24,6 +24,7 @@
     font-family: $FONT-ROBOTO-REGULAR;
     color: var(--rp-ui-base-almost-black);
     width: 100%;
+    min-width: max-content;
     padding: 8px 16px;
     border-radius: 0;
     border: none;

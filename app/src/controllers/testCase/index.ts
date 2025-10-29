@@ -16,7 +16,6 @@
 
 export {
   getFoldersAction,
-  getTestCasesAction,
   getAllTestCasesAction,
   getTestCaseByFolderIdAction,
 } from './actionCreators';

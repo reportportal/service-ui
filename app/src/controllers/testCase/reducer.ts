@@ -20,25 +20,32 @@ import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
 import { TEST_CASE_LIBRARY_PAGE } from 'controllers/pages';
 import {
+  NAMESPACE,
   START_CREATING_FOLDER,
   STOP_CREATING_FOLDER,
   START_LOADING_FOLDER,
   STOP_LOADING_FOLDER,
-  NAMESPACE,
   START_LOADING_TEST_CASES,
   STOP_LOADING_TEST_CASES,
   SET_TEST_CASES,
-  DELETE_FOLDER_SUCCESS,
+  DELETE_TEST_CASE_SUCCESS,
   CREATE_FOLDER_SUCCESS,
+  RENAME_FOLDER_SUCCESS,
+  DELETE_FOLDER_SUCCESS,
   GET_TEST_CASE_DETAILS,
   GET_TEST_CASE_DETAILS_SUCCESS,
   GET_TEST_CASE_DETAILS_FAILURE,
-  RENAME_FOLDER_SUCCESS,
+  UPDATE_FOLDER_COUNTER,
 } from 'controllers/testCase/constants';
 import { Folder } from './types';
-import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { TestCase, Page } from 'pages/inside/testCaseLibraryPage/types';
 import { queueReducers } from 'common/utils';
-import { DeleteFolderSuccessParams, RenameFolderParams } from './actionCreators';
+import {
+  DeleteFolderSuccessParams,
+  DeleteTestCaseParams,
+  RenameFolderParams,
+  UpdateFolderCounterParams,
+} from './actionCreators';
 
 export type InitialStateType = {
   folders: {
@@ -50,6 +57,7 @@ export type InitialStateType = {
   testCases: {
     isLoading: boolean;
     list: TestCase[];
+    page: Page[];
   };
 };
 
@@ -63,6 +71,7 @@ export const INITIAL_STATE: InitialStateType = {
   testCases: {
     isLoading: false,
     list: [],
+    page: null,
   },
 };
 
@@ -72,10 +81,11 @@ const INITIAL_DETAILS_STATE = {
   error: null,
 };
 
-type FolderActions =
+type FolderAction =
   | { type: typeof DELETE_FOLDER_SUCCESS; payload: DeleteFolderSuccessParams }
   | { type: typeof RENAME_FOLDER_SUCCESS; payload: RenameFolderParams }
-  | { type: typeof CREATE_FOLDER_SUCCESS; payload: Folder };
+  | { type: typeof CREATE_FOLDER_SUCCESS; payload: Folder }
+  | { type: typeof UPDATE_FOLDER_COUNTER; payload: UpdateFolderCounterParams };
 
 const isCreatingFolderReducer = (
   state = INITIAL_STATE.folders.isCreatingFolder,
@@ -105,16 +115,26 @@ const isLoadingFolderReducer = (
   }
 };
 
-const testCasesReducer = (
-  state = INITIAL_STATE.testCases,
-  action: { type: string; payload?: unknown },
-) => {
+type TestCasesAction =
+  | { type: typeof SET_TEST_CASES; payload?: { content: TestCase[]; page: Page } }
+  | { type: typeof DELETE_TEST_CASE_SUCCESS; payload: DeleteTestCaseParams }
+  | { type: typeof START_LOADING_TEST_CASES }
+  | { type: typeof STOP_LOADING_TEST_CASES };
+
+const testCasesReducer = (state = INITIAL_STATE.testCases, action: TestCasesAction) => {
   switch (action.type) {
     case SET_TEST_CASES:
       return {
         ...state,
-        list: Array.isArray(action.payload) ? (action.payload as TestCase[]) : [],
+        list: Array.isArray(action.payload?.content) ? action.payload.content : [],
+        page: action.payload?.page || null,
       };
+    case DELETE_TEST_CASE_SUCCESS: {
+      return {
+        ...state,
+        list: state.list.filter(({ id }) => action.payload.testCase.id !== id),
+      };
+    }
     case START_LOADING_TEST_CASES:
       return {
         ...state,
@@ -130,7 +150,7 @@ const testCasesReducer = (
   }
 };
 
-const folderReducer = (state = INITIAL_STATE.folders.data, action: FolderActions) => {
+const folderReducer = (state = INITIAL_STATE.folders.data, action: FolderAction) => {
   switch (action.type) {
     case DELETE_FOLDER_SUCCESS: {
       return state.filter(({ id }) => !action.payload.deletedFolderIds.includes(id));
@@ -146,6 +166,15 @@ const folderReducer = (state = INITIAL_STATE.folders.data, action: FolderActions
     }
     case CREATE_FOLDER_SUCCESS: {
       return [...state, action.payload];
+    }
+    case UPDATE_FOLDER_COUNTER: {
+      return state.map((folder) => {
+        if (folder.id !== action.payload.folderId) {
+          return folder;
+        }
+
+        return { ...folder, countOfTestCases: folder.countOfTestCases + action.payload.delta };
+      });
     }
     default:
       return state;

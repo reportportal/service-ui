@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useIntl } from 'react-intl';
-import { useDispatch } from 'react-redux';
-import { change } from 'redux-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { change, formValueSelector } from 'redux-form';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { useFileProcessing, BaseAttachmentFile } from 'common/hooks';
+import type { AppState } from 'types/store';
+
 import { useAttachmentUpload } from './useAttachmentUpload';
 import { messages } from './messages';
 
@@ -32,6 +35,12 @@ export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOption
   const dispatch = useDispatch();
   const { uploadAttachment } = useAttachmentUpload();
   const { formatMessage } = useIntl();
+  const isInitializedRef = useRef(false);
+  const selector = formValueSelector(formName || 'no-form');
+  const initialAttachments =
+    useSelector<AppState, BaseAttachmentFile[] | undefined>(
+      (state) => selector(state, fieldName) as BaseAttachmentFile[] | undefined,
+    ) || [];
 
   const handleUpload = useCallback(
     async (file: File) => {
@@ -50,15 +59,38 @@ export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOption
     [formatMessage, uploadAttachment],
   );
 
-  const { attachedFiles, addFiles, removeFile, downloadFile } =
+  const { attachedFiles, addFiles, removeFile, downloadFile, setAttachedFiles } =
     useFileProcessing<BaseAttachmentFile>({
       onUpload: handleUpload,
     });
 
   useEffect(() => {
+    if (!isEmpty(initialAttachments) && isEmpty(attachedFiles) && !isInitializedRef.current) {
+      const backendAttachments: BaseAttachmentFile[] = initialAttachments
+        .filter((attachment) => attachment.id && attachment.fileName)
+        .map((attachment) => ({
+          id: attachment.id,
+          fileName: attachment.fileName || 'Attachment',
+          file: new File([], attachment.fileName || 'attachment'),
+          size: attachment.size || 0,
+          attachmentId: attachment.id,
+          isUploading: false,
+          uploadingProgress: 100,
+        }));
+
+      setAttachedFiles(backendAttachments);
+      isInitializedRef.current = true;
+    }
+  }, [initialAttachments, attachedFiles.length, setAttachedFiles, fieldName]);
+
+  useEffect(() => {
     const attachments = attachedFiles
       .filter((file) => file.attachmentId && !file.uploadError)
-      .map(({ attachmentId }) => ({ id: attachmentId }));
+      .map(({ attachmentId, fileName, size }) => ({
+        id: attachmentId,
+        fileName,
+        size,
+      }));
 
     dispatch(change(formName, fieldName, attachments));
   }, [attachedFiles, dispatch, formName, fieldName]);

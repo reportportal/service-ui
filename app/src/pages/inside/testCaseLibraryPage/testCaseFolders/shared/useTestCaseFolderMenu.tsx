@@ -22,9 +22,9 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PopoverItem } from 'pages/common/popoverControl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
-import { useDeleteFolderModal } from '../../testCaseFolders/deleteFolderModal';
-import { useRenameFolderModal } from '../../testCaseFolders/renameFolderModal';
-import { useDuplicateFolderModal } from '../../testCaseFolders/duplicateFolderModal';
+import { useDeleteFolderModal } from '../../testCaseFolders/modals/deleteFolderModal';
+import { useRenameFolderModal } from '../../testCaseFolders/modals/renameFolderModal';
+import { useDuplicateFolderModal } from '../../testCaseFolders/modals/duplicateFolderModal';
 import { commonMessages } from '../../commonMessages';
 
 interface UseTestCaseFolderMenuProps {
@@ -48,27 +48,15 @@ export const useTestCaseFolderMenu = ({
 
   const handleDeleteFolder = () => {
     openDeleteModal({
-      folderId: folder.id,
-      folderName: folder.name,
+      folder,
       activeFolderId: activeFolder,
       setAllTestCases,
     });
   };
 
-  const handleRenameFolder = () => {
-    openRenameModal({
-      folderId: folder.id,
-      folderName: folder.name,
-    });
-  };
+  const handleRenameFolder = () => openRenameModal({ folder });
 
-  const handleDuplicateFolder = () => {
-    openDuplicateModal({
-      folderId: folder.id,
-      folderName: folder.name,
-      parentFolderId: folder.parentFolderId,
-    });
-  };
+  const handleDuplicateFolder = () => openDuplicateModal({ folder });
 
   const testCaseFolderTooltipItems: PopoverItem[] = compact([
     canRenameTestCaseFolder && {

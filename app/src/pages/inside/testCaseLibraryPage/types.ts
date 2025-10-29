@@ -16,9 +16,10 @@
 
 import { FC, SVGProps } from 'react';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
+import { FolderWithFullPath } from 'controllers/testCase/types';
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 
-type Tag = {
+export type Tag = {
   key: string;
   value?: string;
   id: number;
@@ -31,10 +32,11 @@ export interface IAttachment {
 }
 
 export interface Step {
-  id: string;
+  id: number;
   instructions: string;
   expectedResult: string;
   attachments?: Attachment[];
+  position?: number;
 }
 
 export interface Attachment {
@@ -43,6 +45,32 @@ export interface Attachment {
   id: number;
   fileType: string;
 }
+
+export enum ManualScenarioType {
+  STEPS = 'STEPS',
+  TEXT = 'TEXT',
+}
+
+interface ManualScenarioCommon {
+  executionEstimationTime: number;
+  linkToRequirements: string;
+  manualScenarioType: ManualScenarioType;
+  preconditions?: {
+    value: string;
+  };
+}
+
+interface ManualScenarioSteps extends ManualScenarioCommon {
+  steps: TestStep[];
+}
+
+interface ManualScenarioText extends ManualScenarioCommon {
+  instructions?: string;
+  expectedResult?: string;
+  attachments?: Attachment[];
+}
+
+export type ManualScenarioDto = ManualScenarioSteps | ManualScenarioText;
 
 export interface TestCase {
   id: number;
@@ -61,6 +89,7 @@ export interface TestCase {
     startedAt: string;
     duration: number;
   };
+  tags?: { key: string }[];
 }
 
 export interface ManualScenario {
@@ -90,4 +119,35 @@ export interface ActionButton {
   isCompact: boolean;
   variant?: string;
   handleButton: () => void;
+}
+
+export interface CreateTestCaseFormData {
+  name: string;
+  description?: string;
+  folder: FolderWithFullPath | string;
+  priority?: TestCasePriority;
+  linkToRequirements?: string;
+  executionEstimationTime?: number;
+  manualScenarioType: ManualScenarioType;
+  precondition?: string;
+  preconditionAttachments?: Attachment[];
+  steps?: TestStep[];
+  instructions?: string;
+  expectedResult?: string;
+  textAttachments?: Attachment[];
+  tags?: Tag[];
+}
+
+export interface TestStep {
+  instructions: string;
+  expectedResult: string;
+  attachments?: Attachment[];
+  position?: number;
+}
+
+export interface Page {
+  number: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
 }

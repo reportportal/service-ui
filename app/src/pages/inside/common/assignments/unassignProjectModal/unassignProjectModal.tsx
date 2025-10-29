@@ -17,16 +17,18 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { Modal } from '@reportportal/ui-kit';
-import classNames from 'classnames/bind';
+
+import { createClassnames } from 'common/utils';
 import { hideModalAction } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalButtonProps } from 'types/common';
 import { fetchUserInfoAction, idSelector } from 'controllers/user';
 import { messages } from 'common/constants/localization/assignmentsLocalization';
-import styles from './unassignProjectModal.scss';
 import { unassignFromProjectAction } from 'controllers/organization/projects';
 
-const cx = classNames.bind(styles) as typeof classNames;
+import styles from './unassignProjectModal.scss';
+
+const cx = createClassnames(styles);
 
 interface User {
   id: number;

@@ -216,6 +216,14 @@ const messages = defineMessages({
     id: 'TestCaseLibraryPage.testCaseFolderDeletedSuccess',
     defaultMessage: 'Folder has been deleted successfully.',
   },
+  testCaseFolderDuplicatedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseFolderDuplicatedSuccess',
+    defaultMessage: 'Folder has been duplicated successfully.',
+  },
+  testCaseDeletedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseDeletedSuccess',
+    defaultMessage: 'Test case has been deleted successfully.',
+  },
   testCaseFolderRenamedSuccess: {
     id: 'TestCaseLibraryPage.testCaseFolderRenamedSuccess',
     defaultMessage: 'Folder has been renamed successfully.',
@@ -243,6 +251,10 @@ const messages = defineMessages({
   testCaseCreationFailed: {
     id: 'TestCaseLibraryPage.testCaseCreationFailed',
     defaultMessage: 'Failed to create Test Case.',
+  },
+  testCaseUpdateFailed: {
+    id: 'TestCaseLibraryPage.testCaseUpdateFailed',
+    defaultMessage: 'Failed to update Test Case.',
   },
   testCasesAddingToTestPlanFailed: {
     id: 'TestCaseLibraryPage.testCasesAddingToTestPlanFailed',

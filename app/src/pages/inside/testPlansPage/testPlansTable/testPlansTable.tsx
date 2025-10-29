@@ -15,14 +15,15 @@
  */
 
 import { ReactNode } from 'react';
-import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
-import { Table, ChevronRightBreadcrumbsIcon } from '@reportportal/ui-kit';
+import { Table, ChevronDownDropdownIcon } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
 import { useProjectDetails } from 'hooks/useTypedSelector';
+
 import { ProgressBar } from './progressBar';
 import { TestPlanActions } from '../testPlanActions';
 import { TestPlanDto } from 'controllers/testPlan';
@@ -35,7 +36,7 @@ import {
 
 import styles from './testPlansTable.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface TestPlansTableProps {
   testPlans: TestPlanDto[];
@@ -80,15 +81,15 @@ export const TestPlansTable = ({ testPlans }: TestPlansTableProps) => {
   );
 
   const currentTestPlans = testPlans.map(
-    ({ id, name, totalTestCases = 0, coveredTestCases = 0 }) => {
-      const coverage = totalTestCases === 0 ? 0 : coveredTestCases / totalTestCases;
+    ({ id, name, executionStatistic: { total = 0, covered = 0 } }) => {
+      const coverage = total === 0 ? 0 : covered / total;
 
       return {
         id,
         testPlanName: {
           component: getOpenTestPlanDetailsButton(id, name, name),
         },
-        coveredTotal: `${coveredTestCases} / ${totalTestCases}`,
+        coveredTotal: `${covered} / ${total}`,
         coverage: {
           component: (
             <div className={cx('test-plans__table-cell-coverage')}>
@@ -115,7 +116,7 @@ export const TestPlansTable = ({ testPlans }: TestPlansTableProps) => {
           ),
         },
         icon: {
-          component: getOpenTestPlanDetailsButton(id, name, <ChevronRightBreadcrumbsIcon />),
+          component: getOpenTestPlanDetailsButton(id, name, <ChevronDownDropdownIcon />),
         },
       };
     },

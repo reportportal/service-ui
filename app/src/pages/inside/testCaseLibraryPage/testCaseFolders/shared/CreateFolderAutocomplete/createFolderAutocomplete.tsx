@@ -17,10 +17,10 @@
 import { ComponentProps } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
-import classNames from 'classnames/bind';
 import { FieldLabel } from '@reportportal/ui-kit';
 import { isString } from 'es-toolkit/compat';
 
+import { createClassnames } from 'common/utils';
 import { FolderWithFullPath, transformedFoldersWithFullPathSelector } from 'controllers/testCase';
 import { AutocompleteOption } from 'componentLibrary/autocompletes/common/autocompleteOption';
 import { SingleAutocomplete } from 'componentLibrary/autocompletes/singleAutocomplete';
@@ -28,8 +28,9 @@ import { SingleAutocomplete } from 'componentLibrary/autocompletes/singleAutocom
 import { messages } from './messages';
 import styles from './createFolderAutocomplete.scss';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
+import { findFolderById } from 'pages/inside/testCaseLibraryPage/utils';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface CreateFolderAutocompleteProps {
   name: string;
@@ -62,6 +63,8 @@ export const CreateFolderAutocomplete = ({
 }: CreateFolderAutocompleteProps) => {
   const { formatMessage } = useIntl();
   const folders = useSelector(transformedFoldersWithFullPathSelector);
+
+  const targetFolder = findFolderById(folders, value?.id);
 
   const renderOption = (
     option: FolderWithFullPath,
@@ -96,9 +99,10 @@ export const CreateFolderAutocomplete = ({
         optionVariant="key-value"
         onStateChange={onStateChange}
         onChange={onChange}
-        value={value}
+        value={targetFolder}
         error={error}
         touched={touched}
+        skipOptionCreation
         placeholder={placeholder || formatMessage(commonMessages.searchFolderToSelect)}
         options={folders}
         customEmptyListMessage={customEmptyListMessage || formatMessage(messages.noFoldersFound)}

@@ -14,12 +14,28 @@
  * limitations under the License.
  */
 
+import { useSelector } from 'react-redux';
+
 import { useModal } from 'common/hooks';
+import { urlFolderIdSelector } from 'controllers/pages';
+import { transformedFoldersWithFullPathSelector, FolderWithFullPath } from 'controllers/testCase';
 
 import { CREATE_TEST_CASE_MODAL_KEY, CreateTestCaseModal } from './createTestCaseModal';
 
-export const useCreateTestCaseModal = () =>
-  useModal({
+interface CreateTestCaseModalData {
+  folder?: FolderWithFullPath;
+}
+
+export const useCreateTestCaseModal = () => {
+  const folderId = useSelector(urlFolderIdSelector);
+  const folders = useSelector(transformedFoldersWithFullPathSelector);
+
+  const currentContextFolder = folders.find(({ id }) => id === Number(folderId));
+
+  return useModal<CreateTestCaseModalData>({
     modalKey: CREATE_TEST_CASE_MODAL_KEY,
-    renderModal: () => <CreateTestCaseModal />,
+    renderModal: (data) => (
+      <CreateTestCaseModal data={{ ...data, folder: data?.folder || currentContextFolder }} />
+    ),
   });
+};

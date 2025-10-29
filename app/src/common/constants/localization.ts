@@ -344,6 +344,26 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.name',
     defaultMessage: 'Name',
   },
+  START_TIME: {
+    id: 'Common.startTime',
+    defaultMessage: 'Start Time',
+  },
+  TOTAL: {
+    id: 'Common.total',
+    defaultMessage: 'Total',
+  },
+  FAILED: {
+    id: 'Common.failed',
+    defaultMessage: 'Failed',
+  },
+  DONE: {
+    id: 'Common.done',
+    defaultMessage: 'Done',
+  },
+  NOT_APPLICABLE: {
+    id: 'Common.notApplicable',
+    defaultMessage: 'n/a',
+  },
   NO_AVAILABLE_OPTIONS: {
     id: 'Common.noAvailableOptions',
     defaultMessage: 'No available options',

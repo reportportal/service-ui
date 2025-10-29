@@ -20,7 +20,7 @@ import {
   transformFoldersToDisplay,
   transformFoldersWithFullPath,
 } from 'controllers/testCase/utils';
-import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { TestCase, Page } from 'pages/inside/testCaseLibraryPage/types';
 import { Folder } from './types';
 import { InitialStateType } from './reducer';
 
@@ -34,6 +34,7 @@ export interface TestCaseState {
   testCases?: {
     isLoading?: boolean;
     list?: unknown[];
+    page: Page | null;
   };
   details?: {
     data?: TestCase;
@@ -64,6 +65,9 @@ export const isLoadingTestCasesSelector = (state: RootState) =>
   state.testCase?.testCases?.isLoading || false;
 
 export const testCasesSelector = (state: RootState) => state.testCase?.testCases?.list || [];
+
+export const testCasesPageSelector = (state: RootState): Page | null =>
+  state.testCase?.testCases?.page || null;
 
 export const testCaseDetailsSelector = (state: RootState) => state.testCase?.details?.data;
 

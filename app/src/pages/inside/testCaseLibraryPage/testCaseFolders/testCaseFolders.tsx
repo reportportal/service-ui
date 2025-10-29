@@ -15,12 +15,12 @@
  */
 
 import { useState, useEffect, useMemo } from 'react';
-import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
-import { Button, PlusIcon } from '@reportportal/ui-kit';
 import { useDispatch, useSelector } from 'react-redux';
-import { isEmpty, noop } from 'es-toolkit/compat';
+import { noop } from 'es-toolkit/compat';
+import { Button, PlusIcon } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import {
   transformedFoldersSelector,
   areFoldersLoadingSelector,
@@ -29,6 +29,7 @@ import {
   isLoadingTestCasesSelector,
   testCasesSelector,
   foldersSelector,
+  testCasesPageSelector,
 } from 'controllers/testCase';
 import {
   TEST_CASE_LIBRARY_PAGE,
@@ -43,25 +44,27 @@ import {
   showNotification,
 } from 'controllers/notification';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
-import { showModalAction } from 'controllers/modal';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
 
 import { ExpandedOptions } from '../../common/expandedOptions';
 import { commonMessages } from '../commonMessages';
-import { CREATE_FOLDER_MODAL_KEY } from './createFolderModal';
+import { useCreateFolderModal } from './modals/createFolderModal';
 import { AllTestCasesPage } from '../allTestCasesPage';
 
 import styles from './testCaseFolders.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export const TestCaseFolders = () => {
   const [activeFolder, setActiveFolder] = useState<number | null>(null);
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { openModal: openCreateFolderModal } = useCreateFolderModal();
   const folderId = useSelector(urlFolderIdSelector);
   const isLoadingTestCases = useSelector(isLoadingTestCasesSelector);
   const testCases = useSelector(testCasesSelector);
+  const testCasesPageData = useSelector(testCasesPageSelector);
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const projectSlug = useSelector(urlProjectSlugSelector);
   const initialFolders = useSelector(foldersSelector);
@@ -69,10 +72,24 @@ export const TestCaseFolders = () => {
   const areFoldersLoading = useSelector(areFoldersLoadingSelector);
   const { canCreateTestCaseFolder } = useUserPermissions();
   const folderIdNumber = Number(folderId);
+  const actionParams = {
+    limit: testCasesPageData?.size || TestCasePageDefaultValues.limit,
+    offset: TestCasePageDefaultValues.offset,
+  };
 
   const currentFolder = useMemo(() => {
     return initialFolders.find(({ id }) => id === Number(folderId));
   }, [folderId, initialFolders]);
+  const setAllTestCases = () => {
+    setActiveFolder(null);
+    dispatch({
+      type: TEST_CASE_LIBRARY_PAGE,
+      payload: {
+        organizationSlug,
+        projectSlug,
+      },
+    });
+  };
 
   useEffect(() => {
     if (folderId && !currentFolder) {
@@ -87,34 +104,33 @@ export const TestCaseFolders = () => {
         }),
       );
     }
-  }, [currentFolder, folderId, dispatch]);
+  }, [currentFolder, folderId, dispatch, setAllTestCases]);
 
   useEffect(() => {
-    if (currentFolder && folderId !== '' && Number.isFinite(folderIdNumber)) {
-      dispatch(getTestCaseByFolderIdAction({ folderId: folderIdNumber }));
+    if (currentFolder && activeFolder !== folderIdNumber) {
+      dispatch(
+        getTestCaseByFolderIdAction({
+          folderId: folderIdNumber,
+          ...actionParams,
+        }),
+      );
     } else if (!currentFolder && folderId === '') {
-      dispatch(getAllTestCasesAction());
+      dispatch(getAllTestCasesAction(actionParams));
     }
-  }, [currentFolder, folderId, folderIdNumber, dispatch]);
+  }, [currentFolder, folderId, folderIdNumber, dispatch, testCasesPageData?.size]);
 
   useEffect(() => {
     setActiveFolder(folderId ? folderIdNumber : null);
   }, [folderId, folderIdNumber]);
 
-  const setAllTestCases = () => {
-    setActiveFolder(null);
-    dispatch({
-      type: TEST_CASE_LIBRARY_PAGE,
-      payload: {
-        organizationSlug,
-        projectSlug,
-      },
-    });
-  };
-
   const handleFolderClick = (id: number) => {
     setActiveFolder(id);
-    dispatch(getTestCaseByFolderIdAction({ folderId: id }));
+    dispatch(
+      getTestCaseByFolderIdAction({
+        folderId: id,
+        ...actionParams,
+      }),
+    );
     dispatch({
       type: TEST_CASE_LIBRARY_PAGE,
       payload: {
@@ -125,26 +141,14 @@ export const TestCaseFolders = () => {
     });
   };
 
-  const showCreateFolderModal = () => {
-    dispatch(
-      showModalAction({
-        id: CREATE_FOLDER_MODAL_KEY,
-        data: {
-          shouldRenderToggle: !isEmpty(folders),
-        },
-        component: null,
-      }),
-    );
-  };
-
   const renderCreateFolderButton = () => {
     return canCreateTestCaseFolder ? (
       <Button
-        onClick={showCreateFolderModal}
         variant="text"
         icon={<PlusIcon />}
         className={cx('sidebar-actions__create')}
         adjustWidthOn="content"
+        onClick={openCreateFolderModal}
       >
         {formatMessage(commonMessages.createFolder)}
       </Button>
@@ -162,6 +166,7 @@ export const TestCaseFolders = () => {
     >
       <AllTestCasesPage
         testCases={testCases}
+        testCasesPageData={testCasesPageData}
         searchValue=""
         setSearchValue={noop}
         loading={isLoadingTestCases || areFoldersLoading}

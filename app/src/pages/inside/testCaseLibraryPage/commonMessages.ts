@@ -73,4 +73,8 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'TestCaseLibraryPage.searchFolderToSelect',
     defaultMessage: 'Search folder to select',
   },
+  editTestCase: {
+    id: 'TestCaseLibraryPage.editTestCase',
+    defaultMessage: 'Edit Test Case',
+  },
 });

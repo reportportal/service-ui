@@ -28,11 +28,14 @@
       border-radius: 4px;
       box-shadow: var(--rp-ui-base-shadow-hover);
     }
+
+    div + div {
+      align-self: center;
+    }
   }
 
   &__table-cell-coverage {
     font-size: 15px;
-    line-height: 24px;
     color: var(--rp-ui-base-almost-black);
     font-family: $FONT-ROBOTO-MEDIUM;
     font-weight: 500;
@@ -54,6 +57,10 @@
     &:hover svg path,
     &:focus svg path {
       fill: var(--rp-ui-base-topaz-hover);
+    }
+
+    svg {
+      rotate: -90deg;
     }
   }
 }

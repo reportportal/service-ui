@@ -16,9 +16,9 @@
 
 import { useIntl } from 'react-intl';
 import { noop } from 'es-toolkit';
-import classNames from 'classnames/bind';
 import { FieldText, FieldTextFlex } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { EditableTagsSection } from 'pages/inside/testCaseLibraryPage/editableTagsSection';
 import { CreateFolderAutocomplete } from 'pages/inside/testCaseLibraryPage/testCaseFolders/shared/CreateFolderAutocomplete';
@@ -29,13 +29,14 @@ import { PrioritySelect } from '../../prioritySelect/prioritySelect';
 
 import styles from './basicInformation.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface BasicInformationProps {
   className?: string;
+  hideFolderField?: boolean;
 }
 
-export const BasicInformation = ({ className }: BasicInformationProps) => {
+export const BasicInformation = ({ className, hideFolderField = false }: BasicInformationProps) => {
   const { formatMessage } = useIntl();
 
   return (
@@ -49,17 +50,19 @@ export const BasicInformation = ({ className }: BasicInformationProps) => {
           />
         </FieldErrorHint>
       </FieldProvider>
-      <FieldProvider name="folder" placeholder={formatMessage(messages.selectOrCreateFolder)}>
-        <FieldErrorHint provideHint={false} className={cx('basic-information__field')}>
-          <CreateFolderAutocomplete
-            name="folder"
-            label={formatMessage(commonMessages.folder)}
-            placeholder={formatMessage(messages.selectOrCreateFolder)}
-            createWithoutConfirmation={false}
-            isRequired
-          />
-        </FieldErrorHint>
-      </FieldProvider>
+      {!hideFolderField && (
+        <FieldProvider name="folder" placeholder={formatMessage(messages.selectOrCreateFolder)}>
+          <FieldErrorHint provideHint={false} className={cx('basic-information__field')}>
+            <CreateFolderAutocomplete
+              name="folder"
+              label={formatMessage(commonMessages.folder)}
+              placeholder={formatMessage(messages.selectOrCreateFolder)}
+              createWithoutConfirmation={false}
+              isRequired
+            />
+          </FieldErrorHint>
+        </FieldProvider>
+      )}
       <FieldProvider name="priority">
         <FieldErrorHint provideHint={false} className={cx('basic-information__field')}>
           <PrioritySelect />

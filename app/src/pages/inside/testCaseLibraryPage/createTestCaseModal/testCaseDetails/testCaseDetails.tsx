@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
-import { formValueSelector } from 'redux-form';
-import classNames from 'classnames/bind';
-import { isNumber } from 'es-toolkit/compat';
+import { useSelector, useDispatch } from 'react-redux';
+import { change, touch, untouch } from 'redux-form';
+import { isNumber, isEmpty, keyBy } from 'es-toolkit/compat';
 import { FieldText } from '@reportportal/ui-kit';
+
+import { createClassnames } from 'common/utils';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
-import type { AppState } from 'types/store';
 import { Step } from 'pages/inside/testCaseLibraryPage/types';
 
 import { Template } from './template';
@@ -14,11 +14,12 @@ import { AttachmentArea } from '../attachmentArea';
 import { Precondition } from './precondition';
 import { Steps } from './steps';
 import { TextTemplate } from './textTemplate';
-import { CREATE_TEST_CASE_FORM_NAME, ManualScenarioType } from '../createTestCaseModal';
+import { ManualScenarioType } from '../../types';
+import { manualScenarioTypeSelector, stepsDataSelector } from '../selectors';
 
 import styles from './testCaseDetails.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 const messages = defineMessages({
   requirementsLink: {
@@ -32,7 +33,7 @@ const messages = defineMessages({
 });
 
 const createEmptyStep = (): Step => ({
-  id: `step_${Date.now()}`,
+  id: Date.now(),
   instructions: '',
   expectedResult: '',
   attachments: [],
@@ -40,56 +41,148 @@ const createEmptyStep = (): Step => ({
 
 interface TestCaseDetailsProps {
   className?: string;
+  formName: string;
+  isTemplateFieldDisabled?: boolean;
 }
 
-const selector = formValueSelector('create-test-case-modal-form');
-
-export const TestCaseDetails = ({ className }: TestCaseDetailsProps) => {
+export const TestCaseDetails = ({
+  className,
+  formName,
+  isTemplateFieldDisabled = false,
+}: TestCaseDetailsProps) => {
   const [steps, setSteps] = useState<Step[]>([createEmptyStep()]);
+  const [isEditMode, setIsEditMode] = useState(false);
   const { formatMessage } = useIntl();
-  const manualScenarioType = useSelector(
-    (state: AppState) => selector(state, 'manualScenarioType') as ManualScenarioType,
+  const dispatch = useDispatch();
+  const manualScenarioType = useSelector(manualScenarioTypeSelector(formName));
+  const stepsData = useSelector(stepsDataSelector(formName));
+  const isEditModeRef = useRef(!isEmpty(stepsData));
+
+  const buildStepsObjectWithPositions = useCallback(
+    (updatedSteps: Step[]) =>
+      keyBy(
+        updatedSteps.map((step, idx) => ({
+          ...(stepsData?.[step.id] || step),
+          id: step.id,
+          position: idx,
+        })),
+        (step) => step.id,
+      ),
+    [stepsData],
   );
 
-  const handleAddStep = (index?: number) => {
-    setSteps((prevState) => {
+  const getStepDataFromFormState = useCallback(
+    (step: Step, oldIndex: number): Step => {
+      if (isEditMode) {
+        return stepsData?.[step.id] || step;
+      }
+
+      return (Array.isArray(stepsData) ? stepsData[oldIndex] : undefined) || step;
+    },
+    [isEditMode, stepsData],
+  );
+
+  const syncEditModeSteps = useCallback(
+    (updatedSteps: Step[]) => {
+      const stepsObject = buildStepsObjectWithPositions(updatedSteps);
+
+      // Force a detectable change by unsetting/resetting the field
+      dispatch(untouch(formName, 'steps'));
+      dispatch(change(formName, 'steps', stepsObject));
+      dispatch(touch(formName, 'steps'));
+    },
+    [formName, dispatch, buildStepsObjectWithPositions],
+  );
+
+  const syncCreateModeSteps = useCallback(
+    (updatedSteps: Step[]) => {
+      updatedSteps.forEach((step, newIndex) => {
+        const oldIndex = steps.findIndex(({ id }) => id === step.id);
+        const stepData = getStepDataFromFormState(step, oldIndex);
+
+        dispatch(change(formName, `steps.${newIndex}`, stepData));
+      });
+
+      // Clear removed step indices
+      for (let i = updatedSteps.length; i < steps.length; i += 1) {
+        dispatch(change(formName, `steps.${i}`, undefined));
+      }
+    },
+    [steps, formName, dispatch, getStepDataFromFormState],
+  );
+
+  const syncStepsToForm = useCallback(
+    (updatedSteps: Step[]) => {
+      if (isEditMode) {
+        syncEditModeSteps(updatedSteps);
+      } else {
+        syncCreateModeSteps(updatedSteps);
+      }
+    },
+    [isEditMode, syncEditModeSteps, syncCreateModeSteps],
+  );
+
+  useEffect(() => {
+    if (isEditModeRef.current && !isEmpty(stepsData)) {
+      setSteps(Object.values(stepsData));
+      setIsEditMode(true);
+      isEditModeRef.current = false;
+    }
+  }, [stepsData]);
+
+  const setUpdatedSteps = useCallback(
+    (updatedSteps: Step[]) => {
+      setSteps(updatedSteps);
+      syncStepsToForm(updatedSteps);
+    },
+    [syncStepsToForm],
+  );
+
+  const handleAddStep = useCallback(
+    (index?: number) => {
       const newStep = createEmptyStep();
+      const updatedSteps = isNumber(index)
+        ? [...steps.slice(0, index + 1), newStep, ...steps.slice(index + 1)]
+        : [...steps, newStep];
 
-      if (isNumber(index)) {
-        return [...prevState.slice(0, index + 1), newStep, ...prevState.slice(index + 1)];
-      }
+      setUpdatedSteps(updatedSteps);
+    },
+    [steps, syncStepsToForm],
+  );
 
-      return [...prevState, newStep];
-    });
-  };
+  const handleRemoveStep = useCallback(
+    (stepId: number) => {
+      const updatedSteps = steps.filter((step) => step.id !== stepId);
 
-  const handleRemoveStep = (stepId: string) =>
-    setSteps((prevState) => prevState.filter((step) => step.id !== stepId));
+      setUpdatedSteps(updatedSteps);
+    },
+    [steps, syncStepsToForm],
+  );
 
-  const handleMoveStep = ({ stepId, direction }: { stepId: string; direction: 'up' | 'down' }) => {
-    setSteps((prevState) => {
-      const currentIndex = prevState.findIndex((step) => step.id === stepId);
+  const handleMoveStep = useCallback(
+    ({ stepId, direction }: { stepId: number; direction: 'up' | 'down' }) => {
+      const currentIndex = steps.findIndex((step) => step.id === stepId);
       const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
-      const shouldNotMove = newIndex < 0 || newIndex >= prevState.length;
 
-      if (currentIndex === -1 || shouldNotMove) {
-        return prevState;
+      if (currentIndex === -1 || newIndex < 0 || newIndex >= steps.length) {
+        return;
       }
 
-      const reorderedSteps = [...prevState];
+      const reorderedSteps = [...steps];
       const [movedStep] = reorderedSteps.splice(currentIndex, 1);
-
       reorderedSteps.splice(newIndex, 0, movedStep);
 
-      return reorderedSteps;
-    });
-  };
+      setSteps(reorderedSteps);
+      syncStepsToForm(reorderedSteps);
+    },
+    [steps, syncStepsToForm],
+  );
 
-  const isTextTemplate = manualScenarioType === 'TEXT';
+  const isTextTemplate = manualScenarioType === ManualScenarioType.TEXT;
 
   return (
     <div className={cx('test-case-details', className)}>
-      <Template />
+      <Template isTemplateFieldDisabled={isTemplateFieldDisabled} />
       <FieldProvider name="linkToRequirements" placeholder={formatMessage(messages.enterLink)}>
         <FieldErrorHint provideHint={false}>
           <FieldText label={formatMessage(messages.requirementsLink)} defaultWidth={false} />
@@ -98,14 +191,14 @@ export const TestCaseDetails = ({ className }: TestCaseDetailsProps) => {
       {isTextTemplate ? (
         <>
           <Precondition />
-          <TextTemplate />
+          <TextTemplate formName={formName} />
         </>
       ) : (
         <>
           <AttachmentArea
             isNumerable={false}
             attachmentFieldName="preconditionAttachments"
-            formName={CREATE_TEST_CASE_FORM_NAME}
+            formName={formName}
           >
             <Precondition />
           </AttachmentArea>
@@ -115,6 +208,8 @@ export const TestCaseDetails = ({ className }: TestCaseDetailsProps) => {
               onAddStep={handleAddStep}
               onRemoveStep={handleRemoveStep}
               onMoveStep={handleMoveStep}
+              formName={formName}
+              isKeyById={isEditMode}
             />
           </FieldProvider>
         </>

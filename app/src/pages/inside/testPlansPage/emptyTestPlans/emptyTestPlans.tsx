@@ -15,18 +15,20 @@
  */
 
 import Parser from 'html-react-parser';
-import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
-import { referenceDictionary } from 'common/utils';
+
+import { createClassnames, referenceDictionary } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { NumerableBlock } from 'pages/common/numerableBlock';
+
 import { useCreateTestPlanModal } from '../testPlanModals';
 import { commonMessages } from '../commonMessages';
 import { messages } from './messages';
+
 import styles from './emptyTestPlans.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface ActionButton {
   name: string;

@@ -16,12 +16,12 @@
 
 import { useState } from 'react';
 import { useIntl } from 'react-intl';
-import classNames from 'classnames/bind';
 import { isEmpty } from 'es-toolkit/compat';
 import { Pagination } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { TestCaseList } from 'pages/inside/common/testCaseList';
-import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/common/testCaseList/mockData';
+import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/common/testCaseList/constants';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -29,7 +29,7 @@ import { usePagination } from 'hooks/usePagination';
 
 import styles from './allTestCasesPage.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface AllTestCasesPageProps {
   testCases: ExtendedTestCase[];

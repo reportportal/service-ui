@@ -17,9 +17,9 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import classNames from 'classnames/bind';
 import { BreadcrumbsTreeIcon, FieldText, SearchIcon } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { testCaseLibraryBreadcrumbsSelector } from 'controllers/pages/selectors';
 
@@ -28,7 +28,7 @@ import { messages } from '../messages';
 
 import styles from './historyOfActionsHeader.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface HistoryOfActionsHeaderProps {
   testCaseName: string;

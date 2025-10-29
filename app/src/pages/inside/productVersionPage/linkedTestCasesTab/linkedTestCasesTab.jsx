@@ -63,7 +63,7 @@ export const LinkedTestCasesTab = () => {
     {
       key: 'defaultVersion',
       header: formatMessage(messages.defaultVersion),
-      width: 165,
+      width: 160,
       align: 'left',
     },
     {

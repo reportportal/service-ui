@@ -15,7 +15,6 @@
  */
 
 import { memo, useRef, useState } from 'react';
-import classNames from 'classnames/bind';
 import { useIntl, MessageDescriptor } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import Parser from 'html-react-parser';
@@ -29,6 +28,7 @@ import {
 } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
+import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useOnClickOutside } from 'common/hooks';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
@@ -45,6 +45,8 @@ import { foldersSelector } from 'controllers/testCase';
 import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
 import { ManualScenario, ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
+import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
+import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
 
 import { TestCaseMenuAction, TestCaseManualScenario } from '../types';
 import {
@@ -59,7 +61,7 @@ import { messages } from './messages';
 
 import styles from './testCaseSidePanel.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 const safeGetMessage = (
   key: string,
@@ -82,7 +84,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
   const isStepsManualScenario = scenario.manualScenarioType === TestCaseManualScenario.STEPS;
   const isEmptyPreconditions = isEmpty(scenario?.preconditions?.value);
   const isScenarioDataHidden = isStepsManualScenario
-    ? isEmptyPreconditions && isEmpty(scenario?.steps)
+    ? isEmptyPreconditions
     : isEmptyPreconditions && !scenario?.instructions && !scenario?.expectedResult;
 
   return [
@@ -143,7 +145,10 @@ export const TestCaseSidePanel = memo(
     const { formatMessage } = useIntl();
     const sidePanelRef = useRef<HTMLDivElement>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const { openModal } = useAddTestCasesToTestPlanModal();
+    const { openModal: openEditTestCaseModal } = useEditTestCaseModal();
+    const { openModal: openAddTestCasesToTestPlanModal } = useAddTestCasesToTestPlanModal();
+    const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
+
     const folderId = testCase?.testFolder?.id;
     const path = buildBreadcrumbs(folders, folderId);
 
@@ -152,6 +157,10 @@ export const TestCaseSidePanel = memo(
     if (!isVisible || !testCase) {
       return null;
     }
+
+    const handleEditTestCase = () => {
+      openEditTestCaseModal({ testCase });
+    };
 
     const permissionMap = [
       { isAllowed: canEditTestCase, action: TestCaseMenuAction.EDIT },
@@ -162,7 +171,20 @@ export const TestCaseSidePanel = memo(
 
     const menuItems = createTestCaseMenuItems(
       formatMessage,
-      {},
+      {
+        [TestCaseMenuAction.EDIT]: handleEditTestCase,
+        [TestCaseMenuAction.DELETE]: () => openDeleteTestCaseModal({ testCase }),
+        [TestCaseMenuAction.HISTORY]: () => {
+          dispatch({
+            type: TEST_CASE_LIBRARY_PAGE,
+            payload: {
+              organizationSlug,
+              projectSlug,
+              testCasePageRoute: `test-cases/${testCase.id}/historyOfActions`,
+            },
+          });
+        },
+      },
       getExcludedActionsFromPermissionMap(permissionMap),
     );
 
@@ -186,7 +208,10 @@ export const TestCaseSidePanel = memo(
     };
 
     const handleAddToTestPlanClick = () => {
-      openModal({ selectedTestCaseIds: [testCase.id], isSingleTestCaseMode: true });
+      openAddTestCasesToTestPlanModal({
+        selectedTestCaseIds: [testCase.id],
+        isSingleTestCaseMode: true,
+      });
     };
 
     const handleCopyId = async () => {

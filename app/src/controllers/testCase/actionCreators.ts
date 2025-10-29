@@ -15,7 +15,6 @@
  */
 
 import {
-  GET_TEST_CASES,
   GET_FOLDERS,
   CREATE_FOLDER,
   CREATE_FOLDER_SUCCESS,
@@ -32,17 +31,24 @@ import {
   SET_TEST_CASES,
   RENAME_FOLDER,
   RENAME_FOLDER_SUCCESS,
+  DELETE_TEST_CASE_SUCCESS,
+  DUPLICATE_FOLDER,
+  UPDATE_FOLDER_COUNTER,
 } from './constants';
-import { Folder } from './types';
-import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
-
-export interface GetTestCasesParams {
-  search?: string;
-  testFolderId?: number;
-}
+import { Folder, TransformedFolder } from './types';
+import { Page, TestCase } from 'pages/inside/testCaseLibraryPage/types';
 
 export interface GetTestCasesByFolderIdParams {
   folderId: number;
+  offset: number;
+  limit: number;
+  setPageData?: () => void;
+}
+
+export interface GetAllTestCases {
+  offset: number;
+  limit: number;
+  setPageData?: () => void;
 }
 
 export interface CreateFolderParams {
@@ -55,9 +61,13 @@ export interface GetFoldersParams {
 }
 
 export interface DeleteFolderParams {
-  folderId: number;
+  folder: TransformedFolder;
   activeFolderId: number;
   setAllTestCases: () => void;
+}
+
+export interface DeleteTestCaseParams {
+  testCase: TestCase;
 }
 
 export interface DeleteFolderSuccessParams {
@@ -69,18 +79,19 @@ export interface RenameFolderParams {
   folderName: string;
 }
 
-export const getTestCasesAction = (params?: GetTestCasesParams) => ({
-  type: GET_TEST_CASES,
-  payload: params,
-});
+export interface UpdateFolderCounterParams {
+  folderId: number;
+  delta: number;
+}
 
 export const getTestCaseByFolderIdAction = (params: GetTestCasesByFolderIdParams) => ({
   type: GET_TEST_CASES_BY_FOLDER_ID,
-  payload: params.folderId,
+  payload: params,
 });
 
-export const getAllTestCasesAction = () => ({
+export const getAllTestCasesAction = (params: GetAllTestCases) => ({
   type: GET_ALL_TEST_CASES,
+  payload: params,
 });
 
 export const startLoadingTestCasesAction = () => ({
@@ -91,7 +102,7 @@ export const stopLoadingTestCasesAction = () => ({
   type: STOP_LOADING_TEST_CASES,
 });
 
-export const setTestCasesAction = (testCases: TestCase[]) => ({
+export const setTestCasesAction = (testCases: { content: TestCase[]; page: Page | null }) => ({
   type: SET_TEST_CASES,
   payload: testCases,
 });
@@ -137,6 +148,11 @@ export const stopLoadingFolderAction = () => ({
   type: STOP_LOADING_FOLDER,
 });
 
+export const deleteTestCaseSuccessAction = ({ testCase }: DeleteTestCaseParams) => ({
+  type: DELETE_TEST_CASE_SUCCESS,
+  payload: { testCase },
+});
+
 export const renameFolderAction = (folderInfo: RenameFolderParams) => ({
   type: RENAME_FOLDER,
   payload: folderInfo,
@@ -145,4 +161,14 @@ export const renameFolderAction = (folderInfo: RenameFolderParams) => ({
 export const renameFolderSuccessAction = (folderId: RenameFolderParams) => ({
   type: RENAME_FOLDER_SUCCESS,
   payload: folderId,
+});
+
+export const duplicateFolderAction = (folder: CreateFolderParams) => ({
+  type: DUPLICATE_FOLDER,
+  payload: folder,
+});
+
+export const updateFolderCounterAction = (params: UpdateFolderCounterParams) => ({
+  type: UPDATE_FOLDER_COUNTER,
+  payload: params,
 });

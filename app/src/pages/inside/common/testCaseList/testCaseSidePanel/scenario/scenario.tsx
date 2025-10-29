@@ -15,8 +15,9 @@
  */
 
 import { useIntl } from 'react-intl';
-import classNames from 'classnames/bind';
 import { isEmpty } from 'es-toolkit/compat';
+
+import { createClassnames } from 'common/utils';
 import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
 
 import { FieldSection } from '../../../fieldSection';
@@ -27,7 +28,7 @@ import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 
 import styles from './scenario.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface ScenarioProps {
   scenario: ManualScenario;
@@ -39,6 +40,7 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
 
   if (isStepsManualScenario) {
     const isPreconditionAttachments = !isEmpty(scenario.preconditions?.attachments);
+    const firstStep = scenario?.steps?.[0];
 
     return (
       <div className={cx('scenario-wrapper')}>
@@ -58,7 +60,7 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
           ) : null}
         </div>
         <span className={cx('section-name')}>Steps</span>
-        {isEmpty(scenario?.steps) ? (
+        {isEmpty(firstStep?.expectedResult || firstStep?.instructions) ? (
           <div className={cx('empty-section')}>{formatMessage(messages.noSteps)}</div>
         ) : (
           <StepsList steps={scenario.steps} />

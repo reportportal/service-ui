@@ -15,7 +15,6 @@
  */
 
 import { useDispatch, useSelector } from 'react-redux';
-import { noop } from 'es-toolkit';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -27,17 +26,7 @@ import { getTestPlansAction, TestPlanDto } from 'controllers/testPlan';
 
 import { TestPlanFormValues } from '../testPlanModal';
 
-interface UseCreateTestPlanOptions {
-  successMessageId: string;
-  errorMessageId: string;
-  onSuccess?: (testPlanId: number) => void;
-}
-
-export const useCreateTestPlan = ({
-  successMessageId,
-  errorMessageId,
-  onSuccess = noop,
-}: UseCreateTestPlanOptions) => {
+export const useCreateTestPlan = () => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
@@ -46,7 +35,7 @@ export const useCreateTestPlan = ({
     try {
       showSpinner();
 
-      const response = await fetch<TestPlanDto>(URLS.testPlan(projectKey), {
+      await fetch<TestPlanDto>(URLS.testPlan(projectKey), {
         method: 'post',
         data: {
           name: payload.name,
@@ -57,15 +46,14 @@ export const useCreateTestPlan = ({
       dispatch(hideModalAction());
       dispatch(
         showSuccessNotification({
-          messageId: successMessageId,
+          messageId: 'testPlanCreatedSuccess',
         }),
       );
       dispatch(getTestPlansAction());
-      onSuccess(response.id);
     } catch {
       dispatch(
         showErrorNotification({
-          messageId: errorMessageId,
+          messageId: 'errorOccurredTryAgain',
         }),
       );
     } finally {
