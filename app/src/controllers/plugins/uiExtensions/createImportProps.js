@@ -30,6 +30,8 @@ import {
 import Link from 'redux-first-router-link';
 import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import {
   BubblesLoader,
   Button,
@@ -261,6 +263,8 @@ export const createImportProps = (pluginName) => ({
     change,
     useTracking,
     classNames,
+    DndProvider,
+    HTML5Backend,
   },
   components: {
     ...BUTTONS,
