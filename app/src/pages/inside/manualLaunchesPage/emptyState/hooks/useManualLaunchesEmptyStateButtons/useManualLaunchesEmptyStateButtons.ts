@@ -23,7 +23,6 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 import { messages } from 'pages/inside/manualLaunchesPage/messages';
 
 import { EMPTY_STATE_BUTTONS } from './constants';
-import { ButtonVariant } from '../../../../../../types/common';
 import { ActiveProject } from './types';
 
 export const useManualLaunchesEmptyStateButtons = () => {
@@ -41,7 +40,7 @@ export const useManualLaunchesEmptyStateButtons = () => {
 
     return EMPTY_STATE_BUTTONS.map(({ name, type }) => ({
       name: formatMessage(messages[name]),
-      variant: ButtonVariant.text,
+      variant: 'text' as const,
       handleButton: () => dispatch({ type, payload }),
     }));
   }, [organizationSlug, projectSlug, dispatch, canCreateManualLaunch, formatMessage]);
