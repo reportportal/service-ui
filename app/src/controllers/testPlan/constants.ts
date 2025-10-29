@@ -39,22 +39,19 @@ export type TestPlanDto = {
   description?: string;
 };
 
+export interface PageInfo {
+  number: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}
+
 export type TestPlanFoldersDto = {
   content: Folder[];
-  page: {
-    number: number;
-    size: number;
-    totalElements: number;
-    totalPages: number;
-  };
+  page: PageInfo;
 };
 
 export type TestPlanTestCaseDto = {
   content: ExtendedTestCase[];
-  page: {
-    number: number;
-    size: number;
-    totalElements: number;
-    totalPages: number;
-  };
+  page: PageInfo;
 };

@@ -14,7 +14,65 @@
  * limitations under the License.
  */
 
-export type ManualTestCase = {
+import { PageInfo } from 'controllers/testPlan';
+
+export interface LaunchAttribute {
+  key: string;
+  value: string;
+}
+
+export interface LaunchExecutions {
+  total: number;
+  failed?: number;
+  passed?: number;
+  skipped?: number;
+}
+
+export interface LaunchDefectGroup {
+  total: number;
+  [key: string]: number;
+}
+
+export interface LaunchDefects {
+  system_issue?: LaunchDefectGroup;
+  to_investigate?: LaunchDefectGroup;
+  automation_bug?: LaunchDefectGroup;
+  product_bug?: LaunchDefectGroup;
+}
+
+export interface LaunchStatistics {
+  executions: LaunchExecutions;
+  defects: LaunchDefects;
+}
+
+export interface Launch {
+  owner: string;
+  description: string;
+  id: number;
+  uuid: string;
+  name: string;
+  number: number;
+  startTime: string;
+  endTime: string;
+  lastModified: string;
+  status: string;
+  statistics: LaunchStatistics;
+  attributes: LaunchAttribute[];
+  mode: string;
+  analysing: string[];
+  approximateDuration: number;
+  hasRetries: boolean;
+  rerun: boolean;
+  metadata: Record<string, string>;
+  retentionPolicy: string;
+}
+
+export interface LaunchesResponse {
+  content: Launch[];
+  page: PageInfo;
+}
+
+export interface ManualTestCase {
   id: number;
   count: number;
   name: string;
@@ -24,4 +82,4 @@ export type ManualTestCase = {
   failedTests: number;
   skippedTests: number;
   testsToRun: number;
-};
+}
