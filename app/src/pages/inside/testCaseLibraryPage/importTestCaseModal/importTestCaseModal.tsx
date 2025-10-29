@@ -1,50 +1,49 @@
 import { useState, useMemo } from 'react';
 import { reduxForm, InjectedFormProps, FormErrors, SubmitHandler } from 'redux-form';
+import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import Link from 'redux-first-router-link';
+import { isEmpty } from 'es-toolkit/compat';
 import { isString } from 'es-toolkit';
-
 import { Modal, FileDropArea, AddCsvIcon, MIME_TYPES } from '@reportportal/ui-kit';
 import type { MimeType } from '@reportportal/ui-kit/dist/components/fileDropArea/types';
 import { AttachmentFile } from '@reportportal/ui-kit/dist/components/fileDropArea/attachedFilesList';
-import { withModal } from 'controllers/modal';
-import { hideModalAction } from 'controllers/modal';
 
+import { withModal, hideModalAction } from 'controllers/modal';
 import { commonValidators, createClassnames } from 'common/utils';
-import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
+import { UseModalData } from 'common/hooks';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { downloadFileFromBlob } from 'common/utils/fileUtils';
-import { useImportTestCase } from './useImportTestCase';
-import { FolderNameField } from 'pages/inside/testCaseLibraryPage/testCaseFolders/modals/folderFormFields';
 import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';
+import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
+import { FolderNameField } from 'pages/inside/testCaseLibraryPage/testCaseFolders/modals/folderFormFields';
 
 import { messages } from './messages';
+import { useImportTestCase } from './useImportTestCase';
 
 import styles from './importTestCaseModal.scss';
-import { useDispatch } from 'react-redux';
 
 export const IMPORT_TEST_CASE_MODAL_KEY = 'importTestCaseModalKey';
 export const IMPORT_TEST_CASE_FORM_NAME = 'import-test-case-modal-form';
+export type ImportTestCaseFormValues = {
+  folderName: string;
+};
 
+const cx = createClassnames(styles);
 const MAX_FILE_SIZE_MB = 10;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 const CSV_MIME_TYPES = [MIME_TYPES.csv, MIME_TYPES.xls, MIME_TYPES.plain];
 
-const cx = createClassnames(styles);
-
 type FileLike = File | { file: File };
 type FileInput = FileLike | FileLike[];
-type ImportTestCaseFormValues = {
-  folderName: string;
-};
-type ImportModalData = { data?: { folderName?: string } };
-
+type ImportModalData = UseModalData<ImportTestCaseFormValues>;
 type ImportTestCaseSubmitHandler = SubmitHandler<ImportTestCaseFormValues, ImportModalData>;
 
 const extractFolderIdFromHash = (hash: string): number | undefined => {
   const match = /\/testLibrary\/folder\/(\d+)/i.exec(hash);
-  return match ? parseInt(match[1], 10) : undefined;
+
+  return match ? Number.parseInt(match[1], 10) : undefined;
 };
 
 const toMB = (bytes: number) => +(bytes / (1024 * 1024)).toFixed(2);
@@ -69,16 +68,15 @@ export const ImportTestCaseModal = ({
 
   const acceptFileMimeTypes = useMemo<MimeType[]>(() => [...CSV_MIME_TYPES], []);
 
-  const handleImport: (formValues: ImportTestCaseFormValues) => Promise<void> = async (
-    formValues: ImportTestCaseFormValues,
-  ) => {
+  const handleImport = async (formValues: ImportTestCaseFormValues) => {
     const name = formValues.folderName?.trim() ?? '';
+    const hasFolderIdFromUrl = folderIdFromUrl != null;
 
-    if (!file || (folderIdFromUrl == null && !name)) {
+    if (!file || (!hasFolderIdFromUrl && !name)) {
       return;
     }
 
-    if (folderIdFromUrl != null) {
+    if (hasFolderIdFromUrl) {
       await importTestCases({ file, testFolderId: folderIdFromUrl });
     } else {
       await importTestCases({ file, testFolderName: name });
@@ -99,11 +97,12 @@ export const ImportTestCaseModal = ({
   const handleFilesAdded = (incoming: FileInput) => {
     const items = Array.isArray(incoming) ? incoming : [incoming];
 
-    if (!items.length) {
+    if (isEmpty(items)) {
       return;
     }
 
     const next = items[0] instanceof File ? items[0] : items[0].file;
+
     setFile(next);
   };
 
@@ -119,8 +118,8 @@ export const ImportTestCaseModal = ({
 
   const okButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.IMPORT),
-    onClick: handleSubmit(handleImport) as () => void,
     disabled: isImportingTestCases || !file,
+    onClick: handleSubmit(handleImport) as () => void,
   };
 
   const cancelButton = {
@@ -156,9 +155,9 @@ export const ImportTestCaseModal = ({
                 incorrectFileFormat: formatMessage(messages.incorrectFileFormat),
                 incorrectFileSize: formatMessage(messages.incorrectFileSize),
               }}
-              onFilesAdded={handleFilesAdded}
               acceptFileMimeTypes={acceptFileMimeTypes}
               maxFileSize={MAX_FILE_SIZE_BYTES}
+              onFilesAdded={handleFilesAdded}
             >
               <div className={cx('import-test-case-modal__drop-wrap')}>
                 <FileDropArea.DropZone
@@ -216,13 +215,9 @@ export default withModal(IMPORT_TEST_CASE_MODAL_KEY)(
   reduxForm<ImportTestCaseFormValues>({
     form: IMPORT_TEST_CASE_FORM_NAME,
     destroyOnUnmount: true,
-    initialValues: {
-      folderName: '',
-    },
-    validate: ({ folderName }): FormErrors<ImportTestCaseFormValues> => {
-      return {
-        folderName: commonValidators.requiredField(folderName),
-      };
-    },
+    initialValues: { folderName: '' },
+    validate: ({ folderName }): FormErrors<ImportTestCaseFormValues> => ({
+      folderName: commonValidators.requiredField(folderName),
+    }),
   })(ImportTestCaseModal),
 );
