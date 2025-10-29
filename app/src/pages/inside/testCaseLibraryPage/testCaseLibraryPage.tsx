@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
@@ -43,7 +44,6 @@ import { useCreateTestCaseModal } from './createTestCaseModal';
 import { useImportTestCaseModal } from './importTestCaseModal';
 
 import styles from './testCaseLibraryPage.scss';
-import { useMemo } from 'react';
 
 const cx = createClassnames(styles);
 

@@ -1,19 +1,39 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { projectKeySelector } from 'controllers/project';
-import { fetch } from 'common/utils';
-import { isEmpty, isNumber } from 'es-toolkit/compat';
-import { useDebouncedSpinner } from 'common/hooks';
-import { URLS } from 'common/urls';
-import { hideModalAction } from 'controllers/modal';
-import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { useIntl } from 'react-intl';
 import { SubmissionError } from 'redux-form';
+import { isEmpty, isNumber } from 'es-toolkit/compat';
+
+import { projectKeySelector } from 'controllers/project';
+import { hideModalAction } from 'controllers/modal';
+import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
+import { fetch } from 'common/utils';
+import { URLS } from 'common/urls';
+import { useDebouncedSpinner } from 'common/hooks';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 
-type ImportPayload = {
-  file: File;
+type ImportQuery = {
   testFolderId?: number;
   testFolderName?: string;
+};
+
+type ImportPayload = ImportQuery & {
+  file: File;
+};
+
+const createQuery = ({ testFolderId, testFolderName }: ImportQuery) => {
+  const hasId = isNumber(testFolderId);
+  const hasName = !isEmpty(testFolderName?.trim());
+  const query: ImportQuery = {};
+
+  if (hasId && !hasName) {
+    query.testFolderId = testFolderId;
+  }
+
+  if (!hasId && hasName) {
+    query.testFolderName = testFolderName;
+  }
+
+  return query;
 };
 
 export const useImportTestCase = () => {
@@ -27,17 +47,7 @@ export const useImportTestCase = () => {
       return;
     }
 
-    const hasId = isNumber(testFolderId);
-    const hasName = !isEmpty(testFolderName?.trim());
-    const query: { testFolderId?: number; testFolderName?: string } = {};
-
-    if (hasId && !hasName) {
-      query.testFolderId = testFolderId;
-    }
-
-    if (!hasId && hasName) {
-      query.testFolderName = testFolderName;
-    }
+    const query = createQuery({ testFolderId, testFolderName });
 
     if (!query.testFolderId && !query.testFolderName) {
       return;
@@ -46,8 +56,10 @@ export const useImportTestCase = () => {
     const { testFolderName: resolvedFolderName } = query;
 
     showSpinner();
+
     try {
       const formData = new FormData();
+
       formData.append('file', file);
 
       await fetch(URLS.importTestCase(projectKey, query), {
