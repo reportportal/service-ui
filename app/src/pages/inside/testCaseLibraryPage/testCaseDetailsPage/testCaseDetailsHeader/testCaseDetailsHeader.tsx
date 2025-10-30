@@ -18,6 +18,7 @@ import { useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
+import { isEmpty } from 'es-toolkit/compat';
 import { BreadcrumbsTreeIcon, Button, MeatballMenuIcon } from '@reportportal/ui-kit';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
@@ -45,7 +46,6 @@ import { useDeleteTestCaseModal } from '../../deleteTestCaseModal';
 import { AddToLaunchButton } from '../../addToLaunchButton';
 
 import styles from './testCaseDetailsHeader.scss';
-import { isEmpty } from 'es-toolkit/compat';
 
 const cx = createClassnames(styles);
 

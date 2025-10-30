@@ -82,7 +82,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
   scenario: ManualScenario;
   testCaseDescription: string;
 }) => {
-  const isStepsManualScenario = scenario.manualScenarioType === TestCaseManualScenario.STEPS;
+  const isStepsManualScenario = scenario?.manualScenarioType === TestCaseManualScenario.STEPS;
   const isEmptyPreconditions = isEmpty(scenario?.preconditions?.value);
   const isScenarioDataHidden = isStepsManualScenario
     ? isEmptyPreconditions
@@ -101,7 +101,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
       defaultMessageKey: 'noDetailsForScenario',
       childComponent: isScenarioDataHidden ? null : <Scenario scenario={scenario} />,
     },
-    ...(scenario.manualScenarioType === TestCaseManualScenario.TEXT
+    ...(scenario?.manualScenarioType === TestCaseManualScenario.TEXT
       ? [
           {
             titleKey: 'attachmentsTitle',

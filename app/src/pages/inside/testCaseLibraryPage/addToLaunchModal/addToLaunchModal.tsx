@@ -67,13 +67,15 @@ export const AddToLaunchModalComponent = ({
 
   const makeTestPlansOptions = (response: { content: TestPlanDto[] }) => response.content;
 
-  const description = useMemo(() => {
-    return formatMessage(messages.description, {
-      // for now, we do not consider the batch
-      testCaseQuantity: 1,
-      bold: (value: ReactNode) => <b className={cx('selected-test-cases')}>{value}</b>,
-    });
-  }, [formatMessage]);
+  const description = useMemo(
+    () =>
+      formatMessage(messages.description, {
+        // for now, we do not consider the batch
+        testCaseQuantity: 1,
+        bold: (value: ReactNode) => <b className={cx('selected-test-cases')}>{value}</b>,
+      }),
+    [formatMessage],
+  );
 
   const retrieveTestPlans = (value: string) =>
     `${URLS.testPlan(projectKey)}?filter.fts.search=${value}`;
@@ -141,19 +143,16 @@ export const AddToLaunchModalComponent = ({
     </Modal>
   );
 };
+
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 export const AddToLaunchModal = withModal(ADD_TO_LAUNCH_MODAL_KEY)(
   reduxForm<AddToLaunchFormData, AddToLaunchModalProps>({
     form: ADD_TO_LAUNCH_MODAL_FORM,
     destroyOnUnmount: true,
-    initialValues: {
-      launchName: '',
-    },
-    validate: ({ selectedTestPlan, launchName }) => {
-      return {
-        launchName: commonValidators.requiredField(launchName),
-        selectedTestPlan: commonValidators.requiredField(selectedTestPlan),
-      };
-    },
+    initialValues: { launchName: '' },
+    validate: ({ selectedTestPlan, launchName }) => ({
+      launchName: commonValidators.requiredField(launchName),
+      selectedTestPlan: commonValidators.requiredField(selectedTestPlan),
+    }),
   })(AddToLaunchModalComponent),
 );
