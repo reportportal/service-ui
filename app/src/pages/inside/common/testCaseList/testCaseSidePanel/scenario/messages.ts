@@ -33,6 +33,10 @@ export const messages = defineMessages({
     id: 'Scenario.attachments',
     defaultMessage: 'Attachments',
   },
+  steps: {
+    id: 'Scenario.steps',
+    defaultMessage: 'Steps',
+  },
   noSteps: {
     id: 'Scenario.noSteps',
     defaultMessage: 'No steps for this scenario yet',

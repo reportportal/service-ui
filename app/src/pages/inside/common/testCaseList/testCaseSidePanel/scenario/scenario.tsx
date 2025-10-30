@@ -59,7 +59,7 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
             </>
           ) : null}
         </div>
-        <span className={cx('section-name')}>Steps</span>
+        <span className={cx('section-name')}>{formatMessage(messages.steps)}</span>
         {isEmpty(firstStep?.expectedResult || firstStep?.instructions) ? (
           <div className={cx('empty-section')}>{formatMessage(messages.noSteps)}</div>
         ) : (
@@ -72,13 +72,13 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
   return (
     <div className={cx('scenario-wrapper')}>
       <div className={cx('scenario', 'full-view')}>
-        <FieldSection title={formatMessage(messages.precondition)}>
+        <FieldSection title={formatMessage(messages.precondition)} className={cx('sub-header')}>
           <div className={cx('precondition-text')}>{scenario.preconditions?.value}</div>
         </FieldSection>
-        <FieldSection title={formatMessage(messages.instructions)}>
+        <FieldSection title={formatMessage(messages.instructions)} className={cx('sub-header')}>
           <div className={cx('precondition-text')}>{scenario.instructions}</div>
         </FieldSection>
-        <FieldSection title={formatMessage(messages.expectedResult)}>
+        <FieldSection title={formatMessage(messages.expectedResult)} className={cx('sub-header')}>
           <div className={cx('precondition-text')}>{scenario.expectedResult}</div>
         </FieldSection>
       </div>
