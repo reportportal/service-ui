@@ -263,8 +263,6 @@ export const createImportProps = (pluginName) => ({
     change,
     useTracking,
     classNames,
-    DndProvider,
-    HTML5Backend,
   },
   components: {
     ...BUTTONS,
