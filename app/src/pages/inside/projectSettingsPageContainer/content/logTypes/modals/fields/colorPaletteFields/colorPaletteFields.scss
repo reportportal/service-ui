@@ -44,9 +44,11 @@
   height: 24px;
   border: 1px solid var(--rp-ui-base-dark-bg-light);
   border-radius: 50%;
+  background: none;
   cursor: pointer;
 
-  &.active {
+  &.active,
+  &:focus-visible {
     outline: 2px solid var(--rp-ui-base-topaz-focused);
     outline-offset: 4px;
   }

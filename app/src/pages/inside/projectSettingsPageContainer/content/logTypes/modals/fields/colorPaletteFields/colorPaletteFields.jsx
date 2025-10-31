@@ -54,7 +54,7 @@ export const ColorPaletteFields = ({ colors, textBold, onColorChange, onTextBold
       <div className={cx('color-palette-settings')}>
         {[LABEL_COLOR_FIELD_KEY, BACKGROUND_COLOR_FIELD_KEY, TEXT_COLOR_FIELD_KEY].map((tabKey) => (
           <div key={tabKey} className={cx('color-palette-item')}>
-            <div
+            <button
               className={cx('color-tab', { active: activeTab === tabKey })}
               style={{ backgroundColor: colors[tabKey] }}
               onClick={() => setActiveTab(tabKey)}
