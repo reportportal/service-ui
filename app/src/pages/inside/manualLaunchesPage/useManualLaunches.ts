@@ -52,6 +52,7 @@ const transformLaunchToManualTestCase = (launch: Launch): ManualTestCase => {
 export const useManualLaunches = () => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const [launches, setLaunches] = useState<ManualTestCase[]>([]);
+  const [fullLaunches, setFullLaunches] = useState<Launch[]>([]);
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
 
@@ -63,6 +64,7 @@ export const useManualLaunches = () => {
       const transformedData = response.content.map(transformLaunchToManualTestCase);
 
       setLaunches(transformedData);
+      setFullLaunches(response.content);
     } catch {
       dispatch(
         showErrorNotification({
@@ -80,6 +82,7 @@ export const useManualLaunches = () => {
 
   return {
     launches,
+    fullLaunches,
     isLoading,
     refetch: fetchManualLaunches,
   };

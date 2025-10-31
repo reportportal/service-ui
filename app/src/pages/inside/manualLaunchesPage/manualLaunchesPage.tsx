@@ -37,7 +37,7 @@ export const ManualLaunchesPage = () => {
   const { formatMessage } = useIntl();
   const projectName = useSelector(projectNameSelector);
   const organizationName = useSelector(activeOrganizationNameSelector) as string;
-  const { launches, isLoading, refetch } = useManualLaunches();
+  const { launches, fullLaunches, isLoading, refetch } = useManualLaunches();
 
   const handleRefresh = useCallback(() => {
     void refetch();
@@ -62,7 +62,11 @@ export const ManualLaunchesPage = () => {
           </Button>
         )}
       </LocationHeaderLayout>
-      <ManualLaunchesPageContent data={launches} isLoading={isLoading} />
+      <ManualLaunchesPageContent
+        data={launches}
+        fullLaunches={fullLaunches}
+        isLoading={isLoading}
+      />
     </div>
   );
 };
