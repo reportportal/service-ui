@@ -44,7 +44,6 @@ import {
   GET_TEST_CASE_DETAILS_SUCCESS,
   NAMESPACE,
   RENAME_FOLDER,
-  DUPLICATE_FOLDER,
 } from './constants';
 import { Folder } from './types';
 import {
@@ -65,6 +64,7 @@ import {
   GetAllTestCases,
 } from './actionCreators';
 import { getAllFolderIdsToDelete } from './utils';
+import { fetchAllFolders } from './utils/fetchAllFolders';
 import { Page, TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { foldersSelector } from 'controllers/testCase/selectors';
 import {
@@ -91,10 +91,6 @@ interface DeleteFolderAction extends Action<typeof DELETE_FOLDER> {
 
 interface RenameFolderAction extends Action<typeof RENAME_FOLDER> {
   payload: RenameFolderParams;
-}
-
-interface DuplicateFolderAction extends Action<typeof DUPLICATE_FOLDER> {
-  payload: CreateFolderParams;
 }
 
 interface TestCaseDetailsAction extends Action<typeof GET_TEST_CASE_DETAILS> {
@@ -199,16 +195,6 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
   }
 }
 
-type FoldersDto = {
-  content: Folder[];
-  page: {
-    number: number;
-    size: number;
-    totalElements: number;
-    totalPages: number;
-  };
-};
-
 function* getFolders() {
   const projectKey = (yield select(projectKeySelector)) as string;
 
@@ -223,27 +209,7 @@ function* getFolders() {
       meta: { namespace: NAMESPACE },
     });
 
-    const limit = 1000;
-    let offset = 0;
-    const allFolders: Folder[] = [];
-    let totalElements = Infinity;
-
-    while (offset < totalElements) {
-      const response = (yield call(
-        fetch,
-        URLS.testFolders(projectKey, {
-          offset,
-          limit,
-          sort: 'id,ASC',
-        }),
-      )) as FoldersDto;
-
-      const { content, page } = response;
-
-      allFolders.push(...content);
-      totalElements = page.totalElements;
-      offset += limit;
-    }
+    const allFolders = (yield call(fetchAllFolders, { projectKey })) as Folder[];
 
     yield put(
       fetchSuccessAction(NAMESPACE, {
@@ -385,10 +351,6 @@ function* renameFolder(action: RenameFolderAction) {
   }
 }
 
-function* duplicateFolder(action: DuplicateFolderAction) {
-  yield call(handleFolderCreation, action.payload, 'testCaseFolderDuplicatedSuccess');
-}
-
 function* watchGetFolders() {
   yield takeEvery(GET_FOLDERS, getFolders);
 }
@@ -418,6 +380,5 @@ export function* testCaseSagas() {
     watchGetAllTestCases(),
     takeEvery(DELETE_FOLDER, deleteFolder),
     takeEvery(RENAME_FOLDER, renameFolder),
-    takeEvery(DUPLICATE_FOLDER, duplicateFolder),
   ]);
 }

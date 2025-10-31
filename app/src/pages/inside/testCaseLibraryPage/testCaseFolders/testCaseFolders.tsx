@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { noop } from 'es-toolkit/compat';
@@ -80,7 +80,8 @@ export const TestCaseFolders = () => {
   const currentFolder = useMemo(() => {
     return initialFolders.find(({ id }) => id === Number(folderId));
   }, [folderId, initialFolders]);
-  const setAllTestCases = () => {
+
+  const setAllTestCases = useCallback(() => {
     setActiveFolder(null);
     dispatch({
       type: TEST_CASE_LIBRARY_PAGE,
@@ -89,7 +90,7 @@ export const TestCaseFolders = () => {
         projectSlug,
       },
     });
-  };
+  }, [dispatch, organizationSlug, projectSlug]);
 
   useEffect(() => {
     if (folderId && !currentFolder) {

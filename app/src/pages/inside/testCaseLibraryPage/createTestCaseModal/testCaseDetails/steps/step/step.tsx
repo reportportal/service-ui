@@ -15,7 +15,7 @@
  */
 
 import { defineMessages, useIntl } from 'react-intl';
-import { FieldText } from '@reportportal/ui-kit';
+import { FieldTextFlex } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
@@ -99,19 +99,21 @@ export const Step = ({
     <div className={cx('step')}>
       <FieldProvider name={`steps.${stepId}.instructions`}>
         <FieldErrorHint>
-          <FieldText
+          <FieldTextFlex
+            value=""
             label={formatMessage(messages.instructions)}
             placeholder={formatMessage(messages.enterInstruction)}
-            defaultWidth={false}
+            minHeight={53}
           />
         </FieldErrorHint>
       </FieldProvider>
       <FieldProvider name={`steps.${stepId}.expectedResult`}>
         <FieldErrorHint>
-          <FieldText
+          <FieldTextFlex
+            value=""
             label={formatMessage(messages.expectedResult)}
             placeholder={formatMessage(messages.enterExpectedResult)}
-            defaultWidth={false}
+            minHeight={53}
           />
         </FieldErrorHint>
       </FieldProvider>
