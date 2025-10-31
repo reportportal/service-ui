@@ -18,10 +18,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 12px;
+  padding: 0 8px;
   background-color: var(--rp-ui-base-bg-200);
-  border-radius: 4px;
+  border-radius: 6px;
   gap: 8px;
+  width: max-content;
+  height: 28px;
 }
 
 .attribute-content {
@@ -32,16 +34,15 @@
   min-width: 0;
   font-size: 13px;
   line-height: 20px;
+  color: var(--rp-ui-base-almost-black);
 }
 
 .attribute-key {
-  color: var(--rp-ui-base-e-400);
   font-weight: 500;
   flex-shrink: 0;
 }
 
 .attribute-value {
-  color: var(--rp-ui-base-almost-black);
   word-break: break-word;
 }
 
@@ -64,7 +65,7 @@
 
   &:hover {
     svg {
-      fill: var(--rp-ui-base-error);
+      fill: var(--rp-ui-base-almost-black);
     }
   }
 }

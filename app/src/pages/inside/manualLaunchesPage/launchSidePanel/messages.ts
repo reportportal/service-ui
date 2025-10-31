@@ -21,13 +21,13 @@ export const messages = defineMessages({
     id: 'LaunchSidePanel.closePanel',
     defaultMessage: 'Close panel',
   },
-  openDetails: {
-    id: 'LaunchSidePanel.openDetails',
-    defaultMessage: 'Open Details',
+  editLaunch: {
+    id: 'LaunchSidePanel.editLaunch',
+    defaultMessage: 'Edit Launch',
   },
-  runTests: {
-    id: 'LaunchSidePanel.runTests',
-    defaultMessage: 'Run Tests',
+  toRun: {
+    id: 'LaunchSidePanel.toRun',
+    defaultMessage: 'To Run {testCount}',
   },
   moreActionsTooltip: {
     id: 'LaunchSidePanel.moreActionsTooltip',
@@ -60,5 +60,13 @@ export const messages = defineMessages({
   created: {
     id: 'LaunchSidePanel.created',
     defaultMessage: 'Created',
+  },
+  type: {
+    id: 'LaunchSidePanel.type',
+    defaultMessage: 'Type',
+  },
+  testPlan: {
+    id: 'LaunchSidePanel.testPlan',
+    defaultMessage: 'Test Plan',
   },
 });

@@ -17,18 +17,21 @@
 import { memo, useRef } from 'react';
 import { useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
-import { Button, CopyIcon } from '@reportportal/ui-kit';
+import { Button, RerunIcon } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
 import { useOnClickOutside } from 'common/hooks';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
+import OwnerIcon from 'common/img/project-users-inline.svg';
+import TestPlansIcon from 'common/img/sidebar/test-plans-icon-inline.svg';
+import ManualLaunchesIcon from 'common/img/sidebar/manual-launches-icon-inline.svg';
 import { CollapsibleSection } from 'components/collapsibleSection';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
-import { SegmentStatus, SegmentedStatusBar } from 'components/statusBar';
 
 import { Launch } from '../types';
 import { LaunchAttribute } from '../launchAttribute';
+import { TestStatisticsChart } from '../testStatisticsChart';
 import { messages } from './messages';
 
 import styles from './launchSidePanel.scss';
@@ -52,16 +55,12 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
     return null;
   }
 
-  const handleCopyId = async () => {
-    await navigator.clipboard.writeText(launch.id.toString());
+  const handleEditLaunchClick = () => {
+    // TODO: Implement edit launch functionality
   };
 
-  const handleOpenDetailsClick = () => {
-    // TODO: Implement open details functionality
-  };
-
-  const handleRunTestsClick = () => {
-    // TODO: Implement run tests functionality
+  const handleToRunClick = () => {
+    // TODO: Implement to run functionality
   };
 
   const handleRemoveAttribute = () => {
@@ -72,6 +71,7 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
   const passedTests = launch.statistics?.executions?.passed ?? 0;
   const failedTests = launch.statistics?.executions?.failed ?? 0;
   const skippedTests = launch.statistics?.executions?.skipped ?? 0;
+  const testsToRun = totalTests - passedTests - failedTests - skippedTests;
 
   return (
     <div ref={sidePanelRef} className={cx('launch-side-panel')}>
@@ -91,22 +91,23 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
           </button>
         </div>
         <div className={cx('header-meta')}>
-          <div className={cx('meta-row')}>
-            <div className={cx('meta-item-row', 'id-row')}>
-              <span className={cx('meta-label')}>ID:</span>
-              <span className={cx('meta-value')}>{launch.id}</span>
-              <button
-                type="button"
-                className={cx('copy-button')}
-                // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                onClick={handleCopyId}
-                aria-label={formatMessage(messages.copyId)}
-                data-automation-id="copy-launch-id"
-              >
-                <CopyIcon />
-              </button>
-            </div>
+          <div className={cx('meta-row', 'meta-row-with-action')}>
             <div className={cx('meta-item-row')}>
+              {Parser(ManualLaunchesIcon as unknown as string)}
+              <span className={cx('meta-label')}>{formatMessage(messages.type)}:</span>
+              <span className={cx('meta-value')}>{launch.mode}</span>
+            </div>
+          </div>
+          <div className={cx('meta-row')}>
+            <div className={cx('meta-item-row')}>
+              {Parser(OwnerIcon as unknown as string)}
+              <span className={cx('meta-label')}>{formatMessage(messages.owner)}:</span>
+              <span className={cx('meta-value')}>{launch.owner}</span>
+            </div>
+          </div>
+          <div className={cx('meta-row')}>
+            <div className={cx('meta-item-row')}>
+              <RerunIcon />
               <span className={cx('meta-label')}>{formatMessage(messages.created)}:</span>
               <span className={cx('meta-value')}>
                 {formatTimestampForSidePanel(launch.startTime)}
@@ -115,25 +116,32 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
           </div>
           <div className={cx('meta-row')}>
             <div className={cx('meta-item-row')}>
-              <span className={cx('meta-label')}>{formatMessage(messages.owner)}:</span>
-              <span className={cx('meta-value')}>{launch.owner}</span>
+              {Parser(TestPlansIcon as unknown as string)}
+              <span className={cx('meta-label')}>{formatMessage(messages.testPlan)}:</span>
+              <span className={cx('meta-value')}>-</span>
             </div>
           </div>
-        </div>
-        {totalTests > 0 && (
-          <div className={cx('status-bar-section')}>
-            <SegmentedStatusBar
-              data={[
-                { status: SegmentStatus.Passed, value: passedTests },
-                { status: SegmentStatus.Failed, value: failedTests },
-                { status: SegmentStatus.Skipped, value: skippedTests },
-              ]}
-              className={cx('status-bar')}
+          <div className={cx('statistics-section')}>
+            <TestStatisticsChart
+              total={totalTests}
+              passed={10}
+              failed={5}
+              skipped={2}
+              inProgress={0}
+              toRun={6}
             />
           </div>
-        )}
+        </div>
       </div>
       <div className={cx('content')}>
+        <CollapsibleSection
+          title={formatMessage(messages.descriptionTitle)}
+          defaultMessage={formatMessage(messages.descriptionNotSpecified)}
+        >
+          {launch.description && (
+            <ExpandedTextSection text={launch.description} defaultVisibleLines={5} />
+          )}
+        </CollapsibleSection>
         <CollapsibleSection
           title={formatMessage(messages.attributesTitle)}
           defaultMessage={formatMessage(messages.noAttributesAdded)}
@@ -151,31 +159,23 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
             </div>
           )}
         </CollapsibleSection>
-        <CollapsibleSection
-          title={formatMessage(messages.descriptionTitle)}
-          defaultMessage={formatMessage(messages.descriptionNotSpecified)}
-        >
-          {launch.description && (
-            <ExpandedTextSection text={launch.description} defaultVisibleLines={5} />
-          )}
-        </CollapsibleSection>
       </div>
       <div className={cx('footer')}>
         <Button
           variant="ghost"
           className={cx('action-button')}
-          onClick={handleOpenDetailsClick}
-          data-automation-id="launch-open-details"
+          onClick={handleEditLaunchClick}
+          data-automation-id="launch-edit-launch"
         >
-          {formatMessage(messages.openDetails)}
+          {formatMessage(messages.editLaunch)}
         </Button>
         <Button
           variant="primary"
           className={cx('action-button', 'last-button')}
-          onClick={handleRunTestsClick}
-          data-automation-id="launch-run-tests"
+          onClick={handleToRunClick}
+          data-automation-id="launch-to-run"
         >
-          {formatMessage(messages.runTests)}
+          {formatMessage(messages.toRun, { testCount: testsToRun })}
         </Button>
       </div>
     </div>
