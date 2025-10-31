@@ -53,6 +53,13 @@ export const RuleItem = ({
     setShown(!shown);
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onClickHandler();
+    }
+  };
+
   const handleRuleNameClick = (event) => {
     event.stopPropagation();
     onRuleNameClick(item);
@@ -78,10 +85,23 @@ export const RuleItem = ({
           'preview-wrapper': isPreview,
         })}
       >
-        <div className={cx('panel', itemClassNames.panel)} onClick={onClickHandler}>
+        <div
+          className={cx('panel', itemClassNames.panel)}
+          onClick={onClickHandler}
+          tabIndex={0}
+          role="button"
+          onKeyDown={handleKeyDown}
+        >
           <span className={cx('name-wrapper', itemClassNames.nameWrapper)} title={itemTitle}>
             {isRuleNameClickable && !disabled ? (
-              <i className={cx('name', itemClassNames.name)} onClick={handleRuleNameClick}>
+              <i
+                className={cx('name', itemClassNames.name)}
+                onClick={handleRuleNameClick}
+                tabIndex={0}
+                role="button"
+                aria-label={itemTitle}
+                onKeyDown={handleKeyDown}
+              >
                 {name}
               </i>
             ) : (
