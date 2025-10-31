@@ -23,6 +23,7 @@ import classNames from 'classnames/bind';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import { fetch, connectRouter } from 'common/utils';
 import { commonValidators } from 'common/utils/validation';
+import { passwordMinLengthSelector } from 'controllers/appInfo';
 import { URLS } from 'common/urls';
 import { LOGIN_PAGE } from 'controllers/pages';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
@@ -31,6 +32,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
+import { validationLocalization } from 'common/constants/localization/validationLocalization';
 import PasswordIcon from './img/password-icon-inline.svg';
 import styles from './changePasswordForm.scss';
 
@@ -56,29 +58,32 @@ const notifications = defineMessages({
     defaultMessage: 'Failed to update password',
   },
 });
-const hints = defineMessages({
-  passwordHint: {
-    id: 'ChangePasswordForm.passwordConstraints',
-    defaultMessage:
-      'Minimum 8 characters: at least one digit, one special symbol, one uppercase, and one lowercase letter',
-  },
-});
 
 @connectRouter(({ reset: resetQueryParam }) => ({ resetQueryParam }))
-@connect(null, {
-  redirect,
-  showScreenLockAction,
-  hideScreenLockAction,
-  showNotification,
-})
+@connect(
+  (state) => ({
+    minLength: passwordMinLengthSelector(state),
+  }),
+  {
+    redirect,
+    showScreenLockAction,
+    hideScreenLockAction,
+    showNotification,
+  },
+)
+@injectIntl
 @reduxForm({
   form: 'changePassword',
-  validate: ({ password, passwordRepeat }) => ({
-    password: commonValidators.password(password),
-    passwordRepeat: (!passwordRepeat || passwordRepeat !== password) && 'confirmPasswordHint',
-  }),
+  validate: ({ password, passwordRepeat }, { minLength, intl }) => {
+    const passwordMessage = intl.formatMessage(validationLocalization.passwordHint, { minLength });
+    const passwordValidator = commonValidators.createPasswordValidator(minLength, passwordMessage);
+
+    return {
+      password: passwordValidator(password),
+      passwordRepeat: (!passwordRepeat || passwordRepeat !== password) && 'confirmPasswordHint',
+    };
+  },
 })
-@injectIntl
 export class ChangePasswordForm extends PureComponent {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -136,7 +141,6 @@ export class ChangePasswordForm extends PureComponent {
                 icon={PasswordIcon}
                 maxLength={'256'}
                 placeholder={formatMessage(placeholders.newPassword)}
-                hint={formatMessage(hints.passwordHint)}
                 hasDynamicValidation
                 provideErrorHint
               />

@@ -24,7 +24,8 @@ import { reduxForm, formValueSelector } from 'redux-form';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
-import { commonValidators, validateAsync } from 'common/utils/validation';
+import { commonValidators } from 'common/utils/validation';
+import { passwordMinLengthSelector } from 'controllers/appInfo';
 import { URLS } from 'common/urls';
 import { ADMIN_ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ROLES_MAP, MEMBER, PROJECT_MANAGER } from 'common/constants/projectRoles';
@@ -34,6 +35,8 @@ import { SectionHeader } from 'components/main/sectionHeader';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { validationLocalization } from 'common/constants/localization/validationLocalization';
+import { PASSWORD_MIN_ALLOWED_LENGTH } from 'common/constants/validation';
 import styles from './addUserModal.scss';
 
 const cx = classNames.bind(styles);
@@ -89,12 +92,12 @@ const messages = defineMessages({
 
 const getRandomChar = (chars, n) => chars.charAt(Math.floor(Math.random() * n));
 
-const generatePassword = () => {
+const generatePassword = (passwordMinLength) => {
   const charsLowerCase = 'abcdefghijklmnopqrstuvwxyz';
   const charsAperCase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   const charsDigit = '1234567890';
   const charsSpecialSymbol = `~!@#$%^&*_-+=\`|(){}[]:;"'<>,.?/ `;
-  const passSize = 3;
+  const passSize = Math.ceil(passwordMinLength / 4);
   let pass = '';
 
   for (let i = 0; i < passSize; i += 1) {
@@ -108,51 +111,27 @@ const generatePassword = () => {
 };
 
 @withModal('allUsersAddUserModal')
+@connect((state) => ({
+  userRole: formValueSelector('addUserForm')(state, 'accountRole'),
+  minLength: passwordMinLengthSelector(state),
+}))
 @injectIntl
 @reduxForm({
   form: 'addUserForm',
   initialValues: { accountRole: USER, projectRole: MEMBER },
-  validate: ({ login, fullName, email, password, defaultProject }) => ({
-    login: commonValidators.login(login),
-    fullName: commonValidators.userName(fullName),
-    email: commonValidators.email(email),
-    password: commonValidators.password(password),
-    defaultProject: commonValidators.requiredField(defaultProject),
-  }),
-  asyncValidate: ({ login, email }, dispatch, { asyncErrors }, currentField) => {
-    switch (currentField) {
-      case 'login':
-        return validateAsync.loginUnique(login).then(({ is: isExists }) => {
-          const errors = {
-            ...asyncErrors,
-            login: undefined,
-          };
-          if (isExists) {
-            errors.login = 'loginDuplicateHint';
-          }
-          throw errors;
-        });
-      case 'email':
-        return validateAsync.emailUnique(email).then(({ is: isExists }) => {
-          const errors = {
-            ...asyncErrors,
-            email: undefined,
-          };
-          if (isExists) {
-            errors.email = 'emailDuplicateHint';
-          }
-          throw errors;
-        });
-      default:
-        return Promise.resolve();
-    }
+  validate: ({ login, fullName, email, password, defaultProject }, { minLength, intl }) => {
+    const passwordMessage = intl.formatMessage(validationLocalization.passwordHint, { minLength });
+    const passwordValidator = commonValidators.createPasswordValidator(minLength, passwordMessage);
+
+    return {
+      login: commonValidators.login(login),
+      fullName: commonValidators.userName(fullName),
+      email: commonValidators.email(email),
+      password: passwordValidator(password),
+      defaultProject: commonValidators.requiredField(defaultProject),
+    };
   },
-  asyncChangeFields: ['login', 'email'],
-  asyncBlurFields: ['login', 'email'], // validate on blur in case of copy-paste value
 })
-@connect((state) => ({
-  userRole: formValueSelector('addUserForm')(state, 'accountRole'),
-}))
 @track()
 export class AddUserModal extends Component {
   static propTypes = {
@@ -166,6 +145,7 @@ export class AddUserModal extends Component {
     change: PropTypes.func,
     dirty: PropTypes.bool,
     userRole: PropTypes.string,
+    minLength: PropTypes.number,
   };
 
   static defaultProps = {
@@ -174,13 +154,14 @@ export class AddUserModal extends Component {
     change: () => {},
     dirty: false,
     userRole: '',
+    minLength: PASSWORD_MIN_ALLOWED_LENGTH,
   };
 
   onGeneratePassword = () => {
     this.props.tracking.trackEvent(
       ADMIN_ALL_USERS_PAGE_EVENTS.GENERATE_PASSWORD_BTN_ADD_USER_MODAL,
     );
-    this.props.change('password', generatePassword());
+    this.props.change('password', generatePassword(this.props.minLength));
   };
 
   onChangeAccountRole = (event, value) => {
@@ -212,8 +193,7 @@ export class AddUserModal extends Component {
           danger: false,
           onClick: (closeModal) => {
             handleSubmit((values) => {
-              onSubmit(values);
-              closeModal();
+              onSubmit(values, closeModal);
             })();
           },
           eventInfo: ADMIN_ALL_USERS_PAGE_EVENTS.ADD_BTN_ADD_USER_MODAL,

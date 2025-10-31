@@ -18,6 +18,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { HexColorPicker, HexColorInput } from 'react-colorful';
 import classNames from 'classnames/bind';
+import { PRESET_COLORS } from './constants';
 import styles from './hexColorPicker.scss';
 
 const cx = classNames.bind(styles);
@@ -55,6 +56,6 @@ HexColorPickerComponent.propTypes = {
 HexColorPickerComponent.defaultProps = {
   label: '',
   value: '#ffffff',
-  presets: [],
+  presets: PRESET_COLORS,
   onChange: () => {},
 };

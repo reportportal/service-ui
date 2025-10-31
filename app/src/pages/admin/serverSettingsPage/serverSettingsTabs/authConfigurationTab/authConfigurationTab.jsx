@@ -15,7 +15,7 @@
  */
 
 import classNames from 'classnames/bind';
-import { GithubAuthForm, InactivityTimeoutForm, SsoUsersForm } from './forms';
+import { GithubAuthForm, InactivityTimeoutForm, SsoUsersForm, PasswordForm } from './forms';
 import styles from './authConfigurationTab.scss';
 
 const cx = classNames.bind(styles);
@@ -23,6 +23,7 @@ const cx = classNames.bind(styles);
 export const AuthConfigurationTab = () => (
   <div className={cx('auth-configuration-tab')}>
     <InactivityTimeoutForm />
+    <PasswordForm />
     <GithubAuthForm />
     <SsoUsersForm />
   </div>

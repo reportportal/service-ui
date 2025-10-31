@@ -31,6 +31,8 @@ export const DraggableRuleItem = ({
   onDrop,
   dragControlTooltipContent,
   disabled,
+  className,
+  itemClassNames = {},
   ...restRuleItemProps
 }) => {
   const [isDragging, setIsDragging] = useState(false);
@@ -92,13 +94,20 @@ export const DraggableRuleItem = ({
     <div
       ref={(node) => dropRef(dragPreviewRef(node))}
       style={{ opacity: isInDraggingState ? 0 : 1 }}
-      className={cx('draggable-rule-item', {
+      className={cx('draggable-rule-item', className, {
         [`drop-target-${dropTargetType}`]: draggedItemIndex !== null,
         'is-dragging': isDragging,
       })}
     >
-      <RuleItem item={item} isPreview={isDragging} disabled={disabled} {...restRuleItemProps} />
+      <RuleItem
+        item={item}
+        isPreview={isDragging}
+        disabled={disabled}
+        itemClassNames={itemClassNames}
+        {...restRuleItemProps}
+      />
       <DragControlComponent
+        className={itemClassNames.dragControl}
         dragRef={dragRef}
         handleDragStart={handleDragStart}
         handleDragEnd={handleDragEnd}

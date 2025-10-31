@@ -25,3 +25,4 @@ export const FEATURES = 'features';
 export const ANALYTICS = 'analytics';
 export const LINKS_AND_BRANDING = 'linksAndBranding';
 export const PATTERN_ANALYSIS = 'patternAnalysis';
+export const LOG_TYPES = 'logTypes';

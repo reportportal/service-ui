@@ -17,3 +17,10 @@
 export const isString = (value) => {
   return typeof value === 'string';
 };
+
+export const capitalize = (str) => {
+  if (!isString(str)) {
+    return str;
+  }
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+};

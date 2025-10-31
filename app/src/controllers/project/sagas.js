@@ -20,6 +20,8 @@ import {
   showNotification,
   showDefaultErrorNotification,
   NOTIFICATION_TYPES,
+  showSuccessNotification,
+  showErrorNotification,
 } from 'controllers/notification';
 import { projectIdSelector } from 'controllers/pages';
 import { hideModalAction } from 'controllers/modal';
@@ -33,6 +35,7 @@ import {
   removeFilterAction,
   activeFilterSelector,
 } from 'controllers/filter';
+import { fetchDataAction } from 'controllers/fetch';
 
 import {
   UPDATE_DEFECT_TYPE,
@@ -48,6 +51,9 @@ import {
   FETCH_CONFIGURATION_ATTRIBUTES,
   HIDE_FILTER_ON_LAUNCHES,
   SHOW_FILTER_ON_LAUNCHES,
+  FETCH_LOG_TYPES,
+  LOG_TYPES_NAMESPACE,
+  CREATE_LOG_TYPE,
   UPDATE_PROJECT_FILTER_PREFERENCES,
   ADD_PROJECT_NOTIFICATION,
   NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY,
@@ -482,6 +488,31 @@ function* watchUpdateProjectFilterPreferences() {
   yield takeEvery(UPDATE_PROJECT_FILTER_PREFERENCES, updateProjectFilterPreferences);
 }
 
+function* fetchLogTypes({ payload: projectId }) {
+  yield put(fetchDataAction(LOG_TYPES_NAMESPACE)(URLS.projectLogTypes(projectId)));
+}
+
+function* watchFetchLogTypes() {
+  yield takeEvery(FETCH_LOG_TYPES, fetchLogTypes);
+}
+
+function* createLogType({ payload: { data, projectId, onSuccess } }) {
+  yield put(showScreenLockAction());
+  try {
+    yield call(fetch, URLS.projectLogTypes(projectId), { method: 'POST', data });
+    yield put(showSuccessNotification({ messageId: 'createLogTypeSuccess' }));
+    onSuccess?.();
+  } catch {
+    yield put(showErrorNotification({ messageId: 'createLogTypeError' }));
+  } finally {
+    yield put(hideScreenLockAction());
+  }
+}
+
+function* watchCreateLogType() {
+  yield takeEvery(CREATE_LOG_TYPE, createLogType);
+}
+
 export function* projectSagas() {
   yield all([
     watchUpdateDefectType(),
@@ -502,5 +533,7 @@ export function* projectSagas() {
     watchUpdateProjectNotification(),
     watchDeleteProjectNotification(),
     watchFetchProjectNotifications(),
+    watchFetchLogTypes(),
+    watchCreateLogType(),
   ]);
 }

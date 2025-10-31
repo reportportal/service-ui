@@ -36,6 +36,8 @@ import {
   activeRetryIdSelector,
 } from 'controllers/log';
 import { logStackTraceAddonSelector } from 'controllers/plugins/uiExtensions';
+import { logsSizeSelector } from 'controllers/user';
+import { DEFAULT_LOGS_SIZE } from 'common/constants/logsSettings';
 import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import NavigateArrowIcon from 'common/img/navigate-arrow-inline.svg';
@@ -73,6 +75,7 @@ const LOAD_MORE_HEIGHT = 32;
     loadMore: isLoadMoreStackTraceVisible(state),
     retryId: activeRetryIdSelector(state),
     extensions: logStackTraceAddonSelector(state),
+    logsSize: logsSizeSelector(state),
   }),
   {
     fetchLogPageStackTrace,
@@ -101,6 +104,8 @@ export class StackTrace extends Component {
     eventsInfo: PropTypes.object,
     retryId: PropTypes.number.isRequired,
     extensions: PropTypes.arrayOf(extensionType),
+    logsSize: PropTypes.string,
+    expanded: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -116,6 +121,8 @@ export class StackTrace extends Component {
     transparentBackground: false,
     eventsInfo: {},
     extensions: [],
+    logsSize: DEFAULT_LOGS_SIZE,
+    expanded: false,
   };
 
   componentDidMount() {
@@ -157,13 +164,13 @@ export class StackTrace extends Component {
   };
 
   navigateToError = (id) => {
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.CLICK_JUMP_TO_ERROR_LOG);
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.clickJumpToLog());
     setStorageItem(ERROR_LOG_INDEX_KEY, id);
     this.props.setActiveTabIdAction('logs');
   };
 
   createStackTraceItem = (item, { extraRow, extraCell } = {}) => {
-    const { intl, hideAdditionalCells, designMode, eventsInfo } = this.props;
+    const { intl, hideAdditionalCells, designMode, eventsInfo, logsSize, expanded } = this.props;
     const maxRowHeight = this.getMaxRowHeight();
 
     return (
@@ -174,8 +181,9 @@ export class StackTrace extends Component {
           maxHeight={maxRowHeight}
           designMode={designMode}
           eventsInfo={eventsInfo}
+          expanded={expanded}
         >
-          <div className={cx('message-container')}>
+          <div className={cx('message-container', `container-size-${logsSize}`)}>
             <div className={cx('cell', 'message-cell')}>{item.message}</div>
             {!hideAdditionalCells && (
               <>

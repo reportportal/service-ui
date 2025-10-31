@@ -19,6 +19,7 @@ import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { Toggle } from '@reportportal/ui-kit';
 import PropTypes from 'prop-types';
+import { ENTER_KEY_CODE, SPACE_KEY_CODE } from 'common/constants/keyCodes';
 import { ruleItemPropTypes, ruleItemDefaultProps } from './propTypes';
 import styles from './ruleItem.scss';
 
@@ -34,9 +35,10 @@ export const RuleItem = ({
   onRuleNameClick,
   isPreview,
   className,
+  itemClassNames = {},
 }) => {
   const [shown, setShown] = useState(false);
-  const { enabled, name } = item;
+  const { enabled, name, title } = item;
   const isRuleNameClickable = Boolean(onRuleNameClick);
 
   const onToggleActive = (val) => {
@@ -52,18 +54,26 @@ export const RuleItem = ({
     setShown(!shown);
   };
 
+  const handleKeyDown = (e) => {
+    if (e.keyCode === ENTER_KEY_CODE || e.keyCode === SPACE_KEY_CODE) {
+      e.preventDefault();
+      onClickHandler();
+    }
+  };
+
   const handleRuleNameClick = (event) => {
     event.stopPropagation();
     onRuleNameClick(item);
   };
 
+  const itemTitle = title || (typeof name === 'string' ? name : '');
   return (
     <div
       className={cx('container', { 'preview-container': isPreview }, className)}
       data-automation-id="listItem"
     >
       {!isPreview && (
-        <span className={cx('toggle')}>
+        <span className={cx('toggle', itemClassNames.toggle)}>
           <Toggle
             value={enabled}
             onChange={(e) => onToggleActive(e.target.checked)}
@@ -71,11 +81,28 @@ export const RuleItem = ({
           />
         </span>
       )}
-      <div className={cx('panel-wrapper', { 'preview-wrapper': isPreview })}>
-        <div className={cx('panel')} onClick={onClickHandler}>
-          <span className={cx('name-wrapper')} title={name}>
+      <div
+        className={cx('panel-wrapper', itemClassNames.panelWrapper, {
+          'preview-wrapper': isPreview,
+        })}
+      >
+        <div
+          className={cx('panel', itemClassNames.panel)}
+          onClick={onClickHandler}
+          tabIndex={0}
+          role="button"
+          onKeyDown={handleKeyDown}
+        >
+          <span className={cx('name-wrapper', itemClassNames.nameWrapper)} title={itemTitle}>
             {isRuleNameClickable && !disabled ? (
-              <i className={cx('name')} onClick={handleRuleNameClick}>
+              <i
+                className={cx('name', itemClassNames.name)}
+                onClick={handleRuleNameClick}
+                tabIndex={0}
+                role="button"
+                aria-label={itemTitle}
+                onKeyDown={handleKeyDown}
+              >
                 {name}
               </i>
             ) : (
@@ -83,7 +110,7 @@ export const RuleItem = ({
             )}
           </span>
           {actions.length > 0 && !disabled && !isPreview && (
-            <span className={cx('actions')}>
+            <span className={cx('actions', itemClassNames.actions)}>
               {actions.map(({ icon, handler, dataAutomationId, customIcon: CustomIcon, id }) => {
                 return (
                   <React.Fragment key={id || icon}>
@@ -91,7 +118,7 @@ export const RuleItem = ({
                       <CustomIcon item={item} />
                     ) : (
                       <i
-                        className={cx('icon')}
+                        className={cx('icon', itemClassNames.icon)}
                         onClick={(e) => {
                           e.stopPropagation();
                           handler(item);
@@ -117,5 +144,11 @@ RuleItem.propTypes = {
   ...ruleItemPropTypes,
   isPreview: PropTypes.bool,
   className: PropTypes.string,
+  itemClassNames: PropTypes.object,
 };
-RuleItem.defaultProps = { ...ruleItemDefaultProps, isPreview: false, className: '' };
+RuleItem.defaultProps = {
+  ...ruleItemDefaultProps,
+  isPreview: false,
+  className: '',
+  itemClassNames: {},
+};

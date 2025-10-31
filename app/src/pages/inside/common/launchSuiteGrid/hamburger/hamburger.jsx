@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect, useRef, Fragment } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
 import { useTracking } from 'react-tracking';
 import PropTypes from 'prop-types';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
-import { CUSTOMER } from 'common/constants/projectRoles';
 import { IN_PROGRESS } from 'common/constants/launchStatuses';
 import { canDeleteLaunch, canForceFinishLaunch, canMoveToDebug } from 'common/utils/permissions';
 import { updateLaunchLocallyAction } from 'controllers/launch';
@@ -192,29 +191,25 @@ export const Hamburger = ({ launch, customProps }) => {
       </button>
       <div className={cx('hamburger-menu', { shown: menuShown })}>
         <div className={cx('hamburger-menu-actions')}>
-          {projectRole !== CUSTOMER && (
-            <Fragment>
-              {launch.mode === 'DEFAULT' ? (
-                <HamburgerMenuItem
-                  title={getMoveToDebugTooltip()}
-                  text={formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_DEBUG)}
-                  disabled={!canMoveToDebug(accountRole, projectRole, userId === launch.owner)}
-                  onClick={() => {
-                    trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MOVE_TO_DEBUG_LAUNCH_MENU);
-                    customProps.onMove(launch);
-                  }}
-                />
-              ) : (
-                <HamburgerMenuItem
-                  text={formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_ALL_LAUNCHES)}
-                  title={getMoveToDebugTooltip()}
-                  disabled={!canMoveToDebug(accountRole, projectRole, userId === launch.owner)}
-                  onClick={() => {
-                    customProps.onMove(launch);
-                  }}
-                />
-              )}
-            </Fragment>
+          {launch.mode === 'DEFAULT' ? (
+            <HamburgerMenuItem
+              title={getMoveToDebugTooltip()}
+              text={formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_DEBUG)}
+              disabled={!canMoveToDebug(accountRole, projectRole, userId === launch.owner)}
+              onClick={() => {
+                trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MOVE_TO_DEBUG_LAUNCH_MENU);
+                customProps.onMove(launch);
+              }}
+            />
+          ) : (
+            <HamburgerMenuItem
+              text={formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_ALL_LAUNCHES)}
+              title={getMoveToDebugTooltip()}
+              disabled={!canMoveToDebug(accountRole, projectRole, userId === launch.owner)}
+              onClick={() => {
+                customProps.onMove(launch);
+              }}
+            />
           )}
           <HamburgerMenuItem
             text={formatMessage(COMMON_LOCALE_KEYS.FORCE_FINISH)}

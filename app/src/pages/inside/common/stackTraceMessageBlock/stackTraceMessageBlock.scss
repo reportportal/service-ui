@@ -16,17 +16,12 @@
 
 .row-wrapper {
   position: relative;
-  border-left: 4px solid $COLOR--orange-red;
-  background-image: linear-gradient(to right, $COLOR--light-red, $COLOR--white-two);
-  background-size: 19px 100%;
-  background-repeat: no-repeat;
-  background-position: 0 0;
-  padding-left: 20px;
+  border-left: 8px solid $COLOR--orange-red;
   &.with-accordion {
     padding-bottom: 20px;
   }
   &.level-fatal {
-    border-left: 4px solid $COLOR--fatal;
+    border-left: 8px solid $COLOR--fatal;
   }
 }
 .row {
@@ -113,6 +108,7 @@
   );
   background-size: 8px 100%;
   background-position: 1px 0;
+  background-repeat: no-repeat;
   padding-left: 26px;
   &.level-fatal {
     border-left: 3px solid $COLOR--darkmode-fatal;

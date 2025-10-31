@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useIntl } from 'react-intl';
+import { useIntl, defineMessages } from 'react-intl';
 import moment from 'moment';
 import Parser from 'html-react-parser';
 import {
@@ -37,6 +37,7 @@ import {
   Toggle,
   Modal as ModalLayoutComponent,
 } from '@reportportal/ui-kit';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { BigButton } from 'components/buttons/bigButton';
 import { NavigationTabs } from 'components/main/navigationTabs';
@@ -65,6 +66,9 @@ import {
   activeProjectSelector,
   activeProjectRoleSelector,
   isAdminSelector,
+  userIdSelector,
+  getUserProjectSettingsFromStorage,
+  updateUserProjectSettingsInStorage,
 } from 'controllers/user';
 import {
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
@@ -155,6 +159,7 @@ import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
 import { DependentFieldsControl } from 'components/main/dependentFieldsControl';
 import { SidebarButton } from 'components/buttons/sidebarButton';
 import { GeneralTab } from 'pages/inside/projectSettingsPageContainer/generalTab';
+import { TestItemStatus } from 'pages/inside/common/testItemStatus';
 import { RuleList, ItemContent } from 'components/main/ruleList';
 import { RuleListHeader } from 'components/main/ruleListHeader';
 import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
@@ -174,7 +179,7 @@ import {
 } from 'components/integrations/elements';
 import { updateLaunchLocallyAction } from 'controllers/launch';
 import { getDefectTypeLabel } from 'components/main/analytics/events/common/utils';
-import { formatAttribute } from 'common/utils/attributeUtils';
+import { formatAttribute, parseQueryAttributes } from 'common/utils/attributeUtils';
 import { createNamespacedQuery } from 'common/utils/routingUtils';
 import {
   publicPluginsSelector,
@@ -182,6 +187,9 @@ import {
 } from 'controllers/plugins/selectors';
 import { loginAction } from 'controllers/auth';
 import { FieldText } from 'componentLibrary/fieldText';
+import { AttributeEditor } from 'componentLibrary/attributeEditor';
+import { EditableAttribute } from 'componentLibrary/attributeList/editableAttribute';
+
 import {
   FieldElement,
   RuleList as RuleListComponent,
@@ -198,6 +206,13 @@ import { Tabs } from 'components/main/tabs';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { PlainTable } from 'componentLibrary/plainTable';
+import { withFilter } from 'controllers/filter';
+import {
+  DateRangeFormField,
+  formatDisplayedValue,
+  parseFormattedDate,
+  formatDateRangeToMinutesString,
+} from 'components/main/dateRange';
 
 const BUTTONS = {
   GhostButton,
@@ -236,6 +251,7 @@ export const createImportProps = (pluginName) => ({
     useSelector,
     useDispatch,
     useIntl,
+    defineMessages,
     moment,
     Parser,
     reduxForm,
@@ -266,6 +282,7 @@ export const createImportProps = (pluginName) => ({
     ProjectName,
     ScrollWrapper,
     AbsRelTime,
+    TestItemStatus,
     MarkdownEditor,
     MarkdownViewer,
     GeneralTab,
@@ -286,6 +303,8 @@ export const createImportProps = (pluginName) => ({
     ModalLayoutComponent,
     FieldText,
     FieldTextFlex,
+    AttributeEditor,
+    EditableAttribute,
     FieldElement,
     Checkbox,
     Toggle,
@@ -299,12 +318,15 @@ export const createImportProps = (pluginName) => ({
     Breadcrumbs,
     PlainTable,
     BubblesPreloader: BubblesLoader,
+    DateRangeFormField,
   },
   componentLibrary: { DraggableRuleList },
   HOCs: {
     withTooltip,
+    withFilter,
   },
   constants: {
+    COMMON_LOCALE_KEYS,
     PLUGIN_UI_EXTENSION_ADMIN_PAGE,
     PROJECT_SETTINGS_TAB_PAGE,
     DEFECT_TYPES_SEQUENCE,
@@ -341,6 +363,7 @@ export const createImportProps = (pluginName) => ({
     pluginRouteSelector,
     payloadSelector,
     activeProjectSelector,
+    userIdSelector,
     projectIdSelector,
     // TODO: must be removed when the common plugin commands will be used
     globalIntegrationsSelector: createGlobalNamedIntegrationsSelector(pluginName),
@@ -383,7 +406,13 @@ export const createImportProps = (pluginName) => ({
     getDefectTypeLabel,
     getDefectFormFields,
     formatAttribute,
+    parseQueryAttributes,
     createNamespacedQuery,
+    formatDisplayedValue,
+    parseFormattedDate,
+    formatDateRangeToMinutesString,
+    getUserProjectSettingsFromStorage,
+    updateUserProjectSettingsInStorage,
   },
   validators: {
     attributesArray,

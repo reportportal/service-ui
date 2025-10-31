@@ -45,4 +45,8 @@ export const messages = defineMessages({
     id: 'SettingsPage.patternAnalysis',
     defaultMessage: 'Pattern-analysis',
   },
+  logTypes: {
+    id: 'SettingsPage.logTypes',
+    defaultMessage: 'Log types',
+  },
 });

@@ -39,6 +39,7 @@ export class StackTraceMessageBlock extends Component {
     }).isRequired,
     eventsInfo: PropTypes.object,
     customProps: PropTypes.object,
+    expanded: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -48,13 +49,14 @@ export class StackTraceMessageBlock extends Component {
     designMode: '',
     eventsInfo: {},
     customProps: {},
+    expanded: false,
   };
 
   constructor(props) {
     super(props);
     this.state = {
       withAccordion: false,
-      expanded: false,
+      expanded: props.expanded,
       maxHeight: null,
     };
     this.overflowCell = React.createRef();
@@ -71,7 +73,10 @@ export class StackTraceMessageBlock extends Component {
   getContentHeight = () => Number((this.props.maxHeight - TOGGLER_HEIGHT).toFixed());
 
   setupAccordion = () => {
-    this.setState({ withAccordion: true, maxHeight: `${this.getContentHeight()}px` });
+    this.setState((prevState) => ({
+      withAccordion: true,
+      maxHeight: prevState.expanded ? null : `${this.getContentHeight()}px`,
+    }));
   };
 
   removeAccordion = () => {

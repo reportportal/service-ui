@@ -24,6 +24,7 @@ const NOTIFICATIONS = 'notifications';
 const DEFECT_TYPES = 'defect_types';
 const INTEGRATIONS = 'integrations';
 const PATTERN_ANALYSIS = 'pattern_analysis';
+const LOG_TYPES = 'log_types';
 const GENERAL = 'general';
 const BASIC_EVENT_PARAMETERS_ANALYZER_TAB = getBasicClickEventParameters(PROJECT_SETTINGS);
 const BASIC_EVENT_PARAMETERS_NOTIFICATIONS = {
@@ -43,6 +44,11 @@ const BASIC_EVENT_PARAMETERS_INTEGRATIONS = {
 const BASIC_EVENT_PARAMETERS_PATTERN_ANALYSIS = {
   ...getBasicClickEventParameters(PROJECT_SETTINGS),
   place: PATTERN_ANALYSIS,
+};
+
+const BASIC_EVENT_PARAMETERS_LOG_TYPES = {
+  ...getBasicClickEventParameters(PROJECT_SETTINGS),
+  place: LOG_TYPES,
 };
 
 const BASIC_EVENT_PARAMETERS_GENERAL = getBasicClickEventParameters(PROJECT_SETTINGS);
@@ -300,4 +306,17 @@ export const PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS = {
     ...(place && { place }),
     link_name: 'documentation',
   }),
+};
+
+export const PROJECT_SETTINGS_LOG_TYPES_EVENTS = {
+  CLICK_CREATE_TYPES: {
+    ...BASIC_EVENT_PARAMETERS_LOG_TYPES,
+    element_name: 'icon_create_type',
+  },
+
+  CLICK_CREATE_IN_MODAL: {
+    ...BASIC_EVENT_PARAMETERS_LOG_TYPES,
+    modal: 'create_log_types',
+    element_name: 'create_log_type',
+  },
 };

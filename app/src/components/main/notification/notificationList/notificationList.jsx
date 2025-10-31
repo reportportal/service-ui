@@ -172,6 +172,14 @@ const messages = defineMessages({
     id: 'ProfilePage.updateSessionExpirationSuccess',
     defaultMessage: 'Session inactivity timeout has been changed successfully',
   },
+  createLogTypeSuccess: {
+    id: 'LogTypeModal.create.createLogTypeSuccess',
+    defaultMessage: 'Log type has been created successfully',
+  },
+  createLogTypeError: {
+    id: 'LogTypeModal.create.createLogTypeError',
+    defaultMessage: 'Failed to save new log type. Please try again',
+  },
 });
 
 @injectIntl
