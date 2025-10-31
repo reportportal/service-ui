@@ -20,6 +20,7 @@ import Parser from 'html-react-parser';
 import { Toggle } from '@reportportal/ui-kit';
 import PropTypes from 'prop-types';
 import { ruleItemPropTypes, ruleItemDefaultProps } from './propTypes';
+import { ENTER_KEY_CODE, SPACE_KEY_CODE } from '../../../../../../../../common/constants/keyCodes';
 import styles from './ruleItem.scss';
 
 const cx = classNames.bind(styles);
@@ -54,7 +55,7 @@ export const RuleItem = ({
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
+    if (e.keyCode === ENTER_KEY_CODE || e.keyCode === SPACE_KEY_CODE) {
       e.preventDefault();
       onClickHandler();
     }
