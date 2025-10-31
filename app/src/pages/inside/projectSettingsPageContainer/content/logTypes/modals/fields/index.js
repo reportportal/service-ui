@@ -14,30 +14,6 @@
  * limitations under the License.
  */
 
-.sample-container {
-  width: 100%;
-  background-color: var(--rp-ui-base-bg-000);
-  border-radius: 5px;
-  padding: 9px 12px 8px;
-
-  .log-sample {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    height: 20px;
-    padding-left: 15px;
-    border-left: 6px solid var(--rp-ui-base-e-400);
-    border-radius: 2px;
-    box-sizing: border-box;
-
-    .log-text {
-      font-size: 12px;
-      line-height: 18px;
-
-      p {
-        line-height: inherit;
-        font-weight: inherit;
-      }
-    }
-  }
-}
+export { ColorPaletteFields } from './colorPaletteFields';
+export { NameField } from './nameField';
+export { LevelField } from './levelField';

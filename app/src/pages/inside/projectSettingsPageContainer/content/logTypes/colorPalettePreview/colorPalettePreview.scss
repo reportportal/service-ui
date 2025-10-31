@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,31 @@
  * limitations under the License.
  */
 
-export const MAX_DEFECT_TYPES_COUNT = 75;
-export const WARNING_DEFECT_TYPES_COUNT = 65;
+.sample-container {
+  width: 100%;
+  background-color: var(--rp-ui-base-bg-000);
+  border-radius: 5px;
+  padding: 9px 12px 8px;
 
-export const NAME_FIELD_KEY = 'longName';
-export const GROUP_FIELD_KEY = 'typeRef';
-export const COLOR_FIELD_KEY = 'color';
-export const ABBREVIATION_FIELD_KEY = 'shortName';
+  .log-sample {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 20px;
+    padding-left: 15px;
+    border-left: 6px solid var(--rp-ui-base-e-400);
+    border-radius: 2px;
+    box-sizing: border-box;
+
+    .log-text {
+      font-size: 12px;
+      line-height: 18px;
+      color: inherit;
+
+      p {
+        line-height: inherit;
+        font-weight: inherit;
+      }
+    }
+  }
+}

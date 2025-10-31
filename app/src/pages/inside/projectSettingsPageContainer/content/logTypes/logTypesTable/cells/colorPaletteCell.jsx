@@ -16,11 +16,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames/bind';
-import { MarkdownViewer } from 'components/main/markdown';
-import styles from './colorPaletteCell.scss';
-
-const cx = classNames.bind(styles);
+import { ColorPalettePreview } from '../../colorPalettePreview';
 
 export const ColorPaletteCell = ({ logType }) => {
   const {
@@ -31,11 +27,12 @@ export const ColorPaletteCell = ({ logType }) => {
   } = logType.style ?? {};
 
   return (
-    <div className={cx('sample-container')}>
-      <div className={cx('log-sample')} style={{ backgroundColor, color, borderColor, fontWeight }}>
-        <MarkdownViewer className={cx('log-text')} value="Log example" />
-      </div>
-    </div>
+    <ColorPalettePreview
+      backgroundColor={backgroundColor}
+      color={color}
+      borderColor={borderColor}
+      fontWeight={fontWeight}
+    />
   );
 };
 

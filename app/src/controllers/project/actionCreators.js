@@ -49,6 +49,7 @@ import {
   SET_PROJECT_NOTIFICATION_LOADING,
   FETCH_EXISTING_LAUNCH_NAMES_SUCCESS,
   FETCH_LOG_TYPES,
+  CREATE_LOG_TYPE,
 } from './constants';
 
 export const fetchProjectSuccessAction = (project) => ({
@@ -218,4 +219,9 @@ export const fetchExistingLaunchNamesSuccessAction = (payload) => ({
 export const fetchLogTypesAction = (projectId) => ({
   type: FETCH_LOG_TYPES,
   payload: projectId,
+});
+
+export const createLogTypeAction = (data, projectId, onSuccess) => ({
+  type: CREATE_LOG_TYPE,
+  payload: { data, projectId, onSuccess },
 });
