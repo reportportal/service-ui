@@ -1339,6 +1339,7 @@
   "LogTypeModal.logTypeName": "Назва лог тыпу",
   "LogTypeModal.logTypeNameAlreadyExistsHint": "Лог тып з такім імем ужо існуе ў праекце",
   "LogTypeModal.logTypeNameInvalidHint": "Назва лог тыпу можа ўтрымліваць толькі лацінскія літары, лічбы, знакі мінус і падкрэслівак (ад 3 да 16 сімвалаў)",
+  "LogTypeModal.previewText": "Папярэдні прагляд: прыклад логу",
   "LogTypeModal.textBold": "Тоўсты тэкст",
   "LogTypeModal.textColor": "Колер тэксту",
   "LogTypes.color": "Колер",

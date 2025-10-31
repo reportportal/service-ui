@@ -77,7 +77,7 @@ export const ColorPaletteFields = ({ colors, textBold, onColorChange, onTextBold
         borderColor={colors[LABEL_COLOR_FIELD_KEY]}
         color={colors[TEXT_COLOR_FIELD_KEY]}
         fontWeight={textBold ? 'bold' : 'normal'}
-        text="Preview: log example"
+        text={formatMessage(messages.previewText)}
       />
       {[LABEL_COLOR_FIELD_KEY, BACKGROUND_COLOR_FIELD_KEY, TEXT_COLOR_FIELD_KEY].map((tabKey) => (
         <div key={tabKey} className={cx('hex-color-picker', { active: activeTab === tabKey })}>

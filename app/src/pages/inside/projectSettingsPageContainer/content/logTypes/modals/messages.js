@@ -57,4 +57,8 @@ export const messages = defineMessages({
     id: 'LogTypeModal.textBold',
     defaultMessage: 'Text bold',
   },
+  previewText: {
+    id: 'LogTypeModal.previewText',
+    defaultMessage: 'Preview: log example',
+  },
 });

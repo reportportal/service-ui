@@ -1339,6 +1339,7 @@
   "LogTypeModal.logTypeName": "Log type name",
   "LogTypeModal.logTypeNameAlreadyExistsHint": "Log type with the same name already exists on the project",
   "LogTypeModal.logTypeNameInvalidHint": "Log type name may contain only Latin, numeric characters, hyphen, underscore (from 3 to 16 symbols)",
+  "LogTypeModal.previewText": "Preview: log example",
   "LogTypeModal.textBold": "Text bold",
   "LogTypeModal.textColor": "Text color",
   "LogTypes.color": "Color",
