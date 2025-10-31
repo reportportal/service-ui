@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
+import { useModal } from 'common/hooks';
 
-export const messages = defineMessages({
-  description: {
-    id: 'TestCaseLibraryPage.addToTestPlanModal.description',
-    defaultMessage:
-      'You are about to add <bold>{testPlansQuantity, number}</bold> selected {testPlansQuantity, plural, one {test case} other {test cases}} to the Test Plan.',
-  },
-});
+import { ADD_TO_LAUNCH_MODAL_KEY, AddToLaunchModal } from './addToLaunchModal';
+import { AddToLaunchModalData } from './types';
+
+export const useAddToLaunchModal = () =>
+  useModal<AddToLaunchModalData>({
+    modalKey: ADD_TO_LAUNCH_MODAL_KEY,
+    renderModal: (data) => <AddToLaunchModal data={data} />,
+  });

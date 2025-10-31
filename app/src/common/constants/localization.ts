@@ -376,6 +376,22 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.allTestCasesTitle',
     defaultMessage: 'All test cases',
   },
+  ADD_TO_LAUNCH: {
+    id: 'Common.addToLaunch',
+    defaultMessage: 'Add to Launch',
+  },
+  TEST_PLAN_LABEL: {
+    id: 'Common.testPlanLabel',
+    defaultMessage: 'Test Plan',
+  },
+  SELECT_TEST_PLAN_PLACEHOLDER: {
+    id: 'Common.selectTestPlanPlaceholder',
+    defaultMessage: 'Select the Test Plan',
+  },
+  ADD_TO_LAUNCH_TOOLTIP_TEXT: {
+    id: 'Common.addToLaunchTooltipText',
+    defaultMessage: 'Add scenario details to be able to add this test case to launch',
+  },
 });
 
 export const months = [

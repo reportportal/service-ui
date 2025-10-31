@@ -47,6 +47,7 @@ import { ManualScenario, ExtendedTestCase } from 'pages/inside/testCaseLibraryPa
 import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
 import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
+import { AddToLaunchButton } from 'pages/inside/testCaseLibraryPage/addToLaunchButton';
 
 import { TestCaseMenuAction, TestCaseManualScenario } from '../types';
 import {
@@ -81,7 +82,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
   scenario: ManualScenario;
   testCaseDescription: string;
 }) => {
-  const isStepsManualScenario = scenario.manualScenarioType === TestCaseManualScenario.STEPS;
+  const isStepsManualScenario = scenario?.manualScenarioType === TestCaseManualScenario.STEPS;
   const isEmptyPreconditions = isEmpty(scenario?.preconditions?.value);
   const isScenarioDataHidden = isStepsManualScenario
     ? isEmptyPreconditions
@@ -100,7 +101,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
       defaultMessageKey: 'noDetailsForScenario',
       childComponent: isScenarioDataHidden ? null : <Scenario scenario={scenario} />,
     },
-    ...(scenario.manualScenarioType === TestCaseManualScenario.TEXT
+    ...(scenario?.manualScenarioType === TestCaseManualScenario.TEXT
       ? [
           {
             titleKey: 'attachmentsTitle',
@@ -201,10 +202,6 @@ export const TestCaseSidePanel = memo(
           testCasePageRoute: `test-cases/${testCase.id}`,
         },
       });
-    };
-
-    const handleAddToLaunchClick = () => {
-      // TODO: Implement add to launch functionality
     };
 
     const handleAddToTestPlanClick = () => {
@@ -319,14 +316,10 @@ export const TestCaseSidePanel = memo(
             {formatMessage(messages.openDetails)}
           </Button>
           {canAddTestCaseToLaunch && (
-            <Button
-              variant="ghost"
-              className={cx('action-button')}
-              onClick={handleAddToLaunchClick}
-              data-automation-id="test-case-add-to-launch"
-            >
-              {formatMessage(messages.addToLaunch)}
-            </Button>
+            <AddToLaunchButton
+              isButtonDisabled={isEmpty(testCase?.manualScenario?.preconditions?.value)}
+              testCaseId={testCase.id}
+            />
           )}
           {canAddTestCaseToTestPlan && (
             <Button

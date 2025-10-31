@@ -224,7 +224,7 @@ export const AllTestCasesPage = ({
                 </Button>
               </PopoverControl>
               <Button variant="ghost">{formatMessage(messages.moveToFolder)}</Button>
-              <Button variant="ghost">{formatMessage(messages.addToLaunch)}</Button>
+              <Button variant="ghost">{formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}</Button>
               <Button onClick={handleOpenAddToTestPlanModal}>
                 {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
               </Button>

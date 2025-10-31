@@ -17,10 +17,6 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  addToLaunch: {
-    id: 'EditTestCasePage.addToLaunch',
-    defaultMessage: 'Add to Launch',
-  },
   created: {
     id: 'EditTestCasePage.created',
     defaultMessage: 'Created:',
