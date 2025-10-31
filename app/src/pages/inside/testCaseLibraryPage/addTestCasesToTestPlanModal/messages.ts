@@ -22,8 +22,4 @@ export const messages = defineMessages({
     defaultMessage:
       'You are about to add <bold>{testPlansQuantity, number}</bold> selected {testPlansQuantity, plural, one {test case} other {test cases}} to the Test Plan.',
   },
-  label: {
-    id: 'TestCaseLibraryPage.addToTestPlanModal.label',
-    defaultMessage: 'Test Plan',
-  },
 });
