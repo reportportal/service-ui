@@ -502,7 +502,7 @@ function* createLogType({ payload: { data, projectId, onSuccess } }) {
     yield call(fetch, URLS.projectLogTypes(projectId), { method: 'POST', data });
     yield put(showSuccessNotification({ messageId: 'createLogTypeSuccess' }));
     onSuccess?.();
-  } catch (error) {
+  } catch {
     yield put(showErrorNotification({ messageId: 'createLogTypeError' }));
   } finally {
     yield put(hideScreenLockAction());

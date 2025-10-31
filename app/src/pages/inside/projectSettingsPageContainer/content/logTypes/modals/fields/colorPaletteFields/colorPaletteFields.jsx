@@ -28,9 +28,6 @@ import {
   BACKGROUND_COLOR_FIELD_KEY,
   TEXT_COLOR_FIELD_KEY,
   TEXT_BOLD_FIELD_KEY,
-  DEFAULT_LABEL_COLOR,
-  DEFAULT_BACKGROUND_COLOR,
-  DEFAULT_TEXT_COLOR,
 } from '../../constants';
 import styles from './colorPaletteFields.scss';
 
@@ -106,12 +103,4 @@ ColorPaletteFields.propTypes = {
   textBold: PropTypes.bool.isRequired,
   onColorChange: PropTypes.func.isRequired,
   onTextBoldChange: PropTypes.func.isRequired,
-};
-
-ColorPaletteFields.defaultProps = {
-  colors: {
-    [LABEL_COLOR_FIELD_KEY]: DEFAULT_LABEL_COLOR,
-    [BACKGROUND_COLOR_FIELD_KEY]: DEFAULT_BACKGROUND_COLOR,
-    [TEXT_COLOR_FIELD_KEY]: DEFAULT_TEXT_COLOR,
-  },
 };

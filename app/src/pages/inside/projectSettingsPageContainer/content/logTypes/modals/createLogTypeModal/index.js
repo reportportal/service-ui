@@ -14,6 +14,4 @@
  * limitations under the License.
  */
 
-import CreateLogTypeModal from './createLogTypeModal';
-
-export { CreateLogTypeModal };
+export { default as CreateLogTypeModal } from './createLogTypeModal';
