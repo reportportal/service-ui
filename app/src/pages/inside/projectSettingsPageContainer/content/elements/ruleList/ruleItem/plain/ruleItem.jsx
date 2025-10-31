@@ -19,8 +19,8 @@ import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { Toggle } from '@reportportal/ui-kit';
 import PropTypes from 'prop-types';
-import { ruleItemPropTypes, ruleItemDefaultProps } from './propTypes';
 import { ENTER_KEY_CODE, SPACE_KEY_CODE } from 'common/constants/keyCodes';
+import { ruleItemPropTypes, ruleItemDefaultProps } from './propTypes';
 import styles from './ruleItem.scss';
 
 const cx = classNames.bind(styles);
