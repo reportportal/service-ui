@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,4 @@
  * limitations under the License.
  */
 
-export const MAX_DEFECT_TYPES_COUNT = 75;
-export const WARNING_DEFECT_TYPES_COUNT = 65;
-
-export const NAME_FIELD_KEY = 'longName';
-export const GROUP_FIELD_KEY = 'typeRef';
-export const COLOR_FIELD_KEY = 'color';
-export const ABBREVIATION_FIELD_KEY = 'shortName';
+export { ColorPalettePreview } from './colorPalettePreview';

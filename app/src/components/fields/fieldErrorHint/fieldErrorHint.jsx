@@ -276,6 +276,23 @@ const messages = defineMessages({
     id: 'DeleteAccountFeedbackModal.deleteAccountReasonSizeHint',
     defaultMessage: 'The field should have size not more than 128 symbols.',
   },
+  logTypeNameAlreadyExistsHint: {
+    id: 'LogTypeModal.logTypeNameAlreadyExistsHint',
+    defaultMessage: 'Log type with the same name already exists on the project',
+  },
+  logTypeLevelAlreadyExistsHint: {
+    id: 'LogTypeModal.logTypeLevelAlreadyExistsHint',
+    defaultMessage: 'Log type with the same level already exists on the project',
+  },
+  logTypeNameInvalidHint: {
+    id: 'LogTypeModal.logTypeNameInvalidHint',
+    defaultMessage:
+      'Log type name may contain only Latin, numeric characters, hyphen, underscore (from 3 to 16 symbols)',
+  },
+  logTypeLevelInvalidHint: {
+    id: 'LogTypeModal.logTypeLevelInvalidHint',
+    defaultMessage: 'Log level should be a number from 1 to 59999',
+  },
 });
 
 @injectIntl

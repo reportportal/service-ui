@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { ColorPaletteCell } from './colorPaletteCell';
+export { ColorPaletteFields } from './colorPaletteFields';
