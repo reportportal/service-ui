@@ -49,6 +49,12 @@
     }
   }
 
+  .statistics-section {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+  }
+
   .launch-name {
     display: flex;
     align-items: flex-start;
@@ -71,6 +77,10 @@
     font-size: 13px;
     line-height: 20px;
     font-family: $FONT-ROBOTO-REGULAR;
+
+    &-with-action {
+      justify-content: space-between;
+    }
   }
 
   .meta-label {
@@ -83,50 +93,57 @@
     gap: 8px;
     align-items: center;
 
-    &.id-row {
-      position: relative;
-
-      .copy-button {
-        opacity: 0;
-        transition: opacity 0.2s ease;
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 4px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 4px;
-
-        svg {
-          width: 14px;
-          height: 14px;
-          fill: var(--rp-ui-base-e-300);
-        }
-
-        &:hover {
-          background-color: var(--rp-ui-base-bg-200);
-
-          svg {
-            fill: var(--rp-ui-base-topaz-hover);
-          }
-        }
-
-        &:focus {
-          outline: 2px solid var(--rp-ui-base-topaz-focused);
-          outline-offset: 2px;
-        }
-      }
-
-      &:hover .copy-button {
-        opacity: 1;
-      }
+    > svg {
+      width: 16px;
+      height: 16px;
+      fill: var(--rp-ui-base-e-300);
+      flex-shrink: 0;
     }
   }
 
   .meta-value {
     color: var(--rp-ui-base-almost-black);
     font-size: 13px;
+  }
+
+  .copy-jenkins-link {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 4px;
+    flex-shrink: 0;
+
+    &-text {
+      font-size: 11px;
+      line-height: 16px;
+      color: var(--rp-ui-base-e-400);
+      font-family: $FONT-ROBOTO-REGULAR;
+    }
+
+    svg {
+      width: 14px;
+      height: 14px;
+      fill: var(--rp-ui-base-e-300);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    &:hover {
+      background-color: var(--rp-ui-base-bg-200);
+
+      svg {
+        opacity: 1;
+        fill: var(--rp-ui-base-topaz-hover);
+      }
+    }
+
+    &:focus {
+      outline: none;
+    }
   }
 
   .close-button {
@@ -179,7 +196,6 @@
 
   .attributes-list {
     display: flex;
-    flex-direction: column;
     gap: 8px;
   }
 
