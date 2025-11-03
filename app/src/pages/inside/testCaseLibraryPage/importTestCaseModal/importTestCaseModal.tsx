@@ -6,9 +6,9 @@ import Parser from 'html-react-parser';
 import Link from 'redux-first-router-link';
 import { isEmpty } from 'es-toolkit/compat';
 import { isString } from 'es-toolkit';
-import { Modal, FileDropArea, AddCsvIcon, MIME_TYPES } from '@reportportal/ui-kit';
-import type { MimeType } from '@reportportal/ui-kit/dist/components/fileDropArea/types';
-import { AttachmentFile } from '@reportportal/ui-kit/dist/components/fileDropArea/attachedFilesList';
+import { Modal, FileDropArea, AddCsvIcon } from '@reportportal/ui-kit';
+import { MIME_TYPES, MimeType } from '@reportportal/ui-kit/fileDropArea';
+import { AttachmentFile } from '@reportportal/ui-kit/fileDropArea/attachedFilesList';
 
 import { withModal, hideModalAction } from 'controllers/modal';
 import { commonValidators, createClassnames } from 'common/utils';

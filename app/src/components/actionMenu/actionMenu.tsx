@@ -16,7 +16,7 @@
 
 import { ReactNode } from 'react';
 import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
-import { PopoverProps } from '@reportportal/ui-kit/dist/components/popover';
+import { PopoverProps } from '@reportportal/ui-kit/popover';
 import Link from 'redux-first-router-link';
 
 import { createClassnames } from 'common/utils';
