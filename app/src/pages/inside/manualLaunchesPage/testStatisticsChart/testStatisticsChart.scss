@@ -126,7 +126,7 @@
   }
 
   &.skipped {
-    background-color: #B8B8B8;
+    background-color: var(--rp-ui-base-test-execution-status-skipped);
   }
 
   &.to-run {

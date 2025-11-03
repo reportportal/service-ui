@@ -17,15 +17,12 @@
 import { memo, useRef } from 'react';
 import { useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
-import { Button, RerunIcon } from '@reportportal/ui-kit';
+import { Button, RerunIcon, OwnerIcon, LaunchTypeIcon, TestPlanIcon } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
 import { useOnClickOutside } from 'common/hooks';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
-import OwnerIcon from 'common/img/project-users-inline.svg';
-import TestPlansIcon from 'common/img/sidebar/test-plans-icon-inline.svg';
-import ManualLaunchesIcon from 'common/img/sidebar/manual-launches-icon-inline.svg';
 import { CollapsibleSection } from 'components/collapsibleSection';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 
@@ -93,14 +90,14 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
         <div className={cx('header-meta')}>
           <div className={cx('meta-row', 'meta-row-with-action')}>
             <div className={cx('meta-item-row')}>
-              {Parser(ManualLaunchesIcon as unknown as string)}
+              <LaunchTypeIcon className={cx('launch-type-icon')} />
               <span className={cx('meta-label')}>{formatMessage(messages.type)}:</span>
               <span className={cx('meta-value')}>{launch.mode}</span>
             </div>
           </div>
           <div className={cx('meta-row')}>
             <div className={cx('meta-item-row')}>
-              {Parser(OwnerIcon as unknown as string)}
+              <OwnerIcon />
               <span className={cx('meta-label')}>{formatMessage(messages.owner)}:</span>
               <span className={cx('meta-value')}>{launch.owner}</span>
             </div>
@@ -116,7 +113,7 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
           </div>
           <div className={cx('meta-row')}>
             <div className={cx('meta-item-row')}>
-              {Parser(TestPlansIcon as unknown as string)}
+              <TestPlanIcon />
               <span className={cx('meta-label')}>{formatMessage(messages.testPlan)}:</span>
               <span className={cx('meta-value')}>-</span>
             </div>
