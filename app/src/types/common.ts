@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ButtonProps } from '@reportportal/ui-kit/dist/components/button';
+import { ButtonProps } from '@reportportal/ui-kit/button';
 
 export interface ModalButtonProps extends ButtonProps {
   text?: string;

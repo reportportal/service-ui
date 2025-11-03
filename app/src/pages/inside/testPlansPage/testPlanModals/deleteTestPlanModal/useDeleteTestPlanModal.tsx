@@ -15,7 +15,7 @@
  */
 
 import { noop } from 'es-toolkit';
-import { VoidFn } from '@reportportal/ui-kit/dist/common/types';
+import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { TestPlanDto } from 'controllers/testPlan';
 import { useModal } from 'common/hooks';

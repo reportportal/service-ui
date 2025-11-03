@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { RowData } from '@reportportal/ui-kit/dist/components/table/types';
+import { RowData } from '@reportportal/ui-kit/table';
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
