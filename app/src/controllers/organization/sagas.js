@@ -24,7 +24,8 @@ import {
   showErrorNotification,
   showSuccessNotification,
 } from 'controllers/notification';
-import { fetchFilteredProjectAction, projectsSagas } from './projects';
+import { fetchFilteredProjectAction } from './projects/actionCreators';
+import { projectsSagas } from './projects/sagas';
 import {
   CREATE_ORGANIZATION,
   ERROR_CODES,
@@ -36,34 +37,18 @@ import {
   UPDATE_ORGANIZATION_SETTINGS,
 } from './constants';
 import { activeOrganizationSelector } from './selectors';
-import { usersSagas } from './users';
+import { usersSagas } from './users/sagas';
 import { fetch } from 'common/utils';
 import { updateOrganizationSettingsSuccessAction } from './actionCreators';
 import { hideModalAction } from 'controllers/modal';
 import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
+import { withActiveOrganization } from './utils/withActiveOrganization';
 
 function* fetchOrganizationBySlug({ payload: slug }) {
   try {
     yield put(fetchDataAction(FETCH_ORGANIZATION_BY_SLUG)(URLS.organizationList({ slug })));
   } catch (error) {
     yield put(showDefaultErrorNotification(error));
-  }
-}
-
-export function* withActiveOrganization(organizationSlug, onActiveOrgReady) {
-  let activeOrganization = yield select(activeOrganizationSelector);
-  try {
-    if (!activeOrganization || organizationSlug !== activeOrganization?.slug) {
-      yield take(createFetchPredicate(FETCH_ORGANIZATION_BY_SLUG));
-      activeOrganization = yield select(activeOrganizationSelector);
-    }
-    yield* onActiveOrgReady(activeOrganization.id);
-  } catch {
-    yield put(
-      redirect({
-        type: ORGANIZATIONS_PAGE,
-      }),
-    );
   }
 }
 

@@ -28,11 +28,11 @@ import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import {
   userAssignedSelector,
   urlOrganizationAndProjectSelector,
-  ORGANIZATIONS_PAGE,
-} from 'controllers/pages';
+} from 'controllers/pages/selectors';
+import { ORGANIZATIONS_PAGE } from 'controllers/pages/constants';
 import { getLogTimeFormatFromStorage } from 'controllers/log/storageUtils';
 import { setActiveOrganizationAction } from 'controllers/organization/actionCreators';
-import { findAssignedProjectByOrganization } from 'common/utils';
+import { findAssignedProjectByOrganization } from 'common/utils/findAssignedProjectByOrganization';
 import {
   assignToProjectSuccessAction,
   assignToProjectErrorAction,

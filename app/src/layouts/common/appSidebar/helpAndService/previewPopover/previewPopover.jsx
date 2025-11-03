@@ -16,17 +16,14 @@
 
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { withPopover } from 'componentLibrary/popover';
 import PropTypes from 'prop-types';
-import { FAQContent } from 'layouts/common/appSidebar/helpAndService/FAQcontent';
 import HelpIcon from 'common/img/help-inline.svg';
-import { ServicesContent } from './servicesContent';
-import ArrowRightIcon from '../img/arrow-right-inline.svg';
+import ArrowRightIcon from '../../img/arrow-right-inline.svg';
 import styles from './previewPopover.scss';
 
 const cx = classNames.bind(styles);
 
-const PreviewPopover = ({ title, isFaqTouched, onClick }) => {
+export const PreviewPopover = ({ title, isFaqTouched, onClick }) => {
   return (
     <button className={cx('service-wrapper')} onClick={onClick}>
       <button className={cx('service-block', { untouched: !isFaqTouched })}>
@@ -51,27 +48,3 @@ PreviewPopover.propTypes = {
   title: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
 };
-
-export const ServiceWithPopover = withPopover({
-  ContentComponent: ServicesContent,
-  side: 'right',
-  arrowVerticalPosition: 'vertical-bottom',
-  popoverClassName: cx('service-popover'),
-  popoverWrapperClassName: cx('service-popover-control'),
-  variant: 'dark',
-  tabIndex: 0,
-  topPosition: 'auto',
-  arrowVerticalOffset: 16,
-})(PreviewPopover);
-
-export const FAQWithPopover = withPopover({
-  ContentComponent: FAQContent,
-  side: 'right',
-  arrowVerticalPosition: 'vertical-top',
-  popoverClassName: cx('faq-popover'),
-  popoverWrapperClassName: cx('faq-popover-control'),
-  variant: 'dark',
-  tabIndex: 0,
-  topPosition: 1,
-  arrowVerticalOffset: 16,
-})(PreviewPopover);

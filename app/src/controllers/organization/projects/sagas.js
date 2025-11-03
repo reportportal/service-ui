@@ -37,7 +37,7 @@ import {
   RENAME_PROJECT,
   UNASSIGN_FROM_PROJECT,
 } from './constants';
-import { fetchOrganizationBySlugAction } from '..';
+import { fetchOrganizationBySlugAction } from '../actionCreators';
 import { querySelector } from './selectors';
 import { activeOrganizationIdSelector, activeOrganizationSelector } from '../selectors';
 import { fetchOrganizationProjectsAction } from './actionCreators';

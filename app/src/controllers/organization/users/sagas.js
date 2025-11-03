@@ -19,7 +19,7 @@ import { URLS } from 'common/urls';
 import { all, put, select, takeEvery, call } from 'redux-saga/effects';
 import { querySelector } from './selectors';
 import { fetchOrganizationUsersAction } from './actionCreators';
-import { withActiveOrganization } from '../sagas';
+import { withActiveOrganization } from '../utils/withActiveOrganization';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import { fetch } from 'common/utils';
 import {

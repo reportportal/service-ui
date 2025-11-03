@@ -33,7 +33,7 @@ import { useTracking } from 'react-tracking';
 import { HELP_AND_SERVICE_VERSIONS_EVENTS } from 'analyticsEvents/helpAndServiceVersionsEvents';
 import { LinkItem } from '../linkItem';
 import { serverSidebarLinksSelector } from 'controllers/appInfo';
-import { FAQWithPopover } from '../index';
+import { FAQWithPopover } from '../previewPopover/faqWithPopover';
 import { messages } from '../../messages';
 import styles from './servicesContent.scss';
 

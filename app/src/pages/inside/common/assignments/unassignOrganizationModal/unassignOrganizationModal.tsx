@@ -25,7 +25,7 @@ import { idSelector, UserInfo } from 'controllers/user';
 import { messages } from 'common/constants/localization/assignmentsLocalization';
 import { unassignFromOrganizationAction } from 'controllers/organization/users';
 import { Organization } from 'controllers/organization';
-import { useHandleUnassignSuccess } from 'pages/inside/common/assignments';
+import { useHandleUnassignSuccess } from '../hooks';
 import styles from './unassignOrganizationModal.scss';
 
 const cx = classNames.bind(styles) as typeof classNames;

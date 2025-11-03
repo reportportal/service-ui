@@ -25,12 +25,12 @@ import {
   assignedProjectsSelector,
   userAccountRoleSelector,
   userIdSelector,
-} from 'controllers/user';
+} from 'controllers/user/selectors';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { MANAGER } from 'common/constants/projectRoles';
-import { getAlternativePaginationAndSortParams } from 'controllers/pagination';
-import { findAssignedProjectByOrganization } from 'common/utils';
+import { getAlternativePaginationAndSortParams } from 'controllers/pagination/utils';
+import { findAssignedProjectByOrganization } from 'common/utils/findAssignedProjectByOrganization';
 import { pageNames, NO_PAGE } from './constants';
 import { stringToArray } from './utils';
 
