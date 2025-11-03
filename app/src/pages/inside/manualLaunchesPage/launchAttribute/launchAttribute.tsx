@@ -20,6 +20,7 @@ import { createClassnames } from 'common/utils';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 
 import styles from './launchAttribute.scss';
+import { isEmpty } from 'es-toolkit/compat';
 
 const cx = createClassnames(styles);
 
@@ -30,11 +31,17 @@ interface LaunchAttributeProps {
 }
 
 export const LaunchAttribute = ({ attributeKey, value, onRemove }: LaunchAttributeProps) => {
+  const isHasValue = !isEmpty(attributeKey) || !isEmpty(value);
+
+  if (!isHasValue) {
+    return null;
+  }
+
   return (
     <div className={cx('launch-attribute')}>
       <div className={cx('attribute-content')}>
-        <span className={cx('attribute-key')}>{attributeKey}:</span>
-        <span className={cx('attribute-value')}>{value}</span>
+        {attributeKey && <span className={cx('attribute-key')}>{attributeKey}:</span>}
+        {value && <span className={cx('attribute-value')}>{value}</span>}
       </div>
       {onRemove && (
         <button

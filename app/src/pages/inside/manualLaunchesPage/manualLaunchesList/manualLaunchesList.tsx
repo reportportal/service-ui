@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
 import { xor } from 'es-toolkit';
@@ -26,25 +26,27 @@ import { ActionMenu } from 'components/actionMenu';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 import { useManualLaunchesColumns } from './hooks/useManualLaunchesColumns/useManualLaunchesColumns';
-import { ManualTestCase, Launch } from '../types';
+import { Launch } from '../types';
 import { useManualLaunchesListRowActions } from './hooks/useManualLaunchesListRowActions';
 import { useManualLaunchesTableData } from './hooks/useManualLaunchesTableData';
 import { LaunchSidePanel } from '../launchSidePanel';
+import { transformLaunchToManualTestCase } from '../useManualLaunches';
 
 import styles from './manualLaunchesList.scss';
 
 const cx = createClassnames(styles);
 
 interface ManualLaunchesListProps {
-  data: ManualTestCase[];
   fullLaunches: Launch[];
 }
 
-export const ManualLaunchesList = ({ data, fullLaunches }: ManualLaunchesListProps) => {
+export const ManualLaunchesList = ({ fullLaunches }: ManualLaunchesListProps) => {
   const { formatMessage } = useIntl();
   const { canDoTestCaseBulkActions } = useUserPermissions();
   const rowActions = useManualLaunchesListRowActions();
   const { primaryColumn, fixedColumns } = useManualLaunchesColumns();
+
+  const data = useMemo(() => fullLaunches.map(transformLaunchToManualTestCase), [fullLaunches]);
 
   const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
   const [selectedLaunchId, setSelectedLaunchId] = useState<number | null>(null);

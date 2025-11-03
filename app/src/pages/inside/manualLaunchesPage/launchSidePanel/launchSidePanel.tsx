@@ -69,6 +69,7 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
   const failedTests = launch.statistics?.executions?.failed ?? 0;
   const skippedTests = launch.statistics?.executions?.skipped ?? 0;
   const testsToRun = totalTests - passedTests - failedTests - skippedTests;
+  const inProgressTests = totalTests - passedTests - failedTests - skippedTests - testsToRun;
 
   return (
     <div ref={sidePanelRef} className={cx('launch-side-panel')}>
@@ -121,11 +122,11 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
           <div className={cx('statistics-section')}>
             <TestStatisticsChart
               total={totalTests}
-              passed={10}
-              failed={5}
-              skipped={2}
-              inProgress={0}
-              toRun={6}
+              passed={passedTests}
+              failed={failedTests}
+              skipped={skippedTests}
+              inProgress={inProgressTests}
+              toRun={testsToRun}
             />
           </div>
         </div>
