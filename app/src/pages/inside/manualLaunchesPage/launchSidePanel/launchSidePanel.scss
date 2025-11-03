@@ -15,63 +15,20 @@
  */
 
 .launch-side-panel {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 560px;
-  height: 100%;
-  background-color: var(--rp-ui-base-bg-100);
-  border-left: 1px solid var(--rp-ui-base-e-100);
-  display: flex;
-  flex-direction: column;
-  z-index: $Z-INDEX-OVERLAY-PANEL;
-  box-shadow: -2px 0 8px var(--rp-ui-base-e-100);
+  // Hide divider after header section
+  > div:nth-child(2) {
+    display: none;
+  }
 
-  .header {
+  .header-meta {
     display: flex;
     flex-direction: column;
-    padding: 24px 20px 16px 24px;
-    border-bottom: 1px solid var(--rp-ui-base-e-100);
-    flex-shrink: 0;
-    gap: 12px;
-
-    &-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 8px;
-    }
-
-    &-meta {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .launch-type-icon {
-      fill: none;
-    }
-  }
-
-  .statistics-section {
-    margin-top: 16px;
-    display: flex;
-    justify-content: center;
-  }
-
-  .launch-name {
-    display: flex;
-    align-items: flex-start;
     gap: 8px;
+    padding: 0 20px 16px 24px;
   }
 
-  .launch-title {
-    font-size: 20px;
-    line-height: 31px;
-    color: var(--rp-ui-base-almost-black);
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    hyphens: auto;
+  .launch-type-icon {
+    fill: none !important;
   }
 
   .meta-row {
@@ -110,118 +67,19 @@
     font-size: 13px;
   }
 
-  .copy-jenkins-link {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 4px 8px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    border-radius: 4px;
-    flex-shrink: 0;
-
-    &-text {
-      font-size: 11px;
-      line-height: 16px;
-      color: var(--rp-ui-base-e-400);
-      font-family: $FONT-ROBOTO-REGULAR;
-    }
-
-    svg {
-      width: 14px;
-      height: 14px;
-      fill: var(--rp-ui-base-e-300);
-      opacity: 0;
-      transition: opacity 0.2s ease;
-    }
-
-    &:hover {
-      background-color: var(--rp-ui-base-bg-200);
-
-      svg {
-        opacity: 1;
-        fill: var(--rp-ui-base-topaz-hover);
-      }
-    }
-
-    &:focus {
-      outline: none;
-    }
-  }
-
-  .close-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    flex-shrink: 0;
-
-    svg {
-      width: 20px;
-      height: 20px;
-      fill: var(--rp-ui-base-e-300);
-    }
-
-    &:hover {
-      background-color: var(--rp-ui-base-bg-200);
-
-      svg {
-        fill: var(--rp-ui-base-almost-black);
-      }
-    }
-
-    &:focus {
-      outline: 2px solid var(--rp-ui-base-topaz-focused);
-      outline-offset: 2px;
-    }
-  }
-
-  .status-bar-section {
-    margin-top: 4px;
-  }
-
-  .status-bar {
-    width: 100%;
-    height: 8px;
-    border-radius: 4px;
-    overflow: hidden;
-  }
-
-  .content {
-    flex: 1;
-    padding: 16px 24px;
-    overflow-y: auto;
-  }
-
   .attributes-list {
     display: flex;
+    flex-wrap: wrap;
     gap: 8px;
   }
 
   .footer {
     display: flex;
     justify-content: flex-end;
-    flex-direction: row;
     gap: 8px;
-    padding: 12px 24px;
-    border-top: 1px solid var(--rp-ui-base-e-100);
-    flex-shrink: 0;
-    height: 60px;
-    align-items: center;
-    box-sizing: border-box;
   }
 
   .action-button {
-    justify-content: center;
-    font-size: 13px;
-    line-height: 20px;
-    padding: 8px 12px;
     min-width: 0;
-    height: 36px;
   }
 }
