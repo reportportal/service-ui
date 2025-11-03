@@ -49,5 +49,9 @@
       background-color: var(--rp-ui-base-e-100);
       margin: 0 -16px -16px;
     }
+
+    .header-no-margin h4 {
+      margin-top: 0;
+    }
   }
 }
