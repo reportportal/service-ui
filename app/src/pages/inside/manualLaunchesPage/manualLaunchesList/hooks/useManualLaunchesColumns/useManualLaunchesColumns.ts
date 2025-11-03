@@ -18,7 +18,7 @@ import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { messages } from 'pages/inside/manualLaunchesPage/messages';
+import { commonMessages } from 'pages/inside/common/common-messages';
 
 export const useManualLaunchesColumns = () => {
   const { formatMessage } = useIntl();
@@ -67,7 +67,7 @@ export const useManualLaunchesColumns = () => {
       },
       {
         key: 'testsToRun',
-        header: formatMessage(messages.toRun),
+        header: formatMessage(commonMessages.toRun),
         width: 80,
         align: 'center' as const,
       },

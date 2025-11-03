@@ -54,6 +54,12 @@ export const useManualLaunchesTableData = (
         }) => {
           const handleRowClick = () => setSelectedLaunchId(id);
           const isSelected = id === selectedLaunchId;
+          const handleKeyDown = (e: React.KeyboardEvent) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              handleRowClick();
+            }
+          };
 
           return {
             id,
@@ -65,11 +71,7 @@ export const useManualLaunchesTableData = (
                   onClick={handleRowClick}
                   role="button"
                   tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      handleRowClick();
-                    }
-                  }}
+                  onKeyDown={handleKeyDown}
                 >
                   <CountTag count={count} className={cx('manual-launches-list-table-cell-count')} />
                 </div>
@@ -83,11 +85,7 @@ export const useManualLaunchesTableData = (
                   onClick={handleRowClick}
                   role="button"
                   tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      handleRowClick();
-                    }
-                  }}
+                  onKeyDown={handleKeyDown}
                 >
                   {name}
                 </div>
@@ -101,11 +99,7 @@ export const useManualLaunchesTableData = (
                   onClick={handleRowClick}
                   role="button"
                   tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      handleRowClick();
-                    }
-                  }}
+                  onKeyDown={handleKeyDown}
                 >
                   {startTime ? (
                     <AbsRelTime
@@ -128,11 +122,7 @@ export const useManualLaunchesTableData = (
                   onClick={handleRowClick}
                   role="button"
                   tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      handleRowClick();
-                    }
-                  }}
+                  onKeyDown={handleKeyDown}
                 >
                   {totalTests}
                 </div>
@@ -146,11 +136,7 @@ export const useManualLaunchesTableData = (
                   onClick={handleRowClick}
                   role="button"
                   tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      handleRowClick();
-                    }
-                  }}
+                  onKeyDown={handleKeyDown}
                 >
                   <SegmentedStatusBar
                     data={[
@@ -171,11 +157,7 @@ export const useManualLaunchesTableData = (
                   onClick={handleRowClick}
                   role="button"
                   tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      handleRowClick();
-                    }
-                  }}
+                  onKeyDown={handleKeyDown}
                 >
                   <span className={cx('manual-launches-list-table-cell-failed-tests')}>
                     {failedTests}

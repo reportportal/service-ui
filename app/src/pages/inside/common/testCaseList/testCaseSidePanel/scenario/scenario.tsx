@@ -19,6 +19,7 @@ import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
 import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
+import { commonMessages } from 'pages/inside/common/common-messages';
 
 import { FieldSection } from '../../../fieldSection';
 import { ManualScenario } from 'pages/inside/testCaseLibraryPage/types';
@@ -52,7 +53,7 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
             <>
               <div className={cx('section-border')} />
               <FieldSection
-                title={`${formatMessage(messages.attachments)} ${scenario.preconditions.attachments?.length}`}
+                title={`${formatMessage(commonMessages.attachments)} ${scenario.preconditions.attachments?.length}`}
               >
                 <AttachmentList attachments={scenario.preconditions.attachments} />
               </FieldSection>

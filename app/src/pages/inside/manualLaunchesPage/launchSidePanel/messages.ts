@@ -17,16 +17,12 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  closePanel: {
-    id: 'LaunchSidePanel.closePanel',
-    defaultMessage: 'Close panel',
-  },
   editLaunch: {
     id: 'LaunchSidePanel.editLaunch',
     defaultMessage: 'Edit Launch',
   },
-  toRun: {
-    id: 'LaunchSidePanel.toRun',
+  toRunWithCount: {
+    id: 'LaunchSidePanel.toRunWithCount',
     defaultMessage: 'To Run {testCount}',
   },
   moreActionsTooltip: {
@@ -37,21 +33,9 @@ export const messages = defineMessages({
     id: 'LaunchSidePanel.attributesTitle',
     defaultMessage: 'Attributes',
   },
-  descriptionTitle: {
-    id: 'LaunchSidePanel.descriptionTitle',
-    defaultMessage: 'Description',
-  },
   noAttributesAdded: {
     id: 'LaunchSidePanel.noAttributesAdded',
     defaultMessage: 'No attributes added',
-  },
-  descriptionNotSpecified: {
-    id: 'LaunchSidePanel.descriptionNotSpecified',
-    defaultMessage: 'Description not specified',
-  },
-  copyId: {
-    id: 'LaunchSidePanel.copyId',
-    defaultMessage: 'Copy ID',
   },
   owner: {
     id: 'LaunchSidePanel.owner',

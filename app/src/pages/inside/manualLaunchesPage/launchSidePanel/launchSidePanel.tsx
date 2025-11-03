@@ -25,14 +25,16 @@ import { useOnClickOutside } from 'common/hooks';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { CollapsibleSection } from 'components/collapsibleSection';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
+import { formatTimestampForSidePanel } from 'pages/inside/common/testCaseList/utils';
 
+import { commonMessages } from 'pages/inside/common/common-messages';
 import { Launch } from '../types';
 import { LaunchAttribute } from '../launchAttribute';
 import { TestStatisticsChart } from '../testStatisticsChart';
+import { getLaunchStatistics } from '../useManualLaunches';
 import { messages } from './messages';
 
 import styles from './launchSidePanel.scss';
-import { formatTimestampForSidePanel } from 'pages/inside/common/testCaseList/utils';
 
 const cx = createClassnames(styles);
 
@@ -64,12 +66,8 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
     // TODO: Implement remove attribute functionality
   };
 
-  const totalTests = launch.statistics?.executions?.total ?? 0;
-  const passedTests = launch.statistics?.executions?.passed ?? 0;
-  const failedTests = launch.statistics?.executions?.failed ?? 0;
-  const skippedTests = launch.statistics?.executions?.skipped ?? 0;
-  const testsToRun = totalTests - passedTests - failedTests - skippedTests;
-  const inProgressTests = totalTests - passedTests - failedTests - skippedTests - testsToRun;
+  const { totalTests, passedTests, failedTests, skippedTests, testsToRun, inProgressTests } =
+    getLaunchStatistics(launch);
 
   return (
     <div ref={sidePanelRef} className={cx('launch-side-panel')}>
@@ -82,7 +80,7 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
             type="button"
             className={cx('close-button')}
             onClick={onClose}
-            aria-label={formatMessage(messages.closePanel)}
+            aria-label={formatMessage(commonMessages.closePanel)}
             data-automation-id="close-launch-panel"
           >
             {Parser(CrossIcon as unknown as string)}
@@ -133,8 +131,8 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
       </div>
       <div className={cx('content')}>
         <CollapsibleSection
-          title={formatMessage(messages.descriptionTitle)}
-          defaultMessage={formatMessage(messages.descriptionNotSpecified)}
+          title={formatMessage(commonMessages.description)}
+          defaultMessage={formatMessage(commonMessages.descriptionNotSpecified)}
         >
           {launch.description && (
             <ExpandedTextSection text={launch.description} defaultVisibleLines={5} />
@@ -173,7 +171,7 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
           onClick={handleToRunClick}
           data-automation-id="launch-to-run"
         >
-          {formatMessage(messages.toRun, { testCount: testsToRun })}
+          {formatMessage(messages.toRunWithCount, { testCount: testsToRun })}
         </Button>
       </div>
     </div>

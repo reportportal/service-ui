@@ -14,15 +14,4 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
-
-export const messages = defineMessages({
-  totalTests: {
-    id: 'TestStatisticsChart.totalTests',
-    defaultMessage: 'Total tests',
-  },
-  progress: {
-    id: 'TestStatisticsChart.progress',
-    defaultMessage: 'Progress',
-  },
-});
+export { commonMessages } from './common-messages';

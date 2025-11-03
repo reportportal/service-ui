@@ -17,8 +17,10 @@
 import { useIntl } from 'react-intl';
 
 import { createClassnames } from 'common/utils';
+import { commonMessages } from 'pages/inside/common/common-messages';
 
 import { messages } from './messages';
+
 import styles from './testStatisticsChart.scss';
 
 const cx = createClassnames(styles);
@@ -33,33 +35,36 @@ interface TestStatisticsChartProps {
 }
 
 export const TestStatisticsChart = ({
-  total,
-  passed,
-  failed,
-  skipped,
-  inProgress,
-  toRun,
+  total = 0,
+  passed = 0,
+  failed = 0,
+  skipped = 0,
+  inProgress = 0,
+  toRun = 0,
 }: TestStatisticsChartProps) => {
   const { formatMessage } = useIntl();
 
   const maxValue = Math.max(passed, failed, skipped, inProgress, toRun);
-  const chartHeight = 70; // Height available for bars
+  const chartHeight = 70;
 
   const getBarHeight = (value: number): number => {
-    if (maxValue === 0) return 0;
+    if (maxValue === 0) {
+      return 0;
+    }
+
     const calculatedHeight = (value / maxValue) * chartHeight;
-    // Ensure minimum height for visibility
+
     return Math.max(calculatedHeight, 8);
   };
 
   const columns = [
     {
-      label: formatMessage(messages.passed),
+      label: formatMessage(commonMessages.passed),
       value: passed,
       colorClass: 'passed',
     },
     {
-      label: formatMessage(messages.failed),
+      label: formatMessage(commonMessages.failed),
       value: failed,
       colorClass: 'failed',
     },
@@ -69,12 +74,12 @@ export const TestStatisticsChart = ({
       colorClass: 'in-progress',
     },
     {
-      label: formatMessage(messages.skipped),
+      label: formatMessage(commonMessages.skipped),
       value: skipped,
       colorClass: 'skipped',
     },
     {
-      label: formatMessage(messages.toRun),
+      label: formatMessage(commonMessages.toRun),
       value: toRun,
       colorClass: 'to-run',
     },

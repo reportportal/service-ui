@@ -15,12 +15,12 @@
  */
 
 import Parser from 'html-react-parser';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 
 import styles from './launchAttribute.scss';
-import { isEmpty } from 'es-toolkit/compat';
 
 const cx = createClassnames(styles);
 

@@ -23,7 +23,7 @@ import { URLS } from 'common/urls';
 import { showErrorNotification } from 'controllers/notification';
 import { useDebouncedSpinner } from 'common/hooks';
 
-import { Launch, LaunchesResponse, ManualTestCase } from './types';
+import { Launch, LaunchExecutions, LaunchesResponse, ManualTestCase } from './types';
 
 const getExecutionStatistics = (launch: Launch) => ({
   total: launch.statistics?.executions?.total ?? 0,
@@ -46,6 +46,26 @@ export const transformLaunchToManualTestCase = (launch: Launch): ManualTestCase 
     failedTests: failed,
     skippedTests: skipped,
     testsToRun: 0,
+  };
+};
+
+export const getLaunchStatistics = (launch: Launch) => {
+  const executionsStats = launch.statistics?.executions ?? ({} as LaunchExecutions);
+  const totalTests = executionsStats.total ?? 0;
+  const passedTests = executionsStats.passed ?? 0;
+  const failedTests = executionsStats.failed ?? 0;
+  const skippedTests = executionsStats.skipped ?? 0;
+  // TODO: after backend implementation
+  const inProgressTests = 0;
+  const testsToRun = totalTests - passedTests - failedTests - skippedTests;
+
+  return {
+    totalTests,
+    passedTests,
+    failedTests,
+    skippedTests,
+    testsToRun,
+    inProgressTests,
   };
 };
 
