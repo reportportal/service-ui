@@ -59,6 +59,7 @@ import {
 import { createTestCaseMenuItems } from '../configUtils';
 import { Scenario } from './scenario';
 import { messages } from './messages';
+import { commonMessages } from '../../common-messages';
 
 import styles from './testCaseSidePanel.scss';
 
@@ -233,7 +234,7 @@ export const TestCaseSidePanel = memo(
               type="button"
               className={cx('close-button')}
               onClick={onClose}
-              aria-label={formatMessage(messages.closePanel)}
+              aria-label={formatMessage(commonMessages.closePanel)}
               data-automation-id="close-test-case-panel"
             >
               {Parser(CrossIcon as unknown as string)}
@@ -250,7 +251,7 @@ export const TestCaseSidePanel = memo(
                   className={cx('copy-button')}
                   // eslint-disable-next-line @typescript-eslint/no-misused-promises
                   onClick={handleCopyId}
-                  aria-label={formatMessage(messages.copyId)}
+                  aria-label={formatMessage(commonMessages.copyId)}
                   data-automation-id="copy-test-case-id"
                 >
                   <CopyIcon />

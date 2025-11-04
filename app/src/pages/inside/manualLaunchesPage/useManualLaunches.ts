@@ -32,7 +32,7 @@ const getExecutionStatistics = (launch: Launch) => ({
   skipped: launch.statistics?.executions?.skipped ?? 0,
 });
 
-const transformLaunchToManualTestCase = (launch: Launch): ManualTestCase => {
+export const transformLaunchToManualTestCase = (launch: Launch): ManualTestCase => {
   const { total, passed, failed, skipped } = getExecutionStatistics(launch);
   const { id, number, name, startTime } = launch;
 
@@ -49,9 +49,25 @@ const transformLaunchToManualTestCase = (launch: Launch): ManualTestCase => {
   };
 };
 
+export const getLaunchStatistics = (launch: Launch) => {
+  const { total, passed, failed, skipped } = getExecutionStatistics(launch);
+  // TODO: after backend implementation
+  const inProgressTests = 0;
+  const testsToRun = total - passed - failed - skipped;
+
+  return {
+    totalTests: total,
+    passedTests: passed,
+    failedTests: failed,
+    skippedTests: skipped,
+    testsToRun,
+    inProgressTests,
+  };
+};
+
 export const useManualLaunches = () => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
-  const [launches, setLaunches] = useState<ManualTestCase[]>([]);
+  const [fullLaunches, setFullLaunches] = useState<Launch[]>([]);
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
 
@@ -60,9 +76,8 @@ export const useManualLaunches = () => {
       showSpinner();
 
       const response = await fetch<LaunchesResponse>(URLS.manualLaunchesList(projectKey));
-      const transformedData = response.content.map(transformLaunchToManualTestCase);
 
-      setLaunches(transformedData);
+      setFullLaunches(response.content);
     } catch {
       dispatch(
         showErrorNotification({
@@ -79,7 +94,7 @@ export const useManualLaunches = () => {
   }, [fetchManualLaunches]);
 
   return {
-    launches,
+    fullLaunches,
     isLoading,
     refetch: fetchManualLaunches,
   };

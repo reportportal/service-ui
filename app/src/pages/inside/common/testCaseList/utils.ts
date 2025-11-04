@@ -89,3 +89,13 @@ export function buildBreadcrumbs(folders: Folder[], folderId: number): string[] 
 
   return [folder.name];
 }
+
+export const formatTimestampForSidePanel = (timestamp: string, locale = 'enUS'): string => {
+  if (!timestamp) {
+    return '';
+  }
+
+  return format(new Date(timestamp), 'MMM d, yyyy, hh:mm a', {
+    locale: dateFnsLocales[locale],
+  });
+};

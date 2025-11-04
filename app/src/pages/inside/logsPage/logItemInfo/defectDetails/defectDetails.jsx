@@ -53,6 +53,7 @@ import {
 } from 'pages/inside/stepPage/stepGrid/defectType/defectType';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { isEnterOrSpaceKey } from 'common/utils/helperUtils/event.utils';
 import styles from './defectDetails.scss';
 
 const cx = classNames.bind(styles);
@@ -312,7 +313,7 @@ export const DefectDetails = ({ fetchFunc, debugMode, logItem }) => {
                   onClick={toggleExpanded}
                   tabIndex={0}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
+                    if (isEnterOrSpaceKey(e)) {
                       toggleExpanded();
                     }
                   }}
@@ -373,7 +374,7 @@ export const DefectDetails = ({ fetchFunc, debugMode, logItem }) => {
             onClick={toggleExpanded}
             tabIndex={0}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
+              if (isEnterOrSpaceKey(e)) {
                 toggleExpanded();
               }
             }}

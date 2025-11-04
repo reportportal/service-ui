@@ -1,6 +1,7 @@
 export { fetchExtensionManifests, fetchExtensionManifest } from './sagas';
 export {
   uiExtensionSettingsTabsSelector,
+  uiExtensionOrganizationSettingsTabsSelector,
   uiExtensionAdminPagesSelector,
   uiExtensionSidebarComponentsSelector,
   uiExtensionAdminSidebarComponentsSelector,

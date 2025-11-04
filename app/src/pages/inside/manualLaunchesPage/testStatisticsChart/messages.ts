@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,4 +14,15 @@
  * limitations under the License.
  */
 
-export { ActiveDirectorySettings } from './activeDirectorySettings';
+import { defineMessages } from 'react-intl';
+
+export const messages = defineMessages({
+  totalTests: {
+    id: 'TestStatisticsChart.totalTests',
+    defaultMessage: 'Total tests',
+  },
+  progress: {
+    id: 'TestStatisticsChart.progress',
+    defaultMessage: 'Progress',
+  },
+});

@@ -21,6 +21,7 @@ import {
 } from 'controllers/plugins/uiExtensions/utils';
 import {
   EXTENSION_TYPE_SETTINGS_TAB,
+  EXTENSION_TYPE_ORGANIZATION_SETTINGS_TAB,
   EXTENSION_TYPE_ADMIN_PAGE,
   EXTENSION_TYPE_SIDEBAR_COMPONENT,
   EXTENSION_TYPE_ADMIN_SIDEBAR_COMPONENT,
@@ -91,6 +92,9 @@ const createExtensionSelectorByExtensionPoints = (
 export const uiExtensionSettingsTabsSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_SETTINGS_TAB,
 ]);
+export const uiExtensionOrganizationSettingsTabsSelector = createExtensionSelectorByExtensionPoints(
+  [EXTENSION_TYPE_ORGANIZATION_SETTINGS_TAB],
+);
 export const uiExtensionAdminPagesSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_ADMIN_PAGE,
 ]);

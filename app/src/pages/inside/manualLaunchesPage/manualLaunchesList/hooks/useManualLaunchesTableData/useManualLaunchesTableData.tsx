@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-import { RowData } from '@reportportal/ui-kit/table';
-import { useMemo } from 'react';
+import { RowData } from '@reportportal/ui-kit/components/table/types';
+import { Dispatch, SetStateAction, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
 import { AbsRelTime } from 'components/main/absRelTime/absRelTime';
 import { SegmentStatus, SegmentedStatusBar } from 'components/statusBar';
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { isEnterOrSpaceKey } from 'common/utils/helperUtils/event.utils';
 
 import { TestRunButton } from '../../testRunButton/testRunButton';
 import { CountTag } from '../../countTag';
@@ -31,7 +32,11 @@ import styles from '../../manualLaunchesList.scss';
 
 const cx = createClassnames(styles);
 
-export const useManualLaunchesTableData = (data: ManualTestCase[]): RowData[] => {
+export const useManualLaunchesTableData = (
+  data: ManualTestCase[],
+  selectedLaunchId: number | null,
+  setSelectedLaunchId: Dispatch<SetStateAction<number | null>>,
+): RowData[] => {
   const { formatMessage } = useIntl();
 
   return useMemo(
@@ -47,56 +52,127 @@ export const useManualLaunchesTableData = (data: ManualTestCase[]): RowData[] =>
           skippedTests,
           testsToRun,
           successTests,
-        }) => ({
-          id,
-          count: {
-            content: count,
-            component: (
-              <CountTag count={count} className={cx('manual-launches-list-table-cell-count')} />
-            ),
-          },
-          name,
-          startTime: {
-            content: startTime,
-            component: startTime ? (
-              <AbsRelTime
-                startTime={startTime}
-                customClass={cx('manual-launches-list-table-cell-time')}
-              />
-            ) : (
-              <span aria-label={formatMessage(COMMON_LOCALE_KEYS.NOT_APPLICABLE)}>
-                {formatMessage(COMMON_LOCALE_KEYS.NOT_APPLICABLE)}
-              </span>
-            ),
-          },
-          totalTests,
-          testRunStatus: {
-            content: testsToRun,
-            component: (
-              <SegmentedStatusBar
-                data={[
-                  { status: SegmentStatus.Passed, value: successTests ?? 0 },
-                  { status: SegmentStatus.Failed, value: failedTests ?? 0 },
-                  { status: SegmentStatus.Skipped, value: skippedTests ?? 0 },
-                ]}
-                className={cx('manual-launches-list-table-cell-status')}
-              />
-            ),
-          },
-          failedTests: {
-            content: failedTests,
-            component: (
-              <span className={cx('manual-launches-list-table-cell-failed-tests')}>
-                {failedTests}
-              </span>
-            ),
-          },
-          testsToRun: {
-            content: testsToRun,
-            component: <TestRunButton count={testsToRun} />,
-          },
-        }),
+        }) => {
+          const handleRowClick = () => setSelectedLaunchId(id);
+          const isSelected = id === selectedLaunchId;
+          const handleKeyDown = (e: React.KeyboardEvent) => {
+            if (isEnterOrSpaceKey(e)) {
+              e.preventDefault();
+              handleRowClick();
+            }
+          };
+
+          return {
+            id,
+            count: {
+              content: count,
+              component: (
+                <div
+                  className={cx('cell-content', { selected: isSelected })}
+                  onClick={handleRowClick}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={handleKeyDown}
+                >
+                  <CountTag count={count} className={cx('manual-launches-list-table-cell-count')} />
+                </div>
+              ),
+            },
+            name: {
+              content: name,
+              component: (
+                <div
+                  className={cx('cell-content', { selected: isSelected })}
+                  onClick={handleRowClick}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={handleKeyDown}
+                >
+                  {name}
+                </div>
+              ),
+            },
+            startTime: {
+              content: startTime,
+              component: (
+                <div
+                  className={cx('cell-content', { selected: isSelected })}
+                  onClick={handleRowClick}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={handleKeyDown}
+                >
+                  {startTime ? (
+                    <AbsRelTime
+                      startTime={startTime}
+                      customClass={cx('manual-launches-list-table-cell-time')}
+                    />
+                  ) : (
+                    <span aria-label={formatMessage(COMMON_LOCALE_KEYS.NOT_APPLICABLE)}>
+                      {formatMessage(COMMON_LOCALE_KEYS.NOT_APPLICABLE)}
+                    </span>
+                  )}
+                </div>
+              ),
+            },
+            totalTests: {
+              content: totalTests,
+              component: (
+                <div
+                  className={cx('cell-content', { selected: isSelected })}
+                  onClick={handleRowClick}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={handleKeyDown}
+                >
+                  {totalTests}
+                </div>
+              ),
+            },
+            testRunStatus: {
+              content: testsToRun,
+              component: (
+                <div
+                  className={cx('cell-content', { selected: isSelected })}
+                  onClick={handleRowClick}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={handleKeyDown}
+                >
+                  <SegmentedStatusBar
+                    data={[
+                      { status: SegmentStatus.Passed, value: successTests ?? 0 },
+                      { status: SegmentStatus.Failed, value: failedTests ?? 0 },
+                      { status: SegmentStatus.Skipped, value: skippedTests ?? 0 },
+                    ]}
+                    className={cx('manual-launches-list-table-cell-status')}
+                  />
+                </div>
+              ),
+            },
+            failedTests: {
+              content: failedTests,
+              component: (
+                <div
+                  className={cx('cell-content', { selected: isSelected })}
+                  onClick={handleRowClick}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={handleKeyDown}
+                >
+                  <span className={cx('manual-launches-list-table-cell-failed-tests')}>
+                    {failedTests}
+                  </span>
+                </div>
+              ),
+            },
+            testsToRun: {
+              content: testsToRun,
+              component: <TestRunButton count={testsToRun} />,
+            },
+          };
+        },
       ),
-    [data, formatMessage],
+    [data, formatMessage, selectedLaunchId, setSelectedLaunchId],
   );
 };
