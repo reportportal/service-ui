@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { change, touch, untouch } from 'redux-form';
 import { isNumber, isEmpty, keyBy } from 'es-toolkit/compat';
 import { FieldText } from '@reportportal/ui-kit';
+import { MIME_TYPES } from '@reportportal/ui-kit/fileDropArea';
 
 import { createClassnames } from 'common/utils';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
@@ -199,6 +200,7 @@ export const TestCaseDetails = ({
             isNumerable={false}
             attachmentFieldName="preconditionAttachments"
             formName={formName}
+            acceptFileMimeTypes={[MIME_TYPES.jpeg, MIME_TYPES.png]}
           >
             <Precondition />
           </AttachmentArea>

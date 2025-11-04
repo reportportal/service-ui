@@ -30,6 +30,7 @@ import {
   SET_TEST_CASES,
   DELETE_TEST_CASE_SUCCESS,
   CREATE_FOLDER_SUCCESS,
+  CREATE_FOLDERS_BATCH_SUCCESS,
   RENAME_FOLDER_SUCCESS,
   DELETE_FOLDER_SUCCESS,
   GET_TEST_CASE_DETAILS,
@@ -85,6 +86,7 @@ type FolderAction =
   | { type: typeof DELETE_FOLDER_SUCCESS; payload: DeleteFolderSuccessParams }
   | { type: typeof RENAME_FOLDER_SUCCESS; payload: RenameFolderParams }
   | { type: typeof CREATE_FOLDER_SUCCESS; payload: Folder }
+  | { type: typeof CREATE_FOLDERS_BATCH_SUCCESS; payload: Folder[] }
   | { type: typeof UPDATE_FOLDER_COUNTER; payload: UpdateFolderCounterParams };
 
 const isCreatingFolderReducer = (
@@ -166,6 +168,9 @@ const folderReducer = (state = INITIAL_STATE.folders.data, action: FolderAction)
     }
     case CREATE_FOLDER_SUCCESS: {
       return [...state, action.payload];
+    }
+    case CREATE_FOLDERS_BATCH_SUCCESS: {
+      return [...state, ...action.payload];
     }
     case UPDATE_FOLDER_COUNTER: {
       return state.map((folder) => {

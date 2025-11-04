@@ -70,6 +70,7 @@ const TestPlanModalComponent = ({
   isLoading,
   onSubmit,
   dirty,
+  invalid,
   handleSubmit,
 }: TestPlanModalProps & InjectedFormProps<TestPlanFormValues>) => {
   const dispatch = useDispatch();
@@ -78,7 +79,7 @@ const TestPlanModalComponent = ({
   const okButton = {
     children: <LoadingSubmitButton isLoading={isLoading}>{submitButtonText}</LoadingSubmitButton>,
     onClick: handleSubmit(onSubmit) as (event: MouseEvent<HTMLButtonElement>) => void,
-    disabled: isLoading,
+    disabled: isLoading || !dirty || invalid,
   };
 
   const cancelButton = {

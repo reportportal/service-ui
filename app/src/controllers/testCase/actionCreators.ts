@@ -18,6 +18,7 @@ import {
   GET_FOLDERS,
   CREATE_FOLDER,
   CREATE_FOLDER_SUCCESS,
+  CREATE_FOLDERS_BATCH_SUCCESS,
   START_CREATING_FOLDER,
   STOP_CREATING_FOLDER,
   DELETE_FOLDER,
@@ -32,7 +33,6 @@ import {
   RENAME_FOLDER,
   RENAME_FOLDER_SUCCESS,
   DELETE_TEST_CASE_SUCCESS,
-  DUPLICATE_FOLDER,
   UPDATE_FOLDER_COUNTER,
 } from './constants';
 import { Folder, TransformedFolder } from './types';
@@ -130,6 +130,11 @@ export const createFoldersSuccessAction = (folder: Folder) => ({
   payload: folder,
 });
 
+export const createFoldersBatchSuccessAction = (folders: Folder[]) => ({
+  type: CREATE_FOLDERS_BATCH_SUCCESS,
+  payload: folders,
+});
+
 export const deleteFolderAction = (folderInfo: DeleteFolderParams) => ({
   type: DELETE_FOLDER,
   payload: folderInfo,
@@ -161,11 +166,6 @@ export const renameFolderAction = (folderInfo: RenameFolderParams) => ({
 export const renameFolderSuccessAction = (folderId: RenameFolderParams) => ({
   type: RENAME_FOLDER_SUCCESS,
   payload: folderId,
-});
-
-export const duplicateFolderAction = (folder: CreateFolderParams) => ({
-  type: DUPLICATE_FOLDER,
-  payload: folder,
 });
 
 export const updateFolderCounterAction = (params: UpdateFolderCounterParams) => ({
