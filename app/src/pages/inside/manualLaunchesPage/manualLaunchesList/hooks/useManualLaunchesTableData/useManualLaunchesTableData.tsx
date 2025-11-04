@@ -22,6 +22,7 @@ import { AbsRelTime } from 'components/main/absRelTime/absRelTime';
 import { SegmentStatus, SegmentedStatusBar } from 'components/statusBar';
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { isEnterOrSpaceKey } from 'common/utils/helperUtils/event.utils';
 
 import { TestRunButton } from '../../testRunButton/testRunButton';
 import { CountTag } from '../../countTag';
@@ -55,7 +56,7 @@ export const useManualLaunchesTableData = (
           const handleRowClick = () => setSelectedLaunchId(id);
           const isSelected = id === selectedLaunchId;
           const handleKeyDown = (e: React.KeyboardEvent) => {
-            if (e.key === 'Enter' || e.key === ' ') {
+            if (isEnterOrSpaceKey(e)) {
               e.preventDefault();
               handleRowClick();
             }

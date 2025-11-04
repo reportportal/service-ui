@@ -120,12 +120,10 @@
         }
       }
 
-      // Hover state
       &:hover > div + div > div {
         border: 1px solid var(--rp-ui-base-topaz-focused);
       }
 
-      // Selected state
       &:has(.selected) > div + div > div {
         border: 2px solid var(--rp-ui-base-topaz-focused);
       }

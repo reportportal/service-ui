@@ -31,9 +31,9 @@ interface LaunchAttributeProps {
 }
 
 export const LaunchAttribute = ({ attributeKey, value, onRemove }: LaunchAttributeProps) => {
-  const isHasValue = !isEmpty(attributeKey) || !isEmpty(value);
+  const hasValue = !isEmpty(attributeKey) || !isEmpty(value);
 
-  if (!isHasValue) {
+  if (!hasValue) {
     return null;
   }
 

@@ -108,8 +108,8 @@ export const ManualLaunchesList = ({ fullLaunches }: ManualLaunchesListProps) =>
         </div>
       )}
       <LaunchSidePanel
-        launch={selectedLaunch ?? null}
-        isVisible={!!selectedLaunchId}
+        launch={selectedLaunch}
+        isVisible={Boolean(selectedLaunchId)}
         onClose={handleCloseSidePanel}
       />
     </div>

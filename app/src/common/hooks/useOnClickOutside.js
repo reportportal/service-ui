@@ -15,6 +15,7 @@
  */
 
 import { useEffect } from 'react';
+import { isEmpty } from 'es-toolkit/compat';
 
 export const useOnClickOutside = (ref, handler) => {
   useEffect(() => {
@@ -25,7 +26,7 @@ export const useOnClickOutside = (ref, handler) => {
     const listener = (event) => {
       // Check if any modal is open in the DOM
       const modalRoot = document.getElementById('modal-root');
-      const hasOpenModal = modalRoot && modalRoot.children.length > 0;
+      const hasOpenModal = modalRoot && !isEmpty(modalRoot.children);
 
       if (!hasOpenModal && !ref?.current?.contains(event.target)) {
         handler(event);
