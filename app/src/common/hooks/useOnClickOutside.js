@@ -23,7 +23,11 @@ export const useOnClickOutside = (ref, handler) => {
     }
 
     const listener = (event) => {
-      if (!ref?.current?.contains(event.target)) {
+      // Check if any modal is open in the DOM
+      const modalRoot = document.getElementById('modal-root');
+      const hasOpenModal = modalRoot && modalRoot.children.length > 0;
+
+      if (!hasOpenModal && !ref?.current?.contains(event.target)) {
         handler(event);
       }
     };
