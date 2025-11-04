@@ -25,7 +25,7 @@ import { gaMeasurementIdSelector } from 'controllers/appInfo/selectors';
 import ReactObserver from 'react-event-observer';
 import { assignedProjectsSelector } from 'controllers/user';
 import { urlProjectSlugSelector } from 'controllers/pages';
-import { normalizeDimensionValue, getAppVersion, getAutoAnalysisEventValue } from './utils';
+import { normalizeDimensionValue, getAutoAnalysisEventValue } from './utils';
 
 export const analyticsEventObserver = ReactObserver();
 
@@ -55,7 +55,7 @@ export const analyticsEventObserver = ReactObserver();
     if ('place' in data) {
       const eventParameters = {
         instanceID: instanceId,
-        version: getAppVersion(buildVersion),
+        version: buildVersion,
         auto_analysis:
           getAutoAnalysisEventValue(isAnalyzerAvailable, isAutoAnalyzerEnabled) || 'not_set',
         pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled) || 'not_set',

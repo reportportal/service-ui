@@ -28,10 +28,12 @@ interface AttachmentsListProps {
 }
 
 export const AttachmentList = ({ attachments }: AttachmentsListProps) => {
+  const convertBytesToMB = (bytes: number) => Math.round((bytes / (1000 * 1000)) * 100) / 100;
+
   return (
     <div className={cx('attachments-list')}>
       {attachments.map(({ id, fileName, fileSize }) => (
-        <AttachedFile key={id} fileName={fileName} size={fileSize} isFullWidth />
+        <AttachedFile key={id} fileName={fileName} size={convertBytesToMB(fileSize)} isFullWidth />
       ))}
     </div>
   );

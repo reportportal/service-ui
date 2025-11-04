@@ -83,11 +83,17 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
   scenario: ManualScenario;
   testCaseDescription: string;
 }) => {
-  const isStepsManualScenario = scenario?.manualScenarioType === TestCaseManualScenario.STEPS;
-  const isEmptyPreconditions = isEmpty(scenario?.preconditions?.value);
+  const firstStep = scenario?.steps?.[0];
+  const isStepsManualScenario = scenario.manualScenarioType === TestCaseManualScenario.STEPS;
+  const isEmptyPreconditions =
+    !scenario?.preconditions?.value &&
+    isEmpty(scenario?.preconditions?.attachments) &&
+    !firstStep?.instructions &&
+    !firstStep?.expectedResult &&
+    isEmpty(firstStep?.attachments);
   const isScenarioDataHidden = isStepsManualScenario
     ? isEmptyPreconditions
-    : isEmptyPreconditions && !scenario?.instructions && !scenario?.expectedResult;
+    : !scenario?.preconditions?.value && !scenario?.instructions && !scenario?.expectedResult;
 
   return [
     {
