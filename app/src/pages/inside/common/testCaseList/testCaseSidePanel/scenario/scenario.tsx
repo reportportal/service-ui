@@ -39,28 +39,35 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
   const isStepsManualScenario = scenario.manualScenarioType === TestCaseManualScenario.STEPS;
 
   if (isStepsManualScenario) {
-    const isPreconditionAttachments = !isEmpty(scenario.preconditions?.attachments);
+    const hasPreconditionAttachments = !isEmpty(scenario.preconditions?.attachments);
+    const preconditionValue = scenario.preconditions?.value;
     const firstStep = scenario?.steps?.[0];
 
     return (
       <div className={cx('scenario-wrapper')}>
-        <div className={cx('scenario', 'steps-scenario', 'with-attachments')}>
-          <FieldSection title={formatMessage(messages.precondition)}>
-            <div className={cx('precondition-text')}>{scenario.preconditions?.value}</div>
-          </FieldSection>
-          {isPreconditionAttachments ? (
-            <>
-              <div className={cx('section-border')} />
-              <FieldSection
-                title={`${formatMessage(messages.attachments)} ${scenario.preconditions.attachments?.length}`}
-              >
-                <AttachmentList attachments={scenario.preconditions.attachments} />
+        {(preconditionValue || hasPreconditionAttachments) && (
+          <div className={cx('scenario', 'steps-scenario', 'with-attachments')}>
+            {preconditionValue && (
+              <FieldSection title={formatMessage(messages.precondition)}>
+                <div className={cx('precondition-text')}>{scenario.preconditions.value}</div>
               </FieldSection>
-            </>
-          ) : null}
-        </div>
+            )}
+            {hasPreconditionAttachments && (
+              <>
+                {preconditionValue && <div className={cx('section-border')} />}
+                <FieldSection
+                  title={`${formatMessage(messages.attachments)} ${scenario.preconditions.attachments?.length}`}
+                >
+                  <AttachmentList attachments={scenario.preconditions.attachments} />
+                </FieldSection>
+              </>
+            )}
+          </div>
+        )}
         <span className={cx('section-name')}>{formatMessage(messages.steps)}</span>
-        {isEmpty(firstStep?.expectedResult || firstStep?.instructions) ? (
+        {!firstStep?.expectedResult &&
+        !firstStep?.instructions &&
+        isEmpty(firstStep?.attachments) ? (
           <div className={cx('empty-section')}>{formatMessage(messages.noSteps)}</div>
         ) : (
           <StepsList steps={scenario.steps} />

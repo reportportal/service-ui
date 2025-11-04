@@ -69,6 +69,8 @@ export const Step = ({
   const { formatMessage } = useIntl();
 
   if (isReadMode) {
+    const isTextInformation = instructions || expectedResult;
+
     return (
       <div className={cx('step', 'read-mode')}>
         {instructions && (
@@ -85,8 +87,11 @@ export const Step = ({
         )}
         {!isEmpty(attachments) && (
           <>
-            <div className={cx('section-border')} />
-            <FieldSection title={`${formatMessage(messages.attachments)} ${attachments.length}`}>
+            {isTextInformation && <div className={cx('section-border')} />}
+            <FieldSection
+              title={`${formatMessage(messages.attachments)} ${attachments.length}`}
+              className={cx(isTextInformation ? '' : 'header-no-margin')}
+            >
               <AttachmentList attachments={attachments} />
             </FieldSection>
           </>
