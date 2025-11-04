@@ -14,4 +14,8 @@
  * limitations under the License.
  */
 
+<<<<<<<< HEAD:app/src/pages/inside/logsPage/logsGridToolbar/logsSettings/index.js
 export { LogsSettings } from './logsSettings';
+========
+export { TestStatisticsChart } from './testStatisticsChart';
+>>>>>>>> 832c86dec (Feature/launches side panel (#4698)):app/src/pages/inside/manualLaunchesPage/testStatisticsChart/index.ts

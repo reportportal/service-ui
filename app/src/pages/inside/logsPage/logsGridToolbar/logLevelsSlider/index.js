@@ -14,4 +14,8 @@
  * limitations under the License.
  */
 
+<<<<<<<< HEAD:app/src/pages/inside/logsPage/logsGridToolbar/logLevelsSlider/index.js
 export { LogLevelsSlider } from './logLevelsSlider';
+========
+export { LaunchAttribute } from './launchAttribute';
+>>>>>>>> 832c86dec (Feature/launches side panel (#4698)):app/src/pages/inside/manualLaunchesPage/launchAttribute/index.ts

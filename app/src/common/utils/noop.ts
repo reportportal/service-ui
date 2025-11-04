@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,4 +14,8 @@
  * limitations under the License.
  */
 
+<<<<<<<< HEAD:app/src/common/utils/noop.ts
 export const noop = () => {};
+========
+export { commonMessages } from './common-messages';
+>>>>>>>> 832c86dec (Feature/launches side panel (#4698)):app/src/pages/inside/common/common-messages/index.ts
