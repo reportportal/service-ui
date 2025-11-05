@@ -19,6 +19,7 @@ import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerField, unregisterField, InjectedFormProps } from 'redux-form';
 import { Modal } from '@reportportal/ui-kit';
+import { SingleAutocompleteProps } from '@reportportal/ui-kit/dist/components/autocompletes/singleAutocomplete/singleAutocomplete';
 import { isEmpty } from 'es-toolkit/compat';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -33,7 +34,6 @@ import { FolderNameField, ParentFolderToggle } from '../folderFormFields';
 import { CreateFolderAutocomplete } from '../../shared/CreateFolderAutocomplete/createFolderAutocomplete';
 
 import styles from './folderModal.scss';
-import { SingleAutocompleteProps } from '@reportportal/ui-kit/dist/components/autocompletes/singleAutocomplete/singleAutocomplete';
 
 const cx = createClassnames(styles);
 
