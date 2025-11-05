@@ -23,12 +23,13 @@ import { isString } from 'es-toolkit/compat';
 import { createClassnames } from 'common/utils';
 import { FolderWithFullPath, transformedFoldersWithFullPathSelector } from 'controllers/testCase';
 import { AutocompleteOption } from 'componentLibrary/autocompletes/common/autocompleteOption';
-import { SingleAutocomplete } from 'componentLibrary/autocompletes/singleAutocomplete';
+import { SingleAutocomplete } from '@reportportal/ui-kit';
 
 import { messages } from './messages';
 import styles from './createFolderAutocomplete.scss';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 import { findFolderById } from 'pages/inside/testCaseLibraryPage/utils';
+import { SingleAutocompleteProps } from '@reportportal/ui-kit/dist/components/autocompletes/singleAutocomplete/singleAutocomplete';
 
 const cx = createClassnames(styles);
 
@@ -39,7 +40,7 @@ interface CreateFolderAutocompleteProps {
   isRequired?: boolean;
   className?: string;
   customEmptyListMessage?: string;
-  onStateChange?: ({ selectedItem }: { selectedItem: FolderWithFullPath }) => void;
+  onStateChange?: SingleAutocompleteProps<FolderWithFullPath>['onStateChange'];
   onChange?: (value: FolderWithFullPath) => void;
   value?: FolderWithFullPath | null;
   error?: string;
@@ -93,10 +94,10 @@ export const CreateFolderAutocomplete = ({
   return (
     <div className={cx('create-folder-autocomplete', className)}>
       {label && <FieldLabel isRequired={isRequired}>{label}</FieldLabel>}
-      <SingleAutocomplete
+      <SingleAutocomplete<FolderWithFullPath>
         name={name}
         createWithoutConfirmation={createWithoutConfirmation}
-        optionVariant="key-value"
+        optionVariant="key-variant"
         onStateChange={onStateChange}
         onChange={onChange}
         value={targetFolder}

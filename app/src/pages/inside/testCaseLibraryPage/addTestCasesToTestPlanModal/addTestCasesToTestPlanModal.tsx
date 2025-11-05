@@ -23,7 +23,6 @@ import { useIntl } from 'react-intl';
 import { FieldLabel, Modal } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
-import { AsyncAutocomplete } from 'componentLibrary/autocompletes/asyncAutocomplete';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { commonValidators } from 'common/utils/validation';
 import { hideModalAction, withModal } from 'controllers/modal';
@@ -37,6 +36,7 @@ import { AddTestCasesToTestPlanFormData, AddTestCasesToTestPlanModalProps } from
 import { useAddTestCasesToTestPlan } from './useAddTestCasesToTestPlan';
 
 import styles from './addTestCasesToTestPlanModal.module.scss';
+import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 
 type AddTestCasesSubmitHandler = SubmitHandler<
   AddTestCasesToTestPlanFormData,
@@ -111,7 +111,7 @@ export const AddTestCasesToTestPlanModal = ({
           {!isSingleTestCaseMode && description}
           <div className={cx('autocomplete-wrapper')}>
             <FieldLabel>{formatMessage(messages.label)}</FieldLabel>
-            <AsyncAutocomplete
+            <AsyncAutocompleteV2
               placeholder={formatMessage(messages.selectedTestPlanPlaceholder)}
               getURI={retrieveTestPlans}
               makeOptions={makeTestPlansOptions}
