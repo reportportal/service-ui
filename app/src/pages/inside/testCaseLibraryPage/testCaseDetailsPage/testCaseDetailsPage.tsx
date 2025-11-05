@@ -142,7 +142,6 @@ export const TestCaseDetailsPage = () => {
           <TestCaseDetailsHeader
             className={cx('page__header')}
             testCase={testCaseDetails}
-            onAddToLaunch={noop}
             onAddToTestPlan={handleAddToTestPlan}
             onMenuAction={noop}
           />

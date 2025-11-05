@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-export const DOMAIN_KEY = 'domain';
-export const URL_KEY = 'url';
-export const BASE_DN_KEY = 'baseDn';
-export const SEARCH_FILTER_KEY = 'searchFilter';
-export const EMAIL_KEY = 'email';
-export const FULL_NAME_KEY = 'fullName';
-export const PHOTO_KEY = 'photo';
+import { defineMessages } from 'react-intl';
 
-export const LDAP_PREFIX = 'ldap://';
-export const LDAPS_PREFIX = 'ldaps://';
-
-export const DEFAULT_FORM_CONFIG = {
-  [URL_KEY]: LDAP_PREFIX,
-};
+export const messages = defineMessages({
+  totalTests: {
+    id: 'TestStatisticsChart.totalTests',
+    defaultMessage: 'Total tests',
+  },
+  progress: {
+    id: 'TestStatisticsChart.progress',
+    defaultMessage: 'Progress',
+  },
+});

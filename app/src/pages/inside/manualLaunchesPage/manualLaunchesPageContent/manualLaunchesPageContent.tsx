@@ -21,7 +21,7 @@ import { createClassnames } from 'common/utils';
 
 import { ManualLaunchesEmptyState } from '../emptyState/manualLaunchesEmptyState';
 import { ManualLaunchesList } from '../manualLaunchesList';
-import { ManualTestCase } from '../types';
+import { Launch } from '../types';
 
 import styles from '../manualLaunchesPage.scss';
 
@@ -29,12 +29,12 @@ const cx = createClassnames(styles);
 
 export interface ManualLaunchesPageContentProps {
   isLoading: boolean;
-  data?: ManualTestCase[];
+  fullLaunches?: Launch[];
 }
 
 export const ManualLaunchesPageContent = ({
   isLoading,
-  data = [],
+  fullLaunches = [],
 }: ManualLaunchesPageContentProps) => {
   if (isLoading) {
     return (
@@ -44,9 +44,9 @@ export const ManualLaunchesPageContent = ({
     );
   }
 
-  if (isEmpty(data)) {
+  if (isEmpty(fullLaunches)) {
     return <ManualLaunchesEmptyState />;
   }
 
-  return <ManualLaunchesList data={data} />;
+  return <ManualLaunchesList fullLaunches={fullLaunches} />;
 };

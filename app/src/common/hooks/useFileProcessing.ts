@@ -18,10 +18,7 @@ import { useCallback, useState, useEffect } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { isEmpty, keyBy } from 'es-toolkit/compat';
 import { noop } from 'es-toolkit';
-import type {
-  FileWithValidation,
-  FileValidationError,
-} from '@reportportal/ui-kit/dist/components/fileDropArea/types';
+import type { FileWithValidation, FileValidationError } from '@reportportal/ui-kit/fileDropArea';
 
 import { uniqueId } from 'common/utils';
 import { downloadFileFromBlob, getFileKey } from 'common/utils/fileUtils';

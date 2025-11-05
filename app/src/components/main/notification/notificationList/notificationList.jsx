@@ -293,6 +293,18 @@ const messages = defineMessages({
     id: 'TestPlansPage.testPlanDeletedSuccess',
     defaultMessage: 'Test Plan has been deleted successfully.',
   },
+  importSuccessToFolder: {
+    id: 'ImportTestCaseModal.importSuccessToFolder',
+    defaultMessage: 'Test cases have been imported successfully to folder {folderName}.',
+  },
+  importSuccess: {
+    id: 'ImportTestCaseModal.importSuccess',
+    defaultMessage: 'Test cases have been imported successfully.',
+  },
+  importTestCaseFailed: {
+    id: 'ImportTestCaseModal.testCaseImportFailed',
+    defaultMessage: 'Failed to import Test Case.',
+  },
 });
 
 @injectIntl

@@ -63,6 +63,7 @@ export {
 export { pluginSagas } from './sagas';
 export {
   uiExtensionSettingsTabsSelector,
+  uiExtensionOrganizationSettingsTabsSelector,
   uiExtensionAdminPagesSelector,
   uiExtensionSidebarComponentsSelector,
   uiExtensionLaunchItemComponentsSelector,

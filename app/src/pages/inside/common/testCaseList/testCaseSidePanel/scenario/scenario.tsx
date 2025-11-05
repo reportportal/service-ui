@@ -19,6 +19,7 @@ import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
 import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
+import { commonMessages } from 'pages/inside/common/common-messages';
 
 import { FieldSection } from '../../../fieldSection';
 import { ManualScenario } from 'pages/inside/testCaseLibraryPage/types';
@@ -39,28 +40,35 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
   const isStepsManualScenario = scenario.manualScenarioType === TestCaseManualScenario.STEPS;
 
   if (isStepsManualScenario) {
-    const isPreconditionAttachments = !isEmpty(scenario.preconditions?.attachments);
+    const hasPreconditionAttachments = !isEmpty(scenario.preconditions?.attachments);
+    const preconditionValue = scenario.preconditions?.value;
     const firstStep = scenario?.steps?.[0];
 
     return (
       <div className={cx('scenario-wrapper')}>
-        <div className={cx('scenario', 'steps-scenario', 'with-attachments')}>
-          <FieldSection title={formatMessage(messages.precondition)}>
-            <div className={cx('precondition-text')}>{scenario.preconditions?.value}</div>
-          </FieldSection>
-          {isPreconditionAttachments ? (
-            <>
-              <div className={cx('section-border')} />
-              <FieldSection
-                title={`${formatMessage(messages.attachments)} ${scenario.preconditions.attachments?.length}`}
-              >
-                <AttachmentList attachments={scenario.preconditions.attachments} />
+        {(preconditionValue || hasPreconditionAttachments) && (
+          <div className={cx('scenario', 'steps-scenario', 'with-attachments')}>
+            {preconditionValue && (
+              <FieldSection title={formatMessage(messages.precondition)}>
+                <div className={cx('precondition-text')}>{scenario.preconditions.value}</div>
               </FieldSection>
-            </>
-          ) : null}
-        </div>
-        <span className={cx('section-name')}>Steps</span>
-        {isEmpty(firstStep?.expectedResult || firstStep?.instructions) ? (
+            )}
+            {hasPreconditionAttachments && (
+              <>
+                {preconditionValue && <div className={cx('section-border')} />}
+                <FieldSection
+                  title={`${formatMessage(commonMessages.attachments)} ${scenario.preconditions.attachments?.length}`}
+                >
+                  <AttachmentList attachments={scenario.preconditions.attachments} />
+                </FieldSection>
+              </>
+            )}
+          </div>
+        )}
+        <span className={cx('section-name')}>{formatMessage(messages.steps)}</span>
+        {!firstStep?.expectedResult &&
+        !firstStep?.instructions &&
+        isEmpty(firstStep?.attachments) ? (
           <div className={cx('empty-section')}>{formatMessage(messages.noSteps)}</div>
         ) : (
           <StepsList steps={scenario.steps} />
@@ -72,13 +80,13 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
   return (
     <div className={cx('scenario-wrapper')}>
       <div className={cx('scenario', 'full-view')}>
-        <FieldSection title={formatMessage(messages.precondition)}>
+        <FieldSection title={formatMessage(messages.precondition)} className={cx('sub-header')}>
           <div className={cx('precondition-text')}>{scenario.preconditions?.value}</div>
         </FieldSection>
-        <FieldSection title={formatMessage(messages.instructions)}>
+        <FieldSection title={formatMessage(messages.instructions)} className={cx('sub-header')}>
           <div className={cx('precondition-text')}>{scenario.instructions}</div>
         </FieldSection>
-        <FieldSection title={formatMessage(messages.expectedResult)}>
+        <FieldSection title={formatMessage(messages.expectedResult)} className={cx('sub-header')}>
           <div className={cx('precondition-text')}>{scenario.expectedResult}</div>
         </FieldSection>
       </div>

@@ -37,10 +37,6 @@ export const messages = defineMessages({
     id: 'TestCaseLibraryPage.moveToFolder',
     defaultMessage: 'Move to Folder',
   },
-  addToLaunch: {
-    id: 'TestCaseLibraryPage.addToLaunch',
-    defaultMessage: 'Add to Launch',
-  },
   changePriorityTitle: {
     id: 'TestCaseLibraryPage.changePriorityTitle',
     defaultMessage: 'Change Priority',

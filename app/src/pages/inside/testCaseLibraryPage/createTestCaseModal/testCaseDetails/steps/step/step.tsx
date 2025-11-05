@@ -15,7 +15,7 @@
  */
 
 import { defineMessages, useIntl } from 'react-intl';
-import { FieldText } from '@reportportal/ui-kit';
+import { FieldTextFlex } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
@@ -59,6 +59,8 @@ interface StepProps {
   attachments?: Attachment[];
 }
 
+const textAreaHeight = 53;
+
 export const Step = ({
   stepId,
   isReadMode = false,
@@ -69,6 +71,8 @@ export const Step = ({
   const { formatMessage } = useIntl();
 
   if (isReadMode) {
+    const isTextInformation = instructions || expectedResult;
+
     return (
       <div className={cx('step', 'read-mode')}>
         {instructions && (
@@ -85,8 +89,11 @@ export const Step = ({
         )}
         {!isEmpty(attachments) && (
           <>
-            <div className={cx('section-border')} />
-            <FieldSection title={`${formatMessage(messages.attachments)} ${attachments.length}`}>
+            {isTextInformation && <div className={cx('section-border')} />}
+            <FieldSection
+              title={`${formatMessage(messages.attachments)} ${attachments.length}`}
+              className={cx(isTextInformation ? '' : 'header-no-margin')}
+            >
               <AttachmentList attachments={attachments} />
             </FieldSection>
           </>
@@ -99,19 +106,21 @@ export const Step = ({
     <div className={cx('step')}>
       <FieldProvider name={`steps.${stepId}.instructions`}>
         <FieldErrorHint>
-          <FieldText
+          <FieldTextFlex
+            value=""
             label={formatMessage(messages.instructions)}
             placeholder={formatMessage(messages.enterInstruction)}
-            defaultWidth={false}
+            minHeight={textAreaHeight}
           />
         </FieldErrorHint>
       </FieldProvider>
       <FieldProvider name={`steps.${stepId}.expectedResult`}>
         <FieldErrorHint>
-          <FieldText
+          <FieldTextFlex
+            value=""
             label={formatMessage(messages.expectedResult)}
             placeholder={formatMessage(messages.enterExpectedResult)}
-            defaultWidth={false}
+            minHeight={textAreaHeight}
           />
         </FieldErrorHint>
       </FieldProvider>

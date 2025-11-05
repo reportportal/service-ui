@@ -17,37 +17,17 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  closePanel: {
-    id: 'TestCaseSidePanel.closePanel',
-    defaultMessage: 'Close panel',
-  },
   openDetails: {
     id: 'TestCaseSidePanel.openDetails',
     defaultMessage: 'Open Details',
-  },
-  addToLaunch: {
-    id: 'TestCaseSidePanel.addToLaunch',
-    defaultMessage: 'Add to Launch',
   },
   moreActionsTooltip: {
     id: 'TestCaseSidePanel.moreActionsTooltip',
     defaultMessage: 'Add scenario details to be able to add this test case to launch',
   },
-  tagsTitle: {
-    id: 'TestCaseSidePanel.tagsTitle',
-    defaultMessage: 'Tags',
-  },
   scenarioTitle: {
     id: 'TestCaseSidePanel.scenarioTitle',
     defaultMessage: 'Scenario',
-  },
-  attachmentsTitle: {
-    id: 'TestCaseSidePanel.attachmentsTitle',
-    defaultMessage: 'Attachments',
-  },
-  descriptionTitle: {
-    id: 'TestCaseSidePanel.descriptionTitle',
-    defaultMessage: 'Description',
   },
   stepTitle: {
     id: 'TestCaseSidePanel.stepTitle',
@@ -65,16 +45,8 @@ export const messages = defineMessages({
     id: 'TestCaseSidePanel.noAttachmentsAdded',
     defaultMessage: 'No attachments added',
   },
-  descriptionNotSpecified: {
-    id: 'TestCaseSidePanel.descriptionNotSpecified',
-    defaultMessage: 'Description not specified',
-  },
   noStepsAdded: {
     id: 'TestCaseSidePanel.noStepsAdded',
     defaultMessage: 'No steps for this scenario yet',
-  },
-  copyId: {
-    id: 'TestCaseSidePanel.copyId',
-    defaultMessage: 'Copy ID',
   },
 });

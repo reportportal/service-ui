@@ -37,7 +37,7 @@ export const ManualLaunchesPage = () => {
   const { formatMessage } = useIntl();
   const projectName = useSelector(projectNameSelector);
   const organizationName = useSelector(activeOrganizationNameSelector) as string;
-  const { launches, isLoading, refetch } = useManualLaunches();
+  const { fullLaunches, isLoading, refetch } = useManualLaunches();
 
   const handleRefresh = useCallback(() => {
     void refetch();
@@ -50,7 +50,7 @@ export const ManualLaunchesPage = () => {
         organizationName={organizationName}
         projectName={projectName}
       >
-        {!isEmpty(launches) && (
+        {!isEmpty(fullLaunches) && (
           <Button
             variant="text"
             data-automation-id="refreshPageButton"
@@ -62,7 +62,7 @@ export const ManualLaunchesPage = () => {
           </Button>
         )}
       </LocationHeaderLayout>
-      <ManualLaunchesPageContent data={launches} isLoading={isLoading} />
+      <ManualLaunchesPageContent fullLaunches={fullLaunches} isLoading={isLoading} />
     </div>
   );
 };

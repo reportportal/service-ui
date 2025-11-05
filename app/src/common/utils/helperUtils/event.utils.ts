@@ -16,8 +16,12 @@
 
 import { KeyboardEvent } from 'react';
 
+export const isEnterOrSpaceKey = (event: KeyboardEvent): boolean => {
+  return event.key === 'Enter' || event.key === ' ';
+};
+
 export const handleEnterOrSpaceKey = (event: KeyboardEvent) => {
-  if (event.key === 'Enter' || event.key === ' ') {
+  if (isEnterOrSpaceKey(event)) {
     event.preventDefault();
     event.stopPropagation();
   }

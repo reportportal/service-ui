@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@use '../../../../common/css/mixins';
+
 .manual-launches-list {
   --manual-launches-list-grid: 80px minmax(100px, 1fr) 155px 80px 110px 100px 80px 48px;
 
@@ -69,10 +71,17 @@
     }
 
     &-row {
+      position: relative;
+      height: max-content;
+      min-height: 64px;
+      border-radius: 4px;
+      box-sizing: content-box;
+
       // select row
       & > div + div > div {
         grid-template-columns: var(--manual-launches-list-grid) !important;
         padding: 0 !important;
+        border: 1px solid transparent;
 
         //select cells
         > div {
@@ -110,7 +119,27 @@
           }
         }
       }
+
+      &:hover > div + div > div {
+        border: 1px solid var(--rp-ui-base-topaz-focused);
+      }
+
+      &:has(.selected) > div + div > div {
+        border: 2px solid var(--rp-ui-base-topaz-focused);
+      }
     }
+  }
+}
+
+.cell-content {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  &:focus {
+    outline: none;
   }
 }
 
