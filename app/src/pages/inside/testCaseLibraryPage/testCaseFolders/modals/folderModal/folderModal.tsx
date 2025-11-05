@@ -33,6 +33,7 @@ import { FolderNameField, ParentFolderToggle } from '../folderFormFields';
 import { CreateFolderAutocomplete } from '../../shared/CreateFolderAutocomplete/createFolderAutocomplete';
 
 import styles from './folderModal.scss';
+import { SingleAutocompleteProps } from '@reportportal/ui-kit/dist/components/autocompletes/singleAutocomplete/singleAutocomplete';
 
 const cx = createClassnames(styles);
 
@@ -91,7 +92,9 @@ export const FolderModal = ({
     change(toggleFieldName, target.checked);
   };
 
-  const handleFolderSelect = ({ selectedItem }: { selectedItem: FolderWithFullPath }) => {
+  const handleFolderSelect: SingleAutocompleteProps<FolderWithFullPath>['onStateChange'] = ({
+    selectedItem,
+  }) => {
     change(parentFolderFieldName, selectedItem);
   };
 
