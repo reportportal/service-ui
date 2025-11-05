@@ -33,6 +33,18 @@ export const messages = defineMessages({
     id: 'TestCaseSidePanel.stepTitle',
     defaultMessage: 'Steps',
   },
+  tagsTitle: {
+    id: 'TestCaseSidePanel.tagsTitle',
+    defaultMessage: 'Tags',
+  },
+  descriptionTitle: {
+    id: 'TestCaseSidePanel.descriptionTitle',
+    defaultMessage: 'Description',
+  },
+  attachmentsTitle: {
+    id: 'TestCaseSidePanel.attachmentsTitle',
+    defaultMessage: 'Attachments',
+  },
   noTagsAdded: {
     id: 'TestCaseSidePanel.noTagsAdded',
     defaultMessage: 'No tags added',
