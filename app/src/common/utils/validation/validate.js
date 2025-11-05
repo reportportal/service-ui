@@ -30,6 +30,8 @@ import { MAX_FIELD_LENGTH } from './constants';
 
 const URL_REGEX = /^(ftp|http|https):\/\/[^\s"]+[^\s".]$/;
 
+const URL_REGEX = /^(ftp|http|https):\/\/[^\s"]+[^\s".]$/;
+
 export { isNotEmpty as required };
 export const isNotEmptyArray = composeValidators([isNotEmpty, minLength(1)]);
 export const url = composeValidators([isNotEmpty, regex(URL_REGEX)]);
