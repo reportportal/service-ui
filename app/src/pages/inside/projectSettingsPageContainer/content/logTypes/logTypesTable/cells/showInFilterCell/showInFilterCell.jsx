@@ -42,9 +42,10 @@ export const ShowInFilterCell = ({ logType, isEditable }) => {
     [logTypes],
   );
   const noMoreFilterableLogTypes = filterableLogTypesCount >= MAX_FILTERABLE_LOG_TYPES;
-  const tooltipMessage = !isEditable
-    ? messages.noPermissionsToUpdateTooltip
-    : messages.noMoreFilterableLogTypesTooltip;
+  const showTooltip = (noMoreFilterableLogTypes && !isFilterable) || !isEditable;
+  const tooltipMessage = isEditable
+    ? messages.noMoreFilterableLogTypesTooltip
+    : messages.noPermissionsToUpdateTooltip;
 
   const handleToggle = () => {
     const newFilterableValue = !isFilterable;
@@ -60,7 +61,7 @@ export const ShowInFilterCell = ({ logType, isEditable }) => {
     dispatch(updateLogTypeAction(data, logType.id, projectId, onSuccess));
   };
 
-  if ((noMoreFilterableLogTypes && !isFilterable) || !isEditable) {
+  if (showTooltip) {
     return (
       <Tooltip
         content={formatMessage(tooltipMessage)}

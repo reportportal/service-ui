@@ -26,7 +26,7 @@ import { LEVEL_FIELD_KEY } from '../constants';
 const NumericFieldText = ({ onChange, ...rest }) => {
   const handleChange = useCallback(
     (event) => {
-      const numericValue = event.target.value.replace(/\D|^0+/g, '') || '';
+      const numericValue = event.target.value.replaceAll(/\D|^0+/, '') || '';
       onChange(numericValue);
     },
     [onChange],
