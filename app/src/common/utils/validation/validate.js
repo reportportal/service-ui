@@ -26,9 +26,11 @@ import {
   isNotOnlySpaces,
 } from './validatorHelpers';
 
+const URL_REGEX = /^(ftp|http|https):\/\/[^\s"]+[^\s".]$/;
+
 export { isNotEmpty as required };
 export const isNotEmptyArray = composeValidators([isNotEmpty, minLength(1)]);
-export const url = composeValidators([isNotEmpty, regex(/^(ftp|http|https):\/\/[^ "]+$/)]);
+export const url = composeValidators([isNotEmpty, regex(URL_REGEX)]);
 export const rallyUrl = composeValidators([
   isNotEmpty,
   regex(/^(https:\/\/rally1.rallydev.com).*/),
@@ -101,7 +103,7 @@ export const descriptionStepLevelEntity = composeValidators([
 
 export const port = range(1, 65535);
 
-export const optionalUrl = (value) => !value || regex(/^(ftp|http|https):\/\/[^ "]+$/)(value);
+export const optionalUrl = (value) => !value || regex(URL_REGEX)(value);
 export const searchFilter = (value) =>
   !value || composeValidators([isNotOnlySpaces, minLength(3)])(value);
 export const searchMembers = (value) => !value || isNotOnlySpaces(value);
