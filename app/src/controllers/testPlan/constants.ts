@@ -29,6 +29,17 @@ export const defaultQueryParams = {
 };
 export const defaultSortParam = 'createdDate,desc';
 
+export type TmsAttribute = {
+  id: number;
+  key: string;
+};
+
+export type TestPlanAttribute = {
+  id: number;
+  key: string;
+  value: string;
+};
+
 export type TestPlanDto = {
   id: number;
   name: string;
@@ -37,6 +48,7 @@ export type TestPlanDto = {
     total: number;
   };
   description?: string;
+  attributes?: TestPlanAttribute[];
 };
 
 export interface PageInfo {

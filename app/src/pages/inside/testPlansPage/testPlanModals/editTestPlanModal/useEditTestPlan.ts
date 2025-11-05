@@ -24,6 +24,7 @@ import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import { getTestPlansAction, getTestPlanAction } from 'controllers/testPlan';
 
+import { transformFormAttributesToBackend } from '../testPlanModal/testPlanAttributes/useTmsAttributes';
 import { TestPlanFormValues } from '../testPlanModal';
 
 interface EditTestPlanFormValues extends TestPlanFormValues {
@@ -39,11 +40,14 @@ export const useEditTestPlan = () => {
     try {
       showSpinner();
 
+      const attributes = transformFormAttributesToBackend(payload.attributes);
+
       await fetch(URLS.testPlanById(projectKey, payload.id), {
         method: 'put',
         data: {
           name: payload.name,
           description: payload.description,
+          attributes,
         },
       });
 

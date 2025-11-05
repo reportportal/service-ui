@@ -14,64 +14,86 @@
  * limitations under the License.
  */
 
+import { useCallback } from 'react';
 import { useIntl } from 'react-intl';
-import { Field } from 'redux-form';
-import { noop } from 'es-toolkit';
+import { Field, WrappedFieldProps } from 'redux-form';
 
 import { AttributeList } from 'componentLibrary/attributeList';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 
+import { useTmsAttributes } from './useTmsAttributes';
 import { messages } from '../messages';
+import { last } from 'es-toolkit';
 
-interface AttributeListFieldProps {
-  input: {
-    value: unknown[];
-    onChange: VoidFunction;
-  };
-  attributes: Record<string, unknown>[];
-  onChange: VoidFunction;
-  disabled: boolean;
-  newAttrMessage: string;
-  maxLength: number;
-  customClass: string;
-  showButton: boolean;
-  editable: boolean;
-  defaultOpen: boolean;
+interface AttributeItem {
+  id?: number;
+  key?: string;
+  value: string;
 }
-
-const AttributeListField = ({ input, ...rest }: AttributeListFieldProps) => (
-  <AttributeList
-    {...input}
-    {...rest}
-    attributes={input.value || []}
-    onChange={input.onChange}
-    customClass=""
-  />
-);
 
 export const TestPlanAttributes = () => {
   const { formatMessage } = useIntl();
+  const { getTmsAttributeKeys, getTmsAttributeValues, createTmsAttribute } = useTmsAttributes();
 
-  return (
-    <div>
-      <FieldElement label={formatMessage(messages.testPlanAttributes)} withoutProvider>
-        <Field
-          name="attributes"
-          component={AttributeListField}
+  const renderAttributeList = useCallback(
+    ({ input }: WrappedFieldProps) => {
+      const handleAttributeChange = async (attributes: AttributeItem[]) => {
+        const currentAttribute = last(attributes);
+        const isNewAttribute = currentAttribute && currentAttribute.key && !currentAttribute.id;
+
+        if (isNewAttribute) {
+          try {
+            const createdAttribute = (await createTmsAttribute(currentAttribute.key)) as {
+              id: number;
+              key: string;
+            };
+            const updatedAttributes = [...attributes];
+
+            updatedAttributes[updatedAttributes.length - 1] = {
+              ...currentAttribute,
+              id: createdAttribute.id,
+            };
+
+            input.onChange(updatedAttributes);
+          } catch {
+            input.onChange(attributes);
+          }
+        } else {
+          input.onChange(attributes);
+        }
+      };
+
+      const attributesList = Array.isArray(input.value) ? (input.value as AttributeItem[]) : [];
+
+      return (
+        <AttributeList
+          attributes={attributesList}
           showButton
           newAttrMessage={formatMessage(messages.addAttributes)}
           maxLength={50}
           editable
           defaultOpen={false}
-          getURIKey={noop}
-          getURIValue={noop}
-          minLength={9999}
+          disabled={false}
+          customClass=""
           autocompleteProps={{
-            onStateChange: () => {},
-            options: [],
-            async: false,
+            async: true,
+            minLength: 1,
+            makeOptions: (response: { content: AttributeItem[] }) =>
+              response?.content?.map((attr) => attr.key) || [],
           }}
+          getURIKey={getTmsAttributeKeys}
+          getURIValue={getTmsAttributeValues}
+          onChange={handleAttributeChange}
         />
+      );
+    },
+    [formatMessage, getTmsAttributeKeys, getTmsAttributeValues, createTmsAttribute],
+  );
+
+  return (
+    <div>
+      <FieldElement label={formatMessage(messages.testPlanAttributes)} withoutProvider>
+        <Field name="attributes" component={renderAttributeList} />
       </FieldElement>
     </div>
   );

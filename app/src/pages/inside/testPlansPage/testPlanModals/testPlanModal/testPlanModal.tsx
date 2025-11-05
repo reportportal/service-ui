@@ -36,6 +36,7 @@ import styles from './testPlanModal.scss';
 const cx = createClassnames(styles);
 
 export interface Attribute {
+  id?: number;
   value: string;
   system?: boolean;
   key?: string;

@@ -19,7 +19,7 @@ import { useIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { TestPlanDto } from 'controllers/testPlan';
 
-import { TestPlanModal, TestPlanFormValues } from '../testPlanModal';
+import { Attribute, TestPlanModal, TestPlanFormValues } from '../testPlanModal';
 import { commonMessages } from '../../commonMessages';
 import { useEditTestPlan } from './useEditTestPlan';
 
@@ -51,7 +51,7 @@ export const EditTestPlanModal = ({ data }: EditTestPlanModalProps) => {
       initialValues={{
         name: data.name,
         description: data.description,
-        attributes: [],
+        attributes: (data.attributes as Attribute[]) || [],
       }}
       requiresChanges
       onSubmit={handleSubmit}
