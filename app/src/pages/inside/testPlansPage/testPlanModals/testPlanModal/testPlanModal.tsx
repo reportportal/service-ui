@@ -53,9 +53,10 @@ interface TestPlanModalProps {
   title: string;
   submitButtonText: string;
   isLoading: boolean;
-  onSubmit: (values: TestPlanFormValues) => Promise<void>;
+  requiresChanges?: boolean;
   formName: string; // eslint-disable-line react/no-unused-prop-types
   initialValues?: Partial<TestPlanFormValues>; // eslint-disable-line react/no-unused-prop-types
+  onSubmit: (values: TestPlanFormValues) => Promise<void>;
 }
 
 export const initialValues: Partial<TestPlanFormValues> = {
@@ -69,6 +70,7 @@ const TestPlanModalComponent = ({
   submitButtonText,
   isLoading,
   onSubmit,
+  requiresChanges,
   dirty,
   invalid,
   handleSubmit,
@@ -76,10 +78,12 @@ const TestPlanModalComponent = ({
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
 
+  const isSubmitDisabled = requiresChanges ? isLoading || !dirty || invalid : isLoading || invalid;
+
   const okButton = {
     children: <LoadingSubmitButton isLoading={isLoading}>{submitButtonText}</LoadingSubmitButton>,
     onClick: handleSubmit(onSubmit) as (event: MouseEvent<HTMLButtonElement>) => void,
-    disabled: isLoading || !dirty || invalid,
+    disabled: isSubmitDisabled,
   };
 
   const cancelButton = {

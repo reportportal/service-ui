@@ -20,24 +20,41 @@
   margin-top: 5vh !important;
   margin-bottom: 5vh !important;
   padding-right: 24px;
-  height: 90vh;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+
+  > div {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+  }
 
   &__content-wrapper {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+
+    form {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+    }
   }
 
   &__container {
     display: flex;
     column-gap: 24px;
+    flex: 1;
+    min-height: 0;
   }
 
   &__scrollable-section {
     flex: 1;
     min-width: 0;
-    max-height: 65vh;
+    min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
   }
