@@ -43,7 +43,7 @@ export const useLogTypeFormState = (initialColors = null, initialTextBold = fals
     }));
   };
 
-  const getFormData = (formValues) => ({
+  const getFormData = (formValues, isFilterable = false, isSystem = false) => ({
     name: formValues[NAME_FIELD_KEY],
     level: Number(formValues[LEVEL_FIELD_KEY]),
     style: {
@@ -52,7 +52,8 @@ export const useLogTypeFormState = (initialColors = null, initialTextBold = fals
       text_color: colors[TEXT_COLOR_FIELD_KEY],
       text_style: textBold ? 'bold' : 'normal',
     },
-    is_filterable: false,
+    is_filterable: isFilterable,
+    is_system: isSystem,
   });
 
   return {

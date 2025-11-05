@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import className from 'classnames/bind';
 import { useIntl } from 'react-intl';
-import { Modal } from '@reportportal/ui-kit';
+import { Modal, SystemMessage } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { PROJECT_SETTINGS_LOG_TYPES_EVENTS } from 'components/main/analytics/events/ga4Events/projectSettingsPageEvents';
-import { createLogTypeAction, logTypesSelector } from 'controllers/project';
+import { updateLogTypeAction, logTypesSelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
 import { projectIdSelector } from 'controllers/pages';
 import { messages } from '../messages';
@@ -35,49 +35,57 @@ import {
   BACKGROUND_COLOR_FIELD_KEY,
   TEXT_COLOR_FIELD_KEY,
   TEXT_BOLD_FIELD_KEY,
-  DEFAULT_LABEL_COLOR,
-  DEFAULT_BACKGROUND_COLOR,
-  DEFAULT_TEXT_COLOR,
-  CREATE_LOG_TYPE_FORM,
+  UPDATE_LOG_TYPE_FORM,
 } from '../constants';
 import { logTypeValidator } from '../validationUtils';
 import { useLogTypeFormState } from '../hooks';
 import { ColorPaletteFields, LevelField, NameField } from '../fields';
-import styles from './createLogTypeModal.scss';
+import styles from './editLogTypeModal.scss';
 
 const cx = className.bind(styles);
 
-const CreateLogTypeModal = ({ handleSubmit, initialize, invalid, dirty }) => {
+const EditLogTypeModal = ({ logType, handleSubmit, initialize, invalid, dirty }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
   const projectId = useSelector(projectIdSelector);
-  const { colors, textBold, handleColorChange, setTextBold, getFormData } = useLogTypeFormState();
+  const { name, level, style, is_filterable: isFilterable, is_system: isSystem } = logType;
+  const initialColors = useMemo(
+    () => ({
+      [LABEL_COLOR_FIELD_KEY]: style.label_color,
+      [BACKGROUND_COLOR_FIELD_KEY]: style.background_color,
+      [TEXT_COLOR_FIELD_KEY]: style.text_color,
+    }),
+    [style],
+  );
+  const initialTextBold = useMemo(() => style.text_style === 'bold', [style]);
+  const { colors, textBold, handleColorChange, setTextBold, getFormData } = useLogTypeFormState(
+    initialColors,
+    initialTextBold,
+  );
 
   useEffect(() => {
     initialize({
-      [NAME_FIELD_KEY]: '',
-      [LEVEL_FIELD_KEY]: '',
-      [LABEL_COLOR_FIELD_KEY]: DEFAULT_LABEL_COLOR,
-      [BACKGROUND_COLOR_FIELD_KEY]: DEFAULT_BACKGROUND_COLOR,
-      [TEXT_COLOR_FIELD_KEY]: DEFAULT_TEXT_COLOR,
-      [TEXT_BOLD_FIELD_KEY]: false,
+      [NAME_FIELD_KEY]: name,
+      [LEVEL_FIELD_KEY]: level,
+      [TEXT_BOLD_FIELD_KEY]: initialTextBold,
+      ...initialColors,
     });
-  }, [initialize]);
+  }, [initialize, name, level, initialColors, initialTextBold]);
 
   const submitHandler = (formValues) => {
-    const data = getFormData(formValues);
+    const data = getFormData(formValues, isFilterable, isSystem);
 
     const onSuccess = () => {
-      trackEvent(PROJECT_SETTINGS_LOG_TYPES_EVENTS.CLICK_CREATE_IN_MODAL);
+      trackEvent(PROJECT_SETTINGS_LOG_TYPES_EVENTS.clickSaveInEditModal(isSystem));
       dispatch(hideModalAction());
     };
 
-    dispatch(createLogTypeAction(data, projectId, onSuccess));
+    dispatch(updateLogTypeAction(data, logType.id, projectId, onSuccess));
   };
 
   const okButton = {
-    children: formatMessage(COMMON_LOCALE_KEYS.CREATE),
+    children: formatMessage(COMMON_LOCALE_KEYS.SAVE),
     onClick: () => handleSubmit(submitHandler)(),
     disabled: invalid,
     'data-automation-id': 'submitButton',
@@ -90,8 +98,7 @@ const CreateLogTypeModal = ({ handleSubmit, initialize, invalid, dirty }) => {
 
   return (
     <Modal
-      title={formatMessage(messages.modalTitle)}
-      description={formatMessage(messages.modalDescription)}
+      title={formatMessage(messages.updateModalTitle)}
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
@@ -99,8 +106,13 @@ const CreateLogTypeModal = ({ handleSubmit, initialize, invalid, dirty }) => {
       scrollable
     >
       <div className={cx('content')}>
-        <NameField />
-        <LevelField />
+        <NameField disabled={isSystem} />
+        <LevelField disabled={isSystem} showHelpText={false} />
+        {isSystem && (
+          <SystemMessage header={formatMessage(messages.systemLogTypeInfoMessageHeader)}>
+            {formatMessage(messages.systemLogTypeInfoMessage)}
+          </SystemMessage>
+        )}
         <ColorPaletteFields
           colors={colors}
           textBold={textBold}
@@ -112,7 +124,8 @@ const CreateLogTypeModal = ({ handleSubmit, initialize, invalid, dirty }) => {
   );
 };
 
-CreateLogTypeModal.propTypes = {
+EditLogTypeModal.propTypes = {
+  logType: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   initialize: PropTypes.func.isRequired,
   invalid: PropTypes.bool.isRequired,
@@ -123,10 +136,11 @@ export default connect((state) => ({
   logTypes: logTypesSelector(state),
 }))(
   reduxForm({
-    form: CREATE_LOG_TYPE_FORM,
+    form: UPDATE_LOG_TYPE_FORM,
     validate: (values, props) => {
       const logTypes = props.logTypes || [];
-      return logTypeValidator(logTypes)(values);
+      const logType = props.logType;
+      return logTypeValidator(logTypes, logType?.id)(values);
     },
-  })(CreateLogTypeModal),
+  })(EditLogTypeModal),
 );

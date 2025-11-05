@@ -14,19 +14,10 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Toggle } from '@reportportal/ui-kit';
+.tooltip-wrapper {
+  max-width: fit-content;
+}
 
-export const ShowInFilterCell = ({ logType, isEditable }) => {
-  const handleToggle = () => {
-    // TODO: Implement toggle functionality
-  };
-
-  return <Toggle value={logType.is_filterable} disabled={!isEditable} onChange={handleToggle} />;
-};
-
-ShowInFilterCell.propTypes = {
-  logType: PropTypes.object,
-  isEditable: PropTypes.bool,
-};
+.tooltip {
+  max-width: 240px;
+}

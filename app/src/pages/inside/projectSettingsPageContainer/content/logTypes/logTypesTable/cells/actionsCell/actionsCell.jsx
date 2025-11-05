@@ -18,7 +18,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
+import { useDispatch } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { BaseIconButton, EditIcon, DeleteIcon, Tooltip } from '@reportportal/ui-kit';
+import { showModalAction } from 'controllers/modal';
+import { PROJECT_SETTINGS_LOG_TYPES_EVENTS } from 'components/main/analytics/events/ga4Events/projectSettingsPageEvents';
+import { EditLogTypeModal } from '../../../modals/editLogTypeModal';
 import { messages } from '../../../messages';
 import styles from './actionsCell.scss';
 
@@ -26,9 +31,16 @@ const cx = classNames.bind(styles);
 
 export const ActionsCell = ({ logType }) => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
 
   const handleEdit = () => {
-    // TODO: Implement edit functionality
+    trackEvent(PROJECT_SETTINGS_LOG_TYPES_EVENTS.CLICK_EDIT_ICON);
+    dispatch(
+      showModalAction({
+        component: <EditLogTypeModal logType={logType} />,
+      }),
+    );
   };
 
   const handleDelete = () => {

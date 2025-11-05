@@ -21,15 +21,10 @@ import classNames from 'classnames/bind';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import Parser from 'html-react-parser';
-import { projectIdSelector } from 'controllers/pages';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { Button } from '@reportportal/ui-kit';
 import { PROJECT_SETTINGS_LOG_TYPES_EVENTS } from 'components/main/analytics/events/ga4Events/projectSettingsPageEvents';
-import {
-  logTypesSelector,
-  logTypesLoadingSelector,
-  fetchLogTypesAction,
-} from 'controllers/project';
+import { logTypesSelector, logTypesLoadingSelector } from 'controllers/project';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { docsReferences, createExternalLink } from 'common/utils';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -46,25 +41,16 @@ export const LogTypes = ({ setHeaderTitleNode }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
-  const projectId = useSelector(projectIdSelector);
   const logTypes = useSelector(logTypesSelector);
   const loading = useSelector(logTypesLoadingSelector);
   const userAccountRole = useSelector(userAccountRoleSelector);
   const userProjectRole = useSelector(activeProjectRoleSelector);
   const isEditable = canUpdateSettings(userAccountRole, userProjectRole);
 
-  useEffect(() => {
-    dispatch(fetchLogTypesAction(projectId));
-  }, [dispatch, projectId]);
-
   const handleCreateLogType = useCallback(() => {
     trackEvent(PROJECT_SETTINGS_LOG_TYPES_EVENTS.CLICK_CREATE_TYPES);
-    dispatch(
-      showModalAction({
-        component: <CreateLogTypeModal logTypes={logTypes} />,
-      }),
-    );
-  }, [dispatch, logTypes, trackEvent]);
+    dispatch(showModalAction({ component: <CreateLogTypeModal /> }));
+  }, [dispatch, trackEvent]);
 
   useEffect(() => {
     if (isEditable) {

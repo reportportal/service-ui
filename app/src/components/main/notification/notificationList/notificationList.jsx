@@ -180,6 +180,14 @@ const messages = defineMessages({
     id: 'LogTypeModal.create.createLogTypeError',
     defaultMessage: 'Failed to save new log type. Please try again',
   },
+  updateLogTypeSuccess: {
+    id: 'LogTypeModal.update.updateLogTypeSuccess',
+    defaultMessage: 'The log type has been updated successfully',
+  },
+  updateLogTypeError: {
+    id: 'LogTypeModal.update.updateLogTypeError',
+    defaultMessage: 'Failed to update the log type. Please try again',
+  },
 });
 
 @injectIntl

@@ -70,3 +70,6 @@ export const UPDATE_PROJECT_FILTER_PREFERENCES = 'updateProjectFilterPreferences
 export const LOG_TYPES_NAMESPACE = 'logTypes';
 export const FETCH_LOG_TYPES = 'fetchLogTypes';
 export const CREATE_LOG_TYPE = 'createLogType';
+export const UPDATE_LOG_TYPE = 'updateLogType';
+export const CREATE_LOG_TYPE_SUCCESS = 'createLogTypeSuccess';
+export const UPDATE_LOG_TYPE_SUCCESS = 'updateLogTypeSuccess';

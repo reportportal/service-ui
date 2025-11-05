@@ -14,30 +14,54 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useIntl } from 'react-intl';
+import PropTypes from 'prop-types';
 import { FieldText } from '@reportportal/ui-kit';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { messages } from '../messages';
-import { LEVEL_FIELD_KEY, MIN_LOG_LEVEL, MAX_LOG_LEVEL } from '../constants';
+import { LEVEL_FIELD_KEY } from '../constants';
 
-export const LevelField = () => {
+const NumericFieldText = ({ onChange, ...rest }) => {
+  const handleChange = useCallback(
+    (event) => {
+      const numericValue = event.target.value.replace(/\D|^0+/g, '') || '';
+      onChange(numericValue);
+    },
+    [onChange],
+  );
+
+  return <FieldText onChange={handleChange} {...rest} />;
+};
+
+export const LevelField = ({ disabled, showHelpText }) => {
   const { formatMessage } = useIntl();
 
   return (
-    <FieldProvider name={LEVEL_FIELD_KEY} type="number">
+    <FieldProvider name={LEVEL_FIELD_KEY}>
       <FieldErrorHint provideHint={false}>
-        <FieldText
-          type="number"
+        <NumericFieldText
           label={formatMessage(messages.logLevel)}
-          helpText={formatMessage(messages.levelHelperText)}
+          helpText={showHelpText ? formatMessage(messages.levelHelperText) : undefined}
           defaultWidth={false}
-          min={MIN_LOG_LEVEL}
-          max={MAX_LOG_LEVEL}
           isRequired
+          disabled={disabled}
         />
       </FieldErrorHint>
     </FieldProvider>
   );
+};
+
+NumericFieldText.propTypes = {
+  onChange: PropTypes.func,
+};
+
+LevelField.propTypes = {
+  disabled: PropTypes.bool,
+  showHelpText: PropTypes.bool,
+};
+LevelField.defaultProps = {
+  disabled: false,
+  showHelpText: true,
 };

@@ -50,4 +50,13 @@ export const messages = defineMessages({
     id: 'LogTypes.systemLogTypeTooltip',
     defaultMessage: 'This is a system log type and cannot be deleted',
   },
+  noMoreFilterableLogTypesTooltip: {
+    id: 'LogTypes.noMoreFilterableLogTypesTooltip',
+    defaultMessage:
+      'Only 6 log types can be active at the same time in the filter slider. Disable another log type to enable this one.',
+  },
+  noPermissionsToUpdateTooltip: {
+    id: 'LogTypes.noPermissionsToUpdateTooltip',
+    defaultMessage: 'You do not have enough permissions to update log types.',
+  },
 });

@@ -319,4 +319,22 @@ export const PROJECT_SETTINGS_LOG_TYPES_EVENTS = {
     modal: 'create_log_types',
     element_name: 'create_log_type',
   },
+
+  CLICK_EDIT_ICON: {
+    ...BASIC_EVENT_PARAMETERS_LOG_TYPES,
+    icon_name: 'edit_log_type',
+  },
+
+  clickSaveInEditModal: (isSystem) => ({
+    ...BASIC_EVENT_PARAMETERS_LOG_TYPES,
+    modal: 'edit_log_types',
+    element_name: 'save_edit_log_type',
+    condition: isSystem ? 'default_log_type' : 'custom_log_type',
+  }),
+
+  toggleShowInLogFilter: (isSystem, isFilterable) => ({
+    ...BASIC_EVENT_PARAMETERS_LOG_TYPES,
+    condition: isSystem ? 'default_log_type' : 'custom_log_type',
+    switcher: getSwitcher(isFilterable),
+  }),
 };

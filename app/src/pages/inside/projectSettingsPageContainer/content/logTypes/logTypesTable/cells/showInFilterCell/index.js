@@ -14,5 +14,4 @@
  * limitations under the License.
  */
 
-export { CreateLogTypeModal } from './createLogTypeModal';
-export { EditLogTypeModal } from './editLogTypeModal';
+export { ShowInFilterCell } from './showInFilterCell';
