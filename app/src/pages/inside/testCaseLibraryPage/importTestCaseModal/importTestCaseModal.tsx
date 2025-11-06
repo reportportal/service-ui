@@ -16,6 +16,7 @@ import { UseModalData } from 'common/hooks';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { downloadFileFromBlob } from 'common/utils/fileUtils';
 import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';
+import { uniqueId } from 'common/utils';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 import { FolderNameField } from 'pages/inside/testCaseLibraryPage/testCaseFolders/modals/folderFormFields';
 
@@ -86,7 +87,7 @@ export const ImportTestCaseModal = ({
   const attachedFiles: AttachmentFile[] = file
     ? [
         {
-          id: crypto.randomUUID(),
+          id: uniqueId(),
           fileName: file.name,
           file,
           size: toMB(file.size),
