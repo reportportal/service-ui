@@ -97,6 +97,10 @@ export const DraggableRuleItem = ({
       className={cx('draggable-rule-item', className, {
         [`drop-target-${dropTargetType}`]: draggedItemIndex !== null,
         'is-dragging': isDragging,
+        [itemClassNames[
+          `dropTarget${dropTargetType.charAt(0).toUpperCase() + dropTargetType.slice(1)}`
+        ]]: draggedItemIndex !== null,
+        [itemClassNames.isDragging]: isDragging,
       })}
     >
       <RuleItem
