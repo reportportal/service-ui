@@ -94,10 +94,16 @@ export const DraggableRuleItem = ({
     <div
       ref={(node) => dropRef(dragPreviewRef(node))}
       style={{ opacity: isInDraggingState ? 0 : 1 }}
-      className={cx('draggable-rule-item', className, {
-        [`drop-target-${dropTargetType}`]: draggedItemIndex !== null,
-        'is-dragging': isDragging,
-      })}
+      className={cx(
+        'draggable-rule-item',
+        className,
+        {
+          [`drop-target-${dropTargetType}`]: draggedItemIndex !== null,
+          'is-dragging': isDragging,
+          [itemClassNames[`dropTarget${dropTargetType.charAt(0).toUpperCase() + dropTargetType.slice(1)}`]]: draggedItemIndex !== null,
+          [itemClassNames.isDragging]: isDragging
+        }
+      )}
     >
       <RuleItem
         item={item}
