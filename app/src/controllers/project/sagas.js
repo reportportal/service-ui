@@ -61,6 +61,7 @@ import {
   UPDATE_PROJECT_NOTIFICATION,
   DELETE_PROJECT_NOTIFICATION,
   FETCH_PROJECT_NOTIFICATIONS,
+  UPDATE_LOG_TYPE,
 } from './constants';
 import {
   updateDefectTypeSuccessAction,
@@ -80,6 +81,9 @@ import {
   updateProjectNotificationSuccessAction,
   setProjectNotificationsLoadingAction,
   fetchExistingLaunchNamesSuccessAction,
+  fetchLogTypesAction,
+  createLogTypeSuccessAction,
+  updateLogTypeSuccessAction,
 } from './actionCreators';
 import { patternsSelector } from './selectors';
 
@@ -428,6 +432,7 @@ function* fetchProject({ payload: { projectId, fetchInfoOnly } }) {
     yield put(setProjectIntegrationsAction(project.integrations));
     if (!fetchInfoOnly) {
       yield put(fetchProjectPreferencesAction(projectId));
+      yield put(fetchLogTypesAction(projectId));
     }
   } catch (error) {
     yield put(showDefaultErrorNotification(error));
@@ -499,7 +504,8 @@ function* watchFetchLogTypes() {
 function* createLogType({ payload: { data, projectId, onSuccess } }) {
   yield put(showScreenLockAction());
   try {
-    yield call(fetch, URLS.projectLogTypes(projectId), { method: 'POST', data });
+    const response = yield call(fetch, URLS.projectLogTypes(projectId), { method: 'POST', data });
+    yield put(createLogTypeSuccessAction(response));
     yield put(showSuccessNotification({ messageId: 'createLogTypeSuccess' }));
     onSuccess?.();
   } catch {
@@ -511,6 +517,24 @@ function* createLogType({ payload: { data, projectId, onSuccess } }) {
 
 function* watchCreateLogType() {
   yield takeEvery(CREATE_LOG_TYPE, createLogType);
+}
+
+function* updateLogType({ payload: { data, logTypeId, projectId, onSuccess } }) {
+  yield put(showScreenLockAction());
+  try {
+    yield call(fetch, URLS.projectLogTypeById(projectId, logTypeId), { method: 'PUT', data });
+    yield put(updateLogTypeSuccessAction({ ...data, id: logTypeId }));
+    yield put(showSuccessNotification({ messageId: 'updateLogTypeSuccess' }));
+    onSuccess?.();
+  } catch {
+    yield put(showErrorNotification({ messageId: 'updateLogTypeError' }));
+  } finally {
+    yield put(hideScreenLockAction());
+  }
+}
+
+function* watchUpdateLogType() {
+  yield takeEvery(UPDATE_LOG_TYPE, updateLogType);
 }
 
 export function* projectSagas() {
@@ -535,5 +559,6 @@ export function* projectSagas() {
     watchFetchProjectNotifications(),
     watchFetchLogTypes(),
     watchCreateLogType(),
+    watchUpdateLogType(),
   ]);
 }

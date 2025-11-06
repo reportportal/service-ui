@@ -15,6 +15,7 @@
  */
 
 export const CREATE_LOG_TYPE_FORM = 'createLogTypeForm';
+export const UPDATE_LOG_TYPE_FORM = 'updateLogTypeForm';
 
 export const NAME_FIELD_KEY = 'name';
 export const LEVEL_FIELD_KEY = 'level';
@@ -25,7 +26,9 @@ export const TEXT_BOLD_FIELD_KEY = 'textBold';
 
 export const DEFAULT_LABEL_COLOR = '#4DB6AC';
 export const DEFAULT_BACKGROUND_COLOR = '#FFFFFF';
-export const DEFAULT_TEXT_COLOR = '#445A47';
+export const DEFAULT_TEXT_COLOR = '#464547';
 
 export const MIN_LOG_LEVEL = 1;
 export const MAX_LOG_LEVEL = 59999;
+
+export const MAX_FILTERABLE_LOG_TYPES = 6;

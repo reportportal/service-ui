@@ -52,7 +52,7 @@ import { withFilter } from 'controllers/filter';
 import { withPagination, PAGE_KEY, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
 import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
 import { logsPaginationEnabledSelector, userIdSelector } from 'controllers/user';
-import { fetchLogTypesAction, filterableLogTypesSelector } from 'controllers/project';
+import { filterableLogTypesSelector } from 'controllers/project';
 import { projectIdSelector } from 'controllers/pages';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -76,7 +76,7 @@ import { calculateNextIndex } from './utils';
     filterableLogLevels: filterableLogTypesSelector(state),
     projectId: projectIdSelector(state),
   }),
-  { fetchLog, loadMoreLogsAction, fetchLogItemsForPageAction, fetchLogTypesAction },
+  { fetchLog, loadMoreLogsAction, fetchLogItemsForPageAction },
 )
 @withSortingURL({
   defaultFields: ['logTime'],
@@ -168,7 +168,6 @@ export class LogsGridWrapper extends Component {
     className: PropTypes.string,
     filterableLogLevels: PropTypes.array,
     projectId: PropTypes.string,
-    fetchLogTypesAction: PropTypes.func,
   };
 
   static defaultProps = {
@@ -207,7 +206,6 @@ export class LogsGridWrapper extends Component {
     loadingDirection: null,
     className: '',
     filterableLogLevels: [],
-    fetchLogTypesAction: () => {},
   };
 
   state = {
@@ -239,8 +237,6 @@ export class LogsGridWrapper extends Component {
         this.props.fetchLogItemsForPageAction(FIRST_PAGE);
       }
     });
-
-    this.props.fetchLogTypesAction(this.props.projectId);
   }
 
   componentDidUpdate(prevProps) {
@@ -259,10 +255,6 @@ export class LogsGridWrapper extends Component {
         // eslint-disable-next-line react/no-did-update-set-state
         this.setState({ errorLogIndex: null, highlightedRowId: null, isGridRowHighlighted: false });
       }
-    }
-
-    if (this.props.projectId !== prevProps.projectId) {
-      this.props.fetchLogTypesAction(this.props.projectId);
     }
   }
 

@@ -45,6 +45,7 @@ export {
   deleteProjectNotificationAction,
   fetchLogTypesAction,
   createLogTypeAction,
+  updateLogTypeAction,
 } from './actionCreators';
 export { projectReducer } from './reducer';
 export {

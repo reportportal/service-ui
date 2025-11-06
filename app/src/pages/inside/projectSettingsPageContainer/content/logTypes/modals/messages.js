@@ -61,4 +61,17 @@ export const messages = defineMessages({
     id: 'LogTypeModal.previewText',
     defaultMessage: 'Preview: log example',
   },
+  updateModalTitle: {
+    id: 'LogTypeModal.update.modalTitle',
+    defaultMessage: 'Edit Log Type',
+  },
+  systemLogTypeInfoMessageHeader: {
+    id: 'LogTypeModal.systemLogTypeInfoMessageHeader',
+    defaultMessage: 'This is core log type',
+  },
+  systemLogTypeInfoMessage: {
+    id: 'LogTypeModal.systemLogTypeInfoMessage',
+    defaultMessage:
+      'Name and log level cannot be changed — only its visual appearance settings can be adjusted.',
+  },
 });

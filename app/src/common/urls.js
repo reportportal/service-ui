@@ -161,6 +161,8 @@ export const URLS = {
     `${urlBase}project/${activeProject}/usernames?filter.cnt.users=${searchTerm}`,
   projectIndex: (activeProject) => `${urlBase}project/${activeProject}/index`,
   projectLogTypes: (activeProject) => `${urlCommonBase}projects/${activeProject}/log-types`,
+  projectLogTypeById: (activeProject, logTypeId) =>
+    `${urlCommonBase}projects/${activeProject}/log-types/${logTypeId}`,
 
   projectStatus: (activeProject, interval) =>
     `${urlBase}project/list/${activeProject}${getQueryParams({
