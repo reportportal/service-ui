@@ -61,4 +61,8 @@ export const messages = defineMessages({
     id: 'TestCaseSidePanel.noStepsAdded',
     defaultMessage: 'No steps for this scenario yet',
   },
+  descriptionNotSpecified: {
+    id: 'TestCaseSidePanel.descriptionNotSpecified',
+    defaultMessage: 'Description not specified',
+  },
 });
