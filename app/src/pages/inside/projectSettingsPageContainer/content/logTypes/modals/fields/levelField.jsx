@@ -26,7 +26,7 @@ import { LEVEL_FIELD_KEY } from '../constants';
 const NumericFieldText = ({ onChange, ...rest }) => {
   const handleChange = useCallback(
     (event) => {
-      const numericValue = event.target.value.replaceAll(/\D|^0+/, '') || '';
+      const numericValue = event.target.value.replaceAll(/\D|^0+/g, '') || '';
       onChange(numericValue);
     },
     [onChange],
@@ -54,7 +54,7 @@ export const LevelField = ({ disabled, showHelpText }) => {
 };
 
 NumericFieldText.propTypes = {
-  onChange: PropTypes.func,
+  onChange: PropTypes.func.isRequired,
 };
 
 LevelField.propTypes = {
