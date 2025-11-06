@@ -63,7 +63,6 @@ const DuplicateFolderModal = reduxForm<DuplicateFolderFormValues, DuplicateFolde
   },
   handleSubmit,
   change,
-  untouch,
   initialize,
 }: DuplicateFolderModalProps &
   InjectedFormProps<DuplicateFolderFormValues, DuplicateFolderModalProps>) => {
@@ -119,12 +118,10 @@ const DuplicateFolderModal = reduxForm<DuplicateFolderFormValues, DuplicateFolde
       isInvertedToggle
       parentFolderFieldName="destinationFolder"
       parentFolderFieldLabel={formatMessage(sharedFolderMessages.folderDestination)}
-      formName={DUPLICATE_FORM_NAME}
       customContent={customContent}
       handleSubmit={handleSubmit}
       onSubmit={onSubmit}
       change={change}
-      untouch={untouch}
     />
   );
 });
