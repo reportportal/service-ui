@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-import { ButtonProps } from '@reportportal/ui-kit/button';
+import { useSelector } from 'react-redux';
+import { locationQuerySelector } from 'controllers/pages';
 
-export interface ModalButtonProps extends ButtonProps {
-  text?: string;
-  'data-automation-id'?: string;
-}
+type queryParamsType = {
+  offset: number;
+  limit: number;
+};
 
-export type QueryParams = Record<string, string | number>;
+export const useQueryParams = (defaultParams: queryParamsType): queryParamsType => {
+  const query = useSelector(locationQuerySelector);
 
-export interface Page {
-  number: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
-}
+  return query ? { offset: Number(query.offset), limit: Number(query.limit) } : defaultParams;
+};

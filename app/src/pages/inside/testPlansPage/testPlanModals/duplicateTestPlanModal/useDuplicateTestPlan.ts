@@ -19,11 +19,11 @@ import { noop } from 'es-toolkit';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import { useDebouncedSpinner } from 'common/hooks';
+import { useDebouncedSpinner, useQueryParams } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
-import { getTestPlansAction, TestPlanDto } from 'controllers/testPlan';
+import { defaultQueryParams, getTestPlansAction, TestPlanDto } from 'controllers/testPlan';
 
 import { TestPlanFormValues } from '../testPlanModal';
 
@@ -39,6 +39,7 @@ export const useDuplicateTestPlan = ({
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+  const queryParams = useQueryParams(defaultQueryParams);
 
   const duplicateTestPlan = async (payload: TestPlanFormValues) => {
     try {
@@ -58,7 +59,7 @@ export const useDuplicateTestPlan = ({
           messageId: 'testPlanDuplicatedSuccess',
         }),
       );
-      dispatch(getTestPlansAction());
+      dispatch(getTestPlansAction(queryParams));
       onSuccess(response.id);
     } catch {
       dispatch(

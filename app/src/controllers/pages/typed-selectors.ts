@@ -23,6 +23,10 @@ type LocationInfo = {
     projectSlug: string;
   };
   type?: string;
+  query?: {
+    offset: string;
+    limit: string;
+  };
 };
 
 type State = {
@@ -30,6 +34,8 @@ type State = {
 };
 
 export const locationSelector = (state: State) => state.location;
+
+export const locationQuerySelector = (state: State) => state.location?.query;
 
 export const payloadSelector = (state: State) => locationSelector(state).payload;
 

@@ -65,7 +65,7 @@ function* getTestPlans(action: GetTestPlansAction): Generator {
 
     yield put(
       fetchSuccessAction(TEST_PLANS_NAMESPACE, {
-        content: data.content,
+        data,
       }),
     );
   } catch (error) {

@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { Page } from 'types/common';
 
 import { EMPTY_FOLDERS } from '../testCase';
 import { transformFoldersToDisplay } from '../testCase/utils';
 import { TestPlanDto, TestPlanFoldersDto, TestPlanTestCaseDto } from './constants';
 
 export interface TestPlanState {
-  data: TestPlanDto[] | null;
+  data: {
+    content: TestPlanDto[] | null;
+    page: Page | null;
+  };
   isLoading?: boolean;
   activeTestPlan?: TestPlanDto | null;
   testPlanFolders?: TestPlanFoldersDto | null;
@@ -33,11 +37,13 @@ interface RootState {
 }
 
 export const testPlanSelector = (state: RootState): TestPlanState =>
-  state.testPlan || { data: null };
+  state.testPlan || { data: { content: null, page: null } };
 
 export const isLoadingSelector = (state: RootState) => Boolean(testPlanSelector(state).isLoading);
 
-export const testPlansSelector = (state: RootState) => testPlanSelector(state).data;
+export const testPlansSelector = (state: RootState) => testPlanSelector(state).data?.content;
+
+export const testPlansPageSelector = (state: RootState) => testPlanSelector(state).data?.page;
 
 export const activeTestPlanSelector = (state: RootState) =>
   testPlanSelector(state).activeTestPlan || null;
