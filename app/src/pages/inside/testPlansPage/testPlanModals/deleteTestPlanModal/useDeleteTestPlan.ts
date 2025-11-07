@@ -66,8 +66,7 @@ export const useDeleteTestPlan = ({ onSuccess = noop }: UseDeleteTestPlanOptions
 
       if (isSingleItemOnTheLastPage) {
         const offset = Number(queryParams.offset) - Number(queryParams.limit);
-        const url = `/organizations/${organizationSlug}/projects/${projectSlug}/testPlans?
-        offset=${offset}&limit=${queryParams.limit}`;
+        const url = `/organizations/${organizationSlug}/projects/${projectSlug}/testPlans?offset=${offset}&limit=${queryParams.limit}`;
 
         push(url);
       } else {

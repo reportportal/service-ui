@@ -59,7 +59,13 @@ function* getTestPlans(action: GetTestPlansAction): Generator {
       meta: { namespace: TEST_PLANS_NAMESPACE },
     });
 
-    const params = action.payload ?? defaultQueryParams;
+    const params = action.payload
+      ? {
+          limit: action.payload.limit,
+          offset: action.payload.offset,
+          sortBy: defaultQueryParams.sortBy,
+        }
+      : defaultQueryParams;
     const data = (yield call(fetch, URLS.testPlan(projectKey, params))) as {
       content: TestPlanDto[];
       page: Page;

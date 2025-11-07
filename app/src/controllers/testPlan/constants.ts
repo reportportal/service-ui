@@ -24,6 +24,7 @@ export const ACTIVE_TEST_PLAN_NAMESPACE = 'activeTestPlan' as const;
 export const TEST_PLAN_FOLDERS_NAMESPACE = 'testPlanFolders' as const;
 export const TEST_PLAN_TEST_CASES_NAMESPACE = 'testPlanTestCases' as const;
 export const defaultQueryParams = {
+  sortBy: 'createdDate,desc',
   limit: 20,
   offset: 0,
 };

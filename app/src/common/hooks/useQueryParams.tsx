@@ -19,19 +19,19 @@ import { locationQuerySelector } from 'controllers/pages';
 
 import { queryParamsType } from '../../types/common';
 
-export const useQueryParams = (defaultParams: queryParamsType): queryParamsType => {
+export const useQueryParams = ({ offset, limit }: queryParamsType): queryParamsType => {
   const query = useSelector(locationQuerySelector);
 
   if (query?.offset === undefined || query?.limit === undefined) {
-    return defaultParams;
+    return { offset, limit };
   }
 
-  const offset = Number(query.offset);
-  const limit = Number(query.limit);
+  const queryOffset = Number(query.offset);
+  const queryLimit = Number(query.limit);
 
-  if (Number.isNaN(offset) || Number.isNaN(limit)) {
-    return defaultParams;
+  if (Number.isNaN(queryOffset) || Number.isNaN(queryLimit)) {
+    return { offset, limit };
   }
 
-  return { offset, limit };
+  return { offset: queryOffset, limit: queryLimit };
 };
