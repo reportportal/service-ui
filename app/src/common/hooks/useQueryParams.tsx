@@ -25,5 +25,16 @@ type queryParamsType = {
 export const useQueryParams = (defaultParams: queryParamsType): queryParamsType => {
   const query = useSelector(locationQuerySelector);
 
-  return query ? { offset: Number(query.offset), limit: Number(query.limit) } : defaultParams;
+  if (query?.offset === undefined || query?.limit === undefined) {
+    return defaultParams;
+  }
+
+  const offset = Number(query.offset);
+  const limit = Number(query.limit);
+
+  if (Number.isNaN(offset) || Number.isNaN(limit)) {
+    return defaultParams;
+  }
+
+  return { offset, limit };
 };

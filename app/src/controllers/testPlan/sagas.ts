@@ -39,6 +39,7 @@ import {
   TEST_PLAN_TEST_CASES_NAMESPACE,
 } from './constants';
 import { GetTestPlansParams, GetTestPlanParams } from './actionCreators';
+import { Page } from '../../types/common';
 
 interface GetTestPlansAction extends Action<typeof GET_TEST_PLANS> {
   payload?: GetTestPlansParams;
@@ -61,6 +62,7 @@ function* getTestPlans(action: GetTestPlansAction): Generator {
     const params = action.payload ?? defaultQueryParams;
     const data = (yield call(fetch, URLS.testPlan(projectKey, params))) as {
       content: TestPlanDto[];
+      page: Page;
     };
 
     yield put(
