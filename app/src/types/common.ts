@@ -29,3 +29,8 @@ export interface Page {
   totalElements: number;
   totalPages: number;
 }
+
+export type queryParamsType = {
+  offset: number;
+  limit: number;
+};

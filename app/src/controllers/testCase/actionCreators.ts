@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { Page } from 'types/common';
+
 import {
   GET_FOLDERS,
   CREATE_FOLDER,
@@ -36,8 +39,6 @@ import {
   UPDATE_FOLDER_COUNTER,
 } from './constants';
 import { Folder, TransformedFolder } from './types';
-import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
-import { Page } from 'types/common';
 
 export interface GetTestCasesByFolderIdParams {
   folderId: number;

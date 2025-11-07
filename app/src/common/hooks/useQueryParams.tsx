@@ -17,10 +17,7 @@
 import { useSelector } from 'react-redux';
 import { locationQuerySelector } from 'controllers/pages';
 
-type queryParamsType = {
-  offset: number;
-  limit: number;
-};
+import { queryParamsType } from '../../types/common';
 
 export const useQueryParams = (defaultParams: queryParamsType): queryParamsType => {
   const query = useSelector(locationQuerySelector);

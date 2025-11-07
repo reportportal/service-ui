@@ -61,9 +61,14 @@ export const useDeleteTestPlan = ({ onSuccess = noop }: UseDeleteTestPlanOptions
         }),
       );
 
-      if (testPlansPageData?.number === testPlansPageData?.totalPages && testPlans?.length === 1) {
+      const isSingleItemOnTheLastPage =
+        testPlansPageData?.number === testPlansPageData?.totalPages && testPlans?.length === 1;
+
+      if (isSingleItemOnTheLastPage) {
         const offset = Number(queryParams.offset) - Number(queryParams.limit);
-        const url = `/organizations/${organizationSlug}/projects/${projectSlug}/testPlans?offset=${offset}&limit=${queryParams.limit}`;
+        const url = `/organizations/${organizationSlug}/projects/${projectSlug}/testPlans?
+        offset=${offset}&limit=${queryParams.limit}`;
+
         push(url);
       } else {
         dispatch(getTestPlansAction(queryParams));

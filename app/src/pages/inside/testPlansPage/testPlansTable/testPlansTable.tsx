@@ -25,10 +25,10 @@ import { locationQuerySelector, PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controlle
 import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/common/testCaseList';
 import { usePagination } from 'hooks/usePagination';
 import { useProjectDetails } from 'hooks/useTypedSelector';
+import { defaultQueryParams, TestPlanDto, testPlansPageSelector } from 'controllers/testPlan';
 
 import { ProgressBar } from './progressBar';
 import { TestPlanActions } from '../testPlanActions';
-import { defaultQueryParams, TestPlanDto, testPlansPageSelector } from 'controllers/testPlan';
 import { messages } from './messages';
 import {
   useDeleteTestPlanModal,
@@ -36,6 +36,7 @@ import {
   useDuplicateTestPlanModal,
 } from '../testPlanModals';
 import { PageLoader } from '../pageLoader';
+import { queryParamsType } from '../../../../types/common';
 
 import styles from './testPlansTable.scss';
 
@@ -183,19 +184,24 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
     },
   ];
 
+  const changeUrlParams = ({ limit, offset }: queryParamsType): void => {
+    const url = `/organizations/${organizationSlug}/projects/${projectSlug}/testPlans?
+    offset=${offset}&limit=${limit}`;
+
+    push(url);
+  };
+
   const setTestPlansPage = (page: number): void => {
     const offset = (page - 1) * testPlansPageData.size;
 
     if (offset !== Number(query?.offset)) {
-      const url = `/organizations/${organizationSlug}/projects/${projectSlug}/testPlans?offset=${offset}&limit=${pageSize}`;
-      push(url);
+      changeUrlParams({ limit: pageSize, offset });
     }
   };
 
   const setTestPlansPageSize = (pageSize: number): void => {
     if (pageSize !== Number(query?.limit)) {
-      const url = `/organizations/${organizationSlug}/projects/${projectSlug}/testPlans?offset=${defaultQueryParams.offset}&limit=${pageSize}`;
-      push(url);
+      changeUrlParams({ limit: pageSize, offset: defaultQueryParams.offset });
     }
   };
 
