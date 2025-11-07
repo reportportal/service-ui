@@ -38,6 +38,10 @@ export type LocationInfo = {
     query?: LocationQuery;
   };
   type?: string;
+  query?: {
+    offset: string;
+    limit: string;
+  };
 };
 
 type State = {
