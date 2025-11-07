@@ -28,7 +28,8 @@ import {
   TestCasePageDefaultValues,
 } from 'pages/inside/common/testCaseList/constants';
 import { DEFAULT_CURRENT_PAGE } from 'pages/inside/common/testCaseList/configUtils';
-import { TestCase, Page } from 'pages/inside/testCaseLibraryPage/types';
+import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { Page } from 'types/common';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { showModalAction } from 'controllers/modal';
 import { urlFolderIdSelector } from 'controllers/pages';
@@ -74,6 +75,7 @@ export const AllTestCasesPage = ({
   const { captions, activePage, pageSize, totalPages, setActivePage, changePageSize } =
     usePagination({
       totalItems: testCasesPageData?.totalElements,
+      itemsPerPage: TestCasePageDefaultValues.limit,
     });
   const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
   const folderId = useSelector(urlFolderIdSelector);

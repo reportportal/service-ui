@@ -29,7 +29,7 @@ import {
 } from './constants';
 
 const reducer = combineReducers({
-  data: fetchReducer(TEST_PLANS_NAMESPACE, { initialState: null, contentPath: 'content' }),
+  data: fetchReducer(TEST_PLANS_NAMESPACE, { initialState: null, contentPath: 'data' }),
   isLoading: loadingReducer(TEST_PLANS_NAMESPACE),
   activeTestPlan: fetchReducer(ACTIVE_TEST_PLAN_NAMESPACE, { initialState: null }),
   testPlanFolders: fetchReducer(TEST_PLAN_FOLDERS_NAMESPACE, { initialState: null }),

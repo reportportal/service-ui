@@ -113,4 +113,5 @@ export {
   payloadSelector,
   urlProjectSlugSelector,
   urlOrganizationSlugSelector,
+  locationQuerySelector,
 } from './typed-selectors';

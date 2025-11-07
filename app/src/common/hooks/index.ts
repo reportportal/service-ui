@@ -22,3 +22,4 @@ export type { UseModalData } from './useModal';
 export { useFileUploadProgressSimulation } from './useFileUploadProgressSimulation';
 export { useFileProcessing } from './useFileProcessing';
 export type { BaseAttachmentFile } from './useFileProcessing';
+export { useQueryParams } from './useQueryParams';

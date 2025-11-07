@@ -38,9 +38,10 @@ import {
   GET_TEST_CASE_DETAILS_FAILURE,
   UPDATE_FOLDER_COUNTER,
 } from 'controllers/testCase/constants';
-import { Folder } from './types';
-import { TestCase, Page } from 'pages/inside/testCaseLibraryPage/types';
+import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { Page } from 'types/common';
 import { queueReducers } from 'common/utils';
+import { Folder } from './types';
 import {
   DeleteFolderSuccessParams,
   DeleteTestCaseParams,

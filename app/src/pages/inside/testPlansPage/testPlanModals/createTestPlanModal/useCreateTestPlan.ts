@@ -18,11 +18,11 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import { useDebouncedSpinner } from 'common/hooks';
+import { useDebouncedSpinner, useQueryParams } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
-import { getTestPlansAction, TestPlanDto } from 'controllers/testPlan';
+import { defaultQueryParams, getTestPlansAction, TestPlanDto } from 'controllers/testPlan';
 
 import { TestPlanFormValues } from '../testPlanModal';
 
@@ -30,6 +30,7 @@ export const useCreateTestPlan = () => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+  const queryParams = useQueryParams(defaultQueryParams);
 
   const submitTestPlan = async (payload: TestPlanFormValues) => {
     try {
@@ -49,7 +50,7 @@ export const useCreateTestPlan = () => {
           messageId: 'testPlanCreatedSuccess',
         }),
       );
-      dispatch(getTestPlansAction());
+      dispatch(getTestPlansAction(queryParams));
     } catch {
       dispatch(
         showErrorNotification({

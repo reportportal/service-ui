@@ -65,7 +65,8 @@ import {
 } from './actionCreators';
 import { getAllFolderIdsToDelete } from './utils';
 import { fetchAllFolders } from './utils/fetchAllFolders';
-import { Page, TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { Page } from 'types/common';
 import { foldersSelector } from 'controllers/testCase/selectors';
 import {
   TEST_CASE_LIBRARY_PAGE,
