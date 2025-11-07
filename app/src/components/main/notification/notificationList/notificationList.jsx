@@ -188,6 +188,14 @@ const messages = defineMessages({
     id: 'LogTypeModal.update.updateLogTypeError',
     defaultMessage: 'Failed to update the log type. Please try again',
   },
+  deleteLogTypeSuccess: {
+    id: 'LogTypeModal.delete.deleteLogTypeSuccess',
+    defaultMessage: 'The log type has been deleted successfully',
+  },
+  deleteLogTypeError: {
+    id: 'LogTypeModal.delete.deleteLogTypeError',
+    defaultMessage: 'Failed to delete the log type. Please try again',
+  },
 });
 
 @injectIntl

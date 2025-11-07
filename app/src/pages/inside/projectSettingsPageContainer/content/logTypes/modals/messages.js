@@ -74,4 +74,13 @@ export const messages = defineMessages({
     defaultMessage:
       'Name and log level cannot be changed — only its visual appearance settings can be adjusted.',
   },
+  deleteModalTitle: {
+    id: 'LogTypeModal.delete.modalTitle',
+    defaultMessage: 'Delete Log Type',
+  },
+  deleteModalMessage: {
+    id: 'LogTypeModal.delete.modalMessage',
+    defaultMessage:
+      'Are you sure you want to delete <b>{name}</b>?<br/>Logs with this log level will be treated as <b>Undefined</b>.',
+  },
 });

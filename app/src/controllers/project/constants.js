@@ -71,5 +71,7 @@ export const LOG_TYPES_NAMESPACE = 'logTypes';
 export const FETCH_LOG_TYPES = 'fetchLogTypes';
 export const CREATE_LOG_TYPE = 'createLogType';
 export const UPDATE_LOG_TYPE = 'updateLogType';
+export const DELETE_LOG_TYPE = 'deleteLogType';
 export const CREATE_LOG_TYPE_SUCCESS = 'createLogTypeSuccess';
 export const UPDATE_LOG_TYPE_SUCCESS = 'updateLogTypeSuccess';
+export const DELETE_LOG_TYPE_SUCCESS = 'deleteLogTypeSuccess';
