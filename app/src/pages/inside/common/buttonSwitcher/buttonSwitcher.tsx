@@ -23,7 +23,7 @@ import styles from './buttonSwitcher.scss';
 const cx = createClassnames(styles);
 
 export enum ButtonSwitcherOption {
-  EXISTED = 'existed',
+  EXISTING = 'existing',
   NEW = 'new',
 }
 
@@ -40,7 +40,7 @@ export const ButtonSwitcher = ({
   createNewButtonTitle,
   handleActiveButton,
 }: ButtonSwitcherProps) => {
-  const [activeButton, setActiveButton] = useState(ButtonSwitcherOption.EXISTED);
+  const [activeButton, setActiveButton] = useState(ButtonSwitcherOption.EXISTING);
 
   useEffect(() => {
     handleActiveButton(activeButton);
@@ -53,10 +53,10 @@ export const ButtonSwitcher = ({
         <button
           type="button"
           className={cx('buttons-switcher__button', {
-            'buttons-switcher__button--active': activeButton === ButtonSwitcherOption.EXISTED,
+            'buttons-switcher__button--active': activeButton === ButtonSwitcherOption.EXISTING,
           })}
           onClick={() => {
-            setActiveButton(ButtonSwitcherOption.EXISTED);
+            setActiveButton(ButtonSwitcherOption.EXISTING);
           }}
         >
           {existingButtonTitle}

@@ -32,7 +32,7 @@ export const messages = defineMessages({
   },
   addToLaunchButton: {
     id: 'TestCaseLibraryPage.addToLaunchModal.addToLaunchButton',
-    defaultMessage: 'Add to existed launch',
+    defaultMessage: 'Add to existing launch',
   },
   createNewLaunchButton: {
     id: 'TestCaseLibraryPage.addToLaunchModal.createNewLaunchButton',
