@@ -46,6 +46,7 @@ import {
   ACTIONS_WITH_INTEGRATIONS,
   ACTIONS_WITH_AA_SETTINGS,
   ACTIONS_WITH_DEFECTS,
+  ACTIONS_WITH_LOG_TYPES,
   ACTIONS_WITH_IMPORT,
   CREATE_PATTERN,
   UPDATE_PATTERN,
@@ -167,6 +168,10 @@ const messages = defineMessages({
     id: 'WidgetCriteriaOption.defects_actions',
     defaultMessage: 'Update defect types',
   },
+  [ACTIONS_WITH_LOG_TYPES]: {
+    id: 'WidgetCriteriaOption.log_types_actions',
+    defaultMessage: 'Update Log types',
+  },
   [ACTIONS_WITH_IMPORT]: {
     id: 'WidgetCriteriaOption.import_actions',
     defaultMessage: 'Import',
@@ -283,6 +288,7 @@ const getUserActionOptions = (formatMessage) => [
   { value: UPDATE_PROJECT, label: formatMessage(messages[UPDATE_PROJECT]) },
   { value: ACTIONS_WITH_AA_SETTINGS, label: formatMessage(messages[ACTIONS_WITH_AA_SETTINGS]) },
   { value: ACTIONS_WITH_DEFECTS, label: formatMessage(messages[ACTIONS_WITH_DEFECTS]) },
+  { value: ACTIONS_WITH_LOG_TYPES, label: formatMessage(messages[ACTIONS_WITH_LOG_TYPES]) },
   { value: ACTIONS_WITH_IMPORT, label: formatMessage(messages[ACTIONS_WITH_IMPORT]) },
   {
     value: UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
