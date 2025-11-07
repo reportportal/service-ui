@@ -337,4 +337,15 @@ export const PROJECT_SETTINGS_LOG_TYPES_EVENTS = {
     condition: isSystem ? 'default_log_type' : 'custom_log_type',
     switcher: getSwitcher(isFilterable),
   }),
+
+  CLICK_DELETE_ICON: {
+    ...BASIC_EVENT_PARAMETERS_LOG_TYPES,
+    icon_name: 'delete_log_type',
+  },
+
+  CLICK_DELETE_IN_MODAL: {
+    ...BASIC_EVENT_PARAMETERS_LOG_TYPES,
+    modal: 'delete_log_type',
+    element_name: 'delete_log_type',
+  },
 };

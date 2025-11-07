@@ -62,6 +62,7 @@ import {
   DELETE_PROJECT_NOTIFICATION,
   FETCH_PROJECT_NOTIFICATIONS,
   UPDATE_LOG_TYPE,
+  DELETE_LOG_TYPE,
 } from './constants';
 import {
   updateDefectTypeSuccessAction,
@@ -84,6 +85,7 @@ import {
   fetchLogTypesAction,
   createLogTypeSuccessAction,
   updateLogTypeSuccessAction,
+  deleteLogTypeSuccessAction,
 } from './actionCreators';
 import { patternsSelector } from './selectors';
 
@@ -537,6 +539,24 @@ function* watchUpdateLogType() {
   yield takeEvery(UPDATE_LOG_TYPE, updateLogType);
 }
 
+function* deleteLogType({ payload: { logTypeId, projectId, onSuccess } }) {
+  yield put(showScreenLockAction());
+  try {
+    yield call(fetch, URLS.projectLogTypeById(projectId, logTypeId), { method: 'DELETE' });
+    yield put(deleteLogTypeSuccessAction(logTypeId));
+    yield put(showSuccessNotification({ messageId: 'deleteLogTypeSuccess' }));
+    onSuccess?.();
+  } catch {
+    yield put(showErrorNotification({ messageId: 'deleteLogTypeError' }));
+  } finally {
+    yield put(hideScreenLockAction());
+  }
+}
+
+function* watchDeleteLogType() {
+  yield takeEvery(DELETE_LOG_TYPE, deleteLogType);
+}
+
 export function* projectSagas() {
   yield all([
     watchUpdateDefectType(),
@@ -560,5 +580,6 @@ export function* projectSagas() {
     watchFetchLogTypes(),
     watchCreateLogType(),
     watchUpdateLogType(),
+    watchDeleteLogType(),
   ]);
 }

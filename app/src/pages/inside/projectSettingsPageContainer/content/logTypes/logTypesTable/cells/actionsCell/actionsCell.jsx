@@ -23,7 +23,7 @@ import { useTracking } from 'react-tracking';
 import { BaseIconButton, EditIcon, DeleteIcon, Tooltip } from '@reportportal/ui-kit';
 import { showModalAction } from 'controllers/modal';
 import { PROJECT_SETTINGS_LOG_TYPES_EVENTS } from 'components/main/analytics/events/ga4Events/projectSettingsPageEvents';
-import { EditLogTypeModal } from '../../../modals/editLogTypeModal';
+import { EditLogTypeModal, DeleteLogTypeModal } from '../../../modals';
 import { messages } from '../../../messages';
 import styles from './actionsCell.scss';
 
@@ -44,7 +44,12 @@ export const ActionsCell = ({ logType }) => {
   };
 
   const handleDelete = () => {
-    // TODO: Implement delete functionality
+    trackEvent(PROJECT_SETTINGS_LOG_TYPES_EVENTS.CLICK_DELETE_ICON);
+    dispatch(
+      showModalAction({
+        component: <DeleteLogTypeModal logType={logType} />,
+      }),
+    );
   };
 
   const deleteButton = (
@@ -62,7 +67,7 @@ export const ActionsCell = ({ logType }) => {
         <Tooltip
           wrapperClassName={cx('tooltip-wrapper')}
           content={formatMessage(messages.systemLogTypeTooltip)}
-          placement="bottom-end"
+          placement="top-end"
         >
           {deleteButton}
         </Tooltip>

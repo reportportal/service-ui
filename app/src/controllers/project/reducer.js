@@ -42,6 +42,7 @@ import {
   LOG_TYPES_NAMESPACE,
   CREATE_LOG_TYPE_SUCCESS,
   UPDATE_LOG_TYPE_SUCCESS,
+  DELETE_LOG_TYPE_SUCCESS,
 } from './constants';
 
 export const projectInfoReducer = (
@@ -214,6 +215,8 @@ export const logTypesReducer = (state = [], { type, payload }) => {
         if (logType.id === payload.id) return payload;
         return logType;
       });
+    case DELETE_LOG_TYPE_SUCCESS:
+      return state.filter((logType) => logType.id !== payload.id);
     default:
       return state;
   }

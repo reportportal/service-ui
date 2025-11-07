@@ -46,6 +46,7 @@ export const ShowInFilterCell = ({ logType, isEditable }) => {
   const tooltipMessage = isEditable
     ? messages.noMoreFilterableLogTypesTooltip
     : messages.noPermissionsToUpdateTooltip;
+  const tooltipPlacement = isEditable ? 'top' : 'top-end';
 
   const handleToggle = () => {
     const newFilterableValue = !isFilterable;
@@ -67,7 +68,7 @@ export const ShowInFilterCell = ({ logType, isEditable }) => {
         content={formatMessage(tooltipMessage)}
         wrapperClassName={cx('tooltip-wrapper')}
         tooltipClassName={cx('tooltip')}
-        placement="top"
+        placement={tooltipPlacement}
       >
         <Toggle value={isFilterable} disabled />
       </Tooltip>

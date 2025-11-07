@@ -51,8 +51,10 @@ import {
   FETCH_LOG_TYPES,
   CREATE_LOG_TYPE,
   UPDATE_LOG_TYPE,
+  DELETE_LOG_TYPE,
   CREATE_LOG_TYPE_SUCCESS,
   UPDATE_LOG_TYPE_SUCCESS,
+  DELETE_LOG_TYPE_SUCCESS,
 } from './constants';
 
 export const fetchProjectSuccessAction = (project) => ({
@@ -234,6 +236,11 @@ export const updateLogTypeAction = (data, logTypeId, projectId, onSuccess) => ({
   payload: { data, logTypeId, projectId, onSuccess },
 });
 
+export const deleteLogTypeAction = (logTypeId, projectId, onSuccess) => ({
+  type: DELETE_LOG_TYPE,
+  payload: { logTypeId, projectId, onSuccess },
+});
+
 export const createLogTypeSuccessAction = (logType) => ({
   type: CREATE_LOG_TYPE_SUCCESS,
   payload: logType,
@@ -242,4 +249,9 @@ export const createLogTypeSuccessAction = (logType) => ({
 export const updateLogTypeSuccessAction = (logType) => ({
   type: UPDATE_LOG_TYPE_SUCCESS,
   payload: logType,
+});
+
+export const deleteLogTypeSuccessAction = (logTypeId) => ({
+  type: DELETE_LOG_TYPE_SUCCESS,
+  payload: { id: logTypeId },
 });
