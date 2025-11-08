@@ -104,7 +104,7 @@ function* getTestPlan(action: GetTestPlanAction): Generator {
     )) as TestPlanFoldersDto;
     const planTestCases = (yield call(
       fetch,
-      URLS.testCases(projectKey, { 'filter.eq.testPlanId': testPlanId }),
+      URLS.testPlanTestCases(projectKey, testPlanId),
     )) as TestPlanTestCaseDto;
 
     yield put(fetchSuccessAction(ACTIVE_TEST_PLAN_NAMESPACE, data));

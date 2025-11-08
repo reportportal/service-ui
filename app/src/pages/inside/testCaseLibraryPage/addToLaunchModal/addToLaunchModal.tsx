@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ReactNode, useMemo, useState, useCallback } from 'react';
+import { ReactNode, useMemo, useState, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { InjectedFormProps, reduxForm, SubmitHandler } from 'redux-form';
 import { useIntl } from 'react-intl';
@@ -51,9 +51,9 @@ export const AddToLaunchModalComponent = ({
   handleSubmit,
   data,
   invalid,
-  anyTouched,
+  initialize,
 }: AddToLaunchModalProps & InjectedFormProps<AddToLaunchFormData, AddToLaunchModalProps>) => {
-  const { testCaseId } = data;
+  const { testCaseName } = data;
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const [activeButton, setActiveButton] = useState<ButtonSwitcherOption>();
@@ -61,20 +61,24 @@ export const AddToLaunchModalComponent = ({
   const projectKey = useSelector(projectKeySelector);
 
   const { setSelectedTestPlan, addToLaunch } = useAddToLaunch({
-    testCaseId,
     change,
   });
+
+  useEffect(() => {
+    initialize({
+      launchName: '',
+    });
+  }, [initialize, activeButton]);
 
   const makeTestPlansOptions = (response: { content: TestPlanDto[] }) => response.content;
 
   const description = useMemo(
     () =>
       formatMessage(messages.description, {
-        // for now, we do not consider the batch
-        testCaseQuantity: 1,
+        testCaseName,
         bold: (value: ReactNode) => <b className={cx('selected-test-cases')}>{value}</b>,
       }),
-    [formatMessage],
+    [formatMessage, testCaseName],
   );
 
   const retrieveTestPlans = (value: string) =>
@@ -96,7 +100,7 @@ export const AddToLaunchModalComponent = ({
         ),
         type: 'submit',
         onClick: handleSubmit(addToLaunch) as AddToLaunchSubmitHandler,
-        disabled: invalid && anyTouched,
+        disabled: invalid,
       }}
       cancelButton={{
         children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -111,32 +115,51 @@ export const AddToLaunchModalComponent = ({
             existingButtonTitle={formatMessage(messages.addToLaunchButton)}
             handleActiveButton={handleActiveButton}
           />
-          <FieldProvider
-            name="launchName"
-            placeholder={formatMessage(messages.launchNamePlaceholder)}
-            className={cx('launch-name-wrapper')}
-          >
-            <FieldErrorHint provideHint={false}>
-              <FieldText
-                label={formatMessage(messages.launchNameLabel)}
-                defaultWidth={false}
-                isRequired
-              />
-            </FieldErrorHint>
-          </FieldProvider>
-          {activeButton === ButtonSwitcherOption.NEW && (
-            <div className={cx('autocomplete-wrapper')}>
-              <FieldLabel>{formatMessage(COMMON_LOCALE_KEYS.TEST_PLAN_LABEL)}</FieldLabel>
-              <AsyncAutocomplete
-                placeholder={formatMessage(COMMON_LOCALE_KEYS.SELECT_TEST_PLAN_PLACEHOLDER)}
-                getURI={retrieveTestPlans}
-                makeOptions={makeTestPlansOptions}
-                onChange={setSelectedTestPlan}
-                parseValueToString={(value: TestPlanDto) => value?.name}
-                createWithoutConfirmation
-                skipOptionCreation
-              />
-            </div>
+          {activeButton === ButtonSwitcherOption.NEW ? (
+            <>
+              <FieldProvider
+                name="launchName"
+                placeholder={formatMessage(messages.launchNamePlaceholder)}
+                className={cx('launch-name-wrapper')}
+              >
+                <FieldErrorHint provideHint={false}>
+                  <FieldText
+                    label={formatMessage(messages.launchNameLabel)}
+                    defaultWidth={false}
+                    isRequired
+                  />
+                </FieldErrorHint>
+              </FieldProvider>
+              <div className={cx('autocomplete-wrapper')}>
+                <FieldLabel>{formatMessage(COMMON_LOCALE_KEYS.TEST_PLAN_LABEL)}</FieldLabel>
+                <AsyncAutocomplete
+                  placeholder={formatMessage(COMMON_LOCALE_KEYS.SELECT_TEST_PLAN_PLACEHOLDER)}
+                  getURI={retrieveTestPlans}
+                  makeOptions={makeTestPlansOptions}
+                  onChange={setSelectedTestPlan}
+                  parseValueToString={(value: TestPlanDto) => value?.name}
+                  createWithoutConfirmation
+                  skipOptionCreation
+                />
+              </div>
+            </>
+          ) : (
+            <FieldProvider name="launchName" className={cx('launch-name-wrapper')}>
+              <FieldErrorHint provideHint={false}>
+                <>
+                  <FieldLabel isRequired>{formatMessage(messages.launchNameLabel)}</FieldLabel>
+                  <AsyncAutocomplete
+                    placeholder={formatMessage(messages.launchNameExistingPlaceholder)}
+                    getURI={retrieveTestPlans}
+                    makeOptions={makeTestPlansOptions}
+                    onChange={setSelectedTestPlan}
+                    parseValueToString={(value: TestPlanDto) => value?.name}
+                    createWithoutConfirmation
+                    skipOptionCreation
+                  />
+                </>
+              </FieldErrorHint>
+            </FieldProvider>
           )}
         </div>
       </form>
@@ -149,10 +172,10 @@ export const AddToLaunchModal = withModal(ADD_TO_LAUNCH_MODAL_KEY)(
   reduxForm<AddToLaunchFormData, AddToLaunchModalProps>({
     form: ADD_TO_LAUNCH_MODAL_FORM,
     destroyOnUnmount: true,
+    shouldValidate: () => true,
     initialValues: { launchName: '' },
-    validate: ({ selectedTestPlan, launchName }) => ({
+    validate: ({ launchName }) => ({
       launchName: commonValidators.requiredField(launchName),
-      selectedTestPlan: commonValidators.requiredField(selectedTestPlan),
     }),
   })(AddToLaunchModalComponent),
 );

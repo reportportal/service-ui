@@ -17,7 +17,7 @@
 import { TestPlanDto } from 'controllers/testPlan';
 
 export interface AddToLaunchModalData {
-  testCaseId: number;
+  testCaseName: string;
 }
 
 export interface AddToLaunchModalProps {
