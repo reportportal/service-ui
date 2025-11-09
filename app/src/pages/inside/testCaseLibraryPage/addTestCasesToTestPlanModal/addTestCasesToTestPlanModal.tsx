@@ -64,12 +64,16 @@ export const AddTestCasesToTestPlanModal = ({
 
   const selectedTestCasesLength = size(selectedTestCaseIds);
 
-  const { isAddTestCasesToTestPlanLoading, setSelectedTestPlan, addTestCasesToTestPlan } =
-    useAddTestCasesToTestPlan({
-      selectedTestCaseIds,
-      isSingleTestCaseMode,
-      change,
-    });
+  const {
+    isAddTestCasesToTestPlanLoading,
+    selectedTestPlan,
+    setSelectedTestPlan,
+    addTestCasesToTestPlan,
+  } = useAddTestCasesToTestPlan({
+    selectedTestCaseIds,
+    isSingleTestCaseMode,
+    change,
+  });
 
   const makeTestPlansOptions = (response: { content: TestPlanDto[] }) => response.content;
 
@@ -99,7 +103,7 @@ export const AddTestCasesToTestPlanModal = ({
         ),
         type: 'submit',
         onClick: handleSubmit(addTestCasesToTestPlan) as AddTestCasesSubmitHandler,
-        disabled: invalid || isAddTestCasesToTestPlanLoading,
+        disabled: invalid || !selectedTestPlan || isAddTestCasesToTestPlanLoading,
       }}
       cancelButton={{
         children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),

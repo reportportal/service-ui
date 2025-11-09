@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-import { ChangeEvent, ReactNode } from 'react';
+import { ChangeEvent, ComponentProps, ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerField, unregisterField, InjectedFormProps } from 'redux-form';
-import { Modal } from '@reportportal/ui-kit';
-import { SingleAutocompleteProps } from '@reportportal/ui-kit/dist/components/autocompletes/singleAutocomplete/singleAutocomplete';
+import { registerField, unregisterField, InjectedFormProps, getFormValues } from 'redux-form';
+import { Modal, SingleAutocomplete } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -34,6 +33,7 @@ import { FolderNameField, ParentFolderToggle } from '../folderFormFields';
 import { CreateFolderAutocomplete } from '../../shared/CreateFolderAutocomplete/createFolderAutocomplete';
 
 import styles from './folderModal.scss';
+import { FolderFormValues } from '../types';
 
 const cx = createClassnames(styles);
 
@@ -54,6 +54,10 @@ interface FolderModalConfig {
 
 type FolderModalProps = FolderModalConfig &
   Pick<InjectedFormProps<unknown>, 'dirty' | 'handleSubmit' | 'change' | 'untouch'>;
+
+type SingleAutocompleteOnStateChange = ComponentProps<
+  typeof SingleAutocomplete<FolderWithFullPath>
+>['onStateChange'];
 
 export const FolderModal = ({
   title,
@@ -77,6 +81,7 @@ export const FolderModal = ({
   const dispatch = useDispatch();
   const hideModal = () => dispatch(hideModalAction());
   const folders = useSelector(transformedFoldersWithFullPathSelector);
+  const formValues = useSelector((state) => getFormValues(formName)(state) as FolderFormValues);
   const computedShouldRenderToggle = !isEmpty(folders);
 
   const handleToggleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
@@ -92,16 +97,15 @@ export const FolderModal = ({
     change(toggleFieldName, target.checked);
   };
 
-  const handleFolderSelect: SingleAutocompleteProps<FolderWithFullPath>['onStateChange'] = ({
-    selectedItem,
-  }) => {
+  const handleFolderSelect: SingleAutocompleteOnStateChange = ({ selectedItem }) => {
     change(parentFolderFieldName, selectedItem);
   };
 
   const okButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CREATE),
     onClick: handleSubmit(onSubmit) as () => void,
-    disabled: isLoading,
+    disabled:
+      isLoading || (isToggled && !formValues?.[parentFolderFieldName as keyof FolderFormValues]),
     'data-automation-id': 'submitButton',
   };
 

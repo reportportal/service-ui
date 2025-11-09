@@ -18,29 +18,37 @@ import { ComponentProps } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { FieldLabel, SingleAutocomplete } from '@reportportal/ui-kit';
-import { SingleAutocompleteProps } from '@reportportal/ui-kit/dist/components/autocompletes/singleAutocomplete/singleAutocomplete';
 
 import { isString } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
 import { FolderWithFullPath, transformedFoldersWithFullPathSelector } from 'controllers/testCase';
-import { AutocompleteOption } from 'componentLibrary/autocompletes/common/autocompleteOption';
 
 import { messages } from './messages';
 import styles from './createFolderAutocomplete.scss';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 import { findFolderById } from 'pages/inside/testCaseLibraryPage/utils';
+import { GetItemPropsT } from '@reportportal/ui-kit/components/autocompletes/types';
+import { AutocompleteOption } from 'componentLibrary/autocompletes/common/autocompleteOption';
 
 const cx = createClassnames(styles);
 
+type SingleAutocompleteOnStateChange = ComponentProps<
+  typeof SingleAutocomplete<FolderWithFullPath>
+>['onStateChange'];
+
+type SingleAutocompleteRenderOption = ComponentProps<
+  typeof SingleAutocomplete<FolderWithFullPath>
+>['renderOption'];
+
 interface CreateFolderAutocompleteProps {
-  name: string;
+  name?: string;
   label?: string;
   placeholder?: string;
   isRequired?: boolean;
   className?: string;
   customEmptyListMessage?: string;
-  onStateChange?: SingleAutocompleteProps<FolderWithFullPath>['onStateChange'];
+  onStateChange?: SingleAutocompleteOnStateChange;
   onChange?: (value: FolderWithFullPath) => void;
   value?: FolderWithFullPath | null;
   error?: string;
@@ -49,7 +57,6 @@ interface CreateFolderAutocompleteProps {
 }
 
 export const CreateFolderAutocomplete = ({
-  name,
   label,
   placeholder,
   isRequired = false,
@@ -67,22 +74,20 @@ export const CreateFolderAutocomplete = ({
 
   const targetFolder = findFolderById(folders, value?.id);
 
-  const renderOption = (
+  const renderOption: SingleAutocompleteRenderOption = (
     option: FolderWithFullPath,
     index: number,
     _isNew: boolean,
-    getItemProps: ({
-      item,
-      index,
-    }: {
-      item: FolderWithFullPath;
-      index: number;
-    }) => ComponentProps<typeof AutocompleteOption>,
+    getItemProps: GetItemPropsT<FolderWithFullPath>,
   ) => {
     const { description, name, fullPath } = option;
 
     return (
-      <AutocompleteOption {...getItemProps({ item: option, index })} key={option.id} isNew={false}>
+      <AutocompleteOption
+        {...getItemProps?.({ item: option, index })}
+        key={option.id}
+        isNew={false}
+      >
         <>
           <p className={cx('create-folder-autocomplete__folder-name')}>{description || name}</p>
           <p className={cx('create-folder-autocomplete__folder-path')}>{fullPath}</p>
@@ -95,7 +100,6 @@ export const CreateFolderAutocomplete = ({
     <div className={cx('create-folder-autocomplete', className)}>
       {label && <FieldLabel isRequired={isRequired}>{label}</FieldLabel>}
       <SingleAutocomplete<FolderWithFullPath>
-        name={name}
         createWithoutConfirmation={createWithoutConfirmation}
         optionVariant="key-variant"
         onStateChange={onStateChange}

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { InjectedFormProps } from 'redux-form';
+import { getFormValues, InjectedFormProps } from 'redux-form';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { projectKeySelector } from 'controllers/project';
@@ -24,12 +24,16 @@ import { URLS } from 'common/urls';
 import { hideModalAction } from 'controllers/modal';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { TestPlanDto } from 'controllers/testPlan';
+
 import {
   AddTestCasesToTestPlanFormData,
   AddTestCasesToTestPlanModalData,
   AddTestCasesToTestPlanModalProps,
 } from './types';
-import { SELECTED_TEST_PLAN_FIELD_NAME } from './addTestCasesToTestPlanModal';
+import {
+  ADD_TO_TEST_PLAN_MODAL_FORM,
+  SELECTED_TEST_PLAN_FIELD_NAME,
+} from './addTestCasesToTestPlanModal';
 
 export const useAddTestCasesToTestPlan = ({
   selectedTestCaseIds,
@@ -47,6 +51,11 @@ export const useAddTestCasesToTestPlan = ({
   } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+
+  const { selectedTestPlan } = useSelector(
+    (state) =>
+      (getFormValues(ADD_TO_TEST_PLAN_MODAL_FORM)(state) || {}) as AddTestCasesToTestPlanFormData,
+  );
 
   const setSelectedTestPlan = (value: TestPlanDto | null) => {
     change(SELECTED_TEST_PLAN_FIELD_NAME, value || null);
@@ -94,6 +103,7 @@ export const useAddTestCasesToTestPlan = ({
 
   return {
     isAddTestCasesToTestPlanLoading,
+    selectedTestPlan,
     addTestCasesToTestPlan,
     setSelectedTestPlan,
   };
