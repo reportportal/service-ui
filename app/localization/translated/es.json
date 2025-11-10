@@ -1355,7 +1355,7 @@
   "LogTypeModal.logTypeNameInvalidHint": "Log type name may contain only Latin, numeric characters, hyphen, underscore (from 3 to 16 symbols)",
   "LogTypeModal.previewText": "Preview: log example",
   "LogTypeModal.systemLogTypeInfoMessage": "Name and log level cannot be changed — only its visual appearance settings can be adjusted.",
-  "LogTypeModal.systemLogTypeInfoMessageHeader": "This is core log type",
+  "LogTypeModal.systemLogTypeInfoMessageHeader": "This is core type",
   "LogTypeModal.textBold": "Text bold",
   "LogTypeModal.textColor": "Text color",
   "LogTypeModal.update.modalTitle": "Edit Log Type",
