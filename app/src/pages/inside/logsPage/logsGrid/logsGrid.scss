@@ -194,6 +194,10 @@
       padding: 0 7.5px;
     }
   }
+
+  &.with-accordion:not(.header) {
+    padding-bottom: 30px;
+  }
 }
 
 .column-size-medium {

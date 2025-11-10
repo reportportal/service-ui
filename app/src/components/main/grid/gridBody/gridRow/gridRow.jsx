@@ -177,6 +177,9 @@ export class GridRow extends Component {
 
   handleAccordion = () => {
     if (!this.overflowCell) {
+      if (this.state.withAccordion) {
+        this.setState({ withAccordion: false });
+      }
       return;
     }
 
@@ -270,6 +273,7 @@ export class GridRow extends Component {
                 toggleExpand={this.toggleAccordion}
                 rowSpan={descriptionConfig ? column.rowSpan : null}
                 level={i === 0 ? level : 0}
+                withAccordion={this.state.withAccordion}
               />
             );
             return cell;
