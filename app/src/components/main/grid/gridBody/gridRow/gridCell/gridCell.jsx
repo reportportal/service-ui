@@ -48,6 +48,7 @@ export class GridCell extends PureComponent {
     rowSpan: PropTypes.number,
     className: PropTypes.string,
     level: PropTypes.number,
+    withAccordion: PropTypes.bool,
   };
 
   static defaultProps = {
