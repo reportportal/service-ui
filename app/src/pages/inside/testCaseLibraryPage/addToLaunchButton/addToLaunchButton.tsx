@@ -28,15 +28,15 @@ const cx = createClassnames(styles);
 
 interface AddToLaunchButtonProps {
   isButtonDisabled: boolean;
-  testCaseId: number;
+  testCaseName: string;
 }
 
-export const AddToLaunchButton = ({ isButtonDisabled, testCaseId }: AddToLaunchButtonProps) => {
+export const AddToLaunchButton = ({ isButtonDisabled, testCaseName }: AddToLaunchButtonProps) => {
   const { formatMessage } = useIntl();
   const { openModal: openAddToLaunchModal } = useAddToLaunchModal();
 
   const handleAddToLaunchClick = () => {
-    openAddToLaunchModal({ testCaseId });
+    openAddToLaunchModal({ testCaseName });
   };
 
   const buttonComponent = (

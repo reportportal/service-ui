@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
 import { useIntl } from 'react-intl';
 import { Table } from '@reportportal/ui-kit';
 
@@ -34,7 +33,6 @@ const cx = createClassnames(styles);
 
 export const HistoryOfActions = () => {
   const { formatMessage } = useIntl();
-  const [expandedRows, setExpandedRows] = useState<Set<number | string>>(new Set([]));
   // Temporary name. Need to get it in response.
   const testCaseName = '24.2 PV';
 
@@ -110,16 +108,6 @@ export const HistoryOfActions = () => {
     },
   ];
 
-  const handleToggleRowExpansion = (id: string | number) => {
-    const newExpandedRows = new Set(expandedRows);
-    if (newExpandedRows.has(id)) {
-      newExpandedRows.delete(id);
-    } else {
-      newExpandedRows.add(id);
-    }
-    setExpandedRows(newExpandedRows);
-  };
-
   return (
     <SettingsLayout>
       <ScrollWrapper resetRequired={false}>
@@ -136,10 +124,6 @@ export const HistoryOfActions = () => {
               sortableColumns={[]}
               className={cx('history-of-actions__table')}
               rowClassName={cx('history-of-actions__table-row')}
-              isRowsExpandable
-              setExpandedRowIds={setExpandedRows}
-              expandedRowIds={[...expandedRows]}
-              onToggleRowExpansion={handleToggleRowExpansion}
             />
           </div>
         </div>

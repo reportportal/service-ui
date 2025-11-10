@@ -381,6 +381,8 @@ export const URLS = {
     `${urlBase}project/${projectKey}/tms/test-case/batch/duplicate`,
   testCases: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-case${getQueryParams(query)}`,
+  testPlanTestCases: (projectKey, id) =>
+    `${urlBase}project/${projectKey}/tms/test-plan/${id}/test-case`,
   testPlan: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-plan${getQueryParams(query)}`,
   testPlanTestCasesBatch: (projectKey, testPlanId) =>
