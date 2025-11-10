@@ -67,7 +67,7 @@ export const messages = defineMessages({
   },
   systemLogTypeInfoMessageHeader: {
     id: 'LogTypeModal.systemLogTypeInfoMessageHeader',
-    defaultMessage: 'This is core log type',
+    defaultMessage: 'This is core type',
   },
   systemLogTypeInfoMessage: {
     id: 'LogTypeModal.systemLogTypeInfoMessage',
