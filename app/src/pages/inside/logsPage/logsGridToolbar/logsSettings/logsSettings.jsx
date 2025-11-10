@@ -135,6 +135,11 @@ export const LogsSettings = ({ isConsoleViewMode }) => {
                 className={cx('settings-content', { opened: isOpened })}
               >
                 <SettingsBlock header={formatMessage(messages.logAppearance)}>
+                  <div className={cx('item')}>
+                    <InputCheckbox value={logsFullWidthMode} onChange={toggleFullWidthMode}>
+                      {formatMessage(messages.fullWidthMode)}
+                    </InputCheckbox>
+                  </div>
                   {!isConsoleViewMode && (
                     <div className={cx('item')}>
                       <InputCheckbox value={noLogsCollapsing} onChange={toggleNoLogsCollapsing}>
@@ -142,11 +147,6 @@ export const LogsSettings = ({ isConsoleViewMode }) => {
                       </InputCheckbox>
                     </div>
                   )}
-                  <div className={cx('item')}>
-                    <InputCheckbox value={logsFullWidthMode} onChange={toggleFullWidthMode}>
-                      {formatMessage(messages.fullWidthMode)}
-                    </InputCheckbox>
-                  </div>
                 </SettingsBlock>
                 <div className={cx('separator')} />
                 <SettingsBlock header={formatMessage(messages.logsSize)}>
