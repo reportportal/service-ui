@@ -62,6 +62,7 @@ export class GridCell extends PureComponent {
     rowSpan: 1,
     className: '',
     level: 0,
+    withAccordion: false,
   };
 
   render() {
@@ -79,6 +80,7 @@ export class GridCell extends PureComponent {
       rowSpan,
       className,
       level,
+      withAccordion,
     } = this.props;
     const CellComponent = component;
     return (
@@ -97,6 +99,7 @@ export class GridCell extends PureComponent {
         expanded={expanded}
         toggleExpand={toggleExpand}
         rowSpan={rowSpan}
+        withAccordion={withAccordion}
       />
     );
   }

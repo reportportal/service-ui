@@ -149,12 +149,6 @@ export const LogsSettings = ({ isConsoleViewMode }) => {
                   </div>
                 </SettingsBlock>
                 <div className={cx('separator')} />
-                <SettingsBlock header={formatMessage(messages.pagination)}>
-                  <div className={cx('item')}>
-                    <PaginationControl onToggle={closeDropdown} />
-                  </div>
-                </SettingsBlock>
-                <div className={cx('separator')} />
                 <SettingsBlock header={formatMessage(messages.logsSize)}>
                   <InputRadioGroup
                     options={logsSizeOptions}
@@ -163,6 +157,12 @@ export const LogsSettings = ({ isConsoleViewMode }) => {
                     inputGroupClassName={cx('items-group')}
                     size="medium"
                   />
+                </SettingsBlock>
+                <div className={cx('separator')} />
+                <SettingsBlock header={formatMessage(messages.pagination)}>
+                  <div className={cx('item')}>
+                    <PaginationControl onToggle={closeDropdown} />
+                  </div>
                 </SettingsBlock>
               </div>
             )}

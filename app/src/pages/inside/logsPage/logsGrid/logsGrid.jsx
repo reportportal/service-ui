@@ -59,7 +59,7 @@ const LOGS_GRID_EVENTS_INFO = {
   clickOnLoadCurrentStep: LOG_PAGE_EVENTS.LOAD_CURRENT_STEP,
 };
 
-const MessageColumn = ({ className, value, customProps, ...rest }) => {
+const MessageColumn = ({ className, value, customProps, withAccordion, ...rest }) => {
   const { consoleView: console, logsSize = DEFAULT_LOGS_SIZE } = customProps;
 
   return (
@@ -69,7 +69,7 @@ const MessageColumn = ({ className, value, customProps, ...rest }) => {
         `level-${value.level?.toLowerCase()}`,
         `column-size-${logsSize}`,
         className,
-        { console },
+        { console, 'with-accordion': withAccordion },
       )}
     >
       <LogMessageBlock value={value} customProps={customProps} {...rest} />
@@ -80,10 +80,12 @@ MessageColumn.propTypes = {
   className: PropTypes.string.isRequired,
   customProps: PropTypes.object,
   value: PropTypes.object,
+  withAccordion: PropTypes.bool,
 };
 MessageColumn.defaultProps = {
   customProps: {},
   value: {},
+  withAccordion: false,
 };
 
 const AttachmentColumn = ({ className, value, customProps }) => {
