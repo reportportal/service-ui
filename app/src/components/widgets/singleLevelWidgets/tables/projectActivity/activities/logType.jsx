@@ -74,10 +74,26 @@ const messages = defineMessages({
     defaultMessage:
       'show in filter changed from <span>{oldValue}</span> to <span>{newValue}</span>',
   },
+  on: {
+    id: 'LogTypeChanges.on',
+    defaultMessage: 'ON',
+  },
+  off: {
+    id: 'LogTypeChanges.off',
+    defaultMessage: 'OFF',
+  },
 });
 
 export const LogType = ({ activity }) => {
   const { formatMessage } = useIntl();
+
+  const valueReplacer = (value, field) => {
+    if (field === SHOW_IN_FILTER) {
+      const message = value.toString() === 'true' ? messages.on : messages.off;
+      return formatMessage(message);
+    }
+    return value;
+  };
 
   const getActivityHistory = () => {
     const historyItems = [];
@@ -86,11 +102,14 @@ export const LogType = ({ activity }) => {
     history.forEach((item) => {
       const { field, oldValue, newValue } = item;
       if (messages[`${field}Changed`]) {
+        const formattedOldValue = valueReplacer(oldValue, field);
+        const formattedNewValue = valueReplacer(newValue, field);
+
         historyItems.push({
           key: `${field}-${oldValue}-${newValue}`,
           content: formatMessage(messages[`${field}Changed`], {
-            oldValue,
-            newValue,
+            oldValue: formattedOldValue,
+            newValue: formattedNewValue,
             span: (content) => <span className={cx('activity-name')}>{content}</span>,
           }),
         });

@@ -1331,6 +1331,8 @@
   "LogTypeChanges.labelColorChanged": "колір мітки змінено з <span>{oldValue}</span> на <span>{newValue}</span>",
   "LogTypeChanges.levelChanged": "рівень змінено з <span>{oldValue}</span> на <span>{newValue}</span>",
   "LogTypeChanges.nameChanged": "назва змінено з <span>{oldValue}</span> на <span>{newValue}</span>",
+  "LogTypeChanges.off": "Вимк",
+  "LogTypeChanges.on": "Вкл",
   "LogTypeChanges.showInFilterChanged": "відображення у фільтрі змінено з <span>{oldValue}</span> на <span>{newValue}</span>",
   "LogTypeChanges.textColorChanged": "колір тексту змінено з <span>{oldValue}</span> на <span>{newValue}</span>",
   "LogTypeChanges.textStyleChanged": "стиль тексту змінено з <span>{oldValue}</span> на <span>{newValue}</span>",
