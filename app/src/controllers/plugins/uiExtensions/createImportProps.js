@@ -181,6 +181,7 @@ import { updateLaunchLocallyAction } from 'controllers/launch';
 import { getDefectTypeLabel } from 'components/main/analytics/events/common/utils';
 import { formatAttribute, parseQueryAttributes } from 'common/utils/attributeUtils';
 import { createNamespacedQuery } from 'common/utils/routingUtils';
+import { formatMethodType } from 'common/utils/localizationUtils';
 import {
   publicPluginsSelector,
   createGlobalNamedIntegrationsSelector,
@@ -413,6 +414,7 @@ export const createImportProps = (pluginName) => ({
     formatDateRangeToMinutesString,
     getUserProjectSettingsFromStorage,
     updateUserProjectSettingsInStorage,
+    formatMethodType,
   },
   validators: {
     attributesArray,
