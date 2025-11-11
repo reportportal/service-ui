@@ -48,13 +48,13 @@ export const TestStatisticsChart = ({
   const chartHeight = 70;
 
   const getBarHeight = (value: number): number => {
-    if (maxValue === 0) {
+    if (maxValue === 0 || value === 0) {
       return 0;
     }
 
     const calculatedHeight = (value / maxValue) * chartHeight;
 
-    return Math.max(calculatedHeight, 8);
+    return Math.max(calculatedHeight, 14);
   };
 
   const columns = [

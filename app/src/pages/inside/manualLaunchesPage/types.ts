@@ -65,6 +65,7 @@ export interface Launch {
   rerun: boolean;
   metadata: Record<string, string>;
   retentionPolicy: string;
+  testPlan: string;
 }
 
 export interface LaunchesResponse {
