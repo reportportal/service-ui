@@ -15,16 +15,26 @@
  */
 
 .launch-side-panel {
-  // Hide divider after header section
-  > div:nth-child(2) {
-    display: none;
+  min-width: 560px;
+  max-width: 560px;
+
+  :global([class*='header-section']) {
+    > :first-child {
+      padding: 24px 24px 16px 24px;
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   }
 
   .header-meta {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding: 0 20px 16px 24px;
+    padding: 0 24px;
   }
 
   .launch-type-icon {
