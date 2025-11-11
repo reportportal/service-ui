@@ -1331,6 +1331,8 @@
   "LogTypeChanges.labelColorChanged": "цвет метки изменен с <span>{oldValue}</span> на <span>{newValue}</span>",
   "LogTypeChanges.levelChanged": "уровень изменен с <span>{oldValue}</span> на <span>{newValue}</span>",
   "LogTypeChanges.nameChanged": "название изменено с <span>{oldValue}</span> на <span>{newValue}</span>",
+  "LogTypeChanges.off": "Выкл",
+  "LogTypeChanges.on": "Вкл",
   "LogTypeChanges.showInFilterChanged": "отображение в фильтре изменено с <span>{oldValue}</span> на <span>{newValue}</span>",
   "LogTypeChanges.textColorChanged": "цвет текста изменен с <span>{oldValue}</span> на <span>{newValue}</span>",
   "LogTypeChanges.textStyleChanged": "стиль текста изменен с <span>{oldValue}</span> на <span>{newValue}</span>",

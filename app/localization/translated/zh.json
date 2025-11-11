@@ -1331,6 +1331,8 @@
   "LogTypeChanges.labelColorChanged": "label color changed from <span>{oldValue}</span> to <span>{newValue}</span>",
   "LogTypeChanges.levelChanged": "level changed from <span>{oldValue}</span> to <span>{newValue}</span>",
   "LogTypeChanges.nameChanged": "name changed from <span>{oldValue}</span> to <span>{newValue}</span>",
+  "LogTypeChanges.off": "OFF",
+  "LogTypeChanges.on": "ON",
   "LogTypeChanges.showInFilterChanged": "show in filter changed from <span>{oldValue}</span> to <span>{newValue}</span>",
   "LogTypeChanges.textColorChanged": "text color changed from <span>{oldValue}</span> to <span>{newValue}</span>",
   "LogTypeChanges.textStyleChanged": "text changed from <span>{oldValue}</span> to <span>{newValue}</span>",
