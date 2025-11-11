@@ -87,10 +87,13 @@ const messages = defineMessages({
 export const LogType = ({ activity }) => {
   const { formatMessage } = useIntl();
 
-  const valueReplacer = (value, field) =>
-    field === SHOW_IN_FILTER
-      ? formatMessage(value.toString() === 'true' ? messages.on : messages.off)
-      : value;
+  const valueReplacer = (value, field) => {
+    if (field === SHOW_IN_FILTER) {
+      const message = value.toString() === 'true' ? messages.on : messages.off;
+      return formatMessage(message);
+    }
+    return value;
+  };
 
   const getActivityHistory = () => {
     const historyItems = [];
