@@ -50,7 +50,6 @@ import {
   TEST_ITEM_PAGE,
   pageSelector,
   clearPageStateAction,
-  adminPageNames,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   ACCOUNT_REMOVED_PAGE,
   PROJECT_PLUGIN_PAGE,
@@ -113,6 +112,7 @@ import { prepareActiveOrganizationUsersAction } from 'controllers/organization/u
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 import { fetchOrganizationEventsDataAction } from '../controllers/instance/actionCreators';
 import { canSeeActivityOption } from 'common/utils/permissions';
+import { activeOrganizationSelector } from 'controllers/organization';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
   path,
@@ -382,7 +382,8 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
     payload: { organizationSlug: hashOrganizationSlug, projectSlug: hashProjectSlug },
   } = action;
 
-  let { organizationSlug, projectSlug } = activeProjectSelector(getState());
+  let { slug: organizationSlug } = activeOrganizationSelector(getState());
+  let { projectSlug } = activeProjectSelector(getState());
   const hashProjectKey = activeProjectKeySelector(getState());
   const currentPageType = pageSelector(getState());
   const authorized = isAuthorizedSelector(getState());
@@ -392,44 +393,47 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
     hasPermission,
     assignedProjectKey,
     assignmentNotRequired,
-    isAssignedToTargetOrganization,
+    hasPermissionOrganization,
   } = userAssignedSelector(hashProjectSlug, hashOrganizationSlug)(getState());
-
-  const isAdminNewPageType = !!adminPageNames[nextPageType];
-  const isAdminCurrentPageType = !!adminPageNames[currentPageType];
 
   const projectKey = assignedProjectKey || (assignmentNotRequired && hashProjectKey);
 
-  const isChangedProject =
-    organizationSlug !== hashOrganizationSlug || projectSlug !== hashProjectSlug;
+  const isChangedOrganization = organizationSlug !== hashOrganizationSlug;
+  const isChangedProject = isChangedOrganization || projectSlug !== hashProjectSlug;
 
-  if (hashOrganizationSlug && (isChangedProject || isAdminCurrentPageType) && !isAdminNewPageType) {
-    if (hashProjectSlug && hasPermission) {
-      dispatch(
-        setActiveProjectAction({
-          organizationSlug: hashOrganizationSlug,
-          projectSlug: hashProjectSlug,
-        }),
-      );
-      dispatch(setActiveProjectKeyAction(projectKey));
-      dispatch(fetchProjectAction(projectKey));
+  const isOrganizationPage = hashOrganizationSlug && !hashProjectSlug;
+  const isProjectPage = hashOrganizationSlug && hashProjectSlug;
+
+  if (isOrganizationPage && hasPermissionOrganization && isChangedOrganization) {
+    dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
+    organizationSlug = hashOrganizationSlug;
+  }
+
+  if (isProjectPage && hasPermission && isChangedProject) {
+    dispatch(
+      setActiveProjectAction({
+        organizationSlug: hashOrganizationSlug,
+        projectSlug: hashProjectSlug,
+      }),
+    );
+    dispatch(setActiveProjectKeyAction(projectKey));
+    dispatch(fetchProjectAction(projectKey));
+    projectSlug = hashProjectSlug;
+
+    if (isChangedOrganization) {
       dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
-
       organizationSlug = hashOrganizationSlug;
-      projectSlug = hashProjectSlug;
-    } else if (!hashProjectSlug && (isAssignedToTargetOrganization || assignmentNotRequired)) {
-      dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
-
-      organizationSlug = hashOrganizationSlug;
-    } else if (isChangedProject) {
-      dispatch(
-        redirect({
-          ...action,
-          payload: { ...action.payload, organizationSlug, projectSlug },
-          meta: {},
-        }),
-      );
     }
+  }
+
+  if ((isOrganizationPage && !hasPermissionOrganization) || (isProjectPage && !hasPermission)) {
+    dispatch(
+      redirect({
+        ...action,
+        payload: { ...action.payload, organizationSlug, projectSlug },
+        meta: {},
+      }),
+    );
   }
 
   if (nextPageType !== currentPageType) {
