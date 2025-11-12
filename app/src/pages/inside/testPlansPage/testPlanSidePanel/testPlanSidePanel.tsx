@@ -128,25 +128,23 @@ export const TestPlanSidePanel = memo(
           color="var(--rp-ui-base-e-400)"
           isIconVisible={false}
         />
-        <div className={cx('header-meta')}>
-          <div className={cx('meta-row')}>
-            <div className={cx('meta-item-row', 'id-row')}>
-              <span className={cx('meta-label')}>{formatMessage(messages.id)}:</span>
-              <span className={cx('meta-value')}>{testPlan.id}</span>
-              <button
-                type="button"
-                className={cx('copy-button')}
-                // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                onClick={handleCopyId}
-                aria-label="Copy ID"
-              >
-                <CopyIcon />
-              </button>
-            </div>
-            <div className={cx('meta-item-row')}>
-              <DurationIcon />
-              <span className={cx('meta-value')}>{MOCK_DURATION}</span>
-            </div>
+        <div className={cx('meta-row')}>
+          <div className={cx('meta-item-row', 'id-row')}>
+            <span className={cx('meta-label')}>{formatMessage(messages.id)}:</span>
+            <span className={cx('meta-value')}>{testPlan.id}</span>
+            <button
+              type="button"
+              className={cx('copy-button')}
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
+              onClick={handleCopyId}
+              aria-label="Copy ID"
+            >
+              <CopyIcon />
+            </button>
+          </div>
+          <div className={cx('meta-item-row')}>
+            <DurationIcon />
+            <span className={cx('meta-value')}>{MOCK_DURATION}</span>
           </div>
         </div>
       </div>

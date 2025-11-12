@@ -20,6 +20,7 @@ import { createClassnames } from 'common/utils';
 
 import { ExecutionStatusType } from './types';
 import styles from './executionStatus.scss';
+import { isEmpty } from 'es-toolkit/compat';
 
 const cx = createClassnames(styles);
 
@@ -48,7 +49,7 @@ const getStatusColor = (status: ExecutionStatusType): string => {
 };
 
 export const ExecutionStatus = memo(({ executions }: ExecutionStatusProps) => {
-  if (!executions || executions.length === 0) {
+  if (isEmpty(executions)) {
     return null;
   }
 

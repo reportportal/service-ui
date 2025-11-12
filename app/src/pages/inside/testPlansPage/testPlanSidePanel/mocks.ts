@@ -19,34 +19,26 @@ import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 import { ManualScenario } from 'pages/inside/testCaseLibraryPage/types';
 import { ExecutionStatusType } from './executionStatus';
 
-// TODO: Replace with actual breadcrumb data when available in testPlan DTO
 export const MOCK_BREADCRUMB_PATH = ['Regression Weekly A-team', 'Checkout flow'];
 
-// TODO: Replace with actual priority when available in testPlan DTO
 export const MOCK_PRIORITY = 'unspecified' as const;
 
-// TODO: Replace with actual duration when available in testPlan DTO
 export const MOCK_DURATION = '16 min';
 
-// TODO: Replace with actual description when available in testPlan DTO
 export const MOCK_DESCRIPTION = `Ideally you should have a test method for each separate unit of work so you can always immediately view where things are going wrong. In this example there is a basic method called getUserById() which will return a user and there is a total of 3 unit of works.
 
 The first unit of work is to check if the user exists in the database. If the user does not exist, the method should throw an exception. The second unit of work is to validate the user permissions and roles. Finally, the third unit of work is to return the complete user object with all associated data.`;
 
-// TODO: Replace with actual cover status when available in testPlan DTO
 export const MOCK_COVER_STATUS = CoverStatus.UNCOVERED;
 
-// TODO: Replace with actual tags when available in testPlan DTO
 export const MOCK_TAGS = ['Smoke', 'Regression', 'Payment', 'E2E'];
 
-// TODO: Replace with actual executions data when available in testPlan DTO
 export const MOCK_EXECUTIONS = [
   { title: '# 70  Regression Instance B', status: ExecutionStatusType.RUNNING },
   { title: '# 24  Stream B API', status: ExecutionStatusType.PASSED },
   { title: '# 15  Smoke Test Suite', status: ExecutionStatusType.FAILED },
 ];
 
-// TODO: Replace with actual scenario data when available in testPlan DTO
 export const MOCK_SCENARIO: ManualScenario = {
   manualScenarioType: TestCaseManualScenario.STEPS,
   id: 1,

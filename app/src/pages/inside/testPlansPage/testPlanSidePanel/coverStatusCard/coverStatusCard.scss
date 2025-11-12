@@ -40,7 +40,8 @@
       fill: var(--rp-ui-base-e-300);
     }
 
-    &.manual-covered svg > path, &.manual-covered svg > rect {
+    &.manual-covered svg > path,
+    &.manual-covered svg > rect {
       fill: var(--rp-ui-base-purple-600);
     }
   }
