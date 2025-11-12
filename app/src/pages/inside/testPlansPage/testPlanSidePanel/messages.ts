@@ -25,21 +25,29 @@ export const messages = defineMessages({
     id: 'TestPlanSidePanel.duration',
     defaultMessage: 'Duration',
   },
-  testCasesTitle: {
-    id: 'TestPlanSidePanel.testCasesTitle',
-    defaultMessage: 'Test cases',
+  tagsTitle: {
+    id: 'TestPlanSidePanel.tagsTitle',
+    defaultMessage: 'Tags',
   },
-  testPlanInformationTitle: {
-    id: 'TestPlanSidePanel.testPlanInformationTitle',
-    defaultMessage: 'Test Plan Information',
+  manualScenarioTitle: {
+    id: 'TestPlanSidePanel.manualScenarioTitle',
+    defaultMessage: 'Manual scenario',
   },
-  attributesTitle: {
-    id: 'TestPlanSidePanel.attributesTitle',
-    defaultMessage: 'Attributes',
+  executionsInLaunchesTitle: {
+    id: 'TestPlanSidePanel.executionsInLaunchesTitle',
+    defaultMessage: 'Executions in launches',
   },
-  noAttributesAdded: {
-    id: 'TestPlanSidePanel.noAttributesAdded',
-    defaultMessage: 'No attributes added',
+  descriptionTitle: {
+    id: 'TestPlanSidePanel.descriptionTitle',
+    defaultMessage: 'Description',
+  },
+  noTagsAdded: {
+    id: 'TestPlanSidePanel.noTagsAdded',
+    defaultMessage: 'No tags added',
+  },
+  noManualScenario: {
+    id: 'TestPlanSidePanel.noManualScenario',
+    defaultMessage: 'No manual scenario',
   },
   openInLibrary: {
     id: 'TestPlanSidePanel.openInLibrary',

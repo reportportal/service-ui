@@ -16,6 +16,7 @@
 
 import { memo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   Button,
   SidePanel,
@@ -25,17 +26,33 @@ import {
   DurationIcon,
   CopyIcon,
 } from '@reportportal/ui-kit';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames, copyToClipboard } from 'common/utils';
 import { useOnClickOutside } from 'common/hooks';
 import { CollapsibleSection } from 'components/collapsibleSection';
+import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { PathBreadcrumb } from 'componentLibrary/breadcrumbs/pathBreadcrumb';
 import { commonMessages } from 'pages/inside/common/common-messages';
+import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { ProjectDetails } from 'pages/organization/constants';
+import { Scenario } from 'pages/inside/common/testCaseList/testCaseSidePanel/scenario';
+import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 
 import { TestPlanDto } from 'controllers/testPlan';
 import { messages } from './messages';
+import {
+  MOCK_BREADCRUMB_PATH,
+  MOCK_PRIORITY,
+  MOCK_DURATION,
+  MOCK_DESCRIPTION,
+  MOCK_COVER_STATUS,
+  MOCK_SCENARIO,
+  MOCK_TAGS,
+} from './mocks';
+import { CoverStatusCard, CoverStatus } from './coverStatusCard';
 
 import styles from './testPlanSidePanel.scss';
 
@@ -49,9 +66,13 @@ interface TestPlanSidePanelProps {
 
 export const TestPlanSidePanel = memo(
   ({ testPlan, isVisible, onClose }: TestPlanSidePanelProps) => {
+    const dispatch = useDispatch();
     const { formatMessage } = useIntl();
     const sidePanelRef = useRef<HTMLDivElement>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { organizationSlug, projectSlug } = useSelector(
+      urlOrganizationAndProjectSelector,
+    ) as ProjectDetails;
 
     useOnClickOutside(sidePanelRef, onClose);
 
@@ -65,7 +86,14 @@ export const TestPlanSidePanel = memo(
     };
 
     const handleOpenInLibraryClick = () => {
-      // TODO: Implement open in library functionality
+      dispatch({
+        type: TEST_CASE_LIBRARY_PAGE,
+        payload: {
+          organizationSlug,
+          projectSlug,
+          testCasePageRoute: `test-cases/${testPlan.id}`,
+        },
+      });
     };
 
     const handleQuickRunClick = () => {
@@ -84,12 +112,9 @@ export const TestPlanSidePanel = memo(
       await copyToClipboard(testPlan.id.toString());
     };
 
-    // TODO: Replace with actual breadcrumb data when available in testPlan DTO
-    const breadcrumbPath = ['Regression Weekly A-team', 'Checkout flow'];
-
     const titleComponent = (
       <div className={cx('test-plan-title')}>
-        <PriorityIcon priority="unspecified" className={cx('priority-icon')} />
+        <PriorityIcon priority={MOCK_PRIORITY} className={cx('priority-icon')} />
         <span>{testPlan.name}</span>
       </div>
     );
@@ -97,7 +122,7 @@ export const TestPlanSidePanel = memo(
     const descriptionComponent = (
       <div className={cx('description-wrapper')}>
         <PathBreadcrumb
-          path={breadcrumbPath}
+          path={MOCK_BREADCRUMB_PATH}
           color="var(--rp-ui-base-e-400)"
           isIconVisible={false}
         />
@@ -118,10 +143,7 @@ export const TestPlanSidePanel = memo(
             </div>
             <div className={cx('meta-item-row')}>
               <DurationIcon />
-              <span className={cx('meta-value')}>
-                {/* TODO: Add actual duration when available in testPlan DTO */}
-                16 min
-              </span>
+              <span className={cx('meta-value')}>{MOCK_DURATION}</span>
             </div>
           </div>
         </div>
@@ -130,23 +152,30 @@ export const TestPlanSidePanel = memo(
 
     const contentComponent = (
       <div className={cx('content')}>
+        <CoverStatusCard status={MOCK_COVER_STATUS as CoverStatus} />
         <CollapsibleSection
-          title={formatMessage(messages.testCasesTitle)}
+          title={formatMessage(messages.executionsInLaunchesTitle)}
           defaultMessage={formatMessage(commonMessages.descriptionNotSpecified)}
         >
-          {/* TODO: Add test cases content */}
+          {/* TODO: Add executions in launches content */}
         </CollapsibleSection>
         <CollapsibleSection
-          title={formatMessage(messages.testPlanInformationTitle)}
+          title={formatMessage(messages.manualScenarioTitle)}
+          defaultMessage={formatMessage(messages.noManualScenario)}
+        >
+          <Scenario scenario={MOCK_SCENARIO} />
+        </CollapsibleSection>
+        <CollapsibleSection
+          title={formatMessage(messages.tagsTitle)}
+          defaultMessage={formatMessage(messages.noTagsAdded)}
+        >
+          {!isEmpty(MOCK_TAGS) && <AdaptiveTagList tags={MOCK_TAGS} isShowAllView />}
+        </CollapsibleSection>
+        <CollapsibleSection
+          title={formatMessage(messages.descriptionTitle)}
           defaultMessage={formatMessage(commonMessages.descriptionNotSpecified)}
         >
-          {/* TODO: Add test plan information content */}
-        </CollapsibleSection>
-        <CollapsibleSection
-          title={formatMessage(messages.attributesTitle)}
-          defaultMessage={formatMessage(messages.noAttributesAdded)}
-        >
-          {/* TODO: Add attributes content */}
+          <ExpandedTextSection text={MOCK_DESCRIPTION} defaultVisibleLines={4} />
         </CollapsibleSection>
       </div>
     );
