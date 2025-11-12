@@ -15,7 +15,7 @@
  */
 
 import { memo, useRef, useState } from 'react';
-import { useIntl, MessageDescriptor } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import Parser from 'html-react-parser';
 import {
@@ -65,15 +65,6 @@ import styles from './testCaseSidePanel.scss';
 
 const cx = createClassnames(styles);
 
-const safeGetMessage = (
-  key: string,
-  messages: Record<string, MessageDescriptor>,
-  formatMessage: (descriptor: MessageDescriptor) => string,
-): string => {
-  const messageDescriptor = messages[key];
-  return messageDescriptor ? formatMessage(messageDescriptor) : key;
-};
-
 const COLLAPSIBLE_SECTIONS_CONFIG = ({
   attributes,
   scenario,
@@ -97,22 +88,22 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
 
   return [
     {
-      titleKey: 'tagsTitle',
-      defaultMessageKey: 'noTagsAdded',
+      title: commonMessages.tags,
+      defaultMessage: messages.noTagsAdded,
       childComponent: isEmpty(attributes) ? null : (
         <AdaptiveTagList tags={attributes} isShowAllView />
       ),
     },
     {
-      titleKey: 'scenarioTitle',
-      defaultMessageKey: 'noDetailsForScenario',
+      title: messages.scenarioTitle,
+      defaultMessage: messages.noDetailsForScenario,
       childComponent: isScenarioDataHidden ? null : <Scenario scenario={scenario} />,
     },
     ...(scenario?.manualScenarioType === TestCaseManualScenario.TEXT
       ? [
           {
-            titleKey: 'attachmentsTitle',
-            defaultMessageKey: 'noAttachmentsAdded',
+            title: commonMessages.attachments,
+            defaultMessage: messages.noAttachmentsAdded,
             childComponent: isEmpty(scenario?.attachments) ? null : (
               <AttachmentList attachments={scenario.attachments} />
             ),
@@ -120,8 +111,8 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
         ]
       : []),
     {
-      titleKey: 'descriptionTitle',
-      defaultMessageKey: 'descriptionNotSpecified',
+      title: commonMessages.description,
+      defaultMessage: commonMessages.descriptionNotSpecified,
       childComponent: testCaseDescription ? (
         <ExpandedTextSection text={testCaseDescription} defaultVisibleLines={5} />
       ) : null,
@@ -287,11 +278,11 @@ export const TestCaseSidePanel = memo(
             attributes: testCase?.attributes?.map(({ key }) => key),
             scenario: testCase?.manualScenario,
             testCaseDescription: testCase.description,
-          }).map(({ titleKey, defaultMessageKey, childComponent }) => (
+          }).map(({ title, defaultMessage, childComponent }) => (
             <CollapsibleSection
-              key={titleKey}
-              title={safeGetMessage(titleKey, messages, formatMessage)}
-              defaultMessage={safeGetMessage(defaultMessageKey, messages, formatMessage)}
+              key={title.id}
+              title={formatMessage(title)}
+              defaultMessage={formatMessage(defaultMessage)}
             >
               {childComponent}
             </CollapsibleSection>

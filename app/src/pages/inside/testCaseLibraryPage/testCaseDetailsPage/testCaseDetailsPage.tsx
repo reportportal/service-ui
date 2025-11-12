@@ -32,6 +32,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { testCaseDetailsSelector } from 'controllers/testCase';
 
+import { commonMessages } from 'pages/inside/common/common-messages';
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
 import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
@@ -158,7 +159,7 @@ export const TestCaseDetailsPage = () => {
             }).map(({ titleKey, defaultMessageKey, childComponent, headerControl }) => (
               <CollapsibleSectionWithHeaderControl
                 key={titleKey}
-                title={formatMessage(messages[titleKey])}
+                title={formatMessage(commonMessages[titleKey])}
                 defaultMessage={formatMessage(messages[defaultMessageKey])}
                 headerControlComponent={headerControl}
               >

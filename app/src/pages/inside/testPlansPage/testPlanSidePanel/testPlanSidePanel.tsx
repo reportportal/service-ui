@@ -21,7 +21,7 @@ import {
   Button,
   SidePanel,
   ExternalLinkIcon,
-  CoveredManuallyIcon,
+  RunManualIcon,
   MeatballMenuIcon,
   DurationIcon,
   CopyIcon,
@@ -168,13 +168,13 @@ export const TestPlanSidePanel = memo(
           <Scenario scenario={MOCK_SCENARIO} />
         </CollapsibleSection>
         <CollapsibleSection
-          title={formatMessage(messages.tagsTitle)}
+          title={formatMessage(commonMessages.tags)}
           defaultMessage={formatMessage(messages.noTagsAdded)}
         >
           {!isEmpty(MOCK_TAGS) && <AdaptiveTagList tags={MOCK_TAGS} isShowAllView />}
         </CollapsibleSection>
         <CollapsibleSection
-          title={formatMessage(messages.descriptionTitle)}
+          title={formatMessage(commonMessages.description)}
           defaultMessage={formatMessage(commonMessages.descriptionNotSpecified)}
         >
           <ExpandedTextSection text={MOCK_DESCRIPTION} defaultVisibleLines={4} />
@@ -194,7 +194,7 @@ export const TestPlanSidePanel = memo(
             variant="ghost"
             className={cx('action-button', 'menu-button')}
             data-automation-id="test-plan-more-actions"
-            aria-label={formatMessage(messages.moreActionsTooltip)}
+            aria-label={formatMessage(commonMessages.moreActions)}
           >
             <MeatballMenuIcon />
           </Button>
@@ -216,7 +216,7 @@ export const TestPlanSidePanel = memo(
             data-automation-id="test-plan-quick-run"
           >
             {formatMessage(messages.quickRun)}
-            <CoveredManuallyIcon />
+            <RunManualIcon />
           </Button>
         </div>
       </div>

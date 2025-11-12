@@ -25,10 +25,6 @@ export const messages = defineMessages({
     id: 'TestPlanSidePanel.duration',
     defaultMessage: 'Duration',
   },
-  tagsTitle: {
-    id: 'TestPlanSidePanel.tagsTitle',
-    defaultMessage: 'Tags',
-  },
   manualScenarioTitle: {
     id: 'TestPlanSidePanel.manualScenarioTitle',
     defaultMessage: 'Manual scenario',
@@ -36,10 +32,6 @@ export const messages = defineMessages({
   executionsInLaunchesTitle: {
     id: 'TestPlanSidePanel.executionsInLaunchesTitle',
     defaultMessage: 'Executions in launches',
-  },
-  descriptionTitle: {
-    id: 'TestPlanSidePanel.descriptionTitle',
-    defaultMessage: 'Description',
   },
   noTagsAdded: {
     id: 'TestPlanSidePanel.noTagsAdded',
@@ -60,9 +52,5 @@ export const messages = defineMessages({
   removeFromTestPlan: {
     id: 'TestPlanSidePanel.removeFromTestPlan',
     defaultMessage: 'Remove from Test Plan',
-  },
-  moreActionsTooltip: {
-    id: 'TestPlanSidePanel.moreActionsTooltip',
-    defaultMessage: 'More actions',
   },
 });

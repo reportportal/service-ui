@@ -57,4 +57,8 @@ export const commonMessages = defineMessages({
     id: 'Common.skipped',
     defaultMessage: 'Skipped',
   },
+  moreActions: {
+    id: 'Common.moreActions',
+    defaultMessage: 'More actions',
+  },
 });

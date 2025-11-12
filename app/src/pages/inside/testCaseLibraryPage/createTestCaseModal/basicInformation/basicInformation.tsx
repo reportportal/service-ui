@@ -25,6 +25,7 @@ import { CreateFolderAutocomplete } from 'pages/inside/testCaseLibraryPage/testC
 
 import { messages } from './messages';
 import { commonMessages } from '../../commonMessages';
+import { commonMessages as globalCommonMessages } from 'pages/inside/common/common-messages';
 import { PrioritySelect } from '../../prioritySelect/prioritySelect';
 
 import styles from './basicInformation.scss';
@@ -70,7 +71,7 @@ export const BasicInformation = ({ className, hideFolderField = false }: BasicIn
       </FieldProvider>
       <FieldProvider name="description" placeholder={formatMessage(messages.addDetailsOrContext)}>
         <FieldErrorHint provideHint={false} className={cx('basic-information__field')}>
-          <FieldTextFlex label={formatMessage(messages.description)} value="" />
+          <FieldTextFlex label={formatMessage(globalCommonMessages.description)} value="" />
         </FieldErrorHint>
       </FieldProvider>
       <EditableTagsSection variant="modal" onAddTag={noop} />

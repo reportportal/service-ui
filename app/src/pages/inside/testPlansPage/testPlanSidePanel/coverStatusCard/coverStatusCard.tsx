@@ -16,7 +16,7 @@
 
 import { memo } from 'react';
 import { useIntl } from 'react-intl';
-import { CoveredManuallyIcon } from '@reportportal/ui-kit';
+import { CoveredManuallyIcon, CoverageFullIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 
@@ -31,9 +31,9 @@ const getIconByStatus = (status: CoverStatus) => {
     case CoverStatus.MANUAL_COVERED:
       return CoveredManuallyIcon;
     case CoverStatus.UNCOVERED:
-      return CoveredManuallyIcon;
+      return CoverageFullIcon;
     default:
-      return CoveredManuallyIcon;
+      return CoverageFullIcon;
   }
 };
 

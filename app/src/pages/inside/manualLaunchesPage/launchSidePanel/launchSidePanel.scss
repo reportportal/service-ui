@@ -18,12 +18,6 @@
   min-width: 560px;
   max-width: 560px;
 
-  :global([class*='header-section']) {
-    > :first-child {
-      padding: 24px 24px 16px 24px;
-    }
-  }
-
   .content {
     display: flex;
     flex-direction: column;

@@ -21,10 +21,6 @@ export const messages = defineMessages({
     id: 'CreateTestPlanModal.enterTestPlanName',
     defaultMessage: 'Enter test plan name',
   },
-  description: {
-    id: 'CreateTestPlanModal.description',
-    defaultMessage: 'Description',
-  },
   addTestPlanDescription: {
     id: 'CreateTestPlanModal.addTestPlanDescription',
     defaultMessage: 'Add test plan description',
