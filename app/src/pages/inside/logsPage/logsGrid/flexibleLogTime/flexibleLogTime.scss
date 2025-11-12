@@ -22,7 +22,8 @@
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
-  color: $COLOR--charcoal-grey;
+  font-weight: inherit;
+  color: inherit;
   vertical-align: top;
   border: none;
   background: none;
@@ -49,5 +50,5 @@
 }
 
 .micro-seconds {
-  color: $COLOR--gray-60;
+  opacity: 0.6;
 }

@@ -23,7 +23,13 @@ import Parser from 'html-react-parser';
 import { Grid } from 'components/main/grid';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
-import { logsSizeSelector, noLogsCollapsingSelector } from 'controllers/user';
+import {
+  logsSizeSelector,
+  noLogsCollapsingSelector,
+  logsColorizedBackgroundSelector,
+} from 'controllers/user';
+import { logTypesSelector } from 'controllers/project';
+import { getLogLevelStyles } from 'controllers/log/storageUtils';
 import ArrowIcon from 'common/img/arrow-down-inline.svg';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { DEFAULT_LOGS_SIZE } from 'common/constants/logsSettings';
@@ -60,17 +66,20 @@ const LOGS_GRID_EVENTS_INFO = {
 };
 
 const MessageColumn = ({ className, value, customProps, withAccordion, ...rest }) => {
-  const { consoleView: console, logsSize = DEFAULT_LOGS_SIZE } = customProps;
+  const { consoleView, logsSize = DEFAULT_LOGS_SIZE, logLevels = [] } = customProps;
+  const { labelColor, textColor, textStyle } = getLogLevelStyles(value?.level, logLevels);
 
   return (
     <div
-      className={cx(
-        'message-column',
-        `level-${value.level?.toLowerCase()}`,
-        `column-size-${logsSize}`,
-        className,
-        { console, 'with-accordion': withAccordion },
-      )}
+      className={cx('message-column', `column-size-${logsSize}`, className, {
+        console: consoleView,
+        'with-accordion': withAccordion,
+        bold: textStyle === 'bold',
+      })}
+      style={{
+        '--label-color': labelColor,
+        '--text-color': textColor,
+      }}
     >
       <LogMessageBlock value={value} customProps={customProps} {...rest} />
     </div>
@@ -125,10 +134,19 @@ StatusColumn.defaultProps = {
 };
 
 const TimeColumn = ({ className, value, customProps }) => {
-  const { mobile, logsSize = DEFAULT_LOGS_SIZE } = customProps;
+  const { mobile, logsSize = DEFAULT_LOGS_SIZE, logLevels = [] } = customProps;
+  const { textColor, textStyle } = getLogLevelStyles(value?.level, logLevels);
 
   return (
-    <div className={cx('time-column', className, `column-size-${logsSize}`, { mobile })}>
+    <div
+      className={cx('time-column', className, `column-size-${logsSize}`, {
+        mobile,
+        bold: textStyle === 'bold',
+      })}
+      style={{
+        '--text-color': textColor,
+      }}
+    >
       <FlexibleLogTime time={value.time} />
     </div>
   );
@@ -173,6 +191,8 @@ LogStatusCell.defaultProps = {
 @connect((state) => ({
   noLogsCollapsing: noLogsCollapsingSelector(state),
   logsSize: logsSizeSelector(state),
+  logLevels: logTypesSelector(state),
+  logsColorizedBackground: logsColorizedBackgroundSelector(state),
 }))
 @injectIntl
 export class LogsGrid extends Component {
@@ -202,6 +222,8 @@ export class LogsGrid extends Component {
     loadingDirection: PropTypes.string,
     logsSize: PropTypes.string,
     onJumpToLog: PropTypes.func,
+    logLevels: PropTypes.array,
+    logsColorizedBackground: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -223,10 +245,11 @@ export class LogsGrid extends Component {
     loadingDirection: null,
     logsSize: DEFAULT_LOGS_SIZE,
     onJumpToLog: null,
+    logLevels: [],
   };
 
   getConsoleViewColumns = () => {
-    const { logsSize, onJumpToLog } = this.props;
+    const { logsSize, onJumpToLog, logLevels } = this.props;
     return [
       {
         id: 'attachment',
@@ -250,6 +273,7 @@ export class LogsGrid extends Component {
           logsSize,
           gridHeaderCellStyles: cx('header', `column-size-${logsSize}`),
           onJumpToLog,
+          logLevels,
         },
         component: MessageColumn,
       },
@@ -267,7 +291,13 @@ export class LogsGrid extends Component {
   };
 
   getDefaultViewColumns = () => {
-    const { isNestedStepView, rawHeaderCellStylesConfig, logsSize, onJumpToLog } = this.props;
+    const {
+      isNestedStepView,
+      rawHeaderCellStylesConfig,
+      logsSize,
+      onJumpToLog,
+      logLevels,
+    } = this.props;
     const statusColumn = {
       id: STATUS_COLUMN_ID,
       title: {
@@ -305,6 +335,7 @@ export class LogsGrid extends Component {
           logsSize,
           gridHeaderCellStyles: cx('header', `column-size-${logsSize}`),
           onJumpToLog,
+          logLevels,
         },
       },
       {
@@ -328,6 +359,7 @@ export class LogsGrid extends Component {
           rawHeaderCellStylesConfig,
           logsSize,
           gridHeaderCellStyles: cx('header', `column-size-${logsSize}`),
+          logLevels,
         },
       },
     ];
@@ -341,11 +373,20 @@ export class LogsGrid extends Component {
     this.props.consoleView ? this.getConsoleViewColumns() : this.getDefaultViewColumns();
 
   getLogRowClasses = () => {
-    const { consoleView } = this.props;
+    const { consoleView, logsSize } = this.props;
 
     return {
       log: true,
       'row-console': consoleView,
+      [`log-size-${logsSize}`]: logsSize,
+    };
+  };
+
+  getLogRowStyles = (value) => {
+    const { logLevels, logsColorizedBackground } = this.props;
+    const { backgroundColor } = getLogLevelStyles(value?.level, logLevels);
+    return {
+      backgroundColor: logsColorizedBackground && backgroundColor,
     };
   };
 
@@ -421,6 +462,7 @@ export class LogsGrid extends Component {
           loadNext={loadNext}
           loadPrevious={loadPrevious}
           loadingDirection={loadingDirection}
+          rowStylesMapper={this.getLogRowStyles}
         />
         {!logItems.length && !loading && (
           <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />

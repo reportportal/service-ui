@@ -28,6 +28,7 @@ export {
   LOGS_PAGINATION_ENABLED_KEY,
   LOGS_SIZE_KEY,
   LOGS_FULL_WIDTH_MODE_KEY,
+  LOGS_COLORIZED_BACKGROUND_KEY,
 } from './constants';
 export {
   fetchUserAction,
@@ -51,6 +52,7 @@ export {
   setLogsPaginationEnabledAction,
   setLogsSizeAction,
   setLogsFullWidthModeAction,
+  setLogsColorizedBackgroundAction,
 } from './actionCreators';
 export { userReducer } from './reducer';
 export {
@@ -74,6 +76,7 @@ export {
   logsPaginationEnabledSelector,
   logsSizeSelector,
   logsFullWidthModeSelector,
+  logsColorizedBackgroundSelector,
 } from './selectors';
 export { userSagas } from './sagas';
 export {
@@ -85,4 +88,5 @@ export {
   setLogsPaginationEnabledInStorage,
   setLogsSizeInStorage,
   setLogsFullWidthModeInStorage,
+  setLogsColorizedBackgroundInStorage,
 } from './storageUtils';

@@ -16,12 +16,10 @@
 
 .row-wrapper {
   position: relative;
-  border-left: 8px solid $COLOR--orange-red;
+  border-left: 8px solid var(--label-color, $COLOR--orange-red);
+  background-color: var(--background-color, transparent);
   &.with-accordion {
     padding-bottom: 20px;
-  }
-  &.level-fatal {
-    border-left: 8px solid $COLOR--fatal;
   }
 }
 .row {
@@ -47,8 +45,8 @@
   bottom: 0;
   width: calc(100% - 20px);
   height: 20px;
-  background-color: $COLOR--white-two;
-  box-shadow: 0 -15px 20px 0px $COLOR--white-two;
+  background-color: var(--background-color, $COLOR--white-two);
+  box-shadow: 0 -15px 20px 0px var(--background-color, $COLOR--white-two);
   transition: background-color 0.2s ease 0s, box-shadow 0.2s ease 0s;
 
   &.expanded {

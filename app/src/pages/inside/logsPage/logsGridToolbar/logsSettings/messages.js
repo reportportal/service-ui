@@ -29,6 +29,10 @@ export const messages = defineMessages({
     id: 'LogsSettings.fullWidthMode',
     defaultMessage: 'Full-width mode',
   },
+  colorizedBackground: {
+    id: 'LogsSettings.colorizedBackground',
+    defaultMessage: 'Colorized background',
+  },
   pagination: {
     id: 'LogsSettings.pagination',
     defaultMessage: 'Pagination',

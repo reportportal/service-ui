@@ -1393,6 +1393,7 @@
   "LogsGridToolbar.markdownMode": "Режим разметки",
   "LogsGridToolbar.showErrorLog": "Показать",
   "LogsGridToolbar.withAttachments": "Логи с вложениями",
+  "LogsSettings.colorizedBackground": "Цветной фон",
   "LogsSettings.fullWidthMode": "Полный размер",
   "LogsSettings.logAppearance": "Внешний вид логов",
   "LogsSettings.logsSize": "Размер лога",

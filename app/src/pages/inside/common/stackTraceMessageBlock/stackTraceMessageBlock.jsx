@@ -40,6 +40,10 @@ export class StackTraceMessageBlock extends Component {
     eventsInfo: PropTypes.object,
     customProps: PropTypes.object,
     expanded: PropTypes.bool,
+    rowWrapperStyles: PropTypes.shape({
+      labelColor: PropTypes.string,
+      backgroundColor: PropTypes.string,
+    }),
   };
 
   static defaultProps = {
@@ -50,6 +54,7 @@ export class StackTraceMessageBlock extends Component {
     eventsInfo: {},
     customProps: {},
     expanded: false,
+    rowWrapperStyles: {},
   };
 
   constructor(props) {
@@ -112,8 +117,9 @@ export class StackTraceMessageBlock extends Component {
   };
 
   render() {
-    const { children, level, designMode, customProps } = this.props;
+    const { children, level, designMode, customProps, rowWrapperStyles } = this.props;
     const { expanded, withAccordion, maxHeight } = this.state;
+    const { labelColor, backgroundColor } = rowWrapperStyles;
 
     return (
       <div
@@ -124,6 +130,10 @@ export class StackTraceMessageBlock extends Component {
           { [`design-mode-${designMode}`]: designMode },
           customProps.rowWrapper,
         )}
+        style={{
+          '--label-color': labelColor,
+          '--background-color': backgroundColor,
+        }}
       >
         {withAccordion && (
           <div className={cx('accordion-wrapper-mobile')}>

@@ -32,6 +32,10 @@
   './OpenSans-Semibold/OpenSans-Semibold-webfont',
   'open_sanssemibold'
 );
+@font-face {
+  font-family: 'OpenSans-Bold';
+  src: url('./OpenSans-Bold/OpenSans-Bold.ttf') format('truetype');
+}
 @include font-face('OpenSans-Light', './OpenSans-Light/OpenSans-Light-webfont', 'open_sanslight');
 @include font-face(
   'OpenSansCondBold',
@@ -43,6 +47,10 @@
   './Roboto-Mono-Regular/Roboto-Mono-Regular',
   'RobotoMono'
 );
+@font-face {
+  font-family: 'Roboto-Mono-Bold';
+  src: url('./Roboto-Mono-Bold/RobotoMono-Bold.ttf') format('truetype');
+}
 @include font-face('Roboto-Regular', './Roboto-Regular/Roboto-Regular', 'Roboto-Regular');
 @include font-face('Roboto-Medium', './Roboto-Medium/Roboto-Medium', 'Roboto-Medium');
 @include font-face('Roboto-Bold', './Roboto-Bold/Roboto-Bold', 'Roboto-Bold');
