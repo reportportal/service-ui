@@ -17,6 +17,7 @@
 import { CoverStatus } from './coverStatusCard';
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 import { ManualScenario } from 'pages/inside/testCaseLibraryPage/types';
+import { ExecutionStatusType } from './executionStatus';
 
 // TODO: Replace with actual breadcrumb data when available in testPlan DTO
 export const MOCK_BREADCRUMB_PATH = ['Regression Weekly A-team', 'Checkout flow'];
@@ -37,6 +38,13 @@ export const MOCK_COVER_STATUS = CoverStatus.UNCOVERED;
 
 // TODO: Replace with actual tags when available in testPlan DTO
 export const MOCK_TAGS = ['Smoke', 'Regression', 'Payment', 'E2E'];
+
+// TODO: Replace with actual executions data when available in testPlan DTO
+export const MOCK_EXECUTIONS = [
+  { title: '# 70  Regression Instance B', status: ExecutionStatusType.RUNNING },
+  { title: '# 24  Stream B API', status: ExecutionStatusType.PASSED },
+  { title: '# 15  Smoke Test Suite', status: ExecutionStatusType.FAILED },
+];
 
 // TODO: Replace with actual scenario data when available in testPlan DTO
 export const MOCK_SCENARIO: ManualScenario = {

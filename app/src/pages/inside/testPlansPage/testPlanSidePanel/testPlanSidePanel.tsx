@@ -51,8 +51,10 @@ import {
   MOCK_COVER_STATUS,
   MOCK_SCENARIO,
   MOCK_TAGS,
+  MOCK_EXECUTIONS,
 } from './mocks';
 import { CoverStatusCard, CoverStatus } from './coverStatusCard';
+import { ExecutionStatus } from './executionStatus';
 
 import styles from './testPlanSidePanel.scss';
 
@@ -157,7 +159,7 @@ export const TestPlanSidePanel = memo(
           title={formatMessage(messages.executionsInLaunchesTitle)}
           defaultMessage={formatMessage(commonMessages.descriptionNotSpecified)}
         >
-          {/* TODO: Add executions in launches content */}
+          <ExecutionStatus executions={MOCK_EXECUTIONS} />
         </CollapsibleSection>
         <CollapsibleSection
           title={formatMessage(messages.manualScenarioTitle)}
