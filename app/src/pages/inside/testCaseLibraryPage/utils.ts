@@ -16,7 +16,7 @@
 
 import { FolderWithFullPath } from 'controllers/testCase/types';
 import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
-import { Page } from 'pages/inside/testCaseLibraryPage/types';
+import { Page } from 'types/common';
 
 // Going to be resolved to id by folder name with UI search control
 // Currently directly accepts id from name input

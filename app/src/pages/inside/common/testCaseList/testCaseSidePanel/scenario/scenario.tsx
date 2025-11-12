@@ -80,15 +80,21 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
   return (
     <div className={cx('scenario-wrapper')}>
       <div className={cx('scenario', 'full-view')}>
-        <FieldSection title={formatMessage(messages.precondition)} className={cx('sub-header')}>
-          <div className={cx('precondition-text')}>{scenario.preconditions?.value}</div>
-        </FieldSection>
-        <FieldSection title={formatMessage(messages.instructions)} className={cx('sub-header')}>
-          <div className={cx('precondition-text')}>{scenario.instructions}</div>
-        </FieldSection>
-        <FieldSection title={formatMessage(messages.expectedResult)} className={cx('sub-header')}>
-          <div className={cx('precondition-text')}>{scenario.expectedResult}</div>
-        </FieldSection>
+        {scenario.preconditions?.value && (
+          <FieldSection title={formatMessage(messages.precondition)} className={cx('sub-header')}>
+            <div className={cx('precondition-text')}>{scenario.preconditions.value}</div>
+          </FieldSection>
+        )}
+        {scenario.instructions && (
+          <FieldSection title={formatMessage(messages.instructions)} className={cx('sub-header')}>
+            <div className={cx('precondition-text')}>{scenario.instructions}</div>
+          </FieldSection>
+        )}
+        {scenario.expectedResult && (
+          <FieldSection title={formatMessage(messages.expectedResult)} className={cx('sub-header')}>
+            <div className={cx('precondition-text')}>{scenario.expectedResult}</div>
+          </FieldSection>
+        )}
       </div>
     </div>
   );

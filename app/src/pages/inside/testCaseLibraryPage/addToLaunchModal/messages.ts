@@ -19,8 +19,7 @@ import { defineMessages } from 'react-intl';
 export const messages = defineMessages({
   description: {
     id: 'TestCaseLibraryPage.addToLaunchModal.description',
-    defaultMessage:
-      'You are about to add <bold>{testCaseQuantity, number}</bold> selected {testCaseQuantity, plural, one {test case} other {test cases}} to a Launch',
+    defaultMessage: 'You are about to add <bold>{testCaseName}</bold> test case to a Launch',
   },
   launchNameLabel: {
     id: 'TestCaseLibraryPage.addToLaunchModal.launchNameLabel',
@@ -30,9 +29,13 @@ export const messages = defineMessages({
     id: 'TestCaseLibraryPage.addToLaunchModal.launchNamePlaceholder',
     defaultMessage: 'Enter launch name',
   },
+  launchNameExistingPlaceholder: {
+    id: 'TestCaseLibraryPage.addToLaunchModal.launchNameExistingPlaceholder',
+    defaultMessage: 'Search and select launch name',
+  },
   addToLaunchButton: {
     id: 'TestCaseLibraryPage.addToLaunchModal.addToLaunchButton',
-    defaultMessage: 'Add to existed launch',
+    defaultMessage: 'Add to existing launch',
   },
   createNewLaunchButton: {
     id: 'TestCaseLibraryPage.addToLaunchModal.createNewLaunchButton',

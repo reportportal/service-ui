@@ -49,18 +49,20 @@ export const TestCaseExecutionCell = ({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const isTestPlan = instanceKey === INSTANCE_KEYS.TEST_PLAN;
+  // TODO: align this condition to check execution status after BE integration.
+  const isCoveredManually = isTestPlan && testCase.manualScenario.executionEstimationTime > 5;
 
   return (
     <button type="button" className={cx('execution-content')} onClick={onRowClick}>
       <div>
-        {isTestPlan && (
+        {isCoveredManually && (
           <div className={cx('covered-manually')}>
             <CoveredManuallyIcon /> {formatMessage(messages.coveredManually)}
           </div>
         )}
         <div
           className={cx('execution-time', {
-            'execution-time--full-width': isTestPlan,
+            'execution-time--full-width': isCoveredManually,
           })}
         >
           {formatRelativeTime(testCase.updatedAt, locale)}

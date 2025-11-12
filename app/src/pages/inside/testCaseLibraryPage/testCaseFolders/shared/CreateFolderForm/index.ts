@@ -14,17 +14,4 @@
  * limitations under the License.
  */
 
-import { TestPlanDto } from 'controllers/testPlan';
-
-export interface AddToLaunchModalData {
-  testCaseName: string;
-}
-
-export interface AddToLaunchModalProps {
-  data: AddToLaunchModalData;
-}
-
-export interface AddToLaunchFormData {
-  launchName: string;
-  selectedTestPlan: TestPlanDto;
-}
+export { CreateFolderForm } from './createFolderForm';

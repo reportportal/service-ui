@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-import { TestPlanDto } from 'controllers/testPlan';
+import { useModal } from 'common/hooks';
 
-export interface AddToLaunchModalData {
-  testCaseName: string;
-}
+import BatchDuplicateToFolderModal, {
+  BATCH_DUPLICATE_TO_FOLDER_MODAL_KEY,
+  BatchDuplicateToFolderModalData,
+} from './batchDuplicateToFolderModal';
 
-export interface AddToLaunchModalProps {
-  data: AddToLaunchModalData;
-}
-
-export interface AddToLaunchFormData {
-  launchName: string;
-  selectedTestPlan: TestPlanDto;
-}
+export const useBatchDuplicateToFolderModal = () =>
+  useModal<BatchDuplicateToFolderModalData>({
+    modalKey: BATCH_DUPLICATE_TO_FOLDER_MODAL_KEY,
+    renderModal: (data) => <BatchDuplicateToFolderModal data={data} />,
+  });

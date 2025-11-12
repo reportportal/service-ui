@@ -19,7 +19,7 @@ import { useIntl } from 'react-intl';
 import {
   Button,
   RerunIcon,
-  OwnerIcon,
+  UserIcon,
   LaunchTypeIcon,
   TestPlanIcon,
   SidePanel,
@@ -67,12 +67,10 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
     // TODO: Implement to run functionality
   };
 
-  const handleRemoveAttribute = () => {
-    // TODO: Implement remove attribute functionality
-  };
-
   const { totalTests, passedTests, failedTests, skippedTests, testsToRun, inProgressTests } =
     getLaunchStatistics(launch);
+
+  const { testPlan, owner, mode, startTime } = launch;
 
   const descriptionComponent = (
     <div className={cx('header-meta')}>
@@ -80,30 +78,37 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
         <div className={cx('meta-item-row')}>
           <LaunchTypeIcon className={cx('launch-type-icon')} />
           <span className={cx('meta-label')}>{formatMessage(messages.type)}:</span>
-          <span className={cx('meta-value')}>{launch.mode}</span>
+          <span className={cx('meta-value')}>{mode}</span>
         </div>
       </div>
       <div className={cx('meta-row')}>
         <div className={cx('meta-item-row')}>
-          <OwnerIcon />
+          <UserIcon />
           <span className={cx('meta-label')}>{formatMessage(messages.owner)}:</span>
-          <span className={cx('meta-value')}>{launch.owner}</span>
+          <span className={cx('meta-value')}>{owner}</span>
         </div>
       </div>
       <div className={cx('meta-row')}>
         <div className={cx('meta-item-row')}>
           <RerunIcon />
           <span className={cx('meta-label')}>{formatMessage(messages.created)}:</span>
-          <span className={cx('meta-value')}>{formatTimestampForSidePanel(launch.startTime)}</span>
+          <span className={cx('meta-value')}>{formatTimestampForSidePanel(startTime)}</span>
         </div>
       </div>
-      <div className={cx('meta-row')}>
-        <div className={cx('meta-item-row')}>
-          <TestPlanIcon />
-          <span className={cx('meta-label')}>{formatMessage(messages.testPlan)}:</span>
-          <span className={cx('meta-value')}>-</span>
+      {testPlan && (
+        <div className={cx('meta-row')}>
+          <div className={cx('meta-item-row')}>
+            <TestPlanIcon />
+            <span className={cx('meta-label')}>{formatMessage(messages.testPlan)}:</span>
+            <span className={cx('meta-value')}>{testPlan}</span>
+          </div>
         </div>
-      </div>
+      )}
+    </div>
+  );
+
+  const contentComponent = (
+    <div className={cx('content')}>
       <TestStatisticsChart
         total={totalTests}
         passed={passedTests}
@@ -112,11 +117,6 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
         inProgress={inProgressTests}
         toRun={testsToRun}
       />
-    </div>
-  );
-
-  const contentComponent = (
-    <>
       <CollapsibleSection
         title={formatMessage(commonMessages.description)}
         defaultMessage={formatMessage(commonMessages.descriptionNotSpecified)}
@@ -136,13 +136,12 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
                 key={`${attr.key}-${attr.value}`}
                 attributeKey={attr.key}
                 value={attr.value}
-                onRemove={() => handleRemoveAttribute()}
               />
             ))}
           </div>
         )}
       </CollapsibleSection>
-    </>
+    </div>
   );
 
   const footerComponent = (
@@ -159,6 +158,7 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
         variant="primary"
         className={cx('action-button', 'last-button')}
         onClick={handleToRunClick}
+        disabled={testsToRun === 0}
         data-automation-id="launch-to-run"
       >
         {formatMessage(messages.toRunWithCount, { testCount: testsToRun })}

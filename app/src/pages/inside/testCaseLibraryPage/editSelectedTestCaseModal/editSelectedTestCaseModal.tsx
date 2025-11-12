@@ -77,6 +77,9 @@ const EditTestCaseModalComponent = ({
         linkToRequirements: manualScenario?.linkToRequirements,
         precondition: manualScenario?.preconditions?.value,
         preconditionAttachments: manualScenario?.preconditions?.attachments || [],
+        instructions: manualScenario?.instructions,
+        expectedResult: manualScenario?.expectedResult,
+        textAttachments: manualScenario?.attachments || [],
         ...(stepsObject && {
           steps: stepsObject,
         }),

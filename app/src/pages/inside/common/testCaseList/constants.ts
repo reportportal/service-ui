@@ -23,11 +23,11 @@ export const STATUS_TYPES = {
   UNSPECIFIED: 'unspecified',
 } as const;
 
-export const ITEMS_PER_PAGE_OPTIONS: number[] = [10, 25, 50, 100];
+export const ITEMS_PER_PAGE_OPTIONS: number[] = [10, 20, 50, 100];
 
 export const TestCasePageDefaultValues = {
   size: 10,
-  limit: 10,
+  limit: 50,
   offset: 0,
 };
 

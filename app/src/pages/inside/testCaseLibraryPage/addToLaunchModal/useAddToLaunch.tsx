@@ -19,13 +19,12 @@ import { noop } from 'es-toolkit';
 
 import { TestPlanDto } from 'controllers/testPlan';
 
-import { AddToLaunchModalData, AddToLaunchFormData, AddToLaunchModalProps } from './types';
+import { AddToLaunchFormData, AddToLaunchModalProps } from './types';
 import { SELECTED_TEST_PLAN_FIELD_NAME } from './addToLaunchModal';
 
 export const useAddToLaunch = ({
   change,
-}: AddToLaunchModalData &
-  Pick<InjectedFormProps<AddToLaunchFormData, AddToLaunchModalProps>, 'change'>) => {
+}: Pick<InjectedFormProps<AddToLaunchFormData, AddToLaunchModalProps>, 'change'>) => {
   const setSelectedTestPlan = (value: TestPlanDto | null) => {
     change(SELECTED_TEST_PLAN_FIELD_NAME, value || null);
   };

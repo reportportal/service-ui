@@ -377,8 +377,12 @@ export const URLS = {
   testCaseDetails: (projectKey, testCaseId) =>
     `${urlBase}project/${projectKey}/tms/test-case/${testCaseId}`,
   bulkUpdateTestCases: (projectKey) => `${urlBase}project/${projectKey}/tms/test-case/batch`,
+  testCaseBatchDuplicate: (projectKey) =>
+    `${urlBase}project/${projectKey}/tms/test-case/batch/duplicate`,
   testCases: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-case${getQueryParams(query)}`,
+  testPlanTestCases: (projectKey, id) =>
+    `${urlBase}project/${projectKey}/tms/test-plan/${id}/test-case`,
   testPlan: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-plan${getQueryParams(query)}`,
   testPlanTestCasesBatch: (projectKey, testPlanId) =>

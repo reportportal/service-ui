@@ -130,7 +130,7 @@ import { DOCUMENTATION } from 'pages/inside/productVersionPage/constants';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 import { fetchOrganizationEventsDataAction } from '../controllers/instance/actionCreators';
 import { canSeeActivityOption } from 'common/utils/permissions';
-import { getTestPlansAction, getTestPlanAction } from 'controllers/testPlan';
+import { getTestPlansAction, getTestPlanAction, defaultQueryParams } from 'controllers/testPlan';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
   path,
@@ -433,8 +433,10 @@ const routesMap = {
 
   [PROJECT_TEST_PLANS_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug/testPlans',
-    thunk: (dispatch) => {
-      dispatch(getTestPlansAction());
+    thunk: (dispatch, getState) => {
+      const { offset, limit } = getState().location?.query || defaultQueryParams;
+
+      dispatch(getTestPlansAction({ offset, limit }));
     },
   },
   [PROJECT_TEST_PLAN_DETAILS_PAGE]: {

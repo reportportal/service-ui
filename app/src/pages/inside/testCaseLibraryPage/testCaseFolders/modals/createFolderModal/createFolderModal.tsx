@@ -47,7 +47,7 @@ const CreateFolderModal = reduxForm<FolderFormValues>({
       parentFolder: isToggled ? commonValidators.requiredField(parentFolder) : undefined,
     };
   },
-})(({ dirty, handleSubmit, change, untouch }: InjectedFormProps<FolderFormValues>) => {
+})(({ dirty, handleSubmit, change }: InjectedFormProps<FolderFormValues>) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const isCreatingFolder = useSelector(isCreatingFolderSelector);
@@ -68,6 +68,7 @@ const CreateFolderModal = reduxForm<FolderFormValues>({
 
   return (
     <FolderModal
+      formName={CREATE_FORM_NAME}
       title={formatMessage(commonMessages.createFolder)}
       dirty={dirty}
       isLoading={isCreatingFolder}
@@ -76,11 +77,9 @@ const CreateFolderModal = reduxForm<FolderFormValues>({
       toggleFieldName="isToggled"
       parentFolderFieldName={PARENT_FOLDER_FIELD}
       parentFolderFieldLabel={formatMessage(sharedFolderMessages.parentFolder)}
-      formName={CREATE_FORM_NAME}
       handleSubmit={handleSubmit}
       onSubmit={onSubmit}
       change={change}
-      untouch={untouch}
     />
   );
 });

@@ -14,17 +14,22 @@
  * limitations under the License.
  */
 
-import { TestPlanDto } from 'controllers/testPlan';
+.batch-duplicate-modal {
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
 
-export interface AddToLaunchModalData {
-  testCaseName: string;
-}
+  &__description {
+    margin-bottom: 16px;
 
-export interface AddToLaunchModalProps {
-  data: AddToLaunchModalData;
-}
+    b {
+      font-weight: var(--rp-ui-base-fw-bold);
+    }
+  }
 
-export interface AddToLaunchFormData {
-  launchName: string;
-  selectedTestPlan: TestPlanDto;
+  &__autocomplete {
+    margin-top: 0;
+  }
 }

@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import { TestPlanDto } from 'controllers/testPlan';
+.create-folder-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 
-export interface AddToLaunchModalData {
-  testCaseName: string;
-}
+  &__toggle {
+    width: fit-content;
+    margin-top: 8px;
+  }
 
-export interface AddToLaunchModalProps {
-  data: AddToLaunchModalData;
-}
-
-export interface AddToLaunchFormData {
-  launchName: string;
-  selectedTestPlan: TestPlanDto;
+  &__autocomplete {
+    margin-top: 0;
+  }
 }
