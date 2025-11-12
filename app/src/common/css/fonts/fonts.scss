@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+// TODO: Unify fonts or migrate to fonts from ui-kit
+// This file contains multiple font definitions with inconsistent formats.
+// Consider standardizing font loading approach or using shared fonts from ui-kit package.
+
 @mixin font-face($fontFamily, $filePath, $svgMark) {
   @font-face {
     font-family: $fontFamily;
