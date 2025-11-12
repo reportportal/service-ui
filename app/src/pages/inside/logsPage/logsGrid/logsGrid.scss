@@ -44,37 +44,7 @@
     display: block;
     width: 8px;
     border-bottom: 1px solid $COLOR--primary-gray;
-    background-color: $COLOR--e-100;
-  }
-  &.level-fatal {
-    &:before {
-      background-color: $COLOR--fatal;
-    }
-  }
-  &.level-error {
-    &:before {
-      background-color: $COLOR--orange-red;
-    }
-  }
-  &.level-warn {
-    &:before {
-      background-color: $COLOR--to-investigate;
-    }
-  }
-  &.level-trace {
-    &:before {
-      background-color: $COLOR--gray-91;
-    }
-  }
-  &.level-info {
-    &:before {
-      background-color: $COLOR--topaz;
-    }
-  }
-  &.level-debug {
-    &:before {
-      background-color: $COLOR--gray-60;
-    }
+    background-color: var(--label-color, $COLOR--e-100);
   }
 }
 
@@ -166,9 +136,20 @@
   font-size: 12px;
   line-height: 20px;
   font-family: $FONT-MONOSPACE;
+  color: var(--text-color, $COLOR--charcoal-grey);
 
   &.time-column {
     font-family: $FONT-REGULAR;
+  }
+
+  &.bold {
+    &.message-column {
+      font-family: $FONT-MONOSPACE-BOLD;
+    }
+
+    &.time-column {
+      font-family: $FONT-BOLD;
+    }
   }
 }
 

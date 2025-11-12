@@ -55,15 +55,18 @@ export const SET_NO_LOGS_COLLAPSING = 'setNoLogsCollapsing';
 export const SET_LOGS_PAGINATION_ENABLED = 'setLogsPaginationEnabled';
 export const SET_LOGS_SIZE = 'setLogsSize';
 export const SET_LOGS_FULL_WIDTH_MODE = 'setLogsFullWidthMode';
+export const SET_LOGS_COLORIZED_BACKGROUND = 'setLogsColorizedBackground';
 
 export const NO_LOGS_COLLAPSING_KEY = 'noLogsCollapsing';
 export const LOGS_PAGINATION_ENABLED_KEY = 'logsPaginationEnabled';
 export const LOGS_SIZE_KEY = 'logsSize';
 export const LOGS_FULL_WIDTH_MODE_KEY = 'logsFullWidthMode';
+export const LOGS_COLORIZED_BACKGROUND_KEY = 'logsColorizedBackground';
 
 export const ACTIVE_PROJECT_SETTINGS_INITIAL_STATE = {
   [NO_LOGS_COLLAPSING_KEY]: false,
   [LOGS_PAGINATION_ENABLED_KEY]: true,
   [LOGS_SIZE_KEY]: DEFAULT_LOGS_SIZE,
   [LOGS_FULL_WIDTH_MODE_KEY]: false,
+  [LOGS_COLORIZED_BACKGROUND_KEY]: false,
 };

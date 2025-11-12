@@ -60,3 +60,20 @@ export const getLogViewMode = (userId) => getLogViewModeFromStorage(userId) || M
 
 export const setLogViewMode = (userId, viewMode) =>
   updateUserSettingsInStorage(userId, { [LOG_VIEW_MODE_STORAGE_KEY]: viewMode });
+
+export const getLogLevelStyles = (level, logLevels) => {
+  const logLevel = getLogLevelByName(level, logLevels);
+  const {
+    label_color: labelColor,
+    text_color: textColor,
+    text_style: textStyle,
+    background_color: backgroundColor,
+  } = logLevel?.style || {};
+
+  return {
+    labelColor,
+    textColor,
+    textStyle,
+    backgroundColor,
+  };
+};

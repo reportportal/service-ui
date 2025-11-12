@@ -65,7 +65,7 @@ $LEVEL_OFFSET_STEP: 20px;
 .grid-row-wrapper {
   display: table-row-group;
   border-bottom: 1px solid $COLOR--primary-gray;
-  background-color: $COLOR--white-two;
+  background-color: var(--background-color, $COLOR--white-two);
   transition: background-color 0.2s ease 0s;
 
   &.selected {
@@ -139,20 +139,15 @@ $LEVEL_OFFSET_STEP: 20px;
   bottom: 0;
   width: calc(100% - 24px);
   height: 20px;
-  background-color: $COLOR--white-two;
-  box-shadow: 0 -15px 20px 0px $COLOR--white-two;
+  background-color: var(--background-color, $COLOR--white-two);
+  box-shadow: 0 -15px 20px 0px var(--background-color, $COLOR--white-two);
   transition: background-color 0.2s ease 0s, box-shadow 0.2s ease 0s, opacity 2s ease 0.1s;
   opacity: 1;
 
-  &.highlight {
-    opacity: 0;
-  }
-
+  &.highlight,
   &.highlight-error-row {
-    left: 8px;
-    width: calc(100% - 8px);
-    background-color: $COLOR--white-two;
-    box-shadow: 0 -15px 20px 0px $COLOR--white-two;
+    opacity: 0;
+    transition: opacity 0.01s linear;
   }
 
   &.expanded {
@@ -218,6 +213,18 @@ $LEVEL_OFFSET_STEP: 20px;
     @media (max-width: $SCREEN_SM_MAX) {
       bottom: 0;
     }
+    @media (max-width: $SCREEN_XS_MAX) {
+      bottom: 64px;
+    }
+  }
+
+  &.log-size-small .accordion-block {
+    @media (max-width: $SCREEN_XS_MAX) {
+      bottom: 30px;
+    }
+  }
+
+  &.log-size-medium .accordion-block {
     @media (max-width: $SCREEN_XS_MAX) {
       bottom: 64px;
     }

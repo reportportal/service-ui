@@ -18,7 +18,7 @@
   display: flex;
   gap: 4px;
   overflow: hidden;
-  color: $COLOR--charcoal-grey;
+  color: inherit;
   word-break: break-all;
   white-space: pre-wrap;
 
@@ -57,6 +57,7 @@
   font-size: inherit;
   line-height: inherit;
   font-family: inherit;
+  color: inherit;
 
   p {
     line-height: inherit;

@@ -24,6 +24,7 @@ import {
   NO_LOGS_COLLAPSING_KEY,
   LOGS_PAGINATION_ENABLED_KEY,
   LOGS_FULL_WIDTH_MODE_KEY,
+  LOGS_COLORIZED_BACKGROUND_KEY,
   START_TIME_FORMAT_ABSOLUTE,
   START_TIME_FORMAT_RELATIVE,
 } from './constants';
@@ -83,3 +84,6 @@ export const logsSizeSelector = (state) =>
 
 export const logsFullWidthModeSelector = (state) =>
   activeProjectSettingsSelector(state)?.[LOGS_FULL_WIDTH_MODE_KEY] || false;
+
+export const logsColorizedBackgroundSelector = (state) =>
+  activeProjectSettingsSelector(state)?.[LOGS_COLORIZED_BACKGROUND_KEY] || false;

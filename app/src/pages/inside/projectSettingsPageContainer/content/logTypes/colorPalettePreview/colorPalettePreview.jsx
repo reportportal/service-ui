@@ -25,8 +25,8 @@ const cx = classNames.bind(styles);
 export const ColorPalettePreview = ({ backgroundColor, color, borderColor, fontWeight, text }) => {
   return (
     <div className={cx('sample-container')}>
-      <div className={cx('log-sample')} style={{ backgroundColor, color, borderColor, fontWeight }}>
-        <MarkdownViewer className={cx('log-text')} value={text} />
+      <div className={cx('log-sample')} style={{ backgroundColor, color, borderColor }}>
+        <MarkdownViewer className={cx('log-text', { bold: fontWeight === 'bold' })} value={text} />
       </div>
     </div>
   );

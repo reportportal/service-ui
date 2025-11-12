@@ -28,6 +28,7 @@ import {
   setLogsPaginationEnabledInStorage,
   setLogsSizeInStorage,
   setLogsFullWidthModeInStorage,
+  setLogsColorizedBackgroundInStorage,
 } from './storageUtils';
 import {
   ASSIGN_TO_PROJECT,
@@ -42,10 +43,12 @@ import {
   SET_LOGS_PAGINATION_ENABLED,
   SET_LOGS_SIZE,
   SET_LOGS_FULL_WIDTH_MODE,
+  SET_LOGS_COLORIZED_BACKGROUND,
   LOGS_SIZE_KEY,
   NO_LOGS_COLLAPSING_KEY,
   LOGS_PAGINATION_ENABLED_KEY,
   LOGS_FULL_WIDTH_MODE_KEY,
+  LOGS_COLORIZED_BACKGROUND_KEY,
 } from './constants';
 import {
   assignToProjectSuccessAction,
@@ -206,6 +209,14 @@ function* setLogsFullWidthMode({ payload }) {
   });
 }
 
+function* setLogsColorizedBackground({ payload }) {
+  yield call(updateLogsSetting, {
+    payload,
+    setInStorage: setLogsColorizedBackgroundInStorage,
+    settingKey: LOGS_COLORIZED_BACKGROUND_KEY,
+  });
+}
+
 function* addApiKey({ payload = {} }) {
   const { name, successMessage, errorMessage, onSuccess } = payload;
   const user = yield select(userInfoSelector);
@@ -344,6 +355,10 @@ function* watchSetLogsFullWidthMode() {
   yield takeEvery(SET_LOGS_FULL_WIDTH_MODE, setLogsFullWidthMode);
 }
 
+function* watchSetLogsColorizedBackground() {
+  yield takeEvery(SET_LOGS_COLORIZED_BACKGROUND, setLogsColorizedBackground);
+}
+
 function* watchFetchUser() {
   yield takeEvery(FETCH_USER, fetchUserWorker);
 }
@@ -366,6 +381,7 @@ export function* userSagas() {
     watchSetLogsPagination(),
     watchSetLogsSize(),
     watchSetLogsFullWidthMode(),
+    watchSetLogsColorizedBackground(),
     watchAddApiKey(),
     watchFetchApiKeys(),
     watchDeleteApiKey(),

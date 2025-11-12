@@ -278,6 +278,12 @@ export const LOG_PAGE_EVENTS = {
     place: 'settings',
     status: isEnabled ? 'enabled' : 'disabled',
   }),
+  getToggleColorizedBackgroundEvent: (isEnabled) => ({
+    ...basicLogPageClickEventParameters,
+    element_name: 'colorized_background',
+    place: 'settings',
+    status: isEnabled ? 'enabled' : 'disabled',
+  }),
   ENTER_LOG_MSG_FILTER: {
     ...basicLogPageClickEventParameters,
     place: 'all_logs',

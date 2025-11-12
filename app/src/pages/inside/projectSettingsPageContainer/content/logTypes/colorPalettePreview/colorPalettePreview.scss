@@ -35,6 +35,10 @@
       line-height: 18px;
       color: inherit;
 
+      &.bold {
+        font-family: $FONT-MONOSPACE-BOLD;
+      }
+
       p {
         line-height: inherit;
         font-weight: inherit;

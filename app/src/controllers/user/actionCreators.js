@@ -40,6 +40,7 @@ import {
   SET_LOGS_PAGINATION_ENABLED,
   SET_LOGS_SIZE,
   SET_LOGS_FULL_WIDTH_MODE,
+  SET_LOGS_COLORIZED_BACKGROUND,
 } from './constants';
 
 export const fetchUserSuccessAction = (user) => ({
@@ -157,5 +158,10 @@ export const setLogsSizeAction = (value) => ({
 
 export const setLogsFullWidthModeAction = (value) => ({
   type: SET_LOGS_FULL_WIDTH_MODE,
+  payload: { value },
+});
+
+export const setLogsColorizedBackgroundAction = (value) => ({
+  type: SET_LOGS_COLORIZED_BACKGROUND,
   payload: { value },
 });

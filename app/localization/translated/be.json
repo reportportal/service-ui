@@ -1393,6 +1393,7 @@
   "LogsGridToolbar.markdownMode": "Рэжым разметкі",
   "LogsGridToolbar.showErrorLog": "Паказаць",
   "LogsGridToolbar.withAttachments": "Логі з ўкладаннямі",
+  "LogsSettings.colorizedBackground": "Каляровы фон",
   "LogsSettings.fullWidthMode": "Поўнапамерны варыянт",
   "LogsSettings.logAppearance": "Выгляд лагаў",
   "LogsSettings.logsSize": "Памер лагу",

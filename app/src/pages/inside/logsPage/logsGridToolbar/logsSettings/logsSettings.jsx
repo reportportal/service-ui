@@ -34,6 +34,8 @@ import {
   setLogsSizeAction,
   logsFullWidthModeSelector,
   setLogsFullWidthModeAction,
+  logsColorizedBackgroundSelector,
+  setLogsColorizedBackgroundAction,
 } from 'controllers/user';
 import SettingsIcon from 'common/img/settings-icon-inline.svg';
 import { PaginationControl } from './paginationControl';
@@ -56,6 +58,7 @@ export const LogsSettings = ({ isConsoleViewMode }) => {
   const noLogsCollapsing = useSelector(noLogsCollapsingSelector);
   const logsSize = useSelector(logsSizeSelector);
   const logsFullWidthMode = useSelector(logsFullWidthModeSelector);
+  const logsColorizedBackground = useSelector(logsColorizedBackgroundSelector);
   const [isOpened, setOpened] = useState(false);
   const containerRef = useRef(null);
 
@@ -99,6 +102,13 @@ export const LogsSettings = ({ isConsoleViewMode }) => {
     closeDropdown();
   };
 
+  const toggleColorizedBackground = () => {
+    const newValue = !logsColorizedBackground;
+    trackEvent(LOG_PAGE_EVENTS.getToggleColorizedBackgroundEvent(newValue));
+    dispatch(setLogsColorizedBackgroundAction(newValue));
+    closeDropdown();
+  };
+
   return (
     <Manager>
       <div ref={containerRef} className={cx('logs-settings-container')}>
@@ -138,6 +148,14 @@ export const LogsSettings = ({ isConsoleViewMode }) => {
                   <div className={cx('item')}>
                     <InputCheckbox value={logsFullWidthMode} onChange={toggleFullWidthMode}>
                       {formatMessage(messages.fullWidthMode)}
+                    </InputCheckbox>
+                  </div>
+                  <div className={cx('item')}>
+                    <InputCheckbox
+                      value={logsColorizedBackground}
+                      onChange={toggleColorizedBackground}
+                    >
+                      {formatMessage(messages.colorizedBackground)}
                     </InputCheckbox>
                   </div>
                   {!isConsoleViewMode && (

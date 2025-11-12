@@ -36,8 +36,10 @@ import {
   activeRetryIdSelector,
 } from 'controllers/log';
 import { logStackTraceAddonSelector } from 'controllers/plugins/uiExtensions';
-import { logsSizeSelector } from 'controllers/user';
+import { logsSizeSelector, logsColorizedBackgroundSelector } from 'controllers/user';
+import { logTypesSelector } from 'controllers/project';
 import { DEFAULT_LOGS_SIZE } from 'common/constants/logsSettings';
+import { getLogLevelStyles } from 'controllers/log/storageUtils';
 import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import NavigateArrowIcon from 'common/img/navigate-arrow-inline.svg';
@@ -76,6 +78,8 @@ const LOAD_MORE_HEIGHT = 32;
     retryId: activeRetryIdSelector(state),
     extensions: logStackTraceAddonSelector(state),
     logsSize: logsSizeSelector(state),
+    logLevels: logTypesSelector(state),
+    logsColorizedBackground: logsColorizedBackgroundSelector(state),
   }),
   {
     fetchLogPageStackTrace,
@@ -106,6 +110,8 @@ export class StackTrace extends Component {
     extensions: PropTypes.arrayOf(extensionType),
     logsSize: PropTypes.string,
     expanded: PropTypes.bool,
+    logLevels: PropTypes.array,
+    logsColorizedBackground: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -123,6 +129,8 @@ export class StackTrace extends Component {
     extensions: [],
     logsSize: DEFAULT_LOGS_SIZE,
     expanded: false,
+    logLevels: [],
+    logsColorizedBackground: false,
   };
 
   componentDidMount() {
@@ -170,8 +178,21 @@ export class StackTrace extends Component {
   };
 
   createStackTraceItem = (item, { extraRow, extraCell } = {}) => {
-    const { intl, hideAdditionalCells, designMode, eventsInfo, logsSize, expanded } = this.props;
+    const {
+      intl,
+      hideAdditionalCells,
+      designMode,
+      eventsInfo,
+      logsSize,
+      expanded,
+      logLevels,
+      logsColorizedBackground,
+    } = this.props;
     const maxRowHeight = this.getMaxRowHeight();
+    const { labelColor, textColor, textStyle, backgroundColor } = getLogLevelStyles(
+      item?.level,
+      logLevels,
+    );
 
     return (
       <>
@@ -182,8 +203,19 @@ export class StackTrace extends Component {
           designMode={designMode}
           eventsInfo={eventsInfo}
           expanded={expanded}
+          rowWrapperStyles={{
+            labelColor,
+            backgroundColor: logsColorizedBackground && backgroundColor,
+          }}
         >
-          <div className={cx('message-container', `container-size-${logsSize}`)}>
+          <div
+            className={cx('message-container', `container-size-${logsSize}`, {
+              bold: textStyle === 'bold',
+            })}
+            style={{
+              '--text-color': textColor,
+            }}
+          >
             <div className={cx('cell', 'message-cell')}>{item.message}</div>
             {!hideAdditionalCells && (
               <>

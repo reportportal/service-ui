@@ -36,6 +36,11 @@
   line-height: 20px;
   font-family: $FONT-MONOSPACE;
   max-width: calc(100% - 25px);
+  color: var(--text-color, $COLOR--charcoal-grey);
+
+  .bold & {
+    font-family: $FONT-MONOSPACE-BOLD;
+  }
 }
 
 .message-cell {
@@ -50,6 +55,10 @@
 .time-cell {
   white-space: nowrap;
   font-family: $FONT-REGULAR;
+
+  .bold & {
+    font-family: $FONT-BOLD;
+  }
 }
 
 .navigate-btn {

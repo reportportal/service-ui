@@ -63,6 +63,7 @@ export class GridRow extends Component {
     }),
     expanded: PropTypes.bool,
     setHighlighting: PropTypes.func,
+    rowStylesMapper: PropTypes.func,
   };
 
   static defaultProps = {
@@ -89,6 +90,7 @@ export class GridRow extends Component {
     itemIntoViewId: null,
     expanded: false,
     setHighlighting: () => {},
+    rowStylesMapper: () => {},
   };
 
   state = {
@@ -221,10 +223,13 @@ export class GridRow extends Component {
       descriptionConfig,
       itemIntoViewRef,
       itemIntoViewId,
+      rowStylesMapper,
     } = this.props;
 
     const { expanded } = this.state;
     const customClasses = rowClassMapper?.(value) || {};
+    const isSelected = this.isItemSelected();
+    const { backgroundColor } = rowStylesMapper(value) || {};
 
     return (
       <div
@@ -235,6 +240,9 @@ export class GridRow extends Component {
         data-id={value.id}
         ref={this.rowRef}
         onClick={onClickRow ? this.handleRowClick : null}
+        style={{
+          '--background-color': !isSelected && backgroundColor,
+        }}
       >
         {this.state.withAccordion && (
           <div className={cx('accordion-wrapper-mobile')}>
