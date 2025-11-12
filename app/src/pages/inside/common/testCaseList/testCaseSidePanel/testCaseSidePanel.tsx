@@ -28,7 +28,7 @@ import {
 } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
-import { createClassnames } from 'common/utils';
+import { createClassnames, copyToClipboard } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useOnClickOutside } from 'common/hooks';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
@@ -219,7 +219,7 @@ export const TestCaseSidePanel = memo(
     };
 
     const handleCopyId = async () => {
-      await navigator.clipboard.writeText(testCase.id.toString());
+      await copyToClipboard(testCase.id.toString());
     };
 
     return (

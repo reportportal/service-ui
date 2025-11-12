@@ -54,6 +54,12 @@
 
     &--danger {
       color: var(--rp-ui-base-error);
+
+      &:hover,
+      &:active,
+      &:focus {
+        color: var(--rp-ui-base-error);
+      }
     }
   }
 }
