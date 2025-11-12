@@ -21,6 +21,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { SectionWithHeader } from '../sectionWithHeader';
 import { InfoBlock } from '../infoBlock';
 import { messages } from '../testCaseDetailsPage/messages';
+import { commonMessages } from 'pages/inside/common/common-messages';
 
 interface EditableDescriptionSectionProps {
   onAddDescription: () => void;
@@ -41,7 +42,7 @@ export const EditableDescriptionSection = ({
 
   return (
     <SectionWithHeader
-      title={formatMessage(messages.description)}
+      title={formatMessage(commonMessages.description)}
       headerControl={headerControl}
       className={className}
       variant="sidebar"
