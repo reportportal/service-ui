@@ -70,6 +70,7 @@ import {
   userIdSelector,
   getUserProjectSettingsFromStorage,
   updateUserProjectSettingsInStorage,
+  logsSizeSelector,
 } from 'controllers/user';
 import {
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
@@ -386,6 +387,7 @@ export const createImportProps = (pluginName) => ({
     launchSelector,
     publicPluginsSelector,
     querySelector,
+    logsSizeSelector,
   },
   icons: {
     PlusIcon,
