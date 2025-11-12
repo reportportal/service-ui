@@ -38,6 +38,7 @@ import {
   Modal as ModalLayoutComponent,
 } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { ALL } from 'common/constants/reservedFilterIds';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { BigButton } from 'components/buttons/bigButton';
 import { NavigationTabs } from 'components/main/navigationTabs';
@@ -130,6 +131,7 @@ import {
   updateConfigurationAttributesAction,
 } from 'controllers/project';
 import { statisticsLinkSelector, defectLinkSelector, launchSelector } from 'controllers/testItem';
+import { NameLink } from 'pages/inside/common/nameLink';
 import { Grid } from 'components/main/grid';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { AttributeListContainer as AttributeListField } from 'components/containers/attributeListContainer';
@@ -278,6 +280,7 @@ export const createImportProps = (pluginName) => ({
     FieldErrorHint,
     SimpleBreadcrumbs,
     Link,
+    NameLink,
     Grid,
     PaginationToolbar,
     ProjectName,
@@ -330,6 +333,7 @@ export const createImportProps = (pluginName) => ({
     COMMON_LOCALE_KEYS,
     PLUGIN_UI_EXTENSION_ADMIN_PAGE,
     PROJECT_SETTINGS_TAB_PAGE,
+    ALL,
     DEFECT_TYPES_SEQUENCE,
     TO_INVESTIGATE,
     STATS_PB_TOTAL,
