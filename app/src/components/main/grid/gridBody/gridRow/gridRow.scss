@@ -250,7 +250,7 @@ $LEVEL_OFFSET_STEP: 20px;
 }
 
 .row-console {
-  background: none;
+  background: var(--background-color, none);
 
   &::after {
     display: none;
@@ -270,7 +270,7 @@ $LEVEL_OFFSET_STEP: 20px;
   }
 
   &:hover {
-    background: none;
+    background: var(--background-color, none);
   }
 }
 
