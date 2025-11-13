@@ -84,6 +84,7 @@ export const RuleItem = ({
       <div
         className={cx('panel-wrapper', itemClassNames.panelWrapper, {
           'preview-wrapper': isPreview,
+          [itemClassNames.panelPreviewWrapper]: isPreview,
         })}
       >
         <div
