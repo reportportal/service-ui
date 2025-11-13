@@ -30,6 +30,7 @@ import { commonMessages } from '../../commonMessages';
 import { ActionButton } from '../../types';
 
 import styles from './folderEmptyState.scss';
+import { useImportTestCaseModal } from 'pages/inside/testCaseLibraryPage/importTestCaseModal';
 
 const cx = createClassnames(styles);
 
