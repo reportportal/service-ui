@@ -29,6 +29,7 @@ import { commonMessages } from '../../commonMessages';
 import { ActionButton } from '../../types';
 
 import styles from './folderEmptyState.scss';
+import { useImportTestCaseModal } from 'pages/inside/testCaseLibraryPage/importTestCaseModal';
 
 const cx = createClassnames(styles);
 
@@ -40,6 +41,7 @@ export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
   const { formatMessage } = useIntl();
   const { canCreateTestCase, canImportTestCases } = useUserPermissions();
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
+  const { openModal: openImportTestCaseModal } = useImportTestCaseModal();
 
   const getAvailableButtons = () => {
     const buttons: ActionButton[] = [];
@@ -61,7 +63,7 @@ export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
         variant: 'ghost',
         icon: ImportIcon,
         isCompact: true,
-        handleButton: () => {},
+        handleButton: () => openImportTestCaseModal({ folderName: folderTitle ?? '' }),
       });
     }
 
