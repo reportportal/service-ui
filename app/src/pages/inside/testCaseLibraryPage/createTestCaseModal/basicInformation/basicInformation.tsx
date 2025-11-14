@@ -22,10 +22,10 @@ import { createClassnames } from 'common/utils';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { EditableTagsSection } from 'pages/inside/testCaseLibraryPage/editableTagsSection';
 import { CreateFolderAutocomplete } from 'pages/inside/testCaseLibraryPage/testCaseFolders/shared/CreateFolderAutocomplete';
+import { commonMessages as globalCommonMessages } from 'pages/inside/common/common-messages';
 
 import { messages } from './messages';
 import { commonMessages } from '../../commonMessages';
-import { commonMessages as globalCommonMessages } from 'pages/inside/common/common-messages';
 import { PrioritySelect } from '../../prioritySelect/prioritySelect';
 
 import styles from './basicInformation.scss';

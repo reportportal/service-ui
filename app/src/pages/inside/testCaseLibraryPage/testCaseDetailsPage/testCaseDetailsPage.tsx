@@ -31,8 +31,8 @@ import { mockedTestCaseDescription } from 'pages/inside/common/testCaseList/cons
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { testCaseDetailsSelector } from 'controllers/testCase';
-
 import { commonMessages } from 'pages/inside/common/common-messages';
+
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
 import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';

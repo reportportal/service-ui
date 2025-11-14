@@ -22,19 +22,14 @@ import { createClassnames } from 'common/utils';
 
 import { CoverStatus } from './types';
 import { messages } from './messages';
+
 import styles from './coverStatusCard.scss';
 
 const cx = createClassnames(styles);
 
-const getIconByStatus = (status: CoverStatus) => {
-  switch (status) {
-    case CoverStatus.MANUAL_COVERED:
-      return CoveredManuallyIcon;
-    case CoverStatus.UNCOVERED:
-      return CoverageFullIcon;
-    default:
-      return CoverageFullIcon;
-  }
+const statusMap = {
+  [CoverStatus.MANUAL_COVERED]: CoveredManuallyIcon,
+  [CoverStatus.UNCOVERED]: CoverageFullIcon,
 };
 
 interface CoverStatusCardProps {
@@ -44,14 +39,14 @@ interface CoverStatusCardProps {
 export const CoverStatusCard = memo(({ status }: CoverStatusCardProps) => {
   const { formatMessage } = useIntl();
   const isManualCovered = status === CoverStatus.MANUAL_COVERED;
-  const Icon = getIconByStatus(status);
+  const Icon = statusMap[status] || CoverageFullIcon;
 
   return (
     <div className={cx('cover-status-card')}>
-      <div className={cx('icon-wrapper', { 'manual-covered': isManualCovered })}>
+      <div className={cx('icon-wrapper', { 'is-manual-covered': isManualCovered })}>
         <Icon />
       </div>
-      <div className={cx('title', { 'manual-covered': isManualCovered })}>
+      <div className={cx('title', { 'is-manual-covered': isManualCovered })}>
         {formatMessage(isManualCovered ? messages.coveredManually : messages.uncovered)}
       </div>
       <div className={cx('subtitle')}>

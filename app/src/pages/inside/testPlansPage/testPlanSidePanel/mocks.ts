@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { CoverStatus } from './coverStatusCard';
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 import { ManualScenario } from 'pages/inside/testCaseLibraryPage/types';
+
+import { CoverStatus } from './coverStatusCard';
 import { ExecutionStatusType } from './executionStatus';
 
 export const MOCK_BREADCRUMB_PATH = ['Regression Weekly A-team', 'Checkout flow'];
@@ -39,7 +40,7 @@ export const MOCK_EXECUTIONS = [
   { title: '# 15  Smoke Test Suite', status: ExecutionStatusType.FAILED },
 ];
 
-export const MOCK_SCENARIO: ManualScenario = {
+export const MOCK_SCENARIO = {
   manualScenarioType: TestCaseManualScenario.STEPS,
   id: 1,
   executionEstimationTime: 960000,
@@ -69,4 +70,4 @@ export const MOCK_SCENARIO: ManualScenario = {
       position: 2,
     },
   ],
-};
+} satisfies ManualScenario;

@@ -15,7 +15,7 @@
  */
 
 import { RowData } from '@reportportal/ui-kit/components/table/types';
-import { ReactNode, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import { createClassnames } from 'common/utils';
@@ -24,29 +24,11 @@ import { isEnterOrSpaceKey } from 'common/utils/helperUtils/event.utils';
 
 import { ProgressBar } from '../progressBar';
 import { TestPlanActions } from '../../testPlanActions';
+import { ClickableCell } from '../clickableCell';
 
 import styles from '../testPlansTable.scss';
 
 const cx = createClassnames(styles);
-
-interface ClickableCellProps {
-  isSelected: boolean;
-  onClick: () => void;
-  onKeyDown: (e: React.KeyboardEvent) => void;
-  children: ReactNode;
-}
-
-const ClickableCell = ({ isSelected, onClick, onKeyDown, children }: ClickableCellProps) => (
-  <div
-    className={cx('cell-content', { selected: isSelected })}
-    onClick={onClick}
-    role="button"
-    tabIndex={0}
-    onKeyDown={onKeyDown}
-  >
-    {children}
-  </div>
-);
 
 interface UseTestPlansTableDataProps {
   testPlans: TestPlanDto[];

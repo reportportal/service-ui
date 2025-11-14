@@ -71,6 +71,7 @@ const safeGetMessage = (
 ): string => {
   const allMessages: Record<string, MessageDescriptor> = { ...messages, ...commonMessages };
   const messageDescriptor = allMessages[key];
+
   return messageDescriptor ? formatMessage(messageDescriptor) : key;
 };
 

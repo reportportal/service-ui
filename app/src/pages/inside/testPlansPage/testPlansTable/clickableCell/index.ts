@@ -14,10 +14,4 @@
  * limitations under the License.
  */
 
-export const copyToClipboard = async (text: string): Promise<void> => {
-  if (!navigator.clipboard && !navigator.clipboard.writeText) {
-    console.error('Clipboard API not supported.');
-  } else {
-    await navigator.clipboard.writeText(text);
-  }
-};
+export { ClickableCell } from './clickableCell';

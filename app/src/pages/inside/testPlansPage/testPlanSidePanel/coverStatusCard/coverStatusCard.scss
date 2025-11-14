@@ -40,8 +40,7 @@
       fill: var(--rp-ui-base-e-300);
     }
 
-    &.manual-covered svg > path,
-    &.manual-covered svg > rect {
+    &.is-manual-covered svg > :is(path, rect) {
       fill: var(--rp-ui-base-purple-600);
     }
   }
@@ -53,7 +52,7 @@
     text-align: center;
     color: var(--rp-ui-base-almost-black);
 
-    &.manual-covered {
+    &.is-manual-covered {
       color: var(--rp-ui-base-purple-600);
     }
   }

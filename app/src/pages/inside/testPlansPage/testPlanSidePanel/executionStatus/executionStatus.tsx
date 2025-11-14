@@ -17,10 +17,10 @@
 import { memo } from 'react';
 
 import { createClassnames } from 'common/utils';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { ExecutionStatusType } from './types';
 import styles from './executionStatus.scss';
-import { isEmpty } from 'es-toolkit/compat';
 
 const cx = createClassnames(styles);
 
@@ -33,19 +33,11 @@ interface ExecutionStatusProps {
   executions: ExecutionItem[];
 }
 
-const getStatusColor = (status: ExecutionStatusType): string => {
-  switch (status) {
-    case ExecutionStatusType.PASSED:
-      return 'var(--rp-ui-base-test-execution-status-passed)';
-    case ExecutionStatusType.FAILED:
-      return 'var(--rp-ui-base-error)';
-    case ExecutionStatusType.RUNNING:
-      return 'var(--rp-ui-base-topaz-focused)';
-    case ExecutionStatusType.SKIPPED:
-      return 'var(--rp-ui-base-e-400)';
-    default:
-      return 'var(--rp-ui-base-e-400)';
-  }
+const STATUS_COLOR_MAP: Record<ExecutionStatusType, string> = {
+  [ExecutionStatusType.PASSED]: 'var(--rp-ui-base-test-execution-status-passed)',
+  [ExecutionStatusType.FAILED]: 'var(--rp-ui-base-error)',
+  [ExecutionStatusType.RUNNING]: 'var(--rp-ui-base-topaz-focused)',
+  [ExecutionStatusType.SKIPPED]: 'var(--rp-ui-base-e-400)',
 };
 
 export const ExecutionStatus = memo(({ executions }: ExecutionStatusProps) => {
@@ -60,7 +52,9 @@ export const ExecutionStatus = memo(({ executions }: ExecutionStatusProps) => {
           <span className={cx('execution-title')}>{execution.title}</span>
           <div
             className={cx('status-indicator')}
-            style={{ backgroundColor: getStatusColor(execution.status) }}
+            style={{
+              backgroundColor: STATUS_COLOR_MAP[execution.status] || 'var(--rp-ui-base-e-400)',
+            }}
           />
         </div>
       ))}

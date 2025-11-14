@@ -16,12 +16,13 @@
 
 import { useIntl } from 'react-intl';
 import { Button, PlusIcon } from '@reportportal/ui-kit';
+
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { commonMessages } from 'pages/inside/common/common-messages';
 
 import { SectionWithHeader } from '../sectionWithHeader';
 import { InfoBlock } from '../infoBlock';
 import { messages } from '../testCaseDetailsPage/messages';
-import { commonMessages } from 'pages/inside/common/common-messages';
 
 interface EditableDescriptionSectionProps {
   onAddDescription: () => void;
