@@ -61,4 +61,12 @@ export const commonMessages = defineMessages({
     id: 'Common.moreActions',
     defaultMessage: 'More actions',
   },
+  coveredManually: {
+    id: 'Common.coveredManually',
+    defaultMessage: 'Covered manually',
+  },
+  noTagsAdded: {
+    id: 'Common.noTagsAdded',
+    defaultMessage: 'No tags added',
+  },
 });

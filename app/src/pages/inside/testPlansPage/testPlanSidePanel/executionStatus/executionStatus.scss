@@ -27,7 +27,7 @@
   padding: 12px 16px;
   background-color: var(--rp-ui-base-bg-000);
   border-radius: 4px;
-  box-shadow: 0 1px 3px 0 rgba(55, 67, 98, 0.1);
+  box-shadow: 0 1px 3px 0 var(--rp-ui-base-shadow);
 
   .execution-title {
     font-family: $FONT-ROBOTO-MEDIUM;
@@ -42,5 +42,25 @@
     height: 12px;
     border-radius: 50%;
     flex-shrink: 0;
+
+    &--passed {
+      background-color: var(--rp-ui-base-test-execution-status-passed);
+    }
+
+    &--failed {
+      background-color: var(--rp-ui-base-error);
+    }
+
+    &--running {
+      background-color: var(--rp-ui-base-topaz-focused);
+    }
+
+    &--skipped {
+      background-color: var(--rp-ui-base-e-400);
+    }
+
+    &--default {
+      background-color: var(--rp-ui-base-e-400);
+    }
   }
 }

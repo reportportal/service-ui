@@ -17,10 +17,6 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  noTagsAdded: {
-    id: 'EditTestCasePage.noTagsAdded',
-    defaultMessage: 'No tags added yet',
-  },
   noDescriptionAdded: {
     id: 'EditTestCasePage.noDescriptionAdded',
     defaultMessage: 'No description added',

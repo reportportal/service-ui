@@ -17,10 +17,6 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  coveredManually: {
-    id: 'CoverStatusCard.coveredManually',
-    defaultMessage: 'Covered manually',
-  },
   testFullyCovered: {
     id: 'CoverStatusCard.testFullyCovered',
     defaultMessage: 'Test fully covered',

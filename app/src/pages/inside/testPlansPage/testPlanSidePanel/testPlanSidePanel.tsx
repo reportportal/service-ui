@@ -167,7 +167,7 @@ export const TestPlanSidePanel = memo(
         </CollapsibleSection>
         <CollapsibleSection
           title={formatMessage(commonMessages.tags)}
-          defaultMessage={formatMessage(messages.noTagsAdded)}
+          defaultMessage={formatMessage(commonMessages.noTagsAdded)}
         >
           {!isEmpty(MOCK_TAGS) && <AdaptiveTagList tags={MOCK_TAGS} isShowAllView />}
         </CollapsibleSection>

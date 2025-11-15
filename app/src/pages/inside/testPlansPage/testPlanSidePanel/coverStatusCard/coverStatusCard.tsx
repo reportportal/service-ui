@@ -19,6 +19,7 @@ import { useIntl } from 'react-intl';
 import { CoveredManuallyIcon, CoverageFullIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
+import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 
 import { CoverStatus } from './types';
 import { messages } from './messages';
@@ -47,7 +48,7 @@ export const CoverStatusCard = memo(({ status }: CoverStatusCardProps) => {
         <Icon />
       </div>
       <div className={cx('title', { 'is-manual-covered': isManualCovered })}>
-        {formatMessage(isManualCovered ? messages.coveredManually : messages.uncovered)}
+        {formatMessage(isManualCovered ? commonMessages.coveredManually : messages.uncovered)}
       </div>
       <div className={cx('subtitle')}>
         {formatMessage(isManualCovered ? messages.testFullyCovered : messages.noExecutionsYet)}

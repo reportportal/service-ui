@@ -33,10 +33,6 @@ export const messages = defineMessages({
     id: 'TestPlanSidePanel.executionsInLaunchesTitle',
     defaultMessage: 'Executions in launches',
   },
-  noTagsAdded: {
-    id: 'TestPlanSidePanel.noTagsAdded',
-    defaultMessage: 'No tags added',
-  },
   noManualScenario: {
     id: 'TestPlanSidePanel.noManualScenario',
     defaultMessage: 'No manual scenario',

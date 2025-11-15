@@ -33,11 +33,11 @@ interface ExecutionStatusProps {
   executions: ExecutionItem[];
 }
 
-const STATUS_COLOR_MAP: Record<ExecutionStatusType, string> = {
-  [ExecutionStatusType.PASSED]: 'var(--rp-ui-base-test-execution-status-passed)',
-  [ExecutionStatusType.FAILED]: 'var(--rp-ui-base-error)',
-  [ExecutionStatusType.RUNNING]: 'var(--rp-ui-base-topaz-focused)',
-  [ExecutionStatusType.SKIPPED]: 'var(--rp-ui-base-e-400)',
+const STATUS_CLASS_MAP: Record<ExecutionStatusType, string> = {
+  [ExecutionStatusType.PASSED]: 'passed',
+  [ExecutionStatusType.FAILED]: 'failed',
+  [ExecutionStatusType.RUNNING]: 'running',
+  [ExecutionStatusType.SKIPPED]: 'skipped',
 };
 
 export const ExecutionStatus = memo(({ executions }: ExecutionStatusProps) => {
@@ -51,10 +51,10 @@ export const ExecutionStatus = memo(({ executions }: ExecutionStatusProps) => {
         <div key={`${execution.title}-${execution.status}`} className={cx('execution-item')}>
           <span className={cx('execution-title')}>{execution.title}</span>
           <div
-            className={cx('status-indicator')}
-            style={{
-              backgroundColor: STATUS_COLOR_MAP[execution.status] || 'var(--rp-ui-base-e-400)',
-            }}
+            className={cx(
+              'status-indicator',
+              `status-indicator--${STATUS_CLASS_MAP[execution.status] || 'default'}`,
+            )}
           />
         </div>
       ))}

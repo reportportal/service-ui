@@ -64,7 +64,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
   return [
     {
       titleKey: 'tags',
-      defaultMessageKey: 'noTagsAdded',
+      defaultMessage: commonMessages.noTagsAdded,
       childComponent: !isEmpty(tags) && <AdaptiveTagList tags={tags} isShowAllView />,
       headerControl: canEditTestCaseTag && (
         <Button variant="text" adjustWidthOn="content" onClick={handleAddTags} icon={<PlusIcon />}>
@@ -74,7 +74,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
     },
     {
       titleKey: 'description',
-      defaultMessageKey: 'noDescriptionAdded',
+      defaultMessage: messages.noDescriptionAdded,
       childComponent: !isEmpty(testCaseDescription) && (
         <ExpandedTextSection text={testCaseDescription} defaultVisibleLines={5} />
       ),
@@ -156,11 +156,11 @@ export const TestCaseDetailsPage = () => {
               tags: tags.map(({ key }) => key),
               canEditTestCaseTag,
               canEditTestCaseDescription,
-            }).map(({ titleKey, defaultMessageKey, childComponent, headerControl }) => (
+            }).map(({ titleKey, defaultMessage, childComponent, headerControl }) => (
               <CollapsibleSectionWithHeaderControl
                 key={titleKey}
                 title={formatMessage(commonMessages[titleKey])}
-                defaultMessage={formatMessage(messages[defaultMessageKey])}
+                defaultMessage={formatMessage(defaultMessage)}
                 headerControlComponent={headerControl}
               >
                 {childComponent}
