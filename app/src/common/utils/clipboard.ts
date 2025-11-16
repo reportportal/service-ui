@@ -14,19 +14,10 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
-
-export const messages = defineMessages({
-  noDescriptionAdded: {
-    id: 'EditTestCasePage.noDescriptionAdded',
-    defaultMessage: 'No description added',
-  },
-  editTestCase: {
-    id: 'EditTestCasePage.editTestCase',
-    defaultMessage: 'Edit Test Case',
-  },
-  enterTestCaseName: {
-    id: 'TestCaseLibraryPage.enterTestCaseName',
-    defaultMessage: 'Enter test case name',
-  },
-});
+export const copyToClipboard = async (text: string): Promise<void> => {
+  if (!navigator.clipboard && !navigator.clipboard.writeText) {
+    console.error('Clipboard API not supported.');
+  } else {
+    await navigator.clipboard.writeText(text);
+  }
+};

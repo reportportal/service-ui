@@ -20,7 +20,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 import { SectionWithHeader } from '../sectionWithHeader';
 import { InfoBlock } from '../infoBlock';
-import { messages } from '../testCaseDetailsPage/messages';
+import { commonMessages } from '../commonMessages';
 
 interface EditableTagsSectionProps {
   onAddTag: () => void;
@@ -43,12 +43,12 @@ export const EditableTagsSection = ({
 
   return (
     <SectionWithHeader
-      title={formatMessage(messages.tags)}
+      title={formatMessage(commonMessages.tags)}
       headerControl={headerControl}
       className={className}
       variant={variant}
     >
-      <InfoBlock label={formatMessage(messages.noTagsAdded)} />
+      <InfoBlock label={formatMessage(commonMessages.noTagsAdded)} />
     </SectionWithHeader>
   );
 };

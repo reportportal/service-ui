@@ -28,7 +28,7 @@ import {
 } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
-import { createClassnames } from 'common/utils';
+import { createClassnames, copyToClipboard } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useOnClickOutside } from 'common/hooks';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
@@ -67,10 +67,11 @@ const cx = createClassnames(styles);
 
 const safeGetMessage = (
   key: string,
-  messages: Record<string, MessageDescriptor>,
   formatMessage: (descriptor: MessageDescriptor) => string,
 ): string => {
-  const messageDescriptor = messages[key];
+  const allMessages: Record<string, MessageDescriptor> = { ...messages, ...commonMessages };
+  const messageDescriptor = allMessages[key];
+
   return messageDescriptor ? formatMessage(messageDescriptor) : key;
 };
 
@@ -97,7 +98,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
 
   return [
     {
-      titleKey: 'tagsTitle',
+      titleKey: 'tags',
       defaultMessageKey: 'noTagsAdded',
       childComponent: isEmpty(attributes) ? null : (
         <AdaptiveTagList tags={attributes} isShowAllView />
@@ -111,7 +112,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
     ...(scenario?.manualScenarioType === TestCaseManualScenario.TEXT
       ? [
           {
-            titleKey: 'attachmentsTitle',
+            titleKey: 'attachments',
             defaultMessageKey: 'noAttachmentsAdded',
             childComponent: isEmpty(scenario?.attachments) ? null : (
               <AttachmentList attachments={scenario.attachments} />
@@ -120,7 +121,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
         ]
       : []),
     {
-      titleKey: 'descriptionTitle',
+      titleKey: 'description',
       defaultMessageKey: 'descriptionNotSpecified',
       childComponent: testCaseDescription ? (
         <ExpandedTextSection text={testCaseDescription} defaultVisibleLines={5} />
@@ -219,7 +220,7 @@ export const TestCaseSidePanel = memo(
     };
 
     const handleCopyId = async () => {
-      await navigator.clipboard.writeText(testCase.id.toString());
+      await copyToClipboard(testCase.id.toString());
     };
 
     return (
@@ -290,8 +291,8 @@ export const TestCaseSidePanel = memo(
           }).map(({ titleKey, defaultMessageKey, childComponent }) => (
             <CollapsibleSection
               key={titleKey}
-              title={safeGetMessage(titleKey, messages, formatMessage)}
-              defaultMessage={safeGetMessage(defaultMessageKey, messages, formatMessage)}
+              title={safeGetMessage(titleKey, formatMessage)}
+              defaultMessage={safeGetMessage(defaultMessageKey, formatMessage)}
             >
               {childComponent}
             </CollapsibleSection>

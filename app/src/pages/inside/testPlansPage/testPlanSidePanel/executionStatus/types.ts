@@ -14,19 +14,9 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
-
-export const messages = defineMessages({
-  noDescriptionAdded: {
-    id: 'EditTestCasePage.noDescriptionAdded',
-    defaultMessage: 'No description added',
-  },
-  editTestCase: {
-    id: 'EditTestCasePage.editTestCase',
-    defaultMessage: 'Edit Test Case',
-  },
-  enterTestCaseName: {
-    id: 'TestCaseLibraryPage.enterTestCaseName',
-    defaultMessage: 'Enter test case name',
-  },
-});
+export enum ExecutionStatusType {
+  PASSED = 'passed',
+  FAILED = 'failed',
+  RUNNING = 'running',
+  SKIPPED = 'skipped',
+}

@@ -17,16 +17,16 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  noDescriptionAdded: {
-    id: 'EditTestCasePage.noDescriptionAdded',
-    defaultMessage: 'No description added',
+  testFullyCovered: {
+    id: 'CoverStatusCard.testFullyCovered',
+    defaultMessage: 'Test fully covered',
   },
-  editTestCase: {
-    id: 'EditTestCasePage.editTestCase',
-    defaultMessage: 'Edit Test Case',
+  uncovered: {
+    id: 'CoverStatusCard.uncovered',
+    defaultMessage: 'Uncovered',
   },
-  enterTestCaseName: {
-    id: 'TestCaseLibraryPage.enterTestCaseName',
-    defaultMessage: 'Enter test case name',
+  noExecutionsYet: {
+    id: 'CoverStatusCard.noExecutionsYet',
+    defaultMessage: 'No executions yet',
   },
 });

@@ -57,8 +57,4 @@ export const messages = defineMessages({
     id: 'TestCaseList.addScenarioDetailsTooltip',
     defaultMessage: 'Add scenario details to be able to add this test case to launch',
   },
-  coveredManually: {
-    id: 'TestCaseList.coveredManually',
-    defaultMessage: 'Covered manually',
-  },
 });

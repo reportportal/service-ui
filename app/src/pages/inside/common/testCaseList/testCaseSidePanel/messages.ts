@@ -33,22 +33,6 @@ export const messages = defineMessages({
     id: 'TestCaseSidePanel.stepTitle',
     defaultMessage: 'Steps',
   },
-  tagsTitle: {
-    id: 'TestCaseSidePanel.tagsTitle',
-    defaultMessage: 'Tags',
-  },
-  descriptionTitle: {
-    id: 'TestCaseSidePanel.descriptionTitle',
-    defaultMessage: 'Description',
-  },
-  attachmentsTitle: {
-    id: 'TestCaseSidePanel.attachmentsTitle',
-    defaultMessage: 'Attachments',
-  },
-  noTagsAdded: {
-    id: 'TestCaseSidePanel.noTagsAdded',
-    defaultMessage: 'No tags added',
-  },
   noDetailsForScenario: {
     id: 'TestCaseSidePanel.noDetailsForScenario',
     defaultMessage: 'No details for this scenario yet',
@@ -60,9 +44,5 @@ export const messages = defineMessages({
   noStepsAdded: {
     id: 'TestCaseSidePanel.noStepsAdded',
     defaultMessage: 'No steps for this scenario yet',
-  },
-  descriptionNotSpecified: {
-    id: 'TestCaseSidePanel.descriptionNotSpecified',
-    defaultMessage: 'Description not specified',
   },
 });

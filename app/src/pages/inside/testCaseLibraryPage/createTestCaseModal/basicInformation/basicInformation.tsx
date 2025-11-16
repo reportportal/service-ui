@@ -22,6 +22,7 @@ import { createClassnames } from 'common/utils';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { EditableTagsSection } from 'pages/inside/testCaseLibraryPage/editableTagsSection';
 import { CreateFolderAutocomplete } from 'pages/inside/testCaseLibraryPage/testCaseFolders/shared/CreateFolderAutocomplete';
+import { commonMessages as globalCommonMessages } from 'pages/inside/common/common-messages';
 
 import { messages } from './messages';
 import { commonMessages } from '../../commonMessages';
@@ -70,7 +71,7 @@ export const BasicInformation = ({ className, hideFolderField = false }: BasicIn
       </FieldProvider>
       <FieldProvider name="description" placeholder={formatMessage(messages.addDetailsOrContext)}>
         <FieldErrorHint provideHint={false} className={cx('basic-information__field')}>
-          <FieldTextFlex label={formatMessage(messages.description)} value="" />
+          <FieldTextFlex label={formatMessage(globalCommonMessages.description)} value="" />
         </FieldErrorHint>
       </FieldProvider>
       <EditableTagsSection variant="modal" onAddTag={noop} />

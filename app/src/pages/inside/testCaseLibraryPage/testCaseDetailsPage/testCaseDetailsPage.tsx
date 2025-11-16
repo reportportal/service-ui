@@ -31,6 +31,7 @@ import { mockedTestCaseDescription } from 'pages/inside/common/testCaseList/cons
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { testCaseDetailsSelector } from 'controllers/testCase';
+import { commonMessages } from 'pages/inside/common/common-messages';
 
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
@@ -63,7 +64,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
   return [
     {
       titleKey: 'tags',
-      defaultMessageKey: 'noTagsAdded',
+      defaultMessage: commonMessages.noTagsAdded,
       childComponent: !isEmpty(tags) && <AdaptiveTagList tags={tags} isShowAllView />,
       headerControl: canEditTestCaseTag && (
         <Button variant="text" adjustWidthOn="content" onClick={handleAddTags} icon={<PlusIcon />}>
@@ -73,7 +74,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
     },
     {
       titleKey: 'description',
-      defaultMessageKey: 'noDescriptionAdded',
+      defaultMessage: messages.noDescriptionAdded,
       childComponent: !isEmpty(testCaseDescription) && (
         <ExpandedTextSection text={testCaseDescription} defaultVisibleLines={5} />
       ),
@@ -155,11 +156,11 @@ export const TestCaseDetailsPage = () => {
               tags: tags.map(({ key }) => key),
               canEditTestCaseTag,
               canEditTestCaseDescription,
-            }).map(({ titleKey, defaultMessageKey, childComponent, headerControl }) => (
+            }).map(({ titleKey, defaultMessage, childComponent, headerControl }) => (
               <CollapsibleSectionWithHeaderControl
                 key={titleKey}
-                title={formatMessage(messages[titleKey])}
-                defaultMessage={formatMessage(messages[defaultMessageKey])}
+                title={formatMessage(commonMessages[titleKey])}
+                defaultMessage={formatMessage(defaultMessage)}
                 headerControlComponent={headerControl}
               >
                 {childComponent}

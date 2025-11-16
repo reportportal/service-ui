@@ -24,10 +24,10 @@ import { PopoverControl } from 'pages/common/popoverControl';
 import { handleEnterOrSpaceKey } from 'common/utils/helperUtils/event.utils';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
+import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 
 import { useTooltipItems } from '../testCaseExecutionCell/useTooltipItems';
 import { formatRelativeTime } from '../utils';
-import { messages } from '../messages';
 
 import styles from './testCaseExecutionCell.scss';
 
@@ -57,7 +57,7 @@ export const TestCaseExecutionCell = ({
       <div>
         {isCoveredManually && (
           <div className={cx('covered-manually')}>
-            <CoveredManuallyIcon /> {formatMessage(messages.coveredManually)}
+            <CoveredManuallyIcon /> {formatMessage(commonMessages.coveredManually)}
           </div>
         )}
         <div
