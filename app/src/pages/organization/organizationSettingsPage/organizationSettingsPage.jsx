@@ -29,6 +29,7 @@ import { Header } from 'pages/inside/common/header';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { uiExtensionOrganizationSettingsTabsSelector } from 'controllers/plugins';
 import { ExtensionLoader } from 'components/extensionLoader';
+import { useExtensionsConfig } from 'common/hooks';
 import classNames from 'classnames/bind';
 import { messages } from './messages';
 import { GeneralTab } from './content/generalTab';
@@ -53,28 +54,12 @@ export const OrganizationSettingsPage = () => {
     [organizationSlug],
   );
 
-  const extensionsConfig = useMemo(() => {
-    return extensions.reduce((acc, extension) => {
-      const { name, payload } = extension;
-      const title = payload.title || payload.name;
-      return {
-        ...acc,
-        [name]: {
-          name: title,
-          link: createTabLink(name, payload.initialPage?.payload, payload.initialPage?.type),
-          component: (
-            <ExtensionLoader
-              extension={extension}
-              withPreloader
-              silentOnError={false}
-              setHeaderNodes={setHeaderNodes}
-            />
-          ),
-          mobileDisabled: true,
-        },
-      };
-    }, {});
-  }, [createTabLink, extensions]);
+  const { mergeConfig } = useExtensionsConfig({
+    extensions,
+    createTabLink,
+    setHeaderNodes,
+    ExtensionLoaderComponent: ExtensionLoader,
+  });
 
   const config = useMemo(() => {
     const navConfig = {
@@ -86,16 +71,8 @@ export const OrganizationSettingsPage = () => {
       },
     };
 
-    Object.keys(extensionsConfig).forEach((key) => {
-      if (navConfig[key]) {
-        navConfig[key].component = extensionsConfig[key].component;
-
-        delete extensionsConfig[key];
-      }
-    });
-
-    return { ...navConfig, ...extensionsConfig };
-  }, [createTabLink, formatMessage, extensionsConfig]);
+    return mergeConfig(navConfig);
+  }, [createTabLink, formatMessage, mergeConfig]);
 
   const navigation = useMemo(() => {
     const title = (
