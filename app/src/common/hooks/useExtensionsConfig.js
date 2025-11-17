@@ -56,7 +56,7 @@ export const useExtensionsConfig = ({
     (navConfig) => {
       const navConfigCopy = { ...navConfig };
       const extensionsConfigCopy = { ...extensionsConfig };
-      Object.keys(extensionsConfigCopy).forEach((key) => {
+      for (const key of Object.keys(extensionsConfigCopy)) {
         if (navConfigCopy[key]) {
           navConfigCopy[key] = {
             ...navConfigCopy[key],
@@ -64,7 +64,7 @@ export const useExtensionsConfig = ({
           };
           delete extensionsConfigCopy[key];
         }
-      });
+      }
       return { ...navConfigCopy, ...extensionsConfigCopy };
     },
     [extensionsConfig],
