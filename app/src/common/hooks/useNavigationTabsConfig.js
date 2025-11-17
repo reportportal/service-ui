@@ -16,7 +16,7 @@
 
 import { useMemo, useCallback } from 'react';
 
-export const useExtensionsConfig = ({
+export const useNavigationTabsConfig = ({
   extensions,
   createTabLink,
   setHeaderNodes,

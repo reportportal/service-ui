@@ -29,7 +29,7 @@ import { Header } from 'pages/inside/common/header';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { uiExtensionOrganizationSettingsTabsSelector } from 'controllers/plugins';
 import { ExtensionLoader } from 'components/extensionLoader';
-import { useExtensionsConfig } from 'common/hooks';
+import { useNavigationTabsConfig } from 'common/hooks';
 import classNames from 'classnames/bind';
 import { messages } from './messages';
 import { GeneralTab } from './content/generalTab';
@@ -54,7 +54,7 @@ export const OrganizationSettingsPage = () => {
     [organizationSlug],
   );
 
-  const { mergeConfig } = useExtensionsConfig({
+  const { mergeConfig } = useNavigationTabsConfig({
     extensions,
     createTabLink,
     setHeaderNodes,
