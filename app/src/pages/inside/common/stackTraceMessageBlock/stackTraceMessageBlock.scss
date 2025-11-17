@@ -98,23 +98,19 @@
 }
 
 .design-mode-dark.row-wrapper {
-  border-left: 3px solid $COLOR--darkmode-error;
-  background-image: linear-gradient(
-    to right,
-    rgba($COLOR--darkmode-error, 0.25),
-    rgba($COLOR--darkmode-error, 0.25)
-  );
-  background-size: 8px 100%;
-  background-position: 1px 0;
-  background-repeat: no-repeat;
+  position: relative;
+  border-left: 3px solid var(--label-color, $COLOR--darkmode-error);
   padding-left: 26px;
-  &.level-fatal {
-    border-left: 3px solid $COLOR--darkmode-fatal;
-    background-image: linear-gradient(
-      to right,
-      rgba($COLOR--darkmode-fatal, 0.25),
-      rgba($COLOR--darkmode-fatal, 0.25)
-    );
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 8px;
+    height: 100%;
+    background-color: var(--label-color, $COLOR--darkmode-error);
+    opacity: 0.25;
   }
 }
 .design-mode-dark.row {
