@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useCallback, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { Table, ChevronDownDropdownIcon, Pagination } from '@reportportal/ui-kit';
@@ -27,8 +27,7 @@ import { usePagination } from 'hooks/usePagination';
 import { useProjectDetails } from 'hooks/useTypedSelector';
 import { defaultQueryParams, TestPlanDto, testPlansPageSelector } from 'controllers/testPlan';
 
-import { ProgressBar } from './progressBar';
-import { TestPlanActions } from '../testPlanActions';
+import { TestPlanSidePanel } from '../testPlanSidePanel';
 import { messages } from './messages';
 import {
   useDeleteTestPlanModal,
@@ -37,6 +36,7 @@ import {
 } from '../testPlanModals';
 import { PageLoader } from '../pageLoader';
 import { queryParamsType } from '../../../../types/common';
+import { useTestPlansTableData } from './hooks';
 
 import styles from './testPlansTable.scss';
 
@@ -48,7 +48,7 @@ interface TestPlansTableProps {
 }
 
 export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) => {
-  const { formatMessage, formatNumber } = useIntl();
+  const { formatMessage } = useIntl();
   const testPlansPageData = useSelector(testPlansPageSelector);
   const { captions, activePage, pageSize, totalPages, setActivePage, changePageSize } =
     usePagination({
@@ -102,47 +102,31 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
     </button>
   );
 
-  const currentTestPlans = testPlans?.map(
-    ({ id, name, executionStatistic: { total = 0, covered = 0 } }) => {
-      const coverage = total === 0 ? 0 : covered / total;
+  const {
+    data: testPlansTableData,
+    selectedTestPlanId,
+    setSelectedTestPlanId,
+  } = useTestPlansTableData({
+    testPlans,
+    onEdit: getActionHandler(openEditModal),
+    onDuplicate: getActionHandler(openDuplicateModal),
+    onDelete: getActionHandler(openDeleteModal),
+  });
 
-      return {
-        id,
-        testPlanName: {
-          component: getOpenTestPlanDetailsButton(id, name, name),
-        },
-        coveredTotal: `${covered} / ${total}`,
-        coverage: {
-          component: (
-            <div className={cx('test-plans__table-cell-coverage')}>
-              {formatNumber(coverage, {
-                style: 'percent',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 2,
-              })}
-            </div>
-          ),
-        },
-        progressBar: {
-          component: <ProgressBar progress={coverage * 100} />,
-        },
-        options: {
-          component: (
-            <TestPlanActions
-              testPlanId={id}
-              variant="table"
-              onEdit={getActionHandler(openEditModal)}
-              onDuplicate={getActionHandler(openDuplicateModal)}
-              onDelete={getActionHandler(openDeleteModal)}
-            />
-          ),
-        },
-        icon: {
-          component: getOpenTestPlanDetailsButton(id, name, <ChevronDownDropdownIcon />),
-        },
-      };
+  const handleCloseSidePanel = useCallback(() => {
+    setSelectedTestPlanId(null);
+  }, [setSelectedTestPlanId]);
+
+  const currentTestPlans = testPlansTableData.map((row) => ({
+    ...row,
+    icon: {
+      component: getOpenTestPlanDetailsButton(
+        row.id as number,
+        testPlans.find((plan) => plan.id === row.id)?.name || '',
+        <ChevronDownDropdownIcon />,
+      ),
     },
-  );
+  }));
 
   const primaryColumn = {
     key: 'testPlanName',
@@ -204,6 +188,8 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
     }
   };
 
+  const selectedTestPlan = testPlans?.find((plan) => plan.id === selectedTestPlanId);
+
   return (
     <>
       <div className={cx('test-plans__table-container')}>
@@ -234,6 +220,11 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
           />
         </div>
       )}
+      <TestPlanSidePanel
+        testPlan={selectedTestPlan}
+        isVisible={Boolean(selectedTestPlanId)}
+        onClose={handleCloseSidePanel}
+      />
     </>
   );
 };

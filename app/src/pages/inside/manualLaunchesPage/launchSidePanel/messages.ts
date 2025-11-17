@@ -25,10 +25,6 @@ export const messages = defineMessages({
     id: 'LaunchSidePanel.toRunWithCount',
     defaultMessage: 'To Run {testCount}',
   },
-  moreActionsTooltip: {
-    id: 'LaunchSidePanel.moreActionsTooltip',
-    defaultMessage: 'More actions',
-  },
   attributesTitle: {
     id: 'LaunchSidePanel.attributesTitle',
     defaultMessage: 'Attributes',

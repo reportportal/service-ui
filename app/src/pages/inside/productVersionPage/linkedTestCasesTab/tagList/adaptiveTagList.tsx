@@ -20,6 +20,7 @@ import { isEmpty } from 'es-toolkit/compat';
 import { Button } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
+import { commonMessages } from 'pages/inside/common/common-messages';
 
 import { messages } from './messages';
 import {
@@ -238,7 +239,7 @@ export const AdaptiveTagList = ({
     return (
       <div className={cx('tag-list-wrapper')}>
         <div className={cx('tag-list', 'tag-list--no-tags', 'tag-list--full-width')}>
-          <div className={cx('no-tags-message')}>{formatMessage(messages.noTagsAdded)}</div>
+          <div className={cx('no-tags-message')}>{formatMessage(commonMessages.noTagsAdded)}</div>
         </div>
       </div>
     );

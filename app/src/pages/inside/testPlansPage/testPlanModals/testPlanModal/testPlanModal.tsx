@@ -27,6 +27,7 @@ import { commonValidators } from 'common/utils/validation';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
+import { commonMessages } from 'pages/inside/common/common-messages';
 
 import { TestPlanAttributes } from './testPlanAttributes';
 import { messages } from './messages';
@@ -117,7 +118,7 @@ const TestPlanModalComponent = ({
               placeholder={formatMessage(messages.addTestPlanDescription)}
             >
               <FieldErrorHint provideHint={false}>
-                <FieldTextFlex label={formatMessage(messages.description)} value="" />
+                <FieldTextFlex label={formatMessage(commonMessages.description)} value="" />
               </FieldErrorHint>
             </FieldProvider>
             <TestPlanAttributes />
