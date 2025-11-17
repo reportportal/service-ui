@@ -16,4 +16,4 @@
 
 export { useWindowResize } from './useWindowResize';
 export { useOnClickOutside } from './useOnClickOutside';
-export { useNavigationTabsConfig } from './useNavigationTabsConfig';
+export { useNavigationTabsExtensionsConfig } from './useNavigationTabsExtensionsConfig';

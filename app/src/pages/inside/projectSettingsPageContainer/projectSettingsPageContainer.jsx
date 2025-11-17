@@ -42,7 +42,7 @@ import { DemoDataTab } from 'pages/inside/projectSettingsPageContainer/content/d
 import { canSeeDemoData, canUpdateSettings } from 'common/utils/permissions';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { uiExtensionSettingsTabsSelector } from 'controllers/plugins';
-import { useNavigationTabsConfig } from 'common/hooks';
+import { useNavigationTabsExtensionsConfig } from 'common/hooks';
 import { Navigation } from 'pages/inside/common/navigation';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { Header } from 'pages/inside/common/header';
@@ -74,7 +74,7 @@ export const ProjectSettingsPageContainer = () => {
     [projectSlug, organizationSlug],
   );
 
-  const { mergeConfig } = useNavigationTabsConfig({
+  const { mergeConfig } = useNavigationTabsExtensionsConfig({
     extensions,
     createTabLink,
     setHeaderNodes,
