@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import Parser from 'html-react-parser';
+import ClearIcon from 'common/img/clear-icon-inline.svg';
 import styles from './input.scss';
 
 const VARIANT_STANDARD = 'standard';
@@ -45,32 +46,51 @@ export const Input = ({
   variant,
   style,
   title,
-}) => (
-  <input
-    ref={refFunction}
-    type={type}
-    style={style}
-    title={title}
-    className={cx('input', `type-${type}`, className, `variant-${variant}`, {
-      'mobile-disabled': mobileDisabled,
-      disabled,
-      error,
-      touched,
-      readonly,
-      asyncValidating,
-    })}
-    value={value}
-    placeholder={placeholder}
-    maxLength={maxLength}
-    disabled={disabled}
-    readOnly={readonly}
-    onChange={onChange}
-    onFocus={onFocus}
-    onBlur={onBlur}
-    onKeyUp={onKeyUp}
-    onKeyPress={onKeyPress}
-  />
-);
+  clearable,
+}) => {
+  const showClearButton = clearable && !!value && !disabled && !readonly && !asyncValidating;
+
+  const onClickClear = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onChange('');
+  };
+
+  return (
+    <div className={cx('input-wrapper', { 'has-clear': showClearButton })}>
+      <input
+        ref={refFunction}
+        type={type}
+        style={style}
+        title={title}
+        className={cx('input', `type-${type}`, className, `variant-${variant}`, {
+          'mobile-disabled': mobileDisabled,
+          disabled,
+          error,
+          touched,
+          readonly,
+          asyncValidating,
+          clearable: showClearButton,
+        })}
+        value={value}
+        placeholder={placeholder}
+        maxLength={maxLength}
+        disabled={disabled}
+        readOnly={readonly}
+        onChange={onChange}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        onKeyUp={onKeyUp}
+        onKeyPress={onKeyPress}
+      />
+      {showClearButton && (
+        <button type="button" className={cx('clear-icon')} onClick={onClickClear}>
+          {Parser(ClearIcon)}
+        </button>
+      )}
+    </div>
+  );
+};
 
 Input.propTypes = {
   type: PropTypes.string,
@@ -87,6 +107,7 @@ Input.propTypes = {
   variant: PropTypes.oneOf([VARIANT_STANDARD, VARIANT_INLINE]),
   style: PropTypes.object,
   title: PropTypes.string,
+  clearable: PropTypes.bool,
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
@@ -110,6 +131,7 @@ Input.defaultProps = {
   variant: VARIANT_STANDARD,
   style: {},
   title: '',
+  clearable: false,
   onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},

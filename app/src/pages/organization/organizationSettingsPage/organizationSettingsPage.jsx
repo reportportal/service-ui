@@ -21,15 +21,18 @@ import {
   urlOrganizationSlugSelector,
 } from 'controllers/pages';
 import { SettingsLayout } from 'layouts/settingsLayout';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigation } from 'pages/inside/common/navigation';
 import { Header } from 'pages/inside/common/header';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { uiExtensionOrganizationSettingsTabsSelector } from 'controllers/plugins';
+import { ExtensionLoader } from 'components/extensionLoader';
 import classNames from 'classnames/bind';
 import { messages } from './messages';
 import { GeneralTab } from './content/generalTab';
+import { OrganizationSettingsAnalyticsWrapper } from './organizationSettingsAnalyticsWrapper';
 import styles from './organizationSettingsPage.scss';
 
 const cx = classNames.bind(styles);
@@ -39,6 +42,8 @@ export const OrganizationSettingsPage = () => {
   const dispatch = useDispatch();
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const activeTab = useSelector(settingsTabSelector);
+  const extensions = useSelector(uiExtensionOrganizationSettingsTabsSelector);
+  const [headerNodes, setHeaderNodes] = useState({});
 
   const createTabLink = useCallback(
     (tabName, extendedParams = {}, page = ORGANIZATION_SETTINGS_TAB_PAGE) => ({
@@ -48,8 +53,31 @@ export const OrganizationSettingsPage = () => {
     [organizationSlug],
   );
 
+  const extensionsConfig = useMemo(() => {
+    return extensions.reduce((acc, extension) => {
+      const { name, payload } = extension;
+      const title = payload.title || payload.name;
+      return {
+        ...acc,
+        [name]: {
+          name: title,
+          link: createTabLink(name, payload.initialPage?.payload, payload.initialPage?.type),
+          component: (
+            <ExtensionLoader
+              extension={extension}
+              withPreloader
+              silentOnError={false}
+              setHeaderNodes={setHeaderNodes}
+            />
+          ),
+          mobileDisabled: true,
+        },
+      };
+    }, {});
+  }, [createTabLink, extensions]);
+
   const config = useMemo(() => {
-    return {
+    const navConfig = {
       [GENERAL]: {
         name: formatMessage(messages.general),
         link: createTabLink(GENERAL),
@@ -57,7 +85,17 @@ export const OrganizationSettingsPage = () => {
         mobileDisabled: true,
       },
     };
-  }, [createTabLink, formatMessage]);
+
+    Object.keys(extensionsConfig).forEach((key) => {
+      if (navConfig[key]) {
+        navConfig[key].component = extensionsConfig[key].component;
+
+        delete extensionsConfig[key];
+      }
+    });
+
+    return { ...navConfig, ...extensionsConfig };
+  }, [createTabLink, formatMessage, extensionsConfig]);
 
   const navigation = useMemo(() => {
     const title = (
@@ -79,15 +117,19 @@ export const OrganizationSettingsPage = () => {
   }, [activeTab, config, dispatch]);
 
   return (
-    <SettingsLayout navigation={navigation}>
-      <ScrollWrapper resetRequired>
-        <div className={cx('settings-page-content-wrapper')}>
-          <div className={cx('header')}>
-            <Header title={config[activeTab]?.name} />
+    <OrganizationSettingsAnalyticsWrapper>
+      <SettingsLayout navigation={navigation}>
+        <ScrollWrapper resetRequired>
+          <div className={cx('settings-page-content-wrapper')}>
+            <div className={cx('header')}>
+              <Header title={config[activeTab]?.name} titleNode={headerNodes.titleNode}>
+                {headerNodes.children}
+              </Header>
+            </div>
+            <div className={cx('content', 'main-page')}>{content}</div>
           </div>
-          <div className={cx('content', 'main-page')}>{content}</div>
-        </div>
-      </ScrollWrapper>
-    </SettingsLayout>
+        </ScrollWrapper>
+      </SettingsLayout>
+    </OrganizationSettingsAnalyticsWrapper>
   );
 };

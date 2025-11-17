@@ -21,6 +21,7 @@ import { useActivePluginPageExtension } from 'controllers/plugins/uiExtensions/h
 import { Header } from 'pages/inside/common/header';
 import { PageHeader, PageLayout, PageSection } from 'layouts/pageLayout';
 import { ExtensionLoader } from 'components/extensionLoader';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import styles from './adminUiExtensionPage.scss';
 
 const cx = classNames.bind(styles);
@@ -52,12 +53,14 @@ export const AdminUiExtensionPage = () => {
       );
     } else {
       pageLayout = (
-        <PageLayout>
-          <PageHeader breadcrumbs={[{ title: extension.title || extension.name }]} />
-          <PageSection>
-            <ExtensionLoader extension={extension} silentOnError={false} withPreloader />
-          </PageSection>
-        </PageLayout>
+        <ScrollWrapper>
+          <PageLayout>
+            <PageHeader breadcrumbs={[{ title: extension.title || extension.name }]} />
+            <PageSection>
+              <ExtensionLoader extension={extension} silentOnError={false} withPreloader />
+            </PageSection>
+          </PageLayout>
+        </ScrollWrapper>
       );
     }
   }

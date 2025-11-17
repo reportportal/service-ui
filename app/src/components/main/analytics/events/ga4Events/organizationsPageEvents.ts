@@ -22,6 +22,15 @@ const SETTINGS_PAGE = 'organization_settings';
 const BASIC_EVENT_PARAMETERS = getBasicClickEventParameters(ORGANIZATION_PAGE);
 const SETTINGS_EVENT_PARAMETERS = getBasicClickEventParameters(SETTINGS_PAGE);
 
+export const ORGANIZATION_SETTINGS_VIEWS = {
+  getOrganizationSettingsPageView: (settingsTab: string, subTab?: string) => ({
+    action: 'page_view',
+    place: subTab
+      ? `${SETTINGS_PAGE}_${settingsTab.toLowerCase()}_${subTab.toLowerCase()}`
+      : `${SETTINGS_PAGE}_${settingsTab.toLowerCase()}`,
+  }),
+};
+
 export const ORGANIZATION_PAGE_EVENTS = {
   SEARCH_ORGANIZATION_FIELD: {
     ...BASIC_EVENT_PARAMETERS,
@@ -62,10 +71,6 @@ export const ORGANIZATION_PAGE_EVENTS = {
     action: 'page_view',
     organization_id: organizationId,
     place: page,
-  }),
-  viewOrganizationSettings: (page: string) => ({
-    action: 'page_view',
-    place: `organization_settings_${page}`,
   }),
   VIEW_ORGANIZATION_USERS: {
     action: 'page_view',
