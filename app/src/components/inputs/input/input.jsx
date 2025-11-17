@@ -47,13 +47,14 @@ export const Input = ({
   style,
   title,
   clearable,
+  onClear,
 }) => {
   const showClearButton = clearable && !!value && !disabled && !readonly && !asyncValidating;
 
   const onClickClear = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    onChange('');
+    onClear?.();
   };
 
   return (
@@ -84,7 +85,12 @@ export const Input = ({
         onKeyPress={onKeyPress}
       />
       {showClearButton && (
-        <button type="button" className={cx('clear-icon')} onClick={onClickClear}>
+        <button
+          type="button"
+          className={cx('clear-icon')}
+          onClick={onClickClear}
+          aria-label="Clear input"
+        >
           {Parser(ClearIcon)}
         </button>
       )}
@@ -114,6 +120,7 @@ Input.propTypes = {
   onKeyUp: PropTypes.func,
   onKeyPress: PropTypes.func,
   refFunction: PropTypes.func,
+  onClear: PropTypes.func,
 };
 
 Input.defaultProps = {
@@ -138,4 +145,5 @@ Input.defaultProps = {
   onKeyUp: () => {},
   onKeyPress: () => {},
   refFunction: () => {},
+  onClear: () => {},
 };
