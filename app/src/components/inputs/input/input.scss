@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+.input-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
 .input {
   position: relative;
   display: inline-block;
@@ -34,6 +40,10 @@
   transition:
     border-color ease-in-out 0.15s,
     box-shadow ease-in-out 0.15s;
+
+  &.clearable {
+    padding-right: 32px;
+  }
 
   &.dark-view {
     border: 1px solid $COLOR--dark-gray;
@@ -133,4 +143,21 @@
   @media (max-width: $SCREEN_XS_MAX) {
     background-color: $COLOR--gray-91;
   }
+}
+
+.clear-icon {
+  position: absolute;
+  right: 8px;
+  top: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 13px;
+  height: 13px;
+  border-radius: 100%;
+  background: none;
+  border: none;
+  outline: none;
+  padding: 0;
+  cursor: pointer;
 }

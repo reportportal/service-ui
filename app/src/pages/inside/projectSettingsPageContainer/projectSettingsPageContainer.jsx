@@ -42,6 +42,7 @@ import { DemoDataTab } from 'pages/inside/projectSettingsPageContainer/content/d
 import { canSeeDemoData, canUpdateSettings } from 'common/utils/permissions';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { uiExtensionSettingsTabsSelector } from 'controllers/plugins';
+import { useNavigationTabsExtensionsConfig } from 'common/hooks';
 import { Navigation } from 'pages/inside/common/navigation';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { Header } from 'pages/inside/common/header';
@@ -73,29 +74,13 @@ export const ProjectSettingsPageContainer = () => {
     [projectSlug, organizationSlug],
   );
 
-  const extensionsConfig = useMemo(() => {
-    return extensions.reduce((acc, extension) => {
-      const { name, payload } = extension;
-      const title = payload.title || payload.name;
-      return {
-        ...acc,
-        [name]: {
-          name: title,
-          link: createTabLink(name, payload.initialPage?.payload, payload.initialPage?.type),
-          component: (
-            <ExtensionLoader
-              extension={extension}
-              withPreloader
-              silentOnError={false}
-              setHeaderNodes={setHeaderNodes}
-            />
-          ),
-          mobileDisabled: true,
-          eventInfo: SETTINGS_PAGE_EVENTS.extensionTabClick(title),
-        },
-      };
-    }, {});
-  }, [createTabLink, extensions]);
+  const { mergeConfig } = useNavigationTabsExtensionsConfig({
+    extensions,
+    createTabLink,
+    setHeaderNodes,
+    getEventInfo: (title) => SETTINGS_PAGE_EVENTS.extensionTabClick(title),
+    ExtensionLoaderComponent: ExtensionLoader,
+  });
 
   const config = useMemo(() => {
     const navConfig = {
@@ -161,15 +146,8 @@ export const ProjectSettingsPageContainer = () => {
     if (!canSeeDemoData(userRoles)) {
       delete navConfig[DEMO_DATA];
     }
-    Object.keys(extensionsConfig).forEach((key) => {
-      if (navConfig[key]) {
-        navConfig[key].component = extensionsConfig[key].component;
-
-        delete extensionsConfig[key];
-      }
-    });
-    return { ...navConfig, ...extensionsConfig };
-  }, [formatMessage, createTabLink, userRoles, extensionsConfig]);
+    return mergeConfig(navConfig);
+  }, [formatMessage, createTabLink, userRoles, mergeConfig]);
 
   const navigation = useMemo(() => {
     if (subPage) {

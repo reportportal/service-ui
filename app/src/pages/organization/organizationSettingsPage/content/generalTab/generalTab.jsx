@@ -63,10 +63,6 @@ const GeneralTabForm = ({ initialize, handleSubmit }) => {
   const isDisabled = !canPerformUpdate || processingData;
 
   useEffect(() => {
-    trackEvent(ORGANIZATION_PAGE_EVENTS.viewOrganizationSettings('general'));
-  }, [trackEvent]);
-
-  useEffect(() => {
     if (organizationName) {
       initialize({
         name: organizationName,
