@@ -40,6 +40,7 @@ import { useBatchDuplicateToFolder } from './useBatchDuplicateToFolder';
 import { messages } from './messages';
 
 import styles from './batchDuplicateToFolderModal.scss';
+import { SingleAutocompleteProps } from '@reportportal/ui-kit/components/autocompletes/singleAutocomplete/singleAutocomplete';
 
 const cx = createClassnames(styles);
 
@@ -133,12 +134,13 @@ const BatchDuplicateToFolderModal = reduxForm<
     [change],
   );
 
-  const handleFolderSelect = useCallback(
-    ({ selectedItem }: { selectedItem: FolderWithFullPath }) => {
-      change('destinationFolder', selectedItem);
-    },
-    [change],
-  );
+  const handleFolderSelect: SingleAutocompleteProps<FolderWithFullPath>['onStateChange'] =
+    useCallback(
+      ({ selectedItem }) => {
+        change('destinationFolder', selectedItem);
+      },
+      [change],
+    );
 
   const onSubmit = useCallback(
     (values: BatchDuplicateToFolderFormValues) => {
