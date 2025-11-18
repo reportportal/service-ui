@@ -22,6 +22,7 @@ import { useIntl } from 'react-intl';
 
 import { FieldLabel, Modal } from '@reportportal/ui-kit';
 
+import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { commonValidators } from 'common/utils/validation';
@@ -36,7 +37,6 @@ import { AddTestCasesToTestPlanFormData, AddTestCasesToTestPlanModalProps } from
 import { useAddTestCasesToTestPlan } from './useAddTestCasesToTestPlan';
 
 import styles from './addTestCasesToTestPlanModal.module.scss';
-import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 
 type AddTestCasesSubmitHandler = SubmitHandler<
   AddTestCasesToTestPlanFormData,

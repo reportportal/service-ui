@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { WithAsyncLoading } from './withAsyncLoading';
 import { MultipleAutocomplete } from '@reportportal/ui-kit';
+
+import { WithAsyncLoading } from './withAsyncLoading';
 
 export const AsyncMultipleAutocompleteV2 = WithAsyncLoading(MultipleAutocomplete);

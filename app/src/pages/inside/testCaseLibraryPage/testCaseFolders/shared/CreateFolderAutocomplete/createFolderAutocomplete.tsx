@@ -18,19 +18,18 @@ import { ComponentProps } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { FieldLabel, SingleAutocomplete } from '@reportportal/ui-kit';
-
+import { GetItemPropsT } from '@reportportal/ui-kit/components/autocompletes/types';
 import { AutocompleteOption } from '@reportportal/ui-kit/autocompletes';
 
 import { isString, noop } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
 import { FolderWithFullPath, transformedFoldersWithFullPathSelector } from 'controllers/testCase';
+import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
+import { findFolderById } from 'pages/inside/testCaseLibraryPage/utils';
 
 import { messages } from './messages';
 import styles from './createFolderAutocomplete.scss';
-import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
-import { findFolderById } from 'pages/inside/testCaseLibraryPage/utils';
-import { GetItemPropsT } from '@reportportal/ui-kit/components/autocompletes/types';
 
 const cx = createClassnames(styles);
 

@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { WithAsyncLoading } from './withAsyncLoading';
 import { SingleAutocomplete } from '@reportportal/ui-kit';
+
+import { WithAsyncLoading } from './withAsyncLoading';
 
 export const AsyncAutocompleteV2 = WithAsyncLoading(SingleAutocomplete);
