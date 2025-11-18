@@ -18,7 +18,6 @@ import { ComponentProps } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { FieldLabel, SingleAutocomplete } from '@reportportal/ui-kit';
-import { GetItemPropsT } from '@reportportal/ui-kit/components/autocompletes/types';
 import { AutocompleteOption } from '@reportportal/ui-kit/autocompletes';
 
 import { isString, noop } from 'es-toolkit/compat';
@@ -78,7 +77,7 @@ export const CreateFolderAutocomplete = ({
     option: FolderWithFullPath,
     index: number,
     _isNew: boolean,
-    getItemProps: GetItemPropsT<FolderWithFullPath>,
+    getItemProps,
   ) => {
     const { description, name, fullPath } = option;
 

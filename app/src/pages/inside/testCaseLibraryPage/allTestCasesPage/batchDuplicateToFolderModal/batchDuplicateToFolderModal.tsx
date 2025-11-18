@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, ComponentProps } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { reduxForm, InjectedFormProps, formValueSelector } from 'redux-form';
 import { noop } from 'es-toolkit';
-import { Modal } from '@reportportal/ui-kit';
+import { Modal, SingleAutocomplete } from '@reportportal/ui-kit';
 
 import { UseModalData } from 'common/hooks';
 import { createClassnames } from 'common/utils';
@@ -40,7 +40,6 @@ import { useBatchDuplicateToFolder } from './useBatchDuplicateToFolder';
 import { messages } from './messages';
 
 import styles from './batchDuplicateToFolderModal.scss';
-import { SingleAutocompleteProps } from '@reportportal/ui-kit/components/autocompletes/singleAutocomplete/singleAutocomplete';
 
 const cx = createClassnames(styles);
 
@@ -134,13 +133,14 @@ const BatchDuplicateToFolderModal = reduxForm<
     [change],
   );
 
-  const handleFolderSelect: SingleAutocompleteProps<FolderWithFullPath>['onStateChange'] =
-    useCallback(
-      ({ selectedItem }) => {
-        change('destinationFolder', selectedItem);
-      },
-      [change],
-    );
+  const handleFolderSelect: ComponentProps<
+    typeof SingleAutocomplete<FolderWithFullPath>
+  >['onStateChange'] = useCallback(
+    ({ selectedItem }) => {
+      change('destinationFolder', selectedItem);
+    },
+    [change],
+  );
 
   const onSubmit = useCallback(
     (values: BatchDuplicateToFolderFormValues) => {
