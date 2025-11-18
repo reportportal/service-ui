@@ -90,11 +90,7 @@
 }
 
 .asterisk {
-  &:after {
-    content: '*';
-    position: absolute;
-    color: $COLOR--e-300;
-    margin-left: 4px;
-    margin-top: -4px;
-  }
+  color: $COLOR--e-300;
+  margin-left: 4px;
+  margin-top: -4px;
 }
