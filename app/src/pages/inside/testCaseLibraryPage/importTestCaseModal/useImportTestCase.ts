@@ -10,6 +10,14 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { useDebouncedSpinner } from 'common/hooks';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
+import {
+  getAllTestCasesAction,
+  getTestCaseByFolderIdAction,
+} from 'controllers/testCase/actionCreators';
+import { getTestCaseRequestParams } from 'pages/inside/testCaseLibraryPage/utils';
+import { testCasesPageSelector } from 'controllers/testCase';
+import { useCallback } from 'react';
+import { urlFolderIdSelector } from 'controllers/pages';
 
 type ImportQuery = {
   testFolderId?: number;
@@ -40,7 +48,41 @@ export const useImportTestCase = () => {
   const { isLoading: isImportingTestCases, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+  const testCasesPageData = useSelector(testCasesPageSelector);
+  const urlFolderId = useSelector(urlFolderIdSelector);
   const { formatMessage } = useIntl();
+
+  const refetchTestCases = useCallback(
+    (folderId: number, prevFolderId?: number) => {
+      const paginationParams = getTestCaseRequestParams(testCasesPageData);
+      const isViewingTestCaseFolder = Number(urlFolderId) === folderId;
+      const isTestCaseMovedAndViewingPrevFolder =
+        prevFolderId && prevFolderId !== folderId && Number(urlFolderId) === prevFolderId;
+
+      if (!urlFolderId) {
+        dispatch(getAllTestCasesAction(paginationParams));
+      }
+
+      if (isViewingTestCaseFolder) {
+        dispatch(
+          getTestCaseByFolderIdAction({
+            folderId,
+            ...paginationParams,
+          }),
+        );
+      }
+
+      if (isTestCaseMovedAndViewingPrevFolder) {
+        dispatch(
+          getTestCaseByFolderIdAction({
+            folderId: prevFolderId,
+            ...paginationParams,
+          }),
+        );
+      }
+    },
+    [testCasesPageData, urlFolderId, dispatch],
+  );
 
   const importTestCases = async ({ file, testFolderId, testFolderName }: ImportPayload) => {
     if (!file) {
@@ -74,6 +116,7 @@ export const useImportTestCase = () => {
           values: resolvedFolderName ? { folderName: resolvedFolderName } : undefined,
         }),
       );
+      refetchTestCases(testFolderId);
     } catch (error: unknown) {
       if (error instanceof Error && error?.message?.includes('tms_test_case_name_folder_unique')) {
         throw new SubmissionError({
