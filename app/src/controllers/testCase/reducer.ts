@@ -47,7 +47,7 @@ import {
   DeleteFolderSuccessParams,
   DeleteTestCaseParams,
   RenameFolderParams,
-  SelectActiveFolderParams,
+  SetActiveFolderIdParams,
   UpdateFolderCounterParams,
 } from './actionCreators';
 
@@ -209,7 +209,7 @@ const testCaseDetailsReducer = (
 
 const activeFolderReducer = (
   state: number | null = INITIAL_STATE.folders.activeFolderId || null,
-  action: { type: string; payload: SelectActiveFolderParams },
+  action: { type: string; payload: SetActiveFolderIdParams },
 ) => {
   switch (action.type) {
     case SELECT_ACTIVE_FOLDER:
