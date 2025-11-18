@@ -82,7 +82,7 @@ export interface RenameFolderParams {
   folderName: string;
 }
 
-export interface SelectActiveFolderParams {
+export interface SetActiveFolderIdParams {
   activeFolderId: number;
 }
 
@@ -127,7 +127,7 @@ export const getFoldersAction = (params?: GetFoldersParams) => ({
   payload: params,
 });
 
-export const selectActiveFolder = (payload: SelectActiveFolderParams) => {
+export const setActiveFolderId = (payload: SetActiveFolderIdParams) => {
   return {
     type: SELECT_ACTIVE_FOLDER,
     payload: payload,

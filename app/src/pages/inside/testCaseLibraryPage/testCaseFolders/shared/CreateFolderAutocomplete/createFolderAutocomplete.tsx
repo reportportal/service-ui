@@ -19,7 +19,9 @@ import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { FieldLabel, SingleAutocomplete } from '@reportportal/ui-kit';
 
-import { isString } from 'es-toolkit/compat';
+import { AutocompleteOption } from '@reportportal/ui-kit/autocompletes';
+
+import { isString, noop } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
 import { FolderWithFullPath, transformedFoldersWithFullPathSelector } from 'controllers/testCase';
@@ -29,7 +31,6 @@ import styles from './createFolderAutocomplete.scss';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 import { findFolderById } from 'pages/inside/testCaseLibraryPage/utils';
 import { GetItemPropsT } from '@reportportal/ui-kit/components/autocompletes/types';
-import { AutocompleteOption } from 'componentLibrary/autocompletes/common/autocompleteOption';
 
 const cx = createClassnames(styles);
 
@@ -83,16 +84,18 @@ export const CreateFolderAutocomplete = ({
     const { description, name, fullPath } = option;
 
     return (
-      <AutocompleteOption
-        {...getItemProps?.({ item: option, index })}
-        key={option.id}
-        isNew={false}
-      >
-        <>
-          <p className={cx('create-folder-autocomplete__folder-name')}>{description || name}</p>
-          <p className={cx('create-folder-autocomplete__folder-path')}>{fullPath}</p>
-        </>
-      </AutocompleteOption>
+      <div>
+        <AutocompleteOption
+          {...getItemProps?.({ item: option, index })}
+          key={option.id}
+          isNew={false}
+        >
+          <>
+            <p className={cx('create-folder-autocomplete__folder-name')}>{description || name}</p>
+            <p className={cx('create-folder-autocomplete__folder-path')}>{fullPath}</p>
+          </>
+        </AutocompleteOption>
+      </div>
     );
   };
 
@@ -101,13 +104,17 @@ export const CreateFolderAutocomplete = ({
       {label && <FieldLabel isRequired={isRequired}>{label}</FieldLabel>}
       <SingleAutocomplete<FolderWithFullPath>
         createWithoutConfirmation={createWithoutConfirmation}
-        optionVariant="key-variant"
+        optionVariant=""
+        onBlur={noop}
+        onFocus={noop}
+        useFixedPositioning
         onStateChange={onStateChange}
         onChange={onChange}
         value={targetFolder}
         error={error}
         touched={touched}
         skipOptionCreation
+        isDropdownMode
         placeholder={placeholder || formatMessage(commonMessages.searchFolderToSelect)}
         options={folders}
         customEmptyListMessage={customEmptyListMessage || formatMessage(messages.noFoldersFound)}

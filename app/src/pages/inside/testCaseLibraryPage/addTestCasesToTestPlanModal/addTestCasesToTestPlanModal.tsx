@@ -89,7 +89,7 @@ export const AddTestCasesToTestPlanModal = ({
   }, [formatMessage, selectedTestCasesLength]);
 
   const retrieveTestPlans = (value: string) =>
-    `${URLS.testPlan(projectKey)}?filter.fts.search=${value}`;
+    `${URLS.testPlan(projectKey)}${value ? `filter.fts.search=${value}` : ''}`;
 
   return (
     <Modal
@@ -120,9 +120,11 @@ export const AddTestCasesToTestPlanModal = ({
               getURI={retrieveTestPlans}
               makeOptions={makeTestPlansOptions}
               onChange={setSelectedTestPlan}
+              isDropdownMode
               parseValueToString={(value: TestPlanDto) => value?.name}
               createWithoutConfirmation
               skipOptionCreation
+              minLength={0}
             />
           </div>
         </div>

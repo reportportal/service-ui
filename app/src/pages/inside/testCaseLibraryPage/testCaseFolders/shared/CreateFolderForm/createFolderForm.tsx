@@ -18,6 +18,7 @@ import { ChangeEvent, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
+import { SingleAutocompleteProps } from '@reportportal/ui-kit/components/autocompletes/singleAutocomplete/singleAutocomplete';
 
 import { createClassnames } from 'common/utils';
 import { FolderWithFullPath, transformedFoldersWithFullPathSelector } from 'controllers/testCase';
@@ -68,12 +69,13 @@ export const CreateFolderForm = ({
     [toggleFieldName, change],
   );
 
-  const handleFolderSelection = useCallback(
-    ({ selectedItem }: { selectedItem: FolderWithFullPath }) => {
-      change(parentFolderFieldName, selectedItem);
-    },
-    [change, parentFolderFieldName],
-  );
+  const handleFolderSelection: SingleAutocompleteProps<FolderWithFullPath>['onStateChange'] =
+    useCallback(
+      ({ selectedItem }) => {
+        change(parentFolderFieldName, selectedItem);
+      },
+      [change, parentFolderFieldName],
+    );
 
   return (
     <div className={cx('create-folder-form', className)}>

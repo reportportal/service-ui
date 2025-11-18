@@ -62,7 +62,7 @@ import {
   deleteFolderSuccessAction,
   renameFolderSuccessAction,
   GetAllTestCases,
-  selectActiveFolder,
+  setActiveFolderId,
 } from './actionCreators';
 import { getAllFolderIdsToDelete } from './utils';
 import { fetchAllFolders } from './utils/fetchAllFolders';
@@ -251,7 +251,7 @@ function* handleFolderCreation(
 
     yield put(createFoldersSuccessAction({ ...folder, countOfTestCases: 0 }));
     yield put(hideModalAction());
-    yield put(selectActiveFolder({ activeFolderId: folder.id }));
+    yield put(setActiveFolderId({ activeFolderId: folder.id }));
     yield put(
       showSuccessNotification({
         message: null,

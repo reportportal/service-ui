@@ -44,7 +44,7 @@ import {
   WARNING_NOTIFICATION_DURATION,
   showNotification,
 } from 'controllers/notification';
-import { selectActiveFolder } from 'controllers/testCase/actionCreators';
+import { setActiveFolderId } from 'controllers/testCase/actionCreators';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
@@ -88,7 +88,7 @@ export const TestCaseFolders = () => {
 
   const setAllTestCases = useCallback(() => {
     dispatch(
-      selectActiveFolder({
+      setActiveFolderId({
         activeFolderId: null,
       }),
     );
@@ -139,7 +139,7 @@ export const TestCaseFolders = () => {
 
   useEffect(() => {
     dispatch(
-      selectActiveFolder({
+      setActiveFolderId({
         activeFolderId: folderId ? folderIdNumber : null,
       }),
     );
@@ -147,7 +147,7 @@ export const TestCaseFolders = () => {
 
   const handleFolderClick = (id: number) => {
     dispatch(
-      selectActiveFolder({
+      setActiveFolderId({
         activeFolderId: id,
       }),
     );
