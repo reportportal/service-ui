@@ -28,9 +28,9 @@ export const SearchField = ({
   setSearchValue,
   filter,
   onFilterChange,
-  placeholder,
-  isLoading,
-  event,
+  placeholder = '',
+  isLoading = false,
+  event = null,
   className,
 }) => {
   const { trackEvent } = useTracking();
@@ -98,10 +98,4 @@ SearchField.propTypes = {
   placeholder: PropTypes.string,
   isLoading: PropTypes.bool,
   event: PropTypes.object,
-};
-
-SearchField.defaultProps = {
-  placeholder: '',
-  isLoading: false,
-  event: null,
 };
