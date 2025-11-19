@@ -87,6 +87,7 @@ import {
   activeProjectRoleSelector,
   userRolesSelector,
   ORGANIZATION_SETTINGS_TAB_PAGE,
+  ORGANIZATION_PROJECTS_PAGE,
 } from 'controllers/pages';
 import { attributesArray, isNotEmptyArray } from 'common/utils/validation/validate';
 import {
@@ -323,6 +324,7 @@ export const createImportProps = (pluginName) => ({
     SECRET_FIELDS_KEY,
     BTS_FIELDS_FORM,
     ORGANIZATION_SETTINGS_TAB_PAGE,
+    ORGANIZATION_PROJECTS_PAGE,
   },
   actions: {
     showModalAction,
