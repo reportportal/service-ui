@@ -37,6 +37,7 @@ import {
   GET_TEST_CASE_DETAILS_SUCCESS,
   GET_TEST_CASE_DETAILS_FAILURE,
   UPDATE_FOLDER_COUNTER,
+  SELECT_ACTIVE_FOLDER,
 } from 'controllers/testCase/constants';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Page } from 'types/common';
@@ -46,6 +47,7 @@ import {
   DeleteFolderSuccessParams,
   DeleteTestCaseParams,
   RenameFolderParams,
+  SetActiveFolderIdParams,
   UpdateFolderCounterParams,
 } from './actionCreators';
 
@@ -55,6 +57,7 @@ export type InitialStateType = {
     isCreatingFolder: boolean;
     isLoadingFolder: boolean;
     loading: boolean;
+    activeFolderId?: number | null;
   };
   testCases: {
     isLoading: boolean;
@@ -69,6 +72,7 @@ export const INITIAL_STATE: InitialStateType = {
     isCreatingFolder: false,
     isLoadingFolder: false,
     loading: false,
+    activeFolderId: null,
   },
   testCases: {
     isLoading: false,
@@ -203,6 +207,18 @@ const testCaseDetailsReducer = (
   }
 };
 
+const activeFolderReducer = (
+  state: number | null = INITIAL_STATE.folders.activeFolderId || null,
+  action: { type: string; payload: SetActiveFolderIdParams },
+) => {
+  switch (action.type) {
+    case SELECT_ACTIVE_FOLDER:
+      return action.payload.activeFolderId || null;
+    default:
+      return state;
+  }
+};
+
 const reducer = combineReducers({
   details: testCaseDetailsReducer,
   folders: combineReducers({
@@ -210,6 +226,7 @@ const reducer = combineReducers({
       fetchReducer(NAMESPACE, { initialState: [], contentPath: 'content' }),
       folderReducer,
     ),
+    activeFolderId: activeFolderReducer,
     isCreatingFolder: isCreatingFolderReducer,
     isLoadingFolder: isLoadingFolderReducer,
     loading: loadingReducer(NAMESPACE),

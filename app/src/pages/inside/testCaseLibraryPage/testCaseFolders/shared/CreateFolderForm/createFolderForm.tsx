@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-import { ChangeEvent, useCallback } from 'react';
+import { ChangeEvent, ComponentProps, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
+import { SingleAutocomplete } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { FolderWithFullPath, transformedFoldersWithFullPathSelector } from 'controllers/testCase';
@@ -68,8 +69,10 @@ export const CreateFolderForm = ({
     [toggleFieldName, change],
   );
 
-  const handleFolderSelection = useCallback(
-    ({ selectedItem }: { selectedItem: FolderWithFullPath }) => {
+  const handleFolderSelection: ComponentProps<
+    typeof SingleAutocomplete<FolderWithFullPath>
+  >['onStateChange'] = useCallback(
+    ({ selectedItem }) => {
       change(parentFolderFieldName, selectedItem);
     },
     [change, parentFolderFieldName],

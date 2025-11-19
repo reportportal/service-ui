@@ -108,6 +108,7 @@ const DuplicateFolderModal = reduxForm<DuplicateFolderFormValues, DuplicateFolde
 
   return (
     <FolderModal
+      formName={DUPLICATE_FORM_NAME}
       title={formatMessage(commonMessages.duplicateFolder)}
       dirty={dirty}
       isLoading={isDuplicating}

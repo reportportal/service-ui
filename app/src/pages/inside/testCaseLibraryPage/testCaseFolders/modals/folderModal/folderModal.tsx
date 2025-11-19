@@ -16,8 +16,8 @@
 
 import { ReactNode } from 'react';
 import { useIntl } from 'react-intl';
-import { useDispatch } from 'react-redux';
-import { InjectedFormProps } from 'redux-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { InjectedFormProps, getFormValues } from 'redux-form';
 import { Modal } from '@reportportal/ui-kit';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -28,6 +28,7 @@ import { hideModalAction } from 'controllers/modal';
 import { CreateFolderForm } from '../../shared/CreateFolderForm';
 
 import styles from './folderModal.scss';
+import { FolderFormValues } from '../types';
 
 const cx = createClassnames(styles);
 
@@ -36,6 +37,7 @@ interface FolderModalConfig {
   isLoading: boolean;
   isToggled: boolean;
   toggleLabel: string;
+  formName: string;
   toggleFieldName: string;
   parentFolderFieldName: string;
   parentFolderFieldLabel: string;
@@ -55,6 +57,7 @@ export const FolderModal = ({
   isToggled,
   toggleLabel,
   toggleFieldName,
+  formName,
   toggleDisabled = false,
   parentFolderFieldName,
   parentFolderFieldLabel,
@@ -67,11 +70,13 @@ export const FolderModal = ({
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const hideModal = () => dispatch(hideModalAction());
+  const formValues = useSelector((state) => getFormValues(formName)(state) as FolderFormValues);
 
   const okButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CREATE),
     onClick: handleSubmit(onSubmit) as () => void,
-    disabled: isLoading,
+    disabled:
+      isLoading || (isToggled && !formValues?.[parentFolderFieldName as keyof FolderFormValues]),
     'data-automation-id': 'submitButton',
   };
 

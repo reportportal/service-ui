@@ -68,6 +68,7 @@ const CreateFolderModal = reduxForm<FolderFormValues>({
 
   return (
     <FolderModal
+      formName={CREATE_FORM_NAME}
       title={formatMessage(commonMessages.createFolder)}
       dirty={dirty}
       isLoading={isCreatingFolder}

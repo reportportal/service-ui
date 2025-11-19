@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, ComponentProps } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { reduxForm, InjectedFormProps, formValueSelector } from 'redux-form';
 import { noop } from 'es-toolkit';
-import { Modal } from '@reportportal/ui-kit';
+import { Modal, SingleAutocomplete } from '@reportportal/ui-kit';
 
 import { UseModalData } from 'common/hooks';
 import { createClassnames } from 'common/utils';
@@ -133,8 +133,10 @@ const BatchDuplicateToFolderModal = reduxForm<
     [change],
   );
 
-  const handleFolderSelect = useCallback(
-    ({ selectedItem }: { selectedItem: FolderWithFullPath }) => {
+  const handleFolderSelect: ComponentProps<
+    typeof SingleAutocomplete<FolderWithFullPath>
+  >['onStateChange'] = useCallback(
+    ({ selectedItem }) => {
       change('destinationFolder', selectedItem);
     },
     [change],

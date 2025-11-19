@@ -37,6 +37,7 @@ import {
   RENAME_FOLDER_SUCCESS,
   DELETE_TEST_CASE_SUCCESS,
   UPDATE_FOLDER_COUNTER,
+  SELECT_ACTIVE_FOLDER,
 } from './constants';
 import { Folder, TransformedFolder } from './types';
 
@@ -81,6 +82,10 @@ export interface RenameFolderParams {
   folderName: string;
 }
 
+export interface SetActiveFolderIdParams {
+  activeFolderId: number;
+}
+
 export interface UpdateFolderCounterParams {
   folderId: number;
   delta: number;
@@ -121,6 +126,13 @@ export const getFoldersAction = (params?: GetFoldersParams) => ({
   type: GET_FOLDERS,
   payload: params,
 });
+
+export const setActiveFolderId = (payload: SetActiveFolderIdParams) => {
+  return {
+    type: SELECT_ACTIVE_FOLDER,
+    payload: payload,
+  };
+};
 
 export const createFoldersAction = (folder: CreateFolderParams) => ({
   type: CREATE_FOLDER,
