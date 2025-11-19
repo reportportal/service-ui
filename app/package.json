@@ -28,7 +28,7 @@
     "@formatjs/intl-relativetimeformat": "4.5.1",
     "@formatjs/intl-utils": "1.6.0",
     "@reportportal/ui-kit": "^0.0.1-alpha.100",
-    "axios": "^1.8.2",
+    "axios": "^1.12.2",
     "c3": "0.7.20",
     "chart.js": "2.9.4",
     "chartjs-plugin-datalabels": "0.6.0",
