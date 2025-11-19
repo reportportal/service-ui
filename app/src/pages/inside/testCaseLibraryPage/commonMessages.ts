@@ -81,4 +81,8 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'TestCaseLibraryPage.duplicateTestCaseName',
     defaultMessage: 'Test case with this name already exists',
   },
+  coveredManually: {
+    id: 'TestCaseLibraryPage.coveredManually',
+    defaultMessage: 'Covered manually',
+  },
 });
