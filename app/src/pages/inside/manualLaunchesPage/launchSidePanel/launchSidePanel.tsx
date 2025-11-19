@@ -38,9 +38,9 @@ import { LaunchAttribute } from '../launchAttribute';
 import { TestStatisticsChart } from '../testStatisticsChart';
 import { getLaunchStatistics } from '../useManualLaunches';
 import { messages } from './messages';
+import { COMMON_LOCALE_KEYS } from '../../../../common/constants/localization';
 
 import styles from './launchSidePanel.scss';
-import { COMMON_LOCALE_KEYS } from '../../../../common/constants/localization';
 
 const cx = createClassnames(styles);
 
@@ -101,7 +101,7 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
           <div className={cx('meta-item-row')}>
             <TestPlanIcon />
             <span className={cx('meta-label')}>{formatMessage(messages.testPlan)}:</span>
-            <span className={cx('meta-value')}>{'testPlan'}</span>
+            <span className={cx('meta-value')}>{testPlan}</span>
           </div>
         </div>
       )}
@@ -122,7 +122,7 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
         title={formatMessage(commonMessages.description)}
         defaultMessage={formatMessage(commonMessages.descriptionNotSpecified)}
       >
-        {!launch.description && (
+        {launch.description && (
           <ExpandedTextSection text={launch.description} defaultVisibleLines={5} />
         )}
       </CollapsibleSection>
@@ -130,7 +130,7 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
         title={formatMessage(messages.attributesTitle)}
         defaultMessage={formatMessage(messages.noAttributesAdded)}
       >
-        {isEmpty(launch.attributes) && (
+        {!isEmpty(launch.attributes) && (
           <div className={cx('attributes-list')}>
             {launch.attributes.map((attr) => (
               <LaunchAttribute
