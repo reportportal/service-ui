@@ -96,7 +96,7 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
           <span className={cx('meta-value')}>{formatTimestampForSidePanel(startTime)}</span>
         </div>
       </div>
-      {!testPlan && (
+      {testPlan && (
         <div className={cx('meta-row')}>
           <div className={cx('meta-item-row')}>
             <TestPlanIcon />
