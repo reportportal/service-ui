@@ -29,6 +29,10 @@ export const commonMessages = defineMessages({
     id: 'Common.descriptionNotSpecified',
     defaultMessage: 'Description not specified',
   },
+  noExecutions: {
+    id: 'Common.noExecutions',
+    defaultMessage: 'No executions',
+  },
   copyId: {
     id: 'Common.copyId',
     defaultMessage: 'Copy ID',
