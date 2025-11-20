@@ -16,58 +16,76 @@
 
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 import { ManualScenario } from 'pages/inside/testCaseLibraryPage/types';
+import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 
 import { CoverStatus } from './coverStatusCard';
 import { ExecutionStatusType } from './executionStatus';
 
-export const MOCK_BREADCRUMB_PATH = ['Regression Weekly A-team', 'Checkout flow'];
+export interface TestPlanMockData {
+  breadcrumbPath: string[];
+  priority: TestCasePriority;
+  duration: string;
+  description: string;
+  coverStatus: CoverStatus;
+  tags: string[];
+  executions: Array<{ title: string; status: ExecutionStatusType }>;
+  scenario: ManualScenario;
+}
 
-export const MOCK_PRIORITY = 'unspecified' as const;
+export const MOCK_DATA_1: TestPlanMockData = {
+  breadcrumbPath: ['Regression Weekly A-team', 'Checkout flow'],
+  priority: 'unspecified',
+  duration: '16 min',
+  description: `Ideally you should have a test method for each separate unit of work so you can always immediately view where things are going wrong. In this example there is a basic method called getUserById() which will return a user and there is a total of 3 unit of works.
 
-export const MOCK_DURATION = '16 min';
-
-export const MOCK_DESCRIPTION = `Ideally you should have a test method for each separate unit of work so you can always immediately view where things are going wrong. In this example there is a basic method called getUserById() which will return a user and there is a total of 3 unit of works.
-
-The first unit of work is to check if the user exists in the database. If the user does not exist, the method should throw an exception. The second unit of work is to validate the user permissions and roles. Finally, the third unit of work is to return the complete user object with all associated data.`;
-
-export const MOCK_COVER_STATUS = CoverStatus.UNCOVERED;
-
-export const MOCK_TAGS = ['Smoke', 'Regression', 'Payment', 'E2E'];
-
-export const MOCK_EXECUTIONS = [
-  { title: '# 70  Regression Instance B', status: ExecutionStatusType.RUNNING },
-  { title: '# 24  Stream B API', status: ExecutionStatusType.PASSED },
-  { title: '# 15  Smoke Test Suite', status: ExecutionStatusType.FAILED },
-];
-
-export const MOCK_SCENARIO = {
-  manualScenarioType: TestCaseManualScenario.STEPS,
-  id: 1,
-  executionEstimationTime: 960000,
-  linkToRequirements: '',
-  preconditions: {
-    value: 'User is logged in with valid credentials. Shopping cart contains at least one item.',
-    attachments: [],
-  },
-  attributes: [],
-  steps: [
-    {
-      id: 1,
-      instructions:
-        'Navigate to the shopping cart page and verify all items are displayed correctly.',
-      expectedResult:
-        'Shopping cart page loads successfully. All items are visible with correct quantities and prices.',
-      attachments: [],
-      position: 1,
-    },
-    {
-      id: 2,
-      instructions:
-        'Click on the "Proceed to Checkout" button and fill in the shipping information.',
-      expectedResult:
-        'Checkout page opens. Shipping form accepts valid input. Continue button becomes active.',
-      attachments: [],
-      position: 2,
-    },
+The first unit of work is to check if the user exists in the database. If the user does not exist, the method should throw an exception. The second unit of work is to validate the user permissions and roles. Finally, the third unit of work is to return the complete user object with all associated data.`,
+  coverStatus: CoverStatus.UNCOVERED,
+  tags: ['Smoke', 'Regression', 'Payment', 'E2E'],
+  executions: [
+    { title: '# 70  Regression Instance B', status: ExecutionStatusType.RUNNING },
+    { title: '# 24  Stream B API', status: ExecutionStatusType.PASSED },
+    { title: '# 15  Smoke Test Suite', status: ExecutionStatusType.FAILED },
   ],
-} satisfies ManualScenario;
+  scenario: {
+    manualScenarioType: TestCaseManualScenario.STEPS,
+    id: 1,
+    executionEstimationTime: 960000,
+    linkToRequirements: '',
+    preconditions: {
+      value: 'User is logged in with valid credentials. Shopping cart contains at least one item.',
+      attachments: [],
+    },
+    attributes: [],
+    steps: [
+      {
+        id: 1,
+        instructions:
+          'Navigate to the shopping cart page and verify all items are displayed correctly.',
+        expectedResult:
+          'Shopping cart page loads successfully. All items are visible with correct quantities and prices.',
+        attachments: [],
+        position: 1,
+      },
+      {
+        id: 2,
+        instructions:
+          'Click on the "Proceed to Checkout" button and fill in the shipping information.',
+        expectedResult:
+          'Checkout page opens. Shipping form accepts valid input. Continue button becomes active.',
+        attachments: [],
+        position: 2,
+      },
+    ],
+  },
+};
+
+export const MOCK_DATA_2: TestPlanMockData = {
+  breadcrumbPath: ['Nightly Builds', 'Authentication', 'Login'],
+  priority: 'high',
+  duration: '8 min',
+  description: '',
+  coverStatus: CoverStatus.MANUAL_COVERED,
+  tags: [],
+  executions: [],
+  scenario: {} as never as ManualScenario,
+};
