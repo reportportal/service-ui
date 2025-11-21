@@ -434,4 +434,11 @@ export const createImportProps = (pluginName) => ({
     helpers: { composeValidators, bindMessageToValidator },
     email,
   },
+  portalRootIds: {
+    tooltipRoot: 'tooltip-root',
+    modalRoot: 'modal-root',
+    popoverRoot: 'popover-root',
+    notificationRoot: 'notification-root',
+    screenLockRoot: 'screen-lock-root',
+  },
 });

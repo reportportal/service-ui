@@ -58,6 +58,7 @@ export const AttributeEditor = ({
   editorDefaultOpen,
   autocompleteProps,
   isAttributeValueRequired,
+  allowCustomValues = true,
 }) => {
   const [keyTouched, setTouchKey] = useState(false);
   const [valueTouched, setTouchValue] = useState(false);
@@ -200,7 +201,7 @@ export const AttributeEditor = ({
           minLength={1}
           attributeComparator={byKeyComparator}
           getURI={getURIKey}
-          creatable
+          creatable={allowCustomValues}
           placeholder={keyPlaceholder}
           onChange={handleKeyChange}
           value={state.key}
@@ -225,7 +226,7 @@ export const AttributeEditor = ({
           attributes={attributes}
           attributeComparator={byValueComparator}
           getURI={getURIValue(state.key)}
-          creatable
+          creatable={allowCustomValues}
           onChange={handleValueChange}
           value={state.value}
           placeholder={valuePlaceholder}
@@ -278,6 +279,7 @@ AttributeEditor.propTypes = {
   editorDefaultOpen: PropTypes.bool,
   autocompleteProps: PropTypes.object,
   isAttributeValueRequired: PropTypes.bool,
+  allowCustomValues: PropTypes.bool,
 };
 AttributeEditor.defaultProps = {
   attributes: [],
@@ -296,4 +298,5 @@ AttributeEditor.defaultProps = {
   editorDefaultOpen: false,
   autocompleteProps: {},
   isAttributeValueRequired: true,
+  allowCustomValues: true,
 };
