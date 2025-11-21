@@ -57,9 +57,9 @@ export const BasicInformation = ({
 
   const handleTagSelect = useCallback(
     (tag: Attribute) => {
-      const tagExists = attributes.some((attr) => attr.key === tag.key);
+      const isTagExists = attributes.some(({ key }) => key === tag.key);
 
-      if (!tagExists) {
+      if (!isTagExists) {
         const updatedAttributes = [...attributes, tag];
 
         dispatch(change(formName, 'attributes', updatedAttributes));
