@@ -121,6 +121,12 @@ export interface ActionButton {
   handleButton: () => void;
 }
 
+export interface Attribute {
+  id: number;
+  key: string;
+  value: string;
+}
+
 export interface CreateTestCaseFormData {
   name: string;
   description?: string;
@@ -136,6 +142,7 @@ export interface CreateTestCaseFormData {
   expectedResult?: string;
   textAttachments?: Attachment[];
   tags?: Tag[];
+  attributes?: Attribute[];
 }
 
 export interface TestStep {
