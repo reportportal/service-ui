@@ -22,7 +22,7 @@ import { AbsRelTime } from 'components/main/absRelTime/absRelTime';
 import { SegmentStatus, SegmentedStatusBar } from 'components/statusBar';
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { isEnterOrSpaceKey } from 'common/utils/helperUtils/event.utils';
+import { isEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 
 import { TestRunButton } from '../../testRunButton/testRunButton';
 import { CountTag } from '../../countTag';

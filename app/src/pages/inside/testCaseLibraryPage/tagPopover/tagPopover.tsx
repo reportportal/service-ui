@@ -18,6 +18,7 @@ import { ReactNode, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { BubblesLoader, Button, Popover } from '@reportportal/ui-kit';
 import { PopoverProps } from '@reportportal/ui-kit/popover';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
 import { SearchField } from 'components/fields/searchField';
@@ -28,7 +29,6 @@ import { messages } from './messages';
 import { commonMessages } from '../commonMessages';
 
 import styles from './tagPopover.scss';
-import { isEmpty } from 'es-toolkit/compat';
 
 const cx = createClassnames(styles);
 

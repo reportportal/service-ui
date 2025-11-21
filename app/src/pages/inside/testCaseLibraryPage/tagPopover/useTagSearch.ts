@@ -17,7 +17,7 @@
 import { useState, useCallback, useEffect } from 'react';
 
 import { fetch } from 'common/utils';
-import { getErrorMessage } from 'common/utils/helperUtils/error.utils';
+import { getErrorMessage } from 'common/utils/helperUtils/errorUtils';
 import { URLS } from 'common/urls';
 
 import { Attribute } from '../types';
@@ -47,7 +47,9 @@ export const useTagSearch = (searchValue: string = '') => {
       setLoading(true);
       setError(null);
 
-      const response = await fetch<AttributesResponse>(URLS.tmsAttributes(searchValue));
+      const response = await fetch<AttributesResponse>(
+        URLS.tmsAttributes({ 'filter.fts.search': searchValue }),
+      );
 
       setTags(response.content || []);
     } catch {
