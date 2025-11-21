@@ -46,7 +46,9 @@ export const useTagSearch = (searchValue: string = '') => {
     try {
       setLoading(true);
       setError(null);
+
       const response = await fetch<AttributesResponse>(URLS.tmsAttributes(searchValue));
+
       setTags(response.content || []);
     } catch {
       setTags([]);
@@ -61,14 +63,17 @@ export const useTagSearch = (searchValue: string = '') => {
       try {
         setLoading(true);
         setError(null);
+
         const newTag = await fetch<Attribute>(URLS.createTmsAttribute(), {
           method: 'POST',
           data: { key: tagKey, value: tagKey },
         });
+
         await fetchTags();
         return newTag;
       } catch (err: unknown) {
         const errorMessage = getErrorMessage(err);
+
         if (errorMessage.includes('already exists')) {
           setError(TagError.TAG_ALREADY_ADDED);
         } else {
@@ -83,7 +88,8 @@ export const useTagSearch = (searchValue: string = '') => {
   );
 
   useEffect(() => {
-    void fetchTags();
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    fetchTags();
   }, [fetchTags]);
 
   return {

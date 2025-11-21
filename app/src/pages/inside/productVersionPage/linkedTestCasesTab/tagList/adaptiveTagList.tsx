@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
+import { useEffect, useRef, useState, useMemo, useCallback, MouseEvent } from 'react';
 import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
 import Parser from 'html-react-parser';
@@ -42,7 +42,6 @@ interface AdaptiveTagListProps {
   tags: string[];
   isShowAllView?: boolean;
   defaultVisibleLines?: number;
-  isEditable?: boolean;
   onRemoveTag?: (tag: string) => void;
 }
 
@@ -50,7 +49,6 @@ export const AdaptiveTagList = ({
   tags,
   isShowAllView = false,
   defaultVisibleLines = DEFAULT_VISIBLE_LINES,
-  isEditable = false,
   onRemoveTag,
 }: AdaptiveTagListProps) => {
   const { formatMessage } = useIntl();
@@ -61,7 +59,7 @@ export const AdaptiveTagList = ({
   const [isExceedsVisibleLines, setIsExceedsVisibleLines] = useState(false);
 
   const handleRemoveTag = useCallback(
-    (e: React.MouseEvent, tag: string) => {
+    (e: MouseEvent, tag: string) => {
       e.stopPropagation();
       onRemoveTag?.(tag);
     },
@@ -186,13 +184,13 @@ export const AdaptiveTagList = ({
     setIsExpanded((prevState) => !prevState);
   }, []);
 
-  const handleCountClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleCountClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     toggleExpanded();
   };
 
   const handleButtonClick = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
+    (event: MouseEvent<HTMLButtonElement>) => {
       event.stopPropagation();
       toggleExpanded();
     },
@@ -277,7 +275,7 @@ export const AdaptiveTagList = ({
             <div
               // eslint-disable-next-line react/no-array-index-key
               key={`${index}-${tag}`}
-              className={cx('tag-list__item', { 'tag-list__item--editable': isEditable })}
+              className={cx('tag-list__item', { 'tag-list__item--editable': !!onRemoveTag })}
               style={{
                 display: isItemHidden ? 'none' : 'flex',
               }}
@@ -288,7 +286,7 @@ export const AdaptiveTagList = ({
               >
                 {tag}
               </div>
-              {isEditable && onRemoveTag && (
+              {onRemoveTag && (
                 <button
                   type="button"
                   className={cx('tag-list__item-remove')}

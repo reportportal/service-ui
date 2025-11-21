@@ -131,6 +131,7 @@ EmptyStatePage.propTypes = {
     }),
   ),
 };
+
 EmptyStatePage.defaultProps = {
   title: '',
   description: '',

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@use '../../../../common/css/mixins';
+
 .tag-popover {
   width: 300px;
 
@@ -29,13 +31,15 @@
   &__list {
     max-height: 300px;
     overflow-y: auto;
-    padding: 8px 4px 4x;
+    padding: 8px 0;
   }
 
   &__tag-item {
+    @include mixins.button-reset;
+
+    width: 100%;
     padding: 8px 4px;
-    height: 20px;
-    cursor: pointer;
+    height: 36px;
     border-radius: 4px;
     color: var(--rp-ui-base-almost-black);
     font-size: 13px;

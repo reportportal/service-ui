@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { formValueSelector, change } from 'redux-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -54,18 +55,27 @@ export const BasicInformation = ({
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return
   const attributes: Attribute[] = useSelector((state) => selector(state, 'attributes')) || [];
 
-  const handleTagSelect = (tag: Attribute) => {
-    const tagExists = attributes.some((attr) => attr.key === tag.key);
-    if (!tagExists) {
-      const updatedAttributes = [...attributes, tag];
-      dispatch(change(formName, 'attributes', updatedAttributes));
-    }
-  };
+  const handleTagSelect = useCallback(
+    (tag: Attribute) => {
+      const tagExists = attributes.some((attr) => attr.key === tag.key);
 
-  const handleTagRemove = (tagKey: string) => {
-    const updatedAttributes = attributes.filter((attr) => attr.key !== tagKey);
-    dispatch(change(formName, 'attributes', updatedAttributes));
-  };
+      if (!tagExists) {
+        const updatedAttributes = [...attributes, tag];
+
+        dispatch(change(formName, 'attributes', updatedAttributes));
+      }
+    },
+    [attributes, dispatch, formName],
+  );
+
+  const handleTagRemove = useCallback(
+    (tagKey: string) => {
+      const updatedAttributes = attributes.filter((attr) => attr.key !== tagKey);
+
+      dispatch(change(formName, 'attributes', updatedAttributes));
+    },
+    [attributes, dispatch, formName],
+  );
 
   const addButton = (
     <Button variant="text" adjustWidthOn="content" icon={<PlusIcon />}>

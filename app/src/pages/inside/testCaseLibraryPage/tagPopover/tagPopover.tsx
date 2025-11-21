@@ -20,15 +20,15 @@ import { BubblesLoader, Button, Popover } from '@reportportal/ui-kit';
 import { PopoverProps } from '@reportportal/ui-kit/popover';
 
 import { createClassnames } from 'common/utils';
-import { isEnterOrSpaceKey } from 'common/utils/helperUtils/event.utils';
 import { SearchField } from 'components/fields/searchField';
-import { Attribute } from '../types';
 
+import { Attribute } from '../types';
 import { useTagSearch, TagError } from './useTagSearch';
 import { messages } from './messages';
 import { commonMessages } from '../commonMessages';
 
 import styles from './tagPopover.scss';
+import { isEmpty } from 'es-toolkit/compat';
 
 const cx = createClassnames(styles);
 
@@ -59,17 +59,13 @@ export const TagPopover = ({
     setIsOpened(false);
   };
 
-  const handleTagKeyDown = (e: React.KeyboardEvent, tag: Attribute) => {
-    if (isEnterOrSpaceKey(e)) {
-      e.preventDefault();
-      handleTagClick(tag);
-    }
-  };
-
   const handleCreateTag = () => {
-    if (!searchValue.trim()) return;
+    if (!searchValue.trim()) {
+      return;
+    }
 
-    void createTag(searchValue.trim()).then((newTag) => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    createTag(searchValue.trim()).then((newTag) => {
       if (newTag) {
         onTagSelect(newTag);
         setSearchValue('');
@@ -80,10 +76,26 @@ export const TagPopover = ({
 
   const handleOpenChange = (opened: boolean) => {
     setIsOpened(opened);
+
     if (!opened) {
       setSearchValue('');
     }
   };
+
+  const renderTagList = () => (
+    <div className={cx('tag-popover__list')}>
+      {tags.map((tag) => (
+        <button
+          key={tag.id}
+          type="button"
+          className={cx('tag-popover__tag-item')}
+          onClick={() => handleTagClick(tag)}
+        >
+          {tag.key}
+        </button>
+      ))}
+    </div>
+  );
 
   const renderContent = () => {
     if (loading) {
@@ -100,50 +112,22 @@ export const TagPopover = ({
       );
     }
 
-    const hasSearchValue = searchValue.trim().length > 0;
-    const hasTags = tags.length > 0;
+    const hasSearchValue = !isEmpty(searchValue.trim());
+    const hasTags = !isEmpty(tags);
 
     if (!hasSearchValue && !hasTags) {
       return null;
     }
 
     if (!hasSearchValue && hasTags) {
-      return (
-        <div className={cx('tag-popover__list')}>
-          {tags.map((tag) => (
-            <div
-              key={tag.id}
-              className={cx('tag-popover__tag-item')}
-              onClick={() => handleTagClick(tag)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => handleTagKeyDown(e, tag)}
-            >
-              {tag.key}
-            </div>
-          ))}
-        </div>
-      );
+      return renderTagList();
     }
 
     return (
       <>
         {hasTags && (
           <>
-            <div className={cx('tag-popover__list')}>
-              {tags.map((tag) => (
-                <div
-                  key={tag.id}
-                  className={cx('tag-popover__tag-item')}
-                  onClick={() => handleTagClick(tag)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => handleTagKeyDown(e, tag)}
-                >
-                  {tag.key}
-                </div>
-              ))}
-            </div>
+            {renderTagList()}
             <div className={cx('tag-popover__divider')} />
           </>
         )}

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
 import { commonMessages } from 'pages/inside/common/common-messages/common-messages';
@@ -26,7 +27,7 @@ import { InfoBlock } from '../infoBlock';
 interface EditableTagsSectionProps {
   className?: string;
   variant: 'sidebar' | 'modal';
-  addButton?: React.ReactNode;
+  addButton?: ReactNode;
   tags?: Attribute[];
   onTagRemove?: (tagKey: string) => void;
 }
@@ -52,7 +53,7 @@ export const EditableTagsSection = ({
       {isEmpty(tags) ? (
         <InfoBlock label={formatMessage(commonMessages.noTagsAdded)} />
       ) : (
-        <AdaptiveTagList tags={tagKeys} isEditable={!!onTagRemove} onRemoveTag={onTagRemove} />
+        <AdaptiveTagList tags={tagKeys} onRemoveTag={onTagRemove} />
       )}
     </SectionWithHeader>
   );
