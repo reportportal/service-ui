@@ -17,10 +17,10 @@
 import { useIntl } from 'react-intl';
 import { Button, PlusIcon } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { commonMessages } from 'pages/inside/common/common-messages/common-messages';
 
 import { SectionWithHeader } from '../sectionWithHeader';
 import { InfoBlock } from '../infoBlock';
-import { commonMessages } from '../commonMessages';
 
 interface EditableTagsSectionProps {
   onAddTag: () => void;
