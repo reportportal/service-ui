@@ -1,5 +1,5 @@
-/*!
- * Copyright 2024 EPAM Systems
+/*
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-.search-field {
-  overflow: hidden;
+import { isObject, isString } from 'es-toolkit/compat';
 
-  &--full-width {
-    width: 100% !important;
+export const getErrorMessage = (error: unknown) => {
+  if (error && isObject(error) && 'message' in error && isString(error.message)) {
+    return error.message;
   }
-}
+
+  return '';
+};
