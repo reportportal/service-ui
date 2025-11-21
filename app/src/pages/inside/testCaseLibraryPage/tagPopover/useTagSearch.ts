@@ -70,15 +70,17 @@ export const useTagSearch = (searchValue: string = '') => {
         });
 
         await fetchTags();
-        return newTag;
-      } catch (err: unknown) {
-        const errorMessage = getErrorMessage(err);
 
-        if (errorMessage.includes('already exists')) {
-          setError(TagError.TAG_ALREADY_ADDED);
-        } else {
-          setError(TagError.CREATE_TAG_FAILED);
-        }
+        return newTag;
+      } catch (error: unknown) {
+        const errorMessage = getErrorMessage(error);
+
+        setError(
+          errorMessage.includes('already exists')
+            ? TagError.TAG_ALREADY_ADDED
+            : TagError.CREATE_TAG_FAILED,
+        );
+
         return null;
       } finally {
         setLoading(false);

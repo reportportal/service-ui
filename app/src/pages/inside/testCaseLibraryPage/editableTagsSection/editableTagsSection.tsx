@@ -17,6 +17,7 @@
 import { ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
+
 import { commonMessages } from 'pages/inside/common/common-messages/common-messages';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 
@@ -41,7 +42,7 @@ export const EditableTagsSection = ({
 }: EditableTagsSectionProps) => {
   const { formatMessage } = useIntl();
 
-  const tagKeys = tags.map((tag) => tag.key);
+  const tagKeys = tags.map(({ key }) => key);
 
   return (
     <SectionWithHeader

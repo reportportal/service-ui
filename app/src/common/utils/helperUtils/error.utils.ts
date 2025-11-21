@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-export const getErrorMessage = (err: unknown): string => {
-  if (err && typeof err === 'object' && 'message' in err && typeof err.message === 'string') {
-    return err.message;
+import { isObject, isString } from 'es-toolkit/compat';
+
+export const getErrorMessage = (error: unknown) => {
+  if (error && isObject(error) && 'message' in error && isString(error.message)) {
+    return error.message;
   }
+
   return '';
 };

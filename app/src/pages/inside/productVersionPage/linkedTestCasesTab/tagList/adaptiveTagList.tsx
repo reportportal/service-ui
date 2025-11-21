@@ -59,8 +59,8 @@ export const AdaptiveTagList = ({
   const [isExceedsVisibleLines, setIsExceedsVisibleLines] = useState(false);
 
   const handleRemoveTag = useCallback(
-    (e: MouseEvent, tag: string) => {
-      e.stopPropagation();
+    (event: MouseEvent, tag: string) => {
+      event.stopPropagation();
       onRemoveTag?.(tag);
     },
     [onRemoveTag],
@@ -275,7 +275,7 @@ export const AdaptiveTagList = ({
             <div
               // eslint-disable-next-line react/no-array-index-key
               key={`${index}-${tag}`}
-              className={cx('tag-list__item', { 'tag-list__item--editable': !!onRemoveTag })}
+              className={cx('tag-list__item', { 'tag-list__item--is-editable': !!onRemoveTag })}
               style={{
                 display: isItemHidden ? 'none' : 'flex',
               }}
@@ -290,8 +290,8 @@ export const AdaptiveTagList = ({
                 <button
                   type="button"
                   className={cx('tag-list__item-remove')}
-                  onClick={(e) => handleRemoveTag(e, tag)}
-                  aria-label={`Remove ${tag}`}
+                  onClick={(event) => handleRemoveTag(event, tag)}
+                  aria-label={formatMessage(messages.removeTag, { tag })}
                 >
                   {Parser(CrossIcon as unknown as string)}
                 </button>

@@ -70,7 +70,7 @@ export const BasicInformation = ({
 
   const handleTagRemove = useCallback(
     (tagKey: string) => {
-      const updatedAttributes = attributes.filter((attr) => attr.key !== tagKey);
+      const updatedAttributes = attributes.filter(({ key }) => key !== tagKey);
 
       dispatch(change(formName, 'attributes', updatedAttributes));
     },

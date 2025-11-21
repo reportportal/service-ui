@@ -41,43 +41,43 @@ interface TagPopoverProps extends Pick<PopoverProps, 'placement'> {
 export const TagPopover = ({
   trigger,
   onTagSelect,
-  placement = 'bottom-start',
+  placement = 'bottom',
   className,
 }: TagPopoverProps) => {
   const { formatMessage } = useIntl();
-  const [searchValue, setSearchValue] = useState<string>('');
-  const [isOpened, setIsOpened] = useState<boolean>(false);
+  const [searchValue, setSearchValue] = useState('');
+  const [isOpened, setIsOpened] = useState(false);
   const { tags, loading, error, createTag } = useTagSearch(searchValue);
 
   const handleSearchChange = (value: string) => {
     setSearchValue(value);
   };
 
-  const handleTagClick = (tag: Attribute) => {
+  const handleTag = (tag: Attribute) => {
     onTagSelect(tag);
     setSearchValue('');
     setIsOpened(false);
   };
 
   const handleCreateTag = () => {
-    if (!searchValue.trim()) {
+    const trimmedSearchValue = searchValue.trim();
+
+    if (!trimmedSearchValue) {
       return;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    createTag(searchValue.trim()).then((newTag) => {
+    createTag(trimmedSearchValue).then((newTag) => {
       if (newTag) {
-        onTagSelect(newTag);
-        setSearchValue('');
-        setIsOpened(false);
+        handleTag(newTag);
       }
     });
   };
 
-  const handleOpenChange = (opened: boolean) => {
-    setIsOpened(opened);
+  const handleOpenChange = (isOpened: boolean) => {
+    setIsOpened(isOpened);
 
-    if (!opened) {
+    if (!isOpened) {
       setSearchValue('');
     }
   };
@@ -89,7 +89,7 @@ export const TagPopover = ({
           key={tag.id}
           type="button"
           className={cx('tag-popover__tag-item')}
-          onClick={() => handleTagClick(tag)}
+          onClick={() => handleTag(tag)}
         >
           {tag.key}
         </button>
