@@ -17,10 +17,12 @@
 import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
+import Parser from 'html-react-parser';
 import { Button } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { commonMessages } from 'pages/inside/common/common-messages';
+import CrossIcon from 'common/img/cross-icon-inline.svg';
 
 import { messages } from './messages';
 import {
@@ -40,12 +42,16 @@ interface AdaptiveTagListProps {
   tags: string[];
   isShowAllView?: boolean;
   defaultVisibleLines?: number;
+  isEditable?: boolean;
+  onRemoveTag?: (tag: string) => void;
 }
 
 export const AdaptiveTagList = ({
   tags,
   isShowAllView = false,
   defaultVisibleLines = DEFAULT_VISIBLE_LINES,
+  isEditable = false,
+  onRemoveTag,
 }: AdaptiveTagListProps) => {
   const { formatMessage } = useIntl();
   const listRef = useRef<HTMLDivElement>(null);
@@ -53,6 +59,14 @@ export const AdaptiveTagList = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const [hiddenIndices, setHiddenIndices] = useState<Set<number>>(new Set());
   const [isExceedsVisibleLines, setIsExceedsVisibleLines] = useState(false);
+
+  const handleRemoveTag = useCallback(
+    (e: React.MouseEvent, tag: string) => {
+      e.stopPropagation();
+      onRemoveTag?.(tag);
+    },
+    [onRemoveTag],
+  );
 
   const getFullWidthOffset = useCallback(() => {
     const parentElement = listRef.current;
@@ -263,7 +277,7 @@ export const AdaptiveTagList = ({
             <div
               // eslint-disable-next-line react/no-array-index-key
               key={`${index}-${tag}`}
-              className={cx('tag-list__item')}
+              className={cx('tag-list__item', { 'tag-list__item--editable': isEditable })}
               style={{
                 display: isItemHidden ? 'none' : 'flex',
               }}
@@ -274,6 +288,16 @@ export const AdaptiveTagList = ({
               >
                 {tag}
               </div>
+              {isEditable && onRemoveTag && (
+                <button
+                  type="button"
+                  className={cx('tag-list__item-remove')}
+                  onClick={(e) => handleRemoveTag(e, tag)}
+                  aria-label={`Remove ${tag}`}
+                >
+                  {Parser(CrossIcon as unknown as string)}
+                </button>
+              )}
             </div>
           );
         })}

@@ -1,5 +1,5 @@
-/*!
- * Copyright 2024 EPAM Systems
+/*
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-.search-field {
-  overflow: hidden;
-
-  &--full-width {
-    width: 100% !important;
+export const getErrorMessage = (err: unknown): string => {
+  if (err && typeof err === 'object' && 'message' in err && typeof err.message === 'string') {
+    return err.message;
   }
-}
+  return '';
+};

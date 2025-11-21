@@ -1,5 +1,5 @@
-/*!
- * Copyright 2024 EPAM Systems
+/*
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,19 @@
  * limitations under the License.
  */
 
-.search-field {
-  overflow: hidden;
+import { defineMessages } from 'react-intl';
 
-  &--full-width {
-    width: 100% !important;
-  }
-}
+export const messages = defineMessages({
+  searchPlaceholder: {
+    id: 'TagPopover.searchPlaceholder',
+    defaultMessage: 'Find or create new tag',
+  },
+  noTagsFound: {
+    id: 'TagPopover.noTagsFound',
+    defaultMessage: 'No tags found',
+  },
+  tagAlreadyAdded: {
+    id: 'TagPopover.tagAlreadyAdded',
+    defaultMessage: 'Tag has been already added',
+  },
+});

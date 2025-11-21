@@ -15,40 +15,45 @@
  */
 
 import { useIntl } from 'react-intl';
-import { Button, PlusIcon } from '@reportportal/ui-kit';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { isEmpty } from 'es-toolkit/compat';
 import { commonMessages } from 'pages/inside/common/common-messages/common-messages';
+import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 
+import { Attribute } from '../types';
 import { SectionWithHeader } from '../sectionWithHeader';
 import { InfoBlock } from '../infoBlock';
 
 interface EditableTagsSectionProps {
-  onAddTag: () => void;
   className?: string;
   variant: 'sidebar' | 'modal';
+  addButton?: React.ReactNode;
+  tags?: Attribute[];
+  onTagRemove?: (tagKey: string) => void;
 }
 
 export const EditableTagsSection = ({
-  onAddTag,
   className = '',
   variant,
+  addButton,
+  tags = [],
+  onTagRemove,
 }: EditableTagsSectionProps) => {
   const { formatMessage } = useIntl();
 
-  const headerControl = (
-    <Button variant="text" adjustWidthOn="content" onClick={onAddTag} icon={<PlusIcon />}>
-      {formatMessage(COMMON_LOCALE_KEYS.ADD)}
-    </Button>
-  );
+  const tagKeys = tags.map((tag) => tag.key);
 
   return (
     <SectionWithHeader
       title={formatMessage(commonMessages.tags)}
-      headerControl={headerControl}
+      headerControl={addButton}
       className={className}
       variant={variant}
     >
-      <InfoBlock label={formatMessage(commonMessages.noTagsAdded)} />
+      {isEmpty(tags) ? (
+        <InfoBlock label={formatMessage(commonMessages.noTagsAdded)} />
+      ) : (
+        <AdaptiveTagList tags={tagKeys} isEditable={!!onTagRemove} onRemoveTag={onTagRemove} />
+      )}
     </SectionWithHeader>
   );
 };

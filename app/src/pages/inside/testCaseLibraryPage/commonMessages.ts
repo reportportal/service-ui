@@ -85,4 +85,8 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'TestCaseLibraryPage.coveredManually',
     defaultMessage: 'Covered manually',
   },
+  createNew: {
+    id: 'TestCaseLibraryPage.createNew',
+    defaultMessage: 'Create new',
+  },
 });

@@ -15,18 +15,23 @@
  */
 
 import { useIntl } from 'react-intl';
-import { noop } from 'es-toolkit';
-import { FieldText, FieldTextFlex } from '@reportportal/ui-kit';
+import { formValueSelector, change } from 'redux-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button, FieldText, FieldTextFlex, PlusIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { EditableTagsSection } from 'pages/inside/testCaseLibraryPage/editableTagsSection';
 import { CreateFolderAutocomplete } from 'pages/inside/testCaseLibraryPage/testCaseFolders/shared/CreateFolderAutocomplete';
 import { commonMessages as globalCommonMessages } from 'pages/inside/common/common-messages';
+import { TagPopover } from 'pages/inside/testCaseLibraryPage/tagPopover';
+import { Attribute } from 'pages/inside/testCaseLibraryPage/types';
 
 import { messages } from './messages';
 import { commonMessages } from '../../commonMessages';
 import { PrioritySelect } from '../../prioritySelect/prioritySelect';
+import { CREATE_TEST_CASE_FORM_NAME } from '../createTestCaseModal';
 
 import styles from './basicInformation.scss';
 
@@ -35,10 +40,38 @@ const cx = createClassnames(styles);
 interface BasicInformationProps {
   className?: string;
   hideFolderField?: boolean;
+  formName?: string;
 }
 
-export const BasicInformation = ({ className, hideFolderField = false }: BasicInformationProps) => {
+export const BasicInformation = ({
+  className,
+  hideFolderField = false,
+  formName = CREATE_TEST_CASE_FORM_NAME,
+}: BasicInformationProps) => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const selector = formValueSelector(formName);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return
+  const attributes: Attribute[] = useSelector((state) => selector(state, 'attributes')) || [];
+
+  const handleTagSelect = (tag: Attribute) => {
+    const tagExists = attributes.some((attr) => attr.key === tag.key);
+    if (!tagExists) {
+      const updatedAttributes = [...attributes, tag];
+      dispatch(change(formName, 'attributes', updatedAttributes));
+    }
+  };
+
+  const handleTagRemove = (tagKey: string) => {
+    const updatedAttributes = attributes.filter((attr) => attr.key !== tagKey);
+    dispatch(change(formName, 'attributes', updatedAttributes));
+  };
+
+  const addButton = (
+    <Button variant="text" adjustWidthOn="content" icon={<PlusIcon />}>
+      {formatMessage(COMMON_LOCALE_KEYS.ADD)}
+    </Button>
+  );
 
   return (
     <div className={cx('basic-information', className)}>
@@ -74,7 +107,12 @@ export const BasicInformation = ({ className, hideFolderField = false }: BasicIn
           <FieldTextFlex label={formatMessage(globalCommonMessages.description)} value="" />
         </FieldErrorHint>
       </FieldProvider>
-      <EditableTagsSection variant="modal" onAddTag={noop} />
+      <EditableTagsSection
+        variant="modal"
+        tags={attributes}
+        onTagRemove={handleTagRemove}
+        addButton={<TagPopover onTagSelect={handleTagSelect} trigger={addButton} />}
+      />
     </div>
   );
 };

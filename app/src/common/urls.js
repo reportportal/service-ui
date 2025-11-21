@@ -402,4 +402,9 @@ export const URLS = {
   manualLaunchesList: (projectKey) => `${urlBase}/${projectKey}/launch`,
   importTestCase: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-case/import${getQueryParams(query)}`,
+  tmsAttributes: (searchValue = '') =>
+    `${urlBase}tms/attribute${getQueryParams({
+      'filter.fts.search': searchValue,
+    })}`,
+  createTmsAttribute: () => `${urlBase}tms/attribute`,
 };
