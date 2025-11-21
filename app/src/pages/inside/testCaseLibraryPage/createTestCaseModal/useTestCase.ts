@@ -51,7 +51,6 @@ const buildTestCaseData = (
   name: payload.name,
   testFolderId: folderId,
   priority: payload.priority?.toUpperCase(),
-  tags: payload.tags || [],
   manualScenario,
 });
 

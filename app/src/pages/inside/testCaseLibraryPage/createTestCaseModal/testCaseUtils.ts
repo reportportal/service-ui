@@ -29,6 +29,12 @@ export const buildManualScenario = (payload: CreateTestCaseFormData): ManualScen
       value: payload.precondition,
       attachments: payload.preconditionAttachments ?? [],
     },
+    attributes:
+      payload.attributes?.map(({ id, key, value }) => ({
+        id,
+        key,
+        value,
+      })) || [],
   };
 
   if (payload.manualScenarioType === ManualScenarioType.TEXT) {
