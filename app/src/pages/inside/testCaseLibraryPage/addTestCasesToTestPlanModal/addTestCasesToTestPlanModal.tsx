@@ -89,7 +89,7 @@ export const AddTestCasesToTestPlanModal = ({
   }, [formatMessage, selectedTestCasesLength]);
 
   const retrieveTestPlans = (value: string) =>
-    `${URLS.testPlan(projectKey)}${value ? `filter.fts.search=${value}` : ''}`;
+    URLS.testPlan(projectKey, value ? { 'filter.fts.search': value } : {});
 
   return (
     <Modal

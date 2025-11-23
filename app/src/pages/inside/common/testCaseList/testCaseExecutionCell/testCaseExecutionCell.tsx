@@ -56,17 +56,20 @@ export const TestCaseExecutionCell = ({
     <button type="button" className={cx('execution-content')} onClick={onRowClick}>
       <div>
         {isCoveredManually && (
-          <div className={cx('covered-manually')}>
-            <CoveredManuallyIcon /> {formatMessage(commonMessages.coveredManually)}
+          <>
+            <div className={cx('covered-manually')}>
+              <CoveredManuallyIcon /> {formatMessage(commonMessages.coveredManually)}
+            </div>
+            <div className={cx('execution-time', 'execution-time--full-width')}>
+              {formatRelativeTime(testCase.updatedAt, locale)}
+            </div>
+          </>
+        )}
+        {!isTestPlan && (
+          <div className={cx('execution-time')}>
+            {formatRelativeTime(testCase.updatedAt, locale)}
           </div>
         )}
-        <div
-          className={cx('execution-time', {
-            'execution-time--full-width': isCoveredManually,
-          })}
-        >
-          {formatRelativeTime(testCase.updatedAt, locale)}
-        </div>
       </div>
       {!isEmpty(tooltipItems) && (
         <div

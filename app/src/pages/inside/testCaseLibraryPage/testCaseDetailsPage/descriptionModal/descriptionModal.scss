@@ -14,19 +14,8 @@
  * limitations under the License.
  */
 
-export const STATUS_TYPES = {
-  BLOCKER: 'blocker',
-  CRITICAL: 'critical',
-  HIGH: 'high',
-  MEDIUM: 'medium',
-  LOW: 'low',
-  UNSPECIFIED: 'unspecified',
-} as const;
-
-export const ITEMS_PER_PAGE_OPTIONS: number[] = [10, 20, 50, 100];
-
-export const TestCasePageDefaultValues = {
-  size: 10,
-  limit: 50,
-  offset: 0,
-};
+.description-modal {
+  &__form {
+    position: relative;
+  }
+}
