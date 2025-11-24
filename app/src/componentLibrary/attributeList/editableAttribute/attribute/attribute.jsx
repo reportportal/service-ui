@@ -75,11 +75,19 @@ export const Attribute = ({
       >
         {attribute.key ? (
           <>
-            <div className={cx('key', keyClassName)} style={{ maxWidth: maxCellWidth }} title={attribute.key}>
+            <div
+              className={cx('key', keyClassName)}
+              style={{ maxWidth: maxCellWidth }}
+              title={attribute.key}
+            >
               {attribute.key}
             </div>
             <div className={cx('separator')}>:</div>
-            <div className={cx('value', valueClassName)} style={{ maxWidth: maxCellWidth }} title={attribute.value}>
+            <div
+              className={cx('value', valueClassName)}
+              style={{ maxWidth: maxCellWidth }}
+              title={attribute.value}
+            >
               {attribute.value}
             </div>
           </>
