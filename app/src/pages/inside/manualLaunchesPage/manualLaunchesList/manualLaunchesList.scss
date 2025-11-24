@@ -118,7 +118,7 @@
 
           // total tests cell
           &:nth-child(4) {
-            &>div{
+            & > div {
               justify-content: flex-end;
               display: flex;
             }
