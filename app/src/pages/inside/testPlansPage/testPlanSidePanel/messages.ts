@@ -31,7 +31,7 @@ export const messages = defineMessages({
   },
   executionsInLaunchesTitle: {
     id: 'TestPlanSidePanel.executionsInLaunchesTitle',
-    defaultMessage: 'Executions in launches',
+    defaultMessage: 'Latest executions in Launches within the Test Plan',
   },
   noManualScenario: {
     id: 'TestPlanSidePanel.noManualScenario',
