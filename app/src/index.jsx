@@ -27,7 +27,7 @@ import 'reset-css/reset.css';
 import 'common/css/fonts/fonts.scss';
 import 'common/css/common.scss';
 import 'c3/c3.css';
-import '@reportportal/ui-kit/dist/style.css';
+import '@reportportal/ui-kit/style.css';
 
 import { initPluginRegistration } from 'controllers/plugins/uiExtensions/registerPlugin';
 
