@@ -180,7 +180,7 @@ export const TestPlanSidePanel = memo(
       <div className={cx('footer')}>
         <PopoverControl
           items={menuItems}
-          placement="top-start"
+          placement="top"
           isOpened={isMenuOpen}
           setIsOpened={setIsMenuOpen}
         >
