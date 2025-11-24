@@ -43,17 +43,8 @@ import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCases
 
 import { TestPlanDto } from 'controllers/testPlan';
 import { messages } from './messages';
-import {
-  MOCK_BREADCRUMB_PATH,
-  MOCK_PRIORITY,
-  MOCK_DURATION,
-  MOCK_DESCRIPTION,
-  MOCK_COVER_STATUS,
-  MOCK_SCENARIO,
-  MOCK_TAGS,
-  MOCK_EXECUTIONS,
-} from './mocks';
-import { CoverStatusCard, CoverStatus } from './coverStatusCard';
+import { MOCK_DATA_1, MOCK_DATA_2 } from './mocks';
+import { CoverStatusCard } from './coverStatusCard';
 import { ExecutionStatus } from './executionStatus';
 
 import styles from './testPlanSidePanel.scss';
@@ -81,6 +72,9 @@ export const TestPlanSidePanel = memo(
     if (!testPlan) {
       return null;
     }
+
+    // Select mock data based on even/odd ID
+    const mockData = Number(testPlan.id) % 2 === 0 ? MOCK_DATA_1 : MOCK_DATA_2;
 
     const handleRemoveFromTestPlan = () => {
       // TODO: Implement remove from test plan functionality
@@ -116,7 +110,7 @@ export const TestPlanSidePanel = memo(
 
     const titleComponent = (
       <div className={cx('test-plan-title')}>
-        <PriorityIcon priority={MOCK_PRIORITY} className={cx('priority-icon')} />
+        <PriorityIcon priority={mockData.priority} className={cx('priority-icon')} />
         <span>{testPlan.name}</span>
       </div>
     );
@@ -124,7 +118,7 @@ export const TestPlanSidePanel = memo(
     const descriptionComponent = (
       <div className={cx('description-wrapper')}>
         <PathBreadcrumb
-          path={MOCK_BREADCRUMB_PATH}
+          path={mockData.breadcrumbPath}
           color="var(--rp-ui-base-e-400)"
           isIconVisible={false}
         />
@@ -144,7 +138,7 @@ export const TestPlanSidePanel = memo(
           </div>
           <div className={cx('meta-item-row')}>
             <DurationIcon />
-            <span className={cx('meta-value')}>{MOCK_DURATION}</span>
+            <span className={cx('meta-value')}>{mockData.duration}</span>
           </div>
         </div>
       </div>
@@ -152,30 +146,32 @@ export const TestPlanSidePanel = memo(
 
     const contentComponent = (
       <div className={cx('content')}>
-        <CoverStatusCard status={MOCK_COVER_STATUS as CoverStatus} />
+        <CoverStatusCard status={mockData.coverStatus} />
         <CollapsibleSection
           title={formatMessage(messages.executionsInLaunchesTitle)}
-          defaultMessage={formatMessage(commonMessages.descriptionNotSpecified)}
+          defaultMessage={formatMessage(commonMessages.noExecutions)}
         >
-          <ExecutionStatus executions={MOCK_EXECUTIONS} />
+          {!isEmpty(mockData.executions) && <ExecutionStatus executions={mockData.executions} />}
         </CollapsibleSection>
         <CollapsibleSection
           title={formatMessage(messages.manualScenarioTitle)}
           defaultMessage={formatMessage(messages.noManualScenario)}
         >
-          <Scenario scenario={MOCK_SCENARIO} />
+          {!isEmpty(mockData.scenario) && <Scenario scenario={mockData.scenario} />}
         </CollapsibleSection>
         <CollapsibleSection
           title={formatMessage(commonMessages.tags)}
           defaultMessage={formatMessage(commonMessages.noTagsAdded)}
         >
-          {!isEmpty(MOCK_TAGS) && <AdaptiveTagList tags={MOCK_TAGS} isShowAllView />}
+          {!isEmpty(mockData.tags) && <AdaptiveTagList tags={mockData.tags} isShowAllView />}
         </CollapsibleSection>
         <CollapsibleSection
           title={formatMessage(commonMessages.description)}
           defaultMessage={formatMessage(commonMessages.descriptionNotSpecified)}
         >
-          <ExpandedTextSection text={MOCK_DESCRIPTION} defaultVisibleLines={4} />
+          {!isEmpty(mockData.description) && (
+            <ExpandedTextSection text={mockData.description} defaultVisibleLines={4} />
+          )}
         </CollapsibleSection>
       </div>
     );
@@ -184,7 +180,7 @@ export const TestPlanSidePanel = memo(
       <div className={cx('footer')}>
         <PopoverControl
           items={menuItems}
-          placement="top-start"
+          placement="top"
           isOpened={isMenuOpen}
           setIsOpened={setIsMenuOpen}
         >

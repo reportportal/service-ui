@@ -402,4 +402,6 @@ export const URLS = {
   manualLaunchesList: (projectKey) => `${urlBase}/${projectKey}/launch`,
   importTestCase: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-case/import${getQueryParams(query)}`,
+  tmsAttributes: (query = {}) => `${urlBase}tms/attribute${getQueryParams(query)}`,
+  createTmsAttribute: () => `${urlBase}tms/attribute`,
 };

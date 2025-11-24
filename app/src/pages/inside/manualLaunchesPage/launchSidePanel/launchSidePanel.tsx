@@ -38,6 +38,7 @@ import { LaunchAttribute } from '../launchAttribute';
 import { TestStatisticsChart } from '../testStatisticsChart';
 import { getLaunchStatistics } from '../useManualLaunches';
 import { messages } from './messages';
+import { COMMON_LOCALE_KEYS } from '../../../../common/constants/localization';
 
 import styles from './launchSidePanel.scss';
 
@@ -161,7 +162,9 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
         disabled={testsToRun === 0}
         data-automation-id="launch-to-run"
       >
-        {formatMessage(messages.toRunWithCount, { testCount: testsToRun })}
+        {formatMessage(testsToRun ? messages.toRunWithCount : COMMON_LOCALE_KEYS.DONE, {
+          testCount: testsToRun,
+        })}
       </Button>
     </div>
   );

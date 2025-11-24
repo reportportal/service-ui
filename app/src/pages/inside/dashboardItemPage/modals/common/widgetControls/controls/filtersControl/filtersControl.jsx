@@ -39,7 +39,7 @@ import { SearchableFilterList } from 'pages/inside/common/searchableFilterList';
 import { canWorkWithFilters } from 'common/utils/permissions';
 import { userRolesType } from 'common/constants/projectRoles';
 import { userRolesSelector } from 'controllers/pages';
-import { handleEnterOrSpaceKey } from 'common/utils/helperUtils/event.utils';
+import { handleEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 import { WIDGET_WIZARD_FORM } from '../../../constants';
 import { LockedActiveFilter } from './lockedActiveFilter';
 import { FilterEdit } from './filterEdit';

@@ -120,7 +120,7 @@ export const CreateFolderAutocomplete = ({
         parseValueToString={(option: FolderWithFullPath | string) =>
           isString(option) ? option : option?.description || option?.name || ''
         }
-        newItemButtonText={formatMessage(messages.createNew)}
+        newItemButtonText={formatMessage(commonMessages.createNew)}
       />
     </div>
   );

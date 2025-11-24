@@ -21,7 +21,7 @@ import { MeatballMenuIcon, CoveredManuallyIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { PopoverControl } from 'pages/common/popoverControl';
-import { handleEnterOrSpaceKey } from 'common/utils/helperUtils/event.utils';
+import { handleEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';

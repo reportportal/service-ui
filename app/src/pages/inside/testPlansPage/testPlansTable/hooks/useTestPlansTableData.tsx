@@ -20,7 +20,7 @@ import { useIntl } from 'react-intl';
 
 import { createClassnames } from 'common/utils';
 import { TestPlanDto } from 'controllers/testPlan';
-import { isEnterOrSpaceKey } from 'common/utils/helperUtils/event.utils';
+import { isEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 
 import { ProgressBar } from '../progressBar';
 import { TestPlanActions } from '../../testPlanActions';
