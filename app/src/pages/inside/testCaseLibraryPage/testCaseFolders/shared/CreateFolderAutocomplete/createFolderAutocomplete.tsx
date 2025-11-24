@@ -82,18 +82,16 @@ export const CreateFolderAutocomplete = ({
     const { description, name, fullPath } = option;
 
     return (
-      <div>
-        <AutocompleteOption
-          {...getItemProps?.({ item: option, index })}
-          key={option.id}
-          isNew={false}
-        >
-          <>
-            <p className={cx('create-folder-autocomplete__folder-name')}>{description || name}</p>
-            <p className={cx('create-folder-autocomplete__folder-path')}>{fullPath}</p>
-          </>
-        </AutocompleteOption>
-      </div>
+      <AutocompleteOption
+        {...getItemProps?.({ item: option, index })}
+        key={option.id}
+        isNew={false}
+      >
+        <>
+          <p className={cx('create-folder-autocomplete__folder-name')}>{description || name}</p>
+          <p className={cx('create-folder-autocomplete__folder-path')}>{fullPath}</p>
+        </>
+      </AutocompleteOption>
     );
   };
 
