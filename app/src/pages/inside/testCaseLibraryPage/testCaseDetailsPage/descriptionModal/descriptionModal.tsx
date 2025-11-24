@@ -19,6 +19,7 @@ import { useDispatch } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { FieldTextFlex, Modal } from '@reportportal/ui-kit';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { commonMessages as globalCommonMessages } from 'pages/inside/common/common-messages';
@@ -30,7 +31,7 @@ import { createClassnames } from 'common/utils';
 import { UseModalData } from 'common/hooks';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { Validator } from 'common/utils/validation/types';
-import { bindMessageToValidator, validate } from 'common/utils/validation';
+import { bindMessageToValidator, validate, MAX_FIELD_LENGTH } from 'common/utils/validation';
 
 import { useDescription } from './useDescription';
 
@@ -54,7 +55,6 @@ const messages = defineMessages({
 const cx = createClassnames(styles);
 
 export const DESCRIPTION_MODAL_KEY = 'descriptionModalKey';
-const MAX_FIELD_LENGTH = 255;
 
 export interface DescriptionModalData {
   testCaseDetails: TestCase;
@@ -78,12 +78,14 @@ const DescriptionModalComponent = ({
   const dispatch = useDispatch();
   const { isLoading, updateDescription } = useDescription(testCaseDetails.id);
   const { formatMessage } = useIntl();
+  const testCaseDescription = testCaseDetails.description;
+  const isDescriptionExist = !isEmpty(testCaseDescription);
 
   useEffect(() => {
-    if (testCaseDetails.description) {
-      initialize({ description: testCaseDetails.description });
+    if (isDescriptionExist) {
+      initialize({ description: testCaseDescription });
     }
-  }, [testCaseDetails.description, initialize]);
+  }, [testCaseDescription, isDescriptionExist, initialize]);
 
   const hideModal = () => dispatch(hideModalAction());
 
@@ -111,7 +113,7 @@ const DescriptionModalComponent = ({
   return (
     <Modal
       title={
-        testCaseDetails.description
+        isDescriptionExist
           ? formatMessage(messages.editDescription)
           : formatMessage(messages.addDescription)
       }
@@ -126,8 +128,8 @@ const DescriptionModalComponent = ({
           <FieldErrorHint provideHint={false}>
             <FieldTextFlex
               label={formatMessage(globalCommonMessages.description)}
-              maxLength={MAX_FIELD_LENGTH}
-              maxLengthDisplay={MAX_FIELD_LENGTH}
+              maxLength={MAX_FIELD_LENGTH as number}
+              maxLengthDisplay={MAX_FIELD_LENGTH as number}
               minHeight={120}
               value=""
             />
