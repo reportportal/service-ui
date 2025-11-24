@@ -52,6 +52,7 @@ export const useManualLaunchesTableData = (
           skippedTests,
           testsToRun,
           successTests,
+          inProgressTests,
         }) => {
           const handleRowClick = () => setSelectedLaunchId(id);
           const isSelected = id === selectedLaunchId;
@@ -144,6 +145,8 @@ export const useManualLaunchesTableData = (
                       { status: SegmentStatus.Passed, value: successTests ?? 0 },
                       { status: SegmentStatus.Failed, value: failedTests ?? 0 },
                       { status: SegmentStatus.Skipped, value: skippedTests ?? 0 },
+                      { status: SegmentStatus.InProgress, value: inProgressTests ?? 0 },
+                      { status: SegmentStatus.ToRun, value: testsToRun ?? 0 },
                     ]}
                     className={cx('manual-launches-list-table-cell-status')}
                   />

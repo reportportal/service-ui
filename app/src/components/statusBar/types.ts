@@ -18,6 +18,8 @@ export enum SegmentStatus {
   Passed = 'passed',
   Failed = 'failed',
   Skipped = 'skipped',
+  InProgress = 'inProgress',
+  ToRun = 'toRun',
 }
 
 export interface SegmentStatusBarData {
