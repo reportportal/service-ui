@@ -26,6 +26,7 @@ export interface LaunchExecutions {
   failed?: number;
   passed?: number;
   skipped?: number;
+  inProgress?: number;
 }
 
 export interface LaunchDefectGroup {
@@ -81,6 +82,7 @@ export interface ManualTestCase {
   totalTests: number;
   successTests: number;
   failedTests: number;
+  inProgressTests: number;
   skippedTests: number;
   testsToRun: number;
 }

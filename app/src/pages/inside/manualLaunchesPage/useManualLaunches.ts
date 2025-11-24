@@ -30,11 +30,15 @@ const getExecutionStatistics = (launch: Launch) => ({
   passed: launch.statistics?.executions?.passed ?? 0,
   failed: launch.statistics?.executions?.failed ?? 0,
   skipped: launch.statistics?.executions?.skipped ?? 0,
+  inProgress: launch.statistics?.executions?.inProgress ?? 5,
 });
 
 export const transformLaunchToManualTestCase = (launch: Launch): ManualTestCase => {
-  const { total, passed, failed, skipped } = getExecutionStatistics(launch);
+  const { total, passed, failed, skipped, inProgress } = getExecutionStatistics(launch);
   const { id, number, name, startTime } = launch;
+
+  // TODO: after backend implementation
+  const testsToRun = total - passed - failed - skipped - inProgress;
 
   return {
     id,
@@ -45,7 +49,8 @@ export const transformLaunchToManualTestCase = (launch: Launch): ManualTestCase 
     successTests: passed,
     failedTests: failed,
     skippedTests: skipped,
-    testsToRun: 0,
+    inProgressTests: inProgress,
+    testsToRun,
   };
 };
 
