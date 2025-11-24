@@ -88,7 +88,9 @@ export class AppSidebar extends Component {
 
   onClickButton = (eventInfo) => {
     this.props.onClickNavBtn();
-    this.props.tracking.trackEvent(eventInfo);
+    if (eventInfo) {
+      this.props.tracking.trackEvent(eventInfo);
+    }
   };
 
   createTopSidebarItems = () => {
@@ -112,7 +114,7 @@ export class AppSidebar extends Component {
         menuOrder: (menuCounter += menuStep),
       },
       {
-        onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_LAUNCH_ICON),
+        onClick: () => this.onClickButton(SIDEBAR_EVENTS.clickSidebarIcon('launches')),
         link: {
           type: LAUNCHES_PAGE,
           payload: { projectId: activeProject },
@@ -165,8 +167,11 @@ export class AppSidebar extends Component {
     });
     projectPageExtensions.forEach(({ payload }) => {
       if (payload.icon) {
+        const eventInfo = payload.iconName
+          ? SIDEBAR_EVENTS.clickSidebarIcon(payload.iconName)
+          : null;
         topItems.push({
-          onClick: onClickNavBtn,
+          onClick: () => this.onClickButton(eventInfo),
           link: {
             type: PROJECT_PLUGIN_PAGE,
             payload: { projectId: activeProject, pluginPage: payload.slug },
