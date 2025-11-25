@@ -18,11 +18,15 @@
   display: flex;
   column-gap: 16px;
 
-  &__dropdown {
-    max-width: 300px;
-  }
-
   span {
     width: 100%;
+  }
+
+  &__dropdown {
+    max-width: 300px;
+
+    span {
+      width: auto;
+    }
   }
 }
