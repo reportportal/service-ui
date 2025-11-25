@@ -15,7 +15,8 @@
  */
 
 import { defineMessages, useIntl } from 'react-intl';
-import { Button, PlusIcon, MIME_TYPES } from '@reportportal/ui-kit';
+import { Button, PlusIcon } from '@reportportal/ui-kit';
+import { MIME_TYPES } from '@reportportal/ui-kit/fileDropArea';
 
 import { createClassnames } from 'common/utils';
 

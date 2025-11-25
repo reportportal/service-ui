@@ -27,14 +27,15 @@ import { SettingsLayout } from 'layouts/settingsLayout';
 import { CollapsibleSectionWithHeaderControl } from 'components/collapsibleSection';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
-import { mockedTestCaseDescription } from 'pages/inside/common/testCaseList/constants';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { testCaseDetailsSelector } from 'controllers/testCase';
+import { commonMessages } from 'pages/inside/common/common-messages';
 
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
 import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
+import { useDescriptionModal } from './descriptionModal';
 import { messages } from './messages';
 
 import styles from './testCaseDetailsPage.scss';
@@ -48,8 +49,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
   testCaseDescription,
   headerControlKeys,
   handleAddTags,
-  handleAddDescription,
-  handleEditDescription,
+  handleDescriptionModal,
 }: {
   canEditTestCaseTag: boolean;
   canEditTestCaseDescription: boolean;
@@ -57,13 +57,12 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
   testCaseDescription: string;
   headerControlKeys: { ADD: string };
   handleAddTags: () => void;
-  handleAddDescription: () => void;
-  handleEditDescription: () => void;
+  handleDescriptionModal: () => void;
 }) => {
   return [
     {
       titleKey: 'tags',
-      defaultMessageKey: 'noTagsAdded',
+      defaultMessage: commonMessages.noTagsAdded,
       childComponent: !isEmpty(tags) && <AdaptiveTagList tags={tags} isShowAllView />,
       headerControl: canEditTestCaseTag && (
         <Button variant="text" adjustWidthOn="content" onClick={handleAddTags} icon={<PlusIcon />}>
@@ -73,7 +72,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
     },
     {
       titleKey: 'description',
-      defaultMessageKey: 'noDescriptionAdded',
+      defaultMessage: messages.noDescriptionAdded,
       childComponent: !isEmpty(testCaseDescription) && (
         <ExpandedTextSection text={testCaseDescription} defaultVisibleLines={5} />
       ),
@@ -82,7 +81,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
           variant="text"
           adjustWidthOn="content"
           iconPlace={isEmpty(testCaseDescription) ? 'start' : 'end'}
-          onClick={isEmpty(testCaseDescription) ? handleEditDescription : handleAddDescription}
+          onClick={handleDescriptionModal}
           className={cx('fixed-button-height')}
           icon={isEmpty(testCaseDescription) ? <PlusIcon /> : <EditIcon />}
         >
@@ -96,9 +95,9 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
 export const TestCaseDetailsPage = () => {
   const { formatMessage } = useIntl();
   const [isTagsAdded, setIsTagsAdded] = useState(false);
-  const [isDescriptionAdded, setIsDescriptionAdded] = useState(false);
   const { canEditTestCaseTag, canEditTestCaseDescription } = useUserPermissions();
   const { openModal: openAddTestCasesToTestPlanModal } = useAddTestCasesToTestPlanModal();
+  const { openModal: openDescriptionModal } = useDescriptionModal();
 
   const testCaseDetails = useSelector(testCaseDetailsSelector);
 
@@ -108,12 +107,8 @@ export const TestCaseDetailsPage = () => {
     setIsTagsAdded((prevState) => !prevState);
   };
 
-  const handleAddDescription = () => {
-    setIsDescriptionAdded(true);
-  };
-
-  const handleEditDescription = () => {
-    setIsDescriptionAdded(false);
+  const handleDescriptionModal = () => {
+    openDescriptionModal({ testCaseDetails });
   };
 
   const handleAddToTestPlan = () => {
@@ -130,9 +125,6 @@ export const TestCaseDetailsPage = () => {
     { key: 'battery usage analysis for a user interface improvements', id: 3 },
   ];
 
-  const testCaseDescription = isDescriptionAdded
-    ? mockedTestCaseDescription
-    : testCaseDetails.description;
   const tags = isTagsAdded ? mockedTags : [];
 
   return (
@@ -142,25 +134,23 @@ export const TestCaseDetailsPage = () => {
           <TestCaseDetailsHeader
             className={cx('page__header')}
             testCase={testCaseDetails}
-            onAddToLaunch={noop}
             onAddToTestPlan={handleAddToTestPlan}
             onMenuAction={noop}
           />
           <div className={cx('page__sidebar')}>
             {COLLAPSIBLE_SECTIONS_CONFIG({
               handleAddTags,
-              handleAddDescription,
-              handleEditDescription,
+              handleDescriptionModal,
               headerControlKeys: { ADD: formatMessage(COMMON_LOCALE_KEYS.ADD) },
-              testCaseDescription: testCaseDescription,
+              testCaseDescription: testCaseDetails.description,
               tags: tags.map(({ key }) => key),
               canEditTestCaseTag,
               canEditTestCaseDescription,
-            }).map(({ titleKey, defaultMessageKey, childComponent, headerControl }) => (
+            }).map(({ titleKey, defaultMessage, childComponent, headerControl }) => (
               <CollapsibleSectionWithHeaderControl
                 key={titleKey}
-                title={formatMessage(messages[titleKey])}
-                defaultMessage={formatMessage(messages[defaultMessageKey])}
+                title={formatMessage(commonMessages[titleKey])}
+                defaultMessage={formatMessage(defaultMessage)}
                 headerControlComponent={headerControl}
               >
                 {childComponent}

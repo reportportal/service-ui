@@ -51,11 +51,15 @@
       line-height: 20px;
     }
   }
+
+  .sub-header {
+    font-family: var(--rp-ui-base-font-family);
+  }
 }
 
 .section-name {
-  font-family: $FONT-ROBOTO-REGULAR;
-  font-size: 14px;
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 13px;
   color: var(--rp-ui-base-almost-black);
   font-weight: 500;
   margin: 0;

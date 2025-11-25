@@ -51,6 +51,7 @@
 
   &--full-width {
     max-width: none;
+    padding-top: 16px;
   }
 }
 
@@ -58,14 +59,14 @@
   display: flex;
   align-items: center;
   gap: 9px;
-  margin-bottom: -8px;
-  padding-top: 14px;
-  font-size: 11px;
+  margin-top: 16px;
+  margin-bottom: -6px;
+  line-height: 16px;
   color: var(--rp-ui-base-purple-600);
 
   svg {
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
 
     path,
     rect {

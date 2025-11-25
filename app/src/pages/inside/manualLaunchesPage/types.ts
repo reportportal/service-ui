@@ -26,6 +26,7 @@ export interface LaunchExecutions {
   failed?: number;
   passed?: number;
   skipped?: number;
+  inProgress?: number;
 }
 
 export interface LaunchDefectGroup {
@@ -65,6 +66,7 @@ export interface Launch {
   rerun: boolean;
   metadata: Record<string, string>;
   retentionPolicy: string;
+  testPlan: string;
 }
 
 export interface LaunchesResponse {
@@ -80,6 +82,7 @@ export interface ManualTestCase {
   totalTests: number;
   successTests: number;
   failedTests: number;
+  inProgressTests: number;
   skippedTests: number;
   testsToRun: number;
 }

@@ -102,6 +102,7 @@ export const TestCaseModal = ({
             <BasicInformation
               className={cx('test-case-modal__scrollable-section')}
               hideFolderField={hideFolderField}
+              formName={formName}
             />
             <TestCaseDetails
               className={cx('test-case-modal__scrollable-section')}

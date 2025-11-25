@@ -68,7 +68,7 @@ const EditTestCaseModalComponent = ({
         folder: testCase.testFolder,
         priority: (testCase.priority?.toLowerCase() ||
           TEST_CASE_FORM_INITIAL_VALUES.priority) as TestCasePriority,
-        tags: testCase.tags?.map((tag: { key: string }) => tag.key),
+        attributes: manualScenario?.attributes || [],
         manualScenarioType:
           manualScenario?.manualScenarioType || TEST_CASE_FORM_INITIAL_VALUES.manualScenarioType,
         executionEstimationTime:
@@ -77,6 +77,9 @@ const EditTestCaseModalComponent = ({
         linkToRequirements: manualScenario?.linkToRequirements,
         precondition: manualScenario?.preconditions?.value,
         preconditionAttachments: manualScenario?.preconditions?.attachments || [],
+        instructions: manualScenario?.instructions,
+        expectedResult: manualScenario?.expectedResult,
+        textAttachments: manualScenario?.attachments || [],
         ...(stepsObject && {
           steps: stepsObject,
         }),

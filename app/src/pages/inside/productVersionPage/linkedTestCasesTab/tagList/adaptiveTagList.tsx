@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
+import { useEffect, useRef, useState, useMemo, useCallback, MouseEvent } from 'react';
 import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
+import Parser from 'html-react-parser';
 import { Button } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
+import { commonMessages } from 'pages/inside/common/common-messages';
+import CrossIcon from 'common/img/cross-icon-inline.svg';
 
 import { messages } from './messages';
 import {
@@ -39,12 +42,14 @@ interface AdaptiveTagListProps {
   tags: string[];
   isShowAllView?: boolean;
   defaultVisibleLines?: number;
+  onRemoveTag?: (tag: string) => void;
 }
 
 export const AdaptiveTagList = ({
   tags,
   isShowAllView = false,
   defaultVisibleLines = DEFAULT_VISIBLE_LINES,
+  onRemoveTag,
 }: AdaptiveTagListProps) => {
   const { formatMessage } = useIntl();
   const listRef = useRef<HTMLDivElement>(null);
@@ -52,6 +57,14 @@ export const AdaptiveTagList = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const [hiddenIndices, setHiddenIndices] = useState<Set<number>>(new Set());
   const [isExceedsVisibleLines, setIsExceedsVisibleLines] = useState(false);
+
+  const handleRemoveTag = useCallback(
+    (event: MouseEvent, tag: string) => {
+      event.stopPropagation();
+      onRemoveTag?.(tag);
+    },
+    [onRemoveTag],
+  );
 
   const getFullWidthOffset = useCallback(() => {
     const parentElement = listRef.current;
@@ -171,13 +184,13 @@ export const AdaptiveTagList = ({
     setIsExpanded((prevState) => !prevState);
   }, []);
 
-  const handleCountClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleCountClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     toggleExpanded();
   };
 
   const handleButtonClick = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
+    (event: MouseEvent<HTMLButtonElement>) => {
       event.stopPropagation();
       toggleExpanded();
     },
@@ -238,7 +251,7 @@ export const AdaptiveTagList = ({
     return (
       <div className={cx('tag-list-wrapper')}>
         <div className={cx('tag-list', 'tag-list--no-tags', 'tag-list--full-width')}>
-          <div className={cx('no-tags-message')}>{formatMessage(messages.noTagsAdded)}</div>
+          <div className={cx('no-tags-message')}>{formatMessage(commonMessages.noTagsAdded)}</div>
         </div>
       </div>
     );
@@ -262,7 +275,7 @@ export const AdaptiveTagList = ({
             <div
               // eslint-disable-next-line react/no-array-index-key
               key={`${index}-${tag}`}
-              className={cx('tag-list__item')}
+              className={cx('tag-list__item', { 'tag-list__item--is-editable': !!onRemoveTag })}
               style={{
                 display: isItemHidden ? 'none' : 'flex',
               }}
@@ -273,6 +286,16 @@ export const AdaptiveTagList = ({
               >
                 {tag}
               </div>
+              {onRemoveTag && (
+                <button
+                  type="button"
+                  className={cx('tag-list__item-remove')}
+                  onClick={(event) => handleRemoveTag(event, tag)}
+                  aria-label={formatMessage(messages.removeTag, { tag })}
+                >
+                  {Parser(CrossIcon as unknown as string)}
+                </button>
+              )}
             </div>
           );
         })}

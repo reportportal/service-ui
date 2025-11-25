@@ -53,6 +53,7 @@ export const EditTestPlanModal = ({ data }: EditTestPlanModalProps) => {
         description: data.description,
         attributes: [],
       }}
+      requiresChanges
       onSubmit={handleSubmit}
     />
   );

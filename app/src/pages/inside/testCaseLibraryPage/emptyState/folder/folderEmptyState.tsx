@@ -23,6 +23,7 @@ import ImportIcon from 'common/img/import-thin-inline.svg';
 import PlusIconInline from 'common/img/plus-button-inline.svg';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useCreateTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
+import { useImportTestCaseModal } from 'pages/inside/testCaseLibraryPage/importTestCaseModal';
 
 import { messages } from '../messages';
 import { commonMessages } from '../../commonMessages';
@@ -40,6 +41,7 @@ export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
   const { formatMessage } = useIntl();
   const { canCreateTestCase, canImportTestCases } = useUserPermissions();
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
+  const { openModal: openImportTestCaseModal } = useImportTestCaseModal();
 
   const getAvailableButtons = () => {
     const buttons: ActionButton[] = [];
@@ -61,7 +63,7 @@ export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
         variant: 'ghost',
         icon: ImportIcon,
         isCompact: true,
-        handleButton: () => {},
+        handleButton: () => openImportTestCaseModal({ folderName: folderTitle ?? '' }),
       });
     }
 

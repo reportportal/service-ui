@@ -23,13 +23,10 @@ export const STATUS_TYPES = {
   UNSPECIFIED: 'unspecified',
 } as const;
 
-export const ITEMS_PER_PAGE_OPTIONS: number[] = [10, 25, 50, 100];
+export const ITEMS_PER_PAGE_OPTIONS: number[] = [10, 20, 50, 100];
 
 export const TestCasePageDefaultValues = {
   size: 10,
-  limit: 10,
+  limit: 50,
   offset: 0,
 };
-
-export const mockedTestCaseDescription =
-  'Ideally you should have a test method for each separate unit of work so you can always immediately view where things are going wrong. In this example there is a basic method called getUserById() which will return a user and there is a total of 3 unit of works. Ideally you should have a test method for each separate unit of work so you can always immediately view where things are going wrong. In this example there is a basic method called getUserById() which will return a user and there is a total of 3 unit of works';

@@ -27,9 +27,16 @@ const MAX_FIELD_LENGTH = 48;
 interface FolderNameFieldProps {
   name?: string;
   placeholder?: string;
+  helpText?: string;
+  label?: string;
 }
 
-export const FolderNameField = ({ name = 'folderName', placeholder }: FolderNameFieldProps) => {
+export const FolderNameField = ({
+  name = 'folderName',
+  placeholder,
+  helpText,
+  label,
+}: FolderNameFieldProps) => {
   const { formatMessage } = useIntl();
 
   return (
@@ -39,10 +46,11 @@ export const FolderNameField = ({ name = 'folderName', placeholder }: FolderName
     >
       <FieldErrorHint provideHint={false}>
         <FieldText
-          label={formatMessage(COMMON_LOCALE_KEYS.NAME)}
+          label={label || formatMessage(COMMON_LOCALE_KEYS.NAME)}
           defaultWidth={false}
           maxLength={MAX_FIELD_LENGTH}
           maxLengthDisplay={MAX_FIELD_LENGTH}
+          helpText={helpText}
         />
       </FieldErrorHint>
     </FieldProvider>

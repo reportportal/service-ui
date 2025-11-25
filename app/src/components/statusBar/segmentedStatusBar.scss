@@ -39,5 +39,13 @@
     &.skipped {
       background-color: var(--rp-ui-base-e-200);
     }
+
+    &.inProgress {
+      background-color: var(--rp-ui-base-icon-priority-medium);
+    }
+
+    &.toRun {
+      background-color: var(--rp-ui-base-topaz);
+    }
   }
 }

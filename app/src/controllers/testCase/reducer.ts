@@ -30,20 +30,25 @@ import {
   SET_TEST_CASES,
   DELETE_TEST_CASE_SUCCESS,
   CREATE_FOLDER_SUCCESS,
+  CREATE_FOLDERS_BATCH_SUCCESS,
   RENAME_FOLDER_SUCCESS,
   DELETE_FOLDER_SUCCESS,
   GET_TEST_CASE_DETAILS,
   GET_TEST_CASE_DETAILS_SUCCESS,
   GET_TEST_CASE_DETAILS_FAILURE,
   UPDATE_FOLDER_COUNTER,
+  SELECT_ACTIVE_FOLDER,
+  UPDATE_DESCRIPTION_SUCCESS,
 } from 'controllers/testCase/constants';
-import { Folder } from './types';
-import { TestCase, Page } from 'pages/inside/testCaseLibraryPage/types';
+import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { Page } from 'types/common';
 import { queueReducers } from 'common/utils';
+import { Folder } from './types';
 import {
   DeleteFolderSuccessParams,
   DeleteTestCaseParams,
   RenameFolderParams,
+  SetActiveFolderIdParams,
   UpdateFolderCounterParams,
 } from './actionCreators';
 
@@ -53,6 +58,7 @@ export type InitialStateType = {
     isCreatingFolder: boolean;
     isLoadingFolder: boolean;
     loading: boolean;
+    activeFolderId?: number | null;
   };
   testCases: {
     isLoading: boolean;
@@ -67,6 +73,7 @@ export const INITIAL_STATE: InitialStateType = {
     isCreatingFolder: false,
     isLoadingFolder: false,
     loading: false,
+    activeFolderId: null,
   },
   testCases: {
     isLoading: false,
@@ -75,7 +82,13 @@ export const INITIAL_STATE: InitialStateType = {
   },
 };
 
-const INITIAL_DETAILS_STATE = {
+type InitialDetailsStateType = {
+  data: TestCase;
+  loading: boolean;
+  error: string;
+};
+
+const INITIAL_DETAILS_STATE: InitialDetailsStateType = {
   data: null,
   loading: false,
   error: null,
@@ -85,6 +98,7 @@ type FolderAction =
   | { type: typeof DELETE_FOLDER_SUCCESS; payload: DeleteFolderSuccessParams }
   | { type: typeof RENAME_FOLDER_SUCCESS; payload: RenameFolderParams }
   | { type: typeof CREATE_FOLDER_SUCCESS; payload: Folder }
+  | { type: typeof CREATE_FOLDERS_BATCH_SUCCESS; payload: Folder[] }
   | { type: typeof UPDATE_FOLDER_COUNTER; payload: UpdateFolderCounterParams };
 
 const isCreatingFolderReducer = (
@@ -167,6 +181,9 @@ const folderReducer = (state = INITIAL_STATE.folders.data, action: FolderAction)
     case CREATE_FOLDER_SUCCESS: {
       return [...state, action.payload];
     }
+    case CREATE_FOLDERS_BATCH_SUCCESS: {
+      return [...state, ...action.payload];
+    }
     case UPDATE_FOLDER_COUNTER: {
       return state.map((folder) => {
         if (folder.id !== action.payload.folderId) {
@@ -192,6 +209,20 @@ const testCaseDetailsReducer = (
       return { ...state, loading: false, data: payload };
     case GET_TEST_CASE_DETAILS_FAILURE:
       return { ...state, loading: false, error };
+    case UPDATE_DESCRIPTION_SUCCESS:
+      return { ...state, data: { ...state.data, description: payload } };
+    default:
+      return state;
+  }
+};
+
+const activeFolderReducer = (
+  state: number | null = INITIAL_STATE.folders.activeFolderId || null,
+  action: { type: string; payload: SetActiveFolderIdParams },
+) => {
+  switch (action.type) {
+    case SELECT_ACTIVE_FOLDER:
+      return action.payload.activeFolderId || null;
     default:
       return state;
   }
@@ -204,6 +235,7 @@ const reducer = combineReducers({
       fetchReducer(NAMESPACE, { initialState: [], contentPath: 'content' }),
       folderReducer,
     ),
+    activeFolderId: activeFolderReducer,
     isCreatingFolder: isCreatingFolderReducer,
     isLoadingFolder: isLoadingFolderReducer,
     loading: loadingReducer(NAMESPACE),

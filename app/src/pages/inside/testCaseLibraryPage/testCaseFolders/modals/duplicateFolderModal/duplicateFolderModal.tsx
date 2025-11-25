@@ -15,17 +15,16 @@
  */
 
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { reduxForm, InjectedFormProps, formValueSelector } from 'redux-form';
+import { noop } from 'es-toolkit';
 
 import { UseModalData } from 'common/hooks';
 import { createClassnames } from 'common/utils';
 import { withModal } from 'controllers/modal';
 import { TransformedFolder, transformedFoldersWithFullPathSelector } from 'controllers/testCase';
 import { commonValidators } from 'common/utils/validation';
-import { duplicateFolderAction } from 'controllers/testCase/actionCreators';
-import { isCreatingFolderSelector } from 'controllers/testCase/selectors';
 import { coerceToNumericId } from 'pages/inside/testCaseLibraryPage/utils';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 
@@ -34,6 +33,7 @@ import { DUPLICATE_FORM_NAME } from '../constants';
 import { messages } from './messages';
 import { DuplicateFolderFormValues } from '../types';
 import { FolderModal } from '../folderModal';
+import { useDuplicateFolder } from './useDuplicateFolder';
 
 import styles from '../folderModal/folderModal.scss';
 
@@ -63,14 +63,12 @@ const DuplicateFolderModal = reduxForm<DuplicateFolderFormValues, DuplicateFolde
   },
   handleSubmit,
   change,
-  untouch,
   initialize,
 }: DuplicateFolderModalProps &
   InjectedFormProps<DuplicateFolderFormValues, DuplicateFolderModalProps>) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
   const folders = useSelector(transformedFoldersWithFullPathSelector);
-  const isCreatingFolder = useSelector(isCreatingFolderSelector);
+  const { duplicateFolder, isLoading: isDuplicating } = useDuplicateFolder();
   const shouldMoveToRoot = Boolean(
     useSelector((state) => selector(state, 'moveToRoot') as boolean | undefined),
   );
@@ -96,12 +94,7 @@ const DuplicateFolderModal = reduxForm<DuplicateFolderFormValues, DuplicateFolde
       ? null
       : coerceToNumericId(values.destinationFolder?.id);
 
-    dispatch(
-      duplicateFolderAction({
-        folderName: values.folderName,
-        ...(parentFolderId ? { parentFolderId } : {}),
-      }),
-    );
+    duplicateFolder({ folderId, folderName: values.folderName, parentFolderId }).catch(noop);
   };
 
   const customContent = (
@@ -115,9 +108,10 @@ const DuplicateFolderModal = reduxForm<DuplicateFolderFormValues, DuplicateFolde
 
   return (
     <FolderModal
+      formName={DUPLICATE_FORM_NAME}
       title={formatMessage(commonMessages.duplicateFolder)}
       dirty={dirty}
-      isLoading={isCreatingFolder}
+      isLoading={isDuplicating}
       isToggled={shouldMoveToRoot}
       toggleLabel={formatMessage(messages.moveToRootDirectory)}
       toggleFieldName="moveToRoot"
@@ -125,12 +119,10 @@ const DuplicateFolderModal = reduxForm<DuplicateFolderFormValues, DuplicateFolde
       isInvertedToggle
       parentFolderFieldName="destinationFolder"
       parentFolderFieldLabel={formatMessage(sharedFolderMessages.folderDestination)}
-      formName={DUPLICATE_FORM_NAME}
       customContent={customContent}
       handleSubmit={handleSubmit}
       onSubmit={onSubmit}
       change={change}
-      untouch={untouch}
     />
   );
 });

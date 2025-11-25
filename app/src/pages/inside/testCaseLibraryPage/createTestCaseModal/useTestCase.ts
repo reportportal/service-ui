@@ -40,7 +40,7 @@ import { getTestCaseRequestParams } from 'pages/inside/testCaseLibraryPage/utils
 
 import { CreateTestCaseFormData, ManualScenarioDto } from '../types';
 import { createFolder, buildManualScenario, isDuplicateTestCaseError } from './testCaseUtils';
-import { messages } from './basicInformation/messages';
+import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 
 const buildTestCaseData = (
   payload: CreateTestCaseFormData,
@@ -51,7 +51,6 @@ const buildTestCaseData = (
   name: payload.name,
   testFolderId: folderId,
   priority: payload.priority?.toUpperCase(),
-  tags: payload.tags || [],
   manualScenario,
 });
 
@@ -139,7 +138,7 @@ export const useTestCase = (testCaseId?: number) => {
       } catch (error: unknown) {
         if (isDuplicateTestCaseError(error)) {
           throw new SubmissionError({
-            name: formatMessage(messages.duplicateTestCaseName),
+            name: formatMessage(commonMessages.duplicateTestCaseName),
           });
         }
 
@@ -183,7 +182,7 @@ export const useTestCase = (testCaseId?: number) => {
       } catch (error: unknown) {
         if (isDuplicateTestCaseError(error)) {
           throw new SubmissionError({
-            name: formatMessage(messages.duplicateTestCaseName),
+            name: formatMessage(commonMessages.duplicateTestCaseName),
           });
         }
 

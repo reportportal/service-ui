@@ -58,6 +58,7 @@ interface ManualScenarioCommon {
   preconditions?: {
     value: string;
   };
+  attributes?: Attribute[];
 }
 
 interface ManualScenarioSteps extends ManualScenarioCommon {
@@ -121,6 +122,12 @@ export interface ActionButton {
   handleButton: () => void;
 }
 
+export interface Attribute {
+  id: number;
+  key: string;
+  value: string;
+}
+
 export interface CreateTestCaseFormData {
   name: string;
   description?: string;
@@ -136,6 +143,7 @@ export interface CreateTestCaseFormData {
   expectedResult?: string;
   textAttachments?: Attachment[];
   tags?: Tag[];
+  attributes?: Attribute[];
 }
 
 export interface TestStep {
@@ -143,11 +151,4 @@ export interface TestStep {
   expectedResult: string;
   attachments?: Attachment[];
   position?: number;
-}
-
-export interface Page {
-  number: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
 }

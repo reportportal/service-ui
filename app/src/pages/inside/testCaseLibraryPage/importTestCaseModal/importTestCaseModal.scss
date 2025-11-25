@@ -5,6 +5,12 @@
     gap: 16px;
   }
 
+  &__uploader {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
   &__info-block {
     position: relative;
     overflow: hidden;
@@ -31,6 +37,16 @@
     }
   }
 
+  &__label {
+    font-size: 13px;
+    line-height: 20px;
+    font-weight: 500;
+  }
+
+  &__static-value {
+    margin-top: 8px;
+  }
+
   &__info-text {
     font-weight: 700;
     font-size: 13px;
@@ -40,11 +56,8 @@
   }
 
   &__drop-zone {
-    box-sizing: border-box;
-  }
-
-  &__drop-wrap {
     height: 164px;
+    box-sizing: border-box;
   }
 
   &__download-link {

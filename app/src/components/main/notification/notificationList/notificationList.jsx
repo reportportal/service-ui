@@ -220,9 +220,17 @@ const messages = defineMessages({
     id: 'TestCaseLibraryPage.testCaseFolderDuplicatedSuccess',
     defaultMessage: 'Folder has been duplicated successfully.',
   },
+  testCasesDuplicatedSuccess: {
+    id: 'TestCaseLibraryPage.testCasesDuplicatedSuccess',
+    defaultMessage: 'Test cases have been duplicated successfully.',
+  },
   testCaseDeletedSuccess: {
     id: 'TestCaseLibraryPage.testCaseDeletedSuccess',
     defaultMessage: 'Test case has been deleted successfully.',
+  },
+  testCaseDescriptionUpdateSuccess: {
+    id: 'TestCaseLibraryPage.testCaseDescriptionUpdateSuccess',
+    defaultMessage: 'Test case description has been updated successfully.',
   },
   testCaseFolderRenamedSuccess: {
     id: 'TestCaseLibraryPage.testCaseFolderRenamedSuccess',
@@ -292,6 +300,18 @@ const messages = defineMessages({
   testPlanDeletedSuccess: {
     id: 'TestPlansPage.testPlanDeletedSuccess',
     defaultMessage: 'Test Plan has been deleted successfully.',
+  },
+  importSuccessToFolder: {
+    id: 'ImportTestCaseModal.importSuccessToFolder',
+    defaultMessage: 'Test cases have been imported successfully to folder {folderName}.',
+  },
+  importSuccess: {
+    id: 'ImportTestCaseModal.importSuccess',
+    defaultMessage: 'Test cases have been imported successfully.',
+  },
+  importTestCaseFailed: {
+    id: 'ImportTestCaseModal.testCaseImportFailed',
+    defaultMessage: 'Failed to import Test Case.',
   },
 });
 

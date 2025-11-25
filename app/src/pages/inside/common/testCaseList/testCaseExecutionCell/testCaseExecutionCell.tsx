@@ -21,13 +21,13 @@ import { MeatballMenuIcon, CoveredManuallyIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { PopoverControl } from 'pages/common/popoverControl';
-import { handleEnterOrSpaceKey } from 'common/utils/helperUtils/event.utils';
+import { handleEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
+import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 
 import { useTooltipItems } from '../testCaseExecutionCell/useTooltipItems';
 import { formatRelativeTime } from '../utils';
-import { messages } from '../messages';
 
 import styles from './testCaseExecutionCell.scss';
 
@@ -49,22 +49,27 @@ export const TestCaseExecutionCell = ({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const isTestPlan = instanceKey === INSTANCE_KEYS.TEST_PLAN;
+  // TODO: align this condition to check execution status after BE integration.
+  const isCoveredManually = isTestPlan && testCase.manualScenario.executionEstimationTime > 5;
 
   return (
     <button type="button" className={cx('execution-content')} onClick={onRowClick}>
       <div>
-        {isTestPlan && (
-          <div className={cx('covered-manually')}>
-            <CoveredManuallyIcon /> {formatMessage(messages.coveredManually)}
+        {isCoveredManually && (
+          <>
+            <div className={cx('covered-manually')}>
+              <CoveredManuallyIcon /> {formatMessage(commonMessages.coveredManually)}
+            </div>
+            <div className={cx('execution-time', 'execution-time--full-width')}>
+              {formatRelativeTime(testCase.updatedAt, locale)}
+            </div>
+          </>
+        )}
+        {!isTestPlan && (
+          <div className={cx('execution-time')}>
+            {formatRelativeTime(testCase.updatedAt, locale)}
           </div>
         )}
-        <div
-          className={cx('execution-time', {
-            'execution-time--full-width': isTestPlan,
-          })}
-        >
-          {formatRelativeTime(testCase.updatedAt, locale)}
-        </div>
       </div>
       {!isEmpty(tooltipItems) && (
         <div

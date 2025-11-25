@@ -30,11 +30,15 @@ const getExecutionStatistics = (launch: Launch) => ({
   passed: launch.statistics?.executions?.passed ?? 0,
   failed: launch.statistics?.executions?.failed ?? 0,
   skipped: launch.statistics?.executions?.skipped ?? 0,
+  inProgress: launch.statistics?.executions?.inProgress ?? 5,
 });
 
-const transformLaunchToManualTestCase = (launch: Launch): ManualTestCase => {
-  const { total, passed, failed, skipped } = getExecutionStatistics(launch);
+export const transformLaunchToManualTestCase = (launch: Launch): ManualTestCase => {
+  const { total, passed, failed, skipped, inProgress } = getExecutionStatistics(launch);
   const { id, number, name, startTime } = launch;
+
+  // TODO: after backend implementation
+  const testsToRun = total - passed - failed - skipped - inProgress;
 
   return {
     id,
@@ -45,13 +49,30 @@ const transformLaunchToManualTestCase = (launch: Launch): ManualTestCase => {
     successTests: passed,
     failedTests: failed,
     skippedTests: skipped,
-    testsToRun: 0,
+    inProgressTests: inProgress,
+    testsToRun,
+  };
+};
+
+export const getLaunchStatistics = (launch: Launch) => {
+  const { total, passed, failed, skipped } = getExecutionStatistics(launch);
+  // TODO: after backend implementation
+  const inProgressTests = 0;
+  const testsToRun = total - passed - failed - skipped;
+
+  return {
+    totalTests: total,
+    passedTests: passed,
+    failedTests: failed,
+    skippedTests: skipped,
+    testsToRun,
+    inProgressTests,
   };
 };
 
 export const useManualLaunches = () => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
-  const [launches, setLaunches] = useState<ManualTestCase[]>([]);
+  const [fullLaunches, setFullLaunches] = useState<Launch[]>([]);
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
 
@@ -60,9 +81,8 @@ export const useManualLaunches = () => {
       showSpinner();
 
       const response = await fetch<LaunchesResponse>(URLS.manualLaunchesList(projectKey));
-      const transformedData = response.content.map(transformLaunchToManualTestCase);
 
-      setLaunches(transformedData);
+      setFullLaunches(response.content);
     } catch {
       dispatch(
         showErrorNotification({
@@ -79,7 +99,7 @@ export const useManualLaunches = () => {
   }, [fetchManualLaunches]);
 
   return {
-    launches,
+    fullLaunches,
     isLoading,
     refetch: fetchManualLaunches,
   };

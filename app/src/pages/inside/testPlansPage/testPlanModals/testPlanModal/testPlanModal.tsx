@@ -27,6 +27,7 @@ import { commonValidators } from 'common/utils/validation';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
+import { commonMessages } from 'pages/inside/common/common-messages';
 
 import { TestPlanAttributes } from './testPlanAttributes';
 import { messages } from './messages';
@@ -53,9 +54,10 @@ interface TestPlanModalProps {
   title: string;
   submitButtonText: string;
   isLoading: boolean;
-  onSubmit: (values: TestPlanFormValues) => Promise<void>;
+  requiresChanges?: boolean;
   formName: string; // eslint-disable-line react/no-unused-prop-types
   initialValues?: Partial<TestPlanFormValues>; // eslint-disable-line react/no-unused-prop-types
+  onSubmit: (values: TestPlanFormValues) => Promise<void>;
 }
 
 export const initialValues: Partial<TestPlanFormValues> = {
@@ -69,16 +71,20 @@ const TestPlanModalComponent = ({
   submitButtonText,
   isLoading,
   onSubmit,
+  requiresChanges,
   dirty,
+  invalid,
   handleSubmit,
 }: TestPlanModalProps & InjectedFormProps<TestPlanFormValues>) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
 
+  const isSubmitDisabled = requiresChanges ? isLoading || !dirty || invalid : isLoading || invalid;
+
   const okButton = {
     children: <LoadingSubmitButton isLoading={isLoading}>{submitButtonText}</LoadingSubmitButton>,
     onClick: handleSubmit(onSubmit) as (event: MouseEvent<HTMLButtonElement>) => void,
-    disabled: isLoading,
+    disabled: isSubmitDisabled,
   };
 
   const cancelButton = {
@@ -112,7 +118,7 @@ const TestPlanModalComponent = ({
               placeholder={formatMessage(messages.addTestPlanDescription)}
             >
               <FieldErrorHint provideHint={false}>
-                <FieldTextFlex label={formatMessage(messages.description)} value="" />
+                <FieldTextFlex label={formatMessage(commonMessages.description)} value="" />
               </FieldErrorHint>
             </FieldProvider>
             <TestPlanAttributes />

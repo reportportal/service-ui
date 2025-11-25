@@ -33,4 +33,8 @@ export const messages = defineMessages({
     id: 'LinkedTestCasesTab.noTagsAdded',
     defaultMessage: 'No tags added',
   },
+  removeTag: {
+    id: 'LinkedTestCasesTab.removeTag',
+    defaultMessage: 'Remove {tag}',
+  },
 });

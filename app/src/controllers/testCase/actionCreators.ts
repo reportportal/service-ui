@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
+import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { Page } from 'types/common';
+
 import {
   GET_FOLDERS,
   CREATE_FOLDER,
   CREATE_FOLDER_SUCCESS,
+  CREATE_FOLDERS_BATCH_SUCCESS,
   START_CREATING_FOLDER,
   STOP_CREATING_FOLDER,
   DELETE_FOLDER,
@@ -32,11 +36,11 @@ import {
   RENAME_FOLDER,
   RENAME_FOLDER_SUCCESS,
   DELETE_TEST_CASE_SUCCESS,
-  DUPLICATE_FOLDER,
   UPDATE_FOLDER_COUNTER,
+  SELECT_ACTIVE_FOLDER,
+  UPDATE_DESCRIPTION_SUCCESS,
 } from './constants';
 import { Folder, TransformedFolder } from './types';
-import { Page, TestCase } from 'pages/inside/testCaseLibraryPage/types';
 
 export interface GetTestCasesByFolderIdParams {
   folderId: number;
@@ -77,6 +81,10 @@ export interface DeleteFolderSuccessParams {
 export interface RenameFolderParams {
   folderId: number;
   folderName: string;
+}
+
+export interface SetActiveFolderIdParams {
+  activeFolderId: number;
 }
 
 export interface UpdateFolderCounterParams {
@@ -120,6 +128,13 @@ export const getFoldersAction = (params?: GetFoldersParams) => ({
   payload: params,
 });
 
+export const setActiveFolderId = (payload: SetActiveFolderIdParams) => {
+  return {
+    type: SELECT_ACTIVE_FOLDER,
+    payload: payload,
+  };
+};
+
 export const createFoldersAction = (folder: CreateFolderParams) => ({
   type: CREATE_FOLDER,
   payload: folder,
@@ -128,6 +143,11 @@ export const createFoldersAction = (folder: CreateFolderParams) => ({
 export const createFoldersSuccessAction = (folder: Folder) => ({
   type: CREATE_FOLDER_SUCCESS,
   payload: folder,
+});
+
+export const createFoldersBatchSuccessAction = (folders: Folder[]) => ({
+  type: CREATE_FOLDERS_BATCH_SUCCESS,
+  payload: folders,
 });
 
 export const deleteFolderAction = (folderInfo: DeleteFolderParams) => ({
@@ -163,12 +183,12 @@ export const renameFolderSuccessAction = (folderId: RenameFolderParams) => ({
   payload: folderId,
 });
 
-export const duplicateFolderAction = (folder: CreateFolderParams) => ({
-  type: DUPLICATE_FOLDER,
-  payload: folder,
-});
-
 export const updateFolderCounterAction = (params: UpdateFolderCounterParams) => ({
   type: UPDATE_FOLDER_COUNTER,
   payload: params,
+});
+
+export const updateDescriptionSuccessAction = (description: string) => ({
+  type: UPDATE_DESCRIPTION_SUCCESS,
+  payload: description,
 });

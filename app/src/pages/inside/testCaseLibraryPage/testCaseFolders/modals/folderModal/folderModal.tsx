@@ -14,25 +14,21 @@
  * limitations under the License.
  */
 
-import { ChangeEvent, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerField, unregisterField, InjectedFormProps } from 'redux-form';
+import { InjectedFormProps, getFormValues } from 'redux-form';
 import { Modal } from '@reportportal/ui-kit';
-import { isEmpty } from 'es-toolkit/compat';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { createClassnames } from 'common/utils';
-import { FolderWithFullPath, transformedFoldersWithFullPathSelector } from 'controllers/testCase';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { hideModalAction } from 'controllers/modal';
-import { FieldProvider, FieldErrorHint } from 'components/fields';
 
-import { commonMessages } from '../../../commonMessages';
-import { FolderNameField, ParentFolderToggle } from '../folderFormFields';
-import { CreateFolderAutocomplete } from '../../shared/CreateFolderAutocomplete/createFolderAutocomplete';
+import { CreateFolderForm } from '../../shared/CreateFolderForm';
 
 import styles from './folderModal.scss';
+import { FolderFormValues } from '../types';
 
 const cx = createClassnames(styles);
 
@@ -41,10 +37,10 @@ interface FolderModalConfig {
   isLoading: boolean;
   isToggled: boolean;
   toggleLabel: string;
+  formName: string;
   toggleFieldName: string;
   parentFolderFieldName: string;
   parentFolderFieldLabel: string;
-  formName: string;
   toggleDisabled?: boolean;
   isInvertedToggle?: boolean;
   customContent?: ReactNode;
@@ -52,7 +48,7 @@ interface FolderModalConfig {
 }
 
 type FolderModalProps = FolderModalConfig &
-  Pick<InjectedFormProps<unknown>, 'dirty' | 'handleSubmit' | 'change' | 'untouch'>;
+  Pick<InjectedFormProps<unknown>, 'dirty' | 'handleSubmit' | 'change'>;
 
 export const FolderModal = ({
   title,
@@ -61,44 +57,26 @@ export const FolderModal = ({
   isToggled,
   toggleLabel,
   toggleFieldName,
+  formName,
   toggleDisabled = false,
   parentFolderFieldName,
   parentFolderFieldLabel,
-  formName,
   isInvertedToggle = false,
   customContent,
   handleSubmit,
   change,
-  untouch,
   onSubmit,
 }: FolderModalProps) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const hideModal = () => dispatch(hideModalAction());
-  const folders = useSelector(transformedFoldersWithFullPathSelector);
-  const computedShouldRenderToggle = !isEmpty(folders);
-
-  const handleToggleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    const shouldShowParentField = isInvertedToggle ? !target.checked : target.checked;
-
-    if (shouldShowParentField) {
-      dispatch(registerField(formName, parentFolderFieldName, 'Field'));
-      untouch(parentFolderFieldName);
-    } else {
-      dispatch(unregisterField(formName, parentFolderFieldName));
-    }
-
-    change(toggleFieldName, target.checked);
-  };
-
-  const handleFolderSelect = ({ selectedItem }: { selectedItem: FolderWithFullPath }) => {
-    change(parentFolderFieldName, selectedItem);
-  };
+  const formValues = useSelector((state) => getFormValues(formName)(state) as FolderFormValues);
 
   const okButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CREATE),
     onClick: handleSubmit(onSubmit) as () => void,
-    disabled: isLoading,
+    disabled:
+      isLoading || (isToggled && !formValues?.[parentFolderFieldName as keyof FolderFormValues]),
     'data-automation-id': 'submitButton',
   };
 
@@ -119,29 +97,16 @@ export const FolderModal = ({
     >
       <form className={cx('folder-modal__form')}>
         {customContent}
-        <FolderNameField />
-        {computedShouldRenderToggle && (
-          <ParentFolderToggle
-            isToggled={isToggled}
-            onToggle={handleToggleChange}
-            disabled={toggleDisabled}
-            label={toggleLabel}
-            className={cx('folder-modal__toggle')}
-          />
-        )}
-        {(isInvertedToggle ? !isToggled : isToggled) && (
-          <FieldProvider name={parentFolderFieldName}>
-            <FieldErrorHint provideHint={false}>
-              <CreateFolderAutocomplete
-                name={parentFolderFieldName}
-                label={parentFolderFieldLabel}
-                placeholder={formatMessage(commonMessages.searchFolderToSelect)}
-                onStateChange={handleFolderSelect}
-                className={cx('folder-modal__parent-folder')}
-              />
-            </FieldErrorHint>
-          </FieldProvider>
-        )}
+        <CreateFolderForm
+          isToggled={isToggled}
+          toggleLabel={toggleLabel}
+          toggleFieldName={toggleFieldName}
+          parentFolderFieldName={parentFolderFieldName}
+          parentFolderFieldLabel={parentFolderFieldLabel}
+          toggleDisabled={toggleDisabled}
+          isInvertedToggle={isInvertedToggle}
+          change={change}
+        />
         <ModalLoadingOverlay isVisible={isLoading} />
       </form>
     </Modal>

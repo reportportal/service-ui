@@ -22,8 +22,4 @@ export const messages = defineMessages({
     id: 'ManualLaunchesPage.testLibraryLink',
     defaultMessage: 'Open Test Library',
   },
-  toRun: {
-    id: 'ManualLaunchesPage.toRun',
-    defaultMessage: 'To Run',
-  },
 });

@@ -117,17 +117,6 @@ export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
     action: 'Click on Btn Submit on GitHub block on tab Authorization Configuration',
     label: 'Submit changes for GitHub on tab Authorization Configuration',
   },
-  ACTIVATE_AD_SWITCHER: {
-    category: ADMIN_SERVER_SETTINGS_PAGE,
-    action:
-      'Click on switcher Activate Active Directory authorization on tab Authorization Configuration',
-    label: 'On/off Activate Active Directory authorization on tab Authorization Configuration',
-  },
-  SUBMIT_AD_BTN: {
-    category: ADMIN_SERVER_SETTINGS_PAGE,
-    action: 'Click on Btn Submit on Active Directory block on tab Authorization Configuration',
-    label: 'Submit changes for Active Directory on tab Authorization Configuration',
-  },
   ACTIVATE_LDAP_SWITCHER: {
     category: ADMIN_SERVER_SETTINGS_PAGE,
     action: 'Click on switcher Activate LDAP authorization on tab Authorization Configuration',

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { JIRA, RALLY, EMAIL, SAUCE_LABS, SAML, LDAP, AD } from 'common/constants/pluginNames';
+import { JIRA, RALLY, EMAIL, SAUCE_LABS, SAML, LDAP } from 'common/constants/pluginNames';
 import JiraIcon from 'common/img/plugins/jira.svg';
 import RallyIcon from 'common/img/plugins/rally.png';
 import EmailIcon from 'common/img/plugins/email.png';
@@ -22,7 +22,6 @@ import SauceLabsIcon from 'common/img/plugins/sauce-labs.svg';
 import SamlIcon from 'common/img/plugins/saml.png';
 import LdapIcon from 'common/img/plugins/ldap.png';
 import DefaultPluginIcon from 'common/img/plugins/default-plugin-icon.svg';
-import ActiveDirectoryIcon from 'common/img/plugins/activeDirectory.png';
 
 export const PLUGIN_IMAGES_MAP = {
   [JIRA]: JiraIcon,
@@ -31,14 +30,13 @@ export const PLUGIN_IMAGES_MAP = {
   [SAUCE_LABS]: SauceLabsIcon,
   [SAML]: SamlIcon,
   [LDAP]: LdapIcon,
-  [AD]: ActiveDirectoryIcon,
 };
 
 export const PLUGIN_DEFAULT_IMAGE = DefaultPluginIcon;
 
 export const PLUGINS_SUPPORTS_MULTIPLE_INSTANCES = [JIRA, RALLY, SAML];
 
-export const BUILTIN_PLUGINS = [EMAIL, SAML, LDAP, AD];
+export const BUILTIN_PLUGINS = [EMAIL, SAML, LDAP];
 
 export const PLUGIN_ICON_TYPES = {
   BASE_64: 'base64',

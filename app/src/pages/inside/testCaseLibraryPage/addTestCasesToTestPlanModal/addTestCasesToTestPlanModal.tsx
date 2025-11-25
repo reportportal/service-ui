@@ -22,8 +22,8 @@ import { useIntl } from 'react-intl';
 
 import { FieldLabel, Modal } from '@reportportal/ui-kit';
 
+import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 import { createClassnames } from 'common/utils';
-import { AsyncAutocomplete } from 'componentLibrary/autocompletes/asyncAutocomplete';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { commonValidators } from 'common/utils/validation';
 import { hideModalAction, withModal } from 'controllers/modal';
@@ -64,12 +64,16 @@ export const AddTestCasesToTestPlanModal = ({
 
   const selectedTestCasesLength = size(selectedTestCaseIds);
 
-  const { isAddTestCasesToTestPlanLoading, setSelectedTestPlan, addTestCasesToTestPlan } =
-    useAddTestCasesToTestPlan({
-      selectedTestCaseIds,
-      isSingleTestCaseMode,
-      change,
-    });
+  const {
+    isAddTestCasesToTestPlanLoading,
+    selectedTestPlan,
+    setSelectedTestPlan,
+    addTestCasesToTestPlan,
+  } = useAddTestCasesToTestPlan({
+    selectedTestCaseIds,
+    isSingleTestCaseMode,
+    change,
+  });
 
   const makeTestPlansOptions = (response: { content: TestPlanDto[] }) => response.content;
 
@@ -85,7 +89,7 @@ export const AddTestCasesToTestPlanModal = ({
   }, [formatMessage, selectedTestCasesLength]);
 
   const retrieveTestPlans = (value: string) =>
-    `${URLS.testPlan(projectKey)}?filter.fts.search=${value}`;
+    URLS.testPlan(projectKey, value ? { 'filter.fts.search': value } : {});
 
   return (
     <Modal
@@ -99,7 +103,7 @@ export const AddTestCasesToTestPlanModal = ({
         ),
         type: 'submit',
         onClick: handleSubmit(addTestCasesToTestPlan) as AddTestCasesSubmitHandler,
-        disabled: invalid || isAddTestCasesToTestPlanLoading,
+        disabled: invalid || !selectedTestPlan || isAddTestCasesToTestPlanLoading,
       }}
       cancelButton={{
         children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -110,15 +114,17 @@ export const AddTestCasesToTestPlanModal = ({
         <div>
           {!isSingleTestCaseMode && description}
           <div className={cx('autocomplete-wrapper')}>
-            <FieldLabel>{formatMessage(messages.label)}</FieldLabel>
-            <AsyncAutocomplete
-              placeholder={formatMessage(messages.selectedTestPlanPlaceholder)}
+            <FieldLabel>{formatMessage(COMMON_LOCALE_KEYS.TEST_PLAN_LABEL)}</FieldLabel>
+            <AsyncAutocompleteV2
+              placeholder={formatMessage(COMMON_LOCALE_KEYS.SELECT_TEST_PLAN_PLACEHOLDER)}
               getURI={retrieveTestPlans}
               makeOptions={makeTestPlansOptions}
               onChange={setSelectedTestPlan}
+              isDropdownMode
               parseValueToString={(value: TestPlanDto) => value?.name}
               createWithoutConfirmation
               skipOptionCreation
+              minLength={0}
             />
           </div>
         </div>

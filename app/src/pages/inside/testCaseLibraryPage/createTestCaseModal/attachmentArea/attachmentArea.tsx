@@ -29,7 +29,7 @@ import {
   FileDropArea,
   AddImageIcon,
 } from '@reportportal/ui-kit';
-import type { MimeType } from '@reportportal/ui-kit/dist/components/fileDropArea/types';
+import type { MimeType } from '@reportportal/ui-kit/fileDropArea';
 
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';

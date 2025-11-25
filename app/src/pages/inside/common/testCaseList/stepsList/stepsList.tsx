@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { isEmpty } from 'es-toolkit/compat';
 import { createClassnames } from 'common/utils';
 import { AttachmentArea } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/attachmentArea';
 import { Step } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/testCaseDetails/steps/step';
@@ -30,28 +31,33 @@ interface StepsListProps {
 export const StepsList = ({ steps }: StepsListProps) => {
   return (
     <div className={cx('steps-list')}>
-      {steps.map((step, index) => {
-        const { instructions, expectedResult, id, attachments } = step;
-        return (
-          <div key={id} className={cx('step-item')}>
-            <AttachmentArea
-              isDraggable={false}
-              isDragAndDropIconVisible={false}
-              isAttachmentBlockVisible={false}
-              index={index}
-              canAttachFiles={false}
-            >
-              <Step
-                stepId={id}
-                isReadMode
-                instructions={instructions}
-                expectedResult={expectedResult}
-                attachments={attachments}
-              />
-            </AttachmentArea>
-          </div>
-        );
-      })}
+      {steps
+        .filter(
+          ({ instructions, expectedResult, attachments }) =>
+            instructions || expectedResult || !isEmpty(attachments),
+        )
+        .map((step, index) => {
+          const { instructions, expectedResult, id, attachments } = step;
+          return (
+            <div key={id} className={cx('step-item')}>
+              <AttachmentArea
+                isDraggable={false}
+                isDragAndDropIconVisible={false}
+                isAttachmentBlockVisible={false}
+                index={index}
+                canAttachFiles={false}
+              >
+                <Step
+                  stepId={id}
+                  isReadMode
+                  instructions={instructions}
+                  expectedResult={expectedResult}
+                  attachments={attachments}
+                />
+              </AttachmentArea>
+            </div>
+          );
+        })}
     </div>
   );
 };

@@ -17,10 +17,6 @@ export const messages = defineMessages({
     id: 'CreateTestCaseModal.addDetailsOrContext',
     defaultMessage: 'Add details or context for the test case here',
   },
-  description: {
-    id: 'CreateTestCaseModal.description',
-    defaultMessage: 'Description',
-  },
   priority: {
     id: 'CreateTestCaseModal.priority',
     defaultMessage: 'Priority',
@@ -48,9 +44,5 @@ export const messages = defineMessages({
   priorityUnspecified: {
     id: 'CreateTestCaseModal.priorityUnspecified',
     defaultMessage: 'Unspecified',
-  },
-  duplicateTestCaseName: {
-    id: 'CreateTestCaseModal.duplicateTestCaseName',
-    defaultMessage: 'Test case with this name already exists',
   },
 });

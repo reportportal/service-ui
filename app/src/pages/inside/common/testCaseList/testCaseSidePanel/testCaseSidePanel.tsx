@@ -28,7 +28,7 @@ import {
 } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
-import { createClassnames } from 'common/utils';
+import { createClassnames, copyToClipboard } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useOnClickOutside } from 'common/hooks';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
@@ -47,6 +47,7 @@ import { ManualScenario, ExtendedTestCase } from 'pages/inside/testCaseLibraryPa
 import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
 import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
+import { AddToLaunchButton } from 'pages/inside/testCaseLibraryPage/addToLaunchButton';
 
 import { TestCaseMenuAction, TestCaseManualScenario } from '../types';
 import {
@@ -58,6 +59,7 @@ import {
 import { createTestCaseMenuItems } from '../configUtils';
 import { Scenario } from './scenario';
 import { messages } from './messages';
+import { commonMessages } from '../../common-messages';
 
 import styles from './testCaseSidePanel.scss';
 
@@ -65,10 +67,11 @@ const cx = createClassnames(styles);
 
 const safeGetMessage = (
   key: string,
-  messages: Record<string, MessageDescriptor>,
   formatMessage: (descriptor: MessageDescriptor) => string,
 ): string => {
-  const messageDescriptor = messages[key];
+  const allMessages: Record<string, MessageDescriptor> = { ...messages, ...commonMessages };
+  const messageDescriptor = allMessages[key];
+
   return messageDescriptor ? formatMessage(messageDescriptor) : key;
 };
 
@@ -81,15 +84,21 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
   scenario: ManualScenario;
   testCaseDescription: string;
 }) => {
+  const firstStep = scenario?.steps?.[0];
   const isStepsManualScenario = scenario.manualScenarioType === TestCaseManualScenario.STEPS;
-  const isEmptyPreconditions = isEmpty(scenario?.preconditions?.value);
+  const isEmptyPreconditions =
+    !scenario?.preconditions?.value &&
+    isEmpty(scenario?.preconditions?.attachments) &&
+    !firstStep?.instructions &&
+    !firstStep?.expectedResult &&
+    isEmpty(firstStep?.attachments);
   const isScenarioDataHidden = isStepsManualScenario
     ? isEmptyPreconditions
-    : isEmptyPreconditions && !scenario?.instructions && !scenario?.expectedResult;
+    : !scenario?.preconditions?.value && !scenario?.instructions && !scenario?.expectedResult;
 
   return [
     {
-      titleKey: 'tagsTitle',
+      titleKey: 'tags',
       defaultMessageKey: 'noTagsAdded',
       childComponent: isEmpty(attributes) ? null : (
         <AdaptiveTagList tags={attributes} isShowAllView />
@@ -100,10 +109,10 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
       defaultMessageKey: 'noDetailsForScenario',
       childComponent: isScenarioDataHidden ? null : <Scenario scenario={scenario} />,
     },
-    ...(scenario.manualScenarioType === TestCaseManualScenario.TEXT
+    ...(scenario?.manualScenarioType === TestCaseManualScenario.TEXT
       ? [
           {
-            titleKey: 'attachmentsTitle',
+            titleKey: 'attachments',
             defaultMessageKey: 'noAttachmentsAdded',
             childComponent: isEmpty(scenario?.attachments) ? null : (
               <AttachmentList attachments={scenario.attachments} />
@@ -112,7 +121,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
         ]
       : []),
     {
-      titleKey: 'descriptionTitle',
+      titleKey: 'description',
       defaultMessageKey: 'descriptionNotSpecified',
       childComponent: testCaseDescription ? (
         <ExpandedTextSection text={testCaseDescription} defaultVisibleLines={5} />
@@ -203,10 +212,6 @@ export const TestCaseSidePanel = memo(
       });
     };
 
-    const handleAddToLaunchClick = () => {
-      // TODO: Implement add to launch functionality
-    };
-
     const handleAddToTestPlanClick = () => {
       openAddTestCasesToTestPlanModal({
         selectedTestCaseIds: [testCase.id],
@@ -215,7 +220,7 @@ export const TestCaseSidePanel = memo(
     };
 
     const handleCopyId = async () => {
-      await navigator.clipboard.writeText(testCase.id.toString());
+      await copyToClipboard(testCase.id.toString());
     };
 
     return (
@@ -230,7 +235,7 @@ export const TestCaseSidePanel = memo(
               type="button"
               className={cx('close-button')}
               onClick={onClose}
-              aria-label={formatMessage(messages.closePanel)}
+              aria-label={formatMessage(commonMessages.closePanel)}
               data-automation-id="close-test-case-panel"
             >
               {Parser(CrossIcon as unknown as string)}
@@ -247,7 +252,7 @@ export const TestCaseSidePanel = memo(
                   className={cx('copy-button')}
                   // eslint-disable-next-line @typescript-eslint/no-misused-promises
                   onClick={handleCopyId}
-                  aria-label={formatMessage(messages.copyId)}
+                  aria-label={formatMessage(commonMessages.copyId)}
                   data-automation-id="copy-test-case-id"
                 >
                   <CopyIcon />
@@ -280,14 +285,14 @@ export const TestCaseSidePanel = memo(
         </div>
         <div className={cx('content')}>
           {COLLAPSIBLE_SECTIONS_CONFIG({
-            attributes: testCase?.attributes?.map(({ key }) => key),
+            attributes: testCase?.manualScenario?.attributes?.map(({ key }) => key),
             scenario: testCase?.manualScenario,
             testCaseDescription: testCase.description,
           }).map(({ titleKey, defaultMessageKey, childComponent }) => (
             <CollapsibleSection
               key={titleKey}
-              title={safeGetMessage(titleKey, messages, formatMessage)}
-              defaultMessage={safeGetMessage(defaultMessageKey, messages, formatMessage)}
+              title={safeGetMessage(titleKey, formatMessage)}
+              defaultMessage={safeGetMessage(defaultMessageKey, formatMessage)}
             >
               {childComponent}
             </CollapsibleSection>
@@ -319,14 +324,10 @@ export const TestCaseSidePanel = memo(
             {formatMessage(messages.openDetails)}
           </Button>
           {canAddTestCaseToLaunch && (
-            <Button
-              variant="ghost"
-              className={cx('action-button')}
-              onClick={handleAddToLaunchClick}
-              data-automation-id="test-case-add-to-launch"
-            >
-              {formatMessage(messages.addToLaunch)}
-            </Button>
+            <AddToLaunchButton
+              isButtonDisabled={isEmpty(testCase?.manualScenario?.preconditions?.value)}
+              testCaseName={testCase.name}
+            />
           )}
           {canAddTestCaseToTestPlan && (
             <Button

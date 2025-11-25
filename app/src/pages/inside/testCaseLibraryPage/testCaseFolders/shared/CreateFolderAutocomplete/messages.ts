@@ -17,16 +17,8 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  selectOrCreateFolder: {
-    id: 'CreateFolderAutocomplete.selectOrCreateFolder',
-    defaultMessage: 'Select or create folder',
-  },
   noFoldersFound: {
     id: 'CreateFolderAutocomplete.noFoldersFound',
     defaultMessage: 'No folders found',
-  },
-  createNew: {
-    id: 'CreateFolderAutocomplete.createNew',
-    defaultMessage: 'Create new',
   },
 });

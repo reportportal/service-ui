@@ -36,25 +36,22 @@
 .test-case-table-row {
   position: relative;
   height: max-content;
-  min-height: 80px;
+  min-height: 76px;
   border-radius: 4px;
   box-sizing: content-box;
 
   :global([class*='table-row-content']) {
     align-items: flex-start;
-    min-height: 80px;
-    border: 1px solid transparent;
-    padding: 1px;
-  }
-
-  &:hover > :global([class*='table-row-content']) {
-    border: 1px solid var(--rp-ui-base-topaz-focused);
-    padding: 1px;
-  }
-
-  &:has(.selected) > :global([class*='table-row-content']) {
-    border: 2px solid var(--rp-ui-base-topaz-focused);
+    min-height: 76px;
     padding: 0;
+  }
+
+  &:hover :global([class*='table-row-content']) {
+    outline: 1px solid var(--rp-ui-base-topaz-focused);
+  }
+
+  &:has(.selected) :global([class*='table-row-content']) {
+    outline: 2px solid var(--rp-ui-base-topaz-focused);
   }
 }
 

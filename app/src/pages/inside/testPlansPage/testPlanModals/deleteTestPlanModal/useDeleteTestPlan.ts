@@ -16,15 +16,22 @@
 
 import { useDispatch, useSelector } from 'react-redux';
 import { noop } from 'es-toolkit';
-import { VoidFn } from '@reportportal/ui-kit/dist/common/types';
+import { VoidFn } from '@reportportal/ui-kit/common';
+import { push } from 'redux-first-router';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import { useDebouncedSpinner } from 'common/hooks';
+import { useDebouncedSpinner, useQueryParams } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
-import { getTestPlansAction } from 'controllers/testPlan';
+import {
+  defaultQueryParams,
+  getTestPlansAction,
+  testPlansPageSelector,
+  testPlansSelector,
+} from 'controllers/testPlan';
+import { useProjectDetails } from 'hooks/useTypedSelector';
 
 interface UseDeleteTestPlanOptions {
   onSuccess?: VoidFn;
@@ -34,6 +41,10 @@ export const useDeleteTestPlan = ({ onSuccess = noop }: UseDeleteTestPlanOptions
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+  const { organizationSlug, projectSlug } = useProjectDetails();
+  const testPlansPageData = useSelector(testPlansPageSelector);
+  const testPlans = useSelector(testPlansSelector);
+  const queryParams = useQueryParams(defaultQueryParams);
 
   const deleteTestPlan = async (testPlanId: number) => {
     try {
@@ -49,7 +60,19 @@ export const useDeleteTestPlan = ({ onSuccess = noop }: UseDeleteTestPlanOptions
           messageId: 'testPlanDeletedSuccess',
         }),
       );
-      dispatch(getTestPlansAction());
+
+      const isSingleItemOnTheLastPage =
+        testPlansPageData?.number === testPlansPageData?.totalPages && testPlans?.length === 1;
+
+      if (isSingleItemOnTheLastPage) {
+        const offset = Number(queryParams.offset) - Number(queryParams.limit);
+        const url = `/organizations/${organizationSlug}/projects/${projectSlug}/testPlans?offset=${offset}&limit=${queryParams.limit}`;
+
+        push(url);
+      } else {
+        dispatch(getTestPlansAction(queryParams));
+      }
+
       onSuccess();
     } catch {
       dispatch(

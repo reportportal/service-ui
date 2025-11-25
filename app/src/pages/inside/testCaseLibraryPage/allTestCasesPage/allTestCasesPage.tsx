@@ -17,7 +17,7 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { isEmpty, noop } from 'es-toolkit/compat';
+import { isEmpty, noop, compact } from 'es-toolkit/compat';
 import { Button, MeatballMenuIcon, Pagination, Selection } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
@@ -28,7 +28,8 @@ import {
   TestCasePageDefaultValues,
 } from 'pages/inside/common/testCaseList/constants';
 import { DEFAULT_CURRENT_PAGE } from 'pages/inside/common/testCaseList/configUtils';
-import { TestCase, Page } from 'pages/inside/testCaseLibraryPage/types';
+import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { Page } from 'types/common';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { showModalAction } from 'controllers/modal';
 import { urlFolderIdSelector } from 'controllers/pages';
@@ -39,11 +40,13 @@ import {
 } from 'controllers/testCase';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { usePagination } from 'hooks/usePagination';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 
 import { CHANGE_PRIORITY_MODAL_KEY } from './changePriorityModal';
 import { messages } from './messages';
 import { FolderEmptyState } from '../emptyState/folder/folderEmptyState';
 import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
+import { useBatchDuplicateToFolderModal } from './batchDuplicateToFolderModal';
 
 import styles from './allTestCasesPage.scss';
 
@@ -72,12 +75,16 @@ export const AllTestCasesPage = ({
   const { captions, activePage, pageSize, totalPages, setActivePage, changePageSize } =
     usePagination({
       totalItems: testCasesPageData?.totalElements,
+      itemsPerPage: TestCasePageDefaultValues.limit,
     });
   const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
   const folderId = useSelector(urlFolderIdSelector);
   const folders = useSelector(foldersSelector);
   const dispatch = useDispatch();
   const isAnyRowSelected = !isEmpty(selectedRowIds);
+  const { openModal: openAddToTestPlanModal } = useAddTestCasesToTestPlanModal();
+  const { openModal: openBatchDuplicateToFolderModal } = useBatchDuplicateToFolderModal();
+  const { canDeleteTestCase, canDuplicateTestCase, canEditTestCase } = useUserPermissions();
 
   useEffect(() => {
     setActivePage(FIRST_PAGE_NUMBER);
@@ -88,14 +95,17 @@ export const AllTestCasesPage = ({
     return selectedFolder?.name || formatMessage(COMMON_LOCALE_KEYS.ALL_TEST_CASES_TITLE);
   }, [folderId, folders, formatMessage]);
 
-  const { openModal: openAddToTestPlanModal } = useAddTestCasesToTestPlanModal();
-
-  const popoverItems: PopoverItem[] = [
-    {
+  const popoverItems: PopoverItem[] = compact([
+    canDuplicateTestCase && {
       label: formatMessage(messages.duplicateToFolder),
-      onClick: noop,
+      onClick: () => {
+        openBatchDuplicateToFolderModal({
+          selectedTestCaseIds: selectedRowIds,
+          count: selectedRowIds.length,
+        });
+      },
     },
-    {
+    canEditTestCase && {
       label: formatMessage(messages.changePriority),
       onClick: () => {
         dispatch(
@@ -110,16 +120,16 @@ export const AllTestCasesPage = ({
         );
       },
     },
-    {
+    canEditTestCase && {
       label: formatMessage(messages.editTags),
       onClick: noop,
     },
-    {
+    canDeleteTestCase && {
       label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
       variant: 'destructive',
       onClick: noop,
     },
-  ];
+  ]);
 
   const handleOpenAddToTestPlanModal = useCallback(() => {
     openAddToTestPlanModal({ selectedTestCaseIds: selectedRowIds });
@@ -224,7 +234,7 @@ export const AllTestCasesPage = ({
                 </Button>
               </PopoverControl>
               <Button variant="ghost">{formatMessage(messages.moveToFolder)}</Button>
-              <Button variant="ghost">{formatMessage(messages.addToLaunch)}</Button>
+              <Button variant="ghost">{formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}</Button>
               <Button onClick={handleOpenAddToTestPlanModal}>
                 {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
               </Button>

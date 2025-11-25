@@ -49,10 +49,10 @@ export const messages = defineMessages({
   },
 });
 
-export const usePagination = ({ totalItems = 0 }) => {
+export const usePagination = ({ totalItems = 0, itemsPerPage = DEFAULT_ITEMS_PER_PAGE }) => {
   const { formatMessage } = useIntl();
   const [activePage, setActivePage] = useState<number>(DEFAULT_CURRENT_PAGE);
-  const [pageSize, setPageSize] = useState<number>(DEFAULT_ITEMS_PER_PAGE);
+  const [pageSize, setPageSize] = useState<number>(itemsPerPage);
 
   const totalPages = Math.ceil(totalItems / pageSize);
 
