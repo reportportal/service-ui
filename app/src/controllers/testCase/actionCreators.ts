@@ -38,6 +38,7 @@ import {
   DELETE_TEST_CASE_SUCCESS,
   UPDATE_FOLDER_COUNTER,
   SELECT_ACTIVE_FOLDER,
+  UPDATE_DESCRIPTION_SUCCESS,
 } from './constants';
 import { Folder, TransformedFolder } from './types';
 
@@ -185,4 +186,9 @@ export const renameFolderSuccessAction = (folderId: RenameFolderParams) => ({
 export const updateFolderCounterAction = (params: UpdateFolderCounterParams) => ({
   type: UPDATE_FOLDER_COUNTER,
   payload: params,
+});
+
+export const updateDescriptionSuccessAction = (description: string) => ({
+  type: UPDATE_DESCRIPTION_SUCCESS,
+  payload: description,
 });

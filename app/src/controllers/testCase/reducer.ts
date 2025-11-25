@@ -38,6 +38,7 @@ import {
   GET_TEST_CASE_DETAILS_FAILURE,
   UPDATE_FOLDER_COUNTER,
   SELECT_ACTIVE_FOLDER,
+  UPDATE_DESCRIPTION_SUCCESS,
 } from 'controllers/testCase/constants';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Page } from 'types/common';
@@ -81,7 +82,13 @@ export const INITIAL_STATE: InitialStateType = {
   },
 };
 
-const INITIAL_DETAILS_STATE = {
+type InitialDetailsStateType = {
+  data: TestCase;
+  loading: boolean;
+  error: string;
+};
+
+const INITIAL_DETAILS_STATE: InitialDetailsStateType = {
   data: null,
   loading: false,
   error: null,
@@ -202,6 +209,8 @@ const testCaseDetailsReducer = (
       return { ...state, loading: false, data: payload };
     case GET_TEST_CASE_DETAILS_FAILURE:
       return { ...state, loading: false, error };
+    case UPDATE_DESCRIPTION_SUCCESS:
+      return { ...state, data: { ...state.data, description: payload } };
     default:
       return state;
   }
