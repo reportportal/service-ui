@@ -167,7 +167,7 @@
     "sass": "^1.83.4",
     "sass-loader": "^16.0.4",
     "sass-resources-loader": "2.2.5",
-    "slnodejs": "^6.1.1006",
+    "slnodejs": "^6.1.1122",
     "style-loader": "^4.0.0",
     "stylelint": "^16.21.0",
     "stylelint-config-prettier-scss": "^1.0.0",
@@ -188,6 +188,9 @@
     "webpack-notifier": "^1.15.0",
     "webpack-subresource-integrity": "5.1.0",
     "why-did-you-update": "1.0.8"
+  },
+  "overrides": {
+    "form-data": ">=2.5.4"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
