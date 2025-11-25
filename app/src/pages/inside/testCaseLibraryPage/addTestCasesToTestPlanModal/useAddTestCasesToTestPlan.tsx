@@ -55,6 +55,8 @@ export const useAddTestCasesToTestPlan = ({
 
   const autompleteInputRef = useRef<HTMLInputElement>(null);
 
+  const autompleteInputRef = useRef<HTMLInputElement>(null);
+
   const { selectedTestPlan } = useSelector(
     (state) =>
       (getFormValues(ADD_TO_TEST_PLAN_MODAL_FORM)(state) || {}) as AddTestCasesToTestPlanFormData,
