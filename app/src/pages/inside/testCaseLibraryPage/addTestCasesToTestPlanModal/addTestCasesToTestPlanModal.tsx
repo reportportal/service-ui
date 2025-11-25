@@ -69,6 +69,7 @@ export const AddTestCasesToTestPlanModal = ({
     selectedTestPlan,
     setSelectedTestPlan,
     addTestCasesToTestPlan,
+    inputRefFunction,
   } = useAddTestCasesToTestPlan({
     selectedTestCaseIds,
     isSingleTestCaseMode,
@@ -120,6 +121,7 @@ export const AddTestCasesToTestPlanModal = ({
               getURI={retrieveTestPlans}
               makeOptions={makeTestPlansOptions}
               onChange={setSelectedTestPlan}
+              refFunction={inputRefFunction}
               isDropdownMode
               parseValueToString={(value: TestPlanDto) => value?.name}
               createWithoutConfirmation
