@@ -21,6 +21,7 @@ import { uniqueId } from 'common/utils';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 import { FolderNameField } from 'pages/inside/testCaseLibraryPage/testCaseFolders/modals/folderFormFields';
 import { Folder, foldersSelector } from 'controllers/testCase';
+
 import { useImportTestCase } from './useImportTestCase';
 
 import { messages } from './messages';
@@ -30,9 +31,10 @@ import styles from './importTestCaseModal.scss';
 export const IMPORT_TEST_CASE_MODAL_KEY = 'importTestCaseModalKey';
 export const IMPORT_TEST_CASE_FORM_NAME = 'import-test-case-modal-form';
 const DEFAULT_FOLDER_NAME = `Import ${format(new Date(), 'dd.MM.yyyy')}`;
+export type ImportTarget = 'root' | 'existing';
 export type ImportTestCaseFormValues = {
   folderName: string;
-  importTarget?: 'root' | 'existing';
+  importTarget?: ImportTarget;
 };
 
 const cx = createClassnames(styles);
@@ -64,7 +66,7 @@ export const ImportTestCaseModal = ({
   const [folderIdFromUrl] = useState<number | undefined>(() =>
     extractFolderIdFromHash(window.location.hash),
   );
-  const [target, setTarget] = useState<'root' | 'existing'>(
+  const [target, setTarget] = useState<ImportTarget>(
     folderIdFromUrl != null ? 'existing' : 'root',
   );
   const [existingFolderId, setExistingFolderId] = useState<number | null>(null);
@@ -79,7 +81,7 @@ export const ImportTestCaseModal = ({
     dispatch(hideModalAction());
   };
 
-  const setTargetAndForm = (next: 'root' | 'existing') => {
+  const setTargetAndForm = (next: ImportTarget) => {
     setTarget(next);
     change('importTarget', next);
   };
@@ -98,7 +100,7 @@ export const ImportTestCaseModal = ({
   useEffect(() => {
     change('importTarget', target);
 
-    if (folderIdFromUrl && existingOptions.some((o) => Number(o.value) === folderIdFromUrl)) {
+    if (folderIdFromUrl && existingOptions.some(({ value }) => Number(value) === folderIdFromUrl)) {
       setExistingFolderId(folderIdFromUrl);
     }
   }, [folderIdFromUrl, existingOptions, change]);
@@ -107,7 +109,7 @@ export const ImportTestCaseModal = ({
 
   const isWithinSize = (file: File) => file.size <= MAX_FILE_SIZE_BYTES;
 
-  const hasExistingOptions = existingOptions.length > 0;
+  const hasExistingOptions = !isEmpty(existingOptions);
 
   const handleImport = async (formValues: ImportTestCaseFormValues) => {
     const name = formValues.folderName?.trim() ?? '';

@@ -39,23 +39,23 @@ export const messages = defineMessages({
     defaultMessage: 'File size should be up to {size} MB',
   },
   specifyLocation: {
-    id: 'import.specifyLocation',
+    id: 'ImportTestCaseModal.specifyLocation',
     defaultMessage: 'Specify the location for importing your test cases:',
   },
   createNewRootFolder: {
-    id: 'import.createRoot',
+    id: 'ImportTestCaseModal.createRoot',
     defaultMessage: 'Create new root folder',
   },
   addToExistingFolder: {
-    id: 'import.addToExisting',
+    id: 'ImportTestCaseModal.addToExisting',
     defaultMessage: 'Add to the existing folder',
   },
   noFolderContextTooltip: {
-    id: 'import.noFolderContext',
+    id: 'ImportTestCaseModal.noFolderContext',
     defaultMessage: 'Open the modal from a folder to add items there.',
   },
   typeToSearchOrSelect: {
-    id: 'import.typeToSearchOrSelect',
+    id: 'ImportTestCaseModal.typeToSearchOrSelect',
     defaultMessage: 'Type to search or select a folder from the suggestions…',
   },
 });

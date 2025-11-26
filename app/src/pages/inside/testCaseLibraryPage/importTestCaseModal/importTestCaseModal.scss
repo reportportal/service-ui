@@ -92,7 +92,7 @@
   &__segmented {
     display: flex;
     gap: 4px;
-    background: $COLOR--bg-200;
+    background: var(--rp-ui-base-bg-200);
     border-radius: 6px;
     padding: 2px;
   }
