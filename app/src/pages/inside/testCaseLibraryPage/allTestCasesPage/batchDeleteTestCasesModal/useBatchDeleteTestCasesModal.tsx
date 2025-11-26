@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-export {
-  getFoldersAction,
-  getAllTestCasesAction,
-  getTestCaseByFolderIdAction,
-  updateFolderCounterAction,
-} from './actionCreators';
-export { testCaseSagas } from './sagas';
-export * from './constants';
-export * from './types';
-export { testCaseReducer } from './reducer';
-export * from './selectors';
+import { useModal } from 'common/hooks';
+
+import BatchDeleteTestCasesModal, {
+  BATCH_DELETE_TEST_CASES_MODAL_KEY,
+  BatchDeleteTestCasesModalData,
+} from './batchDeleteTestCasesModal';
+
+export const useBatchDeleteTestCasesModal = () =>
+  useModal<BatchDeleteTestCasesModalData>({
+    modalKey: BATCH_DELETE_TEST_CASES_MODAL_KEY,
+    renderModal: (data) => <BatchDeleteTestCasesModal data={data} />,
+  });

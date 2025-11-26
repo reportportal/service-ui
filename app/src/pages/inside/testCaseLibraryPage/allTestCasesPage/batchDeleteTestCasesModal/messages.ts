@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-export {
-  getFoldersAction,
-  getAllTestCasesAction,
-  getTestCaseByFolderIdAction,
-  updateFolderCounterAction,
-} from './actionCreators';
-export { testCaseSagas } from './sagas';
-export * from './constants';
-export * from './types';
-export { testCaseReducer } from './reducer';
-export * from './selectors';
+import { defineMessages } from 'react-intl';
+
+export const messages = defineMessages({
+  batchDeleteTestCasesTitle: {
+    id: 'BatchDeleteTestCasesModal.title',
+    defaultMessage: 'Delete Test Cases',
+  },
+  batchDeleteDescription: {
+    id: 'BatchDeleteTestCasesModal.description',
+    defaultMessage:
+      'Are you sure you want to delete <b>{count} selected test {count, plural, one {case} other {cases}}</b>? This irreversible action will also impact the testing scope of any Test Plans that include them.',
+  },
+});

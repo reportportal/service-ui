@@ -49,6 +49,7 @@ export const useDuplicateFolder = () => {
       showSpinner();
 
       let duplicatedFolder: Folder;
+
       try {
         duplicatedFolder = await fetch<Folder>(URLS.testFolderDuplicate(projectKey, folderId), {
           method: 'POST',
