@@ -114,7 +114,7 @@ export const CreateFolderAutocomplete = ({
         optionVariant=""
         onBlur={noop}
         onFocus={noop}
-        useFixedPositioning
+        useFixedPositioning={false}
         onStateChange={onStateChange}
         onChange={handleChange}
         value={targetFolder}
