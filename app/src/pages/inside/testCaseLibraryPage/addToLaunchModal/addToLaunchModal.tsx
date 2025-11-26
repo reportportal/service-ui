@@ -20,7 +20,7 @@ import { InjectedFormProps, reduxForm, SubmitHandler } from 'redux-form';
 import { useIntl } from 'react-intl';
 import { FieldLabel, FieldText, Modal } from '@reportportal/ui-kit';
 
-import { AsyncAutocomplete } from 'componentLibrary/autocompletes/asyncAutocomplete';
+import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { hideModalAction, withModal } from 'controllers/modal';
@@ -82,7 +82,7 @@ export const AddToLaunchModalComponent = ({
   );
 
   const retrieveTestPlans = (value: string) =>
-    `${URLS.testPlan(projectKey)}?filter.fts.search=${value}`;
+    URLS.testPlan(projectKey, value ? { 'filter.fts.search': value } : {});
 
   const handleActiveButton = useCallback((activeButtonTitle: ButtonSwitcherOption) => {
     setActiveButton(activeButtonTitle);
@@ -132,7 +132,7 @@ export const AddToLaunchModalComponent = ({
               </FieldProvider>
               <div className={cx('autocomplete-wrapper')}>
                 <FieldLabel>{formatMessage(COMMON_LOCALE_KEYS.TEST_PLAN_LABEL)}</FieldLabel>
-                <AsyncAutocomplete
+                <AsyncAutocompleteV2
                   placeholder={formatMessage(COMMON_LOCALE_KEYS.SELECT_TEST_PLAN_PLACEHOLDER)}
                   getURI={retrieveTestPlans}
                   makeOptions={makeTestPlansOptions}
@@ -140,6 +140,8 @@ export const AddToLaunchModalComponent = ({
                   parseValueToString={(value: TestPlanDto) => value?.name}
                   createWithoutConfirmation
                   skipOptionCreation
+                  isDropdownMode
+                  minLength={0}
                 />
               </div>
             </>
@@ -148,7 +150,7 @@ export const AddToLaunchModalComponent = ({
               <FieldErrorHint provideHint={false}>
                 <>
                   <FieldLabel isRequired>{formatMessage(messages.launchNameLabel)}</FieldLabel>
-                  <AsyncAutocomplete
+                  <AsyncAutocompleteV2
                     placeholder={formatMessage(messages.launchNameExistingPlaceholder)}
                     getURI={retrieveTestPlans}
                     makeOptions={makeTestPlansOptions}
@@ -156,6 +158,8 @@ export const AddToLaunchModalComponent = ({
                     parseValueToString={(value: TestPlanDto) => value?.name}
                     createWithoutConfirmation
                     skipOptionCreation
+                    isDropdownMode
+                    minLength={0}
                   />
                 </>
               </FieldErrorHint>

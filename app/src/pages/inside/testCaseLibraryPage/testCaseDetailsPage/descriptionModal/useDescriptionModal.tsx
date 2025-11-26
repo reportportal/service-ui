@@ -14,19 +14,12 @@
  * limitations under the License.
  */
 
-export const STATUS_TYPES = {
-  BLOCKER: 'blocker',
-  CRITICAL: 'critical',
-  HIGH: 'high',
-  MEDIUM: 'medium',
-  LOW: 'low',
-  UNSPECIFIED: 'unspecified',
-} as const;
+import { useModal } from 'common/hooks';
 
-export const ITEMS_PER_PAGE_OPTIONS: number[] = [10, 20, 50, 100];
+import DescriptionModal, { DESCRIPTION_MODAL_KEY, DescriptionModalData } from './descriptionModal';
 
-export const TestCasePageDefaultValues = {
-  size: 10,
-  limit: 50,
-  offset: 0,
-};
+export const useDescriptionModal = () =>
+  useModal<DescriptionModalData>({
+    modalKey: DESCRIPTION_MODAL_KEY,
+    renderModal: (data) => <DescriptionModal data={data} />,
+  });

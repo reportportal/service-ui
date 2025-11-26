@@ -228,6 +228,10 @@ const messages = defineMessages({
     id: 'TestCaseLibraryPage.testCaseDeletedSuccess',
     defaultMessage: 'Test case has been deleted successfully.',
   },
+  testCaseDescriptionUpdateSuccess: {
+    id: 'TestCaseLibraryPage.testCaseDescriptionUpdateSuccess',
+    defaultMessage: 'Test case description has been updated successfully.',
+  },
   testCaseFolderRenamedSuccess: {
     id: 'TestCaseLibraryPage.testCaseFolderRenamedSuccess',
     defaultMessage: 'Folder has been renamed successfully.',

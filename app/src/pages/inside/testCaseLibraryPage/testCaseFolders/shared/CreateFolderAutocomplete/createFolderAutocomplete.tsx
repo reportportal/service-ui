@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ComponentProps } from 'react';
+import { ComponentProps, useRef } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { FieldLabel, SingleAutocomplete } from '@reportportal/ui-kit';
@@ -73,6 +73,12 @@ export const CreateFolderAutocomplete = ({
 
   const targetFolder = findFolderById(folders, value?.id);
 
+  const autocompleteInputRef = useRef<HTMLInputElement>(null);
+
+  const autocompleteInputRefFunction = (node: HTMLInputElement) => {
+    autocompleteInputRef.current = node;
+  };
+
   const renderOption: SingleAutocompleteRenderOption = (
     option: FolderWithFullPath,
     index: number,
@@ -95,6 +101,11 @@ export const CreateFolderAutocomplete = ({
     );
   };
 
+  const handleChange = (selectedItem: FolderWithFullPath | null) => {
+    onChange?.(selectedItem);
+    autocompleteInputRef.current?.blur();
+  };
+
   return (
     <div className={cx('create-folder-autocomplete', className)}>
       {label && <FieldLabel isRequired={isRequired}>{label}</FieldLabel>}
@@ -105,10 +116,11 @@ export const CreateFolderAutocomplete = ({
         onFocus={noop}
         useFixedPositioning={false}
         onStateChange={onStateChange}
-        onChange={onChange}
+        onChange={handleChange}
         value={targetFolder}
         error={error}
         touched={touched}
+        refFunction={autocompleteInputRefFunction}
         skipOptionCreation
         isDropdownMode
         placeholder={placeholder || formatMessage(commonMessages.searchFolderToSelect)}
