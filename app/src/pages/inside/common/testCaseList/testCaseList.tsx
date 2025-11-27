@@ -17,7 +17,7 @@
 import { memo, SetStateAction, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { xor } from 'es-toolkit';
-import { BubblesLoader, FilterOutlineIcon, Table } from '@reportportal/ui-kit';
+import { BubblesLoader, FilterOutlineIcon, FilterFilledIcon, Table } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { SearchField } from 'components/fields/searchField';
@@ -69,8 +69,12 @@ export const TestCaseList = memo(
     const { formatMessage } = useIntl();
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<number | null>(null);
     const [isFilterSidePanelVisible, setIsFilterSidePanelVisible] = useState(false);
+    const [selectedPriorities, setSelectedPriorities] = useState<string[]>([]);
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
     const { canDoTestCaseBulkActions } = useUserPermissions();
+
+    const activeFiltersCount = selectedPriorities.length + selectedTags.length;
 
     let currentData: ExtendedTestCase[];
 
@@ -93,6 +97,10 @@ export const TestCaseList = memo(
 
     const handleFilterIconClick = () => {
       setIsFilterSidePanelVisible(true);
+    };
+
+    const handleApplyFilters = () => {
+      // TODO: Implement apply filters functionality
     };
 
     const handleRowSelect = (id: number | string) => {
@@ -182,11 +190,14 @@ export const TestCaseList = memo(
                   />
                   <button
                     type="button"
-                    className={cx('filter-icon')}
+                    className={cx('filter-icon', { active: activeFiltersCount > 0 })}
                     onClick={handleFilterIconClick}
                     aria-label={formatMessage(messages.filterButton)}
                   >
-                    <FilterOutlineIcon />
+                    {activeFiltersCount > 0 ? <FilterFilledIcon /> : <FilterOutlineIcon />}
+                    {activeFiltersCount > 0 && (
+                      <span className={cx('filter-count')}>{activeFiltersCount}</span>
+                    )}
                   </button>
                 </>
               )}
@@ -229,6 +240,11 @@ export const TestCaseList = memo(
             <FilterSidePanel
               isVisible={isFilterSidePanelVisible}
               onClose={handleCloseFilterSidePanel}
+              selectedPriorities={selectedPriorities}
+              selectedTags={selectedTags}
+              onPrioritiesChange={setSelectedPriorities}
+              onTagsChange={setSelectedTags}
+              onApply={handleApplyFilters}
             />
           </>
         )}
