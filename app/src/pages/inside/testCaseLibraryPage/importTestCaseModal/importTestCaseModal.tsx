@@ -34,7 +34,7 @@ export type ImportTestCaseFormValues = {
 const cx = createClassnames(styles);
 const MAX_FILE_SIZE_MB = 10;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
-const CSV_MIME_TYPES = [MIME_TYPES.csv, MIME_TYPES.xls, MIME_TYPES.plain];
+const CSV_MIME_TYPES: MimeType[] = [MIME_TYPES.csv, MIME_TYPES.xls, MIME_TYPES.plain];
 
 type FileLike = File | { file: File };
 type FileInput = FileLike | FileLike[];
@@ -52,6 +52,7 @@ const toMB = (bytes: number) => +(bytes / (1024 * 1024)).toFixed(2);
 export const ImportTestCaseModal = ({
   handleSubmit,
   data,
+  invalid,
 }: InjectedFormProps<ImportTestCaseFormValues, ImportModalData> & ImportModalData) => {
   const { formatMessage } = useIntl();
   const [file, setFile] = useState<File | null>(null);
@@ -60,6 +61,7 @@ export const ImportTestCaseModal = ({
   );
   const dispatch = useDispatch();
   const selectedFolderName = data?.folderName ?? '';
+  const hasFolderIdFromUrl = folderIdFromUrl != null;
 
   const { isImportingTestCases, importTestCases } = useImportTestCase();
 
@@ -68,6 +70,10 @@ export const ImportTestCaseModal = ({
   };
 
   const acceptFileMimeTypes = useMemo<MimeType[]>(() => [...CSV_MIME_TYPES], []);
+
+  const isAllowedMime = (file: File) => CSV_MIME_TYPES.includes(file.type as MimeType);
+
+  const isWithinSize = (file: File) => file.size <= MAX_FILE_SIZE_BYTES;
 
   const handleImport = async (formValues: ImportTestCaseFormValues) => {
     const name = formValues.folderName?.trim() ?? '';
@@ -102,9 +108,15 @@ export const ImportTestCaseModal = ({
       return;
     }
 
-    const next = items[0] instanceof File ? items[0] : items[0].file;
+    const selectedFile = items
+      .map((item) => (item instanceof File ? item : item.file))
+      .find((file) => isAllowedMime(file) && isWithinSize(file));
 
-    setFile(next);
+    if (!selectedFile) {
+      return;
+    }
+
+    setFile(selectedFile);
   };
 
   const handleRemove = () => setFile(null);
@@ -119,7 +131,7 @@ export const ImportTestCaseModal = ({
 
   const okButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.IMPORT),
-    disabled: isImportingTestCases || !file,
+    disabled: isImportingTestCases || !file || (!hasFolderIdFromUrl && invalid),
     onClick: handleSubmit(handleImport) as () => void,
   };
 

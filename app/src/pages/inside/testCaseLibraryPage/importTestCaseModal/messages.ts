@@ -21,7 +21,7 @@ export const messages = defineMessages({
   },
   incorrectFileFormat: {
     id: 'ImportTestCaseModal.incorrectFileFormat',
-    defaultMessage: 'File format is not supported',
+    defaultMessage: 'Unsupported format. Please ensure you are using .CSV files only.',
   },
   incorrectFileSize: {
     id: 'ImportTestCaseModal.incorrectFileSize',
