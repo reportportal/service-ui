@@ -16,7 +16,6 @@
 
 import { memo, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { xor } from 'es-toolkit';
 import { BubblesLoader, FilterOutlineIcon, FilterFilledIcon, Table } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
