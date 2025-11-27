@@ -25,7 +25,7 @@
     "@formatjs/intl-relativetimeformat": "4.5.1",
     "@formatjs/intl-utils": "1.6.0",
     "@reportportal/ui-kit": "^0.0.1-alpha.132",
-    "axios": "^1.8.2",
+    "axios": "^1.13.2",
     "c3": "0.7.20",
     "chart.js": "2.9.4",
     "chartjs-plugin-datalabels": "0.6.0",
@@ -90,7 +90,7 @@
     "reset-css": "2.2.1",
     "semver-diff": "3.1.1",
     "simplemde": "1.11.2",
-    "swagger-ui-react": "^5.20.2",
+    "swagger-ui-react": "^5.30.2",
     "video.js": "7.17.0"
   },
   "devDependencies": {
@@ -148,7 +148,7 @@
     "sass": "^1.83.4",
     "sass-loader": "^16.0.4",
     "sass-resources-loader": "2.2.5",
-    "slnodejs": "^6.1.1006",
+    "slnodejs": "^6.1.1122",
     "style-loader": "^4.0.0",
     "stylelint": "^13.13.1",
     "stylelint-config-recommended-scss": "^4.3.0",
@@ -164,6 +164,9 @@
     "webpack-notifier": "^1.15.0",
     "webpack-subresource-integrity": "5.1.0",
     "why-did-you-update": "1.0.8"
+  },
+  "overrides": {
+    "form-data": "^4.0.4"
   },
   "lint-staged": {
     "*.{js,jsx}": [
