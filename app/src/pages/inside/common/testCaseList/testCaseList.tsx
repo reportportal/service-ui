@@ -16,7 +16,7 @@
 
 import { memo, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { BubblesLoader, FilterOutlineIcon, Table } from '@reportportal/ui-kit';
+import { BubblesLoader, FilterOutlineIcon, FilterFilledIcon, Table } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { SearchField } from 'components/fields/searchField';
@@ -29,6 +29,7 @@ import { SelectedTestCaseRow } from 'pages/inside/testCaseLibraryPage/allTestCas
 import { TestCaseNameCell } from './testCaseNameCell';
 import { TestCaseExecutionCell } from './testCaseExecutionCell';
 import { TestCaseSidePanel } from './testCaseSidePanel';
+import { FilterSidePanel } from './filterSidePanel';
 import { DEFAULT_CURRENT_PAGE } from './configUtils';
 import { messages } from './messages';
 
@@ -69,8 +70,14 @@ export const TestCaseList = memo(
   }: TestCaseListProps) => {
     const { formatMessage } = useIntl();
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<number | null>(null);
+    const [isFilterSidePanelVisible, setIsFilterSidePanelVisible] = useState(false);
+    const [selectedPriorities, setSelectedPriorities] = useState<string[]>([]);
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
     const { canDoTestCaseBulkActions } = useUserPermissions();
+
+    const activeFiltersCount = selectedPriorities.length + selectedTags.length;
+    const hasActiveFilters = activeFiltersCount > 0;
 
     let currentData: ExtendedTestCase[];
 
@@ -85,6 +92,18 @@ export const TestCaseList = memo(
 
     const handleCloseSidePanel = () => {
       setSelectedTestCaseId(null);
+    };
+
+    const handleCloseFilterSidePanel = () => {
+      setIsFilterSidePanelVisible(false);
+    };
+
+    const handleFilterIconClick = () => {
+      setIsFilterSidePanelVisible(true);
+    };
+
+    const handleApplyFilters = () => {
+      // TODO: Implement apply filters functionality
     };
 
     const handleRowSelect = (id: number | string) => {
@@ -184,9 +203,17 @@ export const TestCaseList = memo(
                     onFilterChange={onSearchChange}
                     placeholder={formatMessage(messages.searchPlaceholder)}
                   />
-                  <div className={cx('filter-icon')}>
-                    <FilterOutlineIcon />
-                  </div>
+                  <button
+                    type="button"
+                    className={cx('filter-icon', { active: hasActiveFilters })}
+                    onClick={handleFilterIconClick}
+                    aria-label={formatMessage(messages.filterButton)}
+                  >
+                    {hasActiveFilters ? <FilterFilledIcon /> : <FilterOutlineIcon />}
+                    {hasActiveFilters && (
+                      <span className={cx('filter-count')}>{activeFiltersCount}</span>
+                    )}
+                  </button>
                 </>
               )}
             </div>
@@ -224,6 +251,15 @@ export const TestCaseList = memo(
               testCase={selectedTestCase}
               isVisible={!!selectedTestCaseId}
               onClose={handleCloseSidePanel}
+            />
+            <FilterSidePanel
+              isVisible={isFilterSidePanelVisible}
+              onClose={handleCloseFilterSidePanel}
+              selectedPriorities={selectedPriorities}
+              selectedTags={selectedTags}
+              onPrioritiesChange={setSelectedPriorities}
+              onTagsChange={setSelectedTags}
+              onApply={handleApplyFilters}
             />
           </>
         )}

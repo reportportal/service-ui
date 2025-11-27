@@ -19,6 +19,7 @@ import { useIntl } from 'react-intl';
 import { createClassnames } from 'common/utils';
 import { DropdownWithDescription } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/dropdownWithDescription';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
+import { commonMessages } from 'pages/inside/common/common-messages';
 
 import { messages } from '../createTestCaseModal/basicInformation/messages';
 
@@ -35,7 +36,7 @@ export const PrioritySelect = ({ value, onChange }: PrioritySelectProps) => {
 
   return (
     <DropdownWithDescription
-      label={formatMessage(messages.priority)}
+      label={formatMessage(commonMessages.priority)}
       value={value}
       onChange={onChange}
       options={[
