@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import { memo, SetStateAction, useState } from 'react';
+import { memo, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { xor } from 'es-toolkit';
 import { BubblesLoader, FilterOutlineIcon, Table } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
@@ -25,6 +24,7 @@ import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { SelectedTestCaseRow } from 'pages/inside/testCaseLibraryPage/allTestCasesPage/allTestCasesPage';
 
 import { TestCaseNameCell } from './testCaseNameCell';
 import { TestCaseExecutionCell } from './testCaseExecutionCell';
@@ -45,7 +45,8 @@ interface TestCaseListProps {
   folderTitle: string;
   searchValue?: string;
   selectedRowIds: (number | string)[];
-  handleSelectedRowIds: (value: SetStateAction<(number | string)[]>) => void;
+  selectedRows: SelectedTestCaseRow[];
+  handleSelectedRows: (rows: SelectedTestCaseRow[]) => void;
   onSearchChange?: (value: string) => void;
   selectable?: boolean;
   instanceKey: INSTANCE_KEYS;
@@ -57,7 +58,8 @@ export const TestCaseList = memo(
     loading = false,
     currentPage = DEFAULT_CURRENT_PAGE,
     selectedRowIds,
-    handleSelectedRowIds,
+    selectedRows,
+    handleSelectedRows,
     itemsPerPage,
     searchValue = '',
     onSearchChange,
@@ -86,25 +88,37 @@ export const TestCaseList = memo(
     };
 
     const handleRowSelect = (id: number | string) => {
-      handleSelectedRowIds((selectedRows) => xor(selectedRows, [id]));
+      const testCase = testCases.find((testCase) => testCase.id === id);
+
+      if (!testCase) {
+        return;
+      }
+
+      const isCurrentlySelected = selectedRows.some((row) => row.id === id);
+
+      handleSelectedRows(
+        isCurrentlySelected
+          ? selectedRows.filter((row) => row.id !== id)
+          : [...selectedRows, { id: testCase.id, folderId: testCase.testFolder.id }],
+      );
     };
 
-    const handleAllSelect = () => {
-      handleSelectedRowIds((prevSelectedRowIds) => {
-        const currentDataIds: (string | number)[] = currentData.map(
-          ({ id }: { id: string | number }) => id,
-        );
-        if (currentDataIds.every((rowId) => prevSelectedRowIds.includes(rowId))) {
-          return prevSelectedRowIds.filter(
-            (selectedRowId) => !currentDataIds.includes(selectedRowId),
-          );
-        }
+    const handleSelectAll = () => {
+      const currentPageTestCaseIds = currentData.map(({ id }) => id);
+      const isAllCurrentPageSelected = currentPageTestCaseIds.every((testCaseId) =>
+        selectedRowIds.includes(testCaseId),
+      );
 
-        return [
-          ...prevSelectedRowIds,
-          ...currentDataIds.filter((id) => !prevSelectedRowIds.includes(id)),
-        ];
-      });
+      const newSelectedRows = isAllCurrentPageSelected
+        ? selectedRows.filter((row) => !currentPageTestCaseIds.includes(row.id))
+        : [
+            ...selectedRows,
+            ...currentData
+              .filter((testCase) => !selectedRowIds.includes(testCase.id))
+              .map((testCase) => ({ id: testCase.id, folderId: testCase.testFolder.id })),
+          ];
+
+      handleSelectedRows(newSelectedRows);
     };
 
     const selectedTestCase = testCases.find((testCase) => testCase.id === selectedTestCaseId);
@@ -201,7 +215,7 @@ export const TestCaseList = memo(
                 fixedColumns={fixedColumns}
                 primaryColumn={primaryColumn}
                 sortableColumns={[]}
-                onToggleAllRowsSelection={handleAllSelect}
+                onToggleAllRowsSelection={handleSelectAll}
                 className={cx('test-case-table')}
                 rowClassName={cx('test-case-table-row')}
               />

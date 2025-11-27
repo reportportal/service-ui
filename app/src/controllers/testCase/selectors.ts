@@ -35,7 +35,7 @@ export interface TestCaseState {
   };
   testCases?: {
     isLoading?: boolean;
-    list?: unknown[];
+    list?: TestCase[];
     page: Page | null;
   };
   details?: {
@@ -69,7 +69,8 @@ export const isLoadingFolderSelector = (state: RootState): boolean =>
 export const isLoadingTestCasesSelector = (state: RootState) =>
   state.testCase?.testCases?.isLoading || false;
 
-export const testCasesSelector = (state: RootState) => state.testCase?.testCases?.list || [];
+export const testCasesSelector = (state: RootState): TestCase[] =>
+  state.testCase?.testCases?.list || [];
 
 export const testCasesPageSelector = (state: RootState): Page | null =>
   state.testCase?.testCases?.page || null;
