@@ -75,6 +75,7 @@ export const TestCaseList = memo(
     const { canDoTestCaseBulkActions } = useUserPermissions();
 
     const activeFiltersCount = selectedPriorities.length + selectedTags.length;
+    const hasActiveFilters = activeFiltersCount > 0;
 
     let currentData: ExtendedTestCase[];
 
@@ -190,12 +191,12 @@ export const TestCaseList = memo(
                   />
                   <button
                     type="button"
-                    className={cx('filter-icon', { active: activeFiltersCount > 0 })}
+                    className={cx('filter-icon', { active: hasActiveFilters })}
                     onClick={handleFilterIconClick}
                     aria-label={formatMessage(messages.filterButton)}
                   >
-                    {activeFiltersCount > 0 ? <FilterFilledIcon /> : <FilterOutlineIcon />}
-                    {activeFiltersCount > 0 && (
+                    {hasActiveFilters ? <FilterFilledIcon /> : <FilterOutlineIcon />}
+                    {hasActiveFilters && (
                       <span className={cx('filter-count')}>{activeFiltersCount}</span>
                     )}
                   </button>

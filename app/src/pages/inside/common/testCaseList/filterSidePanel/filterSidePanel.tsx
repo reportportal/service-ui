@@ -14,21 +14,27 @@
  * limitations under the License.
  */
 
-import { memo, useRef } from 'react';
+import { memo, useRef, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { Button, SidePanel, Dropdown } from '@reportportal/ui-kit';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
 import { useOnClickOutside } from 'common/hooks';
 import { commonMessages } from 'pages/inside/common/common-messages';
+import { messages as priorityMessages } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/basicInformation/messages';
 
+import { STATUS_TYPES } from '../constants';
 import { messages } from './messages';
-import { MOCK_PRIORITY_OPTIONS, MOCK_TAG_OPTIONS } from './mocks';
+import { MOCK_TAG_OPTIONS } from './mocks';
 
 import styles from './filterSidePanel.scss';
-import { isEmpty } from 'es-toolkit/compat';
 
 const cx = createClassnames(styles);
+
+const ensureArray = <T,>(value: T | T[]): T[] => {
+  return Array.isArray(value) ? value : [value];
+};
 
 interface FilterSidePanelProps {
   isVisible: boolean;
@@ -55,6 +61,21 @@ export const FilterSidePanel = memo(
 
     useOnClickOutside(sidePanelRef, onClose);
 
+    const priorityOptions = useMemo(
+      () => [
+        { value: STATUS_TYPES.BLOCKER, label: formatMessage(priorityMessages.priorityBlocker) },
+        { value: STATUS_TYPES.CRITICAL, label: formatMessage(priorityMessages.priorityCritical) },
+        { value: STATUS_TYPES.HIGH, label: formatMessage(priorityMessages.priorityHigh) },
+        { value: STATUS_TYPES.MEDIUM, label: formatMessage(priorityMessages.priorityMedium) },
+        { value: STATUS_TYPES.LOW, label: formatMessage(priorityMessages.priorityLow) },
+        {
+          value: STATUS_TYPES.UNSPECIFIED,
+          label: formatMessage(priorityMessages.priorityUnspecified),
+        },
+      ],
+      [formatMessage],
+    );
+
     const handleClearAllFilters = () => {
       onPrioritiesChange([]);
       onTagsChange([]);
@@ -70,11 +91,11 @@ export const FilterSidePanel = memo(
     };
 
     const handlePriorityChange = (value: string | string[]) => {
-      onPrioritiesChange(Array.isArray(value) ? value : [value]);
+      onPrioritiesChange(ensureArray(value));
     };
 
     const handleTagsChange = (value: string | string[]) => {
-      onTagsChange(Array.isArray(value) ? value : [value]);
+      onTagsChange(ensureArray(value));
     };
 
     const hasActiveFilters = !isEmpty(selectedPriorities) || !isEmpty(selectedTags);
@@ -88,7 +109,7 @@ export const FilterSidePanel = memo(
         <div className={cx('filter-section')}>
           <div className={cx('filter-label')}>{formatMessage(commonMessages.priority)}</div>
           <Dropdown
-            options={MOCK_PRIORITY_OPTIONS}
+            options={priorityOptions}
             value={selectedPriorities}
             onChange={handlePriorityChange}
             placeholder={formatMessage(messages.selectPriority)}
@@ -96,7 +117,6 @@ export const FilterSidePanel = memo(
             clearable
           />
         </div>
-
         <div className={cx('filter-section')}>
           <div className={cx('filter-label')}>{formatMessage(commonMessages.tags)}</div>
           <Dropdown

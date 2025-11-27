@@ -14,13 +14,6 @@
  * limitations under the License.
  */
 
-export const MOCK_PRIORITY_OPTIONS = [
-  { value: 'critical', label: 'Critical' },
-  { value: 'high', label: 'High' },
-  { value: 'medium', label: 'Medium' },
-  { value: 'low', label: 'Low' },
-];
-
 export const MOCK_TAG_OPTIONS = [
   { value: 'smoke', label: 'smoke' },
   { value: 'regression', label: 'regression' },
