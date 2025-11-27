@@ -57,4 +57,8 @@ export const messages = defineMessages({
     id: 'TestCaseList.addScenarioDetailsTooltip',
     defaultMessage: 'Add scenario details to be able to add this test case to launch',
   },
+  filterButton: {
+    id: 'TestCaseList.filterButton',
+    defaultMessage: 'Filter test cases',
+  },
 });

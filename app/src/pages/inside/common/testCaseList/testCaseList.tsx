@@ -29,6 +29,7 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TestCaseNameCell } from './testCaseNameCell';
 import { TestCaseExecutionCell } from './testCaseExecutionCell';
 import { TestCaseSidePanel } from './testCaseSidePanel';
+import { FilterSidePanel } from './filterSidePanel';
 import { DEFAULT_CURRENT_PAGE } from './configUtils';
 import { messages } from './messages';
 
@@ -67,6 +68,7 @@ export const TestCaseList = memo(
   }: TestCaseListProps) => {
     const { formatMessage } = useIntl();
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<number | null>(null);
+    const [isFilterSidePanelVisible, setIsFilterSidePanelVisible] = useState(false);
 
     const { canDoTestCaseBulkActions } = useUserPermissions();
 
@@ -83,6 +85,14 @@ export const TestCaseList = memo(
 
     const handleCloseSidePanel = () => {
       setSelectedTestCaseId(null);
+    };
+
+    const handleCloseFilterSidePanel = () => {
+      setIsFilterSidePanelVisible(false);
+    };
+
+    const handleFilterIconClick = () => {
+      setIsFilterSidePanelVisible(true);
     };
 
     const handleRowSelect = (id: number | string) => {
@@ -170,9 +180,14 @@ export const TestCaseList = memo(
                     onFilterChange={onSearchChange}
                     placeholder={formatMessage(messages.searchPlaceholder)}
                   />
-                  <div className={cx('filter-icon')}>
+                  <button
+                    type="button"
+                    className={cx('filter-icon')}
+                    onClick={handleFilterIconClick}
+                    aria-label={formatMessage(messages.filterButton)}
+                  >
                     <FilterOutlineIcon />
-                  </div>
+                  </button>
                 </>
               )}
             </div>
@@ -210,6 +225,10 @@ export const TestCaseList = memo(
               testCase={selectedTestCase}
               isVisible={!!selectedTestCaseId}
               onClose={handleCloseSidePanel}
+            />
+            <FilterSidePanel
+              isVisible={isFilterSidePanelVisible}
+              onClose={handleCloseFilterSidePanel}
             />
           </>
         )}
