@@ -17,7 +17,7 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { isEmpty, noop, compact } from 'es-toolkit/compat';
+import { isEmpty, noop, compact, countBy } from 'es-toolkit/compat';
 import { Button, MeatballMenuIcon, Pagination, Selection } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
@@ -47,6 +47,7 @@ import { messages } from './messages';
 import { FolderEmptyState } from '../emptyState/folder/folderEmptyState';
 import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { useBatchDuplicateToFolderModal } from './batchDuplicateToFolderModal';
+import { useBatchDeleteTestCasesModal } from './batchDeleteTestCasesModal';
 
 import styles from './allTestCasesPage.scss';
 
@@ -63,6 +64,11 @@ interface AllTestCasesPageProps {
 
 const FIRST_PAGE_NUMBER = 1;
 
+export interface SelectedTestCaseRow {
+  id: number;
+  folderId: number;
+}
+
 export const AllTestCasesPage = ({
   testCases,
   loading,
@@ -77,13 +83,15 @@ export const AllTestCasesPage = ({
       totalItems: testCasesPageData?.totalElements,
       itemsPerPage: TestCasePageDefaultValues.limit,
     });
-  const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
+  const [selectedRows, setSelectedRows] = useState<SelectedTestCaseRow[]>([]);
   const folderId = useSelector(urlFolderIdSelector);
   const folders = useSelector(foldersSelector);
   const dispatch = useDispatch();
-  const isAnyRowSelected = !isEmpty(selectedRowIds);
+  const isAnyRowSelected = !isEmpty(selectedRows);
+  const selectedRowIds = useMemo(() => selectedRows.map((row) => row.id), [selectedRows]);
   const { openModal: openAddToTestPlanModal } = useAddTestCasesToTestPlanModal();
   const { openModal: openBatchDuplicateToFolderModal } = useBatchDuplicateToFolderModal();
+  const { openModal: openBatchDeleteTestCasesModal } = useBatchDeleteTestCasesModal();
   const { canDeleteTestCase, canDuplicateTestCase, canEditTestCase } = useUserPermissions();
 
   useEffect(() => {
@@ -127,7 +135,15 @@ export const AllTestCasesPage = ({
     canDeleteTestCase && {
       label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
       variant: 'destructive',
-      onClick: noop,
+      onClick: () => {
+        const folderDeltasMap = countBy(selectedRows, (row) => String(row.folderId));
+
+        openBatchDeleteTestCasesModal({
+          selectedTestCaseIds: selectedRowIds,
+          folderDeltasMap,
+          onClearSelection,
+        });
+      },
     },
   ]);
 
@@ -147,7 +163,9 @@ export const AllTestCasesPage = ({
     return <FolderEmptyState folderTitle={folderTitle} />;
   }
 
-  const onClearSelection = () => setSelectedRowIds([]);
+  const onClearSelection = () => setSelectedRows([]);
+
+  const handleSelectedRows = (rows: SelectedTestCaseRow[]) => setSelectedRows(rows);
 
   const setTestCasesPage = (page: number): void => {
     const params = {
@@ -198,7 +216,8 @@ export const AllTestCasesPage = ({
           searchValue={searchValue}
           onSearchChange={handleSearchChange}
           selectedRowIds={selectedRowIds}
-          handleSelectedRowIds={setSelectedRowIds}
+          selectedRows={selectedRows}
+          handleSelectedRows={handleSelectedRows}
           folderTitle={folderTitle}
           instanceKey={instanceKey}
         />

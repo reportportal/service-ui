@@ -15,12 +15,11 @@
  */
 
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { Modal } from '@reportportal/ui-kit';
 
 import { hideModalAction, withModal } from 'controllers/modal';
-import { urlFolderIdSelector } from 'controllers/pages';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { PrioritySelect } from '../prioritySelect/prioritySelect';
 import { useUpdateTestCase } from '../testCaseDetailsPage/editTestCaseModal/useUpdateTestCase';
@@ -41,7 +40,6 @@ const ChangePriorityModal = ({ data }: ChangePriorityModalProps) => {
   const dispatch = useDispatch();
   const [priority, setPriority] = useState(data.priority);
   const { bulkUpdateTestCases } = useUpdateTestCase();
-  const folderId = useSelector(urlFolderIdSelector);
 
   const hideModal = () => dispatch(hideModalAction());
 
@@ -49,7 +47,6 @@ const ChangePriorityModal = ({ data }: ChangePriorityModalProps) => {
     await bulkUpdateTestCases(
       {
         testCaseIds: data.selectedRowIds,
-        folderId,
         priority,
       },
       data.onClearSelection,

@@ -18,16 +18,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { hideModalAction } from 'controllers/modal';
 import { projectKeySelector } from 'controllers/project';
-import {
-  GET_TEST_CASE_DETAILS,
-  getAllTestCasesAction,
-  getTestCaseByFolderIdAction,
-  testCasesPageSelector,
-} from 'controllers/testCase';
+import { GET_TEST_CASE_DETAILS } from 'controllers/testCase';
 import { useDebouncedSpinner } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import { getTestCaseRequestParams } from 'pages/inside/testCaseLibraryPage/utils';
+import { useRefetchCurrentTestCases } from '../../hooks/useRefetchCurrentTestCases';
 
 export interface UpdateTestCasePayload {
   name: string;
@@ -38,14 +33,13 @@ export interface UpdateTestCasePayload {
 interface BulkUpdateTestCasesPayload {
   testCaseIds: number[];
   priority: string;
-  folderId?: string;
 }
 
 export const useUpdateTestCase = () => {
   const { isLoading: isUpdateTestCaseLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
-  const testCasesPageData = useSelector(testCasesPageSelector);
+  const refetchCurrentTestCases = useRefetchCurrentTestCases();
 
   const updateTestCase = async (testCaseId: number, payload: UpdateTestCasePayload) => {
     try {
@@ -81,25 +75,15 @@ export const useUpdateTestCase = () => {
     try {
       showSpinner();
 
-      await fetch(URLS.bulkUpdateTestCases(projectKey), {
+      await fetch(URLS.testCasesBatch(projectKey), {
         method: 'patch',
         data: { ...payload },
       });
 
       onSuccess();
 
-      const testCaseRequestParams = getTestCaseRequestParams(testCasesPageData);
+      refetchCurrentTestCases();
 
-      if (payload.folderId) {
-        dispatch(
-          getTestCaseByFolderIdAction({
-            folderId: Number(payload.folderId),
-            ...testCaseRequestParams,
-          }),
-        );
-      } else {
-        dispatch(getAllTestCasesAction(testCaseRequestParams));
-      }
       dispatch(hideModalAction());
       dispatch(
         showSuccessNotification({
