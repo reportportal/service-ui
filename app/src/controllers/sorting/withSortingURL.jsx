@@ -61,6 +61,10 @@ export const withSortingURL = ({
       this.props.updateSorting(formatSortingString([field, ...staticFields], direction));
     };
 
+    setSorting = (field, direction) => {
+      this.props.updateSorting(formatSortingString([field, ...staticFields], direction));
+    };
+
     render() {
       const { sortingString, updateSorting, ...rest } = this.props;
       const { fields, direction } = parseSortingString(this.props.sortingString);
@@ -70,6 +74,7 @@ export const withSortingURL = ({
           sortingColumn={sortingColumn}
           sortingDirection={direction || defaultDirection}
           onChangeSorting={this.changeSorting}
+          onSetSorting={this.setSorting}
           {...rest}
         />
       );

@@ -211,6 +211,7 @@ import { withTooltip } from 'components/main/tooltips/tooltip';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { PlainTable } from 'componentLibrary/plainTable';
 import { withFilter } from 'controllers/filter';
+import { SORTING_KEY, withSortingURL } from 'controllers/sorting';
 import {
   DateRangeFormField,
   formatDisplayedValue,
@@ -329,6 +330,7 @@ export const createImportProps = (pluginName) => ({
   HOCs: {
     withTooltip,
     withFilter,
+    withSortingURL,
   },
   constants: {
     COMMON_LOCALE_KEYS,
@@ -350,6 +352,7 @@ export const createImportProps = (pluginName) => ({
     STOPPED,
     SECRET_FIELDS_KEY,
     BTS_FIELDS_FORM,
+    SORTING_KEY,
   },
   actions: {
     showModalAction,
