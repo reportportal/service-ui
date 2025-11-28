@@ -14,19 +14,23 @@
  * limitations under the License.
  */
 
-export const STATUS_TYPES = {
-  BLOCKER: 'blocker',
-  CRITICAL: 'critical',
-  HIGH: 'high',
-  MEDIUM: 'medium',
-  LOW: 'low',
-  UNSPECIFIED: 'unspecified',
-} as const;
+import { defineMessages } from 'react-intl';
 
-export const ITEMS_PER_PAGE_OPTIONS: number[] = [10, 20, 50, 100];
-
-export const TestCasePageDefaultValues = {
-  size: 10,
-  limit: 50,
-  offset: 0,
-};
+export const messages = defineMessages({
+  filterTitle: {
+    id: 'FilterSidePanel.filterTitle',
+    defaultMessage: 'Filter',
+  },
+  clearAllFilters: {
+    id: 'FilterSidePanel.clearAllFilters',
+    defaultMessage: 'Clear all filters',
+  },
+  selectPriority: {
+    id: 'FilterSidePanel.selectPriority',
+    defaultMessage: 'Select priority level',
+  },
+  selectTags: {
+    id: 'FilterSidePanel.selectTags',
+    defaultMessage: 'Search and select tags to filter',
+  },
+});

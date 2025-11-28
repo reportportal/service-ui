@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { useRef } from 'react';
 import { getFormValues, InjectedFormProps } from 'redux-form';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -52,13 +53,20 @@ export const useAddTestCasesToTestPlan = ({
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
 
+  const autompleteInputRef = useRef<HTMLInputElement>(null);
+
   const { selectedTestPlan } = useSelector(
     (state) =>
       (getFormValues(ADD_TO_TEST_PLAN_MODAL_FORM)(state) || {}) as AddTestCasesToTestPlanFormData,
   );
 
+  const inputRefFunction = (node: HTMLInputElement) => {
+    autompleteInputRef.current = node;
+  };
+
   const setSelectedTestPlan = (value: TestPlanDto | null) => {
     change(SELECTED_TEST_PLAN_FIELD_NAME, value || null);
+    autompleteInputRef.current?.blur();
   };
 
   const addTestCasesToTestPlan = (values: AddTestCasesToTestPlanFormData): void => {
@@ -106,5 +114,6 @@ export const useAddTestCasesToTestPlan = ({
     selectedTestPlan,
     addTestCasesToTestPlan,
     setSelectedTestPlan,
+    inputRefFunction,
   };
 };

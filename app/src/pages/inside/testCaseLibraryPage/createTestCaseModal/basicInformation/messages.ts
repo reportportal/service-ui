@@ -17,10 +17,6 @@ export const messages = defineMessages({
     id: 'CreateTestCaseModal.addDetailsOrContext',
     defaultMessage: 'Add details or context for the test case here',
   },
-  priority: {
-    id: 'CreateTestCaseModal.priority',
-    defaultMessage: 'Priority',
-  },
   priorityBlocker: {
     id: 'CreateTestCaseModal.priorityBlocker',
     defaultMessage: 'Blocker',

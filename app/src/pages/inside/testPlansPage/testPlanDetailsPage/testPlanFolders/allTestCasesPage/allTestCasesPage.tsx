@@ -26,6 +26,7 @@ import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { usePagination } from 'hooks/usePagination';
+import { SelectedTestCaseRow } from 'pages/inside/testCaseLibraryPage/allTestCasesPage/allTestCasesPage';
 
 import styles from './allTestCasesPage.scss';
 
@@ -49,7 +50,7 @@ export const AllTestCasesPage = ({
     usePagination({
       totalItems: testCases.length,
     });
-  const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
+  const [selectedRows, setSelectedRows] = useState<SelectedTestCaseRow[]>([]);
 
   return (
     <>
@@ -60,8 +61,9 @@ export const AllTestCasesPage = ({
           currentPage={activePage}
           itemsPerPage={pageSize}
           searchValue={searchValue}
-          selectedRowIds={selectedRowIds}
-          handleSelectedRowIds={setSelectedRowIds}
+          selectedRowIds={selectedRows.map((row) => row.id)}
+          selectedRows={selectedRows}
+          handleSelectedRows={setSelectedRows}
           folderTitle={formatMessage(COMMON_LOCALE_KEYS.ALL_TEST_CASES_TITLE)}
           selectable={false}
           instanceKey={instanceKey}

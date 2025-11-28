@@ -14,19 +14,13 @@
  * limitations under the License.
  */
 
-export const STATUS_TYPES = {
-  BLOCKER: 'blocker',
-  CRITICAL: 'critical',
-  HIGH: 'high',
-  MEDIUM: 'medium',
-  LOW: 'low',
-  UNSPECIFIED: 'unspecified',
-} as const;
-
-export const ITEMS_PER_PAGE_OPTIONS: number[] = [10, 20, 50, 100];
-
-export const TestCasePageDefaultValues = {
-  size: 10,
-  limit: 50,
-  offset: 0,
-};
+export const MOCK_TAG_OPTIONS = [
+  { value: 'smoke', label: 'smoke' },
+  { value: 'regression', label: 'regression' },
+  { value: 'ui', label: 'ui' },
+  { value: 'api', label: 'api' },
+  { value: 'backend', label: 'backend' },
+  { value: 'frontend', label: 'frontend' },
+  { value: 'mobile', label: 'mobile' },
+  { value: 'integration', label: 'integration' },
+];

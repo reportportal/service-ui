@@ -52,7 +52,7 @@ export const messages = defineMessages({
   },
 });
 
-type PaginationArguments = {
+type PaginationType = {
   namespace?: string;
   totalItems?: number;
   itemsPerPage?: number;
@@ -64,7 +64,7 @@ export const usePagination = ({
   totalItems = 0,
   itemsPerPage = DEFAULT_ITEMS_PER_PAGE,
   shouldSaveUserPreferences = false,
-}: PaginationArguments) => {
+}: PaginationType) => {
   const { formatMessage } = useIntl();
   const [activePage, setActivePage] = useState<number>(DEFAULT_CURRENT_PAGE);
   const userId = useSelector(userIdSelector) as string;

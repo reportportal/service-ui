@@ -14,19 +14,16 @@
  * limitations under the License.
  */
 
-export const STATUS_TYPES = {
-  BLOCKER: 'blocker',
-  CRITICAL: 'critical',
-  HIGH: 'high',
-  MEDIUM: 'medium',
-  LOW: 'low',
-  UNSPECIFIED: 'unspecified',
-} as const;
+import { defineMessages } from 'react-intl';
 
-export const ITEMS_PER_PAGE_OPTIONS: number[] = [10, 20, 50, 100];
-
-export const TestCasePageDefaultValues = {
-  size: 10,
-  limit: 50,
-  offset: 0,
-};
+export const messages = defineMessages({
+  batchDeleteTestCasesTitle: {
+    id: 'BatchDeleteTestCasesModal.title',
+    defaultMessage: 'Delete Test Cases',
+  },
+  batchDeleteDescription: {
+    id: 'BatchDeleteTestCasesModal.description',
+    defaultMessage:
+      'Are you sure you want to delete <b>{count} selected test {count, plural, one {case} other {cases}}</b>? This irreversible action will also impact the testing scope of any Test Plans that include them.',
+  },
+});

@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-export const STATUS_TYPES = {
-  BLOCKER: 'blocker',
-  CRITICAL: 'critical',
-  HIGH: 'high',
-  MEDIUM: 'medium',
-  LOW: 'low',
-  UNSPECIFIED: 'unspecified',
-} as const;
+import { useModal } from 'common/hooks';
 
-export const ITEMS_PER_PAGE_OPTIONS: number[] = [10, 20, 50, 100];
+import BatchDeleteTestCasesModal, {
+  BATCH_DELETE_TEST_CASES_MODAL_KEY,
+  BatchDeleteTestCasesModalData,
+} from './batchDeleteTestCasesModal';
 
-export const TestCasePageDefaultValues = {
-  size: 10,
-  limit: 50,
-  offset: 0,
-};
+export const useBatchDeleteTestCasesModal = () =>
+  useModal<BatchDeleteTestCasesModalData>({
+    modalKey: BATCH_DELETE_TEST_CASES_MODAL_KEY,
+    renderModal: (data) => <BatchDeleteTestCasesModal data={data} />,
+  });
