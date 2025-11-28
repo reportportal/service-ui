@@ -16,11 +16,14 @@
 
 import { defineMessages, useIntl } from 'react-intl';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import {
   DEFAULT_CURRENT_PAGE,
   DEFAULT_ITEMS_PER_PAGE,
 } from 'pages/inside/common/testCaseList/configUtils';
+import { userIdSelector } from 'controllers/user';
+import { updateStorageItem, getStorageItem } from 'common/utils';
 
 export const messages = defineMessages({
   items: {
@@ -49,14 +52,45 @@ export const messages = defineMessages({
   },
 });
 
-export const usePagination = ({ totalItems = 0, itemsPerPage = DEFAULT_ITEMS_PER_PAGE }) => {
+type PaginationArguments = {
+  namespace?: string;
+  totalItems?: number;
+  itemsPerPage?: number;
+  shouldSaveUserPreferences?: boolean;
+};
+
+export const usePagination = ({
+  namespace = '',
+  totalItems = 0,
+  itemsPerPage = DEFAULT_ITEMS_PER_PAGE,
+  shouldSaveUserPreferences = false,
+}: PaginationArguments) => {
   const { formatMessage } = useIntl();
   const [activePage, setActivePage] = useState<number>(DEFAULT_CURRENT_PAGE);
-  const [pageSize, setPageSize] = useState<number>(itemsPerPage);
+  const userId = useSelector(userIdSelector) as string;
+  const [pageSize, setPageSize] = useState<number>(() => {
+    if (shouldSaveUserPreferences) {
+      const settings = getStorageItem(`${userId}_settings`) as Record<string, unknown> | undefined;
+      const key = `${namespace}PageSize`;
+      const value = settings?.[key];
+
+      if (typeof value === 'number') {
+        return value;
+      }
+    }
+
+    return itemsPerPage;
+  });
 
   const totalPages = Math.ceil(totalItems / pageSize);
 
   const changePageSize = (size: number) => {
+    if (shouldSaveUserPreferences) {
+      updateStorageItem(`${userId}_settings`, {
+        [`${namespace}PageSize`]: size,
+      });
+    }
+
     setPageSize(size);
     setActivePage(DEFAULT_CURRENT_PAGE);
   };
