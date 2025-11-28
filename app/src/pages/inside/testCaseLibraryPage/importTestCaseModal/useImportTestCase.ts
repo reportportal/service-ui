@@ -13,6 +13,7 @@ import { useDebouncedSpinner } from 'common/hooks';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 import {
   getAllTestCasesAction,
+  getFoldersAction,
   getTestCaseByFolderIdAction,
 } from 'controllers/testCase/actionCreators';
 import { getTestCaseRequestParams } from 'pages/inside/testCaseLibraryPage/utils';
@@ -26,6 +27,16 @@ type ImportQuery = {
 
 type ImportPayload = ImportQuery & {
   file: File;
+};
+
+type ApiError = {
+  response?: {
+    data?: {
+      errorCode?: number;
+      message?: string;
+    };
+  };
+  message?: string;
 };
 
 const createQuery = ({ testFolderId, testFolderName }: ImportQuery) => {
@@ -117,7 +128,16 @@ export const useImportTestCase = () => {
         }),
       );
       refetchTestCases(testFolderId);
+      dispatch(getFoldersAction());
     } catch (error: unknown) {
+      const apiError = error as ApiError;
+
+      const errorCode = apiError?.response?.data?.errorCode;
+      if (errorCode === 4001) {
+        throw new SubmissionError({
+          _error: formatMessage(commonMessages.incorrectCsvFormat),
+        });
+      }
       if (error instanceof Error && error?.message?.includes('tms_test_case_name_folder_unique')) {
         throw new SubmissionError({
           name: formatMessage(commonMessages.duplicateTestCaseName),

@@ -60,20 +60,17 @@ export const ImportTestCaseModal = ({
   change,
   data,
   invalid,
+  error,
 }: InjectedFormProps<ImportTestCaseFormValues, ImportModalData> & ImportModalData) => {
   const { formatMessage } = useIntl();
+  const folderIdFromUrl = useMemo(() => extractFolderIdFromHash(window.location.hash), []);
   const [file, setFile] = useState<File | null>(null);
-  const [folderIdFromUrl] = useState<number | undefined>(() =>
-    extractFolderIdFromHash(window.location.hash),
-  );
-  const [target, setTarget] = useState<ImportTarget>(
-    folderIdFromUrl != null ? 'existing' : 'root',
-  );
+  const [target, setTarget] = useState<ImportTarget>(folderIdFromUrl != null ? 'existing' : 'root');
   const [existingFolderId, setExistingFolderId] = useState<number | null>(null);
+  const [attachedFiles, setAttachedFiles] = useState<AttachmentFile[]>([]);
   const folders = useSelector(foldersSelector);
   const dispatch = useDispatch();
   const selectedFolderName = data?.folderName ?? '';
-  const hasFolderIdFromUrl = folderIdFromUrl != null;
 
   const { isImportingTestCases, importTestCases } = useImportTestCase();
 
@@ -109,7 +106,13 @@ export const ImportTestCaseModal = ({
 
   const isWithinSize = (file: File) => file.size <= MAX_FILE_SIZE_BYTES;
 
+  const isRootTarget = target === 'root';
+
+  const isExistingTarget = target === 'existing';
+
   const hasExistingOptions = !isEmpty(existingOptions);
+
+  const hasFolderIdFromUrl = folderIdFromUrl != null;
 
   const handleImport = async (formValues: ImportTestCaseFormValues) => {
     const name = formValues.folderName?.trim() ?? '';
@@ -122,24 +125,19 @@ export const ImportTestCaseModal = ({
     if (importTarget === 'existing') {
       const resolvedId = existingFolderId ?? folderIdFromUrl;
 
-      if (!file || resolvedId == null) return;
+      if (!file || resolvedId == null) {
+        return;
+      }
+
       await importTestCases({ file, testFolderId: resolvedId });
     } else {
-      if (!file || !name) return;
+      if (!file || !name) {
+        return;
+      }
+
       await importTestCases({ file, testFolderName: name });
     }
   };
-
-  const attachedFiles: AttachmentFile[] = file
-    ? [
-        {
-          id: uniqueId(),
-          fileName: file.name,
-          file,
-          size: toMB(file.size),
-        },
-      ]
-    : [];
 
   const handleFilesAdded = (incoming: FileInput) => {
     const items = Array.isArray(incoming) ? incoming : [incoming];
@@ -156,10 +154,26 @@ export const ImportTestCaseModal = ({
       return;
     }
 
+    const attachment: AttachmentFile = {
+      id: uniqueId(),
+      fileName: selectedFile.name,
+      file: selectedFile,
+      size: toMB(selectedFile.size),
+    };
+
     setFile(selectedFile);
+    setAttachedFiles([attachment]);
   };
 
-  const handleRemove = () => setFile(null);
+  const handleRemove = (fileId: string) => {
+    setAttachedFiles((prev) => prev.filter((f) => f.id !== fileId));
+    setFile(null);
+  };
+
+  const filesWithError: AttachmentFile[] = attachedFiles.map((item) => ({
+    ...item,
+    customErrorMessage: error ?? item.customErrorMessage,
+  }));
 
   const handleDownload = () => {
     if (!file) {
@@ -276,7 +290,7 @@ export const ImportTestCaseModal = ({
                 <div className={cx('import-test-case-modal__files')}>
                   <FileDropArea.AttachedFilesList
                     className={cx('import-test-case-modal__files')}
-                    files={attachedFiles}
+                    files={filesWithError}
                     onRemoveFile={handleRemove}
                     onDownloadFile={handleDownload}
                   />
@@ -293,11 +307,10 @@ export const ImportTestCaseModal = ({
               <div className={cx('import-test-case-modal__segmented')}>
                 <button
                   type="button"
-                  className={cx(
-                    'import-test-case-modal__segmented-btn',
-                    target === 'root' && 'is-active',
-                  )}
-                  aria-pressed={target === 'root'}
+                  className={cx('import-test-case-modal__segmented-btn', {
+                    'is-active': isRootTarget,
+                  })}
+                  aria-pressed={isRootTarget}
                   onClick={() => setTargetAndForm('root')}
                 >
                   {formatMessage(messages.createNewRootFolder)}
@@ -305,11 +318,10 @@ export const ImportTestCaseModal = ({
 
                 <button
                   type="button"
-                  className={cx(
-                    'import-test-case-modal__segmented-btn',
-                    target === 'existing' && 'is-active',
-                  )}
-                  aria-pressed={target === 'existing'}
+                  className={cx('import-test-case-modal__segmented-btn', {
+                    'is-active': isExistingTarget,
+                  })}
+                  aria-pressed={isExistingTarget}
                   onClick={() => setTargetAndForm('existing')}
                 >
                   {formatMessage(messages.addToExistingFolder)}
@@ -331,11 +343,15 @@ export default withModal(IMPORT_TEST_CASE_MODAL_KEY)(
     form: IMPORT_TEST_CASE_FORM_NAME,
     destroyOnUnmount: true,
     initialValues: { folderName: DEFAULT_FOLDER_NAME, importTarget: undefined },
-    validate: (values): FormErrors<ImportTestCaseFormValues> => {
+    validate: ({
+      importTarget,
+      folderName,
+    }: ImportTestCaseFormValues): FormErrors<ImportTestCaseFormValues> => {
       const needName =
-        values.importTarget === 'root' || extractFolderIdFromHash(window.location.hash) == null;
+        importTarget === 'root' || extractFolderIdFromHash(window.location.hash) == null;
+
       return {
-        folderName: needName ? commonValidators.requiredField(values.folderName) : undefined,
+        folderName: needName ? commonValidators.requiredField(folderName) : undefined,
       };
     },
   })(ImportTestCaseModal),
