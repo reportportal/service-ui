@@ -17,7 +17,13 @@
 import PropTypes from 'prop-types';
 import { DateRange } from './dateRange';
 
-export const DateRangeFormField = ({ input }) => {
+export const DateRangeFormField = ({
+  input,
+  startPopperClassName = '',
+  startCalendarClassName = '',
+  endPopperClassName = '',
+  endCalendarClassName = '',
+}) => {
   const { value = {}, onChange } = input;
 
   const startDateChangeHandler = (startDate) => {
@@ -34,6 +40,10 @@ export const DateRangeFormField = ({ input }) => {
       setStartDate={startDateChangeHandler}
       endDate={value?.endDate}
       setEndDate={endDateChangeHandler}
+      startPopperClassName={startPopperClassName}
+      startCalendarClassName={startCalendarClassName}
+      endPopperClassName={endPopperClassName}
+      endCalendarClassName={endCalendarClassName}
     />
   );
 };
@@ -43,4 +53,8 @@ DateRangeFormField.propTypes = {
     value: PropTypes.object,
     onChange: PropTypes.func,
   }).isRequired,
+  startPopperClassName: PropTypes.string,
+  startCalendarClassName: PropTypes.string,
+  endPopperClassName: PropTypes.string,
+  endCalendarClassName: PropTypes.string,
 };
