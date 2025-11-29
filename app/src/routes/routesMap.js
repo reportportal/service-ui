@@ -443,8 +443,9 @@ const routesMap = {
       const savedLimit = getStorageItem(`${state.user?.info?.userId}_settings`)?.[
         `${TEST_PLANS_NAMESPACE}PageSize`
       ];
-      const { offset } = state.location?.query || defaultQueryParams;
-      const limit = savedLimit || state.location?.query?.limit || defaultQueryParams.limit;
+      const query = state.location?.query;
+      const { offset } = query || defaultQueryParams;
+      const limit = savedLimit || query?.limit || defaultQueryParams.limit;
 
       dispatch(getTestPlansAction({ offset, limit }));
     },

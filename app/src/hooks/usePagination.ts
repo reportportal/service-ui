@@ -17,6 +17,7 @@
 import { defineMessages, useIntl } from 'react-intl';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { isNumber } from 'es-toolkit/compat';
 
 import {
   DEFAULT_CURRENT_PAGE,
@@ -68,13 +69,13 @@ export const usePagination = ({
   const { formatMessage } = useIntl();
   const [activePage, setActivePage] = useState<number>(DEFAULT_CURRENT_PAGE);
   const userId = useSelector(userIdSelector) as string;
-  const [pageSize, setPageSize] = useState<number>(() => {
+  const [pageSize, setPageSize] = useState(() => {
     if (shouldSaveUserPreferences) {
       const settings = getStorageItem(`${userId}_settings`) as Record<string, unknown> | undefined;
       const key = `${namespace}PageSize`;
       const value = settings?.[key];
 
-      if (typeof value === 'number') {
+      if (isNumber(value)) {
         return value;
       }
     }
