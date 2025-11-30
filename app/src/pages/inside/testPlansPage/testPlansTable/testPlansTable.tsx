@@ -25,7 +25,12 @@ import { locationQuerySelector, PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controlle
 import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/common/testCaseList';
 import { usePagination } from 'hooks/usePagination';
 import { useProjectDetails } from 'hooks/useTypedSelector';
-import { defaultQueryParams, TestPlanDto, testPlansPageSelector } from 'controllers/testPlan';
+import {
+  defaultQueryParams,
+  TEST_PLANS_NAMESPACE,
+  TestPlanDto,
+  testPlansPageSelector,
+} from 'controllers/testPlan';
 
 import { TestPlanSidePanel } from '../testPlanSidePanel';
 import { messages } from './messages';
@@ -54,6 +59,8 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
     usePagination({
       totalItems: testPlansPageData?.totalElements,
       itemsPerPage: defaultQueryParams.limit,
+      namespace: TEST_PLANS_NAMESPACE,
+      shouldSaveUserPreferences: true,
     });
   const dispatch = useDispatch();
   const { organizationSlug, projectSlug } = useProjectDetails();
@@ -61,14 +68,14 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
   const { openModal: openDuplicateModal } = useDuplicateTestPlanModal();
   const { openModal: openDeleteModal } = useDeleteTestPlanModal();
   const query = useSelector(locationQuerySelector);
+  const initialPageNumber = 1;
 
   useEffect(() => {
-    if (query?.limit) {
+    if (query?.limit && query?.offset) {
       changePageSize(Number(query.limit));
-
-      if (query?.offset) {
-        setActivePage(Number(query.offset) / Number(query.limit) + 1);
-      }
+      setActivePage(Math.round(Number(query.offset) / Number(query.limit) + 1));
+    } else {
+      setActivePage(initialPageNumber);
     }
   }, [query?.offset, query?.limit, changePageSize, setActivePage]);
 
@@ -175,7 +182,7 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
   };
 
   const setTestPlansPage = (page: number): void => {
-    const offset = (page - 1) * testPlansPageData.size;
+    const offset = (page - 1) * pageSize;
 
     if (offset !== Number(query?.offset)) {
       changeUrlParams({ limit: pageSize, offset });
