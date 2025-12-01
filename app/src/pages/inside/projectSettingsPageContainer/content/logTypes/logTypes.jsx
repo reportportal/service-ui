@@ -20,7 +20,6 @@ import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
-import Parser from 'html-react-parser';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { Button } from '@reportportal/ui-kit';
 import { PROJECT_SETTINGS_LOG_TYPES_EVENTS } from 'components/main/analytics/events/ga4Events/projectSettingsPageEvents';
@@ -29,6 +28,7 @@ import { canUpdateSettings } from 'common/utils/permissions';
 import { docsReferences, createExternalLink } from 'common/utils';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { showModalAction } from 'controllers/modal';
+import { FormattedDescription } from '../elements';
 import { LogTypesTable } from './logTypesTable';
 import { CreateLogTypeModal } from './modals/createLogTypeModal';
 import { messages } from './messages';
@@ -74,11 +74,12 @@ export const LogTypes = ({ setHeaderTitleNode }) => {
   ) : (
     <div className={cx('content')}>
       <div className={cx('description')}>
-        {Parser(
-          formatMessage(messages.description, {
-            a: (data) => createExternalLink(data, docsReferences.workWithReports),
-          }),
-        )}
+        <FormattedDescription
+          content={formatMessage(messages.description, {
+            a: (data) => createExternalLink(data, docsReferences.logTypesDocs),
+          })}
+          event={PROJECT_SETTINGS_LOG_TYPES_EVENTS.CLICK_DOCUMENTATION_LINK}
+        />
       </div>
       {filteredLogTypes.length > 0 && (
         <LogTypesTable logTypes={filteredLogTypes} isEditable={isEditable} />

@@ -348,4 +348,9 @@ export const PROJECT_SETTINGS_LOG_TYPES_EVENTS = {
     modal: 'delete_log_type',
     element_name: 'delete_log_type',
   },
+
+  CLICK_DOCUMENTATION_LINK: {
+    ...BASIC_EVENT_PARAMETERS_LOG_TYPES,
+    link_name: 'documentation',
+  },
 };
