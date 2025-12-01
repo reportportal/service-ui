@@ -76,6 +76,7 @@ import {
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   PROJECT_SETTINGS_TAB_PAGE,
   pluginRouteSelector,
+  pluginPageSelector,
   updatePagePropertiesAction,
   pagePropertiesSelector,
   projectIdSelector,
@@ -370,6 +371,7 @@ export const createImportProps = (pluginName) => ({
   },
   selectors: {
     pluginRouteSelector,
+    pluginPageSelector,
     payloadSelector,
     activeProjectSelector,
     userIdSelector,
