@@ -167,6 +167,7 @@ import { RuleList, ItemContent } from 'components/main/ruleList';
 import { RuleListHeader } from 'components/main/ruleListHeader';
 import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
 import { DEFECT_TYPES_SEQUENCE, TO_INVESTIGATE } from 'common/constants/defectTypes';
+import { METHOD_TYPES_SEQUENCE } from 'common/constants/methodTypes';
 import {
   getDefaultTestItemLinkParams,
   getItemNameConfig,
@@ -338,6 +339,7 @@ export const createImportProps = (pluginName) => ({
     PROJECT_SETTINGS_TAB_PAGE,
     ALL,
     DEFECT_TYPES_SEQUENCE,
+    METHOD_TYPES_SEQUENCE,
     TO_INVESTIGATE,
     STATS_PB_TOTAL,
     STATS_AB_TOTAL,
