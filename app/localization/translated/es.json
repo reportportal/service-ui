@@ -1650,7 +1650,7 @@
   "NotificationsEnableForm.tabDescription": "Administre las notificaciones relacionadas con la ejecución para varios canales de comunicación: correo electrónico, Slack, etc.",
   "NotificationsEnableForm.title": "Sin integración con el servidor de correo electrónico",
   "NotificationsEnableForm.toggleNotificationsLabel": "Notificaciones automáticas por correo electrónico",
-  "NotificationsEnableForm.toggleNotificationsNote": "Enviar notificaciones por correo electrónico al finalizar las ejecuciones",
+  "NotificationsEnableForm.toggleNotificationsNote": "Turn off to stop all notifications. When on, notifications are sent only through the channels enabled below (Email, Slack, etc.)",
   "NotificationsEnableForm.typeDescription": "Seleccione una lista de destinatarios {type} para cada regla para enviar notificaciones relacionadas con la ejecución.",
   "NotificationsEnableForm.unableToConfigure": "¿Por qué no puedo configurarlo?",
   "NotificationsEnableForm.unableToConfigureDescription": "Más información sobre funciones y permisos",

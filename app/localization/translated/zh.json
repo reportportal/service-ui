@@ -1650,7 +1650,7 @@
   "NotificationsEnableForm.tabDescription": "跨多个通信渠道管理与启动相关的通知：Email、Slack, 等。",
   "NotificationsEnableForm.title": "未与电子邮件集成",
   "NotificationsEnableForm.toggleNotificationsLabel": "电子邮件通知",
-  "NotificationsEnableForm.toggleNotificationsNote": "在启测试任务成时发送电子邮件通知",
+  "NotificationsEnableForm.toggleNotificationsNote": "Turn off to stop all notifications. When on, notifications are sent only through the channels enabled below (Email, Slack, etc.)",
   "NotificationsEnableForm.typeDescription": "为每个规则选择 {type} 收件人列表以发送启动相关通知",
   "NotificationsEnableForm.unableToConfigure": "Why can't I configure it?",
   "NotificationsEnableForm.unableToConfigureDescription": "Learn more about roles and permissions",
