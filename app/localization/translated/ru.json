@@ -1650,7 +1650,7 @@
   "NotificationsEnableForm.tabDescription": "Управляйте уведомлениями, связанными с запуском, для разных каналов связи: E-mail, Slack, и т. д.",
   "NotificationsEnableForm.title": "Нет интеграции с E-mail сервером",
   "NotificationsEnableForm.toggleNotificationsLabel": "Автоматические уведомления по электронной почте",
-  "NotificationsEnableForm.toggleNotificationsNote": "Отправлять уведомления по электронной почте о завершении запуска",
+  "NotificationsEnableForm.toggleNotificationsNote": "Отключите, чтобы прекратить все уведомления. Когда параметр включен, уведомления будут приходить только через включённые ниже каналы (Email, Slack и т. д.)",
   "NotificationsEnableForm.typeDescription": "Выберите список получателей {type} для каждого правила для отправки уведомлений, связанных с запуском.",
   "NotificationsEnableForm.unableToConfigure": "Почему я не могу настроить его?",
   "NotificationsEnableForm.unableToConfigureDescription": "Подробнее о ролях и разрешениях",
