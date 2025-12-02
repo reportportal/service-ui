@@ -437,7 +437,7 @@ const routesMap = {
     '/organizations/:organizationSlug/projects/:projectSlug/productVersions/listOfVersions/:productVersionId/:productVersionTab',
 
   [PROJECT_TEST_PLANS_PAGE]: {
-    path: '/organizations/:organizationSlug/projects/:projectSlug/testPlans',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/milestones',
     thunk: (dispatch, getState) => {
       const state = getState();
       const savedLimit = getStorageItem(`${state.user?.info?.userId}_settings`)?.[
@@ -451,7 +451,7 @@ const routesMap = {
     },
   },
   [PROJECT_TEST_PLAN_DETAILS_PAGE]: {
-    path: '/organizations/:organizationSlug/projects/:projectSlug/testPlans/:testPlanId',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/milestones/:testPlanId',
     thunk: (dispatch, getState) => {
       const { location } = getState();
       const { testPlanId } = location.payload;

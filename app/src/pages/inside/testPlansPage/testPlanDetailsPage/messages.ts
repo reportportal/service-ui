@@ -24,10 +24,10 @@ export const messages = defineMessages({
   testPlanNotFoundRedirect: {
     id: 'TestPlanDetailsPage.testPlanNotFoundRedirect',
     defaultMessage:
-      "The item you are trying to access may have been deleted or doesn't exist. You have been redirected to Test Plans.",
+      "The item you are trying to access may have been deleted or doesn't exist. You have been redirected to Milestones.",
   },
   testPlanId: {
     id: 'TestPlanDetailsPage.testPlanId',
-    defaultMessage: 'Test Plan ID: {testPlanId}',
+    defaultMessage: 'Milestone ID: {testPlanId}',
   },
 });

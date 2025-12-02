@@ -51,7 +51,7 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
   },
   noTestPlanCreated: {
     id: 'TestCaseLibraryPage.noTestPlanCreated',
-    defaultMessage: 'No test plan created yet',
+    defaultMessage: 'No Milestone created yet',
   },
   duplicateFolder: {
     id: 'TestCaseLibraryPage.duplicateFolder',

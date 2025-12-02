@@ -24,6 +24,6 @@ export const messages = defineMessages({
   batchDeleteDescription: {
     id: 'BatchDeleteTestCasesModal.description',
     defaultMessage:
-      'Are you sure you want to delete <b>{count} selected test {count, plural, one {case} other {cases}}</b>? This irreversible action will also impact the testing scope of any Test Plans that include them.',
+      'Are you sure you want to delete <b>{count} selected test {count, plural, one {case} other {cases}}</b>? This irreversible action will also impact the testing scope of any Milestones that include them.',
   },
 });

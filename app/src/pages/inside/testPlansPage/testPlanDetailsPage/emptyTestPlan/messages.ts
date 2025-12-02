@@ -24,6 +24,6 @@ export const messages = defineMessages({
   pageDescription: {
     id: 'EmptyTestPlan.description',
     defaultMessage:
-      'To set up Launches for your Test Plan, begin by selecting tests from the Test Case Library. This ensures you address all essential testing areas!',
+      'To set up Launches for your Milestone, begin by selecting tests from the Test Case Library. This ensures you address all essential testing areas!',
   },
 });

@@ -133,7 +133,7 @@ export const COMMON_LOCALE_KEYS = defineMessages({
   },
   ADD_TO_TEST_PLAN: {
     id: 'Common.addToTestPlan',
-    defaultMessage: 'Add to Test Plan',
+    defaultMessage: 'Add to Milestone',
   },
   NO_RESULTS: {
     id: 'Common.noResults',
@@ -382,11 +382,11 @@ export const COMMON_LOCALE_KEYS = defineMessages({
   },
   TEST_PLAN_LABEL: {
     id: 'Common.testPlanLabel',
-    defaultMessage: 'Test Plan',
+    defaultMessage: 'Milestone',
   },
   SELECT_TEST_PLAN_PLACEHOLDER: {
     id: 'Common.selectTestPlanPlaceholder',
-    defaultMessage: 'Select the Test Plan',
+    defaultMessage: 'Select the Milestone',
   },
   ADD_TO_LAUNCH_TOOLTIP_TEXT: {
     id: 'Common.addToLaunchTooltipText',

@@ -31,7 +31,7 @@ export const messages = defineMessages({
   },
   executionsInLaunchesTitle: {
     id: 'TestPlanSidePanel.executionsInLaunchesTitle',
-    defaultMessage: 'Latest executions in Launches within the Test Plan',
+    defaultMessage: 'Latest executions in Launches within the Milestone',
   },
   noManualScenario: {
     id: 'TestPlanSidePanel.noManualScenario',
@@ -47,6 +47,6 @@ export const messages = defineMessages({
   },
   removeFromTestPlan: {
     id: 'TestPlanSidePanel.removeFromTestPlan',
-    defaultMessage: 'Remove from Test Plan',
+    defaultMessage: 'Remove from Milestone',
   },
 });

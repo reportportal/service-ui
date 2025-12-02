@@ -77,7 +77,7 @@ export const TestPlanSidePanel = memo(
     const mockData = Number(testPlan.id) % 2 === 0 ? MOCK_DATA_1 : MOCK_DATA_2;
 
     const handleRemoveFromTestPlan = () => {
-      // TODO: Implement remove from test plan functionality
+      // TODO: Implement remove from milestone functionality
       setIsMenuOpen(false);
     };
 

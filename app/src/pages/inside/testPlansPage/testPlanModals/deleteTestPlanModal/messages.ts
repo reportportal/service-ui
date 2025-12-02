@@ -19,11 +19,11 @@ import { defineMessages } from 'react-intl';
 export const messages = defineMessages({
   deleteTestPlan: {
     id: 'DeleteTestPlanModal.deleteTestPlan',
-    defaultMessage: 'Delete Test Plan',
+    defaultMessage: 'Delete Milestone',
   },
   deleteConfirmation: {
     id: 'DeleteTestPlanModal.deleteConfirmation',
     defaultMessage:
-      'Are you sure you want to delete the Test Plan <b>{testPlanName}</b>? This irreversible action will remove all associated data and impact any linked test cases.',
+      'Are you sure you want to delete the Milestone <b>{testPlanName}</b>? This irreversible action will remove all associated data and impact any linked test cases.',
   },
 });

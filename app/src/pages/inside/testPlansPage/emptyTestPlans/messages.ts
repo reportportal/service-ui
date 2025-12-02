@@ -19,12 +19,12 @@ import { defineMessages } from 'react-intl';
 export const messages = defineMessages({
   pageHeader: {
     id: 'TestPlansPage.header',
-    defaultMessage: 'No Test Plans created yet',
+    defaultMessage: 'No Milestones created yet',
   },
   pageDescription: {
     id: 'TestPlansPage.description',
     defaultMessage:
-      "Track your project's progress and achievements by creating your first test plan. Test plans aid in planning and measuring success over time.",
+      "Track your project's progress and achievements by creating your first milestone. Milestones aid in planning and measuring success over time.",
   },
   numerableBlockTitle: {
     id: 'TestPlansPage.numerableBlockTitle',

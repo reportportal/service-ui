@@ -242,11 +242,11 @@ const messages = defineMessages({
   },
   testCasesAddingToTestPlanSuccess: {
     id: 'TestCaseLibraryPage.testCasesAddedToTestPlanSuccess',
-    defaultMessage: 'Selected Test Cases have been added to the Test Plan successfully.',
+    defaultMessage: 'Selected Test Cases have been added to the Milestone successfully.',
   },
   testCaseAddingToTestPlanSuccess: {
     id: 'TestCaseLibraryPage.testCaseAddedToTestPlanSuccess',
-    defaultMessage: 'Selected Test Case has been added to the Test Plan successfully.',
+    defaultMessage: 'Selected Test Case has been added to the Milestone successfully.',
   },
   testCaseUpdatedSuccess: {
     id: 'TestCaseLibraryPage.testCaseUpdatedSuccess',
@@ -266,11 +266,11 @@ const messages = defineMessages({
   },
   testCasesAddingToTestPlanFailed: {
     id: 'TestCaseLibraryPage.testCasesAddingToTestPlanFailed',
-    defaultMessage: 'Failed to add selected Test Cases to the Test Plan.',
+    defaultMessage: 'Failed to add selected Test Cases to the Milestone.',
   },
   testCaseAddingToTestPlanFailed: {
     id: 'TestCaseLibraryPage.testCaseAddingToTestPlanFailed',
-    defaultMessage: 'Failed to add selected Test Case to the Test Plan.',
+    defaultMessage: 'Failed to add selected Test Case to the Milestone.',
   },
   errorOccurredTryAgain: {
     id: 'Common.errorOccurredTryAgain',
@@ -283,23 +283,23 @@ const messages = defineMessages({
   },
   testPlanCreatedSuccess: {
     id: 'TestPlansPage.testPlanCreatedSuccess',
-    defaultMessage: 'Test Plan has been created successfully.',
+    defaultMessage: 'Milestone has been created successfully.',
   },
   testPlanLoadingFailed: {
     id: 'TestPlansPage.testPlanLoadingFailed',
-    defaultMessage: 'Failed to load Test Plans.',
+    defaultMessage: 'Failed to load Milestones.',
   },
   testPlanUpdatedSuccess: {
     id: 'TestPlansPage.testPlanUpdatedSuccess',
-    defaultMessage: 'Test Plan has been updated successfully.',
+    defaultMessage: 'Milestone has been updated successfully.',
   },
   testPlanDuplicatedSuccess: {
     id: 'TestPlansPage.testPlanDuplicatedSuccess',
-    defaultMessage: 'Test Plan has been duplicated successfully.',
+    defaultMessage: 'Milestone has been duplicated successfully.',
   },
   testPlanDeletedSuccess: {
     id: 'TestPlansPage.testPlanDeletedSuccess',
-    defaultMessage: 'Test Plan has been deleted successfully.',
+    defaultMessage: 'Milestone has been deleted successfully.',
   },
   importSuccessToFolder: {
     id: 'ImportTestCaseModal.importSuccessToFolder',

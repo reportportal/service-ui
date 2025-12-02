@@ -47,6 +47,6 @@ export const messages = defineMessages({
   },
   testPlan: {
     id: 'LaunchSidePanel.testPlan',
-    defaultMessage: 'Test Plan',
+    defaultMessage: 'Milestone',
   },
 });

@@ -19,7 +19,7 @@ import { defineMessages } from 'react-intl';
 export const commonMessages = defineMessages({
   pageTitle: {
     id: 'TestPlansPage.title',
-    defaultMessage: 'Test Plans',
+    defaultMessage: 'Milestones',
   },
   refreshPage: {
     id: 'TestPlansPage.refreshPage',
@@ -27,19 +27,19 @@ export const commonMessages = defineMessages({
   },
   createTestPlan: {
     id: 'TestPlansPage.createTestPlan',
-    defaultMessage: 'Create Test Plan',
+    defaultMessage: 'Create Milestone',
   },
   editTestPlan: {
     id: 'TestPlansPage.editTestPlan',
-    defaultMessage: 'Edit test plan',
+    defaultMessage: 'Edit Milestone',
   },
   duplicateTestPlan: {
     id: 'TestPlansPage.duplicateTestPlan',
-    defaultMessage: 'Duplicate test plan',
+    defaultMessage: 'Duplicate Milestone',
   },
   deleteTestPlan: {
     id: 'TestPlansPage.deleteTestPlan',
-    defaultMessage: 'Delete test plan',
+    defaultMessage: 'Delete Milestone',
   },
   addTestsFromLibrary: {
     id: 'TestPlansPage.addTestsFromLibrary',
