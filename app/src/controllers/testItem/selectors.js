@@ -273,7 +273,7 @@ export const nameLinkSelector = (state, ownProps) => {
     payload.filterId = ALL;
   }
   let testItemIds = ownLinkParams?.testItemIds || testItemIdsSelector(state);
-  const isDebugMode = debugModeSelector(state);
+  const isDebugMode = ownLinkParams?.isDebugMode ?? debugModeSelector(state);
   let query = pagePropertiesSelector(state);
   const testItem = ownLinkParams?.testItem || testItemSelector(state, itemId);
   const hasChildren = testItem?.hasChildren;
