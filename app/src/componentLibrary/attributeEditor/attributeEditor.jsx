@@ -178,13 +178,22 @@ export const AttributeEditor = ({
     keyEditorRef.current = node;
   };
 
-  const getAutocompleteProps = (allAutocompleteProps, label) => ({
-    ...allAutocompleteProps,
-    inputProps: {
-      ...allAutocompleteProps?.inputProps,
-      label,
-    },
-  });
+  const getAutocompleteProps = (allAutocompleteProps, label) => {
+    const { keyMenuClassName, valueMenuClassName, menuClassName, ...restProps } =
+      allAutocompleteProps || {};
+    return {
+      ...restProps,
+      inputProps: {
+        ...allAutocompleteProps?.inputProps,
+        label,
+      },
+    };
+  };
+
+  const keyAutocompleteProps = getAutocompleteProps(autocompleteProps, keyLabel);
+  const valueAutocompleteProps = getAutocompleteProps(autocompleteProps, valueLabel);
+  const keyMenuClassName = autocompleteProps?.keyMenuClassName;
+  const valueMenuClassName = autocompleteProps?.valueMenuClassName;
 
   return (
     <div className={cx('attribute-editor', { 'with-labels': !!(keyLabel || valueLabel) })}>
@@ -209,8 +218,8 @@ export const AttributeEditor = ({
           attributeValue={state.value}
           onInputChange={handleAttributeKeyInputChange}
           optionVariant="key-variant"
-          menuClassName={cx('menu')}
-          {...getAutocompleteProps(autocompleteProps, keyLabel)}
+          menuClassName={cx('menu', keyMenuClassName)}
+          {...keyAutocompleteProps}
         />
       </FieldErrorHint>
       <div className={cx('separator')}>:</div>
@@ -234,8 +243,8 @@ export const AttributeEditor = ({
           attributeValue={state.value}
           isRequired={isAttributeValueRequired}
           optionVariant="value-variant"
-          menuClassName={cx('menu')}
-          {...getAutocompleteProps(autocompleteProps, valueLabel)}
+          menuClassName={cx('menu', valueMenuClassName)}
+          {...valueAutocompleteProps}
         />
       </FieldErrorHint>
       <div className={cx('buttons')}>

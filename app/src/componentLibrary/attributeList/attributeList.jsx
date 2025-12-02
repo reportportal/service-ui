@@ -58,6 +58,7 @@ export const AttributeList = ({
   autocompleteProps,
   allowCustomValues,
   addButtonClassName,
+  isAttributeValueRequired,
 }) => {
   const addNewAttrRef = useRef(null);
   const attributesRefs = useRef(null);
@@ -264,6 +265,7 @@ export const AttributeList = ({
           editorDefaultOpen={editorDefaultOpen}
           autocompleteProps={autocompleteProps}
           allowCustomValues={allowCustomValues}
+          isAttributeValueRequired={isAttributeValueRequired}
         />
       )}
       <div className={cx('attributes-wrapper')}>
@@ -357,6 +359,7 @@ AttributeList.propTypes = {
   autocompleteProps: PropTypes.object,
   allowCustomValues: PropTypes.bool,
   addButtonClassName: PropTypes.string,
+  isAttributeValueRequired: PropTypes.bool,
 };
 AttributeList.defaultProps = {
   attributes: [],
@@ -375,4 +378,5 @@ AttributeList.defaultProps = {
   autocompleteProps: {},
   allowCustomValues: true,
   addButtonClassName: '',
+  isAttributeValueRequired: true,
 };
