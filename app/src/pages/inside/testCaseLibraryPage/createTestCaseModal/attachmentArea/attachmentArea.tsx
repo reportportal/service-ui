@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, Ref } from 'react';
 import { useIntl } from 'react-intl';
 import { isNumber } from 'es-toolkit/compat';
 import { noop } from 'es-toolkit';
@@ -59,6 +59,8 @@ interface AttachmentAreaProps {
   canAttachFiles?: boolean;
   onRemove?: () => void;
   onMove?: (direction: 'up' | 'down') => void;
+  dragHandleRef?: Ref<HTMLButtonElement>;
+  isDraggingActive?: boolean;
 }
 
 export const AttachmentArea = ({
@@ -78,6 +80,8 @@ export const AttachmentArea = ({
   canAttachFiles = true,
   onRemove,
   onMove = noop,
+  dragHandleRef,
+  isDraggingActive = false,
 }: PropsWithChildren<AttachmentAreaProps>) => {
   const { formatMessage } = useIntl();
   const { attachedFiles, addFiles, removeFile, downloadFile } = useTmsFileUpload({
@@ -118,7 +122,13 @@ export const AttachmentArea = ({
                     >
                       <ArrowUpIcon />
                     </Button>
-                    <Button variant="text" adjustWidthOn="content">
+                    <Button
+                      ref={dragHandleRef}
+                      variant="text"
+                      adjustWidthOn="content"
+                      className={cx('drag-handle', { 'drag-handle--active': isDraggingActive })}
+                      aria-label={formatMessage(attachmentAreaMessages.dragToReorder)}
+                    >
                       <DragNDropIcon />
                     </Button>
                     <Button

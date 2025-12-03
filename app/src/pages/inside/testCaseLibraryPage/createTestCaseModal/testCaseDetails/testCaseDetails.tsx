@@ -179,6 +179,13 @@ export const TestCaseDetails = ({
     [steps, syncStepsToForm],
   );
 
+  const handleReorderSteps = useCallback(
+    (reorderedSteps: Step[]) => {
+      setUpdatedSteps(reorderedSteps);
+    },
+    [setUpdatedSteps],
+  );
+
   const isTextTemplate = manualScenarioType === ManualScenarioType.TEXT;
 
   return (
@@ -210,6 +217,7 @@ export const TestCaseDetails = ({
               onAddStep={handleAddStep}
               onRemoveStep={handleRemoveStep}
               onMoveStep={handleMoveStep}
+              onReorderSteps={handleReorderSteps}
               formName={formName}
               isKeyById={isEditMode}
             />
