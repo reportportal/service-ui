@@ -26,9 +26,10 @@ import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { hideModalAction } from 'controllers/modal';
 
 import { CreateFolderForm } from '../../shared/CreateFolderForm';
+import { FolderFormValues } from '../types';
+import { PARENT_FOLDER_FIELD } from '../constants';
 
 import styles from './folderModal.scss';
-import { FolderFormValues } from '../types';
 
 const cx = createClassnames(styles);
 
@@ -76,7 +77,9 @@ export const FolderModal = ({
     children: formatMessage(COMMON_LOCALE_KEYS.CREATE),
     onClick: handleSubmit(onSubmit) as () => void,
     disabled:
-      isLoading || (isToggled && !formValues?.[parentFolderFieldName as keyof FolderFormValues]),
+      isLoading || parentFolderFieldName === PARENT_FOLDER_FIELD
+        ? isToggled && !formValues?.[parentFolderFieldName as keyof FolderFormValues]
+        : false,
     'data-automation-id': 'submitButton',
   };
 

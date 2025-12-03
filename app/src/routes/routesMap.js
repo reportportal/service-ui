@@ -99,7 +99,7 @@ import { fetchMembersAction } from 'controllers/members';
 import { fetchAllUsersAction } from 'controllers/instance/allUsers/actionCreators';
 import { fetchLogPageData } from 'controllers/log';
 import { fetchHistoryPageInfoAction } from 'controllers/itemsHistory';
-import { setSessionItem, updateStorageItem } from 'common/utils/storageUtils';
+import { setSessionItem, updateStorageItem, getStorageItem } from 'common/utils/storageUtils';
 import { fetchClustersAction } from 'controllers/uniqueErrors';
 import {
   GET_TEST_CASE_DETAILS,
@@ -130,7 +130,12 @@ import { DOCUMENTATION } from 'pages/inside/productVersionPage/constants';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 import { fetchOrganizationEventsDataAction } from '../controllers/instance/actionCreators';
 import { canSeeActivityOption } from 'common/utils/permissions';
-import { getTestPlansAction, getTestPlanAction, defaultQueryParams } from 'controllers/testPlan';
+import {
+  getTestPlansAction,
+  getTestPlanAction,
+  defaultQueryParams,
+  TEST_PLANS_NAMESPACE,
+} from 'controllers/testPlan';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
   path,
@@ -434,7 +439,13 @@ const routesMap = {
   [PROJECT_TEST_PLANS_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug/testPlans',
     thunk: (dispatch, getState) => {
-      const { offset, limit } = getState().location?.query || defaultQueryParams;
+      const state = getState();
+      const savedLimit = getStorageItem(`${state.user?.info?.userId}_settings`)?.[
+        `${TEST_PLANS_NAMESPACE}PageSize`
+      ];
+      const query = state.location?.query;
+      const { offset } = query || defaultQueryParams;
+      const limit = savedLimit || query?.limit || defaultQueryParams.limit;
 
       dispatch(getTestPlansAction({ offset, limit }));
     },

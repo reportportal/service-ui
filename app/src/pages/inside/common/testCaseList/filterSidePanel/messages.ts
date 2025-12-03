@@ -14,14 +14,23 @@
  * limitations under the License.
  */
 
-export {
-  getFoldersAction,
-  getAllTestCasesAction,
-  getTestCaseByFolderIdAction,
-  updateFolderCounterAction,
-} from './actionCreators';
-export { testCaseSagas } from './sagas';
-export * from './constants';
-export * from './types';
-export { testCaseReducer } from './reducer';
-export * from './selectors';
+import { defineMessages } from 'react-intl';
+
+export const messages = defineMessages({
+  filterTitle: {
+    id: 'FilterSidePanel.filterTitle',
+    defaultMessage: 'Filter',
+  },
+  clearAllFilters: {
+    id: 'FilterSidePanel.clearAllFilters',
+    defaultMessage: 'Clear all filters',
+  },
+  selectPriority: {
+    id: 'FilterSidePanel.selectPriority',
+    defaultMessage: 'Select priority level',
+  },
+  selectTags: {
+    id: 'FilterSidePanel.selectTags',
+    defaultMessage: 'Search and select tags to filter',
+  },
+});

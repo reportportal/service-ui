@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-export {
-  getFoldersAction,
-  getAllTestCasesAction,
-  getTestCaseByFolderIdAction,
-  updateFolderCounterAction,
-} from './actionCreators';
-export { testCaseSagas } from './sagas';
-export * from './constants';
-export * from './types';
-export { testCaseReducer } from './reducer';
-export * from './selectors';
+export const MOCK_TAG_OPTIONS = [
+  { value: 'smoke', label: 'smoke' },
+  { value: 'regression', label: 'regression' },
+  { value: 'ui', label: 'ui' },
+  { value: 'api', label: 'api' },
+  { value: 'backend', label: 'backend' },
+  { value: 'frontend', label: 'frontend' },
+  { value: 'mobile', label: 'mobile' },
+  { value: 'integration', label: 'integration' },
+];
