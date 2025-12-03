@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, Ref } from 'react';
+import { useCallback, useState, Ref } from 'react';
 import { useIntl } from 'react-intl';
 import { useDrop } from 'react-dnd';
 import { Button, PlusIcon, DragNDropIcon, SortableItem, DragLayer } from '@reportportal/ui-kit';
@@ -34,6 +34,7 @@ import styles from './steps.scss';
 const cx = createClassnames(styles);
 
 const STEP_DRAG_TYPE = 'TEST_CASE_STEP';
+const DROP_ANIMATION_DURATION = 600;
 
 export const Steps = ({
   steps,
@@ -45,12 +46,17 @@ export const Steps = ({
   isKeyById = false,
 }: StepsProps) => {
   const { formatMessage } = useIntl();
+  const [justDroppedId, setJustDroppedId] = useState<number | null>(null);
 
   const handleDrop = useCallback(
     (fromIndex: number, toIndex: number) => {
       const reorderedSteps = [...steps];
       const [movedStep] = reorderedSteps.splice(fromIndex, 1);
       reorderedSteps.splice(toIndex, 0, movedStep);
+
+      setJustDroppedId(movedStep.id);
+      setTimeout(() => setJustDroppedId(null), DROP_ANIMATION_DURATION);
+
       onReorderSteps(reorderedSteps);
     },
     [steps, onReorderSteps],
@@ -116,7 +122,9 @@ export const Steps = ({
               type={STEP_DRAG_TYPE}
               onDrop={handleDrop}
               hideDefaultPreview
-              className={cx('steps__step-container')}
+              className={cx('steps__step-container', {
+                'steps__step-container--just-dropped': justDroppedId === id,
+              })}
               dropTargetClassName={cx('steps__step-container--drop-target')}
             >
               {({ dragRef, isDragging }) => (
