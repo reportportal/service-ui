@@ -18,15 +18,15 @@ import { defineMessages } from 'react-intl';
 
 export const commonMessages = defineMessages({
   pageTitle: {
-    id: 'TestPlansPage.title',
+    id: 'MilestonesPage.title',
     defaultMessage: 'Milestones',
   },
   refreshPage: {
     id: 'TestPlansPage.refreshPage',
     defaultMessage: 'Refresh Page',
   },
-  createTestPlan: {
-    id: 'TestPlansPage.createTestPlan',
+  createMilestone: {
+    id: 'MilestonesPage.createMilestone',
     defaultMessage: 'Create Milestone',
   },
   editTestPlan: {

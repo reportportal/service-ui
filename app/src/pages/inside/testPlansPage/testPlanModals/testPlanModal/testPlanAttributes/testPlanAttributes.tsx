@@ -54,7 +54,7 @@ export const TestPlanAttributes = () => {
 
   return (
     <div>
-      <FieldElement label={formatMessage(messages.testPlanAttributes)} withoutProvider>
+      <FieldElement label={formatMessage(messages.milestoneAttributes)} withoutProvider>
         <Field
           name="attributes"
           component={AttributeListField}
