@@ -16,7 +16,7 @@
 
 import { useDispatch, useSelector } from 'react-redux';
 import { noop } from 'es-toolkit';
-import { VoidFn } from '@reportportal/ui-kit/common';
+import { VoidFn } from '@reportportal/ui-kit/common/types/commonTypes';
 import { push } from 'redux-first-router';
 
 import { URLS } from 'common/urls';
