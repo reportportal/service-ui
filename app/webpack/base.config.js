@@ -180,6 +180,7 @@ module.exports = {
         },
         '@reportportal/ui-kit': {
           singleton: true,
+          eager: true,
           requiredVersion: pjson.dependencies['@reportportal/ui-kit'],
         },
       },
