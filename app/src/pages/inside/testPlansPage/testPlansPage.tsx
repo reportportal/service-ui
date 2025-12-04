@@ -93,7 +93,7 @@ export const TestPlansPage = () => {
                     data-automation-id="createTestPlanButton"
                     onClick={openModal}
                   >
-                    {formatMessage(commonMessages.createTestPlan)}
+                    {formatMessage(commonMessages.createMilestone)}
                   </Button>
                 )}
               </>
