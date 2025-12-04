@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { useIntl } from 'react-intl';
-import { FieldText, Toggle } from '@reportportal/ui-kit';
+import { FieldText, Toggle, Tooltip } from '@reportportal/ui-kit';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
@@ -60,19 +60,31 @@ export const FolderNameField = ({
 interface ParentFolderToggleProps {
   isToggled: boolean;
   onToggle: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  disabled?: boolean;
+  isDisabled?: boolean;
   label: string;
   className?: string;
+  title?: string;
 }
 
 export const ParentFolderToggle = ({
   isToggled,
-  onToggle,
-  disabled = false,
+  isDisabled = false,
   label,
   className,
-}: ParentFolderToggleProps) => (
-  <Toggle value={isToggled} onChange={onToggle} disabled={disabled} className={className}>
-    {label}
-  </Toggle>
-);
+  title,
+  onToggle,
+}: ParentFolderToggleProps) => {
+  const toggleComponent = (
+    <Toggle value={isToggled} onChange={onToggle} disabled={isDisabled} className={className}>
+      {label}
+    </Toggle>
+  );
+
+  return isDisabled && title ? (
+    <Tooltip content={title} placement="top">
+      {toggleComponent}
+    </Tooltip>
+  ) : (
+    toggleComponent
+  );
+};

@@ -45,6 +45,7 @@ interface FolderModalConfig {
   toggleDisabled?: boolean;
   isInvertedToggle?: boolean;
   customContent?: ReactNode;
+  excludeFolderIds?: number[];
   onSubmit: (values: unknown) => void;
 }
 
@@ -64,6 +65,7 @@ export const FolderModal = ({
   parentFolderFieldLabel,
   isInvertedToggle = false,
   customContent,
+  excludeFolderIds = [],
   handleSubmit,
   change,
   onSubmit,
@@ -108,6 +110,7 @@ export const FolderModal = ({
           parentFolderFieldLabel={parentFolderFieldLabel}
           toggleDisabled={toggleDisabled}
           isInvertedToggle={isInvertedToggle}
+          excludeFolderIds={excludeFolderIds}
           change={change}
         />
         <ModalLoadingOverlay isVisible={isLoading} />

@@ -35,6 +35,7 @@ import {
   SET_TEST_CASES,
   RENAME_FOLDER,
   RENAME_FOLDER_SUCCESS,
+  MOVE_FOLDER_SUCCESS,
   DELETE_TEST_CASE_SUCCESS,
   UPDATE_FOLDER_COUNTER,
   SELECT_ACTIVE_FOLDER,
@@ -81,6 +82,11 @@ export interface DeleteFolderSuccessParams {
 export interface RenameFolderParams {
   folderId: number;
   folderName: string;
+}
+
+export interface MoveFolderParams {
+  folderId: number;
+  parentTestFolderId: number | null;
 }
 
 export interface SetActiveFolderIdParams {
@@ -181,6 +187,11 @@ export const renameFolderAction = (folderInfo: RenameFolderParams) => ({
 export const renameFolderSuccessAction = (folderId: RenameFolderParams) => ({
   type: RENAME_FOLDER_SUCCESS,
   payload: folderId,
+});
+
+export const moveFolderSuccessAction = (params: MoveFolderParams) => ({
+  type: MOVE_FOLDER_SUCCESS,
+  payload: params,
 });
 
 export const updateFolderCounterAction = (params: UpdateFolderCounterParams) => ({

@@ -17,42 +17,70 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { isString } from 'es-toolkit';
 import { SubmissionError } from 'redux-form';
 
 import { projectKeySelector } from 'controllers/project';
-import { fetch } from 'common/utils';
-import { useDebouncedSpinner } from 'common/hooks';
-import { URLS } from 'common/urls';
-import { hideModalAction } from 'controllers/modal';
-import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import {
   getTestCaseByFolderIdAction,
   getAllTestCasesAction,
   testCasesPageSelector,
+  FolderWithFullPath,
 } from 'controllers/testCase';
 import {
   createFoldersSuccessAction,
   updateFolderCounterAction,
 } from 'controllers/testCase/actionCreators';
+import { hideModalAction } from 'controllers/modal';
 import { urlFolderIdSelector, TEST_CASE_LIBRARY_PAGE } from 'controllers/pages';
+import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
+import { fetch } from 'common/utils';
+import { useDebouncedSpinner } from 'common/hooks';
+import { URLS } from 'common/urls';
 import { getTestCaseRequestParams } from 'pages/inside/testCaseLibraryPage/utils';
-
-import { CreateTestCaseFormData, ManualScenarioDto } from '../types';
-import { createFolder, buildManualScenario, isDuplicateTestCaseError } from './testCaseUtils';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 
-const buildTestCaseData = (
-  payload: CreateTestCaseFormData,
-  folderId: number,
-  manualScenario: ManualScenarioDto,
-) => ({
-  description: payload.description,
-  name: payload.name,
-  testFolderId: folderId,
-  priority: payload.priority?.toUpperCase(),
-  manualScenario,
-});
+import { CreateTestCaseFormData } from '../types';
+import {
+  buildManualScenario,
+  isDuplicateTestCaseError,
+  processFolder,
+  buildTestCaseData,
+} from './testCaseUtils';
+import { NewFolderData } from '../utils/getFolderFromFormValues';
+
+interface TestCaseResponse {
+  testFolder?: {
+    id: number;
+  };
+}
+
+interface PatchTestCaseOptions {
+  testCaseId: number;
+  currentFolderId?: number;
+  folder?: FolderWithFullPath | NewFolderData;
+  successMessageId?: string;
+  errorMessageId?: string;
+  onSuccess?: (response: unknown) => void;
+}
+
+interface HandleFolderUpdateOptions {
+  response: TestCaseResponse;
+  newFolderDetails?: NewFolderData;
+  currentFolderId?: number;
+  existingFolderId?: number;
+}
+
+interface HandleNewFolderCreationOptions {
+  folderId: number;
+  folderName: string;
+  parentFolderId?: number | null;
+  currentFolderId?: number;
+}
+
+interface HandleFolderCounterUpdateOptions {
+  newFolderId?: number;
+  currentFolderId?: number;
+}
 
 export const useTestCase = (testCaseId?: number) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
@@ -64,20 +92,6 @@ export const useTestCase = (testCaseId?: number) => {
     (state: { location: { type?: string } }) => state.location.type === TEST_CASE_LIBRARY_PAGE,
   );
   const { formatMessage } = useIntl();
-
-  const handleFolder = useCallback(
-    async (payload: CreateTestCaseFormData, currentFolderId?: number): Promise<number> => {
-      if (isString(payload.folder)) {
-        const folder = await createFolder(projectKey, payload.folder);
-
-        dispatch(createFoldersSuccessAction({ ...folder, countOfTestCases: 0 }));
-
-        return folder.id;
-      }
-      return payload.folder?.id || currentFolderId;
-    },
-    [projectKey, dispatch],
-  );
 
   const refetchTestCases = useCallback(
     (folderId: number, prevFolderId?: number) => {
@@ -115,26 +129,89 @@ export const useTestCase = (testCaseId?: number) => {
     [isOnTestCaseLibraryPage, testCasesPageData, urlFolderId, dispatch],
   );
 
+  const handleFolderCounterUpdate = useCallback(
+    ({ newFolderId, currentFolderId }: HandleFolderCounterUpdateOptions) => {
+      const isTestCaseMoved = currentFolderId && newFolderId && currentFolderId !== newFolderId;
+
+      if (isTestCaseMoved) {
+        dispatch(updateFolderCounterAction({ folderId: currentFolderId, delta: -1 }));
+        dispatch(updateFolderCounterAction({ folderId: newFolderId, delta: 1 }));
+      }
+
+      if (newFolderId) {
+        refetchTestCases(newFolderId, currentFolderId);
+      }
+    },
+    [dispatch, refetchTestCases],
+  );
+
+  const handleNewFolderCreation = useCallback(
+    ({ folderId, folderName, parentFolderId, currentFolderId }: HandleNewFolderCreationOptions) => {
+      dispatch(
+        createFoldersSuccessAction({
+          id: folderId,
+          name: folderName,
+          parentFolderId: parentFolderId ?? null,
+          countOfTestCases: 1,
+        }),
+      );
+
+      if (currentFolderId) {
+        dispatch(updateFolderCounterAction({ folderId: currentFolderId, delta: -1 }));
+      }
+
+      refetchTestCases(folderId, currentFolderId);
+    },
+    [dispatch, refetchTestCases],
+  );
+
+  const handleFolderUpdateAfterTestCaseChange = useCallback(
+    ({
+      response,
+      newFolderDetails,
+      currentFolderId,
+      existingFolderId,
+    }: HandleFolderUpdateOptions) => {
+      const newFolderId = response.testFolder?.id ?? existingFolderId;
+
+      if (newFolderDetails && newFolderId) {
+        handleNewFolderCreation({
+          folderId: newFolderId,
+          folderName: newFolderDetails.name,
+          parentFolderId: newFolderDetails.parentTestFolderId,
+          currentFolderId,
+        });
+      } else {
+        handleFolderCounterUpdate({ newFolderId, currentFolderId });
+      }
+
+      return newFolderId;
+    },
+    [handleNewFolderCreation, handleFolderCounterUpdate],
+  );
+
   const createTestCase = useCallback(
     async (payload: CreateTestCaseFormData) => {
       try {
         showSpinner();
 
-        const folderId = await handleFolder(payload);
         const manualScenario = buildManualScenario(payload);
+        const { newFolderDetails, existingFolderId } = processFolder(payload.folder);
 
-        const createdTestCase = await fetch(URLS.testCases(projectKey), {
+        const response = await fetch<TestCaseResponse>(URLS.testCases(projectKey), {
           method: 'POST',
-          data: buildTestCaseData(payload, folderId, manualScenario),
+          data: buildTestCaseData(payload, manualScenario),
         });
 
         dispatch(hideModalAction());
+        dispatch(showSuccessNotification({ messageId: 'testCaseCreatedSuccess' }));
 
-        if (createdTestCase) {
-          dispatch(showSuccessNotification({ messageId: 'testCaseCreatedSuccess' }));
-          dispatch(updateFolderCounterAction({ folderId, delta: 1 }));
-          refetchTestCases(folderId);
-        }
+        handleFolderUpdateAfterTestCaseChange({
+          response,
+          newFolderDetails,
+          currentFolderId: undefined,
+          existingFolderId,
+        });
       } catch (error: unknown) {
         if (isDuplicateTestCaseError(error)) {
           throw new SubmissionError({
@@ -147,7 +224,14 @@ export const useTestCase = (testCaseId?: number) => {
         hideSpinner();
       }
     },
-    [projectKey, dispatch, formatMessage, showSpinner, hideSpinner, handleFolder, refetchTestCases],
+    [
+      projectKey,
+      dispatch,
+      formatMessage,
+      showSpinner,
+      hideSpinner,
+      handleFolderUpdateAfterTestCaseChange,
+    ],
   );
 
   const editTestCase = useCallback(
@@ -160,25 +244,26 @@ export const useTestCase = (testCaseId?: number) => {
       try {
         showSpinner();
 
-        const folderId = await handleFolder(payload, currentFolderId);
         const manualScenario = buildManualScenario(payload);
+        const { newFolderDetails, existingFolderId } = processFolder(payload.folder);
 
-        await fetch(URLS.testCaseDetails(projectKey, testCaseId.toString()), {
-          method: 'PUT',
-          data: buildTestCaseData(payload, folderId, manualScenario),
-        });
+        const response = await fetch<TestCaseResponse>(
+          URLS.testCaseDetails(projectKey, testCaseId.toString()),
+          {
+            method: 'PUT',
+            data: buildTestCaseData(payload, manualScenario),
+          },
+        );
 
         dispatch(hideModalAction());
         dispatch(showSuccessNotification({ messageId: 'testCaseUpdatedSuccess' }));
 
-        const isTestCaseMoved = currentFolderId && currentFolderId !== folderId;
-
-        if (isTestCaseMoved) {
-          dispatch(updateFolderCounterAction({ folderId: currentFolderId, delta: -1 }));
-          dispatch(updateFolderCounterAction({ folderId, delta: 1 }));
-        }
-
-        refetchTestCases(folderId, currentFolderId);
+        handleFolderUpdateAfterTestCaseChange({
+          response,
+          newFolderDetails,
+          currentFolderId,
+          existingFolderId,
+        });
       } catch (error: unknown) {
         if (isDuplicateTestCaseError(error)) {
           throw new SubmissionError({
@@ -198,13 +283,62 @@ export const useTestCase = (testCaseId?: number) => {
       formatMessage,
       showSpinner,
       hideSpinner,
-      handleFolder,
-      refetchTestCases,
+      handleFolderUpdateAfterTestCaseChange,
     ],
   );
+
+  const patchTestCase = useCallback(
+    async ({
+      testCaseId,
+      currentFolderId,
+      folder,
+      successMessageId = 'testCaseUpdatedSuccess',
+      errorMessageId = 'testCaseUpdateFailed',
+      onSuccess,
+    }: PatchTestCaseOptions) => {
+      if (!folder) {
+        return;
+      }
+
+      try {
+        showSpinner();
+
+        const { payload: data, newFolderDetails, existingFolderId } = processFolder(folder);
+
+        const response = await fetch<TestCaseResponse>(
+          URLS.testCaseDetails(projectKey, testCaseId.toString()),
+          {
+            method: 'PATCH',
+            data,
+          },
+        );
+
+        dispatch(hideModalAction());
+        dispatch(showSuccessNotification({ messageId: successMessageId }));
+
+        handleFolderUpdateAfterTestCaseChange({
+          response,
+          newFolderDetails,
+          currentFolderId,
+          existingFolderId,
+        });
+
+        if (onSuccess) {
+          onSuccess(response);
+        }
+      } catch {
+        dispatch(showErrorNotification({ messageId: errorMessageId }));
+      } finally {
+        hideSpinner();
+      }
+    },
+    [projectKey, dispatch, showSpinner, hideSpinner, handleFolderUpdateAfterTestCaseChange],
+  );
+
   return {
     isLoading,
     createTestCase,
     editTestCase,
+    patchTestCase,
   };
 };

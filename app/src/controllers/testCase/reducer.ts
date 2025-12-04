@@ -32,6 +32,7 @@ import {
   CREATE_FOLDER_SUCCESS,
   CREATE_FOLDERS_BATCH_SUCCESS,
   RENAME_FOLDER_SUCCESS,
+  MOVE_FOLDER_SUCCESS,
   DELETE_FOLDER_SUCCESS,
   GET_TEST_CASE_DETAILS,
   GET_TEST_CASE_DETAILS_SUCCESS,
@@ -48,6 +49,7 @@ import {
   DeleteFolderSuccessParams,
   DeleteTestCaseParams,
   RenameFolderParams,
+  MoveFolderParams,
   SetActiveFolderIdParams,
   UpdateFolderCounterParams,
 } from './actionCreators';
@@ -97,6 +99,7 @@ const INITIAL_DETAILS_STATE: InitialDetailsStateType = {
 type FolderAction =
   | { type: typeof DELETE_FOLDER_SUCCESS; payload: DeleteFolderSuccessParams }
   | { type: typeof RENAME_FOLDER_SUCCESS; payload: RenameFolderParams }
+  | { type: typeof MOVE_FOLDER_SUCCESS; payload: MoveFolderParams }
   | { type: typeof CREATE_FOLDER_SUCCESS; payload: Folder }
   | { type: typeof CREATE_FOLDERS_BATCH_SUCCESS; payload: Folder[] }
   | { type: typeof UPDATE_FOLDER_COUNTER; payload: UpdateFolderCounterParams };
@@ -176,6 +179,15 @@ const folderReducer = (state = INITIAL_STATE.folders.data, action: FolderAction)
         }
 
         return { ...folder, name: action.payload.folderName };
+      });
+    }
+    case MOVE_FOLDER_SUCCESS: {
+      return state.map((folder) => {
+        if (folder.id !== action.payload.folderId) {
+          return folder;
+        }
+
+        return { ...folder, parentFolderId: action.payload.parentTestFolderId };
       });
     }
     case CREATE_FOLDER_SUCCESS: {
