@@ -36,6 +36,7 @@ import {
   useActiveTestPlanLoading,
   useTestPlanById,
   useTestPlanFolders,
+  useTestPlanTestCasesLoading,
 } from 'hooks/useTypedSelector';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 
@@ -64,6 +65,7 @@ export const TestPlanDetailsPage = () => {
   const testPlanId = useTestPlanId();
   const testPlan = useTestPlanById(testPlanId);
   const isLoading = useActiveTestPlanLoading();
+  const isTestPlanTestCasesLoading = useTestPlanTestCasesLoading();
   const testPlanFolders = useTestPlanFolders();
   const { openModal: openEditModal } = useEditTestPlanModal();
   const { openModal: openDuplicateModal } = useDuplicateTestPlanModal({
@@ -165,7 +167,7 @@ export const TestPlanDetailsPage = () => {
       return <EmptyTestPlan />;
     }
 
-    return <TestPlanFolders />;
+    return <TestPlanFolders isLoading={isTestPlanTestCasesLoading} />;
   };
 
   return (

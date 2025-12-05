@@ -135,7 +135,10 @@ import {
   getTestPlanAction,
   defaultQueryParams,
   TEST_PLANS_NAMESPACE,
+  TEST_PLAN_TEST_CASES_NAMESPACE,
+  defaultTestPlanTestCasesQueryParams,
 } from 'controllers/testPlan';
+import { getRouterParams } from 'common/utils';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
   path,
@@ -440,12 +443,11 @@ const routesMap = {
     path: '/organizations/:organizationSlug/projects/:projectSlug/milestones',
     thunk: (dispatch, getState) => {
       const state = getState();
-      const savedLimit = getStorageItem(`${state.user?.info?.userId}_settings`)?.[
-        `${TEST_PLANS_NAMESPACE}PageSize`
-      ];
-      const query = state.location?.query;
-      const { offset } = query || defaultQueryParams;
-      const limit = savedLimit || query?.limit || defaultQueryParams.limit;
+      const { offset, limit } = getRouterParams({
+        namespace: TEST_PLANS_NAMESPACE,
+        defaultParams: defaultQueryParams,
+        state,
+      });
 
       dispatch(getTestPlansAction({ offset, limit }));
     },
@@ -453,10 +455,15 @@ const routesMap = {
   [PROJECT_TEST_PLAN_DETAILS_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug/milestones/:testPlanId',
     thunk: (dispatch, getState) => {
-      const { location } = getState();
-      const { testPlanId } = location.payload;
+      const state = getState();
+      const testPlanId = state.location?.payload?.testPlanId;
+      const { offset, limit } = getRouterParams({
+        namespace: TEST_PLAN_TEST_CASES_NAMESPACE,
+        defaultParams: defaultTestPlanTestCasesQueryParams,
+        state,
+      });
 
-      dispatch(getTestPlanAction({ testPlanId }));
+      dispatch(getTestPlanAction({ testPlanId, offset, limit }));
     },
   },
 };
