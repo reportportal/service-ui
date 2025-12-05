@@ -27,7 +27,7 @@ import { Step } from './step';
 import { messages as commonMessages } from '../../messages';
 import { messages } from './messages';
 import { StepsProps } from './types';
-import { HideOnDrag } from './hoc';
+import { HideOnDrag } from './HideOnDrag';
 
 import styles from './steps.scss';
 

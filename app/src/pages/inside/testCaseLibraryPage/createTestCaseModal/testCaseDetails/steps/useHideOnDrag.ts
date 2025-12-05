@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 
 const HIDE_DELAY_MS = 50;
 
-export const useHideOnDrag = (isDragging: boolean): boolean => {
-  const [shouldHide, setShouldHide] = useState<boolean>(false);
+export const useHideOnDrag = ({ isDragging }: { isDragging: boolean }) => {
+  const [shouldHide, setShouldHide] = useState(false);
 
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout>;

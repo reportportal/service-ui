@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { useHideOnDrag } from './hooks';
+import { useHideOnDrag } from './useHideOnDrag';
 
 interface HideOnDragProps {
   isDragging: boolean;
@@ -8,7 +8,7 @@ interface HideOnDragProps {
 }
 
 export const HideOnDrag = ({ isDragging, children }: HideOnDragProps) => {
-  const shouldHide = useHideOnDrag(isDragging);
+  const shouldHide = useHideOnDrag({ isDragging });
 
   if (shouldHide) return null;
 
