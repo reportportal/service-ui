@@ -176,7 +176,7 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
   ];
 
   const changeUrlParams = ({ limit, offset }: queryParamsType): void => {
-    const url = `/organizations/${organizationSlug}/projects/${projectSlug}/testPlans?offset=${offset}&limit=${limit}`;
+    const url = `/organizations/${organizationSlug}/projects/${projectSlug}/milestones?offset=${offset}&limit=${limit}`;
 
     push(url);
   };

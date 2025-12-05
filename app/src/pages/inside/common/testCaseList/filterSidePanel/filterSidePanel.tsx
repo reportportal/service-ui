@@ -125,6 +125,7 @@ export const FilterSidePanel = memo(
             onChange={handleTagsChange}
             placeholder={formatMessage(messages.selectTags)}
             multiSelect
+            isMultiSelectWithTags
             clearable
           />
         </div>

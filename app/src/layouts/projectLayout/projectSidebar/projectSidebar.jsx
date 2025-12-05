@@ -154,13 +154,13 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       },
       {
         onClick: (isSidebarCollapsed) =>
-          onClickButton({ itemName: messages.testPlans.defaultMessage, isSidebarCollapsed }),
+          onClickButton({ itemName: messages.milestones.defaultMessage, isSidebarCollapsed }),
         link: {
           type: PROJECT_TEST_PLANS_PAGE,
           payload: { organizationSlug, projectSlug },
         },
         icon: TestPlansIcon,
-        message: formatMessage(messages.testPlans),
+        message: formatMessage(messages.milestones),
       },
       {
         onClick: (isSidebarCollapsed) =>
