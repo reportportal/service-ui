@@ -14,25 +14,16 @@
  * limitations under the License.
  */
 
-import { GET_TEST_PLANS, GET_TEST_PLAN } from './constants';
+import { defineMessages } from 'react-intl';
 
-export interface GetTestPlansParams {
-  offset?: string | number;
-  limit?: string | number;
-}
-
-export interface GetTestPlanParams {
-  testPlanId: string | number;
-  offset?: string | number;
-  limit?: string | number;
-}
-
-export const getTestPlansAction = (params?: GetTestPlansParams) => ({
-  type: GET_TEST_PLANS,
-  payload: params,
-});
-
-export const getTestPlanAction = (params: GetTestPlanParams) => ({
-  type: GET_TEST_PLAN,
-  payload: params,
+export const messages = defineMessages({
+  batchDeleteTestCasesTitle: {
+    id: 'BatchDeleteTestCasesModal.title',
+    defaultMessage: 'Delete Test Cases',
+  },
+  batchDeleteDescription: {
+    id: 'BatchDeleteTestCasesModal.description',
+    defaultMessage:
+      'Are you sure you want to delete <b>{count} selected test {count, plural, one {case} other {cases}}</b>? This irreversible action will also impact the testing scope of any Test Plans that include them.',
+  },
 });

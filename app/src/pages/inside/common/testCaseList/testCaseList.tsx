@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-import { memo, SetStateAction, useState } from 'react';
+import { memo, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { xor } from 'es-toolkit';
-import { BubblesLoader, FilterOutlineIcon, Table } from '@reportportal/ui-kit';
+import { BubblesLoader, FilterOutlineIcon, FilterFilledIcon, Table } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { SearchField } from 'components/fields/searchField';
@@ -25,11 +24,12 @@ import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { SelectedTestCaseRow } from 'pages/inside/testCaseLibraryPage/allTestCasesPage/allTestCasesPage';
 
 import { TestCaseNameCell } from './testCaseNameCell';
 import { TestCaseExecutionCell } from './testCaseExecutionCell';
 import { TestCaseSidePanel } from './testCaseSidePanel';
-import { DEFAULT_CURRENT_PAGE } from './configUtils';
+import { FilterSidePanel } from './filterSidePanel';
 import { messages } from './messages';
 
 import styles from './testCaseList.scss';
@@ -40,12 +40,11 @@ const cx = createClassnames(styles);
 interface TestCaseListProps {
   testCases: ExtendedTestCase[];
   loading?: boolean;
-  currentPage?: number;
-  itemsPerPage?: number;
   folderTitle: string;
   searchValue?: string;
   selectedRowIds: (number | string)[];
-  handleSelectedRowIds: (value: SetStateAction<(number | string)[]>) => void;
+  selectedRows: SelectedTestCaseRow[];
+  handleSelectedRows: (rows: SelectedTestCaseRow[]) => void;
   onSearchChange?: (value: string) => void;
   selectable?: boolean;
   instanceKey: INSTANCE_KEYS;
@@ -55,10 +54,9 @@ export const TestCaseList = memo(
   ({
     testCases,
     loading = false,
-    currentPage = DEFAULT_CURRENT_PAGE,
     selectedRowIds,
-    handleSelectedRowIds,
-    itemsPerPage,
+    selectedRows,
+    handleSelectedRows,
     searchValue = '',
     onSearchChange,
     folderTitle,
@@ -67,49 +65,68 @@ export const TestCaseList = memo(
   }: TestCaseListProps) => {
     const { formatMessage } = useIntl();
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<number | null>(null);
+    const [isFilterSidePanelVisible, setIsFilterSidePanelVisible] = useState(false);
+    const [selectedPriorities, setSelectedPriorities] = useState<string[]>([]);
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
     const { canDoTestCaseBulkActions } = useUserPermissions();
 
-    let currentData: ExtendedTestCase[];
-
-    if (currentPage && itemsPerPage) {
-      const startIndex = (currentPage - 1) * itemsPerPage;
-      const endIndex = startIndex + itemsPerPage;
-
-      currentData = testCases.slice(startIndex, endIndex);
-    } else {
-      currentData = testCases;
-    }
+    const activeFiltersCount = selectedPriorities.length + selectedTags.length;
+    const hasActiveFilters = activeFiltersCount > 0;
 
     const handleCloseSidePanel = () => {
       setSelectedTestCaseId(null);
     };
 
-    const handleRowSelect = (id: number | string) => {
-      handleSelectedRowIds((selectedRows) => xor(selectedRows, [id]));
+    const handleCloseFilterSidePanel = () => {
+      setIsFilterSidePanelVisible(false);
     };
 
-    const handleAllSelect = () => {
-      handleSelectedRowIds((prevSelectedRowIds) => {
-        const currentDataIds: (string | number)[] = currentData.map(
-          ({ id }: { id: string | number }) => id,
-        );
-        if (currentDataIds.every((rowId) => prevSelectedRowIds.includes(rowId))) {
-          return prevSelectedRowIds.filter(
-            (selectedRowId) => !currentDataIds.includes(selectedRowId),
-          );
-        }
+    const handleFilterIconClick = () => {
+      setIsFilterSidePanelVisible(true);
+    };
 
-        return [
-          ...prevSelectedRowIds,
-          ...currentDataIds.filter((id) => !prevSelectedRowIds.includes(id)),
-        ];
-      });
+    const handleApplyFilters = () => {
+      // TODO: Implement apply filters functionality
+    };
+
+    const handleRowSelect = (id: number | string) => {
+      const testCase = testCases.find((testCase) => testCase.id === id);
+
+      if (!testCase) {
+        return;
+      }
+
+      const isCurrentlySelected = selectedRows.some((row) => row.id === id);
+
+      handleSelectedRows(
+        isCurrentlySelected
+          ? selectedRows.filter((row) => row.id !== id)
+          : [...selectedRows, { id: testCase.id, folderId: testCase.testFolder.id }],
+      );
+    };
+
+    const handleSelectAll = () => {
+      const currentPageTestCaseIds = testCases.map(({ id }) => id);
+      const isAllCurrentPageSelected = currentPageTestCaseIds.every((testCaseId) =>
+        selectedRowIds.includes(testCaseId),
+      );
+
+      const newSelectedRows = isAllCurrentPageSelected
+        ? selectedRows.filter((row) => !currentPageTestCaseIds.includes(row.id))
+        : [
+            ...selectedRows,
+            ...testCases
+              .filter((testCase) => !selectedRowIds.includes(testCase.id))
+              .map((testCase) => ({ id: testCase.id, folderId: testCase.testFolder.id })),
+          ];
+
+      handleSelectedRows(newSelectedRows);
     };
 
     const selectedTestCase = testCases.find((testCase) => testCase.id === selectedTestCaseId);
 
-    const tableData = currentData.map((testCase) => ({
+    const tableData = testCases.map((testCase) => ({
       id: testCase.id,
       name: {
         content: testCase.name,
@@ -170,9 +187,17 @@ export const TestCaseList = memo(
                     onFilterChange={onSearchChange}
                     placeholder={formatMessage(messages.searchPlaceholder)}
                   />
-                  <div className={cx('filter-icon')}>
-                    <FilterOutlineIcon />
-                  </div>
+                  <button
+                    type="button"
+                    className={cx('filter-icon', { active: hasActiveFilters })}
+                    onClick={handleFilterIconClick}
+                    aria-label={formatMessage(messages.filterButton)}
+                  >
+                    {hasActiveFilters ? <FilterFilledIcon /> : <FilterOutlineIcon />}
+                    {hasActiveFilters && (
+                      <span className={cx('filter-count')}>{activeFiltersCount}</span>
+                    )}
+                  </button>
                 </>
               )}
             </div>
@@ -184,7 +209,7 @@ export const TestCaseList = memo(
           </div>
         ) : (
           <>
-            {isEmpty(currentData) ? (
+            {isEmpty(testCases) ? (
               <div className={cx('no-results')}>
                 <div className={cx('no-results-message')}>
                   {searchValue
@@ -201,7 +226,7 @@ export const TestCaseList = memo(
                 fixedColumns={fixedColumns}
                 primaryColumn={primaryColumn}
                 sortableColumns={[]}
-                onToggleAllRowsSelection={handleAllSelect}
+                onToggleAllRowsSelection={handleSelectAll}
                 className={cx('test-case-table')}
                 rowClassName={cx('test-case-table-row')}
               />
@@ -210,6 +235,15 @@ export const TestCaseList = memo(
               testCase={selectedTestCase}
               isVisible={!!selectedTestCaseId}
               onClose={handleCloseSidePanel}
+            />
+            <FilterSidePanel
+              isVisible={isFilterSidePanelVisible}
+              onClose={handleCloseFilterSidePanel}
+              selectedPriorities={selectedPriorities}
+              selectedTags={selectedTags}
+              onPrioritiesChange={setSelectedPriorities}
+              onTagsChange={setSelectedTags}
+              onApply={handleApplyFilters}
             />
           </>
         )}

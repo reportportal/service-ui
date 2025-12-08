@@ -14,25 +14,4 @@
  * limitations under the License.
  */
 
-import { GET_TEST_PLANS, GET_TEST_PLAN } from './constants';
-
-export interface GetTestPlansParams {
-  offset?: string | number;
-  limit?: string | number;
-}
-
-export interface GetTestPlanParams {
-  testPlanId: string | number;
-  offset?: string | number;
-  limit?: string | number;
-}
-
-export const getTestPlansAction = (params?: GetTestPlansParams) => ({
-  type: GET_TEST_PLANS,
-  payload: params,
-});
-
-export const getTestPlanAction = (params: GetTestPlanParams) => ({
-  type: GET_TEST_PLAN,
-  payload: params,
-});
+export { FilterSidePanel } from './filterSidePanel';

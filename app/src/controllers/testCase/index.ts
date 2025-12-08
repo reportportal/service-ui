@@ -18,6 +18,7 @@ export {
   getFoldersAction,
   getAllTestCasesAction,
   getTestCaseByFolderIdAction,
+  updateFolderCounterAction,
 } from './actionCreators';
 export { testCaseSagas } from './sagas';
 export * from './constants';

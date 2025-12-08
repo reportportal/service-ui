@@ -99,7 +99,7 @@ import { fetchMembersAction } from 'controllers/members';
 import { fetchAllUsersAction } from 'controllers/instance/allUsers/actionCreators';
 import { fetchLogPageData } from 'controllers/log';
 import { fetchHistoryPageInfoAction } from 'controllers/itemsHistory';
-import { setSessionItem, updateStorageItem } from 'common/utils/storageUtils';
+import { setSessionItem, updateStorageItem, getStorageItem } from 'common/utils/storageUtils';
 import { fetchClustersAction } from 'controllers/uniqueErrors';
 import {
   GET_TEST_CASE_DETAILS,
@@ -130,7 +130,15 @@ import { DOCUMENTATION } from 'pages/inside/productVersionPage/constants';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 import { fetchOrganizationEventsDataAction } from '../controllers/instance/actionCreators';
 import { canSeeActivityOption } from 'common/utils/permissions';
-import { getTestPlansAction, getTestPlanAction, defaultQueryParams } from 'controllers/testPlan';
+import {
+  getTestPlansAction,
+  getTestPlanAction,
+  defaultQueryParams,
+  TEST_PLANS_NAMESPACE,
+  TEST_PLAN_TEST_CASES_NAMESPACE,
+  defaultTestPlanTestCasesQueryParams,
+} from 'controllers/testPlan';
+import { getRouterParams } from 'common/utils';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
   path,
@@ -432,20 +440,30 @@ const routesMap = {
     '/organizations/:organizationSlug/projects/:projectSlug/productVersions/listOfVersions/:productVersionId/:productVersionTab',
 
   [PROJECT_TEST_PLANS_PAGE]: {
-    path: '/organizations/:organizationSlug/projects/:projectSlug/testPlans',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/milestones',
     thunk: (dispatch, getState) => {
-      const { offset, limit } = getState().location?.query || defaultQueryParams;
+      const state = getState();
+      const { offset, limit } = getRouterParams({
+        namespace: TEST_PLANS_NAMESPACE,
+        defaultParams: defaultQueryParams,
+        state,
+      });
 
       dispatch(getTestPlansAction({ offset, limit }));
     },
   },
   [PROJECT_TEST_PLAN_DETAILS_PAGE]: {
-    path: '/organizations/:organizationSlug/projects/:projectSlug/testPlans/:testPlanId',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/milestones/:testPlanId',
     thunk: (dispatch, getState) => {
-      const { location } = getState();
-      const { testPlanId } = location.payload;
+      const state = getState();
+      const testPlanId = state.location?.payload?.testPlanId;
+      const { offset, limit } = getRouterParams({
+        namespace: TEST_PLAN_TEST_CASES_NAMESPACE,
+        defaultParams: defaultTestPlanTestCasesQueryParams,
+        state,
+      });
 
-      dispatch(getTestPlanAction({ testPlanId }));
+      dispatch(getTestPlanAction({ testPlanId, offset, limit }));
     },
   },
 };

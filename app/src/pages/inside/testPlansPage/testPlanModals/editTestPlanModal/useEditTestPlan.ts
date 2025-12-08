@@ -55,7 +55,7 @@ export const useEditTestPlan = () => {
         }),
       );
       dispatch(getTestPlansAction(queryParams));
-      dispatch(getTestPlanAction({ testPlanId: payload.id }));
+      dispatch(getTestPlanAction({ ...queryParams, testPlanId: payload.id }));
     } catch {
       dispatch(
         showErrorNotification({

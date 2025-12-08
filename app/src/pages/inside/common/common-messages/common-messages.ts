@@ -73,4 +73,16 @@ export const commonMessages = defineMessages({
     id: 'Common.noTagsAdded',
     defaultMessage: 'No tags added',
   },
+  cancel: {
+    id: 'Common.cancel',
+    defaultMessage: 'Cancel',
+  },
+  apply: {
+    id: 'Common.apply',
+    defaultMessage: 'Apply',
+  },
+  priority: {
+    id: 'Common.priority',
+    defaultMessage: 'Priority',
+  },
 });

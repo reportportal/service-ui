@@ -35,6 +35,7 @@ const reducer = combineReducers({
   testPlanFolders: fetchReducer(TEST_PLAN_FOLDERS_NAMESPACE, { initialState: null }),
   testPlanTestCases: fetchReducer(TEST_PLAN_TEST_CASES_NAMESPACE, { initialState: null }),
   isLoadingActive: loadingReducer(ACTIVE_TEST_PLAN_NAMESPACE),
+  isLoadingTestPlanTestCases: loadingReducer(TEST_PLAN_TEST_CASES_NAMESPACE),
 });
 
 export const testPlanReducer = createPageScopedReducer(reducer, [

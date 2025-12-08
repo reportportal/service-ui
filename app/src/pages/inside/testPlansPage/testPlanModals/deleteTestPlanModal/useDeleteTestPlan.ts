@@ -16,7 +16,7 @@
 
 import { useDispatch, useSelector } from 'react-redux';
 import { noop } from 'es-toolkit';
-import { VoidFn } from '@reportportal/ui-kit/common';
+import { VoidFn } from '@reportportal/ui-kit/common/types/commonTypes';
 import { push } from 'redux-first-router';
 
 import { URLS } from 'common/urls';
@@ -66,7 +66,7 @@ export const useDeleteTestPlan = ({ onSuccess = noop }: UseDeleteTestPlanOptions
 
       if (isSingleItemOnTheLastPage) {
         const offset = Number(queryParams.offset) - Number(queryParams.limit);
-        const url = `/organizations/${organizationSlug}/projects/${projectSlug}/testPlans?offset=${offset}&limit=${queryParams.limit}`;
+        const url = `/organizations/${organizationSlug}/projects/${projectSlug}/milestones?offset=${offset}&limit=${queryParams.limit}`;
 
         push(url);
       } else {

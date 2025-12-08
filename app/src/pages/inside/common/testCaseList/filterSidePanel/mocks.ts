@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-// Default number of visible lines when isShowAllView is true
-export const DEFAULT_VISIBLE_LINES = 3;
-
-// Tag item dimensions
-export const TAG_LINE_HEIGHT = 22; // px
-export const TAG_GAP_HEIGHT = 8; // px between lines
-
-// Timing constants
-export const IMMEDIATE_DELAY = 0; // ms - for show-all-view mode
-export const FONT_LOADING_DELAY = 100; // ms - for width-based mode
-
-// Layout tolerance
-export const OFFSET_TOLERANCE = 20; // px - tolerance for line height calculations
+export const MOCK_TAG_OPTIONS = [
+  { value: 'smoke', label: 'smoke' },
+  { value: 'regression', label: 'regression' },
+  { value: 'ui', label: 'ui' },
+  { value: 'api', label: 'api' },
+  { value: 'backend', label: 'backend' },
+  { value: 'frontend', label: 'frontend' },
+  { value: 'mobile', label: 'mobile' },
+  { value: 'integration', label: 'integration' },
+];

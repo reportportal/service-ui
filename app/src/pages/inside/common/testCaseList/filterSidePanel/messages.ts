@@ -14,25 +14,23 @@
  * limitations under the License.
  */
 
-import { GET_TEST_PLANS, GET_TEST_PLAN } from './constants';
+import { defineMessages } from 'react-intl';
 
-export interface GetTestPlansParams {
-  offset?: string | number;
-  limit?: string | number;
-}
-
-export interface GetTestPlanParams {
-  testPlanId: string | number;
-  offset?: string | number;
-  limit?: string | number;
-}
-
-export const getTestPlansAction = (params?: GetTestPlansParams) => ({
-  type: GET_TEST_PLANS,
-  payload: params,
-});
-
-export const getTestPlanAction = (params: GetTestPlanParams) => ({
-  type: GET_TEST_PLAN,
-  payload: params,
+export const messages = defineMessages({
+  filterTitle: {
+    id: 'FilterSidePanel.filterTitle',
+    defaultMessage: 'Filter',
+  },
+  clearAllFilters: {
+    id: 'FilterSidePanel.clearAllFilters',
+    defaultMessage: 'Clear all filters',
+  },
+  selectPriority: {
+    id: 'FilterSidePanel.selectPriority',
+    defaultMessage: 'Select priority level',
+  },
+  selectTags: {
+    id: 'FilterSidePanel.selectTags',
+    defaultMessage: 'Search and select tags to filter',
+  },
 });

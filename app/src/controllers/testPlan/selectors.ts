@@ -30,6 +30,7 @@ export interface TestPlanState {
   testPlanFolders?: TestPlanFoldersDto | null;
   testPlanTestCases?: TestPlanTestCaseDto | null;
   isLoadingActive?: boolean;
+  isLoadingTestPlanTestCases?: boolean;
 }
 
 interface RootState {
@@ -58,6 +59,9 @@ export const EMPTY_TEST_CASES: ExtendedTestCase[] = [];
 
 export const testPlanTestCasesSelector = (state: RootState) =>
   testPlanSelector(state).testPlanTestCases?.content || EMPTY_TEST_CASES;
+
+export const testPlanTestCasesPageSelector = (state: RootState) =>
+  testPlanSelector(state).testPlanTestCases?.page;
 
 export const testPlanTransformedFoldersSelector = (state: RootState) =>
   transformFoldersToDisplay(testPlanFoldersSelector(state));

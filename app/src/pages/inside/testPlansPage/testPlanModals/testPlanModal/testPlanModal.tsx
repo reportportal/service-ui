@@ -104,7 +104,7 @@ const TestPlanModalComponent = ({
       <div className={cx('test-plan-modal__content-wrapper')}>
         <form onSubmit={handleSubmit(onSubmit) as (event: FormEvent) => void}>
           <div className={cx('test-plan-modal__container')}>
-            <FieldProvider name="name" placeholder={formatMessage(messages.enterTestPlanName)}>
+            <FieldProvider name="name" placeholder={formatMessage(messages.enterMilestoneName)}>
               <FieldErrorHint provideHint={false}>
                 <FieldText
                   label={formatMessage(COMMON_LOCALE_KEYS.NAME)}
@@ -115,7 +115,7 @@ const TestPlanModalComponent = ({
             </FieldProvider>
             <FieldProvider
               name="description"
-              placeholder={formatMessage(messages.addTestPlanDescription)}
+              placeholder={formatMessage(messages.addMilestoneDescription)}
             >
               <FieldErrorHint provideHint={false}>
                 <FieldTextFlex label={formatMessage(commonMessages.description)} value="" />
