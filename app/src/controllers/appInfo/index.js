@@ -38,6 +38,7 @@ export {
   serverSidebarLinksSelector,
   importantLaunchesEnabledSelector,
   personalOrganizationsSelector,
+  tmsEnabledSelector,
 } from './selectors';
 export { serverSettingsSagas } from './sagas';
 export {
