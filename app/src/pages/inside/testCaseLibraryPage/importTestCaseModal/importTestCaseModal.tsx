@@ -107,11 +107,8 @@ export const ImportTestCaseModal = ({
   const isWithinSize = (file: File) => file.size <= MAX_FILE_SIZE_BYTES;
 
   const isRootTarget = target === 'root';
-
   const isExistingTarget = target === 'existing';
-
   const hasExistingOptions = !isEmpty(existingOptions);
-
   const hasFolderIdFromUrl = folderIdFromUrl != null;
 
   const handleImport = async (formValues: ImportTestCaseFormValues) => {
@@ -166,13 +163,13 @@ export const ImportTestCaseModal = ({
   };
 
   const handleRemove = (fileId: string) => {
-    setAttachedFiles((prev) => prev.filter((f) => f.id !== fileId));
+    setAttachedFiles((prevFiles) => prevFiles.filter(({ id }) => id !== fileId));
     setFile(null);
   };
 
-  const filesWithError: AttachmentFile[] = attachedFiles.map((item) => ({
-    ...item,
-    customErrorMessage: error ?? item.customErrorMessage,
+  const filesWithError: AttachmentFile[] = attachedFiles.map((file) => ({
+    ...file,
+    customErrorMessage: error ?? file.customErrorMessage,
   }));
 
   const handleDownload = () => {
@@ -215,7 +212,7 @@ export const ImportTestCaseModal = ({
       );
     }
 
-    if (target === 'existing' && hasExistingOptions) {
+    if (isExistingTarget && hasExistingOptions) {
       return (
         <>
           <label className={cx('import-test-case-modal__label')}>
@@ -303,7 +300,6 @@ export const ImportTestCaseModal = ({
               <div className={cx('import-test-case-modal__location-title')}>
                 {formatMessage(messages.specifyLocation)}
               </div>
-
               <div className={cx('import-test-case-modal__segmented')}>
                 <button
                   type="button"
@@ -315,7 +311,6 @@ export const ImportTestCaseModal = ({
                 >
                   {formatMessage(messages.createNewRootFolder)}
                 </button>
-
                 <button
                   type="button"
                   className={cx('import-test-case-modal__segmented-btn', {
