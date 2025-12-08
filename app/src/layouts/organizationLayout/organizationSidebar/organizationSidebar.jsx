@@ -103,9 +103,7 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
         name: extension.name,
         component: <ExtensionLoader extension={extension} />,
         onClick: (isSidebarCollapsed) =>
-          itemName
-            ? onClickButton({ itemName, isSidebarCollapsed })
-            : onClickNavBtn(isSidebarCollapsed),
+          itemName ? onClickButton({ itemName, isSidebarCollapsed }) : onClickNavBtn(),
       });
     });
 

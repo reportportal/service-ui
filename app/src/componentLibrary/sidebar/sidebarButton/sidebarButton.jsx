@@ -33,7 +33,7 @@ export const SidebarButton = ({
   iconColors,
 }) => {
   const { hover, pressed } = iconColors;
-  const styles = { '--icon-color-hover': hover, '--icon-color-pressed': pressed };
+  const inlineStyles = { '--icon-color-hover': hover, '--icon-color-pressed': pressed };
 
   const linkBody = (
     <>
@@ -53,12 +53,12 @@ export const SidebarButton = ({
           className={cx('sidebar-button')}
           activeClassName={cx('active')}
           onClick={onClick}
-          style={styles}
+          style={inlineStyles}
         >
           {linkBody}
         </NavLink>
       ) : (
-        <Link to={link} className={cx('sidebar-button')} onClick={onClick} style={styles}>
+        <Link to={link} className={cx('sidebar-button')} onClick={onClick} style={inlineStyles}>
           {linkBody}
         </Link>
       )}
@@ -70,7 +70,7 @@ SidebarButton.propTypes = {
   icon: PropTypes.element.isRequired,
   onClick: PropTypes.func.isRequired,
   message: PropTypes.string.isRequired,
-  link: PropTypes.string.isRequired,
+  link: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired,
   isNav: PropTypes.bool,
   secondaryMessage: PropTypes.string,
   iconColors: PropTypes.shape({
