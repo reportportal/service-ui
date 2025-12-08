@@ -67,7 +67,7 @@ export const SidebarButton = ({
 };
 
 SidebarButton.propTypes = {
-  icon: PropTypes.element.isRequired,
+  icon: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
   message: PropTypes.string.isRequired,
   link: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired,
