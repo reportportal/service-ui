@@ -24,6 +24,7 @@ import {
   EXTENSION_TYPE_ORGANIZATION_SETTINGS_TAB,
   EXTENSION_TYPE_ADMIN_PAGE,
   EXTENSION_TYPE_SIDEBAR_COMPONENT,
+  EXTENSION_TYPE_ORGANIZATION_SIDEBAR_COMPONENT,
   EXTENSION_TYPE_ADMIN_SIDEBAR_COMPONENT,
   EXTENSION_TYPE_LAUNCH_ITEM_COMPONENT,
   EXTENSION_TYPE_INTEGRATION_FORM_FIELDS,
@@ -101,6 +102,8 @@ export const uiExtensionAdminPagesSelector = createExtensionSelectorByExtensionP
 export const uiExtensionSidebarComponentsSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_SIDEBAR_COMPONENT,
 ]);
+export const uiExtensionOrganizationSidebarComponentsSelector =
+  createExtensionSelectorByExtensionPoints([EXTENSION_TYPE_ORGANIZATION_SIDEBAR_COMPONENT]);
 export const uiExtensionAdminSidebarComponentsSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_ADMIN_SIDEBAR_COMPONENT,
 ]);
