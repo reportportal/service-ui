@@ -35,3 +35,4 @@ export const EPAM = 'EPAM';
 export const SAAS = 'SaaS';
 export const DEDICATED = 'Dedicated';
 export const ALLOW_DELETE_ACCOUNT = 'allow_delete_account';
+export const TMS_ENABLED_KEY = 'tms_enabled';

@@ -31,6 +31,7 @@ import {
   INSTANCE_TYPE,
   NOT_PROVIDED,
   ALLOW_DELETE_ACCOUNT,
+  TMS_ENABLED_KEY,
   SSO_USERS_ONLY_KEY,
   SERVER_SESSION_EXPIRATION_KEY,
   SERVER_SIDEBAR_LINKS_KEY,
@@ -84,6 +85,7 @@ export const instanceTypeSelector = (state) =>
   environmentSelector(state)[INSTANCE_TYPE] || NOT_PROVIDED;
 export const allowDeleteAccountSelector = (state) =>
   environmentSelector(state)[ALLOW_DELETE_ACCOUNT] === 'true';
+export const tmsEnabledSelector = (state) => environmentSelector(state)[TMS_ENABLED_KEY] === 'true';
 export const baseEventParametersSelector = createSelector(
   instanceIdSelector,
   apiBuildVersionSelector,
