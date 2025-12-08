@@ -26,7 +26,11 @@ import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFol
 import { ExpandedOptions } from '../../../common/expandedOptions';
 import { AllTestCasesPage } from './allTestCasesPage';
 
-export const TestPlanFolders = () => {
+interface TestPlanFoldersProps {
+  isLoading?: boolean;
+}
+
+export const TestPlanFolders = ({ isLoading = false }: TestPlanFoldersProps) => {
   const [activeFolder, setActiveFolder] = useState<number | null>(null);
   const folders = useSelector(testPlanTransformedFoldersSelector);
   const testCases = useSelector(testPlanTestCasesSelector);
@@ -53,7 +57,7 @@ export const TestPlanFolders = () => {
       <AllTestCasesPage
         testCases={testCases}
         searchValue=""
-        loading={false}
+        loading={isLoading}
         instanceKey={INSTANCE_KEYS.TEST_PLAN}
       />
     </ExpandedOptions>

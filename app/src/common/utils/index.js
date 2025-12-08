@@ -68,3 +68,4 @@ export { delay, delayedPut } from './delay';
 export { createClassnames } from './createClassnames';
 export { commonValidators } from './validation';
 export { copyToClipboard } from './clipboard';
+export { getRouterParams } from './getRouterParams';
