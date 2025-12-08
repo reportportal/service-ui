@@ -88,6 +88,7 @@ import {
   userRolesSelector,
   ORGANIZATION_SETTINGS_TAB_PAGE,
   ORGANIZATION_PROJECTS_PAGE,
+  urlOrganizationSlugSelector,
 } from 'controllers/pages';
 import { attributesArray, isNotEmptyArray } from 'common/utils/validation/validate';
 import {
@@ -363,6 +364,7 @@ export const createImportProps = (pluginName) => ({
     publicPluginsSelector,
     querySelector,
     activeOrganizationSelector,
+    urlOrganizationSlugSelector,
   },
   icons: {
     PlusIcon,
