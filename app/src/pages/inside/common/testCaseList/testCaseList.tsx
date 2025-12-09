@@ -30,7 +30,6 @@ import { TestCaseNameCell } from './testCaseNameCell';
 import { TestCaseExecutionCell } from './testCaseExecutionCell';
 import { TestCaseSidePanel } from './testCaseSidePanel';
 import { FilterSidePanel } from './filterSidePanel';
-import { DEFAULT_CURRENT_PAGE } from './configUtils';
 import { messages } from './messages';
 
 import styles from './testCaseList.scss';
@@ -41,8 +40,6 @@ const cx = createClassnames(styles);
 interface TestCaseListProps {
   testCases: ExtendedTestCase[];
   loading?: boolean;
-  currentPage?: number;
-  itemsPerPage?: number;
   folderTitle: string;
   searchValue?: string;
   selectedRowIds: (number | string)[];
@@ -57,11 +54,9 @@ export const TestCaseList = memo(
   ({
     testCases,
     loading = false,
-    currentPage = DEFAULT_CURRENT_PAGE,
     selectedRowIds,
     selectedRows,
     handleSelectedRows,
-    itemsPerPage,
     searchValue = '',
     onSearchChange,
     folderTitle,
@@ -78,17 +73,6 @@ export const TestCaseList = memo(
 
     const activeFiltersCount = selectedPriorities.length + selectedTags.length;
     const hasActiveFilters = activeFiltersCount > 0;
-
-    let currentData: ExtendedTestCase[];
-
-    if (currentPage && itemsPerPage) {
-      const startIndex = (currentPage - 1) * itemsPerPage;
-      const endIndex = startIndex + itemsPerPage;
-
-      currentData = testCases.slice(startIndex, endIndex);
-    } else {
-      currentData = testCases;
-    }
 
     const handleCloseSidePanel = () => {
       setSelectedTestCaseId(null);
@@ -123,7 +107,7 @@ export const TestCaseList = memo(
     };
 
     const handleSelectAll = () => {
-      const currentPageTestCaseIds = currentData.map(({ id }) => id);
+      const currentPageTestCaseIds = testCases.map(({ id }) => id);
       const isAllCurrentPageSelected = currentPageTestCaseIds.every((testCaseId) =>
         selectedRowIds.includes(testCaseId),
       );
@@ -132,7 +116,7 @@ export const TestCaseList = memo(
         ? selectedRows.filter((row) => !currentPageTestCaseIds.includes(row.id))
         : [
             ...selectedRows,
-            ...currentData
+            ...testCases
               .filter((testCase) => !selectedRowIds.includes(testCase.id))
               .map((testCase) => ({ id: testCase.id, folderId: testCase.testFolder.id })),
           ];
@@ -142,7 +126,7 @@ export const TestCaseList = memo(
 
     const selectedTestCase = testCases.find((testCase) => testCase.id === selectedTestCaseId);
 
-    const tableData = currentData.map((testCase) => ({
+    const tableData = testCases.map((testCase) => ({
       id: testCase.id,
       name: {
         content: testCase.name,
@@ -225,7 +209,7 @@ export const TestCaseList = memo(
           </div>
         ) : (
           <>
-            {isEmpty(currentData) ? (
+            {isEmpty(testCases) ? (
               <div className={cx('no-results')}>
                 <div className={cx('no-results-message')}>
                   {searchValue

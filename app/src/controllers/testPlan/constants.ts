@@ -29,6 +29,10 @@ export const defaultQueryParams = {
   offset: 0,
 };
 export const defaultSortParam = 'createdDate,desc';
+export const defaultTestPlanTestCasesQueryParams = {
+  limit: 50,
+  offset: 0,
+};
 
 export type TestPlanDto = {
   id: number;

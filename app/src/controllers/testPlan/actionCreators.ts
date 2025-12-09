@@ -17,12 +17,14 @@
 import { GET_TEST_PLANS, GET_TEST_PLAN } from './constants';
 
 export interface GetTestPlansParams {
-  offset?: number;
-  limit?: number;
+  offset?: string | number;
+  limit?: string | number;
 }
 
 export interface GetTestPlanParams {
   testPlanId: string | number;
+  offset?: string | number;
+  limit?: string | number;
 }
 
 export const getTestPlansAction = (params?: GetTestPlansParams) => ({
