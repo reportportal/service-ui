@@ -86,6 +86,9 @@ import {
   payloadSelector,
   activeProjectRoleSelector,
   userRolesSelector,
+  ORGANIZATION_SETTINGS_TAB_PAGE,
+  ORGANIZATION_PROJECTS_PAGE,
+  urlOrganizationSlugSelector,
 } from 'controllers/pages';
 import { attributesArray, isNotEmptyArray } from 'common/utils/validation/validate';
 import {
@@ -154,7 +157,7 @@ import { AbsRelTime } from 'components/main/absRelTime';
 import { StripedMessage } from 'components/main/stripedMessage';
 import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
 import { DependentFieldsControl } from 'components/main/dependentFieldsControl';
-import { GeneralTab } from 'pages/inside/projectSettingsPageContainer/generalTab';
+import { GeneralTab } from 'pages/organization/organizationSettingsPage/content/generalTab';
 import { RuleList, ItemContent } from 'components/main/ruleList';
 import { RuleListHeader } from 'components/main/ruleListHeader';
 import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
@@ -196,6 +199,7 @@ import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { PlainTable } from 'componentLibrary/plainTable';
 import { ProjectName } from 'pages/organization/organizationProjectsPage/projectsListTable/projectName';
 import { SidebarButton } from 'componentLibrary/sidebar/sidebarButton';
+import { activeOrganizationSelector } from 'controllers/organization';
 
 const BUTTONS = {
   GhostButton,
@@ -320,6 +324,8 @@ export const createImportProps = (pluginName) => ({
     STOPPED,
     SECRET_FIELDS_KEY,
     BTS_FIELDS_FORM,
+    ORGANIZATION_SETTINGS_TAB_PAGE,
+    ORGANIZATION_PROJECTS_PAGE,
   },
   actions: {
     showModalAction,
@@ -357,6 +363,8 @@ export const createImportProps = (pluginName) => ({
     launchSelector,
     publicPluginsSelector,
     querySelector,
+    activeOrganizationSelector,
+    urlOrganizationSlugSelector,
   },
   icons: {
     PlusIcon,

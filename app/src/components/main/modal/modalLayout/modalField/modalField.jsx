@@ -36,6 +36,7 @@ export const ModalField = ({
   noMinHeight,
   labelTip,
   middleBaseline,
+  required,
 }) => (
   <div className={cx('modal-field', className, { 'middle-baseline': middleBaseline })}>
     {label && (
@@ -45,6 +46,7 @@ export const ModalField = ({
         alignLeft={alignLeft}
         noMinHeight={noMinHeight}
         labelTip={labelTip}
+        required={required}
       />
     )}
     <div className={cx('modal-field-content')}>
@@ -64,6 +66,7 @@ ModalField.propTypes = {
   noMinHeight: PropTypes.bool,
   labelTip: PropTypes.string,
   middleBaseline: PropTypes.bool,
+  required: PropTypes.bool,
 };
 ModalField.defaultProps = {
   className: '',
@@ -76,9 +79,10 @@ ModalField.defaultProps = {
   noMinHeight: false,
   labelTip: '',
   middleBaseline: false,
+  required: false,
 };
 
-const Label = ({ label, labelWidth, alignLeft, noMinHeight, labelTip }) => (
+const Label = ({ label, labelWidth, alignLeft, noMinHeight, labelTip, required }) => (
   <div
     className={cx('modal-field-label', {
       'no-min-height': label === ' ' || noMinHeight,
@@ -86,12 +90,13 @@ const Label = ({ label, labelWidth, alignLeft, noMinHeight, labelTip }) => (
     })}
     style={{ width: labelWidth || 'unset' }}
   >
-    <span className={cx('asterisk')}>{label}</span>
+    <span>{label}</span>
     {labelTip && (
       <div className={cx('modal-field-label-icon')} title={labelTip}>
         {Parser(InfoIcon)}
       </div>
     )}
+    {required && <span className={cx('asterisk')}>*</span>}
   </div>
 );
 Label.propTypes = {
@@ -100,6 +105,7 @@ Label.propTypes = {
   alignLeft: PropTypes.bool,
   noMinHeight: PropTypes.bool,
   labelTip: PropTypes.string,
+  required: PropTypes.bool,
 };
 Label.defaultProps = {
   label: '',
@@ -107,4 +113,5 @@ Label.defaultProps = {
   alignLeft: false,
   noMinHeight: false,
   labelTip: '',
+  required: false,
 };

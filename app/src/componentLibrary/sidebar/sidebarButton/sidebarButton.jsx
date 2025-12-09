@@ -17,26 +17,65 @@
 import { PropTypes } from 'prop-types';
 import classNames from 'classnames/bind';
 import { NavLink } from 'components/main/navLink';
+import Link from 'redux-first-router-link';
 import Parser from 'html-react-parser';
 import styles from './sidebarButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const SidebarButton = ({ icon, onClick, message, link }) => (
-  <NavLink
-    to={link}
-    className={cx('sidebar-button')}
-    activeClassName={cx('active')}
-    onClick={onClick}
-  >
-    <i className={cx('btn-icon')}>{Parser(icon)}</i>
-    <span className={cx('title')}>{message}</span>
-  </NavLink>
-);
+export const SidebarButton = ({
+  icon,
+  onClick,
+  message,
+  link,
+  isNav,
+  secondaryMessage,
+  variant,
+}) => {
+  const buttonClassName = cx('sidebar-button', `variant-${variant}`);
+
+  const linkBody = (
+    <>
+      <i className={cx('btn-icon')}>{Parser(icon)}</i>
+      <div className={cx('title-container')}>
+        <span className={cx('title')}>{message}</span>
+        {secondaryMessage && <span className={cx('sub-title')}>{secondaryMessage}</span>}
+      </div>
+    </>
+  );
+
+  return (
+    <>
+      {isNav ? (
+        <NavLink
+          to={link}
+          className={buttonClassName}
+          activeClassName={cx('active')}
+          onClick={onClick}
+        >
+          {linkBody}
+        </NavLink>
+      ) : (
+        <Link to={link} className={buttonClassName} onClick={onClick}>
+          {linkBody}
+        </Link>
+      )}
+    </>
+  );
+};
 
 SidebarButton.propTypes = {
-  icon: PropTypes.element.isRequired,
+  icon: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
   message: PropTypes.string.isRequired,
-  link: PropTypes.string.isRequired,
+  link: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired,
+  isNav: PropTypes.bool,
+  secondaryMessage: PropTypes.string,
+  variant: PropTypes.oneOf(['default', 'error', 'warning']),
+};
+
+SidebarButton.defaultProps = {
+  isNav: true,
+  secondaryMessage: '',
+  variant: 'default',
 };

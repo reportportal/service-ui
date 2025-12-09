@@ -265,7 +265,7 @@ const routesMap = {
   ),
 
   [ORGANIZATION_SETTINGS_TAB_PAGE]: {
-    path: `/organizations/:organizationSlug/settings/:settingsTab`,
+    path: `/organizations/:organizationSlug/settings/:settingsTab/:subTab*`,
     thunk: (dispatch, getState) => {
       const {
         location: { payload },

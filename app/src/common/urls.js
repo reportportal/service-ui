@@ -335,6 +335,8 @@ export const URLS = {
   pluginCommandCommon: (projectKey, pluginName, command) =>
     `${urlBase}plugin/${projectKey}/${pluginName}/common/${command}`,
   pluginCommandPublic: (pluginName, command) => `${urlBase}plugin/public/${pluginName}/${command}`,
+  pluginsCommandsCommon: (pluginName, command) =>
+    `${urlCommonBase}plugins/${pluginName}/commands/${command}`,
   globalIntegrationsByPluginName: (pluginName = '') =>
     `${urlBase}integration/global/all/${pluginName}`,
   projectIntegrationByIdCommand: (projectKey, integrationId, command) =>

@@ -66,6 +66,7 @@ export {
   uiExtensionOrganizationSettingsTabsSelector,
   uiExtensionAdminPagesSelector,
   uiExtensionSidebarComponentsSelector,
+  uiExtensionOrganizationSidebarComponentsSelector,
   uiExtensionLaunchItemComponentsSelector,
   uiExtensionIntegrationSettingsSelector,
   uiExtensionIntegrationFormFieldsSelector,
