@@ -35,7 +35,7 @@ interface FolderProps {
   setAllTestCases: () => void;
   instanceKey: INSTANCE_KEYS;
   expandedIds: number[];
-  onToggleFolder: (id: number) => void;
+  onToggleFolder: (folder: TransformedFolder) => void;
 }
 
 export const Folder = ({
@@ -62,10 +62,13 @@ export const Folder = ({
     setAreToolsShown(areToolsOpen || isBlockHovered);
   }, [areToolsOpen, isBlockHovered]);
 
-  const handleChevronClick = useCallback((event: ReactMouseEvent<SVGSVGElement, MouseEvent>) => {
-    event.stopPropagation();
-    onToggleFolder(folder.id);
-  }, []);
+  const handleChevronClick = useCallback(
+    (event: ReactMouseEvent<SVGSVGElement, MouseEvent>) => {
+      event.stopPropagation();
+      onToggleFolder(folder);
+    },
+    [folder, onToggleFolder],
+  );
 
   const handleFolderTitleClick = useCallback(
     (event: ReactMouseEvent<HTMLDivElement, MouseEvent>) => {

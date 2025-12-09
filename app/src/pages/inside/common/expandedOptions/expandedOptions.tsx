@@ -41,6 +41,16 @@ const messages = defineMessages({
   },
 });
 
+const getFolderAndDescendantIds = (folder: TransformedFolder): number[] => {
+  let ids = [folder.id];
+  if (folder.folders && folder.folders.length > 0) {
+    folder.folders.forEach((subFolder) => {
+      ids = ids.concat(getFolderAndDescendantIds(subFolder));
+    });
+  }
+  return ids;
+};
+
 interface ExpandedOptionsProps {
   folders: TransformedFolder[];
   activeFolder: number | null;
@@ -71,10 +81,17 @@ export const ExpandedOptions = ({
     }
   });
 
-  const onToggleFolder = useCallback((folderId: number) => {
+  const onToggleFolder = useCallback((folder: TransformedFolder) => {
     setExpandedIds((prevIds) => {
-      const isExpanded = prevIds.includes(folderId);
-      const newIds = isExpanded ? prevIds.filter((id) => id !== folderId) : [...prevIds, folderId];
+      const isExpanded = prevIds.includes(folder.id);
+
+      let newIds: number[];
+      if (isExpanded) {
+        const idsToRemove = getFolderAndDescendantIds(folder);
+        newIds = prevIds.filter((id) => !idsToRemove.includes(id));
+      } else {
+        newIds = [...prevIds, folder.id];
+      }
 
       localStorage.setItem(STORAGE_KEY, JSON.stringify(newIds));
       return newIds;
