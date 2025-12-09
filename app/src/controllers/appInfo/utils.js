@@ -26,7 +26,7 @@ export const getTmsOverride = () => {
       return Boolean(override);
     }
   } catch (e) {
-    // localStorage может быть недоступен или невалидный JSON
+    return null;
   }
   return null;
 };

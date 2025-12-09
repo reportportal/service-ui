@@ -40,9 +40,7 @@ export const ManualLaunchesPage = () => {
   const { fullLaunches, isLoading, refetch } = useManualLaunches();
 
   const handleRefresh = useCallback(() => {
-    refetch().catch(() => {
-      // Error is already handled in fetchManualLaunches
-    });
+    refetch().catch(() => {});
   }, [refetch]);
 
   return (
