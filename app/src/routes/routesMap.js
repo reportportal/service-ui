@@ -100,7 +100,7 @@ import { fetchMembersAction } from 'controllers/members';
 import { fetchAllUsersAction } from 'controllers/instance/allUsers/actionCreators';
 import { fetchLogPageData } from 'controllers/log';
 import { fetchHistoryPageInfoAction } from 'controllers/itemsHistory';
-import { setSessionItem, updateStorageItem, getStorageItem } from 'common/utils/storageUtils';
+import { setSessionItem, updateStorageItem } from 'common/utils/storageUtils';
 import { fetchClustersAction } from 'controllers/uniqueErrors';
 import {
   GET_TEST_CASE_DETAILS,
