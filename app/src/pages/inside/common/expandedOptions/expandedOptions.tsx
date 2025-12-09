@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ReactNode } from 'react';
+import { ReactNode, useState, useCallback } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { BaseIconButton, SearchIcon } from '@reportportal/ui-kit';
 
@@ -28,6 +28,7 @@ import { Folder } from './folder';
 import styles from './expandedOptions.scss';
 
 const cx = createClassnames(styles);
+const STORAGE_KEY = 'expanded_folders_ids';
 
 const messages = defineMessages({
   allTestCases: {
@@ -60,6 +61,25 @@ export const ExpandedOptions = ({
   children,
 }: ExpandedOptionsProps) => {
   const { formatMessage } = useIntl();
+
+  const [expandedIds, setExpandedIds] = useState<number[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? (JSON.parse(saved) as number[]) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const onToggleFolder = useCallback((folderId: number) => {
+    setExpandedIds((prevIds) => {
+      const isExpanded = prevIds.includes(folderId);
+      const newIds = isExpanded ? prevIds.filter((id) => id !== folderId) : [...prevIds, folderId];
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newIds));
+      return newIds;
+    });
+  }, []);
 
   const totalTestCases = folders.reduce((total: number, folder: TransformedFolder): number => {
     const countFolderTestCases = (folder: TransformedFolder): number => {
@@ -117,6 +137,8 @@ export const ExpandedOptions = ({
                     setActiveFolder={onFolderClick}
                     setAllTestCases={setAllTestCases}
                     instanceKey={instanceKey}
+                    expandedIds={expandedIds}
+                    onToggleFolder={onToggleFolder}
                   />
                 ))}
               </ul>

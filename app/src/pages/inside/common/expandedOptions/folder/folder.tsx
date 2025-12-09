@@ -34,6 +34,8 @@ interface FolderProps {
   setActiveFolder: (id: number) => void;
   setAllTestCases: () => void;
   instanceKey: INSTANCE_KEYS;
+  expandedIds: number[];
+  onToggleFolder: (id: number) => void;
 }
 
 export const Folder = ({
@@ -42,8 +44,10 @@ export const Folder = ({
   setAllTestCases,
   activeFolder,
   instanceKey,
+  expandedIds,
+  onToggleFolder,
 }: FolderProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const isOpen = expandedIds.includes(folder.id);
   const [areToolsShown, setAreToolsShown] = useState(false);
   const [areToolsOpen, setAreToolsOpen] = useState(false);
   const [isBlockHovered, setIsBlockHovered] = useState(false);
@@ -60,7 +64,7 @@ export const Folder = ({
 
   const handleChevronClick = useCallback((event: ReactMouseEvent<SVGSVGElement, MouseEvent>) => {
     event.stopPropagation();
-    setIsOpen((prevState) => !prevState);
+    onToggleFolder(folder.id);
   }, []);
 
   const handleFolderTitleClick = useCallback(
@@ -137,6 +141,8 @@ export const Folder = ({
               setActiveFolder={setActiveFolder}
               setAllTestCases={setAllTestCases}
               instanceKey={instanceKey}
+              expandedIds={expandedIds}
+              onToggleFolder={onToggleFolder}
             />
           ))}
         </ul>
