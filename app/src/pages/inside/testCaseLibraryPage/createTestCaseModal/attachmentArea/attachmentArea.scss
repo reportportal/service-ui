@@ -118,3 +118,18 @@
 .dropzone-wrapper {
   width: 100%;
 }
+
+.drag-handle {
+  cursor: grab;
+  touch-action: none;
+  transition: transform 0.15s ease;
+
+  &:active,
+  &--active {
+    cursor: grabbing;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
