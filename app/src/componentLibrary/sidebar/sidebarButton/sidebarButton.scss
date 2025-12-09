@@ -70,7 +70,7 @@
     }
 
     svg path {
-      fill: var(--icon-color-hover, var(--rp-ui-base-bg-000));
+      fill: var(--rp-ui-base-bg-000);
     }
   }
 
@@ -82,7 +82,7 @@
     }
 
     svg path {
-      fill: var(--icon-color-pressed, var(--rp-ui-base-dark-topaz-pressed));
+      fill: var(--rp-ui-base-dark-topaz-pressed);
     }
   }
 
@@ -97,6 +97,34 @@
 
     .title {
       color: var(--rp-ui-base-dark-topaz-text);
+    }
+  }
+
+  &.variant-error {
+    svg path {
+      fill: var(--rp-ui-base-a-red-400);
+    }
+
+    &:hover svg path {
+      fill: var(--rp-ui-base-a-red-200);
+    }
+
+    &:active svg path {
+      fill: var(--rp-ui-base-a-raspberry-300);
+    }
+  }
+
+  &.variant-warning {
+    svg path {
+      fill: var(--rp-ui-base-a-yellow-600);
+    }
+
+    &:hover svg path {
+      fill: var(--rp-ui-base-a-yellow-300);
+    }
+
+    &:active svg path {
+      fill: var(--rp-ui-base-a-yellow-700);
     }
   }
 }
