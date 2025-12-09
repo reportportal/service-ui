@@ -95,7 +95,9 @@ export const useManualLaunches = () => {
   }, [projectKey]);
 
   useEffect(() => {
-    void fetchManualLaunches();
+    fetchManualLaunches().catch(() => {
+      // Error is already handled in fetchManualLaunches
+    });
   }, [fetchManualLaunches]);
 
   return {
