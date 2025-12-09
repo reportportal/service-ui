@@ -30,10 +30,9 @@ export const SidebarButton = ({
   link,
   isNav,
   secondaryMessage,
-  iconColors,
+  variant,
 }) => {
-  const { hover, pressed } = iconColors;
-  const inlineStyles = { '--icon-color-hover': hover, '--icon-color-pressed': pressed };
+  const buttonClassName = cx('sidebar-button', `variant-${variant}`);
 
   const linkBody = (
     <>
@@ -50,15 +49,14 @@ export const SidebarButton = ({
       {isNav ? (
         <NavLink
           to={link}
-          className={cx('sidebar-button')}
+          className={buttonClassName}
           activeClassName={cx('active')}
           onClick={onClick}
-          style={inlineStyles}
         >
           {linkBody}
         </NavLink>
       ) : (
-        <Link to={link} className={cx('sidebar-button')} onClick={onClick} style={inlineStyles}>
+        <Link to={link} className={buttonClassName} onClick={onClick}>
           {linkBody}
         </Link>
       )}
@@ -73,17 +71,11 @@ SidebarButton.propTypes = {
   link: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired,
   isNav: PropTypes.bool,
   secondaryMessage: PropTypes.string,
-  iconColors: PropTypes.shape({
-    hover: PropTypes.string,
-    pressed: PropTypes.string,
-  }),
+  variant: PropTypes.oneOf(['default', 'error', 'warning']),
 };
 
 SidebarButton.defaultProps = {
   isNav: true,
   secondaryMessage: '',
-  iconColors: {
-    hover: '',
-    pressed: '',
-  },
+  variant: 'default',
 };
