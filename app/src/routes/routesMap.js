@@ -23,6 +23,7 @@ import {
   setActiveProjectKeyAction,
   activeProjectKeySelector,
 } from 'controllers/user';
+import { isTmsEnabled } from 'controllers/appInfo';
 import { fetchProjectAction } from 'controllers/project';
 import {
   LOGIN_PAGE,
@@ -276,10 +277,14 @@ const routesMap = {
   [PROJECT_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug',
     thunk: (dispatch, getState) => {
+      const state = getState();
       dispatch(
         redirect({
           type: PROJECT_DASHBOARD_PAGE,
-          payload: activeProjectSelector(getState()),
+          payload: {
+            organizationSlug: state.location.payload.organizationSlug,
+            projectSlug: state.location.payload.projectSlug,
+          },
         }),
       );
     },
@@ -315,6 +320,20 @@ const routesMap = {
   ),
   [MANUAL_LAUNCHES_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug/manualLaunches',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      if (!isTmsEnabled(state)) {
+        return dispatch(
+          redirect({
+            type: PROJECT_DASHBOARD_PAGE,
+            payload: {
+              organizationSlug: state.location.payload.organizationSlug,
+              projectSlug: state.location.payload.projectSlug,
+            },
+          }),
+        );
+      }
+    },
   },
   [PROJECT_LAUNCHES_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId',
@@ -407,6 +426,17 @@ const routesMap = {
     path: '/organizations/:organizationSlug/projects/:projectSlug/testLibrary/:testCasePageRoute*',
     thunk: (dispatch, getState) => {
       const state = getState();
+      if (!isTmsEnabled(state)) {
+        return dispatch(
+          redirect({
+            type: PROJECT_DASHBOARD_PAGE,
+            payload: {
+              organizationSlug: state.location.payload.organizationSlug,
+              projectSlug: state.location.payload.projectSlug,
+            },
+          }),
+        );
+      }
       const match = state.location.payload?.testCasePageRoute?.match(/test-cases\/(\d+)/);
       const testCaseId = match ? match[1] : null;
 
@@ -420,29 +450,104 @@ const routesMap = {
       }
     },
   },
-  [PRODUCT_VERSIONS_PAGE]: redirectRoute(
-    '/organizations/:organizationSlug/projects/:projectSlug/productVersions',
-    (payload) => ({
-      type: PRODUCT_VERSIONS_TAB_PAGE,
-      payload: { ...payload, subPage: LIST_OF_VERSIONS },
-    }),
-  ),
-  [PRODUCT_VERSIONS_TAB_PAGE]:
-    '/organizations/:organizationSlug/projects/:projectSlug/productVersions/:subPage',
-  [PRODUCT_VERSION_PAGE]: redirectRoute(
-    '/organizations/:organizationSlug/projects/:projectSlug/productVersions/listOfVersions/:productVersionId',
-    (payload) => ({
-      type: PRODUCT_VERSION_TAB_PAGE,
-      payload: { ...payload, productVersionTab: DOCUMENTATION },
-    }),
-  ),
-  [PRODUCT_VERSION_TAB_PAGE]:
-    '/organizations/:organizationSlug/projects/:projectSlug/productVersions/listOfVersions/:productVersionId/:productVersionTab',
+  [PRODUCT_VERSIONS_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/productVersions',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      if (!isTmsEnabled(state)) {
+        return dispatch(
+          redirect({
+            type: PROJECT_DASHBOARD_PAGE,
+            payload: {
+              organizationSlug: state.location.payload.organizationSlug,
+              projectSlug: state.location.payload.projectSlug,
+            },
+          }),
+        );
+      }
+      const { location } = state;
+      dispatch(
+        redirect({
+          type: PRODUCT_VERSIONS_TAB_PAGE,
+          payload: { ...location.payload, subPage: LIST_OF_VERSIONS },
+        }),
+      );
+    },
+  },
+  [PRODUCT_VERSIONS_TAB_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/productVersions/:subPage',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      if (!isTmsEnabled(state)) {
+        return dispatch(
+          redirect({
+            type: PROJECT_DASHBOARD_PAGE,
+            payload: {
+              organizationSlug: state.location.payload.organizationSlug,
+              projectSlug: state.location.payload.projectSlug,
+            },
+          }),
+        );
+      }
+    },
+  },
+  [PRODUCT_VERSION_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/productVersions/listOfVersions/:productVersionId',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      if (!isTmsEnabled(state)) {
+        return dispatch(
+          redirect({
+            type: PROJECT_DASHBOARD_PAGE,
+            payload: {
+              organizationSlug: state.location.payload.organizationSlug,
+              projectSlug: state.location.payload.projectSlug,
+            },
+          }),
+        );
+      }
+      const { location } = state;
+      dispatch(
+        redirect({
+          type: PRODUCT_VERSION_TAB_PAGE,
+          payload: { ...location.payload, productVersionTab: DOCUMENTATION },
+        }),
+      );
+    },
+  },
+  [PRODUCT_VERSION_TAB_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/productVersions/listOfVersions/:productVersionId/:productVersionTab',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      if (!isTmsEnabled(state)) {
+        return dispatch(
+          redirect({
+            type: PROJECT_DASHBOARD_PAGE,
+            payload: {
+              organizationSlug: state.location.payload.organizationSlug,
+              projectSlug: state.location.payload.projectSlug,
+            },
+          }),
+        );
+      }
+    },
+  },
 
   [PROJECT_TEST_PLANS_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug/milestones',
     thunk: (dispatch, getState) => {
       const state = getState();
+      if (!isTmsEnabled(state)) {
+        return dispatch(
+          redirect({
+            type: PROJECT_DASHBOARD_PAGE,
+            payload: {
+              organizationSlug: state.location.payload.organizationSlug,
+              projectSlug: state.location.payload.projectSlug,
+            },
+          }),
+        );
+      }
       const { offset, limit } = getRouterParams({
         namespace: TEST_PLANS_NAMESPACE,
         defaultParams: defaultQueryParams,
@@ -456,6 +561,17 @@ const routesMap = {
     path: '/organizations/:organizationSlug/projects/:projectSlug/milestones/:testPlanId',
     thunk: (dispatch, getState) => {
       const state = getState();
+      if (!isTmsEnabled(state)) {
+        return dispatch(
+          redirect({
+            type: PROJECT_DASHBOARD_PAGE,
+            payload: {
+              organizationSlug: state.location.payload.organizationSlug,
+              projectSlug: state.location.payload.projectSlug,
+            },
+          }),
+        );
+      }
       const testPlanId = state.location?.payload?.testPlanId;
       const { offset, limit } = getRouterParams({
         namespace: TEST_PLAN_TEST_CASES_NAMESPACE,

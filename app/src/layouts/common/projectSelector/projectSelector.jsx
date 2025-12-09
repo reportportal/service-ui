@@ -153,6 +153,10 @@ export class ProjectSelector extends Component {
                     .map((project) => {
                       const { projectSlug, organizationSlug } = projects[project];
 
+                      if (!organizationSlug || !projectSlug) {
+                        return null;
+                      }
+
                       return (
                         <NavLink
                           to={{

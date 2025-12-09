@@ -45,6 +45,7 @@ import { uiExtensionSettingsTabsSelector } from 'controllers/plugins';
 import { Navigation } from 'pages/inside/common/navigation';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { useTmsEnabled } from 'hooks/useTmsEnabled';
 import { Header } from 'pages/inside/common/header';
 import { PatternAnalysis } from 'pages/inside/projectSettingsPageContainer/content/patternAnalysis';
 import { Notifications } from 'pages/inside/projectSettingsPageContainer/content/notifications';
@@ -66,6 +67,7 @@ export const ProjectSettingsPageContainer = () => {
   const { canSeeDemoData, canUpdateSettings } = useUserPermissions();
   const { subPage } = useSelector(querySelector);
   const [headerNodes, setHeaderNodes] = useState({});
+  const isTmsEnabled = useTmsEnabled();
 
   const createTabLink = useCallback(
     (tabName, extendedParams = {}, page = PROJECT_SETTINGS_TAB_PAGE) => ({
@@ -159,18 +161,22 @@ export const ProjectSettingsPageContainer = () => {
         eventInfo: SETTINGS_PAGE_EVENTS.DEMO_DATA_TAB,
         mobileDisabled: true,
       },
-      [ENVIRONMENTS]: {
-        name: formatMessage(messages.environments),
-        link: createTabLink(ENVIRONMENTS),
-        component: <Environments />,
-        mobileDisabled: true,
-      },
-      [TEST_DATA]: {
-        name: formatMessage(messages.testData),
-        link: createTabLink(TEST_DATA),
-        component: <TestData setHeaderTitleNode={(node) => setHeaderNodes({ titleNode: node })} />,
-        mobileDisabled: true,
-      },
+      ...(isTmsEnabled && {
+        [ENVIRONMENTS]: {
+          name: formatMessage(messages.environments),
+          link: createTabLink(ENVIRONMENTS),
+          component: <Environments />,
+          mobileDisabled: true,
+        },
+        [TEST_DATA]: {
+          name: formatMessage(messages.testData),
+          link: createTabLink(TEST_DATA),
+          component: (
+            <TestData setHeaderTitleNode={(node) => setHeaderNodes({ titleNode: node })} />
+          ),
+          mobileDisabled: true,
+        },
+      }),
     };
     if (!canSeeDemoData) {
       delete navConfig[DEMO_DATA];
@@ -183,7 +189,7 @@ export const ProjectSettingsPageContainer = () => {
       }
     });
     return { ...navConfig, ...extensionsConfig };
-  }, [formatMessage, createTabLink, extensionsConfig]);
+  }, [formatMessage, createTabLink, extensionsConfig, isTmsEnabled]);
 
   const navigation = useMemo(() => {
     if (subPage) {
