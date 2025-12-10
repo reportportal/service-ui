@@ -21,6 +21,7 @@ import { BaseIconButton, SearchIcon } from '@reportportal/ui-kit';
 import { createClassnames } from 'common/utils';
 import { EXPANDED_FOLDERS_IDS } from 'common/constants/localStorageKeys';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
+import { isNumber, isEmpty } from 'es-toolkit/compat';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 import { TransformedFolder } from 'controllers/testCase';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
@@ -45,13 +46,14 @@ const messages = defineMessages({
 });
 
 const getFolderAndDescendantIds = (folder: TransformedFolder): number[] => {
-  let ids = [folder.id];
+  const ids = [folder.id];
 
-  if (folder.folders && folder.folders.length > 0) {
+  if (!isEmpty(folder.folders)) {
     folder.folders.forEach((subFolder) => {
-      ids = ids.concat(getFolderAndDescendantIds(subFolder));
+      ids.push(...getFolderAndDescendantIds(subFolder));
     });
   }
+
   return ids;
 };
 
@@ -84,7 +86,7 @@ export const ExpandedOptions = ({
 
       if (!parsed) return [];
 
-      if (Array.isArray(parsed) && parsed.every((id) => typeof id === 'number')) {
+      if (Array.isArray(parsed) && parsed.every((id) => isNumber(id))) {
         return parsed;
       }
 
@@ -102,6 +104,7 @@ export const ExpandedOptions = ({
 
         if (isExpanded) {
           const idsToRemove = getFolderAndDescendantIds(folder);
+
           newIds = prevIds.filter((id) => !idsToRemove.includes(id));
         } else {
           newIds = [...prevIds, folder.id];
