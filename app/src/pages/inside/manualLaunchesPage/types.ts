@@ -60,6 +60,7 @@ export interface Launch {
   statistics: LaunchStatistics;
   attributes: LaunchAttribute[];
   mode: string;
+  type: string;
   analysing: string[];
   approximateDuration: number;
   hasRetries: boolean;
@@ -85,4 +86,40 @@ export interface ManualTestCase {
   inProgressTests: number;
   skippedTests: number;
   testsToRun: number;
+}
+
+export interface LaunchOwner {
+  id: number;
+  email: string;
+  name?: string;
+}
+
+export interface LaunchTestPlan {
+  id: number;
+  name: string;
+}
+
+export interface ExecutionStatistic {
+  total: number;
+  failed: number;
+  passed: number;
+  skipped: number;
+  toRun: number;
+  inProgress: number;
+}
+
+export interface ManualLaunchItem {
+  id: number;
+  name: string;
+  description: string;
+  owner: LaunchOwner;
+  number: number;
+  status: string;
+  attributes: LaunchAttribute[];
+  startTime: string;
+  createdAt: string;
+  type: string;
+  mode: string;
+  testPlan: LaunchTestPlan | null;
+  executionStatistic: ExecutionStatistic;
 }
