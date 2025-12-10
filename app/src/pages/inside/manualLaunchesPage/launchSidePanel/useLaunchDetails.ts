@@ -37,6 +37,8 @@ export const useLaunchDetails = (launchId: number | null) => {
       return;
     }
 
+    const abortController = new AbortController();
+
     const fetchLaunchDetails = async () => {
       try {
         showSpinner();
@@ -45,18 +47,27 @@ export const useLaunchDetails = (launchId: number | null) => {
 
         setLaunchDetails(response);
       } catch {
+        if (abortController.signal.aborted) {
+          return;
+        }
+
         dispatch(
           showErrorNotification({
             messageId: 'errorOccurredTryAgain',
           }),
         );
       } finally {
-        hideSpinner();
+        if (!abortController.signal.aborted) {
+          hideSpinner();
+        }
       }
     };
 
     void fetchLaunchDetails();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    return () => {
+      abortController.abort();
+    };
   }, [projectKey, launchId]);
 
   return {
