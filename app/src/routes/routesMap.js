@@ -455,8 +455,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
         if (authorized && !isAdmin) {
           dispatch(
             redirect({
-              type: PROJECT_DASHBOARD_PAGE,
-              payload: { organizationSlug, projectSlug },
+              type: ORGANIZATIONS_PAGE,
             }),
           );
         } else if (!authorized) {

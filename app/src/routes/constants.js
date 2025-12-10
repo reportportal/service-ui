@@ -178,6 +178,7 @@ export const pageRendering = {
     component: AdminUiExtensionPage,
     layout: InstanceLayout,
     rawContent: true,
+    access: ADMIN_ACCESS,
   },
   [PROJECT_PLUGIN_PAGE]: {
     component: ProjectUiExtensionPage,
