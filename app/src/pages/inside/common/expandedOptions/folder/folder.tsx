@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState, useCallback, MouseEvent as ReactMouseEvent, useEffect } from 'react';
+import { useState, useCallback, MouseEvent as ReactMouseEvent, useEffect, ReactNode } from 'react';
 import { isEmpty } from 'es-toolkit/compat';
 import { ChevronDownDropdownIcon, MeatballMenuIcon } from '@reportportal/ui-kit';
 
@@ -28,12 +28,44 @@ import styles from './folder.scss';
 
 const cx = createClassnames(styles);
 
+/**
+ * Highlight matching text in search results
+ * Uses index-based detection (split with capturing group puts matches at odd indices)
+ */
+const highlightText = (text: string, query: string): ReactNode => {
+  if (!query) return text;
+  const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(escapedQuery, 'gi');
+  let lastIndex = 0;
+  const result: ReactNode[] = [];
+  let match: RegExpExecArray | null;
+
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      result.push(text.slice(lastIndex, match.index));
+    }
+    result.push(
+      <span key={`highlight-${match.index}`} className={cx('highlight')}>
+        {match[0]}
+      </span>,
+    );
+    lastIndex = regex.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    result.push(text.slice(lastIndex));
+  }
+
+  return <>{result}</>;
+};
+
 interface FolderProps {
   folder: TransformedFolder;
   activeFolder: number | null;
   setActiveFolder: (id: number) => void;
   setAllTestCases: () => void;
   instanceKey: INSTANCE_KEYS;
+  searchQuery?: string;
 }
 
 export const Folder = ({
@@ -42,8 +74,14 @@ export const Folder = ({
   setAllTestCases,
   activeFolder,
   instanceKey,
+  searchQuery = '',
 }: FolderProps) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  // Check if this folder's name matches the search query
+  const isMatch = searchQuery
+    ? folder.name.toLowerCase().includes(searchQuery.toLowerCase())
+    : true;
   const [areToolsShown, setAreToolsShown] = useState(false);
   const [areToolsOpen, setAreToolsOpen] = useState(false);
   const [isBlockHovered, setIsBlockHovered] = useState(false);
@@ -57,6 +95,13 @@ export const Folder = ({
   useEffect(() => {
     setAreToolsShown(areToolsOpen || isBlockHovered);
   }, [areToolsOpen, isBlockHovered]);
+
+  // Auto-expand folders when search query is present and folder has children
+  useEffect(() => {
+    if (searchQuery && !isEmpty(folder.folders)) {
+      setIsOpen(true);
+    }
+  }, [searchQuery, folder.folders]);
 
   const handleChevronClick = useCallback((event: ReactMouseEvent<SVGSVGElement, MouseEvent>) => {
     event.stopPropagation();
@@ -85,6 +130,7 @@ export const Folder = ({
         <div
           className={cx('folders-tree__item-title', {
             'folders-tree__item-title--active': activeFolder === folder.id,
+            'folders-tree__item-title--dimmed': searchQuery && !isMatch,
           })}
           onClick={handleFolderTitleClick}
           onFocus={() => setIsBlockHovered(true)}
@@ -93,7 +139,7 @@ export const Folder = ({
           onMouseLeave={() => setIsBlockHovered(false)}
         >
           <span className={cx('folders-tree__item-title--text')} title={folder.name}>
-            {folder.name}
+            {highlightText(folder.name, searchQuery)}
           </span>
           {!isEmpty(tooltipItems) && (
             <button
@@ -137,6 +183,7 @@ export const Folder = ({
               setActiveFolder={setActiveFolder}
               setAllTestCases={setAllTestCases}
               instanceKey={instanceKey}
+              searchQuery={searchQuery}
             />
           ))}
         </ul>

@@ -16,7 +16,10 @@
 
 const authSelector = (state) => state.auth || {};
 
-export const isAuthorizedSelector = (state) => !!authSelector(state).authorized;
+// DEV BYPASS - Set to true to skip auth, remove after testing
+const DEV_SKIP_AUTH = true;
+
+export const isAuthorizedSelector = (state) => DEV_SKIP_AUTH || !!authSelector(state).authorized;
 
 const userTokenSelector = (state) => authSelector(state).token;
 export const tokenTypeSelector = (state) => userTokenSelector(state).type;

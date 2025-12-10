@@ -137,4 +137,20 @@
       }
     }
   }
+
+}
+
+.highlight {
+  background-color: #fff3cd;
+  color: inherit;
+}
+
+.folders-tree__item-title--dimmed {
+  .folders-tree__item-title--text {
+    color: var(--rp-ui-base-e-300);
+  }
+
+  .folders-tree__item-title--counter {
+    color: var(--rp-ui-base-e-200);
+  }
 }
