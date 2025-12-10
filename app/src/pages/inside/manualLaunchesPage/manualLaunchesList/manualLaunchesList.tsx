@@ -79,8 +79,6 @@ export const ManualLaunchesList = ({ fullLaunches }: ManualLaunchesListProps) =>
     setSelectedLaunchId,
   );
 
-  const selectedLaunch = fullLaunches.find((launch) => launch.id === selectedLaunchId);
-
   return (
     <div className={cx('manual-launches-list')}>
       <Table
@@ -108,7 +106,7 @@ export const ManualLaunchesList = ({ fullLaunches }: ManualLaunchesListProps) =>
         </div>
       )}
       <LaunchSidePanel
-        launch={selectedLaunch}
+        launchId={selectedLaunchId}
         isVisible={Boolean(selectedLaunchId)}
         onClose={handleCloseSidePanel}
       />
