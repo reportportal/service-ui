@@ -16,7 +16,7 @@
 
 import { useDispatch } from 'react-redux';
 import { useIntl, defineMessages } from 'react-intl';
-import classNames from 'classnames/bind';
+import { createClassnames } from 'common/utils';
 import { Modal } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -27,7 +27,7 @@ import { useTracking } from 'react-tracking';
 import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
 import { showSuccessNotification } from 'controllers/notification';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export const messages = defineMessages({
   title: {

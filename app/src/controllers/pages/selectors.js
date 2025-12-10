@@ -23,7 +23,6 @@ import {
   activeProjectSelector,
   assignedOrganizationsSelector,
   assignedProjectsSelector,
-  userAccountRoleSelector,
   userIdSelector,
 } from 'controllers/user';
 import { ALL } from 'common/constants/reservedFilterIds';
@@ -31,11 +30,18 @@ import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { MANAGER } from 'common/constants/projectRoles';
 import { getAlternativePaginationAndSortParams } from 'controllers/pagination';
 import { findAssignedProjectByOrganization } from 'common/utils';
-import { pageNames, NO_PAGE } from './constants';
+import { pageNames, NO_PAGE, TEST_CASE_LIBRARY_PAGE, TEST_CASE_DETAILS_PAGE } from './constants';
 import { stringToArray } from './utils';
+import {
+  urlOrganizationSlugSelector,
+  urlProjectSlugSelector,
+  urlTestCaseSlugSelector,
+  urlFolderIdSelector,
+  locationSelector,
+  payloadSelector,
+} from './typed-selectors';
+import { userRolesSelector } from './';
 
-export const locationSelector = (state) => state.location || {};
-export const payloadSelector = (state) => locationSelector(state).payload || {};
 export const searchStringSelector = (state) => locationSelector(state).search || '';
 export const isInitialDispatchDoneSelector = (state) => !!locationSelector(state).kind;
 export const currentPathSelector = (state) => {
@@ -173,10 +179,10 @@ export const prevTestItemSelector = ({ location }) => {
   return parseInt(prevPath[currentPath.length], 10);
 };
 
-export const urlProjectSlugSelector = (state) => payloadSelector(state).projectSlug || '';
-
-export const urlOrganizationSlugSelector = (state) => payloadSelector(state).organizationSlug || '';
-
+/**
+ * @param {Object} state
+ * @returns {{ organizationSlug: string, projectSlug: string } | string}
+ */
 export const urlOrganizationAndProjectSelector = createSelector(
   [urlOrganizationSlugSelector, urlProjectSlugSelector, activeProjectSelector],
   (organizationSlug, projectSlug, activeProject) => {
@@ -202,27 +208,6 @@ export const activeProjectRoleSelector = createSelector(
 
     return assignedProject?.projectRole;
   },
-);
-
-const activeOrganizationRoleSelector = createSelector(
-  urlOrganizationSlugSelector,
-  assignedOrganizationsSelector,
-  (organizationSlug, assignedOrganizations) => {
-    const assignedOrganization = assignedOrganizations[organizationSlug];
-
-    return assignedOrganization?.organizationRole;
-  },
-);
-
-export const userRolesSelector = createSelector(
-  userAccountRoleSelector,
-  activeOrganizationRoleSelector,
-  activeProjectRoleSelector,
-  (userRole, organizationRole, projectRole) => ({
-    userRole,
-    organizationRole,
-    projectRole,
-  }),
 );
 
 export const userAssignedSelector = (projectSlug, organizationSlug) => (state) => {
@@ -268,3 +253,55 @@ export const userAssignedSelector = (projectSlug, organizationSlug) => (state) =
     isAssignedToTargetOrganization,
   };
 };
+
+export const urlTestCaseLibrarySelector = createSelector(
+  [urlOrganizationSlugSelector, urlProjectSlugSelector, urlTestCaseSlugSelector],
+  (organizationSlug, projectSlug, testCaseSlug) => ({
+    organizationSlug,
+    projectSlug,
+    testCaseSlug,
+  }),
+);
+
+export const testCaseLibraryBreadcrumbsSelector = ({ mainTitle, testTitle, pageTitle = '' }) =>
+  createSelector(
+    [urlTestCaseLibrarySelector, urlFolderIdSelector],
+    ({ organizationSlug, projectSlug, testCaseSlug }, folderId) => {
+      const breadcrumbs = [
+        {
+          id: 'test-case-library',
+          title: mainTitle,
+          link: {
+            type: TEST_CASE_LIBRARY_PAGE,
+            payload: {
+              organizationSlug,
+              projectSlug,
+            },
+          },
+        },
+        {
+          id: testCaseSlug,
+          title: testTitle,
+          ...(pageTitle && {
+            link: {
+              type: TEST_CASE_LIBRARY_PAGE,
+              payload: {
+                organizationSlug,
+                projectSlug,
+                testCasePageRoute: `test-cases/${testCaseSlug}`,
+              },
+            },
+          }),
+        },
+      ];
+
+      if (pageTitle) {
+        breadcrumbs.push({
+          id: pageTitle,
+          title: pageTitle,
+        });
+      }
+
+      return breadcrumbs;
+    },
+  );

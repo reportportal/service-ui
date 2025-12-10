@@ -21,7 +21,6 @@ export {
   projectSectionSelector,
   launchIdSelector,
   suiteIdSelector,
-  payloadSelector,
   testItemIdsSelector,
   testItemIdsArraySelector,
   createQueryParametersSelector,
@@ -39,13 +38,11 @@ export {
   pluginPageSelector,
   pluginRouteSelector,
   userProfileRouteSelector,
-  urlProjectSlugSelector,
-  urlOrganizationSlugSelector,
   urlOrganizationAndProjectSelector,
-  userRolesSelector,
   activeProjectRoleSelector,
   userAssignedSelector,
 } from './selectors';
+export { userRolesSelector } from './userRolesSelector';
 export { updatePagePropertiesAction, clearPageStateAction } from './actionCreators';
 
 export {
@@ -64,6 +61,7 @@ export {
   PROJECT_DASHBOARD_PRINT_PAGE,
   PROJECT_FILTERS_PAGE,
   LAUNCHES_PAGE,
+  MANUAL_LAUNCHES_PAGE,
   PROJECT_LAUNCHES_PAGE,
   PROJECT_MEMBERS_PAGE,
   PROJECT_SANDBOX_PAGE,
@@ -98,6 +96,22 @@ export {
   ORGANIZATION_USERS_PAGE,
   ORGANIZATION_SETTINGS_PAGE,
   ORGANIZATION_SETTINGS_TAB_PAGE,
+  PRODUCT_VERSIONS_PAGE,
+  PRODUCT_VERSIONS_TAB_PAGE,
+  PRODUCT_VERSION_PAGE,
+  PRODUCT_VERSION_TAB_PAGE,
+  TEST_CASE_DETAILS_PAGE,
+  TEST_CASE_LIBRARY_PAGE,
+  PROJECT_TEST_PLANS_PAGE,
+  PROJECT_TEST_PLAN_DETAILS_PAGE,
 } from './constants';
 export { NOT_FOUND } from 'redux-first-router';
 export { pageSagas } from './sagas';
+export {
+  urlFolderIdSelector,
+  locationSelector,
+  payloadSelector,
+  urlProjectSlugSelector,
+  urlOrganizationSlugSelector,
+  locationQuerySelector,
+} from './typed-selectors';

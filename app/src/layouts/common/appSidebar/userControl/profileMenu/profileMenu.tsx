@@ -16,16 +16,18 @@
 
 import { useDispatch } from 'react-redux';
 import Parser from 'html-react-parser';
-import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import { Button } from '@reportportal/ui-kit';
+
+import { createClassnames } from 'common/utils';
 import { logoutAction } from 'controllers/auth';
 import { NavLink } from 'components/main/navLink';
 import LogoutIcon from './img/log-out-inline.svg';
 import MyProfileIcon from './img/my-profile-inline.svg';
+
 import styles from './profileMenu.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface ProfileMenuProps {
   closePopover: () => void;
@@ -55,11 +57,11 @@ export const ProfileMenu = ({
           closeSidebar();
         }}
       >
-        {Parser(MyProfileIcon)}
+        {Parser(MyProfileIcon as unknown as string)}
         <FormattedMessage id={'UserBlock.profile'} defaultMessage={'My profile'} />
       </NavLink>
       <Button className={cx('menu-item')} onClick={onClickLogout} variant="text">
-        {Parser(LogoutIcon)}
+        {Parser(LogoutIcon as unknown as string)}
         <FormattedMessage id={'UserBlock.logout'} defaultMessage={'Log out'} />
       </Button>
     </>

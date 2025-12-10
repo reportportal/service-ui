@@ -80,17 +80,19 @@ export const Tabs = ({ config, activeTab, withContent }) => {
   );
 };
 
+export const TabsConfigShape = PropTypes.objectOf(
+  PropTypes.shape({
+    name: PropTypes.node,
+    link: PropTypes.object,
+    component: PropTypes.element,
+    eventInfo: PropTypes.object,
+    mobileDisabled: PropTypes.bool,
+  }),
+);
+
 Tabs.propTypes = {
   activeTab: PropTypes.string,
-  config: PropTypes.objectOf(
-    PropTypes.shape({
-      name: PropTypes.node,
-      link: PropTypes.object,
-      component: PropTypes.Element,
-      eventInfo: PropTypes.object,
-      mobileDisabled: PropTypes.bool,
-    }),
-  ),
+  config: TabsConfigShape,
   withContent: PropTypes.bool,
 };
 Tabs.defaultProps = {

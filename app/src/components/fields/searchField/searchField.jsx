@@ -28,9 +28,11 @@ export const SearchField = ({
   setSearchValue,
   filter,
   onFilterChange,
-  placeholder,
-  isLoading,
-  event,
+  placeholder = '',
+  isLoading = false,
+  event = null,
+  className,
+  isFullWidth = false,
 }) => {
   const { trackEvent } = useTracking();
   const [isSearchActive, setIsSearchActive] = useState(false);
@@ -80,7 +82,7 @@ export const SearchField = ({
       placeholder={placeholder}
       loading={isSearchActive && isLoading}
       startIcon={<SearchIcon />}
-      className={cx('search-field')}
+      className={cx('search-field', { 'search-field--full-width': isFullWidth }, className)}
       maxLength={256}
       collapsible
       clearable
@@ -92,14 +94,10 @@ SearchField.propTypes = {
   searchValue: PropTypes.string || null,
   setSearchValue: PropTypes.func.isRequired,
   filter: PropTypes.string,
+  className: PropTypes.string,
   onFilterChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
   isLoading: PropTypes.bool,
   event: PropTypes.object,
-};
-
-SearchField.defaultProps = {
-  placeholder: '',
-  isLoading: false,
-  event: null,
+  isFullWidth: PropTypes.bool,
 };

@@ -17,23 +17,25 @@
 import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
+import { InjectedFormProps, reduxForm } from 'redux-form';
 import { Modal, FieldText } from '@reportportal/ui-kit';
+
+import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction } from 'controllers/modal';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { Organization } from 'controllers/organization';
-import { InjectedFormProps, reduxForm } from 'redux-form';
-import FieldProvider from 'components/fields';
-import FieldErrorHint from 'components/fields/fieldErrorHint';
+import { FieldProvider } from 'components/fields/fieldProvider';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { BoundValidator } from 'common/utils/validation/types';
 import { commonValidators } from 'common/utils/validation';
 import { ModalButtonProps } from 'types/common';
 import { messages } from 'pages/instance/organizationsPage/messages';
-import classNames from 'classnames/bind';
-import styles from './deleteOrganizationModal.scss';
 import { deleteOrganizationAction } from 'controllers/instance/organizations/actionCreators';
 
-const cx = classNames.bind(styles) as typeof classNames;
+import styles from './deleteOrganizationModal.scss';
+
+const cx = createClassnames(styles);
 
 const ORGANIZATION_NAME_FIELD = 'organizationName';
 const DELETE_ORGANIZATION_FORM = 'deleteOrganizationForm';

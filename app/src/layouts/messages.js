@@ -33,6 +33,10 @@ export const messages = defineMessages({
     id: 'Sidebar.settingsBtn',
     defaultMessage: 'Project Settings',
   },
+  milestones: {
+    id: 'Sidebar.milestonesBtn',
+    defaultMessage: 'Milestones',
+  },
   projectTeam: {
     id: 'Sidebar.membersBtn',
     defaultMessage: 'Project Team',
@@ -49,9 +53,21 @@ export const messages = defineMessages({
     id: 'Sidebar.launchesBtn',
     defaultMessage: 'Launches',
   },
+  manualLaunches: {
+    id: 'Sidebar.manualLaunchesBtn',
+    defaultMessage: 'Manual Launches',
+  },
   dashboards: {
     id: 'Sidebar.dashboardsBtn',
     defaultMessage: 'Project Dashboards',
+  },
+  productVersions: {
+    id: 'Sidebar.productVersions',
+    defaultMessage: 'Product Versions',
+  },
+  testCaseLibrary: {
+    id: 'Sidebar.testCaseLibrary',
+    defaultMessage: 'Test Case Library',
   },
   organizations: {
     id: 'InstanceSidebar.organizations',

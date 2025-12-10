@@ -23,6 +23,7 @@ import {
   setActiveProjectKeyAction,
   activeProjectKeySelector,
 } from 'controllers/user';
+import { isTmsEnabled } from 'controllers/appInfo';
 import { fetchProjectAction } from 'controllers/project';
 import {
   LOGIN_PAGE,
@@ -41,6 +42,7 @@ import {
   SERVER_SETTINGS_PAGE,
   SERVER_SETTINGS_TAB_PAGE,
   LAUNCHES_PAGE,
+  MANUAL_LAUNCHES_PAGE,
   PROJECT_LAUNCHES_PAGE,
   PLUGINS_PAGE,
   PLUGINS_TAB_PAGE,
@@ -67,6 +69,9 @@ import {
   USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
   ORGANIZATIONS_PAGE,
   ORGANIZATIONS_ACTIVITY_PAGE,
+  PRODUCT_VERSIONS_TAB_PAGE,
+  PRODUCT_VERSIONS_PAGE,
+  TEST_CASE_LIBRARY_PAGE,
 } from 'controllers/pages';
 import {
   GENERAL,
@@ -98,6 +103,11 @@ import { fetchHistoryPageInfoAction } from 'controllers/itemsHistory';
 import { setSessionItem, updateStorageItem } from 'common/utils/storageUtils';
 import { fetchClustersAction } from 'controllers/uniqueErrors';
 import {
+  GET_TEST_CASE_DETAILS,
+  getFoldersAction,
+  needsToLoadFoldersSelector,
+} from 'controllers/testCase';
+import {
   API_KEYS_ROUTE,
   CONFIG_EXAMPLES_ROUTE,
   ASSIGNMENTS_ROUTE,
@@ -110,9 +120,26 @@ import {
   prepareActiveOrganizationSettingsAction,
 } from 'controllers/organization/actionCreators';
 import { prepareActiveOrganizationUsersAction } from 'controllers/organization/users';
+import { LIST_OF_VERSIONS } from 'pages/inside/productVersionsPage/constants';
+import {
+  PRODUCT_VERSION_PAGE,
+  PRODUCT_VERSION_TAB_PAGE,
+  PROJECT_TEST_PLANS_PAGE,
+  PROJECT_TEST_PLAN_DETAILS_PAGE,
+} from 'controllers/pages/constants';
+import { DOCUMENTATION } from 'pages/inside/productVersionPage/constants';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 import { fetchOrganizationEventsDataAction } from '../controllers/instance/actionCreators';
 import { canSeeActivityOption } from 'common/utils/permissions';
+import {
+  getTestPlansAction,
+  getTestPlanAction,
+  defaultQueryParams,
+  TEST_PLANS_NAMESPACE,
+  TEST_PLAN_TEST_CASES_NAMESPACE,
+  defaultTestPlanTestCasesQueryParams,
+} from 'controllers/testPlan';
+import { getRouterParams } from 'common/utils';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
   path,
@@ -250,10 +277,14 @@ const routesMap = {
   [PROJECT_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug',
     thunk: (dispatch, getState) => {
+      const state = getState();
       dispatch(
         redirect({
           type: PROJECT_DASHBOARD_PAGE,
-          payload: activeProjectSelector(getState()),
+          payload: {
+            organizationSlug: state.location.payload.organizationSlug,
+            projectSlug: state.location.payload.projectSlug,
+          },
         }),
       );
     },
@@ -287,6 +318,23 @@ const routesMap = {
       dispatch(unselectAllLaunchesAction());
     },
   ),
+  [MANUAL_LAUNCHES_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/manualLaunches',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      if (!isTmsEnabled(state)) {
+        return dispatch(
+          redirect({
+            type: PROJECT_DASHBOARD_PAGE,
+            payload: {
+              organizationSlug: state.location.payload.organizationSlug,
+              projectSlug: state.location.payload.projectSlug,
+            },
+          }),
+        );
+      }
+    },
+  },
   [PROJECT_LAUNCHES_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId',
     thunk: (dispatch) => {
@@ -374,6 +422,166 @@ const routesMap = {
   [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: '/plugin/:pluginPage/:pluginRoute*',
   [PROJECT_PLUGIN_PAGE]:
     '/organizations/:organizationSlug/projects/:projectSlug/plugin/:pluginPage/:pluginRoute*',
+  [TEST_CASE_LIBRARY_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/testLibrary/:testCasePageRoute*',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      if (!isTmsEnabled(state)) {
+        return dispatch(
+          redirect({
+            type: PROJECT_DASHBOARD_PAGE,
+            payload: {
+              organizationSlug: state.location.payload.organizationSlug,
+              projectSlug: state.location.payload.projectSlug,
+            },
+          }),
+        );
+      }
+      const match = state.location.payload?.testCasePageRoute?.match(/test-cases\/(\d+)/);
+      const testCaseId = match ? match[1] : null;
+
+      if (testCaseId) {
+        dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId } });
+      }
+
+      // Only dispatch getFoldersAction if folders are not already loaded
+      if (needsToLoadFoldersSelector(state)) {
+        dispatch(getFoldersAction());
+      }
+    },
+  },
+  [PRODUCT_VERSIONS_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/productVersions',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      if (!isTmsEnabled(state)) {
+        return dispatch(
+          redirect({
+            type: PROJECT_DASHBOARD_PAGE,
+            payload: {
+              organizationSlug: state.location.payload.organizationSlug,
+              projectSlug: state.location.payload.projectSlug,
+            },
+          }),
+        );
+      }
+      const { location } = state;
+      dispatch(
+        redirect({
+          type: PRODUCT_VERSIONS_TAB_PAGE,
+          payload: { ...location.payload, subPage: LIST_OF_VERSIONS },
+        }),
+      );
+    },
+  },
+  [PRODUCT_VERSIONS_TAB_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/productVersions/:subPage',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      if (!isTmsEnabled(state)) {
+        return dispatch(
+          redirect({
+            type: PROJECT_DASHBOARD_PAGE,
+            payload: {
+              organizationSlug: state.location.payload.organizationSlug,
+              projectSlug: state.location.payload.projectSlug,
+            },
+          }),
+        );
+      }
+    },
+  },
+  [PRODUCT_VERSION_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/productVersions/listOfVersions/:productVersionId',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      if (!isTmsEnabled(state)) {
+        return dispatch(
+          redirect({
+            type: PROJECT_DASHBOARD_PAGE,
+            payload: {
+              organizationSlug: state.location.payload.organizationSlug,
+              projectSlug: state.location.payload.projectSlug,
+            },
+          }),
+        );
+      }
+      const { location } = state;
+      dispatch(
+        redirect({
+          type: PRODUCT_VERSION_TAB_PAGE,
+          payload: { ...location.payload, productVersionTab: DOCUMENTATION },
+        }),
+      );
+    },
+  },
+  [PRODUCT_VERSION_TAB_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/productVersions/listOfVersions/:productVersionId/:productVersionTab',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      if (!isTmsEnabled(state)) {
+        return dispatch(
+          redirect({
+            type: PROJECT_DASHBOARD_PAGE,
+            payload: {
+              organizationSlug: state.location.payload.organizationSlug,
+              projectSlug: state.location.payload.projectSlug,
+            },
+          }),
+        );
+      }
+    },
+  },
+
+  [PROJECT_TEST_PLANS_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/milestones',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      if (!isTmsEnabled(state)) {
+        return dispatch(
+          redirect({
+            type: PROJECT_DASHBOARD_PAGE,
+            payload: {
+              organizationSlug: state.location.payload.organizationSlug,
+              projectSlug: state.location.payload.projectSlug,
+            },
+          }),
+        );
+      }
+      const { offset, limit } = getRouterParams({
+        namespace: TEST_PLANS_NAMESPACE,
+        defaultParams: defaultQueryParams,
+        state,
+      });
+
+      dispatch(getTestPlansAction({ offset, limit }));
+    },
+  },
+  [PROJECT_TEST_PLAN_DETAILS_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/milestones/:testPlanId',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      if (!isTmsEnabled(state)) {
+        return dispatch(
+          redirect({
+            type: PROJECT_DASHBOARD_PAGE,
+            payload: {
+              organizationSlug: state.location.payload.organizationSlug,
+              projectSlug: state.location.payload.projectSlug,
+            },
+          }),
+        );
+      }
+      const testPlanId = state.location?.payload?.testPlanId;
+      const { offset, limit } = getRouterParams({
+        namespace: TEST_PLAN_TEST_CASES_NAMESPACE,
+        defaultParams: defaultTestPlanTestCasesQueryParams,
+        state,
+      });
+
+      dispatch(getTestPlanAction({ testPlanId, offset, limit }));
+    },
+  },
 };
 
 export const onBeforeRouteChange = (dispatch, getState, { action }) => {

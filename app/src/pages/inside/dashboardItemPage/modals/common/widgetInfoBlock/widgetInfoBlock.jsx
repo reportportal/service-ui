@@ -26,7 +26,7 @@ import { URLS } from 'common/urls';
 import EmptyWidgetPreview from 'pages/inside/dashboardItemPage/modals/common/img/wdgt-undefined-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';
-import { LinkComponent } from 'pages/inside/projectSettingsPageContainer/content/notifications/LinkComponent';
+import { LinkComponent } from 'pages/inside/common/LinkComponent';
 import { injectIntl } from 'react-intl';
 import { WIDGETS_STATIC_PREVIEWS } from '../widgets';
 import { WidgetPreview } from '../widgetPreview';

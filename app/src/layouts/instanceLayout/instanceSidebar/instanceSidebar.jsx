@@ -20,7 +20,6 @@ import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
 import { userRolesSelector } from 'controllers/pages';
 import { useIntl } from 'react-intl';
-import { canSeeSidebarOptions, canSeeInstanceLevelPluginsPages } from 'common/utils/permissions';
 import {
   SERVER_SETTINGS_PAGE,
   PLUGINS_PAGE,
@@ -38,6 +37,7 @@ import SettingsIcon from 'common/img/sidebar/settings-icon-inline.svg';
 import PluginsIcon from 'common/img/sidebar/plugins-icon-inline.svg';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { assignedOrganizationsSelector } from 'controllers/user';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
 import { messages } from '../../messages';
 
@@ -47,6 +47,7 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
   const userRoles = useSelector(userRolesSelector);
+  const { canSeeSidebarOptions, canSeeInstanceLevelPluginsPages } = useUserPermissions();
   const sidebarExtensions = useSelector(uiExtensionAdminSidebarComponentsSelector);
   const assignedOrganizations = useSelector(assignedOrganizationsSelector);
   const noAssignedOrganizations =
@@ -70,7 +71,7 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
       },
     ];
 
-    if (canSeeSidebarOptions(userRoles)) {
+    if (canSeeSidebarOptions) {
       sidebarItems.push(
         {
           onClick: (isSidebarCollapsed) =>

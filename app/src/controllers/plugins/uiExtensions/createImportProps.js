@@ -189,7 +189,7 @@ import {
   RuleList as RuleListComponent,
   DraggableRuleList,
 } from 'pages/inside/projectSettingsPageContainer/content/elements';
-import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
+import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { SystemMessage } from 'componentLibrary/systemMessage';
 import { AsyncAutocomplete as AsyncAutocompleteField } from 'componentLibrary/autocompletes/asyncAutocomplete';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';

@@ -17,20 +17,22 @@
 import { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { BaseIconButton, CloseIcon, Dropdown, DropdownIcon } from '@reportportal/ui-kit';
-import classNames from 'classnames/bind';
+
+import { createClassnames, fetch } from 'common/utils';
 import { EDITOR, MANAGER, MEMBER } from 'common/constants/projectRoles';
 import { messages } from 'common/constants/localization/invitationsLocalization';
 import { getOrgRoleTitle } from 'common/utils/permissions';
-import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
+import { ProjectsSearchesResponseData } from 'controllers/organization/projects';
+
 import { PROJECTS_LIMIT } from './constants';
-import styles from './organizationItem.scss';
 import { AddItemButton } from './addItemButton';
 import { Project, ProjectItems } from './projectItems';
 import { AddProjectForm } from './addProjectForm';
-import { ProjectsSearchesResponseData } from 'controllers/organization/projects';
 
-const cx = classNames.bind(styles) as typeof classNames;
+import styles from './organizationItem.scss';
+
+const cx = createClassnames(styles);
 
 export interface Organization {
   id: number;

@@ -49,7 +49,7 @@ export default defineConfig([
       // General rules
       'no-unused-vars': 'off', // lot of unused `React` import
       'no-throw-literal': 'error',
-      'no-console': 'error',
+      'no-console': ['error', { allow: ['warn', 'error', 'info'] }],
       'no-await-in-loop': 'error',
       'no-nested-ternary': 'error',
       'react/no-array-index-key': 'error',

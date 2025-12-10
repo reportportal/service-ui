@@ -28,11 +28,10 @@ import { injectIntl } from 'react-intl';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import { showDefaultErrorNotification, showSuccessNotification } from 'controllers/notification';
-import { fetch } from 'common/utils';
-import { canWorkWithDashboard } from 'common/utils/permissions/permissions';
+import { fetch, copyToClipboard } from 'common/utils';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import styles from './dashboardTable.scss';
 import { messages } from './messages';
-import { userRolesSelector } from 'controllers/pages';
 
 const cx = classNames.bind(styles);
 
@@ -110,7 +109,7 @@ export const DuplicateColumn = track()(
       const url = URLS.dashboardConfig(activeProject, value.id);
       return fetch(url);
     };
-    const userRoles = useSelector(userRolesSelector);
+    const { canWorkWithDashboard } = useUserPermissions();
 
     useEffect(() => {
       if (opened) {
@@ -145,7 +144,7 @@ export const DuplicateColumn = track()(
 
       try {
         const config = await dashboardConfigPromise;
-        await navigator.clipboard.writeText(JSON.stringify(config));
+        await copyToClipboard(JSON.stringify(config));
         dispatch(
           showSuccessNotification({
             messageId: 'dashboardConfigurationCopied',
@@ -171,7 +170,7 @@ export const DuplicateColumn = track()(
             <i className={cx('arrow', { opened })} />
             {opened && (
               <div className={cx('duplicate-menu', 'shown')}>
-                {canWorkWithDashboard(userRoles) && (
+                {canWorkWithDashboard && (
                   <button type="button" className={cx('dropdown-item')} onClick={handleDuplicate}>
                     {intl.formatMessage(messages.duplicate)}
                   </button>

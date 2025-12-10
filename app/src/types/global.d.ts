@@ -14,17 +14,38 @@
  * limitations under the License.
  */
 
+// SVG imports
+declare module '*.svg' {
+  import { FC, SVGProps } from 'react';
+
+  const ReactComponent: FC<SVGProps<SVGSVGElement>>;
+  export default ReactComponent;
+}
+
+// SCSS module imports
 declare module '*.scss' {
   const classes: { [key: string]: string };
   export default classes;
 }
 
+// CSS module imports
+declare module '*.css' {
+  const classes: { [key: string]: string };
+  export default classes;
+}
+
+// Image imports
 declare module '*.png' {
   const value: string;
   export default value;
 }
 
-declare module '*-inline.svg' {
-  const content: string;
-  export default content;
+declare module '*.jpg' {
+  const value: string;
+  export default value;
+}
+
+declare module '*.jpeg' {
+  const value: string;
+  export default value;
 }

@@ -53,10 +53,10 @@ export const ProjectTeamActionMenu = ({ user }: ProjectTeamActionMenuProps) => {
   const { trackEvent } = useTracking();
   const roles = useSelector(userRolesSelector);
   const currentUserId = useSelector(idSelector) as number;
-  const projectId = useSelector(projectInfoIdSelector) as number;
-  const projectName = useSelector(projectNameSelector) as string;
-  const projectKey = useSelector(projectKeySelector) as string;
-  const organizationSlug = useSelector(urlOrganizationSlugSelector) as string;
+  const projectId = useSelector(projectInfoIdSelector);
+  const projectName = useSelector(projectNameSelector);
+  const projectKey = useSelector(projectKeySelector);
+  const organizationSlug = useSelector(urlOrganizationSlugSelector);
 
   const handleUnassignClick = useCallback(() => {
     const isCurrentUser = currentUserId === user.id;

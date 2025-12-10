@@ -23,7 +23,6 @@ import {
   querySelector,
   settingsTabSelector,
   urlOrganizationAndProjectSelector,
-  userRolesSelector,
 } from 'controllers/pages';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import {
@@ -34,22 +33,26 @@ import {
   INTEGRATIONS,
   NOTIFICATIONS,
   PATTERN_ANALYSIS,
+  ENVIRONMENTS,
+  TEST_DATA,
 } from 'common/constants/settingsTabs';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Integrations } from 'pages/inside/projectSettingsPageContainer/content/integrations';
 import { DefectTypes } from 'pages/inside/projectSettingsPageContainer/content/defectTypes';
 import { DemoDataTab } from 'pages/inside/projectSettingsPageContainer/content/demoDataContent';
-import { canSeeDemoData, canUpdateSettings } from 'common/utils/permissions';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { uiExtensionSettingsTabsSelector } from 'controllers/plugins';
 import { useNavigationTabsExtensionsConfig } from 'common/hooks';
 import { Navigation } from 'pages/inside/common/navigation';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { useUserPermissions } from 'hooks/useUserPermissions';
+import { useTmsEnabled } from 'hooks/useTmsEnabled';
 import { Header } from 'pages/inside/common/header';
 import { PatternAnalysis } from 'pages/inside/projectSettingsPageContainer/content/patternAnalysis';
 import { Notifications } from 'pages/inside/projectSettingsPageContainer/content/notifications';
 import { GeneralTab } from './generalTab';
 import { AnalyzerContainer } from './content/analyzerContainer';
+import { TestData, Environments } from './content/testLibrary';
 import { messages } from './messages';
 import styles from './projectSettingsPageContainer.scss';
 import { ProjectSettingsAnalyticsWrapper } from './projectSettingsAnalyticsWrapper';
@@ -62,9 +65,10 @@ export const ProjectSettingsPageContainer = () => {
   const extensions = useSelector(uiExtensionSettingsTabsSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
   const activeTab = useSelector(settingsTabSelector);
-  const userRoles = useSelector(userRolesSelector);
+  const { canSeeDemoData, canUpdateSettings } = useUserPermissions();
   const { subPage } = useSelector(querySelector);
   const [headerNodes, setHeaderNodes] = useState({});
+  const isTmsEnabled = useTmsEnabled();
 
   const createTabLink = useCallback(
     (tabName, extendedParams = {}, page = PROJECT_SETTINGS_TAB_PAGE) => ({
@@ -118,7 +122,7 @@ export const ProjectSettingsPageContainer = () => {
       [ANALYSIS]: {
         name: formatMessage(messages.analysis),
         link: createTabLink(ANALYSIS, {
-          subTab: canUpdateSettings(userRoles) ? 'indexSettings' : 'autoAnalysis',
+          subTab: canUpdateSettings ? 'indexSettings' : 'autoAnalysis',
         }),
         component: (
           <AnalyzerContainer setHeaderNodes={(node) => setHeaderNodes({ children: node })} />
@@ -142,12 +146,28 @@ export const ProjectSettingsPageContainer = () => {
         eventInfo: SETTINGS_PAGE_EVENTS.DEMO_DATA_TAB,
         mobileDisabled: true,
       },
+      ...(isTmsEnabled && {
+        [ENVIRONMENTS]: {
+          name: formatMessage(messages.environments),
+          link: createTabLink(ENVIRONMENTS),
+          component: <Environments />,
+          mobileDisabled: true,
+        },
+        [TEST_DATA]: {
+          name: formatMessage(messages.testData),
+          link: createTabLink(TEST_DATA),
+          component: (
+            <TestData setHeaderTitleNode={(node) => setHeaderNodes({ titleNode: node })} />
+          ),
+          mobileDisabled: true,
+        },
+      }),
     };
-    if (!canSeeDemoData(userRoles)) {
+    if (!canSeeDemoData) {
       delete navConfig[DEMO_DATA];
     }
     return mergeConfig(navConfig);
-  }, [formatMessage, createTabLink, userRoles, mergeConfig]);
+  }, [formatMessage, createTabLink, mergeConfig]);
 
   const navigation = useMemo(() => {
     if (subPage) {

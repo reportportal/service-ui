@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
+import PropTypes from 'prop-types';
 import { BubblesLoader, Button, FieldText, SystemMessage, Dropdown } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
@@ -25,16 +29,11 @@ import {
   updateOrganizationSettingsAction,
   activeOrganizationSettingsSelector,
 } from 'controllers/organization';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
-import { canUpdateOrganizationSettings } from 'common/utils/permissions';
-import { userRolesSelector } from 'controllers/pages';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { settingsMessages } from 'common/constants/localization/settingsLocalization';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
-import { useTracking } from 'react-tracking';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useRetentionUtils } from './hooks';
 import { messages } from './generalTabMessages';
 import styles from './generalTab.scss';
@@ -51,8 +50,7 @@ const GeneralTabForm = ({ initialize, handleSubmit }) => {
   const organizationId = useSelector(activeOrganizationIdSelector);
   const organizationName = useSelector(activeOrganizationNameSelector);
   const { attachments, launches, logs } = useSelector(activeOrganizationSettingsSelector);
-  const userRoles = useSelector(userRolesSelector);
-  const canPerformUpdate = canUpdateOrganizationSettings(userRoles);
+  const { canUpdateOrganizationSettings } = useUserPermissions();
   const [processingData] = useState(false);
   const [isLoading] = useState(false);
   const formValues = useSelector((state) =>
@@ -60,7 +58,7 @@ const GeneralTabForm = ({ initialize, handleSubmit }) => {
   );
   const { getLaunchesOptions, getLogOptions, getScreenshotsOptions } =
     useRetentionUtils(formValues);
-  const isDisabled = !canPerformUpdate || processingData;
+  const isDisabled = !canUpdateOrganizationSettings || processingData;
 
   useEffect(() => {
     if (organizationName) {

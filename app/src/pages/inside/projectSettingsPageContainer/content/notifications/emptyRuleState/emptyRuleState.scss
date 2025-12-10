@@ -15,27 +15,10 @@
  */
 
 .empty-rule-state {
-  display: flex;
-  height: 64px;
-  padding: 0px 16px;
-  border-radius: 8px;
-  justify-content: space-between;
-  max-width: calc(100% - 32px);
-  background-color: $COLOR--bg-200;
-  align-items: center;
   margin-left: 48px;
 
-  .label {
-    font-family: $FONT-ROBOTO-REGULAR;
-    font-size: 13px;
-    line-height: 20px;
-    color: $COLOR--e-400;
-    text-indent: 1px;
-  }
-
-  .button {
-    border: $COLOR--topaz solid 1px;
-    height: 36px;
-    padding: 7px 16px;
+  div:first-child {
+    width: auto;
+    max-width: calc(100% - 32px);
   }
 }

@@ -37,6 +37,7 @@ export class MultipleAutocomplete extends Component {
     placeholder: PropTypes.string,
     error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
     touched: PropTypes.bool,
+    getUniqKey: PropTypes.func,
     creatable: PropTypes.bool,
     onChange: PropTypes.func,
     onFocus: PropTypes.func,

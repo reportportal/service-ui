@@ -62,7 +62,7 @@ export function* fetchExtensionManifests(action) {
 
     yield put(fetchExtensionManifestsSuccessAction(manifestsArray));
   } catch (error) {
-    console.error('Plugin manifests load error'); // eslint-disable-line no-console
+    console.error('Plugin manifests load error');
   }
 }
 
@@ -84,6 +84,6 @@ export function* fetchExtensionManifest({ payload: plugin }) {
       }),
     );
   } catch (error) {
-    console.error(`${pluginName} plugin  manifest load error`); // eslint-disable-line no-console
+    console.error(`${pluginName} plugin  manifest load error`);
   }
 }

@@ -83,6 +83,10 @@ const messages = defineMessages({
     id: 'LaunchMergeModal.launchDescriptionHint',
     defaultMessage: 'Description should have size not more than 2048 symbols.',
   },
+  testCaseDescriptionHint: {
+    id: 'DescriptionModal.testCaseDescriptionHint',
+    defaultMessage: 'Description should have size not more than 255 symbols.',
+  },
   dashboardNameHint: {
     id: 'AddEditDashboard.dashboardNameHint',
     defaultMessage: 'Dashboard name should have size  from 3 to 128.',
@@ -159,6 +163,10 @@ const messages = defineMessages({
   issueIdHint: {
     id: 'LinkIssueModal.issueIdHint',
     defaultMessage: 'Issue ID should have size from 1 to 128',
+  },
+  requirementsLinkHint: {
+    id: 'Common.requirementsLinkHint',
+    defaultMessage: 'Please enter a valid URL using the format: https://example.com.',
   },
   requiredFieldHint: {
     id: 'Common.requiredFieldHint',
@@ -318,6 +326,14 @@ const messages = defineMessages({
     id: 'CreateUserModal.emailInviteUserHint',
     defaultMessage: 'Please enter a valid email',
   },
+  projectVersionLengthHint: {
+    id: 'ListOfVersionsPage.projectVersionLengthHint',
+    defaultMessage: 'Name must not exceed 60 characters',
+  },
+  enteredTextDoesNotMatchKeyword: {
+    id: 'ProductVersionPage.enteredTextDoesNotMatch',
+    defaultMessage: 'The entered text does not match the required keyword',
+  },
 });
 
 @injectIntl
@@ -334,6 +350,7 @@ export class FieldErrorHint extends Component {
     provideHint: PropTypes.bool,
     touched: PropTypes.bool,
     dataAutomationId: PropTypes.string,
+    className: PropTypes.string,
   };
 
   static defaultProps = {
@@ -348,6 +365,7 @@ export class FieldErrorHint extends Component {
     provideHint: true,
     touched: false,
     dataAutomationId: '',
+    className: '',
   };
 
   isHintVisible = () => {
@@ -371,9 +389,10 @@ export class FieldErrorHint extends Component {
       darkView,
       provideHint,
       dataAutomationId,
+      className,
       ...rest
     } = this.props;
-    const classes = cx('field-error-hint', `type-${hintType}`);
+    const classes = cx('field-error-hint', `type-${hintType}`, className);
 
     return (
       <div className={classes} data-automation-id={dataAutomationId}>

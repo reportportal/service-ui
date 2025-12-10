@@ -40,6 +40,7 @@ export {
   personalOrganizationsSelector,
   tmsEnabledSelector,
 } from './selectors';
+export { isTmsEnabled } from './utils';
 export { serverSettingsSagas } from './sagas';
 export {
   ANALYTICS_ALL_KEY,

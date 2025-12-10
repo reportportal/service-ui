@@ -40,7 +40,10 @@ export {
   canReadData,
   canSeeDemoData,
   canWorkWithTests,
+  canRenameProject,
+  canInviteUserToProject,
   canSeeEmailMembers,
+  canSeeRowActionMenu,
   canSeeSidebarOptions,
   canCreateOrganization,
   canUpdateOrganizationSettings,
@@ -53,5 +56,31 @@ export {
   canDeleteOrganization,
   canSeeInstanceLevelPluginsPages,
   canRenameOrganization,
+  // MANUAL LAUNCH
+  canCreateManualLaunch,
+  // TEST CASE
+  canAddTestCaseToLaunch,
+  canAddTestCaseToTestPlan,
+  canCreateTestCase,
+  canDeleteTestCase,
+  canDoTestCaseBulkActions,
+  canDuplicateTestCase,
+  canEditTestCase,
+  canEditTestCaseDescription,
+  canEditTestCaseScenario,
+  canEditTestCaseTag,
+  canMoveTestCase,
+  canCreateTestCaseFolder,
+  canDeleteTestCaseFolder,
+  canDuplicateTestCaseFolder,
+  canRenameTestCaseFolder,
+  // TEST CASES
+  canImportTestCases,
+  // TEST PLAN
+  canEditTestPlan,
+  canDeleteTestPlan,
+  canDuplicateTestPlan,
+  canCreateTestPlan,
 } from './permissions';
+
 export { getRoleTitle, getRoleBadgesData, getOrgRoleTitle } from './getRoleTitle';

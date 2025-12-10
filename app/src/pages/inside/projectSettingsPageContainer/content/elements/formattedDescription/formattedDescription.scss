@@ -16,6 +16,7 @@
 
 .topaz {
   & > a {
+    display: inline-flex;
     font-family: $FONT-ROBOTO-REGULAR;
     font-size: 13px;
     line-height: 20px;
@@ -24,6 +25,12 @@
     &:hover {
       text-decoration: underline;
       color: $COLOR--topaz-hover-2;
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+      margin-left: 2px;
     }
   }
 }

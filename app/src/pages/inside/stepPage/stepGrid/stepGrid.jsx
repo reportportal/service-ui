@@ -35,10 +35,8 @@ import {
 } from 'components/filterEntities/constants';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { formatAttribute } from 'common/utils/attributeUtils';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { StatusDropdown } from 'pages/inside/common/statusDropdown/statusDropdown';
-import { canWorkWithDefectTypes, canWorkWithTests } from 'common/utils/permissions/permissions';
-import { userRolesSelector } from 'controllers/pages';
-import { useSelector } from 'react-redux';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
 import { DefectType } from './defectType';
 import { GroupHeader } from './groupHeader';
@@ -211,8 +209,7 @@ export const StepGrid = ({
 }) => {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
-  const userRoles = useSelector(userRolesSelector);
-  const canManageTests = canWorkWithTests(userRoles);
+  const { canWorkWithDefectTypes, canWorkWithTests } = useUserPermissions();
 
   const handleAttributeFilterClick = (attribute) => {
     onFilterClick(
@@ -291,7 +288,7 @@ export const StepGrid = ({
           formatMessage,
           onChange: (status) => trackEvent(events.getChangeItemStatusEvent(status)),
           fetchFunc: onStatusUpdate,
-          readOnly: !canWorkWithTests(userRoles),
+          readOnly: !canWorkWithTests,
           viewOnly: isTestSearchView,
         },
         withFilter: !isTestSearchView,
@@ -320,7 +317,7 @@ export const StepGrid = ({
             onEditEvent: events.MAKE_DECISION_MODAL_EVENTS?.getOpenModalEvent,
             onClickIssueTicketEvent: events.onClickIssueTicketEvent,
           },
-          disabled: !canWorkWithDefectTypes(userRoles),
+          disabled: !canWorkWithDefectTypes,
         },
         withFilter: !isTestSearchView,
         filterEventInfo: events.DEFECT_TYPE_FILTER,
@@ -337,7 +334,6 @@ export const StepGrid = ({
     onStatusUpdate,
     modifyColumnsFunc,
     isTestSearchView,
-    userRoles,
     trackEvent,
   ]);
 
@@ -350,7 +346,7 @@ export const StepGrid = ({
         onToggleSelectAll={onAllItemsSelect}
         onItemsSelect={onItemsSelect}
         selectedItems={selectedItems}
-        selectable={!isTestSearchView && canManageTests}
+        selectable={!isTestSearchView && canWorkWithTests}
         rowClassMapper={highlightFailedItems}
         loading={loading}
         groupHeader={GroupHeader}

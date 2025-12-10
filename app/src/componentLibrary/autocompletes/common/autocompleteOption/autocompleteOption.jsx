@@ -33,8 +33,17 @@ export const AutocompleteOption = ({
   disabled,
   optionVariant,
   variant,
+  newItemButtonText,
   ...props
 }) => {
+  const getButtonText = () => {
+    if (newItemButtonText) {
+      return newItemButtonText;
+    }
+
+    return optionVariant === 'key-variant' ? 'New key' : 'New value';
+  };
+
   return isNew ? (
     <>
       <div className={cx('divider', variant)} />
@@ -53,7 +62,7 @@ export const AutocompleteOption = ({
           icon={Parser(PlusIcon)}
           variant={'text'}
         >
-          {optionVariant === 'key-variant' ? 'New key' : 'New value'}
+          {getButtonText()}
         </Button>
       </li>
     </>
@@ -78,6 +87,7 @@ AutocompleteOption.propTypes = {
   disabled: PropTypes.bool,
   optionVariant: singleAutocompleteOptionVariantType,
   variant: autocompleteVariantType,
+  newItemButtonText: PropTypes.string,
 };
 AutocompleteOption.defaultProps = {
   isActive: false,
@@ -87,4 +97,5 @@ AutocompleteOption.defaultProps = {
   disabled: false,
   optionVariant: '',
   variant: 'light',
+  newItemButtonText: '',
 };

@@ -1,0 +1,120 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.attachment-area {
+  background-color: var(--rp-ui-base-bg-000);
+  width: 100%;
+  box-shadow: 0 1px 3px 0 var(--rp-ui-base-e-100);
+  border-left: 1px solid var(--rp-ui-base-e-100);
+  border-radius: 4px;
+  display: flex;
+  font-family: $FONT-ROBOTO-REGULAR;
+
+  &__fields-container {
+    width: 100%;
+    min-width: 0;
+  }
+
+  &__fields {
+    padding: 16px;
+  }
+
+  &__number {
+    padding: 16px 12px;
+    border-right: 1px solid var(--rp-ui-base-e-100);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    width: 32px;
+
+    svg path {
+      fill: var(--rp-ui-base-e-300);
+    }
+  }
+
+  &__drag {
+    display: flex;
+    font-size: 13px;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 16px;
+    line-height: 16px;
+    font-weight: 500;
+  }
+
+  &__attachments-container {
+    border-top: 1px solid var(--rp-ui-base-e-100);
+    padding: 16px;
+  }
+
+  &__attachment {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  &__attachment-title {
+    color: var(--rp-ui-base-almost-black);
+    font-weight: 500;
+  }
+
+  &__add-attachment {
+    display: flex;
+    column-gap: 8px;
+    align-items: center;
+  }
+
+  &__dropzone-text {
+    display: flex;
+    align-items: center;
+    column-gap: 4px;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--rp-ui-base-e-400);
+  }
+
+  &__files-list {
+    div {
+      min-width: 0;
+    }
+  }
+}
+
+.attachment-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  pointer-events: none;
+
+  .attachment-area__add-attachment {
+    pointer-events: auto;
+    display: flex;
+    column-gap: 8px;
+    align-items: center;
+
+    button {
+      pointer-events: auto;
+    }
+  }
+}
+
+.dropzone-wrapper {
+  width: 100%;
+}

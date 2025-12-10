@@ -18,8 +18,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { userRolesSelector } from 'controllers/pages';
-import { canCreateOrganization } from 'common/utils/permissions';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { BubblesLoader, PlusIcon } from '@reportportal/ui-kit';
@@ -37,6 +35,7 @@ import { assignedOrganizationsSelector, userIdSelector } from 'controllers/user'
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { showModalAction } from 'controllers/modal';
 import EmptyIcon from './img/empty-organizations-inline.svg';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { OrganizationsPageHeader } from './organizationsPageHeader';
 import { OrganizationsPanelView } from './organizationsPanelView';
 import { messages } from './messages';
@@ -71,20 +70,21 @@ const OrganizationsPageComponent = ({
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
-  const userRoles = useSelector(userRolesSelector);
-  const hasPermission = canCreateOrganization(userRoles);
+  const { canCreateOrganization } = useUserPermissions();
   const organizationsList = useSelector(organizationsListSelector);
   const isOrganizationsLoading = useSelector(organizationsListLoadingSelector);
   const userId = useSelector(userIdSelector);
   const organizationPlugin = useSelector(organizationPluginSelector);
   const [searchValue, setSearchValue] = useState(null);
   const [appliedFiltersCount, setAppliedFiltersCount] = useState(0);
+  const isEmptyOrganizations = !isOrganizationsLoading && organizationsList.length === 0;
   const [isOpenTableView, setIsOpenTableView] = useState(
     getStorageItem(`${userId}_settings`)?.organizationsPanel === TABLE_VIEW,
   );
 
   const assignedOrganizations = useSelector(assignedOrganizationsSelector);
-  const noAssignedOrganizations = Object.keys(assignedOrganizations).length === 0 && !hasPermission;
+  const noAssignedOrganizations =
+    Object.keys(assignedOrganizations).length === 0 && !canCreateOrganization;
 
   const openPanelView = () => {
     setIsOpenTableView(false);
@@ -136,14 +136,16 @@ const OrganizationsPageComponent = ({
 
     return searchValue === null && appliedFiltersCount === 0 ? (
       <EmptyPageState
-        hasPermission={hasPermission}
+        hasPermission={canCreateOrganization}
         emptyIcon={EmptyIcon}
         icon={<PlusIcon />}
         label={formatMessage(
-          hasPermission ? messages.noOrganizationsYet : messages.noOrganizationsAvailableYet,
+          canCreateOrganization
+            ? messages.noOrganizationsYet
+            : messages.noOrganizationsAvailableYet,
         )}
         description={formatMessage(
-          hasPermission ? messages.createNewOrganization : messages.description,
+          canCreateOrganization ? messages.createNewOrganization : messages.description,
         )}
         buttonTitle={formatMessage(messages.createOrganization)}
         onClick={() => onCreateOrganization('empty_state')}
@@ -165,8 +167,8 @@ const OrganizationsPageComponent = ({
     <div className={cx('organizations-page')}>
       {!noAssignedOrganizations && (
         <OrganizationsPageHeader
-          hasPermission={hasPermission}
-          isEmpty={itemCount === 0 && searchValue === null && appliedFiltersCount === 0}
+          hasPermission={canCreateOrganization}
+          isEmpty={isEmptyOrganizations && searchValue === null && appliedFiltersCount === 0}
           searchValue={searchValue}
           setSearchValue={setSearchValue}
           openPanelView={openPanelView}
@@ -177,7 +179,7 @@ const OrganizationsPageComponent = ({
           onCreateOrganization={() => onCreateOrganization()}
         />
       )}
-      {itemCount === 0 ? (
+      {isEmptyOrganizations ? (
         getEmptyPageState()
       ) : (
         <OrganizationsPanelView

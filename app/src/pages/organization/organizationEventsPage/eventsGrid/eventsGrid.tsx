@@ -15,8 +15,9 @@
  */
 
 import React, { Fragment, useMemo } from 'react';
-import classNames from 'classnames/bind';
 import { defineMessages, IntlShape, useIntl } from 'react-intl';
+
+import { createClassnames } from 'common/utils';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
 import {
@@ -37,7 +38,7 @@ import {
 
 import styles from './eventsGrid.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 const messages = defineMessages({
   timeCol: { id: 'EventsGrid.timeCol', defaultMessage: 'Time' },
