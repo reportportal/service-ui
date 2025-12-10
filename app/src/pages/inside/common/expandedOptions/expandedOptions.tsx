@@ -19,6 +19,8 @@ import { defineMessages, useIntl } from 'react-intl';
 import { BaseIconButton, SearchIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
+import { EXPANDED_FOLDERS_IDS } from 'common/constants/localStorageKeys';
+import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 import { TransformedFolder } from 'controllers/testCase';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
@@ -28,7 +30,8 @@ import { Folder } from './folder';
 import styles from './expandedOptions.scss';
 
 const cx = createClassnames(styles);
-const STORAGE_KEY = 'expanded_folders_ids';
+
+const BASE_STORAGE_KEY = EXPANDED_FOLDERS_IDS as string;
 
 const messages = defineMessages({
   allTestCases: {
@@ -43,6 +46,7 @@ const messages = defineMessages({
 
 const getFolderAndDescendantIds = (folder: TransformedFolder): number[] => {
   let ids = [folder.id];
+
   if (folder.folders && folder.folders.length > 0) {
     folder.folders.forEach((subFolder) => {
       ids = ids.concat(getFolderAndDescendantIds(subFolder));
@@ -72,31 +76,44 @@ export const ExpandedOptions = ({
 }: ExpandedOptionsProps) => {
   const { formatMessage } = useIntl();
 
+  const storageKey = instanceKey ? `${BASE_STORAGE_KEY}_${instanceKey}` : BASE_STORAGE_KEY;
+
   const [expandedIds, setExpandedIds] = useState<number[]>(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? (JSON.parse(saved) as number[]) : [];
+      const parsed = getStorageItem(storageKey) as number[] | null;
+
+      if (!parsed) return [];
+
+      if (Array.isArray(parsed) && parsed.every((id) => typeof id === 'number')) {
+        return parsed;
+      }
+
+      return [];
     } catch {
       return [];
     }
   });
 
-  const onToggleFolder = useCallback((folder: TransformedFolder) => {
-    setExpandedIds((prevIds) => {
-      const isExpanded = prevIds.includes(folder.id);
+  const onToggleFolder = useCallback(
+    (folder: TransformedFolder) => {
+      setExpandedIds((prevIds) => {
+        const isExpanded = prevIds.includes(folder.id);
+        let newIds: number[];
 
-      let newIds: number[];
-      if (isExpanded) {
-        const idsToRemove = getFolderAndDescendantIds(folder);
-        newIds = prevIds.filter((id) => !idsToRemove.includes(id));
-      } else {
-        newIds = [...prevIds, folder.id];
-      }
+        if (isExpanded) {
+          const idsToRemove = getFolderAndDescendantIds(folder);
+          newIds = prevIds.filter((id) => !idsToRemove.includes(id));
+        } else {
+          newIds = [...prevIds, folder.id];
+        }
 
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(newIds));
-      return newIds;
-    });
-  }, []);
+        setStorageItem(storageKey, newIds);
+
+        return newIds;
+      });
+    },
+    [storageKey],
+  );
 
   const totalTestCases = folders.reduce((total: number, folder: TransformedFolder): number => {
     const countFolderTestCases = (folder: TransformedFolder): number => {
