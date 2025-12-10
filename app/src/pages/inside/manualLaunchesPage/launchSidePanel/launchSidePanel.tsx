@@ -73,7 +73,7 @@ export const LaunchSidePanel = memo(({ launchId, isVisible, onClose }: LaunchSid
 
   const { testPlan, owner, type, startTime } = launchDetails;
 
-  const ownerDisplay = owner?.name ?? owner?.email;
+  const ownerInfo = owner?.name ?? owner?.email;
 
   const descriptionComponent = (
     <div className={cx('header-meta')}>
@@ -88,7 +88,7 @@ export const LaunchSidePanel = memo(({ launchId, isVisible, onClose }: LaunchSid
         <div className={cx('meta-item-row')}>
           <UserIcon />
           <span className={cx('meta-label')}>{formatMessage(messages.owner)}:</span>
-          <span className={cx('meta-value')}>{ownerDisplay}</span>
+          <span className={cx('meta-value')}>{ownerInfo}</span>
         </div>
       </div>
       <div className={cx('meta-row')}>
