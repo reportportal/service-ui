@@ -23,17 +23,11 @@ const getFolderAndDescendantIds = (folder: TransformedFolder): number[] => {
 export const useStorageFolders = (instanceKey?: INSTANCE_KEYS) => {
   const storageKey = instanceKey ? `${BASE_STORAGE_KEY}_${instanceKey}` : BASE_STORAGE_KEY;
 
-  const [expandedIds, setExpandedIds] = useState<number[]>(() => {
+  const [expandedIds, setExpandedIds] = useState(() => {
     try {
       const parsed = getStorageItem(storageKey) as number[] | null;
 
-      if (!parsed) return [];
-
-      if (Array.isArray(parsed) && parsed.every((id) => isNumber(id))) {
-        return parsed;
-      }
-
-      return [];
+      return Array.isArray(parsed) && parsed.every((id) => isNumber(id)) ? parsed : [];
     } catch {
       return [];
     }
