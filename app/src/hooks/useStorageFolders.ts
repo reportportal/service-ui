@@ -6,8 +6,6 @@ import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 import { TransformedFolder } from 'controllers/testCase';
 
-const BASE_STORAGE_KEY = EXPANDED_FOLDERS_IDS as string;
-
 const getFolderAndDescendantIds = (folder: TransformedFolder): number[] =>
   (folder.folders || []).reduce(
     (result, subFolders) => {
@@ -18,7 +16,9 @@ const getFolderAndDescendantIds = (folder: TransformedFolder): number[] =>
   );
 
 export const useStorageFolders = (instanceKey?: INSTANCE_KEYS) => {
-  const storageKey = instanceKey ? `${BASE_STORAGE_KEY}_${instanceKey}` : BASE_STORAGE_KEY;
+  const storageKey = instanceKey
+    ? `${EXPANDED_FOLDERS_IDS}_${instanceKey}`
+    : (EXPANDED_FOLDERS_IDS as string);
 
   const [expandedIds, setExpandedIds] = useState(() => {
     try {
