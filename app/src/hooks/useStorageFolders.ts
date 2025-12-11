@@ -1,6 +1,5 @@
 import { useState, useCallback } from 'react';
-import { isEmpty } from 'es-toolkit/compat';
-import { isNumber } from 'es-toolkit/compat';
+import { isEmpty, isNumber } from 'es-toolkit/compat';
 
 import { EXPANDED_FOLDERS_IDS } from 'common/constants/localStorageKeys';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
