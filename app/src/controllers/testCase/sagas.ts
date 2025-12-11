@@ -289,7 +289,7 @@ function* deleteFolder(action: DeleteFolderAction) {
     const deletedFolderIds = getAllFolderIdsToDelete(id, folders);
     const isActiveFolder = id === activeFolderId;
 
-    yield call(fetch, URLS.deleteFolder(projectKey, id), {
+    yield call(fetch, URLS.folder(projectKey, id), {
       method: 'DELETE',
     });
 
@@ -325,7 +325,7 @@ function* renameFolder(action: RenameFolderAction) {
     const projectKey = (yield select(projectKeySelector)) as string;
     const { folderId, folderName } = action.payload;
 
-    yield call(fetch, URLS.deleteFolder(projectKey, folderId), {
+    yield call(fetch, URLS.folder(projectKey, folderId), {
       method: 'PATCH',
       data: {
         name: folderName,

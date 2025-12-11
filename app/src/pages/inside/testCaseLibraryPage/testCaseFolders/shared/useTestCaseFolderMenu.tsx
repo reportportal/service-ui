@@ -25,6 +25,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useDeleteFolderModal } from '../../testCaseFolders/modals/deleteFolderModal';
 import { useRenameFolderModal } from '../../testCaseFolders/modals/renameFolderModal';
 import { useDuplicateFolderModal } from '../../testCaseFolders/modals/duplicateFolderModal';
+import { useMoveFolderModal } from '../../testCaseFolders/modals/moveFolderModal';
 import { commonMessages } from '../../commonMessages';
 
 interface UseTestCaseFolderMenuProps {
@@ -42,9 +43,14 @@ export const useTestCaseFolderMenu = ({
   const { openModal: openDeleteModal } = useDeleteFolderModal();
   const { openModal: openRenameModal } = useRenameFolderModal();
   const { openModal: openDuplicateModal } = useDuplicateFolderModal();
+  const { openModal: openMoveModal } = useMoveFolderModal();
 
-  const { canDeleteTestCaseFolder, canDuplicateTestCaseFolder, canRenameTestCaseFolder } =
-    useUserPermissions();
+  const {
+    canDeleteTestCaseFolder,
+    canDuplicateTestCaseFolder,
+    canRenameTestCaseFolder,
+    canMoveTestCase,
+  } = useUserPermissions();
 
   const handleDeleteFolder = () => {
     openDeleteModal({
@@ -58,6 +64,8 @@ export const useTestCaseFolderMenu = ({
 
   const handleDuplicateFolder = () => openDuplicateModal({ folder });
 
+  const handleMoveFolder = () => openMoveModal({ folder });
+
   const testCaseFolderTooltipItems: PopoverItem[] = compact([
     canRenameTestCaseFolder && {
       label: formatMessage(COMMON_LOCALE_KEYS.RENAME),
@@ -67,6 +75,11 @@ export const useTestCaseFolderMenu = ({
       label: formatMessage(commonMessages.duplicateFolder),
       variant: 'text' as const,
       onClick: handleDuplicateFolder,
+    },
+    canMoveTestCase && {
+      label: formatMessage(COMMON_LOCALE_KEYS.MOVE),
+      variant: 'text' as const,
+      onClick: handleMoveFolder,
     },
     canDeleteTestCaseFolder && {
       label: formatMessage(commonMessages.deleteFolder),

@@ -14,28 +14,26 @@
  * limitations under the License.
  */
 
-import { useState, useCallback, useMemo, ComponentProps } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useIntl } from 'react-intl';
-import { useDispatch, useSelector } from 'react-redux';
-import { reduxForm, InjectedFormProps, formValueSelector } from 'redux-form';
+import { reduxForm, InjectedFormProps } from 'redux-form';
 import { noop } from 'es-toolkit';
-import { Modal, SingleAutocomplete } from '@reportportal/ui-kit';
+import { Modal } from '@reportportal/ui-kit';
 
 import { UseModalData } from 'common/hooks';
 import { createClassnames } from 'common/utils';
-import { withModal, hideModalAction } from 'controllers/modal';
-import { commonValidators } from 'common/utils/validation';
+import { withModal } from 'controllers/modal';
 import { coerceToNumericId } from 'pages/inside/testCaseLibraryPage/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
-import { ButtonSwitcher, ButtonSwitcherOption } from 'pages/inside/common/buttonSwitcher';
-import { FieldProvider, FieldErrorHint } from 'components/fields';
-import { FolderWithFullPath } from 'controllers/testCase';
+import { ButtonSwitcherOption } from 'pages/inside/common/buttonSwitcher';
 
-import { CreateFolderForm } from '../../testCaseFolders/shared/CreateFolderForm';
-import { CreateFolderAutocomplete } from '../../testCaseFolders/shared/CreateFolderAutocomplete';
-import { sharedFolderMessages } from '../../testCaseFolders/modals/messages';
-import { commonMessages as testCaseCommonMessages } from '../../commonMessages';
+import { DestinationFolderSwitch } from '../../testCaseFolders/shared/DestinationFolderSwitch';
+import { useFolderModalMode } from '../../hooks/useFolderModalMode';
+import { useModalButtons } from '../../hooks/useModalButtons';
+import { validateFolderModalForm } from '../../utils/validateFolderModalForm';
+import { FolderModalFormValues } from '../../utils/folderModalFormConfig';
+import { commonFolderMessages } from '../../testCaseFolders/modals/commonFolderMessages';
 import { useBatchDuplicateToFolder } from './useBatchDuplicateToFolder';
 import { messages } from './messages';
 
@@ -51,42 +49,16 @@ export interface BatchDuplicateToFolderModalData {
   count: number;
 }
 
-interface BatchDuplicateToFolderFormValues {
-  mode?: ButtonSwitcherOption;
-  destinationFolder?: { id: number };
-  folderName?: string;
-  parentFolder?: { id: number };
-  isRootFolder?: boolean;
-}
-
 type BatchDuplicateToFolderModalProps = UseModalData<BatchDuplicateToFolderModalData>;
 
 const BatchDuplicateToFolderModal = reduxForm<
-  BatchDuplicateToFolderFormValues,
+  FolderModalFormValues,
   BatchDuplicateToFolderModalProps
 >({
   form: BATCH_DUPLICATE_TO_FOLDER_FORM,
   destroyOnUnmount: true,
   shouldValidate: () => true,
-  validate: (values, props) => {
-    const errors: Partial<Record<keyof BatchDuplicateToFolderFormValues, string>> = {};
-
-    if (props.data) {
-      const isExistingMode = values.mode === ButtonSwitcherOption.EXISTING;
-
-      if (isExistingMode) {
-        errors.destinationFolder = commonValidators.requiredField(values.destinationFolder);
-      } else {
-        errors.folderName = commonValidators.requiredField(values.folderName);
-
-        if (!values.isRootFolder) {
-          errors.parentFolder = commonValidators.requiredField(values.parentFolder);
-        }
-      }
-    }
-
-    return errors;
-  },
+  validate: (values) => validateFolderModalForm(values),
   initialValues: {
     mode: ButtonSwitcherOption.EXISTING,
     destinationFolder: undefined,
@@ -100,11 +72,10 @@ const BatchDuplicateToFolderModal = reduxForm<
   change,
   data,
 }: BatchDuplicateToFolderModalProps &
-  InjectedFormProps<BatchDuplicateToFolderFormValues, BatchDuplicateToFolderModalProps>) => {
+  InjectedFormProps<FolderModalFormValues, BatchDuplicateToFolderModalProps>) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
   const { isLoading, batchDuplicate } = useBatchDuplicateToFolder();
-  const [currentMode, setCurrentMode] = useState(ButtonSwitcherOption.EXISTING);
+  const { currentMode, handleModeChange } = useFolderModalMode({ change });
 
   const selectedTestCaseIds = useMemo(
     () => data?.selectedTestCaseIds || [],
@@ -112,38 +83,8 @@ const BatchDuplicateToFolderModal = reduxForm<
   );
   const count = data?.count || 0;
 
-  const selector = formValueSelector(BATCH_DUPLICATE_TO_FOLDER_FORM);
-  const isRootFolder = Boolean(
-    useSelector((state) => selector(state, 'isRootFolder') as boolean | undefined),
-  );
-
-  const handleModeChange = useCallback(
-    (mode: ButtonSwitcherOption) => {
-      setCurrentMode(mode);
-      change('mode', mode);
-
-      if (mode === ButtonSwitcherOption.EXISTING) {
-        change('folderName', '');
-        change('parentFolder', undefined);
-        change('isRootFolder', false);
-      } else {
-        change('destinationFolder', undefined);
-      }
-    },
-    [change],
-  );
-
-  const handleFolderSelect: ComponentProps<
-    typeof SingleAutocomplete<FolderWithFullPath>
-  >['onStateChange'] = useCallback(
-    ({ selectedItem }) => {
-      change('destinationFolder', selectedItem);
-    },
-    [change],
-  );
-
   const onSubmit = useCallback(
-    (values: BatchDuplicateToFolderFormValues) => {
+    (values: FolderModalFormValues) => {
       if (currentMode === ButtonSwitcherOption.EXISTING) {
         const testFolderId = coerceToNumericId(values.destinationFolder?.id);
 
@@ -166,33 +107,11 @@ const BatchDuplicateToFolderModal = reduxForm<
     [currentMode, batchDuplicate, selectedTestCaseIds],
   );
 
-  const hideModal = () => dispatch(hideModalAction());
-
-  const description = (
-    <div className={cx('batch-duplicate-modal__description')}>
-      {formatMessage(messages.batchDuplicateDescription, {
-        count,
-        b: (text) => <b>{text}</b>,
-      })}
-    </div>
-  );
-
-  const okButton = useMemo(
-    () => ({
-      children: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE),
-      disabled: isLoading,
-      onClick: handleSubmit(onSubmit) as () => void,
-    }),
-    [formatMessage, handleSubmit, onSubmit, isLoading],
-  );
-
-  const cancelButton = useMemo(
-    () => ({
-      children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      disabled: isLoading,
-    }),
-    [formatMessage, isLoading],
-  );
+  const { okButton, cancelButton, hideModal } = useModalButtons({
+    okButtonText: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE),
+    isLoading,
+    onSubmit: handleSubmit(onSubmit) as () => void,
+  });
 
   return (
     <Modal
@@ -203,38 +122,19 @@ const BatchDuplicateToFolderModal = reduxForm<
       onClose={hideModal}
     >
       <form className={cx('batch-duplicate-modal__form')}>
-        <ButtonSwitcher
-          description={description}
-          existingButtonTitle={formatMessage(messages.duplicateToExistingFolder)}
-          createNewButtonTitle={formatMessage(messages.createNewFolder)}
-          handleActiveButton={handleModeChange}
+        <DestinationFolderSwitch
+          formName={BATCH_DUPLICATE_TO_FOLDER_FORM}
+          description={formatMessage(messages.batchDuplicateDescription, {
+            count,
+            b: (text) => <b>{text}</b>,
+          })}
+          existingFolderButtonLabel={formatMessage(messages.duplicateToExistingFolder)}
+          newFolderButtonLabel={formatMessage(commonFolderMessages.createNewFolder)}
+          rootFolderToggleLabel={formatMessage(messages.duplicateToRootDirectory)}
+          currentMode={currentMode}
+          onModeChange={handleModeChange}
+          change={change}
         />
-        {currentMode === ButtonSwitcherOption.EXISTING && (
-          <FieldProvider name="destinationFolder">
-            <FieldErrorHint provideHint={false}>
-              <CreateFolderAutocomplete
-                name="destinationFolder"
-                label={formatMessage(sharedFolderMessages.folderDestination)}
-                placeholder={formatMessage(testCaseCommonMessages.searchFolderToSelect)}
-                onStateChange={handleFolderSelect}
-                className={cx('batch-duplicate-modal__autocomplete')}
-              />
-            </FieldErrorHint>
-          </FieldProvider>
-        )}
-        {currentMode === ButtonSwitcherOption.NEW && (
-          <CreateFolderForm
-            isToggled={isRootFolder}
-            toggleLabel={formatMessage(messages.duplicateToRootDirectory)}
-            toggleFieldName="isRootFolder"
-            parentFolderFieldName="parentFolder"
-            parentFolderFieldLabel={formatMessage(sharedFolderMessages.parentFolder)}
-            folderNameFieldName="folderName"
-            toggleDisabled={false}
-            isInvertedToggle
-            change={change}
-          />
-        )}
         <ModalLoadingOverlay isVisible={isLoading} />
       </form>
     </Modal>

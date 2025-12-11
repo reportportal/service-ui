@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-export {
-  getFoldersAction,
-  getAllTestCasesAction,
-  getTestCaseByFolderIdAction,
-  updateFolderCounterAction,
-  moveFolderSuccessAction,
-} from './actionCreators';
-export { testCaseSagas } from './sagas';
-export * from './constants';
-export * from './types';
-export { testCaseReducer } from './reducer';
-export * from './selectors';
+import { useModal } from 'common/hooks';
+
+import MoveFolderModal, { MOVE_FOLDER_MODAL_KEY, MoveFolderModalData } from './moveFolderModal';
+
+export const useMoveFolderModal = () =>
+  useModal<MoveFolderModalData>({
+    modalKey: MOVE_FOLDER_MODAL_KEY,
+    renderModal: (data) => <MoveFolderModal data={data} />,
+  });

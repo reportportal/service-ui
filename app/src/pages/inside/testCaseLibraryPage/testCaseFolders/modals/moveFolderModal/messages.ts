@@ -14,15 +14,20 @@
  * limitations under the License.
  */
 
-export {
-  getFoldersAction,
-  getAllTestCasesAction,
-  getTestCaseByFolderIdAction,
-  updateFolderCounterAction,
-  moveFolderSuccessAction,
-} from './actionCreators';
-export { testCaseSagas } from './sagas';
-export * from './constants';
-export * from './types';
-export { testCaseReducer } from './reducer';
-export * from './selectors';
+import { defineMessages } from 'react-intl';
+
+export const messages = defineMessages({
+  moveFolderTitle: {
+    id: 'MoveFolderModal.title',
+    defaultMessage: 'Move Folder',
+  },
+  moveFolderDescription: {
+    id: 'MoveFolderModal.description',
+    defaultMessage:
+      "You're about to move the folder <b>{folderName}</b> along with its test cases and subfolders to a new location",
+  },
+  folderAlreadyAtRoot: {
+    id: 'MoveFolderModal.folderAlreadyAtRoot',
+    defaultMessage: 'The selected folder is already in the root',
+  },
+});

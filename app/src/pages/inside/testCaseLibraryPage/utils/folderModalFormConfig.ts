@@ -14,15 +14,23 @@
  * limitations under the License.
  */
 
-export {
-  getFoldersAction,
-  getAllTestCasesAction,
-  getTestCaseByFolderIdAction,
-  updateFolderCounterAction,
-  moveFolderSuccessAction,
-} from './actionCreators';
-export { testCaseSagas } from './sagas';
-export * from './constants';
-export * from './types';
-export { testCaseReducer } from './reducer';
-export * from './selectors';
+import { ButtonSwitcherOption } from 'pages/inside/common/buttonSwitcher';
+import { FolderWithFullPath } from 'controllers/testCase';
+
+export interface FolderModalFormValues {
+  mode: ButtonSwitcherOption;
+  moveToRoot?: boolean;
+  destinationFolder?: FolderWithFullPath;
+  folderName?: string;
+  parentFolder?: FolderWithFullPath;
+  isRootFolder?: boolean;
+}
+
+export const FOLDER_MODAL_INITIAL_VALUES = {
+  mode: ButtonSwitcherOption.EXISTING,
+  destinationFolder: undefined,
+  folderName: '',
+  parentFolder: undefined,
+  isRootFolder: false,
+  moveToRoot: false,
+};
