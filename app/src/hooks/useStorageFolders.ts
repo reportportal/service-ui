@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { isEmpty, isNumber } from 'es-toolkit/compat';
+import { isNumber } from 'es-toolkit/compat';
 
 import { EXPANDED_FOLDERS_IDS } from 'common/constants/localStorageKeys';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
@@ -8,17 +8,14 @@ import { TransformedFolder } from 'controllers/testCase';
 
 const BASE_STORAGE_KEY = EXPANDED_FOLDERS_IDS as string;
 
-const getFolderAndDescendantIds = (folder: TransformedFolder): number[] => {
-  const ids = [folder.id];
-
-  if (!isEmpty(folder.folders)) {
-    folder.folders.forEach((subFolder) => {
-      ids.push(...getFolderAndDescendantIds(subFolder));
-    });
-  }
-
-  return ids;
-};
+const getFolderAndDescendantIds = (folder: TransformedFolder): number[] =>
+  (folder.folders || []).reduce(
+    (result, subFolders) => {
+      result.push(...getFolderAndDescendantIds(subFolders));
+      return result;
+    },
+    [folder.id],
+  );
 
 export const useStorageFolders = (instanceKey?: INSTANCE_KEYS) => {
   const storageKey = instanceKey ? `${BASE_STORAGE_KEY}_${instanceKey}` : BASE_STORAGE_KEY;
