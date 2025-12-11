@@ -47,12 +47,13 @@ interface CreateFolderAutocompleteProps {
   isRequired?: boolean;
   className?: string;
   customEmptyListMessage?: string;
-  onStateChange?: SingleAutocompleteOnStateChange;
-  onChange?: (value: FolderWithFullPath) => void;
   value?: FolderWithFullPath | null;
   error?: string;
   touched?: boolean;
   createWithoutConfirmation?: boolean;
+  excludeFolderIds?: number[];
+  onStateChange?: SingleAutocompleteOnStateChange;
+  onChange?: (value: FolderWithFullPath) => void;
 }
 
 export const CreateFolderAutocomplete = ({
@@ -61,17 +62,22 @@ export const CreateFolderAutocomplete = ({
   isRequired = false,
   className,
   customEmptyListMessage,
-  onStateChange,
-  onChange,
   value,
   error,
   touched,
   createWithoutConfirmation = true,
+  excludeFolderIds = [],
+  onStateChange,
+  onChange,
 }: CreateFolderAutocompleteProps) => {
   const { formatMessage } = useIntl();
   const folders = useSelector(transformedFoldersWithFullPathSelector);
 
-  const targetFolder = findFolderById(folders, value?.id);
+  const filteredFolders = excludeFolderIds.length
+    ? folders.filter((folder) => !excludeFolderIds.includes(folder.id))
+    : folders;
+
+  const targetFolder = findFolderById(filteredFolders, value?.id);
 
   const autocompleteInputRef = useRef<HTMLInputElement>(null);
 
@@ -124,7 +130,7 @@ export const CreateFolderAutocomplete = ({
         skipOptionCreation
         isDropdownMode
         placeholder={placeholder || formatMessage(commonMessages.searchFolderToSelect)}
-        options={folders}
+        options={filteredFolders}
         customEmptyListMessage={customEmptyListMessage || formatMessage(messages.noFoldersFound)}
         renderOption={renderOption}
         parseValueToString={(option: FolderWithFullPath | string) =>

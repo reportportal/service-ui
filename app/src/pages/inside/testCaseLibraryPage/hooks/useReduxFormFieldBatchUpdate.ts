@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-export {
-  getFoldersAction,
-  getAllTestCasesAction,
-  getTestCaseByFolderIdAction,
-  updateFolderCounterAction,
-  moveFolderSuccessAction,
-} from './actionCreators';
-export { testCaseSagas } from './sagas';
-export * from './constants';
-export * from './types';
-export { testCaseReducer } from './reducer';
-export * from './selectors';
+import { useCallback } from 'react';
+import { InjectedFormProps } from 'redux-form';
+
+export const useReduxFormFieldBatchUpdate = ({ change }: Pick<InjectedFormProps, 'change'>) =>
+  useCallback(
+    (updates: Record<string, unknown>) => {
+      Object.entries(updates).forEach(([field, value]) => {
+        change(field, value);
+      });
+    },
+    [change],
+  );

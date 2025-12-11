@@ -16,7 +16,7 @@
 
 import { defineMessages } from 'react-intl';
 
-export const sharedFolderMessages = defineMessages({
+export const commonFolderMessages = defineMessages({
   createAsSubfolder: {
     id: 'TestCaseLibraryPage.createAsSubfolder',
     defaultMessage: 'Create as subfolder',
@@ -25,6 +25,10 @@ export const sharedFolderMessages = defineMessages({
     id: 'TestCaseLibraryPage.moveToRootDirectory',
     defaultMessage: 'Move to root directory',
   },
+  createAsRootFolder: {
+    id: 'TestCaseLibraryPage.createAsRootFolder',
+    defaultMessage: 'Create as root folder',
+  },
   folderDestination: {
     id: 'TestCaseLibraryPage.folderDestination',
     defaultMessage: 'Folder destination',
@@ -32,5 +36,13 @@ export const sharedFolderMessages = defineMessages({
   parentFolder: {
     id: 'TestCaseLibraryPage.parentFolder',
     defaultMessage: 'Parent folder',
+  },
+  moveToExistingFolder: {
+    id: 'TestCaseLibraryPage.moveToExistingFolder',
+    defaultMessage: 'Move to existing folder',
+  },
+  createNewFolder: {
+    id: 'TestCaseLibraryPage.createNewFolder',
+    defaultMessage: 'Create new folder',
   },
 });

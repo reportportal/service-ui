@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-export {
-  getFoldersAction,
-  getAllTestCasesAction,
-  getTestCaseByFolderIdAction,
-  updateFolderCounterAction,
-  moveFolderSuccessAction,
-} from './actionCreators';
-export { testCaseSagas } from './sagas';
-export * from './constants';
-export * from './types';
-export { testCaseReducer } from './reducer';
-export * from './selectors';
+import { defineMessages } from 'react-intl';
+
+export const messages = defineMessages({
+  moveTestCaseTitle: {
+    id: 'MoveTestCaseModal.title',
+    defaultMessage: 'Move Test Case',
+  },
+  moveTestCaseDescription: {
+    id: 'MoveTestCaseModal.description',
+    defaultMessage: "You're about to move the test case <b>{testCaseName}</b> to a new folder",
+  },
+});

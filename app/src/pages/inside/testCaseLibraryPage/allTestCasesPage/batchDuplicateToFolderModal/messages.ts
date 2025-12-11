@@ -30,10 +30,6 @@ export const messages = defineMessages({
     id: 'BatchDuplicateToFolderModal.duplicateToExistingFolder',
     defaultMessage: 'Duplicate to existing folder',
   },
-  createNewFolder: {
-    id: 'BatchDuplicateToFolderModal.createNewFolder',
-    defaultMessage: 'Create new folder',
-  },
   duplicateToRootDirectory: {
     id: 'BatchDuplicateToFolderModal.duplicateToRootDirectory',
     defaultMessage: 'Duplicate to root directory',

@@ -252,6 +252,18 @@ const messages = defineMessages({
     id: 'TestCaseLibraryPage.testCaseUpdatedSuccess',
     defaultMessage: 'Test Case has been updated successfully.',
   },
+  testCaseMovedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseMovedSuccess',
+    defaultMessage: 'Test Case has been moved successfully.',
+  },
+  testCaseFolderMovedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseFolderMovedSuccess',
+    defaultMessage: 'Folder has been moved successfully.',
+  },
+  testCaseFolderMoveFailed: {
+    id: 'TestCaseLibraryPage.testCaseFolderMoveFailed',
+    defaultMessage: 'Failed to move Folder.',
+  },
   testCaseBulkUpdateSuccess: {
     id: 'TestCaseLibraryPage.testCaseBulkUpdateSuccess',
     defaultMessage: 'Test Cases have been updated successfully.',
@@ -263,6 +275,10 @@ const messages = defineMessages({
   testCaseUpdateFailed: {
     id: 'TestCaseLibraryPage.testCaseUpdateFailed',
     defaultMessage: 'Failed to update Test Case.',
+  },
+  testCaseMoveFailed: {
+    id: 'TestCaseLibraryPage.testCaseMoveFailed',
+    defaultMessage: 'Failed to move Test Case.',
   },
   testCasesAddingToTestPlanFailed: {
     id: 'TestCaseLibraryPage.testCasesAddingToTestPlanFailed',
