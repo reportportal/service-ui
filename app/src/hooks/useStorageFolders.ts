@@ -17,9 +17,7 @@ const getFolderAndDescendantIds = (folder: TransformedFolder) =>
   );
 
 export const useStorageFolders = (instanceKey?: INSTANCE_KEYS) => {
-  const storageKey = instanceKey
-    ? `${EXPANDED_FOLDERS_IDS}_${instanceKey}`
-    : (EXPANDED_FOLDERS_IDS as string);
+  const storageKey = instanceKey ? `${EXPANDED_FOLDERS_IDS}_${instanceKey}` : EXPANDED_FOLDERS_IDS;
 
   const [expandedIds, setExpandedIds] = useState(() => {
     try {
