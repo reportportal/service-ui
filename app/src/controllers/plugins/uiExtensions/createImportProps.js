@@ -68,6 +68,7 @@ import {
   activeProjectRoleSelector,
   isAdminSelector,
   userIdSelector,
+  idSelector,
   getUserProjectSettingsFromStorage,
   updateUserProjectSettingsInStorage,
   logsSizeSelector,
@@ -184,6 +185,8 @@ import {
 } from 'components/integrations/elements';
 import { updateLaunchLocallyAction } from 'controllers/launch';
 import { getDefectTypeLabel } from 'components/main/analytics/events/common/utils';
+import { provideEcGA } from 'components/main/analytics/utils';
+import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
 import { formatAttribute, parseQueryAttributes } from 'common/utils/attributeUtils';
 import { createNamespacedQuery } from 'common/utils/routingUtils';
 import { formatMethodType } from 'common/utils/localizationUtils';
@@ -377,6 +380,7 @@ export const createImportProps = (pluginName) => ({
     payloadSelector,
     activeProjectSelector,
     userIdSelector,
+    idSelector,
     projectIdSelector,
     // TODO: must be removed when the common plugin commands will be used
     globalIntegrationsSelector: createGlobalNamedIntegrationsSelector(pluginName),
@@ -395,6 +399,8 @@ export const createImportProps = (pluginName) => ({
     publicPluginsSelector,
     querySelector,
     logsSizeSelector,
+    analyticsEnabledSelector,
+    baseEventParametersSelector,
   },
   icons: {
     PlusIcon,
@@ -428,6 +434,7 @@ export const createImportProps = (pluginName) => ({
     getUserProjectSettingsFromStorage,
     updateUserProjectSettingsInStorage,
     formatMethodType,
+    provideEcGA,
   },
   validators: {
     attributesArray,
