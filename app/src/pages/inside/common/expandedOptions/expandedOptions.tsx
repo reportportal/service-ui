@@ -72,6 +72,7 @@ export const ExpandedOptions = ({
         folder.testsCount || 0,
       );
     };
+
     return total + countFolderTestCases(folder);
   }, 0);
 
