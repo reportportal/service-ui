@@ -34,6 +34,8 @@ interface FolderProps {
   setActiveFolder: (id: number) => void;
   setAllTestCases: () => void;
   instanceKey: INSTANCE_KEYS;
+  expandedIds: number[];
+  onToggleFolder: (folder: TransformedFolder) => void;
 }
 
 export const Folder = ({
@@ -42,8 +44,10 @@ export const Folder = ({
   setAllTestCases,
   activeFolder,
   instanceKey,
+  expandedIds,
+  onToggleFolder,
 }: FolderProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const isOpen = expandedIds.includes(folder.id);
   const [areToolsShown, setAreToolsShown] = useState(false);
   const [areToolsOpen, setAreToolsOpen] = useState(false);
   const [isBlockHovered, setIsBlockHovered] = useState(false);
@@ -58,10 +62,13 @@ export const Folder = ({
     setAreToolsShown(areToolsOpen || isBlockHovered);
   }, [areToolsOpen, isBlockHovered]);
 
-  const handleChevronClick = useCallback((event: ReactMouseEvent<SVGSVGElement, MouseEvent>) => {
-    event.stopPropagation();
-    setIsOpen((prevState) => !prevState);
-  }, []);
+  const handleChevronClick = useCallback(
+    (event: ReactMouseEvent<SVGSVGElement, MouseEvent>) => {
+      event.stopPropagation();
+      onToggleFolder(folder);
+    },
+    [folder, onToggleFolder],
+  );
 
   const handleFolderTitleClick = useCallback(
     (event: ReactMouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -137,6 +144,8 @@ export const Folder = ({
               setActiveFolder={setActiveFolder}
               setAllTestCases={setAllTestCases}
               instanceKey={instanceKey}
+              expandedIds={expandedIds}
+              onToggleFolder={onToggleFolder}
             />
           ))}
         </ul>
