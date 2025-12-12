@@ -6,10 +6,11 @@ import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 import { TransformedFolder } from 'controllers/testCase';
 
-const getFolderAndDescendantIds = (folder: TransformedFolder): number[] =>
+const getFolderAndDescendantIds = (folder: TransformedFolder) =>
   (folder.folders || []).reduce(
     (result, subFolders) => {
       result.push(...getFolderAndDescendantIds(subFolders));
+
       return result;
     },
     [folder.id],
