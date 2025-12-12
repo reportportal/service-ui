@@ -23,7 +23,7 @@ export const useStorageFolders = (instanceKey?: INSTANCE_KEYS) => {
     try {
       const parsed = getStorageItem(storageKey) as number[] | null;
 
-      return Array.isArray(parsed) && parsed.every((id) => isNumber(id)) ? parsed : [];
+      return Array.isArray(parsed) && parsed.every(isNumber) ? parsed : [];
     } catch {
       return [];
     }
