@@ -210,7 +210,22 @@ export const activeProjectRoleSelector = createSelector(
   },
 );
 
+// DEV BYPASS - Set to true to skip permission checks, remove after testing
+const DEV_SKIP_PERMISSIONS = true;
+
 export const userAssignedSelector = (projectSlug, organizationSlug) => (state) => {
+  // DEV BYPASS
+  if (DEV_SKIP_PERMISSIONS) {
+    return {
+      isAdmin: true,
+      hasPermission: true,
+      assignedProjectKey: `${organizationSlug}_${projectSlug}`,
+      assignmentNotRequired: true,
+      isAssignedToTargetProject: true,
+      isAssignedToTargetOrganization: true,
+    };
+  }
+
   const assignedOrganizations = assignedOrganizationsSelector(state);
   const assignedProjects = assignedProjectsSelector(state);
   const { userRole, organizationRole } = userRolesSelector(state);

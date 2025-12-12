@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState, useCallback, MouseEvent as ReactMouseEvent, useEffect } from 'react';
+import { useState, useCallback, MouseEvent as ReactMouseEvent, useEffect, ReactNode } from 'react';
 import { isEmpty } from 'es-toolkit/compat';
 import { ChevronDownDropdownIcon, MeatballMenuIcon } from '@reportportal/ui-kit';
 
@@ -28,12 +28,58 @@ import styles from './folder.scss';
 
 const cx = createClassnames(styles);
 
+/**
+ * Escapes special regex characters in a string
+ */
+const escapeRegExp = (str: string): string => {
+  let result = '';
+  for (const char of str) {
+    if ('.*+?^${}()|[]\\'.includes(char)) {
+      result += `\\${char}`;
+    } else {
+      result += char;
+    }
+  }
+  return result;
+};
+
+/**
+ * Highlight matching text in search results
+ */
+const highlightText = (text: string, query: string): ReactNode => {
+  if (!query) return text;
+  const escapedQuery = escapeRegExp(query);
+  const regex = new RegExp(escapedQuery, 'gi');
+  let lastIndex = 0;
+  const result: ReactNode[] = [];
+  let match: RegExpExecArray | null;
+
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      result.push(text.slice(lastIndex, match.index));
+    }
+    result.push(
+      <span key={`highlight-${match.index}`} className={cx('highlight')}>
+        {match[0]}
+      </span>,
+    );
+    lastIndex = regex.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    result.push(text.slice(lastIndex));
+  }
+
+  return <>{result}</>;
+};
+
 interface FolderProps {
   folder: TransformedFolder;
   activeFolder: number | null;
   setActiveFolder: (id: number) => void;
   setAllTestCases: () => void;
   instanceKey: INSTANCE_KEYS;
+  searchQuery?: string;
 }
 
 export const Folder = ({
@@ -42,8 +88,14 @@ export const Folder = ({
   setAllTestCases,
   activeFolder,
   instanceKey,
+  searchQuery = '',
 }: FolderProps) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  // Check if this folder's name matches the search query
+  const isMatch = searchQuery
+    ? folder.name.toLowerCase().includes(searchQuery.toLowerCase())
+    : true;
   const [areToolsShown, setAreToolsShown] = useState(false);
   const [areToolsOpen, setAreToolsOpen] = useState(false);
   const [isBlockHovered, setIsBlockHovered] = useState(false);
@@ -58,6 +110,13 @@ export const Folder = ({
     setAreToolsShown(areToolsOpen || isBlockHovered);
   }, [areToolsOpen, isBlockHovered]);
 
+  // Auto-expand folders when search query is present and folder has children
+  useEffect(() => {
+    if (searchQuery && !isEmpty(folder.folders)) {
+      setIsOpen(true);
+    }
+  }, [searchQuery, folder.folders]);
+
   const handleChevronClick = useCallback((event: ReactMouseEvent<SVGSVGElement, MouseEvent>) => {
     event.stopPropagation();
     setIsOpen((prevState) => !prevState);
@@ -70,6 +129,31 @@ export const Folder = ({
     },
     [setActiveFolder, folder.id],
   );
+
+  const handleFolderTitleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        event.stopPropagation();
+        setActiveFolder(folder.id);
+      }
+    },
+    [setActiveFolder, folder.id],
+  );
+
+  const handleBlockHoverStart = useCallback(() => {
+    setIsBlockHovered(true);
+  }, []);
+
+  const handleBlockHoverEnd = useCallback(() => {
+    setIsBlockHovered(false);
+  }, []);
+
+  const handleToolsClick = useCallback((event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setAreToolsOpen(true);
+  }, []);
 
   return (
     <li
@@ -85,27 +169,26 @@ export const Folder = ({
         <div
           className={cx('folders-tree__item-title', {
             'folders-tree__item-title--active': activeFolder === folder.id,
+            'folders-tree__item-title--dimmed': searchQuery && !isMatch,
           })}
+          role="button"
+          tabIndex={0}
           onClick={handleFolderTitleClick}
-          onFocus={() => setIsBlockHovered(true)}
-          onBlur={() => setIsBlockHovered(false)}
-          onMouseEnter={() => setIsBlockHovered(true)}
-          onMouseLeave={() => setIsBlockHovered(false)}
+          onKeyDown={handleFolderTitleKeyDown}
+          onFocus={handleBlockHoverStart}
+          onBlur={handleBlockHoverEnd}
+          onMouseEnter={handleBlockHoverStart}
+          onMouseLeave={handleBlockHoverEnd}
         >
           <span className={cx('folders-tree__item-title--text')} title={folder.name}>
-            {folder.name}
+            {highlightText(folder.name, searchQuery)}
           </span>
           {!isEmpty(tooltipItems) && (
             <button
               className={cx('folders-tree__tools', {
                 'folders-tree__tools--shown': areToolsShown,
               })}
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-
-                setAreToolsOpen(true);
-              }}
+              onClick={handleToolsClick}
             >
               <PopoverControl
                 items={tooltipItems}
@@ -137,6 +220,7 @@ export const Folder = ({
               setActiveFolder={setActiveFolder}
               setAllTestCases={setAllTestCases}
               instanceKey={instanceKey}
+              searchQuery={searchQuery}
             />
           ))}
         </ul>

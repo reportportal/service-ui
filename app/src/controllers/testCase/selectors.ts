@@ -57,8 +57,39 @@ export const activeFolderIdSelector = (state: RootState): number | null =>
 
 export const EMPTY_FOLDERS: Folder[] = [];
 
+// DEV MOCK DATA - Remove after testing (flat structure with parentFolderId)
+const DEV_MOCK_FOLDERS: Folder[] = [
+  // Root folders
+  { id: 1, name: 'Authentication Tests', countOfTestCases: 15, parentFolderId: null },
+  { id: 2, name: 'API Integration', countOfTestCases: 22, parentFolderId: null },
+  { id: 3, name: 'UI Components', countOfTestCases: 30, parentFolderId: null },
+  { id: 4, name: 'Performance Tests', countOfTestCases: 8, parentFolderId: null },
+  { id: 5, name: 'Security Testing', countOfTestCases: 18, parentFolderId: null },
+  // Children of Authentication Tests (id: 1)
+  { id: 11, name: 'Login Tests', countOfTestCases: 8, parentFolderId: 1 },
+  { id: 12, name: 'Registration Tests', countOfTestCases: 5, parentFolderId: 1 },
+  { id: 13, name: 'Password Reset', countOfTestCases: 2, parentFolderId: 1 },
+  // Children of API Integration (id: 2)
+  { id: 21, name: 'REST Endpoints', countOfTestCases: 12, parentFolderId: 2 },
+  { id: 22, name: 'GraphQL Queries', countOfTestCases: 10, parentFolderId: 2 },
+  // Children of REST Endpoints (id: 21) - nested level 2
+  { id: 211, name: 'GET Requests', countOfTestCases: 5, parentFolderId: 21 },
+  { id: 212, name: 'POST Requests', countOfTestCases: 4, parentFolderId: 21 },
+  { id: 213, name: 'DELETE Requests', countOfTestCases: 3, parentFolderId: 21 },
+  // Children of UI Components (id: 3)
+  { id: 31, name: 'Buttons', countOfTestCases: 8, parentFolderId: 3 },
+  { id: 32, name: 'Forms', countOfTestCases: 12, parentFolderId: 3 },
+  { id: 33, name: 'Modals', countOfTestCases: 10, parentFolderId: 3 },
+  // Children of Security Testing (id: 5)
+  { id: 51, name: 'XSS Prevention', countOfTestCases: 6, parentFolderId: 5 },
+  { id: 52, name: 'SQL Injection', countOfTestCases: 7, parentFolderId: 5 },
+  { id: 53, name: 'CSRF Protection', countOfTestCases: 5, parentFolderId: 5 },
+];
+
+const USE_DEV_MOCK = true; // Set to false to use real API data
+
 export const foldersSelector = (state: RootState): Folder[] =>
-  testCaseSelector(state).folders?.data || EMPTY_FOLDERS;
+  USE_DEV_MOCK ? DEV_MOCK_FOLDERS : testCaseSelector(state).folders?.data || EMPTY_FOLDERS;
 
 export const isCreatingFolderSelector = (state: RootState): boolean =>
   testCaseSelector(state).folders?.isCreatingFolder || false;

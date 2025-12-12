@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { ReactNode } from 'react';
+import { ReactNode, useState, useMemo, useCallback, ChangeEvent } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
-import { BaseIconButton, SearchIcon } from '@reportportal/ui-kit';
+import { BaseIconButton, SearchIcon, FieldText } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
@@ -37,6 +37,18 @@ const messages = defineMessages({
   folders: {
     id: 'expandedOptions.folders',
     defaultMessage: 'Folders',
+  },
+  searchPlaceholder: {
+    id: 'expandedOptions.searchPlaceholder',
+    defaultMessage: 'Type to filter folders by name',
+  },
+  noFoldersFound: {
+    id: 'expandedOptions.noFoldersFound',
+    defaultMessage: 'No results found',
+  },
+  noFoldersFoundMessage: {
+    id: 'expandedOptions.noFoldersFoundMessage',
+    defaultMessage: "Your search criteria didn't match any results. Please try different keywords.",
   },
 });
 
@@ -60,17 +72,67 @@ export const ExpandedOptions = ({
   children,
 }: ExpandedOptionsProps) => {
   const { formatMessage } = useIntl();
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const totalTestCases = folders.reduce((total: number, folder: TransformedFolder): number => {
-    const countFolderTestCases = (folder: TransformedFolder): number => {
-      return (folder.folders ?? []).reduce(
+    const countFolderTestCases = (f: TransformedFolder): number => {
+      return (f.folders ?? []).reduce(
         (subTotal: number, subFolder: TransformedFolder): number =>
           subTotal + countFolderTestCases(subFolder),
-        folder.testsCount || 0,
+        f.testsCount || 0,
       );
     };
     return total + countFolderTestCases(folder);
   }, 0);
+
+  // Filter folders based on search query (client-side)
+  // Returns folders that match or have matching descendants, with isMatch flag
+  const filteredFolders = useMemo(() => {
+    if (!searchQuery.trim()) return folders;
+
+    const query = searchQuery.toLowerCase().trim();
+
+    const filterTree = (
+      nodes: TransformedFolder[],
+    ): (TransformedFolder & { isMatch?: boolean })[] => {
+      if (!nodes || !Array.isArray(nodes)) return [];
+
+      return nodes.reduce<(TransformedFolder & { isMatch?: boolean })[]>((acc, node) => {
+        const isMatch = node.name.toLowerCase().includes(query);
+        const filteredChildren = filterTree(node.folders || []);
+        const hasMatchingChildren = filteredChildren.length > 0;
+
+        if (isMatch || hasMatchingChildren) {
+          acc.push({
+            ...node,
+            folders: filteredChildren,
+            isMatch,
+          });
+        }
+        return acc;
+      }, []);
+    };
+
+    return filterTree(folders);
+  }, [searchQuery, folders]);
+
+  const handleSearchToggle = useCallback(() => {
+    setIsSearchVisible((prev) => {
+      if (prev) {
+        setSearchQuery('');
+      }
+      return !prev;
+    });
+  }, []);
+
+  const handleSearchChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  }, []);
+
+  const handleSearchClear = useCallback(() => {
+    setSearchQuery('');
+  }, []);
 
   return (
     <div className={cx('expanded-options')}>
@@ -96,12 +158,34 @@ export const ExpandedOptions = ({
           <div className={cx('expanded-options__sidebar-actions--title')} id="tree_label">
             {formatMessage(messages.folders)}
           </div>
-          <BaseIconButton className={cx('expanded-options__sidebar-actions--search')}>
+          <BaseIconButton
+            className={cx('expanded-options__sidebar-actions--search', {
+              'expanded-options__sidebar-actions--search-active': isSearchVisible,
+            })}
+            onClick={handleSearchToggle}
+          >
             <SearchIcon />
           </BaseIconButton>
           {renderCreateFolderButton?.()}
         </div>
-        <div className={cx('expanded-options__sidebar-folders-wrapper')}>
+        {isSearchVisible && (
+          <div className={cx('expanded-options__search-wrapper')}>
+            <FieldText
+              value={searchQuery}
+              onChange={handleSearchChange}
+              onClear={handleSearchClear}
+              placeholder={formatMessage(messages.searchPlaceholder)}
+              defaultWidth={false}
+              clearable
+              startIcon={<SearchIcon />}
+            />
+          </div>
+        )}
+        <div
+          className={cx('expanded-options__sidebar-folders-wrapper', {
+            'expanded-options__sidebar-folders-wrapper--with-search': isSearchVisible,
+          })}
+        >
           <ScrollWrapper className={cx('expanded-options__scroll-wrapper-background')}>
             <div className={cx('expanded-options__sidebar-folders')}>
               <ul
@@ -109,16 +193,31 @@ export const ExpandedOptions = ({
                 role="tree"
                 aria-labelledby="tree_label"
               >
-                {folders.map((folder, idx) => (
-                  <Folder
-                    folder={folder}
-                    key={folder.id || `${folder.name}-${idx}`}
-                    activeFolder={activeFolder}
-                    setActiveFolder={onFolderClick}
-                    setAllTestCases={setAllTestCases}
-                    instanceKey={instanceKey}
-                  />
-                ))}
+                {filteredFolders.length > 0 ? (
+                  filteredFolders.map((folder, idx) => (
+                    <Folder
+                      folder={folder}
+                      key={folder.id || `${folder.name}-${idx}`}
+                      activeFolder={activeFolder}
+                      setActiveFolder={onFolderClick}
+                      setAllTestCases={setAllTestCases}
+                      instanceKey={instanceKey}
+                      searchQuery={searchQuery}
+                    />
+                  ))
+                ) : (
+                  <li className={cx('folders-tree__no-results')}>
+                    <div className={cx('folders-tree__no-results-icon')}>
+                      <SearchIcon />
+                    </div>
+                    <div className={cx('folders-tree__no-results-title')}>
+                      {formatMessage(messages.noFoldersFound)}
+                    </div>
+                    <div className={cx('folders-tree__no-results-message')}>
+                      {formatMessage(messages.noFoldersFoundMessage)}
+                    </div>
+                  </li>
+                )}
               </ul>
             </div>
           </ScrollWrapper>
