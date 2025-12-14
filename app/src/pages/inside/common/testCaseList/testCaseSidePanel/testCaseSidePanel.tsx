@@ -328,7 +328,7 @@ export const TestCaseSidePanel = memo(
           </Button>
           {canAddTestCaseToLaunch && (
             <AddToLaunchButton
-              isButtonDisabled={isEmpty(testCase?.manualScenario?.preconditions?.value)}
+              manualScenario={testCase?.manualScenario}
               testCaseName={testCase.name}
             />
           )}
