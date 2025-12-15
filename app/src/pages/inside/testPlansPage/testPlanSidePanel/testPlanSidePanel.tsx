@@ -25,6 +25,7 @@ import {
   MeatballMenuIcon,
   DurationIcon,
   CopyIcon,
+  BubblesLoader,
 } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
@@ -36,17 +37,26 @@ import { PopoverControl } from 'pages/common/popoverControl';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { PathBreadcrumb } from 'componentLibrary/breadcrumbs/pathBreadcrumb';
 import { commonMessages } from 'pages/inside/common/common-messages';
-import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import {
+  TEST_CASE_LIBRARY_PAGE,
+  urlOrganizationAndProjectSelector,
+  locationSelector,
+  PROJECT_TEST_PLAN_DETAILS_PAGE,
+} from 'controllers/pages';
 import { ProjectDetails } from 'pages/organization/constants';
 import { Scenario } from 'pages/inside/common/testCaseList/testCaseSidePanel/scenario';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
+import { testPlanFoldersSelector } from 'controllers/testPlan';
+import { foldersSelector } from 'controllers/testCase';
+import { useGenerateFolderPath } from 'hooks/useGenerateFolderPath';
 
 import { TestPlanDto } from 'controllers/testPlan';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { formatDuration } from 'pages/inside/common/testCaseList/utils';
 import { messages } from './messages';
-import { MOCK_DATA_1, MOCK_DATA_2 } from './mocks';
 import { CoverStatusCard } from './coverStatusCard';
-import { ExecutionStatus } from './executionStatus';
+import { ExecutionStatusCard } from './executionStatusCard';
+import { useTestCaseDetails } from './useTestCaseDetails';
 
 import styles from './testPlanSidePanel.scss';
 
@@ -68,14 +78,25 @@ export const TestPlanSidePanel = memo(
       urlOrganizationAndProjectSelector,
     ) as ProjectDetails;
 
+    const location = useSelector(locationSelector);
+    const isTestPlanRoute = location.type === PROJECT_TEST_PLAN_DETAILS_PAGE;
+    const testPlanId = location.payload?.testPlanId ?? null;
+
+    const { testCaseDetails, isLoading, isManualCovered } = useTestCaseDetails({
+      testCaseId: testPlan?.id ?? null,
+      testPlanId: isTestPlanRoute ? testPlanId : null,
+    });
+
+    const testPlanFolders = useSelector(testPlanFoldersSelector);
+    const testCaseFolders = useSelector(foldersSelector);
+    const folders = isTestPlanRoute ? testPlanFolders : testCaseFolders;
+    const breadcrumbPath = useGenerateFolderPath(testCaseDetails?.testFolder?.id, folders);
+
     useOnClickOutside(sidePanelRef, onClose);
 
-    if (!testPlan) {
+    if (!testCaseDetails || !testPlan) {
       return null;
     }
-
-    // Select mock data based on even/odd ID
-    const mockData = Number(testPlan.id) % 2 === 0 ? MOCK_DATA_1 : MOCK_DATA_2;
 
     const handleRemoveFromTestPlan = () => {
       // TODO: Implement remove from test plan functionality
@@ -111,18 +132,27 @@ export const TestPlanSidePanel = memo(
 
     const titleComponent = (
       <div className={cx('test-plan-title')}>
-        <PriorityIcon priority={mockData.priority} className={cx('priority-icon')} />
+        <PriorityIcon
+          priority={testCaseDetails?.priority || 'unspecified'}
+          className={cx('priority-icon')}
+        />
         <span>{testPlan.name}</span>
       </div>
     );
 
+    const duration = testCaseDetails?.lastExecution?.duration
+      ? formatDuration(testCaseDetails.lastExecution.duration)
+      : '';
+
     const descriptionComponent = (
       <div className={cx('description-wrapper')}>
-        <PathBreadcrumb
-          path={mockData.breadcrumbPath}
-          color="var(--rp-ui-base-e-400)"
-          isIconVisible={false}
-        />
+        {!isEmpty(breadcrumbPath) && (
+          <PathBreadcrumb
+            path={breadcrumbPath}
+            color="var(--rp-ui-base-e-400)"
+            isIconVisible={false}
+          />
+        )}
         <div className={cx('meta-row')}>
           <div className={cx('meta-item-row', 'id-row')}>
             <span className={cx('meta-label')}>{formatMessage(messages.id)}:</span>
@@ -137,41 +167,52 @@ export const TestPlanSidePanel = memo(
               <CopyIcon />
             </button>
           </div>
-          <div className={cx('meta-item-row')}>
-            <DurationIcon />
-            <span className={cx('meta-value')}>{mockData.duration}</span>
-          </div>
+          {duration && (
+            <div className={cx('meta-item-row')}>
+              <DurationIcon />
+              <span className={cx('meta-value')}>{duration}</span>
+            </div>
+          )}
         </div>
       </div>
     );
 
     const contentComponent = (
       <div className={cx('content')}>
-        <CoverStatusCard status={mockData.coverStatus} />
+        <CoverStatusCard isManualCovered={isManualCovered} />
         <CollapsibleSection
           title={formatMessage(messages.executionsInLaunchesTitle)}
           defaultMessage={formatMessage(commonMessages.noExecutions)}
         >
-          {!isEmpty(mockData.executions) && <ExecutionStatus executions={mockData.executions} />}
+          {!isEmpty(testCaseDetails?.executions) && (
+            <ExecutionStatusCard executions={testCaseDetails.executions} />
+          )}
         </CollapsibleSection>
         <CollapsibleSection
           title={formatMessage(messages.manualScenarioTitle)}
           defaultMessage={formatMessage(messages.noManualScenario)}
         >
-          {!isEmpty(mockData.scenario) && <Scenario scenario={mockData.scenario} />}
+          {!isEmpty(testCaseDetails?.manualScenario) && (
+            <Scenario scenario={testCaseDetails.manualScenario} />
+          )}
         </CollapsibleSection>
         <CollapsibleSection
           title={formatMessage(commonMessages.tags)}
           defaultMessage={formatMessage(commonMessages.noTagsAdded)}
         >
-          {!isEmpty(mockData.tags) && <AdaptiveTagList tags={mockData.tags} isShowAllView />}
+          {!isEmpty(testCaseDetails?.attributes) && (
+            <AdaptiveTagList
+              tags={testCaseDetails.attributes.map((attr) => attr.key)}
+              isShowAllView
+            />
+          )}
         </CollapsibleSection>
         <CollapsibleSection
           title={formatMessage(commonMessages.description)}
           defaultMessage={formatMessage(commonMessages.descriptionNotSpecified)}
         >
-          {!isEmpty(mockData.description) && (
-            <ExpandedTextSection text={mockData.description} defaultVisibleLines={4} />
+          {!isEmpty(testCaseDetails?.description) && (
+            <ExpandedTextSection text={testCaseDetails.description} defaultVisibleLines={4} />
           )}
         </CollapsibleSection>
       </div>
@@ -222,8 +263,8 @@ export const TestPlanSidePanel = memo(
         <SidePanel
           className={cx('test-plan-side-panel')}
           title={titleComponent}
-          descriptionComponent={descriptionComponent}
-          contentComponent={contentComponent}
+          descriptionComponent={isLoading ? <BubblesLoader /> : descriptionComponent}
+          contentComponent={isLoading ? <BubblesLoader /> : contentComponent}
           footerComponent={footerComponent}
           isOpen={isVisible}
           onClose={onClose}
