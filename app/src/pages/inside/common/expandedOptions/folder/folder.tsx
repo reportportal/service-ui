@@ -14,11 +14,19 @@
  * limitations under the License.
  */
 
-import { useState, useCallback, MouseEvent as ReactMouseEvent, useEffect, ReactNode } from 'react';
+import {
+  useState,
+  useCallback,
+  MouseEvent as ReactMouseEvent,
+  KeyboardEvent,
+  useEffect,
+  ReactNode,
+} from 'react';
 import { isEmpty } from 'es-toolkit/compat';
 import { ChevronDownDropdownIcon, MeatballMenuIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
+import { isEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { TransformedFolder } from 'controllers/testCase';
 
@@ -33,6 +41,7 @@ const cx = createClassnames(styles);
  */
 const escapeRegExp = (str: string): string => {
   let result = '';
+
   for (const char of str) {
     if ('.*+?^${}()|[]\\'.includes(char)) {
       result += `\\${char}`;
@@ -40,6 +49,7 @@ const escapeRegExp = (str: string): string => {
       result += char;
     }
   }
+
   return result;
 };
 
@@ -48,6 +58,7 @@ const escapeRegExp = (str: string): string => {
  */
 const highlightText = (text: string, query: string): ReactNode => {
   if (!query) return text;
+
   const escapedQuery = escapeRegExp(query);
   const regex = new RegExp(escapedQuery, 'gi');
   let lastIndex = 0;
@@ -58,6 +69,7 @@ const highlightText = (text: string, query: string): ReactNode => {
     if (match.index > lastIndex) {
       result.push(text.slice(lastIndex, match.index));
     }
+
     result.push(
       <span key={`highlight-${match.index}`} className={cx('highlight')}>
         {match[0]}
@@ -92,8 +104,7 @@ export const Folder = ({
 }: FolderProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Check if this folder's name matches the search query
-  const isMatch = searchQuery
+  const folderNameMatchesQuery = searchQuery
     ? folder.name.toLowerCase().includes(searchQuery.toLowerCase())
     : true;
   const [areToolsShown, setAreToolsShown] = useState(false);
@@ -131,14 +142,33 @@ export const Folder = ({
   );
 
   const handleFolderTitleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLDivElement>) => {
-      if (event.key === 'Enter' || event.key === ' ') {
+    (event: KeyboardEvent<HTMLDivElement>) => {
+      if (
+        isEnterOrSpaceKey(event) ||
+        event.key === 'ArrowRight' ||
+        event.key === 'ArrowLeft' ||
+        event.key === 'ArrowUp' ||
+        event.key === 'ArrowDown'
+      ) {
         event.preventDefault();
         event.stopPropagation();
+      }
+
+      if (isEnterOrSpaceKey(event)) {
         setActiveFolder(folder.id);
+        return;
+      }
+
+      if (event.key === 'ArrowRight' && !isEmpty(folder.folders) && !isOpen) {
+        setIsOpen(true);
+        return;
+      }
+
+      if (event.key === 'ArrowLeft' && isOpen) {
+        setIsOpen(false);
       }
     },
-    [setActiveFolder, folder.id],
+    [setActiveFolder, folder.id, folder.folders, isOpen],
   );
 
   const handleBlockHoverStart = useCallback(() => {
@@ -169,7 +199,7 @@ export const Folder = ({
         <div
           className={cx('folders-tree__item-title', {
             'folders-tree__item-title--active': activeFolder === folder.id,
-            'folders-tree__item-title--dimmed': searchQuery && !isMatch,
+            'folders-tree__item-title--dimmed': searchQuery && !folderNameMatchesQuery,
           })}
           role="button"
           tabIndex={0}

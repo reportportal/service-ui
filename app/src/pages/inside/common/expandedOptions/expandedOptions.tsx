@@ -16,6 +16,7 @@
 
 import { ReactNode, useState, useMemo, useCallback, ChangeEvent } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
+import { isEmpty } from 'es-toolkit/compat';
 import { BaseIconButton, SearchIcon, FieldText } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
@@ -75,16 +76,19 @@ export const ExpandedOptions = ({
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const totalTestCases = folders.reduce((total: number, folder: TransformedFolder): number => {
-    const countFolderTestCases = (f: TransformedFolder): number => {
-      return (f.folders ?? []).reduce(
-        (subTotal: number, subFolder: TransformedFolder): number =>
-          subTotal + countFolderTestCases(subFolder),
-        f.testsCount || 0,
-      );
-    };
-    return total + countFolderTestCases(folder);
-  }, 0);
+  const totalTestCases = folders.reduce(
+    (total: number, currentFolder: TransformedFolder): number => {
+      const countFolderTestCases = (folder: TransformedFolder) => {
+        return (folder.folders ?? []).reduce(
+          (subTotal: number, subFolder: TransformedFolder): number =>
+            subTotal + countFolderTestCases(subFolder),
+          folder.testsCount || 0,
+        );
+      };
+      return total + countFolderTestCases(currentFolder);
+    },
+    0,
+  );
 
   // Filter folders based on search query (client-side)
   // Returns folders that match or have matching descendants, with isMatch flag
@@ -101,7 +105,7 @@ export const ExpandedOptions = ({
       return nodes.reduce<(TransformedFolder & { isMatch?: boolean })[]>((acc, node) => {
         const isMatch = node.name.toLowerCase().includes(query);
         const filteredChildren = filterTree(node.folders || []);
-        const hasMatchingChildren = filteredChildren.length > 0;
+        const hasMatchingChildren = !isEmpty(filteredChildren);
 
         if (isMatch || hasMatchingChildren) {
           acc.push({
@@ -110,6 +114,7 @@ export const ExpandedOptions = ({
             isMatch,
           });
         }
+
         return acc;
       }, []);
     };
@@ -122,12 +127,13 @@ export const ExpandedOptions = ({
       if (prev) {
         setSearchQuery('');
       }
+
       return !prev;
     });
   }, []);
 
-  const handleSearchChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
+  const handleSearchChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
   }, []);
 
   const handleSearchClear = useCallback(() => {
@@ -193,7 +199,7 @@ export const ExpandedOptions = ({
                 role="tree"
                 aria-labelledby="tree_label"
               >
-                {filteredFolders.length > 0 ? (
+                {!isEmpty(filteredFolders) ? (
                   filteredFolders.map((folder, idx) => (
                     <Folder
                       folder={folder}
