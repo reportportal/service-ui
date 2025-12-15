@@ -133,7 +133,6 @@ export const TestCaseList = memo(
     };
 
     const selectedTestPlan = testCases.find((testCase) => testCase.id === selectedTestCaseId);
-    const selectedTestCase = testCases.find((testCase) => testCase.id === selectedTestCaseId);
 
     const tableData = testCases.map((testCase) => ({
       id: testCase.id,
@@ -242,7 +241,7 @@ export const TestCaseList = memo(
             )}
             {isTestLibraryRoute && (
               <TestCaseSidePanel
-                testCase={selectedTestCase}
+                testCase={selectedTestPlan}
                 isVisible={!!selectedTestCaseId}
                 onClose={handleCloseSidePanel}
               />

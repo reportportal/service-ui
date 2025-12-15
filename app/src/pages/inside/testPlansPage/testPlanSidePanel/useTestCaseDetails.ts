@@ -54,7 +54,9 @@ export const useTestCaseDetails = ({ testCaseId, testPlanId }: UseTestCaseDetail
             ? URLS.testPlanTestCaseDetails(projectKey, testPlanId, testCaseId)
             : URLS.testCaseDetails(projectKey, testCaseId);
 
-        const response = await fetch<ExtendedTestCase>(url);
+        const response = await fetch<ExtendedTestCase>(url, {
+          signal: abortController.signal,
+        });
 
         setTestCaseDetails(response);
       } catch {

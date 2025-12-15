@@ -109,7 +109,7 @@ export interface ManualScenario {
 export enum ExecutionStatus {
   PASSED = 'PASSED',
   FAILED = 'FAILED',
-  STOPPED = 'stopped',
+  STOPPED = 'STOPPED',
   SKIPPED = 'SKIPPED',
   INTERRUPTED = 'INTERRUPTED',
   CANCELLED = 'CANCELLED',
