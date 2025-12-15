@@ -28,11 +28,11 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 import { SelectedTestCaseRow } from 'pages/inside/testCaseLibraryPage/allTestCasesPage/allTestCasesPage';
 import { locationSelector } from 'controllers/pages/typed-selectors';
 import { TEST_CASE_LIBRARY_PAGE, PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
+import { TestPlanSidePanel } from 'pages/inside/testPlansPage/testPlanSidePanel';
 
 import { TestCaseNameCell } from './testCaseNameCell';
 import { TestCaseExecutionCell } from './testCaseExecutionCell';
 import { TestCaseSidePanel } from './testCaseSidePanel';
-import { TestPlanSidePanel } from 'pages/inside/testPlansPage/testPlanSidePanel';
 import { FilterSidePanel } from './filterSidePanel';
 import { messages } from './messages';
 
@@ -79,7 +79,6 @@ export const TestCaseList = memo(
     const activeFiltersCount = selectedPriorities.length + selectedTags.length;
     const hasActiveFilters = activeFiltersCount > 0;
 
-    // Check if we're on test library route or test plan details route
     const isTestLibraryRoute = location.type === TEST_CASE_LIBRARY_PAGE;
     const isTestPlanRoute = location.type === PROJECT_TEST_PLAN_DETAILS_PAGE;
 

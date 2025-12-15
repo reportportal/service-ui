@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ReactNode } from 'react';
+import { KeyboardEvent, ReactNode } from 'react';
 
 import { createClassnames } from 'common/utils';
 
@@ -25,7 +25,7 @@ const cx = createClassnames(styles);
 interface ClickableCellProps {
   isSelected: boolean;
   onClick?: () => void;
-  onKeyDown?: (e: React.KeyboardEvent) => void;
+  onKeyDown?: (event: KeyboardEvent<HTMLDivElement>) => void;
   children: ReactNode;
 }
 

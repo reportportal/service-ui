@@ -24,7 +24,7 @@ export const useGenerateFolderPath = (
   folders: Folder[],
 ): string[] => {
   return useMemo(() => {
-    if (!folderId || !folders || isEmpty(folders)) {
+    if (!folderId || isEmpty(folders)) {
       return [];
     }
 

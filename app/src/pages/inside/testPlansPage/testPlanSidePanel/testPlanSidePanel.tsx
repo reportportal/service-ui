@@ -132,10 +132,7 @@ export const TestPlanSidePanel = memo(
 
     const titleComponent = (
       <div className={cx('test-plan-title')}>
-        <PriorityIcon
-          priority={testCaseDetails?.priority || 'unspecified'}
-          className={cx('priority-icon')}
-        />
+        <PriorityIcon priority={testCaseDetails?.priority} className={cx('priority-icon')} />
         <span>{testPlan.name}</span>
       </div>
     );
