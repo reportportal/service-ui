@@ -16,6 +16,7 @@
 
 import { memo, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { useSelector } from 'react-redux';
 import { BubblesLoader, FilterOutlineIcon, FilterFilledIcon, Table } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
@@ -25,10 +26,13 @@ import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFol
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { SelectedTestCaseRow } from 'pages/inside/testCaseLibraryPage/allTestCasesPage/allTestCasesPage';
+import { locationSelector } from 'controllers/pages/typed-selectors';
+import { TEST_CASE_LIBRARY_PAGE, PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
 
 import { TestCaseNameCell } from './testCaseNameCell';
 import { TestCaseExecutionCell } from './testCaseExecutionCell';
 import { TestCaseSidePanel } from './testCaseSidePanel';
+import { TestPlanSidePanel } from 'pages/inside/testPlansPage/testPlanSidePanel';
 import { FilterSidePanel } from './filterSidePanel';
 import { messages } from './messages';
 
@@ -64,6 +68,7 @@ export const TestCaseList = memo(
     instanceKey,
   }: TestCaseListProps) => {
     const { formatMessage } = useIntl();
+    const location = useSelector(locationSelector);
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<number | null>(null);
     const [isFilterSidePanelVisible, setIsFilterSidePanelVisible] = useState(false);
     const [selectedPriorities, setSelectedPriorities] = useState<string[]>([]);
@@ -73,6 +78,10 @@ export const TestCaseList = memo(
 
     const activeFiltersCount = selectedPriorities.length + selectedTags.length;
     const hasActiveFilters = activeFiltersCount > 0;
+
+    // Check if we're on test library route or test plan details route
+    const isTestLibraryRoute = location.type === TEST_CASE_LIBRARY_PAGE;
+    const isTestPlanRoute = location.type === PROJECT_TEST_PLAN_DETAILS_PAGE;
 
     const handleCloseSidePanel = () => {
       setSelectedTestCaseId(null);
@@ -124,6 +133,7 @@ export const TestCaseList = memo(
       handleSelectedRows(newSelectedRows);
     };
 
+    const selectedTestPlan = testCases.find((testCase) => testCase.id === selectedTestCaseId);
     const selectedTestCase = testCases.find((testCase) => testCase.id === selectedTestCaseId);
 
     const tableData = testCases.map((testCase) => ({
@@ -231,11 +241,20 @@ export const TestCaseList = memo(
                 rowClassName={cx('test-case-table-row')}
               />
             )}
-            <TestCaseSidePanel
-              testCase={selectedTestCase}
-              isVisible={!!selectedTestCaseId}
-              onClose={handleCloseSidePanel}
-            />
+            {isTestLibraryRoute && (
+              <TestCaseSidePanel
+                testCase={selectedTestCase}
+                isVisible={!!selectedTestCaseId}
+                onClose={handleCloseSidePanel}
+              />
+            )}
+            {isTestPlanRoute && (
+              <TestPlanSidePanel
+                testPlan={selectedTestPlan}
+                isVisible={!!selectedTestCaseId}
+                onClose={handleCloseSidePanel}
+              />
+            )}
             <FilterSidePanel
               isVisible={isFilterSidePanelVisible}
               onClose={handleCloseFilterSidePanel}

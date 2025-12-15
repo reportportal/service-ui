@@ -42,6 +42,7 @@ import { Scenario } from 'pages/inside/common/testCaseList/testCaseSidePanel/sce
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 
 import { TestPlanDto } from 'controllers/testPlan';
+import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { messages } from './messages';
 import { MOCK_DATA_1, MOCK_DATA_2 } from './mocks';
 import { CoverStatusCard } from './coverStatusCard';
@@ -52,7 +53,7 @@ import styles from './testPlanSidePanel.scss';
 const cx = createClassnames(styles);
 
 interface TestPlanSidePanelProps {
-  testPlan: TestPlanDto | null;
+  testPlan: TestPlanDto | ExtendedTestCase | null;
   isVisible: boolean;
   onClose: () => void;
 }

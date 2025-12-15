@@ -24,8 +24,8 @@ const cx = createClassnames(styles);
 
 interface ClickableCellProps {
   isSelected: boolean;
-  onClick: () => void;
-  onKeyDown: (e: React.KeyboardEvent) => void;
+  onClick?: () => void;
+  onKeyDown?: (e: React.KeyboardEvent) => void;
   children: ReactNode;
 }
 
