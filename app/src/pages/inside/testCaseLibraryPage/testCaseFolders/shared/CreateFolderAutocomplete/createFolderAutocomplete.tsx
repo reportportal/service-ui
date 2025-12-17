@@ -26,6 +26,7 @@ import { createClassnames } from 'common/utils';
 import { FolderWithFullPath, transformedFoldersWithFullPathSelector } from 'controllers/testCase';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 import { findFolderById } from 'pages/inside/testCaseLibraryPage/utils';
+import { NewFolderData } from 'pages/inside/testCaseLibraryPage/utils/getFolderFromFormValues';
 
 import { messages } from './messages';
 import styles from './createFolderAutocomplete.scss';
@@ -47,13 +48,13 @@ interface CreateFolderAutocompleteProps {
   isRequired?: boolean;
   className?: string;
   customEmptyListMessage?: string;
-  value?: FolderWithFullPath | null;
+  value?: FolderWithFullPath | NewFolderData | null;
   error?: string;
   touched?: boolean;
   createWithoutConfirmation?: boolean;
   excludeFolderIds?: number[];
   onStateChange?: SingleAutocompleteOnStateChange;
-  onChange?: (value: FolderWithFullPath) => void;
+  onChange?: (value: FolderWithFullPath | NewFolderData) => void;
 }
 
 export const CreateFolderAutocomplete = ({
@@ -67,8 +68,8 @@ export const CreateFolderAutocomplete = ({
   touched,
   createWithoutConfirmation = true,
   excludeFolderIds = [],
-  onStateChange,
-  onChange,
+  onStateChange = noop,
+  onChange = noop,
 }: CreateFolderAutocompleteProps) => {
   const { formatMessage } = useIntl();
   const folders = useSelector(transformedFoldersWithFullPathSelector);
@@ -77,7 +78,21 @@ export const CreateFolderAutocomplete = ({
     ? folders.filter((folder) => !excludeFolderIds.includes(folder.id))
     : folders;
 
-  const targetFolder = findFolderById(filteredFolders, value?.id);
+  const getTargetFolder = () => {
+    if (!value) {
+      return null;
+    }
+
+    if ('id' in value) {
+      return findFolderById(filteredFolders, value.id);
+    }
+
+    if ('name' in value) {
+      return value.name;
+    }
+
+    return null;
+  };
 
   const autocompleteInputRef = useRef<HTMLInputElement>(null);
 
@@ -107,36 +122,52 @@ export const CreateFolderAutocomplete = ({
     );
   };
 
-  const handleChange = (selectedItem: FolderWithFullPath | null) => {
-    onChange?.(selectedItem);
+  const handleChange = (selectedItem: FolderWithFullPath | string | null) => {
+    if (selectedItem) {
+      onChange(isString(selectedItem) ? { name: selectedItem } : selectedItem);
+    }
+
     autocompleteInputRef.current?.blur();
+  };
+
+  const parseValueToString = (option: FolderWithFullPath | NewFolderData | string) => {
+    if (!option) {
+      return '';
+    }
+
+    if (isString(option)) {
+      return option;
+    }
+
+    if ('fullPath' in option) {
+      return option.description || option.name || '';
+    }
+
+    return option.name || '';
   };
 
   return (
     <div className={cx('create-folder-autocomplete', className)}>
       {label && <FieldLabel isRequired={isRequired}>{label}</FieldLabel>}
-      <SingleAutocomplete<FolderWithFullPath>
+      <SingleAutocomplete<FolderWithFullPath | string>
         createWithoutConfirmation={createWithoutConfirmation}
         optionVariant=""
-        onBlur={noop}
-        onFocus={noop}
         useFixedPositioning={false}
-        onStateChange={onStateChange}
-        onChange={handleChange}
-        value={targetFolder}
+        value={getTargetFolder()}
         error={error}
         touched={touched}
         refFunction={autocompleteInputRefFunction}
-        skipOptionCreation
+        newItemButtonText={formatMessage(messages.newRootFolder)}
         isDropdownMode
         placeholder={placeholder || formatMessage(commonMessages.searchFolderToSelect)}
         options={filteredFolders}
         customEmptyListMessage={customEmptyListMessage || formatMessage(messages.noFoldersFound)}
         renderOption={renderOption}
-        parseValueToString={(option: FolderWithFullPath | string) =>
-          isString(option) ? option : option?.description || option?.name || ''
-        }
-        newItemButtonText={formatMessage(commonMessages.createNew)}
+        parseValueToString={parseValueToString}
+        onStateChange={onStateChange}
+        onChange={handleChange}
+        onBlur={noop}
+        onFocus={noop}
       />
     </div>
   );
