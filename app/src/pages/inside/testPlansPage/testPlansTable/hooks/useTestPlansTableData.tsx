@@ -15,12 +15,11 @@
  */
 
 import { RowData } from '@reportportal/ui-kit/components/table/types';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
 import { createClassnames } from 'common/utils';
 import { TestPlanDto } from 'controllers/testPlan';
-import { isEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 
 import { ProgressBar } from '../progressBar';
 import { TestPlanActions } from '../../testPlanActions';
@@ -39,8 +38,6 @@ interface UseTestPlansTableDataProps {
 
 interface UseTestPlansTableDataReturn {
   data: RowData[];
-  selectedTestPlanId: number | null;
-  setSelectedTestPlanId: (id: number | null) => void;
 }
 
 export const useTestPlansTableData = ({
@@ -50,26 +47,14 @@ export const useTestPlansTableData = ({
   onDelete,
 }: UseTestPlansTableDataProps): UseTestPlansTableDataReturn => {
   const { formatNumber } = useIntl();
-  const [selectedTestPlanId, setSelectedTestPlanId] = useState<number | null>(null);
 
   const data = useMemo(
     () =>
       testPlans?.map(({ id, name, executionStatistic: { total = 0, covered = 0 } }) => {
         const coverage = total === 0 ? 0 : covered / total;
-        const isSelected = id === selectedTestPlanId;
-
-        const handleRowClick = () => setSelectedTestPlanId(id);
-        const handleKeyDown = (e: React.KeyboardEvent) => {
-          if (isEnterOrSpaceKey(e)) {
-            e.preventDefault();
-            handleRowClick();
-          }
-        };
 
         const cellProps = {
-          isSelected,
-          onClick: handleRowClick,
-          onKeyDown: handleKeyDown,
+          isSelected: false,
         };
 
         return {
@@ -117,12 +102,10 @@ export const useTestPlansTableData = ({
           },
         };
       }) ?? [],
-    [testPlans, selectedTestPlanId, onEdit, onDuplicate, onDelete, formatNumber],
+    [testPlans, onEdit, onDuplicate, onDelete, formatNumber],
   );
 
   return {
     data,
-    selectedTestPlanId,
-    setSelectedTestPlanId,
   };
 };

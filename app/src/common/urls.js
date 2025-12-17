@@ -386,6 +386,8 @@ export const URLS = {
 
   testCaseDetails: (projectKey, testCaseId) =>
     `${urlBase}project/${projectKey}/tms/test-case/${testCaseId}`,
+  testPlanTestCaseDetails: (projectKey, testPlanId, testCaseId) =>
+    `${urlBase}project/${projectKey}/tms/test-plan/${testPlanId}/test-case/${testCaseId}`,
   testCasesBatch: (projectKey) => `${urlBase}project/${projectKey}/tms/test-case/batch`,
   testCaseBatchDuplicate: (projectKey) =>
     `${urlBase}project/${projectKey}/tms/test-case/batch/duplicate`,
