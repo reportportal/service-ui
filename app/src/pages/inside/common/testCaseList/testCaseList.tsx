@@ -71,7 +71,8 @@ export const TestCaseList = memo(
 
     const { canDoTestCaseBulkActions } = useUserPermissions();
 
-    const activeFiltersCount = selectedPriorities.length + selectedTags.length;
+    const activeFiltersCount =
+      (isEmpty(selectedPriorities) ? 0 : 1) + (isEmpty(selectedTags) ? 0 : 1);
     const hasActiveFilters = activeFiltersCount > 0;
 
     const handleCloseSidePanel = () => {
