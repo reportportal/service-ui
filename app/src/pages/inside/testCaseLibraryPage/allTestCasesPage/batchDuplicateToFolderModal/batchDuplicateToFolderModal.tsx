@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { noop } from 'es-toolkit';
@@ -47,6 +47,7 @@ const BATCH_DUPLICATE_TO_FOLDER_FORM = 'batchDuplicateToFolderForm';
 export interface BatchDuplicateToFolderModalData {
   selectedTestCaseIds: number[];
   count: number;
+  onClearSelection: () => void;
 }
 
 type BatchDuplicateToFolderModalProps = UseModalData<BatchDuplicateToFolderModalData>;
@@ -70,18 +71,12 @@ const BatchDuplicateToFolderModal = reduxForm<
   dirty,
   handleSubmit,
   change,
-  data,
+  data: { selectedTestCaseIds = [], count = 0, onClearSelection },
 }: BatchDuplicateToFolderModalProps &
   InjectedFormProps<FolderModalFormValues, BatchDuplicateToFolderModalProps>) => {
   const { formatMessage } = useIntl();
-  const { isLoading, batchDuplicate } = useBatchDuplicateToFolder();
+  const { isLoading, batchDuplicate } = useBatchDuplicateToFolder({ onSuccess: onClearSelection });
   const { currentMode, handleModeChange } = useFolderModalMode({ change });
-
-  const selectedTestCaseIds = useMemo(
-    () => data?.selectedTestCaseIds || [],
-    [data?.selectedTestCaseIds],
-  );
-  const count = data?.count || 0;
 
   const onSubmit = useCallback(
     (values: FolderModalFormValues) => {
