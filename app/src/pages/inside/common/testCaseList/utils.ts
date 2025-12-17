@@ -101,7 +101,7 @@ export const formatTimestampForSidePanel = (timestamp: string, locale = 'enUS'):
   });
 };
 
-export const getIsManualCovered = (status?: ExecutionStatus): boolean => {
+export const getIsManualCovered = (status?: ExecutionStatus) => {
   if (!status) {
     return false;
   }

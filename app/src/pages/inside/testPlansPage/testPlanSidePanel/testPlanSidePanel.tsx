@@ -46,11 +46,10 @@ import {
 import { ProjectDetails } from 'pages/organization/constants';
 import { Scenario } from 'pages/inside/common/testCaseList/testCaseSidePanel/scenario';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
-import { testPlanFoldersSelector } from 'controllers/testPlan';
 import { foldersSelector } from 'controllers/testCase';
 import { useGenerateFolderPath } from 'hooks/useGenerateFolderPath';
 
-import { TestPlanDto } from 'controllers/testPlan';
+import { TestPlanDto, testPlanFoldersSelector } from 'controllers/testPlan';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { formatDuration } from 'pages/inside/common/testCaseList/utils';
 import { messages } from './messages';
@@ -199,7 +198,7 @@ export const TestPlanSidePanel = memo(
         >
           {!isEmpty(testCaseDetails?.attributes) && (
             <AdaptiveTagList
-              tags={testCaseDetails.attributes.map((attr) => attr.key)}
+              tags={testCaseDetails.attributes.map(({ key }) => key)}
               isShowAllView
             />
           )}
