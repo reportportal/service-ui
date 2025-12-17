@@ -14,9 +14,4 @@
  * limitations under the License.
  */
 
-export enum ExecutionStatusType {
-  PASSED = 'passed',
-  FAILED = 'failed',
-  RUNNING = 'running',
-  SKIPPED = 'skipped',
-}
+export { ExecutionStatusCard } from './executionStatusCard';

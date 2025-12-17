@@ -19,28 +19,29 @@ import { memo } from 'react';
 import { createClassnames } from 'common/utils';
 import { isEmpty } from 'es-toolkit/compat';
 
-import { ExecutionStatusType } from './types';
-import styles from './executionStatus.scss';
+import { Execution, ExecutionStatus } from 'pages/inside/testCaseLibraryPage/types';
+
+import styles from './executionStatusCard.scss';
 
 const cx = createClassnames(styles);
 
-interface ExecutionItem {
-  title: string;
-  status: ExecutionStatusType;
-}
-
 interface ExecutionStatusProps {
-  executions: ExecutionItem[];
+  executions: Execution[];
 }
 
-const STATUS_CLASS_MAP: Record<ExecutionStatusType, string> = {
-  [ExecutionStatusType.PASSED]: 'passed',
-  [ExecutionStatusType.FAILED]: 'failed',
-  [ExecutionStatusType.RUNNING]: 'running',
-  [ExecutionStatusType.SKIPPED]: 'skipped',
+const STATUS_CLASS_MAP: Record<ExecutionStatus, string> = {
+  [ExecutionStatus.PASSED]: 'passed',
+  [ExecutionStatus.FAILED]: 'failed',
+  [ExecutionStatus.STOPPED]: 'stopped',
+  [ExecutionStatus.INTERRUPTED]: 'interrupted',
+  [ExecutionStatus.CANCELLED]: 'cancelled',
+  [ExecutionStatus.INFO]: 'info',
+  [ExecutionStatus.WARN]: 'warn',
+  [ExecutionStatus.TO_RUN]: 'to-run',
+  [ExecutionStatus.SKIPPED]: 'skipped',
 };
 
-export const ExecutionStatus = memo(({ executions }: ExecutionStatusProps) => {
+export const ExecutionStatusCard = memo(({ executions }: ExecutionStatusProps) => {
   if (isEmpty(executions)) {
     return null;
   }
@@ -48,8 +49,8 @@ export const ExecutionStatus = memo(({ executions }: ExecutionStatusProps) => {
   return (
     <div className={cx('execution-status-wrapper')}>
       {executions.map((execution) => (
-        <div key={`${execution.title}-${execution.status}`} className={cx('execution-item')}>
-          <span className={cx('execution-title')}>{execution.title}</span>
+        <div key={`${execution.launch.name}-${execution.status}`} className={cx('execution-item')}>
+          <span className={cx('execution-title')}>{execution.launch.name}</span>
           <div
             className={cx(
               'status-indicator',
