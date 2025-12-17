@@ -47,10 +47,11 @@ export const TagPopover = ({
   const { formatMessage } = useIntl();
   const [searchValue, setSearchValue] = useState('');
   const [isOpened, setIsOpened] = useState(false);
-  const { tags, loading, error, createTag } = useTagSearch(searchValue);
+  const { tags, loading, error, createTag, clearError } = useTagSearch(searchValue);
 
   const handleSearchChange = (value: string) => {
     setSearchValue(value);
+    clearError();
   };
 
   const handleTag = (tag: Attribute) => {
@@ -66,12 +67,11 @@ export const TagPopover = ({
       return;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    createTag(trimmedSearchValue).then((newTag) => {
-      if (newTag) {
-        handleTag(newTag);
-      }
-    });
+    const newTag = createTag(trimmedSearchValue);
+
+    if (newTag) {
+      handleTag(newTag);
+    }
   };
 
   const handleOpenChange = (isOpened: boolean) => {
@@ -79,6 +79,7 @@ export const TagPopover = ({
 
     if (!isOpened) {
       setSearchValue('');
+      clearError();
     }
   };
 
@@ -161,6 +162,7 @@ export const TagPopover = ({
               onFilterChange={handleSearchChange}
               placeholder={formatMessage(messages.searchPlaceholder)}
               isFullWidth
+              isAlwaysActive
             />
           </div>
           {renderContent()}
