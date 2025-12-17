@@ -208,12 +208,14 @@ export const useTestCase = (testCaseId?: number) => {
           });
           return createdTag;
         } catch {
-          return tag;
+          return null;
         }
       }),
     );
 
-    return [...existingTags, ...createdTags];
+    const successfullyCreatedTags = createdTags.filter((tag): tag is Attribute => tag !== null);
+
+    return [...existingTags, ...successfullyCreatedTags];
   }, []);
 
   const saveTestCase = useCallback(
@@ -230,7 +232,6 @@ export const useTestCase = (testCaseId?: number) => {
       try {
         showSpinner();
 
-        // Create new tags first
         const updatedAttributes = await createNewTags(payload.attributes);
         const updatedPayload = { ...payload, attributes: updatedAttributes };
 

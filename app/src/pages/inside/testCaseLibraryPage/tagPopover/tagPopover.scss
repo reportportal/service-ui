@@ -53,16 +53,15 @@
     }
   }
 
-  &__empty {
-    padding: 16px 16px 0 16px;
-    text-align: center;
-    color: var(--rp-ui-base-e-400);
-    font-size: 13px;
-  }
-
+  &__empty,
   &__loading {
     padding: 16px 16px 0 16px;
     text-align: center;
+  }
+
+  &__empty {
+    color: var(--rp-ui-base-e-400);
+    font-size: 13px;
   }
 
   &__divider {
