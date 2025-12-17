@@ -45,4 +45,12 @@ export const commonFolderMessages = defineMessages({
     id: 'TestCaseLibraryPage.createNewFolder',
     defaultMessage: 'Create new folder',
   },
+  newFolderLocation: {
+    id: 'TestCaseLibraryPage.newFolderLocation',
+    defaultMessage: 'New folder location',
+  },
+  root: {
+    id: 'TestCaseLibraryPage.root',
+    defaultMessage: 'Root',
+  },
 });

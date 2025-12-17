@@ -26,6 +26,7 @@ import { useDeleteFolderModal } from '../../testCaseFolders/modals/deleteFolderM
 import { useRenameFolderModal } from '../../testCaseFolders/modals/renameFolderModal';
 import { useDuplicateFolderModal } from '../../testCaseFolders/modals/duplicateFolderModal';
 import { useMoveFolderModal } from '../../testCaseFolders/modals/moveFolderModal';
+import { useCreateSubfolderModal } from '../../testCaseFolders/modals/createSubfolderModal';
 import { commonMessages } from '../../commonMessages';
 
 interface UseTestCaseFolderMenuProps {
@@ -44,12 +45,14 @@ export const useTestCaseFolderMenu = ({
   const { openModal: openRenameModal } = useRenameFolderModal();
   const { openModal: openDuplicateModal } = useDuplicateFolderModal();
   const { openModal: openMoveModal } = useMoveFolderModal();
+  const { openModal: openCreateSubfolderModal } = useCreateSubfolderModal();
 
   const {
     canDeleteTestCaseFolder,
     canDuplicateTestCaseFolder,
     canRenameTestCaseFolder,
     canMoveTestCase,
+    canCreateTestCaseFolder,
   } = useUserPermissions();
 
   const handleDeleteFolder = () => {
@@ -66,20 +69,26 @@ export const useTestCaseFolderMenu = ({
 
   const handleMoveFolder = () => openMoveModal({ folder });
 
+  const handleCreateSubfolder = () => openCreateSubfolderModal({ folder });
+
   const testCaseFolderTooltipItems: PopoverItem[] = compact([
+    canCreateTestCaseFolder && {
+      label: formatMessage(commonMessages.createSubfolder),
+      onClick: handleCreateSubfolder,
+    },
     canRenameTestCaseFolder && {
       label: formatMessage(COMMON_LOCALE_KEYS.RENAME),
       onClick: handleRenameFolder,
+    },
+    canMoveTestCase && {
+      label: formatMessage(commonMessages.moveFolderTo),
+      variant: 'text' as const,
+      onClick: handleMoveFolder,
     },
     canDuplicateTestCaseFolder && {
       label: formatMessage(commonMessages.duplicateFolder),
       variant: 'text' as const,
       onClick: handleDuplicateFolder,
-    },
-    canMoveTestCase && {
-      label: formatMessage(COMMON_LOCALE_KEYS.MOVE),
-      variant: 'text' as const,
-      onClick: handleMoveFolder,
     },
     canDeleteTestCaseFolder && {
       label: formatMessage(commonMessages.deleteFolder),
