@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-export const DUPLICATE_FORM_NAME = 'duplicate-folder-modal-form';
-export const CREATE_FORM_NAME = 'create-folder-modal-form';
-export const CREATE_SUBFOLDER_FORM_NAME = 'create-subfolder-modal-form';
-export const PARENT_FIELD_NAME = 'parentFolderName';
-export const PARENT_FOLDER_FIELD = 'parentFolder';
+export { CREATE_SUBFOLDER_MODAL_KEY } from './createSubfolderModal';
+export { useCreateSubfolderModal } from './useCreateSubfolderModal';
+export type { CreateSubfolderModalData } from './createSubfolderModal';
