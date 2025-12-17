@@ -68,7 +68,11 @@ const EditTestCaseModalComponent = ({
         folder: testCase.testFolder,
         priority: (testCase.priority?.toLowerCase() ||
           TEST_CASE_FORM_INITIAL_VALUES.priority) as TestCasePriority,
-        attributes: manualScenario?.attributes || [],
+        attributes: (testCase.attributes ?? []).map((attr) => ({
+          id: attr.id,
+          key: attr.key,
+          value: attr.value ?? '',
+        })),
         manualScenarioType:
           manualScenario?.manualScenarioType || TEST_CASE_FORM_INITIAL_VALUES.manualScenarioType,
         executionEstimationTime:
