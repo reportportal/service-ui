@@ -18,6 +18,7 @@ import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { SubmissionError } from 'redux-form';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { projectKeySelector } from 'controllers/project';
 import {
@@ -39,7 +40,7 @@ import { URLS } from 'common/urls';
 import { getTestCaseRequestParams } from 'pages/inside/testCaseLibraryPage/utils';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 
-import { CreateTestCaseFormData } from '../types';
+import { CreateTestCaseFormData, Attribute } from '../types';
 import {
   buildManualScenario,
   isDuplicateTestCaseError,
@@ -190,26 +191,65 @@ export const useTestCase = (testCaseId?: number) => {
     [handleNewFolderCreation, handleFolderCounterUpdate],
   );
 
-  const createTestCase = useCallback(
-    async (payload: CreateTestCaseFormData) => {
+  const createNewTags = useCallback(async (attributes: Attribute[] = []): Promise<Attribute[]> => {
+    const newTags = attributes.filter((attr) => attr.id < 0);
+    const existingTags = attributes.filter((attr) => attr.id >= 0);
+
+    if (isEmpty(newTags)) {
+      return attributes;
+    }
+
+    const createdTags = await Promise.all(
+      newTags.map(async (tag) => {
+        try {
+          const createdTag = await fetch<Attribute>(URLS.createTmsAttribute(), {
+            method: 'POST',
+            data: { key: tag.key, value: tag.value },
+          });
+          return createdTag;
+        } catch {
+          return null;
+        }
+      }),
+    );
+
+    const successfullyCreatedTags = createdTags.filter((tag): tag is Attribute => tag !== null);
+
+    return [...existingTags, ...successfullyCreatedTags];
+  }, []);
+
+  const saveTestCase = useCallback(
+    async (
+      payload: CreateTestCaseFormData,
+      options: {
+        url: string;
+        method: 'POST' | 'PUT';
+        successMessageId: string;
+        errorMessageId: string;
+        currentFolderId?: number;
+      },
+    ) => {
       try {
         showSpinner();
 
-        const manualScenario = buildManualScenario(payload);
-        const { newFolderDetails, existingFolderId } = processFolder(payload.folder);
+        const updatedAttributes = await createNewTags(payload.attributes);
+        const updatedPayload = { ...payload, attributes: updatedAttributes };
 
-        const response = await fetch<TestCaseResponse>(URLS.testCases(projectKey), {
-          method: 'POST',
-          data: buildTestCaseData(payload, manualScenario),
+        const manualScenario = buildManualScenario(updatedPayload);
+        const { newFolderDetails, existingFolderId } = processFolder(updatedPayload.folder);
+
+        const response = await fetch<TestCaseResponse>(options.url, {
+          method: options.method,
+          data: buildTestCaseData(updatedPayload, manualScenario),
         });
 
         dispatch(hideModalAction());
-        dispatch(showSuccessNotification({ messageId: 'testCaseCreatedSuccess' }));
+        dispatch(showSuccessNotification({ messageId: options.successMessageId }));
 
         handleFolderUpdateAfterTestCaseChange({
           response,
           newFolderDetails,
-          currentFolderId: undefined,
+          currentFolderId: options.currentFolderId,
           existingFolderId,
         });
       } catch (error: unknown) {
@@ -219,19 +259,31 @@ export const useTestCase = (testCaseId?: number) => {
           });
         }
 
-        dispatch(showErrorNotification({ messageId: 'testCaseCreationFailed' }));
+        dispatch(showErrorNotification({ messageId: options.errorMessageId }));
       } finally {
         hideSpinner();
       }
     },
     [
-      projectKey,
-      dispatch,
-      formatMessage,
       showSpinner,
       hideSpinner,
+      createNewTags,
+      dispatch,
+      formatMessage,
       handleFolderUpdateAfterTestCaseChange,
     ],
+  );
+
+  const createTestCase = useCallback(
+    async (payload: CreateTestCaseFormData) => {
+      await saveTestCase(payload, {
+        url: URLS.testCases(projectKey),
+        method: 'POST',
+        successMessageId: 'testCaseCreatedSuccess',
+        errorMessageId: 'testCaseCreationFailed',
+      });
+    },
+    [projectKey, saveTestCase],
   );
 
   const editTestCase = useCallback(
@@ -241,50 +293,15 @@ export const useTestCase = (testCaseId?: number) => {
         return;
       }
 
-      try {
-        showSpinner();
-
-        const manualScenario = buildManualScenario(payload);
-        const { newFolderDetails, existingFolderId } = processFolder(payload.folder);
-
-        const response = await fetch<TestCaseResponse>(
-          URLS.testCaseDetails(projectKey, testCaseId.toString()),
-          {
-            method: 'PUT',
-            data: buildTestCaseData(payload, manualScenario),
-          },
-        );
-
-        dispatch(hideModalAction());
-        dispatch(showSuccessNotification({ messageId: 'testCaseUpdatedSuccess' }));
-
-        handleFolderUpdateAfterTestCaseChange({
-          response,
-          newFolderDetails,
-          currentFolderId,
-          existingFolderId,
-        });
-      } catch (error: unknown) {
-        if (isDuplicateTestCaseError(error)) {
-          throw new SubmissionError({
-            name: formatMessage(commonMessages.duplicateTestCaseName),
-          });
-        }
-
-        dispatch(showErrorNotification({ messageId: 'testCaseUpdateFailed' }));
-      } finally {
-        hideSpinner();
-      }
+      await saveTestCase(payload, {
+        url: URLS.testCaseDetails(projectKey, testCaseId.toString()),
+        method: 'PUT',
+        successMessageId: 'testCaseUpdatedSuccess',
+        errorMessageId: 'testCaseUpdateFailed',
+        currentFolderId,
+      });
     },
-    [
-      testCaseId,
-      projectKey,
-      dispatch,
-      formatMessage,
-      showSpinner,
-      hideSpinner,
-      handleFolderUpdateAfterTestCaseChange,
-    ],
+    [testCaseId, projectKey, dispatch, saveTestCase],
   );
 
   const patchTestCase = useCallback(
