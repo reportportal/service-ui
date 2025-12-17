@@ -58,7 +58,6 @@ interface ManualScenarioCommon {
   preconditions?: {
     value: string;
   };
-  attributes?: Attribute[];
 }
 
 interface ManualScenarioSteps extends ManualScenarioCommon {
