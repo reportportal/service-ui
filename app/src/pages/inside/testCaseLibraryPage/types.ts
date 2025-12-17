@@ -58,7 +58,6 @@ interface ManualScenarioCommon {
   preconditions?: {
     value: string;
   };
-  attributes?: Attribute[];
 }
 
 interface ManualScenarioSteps extends ManualScenarioCommon {
@@ -80,7 +79,7 @@ export interface TestCase {
   createdAt: number;
   description?: string;
   path: string[];
-  attributes?: Tag[];
+  attributes?: (Tag | Attribute)[];
   updatedAt: number;
   durationTime?: number;
   testFolder: {
