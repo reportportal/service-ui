@@ -52,11 +52,6 @@
       border: 1px solid var(--rp-ui-base-topaz-focused);
       padding: 1px;
     }
-
-    &:has(.selected) :global([class*='table-row-content']) {
-      border: 2px solid var(--rp-ui-base-topaz-focused);
-      padding: 0;
-    }
   }
 
   &__table-cell-coverage {

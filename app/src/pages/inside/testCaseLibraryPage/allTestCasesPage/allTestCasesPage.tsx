@@ -110,6 +110,7 @@ export const AllTestCasesPage = ({
         openBatchDuplicateToFolderModal({
           selectedTestCaseIds: selectedRowIds,
           count: selectedRowIds.length,
+          onClearSelection,
         });
       },
     },

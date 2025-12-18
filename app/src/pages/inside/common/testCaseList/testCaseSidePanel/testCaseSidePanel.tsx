@@ -288,7 +288,7 @@ export const TestCaseSidePanel = memo(
         </div>
         <div className={cx('content')}>
           {COLLAPSIBLE_SECTIONS_CONFIG({
-            attributes: testCase?.manualScenario?.attributes?.map(({ key }) => key),
+            attributes: testCase?.attributes?.map(({ key }) => key),
             scenario: testCase?.manualScenario,
             testCaseDescription: testCase.description,
           }).map(({ titleKey, defaultMessageKey, childComponent }) => (
@@ -328,7 +328,7 @@ export const TestCaseSidePanel = memo(
           </Button>
           {canAddTestCaseToLaunch && (
             <AddToLaunchButton
-              isButtonDisabled={isEmpty(testCase?.manualScenario?.preconditions?.value)}
+              manualScenario={testCase?.manualScenario}
               testCaseName={testCase.name}
             />
           )}

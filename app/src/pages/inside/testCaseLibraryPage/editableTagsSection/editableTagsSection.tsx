@@ -54,7 +54,12 @@ export const EditableTagsSection = ({
       {isEmpty(tags) ? (
         <InfoBlock label={formatMessage(commonMessages.noTagsAdded)} />
       ) : (
-        <AdaptiveTagList tags={tagKeys} onRemoveTag={onTagRemove} />
+        <AdaptiveTagList
+          tags={tagKeys}
+          onRemoveTag={onTagRemove}
+          isShowAllView
+          defaultVisibleLines={20}
+        />
       )}
     </SectionWithHeader>
   );

@@ -100,7 +100,7 @@ export const FolderModal = ({
       allowCloseOutside={!dirty}
       onClose={hideModal}
     >
-      <form className={cx('folder-modal__form')}>
+      <form className={cx('folder-modal__form')} onSubmit={handleSubmit(onSubmit) as () => void}>
         {customContent}
         <CreateFolderForm
           isToggled={isToggled}

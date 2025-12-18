@@ -57,7 +57,7 @@ export const LaunchSidePanel = memo(({ launchId, isVisible, onClose }: LaunchSid
 
   useOnClickOutside(sidePanelRef, onClose);
 
-  if (!launchDetails && !isLoading) {
+  if (!launchDetails) {
     return null;
   }
 

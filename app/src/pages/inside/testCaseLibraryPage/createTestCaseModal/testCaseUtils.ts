@@ -17,7 +17,7 @@
 import { FolderWithFullPath } from 'controllers/testCase';
 import { isString } from 'es-toolkit';
 
-import { ManualScenarioDto, ManualScenarioType, CreateTestCaseFormData } from '../types';
+import { ManualScenarioDto, ManualScenarioType, CreateTestCaseFormData, Attribute } from '../types';
 import { NewFolderData, isNewFolderData } from '../utils/getFolderFromFormValues';
 
 export const buildManualScenario = (payload: CreateTestCaseFormData): ManualScenarioDto => {
@@ -29,12 +29,6 @@ export const buildManualScenario = (payload: CreateTestCaseFormData): ManualScen
       value: payload.precondition,
       attachments: payload.preconditionAttachments ?? [],
     },
-    attributes:
-      payload.attributes?.map(({ id, key, value }) => ({
-        id,
-        key,
-        value,
-      })) || [],
   };
 
   if (payload.manualScenarioType === ManualScenarioType.TEXT) {
@@ -115,6 +109,7 @@ export const processFolder = (
 export const buildTestCaseData = (
   payload: CreateTestCaseFormData,
   manualScenario: ManualScenarioDto,
+  attributes: Attribute[],
 ) => {
   const { payload: folderPayload } = processFolder(payload.folder);
 
@@ -124,5 +119,6 @@ export const buildTestCaseData = (
     ...folderPayload,
     priority: payload.priority?.toUpperCase(),
     manualScenario,
+    attributes: attributes.map(({ key: _key, ...rest }) => rest),
   };
 };

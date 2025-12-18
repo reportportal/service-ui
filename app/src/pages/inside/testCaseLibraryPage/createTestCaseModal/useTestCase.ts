@@ -233,14 +233,13 @@ export const useTestCase = (testCaseId?: number) => {
         showSpinner();
 
         const updatedAttributes = await createNewTags(payload.attributes);
-        const updatedPayload = { ...payload, attributes: updatedAttributes };
 
-        const manualScenario = buildManualScenario(updatedPayload);
-        const { newFolderDetails, existingFolderId } = processFolder(updatedPayload.folder);
+        const manualScenario = buildManualScenario(payload);
+        const { newFolderDetails, existingFolderId } = processFolder(payload.folder);
 
         const response = await fetch<TestCaseResponse>(options.url, {
           method: options.method,
-          data: buildTestCaseData(updatedPayload, manualScenario),
+          data: buildTestCaseData(payload, manualScenario, updatedAttributes),
         });
 
         dispatch(hideModalAction());

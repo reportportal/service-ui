@@ -27,7 +27,7 @@ import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFol
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 
 import { useTooltipItems } from '../testCaseExecutionCell/useTooltipItems';
-import { formatRelativeTime } from '../utils';
+import { formatRelativeTime, getIsManualCovered } from '../utils';
 
 import styles from './testCaseExecutionCell.scss';
 
@@ -49,8 +49,7 @@ export const TestCaseExecutionCell = ({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const isTestPlan = instanceKey === INSTANCE_KEYS.TEST_PLAN;
-  // TODO: align this condition to check execution status after BE integration.
-  const isCoveredManually = isTestPlan && testCase.manualScenario.executionEstimationTime > 5;
+  const isCoveredManually = isTestPlan && getIsManualCovered(testCase.lastExecution?.status);
 
   return (
     <button type="button" className={cx('execution-content')} onClick={onRowClick}>

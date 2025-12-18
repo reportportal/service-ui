@@ -21,26 +21,19 @@ import { CoveredManuallyIcon, CoverageFullIcon } from '@reportportal/ui-kit';
 import { createClassnames } from 'common/utils';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 
-import { CoverStatus } from './types';
 import { messages } from './messages';
 
 import styles from './coverStatusCard.scss';
 
 const cx = createClassnames(styles);
 
-const statusMap = {
-  [CoverStatus.MANUAL_COVERED]: CoveredManuallyIcon,
-  [CoverStatus.UNCOVERED]: CoverageFullIcon,
-};
-
 interface CoverStatusCardProps {
-  status: CoverStatus;
+  isManualCovered: boolean;
 }
 
-export const CoverStatusCard = memo(({ status }: CoverStatusCardProps) => {
+export const CoverStatusCard = memo(({ isManualCovered }: CoverStatusCardProps) => {
   const { formatMessage } = useIntl();
-  const isManualCovered = status === CoverStatus.MANUAL_COVERED;
-  const Icon = statusMap[status] || CoverageFullIcon;
+  const Icon = isManualCovered ? CoveredManuallyIcon : CoverageFullIcon;
 
   return (
     <div className={cx('cover-status-card')}>
