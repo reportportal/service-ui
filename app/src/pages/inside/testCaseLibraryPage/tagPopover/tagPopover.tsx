@@ -24,7 +24,7 @@ import { createClassnames } from 'common/utils';
 import { SearchField } from 'components/fields/searchField';
 
 import { Attribute } from '../types';
-import { useTagSearch, TagError } from './useTagSearch';
+import { TagError, useTagSearch } from './useTagSearch';
 import { messages } from './messages';
 import { commonMessages } from '../commonMessages';
 
@@ -35,19 +35,38 @@ const cx = createClassnames(styles);
 interface TagPopoverProps extends Pick<PopoverProps, 'placement'> {
   trigger: ReactNode;
   onTagSelect: (tag: Attribute) => void;
+  selectedTags?: Attribute[];
   className?: string;
 }
 
 export const TagPopover = ({
   trigger,
   onTagSelect,
+  selectedTags = [],
   placement = 'bottom',
   className,
 }: TagPopoverProps) => {
   const { formatMessage } = useIntl();
   const [searchValue, setSearchValue] = useState('');
   const [isOpened, setIsOpened] = useState(false);
-  const { tags, loading, error, createTag, clearError } = useTagSearch(searchValue);
+  const { allTags, tags, loading, error, createTag, clearError } = useTagSearch(searchValue);
+
+  const normalizeTagKey = (value: string) => value.trim().toLowerCase();
+  const normalizedSearchValue = normalizeTagKey(searchValue);
+  const hasSearchValue = !isEmpty(normalizedSearchValue);
+
+  const availableTags = tags.filter(
+    (tag) =>
+      !selectedTags.some(
+        (selectedTag) => normalizeTagKey(selectedTag.key) === normalizeTagKey(tag.key),
+      ),
+  );
+  const hasAvailableTags = !isEmpty(availableTags);
+
+  const isTagNameAlreadyAdded =
+    hasSearchValue &&
+    (allTags.some((tag) => normalizeTagKey(tag.key) === normalizedSearchValue) ||
+      selectedTags.some((tag) => normalizeTagKey(tag.key) === normalizedSearchValue));
 
   const handleSearchChange = (value: string) => {
     setSearchValue(value);
@@ -67,7 +86,7 @@ export const TagPopover = ({
       return;
     }
 
-    const newTag = createTag(trimmedSearchValue);
+    const newTag = createTag(trimmedSearchValue, selectedTags);
 
     if (newTag) {
       handleTag(newTag);
@@ -85,7 +104,7 @@ export const TagPopover = ({
 
   const renderTagList = () => (
     <div className={cx('tag-popover__list')}>
-      {tags.map((tag) => (
+      {availableTags.map((tag) => (
         <button
           key={tag.id}
           type="button"
@@ -113,20 +132,41 @@ export const TagPopover = ({
       );
     }
 
-    const hasSearchValue = !isEmpty(searchValue.trim());
-    const hasTags = !isEmpty(tags);
+    if (!hasAvailableTags) {
+      if (isTagNameAlreadyAdded) {
+        return (
+          <div className={cx('tag-popover__empty')}>{formatMessage(messages.tagAlreadyAdded)}</div>
+        );
+      }
 
-    if (!hasSearchValue && !hasTags) {
-      return null;
+      if (!hasSearchValue) {
+        return (
+          <div className={cx('tag-popover__empty')}>{formatMessage(messages.noTagsFound)}</div>
+        );
+      }
+
+      return (
+        <Button
+          variant="text"
+          adjustWidthOn="content"
+          onClick={handleCreateTag}
+          className={cx('tag-popover__create-section')}
+        >
+          <span className={cx('tag-popover__create-value')}>{searchValue}</span>
+          <span className={cx('tag-popover__create-button-text')}>
+            + {formatMessage(commonMessages.createNew)}
+          </span>
+        </Button>
+      );
     }
 
-    if (!hasSearchValue && hasTags) {
+    if (!hasSearchValue || isTagNameAlreadyAdded) {
       return renderTagList();
     }
 
     return (
       <>
-        {hasTags && (
+        {hasAvailableTags && (
           <>
             {renderTagList()}
             <div className={cx('tag-popover__divider')} />
@@ -168,7 +208,7 @@ export const TagPopover = ({
           {renderContent()}
         </div>
       }
-      className={cx(className)}
+      className={cx('tag-popover__popover', className)}
     >
       {trigger}
     </Popover>

@@ -52,10 +52,13 @@ export const useTagSearch = (searchValue: string = '') => {
   }, []);
 
   const createTag = useCallback(
-    (tagKey: string): Attribute | null => {
+    (tagKey: string, selectedTags: Attribute[] = []): Attribute | null => {
       const tagExists = allTags.some((tag) => tag.key.toLowerCase() === tagKey.toLowerCase());
+      const tagAlreadySelected = selectedTags.some(
+        (tag) => tag.key.toLowerCase() === tagKey.toLowerCase(),
+      );
 
-      if (tagExists) {
+      if (tagExists || tagAlreadySelected) {
         setError(TagError.TAG_ALREADY_ADDED);
         return null;
       }
@@ -89,6 +92,7 @@ export const useTagSearch = (searchValue: string = '') => {
   }, []);
 
   return {
+    allTags,
     tags: filteredTags,
     loading,
     error,
