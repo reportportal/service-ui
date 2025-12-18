@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
+import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { Button, Tooltip } from '@reportportal/ui-kit';
+import { isEmpty } from 'es-toolkit/compat';
 
+import { ManualScenario } from 'pages/inside/testCaseLibraryPage/types';
+import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
@@ -27,13 +31,39 @@ import styles from './addToLaunchButton.scss';
 const cx = createClassnames(styles);
 
 interface AddToLaunchButtonProps {
-  isButtonDisabled: boolean;
   testCaseName: string;
+  manualScenario: ManualScenario;
 }
 
-export const AddToLaunchButton = ({ isButtonDisabled, testCaseName }: AddToLaunchButtonProps) => {
+export const AddToLaunchButton = ({ testCaseName, manualScenario }: AddToLaunchButtonProps) => {
   const { formatMessage } = useIntl();
   const { openModal: openAddToLaunchModal } = useAddToLaunchModal();
+
+  const isDisabled = useMemo(() => {
+    if (isEmpty(manualScenario)) {
+      return true;
+    }
+
+    const hasContent = ({ instructions, expectedResult, attachments }) =>
+      !isEmpty(instructions) || !isEmpty(expectedResult) || !isEmpty(attachments);
+
+    if (manualScenario.manualScenarioType === TestCaseManualScenario.TEXT) {
+      const {
+        preconditions: { value, attachments },
+        instructions,
+        expectedResult,
+      } = manualScenario;
+
+      return isEmpty(value) && !hasContent({ instructions, expectedResult, attachments });
+    }
+
+    return (
+      isEmpty(manualScenario.steps) ||
+      !manualScenario.steps.some(({ instructions, expectedResult, attachments }) =>
+        hasContent({ instructions, expectedResult, attachments }),
+      )
+    );
+  }, [manualScenario]);
 
   const handleAddToLaunchClick = () => {
     openAddToLaunchModal({ testCaseName });
@@ -44,13 +74,13 @@ export const AddToLaunchButton = ({ isButtonDisabled, testCaseName }: AddToLaunc
       variant="ghost"
       onClick={handleAddToLaunchClick}
       data-automation-id="test-case-add-to-launch"
-      disabled={isButtonDisabled}
+      disabled={isDisabled}
     >
       {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}
     </Button>
   );
 
-  return isButtonDisabled ? (
+  return isDisabled ? (
     <Tooltip
       placement="bottom"
       content={formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH_TOOLTIP_TEXT)}

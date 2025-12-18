@@ -18,7 +18,6 @@ import { useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import { isEmpty } from 'es-toolkit/compat';
 import { BreadcrumbsTreeIcon, Button, MeatballMenuIcon } from '@reportportal/ui-kit';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
@@ -190,7 +189,7 @@ export const TestCaseDetailsHeader = ({
           </PopoverControl>
           {canAddTestCaseToLaunch && (
             <AddToLaunchButton
-              isButtonDisabled={isEmpty(testCase?.manualScenario?.preconditions?.value)}
+              manualScenario={testCase?.manualScenario}
               testCaseName={testCase.name}
             />
           )}
