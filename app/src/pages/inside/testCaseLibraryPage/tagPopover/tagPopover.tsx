@@ -15,7 +15,7 @@
  */
 
 import { ReactNode, useState } from 'react';
-import { useIntl } from 'react-intl';
+import { type MessageDescriptor, useIntl } from 'react-intl';
 import { BubblesLoader, Button, Popover } from '@reportportal/ui-kit';
 import { PopoverProps } from '@reportportal/ui-kit/popover';
 import { isEmpty } from 'es-toolkit/compat';
@@ -65,8 +65,7 @@ export const TagPopover = ({
 
   const isTagNameAlreadyAdded =
     hasSearchValue &&
-    (allTags.some((tag) => normalizeTagKey(tag.key) === normalizedSearchValue) ||
-      selectedTags.some((tag) => normalizeTagKey(tag.key) === normalizedSearchValue));
+    [...allTags, ...selectedTags].some((tag) => normalizeTagKey(tag.key) === normalizedSearchValue);
 
   const handleSearchChange = (value: string) => {
     setSearchValue(value);
@@ -133,16 +132,15 @@ export const TagPopover = ({
     }
 
     if (!hasAvailableTags) {
+      let emptyMessage: MessageDescriptor | null = null;
       if (isTagNameAlreadyAdded) {
-        return (
-          <div className={cx('tag-popover__empty')}>{formatMessage(messages.tagAlreadyAdded)}</div>
-        );
+        emptyMessage = messages.tagAlreadyAdded;
+      } else if (!hasSearchValue) {
+        emptyMessage = messages.noTagsFound;
       }
 
-      if (!hasSearchValue) {
-        return (
-          <div className={cx('tag-popover__empty')}>{formatMessage(messages.noTagsFound)}</div>
-        );
+      if (emptyMessage) {
+        return <div className={cx('tag-popover__empty')}>{formatMessage(emptyMessage)}</div>;
       }
 
       return (

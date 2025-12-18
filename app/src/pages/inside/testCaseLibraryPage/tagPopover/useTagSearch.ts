@@ -52,7 +52,7 @@ export const useTagSearch = (searchValue: string = '') => {
   }, []);
 
   const createTag = useCallback(
-    (tagKey: string, selectedTags: Attribute[] = []): Attribute | null => {
+    (tagKey: string, selectedTags: Attribute[] = []) => {
       const tagExists = allTags.some((tag) => tag.key.toLowerCase() === tagKey.toLowerCase());
       const tagAlreadySelected = selectedTags.some(
         (tag) => tag.key.toLowerCase() === tagKey.toLowerCase(),
