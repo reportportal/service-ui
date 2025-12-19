@@ -23,5 +23,5 @@ export const ensureArray = <T>(value?: T | T[] | null): T[] => {
 };
 
 export const normalizeSelection = (values: string[]): string[] => {
-  return [...new Set(values)].sort();
+  return [...new Set(values)].sort((a, b) => a.localeCompare(b));
 };
