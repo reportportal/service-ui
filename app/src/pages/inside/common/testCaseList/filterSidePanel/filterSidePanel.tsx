@@ -16,25 +16,22 @@
 
 import { memo, useRef, useMemo, useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
+import isEqual from 'fast-deep-equal';
 import { Button, SidePanel, Dropdown } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
-import { useOnClickOutside } from 'common/hooks';
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { messages as priorityMessages } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/basicInformation/messages';
 
 import { STATUS_TYPES } from '../constants';
 import { messages } from './messages';
 import { MOCK_TAG_OPTIONS } from './mocks';
+import { ensureArray, normalizeSelection } from './utils';
 
 import styles from './filterSidePanel.scss';
 
 const cx = createClassnames(styles);
-
-const ensureArray = <T,>(value: T | T[]): T[] => {
-  return Array.isArray(value) ? value : [value];
-};
 
 interface FilterSidePanelProps {
   isVisible: boolean;
@@ -57,20 +54,20 @@ export const FilterSidePanel = memo(
     onApply,
   }: FilterSidePanelProps) => {
     const { formatMessage } = useIntl();
-    const sidePanelRef = useRef<HTMLDivElement>(null);
+    const wasVisibleRef = useRef(false);
 
     const [localSelectedPriorities, setLocalSelectedPriorities] =
       useState<string[]>(selectedPriorities);
     const [localSelectedTags, setLocalSelectedTags] = useState<string[]>(selectedTags);
 
     useEffect(() => {
-      if (isVisible) {
+      if (isVisible && !wasVisibleRef.current) {
         setLocalSelectedPriorities(selectedPriorities);
         setLocalSelectedTags(selectedTags);
       }
-    }, [isVisible]);
 
-    useOnClickOutside(sidePanelRef, onClose);
+      wasVisibleRef.current = isVisible;
+    }, [isVisible, selectedPriorities, selectedTags]);
 
     const priorityOptions = useMemo(
       () => [
@@ -88,8 +85,8 @@ export const FilterSidePanel = memo(
     );
 
     const handleClearAllFilters = () => {
-      onPrioritiesChange([]);
-      onTagsChange([]);
+      setLocalSelectedPriorities([]);
+      setLocalSelectedTags([]);
     };
 
     const handleApplyFilters = () => {
@@ -103,15 +100,28 @@ export const FilterSidePanel = memo(
       onClose();
     };
 
-    const handlePriorityChange = (value: string | string[]) => {
+    const handlePriorityChange = (value: string | string[] | null) => {
       setLocalSelectedPriorities(ensureArray(value));
     };
 
-    const handleTagsChange = (value: string | string[]) => {
+    const handleTagsChange = (value: string | string[] | null) => {
       setLocalSelectedTags(ensureArray(value));
     };
 
     const hasActiveFilters = !isEmpty(localSelectedPriorities) || !isEmpty(localSelectedTags);
+
+    const hasChanges = useMemo(() => {
+      const applied = {
+        priorities: normalizeSelection(selectedPriorities),
+        tags: normalizeSelection(selectedTags),
+      };
+      const pending = {
+        priorities: normalizeSelection(localSelectedPriorities),
+        tags: normalizeSelection(localSelectedTags),
+      };
+
+      return !isEqual(applied, pending);
+    }, [localSelectedPriorities, localSelectedTags, selectedPriorities, selectedTags]);
 
     const titleComponent = (
       <div className={cx('filter-title')}>{formatMessage(messages.filterTitle)}</div>
@@ -165,7 +175,7 @@ export const FilterSidePanel = memo(
             variant="primary"
             onClick={handleApplyFilters}
             className={cx('apply-button')}
-            disabled={isEmpty(localSelectedPriorities) && isEmpty(localSelectedTags)}
+            disabled={!hasChanges}
           >
             {formatMessage(commonMessages.apply)}
           </Button>
@@ -174,7 +184,7 @@ export const FilterSidePanel = memo(
     );
 
     return (
-      <div ref={sidePanelRef}>
+      <div>
         <SidePanel
           className={cx('filter-side-panel')}
           title={titleComponent}
