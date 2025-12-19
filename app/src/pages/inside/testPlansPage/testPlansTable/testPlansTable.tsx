@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ReactNode, useCallback } from 'react';
+import { ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { Table, ChevronDownDropdownIcon, Pagination } from '@reportportal/ui-kit';
@@ -32,7 +32,6 @@ import {
 } from 'controllers/testPlan';
 import { useURLBoundPagination } from 'pages/inside/common/testCaseList/useURLBoundPagination';
 
-import { TestPlanSidePanel } from '../testPlanSidePanel';
 import { messages } from './messages';
 import {
   useDeleteTestPlanModal,
@@ -98,20 +97,12 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
     </button>
   );
 
-  const {
-    data: testPlansTableData,
-    selectedTestPlanId,
-    setSelectedTestPlanId,
-  } = useTestPlansTableData({
+  const { data: testPlansTableData } = useTestPlansTableData({
     testPlans,
     onEdit: getActionHandler(openEditModal),
     onDuplicate: getActionHandler(openDuplicateModal),
     onDelete: getActionHandler(openDeleteModal),
   });
-
-  const handleCloseSidePanel = useCallback(() => {
-    setSelectedTestPlanId(null);
-  }, [setSelectedTestPlanId]);
 
   const currentTestPlans = testPlansTableData.map((row) => ({
     ...row,
@@ -164,8 +155,6 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
     },
   ];
 
-  const selectedTestPlan = testPlans?.find((plan) => plan.id === selectedTestPlanId);
-
   return (
     <>
       <div className={cx('test-plans__table-container')}>
@@ -196,11 +185,6 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
           />
         </div>
       )}
-      <TestPlanSidePanel
-        testPlan={selectedTestPlan}
-        isVisible={Boolean(selectedTestPlanId)}
-        onClose={handleCloseSidePanel}
-      />
     </>
   );
 };

@@ -58,7 +58,6 @@ interface ManualScenarioCommon {
   preconditions?: {
     value: string;
   };
-  attributes?: Attribute[];
 }
 
 interface ManualScenarioSteps extends ManualScenarioCommon {
@@ -80,16 +79,13 @@ export interface TestCase {
   createdAt: number;
   description?: string;
   path: string[];
-  attributes?: Tag[];
+  attributes?: (Tag | Attribute)[];
   updatedAt: number;
   durationTime?: number;
   testFolder: {
     id: number;
   };
-  lastExecution?: {
-    startedAt: string;
-    duration: number;
-  };
+  lastExecution?: Execution;
   tags?: { key: string }[];
 }
 
@@ -109,8 +105,34 @@ export interface ManualScenario {
   attachments?: Attachment[];
 }
 
+export enum ExecutionStatus {
+  PASSED = 'PASSED',
+  FAILED = 'FAILED',
+  STOPPED = 'STOPPED',
+  SKIPPED = 'SKIPPED',
+  INTERRUPTED = 'INTERRUPTED',
+  CANCELLED = 'CANCELLED',
+  INFO = 'INFO',
+  WARN = 'WARN',
+  TO_RUN = 'TO_RUN',
+}
+
+export interface Execution {
+  id: number;
+  launch: {
+    id: number;
+    name: string;
+    number: number;
+  };
+  status: ExecutionStatus;
+  startedAt: number;
+  duration: number;
+}
+
 export interface ExtendedTestCase extends TestCase {
   manualScenario?: ManualScenario;
+  lastExecution?: Execution;
+  executions?: Execution[];
 }
 
 export interface ActionButton {

@@ -18,6 +18,7 @@ import { useCallback, useState, Ref } from 'react';
 import { useIntl } from 'react-intl';
 import { useDrop } from 'react-dnd';
 import { Button, PlusIcon, DragNDropIcon, SortableItem, DragLayer } from '@reportportal/ui-kit';
+import { DROP_DETECTION_MODE } from '@reportportal/ui-kit/common';
 import { MIME_TYPES } from '@reportportal/ui-kit/fileDropArea';
 
 import { createClassnames } from 'common/utils';
@@ -52,6 +53,7 @@ export const Steps = ({
     (fromIndex: number, toIndex: number) => {
       const reorderedSteps = [...steps];
       const [movedStep] = reorderedSteps.splice(fromIndex, 1);
+
       reorderedSteps.splice(toIndex, 0, movedStep);
 
       setJustDroppedId(movedStep.id);
@@ -122,9 +124,12 @@ export const Steps = ({
               type={STEP_DRAG_TYPE}
               onDrop={handleDrop}
               hideDefaultPreview
+              dropDetectionMode={DROP_DETECTION_MODE.HOVER}
+              isLast={index === steps.length - 1}
               className={cx('steps__step-container', {
                 'steps__step-container--just-dropped': justDroppedId === id,
               })}
+              draggingClassName={cx('steps__step-container--dragging')}
               dropTargetClassName={cx('steps__step-container--drop-target')}
             >
               {({ dragRef, isDragging }) => (

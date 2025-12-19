@@ -100,6 +100,7 @@ export const AllTestCasesPage = ({
 
   const folderTitle = useMemo(() => {
     const selectedFolder = folders.find((folder) => String(folder.id) === String(folderId));
+
     return selectedFolder?.name || formatMessage(COMMON_LOCALE_KEYS.ALL_TEST_CASES_TITLE);
   }, [folderId, folders, formatMessage]);
 
@@ -110,6 +111,7 @@ export const AllTestCasesPage = ({
         openBatchDuplicateToFolderModal({
           selectedTestCaseIds: selectedRowIds,
           count: selectedRowIds.length,
+          onClearSelection,
         });
       },
     },

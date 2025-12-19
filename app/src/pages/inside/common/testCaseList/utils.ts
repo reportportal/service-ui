@@ -18,6 +18,7 @@ import { formatDistanceToNow, format } from 'date-fns';
 import { enUS, ru, es, de } from 'date-fns/locale';
 import { Folder } from 'controllers/testCase';
 import { TestCaseMenuAction } from 'pages/inside/common/testCaseList/types';
+import { ExecutionStatus } from 'pages/inside/testCaseLibraryPage/types';
 
 const dateFnsLocales: Record<string, Locale> = {
   en: enUS,
@@ -52,8 +53,10 @@ export const formatDuration = (milliseconds: number): string => {
 
   if (hours > 0) {
     const remainingMinutes = minutes % 60;
+
     return remainingMinutes > 0 ? `${hours} h ${remainingMinutes} min` : `${hours}h`;
   }
+
   return `${minutes} min`;
 };
 
@@ -98,4 +101,12 @@ export const formatTimestampForSidePanel = (timestamp: string, locale = 'enUS'):
   return format(new Date(timestamp), 'MMM d, yyyy, hh:mm a', {
     locale: dateFnsLocales[locale],
   });
+};
+
+export const getIsManualCovered = (status?: ExecutionStatus) => {
+  if (!status) {
+    return false;
+  }
+
+  return status === ExecutionStatus.FAILED || status === ExecutionStatus.PASSED;
 };

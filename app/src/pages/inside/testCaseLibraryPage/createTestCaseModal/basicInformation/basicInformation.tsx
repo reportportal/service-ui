@@ -121,7 +121,9 @@ export const BasicInformation = ({
         variant="modal"
         tags={attributes}
         onTagRemove={handleTagRemove}
-        addButton={<TagPopover onTagSelect={handleTagSelect} trigger={addButton} />}
+        addButton={
+          <TagPopover onTagSelect={handleTagSelect} selectedTags={attributes} trigger={addButton} />
+        }
       />
     </div>
   );

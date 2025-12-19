@@ -181,6 +181,7 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
       content: TestCase[];
       page: Page;
     };
+
     yield put(setTestCasesAction(result));
 
     if (setPageData) {
@@ -234,6 +235,9 @@ function* handleFolderCreation(
 ): Generator {
   try {
     const projectKey = (yield select(projectKeySelector)) as string;
+    const organizationSlug = (yield select(urlOrganizationSlugSelector)) as string;
+    const projectSlug = (yield select(urlProjectSlugSelector)) as string;
+
     const spinnerTask = (yield fork(
       delayedPut,
       startCreatingFolderAction(),
@@ -252,6 +256,22 @@ function* handleFolderCreation(
     yield put(createFoldersSuccessAction({ ...folder, countOfTestCases: 0 }));
     yield put(hideModalAction());
     yield put(setActiveFolderId({ activeFolderId: folder.id }));
+    yield put({
+      type: GET_TEST_CASES_BY_FOLDER_ID,
+      payload: {
+        folderId: folder.id,
+        limit: 50,
+        offset: 0,
+      },
+    });
+    yield put({
+      type: TEST_CASE_LIBRARY_PAGE,
+      payload: {
+        testCasePageRoute: `folder/${folder.id}`,
+        organizationSlug,
+        projectSlug,
+      },
+    });
     yield put(
       showSuccessNotification({
         message: null,
