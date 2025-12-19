@@ -31,6 +31,7 @@ import styles from './importTestCaseModal.scss';
 export const IMPORT_TEST_CASE_MODAL_KEY = 'importTestCaseModalKey';
 export const IMPORT_TEST_CASE_FORM_NAME = 'import-test-case-modal-form';
 const DEFAULT_FOLDER_NAME = `Import ${format(new Date(), 'dd.MM.yyyy')}`;
+
 export type ImportTarget = 'root' | 'existing';
 export type ImportTestCaseFormValues = {
   folderName: string;

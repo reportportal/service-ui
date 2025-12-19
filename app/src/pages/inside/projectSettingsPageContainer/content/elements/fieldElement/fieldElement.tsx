@@ -56,6 +56,7 @@ export const FieldElement = (props: FieldElementProps) => {
   } = props;
   const getChildren = () =>
     withoutProvider ? children : <FieldProvider {...rest}>{children}</FieldProvider>;
+
   return (
     <div className={cx('wrapper', className)} data-automation-id={dataAutomationId}>
       {label ? (

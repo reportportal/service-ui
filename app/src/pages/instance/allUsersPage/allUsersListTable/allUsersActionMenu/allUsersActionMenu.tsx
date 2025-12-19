@@ -57,6 +57,7 @@ export const AllUsersActionMenu = ({ user }: AllUsersActionMenuProps) => {
 
   const handleUpdateUserRole = useCallback(() => {
     const isAdmin = user.instanceRole === ADMINISTRATOR;
+
     dispatch(
       showModalAction({
         component: <UpdateUserInstanceRoleModal user={user} onSuccess={onSuccess} />,

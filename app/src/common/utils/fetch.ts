@@ -101,6 +101,7 @@ export const initAuthInterceptor = (store: Store): void => {
     (error: AxiosError) => {
       if (error.response && error.response.status === 401) {
         const isAuthorized = isAuthorizedSelector(store.getState());
+
         if (isAuthorized) {
           store.dispatch(logoutAction());
         }

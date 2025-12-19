@@ -21,10 +21,12 @@ import { ManualScenarioType, Step } from '../types';
 
 export const manualScenarioTypeSelector = (formName: string) => (state: AppState) => {
   const formSelector = formValueSelector(formName);
+
   return formSelector(state, 'manualScenarioType') as ManualScenarioType;
 };
 
 export const stepsDataSelector = (formName: string) => (state: AppState) => {
   const formSelector = formValueSelector(formName);
+
   return formSelector(state, 'steps') as Step[];
 };

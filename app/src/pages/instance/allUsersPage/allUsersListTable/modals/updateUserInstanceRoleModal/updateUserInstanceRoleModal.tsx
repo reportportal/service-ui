@@ -70,6 +70,7 @@ export const UpdateUserInstanceRoleModal = ({
       onSuccess?.();
       trackEvent(ALL_USERS_PAGE_EVENTS.clickProvideRevokeAdminRights(!isAdmin, true));
     };
+
     dispatch(updateUserInfoAction(user.email, data, handleUpdateSuccess));
   };
 

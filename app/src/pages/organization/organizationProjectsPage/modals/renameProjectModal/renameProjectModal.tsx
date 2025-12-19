@@ -62,6 +62,7 @@ const RenameProjectModal: FC<RenameProjectModalProps> = ({
 
   const onSubmit = (formData: RenameProjectFormProps) => {
     const newProjectName = formData[PROJECT_NAME_FIELD]?.trim();
+
     onConfirm(newProjectName);
   };
 

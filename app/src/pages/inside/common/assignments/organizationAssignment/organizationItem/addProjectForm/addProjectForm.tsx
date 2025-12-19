@@ -81,7 +81,9 @@ export const AddProjectForm = ({
       const items = response.items.filter(
         (item) => !projects.some((project: Project) => project.id === item.id),
       );
+
       setItems(items);
+
       return items.map((item) => item.name);
     }
 
@@ -97,6 +99,7 @@ export const AddProjectForm = ({
 
     if (project) {
       setSelectedProject({ id: project.id, name: project.name });
+
       return;
     }
 
@@ -108,6 +111,7 @@ export const AddProjectForm = ({
       ...selectedProject,
       role: canEdit ? EDITOR : VIEWER,
     };
+
     onSave(project);
   };
 

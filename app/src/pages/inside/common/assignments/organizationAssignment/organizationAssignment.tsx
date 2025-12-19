@@ -30,6 +30,7 @@ export const OrganizationAssignment = ({
   const updateItem = (updates: Partial<Organization>, index?: number) => {
     if (isMultiple) {
       const updated = [...(value as Organization[])];
+
       updated[index] = { ...updated[index], ...updates };
       onChange?.(updated);
     } else {
@@ -40,6 +41,7 @@ export const OrganizationAssignment = ({
   const removeItem = (index: number) => {
     if (isMultiple) {
       const updated = [...(value as Organization[])];
+
       updated.splice(index, 1);
       onChange?.(updated);
     }

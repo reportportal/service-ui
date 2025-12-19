@@ -83,6 +83,7 @@ const RenameOrganizationModal = ({
 
   const onSubmit = (formData: RenameOrganizationFormProps) => {
     const newOrganizationName = formData[ORGANIZATION_NAME_FIELD]?.trim();
+
     dispatch(renameOrganizationAction(organization.id, newOrganizationName, onSuccess));
     trackEvent(ORGANIZATION_PAGE_EVENTS.renameOrganization(place));
   };

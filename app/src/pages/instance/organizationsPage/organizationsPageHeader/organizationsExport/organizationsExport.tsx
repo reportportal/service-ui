@@ -48,6 +48,7 @@ export const OrganizationsExport = ({ appliedFiltersCount }: OrganizationsExport
   const handleClick = () => {
     const filtersParams: QueryParams = { ...query, offset: 0 };
     const data = prepareQueryFilters(filtersParams);
+
     delete data.limit;
 
     const requestParams = {

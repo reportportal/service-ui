@@ -42,6 +42,7 @@ export const transformFoldersToDisplay = (folders: Folder[]): TransformedFolder[
   }
 
   const folderMap = new Map<number | null, TransformedFolder>();
+
   // Add virtual root folder
   folderMap.set(null, { id: 0, name: '', testsCount: 0, parentFolderId: null, folders: [] });
 
@@ -58,6 +59,7 @@ export const transformFoldersToDisplay = (folders: Folder[]): TransformedFolder[
 
   folders.forEach((folder) => {
     const transformedFolder = folderMap.get(folder.id);
+
     if (!transformedFolder) return;
 
     const parentFolder = folderMap.get(folder.parentFolderId) || folderMap.get(null);
@@ -85,6 +87,7 @@ export const buildFoldersMap = (folders: Folder[], parentFolders: Folder[] = [])
   return folders.reduce((mergedFolders: Folder[], folder) => {
     if (!folder.parentFolderId) {
       const folderWithSubfolders = addSubfoldersToFolder(folder, folders);
+
       mergedFolders.push(folderWithSubfolders);
     }
 

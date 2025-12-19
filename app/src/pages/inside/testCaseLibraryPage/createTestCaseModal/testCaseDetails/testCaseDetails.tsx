@@ -171,6 +171,7 @@ export const TestCaseDetails = ({
 
       const reorderedSteps = [...steps];
       const [movedStep] = reorderedSteps.splice(currentIndex, 1);
+
       reorderedSteps.splice(newIndex, 0, movedStep);
 
       setSteps(reorderedSteps);

@@ -133,11 +133,13 @@ export const useImportTestCase = () => {
       const apiError = error as ApiError;
 
       const errorCode = apiError?.response?.data?.errorCode;
+
       if (errorCode === 4001) {
         throw new SubmissionError({
           _error: formatMessage(commonMessages.incorrectCsvFormat),
         });
       }
+
       if (error instanceof Error && error?.message?.includes('tms_test_case_name_folder_unique')) {
         throw new SubmissionError({
           name: formatMessage(commonMessages.duplicateTestCaseName),

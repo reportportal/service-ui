@@ -68,6 +68,7 @@ export const DeleteUserModal = ({ user, onSuccess }: DeleteUserModalProps) => {
       onSuccess?.();
       trackEvent(ALL_USERS_PAGE_EVENTS.DELETE_USER);
     };
+
     dispatch(deleteUserAccountAction(handleDeleteSuccess, user.id));
   };
 

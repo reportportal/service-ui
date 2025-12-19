@@ -23,6 +23,7 @@ import { Page } from 'types/common';
 export const coerceToNumericId = (value: unknown): number | undefined => {
   if (value == null || value === '') return undefined;
   const id = Number(value);
+
   return Number.isFinite(id) ? id : undefined;
 };
 

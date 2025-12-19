@@ -68,6 +68,7 @@ export const OrganizationItem = ({
 
   useEffect(() => {
     const data = { method: 'post', data: { limit: PROJECTS_LIMIT } };
+
     fetch(URLS.organizationProjectsSearches(id), data)
       .then(({ total_count }: ProjectsSearchesResponseData) => {
         setTotalProjects(total_count);
@@ -83,9 +84,12 @@ export const OrganizationItem = ({
         ...project,
         role: EDITOR,
       }));
+
       onChange({ role: newRole, projects: updatedProjects });
+
       return;
     }
+
     onChange({ role: newRole });
   };
 
@@ -98,11 +102,13 @@ export const OrganizationItem = ({
     const updatedProjects = projects.map((item) =>
       item.id === projectId ? { ...item, ...updates } : item,
     );
+
     onChange({ projects: updatedProjects });
   };
 
   const handleProjectRemove = (projectId: number) => {
     const updatedProjects = projects.filter((item) => item.id !== projectId);
+
     onChange({ projects: updatedProjects });
   };
 
