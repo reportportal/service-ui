@@ -133,7 +133,6 @@ export const TagPopover = ({
 
     if (!hasAvailableTags) {
       let emptyMessage: MessageDescriptor | null = null;
-
       if (isTagNameAlreadyAdded) {
         emptyMessage = messages.tagAlreadyAdded;
       } else if (!hasSearchValue) {

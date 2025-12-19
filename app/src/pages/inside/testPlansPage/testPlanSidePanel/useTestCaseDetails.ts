@@ -40,7 +40,6 @@ export const useTestCaseDetails = ({ testCaseId, testPlanId }: UseTestCaseDetail
   useEffect(() => {
     if (!testCaseId) {
       setTestCaseDetails(null);
-
       return;
     }
 

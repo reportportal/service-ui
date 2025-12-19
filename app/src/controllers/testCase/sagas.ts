@@ -181,7 +181,6 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
       content: TestCase[];
       page: Page;
     };
-
     yield put(setTestCasesAction(result));
 
     if (setPageData) {

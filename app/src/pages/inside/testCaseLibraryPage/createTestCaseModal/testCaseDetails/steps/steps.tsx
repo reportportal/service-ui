@@ -53,7 +53,6 @@ export const Steps = ({
     (fromIndex: number, toIndex: number) => {
       const reorderedSteps = [...steps];
       const [movedStep] = reorderedSteps.splice(fromIndex, 1);
-
       reorderedSteps.splice(toIndex, 0, movedStep);
 
       setJustDroppedId(movedStep.id);

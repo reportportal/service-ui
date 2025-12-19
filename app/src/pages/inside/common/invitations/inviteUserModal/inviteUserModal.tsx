@@ -116,7 +116,6 @@ export const InviteUser = <L extends keyof FormDataMap>({
         b: (innerData) => DOMPurify.sanitize(`<b>${innerData.join('')}</b>`),
         name: invitedUser.full_name,
       });
-
       dispatch(showSuccessNotification({ message }));
       dispatch(hideModalAction());
     }
@@ -161,7 +160,6 @@ export const InviteUserModal = <L extends keyof FormDataMap>(props: ModalProps<L
 
   if (level === Level.ORGANIZATION) {
     const organization: Organization = { id, name, role: MEMBER, projects: [] };
-
     initialValues = { organization };
   }
 
@@ -170,7 +168,6 @@ export const InviteUserModal = <L extends keyof FormDataMap>(props: ModalProps<L
     validate: (formData) => {
       const { email } = formData;
       const emailValidator: BoundValidator = commonValidators.emailInviteUserValidator();
-
       return { email: emailValidator(email?.trim()) };
     },
     enableReinitialize: true,

@@ -94,7 +94,6 @@ export const DropdownSorting: FC<DropdownSortingProps> = ({
     (event: React.KeyboardEvent<HTMLButtonElement>) => {
       if (!isKeyboardMode) {
         setIsKeyboardMode(true);
-
         return;
       }
 

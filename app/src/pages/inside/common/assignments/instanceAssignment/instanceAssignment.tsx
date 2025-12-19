@@ -203,7 +203,6 @@ export const InstanceAssignment = ({
     }
 
     setNotAssignedOrganizations([]);
-
     return [];
   };
 
@@ -215,7 +214,6 @@ export const InstanceAssignment = ({
     }
 
     setOrganizationProjects([]);
-
     return [];
   };
 
@@ -289,7 +287,6 @@ export const InstanceAssignment = ({
               <Checkbox
                 onChange={(e) => {
                   const checked = e.target.checked;
-
                   dispatch(change(CREATE_USER_FORM, FORM_FIELDS.ORGANIZATION.ROLE, checked));
                   dispatch(
                     change(CREATE_USER_FORM, FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE, checked),

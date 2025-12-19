@@ -48,7 +48,6 @@ export const AllUsersExport = ({ appliedFiltersCount }: AllUsersExportProps) => 
   const handleClick = () => {
     const filterParams = { ...query, offset: 0 };
     const data = prepareQueryFilters(filterParams);
-
     delete data.limit;
 
     const requestParams = {

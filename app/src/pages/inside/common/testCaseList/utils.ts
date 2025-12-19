@@ -53,10 +53,8 @@ export const formatDuration = (milliseconds: number): string => {
 
   if (hours > 0) {
     const remainingMinutes = minutes % 60;
-
     return remainingMinutes > 0 ? `${hours} h ${remainingMinutes} min` : `${hours}h`;
   }
-
   return `${minutes} min`;
 };
 

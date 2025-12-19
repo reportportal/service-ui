@@ -60,7 +60,6 @@ export const useTagSearch = (searchValue: string = '') => {
 
       if (tagExists || tagAlreadySelected) {
         setError(TagError.TAG_ALREADY_ADDED);
-
         return null;
       }
 

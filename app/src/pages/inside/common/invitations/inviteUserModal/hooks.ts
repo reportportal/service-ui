@@ -46,12 +46,10 @@ export const useInviteUser = <L extends keyof FormDataMap>(level: L) => {
   const getHeader = () => {
     if (level === Level.PROJECT) {
       const message = ssoUsersOnly ? messages.assignUserTo : messages.inviteUserTo;
-
       return `${formatMessage(message)} ${projectName}`;
     }
 
     const message = ssoUsersOnly ? messages.assignUser : messages.inviteUser;
-
     return formatMessage(message);
   };
 
@@ -88,7 +86,6 @@ export const useInviteUser = <L extends keyof FormDataMap>(level: L) => {
 
     if (level === Level.ORGANIZATION) {
       const organizationData = formData as InviteUserOrganizationFormData;
-
       organizations = buildOrganizationsData([organizationData.organization]);
     }
 

@@ -38,7 +38,6 @@ export const StepsList = ({ steps }: StepsListProps) => {
         )
         .map((step, index) => {
           const { instructions, expectedResult, id, attachments } = step;
-
           return (
             <div key={id} className={cx('step-item')}>
               <AttachmentArea

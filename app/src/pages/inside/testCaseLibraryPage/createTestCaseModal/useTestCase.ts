@@ -206,7 +206,6 @@ export const useTestCase = (testCaseId?: number) => {
             method: 'POST',
             data: { key: tag.key, value: tag.value },
           });
-
           return createdTag;
         } catch {
           return null;
@@ -290,7 +289,6 @@ export const useTestCase = (testCaseId?: number) => {
     async (payload: CreateTestCaseFormData, currentFolderId?: number) => {
       if (!testCaseId) {
         dispatch(showErrorNotification({ messageId: 'testCaseUpdateFailed' }));
-
         return;
       }
 

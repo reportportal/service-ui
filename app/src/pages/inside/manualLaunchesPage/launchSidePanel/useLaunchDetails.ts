@@ -34,7 +34,6 @@ export const useLaunchDetails = (launchId: number | null) => {
   useEffect(() => {
     if (!launchId) {
       setLaunchDetails(null);
-
       return;
     }
 
