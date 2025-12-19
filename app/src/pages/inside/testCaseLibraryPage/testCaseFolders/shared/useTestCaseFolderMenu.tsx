@@ -26,6 +26,7 @@ import { useDeleteFolderModal } from '../../testCaseFolders/modals/deleteFolderM
 import { useRenameFolderModal } from '../../testCaseFolders/modals/renameFolderModal';
 import { useDuplicateFolderModal } from '../../testCaseFolders/modals/duplicateFolderModal';
 import { useMoveFolderModal } from '../../testCaseFolders/modals/moveFolderModal';
+import { useImportTestCaseModal } from '../../importTestCaseModal';
 import { commonMessages } from '../../commonMessages';
 
 interface UseTestCaseFolderMenuProps {
@@ -40,16 +41,19 @@ export const useTestCaseFolderMenu = ({
   setAllTestCases,
 }: UseTestCaseFolderMenuProps) => {
   const { formatMessage } = useIntl();
+  const { name: folderName } = folder;
   const { openModal: openDeleteModal } = useDeleteFolderModal();
   const { openModal: openRenameModal } = useRenameFolderModal();
   const { openModal: openDuplicateModal } = useDuplicateFolderModal();
   const { openModal: openMoveModal } = useMoveFolderModal();
+  const { openModal: openImportTestCaseModal } = useImportTestCaseModal();
 
   const {
     canDeleteTestCaseFolder,
     canDuplicateTestCaseFolder,
     canRenameTestCaseFolder,
     canMoveTestCase,
+    canImportTestCases,
   } = useUserPermissions();
 
   const handleDeleteFolder = () => {
@@ -66,6 +70,8 @@ export const useTestCaseFolderMenu = ({
 
   const handleMoveFolder = () => openMoveModal({ folder });
 
+  const handleImportTestCase = () => openImportTestCaseModal({ folderName });
+
   const testCaseFolderTooltipItems: PopoverItem[] = compact([
     canRenameTestCaseFolder && {
       label: formatMessage(COMMON_LOCALE_KEYS.RENAME),
@@ -80,6 +86,11 @@ export const useTestCaseFolderMenu = ({
       label: formatMessage(COMMON_LOCALE_KEYS.MOVE),
       variant: 'text' as const,
       onClick: handleMoveFolder,
+    },
+    canImportTestCases && {
+      label: formatMessage(COMMON_LOCALE_KEYS.IMPORT),
+      variant: 'text' as const,
+      onClick: handleImportTestCase,
     },
     canDeleteTestCaseFolder && {
       label: formatMessage(commonMessages.deleteFolder),
