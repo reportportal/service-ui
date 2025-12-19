@@ -21,7 +21,6 @@ import { Button, SidePanel, Dropdown } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
-import { useOnClickOutside } from 'common/hooks';
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { messages as priorityMessages } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/basicInformation/messages';
 
@@ -55,7 +54,6 @@ export const FilterSidePanel = memo(
     onApply,
   }: FilterSidePanelProps) => {
     const { formatMessage } = useIntl();
-    const sidePanelRef = useRef<HTMLDivElement>(null);
     const wasVisibleRef = useRef(false);
 
     const [localSelectedPriorities, setLocalSelectedPriorities] =
@@ -70,8 +68,6 @@ export const FilterSidePanel = memo(
 
       wasVisibleRef.current = isVisible;
     }, [isVisible, selectedPriorities, selectedTags]);
-
-    useOnClickOutside(sidePanelRef, onClose);
 
     const priorityOptions = useMemo(
       () => [
@@ -188,7 +184,7 @@ export const FilterSidePanel = memo(
     );
 
     return (
-      <div ref={sidePanelRef}>
+      <div>
         <SidePanel
           className={cx('filter-side-panel')}
           title={titleComponent}
