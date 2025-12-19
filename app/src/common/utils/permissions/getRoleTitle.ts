@@ -73,21 +73,18 @@ export const getRoleBadgesData = (
   isCurrentLoggedInUser: boolean,
 ) => {
   const badges: Badge[] = [];
-
   if (userRole === ADMINISTRATOR) {
     badges.push({
       title: messages.adminRole,
       type: ADMIN_TYPE,
     });
   }
-
   if (organizationRole === MANAGER) {
     badges.push({
       title: messages.managerRole,
       type: MANAGER_TYPE,
     });
   }
-
   if (isCurrentLoggedInUser) {
     badges.push({
       title: messages.youRole,
