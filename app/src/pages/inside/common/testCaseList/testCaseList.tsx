@@ -238,6 +238,7 @@ export const TestCaseList = memo(
                 onToggleAllRowsSelection={handleSelectAll}
                 className={cx('test-case-table')}
                 rowClassName={cx('test-case-table-row')}
+                isSelectAllCheckboxAlwaysVisible
               />
             )}
             {isTestLibraryRoute && (
