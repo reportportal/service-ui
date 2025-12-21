@@ -51,17 +51,12 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    transition: margin 0.15s ease;
 
-    &--dragging {
-      margin-bottom: -8px;
+    &--is-dragging {
+      display: none !important;
     }
 
     &--drop-target {
-      margin-top: 3px;
-      margin-bottom: 3px;
-      --sortable-gap: 11px;
-
       .steps__between-area {
         visibility: hidden;
       }
