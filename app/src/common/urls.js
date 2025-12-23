@@ -188,6 +188,7 @@ export const URLS = {
     removeTrailingSlash(`${urlBase}${activeProject}/item${getQueryParams({ ids })}`),
   testItemsWithProviderType: (activeProject, ids) =>
     `${urlBase}${activeProject}/item/v2${getQueryParams({ ids })}`,
+  testItemsBulk: (activeProject) => `${urlBase}${activeProject}/item/bulk`,
   testItem: (activeProject, id = '') =>
     removeTrailingSlash(`${urlBase}${activeProject}/item/${id}`),
   testItemStatistics: (activeProject) => `${urlBase}${activeProject}/item/statistics`,
