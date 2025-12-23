@@ -20,6 +20,8 @@ import {
   showNotification,
   showDefaultErrorNotification,
   NOTIFICATION_TYPES,
+  showSuccessNotification,
+  showErrorNotification,
 } from 'controllers/notification';
 import { projectIdSelector } from 'controllers/pages';
 import { hideModalAction } from 'controllers/modal';
@@ -33,6 +35,7 @@ import {
   removeFilterAction,
   activeFilterSelector,
 } from 'controllers/filter';
+import { fetchDataAction } from 'controllers/fetch';
 
 import {
   UPDATE_DEFECT_TYPE,
@@ -48,6 +51,9 @@ import {
   FETCH_CONFIGURATION_ATTRIBUTES,
   HIDE_FILTER_ON_LAUNCHES,
   SHOW_FILTER_ON_LAUNCHES,
+  FETCH_LOG_TYPES,
+  LOG_TYPES_NAMESPACE,
+  CREATE_LOG_TYPE,
   UPDATE_PROJECT_FILTER_PREFERENCES,
   ADD_PROJECT_NOTIFICATION,
   NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY,
@@ -55,6 +61,8 @@ import {
   UPDATE_PROJECT_NOTIFICATION,
   DELETE_PROJECT_NOTIFICATION,
   FETCH_PROJECT_NOTIFICATIONS,
+  UPDATE_LOG_TYPE,
+  DELETE_LOG_TYPE,
 } from './constants';
 import {
   updateDefectTypeSuccessAction,
@@ -74,6 +82,10 @@ import {
   updateProjectNotificationSuccessAction,
   setProjectNotificationsLoadingAction,
   fetchExistingLaunchNamesSuccessAction,
+  fetchLogTypesAction,
+  createLogTypeSuccessAction,
+  updateLogTypeSuccessAction,
+  deleteLogTypeSuccessAction,
 } from './actionCreators';
 import { patternsSelector } from './selectors';
 
@@ -422,6 +434,7 @@ function* fetchProject({ payload: { projectId, fetchInfoOnly } }) {
     yield put(setProjectIntegrationsAction(project.integrations));
     if (!fetchInfoOnly) {
       yield put(fetchProjectPreferencesAction(projectId));
+      yield put(fetchLogTypesAction(projectId));
     }
   } catch (error) {
     yield put(showDefaultErrorNotification(error));
@@ -482,6 +495,68 @@ function* watchUpdateProjectFilterPreferences() {
   yield takeEvery(UPDATE_PROJECT_FILTER_PREFERENCES, updateProjectFilterPreferences);
 }
 
+function* fetchLogTypes({ payload: projectId }) {
+  yield put(fetchDataAction(LOG_TYPES_NAMESPACE)(URLS.projectLogTypes(projectId)));
+}
+
+function* watchFetchLogTypes() {
+  yield takeEvery(FETCH_LOG_TYPES, fetchLogTypes);
+}
+
+function* createLogType({ payload: { data, projectId, onSuccess } }) {
+  yield put(showScreenLockAction());
+  try {
+    const response = yield call(fetch, URLS.projectLogTypes(projectId), { method: 'POST', data });
+    yield put(createLogTypeSuccessAction(response));
+    yield put(showSuccessNotification({ messageId: 'createLogTypeSuccess' }));
+    onSuccess?.();
+  } catch {
+    yield put(showErrorNotification({ messageId: 'createLogTypeError' }));
+  } finally {
+    yield put(hideScreenLockAction());
+  }
+}
+
+function* watchCreateLogType() {
+  yield takeEvery(CREATE_LOG_TYPE, createLogType);
+}
+
+function* updateLogType({ payload: { data, logTypeId, projectId, onSuccess } }) {
+  yield put(showScreenLockAction());
+  try {
+    yield call(fetch, URLS.projectLogTypeById(projectId, logTypeId), { method: 'PUT', data });
+    yield put(updateLogTypeSuccessAction({ ...data, id: logTypeId }));
+    yield put(showSuccessNotification({ messageId: 'updateLogTypeSuccess' }));
+    onSuccess?.();
+  } catch {
+    yield put(showErrorNotification({ messageId: 'updateLogTypeError' }));
+  } finally {
+    yield put(hideScreenLockAction());
+  }
+}
+
+function* watchUpdateLogType() {
+  yield takeEvery(UPDATE_LOG_TYPE, updateLogType);
+}
+
+function* deleteLogType({ payload: { logTypeId, projectId, onSuccess } }) {
+  yield put(showScreenLockAction());
+  try {
+    yield call(fetch, URLS.projectLogTypeById(projectId, logTypeId), { method: 'DELETE' });
+    yield put(deleteLogTypeSuccessAction(logTypeId));
+    yield put(showSuccessNotification({ messageId: 'deleteLogTypeSuccess' }));
+    onSuccess?.();
+  } catch {
+    yield put(showErrorNotification({ messageId: 'deleteLogTypeError' }));
+  } finally {
+    yield put(hideScreenLockAction());
+  }
+}
+
+function* watchDeleteLogType() {
+  yield takeEvery(DELETE_LOG_TYPE, deleteLogType);
+}
+
 export function* projectSagas() {
   yield all([
     watchUpdateDefectType(),
@@ -502,5 +577,9 @@ export function* projectSagas() {
     watchUpdateProjectNotification(),
     watchDeleteProjectNotification(),
     watchFetchProjectNotifications(),
+    watchFetchLogTypes(),
+    watchCreateLogType(),
+    watchUpdateLogType(),
+    watchDeleteLogType(),
   ]);
 }

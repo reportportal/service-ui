@@ -43,6 +43,10 @@ export {
   addProjectNotificationAction,
   updateProjectNotificationAction,
   deleteProjectNotificationAction,
+  fetchLogTypesAction,
+  createLogTypeAction,
+  updateLogTypeAction,
+  deleteLogTypeAction,
 } from './actionCreators';
 export { projectReducer } from './reducer';
 export {
@@ -70,6 +74,9 @@ export {
   projectInfoLoadingSelector,
   projectAttributesSelector,
   projectNotificationsStateSelector,
+  logTypesSelector,
+  logTypesLoadingSelector,
+  filterableLogTypesSelector,
 } from './selectors';
 export { normalizeAttributesWithPrefix } from './utils';
 export { projectSagas } from './sagas';

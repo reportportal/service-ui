@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import * as logLevels from 'common/constants/logLevels';
 import { SORTING_ASC } from 'controllers/sorting/constants';
 import { formatSortingString } from 'controllers/sorting/utils';
+import { LOADING_DIRECTIONS } from 'common/constants/loadingDirections';
 
 export const NAMESPACE = 'log';
 export const LOG_ITEMS_NAMESPACE = `${NAMESPACE}/logItems`;
@@ -27,11 +27,11 @@ export const FETCH_LOG_PAGE_DATA = 'fetchLogPageData';
 export const FETCH_LOG_PAGE_STACK_TRACE = 'fetchLogPageStackTrace';
 export const DEFAULT_HISTORY_DEPTH = 12;
 export const HISTORY_DEPTH_LIMIT = 30;
-export const DEFAULT_LOG_LEVEL = logLevels.TRACE;
 export const LOG_LEVEL_STORAGE_KEY = 'logFilteringLevel';
 export const LOG_TIME_FORMAT_STORAGE_KEY = 'logTimeFormat';
 export const LOG_LEVEL_FILTER_KEY = 'filter.gte.level';
 export const LOG_STATUS_FILTER_KEY = 'filter.in.status';
+export const LOG_MESSAGE_FILTER_KEY = 'filter.cnt.message';
 export const WITH_ATTACHMENTS_FILTER_KEY = 'filter.ex.binaryContent';
 export const LOG_VIEW_MODE_STORAGE_KEY = 'logViewMode';
 export const HIDE_PASSED_LOGS = 'excludePassedLogs';
@@ -55,42 +55,12 @@ export const NUMBER_OF_ITEMS_TO_LOAD = 9;
 export const SET_ACTIVE_TAB_ID = 'SET_ACTIVE_TAB_ID';
 export const FETCH_HISTORY_ITEMS_WITH_LOADING = 'ON_UPDATE_ITEM_STATUS';
 export const FETCH_ERROR_LOGS = 'fetchErrorLogs';
-export const FETCH_ERROR_LOG = 'fetchErrorLog';
+export const FETCH_LOG = 'fetchLog';
+export const LOAD_MORE_PAGE_SIZE = 50;
+export const LOAD_MORE_LOGS = 'LOAD_MORE_LOGS';
+export const FETCH_LOG_ITEMS_FOR_PAGE = 'FETCH_LOG_ITEMS_FOR_PAGE';
 
-export const LOG_LEVELS = [
-  {
-    id: logLevels.FATAL,
-    label: 'Fatal',
-    trackingName: 'fatal',
-  },
-  {
-    id: logLevels.ERROR,
-    label: 'Error',
-    trackingName: 'error',
-  },
-  {
-    id: logLevels.WARN,
-    label: 'Warn',
-    trackingName: 'warn',
-  },
-  {
-    id: logLevels.INFO,
-    label: 'Info',
-    trackingName: 'info',
-  },
-  {
-    id: logLevels.DEBUG,
-    label: 'Debug',
-    trackingName: 'debug',
-  },
-  {
-    id: logLevels.TRACE,
-    label: 'Trace',
-    trackingName: 'trace',
-  },
-];
-
-export const PREVIOUS = 'previous';
-export const NEXT = 'next';
+export const PREVIOUS = LOADING_DIRECTIONS.PREVIOUS;
+export const NEXT = LOADING_DIRECTIONS.NEXT;
 export const ALL = 'all';
 export const ERROR_LOG_INDEX_KEY = 'errorLogIndex';

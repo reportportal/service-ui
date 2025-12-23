@@ -45,6 +45,16 @@
 .attribute-editor {
   display: flex;
   align-items: flex-start;
+
+  &.with-labels {
+    .separator {
+      margin-top: 34px;
+    }
+
+    .buttons {
+      margin-top: 24px;
+    }
+  }
 }
 
 .separator {

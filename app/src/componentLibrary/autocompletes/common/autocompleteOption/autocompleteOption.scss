@@ -37,7 +37,7 @@
   border: 1px solid $COLOR--topaz-focused;
   top: 0;
   left: 0;
-  transform: translate(-2px, -2px);
+  transform: translateY(-2px);
 }
 
 @mixin button-active-state($width) {
@@ -117,7 +117,7 @@
   }
 
   &:not(:hover) {
-    @include button-active-state(80px);
+    @include button-active-state(78px);
   }
 }
 

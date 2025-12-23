@@ -39,6 +39,7 @@ export class AutocompleteOptions extends Component {
     optionVariant: singleAutocompleteOptionVariantType,
     createWithoutConfirmation: PropTypes.bool,
     variant: autocompleteVariantType,
+    creatable: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -53,6 +54,7 @@ export class AutocompleteOptions extends Component {
     optionVariant: '',
     createWithoutConfirmation: false,
     variant: 'light',
+    creatable: true,
   };
 
   filterStaticOptions = () => {
@@ -66,14 +68,14 @@ export class AutocompleteOptions extends Component {
   };
 
   getPrompt = (options) => {
-    const { loading, createWithoutConfirmation, variant } = this.props;
+    const { loading, createWithoutConfirmation, variant, creatable } = this.props;
     if (loading) {
       return (
         <>
           <AutocompletePrompt variant={variant}>
             <BubblesLoader />
           </AutocompletePrompt>
-          {!createWithoutConfirmation && this.renderNewItem(options)}
+          {!createWithoutConfirmation && creatable && this.renderNewItem(options)}
         </>
       );
     }
@@ -121,7 +123,7 @@ export class AutocompleteOptions extends Component {
   };
 
   render() {
-    const { async, options, createWithoutConfirmation } = this.props;
+    const { async, options, createWithoutConfirmation, creatable } = this.props;
     const availableOptions = async ? options : this.filterStaticOptions();
     const prompt = this.getPrompt(options);
     if (prompt) return prompt;
@@ -130,7 +132,7 @@ export class AutocompleteOptions extends Component {
         <ScrollWrapper autoHeight autoHeightMax={140}>
           {this.renderItems(availableOptions)}
         </ScrollWrapper>
-        {!createWithoutConfirmation && this.renderNewItem(availableOptions)}
+        {!createWithoutConfirmation && creatable && this.renderNewItem(availableOptions)}
       </div>
     );
   }

@@ -25,10 +25,10 @@ const basicEventParameters = {
 
 export const SIDEBAR_EVENTS = {
   // GA4 events
-  CLICK_LAUNCH_ICON: {
+  clickSidebarIcon: (iconName = 'sidebar_icon') => ({
     ...basicEventParameters,
-    icon_name: 'launches',
-  },
+    icon_name: iconName,
+  }),
   // GA3 events
   CLICK_MEMBERS_BTN: {
     category: SIDEBAR,

@@ -45,6 +45,9 @@ export const DELETE_INDEX = 'deleteIndex';
 export const CREATE_DEFECT = 'createDefect';
 export const UPDATE_DEFECT = 'updateDefect';
 export const DELETE_DEFECT = 'deleteDefect';
+export const CREATE_LOG_TYPE = 'createLogType';
+export const UPDATE_LOG_TYPE = 'updateLogType';
+export const DELETE_LOG_TYPE = 'deleteLogType';
 export const START_IMPORT = 'startImport';
 export const FINISH_IMPORT = 'finishImport';
 export const UPDATE_ITEM = 'updateItem';
@@ -67,6 +70,7 @@ export const ACTIONS_WITH_FILTERS = 'filtersActions';
 export const ACTIONS_WITH_INTEGRATIONS = 'integrationsActions';
 export const ACTIONS_WITH_AA_SETTINGS = 'aaSettingsActions';
 export const ACTIONS_WITH_DEFECTS = 'defectsActions';
+export const ACTIONS_WITH_LOG_TYPES = 'logTypesActions';
 export const ACTIONS_WITH_IMPORT = 'importActions';
 export const ACTIONS_WITH_LAUNCH = 'launchActions';
 export const ACTIONS_UPDATE_TEST_ITEM = 'updateTestItemActions';
@@ -79,6 +83,7 @@ export const GROUP_TO_ACTION_MAP = {
   [ACTIONS_WITH_INTEGRATIONS]: [CREATE_INTEGRATION, UPDATE_INTEGRATION, DELETE_INTEGRATION],
   [ACTIONS_WITH_AA_SETTINGS]: [UPDATE_ANALYZER, GENERATE_INDEX, DELETE_INDEX],
   [ACTIONS_WITH_DEFECTS]: [CREATE_DEFECT, UPDATE_DEFECT, DELETE_DEFECT],
+  [ACTIONS_WITH_LOG_TYPES]: [CREATE_LOG_TYPE, UPDATE_LOG_TYPE, DELETE_LOG_TYPE],
   [ACTIONS_WITH_IMPORT]: [START_IMPORT, FINISH_IMPORT],
   [ACTIONS_UPDATE_TEST_ITEM]: [UPDATE_ITEM, ANALYZE_ITEM],
 };
@@ -111,6 +116,10 @@ export const ACTION_TO_GROUP_MAP = {
   [CREATE_DEFECT]: ACTIONS_WITH_DEFECTS,
   [UPDATE_DEFECT]: ACTIONS_WITH_DEFECTS,
   [DELETE_DEFECT]: ACTIONS_WITH_DEFECTS,
+
+  [CREATE_LOG_TYPE]: ACTIONS_WITH_LOG_TYPES,
+  [UPDATE_LOG_TYPE]: ACTIONS_WITH_LOG_TYPES,
+  [DELETE_LOG_TYPE]: ACTIONS_WITH_LOG_TYPES,
 
   [START_IMPORT]: ACTIONS_WITH_IMPORT,
   [FINISH_IMPORT]: ACTIONS_WITH_IMPORT,

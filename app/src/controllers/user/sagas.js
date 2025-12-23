@@ -21,7 +21,15 @@ import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { getLogTimeFormatFromStorage } from 'controllers/log/storageUtils';
-import { userIdSelector, userInfoSelector } from './selectors';
+import { userIdSelector, userInfoSelector, activeProjectSelector } from './selectors';
+import {
+  getUserProjectSettingsFromStorage,
+  setNoLogsCollapsingInStorage,
+  setLogsPaginationEnabledInStorage,
+  setLogsSizeInStorage,
+  setLogsFullWidthModeInStorage,
+  setLogsColorizedBackgroundInStorage,
+} from './storageUtils';
 import {
   ASSIGN_TO_PROJECT,
   UNASSIGN_FROM_PROJECT,
@@ -31,6 +39,16 @@ import {
   DELETE_API_KEY,
   FETCH_USER,
   DELETE_USER_ACCOUNT,
+  SET_NO_LOGS_COLLAPSING,
+  SET_LOGS_PAGINATION_ENABLED,
+  SET_LOGS_SIZE,
+  SET_LOGS_FULL_WIDTH_MODE,
+  SET_LOGS_COLORIZED_BACKGROUND,
+  LOGS_SIZE_KEY,
+  NO_LOGS_COLLAPSING_KEY,
+  LOGS_PAGINATION_ENABLED_KEY,
+  LOGS_FULL_WIDTH_MODE_KEY,
+  LOGS_COLORIZED_BACKGROUND_KEY,
 } from './constants';
 import {
   assignToProjectSuccessAction,
@@ -43,6 +61,8 @@ import {
   addApiKeySuccessAction,
   deleteApiKeySuccessAction,
   setLogTimeFormatAction,
+  setActiveProjectSettingsAction,
+  updateActiveProjectSettingsAction,
 } from './actionCreators';
 
 function* assignToProject({ payload: project }) {
@@ -143,6 +163,58 @@ function* saveActiveProject({ payload: project }) {
   const user = yield select(userInfoSelector);
   const currentUserSettings = getStorageItem(`${user.userId}_settings`) || {};
   setStorageItem(`${user.userId}_settings`, { ...currentUserSettings, activeProject: project });
+
+  const projectSettings = getUserProjectSettingsFromStorage(user.userId, project);
+  yield put(setActiveProjectSettingsAction(projectSettings));
+}
+
+function* updateLogsSetting({ payload, setInStorage, settingKey }) {
+  const { value } = payload;
+  const userId = yield select(userIdSelector);
+  const projectId = yield select(activeProjectSelector);
+
+  yield call(setInStorage, userId, projectId, value);
+  yield put(updateActiveProjectSettingsAction({ [settingKey]: value }));
+}
+
+function* setNoLogsCollapsing({ payload }) {
+  yield call(updateLogsSetting, {
+    payload,
+    setInStorage: setNoLogsCollapsingInStorage,
+    settingKey: NO_LOGS_COLLAPSING_KEY,
+  });
+}
+
+function* setLogsPaginationEnabled({ payload }) {
+  yield call(updateLogsSetting, {
+    payload,
+    setInStorage: setLogsPaginationEnabledInStorage,
+    settingKey: LOGS_PAGINATION_ENABLED_KEY,
+  });
+}
+
+function* setLogsSize({ payload }) {
+  yield call(updateLogsSetting, {
+    payload,
+    setInStorage: setLogsSizeInStorage,
+    settingKey: LOGS_SIZE_KEY,
+  });
+}
+
+function* setLogsFullWidthMode({ payload }) {
+  yield call(updateLogsSetting, {
+    payload,
+    setInStorage: setLogsFullWidthModeInStorage,
+    settingKey: LOGS_FULL_WIDTH_MODE_KEY,
+  });
+}
+
+function* setLogsColorizedBackground({ payload }) {
+  yield call(updateLogsSetting, {
+    payload,
+    setInStorage: setLogsColorizedBackgroundInStorage,
+    settingKey: LOGS_COLORIZED_BACKGROUND_KEY,
+  });
 }
 
 function* addApiKey({ payload = {} }) {
@@ -267,6 +339,26 @@ function* watchSetActiveProject() {
   yield takeEvery(SET_ACTIVE_PROJECT, saveActiveProject);
 }
 
+function* watchSetNoLogsCollapsing() {
+  yield takeEvery(SET_NO_LOGS_COLLAPSING, setNoLogsCollapsing);
+}
+
+function* watchSetLogsPagination() {
+  yield takeEvery(SET_LOGS_PAGINATION_ENABLED, setLogsPaginationEnabled);
+}
+
+function* watchSetLogsSize() {
+  yield takeEvery(SET_LOGS_SIZE, setLogsSize);
+}
+
+function* watchSetLogsFullWidthMode() {
+  yield takeEvery(SET_LOGS_FULL_WIDTH_MODE, setLogsFullWidthMode);
+}
+
+function* watchSetLogsColorizedBackground() {
+  yield takeEvery(SET_LOGS_COLORIZED_BACKGROUND, setLogsColorizedBackground);
+}
+
 function* watchFetchUser() {
   yield takeEvery(FETCH_USER, fetchUserWorker);
 }
@@ -285,6 +377,11 @@ export function* userSagas() {
     watchUnassignFromProject(),
     watchFetchUser(),
     watchSetActiveProject(),
+    watchSetNoLogsCollapsing(),
+    watchSetLogsPagination(),
+    watchSetLogsSize(),
+    watchSetLogsFullWidthMode(),
+    watchSetLogsColorizedBackground(),
     watchAddApiKey(),
     watchFetchApiKeys(),
     watchDeleteApiKey(),

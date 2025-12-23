@@ -101,6 +101,10 @@ export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
     place: isPreview ? 'preview_footer' : 'footer',
     link_name: DEFAULT_FOOTER_LINK_NAMES.includes(linkName) ? linkName : 'custom_link',
   }),
+  SUBMIT_PASSWORD_LENGTH: {
+    ...basicClickEventParametersAdminServerSettingsPage,
+    element_name: 'submit_password_length',
+  },
   // GA3 events
   ACTIVATE_GITHUB_SWITCHER: {
     category: ADMIN_SERVER_SETTINGS_PAGE,

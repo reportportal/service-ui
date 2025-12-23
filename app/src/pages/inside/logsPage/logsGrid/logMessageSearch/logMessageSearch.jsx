@@ -58,7 +58,17 @@ export class LogMessageSearch extends Component {
     this.state = {
       inputValue: props.filter || '',
       isSearchHintRequired: false,
+      isTouched: false,
     };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.filter !== this.props.filter) {
+      this.setState({
+        inputValue: this.props.filter || '',
+        isTouched: false,
+      });
+    }
   }
 
   onFocus = () => {
@@ -69,23 +79,31 @@ export class LogMessageSearch extends Component {
     }
   };
 
-  onBlur = () => {
+  onBlur = (event) => {
     if (this.state.isSearchHintRequired) {
       this.setState({
         isSearchHintRequired: false,
       });
     }
+
+    if (event.target.value === '') {
+      this.setState({ isTouched: false });
+    }
   };
 
   handleInputChange = (event) => {
     if (!event.target.value || event.target.value.length >= 3) {
-      this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ENTER_LOG_MSG_FILTER);
       this.props.onFilterChange(event.target.value || undefined);
     }
     this.setState({
       inputValue: event.target.value,
       isSearchHintRequired: event.target.value.length < 3,
     });
+
+    if (!this.state.isTouched) {
+      this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ENTER_LOG_MSG_FILTER);
+      this.setState({ isTouched: true });
+    }
   };
 
   render() {

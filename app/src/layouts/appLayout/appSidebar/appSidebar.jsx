@@ -26,7 +26,6 @@ import {
 } from 'controllers/user';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { FormattedMessage } from 'react-intl';
-import { CUSTOMER } from 'common/constants/projectRoles';
 import { canSeeMembers } from 'common/utils/permissions';
 import { ALL } from 'common/constants/reservedFilterIds';
 import {
@@ -89,7 +88,9 @@ export class AppSidebar extends Component {
 
   onClickButton = (eventInfo) => {
     this.props.onClickNavBtn();
-    this.props.tracking.trackEvent(eventInfo);
+    if (eventInfo) {
+      this.props.tracking.trackEvent(eventInfo);
+    }
   };
 
   createTopSidebarItems = () => {
@@ -102,32 +103,34 @@ export class AppSidebar extends Component {
       projectPageExtensions,
     } = this.props;
 
+    let menuCounter = 0;
+    const menuStep = 10;
     const topItems = [
       {
         onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_DASHBOARD_BTN),
         link: { type: PROJECT_DASHBOARD_PAGE, payload: { projectId: activeProject } },
         icon: DashboardIcon,
         message: <FormattedMessage id={'Sidebar.dashboardsBtn'} defaultMessage={'Dashboards'} />,
+        menuOrder: (menuCounter += menuStep),
       },
       {
-        onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_LAUNCH_ICON),
+        onClick: () => this.onClickButton(SIDEBAR_EVENTS.clickSidebarIcon('launches')),
         link: {
           type: LAUNCHES_PAGE,
           payload: { projectId: activeProject },
         },
         icon: LaunchesIcon,
         message: <FormattedMessage id={'Sidebar.launchesBtn'} defaultMessage={'Launches'} />,
+        menuOrder: (menuCounter += menuStep),
       },
       {
         onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_FILTERS_BTN),
         link: { type: PROJECT_FILTERS_PAGE, payload: { projectId: activeProject } },
         icon: FiltersIcon,
         message: <FormattedMessage id={'Sidebar.filtersBtn'} defaultMessage={'Filters'} />,
+        menuOrder: (menuCounter += menuStep),
       },
-    ];
-
-    if (projectRole !== CUSTOMER) {
-      topItems.push({
+      {
         onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_DEBUG_BTN),
         link: {
           type: PROJECT_USERDEBUG_PAGE,
@@ -135,8 +138,9 @@ export class AppSidebar extends Component {
         },
         icon: DebugIcon,
         message: <FormattedMessage id={'Sidebar.debugBtn'} defaultMessage={'Debug'} />,
-      });
-    }
+        menuOrder: (menuCounter += menuStep),
+      },
+    ];
 
     if (canSeeMembers(accountRole, projectRole)) {
       topItems.push({
@@ -147,6 +151,7 @@ export class AppSidebar extends Component {
         },
         icon: MembersIcon,
         message: <FormattedMessage id={'Sidebar.membersBnt'} defaultMessage={'Project members'} />,
+        menuOrder: (menuCounter += menuStep),
       });
     }
 
@@ -158,17 +163,22 @@ export class AppSidebar extends Component {
       },
       icon: SettingsIcon,
       message: <FormattedMessage id={'Sidebar.settingsBnt'} defaultMessage={'Project settings'} />,
+      menuOrder: (menuCounter += menuStep),
     });
     projectPageExtensions.forEach(({ payload }) => {
       if (payload.icon) {
+        const eventInfo = payload.iconName
+          ? SIDEBAR_EVENTS.clickSidebarIcon(payload.iconName)
+          : null;
         topItems.push({
-          onClick: onClickNavBtn,
+          onClick: () => this.onClickButton(eventInfo),
           link: {
             type: PROJECT_PLUGIN_PAGE,
             payload: { projectId: activeProject, pluginPage: payload.slug },
           },
           icon: <RemotePluginIcon icon={payload.icon} />,
-          message: payload.name,
+          message: payload.title,
+          menuOrder: payload.menuOrder || (menuCounter += menuStep),
         });
       }
     });
@@ -180,7 +190,7 @@ export class AppSidebar extends Component {
       }),
     );
 
-    return topItems;
+    return topItems.sort((a, b) => a.menuOrder - b.menuOrder);
   };
 
   createBottomSidebarItems = () => [

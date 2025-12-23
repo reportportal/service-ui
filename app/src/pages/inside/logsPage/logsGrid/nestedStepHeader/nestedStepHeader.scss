@@ -34,21 +34,17 @@ $LEVEL_OFFSET_STEP: 20px;
 }
 
 .row {
-  min-height: 45px;
   position: relative;
   display: table-row;
-  font-family: $FONT-SEMIBOLD;
-  font-size: 13px;
   border-left-color: $COLOR--primary-gray;
   border-left-style: solid;
   border-left-width: 0;
   background-color: $COLOR--white-two;
   transition: background-color 0.2s ease 0s;
 
-  @media (max-width: $SCREEN_SM_MAX) {
+  @media (max-width: $SCREEN_XS_MAX) {
     display: flex;
     flex-wrap: wrap;
-    flex-direction: column;
     @include levels(false);
   }
 }
@@ -56,9 +52,12 @@ $LEVEL_OFFSET_STEP: 20px;
 .row-cell {
   display: table-cell;
   vertical-align: middle;
-  height: 45px;
+  font-size: 12px;
+  line-height: 20px;
+  font-family: $FONT-SEMIBOLD;
   border-bottom: 4px solid $COLOR--primary-gray;
   border-top: 4px solid $COLOR--primary-gray;
+
   @media (max-width: $SCREEN_SM_MAX) {
     padding: 0 0 5px 40px;
   }
@@ -70,6 +69,11 @@ $LEVEL_OFFSET_STEP: 20px;
   border-left-width: 0;
   width: 78%;
   @include levels(true);
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    min-width: auto;
+    flex: 1;
+  }
 }
 
 .step-name {
@@ -77,8 +81,12 @@ $LEVEL_OFFSET_STEP: 20px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  font-size: 12px;
+  line-height: 20px;
+  font-family: $FONT-MONOSPACE;
   cursor: pointer;
-  padding: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
   @media (max-width: $SCREEN_SM_MAX) {
     padding: 10px 10px 5px 10px;
   }
@@ -89,17 +97,23 @@ $LEVEL_OFFSET_STEP: 20px;
 }
 
 .arrow-icon {
-  width: 24px;
-  height: 24px;
-  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  margin-right: 8px;
   cursor: pointer;
   transition: transform 0.2s ease 0s;
   fill: $COLOR--topaz;
+  transform: rotate(-90deg);
+
   svg {
-    min-width: 24px;
+    min-width: 14px;
   }
+
   &.expanded {
-    transform: rotate(90deg);
+    transform: rotate(0deg);
   }
 }
 
@@ -158,5 +172,50 @@ $LEVEL_OFFSET_STEP: 20px;
       margin-left: auto;
       display: block;
     }
+  }
+}
+
+.header-size-small,
+.header-size-medium,
+.header-size-large {
+  .row-cell {
+    padding: 0 7.5px;
+  }
+}
+
+.header-size-small .row-cell {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.header-size-medium .row-cell {
+  font-size: 13px;
+  padding-top: 14px;
+  padding-bottom: 14px;
+
+  .step-name {
+    font-size: 13px;
+  }
+}
+
+.header-size-large .row-cell {
+  font-size: 14px;
+  padding-top: 18px;
+  padding-bottom: 18px;
+
+  .step-name {
+    font-size: 14px;
+  }
+}
+
+.markdown-viewer {
+  font-size: inherit;
+  line-height: inherit;
+  font-family: inherit;
+
+  p {
+    line-height: inherit;
+    margin-block-start: 0;
+    margin-block-end: 0;
   }
 }

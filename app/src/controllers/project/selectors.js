@@ -15,8 +15,10 @@
  */
 
 import { createSelector } from 'reselect';
+import { capitalize } from 'common/utils';
 import { OWNER } from 'common/constants/permissions';
 import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
+import * as logLevels from 'common/constants/logLevels';
 import {
   ANALYZER_ATTRIBUTE_PREFIX,
   JOB_ATTRIBUTE_PREFIX,
@@ -181,3 +183,25 @@ export const PAStateSelector = (state) =>
 export const enabledPattersSelector = createSelector(patternsSelector, (patterns) =>
   patterns.filter((pattern) => pattern.enabled),
 );
+
+export const logTypesSelector = createSelector(
+  (state) => projectSelector(state).logTypes || [],
+  (logTypes) => [...logTypes].sort((a, b) => b.level - a.level),
+);
+export const logTypesLoadingSelector = (state) => projectSelector(state).logTypesLoading || false;
+export const filterableLogTypesSelector = createSelector(logTypesSelector, (logTypes) => {
+  const filterableLogTypes = logTypes
+    .filter((logType) => logType.is_filterable)
+    .map((logType) => ({
+      ...logType,
+      label: logType.is_system ? capitalize(logType.name) : logType.name,
+    }));
+
+  filterableLogTypes.push({
+    id: logLevels.ALL,
+    name: logLevels.ALL,
+    label: capitalize(logLevels.ALL),
+  });
+
+  return filterableLogTypes;
+});

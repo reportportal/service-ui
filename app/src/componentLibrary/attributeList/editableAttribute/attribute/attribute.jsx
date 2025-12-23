@@ -29,6 +29,8 @@ export const Attribute = ({
   onRemove,
   disabled,
   customClass,
+  keyClassName,
+  valueClassName,
   variant,
   maxCellWidth,
   keyValueRefCallback,
@@ -73,17 +75,25 @@ export const Attribute = ({
       >
         {attribute.key ? (
           <>
-            <div className={cx('key')} style={{ maxWidth: maxCellWidth }} title={attribute.key}>
+            <div
+              className={cx('key', keyClassName)}
+              style={{ maxWidth: maxCellWidth }}
+              title={attribute.key}
+            >
               {attribute.key}
             </div>
             <div className={cx('separator')}>:</div>
-            <div className={cx('value')} style={{ maxWidth: maxCellWidth }} title={attribute.value}>
+            <div
+              className={cx('value', valueClassName)}
+              style={{ maxWidth: maxCellWidth }}
+              title={attribute.value}
+            >
               {attribute.value}
             </div>
           </>
         ) : (
           <div
-            className={cx('value-without-key')}
+            className={cx('value-without-key', valueClassName)}
             style={{ maxWidth: maxCellWidth * 2 }}
             title={attribute.value}
           >
@@ -111,6 +121,8 @@ export const Attribute = ({
 Attribute.propTypes = {
   attribute: PropTypes.object,
   customClass: PropTypes.string,
+  keyClassName: PropTypes.string,
+  valueClassName: PropTypes.string,
   disabled: PropTypes.bool,
   onClick: PropTypes.func,
   onRemove: PropTypes.func,
@@ -127,6 +139,8 @@ Attribute.propTypes = {
 Attribute.defaultProps = {
   attribute: {},
   customClass: '',
+  keyClassName: '',
+  valueClassName: '',
   disabled: false,
   onClick: () => {},
   onRemove: () => {},

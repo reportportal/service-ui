@@ -38,6 +38,7 @@ export {
   sessionExpirationTimeSelector,
   serverFooterLinksSelector,
   importantLaunchesEnabledSelector,
+  passwordMinLengthSelector,
 } from './selectors';
 export { serverSettingsSagas } from './sagas';
 export {
@@ -47,4 +48,6 @@ export {
   UPDATE_API_EXTENSIONS_RESULT,
   SSO_USERS_ONLY_KEY,
   IMPORTANT_LAUNCHES_FEATURE_KEY,
+  PASSWORD_MIN_LENGTH_KEY,
+  APP_INFO_NAMESPACE,
 } from './constants';

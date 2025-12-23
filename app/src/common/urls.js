@@ -160,6 +160,9 @@ export const URLS = {
   projectUsernamesSearch: (activeProject) => (searchTerm = '') =>
     `${urlBase}project/${activeProject}/usernames?filter.cnt.users=${searchTerm}`,
   projectIndex: (activeProject) => `${urlBase}project/${activeProject}/index`,
+  projectLogTypes: (activeProject) => `${urlCommonBase}projects/${activeProject}/log-types`,
+  projectLogTypeById: (activeProject, logTypeId) =>
+    `${urlCommonBase}projects/${activeProject}/log-types/${logTypeId}`,
 
   projectStatus: (activeProject, interval) =>
     `${urlBase}project/list/${activeProject}${getQueryParams({
@@ -222,18 +225,23 @@ export const URLS = {
   logItem: (activeProject, itemId, level) =>
     `${urlBase}${activeProject}/log${getQueryParams({
       'filter.eq.item': itemId,
-      'filter.gte.level': level,
+      ...(level && { 'filter.gte.level': level }),
       'page.page': 1,
       'page.size': 1,
       'page.sort': 'logTime,DESC',
     })}`,
   logItems: (activeProject, itemId, level) =>
     `${urlBase}${activeProject}/log/nested/${itemId}${getQueryParams({
-      'filter.gte.level': level,
+      ...(level && { 'filter.gte.level': level }),
     })}`,
   errorLogs: (activeProject, itemId, level) =>
     `${urlBase}${activeProject}/log/locations/${itemId}${getQueryParams({
-      'filter.gte.level': level,
+      ...(level && { 'filter.gte.level': level }),
+    })}`,
+  searchLogs: (activeProject, itemId, level) =>
+    `${urlBase}${activeProject}/log/locations/search/${itemId}${getQueryParams({
+      excludeLogContent: false,
+      ...(level && { 'filter.gte.level': level }),
     })}`,
   logsUnderPath: (activeProject, path, excludedRetryParentId) =>
     `${urlBase}${activeProject}/log${getQueryParams({
@@ -243,7 +251,7 @@ export const URLS = {
   launchLogs: (activeProject, itemId, level) =>
     `${urlBase}${activeProject}/log${getQueryParams({
       'filter.eq.launch': itemId,
-      'filter.gte.level': level,
+      ...(level && { 'filter.gte.level': level }),
     })}`,
   logItemActivity: (activeProject, itemId) =>
     removeTrailingSlash(`${urlBase}${activeProject}/activity/item/${itemId}`),
@@ -259,7 +267,6 @@ export const URLS = {
   bulkLastLogs: (activeProject) => `${urlBase}${activeProject}/log/under`,
   users: (ids = []) => `${urlCommonBase}users?ids=${ids.join(',')}`,
   userRegistration: () => `${urlCommonBase}users/registration`,
-  userValidateRegistrationInfo: () => `${urlCommonBase}users/registration/info`,
   userPasswordReset: () => `${urlCommonBase}users/password/reset`,
   userPasswordResetToken: (token) => `${urlCommonBase}users/password/reset/${token}`,
   userPasswordRestore: () => `${urlCommonBase}users/password/restore`,

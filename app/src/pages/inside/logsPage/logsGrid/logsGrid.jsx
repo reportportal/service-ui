@@ -16,15 +16,23 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
 import { Grid } from 'components/main/grid';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
-import { ERROR, FATAL } from 'common/constants/logLevels';
+import {
+  logsSizeSelector,
+  noLogsCollapsingSelector,
+  logsColorizedBackgroundSelector,
+} from 'controllers/user';
+import { logTypesSelector } from 'controllers/project';
+import { getLogLevelStyles } from 'controllers/log/storageUtils';
 import ArrowIcon from 'common/img/arrow-down-inline.svg';
 import { NoItemMessage } from 'components/main/noItemMessage';
+import { DEFAULT_LOGS_SIZE } from 'common/constants/logsSettings';
 import { FlexibleLogTime } from './flexibleLogTime';
 import { LogMessageSearch } from './logMessageSearch';
 import { LogMessageBlock } from './logMessageBlock';
@@ -57,37 +65,51 @@ const LOGS_GRID_EVENTS_INFO = {
   clickOnLoadCurrentStep: LOG_PAGE_EVENTS.LOAD_CURRENT_STEP,
 };
 
-const MessageColumn = ({ className, value, ...rest }) => (
-  <div
-    className={cx('message-column', `level-${value.level}`, className, {
-      console: rest.customProps.consoleView,
-    })}
-  >
-    <LogMessageBlock value={value} {...rest} />
-  </div>
-);
+const MessageColumn = ({ className, value, customProps, withAccordion, ...rest }) => {
+  const { consoleView, logsSize = DEFAULT_LOGS_SIZE, logLevels = [] } = customProps;
+  const { labelColor, textColor, textStyle } = getLogLevelStyles(value?.level, logLevels);
+
+  return (
+    <div
+      className={cx('message-column', `column-size-${logsSize}`, className, {
+        console: consoleView,
+        'with-accordion': withAccordion,
+        bold: textStyle === 'bold',
+      })}
+      style={{
+        '--label-color': labelColor,
+        '--text-color': textColor,
+      }}
+    >
+      <LogMessageBlock value={value} customProps={customProps} {...rest} />
+    </div>
+  );
+};
 MessageColumn.propTypes = {
   className: PropTypes.string.isRequired,
   customProps: PropTypes.object,
   value: PropTypes.object,
+  withAccordion: PropTypes.bool,
 };
 MessageColumn.defaultProps = {
   customProps: {},
   value: {},
+  withAccordion: false,
 };
 
-const AttachmentColumn = ({ className, value, customProps }) => (
-  <div
-    className={cx('attachment-column', className, {
-      mobile: customProps.mobile,
-      console: customProps.consoleView,
-    })}
-  >
-    {value.binaryContent?.contentType && (
-      <AttachmentBlock customProps={customProps} value={value.binaryContent} />
-    )}
-  </div>
-);
+const AttachmentColumn = ({ className, value, customProps }) => {
+  const { mobile, consoleView: console, logsSize = DEFAULT_LOGS_SIZE } = customProps;
+
+  return (
+    <div
+      className={cx('attachment-column', `column-size-${logsSize}`, className, { mobile, console })}
+    >
+      {value.binaryContent?.contentType && (
+        <AttachmentBlock customProps={customProps} value={value.binaryContent} />
+      )}
+    </div>
+  );
+};
 AttachmentColumn.propTypes = {
   className: PropTypes.string.isRequired,
   customProps: PropTypes.object,
@@ -98,16 +120,37 @@ AttachmentColumn.defaultProps = {
   value: {},
 };
 
-const StatusColumn = ({ className }) => <div className={className} />;
+const StatusColumn = ({ className, customProps }) => {
+  const { logsSize = DEFAULT_LOGS_SIZE } = customProps;
+
+  return <div className={cx(className, `column-size-${logsSize}`)} />;
+};
 StatusColumn.propTypes = {
   className: PropTypes.string.isRequired,
+  customProps: PropTypes.object,
+};
+StatusColumn.defaultProps = {
+  customProps: {},
 };
 
-const TimeColumn = ({ className, value, customProps: { mobile } }) => (
-  <div className={cx('time-column', className, { mobile })}>
-    <FlexibleLogTime time={value.time} />
-  </div>
-);
+const TimeColumn = ({ className, value, customProps }) => {
+  const { mobile, logsSize = DEFAULT_LOGS_SIZE, logLevels = [] } = customProps;
+  const { textColor, textStyle } = getLogLevelStyles(value?.level, logLevels);
+
+  return (
+    <div
+      className={cx('time-column', className, `column-size-${logsSize}`, {
+        mobile,
+        bold: textStyle === 'bold',
+      })}
+      style={{
+        '--text-color': textColor,
+      }}
+    >
+      <FlexibleLogTime time={value.time} />
+    </div>
+  );
+};
 TimeColumn.propTypes = {
   className: PropTypes.string.isRequired,
   customProps: PropTypes.object,
@@ -145,6 +188,12 @@ LogStatusCell.defaultProps = {
   rawStylesConfig: {},
 };
 
+@connect((state) => ({
+  noLogsCollapsing: noLogsCollapsingSelector(state),
+  logsSize: logsSizeSelector(state),
+  logLevels: logTypesSelector(state),
+  logsColorizedBackground: logsColorizedBackgroundSelector(state),
+}))
 @injectIntl
 export class LogsGrid extends Component {
   static propTypes = {
@@ -167,6 +216,14 @@ export class LogsGrid extends Component {
       highlightErrorRow: PropTypes.bool,
     }),
     rawHeaderCellStylesConfig: PropTypes.object,
+    noLogsCollapsing: PropTypes.bool,
+    loadNext: PropTypes.func,
+    loadPrevious: PropTypes.func,
+    loadingDirection: PropTypes.string,
+    logsSize: PropTypes.string,
+    onJumpToLog: PropTypes.func,
+    logLevels: PropTypes.array,
+    logsColorizedBackground: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -184,51 +241,63 @@ export class LogsGrid extends Component {
     isNestedStepView: false,
     rowHighlightingConfig: {},
     rawHeaderCellStylesConfig: {},
+    noLogsCollapsing: false,
+    loadingDirection: null,
+    logsSize: DEFAULT_LOGS_SIZE,
+    onJumpToLog: null,
+    logLevels: [],
   };
 
-  getConsoleViewColumns = () => [
-    {
-      id: 'attachment',
-      component: AttachmentColumn,
-      customProps: {
-        consoleView: true,
-        rawHeaderCellStylesConfig: this.props.rawHeaderCellStylesConfig,
+  getConsoleViewColumns = () => {
+    const { logsSize, onJumpToLog, logLevels } = this.props;
+    return [
+      {
+        id: 'attachment',
+        component: AttachmentColumn,
+        customProps: {
+          consoleView: true,
+          rawHeaderCellStylesConfig: this.props.rawHeaderCellStylesConfig,
+          logsSize,
+          gridHeaderCellStyles: cx('header', `column-size-${logsSize}`),
+        },
       },
-    },
-    {
-      id: TIME_COLUMN_ID,
-      sortable: true,
-      title: {
-        component: this.renderConsoleViewHeader,
+      {
+        id: TIME_COLUMN_ID,
+        sortable: true,
+        title: {
+          component: this.renderConsoleViewHeader,
+        },
+        customProps: {
+          consoleView: true,
+          rawHeaderCellStylesConfig: this.props.rawHeaderCellStylesConfig,
+          logsSize,
+          gridHeaderCellStyles: cx('header', `column-size-${logsSize}`),
+          onJumpToLog,
+          logLevels,
+        },
+        component: MessageColumn,
       },
-      customProps: {
-        consoleView: true,
-        rawHeaderCellStylesConfig: this.props.rawHeaderCellStylesConfig,
+      {
+        id: 'mobileTime',
+        component: TimeColumn,
+        customProps: {
+          mobile: true,
+          rawHeaderCellStylesConfig: this.props.rawHeaderCellStylesConfig,
+          logsSize,
+          gridHeaderCellStyles: cx('header', 'mobile', `column-size-${logsSize}`),
+        },
       },
-      component: MessageColumn,
-    },
-    {
-      id: 'mobileTime',
-      component: TimeColumn,
-      customProps: {
-        mobile: true,
-        rawHeaderCellStylesConfig: this.props.rawHeaderCellStylesConfig,
-      },
-    },
-    {
-      id: 'mobileAttachment',
-      component: AttachmentColumn,
-      title: {
-        component: () => <div className={cx('no-header')} />,
-      },
-      customProps: {
-        mobile: true,
-      },
-    },
-  ];
+    ];
+  };
 
   getDefaultViewColumns = () => {
-    const { isNestedStepView, rawHeaderCellStylesConfig } = this.props;
+    const {
+      isNestedStepView,
+      rawHeaderCellStylesConfig,
+      logsSize,
+      onJumpToLog,
+      logLevels,
+    } = this.props;
     const statusColumn = {
       id: STATUS_COLUMN_ID,
       title: {
@@ -242,6 +311,10 @@ export class LogsGrid extends Component {
       },
       sortable: true,
       component: StatusColumn,
+      customProps: {
+        logsSize,
+        gridHeaderCellStyles: cx('header', `column-size-${logsSize}`),
+      },
     };
     const columns = [
       {
@@ -259,6 +332,10 @@ export class LogsGrid extends Component {
         component: MessageColumn,
         customProps: {
           markdownMode: this.props.markdownMode,
+          logsSize,
+          gridHeaderCellStyles: cx('header', `column-size-${logsSize}`),
+          onJumpToLog,
+          logLevels,
         },
       },
       {
@@ -266,6 +343,8 @@ export class LogsGrid extends Component {
         component: AttachmentColumn,
         customProps: {
           rawHeaderCellStylesConfig,
+          logsSize,
+          gridHeaderCellStyles: cx('header', `column-size-${logsSize}`),
         },
       },
       {
@@ -278,16 +357,9 @@ export class LogsGrid extends Component {
         sortingEventInfo: LOG_PAGE_EVENTS.TIME_SORTING,
         customProps: {
           rawHeaderCellStylesConfig,
-        },
-      },
-      {
-        id: 'mobileAttachment',
-        title: {
-          component: () => <div className={cx('no-header')} />,
-        },
-        component: AttachmentColumn,
-        customProps: {
-          mobile: true,
+          logsSize,
+          gridHeaderCellStyles: cx('header', `column-size-${logsSize}`),
+          logLevels,
         },
       },
     ];
@@ -300,16 +372,21 @@ export class LogsGrid extends Component {
   getColumns = () =>
     this.props.consoleView ? this.getConsoleViewColumns() : this.getDefaultViewColumns();
 
-  getLogRowClasses = (value) => {
-    const { consoleView, rowHighlightingConfig } = this.props;
-    const isHighlightedErrorLog = rowHighlightingConfig.highlightedRowId === value.id;
+  getLogRowClasses = () => {
+    const { consoleView, logsSize } = this.props;
 
     return {
       log: true,
-      'error-row':
-        !consoleView && (value.level === ERROR || value.level === FATAL) && !isHighlightedErrorLog,
       'row-console': consoleView,
-      'highlight-error-row': isHighlightedErrorLog,
+      [`log-size-${logsSize}`]: logsSize,
+    };
+  };
+
+  getLogRowStyles = (value) => {
+    const { logLevels, logsColorizedBackground } = this.props;
+    const { backgroundColor } = getLogLevelStyles(value?.level, logLevels);
+    return {
+      backgroundColor: logsColorizedBackground && backgroundColor,
     };
   };
 
@@ -344,18 +421,26 @@ export class LogsGrid extends Component {
   };
 
   renderNestedStepHeader = (props) => (
-    <NestedStepHeader {...props} markdownMode={this.props.markdownMode} />
+    <NestedStepHeader
+      {...props}
+      markdownMode={this.props.markdownMode}
+      logsSize={this.props.logsSize}
+    />
   );
 
   render() {
     const {
       intl,
+      noLogsCollapsing,
       logItems,
       loading,
       sortingColumn,
       sortingDirection,
       onChangeSorting,
       rowHighlightingConfig,
+      loadNext,
+      loadPrevious,
+      loadingDirection,
     } = this.props;
 
     return (
@@ -373,6 +458,11 @@ export class LogsGrid extends Component {
           rowHighlightingConfig={rowHighlightingConfig}
           nestedView
           eventsInfo={LOGS_GRID_EVENTS_INFO}
+          expanded={noLogsCollapsing}
+          loadNext={loadNext}
+          loadPrevious={loadPrevious}
+          loadingDirection={loadingDirection}
+          rowStylesMapper={this.getLogRowStyles}
         />
         {!logItems.length && !loading && (
           <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />

@@ -111,7 +111,7 @@ export class ActionPanel extends Component {
     });
   };
 
-  addUser = (values) => {
+  addUser = (values, closeModal) => {
     fetch(URLS.users(), {
       method: 'post',
       data: {
@@ -131,6 +131,7 @@ export class ActionPanel extends Component {
           message: this.props.intl.formatMessage(messages.addUserSuccessNotification),
         });
         this.props.fetchAllUsersAction();
+        closeModal();
       })
       .catch(this.props.showDefaultErrorNotification);
   };

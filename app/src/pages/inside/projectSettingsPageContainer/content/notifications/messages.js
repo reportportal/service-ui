@@ -112,7 +112,8 @@ export const messages = defineMessages({
   },
   toggleNote: {
     id: 'NotificationsEnableForm.toggleNotificationsNote',
-    defaultMessage: 'Toggle to enable or disable all notifications for the application.',
+    defaultMessage:
+      'Turn off to stop all notifications. When on, notifications are sent only through the channels enabled below (Email, Slack, etc.)',
   },
   title: {
     id: 'NotificationsEnableForm.title',

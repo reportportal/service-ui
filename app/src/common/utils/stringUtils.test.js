@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { isString } from './stringUtils';
+import { isString, capitalize } from './stringUtils';
 
 describe('isString', () => {
   test('should return true for string values', () => {
@@ -33,5 +33,27 @@ describe('isString', () => {
     expect(isString({})).toBe(false);
     expect(isString([])).toBe(false);
     expect(isString(() => {})).toBe(false);
+  });
+});
+
+describe('capitalize', () => {
+  test('should capitalize first letter and lowercase the rest', () => {
+    expect(capitalize('hello')).toBe('Hello');
+    expect(capitalize('WORLD')).toBe('World');
+    expect(capitalize('test')).toBe('Test');
+    expect(capitalize('a')).toBe('A');
+    expect(capitalize('hELLo')).toBe('Hello');
+    expect(capitalize('TeSt')).toBe('Test');
+    expect(capitalize('MiXeD')).toBe('Mixed');
+  });
+
+  test('should return original value for non-string inputs', () => {
+    expect(capitalize(123)).toBe(123);
+    expect(capitalize(true)).toBe(true);
+    expect(capitalize(false)).toBe(false);
+    expect(capitalize(null)).toBe(null);
+    expect(capitalize(undefined)).toBe(undefined);
+    expect(capitalize({})).toEqual({});
+    expect(capitalize([])).toEqual([]);
   });
 });

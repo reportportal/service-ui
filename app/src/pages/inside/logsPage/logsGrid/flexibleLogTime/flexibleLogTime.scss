@@ -16,12 +16,14 @@
 
 .flexible-log-time {
   display: inline-block;
-  min-height: 40px;
+  padding: 0;
+  margin: 0;
   cursor: pointer;
-  font-family: $FONT-REGULAR;
-  font-size: 13px;
-  color: $COLOR--charcoal-grey;
-  line-height: 1.5;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  font-weight: inherit;
+  color: inherit;
   vertical-align: top;
   border: none;
   background: none;
@@ -48,5 +50,5 @@
 }
 
 .micro-seconds {
-  color: $COLOR--gray-60;
+  opacity: 0.6;
 }

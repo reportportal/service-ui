@@ -303,6 +303,14 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.assign',
     defaultMessage: 'Assign',
   },
+  EXPORT: {
+    id: 'Common.export',
+    defaultMessage: 'Export',
+  },
+  REFRESH: {
+    id: 'Common.refresh',
+    defaultMessage: 'Refresh',
+  },
 });
 
 export const months = [

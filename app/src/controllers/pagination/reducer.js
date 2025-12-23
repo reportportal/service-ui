@@ -14,7 +14,41 @@
  * limitations under the License.
  */
 
-import { fetchReducer } from 'controllers/fetch';
+import {
+  fetchReducer,
+  FETCH_SUCCESS,
+  CONCAT_FETCH_SUCCESS,
+  PREPEND_FETCH_SUCCESS,
+} from 'controllers/fetch';
 
 export const paginationReducer = (namespace, initialState = {}) =>
   fetchReducer(namespace, { contentPath: 'page', initialState });
+
+export const pageRangeReducer = (namespace) => (state = null, { type, payload, meta }) => {
+  if (meta?.namespace !== namespace) {
+    return state;
+  }
+
+  switch (type) {
+    case FETCH_SUCCESS: {
+      const pageNumber = payload?.page?.number || 1;
+      return { start: pageNumber, end: pageNumber };
+    }
+    case CONCAT_FETCH_SUCCESS: {
+      const newEnd = state.end + 1;
+      return {
+        ...state,
+        end: newEnd,
+      };
+    }
+    case PREPEND_FETCH_SUCCESS: {
+      const newStart = Math.max(1, state.start - 1);
+      return {
+        ...state,
+        start: newStart,
+      };
+    }
+    default:
+      return state;
+  }
+};

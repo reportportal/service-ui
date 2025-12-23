@@ -138,6 +138,14 @@ module.exports = {
           singleton: true,
           requiredVersion: pjson.dependencies['redux-first-router'],
         },
+        'react-dnd': {
+          singleton: true,
+          requiredVersion: pjson.dependencies['react-dnd'],
+        },
+        'react-dnd-html5-backend': {
+          singleton: true,
+          requiredVersion: pjson.dependencies['react-dnd-html5-backend'],
+        },
         history: {
           singleton: true,
           requiredVersion: pjson.dependencies.history,

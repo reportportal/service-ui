@@ -49,8 +49,10 @@ export const btsBoardId = bindMessageToValidator(validate.btsProject, 'btsBoardI
 export const email = bindMessageToValidator(validate.requiredEmail, 'emailHint');
 export const login = bindMessageToValidator(validate.login, 'loginHint');
 export const oldPassword = bindMessageToValidator(validate.oldPassword, 'oldPasswordHint');
-export const password = bindMessageToValidator(validate.password, 'passwordHint');
 export const userName = bindMessageToValidator(validate.userName, 'nameHint');
+
+export const createPasswordValidator = (minLength, message) =>
+  bindMessageToValidator(validate.createPasswordValidator(minLength), message);
 
 export const createPatternNameValidator = (patterns, patternId) =>
   composeBoundValidators([

@@ -24,6 +24,11 @@ export {
   SET_ACTIVE_PROJECT,
   FETCH_USER_SUCCESS,
   FETCH_USER_ERROR,
+  NO_LOGS_COLLAPSING_KEY,
+  LOGS_PAGINATION_ENABLED_KEY,
+  LOGS_SIZE_KEY,
+  LOGS_FULL_WIDTH_MODE_KEY,
+  LOGS_COLORIZED_BACKGROUND_KEY,
 } from './constants';
 export {
   fetchUserAction,
@@ -41,6 +46,13 @@ export {
   assignToProjectErrorAction,
   assignToProjectSuccessAction,
   unassignFromProjectAction,
+  setActiveProjectSettingsAction,
+  updateActiveProjectSettingsAction,
+  setNoLogsCollapsingAction,
+  setLogsPaginationEnabledAction,
+  setLogsSizeAction,
+  setLogsFullWidthModeAction,
+  setLogsColorizedBackgroundAction,
 } from './actionCreators';
 export { userReducer } from './reducer';
 export {
@@ -58,5 +70,23 @@ export {
   apiKeysSelector,
   photoIdSelector,
   availableProjectsSelector,
+  idSelector,
+  activeProjectSettingsSelector,
+  noLogsCollapsingSelector,
+  logsPaginationEnabledSelector,
+  logsSizeSelector,
+  logsFullWidthModeSelector,
+  logsColorizedBackgroundSelector,
 } from './selectors';
 export { userSagas } from './sagas';
+export {
+  getUserSettingsFromStorage,
+  updateUserSettingsInStorage,
+  getUserProjectSettingsFromStorage,
+  updateUserProjectSettingsInStorage,
+  setNoLogsCollapsingInStorage,
+  setLogsPaginationEnabledInStorage,
+  setLogsSizeInStorage,
+  setLogsFullWidthModeInStorage,
+  setLogsColorizedBackgroundInStorage,
+} from './storageUtils';

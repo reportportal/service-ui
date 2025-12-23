@@ -56,6 +56,9 @@ export const AttributeList = ({
   attributesListClassname,
   editorDefaultOpen,
   autocompleteProps,
+  allowCustomValues,
+  addButtonClassName,
+  isAttributeValueRequired,
 }) => {
   const addNewAttrRef = useRef(null);
   const attributesRefs = useRef(null);
@@ -261,6 +264,8 @@ export const AttributeList = ({
           getURIValue={getURIValue}
           editorDefaultOpen={editorDefaultOpen}
           autocompleteProps={autocompleteProps}
+          allowCustomValues={allowCustomValues}
+          isAttributeValueRequired={isAttributeValueRequired}
         />
       )}
       <div className={cx('attributes-wrapper')}>
@@ -322,7 +327,7 @@ export const AttributeList = ({
         {!hasEditedAttribute && !disabled && showButton && attributes.length < maxLength && (
           <Button
             refCallback={addNewAttButtonRefCb}
-            className={cx('button-focused')}
+            className={cx('button-focused', addButtonClassName)}
             icon={Parser(PlusIcon)}
             onClick={onAddNew}
             variant={'text'}
@@ -352,6 +357,9 @@ AttributeList.propTypes = {
   attributesListClassname: PropTypes.string,
   editorDefaultOpen: PropTypes.bool,
   autocompleteProps: PropTypes.object,
+  allowCustomValues: PropTypes.bool,
+  addButtonClassName: PropTypes.string,
+  isAttributeValueRequired: PropTypes.bool,
 };
 AttributeList.defaultProps = {
   attributes: [],
@@ -368,4 +376,7 @@ AttributeList.defaultProps = {
   attributesListClassname: '',
   editorDefaultOpen: false,
   autocompleteProps: {},
+  allowCustomValues: true,
+  addButtonClassName: '',
+  isAttributeValueRequired: true,
 };
