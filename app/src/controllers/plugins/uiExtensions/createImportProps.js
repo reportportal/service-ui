@@ -215,6 +215,7 @@ import { Tabs } from 'components/main/tabs';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { PlainTable } from 'componentLibrary/plainTable';
+import { AdaptiveIssueList } from 'pages/inside/common/adaptiveIssueList';
 import { withFilter } from 'controllers/filter';
 import { SORTING_KEY, withSortingURL } from 'controllers/sorting';
 import {
@@ -330,6 +331,7 @@ export const createImportProps = (pluginName) => ({
     PlainTable,
     BubblesPreloader: BubblesLoader,
     DateRangeFormField,
+    AdaptiveIssueList,
   },
   componentLibrary: { DraggableRuleList },
   HOCs: {
