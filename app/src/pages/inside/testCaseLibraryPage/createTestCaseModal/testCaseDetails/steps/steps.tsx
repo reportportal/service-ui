@@ -48,9 +48,16 @@ export const Steps = ({
 }: StepsProps) => {
   const { formatMessage } = useIntl();
   const [justDroppedId, setJustDroppedId] = useState<number | null>(null);
+  const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
 
   const handleDrop = useCallback(
     (fromIndex: number, toIndex: number) => {
+      setDraggingIndex(null);
+
+      if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0) {
+        return;
+      }
+
       const reorderedSteps = [...steps];
       const [movedStep] = reorderedSteps.splice(fromIndex, 1);
       reorderedSteps.splice(toIndex, 0, movedStep);
@@ -70,12 +77,19 @@ export const Steps = ({
       collect: (monitor) => ({
         isDraggingAny: monitor.canDrop(),
       }),
+      drop: () => {
+        return { droppedInZone: true };
+      },
     }),
     [],
   );
 
   const renderBetweenStepsArea = (index: number) => {
     const isLastStep = index === steps.length - 1;
+
+    if (isDraggingAny) {
+      return null;
+    }
 
     return (
       !isLastStep && (
@@ -114,51 +128,62 @@ export const Steps = ({
         {steps.map((step, index) => {
           const { id, instructions, expectedResult } = step;
           const fieldKey = isKeyById ? id : index;
+          const isLast = index === steps.length - 1;
+          const isDraggingThis = draggingIndex === index;
 
           return (
-            <SortableItem
-              key={id}
-              id={id}
-              index={index}
-              type={STEP_DRAG_TYPE}
-              onDrop={handleDrop}
-              hideDefaultPreview
-              dropDetectionMode={DROP_DETECTION_MODE.HOVER}
-              isLast={index === steps.length - 1}
-              className={cx('steps__step-container', {
-                'steps__step-container--just-dropped': justDroppedId === id,
-              })}
-              draggingClassName={cx('steps__step-container--dragging')}
-              dropTargetClassName={cx('steps__step-container--drop-target')}
-            >
-              {({ dragRef, isDragging }) => (
-                <HideOnDrag isDragging={isDragging}>
-                  <AttachmentArea
-                    isDraggable
+            <>
+              <SortableItem
+                key={id}
+                id={id}
+                index={index}
+                type={STEP_DRAG_TYPE}
+                onDrop={handleDrop}
+                hideDefaultPreview
+                dropDetectionMode={DROP_DETECTION_MODE.HOVER}
+                isLast={isLast}
+                className={cx('steps__step-container', {
+                  'steps__step-container--just-dropped': justDroppedId === id,
+                  'steps__step-container--last': isLast,
+                  'steps__step-container--is-dragging': isDraggingThis,
+                })}
+                draggingClassName={cx('steps__step-container--dragging')}
+                dropTargetClassName={cx('steps__step-container--drop-target')}
+              >
+                {({ dragRef, isDragging }) => (
+                  <HideOnDrag
+                    isDragging={isDragging}
                     index={index}
-                    totalCount={steps.length}
-                    formName={formName}
-                    acceptFileMimeTypes={[MIME_TYPES.jpeg, MIME_TYPES.png]}
-                    dropZoneDescription={formatMessage(commonMessages.dropFileDescription, {
-                      browseButton: formatMessage(commonMessages.browseText),
-                    })}
-                    attachmentFieldName={`steps.${fieldKey}.attachments`}
-                    fileSizeMessage={formatMessage(commonMessages.fileSizeInfo)}
-                    onRemove={() => onRemoveStep(id)}
-                    onMove={(direction) => onMoveStep({ stepId: id, direction })}
-                    dragHandleRef={dragRef as Ref<HTMLButtonElement>}
-                    isDraggingActive={isDragging}
+                    draggingIndex={draggingIndex}
+                    onDraggingChange={setDraggingIndex}
                   >
-                    <Step
-                      stepId={fieldKey}
-                      instructions={instructions}
-                      expectedResult={expectedResult}
-                    />
-                  </AttachmentArea>
-                  {renderBetweenStepsArea(index)}
-                </HideOnDrag>
-              )}
-            </SortableItem>
+                    <AttachmentArea
+                      isDraggable
+                      index={index}
+                      totalCount={steps.length}
+                      formName={formName}
+                      acceptFileMimeTypes={[MIME_TYPES.jpeg, MIME_TYPES.png]}
+                      dropZoneDescription={formatMessage(commonMessages.dropFileDescription, {
+                        browseButton: formatMessage(commonMessages.browseText),
+                      })}
+                      attachmentFieldName={`steps.${fieldKey}.attachments`}
+                      fileSizeMessage={formatMessage(commonMessages.fileSizeInfo)}
+                      onRemove={() => onRemoveStep(id)}
+                      onMove={(direction) => onMoveStep({ stepId: id, direction })}
+                      dragHandleRef={dragRef as Ref<HTMLButtonElement>}
+                      isDraggingActive={isDragging}
+                    >
+                      <Step
+                        stepId={fieldKey}
+                        instructions={instructions}
+                        expectedResult={expectedResult}
+                      />
+                    </AttachmentArea>
+                    {renderBetweenStepsArea(index)}
+                  </HideOnDrag>
+                )}
+              </SortableItem>
+            </>
           );
         })}
       </div>
