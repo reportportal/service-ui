@@ -168,7 +168,7 @@
     "sass": "^1.83.4",
     "sass-loader": "^16.0.4",
     "sass-resources-loader": "2.2.5",
-    "slnodejs": "^6.1.1006",
+    "slnodejs": "^6.1.1086",
     "style-loader": "^4.0.0",
     "stylelint": "^16.21.0",
     "stylelint-config-prettier-scss": "^1.0.0",
