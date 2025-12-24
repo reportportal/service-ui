@@ -67,6 +67,13 @@
     }
   }
 
+  &__list--dragging &__step-container:not(&__step-container--is-dragging) {
+    margin-top: -4px;
+    margin-bottom: -4px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
   &__between-area {
     position: absolute;
     width: 100%;
