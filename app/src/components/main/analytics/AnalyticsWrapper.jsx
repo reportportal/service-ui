@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,57 +17,31 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { baseEventParametersSelector } from 'controllers/appInfo';
 import track from 'react-tracking';
 import GA4 from 'react-ga4';
-import { omit } from 'common/utils';
 import { gaMeasurementIdSelector } from 'controllers/appInfo/selectors';
 import ReactObserver from 'react-event-observer';
-import { assignedProjectsSelector } from 'controllers/user';
-import { projectIdSelector } from 'controllers/pages';
-import { normalizeDimensionValue, getAutoAnalysisEventValue } from './utils';
+import { sendAnalyticsEventAction } from 'controllers/analytics';
 
 export const analyticsEventObserver = ReactObserver();
 
-@connect((state) => ({
-  baseEventParameters: baseEventParametersSelector(state),
-  gaMeasurementId: gaMeasurementIdSelector(state),
-  assignedProject: assignedProjectsSelector(state)[projectIdSelector(state)],
-}))
+@connect(
+  (state) => ({
+    gaMeasurementId: gaMeasurementIdSelector(state),
+  }),
+  {
+    sendAnalyticsEvent: sendAnalyticsEventAction,
+  },
+)
 @track(({ children, dispatch, ...additionalData }) => additionalData, {
-  dispatch: ({ baseEventParameters, gaMeasurementId, assignedProject, isEnabled, ...data }) => {
+  dispatch: ({ gaMeasurementId, isEnabled, sendAnalyticsEvent, ...data }) => {
     if (!isEnabled) {
       return;
     }
 
-    const {
-      instanceId,
-      buildVersion,
-      userId,
-      isAutoAnalyzerEnabled,
-      isPatternAnalyzerEnabled,
-      isAdmin,
-      isAnalyzerAvailable,
-    } = baseEventParameters;
-    const { projectId, entryType } = assignedProject || {};
-
-    if ('place' in data) {
-      const eventParameters = {
-        instanceID: instanceId,
-        version: buildVersion,
-        auto_analysis:
-          getAutoAnalysisEventValue(isAnalyzerAvailable, isAutoAnalyzerEnabled) || 'not_set',
-        pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled) || 'not_set',
-        timestamp: Date.now(),
-        uid: `${userId}|${instanceId}`,
-        kind: entryType || 'not_set',
-        ...(!isAdmin && { project_id: `${projectId}|${instanceId}` }),
-        ...omit(data, data.place ? ['action'] : ['action', 'place']),
-      };
-      GA4.event(data.action, eventParameters);
-    }
+    sendAnalyticsEvent(data);
   },
-  process: ({ page, place }) => (page ? { action: 'pageview', page, place: place || '' } : null),
+  process: ({ page, place }) => (page ? { action: 'page_view', page, place: place || '' } : null),
 })
 export class AnalyticsWrapper extends Component {
   static propTypes = {

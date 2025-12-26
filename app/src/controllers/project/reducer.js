@@ -24,6 +24,7 @@ import {
   PROJECT_INFO_INITIAL_STATE,
   PROJECT_PREFERENCES_INITIAL_STATE,
   FETCH_PROJECT_SUCCESS,
+  FETCH_PROJECT_ERROR,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   UPDATE_CONFIGURATION_ATTRIBUTES,
   UPDATE_DEFECT_TYPE_SUCCESS,
@@ -159,6 +160,7 @@ export const projectInfoLoadingReducer = (state = false, { type = '' }) => {
     case FETCH_PROJECT:
       return true;
     case FETCH_PROJECT_SUCCESS:
+    case FETCH_PROJECT_ERROR:
       return false;
     default:
       return state;
