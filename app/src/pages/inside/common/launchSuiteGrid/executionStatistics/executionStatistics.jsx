@@ -31,6 +31,7 @@ export const ExecutionStatistics = ({
   listViewLinkParams,
   statuses,
   ownLinkParams,
+  onClick,
 }) => (
   <div className={cx('execution-statistics')}>
     <span className={cx('title')}>{title.full}</span>
@@ -42,6 +43,7 @@ export const ExecutionStatistics = ({
         listViewLinkParams={listViewLinkParams}
         className={cx('value', { bold })}
         ownLinkParams={ownLinkParams}
+        onClick={onClick}
       >
         {value}
       </StatisticsLink>
@@ -65,6 +67,7 @@ ExecutionStatistics.propTypes = {
     payload: PropTypes.object,
     page: PropTypes.string,
   }),
+  onClick: PropTypes.func,
 };
 ExecutionStatistics.defaultProps = {
   bold: false,
@@ -73,4 +76,5 @@ ExecutionStatistics.defaultProps = {
   target: '',
   listViewLinkParams: {},
   ownLinkParams: {},
+  onClick: () => {},
 };

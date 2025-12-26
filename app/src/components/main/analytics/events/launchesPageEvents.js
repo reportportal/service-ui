@@ -183,6 +183,11 @@ export const LAUNCHES_PAGE_EVENTS = {
     element_name: 'add_filters',
   },
   getClickOnAnalyzeUniqueErrorsEvent: getClickOnAnalyzeUniqueErrorsEventCreator(LAUNCHES_PAGE),
+  getClickOnExecutionStatisticIconEvent: (type) => ({
+    ...basicClickEventParametersLaunchPage,
+    element_name: 'execution_statistic_icon',
+    type,
+  }),
   // GA3 events
   NAME_FILTER: {
     category: LAUNCHES_PAGE,
