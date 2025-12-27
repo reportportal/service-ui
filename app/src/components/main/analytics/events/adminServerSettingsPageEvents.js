@@ -38,7 +38,7 @@ const DEFAULT_FOOTER_LINK_NAMES = [
 ];
 
 export const getServerSettingsPageViewEvent = (activeTab) => ({
-  action: 'pageview',
+  action: 'page_view',
   page: ADMIN_SERVER_SETTINGS_PAGE,
   place: `${ADMIN_SERVER_SETTINGS_PAGE}_${activeTab.toLowerCase()}`,
 });

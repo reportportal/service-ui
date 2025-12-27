@@ -40,7 +40,6 @@ export const provideEcGA = ({ eventName, baseEventParameters, additionalParamete
     isAnalyzerAvailable,
     isPatternAnalyzerEnabled,
     projectInfoId,
-    isAdmin,
   } = baseEventParameters;
 
   const eventParameters = {
@@ -50,7 +49,7 @@ export const provideEcGA = ({ eventName, baseEventParameters, additionalParamete
     auto_analysis: getAutoAnalysisEventValue(isAnalyzerAvailable, isAutoAnalyzerEnabled),
     pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled),
     timestamp: Date.now(),
-    ...(!isAdmin && { project_id: `${projectInfoId}|${instanceId}` }),
+    project_id: projectInfoId ? `${projectInfoId}|${instanceId}` : 'not_set',
     ...additionalParameters,
   };
 

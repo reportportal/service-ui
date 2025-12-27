@@ -16,6 +16,7 @@
 
 import {
   FETCH_PROJECT_SUCCESS,
+  FETCH_PROJECT_ERROR,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   UPDATE_CONFIGURATION_ATTRIBUTES,
   UPDATE_DEFECT_TYPE,
@@ -60,6 +61,11 @@ import {
 export const fetchProjectSuccessAction = (project) => ({
   type: FETCH_PROJECT_SUCCESS,
   payload: project,
+});
+
+export const fetchProjectErrorAction = (error, projectId) => ({
+  type: FETCH_PROJECT_ERROR,
+  payload: { error, projectId },
 });
 
 export const fetchProjectPreferencesSuccessAction = (preferences) => ({
