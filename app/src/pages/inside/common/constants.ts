@@ -18,6 +18,10 @@ import { defineMessages } from 'react-intl';
 
 export const ISSUE_OPERATION_MAX_ITEMS = 300;
 export const SPINNER_DEBOUNCE = 300;
+export enum TMS_INSTANCE_KEY {
+  TEST_CASE = 'testCase',
+  TEST_PLAN = 'testPlan',
+}
 
 export const actionMessages = defineMessages({
   editDefects: {

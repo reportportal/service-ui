@@ -19,6 +19,7 @@ import { useIntl } from 'react-intl';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { noop } from 'es-toolkit';
 import { Modal } from '@reportportal/ui-kit';
+import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { UseModalData } from 'common/hooks';
 import { createClassnames } from 'common/utils';
@@ -99,7 +100,7 @@ const MoveFolderModal = reduxForm<FolderModalFormValues, MoveFolderModalProps>({
       allowCloseOutside={!dirty}
       onClose={hideModal}
     >
-      <form className={cx('move-folder-modal__form')}>
+      <form className={cx('move-folder-modal__form')} onSubmit={handleSubmit(onSubmit) as VoidFn}>
         <DestinationFolderSwitch
           formName={MOVE_FOLDER_FORM}
           description={formatMessage(messages.moveFolderDescription, {

@@ -19,10 +19,11 @@ import { isEmpty } from 'es-toolkit/compat';
 import { ChevronDownDropdownIcon, MeatballMenuIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { TransformedFolder } from 'controllers/testCase';
 
-import { INSTANCE_KEYS, useFolderTooltipItems } from './useFolderTooltipItems';
+import { useFolderTooltipItems } from './useFolderTooltipItems';
 
 import styles from './folder.scss';
 
@@ -33,7 +34,7 @@ interface FolderProps {
   activeFolder: number | null;
   setActiveFolder: (id: number) => void;
   setAllTestCases: () => void;
-  instanceKey: INSTANCE_KEYS;
+  instanceKey: TMS_INSTANCE_KEY;
   expandedIds: number[];
   onToggleFolder: (folder: TransformedFolder) => void;
 }

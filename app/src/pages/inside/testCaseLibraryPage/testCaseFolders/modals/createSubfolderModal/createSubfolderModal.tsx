@@ -19,6 +19,7 @@ import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { Modal } from '@reportportal/ui-kit';
+import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { UseModalData } from 'common/hooks';
 import { createClassnames, commonValidators } from 'common/utils';
@@ -76,7 +77,7 @@ const CreateSubfolderModalComponent = ({
   const { okButton, cancelButton, hideModal } = useModalButtons({
     okButtonText: formatMessage(COMMON_LOCALE_KEYS.CREATE),
     isLoading: isCreatingFolder,
-    onSubmit: handleSubmit(onSubmit) as () => void,
+    onSubmit: handleSubmit(onSubmit) as VoidFn,
   });
 
   return (
@@ -87,7 +88,7 @@ const CreateSubfolderModalComponent = ({
       allowCloseOutside={!dirty}
       onClose={hideModal}
     >
-      <form onSubmit={handleSubmit(onSubmit) as () => void}>
+      <form onSubmit={handleSubmit(onSubmit) as VoidFn}>
         <div className={cx('create-subfolder-modal__parent-folder')}>
           <div className={cx('create-subfolder-modal__parent-folder__label')}>
             {formatMessage(commonFolderMessages.newFolderLocation)}
