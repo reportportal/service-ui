@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "license": "Apache-2.0",
   "scripts": {
+    "prepare": "node scripts/setup-husky.js",
     "eslint": "eslint \"./**/*.jsx\" \"./**/*.js\"",
     "stylelint": "stylelint \"./**/*.scss\"",
     "lint": "npm run eslint && npm run stylelint",
@@ -17,8 +18,7 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "manage:translations": "webpack --env NODE_ENV=development --no-stats && npx babel-node ./localization/translatorRunner.js",
-    "manage:translations:test": "webpack --env NODE_ENV=development --no-stats && babel-node ./localization/translatorRunnerCheck.js",
-    "postcommit": "git update-index --again"
+    "manage:translations:test": "webpack --env NODE_ENV=development --no-stats && babel-node ./localization/translatorRunnerCheck.js"
   },
   "dependencies": {
     "@formatjs/intl-pluralrules": "1.3.9",
@@ -131,12 +131,12 @@
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^4.6.0",
     "html-webpack-plugin": "^5.6.5",
-    "husky": "^3.1.0",
+    "husky": "^9.1.7",
     "identity-obj-proxy": "3.0.0",
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
     "jest-junit": "^16.0.0",
-    "lint-staged": "9.4.2",
+    "lint-staged": "^16.2.7",
     "mini-css-extract-plugin": "^2.9.4",
     "postcss": "^8.5.6",
     "postcss-loader": "^8.2.0",
@@ -170,17 +170,8 @@
     "qs": "^6.14.1"
   },
   "lint-staged": {
-    "*.{js,jsx}": [
-      "eslint --fix",
-      "git add"
-    ],
-    "*.{scss}": [
-      "stylelint --fix",
-      "git add"
-    ],
-    "*.{md}": [
-      "prettier --write",
-      "git add"
-    ]
+    "*.{js,jsx}": "eslint --fix",
+    "*.scss": "stylelint --fix",
+    "*.md": "prettier --write"
   }
 }
