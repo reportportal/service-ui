@@ -67,7 +67,7 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
   const { openModal: openDuplicateModal } = useDuplicateTestPlanModal();
   const { openModal: openDeleteModal } = useDeleteTestPlanModal();
 
-  const testPlanById = useMemo(
+  const testPlansById = useMemo(
     () => new Map<number, TestPlanDto>(testPlans?.map((testPlan) => [testPlan.id, testPlan])),
     [testPlans],
   );
@@ -80,7 +80,7 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
   };
 
   const getActionHandler = (action: (testPlan: TestPlanDto) => void) => (testPlanId: number) => {
-    const actionTestPlan = testPlanById.get(testPlanId);
+    const actionTestPlan = testPlansById.get(testPlanId);
 
     if (actionTestPlan) {
       action(actionTestPlan);
@@ -110,7 +110,7 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
   });
 
   const currentTestPlans = testPlansTableData.map((row) => {
-    const testPlanName = testPlanById.get(row.id as number)?.name || '';
+    const testPlanName = testPlansById.get(row.id as number)?.name || '';
 
     return {
       ...row,

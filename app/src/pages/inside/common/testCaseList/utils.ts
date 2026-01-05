@@ -119,14 +119,8 @@ type RouteActionInput = {
   meta?: Record<string, unknown>;
 };
 
-type RouteAction = {
-  type: string;
-  payload: Record<string, unknown>;
-  meta?: Record<string, unknown>;
-};
-
-export const openRouteInNewTab = (action: RouteActionInput): void => {
-  const normalizedAction: RouteAction = { ...action, payload: action.payload ?? {} };
+export const openRouteInNewTab = (action: RouteActionInput) => {
+  const normalizedAction = { ...action, payload: action.payload ?? {} };
   const path = actionToPath(normalizedAction, routesMap, qs);
   const href = history().createHref({ pathname: path });
   const url = new URL(href, window.location.href).toString();
