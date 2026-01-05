@@ -17,5 +17,7 @@
 .description-modal {
   &__form {
     position: relative;
+    max-height: 480px;
+    overflow: auto;
   }
 }
