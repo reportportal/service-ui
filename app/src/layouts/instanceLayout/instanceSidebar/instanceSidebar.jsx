@@ -97,7 +97,7 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
       );
     }
 
-    canSeeInstanceLevelPluginsPages(userRoles) &&
+    canSeeInstanceLevelPluginsPages &&
       sidebarExtensions.forEach((extension) => {
         sidebarItems.push({
           name: extension.name,
