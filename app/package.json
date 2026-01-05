@@ -171,7 +171,7 @@
   },
   "lint-staged": {
     "*.{js,jsx}": "eslint --fix",
-    "*.{scss}": "stylelint --fix",
-    "*.{md}": "prettier --write"
+    "*.scss": "stylelint --fix",
+    "*.md": "prettier --write"
   }
 }
