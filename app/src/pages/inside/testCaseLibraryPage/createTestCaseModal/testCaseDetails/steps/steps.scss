@@ -51,17 +51,12 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    transition: margin 0.15s ease;
 
-    &--dragging {
-      margin-bottom: -8px;
+    &--is-dragging {
+      display: none !important;
     }
 
     &--drop-target {
-      margin-top: 3px;
-      margin-bottom: 3px;
-      --sortable-gap: 11px;
-
       .steps__between-area {
         visibility: hidden;
       }
@@ -70,6 +65,13 @@
     &--just-dropped {
       animation: dropHighlight 0.6s ease-out;
     }
+  }
+
+  &__list--dragging &__step-container:not(&__step-container--is-dragging) {
+    margin-top: -4px;
+    margin-bottom: -4px;
+    padding-top: 4px;
+    padding-bottom: 4px;
   }
 
   &__between-area {
