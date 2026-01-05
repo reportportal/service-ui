@@ -53,11 +53,13 @@ export const MembersListTable = ({
       changePageSizeEvent={changePageSizeEvent}
     >
       <Table
+        className={cx('members-list-table')}
+        headerClassName={cx('table-header')}
+        rowClassName={cx('table-row')}
         data={data}
         primaryColumn={primaryColumn}
         fixedColumns={fixedColumns}
         renderRowActions={renderRowActions}
-        className={cx('members-list-table')}
         sortingColumn={primaryColumn}
         sortingDirection={sortingDirection}
         onChangeSorting={onTableSorting}

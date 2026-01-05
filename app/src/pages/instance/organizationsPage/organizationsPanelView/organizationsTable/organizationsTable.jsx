@@ -174,6 +174,7 @@ export const OrganizationsTable = ({
   return (
     <div className={cx('table-container')}>
       <Table
+        headerClassName={cx('table-header')}
         data={data}
         primaryColumn={primaryColumn}
         fixedColumns={fixedColumns}

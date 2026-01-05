@@ -131,6 +131,8 @@ export const ProjectsListTable = ({
       changePageSizeEvent={PROJECTS_PAGE_EVENTS.changePageSize}
     >
       <Table
+        className={cx('projects-list-table')}
+        headerClassName={cx('table-header')}
         data={data}
         primaryColumn={primaryColumn}
         fixedColumns={fixedColumns}
@@ -138,7 +140,6 @@ export const ProjectsListTable = ({
         sortingColumn={primaryColumn}
         sortableColumns={primaryColumn.key}
         renderRowActions={(metaData) => <ProjectActionMenu details={metaData} />}
-        className={cx('projects-list-table')}
         onChangeSorting={onTableColumnSort}
       />
     </PaginationWrapper>

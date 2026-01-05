@@ -29,9 +29,14 @@
   }
 }
 
+.table-header {
+  --table-header-bg-color: transparent;
+}
+
 .name-column {
   display: flex;
   gap: 16px;
+  align-items: center;
 }
 
 .organization-link {
