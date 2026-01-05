@@ -1,5 +1,5 @@
-const { spawnSync } = require('child_process');
-const path = require('path');
+const { spawnSync } = require('node:child_process');
+const path = require('node:path');
 
 try {
   const gitRootResult = spawnSync('git', ['rev-parse', '--show-toplevel'], { encoding: 'utf-8' });
@@ -16,8 +16,8 @@ try {
   });
 
   if (configResult.status === 0) {
-    console.log(`✓ Husky hooks configured: ${huskyPath}`);
+    process.stdout.write(`✓ Husky hooks configured: ${huskyPath}\n`);
   }
-} catch (error) {
-  console.log('⚠ Husky setup skipped (not a git repository or git not available)');
+} catch {
+  process.stdout.write('⚠ Husky setup skipped (not a git repository or git not available)\n');
 }
