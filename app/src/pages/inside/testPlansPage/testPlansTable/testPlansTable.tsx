@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ReactNode } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { Table, ChevronDownDropdownIcon, Pagination } from '@reportportal/ui-kit';
@@ -67,6 +67,11 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
   const { openModal: openDuplicateModal } = useDuplicateTestPlanModal();
   const { openModal: openDeleteModal } = useDeleteTestPlanModal();
 
+  const testPlanById = useMemo(
+    () => new Map<number, TestPlanDto>(testPlans?.map((testPlan) => [testPlan.id, testPlan])),
+    [testPlans],
+  );
+
   const handleRowClick = (testPlanId: number) => {
     dispatch({
       type: PROJECT_TEST_PLAN_DETAILS_PAGE,
@@ -75,7 +80,7 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
   };
 
   const getActionHandler = (action: (testPlan: TestPlanDto) => void) => (testPlanId: number) => {
-    const actionTestPlan = testPlans.find((testPlan) => testPlan.id === testPlanId);
+    const actionTestPlan = testPlanById.get(testPlanId);
 
     if (actionTestPlan) {
       action(actionTestPlan);
@@ -104,16 +109,23 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
     onDelete: getActionHandler(openDeleteModal),
   });
 
-  const currentTestPlans = testPlansTableData.map((row) => ({
-    ...row,
-    icon: {
-      component: getOpenTestPlanDetailsButton(
-        row.id as number,
-        testPlans.find((plan) => plan.id === row.id)?.name || '',
-        <ChevronDownDropdownIcon />,
-      ),
-    },
-  }));
+  const currentTestPlans = testPlansTableData.map((row) => {
+    const testPlanName = testPlanById.get(row.id as number)?.name || '';
+
+    return {
+      ...row,
+      testPlanName: {
+        component: getOpenTestPlanDetailsButton(row.id as number, testPlanName, testPlanName),
+      },
+      icon: {
+        component: getOpenTestPlanDetailsButton(
+          row.id as number,
+          testPlanName,
+          <ChevronDownDropdownIcon />,
+        ),
+      },
+    };
+  });
 
   const primaryColumn = {
     key: 'testPlanName',

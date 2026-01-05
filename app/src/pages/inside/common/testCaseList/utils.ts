@@ -16,6 +16,10 @@
 
 import { formatDistanceToNow, format } from 'date-fns';
 import { enUS, ru, es, de } from 'date-fns/locale';
+import qs from 'qs';
+import { actionToPath, history } from 'redux-first-router';
+
+import routesMap from 'routes/routesMap';
 import { Folder } from 'controllers/testCase';
 import { TestCaseMenuAction } from 'pages/inside/common/testCaseList/types';
 import { ExecutionStatus } from 'pages/inside/testCaseLibraryPage/types';
@@ -107,4 +111,25 @@ export const getIsManualCovered = (status?: ExecutionStatus) => {
   }
 
   return status === ExecutionStatus.FAILED || status === ExecutionStatus.PASSED;
+};
+
+type RouteActionInput = {
+  type: string;
+  payload?: Record<string, unknown>;
+  meta?: Record<string, unknown>;
+};
+
+type RouteAction = {
+  type: string;
+  payload: Record<string, unknown>;
+  meta?: Record<string, unknown>;
+};
+
+export const openRouteInNewTab = (action: RouteActionInput): void => {
+  const normalizedAction: RouteAction = { ...action, payload: action.payload ?? {} };
+  const path = actionToPath(normalizedAction, routesMap, qs);
+  const href = history().createHref({ pathname: path });
+  const url = new URL(href, window.location.href).toString();
+
+  window.open(url, '_blank', 'noopener,noreferrer');
 };
