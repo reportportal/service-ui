@@ -7,6 +7,7 @@
     "block-no-empty": [true, {"severity": "warning"}],
     "selector-max-attribute": null,
     "color-named": "never",
-    "color-no-hex": true
+    "color-no-hex": true,
+    "scss/operator-no-newline-after": null
   }
 }
