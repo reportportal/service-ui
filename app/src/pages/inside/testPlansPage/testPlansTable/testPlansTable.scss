@@ -25,7 +25,7 @@
     margin: 0 auto;
 
     :global([class*='table-body']) {
-      gap: 2px;
+      gap: 4px;
     }
 
     :global([class*='table-cell']) {
@@ -37,19 +37,12 @@
 
   &__table-row {
     position: relative;
-    height: max-content;
     min-height: 64px;
     box-sizing: content-box;
-    cursor: pointer;
 
     :global([class*='table-row-content']) {
       align-items: center;
       border: 1px solid transparent;
-      padding: 1px;
-    }
-
-    &:hover :global([class*='table-row-content']) {
-      border: 1px solid var(--rp-ui-base-topaz-focused);
       padding: 1px;
     }
   }
@@ -87,8 +80,6 @@
 
 .cell-content {
   width: 100%;
-  height: 100%;
-  cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: center;
