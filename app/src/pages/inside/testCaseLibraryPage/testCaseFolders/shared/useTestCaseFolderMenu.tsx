@@ -70,7 +70,8 @@ export const useTestCaseFolderMenu = ({
 
   const handleMoveFolder = () => openMoveModal({ folder });
 
-  const handleImportTestCase = () => openImportTestCaseModal({ folderName });
+  const handleImportTestCase = () =>
+    openImportTestCaseModal({ folderName, importTarget: 'existing' });
 
   const testCaseFolderTooltipItems: PopoverItem[] = compact([
     canRenameTestCaseFolder && {
