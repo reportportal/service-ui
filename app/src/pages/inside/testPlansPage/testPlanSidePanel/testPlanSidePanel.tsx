@@ -16,7 +16,7 @@
 
 import { memo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
   Button,
   SidePanel,
@@ -51,7 +51,7 @@ import { useGenerateFolderPath } from 'hooks/useGenerateFolderPath';
 
 import { TestPlanDto, testPlanFoldersSelector } from 'controllers/testPlan';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
-import { formatDuration } from 'pages/inside/common/testCaseList/utils';
+import { formatDuration, openRouteInNewTab } from 'pages/inside/common/testCaseList/utils';
 import { messages } from './messages';
 import { CoverStatusCard } from './coverStatusCard';
 import { ExecutionStatusCard } from './executionStatusCard';
@@ -69,7 +69,6 @@ interface TestPlanSidePanelProps {
 
 export const TestPlanSidePanel = memo(
   ({ testPlan, isVisible, onClose }: TestPlanSidePanelProps) => {
-    const dispatch = useDispatch();
     const { formatMessage } = useIntl();
     const sidePanelRef = useRef<HTMLDivElement>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -103,7 +102,7 @@ export const TestPlanSidePanel = memo(
     };
 
     const handleOpenInLibraryClick = () => {
-      dispatch({
+      openRouteInNewTab({
         type: TEST_CASE_LIBRARY_PAGE,
         payload: {
           organizationSlug,
