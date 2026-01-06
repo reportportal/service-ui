@@ -30,7 +30,7 @@ import {
   MARK_LAUNCH_AS_IMPORTANT,
   UNMARK_LAUNCH_AS_IMPORTANT,
 } from 'common/constants/actionTypes';
-import { getProjectKey, getTestItemPageLink } from './utils';
+import { getTestItemPageLink } from './utils';
 import styles from './common.scss';
 import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 
@@ -124,9 +124,9 @@ export class Launch extends Component {
             {` ${formatMessage(messages.launch)}`}
             <Link
               to={getTestItemPageLink(
-                getProjectKey(activity),
-                activity.loggedObjectId,
                 activity.organizationSlug,
+                activity.projectSlug,
+                activity.loggedObjectId,
               )}
               className={cx('link')}
               target="_blank"
@@ -137,7 +137,7 @@ export class Launch extends Component {
         )}
         {(activity.actionType === START_IMPORT || activity.actionType === FINISH_IMPORT) && (
           <Link
-            to={this.getLaunchesPageLink(getProjectKey(activity), activity.organizationSlug)}
+            to={this.getLaunchesPageLink(activity.projectSlug, activity.organizationSlug)}
             className={cx('link')}
             target="_blank"
           >
