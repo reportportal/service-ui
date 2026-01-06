@@ -56,7 +56,7 @@ const cx = createClassnames(styles);
 interface AllTestCasesPageProps {
   testCases: TestCase[];
   testCasesPageData: Page;
-  loading: boolean;
+  isLoading: boolean;
   searchValue: string;
   instanceKey: TMS_INSTANCE_KEY;
   setSearchValue: (value: string) => void;
@@ -71,7 +71,7 @@ export interface SelectedTestCaseRow {
 
 export const AllTestCasesPage = ({
   testCases,
-  loading,
+  isLoading,
   searchValue,
   setSearchValue,
   instanceKey,
@@ -160,7 +160,7 @@ export const AllTestCasesPage = ({
     [setSearchValue, setActivePage],
   );
 
-  if (isEmpty(testCases) && !loading) {
+  if (isEmpty(testCases) && !isLoading) {
     return <FolderEmptyState folderTitle={folderTitle} />;
   }
 
@@ -213,14 +213,14 @@ export const AllTestCasesPage = ({
       <div className={cx('all-test-cases-page')}>
         <TestCaseList
           testCases={testCases}
-          loading={loading}
+          isLoading={isLoading}
           searchValue={searchValue}
-          onSearchChange={handleSearchChange}
           selectedRowIds={selectedRowIds}
           selectedRows={selectedRows}
-          handleSelectedRows={handleSelectedRows}
           folderTitle={folderTitle}
           instanceKey={instanceKey}
+          onSearchChange={handleSearchChange}
+          handleSelectedRows={handleSelectedRows}
         />
       </div>
 
