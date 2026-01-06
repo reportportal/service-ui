@@ -141,7 +141,10 @@ $LEVEL_OFFSET_STEP: 20px;
   height: 20px;
   background-color: var(--background-color, $COLOR--white-two);
   box-shadow: 0 -15px 20px 0px var(--background-color, $COLOR--white-two);
-  transition: background-color 0.2s ease 0s, box-shadow 0.2s ease 0s, opacity 2s ease 0.1s;
+  transition:
+    background-color 0.2s ease 0s,
+    box-shadow 0.2s ease 0s,
+    opacity 2s ease 0.1s;
   opacity: 1;
 
   &.highlight,
@@ -286,7 +289,7 @@ $LEVEL_OFFSET_STEP: 20px;
 }
 
 .description {
-  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 @media (max-width: $SCREEN_SM_MAX) {

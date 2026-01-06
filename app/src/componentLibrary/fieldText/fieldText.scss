@@ -136,7 +136,7 @@
   }
 }
 
-.icon-container {
+%icon-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -146,12 +146,12 @@
 }
 
 .icon-container-start {
-  @extend .icon-container;
+  @extend %icon-container;
   margin-right: 4px;
 }
 
 .icon-container-end {
-  @extend .icon-container;
+  @extend %icon-container;
   margin-left: 4px;
 }
 
@@ -233,7 +233,7 @@
   }
 
   &.clear-icon {
-    @extend .icon;
+    @include icon;
     @include clearIcon($COLOR--e-400, $COLOR--topaz-pressed);
   }
 }
@@ -313,7 +313,7 @@
   }
 
   &.clear-icon {
-    @extend .icon;
+    @include icon;
     @include clearIcon($COLOR--darkmode-gray-500, $COLOR--darkmode-gray-50);
   }
 }

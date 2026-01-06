@@ -40,12 +40,9 @@
   font-size: 12px;
   line-height: 1.67;
   vertical-align: middle;
-  word-break: break-all;
+  overflow-wrap: break-word;
   width: 50%;
   padding-right: 10px;
-  @supports (word-break: break-word) {
-    word-break: break-word;
-  }
 }
 
 .no-parameters {

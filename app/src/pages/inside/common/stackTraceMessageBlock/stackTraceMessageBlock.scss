@@ -47,7 +47,9 @@
   height: 20px;
   background-color: var(--background-color, $COLOR--white-two);
   box-shadow: 0 -15px 20px 0px var(--background-color, $COLOR--white-two);
-  transition: background-color 0.2s ease 0s, box-shadow 0.2s ease 0s;
+  transition:
+    background-color 0.2s ease 0s,
+    box-shadow 0.2s ease 0s;
 
   &.expanded {
     box-shadow: none;
@@ -116,7 +118,7 @@
 .design-mode-dark.row {
   color: $COLOR--dark-gray;
   border: none;
-  word-break: break-word;
+  overflow-wrap: break-word;
   white-space: pre-wrap;
 }
 .design-mode-dark.accordion-block {

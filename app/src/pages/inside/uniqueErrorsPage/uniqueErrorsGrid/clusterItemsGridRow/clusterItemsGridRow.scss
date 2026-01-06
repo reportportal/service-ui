@@ -97,11 +97,7 @@
   line-height: 1.55;
   color: $COLOR_-black-2;
   white-space: pre-wrap;
-  word-break: break-all;
-
-  @supports (word-break: break-word) {
-    word-break: break-word;
-  }
+  overflow-wrap: break-word;
 }
 
 .cluster-accordion-block {
