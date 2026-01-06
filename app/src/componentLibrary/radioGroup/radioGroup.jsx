@@ -23,8 +23,8 @@ const cx = classNames.bind(styles);
 
 export const RadioGroup = ({ options, value, ...rest }) => (
   <div className={cx('radio-group')}>
-    {options.map((option) => (
-      <RadioButton option={option} value={value} {...rest} />
+    {options.map((option, index) => (
+      <RadioButton key={option.value ?? index} option={option} value={value} {...rest} />
     ))}
   </div>
 );

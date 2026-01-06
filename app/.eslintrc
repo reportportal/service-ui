@@ -1,12 +1,11 @@
 {
+  "root": true,
   "parser": "@babel/eslint-parser",
   "extends": [
     "airbnb",
-    // "plugin:jsx-a11y/recommended",
-    "plugin:prettier/recommended",
-    "prettier/react"
+    "eslint-config-prettier"
   ],
-  "plugins": ["react", "react-hooks", "jsx-a11y", "prettier", "babel"],
+  "plugins": ["react", "react-hooks", "jsx-a11y", "babel"],
   "settings": {
     "import/resolver": {
       "webpack": {
@@ -23,7 +22,7 @@
     "Utils": true
   },
   "rules": {
-    "prettier/prettier": 2,
+    "arrow-body-style": 0,
     "jsx-a11y/no-static-element-interactions": 0,
     "no-unused-expressions": ["error", { "allowTernary": true, "allowShortCircuit": true }],
     "jsx-a11y/label-has-for": ["error", { "required": { "some": ["nesting", "id"] } }],

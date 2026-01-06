@@ -64,6 +64,7 @@ export default class PageSwitcher extends React.Component {
     if (!PageComponent) throw new Error(`Page ${page} does not exfist`);
     if (!Layout) throw new Error(`Page ${page} is missing layout`);
 
+    // eslint-disable-next-line no-undef
     const mode = process.env.NODE_ENV;
 
     return (

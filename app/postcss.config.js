@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-/* eslint-disable global-require */
+/* eslint-disable global-require, import/no-unresolved */
 module.exports = {
   plugins: [require('autoprefixer')],
 };

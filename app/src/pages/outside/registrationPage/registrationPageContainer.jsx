@@ -116,6 +116,7 @@ export class RegistrationPageContainer extends Component {
         (type === TYPE_SIGNUP && extensions.length !== 0 ? (
           extensions.map((extension) => (
             <ExtensionLoader
+              key={extension.name}
               components={{ RegistrationPage }}
               tokenProvided={Boolean(uuid)}
               tokenActive={this.state.isTokenActive}

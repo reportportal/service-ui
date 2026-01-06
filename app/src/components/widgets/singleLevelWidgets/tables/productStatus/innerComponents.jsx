@@ -102,8 +102,8 @@ export const AttributeColumn = ({ className, value }, name) => {
   return (
     <div className={cx('attribute-col', className)}>
       <div className={cx('mobile-hint')}>{name}:</div>
-      {value.attributes?.[name]?.map((item) => (
-        <div>{item || ''}</div>
+      {value.attributes?.[name]?.map((item, index) => (
+        <div key={index}>{item || ''}</div>
       ))}
     </div>
   );
