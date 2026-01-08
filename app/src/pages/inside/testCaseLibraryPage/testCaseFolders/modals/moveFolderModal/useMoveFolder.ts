@@ -21,27 +21,18 @@ import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import {
-  setActiveFolderId,
-  getTestCaseByFolderIdAction,
-  getAllTestCasesAction,
   moveFolderSuccessAction,
   createFoldersSuccessAction,
 } from 'controllers/testCase/actionCreators';
-import { testCasesPageSelector } from 'controllers/testCase';
 import { fetch } from 'common/utils';
-import { useDebouncedSpinner } from 'common/hooks/useDebouncedSpinner';
 import { URLS } from 'common/urls';
-import { urlFolderIdSelector } from 'controllers/pages';
+import { useDebouncedSpinner } from 'common/hooks/useDebouncedSpinner';
 
-import { getTestCaseRequestParams } from '../../../utils';
+import { useNavigateToFolder } from '../../../hooks/useNavigateToFolder';
+import { FolderDestination } from '../../../utils/getFolderDestinationFromFormValues';
 
-interface MoveFolderApiParams {
+interface MoveFolderApiParams extends FolderDestination {
   folderId: number;
-  parentTestFolderId?: number;
-  parentTestFolder?: {
-    name: string;
-    parentTestFolderId?: number;
-  };
 }
 
 interface MoveFolderResponse {
@@ -54,8 +45,7 @@ export const useMoveFolder = () => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
-  const currentFolderId = useSelector(urlFolderIdSelector);
-  const testCasesPageData = useSelector(testCasesPageSelector);
+  const { navigateToFolder } = useNavigateToFolder();
 
   const moveFolder = useCallback(
     async ({ folderId, parentTestFolderId, parentTestFolder }: MoveFolderApiParams) => {
@@ -66,30 +56,28 @@ export const useMoveFolder = () => {
           method: 'PATCH',
           data: parentTestFolder ? { parentTestFolder } : { parentTestFolderId },
         });
+        const movedFolderParentId = response.parentFolderId ?? null;
 
-        const newParentFolderId = response.parentFolderId;
-
-        if (parentTestFolder) {
+        if (parentTestFolder?.name) {
           dispatch(
             createFoldersSuccessAction({
-              id: newParentFolderId,
+              id: movedFolderParentId,
               name: parentTestFolder.name,
               parentFolderId: parentTestFolder.parentTestFolderId ?? null,
               countOfTestCases: 0,
             }),
           );
-
           dispatch(
             moveFolderSuccessAction({
               folderId,
-              parentTestFolderId: newParentFolderId,
+              parentTestFolderId: movedFolderParentId,
             }),
           );
         } else {
           dispatch(
             moveFolderSuccessAction({
               folderId,
-              parentTestFolderId: newParentFolderId,
+              parentTestFolderId: movedFolderParentId,
             }),
           );
         }
@@ -97,35 +85,19 @@ export const useMoveFolder = () => {
         dispatch(hideModalAction());
         dispatch(showSuccessNotification({ messageId: 'testCaseFolderMovedSuccess' }));
 
-        const isViewingMovedFolder = Number(currentFolderId) === folderId;
+        const targetFolderId = parentTestFolder?.name ? movedFolderParentId : response.id;
+        const expandToParentId = parentTestFolder?.name
+          ? parentTestFolder.parentTestFolderId
+          : response.parentFolderId;
 
-        if (isViewingMovedFolder) {
-          const paginationParams = getTestCaseRequestParams(testCasesPageData);
-
-          if (newParentFolderId) {
-            dispatch(setActiveFolderId({ activeFolderId: newParentFolderId }));
-            dispatch(
-              getTestCaseByFolderIdAction({
-                folderId: newParentFolderId,
-                ...paginationParams,
-              }),
-            );
-          } else {
-            dispatch(setActiveFolderId({ activeFolderId: null }));
-            dispatch(getAllTestCasesAction(paginationParams));
-          }
-        }
+        navigateToFolder({ folderId: targetFolderId, parentIdToExpand: expandToParentId });
       } catch {
-        dispatch(
-          showErrorNotification({
-            messageId: 'testCaseFolderMoveFailed',
-          }),
-        );
+        dispatch(showErrorNotification({ messageId: 'testCaseFolderMoveFailed' }));
       } finally {
         hideSpinner();
       }
     },
-    [projectKey, dispatch, showSpinner, hideSpinner, currentFolderId, testCasesPageData],
+    [showSpinner, projectKey, dispatch, hideSpinner, navigateToFolder],
   );
 
   return { moveFolder, isLoading };

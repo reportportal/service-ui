@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-export {
-  getFoldersAction,
-  getAllTestCasesAction,
-  getTestCaseByFolderIdAction,
-  updateFolderCounterAction,
-  moveFolderSuccessAction,
-  toggleFolderExpansionAction,
-  expandFoldersToLevelAction,
-  setExpandedFolderIdsAction,
-} from './actionCreators';
-export { testCaseSagas } from './sagas';
-export * from './constants';
-export * from './types';
-export { testCaseReducer } from './reducer';
-export * from './selectors';
+import { useModal } from 'common/hooks';
+
+import CreateSubfolderModal, {
+  CREATE_SUBFOLDER_MODAL_KEY,
+  CreateSubfolderModalData,
+} from './createSubfolderModal';
+
+export const useCreateSubfolderModal = () =>
+  useModal<CreateSubfolderModalData>({
+    modalKey: CREATE_SUBFOLDER_MODAL_KEY,
+    renderModal: () => <CreateSubfolderModal />,
+  });

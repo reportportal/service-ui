@@ -26,17 +26,11 @@ import { projectKeySelector } from 'controllers/project';
 import {
   updateFolderCounterAction,
   createFoldersSuccessAction,
-  setActiveFolderId,
 } from 'controllers/testCase/actionCreators';
-import { getTestCaseByFolderIdAction } from 'controllers/testCase';
-import {
-  TEST_CASE_LIBRARY_PAGE,
-  urlFolderIdSelector,
-  urlOrganizationSlugSelector,
-  urlProjectSlugSelector,
-} from 'controllers/pages';
-import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
+import { urlFolderIdSelector } from 'controllers/pages';
+
 import { useRefetchCurrentTestCases } from '../../hooks/useRefetchCurrentTestCases';
+import { useNavigateToFolder } from '../../hooks/useNavigateToFolder';
 
 interface BatchDuplicateParams {
   testCaseIds: number[];
@@ -56,9 +50,8 @@ export const useBatchDuplicateToFolder = ({ onSuccess }: { onSuccess: () => void
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const urlFolderId = useSelector(urlFolderIdSelector);
-  const organizationSlug = useSelector(urlOrganizationSlugSelector);
-  const projectSlug = useSelector(urlProjectSlugSelector);
   const refetchCurrentTestCases = useRefetchCurrentTestCases();
+  const { navigateToFolder } = useNavigateToFolder();
 
   const batchDuplicate = useCallback(
     async ({ testCaseIds, testFolder, testFolderId }: BatchDuplicateParams) => {
@@ -99,22 +92,7 @@ export const useBatchDuplicateToFolder = ({ onSuccess }: { onSuccess: () => void
         if (isViewingTargetFolder) {
           refetchCurrentTestCases();
         } else {
-          dispatch(setActiveFolderId({ activeFolderId: targetFolderId }));
-          dispatch(
-            getTestCaseByFolderIdAction({
-              folderId: targetFolderId,
-              limit: TestCasePageDefaultValues.limit,
-              offset: TestCasePageDefaultValues.offset,
-            }),
-          );
-          dispatch({
-            type: TEST_CASE_LIBRARY_PAGE,
-            payload: {
-              testCasePageRoute: `folder/${targetFolderId}`,
-              organizationSlug,
-              projectSlug,
-            },
-          });
+          navigateToFolder({ folderId: targetFolderId });
         }
 
         dispatch(hideModalAction());
@@ -135,15 +113,14 @@ export const useBatchDuplicateToFolder = ({ onSuccess }: { onSuccess: () => void
       }
     },
     [
-      projectKey,
-      dispatch,
       showSpinner,
-      hideSpinner,
+      projectKey,
       urlFolderId,
-      refetchCurrentTestCases,
-      organizationSlug,
-      projectSlug,
+      dispatch,
       onSuccess,
+      refetchCurrentTestCases,
+      navigateToFolder,
+      hideSpinner,
     ],
   );
 

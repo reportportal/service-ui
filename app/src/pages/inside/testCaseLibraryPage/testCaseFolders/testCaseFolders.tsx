@@ -45,14 +45,15 @@ import {
   showNotification,
 } from 'controllers/notification';
 import { setActiveFolderId } from 'controllers/testCase/actionCreators';
-import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
 
 import { ExpandedOptions } from '../../common/expandedOptions';
 import { commonMessages } from '../commonMessages';
 import { useCreateFolderModal } from './modals/createFolderModal';
 import { AllTestCasesPage } from '../allTestCasesPage';
+import { useNavigateToFolder } from '../hooks/useNavigateToFolder';
 
 import styles from './testCaseFolders.scss';
 
@@ -62,6 +63,7 @@ export const TestCaseFolders = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { openModal: openCreateFolderModal } = useCreateFolderModal();
+  const { navigateToFolder } = useNavigateToFolder();
   const folderId = useSelector(urlFolderIdSelector);
   const activeFolderId = useSelector(activeFolderIdSelector);
   const isLoadingTestCases = useSelector(isLoadingTestCasesSelector);
@@ -146,25 +148,7 @@ export const TestCaseFolders = () => {
   }, [folderId, folderIdNumber, dispatch]);
 
   const handleFolderClick = (id: number) => {
-    dispatch(
-      setActiveFolderId({
-        activeFolderId: id,
-      }),
-    );
-    dispatch(
-      getTestCaseByFolderIdAction({
-        folderId: id,
-        ...actionParams,
-      }),
-    );
-    dispatch({
-      type: TEST_CASE_LIBRARY_PAGE,
-      payload: {
-        testCasePageRoute: `folder/${id}`,
-        organizationSlug,
-        projectSlug,
-      },
-    });
+    navigateToFolder({ folderId: id });
   };
 
   const renderCreateFolderButton = () => {
@@ -188,7 +172,7 @@ export const TestCaseFolders = () => {
       folders={folders}
       onFolderClick={handleFolderClick}
       renderCreateFolderButton={renderCreateFolderButton}
-      instanceKey={INSTANCE_KEYS.TEST_CASE}
+      instanceKey={TMS_INSTANCE_KEY.TEST_CASE}
     >
       <AllTestCasesPage
         testCases={testCases}
@@ -196,7 +180,7 @@ export const TestCaseFolders = () => {
         searchValue=""
         setSearchValue={noop}
         loading={isLoadingTestCases || areFoldersLoading}
-        instanceKey={INSTANCE_KEYS.TEST_CASE}
+        instanceKey={TMS_INSTANCE_KEY.TEST_CASE}
       />
     </ExpandedOptions>
   );

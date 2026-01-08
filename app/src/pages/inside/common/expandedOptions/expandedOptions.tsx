@@ -18,9 +18,9 @@ import { ReactNode } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { BaseIconButton, SearchIcon } from '@reportportal/ui-kit';
 
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { createClassnames } from 'common/utils';
 import { useStorageFolders } from 'hooks/useStorageFolders';
-import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 import { TransformedFolder } from 'controllers/testCase';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 
@@ -47,7 +47,7 @@ interface ExpandedOptionsProps {
   setAllTestCases: () => void;
   onFolderClick: (id: number) => void;
   children: ReactNode;
-  instanceKey?: INSTANCE_KEYS;
+  instanceKey?: TMS_INSTANCE_KEY;
   renderCreateFolderButton?: () => ReactNode;
 }
 
