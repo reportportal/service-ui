@@ -62,8 +62,8 @@ export class NavLinkWrapper extends Component {
           pathname: path,
         });
       } catch (e) {
+        // eslint-disable-next-line no-undef
         if (process.env.NODE_ENV === 'development') {
-          // eslint-disable-next-line no-console
           console.warn(
             '[redux-first-router-link]could not create path from action:',
             action,

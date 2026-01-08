@@ -45,11 +45,8 @@
 
 .message-cell {
   flex-grow: 10;
-  word-break: break-all;
+  overflow-wrap: break-word;
   white-space: pre-wrap;
-  @supports (word-break: break-word) {
-    word-break: break-word;
-  }
 }
 
 .time-cell {

@@ -39,15 +39,11 @@ $LEVEL_OFFSET_STEP: 20px;
   vertical-align: top;
   color: $COLOR--charcoal-grey;
   font-family: $FONT-REGULAR;
-  word-break: break-all;
+  overflow-wrap: break-word;
   border-left-color: $COLOR--primary-gray;
   border-left-style: solid;
   border-left-width: 0px;
   @include levels-desktop;
-
-  @supports (word-break: break-word) {
-    word-break: break-word;
-  }
 
   &:first-child {
     padding-left: 20px;

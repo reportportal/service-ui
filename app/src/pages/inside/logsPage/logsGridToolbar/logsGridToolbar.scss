@@ -32,13 +32,17 @@
   }
 }
 
-.aside {
+%aside {
   display: flex;
   gap: 32px;
 }
 
+.aside {
+  @extend %aside;
+}
+
 .aside-element-block {
-  @extend .aside;
+  @extend %aside;
 }
 
 .mode-buttons {

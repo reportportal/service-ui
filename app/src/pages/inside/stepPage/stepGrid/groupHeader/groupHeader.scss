@@ -24,14 +24,10 @@
   font: 14px/20px $FONT-REGULAR;
   padding-left: 10px;
   transition: background-color 0.2s ease 0s;
-  word-break: break-all;
+  overflow-wrap: break-word;
 
   &.disabled {
     background: $COLOR--gray-light;
-  }
-
-  @supports (word-break: break-word) {
-    word-break: break-word;
   }
 
   &:not(.disabled):hover {

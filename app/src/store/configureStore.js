@@ -56,9 +56,12 @@ export const configureStore = (history, preloadedState) => {
 
   initAuthInterceptor(store);
 
+  // eslint-disable-next-line no-undef
   if (module.hot && process.env.NODE_ENV === 'development') {
+    // eslint-disable-next-line no-undef
     module.hot.accept('./reducers', () => {
-      const newReducers = require('./reducers'); // eslint-disable-line global-require
+      // eslint-disable-next-line no-undef
+      const newReducers = require('./reducers');
       const newAppReducer = combineReducers({ ...newReducers, location: reducer });
       const newRootReducer = createRootReducer(newAppReducer);
       store.replaceReducer(newRootReducer);

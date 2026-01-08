@@ -56,7 +56,7 @@ $triangle-color: rgba($COLOR--almost-black, 0.75);
   font-family: $FONT-ROBOTO-REGULAR;
   font-size: 11px;
   color: $COLOR--white-two;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
   white-space: pre-wrap;
 }
 
