@@ -63,6 +63,7 @@ import {
   renameFolderSuccessAction,
   GetAllTestCases,
   setActiveFolderId,
+  expandFoldersToLevelAction,
 } from './actionCreators';
 import { getAllFolderIdsToDelete } from './utils';
 import { fetchAllFolders } from './utils/fetchAllFolders';
@@ -255,6 +256,13 @@ function* handleFolderCreation(
     yield put(createFoldersSuccessAction({ ...folder, countOfTestCases: 0 }));
     yield put(hideModalAction());
     yield put(setActiveFolderId({ activeFolderId: folder.id }));
+
+    if (folder.parentFolderId) {
+      const folders = (yield select(foldersSelector)) as Folder[];
+
+      yield put(expandFoldersToLevelAction({ folderId: folder.parentFolderId, folders }));
+    }
+
     yield put({
       type: GET_TEST_CASES_BY_FOLDER_ID,
       payload: {

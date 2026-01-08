@@ -19,8 +19,14 @@ import { useIntl } from 'react-intl';
 import { FieldText, Toggle, Tooltip } from '@reportportal/ui-kit';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { createClassnames } from 'common/utils';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
+
 import { commonMessages } from '../../../commonMessages';
+
+import styles from './folderFormFields.scss';
+
+const cx = createClassnames(styles);
 
 const MAX_FIELD_LENGTH = 48;
 
@@ -59,11 +65,11 @@ export const FolderNameField = ({
 
 interface ParentFolderToggleProps {
   isToggled: boolean;
-  onToggle: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isDisabled?: boolean;
   label: string;
   className?: string;
   title?: string;
+  onToggle: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const ParentFolderToggle = ({
@@ -81,7 +87,7 @@ export const ParentFolderToggle = ({
   );
 
   return isDisabled && title ? (
-    <Tooltip content={title} placement="top">
+    <Tooltip content={title} placement="top" wrapperClassName={cx('folder-modal__toggle-tooltip')}>
       {toggleComponent}
     </Tooltip>
   ) : (

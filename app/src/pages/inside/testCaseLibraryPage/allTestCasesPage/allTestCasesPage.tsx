@@ -22,7 +22,6 @@ import { Button, MeatballMenuIcon, Pagination, Selection } from '@reportportal/u
 
 import { createClassnames } from 'common/utils';
 import { TestCaseList } from 'pages/inside/common/testCaseList';
-import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 import {
   ITEMS_PER_PAGE_OPTIONS,
   TestCasePageDefaultValues,
@@ -30,6 +29,7 @@ import {
 import { DEFAULT_CURRENT_PAGE } from 'pages/inside/common/testCaseList/configUtils';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Page } from 'types/common';
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { showModalAction } from 'controllers/modal';
 import { urlFolderIdSelector } from 'controllers/pages';
@@ -58,7 +58,7 @@ interface AllTestCasesPageProps {
   testCasesPageData: Page;
   loading: boolean;
   searchValue: string;
-  instanceKey: INSTANCE_KEYS;
+  instanceKey: TMS_INSTANCE_KEY;
   setSearchValue: (value: string) => void;
 }
 

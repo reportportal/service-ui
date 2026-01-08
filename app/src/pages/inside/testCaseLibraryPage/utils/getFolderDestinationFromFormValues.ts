@@ -22,7 +22,7 @@ import { FolderModalFormValues } from './folderModalFormConfig';
 export interface FolderDestination {
   parentTestFolderId?: number | null;
   parentTestFolder?: {
-    name: string;
+    name?: string;
     parentTestFolderId?: number | null;
   };
 }
@@ -34,7 +34,7 @@ export const getFolderDestinationFromFormValues = (
 
   if (isExistingMode) {
     if (values.moveToRoot) {
-      return { parentTestFolderId: null };
+      return { parentTestFolder: {} };
     }
 
     if (values.destinationFolder) {

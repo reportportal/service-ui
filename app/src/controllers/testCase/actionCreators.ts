@@ -40,6 +40,9 @@ import {
   UPDATE_FOLDER_COUNTER,
   SELECT_ACTIVE_FOLDER,
   UPDATE_DESCRIPTION_SUCCESS,
+  TOGGLE_FOLDER_EXPANSION,
+  EXPAND_FOLDERS_TO_LEVEL,
+  SET_EXPANDED_FOLDER_IDS,
 } from './constants';
 import { Folder, TransformedFolder } from './types';
 
@@ -202,4 +205,28 @@ export const updateFolderCounterAction = (params: UpdateFolderCounterParams) => 
 export const updateDescriptionSuccessAction = (description: string) => ({
   type: UPDATE_DESCRIPTION_SUCCESS,
   payload: description,
+});
+
+export interface ToggleFolderExpansionParams {
+  folderId: number;
+  folders: Folder[];
+}
+
+export const toggleFolderExpansionAction = (params: ToggleFolderExpansionParams) => ({
+  type: TOGGLE_FOLDER_EXPANSION,
+  payload: params,
+});
+
+export const expandFoldersToLevelAction = (params: ToggleFolderExpansionParams) => ({
+  type: EXPAND_FOLDERS_TO_LEVEL,
+  payload: params,
+});
+
+export interface SetExpandedFolderIdsParams {
+  folderIds: number[];
+}
+
+export const setExpandedFolderIdsAction = (params: SetExpandedFolderIdsParams) => ({
+  type: SET_EXPANDED_FOLDER_IDS,
+  payload: params,
 });

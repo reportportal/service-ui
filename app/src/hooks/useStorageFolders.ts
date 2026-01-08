@@ -1,58 +1,51 @@
-import { useState, useCallback } from 'react';
-import { isNumber } from 'es-toolkit/compat';
+import { useCallback, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { EXPANDED_FOLDERS_IDS } from 'common/constants/localStorageKeys';
-import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
-import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
-import { TransformedFolder } from 'controllers/testCase';
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
+import { setStorageItem } from 'common/utils/storageUtils';
+import {
+  TransformedFolder,
+  expandedFolderIdsSelector,
+  toggleFolderExpansionAction,
+  expandFoldersToLevelAction,
+  foldersSelector,
+} from 'controllers/testCase';
+import { getExpandedFoldersStorageKey } from 'controllers/testCase/utils/getExpandedFoldersStorageKey';
 
-const getFolderAndDescendantIds = (folder: TransformedFolder) =>
-  (folder.folders || []).reduce(
-    (result, subFolders) => {
-      result.push(...getFolderAndDescendantIds(subFolders));
+export const useStorageFolders = (instanceKey?: TMS_INSTANCE_KEY) => {
+  const storageKey = getExpandedFoldersStorageKey(instanceKey);
+  const dispatch = useDispatch();
+  const expandedIds = useSelector(expandedFolderIdsSelector);
+  const folders = useSelector(foldersSelector);
+  const isMountedRef = useRef(false);
 
-      return result;
-    },
-    [folder.id],
-  );
+  useEffect(() => {
+    if (!isMountedRef.current) {
+      isMountedRef.current = true;
 
-export const useStorageFolders = (instanceKey?: INSTANCE_KEYS) => {
-  const storageKey = instanceKey ? `${EXPANDED_FOLDERS_IDS}_${instanceKey}` : EXPANDED_FOLDERS_IDS;
-
-  const [expandedIds, setExpandedIds] = useState(() => {
-    try {
-      const parsed = getStorageItem(storageKey) as number[] | null;
-
-      return Array.isArray(parsed) && parsed.every(isNumber) ? parsed : [];
-    } catch {
-      return [];
+      return;
     }
-  });
+
+    setStorageItem(storageKey, expandedIds);
+  }, [expandedIds, storageKey]);
 
   const onToggleFolder = useCallback(
     (folder: TransformedFolder) => {
-      setExpandedIds((prevIds) => {
-        const isExpanded = prevIds.includes(folder.id);
-        let newIds: number[];
-
-        if (isExpanded) {
-          const idsToRemove = getFolderAndDescendantIds(folder);
-
-          newIds = prevIds.filter((id) => !idsToRemove.includes(id));
-        } else {
-          newIds = [...prevIds, folder.id];
-        }
-
-        setStorageItem(storageKey, newIds);
-
-        return newIds;
-      });
+      dispatch(toggleFolderExpansionAction({ folderId: folder.id, folders }));
     },
-    [storageKey],
+    [dispatch, folders],
+  );
+
+  const expandFoldersUpToLevel = useCallback(
+    (folderId: number) => {
+      dispatch(expandFoldersToLevelAction({ folderId, folders }));
+    },
+    [dispatch, folders],
   );
 
   return {
     expandedIds,
     onToggleFolder,
+    expandFoldersUpToLevel,
   };
 };
