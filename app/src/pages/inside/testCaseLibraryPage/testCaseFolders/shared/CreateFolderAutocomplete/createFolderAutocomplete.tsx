@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { ComponentProps, useRef } from 'react';
+import { ComponentProps, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { FieldLabel, SingleAutocomplete } from '@reportportal/ui-kit';
 import { AutocompleteOption } from '@reportportal/ui-kit/autocompletes';
 
-import { isString, noop } from 'es-toolkit/compat';
+import { isEmpty, isString, noop } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
 import { FolderWithFullPath, transformedFoldersWithFullPathSelector } from 'controllers/testCase';
@@ -51,7 +51,7 @@ interface CreateFolderAutocompleteProps {
   value?: FolderWithFullPath | NewFolderData | null;
   error?: string;
   touched?: boolean;
-  createWithoutConfirmation?: boolean;
+  shouldDisplayNewFolderButton?: boolean;
   excludeFolderIds?: number[];
   onStateChange?: SingleAutocompleteOnStateChange;
   onChange?: (value: FolderWithFullPath | NewFolderData) => void;
@@ -66,17 +66,37 @@ export const CreateFolderAutocomplete = ({
   value,
   error,
   touched,
-  createWithoutConfirmation = true,
+  shouldDisplayNewFolderButton = false,
   excludeFolderIds = [],
   onStateChange = noop,
   onChange = noop,
 }: CreateFolderAutocompleteProps) => {
   const { formatMessage } = useIntl();
+  const [inputValue, setInputValue] = useState('');
+  const autocompleteInputRef = useRef<HTMLInputElement>(null);
   const folders = useSelector(transformedFoldersWithFullPathSelector);
 
-  const filteredFolders = excludeFolderIds.length
+  const filteredFolders = !isEmpty(excludeFolderIds)
     ? folders.filter((folder) => !excludeFolderIds.includes(folder.id))
     : folders;
+
+  const hideNewFolderButton = useMemo(() => {
+    if (!shouldDisplayNewFolderButton) {
+      return true;
+    }
+
+    const trimmedInput = inputValue.trim();
+
+    if (!trimmedInput) {
+      return true;
+    }
+
+    return filteredFolders.some((folder) => {
+      const folderName = folder.description || folder.name || '';
+
+      return folderName.toLowerCase() === trimmedInput.toLowerCase();
+    });
+  }, [inputValue, filteredFolders, shouldDisplayNewFolderButton]);
 
   const getTargetFolder = () => {
     if (!value) {
@@ -93,8 +113,6 @@ export const CreateFolderAutocomplete = ({
 
     return null;
   };
-
-  const autocompleteInputRef = useRef<HTMLInputElement>(null);
 
   const autocompleteInputRefFunction = (node: HTMLInputElement) => {
     autocompleteInputRef.current = node;
@@ -146,11 +164,19 @@ export const CreateFolderAutocomplete = ({
     return option.name || '';
   };
 
+  const handleStateChange: SingleAutocompleteOnStateChange = (changes, stateAndHelpers) => {
+    if (changes.inputValue !== undefined) {
+      setInputValue(changes.inputValue || '');
+    }
+
+    onStateChange(changes, stateAndHelpers);
+  };
+
   return (
     <div className={cx('create-folder-autocomplete', className)}>
       {label && <FieldLabel isRequired={isRequired}>{label}</FieldLabel>}
       <SingleAutocomplete<FolderWithFullPath | string>
-        createWithoutConfirmation={createWithoutConfirmation}
+        createWithoutConfirmation={hideNewFolderButton}
         optionVariant=""
         useFixedPositioning={false}
         value={getTargetFolder()}
@@ -164,7 +190,7 @@ export const CreateFolderAutocomplete = ({
         customEmptyListMessage={customEmptyListMessage || formatMessage(messages.noFoldersFound)}
         renderOption={renderOption}
         parseValueToString={parseValueToString}
-        onStateChange={onStateChange}
+        onStateChange={handleStateChange}
         onChange={handleChange}
         onBlur={noop}
         onFocus={noop}

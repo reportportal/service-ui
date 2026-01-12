@@ -64,7 +64,7 @@ export const TestCaseFolders = () => {
   const dispatch = useDispatch();
   const { openModal: openCreateFolderModal } = useCreateFolderModal();
   const { navigateToFolder } = useNavigateToFolder();
-  const folderId = useSelector(urlFolderIdSelector);
+  const urlFolderId = useSelector(urlFolderIdSelector);
   const activeFolderId = useSelector(activeFolderIdSelector);
   const isLoadingTestCases = useSelector(isLoadingTestCasesSelector);
   const testCases = useSelector(testCasesSelector);
@@ -75,18 +75,12 @@ export const TestCaseFolders = () => {
   const folders = useSelector(transformedFoldersSelector);
   const areFoldersLoading = useSelector(areFoldersLoadingSelector);
   const { canCreateTestCaseFolder } = useUserPermissions();
-  const folderIdNumber = Number(folderId);
-  const actionParams = useMemo(
-    () => ({
-      limit: testCasesPageData?.size || TestCasePageDefaultValues.limit,
-      offset: TestCasePageDefaultValues.offset,
-    }),
-    [testCasesPageData?.size],
-  );
 
-  const currentFolder = useMemo(() => {
-    return initialFolders.find(({ id }) => id === Number(folderId));
-  }, [folderId, initialFolders]);
+  const activeFolderIdNumber = Number(urlFolderId);
+  const activeFolder = useMemo(
+    () => initialFolders.find(({ id }) => id === Number(urlFolderId)),
+    [urlFolderId, initialFolders],
+  );
 
   const setAllTestCases = useCallback(() => {
     dispatch(
@@ -104,7 +98,7 @@ export const TestCaseFolders = () => {
   }, [dispatch, organizationSlug, projectSlug]);
 
   useEffect(() => {
-    if (folderId && !currentFolder) {
+    if (urlFolderId && !activeFolder) {
       setAllTestCases();
 
       dispatch(
@@ -116,43 +110,34 @@ export const TestCaseFolders = () => {
         }),
       );
     }
-  }, [currentFolder, folderId, dispatch, setAllTestCases]);
+  }, [activeFolder, urlFolderId, dispatch, setAllTestCases]);
 
   useEffect(() => {
-    if (currentFolder && activeFolderId !== folderIdNumber) {
+    if (activeFolder) {
       dispatch(
         getTestCaseByFolderIdAction({
-          folderId: folderIdNumber,
-          ...actionParams,
+          folderId: activeFolderIdNumber,
+          limit: testCasesPageData?.size || TestCasePageDefaultValues.limit,
+          offset: TestCasePageDefaultValues.offset,
         }),
       );
-    } else if (!currentFolder && folderId === '') {
-      dispatch(getAllTestCasesAction(actionParams));
+    } else if (!activeFolder && urlFolderId === '') {
+      dispatch(
+        getAllTestCasesAction({
+          limit: testCasesPageData?.size || TestCasePageDefaultValues.limit,
+          offset: TestCasePageDefaultValues.offset,
+        }),
+      );
     }
-  }, [
-    currentFolder,
-    folderId,
-    activeFolderId,
-    folderIdNumber,
-    dispatch,
-    testCasesPageData?.size,
-    actionParams,
-  ]);
-
-  useEffect(() => {
-    dispatch(
-      setActiveFolderId({
-        activeFolderId: folderId ? folderIdNumber : null,
-      }),
-    );
-  }, [folderId, folderIdNumber, dispatch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeFolder, urlFolderId, activeFolderIdNumber, dispatch]);
 
   const handleFolderClick = (id: number) => {
     navigateToFolder({ folderId: id });
   };
 
-  const renderCreateFolderButton = () => {
-    return canCreateTestCaseFolder ? (
+  const renderCreateFolderButton = () =>
+    canCreateTestCaseFolder ? (
       <Button
         variant="text"
         icon={<PlusIcon />}
@@ -163,24 +148,23 @@ export const TestCaseFolders = () => {
         {formatMessage(commonMessages.createFolder)}
       </Button>
     ) : null;
-  };
 
   return (
     <ExpandedOptions
       activeFolder={activeFolderId}
-      setAllTestCases={setAllTestCases}
       folders={folders}
+      instanceKey={TMS_INSTANCE_KEY.TEST_CASE}
+      setAllTestCases={setAllTestCases}
       onFolderClick={handleFolderClick}
       renderCreateFolderButton={renderCreateFolderButton}
-      instanceKey={TMS_INSTANCE_KEY.TEST_CASE}
     >
       <AllTestCasesPage
         testCases={testCases}
         testCasesPageData={testCasesPageData}
         searchValue=""
-        setSearchValue={noop}
-        loading={isLoadingTestCases || areFoldersLoading}
         instanceKey={TMS_INSTANCE_KEY.TEST_CASE}
+        isLoading={isLoadingTestCases || areFoldersLoading}
+        setSearchValue={noop}
       />
     </ExpandedOptions>
   );

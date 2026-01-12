@@ -43,29 +43,29 @@ const cx = createClassnames(styles);
 
 interface TestCaseListProps {
   testCases: ExtendedTestCase[];
-  loading?: boolean;
+  isLoading?: boolean;
   folderTitle: string;
   searchValue?: string;
   selectedRowIds: (number | string)[];
   selectedRows: SelectedTestCaseRow[];
-  handleSelectedRows: (rows: SelectedTestCaseRow[]) => void;
-  onSearchChange?: (value: string) => void;
   selectable?: boolean;
   instanceKey: TMS_INSTANCE_KEY;
+  handleSelectedRows: (rows: SelectedTestCaseRow[]) => void;
+  onSearchChange?: (value: string) => void;
 }
 
 export const TestCaseList = memo(
   ({
     testCases,
-    loading = false,
+    isLoading = false,
     selectedRowIds,
     selectedRows,
-    handleSelectedRows,
     searchValue = '',
-    onSearchChange,
     folderTitle,
     selectable = true,
     instanceKey,
+    handleSelectedRows,
+    onSearchChange,
   }: TestCaseListProps) => {
     const { formatMessage } = useIntl();
     const location = useSelector(locationSelector);
@@ -187,20 +187,20 @@ export const TestCaseList = memo(
           <div className={cx('controls-title')}>{folderTitle}</div>
           <div className={cx('controls-actions')}>
             <div className={cx('search-section')}>
-              {loading ? null : (
+              {isLoading ? null : (
                 <>
                   <SearchField
-                    isLoading={loading}
+                    isLoading={isLoading}
                     searchValue={searchValue}
+                    placeholder={formatMessage(messages.searchPlaceholder)}
                     setSearchValue={onSearchChange}
                     onFilterChange={onSearchChange}
-                    placeholder={formatMessage(messages.searchPlaceholder)}
                   />
                   <button
                     type="button"
                     className={cx('filter-icon', { active: hasActiveFilters })}
-                    onClick={handleFilterIconClick}
                     aria-label={formatMessage(messages.filterButton)}
+                    onClick={handleFilterIconClick}
                   >
                     {hasActiveFilters ? <FilterFilledIcon /> : <FilterOutlineIcon />}
                     {hasActiveFilters && (
@@ -212,7 +212,7 @@ export const TestCaseList = memo(
             </div>
           </div>
         </div>
-        {loading ? (
+        {isLoading ? (
           <div className={cx('test-case-list', 'loading')}>
             <BubblesLoader />
           </div>
