@@ -71,7 +71,7 @@ export const AllTestCasesPage = ({
       <div className={cx('all-test-cases-page')}>
         <TestCaseList
           testCases={testCases}
-          loading={loading}
+          isLoading={loading}
           searchValue={searchValue}
           selectedRowIds={selectedRows.map((row) => row.id)}
           selectedRows={selectedRows}

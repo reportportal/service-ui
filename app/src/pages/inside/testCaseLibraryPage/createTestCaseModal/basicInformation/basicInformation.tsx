@@ -101,7 +101,7 @@ export const BasicInformation = ({
               name="folder"
               label={formatMessage(commonMessages.folder)}
               placeholder={formatMessage(messages.selectOrCreateFolder)}
-              createWithoutConfirmation={false}
+              shouldDisplayNewFolderButton
               isRequired
             />
           </FieldErrorHint>
