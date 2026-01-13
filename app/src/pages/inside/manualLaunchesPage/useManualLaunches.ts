@@ -23,7 +23,7 @@ import { URLS } from 'common/urls';
 import { showErrorNotification } from 'controllers/notification';
 import { useDebouncedSpinner } from 'common/hooks';
 
-import { Launch, LaunchesResponse, ManualTestCase } from './types';
+import { Launch, LaunchesResponse, ManualTestCase, UrlsHelper } from './types';
 
 const getExecutionStatistics = (launch: Launch) => ({
   total: launch.statistics?.executions?.total ?? 0,
@@ -70,9 +70,10 @@ export const getLaunchStatistics = (launch: Launch) => {
   };
 };
 
-export const useManualLaunches = () => {
+export const useManualLaunches = (offset: number, limit: number) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
-  const [fullLaunches, setFullLaunches] = useState<Launch[]>([]);
+  const [launchesData, setLaunchesData] = useState<LaunchesResponse | null>(null);
+
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
 
@@ -80,9 +81,12 @@ export const useManualLaunches = () => {
     try {
       showSpinner();
 
-      const response = await fetch<LaunchesResponse>(URLS.manualLaunchesList(projectKey));
+      const typedURLS = URLS as UrlsHelper;
+      const response = await fetch<LaunchesResponse>(
+        typedURLS.manualLaunchesListPagination(projectKey, { offset, limit }),
+      );
 
-      setFullLaunches(response.content);
+      setLaunchesData(response);
     } catch {
       dispatch(
         showErrorNotification({
@@ -92,14 +96,15 @@ export const useManualLaunches = () => {
     } finally {
       hideSpinner();
     }
-  }, [projectKey]);
+  }, [projectKey, offset, limit]);
 
   useEffect(() => {
     void fetchManualLaunches();
   }, [fetchManualLaunches]);
 
   return {
-    fullLaunches,
+    content: launchesData?.content || [],
+    page: launchesData?.page,
     isLoading,
     refetch: fetchManualLaunches,
   };

@@ -19,3 +19,7 @@
  * When exceeded, shows "9999+" instead of the actual count.
  */
 export const MAX_TEST_COUNT_TO_RUN = 9999;
+
+export const ITEMS_PER_PAGE_OPTIONS: number[] = [10, 20, 50, 100];
+
+export const ITEMS_PER_PAGE_LIMIT = 50;
