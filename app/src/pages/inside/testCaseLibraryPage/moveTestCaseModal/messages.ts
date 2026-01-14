@@ -25,4 +25,13 @@ export const messages = defineMessages({
     id: 'MoveTestCaseModal.description',
     defaultMessage: "You're about to move the test case <b>{testCaseName}</b> to a new folder",
   },
+  moveTestCasesDescription: {
+    id: 'MoveTestCaseModal.bulkDescription',
+    defaultMessage:
+      'You are about to move <b>{count}</b> selected test {count, plural, one {case} other {cases}} to a new location',
+  },
+  moveToFolder: {
+    id: 'MoveTestCaseModal.moveToFolder',
+    defaultMessage: 'Move to Folder',
+  },
 });

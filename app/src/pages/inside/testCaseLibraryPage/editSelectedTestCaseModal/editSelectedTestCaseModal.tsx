@@ -28,8 +28,8 @@ import { UseModalData } from 'common/hooks';
 import { commonMessages } from '../commonMessages';
 import { ExtendedTestCase, CreateTestCaseFormData } from '../types';
 import { TestCaseModal } from '../createTestCaseModal/testCaseModal/testCaseModal';
-import { useTestCase } from '../createTestCaseModal/useTestCase';
 import { TEST_CASE_FORM_INITIAL_VALUES } from '../createTestCaseModal/constants';
+import { useTestCase } from '../hooks/useTestCase';
 
 export const EDIT_SELECTED_TEST_CASE_MODAL_KEY = 'editSelectedTestCaseModalKey';
 export const EDIT_TEST_CASE_FORM_NAME: string = 'edit-test-case-modal-form';

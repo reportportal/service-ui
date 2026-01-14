@@ -20,10 +20,9 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { projectKeySelector } from 'controllers/project';
 import { fetch } from 'common/utils';
-import { useDebouncedSpinner } from 'common/hooks';
+import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { hideModalAction } from 'controllers/modal';
-import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { TestPlanDto } from 'controllers/testPlan';
 
 import {
@@ -52,6 +51,7 @@ export const useAddTestCasesToTestPlan = ({
   } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+  const { showSuccessNotification, showErrorNotification } = useNotification();
 
   const autompleteInputRef = useRef<HTMLInputElement>(null);
 
@@ -86,22 +86,18 @@ export const useAddTestCasesToTestPlan = ({
     })
       .then(() => {
         dispatch(hideModalAction());
-        dispatch(
-          showSuccessNotification({
-            messageId: isSingleTestCaseMode
-              ? 'testCaseAddingToTestPlanSuccess'
-              : 'testCasesAddingToTestPlanSuccess',
-          }),
-        );
+        showSuccessNotification({
+          messageKey: isSingleTestCaseMode
+            ? 'testCaseAddingToTestPlanSuccess'
+            : 'testCasesAddingToTestPlanSuccess',
+        });
       })
       .catch((error) => {
-        dispatch(
-          showErrorNotification({
-            messageId: isSingleTestCaseMode
-              ? 'testCaseAddingToTestPlanFailed'
-              : 'testCasesAddingToTestPlanFailed',
-          }),
-        );
+        showErrorNotification({
+          messageKey: isSingleTestCaseMode
+            ? 'testCaseAddingToTestPlanFailed'
+            : 'testCasesAddingToTestPlanFailed',
+        });
         console.error(error);
       })
       .finally(() => {

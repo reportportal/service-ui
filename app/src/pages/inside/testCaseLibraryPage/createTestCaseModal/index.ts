@@ -15,7 +15,6 @@
  */
 
 export { CREATE_TEST_CASE_MODAL_KEY, CreateTestCaseModal } from './createTestCaseModal';
-export { useTestCase } from './useTestCase';
 export { useCreateTestCaseModal } from './useCreateTestCaseModal';
 export {
   EDIT_SELECTED_TEST_CASE_MODAL_KEY,

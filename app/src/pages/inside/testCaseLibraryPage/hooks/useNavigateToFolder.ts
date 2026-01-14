@@ -18,7 +18,6 @@ import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
-  setActiveFolderId,
   getTestCaseByFolderIdAction,
   expandFoldersToLevelAction,
 } from 'controllers/testCase/actionCreators';
@@ -31,6 +30,8 @@ import {
 import { ProjectDetails } from 'pages/organization/constants';
 
 import { getTestCaseRequestParams } from '../utils';
+import { getParentIdToExpand } from '../utils/getParentIdToExpand';
+import { NewFolderData } from '../utils/getFolderFromFormValues';
 
 interface NavigateToFolderParams {
   folderId: number;
@@ -39,7 +40,7 @@ interface NavigateToFolderParams {
 
 export const useNavigateToFolder = () => {
   const dispatch = useDispatch();
-  const currentFolderId = useSelector(urlFolderIdSelector);
+  const urlFolderId = useSelector(urlFolderIdSelector);
   const testCasesPageData = useSelector(testCasesPageSelector);
   const folders = useSelector(foldersSelector);
   const { organizationSlug, projectSlug } = useSelector(
@@ -48,7 +49,7 @@ export const useNavigateToFolder = () => {
 
   const navigateToFolder = useCallback(
     ({ folderId, parentIdToExpand }: NavigateToFolderParams) => {
-      const isCurrentlyViewingFolder = Number(currentFolderId) === folderId;
+      const isCurrentlyViewingFolder = Number(urlFolderId) === folderId;
 
       if (isCurrentlyViewingFolder) {
         const paginationParams = getTestCaseRequestParams(testCasesPageData);
@@ -70,14 +71,37 @@ export const useNavigateToFolder = () => {
         });
       }
 
-      dispatch(setActiveFolderId({ activeFolderId: folderId }));
-
       if (parentIdToExpand) {
         dispatch(expandFoldersToLevelAction({ folderId: parentIdToExpand, folders }));
       }
     },
-    [dispatch, currentFolderId, testCasesPageData, organizationSlug, projectSlug, folders],
+    [dispatch, urlFolderId, testCasesPageData, organizationSlug, projectSlug, folders],
   );
 
-  return { navigateToFolder };
+  const navigateToFolderAfterAction = useCallback(
+    ({
+      targetFolderId,
+      newFolderDetails,
+    }: {
+      targetFolderId: number;
+      newFolderDetails?: NewFolderData;
+    }) => {
+      const parentIdToExpand = getParentIdToExpand({
+        folders,
+        targetFolderId,
+        newFolderDetails,
+      });
+
+      navigateToFolder({
+        folderId: targetFolderId,
+        parentIdToExpand: parentIdToExpand ?? undefined,
+      });
+    },
+    [folders, navigateToFolder],
+  );
+
+  return {
+    navigateToFolder,
+    navigateToFolderAfterAction,
+  };
 };

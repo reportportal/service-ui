@@ -22,19 +22,21 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
-import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
-import {
-  createFoldersSuccessAction,
-  createFoldersBatchSuccessAction,
-} from 'controllers/testCase/actionCreators';
-import { useDebouncedSpinner } from 'common/hooks/useDebouncedSpinner';
+import { createFoldersBatchSuccessAction } from 'controllers/testCase/actionCreators';
+import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { Folder } from 'controllers/testCase/types';
 import { fetchAllFolders } from 'controllers/testCase/utils/fetchAllFolders';
+
+import { useFolderActions } from '../../../hooks/useFolderActions';
+import { useNavigateToFolder } from '../../../hooks/useNavigateToFolder';
 
 export const useDuplicateFolder = () => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+  const { createNewStoreFolder } = useFolderActions();
+  const { navigateToFolderAfterAction } = useNavigateToFolder();
+  const { showSuccessNotification, showErrorNotification } = useNotification();
 
   const duplicateFolder = useCallback(
     async ({
@@ -59,17 +61,20 @@ export const useDuplicateFolder = () => {
           },
         });
       } catch {
-        dispatch(
-          showErrorNotification({
-            messageId: 'errorOccurredTryAgain',
-          }),
-        );
+        showErrorNotification({
+          messageKey: 'errorOccurredTryAgain',
+        });
         hideSpinner();
 
         return;
       }
 
-      dispatch(createFoldersSuccessAction(duplicatedFolder));
+      createNewStoreFolder({
+        targetFolderId: duplicatedFolder.id,
+        folderName: duplicatedFolder.name,
+        parentFolderId: duplicatedFolder.parentFolderId,
+        countOfTestCases: duplicatedFolder.countOfTestCases,
+      });
 
       try {
         const subfolders = await fetchAllFolders({
@@ -85,11 +90,28 @@ export const useDuplicateFolder = () => {
       }
 
       dispatch(hideModalAction());
-      dispatch(showSuccessNotification({ messageId: 'testCaseFolderDuplicatedSuccess' }));
+      showSuccessNotification({ messageKey: 'testCaseFolderDuplicatedSuccess' });
+
+      navigateToFolderAfterAction({
+        targetFolderId: duplicatedFolder.id,
+        newFolderDetails: {
+          name: duplicatedFolder.name,
+          parentTestFolderId: duplicatedFolder.parentFolderId,
+        },
+      });
 
       hideSpinner();
     },
-    [projectKey, dispatch, showSpinner, hideSpinner],
+    [
+      projectKey,
+      dispatch,
+      showSpinner,
+      hideSpinner,
+      createNewStoreFolder,
+      navigateToFolderAfterAction,
+      showSuccessNotification,
+      showErrorNotification,
+    ],
   );
 
   return { duplicateFolder, isLoading };

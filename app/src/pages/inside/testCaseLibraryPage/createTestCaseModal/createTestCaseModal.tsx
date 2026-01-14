@@ -25,8 +25,8 @@ import { FolderWithFullPath } from 'controllers/testCase';
 import { commonMessages } from '../commonMessages';
 import { CreateTestCaseFormData } from '../types';
 import { TestCaseModal } from './testCaseModal/testCaseModal';
-import { useTestCase } from './useTestCase';
 import { TEST_CASE_FORM_INITIAL_VALUES } from './constants';
+import { useTestCase } from '../hooks/useTestCase';
 
 export const CREATE_TEST_CASE_MODAL_KEY = 'createTestCaseModalKey';
 export const CREATE_TEST_CASE_FORM_NAME: string = 'create-test-case-modal-form';

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,17 +19,15 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
-import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
-import {
-  moveFolderSuccessAction,
-  createFoldersSuccessAction,
-} from 'controllers/testCase/actionCreators';
+import { moveFolderSuccessAction } from 'controllers/testCase/actionCreators';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { useDebouncedSpinner } from 'common/hooks/useDebouncedSpinner';
+import { useDebouncedSpinner, useNotification } from 'common/hooks';
 
+import { useFolderActions } from '../../../hooks/useFolderActions';
 import { useNavigateToFolder } from '../../../hooks/useNavigateToFolder';
 import { FolderDestination } from '../../../utils/getFolderDestinationFromFormValues';
+import { processFolderDestination } from '../../../utils/processFolderDestination';
 
 interface MoveFolderApiParams extends FolderDestination {
   folderId: number;
@@ -45,7 +43,9 @@ export const useMoveFolder = () => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+  const { createNewStoreFolder } = useFolderActions();
   const { navigateToFolder } = useNavigateToFolder();
+  const { showSuccessNotification, showErrorNotification } = useNotification();
 
   const moveFolder = useCallback(
     async ({ folderId, parentTestFolderId, parentTestFolder }: MoveFolderApiParams) => {
@@ -58,46 +58,49 @@ export const useMoveFolder = () => {
         });
         const movedFolderParentId = response.parentFolderId ?? null;
 
-        if (parentTestFolder?.name) {
-          dispatch(
-            createFoldersSuccessAction({
-              id: movedFolderParentId,
-              name: parentTestFolder.name,
-              parentFolderId: parentTestFolder.parentTestFolderId ?? null,
-              countOfTestCases: 0,
-            }),
-          );
-          dispatch(
-            moveFolderSuccessAction({
-              folderId,
-              parentTestFolderId: movedFolderParentId,
-            }),
-          );
-        } else {
-          dispatch(
-            moveFolderSuccessAction({
-              folderId,
-              parentTestFolderId: movedFolderParentId,
-            }),
-          );
+        const { targetFolderId, newFolderDetails, isNewFolder } = processFolderDestination({
+          destination: { parentTestFolder, parentTestFolderId },
+          responseFolderId: parentTestFolder?.name ? movedFolderParentId : response.id,
+        });
+
+        if (isNewFolder && newFolderDetails) {
+          createNewStoreFolder({
+            targetFolderId,
+            folderName: newFolderDetails.name,
+            parentFolderId: newFolderDetails.parentTestFolderId,
+          });
         }
 
+        dispatch(
+          moveFolderSuccessAction({
+            folderId,
+            parentTestFolderId: movedFolderParentId,
+          }),
+        );
+
         dispatch(hideModalAction());
-        dispatch(showSuccessNotification({ messageId: 'testCaseFolderMovedSuccess' }));
+        showSuccessNotification({ messageKey: 'testCaseFolderMovedSuccess' });
 
-        const targetFolderId = parentTestFolder?.name ? movedFolderParentId : response.id;
-        const expandToParentId = parentTestFolder?.name
-          ? parentTestFolder.parentTestFolderId
-          : response.parentFolderId;
-
-        navigateToFolder({ folderId: targetFolderId, parentIdToExpand: expandToParentId });
+        navigateToFolder({
+          folderId,
+          parentIdToExpand: movedFolderParentId,
+        });
       } catch {
-        dispatch(showErrorNotification({ messageId: 'testCaseFolderMoveFailed' }));
+        showErrorNotification({ messageKey: 'testCaseFolderMoveFailed' });
       } finally {
         hideSpinner();
       }
     },
-    [showSpinner, projectKey, dispatch, hideSpinner, navigateToFolder],
+    [
+      showSpinner,
+      projectKey,
+      dispatch,
+      navigateToFolder,
+      createNewStoreFolder,
+      hideSpinner,
+      showSuccessNotification,
+      showErrorNotification,
+    ],
   );
 
   return { moveFolder, isLoading };

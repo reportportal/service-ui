@@ -46,6 +46,7 @@ import { FolderEmptyState } from '../emptyState/folder/folderEmptyState';
 import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { useBatchDuplicateToFolderModal } from './batchDuplicateToFolderModal';
 import { useBatchDeleteTestCasesModal } from './batchDeleteTestCasesModal';
+import { useMoveTestCaseModal } from '../moveTestCaseModal';
 
 import styles from './allTestCasesPage.scss';
 
@@ -93,6 +94,7 @@ export const AllTestCasesPage = ({
   const { openModal: openAddToTestPlanModal } = useAddTestCasesToTestPlanModal();
   const { openModal: openBatchDuplicateToFolderModal } = useBatchDuplicateToFolderModal();
   const { openModal: openBatchDeleteTestCasesModal } = useBatchDeleteTestCasesModal();
+  const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
   const { canDeleteTestCase, canDuplicateTestCase, canEditTestCase } = useUserPermissions();
   const folderTitle = useMemo(() => {
     const selectedFolder = folders.find((folder) => String(folder.id) === String(folderId));
@@ -147,6 +149,16 @@ export const AllTestCasesPage = ({
   const handleOpenAddToTestPlanModal = useCallback(() => {
     openAddToTestPlanModal({ selectedTestCaseIds: selectedRowIds });
   }, [selectedRowIds, openAddToTestPlanModal]);
+
+  const handleOpenMoveTestCaseModal = useCallback(() => {
+    const sourceFolderDeltasMap = countBy(selectedRows, (row) => String(row.folderId));
+
+    openMoveTestCaseModal({
+      selectedTestCaseIds: selectedRowIds,
+      sourceFolderDeltasMap,
+      onClearSelection,
+    });
+  }, [selectedRowIds, selectedRows, openMoveTestCaseModal]);
 
   const handleSearchChange = useCallback(
     (targetSearchValue: string) => {
@@ -212,7 +224,9 @@ export const AllTestCasesPage = ({
                 <MeatballMenuIcon />
               </Button>
             </PopoverControl>
-            <Button variant="ghost">{formatMessage(messages.moveToFolder)}</Button>
+            <Button variant="ghost" onClick={handleOpenMoveTestCaseModal}>
+              {formatMessage(messages.moveToFolder)}
+            </Button>
             <Button variant="ghost">{formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}</Button>
             <Button onClick={handleOpenAddToTestPlanModal}>
               {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
