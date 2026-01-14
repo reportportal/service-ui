@@ -39,6 +39,8 @@ import { organizationsSagas } from 'controllers/instance/organizations';
 import { organizationSagas } from 'controllers/organization';
 import { serverSettingsSagas } from 'controllers/appInfo';
 import { exportsSagas } from 'controllers/exports/sagas';
+import { testCaseSagas } from 'controllers/testCase';
+import { testPlanSagas } from 'controllers/testPlan';
 
 const sagas = [
   notificationSagas,
@@ -65,6 +67,8 @@ const sagas = [
   pluginSagas,
   uniqueErrorsSagas,
   exportsSagas,
+  testCaseSagas,
+  testPlanSagas,
 ];
 
 export function* rootSagas() {
@@ -76,8 +80,8 @@ export function* rootSagas() {
           try {
             yield call(saga);
             break;
-          } catch (e) {
-            console.error(e); // eslint-disable-line no-console
+          } catch (error) {
+            console.error(error);
           }
         }
       }),

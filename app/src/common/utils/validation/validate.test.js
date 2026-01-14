@@ -45,12 +45,16 @@ describe('validate.url', () => {
   test('validation should be correct', () => {
     expect(validate.url('https://example.com/')).toBe(true);
     expect(validate.url('http://example.com/')).toBe(true);
+    expect(validate.url('https://example.com/path')).toBe(true);
+    expect(validate.url('ftp://example.com')).toBe(true);
   });
   test('validation should be not correct', () => {
     expect(validate.url(undefined)).toBe(false);
     expect(validate.url('   ')).toBe(false);
     expect(validate.url('example/example')).toBe(false);
     expect(validate.url('http:/example.com/')).toBe(false);
+    expect(validate.url('https://example.')).toBe(false);
+    expect(validate.url('https://subdomain.example.com.')).toBe(false);
   });
 });
 

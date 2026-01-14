@@ -18,10 +18,9 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
-import { userRolesSelector, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { useIntl } from 'react-intl';
-import { canSeeMembers, canWorkWithFilters } from 'common/utils/permissions';
 import { ALL } from 'common/constants/reservedFilterIds';
 import {
   PROJECT_DASHBOARD_PAGE,
@@ -33,6 +32,10 @@ import {
   PROJECT_PLUGIN_PAGE,
   ORGANIZATION_PROJECTS_PAGE,
   USER_PROFILE_PAGE_PROJECT_LEVEL,
+  PRODUCT_VERSIONS_PAGE,
+  TEST_CASE_LIBRARY_PAGE,
+  PROJECT_TEST_PLANS_PAGE,
+  MANUAL_LAUNCHES_PAGE,
 } from 'controllers/pages/constants';
 import {
   uiExtensionSidebarComponentsSelector,
@@ -43,20 +46,27 @@ import { ExtensionLoader } from 'components/extensionLoader';
 import FiltersIcon from 'common/img/filters-icon-inline.svg';
 import DashboardIcon from 'common/img/sidebar/dashboard-icon-inline.svg';
 import LaunchesIcon from 'common/img/sidebar/launches-icon-inline.svg';
+import ManualLaunchesIcon from 'common/img/sidebar/manual-launches-icon-inline.svg';
 import DebugIcon from 'common/img/sidebar/debug-icon-inline.svg';
 import MembersIcon from 'common/img/sidebar/members-icon-inline.svg';
 import SettingsIcon from 'common/img/sidebar/settings-icon-inline.svg';
+import ProductVersionsIcon from 'common/img/sidebar/product-versions-inline.svg';
+import TestCaseIcon from 'common/img/sidebar/test-case-icon-inline.svg';
+import TestPlansIcon from 'common/img/sidebar/test-plans-icon-inline.svg';
 import { projectNameSelector } from 'controllers/project';
 import { activeOrganizationNameSelector } from 'controllers/organization';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
 import { messages } from '../../messages';
+import { useUserPermissions } from 'hooks/useUserPermissions';
+import { useTmsEnabled } from 'hooks/useTmsEnabled';
 
 const ORGANIZATION_CONTROL = 'Organization control';
 
 export const ProjectSidebar = ({ onClickNavBtn }) => {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
-  const userRoles = useSelector(userRolesSelector);
+  const { canSeeMembers, canWorkWithFilters } = useUserPermissions();
+  const isTmsEnabled = useTmsEnabled();
   const sidebarExtensions = useSelector(uiExtensionSidebarComponentsSelector);
   const projectPageExtensions = useSelector(uiExtensionProjectPagesSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
@@ -88,6 +98,23 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         icon: LaunchesIcon,
         message: formatMessage(messages.launches),
       },
+      ...(isTmsEnabled
+        ? [
+            {
+              onClick: (isSidebarCollapsed) =>
+                onClickButton({
+                  itemName: messages.manualLaunches.defaultMessage,
+                  isSidebarCollapsed,
+                }),
+              link: {
+                type: MANUAL_LAUNCHES_PAGE,
+                payload: { organizationSlug, projectSlug },
+              },
+              icon: ManualLaunchesIcon,
+              message: formatMessage(messages.manualLaunches),
+            },
+          ]
+        : []),
       {
         onClick: (isSidebarCollapsed) =>
           onClickButton({ itemName: messages.debugMode.defaultMessage, isSidebarCollapsed }),
@@ -100,7 +127,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       },
     ];
 
-    if (canWorkWithFilters(userRoles)) {
+    if (canWorkWithFilters) {
       sidebarItems.push({
         onClick: (isSidebarCollapsed) =>
           onClickButton({ itemName: messages.filters.defaultMessage, isSidebarCollapsed }),
@@ -110,7 +137,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       });
     }
 
-    if (canSeeMembers(userRoles)) {
+    if (canSeeMembers) {
       sidebarItems.push({
         onClick: (isSidebarCollapsed) =>
           onClickButton({ itemName: messages.projectTeam.defaultMessage, isSidebarCollapsed }),
@@ -121,6 +148,47 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         icon: MembersIcon,
         message: formatMessage(messages.projectTeam),
       });
+    }
+
+    if (isTmsEnabled) {
+      sidebarItems.push(
+        {
+          onClick: (isSidebarCollapsed) =>
+            onClickButton({
+              itemName: messages.testCaseLibrary.defaultMessage,
+              isSidebarCollapsed,
+            }),
+          link: {
+            type: TEST_CASE_LIBRARY_PAGE,
+            payload: { organizationSlug, projectSlug },
+          },
+          icon: TestCaseIcon,
+          message: formatMessage(messages.testCaseLibrary),
+        },
+        {
+          onClick: (isSidebarCollapsed) =>
+            onClickButton({ itemName: messages.milestones.defaultMessage, isSidebarCollapsed }),
+          link: {
+            type: PROJECT_TEST_PLANS_PAGE,
+            payload: { organizationSlug, projectSlug },
+          },
+          icon: TestPlansIcon,
+          message: formatMessage(messages.milestones),
+        },
+        {
+          onClick: (isSidebarCollapsed) =>
+            onClickButton({
+              itemName: messages.productVersions.defaultMessage,
+              isSidebarCollapsed,
+            }),
+          link: {
+            type: PRODUCT_VERSIONS_PAGE,
+            payload: { organizationSlug, projectSlug },
+          },
+          icon: ProductVersionsIcon,
+          message: formatMessage(messages.productVersions),
+        },
+      );
     }
 
     sidebarItems.push({

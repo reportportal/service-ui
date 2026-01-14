@@ -206,11 +206,7 @@ const AddEditDefectTypeModal = ({
             </FieldErrorHint>
           </FieldProvider>
         </div>
-        <FieldProvider
-          name={ABBREVIATION_FIELD_KEY}
-          type="text"
-          className={cx('abbreviation-field')}
-        >
+        <FieldProvider name={ABBREVIATION_FIELD_KEY} type="text">
           <FieldErrorHint provideHint={false} dataAutomationId={ABBREVIATION_FIELD_KEY + FIELD}>
             <FieldText
               label={formatMessage(messages.abbreviation)}

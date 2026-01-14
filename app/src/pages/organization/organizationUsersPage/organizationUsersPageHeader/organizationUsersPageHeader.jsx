@@ -24,8 +24,8 @@ import { useSelector } from 'react-redux';
 import { activeOrganizationSelector } from 'controllers/organization';
 import { InviteUserButton } from 'pages/inside/common/invitations';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
-import { MembersPageHeader } from '../../common/membersPage/membersPageHeader';
-import { messages } from '../../common/membersPage/membersPageHeader/messages';
+import { LocationHeaderLayout } from 'layouts/locationHeaderLayout';
+import { messages } from '../../messages';
 import styles from './organizationUsersPageHeader.scss';
 
 const cx = classNames.bind(styles);
@@ -47,7 +47,7 @@ export const OrganizationUsersPageHeader = ({
   const isNotEmpty = usersCount > 0;
 
   return (
-    <MembersPageHeader
+    <LocationHeaderLayout
       title={formatMessage(messages.organizationUsersTitle)}
       organizationName={organization.name}
     >
@@ -67,7 +67,7 @@ export const OrganizationUsersPageHeader = ({
           </>
         )}
       </div>
-    </MembersPageHeader>
+    </LocationHeaderLayout>
   );
 };
 

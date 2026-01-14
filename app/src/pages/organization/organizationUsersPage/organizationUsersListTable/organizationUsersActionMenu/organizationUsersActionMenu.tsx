@@ -29,12 +29,12 @@ import { messages } from 'common/constants/localization/assignmentsLocalization'
 import { ManageAssignmentsOrganizationModal } from 'pages/inside/common/assignments/manageAssignmentsOrganizationModal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
-import { canAssignUnassignInternalUser } from 'common/utils/permissions';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import {
   useCanUnassignOrganization,
   UnassignOrganizationModal,
 } from 'pages/inside/common/assignments';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 
 interface OrganizationUsersActionMenuProps {
   user: UserInfo;
@@ -47,6 +47,7 @@ export const OrganizationUsersActionMenu = ({ user }: OrganizationUsersActionMen
   const organization = useSelector(activeOrganizationSelector) as Organization;
   const currentUserId = useSelector(idSelector) as number;
   const userRoles = useSelector(userRolesSelector);
+  const { canAssignUnassignInternalUser } = useUserPermissions();
   const isAdmin = userRoles.userRole === ADMINISTRATOR;
   const canUnassign = useCanUnassignOrganization();
 
@@ -96,7 +97,7 @@ export const OrganizationUsersActionMenu = ({ user }: OrganizationUsersActionMen
       {
         label: formatMessage(messages.manageAssignments),
         onClick: handleManageAssignmentsClick,
-        hasPermission: canAssignUnassignInternalUser(userRoles),
+        hasPermission: canAssignUnassignInternalUser,
       },
       {
         label: formatMessage(COMMON_LOCALE_KEYS.UNASSIGN),
@@ -111,7 +112,7 @@ export const OrganizationUsersActionMenu = ({ user }: OrganizationUsersActionMen
     handleUnassignClick,
     organization,
     user,
-    userRoles,
+    canAssignUnassignInternalUser,
   ]);
 
   return <ActionMenu actions={actions} />;

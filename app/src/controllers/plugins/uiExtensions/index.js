@@ -4,6 +4,7 @@ export {
   uiExtensionOrganizationSettingsTabsSelector,
   uiExtensionAdminPagesSelector,
   uiExtensionSidebarComponentsSelector,
+  uiExtensionOrganizationSidebarComponentsSelector,
   uiExtensionAdminSidebarComponentsSelector,
   uiExtensionLaunchItemComponentsSelector,
   uiExtensionIntegrationSettingsSelector,

@@ -41,10 +41,9 @@ import {
   activeOrganizationSelector,
   fetchOrganizationBySlugAction,
 } from 'controllers/organization';
-import { userRolesSelector } from 'controllers/pages';
-import { canInviteUserToOrganization } from 'common/utils/permissions';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
-import { messages } from '../common/membersPage/membersPageHeader/messages';
+import { messages } from '../messages';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { EmptyMembersPageState as EmptyUsersPageState } from '../common/membersPage/emptyMembersPageState';
 import { OrganizationUsersPageHeader } from './organizationUsersPageHeader';
 import styles from './organizationUsersPage.scss';
@@ -68,8 +67,8 @@ const OrganizationUsersPageComponent = ({
   const { id: organizationId, slug: organizationSlug } = useSelector(activeOrganizationSelector);
   const isUsersLoading = useSelector(loadingSelector);
   const [searchValue, setSearchValue] = useState(null);
-  const userRoles = useSelector(userRolesSelector);
-  const hasPermission = canInviteUserToOrganization(userRoles);
+  const isEmptyUsers = users.length === 0;
+  const { canInviteUserToOrganization } = useUserPermissions();
 
   useEffect(() => {
     trackEvent(ORGANIZATION_PAGE_EVENTS.VIEW_ORGANIZATION_USERS);
@@ -93,7 +92,7 @@ const OrganizationUsersPageComponent = ({
     return searchValue === null ? (
       <EmptyUsersPageState
         isLoading={isUsersLoading}
-        isNotEmpty={itemCount > 0}
+        isNotEmpty={!isEmptyUsers}
         hasPermission
         showInviteUserModal={showInviteUserModal}
       />
@@ -111,13 +110,13 @@ const OrganizationUsersPageComponent = ({
     <ScrollWrapper>
       <div className={cx('organization-users-page')}>
         <OrganizationUsersPageHeader
-          hasPermission={hasPermission}
+          hasPermission={canInviteUserToOrganization}
           isUsersLoading={isUsersLoading}
           searchValue={searchValue}
           setSearchValue={setSearchValue}
           onInvite={showInviteUserModal}
         />
-        {itemCount === 0 ? (
+        {isEmptyUsers ? (
           getEmptyPageState()
         ) : (
           <OrganizationTeamListTable

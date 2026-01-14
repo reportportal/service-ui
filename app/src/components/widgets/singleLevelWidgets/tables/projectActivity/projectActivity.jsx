@@ -53,6 +53,7 @@ import {
 } from 'common/constants/actionTypes';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { externalSystemSelector } from 'controllers/project';
+import { urlProjectSlugSelector, urlOrganizationSlugSelector } from 'controllers/pages';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { COMMON_LOCALE_KEYS, months, days } from 'common/constants/localization';
 import { DefaultProjectSettings } from './activities/defaultProjectSettings';
@@ -71,7 +72,6 @@ import { UnassignUser } from './activities/unassignUser';
 import { ChangeRole } from './activities/changeRole';
 import { CreateProject } from './activities/createProject';
 import { UpdateAutoPatternAnalysis } from './activities/updatePatternAnalysis';
-import { getProjectKey } from './activities/utils';
 
 const cx = classNames.bind(styles);
 
@@ -79,6 +79,8 @@ const cx = classNames.bind(styles);
 @connect((state) => ({
   hasBts: externalSystemSelector(state).length > 0,
   lang: langSelector(state),
+  organizationSlug: urlOrganizationSlugSelector(state),
+  projectSlug: urlProjectSlugSelector(state),
 }))
 @injectIntl
 export class ProjectActivity extends Component {
@@ -87,6 +89,8 @@ export class ProjectActivity extends Component {
     widget: PropTypes.object,
     hasBts: PropTypes.bool,
     lang: PropTypes.string,
+    organizationSlug: PropTypes.string,
+    projectSlug: PropTypes.string,
   };
   static defaultProps = {
     widget: {
@@ -96,18 +100,25 @@ export class ProjectActivity extends Component {
     },
     hasBts: false,
     lang: 'en',
+    organizationSlug: null,
+    projectSlug: null,
   };
 
   getActivities = () => {
     const dates = [];
     const { result = [] } = this.props.widget.content;
+    const { organizationSlug, projectSlug } = this.props;
 
     result.forEach((activity) => {
       let dateKey;
       let contains;
       let values;
       if (this.isValidActivity(activity)) {
-        values = activity;
+        values = {
+          ...activity,
+          organizationSlug: activity.organizationSlug ?? organizationSlug,
+          projectSlug: activity.projectSlug ?? projectSlug,
+        };
         dateKey = this.getDayKey(values.lastModified);
         contains = dates.find((item) => item.day === dateKey);
         if (contains) {
@@ -219,12 +230,7 @@ export class ProjectActivity extends Component {
       return (
         ActivityComponent && (
           <div className={cx('row-content')} key={activity.id}>
-            <UserAvatar
-              className={cx('avatar-wrapper')}
-              userId={activity.userId}
-              projectKey={getProjectKey(activity)}
-              alt="avatar"
-            />
+            <UserAvatar className={cx('avatar-wrapper')} userId={activity.userId} />
             <div className={cx('activity-wrapper')}>
               {ActivityComponent}
               <AbsRelTime

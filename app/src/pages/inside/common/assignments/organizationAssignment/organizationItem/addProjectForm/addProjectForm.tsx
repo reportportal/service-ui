@@ -23,7 +23,7 @@ import {
   InfoIcon,
   Tooltip,
 } from '@reportportal/ui-kit';
-import classNames from 'classnames/bind';
+import { createClassnames } from 'common/utils';
 import { useIntl } from 'react-intl';
 import { messages } from 'common/constants/localization/invitationsLocalization';
 import { AsyncAutocomplete } from 'componentLibrary/autocompletes/asyncAutocomplete';
@@ -38,7 +38,7 @@ import { EDITOR, VIEWER } from 'common/constants/projectRoles';
 import { Project } from '../projectItems';
 import styles from './addProjectForm.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface AddProjectFormProps {
   projects: Project[];

@@ -17,13 +17,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { FC, useCallback, useMemo } from 'react';
 import { setActiveProjectKeyAction, UserInfo, userInfoSelector } from 'controllers/user';
-import {
-  canDeleteProject,
-  canInviteUserToProject,
-  canRenameProject,
-  canAssignUnassignInternalUser,
-} from 'common/utils/permissions/permissions';
-import { userRolesSelector } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import {
   deleteProjectAction,
@@ -37,15 +30,8 @@ import { DeleteProjectModal } from '../../modals/deleteProjectModal';
 import { messages } from '../../messages';
 import { ActionMenu, ActionItem, LinkItem } from 'components/actionMenu';
 import { UnassignProjectModal } from 'pages/inside/common/assignments/unassignProjectModal';
-
-interface ProjectDetails {
-  projectName: string;
-  projectKey: string;
-  projectId: number;
-  projectSlug: string;
-  projectRole: string;
-  organizationSlug: string;
-}
+import { ProjectDetails } from 'pages/organization/constants';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 
 interface ProjectActionMenuProps {
   details: ProjectDetails;
@@ -54,7 +40,12 @@ interface ProjectActionMenuProps {
 export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
   const { projectName, projectKey, projectId, projectSlug, projectRole, organizationSlug } =
     details;
-  const roles = useSelector(userRolesSelector);
+  const {
+    canRenameProject,
+    canInviteUserToProject,
+    canDeleteProject,
+    canAssignUnassignInternalUser,
+  } = useUserPermissions();
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const user = useSelector(userInfoSelector) as UserInfo;
@@ -124,42 +115,44 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
   );
 
   const actions = useMemo((): ActionItem[] => {
-    const projectUserRoles = { ...roles, projectRole };
     const isAssigned = !!projectRole;
 
     return [
       {
         label: formatMessage(COMMON_LOCALE_KEYS.RENAME),
         onClick: handleRenameProjectClick,
-        hasPermission: canRenameProject(projectUserRoles),
+        hasPermission: canRenameProject,
       },
       {
         label: formatMessage(messages.actionInviteUser),
         onClick: () => {},
-        hasPermission: canInviteUserToProject(projectUserRoles),
+        hasPermission: canInviteUserToProject,
       },
       {
         label: isAssigned
           ? formatMessage(COMMON_LOCALE_KEYS.UNASSIGN)
           : formatMessage(COMMON_LOCALE_KEYS.ASSIGN),
         onClick: isAssigned ? handleUnassignClick : handleAssignClick,
-        hasPermission: canAssignUnassignInternalUser(roles),
+        hasPermission: canAssignUnassignInternalUser,
       },
       {
         label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
         onClick: handleDeleteProjectClick,
-        hasPermission: canDeleteProject(projectUserRoles),
+        hasPermission: canDeleteProject,
         danger: true,
       },
     ];
   }, [
-    roles,
     projectRole,
     formatMessage,
     handleRenameProjectClick,
-    handleDeleteProjectClick,
-    handleAssignClick,
+    canRenameProject,
+    canInviteUserToProject,
     handleUnassignClick,
+    handleAssignClick,
+    canAssignUnassignInternalUser,
+    handleDeleteProjectClick,
+    canDeleteProject,
   ]);
 
   return <ActionMenu links={links} actions={actions} showDivider={true} />;

@@ -18,12 +18,11 @@ import React from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
-import plusIcon from 'common/img/plus-button-inline.svg';
 import { Button } from '@reportportal/ui-kit';
+import plusIcon from 'common/img/plus-button-inline.svg';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import PropTypes from 'prop-types';
-import { canUpdateSettings } from 'common/utils/permissions';
-import { userRolesSelector } from 'controllers/pages';
-import { useSelector } from 'react-redux';
+import { InfoBlockWithControl } from '../../../content/elements/infoBlockWithControl';
 import { messages } from '../messages';
 import styles from './emptyRuleState.scss';
 
@@ -31,22 +30,25 @@ const cx = classNames.bind(styles);
 
 export const EmptyRuleState = ({ ruleName, onCreateClick }) => {
   const { formatMessage } = useIntl();
-  const userRoles = useSelector(userRolesSelector);
-  const isUpdateSettingAvailable = canUpdateSettings(userRoles);
+  const { canUpdateSettings } = useUserPermissions();
+
   return (
     <div className={cx('empty-rule-state')}>
-      <span className={cx('label')}>{formatMessage(messages.noItemsMessage, { ruleName })}</span>
-      {isUpdateSettingAvailable && (
-        <Button
-          onClick={onCreateClick}
-          variant={'text'}
-          className={cx('button')}
-          icon={Parser(plusIcon)}
-          data-automation-id="createRuleFromEmptyStateButton"
-        >
-          {formatMessage(messages.create)}
-        </Button>
-      )}
+      <InfoBlockWithControl
+        label={formatMessage(messages.noItemsMessage, { ruleName })}
+        {...(canUpdateSettings && {
+          control: (
+            <Button
+              onClick={onCreateClick}
+              variant="text"
+              icon={Parser(plusIcon)}
+              data-automation-id="createRuleFromEmptyStateButton"
+            >
+              {formatMessage(messages.create)}
+            </Button>
+          ),
+        })}
+      />
     </div>
   );
 };

@@ -1,0 +1,13 @@
+<svg width="168" height="120" viewBox="0 0 168 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6 29H162V111.731C162 116.298 158.298 120 153.731 120H14.2687C9.70204 120 6 116.298 6 111.731V29Z" fill="#E3E7EC"/>
+<path d="M0 8.26875C0 3.70205 3.70205 0 8.26875 0H159.731C164.298 0 168 3.70205 168 8.26875V20H0V8.26875Z" fill="#E3E7EC"/>
+<circle cx="12" cy="10" r="4" fill="white"/>
+<circle cx="26" cy="10" r="4" fill="white"/>
+<circle cx="39.998" cy="10" r="4" fill="white"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M0 20H168V107.731C168 112.298 164.298 116 159.731 116H8.26875C3.70205 116 0 112.298 0 107.731V20Z" fill="white"/>
+<rect opacity="0.7" x="8" y="28" width="152" height="80" rx="4" fill="#ECEFF4"/>
+<path d="M51 68.471H60.2407M76.9815 68.471H100.5M76.9815 68.471H60.2407M76.9815 68.471L83.4171 87.3231C83.5553 87.7279 83.9357 88 84.3634 88H100.5M60.2407 68.471L66.8896 48.6815C67.0264 48.2743 67.4079 48 67.8375 48H100.5" stroke="#C1C7D0" stroke-width="6" stroke-linecap="round"/>
+<circle cx="107.5" cy="48" r="5.5" stroke="#C1C7D0" stroke-width="5"/>
+<circle cx="107.5" cy="68" r="5.5" stroke="#C1C7D0" stroke-width="5"/>
+<circle cx="107.5" cy="88" r="5.5" stroke="#C1C7D0" stroke-width="5"/>
+</svg>

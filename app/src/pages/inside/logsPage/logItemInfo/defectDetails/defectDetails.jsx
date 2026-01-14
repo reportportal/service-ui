@@ -52,12 +52,8 @@ import {
   PALabel,
 } from 'pages/inside/stepPage/stepGrid/defectType/defectType';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
-import {
-  canChangeTestItemStatus,
-  canMakeDecision,
-  canManageBTSIssues,
-} from 'common/utils/permissions/permissions';
-import { userRolesSelector } from 'controllers/pages';
+import { useUserPermissions } from 'hooks/useUserPermissions';
+import { isEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 import styles from './defectDetails.scss';
 
 const cx = classNames.bind(styles);
@@ -123,11 +119,7 @@ export const DefectDetails = ({ fetchFunc, debugMode, logItem }) => {
   const isBtsPluginsExist = useSelector(isBtsPluginsExistSelector);
   const enabledBtsPlugins = useSelector(enabledBtsPluginsSelector);
   const [expanded, setExpanded] = useState(false);
-  const userRoles = useSelector(userRolesSelector);
-
-  const canChangeStatus = canChangeTestItemStatus(userRoles);
-  const canSeeMakeDecision = canMakeDecision(userRoles);
-  const canWorkWithBtsIssues = canManageBTSIssues(userRoles);
+  const { canChangeTestItemStatus, canMakeDecision, canManageBTSIssues } = useUserPermissions();
 
   const isDefectTypeVisible = logItem.issue?.issueType;
   const getIssueActionTitle = (noIssueMessage, isPostIssueUnavailable) => {
@@ -264,10 +256,10 @@ export const DefectDetails = ({ fetchFunc, debugMode, logItem }) => {
                     issues={logItem.issue.externalSystemIssues}
                     onRemove={handleUnlinkTicket}
                     onClick={onClickIssue}
-                    readOnly={!canWorkWithBtsIssues}
+                    readOnly={!canManageBTSIssues}
                   />
                 </div>
-                {!debugMode && canWorkWithBtsIssues && (
+                {!debugMode && canManageBTSIssues && (
                   <>
                     <GhostButton
                       tiny
@@ -321,7 +313,7 @@ export const DefectDetails = ({ fetchFunc, debugMode, logItem }) => {
                   onClick={toggleExpanded}
                   tabIndex={0}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
+                    if (isEnterOrSpaceKey(e)) {
                       toggleExpanded();
                     }
                   }}
@@ -351,7 +343,7 @@ export const DefectDetails = ({ fetchFunc, debugMode, logItem }) => {
             fetchFunc={() => dispatch(fetchHistoryItemsWithLoadingAction())}
             onChange={onChangeStatus}
             withIndicator
-            readOnly={!canChangeStatus}
+            readOnly={!canChangeTestItemStatus}
           />
         </span>
         {isDefectTypeVisible && (
@@ -364,7 +356,7 @@ export const DefectDetails = ({ fetchFunc, debugMode, logItem }) => {
             />
           </span>
         )}
-        {!debugMode && canSeeMakeDecision && (
+        {!debugMode && canMakeDecision && (
           <div className={cx('make-decision-action')}>
             <GhostButton
               color="white"
@@ -382,7 +374,7 @@ export const DefectDetails = ({ fetchFunc, debugMode, logItem }) => {
             onClick={toggleExpanded}
             tabIndex={0}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
+              if (isEnterOrSpaceKey(e)) {
                 toggleExpanded();
               }
             }}

@@ -29,7 +29,11 @@ import { commonValidators, validate } from 'common/utils/validation';
 import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import {
+  showNotification,
+  NOTIFICATION_TYPES,
+  showDefaultErrorNotification,
+} from 'controllers/notification';
 import { userRolesType } from 'common/constants/projectRoles';
 import { userRolesSelector } from 'controllers/pages';
 import { formatItemName } from 'controllers/testItem';
@@ -125,6 +129,7 @@ const messages = defineMessages({
   }),
   {
     showNotification,
+    showDefaultErrorNotification,
   },
 )
 export class EditItemModal extends Component {
@@ -142,6 +147,7 @@ export class EditItemModal extends Component {
     dirty: PropTypes.bool.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
+    showDefaultErrorNotification: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -210,13 +216,17 @@ export class EditItemModal extends Component {
     fetch(URLS.launchesItemsUpdate(projectKey, item.id, type), {
       method: 'put',
       data,
-    }).then(() => {
-      this.props.showNotification({
-        message: formatMessage(messages[`${type}UpdateSuccess`]),
-        type: NOTIFICATION_TYPES.SUCCESS,
+    })
+      .then(() => {
+        this.props.showNotification({
+          message: formatMessage(messages[`${type}UpdateSuccess`]),
+          type: NOTIFICATION_TYPES.SUCCESS,
+        });
+        fetchFunc();
+      })
+      .catch((error) => {
+        this.props.showDefaultErrorNotification(error);
       });
-      fetchFunc();
-    });
   };
 
   testItemAttributeKeyURLCreator = (projectKey) => {

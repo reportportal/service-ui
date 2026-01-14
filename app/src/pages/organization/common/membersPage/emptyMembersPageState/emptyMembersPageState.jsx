@@ -6,7 +6,7 @@ import classNames from 'classnames/bind';
 import { ssoUsersOnlySelector } from 'controllers/appInfo';
 import { messages as invitationsMessages } from 'common/constants/localization/invitationsLocalization';
 import { EmptyPageState } from 'pages/common/emptyPageState';
-import { messages } from '../membersPageHeader/messages';
+import { messages } from '../../../messages';
 import EmptyIcon from './img/empty-members-icon-inline.svg';
 import styles from './emptyMembersPageState.scss';
 

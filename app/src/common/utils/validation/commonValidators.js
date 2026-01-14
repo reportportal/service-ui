@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { commonValidators } from 'common/utils/validation/index';
 import * as validate from './validate';
 import { bindMessageToValidator, composeBoundValidators } from './validatorHelpers';
 
@@ -38,6 +39,7 @@ export const descriptionEntity = bindMessageToValidator(
 
 export const btsUrl = bindMessageToValidator(validate.url, 'btsUrlHint');
 export const btsRallyUrl = bindMessageToValidator(validate.rallyUrl, 'btsUrlHint');
+export const optionalUrl = bindMessageToValidator(validate.optionalUrl, 'requirementsLinkHint');
 export const btsIntegrationName = bindMessageToValidator(
   validate.btsIntegrationName,
   'btsIntegrationNameHint',
@@ -130,4 +132,10 @@ export const emailInviteUserValidator = () =>
   composeBoundValidators([
     requiredField,
     bindMessageToValidator(validate.requiredEmail, 'emailInviteUserHint'),
+  ]);
+
+export const createProjectVersionValidator = () =>
+  composeBoundValidators([
+    commonValidators.requiredField,
+    bindMessageToValidator(validate.projectVersionLength, 'projectVersionLengthHint'),
   ]);

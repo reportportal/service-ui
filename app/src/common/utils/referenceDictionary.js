@@ -16,7 +16,7 @@
 
 export const referenceDictionary = {
   rpLanding: 'http://reportportal.io/',
-  rpDoc: 'http://reportportal.io/docs',
+  rpDoc: 'https://reportportal.io/docs',
   rpGitHub: 'https://github.com/reportportal',
   rpFacebook: 'https://www.facebook.com/ReportPortal.io',
   rpTwitter: 'http://twitter.com/ReportPortal_io',

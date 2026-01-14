@@ -131,6 +131,10 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.add',
     defaultMessage: 'Add',
   },
+  ADD_TO_TEST_PLAN: {
+    id: 'Common.addToTestPlan',
+    defaultMessage: 'Add to Test Plan',
+  },
   NO_RESULTS: {
     id: 'Common.noResults',
     defaultMessage: 'No results found',
@@ -194,6 +198,10 @@ export const COMMON_LOCALE_KEYS = defineMessages({
   ANALYZER_DISABLED: {
     id: 'Common.analyzerDisabled',
     defaultMessage: 'Service analyzer is not running',
+  },
+  DUPLICATE: {
+    id: 'Common.duplicate',
+    defaultMessage: 'Duplicate',
   },
   changesWarning: {
     id: 'Common.changesWarning',
@@ -319,6 +327,10 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.no',
     defaultMessage: 'No',
   },
+  IMPORT: {
+    id: 'Common.import',
+    defaultMessage: 'Import',
+  },
   EXPORT: {
     id: 'Common.export',
     defaultMessage: 'Export',
@@ -327,6 +339,58 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.validationTooltip',
     defaultMessage:
       'Please ensure all required fields are filled and validation errors are resolved before proceeding',
+  },
+  NAME: {
+    id: 'Common.name',
+    defaultMessage: 'Name',
+  },
+  START_TIME: {
+    id: 'Common.startTime',
+    defaultMessage: 'Start Time',
+  },
+  TOTAL: {
+    id: 'Common.total',
+    defaultMessage: 'Total',
+  },
+  FAILED: {
+    id: 'Common.failed',
+    defaultMessage: 'Failed',
+  },
+  DONE: {
+    id: 'Common.done',
+    defaultMessage: 'Done',
+  },
+  NOT_APPLICABLE: {
+    id: 'Common.notApplicable',
+    defaultMessage: 'n/a',
+  },
+  NO_AVAILABLE_OPTIONS: {
+    id: 'Common.noAvailableOptions',
+    defaultMessage: 'No available options',
+  },
+  MO_MATCHES_FOUND: {
+    id: 'Common.noMatchesFound',
+    defaultMessage: 'No matches found',
+  },
+  ALL_TEST_CASES_TITLE: {
+    id: 'Common.allTestCasesTitle',
+    defaultMessage: 'All test cases',
+  },
+  ADD_TO_LAUNCH: {
+    id: 'Common.addToLaunch',
+    defaultMessage: 'Add to Launch',
+  },
+  TEST_PLAN_LABEL: {
+    id: 'Common.testPlanLabel',
+    defaultMessage: 'Test Plan',
+  },
+  SELECT_TEST_PLAN_PLACEHOLDER: {
+    id: 'Common.selectTestPlanPlaceholder',
+    defaultMessage: 'Select the Test Plan',
+  },
+  ADD_TO_LAUNCH_TOOLTIP_TEXT: {
+    id: 'Common.addToLaunchTooltipText',
+    defaultMessage: 'Add scenario details to be able to add this test case to launch',
   },
 });
 

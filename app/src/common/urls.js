@@ -375,4 +375,35 @@ export const URLS = {
     `${urlBase}${projectKey}/launch/cluster/${launchId}${getQueryParams(query)}`,
   onboarding: (page = 'GENERAL') => `${urlBase}onboarding?page=${page}`,
   instanceSettings: () => `${urlBase}settings`,
+
+  testCaseDetails: (projectKey, testCaseId) =>
+    `${urlBase}project/${projectKey}/tms/test-case/${testCaseId}`,
+  testCasesBatch: (projectKey) => `${urlBase}project/${projectKey}/tms/test-case/batch`,
+  testCaseBatchDuplicate: (projectKey) =>
+    `${urlBase}project/${projectKey}/tms/test-case/batch/duplicate`,
+  testCases: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/test-case${getQueryParams(query)}`,
+  testPlanTestCases: (projectKey, id, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/test-plan/${id}/test-case${getQueryParams(query)}`,
+  testPlan: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/test-plan${getQueryParams(query)}`,
+  testPlanTestCasesBatch: (projectKey, testPlanId) =>
+    `${urlBase}project/${projectKey}/tms/test-plan/${testPlanId}/test-case/batch`,
+  testPlanById: (projectKey, testPlanId) =>
+    `${urlBase}project/${projectKey}/tms/test-plan/${testPlanId}`,
+  testPlanDuplicate: (projectKey, testPlanId) =>
+    `${urlBase}project/${projectKey}/tms/test-plan/${testPlanId}/duplicate`,
+  testFolders: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/folder${getQueryParams(query)}`,
+  testFolderDuplicate: (projectKey, folderId) =>
+    `${urlBase}project/${projectKey}/tms/folder/${folderId}/duplicate`,
+  deleteFolder: (projectKey, folderId) => `${urlBase}project/${projectKey}/tms/folder/${folderId}`,
+  tmsAttachmentUpload: (projectKey) => `${urlBase}project/${projectKey}/tms/attachment/upload`,
+  tmsAttachmentDownload: (projectKey, attachmentId) =>
+    `${urlBase}project/${projectKey}/tms/attachment/${attachmentId}`,
+  manualLaunchesList: (projectKey) => `${urlBase}/${projectKey}/launch`,
+  importTestCase: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/test-case/import${getQueryParams(query)}`,
+  tmsAttributes: (query = {}) => `${urlBase}tms/attribute${getQueryParams(query)}`,
+  createTmsAttribute: () => `${urlBase}tms/attribute`,
 };

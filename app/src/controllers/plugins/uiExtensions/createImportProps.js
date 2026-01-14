@@ -88,6 +88,7 @@ import {
   userRolesSelector,
   ORGANIZATION_SETTINGS_TAB_PAGE,
   ORGANIZATION_PROJECTS_PAGE,
+  urlOrganizationSlugSelector,
 } from 'controllers/pages';
 import { attributesArray, isNotEmptyArray } from 'common/utils/validation/validate';
 import {
@@ -188,7 +189,7 @@ import {
   RuleList as RuleListComponent,
   DraggableRuleList,
 } from 'pages/inside/projectSettingsPageContainer/content/elements';
-import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
+import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { SystemMessage } from 'componentLibrary/systemMessage';
 import { AsyncAutocomplete as AsyncAutocompleteField } from 'componentLibrary/autocompletes/asyncAutocomplete';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
@@ -363,6 +364,7 @@ export const createImportProps = (pluginName) => ({
     publicPluginsSelector,
     querySelector,
     activeOrganizationSelector,
+    urlOrganizationSlugSelector,
   },
   icons: {
     PlusIcon,

@@ -208,6 +208,111 @@ const messages = defineMessages({
     id: 'OrganizationsPage.updateOrganizationNameSuccess',
     defaultMessage: 'Organization name has been updated successfully',
   },
+  testCaseFolderCreatedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseFolderCreatedSuccess',
+    defaultMessage: 'Folder has been created successfully.',
+  },
+  testCaseFolderDeletedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseFolderDeletedSuccess',
+    defaultMessage: 'Folder has been deleted successfully.',
+  },
+  testCaseFolderDuplicatedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseFolderDuplicatedSuccess',
+    defaultMessage: 'Folder has been duplicated successfully.',
+  },
+  testCasesDuplicatedSuccess: {
+    id: 'TestCaseLibraryPage.testCasesDuplicatedSuccess',
+    defaultMessage: 'Test cases have been duplicated successfully.',
+  },
+  testCaseDeletedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseDeletedSuccess',
+    defaultMessage: 'Test case has been deleted successfully.',
+  },
+  testCaseDescriptionUpdateSuccess: {
+    id: 'TestCaseLibraryPage.testCaseDescriptionUpdateSuccess',
+    defaultMessage: 'Test case description has been updated successfully.',
+  },
+  testCaseFolderRenamedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseFolderRenamedSuccess',
+    defaultMessage: 'Folder has been renamed successfully.',
+  },
+  testCaseCreatedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseCreatedSuccess',
+    defaultMessage: 'Test Case has been created successfully.',
+  },
+  testCasesAddingToTestPlanSuccess: {
+    id: 'TestCaseLibraryPage.testCasesAddedToTestPlanSuccess',
+    defaultMessage: 'Selected Test Cases have been added to the Test Plan successfully.',
+  },
+  testCaseAddingToTestPlanSuccess: {
+    id: 'TestCaseLibraryPage.testCaseAddedToTestPlanSuccess',
+    defaultMessage: 'Selected Test Case has been added to the Test Plan successfully.',
+  },
+  testCaseUpdatedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseUpdatedSuccess',
+    defaultMessage: 'Test Case has been updated successfully.',
+  },
+  testCaseBulkUpdateSuccess: {
+    id: 'TestCaseLibraryPage.testCaseBulkUpdateSuccess',
+    defaultMessage: 'Test Cases have been updated successfully.',
+  },
+  testCaseCreationFailed: {
+    id: 'TestCaseLibraryPage.testCaseCreationFailed',
+    defaultMessage: 'Failed to create Test Case.',
+  },
+  testCaseUpdateFailed: {
+    id: 'TestCaseLibraryPage.testCaseUpdateFailed',
+    defaultMessage: 'Failed to update Test Case.',
+  },
+  testCasesAddingToTestPlanFailed: {
+    id: 'TestCaseLibraryPage.testCasesAddingToTestPlanFailed',
+    defaultMessage: 'Failed to add selected Test Cases to the Test Plan.',
+  },
+  testCaseAddingToTestPlanFailed: {
+    id: 'TestCaseLibraryPage.testCaseAddingToTestPlanFailed',
+    defaultMessage: 'Failed to add selected Test Case to the Test Plan.',
+  },
+  errorOccurredTryAgain: {
+    id: 'Common.errorOccurredTryAgain',
+    defaultMessage: 'An error occurred. Please try again later.',
+  },
+  redirectWarningMessage: {
+    id: 'TestCaseLibraryPage.redirectWarningMessage',
+    defaultMessage:
+      'The item you are trying to access may have been deleted or doesn’t exist. You have been redirected to the Test Case Library.',
+  },
+  testPlanCreatedSuccess: {
+    id: 'TestPlansPage.testPlanCreatedSuccess',
+    defaultMessage: 'Test Plan has been created successfully.',
+  },
+  testPlanLoadingFailed: {
+    id: 'TestPlansPage.testPlanLoadingFailed',
+    defaultMessage: 'Failed to load Test Plans.',
+  },
+  testPlanUpdatedSuccess: {
+    id: 'TestPlansPage.testPlanUpdatedSuccess',
+    defaultMessage: 'Test Plan has been updated successfully.',
+  },
+  testPlanDuplicatedSuccess: {
+    id: 'TestPlansPage.testPlanDuplicatedSuccess',
+    defaultMessage: 'Test Plan has been duplicated successfully.',
+  },
+  testPlanDeletedSuccess: {
+    id: 'TestPlansPage.testPlanDeletedSuccess',
+    defaultMessage: 'Test Plan has been deleted successfully.',
+  },
+  importSuccessToFolder: {
+    id: 'ImportTestCaseModal.importSuccessToFolder',
+    defaultMessage: 'Test cases have been imported successfully to folder {folderName}.',
+  },
+  importSuccess: {
+    id: 'ImportTestCaseModal.importSuccess',
+    defaultMessage: 'Test cases have been imported successfully.',
+  },
+  importTestCaseFailed: {
+    id: 'ImportTestCaseModal.testCaseImportFailed',
+    defaultMessage: 'Failed to import Test Case.',
+  },
 });
 
 @injectIntl
@@ -231,24 +336,28 @@ export class NotificationList extends PureComponent {
     return (
       <div className={cx('notification-list')} data-automation-id="notificationsContainer">
         <TransitionGroup>
-          {this.props.notifications.map(({ uid, type, messageId, values, message }) => (
-            <CSSTransition key={uid} timeout={1000} classNames="notification-transition">
-              <div className={cx('notification-item-wrapper')}>
-                <SystemAlert
-                  type={type}
-                  title={Parser(
-                    DOMPurify.sanitize(
-                      messageId ? formatMessage(messages[messageId], values) : message,
-                      { ADD_ATTR: ['target'] },
-                    ),
-                  )}
-                  onClose={() => this.props.hideNotification(uid)}
-                  className={cx('notification-item')}
-                  dataAutomationId="notificationItem"
-                />
-              </div>
-            </CSSTransition>
-          ))}
+          {this.props.notifications.map(
+            ({ uid, type, duration, typographyColor, messageId, values, message }) => (
+              <CSSTransition key={uid} timeout={1000} classNames="notification-transition">
+                <div className={cx('notification-item-wrapper')}>
+                  <SystemAlert
+                    type={type}
+                    typographyColor={typographyColor}
+                    duration={duration}
+                    title={Parser(
+                      DOMPurify.sanitize(
+                        messageId ? formatMessage(messages[messageId], values) : message,
+                        { ADD_ATTR: ['target'] },
+                      ),
+                    )}
+                    onClose={() => this.props.hideNotification(uid)}
+                    className={cx('notification-item')}
+                    dataAutomationId="notificationItem"
+                  />
+                </div>
+              </CSSTransition>
+            ),
+          )}
         </TransitionGroup>
       </div>
     );

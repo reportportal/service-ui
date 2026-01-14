@@ -20,7 +20,7 @@ import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
 import { NOTIFICATIONS } from 'common/constants/settingsTabs';
-import { getProjectKey, getProjectSettingTabPageLink } from './utils';
+import { getProjectSettingTabPageLink } from './utils';
 import styles from './common.scss';
 import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 
@@ -53,9 +53,9 @@ export class Notifications extends Component {
         {intl.formatMessage(messages.updated)}
         <Link
           to={getProjectSettingTabPageLink(
-            getProjectKey(activity),
-            NOTIFICATIONS,
             activity.organizationSlug,
+            activity.projectSlug,
+            NOTIFICATIONS,
           )}
           className={cx('link')}
           target="_blank"

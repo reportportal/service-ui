@@ -15,7 +15,6 @@
  */
 
 import { useIntl } from 'react-intl';
-import classNames from 'classnames/bind';
 import {
   Button,
   FieldText,
@@ -25,12 +24,16 @@ import {
   WarningIcon,
 } from '@reportportal/ui-kit';
 import { useDispatch, useSelector } from 'react-redux';
-import { messages } from './messages';
-import styles from './externalUserInvitationModal.scss';
+
+import { createClassnames } from 'common/utils';
 import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 
-const cx = classNames.bind(styles) as typeof classNames;
+import { messages } from './messages';
+
+import styles from './externalUserInvitationModal.scss';
+
+const cx = createClassnames(styles);
 
 interface ExternalUserInvitationModalProps {
   email: string;

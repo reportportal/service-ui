@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { canCreateProject } from 'common/utils/permissions';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { BubblesLoader, PlusIcon } from '@reportportal/ui-kit';
@@ -27,14 +27,13 @@ import {
   projectsPaginationSelector,
 } from 'controllers/organization/projects/selectors';
 import { activeOrganizationLoadingSelector } from 'controllers/organization/selectors';
-import { userRolesSelector } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { createProjectAction } from 'controllers/organization/projects/actionCreators';
-import { useState } from 'react';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { EmptyPageState } from 'pages/common';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { assignedProjectsSelector } from 'controllers/user';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { ProjectsPageHeader } from './projectsPageHeader';
 import EmptyIcon from './img/empty-projects-icon-inline.svg';
 import { messages } from './messages';
@@ -62,11 +61,10 @@ const OrganizationProjectsPageComponent = ({
 }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
-  const userRoles = useSelector(userRolesSelector);
-  const hasPermission = canCreateProject(userRoles);
+  const { canCreateProject } = useUserPermissions();
   const organizationLoading = useSelector(activeOrganizationLoadingSelector);
   const projectsLoading = useSelector(loadingSelector);
-  const permissionSuffix = hasPermission ? 'WithPermission' : 'WithoutPermission';
+  const permissionSuffix = canCreateProject ? 'WithPermission' : 'WithoutPermission';
   const label = formatMessage(messages[`noProjects${permissionSuffix}`]);
   const description = Parser(formatMessage(messages[`noProjectsList${permissionSuffix}`]));
   const buttonTitle = formatMessage(messages.createProject);
@@ -113,7 +111,7 @@ const OrganizationProjectsPageComponent = ({
   const getEmptyPageState = () => {
     return searchValue === null && appliedFiltersCount === 0 ? (
       <EmptyPageState
-        hasPermission={hasPermission}
+        hasPermission={canCreateProject}
         label={label}
         description={description}
         icon={<PlusIcon />}
@@ -162,7 +160,7 @@ const OrganizationProjectsPageComponent = ({
   return (
     <div className={cx('organization-projects-container')}>
       <ProjectsPageHeader
-        hasPermission={hasPermission}
+        hasPermission={canCreateProject}
         onCreateProject={showCreateProjectModal}
         searchValue={searchValue}
         setSearchValue={setSearchValue}

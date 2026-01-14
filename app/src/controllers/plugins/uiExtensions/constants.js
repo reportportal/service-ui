@@ -20,6 +20,8 @@ export const EXTENSION_TYPE_ORGANIZATION_SETTINGS_TAB = 'uiExtension:organizatio
 export const EXTENSION_TYPE_ADMIN_SIDEBAR_COMPONENT = 'uiExtension:adminSidebarComponent';
 export const EXTENSION_TYPE_ADMIN_PAGE = 'uiExtension:adminPage';
 export const EXTENSION_TYPE_SIDEBAR_COMPONENT = 'uiExtension:sidebarComponent';
+export const EXTENSION_TYPE_ORGANIZATION_SIDEBAR_COMPONENT =
+  'uiExtension:organizationSidebarComponent';
 export const EXTENSION_TYPE_LAUNCH_ITEM_COMPONENT = 'uiExtension:launchItemComponent';
 export const EXTENSION_TYPE_INTEGRATION_FORM_FIELDS = 'uiExtension:integrationFormFields';
 export const EXTENSION_TYPE_INTEGRATION_SETTINGS = 'uiExtension:integrationSettings';

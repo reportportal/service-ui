@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import { DashboardItemPage } from 'pages/inside/dashboardItemPage';
 import { DashboardPrintPage } from 'pages/inside/dashboardItemPage/dashboardPrintPage';
 import { FiltersPage } from 'pages/inside/filtersPage';
 import { LaunchesPage } from 'pages/inside/launchesPage';
+import { ManualLaunchesPage } from 'pages/inside/manualLaunchesPage';
 import { ProfilePage } from 'pages/inside/profilePage';
 import { SandboxPage } from 'pages/inside/sandboxPage';
 import { ProjectSettingsPageContainer } from 'pages/inside/projectSettingsPageContainer';
@@ -37,6 +38,8 @@ import { NotFoundPage } from 'pages/outside/notFoundPage';
 import { RegistrationPage } from 'pages/outside/registrationPage';
 import { TestItemPage } from 'pages/inside/testItemPage';
 import { LogsPage } from 'pages/inside/logsPage';
+import { TestPlansPage } from 'pages/inside/testPlansPage';
+import { TestPlanDetailsPage } from 'pages/inside/testPlansPage/testPlanDetailsPage';
 import {
   TEST_ITEM_PAGE,
   PROJECT_LOG_PAGE,
@@ -55,7 +58,14 @@ import {
   USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL,
   USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
   ORGANIZATION_USERS_PAGE,
-} from 'controllers/pages';
+  PRODUCT_VERSIONS_PAGE,
+  PRODUCT_VERSIONS_TAB_PAGE,
+  PRODUCT_VERSION_PAGE,
+  PRODUCT_VERSION_TAB_PAGE,
+  TEST_CASE_LIBRARY_PAGE,
+  TEST_CASE_DETAILS_PAGE,
+  PROJECT_TEST_PLAN_DETAILS_PAGE,
+} from 'controllers/pages/constants';
 import { AdminUiExtensionPage } from 'pages/instance/adminUiExtensionPage';
 import { AccountRemovedPage } from 'pages/outside/accountRemovedPage';
 import { ProjectUiExtensionPage } from 'pages/inside/projectUiExtensionPage';
@@ -68,6 +78,8 @@ import { OrganizationUsersPage } from 'pages/organization/organizationUsersPage'
 import { OrganizationsPage } from 'pages/instance/organizationsPage';
 import { OrganizationSettingsPage } from 'pages/organization/organizationSettingsPage';
 import { OrganizationEventsPage } from '../pages/organization/organizationEventsPage';
+import { ProductVersionsPage } from 'pages/inside/productVersionsPage/productVersionsPage';
+import { TestCaseDetailsPage, TestCaseLibraryPageWrapper } from 'pages/inside/testCaseLibraryPage';
 
 export const ANONYMOUS_ACCESS = 'anonymous';
 export const ADMIN_ACCESS = 'admin';
@@ -129,6 +141,7 @@ export const pageRendering = {
   PROJECT_DASHBOARD_PRINT_PAGE: { component: DashboardPrintPage, layout: EmptyLayout },
   PROJECT_FILTERS_PAGE: { component: FiltersPage, layout: ProjectLayout },
   [LAUNCHES_PAGE]: { component: LaunchesPage, layout: ProjectLayout },
+  MANUAL_LAUNCHES_PAGE: { component: ManualLaunchesPage, layout: ProjectLayout, rawContent: true },
   PROJECT_LAUNCHES_PAGE: { component: LaunchesPage, layout: ProjectLayout },
   PROJECT_MEMBERS_PAGE: { component: ProjectTeamPage, rawContent: true, layout: ProjectLayout },
   PROJECT_SANDBOX_PAGE: { component: SandboxPage, layout: ProjectLayout },
@@ -139,6 +152,11 @@ export const pageRendering = {
   },
   PROJECT_SETTINGS_TAB_PAGE: {
     component: ProjectSettingsPageContainer,
+    layout: ProjectLayout,
+    rawContent: true,
+  },
+  PROJECT_TEST_PLANS_PAGE: {
+    component: TestPlansPage,
     layout: ProjectLayout,
     rawContent: true,
   },
@@ -178,9 +196,45 @@ export const pageRendering = {
     component: AdminUiExtensionPage,
     layout: InstanceLayout,
     rawContent: true,
+    access: ADMIN_ACCESS,
   },
   [PROJECT_PLUGIN_PAGE]: {
     component: ProjectUiExtensionPage,
+    layout: ProjectLayout,
+    rawContent: true,
+  },
+  [TEST_CASE_LIBRARY_PAGE]: {
+    component: TestCaseLibraryPageWrapper,
+    layout: ProjectLayout,
+    rawContent: true,
+  },
+  [TEST_CASE_DETAILS_PAGE]: {
+    component: TestCaseDetailsPage,
+    layout: ProjectLayout,
+    rawContent: true,
+  },
+  [PRODUCT_VERSIONS_PAGE]: {
+    component: ProductVersionsPage,
+    layout: ProjectLayout,
+    rawContent: true,
+  },
+  [PRODUCT_VERSIONS_TAB_PAGE]: {
+    component: ProductVersionsPage,
+    layout: ProjectLayout,
+    rawContent: true,
+  },
+  [PRODUCT_VERSION_PAGE]: {
+    component: ProductVersionsPage,
+    layout: ProjectLayout,
+    rawContent: true,
+  },
+  [PRODUCT_VERSION_TAB_PAGE]: {
+    component: ProductVersionsPage,
+    layout: ProjectLayout,
+    rawContent: true,
+  },
+  [PROJECT_TEST_PLAN_DETAILS_PAGE]: {
+    component: TestPlanDetailsPage,
     layout: ProjectLayout,
     rawContent: true,
   },

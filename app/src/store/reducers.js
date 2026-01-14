@@ -39,6 +39,8 @@ import { initialDataReadyReducer } from 'controllers/initialData';
 import { uniqueErrorsReducer } from 'controllers/uniqueErrors';
 import { organizationsReducer } from 'controllers/instance/organizations';
 import { exportsReducer } from 'controllers/exports/reducer';
+import { testCaseReducer } from 'controllers/testCase';
+import { testPlanReducer } from 'controllers/testPlan';
 
 export default {
   appInfo: appInfoReducer,
@@ -66,4 +68,6 @@ export default {
   plugins: pluginsReducer,
   initialDataReady: initialDataReadyReducer,
   exports: exportsReducer,
+  testCase: testCaseReducer,
+  testPlan: testPlanReducer,
 };

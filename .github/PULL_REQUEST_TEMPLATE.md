@@ -10,6 +10,7 @@
 * [ ] Have you made sure that all the necessary pipelines has been successfully completed?
 * [ ] If the task requires translations to be updated, have you done this by running the `manage:translations` script?
 * [ ] Have you added the link to the PR in the Jira ticket comments?
+* [ ] Have you checked and implemented role-based permissions? (if the feature requires different behavior or visibility for different user roles)
 
 ## Visuals
 

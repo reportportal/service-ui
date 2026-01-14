@@ -28,7 +28,7 @@ import {
   USER_PROFILE_PAGE_ORGANIZATION_LEVEL,
   ORGANIZATIONS_PAGE,
 } from 'controllers/pages/constants';
-import { uiExtensionSidebarComponentsSelector } from 'controllers/plugins/uiExtensions';
+import { uiExtensionOrganizationSidebarComponentsSelector } from 'controllers/plugins/uiExtensions';
 import { AppSidebar } from 'layouts/common/appSidebar';
 import { ExtensionLoader } from 'components/extensionLoader';
 import MembersIcon from 'common/img/sidebar/members-icon-inline.svg';
@@ -41,14 +41,16 @@ import {
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
 import { messages } from '../../messages';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 
 const ORGANIZATION_CONTROL = 'Organization control';
 
 export const OrganizationSidebar = ({ onClickNavBtn }) => {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
+  const { canSeeMembers } = useUserPermissions();
   const userRoles = useSelector(userRolesSelector);
-  const sidebarExtensions = useSelector(uiExtensionSidebarComponentsSelector);
+  const sidebarExtensions = useSelector(uiExtensionOrganizationSidebarComponentsSelector);
   const organizationSlug = useSelector(activeOrganizationSelector)?.slug;
   const organizationName = useSelector(activeOrganizationNameSelector);
   const [isOpenOrganizationPopover, setIsOpenOrganizationPopover] = useState(false);
@@ -69,7 +71,7 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
       },
     ];
 
-    if (canSeeMembers(userRoles)) {
+    if (canSeeMembers) {
       sidebarItems.push({
         onClick: (isSidebarCollapsed) =>
           onClickButton({ itemName: messages.users.defaultMessage, isSidebarCollapsed }),
@@ -96,13 +98,16 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
       message: formatMessage(messages.organizationSettings),
     });
 
-    sidebarExtensions.forEach((extension) =>
+    sidebarExtensions.forEach((extension) => {
+      const itemName = extension.payload?.iconName;
+
       sidebarItems.push({
         name: extension.name,
         component: <ExtensionLoader extension={extension} />,
-        onClick: onClickNavBtn,
-      }),
-    );
+        onClick: (isSidebarCollapsed) =>
+          itemName ? onClickButton({ itemName, isSidebarCollapsed }) : onClickNavBtn(),
+      });
+    });
 
     return sidebarItems;
   };

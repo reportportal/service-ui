@@ -21,6 +21,11 @@ import { START_TIME_FORMAT_ABSOLUTE, START_TIME_FORMAT_RELATIVE } from './consta
 const userSelector = (state) => state.user || {};
 export const userInfoSelector = (state) => userSelector(state).info || {};
 export const defaultProjectSelector = (state) => userInfoSelector(state).defaultProject || '';
+
+/**
+ * @param {Object} state
+ * @returns {{ organizationSlug: string, projectSlug: string } | string}
+ */
 export const activeProjectSelector = (state) =>
   userSelector(state).activeProject || defaultProjectSelector(state) || '';
 export const idSelector = (state) => userInfoSelector(state).id;

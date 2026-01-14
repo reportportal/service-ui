@@ -36,6 +36,7 @@ import {
   SERVER_SIDEBAR_LINKS_KEY,
   IMPORTANT_LAUNCHES_FEATURE_KEY,
   PERSONAL_ORGANIZATIONS_KEY,
+  TMS_ENABLED_KEY,
 } from './constants';
 
 export const appInfoSelector = (state) => state.appInfo || {};
@@ -84,6 +85,7 @@ export const instanceTypeSelector = (state) =>
   environmentSelector(state)[INSTANCE_TYPE] || NOT_PROVIDED;
 export const allowDeleteAccountSelector = (state) =>
   environmentSelector(state)[ALLOW_DELETE_ACCOUNT] === 'true';
+export const tmsEnabledSelector = (state) => environmentSelector(state)[TMS_ENABLED_KEY] === 'true';
 export const baseEventParametersSelector = createSelector(
   instanceIdSelector,
   apiBuildVersionSelector,

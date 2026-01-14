@@ -51,6 +51,7 @@ import { Plugin, organizationPluginSelector } from 'controllers/plugins';
 import { RenameOrganizationModal } from 'pages/inside/common/modals/renameOrganizationModal';
 import { DeleteOrganizationModal } from '../modals/deleteOrganizationsModal';
 import { messages } from '../../messages';
+import { OrganizationRoles } from 'types/roles';
 
 interface MeatballMenuProps {
   organization: Organization;
@@ -66,7 +67,8 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
   const organizationPlugin = useSelector(organizationPluginSelector) as Plugin;
   const canUnassign = useCanUnassignOrganization();
   const isAssignedToOrganization = organization.slug in assignedOrganizations;
-  const organizationRole = assignedOrganizations[organization.slug]?.organizationRole;
+  const organizationRole = assignedOrganizations[organization.slug]
+    ?.organizationRole as OrganizationRoles;
   const organizationUserRoles = useMemo(
     () => ({ ...userRoles, organizationRole }),
     [userRoles, organizationRole],

@@ -18,13 +18,15 @@ import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { change } from 'redux-form';
 import { FieldText } from '@reportportal/ui-kit';
-import FieldErrorHint from 'components/fields/fieldErrorHint';
+
+import { createClassnames } from 'common/utils';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { messages } from 'common/constants/localization/invitationsLocalization';
-import styles from './inviteUserEmailField.scss';
-import classNames from 'classnames/bind';
 
-const cx = classNames.bind(styles) as typeof classNames;
+import styles from './inviteUserEmailField.scss';
+
+const cx = createClassnames(styles);
 
 interface InviteUserEmailFieldProps {
   formName: string;

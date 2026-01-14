@@ -25,3 +25,13 @@
 .members-pagination-wrapper {
   flex: 1;
 }
+
+.table-header {
+  --table-header-bg-color: transparent;
+}
+
+/* stylelint-disable-next-line selector-max-attribute */
+.table-row [class*='table-row-content'] {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}

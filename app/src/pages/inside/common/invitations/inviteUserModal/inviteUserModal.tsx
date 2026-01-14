@@ -66,10 +66,10 @@ export const InviteUser = <L extends keyof FormDataMap>({
 
   const inviteUser = async (userData: InvitationRequestData, withProject: boolean) => {
     try {
-      const invitedUser = (await fetch(URLS.userInvitations(), {
+      const invitedUser = await fetch<InvitationResponseData>(URLS.userInvitations(), {
         method: 'post',
         data: userData,
-      })) as InvitationResponseData;
+      });
 
       onInvite?.(withProject);
 

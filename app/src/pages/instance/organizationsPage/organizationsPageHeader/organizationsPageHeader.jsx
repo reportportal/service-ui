@@ -28,12 +28,7 @@ import { NAMESPACE } from 'controllers/instance/organizations/constants';
 import { organizationsListLoadingSelector } from 'controllers/instance/organizations';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { createFilterEntitiesURLContainer } from 'components/filterEntities/containers';
-import {
-  canExportOrganizations,
-  canWorkWithOrganizationFilter,
-  canWorkWithOrganizationsSorting,
-} from 'common/utils/permissions';
-import { userRolesSelector } from 'controllers/pages';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { organizationPluginSelector } from 'controllers/plugins';
 import { OrganizationsFilter } from './organizationsFilter';
 import PanelViewIcon from '../img/panel-view-inline.svg';
@@ -66,7 +61,8 @@ export const OrganizationsPageHeader = ({
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const projectsLoading = useSelector(organizationsListLoadingSelector);
-  const userRoles = useSelector(userRolesSelector);
+  const { canWorkWithOrganizationFilter, canWorkWithOrganizationsSorting, canExportOrganizations } =
+    useUserPermissions();
   const organizationPlugin = useSelector(organizationPluginSelector);
 
   const onMouseEnter = () => {
@@ -87,7 +83,7 @@ export const OrganizationsPageHeader = ({
                 placeholder={formatMessage(messages.searchPlaceholder)}
                 event={ORGANIZATION_PAGE_EVENTS.SEARCH_ORGANIZATION_FIELD}
               />
-              {canWorkWithOrganizationFilter(userRoles) && (
+              {canWorkWithOrganizationFilter && (
                 <FilterEntitiesURLContainer
                   debounced={false}
                   additionalFilter="name"
@@ -101,7 +97,7 @@ export const OrganizationsPageHeader = ({
                   )}
                 />
               )}
-              {canWorkWithOrganizationsSorting(userRoles) && <OrganizationsSorting />}
+              {canWorkWithOrganizationsSorting && <OrganizationsSorting />}
             </div>
             <div className={cx('view-toggle')}>
               <BaseIconButton
@@ -120,7 +116,7 @@ export const OrganizationsPageHeader = ({
               </BaseIconButton>
             </div>
             <div className={cx('primary-actions')}>
-              {canExportOrganizations(userRoles) && (
+              {canExportOrganizations && (
                 <OrganizationsExport appliedFiltersCount={appliedFiltersCount} />
               )}
             </div>

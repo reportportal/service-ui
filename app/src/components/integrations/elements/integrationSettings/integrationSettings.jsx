@@ -28,10 +28,8 @@ import {
   urlOrganizationAndProjectSelector,
   querySelector,
   PROJECT_SETTINGS_TAB_PAGE,
-  userRolesSelector,
 } from 'controllers/pages';
 import { projectKeySelector } from 'controllers/project';
-import { canUpdateSettings } from 'common/utils/permissions';
 import {
   removeIntegrationAction,
   namedGlobalIntegrationsSelector,
@@ -44,6 +42,7 @@ import { INTEGRATION_FORM } from './integrationForm/constants';
 import { ConnectionSection } from './connectionSection';
 import { IntegrationForm } from './integrationForm';
 import styles from './integrationSettings.scss';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 
 const cx = classNames.bind(styles);
 
@@ -54,8 +53,7 @@ export const IntegrationSettings = (props) => {
   const projectIntegrations = useSelector(namedProjectIntegrationsSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
   const projectKey = useSelector(projectKeySelector);
-  const userRoles = useSelector(userRolesSelector);
-  const isEditable = canUpdateSettings(userRoles);
+  const { canUpdateSettings } = useUserPermissions();
   const query = useSelector(querySelector);
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
@@ -149,7 +147,7 @@ export const IntegrationSettings = (props) => {
             pluginName={pluginName}
             data={data}
             isGlobal={isGlobal}
-            isEditable={isEditable}
+            isEditable={canUpdateSettings}
           />
           {!isLdap && (
             <IntegrationForm
@@ -161,7 +159,7 @@ export const IntegrationSettings = (props) => {
               onSubmit={onUpdate}
               formFieldsComponent={formFieldsComponent}
               isEmptyConfiguration={isEmptyConfiguration}
-              isEditable={isEditable}
+              isEditable={canUpdateSettings}
             />
           )}
         </>

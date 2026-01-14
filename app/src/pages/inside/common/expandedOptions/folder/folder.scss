@@ -1,0 +1,140 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.folders-tree {
+  &--inner {
+    margin-left: 24px;
+
+    .folders-tree__item::after {
+      position: absolute;
+      top: 16px;
+      left: -32px;
+      content: '';
+      display: block;
+      width: 12px;
+      height: 1px;
+      background-color: var(--rp-ui-base-e-100);
+    }
+  }
+
+  &__item {
+    position: relative;
+
+    &::before {
+      position: absolute;
+      top: 24px;
+      left: -9px;
+      content: '';
+      display: block;
+      width: 1px;
+      height: calc(100% - 42px);
+      background-color: var(--rp-ui-base-e-100);
+    }
+
+    &-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px;
+      cursor: pointer;
+      height: 20px;
+
+      &--text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 13px;
+        font-family: $FONT-ROBOTO-MEDIUM;
+        font-weight: 500;
+        color: var(--rp-ui-base-almost-black);
+      }
+
+      &--counter {
+        font-size: 13px;
+        font-family: $FONT-ROBOTO-REGULAR;
+        color: var(--rp-ui-base-e-400);
+      }
+
+      &:hover {
+        background-color: var(--rp-ui-base-bg-100);
+        border-radius: 4px;
+      }
+
+      &--active {
+        padding: 6.4px;
+        border: 2px solid var(--rp-ui-base-topaz-focused);
+        border-radius: 4px;
+        box-sizing: border-box;
+        height: 36px;
+      }
+    }
+
+    &-content > svg {
+      position: absolute;
+      top: 8px;
+      left: -16px;
+      transform: rotate(-90deg);
+    }
+
+    &--open > div {
+      > svg {
+        transform: none;
+      }
+    }
+  }
+
+  &__tools {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    margin-right: 8px;
+    height: 20px;
+    visibility: hidden;
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+
+    button svg {
+      width: 16px;
+      height: 100%;
+    }
+
+    &--shown {
+      visibility: visible;
+    }
+
+    &:hover div:first-child {
+      svg path {
+        fill: var(--rp-ui-base-topaz-hover);
+      }
+    }
+  }
+
+  &__meatball {
+    display: flex;
+    align-items: center;
+
+    svg path {
+      fill: var(--rp-ui-base-e-300);
+    }
+
+    &--active {
+      svg path {
+        fill: var(--rp-ui-base-topaz-pressed);
+      }
+    }
+  }
+}
