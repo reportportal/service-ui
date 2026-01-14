@@ -124,6 +124,7 @@ const DescriptionModalComponent = ({
       cancelButton={cancelButton}
       allowCloseOutside={!dirty}
       onClose={hideModal}
+      scrollable
     >
       {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
       <form onSubmit={handleSubmit(onSubmit)} className={cx('description-modal__form')}>

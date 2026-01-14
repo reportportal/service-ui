@@ -24,14 +24,22 @@ import {
   getAllTestCasesAction,
 } from 'controllers/testCase';
 import { getTestCaseRequestParams } from '../utils';
+import { useLastItemOnThePage } from './useLastItemOnThePage';
 
-export const useRefetchCurrentTestCases = () => {
+export const useRefetchCurrentTestCases = (numberOfLastElements?: number) => {
   const dispatch = useDispatch();
   const urlFolderId = useSelector(urlFolderIdSelector);
   const testCasesPageData = useSelector(testCasesPageSelector);
+  const { updateUrl, isSingleItemOnTheLastPage } = useLastItemOnThePage({ numberOfLastElements });
 
   return useCallback(() => {
     const paginationParams = getTestCaseRequestParams(testCasesPageData);
+
+    if (isSingleItemOnTheLastPage) {
+      updateUrl();
+
+      return;
+    }
 
     if (urlFolderId) {
       dispatch(
@@ -43,5 +51,5 @@ export const useRefetchCurrentTestCases = () => {
     } else {
       dispatch(getAllTestCasesAction(paginationParams));
     }
-  }, [dispatch, urlFolderId, testCasesPageData]);
+  }, [dispatch, urlFolderId, testCasesPageData, isSingleItemOnTheLastPage, updateUrl]);
 };
