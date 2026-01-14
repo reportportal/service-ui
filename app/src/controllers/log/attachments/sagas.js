@@ -94,14 +94,24 @@ export function fetchFileData({ projectKey, id }, params) {
 /* HAR */
 function* openHarModalWorker(data) {
   const harData = yield call(fetchFileData, data);
-  yield put(showModalAction({ id: ATTACHMENT_HAR_FILE_MODAL_ID, data: { harData } }));
+  yield put(
+    showModalAction({
+      id: ATTACHMENT_HAR_FILE_MODAL_ID,
+      data: { harData, fileName: data.fileName },
+    }),
+  );
 }
 
 /* IMAGE */
 function* openImageModalsWorker(data) {
   const imageData = yield call(fetchFileData, data, { responseType: 'blob' });
   const imageURL = URL.createObjectURL(imageData);
-  yield put(showModalAction({ id: ATTACHMENT_IMAGE_MODAL_ID, data: { image: imageURL } }));
+  yield put(
+    showModalAction({
+      id: ATTACHMENT_IMAGE_MODAL_ID,
+      data: { image: imageURL, fileName: data.fileName },
+    }),
+  );
   yield take(HIDE_MODAL);
   URL.revokeObjectURL(imageURL);
 }
@@ -116,7 +126,7 @@ function* openBinaryModalWorker(data) {
   yield put(
     showModalAction({
       id: ATTACHMENT_CODE_MODAL_ID,
-      data: { extension: data.extension, content, id: data.id },
+      data: { extension: data.extension, content, id: data.id, fileName: data.fileName },
     }),
   );
 }
@@ -127,7 +137,7 @@ const ATTACHMENT_MODAL_WORKERS = {
   [ATTACHMENT_CODE_MODAL_ID]: openBinaryModalWorker,
 };
 
-function* openAttachmentInModal({ payload: { id, contentType } }) {
+function* openAttachmentInModal({ payload: { id, contentType, fileName } }) {
   const modalId = getAttachmentModalId(contentType);
   const projectKey = yield select(projectKeySelector);
 
@@ -137,6 +147,7 @@ function* openAttachmentInModal({ payload: { id, contentType } }) {
       extension: extractExtension(contentType),
       contentType,
       id,
+      fileName: fileName || createAttachmentName(id, contentType),
     };
     try {
       yield call(ATTACHMENT_MODAL_WORKERS[modalId], data);
