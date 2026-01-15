@@ -45,6 +45,7 @@ export const ManualLaunchesPage = () => {
     usePagination({
       totalItems: totalElements,
       itemsPerPage: ITEMS_PER_PAGE_LIMIT,
+      shouldSaveUserPreferences: true,
     });
 
   const offset = (activePage - 1) * pageSize;
@@ -91,7 +92,7 @@ export const ManualLaunchesPage = () => {
         <ManualLaunchesPageContent fullLaunches={content} isLoading={isLoading} />
       </div>
       <div className={cx('sticky-wrapper')}>
-        {totalPages > 1 && (
+        {Boolean(totalElements) && (
           <div className={cx('pagination')}>
             <Pagination
               pageSize={pageSize}

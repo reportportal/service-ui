@@ -82,7 +82,6 @@ export const AllTestCasesPage = ({
     usePagination({
       totalItems: testCasesPageData?.totalElements,
       itemsPerPage: TestCasePageDefaultValues.limit,
-      shouldSaveUserPreferences: true,
     });
   const [selectedRows, setSelectedRows] = useState<SelectedTestCaseRow[]>([]);
   const folderId = useSelector(urlFolderIdSelector);
