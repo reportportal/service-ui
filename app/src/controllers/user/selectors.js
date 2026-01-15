@@ -16,7 +16,16 @@
 
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { createSelector } from 'reselect';
-import { START_TIME_FORMAT_ABSOLUTE, START_TIME_FORMAT_RELATIVE } from './constants';
+import { DEFAULT_LOGS_SIZE } from 'common/constants/logsSettings';
+import {
+  LOGS_SIZE_KEY,
+  NO_LOGS_COLLAPSING_KEY,
+  LOGS_PAGINATION_ENABLED_KEY,
+  LOGS_FULL_WIDTH_MODE_KEY,
+  LOGS_COLORIZED_BACKGROUND_KEY,
+  START_TIME_FORMAT_ABSOLUTE,
+  START_TIME_FORMAT_RELATIVE,
+} from './constants';
 
 const userSelector = (state) => state.user || {};
 export const userInfoSelector = (state) => userSelector(state).info || {};
@@ -84,3 +93,21 @@ export const availableProjectsSelector = createSelector(
 export const apiKeysSelector = (state) => userSelector(state).apiKeys || [];
 
 export const activeProjectKeySelector = (state) => userSelector(state).activeProjectKey;
+
+export const activeProjectSettingsSelector = (state) =>
+  userSelector(state).activeProjectSettings || {};
+
+export const noLogsCollapsingSelector = (state) =>
+  activeProjectSettingsSelector(state)?.[NO_LOGS_COLLAPSING_KEY] || false;
+
+export const logsPaginationEnabledSelector = (state) =>
+  activeProjectSettingsSelector(state)?.[LOGS_PAGINATION_ENABLED_KEY] ?? true;
+
+export const logsSizeSelector = (state) =>
+  activeProjectSettingsSelector(state)?.[LOGS_SIZE_KEY] || DEFAULT_LOGS_SIZE;
+
+export const logsFullWidthModeSelector = (state) =>
+  activeProjectSettingsSelector(state)?.[LOGS_FULL_WIDTH_MODE_KEY] || false;
+
+export const logsColorizedBackgroundSelector = (state) =>
+  activeProjectSettingsSelector(state)?.[LOGS_COLORIZED_BACKGROUND_KEY] || false;

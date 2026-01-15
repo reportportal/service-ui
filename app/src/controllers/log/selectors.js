@@ -34,6 +34,7 @@ import {
   groupItemsByParent,
 } from 'controllers/testItem';
 import { debugModeSelector } from 'controllers/launch';
+import { logsPaginationEnabledSelector } from 'controllers/user';
 import { extractNamespacedQuery, createNamespacedQuery } from 'common/utils/routingUtils';
 import { getPreviousItem, getNextItem, getUpdatedLogQuery } from './utils';
 import {
@@ -264,14 +265,22 @@ export const logViewModeSelector = (state) => {
 const isLogPageWithoutNestedSteps = createSelector(
   logItemsSelector,
   pagePropertiesSelector,
-  (items, pageQuery) => {
+  parentItemSelector,
+  logsPaginationEnabledSelector,
+  (items, pageQuery, parentItem, logsPaginationEnabled) => {
     const query = extractNamespacedQuery(pageQuery, NAMESPACE);
     const logStatus = query[LOG_STATUS_FILTER_KEY];
     const hasNestedSteps = items.some((item) => 'hasContent' in item);
-    return !hasNestedSteps && !logStatus;
+    const parentHasNestedSteps = !logsPaginationEnabled && parentItem?.hasNestedSteps;
+    return !hasNestedSteps && !logStatus && !parentHasNestedSteps;
   },
 );
 export const isLogPageWithNestedSteps = createSelector(
   isLogPageWithoutNestedSteps,
   (value) => !value,
 );
+
+export const loadedPagesRangeSelector = (state) =>
+  logSelector(state).pageRange || { start: 1, end: 1 };
+
+export const loadingDirectionSelector = (state) => logSelector(state).loadingDirection;

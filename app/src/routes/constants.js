@@ -37,7 +37,7 @@ import { LoginPage } from 'pages/outside/loginPage';
 import { NotFoundPage } from 'pages/outside/notFoundPage';
 import { RegistrationPage } from 'pages/outside/registrationPage';
 import { TestItemPage } from 'pages/inside/testItemPage';
-import { LogsPage } from 'pages/inside/logsPage';
+import { LogsPageContainer } from 'pages/inside/logsPage';
 import { TestPlansPage } from 'pages/inside/testPlansPage';
 import { TestPlanDetailsPage } from 'pages/inside/testPlansPage/testPlanDetailsPage';
 import {
@@ -188,8 +188,12 @@ export const pageRendering = {
     rawContent: true,
   },
   [TEST_ITEM_PAGE]: { component: TestItemPage, layout: ProjectLayout },
-  [PROJECT_LOG_PAGE]: { component: LogsPage, layout: ProjectLayout },
-  [PROJECT_USERDEBUG_LOG_PAGE]: { component: LogsPage, layout: ProjectLayout },
+  [PROJECT_LOG_PAGE]: { component: LogsPageContainer, layout: ProjectLayout, rawContent: true },
+  [PROJECT_USERDEBUG_LOG_PAGE]: {
+    component: LogsPageContainer,
+    layout: ProjectLayout,
+    rawContent: true,
+  },
   [HISTORY_PAGE]: { component: HistoryPage, layout: ProjectLayout },
   [UNIQUE_ERRORS_PAGE]: { component: UniqueErrorsPage, layout: ProjectLayout },
   [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: {

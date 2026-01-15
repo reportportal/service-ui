@@ -23,6 +23,7 @@ import {
   projectInfoIdSelector,
 } from 'controllers/project/selectors';
 import { activeOrganizationIdSelector } from 'controllers/organization/selectors';
+import { PASSWORD_MIN_ALLOWED_LENGTH } from 'common/constants/validation';
 import {
   ANALYTICS_INSTANCE_KEY,
   ANALYTICS_ALL_KEY,
@@ -37,6 +38,7 @@ import {
   IMPORTANT_LAUNCHES_FEATURE_KEY,
   PERSONAL_ORGANIZATIONS_KEY,
   TMS_ENABLED_KEY,
+  PASSWORD_MIN_LENGTH_KEY,
 } from './constants';
 
 export const appInfoSelector = (state) => state.appInfo || {};
@@ -71,6 +73,8 @@ export const importantLaunchesEnabledSelector = (state) =>
   extensionsConfigSelector(state)[IMPORTANT_LAUNCHES_FEATURE_KEY] === 'true';
 export const sessionExpirationTimeSelector = (state) =>
   Number(extensionsConfigSelector(state)[SERVER_SESSION_EXPIRATION_KEY]) || Infinity;
+export const passwordMinLengthSelector = (state) =>
+  Number(extensionsConfigSelector(state)[PASSWORD_MIN_LENGTH_KEY]) || PASSWORD_MIN_ALLOWED_LENGTH;
 export const serverSidebarLinksSelector = createSelector(
   extensionsConfigSelector,
   (extensionsConfig) => JSON.parse(extensionsConfig?.[SERVER_SIDEBAR_LINKS_KEY] || `[]`),

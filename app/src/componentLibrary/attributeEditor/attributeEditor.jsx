@@ -36,8 +36,13 @@ const cx = classNames.bind(styles);
 
 const attributeKeyValidator = commonValidators.attributeKey;
 const attributeValueValidator = composeBoundValidators([
+  commonValidators.requiredField,
   bindMessageToValidator(validate.attributeValue, 'attributeValueLengthHint'),
 ]);
+const attributeFilterValueValidator = bindMessageToValidator(
+  validate.nonRequiredAttributeValueValidator,
+  'attributeValueLengthHint',
+);
 
 export const AttributeEditor = ({
   attributes,
@@ -48,14 +53,24 @@ export const AttributeEditor = ({
   attribute,
   keyPlaceholder,
   valuePlaceholder,
+  keyLabel,
+  valueLabel,
   editorDefaultOpen,
   autocompleteProps,
+  isAttributeValueRequired,
+  allowCustomValues = true,
 }) => {
   const [keyTouched, setTouchKey] = useState(false);
   const [valueTouched, setTouchValue] = useState(false);
+
+  const getAttributeValueValidator = (value) =>
+    isAttributeValueRequired
+      ? attributeValueValidator(value)
+      : attributeFilterValueValidator(value);
+
   const getValidationErrors = (key, value) => ({
     key: attributeKeyValidator(key),
-    value: attribute.edited && valueTouched && attributeValueValidator(value),
+    value: getAttributeValueValidator(value),
   });
 
   const keyEditorRef = useRef(null);
@@ -67,7 +82,11 @@ export const AttributeEditor = ({
     isKeyEdited: false,
   });
 
-  const clearInputValues = () => setState({ key: '', value: '', errors: '', isKeyEdited: false });
+  const clearInputValues = () => {
+    setState({ key: '', value: '', errors: getValidationErrors('', ''), isKeyEdited: false });
+    setTouchValue(false);
+    setTouchKey(false);
+  };
 
   useEffect(() => {
     if (keyEditorRef.current) {
@@ -109,7 +128,6 @@ export const AttributeEditor = ({
   const isAttributeEmpty = () => isEmpty(state.key) && isEmpty(state.value);
 
   const isFormValid = () =>
-    state.value &&
     !state.errors.key &&
     !state.errors.value &&
     isAttributeUnique() &&
@@ -162,8 +180,25 @@ export const AttributeEditor = ({
     keyEditorRef.current = node;
   };
 
+  const getAutocompleteProps = (allAutocompleteProps, label) => {
+    const { keyMenuClassName, valueMenuClassName, menuClassName, ...restProps } =
+      allAutocompleteProps || {};
+    return {
+      ...restProps,
+      inputProps: {
+        ...allAutocompleteProps?.inputProps,
+        label,
+      },
+    };
+  };
+
+  const keyAutocompleteProps = getAutocompleteProps(autocompleteProps, keyLabel);
+  const valueAutocompleteProps = getAutocompleteProps(autocompleteProps, valueLabel);
+  const keyMenuClassName = autocompleteProps?.keyMenuClassName;
+  const valueMenuClassName = autocompleteProps?.valueMenuClassName;
+
   return (
-    <div className={cx('attribute-editor')}>
+    <div className={cx('attribute-editor', { 'with-labels': !!(keyLabel || valueLabel) })}>
       <FieldErrorHint
         provideHint={false}
         error={state.errors.key}
@@ -177,7 +212,7 @@ export const AttributeEditor = ({
           minLength={1}
           attributeComparator={byKeyComparator}
           getURI={getURIKey}
-          creatable
+          creatable={allowCustomValues}
           placeholder={keyPlaceholder}
           onChange={handleKeyChange}
           value={state.key}
@@ -185,8 +220,8 @@ export const AttributeEditor = ({
           attributeValue={state.value}
           onInputChange={handleAttributeKeyInputChange}
           optionVariant="key-variant"
-          menuClassName={cx('menu')}
-          {...autocompleteProps}
+          menuClassName={cx('menu', keyMenuClassName)}
+          {...keyAutocompleteProps}
         />
       </FieldErrorHint>
       <div className={cx('separator')}>:</div>
@@ -202,16 +237,16 @@ export const AttributeEditor = ({
           attributes={attributes}
           attributeComparator={byValueComparator}
           getURI={getURIValue(state.key)}
-          creatable
+          creatable={allowCustomValues}
           onChange={handleValueChange}
           value={state.value}
           placeholder={valuePlaceholder}
           attributeKey={state.key}
           attributeValue={state.value}
-          isRequired
+          isRequired={isAttributeValueRequired}
           optionVariant="value-variant"
-          menuClassName={cx('menu')}
-          {...autocompleteProps}
+          menuClassName={cx('menu', valueMenuClassName)}
+          {...valueAutocompleteProps}
         />
       </FieldErrorHint>
       <div className={cx('buttons')}>
@@ -251,8 +286,12 @@ AttributeEditor.propTypes = {
   attribute: PropTypes.object,
   keyPlaceholder: PropTypes.string,
   valuePlaceholder: PropTypes.string,
+  keyLabel: PropTypes.string,
+  valueLabel: PropTypes.string,
   editorDefaultOpen: PropTypes.bool,
   autocompleteProps: PropTypes.object,
+  isAttributeValueRequired: PropTypes.bool,
+  allowCustomValues: PropTypes.bool,
 };
 AttributeEditor.defaultProps = {
   attributes: [],
@@ -266,6 +305,10 @@ AttributeEditor.defaultProps = {
   attribute: {},
   keyPlaceholder: 'Key',
   valuePlaceholder: 'Value',
+  keyLabel: '',
+  valueLabel: '',
   editorDefaultOpen: false,
   autocompleteProps: {},
+  isAttributeValueRequired: true,
+  allowCustomValues: true,
 };

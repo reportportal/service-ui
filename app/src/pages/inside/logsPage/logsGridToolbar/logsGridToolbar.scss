@@ -22,6 +22,7 @@
   position: sticky;
   top: 0;
   display: flex;
+  gap: 32px;
   justify-content: space-between;
   background-color: $COLOR--white-two;
   padding: 20px 15px;
@@ -31,21 +32,17 @@
   }
 }
 
-.aside {
+%aside {
   display: flex;
+  gap: 32px;
 }
 
-.log-level {
-  width: 280px;
+.aside {
+  @extend %aside;
 }
 
 .aside-element-block {
-  @extend .aside;
-  margin-right: 35px;
-}
-
-.aside-element {
-  margin-left: 20px;
+  @extend %aside;
 }
 
 .mode-buttons {
@@ -76,12 +73,7 @@
   }
 }
 
-.action-buttons {
-  margin-left: 20px;
-}
-
 .pagination {
-  margin-left: 30px;
   display: flex;
   align-items: center;
 }
@@ -102,4 +94,8 @@
 
 .error-counter {
   font-family: $FONT-ROBOTO-BOLD;
+}
+
+.logs-settings {
+  margin-left: 15px;
 }

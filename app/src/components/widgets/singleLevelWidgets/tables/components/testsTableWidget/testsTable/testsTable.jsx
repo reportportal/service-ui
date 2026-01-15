@@ -16,7 +16,7 @@
 
 import * as React from 'react';
 import classNames from 'classnames/bind';
-import { func } from 'prop-types';
+import { func, bool } from 'prop-types';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { TestsTableHeader } from './testsTableHeader';
 import { TestsTableBody } from './testsTableBody';
@@ -25,7 +25,13 @@ import styles from './testsTable.scss';
 
 const cx = classNames.bind(styles);
 
-export const TestsTable = ({ tests, columns, getMatrixTooltip, onItemClick }) => (
+export const TestsTable = ({
+  tests,
+  columns,
+  getMatrixTooltip,
+  onItemClick,
+  opensLinkInNewTab,
+}) => (
   <div className={cx('tests-table')}>
     <ScrollWrapper>
       <TestsTableHeader columns={columns} />
@@ -34,6 +40,7 @@ export const TestsTable = ({ tests, columns, getMatrixTooltip, onItemClick }) =>
         tests={tests}
         getMatrixTooltip={getMatrixTooltip}
         onItemClick={onItemClick}
+        opensLinkInNewTab={opensLinkInNewTab}
       />
     </ScrollWrapper>
   </div>
@@ -44,9 +51,11 @@ TestsTable.propTypes = {
   columns: PTColumns.isRequired,
   getMatrixTooltip: func,
   onItemClick: func,
+  opensLinkInNewTab: bool,
 };
 
 TestsTable.defaultProps = {
   getMatrixTooltip: null,
   onItemClick: null,
+  opensLinkInNewTab: false,
 };

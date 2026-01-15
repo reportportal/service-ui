@@ -32,5 +32,11 @@ export const getBasicSearchEventParameters = (category) =>
 export const getBasicPerformanceEventParameters = (category) =>
   getBasicEventParameters('performance', category);
 
+export const getBasicSelectEventParameters = (category) =>
+  getBasicEventParameters('select', category);
+
 export const normalizeEventParameter = (parameter = '') =>
   parameter.toLowerCase().trim().replace(/\s+|-/g, '_');
+
+export const normalizeEventParameterCase = (str = '') =>
+  str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);

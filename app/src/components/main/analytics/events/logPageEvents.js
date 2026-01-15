@@ -150,11 +150,11 @@ export const LOG_PAGE_EVENTS = {
     element_name: 'microseconds',
     switcher: isActive ? 'on' : 'off',
   }),
-  CLICK_JUMP_TO_ERROR_LOG: {
+  clickJumpToLog: (place = 'stack_trace') => ({
     ...basicLogPageClickEventParameters,
-    place: 'stack_trace',
+    place,
     icon_name: 'jump_to',
-  },
+  }),
   NESTED_STEP_EXPAND: {
     ...basicNestedStepsClickEventParameters,
     icon_name: 'expand_nested_step',
@@ -244,6 +244,51 @@ export const LOG_PAGE_EVENTS = {
     element_name: 'play_video_sauce_labs',
   },
   getChangeItemStatusEvent: getChangeItemStatusEventCreator(LOG_PAGE),
+  clickSettingsIcon: (isEnabled) => ({
+    ...basicLogPageClickEventParameters,
+    icon_name: 'settings',
+    status: isEnabled ? 'on' : 'off',
+  }),
+  getToggleNoLogsCollapsingEvent: (isEnabled) => ({
+    ...basicLogPageClickEventParameters,
+    element_name: 'no_logs_collapsing',
+    place: 'settings',
+    status: isEnabled ? 'enabled' : 'disabled',
+  }),
+  getClickPaginationOptionEvent: (isEnabled) => ({
+    ...basicLogPageClickEventParameters,
+    place: 'settings',
+    element_name: isEnabled ? 'turn_on_pagination' : 'turn_off_pagination',
+  }),
+  getTogglePaginationEvent: (isEnabled) => ({
+    ...basicLogPageClickEventParameters,
+    place: 'settings',
+    modal: isEnabled ? 'turn_on_pagination' : 'turn_off_pagination',
+    element_name: isEnabled ? 'turn_on_reload' : 'turn_off_reload',
+  }),
+  getLogsSizeChangeEvent: (logsSize) => ({
+    ...basicLogPageClickEventParameters,
+    element_name: 'console_mode_log_size',
+    place: 'settings',
+    condition: logsSize,
+  }),
+  getToggleFullWidthModeEvent: (isEnabled) => ({
+    ...basicLogPageClickEventParameters,
+    element_name: 'full_width_size',
+    place: 'settings',
+    status: isEnabled ? 'enabled' : 'disabled',
+  }),
+  getToggleColorizedBackgroundEvent: (isEnabled) => ({
+    ...basicLogPageClickEventParameters,
+    element_name: 'colorized_background',
+    place: 'settings',
+    status: isEnabled ? 'enabled' : 'disabled',
+  }),
+  ENTER_LOG_MSG_FILTER: {
+    ...basicLogPageClickEventParameters,
+    place: 'all_logs',
+    element_name: 'search',
+  },
   // GA3 events
   DEFECT_TYPE_TAG: {
     category: LOG_PAGE,
@@ -259,11 +304,6 @@ export const LOG_PAGE_EVENTS = {
     category: LOG_PAGE,
     action: 'Click on Btn Next Log message page',
     label: 'Transition to next log message page',
-  },
-  ENTER_LOG_MSG_FILTER: {
-    category: LOG_PAGE,
-    action: 'Enter filter parameter in Log message input',
-    label: 'Filter log messages by parameter',
   },
   UNLINK_ISSUES_ACTION: getUnlinkIssueActionEvent(LOG_PAGE),
   // EDIT_DEFECT_MODAL

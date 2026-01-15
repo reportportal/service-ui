@@ -37,7 +37,16 @@ export const messages = defineMessages({
   },
 });
 
-export const DateRange = ({ startDate, setStartDate, endDate, setEndDate }) => {
+export const DateRange = ({
+  startDate,
+  setStartDate,
+  endDate,
+  setEndDate,
+  startPopperClassName = '',
+  startCalendarClassName = '',
+  endPopperClassName = '',
+  endCalendarClassName = '',
+}) => {
   const { formatMessage } = useIntl();
 
   return (
@@ -53,6 +62,8 @@ export const DateRange = ({ startDate, setStartDate, endDate, setEndDate }) => {
               endDate={endDate}
               onChange={setStartDate}
               selects={'start'}
+              popperClassName={startPopperClassName}
+              calendarClassName={startCalendarClassName}
             />
           </div>
         </div>
@@ -65,6 +76,8 @@ export const DateRange = ({ startDate, setStartDate, endDate, setEndDate }) => {
               endDate={endDate}
               onChange={setEndDate}
               selects={'end'}
+              popperClassName={endPopperClassName}
+              calendarClassName={endCalendarClassName}
             />
           </div>
         </div>
@@ -78,4 +91,8 @@ DateRange.propTypes = {
   setStartDate: PropTypes.func.isRequired,
   endDate: PropTypes.string.isRequired,
   setEndDate: PropTypes.func.isRequired,
+  startPopperClassName: PropTypes.string,
+  startCalendarClassName: PropTypes.string,
+  endPopperClassName: PropTypes.string,
+  endCalendarClassName: PropTypes.string,
 };

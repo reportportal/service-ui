@@ -313,6 +313,30 @@ const messages = defineMessages({
     id: 'ImportTestCaseModal.testCaseImportFailed',
     defaultMessage: 'Failed to import Test Case.',
   },
+  createLogTypeSuccess: {
+    id: 'LogTypeModal.create.createLogTypeSuccess',
+    defaultMessage: 'Log type has been created successfully',
+  },
+  createLogTypeError: {
+    id: 'LogTypeModal.create.createLogTypeError',
+    defaultMessage: 'Failed to save new log type. Please try again',
+  },
+  updateLogTypeSuccess: {
+    id: 'LogTypeModal.update.updateLogTypeSuccess',
+    defaultMessage: 'The log type has been updated successfully',
+  },
+  updateLogTypeError: {
+    id: 'LogTypeModal.update.updateLogTypeError',
+    defaultMessage: 'Failed to update the log type. Please try again',
+  },
+  deleteLogTypeSuccess: {
+    id: 'LogTypeModal.delete.deleteLogTypeSuccess',
+    defaultMessage: 'The log type has been deleted successfully',
+  },
+  deleteLogTypeError: {
+    id: 'LogTypeModal.delete.deleteLogTypeError',
+    defaultMessage: 'Failed to delete the log type. Please try again',
+  },
 });
 
 @injectIntl

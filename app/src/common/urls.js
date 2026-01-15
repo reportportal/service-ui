@@ -190,6 +190,9 @@ export const URLS = {
     (searchTerm = '') =>
       `${urlBase}project/${projectKey}/usernames?filter.cnt.users=${searchTerm}`,
   projectIndex: (projectKey) => `${urlBase}project/${projectKey}/index`,
+  projectLogTypes: (projectKey) => `${urlCommonBase}projects/${projectKey}/log-types`,
+  projectLogTypeById: (projectKey, logTypeId) =>
+    `${urlCommonBase}projects/${projectKey}/log-types/${logTypeId}`,
 
   projectStatus: (projectKey, interval) =>
     `${urlBase}project/list/${projectKey}${getQueryParams({
@@ -214,6 +217,7 @@ export const URLS = {
     removeTrailingSlash(`${urlBase}${projectKey}/item${getQueryParams({ ids })}`),
   testItemsWithProviderType: (projectKey, ids) =>
     `${urlBase}${projectKey}/item/v2${getQueryParams({ ids })}`,
+  testItemsBulk: (projectKey) => `${urlBase}${projectKey}/item/bulk`,
   testItem: (projectKey, id = '') => removeTrailingSlash(`${urlBase}${projectKey}/item/${id}`),
   testItemStatistics: (projectKey) => `${urlBase}${projectKey}/item/statistics`,
   testItemUpdate: (projectKey, id = '') => `${urlBase}${projectKey}/item/${id}/update`,
@@ -256,18 +260,23 @@ export const URLS = {
   logItem: (projectKey, itemId, level) =>
     `${urlBase}${projectKey}/log${getQueryParams({
       'filter.eq.item': itemId,
-      'filter.gte.level': level,
+      ...(level && { 'filter.gte.level': level }),
       'page.page': 1,
       'page.size': 1,
       'page.sort': 'logTime,DESC',
     })}`,
   logItems: (projectKey, itemId, level) =>
     `${urlBase}${projectKey}/log/nested/${itemId}${getQueryParams({
-      'filter.gte.level': level,
+      ...(level && { 'filter.gte.level': level }),
     })}`,
   errorLogs: (projectKey, itemId, level) =>
     `${urlBase}${projectKey}/log/locations/${itemId}${getQueryParams({
-      'filter.gte.level': level,
+      ...(level && { 'filter.gte.level': level }),
+    })}`,
+  searchLogs: (projectKey, itemId, level) =>
+    `${urlBase}${projectKey}/log/locations/search/${itemId}${getQueryParams({
+      excludeLogContent: false,
+      ...(level && { 'filter.gte.level': level }),
     })}`,
   logsUnderPath: (projectKey, path, excludedRetryParentId) =>
     `${urlBase}${projectKey}/log${getQueryParams({
@@ -277,7 +286,7 @@ export const URLS = {
   launchLogs: (projectKey, itemId, level) =>
     `${urlBase}${projectKey}/log${getQueryParams({
       'filter.eq.launch': itemId,
-      'filter.gte.level': level,
+      ...(level && { 'filter.gte.level': level }),
     })}`,
   logItemActivity: (projectKey, itemId) =>
     removeTrailingSlash(`${urlBase}${projectKey}/activity/item/${itemId}`),
@@ -293,7 +302,6 @@ export const URLS = {
   bulkLastLogs: (projectKey) => `${urlBase}${projectKey}/log/under`,
   users: (ids = []) => `${urlBase}users?ids=${ids.join(',')}`,
   userRegistration: () => `${urlBase}users/registration`,
-  userValidateRegistrationInfo: () => `${urlBase}users/registration/info`,
   userPasswordReset: () => `${urlBase}users/password/reset`,
   userPasswordResetToken: (token) => `${urlBase}users/password/reset/${token}`,
   userPasswordRestore: () => `${urlBase}users/password/restore`,

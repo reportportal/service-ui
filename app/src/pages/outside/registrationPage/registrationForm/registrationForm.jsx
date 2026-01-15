@@ -19,11 +19,14 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import { reduxForm, SubmissionError } from 'redux-form';
+import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
 import { commonValidators } from 'common/utils/validation';
+import { passwordMinLengthSelector } from 'controllers/appInfo';
+import { validationLocalization } from 'common/constants/localization/validationLocalization';
 import LoginIcon from './img/login-icon-inline.svg';
 import NameIcon from './img/name-icon-inline.svg';
 import EmailIcon from './img/email-icon-inline.svg';
@@ -59,16 +62,24 @@ const messages = defineMessages({
   },
 });
 
+@connect((state) => ({
+  minLength: passwordMinLengthSelector(state),
+}))
+@injectIntl
 @reduxForm({
   form: 'registration',
-  validate: ({ login, name, password, confirmPassword }) => ({
-    password: commonValidators.password(password),
-    confirmPassword: (!confirmPassword || confirmPassword !== password) && 'confirmPasswordHint',
-    login: commonValidators.login(login),
-    name: commonValidators.userName(name),
-  }),
+  validate: ({ login, name, password, confirmPassword }, { minLength, intl }) => {
+    const passwordMessage = intl.formatMessage(validationLocalization.passwordHint, { minLength });
+    const passwordValidator = commonValidators.createPasswordValidator(minLength, passwordMessage);
+
+    return {
+      password: passwordValidator(password),
+      confirmPassword: (!confirmPassword || confirmPassword !== password) && 'confirmPasswordHint',
+      login: commonValidators.login(login),
+      name: commonValidators.userName(name),
+    };
+  },
 })
-@injectIntl
 export class RegistrationForm extends Component {
   static propTypes = {
     submitForm: PropTypes.func,

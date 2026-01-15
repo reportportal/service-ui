@@ -144,17 +144,36 @@ describe('validate.oldPassword', () => {
   });
 });
 
-describe('validate.password', () => {
+describe('validate.createPasswordValidator(8)', () => {
+  const passwordValidator = validate.createPasswordValidator(8);
+
   test('validation should be correct', () => {
-    expect(validate.password('aA1!5678')).toBe(true);
-    expect(validate.password('Aa1@3@.?n&()*^HFU')).toBe(true);
-    expect(validate.password('Firstname+lastname@ex1')).toBe(true);
+    expect(passwordValidator('aA1!5678')).toBe(true);
+    expect(passwordValidator('Aa1@3@.?n&()*^HFU')).toBe(true);
+    expect(passwordValidator('Firstname+lastname@ex1')).toBe(true);
   });
+
   test('validation should be not correct', () => {
-    expect(validate.password(undefined)).toBe(false);
-    expect(validate.password('123')).toBe(false);
-    expect(validate.password('12345678ADd123456789012345')).toBe(false);
-    expect(validate.password('aA1_567')).toBe(false);
+    expect(passwordValidator(undefined)).toBe(false);
+    expect(passwordValidator('123')).toBe(false);
+    expect(passwordValidator('12345678ADd123456789012345')).toBe(false);
+    expect(passwordValidator('aA1_567')).toBe(false);
+  });
+});
+
+describe('validate.createPasswordValidator(12)', () => {
+  const passwordValidator = validate.createPasswordValidator(12);
+
+  test('validation should be correct', () => {
+    expect(passwordValidator('aA1!567890ab')).toBe(true);
+    expect(passwordValidator('Aa1@3@.?n&()*^HFU')).toBe(true);
+    expect(passwordValidator('Firstname+lastname@ex1')).toBe(true);
+  });
+
+  test('validation should be not correct', () => {
+    expect(passwordValidator('aA1!5678')).toBe(false);
+    expect(passwordValidator('Aa1@3@.?')).toBe(false);
+    expect(passwordValidator('F+name@ex1')).toBe(false);
   });
 });
 

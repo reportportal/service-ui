@@ -15,10 +15,10 @@
  */
 
 .log-message-block {
+  display: flex;
+  gap: 4px;
   overflow: hidden;
-  color: $COLOR--charcoal-grey;
-  font-size: 11px;
-  font-family: $FONT-MONOSPACE;
+  color: inherit;
   word-break: break-all;
   white-space: pre-wrap;
 
@@ -26,15 +26,42 @@
     display: table;
     width: 100%;
     table-layout: fixed;
-    padding-bottom: 5px;
-    line-height: 18px;
+  }
+
+  .navigate-btn {
+    align-self: flex-start;
+    margin: 1px;
+    padding: 0;
+    border: none;
+    font: inherit;
+    background: none;
+    color: $COLOR--topaz;
+    cursor: pointer;
+  }
+
+  .navigate-icon {
+    display: inline-flex;
+    width: 13px;
+    height: 9px;
   }
 }
 
 .time {
   position: relative;
-  padding-right: 15px;
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
+  }
+}
+
+.markdown-viewer {
+  font-size: inherit;
+  line-height: inherit;
+  font-family: inherit;
+  color: inherit;
+
+  p {
+    line-height: inherit;
+    margin-block-start: 0;
+    margin-block-end: 0;
   }
 }

@@ -178,6 +178,11 @@ export const LAUNCHES_PAGE_EVENTS = {
     element_name: 'add_filters',
   },
   getClickOnAnalyzeUniqueErrorsEvent: getClickOnAnalyzeUniqueErrorsEventCreator(LAUNCHES_PAGE),
+  getClickOnExecutionStatisticIconEvent: (type) => ({
+    ...basicClickEventParametersLaunchPage,
+    element_name: 'execution_statistic_icon',
+    type,
+  }),
 };
 
 export const LAUNCHES_MODAL_EVENTS = {

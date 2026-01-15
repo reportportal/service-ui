@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, Fragment } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Attachments } from 'pages/inside/logsPage/logItemInfo/logItemInfoTabs/attachments';
 import { LOG_VIEW } from 'controllers/testItem';
@@ -25,10 +25,12 @@ import { SCREEN_XS_MAX_MEDIA } from 'common/constants/screenSizeVariables';
 export class TestItemLogsToolbar extends Component {
   static propTypes = {
     parentItem: PropTypes.object,
+    className: PropTypes.string,
   };
 
   static defaultProps = {
     parentItem: {},
+    className: '',
   };
 
   state = {
@@ -52,14 +54,14 @@ export class TestItemLogsToolbar extends Component {
     });
 
   render() {
-    const { parentItem } = this.props;
+    const { parentItem, className } = this.props;
     const { isMobileView } = this.state;
 
     return (
-      <Fragment>
+      <div className={className}>
         <InfoPanel viewMode={LOG_VIEW} data={parentItem} events={LOG_PAGE_EVENTS} />
         <Attachments isMobileView={isMobileView} />
-      </Fragment>
+      </div>
     );
   }
 }
