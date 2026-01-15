@@ -23,6 +23,7 @@ import { SpringSystem } from 'rebound';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import { FOOTER_EVENTS } from 'components/main/analytics/events';
 import { forceCheck } from 'react-lazyload';
+import { scrollEventObserver, BACK_TO_TOP_EVENT } from 'common/observers/scrollObserver';
 import BackToTopIcon from './img/back-to-top-inline.svg';
 import styles from './scrollWrapper.scss';
 
@@ -57,6 +58,7 @@ export class ScrollWrapper extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    backToTopEventEnabled: PropTypes.bool,
   };
   static defaultProps = {
     initialScrollRight: false,
@@ -82,6 +84,7 @@ export class ScrollWrapper extends Component {
     withFooter: false,
     resetRequired: false,
     onReset: () => {},
+    backToTopEventEnabled: false,
   };
   state = {
     showButton: false,
@@ -138,6 +141,10 @@ export class ScrollWrapper extends Component {
     const scrollTop = this.scrollbars.getScrollTop();
     this.spring.setCurrentValue(scrollTop).setAtRest();
     this.spring.setEndValue(0);
+
+    if (this.props.backToTopEventEnabled) {
+      scrollEventObserver.publish(BACK_TO_TOP_EVENT);
+    }
   };
 
   handleScrollFrame = ({ scrollTop, scrollLeft, top }) => {

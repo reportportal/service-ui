@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,63 +14,66 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
+import { actionToPath, history } from 'redux-first-router';
+import qs from 'qs';
 import { testCaseNameLinkSelector } from 'controllers/testItem';
+import { activeDashboardIdSelector } from 'controllers/pages';
+import { activeProjectSelector } from 'controllers/user';
+import { WIDGETS_EVENTS } from 'components/main/analytics/events/ga4Events/dashboardsPageEvents';
+import routesMap from 'routes/routesMap';
 import { TestsTableWidget } from '../components/testsTableWidget';
 import * as cfg from './mostFailedTestsCfg';
 
-@connect(
-  (state) => ({
-    getTestCaseNameLink: testCaseNameLinkSelector(state),
-  }),
-  { navigate: (linkAction) => linkAction },
-)
-export class MostFailedTests extends Component {
-  static propTypes = {
-    widget: PropTypes.object.isRequired,
-    navigate: PropTypes.func.isRequired,
-    getTestCaseNameLink: PropTypes.func.isRequired,
-  };
+export const MostFailedTests = ({ widget }) => {
+  const activeProject = useSelector(activeProjectSelector);
+  const dashboardId = useSelector(activeDashboardIdSelector);
+  const { trackEvent } = useTracking();
 
-  getIssueTypeMessage = (issueType) => {
+  const getTestCaseNameLink = useMemo(() => {
+    return testCaseNameLinkSelector({ user: { activeProject } });
+  }, [activeProject]);
+
+  const getIssueTypeMessage = (issueType) => {
     const type = issueType.split('$')[2];
     return cfg.issueTypes[type];
   };
 
-  itemClickHandler = (uniqueId) => {
+  const itemClickHandler = (uniqueId) => {
     const {
-      widget: {
-        content: { result },
-      },
-      getTestCaseNameLink,
-      navigate,
-    } = this.props;
+      content: { result },
+    } = widget;
     const launchId = result.find((item) => item.uniqueId === uniqueId)?.launchId;
     const link = getTestCaseNameLink({ uniqueId, testItemIds: launchId });
 
-    navigate(link);
+    trackEvent(WIDGETS_EVENTS.clickOnMostFailedTestCaseName(dashboardId));
+
+    const path = actionToPath(link, routesMap, qs);
+    const url = history().createHref({ pathname: path });
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
-  render() {
-    const {
-      widget: {
-        content,
-        contentParameters: { contentFields, widgetOptions },
-      },
-    } = this.props;
+  const {
+    content,
+    contentParameters: { contentFields, widgetOptions },
+  } = widget;
+  const issueType = contentFields[0];
 
-    const issueType = contentFields[0];
+  return (
+    <TestsTableWidget
+      tests={content.result}
+      launch={{ name: widgetOptions.launchNameFilter }}
+      issueType={getIssueTypeMessage(issueType)}
+      columns={cfg.columns}
+      onItemClick={itemClickHandler}
+      opensLinkInNewTab
+    />
+  );
+};
 
-    return (
-      <TestsTableWidget
-        tests={content.result}
-        launch={{ name: widgetOptions.launchNameFilter }}
-        issueType={this.getIssueTypeMessage(issueType)}
-        columns={cfg.columns}
-        onItemClick={this.itemClickHandler}
-      />
-    );
-  }
-}
+MostFailedTests.propTypes = {
+  widget: PropTypes.object.isRequired,
+};

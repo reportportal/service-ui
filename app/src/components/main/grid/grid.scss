@@ -22,8 +22,33 @@
   z-index: 0;
 }
 .spinner-block {
+  position: relative;
   height: 50px;
   margin-top: 10px;
   padding: 20px;
   background-color: $COLOR--white-two;
+
+  &.inner {
+    display: table-row;
+  }
+
+  .loader {
+    position: absolute;
+    top: 0;
+  }
+}
+
+.sentinel {
+  height: 1px;
+  width: 100%;
+  position: absolute;
+  pointer-events: none;
+
+  &.top {
+    top: 0;
+  }
+
+  &.bottom {
+    bottom: 0;
+  }
 }

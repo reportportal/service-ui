@@ -19,11 +19,7 @@
   justify-content: space-between;
   padding: 10px 15px 0 15px;
   border-bottom: 1px solid $COLOR--white;
-  word-break: break-all;
-
-  @supports (word-break: break-word) {
-    word-break: break-word;
-  }
+  overflow-wrap: break-word;
 }
 
 .content {

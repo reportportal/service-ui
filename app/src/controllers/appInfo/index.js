@@ -39,6 +39,7 @@ export {
   importantLaunchesEnabledSelector,
   personalOrganizationsSelector,
   tmsEnabledSelector,
+  passwordMinLengthSelector,
 } from './selectors';
 export { isTmsEnabled } from './utils';
 export { serverSettingsSagas } from './sagas';
@@ -50,4 +51,6 @@ export {
   SSO_USERS_ONLY_KEY,
   IMPORTANT_LAUNCHES_FEATURE_KEY,
   PERSONAL_ORGANIZATIONS_KEY,
+  PASSWORD_MIN_LENGTH_KEY,
+  APP_INFO_NAMESPACE,
 } from './constants';

@@ -27,3 +27,4 @@ export const LINKS_AND_BRANDING = 'linksAndBranding';
 export const PATTERN_ANALYSIS = 'patternAnalysis';
 export const ENVIRONMENTS = 'environments';
 export const TEST_DATA = 'testData';
+export const LOG_TYPES = 'logTypes';

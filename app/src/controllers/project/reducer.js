@@ -17,10 +17,14 @@
 import { combineReducers } from 'redux';
 import { ADD_FILTER, REMOVE_FILTER, UPDATE_FILTER_SUCCESS } from 'controllers/filter/constants';
 import { updateFilter } from 'controllers/filter/utils';
+import { fetchReducer } from 'controllers/fetch';
+import { loadingReducer } from 'controllers/loading';
+import { queueReducers } from 'common/utils';
 import {
   PROJECT_INFO_INITIAL_STATE,
   PROJECT_PREFERENCES_INITIAL_STATE,
   FETCH_PROJECT_SUCCESS,
+  FETCH_PROJECT_ERROR,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   UPDATE_CONFIGURATION_ATTRIBUTES,
   UPDATE_DEFECT_TYPE_SUCCESS,
@@ -36,6 +40,10 @@ import {
   UPDATE_PROJECT_NOTIFICATION_SUCCESS,
   SET_PROJECT_NOTIFICATION_LOADING,
   FETCH_EXISTING_LAUNCH_NAMES_SUCCESS,
+  LOG_TYPES_NAMESPACE,
+  CREATE_LOG_TYPE_SUCCESS,
+  UPDATE_LOG_TYPE_SUCCESS,
+  DELETE_LOG_TYPE_SUCCESS,
 } from './constants';
 
 export const projectInfoReducer = (
@@ -152,6 +160,7 @@ export const projectInfoLoadingReducer = (state = false, { type = '' }) => {
     case FETCH_PROJECT:
       return true;
     case FETCH_PROJECT_SUCCESS:
+    case FETCH_PROJECT_ERROR:
       return false;
     default:
       return state;
@@ -199,9 +208,30 @@ export const projectNotificationsReducer = (state = {}, { type, payload }) => {
   }
 };
 
+export const logTypesReducer = (state = [], { type, payload }) => {
+  switch (type) {
+    case CREATE_LOG_TYPE_SUCCESS:
+      return [...state, payload];
+    case UPDATE_LOG_TYPE_SUCCESS:
+      return state.map((logType) => {
+        if (logType.id === payload.id) return payload;
+        return logType;
+      });
+    case DELETE_LOG_TYPE_SUCCESS:
+      return state.filter((logType) => logType.id !== payload.id);
+    default:
+      return state;
+  }
+};
+
 export const projectReducer = combineReducers({
   info: projectInfoReducer,
   preferences: projectPreferencesReducer,
   infoLoading: projectInfoLoadingReducer,
   notifications: projectNotificationsReducer,
+  logTypes: queueReducers(
+    fetchReducer(LOG_TYPES_NAMESPACE, { contentPath: 'items' }),
+    logTypesReducer,
+  ),
+  logTypesLoading: loadingReducer(LOG_TYPES_NAMESPACE),
 });

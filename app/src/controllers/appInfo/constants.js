@@ -23,6 +23,7 @@ export const PERSONAL_ORGANIZATIONS_KEY = 'server.features.personal-organization
 export const SERVER_SESSION_EXPIRATION_KEY = 'server.session.expiration';
 export const SERVER_SIDEBAR_LINKS_KEY = 'server.sidebar.links';
 export const IMPORTANT_LAUNCHES_FEATURE_KEY = 'server.features.important.enabled';
+export const PASSWORD_MIN_LENGTH_KEY = 'server.password.min.length';
 
 export const UPDATE_SERVER_SETTINGS = 'UPDATE_SERVER_SETTINGS';
 export const UPDATE_API_EXTENSIONS_RESULT = 'UPDATE_API_EXTENSIONS_RESULT';

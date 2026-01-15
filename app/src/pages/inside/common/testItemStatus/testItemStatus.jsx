@@ -20,19 +20,21 @@ import styles from './testItemStatus.scss';
 
 const cx = classNames.bind(styles);
 
-export const TestItemStatus = ({ status, className }) => (
+export const TestItemStatus = ({ status, className, captionClassName }) => (
   <div className={cx('status-container', className)}>
     <div className={cx('indicator', status.toLowerCase())} />
-    <div className={cx('status')}>{status}</div>
+    <div className={cx('status', captionClassName)}>{status}</div>
   </div>
 );
 
 TestItemStatus.propTypes = {
   status: PropTypes.string,
   className: PropTypes.string,
+  captionClassName: PropTypes.string,
 };
 
 TestItemStatus.defaultProps = {
   status: '',
   className: '',
+  captionClassName: '',
 };

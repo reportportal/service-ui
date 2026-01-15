@@ -16,6 +16,7 @@
 
 export {
   FETCH_PROJECT_SUCCESS,
+  FETCH_PROJECT_ERROR,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   ANALYZER_ATTRIBUTE_PREFIX,
   JOB_ATTRIBUTE_PREFIX,
@@ -44,6 +45,10 @@ export {
   updateProjectNotificationAction,
   deleteProjectNotificationAction,
   fetchProjectSuccessAction,
+  fetchLogTypesAction,
+  createLogTypeAction,
+  updateLogTypeAction,
+  deleteLogTypeAction,
 } from './actionCreators';
 export { projectReducer } from './reducer';
 export {
@@ -75,6 +80,9 @@ export {
   projectKeySelector,
   projectNameSelector,
   projectInfoIdSelector,
+  logTypesSelector,
+  logTypesLoadingSelector,
+  filterableLogTypesSelector,
 } from './selectors';
 export { normalizeAttributesWithPrefix } from './utils';
 export { projectSagas } from './sagas';

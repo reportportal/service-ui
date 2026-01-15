@@ -41,11 +41,6 @@ const messages = defineMessages({
     id: 'CreateUserModal.emailCreateUserHint',
     defaultMessage: 'Email is incorrect. Please enter correct email',
   },
-  passwordHint: {
-    id: 'RegistrationForm.passwordHint',
-    defaultMessage:
-      'Minimum 8 characters: at least one digit, one special symbol, one uppercase, and one lowercase letter',
-  },
   oldPasswordHint: {
     id: 'RegistrationForm.oldPasswordHint',
     defaultMessage:
@@ -58,14 +53,6 @@ const messages = defineMessages({
   confirmPasswordHint: {
     id: 'RegistrationForm.confirmPasswordHint',
     defaultMessage: 'Passwords do not match',
-  },
-  loginDuplicateHint: {
-    id: 'RegistrationForm.loginDuplicateHint',
-    defaultMessage: 'Entered login already exists in the system.',
-  },
-  emailDuplicateHint: {
-    id: 'RegistrationForm.emailDuplicateHint',
-    defaultMessage: 'Entered email already exists in the system.',
   },
   filterNameError: {
     id: 'FiltersPage.filterNameLength',
@@ -333,6 +320,23 @@ const messages = defineMessages({
   enteredTextDoesNotMatchKeyword: {
     id: 'ProductVersionPage.enteredTextDoesNotMatch',
     defaultMessage: 'The entered text does not match the required keyword',
+  },
+  logTypeNameAlreadyExistsHint: {
+    id: 'LogTypeModal.logTypeNameAlreadyExistsHint',
+    defaultMessage: 'Log type with the same name already exists on the project',
+  },
+  logTypeLevelAlreadyExistsHint: {
+    id: 'LogTypeModal.logTypeLevelAlreadyExistsHint',
+    defaultMessage: 'Log type with the same level already exists on the project',
+  },
+  logTypeNameInvalidHint: {
+    id: 'LogTypeModal.logTypeNameInvalidHint',
+    defaultMessage:
+      'Log type name may contain only Latin, numeric characters, hyphen, underscore (from 3 to 16 symbols)',
+  },
+  logTypeLevelInvalidHint: {
+    id: 'LogTypeModal.logTypeLevelInvalidHint',
+    defaultMessage: 'Log level should be a number from 1 to 59999',
   },
 });
 

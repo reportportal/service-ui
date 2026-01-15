@@ -38,7 +38,7 @@ const DEFAULT_FOOTER_LINK_NAMES = [
 ];
 
 export const getServerSettingsPageViewEvent = (activeTab) => ({
-  action: 'pageview',
+  action: 'page_view',
   page: ADMIN_SERVER_SETTINGS_PAGE,
   place: `${ADMIN_SERVER_SETTINGS_PAGE}_${activeTab.toLowerCase()}`,
 });
@@ -101,6 +101,10 @@ export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
     place: 'section_footer_links',
     link_name: DEFAULT_FOOTER_LINK_NAMES.includes(linkName) ? 'default_link' : 'custom_link',
   }),
+  SUBMIT_PASSWORD_LENGTH: {
+    ...basicClickEventParametersAdminServerSettingsPage,
+    element_name: 'submit_password_length',
+  },
   // GA3 events
   ACTIVATE_GITHUB_SWITCHER: {
     category: ADMIN_SERVER_SETTINGS_PAGE,

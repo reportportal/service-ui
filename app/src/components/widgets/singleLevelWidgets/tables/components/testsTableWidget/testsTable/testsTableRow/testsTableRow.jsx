@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-import { Component } from 'react';
-import { func, string, number, array, object, oneOfType } from 'prop-types';
+import React, { Component } from 'react';
+import { func, string, number, array, object, oneOfType, bool } from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl } from 'react-intl';
+import Parser from 'html-react-parser';
+import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { PTTest } from '../../pTypes';
 import { Count } from '../count';
@@ -39,6 +41,7 @@ export class TestsTableRow extends Component {
     duration: number,
     getMatrixTooltip: func,
     onItemClick: func,
+    opensLinkInNewTab: bool,
   };
 
   static defaultProps = {
@@ -49,6 +52,7 @@ export class TestsTableRow extends Component {
     duration: null,
     getMatrixTooltip: null,
     onItemClick: null,
+    opensLinkInNewTab: false,
   };
 
   itemClickHandler = () => {
@@ -70,6 +74,7 @@ export class TestsTableRow extends Component {
       status,
       duration,
       getMatrixTooltip,
+      opensLinkInNewTab,
       intl: { formatMessage },
     } = this.props;
     const { total, uniqueId } = data;
@@ -79,7 +84,10 @@ export class TestsTableRow extends Component {
     return (
       <div className={cx('row')}>
         <div className={cx('col', 'col-name')} onClick={this.itemClickHandler}>
-          <span>{name}</span>
+          <span className={cx('test-name-wrapper')}>
+            <span className={cx('test-text')}>{name}</span>
+            {opensLinkInNewTab && <i className={cx('external-icon')}>{Parser(ExternalLinkIcon)}</i>}
+          </span>
         </div>
         {Matrix && count && (
           <div className={cx('col', 'col-count')} title={matrixTooltip}>

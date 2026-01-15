@@ -17,7 +17,9 @@
 
 .history-line {
   max-width: 100%;
-  margin: 5px 25px 20px 25px;
+  padding: 0 25px;
+  margin: 5px 0 20px;
+  box-sizing: border-box;
 
   @media (max-width: $SCREEN_SM_MAX) {
     display: none;

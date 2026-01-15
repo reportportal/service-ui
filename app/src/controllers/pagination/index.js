@@ -15,7 +15,7 @@
  */
 
 export { withPagination } from './withPagination';
-export { paginationReducer, alternativePaginationReducer } from './reducer';
+export { paginationReducer, alternativePaginationReducer, pageRangeReducer } from './reducer';
 export { defaultPaginationSelector } from './selectors';
 export { SIZE_KEY, PAGE_KEY, DEFAULT_PAGINATION, DEFAULT_PAGE_SIZE } from './constants';
 export { getAlternativePaginationAndSortParams } from './utils';

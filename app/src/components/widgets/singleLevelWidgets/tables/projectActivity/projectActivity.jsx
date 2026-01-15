@@ -31,6 +31,7 @@ import {
   ACTIONS_WITH_INTEGRATIONS,
   ACTIONS_WITH_AA_SETTINGS,
   ACTIONS_WITH_DEFECTS,
+  ACTIONS_WITH_LOG_TYPES,
   ACTIONS_WITH_IMPORT,
   ACTIONS_UPDATE_TEST_ITEM,
   START_LAUNCH,
@@ -65,6 +66,7 @@ import { TestItem } from './activities/testItem';
 import { UpdateItem } from './activities/updateItem';
 import { CommonEntity } from './activities/commonEntity';
 import { DefectType } from './activities/defectType';
+import { LogType } from './activities/logType';
 import { Notifications } from './activities/notifications';
 import styles from './projectActivity.scss';
 import { AssignUser } from './activities/assignUser';
@@ -190,6 +192,8 @@ export class ProjectActivity extends Component {
         );
       case ACTIONS_WITH_DEFECTS:
         return <DefectType activity={activity} />;
+      case ACTIONS_WITH_LOG_TYPES:
+        return <LogType activity={activity} />;
       case ACTIONS_WITH_IMPORT:
       case START_LAUNCH:
       case FINISH_LAUNCH:

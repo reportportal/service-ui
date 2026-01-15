@@ -35,6 +35,13 @@ import {
   SET_ACTIVE_PROJECT_KEY,
   SET_LOG_TIME_FORMAT,
   UPDATE_USER_INFO,
+  SET_ACTIVE_PROJECT_SETTINGS,
+  UPDATE_ACTIVE_PROJECT_SETTINGS,
+  SET_NO_LOGS_COLLAPSING,
+  SET_LOGS_PAGINATION_ENABLED,
+  SET_LOGS_SIZE,
+  SET_LOGS_FULL_WIDTH_MODE,
+  SET_LOGS_COLORIZED_BACKGROUND,
 } from './constants';
 
 export const fetchUserSuccessAction = (user) => ({
@@ -129,4 +136,39 @@ export const assignToProjectErrorAction = (projectInfo) => ({
 export const updateUserInfoAction = (email, data, onSuccess) => ({
   type: UPDATE_USER_INFO,
   payload: { email, data, onSuccess },
+});
+
+export const setActiveProjectSettingsAction = (settings) => ({
+  type: SET_ACTIVE_PROJECT_SETTINGS,
+  payload: settings,
+});
+
+export const updateActiveProjectSettingsAction = (settings) => ({
+  type: UPDATE_ACTIVE_PROJECT_SETTINGS,
+  payload: settings,
+});
+
+export const setNoLogsCollapsingAction = (value) => ({
+  type: SET_NO_LOGS_COLLAPSING,
+  payload: { value },
+});
+
+export const setLogsPaginationEnabledAction = (value) => ({
+  type: SET_LOGS_PAGINATION_ENABLED,
+  payload: { value },
+});
+
+export const setLogsSizeAction = (value) => ({
+  type: SET_LOGS_SIZE,
+  payload: { value },
+});
+
+export const setLogsFullWidthModeAction = (value) => ({
+  type: SET_LOGS_FULL_WIDTH_MODE,
+  payload: { value },
+});
+
+export const setLogsColorizedBackgroundAction = (value) => ({
+  type: SET_LOGS_COLORIZED_BACKGROUND,
+  payload: { value },
 });

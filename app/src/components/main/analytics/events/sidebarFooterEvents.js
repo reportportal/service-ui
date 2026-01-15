@@ -26,10 +26,6 @@ const basicEventParameters = {
 
 export const SIDEBAR_EVENTS = {
   // GA4 events
-  CLICK_LAUNCH_ICON: {
-    ...basicEventParameters,
-    icon_name: 'launches',
-  },
   CLICK_OPEN_ORGANIZATION_PROJECTS_BTN: {
     ...getBasicClickEventParameters(SIDEBAR),
     place: 'hover',

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { DEFAULT_LOGS_SIZE } from 'common/constants/logsSettings';
+
 export const FETCH_USER = 'FETCH_USER';
 export const FETCH_USER_INFO = 'FETCH_USER_INFO';
 export const FETCH_USER_ERROR = 'fetchUserError';
@@ -47,3 +49,25 @@ export const DELETE_API_KEY = 'deleteApiKey';
 export const DELETE_API_KEY_SUCCESS = 'deleteApiKeySuccess';
 export const DELETE_USER_ACCOUNT = 'deleteUserAccount';
 export const UPDATE_USER_INFO = 'updateUserInfo';
+
+export const SET_ACTIVE_PROJECT_SETTINGS = 'setActiveProjectSettings';
+export const UPDATE_ACTIVE_PROJECT_SETTINGS = 'updateActiveProjectSettings';
+export const SET_NO_LOGS_COLLAPSING = 'setNoLogsCollapsing';
+export const SET_LOGS_PAGINATION_ENABLED = 'setLogsPaginationEnabled';
+export const SET_LOGS_SIZE = 'setLogsSize';
+export const SET_LOGS_FULL_WIDTH_MODE = 'setLogsFullWidthMode';
+export const SET_LOGS_COLORIZED_BACKGROUND = 'setLogsColorizedBackground';
+
+export const NO_LOGS_COLLAPSING_KEY = 'noLogsCollapsing';
+export const LOGS_PAGINATION_ENABLED_KEY = 'logsPaginationEnabled';
+export const LOGS_SIZE_KEY = 'logsSize';
+export const LOGS_FULL_WIDTH_MODE_KEY = 'logsFullWidthMode';
+export const LOGS_COLORIZED_BACKGROUND_KEY = 'logsColorizedBackground';
+
+export const ACTIVE_PROJECT_SETTINGS_INITIAL_STATE = {
+  [NO_LOGS_COLLAPSING_KEY]: false,
+  [LOGS_PAGINATION_ENABLED_KEY]: true,
+  [LOGS_SIZE_KEY]: DEFAULT_LOGS_SIZE,
+  [LOGS_FULL_WIDTH_MODE_KEY]: false,
+  [LOGS_COLORIZED_BACKGROUND_KEY]: false,
+};

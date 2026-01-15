@@ -18,7 +18,7 @@ import { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { PageLayout, PageSection } from 'layouts/pageLayout';
+import classNames from 'classnames/bind';
 import {
   refreshLogPageData,
   loadingSelector,
@@ -28,6 +28,7 @@ import {
 } from 'controllers/log';
 import { parentItemSelector } from 'controllers/testItem';
 import { debugModeSelector } from 'controllers/launch';
+import { logsFullWidthModeSelector } from 'controllers/user';
 import { LOG_PAGE, LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { TestItemLogsToolbar } from './testItemLogsToolbar';
@@ -35,6 +36,9 @@ import { LogToolbar } from './logToolbar';
 import { HistoryLine } from './historyLine';
 import { LogItemInfo } from './logItemInfo';
 import { LogsGridWrapper } from './logsGridWrapper';
+import styles from './logsPage.scss';
+
+const cx = classNames.bind(styles);
 
 @connect(
   (state) => ({
@@ -43,6 +47,7 @@ import { LogsGridWrapper } from './logsGridWrapper';
     debugMode: debugModeSelector(state),
     logViewMode: logViewModeSelector(state),
     parentItem: parentItemSelector(state),
+    logsFullWidthMode: logsFullWidthModeSelector(state),
   }),
   {
     refresh: refreshLogPageData,
@@ -61,6 +66,7 @@ export class LogsPage extends Component {
     pageLoading: PropTypes.bool,
     logViewMode: PropTypes.string,
     parentItem: PropTypes.object,
+    logsFullWidthMode: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -68,6 +74,7 @@ export class LogsPage extends Component {
     pageLoading: false,
     logViewMode: DETAILED_LOG_VIEW,
     parentItem: {},
+    logsFullWidthMode: false,
   };
 
   state = {
@@ -93,41 +100,53 @@ export class LogsPage extends Component {
   };
 
   render() {
-    const { refresh, debugMode, loading, pageLoading, logViewMode, parentItem } = this.props;
+    const {
+      refresh,
+      debugMode,
+      loading,
+      pageLoading,
+      logViewMode,
+      parentItem,
+      logsFullWidthMode,
+    } = this.props;
 
     return (
-      <PageLayout>
-        <PageSection>
-          {pageLoading && <SpinningPreloader />}
-          {!pageLoading && (
-            <Fragment>
-              <LogToolbar
-                onRefresh={this.handleRefresh}
-                logViewMode={logViewMode}
-                parentItem={parentItem}
-                debugMode={debugMode}
-              />
-              {logViewMode === DETAILED_LOG_VIEW ? (
-                <Fragment>
-                  {!debugMode && <HistoryLine />}
-                  <LogItemInfo
-                    onToggleSauceLabsIntegrationView={this.toggleSauceLabsIntegrationView}
-                    isSauceLabsIntegrationView={this.state.isSauceLabsIntegrationView}
-                    fetchFunc={refresh}
-                    debugMode={debugMode}
-                    loading={loading}
-                  />
-                </Fragment>
-              ) : (
-                <Fragment>
-                  <TestItemLogsToolbar parentItem={parentItem} />
-                  <LogsGridWrapper />
-                </Fragment>
-              )}
-            </Fragment>
-          )}
-        </PageSection>
-      </PageLayout>
+      <div>
+        {pageLoading ? (
+          <SpinningPreloader />
+        ) : (
+          <Fragment>
+            <LogToolbar
+              className={cx('page-section')}
+              onRefresh={this.handleRefresh}
+              logViewMode={logViewMode}
+              parentItem={parentItem}
+              debugMode={debugMode}
+            />
+            {logViewMode === DETAILED_LOG_VIEW ? (
+              <Fragment>
+                {!debugMode && <HistoryLine className={cx('page-section')} />}
+                <LogItemInfo
+                  className={cx('page-section', { 'full-width': logsFullWidthMode })}
+                  detailsClassName={cx('details-section')}
+                  onToggleSauceLabsIntegrationView={this.toggleSauceLabsIntegrationView}
+                  isSauceLabsIntegrationView={this.state.isSauceLabsIntegrationView}
+                  fetchFunc={refresh}
+                  debugMode={debugMode}
+                  loading={loading}
+                />
+              </Fragment>
+            ) : (
+              <Fragment>
+                <TestItemLogsToolbar className={cx('page-section')} parentItem={parentItem} />
+                <LogsGridWrapper
+                  className={cx('page-section', { 'full-width': logsFullWidthMode })}
+                />
+              </Fragment>
+            )}
+          </Fragment>
+        )}
+      </div>
     );
   }
 }

@@ -37,10 +37,43 @@
       color: $COLOR--topaz;
       white-space: nowrap;
       overflow: hidden;
-      text-overflow: ellipsis;
       text-decoration: none;
-      span {
-        cursor: pointer;
+      cursor: pointer;
+
+      .test-name-wrapper {
+        display: flex;
+        align-items: center;
+        max-width: 100%;
+        overflow: hidden;
+        gap: 3px;
+
+        .test-text {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          flex-shrink: 1;
+          min-width: 0;
+        }
+
+        .external-icon {
+          opacity: 0;
+          display: inline-flex;
+          align-items: center;
+          width: 16px;
+          height: 16px;
+          flex-shrink: 0;
+
+          svg {
+            width: 16px;
+            height: 16px;
+          }
+        }
+      }
+
+      &:hover {
+        .test-name-wrapper .external-icon {
+          opacity: 1;
+        }
       }
 
       @media (max-width: $SCREEN_XS_MAX) {

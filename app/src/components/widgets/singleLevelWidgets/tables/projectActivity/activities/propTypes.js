@@ -22,7 +22,7 @@ export const activityItemPropTypes = {
     objectName: PropTypes.string,
     details: PropTypes.shape({ history: PropTypes.array }),
     id: PropTypes.number,
-    lastModified: PropTypes.number,
+    lastModified: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     loggedObjectId: PropTypes.number,
     objectType: PropTypes.string,
     projectId: PropTypes.number,

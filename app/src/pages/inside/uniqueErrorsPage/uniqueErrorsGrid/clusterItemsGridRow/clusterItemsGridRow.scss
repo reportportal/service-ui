@@ -89,6 +89,7 @@
   border-left: 3px solid $COLOR--orange-red;
   background-image: linear-gradient(to right, $COLOR--light-red, $COLOR--light-red);
   background-size: 7px 100%;
+  background-repeat: no-repeat;
 }
 
 .cluster-row {
@@ -96,11 +97,7 @@
   line-height: 1.55;
   color: $COLOR_-black-2;
   white-space: pre-wrap;
-  word-break: break-all;
-
-  @supports (word-break: break-word) {
-    word-break: break-word;
-  }
+  overflow-wrap: break-word;
 }
 
 .cluster-accordion-block {

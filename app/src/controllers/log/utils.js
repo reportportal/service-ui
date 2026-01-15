@@ -15,6 +15,7 @@
  */
 
 import { PASSED, FAILED, NOT_FOUND } from 'common/constants/testStatuses';
+import { ALL } from 'common/constants/logLevels';
 import { extractNamespacedQuery, createNamespacedQuery } from 'common/utils/routingUtils';
 import { NAMESPACE } from './constants';
 
@@ -142,3 +143,17 @@ export const getFormattedPageLocation = (pagesLocation = []) =>
 
     return acc;
   }, []);
+
+export const isLogLevelsEqual = (logLevel1, logLevel2) => {
+  if (!logLevel1?.name || !logLevel2?.name) {
+    return false;
+  }
+  return logLevel1.name.toLowerCase() === logLevel2.name.toLowerCase();
+};
+
+export const isDefaultLogLevel = (logLevel) => {
+  if (!logLevel?.name) {
+    return false;
+  }
+  return logLevel.name.toLowerCase() === ALL.toLowerCase();
+};
