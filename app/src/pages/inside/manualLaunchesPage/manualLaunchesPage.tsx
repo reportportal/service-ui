@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
 import { Button, RefreshIcon, Pagination } from '@reportportal/ui-kit';
 
@@ -24,50 +24,49 @@ import { projectNameSelector } from 'controllers/project';
 import { activeOrganizationNameSelector } from 'controllers/organization';
 import { LocationHeaderLayout } from 'layouts/locationHeaderLayout';
 import { createClassnames } from 'common/utils';
-import { usePagination } from 'hooks/usePagination';
+
+import {
+  manualLaunchContentSelector,
+  isLoadingSelector,
+  manualLaunchPageSelector,
+  getManualLaunchesAction,
+  MANUAL_LAUNCHES_NAMESPACE,
+  defaultManualLaunchesQueryParams,
+} from 'controllers/manualLaunch';
 
 import { messages } from './messages';
 import styles from './manualLaunchesPage.scss';
 import { ManualLaunchesPageContent } from './manualLaunchesPageContent';
-import { useManualLaunches } from './useManualLaunches';
 import { commonMessages } from '../testPlansPage/commonMessages';
-import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE_LIMIT } from './manualLaunchesList/contants';
+import { ITEMS_PER_PAGE_OPTIONS } from './manualLaunchesList/contants';
+import { useURLBoundPagination } from '../common/testCaseList/useURLBoundPagination';
+import { useProjectDetails } from 'hooks/useTypedSelector';
 
 const cx = createClassnames(styles);
 
 export const ManualLaunchesPage = () => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+
   const projectName = useSelector(projectNameSelector);
   const organizationName = useSelector(activeOrganizationNameSelector) as string;
+  const content = useSelector(manualLaunchContentSelector);
+  const pageInfo = useSelector(manualLaunchPageSelector);
+  const isLoading = useSelector(isLoadingSelector);
+  const { organizationSlug, projectSlug } = useProjectDetails();
 
-  const [totalElements, setTotalElements] = useState(0);
-  const { activePage, pageSize, setActivePage, changePageSize, totalPages, captions } =
-    usePagination({
-      totalItems: totalElements,
-      itemsPerPage: ITEMS_PER_PAGE_LIMIT,
+  const { activePage, pageSize, setPageNumber, setPageSize, totalPages, captions, offset } =
+    useURLBoundPagination({
+      pageData: pageInfo,
+      defaultQueryParams: defaultManualLaunchesQueryParams,
+      namespace: MANUAL_LAUNCHES_NAMESPACE,
       shouldSaveUserPreferences: true,
+      baseUrl: `/organizations/${organizationSlug}/projects/${projectSlug}/manualLaunches`,
     });
 
-  const offset = (activePage - 1) * pageSize;
-  const { content, page, isLoading, refetch } = useManualLaunches(offset, pageSize);
-
-  useEffect(() => {
-    if (page?.totalElements !== undefined && page.totalElements !== totalElements) {
-      setTotalElements(page.totalElements);
-    }
-  }, [page?.totalElements, totalElements]);
-
-  const handlePageChange = (newPage: number): void => {
-    setActivePage(newPage);
-  };
-
-  const handlePageSizeChange = (newSize: number) => {
-    changePageSize(newSize);
-  };
-
   const handleRefresh = useCallback(() => {
-    void refetch();
-  }, [refetch]);
+    dispatch(getManualLaunchesAction({ offset, limit: pageSize }));
+  }, [dispatch, offset, pageSize]);
 
   return (
     <>
@@ -92,16 +91,16 @@ export const ManualLaunchesPage = () => {
         <ManualLaunchesPageContent fullLaunches={content} isLoading={isLoading} />
       </div>
       <div className={cx('sticky-wrapper')}>
-        {Boolean(totalElements) && (
+        {Boolean(pageInfo?.totalElements) && (
           <div className={cx('pagination')}>
             <Pagination
               pageSize={pageSize}
               activePage={activePage}
-              totalItems={totalElements}
+              totalItems={pageInfo?.totalElements || 0}
               totalPages={totalPages}
               pageSizeOptions={ITEMS_PER_PAGE_OPTIONS}
-              changePage={handlePageChange}
-              changePageSize={handlePageSizeChange}
+              changePage={setPageNumber}
+              changePageSize={setPageSize}
               captions={captions}
             />
           </div>

@@ -138,6 +138,11 @@ import {
   TEST_PLAN_TEST_CASES_NAMESPACE,
   defaultTestPlanTestCasesQueryParams,
 } from 'controllers/testPlan';
+import {
+  MANUAL_LAUNCHES_NAMESPACE,
+  defaultManualLaunchesQueryParams,
+  getManualLaunchesAction,
+} from 'controllers/manualLaunch';
 import { getRouterParams } from 'common/utils';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
@@ -315,6 +320,16 @@ const routesMap = {
   ),
   [MANUAL_LAUNCHES_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug/manualLaunches',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      const { offset, limit } = getRouterParams({
+        namespace: MANUAL_LAUNCHES_NAMESPACE,
+        defaultParams: defaultManualLaunchesQueryParams,
+        state,
+      });
+
+      dispatch(getManualLaunchesAction({ offset, limit }));
+    },
   },
   [PROJECT_LAUNCHES_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId',
