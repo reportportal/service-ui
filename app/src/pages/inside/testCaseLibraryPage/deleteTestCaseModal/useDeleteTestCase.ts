@@ -25,12 +25,14 @@ import {
   deleteTestCaseSuccessAction,
   updateFolderCounterAction,
 } from 'controllers/testCase/actionCreators';
-import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import {
   TEST_CASE_LIBRARY_PAGE,
   urlOrganizationSlugSelector,
   urlProjectSlugSelector,
 } from 'controllers/pages';
+
+import { TestCase } from '../types';
+import { useLastItemOnThePage } from '../hooks/useLastItemOnThePage';
 
 export const useDeleteTestCase = ({ isDetailsPage = false } = {}) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
@@ -38,6 +40,7 @@ export const useDeleteTestCase = ({ isDetailsPage = false } = {}) => {
   const projectKey = useSelector(projectKeySelector);
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const projectSlug = useSelector(urlProjectSlugSelector);
+  const { updateUrl, isSingleItemOnTheLastPage } = useLastItemOnThePage();
 
   const deleteTestCase = async (testCase: TestCase) => {
     try {
@@ -51,6 +54,10 @@ export const useDeleteTestCase = ({ isDetailsPage = false } = {}) => {
       dispatch(updateFolderCounterAction({ folderId: testCase.testFolder.id, delta: -1 }));
       dispatch(hideModalAction());
       dispatch(showSuccessNotification({ messageId: 'testCaseDeletedSuccess' }));
+
+      if (isSingleItemOnTheLastPage && !isDetailsPage) {
+        updateUrl();
+      }
 
       if (isDetailsPage) {
         dispatch({

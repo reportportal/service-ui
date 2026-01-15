@@ -26,11 +26,17 @@ import { showSuccessNotification, showErrorNotification } from 'controllers/noti
 import { updateFolderCounterAction } from 'controllers/testCase';
 import { useRefetchCurrentTestCases } from '../../hooks/useRefetchCurrentTestCases';
 
-export const useBatchDeleteTestCases = ({ onSuccess }: { onSuccess: () => void }) => {
+export const useBatchDeleteTestCases = ({
+  onSuccess,
+  testCasesToDelete,
+}: {
+  onSuccess: () => void;
+  testCasesToDelete: number;
+}) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
-  const refetchCurrentTestCases = useRefetchCurrentTestCases();
+  const refetchCurrentTestCases = useRefetchCurrentTestCases(testCasesToDelete);
 
   const batchDelete = useCallback(
     async (testCaseIds: number[], folderDeltasMap: Record<string, number>) => {

@@ -39,6 +39,7 @@ import { useDebouncedSpinner } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { getTestCaseRequestParams } from 'pages/inside/testCaseLibraryPage/utils';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
+import { UseLastItemOnThePageResult } from 'pages/inside/testCaseLibraryPage/hooks/useLastItemOnThePage';
 
 import { CreateTestCaseFormData, Attribute } from '../types';
 import {
@@ -55,7 +56,7 @@ interface TestCaseResponse {
   };
 }
 
-interface PatchTestCaseOptions {
+interface PatchTestCaseOptions extends Partial<UseLastItemOnThePageResult> {
   testCaseId: number;
   currentFolderId?: number;
   folder?: FolderWithFullPath | NewFolderData;
@@ -64,23 +65,28 @@ interface PatchTestCaseOptions {
   onSuccess?: (response: unknown) => void;
 }
 
-interface HandleFolderUpdateOptions {
+interface HandleFolderUpdateOptions extends Partial<UseLastItemOnThePageResult> {
   response: TestCaseResponse;
   newFolderDetails?: NewFolderData;
   currentFolderId?: number;
   existingFolderId?: number;
 }
 
-interface HandleNewFolderCreationOptions {
+interface HandleNewFolderCreationOptions extends Partial<UseLastItemOnThePageResult> {
   folderId: number;
   folderName: string;
   parentFolderId?: number | null;
   currentFolderId?: number;
 }
 
-interface HandleFolderCounterUpdateOptions {
+interface HandleFolderCounterUpdateOptions extends Partial<UseLastItemOnThePageResult> {
   newFolderId?: number;
   currentFolderId?: number;
+}
+
+interface HandleTestCaseFetchApproachOptions extends Partial<UseLastItemOnThePageResult> {
+  newFolderId: number;
+  currentFolderId: number;
 }
 
 export const useTestCase = (testCaseId?: number) => {
@@ -130,8 +136,29 @@ export const useTestCase = (testCaseId?: number) => {
     [isOnTestCaseLibraryPage, testCasesPageData, urlFolderId, dispatch],
   );
 
+  const handleTestCaseFetchApproach = useCallback(
+    ({
+      isSingleItemOnTheLastPage,
+      updateUrl,
+      newFolderId,
+      currentFolderId,
+    }: HandleTestCaseFetchApproachOptions) => {
+      if (isSingleItemOnTheLastPage) {
+        updateUrl();
+      } else {
+        refetchTestCases(newFolderId, currentFolderId);
+      }
+    },
+    [refetchTestCases],
+  );
+
   const handleFolderCounterUpdate = useCallback(
-    ({ newFolderId, currentFolderId }: HandleFolderCounterUpdateOptions) => {
+    ({
+      newFolderId,
+      currentFolderId,
+      updateUrl,
+      isSingleItemOnTheLastPage,
+    }: HandleFolderCounterUpdateOptions) => {
       const isTestCaseMoved = currentFolderId && newFolderId && currentFolderId !== newFolderId;
 
       if (isTestCaseMoved) {
@@ -140,14 +167,26 @@ export const useTestCase = (testCaseId?: number) => {
       }
 
       if (newFolderId) {
-        refetchTestCases(newFolderId, currentFolderId);
+        handleTestCaseFetchApproach({
+          currentFolderId,
+          newFolderId,
+          updateUrl,
+          isSingleItemOnTheLastPage,
+        });
       }
     },
-    [dispatch, refetchTestCases],
+    [dispatch],
   );
 
   const handleNewFolderCreation = useCallback(
-    ({ folderId, folderName, parentFolderId, currentFolderId }: HandleNewFolderCreationOptions) => {
+    ({
+      folderId,
+      folderName,
+      parentFolderId,
+      currentFolderId,
+      updateUrl,
+      isSingleItemOnTheLastPage,
+    }: HandleNewFolderCreationOptions) => {
       dispatch(
         createFoldersSuccessAction({
           id: folderId,
@@ -161,9 +200,14 @@ export const useTestCase = (testCaseId?: number) => {
         dispatch(updateFolderCounterAction({ folderId: currentFolderId, delta: -1 }));
       }
 
-      refetchTestCases(folderId, currentFolderId);
+      handleTestCaseFetchApproach({
+        currentFolderId,
+        newFolderId: folderId,
+        isSingleItemOnTheLastPage,
+        updateUrl,
+      });
     },
-    [dispatch, refetchTestCases],
+    [dispatch],
   );
 
   const handleFolderUpdateAfterTestCaseChange = useCallback(
@@ -172,6 +216,8 @@ export const useTestCase = (testCaseId?: number) => {
       newFolderDetails,
       currentFolderId,
       existingFolderId,
+      updateUrl,
+      isSingleItemOnTheLastPage,
     }: HandleFolderUpdateOptions) => {
       const newFolderId = response.testFolder?.id ?? existingFolderId;
 
@@ -181,9 +227,16 @@ export const useTestCase = (testCaseId?: number) => {
           folderName: newFolderDetails.name,
           parentFolderId: newFolderDetails.parentTestFolderId,
           currentFolderId,
+          updateUrl,
+          isSingleItemOnTheLastPage,
         });
       } else {
-        handleFolderCounterUpdate({ newFolderId, currentFolderId });
+        handleFolderCounterUpdate({
+          newFolderId,
+          currentFolderId,
+          updateUrl,
+          isSingleItemOnTheLastPage,
+        });
       }
 
       return newFolderId;
@@ -311,6 +364,8 @@ export const useTestCase = (testCaseId?: number) => {
       successMessageId = 'testCaseUpdatedSuccess',
       errorMessageId = 'testCaseUpdateFailed',
       onSuccess,
+      updateUrl,
+      isSingleItemOnTheLastPage,
     }: PatchTestCaseOptions) => {
       if (!folder) {
         return;
@@ -337,6 +392,8 @@ export const useTestCase = (testCaseId?: number) => {
           newFolderDetails,
           currentFolderId,
           existingFolderId,
+          updateUrl,
+          isSingleItemOnTheLastPage,
         });
 
         if (onSuccess) {

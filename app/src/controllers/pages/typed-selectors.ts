@@ -18,7 +18,7 @@ import { isString } from 'es-toolkit';
 
 export type LocationInfo = {
   payload: {
-    testCasePageRoute: string;
+    testCasePageRoute?: string;
     organizationSlug: string;
     projectSlug: string;
     testPlanId?: number;
@@ -31,6 +31,11 @@ export type LocationInfo = {
   prev?: {
     payload?: {
       testPlanId?: number;
+      testCasePageRoute?: string;
+    };
+    query?: {
+      offset: string;
+      limit: string;
     };
   };
 };
