@@ -41,6 +41,7 @@ import { serverSettingsSagas } from 'controllers/appInfo';
 import { exportsSagas } from 'controllers/exports/sagas';
 import { testCaseSagas } from 'controllers/testCase';
 import { testPlanSagas } from 'controllers/testPlan';
+import { analyticsSagas } from 'controllers/analytics';
 
 const sagas = [
   notificationSagas,
@@ -69,6 +70,7 @@ const sagas = [
   exportsSagas,
   testCaseSagas,
   testPlanSagas,
+  analyticsSagas,
 ];
 
 export function* rootSagas() {

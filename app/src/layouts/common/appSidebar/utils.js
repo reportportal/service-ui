@@ -18,7 +18,7 @@ import { FAQ_TOUCHED_STATUS_STORAGE_KEY } from 'controllers/log/constants';
 import {
   getUserSettingsFromStorage,
   updateUserSettingsInStorage,
-} from 'controllers/log/storageUtils';
+} from 'controllers/user';
 
 export const getFAQOpenStatus = (userId) =>
   getUserSettingsFromStorage(userId)[FAQ_TOUCHED_STATUS_STORAGE_KEY];

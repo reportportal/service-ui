@@ -47,7 +47,7 @@
       left: 0 !important;
       transform: none !important;
       transition: none;
-      page-break-inside: avoid;
+      break-inside: avoid;
     }
   }
   .react-grid-item.cssTransforms {

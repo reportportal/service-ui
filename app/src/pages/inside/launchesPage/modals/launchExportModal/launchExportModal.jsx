@@ -30,7 +30,7 @@ import { addExportAction, removeExportAction } from 'controllers/exports';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { ERROR_CANCELED } from 'common/utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { activeProjectKeySelector, activeProjectSelector } from 'controllers/user';
+import { activeProjectKeySelector } from 'controllers/user';
 import { PDF_EXPORT, XLS_EXPORT, HTML_EXPORT } from './constants';
 import styles from './launchExportModal.scss';
 

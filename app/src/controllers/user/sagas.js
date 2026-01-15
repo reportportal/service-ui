@@ -32,7 +32,15 @@ import {
 } from 'controllers/pages';
 import { getLogTimeFormatFromStorage } from 'controllers/log/storageUtils';
 import { setActiveOrganizationAction } from 'controllers/organization/actionCreators';
-import { findAssignedProjectByOrganization } from 'common/utils';
+import {
+  getUserProjectSettingsFromStorage,
+  setNoLogsCollapsingInStorage,
+  setLogsPaginationEnabledInStorage,
+  setLogsSizeInStorage,
+  setLogsFullWidthModeInStorage,
+  setLogsColorizedBackgroundInStorage,
+} from './storageUtils';
+import {  findAssignedProjectByOrganization} from 'common/utils';
 import {
   assignToProjectSuccessAction,
   assignToProjectErrorAction,
@@ -44,10 +52,13 @@ import {
   deleteApiKeySuccessAction,
   setActiveProjectKeyAction,
   setLogTimeFormatAction,
+  setActiveProjectSettingsAction,
+  updateActiveProjectSettingsAction,
 } from './actionCreators';
 import {
   ASSIGN_TO_PROJECT,
   SET_ACTIVE_PROJECT,
+  SET_ACTIVE_PROJECT_KEY,
   ADD_API_KEY,
   FETCH_API_KEYS,
   DELETE_API_KEY,
@@ -55,8 +66,18 @@ import {
   FETCH_USER_INFO,
   DELETE_USER_ACCOUNT,
   UPDATE_USER_INFO,
+  SET_NO_LOGS_COLLAPSING,
+  SET_LOGS_PAGINATION_ENABLED,
+  SET_LOGS_SIZE,
+  SET_LOGS_FULL_WIDTH_MODE,
+  SET_LOGS_COLORIZED_BACKGROUND,
+  LOGS_SIZE_KEY,
+  NO_LOGS_COLLAPSING_KEY,
+  LOGS_PAGINATION_ENABLED_KEY,
+  LOGS_FULL_WIDTH_MODE_KEY,
+  LOGS_COLORIZED_BACKGROUND_KEY,
 } from './constants';
-import { userIdSelector, userInfoSelector } from './selectors';
+import { activeProjectKeySelector, userIdSelector, userInfoSelector } from './selectors';
 
 function* assignToProject({ payload: project }) {
   const userId = yield select(userIdSelector);
@@ -208,6 +229,61 @@ function* saveActiveProjectWorker({ payload: activeProject }) {
   });
 }
 
+function* loadProjectSettingsWorker({ payload: projectKey }) {
+  const user = yield select(userInfoSelector);
+  const projectSettings = getUserProjectSettingsFromStorage(user.userId, projectKey);
+  yield put(setActiveProjectSettingsAction(projectSettings));
+}
+
+function* updateLogsSetting({ payload, setInStorage, settingKey }) {
+  const { value } = payload;
+  const userId = yield select(userIdSelector);
+  const projectKey = yield select(activeProjectKeySelector);
+
+  yield call(setInStorage, userId, projectKey, value);
+  yield put(updateActiveProjectSettingsAction({ [settingKey]: value }));
+}
+
+function* setNoLogsCollapsing({ payload }) {
+  yield call(updateLogsSetting, {
+    payload,
+    setInStorage: setNoLogsCollapsingInStorage,
+    settingKey: NO_LOGS_COLLAPSING_KEY,
+  });
+}
+
+function* setLogsPaginationEnabled({ payload }) {
+  yield call(updateLogsSetting, {
+    payload,
+    setInStorage: setLogsPaginationEnabledInStorage,
+    settingKey: LOGS_PAGINATION_ENABLED_KEY,
+  });
+}
+
+function* setLogsSize({ payload }) {
+  yield call(updateLogsSetting, {
+    payload,
+    setInStorage: setLogsSizeInStorage,
+    settingKey: LOGS_SIZE_KEY,
+  });
+}
+
+function* setLogsFullWidthMode({ payload }) {
+  yield call(updateLogsSetting, {
+    payload,
+    setInStorage: setLogsFullWidthModeInStorage,
+    settingKey: LOGS_FULL_WIDTH_MODE_KEY,
+  });
+}
+
+function* setLogsColorizedBackground({ payload }) {
+  yield call(updateLogsSetting, {
+    payload,
+    setInStorage: setLogsColorizedBackgroundInStorage,
+    settingKey: LOGS_COLORIZED_BACKGROUND_KEY,
+  });
+}
+
 function* addApiKey({ payload = {} }) {
   const { name, successMessage, errorMessage, onSuccess } = payload;
   const user = yield select(userInfoSelector);
@@ -346,6 +422,30 @@ function* watchFetchUserInfo() {
   yield takeEvery(FETCH_USER_INFO, fetchUserInfo);
 }
 
+function* watchLoadProjectSettings() {
+  yield takeEvery(SET_ACTIVE_PROJECT_KEY, loadProjectSettingsWorker);
+}
+
+function* watchSetNoLogsCollapsing() {
+  yield takeEvery(SET_NO_LOGS_COLLAPSING, setNoLogsCollapsing);
+}
+
+function* watchSetLogsPagination() {
+  yield takeEvery(SET_LOGS_PAGINATION_ENABLED, setLogsPaginationEnabled);
+}
+
+function* watchSetLogsSize() {
+  yield takeEvery(SET_LOGS_SIZE, setLogsSize);
+}
+
+function* watchSetLogsFullWidthMode() {
+  yield takeEvery(SET_LOGS_FULL_WIDTH_MODE, setLogsFullWidthMode);
+}
+
+function* watchSetLogsColorizedBackground() {
+  yield takeEvery(SET_LOGS_COLORIZED_BACKGROUND, setLogsColorizedBackground);
+}
+
 function* watchFetchUser() {
   yield takeEvery(FETCH_USER, fetchUserWorker);
 }
@@ -364,6 +464,12 @@ export function* userSagas() {
     watchFetchUser(),
     watchFetchUserInfo(),
     watchSaveActiveProject(),
+    watchLoadProjectSettings(),
+    watchSetNoLogsCollapsing(),
+    watchSetLogsPagination(),
+    watchSetLogsSize(),
+    watchSetLogsFullWidthMode(),
+    watchSetLogsColorizedBackground(),
     watchAddApiKey(),
     watchFetchApiKeys(),
     watchDeleteApiKey(),

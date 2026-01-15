@@ -126,7 +126,7 @@ StatusColumn.defaultProps = {
 
 const StartTimeColumn = ({ className, value }) => (
   <div className={cx('start-time-col', className)}>
-    <AbsRelTime startTime={value.startTime} />
+    <AbsRelTime startTime={value.startTime} customClass={cx('start-time-text')} />
   </div>
 );
 StartTimeColumn.propTypes = {
@@ -134,6 +134,18 @@ StartTimeColumn.propTypes = {
   value: PropTypes.object,
 };
 StartTimeColumn.defaultProps = {
+  className: null,
+  value: {},
+};
+
+const AnalysisOwnerColumn = ({ className, value }) => (
+  <div className={cx('analysis-owner-col', className)}>{value.analysisOwner || ''}</div>
+);
+AnalysisOwnerColumn.propTypes = {
+  className: PropTypes.string,
+  value: PropTypes.object,
+};
+AnalysisOwnerColumn.defaultProps = {
   className: null,
   value: {},
 };
@@ -303,6 +315,14 @@ export const StepGrid = ({
         withFilter: !isTestSearchView,
         filterEventInfo: events.START_TIME_FILTER,
         sortingEventInfo: events.START_TIME_SORTING,
+      },
+      {
+        id: 'analysisOwner',
+        title: {
+          full: 'analysis owner',
+        },
+        sortable: false,
+        component: AnalysisOwnerColumn,
       },
       {
         id: ENTITY_DEFECT_TYPE,

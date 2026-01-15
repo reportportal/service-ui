@@ -52,6 +52,9 @@ export const docsReferences = {
   workWithReports: 'https://reportportal.io/docs/work-with-reports/InvestigationOfFailure',
   pluginsDocs: 'https://reportportal.io/docs/plugins/',
   projectConfigurationDocs: 'https://reportportal.io/docs/configuration/ProjectConfiguration',
+  implementOwnIntegrationDocs:
+    'https://reportportal.io/docs/log-data-in-reportportal/ImplementOwnIntegration/',
+  logTypesDocs: 'https://reportportal.io/docs/configuration/ProjectSettings#log-types',
 };
 
 export const faqDictionary = {

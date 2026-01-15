@@ -18,11 +18,14 @@ import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
+import { connect } from 'react-redux';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { commonValidators } from 'common/utils/validation';
+import { passwordMinLengthSelector } from 'controllers/appInfo';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { validationLocalization } from 'common/constants/localization/validationLocalization';
 import { reduxForm } from 'redux-form';
 import { Input } from 'components/inputs/input';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
@@ -68,14 +71,22 @@ const messages = defineMessages({
 });
 
 @withModal('changePasswordModal')
+@connect((state) => ({
+  minLength: passwordMinLengthSelector(state),
+}))
 @injectIntl
 @reduxForm({
   form: 'changePasswordForm',
-  validate: ({ oldPassword, newPassword, confirmPassword }) => ({
-    oldPassword: commonValidators.oldPassword(oldPassword),
-    newPassword: commonValidators.password(newPassword),
-    confirmPassword: newPassword !== confirmPassword && 'profileConfirmPassword',
-  }),
+  validate: ({ oldPassword, newPassword, confirmPassword }, { minLength, intl }) => {
+    const passwordMessage = intl.formatMessage(validationLocalization.passwordHint, { minLength });
+    const passwordValidator = commonValidators.createPasswordValidator(minLength, passwordMessage);
+
+    return {
+      oldPassword: commonValidators.oldPassword(oldPassword),
+      newPassword: passwordValidator(newPassword),
+      confirmPassword: newPassword !== confirmPassword && 'profileConfirmPassword',
+    };
+  },
 })
 @track()
 export class ChangePasswordModal extends Component {

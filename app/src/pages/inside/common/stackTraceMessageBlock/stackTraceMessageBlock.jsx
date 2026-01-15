@@ -39,6 +39,11 @@ export class StackTraceMessageBlock extends Component {
     }).isRequired,
     eventsInfo: PropTypes.object,
     customProps: PropTypes.object,
+    expanded: PropTypes.bool,
+    rowWrapperStyles: PropTypes.shape({
+      labelColor: PropTypes.string,
+      backgroundColor: PropTypes.string,
+    }),
   };
 
   static defaultProps = {
@@ -48,13 +53,15 @@ export class StackTraceMessageBlock extends Component {
     designMode: '',
     eventsInfo: {},
     customProps: {},
+    expanded: false,
+    rowWrapperStyles: {},
   };
 
   constructor(props) {
     super(props);
     this.state = {
       withAccordion: false,
-      expanded: false,
+      expanded: props.expanded,
       maxHeight: null,
     };
     this.overflowCell = React.createRef();
@@ -71,7 +78,10 @@ export class StackTraceMessageBlock extends Component {
   getContentHeight = () => Number((this.props.maxHeight - TOGGLER_HEIGHT).toFixed());
 
   setupAccordion = () => {
-    this.setState({ withAccordion: true, maxHeight: `${this.getContentHeight()}px` });
+    this.setState((prevState) => ({
+      withAccordion: true,
+      maxHeight: prevState.expanded ? null : `${this.getContentHeight()}px`,
+    }));
   };
 
   removeAccordion = () => {
@@ -107,8 +117,9 @@ export class StackTraceMessageBlock extends Component {
   };
 
   render() {
-    const { children, level, designMode, customProps } = this.props;
+    const { children, level, designMode, customProps, rowWrapperStyles } = this.props;
     const { expanded, withAccordion, maxHeight } = this.state;
+    const { labelColor, backgroundColor } = rowWrapperStyles;
 
     return (
       <div
@@ -119,6 +130,10 @@ export class StackTraceMessageBlock extends Component {
           { [`design-mode-${designMode}`]: designMode },
           customProps.rowWrapper,
         )}
+        style={{
+          '--label-color': labelColor,
+          '--background-color': backgroundColor,
+        }}
       >
         {withAccordion && (
           <div className={cx('accordion-wrapper-mobile')}>

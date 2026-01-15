@@ -22,7 +22,7 @@ export {
   setPageLoadingAction,
   clearLogPageStackTrace,
   fetchErrorLogs,
-  fetchErrorLog,
+  fetchLog,
   updateHistoryItemIssuesAction,
   setIncludeAllLaunchesAction,
   fetchHistoryItemsAction,
@@ -30,14 +30,15 @@ export {
   updateHistoryItemLaunchAttributesAction,
   setActiveTabIdAction,
   fetchHistoryItemsWithLoadingAction,
+  loadMoreLogsAction,
+  fetchLogItemsForPageAction,
 } from './actionCreators';
 export { logReducer } from './reducer';
 export {
   NAMESPACE,
-  DEFAULT_LOG_LEVEL,
   LOG_LEVEL_FILTER_KEY,
+  LOG_MESSAGE_FILTER_KEY,
   WITH_ATTACHMENTS_FILTER_KEY,
-  LOG_LEVELS,
   RETRY_ID,
   HIDE_PASSED_LOGS,
   HIDE_EMPTY_STEPS,
@@ -57,6 +58,7 @@ export {
   NEXT,
   ALL,
   ERROR_LOG_INDEX_KEY,
+  LOAD_MORE_PAGE_SIZE,
 } from './constants';
 export {
   historyItemsSelector,
@@ -88,5 +90,7 @@ export {
   includeAllLaunchesSelector,
   shouldShowLoadMoreSelector,
   activeTabIdSelector,
+  loadedPagesRangeSelector,
+  loadingDirectionSelector,
 } from './selectors';
 export { getLogLevel, setLogLevel, getLogViewMode, setLogViewMode } from './storageUtils';

@@ -26,6 +26,8 @@ import { withTooltip } from 'components/main/tooltips/tooltip';
 import { HistoryLineItemTooltip } from 'pages/inside/logsPage/historyLine/historyLineItem/historyLineItemTooltip';
 import { updateItemsHistoryLaunchAttributesAction } from 'controllers/itemsHistory';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
+import { CELL_PREVIEW_ATTRIBUTE } from '../../constants';
+import { getAttributeValue, formatAttributeValue } from '../../utils';
 import { DefectBadge } from './defectBadge/defectBadge';
 import { MessageBadge } from './messageBadge/messageBadge';
 import styles from './historyItem.scss';
@@ -56,6 +58,9 @@ export class HistoryItem extends Component {
     selectedItems: PropTypes.arrayOf(PropTypes.object),
     selectable: PropTypes.bool,
     singleDefectView: PropTypes.bool,
+    cellPreview: PropTypes.string,
+    attributeKey: PropTypes.string,
+    highlightLessThan: PropTypes.string,
     onSelectItem: PropTypes.func,
   };
 
@@ -64,6 +69,9 @@ export class HistoryItem extends Component {
     selectedItems: [],
     selectable: false,
     singleDefectView: false,
+    cellPreview: '',
+    attributeKey: '',
+    highlightLessThan: '',
     onSelectItem: () => {},
   };
 
@@ -110,15 +118,28 @@ export class HistoryItem extends Component {
     });
   };
 
+  renderAttributeContent = () => {
+    const { testItem, attributeKey } = this.props;
+    const value = getAttributeValue(testItem.attributes, attributeKey);
+
+    return (
+      <div className={cx('attribute-content')}>
+        <span className={cx('attribute-value')}>{formatAttributeValue(value)}</span>
+      </div>
+    );
+  };
+
   handleItemSelection = () => {
     const { testItem, onSelectItem } = this.props;
     onSelectItem(testItem);
   };
 
   render() {
-    const { testItem, selectable } = this.props;
+    const { testItem, selectable, cellPreview, attributeKey, highlightLessThan } = this.props;
     const { status, issue = {} } = testItem;
     const selected = selectable ? this.isItemSelected() : false;
+    const isAttributeMode =
+      cellPreview === CELL_PREVIEW_ATTRIBUTE && attributeKey && highlightLessThan;
 
     return (
       <div className={cx('history-item', { selectable, selected })}>
@@ -127,10 +148,19 @@ export class HistoryItem extends Component {
             <InputCheckbox value={selected} onChange={this.handleItemSelection} />
           </div>
         )}
-        {statusesWithDefect.indexOf(status) !== -1 && this.mapDefectsToBadges()}
-        {issue.comment && <MessageBadge data={[{ comment: issue.comment }]} icon={CommentIcon} />}
-        {issue.externalSystemIssues && issue.externalSystemIssues.length > 0 && (
-          <MessageBadge data={issue.externalSystemIssues} icon={TagIcon} />
+
+        {isAttributeMode ? (
+          this.renderAttributeContent()
+        ) : (
+          <>
+            {statusesWithDefect.indexOf(status) !== -1 && this.mapDefectsToBadges()}
+            {issue.comment && (
+              <MessageBadge data={[{ comment: issue.comment }]} icon={CommentIcon} />
+            )}
+            {issue.externalSystemIssues && issue.externalSystemIssues.length > 0 && (
+              <MessageBadge data={issue.externalSystemIssues} icon={TagIcon} />
+            )}
+          </>
         )}
       </div>
     );

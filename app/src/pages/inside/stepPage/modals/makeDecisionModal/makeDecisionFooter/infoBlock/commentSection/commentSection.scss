@@ -24,11 +24,7 @@
   font-size: 11px;
   color: $COLOR--darkmode-gray-100;
   line-height: 20px;
-  word-break: break-all;
-
-  @supports (word-break: break-word) {
-    word-break: break-word;
-  }
+  overflow-wrap: break-word;
 
   &:before,
   &:after {

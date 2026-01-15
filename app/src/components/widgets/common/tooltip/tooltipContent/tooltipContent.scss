@@ -19,8 +19,5 @@
   margin-bottom: 4px;
   overflow: hidden;
   font-family: $FONT-SEMIBOLD;
-  word-break: break-all;
-  @supports (word-break: break-word) {
-    word-break: break-word;
-  }
+  overflow-wrap: break-word;
 }

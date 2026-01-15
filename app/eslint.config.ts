@@ -4,12 +4,31 @@ import typescript from 'typescript-eslint';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
-import prettier from 'eslint-plugin-prettier/recommended';
+import prettier from 'eslint-config-prettier';
 import babelParser from '@babel/eslint-parser';
 import globals from 'globals';
 
 export default defineConfig([
-  globalIgnores(['node_modules/', 'build/', 'dist/', 'localization/', '.tsbuildinfo']),
+  globalIgnores([
+    'node_modules/',
+    'build/',
+    'dist/',
+    'localization/',
+    '.tsbuildinfo',
+    '**/coverage/**',
+    'package.json',
+    'package-lock.json',
+    '**/*.min.js',
+    // Config files
+    'eslint.config.ts',
+    '*.config.js',
+    '*.config.ts',
+    // Setup and script files
+    'jestsetup.js',
+    'scripts/',
+    'src/common/polyfills.js',
+    'webpack/',
+  ]),
   {
     languageOptions: {
       globals: {
@@ -33,7 +52,7 @@ export default defineConfig([
   jsxA11y.flatConfigs.recommended,
   react.configs.flat.recommended,
   react.configs.flat['jsx-runtime'],
-  reactHooks.configs['recommended-latest'],
+  reactHooks.configs.flat['recommended-latest'],
   prettier,
   {
     rules: {
@@ -45,6 +64,12 @@ export default defineConfig([
       'react/display-name': 'off',
       'react/no-unused-prop-types': 'error',
       'react-hooks/exhaustive-deps': 'warn',
+      'react-hooks/static-components': 'warn',
+      'react-hooks/preserve-manual-memoization': 'off',
+      'react-hooks/set-state-in-effect': 'warn',
+      'react-hooks/purity': 'warn',
+      'react-hooks/immutability': 'warn',
+      'react-hooks/refs': 'warn',
 
       // General rules
       'no-unused-vars': 'off', // lot of unused `React` import

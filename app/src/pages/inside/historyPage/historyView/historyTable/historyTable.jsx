@@ -88,6 +88,9 @@ export class HistoryTable extends Component {
     historyDepth: PropTypes.string.isRequired,
     historyBase: PropTypes.string.isRequired,
     defectTypes: PropTypes.object.isRequired,
+    cellPreview: PropTypes.string,
+    attributeKey: PropTypes.string,
+    highlightLessThan: PropTypes.string,
     selectedFilter: PropTypes.object,
     history: PropTypes.array,
     itemsHistory: PropTypes.array,
@@ -110,6 +113,9 @@ export class HistoryTable extends Component {
     totalItemsCount: 0,
     selectedItems: [],
     withGroupOperations: false,
+    cellPreview: '',
+    attributeKey: '',
+    highlightLessThan: '',
     fetchItemsHistoryAction: () => {},
     link: () => {},
     navigate: () => {},
@@ -144,6 +150,9 @@ export class HistoryTable extends Component {
       defectTypes,
       historyBase,
       userRoles,
+      cellPreview,
+      attributeKey,
+      highlightLessThan,
     } = this.props;
     const canManageTestItems = canWorkWithTests(userRoles);
     switch (historyItem.status) {
@@ -155,6 +164,10 @@ export class HistoryTable extends Component {
             key={historyItem.id}
             highlighted={historyItem.isFilterItem}
             bottom={isLastRow}
+            cellPreview={cellPreview}
+            attributeKey={attributeKey}
+            highlightLessThan={highlightLessThan}
+            testItem={historyItem}
           >
             <EmptyHistoryItem {...historyItem} />
           </HistoryCell>
@@ -174,6 +187,10 @@ export class HistoryTable extends Component {
             highlighted={historyItem.isFilterItem}
             bottom={isLastRow}
             key={historyItem.id}
+            cellPreview={cellPreview}
+            attributeKey={attributeKey}
+            highlightLessThan={highlightLessThan}
+            testItem={historyItem}
           >
             <HistoryItem
               includeAllLaunches={historyBase === HISTORY_BASE_DEFAULT_VALUE}
@@ -183,6 +200,9 @@ export class HistoryTable extends Component {
               selectedItems={selectedItems}
               selectable={canManageTestItems && withGroupOperations && !historyItem.isFilterItem}
               singleDefectView={withGroupOperations}
+              cellPreview={cellPreview}
+              attributeKey={attributeKey}
+              highlightLessThan={highlightLessThan}
             />
           </HistoryCell>
         );

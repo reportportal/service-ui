@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
-.method-type-col {
-  color: $COLOR--gray-47;
+@mixin col-text {
   font-size: 13px;
-  line-height: 18px;
-  width: 11%;
+  line-height: 20px;
+}
+
+.method-type-col {
+  @include col-text;
+  color: $COLOR--gray-47;
+  width: 10%;
 
   @media (max-width: $SCREEN_SM_MAX) {
     display: none;
@@ -26,7 +30,7 @@
 }
 
 .name-col {
-  width: 45%;
+  width: 40%;
 
   @media (max-width: $SCREEN_SM_MAX) {
     width: 100%;
@@ -34,11 +38,10 @@
 }
 
 .status-col {
+  @include col-text;
   font-family: $FONT-SEMIBOLD;
-  font-size: 13px;
-  line-height: 18px;
   text-transform: uppercase;
-  width: 9%;
+  width: 8%;
 
   .status-value {
     font-family: $FONT-REGULAR;
@@ -51,7 +54,20 @@
 }
 
 .start-time-col {
-  width: 11%;
+  width: 9%;
+
+  .start-time-text {
+    @include col-text;
+  }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}
+
+.analysis-owner-col {
+  @include col-text;
+  width: 10%;
 
   @media (max-width: $SCREEN_SM_MAX) {
     display: none;

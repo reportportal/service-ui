@@ -392,6 +392,10 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.addToLaunchTooltipText',
     defaultMessage: 'Add scenario details to be able to add this test case to launch',
   },
+  REFRESH: {
+    id: 'Common.refresh',
+    defaultMessage: 'Refresh',
+  },
 });
 
 export const months = [

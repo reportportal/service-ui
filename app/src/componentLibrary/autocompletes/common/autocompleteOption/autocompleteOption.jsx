@@ -60,7 +60,8 @@ export const AutocompleteOption = ({
           {...(!disabled ? props : {})}
           className={cx({ 'button-active': isActive })}
           icon={Parser(PlusIcon)}
-          variant={'text'}
+          variant="text"
+          adjustWidthOn="content"
         >
           {getButtonText()}
         </Button>

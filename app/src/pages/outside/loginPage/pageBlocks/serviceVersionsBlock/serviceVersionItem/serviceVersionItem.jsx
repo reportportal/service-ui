@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { Component } from 'react';
+import React from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages } from 'react-intl';
+import { useIntl, defineMessages } from 'react-intl';
 import styles from './serviceVersionItem.scss';
 
 const cx = classNames.bind(styles);
@@ -29,38 +29,42 @@ const messages = defineMessages({
   },
 });
 
-@injectIntl
-export class ServiceVersionItem extends Component {
-  static propTypes = {
-    serviceName: PropTypes.string,
-    serviceVersion: PropTypes.string,
-    serviceNewVersion: PropTypes.string,
-    isDeprecated: PropTypes.bool,
-    intl: PropTypes.object.isRequired,
+export const ServiceVersionItem = ({
+  serviceName,
+  serviceVersion,
+  serviceNewVersion,
+  isDeprecated,
+}) => {
+  const intl = useIntl();
+  const classes = {
+    'service-version-item': true,
+    deprecated: isDeprecated,
   };
-  static defaultProps = {
-    serviceName: '',
-    serviceVersion: '',
-    serviceNewVersion: '',
-    isDeprecated: false,
-  };
-  render() {
-    const { serviceName, serviceVersion, serviceNewVersion, isDeprecated, intl } = this.props;
-    const classes = {
-      'service-version-item': true,
-      deprecated: isDeprecated,
-    };
-    return (
-      <span
-        className={cx(classes)}
-        title={
-          isDeprecated
-            ? intl.formatMessage(messages.newVersion, { newVersion: serviceNewVersion })
-            : null
-        }
-      >
-        {`${serviceName}: ${serviceVersion};`}
-      </span>
-    );
-  }
-}
+
+  return (
+    <span
+      className={cx(classes)}
+      title={
+        isDeprecated
+          ? intl.formatMessage(messages.newVersion, { newVersion: serviceNewVersion })
+          : null
+      }
+    >
+      {`${serviceName}: ${serviceVersion};`}
+    </span>
+  );
+};
+
+ServiceVersionItem.propTypes = {
+  serviceName: PropTypes.string,
+  serviceVersion: PropTypes.string,
+  serviceNewVersion: PropTypes.string,
+  isDeprecated: PropTypes.bool,
+};
+
+ServiceVersionItem.defaultProps = {
+  serviceName: '',
+  serviceVersion: '',
+  serviceNewVersion: '',
+  isDeprecated: false,
+};

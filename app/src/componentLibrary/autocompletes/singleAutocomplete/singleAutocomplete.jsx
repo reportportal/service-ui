@@ -59,6 +59,7 @@ export class SingleAutocomplete extends Component {
     getUniqKey: PropTypes.func,
     skipOptionCreation: PropTypes.bool,
     newItemButtonText: PropTypes.string,
+    creatable: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -91,6 +92,7 @@ export class SingleAutocomplete extends Component {
     useFixedPositioning: false,
     skipOptionCreation: false,
     newItemButtonText: '',
+    creatable: true,
   };
 
   getOptionProps =
@@ -139,6 +141,7 @@ export class SingleAutocomplete extends Component {
       useFixedPositioning,
       skipOptionCreation,
       newItemButtonText,
+      creatable,
       ...props
     } = this.props;
     return (
@@ -189,7 +192,7 @@ export class SingleAutocomplete extends Component {
                               selectItem(newValue);
                             }
 
-                            if (createWithoutConfirmation) {
+                            if (createWithoutConfirmation && creatable) {
                               selectItem(newValue);
                             }
                           }
@@ -236,6 +239,7 @@ export class SingleAutocomplete extends Component {
                     options={options}
                     variant={variant}
                     newItemButtonText={newItemButtonText}
+                    creatable={creatable}
                     {...props}
                   />
                 )}
