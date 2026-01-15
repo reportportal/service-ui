@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+ @use '../../../../common/css/mixins';
+
 .all-test-cases-page {
   display: flex;
   flex-direction: column;
@@ -22,16 +24,7 @@
 }
 
 .pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: var(--rp-ui-base-bg-100);
-  padding: 5px 32px;
-  border-top: 1px solid var(--rp-ui-base-e-100);
-  margin-top: auto;
-  height: 64px;
-  box-sizing: border-box;
-  width: 100%;
+  @include mixins.pagination-bar;
 }
 
 .pagination-with-panel {
@@ -40,10 +33,7 @@
 }
 
 .sticky-wrapper {
-  position: sticky;
-  width: 100%;
-  bottom: 0;
-  z-index: $Z-INDEX-POPUP;
+  @include mixins.sticky-wrapper($Z_INDEX-STICKY-TOOLBAR);
 }
 
 .selection {
