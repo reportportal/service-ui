@@ -25,6 +25,7 @@ import { createClassnames } from 'common/utils';
 import { withModal } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
+import { useLastItemOnThePage } from 'pages/inside/testCaseLibraryPage/hooks/useLastItemOnThePage';
 
 import { DestinationFolderSwitch } from '../testCaseFolders/shared/DestinationFolderSwitch';
 import { commonFolderMessages } from '../testCaseFolders/modals/commonFolderMessages';
@@ -64,8 +65,8 @@ const MoveTestCaseModal = reduxForm<FolderModalFormValues, MoveTestCaseModalProp
 }: MoveTestCaseModalProps & InjectedFormProps<FolderModalFormValues, MoveTestCaseModalProps>) => {
   const { formatMessage } = useIntl();
   const { isLoading, patchTestCase } = useTestCase();
-
   const { currentMode, handleModeChange } = useFolderModalMode({ change });
+  const { updateUrl, isSingleItemOnTheLastPage } = useLastItemOnThePage();
 
   const onSubmit = useCallback(
     (values: FolderModalFormValues) => {
@@ -81,9 +82,11 @@ const MoveTestCaseModal = reduxForm<FolderModalFormValues, MoveTestCaseModalProp
         folder,
         successMessageId: 'testCaseMovedSuccess',
         errorMessageId: 'testCaseMoveFailed',
+        updateUrl,
+        isSingleItemOnTheLastPage,
       }).catch(noop);
     },
-    [testCase, patchTestCase],
+    [testCase, patchTestCase, updateUrl, isSingleItemOnTheLastPage],
   );
 
   const { okButton, cancelButton, hideModal } = useModalButtons({

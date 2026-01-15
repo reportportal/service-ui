@@ -50,13 +50,11 @@ export interface GetTestCasesByFolderIdParams {
   folderId: number;
   offset: number;
   limit: number;
-  setPageData?: () => void;
 }
 
 export interface GetAllTestCases {
   offset: number;
   limit: number;
-  setPageData?: () => void;
 }
 
 export interface CreateFolderParams {
