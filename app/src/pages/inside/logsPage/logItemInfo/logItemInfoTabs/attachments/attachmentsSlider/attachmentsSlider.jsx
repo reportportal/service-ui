@@ -24,6 +24,7 @@ import ArrowIcon from 'common/img/arrow-right-inline.svg';
 import { Image } from 'components/main/image';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { AttachmentActions } from 'pages/inside/logsPage/attachmentActions';
+import { createAttachmentName } from 'controllers/log/attachments';
 import { DEFAULT_VISIBLE_THUMBS } from '../constants';
 import styles from './attachmentsSlider.scss';
 
@@ -147,6 +148,12 @@ class AttachmentsSlider extends Component {
                   isStatic={!attachment.isImage}
                   preloaderColor="charcoal"
                 />
+                {!isThumbsView && (
+                  <div className={cx('file-name')}>
+                    {attachment.fileName ||
+                      createAttachmentName(attachment.id, attachment.contentType)}
+                  </div>
+                )}
               </div>
               {withActions && (
                 <AttachmentActions
