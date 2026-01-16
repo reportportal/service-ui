@@ -40,6 +40,7 @@ export {
   pluginPageSelector,
   pluginRouteSelector,
   userProfileRouteSelector,
+  locationSelector,
 } from './selectors';
 export { updatePagePropertiesAction, clearPageStateAction } from './actionCreators';
 

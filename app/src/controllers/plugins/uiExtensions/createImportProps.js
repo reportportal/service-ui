@@ -49,6 +49,11 @@ import { showModalAction, hideModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils/fetch';
 import { isEmptyObject } from 'common/utils/isEmptyObject';
 import {
+  getSessionItem,
+  setSessionItem,
+  removeSessionItem,
+} from 'common/utils/storageUtils';
+import {
   STATS_PB_TOTAL,
   STATS_AB_TOTAL,
   STATS_ND_TOTAL,
@@ -83,6 +88,7 @@ import {
   projectIdSelector,
   querySelector,
   payloadSelector,
+  locationSelector,
 } from 'controllers/pages';
 import { attributesArray, isNotEmptyArray } from 'common/utils/validation/validate';
 import {
@@ -403,6 +409,7 @@ export const createImportProps = (pluginName) => ({
     logsSizeSelector,
     analyticsEnabledSelector,
     baseEventParametersSelector,
+    locationSelector,
   },
   icons: {
     PlusIcon,
@@ -437,6 +444,9 @@ export const createImportProps = (pluginName) => ({
     updateUserProjectSettingsInStorage,
     formatMethodType,
     provideEcGA,
+    getSessionItem,
+    setSessionItem,
+    removeSessionItem,
   },
   validators: {
     attributesArray,
