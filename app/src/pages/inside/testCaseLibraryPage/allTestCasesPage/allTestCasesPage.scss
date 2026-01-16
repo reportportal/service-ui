@@ -14,29 +14,46 @@
  * limitations under the License.
  */
 
-@use '../../../../common/css/mixins';
+$sidebar-width: calc(100vw - 408px);
 
 .all-test-cases-page {
   display: flex;
   flex-direction: column;
   height: fit-content;
-  padding: 20px 32px 0 32px;
+  padding: 20px 32px 64px;
+
+  &__with-panel {
+    padding-bottom: 104px;
+  }
 }
 
 .pagination {
-  @include mixins.pagination-bar;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--rp-ui-base-bg-100);
+  padding: 5px 32px;
+  border-top: 1px solid var(--rp-ui-base-e-100);
+  margin-top: auto;
+  height: 64px;
+  box-sizing: border-box;
+  position: fixed;
+  width: $sidebar-width;
+  bottom: 0;
+  z-index: $Z-INDEX-POPUP;
 }
 
 .pagination-with-panel {
   padding: 0 32px;
   height: 40px;
-}
-
-.sticky-wrapper {
-  @include mixins.sticky-wrapper($Z_INDEX-STICKY-TOOLBAR);
+  bottom: 64px;
 }
 
 .selection {
+  position: fixed;
+  width: $sidebar-width;
+  bottom: 0;
+  z-index: $Z-INDEX-POPUP;
   display: flex;
   justify-content: space-between;
   align-items: center;

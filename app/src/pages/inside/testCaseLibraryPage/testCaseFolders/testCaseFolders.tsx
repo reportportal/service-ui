@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { noop } from 'es-toolkit/compat';
 import { Button, PlusIcon } from '@reportportal/ui-kit';
 
-import { createClassnames } from 'common/utils';
+import { createClassnames, getStorageItem } from 'common/utils';
 import {
   transformedFoldersSelector,
   areFoldersLoadingSelector,
@@ -33,6 +33,7 @@ import {
   activeFolderIdSelector,
 } from 'controllers/testCase';
 import {
+  locationSelector,
   TEST_CASE_LIBRARY_PAGE,
   urlFolderIdSelector,
   urlOrganizationSlugSelector,
@@ -48,6 +49,7 @@ import { setActiveFolderId } from 'controllers/testCase/actionCreators';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
+import { userIdSelector } from 'controllers/user';
 
 import { ExpandedOptions } from '../../common/expandedOptions';
 import { commonMessages } from '../commonMessages';
@@ -75,13 +77,19 @@ export const TestCaseFolders = () => {
   const folders = useSelector(transformedFoldersSelector);
   const areFoldersLoading = useSelector(areFoldersLoadingSelector);
   const { canCreateTestCaseFolder } = useUserPermissions();
-
   const activeFolderIdNumber = Number(urlFolderId);
   const activeFolder = useMemo(
     () => initialFolders.find(({ id }) => id === Number(urlFolderId)),
     [urlFolderId, initialFolders],
   );
-
+  const { query } = useSelector(locationSelector);
+  const userId = useSelector(userIdSelector) as string;
+  const userSettings = getStorageItem(`${userId}_settings`) as Record<string, unknown> | undefined;
+  const savedLimit = userSettings?.testCaseListPageSize as number;
+  const queryParams = {
+    limit: Number(query?.limit) || savedLimit || TestCasePageDefaultValues.limit,
+    offset: Number(query?.offset) || TestCasePageDefaultValues.offset,
+  };
   const setAllTestCases = useCallback(() => {
     dispatch(
       setActiveFolderId({
@@ -117,20 +125,14 @@ export const TestCaseFolders = () => {
       dispatch(
         getTestCaseByFolderIdAction({
           folderId: activeFolderIdNumber,
-          limit: testCasesPageData?.size || TestCasePageDefaultValues.limit,
-          offset: TestCasePageDefaultValues.offset,
+          ...queryParams,
         }),
       );
     } else if (!activeFolder && urlFolderId === '') {
-      dispatch(
-        getAllTestCasesAction({
-          limit: testCasesPageData?.size || TestCasePageDefaultValues.limit,
-          offset: TestCasePageDefaultValues.offset,
-        }),
-      );
+      dispatch(getAllTestCasesAction(queryParams));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeFolder, urlFolderId, activeFolderIdNumber, dispatch]);
+  }, [activeFolder, urlFolderId, activeFolderIdNumber, dispatch, query]);
 
   const handleFolderClick = (id: number) => {
     navigateToFolder({ folderId: id });

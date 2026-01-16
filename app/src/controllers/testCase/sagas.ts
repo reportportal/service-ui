@@ -106,7 +106,7 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
   yield put(startLoadingTestCasesAction());
 
   try {
-    const { folderId, offset, limit, setPageData } = action.payload;
+    const { folderId, offset, limit } = action.payload;
     const projectKey = (yield select(projectKeySelector)) as string;
     const result = (yield call(
       fetch,
@@ -117,10 +117,6 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
     };
 
     yield put(setTestCasesAction(result));
-
-    if (setPageData) {
-      setPageData();
-    }
   } catch {
     yield put(
       showErrorNotification({
@@ -176,17 +172,13 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
   yield put(startLoadingTestCasesAction());
 
   try {
-    const { offset, limit, setPageData } = action.payload;
+    const { offset, limit } = action.payload;
     const projectKey = (yield select(projectKeySelector)) as string;
     const result = (yield call(fetch, URLS.testCases(projectKey, { offset, limit }))) as {
       content: TestCase[];
       page: Page;
     };
     yield put(setTestCasesAction(result));
-
-    if (setPageData) {
-      setPageData();
-    }
   } catch {
     yield put(
       showErrorNotification({
