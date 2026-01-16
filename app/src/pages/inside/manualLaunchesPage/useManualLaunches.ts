@@ -14,16 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
-import { projectKeySelector } from 'controllers/project';
-import { fetch } from 'common/utils';
-import { URLS } from 'common/urls';
-import { showErrorNotification } from 'controllers/notification';
-import { useDebouncedSpinner } from 'common/hooks';
-
-import { Launch, LaunchesResponse, ManualTestCase } from './types';
+import { Launch, ManualTestCase } from './types';
 
 const getExecutionStatistics = (launch: Launch) => ({
   total: launch.statistics?.executions?.total ?? 0,
@@ -67,40 +58,5 @@ export const getLaunchStatistics = (launch: Launch) => {
     skippedTests: skipped,
     testsToRun,
     inProgressTests,
-  };
-};
-
-export const useManualLaunches = () => {
-  const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
-  const [fullLaunches, setFullLaunches] = useState<Launch[]>([]);
-  const dispatch = useDispatch();
-  const projectKey = useSelector(projectKeySelector);
-
-  const fetchManualLaunches = useCallback(async () => {
-    try {
-      showSpinner();
-
-      const response = await fetch<LaunchesResponse>(URLS.manualLaunchesList(projectKey));
-
-      setFullLaunches(response.content);
-    } catch {
-      dispatch(
-        showErrorNotification({
-          messageId: 'errorOccurredTryAgain',
-        }),
-      );
-    } finally {
-      hideSpinner();
-    }
-  }, [projectKey]);
-
-  useEffect(() => {
-    void fetchManualLaunches();
-  }, [fetchManualLaunches]);
-
-  return {
-    fullLaunches,
-    isLoading,
-    refetch: fetchManualLaunches,
   };
 };

@@ -123,3 +123,7 @@ export interface ManualLaunchItem {
   testPlan: LaunchTestPlan | null;
   executionStatistic: ExecutionStatistic;
 }
+
+export interface UrlsHelper {
+  manualLaunchesListPagination: (projectKey: string, query?: Record<string, unknown>) => string;
+}

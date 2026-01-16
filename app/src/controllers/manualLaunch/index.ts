@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,8 @@
  * limitations under the License.
  */
 
-.container {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  opacity: 0.7;
-  z-index: $Z-INDEX-OVERLAY-PANEL;
-  @media print {
-    display: none;
-  }
-}
-.item {
-  display: inline-block;
-  width: 40px;
-  height: 40px;
-  line-height: 40px;
-  text-align: center;
-  background: $COLOR--gray-91;
-  border: 1px solid $COLOR--gray-47;
-  cursor: pointer;
-  &.active {
-    cursor: auto;
-    background: $COLOR--gray-47;
-  }
-}
+export { getManualLaunchesAction } from './actionCreators';
+export { manualLaunchesSagas } from './sagas';
+export * from './constants';
+export { manualLaunchesReducer } from './reducer';
+export * from './selectors';
