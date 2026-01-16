@@ -19,7 +19,7 @@
   right: 0;
   bottom: 0;
   opacity: 0.7;
-  z-index: $Z-INDEX-POPUP;
+  z-index: $Z-INDEX-OVERLAY-PANEL;
   @media print {
     display: none;
   }
