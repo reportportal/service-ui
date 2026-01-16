@@ -139,6 +139,11 @@ import {
   TEST_PLAN_TEST_CASES_NAMESPACE,
   defaultTestPlanTestCasesQueryParams,
 } from 'controllers/testPlan';
+import {
+  MANUAL_LAUNCHES_NAMESPACE,
+  defaultManualLaunchesQueryParams,
+  getManualLaunchesAction,
+} from 'controllers/manualLaunch';
 import { getRouterParams } from 'common/utils';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
@@ -323,15 +328,13 @@ const routesMap = {
     thunk: (dispatch, getState) => {
       const state = getState();
       if (!isTmsEnabled(state)) {
-        return dispatch(
-          redirect({
-            type: PROJECT_DASHBOARD_PAGE,
-            payload: {
-              organizationSlug: state.location.payload.organizationSlug,
-              projectSlug: state.location.payload.projectSlug,
-            },
-          }),
-        );
+        const { offset, limit } = getRouterParams({
+          namespace: MANUAL_LAUNCHES_NAMESPACE,
+          defaultParams: defaultManualLaunchesQueryParams,
+          state,
+        });
+
+        dispatch(getManualLaunchesAction({ offset, limit }));
       }
     },
   },
