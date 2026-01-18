@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
-export enum ExecutionStatusType {
-  PASSED = 'passed',
-  FAILED = 'failed',
-  RUNNING = 'running',
-  SKIPPED = 'skipped',
-}
+export const MOCK_TAG_OPTIONS = [
+  { value: 'smoke', label: 'smoke' },
+  { value: 'regression', label: 'regression' },
+  { value: 'ui', label: 'ui' },
+  { value: 'api', label: 'api' },
+  { value: 'backend', label: 'backend' },
+  { value: 'frontend', label: 'frontend' },
+  { value: 'mobile', label: 'mobile' },
+  { value: 'integration', label: 'integration' },
+];

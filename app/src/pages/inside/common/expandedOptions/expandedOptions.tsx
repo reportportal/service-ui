@@ -18,8 +18,9 @@ import { ReactNode } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { BaseIconButton, SearchIcon } from '@reportportal/ui-kit';
 
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { createClassnames } from 'common/utils';
-import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
+import { useStorageFolders } from 'hooks/useStorageFolders';
 import { TransformedFolder } from 'controllers/testCase';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 
@@ -46,7 +47,7 @@ interface ExpandedOptionsProps {
   setAllTestCases: () => void;
   onFolderClick: (id: number) => void;
   children: ReactNode;
-  instanceKey?: INSTANCE_KEYS;
+  instanceKey?: TMS_INSTANCE_KEY;
   renderCreateFolderButton?: () => ReactNode;
 }
 
@@ -60,6 +61,7 @@ export const ExpandedOptions = ({
   children,
 }: ExpandedOptionsProps) => {
   const { formatMessage } = useIntl();
+  const { expandedIds, onToggleFolder } = useStorageFolders(instanceKey);
 
   const totalTestCases = folders.reduce((total: number, folder: TransformedFolder): number => {
     const countFolderTestCases = (folder: TransformedFolder): number => {
@@ -69,6 +71,7 @@ export const ExpandedOptions = ({
         folder.testsCount || 0,
       );
     };
+
     return total + countFolderTestCases(folder);
   }, 0);
 
@@ -117,6 +120,8 @@ export const ExpandedOptions = ({
                     setActiveFolder={onFolderClick}
                     setAllTestCases={setAllTestCases}
                     instanceKey={instanceKey}
+                    expandedIds={expandedIds}
+                    onToggleFolder={onToggleFolder}
                   />
                 ))}
               </ul>

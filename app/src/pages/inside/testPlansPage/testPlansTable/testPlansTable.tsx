@@ -14,20 +14,24 @@
  * limitations under the License.
  */
 
-import { ReactNode, useCallback, useEffect } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { Table, ChevronDownDropdownIcon, Pagination } from '@reportportal/ui-kit';
-import { push } from 'redux-first-router';
+
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { locationQuerySelector, PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
+import { PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
 import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/common/testCaseList';
-import { usePagination } from 'hooks/usePagination';
 import { useProjectDetails } from 'hooks/useTypedSelector';
-import { defaultQueryParams, TestPlanDto, testPlansPageSelector } from 'controllers/testPlan';
+import {
+  defaultQueryParams,
+  TEST_PLANS_NAMESPACE,
+  TestPlanDto,
+  testPlansPageSelector,
+} from 'controllers/testPlan';
+import { useURLBoundPagination } from 'pages/inside/common/testCaseList/useURLBoundPagination';
 
-import { TestPlanSidePanel } from '../testPlanSidePanel';
 import { messages } from './messages';
 import {
   useDeleteTestPlanModal,
@@ -35,7 +39,6 @@ import {
   useDuplicateTestPlanModal,
 } from '../testPlanModals';
 import { PageLoader } from '../pageLoader';
-import { queryParamsType } from '../../../../types/common';
 import { useTestPlansTableData } from './hooks';
 
 import styles from './testPlansTable.scss';
@@ -50,27 +53,24 @@ interface TestPlansTableProps {
 export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) => {
   const { formatMessage } = useIntl();
   const testPlansPageData = useSelector(testPlansPageSelector);
-  const { captions, activePage, pageSize, totalPages, setActivePage, changePageSize } =
-    usePagination({
-      totalItems: testPlansPageData?.totalElements,
-      itemsPerPage: defaultQueryParams.limit,
+  const { organizationSlug, projectSlug } = useProjectDetails();
+  const { setPageNumber, setPageSize, captions, activePage, pageSize, totalPages } =
+    useURLBoundPagination({
+      pageData: testPlansPageData,
+      namespace: TEST_PLANS_NAMESPACE,
+      shouldSaveUserPreferences: true,
+      baseUrl: `/organizations/${organizationSlug}/projects/${projectSlug}/milestones`,
+      defaultQueryParams,
     });
   const dispatch = useDispatch();
-  const { organizationSlug, projectSlug } = useProjectDetails();
   const { openModal: openEditModal } = useEditTestPlanModal();
   const { openModal: openDuplicateModal } = useDuplicateTestPlanModal();
   const { openModal: openDeleteModal } = useDeleteTestPlanModal();
-  const query = useSelector(locationQuerySelector);
 
-  useEffect(() => {
-    if (query?.limit) {
-      changePageSize(Number(query.limit));
-
-      if (query?.offset) {
-        setActivePage(Number(query.offset) / Number(query.limit) + 1);
-      }
-    }
-  }, [query?.offset, query?.limit, changePageSize, setActivePage]);
+  const testPlansById = useMemo(
+    () => new Map<number, TestPlanDto>(testPlans?.map((testPlan) => [testPlan.id, testPlan])),
+    [testPlans],
+  );
 
   const handleRowClick = (testPlanId: number) => {
     dispatch({
@@ -80,7 +80,7 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
   };
 
   const getActionHandler = (action: (testPlan: TestPlanDto) => void) => (testPlanId: number) => {
-    const actionTestPlan = testPlans.find((testPlan) => testPlan.id === testPlanId);
+    const actionTestPlan = testPlansById.get(testPlanId);
 
     if (actionTestPlan) {
       action(actionTestPlan);
@@ -102,31 +102,30 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
     </button>
   );
 
-  const {
-    data: testPlansTableData,
-    selectedTestPlanId,
-    setSelectedTestPlanId,
-  } = useTestPlansTableData({
+  const { data: testPlansTableData } = useTestPlansTableData({
     testPlans,
     onEdit: getActionHandler(openEditModal),
     onDuplicate: getActionHandler(openDuplicateModal),
     onDelete: getActionHandler(openDeleteModal),
   });
 
-  const handleCloseSidePanel = useCallback(() => {
-    setSelectedTestPlanId(null);
-  }, [setSelectedTestPlanId]);
+  const currentTestPlans = testPlansTableData.map((row) => {
+    const testPlanName = testPlansById.get(row.id as number)?.name || '';
 
-  const currentTestPlans = testPlansTableData.map((row) => ({
-    ...row,
-    icon: {
-      component: getOpenTestPlanDetailsButton(
-        row.id as number,
-        testPlans.find((plan) => plan.id === row.id)?.name || '',
-        <ChevronDownDropdownIcon />,
-      ),
-    },
-  }));
+    return {
+      ...row,
+      testPlanName: {
+        component: getOpenTestPlanDetailsButton(row.id as number, testPlanName, testPlanName),
+      },
+      icon: {
+        component: getOpenTestPlanDetailsButton(
+          row.id as number,
+          testPlanName,
+          <ChevronDownDropdownIcon />,
+        ),
+      },
+    };
+  });
 
   const primaryColumn = {
     key: 'testPlanName',
@@ -168,28 +167,6 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
     },
   ];
 
-  const changeUrlParams = ({ limit, offset }: queryParamsType): void => {
-    const url = `/organizations/${organizationSlug}/projects/${projectSlug}/testPlans?offset=${offset}&limit=${limit}`;
-
-    push(url);
-  };
-
-  const setTestPlansPage = (page: number): void => {
-    const offset = (page - 1) * testPlansPageData.size;
-
-    if (offset !== Number(query?.offset)) {
-      changeUrlParams({ limit: pageSize, offset });
-    }
-  };
-
-  const setTestPlansPageSize = (pageSize: number): void => {
-    if (pageSize !== Number(query?.limit)) {
-      changeUrlParams({ limit: pageSize, offset: defaultQueryParams.offset });
-    }
-  };
-
-  const selectedTestPlan = testPlans?.find((plan) => plan.id === selectedTestPlanId);
-
   return (
     <>
       <div className={cx('test-plans__table-container')}>
@@ -214,17 +191,12 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
             totalItems={testPlansPageData.totalElements}
             totalPages={totalPages}
             pageSizeOptions={ITEMS_PER_PAGE_OPTIONS}
-            changePage={setTestPlansPage}
-            changePageSize={setTestPlansPageSize}
+            changePage={setPageNumber}
+            changePageSize={setPageSize}
             captions={captions}
           />
         </div>
       )}
-      <TestPlanSidePanel
-        testPlan={selectedTestPlan}
-        isVisible={Boolean(selectedTestPlanId)}
-        onClose={handleCloseSidePanel}
-      />
     </>
   );
 };

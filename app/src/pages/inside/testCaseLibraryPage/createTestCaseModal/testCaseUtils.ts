@@ -14,17 +14,11 @@
  * limitations under the License.
  */
 
-import { fetch } from 'common/utils';
-import { URLS } from 'common/urls';
-import { Folder } from 'controllers/testCase';
+import { FolderWithFullPath } from 'controllers/testCase';
+import { isString } from 'es-toolkit';
 
-import { ManualScenarioDto, ManualScenarioType, CreateTestCaseFormData } from '../types';
-
-export const createFolder = (projectKey: string, folderName: string) =>
-  fetch<Folder>(URLS.testFolders(projectKey), {
-    method: 'POST',
-    data: { name: folderName },
-  });
+import { ManualScenarioDto, ManualScenarioType, CreateTestCaseFormData, Attribute } from '../types';
+import { NewFolderData, isNewFolderData } from '../utils/getFolderFromFormValues';
 
 export const buildManualScenario = (payload: CreateTestCaseFormData): ManualScenarioDto => {
   const commonData = {
@@ -35,12 +29,6 @@ export const buildManualScenario = (payload: CreateTestCaseFormData): ManualScen
       value: payload.precondition,
       attachments: payload.preconditionAttachments ?? [],
     },
-    attributes:
-      payload.attributes?.map(({ id, key, value }) => ({
-        id,
-        key,
-        value,
-      })) || [],
   };
 
   if (payload.manualScenarioType === ManualScenarioType.TEXT) {
@@ -72,4 +60,65 @@ export const isDuplicateTestCaseError = (error: unknown) => {
   }
 
   return false;
+};
+
+interface FolderPayload {
+  testFolder?: { name: string; parentTestFolderId?: number | null };
+  testFolderId?: number;
+}
+
+interface ProcessFolderResult {
+  payload: FolderPayload;
+  newFolderDetails: NewFolderData | undefined;
+  existingFolderId: number | undefined;
+}
+
+export const processFolder = (
+  folder: FolderWithFullPath | NewFolderData | string,
+): ProcessFolderResult => {
+  if (isString(folder)) {
+    return {
+      payload: { testFolder: { name: folder } },
+      newFolderDetails: { name: folder, parentTestFolderId: undefined },
+      existingFolderId: undefined,
+    };
+  }
+
+  if (isNewFolderData(folder)) {
+    const parentId = folder.parentTestFolderId;
+
+    return {
+      payload: {
+        testFolder: {
+          name: folder.name,
+          ...(parentId && { parentTestFolderId: parentId }),
+        },
+      },
+      newFolderDetails: folder,
+      existingFolderId: undefined,
+    };
+  }
+
+  return {
+    payload: { testFolderId: folder.id },
+    newFolderDetails: undefined,
+    existingFolderId: folder.id,
+  };
+};
+
+export const buildTestCaseData = (
+  payload: CreateTestCaseFormData,
+  manualScenario: ManualScenarioDto,
+  attributes: Attribute[],
+) => {
+  const { payload: folderPayload } = processFolder(payload.folder);
+
+  return {
+    description: payload.description,
+    name: payload.name,
+    ...folderPayload,
+    priority: payload.priority?.toUpperCase(),
+    manualScenario,
+    attributes: attributes.map(({ key: _key, ...rest }) => rest),
+  };
 };

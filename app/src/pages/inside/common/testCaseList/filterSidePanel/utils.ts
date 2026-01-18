@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-// Default number of visible lines when isShowAllView is true
-export const DEFAULT_VISIBLE_LINES = 3;
+export const ensureArray = <T>(value?: T | T[] | null): T[] => {
+  if (value === null || value === undefined) {
+    return [];
+  }
 
-// Tag item dimensions
-export const TAG_LINE_HEIGHT = 22; // px
-export const TAG_GAP_HEIGHT = 8; // px between lines
+  return Array.isArray(value) ? value : [value];
+};
 
-// Timing constants
-export const IMMEDIATE_DELAY = 0; // ms - for show-all-view mode
-export const FONT_LOADING_DELAY = 100; // ms - for width-based mode
-
-// Layout tolerance
-export const OFFSET_TOLERANCE = 20; // px - tolerance for line height calculations
+export const normalizeSelection = (values: string[]) => {
+  return [...new Set(values)].sort((a, b) => a.localeCompare(b));
+};

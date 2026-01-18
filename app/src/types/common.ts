@@ -31,6 +31,6 @@ export interface Page {
 }
 
 export type queryParamsType = {
-  offset: number;
-  limit: number;
+  offset?: number;
+  limit?: number;
 };

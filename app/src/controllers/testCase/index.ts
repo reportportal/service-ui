@@ -18,6 +18,11 @@ export {
   getFoldersAction,
   getAllTestCasesAction,
   getTestCaseByFolderIdAction,
+  updateFolderCounterAction,
+  moveFolderSuccessAction,
+  toggleFolderExpansionAction,
+  expandFoldersToLevelAction,
+  setExpandedFolderIdsAction,
 } from './actionCreators';
 export { testCaseSagas } from './sagas';
 export * from './constants';

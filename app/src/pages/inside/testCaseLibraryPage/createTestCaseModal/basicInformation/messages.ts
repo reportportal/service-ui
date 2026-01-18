@@ -11,15 +11,11 @@ export const messages = defineMessages({
   },
   selectOrCreateFolder: {
     id: 'CreateTestCaseModal.selectOrCreateFolder',
-    defaultMessage: 'Select or create the folder',
+    defaultMessage: 'Start typing to select or create the folder',
   },
   addDetailsOrContext: {
     id: 'CreateTestCaseModal.addDetailsOrContext',
     defaultMessage: 'Add details or context for the test case here',
-  },
-  priority: {
-    id: 'CreateTestCaseModal.priority',
-    defaultMessage: 'Priority',
   },
   priorityBlocker: {
     id: 'CreateTestCaseModal.priorityBlocker',

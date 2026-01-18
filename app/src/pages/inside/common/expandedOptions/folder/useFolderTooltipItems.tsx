@@ -16,26 +16,23 @@
 
 import { TransformedFolder } from 'controllers/testCase';
 import { useTestCaseFolderMenu } from 'pages/inside/testCaseLibraryPage/testCaseFolders/shared/useTestCaseFolderMenu';
-
-export enum INSTANCE_KEYS {
-  TEST_CASE = 'testCase',
-  TEST_PLAN = 'testPlan',
-}
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 
 interface UseFolderTooltipProps {
   folder: TransformedFolder;
   activeFolder: number | null;
   setAllTestCases: () => void;
-  instanceKey?: INSTANCE_KEYS;
+  instanceKey?: TMS_INSTANCE_KEY;
 }
 
 export const useFolderTooltipItems = (props: UseFolderTooltipProps) => {
   const { testCaseFolderTooltipItems } = useTestCaseFolderMenu(props);
 
-  const tooltipItemsByInstance: Partial<Record<INSTANCE_KEYS, typeof testCaseFolderTooltipItems>> =
-    {
-      [INSTANCE_KEYS.TEST_CASE]: testCaseFolderTooltipItems,
-    };
+  const tooltipItemsByInstance: Partial<
+    Record<TMS_INSTANCE_KEY, typeof testCaseFolderTooltipItems>
+  > = {
+    [TMS_INSTANCE_KEY.TEST_CASE]: testCaseFolderTooltipItems,
+  };
 
   return tooltipItemsByInstance[props.instanceKey];
 };

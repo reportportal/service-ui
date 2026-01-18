@@ -14,23 +14,9 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
-
-export const sharedFolderMessages = defineMessages({
-  createAsSubfolder: {
-    id: 'TestCaseLibraryPage.createAsSubfolder',
-    defaultMessage: 'Create as subfolder',
-  },
-  moveToRootDirectory: {
-    id: 'TestCaseLibraryPage.moveToRootDirectory',
-    defaultMessage: 'Move to root directory',
-  },
-  folderDestination: {
-    id: 'TestCaseLibraryPage.folderDestination',
-    defaultMessage: 'Folder destination',
-  },
-  parentFolder: {
-    id: 'TestCaseLibraryPage.parentFolder',
-    defaultMessage: 'Parent folder',
-  },
-});
+export const GET_MANUAL_LAUNCHES = 'getManualLaunches' as const;
+export const MANUAL_LAUNCHES_NAMESPACE = 'manualLaunches' as const;
+export const defaultManualLaunchesQueryParams = {
+  limit: 20,
+  offset: 0,
+};

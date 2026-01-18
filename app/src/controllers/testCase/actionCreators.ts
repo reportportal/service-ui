@@ -35,10 +35,14 @@ import {
   SET_TEST_CASES,
   RENAME_FOLDER,
   RENAME_FOLDER_SUCCESS,
+  MOVE_FOLDER_SUCCESS,
   DELETE_TEST_CASE_SUCCESS,
   UPDATE_FOLDER_COUNTER,
   SELECT_ACTIVE_FOLDER,
   UPDATE_DESCRIPTION_SUCCESS,
+  TOGGLE_FOLDER_EXPANSION,
+  EXPAND_FOLDERS_TO_LEVEL,
+  SET_EXPANDED_FOLDER_IDS,
 } from './constants';
 import { Folder, TransformedFolder } from './types';
 
@@ -46,13 +50,11 @@ export interface GetTestCasesByFolderIdParams {
   folderId: number;
   offset: number;
   limit: number;
-  setPageData?: () => void;
 }
 
 export interface GetAllTestCases {
   offset: number;
   limit: number;
-  setPageData?: () => void;
 }
 
 export interface CreateFolderParams {
@@ -81,6 +83,11 @@ export interface DeleteFolderSuccessParams {
 export interface RenameFolderParams {
   folderId: number;
   folderName: string;
+}
+
+export interface MoveFolderParams {
+  folderId: number;
+  parentTestFolderId: number | null;
 }
 
 export interface SetActiveFolderIdParams {
@@ -183,6 +190,11 @@ export const renameFolderSuccessAction = (folderId: RenameFolderParams) => ({
   payload: folderId,
 });
 
+export const moveFolderSuccessAction = (params: MoveFolderParams) => ({
+  type: MOVE_FOLDER_SUCCESS,
+  payload: params,
+});
+
 export const updateFolderCounterAction = (params: UpdateFolderCounterParams) => ({
   type: UPDATE_FOLDER_COUNTER,
   payload: params,
@@ -191,4 +203,28 @@ export const updateFolderCounterAction = (params: UpdateFolderCounterParams) => 
 export const updateDescriptionSuccessAction = (description: string) => ({
   type: UPDATE_DESCRIPTION_SUCCESS,
   payload: description,
+});
+
+export interface ToggleFolderExpansionParams {
+  folderId: number;
+  folders: Folder[];
+}
+
+export const toggleFolderExpansionAction = (params: ToggleFolderExpansionParams) => ({
+  type: TOGGLE_FOLDER_EXPANSION,
+  payload: params,
+});
+
+export const expandFoldersToLevelAction = (params: ToggleFolderExpansionParams) => ({
+  type: EXPAND_FOLDERS_TO_LEVEL,
+  payload: params,
+});
+
+export interface SetExpandedFolderIdsParams {
+  folderIds: number[];
+}
+
+export const setExpandedFolderIdsAction = (params: SetExpandedFolderIdsParams) => ({
+  type: SET_EXPANDED_FOLDER_IDS,
+  payload: params,
 });

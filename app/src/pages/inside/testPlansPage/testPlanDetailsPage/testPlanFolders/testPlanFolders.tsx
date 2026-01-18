@@ -21,12 +21,16 @@ import {
   testPlanTransformedFoldersSelector,
   testPlanTestCasesSelector,
 } from 'controllers/testPlan';
-import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 
 import { ExpandedOptions } from '../../../common/expandedOptions';
 import { AllTestCasesPage } from './allTestCasesPage';
 
-export const TestPlanFolders = () => {
+interface TestPlanFoldersProps {
+  isLoading?: boolean;
+}
+
+export const TestPlanFolders = ({ isLoading = false }: TestPlanFoldersProps) => {
   const [activeFolder, setActiveFolder] = useState<number | null>(null);
   const folders = useSelector(testPlanTransformedFoldersSelector);
   const testCases = useSelector(testPlanTestCasesSelector);
@@ -53,8 +57,8 @@ export const TestPlanFolders = () => {
       <AllTestCasesPage
         testCases={testCases}
         searchValue=""
-        loading={false}
-        instanceKey={INSTANCE_KEYS.TEST_PLAN}
+        loading={isLoading}
+        instanceKey={TMS_INSTANCE_KEY.TEST_PLAN}
       />
     </ExpandedOptions>
   );

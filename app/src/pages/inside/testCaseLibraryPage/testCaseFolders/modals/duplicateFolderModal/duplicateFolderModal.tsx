@@ -17,7 +17,7 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { reduxForm, InjectedFormProps, formValueSelector } from 'redux-form';
+import { reduxForm, InjectedFormProps } from 'redux-form';
 import { noop } from 'es-toolkit';
 
 import { UseModalData } from 'common/hooks';
@@ -28,17 +28,17 @@ import { commonValidators } from 'common/utils/validation';
 import { coerceToNumericId } from 'pages/inside/testCaseLibraryPage/utils';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 
-import { sharedFolderMessages } from '../messages';
+import { commonFolderMessages } from '../commonFolderMessages';
 import { DUPLICATE_FORM_NAME } from '../constants';
 import { messages } from './messages';
 import { DuplicateFolderFormValues } from '../types';
 import { FolderModal } from '../folderModal';
+import { useBooleanFormFieldValue } from '../../../hooks/useFormFieldValue';
 import { useDuplicateFolder } from './useDuplicateFolder';
 
 import styles from '../folderModal/folderModal.scss';
 
 const cx = createClassnames(styles);
-const selector = formValueSelector(DUPLICATE_FORM_NAME);
 
 export const DUPLICATE_FOLDER_MODAL_KEY = 'duplicateFolderModalKey';
 
@@ -69,9 +69,10 @@ const DuplicateFolderModal = reduxForm<DuplicateFolderFormValues, DuplicateFolde
   const { formatMessage } = useIntl();
   const folders = useSelector(transformedFoldersWithFullPathSelector);
   const { duplicateFolder, isLoading: isDuplicating } = useDuplicateFolder();
-  const shouldMoveToRoot = Boolean(
-    useSelector((state) => selector(state, 'moveToRoot') as boolean | undefined),
-  );
+  const shouldMoveToRoot = useBooleanFormFieldValue<DuplicateFolderFormValues>({
+    formName: DUPLICATE_FORM_NAME,
+    fieldName: 'moveToRoot',
+  });
 
   useEffect(() => {
     if (folderId) {
@@ -118,8 +119,9 @@ const DuplicateFolderModal = reduxForm<DuplicateFolderFormValues, DuplicateFolde
       toggleDisabled={false}
       isInvertedToggle
       parentFolderFieldName="destinationFolder"
-      parentFolderFieldLabel={formatMessage(sharedFolderMessages.folderDestination)}
+      parentFolderFieldLabel={formatMessage(commonFolderMessages.folderDestination)}
       customContent={customContent}
+      excludeFolderIds={[folderId]}
       handleSubmit={handleSubmit}
       onSubmit={onSubmit}
       change={change}

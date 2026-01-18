@@ -376,13 +376,15 @@ export const URLS = {
 
   testCaseDetails: (projectKey, testCaseId) =>
     `${urlBase}project/${projectKey}/tms/test-case/${testCaseId}`,
-  bulkUpdateTestCases: (projectKey) => `${urlBase}project/${projectKey}/tms/test-case/batch`,
+  testPlanTestCaseDetails: (projectKey, testPlanId, testCaseId) =>
+    `${urlBase}project/${projectKey}/tms/test-plan/${testPlanId}/test-case/${testCaseId}`,
+  testCasesBatch: (projectKey) => `${urlBase}project/${projectKey}/tms/test-case/batch`,
   testCaseBatchDuplicate: (projectKey) =>
     `${urlBase}project/${projectKey}/tms/test-case/batch/duplicate`,
   testCases: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-case${getQueryParams(query)}`,
-  testPlanTestCases: (projectKey, id) =>
-    `${urlBase}project/${projectKey}/tms/test-plan/${id}/test-case`,
+  testPlanTestCases: (projectKey, id, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/test-plan/${id}/test-case${getQueryParams(query)}`,
   testPlan: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-plan${getQueryParams(query)}`,
   testPlanTestCasesBatch: (projectKey, testPlanId) =>
@@ -395,11 +397,15 @@ export const URLS = {
     `${urlBase}project/${projectKey}/tms/folder${getQueryParams(query)}`,
   testFolderDuplicate: (projectKey, folderId) =>
     `${urlBase}project/${projectKey}/tms/folder/${folderId}/duplicate`,
-  deleteFolder: (projectKey, folderId) => `${urlBase}project/${projectKey}/tms/folder/${folderId}`,
+  folder: (projectKey, folderId) => `${urlBase}project/${projectKey}/tms/folder/${folderId}`,
   tmsAttachmentUpload: (projectKey) => `${urlBase}project/${projectKey}/tms/attachment/upload`,
   tmsAttachmentDownload: (projectKey, attachmentId) =>
     `${urlBase}project/${projectKey}/tms/attachment/${attachmentId}`,
   manualLaunchesList: (projectKey) => `${urlBase}/${projectKey}/launch`,
+  manualLaunchById: (projectKey, launchId) =>
+    `${urlBase}project/${projectKey}/launch/manual/${launchId}`,
+  manualLaunchesListPagination: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/launch/manual${getQueryParams(query)}`,
   importTestCase: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-case/import${getQueryParams(query)}`,
   tmsAttributes: (query = {}) => `${urlBase}tms/attribute${getQueryParams(query)}`,

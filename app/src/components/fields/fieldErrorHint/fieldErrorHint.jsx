@@ -85,7 +85,7 @@ const messages = defineMessages({
   },
   testCaseDescriptionHint: {
     id: 'DescriptionModal.testCaseDescriptionHint',
-    defaultMessage: 'Description should have size not more than 255 symbols.',
+    defaultMessage: 'Description should have size not more than 1000 symbols.',
   },
   dashboardNameHint: {
     id: 'AddEditDashboard.dashboardNameHint',

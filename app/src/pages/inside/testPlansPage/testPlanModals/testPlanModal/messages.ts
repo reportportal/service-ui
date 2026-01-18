@@ -17,20 +17,20 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  enterTestPlanName: {
-    id: 'CreateTestPlanModal.enterTestPlanName',
-    defaultMessage: 'Enter test plan name',
+  enterMilestoneName: {
+    id: 'CreateMilestoneModal.enterMilestoneName',
+    defaultMessage: 'Enter Milestone name',
   },
-  addTestPlanDescription: {
-    id: 'CreateTestPlanModal.addTestPlanDescription',
-    defaultMessage: 'Add test plan description',
+  addMilestoneDescription: {
+    id: 'CreateMilestoneModal.addMilestoneDescription',
+    defaultMessage: 'Add Milestone description',
   },
-  testPlanAttributes: {
-    id: 'CreateTestPlanModal.testPlanAttributes',
-    defaultMessage: 'Test plan attributes',
+  milestoneAttributes: {
+    id: 'CreateMilestoneModal.milestoneAttributes',
+    defaultMessage: 'Milestone attributes',
   },
   addAttributes: {
-    id: 'CreateTestPlanModal.addAttributes',
+    id: 'CreateMilestoneModal.addAttributes',
     defaultMessage: 'Add Attributes',
   },
 });

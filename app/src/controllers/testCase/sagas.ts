@@ -63,6 +63,7 @@ import {
   renameFolderSuccessAction,
   GetAllTestCases,
   setActiveFolderId,
+  expandFoldersToLevelAction,
 } from './actionCreators';
 import { getAllFolderIdsToDelete } from './utils';
 import { fetchAllFolders } from './utils/fetchAllFolders';
@@ -105,7 +106,7 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
   yield put(startLoadingTestCasesAction());
 
   try {
-    const { folderId, offset, limit, setPageData } = action.payload;
+    const { folderId, offset, limit } = action.payload;
     const projectKey = (yield select(projectKeySelector)) as string;
     const result = (yield call(
       fetch,
@@ -116,10 +117,6 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
     };
 
     yield put(setTestCasesAction(result));
-
-    if (setPageData) {
-      setPageData();
-    }
   } catch {
     yield put(
       showErrorNotification({
@@ -175,17 +172,13 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
   yield put(startLoadingTestCasesAction());
 
   try {
-    const { offset, limit, setPageData } = action.payload;
+    const { offset, limit } = action.payload;
     const projectKey = (yield select(projectKeySelector)) as string;
     const result = (yield call(fetch, URLS.testCases(projectKey, { offset, limit }))) as {
       content: TestCase[];
       page: Page;
     };
     yield put(setTestCasesAction(result));
-
-    if (setPageData) {
-      setPageData();
-    }
   } catch {
     yield put(
       showErrorNotification({
@@ -234,6 +227,9 @@ function* handleFolderCreation(
 ): Generator {
   try {
     const projectKey = (yield select(projectKeySelector)) as string;
+    const organizationSlug = (yield select(urlOrganizationSlugSelector)) as string;
+    const projectSlug = (yield select(urlProjectSlugSelector)) as string;
+
     const spinnerTask = (yield fork(
       delayedPut,
       startCreatingFolderAction(),
@@ -252,6 +248,29 @@ function* handleFolderCreation(
     yield put(createFoldersSuccessAction({ ...folder, countOfTestCases: 0 }));
     yield put(hideModalAction());
     yield put(setActiveFolderId({ activeFolderId: folder.id }));
+
+    if (folder.parentFolderId) {
+      const folders = (yield select(foldersSelector)) as Folder[];
+
+      yield put(expandFoldersToLevelAction({ folderId: folder.parentFolderId, folders }));
+    }
+
+    yield put({
+      type: GET_TEST_CASES_BY_FOLDER_ID,
+      payload: {
+        folderId: folder.id,
+        limit: 50,
+        offset: 0,
+      },
+    });
+    yield put({
+      type: TEST_CASE_LIBRARY_PAGE,
+      payload: {
+        testCasePageRoute: `folder/${folder.id}`,
+        organizationSlug,
+        projectSlug,
+      },
+    });
     yield put(
       showSuccessNotification({
         message: null,
@@ -289,7 +308,7 @@ function* deleteFolder(action: DeleteFolderAction) {
     const deletedFolderIds = getAllFolderIdsToDelete(id, folders);
     const isActiveFolder = id === activeFolderId;
 
-    yield call(fetch, URLS.deleteFolder(projectKey, id), {
+    yield call(fetch, URLS.folder(projectKey, id), {
       method: 'DELETE',
     });
 
@@ -325,7 +344,7 @@ function* renameFolder(action: RenameFolderAction) {
     const projectKey = (yield select(projectKeySelector)) as string;
     const { folderId, folderName } = action.payload;
 
-    yield call(fetch, URLS.deleteFolder(projectKey, folderId), {
+    yield call(fetch, URLS.folder(projectKey, folderId), {
       method: 'PATCH',
       data: {
         name: folderName,

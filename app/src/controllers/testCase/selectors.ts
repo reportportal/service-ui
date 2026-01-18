@@ -31,11 +31,12 @@ export interface TestCaseState {
     isCreatingFolder?: boolean;
     isLoadingFolder?: boolean;
     activeFolderId?: number | null;
+    expandedFolderIds?: number[];
     loading?: boolean;
   };
   testCases?: {
     isLoading?: boolean;
-    list?: unknown[];
+    list?: TestCase[];
     page: Page | null;
   };
   details?: {
@@ -66,10 +67,14 @@ export const isCreatingFolderSelector = (state: RootState): boolean =>
 export const isLoadingFolderSelector = (state: RootState): boolean =>
   testCaseSelector(state).folders?.isLoadingFolder || false;
 
+export const expandedFolderIdsSelector = (state: RootState): number[] =>
+  testCaseSelector(state).folders?.expandedFolderIds || [];
+
 export const isLoadingTestCasesSelector = (state: RootState) =>
   state.testCase?.testCases?.isLoading || false;
 
-export const testCasesSelector = (state: RootState) => state.testCase?.testCases?.list || [];
+export const testCasesSelector = (state: RootState): TestCase[] =>
+  state.testCase?.testCases?.list || [];
 
 export const testCasesPageSelector = (state: RootState): Page | null =>
   state.testCase?.testCases?.page || null;

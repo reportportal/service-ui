@@ -16,16 +16,24 @@
 
 import { useState } from 'react';
 import { useIntl } from 'react-intl';
-import { isEmpty } from 'es-toolkit/compat';
+import { useSelector } from 'react-redux';
 import { Pagination } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { TestCaseList } from 'pages/inside/common/testCaseList';
 import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/common/testCaseList/constants';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
-import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { usePagination } from 'hooks/usePagination';
+import { SelectedTestCaseRow } from 'pages/inside/testCaseLibraryPage/allTestCasesPage/allTestCasesPage';
+import {
+  defaultTestPlanTestCasesQueryParams,
+  TEST_PLAN_TEST_CASES_NAMESPACE,
+  testPlanTestCasesPageSelector,
+} from 'controllers/testPlan';
+import { payloadSelector } from 'controllers/pages';
+import { useProjectDetails } from 'hooks/useTypedSelector';
+import { useURLBoundPagination } from 'pages/inside/common/testCaseList/useURLBoundPagination';
 
 import styles from './allTestCasesPage.scss';
 
@@ -35,7 +43,7 @@ interface AllTestCasesPageProps {
   testCases: ExtendedTestCase[];
   loading: boolean;
   searchValue: string;
-  instanceKey: INSTANCE_KEYS;
+  instanceKey: TMS_INSTANCE_KEY;
 }
 
 export const AllTestCasesPage = ({
@@ -45,39 +53,45 @@ export const AllTestCasesPage = ({
   instanceKey,
 }: AllTestCasesPageProps) => {
   const { formatMessage } = useIntl();
-  const { captions, activePage, pageSize, totalPages, setActivePage, changePageSize } =
-    usePagination({
-      totalItems: testCases.length,
+  const testPlansTestCasesPageData = useSelector(testPlanTestCasesPageSelector);
+  const payload = useSelector(payloadSelector);
+  const { organizationSlug, projectSlug } = useProjectDetails();
+  const { setPageNumber, setPageSize, captions, activePage, pageSize, totalPages } =
+    useURLBoundPagination({
+      pageData: testPlansTestCasesPageData,
+      defaultQueryParams: defaultTestPlanTestCasesQueryParams,
+      namespace: TEST_PLAN_TEST_CASES_NAMESPACE,
+      shouldSaveUserPreferences: true,
+      baseUrl: `/organizations/${organizationSlug}/projects/${projectSlug}/milestones/${payload.testPlanId}`,
     });
-  const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
+  const [selectedRows, setSelectedRows] = useState<SelectedTestCaseRow[]>([]);
 
   return (
     <>
       <div className={cx('all-test-cases-page')}>
         <TestCaseList
           testCases={testCases}
-          loading={loading}
-          currentPage={activePage}
-          itemsPerPage={pageSize}
+          isLoading={loading}
           searchValue={searchValue}
-          selectedRowIds={selectedRowIds}
-          handleSelectedRowIds={setSelectedRowIds}
+          selectedRowIds={selectedRows.map((row) => row.id)}
+          selectedRows={selectedRows}
+          handleSelectedRows={setSelectedRows}
           folderTitle={formatMessage(COMMON_LOCALE_KEYS.ALL_TEST_CASES_TITLE)}
           selectable={false}
           instanceKey={instanceKey}
         />
       </div>
       <div className={cx('sticky-wrapper')}>
-        {!isEmpty(testCases) && (
+        {Boolean(testPlansTestCasesPageData?.totalElements) && (
           <div className={cx('pagination')}>
             <Pagination
               pageSize={pageSize}
               activePage={activePage}
-              totalItems={testCases.length}
+              totalItems={testPlansTestCasesPageData.totalElements}
               totalPages={totalPages}
               pageSizeOptions={ITEMS_PER_PAGE_OPTIONS}
-              changePage={setActivePage}
-              changePageSize={changePageSize}
+              changePage={setPageNumber}
+              changePageSize={setPageSize}
               captions={captions}
             />
           </div>

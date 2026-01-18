@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-export { ExecutionStatus } from './executionStatus';
-export { ExecutionStatusType } from './types';
+export { useBatchDeleteTestCasesModal } from './useBatchDeleteTestCasesModal';
+export { BATCH_DELETE_TEST_CASES_MODAL_KEY } from './batchDeleteTestCasesModal';

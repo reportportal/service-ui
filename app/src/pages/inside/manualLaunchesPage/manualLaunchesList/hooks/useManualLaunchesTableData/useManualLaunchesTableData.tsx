@@ -18,7 +18,7 @@ import { RowData } from '@reportportal/ui-kit/components/table/types';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
-import { AbsRelTime } from 'components/main/absRelTime/absRelTime';
+import { AbsRelTime } from 'components/main/absRelTime';
 import { SegmentStatus, SegmentedStatusBar } from 'components/statusBar';
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';

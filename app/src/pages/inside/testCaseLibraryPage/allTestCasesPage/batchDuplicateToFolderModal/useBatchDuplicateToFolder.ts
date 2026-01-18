@@ -23,14 +23,14 @@ import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import { useDebouncedSpinner } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
-import { updateFolderCounterAction } from 'controllers/testCase/actionCreators';
 import {
-  getTestCaseByFolderIdAction,
-  getAllTestCasesAction,
-  testCasesPageSelector,
-} from 'controllers/testCase';
+  updateFolderCounterAction,
+  createFoldersSuccessAction,
+} from 'controllers/testCase/actionCreators';
 import { urlFolderIdSelector } from 'controllers/pages';
-import { getTestCaseRequestParams } from 'pages/inside/testCaseLibraryPage/utils';
+
+import { useRefetchCurrentTestCases } from '../../hooks/useRefetchCurrentTestCases';
+import { useNavigateToFolder } from '../../hooks/useNavigateToFolder';
 
 interface BatchDuplicateParams {
   testCaseIds: number[];
@@ -41,27 +41,44 @@ interface BatchDuplicateParams {
   };
 }
 
-export const useBatchDuplicateToFolder = () => {
+interface BatchDuplicateResponse {
+  testFolderId: number;
+}
+
+export const useBatchDuplicateToFolder = ({ onSuccess }: { onSuccess: () => void }) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const urlFolderId = useSelector(urlFolderIdSelector);
-  const testCasesPageData = useSelector(testCasesPageSelector);
+  const refetchCurrentTestCases = useRefetchCurrentTestCases();
+  const { navigateToFolder } = useNavigateToFolder();
 
   const batchDuplicate = useCallback(
     async ({ testCaseIds, testFolder, testFolderId }: BatchDuplicateParams) => {
       showSpinner();
 
       try {
-        await fetch(URLS.testCaseBatchDuplicate(projectKey), {
-          method: 'POST',
-          data: { testCaseIds, testFolder, testFolderId },
-        });
+        const response = await fetch<BatchDuplicateResponse>(
+          URLS.testCaseBatchDuplicate(projectKey),
+          {
+            method: 'POST',
+            data: { testCaseIds, testFolder, testFolderId },
+          },
+        );
 
-        // TODO: Get created folder id after backend supports it
-        const targetFolderId = testFolderId || null;
+        const targetFolderId = response.testFolderId;
+        const isNewFolder = Boolean(testFolder);
 
-        if (targetFolderId) {
+        if (isNewFolder && testFolder) {
+          dispatch(
+            createFoldersSuccessAction({
+              id: targetFolderId,
+              name: testFolder.name,
+              parentFolderId: testFolder.parentTestFolderId ?? null,
+              countOfTestCases: testCaseIds.length,
+            }),
+          );
+        } else {
           dispatch(
             updateFolderCounterAction({
               folderId: targetFolderId,
@@ -70,24 +87,16 @@ export const useBatchDuplicateToFolder = () => {
           );
         }
 
-        const paginationParams = getTestCaseRequestParams(testCasesPageData);
-        const isViewingTargetFolder = targetFolderId && Number(urlFolderId) === targetFolderId;
-        const isViewingAllTestCases = !urlFolderId && !targetFolderId;
+        const isViewingTargetFolder = Number(urlFolderId) === targetFolderId;
 
         if (isViewingTargetFolder) {
-          dispatch(
-            getTestCaseByFolderIdAction({
-              folderId: targetFolderId,
-              ...paginationParams,
-            }),
-          );
-        }
-
-        if (isViewingAllTestCases) {
-          dispatch(getAllTestCasesAction(paginationParams));
+          refetchCurrentTestCases();
+        } else {
+          navigateToFolder({ folderId: targetFolderId });
         }
 
         dispatch(hideModalAction());
+        onSuccess();
         dispatch(
           showSuccessNotification({
             messageId: 'testCasesDuplicatedSuccess',
@@ -103,7 +112,16 @@ export const useBatchDuplicateToFolder = () => {
         hideSpinner();
       }
     },
-    [projectKey, dispatch, showSpinner, hideSpinner, urlFolderId, testCasesPageData],
+    [
+      showSpinner,
+      projectKey,
+      urlFolderId,
+      dispatch,
+      onSuccess,
+      refetchCurrentTestCases,
+      navigateToFolder,
+      hideSpinner,
+    ],
   );
 
   return { batchDuplicate, isLoading };

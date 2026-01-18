@@ -15,3 +15,4 @@
  */
 
 export const APPLICATION_SETTINGS = 'applicationSettings';
+export const EXPANDED_FOLDERS_IDS = 'expandedFoldersIds';

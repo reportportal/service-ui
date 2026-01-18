@@ -24,7 +24,8 @@ import { FETCH_START } from 'controllers/fetch/constants';
 import { BaseAppState } from 'types/store';
 import { showErrorNotification } from 'controllers/notification';
 import { projectKeySelector } from 'controllers/project';
-import { PROJECT_TEST_PLANS_PAGE } from 'controllers/pages';
+import { locationSelector, PROJECT_TEST_PLANS_PAGE } from 'controllers/pages';
+import { LocationInfo } from 'controllers/pages/typed-selectors';
 
 import {
   GET_TEST_PLANS,
@@ -37,6 +38,7 @@ import {
   ACTIVE_TEST_PLAN_NAMESPACE,
   TEST_PLAN_FOLDERS_NAMESPACE,
   TEST_PLAN_TEST_CASES_NAMESPACE,
+  defaultTestPlanTestCasesQueryParams,
 } from './constants';
 import { GetTestPlansParams, GetTestPlanParams } from './actionCreators';
 import { Page } from '../../types/common';
@@ -87,29 +89,35 @@ function* getTestPlans(action: GetTestPlansAction): Generator {
 }
 
 function* getTestPlan(action: GetTestPlanAction): Generator {
+  const projectKey = (yield select(projectKeySelector)) as string;
+  const location = (yield select(locationSelector)) as LocationInfo;
+  const { testPlanId, offset, limit } = action.payload;
+  const params = {
+    limit: limit || defaultTestPlanTestCasesQueryParams.limit,
+    offset: offset || defaultTestPlanTestCasesQueryParams.offset,
+  };
+
   try {
-    const projectKey = (yield select(projectKeySelector)) as string;
-    const { testPlanId } = action.payload;
+    if (
+      location.query?.offset !== String(offset) ||
+      location.query?.limit !== String(limit) ||
+      String(location?.prev?.payload?.testPlanId) !== String(location?.payload?.testPlanId)
+    ) {
+      yield put({
+        type: FETCH_START,
+        payload: { projectKey },
+        meta: { namespace: ACTIVE_TEST_PLAN_NAMESPACE },
+      });
 
-    yield put({
-      type: FETCH_START,
-      payload: { projectKey },
-      meta: { namespace: ACTIVE_TEST_PLAN_NAMESPACE },
-    });
+      const data = (yield call(fetch, URLS.testPlanById(projectKey, testPlanId))) as TestPlanDto;
+      const planFolders = (yield call(
+        fetch,
+        URLS.testFolders(projectKey, { 'filter.eq.testPlanId': testPlanId }),
+      )) as TestPlanFoldersDto;
 
-    const data = (yield call(fetch, URLS.testPlanById(projectKey, testPlanId))) as TestPlanDto;
-    const planFolders = (yield call(
-      fetch,
-      URLS.testFolders(projectKey, { 'filter.eq.testPlanId': testPlanId }),
-    )) as TestPlanFoldersDto;
-    const planTestCases = (yield call(
-      fetch,
-      URLS.testPlanTestCases(projectKey, testPlanId),
-    )) as TestPlanTestCaseDto;
-
-    yield put(fetchSuccessAction(ACTIVE_TEST_PLAN_NAMESPACE, data));
-    yield put(fetchSuccessAction(TEST_PLAN_FOLDERS_NAMESPACE, planFolders));
-    yield put(fetchSuccessAction(TEST_PLAN_TEST_CASES_NAMESPACE, planTestCases));
+      yield put(fetchSuccessAction(ACTIVE_TEST_PLAN_NAMESPACE, data));
+      yield put(fetchSuccessAction(TEST_PLAN_FOLDERS_NAMESPACE, planFolders));
+    }
   } catch (error) {
     const locationPayload = (yield select(
       (state: BaseAppState) => state.location?.payload,
@@ -120,6 +128,23 @@ function* getTestPlan(action: GetTestPlanAction): Generator {
       type: PROJECT_TEST_PLANS_PAGE,
       payload: locationPayload,
     });
+  }
+
+  try {
+    yield put({
+      type: FETCH_START,
+      payload: { projectKey },
+      meta: { namespace: TEST_PLAN_TEST_CASES_NAMESPACE },
+    });
+
+    const planTestCases = (yield call(
+      fetch,
+      URLS.testPlanTestCases(projectKey, testPlanId, params),
+    )) as TestPlanTestCaseDto;
+
+    yield put(fetchSuccessAction(TEST_PLAN_TEST_CASES_NAMESPACE, planTestCases));
+  } catch (error) {
+    yield put(fetchErrorAction(TEST_PLAN_TEST_CASES_NAMESPACE, error));
   }
 }
 

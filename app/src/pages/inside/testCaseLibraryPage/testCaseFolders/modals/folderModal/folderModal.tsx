@@ -26,9 +26,10 @@ import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { hideModalAction } from 'controllers/modal';
 
 import { CreateFolderForm } from '../../shared/CreateFolderForm';
+import { FolderFormValues } from '../types';
+import { PARENT_FOLDER_FIELD } from '../constants';
 
 import styles from './folderModal.scss';
-import { FolderFormValues } from '../types';
 
 const cx = createClassnames(styles);
 
@@ -44,6 +45,7 @@ interface FolderModalConfig {
   toggleDisabled?: boolean;
   isInvertedToggle?: boolean;
   customContent?: ReactNode;
+  excludeFolderIds?: number[];
   onSubmit: (values: unknown) => void;
 }
 
@@ -63,6 +65,7 @@ export const FolderModal = ({
   parentFolderFieldLabel,
   isInvertedToggle = false,
   customContent,
+  excludeFolderIds = [],
   handleSubmit,
   change,
   onSubmit,
@@ -76,7 +79,9 @@ export const FolderModal = ({
     children: formatMessage(COMMON_LOCALE_KEYS.CREATE),
     onClick: handleSubmit(onSubmit) as () => void,
     disabled:
-      isLoading || (isToggled && !formValues?.[parentFolderFieldName as keyof FolderFormValues]),
+      isLoading || parentFolderFieldName === PARENT_FOLDER_FIELD
+        ? isToggled && !formValues?.[parentFolderFieldName as keyof FolderFormValues]
+        : false,
     'data-automation-id': 'submitButton',
   };
 
@@ -95,7 +100,7 @@ export const FolderModal = ({
       allowCloseOutside={!dirty}
       onClose={hideModal}
     >
-      <form className={cx('folder-modal__form')}>
+      <form className={cx('folder-modal__form')} onSubmit={handleSubmit(onSubmit) as () => void}>
         {customContent}
         <CreateFolderForm
           isToggled={isToggled}
@@ -105,6 +110,7 @@ export const FolderModal = ({
           parentFolderFieldLabel={parentFolderFieldLabel}
           toggleDisabled={toggleDisabled}
           isInvertedToggle={isInvertedToggle}
+          excludeFolderIds={excludeFolderIds}
           change={change}
         />
         <ModalLoadingOverlay isVisible={isLoading} />

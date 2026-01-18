@@ -14,102 +14,128 @@
  * limitations under the License.
  */
 
-import { memo, SetStateAction, useState } from 'react';
+import { memo, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { xor } from 'es-toolkit';
-import { BubblesLoader, FilterOutlineIcon, Table } from '@reportportal/ui-kit';
+import { useSelector } from 'react-redux';
+import { isEmpty } from 'es-toolkit/compat';
+import { BubblesLoader, FilterOutlineIcon, FilterFilledIcon, Table } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { SearchField } from 'components/fields/searchField';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
-import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { SelectedTestCaseRow } from 'pages/inside/testCaseLibraryPage/allTestCasesPage/allTestCasesPage';
+import { locationSelector } from 'controllers/pages/typed-selectors';
+import { TEST_CASE_LIBRARY_PAGE, PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
+import { TestPlanSidePanel } from 'pages/inside/testPlansPage/testPlanSidePanel';
 
 import { TestCaseNameCell } from './testCaseNameCell';
 import { TestCaseExecutionCell } from './testCaseExecutionCell';
 import { TestCaseSidePanel } from './testCaseSidePanel';
-import { DEFAULT_CURRENT_PAGE } from './configUtils';
+import { FilterSidePanel } from './filterSidePanel';
 import { messages } from './messages';
 
 import styles from './testCaseList.scss';
-import { isEmpty } from 'es-toolkit/compat';
 
 const cx = createClassnames(styles);
 
 interface TestCaseListProps {
   testCases: ExtendedTestCase[];
-  loading?: boolean;
-  currentPage?: number;
-  itemsPerPage?: number;
+  isLoading?: boolean;
   folderTitle: string;
   searchValue?: string;
   selectedRowIds: (number | string)[];
-  handleSelectedRowIds: (value: SetStateAction<(number | string)[]>) => void;
-  onSearchChange?: (value: string) => void;
+  selectedRows: SelectedTestCaseRow[];
   selectable?: boolean;
-  instanceKey: INSTANCE_KEYS;
+  instanceKey: TMS_INSTANCE_KEY;
+  handleSelectedRows: (rows: SelectedTestCaseRow[]) => void;
+  onSearchChange?: (value: string) => void;
 }
 
 export const TestCaseList = memo(
   ({
     testCases,
-    loading = false,
-    currentPage = DEFAULT_CURRENT_PAGE,
+    isLoading = false,
     selectedRowIds,
-    handleSelectedRowIds,
-    itemsPerPage,
+    selectedRows,
     searchValue = '',
-    onSearchChange,
     folderTitle,
     selectable = true,
     instanceKey,
+    handleSelectedRows,
+    onSearchChange,
   }: TestCaseListProps) => {
     const { formatMessage } = useIntl();
+    const location = useSelector(locationSelector);
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<number | null>(null);
+    const [isFilterSidePanelVisible, setIsFilterSidePanelVisible] = useState(false);
+    const [selectedPriorities, setSelectedPriorities] = useState<string[]>([]);
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
     const { canDoTestCaseBulkActions } = useUserPermissions();
 
-    let currentData: ExtendedTestCase[];
+    const activeFiltersCount =
+      (isEmpty(selectedPriorities) ? 0 : 1) + (isEmpty(selectedTags) ? 0 : 1);
+    const hasActiveFilters = activeFiltersCount > 0;
 
-    if (currentPage && itemsPerPage) {
-      const startIndex = (currentPage - 1) * itemsPerPage;
-      const endIndex = startIndex + itemsPerPage;
-
-      currentData = testCases.slice(startIndex, endIndex);
-    } else {
-      currentData = testCases;
-    }
+    const isTestLibraryRoute = location.type === TEST_CASE_LIBRARY_PAGE;
+    const isTestPlanRoute = location.type === PROJECT_TEST_PLAN_DETAILS_PAGE;
 
     const handleCloseSidePanel = () => {
       setSelectedTestCaseId(null);
     };
 
+    const handleCloseFilterSidePanel = () => {
+      setIsFilterSidePanelVisible(false);
+    };
+
+    const handleFilterIconClick = () => {
+      setIsFilterSidePanelVisible(true);
+    };
+
+    const handleApplyFilters = () => {
+      // TODO: Implement apply filters functionality
+    };
+
     const handleRowSelect = (id: number | string) => {
-      handleSelectedRowIds((selectedRows) => xor(selectedRows, [id]));
+      const testCase = testCases.find((testCase) => testCase.id === id);
+
+      if (!testCase) {
+        return;
+      }
+
+      const isCurrentlySelected = selectedRows.some((row) => row.id === id);
+
+      handleSelectedRows(
+        isCurrentlySelected
+          ? selectedRows.filter((row) => row.id !== id)
+          : [...selectedRows, { id: testCase.id, folderId: testCase.testFolder.id }],
+      );
     };
 
-    const handleAllSelect = () => {
-      handleSelectedRowIds((prevSelectedRowIds) => {
-        const currentDataIds: (string | number)[] = currentData.map(
-          ({ id }: { id: string | number }) => id,
-        );
-        if (currentDataIds.every((rowId) => prevSelectedRowIds.includes(rowId))) {
-          return prevSelectedRowIds.filter(
-            (selectedRowId) => !currentDataIds.includes(selectedRowId),
-          );
-        }
+    const handleSelectAll = () => {
+      const currentPageTestCaseIds = testCases.map(({ id }) => id);
+      const isAllCurrentPageSelected = currentPageTestCaseIds.every((testCaseId) =>
+        selectedRowIds.includes(testCaseId),
+      );
 
-        return [
-          ...prevSelectedRowIds,
-          ...currentDataIds.filter((id) => !prevSelectedRowIds.includes(id)),
-        ];
-      });
+      const newSelectedRows = isAllCurrentPageSelected
+        ? selectedRows.filter((row) => !currentPageTestCaseIds.includes(row.id))
+        : [
+            ...selectedRows,
+            ...testCases
+              .filter((testCase) => !selectedRowIds.includes(testCase.id))
+              .map((testCase) => ({ id: testCase.id, folderId: testCase.testFolder.id })),
+          ];
+
+      handleSelectedRows(newSelectedRows);
     };
 
-    const selectedTestCase = testCases.find((testCase) => testCase.id === selectedTestCaseId);
+    const selectedTestPlan = testCases.find((testCase) => testCase.id === selectedTestCaseId);
 
-    const tableData = currentData.map((testCase) => ({
+    const tableData = testCases.map((testCase) => ({
       id: testCase.id,
       name: {
         content: testCase.name,
@@ -150,7 +176,7 @@ export const TestCaseList = memo(
       {
         key: 'lastExecution',
         header: formatMessage(messages.executionHeader),
-        width: instanceKey === INSTANCE_KEYS.TEST_CASE ? 164 : 190,
+        width: instanceKey === TMS_INSTANCE_KEY.TEST_CASE ? 164 : 190,
         align: 'left' as const,
       },
     ];
@@ -161,30 +187,38 @@ export const TestCaseList = memo(
           <div className={cx('controls-title')}>{folderTitle}</div>
           <div className={cx('controls-actions')}>
             <div className={cx('search-section')}>
-              {loading ? null : (
+              {isLoading ? null : (
                 <>
                   <SearchField
-                    isLoading={loading}
+                    isLoading={isLoading}
                     searchValue={searchValue}
+                    placeholder={formatMessage(messages.searchPlaceholder)}
                     setSearchValue={onSearchChange}
                     onFilterChange={onSearchChange}
-                    placeholder={formatMessage(messages.searchPlaceholder)}
                   />
-                  <div className={cx('filter-icon')}>
-                    <FilterOutlineIcon />
-                  </div>
+                  <button
+                    type="button"
+                    className={cx('filter-icon', { active: hasActiveFilters })}
+                    aria-label={formatMessage(messages.filterButton)}
+                    onClick={handleFilterIconClick}
+                  >
+                    {hasActiveFilters ? <FilterFilledIcon /> : <FilterOutlineIcon />}
+                    {hasActiveFilters && (
+                      <span className={cx('filter-count')}>{activeFiltersCount}</span>
+                    )}
+                  </button>
                 </>
               )}
             </div>
           </div>
         </div>
-        {loading ? (
+        {isLoading ? (
           <div className={cx('test-case-list', 'loading')}>
             <BubblesLoader />
           </div>
         ) : (
           <>
-            {isEmpty(currentData) ? (
+            {isEmpty(testCases) ? (
               <div className={cx('no-results')}>
                 <div className={cx('no-results-message')}>
                   {searchValue
@@ -201,15 +235,34 @@ export const TestCaseList = memo(
                 fixedColumns={fixedColumns}
                 primaryColumn={primaryColumn}
                 sortableColumns={[]}
-                onToggleAllRowsSelection={handleAllSelect}
+                onToggleAllRowsSelection={handleSelectAll}
                 className={cx('test-case-table')}
                 rowClassName={cx('test-case-table-row')}
+                isSelectAllCheckboxAlwaysVisible
               />
             )}
-            <TestCaseSidePanel
-              testCase={selectedTestCase}
-              isVisible={!!selectedTestCaseId}
-              onClose={handleCloseSidePanel}
+            {isTestLibraryRoute && (
+              <TestCaseSidePanel
+                testCase={selectedTestPlan}
+                isVisible={!!selectedTestCaseId}
+                onClose={handleCloseSidePanel}
+              />
+            )}
+            {isTestPlanRoute && (
+              <TestPlanSidePanel
+                testPlan={selectedTestPlan}
+                isVisible={!!selectedTestCaseId}
+                onClose={handleCloseSidePanel}
+              />
+            )}
+            <FilterSidePanel
+              isVisible={isFilterSidePanelVisible}
+              onClose={handleCloseFilterSidePanel}
+              selectedPriorities={selectedPriorities}
+              selectedTags={selectedTags}
+              onPrioritiesChange={setSelectedPriorities}
+              onTagsChange={setSelectedTags}
+              onApply={handleApplyFilters}
             />
           </>
         )}

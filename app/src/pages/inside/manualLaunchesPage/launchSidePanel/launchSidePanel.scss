@@ -17,6 +17,7 @@
 .launch-side-panel {
   min-width: 560px;
   max-width: 560px;
+  z-index: $Z-INDEX-POPUP;
 
   .content {
     display: flex;
