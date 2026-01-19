@@ -29,6 +29,27 @@ export const messages = defineMessages({
     id: 'TestCaseLibraryPage.addToLaunchModal.launchNamePlaceholder',
     defaultMessage: 'Enter launch name',
   },
+  launchNameHint: {
+    id: 'TestCaseLibraryPage.addToLaunchModal.launchNameHint',
+    defaultMessage:
+      'When you select an existing launch from the suggestions, or if the provided launch name matches one that already exists, a launch with new number will be created. {learnMoreLink}',
+  },
+  launchDescriptionLabel: {
+    id: 'TestCaseLibraryPage.addToLaunchModal.launchDescriptionLabel',
+    defaultMessage: 'Description',
+  },
+  launchAttributesLabel: {
+    id: 'TestCaseLibraryPage.addToLaunchModal.launchAttributesLabel',
+    defaultMessage: 'Launch attributes',
+  },
+  launchAddAttributeButton: {
+    id: 'TestCaseLibraryPage.addToLaunchModal.launchAddAttributeButton',
+    defaultMessage: 'Add attribute',
+  },
+  launchDescriptionPlaceholder: {
+    id: 'TestCaseLibraryPage.addToLaunchModal.launchDescriptionPlaceholder',
+    defaultMessage: 'Please provide details about the launch (optional).',
+  },
   launchNameExistingPlaceholder: {
     id: 'TestCaseLibraryPage.addToLaunchModal.launchNameExistingPlaceholder',
     defaultMessage: 'Search and select launch name',
@@ -40,5 +61,9 @@ export const messages = defineMessages({
   createNewLaunchButton: {
     id: 'TestCaseLibraryPage.addToLaunchModal.createNewLaunchButton',
     defaultMessage: 'Create new launch',
+  },
+  learnMore: {
+    id: 'Common.learnMore',
+    defaultMessage: 'Learn more >',
   },
 });
