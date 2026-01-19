@@ -20,8 +20,23 @@
 
 .autocomplete-wrapper {
   position: relative;
+  margin-bottom: 16px;
 }
 
 .launch-name-wrapper {
-  margin: 16px 0;
+  margin: 16px 0 4px;
+}
+
+.launch-name-hint {
+  color: var(--rp-ui-base-e-400);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 400;
+  margin-bottom: 16px;
+}
+
+.launch-description {
+  &-wrapper {
+    margin: 16px 0;
+  }
 }

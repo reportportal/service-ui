@@ -18,7 +18,7 @@ import { ReactNode, useMemo, useState, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { InjectedFormProps, reduxForm, SubmitHandler } from 'redux-form';
 import { useIntl } from 'react-intl';
-import { FieldLabel, FieldText, Modal } from '@reportportal/ui-kit';
+import { FieldLabel, FieldText, FieldTextFlex, Modal } from '@reportportal/ui-kit';
 
 import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
@@ -37,6 +37,8 @@ import { AddToLaunchModalProps, AddToLaunchFormData } from './types';
 import { messages } from './messages';
 
 import styles from './addToLaunchModal.scss';
+import { LinkItem } from 'components/main/breadcrumbs/breadcrumb/linkItem';
+import { LaunchAttributes } from './launchAttributes/launchAttributes';
 
 type AddToLaunchSubmitHandler = SubmitHandler<AddToLaunchFormData, AddToLaunchModalProps>;
 
@@ -45,6 +47,7 @@ const cx = createClassnames(styles);
 export const ADD_TO_LAUNCH_MODAL_KEY = 'addToLaunchModalKey';
 export const ADD_TO_LAUNCH_MODAL_FORM = 'add-to-launch-modal-form';
 export const SELECTED_TEST_PLAN_FIELD_NAME = 'selectedTestPlan';
+export const SELECTED_LAUNCH_FIELD_NAME = 'selectedLaunch';
 
 export const AddToLaunchModalComponent = ({
   change,
@@ -60,17 +63,23 @@ export const AddToLaunchModalComponent = ({
 
   const projectKey = useSelector(projectKeySelector);
 
-  const { setSelectedTestPlan, addToLaunch } = useAddToLaunch({
+  const { setSelectedTestPlan, setSelectedLaunch, addToLaunch, isLoading } = useAddToLaunch({
     change,
+    projectKey,
   });
 
   useEffect(() => {
     initialize({
-      launchName: '',
+      selectedLaunch: null,
+      selectedTestPlan: null,
+      launchDescription: '',
+      launchAttributes: [],
     });
   }, [initialize, activeButton]);
 
   const makeTestPlansOptions = (response: { content: TestPlanDto[] }) => response.content;
+
+  const makeLaunchOptions = (response: { content: TestPlanDto[] }) => response.content;
 
   const description = useMemo(
     () =>
@@ -83,6 +92,9 @@ export const AddToLaunchModalComponent = ({
 
   const retrieveTestPlans = (value: string) =>
     URLS.testPlan(projectKey, value ? { 'filter.fts.search': value } : {});
+
+  const retrieveLaunches = (value: string) =>
+    URLS.manualLaunchesListPagination(projectKey, value ? { 'filter.eq.name': value } : {});
 
   const handleActiveButton = useCallback((activeButtonTitle: ButtonSwitcherOption) => {
     setActiveButton(activeButtonTitle);
@@ -100,7 +112,7 @@ export const AddToLaunchModalComponent = ({
         ),
         type: 'submit',
         onClick: handleSubmit(addToLaunch) as AddToLaunchSubmitHandler,
-        disabled: invalid,
+        disabled: invalid || isLoading,
       }}
       cancelButton={{
         children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -130,41 +142,60 @@ export const AddToLaunchModalComponent = ({
                   />
                 </FieldErrorHint>
               </FieldProvider>
-              <div className={cx('autocomplete-wrapper')}>
-                <FieldLabel>{formatMessage(COMMON_LOCALE_KEYS.TEST_PLAN_LABEL)}</FieldLabel>
-                <AsyncAutocompleteV2
-                  placeholder={formatMessage(COMMON_LOCALE_KEYS.SELECT_TEST_PLAN_PLACEHOLDER)}
-                  getURI={retrieveTestPlans}
-                  makeOptions={makeTestPlansOptions}
-                  onChange={setSelectedTestPlan}
-                  parseValueToString={(value: TestPlanDto) => value?.name}
-                  createWithoutConfirmation
-                  skipOptionCreation
-                  isDropdownMode
-                  minLength={0}
-                />
-              </div>
             </>
           ) : (
-            <FieldProvider name="launchName" className={cx('launch-name-wrapper')}>
-              <FieldErrorHint provideHint={false}>
-                <>
-                  <FieldLabel isRequired>{formatMessage(messages.launchNameLabel)}</FieldLabel>
-                  <AsyncAutocompleteV2
-                    placeholder={formatMessage(messages.launchNameExistingPlaceholder)}
-                    getURI={retrieveTestPlans}
-                    makeOptions={makeTestPlansOptions}
-                    onChange={setSelectedTestPlan}
-                    parseValueToString={(value: TestPlanDto) => value?.name}
-                    createWithoutConfirmation
-                    skipOptionCreation
-                    isDropdownMode
-                    minLength={0}
-                  />
-                </>
-              </FieldErrorHint>
-            </FieldProvider>
+            <>
+              <FieldProvider name="launchName" className={cx('launch-name-wrapper')}>
+                <FieldErrorHint provideHint={false}>
+                  <>
+                    <FieldLabel isRequired>{formatMessage(messages.launchNameLabel)}</FieldLabel>
+                    <AsyncAutocompleteV2
+                      placeholder={formatMessage(messages.launchNameExistingPlaceholder)}
+                      getURI={retrieveLaunches}
+                      makeOptions={makeLaunchOptions}
+                      onChange={setSelectedLaunch}
+                      parseValueToString={(value: TestPlanDto) => value?.name}
+                      createWithoutConfirmation
+                      skipOptionCreation
+                      isDropdownMode
+                      minLength={0}
+                    />
+                  </>
+                </FieldErrorHint>
+              </FieldProvider>
+              <p className={cx('launch-name-hint')}>
+                {formatMessage(messages.launchNameHint, {
+                  learnMoreLink: <LinkItem link={{}} title={formatMessage(messages.learnMore)} />,
+                })}
+              </p>
+            </>
           )}
+          <FieldProvider
+            name="launchDescription"
+            placeholder={formatMessage(messages.launchDescriptionPlaceholder)}
+            className={cx('launch-description-wrapper')}
+          >
+            <FieldErrorHint provideHint={false}>
+              <FieldTextFlex label={formatMessage(messages.launchDescriptionLabel)} value="" />
+            </FieldErrorHint>
+          </FieldProvider>
+          {activeButton === ButtonSwitcherOption.NEW && (
+            <div className={cx('autocomplete-wrapper')}>
+              <FieldLabel>{formatMessage(COMMON_LOCALE_KEYS.TEST_PLAN_LABEL)}</FieldLabel>
+              <AsyncAutocompleteV2
+                placeholder={formatMessage(COMMON_LOCALE_KEYS.SELECT_TEST_PLAN_PLACEHOLDER)}
+                getURI={retrieveTestPlans}
+                makeOptions={makeTestPlansOptions}
+                onChange={setSelectedTestPlan}
+                parseValueToString={(value: TestPlanDto) => value?.name}
+                createWithoutConfirmation
+                skipOptionCreation
+                isDropdownMode
+                minLength={0}
+              />
+            </div>
+          )}
+          <LaunchAttributes />
         </div>
       </form>
     </Modal>
@@ -177,9 +208,14 @@ export const AddToLaunchModal = withModal(ADD_TO_LAUNCH_MODAL_KEY)(
     form: ADD_TO_LAUNCH_MODAL_FORM,
     destroyOnUnmount: true,
     shouldValidate: () => true,
-    initialValues: { launchName: '' },
-    validate: ({ launchName }) => ({
-      launchName: commonValidators.requiredField(launchName),
+    initialValues: {
+      selectedLaunch: null,
+      launchAttributes: [],
+      launchDescription: '',
+      selectedTestPlan: null,
+    },
+    validate: ({ selectedLaunch }) => ({
+      selectedLaunch: commonValidators.requiredField(selectedLaunch),
     }),
   })(AddToLaunchModalComponent),
 );

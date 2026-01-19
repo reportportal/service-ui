@@ -16,8 +16,11 @@
 
 import { TestPlanDto } from 'controllers/testPlan';
 
+import { Attribute } from '../types';
+
 export interface AddToLaunchModalData {
   testCaseName: string;
+  projectKey: string;
 }
 
 export interface AddToLaunchModalProps {
@@ -25,6 +28,8 @@ export interface AddToLaunchModalProps {
 }
 
 export interface AddToLaunchFormData {
-  launchName: string;
+  selectedLaunch: any; // TODO: waiting for BE contract
   selectedTestPlan: TestPlanDto;
+  launchDescription: string;
+  launchAttributes: Attribute[];
 }

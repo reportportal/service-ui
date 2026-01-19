@@ -15,22 +15,61 @@
  */
 
 import { InjectedFormProps } from 'redux-form';
-import { noop } from 'es-toolkit';
+import { useDispatch } from 'react-redux';
 
 import { TestPlanDto } from 'controllers/testPlan';
+import { URLS } from 'common/urls';
+import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
+import { useDebouncedSpinner } from 'common/hooks';
 
 import { AddToLaunchFormData, AddToLaunchModalProps } from './types';
-import { SELECTED_TEST_PLAN_FIELD_NAME } from './addToLaunchModal';
+import { SELECTED_TEST_PLAN_FIELD_NAME, SELECTED_LAUNCH_FIELD_NAME } from './addToLaunchModal';
 
-export const useAddToLaunch = ({
-  change,
-}: Pick<InjectedFormProps<AddToLaunchFormData, AddToLaunchModalProps>, 'change'>) => {
+export const useAddToLaunch = (
+  props: Pick<InjectedFormProps<AddToLaunchFormData, AddToLaunchModalProps>, 'change'> & {
+    projectKey: string;
+  },
+) => {
+  const { change } = props;
+  const dispatch = useDispatch();
+  const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
+
   const setSelectedTestPlan = (value: TestPlanDto | null) => {
     change(SELECTED_TEST_PLAN_FIELD_NAME, value || null);
   };
 
+  const setSelectedLaunch = (value: TestPlanDto | null) => {
+    change(SELECTED_LAUNCH_FIELD_NAME, value || null);
+  };
+
+  const addToLaunch = async (_data: AddToLaunchFormData) => {
+    try {
+      showSpinner();
+      await fetch(URLS.addTestCaseToLaunch(projectKey, _data.selectedLaunch.id), {
+        method: 'post',
+        body: { testCaseId },
+      });
+
+      dispatch(
+        showSuccessNotification({
+          messageId: 'testPlanCreatedSuccess',
+        }),
+      );
+    } catch {
+      dispatch(
+        showErrorNotification({
+          messageId: 'errorOccurredTryAgain',
+        }),
+      );
+    } finally {
+      hideSpinner();
+    }
+  };
+
   return {
-    addToLaunch: noop,
     setSelectedTestPlan,
+    setSelectedLaunch,
+    addToLaunch,
+    isLoading,
   };
 };
