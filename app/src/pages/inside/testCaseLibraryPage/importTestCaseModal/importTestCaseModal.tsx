@@ -95,7 +95,7 @@ export const ImportTestCaseModal = ({
   useEffect(() => {
     change('importTarget', target);
 
-    if (folderId != null && filteredFolders.some((f) => f.id === folderId)) {
+    if (folderId != null && filteredFolders.some((folder) => folder.id === folderId)) {
       setExistingFolderId(folderId);
       change('existingFolderId', folderId);
     }
@@ -145,17 +145,23 @@ export const ImportTestCaseModal = ({
     return option.description || option.name || '';
   };
 
-  const handleExistingFolderSelect = (selectedItem: FolderWithFullPath | string | null) => {
-    if (selectedItem && typeof selectedItem === 'object' && 'id' in selectedItem) {
-      setExistingFolderId(selectedItem.id);
-      change('existingFolderId', selectedItem.id);
+  const handleExistingFolderSelect = (selectedItem: FolderWithFullPath | null) => {
+    const id = selectedItem?.id;
+
+    if (id) {
+      setExistingFolderId(id);
+      change('existingFolderId', id);
     }
+
     autocompleteInputRef.current?.blur();
   };
 
   const getTargetFolder = () => {
-    if (!existingFolderId) return null;
-    return filteredFolders.find((f) => f.id === existingFolderId) ?? null;
+    if (!existingFolderId) {
+      return null;
+    }
+
+    return filteredFolders.find((folder) => folder.id === existingFolderId) ?? null;
   };
 
   const setTargetAndForm = (next: ImportTarget) => {
@@ -271,7 +277,6 @@ export const ImportTestCaseModal = ({
           <label className={cx('import-test-case-modal__label')}>
             {formatMessage(messages.importDropdownLabel)}
           </label>
-
           <SingleAutocomplete<FolderWithFullPath | string>
             createWithoutConfirmation={true}
             optionVariant=""
@@ -413,7 +418,6 @@ export default withModal(IMPORT_TEST_CASE_MODAL_KEY)(
       return {
         folderName:
           importTarget === 'root' ? commonValidators.requiredField(folderName) : undefined,
-
         existingFolderId:
           importTarget === 'existing' && folderIdFromUrl == null
             ? commonValidators.requiredField(existingFolderId)
