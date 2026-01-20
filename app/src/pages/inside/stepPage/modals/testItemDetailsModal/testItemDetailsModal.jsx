@@ -37,7 +37,7 @@ import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
 import { getDuration } from 'common/utils/timeDateUtils';
 import { AccordionContainer } from 'components/main/accordionContainer';
 import { AttributeListField } from 'components/main/attributeList';
-import { canEditLaunch } from 'common/utils/permissions';
+import { canManageLaunches } from 'common/utils/permissions';
 import {
   showDefaultErrorNotification,
   showNotification,
@@ -363,7 +363,7 @@ export class TestItemDetailsModal extends Component {
       eventInfo: eventsInfo.cancelBtn,
     };
 
-    const editable = canEditLaunch(userRoles);
+    const editable = canManageLaunches(userRoles);
     return (
       <ModalLayout
         title={intl.formatMessage(messages.modalTitle)}

@@ -17,7 +17,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { isEmpty, noop, compact, countBy } from 'es-toolkit/compat';
+import { isEmpty, noop, countBy } from 'es-toolkit/compat';
 import { Button, MeatballMenuIcon, Pagination, Selection } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
@@ -93,56 +93,56 @@ export const AllTestCasesPage = ({
   const { openModal: openAddToTestPlanModal } = useAddTestCasesToTestPlanModal();
   const { openModal: openBatchDuplicateToFolderModal } = useBatchDuplicateToFolderModal();
   const { openModal: openBatchDeleteTestCasesModal } = useBatchDeleteTestCasesModal();
-  const { canDeleteTestCase, canDuplicateTestCase, canEditTestCase } = useUserPermissions();
+  const { canManageTestCases } = useUserPermissions();
   const folderTitle = useMemo(() => {
     const selectedFolder = folders.find((folder) => String(folder.id) === String(folderId));
     return selectedFolder?.name || formatMessage(COMMON_LOCALE_KEYS.ALL_TEST_CASES_TITLE);
   }, [folderId, folders, formatMessage]);
 
-  const popoverItems: PopoverItem[] = compact([
-    canDuplicateTestCase && {
-      label: formatMessage(messages.duplicateToFolder),
-      onClick: () => {
-        openBatchDuplicateToFolderModal({
-          selectedTestCaseIds: selectedRowIds,
-          count: selectedRowIds.length,
-          onClearSelection,
-        });
-      },
-    },
-    canEditTestCase && {
-      label: formatMessage(messages.changePriority),
-      onClick: () => {
-        dispatch(
-          showModalAction({
-            id: CHANGE_PRIORITY_MODAL_KEY,
-            data: {
-              priority: 'unspecified',
-              selectedRowIds,
+  const popoverItems: PopoverItem[] = canManageTestCases
+    ? [
+        {
+          label: formatMessage(messages.duplicateToFolder),
+          onClick: () =>
+            openBatchDuplicateToFolderModal({
+              selectedTestCaseIds: selectedRowIds,
+              count: selectedRowIds.length,
               onClearSelection,
-            },
-          }),
-        );
-      },
-    },
-    canEditTestCase && {
-      label: formatMessage(messages.editTags),
-      onClick: noop,
-    },
-    canDeleteTestCase && {
-      label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-      variant: 'destructive',
-      onClick: () => {
-        const folderDeltasMap = countBy(selectedRows, (row) => String(row.folderId));
+            }),
+        },
+        {
+          label: formatMessage(messages.changePriority),
+          onClick: () =>
+            dispatch(
+              showModalAction({
+                id: CHANGE_PRIORITY_MODAL_KEY,
+                data: {
+                  priority: 'unspecified',
+                  selectedRowIds,
+                  onClearSelection,
+                },
+              }),
+            ),
+        },
+        {
+          label: formatMessage(messages.editTags),
+          onClick: noop,
+        },
+        {
+          label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+          variant: 'destructive',
+          onClick: () => {
+            const folderDeltasMap = countBy(selectedRows, (row) => String(row.folderId));
 
-        openBatchDeleteTestCasesModal({
-          selectedTestCaseIds: selectedRowIds,
-          folderDeltasMap,
-          onClearSelection,
-        });
-      },
-    },
-  ]);
+            openBatchDeleteTestCasesModal({
+              selectedTestCaseIds: selectedRowIds,
+              folderDeltasMap,
+              onClearSelection,
+            });
+          },
+        },
+      ]
+    : [];
 
   const handleOpenAddToTestPlanModal = useCallback(() => {
     openAddToTestPlanModal({ selectedTestCaseIds: selectedRowIds });

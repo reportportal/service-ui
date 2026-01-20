@@ -59,7 +59,7 @@ export const TestCaseLibraryPage = () => {
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
   const { openModal: openImportFolderModal } = useImportTestCaseModal();
 
-  const { canEditTestCase } = useUserPermissions();
+  const { canManageTestCases } = useUserPermissions();
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
   const hasFolders = !isEmpty(folders);
 
@@ -96,7 +96,7 @@ export const TestCaseLibraryPage = () => {
             </div>
             {hasFolders && (
               <div className={cx('test-case-library-page__actions')}>
-                {canEditTestCase && (
+                {canManageTestCases && (
                   <>
                     <Button
                       variant="text"

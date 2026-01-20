@@ -40,8 +40,7 @@ interface ProjectActionMenuProps {
 export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
   const { projectName, projectKey, projectId, projectSlug, projectRole, organizationSlug } =
     details;
-  const { canRenameProject, canInviteUserToProject, canDeleteProject, canManageUsers } =
-    useUserPermissions();
+  const { canManageProjects, canManageUsers } = useUserPermissions();
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const user = useSelector(userInfoSelector) as UserInfo;
@@ -117,12 +116,12 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
       {
         label: formatMessage(COMMON_LOCALE_KEYS.RENAME),
         onClick: handleRenameProjectClick,
-        hasPermission: canRenameProject,
+        hasPermission: canManageProjects,
       },
       {
         label: formatMessage(messages.actionInviteUser),
         onClick: () => {},
-        hasPermission: canInviteUserToProject,
+        hasPermission: canManageProjects,
       },
       {
         label: isAssigned
@@ -134,7 +133,7 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
       {
         label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
         onClick: handleDeleteProjectClick,
-        hasPermission: canDeleteProject,
+        hasPermission: canManageProjects,
         danger: true,
       },
     ];
@@ -142,13 +141,11 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
     projectRole,
     formatMessage,
     handleRenameProjectClick,
-    canRenameProject,
-    canInviteUserToProject,
     handleUnassignClick,
     handleAssignClick,
     canManageUsers,
     handleDeleteProjectClick,
-    canDeleteProject,
+    canManageProjects,
   ]);
 
   return <ActionMenu links={links} actions={actions} showDivider={true} />;

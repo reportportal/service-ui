@@ -46,13 +46,13 @@ const benefitMessages = [
 export const EmptyTestPlans = () => {
   const { formatMessage } = useIntl();
   const { openModal } = useCreateTestPlanModal();
-  const { canEditTestPlan } = useUserPermissions();
+  const { canManageTestPlans } = useUserPermissions();
   const benefits = benefitMessages.map((translation) =>
     Parser(formatMessage(translation, {}, { ignoreTag: true })),
   );
 
   const getAvailableActions = (): ActionButton[] =>
-    canEditTestPlan
+    canManageTestPlans
       ? [
           {
             name: formatMessage(commonMessages.createMilestone),

@@ -61,10 +61,10 @@ const OrganizationProjectsPageComponent = ({
 }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
-  const { canCreateProject } = useUserPermissions();
+  const { canManageProjects } = useUserPermissions();
   const organizationLoading = useSelector(activeOrganizationLoadingSelector);
   const projectsLoading = useSelector(loadingSelector);
-  const permissionSuffix = canCreateProject ? 'WithPermission' : 'WithoutPermission';
+  const permissionSuffix = canManageProjects ? 'WithPermission' : 'WithoutPermission';
   const label = formatMessage(messages[`noProjects${permissionSuffix}`]);
   const description = Parser(formatMessage(messages[`noProjectsList${permissionSuffix}`]));
   const buttonTitle = formatMessage(messages.createProject);
@@ -111,7 +111,7 @@ const OrganizationProjectsPageComponent = ({
   const getEmptyPageState = () => {
     return searchValue === null && appliedFiltersCount === 0 ? (
       <EmptyPageState
-        hasPermission={canCreateProject}
+        hasPermission={canManageProjects}
         label={label}
         description={description}
         icon={<PlusIcon />}
@@ -160,7 +160,7 @@ const OrganizationProjectsPageComponent = ({
   return (
     <div className={cx('organization-projects-container')}>
       <ProjectsPageHeader
-        hasPermission={canCreateProject}
+        hasPermission={canManageProjects}
         onCreateProject={showCreateProjectModal}
         searchValue={searchValue}
         setSearchValue={setSearchValue}

@@ -62,7 +62,7 @@ export const TestCaseDetailsHeader = ({
   onMenuAction = () => {},
 }: TestCaseDetailsHeaderProps) => {
   const { formatMessage } = useIntl();
-  const { canEditTestCase } = useUserPermissions();
+  const { canManageTestCases } = useUserPermissions();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
@@ -96,7 +96,7 @@ export const TestCaseDetailsHeader = ({
   };
 
   const getMenuItems = () => {
-    const items: PopoverItem[] = canEditTestCase
+    const items: PopoverItem[] = canManageTestCases
       ? [
           { label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE) },
           {
@@ -147,7 +147,7 @@ export const TestCaseDetailsHeader = ({
           className={cx('header__title-icon')}
         />
         {testCase.name}
-        {canEditTestCase && (
+        {canManageTestCases && (
           <button
             type="button"
             className={cx('header__edit-button')}
@@ -182,7 +182,7 @@ export const TestCaseDetailsHeader = ({
               <MeatballMenuIcon />
             </Button>
           </PopoverControl>
-          {canEditTestCase && (
+          {canManageTestCases && (
             <>
               <AddToLaunchButton
                 manualScenario={testCase?.manualScenario}

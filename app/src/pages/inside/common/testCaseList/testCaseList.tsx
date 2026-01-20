@@ -74,7 +74,7 @@ export const TestCaseList = memo(
     const [selectedPriorities, setSelectedPriorities] = useState<string[]>([]);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-    const { canEditTestCase } = useUserPermissions();
+    const { canManageTestCases } = useUserPermissions();
 
     const activeFiltersCount =
       (isEmpty(selectedPriorities) ? 0 : 1) + (isEmpty(selectedTags) ? 0 : 1);
@@ -228,7 +228,7 @@ export const TestCaseList = memo(
               </div>
             ) : (
               <Table
-                selectable={selectable && canEditTestCase}
+                selectable={selectable && canManageTestCases}
                 onToggleRowSelection={handleRowSelect}
                 selectedRowIds={selectedRowIds}
                 data={tableData}

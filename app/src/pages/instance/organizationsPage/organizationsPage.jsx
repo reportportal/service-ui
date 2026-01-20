@@ -70,7 +70,7 @@ const OrganizationsPageComponent = ({
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
-  const { canCreateOrganization } = useUserPermissions();
+  const { canManageOrganizations } = useUserPermissions();
   const organizationsList = useSelector(organizationsListSelector);
   const isOrganizationsLoading = useSelector(organizationsListLoadingSelector);
   const userId = useSelector(userIdSelector);
@@ -84,7 +84,7 @@ const OrganizationsPageComponent = ({
 
   const assignedOrganizations = useSelector(assignedOrganizationsSelector);
   const noAssignedOrganizations =
-    Object.keys(assignedOrganizations).length === 0 && !canCreateOrganization;
+    Object.keys(assignedOrganizations).length === 0 && !canManageOrganizations;
 
   const openPanelView = () => {
     setIsOpenTableView(false);
@@ -136,16 +136,16 @@ const OrganizationsPageComponent = ({
 
     return searchValue === null && appliedFiltersCount === 0 ? (
       <EmptyPageState
-        hasPermission={canCreateOrganization}
+        hasPermission={canManageOrganizations}
         emptyIcon={EmptyIcon}
         icon={<PlusIcon />}
         label={formatMessage(
-          canCreateOrganization
+          canManageOrganizations
             ? messages.noOrganizationsYet
             : messages.noOrganizationsAvailableYet,
         )}
         description={formatMessage(
-          canCreateOrganization ? messages.createNewOrganization : messages.description,
+          canManageOrganizations ? messages.createNewOrganization : messages.description,
         )}
         buttonTitle={formatMessage(messages.createOrganization)}
         onClick={() => onCreateOrganization('empty_state')}
@@ -167,7 +167,7 @@ const OrganizationsPageComponent = ({
     <div className={cx('organizations-page')}>
       {!noAssignedOrganizations && (
         <OrganizationsPageHeader
-          hasPermission={canCreateOrganization}
+          hasPermission={canManageOrganizations}
           isEmpty={isEmptyOrganizations && searchValue === null && appliedFiltersCount === 0}
           searchValue={searchValue}
           setSearchValue={setSearchValue}

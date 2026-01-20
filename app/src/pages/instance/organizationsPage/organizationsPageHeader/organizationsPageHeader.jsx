@@ -61,7 +61,7 @@ export const OrganizationsPageHeader = ({
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const projectsLoading = useSelector(organizationsListLoadingSelector);
-  const { canWorkWithOrganizationFilter, canWorkWithOrganizationsSorting, canExportOrganizations } =
+  const { canWorkWithOrganizationFilter, canWorkWithOrganizationsSorting, canManageOrganizations } =
     useUserPermissions();
   const organizationPlugin = useSelector(organizationPluginSelector);
 
@@ -116,7 +116,7 @@ export const OrganizationsPageHeader = ({
               </BaseIconButton>
             </div>
             <div className={cx('primary-actions')}>
-              {canExportOrganizations && (
+              {canManageOrganizations && (
                 <OrganizationsExport appliedFiltersCount={appliedFiltersCount} />
               )}
             </div>

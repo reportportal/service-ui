@@ -39,12 +39,12 @@ interface FolderEmptyStateProps {
 
 export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
   const { formatMessage } = useIntl();
-  const { canEditTestCase } = useUserPermissions();
+  const { canManageTestCases } = useUserPermissions();
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
   const { openModal: openImportTestCaseModal } = useImportTestCaseModal();
 
   const getAvailableButtons = () => {
-    const buttons: ActionButton[] = canEditTestCase
+    const buttons: ActionButton[] = canManageTestCases
       ? [
           {
             name: formatMessage(commonMessages.createTestCase),

@@ -31,7 +31,7 @@ import { useImportTestCaseModal } from '../../importTestCaseModal';
 
 export const MainPageEmptyState = () => {
   const { formatMessage } = useIntl();
-  const { canEditTestCase } = useUserPermissions();
+  const { canManageTestCases } = useUserPermissions();
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
   const { openModal: openImportTestCaseModal } = useImportTestCaseModal();
   const { openModal: openCreateFolderModal } = useCreateFolderModal();
@@ -40,7 +40,7 @@ export const MainPageEmptyState = () => {
     (translation) => Parser(formatMessage(translation, {}, { ignoreTag: true })),
   );
 
-  const buttons = canEditTestCase
+  const buttons = canManageTestCases
     ? [
         {
           name: formatMessage(commonMessages.createFolder),

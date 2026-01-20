@@ -45,7 +45,7 @@ export const TestPlansPage = () => {
   const dispatch = useDispatch();
   const { openModal } = useCreateTestPlanModal();
   const projectName = useSelector(projectNameSelector);
-  const { canEditTestPlan } = useUserPermissions();
+  const { canManageTestPlans } = useUserPermissions();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
@@ -87,7 +87,7 @@ export const TestPlansPage = () => {
                 >
                   {formatMessage(commonMessages.refreshPage)}
                 </Button>
-                {canEditTestPlan && (
+                {canManageTestPlans && (
                   <Button
                     variant="ghost"
                     data-automation-id="createTestPlanButton"

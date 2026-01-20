@@ -48,50 +48,37 @@ export const createCheckPermission =
 
 const checkPermission = createCheckPermission(PERMISSIONS_MAP);
 
-export const hasAccessToManagementSystem = checkPermission(ACTIONS.ACCESS_TO_MANAGEMENT_SYSTEM);
-export const canCreateProject = checkPermission(ACTIONS.CREATE_PROJECT);
-export const canDeleteProject = checkPermission(ACTIONS.DELETE_PROJECT);
-export const canRenameProject = checkPermission(ACTIONS.RENAME_PROJECT);
-export const canInviteUserToProject = checkPermission(ACTIONS.INVITE_USER_TO_PROJECT);
-export const canInviteUserToOrganization = checkPermission(ACTIONS.INVITE_USER_TO_ORGANIZATION);
-export const canChangeAccessProject = checkPermission(ACTIONS.CHANGE_ACCESS_PROJECT);
-export const canViewInfoBilling = checkPermission(ACTIONS.VIEW_INFO_BILLING);
-export const canUpdateSettings = checkPermission(ACTIONS.UPDATE_SETTINGS);
-export const canSeeSettings = checkPermission(ACTIONS.SEE_SETTINGS);
-export const canManageUsers = checkPermission(ACTIONS.MANAGE_USERS);
-export const canSeeMembers = checkPermission(ACTIONS.SEE_MEMBERS);
 export const canEditOwnAccount = checkPermission(ACTIONS.EDIT_OWN_ACCOUNT);
-export const canEditLaunch = checkPermission(ACTIONS.EDIT_LAUNCH);
-export const canEditTestItem = checkPermission(ACTIONS.EDIT_TEST_ITEM);
+export const canManageOrganizations = checkPermission(ACTIONS.MANAGE_ORGANIZATIONS);
 export const canManageBTSIssues = checkPermission(ACTIONS.MANAGE_BTS_ISSUES);
+export const canManageLaunches = checkPermission(ACTIONS.MANAGE_LAUNCHES);
+export const canManageManualLaunches = checkPermission(ACTIONS.MANAGE_MANUAL_LAUNCHES);
+export const canManageProjects = checkPermission(ACTIONS.MANAGE_PROJECTS);
+export const canManageTestCases = checkPermission(ACTIONS.MANAGE_TEST_CASES);
+export const canManageTestItems = checkPermission(ACTIONS.MANAGE_TEST_ITEMS);
+export const canManageTestPlans = checkPermission(ACTIONS.MANAGE_TEST_PLANS);
+export const canManageUsers = checkPermission(ACTIONS.MANAGE_USERS);
+export const canReadData = checkPermission(ACTIONS.READ_DATA);
+export const canResizeAndDragWidgets = checkPermission(ACTIONS.RESIZE_AND_DRAG_WIDGETS);
+export const canSeeActivityOption = checkPermission(ACTIONS.ACTIVITY_OPTION);
+export const canSeeDemoData = checkPermission(ACTIONS.SEE_DEMO_DATA);
+export const canSeeEmailMembers = checkPermission(ACTIONS.SEE_EMAIL_MEMBERS);
+export const canSeeInstanceLevelPluginsPages = checkPermission(ACTIONS.INSTANCE_LEVEL_PLUGIN_PAGES);
+export const canSeeMembers = checkPermission(ACTIONS.SEE_MEMBERS);
+export const canSeeOrganizationMembers = checkPermission(ACTIONS.SEE_ORGANIZATION_MEMBERS);
+export const canSeeRowActionMenu = checkPermission(ACTIONS.SEE_ROW_ACTION_MENU);
+export const canSeeSettings = checkPermission(ACTIONS.SEE_SETTINGS);
+export const canSeeSidebarOptions = checkPermission(ACTIONS.ACCESS_INSTANCE_LEVEL_PAGES);
+export const canUpdateSettings = checkPermission(ACTIONS.UPDATE_SETTINGS);
+export const canUpdateUserInstanceRole = checkPermission(ACTIONS.UPDATE_USER_INSTANCE_ROLE);
+export const canViewInfoBilling = checkPermission(ACTIONS.VIEW_INFO_BILLING);
+export const canWorkWithDashboard = checkPermission(ACTIONS.WORK_WITH_DASHBOARD);
+export const canWorkWithDefectTypes = checkPermission(ACTIONS.WORK_WITH_DEFECT_TYPES);
 export const canWorkWithFilters = checkPermission(ACTIONS.WORK_WITH_FILTERS);
 export const canWorkWithOrganizationFilter = checkPermission(ACTIONS.WORK_WITH_ORGANIZATION_FILTER);
-export const canReadData = checkPermission(ACTIONS.READ_DATA);
-export const canSeeDemoData = checkPermission(ACTIONS.SEE_DEMO_DATA);
-export const canResizeAndDragWidgets = checkPermission(ACTIONS.RESIZE_AND_DRAG_WIDGETS);
-export const canWorkWithWidgets = checkPermission(ACTIONS.WORK_WITH_WIDGETS);
-export const canWorkWithDefectTypes = checkPermission(ACTIONS.WORK_WITH_DEFECT_TYPES);
-export const canReportLaunches = checkPermission(ACTIONS.REPORT_LAUNCHES);
-export const canUpdateOrganizationSettings = checkPermission(ACTIONS.UPDATE_ORGANIZATION_SETTINGS);
-export const canSeeOrganizationMembers = checkPermission(ACTIONS.SEE_ORGANIZATION_MEMBERS);
-export const canCreateOrganization = checkPermission(ACTIONS.CREATE_ORGANIZATION);
-export const canDeleteOrganization = checkPermission(ACTIONS.DELETE_ORGANIZATION);
-export const canRenameOrganization = checkPermission(ACTIONS.RENAME_ORGANIZATION);
-export const canWorkWithDashboard = checkPermission(ACTIONS.WORK_WITH_DASHBOARD);
-export const canWorkWithTests = checkPermission(ACTIONS.WORK_WITH_TESTS);
-export const canSeeEmailMembers = checkPermission(ACTIONS.SEE_EMAIL_MEMBERS);
-export const canSeeRowActionMenu = checkPermission(ACTIONS.SEE_ROW_ACTION_MENU);
-export const canSeeSidebarOptions = checkPermission(ACTIONS.ACCESS_INSTANCE_LEVEL_PAGES);
 export const canWorkWithOrganizationsSorting = checkPermission(
   ACTIONS.WORK_WITH_ORGANIZATIONS_SORTING,
 );
-export const canUpdateUserInstanceRole = checkPermission(ACTIONS.UPDATE_USER_INSTANCE_ROLE);
-export const canExportOrganizations = checkPermission(ACTIONS.EXPORT_ORGANIZATIONS);
-export const canSeeActivityOption = checkPermission(ACTIONS.ACTIVITY_OPTION);
-export const canSeeInstanceLevelPluginsPages = checkPermission(ACTIONS.INSTANCE_LEVEL_PLUGIN_PAGES);
-// MANUAL LAUNCHES
-export const canEditManualLaunch = checkPermission(ACTIONS.EDIT_MANUAL_LAUNCH);
-// TEST CASE
-export const canEditTestCase = checkPermission(ACTIONS.EDIT_TEST_CASE);
-// TEST PLAN
-export const canEditTestPlan = checkPermission(ACTIONS.EDIT_TEST_PLAN);
+export const canWorkWithTests = checkPermission(ACTIONS.WORK_WITH_TESTS);
+export const canWorkWithWidgets = checkPermission(ACTIONS.WORK_WITH_WIDGETS);
+export const hasAccessToManagementSystem = checkPermission(ACTIONS.ACCESS_TO_MANAGEMENT_SYSTEM);

@@ -48,12 +48,12 @@ export const TestPlanActions = ({
 }: TestPlanActionsProps) => {
   const { formatMessage } = useIntl();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { canEditTestPlan } = useUserPermissions();
+  const { canManageTestPlans } = useUserPermissions();
 
   const isHeader = variant === 'header';
-  const menuItems: PopoverItem[] = canEditTestPlan
+  const menuItems: PopoverItem[] = canManageTestPlans
     ? [
-        canEditTestPlan && {
+        canManageTestPlans && {
           label: formatMessage(commonMessages.editTestPlan),
           onClick: () => onEdit(testPlanId),
         },

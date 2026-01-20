@@ -70,7 +70,7 @@ import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchFiltersContainer } from 'pages/inside/common/launchFiltersContainer';
 import { LaunchFiltersToolbar } from 'pages/inside/common/launchFiltersToolbar';
 import { RefineFiltersPanel } from 'pages/inside/common/refineFiltersPanel';
-import { canEditLaunch } from 'common/utils/permissions';
+import { canManageLaunches } from 'common/utils/permissions';
 import { DebugFiltersContainer } from './debugFiltersContainer';
 import { LaunchToolbar } from './LaunchToolbar';
 import { NoItemsDemo } from './noItemsDemo';
@@ -685,7 +685,7 @@ export class LaunchesPage extends Component {
     };
 
     const { finishedLaunchesCount } = this.state;
-    const canManageActions = canEditLaunch(userRoles);
+    const canManageActions = canManageLaunches(userRoles);
 
     return (
       <FilterEntitiesContainer

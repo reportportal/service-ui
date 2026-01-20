@@ -140,7 +140,7 @@ interface TestCaseSidePanelProps {
 export const TestCaseSidePanel = memo(
   ({ testCase, isVisible, onClose }: TestCaseSidePanelProps) => {
     const dispatch = useDispatch();
-    const { canEditTestCase } = useUserPermissions();
+    const { canManageTestCases } = useUserPermissions();
     const { organizationSlug, projectSlug } = useSelector(
       urlOrganizationAndProjectSelector,
     ) as ProjectDetails;
@@ -174,7 +174,7 @@ export const TestCaseSidePanel = memo(
     ];
 
     const permissionMap = actions.map((action) => ({
-      isAllowed: canEditTestCase,
+      isAllowed: canManageTestCases,
       action,
     }));
 
@@ -324,7 +324,7 @@ export const TestCaseSidePanel = memo(
           >
             {formatMessage(messages.openDetails)}
           </Button>
-          {canEditTestCase && (
+          {canManageTestCases && (
             <>
               <AddToLaunchButton
                 manualScenario={testCase?.manualScenario}

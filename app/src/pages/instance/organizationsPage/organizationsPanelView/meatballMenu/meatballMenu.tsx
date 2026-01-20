@@ -23,9 +23,8 @@ import { showModalAction } from 'controllers/modal';
 import { setActiveOrganizationAction } from 'controllers/organization/actionCreators';
 import {
   canSeeActivityOption,
-  canDeleteOrganization,
+  canManageOrganizations,
   canSeeOrganizationMembers,
-  canRenameOrganization,
 } from 'common/utils/permissions';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import {
@@ -161,7 +160,7 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
         label: formatMessage(COMMON_LOCALE_KEYS.RENAME),
         onClick: handleRenameClick,
         hasPermission:
-          canRenameOrganization(organizationUserRoles) &&
+          canManageOrganizations &&
           organizationPlugin?.enabled &&
           organization.type !== OrganizationType.PERSONAL,
       },
@@ -173,7 +172,7 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
       {
         label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
         onClick: handleDeleteClick,
-        hasPermission: canDeleteOrganization(organizationUserRoles) && organizationPlugin?.enabled,
+        hasPermission: canManageOrganizations && organizationPlugin?.enabled,
         danger: true,
       },
     ],
@@ -185,7 +184,6 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
       currentUser,
       organization,
       handleDeleteClick,
-      organizationUserRoles,
       handleRenameClick,
       organizationPlugin?.enabled,
     ],
