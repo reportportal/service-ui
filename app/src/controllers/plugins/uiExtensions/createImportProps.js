@@ -224,6 +224,7 @@ import { PlainTable } from 'componentLibrary/plainTable';
 import { AdaptiveIssueList } from 'pages/inside/common/adaptiveIssueList';
 import { withFilter } from 'controllers/filter';
 import { SORTING_KEY, withSortingURL } from 'controllers/sorting';
+import { PAGE_KEY } from 'controllers/pagination';
 import {
   DateRangeFormField,
   formatDisplayedValue,
@@ -367,6 +368,7 @@ export const createImportProps = (pluginName) => ({
     SECRET_FIELDS_KEY,
     BTS_FIELDS_FORM,
     SORTING_KEY,
+    PAGE_KEY,
   },
   actions: {
     showModalAction,
