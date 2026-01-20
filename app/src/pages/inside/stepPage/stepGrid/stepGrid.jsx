@@ -38,7 +38,7 @@ import { NoItemMessage } from 'components/main/noItemMessage';
 import { formatAttribute } from 'common/utils/attributeUtils';
 import { StatusDropdown } from 'pages/inside/common/statusDropdown/statusDropdown';
 import { canChangeStatus } from 'common/utils/permissions';
-import { userAccountRoleSelector, activeProjectRoleSelector, userInfoSelector } from 'controllers/user';
+import { userAccountRoleSelector, activeProjectRoleSelector } from 'controllers/user';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
 import { DefectType } from './defectType';
 import { GroupHeader } from './groupHeader';
@@ -199,7 +199,6 @@ PredefinedFilterSwitcherCell.defaultProps = {
 @connect((state) => ({
   userRole: userAccountRoleSelector(state),
   projectRole: activeProjectRoleSelector(state),
-  userId: userInfoSelector(state).userId,
 }))
 export class StepGrid extends Component {
   static propTypes = {
@@ -234,7 +233,6 @@ export class StepGrid extends Component {
     errorMessage: PropTypes.string,
     userRole: PropTypes.string,
     projectRole: PropTypes.string,
-    userId: PropTypes.string,
   };
 
   static defaultProps = {
