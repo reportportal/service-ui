@@ -29,12 +29,12 @@ export const useManualLaunchesEmptyStateButtons = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { organizationSlug, projectSlug } = useSelector(activeProjectSelector) as ActiveProject;
-  const { canCreateManualLaunch } = useUserPermissions();
+  const { canManageManualLaunches } = useUserPermissions();
 
   return useMemo(() => {
     const payload = { organizationSlug, projectSlug };
 
-    if (!canCreateManualLaunch) {
+    if (!canManageManualLaunches) {
       return [];
     }
 
@@ -43,5 +43,5 @@ export const useManualLaunchesEmptyStateButtons = () => {
       variant: 'text' as const,
       handleButton: () => dispatch({ type, payload }),
     }));
-  }, [organizationSlug, projectSlug, dispatch, canCreateManualLaunch, formatMessage]);
+  }, [organizationSlug, projectSlug, dispatch, canManageManualLaunches, formatMessage]);
 };
