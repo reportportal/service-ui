@@ -408,7 +408,7 @@ export default withModal(IMPORT_TEST_CASE_MODAL_KEY)(
       folderName,
       existingFolderId,
     }: ImportTestCaseFormValues): FormErrors<ImportTestCaseFormValues> => {
-      const folderIdFromUrl = extractFolderIdFromHash(window.location.hash);
+      const folderIdFromUrl = extractFolderIdFromHash(globalThis.location.hash);
 
       return {
         folderName:
