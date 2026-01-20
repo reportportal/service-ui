@@ -39,6 +39,8 @@ import {
 } from 'controllers/plugins';
 import { DefectTypeItem } from 'pages/inside/common/defectTypeItem';
 import { StatusDropdown } from 'pages/inside/common/statusDropdown';
+import { canChangeStatus } from 'common/utils/permissions';
+import { userAccountRoleSelector, activeProjectRoleSelector } from 'controllers/user';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import CommentIcon from 'common/img/comment-inline.svg';
 import ArrowDownIcon from 'common/img/arrow-down-inline.svg';
@@ -115,6 +117,8 @@ const getUnlinkIssueEventsInfo = (place) => ({
     btsIntegrations: availableBtsIntegrationsSelector(state),
     isBtsPluginsExist: isBtsPluginsExistSelector(state),
     enabledBtsPlugins: enabledBtsPluginsSelector(state),
+    userRole: userAccountRoleSelector(state),
+    projectRole: activeProjectRoleSelector(state),
   }),
   {
     linkIssueAction,
@@ -146,6 +150,8 @@ export class DefectDetails extends Component {
     logItem: PropTypes.object,
     isBtsPluginsExist: PropTypes.bool,
     enabledBtsPlugins: PropTypes.array,
+    userRole: PropTypes.string,
+    projectRole: PropTypes.string,
   };
   static defaultProps = {
     logItem: null,
@@ -282,9 +288,12 @@ export class DefectDetails extends Component {
       debugMode,
       intl: { formatMessage },
       fetchHistoryItemsWithLoading,
+      userRole,
+      projectRole,
     } = this.props;
     const { expanded } = this.state;
     const isPostIssueUnavailable = !isPostIssueActionAvailable(this.props.btsIntegrations);
+    const canChange = canChangeStatus(userRole, projectRole, false);
 
     return (
       <div className={cx('details-container')}>
@@ -396,6 +405,7 @@ export class DefectDetails extends Component {
               fetchFunc={fetchHistoryItemsWithLoading}
               onChange={this.onChangeStatus}
               withIndicator
+              disabled={!canChange}
             />
           </span>
           {this.isDefectTypeVisible() && (
