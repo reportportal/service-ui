@@ -26,7 +26,7 @@ import Parser from 'html-react-parser';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
 import { injectIntl } from 'react-intl';
 import { URLS } from 'common/urls';
-import { activeProjectSelector } from 'controllers/user';
+import { activeProjectKeySelector } from 'controllers/user';
 import { showDefaultErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { fetch, copyToClipboard } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
@@ -100,13 +100,13 @@ export const DuplicateColumn = track()(
     const dropdownRef = useRef(null);
     const dispatch = useDispatch();
 
-    const activeProject = useSelector(activeProjectSelector);
+    const activeProjectKey = useSelector(activeProjectKeySelector);
 
     // The promise should be stored in state to prevent losing document focus (causes errors) in Safari when clicking to copy
     const [dashboardConfigPromise, setDashboardConfigPromise] = useState(null);
 
     const fetchDashboardConfig = async () => {
-      const url = URLS.dashboardConfig(activeProject, value.id);
+      const url = URLS.dashboardConfig(activeProjectKey, value.id);
       return fetch(url);
     };
     const { canWorkWithDashboard } = useUserPermissions();
