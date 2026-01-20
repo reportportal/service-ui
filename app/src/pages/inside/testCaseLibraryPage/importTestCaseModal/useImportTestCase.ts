@@ -38,6 +38,13 @@ type ApiError = {
   message?: string;
 };
 
+type ImportResponseItem = {
+  id: number;
+  testFolder?: {
+    id?: number;
+  };
+};
+
 const createQuery = ({ testFolderId, testFolderName }: ImportQuery) => {
   const hasId = isNumber(testFolderId);
   const hasName = !isEmpty(testFolderName?.trim());
@@ -62,6 +69,15 @@ export const useImportTestCase = () => {
   const urlFolderId = useSelector(urlFolderIdSelector);
   const { formatMessage } = useIntl();
   const { showSuccessNotification, showErrorNotification } = useNotification();
+
+  const redirectToFolder = (folderId: number) => {
+    const hash = window.location.hash || '';
+    const idx = hash.indexOf('/testLibrary');
+    if (idx === -1) return;
+
+    const base = hash.slice(0, idx + '/testLibrary'.length); // ровно до .../testLibrary
+    window.location.hash = `${base}/folder/${folderId}`;
+  };
 
   const refetchTestCases = useCallback(
     (folderId: number, prevFolderId?: number) => {
@@ -115,10 +131,18 @@ export const useImportTestCase = () => {
 
       formData.append('file', file);
 
-      await fetch(URLS.importTestCase(projectKey, query), {
+      const response = await fetch<ImportResponseItem[]>(URLS.importTestCase(projectKey, query), {
         method: 'post',
         data: formData,
       });
+
+      const createdFolderId = Array.isArray(response) ? response[0]?.testFolder?.id : undefined;
+
+      const resolvedFolderId = query.testFolderId ?? createdFolderId;
+
+      if (resolvedFolderId) {
+        redirectToFolder(resolvedFolderId);
+      }
 
       dispatch(hideModalAction());
       showSuccessNotification({
