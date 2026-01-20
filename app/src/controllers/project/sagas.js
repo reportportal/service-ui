@@ -439,8 +439,10 @@ function* fetchProject({ payload: { projectKey, fetchInfoOnly } }) {
     const userRoles = yield select(userRolesSelector);
     const hasFilterPermissions = canWorkWithFilters(userRoles);
 
-    if (!fetchInfoOnly && hasFilterPermissions && projectKey) {
-      yield put(fetchProjectPreferencesAction(project.projectKey));
+    if (!fetchInfoOnly && projectKey) {
+      if (hasFilterPermissions) {
+        yield put(fetchProjectPreferencesAction(project.projectKey));
+      }
       yield put(fetchLogTypesAction(project.projectKey));
     }
   } catch (error) {

@@ -245,6 +245,17 @@ export const IntegrationInfo = (props) => {
     trackEvent(PROJECT_SETTINGS_INTEGRATION.clickDocumentationLink('integrations'));
   };
 
+  const getButtons = () =>
+    canUpdateSettings
+      ? [
+          {
+            name: formatMessage(messages.noGlobalIntegrationsButtonAdd),
+            dataAutomationId: 'addProjectIntegrationButton',
+            handleButton: onAddProjectIntegration,
+          },
+        ]
+      : [];
+
   const renderIntegrationList = () => (
     <>
       {isAtLeastOneIntegrationAvailable ? (
@@ -278,16 +289,7 @@ export const IntegrationInfo = (props) => {
               : messages.noGlobalIntegrationsYetDescription,
           )}
           handleDocumentationClick={handleDocumentationClick}
-          buttons={[
-            {
-              name: canUpdateSettings
-                ? formatMessage(messages.noGlobalIntegrationsButtonAdd)
-                : null,
-              isDisabled: !canUpdateSettings,
-              dataAutomationId: 'addProjectIntegrationButton',
-              handleButton: onAddProjectIntegration,
-            },
-          ]}
+          buttons={getButtons()}
         />
       )}
     </>

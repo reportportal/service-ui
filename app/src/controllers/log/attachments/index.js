@@ -39,6 +39,7 @@ export {
   getAttachmentModalId,
   extractExtension,
   isFileActionAllowed,
+  createAttachmentName,
 } from './utils';
 export {
   attachmentItemsSelector,
