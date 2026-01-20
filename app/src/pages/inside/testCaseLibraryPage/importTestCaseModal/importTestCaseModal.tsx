@@ -1,15 +1,16 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef, ComponentProps } from 'react';
 import { reduxForm, InjectedFormProps, FormErrors, SubmitHandler } from 'redux-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import Link from 'redux-first-router-link';
-import { isEmpty } from 'es-toolkit/compat';
+import { isEmpty, noop } from 'es-toolkit/compat';
 import { isString } from 'es-toolkit';
 import { format } from 'date-fns';
-import { Modal, FileDropArea, AddCsvIcon, Dropdown } from '@reportportal/ui-kit';
+import { Modal, FileDropArea, AddCsvIcon, SingleAutocomplete } from '@reportportal/ui-kit';
 import { MIME_TYPES, MimeType } from '@reportportal/ui-kit/fileDropArea';
 import { AttachmentFile } from '@reportportal/ui-kit/fileDropArea/attachedFilesList';
+import { AutocompleteOption } from '@reportportal/ui-kit/autocompletes';
 
 import { withModal, hideModalAction } from 'controllers/modal';
 import { commonValidators, createClassnames } from 'common/utils';
@@ -20,7 +21,11 @@ import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';
 import { uniqueId } from 'common/utils';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 import { FolderNameField } from 'pages/inside/testCaseLibraryPage/testCaseFolders/modals/folderFormFields';
-import { Folder, foldersSelector } from 'controllers/testCase';
+import {
+  foldersSelector,
+  FolderWithFullPath,
+  transformedFoldersWithFullPathSelector,
+} from 'controllers/testCase';
 
 import { useImportTestCase } from './useImportTestCase';
 
@@ -35,6 +40,7 @@ export type ImportTarget = 'root' | 'existing';
 export type ImportTestCaseFormValues = {
   folderName: string;
   importTarget?: ImportTarget;
+  existingFolderId?: number | null;
 };
 
 const cx = createClassnames(styles);
@@ -46,6 +52,10 @@ type FileLike = File | { file: File };
 type FileInput = FileLike | FileLike[];
 type ImportModalData = UseModalData<ImportTestCaseFormValues>;
 type ImportTestCaseSubmitHandler = SubmitHandler<ImportTestCaseFormValues, ImportModalData>;
+
+type SingleAutocompleteRenderOption = ComponentProps<
+  typeof SingleAutocomplete<FolderWithFullPath>
+>['renderOption'];
 
 const extractFolderIdFromHash = (hash: string): number | undefined => {
   const match = /\/testLibrary\/folder\/(\d+)/i.exec(hash);
@@ -66,6 +76,7 @@ export const ImportTestCaseModal = ({
   const selectedFolderName = data?.folderName ?? '';
   const predefinedImportTarget = data?.importTarget;
   const folders = useSelector(foldersSelector);
+  const foldersWithPath = useSelector(transformedFoldersWithFullPathSelector);
   const folderIdFromName = folders.find((folder) => folder.name === selectedFolderName)?.id;
   const folderIdFromUrl = extractFolderIdFromHash(window.location.hash);
   const folderId = predefinedImportTarget === 'existing' ? folderIdFromName : folderIdFromUrl;
@@ -73,37 +84,22 @@ export const ImportTestCaseModal = ({
   const [target, setTarget] = useState<ImportTarget>(folderId != null ? 'existing' : 'root');
   const [existingFolderId, setExistingFolderId] = useState<number | null>(null);
   const [attachedFiles, setAttachedFiles] = useState<AttachmentFile[]>([]);
+  const autocompleteInputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
 
   const { isImportingTestCases, importTestCases } = useImportTestCase();
 
-  const handleCancel = () => {
-    dispatch(hideModalAction());
-  };
-
-  const setTargetAndForm = (next: ImportTarget) => {
-    setTarget(next);
-    change('importTarget', next);
-  };
-
-  const existingOptions = useMemo(
-    () =>
-      (Array.isArray(folders) ? folders : []).map((folder: Folder) => ({
-        value: folder.id,
-        label: folder.name,
-      })),
-    [folders],
-  );
-
   const acceptFileMimeTypes = useMemo<MimeType[]>(() => [...CSV_MIME_TYPES], []);
+  const filteredFolders = foldersWithPath;
 
   useEffect(() => {
     change('importTarget', target);
 
-    if (folderId && existingOptions.some(({ value }) => Number(value) === folderId)) {
+    if (folderId != null && filteredFolders.some((f) => f.id === folderId)) {
       setExistingFolderId(folderId);
+      change('existingFolderId', folderId);
     }
-  }, [folderId, existingOptions, change]);
+  }, [folderId, filteredFolders, target, change]);
 
   const isAllowedMime = (file: File) => CSV_MIME_TYPES.includes(file.type as MimeType);
 
@@ -111,8 +107,66 @@ export const ImportTestCaseModal = ({
 
   const isRootTarget = target === 'root';
   const isExistingTarget = target === 'existing';
-  const hasExistingOptions = !isEmpty(existingOptions);
   const hasFolderId = folderId != null;
+
+  const autocompleteInputRefFunction = (node: HTMLInputElement) => {
+    autocompleteInputRef.current = node;
+  };
+
+  const handleCancel = () => {
+    dispatch(hideModalAction());
+  };
+
+  const renderOption: SingleAutocompleteRenderOption = (
+    option: FolderWithFullPath,
+    index: number,
+    _isNew: boolean,
+    getItemProps,
+  ) => {
+    const { description, name, fullPath } = option;
+
+    return (
+      <AutocompleteOption
+        {...getItemProps?.({ item: option, index })}
+        key={option.id}
+        isNew={false}
+      >
+        <>
+          <p className={cx('create-folder-autocomplete__folder-name')}>{description || name}</p>
+          <p className={cx('create-folder-autocomplete__folder-path')}>{fullPath}</p>
+        </>
+      </AutocompleteOption>
+    );
+  };
+
+  const parseValueToString = (option: FolderWithFullPath | string | null) => {
+    if (!option) return '';
+    if (isString(option)) return option;
+    return option.description || option.name || '';
+  };
+
+  const handleExistingFolderSelect = (selectedItem: FolderWithFullPath | string | null) => {
+    if (selectedItem && typeof selectedItem === 'object' && 'id' in selectedItem) {
+      setExistingFolderId(selectedItem.id);
+      change('existingFolderId', selectedItem.id);
+    }
+    autocompleteInputRef.current?.blur();
+  };
+
+  const getTargetFolder = () => {
+    if (!existingFolderId) return null;
+    return filteredFolders.find((f) => f.id === existingFolderId) ?? null;
+  };
+
+  const setTargetAndForm = (next: ImportTarget) => {
+    setTarget(next);
+    change('importTarget', next);
+
+    if (next === 'root') {
+      setExistingFolderId(null);
+      change('existingFolderId', null);
+    }
+  };
 
   const handleImport = async (formValues: ImportTestCaseFormValues) => {
     const name = formValues.folderName?.trim() ?? '';
@@ -197,10 +251,6 @@ export const ImportTestCaseModal = ({
 
   const iconMarkup = isString(ExternalLinkIcon) ? Parser(ExternalLinkIcon) : null;
 
-  const handleExistingFolderChange = (value: number) => {
-    setExistingFolderId(value);
-  };
-
   const renderLocationControl = () => {
     if (hasFolderId) {
       return (
@@ -215,18 +265,30 @@ export const ImportTestCaseModal = ({
       );
     }
 
-    if (isExistingTarget && hasExistingOptions) {
+    if (isExistingTarget) {
       return (
         <>
           <label className={cx('import-test-case-modal__label')}>
             {formatMessage(messages.importDropdownLabel)}
           </label>
-          <Dropdown
-            className={cx('import-test-case-modal__dropdown')}
-            options={existingOptions}
-            value={existingFolderId ?? undefined}
+
+          <SingleAutocomplete<FolderWithFullPath | string>
+            createWithoutConfirmation={true}
+            optionVariant=""
+            useFixedPositioning={false}
+            value={getTargetFolder()}
+            error={error}
+            touched={false}
+            refFunction={autocompleteInputRefFunction}
+            isDropdownMode
             placeholder={formatMessage(messages.typeToSearchOrSelect)}
-            onChange={handleExistingFolderChange}
+            options={filteredFolders}
+            renderOption={renderOption}
+            parseValueToString={parseValueToString}
+            onStateChange={noop}
+            onChange={handleExistingFolderSelect}
+            onBlur={noop}
+            onFocus={noop}
           />
         </>
       );
@@ -344,12 +406,18 @@ export default withModal(IMPORT_TEST_CASE_MODAL_KEY)(
     validate: ({
       importTarget,
       folderName,
+      existingFolderId,
     }: ImportTestCaseFormValues): FormErrors<ImportTestCaseFormValues> => {
-      const needName =
-        importTarget === 'root' || extractFolderIdFromHash(window.location.hash) == null;
+      const folderIdFromUrl = extractFolderIdFromHash(window.location.hash);
 
       return {
-        folderName: needName ? commonValidators.requiredField(folderName) : undefined,
+        folderName:
+          importTarget === 'root' ? commonValidators.requiredField(folderName) : undefined,
+
+        existingFolderId:
+          importTarget === 'existing' && folderIdFromUrl == null
+            ? commonValidators.requiredField(existingFolderId)
+            : undefined,
       };
     },
   })(ImportTestCaseModal),
