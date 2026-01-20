@@ -47,13 +47,6 @@
   min-height: 60px;
 
   .sidebar-btn {
-    display: none;
     height: 45px;
-  }
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    .sidebar-btn {
-      display: block;
-    }
   }
 }
