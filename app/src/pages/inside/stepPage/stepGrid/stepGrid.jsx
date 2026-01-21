@@ -19,6 +19,7 @@ import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
+import { connect } from 'react-redux';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { groupItemsByParent } from 'controllers/testItem';
@@ -36,6 +37,8 @@ import {
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { formatAttribute } from 'common/utils/attributeUtils';
 import { StatusDropdown } from 'pages/inside/common/statusDropdown/statusDropdown';
+import { canChangeStatus } from 'common/utils/permissions';
+import { userAccountRoleSelector, activeProjectRoleSelector } from 'controllers/user';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
 import { DefectType } from './defectType';
 import { GroupHeader } from './groupHeader';
@@ -82,11 +85,12 @@ NameColumn.defaultProps = {
   customProps: {},
 };
 
-const StatusColumn = ({ className, value, customProps: { viewOnly, onChange, fetchFunc } }) => {
+const StatusColumn = ({ className, value, customProps: { viewOnly, onChange, fetchFunc, userRole, projectRole } }) => {
   const { id, status, attributes, description } = value;
+  const canChange = canChangeStatus(userRole, projectRole, false);
   return (
     <div className={cx('status-col', className)}>
-      {viewOnly ? (
+      {viewOnly || !canChange ? (
         <span className={cx('status-value')}>{status.toLowerCase()}</span>
       ) : (
         <StatusDropdown
@@ -109,6 +113,8 @@ StatusColumn.propTypes = {
     onChange: PropTypes.func,
     fetchFunc: PropTypes.func,
     viewOnly: PropTypes.bool,
+    userRole: PropTypes.string,
+    projectRole: PropTypes.string,
   }).isRequired,
 };
 StatusColumn.defaultProps = {
@@ -190,6 +196,10 @@ PredefinedFilterSwitcherCell.defaultProps = {
 
 @injectIntl
 @track()
+@connect((state) => ({
+  userRole: userAccountRoleSelector(state),
+  projectRole: activeProjectRoleSelector(state),
+}))
 export class StepGrid extends Component {
   static propTypes = {
     data: PropTypes.array,
@@ -221,6 +231,8 @@ export class StepGrid extends Component {
     modifyColumnsFunc: PropTypes.func,
     isTestSearchView: PropTypes.bool,
     errorMessage: PropTypes.string,
+    userRole: PropTypes.string,
+    projectRole: PropTypes.string,
   };
 
   static defaultProps = {
@@ -318,6 +330,8 @@ export class StepGrid extends Component {
           onChange: (status) => tracking.trackEvent(events.getChangeItemStatusEvent(status)),
           fetchFunc: onStatusUpdate,
           viewOnly: isTestSearchView,
+          userRole: this.props.userRole,
+          projectRole: this.props.projectRole,
         },
         withFilter: !isTestSearchView,
         filterEventInfo: events.STATUS_FILTER,
