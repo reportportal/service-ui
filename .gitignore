@@ -9,6 +9,7 @@
 .devcontainer
 .scannerwork
 .cursor
+app/.env
 
 ## Compiled
 build/

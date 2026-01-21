@@ -24,7 +24,8 @@ import { projectNameSelector } from 'controllers/project';
 import { activeOrganizationNameSelector } from 'controllers/organization';
 import { LocationHeaderLayout } from 'layouts/locationHeaderLayout';
 import { createClassnames } from 'common/utils';
-
+import { ScrollWrapper } from 'components/main/scrollWrapper/scrollWrapper';
+import { useProjectDetails } from 'hooks/useTypedSelector';
 import {
   manualLaunchContentSelector,
   isLoadingSelector,
@@ -35,12 +36,12 @@ import {
 } from 'controllers/manualLaunch';
 
 import { messages } from './messages';
-import styles from './manualLaunchesPage.scss';
 import { ManualLaunchesPageContent } from './manualLaunchesPageContent';
 import { commonMessages } from '../testPlansPage/commonMessages';
 import { ITEMS_PER_PAGE_OPTIONS } from './manualLaunchesList/contants';
 import { useURLBoundPagination } from '../common/testCaseList/useURLBoundPagination';
-import { useProjectDetails } from 'hooks/useTypedSelector';
+
+import styles from './manualLaunchesPage.scss';
 
 const cx = createClassnames(styles);
 
@@ -69,28 +70,26 @@ export const ManualLaunchesPage = () => {
   }, [dispatch, offset, pageSize]);
 
   return (
-    <>
-      <div className={cx('manual-launches-page')}>
-        <LocationHeaderLayout
-          title={formatMessage(messages.manualLaunchesTitle)}
-          organizationName={organizationName}
-          projectName={projectName}
-        >
-          {!isEmpty(content) && (
-            <Button
-              variant="text"
-              data-automation-id="refreshPageButton"
-              icon={<RefreshIcon />}
-              disabled={isLoading}
-              onClick={handleRefresh}
-            >
-              {formatMessage(commonMessages.refreshPage)}
-            </Button>
-          )}
-        </LocationHeaderLayout>
+    <div className={cx('manual-launches-page')}>
+      <LocationHeaderLayout
+        title={formatMessage(messages.manualLaunchesTitle)}
+        organizationName={organizationName}
+        projectName={projectName}
+      >
+        {!isEmpty(content) && (
+          <Button
+            variant="text"
+            data-automation-id="refreshPageButton"
+            icon={<RefreshIcon />}
+            disabled={isLoading}
+            onClick={handleRefresh}
+          >
+            {formatMessage(commonMessages.refreshPage)}
+          </Button>
+        )}
+      </LocationHeaderLayout>
+      <ScrollWrapper resetRequired>
         <ManualLaunchesPageContent fullLaunches={content} isLoading={isLoading} />
-      </div>
-      <div className={cx('sticky-wrapper')}>
         {Boolean(pageInfo?.totalElements) && (
           <div className={cx('pagination')}>
             <Pagination
@@ -105,7 +104,7 @@ export const ManualLaunchesPage = () => {
             />
           </div>
         )}
-      </div>
-    </>
+      </ScrollWrapper>
+    </div>
   );
 };
