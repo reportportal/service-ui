@@ -39,8 +39,10 @@ import {
 } from 'controllers/plugins';
 import { DefectTypeItem } from 'pages/inside/common/defectTypeItem';
 import { StatusDropdown } from 'pages/inside/common/statusDropdown';
+import { TestItemStatus } from 'pages/inside/common/testItemStatus';
 import { canChangeStatus } from 'common/utils/permissions';
-import { userAccountRoleSelector, activeProjectRoleSelector } from 'controllers/user';
+import { userAccountRoleSelector, activeProjectRoleSelector, userIdSelector } from 'controllers/user';
+import { isItemOwner } from 'controllers/testItem';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import CommentIcon from 'common/img/comment-inline.svg';
 import ArrowDownIcon from 'common/img/arrow-down-inline.svg';
@@ -119,6 +121,7 @@ const getUnlinkIssueEventsInfo = (place) => ({
     enabledBtsPlugins: enabledBtsPluginsSelector(state),
     userRole: userAccountRoleSelector(state),
     projectRole: activeProjectRoleSelector(state),
+    userId: userIdSelector(state),
   }),
   {
     linkIssueAction,
@@ -152,6 +155,8 @@ export class DefectDetails extends Component {
     enabledBtsPlugins: PropTypes.array,
     userRole: PropTypes.string,
     projectRole: PropTypes.string,
+    userId: PropTypes.string,
+    parentLaunch: PropTypes.object,
   };
   static defaultProps = {
     logItem: null,
@@ -290,10 +295,13 @@ export class DefectDetails extends Component {
       fetchHistoryItemsWithLoading,
       userRole,
       projectRole,
+      userId,
+      parentLaunch,
     } = this.props;
     const { expanded } = this.state;
     const isPostIssueUnavailable = !isPostIssueActionAvailable(this.props.btsIntegrations);
-    const canChange = canChangeStatus(userRole, projectRole, false);
+    const isOwner = userId && logItem ? isItemOwner(userId, logItem, parentLaunch) : false;
+    const canChange = canChangeStatus(userRole, projectRole, isOwner);
 
     return (
       <div className={cx('details-container')}>
@@ -397,16 +405,19 @@ export class DefectDetails extends Component {
             </Fragment>
           )}
           <span className={cx('status-wrapper', 'with-separator')}>
-            <StatusDropdown
-              itemId={logItem.id}
-              status={logItem.status}
-              attributes={logItem.attributes}
-              description={logItem.description}
-              fetchFunc={fetchHistoryItemsWithLoading}
-              onChange={this.onChangeStatus}
-              withIndicator
-              disabled={!canChange}
-            />
+            {canChange ? (
+              <StatusDropdown
+                itemId={logItem.id}
+                status={logItem.status}
+                attributes={logItem.attributes}
+                description={logItem.description}
+                fetchFunc={fetchHistoryItemsWithLoading}
+                onChange={this.onChangeStatus}
+                withIndicator
+              />
+            ) : (
+              <TestItemStatus status={logItem.status} className={cx('status')} />
+            )}
           </span>
           {this.isDefectTypeVisible() && (
             <span className={cx('defect-item-wrapper', 'with-separator')}>

@@ -38,7 +38,8 @@ import { NoItemMessage } from 'components/main/noItemMessage';
 import { formatAttribute } from 'common/utils/attributeUtils';
 import { StatusDropdown } from 'pages/inside/common/statusDropdown/statusDropdown';
 import { canChangeStatus } from 'common/utils/permissions';
-import { userAccountRoleSelector, activeProjectRoleSelector } from 'controllers/user';
+import { userAccountRoleSelector, activeProjectRoleSelector, userIdSelector } from 'controllers/user';
+import { isItemOwner } from 'controllers/testItem';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
 import { DefectType } from './defectType';
 import { GroupHeader } from './groupHeader';
@@ -85,9 +86,11 @@ NameColumn.defaultProps = {
   customProps: {},
 };
 
-const StatusColumn = ({ className, value, customProps: { viewOnly, onChange, fetchFunc, userRole, projectRole } }) => {
+const StatusColumn = ({ className, value, customProps: { viewOnly, onChange, fetchFunc, userRole, projectRole, userId, parentLaunch } }) => {
   const { id, status, attributes, description } = value;
-  const canChange = canChangeStatus(userRole, projectRole, false);
+  const isOwner = userId && value ? isItemOwner(userId, value, parentLaunch) : false;
+  const canChange = canChangeStatus(userRole, projectRole, isOwner);
+
   return (
     <div className={cx('status-col', className)}>
       {viewOnly || !canChange ? (
@@ -115,6 +118,8 @@ StatusColumn.propTypes = {
     viewOnly: PropTypes.bool,
     userRole: PropTypes.string,
     projectRole: PropTypes.string,
+    userId: PropTypes.string,
+    parentLaunch: PropTypes.object,
   }).isRequired,
 };
 StatusColumn.defaultProps = {
@@ -199,6 +204,7 @@ PredefinedFilterSwitcherCell.defaultProps = {
 @connect((state) => ({
   userRole: userAccountRoleSelector(state),
   projectRole: activeProjectRoleSelector(state),
+  userId: userIdSelector(state),
 }))
 export class StepGrid extends Component {
   static propTypes = {
@@ -233,6 +239,8 @@ export class StepGrid extends Component {
     errorMessage: PropTypes.string,
     userRole: PropTypes.string,
     projectRole: PropTypes.string,
+    userId: PropTypes.string,
+    parentLaunch: PropTypes.object,
   };
 
   static defaultProps = {
@@ -332,6 +340,8 @@ export class StepGrid extends Component {
           viewOnly: isTestSearchView,
           userRole: this.props.userRole,
           projectRole: this.props.projectRole,
+          userId: this.props.userId,
+          parentLaunch: this.props.parentLaunch,
         },
         withFilter: !isTestSearchView,
         filterEventInfo: events.STATUS_FILTER,
