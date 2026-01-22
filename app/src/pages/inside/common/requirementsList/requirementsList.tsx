@@ -15,7 +15,7 @@
  */
 
 import { createClassnames, copyToClipboard } from 'common/utils';
-import { CopyIcon } from '@reportportal/ui-kit';
+import { Button, CopyIcon } from '@reportportal/ui-kit';
 import { Requirement } from 'pages/inside/testCaseLibraryPage/types';
 import styles from './requirementsList.scss';
 
@@ -61,9 +61,14 @@ export const RequirementsList = ({ items, copyEnabled = false }: RequirementsLis
             {processText(req.value)}
           </div>
           {copyEnabled && (
-            <div className={cx('copy-button')} onClick={() => void handleCopy(req.value)}>
+            <Button
+              variant="text"
+              adjustWidthOn="content"
+              className={cx('copy-button')}
+              onClick={() => void handleCopy(req.value)}
+            >
               <CopyIcon />
-            </div>
+            </Button>
           )}
         </div>
       ))}
