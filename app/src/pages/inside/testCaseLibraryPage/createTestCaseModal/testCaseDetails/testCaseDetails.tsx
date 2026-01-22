@@ -1,13 +1,11 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { defineMessages, useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import { change, touch, untouch } from 'redux-form';
 import { isNumber, isEmpty, keyBy } from 'es-toolkit/compat';
-import { FieldText } from '@reportportal/ui-kit';
 import { MIME_TYPES } from '@reportportal/ui-kit/fileDropArea';
 
 import { createClassnames } from 'common/utils';
-import { FieldErrorHint, FieldProvider } from 'components/fields';
+import { FieldProvider } from 'components/fields';
 import { Step } from 'pages/inside/testCaseLibraryPage/types';
 
 import { Template } from './template';
@@ -15,23 +13,13 @@ import { AttachmentArea } from '../attachmentArea';
 import { Precondition } from './precondition';
 import { Steps } from './steps';
 import { TextTemplate } from './textTemplate';
+import { Requirements } from './requirements/requirements';
 import { ManualScenarioType } from '../../types';
 import { manualScenarioTypeSelector, stepsDataSelector } from '../selectors';
 
 import styles from './testCaseDetails.scss';
 
 const cx = createClassnames(styles);
-
-const messages = defineMessages({
-  requirementsLink: {
-    id: 'createTestCaseModal.requirementsLink',
-    defaultMessage: 'Requirements link',
-  },
-  enterLink: {
-    id: 'createTestCaseModal.enterLink',
-    defaultMessage: 'Enter link to requirements (e.g. https://example.com)',
-  },
-});
 
 const createEmptyStep = (): Step => ({
   id: Date.now(),
@@ -53,7 +41,6 @@ export const TestCaseDetails = ({
 }: TestCaseDetailsProps) => {
   const [steps, setSteps] = useState<Step[]>([createEmptyStep()]);
   const [isEditMode, setIsEditMode] = useState(false);
-  const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const manualScenarioType = useSelector(manualScenarioTypeSelector(formName));
   const stepsData = useSelector(stepsDataSelector(formName));
@@ -191,11 +178,7 @@ export const TestCaseDetails = ({
   return (
     <div className={cx('test-case-details', className)}>
       <Template isTemplateFieldDisabled={isTemplateFieldDisabled} />
-      <FieldProvider name="linkToRequirements" placeholder={formatMessage(messages.enterLink)}>
-        <FieldErrorHint provideHint={false}>
-          <FieldText label={formatMessage(messages.requirementsLink)} defaultWidth={false} />
-        </FieldErrorHint>
-      </FieldProvider>
+      <Requirements />
       {isTextTemplate ? (
         <>
           <Precondition />

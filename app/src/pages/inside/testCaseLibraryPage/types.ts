@@ -53,7 +53,7 @@ export enum ManualScenarioType {
 
 interface ManualScenarioCommon {
   executionEstimationTime: number;
-  linkToRequirements: string;
+  requirements: Requirement[];
   manualScenarioType: ManualScenarioType;
   preconditions?: {
     value: string;
@@ -87,13 +87,14 @@ export interface TestCase {
   };
   lastExecution?: Execution;
   tags?: { key: string }[];
+  manualScenario?: ManualScenario;
 }
 
 export interface ManualScenario {
   manualScenarioType: TestCaseManualScenario;
   id: number;
   executionEstimationTime: number;
-  linkToRequirements: string;
+  requirements: Requirement[];
   preconditions: {
     value: string;
     attachments: Attachment[];
@@ -150,12 +151,17 @@ export interface Attribute {
   value: string;
 }
 
+export interface Requirement {
+  id: string;
+  value: string;
+}
+
 export interface CreateTestCaseFormData {
   name: string;
   description?: string;
   folder: FolderWithFullPath | string;
   priority?: TestCasePriority;
-  linkToRequirements?: string;
+  requirements?: Requirement[];
   executionEstimationTime?: number;
   manualScenarioType: ManualScenarioType;
   precondition?: string;

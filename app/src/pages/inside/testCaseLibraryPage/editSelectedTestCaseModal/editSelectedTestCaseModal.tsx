@@ -25,6 +25,7 @@ import { withModal } from 'controllers/modal';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { UseModalData } from 'common/hooks';
 
+import { uniqueId } from 'common/utils';
 import { commonMessages } from '../commonMessages';
 import { ExtendedTestCase, CreateTestCaseFormData } from '../types';
 import { TestCaseModal } from '../createTestCaseModal/testCaseModal/testCaseModal';
@@ -78,7 +79,7 @@ const EditTestCaseModalComponent = ({
         executionEstimationTime:
           manualScenario?.executionEstimationTime ||
           TEST_CASE_FORM_INITIAL_VALUES.executionEstimationTime,
-        linkToRequirements: manualScenario?.linkToRequirements,
+        requirements: manualScenario?.requirements || [{ id: uniqueId(), value: '' }],
         precondition: manualScenario?.preconditions?.value,
         preconditionAttachments: manualScenario?.preconditions?.attachments || [],
         instructions: manualScenario?.instructions,
@@ -124,9 +125,8 @@ const EditTestCaseModalComponent = ({
 const ReduxFormComponent = reduxForm<CreateTestCaseFormData, EditTestCaseModalProps>({
   form: EDIT_TEST_CASE_FORM_NAME,
   initialValues: TEST_CASE_FORM_INITIAL_VALUES,
-  validate: ({ name, linkToRequirements }) => ({
+  validate: ({ name }) => ({
     name: commonValidators.requiredField(name),
-    linkToRequirements: commonValidators.optionalUrl(linkToRequirements),
   }),
   enableReinitialize: false,
 })(EditTestCaseModalComponent);
