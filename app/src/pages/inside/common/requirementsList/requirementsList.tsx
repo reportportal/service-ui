@@ -18,6 +18,7 @@ import { createClassnames, copyToClipboard } from 'common/utils';
 import { Button, CopyIcon } from '@reportportal/ui-kit';
 import { Requirement } from 'pages/inside/testCaseLibraryPage/types';
 import styles from './requirementsList.scss';
+import { processText } from './utils';
 
 const cx = createClassnames(styles);
 
@@ -27,28 +28,6 @@ interface RequirementsListProps {
 }
 
 export const RequirementsList = ({ items, copyEnabled = false }: RequirementsListProps) => {
-  const processText = (text: string) => {
-    const urlRegex = /(https?:\/\/[^\s]+)/g;
-
-    return text.split(urlRegex).map((part, i) => {
-      if (part.match(urlRegex)) {
-        return (
-          <a
-            // eslint-disable-next-line react/no-array-index-key
-            key={i}
-            href={part}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {part}
-          </a>
-        );
-      }
-
-      return part;
-    });
-  };
-
   const handleCopy = async (text: string): Promise<void> => {
     await copyToClipboard(text);
   };

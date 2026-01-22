@@ -24,7 +24,7 @@ export const buildManualScenario = (payload: CreateTestCaseFormData): ManualScen
   const commonData = {
     executionEstimationTime: payload.executionEstimationTime,
     requirements: payload.requirements
-      ? payload.requirements.filter((req) => req.value && req.value.trim() !== '')
+      ? payload.requirements.filter((req) => req.value?.trim())
       : [],
     manualScenarioType: payload.manualScenarioType,
     preconditions: {
