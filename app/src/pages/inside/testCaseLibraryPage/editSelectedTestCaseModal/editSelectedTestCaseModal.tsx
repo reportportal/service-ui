@@ -19,13 +19,12 @@ import { useIntl } from 'react-intl';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { keyBy } from 'es-toolkit';
 
-import { commonValidators } from 'common/utils';
+import { commonValidators, uniqueId } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal } from 'controllers/modal';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { UseModalData } from 'common/hooks';
 
-import { uniqueId } from 'common/utils';
 import { commonMessages } from '../commonMessages';
 import { ExtendedTestCase, CreateTestCaseFormData } from '../types';
 import { TestCaseModal } from '../createTestCaseModal/testCaseModal/testCaseModal';

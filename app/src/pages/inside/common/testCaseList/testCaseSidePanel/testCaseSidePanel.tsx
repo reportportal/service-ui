@@ -43,8 +43,11 @@ import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'contr
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import { foldersSelector } from 'controllers/testCase';
 import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
-import { Requirement } from 'pages/inside/testCaseLibraryPage/types';
-import { ManualScenario, ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import {
+  ManualScenario,
+  ExtendedTestCase,
+  Requirement,
+} from 'pages/inside/testCaseLibraryPage/types';
 import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
 import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
