@@ -71,10 +71,9 @@ const CreateTestCaseModalComponent = ({
 export const CreateTestCaseModal = reduxForm<CreateTestCaseFormData, CreateTestCaseModalOwnProps>({
   form: CREATE_TEST_CASE_FORM_NAME,
   initialValues: TEST_CASE_FORM_INITIAL_VALUES,
-  validate: ({ name, folder, linkToRequirements }) => ({
+  validate: ({ name, folder }) => ({
     name: commonValidators.requiredField(name),
     folder: commonValidators.requiredField(folder),
-    linkToRequirements: commonValidators.optionalUrl(linkToRequirements),
   }),
   enableReinitialize: false,
 })(CreateTestCaseModalComponent);

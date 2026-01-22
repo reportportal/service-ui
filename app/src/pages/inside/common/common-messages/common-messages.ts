@@ -73,6 +73,14 @@ export const commonMessages = defineMessages({
     id: 'Common.noTagsAdded',
     defaultMessage: 'No tags added',
   },
+  requirementsAreNotSpecified: {
+    id: 'Common.requirementsAreNotSpecified',
+    defaultMessage: 'Requirements are not specified',
+  },
+  requirements: {
+    id: 'Common.requirements',
+    defaultMessage: 'Requirements',
+  },
   cancel: {
     id: 'Common.cancel',
     defaultMessage: 'Cancel',

@@ -1,0 +1,44 @@
+.requirements-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .requirement-item {
+    display: flex;
+
+    .text-container {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--Text-Primary, #3F3F3F);
+      font-family: $FONT-ROBOTO-REGULAR;
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 24px;
+
+      a {
+        color: $COLOR--topaz-2;
+        text-decoration: none;
+        cursor: pointer;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .copy-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 8px;
+      cursor: pointer;
+
+      svg {
+        width: 14px;
+        height: 14px;
+        fill: $COLOR--e-300;
+      }
+    }
+  }
+}

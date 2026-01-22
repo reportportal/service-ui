@@ -14,40 +14,44 @@
  * limitations under the License.
  */
 
-.page {
-  display: grid;
-  height: 100%;
-  padding: 0;
-  grid-template:
-    'header header' auto
-    'sidebar main' 1fr
-    / 360px 1fr;
+.requirements-container {
+  display: flex;
+  flex-direction: column;
 
-  &__header {
-    grid-area: header;
-  }
-
-  &__sidebar {
+  .requirement-row {
     display: flex;
-    grid-area: sidebar;
-    flex-direction: column;
-    padding: 24px 32px;
-    gap: 16px;
-    border-right: 1px solid var(--rp-ui-base-e-100);
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 8px;
 
-    .fixed-button-height {
-      height: 22px;
+    .input-container {
+      flex-grow: 1;
+
+      span {
+        overflow: hidden;
+      }
+    }
+
+    .delete-button {
+      min-width: 36px;
+      width: 36px !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      i {
+        margin: 0;
+        padding-bottom: 3px;
+        padding-left: 1px;
+
+        svg {
+          width: 10px;
+          height: 10px;
+        }
+      }
     }
   }
-
-  &__main-content {
-    grid-area: main;
-    flex-grow: 1;
-    margin-left: 1px;
-    min-height: 400px;
-    display: flex;
-    flex-direction: column;
-    padding: 24px 32px;
-    gap: 16px;
-  }
 }
+
+

@@ -43,12 +43,14 @@ import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'contr
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import { foldersSelector } from 'controllers/testCase';
 import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
+import { Requirement } from 'pages/inside/testCaseLibraryPage/types';
 import { ManualScenario, ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
 import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
 import { useMoveTestCaseModal } from 'pages/inside/testCaseLibraryPage/moveTestCaseModal/useMoveTestCaseModal';
 import { AddToLaunchButton } from 'pages/inside/testCaseLibraryPage/addToLaunchButton';
+import { RequirementsList } from '../../requirementsList/requirementsList';
 
 import { TestCaseMenuAction, TestCaseManualScenario } from '../types';
 import {
@@ -80,10 +82,12 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
   attributes,
   scenario,
   testCaseDescription,
+  requirements,
 }: {
   attributes: string[];
   scenario: ManualScenario;
   testCaseDescription: string;
+  requirements: Requirement[];
 }) => {
   const firstStep = scenario?.steps?.[0];
   const isStepsManualScenario = scenario.manualScenarioType === TestCaseManualScenario.STEPS;
@@ -104,6 +108,11 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
       childComponent: isEmpty(attributes) ? null : (
         <AdaptiveTagList tags={attributes} isShowAllView />
       ),
+    },
+    {
+      titleKey: 'requirements',
+      defaultMessageKey: 'requirementsAreNotSpecified',
+      childComponent: isEmpty(requirements) ? null : <RequirementsList items={requirements} />,
     },
     {
       titleKey: 'scenarioTitle',
@@ -291,6 +300,7 @@ export const TestCaseSidePanel = memo(
             attributes: testCase?.attributes?.map(({ key }) => key),
             scenario: testCase?.manualScenario,
             testCaseDescription: testCase.description,
+            requirements: testCase?.manualScenario?.requirements || [],
           }).map(({ titleKey, defaultMessageKey, childComponent }) => (
             <CollapsibleSection
               key={titleKey}
