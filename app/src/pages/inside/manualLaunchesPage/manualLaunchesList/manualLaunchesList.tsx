@@ -96,12 +96,14 @@ export const ManualLaunchesList = ({ fullLaunches }: ManualLaunchesListProps) =>
       />
       {isAnyRowSelected && (
         <div className={cx('selection')}>
-          <Selection
-            selectedCount={selectedRowIds.length}
-            onClearSelection={() => setSelectedRowIds([])}
-          />
-          <div className={cx('selection-controls')}>
-            <Button>{formatMessage(COMMON_LOCALE_KEYS.DELETE)}</Button>
+          <div className={cx('selection-container')}>
+            <Selection
+              selectedCount={selectedRowIds.length}
+              onClearSelection={() => setSelectedRowIds([])}
+            />
+            <div className={cx('selection-controls')}>
+              <Button>{formatMessage(COMMON_LOCALE_KEYS.DELETE)}</Button>
+            </div>
           </div>
         </div>
       )}
