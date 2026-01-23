@@ -87,6 +87,6 @@ const RequirementsList = ({ fields }: WrappedFieldArrayProps<Requirement>) => {
   );
 };
 
-export const Requirements: FC = () => {
+export const Requirements = () => {
   return <FieldArray name="requirements" component={RequirementsList} />;
 };
