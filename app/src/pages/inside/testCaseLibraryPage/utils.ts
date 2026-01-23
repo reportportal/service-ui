@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { FolderWithFullPath } from 'controllers/testCase/types';
 import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
 import { Page } from 'types/common';
 
@@ -23,15 +22,16 @@ import { Page } from 'types/common';
 export const coerceToNumericId = (value: unknown): number | undefined => {
   if (value == null || value === '') return undefined;
   const id = Number(value);
+
   return Number.isFinite(id) ? id : undefined;
 };
 
-export const findFolderById = (
-  folders: FolderWithFullPath[],
+export const findFolderById = <T extends { id: number }>(
+  folders: T[],
   folderId?: number,
-): FolderWithFullPath | undefined => {
+): T | undefined => {
   if (!folderId) {
-    return undefined;
+    return;
   }
 
   return folders.find((folder) => folder.id === folderId);

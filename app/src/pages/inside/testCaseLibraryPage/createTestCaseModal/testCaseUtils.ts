@@ -52,16 +52,6 @@ export const buildManualScenario = (payload: CreateTestCaseFormData): ManualScen
   };
 };
 
-export const isDuplicateTestCaseError = (error: unknown) => {
-  if (error && typeof error === 'object' && 'message' in error) {
-    const message = error.message;
-
-    return typeof message === 'string' && message.includes('tms_test_case_name_folder_unique');
-  }
-
-  return false;
-};
-
 interface FolderPayload {
   testFolder?: { name: string; parentTestFolderId?: number | null };
   testFolderId?: number;

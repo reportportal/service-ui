@@ -43,7 +43,7 @@ const messages = defineMessages({
 
 interface ExpandedOptionsProps {
   folders: TransformedFolder[];
-  activeFolder: number | null;
+  activeFolderId: number | null;
   setAllTestCases: () => void;
   onFolderClick: (id: number) => void;
   children: ReactNode;
@@ -53,12 +53,12 @@ interface ExpandedOptionsProps {
 
 export const ExpandedOptions = ({
   folders,
-  activeFolder,
-  setAllTestCases,
-  onFolderClick,
-  renderCreateFolderButton,
+  activeFolderId,
   instanceKey,
   children,
+  setAllTestCases,
+  renderCreateFolderButton,
+  onFolderClick,
 }: ExpandedOptionsProps) => {
   const { formatMessage } = useIntl();
   const { expandedIds, onToggleFolder } = useStorageFolders(instanceKey);
@@ -82,7 +82,7 @@ export const ExpandedOptions = ({
           <button
             type="button"
             className={cx('sidebar-header__title', {
-              'sidebar-header__title--active': activeFolder === null,
+              'sidebar-header__title--active': activeFolderId === null,
             })}
             onClick={setAllTestCases}
           >
@@ -116,11 +116,11 @@ export const ExpandedOptions = ({
                   <Folder
                     folder={folder}
                     key={folder.id || `${folder.name}-${idx}`}
-                    activeFolder={activeFolder}
-                    setActiveFolder={onFolderClick}
-                    setAllTestCases={setAllTestCases}
+                    activeFolder={activeFolderId}
                     instanceKey={instanceKey}
                     expandedIds={expandedIds}
+                    onFolderClick={onFolderClick}
+                    setAllTestCases={setAllTestCases}
                     onToggleFolder={onToggleFolder}
                   />
                 ))}

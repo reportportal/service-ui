@@ -24,3 +24,4 @@ export { useFileProcessing } from './useFileProcessing';
 export type { BaseAttachmentFile } from './useFileProcessing';
 export { useQueryParams } from './useQueryParams';
 export { useNavigationTabsExtensionsConfig } from './useNavigationTabsExtensionsConfig';
+export { useNotification } from './useNotification';

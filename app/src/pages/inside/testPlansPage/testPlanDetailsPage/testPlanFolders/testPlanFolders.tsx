@@ -49,7 +49,7 @@ export const TestPlanFolders = ({ isLoading = false }: TestPlanFoldersProps) => 
 
   return (
     <ExpandedOptions
-      activeFolder={activeFolder}
+      activeFolderId={activeFolder}
       folders={folders}
       onFolderClick={handleFolderClick}
       setAllTestCases={setAllTestCases}

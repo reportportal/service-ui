@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-export {
-  EDIT_SELECTED_TEST_CASE_MODAL_KEY,
-  EditSelectedTestCaseModal,
-} from './editSelectedTestCaseModal';
-export { useEditTestCaseModal } from './useEditTestCaseModal';
+export { default as MoveTestCaseModal, MOVE_TEST_CASE_MODAL_KEY } from './moveTestCaseModal';
+export { useMoveTestCaseModal } from './useMoveTestCaseModal';
+export type { MoveTestCaseModalData } from './moveTestCaseModal';

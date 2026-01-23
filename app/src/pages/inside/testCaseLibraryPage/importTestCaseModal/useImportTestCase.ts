@@ -6,10 +6,9 @@ import { isEmpty, isNumber } from 'es-toolkit/compat';
 
 import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
-import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { useDebouncedSpinner } from 'common/hooks';
+import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 import {
   getAllTestCasesAction,
@@ -62,6 +61,7 @@ export const useImportTestCase = () => {
   const testCasesPageData = useSelector(testCasesPageSelector);
   const urlFolderId = useSelector(urlFolderIdSelector);
   const { formatMessage } = useIntl();
+  const { showSuccessNotification, showErrorNotification } = useNotification();
 
   const refetchTestCases = useCallback(
     (folderId: number, prevFolderId?: number) => {
@@ -121,12 +121,10 @@ export const useImportTestCase = () => {
       });
 
       dispatch(hideModalAction());
-      dispatch(
-        showSuccessNotification({
-          messageId: resolvedFolderName ? 'importSuccessToFolder' : 'importSuccess',
-          values: resolvedFolderName ? { folderName: resolvedFolderName } : undefined,
-        }),
-      );
+      showSuccessNotification({
+        messageKey: resolvedFolderName ? 'importSuccessToFolder' : 'importSuccess',
+        values: resolvedFolderName ? { folderName: resolvedFolderName } : undefined,
+      });
       refetchTestCases(testFolderId);
       dispatch(getFoldersAction());
     } catch (error: unknown) {
@@ -143,11 +141,9 @@ export const useImportTestCase = () => {
           name: formatMessage(commonMessages.duplicateTestCaseName),
         });
       } else {
-        dispatch(
-          showErrorNotification({
-            messageId: 'importTestCaseFailed',
-          }),
-        );
+        showErrorNotification({
+          messageKey: 'importTestCaseFailed',
+        });
       }
     } finally {
       hideSpinner();

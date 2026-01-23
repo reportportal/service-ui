@@ -32,20 +32,20 @@ const cx = createClassnames(styles);
 interface FolderProps {
   folder: TransformedFolder;
   activeFolder: number | null;
-  setActiveFolder: (id: number) => void;
-  setAllTestCases: () => void;
   instanceKey: TMS_INSTANCE_KEY;
   expandedIds: number[];
+  setAllTestCases: () => void;
+  onFolderClick: (id: number) => void;
   onToggleFolder: (folder: TransformedFolder) => void;
 }
 
 export const Folder = ({
   folder,
-  setActiveFolder,
-  setAllTestCases,
   activeFolder,
   instanceKey,
   expandedIds,
+  onFolderClick,
+  setAllTestCases,
   onToggleFolder,
 }: FolderProps) => {
   const isOpen = expandedIds.includes(folder.id);
@@ -74,9 +74,10 @@ export const Folder = ({
   const handleFolderTitleClick = useCallback(
     (event: ReactMouseEvent<HTMLDivElement, MouseEvent>) => {
       event.stopPropagation();
-      setActiveFolder(folder.id);
+
+      onFolderClick(folder.id);
     },
-    [setActiveFolder, folder.id],
+    [folder.id, onFolderClick],
   );
 
   return (
@@ -142,10 +143,10 @@ export const Folder = ({
               folder={subfolder}
               key={subfolder.id}
               activeFolder={activeFolder}
-              setActiveFolder={setActiveFolder}
-              setAllTestCases={setAllTestCases}
               instanceKey={instanceKey}
               expandedIds={expandedIds}
+              onFolderClick={onFolderClick}
+              setAllTestCases={setAllTestCases}
               onToggleFolder={onToggleFolder}
             />
           ))}

@@ -25,20 +25,26 @@ import { hideModalAction } from 'controllers/modal';
 interface UseModalButtonsProps {
   okButtonText: string;
   isLoading: boolean;
+  isSubmitButtonDisabled?: boolean;
   onSubmit: SubmitHandler;
 }
 
-export const useModalButtons = ({ okButtonText, isLoading, onSubmit }: UseModalButtonsProps) => {
+export const useModalButtons = ({
+  okButtonText,
+  isLoading,
+  isSubmitButtonDisabled = false,
+  onSubmit,
+}: UseModalButtonsProps) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
   const okButton = useMemo(
     () => ({
       children: okButtonText,
-      disabled: isLoading,
+      disabled: isLoading || isSubmitButtonDisabled,
       onClick: onSubmit as unknown as () => void,
     }),
-    [okButtonText, isLoading, onSubmit],
+    [okButtonText, isLoading, isSubmitButtonDisabled, onSubmit],
   );
 
   const cancelButton = useMemo(

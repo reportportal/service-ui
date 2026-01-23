@@ -34,7 +34,6 @@ import {
   MOVE_FOLDER_SUCCESS,
   NAMESPACE,
   RENAME_FOLDER_SUCCESS,
-  SELECT_ACTIVE_FOLDER,
   SET_EXPANDED_FOLDER_IDS,
   SET_TEST_CASES,
   START_CREATING_FOLDER,
@@ -59,7 +58,6 @@ import {
   DeleteTestCaseParams,
   MoveFolderParams,
   RenameFolderParams,
-  SetActiveFolderIdParams,
   SetExpandedFolderIdsParams,
   ToggleFolderExpansionParams,
   UpdateFolderCounterParams,
@@ -256,18 +254,6 @@ const testCaseDetailsReducer = (
   }
 };
 
-const activeFolderReducer = (
-  state: number | null = INITIAL_STATE.folders.activeFolderId || null,
-  action: { type: string; payload: SetActiveFolderIdParams },
-) => {
-  switch (action.type) {
-    case SELECT_ACTIVE_FOLDER:
-      return action.payload.activeFolderId || null;
-    default:
-      return state;
-  }
-};
-
 const getFolderAndDescendantIds = (folders: Folder[], folderId: number): number[] => {
   const folder = folders.find((folder) => folder.id === folderId);
 
@@ -390,7 +376,6 @@ const reducer = combineReducers({
       fetchReducer(NAMESPACE, { initialState: [], contentPath: 'content' }),
       folderReducer,
     ),
-    activeFolderId: activeFolderReducer,
     expandedFolderIds: expandedFolderIdsReducer,
     isCreatingFolder: isCreatingFolderReducer,
     isLoadingFolder: isLoadingFolderReducer,

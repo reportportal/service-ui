@@ -15,16 +15,12 @@
  */
 
 import { useDispatch, useSelector } from 'react-redux';
-import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { hideModalAction } from 'controllers/modal';
 import { projectKeySelector } from 'controllers/project';
-import { useDebouncedSpinner } from 'common/hooks';
+import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import {
-  deleteTestCaseSuccessAction,
-  updateFolderCounterAction,
-} from 'controllers/testCase/actionCreators';
+import { deleteTestCaseSuccessAction } from 'controllers/testCase/actionCreators';
 import {
   TEST_CASE_LIBRARY_PAGE,
   urlOrganizationSlugSelector,
@@ -33,6 +29,7 @@ import {
 
 import { TestCase } from '../types';
 import { useLastItemOnThePage } from '../hooks/useLastItemOnThePage';
+import { useFolderCounterUpdate } from '../hooks/useFolderCounterUpdate';
 
 export const useDeleteTestCase = ({ isDetailsPage = false } = {}) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
@@ -41,6 +38,8 @@ export const useDeleteTestCase = ({ isDetailsPage = false } = {}) => {
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const projectSlug = useSelector(urlProjectSlugSelector);
   const { updateUrl, isSingleItemOnTheLastPage } = useLastItemOnThePage();
+  const { updateFolderCounter } = useFolderCounterUpdate();
+  const { showSuccessNotification, showErrorNotification } = useNotification();
 
   const deleteTestCase = async (testCase: TestCase) => {
     try {
@@ -51,9 +50,9 @@ export const useDeleteTestCase = ({ isDetailsPage = false } = {}) => {
       });
 
       dispatch(deleteTestCaseSuccessAction({ testCase }));
-      dispatch(updateFolderCounterAction({ folderId: testCase.testFolder.id, delta: -1 }));
+      updateFolderCounter({ folderId: testCase.testFolder.id, delta: -1 });
       dispatch(hideModalAction());
-      dispatch(showSuccessNotification({ messageId: 'testCaseDeletedSuccess' }));
+      showSuccessNotification({ messageKey: 'testCaseDeletedSuccess' });
 
       if (isSingleItemOnTheLastPage && !isDetailsPage) {
         updateUrl();
@@ -69,11 +68,9 @@ export const useDeleteTestCase = ({ isDetailsPage = false } = {}) => {
         });
       }
     } catch (error: unknown) {
-      dispatch(
-        showErrorNotification({
-          message: (error as Error).message,
-        }),
-      );
+      showErrorNotification({
+        message: (error as Error).message,
+      });
     } finally {
       hideSpinner();
     }

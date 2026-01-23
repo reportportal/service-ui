@@ -100,6 +100,6 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
   },
   createSubfolder: {
     id: 'TestCaseLibraryPage.createSubfolder',
-    defaultMessage: 'Create subfolder',
+    defaultMessage: 'Create Subfolder',
   },
 });
