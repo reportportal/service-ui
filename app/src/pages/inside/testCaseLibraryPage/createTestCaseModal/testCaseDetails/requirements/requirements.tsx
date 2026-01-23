@@ -18,9 +18,11 @@ import { FC } from 'react';
 import { useIntl, defineMessages } from 'react-intl';
 import { FieldArray, WrappedFieldArrayProps } from 'redux-form';
 import { FieldText, Button, PlusIcon, FieldLabel, CloseIcon } from '@reportportal/ui-kit';
+
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { createClassnames, uniqueId } from 'common/utils';
 import { Requirement } from 'pages/inside/testCaseLibraryPage/types';
+
 import styles from './requirements.scss';
 
 const cx = createClassnames(styles);

@@ -15,9 +15,12 @@
  */
 
 import { Button, CopyIcon } from '@reportportal/ui-kit';
+
 import { createClassnames, copyToClipboard } from 'common/utils';
 import { Requirement } from 'pages/inside/testCaseLibraryPage/types';
+
 import { processText } from './utils';
+
 import styles from './requirementsList.scss';
 
 const cx = createClassnames(styles);
