@@ -7,7 +7,7 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 
 export const useCanUnassignOrganization = () => {
   const currentUserId = useSelector(idSelector) as number;
-  const { canAssignUnassignInternalUser } = useUserPermissions();
+  const { canManageUsers } = useUserPermissions();
 
   return (targetUser: UserInfo, targetOrganization: Organization) => {
     const { id: userId, accountType: userType } = targetUser;
@@ -17,14 +17,14 @@ export const useCanUnassignOrganization = () => {
     const isOrganizationOwner = userId === ownerId;
 
     if (organizationType === OrganizationType.EXTERNAL) {
-      return (isCurrentUser || canAssignUnassignInternalUser) && !isUpsa;
+      return (isCurrentUser || canManageUsers) && !isUpsa;
     }
 
     if (organizationType === OrganizationType.PERSONAL) {
-      return (isCurrentUser || canAssignUnassignInternalUser) && !isOrganizationOwner;
+      return (isCurrentUser || canManageUsers) && !isOrganizationOwner;
     }
 
-    return isCurrentUser || canAssignUnassignInternalUser;
+    return isCurrentUser || canManageUsers;
   };
 };
 

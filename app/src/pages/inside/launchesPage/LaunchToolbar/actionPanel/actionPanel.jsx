@@ -84,14 +84,14 @@ export const ActionPanel = ({
   finishedLaunchesCount,
 }) => {
   const breadcrumbs = useSelector(breadcrumbsSelector);
-  const { canBulkEditItems, canWorkWithWidgets } = useUserPermissions();
+  const { canManageLaunches, canWorkWithWidgets } = useUserPermissions();
   const isImportPluginsAvailable = useSelector(isImportPluginsAvailableSelector);
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
 
   const isShowWidgetButton = Number.isInteger(activeFilterId) && canWorkWithWidgets;
-  const isShowImportButton = canBulkEditItems && !debugMode && !Number.isInteger(activeFilterId);
+  const isShowImportButton = canManageLaunches && !debugMode && !Number.isInteger(activeFilterId);
   const onClickActionButton = () => trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ACTIONS_BTN);
 
   const createActionDescriptors = () => {
@@ -99,7 +99,7 @@ export const ActionPanel = ({
       {
         label: formatMessage(COMMON_LOCALE_KEYS.EDIT),
         value: 'action-bulk-edit',
-        hidden: debugMode || !canBulkEditItems,
+        hidden: debugMode || !canManageLaunches,
         onClick: () => {
           selectedLaunches.length > 1
             ? onEditItems(selectedLaunches)
@@ -110,7 +110,7 @@ export const ActionPanel = ({
       {
         label: formatMessage(COMMON_LOCALE_KEYS.MERGE),
         value: 'action-merge',
-        hidden: debugMode || !canBulkEditItems,
+        hidden: debugMode || !canManageLaunches,
         onClick: () => {
           onMerge();
           trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('merge'));
@@ -128,7 +128,7 @@ export const ActionPanel = ({
       {
         label: formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_DEBUG),
         value: 'action-move-to-debug',
-        hidden: debugMode || !canBulkEditItems,
+        hidden: debugMode || !canManageLaunches,
         onClick: () => {
           onMove();
           trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('move_to_debug'));
@@ -143,7 +143,7 @@ export const ActionPanel = ({
       {
         label: formatMessage(COMMON_LOCALE_KEYS.FORCE_FINISH),
         value: 'action-force-finish',
-        hidden: !canBulkEditItems,
+        hidden: !canManageLaunches,
         onClick: () => {
           onForceFinish();
           trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('force_finish'));
@@ -152,7 +152,7 @@ export const ActionPanel = ({
       {
         label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
         value: 'action-delete',
-        hidden: !canBulkEditItems,
+        hidden: !canManageLaunches,
         onClick: () => {
           onDelete();
           trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('delete'));
@@ -205,7 +205,7 @@ export const ActionPanel = ({
             </GhostButton>
           </div>
         )}
-        {(canBulkEditItems || !debugMode) && (
+        {(canManageLaunches || !debugMode) && (
           <div className={cx('action-button', 'tablet-hidden')}>
             <GhostMenuButton
               tooltip={!selectedLaunches.length ? formatMessage(messages.actionsBtnTooltip) : null}

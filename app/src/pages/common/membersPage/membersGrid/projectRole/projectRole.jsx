@@ -23,7 +23,7 @@ import PropTypes from 'prop-types';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { InputDropdown } from 'components/inputs/inputDropdown';
-import { canChangeUserRole } from 'common/utils/permissions';
+import { canManageUsers } from 'common/utils/permissions';
 import { urlProjectSlugSelector, userRolesSelector } from 'controllers/pages';
 import { userIdSelector } from 'controllers/user';
 import { ROLES_MAP } from 'common/constants/projectRoles';
@@ -51,7 +51,7 @@ const messages = defineMessages({
   (state) => ({
     currentUser: userIdSelector(state),
     projectSlug: urlProjectSlugSelector(state),
-    canChangeRole: canChangeUserRole(userRolesSelector(state)),
+    canChangeRole: canManageUsers(userRolesSelector(state)),
     projectKey: projectKeySelector(state),
   }),
   { showNotification },

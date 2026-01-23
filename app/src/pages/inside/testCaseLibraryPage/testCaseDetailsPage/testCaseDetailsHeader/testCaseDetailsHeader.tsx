@@ -62,13 +62,7 @@ export const TestCaseDetailsHeader = ({
   onMenuAction = () => {},
 }: TestCaseDetailsHeaderProps) => {
   const { formatMessage } = useIntl();
-  const {
-    canDeleteTestCase,
-    canDuplicateTestCase,
-    canEditTestCase,
-    canAddTestCaseToLaunch,
-    canAddTestCaseToTestPlan,
-  } = useUserPermissions();
+  const { canManageTestCases } = useUserPermissions();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
@@ -102,24 +96,25 @@ export const TestCaseDetailsHeader = ({
   };
 
   const getMenuItems = () => {
-    const items: PopoverItem[] = [
-      {
-        label: formatMessage(commonMessages.historyOfActions),
-        onClick: handleHistoryOfActions,
-      },
-    ];
-
-    if (canDuplicateTestCase) {
-      items.unshift({ label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE) });
-    }
-
-    if (canDeleteTestCase) {
-      items.push({
-        label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-        variant: 'destructive',
-        onClick: handleDeleteTestCase,
-      });
-    }
+    const items: PopoverItem[] = canManageTestCases
+      ? [
+          { label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE) },
+          {
+            label: formatMessage(commonMessages.historyOfActions),
+            onClick: handleHistoryOfActions,
+          },
+          {
+            label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+            variant: 'destructive',
+            onClick: handleDeleteTestCase,
+          },
+        ]
+      : [
+          {
+            label: formatMessage(commonMessages.historyOfActions),
+            onClick: handleHistoryOfActions,
+          },
+        ];
 
     return items;
   };
@@ -152,7 +147,7 @@ export const TestCaseDetailsHeader = ({
           className={cx('header__title-icon')}
         />
         {testCase.name}
-        {canEditTestCase && (
+        {canManageTestCases && (
           <button
             type="button"
             className={cx('header__edit-button')}
@@ -187,16 +182,16 @@ export const TestCaseDetailsHeader = ({
               <MeatballMenuIcon />
             </Button>
           </PopoverControl>
-          {canAddTestCaseToLaunch && (
-            <AddToLaunchButton
-              manualScenario={testCase?.manualScenario}
-              testCaseName={testCase.name}
-            />
-          )}
-          {canAddTestCaseToTestPlan && (
-            <Button onClick={onAddToTestPlan} variant="ghost">
-              {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
-            </Button>
+          {canManageTestCases && (
+            <>
+              <AddToLaunchButton
+                manualScenario={testCase?.manualScenario}
+                testCaseName={testCase.name}
+              />
+              <Button onClick={onAddToTestPlan} variant="ghost">
+                {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
+              </Button>
+            </>
           )}
         </div>
       </div>

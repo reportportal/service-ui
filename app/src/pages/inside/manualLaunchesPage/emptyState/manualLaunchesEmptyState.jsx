@@ -13,9 +13,9 @@ const cx = createClassnames(styles);
 
 export const ManualLaunchesEmptyState = () => {
   const { formatMessage } = useIntl();
-  const { canCreateManualLaunch } = useUserPermissions();
+  const { canManageLaunches } = useUserPermissions();
 
-  const descriptionMessage = canCreateManualLaunch
+  const descriptionMessage = canManageLaunches
     ? formatMessage(messages.noLaunchesDescription)
     : undefined;
 

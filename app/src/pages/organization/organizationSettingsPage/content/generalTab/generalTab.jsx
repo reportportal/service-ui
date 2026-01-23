@@ -50,7 +50,7 @@ const GeneralTabForm = ({ initialize, handleSubmit }) => {
   const organizationId = useSelector(activeOrganizationIdSelector);
   const organizationName = useSelector(activeOrganizationNameSelector);
   const { attachments, launches, logs } = useSelector(activeOrganizationSettingsSelector);
-  const { canUpdateOrganizationSettings } = useUserPermissions();
+  const { canManageOrganizations } = useUserPermissions();
   const [processingData] = useState(false);
   const [isLoading] = useState(false);
   const formValues = useSelector((state) =>
@@ -58,7 +58,7 @@ const GeneralTabForm = ({ initialize, handleSubmit }) => {
   );
   const { getLaunchesOptions, getLogOptions, getScreenshotsOptions } =
     useRetentionUtils(formValues);
-  const isDisabled = !canUpdateOrganizationSettings || processingData;
+  const isDisabled = !canManageOrganizations || processingData;
 
   useEffect(() => {
     trackEvent(ORGANIZATION_PAGE_EVENTS.viewOrganizationSettings('general'));

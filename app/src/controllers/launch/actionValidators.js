@@ -16,19 +16,14 @@
 
 import { userRolesSelector } from 'controllers/pages';
 import { IN_PROGRESS } from 'common/constants/launchStatuses';
-import {
-  canMergeLaunches,
-  canForceFinishLaunch,
-  canMoveToDebug,
-  canDeleteLaunch,
-} from 'common/utils/permissions';
+import { canManageLaunches } from 'common/utils/permissions';
 
 export const validateMergeLaunch = (launch, launches, state) => {
   if (launches.length < 2) {
     return 'selectMoreItems';
   }
   const userRoles = userRolesSelector(state);
-  if (!canMergeLaunches(userRoles)) {
+  if (!canManageLaunches(userRoles)) {
     return 'notYourOwnLaunch';
   }
   if (launch.status && launch.status.toLowerCase() === IN_PROGRESS) {
@@ -46,15 +41,17 @@ export const validateFinishForceLaunch = (launch, launches, state) => {
   }
 
   const userRoles = userRolesSelector(state);
-  if (!canForceFinishLaunch(userRoles)) {
+
+  if (!canManageLaunches(userRoles)) {
     return 'notYourOwnLaunch';
   }
+
   return null;
 };
 
 export const validateMoveLaunch = (launch, launches, state) => {
   const userRoles = userRolesSelector(state);
-  if (!canMoveToDebug(userRoles)) {
+  if (!canManageLaunches(userRoles)) {
     return 'notYourOwnLaunch';
   }
   return null;
@@ -62,7 +59,7 @@ export const validateMoveLaunch = (launch, launches, state) => {
 
 export const validateDeleteLaunch = (launch, launches, state) => {
   const userRoles = userRolesSelector(state);
-  if (!canDeleteLaunch(userRoles)) {
+  if (!canManageLaunches(userRoles)) {
     return 'notYourOwnLaunch';
   }
   if (launch.status && launch.status.toLowerCase() === IN_PROGRESS) {

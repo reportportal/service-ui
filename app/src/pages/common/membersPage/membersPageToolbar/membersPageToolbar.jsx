@@ -25,7 +25,7 @@ import { reduxForm } from 'redux-form';
 import { userRolesType } from 'common/constants/projectRoles';
 import { userRolesSelector } from 'controllers/pages';
 import { ssoUsersOnlySelector } from 'controllers/appInfo';
-import { canInviteInternalUser } from 'common/utils/permissions';
+import { canManageUsers } from 'common/utils/permissions';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { InputSearch } from 'components/inputs/inputSearch';
@@ -136,7 +136,7 @@ export class MembersPageToolbar extends React.Component {
           <GhostButton
             icon={InviteUserIcon}
             onClick={this.showInviteUserModal}
-            disabled={!canInviteInternalUser(this.props.userRoles)}
+            disabled={!canManageUsers(this.props.userRoles)}
           >
             {this.props.intl.formatMessage(this.getButtonText())}
           </GhostButton>

@@ -70,7 +70,7 @@ import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchFiltersContainer } from 'pages/inside/common/launchFiltersContainer';
 import { LaunchFiltersToolbar } from 'pages/inside/common/launchFiltersToolbar';
 import { RefineFiltersPanel } from 'pages/inside/common/refineFiltersPanel';
-import { canBulkEditItems } from 'common/utils/permissions';
+import { canManageLaunches } from 'common/utils/permissions';
 import { DebugFiltersContainer } from './debugFiltersContainer';
 import { LaunchToolbar } from './LaunchToolbar';
 import { NoItemsDemo } from './noItemsDemo';
@@ -297,6 +297,7 @@ export class LaunchesPage extends Component {
       },
     });
   };
+
   onPatternAnalysis = (launch) => {
     const {
       tracking: { trackEvent },
@@ -310,6 +311,7 @@ export class LaunchesPage extends Component {
       },
     });
   };
+
   onAddDashboard = (dashboard) => {
     const { projectKey } = this.props;
     if (dashboard.id) {
@@ -320,6 +322,7 @@ export class LaunchesPage extends Component {
       data: dashboard,
     });
   };
+
   onAddWidget = (widget, closeModal, dashboard) => {
     const {
       projectKey,
@@ -344,6 +347,7 @@ export class LaunchesPage extends Component {
         });
     });
   };
+
   showWidgetWizard = () => {
     const {
       tracking: { trackEvent },
@@ -370,6 +374,7 @@ export class LaunchesPage extends Component {
       },
     });
   };
+
   autoAnalyseItem = (launch, data) => {
     const {
       projectKey,
@@ -680,7 +685,7 @@ export class LaunchesPage extends Component {
     };
 
     const { finishedLaunchesCount } = this.state;
-    const canManageActions = canBulkEditItems(userRoles);
+    const canManageActions = canManageLaunches(userRoles);
 
     return (
       <FilterEntitiesContainer

@@ -44,13 +44,7 @@ export const Hamburger = ({ launch, customProps }) => {
   const [menuShown, setMenuShown] = useState(false);
   const [disableEventTrack, setDisableEventTrack] = useState(false);
   const iconRef = useRef(null);
-  const {
-    canForceFinishLaunch,
-    canMoveToDebug,
-    canDeleteLaunch,
-    canSeeRowActionMenu,
-    canStartAnalysis,
-  } = useUserPermissions();
+  const { canManageLaunches, canSeeRowActionMenu } = useUserPermissions();
   const projectKey = useSelector(projectKeySelector);
   const enabledPatterns = useSelector(enabledPattersSelector);
   const analyzerExtensions = useSelector(analyzerExtensionsSelector);
@@ -91,7 +85,7 @@ export const Hamburger = ({ launch, customProps }) => {
   const getForceFinishTooltip = () => {
     let forceFinishTitle = '';
 
-    if (!canForceFinishLaunch) {
+    if (!canManageLaunches) {
       forceFinishTitle = formatMessage(messages.noPermissions);
     }
     if (!isLaunchInProgress) {
@@ -101,11 +95,11 @@ export const Hamburger = ({ launch, customProps }) => {
   };
 
   const getMoveToDebugTooltip = () => {
-    return !canMoveToDebug ? formatMessage(messages.noPermissions) : '';
+    return !canManageLaunches ? formatMessage(messages.noPermissions) : '';
   };
 
   const getDeleteItemTooltip = () => {
-    if (!canDeleteLaunch) {
+    if (!canManageLaunches) {
       return formatMessage(messages.notYourLaunch);
     }
     if (isLaunchInProgress) {
@@ -166,7 +160,7 @@ export const Hamburger = ({ launch, customProps }) => {
   const getImportantLaunchesTitle = () => {
     if (!areImportantLaunchesEnabled) {
       return formatMessage(messages.importantControlsDisabledTooltip);
-    } else if (!canDeleteLaunch) {
+    } else if (!canManageLaunches) {
       return formatMessage(messages.noPermissions);
     }
     return '';
@@ -189,7 +183,7 @@ export const Hamburger = ({ launch, customProps }) => {
                 <HamburgerMenuItem
                   title={getMoveToDebugTooltip()}
                   text={formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_DEBUG)}
-                  disabled={!canMoveToDebug}
+                  disabled={!canManageLaunches}
                   onClick={() => {
                     trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MOVE_TO_DEBUG_LAUNCH_MENU);
                     customProps.onMove(launch);
@@ -199,7 +193,7 @@ export const Hamburger = ({ launch, customProps }) => {
                 <HamburgerMenuItem
                   text={formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_ALL_LAUNCHES)}
                   title={getMoveToDebugTooltip()}
-                  disabled={!canMoveToDebug}
+                  disabled={!canManageLaunches}
                   onClick={() => {
                     customProps.onMove(launch);
                   }}
@@ -208,7 +202,7 @@ export const Hamburger = ({ launch, customProps }) => {
               <HamburgerMenuItem
                 text={formatMessage(COMMON_LOCALE_KEYS.FORCE_FINISH)}
                 title={getForceFinishTooltip()}
-                disabled={!canForceFinishLaunch || !isLaunchInProgress}
+                disabled={!canManageLaunches || !isLaunchInProgress}
                 onClick={() => {
                   trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_FORCE_FINISH_LAUNCH_MENU);
                   customProps.onForceFinish(launch);
@@ -233,7 +227,7 @@ export const Hamburger = ({ launch, customProps }) => {
               />
               {launch.mode === 'DEFAULT' && (
                 <HamburgerMenuItem
-                  disabled={!canStartAnalysis}
+                  disabled={!canManageLaunches}
                   text={formatMessage(messages.analysis)}
                   onClick={() => {
                     trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ANALYSIS_LAUNCH_MENU);
@@ -242,7 +236,7 @@ export const Hamburger = ({ launch, customProps }) => {
                 />
               )}
               <HamburgerMenuItem
-                disabled={!!clusterTitle || !canStartAnalysis}
+                disabled={!!clusterTitle || !canManageLaunches}
                 title={clusterTitle}
                 text={formatMessage(messages.uniqueErrorAnalysis)}
                 onClick={() => {
@@ -261,7 +255,7 @@ export const Hamburger = ({ launch, customProps }) => {
               />
               <HamburgerMenuItem
                 text={formatMessage(COMMON_LOCALE_KEYS.DELETE)}
-                disabled={!canDeleteLaunch || isLaunchInProgress}
+                disabled={!canManageLaunches || isLaunchInProgress}
                 onClick={() => {
                   trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_DELETE_LAUNCH_MENU);
                   customProps.onDeleteItem(launch);

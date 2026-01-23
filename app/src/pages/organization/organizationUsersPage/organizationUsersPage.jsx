@@ -68,7 +68,7 @@ const OrganizationUsersPageComponent = ({
   const isUsersLoading = useSelector(loadingSelector);
   const [searchValue, setSearchValue] = useState(null);
   const isEmptyUsers = users.length === 0;
-  const { canInviteUserToOrganization } = useUserPermissions();
+  const { canManageOrganizations } = useUserPermissions();
 
   useEffect(() => {
     trackEvent(ORGANIZATION_PAGE_EVENTS.VIEW_ORGANIZATION_USERS);
@@ -110,7 +110,7 @@ const OrganizationUsersPageComponent = ({
     <ScrollWrapper>
       <div className={cx('organization-users-page')}>
         <OrganizationUsersPageHeader
-          hasPermission={canInviteUserToOrganization}
+          hasPermission={canManageOrganizations}
           isUsersLoading={isUsersLoading}
           searchValue={searchValue}
           setSearchValue={setSearchValue}

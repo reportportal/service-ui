@@ -39,7 +39,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
 import { AttributeListField } from 'components/main/attributeList';
 import { AccordionContainer } from 'components/main/accordionContainer';
-import { canEditLaunch } from 'common/utils/permissions';
+import { canManageLaunches } from 'common/utils/permissions';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { TestParameters } from 'pages/inside/common/testParameters';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -270,7 +270,7 @@ export class EditItemModal extends Component {
       eventInfo: eventsInfo.CANCEL_BTN_EDIT_ITEM_MODAL,
     };
 
-    const editable = canEditLaunch(userRoles);
+    const editable = canManageLaunches(userRoles);
 
     return (
       <ModalLayout

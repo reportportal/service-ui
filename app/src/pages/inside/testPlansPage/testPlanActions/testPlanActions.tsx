@@ -16,7 +16,7 @@
 import { useState } from 'react';
 import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
-import { compact, noop } from 'es-toolkit';
+import { noop } from 'es-toolkit';
 import { MeatballMenuIcon, Button } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
@@ -48,24 +48,26 @@ export const TestPlanActions = ({
 }: TestPlanActionsProps) => {
   const { formatMessage } = useIntl();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { canEditTestPlan, canDuplicateTestPlan, canDeleteTestPlan } = useUserPermissions();
+  const { canManageTestPlans } = useUserPermissions();
 
   const isHeader = variant === 'header';
-  const menuItems: PopoverItem[] = compact([
-    canEditTestPlan && {
-      label: formatMessage(commonMessages.editTestPlan),
-      onClick: () => onEdit(testPlanId),
-    },
-    canDuplicateTestPlan && {
-      label: formatMessage(commonMessages.duplicateTestPlan),
-      onClick: () => onDuplicate(testPlanId),
-    },
-    canDeleteTestPlan && {
-      label: formatMessage(commonMessages.deleteTestPlan),
-      variant: 'danger',
-      onClick: () => onDelete(testPlanId),
-    },
-  ]);
+  const menuItems: PopoverItem[] = canManageTestPlans
+    ? [
+        canManageTestPlans && {
+          label: formatMessage(commonMessages.editTestPlan),
+          onClick: () => onEdit(testPlanId),
+        },
+        {
+          label: formatMessage(commonMessages.duplicateTestPlan),
+          onClick: () => onDuplicate(testPlanId),
+        },
+        {
+          label: formatMessage(commonMessages.deleteTestPlan),
+          variant: 'danger',
+          onClick: () => onDelete(testPlanId),
+        },
+      ]
+    : [];
 
   if (isEmpty(menuItems)) {
     return null;

@@ -32,17 +32,16 @@ interface TestCaseTooltipItemsProps {
 
 export const useTestCaseTooltipItems = ({ testCase }: TestCaseTooltipItemsProps) => {
   const { formatMessage } = useIntl();
-  const { canDeleteTestCase, canDuplicateTestCase, canEditTestCase, canMoveTestCase } =
-    useUserPermissions();
+  const { canManageTestCases } = useUserPermissions();
   const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
   const { openModal: openEditTestCaseModal } = useEditTestCaseModal();
   const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
 
   const permissionMap = [
-    { isAllowed: canDuplicateTestCase, action: TestCaseMenuAction.DUPLICATE },
-    { isAllowed: canEditTestCase, action: TestCaseMenuAction.EDIT },
-    { isAllowed: canMoveTestCase, action: TestCaseMenuAction.MOVE },
-    { isAllowed: canDeleteTestCase, action: TestCaseMenuAction.DELETE },
+    { isAllowed: canManageTestCases, action: TestCaseMenuAction.DUPLICATE },
+    { isAllowed: canManageTestCases, action: TestCaseMenuAction.EDIT },
+    { isAllowed: canManageTestCases, action: TestCaseMenuAction.MOVE },
+    { isAllowed: canManageTestCases, action: TestCaseMenuAction.DELETE },
   ];
 
   return createTestCaseMenuItems(

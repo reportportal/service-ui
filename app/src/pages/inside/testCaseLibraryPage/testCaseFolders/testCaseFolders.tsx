@@ -76,7 +76,7 @@ export const TestCaseFolders = () => {
   const initialFolders = useSelector(foldersSelector);
   const folders = useSelector(transformedFoldersSelector);
   const areFoldersLoading = useSelector(areFoldersLoadingSelector);
-  const { canCreateTestCaseFolder } = useUserPermissions();
+  const { canManageTestCases } = useUserPermissions();
   const activeFolderIdNumber = Number(urlFolderId);
   const activeFolder = useMemo(
     () => initialFolders.find(({ id }) => id === Number(urlFolderId)),
@@ -139,7 +139,7 @@ export const TestCaseFolders = () => {
   };
 
   const renderCreateFolderButton = () =>
-    canCreateTestCaseFolder ? (
+    canManageTestCases ? (
       <Button
         variant="text"
         icon={<PlusIcon />}

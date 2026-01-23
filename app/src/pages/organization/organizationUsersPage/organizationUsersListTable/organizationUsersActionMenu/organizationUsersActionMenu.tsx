@@ -47,7 +47,7 @@ export const OrganizationUsersActionMenu = ({ user }: OrganizationUsersActionMen
   const organization = useSelector(activeOrganizationSelector) as Organization;
   const currentUserId = useSelector(idSelector) as number;
   const userRoles = useSelector(userRolesSelector);
-  const { canAssignUnassignInternalUser } = useUserPermissions();
+  const { canManageUsers } = useUserPermissions();
   const isAdmin = userRoles.userRole === ADMINISTRATOR;
   const canUnassign = useCanUnassignOrganization();
 
@@ -97,7 +97,7 @@ export const OrganizationUsersActionMenu = ({ user }: OrganizationUsersActionMen
       {
         label: formatMessage(messages.manageAssignments),
         onClick: handleManageAssignmentsClick,
-        hasPermission: canAssignUnassignInternalUser,
+        hasPermission: canManageUsers,
       },
       {
         label: formatMessage(COMMON_LOCALE_KEYS.UNASSIGN),
@@ -112,7 +112,7 @@ export const OrganizationUsersActionMenu = ({ user }: OrganizationUsersActionMen
     handleUnassignClick,
     organization,
     user,
-    canAssignUnassignInternalUser,
+    canManageUsers,
   ]);
 
   return <ActionMenu actions={actions} />;
