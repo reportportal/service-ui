@@ -20,7 +20,6 @@ export const CREATE_FOLDER_SUCCESS = 'createFolderSuccess' as const;
 export const CREATE_FOLDERS_BATCH_SUCCESS = 'createFoldersBatchSuccess' as const;
 export const DELETE_FOLDER = 'deleteFolder' as const;
 export const DELETE_FOLDER_SUCCESS = 'deleteFolderSuccess' as const;
-export const SELECT_ACTIVE_FOLDER = 'selectActiveFolder' as const;
 export const START_CREATING_FOLDER = 'startCreatingFolder' as const;
 export const STOP_CREATING_FOLDER = 'stopCreatingFolder' as const;
 export const START_LOADING_FOLDER = 'startLoadingFolder' as const;
