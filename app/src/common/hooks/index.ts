@@ -23,3 +23,4 @@ export { useFileUploadProgressSimulation } from './useFileUploadProgressSimulati
 export { useFileProcessing } from './useFileProcessing';
 export type { BaseAttachmentFile } from './useFileProcessing';
 export { useQueryParams } from './useQueryParams';
+export { useNotification } from './useNotification';

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,15 @@
 import { useCallback, ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 import { reduxForm, InjectedFormProps } from 'redux-form';
-import { noop } from 'es-toolkit';
+import { isEmpty } from 'es-toolkit/compat';
 import { Modal } from '@reportportal/ui-kit';
+import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { UseModalData } from 'common/hooks';
 import { createClassnames } from 'common/utils';
 import { withModal } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
-import { useLastItemOnThePage } from 'pages/inside/testCaseLibraryPage/hooks/useLastItemOnThePage';
 
 import { DestinationFolderSwitch } from '../testCaseFolders/shared/DestinationFolderSwitch';
 import { commonFolderMessages } from '../testCaseFolders/modals/commonFolderMessages';
@@ -35,7 +35,7 @@ import { useModalButtons } from '../hooks/useModalButtons';
 import { validateFolderModalForm } from '../utils/validateFolderModalForm';
 import { getFolderFromFormValues } from '../utils/getFolderFromFormValues';
 import { FolderModalFormValues, FOLDER_MODAL_INITIAL_VALUES } from '../utils/folderModalFormConfig';
-import { useTestCase } from '../createTestCaseModal/useTestCase';
+import { useTestCase } from '../hooks/useTestCase';
 import { messages } from './messages';
 
 import styles from './moveTestCaseModal.scss';
@@ -46,7 +46,10 @@ export const MOVE_TEST_CASE_MODAL_KEY = 'moveTestCaseModalKey';
 const MOVE_TEST_CASE_FORM = 'moveTestCaseForm';
 
 export interface MoveTestCaseModalData {
-  testCase: ExtendedTestCase;
+  testCase?: ExtendedTestCase;
+  selectedTestCaseIds?: number[];
+  sourceFolderDeltasMap?: Record<string, number>;
+  onClearSelection?: VoidFn;
 }
 
 type MoveTestCaseModalProps = UseModalData<MoveTestCaseModalData>;
@@ -59,45 +62,83 @@ const MoveTestCaseModal = reduxForm<FolderModalFormValues, MoveTestCaseModalProp
   validate: (values) => validateFolderModalForm(values),
 })(({
   dirty,
-  data: { testCase },
+  data: { testCase, selectedTestCaseIds = [], sourceFolderDeltasMap = {}, onClearSelection },
   handleSubmit,
   change,
 }: MoveTestCaseModalProps & InjectedFormProps<FolderModalFormValues, MoveTestCaseModalProps>) => {
   const { formatMessage } = useIntl();
-  const { isLoading, patchTestCase } = useTestCase();
+  const { isLoading, patchTestCase, batchMove } = useTestCase();
   const { currentMode, handleModeChange } = useFolderModalMode({ change });
-  const { updateUrl, isSingleItemOnTheLastPage } = useLastItemOnThePage();
 
-  const onSubmit = useCallback(
-    (values: FolderModalFormValues) => {
+  const isBatch = !isEmpty(selectedTestCaseIds.length);
+
+  const moveTestCase = useCallback(
+    async (values: FolderModalFormValues) => {
       if (!testCase) {
         return;
       }
 
-      const folder = getFolderFromFormValues(values);
-
-      patchTestCase({
+      await patchTestCase({
         testCaseId: testCase.id,
-        currentFolderId: testCase.testFolder?.id,
-        folder,
+        destinationFolder: getFolderFromFormValues(values),
+        testCasesSourceFolderId: testCase.testFolder?.id,
         successMessageId: 'testCaseMovedSuccess',
         errorMessageId: 'testCaseMoveFailed',
-        updateUrl,
-        isSingleItemOnTheLastPage,
-      }).catch(noop);
+      });
     },
-    [testCase, patchTestCase, updateUrl, isSingleItemOnTheLastPage],
+    [testCase, patchTestCase],
+  );
+
+  const batchMoveTestCases = useCallback(
+    async (values: FolderModalFormValues) => {
+      const destinationFolder = getFolderFromFormValues(values);
+
+      if (destinationFolder) {
+        await batchMove({
+          testCaseIds: selectedTestCaseIds,
+          destinationFolder,
+          sourceFolderDeltasMap,
+          onSuccess: onClearSelection,
+        });
+      }
+    },
+    [selectedTestCaseIds, sourceFolderDeltasMap, onClearSelection, batchMove],
+  );
+
+  const onSubmit = useCallback(
+    async (values: FolderModalFormValues) => {
+      if (isBatch) {
+        await batchMoveTestCases(values);
+      } else {
+        await moveTestCase(values);
+      }
+    },
+    [isBatch, batchMoveTestCases, moveTestCase],
   );
 
   const { okButton, cancelButton, hideModal } = useModalButtons({
     okButtonText: formatMessage(COMMON_LOCALE_KEYS.MOVE),
     isLoading,
-    onSubmit: handleSubmit(onSubmit) as () => void,
+    onSubmit: handleSubmit(onSubmit) as VoidFn,
   });
+
+  const description = isBatch
+    ? formatMessage(messages.moveTestCasesDescription, {
+        count: selectedTestCaseIds.length,
+        b: (text: ReactNode) => <b>{text}</b>,
+      })
+    : formatMessage(messages.moveTestCaseDescription, {
+        testCaseName: testCase?.name,
+        b: (text: ReactNode) => <b>{text}</b>,
+      });
+
+  const excludeFolderIds = testCase?.testFolder?.id ? [testCase.testFolder.id] : [];
 
   return (
     <Modal
-      title={formatMessage(messages.moveTestCaseTitle)}
+      title={
+        isBatch ? formatMessage(messages.moveToFolder) : formatMessage(messages.moveTestCaseTitle)
+      }
       okButton={okButton}
       cancelButton={cancelButton}
       allowCloseOutside={!dirty}
@@ -106,17 +147,14 @@ const MoveTestCaseModal = reduxForm<FolderModalFormValues, MoveTestCaseModalProp
       <form className={cx('move-test-case-modal__form')}>
         <DestinationFolderSwitch
           formName={MOVE_TEST_CASE_FORM}
-          description={formatMessage(messages.moveTestCaseDescription, {
-            testCaseName: testCase?.name,
-            b: (text: ReactNode) => <b>{text}</b>,
-          })}
+          description={description}
           existingFolderButtonLabel={formatMessage(commonFolderMessages.moveToExistingFolder)}
           newFolderButtonLabel={formatMessage(commonFolderMessages.createNewFolder)}
           rootFolderToggleLabel={formatMessage(commonFolderMessages.createAsRootFolder)}
           currentMode={currentMode}
-          onModeChange={handleModeChange}
+          excludeFolderIds={excludeFolderIds}
           change={change}
-          excludeFolderIds={testCase?.testFolder?.id ? [testCase.testFolder.id] : []}
+          onModeChange={handleModeChange}
         />
         <ModalLoadingOverlay isVisible={isLoading} />
       </form>

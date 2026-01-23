@@ -56,6 +56,8 @@ type CreateSubfolderModalProps = UseModalData<CreateSubfolderModalData>;
 const CreateSubfolderModalComponent = ({
   data: { folder },
   dirty,
+  pristine,
+  invalid,
   handleSubmit,
 }: CreateSubfolderModalProps & InjectedFormProps<FolderFormValues, CreateSubfolderModalProps>) => {
   const { formatMessage } = useIntl();
@@ -77,6 +79,7 @@ const CreateSubfolderModalComponent = ({
   const { okButton, cancelButton, hideModal } = useModalButtons({
     okButtonText: formatMessage(COMMON_LOCALE_KEYS.CREATE),
     isLoading: isCreatingFolder,
+    isSubmitButtonDisabled: pristine || invalid,
     onSubmit: handleSubmit(onSubmit) as VoidFn,
   });
 

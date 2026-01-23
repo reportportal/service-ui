@@ -38,7 +38,6 @@ import {
   MOVE_FOLDER_SUCCESS,
   DELETE_TEST_CASE_SUCCESS,
   UPDATE_FOLDER_COUNTER,
-  SELECT_ACTIVE_FOLDER,
   UPDATE_DESCRIPTION_SUCCESS,
   TOGGLE_FOLDER_EXPANSION,
   EXPAND_FOLDERS_TO_LEVEL,
@@ -90,10 +89,6 @@ export interface MoveFolderParams {
   parentTestFolderId: number | null;
 }
 
-export interface SetActiveFolderIdParams {
-  activeFolderId: number;
-}
-
 export interface UpdateFolderCounterParams {
   folderId: number;
   delta: number;
@@ -134,13 +129,6 @@ export const getFoldersAction = (params?: GetFoldersParams) => ({
   type: GET_FOLDERS,
   payload: params,
 });
-
-export const setActiveFolderId = (payload: SetActiveFolderIdParams) => {
-  return {
-    type: SELECT_ACTIVE_FOLDER,
-    payload: payload,
-  };
-};
 
 export const createFoldersAction = (folder: CreateFolderParams) => ({
   type: CREATE_FOLDER,

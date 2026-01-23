@@ -28,7 +28,7 @@ import styles from './notificationList.scss';
 
 const cx = classNames.bind(styles);
 
-const messages = defineMessages({
+export const notificationMessages = defineMessages({
   successLogin: { id: 'NotificationItem.successLogin', defaultMessage: 'Signed in successfully' },
   failureDefault: {
     id: 'NotificationItem.failureDefault',
@@ -228,6 +228,10 @@ const messages = defineMessages({
     id: 'TestCaseLibraryPage.testCaseDeletedSuccess',
     defaultMessage: 'Test case has been deleted successfully.',
   },
+  testCasesDeletedSuccess: {
+    id: 'TestCaseLibraryPage.testCasesDeletedSuccess',
+    defaultMessage: 'Test cases have been deleted successfully.',
+  },
   testCaseDescriptionUpdateSuccess: {
     id: 'TestCaseLibraryPage.testCaseDescriptionUpdateSuccess',
     defaultMessage: 'Test case description has been updated successfully.',
@@ -255,6 +259,10 @@ const messages = defineMessages({
   testCaseMovedSuccess: {
     id: 'TestCaseLibraryPage.testCaseMovedSuccess',
     defaultMessage: 'Test Case has been moved successfully.',
+  },
+  testCasesMovedSuccess: {
+    id: 'TestCaseLibraryPage.testCasesMovedSuccess',
+    defaultMessage: 'Test Cases have been moved successfully.',
   },
   testCaseFolderMovedSuccess: {
     id: 'TestCaseLibraryPage.testCaseFolderMovedSuccess',
@@ -362,7 +370,9 @@ export class NotificationList extends PureComponent {
                     duration={duration}
                     title={Parser(
                       DOMPurify.sanitize(
-                        messageId ? formatMessage(messages[messageId], values) : message,
+                        messageId
+                          ? formatMessage(notificationMessages[messageId], values)
+                          : message,
                         { ADD_ATTR: ['target'] },
                       ),
                     )}

@@ -20,17 +20,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { hideModalAction } from 'controllers/modal';
-import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
-import { useDebouncedSpinner } from 'common/hooks';
+import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
-import {
-  updateFolderCounterAction,
-  createFoldersSuccessAction,
-} from 'controllers/testCase/actionCreators';
-import { urlFolderIdSelector } from 'controllers/pages';
+import { FolderWithFullPath } from 'controllers/testCase';
 
-import { useRefetchCurrentTestCases } from '../../hooks/useRefetchCurrentTestCases';
-import { useNavigateToFolder } from '../../hooks/useNavigateToFolder';
+import { useFolderActions } from '../../hooks/useFolderActions';
 
 interface BatchDuplicateParams {
   testCaseIds: number[];
@@ -49,9 +43,8 @@ export const useBatchDuplicateToFolder = ({ onSuccess }: { onSuccess: () => void
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
-  const urlFolderId = useSelector(urlFolderIdSelector);
-  const refetchCurrentTestCases = useRefetchCurrentTestCases();
-  const { navigateToFolder } = useNavigateToFolder();
+  const { processFolderDestinationAndComplete } = useFolderActions();
+  const { showSuccessNotification, showErrorNotification } = useNotification();
 
   const batchDuplicate = useCallback(
     async ({ testCaseIds, testFolder, testFolderId }: BatchDuplicateParams) => {
@@ -66,48 +59,21 @@ export const useBatchDuplicateToFolder = ({ onSuccess }: { onSuccess: () => void
           },
         );
 
-        const targetFolderId = response.testFolderId;
-        const isNewFolder = Boolean(testFolder);
-
-        if (isNewFolder && testFolder) {
-          dispatch(
-            createFoldersSuccessAction({
-              id: targetFolderId,
-              name: testFolder.name,
-              parentFolderId: testFolder.parentTestFolderId ?? null,
-              countOfTestCases: testCaseIds.length,
-            }),
-          );
-        } else {
-          dispatch(
-            updateFolderCounterAction({
-              folderId: targetFolderId,
-              delta: testCaseIds.length,
-            }),
-          );
-        }
-
-        const isViewingTargetFolder = Number(urlFolderId) === targetFolderId;
-
-        if (isViewingTargetFolder) {
-          refetchCurrentTestCases();
-        } else {
-          navigateToFolder({ folderId: targetFolderId });
-        }
+        processFolderDestinationAndComplete({
+          destination: testFolder ?? ({ id: response.testFolderId } as FolderWithFullPath),
+          responseFolderId: response.testFolderId,
+          testCaseCount: testCaseIds.length,
+        });
 
         dispatch(hideModalAction());
         onSuccess();
-        dispatch(
-          showSuccessNotification({
-            messageId: 'testCasesDuplicatedSuccess',
-          }),
-        );
+        showSuccessNotification({
+          messageKey: 'testCasesDuplicatedSuccess',
+        });
       } catch {
-        dispatch(
-          showErrorNotification({
-            messageId: 'errorOccurredTryAgain',
-          }),
-        );
+        showErrorNotification({
+          messageKey: 'errorOccurredTryAgain',
+        });
       } finally {
         hideSpinner();
       }
@@ -115,12 +81,12 @@ export const useBatchDuplicateToFolder = ({ onSuccess }: { onSuccess: () => void
     [
       showSpinner,
       projectKey,
-      urlFolderId,
       dispatch,
       onSuccess,
-      refetchCurrentTestCases,
-      navigateToFolder,
+      processFolderDestinationAndComplete,
       hideSpinner,
+      showSuccessNotification,
+      showErrorNotification,
     ],
   );
 

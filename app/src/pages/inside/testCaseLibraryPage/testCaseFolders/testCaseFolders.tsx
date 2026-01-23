@@ -30,7 +30,6 @@ import {
   testCasesSelector,
   foldersSelector,
   testCasesPageSelector,
-  activeFolderIdSelector,
 } from 'controllers/testCase';
 import {
   locationSelector,
@@ -45,7 +44,6 @@ import {
   WARNING_NOTIFICATION_DURATION,
   showNotification,
 } from 'controllers/notification';
-import { setActiveFolderId } from 'controllers/testCase/actionCreators';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
@@ -67,7 +65,6 @@ export const TestCaseFolders = () => {
   const { openModal: openCreateFolderModal } = useCreateFolderModal();
   const { navigateToFolder } = useNavigateToFolder();
   const urlFolderId = useSelector(urlFolderIdSelector);
-  const activeFolderId = useSelector(activeFolderIdSelector);
   const isLoadingTestCases = useSelector(isLoadingTestCasesSelector);
   const testCases = useSelector(testCasesSelector);
   const testCasesPageData = useSelector(testCasesPageSelector);
@@ -76,26 +73,26 @@ export const TestCaseFolders = () => {
   const initialFolders = useSelector(foldersSelector);
   const folders = useSelector(transformedFoldersSelector);
   const areFoldersLoading = useSelector(areFoldersLoadingSelector);
+  const { query } = useSelector(locationSelector);
+  const userId = useSelector(userIdSelector) as string;
   const { canCreateTestCaseFolder } = useUserPermissions();
-  const activeFolderIdNumber = Number(urlFolderId);
+
+  const urlFolderIdNumber = Number(urlFolderId);
   const activeFolder = useMemo(
     () => initialFolders.find(({ id }) => id === Number(urlFolderId)),
     [urlFolderId, initialFolders],
   );
-  const { query } = useSelector(locationSelector);
-  const userId = useSelector(userIdSelector) as string;
   const userSettings = getStorageItem(`${userId}_settings`) as Record<string, unknown> | undefined;
   const savedLimit = userSettings?.testCaseListPageSize as number;
-  const queryParams = {
-    limit: Number(query?.limit) || savedLimit || TestCasePageDefaultValues.limit,
-    offset: Number(query?.offset) || TestCasePageDefaultValues.offset,
-  };
-  const setAllTestCases = useCallback(() => {
-    dispatch(
-      setActiveFolderId({
-        activeFolderId: null,
-      }),
-    );
+  const queryParams = useMemo(
+    () => ({
+      limit: Number(query?.limit) || savedLimit || TestCasePageDefaultValues.limit,
+      offset: Number(query?.offset) || TestCasePageDefaultValues.offset,
+    }),
+    [query, savedLimit],
+  );
+
+  const navigateToAllTestCases = useCallback(() => {
     dispatch({
       type: TEST_CASE_LIBRARY_PAGE,
       payload: {
@@ -107,7 +104,7 @@ export const TestCaseFolders = () => {
 
   useEffect(() => {
     if (urlFolderId && !activeFolder) {
-      setAllTestCases();
+      navigateToAllTestCases();
 
       dispatch(
         showNotification({
@@ -118,13 +115,13 @@ export const TestCaseFolders = () => {
         }),
       );
     }
-  }, [activeFolder, urlFolderId, dispatch, setAllTestCases]);
+  }, [activeFolder, urlFolderId, dispatch, navigateToAllTestCases]);
 
   useEffect(() => {
-    if (activeFolder) {
+    if (urlFolderId) {
       dispatch(
         getTestCaseByFolderIdAction({
-          folderId: activeFolderIdNumber,
+          folderId: urlFolderIdNumber,
           ...queryParams,
         }),
       );
@@ -132,7 +129,7 @@ export const TestCaseFolders = () => {
       dispatch(getAllTestCasesAction(queryParams));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeFolder, urlFolderId, activeFolderIdNumber, dispatch, query]);
+  }, [urlFolderId, queryParams.limit, queryParams.offset]);
 
   const handleFolderClick = (id: number) => {
     navigateToFolder({ folderId: id });
@@ -153,10 +150,10 @@ export const TestCaseFolders = () => {
 
   return (
     <ExpandedOptions
-      activeFolder={activeFolderId}
+      activeFolderId={urlFolderIdNumber || null}
       folders={folders}
       instanceKey={TMS_INSTANCE_KEY.TEST_CASE}
-      setAllTestCases={setAllTestCases}
+      setAllTestCases={navigateToAllTestCases}
       onFolderClick={handleFolderClick}
       renderCreateFolderButton={renderCreateFolderButton}
     >
