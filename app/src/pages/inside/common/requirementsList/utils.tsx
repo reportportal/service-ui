@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-export const processText = (text: string): React.ReactNode[] => {
+export const processText = (text: string) => {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
 
-  return text.split(urlRegex).map((part, i) => {
+  return text.split(urlRegex).map((part, index) => {
     if (part.match(urlRegex)) {
       return (
         <a
           // eslint-disable-next-line react/no-array-index-key
-          key={i}
+          key={index}
           href={part}
           target="_blank"
           rel="noopener noreferrer"

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,7 @@ interface RequirementsListProps {
 }
 
 export const RequirementsList = ({ items, copyEnabled = false }: RequirementsListProps) => {
-  const handleCopy = async (text: string): Promise<void> => {
-    await copyToClipboard(text);
-  };
+  const handleCopy = (text: string) => copyToClipboard(text);
 
   return (
     <div className={cx('requirements-list')}>
