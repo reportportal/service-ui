@@ -49,16 +49,13 @@ const RequirementsList = ({ fields }: WrappedFieldArrayProps<Requirement>) => {
   return (
     <div className={cx('requirements-container')}>
       <FieldLabel>{formatMessage(messages.requirements)}</FieldLabel>
-      {fields.map((member, index) => {
+      {fields.map((item, index) => {
         const fieldData = fields.get(index);
 
         return (
           <div key={fieldData.id} className={cx('requirement-row')}>
             <div className={cx('input-container')}>
-              <FieldProvider
-                name={`${member}.value`}
-                placeholder={formatMessage(messages.enterLink)}
-              >
+              <FieldProvider name={`${item}.value`} placeholder={formatMessage(messages.enterLink)}>
                 <FieldErrorHint provideHint={false}>
                   <FieldText defaultWidth={false} />
                 </FieldErrorHint>
