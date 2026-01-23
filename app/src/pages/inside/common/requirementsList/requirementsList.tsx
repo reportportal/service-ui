@@ -32,17 +32,17 @@ export const RequirementsList = ({ items, copyEnabled = false }: RequirementsLis
 
   return (
     <div className={cx('requirements-list')}>
-      {items.map((req) => (
-        <div key={req.id} className={cx('requirement-item')}>
-          <div className={cx('text-container')} title={req.value}>
-            {processText(req.value)}
+      {items.map((item) => (
+        <div key={item.id} className={cx('requirement-item')}>
+          <div className={cx('text-container')} title={item.value}>
+            {processText(item.value)}
           </div>
           {copyEnabled && (
             <Button
               variant="text"
               adjustWidthOn="content"
               className={cx('copy-button')}
-              onClick={() => void handleCopy(req.value)}
+              onClick={() => void handleCopy(item.value)}
             >
               <CopyIcon />
             </Button>
