@@ -53,8 +53,8 @@ import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTes
 import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
 import { useMoveTestCaseModal } from 'pages/inside/testCaseLibraryPage/moveTestCaseModal/useMoveTestCaseModal';
 import { AddToLaunchButton } from 'pages/inside/testCaseLibraryPage/addToLaunchButton';
-import { RequirementsList } from '../../requirementsList/requirementsList';
 
+import { RequirementsList } from '../../requirementsList/requirementsList';
 import { TestCaseMenuAction, TestCaseManualScenario } from '../types';
 import {
   formatTimestamp,
