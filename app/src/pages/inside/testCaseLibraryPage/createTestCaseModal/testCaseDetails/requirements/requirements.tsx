@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { FC } from 'react';
 import { useIntl, defineMessages } from 'react-intl';
 import { FieldArray, WrappedFieldArrayProps } from 'redux-form';
 import { FieldText, Button, PlusIcon, FieldLabel, CloseIcon } from '@reportportal/ui-kit';
