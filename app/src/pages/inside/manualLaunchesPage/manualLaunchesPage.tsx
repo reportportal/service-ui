@@ -71,24 +71,24 @@ export const ManualLaunchesPage = () => {
 
   return (
     <div className={cx('manual-launches-page')}>
-      <LocationHeaderLayout
-        title={formatMessage(messages.manualLaunchesTitle)}
-        organizationName={organizationName}
-        projectName={projectName}
-      >
-        {!isEmpty(content) && (
-          <Button
-            variant="text"
-            data-automation-id="refreshPageButton"
-            icon={<RefreshIcon />}
-            disabled={isLoading}
-            onClick={handleRefresh}
-          >
-            {formatMessage(commonMessages.refreshPage)}
-          </Button>
-        )}
-      </LocationHeaderLayout>
       <ScrollWrapper resetRequired>
+        <LocationHeaderLayout
+          title={formatMessage(messages.manualLaunchesTitle)}
+          organizationName={organizationName}
+          projectName={projectName}
+        >
+          {!isEmpty(content) && (
+            <Button
+              variant="text"
+              data-automation-id="refreshPageButton"
+              icon={<RefreshIcon />}
+              disabled={isLoading}
+              onClick={handleRefresh}
+            >
+              {formatMessage(commonMessages.refreshPage)}
+            </Button>
+          )}
+        </LocationHeaderLayout>
         <ManualLaunchesPageContent fullLaunches={content} isLoading={isLoading} />
         {Boolean(pageInfo?.totalElements) && (
           <div className={cx('pagination')}>
