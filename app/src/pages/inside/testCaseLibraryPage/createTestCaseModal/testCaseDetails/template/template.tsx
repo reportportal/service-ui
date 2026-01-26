@@ -86,7 +86,9 @@ export const Template = ({ isTemplateFieldDisabled = false }: TemplateProps) => 
         />
       </FieldProvider>
       <FieldProvider name="executionEstimationTime">
-        <FieldNumber min={1} label={formatMessage(messages.executionTime)} onChange={noop} />
+        <div className={cx('template__execution-time')}>
+          <FieldNumber min={1} label={formatMessage(messages.executionTime)} onChange={noop} />
+        </div>
       </FieldProvider>
     </div>
   );
