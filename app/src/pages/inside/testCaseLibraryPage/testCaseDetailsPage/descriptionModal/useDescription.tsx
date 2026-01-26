@@ -16,11 +16,10 @@
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { updateDescriptionSuccessAction } from 'controllers/testCase/actionCreators';
 import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
-import { useDebouncedSpinner } from 'common/hooks';
+import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 
@@ -28,6 +27,7 @@ export const useDescription = (testCaseId: number) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+  const { showSuccessNotification, showErrorNotification } = useNotification();
 
   const updateDescription = async (description: string) => {
     try {
@@ -42,13 +42,11 @@ export const useDescription = (testCaseId: number) => {
 
       dispatch(updateDescriptionSuccessAction(description));
       dispatch(hideModalAction());
-      dispatch(showSuccessNotification({ messageId: 'testCaseDescriptionUpdateSuccess' }));
+      showSuccessNotification({ messageKey: 'testCaseDescriptionUpdateSuccess' });
     } catch (error: unknown) {
-      dispatch(
-        showErrorNotification({
-          message: (error as Error).message,
-        }),
-      );
+      showErrorNotification({
+        message: (error as Error).message,
+      });
     } finally {
       hideSpinner();
     }

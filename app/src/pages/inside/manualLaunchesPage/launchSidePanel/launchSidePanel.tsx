@@ -23,6 +23,7 @@ import {
   LaunchTypeIcon,
   TestPlanIcon,
   SidePanel,
+  BubblesLoader,
 } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
@@ -33,10 +34,9 @@ import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { formatTimestampForSidePanel } from 'pages/inside/common/testCaseList/utils';
 
 import { commonMessages } from 'pages/inside/common/common-messages';
-import { Launch } from '../types';
 import { LaunchAttribute } from '../launchAttribute';
 import { TestStatisticsChart } from '../testStatisticsChart';
-import { getLaunchStatistics } from '../useManualLaunches';
+import { useLaunchDetails } from './useLaunchDetails';
 import { messages } from './messages';
 import { COMMON_LOCALE_KEYS } from '../../../../common/constants/localization';
 
@@ -45,18 +45,19 @@ import styles from './launchSidePanel.scss';
 const cx = createClassnames(styles);
 
 interface LaunchSidePanelProps {
-  launch: Launch | null;
+  launchId: number | null;
   isVisible: boolean;
   onClose: () => void;
 }
 
-export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSidePanelProps) => {
+export const LaunchSidePanel = memo(({ launchId, isVisible, onClose }: LaunchSidePanelProps) => {
   const { formatMessage } = useIntl();
   const sidePanelRef = useRef<HTMLDivElement>(null);
+  const { launchDetails, isLoading } = useLaunchDetails(launchId);
 
   useOnClickOutside(sidePanelRef, onClose);
 
-  if (!launch) {
+  if (!launchDetails) {
     return null;
   }
 
@@ -68,10 +69,11 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
     // TODO: Implement to run functionality
   };
 
-  const { totalTests, passedTests, failedTests, skippedTests, testsToRun, inProgressTests } =
-    getLaunchStatistics(launch);
+  const { total, passed, failed, skipped, toRun, inProgress } = launchDetails.executionStatistic;
 
-  const { testPlan, owner, mode, startTime } = launch;
+  const { testPlan, owner, type, startTime } = launchDetails;
+
+  const ownerInfo = owner?.name ?? owner?.email;
 
   const descriptionComponent = (
     <div className={cx('header-meta')}>
@@ -79,14 +81,14 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
         <div className={cx('meta-item-row')}>
           <LaunchTypeIcon className={cx('launch-type-icon')} />
           <span className={cx('meta-label')}>{formatMessage(messages.type)}:</span>
-          <span className={cx('meta-value')}>{mode}</span>
+          <span className={cx('meta-value')}>{type}</span>
         </div>
       </div>
       <div className={cx('meta-row')}>
         <div className={cx('meta-item-row')}>
           <UserIcon />
           <span className={cx('meta-label')}>{formatMessage(messages.owner)}:</span>
-          <span className={cx('meta-value')}>{owner}</span>
+          <span className={cx('meta-value')}>{ownerInfo}</span>
         </div>
       </div>
       <div className={cx('meta-row')}>
@@ -101,7 +103,7 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
           <div className={cx('meta-item-row')}>
             <TestPlanIcon />
             <span className={cx('meta-label')}>{formatMessage(messages.testPlan)}:</span>
-            <span className={cx('meta-value')}>{testPlan}</span>
+            <span className={cx('meta-value')}>{testPlan.name}</span>
           </div>
         </div>
       )}
@@ -111,28 +113,28 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
   const contentComponent = (
     <div className={cx('content')}>
       <TestStatisticsChart
-        total={totalTests}
-        passed={passedTests}
-        failed={failedTests}
-        skipped={skippedTests}
-        inProgress={inProgressTests}
-        toRun={testsToRun}
+        total={total}
+        passed={passed}
+        failed={failed}
+        skipped={skipped}
+        inProgress={inProgress}
+        toRun={toRun}
       />
       <CollapsibleSection
         title={formatMessage(commonMessages.description)}
         defaultMessage={formatMessage(commonMessages.descriptionNotSpecified)}
       >
-        {launch.description && (
-          <ExpandedTextSection text={launch.description} defaultVisibleLines={5} />
+        {launchDetails.description && (
+          <ExpandedTextSection text={launchDetails.description} defaultVisibleLines={5} />
         )}
       </CollapsibleSection>
       <CollapsibleSection
         title={formatMessage(messages.attributesTitle)}
         defaultMessage={formatMessage(messages.noAttributesAdded)}
       >
-        {!isEmpty(launch.attributes) && (
+        {!isEmpty(launchDetails.attributes) && (
           <div className={cx('attributes-list')}>
-            {launch.attributes.map((attr) => (
+            {launchDetails.attributes.map((attr) => (
               <LaunchAttribute
                 key={`${attr.key}-${attr.value}`}
                 attributeKey={attr.key}
@@ -159,11 +161,11 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
         variant="primary"
         className={cx('action-button', 'last-button')}
         onClick={handleToRunClick}
-        disabled={testsToRun === 0}
+        disabled={toRun === 0}
         data-automation-id="launch-to-run"
       >
-        {formatMessage(testsToRun ? messages.toRunWithCount : COMMON_LOCALE_KEYS.DONE, {
-          testCount: testsToRun,
+        {formatMessage(toRun ? messages.toRunWithCount : COMMON_LOCALE_KEYS.DONE, {
+          testCount: toRun,
         })}
       </Button>
     </div>
@@ -173,9 +175,9 @@ export const LaunchSidePanel = memo(({ launch, isVisible, onClose }: LaunchSideP
     <div ref={sidePanelRef}>
       <SidePanel
         className={cx('launch-side-panel')}
-        title={launch.name}
-        descriptionComponent={descriptionComponent}
-        contentComponent={contentComponent}
+        title={launchDetails.name}
+        descriptionComponent={isLoading ? <BubblesLoader /> : descriptionComponent}
+        contentComponent={isLoading ? <BubblesLoader /> : contentComponent}
         footerComponent={footerComponent}
         isOpen={isVisible}
         onClose={onClose}

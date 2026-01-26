@@ -17,5 +17,6 @@
 .description-modal {
   &__form {
     position: relative;
+    overflow: auto;
   }
 }

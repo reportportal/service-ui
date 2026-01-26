@@ -24,6 +24,7 @@ import { getExcludedActionsFromPermissionMap } from 'pages/inside/common/testCas
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 
 import { useEditTestCaseModal } from '../editSelectedTestCaseModal';
+import { useMoveTestCaseModal } from '../moveTestCaseModal/useMoveTestCaseModal';
 
 interface TestCaseTooltipItemsProps {
   testCase: ExtendedTestCase;
@@ -35,6 +36,7 @@ export const useTestCaseTooltipItems = ({ testCase }: TestCaseTooltipItemsProps)
     useUserPermissions();
   const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
   const { openModal: openEditTestCaseModal } = useEditTestCaseModal();
+  const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
 
   const permissionMap = [
     { isAllowed: canDuplicateTestCase, action: TestCaseMenuAction.DUPLICATE },
@@ -48,6 +50,7 @@ export const useTestCaseTooltipItems = ({ testCase }: TestCaseTooltipItemsProps)
     {
       [TestCaseMenuAction.DELETE]: () => openDeleteTestCaseModal({ testCase }),
       [TestCaseMenuAction.EDIT]: () => openEditTestCaseModal({ testCase }),
+      [TestCaseMenuAction.MOVE]: () => openMoveTestCaseModal({ testCase }),
     },
     getExcludedActionsFromPermissionMap(permissionMap),
   );

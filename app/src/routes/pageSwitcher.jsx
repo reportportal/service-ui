@@ -69,15 +69,15 @@ export default class PageSwitcher extends React.Component {
     return (
       <div className={cx('page-switcher')}>
         <ThemeProvider>
-          <Layout rawContent={rawContent}>
-            {mode === 'development' && <LocalizationSwitcher />}
-            <PageErrorBoundary key={page}>
-              <DndProvider backend={HTML5Backend}>
+          <DndProvider backend={HTML5Backend}>
+            <Layout rawContent={rawContent}>
+              {mode === 'development' && <LocalizationSwitcher />}
+              <PageErrorBoundary key={page}>
                 <PageComponent />
-              </DndProvider>
-            </PageErrorBoundary>
-          </Layout>
-          <ModalContainer />
+              </PageErrorBoundary>
+            </Layout>
+            <ModalContainer />
+          </DndProvider>
           <NotificationContainer />
           <ScreenLock />
         </ThemeProvider>

@@ -20,10 +20,10 @@ import { useSelector } from 'react-redux';
 import { Pagination } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { TestCaseList } from 'pages/inside/common/testCaseList';
 import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/common/testCaseList/constants';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
-import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { SelectedTestCaseRow } from 'pages/inside/testCaseLibraryPage/allTestCasesPage/allTestCasesPage';
 import {
@@ -43,7 +43,7 @@ interface AllTestCasesPageProps {
   testCases: ExtendedTestCase[];
   loading: boolean;
   searchValue: string;
-  instanceKey: INSTANCE_KEYS;
+  instanceKey: TMS_INSTANCE_KEY;
 }
 
 export const AllTestCasesPage = ({
@@ -71,7 +71,7 @@ export const AllTestCasesPage = ({
       <div className={cx('all-test-cases-page')}>
         <TestCaseList
           testCases={testCases}
-          loading={loading}
+          isLoading={loading}
           searchValue={searchValue}
           selectedRowIds={selectedRows.map((row) => row.id)}
           selectedRows={selectedRows}

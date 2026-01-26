@@ -57,6 +57,7 @@ const BatchDeleteTestCasesModal = ({
       dispatch(hideModalAction());
       onClearSelection();
     },
+    testCasesToDelete: selectedTestCaseIds.length,
   });
 
   const hideModal = () => dispatch(hideModalAction());

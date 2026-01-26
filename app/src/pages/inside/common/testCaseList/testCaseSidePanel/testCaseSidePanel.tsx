@@ -47,6 +47,7 @@ import { ManualScenario, ExtendedTestCase } from 'pages/inside/testCaseLibraryPa
 import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
 import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
+import { useMoveTestCaseModal } from 'pages/inside/testCaseLibraryPage/moveTestCaseModal/useMoveTestCaseModal';
 import { AddToLaunchButton } from 'pages/inside/testCaseLibraryPage/addToLaunchButton';
 
 import { TestCaseMenuAction, TestCaseManualScenario } from '../types';
@@ -157,6 +158,7 @@ export const TestCaseSidePanel = memo(
     const { openModal: openEditTestCaseModal } = useEditTestCaseModal();
     const { openModal: openAddTestCasesToTestPlanModal } = useAddTestCasesToTestPlanModal();
     const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
+    const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
 
     const folderId = testCase?.testFolder?.id;
     const path = buildBreadcrumbs(folders, folderId);
@@ -183,6 +185,7 @@ export const TestCaseSidePanel = memo(
       {
         [TestCaseMenuAction.EDIT]: handleEditTestCase,
         [TestCaseMenuAction.DELETE]: () => openDeleteTestCaseModal({ testCase }),
+        [TestCaseMenuAction.MOVE]: () => openMoveTestCaseModal({ testCase }),
         [TestCaseMenuAction.HISTORY]: () => {
           dispatch({
             type: TEST_CASE_LIBRARY_PAGE,
@@ -285,7 +288,7 @@ export const TestCaseSidePanel = memo(
         </div>
         <div className={cx('content')}>
           {COLLAPSIBLE_SECTIONS_CONFIG({
-            attributes: testCase?.manualScenario?.attributes?.map(({ key }) => key),
+            attributes: testCase?.attributes?.map(({ key }) => key),
             scenario: testCase?.manualScenario,
             testCaseDescription: testCase.description,
           }).map(({ titleKey, defaultMessageKey, childComponent }) => (
@@ -325,7 +328,7 @@ export const TestCaseSidePanel = memo(
           </Button>
           {canAddTestCaseToLaunch && (
             <AddToLaunchButton
-              isButtonDisabled={isEmpty(testCase?.manualScenario?.preconditions?.value)}
+              manualScenario={testCase?.manualScenario}
               testCaseName={testCase.name}
             />
           )}

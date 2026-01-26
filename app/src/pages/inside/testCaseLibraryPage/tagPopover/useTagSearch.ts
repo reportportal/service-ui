@@ -17,7 +17,6 @@
 import { useState, useCallback, useEffect } from 'react';
 
 import { fetch } from 'common/utils';
-import { getErrorMessage } from 'common/utils/helperUtils/errorUtils';
 import { URLS } from 'common/urls';
 
 import { Attribute } from '../types';
@@ -32,63 +31,51 @@ interface AttributesResponse {
 }
 
 export const useTagSearch = (searchValue: string = '') => {
-  const [tags, setTags] = useState<Attribute[]>([]);
+  const [allTags, setAllTags] = useState<Attribute[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<TagError | null>(null);
 
   const fetchTags = useCallback(async () => {
-    if (!searchValue.trim()) {
-      setTags([]);
-      setLoading(false);
-      return;
-    }
-
     try {
       setLoading(true);
       setError(null);
 
-      const response = await fetch<AttributesResponse>(
-        URLS.tmsAttributes({ 'filter.fts.search': searchValue }),
-      );
+      const response = await fetch<AttributesResponse>(URLS.tmsAttributes({}));
 
-      setTags(response.content || []);
+      setAllTags(response.content || []);
     } catch {
-      setTags([]);
+      setAllTags([]);
       setError(null);
     } finally {
       setLoading(false);
     }
-  }, [searchValue]);
+  }, []);
 
   const createTag = useCallback(
-    async (tagKey: string): Promise<Attribute | null> => {
-      try {
-        setLoading(true);
-        setError(null);
+    (tagKey: string, selectedTags: Attribute[] = []) => {
+      const tagExists = allTags.some((tag) => tag.key.toLowerCase() === tagKey.toLowerCase());
+      const tagAlreadySelected = selectedTags.some(
+        (tag) => tag.key.toLowerCase() === tagKey.toLowerCase(),
+      );
 
-        const newTag = await fetch<Attribute>(URLS.createTmsAttribute(), {
-          method: 'POST',
-          data: { key: tagKey, value: tagKey },
-        });
-
-        await fetchTags();
-
-        return newTag;
-      } catch (error: unknown) {
-        const errorMessage = getErrorMessage(error);
-
-        setError(
-          errorMessage.includes('already exists')
-            ? TagError.TAG_ALREADY_ADDED
-            : TagError.CREATE_TAG_FAILED,
-        );
-
+      if (tagExists || tagAlreadySelected) {
+        setError(TagError.TAG_ALREADY_ADDED);
         return null;
-      } finally {
-        setLoading(false);
       }
+
+      setError(null);
+
+      const newTag: Attribute = {
+        id: -Date.now(),
+        key: tagKey,
+        value: tagKey,
+      };
+
+      setAllTags((prevTags) => [...prevTags, newTag]);
+
+      return newTag;
     },
-    [fetchTags],
+    [allTags],
   );
 
   useEffect(() => {
@@ -96,11 +83,21 @@ export const useTagSearch = (searchValue: string = '') => {
     fetchTags();
   }, [fetchTags]);
 
+  const filteredTags = searchValue.trim()
+    ? allTags.filter((tag) => tag.key.toLowerCase().includes(searchValue.toLowerCase()))
+    : allTags;
+
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
+
   return {
-    tags,
+    allTags,
+    tags: filteredTags,
     loading,
     error,
     createTag,
+    clearError,
     refetch: fetchTags,
   };
 };

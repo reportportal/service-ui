@@ -19,10 +19,11 @@ import { isEmpty } from 'es-toolkit/compat';
 import { ChevronDownDropdownIcon, MeatballMenuIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { TransformedFolder } from 'controllers/testCase';
 
-import { INSTANCE_KEYS, useFolderTooltipItems } from './useFolderTooltipItems';
+import { useFolderTooltipItems } from './useFolderTooltipItems';
 
 import styles from './folder.scss';
 
@@ -31,19 +32,23 @@ const cx = createClassnames(styles);
 interface FolderProps {
   folder: TransformedFolder;
   activeFolder: number | null;
-  setActiveFolder: (id: number) => void;
+  instanceKey: TMS_INSTANCE_KEY;
+  expandedIds: number[];
   setAllTestCases: () => void;
-  instanceKey: INSTANCE_KEYS;
+  onFolderClick: (id: number) => void;
+  onToggleFolder: (folder: TransformedFolder) => void;
 }
 
 export const Folder = ({
   folder,
-  setActiveFolder,
-  setAllTestCases,
   activeFolder,
   instanceKey,
+  expandedIds,
+  onFolderClick,
+  setAllTestCases,
+  onToggleFolder,
 }: FolderProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const isOpen = expandedIds.includes(folder.id);
   const [areToolsShown, setAreToolsShown] = useState(false);
   const [areToolsOpen, setAreToolsOpen] = useState(false);
   const [isBlockHovered, setIsBlockHovered] = useState(false);
@@ -58,17 +63,21 @@ export const Folder = ({
     setAreToolsShown(areToolsOpen || isBlockHovered);
   }, [areToolsOpen, isBlockHovered]);
 
-  const handleChevronClick = useCallback((event: ReactMouseEvent<SVGSVGElement, MouseEvent>) => {
-    event.stopPropagation();
-    setIsOpen((prevState) => !prevState);
-  }, []);
+  const handleChevronClick = useCallback(
+    (event: ReactMouseEvent<SVGSVGElement, MouseEvent>) => {
+      event.stopPropagation();
+      onToggleFolder(folder);
+    },
+    [folder, onToggleFolder],
+  );
 
   const handleFolderTitleClick = useCallback(
     (event: ReactMouseEvent<HTMLDivElement, MouseEvent>) => {
       event.stopPropagation();
-      setActiveFolder(folder.id);
+
+      onFolderClick(folder.id);
     },
-    [setActiveFolder, folder.id],
+    [folder.id, onFolderClick],
   );
 
   return (
@@ -134,9 +143,11 @@ export const Folder = ({
               folder={subfolder}
               key={subfolder.id}
               activeFolder={activeFolder}
-              setActiveFolder={setActiveFolder}
-              setAllTestCases={setAllTestCases}
               instanceKey={instanceKey}
+              expandedIds={expandedIds}
+              onFolderClick={onFolderClick}
+              setAllTestCases={setAllTestCases}
+              onToggleFolder={onToggleFolder}
             />
           ))}
         </ul>

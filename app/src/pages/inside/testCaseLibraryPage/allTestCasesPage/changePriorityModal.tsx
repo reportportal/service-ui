@@ -22,7 +22,7 @@ import { Modal } from '@reportportal/ui-kit';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { PrioritySelect } from '../prioritySelect/prioritySelect';
-import { useUpdateTestCase } from '../testCaseDetailsPage/editTestCaseModal/useUpdateTestCase';
+import { useTestCase } from '../hooks/useTestCase';
 import { messages } from './messages';
 
 export const CHANGE_PRIORITY_MODAL_KEY = 'changePriorityModalKey';
@@ -39,12 +39,12 @@ const ChangePriorityModal = ({ data }: ChangePriorityModalProps) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const [priority, setPriority] = useState(data.priority);
-  const { bulkUpdateTestCases } = useUpdateTestCase();
+  const { batchUpdatePriority } = useTestCase();
 
   const hideModal = () => dispatch(hideModalAction());
 
   const handleSave = async () => {
-    await bulkUpdateTestCases(
+    await batchUpdatePriority(
       {
         testCaseIds: data.selectedRowIds,
         priority,

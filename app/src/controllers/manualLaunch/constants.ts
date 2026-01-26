@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-export enum ExecutionStatusType {
-  PASSED = 'passed',
-  FAILED = 'failed',
-  RUNNING = 'running',
-  SKIPPED = 'skipped',
-}
+export const GET_MANUAL_LAUNCHES = 'getManualLaunches' as const;
+export const MANUAL_LAUNCHES_NAMESPACE = 'manualLaunches' as const;
+export const defaultManualLaunchesQueryParams = {
+  limit: 20,
+  offset: 0,
+};

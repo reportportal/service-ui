@@ -28,8 +28,8 @@ import { UseModalData } from 'common/hooks';
 import { commonMessages } from '../commonMessages';
 import { ExtendedTestCase, CreateTestCaseFormData } from '../types';
 import { TestCaseModal } from '../createTestCaseModal/testCaseModal/testCaseModal';
-import { useTestCase } from '../createTestCaseModal/useTestCase';
 import { TEST_CASE_FORM_INITIAL_VALUES } from '../createTestCaseModal/constants';
+import { useTestCase } from '../hooks/useTestCase';
 
 export const EDIT_SELECTED_TEST_CASE_MODAL_KEY = 'editSelectedTestCaseModalKey';
 export const EDIT_TEST_CASE_FORM_NAME: string = 'edit-test-case-modal-form';
@@ -68,7 +68,11 @@ const EditTestCaseModalComponent = ({
         folder: testCase.testFolder,
         priority: (testCase.priority?.toLowerCase() ||
           TEST_CASE_FORM_INITIAL_VALUES.priority) as TestCasePriority,
-        attributes: manualScenario?.attributes || [],
+        attributes: (testCase.attributes ?? []).map(({ id, key, value }) => ({
+          id,
+          key,
+          value: value ?? '',
+        })),
         manualScenarioType:
           manualScenario?.manualScenarioType || TEST_CASE_FORM_INITIAL_VALUES.manualScenarioType,
         executionEstimationTime:

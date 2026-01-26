@@ -89,4 +89,17 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'TestCaseLibraryPage.createNew',
     defaultMessage: 'Create new',
   },
+  incorrectCsvFormat: {
+    id: 'TestCaseLibraryPage.incorrectCsvFormat',
+    defaultMessage:
+      'Invalid CSV format: Ensure your file includes the required columns: "name", "description", "priority", "externalId".',
+  },
+  moveFolderTo: {
+    id: 'TestCaseLibraryPage.moveFolderTo',
+    defaultMessage: 'Move folder to',
+  },
+  createSubfolder: {
+    id: 'TestCaseLibraryPage.createSubfolder',
+    defaultMessage: 'Create Subfolder',
+  },
 });

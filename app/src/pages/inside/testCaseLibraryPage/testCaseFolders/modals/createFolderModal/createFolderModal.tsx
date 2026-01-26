@@ -23,7 +23,7 @@ import { createFoldersAction } from 'controllers/testCase/actionCreators';
 import { isCreatingFolderSelector } from 'controllers/testCase/selectors';
 
 import { commonMessages } from '../../../commonMessages';
-import { sharedFolderMessages } from '../messages';
+import { commonFolderMessages } from '../commonFolderMessages';
 import { CREATE_FORM_NAME, PARENT_FOLDER_FIELD } from '../constants';
 import { FolderFormValues } from '../types';
 import { FolderModal } from '../folderModal';
@@ -73,10 +73,10 @@ const CreateFolderModal = reduxForm<FolderFormValues>({
       dirty={dirty}
       isLoading={isCreatingFolder}
       isToggled={isSubfolderToggled}
-      toggleLabel={formatMessage(sharedFolderMessages.createAsSubfolder)}
+      toggleLabel={formatMessage(commonFolderMessages.createAsSubfolder)}
       toggleFieldName="isToggled"
       parentFolderFieldName={PARENT_FOLDER_FIELD}
-      parentFolderFieldLabel={formatMessage(sharedFolderMessages.parentFolder)}
+      parentFolderFieldLabel={formatMessage(commonFolderMessages.parentFolder)}
       handleSubmit={handleSubmit}
       onSubmit={onSubmit}
       change={change}

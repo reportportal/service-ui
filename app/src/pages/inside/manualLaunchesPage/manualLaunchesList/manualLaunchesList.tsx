@@ -79,8 +79,6 @@ export const ManualLaunchesList = ({ fullLaunches }: ManualLaunchesListProps) =>
     setSelectedLaunchId,
   );
 
-  const selectedLaunch = fullLaunches.find((launch) => launch.id === selectedLaunchId);
-
   return (
     <div className={cx('manual-launches-list')}>
       <Table
@@ -98,17 +96,19 @@ export const ManualLaunchesList = ({ fullLaunches }: ManualLaunchesListProps) =>
       />
       {isAnyRowSelected && (
         <div className={cx('selection')}>
-          <Selection
-            selectedCount={selectedRowIds.length}
-            onClearSelection={() => setSelectedRowIds([])}
-          />
-          <div className={cx('selection-controls')}>
-            <Button>{formatMessage(COMMON_LOCALE_KEYS.DELETE)}</Button>
+          <div className={cx('selection-container')}>
+            <Selection
+              selectedCount={selectedRowIds.length}
+              onClearSelection={() => setSelectedRowIds([])}
+            />
+            <div className={cx('selection-controls')}>
+              <Button>{formatMessage(COMMON_LOCALE_KEYS.DELETE)}</Button>
+            </div>
           </div>
         </div>
       )}
       <LaunchSidePanel
-        launch={selectedLaunch}
+        launchId={selectedLaunchId}
         isVisible={Boolean(selectedLaunchId)}
         onClose={handleCloseSidePanel}
       />

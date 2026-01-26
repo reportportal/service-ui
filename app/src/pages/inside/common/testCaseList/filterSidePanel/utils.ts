@@ -14,5 +14,14 @@
  * limitations under the License.
  */
 
-export { ExecutionStatus } from './executionStatus';
-export { ExecutionStatusType } from './types';
+export const ensureArray = <T>(value?: T | T[] | null): T[] => {
+  if (value === null || value === undefined) {
+    return [];
+  }
+
+  return Array.isArray(value) ? value : [value];
+};
+
+export const normalizeSelection = (values: string[]) => {
+  return [...new Set(values)].sort((a, b) => a.localeCompare(b));
+};

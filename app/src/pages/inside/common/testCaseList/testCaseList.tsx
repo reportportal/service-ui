@@ -16,15 +16,20 @@
 
 import { memo, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { useSelector } from 'react-redux';
+import { isEmpty } from 'es-toolkit/compat';
 import { BubblesLoader, FilterOutlineIcon, FilterFilledIcon, Table } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { SearchField } from 'components/fields/searchField';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
-import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { SelectedTestCaseRow } from 'pages/inside/testCaseLibraryPage/allTestCasesPage/allTestCasesPage';
+import { locationSelector } from 'controllers/pages/typed-selectors';
+import { TEST_CASE_LIBRARY_PAGE, PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
+import { TestPlanSidePanel } from 'pages/inside/testPlansPage/testPlanSidePanel';
 
 import { TestCaseNameCell } from './testCaseNameCell';
 import { TestCaseExecutionCell } from './testCaseExecutionCell';
@@ -33,37 +38,37 @@ import { FilterSidePanel } from './filterSidePanel';
 import { messages } from './messages';
 
 import styles from './testCaseList.scss';
-import { isEmpty } from 'es-toolkit/compat';
 
 const cx = createClassnames(styles);
 
 interface TestCaseListProps {
   testCases: ExtendedTestCase[];
-  loading?: boolean;
+  isLoading?: boolean;
   folderTitle: string;
   searchValue?: string;
   selectedRowIds: (number | string)[];
   selectedRows: SelectedTestCaseRow[];
+  selectable?: boolean;
+  instanceKey: TMS_INSTANCE_KEY;
   handleSelectedRows: (rows: SelectedTestCaseRow[]) => void;
   onSearchChange?: (value: string) => void;
-  selectable?: boolean;
-  instanceKey: INSTANCE_KEYS;
 }
 
 export const TestCaseList = memo(
   ({
     testCases,
-    loading = false,
+    isLoading = false,
     selectedRowIds,
     selectedRows,
-    handleSelectedRows,
     searchValue = '',
-    onSearchChange,
     folderTitle,
     selectable = true,
     instanceKey,
+    handleSelectedRows,
+    onSearchChange,
   }: TestCaseListProps) => {
     const { formatMessage } = useIntl();
+    const location = useSelector(locationSelector);
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<number | null>(null);
     const [isFilterSidePanelVisible, setIsFilterSidePanelVisible] = useState(false);
     const [selectedPriorities, setSelectedPriorities] = useState<string[]>([]);
@@ -71,8 +76,12 @@ export const TestCaseList = memo(
 
     const { canDoTestCaseBulkActions } = useUserPermissions();
 
-    const activeFiltersCount = selectedPriorities.length + selectedTags.length;
+    const activeFiltersCount =
+      (isEmpty(selectedPriorities) ? 0 : 1) + (isEmpty(selectedTags) ? 0 : 1);
     const hasActiveFilters = activeFiltersCount > 0;
+
+    const isTestLibraryRoute = location.type === TEST_CASE_LIBRARY_PAGE;
+    const isTestPlanRoute = location.type === PROJECT_TEST_PLAN_DETAILS_PAGE;
 
     const handleCloseSidePanel = () => {
       setSelectedTestCaseId(null);
@@ -124,7 +133,7 @@ export const TestCaseList = memo(
       handleSelectedRows(newSelectedRows);
     };
 
-    const selectedTestCase = testCases.find((testCase) => testCase.id === selectedTestCaseId);
+    const selectedTestPlan = testCases.find((testCase) => testCase.id === selectedTestCaseId);
 
     const tableData = testCases.map((testCase) => ({
       id: testCase.id,
@@ -167,7 +176,7 @@ export const TestCaseList = memo(
       {
         key: 'lastExecution',
         header: formatMessage(messages.executionHeader),
-        width: instanceKey === INSTANCE_KEYS.TEST_CASE ? 164 : 190,
+        width: instanceKey === TMS_INSTANCE_KEY.TEST_CASE ? 164 : 190,
         align: 'left' as const,
       },
     ];
@@ -178,20 +187,20 @@ export const TestCaseList = memo(
           <div className={cx('controls-title')}>{folderTitle}</div>
           <div className={cx('controls-actions')}>
             <div className={cx('search-section')}>
-              {loading ? null : (
+              {isLoading ? null : (
                 <>
                   <SearchField
-                    isLoading={loading}
+                    isLoading={isLoading}
                     searchValue={searchValue}
+                    placeholder={formatMessage(messages.searchPlaceholder)}
                     setSearchValue={onSearchChange}
                     onFilterChange={onSearchChange}
-                    placeholder={formatMessage(messages.searchPlaceholder)}
                   />
                   <button
                     type="button"
                     className={cx('filter-icon', { active: hasActiveFilters })}
-                    onClick={handleFilterIconClick}
                     aria-label={formatMessage(messages.filterButton)}
+                    onClick={handleFilterIconClick}
                   >
                     {hasActiveFilters ? <FilterFilledIcon /> : <FilterOutlineIcon />}
                     {hasActiveFilters && (
@@ -203,7 +212,7 @@ export const TestCaseList = memo(
             </div>
           </div>
         </div>
-        {loading ? (
+        {isLoading ? (
           <div className={cx('test-case-list', 'loading')}>
             <BubblesLoader />
           </div>
@@ -229,13 +238,23 @@ export const TestCaseList = memo(
                 onToggleAllRowsSelection={handleSelectAll}
                 className={cx('test-case-table')}
                 rowClassName={cx('test-case-table-row')}
+                isSelectAllCheckboxAlwaysVisible
               />
             )}
-            <TestCaseSidePanel
-              testCase={selectedTestCase}
-              isVisible={!!selectedTestCaseId}
-              onClose={handleCloseSidePanel}
-            />
+            {isTestLibraryRoute && (
+              <TestCaseSidePanel
+                testCase={selectedTestPlan}
+                isVisible={!!selectedTestCaseId}
+                onClose={handleCloseSidePanel}
+              />
+            )}
+            {isTestPlanRoute && (
+              <TestPlanSidePanel
+                testPlan={selectedTestPlan}
+                isVisible={!!selectedTestCaseId}
+                onClose={handleCloseSidePanel}
+              />
+            )}
             <FilterSidePanel
               isVisible={isFilterSidePanelVisible}
               onClose={handleCloseFilterSidePanel}

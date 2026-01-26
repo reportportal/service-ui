@@ -16,32 +16,58 @@
 
 import { useCallback } from 'react';
 import { useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
-import { Button, RefreshIcon } from '@reportportal/ui-kit';
+import { Button, RefreshIcon, Pagination } from '@reportportal/ui-kit';
 
 import { projectNameSelector } from 'controllers/project';
 import { activeOrganizationNameSelector } from 'controllers/organization';
 import { LocationHeaderLayout } from 'layouts/locationHeaderLayout';
 import { createClassnames } from 'common/utils';
+import { ScrollWrapper } from 'components/main/scrollWrapper/scrollWrapper';
+import { useProjectDetails } from 'hooks/useTypedSelector';
+import {
+  manualLaunchContentSelector,
+  isLoadingSelector,
+  manualLaunchPageSelector,
+  getManualLaunchesAction,
+  MANUAL_LAUNCHES_NAMESPACE,
+  defaultManualLaunchesQueryParams,
+} from 'controllers/manualLaunch';
 
 import { messages } from './messages';
-import styles from './manualLaunchesPage.scss';
 import { ManualLaunchesPageContent } from './manualLaunchesPageContent';
-import { useManualLaunches } from './useManualLaunches';
 import { commonMessages } from '../testPlansPage/commonMessages';
+import { ITEMS_PER_PAGE_OPTIONS } from './manualLaunchesList/contants';
+import { useURLBoundPagination } from '../common/testCaseList/useURLBoundPagination';
+
+import styles from './manualLaunchesPage.scss';
 
 const cx = createClassnames(styles);
 
 export const ManualLaunchesPage = () => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+
   const projectName = useSelector(projectNameSelector);
   const organizationName = useSelector(activeOrganizationNameSelector) as string;
-  const { fullLaunches, isLoading, refetch } = useManualLaunches();
+  const content = useSelector(manualLaunchContentSelector);
+  const pageInfo = useSelector(manualLaunchPageSelector);
+  const isLoading = useSelector(isLoadingSelector);
+  const { organizationSlug, projectSlug } = useProjectDetails();
+
+  const { activePage, pageSize, setPageNumber, setPageSize, totalPages, captions, offset } =
+    useURLBoundPagination({
+      pageData: pageInfo,
+      defaultQueryParams: defaultManualLaunchesQueryParams,
+      namespace: MANUAL_LAUNCHES_NAMESPACE,
+      shouldSaveUserPreferences: true,
+      baseUrl: `/organizations/${organizationSlug}/projects/${projectSlug}/manualLaunches`,
+    });
 
   const handleRefresh = useCallback(() => {
-    refetch().catch(() => {});
-  }, [refetch]);
+    dispatch(getManualLaunchesAction({ offset, limit: pageSize }));
+  }, [dispatch, offset, pageSize]);
 
   return (
     <div className={cx('manual-launches-page')}>
@@ -50,7 +76,7 @@ export const ManualLaunchesPage = () => {
         organizationName={organizationName}
         projectName={projectName}
       >
-        {!isEmpty(fullLaunches) && (
+        {!isEmpty(content) && (
           <Button
             variant="text"
             data-automation-id="refreshPageButton"
@@ -62,7 +88,23 @@ export const ManualLaunchesPage = () => {
           </Button>
         )}
       </LocationHeaderLayout>
-      <ManualLaunchesPageContent fullLaunches={fullLaunches} isLoading={isLoading} />
+      <ScrollWrapper resetRequired>
+        <ManualLaunchesPageContent fullLaunches={content} isLoading={isLoading} />
+        {Boolean(pageInfo?.totalElements) && (
+          <div className={cx('pagination')}>
+            <Pagination
+              pageSize={pageSize}
+              activePage={activePage}
+              totalItems={pageInfo?.totalElements || 0}
+              totalPages={totalPages}
+              pageSizeOptions={ITEMS_PER_PAGE_OPTIONS}
+              changePage={setPageNumber}
+              changePageSize={setPageSize}
+              captions={captions}
+            />
+          </div>
+        )}
+      </ScrollWrapper>
     </div>
   );
 };

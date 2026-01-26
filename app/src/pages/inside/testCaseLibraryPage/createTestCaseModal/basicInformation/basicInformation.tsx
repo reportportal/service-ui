@@ -101,7 +101,7 @@ export const BasicInformation = ({
               name="folder"
               label={formatMessage(commonMessages.folder)}
               placeholder={formatMessage(messages.selectOrCreateFolder)}
-              createWithoutConfirmation={false}
+              shouldDisplayNewFolderButton
               isRequired
             />
           </FieldErrorHint>
@@ -121,7 +121,9 @@ export const BasicInformation = ({
         variant="modal"
         tags={attributes}
         onTagRemove={handleTagRemove}
-        addButton={<TagPopover onTagSelect={handleTagSelect} trigger={addButton} />}
+        addButton={
+          <TagPopover onTagSelect={handleTagSelect} selectedTags={attributes} trigger={addButton} />
+        }
       />
     </div>
   );

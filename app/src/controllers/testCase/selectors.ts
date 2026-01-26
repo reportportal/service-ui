@@ -31,6 +31,7 @@ export interface TestCaseState {
     isCreatingFolder?: boolean;
     isLoadingFolder?: boolean;
     activeFolderId?: number | null;
+    expandedFolderIds?: number[];
     loading?: boolean;
   };
   testCases?: {
@@ -52,9 +53,6 @@ export const testCaseSelector = (state: RootState): TestCaseState => state.testC
 export const areFoldersLoadingSelector = (state: RootState): boolean =>
   testCaseSelector(state).folders?.loading || false;
 
-export const activeFolderIdSelector = (state: RootState): number | null =>
-  testCaseSelector(state).folders?.activeFolderId || null;
-
 export const EMPTY_FOLDERS: Folder[] = [];
 
 export const foldersSelector = (state: RootState): Folder[] =>
@@ -65,6 +63,9 @@ export const isCreatingFolderSelector = (state: RootState): boolean =>
 
 export const isLoadingFolderSelector = (state: RootState): boolean =>
   testCaseSelector(state).folders?.isLoadingFolder || false;
+
+export const expandedFolderIdsSelector = (state: RootState): number[] =>
+  testCaseSelector(state).folders?.expandedFolderIds || [];
 
 export const isLoadingTestCasesSelector = (state: RootState) =>
   state.testCase?.testCases?.isLoading || false;

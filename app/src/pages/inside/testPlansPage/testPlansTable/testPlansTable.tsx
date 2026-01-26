@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ReactNode, useCallback } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { Table, ChevronDownDropdownIcon, Pagination } from '@reportportal/ui-kit';
@@ -32,7 +32,6 @@ import {
 } from 'controllers/testPlan';
 import { useURLBoundPagination } from 'pages/inside/common/testCaseList/useURLBoundPagination';
 
-import { TestPlanSidePanel } from '../testPlanSidePanel';
 import { messages } from './messages';
 import {
   useDeleteTestPlanModal,
@@ -68,6 +67,11 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
   const { openModal: openDuplicateModal } = useDuplicateTestPlanModal();
   const { openModal: openDeleteModal } = useDeleteTestPlanModal();
 
+  const testPlansById = useMemo(
+    () => new Map<number, TestPlanDto>(testPlans?.map((testPlan) => [testPlan.id, testPlan])),
+    [testPlans],
+  );
+
   const handleRowClick = (testPlanId: number) => {
     dispatch({
       type: PROJECT_TEST_PLAN_DETAILS_PAGE,
@@ -76,7 +80,7 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
   };
 
   const getActionHandler = (action: (testPlan: TestPlanDto) => void) => (testPlanId: number) => {
-    const actionTestPlan = testPlans.find((testPlan) => testPlan.id === testPlanId);
+    const actionTestPlan = testPlansById.get(testPlanId);
 
     if (actionTestPlan) {
       action(actionTestPlan);
@@ -98,31 +102,30 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
     </button>
   );
 
-  const {
-    data: testPlansTableData,
-    selectedTestPlanId,
-    setSelectedTestPlanId,
-  } = useTestPlansTableData({
+  const { data: testPlansTableData } = useTestPlansTableData({
     testPlans,
     onEdit: getActionHandler(openEditModal),
     onDuplicate: getActionHandler(openDuplicateModal),
     onDelete: getActionHandler(openDeleteModal),
   });
 
-  const handleCloseSidePanel = useCallback(() => {
-    setSelectedTestPlanId(null);
-  }, [setSelectedTestPlanId]);
+  const currentTestPlans = testPlansTableData.map((row) => {
+    const testPlanName = testPlansById.get(row.id as number)?.name || '';
 
-  const currentTestPlans = testPlansTableData.map((row) => ({
-    ...row,
-    icon: {
-      component: getOpenTestPlanDetailsButton(
-        row.id as number,
-        testPlans.find((plan) => plan.id === row.id)?.name || '',
-        <ChevronDownDropdownIcon />,
-      ),
-    },
-  }));
+    return {
+      ...row,
+      testPlanName: {
+        component: getOpenTestPlanDetailsButton(row.id as number, testPlanName, testPlanName),
+      },
+      icon: {
+        component: getOpenTestPlanDetailsButton(
+          row.id as number,
+          testPlanName,
+          <ChevronDownDropdownIcon />,
+        ),
+      },
+    };
+  });
 
   const primaryColumn = {
     key: 'testPlanName',
@@ -164,8 +167,6 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
     },
   ];
 
-  const selectedTestPlan = testPlans?.find((plan) => plan.id === selectedTestPlanId);
-
   return (
     <>
       <div className={cx('test-plans__table-container')}>
@@ -196,11 +197,6 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
           />
         </div>
       )}
-      <TestPlanSidePanel
-        testPlan={selectedTestPlan}
-        isVisible={Boolean(selectedTestPlanId)}
-        onClose={handleCloseSidePanel}
-      />
     </>
   );
 };

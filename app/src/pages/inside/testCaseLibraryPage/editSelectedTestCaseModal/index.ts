@@ -18,5 +18,4 @@ export {
   EDIT_SELECTED_TEST_CASE_MODAL_KEY,
   EditSelectedTestCaseModal,
 } from './editSelectedTestCaseModal';
-export { useTestCase } from '../createTestCaseModal/useTestCase';
 export { useEditTestCaseModal } from './useEditTestCaseModal';
