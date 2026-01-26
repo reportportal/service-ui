@@ -15,7 +15,9 @@
  */
 
 export const GET_MANUAL_LAUNCHES = 'getManualLaunches' as const;
+export const GET_MANUAL_LAUNCH = 'getManualLaunch' as const;
 export const MANUAL_LAUNCHES_NAMESPACE = 'manualLaunches' as const;
+export const ACTIVE_MANUAL_LAUNCH_NAMESPACE = 'activeManualLaunch' as const;
 export const defaultManualLaunchesQueryParams = {
   limit: 20,
   offset: 0,

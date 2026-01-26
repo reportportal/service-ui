@@ -16,6 +16,7 @@
 
 import { memo, useRef } from 'react';
 import { useIntl } from 'react-intl';
+import { useDispatch } from 'react-redux';
 import {
   Button,
   RerunIcon,
@@ -32,13 +33,15 @@ import { useOnClickOutside } from 'common/hooks';
 import { CollapsibleSection } from 'components/collapsibleSection';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { formatTimestampForSidePanel } from 'pages/inside/common/testCaseList/utils';
+import { MANUAL_LAUNCH_DETAILS_PAGE } from 'controllers/pages';
+import { useProjectDetails } from 'hooks/useTypedSelector';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { LaunchAttribute } from '../launchAttribute';
 import { TestStatisticsChart } from '../testStatisticsChart';
 import { useLaunchDetails } from './useLaunchDetails';
 import { messages } from './messages';
-import { COMMON_LOCALE_KEYS } from '../../../../common/constants/localization';
 
 import styles from './launchSidePanel.scss';
 
@@ -52,6 +55,8 @@ interface LaunchSidePanelProps {
 
 export const LaunchSidePanel = memo(({ launchId, isVisible, onClose }: LaunchSidePanelProps) => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const { organizationSlug, projectSlug } = useProjectDetails();
   const sidePanelRef = useRef<HTMLDivElement>(null);
   const { launchDetails, isLoading } = useLaunchDetails(launchId);
 
@@ -67,6 +72,16 @@ export const LaunchSidePanel = memo(({ launchId, isVisible, onClose }: LaunchSid
 
   const handleToRunClick = () => {
     // TODO: Implement to run functionality
+  };
+
+  const handleOpenDetailsClick = () => {
+    if (launchId) {
+      dispatch({
+        type: MANUAL_LAUNCH_DETAILS_PAGE,
+        payload: { organizationSlug, projectSlug, launchId: launchId.toString() },
+      });
+      onClose();
+    }
   };
 
   const { total, passed, failed, skipped, toRun, inProgress } = launchDetails.executionStatistic;
@@ -149,6 +164,14 @@ export const LaunchSidePanel = memo(({ launchId, isVisible, onClose }: LaunchSid
 
   const footerComponent = (
     <div className={cx('footer')}>
+      <Button
+        variant="ghost"
+        className={cx('action-button')}
+        onClick={handleOpenDetailsClick}
+        data-automation-id="launch-open-details"
+      >
+        {formatMessage(messages.openDetails)}
+      </Button>
       <Button
         variant="ghost"
         className={cx('action-button')}

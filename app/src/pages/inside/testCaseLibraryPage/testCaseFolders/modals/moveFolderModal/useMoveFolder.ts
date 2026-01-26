@@ -79,14 +79,14 @@ export const useMoveFolder = () => {
         );
 
         dispatch(hideModalAction());
-        showSuccessNotification({ messageKey: 'testCaseFolderMovedSuccess' });
+        showSuccessNotification({ messageId: 'testCaseFolderMovedSuccess' });
 
         navigateToFolder({
           folderId,
           parentIdToExpand: movedFolderParentId,
         });
       } catch {
-        showErrorNotification({ messageKey: 'testCaseFolderMoveFailed' });
+        showErrorNotification({ messageId: 'testCaseFolderMoveFailed' });
       } finally {
         hideSpinner();
       }

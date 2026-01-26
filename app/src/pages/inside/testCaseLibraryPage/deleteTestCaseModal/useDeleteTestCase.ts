@@ -52,7 +52,7 @@ export const useDeleteTestCase = ({ isDetailsPage = false } = {}) => {
       dispatch(deleteTestCaseSuccessAction({ testCase }));
       updateFolderCounter({ folderId: testCase.testFolder.id, delta: -1 });
       dispatch(hideModalAction());
-      showSuccessNotification({ messageKey: 'testCaseDeletedSuccess' });
+      showSuccessNotification({ messageId: 'testCaseDeletedSuccess' });
 
       if (isSingleItemOnTheLastPage && !isDetailsPage) {
         updateUrl();

@@ -68,11 +68,11 @@ export const useBatchDuplicateToFolder = ({ onSuccess }: { onSuccess: () => void
         dispatch(hideModalAction());
         onSuccess();
         showSuccessNotification({
-          messageKey: 'testCasesDuplicatedSuccess',
+          messageId: 'testCasesDuplicatedSuccess',
         });
       } catch {
         showErrorNotification({
-          messageKey: 'errorOccurredTryAgain',
+          messageId: 'errorOccurredTryAgain',
         });
       } finally {
         hideSpinner();

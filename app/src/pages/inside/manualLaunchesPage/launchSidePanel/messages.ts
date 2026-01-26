@@ -17,6 +17,10 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
+  openDetails: {
+    id: 'LaunchSidePanel.openDetails',
+    defaultMessage: 'Open Details',
+  },
   editLaunch: {
     id: 'LaunchSidePanel.editLaunch',
     defaultMessage: 'Edit Launch',

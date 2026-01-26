@@ -42,7 +42,7 @@ export const useDescription = (testCaseId: number) => {
 
       dispatch(updateDescriptionSuccessAction(description));
       dispatch(hideModalAction());
-      showSuccessNotification({ messageKey: 'testCaseDescriptionUpdateSuccess' });
+      showSuccessNotification({ messageId: 'testCaseDescriptionUpdateSuccess' });
     } catch (error: unknown) {
       showErrorNotification({
         message: (error as Error).message,

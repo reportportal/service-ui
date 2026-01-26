@@ -16,27 +16,26 @@
 
 import { isString } from 'es-toolkit';
 
+interface LocationPayload {
+  organizationSlug: string;
+  projectSlug: string;
+  testCasePageRoute?: string;
+  testPlanId?: string;
+  launchId?: string;
+}
+
+interface LocationQuery {
+  offset: string;
+  limit: string;
+}
+
 export type LocationInfo = {
-  payload: {
-    testCasePageRoute?: string;
-    organizationSlug: string;
-    projectSlug: string;
-    testPlanId?: number;
-  };
+  payload: LocationPayload;
   type?: string;
-  query?: {
-    offset: string;
-    limit: string;
-  };
+  query?: LocationQuery;
   prev?: {
-    payload?: {
-      testPlanId?: number;
-      testCasePageRoute?: string;
-    };
-    query?: {
-      offset: string;
-      limit: string;
-    };
+    payload?: LocationPayload;
+    query?: LocationQuery;
   };
 };
 

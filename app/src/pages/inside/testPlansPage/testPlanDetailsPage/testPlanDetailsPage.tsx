@@ -40,7 +40,7 @@ import {
 } from 'hooks/useTypedSelector';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 
-import { TestPlansHeader } from '../testPlansHeader';
+import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWithBreadcrumbsAndActions';
 import { PageLoader } from '../pageLoader';
 import { EmptyTestPlan } from './emptyTestPlan';
 import { TestPlanActions } from '../testPlanActions';
@@ -174,7 +174,7 @@ export const TestPlanDetailsPage = () => {
     <SettingsLayout>
       <ScrollWrapper resetRequired>
         <div className={cx('test-plan-details-page')}>
-          <TestPlansHeader
+          <PageHeaderWithBreadcrumbsAndActions
             title={testPlan?.name || ''}
             breadcrumbDescriptors={breadcrumbDescriptors}
             actions={renderActions()}

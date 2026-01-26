@@ -16,14 +16,13 @@
 
 @use '../../../common/css/mixins';
 
-.manual-launches-page {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
+.content-wrapper {
+  padding-bottom: 64px;
 }
 
 .pagination {
   @include mixins.pagination-bar;
+
   position: fixed;
   width: calc(100vw - 48px);
   left: 48px;

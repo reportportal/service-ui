@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export { getManualLaunchesAction } from './actionCreators';
+export { getManualLaunchesAction, getManualLaunchAction } from './actionCreators';
 export { manualLaunchesSagas } from './sagas';
 export * from './constants';
 export { manualLaunchesReducer } from './reducer';

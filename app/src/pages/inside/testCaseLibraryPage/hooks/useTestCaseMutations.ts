@@ -145,7 +145,7 @@ export const useTestCaseMutations = (testCaseId?: number) => {
         });
 
         dispatch(hideModalAction());
-        showSuccessNotification({ messageKey: options.successMessageId });
+        showSuccessNotification({ messageId: options.successMessageId });
 
         completeFolderDestination({
           newFolderDetails,
@@ -153,7 +153,7 @@ export const useTestCaseMutations = (testCaseId?: number) => {
           responseFolderId: response?.testFolder?.id,
         });
       } catch {
-        showErrorNotification({ messageKey: options.errorMessageId });
+        showErrorNotification({ messageId: options.errorMessageId });
       } finally {
         hideSpinner();
       }
@@ -183,7 +183,7 @@ export const useTestCaseMutations = (testCaseId?: number) => {
   const editTestCase = useCallback(
     async (payload: CreateTestCaseFormData, currentFolderId?: number) => {
       if (!testCaseId) {
-        showErrorNotification({ messageKey: 'testCaseUpdateFailed' });
+        showErrorNotification({ messageId: 'testCaseUpdateFailed' });
 
         return;
       }
@@ -212,7 +212,7 @@ export const useTestCaseMutations = (testCaseId?: number) => {
       const resolvedTestCaseId = targetTestCaseId ?? testCaseId;
 
       if (!resolvedTestCaseId) {
-        showErrorNotification({ messageKey: errorMessageId });
+        showErrorNotification({ messageId: errorMessageId });
 
         return;
       }
@@ -242,7 +242,7 @@ export const useTestCaseMutations = (testCaseId?: number) => {
         }
 
         dispatch(hideModalAction());
-        showSuccessNotification({ messageKey: successMessageId });
+        showSuccessNotification({ messageId: successMessageId });
 
         if (destinationFolder) {
           completeFolderDestination({
@@ -256,7 +256,7 @@ export const useTestCaseMutations = (testCaseId?: number) => {
         onSuccess?.(response);
       } catch (error) {
         showErrorNotification({
-          messageKey: errorMessageId,
+          messageId: errorMessageId,
           message: (error as Error).message,
         });
       } finally {

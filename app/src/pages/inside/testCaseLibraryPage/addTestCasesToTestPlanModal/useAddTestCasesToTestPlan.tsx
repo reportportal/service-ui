@@ -87,14 +87,14 @@ export const useAddTestCasesToTestPlan = ({
       .then(() => {
         dispatch(hideModalAction());
         showSuccessNotification({
-          messageKey: isSingleTestCaseMode
+          messageId: isSingleTestCaseMode
             ? 'testCaseAddingToTestPlanSuccess'
             : 'testCasesAddingToTestPlanSuccess',
         });
       })
       .catch((error) => {
         showErrorNotification({
-          messageKey: isSingleTestCaseMode
+          messageId: isSingleTestCaseMode
             ? 'testCaseAddingToTestPlanFailed'
             : 'testCasesAddingToTestPlanFailed',
         });

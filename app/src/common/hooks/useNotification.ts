@@ -26,35 +26,29 @@ import { notificationMessages } from 'components/main/notification/notificationL
 export type NotificationMessageKey = keyof typeof notificationMessages;
 
 interface ShowSuccessNotificationParams {
-  messageKey: NotificationMessageKey;
+  messageId: NotificationMessageKey;
   values?: Record<string, unknown>;
 }
 
 interface ShowErrorNotificationParams {
-  messageKey?: NotificationMessageKey;
+  messageId?: NotificationMessageKey;
   message?: string;
   values?: Record<string, unknown>;
 }
-
-const getMessageId = (key: NotificationMessageKey) => notificationMessages[key]?.id;
 
 export const useNotification = () => {
   const dispatch = useDispatch();
 
   const showSuccessNotification = useCallback(
-    ({ messageKey, values }: ShowSuccessNotificationParams) => {
-      const messageId = getMessageId(messageKey);
-
-      dispatch(dispatchSuccessNotification({ messageId, values }));
+    ({ messageId, values }: ShowSuccessNotificationParams) => {
+      dispatch(dispatchSuccessNotification({ messageId: messageId, values }));
     },
     [dispatch],
   );
 
   const showErrorNotification = useCallback(
-    ({ messageKey, message, values }: ShowErrorNotificationParams) => {
-      const messageId = messageKey ? getMessageId(messageKey) : undefined;
-
-      dispatch(dispatchErrorNotification({ messageId, message, values }));
+    ({ messageId, message, values }: ShowErrorNotificationParams) => {
+      dispatch(dispatchErrorNotification({ messageId: messageId, message, values }));
     },
     [dispatch],
   );

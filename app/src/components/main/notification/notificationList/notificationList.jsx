@@ -313,6 +313,20 @@ export const notificationMessages = defineMessages({
     id: 'TestPlansPage.testPlanLoadingFailed',
     defaultMessage: 'Failed to load Test Plans.',
   },
+  testPlanRedirectWarningMessage: {
+    id: 'TestPlansPage.testPlanRedirectWarningMessage',
+    defaultMessage:
+      "The item you are trying to access may have been deleted or doesn't exist. You have been redirected to Test Plans.",
+  },
+  manualLaunchesLoadingFailed: {
+    id: 'ManualLaunchesPage.manualLaunchesLoadingFailed',
+    defaultMessage: 'Failed to load Manual Launches.',
+  },
+  manualLaunchRedirectWarningMessage: {
+    id: 'ManualLaunchesPage.manualLaunchRedirectWarningMessage',
+    defaultMessage:
+      "The item you are trying to access may have been deleted or doesn't exist. You have been redirected to Manual Launches.",
+  },
   testPlanUpdatedSuccess: {
     id: 'TestPlansPage.testPlanUpdatedSuccess',
     defaultMessage: 'Test Plan has been updated successfully.',

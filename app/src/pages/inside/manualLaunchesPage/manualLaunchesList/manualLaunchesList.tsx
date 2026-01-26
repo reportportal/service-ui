@@ -83,15 +83,15 @@ export const ManualLaunchesList = ({ fullLaunches }: ManualLaunchesListProps) =>
     <div className={cx('manual-launches-list')}>
       <Table
         selectable={canDoTestCaseBulkActions}
-        onToggleRowSelection={handleRowSelect}
         selectedRowIds={selectedRowIds}
         data={manualLaunchesTableData}
         fixedColumns={fixedColumns}
         primaryColumn={primaryColumn}
         sortableColumns={[]}
-        onToggleAllRowsSelection={handleSelectAll}
         className={cx('manual-launches-list-table')}
         rowClassName={cx('manual-launches-list-table-row')}
+        onToggleRowSelection={handleRowSelect}
+        onToggleAllRowsSelection={handleSelectAll}
         renderRowActions={() => <ActionMenu actions={rowActions} />}
       />
       {isAnyRowSelected && (

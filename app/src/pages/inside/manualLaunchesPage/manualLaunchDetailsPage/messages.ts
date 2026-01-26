@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,4 +14,12 @@
  * limitations under the License.
  */
 
-export { TestPlansHeader } from './testPlansHeader';
+import { defineMessages } from 'react-intl';
+
+export const messages = defineMessages({
+  manualLaunchNotFoundRedirect: {
+    id: 'ManualLaunchDetailsPage.manualLaunchNotFoundRedirect',
+    defaultMessage:
+      "The item you are trying to access may have been deleted or doesn't exist. You have been redirected to Manual Launches.",
+  },
+});

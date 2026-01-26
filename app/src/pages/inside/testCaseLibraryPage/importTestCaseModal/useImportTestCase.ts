@@ -122,7 +122,7 @@ export const useImportTestCase = () => {
 
       dispatch(hideModalAction());
       showSuccessNotification({
-        messageKey: resolvedFolderName ? 'importSuccessToFolder' : 'importSuccess',
+        messageId: resolvedFolderName ? 'importSuccessToFolder' : 'importSuccess',
         values: resolvedFolderName ? { folderName: resolvedFolderName } : undefined,
       });
       refetchTestCases(testFolderId);
@@ -142,7 +142,7 @@ export const useImportTestCase = () => {
         });
       } else {
         showErrorNotification({
-          messageKey: 'importTestCaseFailed',
+          messageId: 'importTestCaseFailed',
         });
       }
     } finally {

@@ -119,11 +119,11 @@ export const useTestCaseBatchActions = () => {
         dispatch(hideModalAction());
         onSuccess();
         showSuccessNotification({
-          messageKey: testCaseIds.length > 1 ? 'testCasesMovedSuccess' : 'testCaseMovedSuccess',
+          messageId: testCaseIds.length > 1 ? 'testCasesMovedSuccess' : 'testCaseMovedSuccess',
         });
       } catch {
         showErrorNotification({
-          messageKey: 'errorOccurredTryAgain',
+          messageId: 'errorOccurredTryAgain',
         });
       } finally {
         hideSpinner();
@@ -159,7 +159,7 @@ export const useTestCaseBatchActions = () => {
 
         dispatch(hideModalAction());
         showSuccessNotification({
-          messageKey:
+          messageId:
             payload.testCaseIds.length > 1 ? 'testCaseBulkUpdateSuccess' : 'testCaseUpdatedSuccess',
         });
       } catch (error: unknown) {

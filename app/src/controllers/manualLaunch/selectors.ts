@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { Page } from 'types/common';
+import { AppState } from 'types/store';
 
 import { Launch } from 'pages/inside/manualLaunchesPage/types';
 
@@ -23,20 +24,40 @@ export interface ManualLaunchState {
     page: Page | null;
   };
   isLoading?: boolean;
+  activeManualLaunch?: Launch | null;
+  isLoadingActive?: boolean;
 }
 
-interface RootState {
-  manualLaunch?: ManualLaunchState;
-}
-
-export const manualLaunchesSelector = (state: RootState): ManualLaunchState =>
+export const manualLaunchesSelector = (state: AppState): ManualLaunchState =>
   state.manualLaunch || { data: { content: null, page: null } };
 
-export const isLoadingSelector = (state: RootState) =>
+export const isLoadingSelector = (state: AppState) =>
   Boolean(manualLaunchesSelector(state).isLoading);
 
-export const manualLaunchContentSelector = (state: RootState) =>
+export const manualLaunchContentSelector = (state: AppState) =>
   manualLaunchesSelector(state).data?.content;
 
-export const manualLaunchPageSelector = (state: RootState) =>
+export const manualLaunchPageSelector = (state: AppState) =>
   manualLaunchesSelector(state).data?.page;
+
+export const activeManualLaunchSelector = (state: AppState) =>
+  manualLaunchesSelector(state).activeManualLaunch || null;
+
+export const isLoadingActiveSelector = (state: AppState) =>
+  Boolean(manualLaunchesSelector(state).isLoadingActive);
+
+export const manualLaunchByIdSelector = (launchId: string | number) => (state: AppState) => {
+  const activeManualLaunch = activeManualLaunchSelector(state);
+
+  if (activeManualLaunch?.id === Number(launchId)) {
+    return activeManualLaunch;
+  }
+
+  const launches = manualLaunchContentSelector(state);
+
+  if (launches) {
+    return launches.find((launch) => launch.id === Number(launchId));
+  }
+
+  return undefined;
+};

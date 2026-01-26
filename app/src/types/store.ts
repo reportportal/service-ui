@@ -17,6 +17,7 @@
 import { ProjectDetails } from 'pages/organization/constants';
 import { TestPlanState } from 'controllers/testPlan/selectors';
 import { TestCaseState } from 'controllers/testCase/selectors';
+import { ManualLaunchState } from 'controllers/manualLaunch/selectors';
 import { UserState } from 'controllers/user/types';
 import { NotificationState } from 'controllers/notification/types';
 import { ModalState } from 'controllers/modal/types';
@@ -26,6 +27,7 @@ export interface BaseAppState {
     payload?: ProjectDetails & {
       testPlanId?: string;
       testCaseId?: string;
+      launchId?: string;
     };
     prev?: {
       payload?: ProjectDetails;
@@ -44,6 +46,7 @@ export interface TestCaseAppState extends BaseAppState {
 export interface AppState extends BaseAppState {
   testPlan?: TestPlanAppState['testPlan'];
   testCase?: TestCaseAppState['testCase'];
+  manualLaunch?: ManualLaunchState;
   user?: UserState;
   notifications?: NotificationState;
   modal?: ModalState;

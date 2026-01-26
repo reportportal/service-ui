@@ -53,4 +53,8 @@ export const commonFolderMessages = defineMessages({
     id: 'TestCaseLibraryPage.root',
     defaultMessage: 'Root',
   },
+  createSubfolder: {
+    id: 'TestCaseLibraryPage.createSubfolder',
+    defaultMessage: 'Create Subfolder',
+  },
 });

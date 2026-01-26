@@ -58,11 +58,11 @@ export const useBatchDeleteTestCases = ({
         onSuccess();
 
         showSuccessNotification({
-          messageKey: testCaseIds.length > 1 ? 'testCasesDeletedSuccess' : 'testCaseDeletedSuccess',
+          messageId: testCaseIds.length > 1 ? 'testCasesDeletedSuccess' : 'testCaseDeletedSuccess',
         });
       } catch {
         showErrorNotification({
-          messageKey: 'errorOccurredTryAgain',
+          messageId: 'errorOccurredTryAgain',
         });
       } finally {
         hideSpinner();

@@ -99,7 +99,7 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     defaultMessage: 'Move folder to',
   },
   createSubfolder: {
-    id: 'TestCaseLibraryPage.createSubfolder',
-    defaultMessage: 'Create Subfolder',
+    id: 'TestCaseLibraryPage.createSubfolderAction',
+    defaultMessage: 'Create subfolder',
   },
 });

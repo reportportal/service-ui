@@ -19,13 +19,18 @@ import { combineReducers } from 'redux';
 import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
-import { MANUAL_LAUNCHES_PAGE } from 'controllers/pages';
+import { MANUAL_LAUNCHES_PAGE, MANUAL_LAUNCH_DETAILS_PAGE } from 'controllers/pages';
 
-import { MANUAL_LAUNCHES_NAMESPACE } from './constants';
+import { MANUAL_LAUNCHES_NAMESPACE, ACTIVE_MANUAL_LAUNCH_NAMESPACE } from './constants';
 
 const reducer = combineReducers({
   data: fetchReducer(MANUAL_LAUNCHES_NAMESPACE, { initialState: null, contentPath: 'data' }),
   isLoading: loadingReducer(MANUAL_LAUNCHES_NAMESPACE),
+  activeManualLaunch: fetchReducer(ACTIVE_MANUAL_LAUNCH_NAMESPACE, { initialState: null }),
+  isLoadingActive: loadingReducer(ACTIVE_MANUAL_LAUNCH_NAMESPACE),
 });
 
-export const manualLaunchesReducer = createPageScopedReducer(reducer, [MANUAL_LAUNCHES_PAGE]);
+export const manualLaunchesReducer = createPageScopedReducer(reducer, [
+  MANUAL_LAUNCHES_PAGE,
+  MANUAL_LAUNCH_DETAILS_PAGE,
+]);
