@@ -82,7 +82,7 @@ export const TestPlanSidePanel = memo(
 
     const { testCaseDetails, isLoading, isManualCovered } = useTestCaseDetails({
       testCaseId: testPlan?.id ?? null,
-      testPlanId: isTestPlanRoute ? testPlanId : null,
+      testPlanId: isTestPlanRoute ? Number(testPlanId) : null,
     });
 
     const testPlanFolders = useSelector(testPlanFoldersSelector);

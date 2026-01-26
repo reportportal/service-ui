@@ -34,7 +34,6 @@ import {
 } from 'controllers/testCase';
 import { findFolderById } from 'pages/inside/testCaseLibraryPage/utils';
 
-import { commonMessages } from '../../../commonMessages';
 import { commonFolderMessages } from '../commonFolderMessages';
 import { CREATE_SUBFOLDER_FORM_NAME } from '../constants';
 import { FolderFormValues } from '../types';
@@ -85,7 +84,7 @@ const CreateSubfolderModalComponent = ({
 
   return (
     <Modal
-      title={formatMessage(commonMessages.createSubfolder)}
+      title={formatMessage(commonFolderMessages.createSubfolder)}
       okButton={okButton}
       cancelButton={cancelButton}
       allowCloseOutside={!dirty}

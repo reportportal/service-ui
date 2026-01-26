@@ -62,7 +62,7 @@ export const useDuplicateFolder = () => {
         });
       } catch {
         showErrorNotification({
-          messageKey: 'errorOccurredTryAgain',
+          messageId: 'errorOccurredTryAgain',
         });
         hideSpinner();
 
@@ -90,7 +90,7 @@ export const useDuplicateFolder = () => {
       }
 
       dispatch(hideModalAction());
-      showSuccessNotification({ messageKey: 'testCaseFolderDuplicatedSuccess' });
+      showSuccessNotification({ messageId: 'testCaseFolderDuplicatedSuccess' });
 
       navigateToFolderAfterAction({
         targetFolderId: duplicatedFolder.id,

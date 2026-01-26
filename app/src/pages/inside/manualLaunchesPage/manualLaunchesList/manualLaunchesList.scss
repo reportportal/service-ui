@@ -1,5 +1,5 @@
 /*!
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
-  padding-bottom: 70px;
 
   &-table {
     margin: 24px auto 0;
@@ -85,6 +84,10 @@
 
       &:hover :global([class*='table-row-content']) {
         outline: 1px solid var(--rp-ui-base-topaz-focused);
+      }
+
+      &:has(.manual-launches-list-table-cell-hoverable:hover) .manual-launches-list-table-cell-hoverable {
+        color: var(--rp-ui-base-topaz-hover);
       }
 
       // select row

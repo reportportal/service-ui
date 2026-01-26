@@ -37,7 +37,7 @@ import { useQueryParams } from 'common/hooks';
 
 import { useCreateTestPlanModal } from './testPlanModals';
 import { TestPlansTable } from './testPlansTable';
-import { TestPlansHeader } from './testPlansHeader';
+import { PageHeaderWithBreadcrumbsAndActions } from '../common/pageHeaderWithBreadcrumbsAndActions';
 import { commonMessages } from './commonMessages';
 
 export const TestPlansPage = () => {
@@ -72,7 +72,7 @@ export const TestPlansPage = () => {
   return (
     <SettingsLayout>
       <ScrollWrapper resetRequired>
-        <TestPlansHeader
+        <PageHeaderWithBreadcrumbsAndActions
           title={formatMessage(commonMessages.pageTitle)}
           breadcrumbDescriptors={breadcrumbDescriptors}
           {...(!isEmpty(testPlans) && {

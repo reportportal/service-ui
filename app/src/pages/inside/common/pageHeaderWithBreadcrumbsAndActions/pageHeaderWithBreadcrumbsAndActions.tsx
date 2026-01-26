@@ -16,39 +16,42 @@
 
 import { ReactNode } from 'react';
 import { BreadcrumbsTreeIcon } from '@reportportal/ui-kit';
+import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { createClassnames } from 'common/utils';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 
-import styles from './testPlansHeader.scss';
+import styles from './pageHeaderWithBreadcrumbsAndActions.scss';
 
 const cx = createClassnames(styles);
 
 interface BreadcrumbDescriptor {
   id: string;
   title: string;
-  onClick?: VoidFunction;
+  onClick?: VoidFn;
 }
 
-interface TestPlansHeaderProps {
+interface PageHeaderWithBreadcrumbsAndActionsProps {
   title: string;
   breadcrumbDescriptors: BreadcrumbDescriptor[];
   actions?: ReactNode;
 }
 
-export const TestPlansHeader = ({
+export const PageHeaderWithBreadcrumbsAndActions = ({
   title,
   breadcrumbDescriptors = [],
   actions,
-}: TestPlansHeaderProps) => (
-  <header className={cx('test-plans-header')}>
-    <div className={cx('test-plans-header__breadcrumb')}>
+}: PageHeaderWithBreadcrumbsAndActionsProps) => (
+  <header className={cx('page-header-with-breadcrumbs-and-actions')}>
+    <div className={cx('page-header-with-breadcrumbs-and-actions__breadcrumb')}>
       <BreadcrumbsTreeIcon />
       <Breadcrumbs descriptors={breadcrumbDescriptors} />
     </div>
-    <div className={cx('test-plans-header__title-row')}>
-      <h1 className={cx('test-plans-header__title')}>{title}</h1>
-      {actions && <div className={cx('test-plans-header__actions')}>{actions}</div>}
+    <div className={cx('page-header-with-breadcrumbs-and-actions__title-row')}>
+      <h1 className={cx('page-header-with-breadcrumbs-and-actions__title')}>{title}</h1>
+      {actions && (
+        <div className={cx('page-header-with-breadcrumbs-and-actions__actions')}>{actions}</div>
+      )}
     </div>
   </header>
 );

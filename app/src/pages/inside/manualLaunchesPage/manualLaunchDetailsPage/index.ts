@@ -14,23 +14,4 @@
  * limitations under the License.
  */
 
-import { GET_MANUAL_LAUNCHES, GET_MANUAL_LAUNCH } from './constants';
-
-export interface GetManualLaunchesParams {
-  offset?: string | number;
-  limit?: string | number;
-}
-
-export interface GetManualLaunchParams {
-  launchId: string | number;
-}
-
-export const getManualLaunchesAction = (params?: GetManualLaunchesParams) => ({
-  type: GET_MANUAL_LAUNCHES,
-  payload: params,
-});
-
-export const getManualLaunchAction = (params: GetManualLaunchParams) => ({
-  type: GET_MANUAL_LAUNCH,
-  payload: params,
-});
+export { ManualLaunchDetailsPage } from './manualLaunchDetailsPage';

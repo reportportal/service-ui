@@ -21,11 +21,11 @@ import { isEmpty } from 'es-toolkit/compat';
 import { Button, RefreshIcon, Pagination } from '@reportportal/ui-kit';
 
 import { projectNameSelector } from 'controllers/project';
-import { activeOrganizationNameSelector } from 'controllers/organization';
-import { LocationHeaderLayout } from 'layouts/locationHeaderLayout';
+import { SettingsLayout } from 'layouts/settingsLayout';
 import { createClassnames } from 'common/utils';
-import { ScrollWrapper } from 'components/main/scrollWrapper/scrollWrapper';
-import { useProjectDetails } from 'hooks/useTypedSelector';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { ProjectDetails } from 'pages/organization/constants';
 import {
   manualLaunchContentSelector,
   isLoadingSelector,
@@ -40,6 +40,7 @@ import { ManualLaunchesPageContent } from './manualLaunchesPageContent';
 import { commonMessages } from '../testPlansPage/commonMessages';
 import { ITEMS_PER_PAGE_OPTIONS } from './manualLaunchesList/contants';
 import { useURLBoundPagination } from '../common/testCaseList/useURLBoundPagination';
+import { PageHeaderWithBreadcrumbsAndActions } from '../common/pageHeaderWithBreadcrumbsAndActions';
 
 import styles from './manualLaunchesPage.scss';
 
@@ -50,11 +51,12 @@ export const ManualLaunchesPage = () => {
   const dispatch = useDispatch();
 
   const projectName = useSelector(projectNameSelector);
-  const organizationName = useSelector(activeOrganizationNameSelector) as string;
   const content = useSelector(manualLaunchContentSelector);
   const pageInfo = useSelector(manualLaunchPageSelector);
   const isLoading = useSelector(isLoadingSelector);
-  const { organizationSlug, projectSlug } = useProjectDetails();
+  const { organizationSlug, projectSlug } = useSelector(
+    urlOrganizationAndProjectSelector,
+  ) as ProjectDetails;
 
   const { activePage, pageSize, setPageNumber, setPageSize, totalPages, captions, offset } =
     useURLBoundPagination({
@@ -69,27 +71,32 @@ export const ManualLaunchesPage = () => {
     dispatch(getManualLaunchesAction({ offset, limit: pageSize }));
   }, [dispatch, offset, pageSize]);
 
+  const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
+  const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
+
   return (
-    <div className={cx('manual-launches-page')}>
-      <LocationHeaderLayout
-        title={formatMessage(messages.manualLaunchesTitle)}
-        organizationName={organizationName}
-        projectName={projectName}
-      >
-        {!isEmpty(content) && (
-          <Button
-            variant="text"
-            data-automation-id="refreshPageButton"
-            icon={<RefreshIcon />}
-            disabled={isLoading}
-            onClick={handleRefresh}
-          >
-            {formatMessage(commonMessages.refreshPage)}
-          </Button>
-        )}
-      </LocationHeaderLayout>
+    <SettingsLayout>
       <ScrollWrapper resetRequired>
-        <ManualLaunchesPageContent fullLaunches={content} isLoading={isLoading} />
+        <PageHeaderWithBreadcrumbsAndActions
+          title={formatMessage(messages.manualLaunchesTitle)}
+          breadcrumbDescriptors={breadcrumbDescriptors}
+          {...(!isEmpty(content) && {
+            actions: (
+              <Button
+                variant="text"
+                data-automation-id="refreshPageButton"
+                icon={<RefreshIcon />}
+                disabled={isLoading}
+                onClick={handleRefresh}
+              >
+                {formatMessage(commonMessages.refreshPage)}
+              </Button>
+            ),
+          })}
+        />
+        <div className={cx('content-wrapper')}>
+          <ManualLaunchesPageContent fullLaunches={content} isLoading={isLoading} />
+        </div>
         {Boolean(pageInfo?.totalElements) && (
           <div className={cx('pagination')}>
             <Pagination
@@ -98,13 +105,13 @@ export const ManualLaunchesPage = () => {
               totalItems={pageInfo?.totalElements || 0}
               totalPages={totalPages}
               pageSizeOptions={ITEMS_PER_PAGE_OPTIONS}
+              captions={captions}
               changePage={setPageNumber}
               changePageSize={setPageSize}
-              captions={captions}
             />
           </div>
         )}
       </ScrollWrapper>
-    </div>
+    </SettingsLayout>
   );
 };
