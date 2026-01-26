@@ -16,7 +16,7 @@ jobs:
   variables-setup:
     name: Setting variables for docker build
     runs-on: ubuntu-latest
-    if: (!startsWith(github.head_ref, 'rc/') || !startsWith(github.head_ref, 'hotfix/') || !startsWith(github.head_ref, 'master') || !startsWith(github.head_ref, 'main'))
+    if: (!startsWith(github.head_ref, 'dependabot/') || !startsWith(github.head_ref, 'rc/') || !startsWith(github.head_ref, 'hotfix/') || !startsWith(github.head_ref, 'master') || !startsWith(github.head_ref, 'main'))
     steps:
       - name: Checkout
         uses: actions/checkout@v3
