@@ -28,55 +28,64 @@ import IconLocked from 'common/img/locked-inline.svg';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { URLS } from 'common/urls';
-import { activeProjectSelector, activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-import { canLockDashboard } from 'common/utils/permissions/permissions';
+import { activeProjectSelector } from 'controllers/user';
 import { showDefaultErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { fetch } from 'common/utils';
 import styles from './dashboardTable.scss';
 import { messages } from './messages';
+import { useCanLockDashboard } from './hooks';
 
 const cx = classNames.bind(styles);
 
-export const NameColumn = (
-  ({ value, customProps: { getLink }, className }) => {
-    const { trackEvent } = useTracking();
-    const { formatMessage } = useIntl();
-    const { id: dashboardId, name, locked } = value;
-    const userRole = useSelector(userAccountRoleSelector);
-    const projectRole = useSelector(activeProjectRoleSelector);
+const LockedDashboardTooltip = ({ children, locked }) => {
+  const { formatMessage } = useIntl();
+  const canLock = useCanLockDashboard();
 
-    const renderLockedIcon = () => {
-      const canLock = canLockDashboard(userRole, projectRole, false);
-      const lockedIcon = <div className={cx('locked-icon')}>{Parser(IconLocked)}</div>;
+  if (!locked || canLock) return children;
 
-      return canLock ? lockedIcon : (
-        <Tooltip
-          content={formatMessage(messages.lockedDashboardTooltip)}
-          wrapperClassName={cx('locked-tooltip-wrapper')}
-          tooltipClassName={cx('locked-tooltip')}
-          contentClassName={cx('locked-tooltip-content')}
-        >
-          {lockedIcon}
-        </Tooltip>
-      );
-    };
+  return (
+    <Tooltip
+      content={formatMessage(messages.lockedDashboardTooltip)}
+      wrapperClassName={cx('locked-tooltip-wrapper')}
+      tooltipClassName={cx('locked-tooltip')}
+      contentClassName={cx('locked-tooltip-content')}
+    >
+      {children}
+    </Tooltip>
+  );
+};
+LockedDashboardTooltip.propTypes = {
+  children: PropTypes.node,
+  locked: PropTypes.bool,
+};
+LockedDashboardTooltip.defaultProps = {
+  children: null,
+  locked: false,
+};
 
-    return (
-      <div className={cx(className, 'name-container')}>
-        {locked && renderLockedIcon()}
-        <NavLink
-          className={cx('name')}
-          to={getLink(dashboardId)}
-          onClick={() => {
-            trackEvent(DASHBOARD_EVENTS.clickOnDashboardName(dashboardId));
-          }}
-        >
-          {name}
-        </NavLink>
-      </div>
-    );
-  }
-);
+export const NameColumn = ({ value, customProps: { getLink }, className }) => {
+  const { trackEvent } = useTracking();
+  const { id: dashboardId, name, locked } = value;
+
+  return (
+    <div className={cx(className, 'name-container')}>
+      {locked && (
+        <LockedDashboardTooltip locked={locked}>
+          <div className={cx('locked-icon')}>{Parser(IconLocked)}</div>
+        </LockedDashboardTooltip>
+      )}
+      <NavLink
+        className={cx('name')}
+        to={getLink(dashboardId)}
+        onClick={() => {
+          trackEvent(DASHBOARD_EVENTS.clickOnDashboardName(dashboardId));
+        }}
+      >
+        {name}
+      </NavLink>
+    </div>
+  );
+};
 NameColumn.propTypes = {
   value: PropTypes.object,
   customProps: PropTypes.object,
@@ -140,7 +149,7 @@ export const DuplicateColumn = ({ value, customProps, className }) => {
       document.addEventListener('click', handleOutsideClick);
       return () => document.removeEventListener('click', handleOutsideClick);
     }
-    return () => { };
+    return () => {};
   }, [opened]);
 
   const handleClick = () => {
@@ -215,12 +224,9 @@ DuplicateColumn.defaultProps = {
 
 export const EditColumn = ({ value, customProps, className }) => {
   const { trackEvent } = useTracking();
-  const { formatMessage } = useIntl();
   const { onEdit } = customProps;
   const { id, locked } = value;
-  const userRole = useSelector(userAccountRoleSelector);
-  const projectRole = useSelector(activeProjectRoleSelector);
-  const canLock = canLockDashboard(userRole, projectRole, false);
+  const canLock = useCanLockDashboard();
   const isDisabled = locked && !canLock;
 
   const editItemHandler = () => {
@@ -229,29 +235,12 @@ export const EditColumn = ({ value, customProps, className }) => {
     onEdit(value);
   };
 
-  const renderIcon = () => {
-    const icon = <Icon type="icon-pencil" onClick={editItemHandler} disabled={isDisabled} />;
-
-    return (
-      isDisabled ? (
-        <Tooltip
-          content={formatMessage(messages.lockedDashboardTooltip)}
-          wrapperClassName={cx('locked-tooltip-wrapper')}
-          tooltipClassName={cx('locked-tooltip')}
-          contentClassName={cx('locked-tooltip-content')}
-        >
-          {icon}
-        </Tooltip>
-      ) : (
-        icon
-      )
-    );
-  };
-
   return (
     <div className={cx(className, 'icon-cell', 'with-button', 'edit-cell')}>
       <div className={cx('icon-holder')}>
-        {renderIcon()}
+        <LockedDashboardTooltip locked={locked}>
+          <Icon type="icon-pencil" onClick={editItemHandler} disabled={isDisabled} />
+        </LockedDashboardTooltip>
       </div>
     </div>
   );
@@ -269,11 +258,8 @@ EditColumn.defaultProps = {
 
 export const DeleteColumn = ({ value, customProps, className }) => {
   const { trackEvent } = useTracking();
-  const { formatMessage } = useIntl();
   const { id, locked } = value;
-  const userRole = useSelector(userAccountRoleSelector);
-  const projectRole = useSelector(activeProjectRoleSelector);
-  const canLock = canLockDashboard(userRole, projectRole, false);
+  const canLock = useCanLockDashboard();
   const isDisabled = locked && !canLock;
 
   const deleteItemHandler = () => {
@@ -282,29 +268,12 @@ export const DeleteColumn = ({ value, customProps, className }) => {
     customProps.onDelete(value);
   };
 
-  const renderIcon = () => {
-    const icon = <Icon type="icon-delete" onClick={deleteItemHandler} disabled={isDisabled} />;
-
-    return (
-      isDisabled ? (
-        <Tooltip
-          content={formatMessage(messages.lockedDashboardTooltip)}
-          wrapperClassName={cx('locked-tooltip-wrapper')}
-          tooltipClassName={cx('locked-tooltip')}
-          contentClassName={cx('locked-tooltip-content')}
-        >
-          {icon}
-        </Tooltip>
-      ) : (
-        icon
-      )
-    );
-  };
-
   return (
     <div className={cx(className, 'icon-cell', 'with-button', 'delete-cell')}>
       <div className={cx('icon-holder')}>
-        {renderIcon()}
+        <LockedDashboardTooltip locked={locked}>
+          <Icon type="icon-delete" onClick={deleteItemHandler} disabled={isDisabled} />
+        </LockedDashboardTooltip>
       </div>
     </div>
   );
