@@ -14,12 +14,38 @@
  * limitations under the License.
  */
 
+.name-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.locked-icon {
+  width: 12px;
+  height: 14px;
+}
+
+.locked-tooltip-wrapper {
+  max-width: fit-content;
+}
+
+.locked-tooltip {
+  max-width: 220px;
+}
+
+.locked-tooltip-content {
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 11px;
+  line-height: 16px;
+  text-align: center;
+}
+
 .name {
   width: 30%;
   color: $COLOR--topaz;
   font-size: 15px;
   font-family: $FONT-SEMIBOLD;
-  line-height: 22px;
+  line-height: 20px;
   cursor: pointer;
   text-decoration: none;
   word-break: break-all;

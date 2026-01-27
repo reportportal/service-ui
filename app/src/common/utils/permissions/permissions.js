@@ -63,3 +63,4 @@ export const canWorkWithFilters = checkPermission(ACTIONS.WORK_WITH_FILTERS);
 export const canReadData = checkPermission(ACTIONS.READ_DATA);
 export const canSeeDemoData = checkPermission(ACTIONS.SEE_DEMO_DATA);
 export const canChangeStatus = checkPermission(ACTIONS.CHANGE_STATUS);
+export const canLockDashboard = checkPermission(ACTIONS.LOCK_DASHBOARD);

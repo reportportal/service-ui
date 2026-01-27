@@ -512,6 +512,7 @@
   "DashboardTable.description": "Descripción",
   "DashboardTable.duplicate": "Duplicate",
   "DashboardTable.edit": "Editar",
+  "DashboardTable.lockedDashboardTooltip": "This dashboard is locked by a project manager or administrator and cannot be modified",
   "DashboardTable.owner": "Propietario",
   "DateRange.customRange": "Custom range",
   "DateRange.from": "From",

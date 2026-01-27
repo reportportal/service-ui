@@ -17,16 +17,19 @@
 import React, { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import track from 'react-tracking';
+import { useTracking } from 'react-tracking';
+import { Tooltip } from '@reportportal/ui-kit';
 import { Icon } from 'components/main/icon';
 import { NavLink } from 'components/main/navLink';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import Parser from 'html-react-parser';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
-import { injectIntl } from 'react-intl';
+import IconLocked from 'common/img/locked-inline.svg';
+import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { URLS } from 'common/urls';
-import { activeProjectSelector } from 'controllers/user';
+import { activeProjectSelector, activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
+import { canLockDashboard } from 'common/utils/permissions/permissions';
 import { showDefaultErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { fetch } from 'common/utils';
 import styles from './dashboardTable.scss';
@@ -34,21 +37,45 @@ import { messages } from './messages';
 
 const cx = classNames.bind(styles);
 
-export const NameColumn = track()(
-  ({ value, customProps: { getLink }, className, tracking: { trackEvent } }) => {
-    const { id: dashboardId, name } = value;
+export const NameColumn = (
+  ({ value, customProps: { getLink }, className }) => {
+    const { trackEvent } = useTracking();
+    const { formatMessage } = useIntl();
+    const { id: dashboardId, name, locked } = value;
+    const userRole = useSelector(userAccountRoleSelector);
+    const projectRole = useSelector(activeProjectRoleSelector);
+
+    const renderLockedIcon = () => {
+      const canLock = canLockDashboard(userRole, projectRole, false);
+      const lockedIcon = <div className={cx('locked-icon')}>{Parser(IconLocked)}</div>;
+
+      return canLock ? lockedIcon : (
+        <Tooltip
+          content={formatMessage(messages.lockedDashboardTooltip)}
+          wrapperClassName={cx('locked-tooltip-wrapper')}
+          tooltipClassName={cx('locked-tooltip')}
+          contentClassName={cx('locked-tooltip-content')}
+        >
+          {lockedIcon}
+        </Tooltip>
+      );
+    };
+
     return (
-      <NavLink
-        className={cx(className, 'name')}
-        to={getLink(dashboardId)}
-        onClick={() => {
-          trackEvent(DASHBOARD_EVENTS.clickOnDashboardName(dashboardId));
-        }}
-      >
-        {name}
-      </NavLink>
+      <div className={cx(className, 'name-container')}>
+        {locked && renderLockedIcon()}
+        <NavLink
+          className={cx('name')}
+          to={getLink(dashboardId)}
+          onClick={() => {
+            trackEvent(DASHBOARD_EVENTS.clickOnDashboardName(dashboardId));
+          }}
+        >
+          {name}
+        </NavLink>
+      </div>
     );
-  },
+  }
 );
 NameColumn.propTypes = {
   value: PropTypes.object,
@@ -85,94 +112,94 @@ OwnerColumn.defaultProps = {
   className: '',
 };
 
-export const DuplicateColumn = track()(
-  injectIntl(({ value, customProps, className, tracking: { trackEvent }, intl }) => {
-    const [opened, setOpened] = useState(false);
-    const dropdownRef = useRef(null);
-    const dispatch = useDispatch();
-    const activeProject = useSelector(activeProjectSelector);
+export const DuplicateColumn = ({ value, customProps, className }) => {
+  const { trackEvent } = useTracking();
+  const { formatMessage } = useIntl();
+  const [opened, setOpened] = useState(false);
+  const dropdownRef = useRef(null);
+  const dispatch = useDispatch();
+  const activeProject = useSelector(activeProjectSelector);
 
-    // The promise should be stored in state to prevent losing document focus (causes errors) in Safari when clicking to copy
-    const [dashboardConfigPromise, setDashboardConfigPromise] = useState(null);
+  // The promise should be stored in state to prevent losing document focus (causes errors) in Safari when clicking to copy
+  const [dashboardConfigPromise, setDashboardConfigPromise] = useState(null);
 
-    const fetchDashboardConfig = async () => {
-      const url = URLS.dashboardConfig(activeProject, value.id);
-      return fetch(url);
-    };
+  const fetchDashboardConfig = async () => {
+    const url = URLS.dashboardConfig(activeProject, value.id);
+    return fetch(url);
+  };
 
-    useEffect(() => {
-      if (opened) {
-        setDashboardConfigPromise(fetchDashboardConfig());
-        const handleOutsideClick = (e) => {
-          if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-            setOpened(false);
-          }
-        };
+  useEffect(() => {
+    if (opened) {
+      setDashboardConfigPromise(fetchDashboardConfig());
+      const handleOutsideClick = (e) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+          setOpened(false);
+        }
+      };
 
-        document.addEventListener('click', handleOutsideClick);
-        return () => document.removeEventListener('click', handleOutsideClick);
-      }
-      return () => {};
-    }, [opened]);
+      document.addEventListener('click', handleOutsideClick);
+      return () => document.removeEventListener('click', handleOutsideClick);
+    }
+    return () => { };
+  }, [opened]);
 
-    const handleClick = () => {
-      trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('duplicate', value.id));
-      setOpened(!opened);
-    };
+  const handleClick = () => {
+    trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('duplicate', value.id));
+    setOpened(!opened);
+  };
 
-    const handleDuplicate = (e) => {
-      e.stopPropagation();
-      trackEvent(DASHBOARD_EVENTS.clickOnDuplicateMenuOption('duplicate'));
-      customProps.onDuplicate(value);
-      setOpened(false);
-    };
+  const handleDuplicate = (e) => {
+    e.stopPropagation();
+    trackEvent(DASHBOARD_EVENTS.clickOnDuplicateMenuOption('duplicate'));
+    customProps.onDuplicate(value);
+    setOpened(false);
+  };
 
-    const handleCopyConfig = async (e) => {
-      e.stopPropagation();
-      trackEvent(DASHBOARD_EVENTS.clickOnDuplicateMenuOption('copy_dashboard'));
+  const handleCopyConfig = async (e) => {
+    e.stopPropagation();
+    trackEvent(DASHBOARD_EVENTS.clickOnDuplicateMenuOption('copy_dashboard'));
 
-      try {
-        const config = await dashboardConfigPromise;
-        await navigator.clipboard.writeText(JSON.stringify(config));
-        dispatch(
-          showSuccessNotification({
-            messageId: 'dashboardConfigurationCopied',
-          }),
-        );
-      } catch (error) {
-        dispatch(showDefaultErrorNotification(error));
-      }
+    try {
+      const config = await dashboardConfigPromise;
+      await navigator.clipboard.writeText(JSON.stringify(config));
+      dispatch(
+        showSuccessNotification({
+          messageId: 'dashboardConfigurationCopied',
+        }),
+      );
+    } catch (error) {
+      dispatch(showDefaultErrorNotification(error));
+    }
 
-      setOpened(false);
-    };
+    setOpened(false);
+  };
 
-    return (
-      <div className={cx(className, 'icon-cell', 'with-button')}>
-        <div className={cx('icon-holder', 'no-border')}>
-          <button
-            ref={dropdownRef}
-            type="button"
-            className={cx('duplicate-dropdown')}
-            onClick={handleClick}
-          >
-            <div className={cx('duplicate-icon')}>{Parser(IconDuplicate)}</div>
-            <i className={cx('arrow', { opened })} />
-            {opened && (
-              <div className={cx('duplicate-menu', 'shown')}>
-                <button type="button" className={cx('dropdown-item')} onClick={handleDuplicate}>
-                  {intl.formatMessage(messages.duplicate)}
-                </button>
-                <button type="button" className={cx('dropdown-item')} onClick={handleCopyConfig}>
-                  {intl.formatMessage(messages.copyConfig)}
-                </button>
-              </div>
-            )}
-          </button>
-        </div>
+  return (
+    <div className={cx(className, 'icon-cell', 'with-button')}>
+      <div className={cx('icon-holder', 'no-border')}>
+        <button
+          ref={dropdownRef}
+          type="button"
+          className={cx('duplicate-dropdown')}
+          onClick={handleClick}
+        >
+          <div className={cx('duplicate-icon')}>{Parser(IconDuplicate)}</div>
+          <i className={cx('arrow', { opened })} />
+          {opened && (
+            <div className={cx('duplicate-menu', 'shown')}>
+              <button type="button" className={cx('dropdown-item')} onClick={handleDuplicate}>
+                {formatMessage(messages.duplicate)}
+              </button>
+              <button type="button" className={cx('dropdown-item')} onClick={handleCopyConfig}>
+                {formatMessage(messages.copyConfig)}
+              </button>
+            </div>
+          )}
+        </button>
       </div>
-    );
-  }),
-);
+    </div>
+  );
+};
 
 DuplicateColumn.propTypes = {
   value: PropTypes.object,
@@ -186,23 +213,49 @@ DuplicateColumn.defaultProps = {
   className: '',
 };
 
-export const EditColumn = track()(({ value, customProps, className, tracking: { trackEvent } }) => {
+export const EditColumn = ({ value, customProps, className }) => {
+  const { trackEvent } = useTracking();
+  const { formatMessage } = useIntl();
   const { onEdit } = customProps;
-  const { id } = value;
+  const { id, locked } = value;
+  const userRole = useSelector(userAccountRoleSelector);
+  const projectRole = useSelector(activeProjectRoleSelector);
+  const canLock = canLockDashboard(userRole, projectRole, false);
+  const isDisabled = locked && !canLock;
 
   const editItemHandler = () => {
+    if (isDisabled) return;
     trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('edit', id));
     onEdit(value);
+  };
+
+  const renderIcon = () => {
+    const icon = <Icon type="icon-pencil" onClick={editItemHandler} disabled={isDisabled} />;
+
+    return (
+      isDisabled ? (
+        <Tooltip
+          content={formatMessage(messages.lockedDashboardTooltip)}
+          wrapperClassName={cx('locked-tooltip-wrapper')}
+          tooltipClassName={cx('locked-tooltip')}
+          contentClassName={cx('locked-tooltip-content')}
+        >
+          {icon}
+        </Tooltip>
+      ) : (
+        icon
+      )
+    );
   };
 
   return (
     <div className={cx(className, 'icon-cell', 'with-button', 'edit-cell')}>
       <div className={cx('icon-holder')}>
-        <Icon type="icon-pencil" onClick={editItemHandler} />
+        {renderIcon()}
       </div>
     </div>
   );
-});
+};
 EditColumn.propTypes = {
   value: PropTypes.object,
   customProps: PropTypes.object,
@@ -214,23 +267,48 @@ EditColumn.defaultProps = {
   className: '',
 };
 
-export const DeleteColumn = track()(
-  ({ value, customProps, className, tracking: { trackEvent } }) => {
-    const deleteItemHandler = () => {
-      const { id } = value;
-      trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('delete', id));
-      customProps.onDelete(value);
-    };
+export const DeleteColumn = ({ value, customProps, className }) => {
+  const { trackEvent } = useTracking();
+  const { formatMessage } = useIntl();
+  const { id, locked } = value;
+  const userRole = useSelector(userAccountRoleSelector);
+  const projectRole = useSelector(activeProjectRoleSelector);
+  const canLock = canLockDashboard(userRole, projectRole, false);
+  const isDisabled = locked && !canLock;
+
+  const deleteItemHandler = () => {
+    if (isDisabled) return;
+    trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('delete', id));
+    customProps.onDelete(value);
+  };
+
+  const renderIcon = () => {
+    const icon = <Icon type="icon-delete" onClick={deleteItemHandler} disabled={isDisabled} />;
 
     return (
-      <div className={cx(className, 'icon-cell', 'with-button', 'delete-cell')}>
-        <div className={cx('icon-holder')}>
-          <Icon type="icon-delete" onClick={deleteItemHandler} />
-        </div>
-      </div>
+      isDisabled ? (
+        <Tooltip
+          content={formatMessage(messages.lockedDashboardTooltip)}
+          wrapperClassName={cx('locked-tooltip-wrapper')}
+          tooltipClassName={cx('locked-tooltip')}
+          contentClassName={cx('locked-tooltip-content')}
+        >
+          {icon}
+        </Tooltip>
+      ) : (
+        icon
+      )
     );
-  },
-);
+  };
+
+  return (
+    <div className={cx(className, 'icon-cell', 'with-button', 'delete-cell')}>
+      <div className={cx('icon-holder')}>
+        {renderIcon()}
+      </div>
+    </div>
+  );
+};
 DeleteColumn.propTypes = {
   value: PropTypes.object,
   customProps: PropTypes.object,
