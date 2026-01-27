@@ -41,11 +41,8 @@ export const URLS = {
     `${urlBase}data/${activeProject}/userphoto${getQueryParams({ login, loadThumbnail })}`,
 
   dashboard: (activeProject, id) => `${urlBase}${activeProject}/dashboard/${id}`,
-  dashboards: (activeProject, params, queryOptions = {}) =>
-    `${urlBase}${activeProject}/dashboard${getQueryParams(
-      { ...params },
-      queryOptions,
-    )}`,
+  dashboards: (activeProject, params = {}, queryOptions = {}) =>
+    `${urlBase}${activeProject}/dashboard${getQueryParams(params, queryOptions)}`,
   dashboardConfig: (activeProject, id) => `${urlBase}${activeProject}/dashboard/${id}/config`,
   dashboardPreconfigured: (activeProject) => `${urlBase}${activeProject}/dashboard/preconfigured`,
 
