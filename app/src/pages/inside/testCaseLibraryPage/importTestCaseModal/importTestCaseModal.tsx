@@ -92,7 +92,8 @@ export const ImportTestCaseModal = ({
     change('importTarget', target);
 
     if (folderId != null) {
-      const folder = foldersWithPath.find((f) => f.id === folderId);
+      const folder = foldersWithPath.find(({ id }) => id === folderId);
+
       if (folder) {
         change('existingFolderId', folder.id);
         change('selectedFolder', folder);
