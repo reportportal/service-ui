@@ -17,14 +17,8 @@
 .time-range-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
   padding: 8px 12px;
-  height: 100px;
-}
-
-.time-range {
-  display: flex;
-  gap: 16px;
 }
 
 .title {
@@ -34,21 +28,7 @@
   line-height: 24px;
 }
 
-.date-picker-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  width: 100%;
-}
-
 .date-picker-container {
   width: 100%;
   box-sizing: border-box;
-}
-
-.date-picker-label {
-  font-family: var(--rp-ui-base-font-family);
-  font-weight: var(--rp-ui-base-fw-medium);
-  font-size: 13px;
-  line-height: 20px;
 }

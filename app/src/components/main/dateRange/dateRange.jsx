@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useIntl, defineMessages } from 'react-intl';
@@ -27,72 +28,45 @@ export const messages = defineMessages({
     id: 'DateRange.customRange',
     defaultMessage: 'Custom range',
   },
-  from: {
-    id: 'DateRange.from',
-    defaultMessage: 'From',
-  },
-  to: {
-    id: 'DateRange.to',
-    defaultMessage: 'To',
-  },
 });
 
 export const DateRange = ({
   startDate,
-  setStartDate,
   endDate,
-  setEndDate,
-  startPopperClassName = '',
-  startCalendarClassName = '',
-  endPopperClassName = '',
-  endCalendarClassName = '',
+  onChange,
+  popperClassName = '',
+  calendarClassName = '',
 }) => {
   const { formatMessage } = useIntl();
+
+  const handleDateChange = useCallback(
+    (dates) => {
+      const [start, end] = dates;
+      onChange({ startDate: start, endDate: end });
+    },
+    [onChange],
+  );
 
   return (
     <div className={cx('time-range-wrapper')}>
       <div className={cx('title')}>{formatMessage(messages.customRange)}</div>
-      <div className={cx('time-range')}>
-        <div className={cx('date-picker-wrapper')}>
-          <span className={cx('date-picker-label')}>{formatMessage(messages.from)}</span>
-          <div className={cx('date-picker-container')}>
-            <DatePicker
-              value={startDate}
-              startDate={startDate}
-              endDate={endDate}
-              onChange={setStartDate}
-              selects={'start'}
-              popperClassName={startPopperClassName}
-              calendarClassName={startCalendarClassName}
-            />
-          </div>
-        </div>
-        <div className={cx('date-picker-wrapper')}>
-          <span className={cx('date-picker-label')}>{formatMessage(messages.to)}</span>
-          <div className={cx('date-picker-container')}>
-            <DatePicker
-              value={endDate}
-              startDate={startDate}
-              endDate={endDate}
-              onChange={setEndDate}
-              selects={'end'}
-              popperClassName={endPopperClassName}
-              calendarClassName={endCalendarClassName}
-            />
-          </div>
-        </div>
+      <div className={cx('date-picker-container')}>
+        <DatePicker
+          selectsRange
+          value={[startDate, endDate]}
+          onChange={handleDateChange}
+          popperClassName={popperClassName}
+          calendarClassName={calendarClassName}
+        />
       </div>
     </div>
   );
 };
 
 DateRange.propTypes = {
-  startDate: PropTypes.string.isRequired,
-  setStartDate: PropTypes.func.isRequired,
-  endDate: PropTypes.string.isRequired,
-  setEndDate: PropTypes.func.isRequired,
-  startPopperClassName: PropTypes.string,
-  startCalendarClassName: PropTypes.string,
-  endPopperClassName: PropTypes.string,
-  endCalendarClassName: PropTypes.string,
+  startDate: PropTypes.instanceOf(Date),
+  endDate: PropTypes.instanceOf(Date),
+  onChange: PropTypes.func.isRequired,
+  popperClassName: PropTypes.string,
+  calendarClassName: PropTypes.string,
 };
