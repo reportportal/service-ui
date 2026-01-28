@@ -74,6 +74,7 @@ const RequirementsList = ({ fields }: WrappedFieldArrayProps<Requirement>) => {
       <div className={cx('add-button-container')}>
         <Button
           variant="text"
+          type="button"
           onClick={() => fields.push({ id: uniqueId(), value: '' })}
           className={cx('add-button')}
           iconPlace="start"
