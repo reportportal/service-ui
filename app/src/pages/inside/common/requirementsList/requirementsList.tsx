@@ -27,10 +27,10 @@ const cx = createClassnames(styles);
 
 interface RequirementsListProps {
   items: Requirement[];
-  copyEnabled?: boolean;
+  isCopyEnabled?: boolean;
 }
 
-export const RequirementsList = ({ items, copyEnabled = false }: RequirementsListProps) => {
+export const RequirementsList = ({ items, isCopyEnabled = false }: RequirementsListProps) => {
   const handleCopy = (text: string) => copyToClipboard(text);
 
   return (
@@ -40,7 +40,7 @@ export const RequirementsList = ({ items, copyEnabled = false }: RequirementsLis
           <div className={cx('text-container')} title={item.value}>
             {processText(item.value)}
           </div>
-          {copyEnabled && (
+          {isCopyEnabled && (
             <Button
               variant="text"
               adjustWidthOn="content"

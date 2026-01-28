@@ -103,7 +103,7 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
       titleKey: 'requirements',
       defaultMessage: commonMessages.requirementsAreNotSpecified,
       childComponent: isEmpty(requirements) ? null : (
-        <RequirementsList items={requirements} copyEnabled />
+        <RequirementsList items={requirements} isCopyEnabled />
       ),
     },
   ] as const;
