@@ -21,16 +21,13 @@ import { FieldText, Button, PlusIcon, FieldLabel, CloseIcon } from '@reportporta
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { createClassnames, uniqueId } from 'common/utils';
 import { Requirement } from 'pages/inside/testCaseLibraryPage/types';
+import { commonMessages } from 'pages/inside/common/common-messages';
 
 import styles from './requirements.scss';
 
 const cx = createClassnames(styles);
 
 const messages = defineMessages({
-  requirements: {
-    id: 'createTestCaseModal.requirements',
-    defaultMessage: 'Requirements',
-  },
   enterLink: {
     id: 'createTestCaseModal.enterLink',
     defaultMessage:
@@ -47,7 +44,7 @@ const RequirementsList = ({ fields }: WrappedFieldArrayProps<Requirement>) => {
 
   return (
     <div className={cx('requirements-container')}>
-      <FieldLabel>{formatMessage(messages.requirements)}</FieldLabel>
+      <FieldLabel>{formatMessage(commonMessages.requirements)}</FieldLabel>
       {fields.map((item, index) => {
         const fieldData = fields.get(index);
 
