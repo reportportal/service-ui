@@ -62,4 +62,5 @@ export const ClipboardButton = ({ text, className }) => {
 
 ClipboardButton.propTypes = {
   text: PropTypes.string.isRequired,
+  className: PropTypes.string,
 };
