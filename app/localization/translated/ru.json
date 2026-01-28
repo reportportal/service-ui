@@ -512,6 +512,7 @@
   "DashboardTable.description": "Описание",
   "DashboardTable.duplicate": "Дублировать",
   "DashboardTable.edit": "Редактировать",
+  "DashboardTable.lockedDashboardTooltip": "Этот дашборд заблокирован менеджером проекта или администратором и не может быть изменён",
   "DashboardTable.owner": "Владелец",
   "DateRange.customRange": "Настраиваемый диапазон",
   "DateRange.from": "От",

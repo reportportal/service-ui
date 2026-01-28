@@ -45,4 +45,8 @@ export const messages = defineMessages({
     id: 'DashboardTable.copyConfig',
     defaultMessage: 'Copy dashboard configuration to clipboard',
   },
+  lockedDashboardTooltip: {
+    id: 'DashboardTable.lockedDashboardTooltip',
+    defaultMessage: 'This dashboard is locked by a project manager or administrator and cannot be modified',
+  },
 });
