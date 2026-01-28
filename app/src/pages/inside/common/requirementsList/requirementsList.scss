@@ -43,18 +43,10 @@
       }
     }
 
-    .copy-button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-left: 8px;
-      cursor: pointer;
-
-      svg {
-        width: 14px;
-        height: 14px;
-        fill: var(--rp-ui-base-e-300);
-      }
+    .custom-button {
+      margin-top: 0;
+      height: 24px;
+      cursor: auto;
     }
   }
 }

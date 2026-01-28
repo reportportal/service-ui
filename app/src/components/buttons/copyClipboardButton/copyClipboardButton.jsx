@@ -34,7 +34,7 @@ const messages = defineMessages({
   },
 });
 
-export const ClipboardButton = ({ text }) => {
+export const ClipboardButton = ({ text, className }) => {
   const { formatMessage } = useIntl();
   const [isCopy, setIsCopy] = useState(false);
 
@@ -44,7 +44,7 @@ export const ClipboardButton = ({ text }) => {
   };
 
   return (
-    <div className={cx('copy-wrapper')}>
+    <div className={cx('copy-wrapper', className)}>
       {isCopy ? (
         <Tooltip content={formatMessage(messages.copyToClipboard)} placement="top">
           <div className={cx('popover-message')}>{Parser(IconTick)}</div>

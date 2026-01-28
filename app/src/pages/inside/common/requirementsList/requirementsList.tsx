@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { Button, CopyIcon } from '@reportportal/ui-kit';
-
+import { ClipboardButton } from 'components/buttons/copyClipboardButton';
 import { createClassnames, copyToClipboard } from 'common/utils';
 import { Requirement } from 'pages/inside/testCaseLibraryPage/types';
 
@@ -41,14 +40,7 @@ export const RequirementsList = ({ items, isCopyEnabled = false }: RequirementsL
             {processText(item.value)}
           </div>
           {isCopyEnabled && (
-            <Button
-              variant="text"
-              adjustWidthOn="content"
-              className={cx('copy-button')}
-              onClick={() => void handleCopy(item.value)}
-            >
-              <CopyIcon />
-            </Button>
+           <ClipboardButton text={item.value} className={cx('custom-button')}/>
           )}
         </div>
       ))}
