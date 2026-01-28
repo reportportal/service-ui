@@ -62,6 +62,7 @@ const RequirementsList = ({ fields }: WrappedFieldArrayProps<Requirement>) => {
             </div>
             <Button
               variant="ghost"
+              adjustWidthOn="content"
               type="button"
               icon={<CloseIcon />}
               className={cx('delete-button')}

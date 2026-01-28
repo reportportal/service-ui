@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,8 +34,7 @@
     }
 
     .delete-button {
-      min-width: 36px;
-      width: 36px !important;
+      width: 36px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -43,7 +42,6 @@
       i {
         margin: 0;
         padding-bottom: 3px;
-        padding-left: 1px;
 
         svg {
           width: 10px;
