@@ -15,7 +15,7 @@
  */
 
 import { ClipboardButton } from 'components/buttons/copyClipboardButton';
-import { createClassnames, copyToClipboard } from 'common/utils';
+import { createClassnames } from 'common/utils';
 import { Requirement } from 'pages/inside/testCaseLibraryPage/types';
 
 import { processText } from './utils';
@@ -30,7 +30,6 @@ interface RequirementsListProps {
 }
 
 export const RequirementsList = ({ items, isCopyEnabled = false }: RequirementsListProps) => {
-  const handleCopy = (text: string) => copyToClipboard(text);
 
   return (
     <div className={cx('requirements-list')}>
