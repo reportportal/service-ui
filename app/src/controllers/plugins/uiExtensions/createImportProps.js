@@ -53,6 +53,11 @@ import { showModalAction, hideModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils/fetch';
 import { isEmptyObject } from 'common/utils/isEmptyObject';
 import {
+  getSessionItem,
+  setSessionItem,
+  removeSessionItem,
+} from 'common/utils/storageUtils';
+import {
   STATS_PB_TOTAL,
   STATS_AB_TOTAL,
   STATS_ND_TOTAL,
@@ -80,6 +85,7 @@ import {
 import {
   userIdSelector,
   idSelector,
+  userAccountRoleSelector,
   getUserProjectSettingsFromStorage,
   updateUserProjectSettingsInStorage,
   logsSizeSelector,
@@ -99,8 +105,10 @@ import {
   ORGANIZATION_SETTINGS_TAB_PAGE,
   ORGANIZATION_PROJECTS_PAGE,
   urlOrganizationSlugSelector,
+  locationSelector,
 } from 'controllers/pages';
 import { attributesArray, isNotEmptyArray } from 'common/utils/validation/validate';
+import { canDeleteTestItem } from 'common/utils/permissions';
 import {
   requiredField,
   btsUrl,
@@ -222,6 +230,7 @@ import { activeOrganizationSelector } from 'controllers/organization';
 import { AdaptiveIssueList } from 'pages/inside/common/adaptiveIssueList';
 import { withFilter } from 'controllers/filter';
 import { SORTING_KEY, withSortingURL } from 'controllers/sorting';
+import { PAGE_KEY } from 'controllers/pagination';
 import {
   DateRangeFormField,
   formatDisplayedValue,
@@ -367,6 +376,7 @@ export const createImportProps = (pluginName) => ({
     ORGANIZATION_SETTINGS_TAB_PAGE,
     ORGANIZATION_PROJECTS_PAGE,
     SORTING_KEY,
+    PAGE_KEY,
   },
   actions: {
     showModalAction,
@@ -397,6 +407,7 @@ export const createImportProps = (pluginName) => ({
     projectAttributesSelector,
     activeProjectRoleSelector,
     userRolesSelector,
+    userAccountRoleSelector,
     projectInfoLoadingSelector,
     isEmailIntegrationAvailableSelector,
     isAdminSelector,
@@ -412,6 +423,7 @@ export const createImportProps = (pluginName) => ({
     logsSizeSelector,
     analyticsEnabledSelector,
     baseEventParametersSelector,
+    locationSelector,
   },
   icons: {
     PlusIcon,
@@ -446,6 +458,10 @@ export const createImportProps = (pluginName) => ({
     updateUserProjectSettingsInStorage,
     formatMethodType,
     provideEcGA,
+    getSessionItem,
+    setSessionItem,
+    removeSessionItem,
+    canDeleteTestItem,
   },
   validators: {
     attributesArray,

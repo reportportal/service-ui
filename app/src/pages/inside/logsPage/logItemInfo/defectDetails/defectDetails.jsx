@@ -39,6 +39,9 @@ import {
 } from 'controllers/plugins';
 import { DefectTypeItem } from 'pages/inside/common/defectTypeItem';
 import { StatusDropdown } from 'pages/inside/common/statusDropdown';
+import { TestItemStatus } from 'pages/inside/common/testItemStatus';
+import { userIdSelector } from 'controllers/user';
+import { isItemOwner } from 'controllers/testItem';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import CommentIcon from 'common/img/comment-inline.svg';
 import ArrowDownIcon from 'common/img/arrow-down-inline.svg';
@@ -111,13 +114,14 @@ const getUnlinkIssueEventsInfo = (place) => ({
   closeIcon: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
 });
 
-export const DefectDetails = ({ fetchFunc, debugMode, logItem }) => {
+export const DefectDetails = ({ fetchFunc, debugMode, logItem, parentLaunch }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const btsIntegrations = useSelector(availableBtsIntegrationsSelector);
   const isBtsPluginsExist = useSelector(isBtsPluginsExistSelector);
   const enabledBtsPlugins = useSelector(enabledBtsPluginsSelector);
+  const userId = useSelector(userIdSelector);
   const [expanded, setExpanded] = useState(false);
   const { canChangeTestItemStatus, canMakeDecision, canManageBTSIssues } = useUserPermissions();
 
@@ -223,6 +227,9 @@ export const DefectDetails = ({ fetchFunc, debugMode, logItem }) => {
   };
 
   const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
+
+  const isOwner = userId && logItem ? isItemOwner(userId, logItem, parentLaunch) : false;
+  const canChangeStatus = canChangeTestItemStatus || isOwner;
 
   return (
     <div className={cx('details-container')}>
@@ -335,16 +342,19 @@ export const DefectDetails = ({ fetchFunc, debugMode, logItem }) => {
           </>
         )}
         <span className={cx('status-wrapper', 'with-separator')}>
-          <StatusDropdown
-            itemId={logItem.id}
-            status={logItem.status}
-            attributes={logItem.attributes}
-            description={logItem.description}
-            fetchFunc={() => dispatch(fetchHistoryItemsWithLoadingAction())}
-            onChange={onChangeStatus}
-            withIndicator
-            readOnly={!canChangeTestItemStatus}
-          />
+          {canChangeStatus ? (
+            <StatusDropdown
+              itemId={logItem.id}
+              status={logItem.status}
+              attributes={logItem.attributes}
+              description={logItem.description}
+              fetchFunc={() => dispatch(fetchHistoryItemsWithLoadingAction())}
+              onChange={onChangeStatus}
+              withIndicator
+            />
+          ) : (
+            <TestItemStatus status={logItem.status} className={cx('status')} />
+          )}
         </span>
         {isDefectTypeVisible && (
           <span className={cx('defect-item-wrapper', 'with-separator')}>
@@ -392,6 +402,7 @@ DefectDetails.propTypes = {
   fetchFunc: PropTypes.func.isRequired,
   debugMode: PropTypes.bool.isRequired,
   logItem: PropTypes.object,
+  parentLaunch: PropTypes.object,
 };
 
 DefectDetails.defaultProps = {

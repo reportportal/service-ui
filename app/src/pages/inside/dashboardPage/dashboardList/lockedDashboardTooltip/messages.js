@@ -14,21 +14,11 @@
  * limitations under the License.
  */
 
-.time-range-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 8px 12px;
-}
+import { defineMessages } from 'react-intl';
 
-.title {
-  font-family: var(--rp-ui-base-font-family);
-  font-weight: var(--rp-ui-base-fw-medium);
-  font-size: 14px;
-  line-height: 24px;
-}
-
-.date-picker-container {
-  width: 100%;
-  box-sizing: border-box;
-}
+export const messages = defineMessages({
+  lockedDashboardTooltip: {
+    id: 'DashboardList.lockedDashboardTooltip',
+    defaultMessage: 'This dashboard is locked by a project manager or administrator and cannot be modified',
+  },
+});

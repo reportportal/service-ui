@@ -29,7 +29,8 @@ const urlBase = `${DEFAULT_API_URL_PREFIX}/`;
 const urlCommonBase = `${DEFAULT_COMMON_API_URL_PREFIX}/`;
 const uatBase = `${UAT_API_URL_PREFIX}/`;
 const compositeBase = COMPOSITE_API_URL_PREFIX;
-const getQueryParams = (paramsObj) => stringify(paramsObj, { addQueryPrefix: true });
+const getQueryParams = (paramsObj, options = {}) =>
+  stringify(paramsObj, { addQueryPrefix: true, ...options });
 const removeTrailingSlash = (url) => (url.endsWith('/') ? url.slice(0, -1) : url);
 
 export const URLS = {
@@ -41,8 +42,8 @@ export const URLS = {
   createUser: () => `${urlCommonBase}users`,
 
   dashboard: (projectKey, id) => `${urlBase}${projectKey}/dashboard/${id}`,
-  dashboards: (projectKey, params) =>
-    `${urlBase}${projectKey}/dashboard${getQueryParams({ ...params })}`,
+  dashboards: (activeProject, params = {}, queryOptions = {}) =>
+    `${urlBase}${activeProject}/dashboard${getQueryParams(params, queryOptions)}`,
   dashboardConfig: (projectKey, id) => `${urlBase}${projectKey}/dashboard/${id}/config`,
   dashboardPreconfigured: (projectKey) => `${urlBase}${projectKey}/dashboard/preconfigured`,
 

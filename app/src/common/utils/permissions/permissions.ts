@@ -102,6 +102,8 @@ export const canUpdateUserInstanceRole = checkPermission(ACTIONS.UPDATE_USER_INS
 export const canExportOrganizations = checkPermission(ACTIONS.EXPORT_ORGANIZATIONS);
 export const canSeeActivityOption = checkPermission(ACTIONS.ACTIVITY_OPTION);
 export const canSeeInstanceLevelPluginsPages = checkPermission(ACTIONS.INSTANCE_LEVEL_PLUGIN_PAGES);
+export const canLockDashboard = checkPermission(ACTIONS.LOCK_DASHBOARD);
+
 // MANUAL LAUNCHES
 export const canCreateManualLaunch = checkPermission(ACTIONS.CREATE_MANUAL_LAUNCH);
 // TEST CASE

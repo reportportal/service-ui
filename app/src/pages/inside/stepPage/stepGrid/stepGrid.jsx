@@ -19,9 +19,10 @@ import { useTracking } from 'react-tracking';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
+import { useSelector } from 'react-redux';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { groupItemsByParent } from 'controllers/testItem';
+import { groupItemsByParent, isItemOwner } from 'controllers/testItem';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { formatMethodType } from 'common/utils/localizationUtils';
 import { FAILED } from 'common/constants/testStatuses';
@@ -37,6 +38,7 @@ import { NoItemMessage } from 'components/main/noItemMessage';
 import { formatAttribute } from 'common/utils/attributeUtils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { StatusDropdown } from 'pages/inside/common/statusDropdown/statusDropdown';
+import { userIdSelector } from 'controllers/user';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
 import { DefectType } from './defectType';
 import { GroupHeader } from './groupHeader';
@@ -86,12 +88,17 @@ NameColumn.defaultProps = {
 const StatusColumn = ({
   className,
   value,
-  customProps: { viewOnly, onChange, fetchFunc, readOnly },
+  customProps: { viewOnly, onChange, fetchFunc, readOnly, parentLaunch },
 }) => {
   const { id, status, attributes, description } = value;
+  const userId = useSelector(userIdSelector);
+  const isOwner = userId && value ? isItemOwner(userId, value, parentLaunch) : false;
+  const { canChangeStatus } = useUserPermissions();
+  const canChange = canChangeStatus || isOwner;
+
   return (
     <div className={cx('status-col', className)}>
-      {viewOnly ? (
+      {viewOnly || !canChange ? (
         <span className={cx('status-value')}>{status.toLowerCase()}</span>
       ) : (
         <StatusDropdown
@@ -116,6 +123,8 @@ StatusColumn.propTypes = {
     fetchFunc: PropTypes.func,
     readOnly: PropTypes.bool,
     viewOnly: PropTypes.bool,
+    userId: PropTypes.string,
+    parentLaunch: PropTypes.object,
   }).isRequired,
 };
 StatusColumn.defaultProps = {
@@ -302,6 +311,8 @@ export const StepGrid = ({
           fetchFunc: onStatusUpdate,
           readOnly: !canWorkWithTests,
           viewOnly: isTestSearchView,
+          userId: userId,
+          parentLaunch: parentLaunch,
         },
         withFilter: !isTestSearchView,
         filterEventInfo: events.STATUS_FILTER,

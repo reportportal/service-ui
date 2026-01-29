@@ -506,6 +506,7 @@
   "DashboardItemPage.editDashboard": "Editar",
   "DashboardItemPage.fullscreen": "Modo pantalla completa",
   "DashboardItemPage.notMyDashboardEmptyHeader": "No widgets yet",
+  "DashboardList.lockedDashboardTooltip": "This dashboard is locked by a project manager or administrator and cannot be modified",
   "DashboardPage.addDashboardSuccess": "Dashboard has been created successfully.",
   "DashboardPage.addPreconfigDashboardError": "Dashboard can't be created. Please check the pasted configuration.",
   "DashboardPage.dashboardExists": "Dashboard with the same name ''{name}'' already exists on the project",
