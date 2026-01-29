@@ -17,32 +17,8 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  dashboardName: {
-    id: 'DashboardTable.dashboardName',
-    defaultMessage: 'Dashboard Name',
-  },
-  description: {
-    id: 'DashboardTable.description',
-    defaultMessage: 'Description',
-  },
-  owner: {
-    id: 'DashboardTable.owner',
-    defaultMessage: 'Owner',
-  },
-  duplicate: {
-    id: 'DashboardTable.duplicate',
-    defaultMessage: 'Duplicate',
-  },
-  edit: {
-    id: 'DashboardTable.edit',
-    defaultMessage: 'Edit',
-  },
-  deleteDashboard: {
-    id: 'DashboardTable.deleteDashboard',
-    defaultMessage: 'Delete',
-  },
-  copyConfig: {
-    id: 'DashboardTable.copyConfig',
-    defaultMessage: 'Copy dashboard configuration to clipboard',
+  lockedDashboardTooltip: {
+    id: 'DashboardList.lockedDashboardTooltip',
+    defaultMessage: 'This dashboard is locked by a project manager or administrator and cannot be modified',
   },
 });
