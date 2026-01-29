@@ -93,8 +93,8 @@ const StatusColumn = ({
   const { id, status, attributes, description } = value;
   const userId = useSelector(userIdSelector);
   const isOwner = userId && value ? isItemOwner(userId, value, parentLaunch) : false;
-  const { canChangeStatus } = useUserPermissions();
-  const canChange = canChangeStatus || isOwner;
+  const { canChangeTestItemStatus } = useUserPermissions();
+  const canChange = canChangeTestItemStatus || isOwner;
 
   return (
     <div className={cx('status-col', className)}>
