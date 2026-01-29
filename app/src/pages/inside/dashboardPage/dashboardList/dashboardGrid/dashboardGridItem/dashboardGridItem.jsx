@@ -75,16 +75,18 @@ export const DashboardGridItem = ({ item, onEdit, onDelete, nameEventInfo }) => 
           <p>{description}</p>
         </div>
         <div className={cx('grid-cell', 'owner')}>{owner}</div>
-        {!isDisabled && (
-          <>
-            <div className={cx('grid-cell', 'edit')}>
-              <Icon type="icon-pencil" onClick={editItem} />
-            </div>
-            <div className={cx('grid-cell', 'delete')}>
-              <Icon type="icon-close" onClick={deleteItem} />
-            </div>
-          </>
-        )}
+        <>
+          <div className={cx('grid-cell', 'edit')}>
+            <LockedDashboardTooltip locked={locked}>
+              <Icon type="icon-pencil" onClick={editItem} disabled={isDisabled} />
+            </LockedDashboardTooltip>
+          </div>
+          <div className={cx('grid-cell', 'delete')}>
+            <LockedDashboardTooltip locked={locked}>
+              <Icon type="icon-close" onClick={deleteItem} disabled={isDisabled} />
+            </LockedDashboardTooltip>
+          </div>
+        </>
       </NavLink>
     </div>
   );

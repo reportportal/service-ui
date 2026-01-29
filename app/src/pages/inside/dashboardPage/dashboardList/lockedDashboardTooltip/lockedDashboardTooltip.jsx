@@ -31,12 +31,15 @@ export const LockedDashboardTooltip = ({ children, locked }) => {
 
   if (!locked || canLock) return children;
 
+  const portalRoot = typeof document !== 'undefined' ? document.getElementById('tooltip-root') : null;
+
   return (
     <Tooltip
       content={formatMessage(messages.lockedDashboardTooltip)}
       wrapperClassName={cx('locked-tooltip-wrapper')}
       tooltipClassName={cx('locked-tooltip')}
       contentClassName={cx('locked-tooltip-content')}
+      portalRoot={portalRoot}
     >
       {children}
     </Tooltip>
