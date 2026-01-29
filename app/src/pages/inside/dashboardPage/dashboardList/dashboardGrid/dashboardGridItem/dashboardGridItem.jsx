@@ -77,11 +77,11 @@ export const DashboardGridItem = ({ item, onEdit, onDelete, nameEventInfo }) => 
         <div className={cx('grid-cell', 'owner')}>{owner}</div>
         {!isDisabled && (
           <>
-            <div className={cx('grid-cell', 'edit')} onClick={editItem}>
-              <Icon type="icon-pencil" />
+            <div className={cx('grid-cell', 'edit')}>
+              <Icon type="icon-pencil" onClick={editItem} />
             </div>
-            <div className={cx('grid-cell', 'delete')} onClick={deleteItem}>
-              <Icon type="icon-close" />
+            <div className={cx('grid-cell', 'delete')}>
+              <Icon type="icon-close" onClick={deleteItem} />
             </div>
           </>
         )}
