@@ -14,95 +14,92 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
-import track from 'react-tracking';
+import React from 'react';
+import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
+import Parser from 'html-react-parser';
 import { getDashboardItemPageLinkSelector } from 'controllers/dashboard/selectors';
 import { Icon } from 'components/main/icon';
 import { NavLink } from 'components/main/navLink';
+import IconLocked from 'common/img/locked-inline.svg';
+import { LockedDashboardTooltip } from '../../lockedDashboardTooltip';
+import { useCanLockDashboard } from '../../hooks';
 import styles from './dashboardGridItem.scss';
 
 const cx = classNames.bind(styles);
 
-@connect((state) => ({
-  getDashboardItemPageLink: getDashboardItemPageLinkSelector(state),
-}))
-@track()
-export class DashboardGridItem extends Component {
-  static calculateGridPreviewBaseOnWidgetId(id) {
-    return id % 14;
-  }
+const calculateGridPreviewBaseOnWidgetId = (id) => id % 14;
 
-  static propTypes = {
-    item: PropTypes.object,
-    onEdit: PropTypes.func,
-    onDelete: PropTypes.func,
-    nameEventInfo: PropTypes.object,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
-    getDashboardItemPageLink: PropTypes.func.isRequired,
-  };
+export const DashboardGridItem = ({ item, onEdit, onDelete, nameEventInfo }) => {
+  const { trackEvent } = useTracking();
+  const getDashboardItemPageLink = useSelector(getDashboardItemPageLinkSelector);
+  const canLock = useCanLockDashboard();
+  const { name, description, owner, id, locked } = item;
+  const isDisabled = locked && !canLock;
 
-  static defaultProps = {
-    item: {},
-    onEdit: () => {},
-    onDelete: () => {},
-    nameEventInfo: {},
-  };
-
-  editItem = (e) => {
+  const editItem = (e) => {
     e.preventDefault();
-
-    const { item, onEdit } = this.props;
-
     onEdit(item);
   };
 
-  deleteItem = (e) => {
+  const deleteItem = (e) => {
     e.preventDefault();
-
-    const { item, onDelete } = this.props;
-
     onDelete(item);
   };
 
-  render() {
-    const { item, getDashboardItemPageLink } = this.props;
-    const { name, description, owner, id } = item;
-
-    return (
-      <div className={cx('grid-view')}>
-        <NavLink
-          to={getDashboardItemPageLink(id)}
-          className={cx('grid-view-inner')}
-          onClick={() => this.props.tracking.trackEvent(this.props.nameEventInfo)}
+  return (
+    <div className={cx('grid-view')}>
+      <NavLink
+        to={getDashboardItemPageLink(id)}
+        className={cx('grid-view-inner')}
+        onClick={() => trackEvent(nameEventInfo)}
+      >
+        <div className={cx('grid-cell', 'name')}>
+          {locked && (
+            <LockedDashboardTooltip locked={locked}>
+              <div className={cx('locked-icon')}>{Parser(IconLocked)}</div>
+            </LockedDashboardTooltip>
+          )}
+          <h3 className={cx('dashboard-link')}>{name}</h3>
+        </div>
+        <div
+          className={cx(
+            'grid-cell',
+            'description',
+            'preview',
+            `preview-${calculateGridPreviewBaseOnWidgetId(id)}`,
+          )}
         >
-          <div className={cx('grid-cell', 'name')}>
-            <h3 className={cx('dashboard-link')}>{name}</h3>
-          </div>
-          <div
-            className={cx(
-              'grid-cell',
-              'description',
-              'preview',
-              `preview-${DashboardGridItem.calculateGridPreviewBaseOnWidgetId(id)}`,
-            )}
-          >
-            <p>{description}</p>
-          </div>
-          <div className={cx('grid-cell', 'owner')}>{owner}</div>
-          <div className={cx('grid-cell', 'edit')} onClick={this.editItem}>
-            <Icon type="icon-pencil" />
-          </div>
-          <div className={cx('grid-cell', 'delete')} onClick={this.deleteItem}>
-            <Icon type="icon-close" />
-          </div>
-        </NavLink>
-      </div>
-    );
-  }
-}
+          <p>{description}</p>
+        </div>
+        <div className={cx('grid-cell', 'owner')}>{owner}</div>
+        {!isDisabled && (
+          <>
+            <div className={cx('grid-cell', 'edit')} onClick={editItem}>
+              <Icon type="icon-pencil" />
+            </div>
+            <div className={cx('grid-cell', 'delete')} onClick={deleteItem}>
+              <Icon type="icon-close" />
+            </div>
+          </>
+        )}
+      </NavLink>
+    </div>
+  );
+};
+
+DashboardGridItem.propTypes = {
+  item: PropTypes.object,
+  onEdit: PropTypes.func,
+  onDelete: PropTypes.func,
+  nameEventInfo: PropTypes.object,
+};
+
+DashboardGridItem.defaultProps = {
+  item: {},
+  onEdit: () => {},
+  onDelete: () => {},
+  nameEventInfo: {},
+};

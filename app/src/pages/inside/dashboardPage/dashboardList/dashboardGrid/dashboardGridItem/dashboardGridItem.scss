@@ -31,14 +31,24 @@
     width: 100%;
   }
 
+  .locked-icon {
+    width: 12px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+
   .name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 70px 0 13px;
+    border-bottom: 1px solid $COLOR--gray-91;
+    background: $COLOR--white;
+
     h3 {
       letter-spacing: 1px;
       line-height: 47px;
-      padding: 0 70px 0 13px;
       font-size: 15px;
-      border-bottom: 1px solid $COLOR--gray-91;
-      background: $COLOR--white;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;

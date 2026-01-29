@@ -18,7 +18,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
-import { Tooltip } from '@reportportal/ui-kit';
 import { Icon } from 'components/main/icon';
 import { NavLink } from 'components/main/navLink';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
@@ -31,37 +30,12 @@ import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import { showDefaultErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { fetch } from 'common/utils';
+import { LockedDashboardTooltip } from '../lockedDashboardTooltip';
+import { useCanLockDashboard } from '../hooks';
 import styles from './dashboardTable.scss';
 import { messages } from './messages';
-import { useCanLockDashboard } from './hooks';
 
 const cx = classNames.bind(styles);
-
-const LockedDashboardTooltip = ({ children, locked }) => {
-  const { formatMessage } = useIntl();
-  const canLock = useCanLockDashboard();
-
-  if (!locked || canLock) return children;
-
-  return (
-    <Tooltip
-      content={formatMessage(messages.lockedDashboardTooltip)}
-      wrapperClassName={cx('locked-tooltip-wrapper')}
-      tooltipClassName={cx('locked-tooltip')}
-      contentClassName={cx('locked-tooltip-content')}
-    >
-      {children}
-    </Tooltip>
-  );
-};
-LockedDashboardTooltip.propTypes = {
-  children: PropTypes.node,
-  locked: PropTypes.bool,
-};
-LockedDashboardTooltip.defaultProps = {
-  children: null,
-  locked: false,
-};
 
 export const NameColumn = ({ value, customProps: { getLink }, className }) => {
   const { trackEvent } = useTracking();
