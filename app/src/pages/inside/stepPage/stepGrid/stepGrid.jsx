@@ -123,7 +123,6 @@ StatusColumn.propTypes = {
     fetchFunc: PropTypes.func,
     readOnly: PropTypes.bool,
     viewOnly: PropTypes.bool,
-    userId: PropTypes.string,
     parentLaunch: PropTypes.object,
   }).isRequired,
 };
@@ -227,6 +226,7 @@ export const StepGrid = ({
   modifyColumnsFunc,
   isTestSearchView,
   errorMessage,
+  parentLaunch,
 }) => {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
@@ -311,8 +311,7 @@ export const StepGrid = ({
           fetchFunc: onStatusUpdate,
           readOnly: !canWorkWithTests,
           viewOnly: isTestSearchView,
-          userId: userId,
-          parentLaunch: parentLaunch,
+          parentLaunch,
         },
         withFilter: !isTestSearchView,
         filterEventInfo: events.STATUS_FILTER,
@@ -428,6 +427,7 @@ StepGrid.propTypes = {
   modifyColumnsFunc: PropTypes.func,
   isTestSearchView: PropTypes.bool,
   errorMessage: PropTypes.string,
+  parentLaunch: PropTypes.object,
 };
 
 StepGrid.defaultProps = {
@@ -454,4 +454,5 @@ StepGrid.defaultProps = {
   modifyColumnsFunc: null,
   isTestSearchView: false,
   errorMessage: null,
+  parentLaunch: {},
 };

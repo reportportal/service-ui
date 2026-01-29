@@ -180,7 +180,7 @@ export const DuplicateColumn = ({ value, customProps, className }) => {
             <div className={cx('duplicate-menu', 'shown')}>
               {canWorkWithDashboard && (
                 <button type="button" className={cx('dropdown-item')} onClick={handleDuplicate}>
-                  {intl.formatMessage(messages.duplicate)}
+                  {formatMessage(messages.duplicate)}
                 </button>
               )}
               <button type="button" className={cx('dropdown-item')} onClick={handleCopyConfig}>

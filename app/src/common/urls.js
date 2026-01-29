@@ -42,8 +42,8 @@ export const URLS = {
   createUser: () => `${urlCommonBase}users`,
 
   dashboard: (projectKey, id) => `${urlBase}${projectKey}/dashboard/${id}`,
-  dashboards: (activeProject, params = {}, queryOptions = {}) =>
-    `${urlBase}${activeProject}/dashboard${getQueryParams(params, queryOptions)}`,
+  dashboards: (projectKey, params = {}, queryOptions = {}) =>
+    `${urlBase}${projectKey}/dashboard${getQueryParams(params, queryOptions)}`,
   dashboardConfig: (projectKey, id) => `${urlBase}${projectKey}/dashboard/${id}/config`,
   dashboardPreconfigured: (projectKey) => `${urlBase}${projectKey}/dashboard/preconfigured`,
 
