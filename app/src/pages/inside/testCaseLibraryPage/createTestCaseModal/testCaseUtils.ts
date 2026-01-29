@@ -23,7 +23,9 @@ import { NewFolderData, isNewFolderData } from '../utils/getFolderFromFormValues
 export const buildManualScenario = (payload: CreateTestCaseFormData): ManualScenarioDto => {
   const commonData = {
     executionEstimationTime: payload.executionEstimationTime,
-    linkToRequirements: payload.linkToRequirements,
+    requirements: payload.requirements
+      ? payload.requirements.filter((req) => req.value?.trim())
+      : [],
     manualScenarioType: payload.manualScenarioType,
     preconditions: {
       value: payload.precondition,

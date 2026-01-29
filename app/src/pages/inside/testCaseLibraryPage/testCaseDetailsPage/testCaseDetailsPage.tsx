@@ -27,22 +27,23 @@ import { SettingsLayout } from 'layouts/settingsLayout';
 import { CollapsibleSectionWithHeaderControl } from 'components/collapsibleSection';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
+import { RequirementsList } from 'pages/inside/common/requirementsList/requirementsList';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { testCaseDetailsSelector } from 'controllers/testCase';
 import { commonMessages } from 'pages/inside/common/common-messages';
 
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
-import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
 import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { useDescriptionModal } from './descriptionModal';
 import { messages } from './messages';
+import { Requirement } from '../types';
 
 import styles from './testCaseDetailsPage.scss';
 
 const cx = createClassnames(styles);
 
-const COLLAPSIBLE_SECTIONS_CONFIG = ({
+const SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG = ({
   canEditTestCaseTag,
   canEditTestCaseDescription,
   tags,
@@ -87,6 +88,22 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
         >
           {isEmpty(testCaseDescription) && headerControlKeys.ADD}
         </Button>
+      ),
+    },
+  ] as const;
+};
+
+const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
+  requirements,
+}: {
+  requirements: Requirement[];
+}) => {
+  return [
+    {
+      titleKey: 'requirements',
+      defaultMessage: commonMessages.requirementsAreNotSpecified,
+      childComponent: isEmpty(requirements) ? null : (
+        <RequirementsList items={requirements} isCopyEnabled />
       ),
     },
   ] as const;
@@ -138,7 +155,7 @@ export const TestCaseDetailsPage = () => {
             onMenuAction={noop}
           />
           <div className={cx('page__sidebar')}>
-            {COLLAPSIBLE_SECTIONS_CONFIG({
+            {SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG({
               handleAddTags,
               handleDescriptionModal,
               headerControlKeys: { ADD: formatMessage(COMMON_LOCALE_KEYS.ADD) },
@@ -159,7 +176,17 @@ export const TestCaseDetailsPage = () => {
           </div>
           <div className={cx('page__main-content')}>
             <ScrollWrapper>
-              <DetailsEmptyState />
+              {MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG({
+                requirements: testCaseDetails.manualScenario?.requirements || [],
+              }).map(({ titleKey, defaultMessage, childComponent }) => (
+                <CollapsibleSectionWithHeaderControl
+                  key={titleKey}
+                  title={formatMessage(commonMessages[titleKey])}
+                  defaultMessage={formatMessage(defaultMessage)}
+                >
+                  {childComponent}
+                </CollapsibleSectionWithHeaderControl>
+              ))}
             </ScrollWrapper>
           </div>
         </div>

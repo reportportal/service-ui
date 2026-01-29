@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,40 @@
  * limitations under the License.
  */
 
-.template {
+.requirements-container {
   display: flex;
-  column-gap: 16px;
+  flex-direction: column;
 
-  span {
+  .requirement-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     width: 100%;
-  }
+    margin-bottom: 8px;
 
-  &__dropdown {
-    max-width: 300px;
+    .input-container {
+      flex-grow: 1;
 
-    span {
-      width: auto;
+      span {
+        overflow: hidden;
+      }
     }
-  }
 
-  &__execution-time {
-    min-width: 115px; 
+    .delete-button {
+      width: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      i {
+        margin: 0;
+        padding-bottom: 3px;
+
+        svg {
+          width: 10px;
+          height: 10px;
+        }
+      }
+    }
   }
 }
