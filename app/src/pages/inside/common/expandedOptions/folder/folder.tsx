@@ -16,7 +16,8 @@
 
 import { useState, useCallback, MouseEvent as ReactMouseEvent, useEffect } from 'react';
 import { isEmpty } from 'es-toolkit/compat';
-import { ChevronDownDropdownIcon, MeatballMenuIcon } from '@reportportal/ui-kit';
+import { ChevronDownDropdownIcon, MeatballMenuIcon, DragNDropIcon } from '@reportportal/ui-kit';
+import { TreeSortableItem } from '@reportportal/ui-kit/sortable';
 
 import { createClassnames } from 'common/utils';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
@@ -29,6 +30,8 @@ import styles from './folder.scss';
 
 const cx = createClassnames(styles);
 
+const FOLDER_DRAG_TYPE = 'TEST_CASE_FOLDER';
+
 interface FolderProps {
   folder: TransformedFolder;
   activeFolder: number | null;
@@ -37,6 +40,10 @@ interface FolderProps {
   setAllTestCases: () => void;
   onFolderClick: (id: number) => void;
   onToggleFolder: (folder: TransformedFolder) => void;
+  index: number;
+  parentId?: number | null;
+  enableDragAndDrop?: boolean;
+  canDropOn?: (draggedItem: { id: string | number }, targetId: string | number) => boolean;
 }
 
 export const Folder = ({
@@ -47,11 +54,16 @@ export const Folder = ({
   onFolderClick,
   setAllTestCases,
   onToggleFolder,
+  index,
+  parentId = null,
+  enableDragAndDrop = false,
+  canDropOn,
 }: FolderProps) => {
   const isOpen = expandedIds.includes(folder.id);
   const [areToolsShown, setAreToolsShown] = useState(false);
   const [areToolsOpen, setAreToolsOpen] = useState(false);
   const [isBlockHovered, setIsBlockHovered] = useState(false);
+  const [showDragIcon, setShowDragIcon] = useState(false);
   const tooltipItems = useFolderTooltipItems({
     folder,
     activeFolder,
@@ -80,10 +92,14 @@ export const Folder = ({
     [folder.id, onFolderClick],
   );
 
-  return (
+  const renderFolderContent = (
+    isDraggingFolder: boolean,
+    dragHandleRef?: (node: HTMLElement | null) => void,
+  ) => (
     <li
       className={cx('folders-tree__item', {
         'folders-tree__item--open': isOpen,
+        'folders-tree__item--dragging': isDraggingFolder,
       })}
       role="treeitem"
       aria-expanded={isOpen}
@@ -98,47 +114,70 @@ export const Folder = ({
           onClick={handleFolderTitleClick}
           onFocus={() => setIsBlockHovered(true)}
           onBlur={() => setIsBlockHovered(false)}
-          onMouseEnter={() => setIsBlockHovered(true)}
-          onMouseLeave={() => setIsBlockHovered(false)}
+          onMouseEnter={() => {
+            setIsBlockHovered(true);
+            setShowDragIcon(true);
+          }}
+          onMouseLeave={() => {
+            setIsBlockHovered(false);
+            setShowDragIcon(false);
+          }}
         >
           <span className={cx('folders-tree__item-title--text')} title={folder.name}>
             {folder.name}
           </span>
-          {!isEmpty(tooltipItems) && (
-            <button
-              className={cx('folders-tree__tools', {
-                'folders-tree__tools--shown': areToolsShown,
-              })}
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
+          <div className={cx('folders-tree__item-actions')}>
+            {!isEmpty(tooltipItems) && (
+              <button
+                className={cx('folders-tree__tools', {
+                  'folders-tree__tools--shown': areToolsShown,
+                })}
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
 
-                setAreToolsOpen(true);
-              }}
-            >
-              <PopoverControl
-                items={tooltipItems}
-                isOpened={areToolsOpen}
-                setIsOpened={setAreToolsOpen}
-                placement="bottom-end"
+                  setAreToolsOpen(true);
+                }}
               >
-                <div
-                  className={cx('folders-tree__meatball', {
-                    'folders-tree__meatball--active': areToolsOpen,
-                  })}
+                <PopoverControl
+                  items={tooltipItems}
+                  isOpened={areToolsOpen}
+                  setIsOpened={setAreToolsOpen}
+                  placement="bottom-end"
                 >
-                  <MeatballMenuIcon />
-                </div>
-              </PopoverControl>
-            </button>
-          )}
-          <span className={cx('folders-tree__item-title--counter')}>{folder.testsCount || 0}</span>
+                  <div
+                    className={cx('folders-tree__meatball', {
+                      'folders-tree__meatball--active': areToolsOpen,
+                    })}
+                  >
+                    <MeatballMenuIcon />
+                  </div>
+                </PopoverControl>
+              </button>
+            )}
+            {enableDragAndDrop && (showDragIcon || isDraggingFolder) ? (
+              <div
+                ref={dragHandleRef}
+                className={cx('folders-tree__drag-handle')}
+                role="button"
+                aria-label="Drag to reorder"
+                tabIndex={0}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <DragNDropIcon />
+              </div>
+            ) : (
+              <span className={cx('folders-tree__item-title--counter')}>
+                {folder.testsCount || 0}
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
       {isOpen && !isEmpty(folder.folders) && (
         <ul className={cx('folders-tree', 'folders-tree--inner')} role="group">
-          {folder.folders?.map((subfolder) => (
+          {folder.folders?.map((subfolder: TransformedFolder, idx: number) => (
             <Folder
               folder={subfolder}
               key={subfolder.id}
@@ -148,10 +187,36 @@ export const Folder = ({
               onFolderClick={onFolderClick}
               setAllTestCases={setAllTestCases}
               onToggleFolder={onToggleFolder}
+              index={idx}
+              parentId={folder.id}
+              enableDragAndDrop={enableDragAndDrop}
+              canDropOn={canDropOn}
             />
           ))}
         </ul>
       )}
     </li>
+  );
+
+  return enableDragAndDrop ? (
+    <TreeSortableItem
+      id={folder.id}
+      index={index}
+      parentId={parentId}
+      type={FOLDER_DRAG_TYPE}
+      hideDefaultPreview
+      className={cx('tree-sortable-wrapper')}
+      canDropOn={canDropOn}
+    >
+      {({
+        isDragging: isDraggingFolder,
+        dragRef: dragHandleRef,
+      }: {
+        isDragging: boolean;
+        dragRef: (node: HTMLElement | null) => void;
+      }) => renderFolderContent(isDraggingFolder, dragHandleRef)}
+    </TreeSortableItem>
+  ) : (
+    renderFolderContent(false)
   );
 };

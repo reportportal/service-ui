@@ -58,7 +58,60 @@
   }
 
   &__sidebar-folders {
+    position: relative;
     padding: 0 24px 20px;
+    margin: 0;
+    border: 2px dashed transparent;
+    border-radius: 4px;
+    transition:
+      border-color 0.2s ease,
+      margin 0.2s ease,
+      padding 0.2s ease;
+
+    &--dragging {
+      margin: 5px 4px;
+      padding: 1px 1px 2px 2px;
+      border-color: var(--rp-ui-color-primary-focused);
+
+      &:has(.expanded-options__drop-placeholder) {
+        border-color: #a2aab5;
+      }
+    }
+
+    // Keep border visible when confirmation popup is showing (pending state)
+    &:has([class*='tree-sortable-item--pending']) {
+      margin: 5px 4px;
+      padding: 1px 1px 2px 2px;
+      border: 2px dashed var(--rp-ui-color-primary-focused);
+    }
+  }
+
+  &__drop-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #eceff4;
+    opacity: 0.9;
+    z-index: 10;
+    pointer-events: none;
+
+    ~ .folders-tree {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
+
+  &__drop-placeholder-text {
+    font-size: 13px;
+    font-family: $FONT-ROBOTO-MEDIUM;
+    font-weight: 500;
+    color: var(--rp-ui-base-almost-black);
+    text-align: center;
   }
 
   &__sidebar-folders-wrapper {
@@ -149,5 +202,41 @@
   &__text {
     font-size: 14px;
     font-style: italic;
+  }
+}
+
+.folder-drag-preview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 320px;
+  height: 44px;
+  padding: 0 16px;
+  gap: 4px;
+  background-color: var(--rp-ui-base-bg-100);
+  border: 1px solid var(--rp-ui-base-e-200);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  opacity: 0.93;
+  cursor: grabbing;
+
+  span {
+    font-size: 13px;
+    font-family: $FONT-ROBOTO-MEDIUM;
+    font-weight: 500;
+    color: var(--rp-ui-base-almost-black);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  svg path {
+    fill: var(--rp-ui-base-e-300);
   }
 }

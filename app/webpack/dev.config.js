@@ -34,7 +34,7 @@ module.exports = () => {
       rules: [
         {
           test: /\.css$/,
-          include: /node_modules/,
+          //  include: [/node_modules/, /ui-kit/],
           use: [
             // see https://github.com/webpack-contrib/css-loader?tab=readme-ov-file#recommend
             'style-loader',

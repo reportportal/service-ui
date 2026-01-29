@@ -19,6 +19,8 @@ import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { noop } from 'es-toolkit/compat';
 import { Button, PlusIcon } from '@reportportal/ui-kit';
+import type { TreeDragItem, TreeDropPosition } from '@reportportal/ui-kit/common';
+import { TREE_DROP_POSITIONS } from '@reportportal/ui-kit/common';
 
 import { createClassnames, getStorageItem } from 'common/utils';
 import {
@@ -54,6 +56,8 @@ import { commonMessages } from '../commonMessages';
 import { useCreateFolderModal } from './modals/createFolderModal';
 import { AllTestCasesPage } from '../allTestCasesPage';
 import { useNavigateToFolder } from '../hooks/useNavigateToFolder';
+import { useMoveFolder } from './modals/moveFolderModal/useMoveFolder';
+import { useDuplicateFolder } from './modals/duplicateFolderModal/useDuplicateFolder';
 
 import styles from './testCaseFolders.scss';
 
@@ -65,6 +69,8 @@ export const TestCaseFolders = () => {
   const { openModal: openCreateFolderModal } = useCreateFolderModal();
   const { navigateToFolder } = useNavigateToFolder();
   const urlFolderId = useSelector(urlFolderIdSelector);
+  const { moveFolder } = useMoveFolder();
+  const { duplicateFolder } = useDuplicateFolder();
   const isLoadingTestCases = useSelector(isLoadingTestCasesSelector);
   const testCases = useSelector(testCasesSelector);
   const testCasesPageData = useSelector(testCasesPageSelector);
@@ -148,6 +154,58 @@ export const TestCaseFolders = () => {
       </Button>
     ) : null;
 
+  const handleMoveFolder = useCallback(
+    (draggedItem: TreeDragItem, targetId: string | number, position: TreeDropPosition) => {
+      const draggedFolderId = Number(draggedItem.id);
+      const targetFolderId = Number(targetId);
+
+      // Determine the parent folder based on drop position
+      let parentTestFolderId: number | undefined;
+
+      if (position === TREE_DROP_POSITIONS.INSIDE) {
+        // Dropped inside target folder
+        parentTestFolderId = targetFolderId;
+      } else {
+        // Dropped before/after target folder - use target's parent
+        parentTestFolderId = draggedItem.parentId ? Number(draggedItem.parentId) : undefined;
+      }
+
+      void moveFolder({
+        folderId: draggedFolderId,
+        parentTestFolderId,
+      });
+    },
+    [moveFolder],
+  );
+
+  const handleDuplicateFolder = useCallback(
+    (draggedItem: TreeDragItem, targetId: string | number, position: TreeDropPosition) => {
+      const draggedFolderId = Number(draggedItem.id);
+      const targetFolderId = Number(targetId);
+      const draggedFolderData = initialFolders.find((f) => f.id === draggedFolderId);
+
+      if (!draggedFolderData) return;
+
+      // Determine the parent folder based on drop position
+      let parentFolderId: number | undefined;
+
+      if (position === TREE_DROP_POSITIONS.INSIDE) {
+        // Dropped inside target folder
+        parentFolderId = targetFolderId;
+      } else {
+        // Dropped before/after target folder - use target's parent
+        parentFolderId = draggedItem.parentId ? Number(draggedItem.parentId) : undefined;
+      }
+
+      void duplicateFolder({
+        folderId: draggedFolderId,
+        folderName: `${draggedFolderData.name} (Copy)`,
+        parentFolderId,
+      });
+    },
+    [duplicateFolder, initialFolders],
+  );
+
   return (
     <ExpandedOptions
       activeFolderId={urlFolderIdNumber || null}
@@ -156,6 +214,8 @@ export const TestCaseFolders = () => {
       setAllTestCases={navigateToAllTestCases}
       onFolderClick={handleFolderClick}
       renderCreateFolderButton={renderCreateFolderButton}
+      onMoveFolder={handleMoveFolder}
+      onDuplicateFolder={handleDuplicateFolder}
     >
       <AllTestCasesPage
         testCases={testCases}
