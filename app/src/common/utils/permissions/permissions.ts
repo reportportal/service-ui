@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,36 +15,8 @@
  */
 
 import { PERMISSIONS_MAP, ACTIONS } from 'common/constants/permissions';
-import { ADMINISTRATOR } from 'common/constants/accountRoles';
-import { MANAGER } from 'common/constants/projectRoles';
-import { UserRoles, OrganizationRoles, ProjectRoles, PermissionsMap } from '../../../types/roles';
 
-export const createCheckPermission =
-  (permissionMap: PermissionsMap) =>
-  (permission: string) =>
-  ({
-    userRole,
-    organizationRole,
-    projectRole,
-  }: {
-    userRole: UserRoles;
-    organizationRole: OrganizationRoles;
-    projectRole: ProjectRoles;
-  }) => {
-    if (userRole === ADMINISTRATOR) {
-      return true;
-    }
-
-    if (organizationRole === MANAGER) {
-      return !!permissionMap[organizationRole][permission];
-    }
-
-    if (permissionMap[organizationRole]?.[projectRole]) {
-      return !!permissionMap[organizationRole][projectRole][permission];
-    }
-
-    return false;
-  };
+import { createCheckPermission } from './createCheckPermissions';
 
 const checkPermission = createCheckPermission(PERMISSIONS_MAP);
 
