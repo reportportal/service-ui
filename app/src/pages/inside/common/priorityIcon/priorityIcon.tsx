@@ -45,6 +45,8 @@ const iconMap = {
   unspecified: <PriorityUnspecifiedIcon />,
 } as const;
 
-export const PriorityIcon = ({ priority, className }: PriorityIconProps) => (
-  <div className={cx('priority-icon', className)}>{iconMap[priority.toLowerCase()]}</div>
-);
+export const PriorityIcon = ({ priority, className }: PriorityIconProps) => {
+  const icon = iconMap[priority?.toLowerCase() as TestCasePriority] || iconMap.unspecified;
+
+  return <div className={cx('priority-icon', className)}>{icon}</div>;
+};
