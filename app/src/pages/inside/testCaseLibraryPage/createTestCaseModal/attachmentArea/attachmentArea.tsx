@@ -43,6 +43,8 @@ import styles from './attachmentArea.scss';
 
 const cx = createClassnames(styles);
 
+const MIN_STEPS_FOR_REORDERING_CONTROLS = 2;
+
 interface AttachmentAreaProps {
   formName?: string;
   isDraggable?: boolean;
@@ -111,7 +113,7 @@ export const AttachmentArea = ({
             <div className={cx('attachment-area__number')}>
               <div className={cx('attachment-area__drag')}>
                 {areaNumber}
-                {isDraggable && (
+                {isDraggable && totalCount && totalCount >= MIN_STEPS_FOR_REORDERING_CONTROLS && (
                   <>
                     <Button
                       variant="text"
