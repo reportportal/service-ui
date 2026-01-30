@@ -77,6 +77,7 @@ export class LogItemInfo extends Component {
     retries: PropTypes.arrayOf(PropTypes.object),
     className: PropTypes.string,
     detailsClassName: PropTypes.string,
+    parentLaunch: PropTypes.object,
   };
   static defaultProps = {
     logItem: null,
@@ -128,13 +129,19 @@ export class LogItemInfo extends Component {
       intl: { formatMessage },
       className,
       detailsClassName,
+      parentLaunch,
     } = this.props;
 
     return (
       logItem && (
         <div className={cx('log-item-info', className)}>
           <div className={cx('details', detailsClassName)}>
-            <DefectDetails logItem={logItem} debugMode={debugMode} fetchFunc={fetchFunc} />
+            <DefectDetails
+              logItem={logItem}
+              debugMode={debugMode}
+              fetchFunc={fetchFunc}
+              parentLaunch={parentLaunch}
+            />
             {this.hasRetries() && (
               <div
                 className={cx('retries', {

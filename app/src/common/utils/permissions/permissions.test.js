@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { createCheckPermission } from './permissions';
+import { createCheckPermission } from './createCheckPermissions';
 
 const PERMISSIONS_MAP = {
   ADMINISTRATOR: {

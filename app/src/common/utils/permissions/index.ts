@@ -67,6 +67,7 @@ export {
   canDeleteOrganization,
   canSeeInstanceLevelPluginsPages,
   canRenameOrganization,
+  canLockDashboard,
   // MANUAL LAUNCH
   canCreateManualLaunch,
   // TEST CASE

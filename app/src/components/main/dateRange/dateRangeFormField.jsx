@@ -19,31 +19,18 @@ import { DateRange } from './dateRange';
 
 export const DateRangeFormField = ({
   input,
-  startPopperClassName = '',
-  startCalendarClassName = '',
-  endPopperClassName = '',
-  endCalendarClassName = '',
+  popperClassName = '',
+  calendarClassName = '',
 }) => {
   const { value = {}, onChange } = input;
-
-  const startDateChangeHandler = (startDate) => {
-    onChange({ startDate, endDate: value?.endDate });
-  };
-
-  const endDateChangeHandler = (endDate) => {
-    onChange({ startDate: value?.startDate || endDate, endDate });
-  };
 
   return (
     <DateRange
       startDate={value?.startDate}
-      setStartDate={startDateChangeHandler}
       endDate={value?.endDate}
-      setEndDate={endDateChangeHandler}
-      startPopperClassName={startPopperClassName}
-      startCalendarClassName={startCalendarClassName}
-      endPopperClassName={endPopperClassName}
-      endCalendarClassName={endCalendarClassName}
+      onChange={onChange}
+      popperClassName={popperClassName}
+      calendarClassName={calendarClassName}
     />
   );
 };
@@ -53,8 +40,6 @@ DateRangeFormField.propTypes = {
     value: PropTypes.object,
     onChange: PropTypes.func,
   }).isRequired,
-  startPopperClassName: PropTypes.string,
-  startCalendarClassName: PropTypes.string,
-  endPopperClassName: PropTypes.string,
-  endCalendarClassName: PropTypes.string,
+  popperClassName: PropTypes.string,
+  calendarClassName: PropTypes.string,
 };

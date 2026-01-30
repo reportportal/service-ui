@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,4 @@
  * limitations under the License.
  */
 
-.time-range-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 8px 12px;
-}
-
-.title {
-  font-family: var(--rp-ui-base-font-family);
-  font-weight: var(--rp-ui-base-fw-medium);
-  font-size: 14px;
-  line-height: 24px;
-}
-
-.date-picker-container {
-  width: 100%;
-  box-sizing: border-box;
-}
+export { LockedDashboardTooltip } from './lockedDashboardTooltip';
