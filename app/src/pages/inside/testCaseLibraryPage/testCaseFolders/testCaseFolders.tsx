@@ -160,14 +160,36 @@ export const TestCaseFolders = () => {
       const targetFolderId = Number(targetId);
 
       // Determine the parent folder based on drop position
-      let parentTestFolderId: number | undefined;
+      let parentTestFolderId: number | null | undefined;
 
       if (position === TREE_DROP_POSITIONS.INSIDE) {
         // Dropped inside target folder
         parentTestFolderId = targetFolderId;
       } else {
-        // Dropped before/after target folder - use target's parent
-        parentTestFolderId = draggedItem.parentId ? Number(draggedItem.parentId) : undefined;
+        // Dropped before/after target folder - use target folder's parent
+        const targetFolder = initialFolders.find((f) => f.id === targetFolderId);
+
+        if (!targetFolder) {
+          parentTestFolderId = undefined;
+        } else if ('parentFolderId' in targetFolder) {
+          // Target has parentFolderId property - use it (could be null or a number)
+          parentTestFolderId = targetFolder.parentFolderId;
+        } else {
+          // Target doesn't have parentFolderId property - it's a root level folder
+          parentTestFolderId = null;
+        }
+      }
+
+      // Check if this is just a reorder within the same parent (not supported by backend)
+      const draggedFolder = initialFolders.find((f) => f.id === draggedFolderId);
+      const draggedParentId = draggedFolder?.parentFolderId ?? null;
+
+      if (draggedParentId === parentTestFolderId && position !== TREE_DROP_POSITIONS.INSIDE) {
+        // Same parent, just reordering - backend doesn't support this
+        console.warn(
+          'Folder reordering within the same parent is not supported by the backend API',
+        );
+        return;
       }
 
       void moveFolder({
@@ -175,7 +197,7 @@ export const TestCaseFolders = () => {
         parentTestFolderId,
       });
     },
-    [moveFolder],
+    [moveFolder, initialFolders],
   );
 
   const handleDuplicateFolder = useCallback(
@@ -187,14 +209,24 @@ export const TestCaseFolders = () => {
       if (!draggedFolderData) return;
 
       // Determine the parent folder based on drop position
-      let parentFolderId: number | undefined;
+      let parentFolderId: number | null | undefined;
 
       if (position === TREE_DROP_POSITIONS.INSIDE) {
         // Dropped inside target folder
         parentFolderId = targetFolderId;
       } else {
-        // Dropped before/after target folder - use target's parent
-        parentFolderId = draggedItem.parentId ? Number(draggedItem.parentId) : undefined;
+        // Dropped before/after target folder - use target folder's parent
+        const targetFolder = initialFolders.find((f) => f.id === targetFolderId);
+
+        if (!targetFolder) {
+          parentFolderId = undefined;
+        } else if ('parentFolderId' in targetFolder) {
+          // Target has parentFolderId property - use it (could be null or a number)
+          parentFolderId = targetFolder.parentFolderId;
+        } else {
+          // Target doesn't have parentFolderId property - it's a root level folder
+          parentFolderId = null;
+        }
       }
 
       void duplicateFolder({
