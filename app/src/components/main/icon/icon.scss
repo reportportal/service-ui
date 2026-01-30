@@ -17,12 +17,18 @@
 .icon {
   height: 20px;
   width: 20px;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background-color: transparent;
   margin: 0 auto;
   display: inline-block;
   background-repeat: no-repeat;
   background-position: center;
+  cursor: pointer;
 
   &.disabled {
+    cursor: default;
     opacity: 0.3;
     pointer-events: none;
   }
