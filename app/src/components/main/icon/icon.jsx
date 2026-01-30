@@ -21,26 +21,12 @@ import styles from './icon.scss';
 
 const cx = classNames.bind(styles);
 
-export const Icon = ({ type, onClick, className, disabled }) => {
-  const handleKeyDown = (e) => {
-    if (disabled) return;
-
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      onClick?.(e);
-    }
-  };
-
-  return (
-    <i
-      className={cx('icon', type, { disabled }, className)}
-      onClick={disabled ? undefined : onClick}
-      onKeyDown={handleKeyDown}
-      tabIndex={0}
-      role="button"
-    />
-  );
-};
+export const Icon = ({ type, onClick, className, disabled }) => (
+  <button
+    className={cx('icon', type, className, { disabled })}
+    onClick={disabled ? null : onClick}
+  />
+);
 
 Icon.propTypes = {
   type: PropTypes.string.isRequired,

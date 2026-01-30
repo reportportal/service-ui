@@ -26,12 +26,12 @@
   background-repeat: no-repeat;
   background-position: center;
   cursor: pointer;
+}
 
-  &.disabled {
-    cursor: default;
-    opacity: 0.3;
-    pointer-events: none;
-  }
+.disabled {
+  cursor: default;
+  opacity: 0.3;
+  pointer-events: none;
 }
 
 .icon-check {
