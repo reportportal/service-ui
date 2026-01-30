@@ -49,11 +49,10 @@ export const DateRangeFormField = ({
       };
       const formattedValue = formatDateRangeToMinutesString(normalizedDateRange);
 
+      onChange(formattedValue);
+
       if (startDate && endDate && startDate <= endDate) {
-        onChange(formattedValue);
         onClose();
-      } else {
-        onChange(formattedValue);
       }
     },
     [onChange, onClose],
@@ -76,10 +75,15 @@ export const DateRangeFormField = ({
 };
 DateRangeFormField.propTypes = {
   input: PropTypes.shape({
-    value: PropTypes.object,
+    value: PropTypes.string,
     onChange: PropTypes.func,
   }).isRequired,
   onClose: PropTypes.func,
   popperClassName: PropTypes.string,
   calendarClassName: PropTypes.string,
+};
+DateRangeFormField.defaultProps = {
+  onClose: () => {},
+  popperClassName: '',
+  calendarClassName: '',
 };
