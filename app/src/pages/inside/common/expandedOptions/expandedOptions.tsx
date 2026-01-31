@@ -17,6 +17,7 @@
 import { ReactNode, useCallback } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { useDrop } from 'react-dnd';
+import Parser from 'html-react-parser';
 import {
   BaseIconButton,
   SearchIcon,
@@ -34,6 +35,7 @@ import { TransformedFolder } from 'controllers/testCase';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { foldersSelector } from 'controllers/testCase';
+import FolderDropIcon from 'common/img/folder-drop-inline.svg';
 
 import { Folder } from './folder';
 
@@ -195,12 +197,17 @@ export const ExpandedOptions = ({
               >
                 {isDraggingAny && !isOverFoldersZone && (
                   <div className={cx('expanded-options__drop-placeholder')}>
-                    <span className={cx('expanded-options__drop-placeholder-text')}>
-                      {formatMessage({
-                        id: 'expandedOptions.dropPlaceholder',
-                        defaultMessage: 'Drop items here to move them into a folder',
-                      })}
-                    </span>
+                    <div className={cx('expanded-options__drop-placeholder-content')}>
+                      <i className={cx('expanded-options__drop-placeholder-icon')}>
+                        {Parser(FolderDropIcon)}
+                      </i>
+                      <span className={cx('expanded-options__drop-placeholder-text')}>
+                        {formatMessage({
+                          id: 'expandedOptions.dropPlaceholder',
+                          defaultMessage: 'Drop items here to move them into a folder',
+                        })}
+                      </span>
+                    </div>
                   </div>
                 )}
                 <ul
