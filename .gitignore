@@ -27,3 +27,8 @@ data/
 
 ##Release dir
 release/
+
+# local working files
+.local/
+.serena/
+.cursor/
