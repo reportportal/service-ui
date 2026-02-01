@@ -42,21 +42,19 @@ const cx = createClassnames(styles);
 interface AllTestCasesPageProps {
   testCases: ExtendedTestCase[];
   loading: boolean;
-  searchValue: string;
   instanceKey: TMS_INSTANCE_KEY;
 }
 
 export const AllTestCasesPage = ({
   testCases,
   loading,
-  searchValue,
   instanceKey,
 }: AllTestCasesPageProps) => {
   const { formatMessage } = useIntl();
   const testPlansTestCasesPageData = useSelector(testPlanTestCasesPageSelector);
   const payload = useSelector(payloadSelector);
   const { organizationSlug, projectSlug } = useProjectDetails();
-  const { setPageNumber, setPageSize, captions, activePage, pageSize, totalPages } =
+  const { setPageNumber, setPageSize, captions, activePage, pageSize, totalPages  } =
     useURLBoundPagination({
       pageData: testPlansTestCasesPageData,
       defaultQueryParams: defaultTestPlanTestCasesQueryParams,
@@ -72,7 +70,6 @@ export const AllTestCasesPage = ({
         <TestCaseList
           testCases={testCases}
           isLoading={loading}
-          searchValue={searchValue}
           selectedRowIds={selectedRows.map((row) => row.id)}
           selectedRows={selectedRows}
           handleSelectedRows={setSelectedRows}

@@ -14,22 +14,31 @@
  * limitations under the License.
  */
 
-import { memo, useState } from 'react';
+import { memo, useEffect, useCallback, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
 import { BubblesLoader, FilterOutlineIcon, FilterFilledIcon, Table } from '@reportportal/ui-kit';
 
-import { createClassnames } from 'common/utils';
+import { createClassnames, debounce } from 'common/utils';
 import { SearchField } from 'components/fields/searchField';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { SelectedTestCaseRow } from 'pages/inside/testCaseLibraryPage/allTestCasesPage/allTestCasesPage';
 import { locationSelector } from 'controllers/pages/typed-selectors';
-import { TEST_CASE_LIBRARY_PAGE, PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
+import {
+  TEST_CASE_LIBRARY_PAGE,
+  PROJECT_TEST_PLAN_DETAILS_PAGE,
+  updatePagePropertiesAction,
+} from 'controllers/pages';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { TestPlanSidePanel } from 'pages/inside/testPlansPage/testPlanSidePanel';
+import { DEFAULT_CURRENT_PAGE } from 'pages/inside/common/testCaseList/configUtils';
+import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
+import { EmptyPageState } from 'pages/common';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 
 import { TestCaseNameCell } from './testCaseNameCell';
 import { TestCaseExecutionCell } from './testCaseExecutionCell';
@@ -45,13 +54,12 @@ interface TestCaseListProps {
   testCases: ExtendedTestCase[];
   isLoading?: boolean;
   folderTitle: string;
-  searchValue?: string;
+  activePage?: number;
   selectedRowIds: (number | string)[];
   selectedRows: SelectedTestCaseRow[];
   selectable?: boolean;
   instanceKey: TMS_INSTANCE_KEY;
   handleSelectedRows: (rows: SelectedTestCaseRow[]) => void;
-  onSearchChange?: (value: string) => void;
 }
 
 export const TestCaseList = memo(
@@ -60,21 +68,33 @@ export const TestCaseList = memo(
     isLoading = false,
     selectedRowIds,
     selectedRows,
-    searchValue = '',
     folderTitle,
     selectable = true,
     instanceKey,
     handleSelectedRows,
-    onSearchChange,
+    activePage,
   }: TestCaseListProps) => {
     const { formatMessage } = useIntl();
     const location = useSelector(locationSelector);
+    const [searchValue, setSearchValue] = useState('');
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<number | null>(null);
     const [isFilterSidePanelVisible, setIsFilterSidePanelVisible] = useState(false);
     const [selectedPriorities, setSelectedPriorities] = useState<string[]>([]);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
-
+    const dispatch = useDispatch();
     const { canDoTestCaseBulkActions } = useUserPermissions();
+
+    useEffect(() => {
+      const searchTerm = location?.query?.testCasesSearchParams;
+
+      if (!searchTerm) {
+        setSearchValue('');
+
+        return;
+      }
+
+      setSearchValue(searchTerm);
+    }, [folderTitle, location]);
 
     const activeFiltersCount =
       (isEmpty(selectedPriorities) ? 0 : 1) + (isEmpty(selectedTags) ? 0 : 1);
@@ -82,6 +102,22 @@ export const TestCaseList = memo(
 
     const isTestLibraryRoute = location.type === TEST_CASE_LIBRARY_PAGE;
     const isTestPlanRoute = location.type === PROJECT_TEST_PLAN_DETAILS_PAGE;
+
+    const handleFilterChange = useCallback(
+      // eslint-disable-next-line react-hooks/use-memo
+      debounce((value: string) => {
+        dispatch(
+          updatePagePropertiesAction({
+            testCasesSearchParams: value,
+            ...(activePage !== DEFAULT_CURRENT_PAGE && {
+              ...TestCasePageDefaultValues,
+              testCasesSearchParams: value,
+            }),
+          }),
+        );
+      }, 1000),
+      [activePage],
+    );
 
     const handleCloseSidePanel = () => {
       setSelectedTestCaseId(null);
@@ -187,28 +223,24 @@ export const TestCaseList = memo(
           <div className={cx('controls-title')}>{folderTitle}</div>
           <div className={cx('controls-actions')}>
             <div className={cx('search-section')}>
-              {isLoading ? null : (
-                <>
-                  <SearchField
-                    isLoading={isLoading}
-                    searchValue={searchValue}
-                    placeholder={formatMessage(messages.searchPlaceholder)}
-                    setSearchValue={onSearchChange}
-                    onFilterChange={onSearchChange}
-                  />
-                  <button
-                    type="button"
-                    className={cx('filter-icon', { active: hasActiveFilters })}
-                    aria-label={formatMessage(messages.filterButton)}
-                    onClick={handleFilterIconClick}
-                  >
-                    {hasActiveFilters ? <FilterFilledIcon /> : <FilterOutlineIcon />}
-                    {hasActiveFilters && (
-                      <span className={cx('filter-count')}>{activeFiltersCount}</span>
-                    )}
-                  </button>
-                </>
-              )}
+              <SearchField
+                isLoading={isLoading}
+                searchValue={searchValue}
+                placeholder={formatMessage(messages.searchPlaceholder)}
+                setSearchValue={setSearchValue}
+                onFilterChange={handleFilterChange}
+              />
+              <button
+                type="button"
+                className={cx('filter-icon', { active: hasActiveFilters })}
+                aria-label={formatMessage(messages.filterButton)}
+                onClick={handleFilterIconClick}
+              >
+                {hasActiveFilters ? <FilterFilledIcon /> : <FilterOutlineIcon />}
+                {hasActiveFilters && (
+                  <span className={cx('filter-count')}>{activeFiltersCount}</span>
+                )}
+              </button>
             </div>
           </div>
         </div>
@@ -221,9 +253,15 @@ export const TestCaseList = memo(
             {isEmpty(testCases) ? (
               <div className={cx('no-results')}>
                 <div className={cx('no-results-message')}>
-                  {searchValue
-                    ? formatMessage(messages.noResultsFilteredMessage)
-                    : formatMessage(messages.noResultsEmptyMessage)}
+                  {searchValue ? (
+                    <EmptyPageState
+                      label={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
+                      description={formatMessage(messages.noResultsDescription)}
+                      emptyIcon={NoResultsIcon as unknown as string}
+                    />
+                  ) : (
+                    formatMessage(messages.noResultsEmptyMessage)
+                  )}
                 </div>
               </div>
             ) : (

@@ -27,6 +27,7 @@ interface LocationPayload {
 interface LocationQuery {
   offset: string;
   limit: string;
+  testCasesSearchParams?: string;
 }
 
 export type LocationInfo = {
