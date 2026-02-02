@@ -149,7 +149,11 @@ export const useImportTestCase = () => {
         messageId: resolvedFolderName ? 'importSuccessToFolder' : 'importSuccess',
         values: resolvedFolderName ? { folderName: resolvedFolderName } : undefined,
       });
-      refetchTestCases(testFolderId);
+
+      if (resolvedFolderId) {
+        refetchTestCases(resolvedFolderId);
+      }
+
       dispatch(getFoldersAction());
     } catch (error: unknown) {
       const apiError = error as ApiError;
