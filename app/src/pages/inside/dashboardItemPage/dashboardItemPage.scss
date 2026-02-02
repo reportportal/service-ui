@@ -26,9 +26,12 @@
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+  align-items: center;
+  row-gap: 8px;
+  column-gap: 44px;
   min-height: 30px;
   margin: 0;
-  padding: 20px 10px 0 10px;
+  padding: 20px 10px;
   border-bottom: 1px solid $COLOR--gray-91;
 
   @media (max-width: $SCREEN_XS_MAX) {
@@ -36,15 +39,20 @@
   }
 }
 
+.locked-dashboard {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 13px;
+  line-height: 1;
+  margin-left: auto;
+  color: $COLOR--charcoal-grey;
+}
+
 .buttons-block {
   display: flex;
-  padding-bottom: 20px;
-
-  button {
-    &:not(:last-child) {
-      margin-right: 10px;
-    }
-  }
+  align-items: center;
+  gap: 10px;
 }
 
 .icon-close {

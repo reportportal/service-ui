@@ -19,7 +19,7 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { Tooltip } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
-import { useCanLockDashboard } from '../hooks';
+import { useCanLockDashboard } from 'common/hooks/useCanLockDashboard';
 import { messages } from './messages';
 import styles from './lockedDashboardTooltip.scss';
 

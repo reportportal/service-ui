@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-import React, { Fragment, Component } from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
 import AddDashboardIcon from 'common/img/add-widget-inline.svg';
 import styles from './emptyWidgetGrid.scss';
+import { useCanLockDashboard } from 'common/hooks';
+import { useSelector } from 'react-redux';
+import { activeDashboardItemSelector } from 'controllers/dashboard';
+import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardTooltip';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
@@ -38,41 +42,45 @@ const messages = defineMessages({
   },
 });
 
-@injectIntl
-export class EmptyWidgetGrid extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    action: PropTypes.func,
-    isDisable: PropTypes.bool,
-  };
+export const EmptyWidgetGrid = ({ action, isDisable }) => {
+  const { formatMessage } = useIntl();
+  const canLock = useCanLockDashboard();
+  const dashboard = useSelector(activeDashboardItemSelector);
+  const isButtonDisabled = dashboard.locked && !canLock;
 
-  static defaultProps = {
-    action: () => {},
-    isDisable: false,
-  };
-
-  render() {
-    const { action, intl, isDisable } = this.props;
-
-    return (
-      <div className={cx('empty-widget')}>
-        <div className={cx('empty-dashboard', { 'add-enabled': !isDisable })} />
-        <p className={cx('empty-widget-headline')}>
-          {intl.formatMessage(messages.notMyDashboardEmptyHeader)}
-        </p>
-        {!isDisable && (
-          <Fragment>
-            <p className={cx('empty-widget-text')}>
-              {intl.formatMessage(messages.dashboardEmptyText)}
-            </p>
-            <div className={cx('empty-widget-content')}>
-              <GhostButton icon={AddDashboardIcon} onClick={action}>
-                {intl.formatMessage(messages.addNewWidget)}
+  return (
+    <div className={cx('empty-widget')}>
+      <div className={cx('empty-dashboard', { 'add-enabled': !isDisable })} />
+      <p className={cx('empty-widget-headline')}>
+        {formatMessage(messages.notMyDashboardEmptyHeader)}
+      </p>
+      {!isDisable && (
+        <Fragment>
+          <p className={cx('empty-widget-text')}>{formatMessage(messages.dashboardEmptyText)}</p>
+          <div className={cx('empty-widget-content')}>
+            <LockedDashboardTooltip locked={dashboard.locked}>
+              <GhostButton
+                icon={AddDashboardIcon}
+                onClick={action}
+                disabled={isButtonDisabled}
+                appearance="faded"
+              >
+                {formatMessage(messages.addNewWidget)}
               </GhostButton>
-            </div>
-          </Fragment>
-        )}
-      </div>
-    );
-  }
-}
+            </LockedDashboardTooltip>
+          </div>
+        </Fragment>
+      )}
+    </div>
+  );
+};
+
+EmptyWidgetGrid.propTypes = {
+  action: PropTypes.func,
+  isDisable: PropTypes.bool,
+};
+
+EmptyWidgetGrid.defaultProps = {
+  action: () => {},
+  isDisable: false,
+};

@@ -44,7 +44,7 @@ export const GhostButton = ({
   appearance,
 }) => {
   const classes = cx('ghost-button', {
-    disabled,
+    disabled: disabled && appearance !== 'faded',
     tiny,
     large,
     active,
