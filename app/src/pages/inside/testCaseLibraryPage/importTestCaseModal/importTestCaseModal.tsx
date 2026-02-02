@@ -118,6 +118,9 @@ export const ImportTestCaseModal = ({
     if (selectedItem && 'id' in selectedItem) {
       change('existingFolderId', selectedItem.id);
       change('selectedFolder', selectedItem);
+    } else if (selectedItem && 'name' in selectedItem) {
+      change('existingFolderId', null);
+      change('selectedFolder', null);
     }
   };
 
@@ -127,6 +130,7 @@ export const ImportTestCaseModal = ({
 
     if (next === 'root') {
       change('existingFolderId', null);
+      change('selectedFolder', null);
     }
   };
 
@@ -229,7 +233,7 @@ export const ImportTestCaseModal = ({
 
     if (isExistingTarget) {
       return (
-        <FieldProvider name="selectedFolder">
+        <FieldProvider name="existingFolderId">
           <FieldErrorHint provideHint={false}>
             <CreateFolderAutocomplete
               label={formatMessage(messages.importDropdownLabel)}
