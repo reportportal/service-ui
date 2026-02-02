@@ -62,9 +62,13 @@
   width: 24px;
   height: 24px;
   opacity: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background-color: transparent;
   fill: $COLOR--gray-60;
-  cursor: pointer;
   transition: opacity 0.5s ease;
+  cursor: pointer;
 }
 
 :global {

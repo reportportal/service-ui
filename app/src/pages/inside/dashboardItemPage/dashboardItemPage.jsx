@@ -335,9 +335,9 @@ export const DashboardItemPage = () => {
               }
             />
             {fullScreenMode && (
-              <i className={cx('icon-close')} onClick={toggleFullscreen}>
+              <button className={cx('icon-close')} onClick={toggleFullscreen}>
                 {Parser(CancelIcon)}
-              </i>
+              </button>
             )}
           </Fullscreen>
         </div>
