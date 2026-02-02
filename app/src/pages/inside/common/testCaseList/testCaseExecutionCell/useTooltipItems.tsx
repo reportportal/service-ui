@@ -31,6 +31,7 @@ export const useTooltipItems = ({ instanceKey, testCase }: UseTooltipItemsProps)
   const tooltipItemsByInstance: Record<TMS_INSTANCE_KEY, typeof testPlanTooltipItems> = {
     [TMS_INSTANCE_KEY.TEST_PLAN]: testPlanTooltipItems,
     [TMS_INSTANCE_KEY.TEST_CASE]: testCaseTooltipItems,
+    [TMS_INSTANCE_KEY.MANUAL_LAUNCH]: testCaseTooltipItems, // TODO will replace with manual launch tooltip items
   };
 
   return tooltipItemsByInstance[instanceKey];

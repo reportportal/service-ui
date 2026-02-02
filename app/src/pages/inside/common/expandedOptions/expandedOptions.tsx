@@ -35,6 +35,10 @@ const messages = defineMessages({
     id: 'expandedOptions.allTestCases',
     defaultMessage: 'All Test Cases',
   },
+  allTestExecutions: {
+    id: 'expandedOptions.allTestExecutions',
+    defaultMessage: 'All Tests Executions',
+  },
   folders: {
     id: 'expandedOptions.folders',
     defaultMessage: 'Folders',
@@ -49,6 +53,8 @@ interface ExpandedOptionsProps {
   children: ReactNode;
   instanceKey?: TMS_INSTANCE_KEY;
   renderCreateFolderButton?: () => ReactNode;
+  expandedIds?: number[];
+  onToggleFolder?: (folder: TransformedFolder) => void;
 }
 
 export const ExpandedOptions = ({
@@ -59,10 +65,20 @@ export const ExpandedOptions = ({
   setAllTestCases,
   renderCreateFolderButton,
   onFolderClick,
+  expandedIds: customExpandedIds,
+  onToggleFolder: customOnToggleFolder,
 }: ExpandedOptionsProps) => {
   const { formatMessage } = useIntl();
 
-  const { expandedIds, onToggleFolder } = useStorageFolders(instanceKey);
+  // Use custom props if provided (for Manual Launch), otherwise use storage hook (for Test Cases/Plans)
+  const storageHook = useStorageFolders(customExpandedIds !== undefined ? undefined : instanceKey);
+  const expandedIds = customExpandedIds ?? storageHook.expandedIds;
+  const onToggleFolder = customOnToggleFolder ?? storageHook.onToggleFolder;
+
+  const allItemsTitle =
+    instanceKey === TMS_INSTANCE_KEY.MANUAL_LAUNCH
+      ? formatMessage(messages.allTestExecutions)
+      : formatMessage(messages.allTestCases);
 
   const totalTestCases = folders.reduce((total: number, folder: TransformedFolder): number => {
     const countFolderTestCases = (folder: TransformedFolder): number => {
@@ -87,9 +103,7 @@ export const ExpandedOptions = ({
             })}
             onClick={setAllTestCases}
           >
-            <span className={cx('sidebar-header__title--text')}>
-              {formatMessage(messages.allTestCases)}
-            </span>
+            <span className={cx('sidebar-header__title--text')}>{allItemsTitle}</span>
             <span className={cx('sidebar-header__title--counter')}>
               {totalTestCases.toLocaleString()}
             </span>

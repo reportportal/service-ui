@@ -27,6 +27,7 @@ import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { transformFoldersToDisplay } from 'common/utils/folderUtils';
 import { ExpandedOptions } from '../../../common/expandedOptions';
 import { ManualLaunchExecutions } from '../manualLaunchExecutions';
+import { useManualLaunchFolderExpansion } from '../hooks';
 
 export const ManualLaunchFolders = () => {
   const folders = useSelector(manualLaunchFoldersSelector);
@@ -35,6 +36,7 @@ export const ManualLaunchFolders = () => {
   const isLoadingExecutions = useSelector(isLoadingManualLaunchTestCaseExecutionsSelector);
 
   const [activeFolderId, setActiveFolderId] = useState<number | null>(null);
+  const { expandedIds, onToggleFolder } = useManualLaunchFolderExpansion();
 
   const transformedFolders = useMemo(() => transformFoldersToDisplay(folders), [folders]);
 
@@ -78,6 +80,8 @@ export const ManualLaunchFolders = () => {
       instanceKey={TMS_INSTANCE_KEY.MANUAL_LAUNCH}
       setAllTestCases={handleAllExecutionsClick}
       onFolderClick={handleFolderClick}
+      expandedIds={expandedIds}
+      onToggleFolder={onToggleFolder}
     >
       <ManualLaunchExecutions
         executions={filteredExecutions}
