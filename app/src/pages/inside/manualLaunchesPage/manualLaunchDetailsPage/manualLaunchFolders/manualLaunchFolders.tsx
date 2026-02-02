@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,34 +40,10 @@ export const ManualLaunchFolders = () => {
 
   const transformedFolders = useMemo(() => transformFoldersToDisplay(folders), [folders]);
 
-  const filteredExecutions = useMemo(() => {
-    return executions;
-  }, [executions]);
-
-  const handleFolderClick = useCallback(
-    (folderId: number) => {
-      setActiveFolderId(folderId);
-
-      // TODO will be deleted in next task
-      // Find clicked folder
-      const folder = folders.find((f) => f.id === folderId);
-
-      // Filter executions by folder's testItemId
-      const folderExecutions = executions.filter(
-        (execution) => execution.testFolder?.testItemId === folderId,
-      );
-
-      console.info('📁 Folder clicked:', {
-        folderId,
-        folderName: folder?.name,
-        countOfTestCases: folder?.countOfTestCases,
-        parentFolderId: folder?.parentFolderId,
-        executionsCount: folderExecutions.length,
-        executionNames: folderExecutions.map((e) => e.testCaseName),
-      });
-    },
-    [folders, executions],
-  );
+  const handleFolderClick = useCallback((folderId: number) => {
+    setActiveFolderId(folderId);
+    // TODO: Fetch executions for specific folder from backend
+  }, []);
 
   const handleAllExecutionsClick = useCallback(() => {
     setActiveFolderId(null);
@@ -84,7 +60,7 @@ export const ManualLaunchFolders = () => {
       onToggleFolder={onToggleFolder}
     >
       <ManualLaunchExecutions
-        executions={filteredExecutions}
+        executions={executions}
         isLoading={isLoadingExecutions || isLoadingFolders}
       />
     </ExpandedOptions>

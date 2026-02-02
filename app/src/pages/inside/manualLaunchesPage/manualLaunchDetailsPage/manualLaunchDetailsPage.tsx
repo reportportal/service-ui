@@ -121,7 +121,7 @@ export const ManualLaunchDetailsPage = () => {
   }
 
   const renderContent = () => {
-    const hasData = folders.length > 0 || executions.length > 0;
+    const hasData = !isEmpty(folders) || !isEmpty(executions);
 
     if (hasData) {
       return <ManualLaunchFolders />;

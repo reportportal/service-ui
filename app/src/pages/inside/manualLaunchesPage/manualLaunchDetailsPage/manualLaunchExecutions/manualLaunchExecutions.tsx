@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,12 +22,7 @@ import styles from './manualLaunchExecutions.scss';
 
 const cx = createClassnames(styles);
 
-export const ManualLaunchExecutions = ({ executions, isLoading }: ManualLaunchExecutionsProps) => {
-  console.info('🔄 ManualLaunchExecutions render:', {
-    isLoading,
-    executionsCount: executions.length,
-  });
-
+export const ManualLaunchExecutions = ({ isLoading }: ManualLaunchExecutionsProps) => {
   if (isLoading) {
     return (
       <div className={cx('manual-launch-executions__loader')}>
