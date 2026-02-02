@@ -71,7 +71,7 @@ export const ExpandedOptions = ({
   const { formatMessage } = useIntl();
 
   // Use custom props if provided (for Manual Launch), otherwise use storage hook (for Test Cases/Plans)
-  const storageHook = useStorageFolders(customExpandedIds !== undefined ? undefined : instanceKey);
+  const storageHook = useStorageFolders(customExpandedIds === undefined ? instanceKey : undefined);
   const expandedIds = customExpandedIds ?? storageHook.expandedIds;
   const onToggleFolder = customOnToggleFolder ?? storageHook.onToggleFolder;
 

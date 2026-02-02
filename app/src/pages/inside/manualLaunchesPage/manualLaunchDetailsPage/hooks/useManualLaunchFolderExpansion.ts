@@ -52,7 +52,7 @@ export const useManualLaunchFolderExpansion = () => {
     try {
       const parsed = JSON.parse(stored) as unknown;
 
-      if (Array.isArray(parsed) && parsed.every(isNumber)) {
+      if (Array.isArray(parsed) && parsed.every((item) => isNumber(item))) {
         return parsed;
       }
 
