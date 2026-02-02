@@ -228,7 +228,6 @@ function* addApiKey({ payload = {} }) {
       },
     });
 
-     
     const { id, created_at, api_key } = response;
     onSuccess(api_key);
     if (successMessage) {
