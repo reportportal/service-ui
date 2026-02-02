@@ -21,9 +21,8 @@ import classNames from 'classnames/bind';
 import { dateFormat, getMicroSeconds } from 'common/utils/timeDateUtils';
 import { LOG_TIME_FORMAT_ABSOLUTE, LOG_TIME_FORMAT_EXTENDED } from 'controllers/user/constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLogTimeFormatAction, userIdSelector } from 'controllers/user';
+import { setLogTimeFormatAction, userIdSelector, setLogTimeFormatInStorage } from 'controllers/user';
 import { logTimeFormatSelector } from 'controllers/user/selectors';
-import { setLogTimeFormatInStorage } from 'controllers/log/storageUtils';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './flexibleLogTime.scss';
 

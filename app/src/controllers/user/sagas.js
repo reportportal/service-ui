@@ -20,7 +20,6 @@ import { URLS } from 'common/urls';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
-import { getLogTimeFormatFromStorage } from 'controllers/log/storageUtils';
 import { userIdSelector, userInfoSelector, activeProjectSelector } from './selectors';
 import {
   getUserProjectSettingsFromStorage,
@@ -29,6 +28,7 @@ import {
   setLogsSizeInStorage,
   setLogsFullWidthModeInStorage,
   setLogsColorizedBackgroundInStorage,
+  getLogTimeFormatFromStorage,
 } from './storageUtils';
 import {
   ASSIGN_TO_PROJECT,
@@ -228,7 +228,6 @@ function* addApiKey({ payload = {} }) {
       },
     });
 
-    // eslint-disable-next-line camelcase
     const { id, created_at, api_key } = response;
     onSuccess(api_key);
     if (successMessage) {
