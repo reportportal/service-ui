@@ -64,7 +64,7 @@ import {
   GetAllTestCases,
   expandFoldersToLevelAction,
 } from './actionCreators';
-import { getAllFolderIdsToDelete } from './utils';
+import { getAllFolderIdsToDelete } from 'common/utils/folderUtils';
 import { fetchAllFolders } from './utils/fetchAllFolders';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Page } from 'types/common';

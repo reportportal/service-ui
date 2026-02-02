@@ -16,10 +16,8 @@
 
 import { createSelector } from 'reselect';
 
-import {
-  transformFoldersToDisplay,
-  transformFoldersWithFullPath,
-} from 'controllers/testCase/utils';
+import { transformFoldersToDisplay } from 'common/utils/folderUtils';
+import { transformFoldersWithFullPath } from 'controllers/testCase/utils';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Page } from 'types/common';
 import { Folder } from './types';

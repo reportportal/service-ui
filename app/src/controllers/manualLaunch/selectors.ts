@@ -16,17 +16,13 @@
 import { Page } from 'types/common';
 import { AppState } from 'types/store';
 
-import { Launch } from 'pages/inside/manualLaunchesPage/types';
-
-export interface ManualLaunchState {
-  data: {
-    content: Launch[] | null;
-    page: Page | null;
-  };
-  isLoading?: boolean;
-  activeManualLaunch?: Launch | null;
-  isLoadingActive?: boolean;
-}
+import {
+  ManualLaunchState,
+  ManualLaunchFoldersState,
+  ManualLaunchTestCaseExecutionsState,
+  ManualLaunchFolder,
+  TestCaseExecution,
+} from './types';
 
 export const manualLaunchesSelector = (state: AppState): ManualLaunchState =>
   state.manualLaunch || { data: { content: null, page: null } };
@@ -61,3 +57,30 @@ export const manualLaunchByIdSelector = (launchId: string | number) => (state: A
 
   return undefined;
 };
+
+// Selectors for Manual Launch Folders
+const manualLaunchFoldersStateSelector = (state: AppState): ManualLaunchFoldersState | undefined =>
+  state.manualLaunchFolders || { data: { content: [], page: null } };
+
+export const manualLaunchFoldersSelector = (state: AppState): ManualLaunchFolder[] =>
+  manualLaunchFoldersStateSelector(state)?.data?.content || [];
+
+export const manualLaunchFoldersPageSelector = (state: AppState): Page | null =>
+  manualLaunchFoldersStateSelector(state)?.data?.page || null;
+
+export const isLoadingManualLaunchFoldersSelector = (state: AppState): boolean =>
+  Boolean(manualLaunchFoldersStateSelector(state)?.isLoading);
+
+// Selectors for Test Case Executions
+const manualLaunchTestCaseExecutionsStateSelector = (
+  state: AppState,
+): ManualLaunchTestCaseExecutionsState | undefined => state.manualLaunchTestCaseExecutions;
+
+export const manualLaunchTestCaseExecutionsSelector = (state: AppState): TestCaseExecution[] =>
+  manualLaunchTestCaseExecutionsStateSelector(state)?.data?.content || [];
+
+export const manualLaunchTestCaseExecutionsPageSelector = (state: AppState): Page | null =>
+  manualLaunchTestCaseExecutionsStateSelector(state)?.data?.page || null;
+
+export const isLoadingManualLaunchTestCaseExecutionsSelector = (state: AppState): boolean =>
+  Boolean(manualLaunchTestCaseExecutionsStateSelector(state)?.isLoading);

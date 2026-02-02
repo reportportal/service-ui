@@ -61,6 +61,7 @@ export const ExpandedOptions = ({
   onFolderClick,
 }: ExpandedOptionsProps) => {
   const { formatMessage } = useIntl();
+
   const { expandedIds, onToggleFolder } = useStorageFolders(instanceKey);
 
   const totalTestCases = folders.reduce((total: number, folder: TransformedFolder): number => {

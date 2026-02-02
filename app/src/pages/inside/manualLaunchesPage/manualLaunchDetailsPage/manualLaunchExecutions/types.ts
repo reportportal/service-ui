@@ -14,18 +14,9 @@
  * limitations under the License.
  */
 
-export {
-  getManualLaunchesAction,
-  getManualLaunchAction,
-  getManualLaunchFoldersAction,
-  getManualLaunchTestCaseExecutionsAction,
-} from './actionCreators';
-export { manualLaunchesSagas } from './sagas';
-export * from './constants';
-export {
-  manualLaunchesReducer,
-  manualLaunchFoldersReducer,
-  manualLaunchTestCaseExecutionsReducer,
-} from './reducer';
-export * from './selectors';
-export * from './types';
+import { TestCaseExecution } from 'controllers/manualLaunch';
+
+export interface ManualLaunchExecutionsProps {
+  executions: TestCaseExecution[];
+  isLoading: boolean;
+}
