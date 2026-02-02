@@ -493,6 +493,7 @@
   "DashboardPage.addPreconfigDashboardError": "Немагчыма стварыць дашборд. Калі ласка, праверце ўстаўленую канфігурацыю.",
   "DashboardPage.dashboardExists": "У праекце ўжо існуе панэль кіравання з назвай ''{name}''",
   "DashboardPage.deleteDashboardSuccess": "Панэль кіравання была выдаленая",
+  "DashboardPage.lockedDashboard": "Дашборд заблакіраваны",
   "DashboardPage.modal.deleteModalConfirmationText": "Вы ўпэўнены, што хочаце выдаліць панэль кіравання  '<b>{name}</b>'? Яна больш не будзе існаваць.",
   "DashboardPage.modal.deleteModalSubmitButtonText": "Выдаліць",
   "DashboardPage.modal.deleteModalTitle": "Выдаліць панэль кіравання",

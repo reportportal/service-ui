@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,23 @@
  * limitations under the License.
  */
 
-export { useWindowResize } from './useWindowResize';
-export { useOnClickOutside } from './useOnClickOutside';
-export { useCanLockDashboard } from './useCanLockDashboard';
+import React from 'react';
+import classNames from 'classnames/bind';
+import PropTypes from 'prop-types';
+import Parser from 'html-react-parser';
+import IconLocked from 'common/img/locked-inline.svg';
+import styles from './lockedIcon.scss';
+
+const cx = classNames.bind(styles);
+
+export const LockedIcon = ({ className }) => (
+  <div className={cx('locked-icon', className)}>{Parser(IconLocked)}</div>
+);
+
+LockedIcon.propTypes = {
+  className: PropTypes.string,
+};
+
+LockedIcon.defaultProps = {
+  className: '',
+};

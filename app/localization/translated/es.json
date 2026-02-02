@@ -493,6 +493,7 @@
   "DashboardPage.addPreconfigDashboardError": "Dashboard can't be created. Please check the pasted configuration.",
   "DashboardPage.dashboardExists": "Dashboard with the same name ''{name}'' already exists on the project",
   "DashboardPage.deleteDashboardSuccess": "El panel de control fue eliminado",
+  "DashboardPage.lockedDashboard": "Locked dashboard",
   "DashboardPage.modal.deleteModalConfirmationText": "¿Está seguro de que desea eliminar el panel de control '<b>{name}</b>'? Perderá acceso a él. Esta acción no se puede deshacer.",
   "DashboardPage.modal.deleteModalSubmitButtonText": "Eliminar",
   "DashboardPage.modal.deleteModalTitle": "eliminación del panel de control",

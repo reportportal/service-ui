@@ -23,15 +23,15 @@ import { NavLink } from 'components/main/navLink';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import Parser from 'html-react-parser';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
-import IconLocked from 'common/img/locked-inline.svg';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import { showDefaultErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { fetch } from 'common/utils';
-import { LockedDashboardTooltip } from '../lockedDashboardTooltip';
-import { useCanLockDashboard } from '../hooks';
+import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardTooltip';
+import { LockedIcon } from 'pages/inside/common/lockedIcon';
+import { useCanLockDashboard } from 'common/hooks/useCanLockDashboard';
 import styles from './dashboardTable.scss';
 import { messages } from './messages';
 
@@ -45,7 +45,7 @@ export const NameColumn = ({ value, customProps: { getLink }, className }) => {
     <div className={cx(className, 'name-container')}>
       {locked && (
         <LockedDashboardTooltip locked={locked}>
-          <div className={cx('locked-icon')}>{Parser(IconLocked)}</div>
+          <LockedIcon />
         </LockedDashboardTooltip>
       )}
       <NavLink

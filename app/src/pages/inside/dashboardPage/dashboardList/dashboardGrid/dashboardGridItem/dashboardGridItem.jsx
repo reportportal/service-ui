@@ -19,13 +19,12 @@ import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import Parser from 'html-react-parser';
 import { getDashboardItemPageLinkSelector } from 'controllers/dashboard/selectors';
 import { Icon } from 'components/main/icon';
 import { NavLink } from 'components/main/navLink';
-import IconLocked from 'common/img/locked-inline.svg';
-import { LockedDashboardTooltip } from '../../lockedDashboardTooltip';
-import { useCanLockDashboard } from '../../hooks';
+import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardTooltip';
+import { LockedIcon } from 'pages/inside/common/lockedIcon';
+import { useCanLockDashboard } from 'common/hooks/useCanLockDashboard';
 import styles from './dashboardGridItem.scss';
 
 const cx = classNames.bind(styles);
@@ -59,7 +58,7 @@ export const DashboardGridItem = ({ item, onEdit, onDelete, nameEventInfo }) => 
         <div className={cx('grid-cell', 'name')}>
           {locked && (
             <LockedDashboardTooltip locked={locked}>
-              <div className={cx('locked-icon')}>{Parser(IconLocked)}</div>
+              <LockedIcon />
             </LockedDashboardTooltip>
           )}
           <h3 className={cx('dashboard-link')}>{name}</h3>

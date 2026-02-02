@@ -1,4 +1,4 @@
-@use "sass:color";
+@use 'sass:color';
 /*!
  * Copyright 2019 EPAM Systems
  *
@@ -290,6 +290,12 @@
     &.transparent-background {
       color: rgba($COLOR--darkmode-topaz-main, 0.5);
       background: transparent;
+    }
+  }
+  &.appearance-faded {
+    &:disabled {
+      opacity: 0.3;
+      pointer-events: none;
     }
   }
 }

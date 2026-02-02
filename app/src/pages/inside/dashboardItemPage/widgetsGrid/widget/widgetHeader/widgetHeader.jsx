@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, FormattedRelativeTime } from 'react-intl';
+import { useIntl, defineMessages, FormattedRelativeTime } from 'react-intl';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
+import { activeDashboardItemSelector } from 'controllers/dashboard';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import RefreshIcon from 'common/img/refresh-icon-inline.svg';
@@ -31,6 +33,8 @@ import {
 import { STATE_RENDERING } from 'components/widgets/common/constants';
 import { MATERIALIZED_VIEW_WIDGETS } from 'components/widgets';
 import { Toggle } from '@reportportal/ui-kit';
+import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardTooltip';
+import { useCanLockDashboard } from 'common/hooks';
 import { DescriptionTooltipIcon } from './descriptionTooltipIcon';
 import styles from './widgetHeader.scss';
 
@@ -46,134 +50,143 @@ const messages = defineMessages({
   },
 });
 
-@injectIntl
-export class WidgetHeader extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    data: PropTypes.object,
-    onRefresh: PropTypes.func,
-    onDelete: PropTypes.func,
-    onEdit: PropTypes.func,
-    onForceUpdate: PropTypes.func,
-    customClass: PropTypes.string,
-    isPrintMode: PropTypes.bool,
-    isDisplayedLaunches: PropTypes.bool,
-    onDisplayLaunchesToggle: PropTypes.func,
-  };
-  static defaultProps = {
-    data: {},
-    onRefresh: () => {},
-    onDelete: () => {},
-    onEdit: () => {},
-    onForceUpdate: () => {},
-    customClass: null,
-    isPrintMode: false,
-    isDisplayedLaunches: false,
-  };
+export const WidgetHeader = ({
+  data,
+  onRefresh,
+  onDelete,
+  onEdit,
+  onForceUpdate,
+  customClass,
+  isPrintMode,
+  isDisplayedLaunches,
+  onDisplayLaunchesToggle,
+}) => {
+  const { formatMessage } = useIntl();
+  const dashboard = useSelector(activeDashboardItemSelector);
+  const canLock = useCanLockDashboard();
+  const editDeleteDisabled = dashboard?.locked && !canLock;
+  const isForceUpdateAvailable = MATERIALIZED_VIEW_WIDGETS.includes(data.type);
+  const isEditControlHidden = isForceUpdateAvailable && data.state === STATE_RENDERING;
+  const { value: startTime, unit } = getRelativeUnits(data.lastRefresh);
 
-  renderMetaInfo = () =>
-    this.props.data.meta.map((item, index) => {
+  const renderMetaInfo = () =>
+    data.meta?.map((item, index) => {
       const widgetMode = getWidgetModeByValue(item);
       return (
-        // eslint-disable-next-line react/no-array-index-key
         <div key={`${widgetMode}_${index}`} className={cx('meta-info')}>
           {widgetModeMessages[widgetMode]
-            ? this.props.intl.formatMessage(widgetModeMessages[widgetMode])
+            ? formatMessage(widgetModeMessages[widgetMode])
             : widgetMode}
         </div>
       );
     });
 
-  render() {
-    const {
-      intl,
-      data,
-      onRefresh,
-      onDelete,
-      onEdit,
-      onForceUpdate,
-      onDisplayLaunchesToggle,
-      customClass,
-      isPrintMode,
-      isDisplayedLaunches,
-    } = this.props;
-
-    const isForceUpdateAvailable = MATERIALIZED_VIEW_WIDGETS.includes(data.type);
-    const isEditControlHidden = isForceUpdateAvailable && data.state === STATE_RENDERING;
-    const { value: startTime, unit } = getRelativeUnits(data.lastRefresh);
-
-    return (
-      <div className={cx('widget-header')}>
-        <div className={cx('info-block')}>
-          <div className={cx('widget-name')}>
-            <div className={cx('widget-name-block')}>{data.name}</div>
-            <div className={cx('icons-block')}>
-              {data.description && (
-                <div className={cx('icon')}>
-                  <DescriptionTooltipIcon tooltipContent={data.description} />
-                </div>
-              )}
-            </div>
-          </div>
-          <br />
-          <div className={cx('widget-type')}>
-            <span className={cx('type')}>
-              {widgetTypesMessages[data.type]
-                ? intl.formatMessage(widgetTypesMessages[data.type])
-                : data.type}
-            </span>
-            {this.renderMetaInfo()}
+  return (
+    <div className={cx('widget-header')}>
+      <div className={cx('info-block')}>
+        <div className={cx('widget-name')}>
+          <div className={cx('widget-name-block')}>{data.name}</div>
+          <div className={cx('icons-block')}>
+            {data.description && (
+              <div className={cx('icon')}>
+                <DescriptionTooltipIcon tooltipContent={data.description} />
+              </div>
+            )}
           </div>
         </div>
-        {!isPrintMode && (
-          <div className={customClass}>
-            <div
-              className={cx('controls-block', { 'controls-block-update': isForceUpdateAvailable })}
-            >
-              {onDisplayLaunchesToggle && (
-                <Toggle
-                  value={isDisplayedLaunches}
-                  onChange={onDisplayLaunchesToggle}
-                  className={cx('display-launches-wrapper')}
-                >
-                  <span className={cx('title')}>Display launches</span>
-                </Toggle>
-              )}
-              {isForceUpdateAvailable && (
-                <div className={cx('force-update', 'mobile-hide')}>
-                  {data.lastRefresh && (
-                    <Fragment>
-                      {intl.formatMessage(messages.lastRefresh)}
-                      <span className={cx('force-update-time')}>
-                        <FormattedRelativeTime value={startTime} unit={unit} numeric="auto" />
-                      </span>
-                    </Fragment>
-                  )}
-                  <div className={cx('control', 'force-update-control')} onClick={onForceUpdate}>
-                    {Parser(RefreshIcon)}
-                    <span className={cx('force-update-label')}>
-                      {intl.formatMessage(messages.forceUpdate)}
-                    </span>
-                  </div>
-                </div>
-              )}
-              {!isEditControlHidden && data.type && (
-                <div className={cx('control', 'mobile-hide')} onClick={onEdit}>
-                  {Parser(PencilIcon)}
-                </div>
-              )}
-              {!isForceUpdateAvailable && data.type && (
-                <div className={cx('control')} onClick={onRefresh}>
-                  {Parser(RefreshIcon)}
-                </div>
-              )}
-              <div className={cx('control', 'mobile-hide')} onClick={onDelete}>
-                {Parser(CrossIcon)}
-              </div>
-            </div>
-          </div>
-        )}
+        <br />
+        <div className={cx('widget-type')}>
+          <span className={cx('type')}>
+            {widgetTypesMessages[data.type]
+              ? formatMessage(widgetTypesMessages[data.type])
+              : data.type}
+          </span>
+          {renderMetaInfo()}
+        </div>
       </div>
-    );
-  }
-}
+      {!isPrintMode && (
+        <div className={customClass}>
+          <div
+            className={cx('controls-block', { 'controls-block-update': isForceUpdateAvailable })}
+          >
+            {onDisplayLaunchesToggle && (
+              <Toggle
+                value={isDisplayedLaunches}
+                onChange={onDisplayLaunchesToggle}
+                className={cx('display-launches-wrapper')}
+              >
+                <span className={cx('title')}>Display launches</span>
+              </Toggle>
+            )}
+            {isForceUpdateAvailable && (
+              <div className={cx('force-update', 'mobile-hide')}>
+                {data.lastRefresh && (
+                  <Fragment>
+                    {formatMessage(messages.lastRefresh)}
+                    <span className={cx('force-update-time')}>
+                      <FormattedRelativeTime value={startTime} unit={unit} numeric="auto" />
+                    </span>
+                  </Fragment>
+                )}
+                <button className={cx('control', 'force-update-control')} onClick={onForceUpdate}>
+                  {Parser(RefreshIcon)}
+                  <span className={cx('force-update-label')}>
+                    {formatMessage(messages.forceUpdate)}
+                  </span>
+                </button>
+              </div>
+            )}
+            {!isEditControlHidden && data.type && (
+              <LockedDashboardTooltip locked={dashboard?.locked}>
+                <button
+                  className={cx('control', 'mobile-hide')}
+                  onClick={onEdit}
+                  disabled={editDeleteDisabled}
+                >
+                  {Parser(PencilIcon)}
+                </button>
+              </LockedDashboardTooltip>
+            )}
+            {!isForceUpdateAvailable && data.type && (
+              <button className={cx('control')} onClick={onRefresh}>
+                {Parser(RefreshIcon)}
+              </button>
+            )}
+            <LockedDashboardTooltip locked={dashboard?.locked}>
+              <button
+                className={cx('control', 'mobile-hide')}
+                onClick={onDelete}
+                disabled={editDeleteDisabled}
+              >
+                {Parser(CrossIcon)}
+              </button>
+            </LockedDashboardTooltip>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+WidgetHeader.propTypes = {
+  data: PropTypes.object,
+  onRefresh: PropTypes.func,
+  onDelete: PropTypes.func,
+  onEdit: PropTypes.func,
+  onForceUpdate: PropTypes.func,
+  customClass: PropTypes.string,
+  isPrintMode: PropTypes.bool,
+  isDisplayedLaunches: PropTypes.bool,
+  onDisplayLaunchesToggle: PropTypes.func,
+};
+
+WidgetHeader.defaultProps = {
+  data: {},
+  onRefresh: () => {},
+  onDelete: () => {},
+  onEdit: () => {},
+  onForceUpdate: () => {},
+  customClass: null,
+  isPrintMode: false,
+  isDisplayedLaunches: false,
+};
