@@ -46,7 +46,7 @@ export const EmptyWidgetGrid = ({ action, isDisable }) => {
   const { formatMessage } = useIntl();
   const canLock = useCanLockDashboard();
   const dashboard = useSelector(activeDashboardItemSelector);
-  const isButtonDisabled = dashboard.locked && !canLock;
+  const isButtonDisabled = dashboard?.locked && !canLock;
 
   return (
     <div className={cx('empty-widget')}>
@@ -58,7 +58,7 @@ export const EmptyWidgetGrid = ({ action, isDisable }) => {
         <Fragment>
           <p className={cx('empty-widget-text')}>{formatMessage(messages.dashboardEmptyText)}</p>
           <div className={cx('empty-widget-content')}>
-            <LockedDashboardTooltip locked={dashboard.locked}>
+            <LockedDashboardTooltip locked={dashboard?.locked}>
               <GhostButton
                 icon={AddDashboardIcon}
                 onClick={action}
