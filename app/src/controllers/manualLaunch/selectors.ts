@@ -58,12 +58,16 @@ export const manualLaunchByIdSelector = (launchId: string | number) => (state: A
   return undefined;
 };
 
+// Constants for memoization
+const EMPTY_FOLDERS: ManualLaunchFolder[] = [];
+const EMPTY_EXECUTIONS: TestCaseExecution[] = [];
+
 // Selectors for Manual Launch Folders
 const manualLaunchFoldersStateSelector = (state: AppState): ManualLaunchFoldersState | undefined =>
-  state.manualLaunchFolders || { data: { content: [], page: null } };
+  state.manualLaunchFolders;
 
 export const manualLaunchFoldersSelector = (state: AppState): ManualLaunchFolder[] =>
-  manualLaunchFoldersStateSelector(state)?.data?.content || [];
+  manualLaunchFoldersStateSelector(state)?.data?.content || EMPTY_FOLDERS;
 
 export const manualLaunchFoldersPageSelector = (state: AppState): Page | null =>
   manualLaunchFoldersStateSelector(state)?.data?.page || null;
@@ -77,7 +81,7 @@ const manualLaunchTestCaseExecutionsStateSelector = (
 ): ManualLaunchTestCaseExecutionsState | undefined => state.manualLaunchTestCaseExecutions;
 
 export const manualLaunchTestCaseExecutionsSelector = (state: AppState): TestCaseExecution[] =>
-  manualLaunchTestCaseExecutionsStateSelector(state)?.data?.content || [];
+  manualLaunchTestCaseExecutionsStateSelector(state)?.data?.content || EMPTY_EXECUTIONS;
 
 export const manualLaunchTestCaseExecutionsPageSelector = (state: AppState): Page | null =>
   manualLaunchTestCaseExecutionsStateSelector(state)?.data?.page || null;
