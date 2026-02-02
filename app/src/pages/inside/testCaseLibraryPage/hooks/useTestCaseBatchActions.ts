@@ -97,7 +97,7 @@ export const useTestCaseBatchActions = () => {
 
         if (isNewFolder && Boolean(newFolderDetails)) {
           createNewStoreFolder({
-            targetFolderId,
+            id: targetFolderId,
             folderName: newFolderDetails.name,
             parentFolderId: newFolderDetails.parentTestFolderId,
             countOfTestCases: testCaseIds.length,

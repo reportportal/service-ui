@@ -165,7 +165,7 @@ export const LaunchSidePanel = memo(({ launchId, isVisible, onClose }: LaunchSid
   const footerComponent = (
     <div className={cx('footer')}>
       <Button
-        variant="ghost"
+        variant="text"
         className={cx('action-button')}
         onClick={handleOpenDetailsClick}
         data-automation-id="launch-open-details"

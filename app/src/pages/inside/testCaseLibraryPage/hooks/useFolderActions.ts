@@ -33,19 +33,19 @@ export const useFolderActions = () => {
 
   const createNewStoreFolder = useCallback(
     ({
-      targetFolderId,
+      id,
       folderName,
       parentFolderId,
       countOfTestCases = 0,
     }: {
-      targetFolderId: number;
+      id: number;
       folderName: string;
       parentFolderId?: number | null;
       countOfTestCases?: number;
     }) => {
       dispatch(
         createFoldersSuccessAction({
-          id: targetFolderId,
+          id,
           name: folderName,
           parentFolderId: parentFolderId ?? null,
           countOfTestCases,
@@ -77,7 +77,7 @@ export const useFolderActions = () => {
 
       if (isCreatingNewFolder) {
         createNewStoreFolder({
-          targetFolderId,
+          id: targetFolderId,
           folderName: newFolderDetails.name,
           parentFolderId: newFolderDetails.parentTestFolderId,
           countOfTestCases: testCaseCount,

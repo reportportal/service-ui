@@ -69,9 +69,11 @@ const BatchDuplicateToFolderModal = reduxForm<
   },
 })(({
   dirty,
+  pristine,
+  invalid,
+  data: { selectedTestCaseIds = [], count = 0, onClearSelection },
   handleSubmit,
   change,
-  data: { selectedTestCaseIds = [], count = 0, onClearSelection },
 }: BatchDuplicateToFolderModalProps &
   InjectedFormProps<FolderModalFormValues, BatchDuplicateToFolderModalProps>) => {
   const { formatMessage } = useIntl();
@@ -105,6 +107,7 @@ const BatchDuplicateToFolderModal = reduxForm<
   const { okButton, cancelButton, hideModal } = useModalButtons({
     okButtonText: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE),
     isLoading,
+    isSubmitButtonDisabled: pristine || invalid,
     onSubmit: handleSubmit(onSubmit) as () => void,
   });
 
