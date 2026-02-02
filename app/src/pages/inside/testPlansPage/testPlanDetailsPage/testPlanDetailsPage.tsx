@@ -50,6 +50,7 @@ import {
   useEditTestPlanModal,
   useDuplicateTestPlanModal,
   useDeleteTestPlanModal,
+  useCreateLaunchModal,
 } from '../testPlanModals';
 import { TestPlanFolders } from './testPlanFolders';
 
@@ -82,6 +83,7 @@ export const TestPlanDetailsPage = () => {
         payload: { organizationSlug, projectSlug },
       }),
   });
+  const { openModal: openCreateLaunchModal } = useCreateLaunchModal();
 
   const actionsMap = {
     edit: openEditModal,
@@ -145,7 +147,11 @@ export const TestPlanDetailsPage = () => {
             </Button>
           )}
           {canCreateManualLaunch && (
-            <Button variant="primary" data-automation-id="createLaunchButton">
+            <Button
+              variant="primary"
+              data-automation-id="createLaunchButton"
+              onClick={openCreateLaunchModal}
+            >
               {formatMessage(messages.createLaunch)}
             </Button>
           )}
