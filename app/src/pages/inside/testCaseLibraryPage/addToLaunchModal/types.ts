@@ -15,12 +15,12 @@
  */
 
 import { TestPlanDto } from 'controllers/testPlan';
-
 import { Attribute } from '../types';
+import { Launch } from 'pages/inside/manualLaunchesPage/types';
 
 export interface AddToLaunchModalData {
+  testCaseId: number;
   testCaseName: string;
-  projectKey: string;
 }
 
 export interface AddToLaunchModalProps {
@@ -28,8 +28,22 @@ export interface AddToLaunchModalProps {
 }
 
 export interface AddToLaunchFormData {
-  selectedLaunch: any; // TODO: waiting for BE contract
-  selectedTestPlan: TestPlanDto;
-  launchDescription: string;
-  launchAttributes: Attribute[];
+  selectedLaunch?: Launch;
+  selectedTestPlan?: TestPlanDto;
+  launchDescription?: string;
+  launchName?: string;
+  launchAttributes?: Attribute[];
+}
+
+export interface CreateLaunchDto {
+  name: string;
+  startTime: string;
+  description: string;
+  testPlanId: number;
+  testCaseIds: number[];
+  attributes: Attribute[];
+}
+
+export interface AddTestCaseToLaunchDto {
+  testCaseId: number[];
 }

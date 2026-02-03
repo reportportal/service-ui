@@ -33,6 +33,11 @@
   line-height: 16px;
   font-weight: 400;
   margin-bottom: 16px;
+
+  &-link {
+    color: var(--rp-ui-base-dark-topaz-main);
+    text-decoration: none;
+  }
 }
 
 .launch-description {

@@ -191,6 +191,7 @@ export const TestCaseDetailsHeader = ({
             <AddToLaunchButton
               manualScenario={testCase?.manualScenario}
               testCaseName={testCase.name}
+              testCaseId={testCase.id}
             />
           )}
           {canAddTestCaseToTestPlan && (

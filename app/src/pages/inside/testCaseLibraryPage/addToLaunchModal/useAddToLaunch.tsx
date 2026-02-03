@@ -15,24 +15,33 @@
  */
 
 import { InjectedFormProps } from 'redux-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { TestPlanDto } from 'controllers/testPlan';
 import { URLS } from 'common/urls';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { useDebouncedSpinner } from 'common/hooks';
 
-import { AddToLaunchFormData, AddToLaunchModalProps } from './types';
+import {
+  AddTestCaseToLaunchDto,
+  AddToLaunchFormData,
+  AddToLaunchModalProps,
+  CreateLaunchDto,
+} from './types';
 import { SELECTED_TEST_PLAN_FIELD_NAME, SELECTED_LAUNCH_FIELD_NAME } from './addToLaunchModal';
+import { ButtonSwitcherOption } from 'pages/inside/common/buttonSwitcher';
+import { projectKeySelector } from 'controllers/project';
+import { fetch } from 'common/utils';
 
 export const useAddToLaunch = (
   props: Pick<InjectedFormProps<AddToLaunchFormData, AddToLaunchModalProps>, 'change'> & {
-    projectKey: string;
+    testCaseId: number;
   },
 ) => {
-  const { change } = props;
+  const { testCaseId, change } = props;
   const dispatch = useDispatch();
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
+  const projectKey = useSelector(projectKeySelector);
 
   const setSelectedTestPlan = (value: TestPlanDto | null) => {
     change(SELECTED_TEST_PLAN_FIELD_NAME, value || null);
@@ -42,19 +51,44 @@ export const useAddToLaunch = (
     change(SELECTED_LAUNCH_FIELD_NAME, value || null);
   };
 
-  const addToLaunch = async (_data: AddToLaunchFormData) => {
+  const addToLaunch = (activeButton: ButtonSwitcherOption) => async (data: AddToLaunchFormData) => {
     try {
       showSpinner();
-      await fetch(URLS.addTestCaseToLaunch(projectKey, _data.selectedLaunch.id), {
-        method: 'post',
-        body: { testCaseId },
-      });
+      if (activeButton === ButtonSwitcherOption.EXISTING) {
+        await fetch<AddTestCaseToLaunchDto>(
+          URLS.addTestCaseToLaunch(projectKey, data.selectedLaunch.id),
+          {
+            method: 'post',
+            data: { testCaseId },
+          },
+        );
 
-      dispatch(
-        showSuccessNotification({
-          messageId: 'testPlanCreatedSuccess',
-        }),
-      );
+        dispatch(
+          showSuccessNotification({
+            messageId: 'launchCreatedSuccess',
+          }),
+        );
+      } else {
+        const payload: CreateLaunchDto = {
+          attributes: data.launchAttributes || [],
+          description: data.launchDescription || '',
+          name: data.launchName,
+          startTime: new Date().toISOString(),
+          testCaseIds: [testCaseId],
+          testPlanId: data.selectedTestPlan.id,
+        };
+
+        await fetch<CreateLaunchDto>(URLS.createManualLaunch(projectKey), {
+          method: 'post',
+          data: payload,
+        });
+
+        dispatch(
+          showSuccessNotification({
+            messageId: 'launchCreatedSuccess',
+          }),
+        );
+      }
     } catch {
       dispatch(
         showErrorNotification({

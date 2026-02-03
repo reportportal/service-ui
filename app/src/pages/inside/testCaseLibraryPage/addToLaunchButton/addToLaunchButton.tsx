@@ -31,11 +31,16 @@ import styles from './addToLaunchButton.scss';
 const cx = createClassnames(styles);
 
 interface AddToLaunchButtonProps {
+  testCaseId: number;
   testCaseName: string;
   manualScenario: ManualScenario;
 }
 
-export const AddToLaunchButton = ({ testCaseName, manualScenario }: AddToLaunchButtonProps) => {
+export const AddToLaunchButton = ({
+  testCaseId,
+  testCaseName,
+  manualScenario,
+}: AddToLaunchButtonProps) => {
   const { formatMessage } = useIntl();
   const { openModal: openAddToLaunchModal } = useAddToLaunchModal();
 
@@ -66,7 +71,7 @@ export const AddToLaunchButton = ({ testCaseName, manualScenario }: AddToLaunchB
   }, [manualScenario]);
 
   const handleAddToLaunchClick = () => {
-    openAddToLaunchModal({ testCaseName });
+    openAddToLaunchModal({ testCaseId, testCaseName });
   };
 
   const buttonComponent = (
