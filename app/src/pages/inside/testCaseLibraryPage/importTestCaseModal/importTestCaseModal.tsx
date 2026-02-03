@@ -114,14 +114,21 @@ export const ImportTestCaseModal = ({
     dispatch(hideModalAction());
   };
 
-  const handleFolderSelection = (selectedItem: FolderWithFullPath | NewFolderData) => {
-    if (selectedItem && 'id' in selectedItem) {
-      change('existingFolderId', selectedItem.id);
-      change('selectedFolder', selectedItem);
-    } else if (selectedItem && 'name' in selectedItem) {
+  const handleFolderSelection = (selectedItem: FolderWithFullPath | NewFolderData | null | undefined) => {
+    if (!selectedItem) {
       change('existingFolderId', null);
       change('selectedFolder', null);
+      return;
     }
+
+    if ('id' in selectedItem) {
+      change('existingFolderId', selectedItem.id);
+      change('selectedFolder', selectedItem);
+      return;
+    }
+
+    change('existingFolderId', null);
+    change('selectedFolder', null);
   };
 
   const setTargetAndForm = (next: ImportTarget) => {
