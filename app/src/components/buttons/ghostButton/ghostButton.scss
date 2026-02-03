@@ -300,7 +300,9 @@
   }
 }
 .icon {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   width: 20px;
   height: 20px;

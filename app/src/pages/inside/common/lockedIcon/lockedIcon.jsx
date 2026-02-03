@@ -19,18 +19,23 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import IconLocked from 'common/img/locked-inline.svg';
+import IconUnlocked from 'common/img/unlocked-inline.svg';
 import styles from './lockedIcon.scss';
 
 const cx = classNames.bind(styles);
 
-export const LockedIcon = ({ className }) => (
-  <div className={cx('locked-icon', className)}>{Parser(IconLocked)}</div>
+export const LockedIcon = ({ className, locked = true }) => (
+  <div className={cx('locked-icon', className)}>
+    {Parser(locked ? IconLocked : IconUnlocked)}
+  </div>
 );
 
 LockedIcon.propTypes = {
   className: PropTypes.string,
+  locked: PropTypes.bool,
 };
 
 LockedIcon.defaultProps = {
   className: '',
+  locked: true,
 };
