@@ -195,7 +195,7 @@ export const FilterSidePanel = memo(
           onClose={onClose}
           closeButtonAriaLabel={formatMessage(commonMessages.closePanel)}
           side="right"
-          showOverlay={true}
+          showOverlay
           allowCloseOutside={!hasChanges}
         />
       </div>
