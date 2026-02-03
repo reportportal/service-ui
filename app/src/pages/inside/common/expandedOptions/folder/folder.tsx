@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState, useCallback, MouseEvent as ReactMouseEvent, useEffect } from 'react';
+import { useState, useCallback, MouseEvent as ReactMouseEvent, useEffect, FC } from 'react';
 import { isEmpty } from 'es-toolkit/compat';
 import { ChevronDownDropdownIcon, MeatballMenuIcon } from '@reportportal/ui-kit';
 
@@ -24,12 +24,19 @@ import { PopoverControl } from 'pages/common/popoverControl';
 import { highlightText, hasMatchInTree, hasChildMatch } from '../utils';
 import { FolderProps } from './types';
 import { useFolderTooltipItems } from './useFolderTooltipItems';
+import { FolderWrapper } from './folderWrapper';
+import { FolderSubfolders } from './folderSubfolders';
 
 import styles from './folder.scss';
 
 const cx = createClassnames(styles);
 
-export const Folder = ({
+interface FolderComposite extends FC<FolderProps> {
+  Wrapper: typeof FolderWrapper;
+  Subfolders: typeof FolderSubfolders;
+}
+
+export const Folder: FolderComposite = ({
   folder,
   activeFolder,
   instanceKey,
@@ -82,14 +89,7 @@ export const Folder = ({
   );
 
   return (
-    <li
-      className={cx('folders-tree__item', {
-        'folders-tree__item--open': isOpen,
-      })}
-      role="treeitem"
-      aria-expanded={isOpen}
-      aria-selected={activeFolder === folder.id}
-    >
+    <Folder.Wrapper isOpen={isOpen} ariaSelected={activeFolder === folder.id}>
       <div className={cx('folders-tree__item-content')}>
         {!isEmpty(folder.folders) && <ChevronDownDropdownIcon onClick={handleChevronClick} />}
         <div
@@ -137,35 +137,35 @@ export const Folder = ({
           <span className={cx('folders-tree__item-title--counter')}>{folder.testsCount || 0}</span>
         </div>
       </div>
+      <Folder.Subfolders shouldDisplay={isOpen && !isEmpty(folder.folders)}>
+        {folder.folders?.map((subfolder) => {
+          const shouldShow =
+            !searchQuery ||
+            isDirectMatch ||
+            ancestorDirectMatch ||
+            hasMatchInTree(subfolder, searchQuery);
 
-      {isOpen && !isEmpty(folder.folders) && (
-        <ul className={cx('folders-tree', 'folders-tree--inner')} role="group">
-          {folder.folders?.map((subfolder) => {
-            const shouldShow =
-              !searchQuery ||
-              isDirectMatch ||
-              ancestorDirectMatch ||
-              hasMatchInTree(subfolder, searchQuery);
+          if (!shouldShow) return null;
 
-            if (!shouldShow) return null;
-
-            return (
-              <Folder
-                folder={subfolder}
-                key={subfolder.id}
-                activeFolder={activeFolder}
-                instanceKey={instanceKey}
-                expandedIds={expandedIds}
-                onFolderClick={onFolderClick}
-                setAllTestCases={setAllTestCases}
-                onToggleFolder={onToggleFolder}
-                searchQuery={searchQuery}
-                ancestorDirectMatch={isDirectMatch || ancestorDirectMatch}
-              />
-            );
-          })}
-        </ul>
-      )}
-    </li>
+          return (
+            <Folder
+              folder={subfolder}
+              key={subfolder.id}
+              activeFolder={activeFolder}
+              instanceKey={instanceKey}
+              expandedIds={expandedIds}
+              onFolderClick={onFolderClick}
+              setAllTestCases={setAllTestCases}
+              onToggleFolder={onToggleFolder}
+              searchQuery={searchQuery}
+              ancestorDirectMatch={isDirectMatch || ancestorDirectMatch}
+            />
+          );
+        })}
+      </Folder.Subfolders>
+    </Folder.Wrapper>
   );
 };
+
+Folder.Wrapper = FolderWrapper;
+Folder.Subfolders = FolderSubfolders;

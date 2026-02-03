@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
@@ -42,6 +42,7 @@ import {
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { testPlanTestCasesSelector } from 'controllers/testPlan';
 
+import { TestLibrarySidePanel } from '../../common/testLibrarySidePanel';
 import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWithBreadcrumbsAndActions';
 import { PageLoader } from '../pageLoader';
 import { EmptyTestPlan } from './emptyTestPlan';
@@ -65,12 +66,16 @@ export const TestPlanDetailsPage = () => {
   const dispatch = useDispatch();
   const { organizationSlug, projectSlug } = useProjectDetails();
   const { canAddTestCaseToTestPlan, canCreateManualLaunch } = useUserPermissions();
+  const [isTestLibrarySidePanelOpen, setIsTestLibrarySidePanelOpen] = useState(false);
+  const [selectedTestCasesToBeAdded, setSelectedTestCasesToBeAdded] = useState<number[]>([]);
+
   const testPlanId = useTestPlanId();
   const testPlan = useTestPlanById(testPlanId);
   const isLoading = useActiveTestPlanLoading();
   const isTestPlanTestCasesLoading = useTestPlanTestCasesLoading();
   const testPlanFolders = useTestPlanFolders();
   const testCases = useTestPlanSelector(testPlanTestCasesSelector);
+
   const { openModal: openEditModal } = useEditTestPlanModal();
   const { openModal: openDuplicateModal } = useDuplicateTestPlanModal({
     onSuccess: (newTestPlanId) =>
@@ -99,6 +104,10 @@ export const TestPlanDetailsPage = () => {
     if (testPlan) {
       actionsMap[action](testPlan);
     }
+  };
+
+  const handleAddTestCases = (testCaseIds: number[]) => {
+    setSelectedTestCasesToBeAdded([...selectedTestCasesToBeAdded, ...testCaseIds]);
   };
 
   useEffect(() => {
@@ -146,7 +155,11 @@ export const TestPlanDetailsPage = () => {
       {!isEmpty(testPlanFolders) && (
         <>
           {canAddTestCaseToTestPlan && (
-            <Button variant="ghost" data-automation-id="addTestsFromLibraryButton">
+            <Button
+              variant="ghost"
+              data-automation-id="addTestsFromLibraryButton"
+              onClick={() => setIsTestLibrarySidePanelOpen(true)}
+            >
               {formatMessage(commonMessages.addTestsFromLibrary)}
             </Button>
           )}
@@ -192,6 +205,11 @@ export const TestPlanDetailsPage = () => {
           <div className={cx('test-plan-details-page__content')}>{renderContent()}</div>
         </div>
       </ScrollWrapper>
+      <TestLibrarySidePanel
+        isOpen={isTestLibrarySidePanelOpen}
+        onAddTestCases={handleAddTestCases}
+        onClose={() => setIsTestLibrarySidePanelOpen(false)}
+      />
     </SettingsLayout>
   );
 };

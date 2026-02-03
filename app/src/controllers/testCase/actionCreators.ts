@@ -42,6 +42,7 @@ import {
   TOGGLE_FOLDER_EXPANSION,
   EXPAND_FOLDERS_TO_LEVEL,
   SET_EXPANDED_FOLDER_IDS,
+  SET_FOLDERS_FETCHED,
 } from './constants';
 import { Folder, TransformedFolder } from './types';
 
@@ -217,4 +218,8 @@ export interface SetExpandedFolderIdsParams {
 export const setExpandedFolderIdsAction = (params: SetExpandedFolderIdsParams) => ({
   type: SET_EXPANDED_FOLDER_IDS,
   payload: params,
+});
+
+export const setFoldersFetchedAction = () => ({
+  type: SET_FOLDERS_FETCHED,
 });
