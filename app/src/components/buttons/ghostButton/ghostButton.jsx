@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
@@ -59,6 +60,17 @@ export const GhostButton = ({
     'transparent-border-hover': transparentBorderHover,
     'transparent-background': transparentBackground,
   });
+
+  const renderIcon = () => {
+    if (React.isValidElement(icon)) {
+      return icon;
+    }
+    if (typeof icon === 'string') {
+      return Parser(icon);
+    }
+    return null;
+  };
+
   return (
     <button
       style={style}
@@ -70,7 +82,7 @@ export const GhostButton = ({
     >
       {icon && (
         <i className={cx('icon', { 'only-icon': !children, 'icon-at-right': iconAtRight })}>
-          {Parser(icon)}
+          {renderIcon()}
         </i>
       )}
       {children && <span className={cx('text')}>{children}</span>}
@@ -88,7 +100,7 @@ GhostButton.propTypes = {
   notMinified: PropTypes.bool,
   title: PropTypes.string,
   color: PropTypes.string,
-  icon: PropTypes.string,
+  icon: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   type: PropTypes.string,
   onClick: PropTypes.func,
   transparentBorder: PropTypes.bool,

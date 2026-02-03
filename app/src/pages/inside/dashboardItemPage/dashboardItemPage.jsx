@@ -52,6 +52,7 @@ import AddWidgetIcon from 'common/img/add-widget-inline.svg';
 import ExportIcon from 'common/img/export-inline.svg';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { useCanLockDashboard } from 'common/hooks/useCanLockDashboard';
+import { updateDashboardLockedAction } from 'controllers/dashboard/actionCreators';
 import { LockedDashboardTooltip } from '../common/lockedDashboardTooltip';
 import { LockedIcon } from '../common/lockedIcon';
 import { getUpdatedWidgetsList } from './modals/common/utils';
@@ -109,6 +110,14 @@ const messages = defineMessages({
   lockedDashboard: {
     id: 'DashboardPage.lockedDashboard',
     defaultMessage: 'Locked dashboard',
+  },
+  lock: {
+    id: 'DashboardPage.lock',
+    defaultMessage: 'Lock',
+  },
+  unlock: {
+    id: 'DashboardPage.unlock',
+    defaultMessage: 'Unlock',
   },
 });
 
@@ -254,6 +263,14 @@ export const DashboardItemPage = () => {
     );
   }, [activeDashboardId, addWidget, trackEvent, dispatch]);
 
+  const onChangeLockedState = () => {
+    const newValue = !dashboard.locked;
+    const iconName = `${dashboard.locked ? 'un' : ''}lock_dashboard`;
+
+    trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard(iconName, dashboard.id));
+    dispatch(updateDashboardLockedAction(newValue, dashboard));
+  };
+
   return (
     <PageLayout>
       <PageHeader breadcrumbs={getBreadcrumbs()}>
@@ -283,6 +300,14 @@ export const DashboardItemPage = () => {
               </div>
             )}
             <div className={cx('buttons-block')}>
+              {canLock && (
+                <GhostButton
+                  icon={<LockedIcon locked={!dashboard.locked} />}
+                  onClick={onChangeLockedState}
+                >
+                  {formatMessage(dashboard.locked ? messages.unlock : messages.lock)}
+                </GhostButton>
+              )}
               <LockedDashboardTooltip locked={dashboard.locked}>
                 <GhostButton
                   icon={EditIcon}

@@ -32,6 +32,7 @@ import {
   UPDATE_DASHBOARD_WIDGETS,
   DUPLICATE_DASHBOARD,
   DUPLICATE_DASHBOARD_SUCCESS,
+  UPDATE_DASHBOARD_LOCKED,
 } from './constants';
 
 export const fetchDashboardsAction = (params) => ({
@@ -107,3 +108,8 @@ export const changeVisibilityTypeAction = (type) => {
     payload: visibilityType,
   };
 };
+
+export const updateDashboardLockedAction = (locked, dashboard) => ({
+  type: UPDATE_DASHBOARD_LOCKED,
+  payload: { locked, dashboard }
+});
