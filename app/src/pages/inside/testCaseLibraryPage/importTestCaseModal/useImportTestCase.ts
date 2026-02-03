@@ -71,12 +71,13 @@ export const useImportTestCase = () => {
   const { showSuccessNotification, showErrorNotification } = useNotification();
 
   const redirectToFolder = (folderId: number) => {
-    const hash = globalThis.location.hash || '';
-    const idx = hash.indexOf('/testLibrary');
-    if (idx === -1) return;
+    const testLibraryRoute = '/testLibrary';
+    const { hash = '' } = globalThis.location;
 
-    const base = hash.slice(0, idx + '/testLibrary'.length);
-    globalThis.location.hash = `${base}/folder/${folderId}`;
+    if (!hash.includes(testLibraryRoute)) return;
+
+    const [base] = hash.split(testLibraryRoute);
+    globalThis.location.hash = `${base}${testLibraryRoute}/folder/${folderId}`;
   };
 
   const refetchTestCases = useCallback(
