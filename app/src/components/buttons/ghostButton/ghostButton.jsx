@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
@@ -42,7 +43,6 @@ export const GhostButton = ({
   style,
   transparentBackground,
   appearance,
-  preventIconParsing,
 }) => {
   const classes = cx('ghost-button', {
     disabled: disabled && appearance !== 'faded',
@@ -60,6 +60,17 @@ export const GhostButton = ({
     'transparent-border-hover': transparentBorderHover,
     'transparent-background': transparentBackground,
   });
+
+  const renderIcon = () => {
+    if (React.isValidElement(icon)) {
+      return icon;
+    }
+    if (typeof icon === 'string') {
+      return Parser(icon);
+    }
+    return null;
+  };
+
   return (
     <button
       style={style}
@@ -71,7 +82,7 @@ export const GhostButton = ({
     >
       {icon && (
         <i className={cx('icon', { 'only-icon': !children, 'icon-at-right': iconAtRight })}>
-          {preventIconParsing ? icon : Parser(icon)}
+          {renderIcon()}
         </i>
       )}
       {children && <span className={cx('text')}>{children}</span>}
@@ -100,7 +111,6 @@ GhostButton.propTypes = {
   strokedIcon: PropTypes.bool,
   transparentBackground: PropTypes.bool,
   appearance: PropTypes.string,
-  preventIconParsing: PropTypes.bool,
 };
 
 GhostButton.defaultProps = {
@@ -124,5 +134,4 @@ GhostButton.defaultProps = {
   strokedIcon: false,
   transparentBackground: false,
   appearance: '',
-  preventIconParsing: false,
 };

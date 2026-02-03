@@ -304,7 +304,6 @@ export const DashboardItemPage = () => {
                 <GhostButton
                   icon={<LockedIcon locked={!dashboard.locked} />}
                   onClick={onChangeLockedState}
-                  preventIconParsing
                 >
                   {formatMessage(dashboard.locked ? messages.unlock : messages.lock)}
                 </GhostButton>
