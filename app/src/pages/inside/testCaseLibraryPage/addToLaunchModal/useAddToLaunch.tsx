@@ -32,6 +32,7 @@ import { SELECTED_TEST_PLAN_FIELD_NAME, SELECTED_LAUNCH_FIELD_NAME } from './add
 import { ButtonSwitcherOption } from 'pages/inside/common/buttonSwitcher';
 import { projectKeySelector } from 'controllers/project';
 import { fetch } from 'common/utils';
+import { hideModalAction } from 'controllers/modal';
 
 export const useAddToLaunch = (
   props: Pick<InjectedFormProps<AddToLaunchFormData, AddToLaunchModalProps>, 'change'> & {
@@ -65,7 +66,7 @@ export const useAddToLaunch = (
 
         dispatch(
           showSuccessNotification({
-            messageId: 'launchCreatedSuccess',
+            messageId: 'launchUpdatedSuccess',
           }),
         );
       } else {
@@ -89,6 +90,7 @@ export const useAddToLaunch = (
           }),
         );
       }
+      dispatch(hideModalAction());
     } catch {
       dispatch(
         showErrorNotification({
