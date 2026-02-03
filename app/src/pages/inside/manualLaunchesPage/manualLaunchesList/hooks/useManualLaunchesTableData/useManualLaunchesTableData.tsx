@@ -106,34 +106,42 @@ export const useManualLaunchesTableData = (
             className: cx('cell-content', { selected: isSelected }),
           };
 
-          const hoverableCellProps = {
-            ...baseCellProps,
-            className: cx('cell-content', 'manual-launches-list-table-cell-hoverable', {
-              selected: isSelected,
-            }),
-          };
-
           return {
             id,
             count: {
               content: count,
               component: (
-                <div {...baseCellProps} {...navigateToDetailsHandlers}>
-                  <CountTag
-                    count={count}
-                    className={cx(
-                      'manual-launches-list-table-cell-count',
-                      'manual-launches-list-table-cell-hoverable',
-                    )}
-                  />
+                <div {...baseCellProps} {...openSidePanelHandlers}>
+                  <button
+                    {...navigateToDetailsHandlers}
+                    className={cx('manual-launches-list-table__details-button')}
+                    type="button"
+                  >
+                    <CountTag
+                      count={count}
+                      className={cx(
+                        'manual-launches-list-table-cell-count',
+                        'manual-launches-list-table-cell-hoverable',
+                      )}
+                    />
+                  </button>
                 </div>
               ),
             },
             name: {
               content: name,
               component: (
-                <div {...hoverableCellProps} {...navigateToDetailsHandlers}>
-                  {name}
+                <div {...baseCellProps} {...openSidePanelHandlers}>
+                  <button
+                    {...navigateToDetailsHandlers}
+                    className={cx(
+                      'manual-launches-list-table__details-button',
+                      'manual-launches-list-table-cell-hoverable',
+                    )}
+                    type="button"
+                  >
+                    {name}
+                  </button>
                 </div>
               ),
             },

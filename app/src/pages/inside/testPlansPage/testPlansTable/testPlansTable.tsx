@@ -180,6 +180,7 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
             sortableColumns={[]}
             className={cx('test-plans__table')}
             rowClassName={cx('test-plans__table-row')}
+            headerClassName={cx('test-plans__table-header')}
           />
         )}
       </div>

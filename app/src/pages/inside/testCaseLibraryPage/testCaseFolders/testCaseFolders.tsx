@@ -63,7 +63,7 @@ export const TestCaseFolders = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { openModal: openCreateFolderModal } = useCreateFolderModal();
-  const { navigateToFolder } = useNavigateToFolder();
+  const { navigateToFolder, expandFoldersToLevel } = useNavigateToFolder();
   const urlFolderId = useSelector(urlFolderIdSelector);
   const isLoadingTestCases = useSelector(isLoadingTestCasesSelector);
   const testCases = useSelector(testCasesSelector);
@@ -125,6 +125,8 @@ export const TestCaseFolders = () => {
           ...queryParams,
         }),
       );
+
+      expandFoldersToLevel(urlFolderIdNumber);
     } else if (!activeFolder && urlFolderId === '') {
       dispatch(getAllTestCasesAction(queryParams));
     }
