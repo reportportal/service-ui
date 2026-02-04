@@ -46,7 +46,6 @@ const AttributeListField = ({ input, ...rest }: AttributeListFieldProps) => (
     {...rest}
     attributes={input.value || []}
     onChange={input.onChange}
-    customClass=""
     isAttributeValueRequired={false}
   />
 );
@@ -57,11 +56,13 @@ const CreateLaunchModalComponent = ({
   dirty,
   invalid,
   handleSubmit,
+  selectedTestsCount,
 }: CreateLaunchModalProps & InjectedFormProps<CreateLaunchFormValues>) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
 
   const isSubmitDisabled = isLoading || invalid;
+  const hasSelectedTests = !!selectedTestsCount;
 
   const okButton = {
     children: (
@@ -90,30 +91,52 @@ const CreateLaunchModalComponent = ({
       <div className={cx('create-launch-modal__content-wrapper')}>
         <form onSubmit={handleSubmit(onSubmit) as (event: FormEvent) => void}>
           <div className={cx('create-launch-modal__container')}>
-            <FieldProvider name="name" placeholder={formatMessage(messages.enterLaunchName)}>
-              <FieldErrorHint provideHint={false}>
-                <FieldText
-                  label={formatMessage(messages.launchName)}
-                  defaultWidth={false}
-                  isRequired
-                />
-              </FieldErrorHint>
-            </FieldProvider>
+            {hasSelectedTests && (
+              <div className={cx('scope-of-testing-field')}>
+                <FieldProvider
+                  name="scopeOfTesting"
+                  disabled
+                  value={`Selected tests (${selectedTestsCount})`}
+                >
+                  <FieldErrorHint provideHint={false}>
+                    <FieldText
+                      label={formatMessage(messages.scopeOfTesting)}
+                      defaultWidth={false}
+                      disabled
+                    />
+                  </FieldErrorHint>
+                </FieldProvider>
+              </div>
+            )}
+            <div className={cx('launch-name-field')}>
+              <FieldProvider name="name" placeholder={formatMessage(messages.enterLaunchName)}>
+                <FieldErrorHint provideHint={false}>
+                  <FieldText
+                    label={formatMessage(messages.launchName)}
+                    defaultWidth={false}
+                    isRequired
+                  />
+                </FieldErrorHint>
+              </FieldProvider>
+            </div>
             <FieldProvider
               name="description"
-              placeholder={formatMessage(messages.addLaunchDescription)}
+              placeholder={formatMessage(messages.addLaunchDescriptionOptional)}
             >
-              <FieldErrorHint provideHint={false}>
-                <FieldTextFlex label={formatMessage(commonMessages.description)} value="" />
-              </FieldErrorHint>
+              <FieldTextFlex label={formatMessage(commonMessages.description)} value="" />
             </FieldProvider>
-            <div>
-              <FieldElement label={formatMessage(messages.launchAttributes)} withoutProvider>
+            <div className={cx('attributes-section')}>
+              <FieldElement
+                label={formatMessage(messages.launchAttributes)}
+                withoutProvider
+                childrenClassName={cx('attributes-content')}
+              >
                 <Field
                   name="attributes"
                   component={AttributeListField}
                   showButton
                   newAttrMessage={formatMessage(messages.addAttributes)}
+                  addButtonClassName={cx('add-attribute-button')}
                   maxLength={50}
                   editable
                   defaultOpen={false}
@@ -136,15 +159,11 @@ const CreateLaunchModalComponent = ({
   );
 };
 
-const validate = ({ name, description, attributes }: CreateLaunchFormValues) => {
+const validate = ({ name, attributes }: CreateLaunchFormValues) => {
   const errors: Record<string, string> = {};
 
   if (commonValidators.requiredField(name)) {
     errors.name = commonValidators.requiredField(name);
-  }
-
-  if (commonValidators.requiredField(description)) {
-    errors.description = commonValidators.requiredField(description);
   }
 
   // Validate attributes: if an attribute has a value, it must have a key

@@ -24,24 +24,33 @@ import { CreateLaunchFormValues } from './types';
 import { CREATE_LAUNCH_MODAL_KEY } from './constants';
 import { CreateLaunchModal } from './createLaunchModal';
 
-export const useCreateLaunchModal = () => {
+export const useCreateLaunchModal = (selectedTestsCount?: number) => {
   const dispatch = useDispatch();
   const [isLoading] = useState(false);
 
-  const handleSubmit = async (formValues: CreateLaunchFormValues) => {
+  const handleSubmit = (formValues: CreateLaunchFormValues) => {
     // For now, just console.log the data as requested
     console.info('Create Launch Data:', {
       name: formValues.name,
       description: formValues.description,
       attributes: formValues.attributes,
+      selectedTestsCount,
     });
 
     // Close the modal after logging
     dispatch(hideModalAction());
+
+    return Promise.resolve();
   };
 
   return useModal({
     modalKey: CREATE_LAUNCH_MODAL_KEY,
-    renderModal: () => <CreateLaunchModal isLoading={isLoading} onSubmit={handleSubmit} />,
+    renderModal: () => (
+      <CreateLaunchModal
+        isLoading={isLoading}
+        onSubmit={handleSubmit}
+        selectedTestsCount={selectedTestsCount}
+      />
+    ),
   });
 };

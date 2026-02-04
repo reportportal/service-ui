@@ -22,6 +22,32 @@
   &__container {
     display: flex;
     flex-direction: column;
-    row-gap: 16px;
+  }
+
+  .scope-of-testing-field {
+    margin-bottom: 16px;
+
+    input {
+      cursor: not-allowed;
+      background-color: var(--color-bg-disabled, #f5f5f5);
+    }
+  }
+
+  .launch-name-field {
+    margin-bottom: 16px;
+  }
+
+  .attributes-section {
+    margin-top: 16px;
+
+    .attributes-content {
+      margin-top: 12px;
+    }
+  }
+
+  .add-attribute-button {
+    justify-content: flex-start;
+    padding-left: 0;
+    margin-left: -3px;
   }
 }

@@ -25,9 +25,9 @@ export const messages = defineMessages({
     id: 'CreateLaunchModal.enterLaunchName',
     defaultMessage: 'Enter launch name',
   },
-  addLaunchDescription: {
-    id: 'CreateLaunchModal.addLaunchDescription',
-    defaultMessage: 'Describe the launch',
+  addLaunchDescriptionOptional: {
+    id: 'CreateLaunchModal.addLaunchDescriptionOptional',
+    defaultMessage: 'Please provide details about the launch (optional).',
   },
   launchAttributes: {
     id: 'CreateLaunchModal.launchAttributes',
@@ -40,5 +40,13 @@ export const messages = defineMessages({
   launchName: {
     id: 'CreateLaunchModal.launchName',
     defaultMessage: 'Launch name',
+  },
+  scopeOfTesting: {
+    id: 'CreateLaunchModal.scopeOfTesting',
+    defaultMessage: 'Scope of testing',
+  },
+  selectedTests: {
+    id: 'CreateLaunchModal.selectedTests',
+    defaultMessage: 'Selected tests ({count})',
   },
 });

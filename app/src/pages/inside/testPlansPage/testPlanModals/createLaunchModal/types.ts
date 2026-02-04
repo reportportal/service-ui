@@ -26,11 +26,13 @@ export interface CreateLaunchFormValues {
   name: string;
   description: string;
   attributes: Attribute[];
+  scopeOfTesting?: string;
 }
 
 export interface CreateLaunchModalProps {
   isLoading: boolean;
   onSubmit: (values: CreateLaunchFormValues) => Promise<void>;
+  selectedTestsCount?: number;
 }
 
 export interface AttributeListFieldProps {
