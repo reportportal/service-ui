@@ -207,10 +207,15 @@ const routesMap = {
   ),
   [PROJECT_LAUNCHES_PAGE]: {
     path: '/:projectId/launches/:filterId',
-    thunk: (dispatch) => {
+    thunk: (dispatch, getState, { action }) => {
+      const location = action?.meta?.location || {};
+      const prevPage = getState().location?.prev;
+      const pageChanged = prevPage?.type !== PROJECT_LAUNCHES_PAGE;
+      const refreshPreferences = location.kind !== 'load' && pageChanged;
+
       dispatch(setDebugMode(false));
       dispatch(setLevelAction(''));
-      dispatch(parseQueryToFilterEntityAction());
+      dispatch(parseQueryToFilterEntityAction(refreshPreferences));
     },
   },
   [HISTORY_PAGE]: {

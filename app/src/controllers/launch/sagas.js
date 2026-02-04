@@ -26,8 +26,8 @@ import {
   changeActiveFilterAction,
   launchFiltersReadySelector,
 } from 'controllers/filter';
-import { showFilterOnLaunchesAction, fetchProjectPreferencesAction } from 'controllers/project';
-import { filterIdSelector, locationSelector } from 'controllers/pages';
+import { showFilterOnLaunchesAction } from 'controllers/project';
+import { filterIdSelector } from 'controllers/pages';
 import { isEmptyValue } from 'common/utils/isEmptyValue';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
 import { formatSortingString, SORTING_ASC, SORTING_DESC, SORTING_KEY } from 'controllers/sorting';
@@ -66,13 +66,6 @@ function* fetchLaunchesWithParams({ payload }) {
 const notEmptyConditionsPredicate = ({ value }) => !isEmptyValue(value);
 
 function* fetchLaunches() {
-  // Refresh preferences (filters) on navigate; on full reload fetchProject already loads them
-  const { kind } = yield select(locationSelector);
-  if (kind !== 'load') {
-    const activeProject = yield select(activeProjectSelector);
-    yield put(fetchProjectPreferencesAction(activeProject));
-  }
-
   const filterId = yield select(filterIdSelector);
   let activeFilter = yield select(activeFilterSelector);
   if (Number.isInteger(filterId)) {

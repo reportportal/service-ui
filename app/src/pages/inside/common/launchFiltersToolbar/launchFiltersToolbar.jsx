@@ -140,11 +140,11 @@ export const LaunchFiltersToolbar = ({
   }, [expanded, trackEvent]);
   const isNewFilter = useCallback(() => activeFilterId < 0, [activeFilterId]);
   const isFilterUnsaved = useCallback(
-    () => unsavedFilterIds.indexOf(activeFilterId) !== -1,
+    () => unsavedFilterIds.includes(activeFilterId),
     [unsavedFilterIds, activeFilterId],
   );
   const isFilterDirty = useCallback(
-    () => dirtyFilterIds.indexOf(activeFilterId) !== -1,
+    () => dirtyFilterIds.includes(activeFilterId),
     [dirtyFilterIds, activeFilterId],
   );
   const isSaveDisabled = useCallback(
