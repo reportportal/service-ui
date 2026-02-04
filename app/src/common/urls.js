@@ -29,7 +29,8 @@ const urlBase = `${DEFAULT_API_URL_PREFIX}/`;
 const urlCommonBase = `${DEFAULT_COMMON_API_URL_PREFIX}/`;
 const uatBase = `${UAT_API_URL_PREFIX}/`;
 const compositeBase = COMPOSITE_API_URL_PREFIX;
-const getQueryParams = (paramsObj) => stringify(paramsObj, { addQueryPrefix: true });
+const getQueryParams = (paramsObj, options = {}) =>
+  stringify(paramsObj, { addQueryPrefix: true, ...options });
 const removeTrailingSlash = (url) => (url.endsWith('/') ? url.slice(0, -1) : url);
 
 export const URLS = {
@@ -41,8 +42,8 @@ export const URLS = {
   createUser: () => `${urlCommonBase}users`,
 
   dashboard: (projectKey, id) => `${urlBase}${projectKey}/dashboard/${id}`,
-  dashboards: (projectKey, params) =>
-    `${urlBase}${projectKey}/dashboard${getQueryParams({ ...params })}`,
+  dashboards: (projectKey, params = {}, queryOptions = {}) =>
+    `${urlBase}${projectKey}/dashboard${getQueryParams(params, queryOptions)}`,
   dashboardConfig: (projectKey, id) => `${urlBase}${projectKey}/dashboard/${id}/config`,
   dashboardPreconfigured: (projectKey) => `${urlBase}${projectKey}/dashboard/preconfigured`,
 
@@ -416,6 +417,10 @@ export const URLS = {
     `${urlBase}project/${projectKey}/launch/manual/${launchId}`,
   manualLaunchesListPagination: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/launch/manual${getQueryParams(query)}`,
+  manualLaunchFolders: (projectKey, launchId, query = {}) =>
+    `${urlBase}project/${projectKey}/launch/manual/${launchId}/folder${getQueryParams(query)}`,
+  manualLaunchTestCaseExecutions: (projectKey, launchId, query = {}) =>
+    `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case/execution${getQueryParams(query)}`,
   importTestCase: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-case/import${getQueryParams(query)}`,
   tmsAttributes: (query = {}) => `${urlBase}tms/attribute${getQueryParams(query)}`,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import { DATE_FORMAT_DROPDOWN } from 'common/constants/timeDateFormat';
 
 export const parseFormattedDate = (formatted) => {
   if (!formatted) {
-    return null;
+    return {};
   }
 
   if (formatted instanceof Object) {
@@ -28,18 +28,17 @@ export const parseFormattedDate = (formatted) => {
   }
 
   const [startMinutesStr, endMinutesStr] = formatted.split(';');
-  if (!startMinutesStr || !endMinutesStr) {
-    return null;
-  }
 
-  const startMinutes = parseInt(startMinutesStr, 10);
-  const endMinutes = parseInt(endMinutesStr, 10);
-  const startDate = moment(moment().startOf('day')).add(startMinutes, 'minutes');
-  const endDate = moment(moment().startOf('day')).add(endMinutes, 'minutes');
+  const startDate = startMinutesStr
+    ? moment(moment().startOf('day')).add(parseInt(startMinutesStr, 10), 'minutes')
+    : undefined;
+  const endDate = endMinutesStr
+    ? moment(moment().startOf('day')).add(parseInt(endMinutesStr, 10), 'minutes')
+    : undefined;
 
   return {
-    startDate: startDate.toDate(),
-    endDate: endDate.toDate(),
+    startDate: startDate?.toDate(),
+    endDate: endDate?.toDate(),
   };
 };
 
@@ -74,5 +73,13 @@ export const formatDateRangeToMinutesString = (formValue) => {
 
   const utcString = moment().format('ZZ');
 
-  return `${getMinutesFromTimestamp(startDate)};${getMinutesFromTimestamp(endDate)};${utcString}`;
+  return `${startDate ? getMinutesFromTimestamp(startDate) : ''};${endDate ? getMinutesFromTimestamp(endDate) : ''};${utcString}`;
+};
+
+export const setEndOfDay = (date) => {
+  if (!date) return date;
+
+  const dateObj = new Date(date);
+  dateObj.setHours(23, 59);
+  return dateObj;
 };

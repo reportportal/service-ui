@@ -33,15 +33,13 @@ import {
   ORGANIZATION_TYPE_FILTER_NAME,
   timeRangeValues,
   getRangeComparisons,
-  getTimeRange,
+  getTimeRangeOptions,
   messages as helpMessage,
 } from 'components/main/filterButton';
 import { getApplyFilterEventParams } from 'components/main/analytics/utils';
 import {
   DateRangeFormField,
   formatDisplayedValue,
-  parseFormattedDate,
-  formatDateRangeToMinutesString,
 } from 'components/main/dateRange';
 import { messages } from './messages';
 import styles from './organizationFilter.scss';
@@ -58,7 +56,7 @@ export const OrganizationsFilter = ({
 }) => {
   const { formatMessage } = useIntl();
 
-  const timeRange = getTimeRange(formatMessage);
+  const timeRange = getTimeRangeOptions(formatMessage);
   const rangeComparisons = getRangeComparisons(formatMessage);
   const organizationTypes = [
     { label: formatMessage(messages.typePersonal), value: 'PERSONAL' },
@@ -106,12 +104,11 @@ export const OrganizationsFilter = ({
             formatDisplayedValue: (displayedValue) =>
               formatDisplayedValue(displayedValue, lastRunDate, timeRangeValues),
             notScrollable: true,
-            footer: (
+            footer: (closeDropdown) => (
               <Field
                 name={LAST_RUN_DATE_FILTER_NAME}
                 component={DateRangeFormField}
-                format={parseFormattedDate}
-                parse={formatDateRangeToMinutesString}
+                onClose={closeDropdown}
               />
             ),
           },
