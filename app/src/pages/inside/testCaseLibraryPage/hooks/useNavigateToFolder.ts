@@ -47,6 +47,13 @@ export const useNavigateToFolder = () => {
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
 
+  const expandFoldersToLevel = useCallback(
+    (folderId: number) => {
+      dispatch(expandFoldersToLevelAction({ folderId, folders }));
+    },
+    [dispatch, folders],
+  );
+
   const navigateToFolder = useCallback(
     ({ folderId, parentIdToExpand }: NavigateToFolderParams) => {
       const isCurrentlyViewingFolder = Number(urlFolderId) === folderId;
@@ -72,10 +79,10 @@ export const useNavigateToFolder = () => {
       }
 
       if (parentIdToExpand) {
-        dispatch(expandFoldersToLevelAction({ folderId: parentIdToExpand, folders }));
+        expandFoldersToLevel(parentIdToExpand);
       }
     },
-    [dispatch, urlFolderId, testCasesPageData, organizationSlug, projectSlug, folders],
+    [urlFolderId, testCasesPageData, dispatch, organizationSlug, projectSlug, expandFoldersToLevel],
   );
 
   const navigateToFolderAfterAction = useCallback(
@@ -103,5 +110,6 @@ export const useNavigateToFolder = () => {
   return {
     navigateToFolder,
     navigateToFolderAfterAction,
+    expandFoldersToLevel,
   };
 };

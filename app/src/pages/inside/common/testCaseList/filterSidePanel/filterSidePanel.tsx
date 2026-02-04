@@ -187,6 +187,7 @@ export const FilterSidePanel = memo(
       <div>
         <SidePanel
           className={cx('filter-side-panel')}
+          overlayClassName={cx('filter-overlay')}
           title={titleComponent}
           contentComponent={contentComponent}
           footerComponent={footerComponent}
@@ -194,6 +195,8 @@ export const FilterSidePanel = memo(
           onClose={onClose}
           closeButtonAriaLabel={formatMessage(commonMessages.closePanel)}
           side="right"
+          showOverlay
+          allowCloseOutside={!hasChanges}
         />
       </div>
     );
