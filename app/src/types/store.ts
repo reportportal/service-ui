@@ -17,7 +17,11 @@
 import { ProjectDetails } from 'pages/organization/constants';
 import { TestPlanState } from 'controllers/testPlan/selectors';
 import { TestCaseState } from 'controllers/testCase/selectors';
-import { ManualLaunchState } from 'controllers/manualLaunch/selectors';
+import {
+  ManualLaunchState,
+  ManualLaunchFoldersState,
+  ManualLaunchTestCaseExecutionsState,
+} from 'controllers/manualLaunch/types';
 import { UserState } from 'controllers/user/types';
 import { NotificationState } from 'controllers/notification/types';
 import { ModalState } from 'controllers/modal/types';
@@ -47,6 +51,8 @@ export interface AppState extends BaseAppState {
   testPlan?: TestPlanAppState['testPlan'];
   testCase?: TestCaseAppState['testCase'];
   manualLaunch?: ManualLaunchState;
+  manualLaunchFolders?: ManualLaunchFoldersState;
+  manualLaunchTestCaseExecutions?: ManualLaunchTestCaseExecutionsState;
   user?: UserState;
   notifications?: NotificationState;
   modal?: ModalState;

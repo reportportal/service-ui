@@ -145,10 +145,12 @@ import {
   defaultManualLaunchesQueryParams,
   getManualLaunchesAction,
   getManualLaunchAction,
+  getManualLaunchFoldersAction,
+  getManualLaunchTestCaseExecutionsAction,
 } from 'controllers/manualLaunch';
 import { getRouterParams } from 'common/utils';
 
-const redirectRoute = (path, createNewAction, onRedirect = () => { }) => ({
+const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
   path,
   thunk: (dispatch, getState) => {
     const { location } = getState();
@@ -346,6 +348,22 @@ const routesMap = {
 
       if (launchId) {
         dispatch(getManualLaunchAction({ launchId }));
+
+        // Load folders and test case executions
+        dispatch(
+          getManualLaunchFoldersAction({
+            launchId,
+            offset: 0,
+            limit: 100, // TODO do we need to implement folder click and fetch test executions for certain folder?
+          }),
+        );
+        dispatch(
+          getManualLaunchTestCaseExecutionsAction({
+            launchId,
+            offset: 0,
+            limit: 1000, // TODO do we need to implement pagination for test case executions?
+          }),
+        );
       }
     },
   },
