@@ -17,7 +17,7 @@
 .scenario {
   &__section {
     margin-bottom: 16px;
-    color: $COLOR--almost-black;
+    color: var(--rp-ui-base-almost-black);
     font-size: 13px;
     line-height: 20px;
 
@@ -26,13 +26,13 @@
     }
 
     &-header {
-      font-family: $FONT-ROBOTO-MEDIUM;
+      font-family: var(--rp-ui-base-font-family);
       font-weight: 500;
       margin-bottom: 4px;
     }
 
     &-value {
-      font-family: $FONT-ROBOTO-REGULAR;
+      font-family: var(--rp-ui-base-font-family);
       font-weight: 400;
     }
   }

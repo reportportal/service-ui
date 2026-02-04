@@ -132,9 +132,9 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({ manualScenario }: { manualSc
         titleKey: 'scenario',
         defaultMessage: messages.noPrecondition,
         childComponent: (
-            manualScenario.preconditions?.value ||
-            manualScenario.instructions ||
-            manualScenario.expectedResult
+            manualScenario?.preconditions?.value ||
+            manualScenario?.instructions ||
+            manualScenario?.expectedResult
           ) &&
           <Scenario
             expectedResult={manualScenario.expectedResult}
@@ -145,7 +145,7 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({ manualScenario }: { manualSc
       {
         titleKey: 'attachments',
         defaultMessage: messages.noAttachments,
-        childComponent: !isEmpty(manualScenario.attachments) &&
+        childComponent: !isEmpty(manualScenario?.attachments) &&
           <AttachmentList
             attachments={manualScenario.attachments}
             className={cx('page__attachments-list')}
@@ -225,7 +225,7 @@ export const TestCaseDetailsPage = () => {
           <ScrollWrapper>
             <div className={cx('page__main-content', testCaseDetails?.id ? 'page__main-content-with-data' : '')}>
               {
-                testCaseDetails?.id ?
+                testCaseDetails?.manualScenario ?
                   MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG({ manualScenario: testCaseDetails.manualScenario })
                     .map(({ titleKey, defaultMessage, childComponent }) => (
                       <CollapsibleSectionWithHeaderControl

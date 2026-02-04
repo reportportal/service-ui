@@ -16,18 +16,18 @@
 
 .precondition {
   display: flex;
-  background-color: $COLOR--bg-000;
-  box-shadow: 0 1px 3px 0 $COLOR--item-shadow;
+  background-color: var(--rp-ui-base-bg-000);
+  box-shadow: 0 1px 3px 0 var(--rp-ui-base-shadow);
   border-radius: 4px;
   font-size: 13px;
   line-height: 20px;
-  font-family: $FONT-ROBOTO-REGULAR;
+  font-family: var(--rp-ui-base-font-family);
   font-weight: 400;
-  color: $COLOR--almost-black;
+  color: var(--rp-ui-base-almost-black);
 
   &__type {
     padding: 16px 12px;
-    border-right: 1px solid $COLOR--e-100;
+    border-right: 1px solid var(--rp-ui-base-e-100);
     font-weight: 500;
   }
 
@@ -35,7 +35,7 @@
     flex-grow: 1;
 
     & > div:first-child:not(:last-child) {
-      border-bottom: 1px solid $COLOR--e-100;
+      border-bottom: 1px solid var(--rp-ui-base-e-100);
     }
   }
 
@@ -45,7 +45,7 @@
 
   &__attachments-wrapper {
     padding: 16px;
-    color: $COLOR--e-400;
+    color: var(--rp-ui-base-e-400);
   }
 
   &__attachments-list {

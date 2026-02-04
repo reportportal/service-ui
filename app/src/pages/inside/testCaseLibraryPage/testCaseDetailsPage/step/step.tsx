@@ -15,8 +15,10 @@
  */
 
 import { isEmpty } from 'es-toolkit/compat';
+import { useIntl } from 'react-intl';
 
 import { createClassnames } from 'common/utils';
+import { commonMessages } from 'pages/inside/common/common-messages';
 
 import { AttachmentList } from '../../attachmentList';
 import { Attachment } from '../../types';
@@ -37,32 +39,36 @@ export const Step = ({
   instructions = '',
   expectedResult = '',
   attachments,
-}: StepProps) => (
-  <li className={cx('step')}>
-    <div className={cx('step__number')}>{index}</div>
-    <div className={cx('step__content')}>
-      {
-        (instructions || expectedResult) && (
-          <div className={cx('step__description')}>
-            <div className={cx('step__instruction')}>
-              {instructions}
+}: StepProps) => {
+  const { formatMessage } = useIntl();
+
+  return (
+    <li className={cx('step')}>
+      <div className={cx('step__number')}>{index}</div>
+      <div className={cx('step__content')}>
+        {
+          (instructions || expectedResult) && (
+            <div className={cx('step__description')}>
+              <div className={cx('step__instruction')}>
+                {instructions}
+              </div>
+              <div className={cx('step__expected-result')}>
+                {expectedResult}
+              </div>
             </div>
-            <div className={cx('step__expected-result')}>
-              {expectedResult}
-            </div>
-          </div>
-        )
-      }
-      {
-        !isEmpty(attachments) &&
+          )
+        }
+        {
+          !isEmpty(attachments) &&
           <div className={cx('step__attachments-wrapper')}>
-            <h4>Attachments {attachments.length}</h4>
+            <h4>{formatMessage(commonMessages.attachments) } {attachments.length}</h4>
             <AttachmentList
               attachments={attachments}
               className={cx('step__attachments-list')}
             />
           </div>
-      }
-    </div>
-  </li>
-);
+        }
+      </div>
+    </li>
+  );
+};

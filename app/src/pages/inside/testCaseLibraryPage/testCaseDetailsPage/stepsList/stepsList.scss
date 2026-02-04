@@ -17,10 +17,10 @@
 .steps-list {
   &__columns {
     display: flex;
-    color: $COLOR--e-400;
+    color: var(--rp-ui-base-e-400);
     font-size: 13px;
     line-height: 20px;
-    font-family: $FONT-ROBOTO-REGULAR;
+    font-family: var(--rp-ui-base-font-family);
     font-weight: 400;
     margin-bottom: 4px;
 
