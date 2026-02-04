@@ -77,6 +77,7 @@ export const useImportTestCase = () => {
     if (!hash.includes(testLibraryRoute)) return;
 
     const [base] = hash.split(testLibraryRoute);
+
     globalThis.location.hash = `${base}${testLibraryRoute}/folder/${folderId}`;
   };
 
