@@ -27,7 +27,7 @@ export const getInitialExpandedFolderIds = (instanceKey: TMS_INSTANCE_KEY): numb
     const storageKey = getExpandedFoldersStorageKey(instanceKey);
     const parsed = getStorageItem(storageKey) as number[] | null;
 
-    if (Array.isArray(parsed) && parsed.every(isNumber)) {
+    if (Array.isArray(parsed) && parsed.every((item) => isNumber(item))) {
       return parsed;
     }
 
