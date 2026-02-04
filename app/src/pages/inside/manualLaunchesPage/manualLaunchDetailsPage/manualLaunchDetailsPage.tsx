@@ -26,8 +26,12 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { MANUAL_LAUNCHES_PAGE } from 'controllers/pages';
 import {
   getManualLaunchAction,
+  getManualLaunchFoldersAction,
+  getManualLaunchTestCaseExecutionsAction,
   manualLaunchFoldersSelector,
   manualLaunchTestCaseExecutionsSelector,
+  isLoadingManualLaunchFoldersSelector,
+  isLoadingManualLaunchTestCaseExecutionsSelector,
 } from 'controllers/manualLaunch';
 import {
   showNotification,
@@ -63,6 +67,8 @@ export const ManualLaunchDetailsPage = () => {
   const isLoading = useActiveManualLaunchLoading();
   const folders = useSelector(manualLaunchFoldersSelector);
   const executions = useSelector(manualLaunchTestCaseExecutionsSelector);
+  const isLoadingFolders = useSelector(isLoadingManualLaunchFoldersSelector);
+  const isLoadingExecutions = useSelector(isLoadingManualLaunchTestCaseExecutionsSelector);
 
   useEffect(() => {
     if (!isLoading && isEmpty(launch) && launchId) {
@@ -85,6 +91,8 @@ export const ManualLaunchDetailsPage = () => {
   const handleRefresh = useCallback(() => {
     if (launchId) {
       dispatch(getManualLaunchAction({ launchId }));
+      dispatch(getManualLaunchFoldersAction({ launchId }));
+      dispatch(getManualLaunchTestCaseExecutionsAction({ launchId }));
     }
   }, [dispatch, launchId]);
 
@@ -122,8 +130,9 @@ export const ManualLaunchDetailsPage = () => {
 
   const renderContent = () => {
     const hasData = !isEmpty(folders) || !isEmpty(executions);
+    const isLoadingFoldersView = isLoadingFolders || isLoadingExecutions;
 
-    if (hasData) {
+    if (hasData || isLoadingFoldersView) {
       return <ManualLaunchFolders />;
     }
 
