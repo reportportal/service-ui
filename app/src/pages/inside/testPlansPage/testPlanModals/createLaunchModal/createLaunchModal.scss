@@ -15,6 +15,10 @@
  */
 
 .create-launch-modal {
+  :global([class*='buttons-block']) {
+    column-gap: 8px;
+  }
+
   &__content-wrapper {
     position: relative;
   }
