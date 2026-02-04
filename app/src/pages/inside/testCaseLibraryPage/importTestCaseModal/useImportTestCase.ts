@@ -38,6 +38,13 @@ type ApiError = {
   message?: string;
 };
 
+type ImportResponseItem = {
+  id: number;
+  testFolder?: {
+    id?: number;
+  };
+};
+
 const createQuery = ({ testFolderId, testFolderName }: ImportQuery) => {
   const hasId = isNumber(testFolderId);
   const hasName = !isEmpty(testFolderName?.trim());
@@ -62,6 +69,17 @@ export const useImportTestCase = () => {
   const urlFolderId = useSelector(urlFolderIdSelector);
   const { formatMessage } = useIntl();
   const { showSuccessNotification, showErrorNotification } = useNotification();
+
+  const redirectToFolder = (folderId: number) => {
+    const testLibraryRoute = '/testLibrary';
+    const { hash = '' } = globalThis.location;
+
+    if (!hash.includes(testLibraryRoute)) return;
+
+    const [base] = hash.split(testLibraryRoute);
+
+    globalThis.location.hash = `${base}${testLibraryRoute}/folder/${folderId}`;
+  };
 
   const refetchTestCases = useCallback(
     (folderId: number, prevFolderId?: number) => {
@@ -115,17 +133,29 @@ export const useImportTestCase = () => {
 
       formData.append('file', file);
 
-      await fetch(URLS.importTestCase(projectKey, query), {
+      const response = await fetch<ImportResponseItem[]>(URLS.importTestCase(projectKey, query), {
         method: 'post',
         data: formData,
       });
+
+      const createdFolderId = Array.isArray(response) ? response[0]?.testFolder?.id : undefined;
+
+      const resolvedFolderId = query.testFolderId ?? createdFolderId;
+
+      if (resolvedFolderId) {
+        redirectToFolder(resolvedFolderId);
+      }
 
       dispatch(hideModalAction());
       showSuccessNotification({
         messageId: resolvedFolderName ? 'importSuccessToFolder' : 'importSuccess',
         values: resolvedFolderName ? { folderName: resolvedFolderName } : undefined,
       });
-      refetchTestCases(testFolderId);
+
+      if (resolvedFolderId) {
+        refetchTestCases(resolvedFolderId);
+      }
+
       dispatch(getFoldersAction());
     } catch (error: unknown) {
       const apiError = error as ApiError;
