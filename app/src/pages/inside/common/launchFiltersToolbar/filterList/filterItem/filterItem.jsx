@@ -18,9 +18,11 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import Link from 'redux-first-router-link';
+import { useSelector } from 'react-redux';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
-import { connect } from 'react-redux';
 import { getLaunchFilterLinkSelector } from 'controllers/launch';
+import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardTooltip';
+import { LockedIcon } from 'pages/inside/common/lockedIcon';
 import { FilterDescriptionTooltipIcon } from './filterDescriptionTooltipIcon';
 import styles from './filterItem.scss';
 
@@ -35,57 +37,65 @@ const handleClick = (e) => {
   e.preventDefault();
 };
 
-const FilterItemBase = ({
+export const FilterItem = ({
   id,
   name,
   active,
   description,
+  locked,
   unsaved,
   onRemove,
   className,
   isDisabled,
-  getLaunchFilterLink,
-}) => (
-  <Link
-    className={cx('filter-item', className, { active })}
-    onClick={isDisabled && handleClick}
-    to={getLaunchFilterLink(id, active)}
-  >
-    <span className={cx('name')}>
-      {name}
-      {unsaved && <span className={cx('unsaved')}>*</span>}
-    </span>
-    {description && (
-      <div className={cx('icon')}>
-        <FilterDescriptionTooltipIcon tooltipContent={description} />
-      </div>
-    )}
-    {active && (
-      <div className={cx('icon')} onClick={stopPropagation(onRemove)}>
-        {Parser(CrossIcon)}
-      </div>
-    )}
-  </Link>
-);
+}) => {
+  const getLaunchFilterLink = useSelector(getLaunchFilterLinkSelector);
 
-export const FilterItem = connect((state) => ({
-  getLaunchFilterLink: getLaunchFilterLinkSelector(state),
-}))(FilterItemBase);
+  return (
+    <Link
+      className={cx('filter-item', className, { active })}
+      onClick={isDisabled && handleClick}
+      to={getLaunchFilterLink(id, active)}
+    >
+      <div className={cx('name-container')}>
+        {locked && (
+          <LockedDashboardTooltip locked={locked} variant="filter">
+            <LockedIcon />
+          </LockedDashboardTooltip>
+        )}
+        <span className={cx('name')}>
+          {name}
+          {unsaved && <span className={cx('unsaved')}>*</span>}
+        </span>
+      </div>
+      {description && (
+        <div className={cx('icon')}>
+          <FilterDescriptionTooltipIcon tooltipContent={description} />
+        </div>
+      )}
+      {active && (
+        <div className={cx('icon')} onClick={stopPropagation(onRemove)}>
+          {Parser(CrossIcon)}
+        </div>
+      )}
+    </Link>
+  );
+};
 
-FilterItemBase.propTypes = {
+FilterItem.propTypes = {
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   active: PropTypes.bool,
   description: PropTypes.string,
+  locked: PropTypes.bool,
   unsaved: PropTypes.bool,
   onRemove: PropTypes.func,
-  getLaunchFilterLink: PropTypes.func.isRequired,
   className: PropTypes.string,
   isDisabled: PropTypes.bool,
 };
-FilterItemBase.defaultProps = {
+FilterItem.defaultProps = {
   active: false,
   description: null,
+  locked: false,
   unsaved: false,
   onRemove: () => {},
   className: '',

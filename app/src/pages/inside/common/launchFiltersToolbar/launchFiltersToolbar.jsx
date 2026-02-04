@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { Component } from 'react';
+import { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
-import track from 'react-tracking';
 import { showModalAction } from 'controllers/modal';
 import {
   updateFilterAction,
@@ -37,6 +37,7 @@ import { levelSelector } from 'controllers/testItem';
 import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
+import { useCanLockDashboard } from 'common/hooks';
 import { FilterList } from './filterList';
 import { FiltersActionBar } from './filtersActionBar';
 import { ExpandToggler } from './expandToggler';
@@ -46,130 +47,75 @@ import styles from './launchFiltersToolbar.scss';
 
 const cx = classNames.bind(styles);
 
-@track()
-@connect(
-  (state) => ({
-    unsavedFilterIds: unsavedFilterIdsSelector(state),
-    dirtyFilterIds: dirtyFilterIdsSelector(state),
-    launchDistinct: launchDistinctSelector(state),
-    level: levelSelector(state),
-  }),
-  {
-    showModal: showModalAction,
-    updateFilter: updateFilterAction,
-    resetFilter: resetFilterAction,
-    createFilter: createFilterAction,
-    saveNewFilter: saveNewFilterAction,
-    changeLaunchDistinct: changeLaunchDistinctAction,
-    redirectToLaunches: changeActiveFilterAction,
-  },
-)
-export class LaunchFiltersToolbar extends Component {
-  static propTypes = {
-    filters: PropTypes.arrayOf(filterShape),
-    activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    activeFilter: PropTypes.object,
-    unsavedFilterIds: PropTypes.array,
-    dirtyFilterIds: PropTypes.array,
-    onRemoveFilter: PropTypes.func,
-    onFilterAdd: PropTypes.func,
-    onFilterRemove: PropTypes.func,
-    onFilterValidate: PropTypes.func,
-    onFilterChange: PropTypes.func,
-    onChangeSorting: PropTypes.func,
-    sortingString: PropTypes.string,
-    filterErrors: PropTypes.object,
-    filterEntities: PropTypes.array,
-    showModal: PropTypes.func,
-    updateFilter: PropTypes.func,
-    resetFilter: PropTypes.func,
-    onResetFilter: PropTypes.func,
-    createFilter: PropTypes.func,
-    saveNewFilter: PropTypes.func,
-    redirectToLaunches: PropTypes.func,
-    changeLaunchDistinct: PropTypes.func,
-    launchDistinct: PropTypes.string,
-    level: PropTypes.string,
-    intl: PropTypes.object.isRequired,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
-  };
+export const LaunchFiltersToolbar = ({
+  filters,
+  activeFilterId,
+  activeFilter,
+  onRemoveFilter,
+  onFilterAdd,
+  onFilterRemove,
+  onFilterValidate,
+  onFilterChange,
+  onChangeSorting,
+  sortingString,
+  filterErrors,
+  filterEntities,
+  onResetFilter,
+}) => {
+  const [expanded, setExpanded] = useState(true);
+  const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
 
-  static defaultProps = {
-    filters: [],
-    activeFilterId: null,
-    activeFilter: null,
-    unsavedFilterIds: [],
-    dirtyFilterIds: [],
-    onRemoveFilter: () => {},
-    onFilterAdd: () => {},
-    onFilterRemove: () => {},
-    onFilterValidate: () => {},
-    onFilterChange: () => {},
-    onChangeSorting: () => {},
-    sortingString: '',
-    filterErrors: {},
-    filterEntities: [],
-    showModal: () => {},
-    updateFilter: () => {},
-    resetFilter: () => {},
-    onResetFilter: () => {},
-    createFilter: () => {},
-    saveNewFilter: () => {},
-    redirectToLaunches: () => {},
-    changeLaunchDistinct: () => {},
-    launchDistinct: '',
-    level: '',
-  };
+  const unsavedFilterIds = useSelector(unsavedFilterIdsSelector);
+  const dirtyFilterIds = useSelector(dirtyFilterIdsSelector);
+  const launchDistinct = useSelector(launchDistinctSelector);
+  const level = useSelector(levelSelector);
+  const canLock = useCanLockDashboard();
+  const isFilterLocked = !!activeFilter?.locked;
 
-  state = {
-    expanded: true,
-  };
+  const showModal = useCallback((payload) => dispatch(showModalAction(payload)), [dispatch]);
+  const updateFilter = useCallback((payload) => dispatch(updateFilterAction(payload)), [dispatch]);
+  const resetFilter = useCallback((payload) => dispatch(resetFilterAction(payload)), [dispatch]);
+  const createFilter = useCallback((payload) => dispatch(createFilterAction(payload)), [dispatch]);
+  const saveNewFilter = useCallback(
+    (payload) => dispatch(saveNewFilterAction(payload)),
+    [dispatch],
+  );
+  const changeLaunchDistinct = useCallback(
+    (payload) => dispatch(changeLaunchDistinctAction(payload)),
+    [dispatch],
+  );
+  const redirectToLaunches = useCallback(
+    () => dispatch(changeActiveFilterAction(launchDistinct)),
+    [dispatch, launchDistinct],
+  );
 
-  handleFilterClone = () => {
-    const { activeFilter, createFilter, tracking } = this.props;
-    createFilter(activeFilter);
-    tracking.trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnFilterActionBarButtonEvent('clone'));
-  };
+  const handleFilterClone = useCallback(() => {
+    const { locked, ...newFilter } = activeFilter || {};
+    createFilter(newFilter);
+    trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnFilterActionBarButtonEvent('clone'));
+  }, [activeFilter, createFilter, trackEvent]);
 
-  handleFilterCreate = () => {
-    const { createFilter, tracking } = this.props;
+  const handleFilterCreate = useCallback(() => {
     createFilter();
-    tracking.trackEvent(LAUNCHES_PAGE_EVENTS.ADD_FILTER);
-  };
+    trackEvent(LAUNCHES_PAGE_EVENTS.ADD_FILTER);
+  }, [createFilter, trackEvent]);
 
-  handleFilterEdit = () => {
-    const { showModal, activeFilter, updateFilter, tracking } = this.props;
+  const handleFilterEdit = useCallback(() => {
     showModal({
       id: 'filterEditModal',
-      data: {
-        filter: activeFilter,
-        onEdit: updateFilter,
-      },
+      data: { filter: activeFilter, onEdit: updateFilter },
     });
-    tracking.trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnFilterActionBarButtonEvent('edit'));
-  };
+    trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnFilterActionBarButtonEvent('edit'));
+  }, [activeFilter, showModal, updateFilter, trackEvent]);
 
-  handleFilterReset = () => {
-    const { activeFilter, resetFilter, onResetFilter, tracking } = this.props;
+  const handleFilterReset = useCallback(() => {
     resetFilter(activeFilter.id);
     onResetFilter();
-    tracking.trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnFilterActionBarButtonEvent('discard'));
-  };
+    trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnFilterActionBarButtonEvent('discard'));
+  }, [activeFilter, resetFilter, onResetFilter, trackEvent]);
 
-  redirectToLaunches = () => this.props.redirectToLaunches(this.props.launchDistinct);
-
-  updateActiveFilter = () => {
-    const {
-      activeFilter,
-      updateFilter,
-      activeFilterId,
-      showModal,
-      saveNewFilter,
-      tracking,
-    } = this.props;
+  const updateActiveFilter = useCallback(() => {
     if (activeFilterId < 0) {
       showModal({
         id: 'filterEditModal',
@@ -182,122 +128,131 @@ export class LaunchFiltersToolbar extends Component {
     } else {
       updateFilter(activeFilter);
     }
-    tracking.trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnFilterActionBarButtonEvent('save'));
-  };
-  isNoFilterValues = () => {
-    const {
-      activeFilter: { conditions = [] },
-    } = this.props;
+    trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnFilterActionBarButtonEvent('save'));
+  }, [activeFilter, activeFilterId, showModal, saveNewFilter, updateFilter, trackEvent]);
+  const isNoFilterValues = useCallback(() => {
+    const { conditions = [] } = activeFilter || {};
     return !conditions.some((filter) => !isEmptyValue(filter.value));
-  };
-  toggleExpand = () => {
-    this.props.tracking.trackEvent(
-      LAUNCHES_PAGE_EVENTS.getClickOnCriteriaTogglerEvent(this.state.expanded),
-    );
+  }, [activeFilter]);
+  const toggleExpand = useCallback(() => {
+    trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnCriteriaTogglerEvent(expanded));
+    setExpanded((prev) => !prev);
+  }, [expanded, trackEvent]);
+  const isNewFilter = useCallback(() => activeFilterId < 0, [activeFilterId]);
+  const isFilterUnsaved = useCallback(
+    () => unsavedFilterIds.indexOf(activeFilterId) !== -1,
+    [unsavedFilterIds, activeFilterId],
+  );
+  const isFilterDirty = useCallback(
+    () => dirtyFilterIds.indexOf(activeFilterId) !== -1,
+    [dirtyFilterIds, activeFilterId],
+  );
+  const isSaveDisabled = useCallback(
+    () =>
+      !isFilterUnsaved() ||
+      !isEmptyObject(filterErrors) ||
+      isNoFilterValues() ||
+      (!canLock && isFilterLocked),
+    [canLock, isFilterLocked, isFilterUnsaved, filterErrors, isNoFilterValues],
+  );
+  const isDiscardDisabled = useCallback(() => !isFilterDirty(), [isFilterDirty]);
+  const isEditDisabled = useCallback(
+    () => isFilterUnsaved() || isNewFilter() || (!canLock && isFilterLocked),
+    [canLock, isFilterLocked, isFilterUnsaved, isNewFilter],
+  );
 
-    return this.setState({ expanded: !this.state.expanded });
-  };
-  isNewFilter = () => {
-    const { activeFilterId } = this.props;
-    return activeFilterId < 0;
-  };
-  isFilterUnsaved = () => {
-    const { unsavedFilterIds, activeFilterId } = this.props;
-    return unsavedFilterIds.indexOf(activeFilterId) !== -1;
-  };
-  isFilterDirty = () => {
-    const { dirtyFilterIds, activeFilterId } = this.props;
-    return dirtyFilterIds.indexOf(activeFilterId) !== -1;
-  };
-  isSaveDisabled = () => {
-    const { filterErrors } = this.props;
-
-    return !this.isFilterUnsaved() || !isEmptyObject(filterErrors) || this.isNoFilterValues();
-  };
-  isDiscardDisabled = () => !this.isFilterDirty();
-  isEditDisabled = () => this.isFilterUnsaved() || this.isNewFilter();
-  render() {
-    const {
-      filters,
-      activeFilterId,
-      launchDistinct,
-      activeFilter,
-      onRemoveFilter,
-      filterEntities,
-      filterErrors,
-      onFilterChange,
-      onChangeSorting,
-      sortingString,
-      onFilterValidate,
-      onFilterAdd,
-      onFilterRemove,
-      changeLaunchDistinct,
-      unsavedFilterIds,
-      level,
-      intl,
-    } = this.props;
-    return (
-      <div className={cx('launch-filters-toolbar')}>
-        <div className={cx('filter-tickets-row')}>
-          <div className={cx('all-latest-switcher')}>
-            <AllLatestDropdown
-              activeFilterId={activeFilterId}
-              value={launchDistinct}
-              onClick={this.redirectToLaunches}
-              onChange={changeLaunchDistinct}
-            />
-          </div>
-          <div className={cx('separator')} />
-          <div className={cx('add-filter-button')}>
-            <GhostButton icon={AddFilterIcon} onClick={this.handleFilterCreate}>
-              <FormattedMessage id="LaunchFiltersToolbar.addFilter" defaultMessage="Add filter" />
-            </GhostButton>
-          </div>
-          <div className={cx('filter-tickets-container')}>
-            <FilterList
-              filters={filters}
-              activeFilterId={activeFilterId}
-              unsavedFilterIds={unsavedFilterIds}
-              onRemoveFilter={onRemoveFilter}
-              intl={intl}
-            />
-          </div>
-          {!!activeFilter && !level && (
-            <div className={cx('expand-toggle-container')}>
-              <ExpandToggler expanded={this.state.expanded} onToggleExpand={this.toggleExpand} />
-            </div>
-          )}
+  return (
+    <div className={cx('launch-filters-toolbar')}>
+      <div className={cx('filter-tickets-row')}>
+        <div className={cx('all-latest-switcher')}>
+          <AllLatestDropdown
+            activeFilterId={activeFilterId}
+            value={launchDistinct}
+            onClick={() => redirectToLaunches(launchDistinct)}
+            onChange={changeLaunchDistinct}
+          />
         </div>
-        {this.state.expanded && !level && !!activeFilter && (
-          <div className={cx('filter-controls-container')}>
-            <div className={cx('filter-entities-container')}>
-              <EntitiesGroup
-                onChange={onFilterChange}
-                onValidate={onFilterValidate}
-                onRemove={onFilterRemove}
-                onAdd={onFilterAdd}
-                errors={filterErrors}
-                entities={filterEntities}
-                events={LAUNCHES_PAGE_EVENTS}
-              />
-            </div>
-            <FiltersActionBar
-              unsaved={this.isFilterUnsaved()}
-              discardDisabled={this.isDiscardDisabled()}
-              saveDisabled={this.isSaveDisabled()}
-              cloneDisabled={this.isNoFilterValues()}
-              editDisabled={this.isEditDisabled()}
-              onDiscard={this.handleFilterReset}
-              onEdit={this.handleFilterEdit}
-              onSave={this.updateActiveFilter}
-              onClone={this.handleFilterClone}
-              filter={activeFilter}
-              onChangeSorting={onChangeSorting}
-              sortingString={sortingString}
-            />
+        <div className={cx('separator')} />
+        <div className={cx('add-filter-button')}>
+          <GhostButton icon={AddFilterIcon} onClick={handleFilterCreate}>
+            <FormattedMessage id="LaunchFiltersToolbar.addFilter" defaultMessage="Add filter" />
+          </GhostButton>
+        </div>
+        <div className={cx('filter-tickets-container')}>
+          <FilterList
+            filters={filters}
+            activeFilterId={activeFilterId}
+            unsavedFilterIds={unsavedFilterIds}
+            onRemoveFilter={onRemoveFilter}
+          />
+        </div>
+        {!!activeFilter && !level && (
+          <div className={cx('expand-toggle-container')}>
+            <ExpandToggler expanded={expanded} onToggleExpand={toggleExpand} />
           </div>
         )}
       </div>
-    );
-  }
-}
+      {expanded && !level && !!activeFilter && (
+        <div className={cx('filter-controls-container')}>
+          <div className={cx('filter-entities-container')}>
+            <EntitiesGroup
+              onChange={onFilterChange}
+              onValidate={onFilterValidate}
+              onRemove={onFilterRemove}
+              onAdd={onFilterAdd}
+              errors={filterErrors}
+              entities={filterEntities}
+              events={LAUNCHES_PAGE_EVENTS}
+            />
+          </div>
+          <FiltersActionBar
+            unsaved={isFilterUnsaved()}
+            discardDisabled={isDiscardDisabled()}
+            saveDisabled={isSaveDisabled()}
+            cloneDisabled={isNoFilterValues()}
+            editDisabled={isEditDisabled()}
+            onDiscard={handleFilterReset}
+            onEdit={handleFilterEdit}
+            onSave={updateActiveFilter}
+            onClone={handleFilterClone}
+            filter={activeFilter}
+            onChangeSorting={onChangeSorting}
+            sortingString={sortingString}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
+
+LaunchFiltersToolbar.propTypes = {
+  filters: PropTypes.arrayOf(filterShape),
+  activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  activeFilter: PropTypes.object,
+  onRemoveFilter: PropTypes.func,
+  onFilterAdd: PropTypes.func,
+  onFilterRemove: PropTypes.func,
+  onFilterValidate: PropTypes.func,
+  onFilterChange: PropTypes.func,
+  onChangeSorting: PropTypes.func,
+  sortingString: PropTypes.string,
+  filterErrors: PropTypes.object,
+  filterEntities: PropTypes.array,
+  onResetFilter: PropTypes.func,
+};
+
+LaunchFiltersToolbar.defaultProps = {
+  filters: [],
+  activeFilterId: null,
+  activeFilter: null,
+  onRemoveFilter: () => {},
+  onFilterAdd: () => {},
+  onFilterRemove: () => {},
+  onFilterValidate: () => {},
+  onFilterChange: () => {},
+  onChangeSorting: () => {},
+  sortingString: '',
+  filterErrors: {},
+  filterEntities: [],
+  onResetFilter: () => {},
+};
