@@ -75,6 +75,9 @@ export const manualLaunchFoldersPageSelector = (state: AppState): Page | null =>
 export const isLoadingManualLaunchFoldersSelector = (state: AppState): boolean =>
   Boolean(manualLaunchFoldersStateSelector(state)?.isLoading);
 
+export const manualLaunchExpandedFolderIdsSelector = (state: AppState): number[] =>
+  manualLaunchFoldersStateSelector(state)?.expandedFolderIds || [];
+
 // Selectors for Test Case Executions
 const manualLaunchTestCaseExecutionsStateSelector = (
   state: AppState,

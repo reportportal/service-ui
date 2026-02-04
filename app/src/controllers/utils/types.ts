@@ -14,4 +14,15 @@
  * limitations under the License.
  */
 
-export { useManualLaunchFolderExpansion } from './useManualLaunchFolderExpansion';
+export interface FolderWithId {
+  id: number;
+  parentFolderId: number | null;
+}
+
+export const hasPayloadProps = <T>(
+  action: { type: string; payload?: unknown },
+  props: string[],
+): action is { type: string; payload: T } =>
+  !!action.payload &&
+  typeof action.payload === 'object' &&
+  props.every((prop) => prop in (action.payload as Record<string, unknown>));

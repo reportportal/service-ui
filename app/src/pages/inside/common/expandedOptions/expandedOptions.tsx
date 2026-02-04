@@ -51,10 +51,8 @@ interface ExpandedOptionsProps {
   setAllTestCases: () => void;
   onFolderClick: (id: number) => void;
   children: ReactNode;
-  instanceKey?: TMS_INSTANCE_KEY;
+  instanceKey: TMS_INSTANCE_KEY;
   renderCreateFolderButton?: () => ReactNode;
-  expandedIds?: number[];
-  onToggleFolder?: (folder: TransformedFolder) => void;
 }
 
 export const ExpandedOptions = ({
@@ -65,15 +63,10 @@ export const ExpandedOptions = ({
   setAllTestCases,
   renderCreateFolderButton,
   onFolderClick,
-  expandedIds: customExpandedIds,
-  onToggleFolder: customOnToggleFolder,
 }: ExpandedOptionsProps) => {
   const { formatMessage } = useIntl();
 
-  // Use custom props if provided (for Manual Launch), otherwise use storage hook (for Test Cases/Plans)
-  const storageHook = useStorageFolders(customExpandedIds === undefined ? instanceKey : undefined);
-  const expandedIds = customExpandedIds ?? storageHook.expandedIds;
-  const onToggleFolder = customOnToggleFolder ?? storageHook.onToggleFolder;
+  const { expandedIds, onToggleFolder } = useStorageFolders(instanceKey);
 
   const allItemsTitle =
     instanceKey === TMS_INSTANCE_KEY.MANUAL_LAUNCH

@@ -15,18 +15,110 @@
  */
 
 import { combineReducers } from 'redux';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
 import { MANUAL_LAUNCHES_PAGE, MANUAL_LAUNCH_DETAILS_PAGE } from 'controllers/pages';
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
+import {
+  getInitialExpandedFolderIds,
+  saveExpandedFolderIds,
+  getFolderAndDescendantIds,
+} from 'controllers/utils/folderReducerUtils';
 
 import {
   MANUAL_LAUNCHES_NAMESPACE,
   ACTIVE_MANUAL_LAUNCH_NAMESPACE,
   MANUAL_LAUNCH_FOLDERS_NAMESPACE,
   MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
+  TOGGLE_MANUAL_LAUNCH_FOLDER_EXPANSION,
+  EXPAND_MANUAL_LAUNCH_FOLDERS_TO_LEVEL,
+  SET_MANUAL_LAUNCH_EXPANDED_FOLDER_IDS,
 } from './constants';
+import {
+  ExpandedFolderIdsAction,
+  hasFolderExpansionPayload,
+  hasSetExpandedFolderIdsPayload,
+} from './types';
+
+const expandedFolderIdsReducer = (
+  state = getInitialExpandedFolderIds(TMS_INSTANCE_KEY.MANUAL_LAUNCH),
+  action: ExpandedFolderIdsAction,
+): number[] => {
+  switch (action.type) {
+    case TOGGLE_MANUAL_LAUNCH_FOLDER_EXPANSION: {
+      if (hasFolderExpansionPayload(action)) {
+        const { folderId, folders } = action.payload;
+        const isExpanded = state.includes(folderId);
+
+        if (isExpanded) {
+          const idsToRemove = getFolderAndDescendantIds(folders, folderId);
+          const newState = state.filter((id) => !idsToRemove.includes(id));
+          saveExpandedFolderIds(TMS_INSTANCE_KEY.MANUAL_LAUNCH, newState);
+          return newState;
+        }
+
+        const newState = [...state, folderId];
+
+        saveExpandedFolderIds(TMS_INSTANCE_KEY.MANUAL_LAUNCH, newState);
+
+        return newState;
+      }
+
+      return state;
+    }
+
+    case EXPAND_MANUAL_LAUNCH_FOLDERS_TO_LEVEL: {
+      if (hasFolderExpansionPayload(action)) {
+        const { folderId, folders } = action.payload;
+        const folderMap = new Map(folders.map((folder) => [folder.id, folder]));
+
+        const collectParentIds = (id: number): number[] => {
+          const folder = folderMap.get(id);
+
+          if (!folder) {
+            return [];
+          }
+
+          const currentIds = state.includes(id) ? [] : [id];
+
+          if (folder.parentFolderId === null || folder.parentFolderId === undefined) {
+            return currentIds;
+          }
+
+          return [...currentIds, ...collectParentIds(folder.parentFolderId)];
+        };
+
+        const idsToExpand = collectParentIds(folderId);
+
+        if (!isEmpty(idsToExpand)) {
+          const newState = [...state, ...idsToExpand];
+          saveExpandedFolderIds(TMS_INSTANCE_KEY.MANUAL_LAUNCH, newState);
+          return newState;
+        }
+      }
+
+      return state;
+    }
+
+    case SET_MANUAL_LAUNCH_EXPANDED_FOLDER_IDS: {
+      if (hasSetExpandedFolderIdsPayload(action)) {
+        const newState = action.payload.folderIds;
+
+        saveExpandedFolderIds(TMS_INSTANCE_KEY.MANUAL_LAUNCH, newState);
+
+        return newState;
+      }
+
+      return state;
+    }
+
+    default:
+      return state;
+  }
+};
 
 const reducer = combineReducers({
   data: fetchReducer(MANUAL_LAUNCHES_NAMESPACE, { initialState: null, contentPath: 'data' }),
@@ -38,6 +130,7 @@ const reducer = combineReducers({
 const foldersReducer = combineReducers({
   data: fetchReducer(MANUAL_LAUNCH_FOLDERS_NAMESPACE, { initialState: null, contentPath: 'data' }),
   isLoading: loadingReducer(MANUAL_LAUNCH_FOLDERS_NAMESPACE),
+  expandedFolderIds: expandedFolderIdsReducer,
 });
 
 const executionsReducer = combineReducers({

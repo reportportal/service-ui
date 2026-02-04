@@ -17,6 +17,12 @@
 import { Page } from 'types/common';
 
 import { Launch } from 'pages/inside/manualLaunchesPage/types';
+import { hasPayloadProps } from 'controllers/utils/types';
+import {
+  TOGGLE_MANUAL_LAUNCH_FOLDER_EXPANSION,
+  EXPAND_MANUAL_LAUNCH_FOLDERS_TO_LEVEL,
+  SET_MANUAL_LAUNCH_EXPANDED_FOLDER_IDS,
+} from './constants';
 
 // Action parameter types
 export interface GetManualLaunchesParams {
@@ -57,6 +63,7 @@ export interface ManualLaunchFoldersState {
     page: Page | null;
   } | null;
   isLoading?: boolean;
+  expandedFolderIds?: number[];
 }
 
 export interface ManualLaunchTestCaseExecutionsState {
@@ -72,8 +79,33 @@ export interface ManualLaunchFolder {
   id: number;
   name: string;
   countOfTestCases: number;
-  parentFolderId?: number;
+  parentFolderId: number | null;
 }
+
+// Action parameter types for folder expansion
+export interface ToggleManualLaunchFolderExpansionParams {
+  folderId: number;
+  folders: ManualLaunchFolder[];
+}
+
+export interface SetManualLaunchExpandedFolderIdsParams {
+  folderIds: number[];
+}
+
+export type ExpandedFolderIdsAction =
+  | {
+      type: typeof TOGGLE_MANUAL_LAUNCH_FOLDER_EXPANSION;
+      payload: ToggleManualLaunchFolderExpansionParams;
+    }
+  | {
+      type: typeof EXPAND_MANUAL_LAUNCH_FOLDERS_TO_LEVEL;
+      payload: ToggleManualLaunchFolderExpansionParams;
+    }
+  | {
+      type: typeof SET_MANUAL_LAUNCH_EXPANDED_FOLDER_IDS;
+      payload: SetManualLaunchExpandedFolderIdsParams;
+    }
+  | { type: string };
 
 export interface ManualLaunchFoldersResponse {
   content: ManualLaunchFolder[];
@@ -154,3 +186,16 @@ export interface TestCaseExecutionsResponse {
   content: TestCaseExecution[];
   page: Page;
 }
+
+// Type guards
+export const hasFolderExpansionPayload = (action: {
+  type: string;
+  payload?: unknown;
+}): action is { type: string; payload: ToggleManualLaunchFolderExpansionParams } =>
+  hasPayloadProps<ToggleManualLaunchFolderExpansionParams>(action, ['folderId', 'folders']);
+
+export const hasSetExpandedFolderIdsPayload = (action: {
+  type: string;
+  payload?: unknown;
+}): action is { type: string; payload: SetManualLaunchExpandedFolderIdsParams } =>
+  hasPayloadProps<SetManualLaunchExpandedFolderIdsParams>(action, ['folderIds']);
