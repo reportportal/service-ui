@@ -117,12 +117,13 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({ manualScenario }: { manualSc
         defaultMessage: messages.noPrecondition,
         childComponent:
           (manualScenario?.preconditions?.value || !isEmpty(manualScenario?.preconditions?.attachments)) &&
-          <Precondition preconditions={manualScenario.preconditions} />,
+            <Precondition preconditions={manualScenario.preconditions} />,
       },
       {
         titleKey: 'steps',
         defaultMessage: messages.noSteps,
-        childComponent: !isEmpty(manualScenario?.steps) && <StepsList steps={manualScenario.steps} />,
+        childComponent: !isEmpty(manualScenario?.steps) &&
+          <StepsList steps={manualScenario.steps} />,
       }
     );
   } else {
@@ -144,10 +145,11 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({ manualScenario }: { manualSc
       {
         titleKey: 'attachments',
         defaultMessage: messages.noAttachments,
-        childComponent: !isEmpty(manualScenario.attachments) && <AttachmentList
-          attachments={manualScenario.attachments}
-          className={cx('page__attachments-list')}
-        />,
+        childComponent: !isEmpty(manualScenario.attachments) &&
+          <AttachmentList
+            attachments={manualScenario.attachments}
+            className={cx('page__attachments-list')}
+          />,
       }
     );
   }

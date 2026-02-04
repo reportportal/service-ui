@@ -19,9 +19,9 @@ import { isEmpty } from 'es-toolkit/compat';
 import { createClassnames } from 'common/utils';
 
 import { AttachmentList } from '../../attachmentList';
+import { Attachment } from '../../types';
 
 import styles from './step.scss';
-import {Attachment} from "pages/inside/testCaseLibraryPage/types";
 
 const cx = createClassnames(styles);
 
@@ -39,7 +39,7 @@ export const Step = ({
   attachments,
 }: StepProps) => (
   <li className={cx('step')}>
-    <div className={cx('step__type')}>{index}</div>
+    <div className={cx('step__number')}>{index}</div>
     <div className={cx('step__content')}>
       {
         (instructions || expectedResult) && (
