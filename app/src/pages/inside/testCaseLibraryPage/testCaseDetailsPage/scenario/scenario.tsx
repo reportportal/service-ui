@@ -35,29 +35,45 @@ export const Scenario = ({
   expectedResult,
 }: ScenarioProps) => {
   const { formatMessage } = useIntl();
+  const getSubScenario = (
+    {
+      header,
+      value,
+    }:
+    {
+      header: {
+        id: string;
+        defaultMessage: string;
+      };
+      value: string;
+  }) => (
+    value ?
+      <div className={cx('scenario__section')}>
+        <h4 className={cx('scenario__section-header')}>{formatMessage(header)}</h4>
+        <p className={cx('scenario__section-value')}>{value}</p>
+      </div> :
+      null
+  );
 
   return (
     <section className={cx('scenario')}>
       {
-        precondition &&
-          <div className={cx('scenario__section')}>
-            <h4 className={cx('scenario__section-header')}>{formatMessage(commonMessages.precondition)}</h4>
-            <p className={cx('scenario__section-value')}>{precondition}</p>
-          </div>
+        getSubScenario({
+          header: commonMessages.precondition,
+          value: precondition,
+        })
       }
       {
-        instructions &&
-          <div className={cx('scenario__section')}>
-            <h4 className={cx('scenario__section-header')}>{formatMessage(commonMessages.instructions)}</h4>
-            <p className={cx('scenario__section-value')}>{instructions}</p>
-          </div>
+        getSubScenario({
+          header: commonMessages.instructions,
+          value: instructions,
+        })
       }
       {
-        expectedResult &&
-          <div className={cx('scenario__section')}>
-            <h4 className={cx('scenario__section-header')}>{formatMessage(commonMessages.expectedResult)}</h4>
-            <p className={cx('scenario__section-value')}>{expectedResult}</p>
-          </div>
+        getSubScenario({
+          header: commonMessages.expectedResult,
+          value: expectedResult,
+        })
       }
     </section>
   );
