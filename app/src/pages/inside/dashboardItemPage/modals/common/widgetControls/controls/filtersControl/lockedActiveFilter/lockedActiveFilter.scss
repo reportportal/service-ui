@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,21 +17,13 @@
 .locked-active-filter {
   position: relative;
   margin-bottom: 20px;
-  padding: 10px 0;
+  padding: 10px 28px 10px 0;
   border-bottom: 1px solid $COLOR--gray-91;
 
   .pencil-icon {
     position: absolute;
     right: 0;
     display: inline-block;
-    width: 20px;
-    height: 18px;
-    cursor: pointer;
-    fill: $COLOR--gray-60;
-
-    &:hover {
-      fill: $COLOR--gray-47;
-    }
   }
 
   .not-found {

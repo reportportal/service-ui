@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,37 +14,23 @@
  * limitations under the License.
  */
 
-import React, { PureComponent } from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import Parser from 'html-react-parser';
-import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import { InputRadio } from 'components/inputs/inputRadio';
 import { FilterOptions } from 'pages/inside/filtersPage/filterGrid/filterOptions';
 import { FilterName } from 'pages/inside/filtersPage/filterGrid/filterName';
+import { Icon } from 'components/main/icon';
+import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardTooltip';
 import styles from './filtersItem.scss';
+import { useCanLockDashboard } from 'common/hooks';
 
 const cx = classNames.bind(styles);
 
-export class FiltersItem extends PureComponent {
-  static propTypes = {
-    filter: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired,
-    search: PropTypes.string,
-    activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    editable: PropTypes.bool,
-    onEdit: PropTypes.func,
-  };
-
-  static defaultProps = {
-    search: '',
-    activeFilterId: '',
-    editable: false,
-    onEdit: () => {},
-  };
-
-  render() {
-    const { activeFilterId, filter, search, onChange, editable, onEdit } = this.props;
+export const FiltersItem = memo(
+  ({ filter, onChange, search, activeFilterId, editable, onEdit }) => {
+    const canLock = useCanLockDashboard();
+    const isDisabled = filter.locked && !canLock;
 
     return (
       <div className={cx('filter-item')}>
@@ -57,14 +43,38 @@ export class FiltersItem extends PureComponent {
         >
           <FilterName search={search} filter={filter} showDesc={false} editable={false} />
           <FilterOptions entities={filter.conditions} sort={filter.orders}>
-            {editable && (
-              <span className={cx('pencil-icon')} onClick={onEdit}>
-                {Parser(PencilIcon)}
-              </span>
+            {editable && onEdit && (
+              <LockedDashboardTooltip
+                locked={filter.locked}
+                variant="filter"
+                wrapperClassName={cx('pencil-icon-wrapper')}
+              >
+                <Icon
+                  className={cx('pencil-icon')}
+                  type="icon-pencil"
+                  onClick={onEdit}
+                  disabled={isDisabled}
+                />
+              </LockedDashboardTooltip>
             )}
           </FilterOptions>
         </InputRadio>
       </div>
     );
-  }
-}
+  },
+);
+
+FiltersItem.propTypes = {
+  filter: PropTypes.object.isRequired,
+  onChange: PropTypes.func.isRequired,
+  search: PropTypes.string,
+  activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  editable: PropTypes.bool,
+  onEdit: PropTypes.func,
+};
+FiltersItem.defaultProps = {
+  search: '',
+  activeFilterId: '',
+  editable: false,
+  onEdit: null,
+};

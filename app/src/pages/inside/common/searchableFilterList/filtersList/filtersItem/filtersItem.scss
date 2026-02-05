@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,14 +25,16 @@
   }
 }
 
+.pencil-icon-wrapper {
+  display: inline-block;
+}
+
 .pencil-icon {
   width: 20px;
   height: 18px;
   margin-left: 10px;
   display: none;
   vertical-align: top;
-  cursor: pointer;
-  fill: $COLOR--gray-60;
 
   @media (max-width: $SCREEN_XS_MAX) {
     display: inline-block;
