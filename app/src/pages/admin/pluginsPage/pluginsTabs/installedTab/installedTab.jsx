@@ -25,6 +25,7 @@ import { fetch } from 'common/utils';
 import { getPluginsFilter } from 'common/constants/pluginsFilter';
 import { ALL_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import { updatePluginSuccessAction } from 'controllers/plugins';
+import { disablePluginPopupContentSelector } from 'controllers/plugins/uiExtensions';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import {
   getPluginFilterTabClickEvent,
@@ -79,11 +80,16 @@ const messages = defineMessages({
 });
 
 @injectIntl
-@connect(null, {
-  showNotification,
-  updatePluginSuccessAction,
-  showModalAction,
-})
+@connect(
+  (state) => ({
+    disablePluginPopupContent: (pluginName) => disablePluginPopupContentSelector(state, pluginName),
+  }),
+  {
+    showNotification,
+    updatePluginSuccessAction,
+    showModalAction,
+  },
+)
 @track()
 export class InstalledTab extends Component {
   static propTypes = {
@@ -92,6 +98,7 @@ export class InstalledTab extends Component {
     showModalAction: PropTypes.func.isRequired,
     plugins: PropTypes.array.isRequired,
     updatePluginSuccessAction: PropTypes.func.isRequired,
+    disablePluginPopupContent: PropTypes.func.isRequired,
     showNotification: PropTypes.func,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -155,15 +162,28 @@ export class InstalledTab extends Component {
     });
   };
 
-  showDisablePluginModal = (pluginName, pluginLocation, callback) => {
+  showDisablePluginModal = (pluginName, pluginLocation, callback, pluginId = null) => {
     const {
-      intl: { formatMessage },
+      intl: { formatMessage, locale },
+      disablePluginPopupContent,
+      plugins,
     } = this.props;
+
+    const plugin = plugins.find((p) => p.name === pluginName);
+    const displayName = plugin?.details?.name || plugin?.name || pluginName;
+    const manifestLookupName = pluginId || pluginName;
+
+    const customMessageData = disablePluginPopupContent(manifestLookupName);
+    const customMessage = typeof customMessageData === 'object'
+      ? (customMessageData?.[locale] || customMessageData?.en)
+      : customMessageData;
+
+    const message = customMessage || formatMessage(messages.disablePluginMessage, { pluginName: displayName, pluginLocation });
 
     this.props.showModalAction({
       id: 'confirmationModal',
       data: {
-        message: formatMessage(messages.disablePluginMessage, { pluginName, pluginLocation }),
+        message,
         onConfirm: callback,
         dangerConfirm: true,
         title: formatMessage(messages.disablePluginTitle),
@@ -181,9 +201,10 @@ export class InstalledTab extends Component {
     pluginName,
     callback,
     pluginLocation = 'Project Settings',
+    pluginId = null,
   ) => {
     isEnabled
-      ? this.showDisablePluginModal(pluginName, pluginLocation, callback)
+      ? this.showDisablePluginModal(pluginName, pluginLocation, callback, pluginId)
       : this.showEnablePluginModal(pluginName, callback);
   };
 
