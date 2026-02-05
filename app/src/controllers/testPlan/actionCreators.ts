@@ -23,6 +23,7 @@ export interface GetTestPlansParams {
 
 export interface GetTestPlanParams {
   testPlanId: string | number;
+  folderId?: string | number;
   offset?: string | number;
   limit?: string | number;
 }

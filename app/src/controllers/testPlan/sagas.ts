@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /*
  * Copyright 2025 EPAM Systems
  *
@@ -104,8 +105,6 @@ function* getTestPlan(action: GetTestPlanAction): Generator {
 
   try {
     if (
-      location.query?.offset !== String(offset) ||
-      location.query?.limit !== String(limit) ||
       String(location?.prev?.payload?.testPlanId) !== String(location?.payload?.testPlanId)
     ) {
       yield put({
@@ -148,10 +147,19 @@ function* getTestPlan(action: GetTestPlanAction): Generator {
       meta: { namespace: TEST_PLAN_TEST_CASES_NAMESPACE },
     });
 
-    const planTestCases = (yield call(
-      fetch,
-      URLS.testPlanTestCases(projectKey, testPlanId, params),
-    )) as TestPlanTestCaseDto;
+    let planTestCases: TestPlanTestCaseDto;
+
+    if (!action.payload.folderId) {
+      planTestCases = (yield call(
+        fetch,
+        URLS.testPlanTestCases(projectKey, testPlanId, params),
+      )) as TestPlanTestCaseDto;
+    } else {
+      planTestCases = (yield call(
+        fetch,
+        URLS.testCases(projectKey, { 'filter.eq.testFolderId': action.payload.folderId, ...params }),
+      )) as TestPlanTestCaseDto;
+    }
 
     yield put(fetchSuccessAction(TEST_PLAN_TEST_CASES_NAMESPACE, planTestCases));
   } catch (error) {

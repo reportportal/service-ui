@@ -498,17 +498,20 @@ const routesMap = {
     },
   },
   [PROJECT_TEST_PLAN_DETAILS_PAGE]: {
-    path: '/organizations/:organizationSlug/projects/:projectSlug/milestones/:testPlanId',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/milestones/:testPlanId/:testPlanRoute*',
     thunk: (dispatch, getState) => {
       const state = getState();
       const testPlanId = state.location?.payload?.testPlanId;
+      const testPlanRoute = state.location?.payload?.testPlanRoute;
+      const match = testPlanRoute?.match(/folder\/(\d+)/);
+      const folderId = match ? match[1] : null;
       const { offset, limit } = getRouterParams({
         namespace: TEST_PLAN_TEST_CASES_NAMESPACE,
         defaultParams: defaultTestPlanTestCasesQueryParams,
         state,
       });
 
-      dispatch(getTestPlanAction({ testPlanId, offset, limit }));
+      dispatch(getTestPlanAction({ testPlanId, folderId, offset, limit }));
     },
   },
 };

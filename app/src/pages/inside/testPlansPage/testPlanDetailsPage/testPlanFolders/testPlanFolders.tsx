@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
-import {
-  testPlanTransformedFoldersSelector,
-  testPlanTestCasesSelector,
-} from 'controllers/testPlan';
+import { testPlanTestCasesSelector } from 'controllers/testPlan';
+import { PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
+import { useTestPlanActiveFolders } from 'pages/inside/testCaseLibraryPage/hooks/useTestPlanActiveFolders';
 
 import { ExpandedOptions } from '../../../common/expandedOptions';
 import { AllTestCasesPage } from './allTestCasesPage';
@@ -31,34 +29,48 @@ interface TestPlanFoldersProps {
 }
 
 export const TestPlanFolders = ({ isLoading = false }: TestPlanFoldersProps) => {
-  const [activeFolder, setActiveFolder] = useState<number | null>(null);
-  const folders = useSelector(testPlanTransformedFoldersSelector);
+  const dispatch = useDispatch();
   const testCases = useSelector(testPlanTestCasesSelector);
-
-  useEffect(() => {
-    setActiveFolder(null);
-  }, []);
+  const { activeFolderId, activeFolder, payload, folders } = useTestPlanActiveFolders();
 
   const setAllTestCases = () => {
-    setActiveFolder(null);
+    if(activeFolderId){
+    dispatch({
+      type: PROJECT_TEST_PLAN_DETAILS_PAGE,
+      payload: {
+        ...payload,
+        testPlanRoute: undefined,
+      },
+    });
+  }
   };
 
   const handleFolderClick = (id: number) => {
-    setActiveFolder(id);
+    if(id !== activeFolderId){
+    dispatch({
+      type: PROJECT_TEST_PLAN_DETAILS_PAGE,
+      payload: {
+        ...payload,
+        testPlanRoute: `folder/${id}`,
+      },
+    });
+  }
   };
 
   return (
     <ExpandedOptions
-      activeFolderId={activeFolder}
+      activeFolderId={activeFolderId}
       folders={folders}
       onFolderClick={handleFolderClick}
       setAllTestCases={setAllTestCases}
+      instanceKey={TMS_INSTANCE_KEY.TEST_PLAN}
     >
       <AllTestCasesPage
         testCases={testCases}
         searchValue=""
         loading={isLoading}
         instanceKey={TMS_INSTANCE_KEY.TEST_PLAN}
+        folderName={activeFolder?.name}
       />
     </ExpandedOptions>
   );
