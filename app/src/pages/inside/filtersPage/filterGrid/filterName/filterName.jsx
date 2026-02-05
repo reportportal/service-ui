@@ -38,7 +38,7 @@ const NameLink = ({ link, children }) =>
     children
   );
 NameLink.propTypes = {
-  link: PropTypes.string,
+  link: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   children: PropTypes.node,
 };
 NameLink.defaultProps = {
@@ -62,11 +62,13 @@ export const FilterName = ({
   const isDisabled = filter.locked && !canLock;
 
   const getHighlightName = () => {
+    const name = filter.name || '';
+
     if (!search.length) {
-      return filter.name;
+      return name;
     }
 
-    return filter.name.replace(
+    return name.replace(
       new RegExp(search, 'i'),
       (match) => `<span class=${cx('name-highlight')}>${match}</span>`,
     );
