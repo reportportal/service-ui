@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
- .input-wrapper {
+.input-wrapper {
   position: relative;
   display: inline-block;
   width: 100%;
@@ -37,9 +37,7 @@
   color: $COLOR--charcoal-grey;
   box-shadow: none;
   flex-grow: 1;
-  transition:
-    border-color ease-in-out 0.15s,
-    box-shadow ease-in-out 0.15s;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
 
   &.clearable {
     padding-right: 32px;
