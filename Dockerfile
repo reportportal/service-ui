@@ -1,7 +1,7 @@
 # Only for technical/build aims, built image will be with nginxinc/nginx-unprivileged:alpine according to the last step
 
 
-FROM alpine:3.20.3 AS generate-build-info
+FROM alpine:3.23.3 AS generate-build-info
 RUN mkdir -p /usr/src/app/build
 WORKDIR /usr/src
 ARG APP_VERSION=develop
@@ -19,6 +19,8 @@ RUN npm ci --legacy-peer-deps && npm run build
 FROM nginxinc/nginx-unprivileged:alpine
 
 USER root
+
+RUN apk update && apk upgrade
 
 COPY --from=build-frontend /usr/src/app/build /usr/share/nginx/html
 COPY --from=generate-build-info /usr/src/app/build /usr/share/nginx/html
