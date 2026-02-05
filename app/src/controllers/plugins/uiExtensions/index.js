@@ -18,5 +18,7 @@ export {
   logStackTraceAddonSelector,
   testItemDetailsAddonSelector,
   uiExtensionProjectPagesSelector,
+  extensionManifestSelector,
+  disablePluginPopupContentSelector,
 } from './selectors';
 export { uiExtensionsReducer } from './reducer';
