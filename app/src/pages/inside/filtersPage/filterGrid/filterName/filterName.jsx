@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-import React, { Fragment, Component } from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import DOMPurify from 'dompurify';
 import Link from 'redux-first-router-link';
-import PencilIcon from 'common/img/pencil-icon-inline.svg';
+import { Icon } from 'components/main/icon';
 import { MarkdownViewer } from 'components/main/markdown';
+import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardTooltip';
+import { LockedIcon } from 'pages/inside/common/lockedIcon';
+import { useCanLockDashboard } from 'common/hooks';
 import styles from './filterName.scss';
 
 const cx = classNames.bind(styles);
@@ -35,7 +38,7 @@ const NameLink = ({ link, children }) =>
     children
   );
 NameLink.propTypes = {
-  link: PropTypes.string,
+  link: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   children: PropTypes.node,
 };
 NameLink.defaultProps = {
@@ -43,38 +46,23 @@ NameLink.defaultProps = {
   children: null,
 };
 
-export class FilterName extends Component {
-  static propTypes = {
-    userFilters: PropTypes.array,
-    filter: PropTypes.object,
-    onClickName: PropTypes.func,
-    onEdit: PropTypes.func,
-    search: PropTypes.string,
-    showDesc: PropTypes.bool,
-    editable: PropTypes.bool,
-    isBold: PropTypes.bool,
-    isLink: PropTypes.bool,
-    nameLink: PropTypes.object,
-  };
+export const FilterName = ({
+  userFilters,
+  filter,
+  onClickName,
+  onEdit,
+  search,
+  showDesc,
+  editable,
+  isBold,
+  isLink,
+  nameLink,
+}) => {
+  const canLock = useCanLockDashboard();
+  const isDisabled = filter.locked && !canLock;
 
-  static defaultProps = {
-    userFilters: [],
-    filter: {},
-    onClickName: () => {},
-    onEdit: () => {},
-    search: '',
-    showDesc: true,
-    editable: true,
-    isBold: false,
-    isLink: false,
-    nameLink: null,
-  };
-
-  getHighlightName = () => {
-    const {
-      filter: { name },
-      search,
-    } = this.props;
+  const getHighlightName = () => {
+    const name = filter.name || '';
 
     if (!search.length) {
       return name;
@@ -86,21 +74,14 @@ export class FilterName extends Component {
     );
   };
 
-  render() {
-    const {
-      userFilters,
-      filter,
-      onClickName,
-      onEdit,
-      showDesc,
-      editable,
-      isBold,
-      isLink,
-      nameLink,
-    } = this.props;
-
-    return (
-      <Fragment>
+  return (
+    <Fragment>
+      <div className={cx('name-container')}>
+        {filter.locked && (
+          <LockedDashboardTooltip locked={filter.locked} variant="filter">
+            <LockedIcon />
+          </LockedDashboardTooltip>
+        )}
         <span className={cx('name-wrapper')}>
           <NameLink link={nameLink}>
             <span
@@ -110,17 +91,51 @@ export class FilterName extends Component {
               })}
               onClick={() => onClickName(filter)}
             >
-              {Parser(DOMPurify.sanitize(this.getHighlightName(filter.name)))}
+              {Parser(DOMPurify.sanitize(getHighlightName()))}
             </span>
           </NameLink>
-          {editable && (
-            <span className={cx('pencil-icon')} onClick={() => onEdit(filter)}>
-              {Parser(PencilIcon)}
-            </span>
+          {editable && onEdit && (
+            <LockedDashboardTooltip
+              locked={filter.locked}
+              variant="filter"
+              wrapperClassName={cx('pencil-icon-wrapper')}
+            >
+              <Icon
+                type="icon-pencil"
+                onClick={() => onEdit(filter)}
+                disabled={isDisabled}
+                className={cx('pencil-icon')}
+              />
+            </LockedDashboardTooltip>
           )}
         </span>
-        {showDesc && <MarkdownViewer value={filter.description} />}
-      </Fragment>
-    );
-  }
-}
+      </div>
+      {showDesc && <MarkdownViewer value={filter.description} />}
+    </Fragment>
+  );
+};
+
+FilterName.propTypes = {
+  userFilters: PropTypes.array,
+  filter: PropTypes.object,
+  onClickName: PropTypes.func,
+  onEdit: PropTypes.func,
+  search: PropTypes.string,
+  showDesc: PropTypes.bool,
+  editable: PropTypes.bool,
+  isBold: PropTypes.bool,
+  isLink: PropTypes.bool,
+  nameLink: PropTypes.object,
+};
+FilterName.defaultProps = {
+  userFilters: [],
+  filter: {},
+  onClickName: () => {},
+  onEdit: null,
+  search: '',
+  showDesc: true,
+  editable: true,
+  isBold: false,
+  isLink: false,
+  nameLink: null,
+};
