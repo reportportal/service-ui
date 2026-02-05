@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,21 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames/bind';
-import Parser from 'html-react-parser';
-import BinIcon from 'common/img/bin-icon-inline.svg';
-import styles from './deleteFilterButton.scss';
+import { Icon } from 'components/main/icon';
+import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardTooltip';
+import { useCanLockDashboard } from 'common/hooks';
 
-const cx = classNames.bind(styles);
+export const DeleteFilterButton = ({ onDelete, filter }) => {
+  const canLock = useCanLockDashboard();
+  const isDisabled = filter.locked && !canLock;
 
-export const DeleteFilterButton = ({ onDelete, filter }) => (
-  <div className={cx('bin-icon')} onClick={() => onDelete(filter)}>
-    {Parser(BinIcon)}
-  </div>
-);
+  return (
+    <LockedDashboardTooltip locked={filter.locked} variant="filter">
+      <Icon type="icon-delete" onClick={() => onDelete(filter)} disabled={isDisabled} />
+    </LockedDashboardTooltip>
+  );
+};
+
 DeleteFilterButton.propTypes = {
   onDelete: PropTypes.func,
   filter: PropTypes.object,

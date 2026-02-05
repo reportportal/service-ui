@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,32 @@
  * limitations under the License.
  */
 
-.name-wrapper {
+.name-container {
   width: 100%;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 
   &:hover .pencil-icon {
     display: inline-block;
   }
 }
 
-.name {
+.name-wrapper {
+  display: inline-block;
+  font-size: 15px;
   line-height: 20px;
+}
+
+.name {
   word-break: break-all;
-  font-size: 14px;
+  vertical-align: middle;
 
   &.bold {
     font-family: $FONT-SEMIBOLD;
   }
 
   &.link {
-    font-size: 15px;
     color: $COLOR--topaz;
     cursor: pointer;
 
@@ -41,28 +47,20 @@
       text-decoration: underline;
     }
   }
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    font-size: 16px;
-  }
 }
 
 .name-highlight {
   color: $COLOR--fatal;
 }
 
+.pencil-icon-wrapper {
+  vertical-align: middle;
+}
+
 .pencil-icon {
-  width: 20px;
-  height: 20px;
   margin-left: 10px;
   display: none;
-  vertical-align: top;
-  background-image: url(./img/pencil-icon.svg);
-  cursor: pointer;
-
-  &:hover {
-    background-image: url(./img/pencil-icon-hover.svg);
-  }
+  vertical-align: middle;
 
   @media (max-width: $SCREEN_XS_MAX) {
     display: inline-block;

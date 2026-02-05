@@ -25,7 +25,7 @@ import styles from './lockedDashboardTooltip.scss';
 
 const cx = classNames.bind(styles);
 
-export const LockedDashboardTooltip = ({ children, locked, variant }) => {
+export const LockedDashboardTooltip = ({ children, locked, variant, wrapperClassName }) => {
   const { formatMessage } = useIntl();
   const canLock = useCanLockDashboard();
 
@@ -37,7 +37,7 @@ export const LockedDashboardTooltip = ({ children, locked, variant }) => {
   return (
     <Tooltip
       content={formatMessage(message)}
-      wrapperClassName={cx('locked-tooltip-wrapper')}
+      wrapperClassName={cx('locked-tooltip-wrapper', wrapperClassName)}
       tooltipClassName={cx('locked-tooltip')}
       contentClassName={cx('locked-tooltip-content')}
       portalRoot={portalRoot}
@@ -51,10 +51,12 @@ LockedDashboardTooltip.propTypes = {
   children: PropTypes.node,
   locked: PropTypes.bool,
   variant: PropTypes.oneOf(['dashboard', 'filter']),
+  wrapperClassName: PropTypes.string,
 };
 
 LockedDashboardTooltip.defaultProps = {
   children: null,
   locked: false,
   variant: 'dashboard',
+  wrapperClassName: '',
 };
