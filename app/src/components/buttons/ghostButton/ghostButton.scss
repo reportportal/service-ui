@@ -38,7 +38,7 @@
     color: $COLOR--gray-60;
     background-color: $COLOR--white;
     border-color: $COLOR--gray-91;
-    cursor: default;
+    pointer-events: none;
 
     &.filled-icon:not(.stroked-icon) {
       path,

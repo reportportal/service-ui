@@ -42,21 +42,23 @@ export const NameColumn = ({ value, customProps: { getLink }, className }) => {
   const { id: dashboardId, name, locked } = value;
 
   return (
-    <div className={cx(className, 'name-container')}>
-      {locked && (
-        <LockedDashboardTooltip locked={locked}>
-          <LockedIcon />
-        </LockedDashboardTooltip>
-      )}
-      <NavLink
-        className={cx('name')}
-        to={getLink(dashboardId)}
-        onClick={() => {
-          trackEvent(DASHBOARD_EVENTS.clickOnDashboardName(dashboardId));
-        }}
-      >
-        {name}
-      </NavLink>
+    <div className={cx(className, 'name-cell')}>
+      <div className={cx('name-container')}>
+        {locked && (
+          <LockedDashboardTooltip locked={locked}>
+            <LockedIcon />
+          </LockedDashboardTooltip>
+        )}
+        <NavLink
+          className={cx('name')}
+          to={getLink(dashboardId)}
+          onClick={() => {
+            trackEvent(DASHBOARD_EVENTS.clickOnDashboardName(dashboardId));
+          }}
+        >
+          {name}
+        </NavLink>
+      </div>
     </div>
   );
 };

@@ -22,7 +22,7 @@ import styles from './filterList.scss';
 
 const cx = classNames.bind(styles);
 
-export const FilterList = ({ filters, activeFilterId, unsavedFilterIds, onRemoveFilter, intl }) => (
+export const FilterList = ({ filters, activeFilterId, unsavedFilterIds, onRemoveFilter }) => (
   <div className={cx('filter-list')}>
     {filters.map((filter) => (
       <div key={filter.id} className={cx('item')}>
@@ -30,10 +30,10 @@ export const FilterList = ({ filters, activeFilterId, unsavedFilterIds, onRemove
           id={filter.id}
           name={filter.name}
           description={filter.description}
+          locked={filter.locked}
           active={filter.id === activeFilterId}
           unsaved={unsavedFilterIds.indexOf(filter.id) > -1}
           onRemove={() => onRemoveFilter(filter)}
-          intl={intl}
         />
       </div>
     ))}
@@ -44,7 +44,6 @@ FilterList.propTypes = {
   activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   unsavedFilterIds: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
   onRemoveFilter: PropTypes.func,
-  intl: PropTypes.object.isRequired,
 };
 FilterList.defaultProps = {
   filters: [],

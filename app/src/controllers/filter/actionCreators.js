@@ -130,6 +130,7 @@ export const setPageLoadingAction = (isLoading) => ({
   payload: isLoading,
 });
 
-export const parseQueryToFilterEntityAction = () => ({
+export const parseQueryToFilterEntityAction = (refreshPreferences = false) => ({
   type: PARSE_QUERY_TO_FILTER_ENTITY,
+  payload: refreshPreferences,
 });
