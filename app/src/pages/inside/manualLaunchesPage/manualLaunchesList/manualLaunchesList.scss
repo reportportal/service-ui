@@ -81,7 +81,8 @@
         outline: 1px solid var(--rp-ui-base-topaz-focused);
       }
 
-      &:has(.manual-launches-list-table-cell-hoverable:hover) .manual-launches-list-table-cell-hoverable {
+      &:has(.manual-launches-list-table-cell-hoverable:hover)
+        .manual-launches-list-table-cell-hoverable {
         color: var(--rp-ui-base-topaz-hover);
       }
 

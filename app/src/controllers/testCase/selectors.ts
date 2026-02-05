@@ -18,7 +18,7 @@ import { createSelector } from 'reselect';
 
 import { transformFoldersToDisplay } from 'common/utils/folderUtils';
 import { transformFoldersWithFullPath } from 'controllers/testCase/utils';
-import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { ExtendedTestCase, TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Page } from 'types/common';
 import { Folder } from './types';
 import { InitialStateType } from './reducer';
@@ -38,7 +38,7 @@ export interface TestCaseState {
     page: Page | null;
   };
   details?: {
-    data?: TestCase;
+    data?: ExtendedTestCase;
   };
 }
 
