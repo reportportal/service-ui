@@ -35,6 +35,7 @@ export {
   canDeleteTestItem,
   canMoveToDebug,
   canMergeLaunches,
+  canImportLaunches,
   canWorkWithFilters,
   canReadData,
   canSeeDemoData,

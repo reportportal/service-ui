@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { canBulkEditItems } from 'common/utils/permissions';
+import { canBulkEditItems, canImportLaunches } from 'common/utils/permissions';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
@@ -228,8 +228,10 @@ export class ActionPanel extends Component {
     ];
   };
   isShowImportButton = () => {
-    const { debugMode, activeFilterId } = this.props;
-    return !debugMode && !Number.isInteger(activeFilterId);
+    const { debugMode, activeFilterId, accountRole, projectRole } = this.props;
+    return (
+      !debugMode && !Number.isInteger(activeFilterId) && canImportLaunches(accountRole, projectRole)
+    );
   };
 
   isShowWidgetButton = () => {

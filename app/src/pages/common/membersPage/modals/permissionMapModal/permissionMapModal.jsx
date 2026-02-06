@@ -52,6 +52,7 @@ export class PermissionMapModal extends Component {
         title={this.props.intl.formatMessage(messages.permissionMapHeader)}
         className={cx('permission-map')}
         okButton={okButton}
+        scrollable
       >
         <PermissionMap />
       </ModalLayout>
