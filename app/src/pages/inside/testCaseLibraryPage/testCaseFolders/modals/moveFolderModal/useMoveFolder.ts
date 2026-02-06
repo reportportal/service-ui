@@ -19,7 +19,9 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
-import { moveFolderSuccessAction } from 'controllers/testCase/actionCreators';
+import {
+  moveFolderSuccessAction,
+} from 'controllers/testCase/actionCreators';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { useDebouncedSpinner, useNotification } from 'common/hooks';
@@ -44,7 +46,7 @@ export const useMoveFolder = () => {
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const { createNewStoreFolder } = useFolderActions();
-  const { navigateToFolder } = useNavigateToFolder();
+  const { navigateToFolder, navigateToFolderAfterAction, expandFoldersToLevel } = useNavigateToFolder();
   const { showSuccessNotification, showErrorNotification } = useNotification();
 
   const moveFolder = useCallback(
@@ -65,7 +67,7 @@ export const useMoveFolder = () => {
 
         if (isNewFolder && newFolderDetails) {
           createNewStoreFolder({
-            targetFolderId,
+            id: targetFolderId,
             folderName: newFolderDetails.name,
             parentFolderId: newFolderDetails.parentTestFolderId,
           });
@@ -81,26 +83,25 @@ export const useMoveFolder = () => {
         dispatch(hideModalAction());
         showSuccessNotification({ messageId: 'testCaseFolderMovedSuccess' });
 
-        navigateToFolder({
-          folderId,
-          parentIdToExpand: movedFolderParentId,
-        });
+        if (isNewFolder && newFolderDetails) {
+          navigateToFolderAfterAction({
+            targetFolderId,
+            newFolderDetails,
+          });
+          expandFoldersToLevel(targetFolderId);
+        } else {
+          navigateToFolder({
+            folderId,
+            parentIdToExpand: movedFolderParentId,
+          });
+        }
       } catch {
         showErrorNotification({ messageId: 'testCaseFolderMoveFailed' });
       } finally {
         hideSpinner();
       }
     },
-    [
-      showSpinner,
-      projectKey,
-      dispatch,
-      navigateToFolder,
-      createNewStoreFolder,
-      hideSpinner,
-      showSuccessNotification,
-      showErrorNotification,
-    ],
+    [showSpinner, projectKey, dispatch, showSuccessNotification, createNewStoreFolder, navigateToFolderAfterAction, expandFoldersToLevel, navigateToFolder, showErrorNotification, hideSpinner],
   );
 
   return { moveFolder, isLoading };

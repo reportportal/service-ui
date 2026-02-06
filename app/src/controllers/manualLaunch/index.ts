@@ -14,8 +14,21 @@
  * limitations under the License.
  */
 
-export { getManualLaunchesAction, getManualLaunchAction } from './actionCreators';
+export {
+  getManualLaunchesAction,
+  getManualLaunchAction,
+  getManualLaunchFoldersAction,
+  getManualLaunchTestCaseExecutionsAction,
+  toggleManualLaunchFolderExpansionAction,
+  expandManualLaunchFoldersToLevelAction,
+  setManualLaunchExpandedFolderIdsAction,
+} from './actionCreators';
 export { manualLaunchesSagas } from './sagas';
 export * from './constants';
-export { manualLaunchesReducer } from './reducer';
+export {
+  manualLaunchesReducer,
+  manualLaunchFoldersReducer,
+  manualLaunchTestCaseExecutionsReducer,
+} from './reducer';
 export * from './selectors';
+export * from './types';

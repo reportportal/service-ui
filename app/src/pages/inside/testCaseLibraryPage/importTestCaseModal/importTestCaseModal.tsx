@@ -7,7 +7,7 @@ import Link from 'redux-first-router-link';
 import { isEmpty } from 'es-toolkit/compat';
 import { isString } from 'es-toolkit';
 import { format } from 'date-fns';
-import { Modal, FileDropArea, AddCsvIcon, Dropdown } from '@reportportal/ui-kit';
+import { Modal, FileDropArea, AddCsvIcon } from '@reportportal/ui-kit';
 import { MIME_TYPES, MimeType } from '@reportportal/ui-kit/fileDropArea';
 import { AttachmentFile } from '@reportportal/ui-kit/fileDropArea/attachedFilesList';
 
@@ -20,7 +20,14 @@ import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';
 import { uniqueId } from 'common/utils';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 import { FolderNameField } from 'pages/inside/testCaseLibraryPage/testCaseFolders/modals/folderFormFields';
-import { Folder, foldersSelector } from 'controllers/testCase';
+import { CreateFolderAutocomplete } from 'pages/inside/testCaseLibraryPage/testCaseFolders/shared/CreateFolderAutocomplete';
+import {
+  foldersSelector,
+  FolderWithFullPath,
+  transformedFoldersWithFullPathSelector,
+} from 'controllers/testCase';
+import { FieldErrorHint, FieldProvider } from 'components/fields';
+import { NewFolderData } from 'pages/inside/testCaseLibraryPage/utils/getFolderFromFormValues';
 
 import { useImportTestCase } from './useImportTestCase';
 
@@ -35,6 +42,8 @@ export type ImportTarget = 'root' | 'existing';
 export type ImportTestCaseFormValues = {
   folderName: string;
   importTarget?: ImportTarget;
+  existingFolderId?: number | null;
+  selectedFolder?: FolderWithFullPath | null;
 };
 
 const cx = createClassnames(styles);
@@ -66,44 +75,32 @@ export const ImportTestCaseModal = ({
   const selectedFolderName = data?.folderName ?? '';
   const predefinedImportTarget = data?.importTarget;
   const folders = useSelector(foldersSelector);
+  const foldersWithPath = useSelector(transformedFoldersWithFullPathSelector);
   const folderIdFromName = folders.find((folder) => folder.name === selectedFolderName)?.id;
-  const folderIdFromUrl = extractFolderIdFromHash(window.location.hash);
+  const folderIdFromUrl = extractFolderIdFromHash(globalThis.location.hash);
   const folderId = predefinedImportTarget === 'existing' ? folderIdFromName : folderIdFromUrl;
   const [file, setFile] = useState<File | null>(null);
   const [target, setTarget] = useState<ImportTarget>(folderId != null ? 'existing' : 'root');
-  const [existingFolderId, setExistingFolderId] = useState<number | null>(null);
   const [attachedFiles, setAttachedFiles] = useState<AttachmentFile[]>([]);
   const dispatch = useDispatch();
 
   const { isImportingTestCases, importTestCases } = useImportTestCase();
-
-  const handleCancel = () => {
-    dispatch(hideModalAction());
-  };
-
-  const setTargetAndForm = (next: ImportTarget) => {
-    setTarget(next);
-    change('importTarget', next);
-  };
-
-  const existingOptions = useMemo(
-    () =>
-      (Array.isArray(folders) ? folders : []).map((folder: Folder) => ({
-        value: folder.id,
-        label: folder.name,
-      })),
-    [folders],
-  );
 
   const acceptFileMimeTypes = useMemo<MimeType[]>(() => [...CSV_MIME_TYPES], []);
 
   useEffect(() => {
     change('importTarget', target);
 
-    if (folderId && existingOptions.some(({ value }) => Number(value) === folderId)) {
-      setExistingFolderId(folderId);
+    if (folderId != null) {
+      const folder = foldersWithPath.find(({ id }) => id === folderId);
+
+      if (folder) {
+        change('existingFolderId', folder.id);
+        change('selectedFolder', folder);
+      }
     }
-  }, [folderId, existingOptions, change]);
+
+  }, [folderId, foldersWithPath, target, change]);
 
   const isAllowedMime = (file: File) => CSV_MIME_TYPES.includes(file.type as MimeType);
 
@@ -111,8 +108,38 @@ export const ImportTestCaseModal = ({
 
   const isRootTarget = target === 'root';
   const isExistingTarget = target === 'existing';
-  const hasExistingOptions = !isEmpty(existingOptions);
   const hasFolderId = folderId != null;
+
+  const handleCancel = () => {
+    dispatch(hideModalAction());
+  };
+
+  const handleFolderSelection = (selectedItem: FolderWithFullPath | NewFolderData | null | undefined) => {
+    if (!selectedItem) {
+      change('existingFolderId', null);
+      change('selectedFolder', null);
+      return;
+    }
+
+    if ('id' in selectedItem) {
+      change('existingFolderId', selectedItem.id);
+      change('selectedFolder', selectedItem);
+      return;
+    }
+
+    change('existingFolderId', null);
+    change('selectedFolder', null);
+  };
+
+  const setTargetAndForm = (next: ImportTarget) => {
+    setTarget(next);
+    change('importTarget', next);
+
+    if (next === 'root') {
+      change('existingFolderId', null);
+      change('selectedFolder', null);
+    }
+  };
 
   const handleImport = async (formValues: ImportTestCaseFormValues) => {
     const name = formValues.folderName?.trim() ?? '';
@@ -123,7 +150,7 @@ export const ImportTestCaseModal = ({
     }
 
     if (importTarget === 'existing') {
-      const resolvedId = existingFolderId ?? folderId;
+      const resolvedId = formValues.existingFolderId ?? folderId;
 
       if (!file || resolvedId == null) {
         return;
@@ -197,10 +224,6 @@ export const ImportTestCaseModal = ({
 
   const iconMarkup = isString(ExternalLinkIcon) ? Parser(ExternalLinkIcon) : null;
 
-  const handleExistingFolderChange = (value: number) => {
-    setExistingFolderId(value);
-  };
-
   const renderLocationControl = () => {
     if (hasFolderId) {
       return (
@@ -215,20 +238,18 @@ export const ImportTestCaseModal = ({
       );
     }
 
-    if (isExistingTarget && hasExistingOptions) {
+    if (isExistingTarget) {
       return (
-        <>
-          <label className={cx('import-test-case-modal__label')}>
-            {formatMessage(messages.importDropdownLabel)}
-          </label>
-          <Dropdown
-            className={cx('import-test-case-modal__dropdown')}
-            options={existingOptions}
-            value={existingFolderId ?? undefined}
-            placeholder={formatMessage(messages.typeToSearchOrSelect)}
-            onChange={handleExistingFolderChange}
-          />
-        </>
+        <FieldProvider name="existingFolderId">
+          <FieldErrorHint provideHint={false}>
+            <CreateFolderAutocomplete
+              label={formatMessage(messages.importDropdownLabel)}
+              placeholder={formatMessage(messages.typeToSearchOrSelect)}
+              onChange={handleFolderSelection}
+              error={error}
+            />
+          </FieldErrorHint>
+        </FieldProvider>
       );
     }
 
@@ -344,12 +365,17 @@ export default withModal(IMPORT_TEST_CASE_MODAL_KEY)(
     validate: ({
       importTarget,
       folderName,
+      existingFolderId,
     }: ImportTestCaseFormValues): FormErrors<ImportTestCaseFormValues> => {
-      const needName =
-        importTarget === 'root' || extractFolderIdFromHash(window.location.hash) == null;
+      const folderIdFromUrl = extractFolderIdFromHash(globalThis.location.hash);
 
       return {
-        folderName: needName ? commonValidators.requiredField(folderName) : undefined,
+        folderName:
+          importTarget === 'root' ? commonValidators.requiredField(folderName) : undefined,
+        existingFolderId:
+          importTarget === 'existing' && folderIdFromUrl == null
+            ? commonValidators.requiredField(existingFolderId)
+            : undefined,
       };
     },
   })(ImportTestCaseModal),

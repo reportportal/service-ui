@@ -35,6 +35,10 @@ const messages = defineMessages({
     id: 'expandedOptions.allTestCases',
     defaultMessage: 'All Test Cases',
   },
+  allTestExecutions: {
+    id: 'expandedOptions.allTestExecutions',
+    defaultMessage: 'All Tests Executions',
+  },
   folders: {
     id: 'expandedOptions.folders',
     defaultMessage: 'Folders',
@@ -47,7 +51,7 @@ interface ExpandedOptionsProps {
   setAllTestCases: () => void;
   onFolderClick: (id: number) => void;
   children: ReactNode;
-  instanceKey?: TMS_INSTANCE_KEY;
+  instanceKey: TMS_INSTANCE_KEY;
   renderCreateFolderButton?: () => ReactNode;
 }
 
@@ -61,7 +65,13 @@ export const ExpandedOptions = ({
   onFolderClick,
 }: ExpandedOptionsProps) => {
   const { formatMessage } = useIntl();
+
   const { expandedIds, onToggleFolder } = useStorageFolders(instanceKey);
+
+  const allItemsTitle =
+    instanceKey === TMS_INSTANCE_KEY.MANUAL_LAUNCH
+      ? formatMessage(messages.allTestExecutions)
+      : formatMessage(messages.allTestCases);
 
   const totalTestCases = folders.reduce((total: number, folder: TransformedFolder): number => {
     const countFolderTestCases = (folder: TransformedFolder): number => {
@@ -86,9 +96,7 @@ export const ExpandedOptions = ({
             })}
             onClick={setAllTestCases}
           >
-            <span className={cx('sidebar-header__title--text')}>
-              {formatMessage(messages.allTestCases)}
-            </span>
+            <span className={cx('sidebar-header__title--text')}>{allItemsTitle}</span>
             <span className={cx('sidebar-header__title--counter')}>
               {totalTestCases.toLocaleString()}
             </span>

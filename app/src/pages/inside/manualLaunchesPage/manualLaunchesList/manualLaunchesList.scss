@@ -31,10 +31,6 @@
     box-sizing: border-box;
 
     &-cell {
-      &-count {
-        padding: 8px 0;
-      }
-
       &-time {
         display: flex;
         align-items: center;
@@ -57,7 +53,6 @@
     // select column headers
     > div {
       grid-template-columns: 32px var(--manual-launches-list-grid) !important;
-      background: none !important; // TODO: delete after it is fixed in ui-kit
 
       & > button:nth-of-type(1) {
         flex: 0 0 auto;
@@ -86,7 +81,8 @@
         outline: 1px solid var(--rp-ui-base-topaz-focused);
       }
 
-      &:has(.manual-launches-list-table-cell-hoverable:hover) .manual-launches-list-table-cell-hoverable {
+      &:has(.manual-launches-list-table-cell-hoverable:hover)
+        .manual-launches-list-table-cell-hoverable {
         color: var(--rp-ui-base-topaz-hover);
       }
 
@@ -137,6 +133,17 @@
       &:hover > div + div > div {
         outline: 1px solid var(--rp-ui-base-topaz-focused);
       }
+    }
+
+    &-header {
+      --table-header-bg-color: transparent;
+    }
+
+    &__details-button {
+      @include mixins.button-reset();
+
+      border-radius: 50%;
+      margin: 8px 0;
     }
   }
 }

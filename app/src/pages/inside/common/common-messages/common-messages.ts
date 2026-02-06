@@ -25,6 +25,30 @@ export const commonMessages = defineMessages({
     id: 'Common.description',
     defaultMessage: 'Description',
   },
+  instructions: {
+    id: 'Common.instructions',
+    defaultMessage: 'Instructions',
+  },
+  expectedResult: {
+    id: 'Common.expectedResult',
+    defaultMessage: 'Expected Result',
+  },
+  scenario: {
+    id: 'Common.scenario',
+    defaultMessage: 'Scenario',
+  },
+  precondition: {
+    id: 'Common.precondition',
+    defaultMessage: 'Precondition',
+  },
+  preconditions: {
+    id: 'Common.preconditions',
+    defaultMessage: 'Preconditions',
+  },
+  steps: {
+    id: 'Common.steps',
+    defaultMessage: 'Steps',
+  },
   descriptionNotSpecified: {
     id: 'Common.descriptionNotSpecified',
     defaultMessage: 'Description not specified',

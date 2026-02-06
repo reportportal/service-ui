@@ -51,6 +51,7 @@ export const TestPlanFolders = ({ isLoading = false }: TestPlanFoldersProps) => 
     <ExpandedOptions
       activeFolderId={activeFolder}
       folders={folders}
+      instanceKey={TMS_INSTANCE_KEY.TEST_PLAN}
       onFolderClick={handleFolderClick}
       setAllTestCases={setAllTestCases}
     >

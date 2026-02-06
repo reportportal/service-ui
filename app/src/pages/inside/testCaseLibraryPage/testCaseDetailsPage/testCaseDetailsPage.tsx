@@ -17,7 +17,7 @@
 import { useState } from 'react';
 import { isEmpty } from 'es-toolkit/compat';
 import { noop } from 'es-toolkit';
-import { useIntl } from 'react-intl';
+import { useIntl, MessageDescriptor } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { Button, EditIcon, PlusIcon } from '@reportportal/ui-kit';
 
@@ -32,12 +32,18 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { testCaseDetailsSelector } from 'controllers/testCase';
 import { commonMessages } from 'pages/inside/common/common-messages';
+import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
 import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { useDescriptionModal } from './descriptionModal';
 import { messages } from './messages';
-import { Requirement } from '../types';
+import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
+import { AttachmentList } from '../attachmentList';
+import { ManualScenario } from '../types';
+import { Precondition } from './precondition';
+import { StepsList } from './stepsList';
+import { Scenario } from './scenario';
 
 import styles from './testCaseDetailsPage.scss';
 
@@ -93,20 +99,62 @@ const SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG = ({
   ] as const;
 };
 
-const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
-  requirements,
-}: {
-  requirements: Requirement[];
-}) => {
-  return [
+const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({ manualScenario }: { manualScenario: ManualScenario }) => {
+  const sections = [
     {
       titleKey: 'requirements',
       defaultMessage: commonMessages.requirementsAreNotSpecified,
-      childComponent: isEmpty(requirements) ? null : (
-        <RequirementsList items={requirements} isCopyEnabled />
+      childComponent: isEmpty(manualScenario?.requirements) ? null : (
+        <RequirementsList items={manualScenario.requirements} isCopyEnabled />
       ),
     },
-  ] as const;
+  ];
+
+  if (manualScenario?.manualScenarioType === TestCaseManualScenario.STEPS) {
+    sections.push(
+      {
+        titleKey: 'preconditions',
+        defaultMessage: messages.noPrecondition,
+        childComponent:
+          (manualScenario?.preconditions?.value || !isEmpty(manualScenario?.preconditions?.attachments)) &&
+            <Precondition preconditions={manualScenario.preconditions} />,
+      },
+      {
+        titleKey: 'steps',
+        defaultMessage: messages.noSteps,
+        childComponent: !isEmpty(manualScenario?.steps) &&
+          <StepsList steps={manualScenario.steps} />,
+      }
+    );
+  } else {
+    sections.push(
+      {
+        titleKey: 'scenario',
+        defaultMessage: messages.noPrecondition,
+        childComponent: (
+            manualScenario?.preconditions?.value ||
+            manualScenario?.instructions ||
+            manualScenario?.expectedResult
+          ) &&
+          <Scenario
+            expectedResult={manualScenario.expectedResult}
+            instructions={manualScenario.instructions}
+            precondition={manualScenario.preconditions?.value}
+          />,
+      },
+      {
+        titleKey: 'attachments',
+        defaultMessage: messages.noAttachments,
+        childComponent: !isEmpty(manualScenario?.attachments) &&
+          <AttachmentList
+            attachments={manualScenario.attachments}
+            className={cx('page__attachments-list')}
+          />,
+      }
+    );
+  }
+
+  return sections;
 };
 
 export const TestCaseDetailsPage = () => {
@@ -174,21 +222,24 @@ export const TestCaseDetailsPage = () => {
               </CollapsibleSectionWithHeaderControl>
             ))}
           </div>
-          <div className={cx('page__main-content')}>
-            <ScrollWrapper>
-              {MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG({
-                requirements: testCaseDetails.manualScenario?.requirements || [],
-              }).map(({ titleKey, defaultMessage, childComponent }) => (
-                <CollapsibleSectionWithHeaderControl
-                  key={titleKey}
-                  title={formatMessage(commonMessages[titleKey])}
-                  defaultMessage={formatMessage(defaultMessage)}
-                >
-                  {childComponent}
-                </CollapsibleSectionWithHeaderControl>
-              ))}
-            </ScrollWrapper>
-          </div>
+          <ScrollWrapper>
+            <div className={cx('page__main-content', testCaseDetails?.id ? 'page__main-content-with-data' : '')}>
+              {
+                testCaseDetails?.manualScenario ?
+                  MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG({ manualScenario: testCaseDetails.manualScenario })
+                    .map(({ titleKey, defaultMessage, childComponent }) => (
+                      <CollapsibleSectionWithHeaderControl
+                        key={titleKey}
+                        title={formatMessage(commonMessages[titleKey] as MessageDescriptor)}
+                        defaultMessage={formatMessage(defaultMessage)}
+                      >
+                        {childComponent}
+                      </CollapsibleSectionWithHeaderControl>
+                    )) :
+                    <DetailsEmptyState />
+              }
+            </div>
+          </ScrollWrapper>
         </div>
       </ScrollWrapper>
     </SettingsLayout>

@@ -50,4 +50,21 @@
     padding: 24px 32px;
     gap: 16px;
   }
+
+  &__main-content-with-data {
+    padding: 24px 32px;
+
+    & > div {
+      margin-bottom: 24px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &__attachments-list > div {
+    width: 120px;
+    min-width: auto;
+  }
 }
