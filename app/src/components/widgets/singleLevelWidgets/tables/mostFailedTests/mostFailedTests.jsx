@@ -18,19 +18,20 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
-import { actionToPath, history } from 'redux-first-router';
+import { actionToPath, history, selectLocationState } from 'redux-first-router';
 import qs from 'qs';
 import { testCaseNameLinkSelector } from 'controllers/testItem';
 import { activeDashboardIdSelector } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
 import { WIDGETS_EVENTS } from 'components/main/analytics/events/ga4Events/dashboardsPageEvents';
-import routesMap from 'routes/routesMap';
 import { TestsTableWidget } from '../components/testsTableWidget';
 import * as cfg from './mostFailedTestsCfg';
 
 export const MostFailedTests = ({ widget }) => {
   const activeProject = useSelector(activeProjectSelector);
   const dashboardId = useSelector(activeDashboardIdSelector);
+  const location = useSelector(selectLocationState);
+  const { routesMap } = location;
   const { trackEvent } = useTracking();
 
   const getTestCaseNameLink = useMemo(() => {
