@@ -38,6 +38,7 @@ import { DEFAULT_CURRENT_PAGE } from 'pages/inside/common/testCaseList/configUti
 import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
 import { EmptyPageState } from 'pages/common';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { SEARCH_DELAY } from 'common/constants/delayTime';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 
 import { TestCaseNameCell } from './testCaseNameCell';
@@ -76,7 +77,7 @@ export const TestCaseList = memo(
   }: TestCaseListProps) => {
     const { formatMessage } = useIntl();
     const location = useSelector(locationSelector);
-    const [searchValue, setSearchValue] = useState('');
+    const [searchValue, setSearchValue] = useState(location?.query?.testCasesSearchParams || '');
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<number | null>(null);
     const [isFilterSidePanelVisible, setIsFilterSidePanelVisible] = useState(false);
     const [selectedPriorities, setSelectedPriorities] = useState<string[]>([]);
@@ -85,15 +86,7 @@ export const TestCaseList = memo(
     const { canDoTestCaseBulkActions } = useUserPermissions();
 
     useEffect(() => {
-      const searchTerm = location?.query?.testCasesSearchParams;
-
-      if (!searchTerm) {
-        setSearchValue('');
-
-        return;
-      }
-
-      setSearchValue(searchTerm);
+      setSearchValue(location?.query?.testCasesSearchParams || '');
     }, [folderTitle, location]);
 
     const activeFiltersCount =
@@ -115,7 +108,7 @@ export const TestCaseList = memo(
             }),
           }),
         );
-      }, 1000),
+      }, SEARCH_DELAY),
       [activePage],
     );
 
@@ -236,9 +229,13 @@ export const TestCaseList = memo(
                 aria-label={formatMessage(messages.filterButton)}
                 onClick={handleFilterIconClick}
               >
-                {hasActiveFilters ? <FilterFilledIcon /> : <FilterOutlineIcon />}
-                {hasActiveFilters && (
-                  <span className={cx('filter-count')}>{activeFiltersCount}</span>
+                {hasActiveFilters ? (
+                  <>
+                    <FilterFilledIcon />
+                    <span className={cx('filter-count')}>{activeFiltersCount}</span>
+                  </>
+                ) : (
+                  <FilterOutlineIcon />
                 )}
               </button>
             </div>
