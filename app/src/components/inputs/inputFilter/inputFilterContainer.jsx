@@ -20,6 +20,7 @@ import isEqual from 'fast-deep-equal';
 import { FilterEntitiesContainer } from 'components/filterEntities/containers';
 import { filterValueShape } from 'components/filterEntities';
 import { debounce } from 'common/utils/debounce';
+import { SEARCH_DELAY } from "common/constants/delayTime";
 import { InputFilter } from './inputFilter';
 
 const parseFilterString = (key, value = '') => ({
@@ -70,7 +71,7 @@ export class InputFilterContainer extends Component {
   debouncedChangeHandler = debounce((value) => {
     const { id } = this.props;
     return this.props.onChange({ ...this.props.filterValues, ...parseFilterString(id, value) });
-  }, 1000);
+  }, SEARCH_DELAY);
 
   handleFilterChange = (values) => {
     this.setState({ values });
