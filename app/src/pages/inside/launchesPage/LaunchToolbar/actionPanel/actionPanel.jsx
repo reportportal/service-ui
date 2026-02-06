@@ -230,9 +230,7 @@ export class ActionPanel extends Component {
   isShowImportButton = () => {
     const { debugMode, activeFilterId, accountRole, projectRole } = this.props;
     return (
-      !debugMode &&
-      !Number.isInteger(activeFilterId) &&
-      canImportLaunches(accountRole, projectRole, true)
+      !debugMode && !Number.isInteger(activeFilterId) && canImportLaunches(accountRole, projectRole)
     );
   };
 
