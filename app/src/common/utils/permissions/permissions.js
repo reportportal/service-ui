@@ -59,6 +59,7 @@ export const canStartAnalysis = checkPermission(ACTIONS.START_ANALYSIS);
 export const canDeleteTestItem = checkPermission(ACTIONS.DELETE_TEST_ITEM);
 export const canMoveToDebug = checkPermission(ACTIONS.MOVE_TO_DEBUG);
 export const canMergeLaunches = checkPermission(ACTIONS.MERGE_LAUNCHES);
+export const canImportLaunches = checkPermission(ACTIONS.IMPORT_LAUNCHES);
 export const canWorkWithFilters = checkPermission(ACTIONS.WORK_WITH_FILTERS);
 export const canReadData = checkPermission(ACTIONS.READ_DATA);
 export const canSeeDemoData = checkPermission(ACTIONS.SEE_DEMO_DATA);
