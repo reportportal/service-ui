@@ -10,12 +10,14 @@ jobs:
       github.event.review.state == 'approved' && (github.event.pull_request.base.ref == 'master' || github.event.pull_request.base.ref == 'main')
     # TODO: Pin reusable workflow to a version tag once v1 is released
     uses: reportportal/.github/.github/workflows/dockerhub-release.yaml@main
-    secrets: inherit
+    secrets:
+      AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+      REGESTRY_USERNAME: ${{ secrets.REGESTRY_USERNAME }}
+      REGESTRY_PASSWORD: ${{ secrets.REGESTRY_PASSWORD }}
     with:
       aws-region: ${{ vars.AWS_REGION }}
-      aws-role-arn: ${{ vars.AWS_ROLE_ARN }}
-      ecr-repository: service-ui
-      target-registry: docker.io
-      target-repository: reportportal/service-ui
-      platforms: linux/amd64
+      ecr-repository: ${{ vars.ECR_REPOSITORY || 'service-ui' }}
+      target-registry: ${{ vars.TARGET_REGISTRY || 'docker.io' }}
+      target-repository: ${{ vars.TARGET_REPOSITORY || 'reportportal/service-ui' }}
+      platforms: ${{ vars.BUILD_PLATFORMS }}
       release-mode: rc
