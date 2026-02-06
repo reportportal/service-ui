@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import {
   NAMESPACE,
   RENAME_FOLDER_SUCCESS,
   SET_EXPANDED_FOLDER_IDS,
+  SET_INITIAL_EXPANDED_FOLDERS,
   SET_TEST_CASES,
   START_CREATING_FOLDER,
   START_LOADING_FOLDER,
@@ -46,13 +47,11 @@ import {
   UPDATE_DESCRIPTION_SUCCESS,
   UPDATE_FOLDER_COUNTER,
 } from 'controllers/testCase/constants';
-import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Page } from 'types/common';
-
 import { queueReducers } from 'common/utils';
+
 import { Folder } from './types';
-import { getExpandedFoldersStorageKey } from './utils/getExpandedFoldersStorageKey';
 import {
   DeleteFolderSuccessParams,
   DeleteTestCaseParams,
@@ -63,9 +62,8 @@ import {
   UpdateFolderCounterParams,
 } from './actionCreators';
 
-const getInitialExpandedFolderIds = (): number[] => {
+const getInitialExpandedFolderIds = (storageKey: string): number[] => {
   try {
-    const storageKey = getExpandedFoldersStorageKey(TMS_INSTANCE_KEY.TEST_CASE);
     const parsed = getStorageItem(storageKey) as number[] | null;
 
     if (Array.isArray(parsed) && parsed.every(isNumber)) {
@@ -294,8 +292,14 @@ const hasSetExpandedFolderIdsPayload = (action: {
 }): action is { type: string; payload: SetExpandedFolderIdsParams } =>
   hasPayloadProps<SetExpandedFolderIdsParams>(action, ['folderIds']);
 
+const hasSetInitialExpandedFoldersPayload = (action: {
+  type: string;
+  payload?: unknown;
+}): action is { type: string; payload: string } =>
+  typeof action.payload === 'string';
+
 const expandedFolderIdsReducer = (
-  state = getInitialExpandedFolderIds(),
+  state: number[] = [],
   action:
     | { type: typeof TOGGLE_FOLDER_EXPANSION; payload: ToggleFolderExpansionParams }
     | { type: typeof EXPAND_FOLDERS_TO_LEVEL; payload: ToggleFolderExpansionParams }
@@ -361,7 +365,14 @@ const expandedFolderIdsReducer = (
 
         return state.filter((id) => !deletedFolderIds.includes(id));
       }
-
+      
+      return state;
+    }
+    case SET_INITIAL_EXPANDED_FOLDERS: {
+      if (hasSetInitialExpandedFoldersPayload(action)) {
+        return getInitialExpandedFolderIds(action.payload);
+      }
+      
       return state;
     }
     default:

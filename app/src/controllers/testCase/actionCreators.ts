@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@ import {
   TOGGLE_FOLDER_EXPANSION,
   EXPAND_FOLDERS_TO_LEVEL,
   SET_EXPANDED_FOLDER_IDS,
+  SET_INITIAL_EXPANDED_FOLDERS,
 } from './constants';
 import { Folder, TransformedFolder } from './types';
 
@@ -197,6 +198,11 @@ export interface ToggleFolderExpansionParams {
   folderId: number;
   folders: Folder[];
 }
+
+export const setInitialExpandedFoldersAction = (instanceKey: string) => ({
+  type: SET_INITIAL_EXPANDED_FOLDERS,
+  payload: instanceKey,
+});
 
 export const toggleFolderExpansionAction = (params: ToggleFolderExpansionParams) => ({
   type: TOGGLE_FOLDER_EXPANSION,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ export const CREATE_FOLDER_SUCCESS = 'createFolderSuccess' as const;
 export const CREATE_FOLDERS_BATCH_SUCCESS = 'createFoldersBatchSuccess' as const;
 export const DELETE_FOLDER = 'deleteFolder' as const;
 export const DELETE_FOLDER_SUCCESS = 'deleteFolderSuccess' as const;
+export const SET_INITIAL_EXPANDED_FOLDERS = 'setInitialExpandedFolders' as const;
 export const START_CREATING_FOLDER = 'startCreatingFolder' as const;
 export const STOP_CREATING_FOLDER = 'stopCreatingFolder' as const;
 export const START_LOADING_FOLDER = 'startLoadingFolder' as const;
