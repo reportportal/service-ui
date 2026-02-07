@@ -14,7 +14,14 @@
  * limitations under the License.
  */
 
-export { getTestPlansAction, getTestPlanAction } from './actionCreators';
+export {
+  getTestPlansAction,
+  getTestPlanAction,
+  toggleTestPlanFolderExpansionAction,
+  expandTestPlanFoldersToLevelAction,
+  setTestPlanExpandedFolderIdsAction,
+  deleteTestPlanFolderSuccessAction,
+} from './actionCreators';
 export { testPlanSagas } from './sagas';
 export * from './constants';
 export { testPlanReducer } from './reducer';

@@ -14,7 +14,16 @@
  * limitations under the License.
  */
 
-import { GET_TEST_PLANS, GET_TEST_PLAN } from './constants';
+import { Folder } from 'controllers/testCase';
+
+import {
+  GET_TEST_PLANS,
+  GET_TEST_PLAN,
+  TOGGLE_TEST_PLAN_FOLDER_EXPANSION,
+  EXPAND_TEST_PLAN_FOLDERS_TO_LEVEL,
+  SET_TEST_PLAN_EXPANDED_FOLDER_IDS,
+  DELETE_TEST_PLAN_FOLDER_SUCCESS,
+} from './constants';
 
 export interface GetTestPlansParams {
   offset?: string | number;
@@ -35,5 +44,46 @@ export const getTestPlansAction = (params?: GetTestPlansParams) => ({
 
 export const getTestPlanAction = (params: GetTestPlanParams) => ({
   type: GET_TEST_PLAN,
+  payload: params,
+});
+
+export interface ToggleTestPlanFolderExpansionParams {
+  folderId: number;
+  folders: Folder[];
+}
+
+export interface SetTestPlanExpandedFolderIdsParams {
+  folderIds: number[];
+}
+
+export interface DeleteTestPlanFolderSuccessParams {
+  deletedFolderIds: number[];
+}
+
+export const toggleTestPlanFolderExpansionAction = (
+  params: ToggleTestPlanFolderExpansionParams,
+) => ({
+  type: TOGGLE_TEST_PLAN_FOLDER_EXPANSION,
+  payload: params,
+});
+
+export const expandTestPlanFoldersToLevelAction = (
+  params: ToggleTestPlanFolderExpansionParams,
+) => ({
+  type: EXPAND_TEST_PLAN_FOLDERS_TO_LEVEL,
+  payload: params,
+});
+
+export const setTestPlanExpandedFolderIdsAction = (
+  params: SetTestPlanExpandedFolderIdsParams,
+) => ({
+  type: SET_TEST_PLAN_EXPANDED_FOLDER_IDS,
+  payload: params,
+});
+
+export const deleteTestPlanFolderSuccessAction = (
+  params: DeleteTestPlanFolderSuccessParams,
+) => ({
+  type: DELETE_TEST_PLAN_FOLDER_SUCCESS,
   payload: params,
 });
