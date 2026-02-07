@@ -17,7 +17,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { INSTANCE_SELECTOR_MAP, TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { setStorageItem } from 'common/utils/storageUtils';
 import {
   expandedFolderIdsSelector,
