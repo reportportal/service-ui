@@ -63,6 +63,8 @@ const MoveFolderModal = reduxForm<FolderModalFormValues, MoveFolderModalProps>({
 })(({
   data: { folder },
   dirty,
+  pristine,
+  invalid,
   handleSubmit,
   change,
 }: MoveFolderModalProps & InjectedFormProps<FolderModalFormValues, MoveFolderModalProps>) => {
@@ -89,6 +91,7 @@ const MoveFolderModal = reduxForm<FolderModalFormValues, MoveFolderModalProps>({
   const { okButton, cancelButton, hideModal } = useModalButtons({
     okButtonText: formatMessage(COMMON_LOCALE_KEYS.MOVE),
     isLoading,
+    isSubmitButtonDisabled: pristine || invalid,
     onSubmit: handleSubmit(onSubmit) as () => void,
   });
 

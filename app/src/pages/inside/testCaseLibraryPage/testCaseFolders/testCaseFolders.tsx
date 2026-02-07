@@ -17,7 +17,6 @@
 import { useEffect, useMemo, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
-import { noop } from 'es-toolkit/compat';
 import { Button, PlusIcon } from '@reportportal/ui-kit';
 
 import { createClassnames, getStorageItem } from 'common/utils';
@@ -63,7 +62,7 @@ export const TestCaseFolders = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { openModal: openCreateFolderModal } = useCreateFolderModal();
-  const { navigateToFolder } = useNavigateToFolder();
+  const { navigateToFolder, expandFoldersToLevel } = useNavigateToFolder();
   const urlFolderId = useSelector(urlFolderIdSelector);
   const isLoadingTestCases = useSelector(isLoadingTestCasesSelector);
   const testCases = useSelector(testCasesSelector);
@@ -88,6 +87,7 @@ export const TestCaseFolders = () => {
     () => ({
       limit: Number(query?.limit) || savedLimit || TestCasePageDefaultValues.limit,
       offset: Number(query?.offset) || TestCasePageDefaultValues.offset,
+      testCasesSearchParams: query?.testCasesSearchParams,
     }),
     [query, savedLimit],
   );
@@ -125,11 +125,13 @@ export const TestCaseFolders = () => {
           ...queryParams,
         }),
       );
+
+      expandFoldersToLevel(urlFolderIdNumber);
     } else if (!activeFolder && urlFolderId === '') {
       dispatch(getAllTestCasesAction(queryParams));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [urlFolderId, queryParams.limit, queryParams.offset]);
+  }, [urlFolderId, queryParams.limit, queryParams.offset, queryParams.testCasesSearchParams]);
 
   const handleFolderClick = (id: number) => {
     navigateToFolder({ folderId: id });
@@ -160,10 +162,8 @@ export const TestCaseFolders = () => {
       <AllTestCasesPage
         testCases={testCases}
         testCasesPageData={testCasesPageData}
-        searchValue=""
         instanceKey={TMS_INSTANCE_KEY.TEST_CASE}
         isLoading={isLoadingTestCases || areFoldersLoading}
-        setSearchValue={noop}
       />
     </ExpandedOptions>
   );

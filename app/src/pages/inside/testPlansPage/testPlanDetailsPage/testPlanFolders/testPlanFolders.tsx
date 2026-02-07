@@ -61,13 +61,13 @@ export const TestPlanFolders = ({ isLoading = false }: TestPlanFoldersProps) => 
     <ExpandedOptions
       activeFolderId={activeFolderId}
       folders={folders}
+      instanceKey={TMS_INSTANCE_KEY.TEST_PLAN}
       onFolderClick={handleFolderClick}
       setAllTestCases={setAllTestCases}
       instanceKey={TMS_INSTANCE_KEY.TEST_PLAN}
     >
       <AllTestCasesPage
         testCases={testCases}
-        searchValue=""
         loading={isLoading}
         instanceKey={TMS_INSTANCE_KEY.TEST_PLAN}
         folderName={activeFolder?.name}

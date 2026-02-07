@@ -64,7 +64,7 @@ import {
   GetAllTestCases,
   expandFoldersToLevelAction,
 } from './actionCreators';
-import { getAllFolderIdsToDelete } from './utils';
+import { getAllFolderIdsToDelete } from 'common/utils/folderUtils';
 import { fetchAllFolders } from './utils/fetchAllFolders';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Page } from 'types/common';
@@ -105,11 +105,16 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
   yield put(startLoadingTestCasesAction());
 
   try {
-    const { folderId, offset, limit } = action.payload;
+    const { folderId, offset, limit, testCasesSearchParams } = action.payload;
     const projectKey = (yield select(projectKeySelector)) as string;
     const result = (yield call(
       fetch,
-      URLS.testCases(projectKey, { 'filter.eq.testFolderId': folderId, offset, limit }),
+      URLS.testCases(projectKey, {
+        'filter.eq.testFolderId': folderId,
+        'filter.fts.search': testCasesSearchParams,
+        offset,
+        limit,
+      }),
     )) as {
       content: TestCase[];
       page: Page;
@@ -171,9 +176,12 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
   yield put(startLoadingTestCasesAction());
 
   try {
-    const { offset, limit } = action.payload;
+    const { offset, limit, testCasesSearchParams } = action.payload;
     const projectKey = (yield select(projectKeySelector)) as string;
-    const result = (yield call(fetch, URLS.testCases(projectKey, { offset, limit }))) as {
+    const result = (yield call(
+      fetch,
+      URLS.testCases(projectKey, { offset, limit, 'filter.fts.search': testCasesSearchParams }),
+    )) as {
       content: TestCase[];
       page: Page;
     };

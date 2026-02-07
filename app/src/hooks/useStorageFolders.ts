@@ -20,34 +20,58 @@ import { useDispatch, useSelector } from 'react-redux';
 import { INSTANCE_SELECTOR_MAP, TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { setStorageItem } from 'common/utils/storageUtils';
 import {
-  TransformedFolder,
   expandedFolderIdsSelector,
   toggleFolderExpansionAction,
   expandFoldersToLevelAction,
   Folder,
 } from 'controllers/testCase';
+import {
+  manualLaunchExpandedFolderIdsSelector,
+  manualLaunchFoldersSelector,
+  toggleManualLaunchFolderExpansionAction,
+  expandManualLaunchFoldersToLevelAction,
+} from 'controllers/manualLaunch';
 import { getExpandedFoldersStorageKey } from 'controllers/testCase/utils/getExpandedFoldersStorageKey';
 import { setInitialExpandedFoldersAction } from 'controllers/testCase/actionCreators';
 
 import { useTestPlanId } from './useTypedSelector';
 
+// Config mapper for each instance
+const STORAGE_FOLDERS_CONFIG = {
+  [TMS_INSTANCE_KEY.TEST_CASE]: {
+    expandedIdsSelector: expandedFolderIdsSelector,
+    foldersSelector,
+    toggleFolderAction: toggleFolderExpansionAction,
+    expandToLevelAction: expandFoldersToLevelAction,
+  },
+  [TMS_INSTANCE_KEY.TEST_PLAN]: {
+    expandedIdsSelector: expandedFolderIdsSelector,
+    foldersSelector,
+    toggleFolderAction: toggleFolderExpansionAction,
+    expandToLevelAction: expandFoldersToLevelAction,
+  },
+  [TMS_INSTANCE_KEY.MANUAL_LAUNCH]: {
+    expandedIdsSelector: manualLaunchExpandedFolderIdsSelector,
+    foldersSelector: manualLaunchFoldersSelector,
+    toggleFolderAction: toggleManualLaunchFolderExpansionAction,
+    expandToLevelAction: expandManualLaunchFoldersToLevelAction,
+  },
+};
+
 export const useStorageFolders = (instanceKey: TMS_INSTANCE_KEY) => {
-  const testPlanId = useTestPlanId();
-  const updatedInstanceKey = testPlanId ? `${instanceKey}${testPlanId}` : instanceKey;
-  const storageKey = getExpandedFoldersStorageKey(updatedInstanceKey);
+  const { expandedIdsSelector, foldersSelector, toggleFolderAction, expandToLevelAction } =
+    STORAGE_FOLDERS_CONFIG[instanceKey];
+  const storageKey = getExpandedFoldersStorageKey(instanceKey);
   const dispatch = useDispatch();
-  const selector = INSTANCE_SELECTOR_MAP[instanceKey]
-  const expandedIds = useSelector(expandedFolderIdsSelector);
-  const folders = useSelector(selector) as Folder[];
+  const expandedIds = useSelector(expandedIdsSelector);
+  const folders = useSelector(foldersSelector);
   const isMountedRef = useRef(false);
   
   useEffect(() => {
     if (!isMountedRef.current) {
       isMountedRef.current = true;
-
       return;
     }
-
     setStorageItem(storageKey, expandedIds);
   }, [expandedIds, storageKey]);
 
@@ -56,17 +80,17 @@ export const useStorageFolders = (instanceKey: TMS_INSTANCE_KEY) => {
   }, [dispatch, storageKey]);
 
   const onToggleFolder = useCallback(
-    (folder: TransformedFolder) => {
-      dispatch(toggleFolderExpansionAction({ folderId: folder.id, folders }));
+    (folder: { id: number }) => {
+      dispatch(toggleFolderAction({ folderId: folder.id, folders }));
     },
-    [dispatch, folders],
+    [dispatch, folders, toggleFolderAction],
   );
 
   const expandFoldersUpToLevel = useCallback(
     (folderId: number) => {
-      dispatch(expandFoldersToLevelAction({ folderId, folders }));
+      dispatch(expandToLevelAction({ folderId, folders }));
     },
-    [dispatch, folders],
+    [dispatch, folders, expandToLevelAction],
   );
 
   return {

@@ -90,6 +90,7 @@ export const ManualLaunchesList = ({ fullLaunches }: ManualLaunchesListProps) =>
         sortableColumns={[]}
         className={cx('manual-launches-list-table')}
         rowClassName={cx('manual-launches-list-table-row')}
+        headerClassName={cx('manual-launches-list-table-header')}
         onToggleRowSelection={handleRowSelect}
         onToggleAllRowsSelection={handleSelectAll}
         renderRowActions={() => <ActionMenu actions={rowActions} />}

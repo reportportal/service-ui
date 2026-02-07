@@ -25,13 +25,14 @@ const cx = createClassnames(styles);
 
 interface AttachmentsListProps {
   attachments: Attachment[];
+  className?: string;
 }
 
-export const AttachmentList = ({ attachments }: AttachmentsListProps) => {
+export const AttachmentList = ({ attachments, className = '' }: AttachmentsListProps) => {
   const convertBytesToMB = (bytes: number) => Math.round((bytes / (1000 * 1000)) * 100) / 100;
 
   return (
-    <div className={cx('attachments-list')}>
+    <div className={cx('attachments-list', className)}>
       {attachments.map(({ id, fileName, fileSize }) => (
         <AttachedFile key={id} fileName={fileName} size={convertBytesToMB(fileSize)} isFullWidth />
       ))}

@@ -42,7 +42,6 @@ const cx = createClassnames(styles);
 interface AllTestCasesPageProps {
   testCases: ExtendedTestCase[];
   loading: boolean;
-  searchValue: string;
   instanceKey: TMS_INSTANCE_KEY;
   folderName?: string;
 }
@@ -50,7 +49,6 @@ interface AllTestCasesPageProps {
 export const AllTestCasesPage = ({
   testCases,
   loading,
-  searchValue,
   instanceKey,
   folderName,
 }: AllTestCasesPageProps) => {
@@ -74,7 +72,6 @@ export const AllTestCasesPage = ({
         <TestCaseList
           testCases={testCases}
           isLoading={loading}
-          searchValue={searchValue}
           selectedRowIds={selectedRows.map((row) => row.id)}
           selectedRows={selectedRows}
           handleSelectedRows={setSelectedRows}

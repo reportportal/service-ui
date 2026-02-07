@@ -50,11 +50,13 @@ export interface GetTestCasesByFolderIdParams {
   folderId: number;
   offset: number;
   limit: number;
+  testCasesSearchParams?: string;
 }
 
 export interface GetAllTestCases {
   offset: number;
   limit: number;
+  testCasesSearchParams?: string;
 }
 
 export interface CreateFolderParams {

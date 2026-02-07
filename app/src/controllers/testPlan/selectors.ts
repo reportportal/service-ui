@@ -18,7 +18,7 @@ import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Page } from 'types/common';
 
 import { EMPTY_FOLDERS } from '../testCase';
-import { transformFoldersToDisplay } from '../testCase/utils';
+import { transformFoldersToDisplay } from 'common/utils/folderUtils';
 import { TestPlanDto, TestPlanFoldersDto, TestPlanTestCaseDto } from './constants';
 
 export interface TestPlanState {
