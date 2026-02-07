@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Page } from 'types/common';
 
@@ -34,7 +33,7 @@ export interface TestPlanState {
   isLoadingTestPlanTestCases?: boolean;
 }
 
-export interface RootState {
+interface RootState {
   testPlan?: TestPlanState;
 }
 
