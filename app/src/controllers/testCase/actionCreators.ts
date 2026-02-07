@@ -42,7 +42,6 @@ import {
   TOGGLE_FOLDER_EXPANSION,
   EXPAND_FOLDERS_TO_LEVEL,
   SET_EXPANDED_FOLDER_IDS,
-  SET_INITIAL_EXPANDED_FOLDERS,
 } from './constants';
 import { Folder, TransformedFolder } from './types';
 
