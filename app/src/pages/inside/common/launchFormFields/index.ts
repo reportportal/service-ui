@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-import { useModal } from 'common/hooks';
-import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
-import { CREATE_LAUNCH_MODAL_KEY } from './constants';
-import { CreateLaunchModal } from './createLaunchModal';
-
-export const useCreateLaunchModal = (testCases: ExtendedTestCase[]) => {
-  return useModal({
-    modalKey: CREATE_LAUNCH_MODAL_KEY,
-    renderModal: () => <CreateLaunchModal testCases={testCases} />,
-  });
-};
+export { LaunchFormFields } from './launchFormFields';
+export { INITIAL_LAUNCH_FORM_VALUES, LAUNCH_FORM_FIELD_NAMES } from './constants';
+export { useCreateManualLaunch } from './useCreateManualLaunch';
+export type {
+  LaunchFormData,
+  LaunchFormFieldsProps,
+  CreateManualLaunchDto,
+  Attribute,
+} from './types';
+export { LaunchMode, isLaunchObject } from './types';

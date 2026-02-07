@@ -17,36 +17,8 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  createLaunch: {
-    id: 'CreateLaunchModal.createLaunch',
-    defaultMessage: 'Create Launch',
-  },
-  enterLaunchName: {
-    id: 'CreateLaunchModal.enterLaunchName',
-    defaultMessage: 'Enter launch name',
-  },
-  addLaunchDescriptionOptional: {
-    id: 'CreateLaunchModal.addLaunchDescriptionOptional',
-    defaultMessage: 'Please provide details about the launch (optional).',
-  },
-  launchAttributes: {
-    id: 'CreateLaunchModal.launchAttributes',
-    defaultMessage: 'Launch attributes',
-  },
-  addAttributes: {
-    id: 'CreateLaunchModal.addAttributes',
-    defaultMessage: 'Add Attribute',
-  },
-  launchName: {
-    id: 'CreateLaunchModal.launchName',
-    defaultMessage: 'Launch name',
-  },
-  scopeOfTesting: {
-    id: 'CreateLaunchModal.scopeOfTesting',
-    defaultMessage: 'Scope of testing',
-  },
-  selectedTests: {
-    id: 'CreateLaunchModal.selectedTests',
-    defaultMessage: 'Selected tests ({count})',
+  addToLaunch: {
+    id: 'CreateLaunchModal.addToLaunch',
+    defaultMessage: 'Add to Launch',
   },
 });

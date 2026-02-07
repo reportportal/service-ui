@@ -14,55 +14,60 @@
  * limitations under the License.
  */
 
-import { FormEvent, MouseEvent } from 'react';
+import { FormEvent, MouseEvent, useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
-import { InjectedFormProps, reduxForm, Field } from 'redux-form';
-import { Modal, FieldText, FieldTextFlex } from '@reportportal/ui-kit';
-import { noop } from 'es-toolkit';
+import { InjectedFormProps, reduxForm } from 'redux-form';
+import { Modal } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction } from 'controllers/modal';
 import { commonValidators } from 'common/utils/validation';
-import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
-import { AttributeList } from 'componentLibrary/attributeList';
-import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
-import { commonMessages } from 'pages/inside/common/common-messages';
+import { useActiveTestPlan } from 'hooks/useTypedSelector';
+import {
+  LaunchFormFields,
+  LaunchFormData,
+  INITIAL_LAUNCH_FORM_VALUES,
+  useCreateManualLaunch,
+  isLaunchObject,
+  LaunchMode,
+} from 'pages/inside/common/launchFormFields';
 
-import { CreateLaunchFormValues, CreateLaunchModalProps, AttributeListFieldProps } from './types';
-import { INITIAL_VALUES } from './constants';
+import { CreateLaunchModalProps } from './types';
 import { messages } from './messages';
 
 import styles from './createLaunchModal.scss';
 
 const cx = createClassnames(styles);
 
-const AttributeListField = ({ input, ...rest }: AttributeListFieldProps) => (
-  <AttributeList
-    {...input}
-    {...rest}
-    attributes={input.value || []}
-    onChange={input.onChange}
-    isAttributeValueRequired={false}
-  />
-);
-
 const CreateLaunchModalComponent = ({
-  isLoading,
-  onSubmit,
   dirty,
+  pristine,
   invalid,
   handleSubmit,
-  selectedTestsCount,
-}: CreateLaunchModalProps & InjectedFormProps<CreateLaunchFormValues>) => {
+  testCases,
+  initialize,
+}: CreateLaunchModalProps & InjectedFormProps<LaunchFormData>) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
+  const activeTestPlan = useActiveTestPlan();
+  const [activeMode, setActiveMode] = useState<LaunchMode>(LaunchMode.EXISTING);
+  const [selectedLaunch, setSelectedLaunch] = useState<{ id: number; name: string } | null>(null);
 
-  const isSubmitDisabled = isLoading || invalid;
-  const hasSelectedTests = !!selectedTestsCount;
+  const testPlanName = activeTestPlan?.name;
+  const testPlanId = activeTestPlan?.id || 0;
+
+  const { handleSubmit: handleCreateLaunch, isLoading } = useCreateManualLaunch(
+    testCases,
+    testPlanId,
+    activeMode,
+    selectedLaunch?.id,
+  );
+
+  const isSubmitDisabled = isLoading || pristine || invalid;
 
   const okButton = {
     children: (
@@ -70,7 +75,7 @@ const CreateLaunchModalComponent = ({
         {formatMessage(COMMON_LOCALE_KEYS.CREATE)}
       </LoadingSubmitButton>
     ),
-    onClick: handleSubmit(onSubmit) as (event: MouseEvent<HTMLButtonElement>) => void,
+    onClick: handleSubmit(handleCreateLaunch) as (event: MouseEvent<HTMLButtonElement>) => void,
     disabled: isSubmitDisabled,
   };
 
@@ -79,9 +84,18 @@ const CreateLaunchModalComponent = ({
     disabled: isLoading,
   };
 
+  useEffect(() => {
+    initialize({
+      name: '',
+      description: '',
+      attributes: [],
+      uncoveredTestsOnly: false,
+    });
+  }, [activeMode, initialize]);
+
   return (
     <Modal
-      title={formatMessage(messages.createLaunch)}
+      title={formatMessage(messages.addToLaunch)}
       okButton={okButton}
       className={cx('create-launch-modal')}
       cancelButton={cancelButton}
@@ -89,68 +103,14 @@ const CreateLaunchModalComponent = ({
       onClose={() => dispatch(hideModalAction())}
     >
       <div className={cx('create-launch-modal__content-wrapper')}>
-        <form onSubmit={handleSubmit(onSubmit) as (event: FormEvent) => void}>
+        <form onSubmit={handleSubmit(handleCreateLaunch) as (event: FormEvent) => void}>
           <div className={cx('create-launch-modal__container')}>
-            {hasSelectedTests && (
-              <div className={cx('scope-of-testing-field')}>
-                <FieldProvider
-                  name="scopeOfTesting"
-                  disabled
-                  value={`Selected tests (${selectedTestsCount})`}
-                >
-                  <FieldErrorHint provideHint={false}>
-                    <FieldText
-                      label={formatMessage(messages.scopeOfTesting)}
-                      defaultWidth={false}
-                      disabled
-                    />
-                  </FieldErrorHint>
-                </FieldProvider>
-              </div>
-            )}
-            <div className={cx('launch-name-field')}>
-              <FieldProvider name="name" placeholder={formatMessage(messages.enterLaunchName)}>
-                <FieldErrorHint provideHint={false}>
-                  <FieldText
-                    label={formatMessage(messages.launchName)}
-                    defaultWidth={false}
-                    isRequired
-                  />
-                </FieldErrorHint>
-              </FieldProvider>
-            </div>
-            <FieldProvider
-              name="description"
-              placeholder={formatMessage(messages.addLaunchDescriptionOptional)}
-            >
-              <FieldTextFlex label={formatMessage(commonMessages.description)} value="" />
-            </FieldProvider>
-            <div className={cx('attributes-section')}>
-              <FieldElement
-                label={formatMessage(messages.launchAttributes)}
-                withoutProvider
-                childrenClassName={cx('attributes-content')}
-              >
-                <Field
-                  name="attributes"
-                  component={AttributeListField}
-                  showButton
-                  newAttrMessage={formatMessage(messages.addAttributes)}
-                  addButtonClassName={cx('add-attribute-button')}
-                  maxLength={50}
-                  editable
-                  defaultOpen={false}
-                  getURIKey={noop}
-                  getURIValue={noop}
-                  minLength={9999}
-                  autocompleteProps={{
-                    onStateChange: () => {},
-                    options: [],
-                    async: false,
-                  }}
-                />
-              </FieldElement>
-            </div>
+            <LaunchFormFields
+              testPlanName={testPlanName}
+              activeMode={activeMode}
+              onModeChange={setActiveMode}
+              onLaunchSelect={setSelectedLaunch}
+            />
           </div>
         </form>
         <ModalLoadingOverlay isVisible={isLoading} />
@@ -159,14 +119,17 @@ const CreateLaunchModalComponent = ({
   );
 };
 
-const validate = ({ name, attributes }: CreateLaunchFormValues) => {
+const validate = ({ name, attributes }: LaunchFormData) => {
   const errors: Record<string, string> = {};
 
-  if (commonValidators.requiredField(name)) {
-    errors.name = commonValidators.requiredField(name);
+  // Validate name: string (NEW mode) or object with id (EXISTING mode)
+  if (typeof name === 'string') {
+    const error = commonValidators.requiredField(name);
+    if (error) errors.name = error;
+  } else if (!isLaunchObject(name)) {
+    errors.name = 'This field is required';
   }
 
-  // Validate attributes: if an attribute has a value, it must have a key
   if (attributes && attributes.length > 0) {
     const hasInvalidAttribute = attributes.some((attr) => attr.value && !attr.key);
     if (hasInvalidAttribute) {
@@ -177,8 +140,10 @@ const validate = ({ name, attributes }: CreateLaunchFormValues) => {
   return errors;
 };
 
-export const CreateLaunchModal = reduxForm<CreateLaunchFormValues, CreateLaunchModalProps>({
+export const CreateLaunchModal = reduxForm<LaunchFormData, CreateLaunchModalProps>({
   form: 'create-launch-modal-form',
   validate,
-  initialValues: INITIAL_VALUES,
+  destroyOnUnmount: true,
+  shouldValidate: () => true,
+  initialValues: INITIAL_LAUNCH_FORM_VALUES,
 })(CreateLaunchModalComponent);

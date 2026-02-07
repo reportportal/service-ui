@@ -17,9 +17,9 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  createLaunch: {
-    id: 'TestPlanDetailsPage.createLaunch',
-    defaultMessage: 'Create Launch',
+  addToLaunch: {
+    id: 'TestPlanDetailsPage.addToLaunch',
+    defaultMessage: 'Add to Launch',
   },
   testPlanNotFoundRedirect: {
     id: 'TestPlanDetailsPage.testPlanNotFoundRedirect',

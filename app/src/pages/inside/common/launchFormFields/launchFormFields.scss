@@ -1,0 +1,73 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@use 'common/css/variables/font-variable';
+
+@mixin hint-text-style {
+  font-family: font-variable.$FONT-ROBOTO-REGULAR;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0;
+}
+
+.launch-name-field {
+  margin-top: 16px;
+}
+
+.uncovered-tests-checkbox {
+  margin-top: 16px;
+}
+
+.test-plan-name {
+  font-weight: 600;
+}
+
+.launch-name-hint {
+  @include hint-text-style;
+  margin-top: 8px;
+  margin-bottom: 16px;
+  color: var(--color-text-secondary);
+}
+
+.launch-name-hint-link {
+  @include hint-text-style;
+  color: var(--color-link);
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.test-plan-field {
+  margin-top: 16px;
+}
+
+.attributes-section {
+  margin-top: 16px;
+
+  .attributes-content {
+    margin-top: 12px;
+  }
+}
+
+.add-attribute-button {
+  justify-content: flex-start;
+  padding-left: 0;
+  margin-left: -3px;
+}

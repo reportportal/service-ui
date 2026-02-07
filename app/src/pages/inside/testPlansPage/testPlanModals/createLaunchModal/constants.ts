@@ -14,12 +14,4 @@
  * limitations under the License.
  */
 
-import { CreateLaunchFormValues } from './types';
-
 export const CREATE_LAUNCH_MODAL_KEY = 'createLaunchModalKey';
-
-export const INITIAL_VALUES: CreateLaunchFormValues = {
-  name: '',
-  description: '',
-  attributes: [],
-};

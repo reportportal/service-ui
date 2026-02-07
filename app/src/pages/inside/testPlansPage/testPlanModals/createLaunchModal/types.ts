@@ -14,39 +14,8 @@
  * limitations under the License.
  */
 
-export interface Attribute {
-  value: string;
-  system?: boolean;
-  key?: string;
-  edited?: boolean;
-  new?: boolean;
-}
-
-export interface CreateLaunchFormValues {
-  name: string;
-  description: string;
-  attributes: Attribute[];
-  scopeOfTesting?: string;
-}
+import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 
 export interface CreateLaunchModalProps {
-  isLoading: boolean;
-  onSubmit: (values: CreateLaunchFormValues) => Promise<void>;
-  selectedTestsCount?: number;
-}
-
-export interface AttributeListFieldProps {
-  input: {
-    value: Attribute[];
-    onChange: (value: Attribute[]) => void;
-  };
-  attributes: Record<string, unknown>[];
-  onChange: VoidFunction;
-  disabled: boolean;
-  newAttrMessage: string;
-  maxLength: number;
-  customClass: string;
-  showButton: boolean;
-  editable: boolean;
-  defaultOpen: boolean;
+  testCases: ExtendedTestCase[];
 }
