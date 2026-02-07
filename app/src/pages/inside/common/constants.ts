@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 EPAM Systems
+ * Copyright 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,6 @@
 
 import { defineMessages } from 'react-intl';
 
-import { foldersSelector } from 'controllers/testCase/selectors';
-import { testPlanTransformedFoldersSelector } from 'controllers/testPlan/selectors';
-
-import { FoldersSelectorType } from '../manualLaunchesPage/types';
-
 export const ISSUE_OPERATION_MAX_ITEMS = 300;
 export const SPINNER_DEBOUNCE = 300;
 export enum TMS_INSTANCE_KEY {
@@ -28,11 +23,6 @@ export enum TMS_INSTANCE_KEY {
   TEST_PLAN = 'testPlan',
   MANUAL_LAUNCH = 'manualLaunch',
 }
-
-export const INSTANCE_SELECTOR_MAP: Record<TMS_INSTANCE_KEY, FoldersSelectorType> = {
-  [TMS_INSTANCE_KEY.TEST_CASE]: foldersSelector,
-  [TMS_INSTANCE_KEY.TEST_PLAN]: testPlanTransformedFoldersSelector, 
-};
 
 export const actionMessages = defineMessages({
   editDefects: {
