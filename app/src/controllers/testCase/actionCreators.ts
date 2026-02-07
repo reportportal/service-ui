@@ -201,11 +201,6 @@ export interface ToggleFolderExpansionParams {
   folders: Folder[];
 }
 
-export const setInitialExpandedFoldersAction = (instanceKey: string) => ({
-  type: SET_INITIAL_EXPANDED_FOLDERS,
-  payload: instanceKey,
-});
-
 export const toggleFolderExpansionAction = (params: ToggleFolderExpansionParams) => ({
   type: TOGGLE_FOLDER_EXPANSION,
   payload: params,

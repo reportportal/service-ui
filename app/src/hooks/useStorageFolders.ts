@@ -32,7 +32,6 @@ import {
   expandManualLaunchFoldersToLevelAction,
 } from 'controllers/manualLaunch';
 import { getExpandedFoldersStorageKey } from 'controllers/testCase/utils/getExpandedFoldersStorageKey';
-import { setInitialExpandedFoldersAction } from 'controllers/testCase/actionCreators';
 
 import { useTestPlanId } from './useTypedSelector';
 
@@ -74,10 +73,6 @@ export const useStorageFolders = (instanceKey: TMS_INSTANCE_KEY) => {
     }
     setStorageItem(storageKey, expandedIds);
   }, [expandedIds, storageKey]);
-
-  useEffect(() => {
-   dispatch(setInitialExpandedFoldersAction(storageKey))
-  }, [dispatch, storageKey]);
 
   const onToggleFolder = useCallback(
     (folder: { id: number }) => {
