@@ -24,7 +24,7 @@ import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
 import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 
-import { ExistingLaunchFieldsProps } from './types';
+import { ExistingLaunchFieldsProps, LaunchOption } from './types';
 import { LAUNCH_FORM_FIELD_NAMES } from './constants';
 import { messages } from './messages';
 
@@ -48,7 +48,7 @@ export const ExistingLaunchFields = ({ onLaunchSelect }: ExistingLaunchFieldsPro
   const handleLaunchChange = (value: unknown, input: { onChange: (value: unknown) => void }) => {
     input.onChange(value);
     if (onLaunchSelect) {
-      const launch = value as { id: number; name: string } | null;
+      const launch = value as LaunchOption | null;
       onLaunchSelect(launch);
     }
   };

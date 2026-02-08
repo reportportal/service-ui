@@ -47,6 +47,7 @@ import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/u
 import { useBatchDuplicateToFolderModal } from './batchDuplicateToFolderModal';
 import { useBatchDeleteTestCasesModal } from './batchDeleteTestCasesModal';
 import { useMoveTestCaseModal } from '../moveTestCaseModal';
+import { useAddToLaunchModalV2 } from '../addToLaunchModalV2';
 
 import styles from './allTestCasesPage.scss';
 
@@ -92,10 +93,15 @@ export const AllTestCasesPage = ({
   const isAnyRowSelected = !isEmpty(selectedRows);
   const selectedRowIds = useMemo(() => selectedRows.map((row) => row.id), [selectedRows]);
   const { openModal: openAddToTestPlanModal } = useAddTestCasesToTestPlanModal();
+  const { openModal: openAddToLaunchModal } = useAddToLaunchModalV2(selectedRowIds);
   const { openModal: openBatchDuplicateToFolderModal } = useBatchDuplicateToFolderModal();
   const { openModal: openBatchDeleteTestCasesModal } = useBatchDeleteTestCasesModal();
   const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
   const { canDeleteTestCase, canDuplicateTestCase, canEditTestCase } = useUserPermissions();
+
+  const onClearSelection = () => setSelectedRows([]);
+  const handleSelectedRows = (rows: SelectedTestCaseRow[]) => setSelectedRows(rows);
+
   const folderTitle = useMemo(() => {
     const selectedFolder = folders.find((folder) => String(folder.id) === String(folderId));
     return selectedFolder?.name || formatMessage(COMMON_LOCALE_KEYS.ALL_TEST_CASES_TITLE);
@@ -150,6 +156,10 @@ export const AllTestCasesPage = ({
     openAddToTestPlanModal({ selectedTestCaseIds: selectedRowIds });
   }, [selectedRowIds, openAddToTestPlanModal]);
 
+  const handleOpenAddToLaunchModal = useCallback(() => {
+    openAddToLaunchModal();
+  }, [openAddToLaunchModal]);
+
   const handleOpenMoveTestCaseModal = useCallback(() => {
     const sourceFolderDeltasMap = countBy(selectedRows, (row) => String(row.folderId));
 
@@ -171,10 +181,6 @@ export const AllTestCasesPage = ({
   if (isEmpty(testCases) && !isLoading) {
     return <FolderEmptyState folderTitle={folderTitle} />;
   }
-
-  const onClearSelection = () => setSelectedRows([]);
-
-  const handleSelectedRows = (rows: SelectedTestCaseRow[]) => setSelectedRows(rows);
 
   return (
     <>
@@ -227,7 +233,9 @@ export const AllTestCasesPage = ({
             <Button variant="ghost" onClick={handleOpenMoveTestCaseModal}>
               {formatMessage(messages.moveToFolder)}
             </Button>
-            <Button variant="ghost">{formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}</Button>
+            <Button variant="ghost" onClick={handleOpenAddToLaunchModal}>
+              {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}
+            </Button>
             <Button onClick={handleOpenAddToTestPlanModal}>
               {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
             </Button>

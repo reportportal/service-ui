@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-export { LaunchFormFields } from './launchFormFields';
-export { INITIAL_LAUNCH_FORM_VALUES, LAUNCH_FORM_FIELD_NAMES } from './constants';
-export { useCreateManualLaunch } from './useCreateManualLaunch';
-export type {
-  LaunchFormData,
-  LaunchFormFieldsProps,
-  CreateManualLaunchDto,
-  Attribute,
-  LaunchOption,
-  TestPlanOption,
-  OnLaunchChangeHandler,
-  OnTestPlanChangeHandler,
-} from './types';
-export { LaunchMode, isLaunchObject } from './types';
+import { useModal } from 'common/hooks';
+import { ADD_TO_LAUNCH_MODAL_V2_KEY } from './constants';
+import { AddToLaunchModalV2 } from './addToLaunchModalV2';
+
+export const useAddToLaunchModalV2 = (selectedRowsIds: number[]) => {
+  return useModal({
+    modalKey: ADD_TO_LAUNCH_MODAL_V2_KEY,
+    renderModal: () => <AddToLaunchModalV2 selectedRowsIds={selectedRowsIds} />,
+  });
+};

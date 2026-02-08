@@ -21,6 +21,19 @@ export enum LaunchMode {
   EXISTING = 'existing',
 }
 
+export interface LaunchOption {
+  id: number;
+  name: string;
+}
+
+export interface TestPlanOption {
+  id: number;
+  name: string;
+}
+
+export type OnLaunchChangeHandler = (launch: LaunchOption | null) => void;
+export type OnTestPlanChangeHandler = (testPlan: TestPlanOption | null) => void;
+
 export interface Attribute {
   value: string;
   key?: string;
@@ -30,14 +43,14 @@ export interface Attribute {
 }
 
 export interface LaunchFormData {
-  name: string | { id: number; name: string };
-  selectedLaunch?: { id: number; name: string };
+  name: string | LaunchOption;
+  selectedLaunch?: LaunchOption;
   description?: string;
   attributes: Attribute[];
   uncoveredTestsOnly?: boolean;
 }
 
-export const isLaunchObject = (value: unknown): value is { id: number; name: string } => {
+export const isLaunchObject = (value: unknown): value is LaunchOption => {
   return typeof value === 'object' && value !== null && 'id' in value;
 };
 
@@ -54,8 +67,10 @@ export interface LaunchFormFieldsProps {
   testPlanName?: string;
   activeMode?: LaunchMode;
   onModeChange?: (mode: LaunchMode) => void;
-  onLaunchSelect?: (launch: { id: number; name: string } | null) => void;
+  onLaunchSelect?: OnLaunchChangeHandler;
+  onTestPlanChange?: OnTestPlanChangeHandler;
   description?: ReactNode;
+  isTestPlanFieldDisabled?: boolean;
 }
 
 export interface CheckboxFieldProps {
@@ -80,9 +95,11 @@ export interface AttributeListFieldProps {
 }
 
 export interface ExistingLaunchFieldsProps {
-  onLaunchSelect?: (launch: { id: number; name: string } | null) => void;
+  onLaunchSelect?: OnLaunchChangeHandler;
 }
 
 export interface NewLaunchFieldsProps {
   testPlanName?: string;
+  isTestPlanFieldDisabled?: boolean;
+  onTestPlanChange?: OnTestPlanChangeHandler;
 }

@@ -17,10 +17,11 @@
 import { useIntl } from 'react-intl';
 import { Field } from 'redux-form';
 import { FieldText, FieldTextFlex, FieldLabel } from '@reportportal/ui-kit';
-import { noop } from 'es-toolkit';
+import { useSelector } from 'react-redux';
 
 import { createClassnames } from 'common/utils';
 import { URLS } from 'common/urls';
+import { projectKeySelector } from 'controllers/project';
 import { FieldProvider, FieldErrorHint } from 'components/fields';
 import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
@@ -28,7 +29,7 @@ import { commonMessages } from 'pages/inside/common/common-messages';
 import { referenceDictionary } from 'common/utils/referenceDictionary';
 import { LinkItem } from 'layouts/common/appSidebar/helpAndService/linkItem';
 
-import { NewLaunchFieldsProps } from './types';
+import { NewLaunchFieldsProps, TestPlanOption } from './types';
 import { LAUNCH_FORM_FIELD_NAMES } from './constants';
 import { messages } from './messages';
 import { AttributeListField } from './attributeListField';
@@ -37,10 +38,27 @@ import styles from './launchFormFields.scss';
 
 const cx = createClassnames(styles);
 
-export const NewLaunchFields = ({ testPlanName }: NewLaunchFieldsProps) => {
+export const NewLaunchFields = ({
+  testPlanName,
+  isTestPlanFieldDisabled = true,
+  onTestPlanChange,
+}: NewLaunchFieldsProps) => {
   const { formatMessage } = useIntl();
+  const projectKey = useSelector(projectKeySelector);
 
   const testPlanValue: { name: string } | null = testPlanName ? { name: testPlanName } : null;
+
+  const retrieveTestPlans = (value: string) =>
+    URLS.testPlan(projectKey, value ? { 'filter.fts.search': value } : {});
+
+  const makeTestPlanOptions = (response: { content: Array<{ id: number; name: string }> }) =>
+    response.content;
+
+  const handleTestPlanChange = (value: unknown) => {
+    if (!isTestPlanFieldDisabled && onTestPlanChange) {
+      onTestPlanChange(value as TestPlanOption | null);
+    }
+  };
 
   return (
     <>
@@ -81,11 +99,12 @@ export const NewLaunchFields = ({ testPlanName }: NewLaunchFieldsProps) => {
         <FieldLabel>{formatMessage(messages.testPlanLabel)}</FieldLabel>
         <AsyncAutocompleteV2
           placeholder={formatMessage(messages.selectTestPlanPlaceholder)}
-          getURI={URLS.testPlan}
-          onChange={noop}
+          getURI={retrieveTestPlans}
+          makeOptions={makeTestPlanOptions}
+          onChange={handleTestPlanChange}
           parseValueToString={(value: { name?: string }) => value?.name || ''}
           value={testPlanValue}
-          disabled
+          disabled={Boolean(isTestPlanFieldDisabled)}
           createWithoutConfirmation
           skipOptionCreation
           isDropdownMode

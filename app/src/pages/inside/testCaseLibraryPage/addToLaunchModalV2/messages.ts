@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-export { LaunchFormFields } from './launchFormFields';
-export { INITIAL_LAUNCH_FORM_VALUES, LAUNCH_FORM_FIELD_NAMES } from './constants';
-export { useCreateManualLaunch } from './useCreateManualLaunch';
-export type {
-  LaunchFormData,
-  LaunchFormFieldsProps,
-  CreateManualLaunchDto,
-  Attribute,
-  LaunchOption,
-  TestPlanOption,
-  OnLaunchChangeHandler,
-  OnTestPlanChangeHandler,
-} from './types';
-export { LaunchMode, isLaunchObject } from './types';
+import { defineMessages } from 'react-intl';
+
+export const messages = defineMessages({
+  addToLaunch: {
+    id: 'AddToLaunchModalV2.addToLaunch',
+    defaultMessage: 'Add to Launch',
+  },
+  addSelectedTestCases: {
+    id: 'AddToLaunchModalV2.addSelectedTestCases',
+    defaultMessage: 'You are about to add <bold>{count}</bold> selected test cases to a Launch',
+  },
+});
