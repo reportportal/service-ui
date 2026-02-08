@@ -27,13 +27,12 @@ import {
   TEST_CASE_LIST_NAMESPACE,
   TestCasePageDefaultValues,
 } from 'pages/inside/common/testCaseList/constants';
-import { DEFAULT_CURRENT_PAGE } from 'pages/inside/common/testCaseList/configUtils';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Page } from 'types/common';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { showModalAction } from 'controllers/modal';
-import { payloadSelector, urlFolderIdSelector } from 'controllers/pages';
+import { locationQuerySelector, payloadSelector, urlFolderIdSelector } from 'controllers/pages';
 import { foldersSelector } from 'controllers/testCase';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
@@ -57,9 +56,7 @@ interface AllTestCasesPageProps {
   testCases: TestCase[];
   testCasesPageData: Page;
   isLoading: boolean;
-  searchValue: string;
   instanceKey: TMS_INSTANCE_KEY;
-  setSearchValue: (value: string) => void;
 }
 
 export interface SelectedTestCaseRow {
@@ -70,14 +67,13 @@ export interface SelectedTestCaseRow {
 export const AllTestCasesPage = ({
   testCases,
   isLoading,
-  searchValue,
-  setSearchValue,
   instanceKey,
   testCasesPageData,
 }: AllTestCasesPageProps) => {
   const { formatMessage } = useIntl();
   const { organizationSlug, projectSlug } = useProjectDetails();
   const payload = useSelector(payloadSelector);
+  const query = useSelector(locationQuerySelector);
   const { setPageNumber, setPageSize, captions, activePage, pageSize, totalPages } =
     useURLBoundPagination({
       pageData: testCasesPageData,
@@ -170,15 +166,7 @@ export const AllTestCasesPage = ({
     });
   }, [selectedRowIds, selectedRows, openMoveTestCaseModal]);
 
-  const handleSearchChange = useCallback(
-    (targetSearchValue: string) => {
-      setSearchValue(targetSearchValue);
-      setPageNumber(DEFAULT_CURRENT_PAGE);
-    },
-    [setSearchValue, setPageNumber],
-  );
-
-  if (isEmpty(testCases) && !isLoading) {
+  if (isEmpty(testCases) && !isLoading && !query?.testCasesSearchParams) {
     return <FolderEmptyState folderTitle={folderTitle} />;
   }
 
@@ -193,13 +181,12 @@ export const AllTestCasesPage = ({
         <TestCaseList
           testCases={testCases}
           isLoading={isLoading}
-          searchValue={searchValue}
           selectedRowIds={selectedRowIds}
           selectedRows={selectedRows}
           folderTitle={folderTitle}
           instanceKey={instanceKey}
-          onSearchChange={handleSearchChange}
           handleSelectedRows={handleSelectedRows}
+          activePage={activePage}
         />
       </div>
       {Boolean(testCasesPageData?.totalElements) && (
