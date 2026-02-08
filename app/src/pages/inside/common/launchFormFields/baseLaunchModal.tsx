@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { FormEvent, MouseEvent, useState, useEffect } from 'react';
+import { FormEvent, MouseEvent, useState, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { InjectedFormProps } from 'redux-form';
@@ -26,13 +26,7 @@ import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 
 import { LaunchFormFields } from './launchFormFields';
-import {
-  LaunchFormData,
-  LaunchMode,
-  LaunchOption,
-  TestPlanOption,
-  BaseLaunchModalProps,
-} from './types';
+import { LaunchFormData, LaunchMode, LaunchOption, BaseLaunchModalProps } from './types';
 import { useCreateManualLaunch } from './useCreateManualLaunch';
 
 export const BaseLaunchModal = ({
@@ -40,7 +34,7 @@ export const BaseLaunchModal = ({
   pristine,
   invalid,
   handleSubmit,
-  initialize,
+  change,
   testCases,
   testPlanId,
   testPlanName,
@@ -55,23 +49,31 @@ export const BaseLaunchModal = ({
   const { formatMessage } = useIntl();
   const [activeMode, setActiveMode] = useState<LaunchMode>(LaunchMode.EXISTING);
   const [selectedLaunch, setSelectedLaunch] = useState<LaunchOption | null>(null);
-  const [selectedTestPlan, setSelectedTestPlan] = useState<TestPlanOption | null>(null);
 
   const { handleSubmit: handleCreateLaunch, isLoading } = useCreateManualLaunch(
     testCases,
     activeMode,
-    testPlanId ?? selectedTestPlan?.id,
+    testPlanId,
     selectedLaunch?.id,
     onClearSelection,
   );
 
-  const isSubmitDisabled = isLoading || pristine || invalid;
+  const isSubmitDisabled =
+    isLoading || (activeMode === LaunchMode.EXISTING ? !selectedLaunch : pristine || invalid);
 
-  const handleModeChange = (mode: LaunchMode) => {
-    setActiveMode(mode);
-    setSelectedLaunch(null);
-    setSelectedTestPlan(null);
-  };
+  const handleModeChange = useCallback(
+    (mode: LaunchMode) => {
+      if (mode !== activeMode) {
+        setActiveMode(mode);
+        setSelectedLaunch(null);
+        // Clear the name field when switching modes to prevent type conflicts
+        change('name', mode === LaunchMode.NEW ? '' : null);
+        // Reset uncoveredTestsOnly checkbox when switching modes
+        change('uncoveredTestsOnly', false);
+      }
+    },
+    [activeMode, change],
+  );
 
   const okButton = {
     children: (
@@ -86,15 +88,6 @@ export const BaseLaunchModal = ({
     disabled: isLoading,
   };
 
-  useEffect(() => {
-    initialize({
-      name: '',
-      description: '',
-      attributes: [],
-      uncoveredTestsOnly: false,
-    });
-  }, [activeMode, initialize]);
-
   return (
     <Modal
       title={modalTitle}
@@ -108,13 +101,14 @@ export const BaseLaunchModal = ({
         <form onSubmit={handleSubmit(handleCreateLaunch) as (event: FormEvent) => void}>
           <div className={className ? `${className}__container` : undefined}>
             <LaunchFormFields
-              testPlanName={testPlanName}
               activeMode={activeMode}
               onModeChange={handleModeChange}
               onLaunchSelect={setSelectedLaunch}
-              onTestPlanChange={setSelectedTestPlan}
               description={description}
               isTestPlanFieldDisabled={isTestPlanFieldDisabled}
+              testPlanValue={
+                testPlanId && testPlanName ? { id: testPlanId, name: testPlanName } : undefined
+              }
             />
           </div>
         </form>

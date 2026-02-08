@@ -53,22 +53,28 @@ export const ExistingLaunchFields = ({ onLaunchSelect }: ExistingLaunchFieldsPro
     }
   };
 
-  const renderLaunchField = ({ input }: WrappedFieldProps) => (
-    <AsyncAutocompleteV2
-      {...input}
-      placeholder={formatMessage(messages.searchAndSelectLaunch)}
-      getURI={retrieveLaunches}
-      makeOptions={makeLaunchOptions}
-      onChange={(value) => handleLaunchChange(value, input)}
-      parseValueToString={(value: { name?: string }) => value?.name || ''}
-      createWithoutConfirmation
-      skipOptionCreation
-      isDropdownMode
-      minLength={0}
-      limitOptions={50}
-      limitationText={formatMessage(messages.tooManyLaunchesResult)}
-    />
-  );
+  const renderLaunchField = ({ input }: WrappedFieldProps) => {
+    return (
+      <AsyncAutocompleteV2
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        value={input.value}
+        name={input.name}
+        onBlur={input.onBlur}
+        onFocus={input.onFocus}
+        placeholder={formatMessage(messages.searchAndSelectLaunch)}
+        getURI={retrieveLaunches}
+        makeOptions={makeLaunchOptions}
+        onChange={(value) => handleLaunchChange(value, input)}
+        parseValueToString={(value: { name?: string }) => value?.name || ''}
+        createWithoutConfirmation
+        skipOptionCreation
+        isDropdownMode
+        minLength={0}
+        limitOptions={50}
+        limitationText={formatMessage(messages.tooManyLaunchesResult)}
+      />
+    );
+  };
 
   return (
     <div className={cx('launch-name-field')}>

@@ -16,6 +16,7 @@
 
 import { useIntl } from 'react-intl';
 import { InjectedFormProps, reduxForm } from 'redux-form';
+import { useMemo, ReactNode } from 'react';
 
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -24,6 +25,7 @@ import {
   BaseLaunchModal,
   LaunchFormData,
   INITIAL_LAUNCH_FORM_VALUES,
+  messages as launchFormMessages,
 } from 'pages/inside/common/launchFormFields';
 
 import { CreateLaunchModalProps } from './types';
@@ -32,6 +34,8 @@ import { messages } from './messages';
 import styles from './createLaunchModal.scss';
 
 const cx = createClassnames(styles);
+
+const BoldTestPlanName = (parts: ReactNode[]) => <b className={cx('test-plan-name')}>{parts}</b>;
 
 const CreateLaunchModalComponent = ({
   testCases,
@@ -43,6 +47,13 @@ const CreateLaunchModalComponent = ({
   const testPlanName = activeTestPlan?.name;
   const testPlanId = activeTestPlan?.id;
 
+  const descriptionText = useMemo(() => {
+    return formatMessage(launchFormMessages.addTestCasesFromTestPlan, {
+      testPlanName: testPlanName || '',
+      bold: BoldTestPlanName,
+    });
+  }, [testPlanName, formatMessage]);
+
   return (
     <BaseLaunchModal
       {...reduxFormProps}
@@ -51,6 +62,7 @@ const CreateLaunchModalComponent = ({
       testPlanName={testPlanName}
       modalTitle={formatMessage(messages.addToLaunch)}
       okButtonText={COMMON_LOCALE_KEYS.CREATE}
+      description={descriptionText}
       isTestPlanFieldDisabled={true}
       className={cx('create-launch-modal')}
     />

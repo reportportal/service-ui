@@ -28,4 +28,5 @@ export const LAUNCH_FORM_FIELD_NAMES = {
   DESCRIPTION: 'description',
   ATTRIBUTES: 'attributes',
   UNCOVERED_TESTS_ONLY: 'uncoveredTestsOnly',
+  TEST_PLAN: 'testPlan',
 } as const;

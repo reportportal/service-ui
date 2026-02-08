@@ -28,6 +28,10 @@
     flex-direction: column;
   }
 
+  .test-plan-name {
+    font-weight: var(--rp-ui-base-fw-medium);
+  }
+
   .scope-of-testing-field {
     margin-bottom: 16px;
 

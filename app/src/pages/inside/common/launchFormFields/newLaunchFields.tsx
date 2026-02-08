@@ -16,7 +16,7 @@
 
 import { useIntl } from 'react-intl';
 import { useCallback } from 'react';
-import { Field } from 'redux-form';
+import { Field, WrappedFieldProps } from 'redux-form';
 import { FieldText, FieldTextFlex, FieldLabel } from '@reportportal/ui-kit';
 import { useSelector } from 'react-redux';
 
@@ -30,7 +30,7 @@ import { commonMessages } from 'pages/inside/common/common-messages';
 import { referenceDictionary } from 'common/utils/referenceDictionary';
 import { LinkItem } from 'layouts/common/appSidebar/helpAndService/linkItem';
 
-import { NewLaunchFieldsProps, TestPlanOption } from './types';
+import { NewLaunchFieldsProps } from './types';
 import { LAUNCH_FORM_FIELD_NAMES } from './constants';
 import { messages } from './messages';
 import { AttributeListField } from './attributeListField';
@@ -40,15 +40,16 @@ import styles from './launchFormFields.scss';
 const cx = createClassnames(styles);
 
 export const NewLaunchFields = ({
-  testPlanName,
   isTestPlanFieldDisabled = true,
-  onTestPlanChange,
+  testPlanValue,
 }: NewLaunchFieldsProps) => {
   const { formatMessage } = useIntl();
 
   const validateLaunchName = useCallback(
     (value: string): string | undefined => {
-      if (!value?.trim()) {
+      // Handle case when value is not a string (e.g., object from EXISTING mode)
+      const stringValue = typeof value === 'string' ? value : '';
+      if (!stringValue.trim()) {
         return formatMessage(messages.launchNameRequired);
       }
       return undefined;
@@ -58,19 +59,32 @@ export const NewLaunchFields = ({
 
   const projectKey = useSelector(projectKeySelector);
 
-  const testPlanValue: { name: string } | null = testPlanName ? { name: testPlanName } : null;
-
   const retrieveTestPlans = (value: string) =>
     URLS.testPlan(projectKey, value ? { 'filter.fts.search': value } : {});
 
   const makeTestPlanOptions = (response: { content: Array<{ id: number; name: string }> }) =>
     response.content;
 
-  const handleTestPlanChange = (value: unknown) => {
-    if (!isTestPlanFieldDisabled && onTestPlanChange) {
-      onTestPlanChange(value as TestPlanOption | null);
-    }
+  const handleTestPlanChange = (value: unknown, input: { onChange: (value: unknown) => void }) => {
+    input.onChange(value);
   };
+
+  const renderTestPlanField = ({ input }: WrappedFieldProps) => (
+    <AsyncAutocompleteV2
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      value={isTestPlanFieldDisabled && testPlanValue ? testPlanValue : input.value}
+      placeholder={formatMessage(messages.selectTestPlanPlaceholder)}
+      getURI={retrieveTestPlans}
+      makeOptions={makeTestPlanOptions}
+      onChange={(value) => handleTestPlanChange(value, input)}
+      parseValueToString={(value: { name?: string }) => value?.name || ''}
+      disabled={Boolean(isTestPlanFieldDisabled)}
+      createWithoutConfirmation
+      skipOptionCreation
+      isDropdownMode
+      minLength={0}
+    />
+  );
 
   return (
     <>
@@ -110,19 +124,7 @@ export const NewLaunchFields = ({
 
       <div className={cx('test-plan-field')}>
         <FieldLabel>{formatMessage(messages.testPlanLabel)}</FieldLabel>
-        <AsyncAutocompleteV2
-          placeholder={formatMessage(messages.selectTestPlanPlaceholder)}
-          getURI={retrieveTestPlans}
-          makeOptions={makeTestPlanOptions}
-          onChange={handleTestPlanChange}
-          parseValueToString={(value: { name?: string }) => value?.name || ''}
-          value={testPlanValue}
-          disabled={Boolean(isTestPlanFieldDisabled)}
-          createWithoutConfirmation
-          skipOptionCreation
-          isDropdownMode
-          minLength={0}
-        />
+        <Field name={LAUNCH_FORM_FIELD_NAMES.TEST_PLAN} component={renderTestPlanField} />
       </div>
 
       <div className={cx('attributes-section')}>

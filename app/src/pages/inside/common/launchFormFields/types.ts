@@ -50,6 +50,7 @@ export interface LaunchFormData {
   description?: string;
   attributes: Attribute[];
   uncoveredTestsOnly?: boolean;
+  testPlan?: TestPlanOption;
 }
 
 export const isLaunchObject = (value: unknown): value is LaunchOption => {
@@ -66,13 +67,12 @@ export interface CreateManualLaunchDto {
 }
 
 export interface LaunchFormFieldsProps {
-  testPlanName?: string;
   activeMode?: LaunchMode;
   onModeChange?: (mode: LaunchMode) => void;
   onLaunchSelect?: OnLaunchChangeHandler;
-  onTestPlanChange?: OnTestPlanChangeHandler;
   description?: ReactNode;
   isTestPlanFieldDisabled?: boolean;
+  testPlanValue?: TestPlanOption;
 }
 
 export interface CheckboxFieldProps {
@@ -101,9 +101,8 @@ export interface ExistingLaunchFieldsProps {
 }
 
 export interface NewLaunchFieldsProps {
-  testPlanName?: string;
   isTestPlanFieldDisabled?: boolean;
-  onTestPlanChange?: OnTestPlanChangeHandler;
+  testPlanValue?: TestPlanOption;
 }
 
 export interface BaseLaunchModalProps {

@@ -16,7 +16,6 @@
 
 import { useIntl } from 'react-intl';
 import { Field } from 'redux-form';
-import { useMemo, ReactNode } from 'react';
 
 import { createClassnames } from 'common/utils';
 import { ButtonSwitcher } from 'pages/inside/common/buttonSwitcher';
@@ -32,27 +31,17 @@ import styles from './launchFormFields.scss';
 
 const cx = createClassnames(styles);
 
-const BoldTestPlanName = (parts: ReactNode[]) => <b className={cx('test-plan-name')}>{parts}</b>;
-
 export const LaunchFormFields = ({
-  testPlanName,
   activeMode = LaunchMode.NEW,
   onModeChange,
   onLaunchSelect,
-  onTestPlanChange,
   description,
   isTestPlanFieldDisabled = true,
+  testPlanValue,
 }: LaunchFormFieldsProps) => {
   const { formatMessage } = useIntl();
 
   const isExistingMode = activeMode === LaunchMode.EXISTING;
-
-  const defaultDescription = useMemo(() => {
-    return formatMessage(messages.addTestCasesFromTestPlan, {
-      testPlanName: testPlanName || '',
-      bold: BoldTestPlanName,
-    });
-  }, [testPlanName, formatMessage]);
 
   const handleModeChange = (mode: string) => {
     if (onModeChange) {
@@ -63,7 +52,7 @@ export const LaunchFormFields = ({
   return (
     <>
       <ButtonSwitcher
-        description={description || defaultDescription}
+        description={description}
         createNewButtonTitle={formatMessage(messages.createNewLaunch)}
         existingButtonTitle={formatMessage(messages.addToExistingLaunch)}
         handleActiveButton={handleModeChange}
@@ -81,9 +70,8 @@ export const LaunchFormFields = ({
         <ExistingLaunchFields onLaunchSelect={onLaunchSelect} />
       ) : (
         <NewLaunchFields
-          testPlanName={testPlanName}
           isTestPlanFieldDisabled={Boolean(isTestPlanFieldDisabled)}
-          onTestPlanChange={onTestPlanChange}
+          testPlanValue={testPlanValue}
         />
       )}
     </>
