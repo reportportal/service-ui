@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-@use 'common/css/variables/font-variable';
+@use 'common/css/variables/newColors';
 
 @mixin hint-text-style {
-  font-family: font-variable.$FONT-ROBOTO-REGULAR;
+  font-family: $FONT-ROBOTO-REGULAR;
   font-weight: 400;
   font-size: 11px;
   line-height: 16px;
@@ -40,17 +40,19 @@
   @include hint-text-style;
   margin-top: 8px;
   margin-bottom: 16px;
-  color: var(--color-text-secondary);
+  color: var(--rp-ui-base-e-400);
 }
 
 .launch-name-hint-link {
-  @include hint-text-style;
-  color: var(--color-link);
-  text-decoration: none;
-  cursor: pointer;
+  a {
+    @include hint-text-style;
+    color: var(--rp-ui-base-topaz);
+    text-decoration: none;
+    cursor: pointer;
 
-  &:hover {
-    text-decoration: underline;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 

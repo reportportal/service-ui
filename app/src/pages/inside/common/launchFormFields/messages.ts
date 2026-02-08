@@ -47,7 +47,7 @@ export const messages = defineMessages({
   },
   learnMore: {
     id: 'LaunchFormFields.learnMore',
-    defaultMessage: 'Learn more',
+    defaultMessage: 'Learn more >',
   },
   addOnlyUncoveredTestCases: {
     id: 'LaunchFormFields.addOnlyUncoveredTestCases',

@@ -57,3 +57,32 @@ export interface LaunchFormFieldsProps {
   onLaunchSelect?: (launch: { id: number; name: string } | null) => void;
   description?: ReactNode;
 }
+
+export interface CheckboxFieldProps {
+  input: {
+    value: boolean;
+    onChange: (value: boolean) => void;
+  };
+  label?: string;
+}
+
+export interface AttributeListFieldProps {
+  input: {
+    value: unknown[];
+    onChange: (value: unknown[]) => void;
+  };
+  newAttrMessage?: string;
+  maxLength?: number;
+  showButton?: boolean;
+  editable?: boolean;
+  defaultOpen?: boolean;
+  [key: string]: unknown;
+}
+
+export interface ExistingLaunchFieldsProps {
+  onLaunchSelect?: (launch: { id: number; name: string } | null) => void;
+}
+
+export interface NewLaunchFieldsProps {
+  testPlanName?: string;
+}
