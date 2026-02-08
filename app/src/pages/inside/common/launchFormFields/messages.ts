@@ -75,4 +75,8 @@ export const messages = defineMessages({
     id: 'LaunchFormFields.tooManyLaunchesResult',
     defaultMessage: 'Too many results. Please refine your search',
   },
+  launchNameRequired: {
+    id: 'LaunchFormFields.launchNameRequired',
+    defaultMessage: 'Launch name is required',
+  },
 });

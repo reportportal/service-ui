@@ -15,6 +15,7 @@
  */
 
 import { useIntl } from 'react-intl';
+import { useCallback } from 'react';
 import { Field } from 'redux-form';
 import { FieldText, FieldTextFlex, FieldLabel } from '@reportportal/ui-kit';
 import { useSelector } from 'react-redux';
@@ -44,6 +45,17 @@ export const NewLaunchFields = ({
   onTestPlanChange,
 }: NewLaunchFieldsProps) => {
   const { formatMessage } = useIntl();
+
+  const validateLaunchName = useCallback(
+    (value: string): string | undefined => {
+      if (!value || !value.trim()) {
+        return formatMessage(messages.launchNameRequired);
+      }
+      return undefined;
+    },
+    [formatMessage],
+  );
+
   const projectKey = useSelector(projectKeySelector);
 
   const testPlanValue: { name: string } | null = testPlanName ? { name: testPlanName } : null;
@@ -66,6 +78,7 @@ export const NewLaunchFields = ({
         <FieldProvider
           name={LAUNCH_FORM_FIELD_NAMES.NAME}
           placeholder={formatMessage(messages.searchAndSelectLaunch)}
+          validate={validateLaunchName}
         >
           <FieldErrorHint provideHint={false}>
             <FieldText label={formatMessage(messages.launchName)} defaultWidth={false} isRequired />

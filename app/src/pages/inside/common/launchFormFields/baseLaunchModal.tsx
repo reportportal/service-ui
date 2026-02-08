@@ -68,6 +68,12 @@ export const BaseLaunchModal = ({
 
   const isSubmitDisabled = isLoading || pristine || invalid;
 
+  const handleModeChange = (mode: LaunchMode) => {
+    setActiveMode(mode);
+    setSelectedLaunch(null);
+    setSelectedTestPlan(null);
+  };
+
   const okButton = {
     children: (
       <LoadingSubmitButton isLoading={isLoading}>{formatMessage(okButtonText)}</LoadingSubmitButton>
@@ -107,7 +113,7 @@ export const BaseLaunchModal = ({
             <LaunchFormFields
               testPlanName={testPlanName}
               activeMode={activeMode}
-              onModeChange={setActiveMode}
+              onModeChange={handleModeChange}
               onLaunchSelect={setSelectedLaunch}
               onTestPlanChange={setSelectedTestPlan}
               description={description}

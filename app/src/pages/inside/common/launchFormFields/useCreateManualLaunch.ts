@@ -25,6 +25,7 @@ import { showSuccessNotification, showErrorNotification } from 'controllers/noti
 
 import { LaunchFormData, LaunchMode } from './types';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { generateUUID } from './utils';
 
 export const useCreateManualLaunch = (
   testCases: ExtendedTestCase[],
@@ -61,7 +62,7 @@ export const useCreateManualLaunch = (
       } else if (activeMode === LaunchMode.NEW) {
         // NEW: Create launch with test cases
         const launchName = typeof formValues.name === 'string' ? formValues.name : '';
-        const launchUuid = crypto.randomUUID();
+        const launchUuid = generateUUID();
 
         const launchData = {
           name: launchName,
@@ -93,10 +94,11 @@ export const useCreateManualLaunch = (
       onClearSelection?.();
       dispatch(hideModalAction());
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to create launch';
+      const { message = 'Failed to create launch' } = (error as Record<string, string>) ?? {};
+
       dispatch(
         showErrorNotification({
-          message: errorMessage,
+          message,
         }),
       );
     } finally {

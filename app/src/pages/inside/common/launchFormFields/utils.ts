@@ -14,20 +14,15 @@
  * limitations under the License.
  */
 
-export { LaunchFormFields } from './launchFormFields';
-export { BaseLaunchModal } from './baseLaunchModal';
-export { INITIAL_LAUNCH_FORM_VALUES, LAUNCH_FORM_FIELD_NAMES } from './constants';
-export { useCreateManualLaunch } from './useCreateManualLaunch';
-export { generateUUID } from './utils';
-export type {
-  LaunchFormData,
-  LaunchFormFieldsProps,
-  CreateManualLaunchDto,
-  Attribute,
-  LaunchOption,
-  TestPlanOption,
-  OnLaunchChangeHandler,
-  OnTestPlanChangeHandler,
-  BaseLaunchModalProps,
-} from './types';
-export { LaunchMode, isLaunchObject } from './types';
+/**
+ * Generate UUID with fallback for non-secure contexts (HTTP)
+ * crypto.randomUUID() requires HTTPS or localhost, this provides a fallback
+ */
+export const generateUUID = (): string => {
+  try {
+    return crypto.randomUUID();
+  } catch {
+    // Fallback for non-HTTPS environments
+    return `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
+  }
+};
