@@ -61,9 +61,11 @@ export const useCreateManualLaunch = (
       } else {
         // NEW: Create launch with test cases
         const launchName = typeof formValues.name === 'string' ? formValues.name : '';
+        const uuid: string = uuidv4();
+
         const launchData = {
           name: launchName,
-          uuid: uuidv4(),
+          uuid,
           startTime: new Date().toISOString(),
           description: formValues.description || '',
           attributes: formValues.attributes?.filter((attr) => attr.key && attr.value) || [],
