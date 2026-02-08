@@ -15,6 +15,8 @@
  */
 
 import { ReactNode } from 'react';
+import { MessageDescriptor } from 'react-intl';
+import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 
 export enum LaunchMode {
   NEW = 'new',
@@ -102,4 +104,15 @@ export interface NewLaunchFieldsProps {
   testPlanName?: string;
   isTestPlanFieldDisabled?: boolean;
   onTestPlanChange?: OnTestPlanChangeHandler;
+}
+
+export interface BaseLaunchModalProps {
+  testCases: ExtendedTestCase[];
+  testPlanId?: number;
+  testPlanName?: string;
+  modalTitle: string;
+  okButtonText: MessageDescriptor;
+  description?: ReactNode;
+  isTestPlanFieldDisabled?: boolean;
+  className?: string;
 }

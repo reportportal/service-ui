@@ -21,5 +21,6 @@
 }
 
 .selected-test-cases {
-  font-family: $FONT-ROBOTO-BOLD;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-bold);
 }

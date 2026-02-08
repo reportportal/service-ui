@@ -17,7 +17,7 @@
 @use 'common/css/variables/newColors';
 
 @mixin hint-text-style {
-  font-family: $FONT-ROBOTO-REGULAR;
+  font-family: var(--rp-ui-base-font-family);
   font-weight: 400;
   font-size: 11px;
   line-height: 16px;

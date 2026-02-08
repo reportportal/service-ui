@@ -15,6 +15,7 @@
  */
 
 export { LaunchFormFields } from './launchFormFields';
+export { BaseLaunchModal } from './baseLaunchModal';
 export { INITIAL_LAUNCH_FORM_VALUES, LAUNCH_FORM_FIELD_NAMES } from './constants';
 export { useCreateManualLaunch } from './useCreateManualLaunch';
 export type {
@@ -26,5 +27,6 @@ export type {
   TestPlanOption,
   OnLaunchChangeHandler,
   OnTestPlanChangeHandler,
+  BaseLaunchModalProps,
 } from './types';
 export { LaunchMode, isLaunchObject } from './types';
