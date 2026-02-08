@@ -104,9 +104,9 @@ export const BaseLaunchModal = ({
       allowCloseOutside={!dirty}
       onClose={() => dispatch(hideModalAction())}
     >
-      <div className={`${className}__content-wrapper`}>
+      <div className={className ? `${className}__content-wrapper` : undefined}>
         <form onSubmit={handleSubmit(handleCreateLaunch) as (event: FormEvent) => void}>
-          <div className={`${className}__container`}>
+          <div className={className ? `${className}__container` : undefined}>
             <LaunchFormFields
               testPlanName={testPlanName}
               activeMode={activeMode}
