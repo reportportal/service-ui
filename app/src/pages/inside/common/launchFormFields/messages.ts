@@ -29,6 +29,10 @@ export const messages = defineMessages({
     id: 'LaunchFormFields.searchAndSelectLaunch',
     defaultMessage: 'Search and select launch',
   },
+  enterLaunchName: {
+    id: 'LaunchFormFields.enterLaunchName',
+    defaultMessage: 'Enter launch name',
+  },
   addLaunchDescriptionOptional: {
     id: 'LaunchFormFields.addLaunchDescriptionOptional',
     defaultMessage: 'Please provide details about the launch (optional).',

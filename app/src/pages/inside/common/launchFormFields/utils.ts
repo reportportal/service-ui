@@ -22,9 +22,8 @@ export const generateUUID = (): string => {
   try {
     return crypto.randomUUID();
   } catch {
-    // Fallback for non-HTTPS environments
-    // NOSONAR: Math.random() is acceptable here as this UUID is only used for
-    // temporary client-side request identification, not for security-critical operations
-    return `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
+    // Fallback for non-HTTPS environments - Math.random() is acceptable here as this UUID
+    // is only used for temporary client-side request identification, not for security operations
+    return `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`; // NOSONAR
   }
 };

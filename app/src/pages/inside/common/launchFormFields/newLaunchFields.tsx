@@ -77,7 +77,7 @@ export const NewLaunchFields = ({
       <div className={cx('launch-name-field')}>
         <FieldProvider
           name={LAUNCH_FORM_FIELD_NAMES.NAME}
-          placeholder={formatMessage(messages.searchAndSelectLaunch)}
+          placeholder={formatMessage(messages.enterLaunchName)}
           validate={validateLaunchName}
         >
           <FieldErrorHint provideHint={false}>
