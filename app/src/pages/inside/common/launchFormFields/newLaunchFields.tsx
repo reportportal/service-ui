@@ -60,7 +60,10 @@ export const NewLaunchFields = ({
   const projectKey = useSelector(projectKeySelector);
 
   const retrieveTestPlans = (value: string) =>
-    URLS.testPlan(projectKey, value ? { 'filter.fts.search': value } : {});
+    URLS.testPlan(
+      projectKey,
+      value ? { 'filter.fts.search': value, pageSize: 50 } : { pageSize: 50 },
+    );
 
   const makeTestPlanOptions = (response: { content: Array<{ id: number; name: string }> }) =>
     response.content;

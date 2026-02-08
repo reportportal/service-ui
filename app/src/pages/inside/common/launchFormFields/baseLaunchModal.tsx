@@ -59,7 +59,7 @@ export const BaseLaunchModal = ({
   );
 
   const isSubmitDisabled =
-    isLoading || (activeMode === LaunchMode.EXISTING ? !selectedLaunch : pristine || invalid);
+    isLoading || invalid || (activeMode === LaunchMode.EXISTING ? !selectedLaunch : pristine);
 
   const handleModeChange = useCallback(
     (mode: LaunchMode) => {

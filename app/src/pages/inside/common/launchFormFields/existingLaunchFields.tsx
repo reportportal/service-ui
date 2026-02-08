@@ -39,7 +39,7 @@ export const ExistingLaunchFields = ({ onLaunchSelect }: ExistingLaunchFieldsPro
   const retrieveLaunches = (value: string) =>
     URLS.manualLaunchesListPagination(
       projectKey,
-      value ? { 'filter.eq.name': value, pageSize: 50 } : {},
+      value ? { 'filter.eq.name': value, pageSize: 50 } : { pageSize: 50 },
     );
 
   const makeLaunchOptions = (response: { content: Array<{ id: number; name: string }> }) =>
