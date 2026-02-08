@@ -20,7 +20,6 @@ import { useDispatch } from 'react-redux';
 import { InjectedFormProps } from 'redux-form';
 import { Modal } from '@reportportal/ui-kit';
 
-import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction } from 'controllers/modal';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
@@ -96,20 +95,18 @@ export const BaseLaunchModal = ({
     });
   }, [activeMode, initialize]);
 
-  const cx = createClassnames({ [className || '']: true });
-
   return (
     <Modal
       title={modalTitle}
       okButton={okButton}
-      className={cx(className)}
+      className={className}
       cancelButton={cancelButton}
       allowCloseOutside={!dirty}
       onClose={() => dispatch(hideModalAction())}
     >
-      <div className={cx(`${className}__content-wrapper`)}>
+      <div className={`${className}__content-wrapper`}>
         <form onSubmit={handleSubmit(handleCreateLaunch) as (event: FormEvent) => void}>
-          <div className={cx(`${className}__container`)}>
+          <div className={`${className}__container`}>
             <LaunchFormFields
               testPlanName={testPlanName}
               activeMode={activeMode}
