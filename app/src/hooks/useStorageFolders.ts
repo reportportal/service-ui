@@ -67,35 +67,32 @@ const STORAGE_FOLDERS_CONFIG: Record<TMS_INSTANCE_KEY, StorageFoldersConfigItem>
 export const useStorageFolders = (instanceKey: TMS_INSTANCE_KEY) => {
   const { expandedIdsSelector, foldersSelector, toggleFolderAction, expandToLevelAction } =
     STORAGE_FOLDERS_CONFIG[instanceKey];
-  const testPlanId = useTestPlanId() || '';
-  const isTestPlan = instanceKey === TMS_INSTANCE_KEY.TEST_PLAN;
-  const storageKey = isTestPlan
-    ? getExpandedFoldersStorageKey(instanceKey)
-    : getExpandedFoldersStorageKey(`${instanceKey}${testPlanId}`);
+  const testPlanId = useTestPlanId();
+  const storageKey = getExpandedFoldersStorageKey(instanceKey)
   const dispatch = useDispatch();
   const expandedIds = useSelector(expandedIdsSelector);
   const folders = useSelector(foldersSelector);
   const isMountedRef = useRef(false);
 
   useEffect(() => {
-    if (isTestPlan && testPlanId) {
+    if (testPlanId) {
       dispatch(setTestPlanInitialExpandedFoldersAction({ testPlanId }));
     }
-  }, [isTestPlan, testPlanId, dispatch]);
+  }, [testPlanId, dispatch]);
 
   useEffect(() => {
     if (!isMountedRef.current) {
       isMountedRef.current = true;
       return;
     }
-    if (isTestPlan && testPlanId) {
+    if (testPlanId) {
       const record = (getStorageItem(storageKey) as Record<string, number[]>) || {};
       record[testPlanId] = expandedIds;
       setStorageItem(storageKey, record);
     } else {
       setStorageItem(storageKey, expandedIds);
     }
-  }, [expandedIds, storageKey, isTestPlan, testPlanId]);
+  }, [expandedIds, storageKey, testPlanId]);
 
   const onToggleFolder = useCallback(
     (folder: { id: number }) => {
