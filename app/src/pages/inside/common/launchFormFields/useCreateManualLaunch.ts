@@ -16,7 +16,6 @@
 
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { v4 as uuidv4 } from 'uuid';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -61,7 +60,7 @@ export const useCreateManualLaunch = (
       } else {
         // NEW: Create launch with test cases
         const launchName = typeof formValues.name === 'string' ? formValues.name : '';
-        const launchUuid = uuidv4();
+        const launchUuid = crypto.randomUUID();
 
         const launchData = {
           name: launchName,
