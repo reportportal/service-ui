@@ -28,8 +28,8 @@ import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 
 export const useCreateManualLaunch = (
   testCases: ExtendedTestCase[],
-  testPlanId: number,
   activeMode: LaunchMode,
+  testPlanId?: number,
   selectedLaunchId?: number,
 ) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -57,7 +57,7 @@ export const useCreateManualLaunch = (
             message: `Test cases have been added to launch successfully`,
           }),
         );
-      } else {
+      } else if (activeMode === LaunchMode.NEW) {
         // NEW: Create launch with test cases
         const launchName = typeof formValues.name === 'string' ? formValues.name : '';
         const launchUuid = crypto.randomUUID();
@@ -83,6 +83,10 @@ export const useCreateManualLaunch = (
             message: `Launch "${launchName}" has been created successfully`,
           }),
         );
+      } else {
+        // EXISTING mode without a selected launch
+        setIsLoading(false);
+        return;
       }
 
       dispatch(hideModalAction());

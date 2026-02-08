@@ -59,8 +59,8 @@ export const BaseLaunchModal = ({
 
   const { handleSubmit: handleCreateLaunch, isLoading } = useCreateManualLaunch(
     testCases,
-    testPlanId ?? selectedTestPlan?.id,
     activeMode,
+    testPlanId ?? selectedTestPlan?.id,
     selectedLaunch?.id,
   );
 
