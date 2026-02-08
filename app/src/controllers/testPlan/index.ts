@@ -21,6 +21,7 @@ export {
   expandTestPlanFoldersToLevelAction,
   setTestPlanExpandedFolderIdsAction,
   deleteTestPlanFolderSuccessAction,
+  setTestPlanInitialExpandedFoldersAction,
 } from './actionCreators';
 export { testPlanSagas } from './sagas';
 export * from './constants';

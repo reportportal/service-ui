@@ -23,6 +23,7 @@ import {
   EXPAND_TEST_PLAN_FOLDERS_TO_LEVEL,
   SET_TEST_PLAN_EXPANDED_FOLDER_IDS,
   DELETE_TEST_PLAN_FOLDER_SUCCESS,
+  SET_TEST_PLAN_INITIAL_EXPANDED_FOLDERS,
 } from './constants';
 
 export interface GetTestPlansParams {
@@ -85,5 +86,16 @@ export const deleteTestPlanFolderSuccessAction = (
   params: DeleteTestPlanFolderSuccessParams,
 ) => ({
   type: DELETE_TEST_PLAN_FOLDER_SUCCESS,
+  payload: params,
+});
+
+export interface SetTestPlanInitialExpandedFoldersParams {
+  testPlanId: string;
+}
+
+export const setTestPlanInitialExpandedFoldersAction = (
+  params: SetTestPlanInitialExpandedFoldersParams,
+) => ({
+  type: SET_TEST_PLAN_INITIAL_EXPANDED_FOLDERS,
   payload: params,
 });

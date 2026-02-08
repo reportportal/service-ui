@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
-import { setStorageItem } from 'common/utils/storageUtils';
+import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { AppState } from 'types/store';
 import { FolderWithId } from 'controllers/utils/types';
 import {
@@ -17,6 +17,7 @@ import {
   toggleTestPlanFolderExpansionAction,
   expandTestPlanFoldersToLevelAction,
 } from 'controllers/testPlan';
+import { setTestPlanInitialExpandedFoldersAction } from 'controllers/testPlan/actionCreators';
 import {
   manualLaunchExpandedFolderIdsSelector,
   manualLaunchFoldersSelector,
@@ -66,20 +67,35 @@ const STORAGE_FOLDERS_CONFIG: Record<TMS_INSTANCE_KEY, StorageFoldersConfigItem>
 export const useStorageFolders = (instanceKey: TMS_INSTANCE_KEY) => {
   const { expandedIdsSelector, foldersSelector, toggleFolderAction, expandToLevelAction } =
     STORAGE_FOLDERS_CONFIG[instanceKey];
-  const testPlanId = useTestPlanId() || ''; 
-  const storageKey = getExpandedFoldersStorageKey(`${instanceKey}${testPlanId}`);
+  const testPlanId = useTestPlanId() || '';
+  const isTestPlan = instanceKey === TMS_INSTANCE_KEY.TEST_PLAN;
+  const storageKey = isTestPlan
+    ? getExpandedFoldersStorageKey(instanceKey)
+    : getExpandedFoldersStorageKey(`${instanceKey}${testPlanId}`);
   const dispatch = useDispatch();
   const expandedIds = useSelector(expandedIdsSelector);
   const folders = useSelector(foldersSelector);
   const isMountedRef = useRef(false);
 
   useEffect(() => {
+    if (isTestPlan && testPlanId) {
+      dispatch(setTestPlanInitialExpandedFoldersAction({ testPlanId }));
+    }
+  }, [isTestPlan, testPlanId, dispatch]);
+
+  useEffect(() => {
     if (!isMountedRef.current) {
       isMountedRef.current = true;
       return;
     }
-    setStorageItem(storageKey, expandedIds);
-  }, [expandedIds, storageKey]);
+    if (isTestPlan && testPlanId) {
+      const record = (getStorageItem(storageKey) as Record<string, number[]>) || {};
+      record[testPlanId] = expandedIds;
+      setStorageItem(storageKey, record);
+    } else {
+      setStorageItem(storageKey, expandedIds);
+    }
+  }, [expandedIds, storageKey, isTestPlan, testPlanId]);
 
   const onToggleFolder = useCallback(
     (folder: { id: number }) => {

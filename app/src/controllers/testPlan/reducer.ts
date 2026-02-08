@@ -21,12 +21,11 @@ import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
 import { PROJECT_TEST_PLANS_PAGE, PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
-import {
-  getInitialExpandedFolderIds,
-  getFolderAndDescendantIds,
-} from 'controllers/utils/folderReducerUtils';
+import { getStorageItem } from 'common/utils/storageUtils';
+import { getFolderAndDescendantIds } from 'controllers/utils/folderReducerUtils';
 import { hasPayloadProps } from 'controllers/utils/types';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
+import { getExpandedFoldersStorageKey } from 'controllers/testCase/utils/getExpandedFoldersStorageKey';
 
 import {
   ACTIVE_TEST_PLAN_NAMESPACE,
@@ -37,11 +36,13 @@ import {
   EXPAND_TEST_PLAN_FOLDERS_TO_LEVEL,
   SET_TEST_PLAN_EXPANDED_FOLDER_IDS,
   DELETE_TEST_PLAN_FOLDER_SUCCESS,
+  SET_TEST_PLAN_INITIAL_EXPANDED_FOLDERS,
 } from './constants';
 import {
   ToggleTestPlanFolderExpansionParams,
   SetTestPlanExpandedFolderIdsParams,
   DeleteTestPlanFolderSuccessParams,
+  SetTestPlanInitialExpandedFoldersParams,
 } from './actionCreators';
 
 const hasTestPlanFolderExpansionPayload = (action: {
@@ -62,8 +63,16 @@ const hasTestPlanSetExpandedFolderIdsPayload = (action: {
 }): action is { type: string; payload: SetTestPlanExpandedFolderIdsParams } =>
   hasPayloadProps<SetTestPlanExpandedFolderIdsParams>(action, ['folderIds']);
 
+const hasSetTestPlanInitialExpandedFoldersPayload = (action: {
+  type: string;
+  payload?: unknown;
+}): action is { type: string; payload: SetTestPlanInitialExpandedFoldersParams } =>
+  hasPayloadProps<SetTestPlanInitialExpandedFoldersParams>(action, ['testPlanId']);
+
+const INITIAL_EXPANDED_FOLDER_IDS: number[] = [];
+
 const testPlanExpandedFolderIdsReducer = (
-  state = getInitialExpandedFolderIds(TMS_INSTANCE_KEY.TEST_PLAN),
+  state = INITIAL_EXPANDED_FOLDER_IDS,
   action:
     | {
         type: typeof TOGGLE_TEST_PLAN_FOLDER_EXPANSION;
@@ -78,6 +87,10 @@ const testPlanExpandedFolderIdsReducer = (
         payload: SetTestPlanExpandedFolderIdsParams;
       }
     | { type: typeof DELETE_TEST_PLAN_FOLDER_SUCCESS; payload: DeleteTestPlanFolderSuccessParams }
+    | {
+        type: typeof SET_TEST_PLAN_INITIAL_EXPANDED_FOLDERS;
+        payload: SetTestPlanInitialExpandedFoldersParams;
+      }
     | { type: string },
 ) => {
   switch (action.type) {
@@ -137,6 +150,17 @@ const testPlanExpandedFolderIdsReducer = (
         const { deletedFolderIds } = action.payload;
 
         return state.filter((id) => !deletedFolderIds.includes(id));
+      }
+
+      return state;
+    }
+    case SET_TEST_PLAN_INITIAL_EXPANDED_FOLDERS: {
+      if (hasSetTestPlanInitialExpandedFoldersPayload(action)) {
+        const { testPlanId } = action.payload;
+        const storageKey = getExpandedFoldersStorageKey(TMS_INSTANCE_KEY.TEST_PLAN);
+        const record = (getStorageItem(storageKey) as Record<string, number[]>) || {};
+
+        return Array.isArray(record[testPlanId]) ? record[testPlanId] : [];
       }
 
       return state;
