@@ -35,6 +35,10 @@ import styles from './addToLaunchModalV2.scss';
 
 const cx = createClassnames(styles);
 
+const BoldTestCasesCount = (parts: ReactNode[]) => (
+  <b className={cx('selected-test-cases')}>{parts}</b>
+);
+
 const AddToLaunchModalV2Component = ({
   selectedRowsIds,
   ...reduxFormProps
@@ -49,7 +53,7 @@ const AddToLaunchModalV2Component = ({
   const descriptionText = useMemo(() => {
     return formatMessage(messages.addSelectedTestCases, {
       count: selectedRowsIds.length,
-      bold: (value: ReactNode) => <b className={cx('selected-test-cases')}>{value}</b>,
+      bold: BoldTestCasesCount,
     });
   }, [selectedRowsIds.length, formatMessage]);
 

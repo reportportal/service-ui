@@ -53,28 +53,27 @@ export const ExistingLaunchFields = ({ onLaunchSelect }: ExistingLaunchFieldsPro
     }
   };
 
+  const renderLaunchField = ({ input }: WrappedFieldProps) => (
+    <AsyncAutocompleteV2
+      {...input}
+      placeholder={formatMessage(messages.searchAndSelectLaunch)}
+      getURI={retrieveLaunches}
+      makeOptions={makeLaunchOptions}
+      onChange={(value) => handleLaunchChange(value, input)}
+      parseValueToString={(value: { name?: string }) => value?.name || ''}
+      createWithoutConfirmation
+      skipOptionCreation
+      isDropdownMode
+      minLength={0}
+      limitOptions={50}
+      limitationText={formatMessage(messages.tooManyLaunchesResult)}
+    />
+  );
+
   return (
     <div className={cx('launch-name-field')}>
       <FieldLabel isRequired>{formatMessage(messages.launchName)}</FieldLabel>
-      <Field
-        name={LAUNCH_FORM_FIELD_NAMES.NAME}
-        component={({ input }: WrappedFieldProps) => (
-          <AsyncAutocompleteV2
-            {...input}
-            placeholder={formatMessage(messages.searchAndSelectLaunch)}
-            getURI={retrieveLaunches}
-            makeOptions={makeLaunchOptions}
-            onChange={(value) => handleLaunchChange(value, input)}
-            parseValueToString={(value: { name?: string }) => value?.name || ''}
-            createWithoutConfirmation
-            skipOptionCreation
-            isDropdownMode
-            minLength={0}
-            limitOptions={50}
-            limitationText={formatMessage(messages.tooManyLaunchesResult)}
-          />
-        )}
-      />
+      <Field name={LAUNCH_FORM_FIELD_NAMES.NAME} component={renderLaunchField} />
     </div>
   );
 };

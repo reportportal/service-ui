@@ -34,9 +34,9 @@ export const AttributeListField = ({
     customClass=""
     newAttrMessage={newAttrMessage || ''}
     maxLength={maxLength || 50}
-    showButton={showButton !== undefined ? showButton : true}
-    editable={editable !== undefined ? editable : true}
-    defaultOpen={defaultOpen !== undefined ? defaultOpen : false}
+    showButton={showButton ?? true}
+    editable={editable ?? true}
+    defaultOpen={defaultOpen ?? false}
     {...rest}
   />
 );

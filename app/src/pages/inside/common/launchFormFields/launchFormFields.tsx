@@ -32,6 +32,8 @@ import styles from './launchFormFields.scss';
 
 const cx = createClassnames(styles);
 
+const BoldTestPlanName = (parts: ReactNode[]) => <b className={cx('test-plan-name')}>{parts}</b>;
+
 export const LaunchFormFields = ({
   testPlanName,
   activeMode = LaunchMode.NEW,
@@ -48,7 +50,7 @@ export const LaunchFormFields = ({
   const defaultDescription = useMemo(() => {
     return formatMessage(messages.addTestCasesFromTestPlan, {
       testPlanName: testPlanName || '',
-      bold: (value: ReactNode) => <b className={cx('test-plan-name')}>{value}</b>,
+      bold: BoldTestPlanName,
     });
   }, [testPlanName, formatMessage]);
 
