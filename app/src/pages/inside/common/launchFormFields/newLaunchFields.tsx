@@ -48,7 +48,7 @@ export const NewLaunchFields = ({
 
   const validateLaunchName = useCallback(
     (value: string): string | undefined => {
-      if (!value || !value.trim()) {
+      if (!value?.trim()) {
         return formatMessage(messages.launchNameRequired);
       }
       return undefined;
