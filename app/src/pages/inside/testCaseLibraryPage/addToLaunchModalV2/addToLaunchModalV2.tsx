@@ -41,6 +41,7 @@ const BoldTestCasesCount = (parts: ReactNode[]) => (
 
 const AddToLaunchModalV2Component = ({
   selectedRowsIds,
+  onClearSelection,
   ...reduxFormProps
 }: AddToLaunchModalV2Props & InjectedFormProps<LaunchFormData>) => {
   const { formatMessage } = useIntl();
@@ -66,6 +67,7 @@ const AddToLaunchModalV2Component = ({
       description={descriptionText}
       isTestPlanFieldDisabled={false}
       className={cx('add-to-launch-modal-v2')}
+      onClearSelection={onClearSelection}
     />
   );
 };

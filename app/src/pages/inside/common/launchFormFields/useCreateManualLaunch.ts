@@ -31,6 +31,7 @@ export const useCreateManualLaunch = (
   activeMode: LaunchMode,
   testPlanId?: number,
   selectedLaunchId?: number,
+  onClearSelection?: () => void,
 ) => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
@@ -89,6 +90,7 @@ export const useCreateManualLaunch = (
         return;
       }
 
+      onClearSelection?.();
       dispatch(hideModalAction());
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to create launch';

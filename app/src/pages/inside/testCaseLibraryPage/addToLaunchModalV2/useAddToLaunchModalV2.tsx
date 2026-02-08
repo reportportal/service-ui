@@ -18,9 +18,11 @@ import { useModal } from 'common/hooks';
 import { ADD_TO_LAUNCH_MODAL_V2_KEY } from './constants';
 import { AddToLaunchModalV2 } from './addToLaunchModalV2';
 
-export const useAddToLaunchModalV2 = (selectedRowsIds: number[]) => {
+export const useAddToLaunchModalV2 = (selectedRowsIds: number[], onClearSelection?: () => void) => {
   return useModal({
     modalKey: ADD_TO_LAUNCH_MODAL_V2_KEY,
-    renderModal: () => <AddToLaunchModalV2 selectedRowsIds={selectedRowsIds} />,
+    renderModal: () => (
+      <AddToLaunchModalV2 selectedRowsIds={selectedRowsIds} onClearSelection={onClearSelection} />
+    ),
   });
 };

@@ -89,13 +89,16 @@ export const AllTestCasesPage = ({
   const isAnyRowSelected = !isEmpty(selectedRows);
   const selectedRowIds = useMemo(() => selectedRows.map((row) => row.id), [selectedRows]);
   const { openModal: openAddToTestPlanModal } = useAddTestCasesToTestPlanModal();
-  const { openModal: openAddToLaunchModal } = useAddToLaunchModalV2(selectedRowIds);
+  const onClearSelection = () => setSelectedRows([]);
+  const { openModal: openAddToLaunchModal } = useAddToLaunchModalV2(
+    selectedRowIds,
+    onClearSelection,
+  );
   const { openModal: openBatchDuplicateToFolderModal } = useBatchDuplicateToFolderModal();
   const { openModal: openBatchDeleteTestCasesModal } = useBatchDeleteTestCasesModal();
   const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
   const { canDeleteTestCase, canDuplicateTestCase, canEditTestCase } = useUserPermissions();
 
-  const onClearSelection = () => setSelectedRows([]);
   const handleSelectedRows = (rows: SelectedTestCaseRow[]) => setSelectedRows(rows);
 
   const folderTitle = useMemo(() => {

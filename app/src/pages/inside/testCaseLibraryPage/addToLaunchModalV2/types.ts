@@ -16,4 +16,5 @@
 
 export interface AddToLaunchModalV2Props {
   selectedRowsIds: number[];
+  onClearSelection?: () => void;
 }

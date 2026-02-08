@@ -115,4 +115,5 @@ export interface BaseLaunchModalProps {
   description?: ReactNode;
   isTestPlanFieldDisabled?: boolean;
   className?: string;
+  onClearSelection?: () => void;
 }

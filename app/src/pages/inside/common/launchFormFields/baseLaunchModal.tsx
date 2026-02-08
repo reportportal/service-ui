@@ -50,6 +50,7 @@ export const BaseLaunchModal = ({
   description,
   isTestPlanFieldDisabled = true,
   className,
+  onClearSelection,
 }: BaseLaunchModalProps & InjectedFormProps<LaunchFormData>) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
@@ -62,6 +63,7 @@ export const BaseLaunchModal = ({
     activeMode,
     testPlanId ?? selectedTestPlan?.id,
     selectedLaunch?.id,
+    onClearSelection,
   );
 
   const isSubmitDisabled = isLoading || pristine || invalid;
