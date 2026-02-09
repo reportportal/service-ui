@@ -107,11 +107,6 @@
     }
   }
 
-  .highlight {
-    background-color: rgba(#00829b, 0.1);
-    color: #00829b;
-  }
-
   &__tools {
     display: flex;
     align-items: center;
@@ -153,4 +148,8 @@
       }
     }
   }
+}
+
+.highlight {
+  color: var(--rp-ui-color-primary-text);
 }

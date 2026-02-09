@@ -14,92 +14,20 @@
  * limitations under the License.
  */
 
-import { useState, useCallback, MouseEvent as ReactMouseEvent, useEffect, ReactNode } from 'react';
+import { useState, useCallback, MouseEvent as ReactMouseEvent, useEffect } from 'react';
 import { isEmpty } from 'es-toolkit/compat';
 import { ChevronDownDropdownIcon, MeatballMenuIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
-import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { PopoverControl } from 'pages/common/popoverControl';
-import { TransformedFolder } from 'controllers/testCase';
 
+import { highlightText, hasMatchInTree, hasChildMatch } from '../utils';
+import { FolderProps } from './types';
 import { useFolderTooltipItems } from './useFolderTooltipItems';
 
 import styles from './folder.scss';
 
 const cx = createClassnames(styles);
-
-/**
- * Highlights matching text in folder names
- * Wraps matching text with a highlight span
- */
-const highlightText = (text: string, query: string): ReactNode => {
-  if (!query || !text) return text;
-
-  const trimmedQuery = query.trim();
-  if (!trimmedQuery) return text;
-
-  const escapedQuery = trimmedQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const regex = new RegExp(escapedQuery, 'gi');
-
-  const parts: ReactNode[] = [];
-  let lastIndex = 0;
-  let match: RegExpExecArray | null;
-
-  // Reset regex lastIndex to ensure clean state
-  regex.lastIndex = 0;
-
-  while ((match = regex.exec(text)) !== null) {
-    // Add text before match
-    if (match.index > lastIndex) {
-      parts.push(text.slice(lastIndex, match.index));
-    }
-    // Add matched text with highlight
-    parts.push(
-      <span key={`highlight-${match.index}`} className={cx('highlight')}>
-        {match[0]}
-      </span>,
-    );
-    lastIndex = regex.lastIndex;
-
-    // Prevent infinite loop on zero-width matches
-    if (match.index === regex.lastIndex) {
-      regex.lastIndex += 1;
-    }
-  }
-
-  // Add remaining text
-  if (lastIndex < text.length) {
-    parts.push(text.slice(lastIndex));
-  }
-
-  return parts.length > 0 ? <>{parts}</> : text;
-};
-
-/**
- * Recursively checks if a folder or any of its descendants match the search query
- */
-const hasMatchInTree = (folder: TransformedFolder, query: string): boolean => {
-  if (!query) return true;
-
-  const lowerQuery = query.toLowerCase().trim();
-  if (folder.name.toLowerCase().includes(lowerQuery)) {
-    return true;
-  }
-
-  return (folder.folders ?? []).some((child) => hasMatchInTree(child, lowerQuery));
-};
-
-interface FolderProps {
-  folder: TransformedFolder;
-  activeFolder: number | null;
-  instanceKey: TMS_INSTANCE_KEY;
-  expandedIds: number[];
-  setAllTestCases: () => void;
-  onFolderClick: (id: number) => void;
-  onToggleFolder: (folder: TransformedFolder) => void;
-  searchQuery?: string;
-}
 
 export const Folder = ({
   folder,
@@ -110,19 +38,23 @@ export const Folder = ({
   setAllTestCases,
   onToggleFolder,
   searchQuery = '',
+  ancestorDirectMatch = false,
 }: FolderProps) => {
   const isOpen = expandedIds.includes(folder.id);
   const [areToolsShown, setAreToolsShown] = useState(false);
   const [areToolsOpen, setAreToolsOpen] = useState(false);
   const [isBlockHovered, setIsBlockHovered] = useState(false);
 
-  // Check if this folder or any descendant matches (determines visibility in tree)
-  const hasMatchInSubtree = hasMatchInTree(folder, searchQuery);
-
   // Check if THIS folder name directly matches the search query
   const isDirectMatch = searchQuery
     ? folder.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
-    : true;
+    : false;
+
+  // Check if any children match (for dimming logic)
+  const childrenMatch = searchQuery ? hasChildMatch(folder, searchQuery) : false;
+
+  // Dimmed when: search active AND not direct match AND (children match OR any ancestor matched)
+  const isDimmed = searchQuery && !isDirectMatch && (childrenMatch || ancestorDirectMatch);
 
   const tooltipItems = useFolderTooltipItems({
     folder,
@@ -134,14 +66,6 @@ export const Folder = ({
   useEffect(() => {
     setAreToolsShown(areToolsOpen || isBlockHovered);
   }, [areToolsOpen, isBlockHovered]);
-
-  // Auto-expand folders when searching if they have children and are relevant
-  // Only expand if this folder doesn't match directly but has matching descendants
-  useEffect(() => {
-    if (searchQuery && !isEmpty(folder.folders) && hasMatchInSubtree && !isDirectMatch && !isOpen) {
-      onToggleFolder(folder);
-    }
-  }, [searchQuery, folder, hasMatchInSubtree, isDirectMatch, isOpen, onToggleFolder]);
 
   const handleChevronClick = useCallback(
     (event: ReactMouseEvent<SVGSVGElement, MouseEvent>) => {
@@ -174,7 +98,7 @@ export const Folder = ({
         <div
           className={cx('folders-tree__item-title', {
             'folders-tree__item-title--active': activeFolder === folder.id,
-            'folders-tree__item-title--dimmed': searchQuery && !isDirectMatch,
+            'folders-tree__item-title--dimmed': isDimmed,
           })}
           onClick={handleFolderTitleClick}
           onFocus={() => setIsBlockHovered(true)}
@@ -183,7 +107,7 @@ export const Folder = ({
           onMouseLeave={() => setIsBlockHovered(false)}
         >
           <span className={cx('folders-tree__item-title--text')} title={folder.name}>
-            {highlightText(folder.name, searchQuery)}
+            {isDirectMatch ? highlightText(folder.name, searchQuery) : folder.name}
           </span>
           {!isEmpty(tooltipItems) && (
             <button
@@ -219,9 +143,16 @@ export const Folder = ({
 
       {isOpen && !isEmpty(folder.folders) && (
         <ul className={cx('folders-tree', 'folders-tree--inner')} role="group">
-          {folder.folders
-            ?.filter((subfolder) => !searchQuery || hasMatchInTree(subfolder, searchQuery))
-            .map((subfolder) => (
+          {folder.folders?.map((subfolder) => {
+            // Show all children if: no search OR current folder matches OR any ancestor matched OR subfolder tree matches
+            const shouldShow =
+              !searchQuery ||
+              isDirectMatch ||
+              ancestorDirectMatch ||
+              hasMatchInTree(subfolder, searchQuery);
+            if (!shouldShow) return null;
+
+            return (
               <Folder
                 folder={subfolder}
                 key={subfolder.id}
@@ -232,8 +163,10 @@ export const Folder = ({
                 setAllTestCases={setAllTestCases}
                 onToggleFolder={onToggleFolder}
                 searchQuery={searchQuery}
+                ancestorDirectMatch={isDirectMatch || ancestorDirectMatch}
               />
-            ))}
+            );
+          })}
         </ul>
       )}
     </li>
