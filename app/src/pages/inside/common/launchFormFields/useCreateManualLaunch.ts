@@ -25,7 +25,7 @@ import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 
-import { LaunchFormData, LaunchMode, isLaunchObject } from './types';
+import { LaunchFormData, LaunchMode, isLaunchObject, CreateManualLaunchDto } from './types';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { generateUUID } from './utils';
 import { messages } from './messages';
@@ -70,14 +70,14 @@ export const useCreateManualLaunch = (
           const launchName = isString(formValues.name) ? formValues.name : '';
           const launchUuid = generateUUID();
 
-          const launchData = {
+          const launchData: CreateManualLaunchDto = {
             name: launchName,
             uuid: launchUuid,
             startTime: new Date().toISOString(),
-            description: formValues.description || '',
-            attributes: formValues.attributes?.filter((attr) => attr.key && attr.value) || [],
-            testCaseIds,
             mode: 'DEFAULT',
+            testCaseIds,
+            attributes: formValues.attributes?.filter((attr) => attr.key && attr.value) || [],
+            description: formValues.description || '',
             ...(resolvedTestPlanId && { testPlanId: resolvedTestPlanId }),
           };
 

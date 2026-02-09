@@ -60,11 +60,13 @@ export const isLaunchObject = (value: unknown): value is LaunchOption => {
 
 export interface CreateManualLaunchDto {
   name: string;
+  uuid: string;
   startTime: string;
+  mode: string;
+  testCaseIds: number[];
+  attributes: Attribute[];
   description?: string;
   testPlanId?: number;
-  testCaseIds?: number[];
-  attributes: Attribute[];
 }
 
 export interface LaunchFormFieldsProps {
