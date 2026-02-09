@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,21 @@
  * limitations under the License.
  */
 
-export * from './testPlanModal';
-export * from './createTestPlanModal';
-export * from './editTestPlanModal';
-export * from './duplicateTestPlanModal';
-export * from './deleteTestPlanModal';
-export * from './createLaunchModal';
+import { LaunchFormData } from './types';
+
+export const INITIAL_LAUNCH_FORM_VALUES: LaunchFormData = {
+  name: '',
+  description: '',
+  attributes: [],
+  uncoveredTestsOnly: false,
+};
+
+export const LAUNCH_FORM_FIELD_NAMES = {
+  NAME: 'name',
+  DESCRIPTION: 'description',
+  ATTRIBUTES: 'attributes',
+  UNCOVERED_TESTS_ONLY: 'uncoveredTestsOnly',
+  TEST_PLAN: 'testPlan',
+} as const;
+
+export const PAGE_SIZE = 50;

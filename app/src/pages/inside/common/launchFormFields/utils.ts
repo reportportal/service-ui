@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,16 @@
  * limitations under the License.
  */
 
-export * from './testPlanModal';
-export * from './createTestPlanModal';
-export * from './editTestPlanModal';
-export * from './duplicateTestPlanModal';
-export * from './deleteTestPlanModal';
-export * from './createLaunchModal';
+/**
+ * Generate UUID with fallback for non-secure contexts (HTTP)
+ * crypto.randomUUID() requires HTTPS or localhost, this provides a fallback
+ */
+export const generateUUID = (): string => {
+  try {
+    return crypto.randomUUID();
+  } catch {
+    // Fallback for non-HTTPS environments - Math.random() is acceptable here as this UUID
+    // is only used for temporary client-side request identification, not for security operations
+    return `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`; // NOSONAR
+  }
+};

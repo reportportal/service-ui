@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,16 +18,7 @@ import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
   addToLaunch: {
-    id: 'TestPlanDetailsPage.addToLaunch',
+    id: 'CreateLaunchModal.addToLaunch',
     defaultMessage: 'Add to Launch',
-  },
-  testPlanNotFoundRedirect: {
-    id: 'TestPlanDetailsPage.testPlanNotFoundRedirect',
-    defaultMessage:
-      "The item you are trying to access may have been deleted or doesn't exist. You have been redirected to Test Plans.",
-  },
-  testPlanId: {
-    id: 'TestPlanDetailsPage.testPlanId',
-    defaultMessage: 'Test Plan ID: {testPlanId}',
   },
 });

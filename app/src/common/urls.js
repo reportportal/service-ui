@@ -421,6 +421,11 @@ export const URLS = {
     `${urlBase}project/${projectKey}/launch/manual/${launchId}/folder${getQueryParams(query)}`,
   manualLaunchTestCaseExecutions: (projectKey, launchId, query = {}) =>
     `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case/execution${getQueryParams(query)}`,
+  createManualLaunch: (projectKey) => `${urlBase}project/${projectKey}/launch/manual`,
+  addTestCaseToLaunch: (projectKey, launchId) =>
+    `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case`,
+  batchAddTestCasesToLaunch: (projectKey, launchId) =>
+    `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case/batch`,
   importTestCase: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-case/import${getQueryParams(query)}`,
   tmsAttributes: (query = {}) => `${urlBase}tms/attribute${getQueryParams(query)}`,
