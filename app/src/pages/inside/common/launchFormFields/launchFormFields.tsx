@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
+import { ChangeEvent, useCallback } from 'react';
 import { useIntl } from 'react-intl';
-import { Field } from 'redux-form';
+import { Field, WrappedFieldProps } from 'redux-form';
 
 import { createClassnames } from 'common/utils';
 import { ButtonSwitcher } from 'pages/inside/common/buttonSwitcher';
-import { CheckboxField } from '../checkboxField';
+import { Checkbox } from '@reportportal/ui-kit';
 
 import { LaunchFormFieldsProps, LaunchMode } from './types';
 import { LAUNCH_FORM_FIELD_NAMES } from './constants';
@@ -49,6 +50,19 @@ export const LaunchFormFields = ({
     }
   };
 
+  const renderUncoveredTestsCheckbox = useCallback(
+    ({ input }: WrappedFieldProps) => (
+      <Checkbox
+        value={Boolean(input.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => input.onChange(e.target.checked)}
+        className={cx('checkbox')}
+      >
+        {formatMessage(messages.addOnlyUncoveredTestCases)}
+      </Checkbox>
+    ),
+    [formatMessage],
+  );
+
   return (
     <>
       <ButtonSwitcher
@@ -61,8 +75,7 @@ export const LaunchFormFields = ({
       <div className={cx('uncovered-tests-checkbox')}>
         <Field
           name={LAUNCH_FORM_FIELD_NAMES.UNCOVERED_TESTS_ONLY}
-          component={CheckboxField}
-          label={formatMessage(messages.addOnlyUncoveredTestCases)}
+          component={renderUncoveredTestsCheckbox}
         />
       </div>
 

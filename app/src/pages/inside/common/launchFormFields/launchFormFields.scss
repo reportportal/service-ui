@@ -30,6 +30,12 @@
 
 .uncovered-tests-checkbox {
   margin-top: 16px;
+
+  .checkbox {
+    font-family: var(--rp-ui-base-font-family);
+    font-size: 13px;
+    font-weight: 400;
+  }
 }
 
 .test-plan-name {
