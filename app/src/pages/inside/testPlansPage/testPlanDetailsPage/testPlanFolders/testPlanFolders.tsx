@@ -16,13 +16,14 @@
 
 import { useSelector, useDispatch } from 'react-redux';
 
-import { testPlanTestCasesSelector } from 'controllers/testPlan';
+import { expandTestPlanFoldersToLevelAction, testPlanTestCasesSelector } from 'controllers/testPlan';
 import { PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { useTestPlanActiveFolders } from 'pages/inside/testCaseLibraryPage/hooks/useTestPlanActiveFolders';
 
 import { ExpandedOptions } from '../../../common/expandedOptions';
 import { AllTestCasesPage } from './allTestCasesPage';
+import { useEffect } from 'react';
 
 interface TestPlanFoldersProps {
   isLoading?: boolean;
@@ -31,36 +32,43 @@ interface TestPlanFoldersProps {
 export const TestPlanFolders = ({ isLoading = false }: TestPlanFoldersProps) => {
   const dispatch = useDispatch();
   const testCases = useSelector(testPlanTestCasesSelector);
-  const { activeFolderId, activeFolder, payload, folders } = useTestPlanActiveFolders();
+  const { activeFolderId, activeFolder, payload, folders, transformedFolders } = useTestPlanActiveFolders();
+
+  useEffect(() => {
+    dispatch(expandTestPlanFoldersToLevelAction({ folderId: activeFolderId, folders }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+
 
   const setAllTestCases = () => {
-    if(activeFolderId){
-    dispatch({
-      type: PROJECT_TEST_PLAN_DETAILS_PAGE,
-      payload: {
-        ...payload,
-        testPlanRoute: undefined,
-      },
-    });
-  }
+    if (activeFolderId) {
+      dispatch({
+        type: PROJECT_TEST_PLAN_DETAILS_PAGE,
+        payload: {
+          ...payload,
+          testPlanRoute: undefined,
+        },
+      });
+    }
   };
 
   const handleFolderClick = (id: number) => {
-    if(id !== activeFolderId){
-    dispatch({
-      type: PROJECT_TEST_PLAN_DETAILS_PAGE,
-      payload: {
-        ...payload,
-        testPlanRoute: `folder/${id}`,
-      },
-    });
-  }
+    if (id !== activeFolderId) {
+      dispatch({
+        type: PROJECT_TEST_PLAN_DETAILS_PAGE,
+        payload: {
+          ...payload,
+          testPlanRoute: `folder/${id}`,
+        },
+      });
+    }
   };
 
   return (
     <ExpandedOptions
       activeFolderId={activeFolderId}
-      folders={folders}
+      folders={transformedFolders}
       instanceKey={TMS_INSTANCE_KEY.TEST_PLAN}
       onFolderClick={handleFolderClick}
       setAllTestCases={setAllTestCases}

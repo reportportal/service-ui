@@ -17,7 +17,7 @@ import { useSelector } from "react-redux";
 
 import { locationSelector } from "controllers/pages";
 import { TransformedFolder } from "controllers/testCase/types";
-import { testPlanTransformedFoldersSelector } from "controllers/testPlan";
+import { testPlanFoldersSelector, testPlanTransformedFoldersSelector } from "controllers/testPlan";
 
 
 export const findFolderById = (folders: TransformedFolder[], id: number): TransformedFolder | undefined => {
@@ -37,11 +37,12 @@ export const findFolderById = (folders: TransformedFolder[], id: number): Transf
 
 export const useTestPlanActiveFolders = () => {
   const { payload } = useSelector(locationSelector);
-  const folders = useSelector(testPlanTransformedFoldersSelector);
+  const transformedFolders = useSelector(testPlanTransformedFoldersSelector);
+  const folders = useSelector(testPlanFoldersSelector);
   const testPlanRoute = payload.testPlanRoute;
   const match = testPlanRoute?.match(/folder\/(\d+)/);
   const activeFolderId = match ? Number(match[1]) : null;
-  const activeFolder = activeFolderId ? findFolderById(folders, activeFolderId) : null;
+  const activeFolder = activeFolderId ? findFolderById(transformedFolders, activeFolderId) : null;
 
-  return { activeFolderId, activeFolder, payload, folders};
+  return { activeFolderId, activeFolder, payload, folders, transformedFolders};
 }

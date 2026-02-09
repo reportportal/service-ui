@@ -110,28 +110,28 @@ const testPlanExpandedFolderIdsReducer = (
 
       return state;
     }
-    case EXPAND_TEST_PLAN_FOLDERS_TO_LEVEL: {
+   case EXPAND_TEST_PLAN_FOLDERS_TO_LEVEL: {
       if (hasTestPlanFolderExpansionPayload(action)) {
         const { folderId, folders } = action.payload;
-        const folderMap = new Map(folders.map((folder) => [folder.id, folder]));
+        const folderMap = new Map(folders.map((f) => [f.id, f]));
+        const idsToExpand: number[] = [];
+        const targetFolder = folderMap.get(folderId);
 
-        const collectParentIds = (id: number): number[] => {
-          const folder = folderMap.get(id);
+        let currentCursor = targetFolder?.parentFolderId;
 
-          if (!folder) {
-            return [];
+        while (currentCursor) {
+          const parentFolder = folderMap.get(currentCursor);
+
+          if (!parentFolder) {
+            break;
           }
 
-          const currentIds = state.includes(id) ? [] : [id];
-
-          if (folder.parentFolderId === null) {
-            return currentIds;
+          if (!state.includes(currentCursor)) {
+            idsToExpand.push(currentCursor);
           }
 
-          return [...currentIds, ...collectParentIds(folder.parentFolderId)];
-        };
-
-        const idsToExpand = collectParentIds(folderId);
+          currentCursor = parentFolder.parentFolderId;
+        }
 
         return !isEmpty(idsToExpand) ? [...state, ...idsToExpand] : state;
       }
