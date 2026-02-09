@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ export const UNASSIGN_USER = 'unassignUser';
 export const CHANGE_ROLE = 'changeRole';
 export const CREATE_DASHBOARD = 'createDashboard';
 export const UPDATE_DASHBOARD = 'updateDashboard';
+export const UPDATE_DASHBOARD_STATE = 'updateDashboardState';
 export const DELETE_DASHBOARD = 'deleteDashboard';
 export const CREATE_WIDGET = 'createWidget';
 export const UPDATE_WIDGET = 'updateWidget';
@@ -72,12 +73,14 @@ export const ACTIONS_WITH_AA_SETTINGS = 'aaSettingsActions';
 export const ACTIONS_WITH_DEFECTS = 'defectsActions';
 export const ACTIONS_WITH_LOG_TYPES = 'logTypesActions';
 export const ACTIONS_WITH_IMPORT = 'importActions';
+export const ACTIONS_UPDATE_DASHBOARD = 'updateDashboardActions';
 export const ACTIONS_WITH_LAUNCH = 'launchActions';
 export const ACTIONS_UPDATE_TEST_ITEM = 'updateTestItemActions';
 
 export const GROUP_TO_ACTION_MAP = {
   [ACTIONS_WITH_BTS_ISSUES]: [POST_ISSUE, LINK_ISSUE, UNLINK_ISSUE],
-  [ACTIONS_WITH_DASHBOARDS]: [CREATE_DASHBOARD, UPDATE_DASHBOARD, DELETE_DASHBOARD],
+  [ACTIONS_WITH_DASHBOARDS]: [CREATE_DASHBOARD, UPDATE_DASHBOARD, DELETE_DASHBOARD, UPDATE_DASHBOARD_STATE],
+  [ACTIONS_UPDATE_DASHBOARD]: [UPDATE_DASHBOARD, UPDATE_DASHBOARD_STATE],
   [ACTIONS_WITH_WIDGETS]: [CREATE_WIDGET, UPDATE_WIDGET, DELETE_WIDGET],
   [ACTIONS_WITH_FILTERS]: [CREATE_FILTER, UPDATE_FILTER, DELETE_FILTER],
   [ACTIONS_WITH_INTEGRATIONS]: [CREATE_INTEGRATION, UPDATE_INTEGRATION, DELETE_INTEGRATION],
@@ -96,6 +99,7 @@ export const ACTION_TO_GROUP_MAP = {
   [CREATE_DASHBOARD]: ACTIONS_WITH_DASHBOARDS,
   [UPDATE_DASHBOARD]: ACTIONS_WITH_DASHBOARDS,
   [DELETE_DASHBOARD]: ACTIONS_WITH_DASHBOARDS,
+  [UPDATE_DASHBOARD_STATE]: ACTIONS_WITH_DASHBOARDS,
 
   [CREATE_WIDGET]: ACTIONS_WITH_WIDGETS,
   [UPDATE_WIDGET]: ACTIONS_WITH_WIDGETS,

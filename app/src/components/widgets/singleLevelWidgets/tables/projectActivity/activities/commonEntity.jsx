@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,10 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import {
-  CREATE_DASHBOARD,
-  UPDATE_DASHBOARD,
-  DELETE_DASHBOARD,
   CREATE_WIDGET,
   UPDATE_WIDGET,
   DELETE_WIDGET,
@@ -39,18 +35,6 @@ import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  [CREATE_DASHBOARD]: {
-    id: 'CommonEntityChanges.create',
-    defaultMessage: 'created dashboard',
-  },
-  [UPDATE_DASHBOARD]: {
-    id: 'CommonEntityChanges.updateDashboard',
-    defaultMessage: 'updated dashboard',
-  },
-  [DELETE_DASHBOARD]: {
-    id: 'CommonEntityChanges.deleteDashboard',
-    defaultMessage: 'deleted dashboard',
-  },
   [CREATE_WIDGET]: {
     id: 'CommonEntityChanges.createWidget',
     defaultMessage: 'created widget',
@@ -93,26 +77,17 @@ const messages = defineMessages({
   },
 });
 
-@injectIntl
-export class CommonEntity extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    ...activityItemPropTypes,
-  };
-  static defaultProps = activityItemDefaultProps;
+export const CommonEntity = ({ activity }) => {
+  const { formatMessage } = useIntl();
 
-  state = {
-    testItem: null,
-  };
+  return (
+    <>
+      <span className={cx('user-name')}>{activity.user}</span>
+      {messages[activity.actionType] && formatMessage(messages[activity.actionType])}
+      <span className={cx('activity-name')}> {activity.objectName}.</span>
+    </>
+  );
+};
 
-  render() {
-    const { activity, intl } = this.props;
-    return (
-      <Fragment>
-        <span className={cx('user-name')}>{activity.user}</span>
-        {messages[activity.actionType] && intl.formatMessage(messages[activity.actionType])}
-        <span className={cx('activity-name')}> {activity.objectName}.</span>
-      </Fragment>
-    );
-  }
-}
+CommonEntity.propTypes = activityItemPropTypes;
+CommonEntity.defaultProps = activityItemDefaultProps;
