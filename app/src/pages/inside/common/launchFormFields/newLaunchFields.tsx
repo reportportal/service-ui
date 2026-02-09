@@ -19,6 +19,7 @@ import { useCallback } from 'react';
 import { Field, WrappedFieldProps } from 'redux-form';
 import { FieldText, FieldTextFlex, FieldLabel } from '@reportportal/ui-kit';
 import { useSelector } from 'react-redux';
+import { isString } from 'es-toolkit';
 
 import { createClassnames } from 'common/utils';
 import { URLS } from 'common/urls';
@@ -47,8 +48,7 @@ export const NewLaunchFields = ({
 
   const validateLaunchName = useCallback(
     (value: string): string | undefined => {
-      // Handle case when value is not a string (e.g., object from EXISTING mode)
-      const stringValue = typeof value === 'string' ? value : '';
+      const stringValue = isString(value) ? value : '';
       if (!stringValue.trim()) {
         return formatMessage(messages.launchNameRequired);
       }

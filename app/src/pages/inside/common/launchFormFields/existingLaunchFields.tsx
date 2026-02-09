@@ -25,7 +25,7 @@ import { projectKeySelector } from 'controllers/project';
 import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 
 import { ExistingLaunchFieldsProps, LaunchOption } from './types';
-import { LAUNCH_FORM_FIELD_NAMES } from './constants';
+import { LAUNCH_FORM_FIELD_NAMES, PAGE_SIZE } from './constants';
 import { messages } from './messages';
 
 import styles from './launchFormFields.scss';
@@ -39,7 +39,7 @@ export const ExistingLaunchFields = ({ onLaunchSelect }: ExistingLaunchFieldsPro
   const retrieveLaunches = (value: string) =>
     URLS.manualLaunchesListPagination(
       projectKey,
-      value ? { 'filter.eq.name': value, pageSize: 50 } : { pageSize: 50 },
+      value ? { 'filter.eq.name': value, pageSize: PAGE_SIZE } : { pageSize: PAGE_SIZE },
     );
 
   const makeLaunchOptions = (response: { content: Array<{ id: number; name: string }> }) =>
@@ -70,7 +70,7 @@ export const ExistingLaunchFields = ({ onLaunchSelect }: ExistingLaunchFieldsPro
         skipOptionCreation
         isDropdownMode
         minLength={0}
-        limitOptions={50}
+        limitOptions={PAGE_SIZE}
         limitationText={formatMessage(messages.tooManyLaunchesResult)}
       />
     );

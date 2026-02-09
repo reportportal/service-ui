@@ -48,7 +48,7 @@ const AddToLaunchModalV2Component = ({
   const allTestCases = useSelector(testCasesSelector);
 
   const testCases = useMemo(() => {
-    return allTestCases.filter((tc) => selectedRowsIds.includes(tc.id));
+    return allTestCases.filter((testCase) => selectedRowsIds.includes(testCase.id));
   }, [allTestCases, selectedRowsIds]);
 
   const descriptionText = useMemo(() => {

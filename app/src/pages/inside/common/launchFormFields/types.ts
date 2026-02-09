@@ -16,6 +16,7 @@
 
 import { ReactNode } from 'react';
 import { MessageDescriptor } from 'react-intl';
+import { isPlainObject } from 'es-toolkit';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 
 export enum LaunchMode {
@@ -54,7 +55,7 @@ export interface LaunchFormData {
 }
 
 export const isLaunchObject = (value: unknown): value is LaunchOption => {
-  return typeof value === 'object' && value !== null && 'id' in value;
+  return isPlainObject(value) && 'id' in value;
 };
 
 export interface CreateManualLaunchDto {
@@ -75,14 +76,6 @@ export interface LaunchFormFieldsProps {
   testPlanValue?: TestPlanOption;
 }
 
-export interface CheckboxFieldProps {
-  input: {
-    value: boolean;
-    onChange: (value: boolean) => void;
-  };
-  label?: string;
-}
-
 export interface AttributeListFieldProps {
   input: {
     value: unknown[];
@@ -93,6 +86,8 @@ export interface AttributeListFieldProps {
   showButton?: boolean;
   editable?: boolean;
   defaultOpen?: boolean;
+  disabled?: boolean;
+  customClass?: string;
   [key: string]: unknown;
 }
 

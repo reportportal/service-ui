@@ -14,20 +14,5 @@
  * limitations under the License.
  */
 
-import { ChangeEvent } from 'react';
-import { InputCheckbox } from 'components/inputs/inputCheckbox';
-
-import { CheckboxFieldProps } from './types';
-
-export const CheckboxField = ({ input, label }: CheckboxFieldProps) => {
-  const checked = Boolean(input.value);
-
-  return (
-    <InputCheckbox
-      value={checked}
-      onChange={(e: ChangeEvent<HTMLInputElement>) => input.onChange(e.target.checked)}
-    >
-      {label}
-    </InputCheckbox>
-  );
-};
+export { CheckboxField } from './checkboxField';
+export type { CheckboxFieldProps } from './checkboxField';

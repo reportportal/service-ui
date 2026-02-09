@@ -14,21 +14,26 @@
  * limitations under the License.
  */
 
-import { LaunchFormData } from './types';
+import { ChangeEvent } from 'react';
+import { InputCheckbox } from 'components/inputs/inputCheckbox';
 
-export const INITIAL_LAUNCH_FORM_VALUES: LaunchFormData = {
-  name: '',
-  description: '',
-  attributes: [],
-  uncoveredTestsOnly: false,
+export interface CheckboxFieldProps {
+  input: {
+    value: boolean;
+    onChange: (value: boolean) => void;
+  };
+  label?: string;
+}
+
+export const CheckboxField = ({ input, label }: CheckboxFieldProps) => {
+  const checked = Boolean(input.value);
+
+  return (
+    <InputCheckbox
+      value={checked}
+      onChange={(e: ChangeEvent<HTMLInputElement>) => input.onChange(e.target.checked)}
+    >
+      {label}
+    </InputCheckbox>
+  );
 };
-
-export const LAUNCH_FORM_FIELD_NAMES = {
-  NAME: 'name',
-  DESCRIPTION: 'description',
-  ATTRIBUTES: 'attributes',
-  UNCOVERED_TESTS_ONLY: 'uncoveredTestsOnly',
-  TEST_PLAN: 'testPlan',
-} as const;
-
-export const PAGE_SIZE = 50;

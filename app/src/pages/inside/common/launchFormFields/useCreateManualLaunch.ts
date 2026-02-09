@@ -16,6 +16,8 @@
 
 import { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useIntl } from 'react-intl';
+import { isString } from 'es-toolkit';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -23,42 +25,37 @@ import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 
-import { LaunchFormData, LaunchMode } from './types';
+import { LaunchFormData, LaunchMode, isLaunchObject } from './types';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { generateUUID } from './utils';
+import { messages } from './messages';
 
 export const useCreateManualLaunch = (
   testCases: ExtendedTestCase[],
   activeMode: LaunchMode,
-  testPlanIdProp?: number,
+  testPlanId?: number,
   selectedLaunchId?: number,
   onClearSelection?: () => void,
 ) => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+  const { formatMessage } = useIntl();
 
   const handleSubmit = useCallback(
     async (formValues: LaunchFormData) => {
       setIsLoading(true);
 
-      // Get testPlanId from prop (disabled field) or formValues (user selection)
-      const testPlanId: number | undefined = testPlanIdProp ?? formValues.testPlan?.id;
+      const resolvedTestPlanId = testPlanId ?? formValues.testPlan?.id;
 
-      // Filter test cases based on uncoveredTestsOnly checkbox
       const testCaseIds = formValues.uncoveredTestsOnly
-        ? testCases.filter((tc) => !tc.lastExecution).map((tc) => tc.id)
-        : testCases.map((tc) => tc.id);
+        ? testCases.filter((testCase) => !testCase.lastExecution).map((testCase) => testCase.id)
+        : testCases.map((testCase) => testCase.id);
 
       try {
-        // Get launch ID from formValues if it's an object, or use selectedLaunchId
-        const launchId =
-          typeof formValues.name === 'object' && formValues.name !== null
-            ? (formValues.name as { id: number }).id
-            : selectedLaunchId;
+        const launchId = isLaunchObject(formValues.name) ? formValues.name.id : selectedLaunchId;
 
         if (activeMode === LaunchMode.EXISTING && launchId) {
-          // EXISTING: Add test cases to selected launch
           await fetch(URLS.batchAddTestCasesToLaunch(projectKey, launchId), {
             method: 'POST',
             data: { testCaseIds },
@@ -66,12 +63,11 @@ export const useCreateManualLaunch = (
 
           dispatch(
             showSuccessNotification({
-              message: `Test cases have been added to launch successfully`,
+              message: formatMessage(messages.testCasesAddedSuccess),
             }),
           );
         } else if (activeMode === LaunchMode.NEW) {
-          // NEW: Create launch with test cases
-          const launchName = typeof formValues.name === 'string' ? formValues.name : '';
+          const launchName = isString(formValues.name) ? formValues.name : '';
           const launchUuid = generateUUID();
 
           const launchData = {
@@ -82,7 +78,7 @@ export const useCreateManualLaunch = (
             attributes: formValues.attributes?.filter((attr) => attr.key && attr.value) || [],
             testCaseIds,
             mode: 'DEFAULT',
-            ...(testPlanId && { testPlanId }),
+            ...(resolvedTestPlanId && { testPlanId: resolvedTestPlanId }),
           };
 
           await fetch(URLS.createManualLaunch(projectKey), {
@@ -92,11 +88,10 @@ export const useCreateManualLaunch = (
 
           dispatch(
             showSuccessNotification({
-              message: `Launch "${launchName}" has been created successfully`,
+              message: formatMessage(messages.launchCreatedSuccess, { launchName }),
             }),
           );
         } else {
-          // EXISTING mode without a selected launch
           setIsLoading(false);
           return;
         }
@@ -104,11 +99,11 @@ export const useCreateManualLaunch = (
         onClearSelection?.();
         dispatch(hideModalAction());
       } catch (error: unknown) {
-        const { message = 'Failed to create launch' } = (error as Record<string, string>) ?? {};
+        const { message } = (error as Record<string, string>) ?? {};
 
         dispatch(
           showErrorNotification({
-            message,
+            message: message || formatMessage(messages.launchCreationFailed),
           }),
         );
       } finally {
@@ -118,11 +113,12 @@ export const useCreateManualLaunch = (
     [
       testCases,
       activeMode,
-      testPlanIdProp,
+      testPlanId,
       selectedLaunchId,
       onClearSelection,
       dispatch,
       projectKey,
+      formatMessage,
     ],
   );
 

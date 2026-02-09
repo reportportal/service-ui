@@ -19,11 +19,11 @@ import { Field } from 'redux-form';
 
 import { createClassnames } from 'common/utils';
 import { ButtonSwitcher } from 'pages/inside/common/buttonSwitcher';
+import { CheckboxField } from '../checkboxField';
 
 import { LaunchFormFieldsProps, LaunchMode } from './types';
 import { LAUNCH_FORM_FIELD_NAMES } from './constants';
 import { messages } from './messages';
-import { CheckboxField } from './checkboxField';
 import { ExistingLaunchFields } from './existingLaunchFields';
 import { NewLaunchFields } from './newLaunchFields';
 

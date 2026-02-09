@@ -20,23 +20,25 @@ import { AttributeListFieldProps } from './types';
 
 export const AttributeListField = ({
   input,
-  newAttrMessage,
-  maxLength,
-  showButton,
-  editable,
-  defaultOpen,
+  newAttrMessage = '',
+  maxLength = 50,
+  showButton = true,
+  editable = true,
+  defaultOpen = false,
+  disabled = false,
+  customClass = '',
   ...rest
 }: AttributeListFieldProps) => (
   <EditableAttributeList
     attributes={input.value || []}
     onChange={input.onChange}
-    disabled={false}
-    customClass=""
-    newAttrMessage={newAttrMessage || ''}
-    maxLength={maxLength || 50}
-    showButton={showButton ?? true}
-    editable={editable ?? true}
-    defaultOpen={defaultOpen ?? false}
+    disabled={disabled}
+    customClass={customClass}
+    newAttrMessage={newAttrMessage}
+    maxLength={maxLength}
+    showButton={showButton}
+    editable={editable}
+    defaultOpen={defaultOpen}
     {...rest}
   />
 );

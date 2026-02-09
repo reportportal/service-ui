@@ -83,4 +83,16 @@ export const messages = defineMessages({
     id: 'LaunchFormFields.launchNameRequired',
     defaultMessage: 'Launch name is required',
   },
+  testCasesAddedSuccess: {
+    id: 'LaunchFormFields.testCasesAddedSuccess',
+    defaultMessage: 'Test cases have been added to launch successfully',
+  },
+  launchCreatedSuccess: {
+    id: 'LaunchFormFields.launchCreatedSuccess',
+    defaultMessage: 'Launch "{launchName}" has been created successfully',
+  },
+  launchCreationFailed: {
+    id: 'LaunchFormFields.launchCreationFailed',
+    defaultMessage: 'Failed to create launch',
+  },
 });
