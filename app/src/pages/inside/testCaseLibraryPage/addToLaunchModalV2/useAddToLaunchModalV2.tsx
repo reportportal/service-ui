@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
-export * from './testPlanModal';
-export * from './createTestPlanModal';
-export * from './editTestPlanModal';
-export * from './duplicateTestPlanModal';
-export * from './deleteTestPlanModal';
-export * from './createLaunchModal';
+import { useModal } from 'common/hooks';
+import { ADD_TO_LAUNCH_MODAL_V2_KEY } from './constants';
+import { AddToLaunchModalV2 } from './addToLaunchModalV2';
+
+export const useAddToLaunchModalV2 = (selectedRowsIds: number[], onClearSelection?: () => void) => {
+  return useModal({
+    modalKey: ADD_TO_LAUNCH_MODAL_V2_KEY,
+    renderModal: () => (
+      <AddToLaunchModalV2 selectedRowsIds={selectedRowsIds} onClearSelection={onClearSelection} />
+    ),
+  });
+};
