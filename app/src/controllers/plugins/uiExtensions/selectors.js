@@ -41,6 +41,8 @@ import {
   PLUGIN_TYPE_REMOTE,
   PLUGIN_TYPE_EXTENSION,
   REMOTE_EXTENSION_POINT_PROJECT_PAGE,
+  MANIFEST_OVERRIDES_KEY,
+  MANIFEST_OVERRIDE_DISABLE_POPUP_CONTENT_KEY,
 } from './constants';
 import {
   domainSelector,
@@ -147,3 +149,13 @@ export const logStackTraceAddonSelector = createExtensionSelectorByExtensionPoin
 export const testItemDetailsAddonSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_TEST_ITEM_DETAILS_ADDON,
 ]);
+
+export const extensionManifestSelector = (state, pluginName) => {
+  const extensionManifests = domainSelector(state).uiExtensions?.extensionManifests || [];
+  return extensionManifests.find((item) => item.pluginName === pluginName) || null;
+};
+
+export const disablePluginPopupContentSelector = (state, pluginName) => {
+  const manifest = extensionManifestSelector(state, pluginName);
+  return manifest?.[MANIFEST_OVERRIDES_KEY]?.[MANIFEST_OVERRIDE_DISABLE_POPUP_CONTENT_KEY] || null;
+};
