@@ -80,6 +80,16 @@
         box-sizing: border-box;
         height: 36px;
       }
+
+      &--dimmed {
+        .folders-tree__item-title--text {
+          color: var(--rp-ui-base-e-300);
+        }
+
+        .folders-tree__item-title--counter {
+          color: var(--rp-ui-base-e-200);
+        }
+      }
     }
 
     &-content > svg {
@@ -95,6 +105,11 @@
         transform: none;
       }
     }
+  }
+
+  .highlight {
+    background-color: rgba(#00829b, 0.1);
+    color: #00829b;
   }
 
   &__tools {

@@ -14,21 +14,36 @@
  * limitations under the License.
  */
 
-import { ReactNode } from 'react';
+import { ReactNode, useState, useCallback, ChangeEvent, useRef, useEffect } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
-import { BaseIconButton, SearchIcon } from '@reportportal/ui-kit';
+import { BaseIconButton, SearchIcon, FieldText } from '@reportportal/ui-kit';
 
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { createClassnames } from 'common/utils';
 import { useStorageFolders } from 'hooks/useStorageFolders';
 import { TransformedFolder } from 'controllers/testCase';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { useOnClickOutside } from 'common/hooks';
 
 import { Folder } from './folder';
 
 import styles from './expandedOptions.scss';
 
 const cx = createClassnames(styles);
+
+/**
+ * Recursively checks if a folder or any of its descendants match the search query
+ */
+const hasMatchInTree = (folder: TransformedFolder, query: string): boolean => {
+  if (!query) return true;
+
+  const lowerQuery = query.toLowerCase().trim();
+  if (folder.name.toLowerCase().includes(lowerQuery)) {
+    return true;
+  }
+
+  return (folder.folders ?? []).some((child) => hasMatchInTree(child, lowerQuery));
+};
 
 const messages = defineMessages({
   allTestCases: {
@@ -42,6 +57,18 @@ const messages = defineMessages({
   folders: {
     id: 'expandedOptions.folders',
     defaultMessage: 'Folders',
+  },
+  searchPlaceholder: {
+    id: 'expandedOptions.searchPlaceholder',
+    defaultMessage: 'Type to filter folders by name',
+  },
+  noFoldersFound: {
+    id: 'expandedOptions.noFoldersFound',
+    defaultMessage: 'No results found',
+  },
+  noFoldersFoundMessage: {
+    id: 'expandedOptions.noFoldersFoundMessage',
+    defaultMessage: "Your search criteria didn't match any results. Please try different keywords.",
   },
 });
 
@@ -68,6 +95,25 @@ export const ExpandedOptions = ({
 
   const { expandedIds, onToggleFolder } = useStorageFolders(instanceKey);
 
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchWrapperRef = useRef<HTMLDivElement>(null);
+
+  // Auto-focus search input when it becomes visible
+  useEffect(() => {
+    if (isSearchVisible && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [isSearchVisible]);
+
+  // Close search on outside click if field is empty
+  useOnClickOutside(searchWrapperRef, () => {
+    if (isSearchVisible && !searchQuery) {
+      setIsSearchVisible(false);
+    }
+  });
+
   const allItemsTitle =
     instanceKey === TMS_INSTANCE_KEY.MANUAL_LAUNCH
       ? formatMessage(messages.allTestExecutions)
@@ -84,6 +130,35 @@ export const ExpandedOptions = ({
 
     return total + countFolderTestCases(folder);
   }, 0);
+
+  const handleSearchToggle = useCallback(() => {
+    setIsSearchVisible((prev) => {
+      if (prev) {
+        setSearchQuery('');
+        return false;
+      }
+      // If opening with empty search, show it
+      // If search has content, toggle will only trigger with empty field (handled by click)
+      return true;
+    });
+  }, []);
+
+  const handleSearchChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  }, []);
+
+  const handleSearchClear = useCallback(() => {
+    setSearchQuery('');
+    // Hide search field when clearing
+    setIsSearchVisible(false);
+  }, []);
+
+  // Filter folders to only show those with matches in their tree
+  const filteredFolders = searchQuery
+    ? folders.filter((folder) => hasMatchInTree(folder, searchQuery))
+    : folders;
+
+  const hasAnyMatch = filteredFolders.length > 0;
 
   return (
     <div className={cx('expanded-options')}>
@@ -107,12 +182,42 @@ export const ExpandedOptions = ({
           <div className={cx('expanded-options__sidebar-actions--title')} id="tree_label">
             {formatMessage(messages.folders)}
           </div>
-          <BaseIconButton className={cx('expanded-options__sidebar-actions--search')}>
+          <BaseIconButton
+            className={cx('expanded-options__sidebar-actions--search', {
+              'expanded-options__sidebar-actions--search-active': isSearchVisible,
+            })}
+            onClick={() => {
+              if (isSearchVisible && !searchQuery) {
+                // Close if search is open and empty
+                setIsSearchVisible(false);
+              } else {
+                handleSearchToggle();
+              }
+            }}
+          >
             <SearchIcon />
           </BaseIconButton>
           {renderCreateFolderButton?.()}
         </div>
-        <div className={cx('expanded-options__sidebar-folders-wrapper')}>
+        {isSearchVisible && (
+          <div ref={searchWrapperRef} className={cx('expanded-options__search-wrapper')}>
+            <FieldText
+              ref={searchInputRef}
+              value={searchQuery}
+              onChange={handleSearchChange}
+              onClear={handleSearchClear}
+              placeholder={formatMessage(messages.searchPlaceholder)}
+              defaultWidth={false}
+              clearable
+              startIcon={<SearchIcon />}
+            />
+          </div>
+        )}
+        <div
+          className={cx('expanded-options__sidebar-folders-wrapper', {
+            'expanded-options__sidebar-folders-wrapper--with-search': isSearchVisible,
+          })}
+        >
           <ScrollWrapper className={cx('expanded-options__scroll-wrapper-background')}>
             <div className={cx('expanded-options__sidebar-folders')}>
               <ul
@@ -120,18 +225,33 @@ export const ExpandedOptions = ({
                 role="tree"
                 aria-labelledby="tree_label"
               >
-                {folders.map((folder, idx) => (
-                  <Folder
-                    folder={folder}
-                    key={folder.id || `${folder.name}-${idx}`}
-                    activeFolder={activeFolderId}
-                    instanceKey={instanceKey}
-                    expandedIds={expandedIds}
-                    onFolderClick={onFolderClick}
-                    setAllTestCases={setAllTestCases}
-                    onToggleFolder={onToggleFolder}
-                  />
-                ))}
+                {hasAnyMatch ? (
+                  filteredFolders.map((folder, idx) => (
+                    <Folder
+                      folder={folder}
+                      key={folder.id || `${folder.name}-${idx}`}
+                      activeFolder={activeFolderId}
+                      instanceKey={instanceKey}
+                      expandedIds={expandedIds}
+                      onFolderClick={onFolderClick}
+                      setAllTestCases={setAllTestCases}
+                      onToggleFolder={onToggleFolder}
+                      searchQuery={searchQuery}
+                    />
+                  ))
+                ) : (
+                  <li className={cx('folders-tree__no-results')}>
+                    <div className={cx('folders-tree__no-results-icon')}>
+                      <SearchIcon />
+                    </div>
+                    <div className={cx('folders-tree__no-results-title')}>
+                      {formatMessage(messages.noFoldersFound)}
+                    </div>
+                    <div className={cx('folders-tree__no-results-message')}>
+                      {formatMessage(messages.noFoldersFoundMessage)}
+                    </div>
+                  </li>
+                )}
               </ul>
             </div>
           </ScrollWrapper>
