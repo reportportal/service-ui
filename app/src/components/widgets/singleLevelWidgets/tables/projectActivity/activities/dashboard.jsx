@@ -70,20 +70,26 @@ export const Dashboard = ({ activity }) => {
       const history = activity.details?.history || [];
       const formatStateLabel = (value) =>
         formatMessage(value === 'true' || value === true ? messages.locked : messages.unlocked);
-      const historyItems = history.map((item) =>
-        formatMessage(messages[`${activity.actionType}Changed`], {
-          oldValue: formatStateLabel(item.oldValue),
-          newValue: formatStateLabel(item.newValue),
-          span: SpanBold,
-        }),
-      );
+
+      const historyItems = history.map((item) => {
+        const { field, oldValue, newValue } = item;
+
+        return {
+          key: `${field}-${oldValue}-${newValue}`,
+          content: formatMessage(messages[`${activity.actionType}Changed`], {
+            oldValue: formatStateLabel(item.oldValue),
+            newValue: formatStateLabel(item.newValue),
+            span: SpanBold,
+          }),
+        };
+      });
 
       return (
         <>
           {historyItems.map((item, index) => (
-            <Fragment key={index}>
+            <Fragment key={item.key}>
               {index > 0 && ' '}
-              {item}
+              {item.content}
             </Fragment>
           ))}
         </>
