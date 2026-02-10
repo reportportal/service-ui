@@ -15,9 +15,15 @@
  */
 
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
+import { TestCaseMenuAction } from 'pages/inside/common/testCaseList/types';
 import { useTestCaseTooltipItems } from 'pages/inside/testCaseLibraryPage/allTestCasesPage/useTestCaseTooltipItems';
 import { useTestPlanTooltipItems } from 'pages/inside/testPlansPage/testPlanDetailsPage/testPlanFolders/allTestCasesPage/useTestPlanTooltipItems';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+
+const EXECUTION_EXCLUDED_ACTIONS = new Set<TestCaseMenuAction>([
+  TestCaseMenuAction.DUPLICATE,
+  TestCaseMenuAction.EDIT,
+]);
 
 interface UseTooltipItemsProps {
   instanceKey: TMS_INSTANCE_KEY;
@@ -31,8 +37,15 @@ export const useTooltipItems = ({ instanceKey, testCase }: UseTooltipItemsProps)
   const tooltipItemsByInstance: Record<TMS_INSTANCE_KEY, typeof testPlanTooltipItems> = {
     [TMS_INSTANCE_KEY.TEST_PLAN]: testPlanTooltipItems,
     [TMS_INSTANCE_KEY.TEST_CASE]: testCaseTooltipItems,
-    [TMS_INSTANCE_KEY.MANUAL_LAUNCH]: testCaseTooltipItems, // TODO will replace with manual launch tooltip items
+    [TMS_INSTANCE_KEY.MANUAL_LAUNCH]: testCaseTooltipItems,
   };
 
-  return tooltipItemsByInstance[instanceKey];
+  const items = tooltipItemsByInstance[instanceKey];
+
+  return items.filter(
+    (item) =>
+      !EXECUTION_EXCLUDED_ACTIONS.has(
+        (item as unknown as { action: TestCaseMenuAction }).action,
+      ),
+  );
 };

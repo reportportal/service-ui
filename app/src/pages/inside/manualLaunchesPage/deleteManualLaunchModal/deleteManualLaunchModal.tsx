@@ -1,0 +1,99 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { ReactNode } from 'react';
+import { useIntl } from 'react-intl';
+import { useDispatch } from 'react-redux';
+import { noop } from 'es-toolkit';
+import { Modal } from '@reportportal/ui-kit';
+
+import { createClassnames } from 'common/utils';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { hideModalAction } from 'controllers/modal';
+import { LoadingSubmitButton } from 'components/loadingSubmitButton';
+
+import { useDeleteManualLaunch } from './useDeleteManualLaunch';
+import { messages } from './messages';
+
+import styles from './deleteManualLaunchModal.scss';
+
+const cx = createClassnames(styles);
+
+export const DELETE_MANUAL_LAUNCH_MODAL_KEY = 'deleteManualLaunchModalKey';
+
+export interface DeleteManualLaunchModalData {
+  id: number;
+  name: string;
+}
+
+interface DeleteManualLaunchModalProps {
+  data: DeleteManualLaunchModalData;
+  onSuccess?: () => void;
+}
+
+export const DeleteManualLaunchModal = ({
+  data,
+  onSuccess = noop,
+}: DeleteManualLaunchModalProps) => {
+  const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const { isLoading, deleteManualLaunch } = useDeleteManualLaunch({ onSuccess });
+
+  const handleDelete = async () => {
+    await deleteManualLaunch(data.id, data.name);
+  };
+
+  const handleCancel = () => {
+    dispatch(hideModalAction());
+  };
+
+  const okButton = {
+    children: (
+      <LoadingSubmitButton isLoading={isLoading}>
+        {formatMessage(COMMON_LOCALE_KEYS.DELETE)}
+      </LoadingSubmitButton>
+    ),
+    disabled: isLoading,
+    variant: 'danger' as const,
+    onClick: handleDelete,
+  };
+
+  const cancelButton = {
+    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    disabled: isLoading,
+    onClick: handleCancel,
+  };
+
+  return (
+    <Modal
+      title={formatMessage(messages.deleteLaunchTitle)}
+      okButton={okButton}
+      cancelButton={cancelButton}
+      onClose={handleCancel}
+      className={cx('delete-manual-launch-modal')}
+    >
+      <div>
+        <p>
+          {formatMessage(messages.deleteConfirmation, {
+            launchName: data.name,
+            b: (chunks: ReactNode) => <strong>{chunks}</strong>, // NOSONAR
+          })}
+        </p>
+        <p>{formatMessage(messages.deletePermanentWarning)}</p>
+      </div>
+    </Modal>
+  );
+};

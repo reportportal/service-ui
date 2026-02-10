@@ -15,6 +15,7 @@
  */
 
 import { memo, useRef, useMemo, useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useIntl } from 'react-intl';
 import isEqual from 'fast-deep-equal';
 import { Button, SidePanel, Dropdown } from '@reportportal/ui-kit';
@@ -183,7 +184,7 @@ export const FilterSidePanel = memo(
       </div>
     );
 
-    return (
+    return createPortal(
       <div>
         <SidePanel
           className={cx('filter-side-panel')}
@@ -198,7 +199,8 @@ export const FilterSidePanel = memo(
           showOverlay
           allowCloseOutside={!hasChanges}
         />
-      </div>
+      </div>,
+      document.body,
     );
   },
 );
