@@ -75,22 +75,22 @@ const testPlanExpandedFolderIdsReducer = (
   state = INITIAL_EXPANDED_FOLDER_IDS,
   action:
     | {
-        type: typeof TOGGLE_TEST_PLAN_FOLDER_EXPANSION;
-        payload: ToggleTestPlanFolderExpansionParams;
-      }
+      type: typeof TOGGLE_TEST_PLAN_FOLDER_EXPANSION;
+      payload: ToggleTestPlanFolderExpansionParams;
+    }
     | {
-        type: typeof EXPAND_TEST_PLAN_FOLDERS_TO_LEVEL;
-        payload: ToggleTestPlanFolderExpansionParams;
-      }
+      type: typeof EXPAND_TEST_PLAN_FOLDERS_TO_LEVEL;
+      payload: ToggleTestPlanFolderExpansionParams;
+    }
     | {
-        type: typeof SET_TEST_PLAN_EXPANDED_FOLDER_IDS;
-        payload: SetTestPlanExpandedFolderIdsParams;
-      }
+      type: typeof SET_TEST_PLAN_EXPANDED_FOLDER_IDS;
+      payload: SetTestPlanExpandedFolderIdsParams;
+    }
     | { type: typeof DELETE_TEST_PLAN_FOLDER_SUCCESS; payload: DeleteTestPlanFolderSuccessParams }
     | {
-        type: typeof SET_TEST_PLAN_INITIAL_EXPANDED_FOLDERS;
-        payload: SetTestPlanInitialExpandedFoldersParams;
-      }
+      type: typeof SET_TEST_PLAN_INITIAL_EXPANDED_FOLDERS;
+      payload: SetTestPlanInitialExpandedFoldersParams;
+    }
     | { type: string },
 ) => {
   switch (action.type) {
@@ -110,7 +110,7 @@ const testPlanExpandedFolderIdsReducer = (
 
       return state;
     }
-   case EXPAND_TEST_PLAN_FOLDERS_TO_LEVEL: {
+    case EXPAND_TEST_PLAN_FOLDERS_TO_LEVEL: {
       if (hasTestPlanFolderExpansionPayload(action)) {
         const { folderId, folders } = action.payload;
         const folderMap = new Map(folders.map((f) => [f.id, f]));
