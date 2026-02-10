@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { useCallback } from 'react';
 import { noop } from 'es-toolkit';
 import { VoidFn } from '@reportportal/ui-kit/common/types/commonTypes';
 
@@ -31,8 +32,39 @@ interface UseDeleteManualLaunchModalOptions {
 
 export const useDeleteManualLaunchModal = ({
   onSuccess = noop,
-}: UseDeleteManualLaunchModalOptions = {}) =>
-  useModal<DeleteManualLaunchModalData>({
+}: UseDeleteManualLaunchModalOptions = {}) => {
+  const { openModal: openRawModal, ...rest } = useModal<DeleteManualLaunchModalData>({
     modalKey: DELETE_MANUAL_LAUNCH_MODAL_KEY,
     renderModal: (data) => <DeleteManualLaunchModal data={data} onSuccess={onSuccess} />,
   });
+
+  const openModal = useCallback(
+    (data: Omit<Extract<DeleteManualLaunchModalData, { type: 'single' }>, 'type'>) => {
+      openRawModal({ ...data, type: 'single' });
+    },
+    [openRawModal],
+  );
+
+  return { openModal, ...rest };
+};
+
+interface BatchDeleteData {
+  launchIds: number[];
+  onClearSelection?: () => void;
+}
+
+export const useBatchDeleteManualLaunchesModal = () => {
+  const { openModal: openRawModal, ...rest } = useModal<DeleteManualLaunchModalData>({
+    modalKey: DELETE_MANUAL_LAUNCH_MODAL_KEY,
+    renderModal: (data) => <DeleteManualLaunchModal data={data} />,
+  });
+
+  const openModal = useCallback(
+    (data: BatchDeleteData) => {
+      openRawModal({ ...data, type: 'batch' });
+    },
+    [openRawModal],
+  );
+
+  return { openModal, ...rest };
+};

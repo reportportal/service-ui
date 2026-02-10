@@ -29,4 +29,13 @@ export const messages = defineMessages({
     id: 'DeleteManualLaunchModal.deletePermanentWarning',
     defaultMessage: 'This launch and all its test executions will be permanently deleted.',
   },
+  batchDeleteTitle: {
+    id: 'BatchDeleteManualLaunchesModal.title',
+    defaultMessage: 'Delete launches',
+  },
+  batchDeleteDescription: {
+    id: 'BatchDeleteManualLaunchesModal.description',
+    defaultMessage:
+      'Are you sure you want to delete {count} selected {count, plural, one {launch} other {launches}}?',
+  },
 });

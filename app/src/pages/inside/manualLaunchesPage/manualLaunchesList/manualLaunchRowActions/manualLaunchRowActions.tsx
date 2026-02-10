@@ -20,11 +20,15 @@ import { MetaData } from '@reportportal/ui-kit/components/table/types';
 import { ActionMenu } from 'components/actionMenu';
 
 import { useManualLaunchesListRowActions } from '../hooks/useManualLaunchesListRowActions';
-import { DeleteManualLaunchModalData } from '../../deleteManualLaunchModal/deleteManualLaunchModal';
+
+interface SingleDeleteData {
+  id: number;
+  name: string;
+}
 
 interface ManualLaunchRowActionsProps {
   metaData: MetaData;
-  onDelete: (data: DeleteManualLaunchModalData) => void;
+  onDelete: (data: SingleDeleteData) => void;
 }
 
 export const ManualLaunchRowActions = ({ metaData, onDelete }: ManualLaunchRowActionsProps) => {

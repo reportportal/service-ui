@@ -421,8 +421,7 @@ export const URLS = {
     `${urlBase}project/${projectKey}/launch/manual/${launchId}/folder${getQueryParams(query)}`,
   manualLaunchTestCaseExecutions: (projectKey, launchId, query = {}) =>
     `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case/execution${getQueryParams(query)}`,
-  createManualLaunch: (projectKey) => `${urlBase}project/${projectKey}/launch/manual`,
-  batchDeleteManualLaunches: (projectKey) => `${urlBase}project/${projectKey}/launch/manual`,
+  manualLaunch: (projectKey) => `${urlBase}project/${projectKey}/launch/manual`,
   addTestCaseToLaunch: (projectKey, launchId) =>
     `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case`,
   batchAddTestCasesToLaunch: (projectKey, launchId) =>

@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-import { ReactNode } from 'react';
+import { ReactNode, useCallback } from 'react';
 import { useIntl } from 'react-intl';
-import { useDispatch } from 'react-redux';
 import { noop } from 'es-toolkit';
 import { Modal } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { hideModalAction } from 'controllers/modal';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
+import { useModalButtons } from 'pages/inside/testCaseLibraryPage/hooks/useModalButtons';
 
-import { useDeleteManualLaunch } from './useDeleteManualLaunch';
+import { useDeleteManualLaunches } from './useDeleteManualLaunches';
 import { messages } from './messages';
 
 import styles from './deleteManualLaunchModal.scss';
@@ -34,10 +33,19 @@ const cx = createClassnames(styles);
 
 export const DELETE_MANUAL_LAUNCH_MODAL_KEY = 'deleteManualLaunchModalKey';
 
-export interface DeleteManualLaunchModalData {
+interface SingleDeleteData {
+  type: 'single';
   id: number;
   name: string;
 }
+
+interface BatchDeleteData {
+  type: 'batch';
+  launchIds: number[];
+  onClearSelection?: () => void;
+}
+
+export type DeleteManualLaunchModalData = SingleDeleteData | BatchDeleteData;
 
 interface DeleteManualLaunchModalProps {
   data: DeleteManualLaunchModalData;
@@ -49,50 +57,49 @@ export const DeleteManualLaunchModal = ({
   onSuccess = noop,
 }: DeleteManualLaunchModalProps) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
-  const { isLoading, deleteManualLaunch } = useDeleteManualLaunch({ onSuccess });
+  const isBatch = data.type === 'batch';
 
-  const handleDelete = async () => {
-    await deleteManualLaunch(data.id, data.name);
-  };
+  const { isLoading, deleteLaunches } = useDeleteManualLaunches({ onSuccess });
 
-  const handleCancel = () => {
-    dispatch(hideModalAction());
-  };
+  const handleDelete = useCallback(() => {
+    deleteLaunches(data).catch(noop);
+  }, [deleteLaunches, data]);
 
-  const okButton = {
-    children: (
+  const { okButton, cancelButton, hideModal } = useModalButtons({
+    okButtonText: (
       <LoadingSubmitButton isLoading={isLoading}>
         {formatMessage(COMMON_LOCALE_KEYS.DELETE)}
       </LoadingSubmitButton>
     ),
-    disabled: isLoading,
-    variant: 'danger' as const,
-    onClick: handleDelete,
-  };
-
-  const cancelButton = {
-    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-    disabled: isLoading,
-    onClick: handleCancel,
-  };
+    isLoading,
+    variant: 'danger',
+    onSubmit: handleDelete,
+  });
 
   return (
     <Modal
-      title={formatMessage(messages.deleteLaunchTitle)}
+      title={formatMessage(isBatch ? messages.batchDeleteTitle : messages.deleteLaunchTitle)}
       okButton={okButton}
       cancelButton={cancelButton}
-      onClose={handleCancel}
+      onClose={hideModal}
       className={cx('delete-manual-launch-modal')}
     >
       <div>
-        <p>
-          {formatMessage(messages.deleteConfirmation, {
-            launchName: data.name,
-            b: (chunks: ReactNode) => <strong>{chunks}</strong>, // NOSONAR
-          })}
-        </p>
-        <p>{formatMessage(messages.deletePermanentWarning)}</p>
+        {isBatch ? (
+          formatMessage(messages.batchDeleteDescription, {
+            count: data.launchIds.length,
+          })
+        ) : (
+          <>
+            <p>
+              {formatMessage(messages.deleteConfirmation, {
+                launchName: data.name,
+                b: (chunks: ReactNode) => <strong>{chunks}</strong>, // NOSONAR
+              })}
+            </p>
+            <p>{formatMessage(messages.deletePermanentWarning)}</p>
+          </>
+        )}
       </div>
     </Modal>
   );
