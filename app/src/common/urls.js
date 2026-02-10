@@ -422,6 +422,7 @@ export const URLS = {
   manualLaunchTestCaseExecutions: (projectKey, launchId, query = {}) =>
     `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case/execution${getQueryParams(query)}`,
   createManualLaunch: (projectKey) => `${urlBase}project/${projectKey}/launch/manual`,
+  batchDeleteManualLaunches: (projectKey) => `${urlBase}project/${projectKey}/launch/manual`,
   addTestCaseToLaunch: (projectKey, launchId) =>
     `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case`,
   batchAddTestCasesToLaunch: (projectKey, launchId) =>

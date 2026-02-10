@@ -343,6 +343,11 @@ export const notificationMessages = defineMessages({
     id: 'ManualLaunchesPage.manualLaunchDeletedSuccess',
     defaultMessage: "Launch ''{name}'' has been deleted",
   },
+  manualLaunchesBatchDeletedSuccess: {
+    id: 'ManualLaunchesPage.manualLaunchesBatchDeletedSuccess',
+    defaultMessage:
+      '{count} {count, plural, one {launch has} other {launches have}} been deleted successfully.',
+  },
   importSuccessToFolder: {
     id: 'ImportTestCaseModal.importSuccessToFolder',
     defaultMessage: 'Test cases have been imported successfully to folder {folderName}.',
