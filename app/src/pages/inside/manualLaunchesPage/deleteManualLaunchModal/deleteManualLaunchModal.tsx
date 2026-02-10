@@ -18,6 +18,7 @@ import { ReactNode, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { noop } from 'es-toolkit';
 import { Modal } from '@reportportal/ui-kit';
+import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -42,14 +43,14 @@ interface SingleDeleteData {
 interface BatchDeleteData {
   type: 'batch';
   launchIds: number[];
-  onClearSelection?: () => void;
+  onClearSelection?: VoidFn;
 }
 
 export type DeleteManualLaunchModalData = SingleDeleteData | BatchDeleteData;
 
 interface DeleteManualLaunchModalProps {
   data: DeleteManualLaunchModalData;
-  onSuccess?: () => void;
+  onSuccess?: VoidFn;
 }
 
 export const DeleteManualLaunchModal = ({

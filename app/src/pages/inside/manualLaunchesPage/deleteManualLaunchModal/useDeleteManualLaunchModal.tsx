@@ -50,7 +50,7 @@ export const useDeleteManualLaunchModal = ({
 
 interface BatchDeleteData {
   launchIds: number[];
-  onClearSelection?: () => void;
+  onClearSelection?: VoidFn;
 }
 
 export const useBatchDeleteManualLaunchesModal = () => {
