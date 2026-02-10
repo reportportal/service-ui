@@ -26,7 +26,7 @@
   &__icon {
     width: 64px;
     height: 64px;
-    margin-bottom: 16px;
+    margin-bottom: 24px;
     color: var(--rp-ui-base-e-200);
 
     svg {
@@ -36,17 +36,21 @@
   }
 
   &__title {
-    font-size: 18px;
-    font-family: $FONT-ROBOTO-MEDIUM;
-    font-weight: 500;
-    color: var(--rp-ui-base-e-300);
-    margin-bottom: 8px;
+    font-size: 20px;
+    font-family: $FONT-REGULAR;
+    font-weight: 400;
+    line-height: 31px;
+    letter-spacing: 0;
+    color: var(--rp-ui-base-e-400);
+    margin-bottom: 16px;
+    text-align: center;
   }
 
   &__message {
     font-size: 13px;
     font-family: $FONT-ROBOTO-REGULAR;
-    color: var(--rp-ui-base-e-300);
+    line-height: 20px;
+    color: var(--rp-ui-base-e-400);
     max-width: 280px;
   }
 }
