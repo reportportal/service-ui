@@ -16,10 +16,13 @@
 
 import { useIntl } from 'react-intl';
 import { Field } from 'redux-form';
-import { noop } from 'es-toolkit';
+import { useSelector } from 'react-redux';
+import { useCallback } from 'react';
 
 import { AttributeList } from 'componentLibrary/attributeList';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
+import { projectKeySelector } from 'controllers/project';
+import { URLS } from 'common/urls';
 
 import { messages } from '../messages';
 
@@ -51,6 +54,19 @@ const AttributeListField = ({ input, ...rest }: AttributeListFieldProps) => (
 
 export const TestPlanAttributes = () => {
   const { formatMessage } = useIntl();
+  const projectKey = useSelector(projectKeySelector);
+
+  const getURIKey = useCallback(
+    (search = '') => URLS.tmsAttributeKeysSearch(projectKey, { search }),
+    [projectKey],
+  );
+
+  const getURIValue = useCallback(
+    () =>
+      (search = '') =>
+        URLS.tmsAttributeValuesSearch(projectKey, { search }),
+    [projectKey],
+  );
 
   return (
     <div>
@@ -63,14 +79,8 @@ export const TestPlanAttributes = () => {
           maxLength={50}
           editable
           defaultOpen={false}
-          getURIKey={noop}
-          getURIValue={noop}
-          minLength={9999}
-          autocompleteProps={{
-            onStateChange: () => {},
-            options: [],
-            async: false,
-          }}
+          getURIKey={getURIKey}
+          getURIValue={getURIValue}
         />
       </FieldElement>
     </div>

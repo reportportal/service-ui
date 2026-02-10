@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { ExtendedTestCase, Attribute } from 'pages/inside/testCaseLibraryPage/types';
 import { Folder } from 'controllers/testCase';
 
 export const GET_TEST_PLANS = 'getTestPlans' as const;
@@ -42,6 +42,7 @@ export type TestPlanDto = {
     total: number;
   };
   description?: string;
+  attributes?: Attribute[];
 };
 
 export interface PageInfo {
