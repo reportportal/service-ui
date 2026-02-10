@@ -33,7 +33,7 @@ export const findFolderById = (folders: TransformedFolder[], id: number): Transf
       }
     }
   }
-  return undefined;
+  return null;
 };
 
 export const useTestPlanActiveFolders = () => {
