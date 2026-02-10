@@ -14,18 +14,4 @@
  * limitations under the License.
  */
 
-.locked-tooltip-wrapper {
-  display: inline-flex;
-  max-width: fit-content;
-}
-
-.content {
-  max-width: 200px;
-  text-align: center;
-}
-
-.locked-tooltip-content {
-  font-family: $FONT-ROBOTO-REGULAR;
-  font-size: 11px;
-  line-height: 16px;
-}
+export { LockedFilterTooltipContent } from './lockedFilterTooltipContent';
