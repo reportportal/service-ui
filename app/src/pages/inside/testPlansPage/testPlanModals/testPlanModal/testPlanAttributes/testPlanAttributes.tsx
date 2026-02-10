@@ -40,13 +40,7 @@ interface AttributeListFieldProps {
 }
 
 const AttributeListField = ({ input, ...rest }: AttributeListFieldProps) => (
-  <AttributeList
-    {...input}
-    {...rest}
-    attributes={input.value || []}
-    onChange={input.onChange}
-    customClass=""
-  />
+  <AttributeList {...input} {...rest} attributes={input.value || []} onChange={input.onChange} />
 );
 
 export const TestPlanAttributes = () => {

@@ -34,10 +34,6 @@ export const messages = defineMessages({
     defaultMessage:
       'When you select an existing launch from the suggestions, or if the provided launch name matches one that already exists, a launch with new number will be created. {learnMoreLink}',
   },
-  launchDescriptionLabel: {
-    id: 'TestCaseLibraryPage.addToLaunchModal.launchDescriptionLabel',
-    defaultMessage: 'Description',
-  },
   launchAttributesLabel: {
     id: 'TestCaseLibraryPage.addToLaunchModal.launchAttributesLabel',
     defaultMessage: 'Launch attributes',
