@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { useSelector } from "react-redux";
+import { isEmpty } from "es-toolkit/compat";
 
 import { locationSelector } from "controllers/pages";
 import { TransformedFolder } from "controllers/testCase/types";
@@ -25,7 +26,7 @@ export const findFolderById = (folders: TransformedFolder[], id: number): Transf
     if (folder.id === id) {
       return folder;
     }
-    if (folder.folders && folder.folders.length > 0) {
+    if (!isEmpty(folder.folders)) {
       const found = findFolderById(folder.folders, id);
       if (found) {
         return found;
