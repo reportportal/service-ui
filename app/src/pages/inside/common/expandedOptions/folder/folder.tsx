@@ -45,15 +45,12 @@ export const Folder = ({
   const [areToolsOpen, setAreToolsOpen] = useState(false);
   const [isBlockHovered, setIsBlockHovered] = useState(false);
 
-  // Check if THIS folder name directly matches the search query
   const isDirectMatch = searchQuery
     ? folder.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
     : false;
 
-  // Check if any children match (for dimming logic)
   const childrenMatch = searchQuery ? hasChildMatch(folder, searchQuery) : false;
 
-  // Dimmed when: search active AND not direct match AND (children match OR any ancestor matched)
   const isDimmed = searchQuery && !isDirectMatch && (childrenMatch || ancestorDirectMatch);
 
   const tooltipItems = useFolderTooltipItems({
@@ -144,7 +141,6 @@ export const Folder = ({
       {isOpen && !isEmpty(folder.folders) && (
         <ul className={cx('folders-tree', 'folders-tree--inner')} role="group">
           {folder.folders?.map((subfolder) => {
-            // Show all children if: no search OR current folder matches OR any ancestor matched OR subfolder tree matches
             const shouldShow =
               !searchQuery ||
               isDirectMatch ||

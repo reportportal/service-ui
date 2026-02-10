@@ -17,7 +17,7 @@
 import { useState, useCallback, ChangeEvent, useRef, useEffect, useMemo } from 'react';
 
 import { useOnClickOutside } from 'common/hooks';
-
+import { TransformedFolder } from 'controllers/testCase';
 import { hasMatchInTree, collectFoldersToExpand } from './utils';
 import { UseFolderSearchParams } from './types';
 
