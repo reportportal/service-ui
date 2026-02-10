@@ -134,7 +134,7 @@ export const ExpandedOptions = ({
                 role="tree"
                 aria-labelledby="tree_label"
               >
-                {hasAnyMatch ? (
+                {!searchQuery || hasAnyMatch ? (
                   filteredFolders.map((folder, idx) => (
                     <Folder
                       folder={folder}
