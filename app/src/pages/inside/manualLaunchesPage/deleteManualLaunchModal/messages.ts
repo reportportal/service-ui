@@ -23,7 +23,7 @@ export const messages = defineMessages({
   },
   deleteConfirmation: {
     id: 'DeleteManualLaunchModal.deleteConfirmation',
-    defaultMessage: "Are you sure you want to delete <b>''{launchName}''</b>?",
+    defaultMessage: "Are you sure you want to delete <b>{launchName}</b>?",
   },
   deletePermanentWarning: {
     id: 'DeleteManualLaunchModal.deletePermanentWarning',

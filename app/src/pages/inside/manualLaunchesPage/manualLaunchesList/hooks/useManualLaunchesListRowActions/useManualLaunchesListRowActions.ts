@@ -20,6 +20,7 @@ import { useIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ActionItem } from 'components/actionMenu';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { messages } from 'pages/inside/manualLaunchesPage/launchSidePanel/messages';
 
 interface UseManualLaunchesListRowActionsParams {
   onDelete: () => void;
@@ -34,11 +35,11 @@ export const useManualLaunchesListRowActions = ({
   return useMemo(
     () => [
       {
-        label: formatMessage(COMMON_LOCALE_KEYS.EDIT),
+        label: formatMessage(messages.editLaunch),
         onClick: () => {},
       },
       {
-        label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+        label: formatMessage(messages.deleteLaunch),
         onClick: onDelete,
         danger: true,
         hasPermission: canDeleteLaunch,
