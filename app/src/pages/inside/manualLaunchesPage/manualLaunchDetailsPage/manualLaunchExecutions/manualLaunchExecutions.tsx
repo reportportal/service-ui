@@ -142,7 +142,7 @@ export const ManualLaunchExecutions = ({ executions, isLoading }: ManualLaunchEx
       steps: {
         content: stepsCount || '',
         component: (
-          <div className={cx('execution-steps-cell')}>{stepsCount !== null ? stepsCount : '—'}</div>
+          <div className={cx('execution-steps-cell')}>{stepsCount === null ? '—' : stepsCount}</div>
         ),
       },
       status: {
@@ -252,7 +252,7 @@ export const ManualLaunchExecutions = ({ executions, isLoading }: ManualLaunchEx
         </div>
 
         {hasNoSearchResults ? (
-          <div className={cx('executions-table-wrapper')}>
+          <div className={cx('executions-table-wrapper', 'executions-table-wrapper--empty')}>
             <EmptyPageState
               emptyIcon={NoResultsIcon as unknown as string}
               label={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}

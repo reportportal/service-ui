@@ -19,7 +19,6 @@ export enum ExecutionStatus {
   IN_PROGRESS = 'IN_PROGRESS',
   PASSED = 'PASSED',
   FAILED = 'FAILED',
-  SKIPPED = 'SKIPPED',
 }
 
 export interface ExecutionStatusChipProps {

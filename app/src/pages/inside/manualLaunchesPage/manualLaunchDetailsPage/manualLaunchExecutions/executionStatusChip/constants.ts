@@ -26,7 +26,6 @@ export const STATUS_CLASS_MAP: Record<ExecutionStatus, string> = {
   [ExecutionStatus.IN_PROGRESS]: 'in-progress',
   [ExecutionStatus.PASSED]: 'passed',
   [ExecutionStatus.FAILED]: 'failed',
-  [ExecutionStatus.SKIPPED]: 'skipped',
 };
 
 export const STATUS_ICON_MAP: Record<ExecutionStatus, string> = {
@@ -34,5 +33,4 @@ export const STATUS_ICON_MAP: Record<ExecutionStatus, string> = {
   [ExecutionStatus.IN_PROGRESS]: InProgressIcon as unknown as string,
   [ExecutionStatus.PASSED]: PassedIcon as unknown as string,
   [ExecutionStatus.FAILED]: FailedIcon as unknown as string,
-  [ExecutionStatus.SKIPPED]: ToRunIcon as unknown as string,
 };

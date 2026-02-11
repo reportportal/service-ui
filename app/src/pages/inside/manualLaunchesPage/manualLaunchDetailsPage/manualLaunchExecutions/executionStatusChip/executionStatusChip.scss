@@ -22,8 +22,7 @@
   &.to-run,
   &.in-progress,
   &.passed,
-  &.failed,
-  &.skipped {
+  &.failed {
     .status-icon {
       display: flex;
       align-items: center;

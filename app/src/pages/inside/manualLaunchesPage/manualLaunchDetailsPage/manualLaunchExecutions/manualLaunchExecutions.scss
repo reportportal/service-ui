@@ -136,6 +136,10 @@ $sidebar-width: calc(100vw - 408px);
 
 .executions-table-wrapper {
   margin-top: 16px;
+
+  &--empty {
+    padding-top: 116px;
+  }
 }
 
 .executions-table {
@@ -147,7 +151,8 @@ $sidebar-width: calc(100vw - 408px);
   }
 
   :global([class*='_header-cell_']) {
-    font-family: $FONT-ROBOTO-MEDIUM;
+    font-family: var(--rp-ui-base-font-family);
+    font-weight: var(--rp-ui-base-fw-medium);
     font-size: 13px;
     line-height: 20px;
     color: var(--rp-ui-base-e-300);
@@ -174,9 +179,9 @@ $sidebar-width: calc(100vw - 408px);
 }
 
 .test-name {
-  font-family: $FONT-ROBOTO-REGULAR;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
   font-size: 13px;
-  font-weight: 400;
   line-height: 20px;
   color: var(--rp-ui-base-almost-black);
 }
@@ -202,7 +207,7 @@ $sidebar-width: calc(100vw - 408px);
     outline: 1px solid var(--rp-ui-base-topaz-focused);
   }
 
-  &:has(.selected) :global([class*='table-row-content']) {
+  &.selected :global([class*='table-row-content']) {
     outline: 2px solid var(--rp-ui-base-topaz-focused);
   }
 }
@@ -212,9 +217,9 @@ $sidebar-width: calc(100vw - 408px);
   align-items: center;
   justify-content: center;
   width: 100%;
-  font-family: $FONT-ROBOTO-REGULAR;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
   font-size: 13px;
-  font-weight: 400;
   line-height: 20px;
   letter-spacing: 0;
   color: var(--rp-ui-base-almost-black);
@@ -236,14 +241,14 @@ $sidebar-width: calc(100vw - 408px);
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0;
+  padding: 4px;
   color: var(--rp-ui-base-e-300);
   border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
+  min-width: 24px;
+  min-height: 24px;
 
   &:hover {
     background-color: var(--rp-ui-base-e-100);

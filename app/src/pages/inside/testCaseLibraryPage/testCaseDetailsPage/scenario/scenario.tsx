@@ -31,7 +31,7 @@ interface ScenarioProps {
 
 export const Scenario = ({ precondition, instructions, expectedResult }: ScenarioProps) => {
   const { formatMessage } = useIntl();
-  const getSubScenario = ({ header, value }: { header: MessageDescriptor; value: string }) =>
+  const getSubScenario = ({ header, value }: { header: MessageDescriptor; value?: string }) =>
     value ? (
       <div className={cx('scenario__section')}>
         <h4 className={cx('scenario__section-header')}>{formatMessage(header)}</h4>

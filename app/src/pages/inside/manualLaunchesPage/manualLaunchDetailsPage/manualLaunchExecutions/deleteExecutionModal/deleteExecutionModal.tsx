@@ -38,6 +38,8 @@ const BoldText: FC<{ children: ReactNode }> = ({ children }) => (
   <span className={cx('delete-execution-modal__text--bold')}>{children}</span>
 );
 
+const boldFormatter = (chunks: ReactNode) => <BoldText>{chunks}</BoldText>;
+
 const DeleteExecutionModalComponent = ({
   data: { execution, launchId },
 }: UseModalData<DeleteExecutionModalData>) => {
@@ -45,7 +47,11 @@ const DeleteExecutionModalComponent = ({
   const { formatMessage } = useIntl();
   const { deleteExecution, isLoading } = useDeleteExecution();
 
-  const hideModal = () => dispatch(hideModalAction());
+  const hideModal = () => {
+    if (!isLoading) {
+      dispatch(hideModalAction());
+    }
+  };
 
   const onSubmit = () => deleteExecution(launchId, execution.id);
 
@@ -74,7 +80,7 @@ const DeleteExecutionModalComponent = ({
       onClose={hideModal}
     >
       {formatMessage(messages.deleteExecutionText, {
-        b: (data) => <BoldText>{data}</BoldText>,
+        b: boldFormatter,
         name: execution.testCaseName,
       })}
     </Modal>
