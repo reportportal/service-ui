@@ -195,7 +195,7 @@ export const LaunchSidePanel = memo(({ launchId, isVisible, onClose }: LaunchSid
   );
 
   return (
-    <div ref={sidePanelRef}>
+    <div ref={sidePanelRef} className={cx('launch-side-panel-wrapper')}>
       <SidePanel
         className={cx('launch-side-panel')}
         title={launchDetails.name}

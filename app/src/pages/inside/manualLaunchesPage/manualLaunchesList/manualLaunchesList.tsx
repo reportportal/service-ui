@@ -22,14 +22,14 @@ import { Button, Selection, Table } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { ActionMenu } from 'components/actionMenu';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 import { useManualLaunchesColumns } from './hooks/useManualLaunchesColumns/useManualLaunchesColumns';
 import { Launch } from '../types';
-import { useManualLaunchesListRowActions } from './hooks/useManualLaunchesListRowActions';
 import { useManualLaunchesTableData } from './hooks/useManualLaunchesTableData';
 import { LaunchSidePanel } from '../launchSidePanel';
+import { useDeleteManualLaunchModal, useBatchDeleteManualLaunchesModal } from '../deleteManualLaunchModal';
+import { ManualLaunchRowActions } from './manualLaunchRowActions';
 import { transformLaunchToManualTestCase } from '../useManualLaunches';
 
 import styles from './manualLaunchesList.scss';
@@ -43,7 +43,8 @@ interface ManualLaunchesListProps {
 export const ManualLaunchesList = ({ fullLaunches }: ManualLaunchesListProps) => {
   const { formatMessage } = useIntl();
   const { canDoTestCaseBulkActions } = useUserPermissions();
-  const rowActions = useManualLaunchesListRowActions();
+  const { openModal: openDeleteModal } = useDeleteManualLaunchModal();
+  const { openModal: openBatchDeleteModal } = useBatchDeleteManualLaunchesModal();
   const { primaryColumn, fixedColumns } = useManualLaunchesColumns();
 
   const data = useMemo(() => fullLaunches.map(transformLaunchToManualTestCase), [fullLaunches]);
@@ -73,6 +74,13 @@ export const ManualLaunchesList = ({ fullLaunches }: ManualLaunchesListProps) =>
     setSelectedLaunchId(null);
   }, []);
 
+  const handleBatchDelete = useCallback(() => {
+    openBatchDeleteModal({
+      launchIds: selectedRowIds,
+      onClearSelection: () => setSelectedRowIds([]),
+    });
+  }, [openBatchDeleteModal, selectedRowIds]);
+
   const manualLaunchesTableData = useManualLaunchesTableData(
     data,
     selectedLaunchId,
@@ -93,7 +101,11 @@ export const ManualLaunchesList = ({ fullLaunches }: ManualLaunchesListProps) =>
         headerClassName={cx('manual-launches-list-table-header')}
         onToggleRowSelection={handleRowSelect}
         onToggleAllRowsSelection={handleSelectAll}
-        renderRowActions={() => <ActionMenu actions={rowActions} />}
+        renderRowActions={(metaData) =>
+          metaData ? (
+            <ManualLaunchRowActions metaData={metaData} onDelete={openDeleteModal} />
+          ) : null
+        }
       />
       {isAnyRowSelected && (
         <div className={cx('selection')}>
@@ -103,7 +115,9 @@ export const ManualLaunchesList = ({ fullLaunches }: ManualLaunchesListProps) =>
               onClearSelection={() => setSelectedRowIds([])}
             />
             <div className={cx('selection-controls')}>
-              <Button>{formatMessage(COMMON_LOCALE_KEYS.DELETE)}</Button>
+              <Button variant="danger" onClick={handleBatchDelete}>
+                {formatMessage(COMMON_LOCALE_KEYS.DELETE)}
+              </Button>
             </div>
           </div>
         </div>

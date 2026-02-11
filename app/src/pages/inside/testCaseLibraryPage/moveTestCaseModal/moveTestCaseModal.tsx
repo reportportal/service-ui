@@ -126,13 +126,13 @@ const MoveTestCaseModal = reduxForm<FolderModalFormValues, MoveTestCaseModalProp
 
   const description = isBatch
     ? formatMessage(messages.moveTestCasesDescription, {
-        count: selectedTestCaseIds.length,
-        b: (text: ReactNode) => <b>{text}</b>,
-      })
+      count: selectedTestCaseIds.length,
+      b: (text: ReactNode) => <b>{text}</b>,
+    })
     : formatMessage(messages.moveTestCaseDescription, {
-        testCaseName: testCase?.name,
-        b: (text: ReactNode) => <b>{text}</b>,
-      });
+      testCaseName: testCase?.name,
+      b: (text: ReactNode) => <b>{text}</b>,
+    });
 
   const excludeFolderIds = testCase?.testFolder?.id ? [testCase.testFolder.id] : [];
 
