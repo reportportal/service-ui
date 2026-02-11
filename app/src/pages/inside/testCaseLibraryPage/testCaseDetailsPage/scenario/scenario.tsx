@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useIntl } from 'react-intl';
+import { MessageDescriptor, useIntl } from 'react-intl';
 
 import { createClassnames } from 'common/utils';
 import { commonMessages } from 'pages/inside/common/common-messages';
@@ -29,52 +29,30 @@ interface ScenarioProps {
   expectedResult?: string;
 }
 
-export const Scenario = ({
-  precondition,
-  instructions,
-  expectedResult,
-}: ScenarioProps) => {
+export const Scenario = ({ precondition, instructions, expectedResult }: ScenarioProps) => {
   const { formatMessage } = useIntl();
-  const getSubScenario = (
-    {
-      header,
-      value,
-    }:
-    {
-      header: {
-        id: string;
-        defaultMessage: string;
-      };
-      value: string;
-  }) => (
-    value ?
+  const getSubScenario = ({ header, value }: { header: MessageDescriptor; value: string }) =>
+    value ? (
       <div className={cx('scenario__section')}>
         <h4 className={cx('scenario__section-header')}>{formatMessage(header)}</h4>
         <p className={cx('scenario__section-value')}>{value}</p>
-      </div> :
-      null
-  );
+      </div>
+    ) : null;
 
   return (
     <section className={cx('scenario')}>
-      {
-        getSubScenario({
-          header: commonMessages.precondition,
-          value: precondition,
-        })
-      }
-      {
-        getSubScenario({
-          header: commonMessages.instructions,
-          value: instructions,
-        })
-      }
-      {
-        getSubScenario({
-          header: commonMessages.expectedResult,
-          value: expectedResult,
-        })
-      }
+      {getSubScenario({
+        header: commonMessages.precondition,
+        value: precondition,
+      })}
+      {getSubScenario({
+        header: commonMessages.instructions,
+        value: instructions,
+      })}
+      {getSubScenario({
+        header: commonMessages.expectedResult,
+        value: expectedResult,
+      })}
     </section>
   );
 };
