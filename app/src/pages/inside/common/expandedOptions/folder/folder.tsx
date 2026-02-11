@@ -51,7 +51,7 @@ export const Folder = ({
 
   const childrenMatch = searchQuery ? hasChildMatch(folder, searchQuery) : false;
 
-  const isDimmed = searchQuery && !isDirectMatch && (childrenMatch || ancestorDirectMatch);
+  const hasIndirectMatch = searchQuery && !isDirectMatch && (childrenMatch || ancestorDirectMatch);
 
   const tooltipItems = useFolderTooltipItems({
     folder,
@@ -95,7 +95,7 @@ export const Folder = ({
         <div
           className={cx('folders-tree__item-title', {
             'folders-tree__item-title--active': activeFolder === folder.id,
-            'folders-tree__item-title--dimmed': isDimmed,
+            'folders-tree__item-title--dimmed': hasIndirectMatch,
           })}
           onClick={handleFolderTitleClick}
           onFocus={() => setIsBlockHovered(true)}
@@ -146,6 +146,7 @@ export const Folder = ({
               isDirectMatch ||
               ancestorDirectMatch ||
               hasMatchInTree(subfolder, searchQuery);
+
             if (!shouldShow) return null;
 
             return (

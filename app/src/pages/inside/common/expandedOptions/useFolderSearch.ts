@@ -15,6 +15,7 @@
  */
 
 import { useState, useCallback, ChangeEvent, useRef, useEffect, useMemo } from 'react';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { useOnClickOutside } from 'common/hooks';
 import { TransformedFolder } from 'controllers/testCase';
@@ -71,7 +72,7 @@ export const useFolderSearch = ({
     [folders, searchQuery],
   );
 
-  const hasAnyMatch = filteredFolders.length > 0;
+  const hasAnyMatch = !isEmpty(filteredFolders);
 
   const foldersToExpand = useMemo(
     () => (searchQuery ? collectFoldersToExpand(folders, searchQuery) : []),
@@ -79,13 +80,8 @@ export const useFolderSearch = ({
   );
 
   useEffect(() => {
-    if (searchQuery) {
-      setSearchExpandedIds(new Set(foldersToExpand));
-      setUserClosedDuringSearch(new Set());
-    } else {
-      setSearchExpandedIds(new Set());
-      setUserClosedDuringSearch(new Set());
-    }
+    setSearchExpandedIds(searchQuery ? new Set(foldersToExpand) : new Set());
+    setUserClosedDuringSearch(new Set());
   }, [searchQuery, foldersToExpand]);
 
   const effectiveExpandedIds = useMemo(

@@ -15,6 +15,7 @@
  */
 
 import { ReactNode } from 'react';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
 import { TransformedFolder } from 'controllers/testCase';
@@ -55,7 +56,7 @@ export const collectFoldersToExpand = (
       result.push(folder.id);
     }
 
-    if (folder.folders && folder.folders.length > 0) {
+    if (!isEmpty(folder.folders)) {
       collectFoldersToExpand(folder.folders, query, result);
     }
   });

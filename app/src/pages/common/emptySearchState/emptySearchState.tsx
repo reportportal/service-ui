@@ -18,6 +18,7 @@ import { useIntl } from 'react-intl';
 import { SearchIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 import { EmptySearchStateProps } from './types';
 import { messages } from './messages';
@@ -35,7 +36,7 @@ export const EmptySearchState = ({ title, message }: EmptySearchStateProps) => {
         <SearchIcon />
       </div>
       <div className={cx('empty-search-state__title')}>
-        {title || formatMessage(messages.noResultsFound)}
+        {title || formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
       </div>
       <div className={cx('empty-search-state__message')}>
         {message || formatMessage(messages.noResultsMessage)}

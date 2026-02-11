@@ -17,10 +17,6 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  noResultsFound: {
-    id: 'emptySearchState.noResultsFound',
-    defaultMessage: 'No results found',
-  },
   noResultsMessage: {
     id: 'emptySearchState.noResultsMessage',
     defaultMessage: "Your search criteria didn't match any results. Please try different keywords.",
