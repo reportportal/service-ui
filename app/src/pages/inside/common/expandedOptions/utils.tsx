@@ -70,7 +70,7 @@ export const highlightText = (text: string, query: string): ReactNode => {
   const trimmedQuery = query.trim();
   if (!trimmedQuery) return text;
 
-  const escapedQuery = trimmedQuery.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
+  const escapedQuery = trimmedQuery.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`); // NOSONAR
 
   const regex = new RegExp(`(${escapedQuery})`, 'gi');
   const parts = text.split(regex);
