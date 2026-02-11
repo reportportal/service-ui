@@ -39,6 +39,7 @@ import { messages } from './messages';
 import { LaunchAttributes } from './launchAttributes/launchAttributes';
 
 import styles from './addToLaunchModal.scss';
+import { commonMessages } from 'pages/inside/common/common-messages';
 
 type AddToLaunchSubmitHandler = SubmitHandler<AddToLaunchFormData, AddToLaunchModalProps>;
 
@@ -175,7 +176,7 @@ export const AddToLaunchModalComponent = (
                 className={cx('launch-description-wrapper')}
               >
                 <FieldErrorHint provideHint={false}>
-                  <FieldTextFlex label={formatMessage(messages.launchDescriptionLabel)} value="" />
+                  <FieldTextFlex label={formatMessage(commonMessages.description)} value="" />
                 </FieldErrorHint>
               </FieldProvider>
               <div className={cx('autocomplete-wrapper')}>
