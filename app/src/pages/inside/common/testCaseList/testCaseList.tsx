@@ -83,7 +83,7 @@ export const TestCaseList = memo(
     const [selectedPriorities, setSelectedPriorities] = useState<string[]>([]);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const dispatch = useDispatch();
-    const { canDoTestCaseBulkActions } = useUserPermissions();
+    const { canManageTestCases } = useUserPermissions();
 
     useEffect(() => {
       setSearchValue(location?.query?.testCasesSearchParams || '');
@@ -263,7 +263,7 @@ export const TestCaseList = memo(
               </div>
             ) : (
               <Table
-                selectable={selectable && canDoTestCaseBulkActions}
+                selectable={selectable && canManageTestCases}
                 onToggleRowSelection={handleRowSelect}
                 selectedRowIds={selectedRowIds}
                 data={tableData}

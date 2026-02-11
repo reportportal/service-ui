@@ -32,7 +32,7 @@ import { useImportTestCaseModal } from '../../importTestCaseModal';
 
 export const MainPageEmptyState = () => {
   const { formatMessage } = useIntl();
-  const { canCreateTestCase, canCreateTestCaseFolder, canImportTestCases } = useUserPermissions();
+  const { canManageTestCases, canManageTestCaseFolders } = useUserPermissions();
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
   const { openModal: openImportTestCaseModal } = useImportTestCaseModal();
   const { openModal: openCreateFolderModal } = useCreateFolderModal();
@@ -42,20 +42,20 @@ export const MainPageEmptyState = () => {
   );
 
   const buttons = compact([
-    canCreateTestCaseFolder && {
+    canManageTestCaseFolders && {
       name: formatMessage(commonMessages.createFolder),
       dataAutomationId: 'createFolderButton',
       isCompact: true,
       handleButton: openCreateFolderModal,
     },
-    canCreateTestCase && {
+    canManageTestCases && {
       name: formatMessage(commonMessages.createTestCase),
       dataAutomationId: 'createTestCaseButton',
       isCompact: true,
       variant: 'ghost',
       handleButton: openCreateTestCaseModal,
     },
-    canImportTestCases && {
+    canManageTestCases && {
       name: formatMessage(COMMON_LOCALE_KEYS.IMPORT),
       dataAutomationId: 'importTestCaseButton',
       isCompact: false,

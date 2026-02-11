@@ -50,16 +50,14 @@ import styles from './testCaseDetailsPage.scss';
 const cx = createClassnames(styles);
 
 const SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG = ({
-  canEditTestCaseTag,
-  canEditTestCaseDescription,
+  canManageTestCases,
   tags,
   testCaseDescription,
   headerControlKeys,
   handleAddTags,
   handleDescriptionModal,
 }: {
-  canEditTestCaseTag: boolean;
-  canEditTestCaseDescription: boolean;
+  canManageTestCases: boolean;
   tags: string[];
   testCaseDescription: string;
   headerControlKeys: { ADD: string };
@@ -71,7 +69,7 @@ const SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG = ({
       titleKey: 'tags',
       defaultMessage: commonMessages.noTagsAdded,
       childComponent: !isEmpty(tags) && <AdaptiveTagList tags={tags} isShowAllView />,
-      headerControl: canEditTestCaseTag && (
+      headerControl: canManageTestCases && (
         <Button variant="text" adjustWidthOn="content" onClick={handleAddTags} icon={<PlusIcon />}>
           {headerControlKeys.ADD}
         </Button>
@@ -83,7 +81,7 @@ const SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG = ({
       childComponent: !isEmpty(testCaseDescription) && (
         <ExpandedTextSection text={testCaseDescription} defaultVisibleLines={5} />
       ),
-      headerControl: canEditTestCaseDescription && (
+      headerControl: canManageTestCases && (
         <Button
           variant="text"
           adjustWidthOn="content"
@@ -171,7 +169,7 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
 export const TestCaseDetailsPage = () => {
   const { formatMessage } = useIntl();
   const [isTagsAdded, setIsTagsAdded] = useState(false);
-  const { canEditTestCaseTag, canEditTestCaseDescription } = useUserPermissions();
+  const { canManageTestCases } = useUserPermissions();
   const { openModal: openAddTestCasesToTestPlanModal } = useAddTestCasesToTestPlanModal();
   const { openModal: openDescriptionModal } = useDescriptionModal();
 
@@ -220,8 +218,7 @@ export const TestCaseDetailsPage = () => {
               headerControlKeys: { ADD: formatMessage(COMMON_LOCALE_KEYS.ADD) },
               testCaseDescription: testCaseDetails.description,
               tags: tags.map(({ key }) => key),
-              canEditTestCaseTag,
-              canEditTestCaseDescription,
+              canManageTestCases,
             }).map(({ titleKey, defaultMessage, childComponent, headerControl }) => (
               <CollapsibleSectionWithHeaderControl
                 key={titleKey}
