@@ -15,6 +15,7 @@
  */
 
 import { memo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import {
@@ -253,7 +254,7 @@ export const TestPlanSidePanel = memo(
       </div>
     );
 
-    return (
+    return createPortal(
       <div ref={sidePanelRef}>
         <SidePanel
           className={cx('test-plan-side-panel')}
@@ -266,7 +267,8 @@ export const TestPlanSidePanel = memo(
           closeButtonAriaLabel={formatMessage(commonMessages.closePanel)}
           side="right"
         />
-      </div>
+      </div>,
+      document.body,
     );
   },
 );

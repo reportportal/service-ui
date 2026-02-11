@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,5 +14,4 @@
  * limitations under the License.
  */
 
-export { useBatchDeleteTestCasesModal } from './useBatchDeleteTestCasesModal';
-export { BATCH_DELETE_TEST_CASES_MODAL_KEY } from './batchDeleteTestCasesModal';
+export { ManualLaunchRowActions } from './manualLaunchRowActions';

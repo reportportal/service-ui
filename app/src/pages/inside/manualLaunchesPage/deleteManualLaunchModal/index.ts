@@ -14,5 +14,6 @@
  * limitations under the License.
  */
 
-export { useBatchDeleteTestCasesModal } from './useBatchDeleteTestCasesModal';
-export { BATCH_DELETE_TEST_CASES_MODAL_KEY } from './batchDeleteTestCasesModal';
+export { useDeleteManualLaunchModal, useBatchDeleteManualLaunchesModal } from './useDeleteManualLaunchModal';
+export { DELETE_MANUAL_LAUNCH_MODAL_KEY } from './deleteManualLaunchModal';
+export type { DeleteManualLaunchModalData } from './deleteManualLaunchModal';
