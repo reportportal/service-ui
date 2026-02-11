@@ -26,6 +26,7 @@ import { EmptyPageState } from 'pages/common';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { usePagination } from 'hooks/usePagination';
+import { useManualLaunchId } from 'hooks/useTypedSelector';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
@@ -35,6 +36,7 @@ import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { ManualLaunchExecutionsProps } from './types';
 import { ExecutionStatusChip, ExecutionStatus } from './executionStatusChip';
 import { ITEMS_PER_PAGE_OPTIONS, DEFAULT_PAGE_SIZE } from './constants';
+import { useDeleteExecutionModal } from './deleteExecutionModal';
 import { messages } from './messages';
 import styles from './manualLaunchExecutions.scss';
 
@@ -44,6 +46,8 @@ export const ManualLaunchExecutions = ({ executions, isLoading }: ManualLaunchEx
   const { formatMessage } = useIntl();
   const { canEditTestCase } = useUserPermissions();
   const [searchValue, setSearchValue] = useState('');
+  const launchId = useManualLaunchId();
+  const { openModal: openDeleteExecutionModal } = useDeleteExecutionModal();
 
   const filteredExecutions = useMemo(() => {
     if (!searchValue.trim()) {
@@ -84,8 +88,11 @@ export const ManualLaunchExecutions = ({ executions, isLoading }: ManualLaunchEx
     setActivePage(1);
   };
 
-  const handleDeleteExecution = (_executionId: number) => {
-    // TODO: Implement delete functionality when backend is ready
+  const handleDeleteExecution = (executionId: number) => {
+    const execution = executions.find((exec) => exec.id === executionId);
+    if (execution && launchId) {
+      openDeleteExecutionModal({ execution, launchId });
+    }
   };
 
   const getPopoverItems = (executionId: number): PopoverItem[] => {
