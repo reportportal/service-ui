@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,13 +31,32 @@ import { DeleteManualLaunchModalData } from './deleteManualLaunchModal';
 
 interface UseDeleteManualLaunchesOptions {
   onSuccess?: VoidFn;
+  data: DeleteManualLaunchModalData;
 }
 
-export const useDeleteManualLaunches = ({ onSuccess }: UseDeleteManualLaunchesOptions = {}) => {
+export const useDeleteManualLaunches = ({ onSuccess, data }: UseDeleteManualLaunchesOptions) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const query = useSelector(locationQuerySelector);
+
+  const handleLimitOffset = useCallback(() => {
+    const limit = Number(query?.limit) || defaultManualLaunchesQueryParams.limit;
+    const offset = Number(query?.offset) || defaultManualLaunchesQueryParams.offset;
+
+    const isBatchDelete = data.type !== 'single';
+    const deletedCount = isBatchDelete ? data.launchIds.length : 1;
+
+    const nextOffset =
+      deletedCount >= limit && offset > 0
+        ? Math.max(offset - limit, 0)
+        : offset;
+
+    return {
+      offset: nextOffset,
+      limit,
+    };
+  }, [query]);
 
   const deleteLaunches = useCallback(
     async (data: DeleteManualLaunchModalData) => {
@@ -73,10 +92,7 @@ export const useDeleteManualLaunches = ({ onSuccess }: UseDeleteManualLaunchesOp
 
         dispatch(hideModalAction());
         dispatch(
-          getManualLaunchesAction({
-            offset: Number(query?.offset) || defaultManualLaunchesQueryParams.offset,
-            limit: Number(query?.limit) || defaultManualLaunchesQueryParams.limit,
-          }),
+          getManualLaunchesAction(handleLimitOffset()),
         );
         onSuccess?.();
       } catch {

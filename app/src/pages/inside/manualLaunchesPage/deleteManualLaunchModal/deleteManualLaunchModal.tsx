@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ export const DeleteManualLaunchModal = ({
   const { formatMessage } = useIntl();
   const isBatch = data.type === 'batch';
 
-  const { isLoading, deleteLaunches } = useDeleteManualLaunches({ onSuccess });
+  const { isLoading, deleteLaunches } = useDeleteManualLaunches({ onSuccess, data });
 
   const handleDelete = useCallback(() => {
     deleteLaunches(data).catch(noop);
