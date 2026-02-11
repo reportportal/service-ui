@@ -63,7 +63,11 @@ export const messages = defineMessages({
     defaultMessage: 'Create new launch',
   },
   learnMore: {
-    id: 'Common.learnMore',
+    id: 'TestCaseLibraryPage.addToLaunchModal.learnMore',
     defaultMessage: 'Learn more >',
+  },
+  tooManyLaunchesResults: {
+    id: 'TestCaseLibraryPage.addToLaunchModal.tooManyLaunchesResults',
+    defaultMessage: 'Too many results. Type to search',
   },
 });

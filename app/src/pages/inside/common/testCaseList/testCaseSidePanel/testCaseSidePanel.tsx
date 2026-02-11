@@ -343,6 +343,7 @@ export const TestCaseSidePanel = memo(
             <AddToLaunchButton
               manualScenario={testCase?.manualScenario}
               testCaseName={testCase.name}
+              testCaseId={testCase.id}
             />
           )}
           {canAddTestCaseToTestPlan && (

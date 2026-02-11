@@ -415,8 +415,6 @@ export const URLS = {
   manualLaunchesList: (projectKey) => `${urlBase}/${projectKey}/launch`,
   manualLaunchById: (projectKey, launchId) =>
     `${urlBase}project/${projectKey}/launch/manual/${launchId}`,
-  addTestCaseToLaunch: (projectKey, launchId) =>
-    `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case`,
   manualLaunchesListPagination: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/launch/manual${getQueryParams(query)}`,
   manualLaunchFolders: (projectKey, launchId, query = {}) =>

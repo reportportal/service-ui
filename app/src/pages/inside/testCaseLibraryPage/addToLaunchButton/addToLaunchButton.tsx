@@ -23,21 +23,25 @@ import { ManualScenario } from 'pages/inside/testCaseLibraryPage/types';
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-
-import { useAddToLaunchModal } from '../addToLaunchModal/useAddToLaunchModal';
+import { useAddToLaunchModalV2 } from '../addToLaunchModalV2';
 
 import styles from './addToLaunchButton.scss';
 
 const cx = createClassnames(styles);
 
 interface AddToLaunchButtonProps {
+  testCaseId: number;
   testCaseName: string;
   manualScenario: ManualScenario;
 }
 
-export const AddToLaunchButton = ({ testCaseName, manualScenario }: AddToLaunchButtonProps) => {
+export const AddToLaunchButton = ({
+  testCaseId,
+  testCaseName,
+  manualScenario,
+}: AddToLaunchButtonProps) => {
   const { formatMessage } = useIntl();
-  const { openModal: openAddToLaunchModal } = useAddToLaunchModal();
+  const { openModal: openAddToLaunchModal } = useAddToLaunchModalV2([testCaseId]);
 
   const isDisabled = useMemo(() => {
     if (isEmpty(manualScenario)) {
@@ -66,7 +70,8 @@ export const AddToLaunchButton = ({ testCaseName, manualScenario }: AddToLaunchB
   }, [manualScenario]);
 
   const handleAddToLaunchClick = () => {
-    openAddToLaunchModal({ testCaseName });
+    console.log('OPEN LAUNCH MODAL');
+    openAddToLaunchModal({ testCaseId, testCaseName });
   };
 
   const buttonComponent = (
