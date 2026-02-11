@@ -1,0 +1,56 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.empty-search-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+  list-style: none;
+  text-align: center;
+
+  &__icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 24px;
+    color: var(--rp-ui-base-e-200);
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__title {
+    font-size: 20px;
+    font-family: $FONT-REGULAR;
+    font-weight: 400;
+    line-height: 31px;
+    letter-spacing: 0;
+    color: var(--rp-ui-base-e-400);
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  &__message {
+    font-size: 13px;
+    font-family: $FONT-ROBOTO-REGULAR;
+    line-height: 20px;
+    color: var(--rp-ui-base-e-400);
+    max-width: 280px;
+  }
+}

@@ -45,6 +45,7 @@ export const useEditTestPlan = () => {
         data: {
           name: payload.name,
           description: payload.description,
+          attributes: payload.attributes,
         },
       });
 

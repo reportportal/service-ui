@@ -19,25 +19,15 @@ import { isEmpty } from 'es-toolkit/compat';
 import { ChevronDownDropdownIcon, MeatballMenuIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
-import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { PopoverControl } from 'pages/common/popoverControl';
-import { TransformedFolder } from 'controllers/testCase';
 
+import { highlightText, hasMatchInTree, hasChildMatch } from '../utils';
+import { FolderProps } from './types';
 import { useFolderTooltipItems } from './useFolderTooltipItems';
 
 import styles from './folder.scss';
 
 const cx = createClassnames(styles);
-
-interface FolderProps {
-  folder: TransformedFolder;
-  activeFolder: number | null;
-  instanceKey: TMS_INSTANCE_KEY;
-  expandedIds: number[];
-  setAllTestCases: () => void;
-  onFolderClick: (id: number) => void;
-  onToggleFolder: (folder: TransformedFolder) => void;
-}
 
 export const Folder = ({
   folder,
@@ -47,11 +37,22 @@ export const Folder = ({
   onFolderClick,
   setAllTestCases,
   onToggleFolder,
+  searchQuery = '',
+  ancestorDirectMatch = false,
 }: FolderProps) => {
   const isOpen = expandedIds.includes(folder.id);
   const [areToolsShown, setAreToolsShown] = useState(false);
   const [areToolsOpen, setAreToolsOpen] = useState(false);
   const [isBlockHovered, setIsBlockHovered] = useState(false);
+
+  const isDirectMatch = searchQuery
+    ? folder.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
+    : false;
+
+  const childrenMatch = searchQuery ? hasChildMatch(folder, searchQuery) : false;
+
+  const hasIndirectMatch = searchQuery && !isDirectMatch && (childrenMatch || ancestorDirectMatch);
+
   const tooltipItems = useFolderTooltipItems({
     folder,
     activeFolder,
@@ -94,6 +95,7 @@ export const Folder = ({
         <div
           className={cx('folders-tree__item-title', {
             'folders-tree__item-title--active': activeFolder === folder.id,
+            'folders-tree__item-title--dimmed': hasIndirectMatch,
           })}
           onClick={handleFolderTitleClick}
           onFocus={() => setIsBlockHovered(true)}
@@ -102,7 +104,7 @@ export const Folder = ({
           onMouseLeave={() => setIsBlockHovered(false)}
         >
           <span className={cx('folders-tree__item-title--text')} title={folder.name}>
-            {folder.name}
+            {isDirectMatch ? highlightText(folder.name, searchQuery) : folder.name}
           </span>
           {!isEmpty(tooltipItems) && (
             <button
@@ -138,18 +140,30 @@ export const Folder = ({
 
       {isOpen && !isEmpty(folder.folders) && (
         <ul className={cx('folders-tree', 'folders-tree--inner')} role="group">
-          {folder.folders?.map((subfolder) => (
-            <Folder
-              folder={subfolder}
-              key={subfolder.id}
-              activeFolder={activeFolder}
-              instanceKey={instanceKey}
-              expandedIds={expandedIds}
-              onFolderClick={onFolderClick}
-              setAllTestCases={setAllTestCases}
-              onToggleFolder={onToggleFolder}
-            />
-          ))}
+          {folder.folders?.map((subfolder) => {
+            const shouldShow =
+              !searchQuery ||
+              isDirectMatch ||
+              ancestorDirectMatch ||
+              hasMatchInTree(subfolder, searchQuery);
+
+            if (!shouldShow) return null;
+
+            return (
+              <Folder
+                folder={subfolder}
+                key={subfolder.id}
+                activeFolder={activeFolder}
+                instanceKey={instanceKey}
+                expandedIds={expandedIds}
+                onFolderClick={onFolderClick}
+                setAllTestCases={setAllTestCases}
+                onToggleFolder={onToggleFolder}
+                searchQuery={searchQuery}
+                ancestorDirectMatch={isDirectMatch || ancestorDirectMatch}
+              />
+            );
+          })}
         </ul>
       )}
     </li>
