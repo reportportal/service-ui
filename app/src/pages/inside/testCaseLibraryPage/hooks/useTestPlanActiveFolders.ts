@@ -16,7 +16,7 @@
 import { useSelector } from "react-redux";
 import { isEmpty } from "es-toolkit/compat";
 
-import { locationSelector } from "controllers/pages";
+import { payloadSelector } from "controllers/pages";
 import { TransformedFolder } from "controllers/testCase/types";
 import { testPlanFoldersSelector, testPlanTransformedFoldersSelector } from "controllers/testPlan";
 
@@ -37,7 +37,7 @@ export const findFolderById = (folders: TransformedFolder[], id: number): Transf
 };
 
 export const useTestPlanActiveFolders = () => {
-  const { payload } = useSelector(locationSelector);
+  const payload = useSelector(payloadSelector);
   const transformedFolders = useSelector(testPlanTransformedFoldersSelector);
   const folders = useSelector(testPlanFoldersSelector);
   const testPlanRoute = payload.testPlanRoute;

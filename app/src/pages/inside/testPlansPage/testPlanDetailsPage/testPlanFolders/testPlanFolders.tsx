@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { expandTestPlanFoldersToLevelAction, testPlanTestCasesSelector } from 'controllers/testPlan';
@@ -23,7 +24,6 @@ import { useTestPlanActiveFolders } from 'pages/inside/testCaseLibraryPage/hooks
 
 import { ExpandedOptions } from '../../../common/expandedOptions';
 import { AllTestCasesPage } from './allTestCasesPage';
-import { useEffect } from 'react';
 
 interface TestPlanFoldersProps {
   isLoading?: boolean;
