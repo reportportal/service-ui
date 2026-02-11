@@ -21,6 +21,11 @@ import { TestPlanDto } from 'controllers/testPlan';
 import { URLS } from 'common/urls';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { useDebouncedSpinner } from 'common/hooks';
+import { ButtonSwitcherOption } from 'pages/inside/common/buttonSwitcher';
+import { projectKeySelector } from 'controllers/project';
+import { fetch } from 'common/utils';
+import { Launch } from 'pages/inside/manualLaunchesPage/types';
+import { hideModalAction } from 'controllers/modal';
 
 import {
   AddTestCaseToLaunchDto,
@@ -29,9 +34,6 @@ import {
   CreateLaunchDto,
 } from './types';
 import { SELECTED_TEST_PLAN_FIELD_NAME, SELECTED_LAUNCH_FIELD_NAME } from './addToLaunchModal';
-import { ButtonSwitcherOption } from 'pages/inside/common/buttonSwitcher';
-import { projectKeySelector } from 'controllers/project';
-import { fetch } from 'common/utils';
 
 export const useAddToLaunch = (
   props: Pick<InjectedFormProps<AddToLaunchFormData, AddToLaunchModalProps>, 'change'> & {
@@ -47,7 +49,7 @@ export const useAddToLaunch = (
     change(SELECTED_TEST_PLAN_FIELD_NAME, value || null);
   };
 
-  const setSelectedLaunch = (value: TestPlanDto | null) => {
+  const setSelectedLaunch = (value: Launch | null) => {
     change(SELECTED_LAUNCH_FIELD_NAME, value || null);
   };
 
@@ -89,6 +91,7 @@ export const useAddToLaunch = (
           }),
         );
       }
+      dispatch(hideModalAction());
     } catch {
       dispatch(
         showErrorNotification({
