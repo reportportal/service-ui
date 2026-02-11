@@ -70,7 +70,7 @@ export const TestCaseList = memo(
     const { formatMessage } = useIntl();
     const location = useSelector(locationSelector);
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<number | null>(null);
-    const { canDoTestCaseBulkActions } = useUserPermissions();
+    const { canManageTestCases } = useUserPermissions();
 
     const isTestLibraryRoute = location.type === TEST_CASE_LIBRARY_PAGE;
     const isTestPlanRoute = location.type === PROJECT_TEST_PLAN_DETAILS_PAGE;
@@ -192,7 +192,7 @@ export const TestCaseList = memo(
               </div>
             ) : (
               <Table
-                selectable={selectable && canDoTestCaseBulkActions}
+                selectable={selectable && canManageTestCases}
                 onToggleRowSelection={handleRowSelect}
                 selectedRowIds={selectedRowIds}
                 data={tableData}

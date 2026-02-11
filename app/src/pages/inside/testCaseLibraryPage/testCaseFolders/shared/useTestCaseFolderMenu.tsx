@@ -50,14 +50,7 @@ export const useTestCaseFolderMenu = ({
   const { openModal: openImportTestCaseModal } = useImportTestCaseModal();
   const { openModal: openCreateSubfolderModal } = useCreateSubfolderModal();
 
-  const {
-    canDeleteTestCaseFolder,
-    canDuplicateTestCaseFolder,
-    canRenameTestCaseFolder,
-    canMoveTestCase,
-    canCreateTestCaseFolder,
-    canImportTestCases,
-  } = useUserPermissions();
+  const { canManageTestCases, canManageTestCaseFolders } = useUserPermissions();
 
   const handleDeleteFolder = () => {
     openDeleteModal({
@@ -79,30 +72,30 @@ export const useTestCaseFolderMenu = ({
   const handleCreateSubfolder = () => openCreateSubfolderModal({ folder });
 
   const testCaseFolderTooltipItems: PopoverItem[] = compact([
-    canCreateTestCaseFolder && {
+    canManageTestCaseFolders && {
       label: formatMessage(commonMessages.createSubfolder),
       onClick: handleCreateSubfolder,
     },
-    canRenameTestCaseFolder && {
+    canManageTestCaseFolders && {
       label: formatMessage(COMMON_LOCALE_KEYS.RENAME),
       onClick: handleRenameFolder,
     },
-    canMoveTestCase && {
+    canManageTestCases && {
       label: formatMessage(commonMessages.moveFolderTo),
       variant: 'text' as const,
       onClick: handleMoveFolder,
     },
-    canDuplicateTestCaseFolder && {
+    canManageTestCaseFolders && {
       label: formatMessage(commonMessages.duplicateFolder),
       variant: 'text' as const,
       onClick: handleDuplicateFolder,
     },
-    canImportTestCases && {
+    canManageTestCases && {
       label: formatMessage(COMMON_LOCALE_KEYS.IMPORT),
       variant: 'text' as const,
       onClick: handleImportTestCase,
     },
-    canDeleteTestCaseFolder && {
+    canManageTestCaseFolders && {
       label: formatMessage(commonMessages.deleteFolder),
       variant: 'destructive' as const,
       onClick: handleDeleteFolder,

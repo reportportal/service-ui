@@ -67,32 +67,13 @@ export {
   canDeleteOrganization,
   canSeeInstanceLevelPluginsPages,
   canRenameOrganization,
+
+  // TMS FEATURES:
   canLockDashboard,
-  // MANUAL LAUNCH
   canCreateManualLaunch,
-  // TEST CASE
-  canAddTestCaseToLaunch,
-  canAddTestCaseToTestPlan,
-  canCreateTestCase,
-  canDeleteTestCase,
-  canDoTestCaseBulkActions,
-  canDuplicateTestCase,
-  canEditTestCase,
-  canEditTestCaseDescription,
-  canEditTestCaseScenario,
-  canEditTestCaseTag,
-  canMoveTestCase,
-  canCreateTestCaseFolder,
-  canDeleteTestCaseFolder,
-  canDuplicateTestCaseFolder,
-  canRenameTestCaseFolder,
-  // TEST CASES
-  canImportTestCases,
-  // TEST PLAN
-  canEditTestPlan,
-  canDeleteTestPlan,
-  canDuplicateTestPlan,
-  canCreateTestPlan,
+  canManageTestCases,
+  canManageTestCaseFolders,
+  canManageTestPlans,
 } from './permissions';
 
 export { getRoleTitle, getRoleBadgesData, getOrgRoleTitle } from './getRoleTitle';
