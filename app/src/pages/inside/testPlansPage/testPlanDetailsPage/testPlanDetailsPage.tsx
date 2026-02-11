@@ -17,10 +17,10 @@
 import { useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
-import classNames from 'classnames/bind';
 import { isEmpty } from 'es-toolkit/compat';
 import { Button } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { PROJECT_TEST_PLANS_PAGE, PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
@@ -35,6 +35,8 @@ import {
   useTestPlanId,
   useActiveTestPlanLoading,
   useTestPlanById,
+  useTestPlanFolders,
+  useTestPlanTestCasesLoading,
 } from 'hooks/useTypedSelector';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 
@@ -49,10 +51,11 @@ import {
   useDuplicateTestPlanModal,
   useDeleteTestPlanModal,
 } from '../testPlanModals';
+import { TestPlanFolders } from './testPlanFolders';
 
 import styles from './testPlanDetailsPage.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export const TestPlanDetailsPage = () => {
   const { formatMessage } = useIntl();
@@ -62,6 +65,8 @@ export const TestPlanDetailsPage = () => {
   const testPlanId = useTestPlanId();
   const testPlan = useTestPlanById(testPlanId);
   const isLoading = useActiveTestPlanLoading();
+  const isTestPlanTestCasesLoading = useTestPlanTestCasesLoading();
+  const testPlanFolders = useTestPlanFolders();
   const { openModal: openEditModal } = useEditTestPlanModal();
   const { openModal: openDuplicateModal } = useDuplicateTestPlanModal({
     onSuccess: (newTestPlanId) =>
@@ -132,7 +137,7 @@ export const TestPlanDetailsPage = () => {
         onDuplicate={openActionModal('duplicate')}
         onDelete={openActionModal('delete')}
       />
-      {!isEmpty(testPlan?.totalTestCases) && (
+      {!isEmpty(testPlanFolders) && (
         <>
           {canAddTestCaseToTestPlan && (
             <Button variant="ghost" data-automation-id="addTestsFromLibraryButton">
@@ -158,22 +163,24 @@ export const TestPlanDetailsPage = () => {
   }
 
   const renderContent = () => {
-    if (!testPlan?.totalTestCases) {
+    if (!testPlan?.executionStatistic.total && isEmpty(testPlanFolders)) {
       return <EmptyTestPlan />;
     }
 
-    return <div>Test cases are present</div>;
+    return <TestPlanFolders isLoading={isTestPlanTestCasesLoading} />;
   };
 
   return (
     <SettingsLayout>
       <ScrollWrapper resetRequired>
-        <TestPlansHeader
-          title={testPlan?.name || ''}
-          breadcrumbDescriptors={breadcrumbDescriptors}
-          actions={renderActions()}
-        />
-        {renderContent()}
+        <div className={cx('test-plan-details-page')}>
+          <TestPlansHeader
+            title={testPlan?.name || ''}
+            breadcrumbDescriptors={breadcrumbDescriptors}
+            actions={renderActions()}
+          />
+          <div className={cx('test-plan-details-page__content')}>{renderContent()}</div>
+        </div>
       </ScrollWrapper>
     </SettingsLayout>
   );

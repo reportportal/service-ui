@@ -14,113 +14,117 @@
  * limitations under the License.
  */
 
+import { useCallback } from 'react';
 import { useIntl } from 'react-intl';
-import { noop } from 'es-toolkit';
-import classNames from 'classnames/bind';
-import { FieldText, FieldTextFlex } from '@reportportal/ui-kit';
+import { formValueSelector, change } from 'redux-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button, FieldText, FieldTextFlex, PlusIcon } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { EditableTagsSection } from 'pages/inside/testCaseLibraryPage/editableTagsSection';
-import { DropdownWithDescription } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/dropdownWithDescription';
+import { CreateFolderAutocomplete } from 'pages/inside/testCaseLibraryPage/testCaseFolders/shared/CreateFolderAutocomplete';
+import { commonMessages as globalCommonMessages } from 'pages/inside/common/common-messages';
+import { TagPopover } from 'pages/inside/testCaseLibraryPage/tagPopover';
+import { Attribute } from 'pages/inside/testCaseLibraryPage/types';
 
-import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { messages } from './messages';
+import { commonMessages } from '../../commonMessages';
+import { PrioritySelect } from '../../prioritySelect/prioritySelect';
+import { CREATE_TEST_CASE_FORM_NAME } from '../createTestCaseModal';
 
 import styles from './basicInformation.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface BasicInformationProps {
   className?: string;
+  hideFolderField?: boolean;
+  formName?: string;
 }
 
-export const BasicInformation = ({ className }: BasicInformationProps) => {
+export const BasicInformation = ({
+  className,
+  hideFolderField = false,
+  formName = CREATE_TEST_CASE_FORM_NAME,
+}: BasicInformationProps) => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const selector = formValueSelector(formName);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return
+  const attributes: Attribute[] = useSelector((state) => selector(state, 'attributes')) || [];
+
+  const handleTagSelect = useCallback(
+    (tag: Attribute) => {
+      const isTagExists = attributes.some(({ key }) => key === tag.key);
+
+      if (!isTagExists) {
+        const updatedAttributes = [...attributes, tag];
+
+        dispatch(change(formName, 'attributes', updatedAttributes));
+      }
+    },
+    [attributes, dispatch, formName],
+  );
+
+  const handleTagRemove = useCallback(
+    (tagKey: string) => {
+      const updatedAttributes = attributes.filter(({ key }) => key !== tagKey);
+
+      dispatch(change(formName, 'attributes', updatedAttributes));
+    },
+    [attributes, dispatch, formName],
+  );
+
+  const addButton = (
+    <Button variant="text" adjustWidthOn="content" icon={<PlusIcon />}>
+      {formatMessage(COMMON_LOCALE_KEYS.ADD)}
+    </Button>
+  );
 
   return (
     <div className={cx('basic-information', className)}>
       <FieldProvider name="name" placeholder={formatMessage(messages.enterNameForTestCase)}>
         <FieldErrorHint provideHint={false} className={cx('basic-information__field')}>
-          <FieldText label={formatMessage(messages.testCaseName)} defaultWidth={false} isRequired />
+          <FieldText
+            label={formatMessage(commonMessages.testCaseName)}
+            defaultWidth={false}
+            isRequired
+          />
         </FieldErrorHint>
       </FieldProvider>
-      <FieldProvider name="folder" placeholder={formatMessage(messages.selectOrCreateFolder)}>
-        <FieldErrorHint provideHint={false} className={cx('basic-information__field')}>
-          <FieldText label={formatMessage(messages.folder)} defaultWidth={false} isRequired />
-        </FieldErrorHint>
-      </FieldProvider>
+      {!hideFolderField && (
+        <FieldProvider name="folder" placeholder={formatMessage(messages.selectOrCreateFolder)}>
+          <FieldErrorHint provideHint={false} className={cx('basic-information__field')}>
+            <CreateFolderAutocomplete
+              name="folder"
+              label={formatMessage(commonMessages.folder)}
+              placeholder={formatMessage(messages.selectOrCreateFolder)}
+              shouldDisplayNewFolderButton
+              isRequired
+            />
+          </FieldErrorHint>
+        </FieldProvider>
+      )}
       <FieldProvider name="priority">
         <FieldErrorHint provideHint={false} className={cx('basic-information__field')}>
-          <DropdownWithDescription
-            label={formatMessage(messages.priority)}
-            options={[
-              {
-                label: formatMessage(messages.priorityBlocker),
-                value: 'blocker',
-                icon: (
-                  <PriorityIcon
-                    priority="blocker"
-                    className={cx('basic-information__priority-icon')}
-                  />
-                ),
-              },
-              {
-                label: formatMessage(messages.priorityCritical),
-                value: 'critical',
-                icon: (
-                  <PriorityIcon
-                    priority="critical"
-                    className={cx('basic-information__priority-icon')}
-                  />
-                ),
-              },
-              {
-                label: formatMessage(messages.priorityHigh),
-                value: 'high',
-                icon: (
-                  <PriorityIcon
-                    priority="high"
-                    className={cx('basic-information__priority-icon')}
-                  />
-                ),
-              },
-              {
-                label: formatMessage(messages.priorityMedium),
-                value: 'medium',
-                icon: (
-                  <PriorityIcon
-                    priority="medium"
-                    className={cx('basic-information__priority-icon')}
-                  />
-                ),
-              },
-              {
-                label: formatMessage(messages.priorityLow),
-                value: 'low',
-                icon: (
-                  <PriorityIcon priority="low" className={cx('basic-information__priority-icon')} />
-                ),
-              },
-              {
-                label: formatMessage(messages.priorityUnspecified),
-                value: 'unspecified',
-                icon: (
-                  <PriorityIcon
-                    priority="unspecified"
-                    className={cx('basic-information__priority-icon')}
-                  />
-                ),
-              },
-            ]}
-          />
+          <PrioritySelect />
         </FieldErrorHint>
       </FieldProvider>
       <FieldProvider name="description" placeholder={formatMessage(messages.addDetailsOrContext)}>
         <FieldErrorHint provideHint={false} className={cx('basic-information__field')}>
-          <FieldTextFlex label={formatMessage(messages.description)} value="" />
+          <FieldTextFlex label={formatMessage(globalCommonMessages.description)} value="" />
         </FieldErrorHint>
       </FieldProvider>
-      <EditableTagsSection variant="modal" onAddTag={noop} />
+      <EditableTagsSection
+        variant="modal"
+        tags={attributes}
+        onTagRemove={handleTagRemove}
+        addButton={
+          <TagPopover onTagSelect={handleTagSelect} selectedTags={attributes} trigger={addButton} />
+        }
+      />
     </div>
   );
 };

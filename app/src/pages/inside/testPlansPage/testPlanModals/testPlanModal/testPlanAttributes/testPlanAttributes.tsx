@@ -40,13 +40,7 @@ interface AttributeListFieldProps {
 }
 
 const AttributeListField = ({ input, ...rest }: AttributeListFieldProps) => (
-  <AttributeList
-    {...input}
-    {...rest}
-    attributes={input.value || []}
-    onChange={input.onChange}
-    customClass=""
-  />
+  <AttributeList {...input} {...rest} attributes={input.value || []} onChange={input.onChange} />
 );
 
 export const TestPlanAttributes = () => {
@@ -54,7 +48,7 @@ export const TestPlanAttributes = () => {
 
   return (
     <div>
-      <FieldElement label={formatMessage(messages.testPlanAttributes)} withoutProvider>
+      <FieldElement label={formatMessage(messages.milestoneAttributes)} withoutProvider>
         <Field
           name="attributes"
           component={AttributeListField}

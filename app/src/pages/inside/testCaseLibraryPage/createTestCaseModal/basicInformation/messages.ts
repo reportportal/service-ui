@@ -9,25 +9,13 @@ export const messages = defineMessages({
     id: 'CreateTestCaseModal.enterNameForTestCase',
     defaultMessage: 'Enter name for the test case',
   },
-  folder: {
-    id: 'CreateTestCaseModal.folder',
-    defaultMessage: 'Folder',
-  },
   selectOrCreateFolder: {
     id: 'CreateTestCaseModal.selectOrCreateFolder',
-    defaultMessage: 'Select or create the folder',
+    defaultMessage: 'Start typing to select or create the folder',
   },
   addDetailsOrContext: {
     id: 'CreateTestCaseModal.addDetailsOrContext',
     defaultMessage: 'Add details or context for the test case here',
-  },
-  description: {
-    id: 'CreateTestCaseModal.description',
-    defaultMessage: 'Description',
-  },
-  priority: {
-    id: 'CreateTestCaseModal.priority',
-    defaultMessage: 'Priority',
   },
   priorityBlocker: {
     id: 'CreateTestCaseModal.priorityBlocker',
@@ -52,9 +40,5 @@ export const messages = defineMessages({
   priorityUnspecified: {
     id: 'CreateTestCaseModal.priorityUnspecified',
     defaultMessage: 'Unspecified',
-  },
-  duplicateTestCaseName: {
-    id: 'CreateTestCaseModal.duplicateTestCaseName',
-    defaultMessage: 'Test case with this name already exists',
   },
 });

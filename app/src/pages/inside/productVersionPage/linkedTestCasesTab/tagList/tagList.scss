@@ -18,40 +18,20 @@
 
 .tag-list-wrapper {
   display: flex;
-
-  &--show-all-view {
-    flex-direction: column;
-  }
 }
 
 .tag-list {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  height: 20px;
+  height: fit-content;
   max-width: 450px;
   overflow: hidden;
-
-  &--full-width {
-    max-width: 850px;
-  }
-
-  &--show-all-view {
-    height: auto;
-    overflow: hidden;
-    transition: max-height 0.2s ease;
-    max-height: 66px;
-  }
 
   &--expanded {
     height: auto;
     max-width: none;
     overflow: visible;
-  }
-
-  &--no-tags {
-    padding-left: 0;
-    height: auto;
   }
 
   &__item {
@@ -117,31 +97,10 @@
     }
 
     &--button {
-      &-show-all-view {
-        min-width: 45px;
-        font-weight: 400;
-      }
-
-      &-wrapper {
-        width: 100%;
-        display: flex;
-        justify-content: flex-start;
-        margin-top: 8px;
-      }
+      @include mixins.button-reset;
+      color: var(--rp-ui-color-primary-text);
+      font-weight: 400;
+      min-width: 50px;
     }
   }
-
-  button {
-    @include mixins.button-reset;
-    color: var(--rp-ui-color-primary-text);
-    font-weight: 400;
-    min-width: 50px;
-  }
-}
-
-.no-tags-message {
-  font-size: 11px;
-  line-height: 16px;
-  font-weight: 400;
-  color: var(--rp-ui-base-e-400);
 }

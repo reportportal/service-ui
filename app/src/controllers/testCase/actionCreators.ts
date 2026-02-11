@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
+import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { Page } from 'types/common';
+
 import {
-  GET_TEST_CASES,
   GET_FOLDERS,
   CREATE_FOLDER,
   CREATE_FOLDER_SUCCESS,
+  CREATE_FOLDERS_BATCH_SUCCESS,
   START_CREATING_FOLDER,
   STOP_CREATING_FOLDER,
   DELETE_FOLDER,
@@ -32,17 +35,26 @@ import {
   SET_TEST_CASES,
   RENAME_FOLDER,
   RENAME_FOLDER_SUCCESS,
+  MOVE_FOLDER_SUCCESS,
+  DELETE_TEST_CASE_SUCCESS,
+  UPDATE_FOLDER_COUNTER,
+  SELECT_ACTIVE_FOLDER,
+  UPDATE_DESCRIPTION_SUCCESS,
+  TOGGLE_FOLDER_EXPANSION,
+  EXPAND_FOLDERS_TO_LEVEL,
+  SET_EXPANDED_FOLDER_IDS,
 } from './constants';
-import { Folder } from './types';
-import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
-
-export interface GetTestCasesParams {
-  search?: string;
-  testFolderId?: number;
-}
+import { Folder, TransformedFolder } from './types';
 
 export interface GetTestCasesByFolderIdParams {
   folderId: number;
+  offset: number;
+  limit: number;
+}
+
+export interface GetAllTestCases {
+  offset: number;
+  limit: number;
 }
 
 export interface CreateFolderParams {
@@ -55,9 +67,13 @@ export interface GetFoldersParams {
 }
 
 export interface DeleteFolderParams {
-  folderId: number;
+  folder: TransformedFolder;
   activeFolderId: number;
   setAllTestCases: () => void;
+}
+
+export interface DeleteTestCaseParams {
+  testCase: TestCase;
 }
 
 export interface DeleteFolderSuccessParams {
@@ -69,18 +85,28 @@ export interface RenameFolderParams {
   folderName: string;
 }
 
-export const getTestCasesAction = (params?: GetTestCasesParams) => ({
-  type: GET_TEST_CASES,
-  payload: params,
-});
+export interface MoveFolderParams {
+  folderId: number;
+  parentTestFolderId: number | null;
+}
+
+export interface SetActiveFolderIdParams {
+  activeFolderId: number;
+}
+
+export interface UpdateFolderCounterParams {
+  folderId: number;
+  delta: number;
+}
 
 export const getTestCaseByFolderIdAction = (params: GetTestCasesByFolderIdParams) => ({
   type: GET_TEST_CASES_BY_FOLDER_ID,
-  payload: params.folderId,
+  payload: params,
 });
 
-export const getAllTestCasesAction = () => ({
+export const getAllTestCasesAction = (params: GetAllTestCases) => ({
   type: GET_ALL_TEST_CASES,
+  payload: params,
 });
 
 export const startLoadingTestCasesAction = () => ({
@@ -91,7 +117,7 @@ export const stopLoadingTestCasesAction = () => ({
   type: STOP_LOADING_TEST_CASES,
 });
 
-export const setTestCasesAction = (testCases: TestCase[]) => ({
+export const setTestCasesAction = (testCases: { content: TestCase[]; page: Page | null }) => ({
   type: SET_TEST_CASES,
   payload: testCases,
 });
@@ -109,6 +135,13 @@ export const getFoldersAction = (params?: GetFoldersParams) => ({
   payload: params,
 });
 
+export const setActiveFolderId = (payload: SetActiveFolderIdParams) => {
+  return {
+    type: SELECT_ACTIVE_FOLDER,
+    payload: payload,
+  };
+};
+
 export const createFoldersAction = (folder: CreateFolderParams) => ({
   type: CREATE_FOLDER,
   payload: folder,
@@ -117,6 +150,11 @@ export const createFoldersAction = (folder: CreateFolderParams) => ({
 export const createFoldersSuccessAction = (folder: Folder) => ({
   type: CREATE_FOLDER_SUCCESS,
   payload: folder,
+});
+
+export const createFoldersBatchSuccessAction = (folders: Folder[]) => ({
+  type: CREATE_FOLDERS_BATCH_SUCCESS,
+  payload: folders,
 });
 
 export const deleteFolderAction = (folderInfo: DeleteFolderParams) => ({
@@ -137,6 +175,11 @@ export const stopLoadingFolderAction = () => ({
   type: STOP_LOADING_FOLDER,
 });
 
+export const deleteTestCaseSuccessAction = ({ testCase }: DeleteTestCaseParams) => ({
+  type: DELETE_TEST_CASE_SUCCESS,
+  payload: { testCase },
+});
+
 export const renameFolderAction = (folderInfo: RenameFolderParams) => ({
   type: RENAME_FOLDER,
   payload: folderInfo,
@@ -145,4 +188,43 @@ export const renameFolderAction = (folderInfo: RenameFolderParams) => ({
 export const renameFolderSuccessAction = (folderId: RenameFolderParams) => ({
   type: RENAME_FOLDER_SUCCESS,
   payload: folderId,
+});
+
+export const moveFolderSuccessAction = (params: MoveFolderParams) => ({
+  type: MOVE_FOLDER_SUCCESS,
+  payload: params,
+});
+
+export const updateFolderCounterAction = (params: UpdateFolderCounterParams) => ({
+  type: UPDATE_FOLDER_COUNTER,
+  payload: params,
+});
+
+export const updateDescriptionSuccessAction = (description: string) => ({
+  type: UPDATE_DESCRIPTION_SUCCESS,
+  payload: description,
+});
+
+export interface ToggleFolderExpansionParams {
+  folderId: number;
+  folders: Folder[];
+}
+
+export const toggleFolderExpansionAction = (params: ToggleFolderExpansionParams) => ({
+  type: TOGGLE_FOLDER_EXPANSION,
+  payload: params,
+});
+
+export const expandFoldersToLevelAction = (params: ToggleFolderExpansionParams) => ({
+  type: EXPAND_FOLDERS_TO_LEVEL,
+  payload: params,
+});
+
+export interface SetExpandedFolderIdsParams {
+  folderIds: number[];
+}
+
+export const setExpandedFolderIdsAction = (params: SetExpandedFolderIdsParams) => ({
+  type: SET_EXPANDED_FOLDER_IDS,
+  payload: params,
 });

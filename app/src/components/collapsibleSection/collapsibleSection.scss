@@ -15,8 +15,6 @@
  */
 
 .collapsible-section {
-  margin-bottom: 16px;
-
   .header-row {
     display: flex;
   }
@@ -57,7 +55,7 @@
     }
 
     .section-title {
-      font-family: $FONT-ROBOTO-REGULAR;
+      font-family: var(--rp-ui-base-font-family);
       font-size: 14px;
       color: var(--rp-ui-base-almost-black);
       font-weight: 500;

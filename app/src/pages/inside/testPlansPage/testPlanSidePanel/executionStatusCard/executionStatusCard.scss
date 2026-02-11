@@ -1,0 +1,66 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.execution-status-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.execution-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background-color: var(--rp-ui-base-bg-000);
+  border-radius: 4px;
+  box-shadow: var(--rp-ui-base-shadow);
+
+  .execution-title {
+    font-family: $FONT-ROBOTO-MEDIUM;
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--rp-ui-base-almost-black);
+    flex: 1;
+  }
+
+  .status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+
+    &--passed {
+      background-color: var(--rp-ui-base-test-execution-status-passed);
+    }
+
+    &--failed {
+      background-color: var(--rp-ui-base-error);
+    }
+
+    &--to-run {
+      background-color: var(--rp-ui-base-topaz-focused);
+    }
+
+    &--skipped {
+      background-color: var(--rp-ui-base-e-400);
+    }
+
+    &--default {
+      background-color: var(--rp-ui-base-e-400);
+    }
+  }
+}

@@ -16,4 +16,8 @@
 
 .search-field {
   overflow: hidden;
+
+  &--full-width {
+    width: 100% !important;
+  }
 }

@@ -14,20 +14,49 @@
  * limitations under the License.
  */
 
+import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { Folder } from 'controllers/testCase';
+
 export const GET_TEST_PLANS = 'getTestPlans' as const;
 export const GET_TEST_PLAN = 'getTestPlan' as const;
 export const TEST_PLANS_NAMESPACE = 'testPlans' as const;
 export const ACTIVE_TEST_PLAN_NAMESPACE = 'activeTestPlan' as const;
+export const TEST_PLAN_FOLDERS_NAMESPACE = 'testPlanFolders' as const;
+export const TEST_PLAN_TEST_CASES_NAMESPACE = 'testPlanTestCases' as const;
 export const defaultQueryParams = {
-  limit: 1000,
   sortBy: 'createdDate,desc',
+  limit: 20,
+  offset: 0,
 };
 export const defaultSortParam = 'createdDate,desc';
+export const defaultTestPlanTestCasesQueryParams = {
+  limit: 50,
+  offset: 0,
+};
 
 export type TestPlanDto = {
   id: number;
   name: string;
-  totalTestCases: number;
-  coveredTestCases: number;
+  executionStatistic: {
+    covered: number;
+    total: number;
+  };
   description?: string;
+};
+
+export interface PageInfo {
+  number: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}
+
+export type TestPlanFoldersDto = {
+  content: Folder[];
+  page: PageInfo;
+};
+
+export type TestPlanTestCaseDto = {
+  content: ExtendedTestCase[];
+  page: PageInfo;
 };

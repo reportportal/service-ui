@@ -14,6 +14,10 @@ export const messages = defineMessages({
     id: 'ImportTestCaseModal.importFolderNameLabel',
     defaultMessage: 'Import folder name',
   },
+  importDropdownLabel: {
+    id: 'ImportTestCaseModal.importDropdownLabel',
+    defaultMessage: 'Select folder',
+  },
   importFolderNameDescription: {
     id: 'ImportTestCaseModal.importFolderNameDescription',
     defaultMessage:
@@ -21,7 +25,7 @@ export const messages = defineMessages({
   },
   incorrectFileFormat: {
     id: 'ImportTestCaseModal.incorrectFileFormat',
-    defaultMessage: 'File format is not supported',
+    defaultMessage: 'Unsupported format. Please ensure you are using .CSV files only.',
   },
   incorrectFileSize: {
     id: 'ImportTestCaseModal.incorrectFileSize',
@@ -33,5 +37,25 @@ export const messages = defineMessages({
   fileSizeMessage: {
     id: 'ImportTestCaseModal.fileSizeMessage',
     defaultMessage: 'File size should be up to {size} MB',
+  },
+  specifyLocation: {
+    id: 'ImportTestCaseModal.specifyLocation',
+    defaultMessage: 'Specify the location for importing your test cases:',
+  },
+  createNewRootFolder: {
+    id: 'ImportTestCaseModal.createRoot',
+    defaultMessage: 'Create new root folder',
+  },
+  addToExistingFolder: {
+    id: 'ImportTestCaseModal.addToExisting',
+    defaultMessage: 'Add to the existing folder',
+  },
+  noFolderContextTooltip: {
+    id: 'ImportTestCaseModal.noFolderContext',
+    defaultMessage: 'Open the modal from a folder to add items there.',
+  },
+  typeToSearchOrSelect: {
+    id: 'ImportTestCaseModal.typeToSearchOrSelect',
+    defaultMessage: 'Type to search or select a folder from the suggestions…',
   },
 });

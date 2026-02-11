@@ -22,10 +22,6 @@ export const messages = defineMessages({
     defaultMessage:
       'These tests have been updated for this product version. If the functionality is released, we recommend setting them as the default versions to ensure they are used moving forward.',
   },
-  testCaseName: {
-    id: 'LinkedTestCasesTab.testCaseName',
-    defaultMessage: 'Test case name',
-  },
   executionStatus: {
     id: 'LinkedTestCasesTab.executionStatus',
     defaultMessage: 'Execution status',

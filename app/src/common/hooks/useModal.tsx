@@ -14,30 +14,35 @@
  * limitations under the License.
  */
 
-import { ReactElement } from 'react';
+import { ReactElement, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { showModalAction } from 'controllers/modal';
 
 interface UseModalOptions<T = void> {
   modalKey: string;
-  renderModal: (data?: T) => ReactElement;
+  renderModal?: (data?: T) => ReactElement;
+}
+
+export interface UseModalData<T> {
+  data: T;
 }
 
 export const useModal = <T,>({ modalKey, renderModal }: UseModalOptions<T>) => {
   const dispatch = useDispatch();
 
-  const openModal = (data?: T) => {
-    dispatch(
-      showModalAction({
-        id: modalKey,
-        data: data ?? null,
-        component: renderModal(data),
-      }),
-    );
-  };
+  const openModal = useCallback(
+    (data?: T) => {
+      dispatch(
+        showModalAction({
+          id: modalKey,
+          data: data ?? null,
+          component: renderModal ? renderModal(data) : null,
+        }),
+      );
+    },
+    [dispatch, modalKey, renderModal],
+  );
 
-  return {
-    openModal,
-  };
+  return { openModal };
 };

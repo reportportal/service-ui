@@ -83,6 +83,10 @@ const messages = defineMessages({
     id: 'LaunchMergeModal.launchDescriptionHint',
     defaultMessage: 'Description should have size not more than 2048 symbols.',
   },
+  testCaseDescriptionHint: {
+    id: 'DescriptionModal.testCaseDescriptionHint',
+    defaultMessage: 'Description should have size not more than 1000 symbols.',
+  },
   dashboardNameHint: {
     id: 'AddEditDashboard.dashboardNameHint',
     defaultMessage: 'Dashboard name should have size  from 3 to 128.',
@@ -159,6 +163,10 @@ const messages = defineMessages({
   issueIdHint: {
     id: 'LinkIssueModal.issueIdHint',
     defaultMessage: 'Issue ID should have size from 1 to 128',
+  },
+  requirementsLinkHint: {
+    id: 'Common.requirementsLinkHint',
+    defaultMessage: 'Please enter a valid URL using the format: https://example.com.',
   },
   requiredFieldHint: {
     id: 'Common.requiredFieldHint',

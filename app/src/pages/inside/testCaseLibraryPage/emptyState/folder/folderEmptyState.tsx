@@ -16,13 +16,14 @@
 
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
-import classNames from 'classnames/bind';
 
+import { createClassnames } from 'common/utils';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import ImportIcon from 'common/img/import-thin-inline.svg';
 import PlusIconInline from 'common/img/plus-button-inline.svg';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useCreateTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
+import { useImportTestCaseModal } from 'pages/inside/testCaseLibraryPage/importTestCaseModal';
 
 import { messages } from '../messages';
 import { commonMessages } from '../../commonMessages';
@@ -30,7 +31,7 @@ import { ActionButton } from '../../types';
 
 import styles from './folderEmptyState.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface FolderEmptyStateProps {
   folderTitle: string;
@@ -40,6 +41,7 @@ export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
   const { formatMessage } = useIntl();
   const { canCreateTestCase, canImportTestCases } = useUserPermissions();
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
+  const { openModal: openImportTestCaseModal } = useImportTestCaseModal();
 
   const getAvailableButtons = () => {
     const buttons: ActionButton[] = [];
@@ -61,7 +63,7 @@ export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
         variant: 'ghost',
         icon: ImportIcon,
         isCompact: true,
-        handleButton: () => {},
+        handleButton: () => openImportTestCaseModal({ folderName: folderTitle ?? '' }),
       });
     }
 

@@ -14,14 +14,13 @@
  *  limitations under the License.
  */
 
-import { AD, EMAIL, JIRA, LDAP, RALLY, SAML, SAUCE_LABS } from 'common/constants/pluginNames';
+import { EMAIL, JIRA, LDAP, RALLY, SAML, SAUCE_LABS } from 'common/constants/pluginNames';
 import { SauceLabsSettings } from './integrationProviders/sauceLabsIntegration/sauceLabsSettings';
 import { EmailSettings } from './integrationProviders/emailIntegration/emailSettings';
 import { JiraSettings } from './integrationProviders/jiraIntegration/jiraSettings';
 import { RallySettings } from './integrationProviders/rallyIntegration/rallySettings';
 import { SamlSettings } from './integrationProviders/samlIntegration/samlSettings';
 import { LdapSettings } from './integrationProviders/ldapIntegration/ldapSettings';
-import { ActiveDirectorySettings } from './integrationProviders/activeDirectoryIntegration/activeDirectorySettings';
 
 export const INTEGRATIONS_SETTINGS_COMPONENTS_MAP = {
   [SAUCE_LABS]: SauceLabsSettings,
@@ -30,5 +29,4 @@ export const INTEGRATIONS_SETTINGS_COMPONENTS_MAP = {
   [RALLY]: RallySettings,
   [SAML]: SamlSettings,
   [LDAP]: LdapSettings,
-  [AD]: ActiveDirectorySettings,
 };

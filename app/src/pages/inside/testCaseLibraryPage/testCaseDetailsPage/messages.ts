@@ -17,20 +17,16 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  tags: {
-    id: 'EditTestCasePage.tags',
-    defaultMessage: 'Tags',
-  },
-  noTagsAdded: {
-    id: 'EditTestCasePage.noTagsAdded',
-    defaultMessage: 'No tags added yet',
-  },
-  description: {
-    id: 'EditTestCasePage.description',
-    defaultMessage: 'Description',
-  },
   noDescriptionAdded: {
     id: 'EditTestCasePage.noDescriptionAdded',
     defaultMessage: 'No description added',
+  },
+  editTestCase: {
+    id: 'EditTestCasePage.editTestCase',
+    defaultMessage: 'Edit Test Case',
+  },
+  enterTestCaseName: {
+    id: 'TestCaseLibraryPage.enterTestCaseName',
+    defaultMessage: 'Enter test case name',
   },
 });

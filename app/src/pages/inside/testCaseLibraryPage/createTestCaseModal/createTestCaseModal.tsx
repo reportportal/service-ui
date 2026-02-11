@@ -14,97 +14,67 @@
  * limitations under the License.
  */
 
-import { FormEvent, MouseEvent } from 'react';
+import { useEffect } from 'react';
 import { useIntl } from 'react-intl';
-import { useDispatch } from 'react-redux';
-import { reduxForm } from 'redux-form';
-import classNames from 'classnames/bind';
-import { Modal } from '@reportportal/ui-kit';
+import { reduxForm, InjectedFormProps } from 'redux-form';
 
+import { commonValidators } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { hideModalAction } from 'controllers/modal';
-import { commonValidators } from 'common/utils/validation';
-import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
-import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
-import { LoadingSubmitButton } from 'components/loadingSubmitButton';
+import { FolderWithFullPath } from 'controllers/testCase';
 
 import { commonMessages } from '../commonMessages';
-import { BasicInformation } from './basicInformation';
-import { TestCaseDetails } from './testCaseDetails';
-import { TestStep, useCreateTestCase } from './useCreateTestCase';
-
-import styles from './createTestCaseModal.scss';
-
-const cx = classNames.bind(styles) as typeof classNames;
+import { CreateTestCaseFormData } from '../types';
+import { TestCaseModal } from './testCaseModal/testCaseModal';
+import { useTestCase } from './useTestCase';
+import { TEST_CASE_FORM_INITIAL_VALUES } from './constants';
 
 export const CREATE_TEST_CASE_MODAL_KEY = 'createTestCaseModalKey';
+export const CREATE_TEST_CASE_FORM_NAME: string = 'create-test-case-modal-form';
 
-export type ManualScenarioType = 'STEPS' | 'TEXT';
-
-export interface CreateTestCaseFormData {
-  name: string;
-  description?: string;
-  folder: string;
-  priority?: TestCasePriority;
-  linkToRequirements?: string;
-  executionEstimationTime?: number;
-  manualScenarioType: ManualScenarioType;
-  precondition?: string;
-  steps?: TestStep[];
-  instructions?: string;
-  expectedResult?: string;
-  tags?: string[];
+interface CreateTestCaseModalData {
+  folder?: FolderWithFullPath;
 }
 
-export const CreateTestCaseModal = reduxForm<CreateTestCaseFormData>({
-  form: 'create-test-case-modal-form',
-  initialValues: {
-    priority: 'unspecified',
-    manualScenarioType: 'STEPS',
-    executionEstimationTime: 5,
-  },
-  validate: ({ name, folder }) => ({
-    name: commonValidators.requiredField(name),
-    folder: commonValidators.requiredField(folder),
-  }),
-})(({ dirty, handleSubmit }) => {
+interface CreateTestCaseModalOwnProps {
+  data?: CreateTestCaseModalData;
+}
+
+type CreateTestCaseModalProps = CreateTestCaseModalOwnProps &
+  InjectedFormProps<CreateTestCaseFormData, CreateTestCaseModalOwnProps>;
+
+const CreateTestCaseModalComponent = ({
+  data,
+  pristine,
+  initialize,
+  handleSubmit,
+}: CreateTestCaseModalProps) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
-  const { isCreateTestCaseLoading, createTestCase } = useCreateTestCase();
+  const { isLoading: isCreateTestCaseLoading, createTestCase } = useTestCase();
 
-  const okButton = {
-    children: (
-      <LoadingSubmitButton isLoading={isCreateTestCaseLoading}>
-        {formatMessage(COMMON_LOCALE_KEYS.CREATE)}
-      </LoadingSubmitButton>
-    ),
-    onClick: handleSubmit(createTestCase) as (event: MouseEvent<HTMLButtonElement>) => void,
-    disabled: isCreateTestCaseLoading,
-  };
-
-  const cancelButton = {
-    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-    disabled: isCreateTestCaseLoading,
-  };
+  useEffect(() => {
+    initialize({ ...TEST_CASE_FORM_INITIAL_VALUES, folder: data?.folder });
+  }, [data, initialize]);
 
   return (
-    <Modal
+    <TestCaseModal
+      pristine={pristine}
+      handleSubmit={handleSubmit}
       title={formatMessage(commonMessages.createTestCase)}
-      okButton={okButton}
-      className={cx('create-test-case-modal')}
-      cancelButton={cancelButton}
-      allowCloseOutside={!dirty}
-      onClose={() => dispatch(hideModalAction())}
-    >
-      <div className={cx('create-test-case-modal__content-wrapper')}>
-        <form onSubmit={handleSubmit(createTestCase) as (event: FormEvent) => void}>
-          <div className={cx('create-test-case-modal__container')}>
-            <BasicInformation className={cx('create-test-case-modal__scrollable-section')} />
-            <TestCaseDetails className={cx('create-test-case-modal__scrollable-section')} />
-          </div>
-        </form>
-        <ModalLoadingOverlay isVisible={isCreateTestCaseLoading} />
-      </div>
-    </Modal>
+      submitButtonText={formatMessage(COMMON_LOCALE_KEYS.CREATE)}
+      isLoading={isCreateTestCaseLoading}
+      onSubmitHandler={createTestCase}
+      formName={CREATE_TEST_CASE_FORM_NAME}
+    />
   );
-});
+};
+
+export const CreateTestCaseModal = reduxForm<CreateTestCaseFormData, CreateTestCaseModalOwnProps>({
+  form: CREATE_TEST_CASE_FORM_NAME,
+  initialValues: TEST_CASE_FORM_INITIAL_VALUES,
+  validate: ({ name, folder, linkToRequirements }) => ({
+    name: commonValidators.requiredField(name),
+    folder: commonValidators.requiredField(folder),
+    linkToRequirements: commonValidators.optionalUrl(linkToRequirements),
+  }),
+  enableReinitialize: false,
+})(CreateTestCaseModalComponent);

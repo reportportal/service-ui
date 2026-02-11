@@ -15,14 +15,18 @@
  */
 
 import { defineMessages, useIntl } from 'react-intl';
-import { FieldText } from '@reportportal/ui-kit';
-import classNames from 'classnames/bind';
+import { FieldTextFlex } from '@reportportal/ui-kit';
+import { isEmpty } from 'es-toolkit/compat';
 
+import { createClassnames } from 'common/utils';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
+import { Attachment } from 'pages/inside/testCaseLibraryPage/types';
+import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
+import { FieldSection } from 'pages/inside/common/fieldSection';
 
 import styles from './step.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 const messages = defineMessages({
   instructions: {
@@ -41,19 +45,34 @@ const messages = defineMessages({
     id: 'CreateTestCaseModal.enterExpectedResult',
     defaultMessage: 'Enter expected result',
   },
+  attachments: {
+    id: 'CreateTestCaseModal.attachments',
+    defaultMessage: 'Attachments',
+  },
 });
 
 interface StepProps {
-  stepId: string;
+  stepId: number;
   isReadMode?: boolean;
   instructions?: string;
   expectedResult?: string;
+  attachments?: Attachment[];
 }
 
-export const Step = ({ stepId, isReadMode = false, instructions, expectedResult }: StepProps) => {
+const textAreaHeight = 53;
+
+export const Step = ({
+  stepId,
+  isReadMode = false,
+  instructions,
+  expectedResult,
+  attachments,
+}: StepProps) => {
   const { formatMessage } = useIntl();
 
   if (isReadMode) {
+    const isTextInformation = instructions || expectedResult;
+
     return (
       <div className={cx('step', 'read-mode')}>
         {instructions && (
@@ -68,6 +87,17 @@ export const Step = ({ stepId, isReadMode = false, instructions, expectedResult 
             <div className={cx('field-value')}>{expectedResult}</div>
           </div>
         )}
+        {!isEmpty(attachments) && (
+          <>
+            {isTextInformation && <div className={cx('section-border')} />}
+            <FieldSection
+              title={`${formatMessage(messages.attachments)} ${attachments.length}`}
+              className={cx(isTextInformation ? '' : 'header-no-margin')}
+            >
+              <AttachmentList attachments={attachments} />
+            </FieldSection>
+          </>
+        )}
       </div>
     );
   }
@@ -76,19 +106,21 @@ export const Step = ({ stepId, isReadMode = false, instructions, expectedResult 
     <div className={cx('step')}>
       <FieldProvider name={`steps.${stepId}.instructions`}>
         <FieldErrorHint>
-          <FieldText
+          <FieldTextFlex
+            value=""
             label={formatMessage(messages.instructions)}
             placeholder={formatMessage(messages.enterInstruction)}
-            defaultWidth={false}
+            minHeight={textAreaHeight}
           />
         </FieldErrorHint>
       </FieldProvider>
       <FieldProvider name={`steps.${stepId}.expectedResult`}>
         <FieldErrorHint>
-          <FieldText
+          <FieldTextFlex
+            value=""
             label={formatMessage(messages.expectedResult)}
             placeholder={formatMessage(messages.enterExpectedResult)}
-            defaultWidth={false}
+            minHeight={textAreaHeight}
           />
         </FieldErrorHint>
       </FieldProvider>

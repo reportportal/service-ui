@@ -18,22 +18,23 @@ import { FormEvent, MouseEvent, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { InjectedFormProps, reduxForm } from 'redux-form';
-import classNames from 'classnames/bind';
 import { Modal, FieldText, FieldTextFlex } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction } from 'controllers/modal';
 import { commonValidators } from 'common/utils/validation';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
+import { commonMessages } from 'pages/inside/common/common-messages';
 
 import { TestPlanAttributes } from './testPlanAttributes';
 import { messages } from './messages';
 
 import styles from './testPlanModal.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export interface Attribute {
   value: string;
@@ -53,9 +54,10 @@ interface TestPlanModalProps {
   title: string;
   submitButtonText: string;
   isLoading: boolean;
-  onSubmit: (values: TestPlanFormValues) => Promise<void>;
+  requiresChanges?: boolean;
   formName: string; // eslint-disable-line react/no-unused-prop-types
   initialValues?: Partial<TestPlanFormValues>; // eslint-disable-line react/no-unused-prop-types
+  onSubmit: (values: TestPlanFormValues) => Promise<void>;
 }
 
 export const initialValues: Partial<TestPlanFormValues> = {
@@ -69,16 +71,20 @@ const TestPlanModalComponent = ({
   submitButtonText,
   isLoading,
   onSubmit,
+  requiresChanges,
   dirty,
+  invalid,
   handleSubmit,
 }: TestPlanModalProps & InjectedFormProps<TestPlanFormValues>) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
 
+  const isSubmitDisabled = requiresChanges ? isLoading || !dirty || invalid : isLoading || invalid;
+
   const okButton = {
     children: <LoadingSubmitButton isLoading={isLoading}>{submitButtonText}</LoadingSubmitButton>,
     onClick: handleSubmit(onSubmit) as (event: MouseEvent<HTMLButtonElement>) => void,
-    disabled: isLoading,
+    disabled: isSubmitDisabled,
   };
 
   const cancelButton = {
@@ -98,7 +104,7 @@ const TestPlanModalComponent = ({
       <div className={cx('test-plan-modal__content-wrapper')}>
         <form onSubmit={handleSubmit(onSubmit) as (event: FormEvent) => void}>
           <div className={cx('test-plan-modal__container')}>
-            <FieldProvider name="name" placeholder={formatMessage(messages.enterTestPlanName)}>
+            <FieldProvider name="name" placeholder={formatMessage(messages.enterMilestoneName)}>
               <FieldErrorHint provideHint={false}>
                 <FieldText
                   label={formatMessage(COMMON_LOCALE_KEYS.NAME)}
@@ -109,10 +115,10 @@ const TestPlanModalComponent = ({
             </FieldProvider>
             <FieldProvider
               name="description"
-              placeholder={formatMessage(messages.addTestPlanDescription)}
+              placeholder={formatMessage(messages.addMilestoneDescription)}
             >
               <FieldErrorHint provideHint={false}>
-                <FieldTextFlex label={formatMessage(messages.description)} value="" />
+                <FieldTextFlex label={formatMessage(commonMessages.description)} value="" />
               </FieldErrorHint>
             </FieldProvider>
             <TestPlanAttributes />

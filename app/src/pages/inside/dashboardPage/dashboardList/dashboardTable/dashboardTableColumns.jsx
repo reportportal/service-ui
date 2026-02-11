@@ -28,7 +28,7 @@ import { injectIntl } from 'react-intl';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import { showDefaultErrorNotification, showSuccessNotification } from 'controllers/notification';
-import { fetch } from 'common/utils';
+import { fetch, copyToClipboard } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import styles from './dashboardTable.scss';
 import { messages } from './messages';
@@ -144,7 +144,7 @@ export const DuplicateColumn = track()(
 
       try {
         const config = await dashboardConfigPromise;
-        await navigator.clipboard.writeText(JSON.stringify(config));
+        await copyToClipboard(JSON.stringify(config));
         dispatch(
           showSuccessNotification({
             messageId: 'dashboardConfigurationCopied',

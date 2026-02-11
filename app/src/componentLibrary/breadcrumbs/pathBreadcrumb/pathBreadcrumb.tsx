@@ -15,20 +15,26 @@
  */
 
 import { memo } from 'react';
-import classNames from 'classnames/bind';
 import { ChevronRightBreadcrumbsIcon, MoveToFolderIcon } from '@reportportal/ui-kit';
+
+import { createClassnames } from 'common/utils';
+
 import styles from './pathBreadcrumb.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface PathBreadcrumbProps {
   path: string[];
+  color?: string;
+  isIconVisible?: boolean;
 }
 
-export const PathBreadcrumb = memo(({ path }: PathBreadcrumbProps) => {
+export const PathBreadcrumb = memo(({ path, color, isIconVisible = true }: PathBreadcrumbProps) => {
+  const customStyle = color ? { color } : undefined;
+
   return (
-    <div className={cx('path-breadcrumb')}>
-      <MoveToFolderIcon />
+    <div className={cx('path-breadcrumb')} style={customStyle}>
+      {isIconVisible && <MoveToFolderIcon />}
       <div className={cx('path-text')}>
         {path.map((item, index) => (
           <span key={item} className={cx('path-item-container')}>

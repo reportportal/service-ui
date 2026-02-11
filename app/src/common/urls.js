@@ -374,18 +374,43 @@ export const URLS = {
   onboarding: (page = 'GENERAL') => `${urlBase}onboarding?page=${page}`,
   instanceSettings: () => `${urlBase}settings`,
 
-  testCase: (projectKey, query = {}) =>
-    `${urlBase}project/${projectKey}/tms/test-case${getQueryParams(query)}`,
   testCaseDetails: (projectKey, testCaseId) =>
     `${urlBase}project/${projectKey}/tms/test-case/${testCaseId}`,
-  testCasesByFolderId: (projectKey, folderId) =>
-    `${urlBase}project/${projectKey}/tms/test-case?testFolderId=${folderId}`,
-  allTestCases: (projectKey) => `${urlBase}project/${projectKey}/tms/test-case`,
+  testPlanTestCaseDetails: (projectKey, testPlanId, testCaseId) =>
+    `${urlBase}project/${projectKey}/tms/test-plan/${testPlanId}/test-case/${testCaseId}`,
+  testCasesBatch: (projectKey) => `${urlBase}project/${projectKey}/tms/test-case/batch`,
+  testCaseBatchDuplicate: (projectKey) =>
+    `${urlBase}project/${projectKey}/tms/test-case/batch/duplicate`,
+  testCases: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/test-case${getQueryParams(query)}`,
+  testPlanTestCases: (projectKey, id, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/test-plan/${id}/test-case${getQueryParams(query)}`,
   testPlan: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-plan${getQueryParams(query)}`,
+  testPlanTestCasesBatch: (projectKey, testPlanId) =>
+    `${urlBase}project/${projectKey}/tms/test-plan/${testPlanId}/test-case/batch`,
   testPlanById: (projectKey, testPlanId) =>
     `${urlBase}project/${projectKey}/tms/test-plan/${testPlanId}`,
+  testPlanDuplicate: (projectKey, testPlanId) =>
+    `${urlBase}project/${projectKey}/tms/test-plan/${testPlanId}/duplicate`,
   testFolders: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/folder${getQueryParams(query)}`,
-  deleteFolder: (projectKey, folderId) => `${urlBase}project/${projectKey}/tms/folder/${folderId}`,
+  testFolderDuplicate: (projectKey, folderId) =>
+    `${urlBase}project/${projectKey}/tms/folder/${folderId}/duplicate`,
+  folder: (projectKey, folderId) => `${urlBase}project/${projectKey}/tms/folder/${folderId}`,
+  tmsAttachmentUpload: (projectKey) => `${urlBase}project/${projectKey}/tms/attachment/upload`,
+  tmsAttachmentDownload: (projectKey, attachmentId) =>
+    `${urlBase}project/${projectKey}/tms/attachment/${attachmentId}`,
+  manualLaunchesList: (projectKey) => `${urlBase}/${projectKey}/launch`,
+  manualLaunchById: (projectKey, launchId) =>
+    `${urlBase}project/${projectKey}/launch/manual/${launchId}`,
+  createManualLaunch: (projectKey) => `${urlBase}project/${projectKey}/launch/manual`,
+  addTestCaseToLaunch: (projectKey, launchId) =>
+    `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case`,
+  manualLaunchesListPagination: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/launch/manual${getQueryParams(query)}`,
+  importTestCase: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/test-case/import${getQueryParams(query)}`,
+  tmsAttributes: (query = {}) => `${urlBase}tms/attribute${getQueryParams(query)}`,
+  createTmsAttribute: () => `${urlBase}tms/attribute`,
 };

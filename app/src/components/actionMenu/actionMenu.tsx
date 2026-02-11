@@ -16,12 +16,14 @@
 
 import { ReactNode } from 'react';
 import { MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
-import { PopoverProps } from '@reportportal/ui-kit/dist/components/popover';
-import classNames from 'classnames/bind';
+import { PopoverProps } from '@reportportal/ui-kit/popover';
 import Link from 'redux-first-router-link';
+
+import { createClassnames } from 'common/utils';
+
 import styles from './actionMenu.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 export interface ActionItem {
   label: string;

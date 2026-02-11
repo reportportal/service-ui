@@ -16,79 +16,53 @@
 
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
-import { useDispatch } from 'react-redux';
+import { compact } from 'es-toolkit/compat';
 
 import { NumerableBlock } from 'pages/common/numerableBlock';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { referenceDictionary } from 'common/utils';
-import { showModalAction } from 'controllers/modal';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { CREATE_FOLDER_MODAL_KEY } from 'pages/inside/testCaseLibraryPage/expandedOptions/createFolderModal';
+import { useCreateFolderModal } from 'pages/inside/testCaseLibraryPage/testCaseFolders/modals/createFolderModal';
 
 import { messages } from '../messages';
 import { commonMessages } from '../../commonMessages';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useCreateTestCaseModal } from '../../createTestCaseModal';
 import { useImportTestCaseModal } from '../../importTestCaseModal';
-import { ActionButton } from '../../types';
 
 export const MainPageEmptyState = () => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
   const { canCreateTestCase, canCreateTestCaseFolder, canImportTestCases } = useUserPermissions();
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
-  const { openModal: openImportFolderModal } = useImportTestCaseModal();
-
-  const openCreateFolderModal = () => {
-    dispatch(
-      showModalAction({
-        id: CREATE_FOLDER_MODAL_KEY,
-        data: {
-          shouldRenderToggle: false,
-        },
-        component: null,
-      }),
-    );
-  };
+  const { openModal: openImportTestCaseModal } = useImportTestCaseModal();
+  const { openModal: openCreateFolderModal } = useCreateFolderModal();
 
   const benefits = [messages.createFolder, messages.addTestCases, messages.tagTestCases].map(
     (translation) => Parser(formatMessage(translation, {}, { ignoreTag: true })),
   );
 
-  const getAvailableButtons = () => {
-    const buttons: ActionButton[] = [];
-
-    if (canCreateTestCaseFolder) {
-      buttons.push({
-        name: formatMessage(commonMessages.createFolder),
-        dataAutomationId: 'createFolderButton',
-        isCompact: true,
-        handleButton: openCreateFolderModal,
-      });
-    }
-
-    if (canCreateTestCase) {
-      buttons.push({
-        name: formatMessage(commonMessages.createTestCase),
-        dataAutomationId: 'createTestCaseButton',
-        isCompact: true,
-        variant: 'ghost',
-        handleButton: openCreateTestCaseModal,
-      });
-    }
-
-    if (canImportTestCases) {
-      buttons.push({
-        name: formatMessage(COMMON_LOCALE_KEYS.IMPORT),
-        dataAutomationId: 'importTestCaseButton',
-        isCompact: false,
-        variant: 'ghost',
-        handleButton: openImportFolderModal,
-      });
-    }
-
-    return buttons;
-  };
+  const buttons = compact([
+    canCreateTestCaseFolder && {
+      name: formatMessage(commonMessages.createFolder),
+      dataAutomationId: 'createFolderButton',
+      isCompact: true,
+      handleButton: openCreateFolderModal,
+    },
+    canCreateTestCase && {
+      name: formatMessage(commonMessages.createTestCase),
+      dataAutomationId: 'createTestCaseButton',
+      isCompact: true,
+      variant: 'ghost',
+      handleButton: openCreateTestCaseModal,
+    },
+    canImportTestCases && {
+      name: formatMessage(COMMON_LOCALE_KEYS.IMPORT),
+      dataAutomationId: 'importTestCaseButton',
+      isCompact: false,
+      variant: 'ghost',
+      handleButton: openImportTestCaseModal,
+    },
+  ]);
 
   return (
     <>
@@ -97,7 +71,7 @@ export const MainPageEmptyState = () => {
         description={Parser(formatMessage(messages.emptyPageDescription))}
         imageType="docs"
         documentationLink={referenceDictionary.rpDoc}
-        buttons={getAvailableButtons()}
+        buttons={buttons}
       />
       <NumerableBlock
         items={benefits}

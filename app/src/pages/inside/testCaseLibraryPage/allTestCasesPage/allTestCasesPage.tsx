@@ -15,156 +15,211 @@
  */
 
 import { useState, useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import classNames from 'classnames/bind';
-import { isEmpty } from 'es-toolkit/compat';
+import { isEmpty, noop, compact, countBy } from 'es-toolkit/compat';
 import { Button, MeatballMenuIcon, Pagination, Selection } from '@reportportal/ui-kit';
 
-import { TestCaseList } from 'pages/inside/testCaseLibraryPage/testCaseList';
-import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/testCaseLibraryPage/testCaseList/mockData';
+import { createClassnames } from 'common/utils';
+import { TestCaseList } from 'pages/inside/common/testCaseList';
 import {
-  DEFAULT_CURRENT_PAGE,
-  DEFAULT_ITEMS_PER_PAGE,
-} from 'pages/inside/testCaseLibraryPage/testCaseList/configUtils';
+  ITEMS_PER_PAGE_OPTIONS,
+  TEST_CASE_LIST_NAMESPACE,
+  TestCasePageDefaultValues,
+} from 'pages/inside/common/testCaseList/constants';
+import { DEFAULT_CURRENT_PAGE } from 'pages/inside/common/testCaseList/configUtils';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { Page } from 'types/common';
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
-import { urlFolderIdSelector } from 'controllers/pages';
+import { showModalAction } from 'controllers/modal';
+import { payloadSelector, urlFolderIdSelector } from 'controllers/pages';
 import { foldersSelector } from 'controllers/testCase';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { useUserPermissions } from 'hooks/useUserPermissions';
+import { useURLBoundPagination } from 'pages/inside/common/testCaseList/useURLBoundPagination';
+import { useProjectDetails } from 'hooks/useTypedSelector';
 
+import { CHANGE_PRIORITY_MODAL_KEY } from './changePriorityModal';
 import { messages } from './messages';
 import { FolderEmptyState } from '../emptyState/folder/folderEmptyState';
+import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
+import { useBatchDuplicateToFolderModal } from './batchDuplicateToFolderModal';
+import { useBatchDeleteTestCasesModal } from './batchDeleteTestCasesModal';
 
 import styles from './allTestCasesPage.scss';
 
-const cx = classNames.bind(styles) as typeof classNames;
+const cx = createClassnames(styles);
 
 interface AllTestCasesPageProps {
   testCases: TestCase[];
-  loading: boolean;
+  testCasesPageData: Page;
+  isLoading: boolean;
   searchValue: string;
+  instanceKey: TMS_INSTANCE_KEY;
   setSearchValue: (value: string) => void;
+}
+
+export interface SelectedTestCaseRow {
+  id: number;
+  folderId: number;
 }
 
 export const AllTestCasesPage = ({
   testCases,
-  loading,
+  isLoading,
   searchValue,
   setSearchValue,
+  instanceKey,
+  testCasesPageData,
 }: AllTestCasesPageProps) => {
   const { formatMessage } = useIntl();
-  const [activePage, setActivePage] = useState<number>(DEFAULT_CURRENT_PAGE);
-  const [pageSize, setPageSize] = useState<number>(DEFAULT_ITEMS_PER_PAGE);
-  const [selectedRowIds, setSelectedRowIds] = useState<(number | string)[]>([]);
+  const { organizationSlug, projectSlug } = useProjectDetails();
+  const payload = useSelector(payloadSelector);
+  const { setPageNumber, setPageSize, captions, activePage, pageSize, totalPages } =
+    useURLBoundPagination({
+      pageData: testCasesPageData,
+      defaultQueryParams: TestCasePageDefaultValues,
+      namespace: TEST_CASE_LIST_NAMESPACE,
+      shouldSaveUserPreferences: true,
+      baseUrl: `/organizations/${organizationSlug}/projects/${projectSlug}/testLibrary${payload.testCasePageRoute ? '/' + payload.testCasePageRoute : ''}`,
+    });
+  const [selectedRows, setSelectedRows] = useState<SelectedTestCaseRow[]>([]);
   const folderId = useSelector(urlFolderIdSelector);
   const folders = useSelector(foldersSelector);
-  const isAnyRowSelected = !isEmpty(selectedRowIds);
-
+  const dispatch = useDispatch();
+  const isAnyRowSelected = !isEmpty(selectedRows);
+  const selectedRowIds = useMemo(() => selectedRows.map((row) => row.id), [selectedRows]);
+  const { openModal: openAddToTestPlanModal } = useAddTestCasesToTestPlanModal();
+  const { openModal: openBatchDuplicateToFolderModal } = useBatchDuplicateToFolderModal();
+  const { openModal: openBatchDeleteTestCasesModal } = useBatchDeleteTestCasesModal();
+  const { canDeleteTestCase, canDuplicateTestCase, canEditTestCase } = useUserPermissions();
   const folderTitle = useMemo(() => {
     const selectedFolder = folders.find((folder) => String(folder.id) === String(folderId));
-    return selectedFolder?.name || formatMessage(messages.allTestCasesTitle);
+    return selectedFolder?.name || formatMessage(COMMON_LOCALE_KEYS.ALL_TEST_CASES_TITLE);
   }, [folderId, folders, formatMessage]);
 
-  // Calculate pagination values
-  const totalItems = testCases.length;
-  const totalPages = Math.ceil(totalItems / pageSize);
-
-  const popoverItems: PopoverItem[] = [
-    {
+  const popoverItems: PopoverItem[] = compact([
+    canDuplicateTestCase && {
       label: formatMessage(messages.duplicateToFolder),
+      onClick: () => {
+        openBatchDuplicateToFolderModal({
+          selectedTestCaseIds: selectedRowIds,
+          count: selectedRowIds.length,
+          onClearSelection,
+        });
+      },
     },
-    {
+    canEditTestCase && {
       label: formatMessage(messages.changePriority),
+      onClick: () => {
+        dispatch(
+          showModalAction({
+            id: CHANGE_PRIORITY_MODAL_KEY,
+            data: {
+              priority: 'unspecified',
+              selectedRowIds,
+              onClearSelection,
+            },
+          }),
+        );
+      },
     },
-    {
+    canEditTestCase && {
       label: formatMessage(messages.editTags),
+      onClick: noop,
     },
-    {
+    canDeleteTestCase && {
       label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
       variant: 'destructive',
+      onClick: () => {
+        const folderDeltasMap = countBy(selectedRows, (row) => String(row.folderId));
+
+        openBatchDeleteTestCasesModal({
+          selectedTestCaseIds: selectedRowIds,
+          folderDeltasMap,
+          onClearSelection,
+        });
+      },
     },
-  ];
+  ]);
+
+  const handleOpenAddToTestPlanModal = useCallback(() => {
+    openAddToTestPlanModal({ selectedTestCaseIds: selectedRowIds });
+  }, [selectedRowIds, openAddToTestPlanModal]);
 
   const handleSearchChange = useCallback(
     (targetSearchValue: string) => {
       setSearchValue(targetSearchValue);
-      setActivePage(DEFAULT_CURRENT_PAGE);
+      setPageNumber(DEFAULT_CURRENT_PAGE);
     },
-    [setSearchValue],
+    [setSearchValue, setPageNumber],
   );
 
-  const changePageSize = (size: number) => {
-    setPageSize(size);
-    setActivePage(DEFAULT_CURRENT_PAGE);
-  };
-
-  if (isEmpty(testCases) && !loading) {
+  if (isEmpty(testCases) && !isLoading) {
     return <FolderEmptyState folderTitle={folderTitle} />;
   }
 
+  const onClearSelection = () => setSelectedRows([]);
+
+  const handleSelectedRows = (rows: SelectedTestCaseRow[]) => setSelectedRows(rows);
+
   return (
     <>
-      <div className={cx('all-test-cases-page')}>
+      <div
+        className={cx(
+          'all-test-cases-page',
+          isAnyRowSelected ? 'all-test-cases-page__with-panel' : '',
+        )}
+      >
         <TestCaseList
           testCases={testCases}
-          loading={loading}
-          currentPage={activePage}
-          itemsPerPage={pageSize}
+          isLoading={isLoading}
           searchValue={searchValue}
-          onSearchChange={handleSearchChange}
           selectedRowIds={selectedRowIds}
-          handleSelectedRowIds={setSelectedRowIds}
+          selectedRows={selectedRows}
           folderTitle={folderTitle}
+          instanceKey={instanceKey}
+          onSearchChange={handleSearchChange}
+          handleSelectedRows={handleSelectedRows}
         />
       </div>
-
-      <div className={cx('sticky-wrapper')}>
-        {totalItems > 0 && (
-          <div className={cx('pagination')}>
-            <Pagination
-              pageSize={pageSize}
-              activePage={activePage}
-              totalItems={totalItems}
-              totalPages={totalPages}
-              pageSizeOptions={ITEMS_PER_PAGE_OPTIONS}
-              changePage={setActivePage}
-              changePageSize={changePageSize}
-              captions={{
-                items: formatMessage(messages.items),
-                of: formatMessage(messages.of),
-                page: formatMessage(messages.page),
-                goTo: formatMessage(messages.goToPage),
-                goAction: formatMessage(messages.go),
-                perPage: formatMessage(messages.perPage),
-              }}
-            />
+      {Boolean(testCasesPageData?.totalElements) && (
+        <div className={cx('pagination', isAnyRowSelected ? 'pagination-with-panel' : '')}>
+          <Pagination
+            pageSize={pageSize}
+            activePage={activePage}
+            totalItems={testCasesPageData.totalElements}
+            totalPages={totalPages}
+            pageSizeOptions={ITEMS_PER_PAGE_OPTIONS}
+            changePage={setPageNumber}
+            changePageSize={setPageSize}
+            captions={captions}
+          />
+        </div>
+      )}
+      {isAnyRowSelected && (
+        <div className={cx('selection')}>
+          <Selection selectedCount={selectedRowIds.length} onClearSelection={onClearSelection} />
+          <div className={cx('selection-controls')}>
+            <PopoverControl items={popoverItems} placement="bottom-end">
+              <Button
+                variant="ghost"
+                adjustWidthOn="content"
+                onClick={noop}
+                className={cx('selection-controls__more-button')}
+              >
+                <MeatballMenuIcon />
+              </Button>
+            </PopoverControl>
+            <Button variant="ghost">{formatMessage(messages.moveToFolder)}</Button>
+            <Button variant="ghost">{formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}</Button>
+            <Button onClick={handleOpenAddToTestPlanModal}>
+              {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
+            </Button>
           </div>
-        )}
-        {isAnyRowSelected && (
-          <div className={cx('selection')}>
-            <Selection
-              selectedCount={selectedRowIds.length}
-              onClearSelection={() => setSelectedRowIds([])}
-            />
-            <div className={cx('selection-controls')}>
-              <PopoverControl items={popoverItems} placement="bottom-end">
-                <Button
-                  variant="ghost"
-                  adjustWidthOn="content"
-                  onClick={() => {}}
-                  className={cx('selection-controls__more-button')}
-                >
-                  <MeatballMenuIcon />
-                </Button>
-              </PopoverControl>
-              <Button variant="ghost">{formatMessage(messages.moveToFolder)}</Button>
-              <Button variant="ghost">{formatMessage(messages.addToLaunch)}</Button>
-              <Button>{formatMessage(messages.addToTestPlan)}</Button>
-            </div>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
     </>
   );
 };

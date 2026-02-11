@@ -26,13 +26,18 @@ import { ProjectDetails } from 'pages/organization/constants';
 import { EmptyTestPlans } from 'pages/inside/testPlansPage/emptyTestPlans';
 import { projectNameSelector } from 'controllers/project';
 import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
-import { getTestPlansAction, testPlansSelector, isLoadingSelector } from 'controllers/testPlan';
+import {
+  getTestPlansAction,
+  testPlansSelector,
+  isLoadingSelector,
+  defaultQueryParams,
+} from 'controllers/testPlan';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { useQueryParams } from 'common/hooks';
 
 import { useCreateTestPlanModal } from './testPlanModals';
 import { TestPlansTable } from './testPlansTable';
 import { TestPlansHeader } from './testPlansHeader';
-import { PageLoader } from './pageLoader';
 import { commonMessages } from './commonMessages';
 
 export const TestPlansPage = () => {
@@ -48,6 +53,7 @@ export const TestPlansPage = () => {
   const isLoading = useSelector(isLoadingSelector);
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
   const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
+  const queryParams = useQueryParams(defaultQueryParams);
 
   useEffect(() => {
     if (isNull(testPlans) && !isLoading) {
@@ -56,12 +62,8 @@ export const TestPlansPage = () => {
   }, [dispatch, testPlans, isLoading]);
 
   const renderContent = () => {
-    if (isLoading) {
-      return <PageLoader />;
-    }
-
-    if (testPlans && !isEmpty(testPlans)) {
-      return <TestPlansTable testPlans={testPlans} />;
+    if ((testPlans && !isEmpty(testPlans)) || isLoading) {
+      return <TestPlansTable testPlans={testPlans} isLoading={isLoading} />;
     }
 
     return <EmptyTestPlans />;
@@ -81,7 +83,7 @@ export const TestPlansPage = () => {
                   data-automation-id="refreshPageButton"
                   icon={<RefreshIcon />}
                   disabled={isLoading}
-                  onClick={() => dispatch(getTestPlansAction())}
+                  onClick={() => dispatch(getTestPlansAction(queryParams))}
                 >
                   {formatMessage(commonMessages.refreshPage)}
                 </Button>
@@ -91,7 +93,7 @@ export const TestPlansPage = () => {
                     data-automation-id="createTestPlanButton"
                     onClick={openModal}
                   >
-                    {formatMessage(commonMessages.createTestPlan)}
+                    {formatMessage(commonMessages.createMilestone)}
                   </Button>
                 )}
               </>

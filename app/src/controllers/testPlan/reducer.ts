@@ -21,13 +21,21 @@ import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
 import { PROJECT_TEST_PLANS_PAGE, PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
 
-import { ACTIVE_TEST_PLAN_NAMESPACE, TEST_PLANS_NAMESPACE } from './constants';
+import {
+  ACTIVE_TEST_PLAN_NAMESPACE,
+  TEST_PLAN_FOLDERS_NAMESPACE,
+  TEST_PLANS_NAMESPACE,
+  TEST_PLAN_TEST_CASES_NAMESPACE,
+} from './constants';
 
 const reducer = combineReducers({
-  data: fetchReducer(TEST_PLANS_NAMESPACE, { initialState: null, contentPath: 'content' }),
+  data: fetchReducer(TEST_PLANS_NAMESPACE, { initialState: null, contentPath: 'data' }),
   isLoading: loadingReducer(TEST_PLANS_NAMESPACE),
   activeTestPlan: fetchReducer(ACTIVE_TEST_PLAN_NAMESPACE, { initialState: null }),
+  testPlanFolders: fetchReducer(TEST_PLAN_FOLDERS_NAMESPACE, { initialState: null }),
+  testPlanTestCases: fetchReducer(TEST_PLAN_TEST_CASES_NAMESPACE, { initialState: null }),
   isLoadingActive: loadingReducer(ACTIVE_TEST_PLAN_NAMESPACE),
+  isLoadingTestPlanTestCases: loadingReducer(TEST_PLAN_TEST_CASES_NAMESPACE),
 });
 
 export const testPlanReducer = createPageScopedReducer(reducer, [

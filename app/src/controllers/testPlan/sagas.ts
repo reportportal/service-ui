@@ -24,17 +24,24 @@ import { FETCH_START } from 'controllers/fetch/constants';
 import { BaseAppState } from 'types/store';
 import { showErrorNotification } from 'controllers/notification';
 import { projectKeySelector } from 'controllers/project';
-import { PROJECT_TEST_PLANS_PAGE } from 'controllers/pages';
+import { locationSelector, PROJECT_TEST_PLANS_PAGE } from 'controllers/pages';
+import { LocationInfo } from 'controllers/pages/typed-selectors';
 
 import {
   GET_TEST_PLANS,
   GET_TEST_PLAN,
   TEST_PLANS_NAMESPACE,
   TestPlanDto,
+  TestPlanFoldersDto,
+  TestPlanTestCaseDto,
   defaultQueryParams,
   ACTIVE_TEST_PLAN_NAMESPACE,
+  TEST_PLAN_FOLDERS_NAMESPACE,
+  TEST_PLAN_TEST_CASES_NAMESPACE,
+  defaultTestPlanTestCasesQueryParams,
 } from './constants';
 import { GetTestPlansParams, GetTestPlanParams } from './actionCreators';
+import { Page } from '../../types/common';
 
 interface GetTestPlansAction extends Action<typeof GET_TEST_PLANS> {
   payload?: GetTestPlansParams;
@@ -54,14 +61,21 @@ function* getTestPlans(action: GetTestPlansAction): Generator {
       meta: { namespace: TEST_PLANS_NAMESPACE },
     });
 
-    const params = action.payload ?? defaultQueryParams;
+    const params = action.payload
+      ? {
+          limit: action.payload.limit,
+          offset: action.payload.offset,
+          sortBy: defaultQueryParams.sortBy,
+        }
+      : defaultQueryParams;
     const data = (yield call(fetch, URLS.testPlan(projectKey, params))) as {
       content: TestPlanDto[];
+      page: Page;
     };
 
     yield put(
       fetchSuccessAction(TEST_PLANS_NAMESPACE, {
-        content: data.content,
+        data,
       }),
     );
   } catch (error) {
@@ -75,19 +89,35 @@ function* getTestPlans(action: GetTestPlansAction): Generator {
 }
 
 function* getTestPlan(action: GetTestPlanAction): Generator {
+  const projectKey = (yield select(projectKeySelector)) as string;
+  const location = (yield select(locationSelector)) as LocationInfo;
+  const { testPlanId, offset, limit } = action.payload;
+  const params = {
+    limit: limit || defaultTestPlanTestCasesQueryParams.limit,
+    offset: offset || defaultTestPlanTestCasesQueryParams.offset,
+  };
+
   try {
-    const projectKey = (yield select(projectKeySelector)) as string;
-    const { testPlanId } = action.payload;
+    if (
+      location.query?.offset !== String(offset) ||
+      location.query?.limit !== String(limit) ||
+      String(location?.prev?.payload?.testPlanId) !== String(location?.payload?.testPlanId)
+    ) {
+      yield put({
+        type: FETCH_START,
+        payload: { projectKey },
+        meta: { namespace: ACTIVE_TEST_PLAN_NAMESPACE },
+      });
 
-    yield put({
-      type: FETCH_START,
-      payload: { projectKey },
-      meta: { namespace: ACTIVE_TEST_PLAN_NAMESPACE },
-    });
+      const data = (yield call(fetch, URLS.testPlanById(projectKey, testPlanId))) as TestPlanDto;
+      const planFolders = (yield call(
+        fetch,
+        URLS.testFolders(projectKey, { 'filter.eq.testPlanId': testPlanId }),
+      )) as TestPlanFoldersDto;
 
-    const data = (yield call(fetch, URLS.testPlanById(projectKey, testPlanId))) as TestPlanDto;
-
-    yield put(fetchSuccessAction(ACTIVE_TEST_PLAN_NAMESPACE, data));
+      yield put(fetchSuccessAction(ACTIVE_TEST_PLAN_NAMESPACE, data));
+      yield put(fetchSuccessAction(TEST_PLAN_FOLDERS_NAMESPACE, planFolders));
+    }
   } catch (error) {
     const locationPayload = (yield select(
       (state: BaseAppState) => state.location?.payload,
@@ -98,6 +128,23 @@ function* getTestPlan(action: GetTestPlanAction): Generator {
       type: PROJECT_TEST_PLANS_PAGE,
       payload: locationPayload,
     });
+  }
+
+  try {
+    yield put({
+      type: FETCH_START,
+      payload: { projectKey },
+      meta: { namespace: TEST_PLAN_TEST_CASES_NAMESPACE },
+    });
+
+    const planTestCases = (yield call(
+      fetch,
+      URLS.testPlanTestCases(projectKey, testPlanId, params),
+    )) as TestPlanTestCaseDto;
+
+    yield put(fetchSuccessAction(TEST_PLAN_TEST_CASES_NAMESPACE, planTestCases));
+  } catch (error) {
+    yield put(fetchErrorAction(TEST_PLAN_TEST_CASES_NAMESPACE, error));
   }
 }
 

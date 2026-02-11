@@ -25,10 +25,13 @@ import {
   range,
   isNotOnlySpaces,
 } from './validatorHelpers';
+import { MAX_FIELD_LENGTH } from './constants';
+
+const URL_REGEX = /^(ftp|http|https):\/\/[^\s"]+[^\s".]$/;
 
 export { isNotEmpty as required };
 export const isNotEmptyArray = composeValidators([isNotEmpty, minLength(1)]);
-export const url = composeValidators([isNotEmpty, regex(/^(ftp|http|https):\/\/[^ "]+$/)]);
+export const url = composeValidators([isNotEmpty, regex(URL_REGEX)]);
 export const rallyUrl = composeValidators([
   isNotEmpty,
   regex(/^(https:\/\/rally1.rallydev.com).*/),
@@ -53,6 +56,7 @@ export const userName = composeValidators([isNotEmpty, regex(/^[A-Za-z0-9.'_\- ]
 export const filterName = composeValidators([isNotEmpty, lengthRange(3, 128)]);
 export const launchName = composeValidators([isNotEmpty, maxLength(256)]);
 export const launchDescription = maxLength(2048);
+export const testCaseDescription = maxLength(MAX_FIELD_LENGTH);
 export const dashboardName = composeValidators([isNotEmpty, lengthRange(3, 128)]);
 export const createDashboardNameUniqueValidator = (dashboardItems, dashboardItem) => (name) =>
   !dashboardItems.some((dashboard) => dashboard.name === name && dashboard.id !== dashboardItem.id);
@@ -101,6 +105,7 @@ export const descriptionStepLevelEntity = composeValidators([
 
 export const port = range(1, 65535);
 
+export const optionalUrl = (value) => !value || regex(URL_REGEX)(value);
 export const searchFilter = (value) =>
   !value || composeValidators([isNotOnlySpaces, minLength(3)])(value);
 export const searchMembers = (value) => !value || isNotOnlySpaces(value);

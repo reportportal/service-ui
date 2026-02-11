@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-import { GET_TEST_PLANS, GET_TEST_PLAN, defaultQueryParams } from './constants';
+import { GET_TEST_PLANS, GET_TEST_PLAN } from './constants';
 
 export interface GetTestPlansParams {
-  sort?: string;
-  limit?: number;
+  offset?: string | number;
+  limit?: string | number;
 }
 
 export interface GetTestPlanParams {
   testPlanId: string | number;
+  offset?: string | number;
+  limit?: string | number;
 }
 
-export const getTestPlansAction = (params: GetTestPlansParams = defaultQueryParams) => ({
+export const getTestPlansAction = (params?: GetTestPlansParams) => ({
   type: GET_TEST_PLANS,
   payload: params,
 });

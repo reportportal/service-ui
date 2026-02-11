@@ -41,6 +41,16 @@
         &:first-child {
           flex: 0 0 155px;
         }
+
+        div:has(.history-of-actions__table-cell-user) {
+          overflow: visible !important;
+        }
+      }
+    }
+
+    :global([class*='table-row-content']) {
+      > div {
+        white-space: normal;
       }
     }
   }

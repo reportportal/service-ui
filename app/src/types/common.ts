@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ButtonProps } from '@reportportal/ui-kit/dist/components/button';
+import { ButtonProps } from '@reportportal/ui-kit/button';
 
 export interface ModalButtonProps extends ButtonProps {
   text?: string;
@@ -22,3 +22,15 @@ export interface ModalButtonProps extends ButtonProps {
 }
 
 export type QueryParams = Record<string, string | number>;
+
+export interface Page {
+  number: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}
+
+export type queryParamsType = {
+  offset?: number;
+  limit?: number;
+};

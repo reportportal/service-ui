@@ -33,14 +33,6 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'TestCaseLibraryPage.importTestCases',
     defaultMessage: 'Import Test Cases',
   },
-  allTestCases: {
-    id: 'TestCaseLibraryPage.allTestCases',
-    defaultMessage: 'All Test Cases',
-  },
-  folders: {
-    id: 'TestCaseLibraryPage.folders',
-    defaultMessage: 'Folders',
-  },
   testCaseLibraryBreadcrumb: {
     id: 'TestCaseLibraryPage.testCaseLibraryBreadcrumb',
     defaultMessage: 'Test Case Library',
@@ -57,6 +49,10 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'TestCaseLibraryPage.deleteFolder',
     defaultMessage: 'Delete folder',
   },
+  noTestPlanCreated: {
+    id: 'TestCaseLibraryPage.noTestPlanCreated',
+    defaultMessage: 'No test plan created yet',
+  },
   duplicateFolder: {
     id: 'TestCaseLibraryPage.duplicateFolder',
     defaultMessage: 'Duplicate folder',
@@ -64,5 +60,46 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
   enterFolderName: {
     id: 'TestCaseLibraryPage.enterFolderName',
     defaultMessage: 'Enter folder name',
+  },
+  testCaseName: {
+    id: 'TestCaseLibraryPage.testCaseName',
+    defaultMessage: 'Test case name',
+  },
+  folder: {
+    id: 'TestCaseLibraryPage.folder',
+    defaultMessage: 'Folder',
+  },
+  searchFolderToSelect: {
+    id: 'TestCaseLibraryPage.searchFolderToSelect',
+    defaultMessage: 'Search folder to select',
+  },
+  editTestCase: {
+    id: 'TestCaseLibraryPage.editTestCase',
+    defaultMessage: 'Edit Test Case',
+  },
+  duplicateTestCaseName: {
+    id: 'TestCaseLibraryPage.duplicateTestCaseName',
+    defaultMessage: 'Test case with this name already exists',
+  },
+  coveredManually: {
+    id: 'TestCaseLibraryPage.coveredManually',
+    defaultMessage: 'Covered manually',
+  },
+  createNew: {
+    id: 'TestCaseLibraryPage.createNew',
+    defaultMessage: 'Create new',
+  },
+  incorrectCsvFormat: {
+    id: 'TestCaseLibraryPage.incorrectCsvFormat',
+    defaultMessage:
+      'Invalid CSV format: Ensure your file includes the required columns: "name", "description", "priority", "externalId".',
+  },
+  moveFolderTo: {
+    id: 'TestCaseLibraryPage.moveFolderTo',
+    defaultMessage: 'Move folder to',
+  },
+  createSubfolder: {
+    id: 'TestCaseLibraryPage.createSubfolder',
+    defaultMessage: 'Create subfolder',
   },
 });

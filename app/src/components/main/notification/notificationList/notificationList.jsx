@@ -216,6 +216,22 @@ const messages = defineMessages({
     id: 'TestCaseLibraryPage.testCaseFolderDeletedSuccess',
     defaultMessage: 'Folder has been deleted successfully.',
   },
+  testCaseFolderDuplicatedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseFolderDuplicatedSuccess',
+    defaultMessage: 'Folder has been duplicated successfully.',
+  },
+  testCasesDuplicatedSuccess: {
+    id: 'TestCaseLibraryPage.testCasesDuplicatedSuccess',
+    defaultMessage: 'Test cases have been duplicated successfully.',
+  },
+  testCaseDeletedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseDeletedSuccess',
+    defaultMessage: 'Test case has been deleted successfully.',
+  },
+  testCaseDescriptionUpdateSuccess: {
+    id: 'TestCaseLibraryPage.testCaseDescriptionUpdateSuccess',
+    defaultMessage: 'Test case description has been updated successfully.',
+  },
   testCaseFolderRenamedSuccess: {
     id: 'TestCaseLibraryPage.testCaseFolderRenamedSuccess',
     defaultMessage: 'Folder has been renamed successfully.',
@@ -224,9 +240,53 @@ const messages = defineMessages({
     id: 'TestCaseLibraryPage.testCaseCreatedSuccess',
     defaultMessage: 'Test Case has been created successfully.',
   },
+  testCasesAddingToTestPlanSuccess: {
+    id: 'TestCaseLibraryPage.testCasesAddedToTestPlanSuccess',
+    defaultMessage: 'Selected Test Cases have been added to the Test Plan successfully.',
+  },
+  testCaseAddingToTestPlanSuccess: {
+    id: 'TestCaseLibraryPage.testCaseAddedToTestPlanSuccess',
+    defaultMessage: 'Selected Test Case has been added to the Test Plan successfully.',
+  },
+  testCaseUpdatedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseUpdatedSuccess',
+    defaultMessage: 'Test Case has been updated successfully.',
+  },
+  testCaseMovedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseMovedSuccess',
+    defaultMessage: 'Test Case has been moved successfully.',
+  },
+  testCaseFolderMovedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseFolderMovedSuccess',
+    defaultMessage: 'Folder has been moved successfully.',
+  },
+  testCaseFolderMoveFailed: {
+    id: 'TestCaseLibraryPage.testCaseFolderMoveFailed',
+    defaultMessage: 'Failed to move Folder.',
+  },
+  testCaseBulkUpdateSuccess: {
+    id: 'TestCaseLibraryPage.testCaseBulkUpdateSuccess',
+    defaultMessage: 'Test Cases have been updated successfully.',
+  },
   testCaseCreationFailed: {
     id: 'TestCaseLibraryPage.testCaseCreationFailed',
     defaultMessage: 'Failed to create Test Case.',
+  },
+  testCaseUpdateFailed: {
+    id: 'TestCaseLibraryPage.testCaseUpdateFailed',
+    defaultMessage: 'Failed to update Test Case.',
+  },
+  testCaseMoveFailed: {
+    id: 'TestCaseLibraryPage.testCaseMoveFailed',
+    defaultMessage: 'Failed to move Test Case.',
+  },
+  testCasesAddingToTestPlanFailed: {
+    id: 'TestCaseLibraryPage.testCasesAddingToTestPlanFailed',
+    defaultMessage: 'Failed to add selected Test Cases to the Test Plan.',
+  },
+  testCaseAddingToTestPlanFailed: {
+    id: 'TestCaseLibraryPage.testCaseAddingToTestPlanFailed',
+    defaultMessage: 'Failed to add selected Test Case to the Test Plan.',
   },
   errorOccurredTryAgain: {
     id: 'Common.errorOccurredTryAgain',
@@ -240,6 +300,14 @@ const messages = defineMessages({
   testPlanCreatedSuccess: {
     id: 'TestPlansPage.testPlanCreatedSuccess',
     defaultMessage: 'Test Plan has been created successfully.',
+  },
+  launchCreatedSuccess: {
+    id: 'TestPlansPage.launchCreatedSuccess',
+    defaultMessage: 'Launch has been created successfully.',
+  },
+  launchUpdatedSuccess: {
+    id: 'TestPlansPage.launchUpdatedSuccess',
+    defaultMessage: 'Launch has been updated successfully.',
   },
   testPlanLoadingFailed: {
     id: 'TestPlansPage.testPlanLoadingFailed',
@@ -256,6 +324,18 @@ const messages = defineMessages({
   testPlanDeletedSuccess: {
     id: 'TestPlansPage.testPlanDeletedSuccess',
     defaultMessage: 'Test Plan has been deleted successfully.',
+  },
+  importSuccessToFolder: {
+    id: 'ImportTestCaseModal.importSuccessToFolder',
+    defaultMessage: 'Test cases have been imported successfully to folder {folderName}.',
+  },
+  importSuccess: {
+    id: 'ImportTestCaseModal.importSuccess',
+    defaultMessage: 'Test cases have been imported successfully.',
+  },
+  importTestCaseFailed: {
+    id: 'ImportTestCaseModal.testCaseImportFailed',
+    defaultMessage: 'Failed to import Test Case.',
   },
 });
 

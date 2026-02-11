@@ -18,21 +18,37 @@
 
 .test-plans {
   &__table-container {
-    display: flex;
-    justify-content: center;
-    padding: 26px 32px;
+    padding: 26px 32px 90px;
+  }
+
+  &__table {
+    margin: 0 auto;
+
+    :global([class*='table-body']) {
+      gap: 4px;
+    }
+
+    :global([class*='table-cell']) {
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
   }
 
   &__table-row {
-    &:hover {
-      border-radius: 4px;
-      box-shadow: var(--rp-ui-base-shadow-hover);
+    position: relative;
+    min-height: 64px;
+    box-sizing: content-box;
+
+    :global([class*='table-row-content']) {
+      align-items: center;
+      border: 1px solid transparent;
+      padding: 1px;
     }
   }
 
   &__table-cell-coverage {
     font-size: 15px;
-    line-height: 24px;
     color: var(--rp-ui-base-almost-black);
     font-family: $FONT-ROBOTO-MEDIUM;
     font-weight: 500;
@@ -55,5 +71,35 @@
     &:focus svg path {
       fill: var(--rp-ui-base-topaz-hover);
     }
+
+    svg {
+      rotate: -90deg;
+    }
+  }
+}
+
+.cell-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.pagination-wrapper {
+  position: fixed;
+  width: calc(100vw - 48px);
+  bottom: 0;
+  z-index: $Z-INDEX-POPUP;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--rp-ui-base-bg-100);
+  padding: 5px 32px;
+  border-top: 1px solid var(--rp-ui-base-e-100);
+  height: 64px;
+  box-sizing: border-box;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100vw;
   }
 }

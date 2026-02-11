@@ -15,38 +15,28 @@
  */
 
 import { useDispatch, useSelector } from 'react-redux';
-import { noop } from 'es-toolkit';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import { useDebouncedSpinner } from 'common/hooks';
+import { useDebouncedSpinner, useQueryParams } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
-import { getTestPlansAction, TestPlanDto } from 'controllers/testPlan';
+import { defaultQueryParams, getTestPlansAction, TestPlanDto } from 'controllers/testPlan';
 
 import { TestPlanFormValues } from '../testPlanModal';
 
-interface UseCreateTestPlanOptions {
-  successMessageId: string;
-  errorMessageId: string;
-  onSuccess?: (testPlanId: number) => void;
-}
-
-export const useCreateTestPlan = ({
-  successMessageId,
-  errorMessageId,
-  onSuccess = noop,
-}: UseCreateTestPlanOptions) => {
+export const useCreateTestPlan = () => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+  const queryParams = useQueryParams(defaultQueryParams);
 
   const submitTestPlan = async (payload: TestPlanFormValues) => {
     try {
       showSpinner();
 
-      const response = await fetch<TestPlanDto>(URLS.testPlan(projectKey), {
+      await fetch<TestPlanDto>(URLS.testPlan(projectKey), {
         method: 'post',
         data: {
           name: payload.name,
@@ -57,15 +47,14 @@ export const useCreateTestPlan = ({
       dispatch(hideModalAction());
       dispatch(
         showSuccessNotification({
-          messageId: successMessageId,
+          messageId: 'testPlanCreatedSuccess',
         }),
       );
-      dispatch(getTestPlansAction());
-      onSuccess(response.id);
+      dispatch(getTestPlansAction(queryParams));
     } catch {
       dispatch(
         showErrorNotification({
-          messageId: errorMessageId,
+          messageId: 'errorOccurredTryAgain',
         }),
       );
     } finally {
