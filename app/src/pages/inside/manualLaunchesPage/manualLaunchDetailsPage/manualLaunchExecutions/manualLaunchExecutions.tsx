@@ -140,7 +140,7 @@ export const ManualLaunchExecutions = ({ executions, isLoading }: ManualLaunchEx
         ),
       },
       steps: {
-        content: stepsCount || '',
+        content: stepsCount ?? '',
         component: (
           <div className={cx('execution-steps-cell')}>{stepsCount === null ? '—' : stepsCount}</div>
         ),

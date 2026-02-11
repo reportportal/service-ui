@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+// Sidebar width calculation: 100vw - (side menu 48px + detail panel 360px)
 $sidebar-width: calc(100vw - 408px);
 
 .manual-launch-executions {
