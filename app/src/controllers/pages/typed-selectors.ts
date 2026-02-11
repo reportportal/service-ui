@@ -21,6 +21,7 @@ interface LocationPayload {
   projectSlug: string;
   testCasePageRoute?: string;
   testPlanId?: string;
+  testPlanRoute?: string;
   launchId?: string;
 }
 
