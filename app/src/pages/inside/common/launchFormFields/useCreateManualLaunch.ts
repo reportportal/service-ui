@@ -81,7 +81,7 @@ export const useCreateManualLaunch = (
             ...(resolvedTestPlanId && { testPlanId: resolvedTestPlanId }),
           };
 
-          await fetch(URLS.createManualLaunch(projectKey), {
+          await fetch(URLS.manualLaunch(projectKey), {
             method: 'POST',
             data: launchData,
           });

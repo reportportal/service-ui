@@ -17,13 +17,25 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  batchDeleteTestCasesTitle: {
-    id: 'BatchDeleteTestCasesModal.title',
-    defaultMessage: 'Delete Test Cases',
+  deleteLaunchTitle: {
+    id: 'DeleteManualLaunchModal.deleteLaunchTitle',
+    defaultMessage: 'Delete launch',
+  },
+  deleteConfirmation: {
+    id: 'DeleteManualLaunchModal.deleteConfirmation',
+    defaultMessage: "Are you sure you want to delete <b>''{launchName}''</b>?",
+  },
+  deletePermanentWarning: {
+    id: 'DeleteManualLaunchModal.deletePermanentWarning',
+    defaultMessage: 'This launch and all its test executions will be permanently deleted.',
+  },
+  batchDeleteTitle: {
+    id: 'BatchDeleteManualLaunchesModal.title',
+    defaultMessage: 'Delete launches',
   },
   batchDeleteDescription: {
-    id: 'BatchDeleteTestCasesModal.description',
+    id: 'BatchDeleteManualLaunchesModal.description',
     defaultMessage:
-      'Are you sure you want to delete <b>{count} selected test {count, plural, one {case} other {cases}}</b>? This irreversible action will also impact the testing scope of any Test Plans that include them.',
+      'Are you sure you want to delete {count} selected {count, plural, one {launch} other {launches}}?',
   },
 });

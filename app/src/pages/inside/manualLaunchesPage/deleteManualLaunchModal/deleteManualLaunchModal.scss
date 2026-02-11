@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,8 @@
  * limitations under the License.
  */
 
-export {
-  getTestPlansAction,
-  getTestPlanAction,
-  toggleTestPlanFolderExpansionAction,
-  expandTestPlanFoldersToLevelAction,
-  setTestPlanExpandedFolderIdsAction,
-  deleteTestPlanFolderSuccessAction,
-  setTestPlanInitialExpandedFoldersAction,
-} from './actionCreators';
-export { testPlanSagas } from './sagas';
-export * from './constants';
-export { testPlanReducer } from './reducer';
-export * from './selectors';
+.delete-manual-launch-modal {
+  strong {
+    font-weight: 700;
+  }
+}

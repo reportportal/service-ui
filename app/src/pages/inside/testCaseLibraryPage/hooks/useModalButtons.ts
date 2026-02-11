@@ -14,25 +14,29 @@
  * limitations under the License.
  */
 
-import { useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { useIntl } from 'react-intl';
-import { SubmitHandler } from 'redux-form';
 import { useDispatch } from 'react-redux';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction } from 'controllers/modal';
+import { VoidFn } from '@reportportal/ui-kit/common';
+
+type ButtonVariant = 'primary' | 'ghost' | 'danger' | 'text' | 'ghost-danger' | 'text-danger';
 
 interface UseModalButtonsProps {
-  okButtonText: string;
+  okButtonText: ReactNode;
   isLoading: boolean;
   isSubmitButtonDisabled?: boolean;
-  onSubmit: SubmitHandler;
+  variant?: ButtonVariant;
+  onSubmit: VoidFn;
 }
 
 export const useModalButtons = ({
   okButtonText,
   isLoading,
   isSubmitButtonDisabled = false,
+  variant,
   onSubmit,
 }: UseModalButtonsProps) => {
   const { formatMessage } = useIntl();
@@ -42,9 +46,10 @@ export const useModalButtons = ({
     () => ({
       children: okButtonText,
       disabled: isLoading || isSubmitButtonDisabled,
-      onClick: onSubmit as unknown as () => void,
+      ...(variant && { variant }),
+      onClick: onSubmit,
     }),
-    [okButtonText, isLoading, isSubmitButtonDisabled, onSubmit],
+    [okButtonText, isLoading, isSubmitButtonDisabled, variant, onSubmit],
   );
 
   const cancelButton = useMemo(

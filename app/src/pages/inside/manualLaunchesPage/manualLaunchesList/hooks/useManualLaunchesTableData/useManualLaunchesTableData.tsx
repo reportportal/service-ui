@@ -201,6 +201,7 @@ export const useManualLaunchesTableData = (
               content: testsToRun,
               component: <TestRunButton count={testsToRun} />,
             },
+            metaData: { id, name },
           };
         },
       ),
