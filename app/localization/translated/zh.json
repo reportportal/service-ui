@@ -1365,7 +1365,7 @@
   "LogTypeModal.logTypeLevelInvalidHint": "Log level should be a number from 1 to 59999",
   "LogTypeModal.logTypeName": "Log type name",
   "LogTypeModal.logTypeNameAlreadyExistsHint": "Log type with the same name already exists on the project",
-  "LogTypeModal.logTypeNameInvalidHint": "Log type name may contain only Latin, numeric characters, hyphen, underscore (from 3 to 16 symbols)",
+  "LogTypeModal.logTypeNameInvalidHint": "Log type name may contain only Latin, numeric characters, space (from 3 to 16 symbols)",
   "LogTypeModal.previewText": "Preview: log example",
   "LogTypeModal.systemLogTypeInfoMessage": "Name and log level cannot be changed — only its visual appearance settings can be adjusted.",
   "LogTypeModal.systemLogTypeInfoMessageHeader": "This is core type",
