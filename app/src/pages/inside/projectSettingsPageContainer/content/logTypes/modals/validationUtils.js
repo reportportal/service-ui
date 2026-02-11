@@ -23,7 +23,7 @@ import {
 } from 'common/utils/validation/validatorHelpers';
 import { NAME_FIELD_KEY, LEVEL_FIELD_KEY, MIN_LOG_LEVEL, MAX_LOG_LEVEL } from './constants';
 
-export const logTypeName = composeValidators([lengthRange(3, 16), regex(/^[A-Za-z0-9_-]+$/)]);
+export const logTypeName = composeValidators([lengthRange(3, 16), regex(/^[A-Za-z0-9 ]+$/)]);
 export const logTypeLevel = composeValidators([
   range(MIN_LOG_LEVEL, MAX_LOG_LEVEL),
   regex(/^\d+$/),
@@ -44,6 +44,8 @@ export const levelUniqueValidator = (logTypes, excludeLogTypeId = null) => (valu
 export const logTypeValidator = (logTypes = [], excludeLogTypeId = null) => (values) => {
   const { [NAME_FIELD_KEY]: name, [LEVEL_FIELD_KEY]: level } = values;
 
+  const trimmedName = (name || '').trim();
+
   return {
     [NAME_FIELD_KEY]: composeBoundValidators([
       bindMessageToValidator(validate.required, 'requiredFieldHint'),
@@ -52,7 +54,7 @@ export const logTypeValidator = (logTypes = [], excludeLogTypeId = null) => (val
         nameUniqueValidator(logTypes, excludeLogTypeId),
         'logTypeNameAlreadyExistsHint',
       ),
-    ])(name),
+    ])(trimmedName),
 
     [LEVEL_FIELD_KEY]: composeBoundValidators([
       bindMessageToValidator(validate.required, 'requiredFieldHint'),

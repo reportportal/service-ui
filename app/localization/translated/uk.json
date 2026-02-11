@@ -1365,7 +1365,7 @@
   "LogTypeModal.logTypeLevelInvalidHint": "Рівень лога повинен бути числом від 1 до 59999",
   "LogTypeModal.logTypeName": "Назва лог типу",
   "LogTypeModal.logTypeNameAlreadyExistsHint": "Лог тип з таким ім'ям вже існує в проєкті",
-  "LogTypeModal.logTypeNameInvalidHint": "Назва лог типу може містити тільки латинські букви, цифри, тире та підкреслення (від 3 до 16 символів)",
+  "LogTypeModal.logTypeNameInvalidHint": "Назва лог типу може містити тільки латинські букви, цифри та пробіл (від 3 до 16 символів)",
   "LogTypeModal.previewText": "Попередній перегляд: приклад логу",
   "LogTypeModal.systemLogTypeInfoMessage": "Назву та рівень логу змінити неможливо — можна налаштувати лише параметри зовнішнього вигляду.",
   "LogTypeModal.systemLogTypeInfoMessageHeader": "Це базовий тип",

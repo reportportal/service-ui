@@ -287,7 +287,7 @@ const messages = defineMessages({
   logTypeNameInvalidHint: {
     id: 'LogTypeModal.logTypeNameInvalidHint',
     defaultMessage:
-      'Log type name may contain only Latin, numeric characters, hyphen, underscore (from 3 to 16 symbols)',
+      'Log type name may contain only Latin, numeric characters, space (from 3 to 16 symbols)',
   },
   logTypeLevelInvalidHint: {
     id: 'LogTypeModal.logTypeLevelInvalidHint',
