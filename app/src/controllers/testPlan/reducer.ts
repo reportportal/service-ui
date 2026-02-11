@@ -113,7 +113,7 @@ const testPlanExpandedFolderIdsReducer = (
     case EXPAND_TEST_PLAN_FOLDERS_TO_LEVEL: {
       if (hasTestPlanFolderExpansionPayload(action)) {
         const { folderId, folders } = action.payload;
-        const folderMap = new Map(folders.map((f) => [f.id, f]));
+        const folderMap = new Map(folders.map((folder) => [folder.id, folder]));
         const idsToExpand: number[] = [];
         const targetFolder = folderMap.get(folderId);
 
