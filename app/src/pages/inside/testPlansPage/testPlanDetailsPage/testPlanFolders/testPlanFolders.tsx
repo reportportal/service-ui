@@ -39,8 +39,6 @@ export const TestPlanFolders = ({ isLoading = false }: TestPlanFoldersProps) => 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-
-
   const setAllTestCases = () => {
     if (activeFolderId) {
       dispatch({
