@@ -65,16 +65,22 @@ export const ManualLaunchExecutions = ({ executions, isLoading }: ManualLaunchEx
       itemsPerPage: DEFAULT_PAGE_SIZE,
     });
 
-  const handleSearchChange = debounce((_value: string) => {
-    setActivePage(1);
-  }, 300);
+  const handleSearchChange = useMemo(
+    () =>
+      debounce((_value: string) => {
+        setActivePage(1);
+      }, 300),
+    [setActivePage],
+  );
 
   const handleFilterClick = () => {
     // TODO: Implement filter functionality
   };
 
   const paginatedExecutions = useMemo(() => {
-    const startIndex = (activePage - 1) * pageSize;
+    const maxPage = Math.max(1, Math.ceil((filteredExecutions?.length || 0) / pageSize));
+    const safePage = Math.min(activePage, maxPage);
+    const startIndex = (safePage - 1) * pageSize;
     const endIndex = startIndex + pageSize;
     return filteredExecutions?.slice(startIndex, endIndex) || [];
   }, [filteredExecutions, activePage, pageSize]);
@@ -110,7 +116,7 @@ export const ManualLaunchExecutions = ({ executions, isLoading }: ManualLaunchEx
   };
 
   const tableData = paginatedExecutions.map((execution) => {
-    const stepsCount = execution.manualScenario?.steps?.length || null;
+    const stepsCount = execution.manualScenario?.steps?.length ?? null;
     const tags = execution.attributes?.map((attr) => attr.key) || [];
 
     return {

@@ -26,8 +26,6 @@ import {
   getManualLaunchAction,
 } from 'controllers/manualLaunch';
 
-import { DeleteExecutionUrlFn } from './types';
-
 export const useDeleteExecution = () => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
@@ -38,11 +36,7 @@ export const useDeleteExecution = () => {
     try {
       showSpinner();
 
-      const deleteUrl = (URLS.deleteExecutionFromLaunch as DeleteExecutionUrlFn)(
-        projectKey,
-        launchId,
-        executionId,
-      );
+      const deleteUrl = URLS.deleteExecutionFromLaunch(projectKey, launchId, executionId);
       await fetch(deleteUrl, {
         method: 'delete',
       });

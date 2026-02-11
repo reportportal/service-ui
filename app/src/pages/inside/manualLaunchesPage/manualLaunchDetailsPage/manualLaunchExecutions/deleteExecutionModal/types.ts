@@ -20,9 +20,3 @@ export interface DeleteExecutionModalData {
   execution: TestCaseExecution;
   launchId: string | number;
 }
-
-export type DeleteExecutionUrlFn = (
-  projectKey: string,
-  launchId: string | number,
-  executionId: number,
-) => string;

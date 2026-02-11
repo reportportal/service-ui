@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { MouseEvent } from 'react';
+import { FC, MouseEvent, ReactNode } from 'react';
 import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { Modal } from '@reportportal/ui-kit';
@@ -33,6 +33,10 @@ import { messages } from './messages';
 import styles from './deleteExecutionModal.scss';
 
 const cx = createClassnames(styles);
+
+const BoldText: FC<{ children: ReactNode }> = ({ children }) => (
+  <span className={cx('delete-execution-modal__text--bold')}>{children}</span>
+);
 
 const DeleteExecutionModalComponent = ({
   data: { execution, launchId },
@@ -70,7 +74,7 @@ const DeleteExecutionModalComponent = ({
       onClose={hideModal}
     >
       {formatMessage(messages.deleteExecutionText, {
-        b: (data) => <span className={cx('delete-execution-modal__text--bold')}>{data}</span>,
+        b: (data) => <BoldText>{data}</BoldText>,
         name: execution.testCaseName,
       })}
     </Modal>
