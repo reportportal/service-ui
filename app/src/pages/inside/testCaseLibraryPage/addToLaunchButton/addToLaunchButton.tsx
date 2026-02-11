@@ -70,7 +70,6 @@ export const AddToLaunchButton = ({
   }, [manualScenario]);
 
   const handleAddToLaunchClick = () => {
-    console.log('OPEN LAUNCH MODAL');
     openAddToLaunchModal({ testCaseId, testCaseName });
   };
 
