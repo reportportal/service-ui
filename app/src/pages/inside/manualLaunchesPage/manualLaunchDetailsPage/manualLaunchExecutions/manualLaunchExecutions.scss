@@ -14,14 +14,250 @@
  * limitations under the License.
  */
 
+$sidebar-width: calc(100vw - 408px);
+
 .manual-launch-executions {
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  padding: 20px 32px 64px;
+
   &__loader {
     display: flex;
     justify-content: center;
+    align-items: center;
     padding: 40px;
+    min-height: 400px;
   }
 
-  &__content {
-    padding: 20px;
+  &__empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    min-height: 400px;
+  }
+
+  &__pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--rp-ui-base-bg-100);
+    padding: 5px 32px;
+    border-top: 1px solid var(--rp-ui-base-e-100);
+    margin-top: auto;
+    height: 64px;
+    box-sizing: border-box;
+    position: fixed;
+    width: $sidebar-width;
+    bottom: 0;
+    z-index: $Z-INDEX-POPUP;
+  }
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rp-ui-base-e-100);
+  background: transparent;
+  gap: 16px;
+  width: 100%;
+  height: 45px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.controls-title {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  color: var(--rp-ui-base-almost-black);
+  flex-shrink: 0;
+}
+
+.controls-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-right: 12px;
+}
+
+.search-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 0 0 auto;
+  max-width: 400px;
+}
+
+.filter-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 8px;
+  height: 32px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--rp-ui-base-e-400);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+
+  &:hover {
+    background-color: var(--rp-ui-base-bg-200);
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    color: var(--rp-ui-base-e-400);
+    transition: color 0.2s ease-in-out;
+
+    path {
+      fill: currentColor;
+    }
+  }
+
+  &.active {
+    svg {
+      color: var(--rp-ui-base-topaz);
+    }
+
+    &:hover {
+      background-color: var(--rp-ui-base-bg-200);
+    }
+  }
+}
+
+.executions-table-wrapper {
+  margin-top: 16px;
+}
+
+.executions-table {
+  width: 100%;
+
+  :global([class*='_table-header_']) {
+    background: none !important;
+    margin-bottom: 8px;
+  }
+
+  :global([class*='_header-cell_']) {
+    font-family: $FONT-ROBOTO-MEDIUM;
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--rp-ui-base-e-300);
+    text-transform: uppercase;
+  }
+
+  :global([class*='_cell_']) {
+    &:not(:first-child) {
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+.execution-name-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.first-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.test-name {
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--rp-ui-base-almost-black);
+}
+
+.tags-section {
+  margin-top: 24px;
+}
+
+.execution-chip {
+  position: relative;
+  height: max-content;
+  min-height: 76px;
+  border-radius: 4px;
+  box-sizing: content-box;
+
+  :global([class*='table-row-content']) {
+    align-items: center;
+    min-height: 76px;
+    cursor: pointer;
+  }
+
+  &:hover :global([class*='table-row-content']) {
+    outline: 1px solid var(--rp-ui-base-topaz-focused);
+  }
+
+  &:has(.selected) :global([class*='table-row-content']) {
+    outline: 2px solid var(--rp-ui-base-topaz-focused);
+  }
+}
+
+.execution-steps-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0;
+  color: var(--rp-ui-base-almost-black);
+}
+
+.execution-status-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.execution-actions-cell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.execution-actions-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: var(--rp-ui-base-e-300);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+
+  &:hover {
+    background-color: var(--rp-ui-base-e-100);
+  }
+
+  &:active,
+  &:focus {
+    svg {
+      color: var(--rp-ui-base-topaz-pressed);
+    }
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
   }
 }
