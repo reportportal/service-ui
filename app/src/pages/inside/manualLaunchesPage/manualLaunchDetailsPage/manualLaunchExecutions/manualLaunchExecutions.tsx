@@ -117,7 +117,7 @@ export const ManualLaunchExecutions = ({ executions, isLoading }: ManualLaunchEx
 
   const tableData = paginatedExecutions.map((execution) => {
     const stepsCount = execution.manualScenario?.steps?.length ?? null;
-    const tags = execution.attributes?.map((attr) => attr.key) || [];
+    const tags = execution.attributes?.map((attr) => attr.key).filter(Boolean) || [];
 
     return {
       id: execution.id,

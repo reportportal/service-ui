@@ -19,22 +19,17 @@
   align-items: center;
   justify-content: center;
 
-  &.to-run,
-  &.in-progress,
-  &.passed,
-  &.failed {
-    .status-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+  .status-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 36px;
+
+    svg {
       width: 48px;
       height: 36px;
-
-      svg {
-        width: 48px;
-        height: 36px;
-        display: block;
-      }
+      display: block;
     }
   }
 }
