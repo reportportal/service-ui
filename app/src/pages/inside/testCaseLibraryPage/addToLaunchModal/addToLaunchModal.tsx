@@ -54,14 +54,16 @@ const AddToLaunchModalComponent = ({
 
   const descriptionText = useMemo(() => {
     // Switch description text based on the number of selected test cases
-    return selectedTestCasesIds.length > 1 ? formatMessage(messages.addSelectedTestCases, {
-      count: selectedTestCasesIds.length,
-      bold: BoldTestCasesCount,
-    }) : formatMessage(messages.addSelectedTestCase, {
-      testCaseName: testCases[0]?.name,
-      bold: BoldTestCasesCount,
-    });
-  }, [selectedTestCasesIds.length, formatMessage]);
+    return selectedTestCasesIds.length > 1
+      ? formatMessage(messages.addSelectedTestCases, {
+          count: selectedTestCasesIds.length,
+          bold: BoldTestCasesCount,
+        })
+      : formatMessage(messages.addSelectedTestCase, {
+          testCaseName: testCases[0]?.name,
+          bold: BoldTestCasesCount,
+        });
+  }, [selectedTestCasesIds.length, formatMessage, testCases?.[0]?.name]);
 
   return (
     <BaseLaunchModal

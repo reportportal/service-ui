@@ -124,6 +124,7 @@ export const useCreateManualLaunch = (
       dispatch,
       projectKey,
       formatMessage,
+      testCases?.[0]?.name
     ],
   );
 

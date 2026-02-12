@@ -80,7 +80,7 @@ export const messages = defineMessages({
   },
   testCaseAddedSuccess: {
     id: 'LaunchFormFields.testCaseAddedSuccess',
-    defaultMessage: 'Test case "{testCaseName}" have been added to launch successfully',
+    defaultMessage: 'Test case "{testCaseName}" has been added to launch successfully',
   },
   launchCreatedSuccess: {
     id: 'LaunchFormFields.launchCreatedSuccess',
