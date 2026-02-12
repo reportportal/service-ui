@@ -25,6 +25,7 @@ import { Button } from '@reportportal/ui-kit';
 import { isIntegrationSupportsMultipleInstances } from 'components/integrations/utils';
 import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { removeNoneValues } from 'components/fields/dynamicFieldsSection/utils';
+import { trimStringValues } from 'common/utils';
 import styles from './integrationForm.scss';
 
 const cx = classNames.bind(styles);
@@ -96,7 +97,7 @@ export class IntegrationForm extends Component {
 
   submitIntegration = (formData) => {
     this.props.onSubmit(
-      removeNoneValues(formData),
+      removeNoneValues(trimStringValues(formData)),
       this.submitIntegrationSuccess,
       this.state.metaData,
     );

@@ -30,6 +30,7 @@ import { INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP } from 'components/integrations
 import { uiExtensionIntegrationFormFieldsSelector } from 'controllers/plugins';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { INTEGRATION_FORM } from 'components/integrations/elements';
+import { trimStringValues } from 'common/utils';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './addIntegrationModal.scss';
 
@@ -87,7 +88,7 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
       }
     }
 
-    onConfirm(newData, metaData);
+    onConfirm(trimStringValues(newData), metaData);
   };
 
   const okButton = {
