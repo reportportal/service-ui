@@ -309,14 +309,6 @@ export const notificationMessages = defineMessages({
     id: 'TestPlansPage.testPlanCreatedSuccess',
     defaultMessage: 'Test Plan has been created successfully.',
   },
-  launchCreatedSuccess: {
-    id: 'TestPlansPage.launchCreatedSuccess',
-    defaultMessage: 'Launch has been created successfully.',
-  },
-  launchUpdatedSuccess: {
-    id: 'TestPlansPage.launchUpdatedSuccess',
-    defaultMessage: 'Launch has been updated successfully.',
-  },
   testPlanLoadingFailed: {
     id: 'TestPlansPage.testPlanLoadingFailed',
     defaultMessage: 'Failed to load Test Plans.',

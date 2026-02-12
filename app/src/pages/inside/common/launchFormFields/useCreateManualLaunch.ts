@@ -63,7 +63,12 @@ export const useCreateManualLaunch = (
 
           dispatch(
             showSuccessNotification({
-              message: formatMessage(messages.testCasesAddedSuccess),
+              message:
+                testCaseIds.length > 1
+                  ? formatMessage(messages.testCasesAddedSuccess)
+                  : formatMessage(messages.testCaseAddedSuccess, {
+                      testCaseName: testCases[0]?.name,
+                    }),
             }),
           );
         } else if (activeMode === LaunchMode.NEW) {

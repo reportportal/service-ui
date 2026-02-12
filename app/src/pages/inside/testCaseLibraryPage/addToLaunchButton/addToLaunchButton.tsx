@@ -31,13 +31,11 @@ const cx = createClassnames(styles);
 
 interface AddToLaunchButtonProps {
   testCaseId: number;
-  testCaseName: string;
   manualScenario: ManualScenario;
 }
 
 export const AddToLaunchButton = ({
   testCaseId,
-  testCaseName,
   manualScenario,
 }: AddToLaunchButtonProps) => {
   const { formatMessage } = useIntl();
@@ -73,7 +71,7 @@ export const AddToLaunchButton = ({
   }, [manualScenario]);
 
   const handleAddToLaunchClick = () => {
-    openAddToLaunchModal({ testCaseId, testCaseName });
+    openAddToLaunchModal();
   };
 
   const buttonComponent = (
