@@ -39,6 +39,7 @@ export const LaunchFormFields = ({
   description,
   isTestPlanFieldDisabled = true,
   testPlanValue,
+  isUncoveredTestsCheckboxAvailable = true,
 }: LaunchFormFieldsProps) => {
   const { formatMessage } = useIntl();
 
@@ -72,12 +73,14 @@ export const LaunchFormFields = ({
         handleActiveButton={handleModeChange}
       />
 
-      <div className={cx('uncovered-tests-checkbox')}>
-        <Field
-          name={LAUNCH_FORM_FIELD_NAMES.UNCOVERED_TESTS_ONLY}
-          component={renderUncoveredTestsCheckbox}
-        />
-      </div>
+      {isUncoveredTestsCheckboxAvailable && (
+        <div className={cx('uncovered-tests-checkbox')}>
+          <Field
+            name={LAUNCH_FORM_FIELD_NAMES.UNCOVERED_TESTS_ONLY}
+            component={renderUncoveredTestsCheckbox}
+          />
+        </div>
+      )}
 
       {isExistingMode ? (
         <ExistingLaunchFields onLaunchSelect={onLaunchSelect} />

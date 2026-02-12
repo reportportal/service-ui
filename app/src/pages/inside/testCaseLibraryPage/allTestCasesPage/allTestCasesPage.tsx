@@ -46,7 +46,7 @@ import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/u
 import { useBatchDuplicateToFolderModal } from './batchDuplicateToFolderModal';
 import { useBatchDeleteTestCasesModal } from './batchDeleteTestCasesModal';
 import { useMoveTestCaseModal } from '../moveTestCaseModal';
-import { useAddToLaunchModalV2 } from '../addToLaunchModalV2';
+import { useAddToLaunchModal } from '../addToLaunchModal';
 
 import styles from './allTestCasesPage.scss';
 
@@ -90,10 +90,10 @@ export const AllTestCasesPage = ({
   const selectedRowIds = useMemo(() => selectedRows.map((row) => row.id), [selectedRows]);
   const { openModal: openAddToTestPlanModal } = useAddTestCasesToTestPlanModal();
   const onClearSelection = () => setSelectedRows([]);
-  const { openModal: openAddToLaunchModal } = useAddToLaunchModalV2(
-    selectedRowIds,
+  const { openModal: openAddToLaunchModal } = useAddToLaunchModal({
+    selectedTestCasesIds: selectedRowIds,
     onClearSelection,
-  );
+  });
   const { openModal: openBatchDuplicateToFolderModal } = useBatchDuplicateToFolderModal();
   const { openModal: openBatchDeleteTestCasesModal } = useBatchDeleteTestCasesModal();
   const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();

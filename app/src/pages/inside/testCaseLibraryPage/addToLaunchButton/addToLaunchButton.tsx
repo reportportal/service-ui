@@ -23,7 +23,7 @@ import { ManualScenario } from 'pages/inside/testCaseLibraryPage/types';
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { useAddToLaunchModalV2 } from '../addToLaunchModalV2';
+import { useAddToLaunchModal } from '../addToLaunchModal';
 
 import styles from './addToLaunchButton.scss';
 
@@ -41,7 +41,10 @@ export const AddToLaunchButton = ({
   manualScenario,
 }: AddToLaunchButtonProps) => {
   const { formatMessage } = useIntl();
-  const { openModal: openAddToLaunchModal } = useAddToLaunchModalV2([testCaseId]);
+  const { openModal: openAddToLaunchModal } = useAddToLaunchModal({
+    selectedTestCasesIds: [testCaseId],
+    isUncoveredTestsCheckboxAvailable: false,
+  });
 
   const isDisabled = useMemo(() => {
     if (isEmpty(manualScenario)) {

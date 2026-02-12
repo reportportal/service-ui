@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,36 +14,8 @@
  * limitations under the License.
  */
 
-import { TestPlanDto } from 'controllers/testPlan';
-import { Attribute } from '../types';
-import { Launch } from 'pages/inside/manualLaunchesPage/types';
-
-export interface AddToLaunchModalData {
-  testCaseId: number;
-  testCaseName: string;
-}
-
 export interface AddToLaunchModalProps {
-  data: AddToLaunchModalData;
-}
-
-export interface AddToLaunchFormData {
-  selectedLaunch?: Launch;
-  selectedTestPlan?: TestPlanDto;
-  launchDescription?: string;
-  launchName?: string;
-  launchAttributes?: Attribute[];
-}
-
-export interface CreateLaunchDto {
-  name: string;
-  startTime: string;
-  description: string;
-  testPlanId: number;
-  testCaseIds: number[];
-  attributes: Attribute[];
-}
-
-export interface AddTestCaseToLaunchDto {
-  testCaseId: number[];
+  selectedTestCasesIds: number[];
+  isUncoveredTestsCheckboxAvailable?: boolean;
+  onClearSelection?: () => void;
 }

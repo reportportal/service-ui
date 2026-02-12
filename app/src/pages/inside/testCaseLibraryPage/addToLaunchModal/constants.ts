@@ -14,7 +14,4 @@
  * limitations under the License.
  */
 
-export interface AddToLaunchModalV2Props {
-  selectedRowsIds: number[];
-  onClearSelection?: () => void;
-}
+export const ADD_TO_LAUNCH_MODAL_KEY = 'addToLaunchModal';
