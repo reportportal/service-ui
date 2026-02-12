@@ -19,7 +19,7 @@ import { defineMessages } from 'react-intl';
 export const messages = defineMessages({
   deleteLaunchTitle: {
     id: 'DeleteManualLaunchModal.deleteLaunchTitle',
-    defaultMessage: 'Delete launch',
+    defaultMessage: 'Delete Launch',
   },
   deleteConfirmation: {
     id: 'DeleteManualLaunchModal.deleteConfirmation',
@@ -31,7 +31,7 @@ export const messages = defineMessages({
   },
   batchDeleteTitle: {
     id: 'BatchDeleteManualLaunchesModal.title',
-    defaultMessage: 'Delete launches',
+    defaultMessage: 'Delete Launches',
   },
   batchDeleteDescription: {
     id: 'BatchDeleteManualLaunchesModal.description',
