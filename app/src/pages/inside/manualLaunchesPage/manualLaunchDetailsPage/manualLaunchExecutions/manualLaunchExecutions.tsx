@@ -243,7 +243,7 @@ export const ManualLaunchExecutions = ({ executions, isLoading }: ManualLaunchEx
                 type="button"
                 className={cx('filter-icon')}
                 onClick={handleFilterClick}
-                aria-label="Filter"
+                aria-label={formatMessage(messages.filterAriaLabel)}
               >
                 <FilterOutlineIcon />
               </button>

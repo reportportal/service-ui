@@ -50,4 +50,8 @@ export const messages = defineMessages({
     id: 'ManualLaunchExecutions.deleteExecution',
     defaultMessage: 'Delete',
   },
+  filterAriaLabel: {
+    id: 'ManualLaunchExecutions.filterAriaLabel',
+    defaultMessage: 'Filter',
+  },
 });
