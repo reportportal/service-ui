@@ -28,8 +28,6 @@ import { FieldProvider, FieldErrorHint } from 'components/fields';
 import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { commonMessages } from 'pages/inside/common/common-messages';
-import { referenceDictionary } from 'common/utils/referenceDictionary';
-import { LinkItem } from 'layouts/common/appSidebar/helpAndService/linkItem';
 
 import { NewLaunchFieldsProps } from './types';
 import { LAUNCH_FORM_FIELD_NAMES } from './constants';
@@ -102,21 +100,6 @@ export const NewLaunchFields = ({
           </FieldErrorHint>
         </FieldProvider>
       </div>
-
-      <p className={cx('launch-name-hint')}>
-        {formatMessage(messages.existingLaunchHint, {
-          learnMoreLink: (
-            <span className={cx('launch-name-hint-link')}>
-              <LinkItem
-                icon={null}
-                isInternal={false}
-                link={referenceDictionary.rpDoc}
-                content={formatMessage(messages.learnMore)}
-              />
-            </span>
-          ),
-        })}
-      </p>
 
       <FieldProvider
         name={LAUNCH_FORM_FIELD_NAMES.DESCRIPTION}

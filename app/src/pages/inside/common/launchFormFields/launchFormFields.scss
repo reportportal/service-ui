@@ -42,26 +42,6 @@
   font-weight: 600;
 }
 
-.launch-name-hint {
-  @include hint-text-style;
-  margin-top: 8px;
-  margin-bottom: 16px;
-  color: var(--rp-ui-base-e-400);
-}
-
-.launch-name-hint-link {
-  a {
-    @include hint-text-style;
-    color: var(--rp-ui-base-topaz);
-    text-decoration: none;
-    cursor: pointer;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-}
-
 .test-plan-field {
   margin-top: 16px;
 }
