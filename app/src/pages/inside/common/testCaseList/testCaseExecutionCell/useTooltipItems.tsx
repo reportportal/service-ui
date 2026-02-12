@@ -15,12 +15,11 @@
  */
 
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
-import { TestCaseMenuAction } from 'pages/inside/common/testCaseList/types';
 import { useTestCaseTooltipItems } from 'pages/inside/testCaseLibraryPage/allTestCasesPage/useTestCaseTooltipItems';
-import { useTestPlanTooltipItems } from 'pages/inside/testPlansPage/testPlanDetailsPage/testPlanFolders/allTestCasesPage/useTestPlanTooltipItems';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { useIntl } from 'react-intl';
 import { messages } from '../messages';
+import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
 
 interface UseTooltipItemsProps {
   instanceKey: TMS_INSTANCE_KEY;
@@ -29,11 +28,10 @@ interface UseTooltipItemsProps {
 
 export const useTooltipItems = ({ instanceKey, testCase }: UseTooltipItemsProps) => {
   const { formatMessage } = useIntl();
-  const testPlanTooltipItems = useTestPlanTooltipItems();
   const testCaseTooltipItems = useTestCaseTooltipItems({ testCase });
 
 
-  const tooltipItemsByInstance: Record<TMS_INSTANCE_KEY, typeof testPlanTooltipItems> = {
+  const tooltipItemsByInstance: Partial<Record<TMS_INSTANCE_KEY, PopoverItem[]>> = {
     [TMS_INSTANCE_KEY.TEST_PLAN]: [
       {
         label: formatMessage(messages.removeTestCase),
