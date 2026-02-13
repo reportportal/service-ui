@@ -341,7 +341,7 @@ export const notificationMessages = defineMessages({
   },
   manualLaunchDeletedSuccess: {
     id: 'ManualLaunchesPage.manualLaunchDeletedSuccess',
-    defaultMessage: "Launch ''{name}'' has been deleted",
+    defaultMessage: "Launch ''{name}'' has been deleted successfully.",
   },
   manualLaunchesBatchDeletedSuccess: {
     id: 'ManualLaunchesPage.manualLaunchesBatchDeletedSuccess',
