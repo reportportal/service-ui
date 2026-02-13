@@ -17,7 +17,7 @@
 import { useState } from 'react';
 import { isEmpty } from 'es-toolkit/compat';
 import { noop } from 'es-toolkit';
-import { useIntl, MessageDescriptor } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { Button, EditIcon, PlusIcon } from '@reportportal/ui-kit';
 
@@ -99,7 +99,11 @@ const SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG = ({
   ] as const;
 };
 
-const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({ manualScenario }: { manualScenario: ManualScenario }) => {
+const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
+  manualScenario,
+}: {
+  manualScenario: ManualScenario;
+}) => {
   const sections = [
     {
       titleKey: 'requirements',
@@ -115,42 +119,44 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({ manualScenario }: { manualSc
       {
         titleKey: 'preconditions',
         defaultMessage: messages.noPrecondition,
-        childComponent:
-          (manualScenario?.preconditions?.value || !isEmpty(manualScenario?.preconditions?.attachments)) &&
-            <Precondition preconditions={manualScenario.preconditions} />,
+        childComponent: (manualScenario?.preconditions?.value ||
+          !isEmpty(manualScenario?.preconditions?.attachments)) && (
+          <Precondition preconditions={manualScenario.preconditions} />
+        ),
       },
       {
         titleKey: 'steps',
         defaultMessage: messages.noSteps,
-        childComponent: !isEmpty(manualScenario?.steps) &&
-          <StepsList steps={manualScenario.steps} />,
-      }
+        childComponent: !isEmpty(manualScenario?.steps) && (
+          <StepsList steps={manualScenario.steps} />
+        ),
+      },
     );
   } else {
     sections.push(
       {
         titleKey: 'scenario',
         defaultMessage: messages.noPrecondition,
-        childComponent: (
-            manualScenario?.preconditions?.value ||
-            manualScenario?.instructions ||
-            manualScenario?.expectedResult
-          ) &&
+        childComponent: (manualScenario?.preconditions?.value ||
+          manualScenario?.instructions ||
+          manualScenario?.expectedResult) && (
           <Scenario
             expectedResult={manualScenario.expectedResult}
             instructions={manualScenario.instructions}
             precondition={manualScenario.preconditions?.value}
-          />,
+          />
+        ),
       },
       {
         titleKey: 'attachments',
         defaultMessage: messages.noAttachments,
-        childComponent: !isEmpty(manualScenario?.attachments) &&
+        childComponent: !isEmpty(manualScenario?.attachments) && (
           <AttachmentList
             attachments={manualScenario.attachments}
             className={cx('page__attachments-list')}
-          />,
-      }
+          />
+        ),
+      },
     );
   }
 
@@ -223,21 +229,27 @@ export const TestCaseDetailsPage = () => {
             ))}
           </div>
           <ScrollWrapper>
-            <div className={cx('page__main-content', testCaseDetails?.id ? 'page__main-content-with-data' : '')}>
-              {
-                testCaseDetails?.manualScenario ?
-                  MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG({ manualScenario: testCaseDetails.manualScenario })
-                    .map(({ titleKey, defaultMessage, childComponent }) => (
-                      <CollapsibleSectionWithHeaderControl
-                        key={titleKey}
-                        title={formatMessage(commonMessages[titleKey] as MessageDescriptor)}
-                        defaultMessage={formatMessage(defaultMessage)}
-                      >
-                        {childComponent}
-                      </CollapsibleSectionWithHeaderControl>
-                    )) :
-                    <DetailsEmptyState />
-              }
+            <div
+              className={cx(
+                'page__main-content',
+                testCaseDetails?.id ? 'page__main-content-with-data' : '',
+              )}
+            >
+              {testCaseDetails?.manualScenario ? (
+                MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG({
+                  manualScenario: testCaseDetails.manualScenario,
+                }).map(({ titleKey, defaultMessage, childComponent }) => (
+                  <CollapsibleSectionWithHeaderControl
+                    key={titleKey}
+                    title={formatMessage(commonMessages[titleKey])}
+                    defaultMessage={formatMessage(defaultMessage)}
+                  >
+                    {childComponent}
+                  </CollapsibleSectionWithHeaderControl>
+                ))
+              ) : (
+                <DetailsEmptyState />
+              )}
             </div>
           </ScrollWrapper>
         </div>

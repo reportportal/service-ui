@@ -14,11 +14,22 @@
  * limitations under the License.
  */
 
-import { TestCaseExecution } from 'controllers/manualLaunch';
-import { Page } from 'types/common';
+.execution-status-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-export interface ManualLaunchExecutionsProps {
-  executions: TestCaseExecution[];
-  pageInfo: Page | null;
-  isLoading: boolean;
+  .status-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 36px;
+
+    svg {
+      width: 48px;
+      height: 36px;
+      display: block;
+    }
+  }
 }

@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-import { TestCaseExecution } from 'controllers/manualLaunch';
-import { Page } from 'types/common';
+export enum ExecutionStatus {
+  TO_RUN = 'TO_RUN',
+  IN_PROGRESS = 'IN_PROGRESS',
+  PASSED = 'PASSED',
+  FAILED = 'FAILED',
+}
 
-export interface ManualLaunchExecutionsProps {
-  executions: TestCaseExecution[];
-  pageInfo: Page | null;
-  isLoading: boolean;
+export interface ExecutionStatusChipProps {
+  status?: string;
+  startedAt?: number;
 }

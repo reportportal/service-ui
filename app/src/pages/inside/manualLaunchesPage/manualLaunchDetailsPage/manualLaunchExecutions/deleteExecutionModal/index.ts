@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-import { TestCaseExecution } from 'controllers/manualLaunch';
-import { Page } from 'types/common';
-
-export interface ManualLaunchExecutionsProps {
-  executions: TestCaseExecution[];
-  pageInfo: Page | null;
-  isLoading: boolean;
-}
+export { default as DeleteExecutionModal } from './deleteExecutionModal';
+export { DELETE_EXECUTION_MODAL_KEY } from './constants';
+export type { DeleteExecutionModalData } from './types';
+export { useDeleteExecutionModal } from './useDeleteExecutionModal';

@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-import { TestCaseExecution } from 'controllers/manualLaunch';
-import { Page } from 'types/common';
+import { useModal } from 'common/hooks';
 
-export interface ManualLaunchExecutionsProps {
-  executions: TestCaseExecution[];
-  pageInfo: Page | null;
-  isLoading: boolean;
-}
+import DeleteExecutionModal from './deleteExecutionModal';
+import { DELETE_EXECUTION_MODAL_KEY } from './constants';
+import { DeleteExecutionModalData } from './types';
+
+export const useDeleteExecutionModal = () =>
+  useModal<DeleteExecutionModalData>({
+    modalKey: DELETE_EXECUTION_MODAL_KEY,
+    renderModal: (data) => <DeleteExecutionModal data={data} />,
+  });

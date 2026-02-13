@@ -142,6 +142,7 @@ import {
 } from 'controllers/testPlan';
 import {
   MANUAL_LAUNCHES_NAMESPACE,
+  MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
   defaultManualLaunchesQueryParams,
   getManualLaunchesAction,
   getManualLaunchAction,
@@ -349,7 +350,7 @@ const routesMap = {
       if (launchId) {
         dispatch(getManualLaunchAction({ launchId }));
 
-        // Load folders and test case executions
+        // Load folders
         dispatch(
           getManualLaunchFoldersAction({
             launchId,
@@ -357,11 +358,19 @@ const routesMap = {
             limit: 100, // TODO do we need to implement folder click and fetch test executions for certain folder?
           }),
         );
+
+        // Load test case executions with pagination from URL
+        const { offset, limit } = getRouterParams({
+          namespace: MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
+          defaultParams: defaultManualLaunchesQueryParams,
+          state,
+        });
+
         dispatch(
           getManualLaunchTestCaseExecutionsAction({
             launchId,
-            offset: 0,
-            limit: 1000, // TODO do we need to implement pagination for test case executions?
+            offset,
+            limit,
           }),
         );
       }

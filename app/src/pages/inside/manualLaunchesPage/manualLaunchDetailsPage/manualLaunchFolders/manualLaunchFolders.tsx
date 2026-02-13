@@ -20,6 +20,7 @@ import { useSelector } from 'react-redux';
 import {
   manualLaunchFoldersSelector,
   manualLaunchTestCaseExecutionsSelector,
+  manualLaunchTestCaseExecutionsPageSelector,
   isLoadingManualLaunchFoldersSelector,
   isLoadingManualLaunchTestCaseExecutionsSelector,
 } from 'controllers/manualLaunch';
@@ -31,6 +32,7 @@ import { ManualLaunchExecutions } from '../manualLaunchExecutions';
 export const ManualLaunchFolders = () => {
   const folders = useSelector(manualLaunchFoldersSelector);
   const executions = useSelector(manualLaunchTestCaseExecutionsSelector);
+  const pageInfo = useSelector(manualLaunchTestCaseExecutionsPageSelector);
   const isLoadingFolders = useSelector(isLoadingManualLaunchFoldersSelector);
   const isLoadingExecutions = useSelector(isLoadingManualLaunchTestCaseExecutionsSelector);
 
@@ -57,6 +59,7 @@ export const ManualLaunchFolders = () => {
     >
       <ManualLaunchExecutions
         executions={executions}
+        pageInfo={pageInfo}
         isLoading={isLoadingExecutions || isLoadingFolders}
       />
     </ExpandedOptions>

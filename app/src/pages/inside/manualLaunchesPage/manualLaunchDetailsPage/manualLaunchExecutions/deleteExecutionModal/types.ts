@@ -15,10 +15,8 @@
  */
 
 import { TestCaseExecution } from 'controllers/manualLaunch';
-import { Page } from 'types/common';
 
-export interface ManualLaunchExecutionsProps {
-  executions: TestCaseExecution[];
-  pageInfo: Page | null;
-  isLoading: boolean;
+export interface DeleteExecutionModalData {
+  execution: TestCaseExecution;
+  launchId: string | number;
 }

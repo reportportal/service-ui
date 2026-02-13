@@ -14,11 +14,5 @@
  * limitations under the License.
  */
 
-import { TestCaseExecution } from 'controllers/manualLaunch';
-import { Page } from 'types/common';
-
-export interface ManualLaunchExecutionsProps {
-  executions: TestCaseExecution[];
-  pageInfo: Page | null;
-  isLoading: boolean;
-}
+export { ExecutionStatusChip } from './executionStatusChip';
+export { ExecutionStatus } from './types';

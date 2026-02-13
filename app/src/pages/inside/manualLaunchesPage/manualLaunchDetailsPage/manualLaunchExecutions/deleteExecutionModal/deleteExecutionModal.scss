@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-import { TestCaseExecution } from 'controllers/manualLaunch';
-import { Page } from 'types/common';
-
-export interface ManualLaunchExecutionsProps {
-  executions: TestCaseExecution[];
-  pageInfo: Page | null;
-  isLoading: boolean;
+.delete-execution-modal {
+  &__text--bold {
+    color: var(--rp-ui-base-almost-black);
+    font-weight: 500;
+  }
 }

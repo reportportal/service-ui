@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
-import { TestCaseExecution } from 'controllers/manualLaunch';
-import { Page } from 'types/common';
+import { defineMessages } from 'react-intl';
 
-export interface ManualLaunchExecutionsProps {
-  executions: TestCaseExecution[];
-  pageInfo: Page | null;
-  isLoading: boolean;
-}
+export const messages = defineMessages({
+  deleteExecutionTitle: {
+    id: 'ManualLaunchExecutions.deleteExecutionTitle',
+    defaultMessage: 'Delete Test Execution',
+  },
+  deleteExecutionText: {
+    id: 'ManualLaunchExecutions.deleteExecutionText',
+    defaultMessage: 'Are you sure you want to delete test execution <b>{name}</b> from the launch?',
+  },
+});
