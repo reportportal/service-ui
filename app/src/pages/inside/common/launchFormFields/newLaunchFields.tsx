@@ -30,6 +30,7 @@ import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { referenceDictionary } from 'common/utils/referenceDictionary';
 import { LinkItem } from 'layouts/common/appSidebar/helpAndService/linkItem';
+import { LAUNCH_NAME_FILTER_KEY } from 'pages/inside/common/constants';
 
 import { NewLaunchFieldsProps } from './types';
 import { LAUNCH_FORM_FIELD_NAMES } from './constants';
@@ -62,7 +63,7 @@ export const NewLaunchFields = ({
   const retrieveTestPlans = (value: string) =>
     URLS.testPlan(
       projectKey,
-      value ? { 'filter.fts.search': value, pageSize: 50 } : { pageSize: 50 },
+      value ? { [LAUNCH_NAME_FILTER_KEY]: value, pageSize: 50 } : { pageSize: 50 },
     );
 
   const makeTestPlanOptions = (response: { content: Array<{ id: number; name: string }> }) =>
