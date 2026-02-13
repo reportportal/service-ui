@@ -91,14 +91,16 @@ export class IntegrationForm extends Component {
     this.setState({ disabled: !this.state.disabled });
   };
 
-  submitIntegrationSuccess = () => {
+  submitIntegrationSuccess = (formData) => {
     this.setState({ disabled: true });
+    this.props.initialize(formData);
   };
 
   submitIntegration = (formData) => {
+    const trimmedFormData = trimStringValues(formData);
     this.props.onSubmit(
-      removeNoneValues(trimStringValues(formData)),
-      this.submitIntegrationSuccess,
+      removeNoneValues(trimmedFormData),
+      () => this.submitIntegrationSuccess(trimmedFormData),
       this.state.metaData,
     );
     this.props.tracking.trackEvent(
