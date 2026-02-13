@@ -60,11 +60,11 @@
         fill: var(--rp-ui-base-e-200);
       }
 
-      &:hover:not(:focus-visible):not(&-has-query):not(&-panel-open) svg path {
+      &:hover:not(:focus-visible, &-has-query, &-panel-open) svg path {
         fill: var(--rp-ui-base-e-400);
       }
 
-      &:focus-visible:not(&-has-query):not(&-panel-open) svg path {
+      &:focus-visible:not(&-has-query, &-panel-open) svg path {
         fill: var(--rp-ui-base-topaz-hover);
       }
 
@@ -83,17 +83,17 @@
 
       &-has-query {
         svg path {
-          fill: $COLOR--topaz-hover-2;
+          fill: var(--rp-ui-base-topaz-hover);
         }
 
         &:hover:not(.expanded-options__sidebar-actions--search-panel-open) svg path {
           fill: var(--rp-ui-base-topaz-focused);
         }
 
-        &:focus-visible:not(:hover):not(.expanded-options__sidebar-actions--search-panel-open)
+        &:focus-visible:not(:hover, .expanded-options__sidebar-actions--search-panel-open)
           svg
           path {
-          fill: $COLOR--topaz-hover-2;
+          fill: var(--rp-ui-base-topaz-hover);
         }
 
         &.expanded-options__sidebar-actions--search-panel-open {
@@ -104,10 +104,7 @@
             fill: var(--rp-ui-base-topaz-pressed);
           }
 
-          &:hover:not(:focus-visible) svg path {
-            fill: var(--rp-ui-base-topaz-hover);
-          }
-
+          &:hover:not(:focus-visible) svg path,
           &:focus-visible svg path {
             fill: var(--rp-ui-base-topaz-hover);
           }
