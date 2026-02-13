@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-import { FC, MouseEvent, ReactNode } from 'react';
-import { useDispatch } from 'react-redux';
+import { FC, ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 import { Modal } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { UseModalData } from 'common/hooks';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { hideModalAction, withModal } from 'controllers/modal';
+import { withModal } from 'controllers/modal';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
+import { useModalButtons } from 'pages/inside/testCaseLibraryPage/hooks/useModalButtons';
 
 import { useDeleteExecution } from './useDeleteExecution';
 import { DELETE_EXECUTION_MODAL_KEY } from './constants';
@@ -43,34 +43,21 @@ const boldFormatter = (chunks: ReactNode) => <BoldText>{chunks}</BoldText>;
 const DeleteExecutionModalComponent = ({
   data: { execution, launchId },
 }: UseModalData<DeleteExecutionModalData>) => {
-  const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const { deleteExecution, isLoading } = useDeleteExecution();
 
-  const hideModal = () => {
-    if (!isLoading) {
-      dispatch(hideModalAction());
-    }
-  };
-
   const onSubmit = () => deleteExecution(launchId, execution.id);
 
-  const okButton = {
-    children: (
+  const { okButton, cancelButton, hideModal } = useModalButtons({
+    okButtonText: (
       <LoadingSubmitButton isLoading={isLoading}>
         {formatMessage(COMMON_LOCALE_KEYS.DELETE)}
       </LoadingSubmitButton>
     ),
-    onClick: onSubmit as (event: MouseEvent<HTMLButtonElement>) => void,
-    disabled: isLoading,
-    variant: 'danger' as const,
-    'data-automation-id': 'submitButton',
-  };
-  const cancelButton = {
-    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-    disabled: isLoading,
-    'data-automation-id': 'cancelButton',
-  };
+    isLoading,
+    variant: 'danger',
+    onSubmit: onSubmit as () => void,
+  });
 
   return (
     <Modal

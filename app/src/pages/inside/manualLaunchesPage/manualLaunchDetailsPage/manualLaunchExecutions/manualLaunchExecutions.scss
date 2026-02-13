@@ -145,12 +145,6 @@ $sidebar-width: calc(100vw - 408px);
 
 .executions-table {
   width: 100%;
-
-  :global([class*='_table-header_']) {
-    background: none !important;
-    margin-bottom: 8px;
-  }
-
   :global([class*='_header-cell_']) {
     font-family: var(--rp-ui-base-font-family);
     font-weight: var(--rp-ui-base-fw-medium);
@@ -165,6 +159,11 @@ $sidebar-width: calc(100vw - 408px);
       display: flex;
       align-items: center;
     }
+  }
+
+  &-header {
+    --table-header-bg-color: transparent;
+    margin-bottom: 8px;
   }
 }
 
