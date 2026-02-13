@@ -222,7 +222,7 @@ export class LaunchLevelEntities extends Component {
         removable: true,
         customProps: {
           placeholder: intl.formatMessage(messages.DESCRIPTION_PLACEHOLDER),
-          maxLength: 18,
+          maxLength: 256,
         },
       },
       {

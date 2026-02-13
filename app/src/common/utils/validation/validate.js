@@ -93,7 +93,7 @@ export const launchNumericEntity = composeValidators([
 ]);
 export const descriptionEntity = composeValidators([
   isNotEmpty,
-  ({ value }) => composeValidators([isNotEmpty, maxLength(18)])(value),
+  ({ value }) => composeValidators([isNotEmpty, maxLength(256)])(value),
 ]);
 export const descriptionStepLevelEntity = composeValidators([
   isNotEmpty,

@@ -1193,7 +1193,7 @@
   "LaunchLevelEntities.TO_INVESTIGATE_title": "待分析",
   "LaunchLevelEntities.TO_INVESTIGATE_totalTitle": "全部待分析",
   "LaunchLevelEntities.TotalTitle": "全部",
-  "LaunchLevelEntities.descriptionEntityHint": "描述文本的长度应为3到18个字符",
+  "LaunchLevelEntities.descriptionEntityHint": "描述文本的长度应为1到256个字符",
   "LaunchLevelEntities.descriptionPlaceholder": "请输入描述文本",
   "LaunchLevelEntities.descriptionStepLevelEntityHint": "描述文本的长度应为1到256个字符",
   "LaunchLevelEntities.entityItemStatistics.placeholder": "请输入数量",
