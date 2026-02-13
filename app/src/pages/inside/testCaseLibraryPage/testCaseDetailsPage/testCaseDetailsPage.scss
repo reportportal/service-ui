@@ -47,15 +47,13 @@
     min-height: 400px;
     display: flex;
     flex-direction: column;
-    padding: 24px 32px;
-    gap: 16px;
   }
 
   &__main-content-with-data {
     padding: 24px 32px;
 
     & > div {
-      margin-bottom: 24px;
+      margin-bottom: 16px;
 
       &:last-child {
         margin-bottom: 0;
