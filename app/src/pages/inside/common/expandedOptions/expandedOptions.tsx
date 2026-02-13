@@ -16,6 +16,7 @@
 
 import { useIntl } from 'react-intl';
 import { BaseIconButton, SearchIcon, FieldText } from '@reportportal/ui-kit';
+import Parser from 'html-react-parser';
 
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { createClassnames } from 'common/utils';
@@ -23,6 +24,8 @@ import { useStorageFolders } from 'hooks/useStorageFolders';
 import { TransformedFolder } from 'controllers/testCase';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { EmptySearchState } from 'pages/common/emptySearchState';
+import OutlineSearchIcon from 'common/img/search-outline-icon-inline.svg';
+import FilledSearchIcon from 'common/img/search-filled-icon-inline.svg';
 
 import { Folder } from './folder';
 import { messages } from './messages';
@@ -100,11 +103,12 @@ export const ExpandedOptions = ({
           </div>
           <BaseIconButton
             className={cx('expanded-options__sidebar-actions--search', {
-              'expanded-options__sidebar-actions--search-active': isSearchVisible || !!searchQuery,
+              'expanded-options__sidebar-actions--search-panel-open': isSearchVisible,
+              'expanded-options__sidebar-actions--search-has-query': !!searchQuery,
             })}
             onClick={handleMagnifierClick}
           >
-            <SearchIcon />
+            {searchQuery ? Parser(String(FilledSearchIcon)) : Parser(String(OutlineSearchIcon))}
           </BaseIconButton>
           {renderCreateFolderButton?.()}
         </div>

@@ -51,15 +51,65 @@
     &--search {
       height: 16px;
 
-      &-active {
-        color: var(--rp-ui-base-topaz-focused);
+      svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      svg path {
+        fill: var(--rp-ui-base-e-200);
+      }
+
+      &:hover:not(:focus-visible):not(&-has-query):not(&-panel-open) svg path {
+        fill: var(--rp-ui-base-e-400);
+      }
+
+      &:focus-visible:not(&-has-query):not(&-panel-open) svg path {
+        fill: var(--rp-ui-base-topaz-hover);
+      }
+
+      &-panel-open:not(&-has-query) {
+        color: var(--rp-ui-base-topaz-pressed);
         background-color: var(--rp-ui-base-topaz-focused-10);
 
-        svg {
-          color: var(--rp-ui-base-topaz-focused);
+        svg path {
+          fill: var(--rp-ui-base-topaz-pressed);
+        }
 
+        &:hover:not(:focus-visible) svg path {
+          fill: var(--rp-ui-base-topaz-hover);
+        }
+      }
+
+      &-has-query {
+        svg path {
+          fill: $COLOR--topaz-hover-2;
+        }
+
+        &:hover:not(.expanded-options__sidebar-actions--search-panel-open) svg path {
+          fill: var(--rp-ui-base-topaz-focused);
+        }
+
+        &:focus-visible:not(:hover):not(.expanded-options__sidebar-actions--search-panel-open)
+          svg
           path {
-            fill: var(--rp-ui-base-topaz-focused);
+          fill: $COLOR--topaz-hover-2;
+        }
+
+        &.expanded-options__sidebar-actions--search-panel-open {
+          color: var(--rp-ui-base-topaz-pressed);
+          background-color: var(--rp-ui-base-topaz-focused-10);
+
+          svg path {
+            fill: var(--rp-ui-base-topaz-pressed);
+          }
+
+          &:hover:not(:focus-visible) svg path {
+            fill: var(--rp-ui-base-topaz-hover);
+          }
+
+          &:focus-visible svg path {
+            fill: var(--rp-ui-base-topaz-hover);
           }
         }
       }

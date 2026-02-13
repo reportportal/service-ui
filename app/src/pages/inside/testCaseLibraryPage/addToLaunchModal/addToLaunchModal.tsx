@@ -30,6 +30,7 @@ import { commonValidators } from 'common/utils/validation';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { createClassnames } from 'common/utils';
 import { URLS } from 'common/urls';
+import { LAUNCH_NAME_FILTER_KEY } from 'pages/inside/common/constants';
 
 import { useAddToLaunch } from './useAddToLaunch';
 import { ButtonSwitcher, ButtonSwitcherOption } from '../../common/buttonSwitcher';
@@ -82,7 +83,7 @@ export const AddToLaunchModalComponent = ({
   );
 
   const retrieveTestPlans = (value: string) =>
-    URLS.testPlan(projectKey, value ? { 'filter.fts.search': value } : {});
+    URLS.testPlan(projectKey, value ? { [LAUNCH_NAME_FILTER_KEY]: value } : {});
 
   const handleActiveButton = useCallback((activeButtonTitle: ButtonSwitcherOption) => {
     setActiveButton(activeButtonTitle);
