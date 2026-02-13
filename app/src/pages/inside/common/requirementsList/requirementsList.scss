@@ -51,7 +51,7 @@
       button {
         &:hover {
           background-color: transparent;
-          border: none;
+          border-color: transparent;
 
           svg * {
             stroke: var(--rp-ui-color-primary-hover);
