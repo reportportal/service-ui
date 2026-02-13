@@ -18,8 +18,9 @@ import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { useTestCaseTooltipItems } from 'pages/inside/testCaseLibraryPage/allTestCasesPage/useTestCaseTooltipItems';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { useIntl } from 'react-intl';
-import { messages } from '../messages';
 import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
+
+import { messages } from '../messages';
 
 interface UseTooltipItemsProps {
   instanceKey: TMS_INSTANCE_KEY;
