@@ -24,6 +24,7 @@ import {
   activeProjectKeySelector,
 } from 'controllers/user';
 import { isTmsEnabled } from 'controllers/appInfo';
+import { getTmsMilestonesOverride } from 'controllers/appInfo/utils';
 import { fetchProjectAction } from 'controllers/project';
 import {
   LOGIN_PAGE,
@@ -512,7 +513,7 @@ const routesMap = {
   },
 
   [PROJECT_TEST_PLANS_PAGE]: {
-    path: '/organizations/:organizationSlug/projects/:projectSlug/milestones',
+    path: `/organizations/:organizationSlug/projects/:projectSlug/${getTmsMilestonesOverride() === true ? 'milestones' : 'testPlans'}`,
     thunk: (dispatch, getState) => {
       const state = getState();
       const { offset, limit } = getRouterParams({
@@ -525,7 +526,7 @@ const routesMap = {
     },
   },
   [PROJECT_TEST_PLAN_DETAILS_PAGE]: {
-    path: '/organizations/:organizationSlug/projects/:projectSlug/milestones/:testPlanId/:testPlanRoute*',
+    path: `/organizations/:organizationSlug/projects/:projectSlug/${getTmsMilestonesOverride() === true ? 'milestones' : 'testPlans'}/:testPlanId/:testPlanRoute*`,
     thunk: (dispatch, getState) => {
       const state = getState();
       const testPlanId = state.location?.payload?.testPlanId;

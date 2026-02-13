@@ -29,6 +29,10 @@ export const commonMessages = defineMessages({
     id: 'MilestonesPage.createMilestone',
     defaultMessage: 'Create Milestone',
   },
+  createTestPlan: {
+    id: 'TestPlansPage.createTestPlan',
+    defaultMessage: 'Create Test Plan',
+  },
   editTestPlan: {
     id: 'TestPlansPage.editTestPlan',
     defaultMessage: 'Edit test plan',

@@ -28,6 +28,7 @@ import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { commonMessages } from 'pages/inside/common/common-messages';
+import { useTmsMilestonesEnabled } from 'hooks/useTmsMilestonesEnabled';
 
 import { TestPlanAttributes } from './testPlanAttributes';
 import { messages } from './messages';
@@ -78,6 +79,7 @@ const TestPlanModalComponent = ({
 }: TestPlanModalProps & InjectedFormProps<TestPlanFormValues>) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
+  const isTmsMilestonesEnabled = useTmsMilestonesEnabled();
 
   const isSubmitDisabled = requiresChanges ? isLoading || !dirty || invalid : isLoading || invalid;
 
@@ -104,7 +106,12 @@ const TestPlanModalComponent = ({
       <div className={cx('test-plan-modal__content-wrapper')}>
         <form onSubmit={handleSubmit(onSubmit) as (event: FormEvent) => void}>
           <div className={cx('test-plan-modal__container')}>
-            <FieldProvider name="name" placeholder={formatMessage(messages.enterMilestoneName)}>
+            <FieldProvider
+              name="name"
+              placeholder={formatMessage(
+                isTmsMilestonesEnabled ? messages.enterMilestoneName : messages.enterTestPlanName,
+              )}
+            >
               <FieldErrorHint provideHint={false}>
                 <FieldText
                   label={formatMessage(COMMON_LOCALE_KEYS.NAME)}
@@ -115,7 +122,11 @@ const TestPlanModalComponent = ({
             </FieldProvider>
             <FieldProvider
               name="description"
-              placeholder={formatMessage(messages.addMilestoneDescription)}
+              placeholder={formatMessage(
+                isTmsMilestonesEnabled
+                  ? messages.addMilestoneDescription
+                  : messages.addTestPlanDescription,
+              )}
             >
               <FieldErrorHint provideHint={false}>
                 <FieldTextFlex label={formatMessage(commonMessages.description)} value="" />
