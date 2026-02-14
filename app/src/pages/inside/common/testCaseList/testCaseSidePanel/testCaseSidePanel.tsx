@@ -52,6 +52,7 @@ import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage
 import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
 import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
 import { useMoveTestCaseModal } from 'pages/inside/testCaseLibraryPage/moveTestCaseModal/useMoveTestCaseModal';
+import { useDuplicateTestCaseModal } from 'pages/inside/testCaseLibraryPage/duplicateTestCaseModal';
 import { AddToLaunchButton } from 'pages/inside/testCaseLibraryPage/addToLaunchButton';
 
 import { RequirementsList } from '../../requirementsList/requirementsList';
@@ -171,6 +172,7 @@ export const TestCaseSidePanel = memo(
     const { openModal: openAddTestCasesToTestPlanModal } = useAddTestCasesToTestPlanModal();
     const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
     const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
+    const { openModal: openDuplicateTestCaseModal } = useDuplicateTestCaseModal();
 
     const folderId = testCase?.testFolder?.id;
     const path = buildBreadcrumbs(folders, folderId);
@@ -198,6 +200,7 @@ export const TestCaseSidePanel = memo(
         [TestCaseMenuAction.EDIT]: handleEditTestCase,
         [TestCaseMenuAction.DELETE]: () => openDeleteTestCaseModal({ testCase }),
         [TestCaseMenuAction.MOVE]: () => openMoveTestCaseModal({ testCase }),
+        [TestCaseMenuAction.DUPLICATE]: () => openDuplicateTestCaseModal(testCase),
         [TestCaseMenuAction.HISTORY]: () => {
           dispatch({
             type: TEST_CASE_LIBRARY_PAGE,

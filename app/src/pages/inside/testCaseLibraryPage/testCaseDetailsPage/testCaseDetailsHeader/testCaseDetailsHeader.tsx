@@ -42,6 +42,7 @@ import { messages } from './messages';
 import { commonMessages } from '../../commonMessages';
 import { EDIT_TEST_CASE_MODAL_KEY } from '../editTestCaseModal/editTestCaseModal';
 import { useDeleteTestCaseModal } from '../../deleteTestCaseModal';
+import { useDuplicateTestCaseModal } from '../../duplicateTestCaseModal';
 import { AddToLaunchButton } from '../../addToLaunchButton';
 
 import styles from './testCaseDetailsHeader.scss';
@@ -74,6 +75,7 @@ export const TestCaseDetailsHeader = ({
   ) as ProjectDetails;
   const dispatch = useDispatch();
   const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
+  const { openModal: openDuplicateTestCaseModal } = useDuplicateTestCaseModal();
 
   const breadcrumbsTitles = {
     mainTitle: formatMessage(commonMessages.testCaseLibraryBreadcrumb),
@@ -95,6 +97,8 @@ export const TestCaseDetailsHeader = ({
 
   const handleDeleteTestCase = () => openDeleteTestCaseModal({ testCase, isDetailsPage: true });
 
+  const handleDuplicateTestCase = () => openDuplicateTestCaseModal(testCase);
+
   const getCreationDate = (timestamp: number) => {
     const date = new Date(timestamp);
 
@@ -110,7 +114,10 @@ export const TestCaseDetailsHeader = ({
     ];
 
     if (canDuplicateTestCase) {
-      items.unshift({ label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE) });
+      items.unshift({
+        label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE),
+        onClick: handleDuplicateTestCase,
+      });
     }
 
     if (canDeleteTestCase) {
