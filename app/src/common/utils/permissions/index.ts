@@ -72,7 +72,6 @@ export {
   canLockDashboard,
   canCreateManualLaunch,
   canManageTestCases,
-  canManageTestCaseFolders,
   canManageTestPlans,
 } from './permissions';
 
