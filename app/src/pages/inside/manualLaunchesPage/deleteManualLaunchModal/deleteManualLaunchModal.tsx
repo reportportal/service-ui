@@ -77,6 +77,19 @@ export const DeleteManualLaunchModal = ({
     onSubmit: handleDelete,
   });
 
+  const boldFormatter = (chunks: ReactNode) => <strong>{chunks}</strong>; // NOSONAR
+
+  const description = isBatch ? messages.batchDeleteDescription : messages.deleteConfirmation;
+  const descriptionParams = isBatch
+    ? {
+        count: data?.launchIds.length,
+        b: boldFormatter,
+      }
+    : {
+        launchName: data.name,
+        b: boldFormatter,
+      };
+
   return (
     <Modal
       title={formatMessage(isBatch ? messages.batchDeleteTitle : messages.deleteLaunchTitle)}
@@ -85,23 +98,12 @@ export const DeleteManualLaunchModal = ({
       onClose={hideModal}
       className={cx('delete-manual-launch-modal')}
     >
-      <div>
-        {isBatch ? (
-          formatMessage(messages.batchDeleteDescription, {
-            count: data.launchIds.length,
-          })
-        ) : (
           <>
             <p>
-              {formatMessage(messages.deleteConfirmation, {
-                launchName: data.name,
-                b: (chunks: ReactNode) => <strong>{chunks}</strong>, // NOSONAR
-              })}
+              {formatMessage(description, descriptionParams)}
             </p>
             <p>{formatMessage(messages.deletePermanentWarning)}</p>
           </>
-        )}
-      </div>
     </Modal>
   );
 };
