@@ -203,6 +203,6 @@ export interface AttributesResponse {
   content: Tag[];
 }
 
-export const isTag = (attr: unknown): attr is Tag => {
+export const hasTagShape = (attr: unknown): attr is Tag => {
   return isObject(attr) && 'key' in attr && isString((attr as Tag).key);
 };
