@@ -29,6 +29,7 @@
 
   input::placeholder {
     @include input-placeholder(28px);
+
     vertical-align: middle;
   }
 }

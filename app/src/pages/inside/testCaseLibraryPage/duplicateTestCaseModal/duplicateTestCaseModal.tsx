@@ -68,7 +68,7 @@ const DuplicateTestCaseModal = ({
       cancelButton={cancelButton}
       onClose={hideModal}
     >
-      <form>
+      <form onSubmit={handleSubmit(handleDuplicate) as VoidFn}>
         <FieldProvider name="name" placeholder={formatMessage(messages.enterTestCaseName)}>
           <FieldErrorHint provideHint={false}>
             <FieldText

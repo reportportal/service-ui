@@ -52,10 +52,19 @@ export const useDuplicateTestCase = () => {
         const duplicatedTestCaseId = response.testCases?.[0]?.id;
 
         if (duplicatedTestCaseId) {
-          await fetch(URLS.testCaseDetails(projectKey, duplicatedTestCaseId), {
-            method: 'PATCH',
-            data: { name },
-          });
+          try {
+            await fetch(URLS.testCaseDetails(projectKey, duplicatedTestCaseId), {
+              method: 'PATCH',
+              data: { name },
+            });
+          } catch (patchError) {
+            // Rollback: delete the duplicate if rename failed
+            await fetch(URLS.testCasesBatch(projectKey), {
+              method: 'DELETE',
+              data: { testCaseIds: [duplicatedTestCaseId] },
+            });
+            throw patchError;
+          }
         }
 
         dispatch(hideModalAction());
