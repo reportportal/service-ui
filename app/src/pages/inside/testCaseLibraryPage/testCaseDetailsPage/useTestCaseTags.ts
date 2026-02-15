@@ -81,6 +81,8 @@ export const useTestCaseTags = ({ testCaseId }: UseTestCaseTagsParams) => {
 
   const addTag = useCallback(
     async (tag: Tag) => {
+      if (isLoading) return;
+
       const currentAttributes = (testCaseDetails?.attributes || []).filter(hasTagShape);
 
       const isTagExists = currentAttributes.some(({ key }) => key === tag.key);
@@ -90,17 +92,19 @@ export const useTestCaseTags = ({ testCaseId }: UseTestCaseTagsParams) => {
         await updateTestCaseTags(updatedAttributes);
       }
     },
-    [updateTestCaseTags, testCaseDetails],
+    [isLoading, updateTestCaseTags, testCaseDetails],
   );
 
   const removeTag = useCallback(
     async (tagKey: string) => {
+      if (isLoading) return;
+
       const currentAttributes = (testCaseDetails?.attributes || []).filter(hasTagShape);
 
       const updatedAttributes = currentAttributes.filter(({ key }) => key !== tagKey);
       await updateTestCaseTags(updatedAttributes);
     },
-    [updateTestCaseTags, testCaseDetails],
+    [isLoading, updateTestCaseTags, testCaseDetails],
   );
 
   return {

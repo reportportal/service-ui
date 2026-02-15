@@ -180,7 +180,11 @@ export const TestCaseDetailsPage = () => {
 
   const testCaseId = testCaseDetails?.id || 0;
 
-  const { addTag, removeTag } = useTestCaseTags({
+  const {
+    addTag,
+    removeTag,
+    isLoading: isTagsLoading,
+  } = useTestCaseTags({
     testCaseId,
   });
 
@@ -212,7 +216,7 @@ export const TestCaseDetailsPage = () => {
       onTagSelect={handleTagSelect}
       selectedTags={attributes}
       trigger={
-        <Button variant="text" adjustWidthOn="content" icon={<PlusIcon />}>
+        <Button variant="text" adjustWidthOn="content" icon={<PlusIcon />} disabled={isTagsLoading}>
           {formatMessage(COMMON_LOCALE_KEYS.ADD)}
         </Button>
       }
@@ -234,7 +238,7 @@ export const TestCaseDetailsPage = () => {
           <div className={cx('page__sidebar')}>
             {SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG({
               tagAddButton,
-              onTagRemove: canEditTestCaseTag ? handleTagRemove : undefined,
+              onTagRemove: canEditTestCaseTag && !isTagsLoading ? handleTagRemove : undefined,
               handleDescriptionModal,
               headerControlKeys: { ADD: formatMessage(COMMON_LOCALE_KEYS.ADD) },
               testCaseDescription: testCaseDetails.description || '',
