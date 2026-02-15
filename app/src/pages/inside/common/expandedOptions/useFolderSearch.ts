@@ -56,7 +56,6 @@ export const useFolderSearch = ({
 
   const handleSearchClear = useCallback(() => {
     setSearchQuery('');
-    setIsSearchVisible(false);
   }, []);
 
   const handleMagnifierClick = useCallback(() => {

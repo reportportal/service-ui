@@ -23,6 +23,7 @@ import { createClassnames } from 'common/utils';
 import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
 import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
+import { LAUNCH_NAME_FILTER_KEY } from 'pages/inside/common/constants';
 
 import { ExistingLaunchFieldsProps, LaunchOption } from './types';
 import { LAUNCH_FORM_FIELD_NAMES, PAGE_SIZE } from './constants';
@@ -39,7 +40,7 @@ export const ExistingLaunchFields = ({ onLaunchSelect }: ExistingLaunchFieldsPro
   const retrieveLaunches = (value: string) =>
     URLS.manualLaunchesListPagination(
       projectKey,
-      value ? { 'filter.eq.name': value, pageSize: PAGE_SIZE } : { pageSize: PAGE_SIZE },
+      value ? { [LAUNCH_NAME_FILTER_KEY]: value, pageSize: PAGE_SIZE } : { pageSize: PAGE_SIZE },
     );
 
   const makeLaunchOptions = (response: { content: Array<{ id: number; name: string }> }) =>
