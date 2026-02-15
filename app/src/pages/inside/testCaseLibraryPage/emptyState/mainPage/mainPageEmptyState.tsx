@@ -16,7 +16,6 @@
 
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
-import { compact } from 'es-toolkit/compat';
 
 import { NumerableBlock } from 'pages/common/numerableBlock';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
@@ -32,7 +31,7 @@ import { useImportTestCaseModal } from '../../importTestCaseModal';
 
 export const MainPageEmptyState = () => {
   const { formatMessage } = useIntl();
-  const { canManageTestCases, canManageTestCaseFolders } = useUserPermissions();
+  const { canManageTestCases } = useUserPermissions();
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
   const { openModal: openImportTestCaseModal } = useImportTestCaseModal();
   const { openModal: openCreateFolderModal } = useCreateFolderModal();
@@ -41,28 +40,28 @@ export const MainPageEmptyState = () => {
     (translation) => Parser(formatMessage(translation, {}, { ignoreTag: true })),
   );
 
-  const buttons = compact([
-    canManageTestCaseFolders && {
+  const buttons = canManageTestCases ? [
+    {
       name: formatMessage(commonMessages.createFolder),
       dataAutomationId: 'createFolderButton',
       isCompact: true,
       handleButton: openCreateFolderModal,
     },
-    canManageTestCases && {
+    {
       name: formatMessage(commonMessages.createTestCase),
       dataAutomationId: 'createTestCaseButton',
       isCompact: true,
       variant: 'ghost',
       handleButton: openCreateTestCaseModal,
     },
-    canManageTestCases && {
+    {
       name: formatMessage(COMMON_LOCALE_KEYS.IMPORT),
       dataAutomationId: 'importTestCaseButton',
       isCompact: false,
       variant: 'ghost',
       handleButton: openImportTestCaseModal,
     },
-  ]);
+  ] : [];
 
   return (
     <>

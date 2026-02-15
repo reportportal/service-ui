@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { compact } from 'es-toolkit/compat';
 import { useIntl } from 'react-intl';
 
 import { TransformedFolder } from 'controllers/testCase';
@@ -50,7 +49,7 @@ export const useTestCaseFolderMenu = ({
   const { openModal: openImportTestCaseModal } = useImportTestCaseModal();
   const { openModal: openCreateSubfolderModal } = useCreateSubfolderModal();
 
-  const { canManageTestCases, canManageTestCaseFolders } = useUserPermissions();
+  const { canManageTestCases } = useUserPermissions();
 
   const handleDeleteFolder = () => {
     openDeleteModal({
@@ -71,36 +70,36 @@ export const useTestCaseFolderMenu = ({
 
   const handleCreateSubfolder = () => openCreateSubfolderModal({ folder });
 
-  const testCaseFolderTooltipItems: PopoverItem[] = compact([
-    canManageTestCaseFolders && {
+  const testCaseFolderTooltipItems: PopoverItem[] = canManageTestCases ? [
+    {
       label: formatMessage(commonMessages.createSubfolder),
       onClick: handleCreateSubfolder,
     },
-    canManageTestCaseFolders && {
+    {
       label: formatMessage(COMMON_LOCALE_KEYS.RENAME),
       onClick: handleRenameFolder,
     },
-    canManageTestCases && {
+    {
       label: formatMessage(commonMessages.moveFolderTo),
       variant: 'text' as const,
       onClick: handleMoveFolder,
     },
-    canManageTestCaseFolders && {
+    {
       label: formatMessage(commonMessages.duplicateFolder),
       variant: 'text' as const,
       onClick: handleDuplicateFolder,
     },
-    canManageTestCases && {
+    {
       label: formatMessage(COMMON_LOCALE_KEYS.IMPORT),
       variant: 'text' as const,
       onClick: handleImportTestCase,
     },
-    canManageTestCaseFolders && {
+    {
       label: formatMessage(commonMessages.deleteFolder),
       variant: 'destructive' as const,
       onClick: handleDeleteFolder,
     },
-  ]);
+  ] : [];
 
   return {
     testCaseFolderTooltipItems,
