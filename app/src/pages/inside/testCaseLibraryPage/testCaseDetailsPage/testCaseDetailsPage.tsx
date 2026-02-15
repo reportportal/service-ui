@@ -40,7 +40,7 @@ import { useDescriptionModal } from './descriptionModal';
 import { messages } from './messages';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
 import { AttachmentList } from '../attachmentList';
-import { ManualScenario } from '../types';
+import { ManualScenario, Step } from '../types';
 import { Precondition } from './precondition';
 import { StepsList } from './stepsList';
 import { Scenario } from './scenario';
@@ -115,6 +115,11 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
   ];
 
   if (manualScenario?.manualScenarioType === TestCaseManualScenario.STEPS) {
+    const firstStep = manualScenario?.steps?.[0];
+    const isStepDataExists = (step: Step) => {
+      return step?.instructions || step?.expectedResult || !isEmpty(step?.attachments)
+    };
+
     sections.push(
       {
         titleKey: 'preconditions',
@@ -127,8 +132,8 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
       {
         titleKey: 'steps',
         defaultMessage: messages.noSteps,
-        childComponent: !isEmpty(manualScenario?.steps) && (
-          <StepsList steps={manualScenario.steps} />
+        childComponent: isStepDataExists(firstStep) && (
+          <StepsList steps={manualScenario.steps.filter(isStepDataExists)} />
         ),
       },
     );

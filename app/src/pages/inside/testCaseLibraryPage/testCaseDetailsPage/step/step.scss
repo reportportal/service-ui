@@ -23,7 +23,7 @@
   line-height: 20px;
   font-family: var(--rp-ui-base-font-family);
   font-weight: 400;
-  box-shadow: 0 1px 3px 0 var(--rp-ui-base-shadow);
+  box-shadow: var(--rp-ui-base-shadow);
 
   &__number {
     padding: 16px 12px;
