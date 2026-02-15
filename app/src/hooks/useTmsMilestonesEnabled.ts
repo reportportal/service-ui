@@ -18,5 +18,6 @@ import { getTmsMilestonesOverride } from 'controllers/appInfo/utils';
 
 export const useTmsMilestonesEnabled = (): boolean => {
   const override: boolean | null = (getTmsMilestonesOverride as () => boolean | null)();
+  
   return override === true;
 };
