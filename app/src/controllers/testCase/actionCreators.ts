@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { TestCase, Tag } from 'pages/inside/testCaseLibraryPage/types';
+import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Page } from 'types/common';
 
 import {
