@@ -75,7 +75,9 @@ export const TestPlansPage = () => {
     <SettingsLayout>
       <ScrollWrapper resetRequired>
         <PageHeaderWithBreadcrumbsAndActions
-          title={formatMessage(commonMessages.pageTitle)}
+          title={formatMessage(
+            isTmsMilestonesEnabled ? commonMessages.pageTitle : commonMessages.pageTestPlansTitle,
+          )}
           breadcrumbDescriptors={breadcrumbDescriptors}
           {...(!isEmpty(testPlans) && {
             actions: (
@@ -95,11 +97,7 @@ export const TestPlansPage = () => {
                     data-automation-id="createTestPlanButton"
                     onClick={openModal}
                   >
-                    {formatMessage(
-                      isTmsMilestonesEnabled
-                        ? commonMessages.createMilestone
-                        : commonMessages.createTestPlan,
-                    )}
+                    {formatMessage(commonMessages.createTestPlan)}
                   </Button>
                 )}
               </>

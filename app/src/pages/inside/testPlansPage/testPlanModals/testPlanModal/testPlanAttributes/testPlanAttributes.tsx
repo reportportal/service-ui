@@ -23,7 +23,6 @@ import { AttributeList } from 'componentLibrary/attributeList';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { projectKeySelector } from 'controllers/project';
 import { URLS } from 'common/urls';
-import { useTmsMilestonesEnabled } from 'hooks/useTmsMilestonesEnabled';
 
 import { messages } from '../messages';
 
@@ -56,7 +55,6 @@ const AttributeListField = ({ input, ...rest }: AttributeListFieldProps) => (
 export const TestPlanAttributes = () => {
   const { formatMessage } = useIntl();
   const projectKey = useSelector(projectKeySelector);
-  const isTmsMilestonesEnabled = useTmsMilestonesEnabled();
 
   const getURIKey = useCallback(
     (search = '') => URLS.tmsAttributeKeysSearch(projectKey, { search }),
@@ -72,12 +70,7 @@ export const TestPlanAttributes = () => {
 
   return (
     <div>
-      <FieldElement
-        label={formatMessage(
-          isTmsMilestonesEnabled ? messages.milestoneAttributes : messages.testPlanAttributes,
-        )}
-        withoutProvider
-      >
+      <FieldElement label={formatMessage(messages.testPlanAttributes)} withoutProvider>
         <Field
           name="attributes"
           component={AttributeListField}

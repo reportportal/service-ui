@@ -21,6 +21,10 @@ export const commonMessages = defineMessages({
     id: 'MilestonesPage.title',
     defaultMessage: 'Milestones',
   },
+  pageTestPlansTitle: {
+    id: 'TestPlansPage.title',
+    defaultMessage: 'Test Plans',
+  },
   refreshPage: {
     id: 'TestPlansPage.refreshPage',
     defaultMessage: 'Refresh Page',

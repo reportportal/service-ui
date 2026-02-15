@@ -17,7 +17,6 @@
 import { useIntl } from 'react-intl';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { useTmsMilestonesEnabled } from 'hooks/useTmsMilestonesEnabled';
 
 import { TestPlanModal } from '../testPlanModal';
 import { commonMessages } from '../../commonMessages';
@@ -28,13 +27,10 @@ export const CREATE_TEST_PLAN_MODAL_KEY = 'createTestPlanModalKey';
 export const CreateTestPlanModal = () => {
   const { formatMessage } = useIntl();
   const { isLoading, submitTestPlan } = useCreateTestPlan();
-  const isTmsMilestonesEnabled = useTmsMilestonesEnabled();
 
   return (
     <TestPlanModal
-      title={formatMessage(
-        isTmsMilestonesEnabled ? commonMessages.createMilestone : commonMessages.createTestPlan,
-      )}
+      title={formatMessage(commonMessages.createTestPlan)}
       submitButtonText={formatMessage(COMMON_LOCALE_KEYS.CREATE)}
       isLoading={isLoading}
       formName="create-test-plan-modal-form"

@@ -19,7 +19,6 @@ import { useIntl } from 'react-intl';
 
 import { createClassnames, referenceDictionary } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { useTmsMilestonesEnabled } from 'hooks/useTmsMilestonesEnabled';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { NumerableBlock } from 'pages/common/numerableBlock';
 
@@ -48,7 +47,6 @@ export const EmptyTestPlans = () => {
   const { formatMessage } = useIntl();
   const { openModal } = useCreateTestPlanModal();
   const { canCreateTestPlan } = useUserPermissions();
-  const isTmsMilestonesEnabled = useTmsMilestonesEnabled();
   const benefits = benefitMessages.map((translation) =>
     Parser(formatMessage(translation, {}, { ignoreTag: true })),
   );
@@ -57,11 +55,7 @@ export const EmptyTestPlans = () => {
     canCreateTestPlan
       ? [
           {
-            name: formatMessage(
-              isTmsMilestonesEnabled
-                ? commonMessages.createMilestone
-                : commonMessages.createTestPlan,
-            ),
+            name: formatMessage(commonMessages.createTestPlan),
             dataAutomationId: 'createTestPlansButton',
             isCompact: true,
             handleButton: openModal,

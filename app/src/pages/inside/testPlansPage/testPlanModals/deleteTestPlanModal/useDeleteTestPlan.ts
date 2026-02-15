@@ -32,7 +32,6 @@ import {
   testPlansSelector,
 } from 'controllers/testPlan';
 import { useProjectDetails } from 'hooks/useTypedSelector';
-import { useTmsMilestonesEnabled } from 'hooks/useTmsMilestonesEnabled';
 
 interface UseDeleteTestPlanOptions {
   onSuccess?: VoidFn;
@@ -46,7 +45,6 @@ export const useDeleteTestPlan = ({ onSuccess = noop }: UseDeleteTestPlanOptions
   const testPlansPageData = useSelector(testPlansPageSelector);
   const testPlans = useSelector(testPlansSelector);
   const queryParams = useQueryParams(defaultQueryParams);
-  const isTmsMilestonesEnabled = useTmsMilestonesEnabled();
 
   const deleteTestPlan = async (testPlanId: number) => {
     try {
@@ -68,8 +66,7 @@ export const useDeleteTestPlan = ({ onSuccess = noop }: UseDeleteTestPlanOptions
 
       if (isSingleItemOnTheLastPage) {
         const offset = Number(queryParams.offset) - Number(queryParams.limit);
-        const pathSegment = isTmsMilestonesEnabled ? 'milestones' : 'testPlans';
-        const url = `/organizations/${organizationSlug}/projects/${projectSlug}/${pathSegment}?offset=${offset}&limit=${queryParams.limit}`;
+        const url = `/organizations/${organizationSlug}/projects/${projectSlug}/milestones?offset=${offset}&limit=${queryParams.limit}`;
 
         push(url);
       } else {
