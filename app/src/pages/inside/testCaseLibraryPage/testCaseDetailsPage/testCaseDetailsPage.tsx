@@ -41,7 +41,7 @@ import { useTestCaseTags } from './useTestCaseTags';
 import { messages } from './messages';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
 import { AttachmentList } from '../attachmentList';
-import { ManualScenario, Step, Tag, isTag } from '../types';
+import { ManualScenario, Step, Tag, hasTagShape } from '../types';
 import { Precondition } from './precondition';
 import { StepsList } from './stepsList';
 import { Scenario } from './scenario';
@@ -119,7 +119,7 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
   if (manualScenario?.manualScenarioType === TestCaseManualScenario.STEPS) {
     const firstStep = manualScenario?.steps?.[0];
     const isStepDataExists = (step: Step) => {
-      return step?.instructions || step?.expectedResult || !isEmpty(step?.attachments)
+      return step?.instructions || step?.expectedResult || !isEmpty(step?.attachments);
     };
 
     sections.push(
@@ -186,14 +186,14 @@ export const TestCaseDetailsPage = () => {
 
   if (!testCaseDetails) return null;
 
-  const attributes = (testCaseDetails.attributes || []).filter(isTag);
+  const attributes = (testCaseDetails.attributes || []).filter(hasTagShape);
 
   const handleTagSelect = (tag: Tag) => {
-    void addTag(tag);
+    addTag(tag).catch(noop);
   };
 
   const handleTagRemove = (tagKey: string) => {
-    void removeTag(tagKey);
+    removeTag(tagKey).catch(noop);
   };
 
   const handleDescriptionModal = () => {
