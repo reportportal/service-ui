@@ -67,9 +67,9 @@ export {
   canDeleteOrganization,
   canSeeInstanceLevelPluginsPages,
   canRenameOrganization,
+  canLockDashboard,
 
   // TMS FEATURES:
-  canLockDashboard,
   canCreateManualLaunch,
   canManageTestCases,
   canManageTestPlans,
