@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { TestCase, Tag } from 'pages/inside/testCaseLibraryPage/types';
 import { Page } from 'types/common';
 
 import {
@@ -39,6 +39,7 @@ import {
   DELETE_TEST_CASE_SUCCESS,
   UPDATE_FOLDER_COUNTER,
   UPDATE_DESCRIPTION_SUCCESS,
+  UPDATE_TAGS_SUCCESS,
   TOGGLE_FOLDER_EXPANSION,
   EXPAND_FOLDERS_TO_LEVEL,
   SET_EXPANDED_FOLDER_IDS,
@@ -193,6 +194,11 @@ export const updateFolderCounterAction = (params: UpdateFolderCounterParams) => 
 export const updateDescriptionSuccessAction = (description: string) => ({
   type: UPDATE_DESCRIPTION_SUCCESS,
   payload: description,
+});
+
+export const updateTestCaseTagsSuccessAction = (attributes: Tag[]) => ({
+  type: UPDATE_TAGS_SUCCESS,
+  payload: attributes,
 });
 
 export interface ToggleFolderExpansionParams {

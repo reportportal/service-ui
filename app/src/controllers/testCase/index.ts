@@ -19,6 +19,7 @@ export {
   getAllTestCasesAction,
   getTestCaseByFolderIdAction,
   updateFolderCounterAction,
+  updateTestCaseTagsSuccessAction,
   moveFolderSuccessAction,
   toggleFolderExpansionAction,
   expandFoldersToLevelAction,
