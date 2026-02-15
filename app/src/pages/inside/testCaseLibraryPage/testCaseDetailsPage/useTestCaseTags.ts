@@ -24,7 +24,7 @@ import { projectKeySelector } from 'controllers/project';
 import { GET_TEST_CASE_DETAILS_SUCCESS } from 'controllers/testCase/constants';
 import { testCaseDetailsSelector } from 'controllers/testCase';
 
-import { Tag, ExtendedTestCase, isTag, UseTestCaseTagsParams } from '../types';
+import { Tag, ExtendedTestCase, hasTagShape, UseTestCaseTagsParams } from '../types';
 
 export const useTestCaseTags = ({ testCaseId }: UseTestCaseTagsParams) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
@@ -81,7 +81,7 @@ export const useTestCaseTags = ({ testCaseId }: UseTestCaseTagsParams) => {
 
   const addTag = useCallback(
     async (tag: Tag) => {
-      const currentAttributes = (testCaseDetails?.attributes || []).filter(isTag);
+      const currentAttributes = (testCaseDetails?.attributes || []).filter(hasTagShape);
 
       const isTagExists = currentAttributes.some(({ key }) => key === tag.key);
 
@@ -95,7 +95,7 @@ export const useTestCaseTags = ({ testCaseId }: UseTestCaseTagsParams) => {
 
   const removeTag = useCallback(
     async (tagKey: string) => {
-      const currentAttributes = (testCaseDetails?.attributes || []).filter(isTag);
+      const currentAttributes = (testCaseDetails?.attributes || []).filter(hasTagShape);
 
       const updatedAttributes = currentAttributes.filter(({ key }) => key !== tagKey);
       await updateTestCaseTags(updatedAttributes);

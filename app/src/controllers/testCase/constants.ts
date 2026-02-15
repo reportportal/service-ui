@@ -39,7 +39,6 @@ export const RENAME_FOLDER_SUCCESS = 'renameFolderSuccess' as const;
 export const MOVE_FOLDER_SUCCESS = 'moveFolderSuccess' as const;
 export const UPDATE_FOLDER_COUNTER = 'updateFolderCounter' as const;
 export const UPDATE_DESCRIPTION_SUCCESS = 'updateDescriptionSuccess' as const;
-export const UPDATE_TAGS_SUCCESS = 'updateTagsSuccess' as const;
 export const TOGGLE_FOLDER_EXPANSION = 'toggleFolderExpansion' as const;
 export const EXPAND_FOLDERS_TO_LEVEL = 'expandFoldersToLevel' as const;
 export const SET_EXPANDED_FOLDER_IDS = 'setExpandedFolderIds' as const;
