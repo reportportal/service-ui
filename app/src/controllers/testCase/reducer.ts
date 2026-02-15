@@ -45,6 +45,7 @@ import {
   STOP_LOADING_TEST_CASES,
   TOGGLE_FOLDER_EXPANSION,
   UPDATE_DESCRIPTION_SUCCESS,
+  UPDATE_TAGS_SUCCESS,
   UPDATE_FOLDER_COUNTER,
 } from 'controllers/testCase/constants';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
@@ -234,6 +235,14 @@ const testCaseDetailsReducer = (
       return { ...state, loading: false, error };
     case UPDATE_DESCRIPTION_SUCCESS:
       return { ...state, data: { ...state.data, description: payload } };
+    case UPDATE_TAGS_SUCCESS:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          attributes: payload,
+        },
+      };
     default:
       return state;
   }

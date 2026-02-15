@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
+import { type ReactNode } from 'react';
 import { isEmpty } from 'es-toolkit/compat';
 import { noop } from 'es-toolkit';
 import { useIntl } from 'react-intl';
@@ -37,13 +37,15 @@ import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
 import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { useDescriptionModal } from './descriptionModal';
+import { useTestCaseTags } from './useTestCaseTags';
 import { messages } from './messages';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
 import { AttachmentList } from '../attachmentList';
-import { ManualScenario, Step } from '../types';
+import { ManualScenario, Step, Tag, isTag } from '../types';
 import { Precondition } from './precondition';
 import { StepsList } from './stepsList';
 import { Scenario } from './scenario';
+import { TagPopover } from '../tagPopover';
 
 import styles from './testCaseDetailsPage.scss';
 
@@ -55,7 +57,8 @@ const SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG = ({
   tags,
   testCaseDescription,
   headerControlKeys,
-  handleAddTags,
+  onTagRemove,
+  tagAddButton,
   handleDescriptionModal,
 }: {
   canEditTestCaseTag: boolean;
@@ -63,19 +66,18 @@ const SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG = ({
   tags: string[];
   testCaseDescription: string;
   headerControlKeys: { ADD: string };
-  handleAddTags: () => void;
+  onTagRemove?: (tagKey: string) => void;
+  tagAddButton?: ReactNode;
   handleDescriptionModal: () => void;
 }) => {
   return [
     {
       titleKey: 'tags',
       defaultMessage: commonMessages.noTagsAdded,
-      childComponent: !isEmpty(tags) && <AdaptiveTagList tags={tags} isShowAllView />,
-      headerControl: canEditTestCaseTag && (
-        <Button variant="text" adjustWidthOn="content" onClick={handleAddTags} icon={<PlusIcon />}>
-          {headerControlKeys.ADD}
-        </Button>
+      childComponent: !isEmpty(tags) && (
+        <AdaptiveTagList tags={tags} isShowAllView onRemoveTag={onTagRemove} />
       ),
+      headerControl: canEditTestCaseTag && tagAddButton,
     },
     {
       titleKey: 'description',
@@ -170,17 +172,28 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
 
 export const TestCaseDetailsPage = () => {
   const { formatMessage } = useIntl();
-  const [isTagsAdded, setIsTagsAdded] = useState(false);
   const { canEditTestCaseTag, canEditTestCaseDescription } = useUserPermissions();
   const { openModal: openAddTestCasesToTestPlanModal } = useAddTestCasesToTestPlanModal();
   const { openModal: openDescriptionModal } = useDescriptionModal();
 
   const testCaseDetails = useSelector(testCaseDetailsSelector);
 
+  const testCaseId = testCaseDetails?.id || 0;
+
+  const { addTag, removeTag } = useTestCaseTags({
+    testCaseId,
+  });
+
   if (!testCaseDetails) return null;
 
-  const handleAddTags = () => {
-    setIsTagsAdded((prevState) => !prevState);
+  const attributes = (testCaseDetails.attributes || []).filter(isTag);
+
+  const handleTagSelect = (tag: Tag) => {
+    void addTag(tag);
+  };
+
+  const handleTagRemove = (tagKey: string) => {
+    void removeTag(tagKey);
   };
 
   const handleDescriptionModal = () => {
@@ -194,14 +207,19 @@ export const TestCaseDetailsPage = () => {
     });
   };
 
-  // TODO: Remove mock data after integration
-  const mockedTags = [
-    { key: 'sso system', id: 1 },
-    { key: 'user interface improvements user interface improvements', id: 2 },
-    { key: 'battery usage analysis for a user interface improvements', id: 3 },
-  ];
+  const tagAddButton = (
+    <TagPopover
+      onTagSelect={handleTagSelect}
+      selectedTags={attributes}
+      trigger={
+        <Button variant="text" adjustWidthOn="content" icon={<PlusIcon />}>
+          {formatMessage(COMMON_LOCALE_KEYS.ADD)}
+        </Button>
+      }
+    />
+  );
 
-  const tags = isTagsAdded ? mockedTags : [];
+  const tags = attributes.map(({ key }) => key);
 
   return (
     <SettingsLayout>
@@ -215,11 +233,12 @@ export const TestCaseDetailsPage = () => {
           />
           <div className={cx('page__sidebar')}>
             {SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG({
-              handleAddTags,
+              tagAddButton,
+              onTagRemove: canEditTestCaseTag ? handleTagRemove : undefined,
               handleDescriptionModal,
               headerControlKeys: { ADD: formatMessage(COMMON_LOCALE_KEYS.ADD) },
-              testCaseDescription: testCaseDetails.description,
-              tags: tags.map(({ key }) => key),
+              testCaseDescription: testCaseDetails.description || '',
+              tags,
               canEditTestCaseTag,
               canEditTestCaseDescription,
             }).map(({ titleKey, defaultMessage, childComponent, headerControl }) => (
