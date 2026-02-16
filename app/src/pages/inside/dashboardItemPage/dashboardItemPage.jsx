@@ -32,6 +32,7 @@ import {
   toggleFullScreenModeAction,
   deleteDashboardAction,
   updateDashboardAction,
+  loadingSelector,
 } from 'controllers/dashboard';
 import { userInfoSelector, activeProjectSelector } from 'controllers/user';
 import {
@@ -53,6 +54,7 @@ import ExportIcon from 'common/img/export-inline.svg';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { useCanLockDashboard } from 'common/hooks/useCanLockDashboard';
 import { updateDashboardLockedAction } from 'controllers/dashboard/actionCreators';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { LockedDashboardTooltip } from '../common/lockedDashboardTooltip';
 import { LockedIcon } from '../common/lockedIcon';
 import { getUpdatedWidgetsList } from './modals/common/utils';
@@ -131,8 +133,10 @@ export const DashboardItemPage = () => {
   const fullScreenMode = useSelector(dashboardFullScreenModeSelector);
   const activeDashboardId = useSelector(activeDashboardIdSelector);
   const query = useSelector(pagePropertiesSelector);
+  const loading = useSelector(loadingSelector);
   const canLock = useCanLockDashboard();
-  const isDisabled = dashboard.locked && !canLock;
+  const isDisabled = dashboard?.locked && !canLock;
+  const isCurrentDashboard = dashboard?.id && +dashboard.id === +activeDashboardId;
 
   const getBreadcrumbs = useCallback(() => {
     return [
@@ -273,100 +277,108 @@ export const DashboardItemPage = () => {
 
   return (
     <PageLayout>
-      <PageHeader breadcrumbs={getBreadcrumbs()}>
-        <DashboardPageHeader />
-      </PageHeader>
-      <PageSection>
-        <div className={cx('dashboard-item')}>
-          <div className={cx('buttons-container')}>
-            <div className={cx('buttons-block')}>
-              <LockedDashboardTooltip locked={dashboard.locked}>
-                <GhostButton
-                  icon={AddWidgetIcon}
-                  onClick={showWidgetWizard}
-                  disabled={isDisabled}
-                  appearance="faded"
-                >
-                  {formatMessage(messages.addNewWidget)}
-                </GhostButton>
-              </LockedDashboardTooltip>
-            </div>
-            {isDisabled && (
-              <div className={cx('locked-dashboard')}>
-                <LockedDashboardTooltip locked={dashboard.locked}>
-                  <LockedIcon />
-                </LockedDashboardTooltip>
-                <span>{formatMessage(messages.lockedDashboard)}</span>
+      {!isCurrentDashboard || loading ? (
+        <PageSection>
+          <SpinningPreloader />
+        </PageSection>
+      ) : (
+        <>
+          <PageHeader breadcrumbs={getBreadcrumbs()}>
+            <DashboardPageHeader />
+          </PageHeader>
+          <PageSection>
+            <div className={cx('dashboard-item')}>
+              <div className={cx('buttons-container')}>
+                <div className={cx('buttons-block')}>
+                  <LockedDashboardTooltip locked={dashboard.locked}>
+                    <GhostButton
+                      icon={AddWidgetIcon}
+                      onClick={showWidgetWizard}
+                      disabled={isDisabled}
+                      appearance="faded"
+                    >
+                      {formatMessage(messages.addNewWidget)}
+                    </GhostButton>
+                  </LockedDashboardTooltip>
+                </div>
+                {isDisabled && (
+                  <div className={cx('locked-dashboard')}>
+                    <LockedDashboardTooltip locked={dashboard.locked}>
+                      <LockedIcon />
+                    </LockedDashboardTooltip>
+                    <span>{formatMessage(messages.lockedDashboard)}</span>
+                  </div>
+                )}
+                <div className={cx('buttons-block')}>
+                  {canLock && (
+                    <GhostButton
+                      icon={<LockedIcon locked={!dashboard.locked} />}
+                      onClick={onChangeLockedState}
+                    >
+                      {formatMessage(dashboard.locked ? messages.unlock : messages.lock)}
+                    </GhostButton>
+                  )}
+                  <LockedDashboardTooltip locked={dashboard.locked}>
+                    <GhostButton
+                      icon={EditIcon}
+                      onClick={onEditDashboardItem}
+                      disabled={isDisabled}
+                      appearance="faded"
+                    >
+                      {formatMessage(messages.editDashboard)}
+                    </GhostButton>
+                  </LockedDashboardTooltip>
+                  <GhostButton icon={FullscreenIcon} onClick={toggleFullscreen}>
+                    {formatMessage(messages.fullscreen)}
+                  </GhostButton>
+                  <LockedDashboardTooltip locked={dashboard.locked}>
+                    <GhostButton
+                      icon={CancelIcon}
+                      onClick={onDeleteDashboard}
+                      disabled={isDisabled}
+                      appearance="faded"
+                    >
+                      {formatMessage(messages.delete)}
+                    </GhostButton>
+                  </LockedDashboardTooltip>
+                  <Link
+                    to={{
+                      type: PROJECT_DASHBOARD_PRINT_PAGE,
+                      payload: { projectId: activeProject, dashboardId: activeDashboardId },
+                    }}
+                    target="_blank"
+                    className={cx('print-button')}
+                    onClick={onPrintDashboard}
+                  >
+                    <GhostButton icon={ExportIcon}>{formatMessage(messages.print)}</GhostButton>
+                  </Link>
+                </div>
               </div>
-            )}
-            <div className={cx('buttons-block')}>
-              {canLock && (
-                <GhostButton
-                  icon={<LockedIcon locked={!dashboard.locked} />}
-                  onClick={onChangeLockedState}
-                >
-                  {formatMessage(dashboard.locked ? messages.unlock : messages.lock)}
-                </GhostButton>
-              )}
-              <LockedDashboardTooltip locked={dashboard.locked}>
-                <GhostButton
-                  icon={EditIcon}
-                  onClick={onEditDashboardItem}
-                  disabled={isDisabled}
-                  appearance="faded"
-                >
-                  {formatMessage(messages.editDashboard)}
-                </GhostButton>
-              </LockedDashboardTooltip>
-              <GhostButton icon={FullscreenIcon} onClick={toggleFullscreen}>
-                {formatMessage(messages.fullscreen)}
-              </GhostButton>
-              <LockedDashboardTooltip locked={dashboard.locked}>
-                <GhostButton
-                  icon={CancelIcon}
-                  onClick={onDeleteDashboard}
-                  disabled={isDisabled}
-                  appearance="faded"
-                >
-                  {formatMessage(messages.delete)}
-                </GhostButton>
-              </LockedDashboardTooltip>
-              <Link
-                to={{
-                  type: PROJECT_DASHBOARD_PRINT_PAGE,
-                  payload: { projectId: activeProject, dashboardId: activeDashboardId },
-                }}
-                target="_blank"
-                className={cx('print-button')}
-                onClick={onPrintDashboard}
+              <Fullscreen
+                enabled={fullScreenMode}
+                onChange={(mode) => dispatch(changeFullScreenModeAction(mode))}
               >
-                <GhostButton icon={ExportIcon}>{formatMessage(messages.print)}</GhostButton>
-              </Link>
+                <WidgetsGrid
+                  isModifiable={!fullScreenMode && !isDisabled}
+                  dashboard={dashboard}
+                  isFullscreen={fullScreenMode}
+                  showWidgetWizard={showWidgetWizard}
+                  activeProject={activeProject}
+                  showNotification={(payload) => dispatch(showNotification(payload))}
+                  updateDashboardWidgetsAction={(payload) =>
+                    dispatch(updateDashboardWidgetsAction(payload))
+                  }
+                />
+                {fullScreenMode && (
+                  <button className={cx('icon-close')} onClick={toggleFullscreen}>
+                    {Parser(CancelIcon)}
+                  </button>
+                )}
+              </Fullscreen>
             </div>
-          </div>
-          <Fullscreen
-            enabled={fullScreenMode}
-            onChange={(mode) => dispatch(changeFullScreenModeAction(mode))}
-          >
-            <WidgetsGrid
-              isModifiable={!fullScreenMode && !isDisabled}
-              dashboard={dashboard}
-              isFullscreen={fullScreenMode}
-              showWidgetWizard={showWidgetWizard}
-              activeProject={activeProject}
-              showNotification={(payload) => dispatch(showNotification(payload))}
-              updateDashboardWidgetsAction={(payload) =>
-                dispatch(updateDashboardWidgetsAction(payload))
-              }
-            />
-            {fullScreenMode && (
-              <button className={cx('icon-close')} onClick={toggleFullscreen}>
-                {Parser(CancelIcon)}
-              </button>
-            )}
-          </Fullscreen>
-        </div>
-      </PageSection>
+          </PageSection>
+        </>
+      )}
     </PageLayout>
   );
 };
