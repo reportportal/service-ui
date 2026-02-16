@@ -463,16 +463,16 @@ describe('validate.launchNumericEntity', () => {
 
 describe('validate.descriptionEntity', () => {
   test('validation should be correct', () => {
+    expect(validate.descriptionEntity({ value: 'a' })).toBe(true);
     expect(validate.descriptionEntity({ value: 'abc' })).toBe(true);
-    expect(validate.descriptionEntity({ value: 'example 18 symbols' })).toBe(true);
+    expect(validate.descriptionEntity({ value: 'x'.repeat(256) })).toBe(true);
   });
-  test('Validation should not be correct', () => {
-    expect(validate.launchNumericEntity(undefined)).toBe(false);
-    expect(validate.launchNumericEntity({})).toBe(false);
-    expect(validate.launchNumericEntity({ value: '' })).toBe(false);
-    expect(validate.launchNumericEntity({ value: '  ' })).toBe(false);
-    expect(validate.launchNumericEntity({ value: 'a' })).toBe(false);
-    expect(validate.launchNumericEntity({ value: 'example more then 18 symbols' })).toBe(false);
+  test('validation should not be correct', () => {
+    expect(validate.descriptionEntity(undefined)).toBe(false);
+    expect(validate.descriptionEntity({})).toBe(false);
+    expect(validate.descriptionEntity({ value: '' })).toBe(false);
+    expect(validate.descriptionEntity({ value: '  ' })).toBe(false);
+    expect(validate.descriptionEntity({ value: 'x'.repeat(257) })).toBe(false);
   });
 });
 

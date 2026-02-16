@@ -1193,7 +1193,7 @@
   "LaunchLevelEntities.TO_INVESTIGATE_title": "To Investigate",
   "LaunchLevelEntities.TO_INVESTIGATE_totalTitle": "Всего To Investigate",
   "LaunchLevelEntities.TotalTitle": "Всего",
-  "LaunchLevelEntities.descriptionEntityHint": "Описание должно быть длиной от 3 до 18",
+  "LaunchLevelEntities.descriptionEntityHint": "Описание должно быть длиной от 1 до 256",
   "LaunchLevelEntities.descriptionPlaceholder": "Введите описание",
   "LaunchLevelEntities.descriptionStepLevelEntityHint": "Описание должно быть длиной от 1 до 256",
   "LaunchLevelEntities.entityItemStatistics.placeholder": "Введите количество",

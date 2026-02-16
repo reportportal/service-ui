@@ -1193,7 +1193,7 @@
   "LaunchLevelEntities.TO_INVESTIGATE_title": "Для Розслідування",
   "LaunchLevelEntities.TO_INVESTIGATE_totalTitle": "Всього Для Розслідування",
   "LaunchLevelEntities.TotalTitle": "Всього",
-  "LaunchLevelEntities.descriptionEntityHint": "Опис повинен бути довжиною від 3 до 18",
+  "LaunchLevelEntities.descriptionEntityHint": "Опис повинен бути довжиною від 1 до 256",
   "LaunchLevelEntities.descriptionPlaceholder": "Введіть опис",
   "LaunchLevelEntities.descriptionStepLevelEntityHint": "Опис повинен бути довжиною від 1 до 256",
   "LaunchLevelEntities.entityItemStatistics.placeholder": "Введіть Кількість",

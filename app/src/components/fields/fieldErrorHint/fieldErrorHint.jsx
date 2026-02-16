@@ -109,7 +109,7 @@ const messages = defineMessages({
   },
   descriptionEntityHint: {
     id: 'LaunchLevelEntities.descriptionEntityHint',
-    defaultMessage: 'Description should have size from 3 to 18',
+    defaultMessage: 'Description should have size from 1 to 256',
   },
   descriptionStepLevelEntityHint: {
     id: 'LaunchLevelEntities.descriptionStepLevelEntityHint',

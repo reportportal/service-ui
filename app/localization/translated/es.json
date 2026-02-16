@@ -1193,7 +1193,7 @@
   "LaunchLevelEntities.TO_INVESTIGATE_title": "Investigar",
   "LaunchLevelEntities.TO_INVESTIGATE_totalTitle": "Total de investigar",
   "LaunchLevelEntities.TotalTitle": "Total",
-  "LaunchLevelEntities.descriptionEntityHint": "La descripción debe tener entre 3 y 18 caracteres",
+  "LaunchLevelEntities.descriptionEntityHint": "La descripción debe tener entre 1 y 256 caracteres",
   "LaunchLevelEntities.descriptionPlaceholder": "Ingrese la descripción",
   "LaunchLevelEntities.descriptionStepLevelEntityHint": "La descripción debe tener entre 1 y 256 caracteres",
   "LaunchLevelEntities.entityItemStatistics.placeholder": "Ingrese cantidad",
