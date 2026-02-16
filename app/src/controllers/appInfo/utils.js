@@ -34,14 +34,10 @@ export const getTmsOverride = () => {
 
 export const getTmsMilestonesOverride = () => {
   try {
-    const override = getStorageItem(TMS_MILESTONES_STORAGE_KEY);
-    if (override === true || override === false) {
-      return Boolean(override);
-    }
-  } catch () {
+    return getStorageItem(TMS_MILESTONES_STORAGE_KEY) === true;
+  } catch {
     return null;
   }
-  return null;
 };
 
 export const isTmsEnabled = (state) => {
