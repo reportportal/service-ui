@@ -20,17 +20,16 @@ import Parser from 'html-react-parser';
 
 import { ExecutionStatus, ExecutionStatusChipProps } from './types';
 import { STATUS_CLASS_MAP, STATUS_ICON_MAP } from './constants';
-import { getTemporaryStatus } from './utils';
 import styles from './executionStatusChip.scss';
 
 const cx = createClassnames(styles);
 
 export { ExecutionStatus } from './types';
 
-export const ExecutionStatusChip = memo(({ status, startedAt }: ExecutionStatusChipProps) => {
-  const statusKey = getTemporaryStatus(status, startedAt);
-  const statusClass = STATUS_CLASS_MAP[statusKey] || STATUS_CLASS_MAP[ExecutionStatus.TO_RUN];
-  const statusIcon = STATUS_ICON_MAP[statusKey] || STATUS_ICON_MAP[ExecutionStatus.TO_RUN];
+export const ExecutionStatusChip = memo(({ status }: ExecutionStatusChipProps) => {
+  const statusKey = status.toUpperCase() as ExecutionStatus;
+  const statusClass = STATUS_CLASS_MAP[statusKey];
+  const statusIcon = STATUS_ICON_MAP[statusKey];
 
   return (
     <div className={cx('execution-status-chip', statusClass)}>

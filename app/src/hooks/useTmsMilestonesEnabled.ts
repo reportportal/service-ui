@@ -14,18 +14,8 @@
  * limitations under the License.
  */
 
-import { ExecutionStatus } from './types';
+import { getTmsMilestonesOverride } from 'controllers/appInfo/utils';
 
-// TODO Replace getTemporaryStatus with real status from backend when it will be available
-export const getTemporaryStatus = (status?: string, startedAt?: number): ExecutionStatus => {
-  if (status) {
-    return status.toUpperCase() as ExecutionStatus;
-  }
-
-  // TODO Remove this temporary logic when real status will be available from backend. This is just for demonstration of different status icons in UI.
-  if (startedAt) {
-    return startedAt % 2 === 0 ? ExecutionStatus.IN_PROGRESS : ExecutionStatus.PASSED;
-  }
-
-  return ExecutionStatus.TO_RUN;
+export const useTmsMilestonesEnabled = (): boolean | null => {
+  return (getTmsMilestonesOverride as () => boolean | null)();
 };

@@ -14,13 +14,26 @@
  * limitations under the License.
  */
 
-export enum ExecutionStatus {
-  TO_RUN = 'TO_RUN',
-  IN_PROGRESS = 'IN_PROGRESS',
-  PASSED = 'PASSED',
-  FAILED = 'FAILED',
+import { UseModalData } from 'common/hooks';
+
+import { ExtendedTestCase } from '../types';
+
+export interface DuplicateTestCasePayload {
+  testCaseId: number;
+  testFolderId: number;
+  name: string;
 }
 
-export interface ExecutionStatusChipProps {
-  status: string;
+export interface DuplicateTestCaseResponse {
+  testFolderId: number;
+  testCases: Array<{ id: number }>;
 }
+
+export interface DuplicateTestCaseFormValues {
+  name: string;
+  folder: { id: number };
+}
+
+export type DuplicateTestCaseModalProps = UseModalData<{
+  testCase: ExtendedTestCase;
+}>;

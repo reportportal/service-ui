@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,20 +17,20 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  enterTestPlanName: {
-    id: 'CreateTestPlanModal.enterTestPlanName',
-    defaultMessage: 'Enter test plan name',
+  duplicateTestCase: {
+    id: 'DuplicateTestCaseModal.duplicateTestCase',
+    defaultMessage: 'Duplicate Test Case',
   },
-  addTestPlanDescription: {
-    id: 'CreateTestPlanModal.addTestPlanDescription',
-    defaultMessage: 'Add test plan description',
+  testCaseDuplicatedSuccess: {
+    id: 'DuplicateTestCaseModal.testCaseDuplicatedSuccess',
+    defaultMessage: 'Test case has been duplicated successfully',
   },
-  testPlanAttributes: {
-    id: 'CreateTestPlanModal.testPlanAttributes',
-    defaultMessage: 'Test plan attributes',
+  selectFolderForDuplicate: {
+    id: 'DuplicateTestCaseModal.selectFolderForDuplicate',
+    defaultMessage: 'Please enter a name for the folder where all test cases will be organized',
   },
-  addAttributes: {
-    id: 'CreateMilestoneModal.addAttributes',
-    defaultMessage: 'Add Attributes',
+  enterTestCaseName: {
+    id: 'DuplicateTestCaseModal.enterTestCaseName',
+    defaultMessage: 'Enter name for the test case',
   },
 });

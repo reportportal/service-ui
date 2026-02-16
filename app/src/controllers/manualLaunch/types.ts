@@ -166,7 +166,7 @@ export interface ManualScenario {
 
 export interface TestCaseExecution {
   id: number;
-  executionStatus?: string;
+  executionStatus: string;
   executionComment?: ExecutionComment;
   startedAt?: number;
   finishedAt?: number;
