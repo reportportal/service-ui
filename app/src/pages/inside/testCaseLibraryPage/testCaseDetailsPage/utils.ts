@@ -22,7 +22,7 @@ import { ManualScenario, Step } from '../types';
 export const hasStepContent = (step: Step) =>
   !!step?.instructions || !!step?.expectedResult || !isEmpty(step?.attachments);
 
-export const isScenarioEmpty = (manualScenario: ManualScenario | undefined): boolean => {
+export const checkScenario = (manualScenario: ManualScenario | undefined): boolean => {
   if (!manualScenario) return true;
 
   const hasRequirements = !isEmpty(manualScenario.requirements);

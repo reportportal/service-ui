@@ -44,7 +44,7 @@ import { ManualScenario } from '../types';
 import { Precondition } from './precondition';
 import { StepsList } from './stepsList';
 import { Scenario } from './scenario';
-import { isScenarioEmpty, hasStepContent } from './utils';
+import { checkScenario, hasStepContent } from './utils';
 
 import styles from './testCaseDetailsPage.scss';
 
@@ -201,7 +201,7 @@ export const TestCaseDetailsPage = () => {
 
   const tags = isTagsAdded ? mockedTags : [];
 
-  const scenarioEmpty = isScenarioEmpty(testCaseDetails?.manualScenario);
+  const isScenarioEmpty = checkScenario(testCaseDetails?.manualScenario);
 
   return (
     <SettingsLayout>
@@ -212,7 +212,7 @@ export const TestCaseDetailsPage = () => {
             testCase={testCaseDetails}
             onAddToTestPlan={handleAddToTestPlan}
             onMenuAction={noop}
-            isScenarioEmpty={scenarioEmpty}
+            isScenarioEmpty={isScenarioEmpty}
           />
           <div className={cx('page__sidebar')}>
             {SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG({
@@ -241,7 +241,7 @@ export const TestCaseDetailsPage = () => {
                 testCaseDetails?.id ? 'page__main-content-with-data' : '',
               )}
             >
-              {scenarioEmpty ? (
+              {isScenarioEmpty ? (
                 <DetailsEmptyState testCase={testCaseDetails} />
               ) : (
                 MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG({
