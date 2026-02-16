@@ -228,11 +228,11 @@ export const DashboardItemPage = () => {
   const toggleFullscreen = useCallback(() => {
     trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('full_screen', dashboard.id));
     dispatch(toggleFullScreenModeAction());
-  }, [dashboard.id, trackEvent, dispatch]);
+  }, [dashboard?.id, trackEvent, dispatch]);
 
   const onPrintDashboard = useCallback(() => {
     trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('print', dashboard.id));
-  }, [dashboard.id, trackEvent]);
+  }, [dashboard?.id, trackEvent]);
 
   const showWidgetWizard = useCallback(() => {
     trackEvent(DASHBOARD_EVENTS.clickOnAddNewWidgetButton(activeDashboardId));
