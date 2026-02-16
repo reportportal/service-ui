@@ -22,6 +22,5 @@ export enum ExecutionStatus {
 }
 
 export interface ExecutionStatusChipProps {
-  status?: string;
-  startedAt?: number;
+  status: string;
 }

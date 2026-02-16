@@ -52,12 +52,12 @@
       height: 16px;
 
       svg {
-        width: 14px;
-        height: 14px;
+        width: 16px;
+        height: 16px;
       }
 
       svg path {
-        fill: var(--rp-ui-base-e-200);
+        fill: var(--rp-ui-base-e-300);
       }
 
       &:hover:not(:focus-visible, &-has-query, &-panel-open) svg path {
