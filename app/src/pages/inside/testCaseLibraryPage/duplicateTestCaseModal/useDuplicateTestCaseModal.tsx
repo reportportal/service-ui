@@ -14,13 +14,28 @@
  * limitations under the License.
  */
 
-export enum ExecutionStatus {
-  TO_RUN = 'TO_RUN',
-  IN_PROGRESS = 'IN_PROGRESS',
-  PASSED = 'PASSED',
-  FAILED = 'FAILED',
-}
+import { useDispatch } from 'react-redux';
 
-export interface ExecutionStatusChipProps {
-  status: string;
-}
+import { showModalAction } from 'controllers/modal';
+
+import { ExtendedTestCase } from '../types';
+import { DUPLICATE_TEST_CASE_MODAL_KEY } from './duplicateTestCaseModal';
+
+export const useDuplicateTestCaseModal = () => {
+  const dispatch = useDispatch();
+
+  const openModal = (testCase: ExtendedTestCase) => {
+    dispatch(
+      showModalAction({
+        id: DUPLICATE_TEST_CASE_MODAL_KEY,
+        data: {
+          testCase,
+        },
+      }),
+    );
+  };
+
+  return {
+    openModal,
+  };
+};

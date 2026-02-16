@@ -59,6 +59,7 @@ import { OrganizationsControlWithPopover } from '../../organizationsControl';
 import { messages } from '../../messages';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useTmsEnabled } from 'hooks/useTmsEnabled';
+import { useTmsMilestonesEnabled } from 'hooks/useTmsMilestonesEnabled';
 
 const ORGANIZATION_CONTROL = 'Organization control';
 
@@ -67,6 +68,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
   const { formatMessage } = useIntl();
   const { canSeeMembers, canWorkWithFilters } = useUserPermissions();
   const isTmsEnabled = useTmsEnabled();
+  const isTmsMilestonesEnabled = useTmsMilestonesEnabled();
   const sidebarExtensions = useSelector(uiExtensionSidebarComponentsSelector);
   const projectPageExtensions = useSelector(uiExtensionProjectPagesSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
@@ -179,13 +181,19 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         },
         {
           onClick: (isSidebarCollapsed) =>
-            onClickButton({ itemName: messages.milestones.defaultMessage, isSidebarCollapsed }),
+            onClickButton({
+              itemName: (isTmsMilestonesEnabled ? messages.milestones : messages.testPlans)
+                .defaultMessage,
+              isSidebarCollapsed,
+            }),
           link: {
             type: PROJECT_TEST_PLANS_PAGE,
             payload: { organizationSlug, projectSlug },
           },
           icon: TestPlansIcon,
-          message: formatMessage(messages.milestones),
+          message: formatMessage(
+            isTmsMilestonesEnabled ? messages.milestones : messages.testPlans,
+          ),
           menuOrder: (menuCounter += menuStep),
         },
         {

@@ -14,13 +14,34 @@
  * limitations under the License.
  */
 
-export enum ExecutionStatus {
-  TO_RUN = 'TO_RUN',
-  IN_PROGRESS = 'IN_PROGRESS',
-  PASSED = 'PASSED',
-  FAILED = 'FAILED',
+@mixin input-placeholder($line-height) {
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: 400;
+  font-size: 13px;
+  line-height: $line-height;
+  text-indent: 1px;
+  letter-spacing: 0;
+  color: var(--rp-ui-base-e-300);
 }
 
-export interface ExecutionStatusChipProps {
-  status: string;
+.folder-select {
+  margin-top: 16px;
+
+  input::placeholder {
+    @include input-placeholder(28px);
+
+    vertical-align: middle;
+  }
+}
+
+.folder-description {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 11px;
+  color: var(--rp-ui-base-e-400);
+}
+
+form input::placeholder {
+  @include input-placeholder(20px);
 }

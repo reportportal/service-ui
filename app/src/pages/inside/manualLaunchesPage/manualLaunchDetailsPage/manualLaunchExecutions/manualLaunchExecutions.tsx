@@ -39,7 +39,7 @@ import {
 } from 'controllers/manualLaunch';
 
 import { ManualLaunchExecutionsProps } from './types';
-import { ExecutionStatusChip, ExecutionStatus } from './executionStatusChip';
+import { ExecutionStatusChip } from './executionStatusChip';
 import { ITEMS_PER_PAGE_OPTIONS } from './constants';
 import { useDeleteExecutionModal } from './deleteExecutionModal';
 import { messages } from './messages';
@@ -152,13 +152,10 @@ export const ManualLaunchExecutions = ({
         ),
       },
       status: {
-        content: execution.executionStatus || ExecutionStatus.TO_RUN,
+        content: execution.executionStatus,
         component: (
           <div className={cx('execution-status-cell')}>
-            <ExecutionStatusChip
-              status={execution.executionStatus}
-              startedAt={execution.startedAt}
-            />
+            <ExecutionStatusChip status={execution.executionStatus} />
           </div>
         ),
       },

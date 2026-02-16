@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
-export enum ExecutionStatus {
-  TO_RUN = 'TO_RUN',
-  IN_PROGRESS = 'IN_PROGRESS',
-  PASSED = 'PASSED',
-  FAILED = 'FAILED',
-}
-
-export interface ExecutionStatusChipProps {
-  status: string;
-}
+export {
+  default as DuplicateTestCaseModal,
+  DUPLICATE_TEST_CASE_MODAL_KEY,
+} from './duplicateTestCaseModal';
+export { useDuplicateTestCase } from './useDuplicateTestCase';
+export { useDuplicateTestCaseModal } from './useDuplicateTestCaseModal';

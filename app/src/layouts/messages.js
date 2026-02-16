@@ -37,6 +37,10 @@ export const messages = defineMessages({
     id: 'Sidebar.milestonesBtn',
     defaultMessage: 'Milestones',
   },
+  testPlans: {
+    id: 'Sidebar.testPlansBtn',
+    defaultMessage: 'Test Plans',
+  },
   projectTeam: {
     id: 'Sidebar.membersBtn',
     defaultMessage: 'Project Team',
