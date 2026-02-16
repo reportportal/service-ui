@@ -19,7 +19,7 @@ import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 
 import { ManualScenario, Step } from '../types';
 
-export const hasStepContent = (step: Step): boolean =>
+export const hasStepContent = (step: Step) =>
   !!step?.instructions || !!step?.expectedResult || !isEmpty(step?.attachments);
 
 export const isScenarioEmpty = (manualScenario: ManualScenario | undefined): boolean => {

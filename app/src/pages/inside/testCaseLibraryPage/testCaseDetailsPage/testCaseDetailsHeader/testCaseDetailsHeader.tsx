@@ -40,7 +40,6 @@ import { testCaseLibraryBreadcrumbsSelector } from 'controllers/pages/selectors'
 import { ExtendedTestCase } from '../../types';
 import { messages } from './messages';
 import { commonMessages } from '../../commonMessages';
-import { messages as emptyStateMessages } from '../../emptyState/messages';
 import { EDIT_TEST_CASE_MODAL_KEY } from '../editTestCaseModal/editTestCaseModal';
 import { useDeleteTestCaseModal } from '../../deleteTestCaseModal';
 import { useEditTestCaseModal } from '../../editSelectedTestCaseModal';
@@ -206,7 +205,7 @@ export const TestCaseDetailsHeader = ({
           </PopoverControl>
           {!isScenarioEmpty && canEditTestCaseScenario && (
             <Button onClick={openEditScenarioModal} variant="ghost">
-              {formatMessage(emptyStateMessages.editScenario)}
+              {formatMessage(commonMessages.editScenario)}
             </Button>
           )}
           {canAddTestCaseToLaunch && (
