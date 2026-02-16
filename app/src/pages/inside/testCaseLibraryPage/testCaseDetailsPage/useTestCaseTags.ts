@@ -85,7 +85,9 @@ export const useTestCaseTags = ({ testCaseId }: UseTestCaseTagsParams) => {
 
       const currentAttributes = (testCaseDetails?.attributes || []).filter(hasTagShape);
 
-      const isTagExists = currentAttributes.some(({ key }) => key === tag.key);
+      const isTagExists = currentAttributes.some(
+        ({ key }) => key.toLowerCase() === tag.key.toLowerCase(),
+      );
 
       if (!isTagExists) {
         const updatedAttributes = [...currentAttributes, tag];
