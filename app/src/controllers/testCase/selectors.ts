@@ -39,6 +39,7 @@ export interface TestCaseState {
   };
   details?: {
     data?: ExtendedTestCase;
+    loading: boolean;
   };
 }
 
@@ -75,6 +76,8 @@ export const testCasesPageSelector = (state: RootState): Page | null =>
   state.testCase?.testCases?.page || null;
 
 export const testCaseDetailsSelector = (state: RootState) => state.testCase?.details?.data;
+
+export const isLoadingTestCaseDetailsSelector = (state: RootState) => state.testCase?.details?.loading || false;
 
 export const transformedFoldersSelector = createSelector(
   foldersSelector,

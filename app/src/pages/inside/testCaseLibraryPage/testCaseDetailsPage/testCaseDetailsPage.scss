@@ -49,6 +49,15 @@
     flex-direction: column;
   }
 
+  &__loading-state {
+    justify-content: center;
+  }
+
+  &__loader {
+    display: flex;
+    justify-content: center;
+  }
+
   &__main-content-with-data {
     padding: 24px 32px;
 

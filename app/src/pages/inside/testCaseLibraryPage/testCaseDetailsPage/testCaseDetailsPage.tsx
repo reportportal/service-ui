@@ -19,7 +19,7 @@ import { isEmpty } from 'es-toolkit/compat';
 import { noop } from 'es-toolkit';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
-import { Button, EditIcon, PlusIcon } from '@reportportal/ui-kit';
+import { BubblesLoader, Button, EditIcon, PlusIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
@@ -30,7 +30,7 @@ import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCases
 import { RequirementsList } from 'pages/inside/common/requirementsList/requirementsList';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { testCaseDetailsSelector } from 'controllers/testCase';
+import { isLoadingTestCaseDetailsSelector, testCaseDetailsSelector } from 'controllers/testCase';
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 
@@ -40,7 +40,7 @@ import { useDescriptionModal } from './descriptionModal';
 import { messages } from './messages';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
 import { AttachmentList } from '../attachmentList';
-import { ManualScenario, Step } from '../types';
+import { Attachment, ManualScenario, Step } from '../types';
 import { Precondition } from './precondition';
 import { StepsList } from './stepsList';
 import { Scenario } from './scenario';
@@ -48,6 +48,33 @@ import { Scenario } from './scenario';
 import styles from './testCaseDetailsPage.scss';
 
 const cx = createClassnames(styles);
+
+const isStepItemExist = (step?: Step) => {
+  return Boolean(step?.instructions || step?.expectedResult || !isEmpty(step?.attachments));
+};
+
+const isStepsPreconditionExist = (preconditions: {
+  value?: string;
+  attachments?: Attachment[];
+}) => {
+  return Boolean(preconditions?.value || !isEmpty(preconditions?.attachments));
+};
+
+const isScenarioExist = (manualScenario: ManualScenario) => {
+  return Boolean(manualScenario?.preconditions?.value ||
+    manualScenario?.instructions ||
+    manualScenario?.expectedResult);
+};
+
+const isTestCaseDetailsInfo = (manualScenario: ManualScenario) => {
+  const isRequirementsExist = !isEmpty(manualScenario?.requirements);
+
+  if (manualScenario?.manualScenarioType === TestCaseManualScenario.STEPS) {
+    return isRequirementsExist || isStepsPreconditionExist(manualScenario?.preconditions) || isStepItemExist(manualScenario?.steps?.[0]);
+  }
+
+  return isRequirementsExist || isScenarioExist(manualScenario) || !isEmpty(manualScenario?.attachments);
+};
 
 const SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG = ({
   canEditTestCaseTag,
@@ -115,25 +142,19 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
   ];
 
   if (manualScenario?.manualScenarioType === TestCaseManualScenario.STEPS) {
-    const firstStep = manualScenario?.steps?.[0];
-    const isStepDataExists = (step: Step) => {
-      return step?.instructions || step?.expectedResult || !isEmpty(step?.attachments)
-    };
-
     sections.push(
       {
-        titleKey: 'preconditions',
+        titleKey: 'precondition',
         defaultMessage: messages.noPrecondition,
-        childComponent: (manualScenario?.preconditions?.value ||
-          !isEmpty(manualScenario?.preconditions?.attachments)) && (
+        childComponent: isStepsPreconditionExist(manualScenario?.preconditions) && (
           <Precondition preconditions={manualScenario.preconditions} />
         ),
       },
       {
         titleKey: 'steps',
         defaultMessage: messages.noSteps,
-        childComponent: isStepDataExists(firstStep) && (
-          <StepsList steps={manualScenario.steps.filter(isStepDataExists)} />
+        childComponent: isStepItemExist(manualScenario?.steps?.[0]) && (
+          <StepsList steps={manualScenario.steps.filter(isStepItemExist)} />
         ),
       },
     );
@@ -141,10 +162,8 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
     sections.push(
       {
         titleKey: 'scenario',
-        defaultMessage: messages.noPrecondition,
-        childComponent: (manualScenario?.preconditions?.value ||
-          manualScenario?.instructions ||
-          manualScenario?.expectedResult) && (
+        defaultMessage: messages.noScenario,
+        childComponent: isScenarioExist(manualScenario) && (
           <Scenario
             expectedResult={manualScenario.expectedResult}
             instructions={manualScenario.instructions}
@@ -176,6 +195,7 @@ export const TestCaseDetailsPage = () => {
   const { openModal: openDescriptionModal } = useDescriptionModal();
 
   const testCaseDetails = useSelector(testCaseDetailsSelector);
+  const isLoadingTestCaseDetails = useSelector(isLoadingTestCaseDetailsSelector);
 
   if (!testCaseDetails) return null;
 
@@ -202,6 +222,19 @@ export const TestCaseDetailsPage = () => {
   ];
 
   const tags = isTagsAdded ? mockedTags : [];
+  const mainContent = isTestCaseDetailsInfo(testCaseDetails?.manualScenario) ?
+    MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG({
+      manualScenario: testCaseDetails.manualScenario,
+    }).map(({ titleKey, defaultMessage, childComponent }) => (
+      <CollapsibleSectionWithHeaderControl
+        key={titleKey}
+        title={formatMessage(commonMessages[titleKey])}
+        defaultMessage={formatMessage(defaultMessage)}
+      >
+        {childComponent}
+      </CollapsibleSectionWithHeaderControl>
+    )) :
+    <DetailsEmptyState />;
 
   return (
     <SettingsLayout>
@@ -238,23 +271,15 @@ export const TestCaseDetailsPage = () => {
               className={cx(
                 'page__main-content',
                 testCaseDetails?.id ? 'page__main-content-with-data' : '',
+                isLoadingTestCaseDetails ? 'page__loading-state' : '',
               )}
             >
-              {testCaseDetails?.manualScenario ? (
-                MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG({
-                  manualScenario: testCaseDetails.manualScenario,
-                }).map(({ titleKey, defaultMessage, childComponent }) => (
-                  <CollapsibleSectionWithHeaderControl
-                    key={titleKey}
-                    title={formatMessage(commonMessages[titleKey])}
-                    defaultMessage={formatMessage(defaultMessage)}
-                  >
-                    {childComponent}
-                  </CollapsibleSectionWithHeaderControl>
-                ))
-              ) : (
-                <DetailsEmptyState />
-              )}
+              {isLoadingTestCaseDetails ?
+                <div className={cx('page__loader')}>
+                  <BubblesLoader />
+                </div> :
+                mainContent
+              }
             </div>
           </ScrollWrapper>
         </div>
