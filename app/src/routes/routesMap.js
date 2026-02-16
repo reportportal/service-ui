@@ -513,7 +513,7 @@ const routesMap = {
   },
 
   [PROJECT_TEST_PLANS_PAGE]: {
-    path: `/organizations/:organizationSlug/projects/:projectSlug/${getTmsMilestonesOverride() === true ? 'milestones' : 'testPlans'}`,
+    path: `/organizations/:organizationSlug/projects/:projectSlug/${getTmsMilestonesOverride() ? 'milestones' : 'testPlans'}`,
     thunk: (dispatch, getState) => {
       const state = getState();
       const { offset, limit } = getRouterParams({
@@ -526,7 +526,7 @@ const routesMap = {
     },
   },
   [PROJECT_TEST_PLAN_DETAILS_PAGE]: {
-    path: `/organizations/:organizationSlug/projects/:projectSlug/${getTmsMilestonesOverride() === true ? 'milestones' : 'testPlans'}/:testPlanId/:testPlanRoute*`,
+    path: `/organizations/:organizationSlug/projects/:projectSlug/${getTmsMilestonesOverride() ? 'milestones' : 'testPlans'}/:testPlanId/:testPlanRoute*`,
     thunk: (dispatch, getState) => {
       const state = getState();
       const testPlanId = state.location?.payload?.testPlanId;
