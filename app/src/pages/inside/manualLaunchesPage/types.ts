@@ -129,10 +129,10 @@ export interface ManualLaunchDto {
   uuid: string;
   startTime: string;
   description: string;
-  testPlanId: number;
   testCaseIds: number[];
   attributes: LaunchAttribute[];
   mode: string;
+  testPlanId?: number;
 }
 
 export interface UrlsHelper {

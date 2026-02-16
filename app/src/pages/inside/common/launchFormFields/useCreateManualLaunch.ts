@@ -48,9 +48,11 @@ export const useCreateManualLaunch = (
 
       const resolvedTestPlanId = testPlanId ?? formValues.testPlan?.id;
 
-      const testCaseIds = formValues.uncoveredTestsOnly
-        ? testCases.filter((testCase) => !testCase.lastExecution).map((testCase) => testCase.id)
-        : testCases.map((testCase) => testCase.id);
+      const addedTestCases = formValues.uncoveredTestsOnly
+        ? testCases.filter((testCase) => !testCase.lastExecution)
+        : testCases;
+
+      const testCaseIds = addedTestCases.map((testCase) => testCase.id);
 
       try {
         const launchId = isLaunchObject(formValues.name) ? formValues.name.id : selectedLaunchId;
@@ -64,10 +66,10 @@ export const useCreateManualLaunch = (
           dispatch(
             showSuccessNotification({
               message:
-                testCaseIds.length > 1
+                addedTestCases.length > 1
                   ? formatMessage(messages.testCasesAddedSuccess)
                   : formatMessage(messages.testCaseAddedSuccess, {
-                      testCaseName: testCases[0]?.name,
+                      testCaseName: addedTestCases[0]?.name,
                     }),
             }),
           );
@@ -124,7 +126,6 @@ export const useCreateManualLaunch = (
       dispatch,
       projectKey,
       formatMessage,
-      testCases?.[0]?.name
     ],
   );
 

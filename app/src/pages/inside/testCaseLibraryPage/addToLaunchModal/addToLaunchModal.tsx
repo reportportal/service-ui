@@ -60,10 +60,10 @@ const AddToLaunchModalComponent = ({
           bold: BoldTestCasesCount,
         })
       : formatMessage(messages.addSelectedTestCase, {
-          testCaseName: testCases[0]?.name,
+          testCaseName: testCases?.[0]?.name,
           bold: BoldTestCasesCount,
         });
-  }, [selectedTestCasesIds.length, formatMessage, testCases?.[0]?.name]);
+  }, [selectedTestCasesIds.length, testCases, formatMessage]);
 
   return (
     <BaseLaunchModal
