@@ -38,7 +38,7 @@ export const getTmsMilestonesOverride = () => {
     if (override === true || override === false) {
       return Boolean(override);
     }
-  } catch (e) {
+  } catch () {
     return null;
   }
   return null;
