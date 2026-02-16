@@ -19,6 +19,9 @@ import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 
 import { ManualScenario, Step } from '../types';
 
+export const hasStepContent = (step: Step): boolean =>
+  !!step?.instructions || !!step?.expectedResult || !isEmpty(step?.attachments);
+
 export const isScenarioEmpty = (manualScenario: ManualScenario | undefined): boolean => {
   if (!manualScenario) return true;
 
@@ -27,9 +30,7 @@ export const isScenarioEmpty = (manualScenario: ManualScenario | undefined): boo
     manualScenario.preconditions?.value || !isEmpty(manualScenario.preconditions?.attachments);
 
   if (manualScenario.manualScenarioType === TestCaseManualScenario.STEPS) {
-    const hasSteps = manualScenario.steps?.some((step: Step) => {
-      return step?.instructions || step?.expectedResult || !isEmpty(step?.attachments);
-    });
+    const hasSteps = manualScenario.steps?.some(hasStepContent);
     return !hasRequirements && !hasPreconditions && !hasSteps;
   }
 

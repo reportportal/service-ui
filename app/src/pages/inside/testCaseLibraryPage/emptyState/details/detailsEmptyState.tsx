@@ -16,6 +16,7 @@
 
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
+import { Button } from '@reportportal/ui-kit';
 import { createClassnames } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import NoScenarioIcon from 'pages/inside/common/emptyStatePage/img/no-scenario-details-inline.svg';
@@ -44,9 +45,9 @@ export const DetailsEmptyState = ({ testCase }: DetailsEmptyStateProps) => {
         {formatMessage(messages.noScenarioDetailsDescription)}
       </div>
       {canEditTestCaseScenario && (
-        <button type="button" className={cx('button')} onClick={handleEditScenario}>
+        <Button variant="primary" onClick={handleEditScenario} className={cx('button')}>
           {formatMessage(messages.editScenario)}
-        </button>
+        </Button>
       )}
     </div>
   );
