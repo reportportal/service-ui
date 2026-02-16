@@ -180,3 +180,7 @@ export interface TestStep {
   attachments?: Attachment[];
   position?: number;
 }
+
+export interface DetailsEmptyStateProps {
+  testCase: ExtendedTestCase;
+}

@@ -44,6 +44,7 @@ import { ManualScenario, Step } from '../types';
 import { Precondition } from './precondition';
 import { StepsList } from './stepsList';
 import { Scenario } from './scenario';
+import { isScenarioEmpty } from './utils';
 
 import styles from './testCaseDetailsPage.scss';
 
@@ -117,7 +118,7 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
   if (manualScenario?.manualScenarioType === TestCaseManualScenario.STEPS) {
     const firstStep = manualScenario?.steps?.[0];
     const isStepDataExists = (step: Step) => {
-      return step?.instructions || step?.expectedResult || !isEmpty(step?.attachments)
+      return step?.instructions || step?.expectedResult || !isEmpty(step?.attachments);
     };
 
     sections.push(
@@ -212,6 +213,7 @@ export const TestCaseDetailsPage = () => {
             testCase={testCaseDetails}
             onAddToTestPlan={handleAddToTestPlan}
             onMenuAction={noop}
+            isScenarioEmpty={isScenarioEmpty(testCaseDetails?.manualScenario)}
           />
           <div className={cx('page__sidebar')}>
             {SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG({
@@ -240,7 +242,7 @@ export const TestCaseDetailsPage = () => {
                 testCaseDetails?.id ? 'page__main-content-with-data' : '',
               )}
             >
-              {testCaseDetails?.manualScenario ? (
+              {!isScenarioEmpty(testCaseDetails?.manualScenario) ? (
                 MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG({
                   manualScenario: testCaseDetails.manualScenario,
                 }).map(({ titleKey, defaultMessage, childComponent }) => (
@@ -253,7 +255,7 @@ export const TestCaseDetailsPage = () => {
                   </CollapsibleSectionWithHeaderControl>
                 ))
               ) : (
-                <DetailsEmptyState />
+                <DetailsEmptyState testCase={testCaseDetails} />
               )}
             </div>
           </ScrollWrapper>

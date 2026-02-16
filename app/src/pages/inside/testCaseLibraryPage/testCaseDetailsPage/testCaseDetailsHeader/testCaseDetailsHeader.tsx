@@ -40,8 +40,10 @@ import { testCaseLibraryBreadcrumbsSelector } from 'controllers/pages/selectors'
 import { ExtendedTestCase } from '../../types';
 import { messages } from './messages';
 import { commonMessages } from '../../commonMessages';
+import { messages as emptyStateMessages } from '../../emptyState/messages';
 import { EDIT_TEST_CASE_MODAL_KEY } from '../editTestCaseModal/editTestCaseModal';
 import { useDeleteTestCaseModal } from '../../deleteTestCaseModal';
+import { useEditTestCaseModal } from '../../editSelectedTestCaseModal';
 import { AddToLaunchButton } from '../../addToLaunchButton';
 
 import styles from './testCaseDetailsHeader.scss';
@@ -53,6 +55,7 @@ interface TestCaseDetailsHeaderProps {
   testCase: ExtendedTestCase;
   onAddToTestPlan: () => void;
   onMenuAction?: () => void;
+  isScenarioEmpty?: boolean;
 }
 
 export const TestCaseDetailsHeader = ({
@@ -60,6 +63,7 @@ export const TestCaseDetailsHeader = ({
   testCase,
   onAddToTestPlan,
   onMenuAction = () => {},
+  isScenarioEmpty = false,
 }: TestCaseDetailsHeaderProps) => {
   const { formatMessage } = useIntl();
   const {
@@ -68,12 +72,14 @@ export const TestCaseDetailsHeader = ({
     canEditTestCase,
     canAddTestCaseToLaunch,
     canAddTestCaseToTestPlan,
+    canEditTestCaseScenario,
   } = useUserPermissions();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
   const dispatch = useDispatch();
   const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
+  const { openModal: openEditTestCaseModal } = useEditTestCaseModal();
 
   const breadcrumbsTitles = {
     mainTitle: formatMessage(commonMessages.testCaseLibraryBreadcrumb),
@@ -124,7 +130,11 @@ export const TestCaseDetailsHeader = ({
     return items;
   };
 
-  const openEditTestCaseModal = () => {
+  const openEditScenarioModal = () => {
+    openEditTestCaseModal({ testCase });
+  };
+
+  const openEditNameAndPriorityModal = () => {
     dispatch(
       showModalAction({
         id: EDIT_TEST_CASE_MODAL_KEY,
@@ -156,7 +166,7 @@ export const TestCaseDetailsHeader = ({
           <button
             type="button"
             className={cx('header__edit-button')}
-            onClick={openEditTestCaseModal}
+            onClick={openEditNameAndPriorityModal}
           >
             {Parser(PencilIcon as unknown as string)}
           </button>
@@ -187,6 +197,11 @@ export const TestCaseDetailsHeader = ({
               <MeatballMenuIcon />
             </Button>
           </PopoverControl>
+          {!isScenarioEmpty && canEditTestCaseScenario && (
+            <Button onClick={openEditScenarioModal} variant="ghost">
+              {formatMessage(emptyStateMessages.editScenario)}
+            </Button>
+          )}
           {canAddTestCaseToLaunch && (
             <AddToLaunchButton
               manualScenario={testCase?.manualScenario}
@@ -194,7 +209,7 @@ export const TestCaseDetailsHeader = ({
             />
           )}
           {canAddTestCaseToTestPlan && (
-            <Button onClick={onAddToTestPlan} variant="ghost">
+            <Button onClick={onAddToTestPlan} variant="primary">
               {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
             </Button>
           )}

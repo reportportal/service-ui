@@ -67,6 +67,11 @@ export const messages = defineMessages({
     defaultMessage:
       'You have your first test case created. To build a comprehensive test case add a manual scenario and unique details like requirements, preconditions, steps etc.',
   },
+  noScenarioDetailsDescription: {
+    id: 'EditTestCasePage.noScenarioDetailsDescription',
+    defaultMessage:
+      'Build a detailed test case by adding a manual scenario and unique details like requirements, preconditions, and steps.',
+  },
   editScenario: {
     id: 'EditTestCasePage.editScenario',
     defaultMessage: 'Edit Scenario',

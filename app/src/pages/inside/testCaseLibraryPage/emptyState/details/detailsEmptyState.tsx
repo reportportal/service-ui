@@ -16,34 +16,38 @@
 
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
-import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
-import { referenceDictionary } from 'common/utils';
+import { createClassnames } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import NoScenarioIcon from 'pages/inside/common/emptyStatePage/img/no-scenario-details-inline.svg';
 
+import { useEditTestCaseModal } from '../../editSelectedTestCaseModal';
+import { DetailsEmptyStateProps } from '../../types';
 import { messages } from '../messages';
+import styles from './detailsEmptyState.scss';
 
-export const DetailsEmptyState = () => {
+const cx = createClassnames(styles);
+
+export const DetailsEmptyState = ({ testCase }: DetailsEmptyStateProps) => {
   const { formatMessage } = useIntl();
   const { canEditTestCaseScenario } = useUserPermissions();
+  const { openModal } = useEditTestCaseModal();
 
-  const getActionButtons = () =>
-    canEditTestCaseScenario
-      ? [
-          {
-            isCompact: true,
-            name: formatMessage(messages.editScenario),
-            variant: 'primary',
-          },
-        ]
-      : [];
+  const handleEditScenario = () => {
+    openModal({ testCase });
+  };
 
   return (
-    <EmptyStatePage
-      title={formatMessage(messages.noScenarioDetails)}
-      description={Parser(formatMessage(messages.scenarioDescription))}
-      imageType="plus"
-      documentationLink={referenceDictionary.rpDoc}
-      buttons={getActionButtons()}
-    />
+    <div className={cx('container')}>
+      <div className={cx('icon')}>{Parser(String(NoScenarioIcon))}</div>
+      <div className={cx('title')}>{formatMessage(messages.noScenarioDetails)}</div>
+      <div className={cx('description')}>
+        {formatMessage(messages.noScenarioDetailsDescription)}
+      </div>
+      {canEditTestCaseScenario && (
+        <button type="button" className={cx('button')} onClick={handleEditScenario}>
+          {formatMessage(messages.editScenario)}
+        </button>
+      )}
+    </div>
   );
 };
