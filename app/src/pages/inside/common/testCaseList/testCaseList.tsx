@@ -248,7 +248,11 @@ export const TestCaseList = memo(
         ) : (
           <>
             {isEmpty(testCases) ? (
-              <div className={cx('no-results')}>
+              <div
+                className={cx('no-results', {
+                  'no-results--search': searchValue,
+                })}
+              >
                 <div className={cx('no-results-message')}>
                   {searchValue ? (
                     <EmptyPageState
