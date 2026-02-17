@@ -27,7 +27,7 @@ import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { UseModalData } from 'common/hooks';
 
 import { commonMessages } from '../commonMessages';
-import { ExtendedTestCase, CreateTestCaseFormData } from '../types';
+import { ExtendedTestCase, CreateTestCaseFormData, hasTagShape } from '../types';
 import { TestCaseModal } from '../createTestCaseModal/testCaseModal/testCaseModal';
 import { TEST_CASE_FORM_INITIAL_VALUES } from '../createTestCaseModal/constants';
 import { useTestCase } from '../hooks/useTestCase';
@@ -69,7 +69,7 @@ const EditTestCaseModalComponent = ({
         folder: testCase.testFolder,
         priority: (testCase.priority?.toLowerCase() ||
           TEST_CASE_FORM_INITIAL_VALUES.priority) as TestCasePriority,
-        attributes: (testCase.attributes ?? []).map(({ id, key, value }) => ({
+        attributes: (testCase.attributes ?? []).filter(hasTagShape).map(({ id, key, value }) => ({
           id,
           key,
           value: value ?? '',

@@ -14,30 +14,22 @@
  * limitations under the License.
  */
 
-import { ReactNode, useState } from 'react';
+import { useState } from 'react';
 import { type MessageDescriptor, useIntl } from 'react-intl';
 import { BubblesLoader, Button, Popover } from '@reportportal/ui-kit';
-import { PopoverProps } from '@reportportal/ui-kit/popover';
 import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
 import { SearchField } from 'components/fields/searchField';
 
-import { Attribute } from '../types';
-import { TagError, useTagSearch } from './useTagSearch';
+import { TagPopoverProps, Tag, TagError } from '../types';
+import { useTagSearch } from './useTagSearch';
 import { messages } from './messages';
 import { commonMessages } from '../commonMessages';
 
 import styles from './tagPopover.scss';
 
 const cx = createClassnames(styles);
-
-interface TagPopoverProps extends Pick<PopoverProps, 'placement'> {
-  trigger: ReactNode;
-  onTagSelect: (tag: Attribute) => void;
-  selectedTags?: Attribute[];
-  className?: string;
-}
 
 export const TagPopover = ({
   trigger,
@@ -72,7 +64,7 @@ export const TagPopover = ({
     clearError();
   };
 
-  const handleTag = (tag: Attribute) => {
+  const handleTag = (tag: Tag) => {
     onTagSelect(tag);
     setSearchValue('');
     setIsOpened(false);

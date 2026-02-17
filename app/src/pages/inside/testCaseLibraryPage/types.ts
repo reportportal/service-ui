@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { FC, SVGProps } from 'react';
+import { FC, SVGProps, ReactNode } from 'react';
+import { isString, isObject, isNil } from 'es-toolkit/compat';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { FolderWithFullPath } from 'controllers/testCase/types';
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
@@ -184,3 +185,33 @@ export interface TestStep {
 export interface DetailsEmptyStateProps {
   testCase: ExtendedTestCase;
 }
+
+export interface TagPopoverProps {
+  trigger: ReactNode;
+  onTagSelect: (tag: Tag | Attribute) => void;
+  selectedTags?: (Tag | Attribute)[];
+  placement?: 'top' | 'bottom' | 'left' | 'right';
+  className?: string;
+}
+
+export interface UseTestCaseTagsParams {
+  testCaseId: number;
+}
+
+export enum TagError {
+  TAG_ALREADY_ADDED = 'tagAlreadyAdded',
+  CREATE_TAG_FAILED = 'createTagFailed',
+}
+
+export interface AttributesResponse {
+  content: Tag[];
+}
+
+export const hasTagShape = (attr: Tag | Attribute): attr is Tag => {
+  return (
+    isObject(attr) &&
+    'key' in attr &&
+    isString((attr as Tag).key) &&
+    (!('value' in attr) || isNil(attr.value))
+  );
+};
