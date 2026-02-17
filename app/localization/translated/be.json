@@ -1299,7 +1299,6 @@
   "LocalizationBlock.spanish": "Iспанська",
   "LocalizationBlock.ukrainian": "Ukrainian",
   "LockedDashboardTooltip.lockedDashboard": "Гэты дашборд заблакіраваны менеджэрам праекта або адміністратарам і не можа быць зменены",
-  "LockedDashboardTooltip.lockedFilter": "Фільтр звязаны з дашбордам, заблакіраваным кіраўніком праекта або адміністратарам, і недаступны для рэдагавання",
   "LogItemActivity.changedByAnalyzer": "АА змяніў тып дэфекту",
   "LogItemActivity.issueLoadByAnalyzer": "AA прывязаў памылку",
   "LogItemActivity.linkIssue": "прывязаў памылку",

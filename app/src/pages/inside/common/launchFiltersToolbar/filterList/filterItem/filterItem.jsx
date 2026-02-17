@@ -21,8 +21,6 @@ import Link from 'redux-first-router-link';
 import { useSelector } from 'react-redux';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { getLaunchFilterLinkSelector } from 'controllers/launch';
-import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardTooltip';
-import { LockedIcon } from 'pages/inside/common/lockedIcon';
 import { FilterDescriptionTooltipIcon } from './filterDescriptionTooltipIcon';
 import styles from './filterItem.scss';
 
@@ -42,7 +40,6 @@ export const FilterItem = ({
   name,
   active,
   description,
-  locked,
   unsaved,
   onRemove,
   className,
@@ -56,17 +53,10 @@ export const FilterItem = ({
       onClick={isDisabled && handleClick}
       to={getLaunchFilterLink(id, active)}
     >
-      <div className={cx('name-container')}>
-        {locked && (
-          <LockedDashboardTooltip locked={locked} variant="filter">
-            <LockedIcon />
-          </LockedDashboardTooltip>
-        )}
-        <span className={cx('name')}>
-          {name}
-          {unsaved && <span className={cx('unsaved')}>*</span>}
-        </span>
-      </div>
+      <span className={cx('name')}>
+        {name}
+        {unsaved && <span className={cx('unsaved')}>*</span>}
+      </span>
       {description && (
         <div className={cx('icon')}>
           <FilterDescriptionTooltipIcon tooltipContent={description} />
@@ -86,7 +76,6 @@ FilterItem.propTypes = {
   name: PropTypes.string.isRequired,
   active: PropTypes.bool,
   description: PropTypes.string,
-  locked: PropTypes.bool,
   unsaved: PropTypes.bool,
   onRemove: PropTypes.func,
   className: PropTypes.string,
@@ -95,7 +84,6 @@ FilterItem.propTypes = {
 FilterItem.defaultProps = {
   active: false,
   description: null,
-  locked: false,
   unsaved: false,
   onRemove: () => {},
   className: '',
