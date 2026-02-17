@@ -58,7 +58,7 @@ export const FilterItem = ({
     >
       <div className={cx('name-container')}>
         {locked && (
-          <LockedDashboardTooltip locked={locked} variant="filter" itemId={id}>
+          <LockedDashboardTooltip locked={locked} variant="filter">
             <LockedIcon />
           </LockedDashboardTooltip>
         )}

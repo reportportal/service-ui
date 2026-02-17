@@ -1300,8 +1300,6 @@
   "LocalizationBlock.ukrainian": "乌克兰运",
   "LockedDashboardTooltip.lockedDashboard": "This dashboard is locked by a project manager or administrator and cannot be modified",
   "LockedDashboardTooltip.lockedFilter": "The filter is associated with a dashboard locked by a project manager or administrator and is not available for editing",
-  "LockedDashboardTooltip.lockedFilterIntro": "This filter is locked and used by the following locked dashboards:",
-  "LockedDashboardTooltip.lockedFilterMore": "+ {count} more",
   "LogItemActivity.changedByAnalyzer": "自动分析服务已更改缺陷类型",
   "LogItemActivity.issueLoadByAnalyzer": "自动分析服务已关联问题",
   "LogItemActivity.linkIssue": "关联的问题",

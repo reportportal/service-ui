@@ -27,12 +27,4 @@ export const messages = defineMessages({
     defaultMessage:
       'The filter is associated with a dashboard locked by a project manager or administrator and is not available for editing',
   },
-  lockedFilterIntro: {
-    id: 'LockedDashboardTooltip.lockedFilterIntro',
-    defaultMessage: 'This filter is locked and used by the following locked dashboards:',
-  },
-  lockedFilterMore: {
-    id: 'LockedDashboardTooltip.lockedFilterMore',
-    defaultMessage: '+ {count} more',
-  },
 });

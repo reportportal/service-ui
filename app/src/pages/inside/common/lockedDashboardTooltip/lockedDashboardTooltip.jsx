@@ -20,32 +20,25 @@ import PropTypes from 'prop-types';
 import { Tooltip } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
 import { useCanLockDashboard } from 'common/hooks/useCanLockDashboard';
-import { LockedFilterTooltipContent } from './lockedFilterTooltipContent';
 import { messages } from './messages';
 import styles from './lockedDashboardTooltip.scss';
 
 const cx = classNames.bind(styles);
 
-export const LockedDashboardTooltip = ({ children, locked, variant, wrapperClassName, itemId }) => {
+export const LockedDashboardTooltip = ({ children, locked, variant, wrapperClassName }) => {
   const { formatMessage } = useIntl();
   const canLock = useCanLockDashboard();
 
-  const hideTooltip = variant === 'dashboard' ? !locked || canLock : !locked;
-  if (hideTooltip) return children;
+  if (!locked || canLock) return children;
 
-  const portalRoot =
-    typeof document !== 'undefined' ? document.getElementById('tooltip-root') : null;
-  const isFilterVariant = variant === 'filter';
-  const content = isFilterVariant ? (
-    <LockedFilterTooltipContent itemId={itemId} />
-  ) : (
-    <div className={cx('content')}>{formatMessage(messages.lockedDashboard)}</div>
-  );
+  const portalRoot = typeof document !== 'undefined' ? document.getElementById('tooltip-root') : null;
+  const message = variant === 'filter' ? messages.lockedFilter : messages.lockedDashboard;
 
   return (
     <Tooltip
-      content={content}
+      content={formatMessage(message)}
       wrapperClassName={cx('locked-tooltip-wrapper', wrapperClassName)}
+      tooltipClassName={cx('locked-tooltip')}
       contentClassName={cx('locked-tooltip-content')}
       portalRoot={portalRoot}
     >
@@ -59,7 +52,6 @@ LockedDashboardTooltip.propTypes = {
   locked: PropTypes.bool,
   variant: PropTypes.oneOf(['dashboard', 'filter']),
   wrapperClassName: PropTypes.string,
-  itemId: PropTypes.number,
 };
 
 LockedDashboardTooltip.defaultProps = {
@@ -67,5 +59,4 @@ LockedDashboardTooltip.defaultProps = {
   locked: false,
   variant: 'dashboard',
   wrapperClassName: '',
-  itemId: null,
 };

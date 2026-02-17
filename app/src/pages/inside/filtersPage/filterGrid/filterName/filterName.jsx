@@ -78,7 +78,7 @@ export const FilterName = ({
     <Fragment>
       <div className={cx('name-container')}>
         {filter.locked && (
-          <LockedDashboardTooltip locked={filter.locked} variant="filter" itemId={filter.id}>
+          <LockedDashboardTooltip locked={filter.locked} variant="filter">
             <LockedIcon />
           </LockedDashboardTooltip>
         )}

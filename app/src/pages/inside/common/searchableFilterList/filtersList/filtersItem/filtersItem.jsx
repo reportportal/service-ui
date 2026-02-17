@@ -47,7 +47,6 @@ export const FiltersItem = memo(
               <LockedDashboardTooltip
                 locked={filter.locked}
                 variant="filter"
-                itemId={filter.id}
                 wrapperClassName={cx('pencil-icon-wrapper')}
               >
                 <Icon
