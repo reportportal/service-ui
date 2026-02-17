@@ -49,4 +49,8 @@ export const messages = defineMessages({
     id: 'TestCaseDetailsPage.noAttachments',
     defaultMessage: 'No attachments added yet',
   },
+  noScenario: {
+    id: 'TestCaseDetailsPage.noScenario',
+    defaultMessage: 'No details for this scenario yet',
+  },
 });

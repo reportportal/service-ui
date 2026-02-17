@@ -42,6 +42,7 @@ export const BaseLaunchModal = ({
   okButtonText,
   description,
   isTestPlanFieldDisabled = true,
+  isUncoveredTestsCheckboxAvailable,
   className,
   onClearSelection,
 }: BaseLaunchModalProps & InjectedFormProps<LaunchFormData>) => {
@@ -106,6 +107,7 @@ export const BaseLaunchModal = ({
               onLaunchSelect={setSelectedLaunch}
               description={description}
               isTestPlanFieldDisabled={isTestPlanFieldDisabled}
+              isUncoveredTestsCheckboxAvailable={isUncoveredTestsCheckboxAvailable}
               testPlanValue={
                 testPlanId && testPlanName ? { id: testPlanId, name: testPlanName } : undefined
               }
