@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
-import { Pagination } from '@reportportal/ui-kit';
+import { isEmpty } from 'es-toolkit/compat';
+import { Pagination, Button, Selection } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
-import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { TestCaseList } from 'pages/inside/common/testCaseList';
 import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/common/testCaseList/constants';
-import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { SelectedTestCaseRow } from 'pages/inside/testCaseLibraryPage/allTestCasesPage/allTestCasesPage';
 import {
@@ -32,19 +31,15 @@ import {
   testPlanTestCasesPageSelector,
 } from 'controllers/testPlan';
 import { payloadSelector } from 'controllers/pages';
-import { useProjectDetails } from 'hooks/useTypedSelector';
+import { useProjectDetails, useTestPlanId } from 'hooks/useTypedSelector';
 import { useURLBoundPagination } from 'pages/inside/common/testCaseList/useURLBoundPagination';
 
+import { useRemoveTestCasesFromTestPlanModal } from './removeTestCasesFromTestPlanModal';
+import { messages } from './removeTestCasesFromTestPlanModal/messages';
+import { AllTestCasesPageProps } from './types';
 import styles from './allTestCasesPage.scss';
 
 const cx = createClassnames(styles);
-
-interface AllTestCasesPageProps {
-  testCases: ExtendedTestCase[];
-  loading: boolean;
-  instanceKey: TMS_INSTANCE_KEY;
-  folderName?: string;
-}
 
 export const AllTestCasesPage = ({
   testCases,
@@ -56,6 +51,7 @@ export const AllTestCasesPage = ({
   const testPlansTestCasesPageData = useSelector(testPlanTestCasesPageSelector);
   const payload = useSelector(payloadSelector);
   const { organizationSlug, projectSlug } = useProjectDetails();
+  const testPlanId = useTestPlanId();
   const testPlanRoute = payload.testPlanRoute ? `/${payload.testPlanRoute}` : '';
   const { setPageNumber, setPageSize, captions, activePage, pageSize, totalPages } =
     useURLBoundPagination({
@@ -65,24 +61,44 @@ export const AllTestCasesPage = ({
       shouldSaveUserPreferences: true,
       baseUrl: `/organizations/${organizationSlug}/projects/${projectSlug}/milestones/${payload.testPlanId}${testPlanRoute}`,
     });
+
   const [selectedRows, setSelectedRows] = useState<SelectedTestCaseRow[]>([]);
+  const { openModal: openRemoveTestCasesModal } = useRemoveTestCasesFromTestPlanModal();
+
+  const isAnyRowSelected = !isEmpty(selectedRows);
+  const selectedRowIds = useMemo(() => selectedRows.map((row) => row.id), [selectedRows]);
+  const onClearSelection = () => setSelectedRows([]);
+
+  const handleOpenRemoveModal = () => {
+    openRemoveTestCasesModal({
+      selectedTestCaseIds: selectedRowIds,
+      testPlanId,
+      onClearSelection,
+    });
+  };
+
   return (
     <>
-      <div className={cx('all-test-cases-page')}>
+      <div
+        className={cx(
+          'all-test-cases-page',
+          isAnyRowSelected ? 'all-test-cases-page__with-panel' : '',
+        )}
+      >
         <TestCaseList
           testCases={testCases}
           isLoading={loading}
-          selectedRowIds={selectedRows.map((row) => row.id)}
+          selectedRowIds={selectedRowIds}
           selectedRows={selectedRows}
           handleSelectedRows={setSelectedRows}
           folderTitle={folderName || formatMessage(COMMON_LOCALE_KEYS.ALL_TEST_CASES_TITLE)}
-          selectable={false}
+          selectable={true}
           instanceKey={instanceKey}
         />
       </div>
       <div className={cx('sticky-wrapper')}>
         {Boolean(testPlansTestCasesPageData?.totalElements) && (
-          <div className={cx('pagination')}>
+          <div className={cx('pagination', isAnyRowSelected ? 'pagination-with-panel' : '')}>
             <Pagination
               pageSize={pageSize}
               activePage={activePage}
@@ -93,6 +109,23 @@ export const AllTestCasesPage = ({
               changePageSize={setPageSize}
               captions={captions}
             />
+          </div>
+        )}
+        {isAnyRowSelected && (
+          <div className={cx('selection')}>
+            <Selection selectedCount={selectedRowIds.length} onClearSelection={onClearSelection} />
+            <div className={cx('selection-controls')}>
+              <Button
+                variant="ghost"
+                onClick={handleOpenRemoveModal}
+                className={cx('selection-controls__remove-button')}
+              >
+                {formatMessage(messages.removeFromTestPlanTitle)}
+              </Button>
+              <Button variant="primary" disabled>
+                {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}
+              </Button>
+            </div>
           </div>
         )}
       </div>

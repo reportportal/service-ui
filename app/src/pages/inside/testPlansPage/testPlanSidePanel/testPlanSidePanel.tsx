@@ -53,6 +53,7 @@ import { useGenerateFolderPath } from 'hooks/useGenerateFolderPath';
 import { TestPlanDto, testPlanFoldersSelector } from 'controllers/testPlan';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { formatDuration, openRouteInNewTab } from 'pages/inside/common/testCaseList/utils';
+import { useRemoveTestCasesFromTestPlanModal } from '../testPlanDetailsPage/testPlanFolders/allTestCasesPage/removeTestCasesFromTestPlanModal';
 import { messages } from './messages';
 import { CoverStatusCard } from './coverStatusCard';
 import { ExecutionStatusCard } from './executionStatusCard';
@@ -90,6 +91,7 @@ export const TestPlanSidePanel = memo(
     const testCaseFolders = useSelector(foldersSelector);
     const folders = isTestPlanRoute ? testPlanFolders : testCaseFolders;
     const breadcrumbPath = useGenerateFolderPath(testCaseDetails?.testFolder?.id, folders);
+    const { openModal: openRemoveTestCasesModal } = useRemoveTestCasesFromTestPlanModal();
 
     useOnClickOutside(sidePanelRef, onClose);
 
@@ -98,7 +100,13 @@ export const TestPlanSidePanel = memo(
     }
 
     const handleRemoveFromTestPlan = () => {
-      // TODO: Implement remove from test plan functionality
+      openRemoveTestCasesModal({
+        selectedTestCaseIds: [testPlan.id],
+        testPlanId: String(testPlanId),
+        onClearSelection: () => {
+          onClose();
+        },
+      });
       setIsMenuOpen(false);
     };
 
