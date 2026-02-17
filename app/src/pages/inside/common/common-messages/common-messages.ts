@@ -41,10 +41,6 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'Common.precondition',
     defaultMessage: 'Precondition',
   },
-  preconditions: {
-    id: 'Common.preconditions',
-    defaultMessage: 'Preconditions',
-  },
   steps: {
     id: 'Common.steps',
     defaultMessage: 'Steps',

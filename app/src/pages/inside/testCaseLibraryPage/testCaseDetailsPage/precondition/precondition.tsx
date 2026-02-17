@@ -15,6 +15,7 @@
  */
 
 import { useIntl } from 'react-intl';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
 import { commonMessages } from 'pages/inside/common/common-messages';
@@ -47,7 +48,7 @@ export const Precondition = ({ preconditions }: PreconditionProps) => {
             </div>
         }
         {
-          preconditions.attachments &&
+          !isEmpty(preconditions.attachments) &&
             <div className={cx('precondition__attachments-wrapper')}>
               <h4>{formatMessage(commonMessages.attachments)} {preconditions.attachments.length}</h4>
               <AttachmentList
