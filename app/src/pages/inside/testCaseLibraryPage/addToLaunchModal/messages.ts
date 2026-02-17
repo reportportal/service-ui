@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,28 +17,16 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  description: {
-    id: 'TestCaseLibraryPage.addToLaunchModal.description',
+  addToLaunch: {
+    id: 'AddToLaunchModal.addToLaunch',
+    defaultMessage: 'Add to Launch',
+  },
+  addSelectedTestCases: {
+    id: 'AddToLaunchModal.addSelectedTestCases',
+    defaultMessage: 'You are about to add <bold>{count}</bold> selected test cases to a Launch',
+  },
+  addSelectedTestCase: {
+    id: 'AddToLaunchModal.addSelectedTestCase',
     defaultMessage: 'You are about to add <bold>{testCaseName}</bold> test case to a Launch',
-  },
-  launchNameLabel: {
-    id: 'TestCaseLibraryPage.addToLaunchModal.launchNameLabel',
-    defaultMessage: 'Launch name',
-  },
-  launchNamePlaceholder: {
-    id: 'TestCaseLibraryPage.addToLaunchModal.launchNamePlaceholder',
-    defaultMessage: 'Enter launch name',
-  },
-  launchNameExistingPlaceholder: {
-    id: 'TestCaseLibraryPage.addToLaunchModal.launchNameExistingPlaceholder',
-    defaultMessage: 'Search and select launch name',
-  },
-  addToLaunchButton: {
-    id: 'TestCaseLibraryPage.addToLaunchModal.addToLaunchButton',
-    defaultMessage: 'Add to existing launch',
-  },
-  createNewLaunchButton: {
-    id: 'TestCaseLibraryPage.addToLaunchModal.createNewLaunchButton',
-    defaultMessage: 'Create new launch',
   },
 });

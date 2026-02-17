@@ -76,6 +76,7 @@ export interface LaunchFormFieldsProps {
   description?: ReactNode;
   isTestPlanFieldDisabled?: boolean;
   testPlanValue?: TestPlanOption;
+  isUncoveredTestsCheckboxAvailable?: boolean;
 }
 
 export interface AttributeListFieldProps {
@@ -111,5 +112,6 @@ export interface BaseLaunchModalProps {
   description?: ReactNode;
   isTestPlanFieldDisabled?: boolean;
   className?: string;
+  isUncoveredTestsCheckboxAvailable?: boolean;
   onClearSelection?: () => void;
 }

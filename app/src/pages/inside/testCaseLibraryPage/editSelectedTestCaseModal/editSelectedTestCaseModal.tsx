@@ -18,6 +18,7 @@ import { useEffect, useCallback, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { keyBy } from 'es-toolkit';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { commonValidators, uniqueId } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -26,7 +27,7 @@ import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { UseModalData } from 'common/hooks';
 
 import { commonMessages } from '../commonMessages';
-import { ExtendedTestCase, CreateTestCaseFormData } from '../types';
+import { ExtendedTestCase, CreateTestCaseFormData, hasTagShape } from '../types';
 import { TestCaseModal } from '../createTestCaseModal/testCaseModal/testCaseModal';
 import { TEST_CASE_FORM_INITIAL_VALUES } from '../createTestCaseModal/constants';
 import { useTestCase } from '../hooks/useTestCase';
@@ -68,7 +69,7 @@ const EditTestCaseModalComponent = ({
         folder: testCase.testFolder,
         priority: (testCase.priority?.toLowerCase() ||
           TEST_CASE_FORM_INITIAL_VALUES.priority) as TestCasePriority,
-        attributes: (testCase.attributes ?? []).map(({ id, key, value }) => ({
+        attributes: (testCase.attributes ?? []).filter(hasTagShape).map(({ id, key, value }) => ({
           id,
           key,
           value: value ?? '',
@@ -78,7 +79,9 @@ const EditTestCaseModalComponent = ({
         executionEstimationTime:
           manualScenario?.executionEstimationTime ||
           TEST_CASE_FORM_INITIAL_VALUES.executionEstimationTime,
-        requirements: manualScenario?.requirements || [{ id: uniqueId(), value: '' }],
+        requirements: isEmpty(manualScenario?.requirements)
+          ? [{ id: uniqueId(), value: '' }]
+          : manualScenario?.requirements,
         precondition: manualScenario?.preconditions?.value,
         preconditionAttachments: manualScenario?.preconditions?.attachments || [],
         instructions: manualScenario?.instructions,

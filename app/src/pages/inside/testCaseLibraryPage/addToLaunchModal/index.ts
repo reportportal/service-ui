@@ -14,15 +14,7 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
-
-export const messages = defineMessages({
-  addToLaunch: {
-    id: 'AddToLaunchModalV2.addToLaunch',
-    defaultMessage: 'Add to Launch',
-  },
-  addSelectedTestCases: {
-    id: 'AddToLaunchModalV2.addSelectedTestCases',
-    defaultMessage: 'You are about to add <bold>{count}</bold> selected test cases to a Launch',
-  },
-});
+export { AddToLaunchModal } from './addToLaunchModal';
+export { useAddToLaunchModal } from './useAddToLaunchModal';
+export { ADD_TO_LAUNCH_MODAL_KEY } from './constants';
+export type { AddToLaunchModalProps } from './types';

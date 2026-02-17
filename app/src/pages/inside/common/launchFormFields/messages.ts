@@ -49,10 +49,6 @@ export const messages = defineMessages({
     id: 'LaunchFormFields.launchName',
     defaultMessage: 'Launch name',
   },
-  learnMore: {
-    id: 'LaunchFormFields.learnMore',
-    defaultMessage: 'Learn more >',
-  },
   addOnlyUncoveredTestCases: {
     id: 'LaunchFormFields.addOnlyUncoveredTestCases',
     defaultMessage: 'Add only uncovered test cases',
@@ -61,11 +57,6 @@ export const messages = defineMessages({
     id: 'LaunchFormFields.addTestCasesFromTestPlan',
     defaultMessage:
       'You are about to add test cases from <bold>{testPlanName}</bold> test plan to a Launch',
-  },
-  existingLaunchHint: {
-    id: 'LaunchFormFields.existingLaunchHint',
-    defaultMessage:
-      'When you select an existing launch from the suggestions, or if the provided launch name matches one that already exists, a launch with new number will be created. {learnMoreLink}',
   },
   testPlanLabel: {
     id: 'LaunchFormFields.testPlanLabel',
@@ -86,6 +77,10 @@ export const messages = defineMessages({
   testCasesAddedSuccess: {
     id: 'LaunchFormFields.testCasesAddedSuccess',
     defaultMessage: 'Test cases have been added to launch successfully',
+  },
+  testCaseAddedSuccess: {
+    id: 'LaunchFormFields.testCaseAddedSuccess',
+    defaultMessage: 'Test case "{testCaseName}" has been added to launch successfully',
   },
   launchCreatedSuccess: {
     id: 'LaunchFormFields.launchCreatedSuccess',
