@@ -31,10 +31,11 @@ import {
   testPlanTestCasesPageSelector,
 } from 'controllers/testPlan';
 import { payloadSelector } from 'controllers/pages';
-import { useProjectDetails, useTestPlanId } from 'hooks/useTypedSelector';
+import { useProjectDetails, useTestPlanId, useTestPlanById } from 'hooks/useTypedSelector';
 import { useURLBoundPagination } from 'pages/inside/common/testCaseList/useURLBoundPagination';
 
 import { useRemoveTestCasesFromTestPlanModal } from './removeTestCasesFromTestPlanModal';
+import { useAddTestCasesToLaunchModal } from './addTestCasesToLaunchModal';
 import { messages } from './removeTestCasesFromTestPlanModal/messages';
 import { AllTestCasesPageProps } from './types';
 import styles from './allTestCasesPage.scss';
@@ -63,7 +64,15 @@ export const AllTestCasesPage = ({
     });
 
   const [selectedRows, setSelectedRows] = useState<SelectedTestCaseRow[]>([]);
+  const testPlan = useTestPlanById(testPlanId);
   const { openModal: openRemoveTestCasesModal } = useRemoveTestCasesFromTestPlanModal();
+  const { openModal: openAddToLaunchModal } = useAddTestCasesToLaunchModal({
+    selectedRowsIds: useMemo(() => selectedRows.map((row) => row.id), [selectedRows]),
+    testCases,
+    testPlanId,
+    testPlanName: testPlan?.name || '',
+    onClearSelection: () => setSelectedRows([]),
+  });
 
   const isAnyRowSelected = !isEmpty(selectedRows);
   const selectedRowIds = useMemo(() => selectedRows.map((row) => row.id), [selectedRows]);
@@ -122,7 +131,7 @@ export const AllTestCasesPage = ({
               >
                 {formatMessage(messages.removeFromTestPlanTitle)}
               </Button>
-              <Button variant="primary" disabled>
+              <Button variant="primary" onClick={openAddToLaunchModal}>
                 {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}
               </Button>
             </div>
