@@ -426,10 +426,13 @@ export const URLS = {
     `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case`,
   batchAddTestCasesToLaunch: (projectKey, launchId) =>
     `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case/batch`,
+  deleteExecutionFromLaunch: (projectKey, launchId, executionId) =>
+    `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case/execution/${executionId}`,
   importTestCase: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-case/import${getQueryParams(query)}`,
-  tmsAttributes: (query = {}) => `${urlBase}tms/attribute${getQueryParams(query)}`,
-  createTmsAttribute: () => `${urlBase}tms/attribute`,
+  tmsAttributes: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/attribute${getQueryParams(query)}`,
+  createTmsAttribute: (projectKey) => `${urlBase}project/${projectKey}/tms/attribute`,
   tmsAttributeKeysSearch: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/attribute/key${getQueryParams(query)}`,
   tmsAttributeValuesSearch: (projectKey, query = {}) =>

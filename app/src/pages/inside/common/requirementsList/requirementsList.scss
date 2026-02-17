@@ -47,6 +47,21 @@
       margin-top: 0;
       height: 24px;
       cursor: auto;
+
+      button {
+        &:hover {
+          background-color: transparent;
+          border-color: transparent;
+
+          svg * {
+            stroke: var(--rp-ui-color-primary-hover);
+          }
+        }
+
+        svg * {
+          fill: var(--rp-ui-base-bg-100);
+        }
+      }
     }
   }
 }

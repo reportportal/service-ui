@@ -15,32 +15,26 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
+import { projectKeySelector } from 'controllers/project';
 
-import { Attribute } from '../types';
-
-export enum TagError {
-  TAG_ALREADY_ADDED = 'tagAlreadyAdded',
-  CREATE_TAG_FAILED = 'createTagFailed',
-}
-
-interface AttributesResponse {
-  content: Attribute[];
-}
+import { Tag, TagError, AttributesResponse } from '../types';
 
 export const useTagSearch = (searchValue: string = '') => {
-  const [allTags, setAllTags] = useState<Attribute[]>([]);
+  const [allTags, setAllTags] = useState<Tag[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<TagError | null>(null);
+  const projectKey = useSelector(projectKeySelector);
 
   const fetchTags = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const response = await fetch<AttributesResponse>(URLS.tmsAttributes({}));
+      const response = await fetch<AttributesResponse>(URLS.tmsAttributes(projectKey, {}));
 
       setAllTags(response.content || []);
     } catch {
@@ -49,10 +43,10 @@ export const useTagSearch = (searchValue: string = '') => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [projectKey]);
 
   const createTag = useCallback(
-    (tagKey: string, selectedTags: Attribute[] = []) => {
+    (tagKey: string, selectedTags: Tag[] = []) => {
       const tagExists = allTags.some((tag) => tag.key.toLowerCase() === tagKey.toLowerCase());
       const tagAlreadySelected = selectedTags.some(
         (tag) => tag.key.toLowerCase() === tagKey.toLowerCase(),
@@ -65,7 +59,7 @@ export const useTagSearch = (searchValue: string = '') => {
 
       setError(null);
 
-      const newTag: Attribute = {
+      const newTag: Tag = {
         id: -Date.now(),
         key: tagKey,
         value: tagKey,

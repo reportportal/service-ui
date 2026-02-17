@@ -33,6 +33,7 @@ import {
   defaultQueryParams,
 } from 'controllers/testPlan';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { useTmsMilestonesEnabled } from 'hooks/useTmsMilestonesEnabled';
 import { useQueryParams } from 'common/hooks';
 
 import { useCreateTestPlanModal } from './testPlanModals';
@@ -46,6 +47,7 @@ export const TestPlansPage = () => {
   const { openModal } = useCreateTestPlanModal();
   const projectName = useSelector(projectNameSelector);
   const { canCreateTestPlan } = useUserPermissions();
+  const isTmsMilestonesEnabled = useTmsMilestonesEnabled();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
@@ -73,7 +75,9 @@ export const TestPlansPage = () => {
     <SettingsLayout>
       <ScrollWrapper resetRequired>
         <PageHeaderWithBreadcrumbsAndActions
-          title={formatMessage(commonMessages.pageTitle)}
+          title={formatMessage(
+            isTmsMilestonesEnabled ? commonMessages.pageTitle : commonMessages.pageTestPlansTitle,
+          )}
           breadcrumbDescriptors={breadcrumbDescriptors}
           {...(!isEmpty(testPlans) && {
             actions: (
@@ -93,7 +97,7 @@ export const TestPlansPage = () => {
                     data-automation-id="createTestPlanButton"
                     onClick={openModal}
                   >
-                    {formatMessage(commonMessages.createMilestone)}
+                    {formatMessage(commonMessages.createTestPlan)}
                   </Button>
                 )}
               </>

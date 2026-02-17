@@ -19,23 +19,23 @@ import { defineMessages } from 'react-intl';
 export const messages = defineMessages({
   deleteLaunchTitle: {
     id: 'DeleteManualLaunchModal.deleteLaunchTitle',
-    defaultMessage: 'Delete launch',
+    defaultMessage: 'Delete Launch',
   },
   deleteConfirmation: {
     id: 'DeleteManualLaunchModal.deleteConfirmation',
-    defaultMessage: "Are you sure you want to delete <b>''{launchName}''</b>?",
+    defaultMessage: "Are you sure you want to delete the launch <b>{launchName}</b>?",
   },
   deletePermanentWarning: {
     id: 'DeleteManualLaunchModal.deletePermanentWarning',
-    defaultMessage: 'This launch and all its test executions will be permanently deleted.',
+    defaultMessage: 'This irreversible action will remove all its test executions and may impact the coverage of the test plans to which it is linked.',
   },
   batchDeleteTitle: {
     id: 'BatchDeleteManualLaunchesModal.title',
-    defaultMessage: 'Delete launches',
+    defaultMessage: 'Delete Launches',
   },
   batchDeleteDescription: {
     id: 'BatchDeleteManualLaunchesModal.description',
     defaultMessage:
-      'Are you sure you want to delete {count} selected {count, plural, one {launch} other {launches}}?',
+      'Are you sure you want to delete <b>{count}</b> selected {count, plural, one {launch} other {launches}}?',
   },
 });

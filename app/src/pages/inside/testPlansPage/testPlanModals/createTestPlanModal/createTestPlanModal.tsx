@@ -30,7 +30,7 @@ export const CreateTestPlanModal = () => {
 
   return (
     <TestPlanModal
-      title={formatMessage(commonMessages.createMilestone)}
+      title={formatMessage(commonMessages.createTestPlan)}
       submitButtonText={formatMessage(COMMON_LOCALE_KEYS.CREATE)}
       isLoading={isLoading}
       formName="create-test-plan-modal-form"

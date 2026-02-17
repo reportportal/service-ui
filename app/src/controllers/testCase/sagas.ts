@@ -111,7 +111,7 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
       fetch,
       URLS.testCases(projectKey, {
         'filter.eq.testFolderId': folderId,
-        'filter.fts.search': testCasesSearchParams,
+        'filter.cnt.name': testCasesSearchParams,
         offset,
         limit,
       }),
@@ -180,7 +180,7 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
     const projectKey = (yield select(projectKeySelector)) as string;
     const result = (yield call(
       fetch,
-      URLS.testCases(projectKey, { offset, limit, 'filter.fts.search': testCasesSearchParams }),
+      URLS.testCases(projectKey, { offset, limit, 'filter.cnt.name': testCasesSearchParams }),
     )) as {
       content: TestCase[];
       page: Page;

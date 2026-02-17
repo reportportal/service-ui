@@ -24,6 +24,7 @@ import {
   activeProjectKeySelector,
 } from 'controllers/user';
 import { isTmsEnabled } from 'controllers/appInfo';
+import { getTmsMilestonesOverride } from 'controllers/appInfo/utils';
 import { fetchProjectAction } from 'controllers/project';
 import {
   LOGIN_PAGE,
@@ -142,6 +143,7 @@ import {
 } from 'controllers/testPlan';
 import {
   MANUAL_LAUNCHES_NAMESPACE,
+  MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
   defaultManualLaunchesQueryParams,
   getManualLaunchesAction,
   getManualLaunchAction,
@@ -349,7 +351,7 @@ const routesMap = {
       if (launchId) {
         dispatch(getManualLaunchAction({ launchId }));
 
-        // Load folders and test case executions
+        // Load folders
         dispatch(
           getManualLaunchFoldersAction({
             launchId,
@@ -357,11 +359,19 @@ const routesMap = {
             limit: 100, // TODO do we need to implement folder click and fetch test executions for certain folder?
           }),
         );
+
+        // Load test case executions with pagination from URL
+        const { offset, limit } = getRouterParams({
+          namespace: MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
+          defaultParams: defaultManualLaunchesQueryParams,
+          state,
+        });
+
         dispatch(
           getManualLaunchTestCaseExecutionsAction({
             launchId,
-            offset: 0,
-            limit: 1000, // TODO do we need to implement pagination for test case executions?
+            offset,
+            limit,
           }),
         );
       }
@@ -503,7 +513,7 @@ const routesMap = {
   },
 
   [PROJECT_TEST_PLANS_PAGE]: {
-    path: '/organizations/:organizationSlug/projects/:projectSlug/milestones',
+    path: `/organizations/:organizationSlug/projects/:projectSlug/${getTmsMilestonesOverride() ? 'milestones' : 'testPlans'}`,
     thunk: (dispatch, getState) => {
       const state = getState();
       const { offset, limit } = getRouterParams({
@@ -516,7 +526,7 @@ const routesMap = {
     },
   },
   [PROJECT_TEST_PLAN_DETAILS_PAGE]: {
-    path: '/organizations/:organizationSlug/projects/:projectSlug/milestones/:testPlanId/:testPlanRoute*',
+    path: `/organizations/:organizationSlug/projects/:projectSlug/${getTmsMilestonesOverride() ? 'milestones' : 'testPlans'}/:testPlanId/:testPlanRoute*`,
     thunk: (dispatch, getState) => {
       const state = getState();
       const testPlanId = state.location?.payload?.testPlanId;
