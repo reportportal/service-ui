@@ -15,7 +15,7 @@
  */
 
 import { FC, SVGProps, ReactNode } from 'react';
-import { isString, isObject } from 'es-toolkit/compat';
+import { isString, isObject, isNil } from 'es-toolkit/compat';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { FolderWithFullPath } from 'controllers/testCase/types';
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
@@ -208,5 +208,10 @@ export interface AttributesResponse {
 }
 
 export const hasTagShape = (attr: Tag | Attribute): attr is Tag => {
-  return isObject(attr) && 'key' in attr && isString((attr as Tag).key);
+  return (
+    isObject(attr) &&
+    'key' in attr &&
+    isString((attr as Tag).key) &&
+    (!('value' in attr) || isNil(attr.value))
+  );
 };
