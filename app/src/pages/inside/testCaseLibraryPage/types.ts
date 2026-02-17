@@ -182,6 +182,10 @@ export interface TestStep {
   position?: number;
 }
 
+export interface DetailsEmptyStateProps {
+  testCase: ExtendedTestCase;
+}
+
 export interface TagPopoverProps {
   trigger: ReactNode;
   onTagSelect: (tag: Tag | Attribute) => void;

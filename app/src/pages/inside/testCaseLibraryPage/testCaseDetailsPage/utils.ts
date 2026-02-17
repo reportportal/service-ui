@@ -15,14 +15,14 @@
  */
 
 import { isEmpty } from 'es-toolkit/compat';
+import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 
 import { ManualScenario, Step } from '../types';
-import { TestCaseManualScenario } from '../../common/testCaseList/types';
 
 export const hasStepContent = (step: Step) =>
   !!step?.instructions || !!step?.expectedResult || !isEmpty(step?.attachments);
 
-export const isScenarioEmpty = (manualScenario: ManualScenario | undefined): boolean => {
+export const checkScenario = (manualScenario: ManualScenario | undefined): boolean => {
   if (!manualScenario) return true;
 
   const hasRequirements = !isEmpty(manualScenario.requirements);

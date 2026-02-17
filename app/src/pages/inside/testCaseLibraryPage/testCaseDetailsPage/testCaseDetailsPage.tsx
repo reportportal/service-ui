@@ -41,11 +41,12 @@ import { useTestCaseTags } from './useTestCaseTags';
 import { messages } from './messages';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
 import { AttachmentList } from '../attachmentList';
-import { ManualScenario, Step, Tag, hasTagShape } from '../types';
+import { ManualScenario, Tag, hasTagShape } from '../types';
 import { Precondition } from './precondition';
 import { StepsList } from './stepsList';
 import { Scenario } from './scenario';
 import { TagPopover } from '../tagPopover';
+import { checkScenario, hasStepContent } from './utils';
 
 import styles from './testCaseDetailsPage.scss';
 
@@ -118,9 +119,6 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
 
   if (manualScenario?.manualScenarioType === TestCaseManualScenario.STEPS) {
     const firstStep = manualScenario?.steps?.[0];
-    const isStepDataExists = (step: Step) => {
-      return step?.instructions || step?.expectedResult || !isEmpty(step?.attachments);
-    };
 
     sections.push(
       {
@@ -134,8 +132,8 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
       {
         titleKey: 'steps',
         defaultMessage: messages.noSteps,
-        childComponent: isStepDataExists(firstStep) && (
-          <StepsList steps={manualScenario.steps.filter(isStepDataExists)} />
+        childComponent: hasStepContent(firstStep) && (
+          <StepsList steps={manualScenario.steps.filter(hasStepContent)} />
         ),
       },
     );
@@ -225,6 +223,8 @@ export const TestCaseDetailsPage = () => {
 
   const tags = attributes.map(({ key }) => key);
 
+  const isScenarioEmpty = checkScenario(testCaseDetails?.manualScenario);
+
   return (
     <SettingsLayout>
       <ScrollWrapper resetRequired>
@@ -234,6 +234,7 @@ export const TestCaseDetailsPage = () => {
             testCase={testCaseDetails}
             onAddToTestPlan={handleAddToTestPlan}
             onMenuAction={noop}
+            isScenarioEmpty={isScenarioEmpty}
           />
           <div className={cx('page__sidebar')}>
             {SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG({
@@ -263,7 +264,9 @@ export const TestCaseDetailsPage = () => {
                 testCaseDetails?.id ? 'page__main-content-with-data' : '',
               )}
             >
-              {testCaseDetails?.manualScenario ? (
+              {isScenarioEmpty ? (
+                <DetailsEmptyState testCase={testCaseDetails} />
+              ) : (
                 MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG({
                   manualScenario: testCaseDetails.manualScenario,
                 }).map(({ titleKey, defaultMessage, childComponent }) => (
@@ -275,8 +278,6 @@ export const TestCaseDetailsPage = () => {
                     {childComponent}
                   </CollapsibleSectionWithHeaderControl>
                 ))
-              ) : (
-                <DetailsEmptyState />
               )}
             </div>
           </ScrollWrapper>

@@ -18,6 +18,7 @@ import { useEffect, useCallback, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { keyBy } from 'es-toolkit';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { commonValidators, uniqueId } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -78,7 +79,9 @@ const EditTestCaseModalComponent = ({
         executionEstimationTime:
           manualScenario?.executionEstimationTime ||
           TEST_CASE_FORM_INITIAL_VALUES.executionEstimationTime,
-        requirements: manualScenario?.requirements || [{ id: uniqueId(), value: '' }],
+        requirements: isEmpty(manualScenario?.requirements)
+          ? [{ id: uniqueId(), value: '' }]
+          : manualScenario?.requirements,
         precondition: manualScenario?.preconditions?.value,
         preconditionAttachments: manualScenario?.preconditions?.attachments || [],
         instructions: manualScenario?.instructions,
