@@ -198,7 +198,7 @@ export const LaunchSidePanel = memo(({ launchId, isVisible, onClose }: LaunchSid
     <div ref={sidePanelRef} className={cx('launch-side-panel-wrapper')}>
       <SidePanel
         className={cx('launch-side-panel')}
-        title={launchDetails.name}
+        title={`${launchDetails.name} #${launchDetails.number}`}
         descriptionComponent={isLoading ? <BubblesLoader /> : descriptionComponent}
         contentComponent={isLoading ? <BubblesLoader /> : contentComponent}
         footerComponent={footerComponent}

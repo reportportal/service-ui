@@ -19,12 +19,14 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
+
 import { URLS } from 'common/urls';
-import { AsyncMultipleAutocomplete } from 'componentLibrary/autocompletes/asyncMultipleAutocomplete';
+import { AsyncMultipleAutocompleteV2 } from 'componentLibrary/autocompletes/asyncMultipleAutocompleteV2';
 import { SystemMessage } from 'componentLibrary/systemMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { isExistingLaunchNamesSelector } from 'controllers/project/selectors';
 import { projectKeySelector } from 'controllers/project';
+
 import styles from './launchNamesContainer.scss';
 
 const cx = classNames.bind(styles);
@@ -66,10 +68,11 @@ export const LaunchNamesContainer = ({ highlightUnStoredItem, value, ...rest }) 
     highlightUnStoredItem && setShowMessage(containsNonExistingName(items, storedItems));
   return (
     <>
-      <AsyncMultipleAutocomplete
+      <AsyncMultipleAutocompleteV2
         getURI={URLS.launchNameSearch(projectKey)}
         createWithoutConfirmation
         creatable
+        isDropdownMode
         editable
         handleUnStoredItemCb={handleSystemMessage}
         existingItemsMap={existingItemsMap}

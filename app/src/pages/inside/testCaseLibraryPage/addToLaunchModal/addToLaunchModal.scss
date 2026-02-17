@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
+.add-to-launch-modal {
+  &__content-wrapper {
+    position: relative;
+  }
+}
+
 .selected-test-cases {
-  font-family: $FONT-ROBOTO-BOLD;
-}
-
-.autocomplete-wrapper {
-  position: relative;
-}
-
-.launch-name-wrapper {
-  margin: 16px 0;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-bold);
 }
