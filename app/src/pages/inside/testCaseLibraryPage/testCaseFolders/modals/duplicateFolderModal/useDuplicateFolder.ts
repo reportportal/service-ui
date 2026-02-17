@@ -70,7 +70,7 @@ export const useDuplicateFolder = () => {
       }
 
       createNewStoreFolder({
-        targetFolderId: duplicatedFolder.id,
+        id: duplicatedFolder.id,
         folderName: duplicatedFolder.name,
         parentFolderId: duplicatedFolder.parentFolderId,
         countOfTestCases: duplicatedFolder.countOfTestCases,

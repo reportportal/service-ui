@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
+import { type ReactNode } from 'react';
 import { isEmpty } from 'es-toolkit/compat';
 import { noop } from 'es-toolkit';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
-import { Button, EditIcon, PlusIcon } from '@reportportal/ui-kit';
+import { BubblesLoader, Button, EditIcon, PlusIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
@@ -30,14 +30,28 @@ import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCases
 import { RequirementsList } from 'pages/inside/common/requirementsList/requirementsList';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { testCaseDetailsSelector } from 'controllers/testCase';
+import { isLoadingTestCaseDetailsSelector, testCaseDetailsSelector } from 'controllers/testCase';
 import { commonMessages } from 'pages/inside/common/common-messages';
+import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
 import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { useDescriptionModal } from './descriptionModal';
+import { useTestCaseTags } from './useTestCaseTags';
 import { messages } from './messages';
-import { Requirement } from '../types';
+import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
+import { AttachmentList } from '../attachmentList';
+import { ManualScenario, Tag, hasTagShape } from '../types';
+import { Precondition } from './precondition';
+import { StepsList } from './stepsList';
+import { Scenario } from './scenario';
+import { TagPopover } from '../tagPopover';
+import {
+  checkScenario,
+  hasStepContent,
+  hasStepsPreconditionContent,
+  hasScenarioContent,
+} from './utils';
 
 import styles from './testCaseDetailsPage.scss';
 
@@ -49,7 +63,8 @@ const SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG = ({
   tags,
   testCaseDescription,
   headerControlKeys,
-  handleAddTags,
+  onTagRemove,
+  tagAddButton,
   handleDescriptionModal,
 }: {
   canEditTestCaseTag: boolean;
@@ -57,19 +72,18 @@ const SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG = ({
   tags: string[];
   testCaseDescription: string;
   headerControlKeys: { ADD: string };
-  handleAddTags: () => void;
+  onTagRemove?: (tagKey: string) => void;
+  tagAddButton?: ReactNode;
   handleDescriptionModal: () => void;
 }) => {
   return [
     {
       titleKey: 'tags',
       defaultMessage: commonMessages.noTagsAdded,
-      childComponent: !isEmpty(tags) && <AdaptiveTagList tags={tags} isShowAllView />,
-      headerControl: canEditTestCaseTag && (
-        <Button variant="text" adjustWidthOn="content" onClick={handleAddTags} icon={<PlusIcon />}>
-          {headerControlKeys.ADD}
-        </Button>
+      childComponent: !isEmpty(tags) && (
+        <AdaptiveTagList tags={tags} isShowAllView onRemoveTag={onTagRemove} />
       ),
+      headerControl: canEditTestCaseTag && tagAddButton,
     },
     {
       titleKey: 'description',
@@ -94,34 +108,95 @@ const SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG = ({
 };
 
 const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
-  requirements,
+  manualScenario,
 }: {
-  requirements: Requirement[];
+  manualScenario: ManualScenario;
 }) => {
-  return [
+  const sections = [
     {
       titleKey: 'requirements',
       defaultMessage: commonMessages.requirementsAreNotSpecified,
-      childComponent: isEmpty(requirements) ? null : (
-        <RequirementsList items={requirements} isCopyEnabled />
+      childComponent: isEmpty(manualScenario?.requirements) ? null : (
+        <RequirementsList items={manualScenario.requirements} isCopyEnabled />
       ),
     },
-  ] as const;
+  ];
+
+  if (manualScenario?.manualScenarioType === TestCaseManualScenario.STEPS) {
+    sections.push(
+      {
+        titleKey: 'precondition',
+        defaultMessage: messages.noPrecondition,
+        childComponent: hasStepsPreconditionContent(manualScenario?.preconditions) && (
+          <Precondition preconditions={manualScenario.preconditions} />
+        ),
+      },
+      {
+        titleKey: 'steps',
+        defaultMessage: messages.noSteps,
+        childComponent: hasStepContent(manualScenario?.steps?.[0]) && (
+          <StepsList steps={manualScenario.steps.filter(hasStepContent)} />
+        ),
+      },
+    );
+  } else {
+    sections.push(
+      {
+        titleKey: 'scenario',
+        defaultMessage: messages.noScenario,
+        childComponent: hasScenarioContent(manualScenario) && (
+          <Scenario
+            expectedResult={manualScenario.expectedResult}
+            instructions={manualScenario.instructions}
+            precondition={manualScenario.preconditions?.value}
+          />
+        ),
+      },
+      {
+        titleKey: 'attachments',
+        defaultMessage: messages.noAttachments,
+        childComponent: !isEmpty(manualScenario?.attachments) && (
+          <AttachmentList
+            attachments={manualScenario.attachments}
+            className={cx('page__attachments-list')}
+          />
+        ),
+      },
+    );
+  }
+
+  return sections;
 };
 
 export const TestCaseDetailsPage = () => {
   const { formatMessage } = useIntl();
-  const [isTagsAdded, setIsTagsAdded] = useState(false);
   const { canEditTestCaseTag, canEditTestCaseDescription } = useUserPermissions();
   const { openModal: openAddTestCasesToTestPlanModal } = useAddTestCasesToTestPlanModal();
   const { openModal: openDescriptionModal } = useDescriptionModal();
 
   const testCaseDetails = useSelector(testCaseDetailsSelector);
+  const isLoadingTestCaseDetails = useSelector(isLoadingTestCaseDetailsSelector);
+
+  const testCaseId = testCaseDetails?.id || 0;
+
+  const {
+    addTag,
+    removeTag,
+    isLoading: isTagsLoading,
+  } = useTestCaseTags({
+    testCaseId,
+  });
 
   if (!testCaseDetails) return null;
 
-  const handleAddTags = () => {
-    setIsTagsAdded((prevState) => !prevState);
+  const attributes = (testCaseDetails.attributes || []).filter(hasTagShape);
+
+  const handleTagSelect = (tag: Tag) => {
+    addTag(tag).catch(noop);
+  };
+
+  const handleTagRemove = (tagKey: string) => {
+    removeTag(tagKey).catch(noop);
   };
 
   const handleDescriptionModal = () => {
@@ -135,14 +210,35 @@ export const TestCaseDetailsPage = () => {
     });
   };
 
-  // TODO: Remove mock data after integration
-  const mockedTags = [
-    { key: 'sso system', id: 1 },
-    { key: 'user interface improvements user interface improvements', id: 2 },
-    { key: 'battery usage analysis for a user interface improvements', id: 3 },
-  ];
+  const tagAddButton = (
+    <TagPopover
+      onTagSelect={handleTagSelect}
+      selectedTags={attributes}
+      trigger={
+        <Button variant="text" adjustWidthOn="content" icon={<PlusIcon />} disabled={isTagsLoading}>
+          {formatMessage(COMMON_LOCALE_KEYS.ADD)}
+        </Button>
+      }
+    />
+  );
 
-  const tags = isTagsAdded ? mockedTags : [];
+  const tags = attributes.map(({ key }) => key);
+
+  const isScenarioEmpty = checkScenario(testCaseDetails?.manualScenario);
+
+  const mainContent = isScenarioEmpty ?
+    <DetailsEmptyState testCase={testCaseDetails} /> :
+    MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG({
+      manualScenario: testCaseDetails.manualScenario,
+    }).map(({ titleKey, defaultMessage, childComponent }) => (
+      <CollapsibleSectionWithHeaderControl
+        key={titleKey}
+        title={formatMessage(commonMessages[titleKey])}
+        defaultMessage={formatMessage(defaultMessage)}
+      >
+        {childComponent}
+      </CollapsibleSectionWithHeaderControl>
+    ));
 
   return (
     <SettingsLayout>
@@ -153,14 +249,16 @@ export const TestCaseDetailsPage = () => {
             testCase={testCaseDetails}
             onAddToTestPlan={handleAddToTestPlan}
             onMenuAction={noop}
+            isScenarioEmpty={isScenarioEmpty}
           />
           <div className={cx('page__sidebar')}>
             {SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG({
-              handleAddTags,
+              tagAddButton,
+              onTagRemove: canEditTestCaseTag && !isTagsLoading ? handleTagRemove : undefined,
               handleDescriptionModal,
               headerControlKeys: { ADD: formatMessage(COMMON_LOCALE_KEYS.ADD) },
-              testCaseDescription: testCaseDetails.description,
-              tags: tags.map(({ key }) => key),
+              testCaseDescription: testCaseDetails.description || '',
+              tags,
               canEditTestCaseTag,
               canEditTestCaseDescription,
             }).map(({ titleKey, defaultMessage, childComponent, headerControl }) => (
@@ -174,21 +272,22 @@ export const TestCaseDetailsPage = () => {
               </CollapsibleSectionWithHeaderControl>
             ))}
           </div>
-          <div className={cx('page__main-content')}>
-            <ScrollWrapper>
-              {MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG({
-                requirements: testCaseDetails.manualScenario?.requirements || [],
-              }).map(({ titleKey, defaultMessage, childComponent }) => (
-                <CollapsibleSectionWithHeaderControl
-                  key={titleKey}
-                  title={formatMessage(commonMessages[titleKey])}
-                  defaultMessage={formatMessage(defaultMessage)}
-                >
-                  {childComponent}
-                </CollapsibleSectionWithHeaderControl>
-              ))}
-            </ScrollWrapper>
-          </div>
+          <ScrollWrapper>
+            <div
+              className={cx(
+                'page__main-content',
+                testCaseDetails?.id ? 'page__main-content-with-data' : '',
+                isLoadingTestCaseDetails ? 'page__loading-state' : '',
+              )}
+            >
+              {isLoadingTestCaseDetails ?
+                <div className={cx('page__loader')}>
+                  <BubblesLoader />
+                </div> :
+                mainContent
+              }
+            </div>
+          </ScrollWrapper>
         </div>
       </ScrollWrapper>
     </SettingsLayout>

@@ -42,41 +42,40 @@ const cx = createClassnames(styles);
 interface AllTestCasesPageProps {
   testCases: ExtendedTestCase[];
   loading: boolean;
-  searchValue: string;
   instanceKey: TMS_INSTANCE_KEY;
+  folderName?: string;
 }
 
 export const AllTestCasesPage = ({
   testCases,
   loading,
-  searchValue,
   instanceKey,
+  folderName,
 }: AllTestCasesPageProps) => {
   const { formatMessage } = useIntl();
   const testPlansTestCasesPageData = useSelector(testPlanTestCasesPageSelector);
   const payload = useSelector(payloadSelector);
   const { organizationSlug, projectSlug } = useProjectDetails();
+  const testPlanRoute = payload.testPlanRoute ? `/${payload.testPlanRoute}` : '';
   const { setPageNumber, setPageSize, captions, activePage, pageSize, totalPages } =
     useURLBoundPagination({
       pageData: testPlansTestCasesPageData,
       defaultQueryParams: defaultTestPlanTestCasesQueryParams,
       namespace: TEST_PLAN_TEST_CASES_NAMESPACE,
       shouldSaveUserPreferences: true,
-      baseUrl: `/organizations/${organizationSlug}/projects/${projectSlug}/milestones/${payload.testPlanId}`,
+      baseUrl: `/organizations/${organizationSlug}/projects/${projectSlug}/milestones/${payload.testPlanId}${testPlanRoute}`,
     });
   const [selectedRows, setSelectedRows] = useState<SelectedTestCaseRow[]>([]);
-
   return (
     <>
       <div className={cx('all-test-cases-page')}>
         <TestCaseList
           testCases={testCases}
           isLoading={loading}
-          searchValue={searchValue}
           selectedRowIds={selectedRows.map((row) => row.id)}
           selectedRows={selectedRows}
           handleSelectedRows={setSelectedRows}
-          folderTitle={formatMessage(COMMON_LOCALE_KEYS.ALL_TEST_CASES_TITLE)}
+          folderTitle={folderName || formatMessage(COMMON_LOCALE_KEYS.ALL_TEST_CASES_TITLE)}
           selectable={false}
           instanceKey={instanceKey}
         />

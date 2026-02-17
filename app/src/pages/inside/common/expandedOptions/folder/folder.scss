@@ -86,6 +86,12 @@
         box-sizing: border-box;
         height: 36px;
       }
+
+      &--dimmed {
+        .folders-tree__item-title--text {
+          color: var(--rp-ui-base-e-300);
+        }
+      }
     }
 
     &-content > svg {
@@ -93,6 +99,7 @@
       top: 8px;
       left: -16px;
       transform: rotate(-90deg);
+      cursor: pointer;
     }
 
     &--open > div {
@@ -231,4 +238,8 @@
     font-weight: 500;
     color: var(--rp-ui-base-almost-black);
   }
+}
+
+.highlight {
+  color: var(--rp-ui-color-primary-text);
 }

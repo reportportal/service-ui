@@ -14,36 +14,42 @@
  * limitations under the License.
  */
 
-import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
-import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
-import { referenceDictionary } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 
+import { useEditTestCaseModal } from '../../editSelectedTestCaseModal';
+import { DetailsEmptyStateProps } from '../../types';
 import { messages } from '../messages';
+import { commonMessages } from '../../commonMessages';
 
-export const DetailsEmptyState = () => {
+export const DetailsEmptyState = ({ testCase }: DetailsEmptyStateProps) => {
   const { formatMessage } = useIntl();
   const { canEditTestCaseScenario } = useUserPermissions();
+  const { openModal } = useEditTestCaseModal();
 
-  const getActionButtons = () =>
-    canEditTestCaseScenario
-      ? [
-          {
-            isCompact: true,
-            name: formatMessage(messages.editScenario),
-            variant: 'primary',
-          },
-        ]
-      : [];
+  const handleEditScenario = () => {
+    openModal({ testCase });
+  };
+
+  const buttons = canEditTestCaseScenario
+    ? [
+        {
+          name: formatMessage(commonMessages.editScenario),
+          dataAutomationId: 'editScenarioButton',
+          handleButton: handleEditScenario,
+          variant: 'primary' as const,
+          isCompact: false,
+        },
+      ]
+    : [];
 
   return (
     <EmptyStatePage
-      title={formatMessage(messages.noScenarioDetails)}
-      description={Parser(formatMessage(messages.scenarioDescription))}
       imageType="plus"
-      documentationLink={referenceDictionary.rpDoc}
-      buttons={getActionButtons()}
+      title={formatMessage(messages.noScenarioDetails)}
+      description={formatMessage(messages.noScenarioDetailsDescription)}
+      buttons={buttons}
     />
   );
 };

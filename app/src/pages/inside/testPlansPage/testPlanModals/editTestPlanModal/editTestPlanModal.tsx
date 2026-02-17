@@ -51,7 +51,7 @@ export const EditTestPlanModal = ({ data }: EditTestPlanModalProps) => {
       initialValues={{
         name: data.name,
         description: data.description,
-        attributes: [],
+        attributes: data.attributes || [],
       }}
       requiresChanges
       onSubmit={handleSubmit}

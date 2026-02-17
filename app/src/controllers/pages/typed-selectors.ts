@@ -21,12 +21,14 @@ interface LocationPayload {
   projectSlug: string;
   testCasePageRoute?: string;
   testPlanId?: string;
+  testPlanRoute?: string;
   launchId?: string;
 }
 
 interface LocationQuery {
   offset: string;
   limit: string;
+  testCasesSearchParams?: string;
 }
 
 export type LocationInfo = {

@@ -27,13 +27,12 @@ import {
   TEST_CASE_LIST_NAMESPACE,
   TestCasePageDefaultValues,
 } from 'pages/inside/common/testCaseList/constants';
-import { DEFAULT_CURRENT_PAGE } from 'pages/inside/common/testCaseList/configUtils';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Page } from 'types/common';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { showModalAction } from 'controllers/modal';
-import { payloadSelector, urlFolderIdSelector } from 'controllers/pages';
+import { locationQuerySelector, payloadSelector, urlFolderIdSelector } from 'controllers/pages';
 import { foldersSelector } from 'controllers/testCase';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
@@ -47,6 +46,7 @@ import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/u
 import { useBatchDuplicateToFolderModal } from './batchDuplicateToFolderModal';
 import { useBatchDeleteTestCasesModal } from './batchDeleteTestCasesModal';
 import { useMoveTestCaseModal } from '../moveTestCaseModal';
+import { useAddToLaunchModal } from '../addToLaunchModal';
 
 import styles from './allTestCasesPage.scss';
 
@@ -56,9 +56,7 @@ interface AllTestCasesPageProps {
   testCases: TestCase[];
   testCasesPageData: Page;
   isLoading: boolean;
-  searchValue: string;
   instanceKey: TMS_INSTANCE_KEY;
-  setSearchValue: (value: string) => void;
 }
 
 export interface SelectedTestCaseRow {
@@ -69,14 +67,13 @@ export interface SelectedTestCaseRow {
 export const AllTestCasesPage = ({
   testCases,
   isLoading,
-  searchValue,
-  setSearchValue,
   instanceKey,
   testCasesPageData,
 }: AllTestCasesPageProps) => {
   const { formatMessage } = useIntl();
   const { organizationSlug, projectSlug } = useProjectDetails();
   const payload = useSelector(payloadSelector);
+  const query = useSelector(locationQuerySelector);
   const { setPageNumber, setPageSize, captions, activePage, pageSize, totalPages } =
     useURLBoundPagination({
       pageData: testCasesPageData,
@@ -92,10 +89,18 @@ export const AllTestCasesPage = ({
   const isAnyRowSelected = !isEmpty(selectedRows);
   const selectedRowIds = useMemo(() => selectedRows.map((row) => row.id), [selectedRows]);
   const { openModal: openAddToTestPlanModal } = useAddTestCasesToTestPlanModal();
+  const onClearSelection = () => setSelectedRows([]);
+  const { openModal: openAddToLaunchModal } = useAddToLaunchModal({
+    selectedTestCasesIds: selectedRowIds,
+    onClearSelection,
+  });
   const { openModal: openBatchDuplicateToFolderModal } = useBatchDuplicateToFolderModal();
   const { openModal: openBatchDeleteTestCasesModal } = useBatchDeleteTestCasesModal();
   const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
   const { canDeleteTestCase, canDuplicateTestCase, canEditTestCase } = useUserPermissions();
+
+  const handleSelectedRows = (rows: SelectedTestCaseRow[]) => setSelectedRows(rows);
+
   const folderTitle = useMemo(() => {
     const selectedFolder = folders.find((folder) => String(folder.id) === String(folderId));
     return selectedFolder?.name || formatMessage(COMMON_LOCALE_KEYS.ALL_TEST_CASES_TITLE);
@@ -150,6 +155,10 @@ export const AllTestCasesPage = ({
     openAddToTestPlanModal({ selectedTestCaseIds: selectedRowIds });
   }, [selectedRowIds, openAddToTestPlanModal]);
 
+  const handleOpenAddToLaunchModal = useCallback(() => {
+    openAddToLaunchModal();
+  }, [openAddToLaunchModal]);
+
   const handleOpenMoveTestCaseModal = useCallback(() => {
     const sourceFolderDeltasMap = countBy(selectedRows, (row) => String(row.folderId));
 
@@ -160,21 +169,9 @@ export const AllTestCasesPage = ({
     });
   }, [selectedRowIds, selectedRows, openMoveTestCaseModal]);
 
-  const handleSearchChange = useCallback(
-    (targetSearchValue: string) => {
-      setSearchValue(targetSearchValue);
-      setPageNumber(DEFAULT_CURRENT_PAGE);
-    },
-    [setSearchValue, setPageNumber],
-  );
-
-  if (isEmpty(testCases) && !isLoading) {
+  if (isEmpty(testCases) && !isLoading && !query?.testCasesSearchParams) {
     return <FolderEmptyState folderTitle={folderTitle} />;
   }
-
-  const onClearSelection = () => setSelectedRows([]);
-
-  const handleSelectedRows = (rows: SelectedTestCaseRow[]) => setSelectedRows(rows);
 
   return (
     <>
@@ -187,13 +184,12 @@ export const AllTestCasesPage = ({
         <TestCaseList
           testCases={testCases}
           isLoading={isLoading}
-          searchValue={searchValue}
           selectedRowIds={selectedRowIds}
           selectedRows={selectedRows}
           folderTitle={folderTitle}
           instanceKey={instanceKey}
-          onSearchChange={handleSearchChange}
           handleSelectedRows={handleSelectedRows}
+          activePage={activePage}
         />
       </div>
       {Boolean(testCasesPageData?.totalElements) && (
@@ -227,7 +223,9 @@ export const AllTestCasesPage = ({
             <Button variant="ghost" onClick={handleOpenMoveTestCaseModal}>
               {formatMessage(messages.moveToFolder)}
             </Button>
-            <Button variant="ghost">{formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}</Button>
+            <Button variant="ghost" onClick={handleOpenAddToLaunchModal}>
+              {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}
+            </Button>
             <Button onClick={handleOpenAddToTestPlanModal}>
               {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
             </Button>

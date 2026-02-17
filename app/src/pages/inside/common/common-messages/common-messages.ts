@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
+import { defineMessages, MessageDescriptor } from 'react-intl';
 
-export const commonMessages = defineMessages({
+export const commonMessages: Record<string, MessageDescriptor> = defineMessages({
   closePanel: {
     id: 'Common.closePanel',
     defaultMessage: 'Close panel',
@@ -24,6 +24,26 @@ export const commonMessages = defineMessages({
   description: {
     id: 'Common.description',
     defaultMessage: 'Description',
+  },
+  instructions: {
+    id: 'Common.instructions',
+    defaultMessage: 'Instructions',
+  },
+  expectedResult: {
+    id: 'Common.expectedResult',
+    defaultMessage: 'Expected Result',
+  },
+  scenario: {
+    id: 'Common.scenario',
+    defaultMessage: 'Scenario',
+  },
+  precondition: {
+    id: 'Common.precondition',
+    defaultMessage: 'Precondition',
+  },
+  steps: {
+    id: 'Common.steps',
+    defaultMessage: 'Steps',
   },
   descriptionNotSpecified: {
     id: 'Common.descriptionNotSpecified',
@@ -60,6 +80,10 @@ export const commonMessages = defineMessages({
   skipped: {
     id: 'Common.skipped',
     defaultMessage: 'Skipped',
+  },
+  inProgress: {
+    id: 'Common.inProgress',
+    defaultMessage: 'In progress',
   },
   moreActions: {
     id: 'Common.moreActions',

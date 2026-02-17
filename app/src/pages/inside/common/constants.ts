@@ -18,9 +18,11 @@ import { defineMessages } from 'react-intl';
 
 export const ISSUE_OPERATION_MAX_ITEMS = 300;
 export const SPINNER_DEBOUNCE = 300;
+export const LAUNCH_NAME_FILTER_KEY = 'filter.cnt.name';
 export enum TMS_INSTANCE_KEY {
   TEST_CASE = 'testCase',
   TEST_PLAN = 'testPlan',
+  MANUAL_LAUNCH = 'manualLaunch',
 }
 
 export const actionMessages = defineMessages({

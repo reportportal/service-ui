@@ -506,6 +506,7 @@
   "DashboardItemPage.editDashboard": "Рэдагаваць",
   "DashboardItemPage.fullscreen": "Поўнаэкранны рэжым",
   "DashboardItemPage.notMyDashboardEmptyHeader": "Пакуль няма віджэтаў",
+  "DashboardList.lockedDashboardTooltip": "Гэты дашборд заблакіраваны менеджэрам праекта або адміністратарам і не можа быць зменены",
   "DashboardPage.addDashboardSuccess": "Дашбард быў паспяхова створаны.",
   "DashboardPage.addPreconfigDashboardError": "Немагчыма стварыць дашборд. Калі ласка, праверце ўстаўленую канфігурацыю.",
   "DashboardPage.dashboardExists": "У праекце ўжо існуе панэль кіравання з назвай ''{name}''",

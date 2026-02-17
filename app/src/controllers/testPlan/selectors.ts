@@ -17,7 +17,7 @@ import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Page } from 'types/common';
 
 import { EMPTY_FOLDERS } from '../testCase';
-import { transformFoldersToDisplay } from '../testCase/utils';
+import { transformFoldersToDisplay } from 'common/utils/folderUtils';
 import { TestPlanDto, TestPlanFoldersDto, TestPlanTestCaseDto } from './constants';
 
 export interface TestPlanState {
@@ -31,6 +31,7 @@ export interface TestPlanState {
   testPlanTestCases?: TestPlanTestCaseDto | null;
   isLoadingActive?: boolean;
   isLoadingTestPlanTestCases?: boolean;
+  expandedFolderIds?: number[];
 }
 
 interface RootState {
@@ -65,6 +66,9 @@ export const testPlanTestCasesPageSelector = (state: RootState) =>
 
 export const testPlanTransformedFoldersSelector = (state: RootState) =>
   transformFoldersToDisplay(testPlanFoldersSelector(state));
+
+export const testPlanExpandedFolderIdsSelector = (state: RootState): number[] =>
+  testPlanSelector(state).expandedFolderIds || [];
 
 export const testPlanByIdSelector = (testPlanId: string | number) => (state: RootState) => {
   const activeTestPlan = activeTestPlanSelector(state);

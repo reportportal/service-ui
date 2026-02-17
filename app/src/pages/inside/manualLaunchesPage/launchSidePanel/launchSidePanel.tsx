@@ -165,7 +165,7 @@ export const LaunchSidePanel = memo(({ launchId, isVisible, onClose }: LaunchSid
   const footerComponent = (
     <div className={cx('footer')}>
       <Button
-        variant="ghost"
+        variant="text"
         className={cx('action-button')}
         onClick={handleOpenDetailsClick}
         data-automation-id="launch-open-details"
@@ -195,10 +195,10 @@ export const LaunchSidePanel = memo(({ launchId, isVisible, onClose }: LaunchSid
   );
 
   return (
-    <div ref={sidePanelRef}>
+    <div ref={sidePanelRef} className={cx('launch-side-panel-wrapper')}>
       <SidePanel
         className={cx('launch-side-panel')}
-        title={launchDetails.name}
+        title={`${launchDetails.name} #${launchDetails.number}`}
         descriptionComponent={isLoading ? <BubblesLoader /> : descriptionComponent}
         contentComponent={isLoading ? <BubblesLoader /> : contentComponent}
         footerComponent={footerComponent}

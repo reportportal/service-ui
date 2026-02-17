@@ -37,8 +37,10 @@ import {
   useTestPlanById,
   useTestPlanFolders,
   useTestPlanTestCasesLoading,
+  useTestPlanSelector,
 } from 'hooks/useTypedSelector';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { testPlanTestCasesSelector } from 'controllers/testPlan';
 
 import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWithBreadcrumbsAndActions';
 import { PageLoader } from '../pageLoader';
@@ -50,6 +52,7 @@ import {
   useEditTestPlanModal,
   useDuplicateTestPlanModal,
   useDeleteTestPlanModal,
+  useCreateLaunchModal,
 } from '../testPlanModals';
 import { TestPlanFolders } from './testPlanFolders';
 
@@ -67,6 +70,7 @@ export const TestPlanDetailsPage = () => {
   const isLoading = useActiveTestPlanLoading();
   const isTestPlanTestCasesLoading = useTestPlanTestCasesLoading();
   const testPlanFolders = useTestPlanFolders();
+  const testCases = useTestPlanSelector(testPlanTestCasesSelector);
   const { openModal: openEditModal } = useEditTestPlanModal();
   const { openModal: openDuplicateModal } = useDuplicateTestPlanModal({
     onSuccess: (newTestPlanId) =>
@@ -82,6 +86,8 @@ export const TestPlanDetailsPage = () => {
         payload: { organizationSlug, projectSlug },
       }),
   });
+
+  const { openModal: openCreateLaunchModal } = useCreateLaunchModal(testCases || []);
 
   const actionsMap = {
     edit: openEditModal,
@@ -145,8 +151,12 @@ export const TestPlanDetailsPage = () => {
             </Button>
           )}
           {canCreateManualLaunch && (
-            <Button variant="primary" data-automation-id="createLaunchButton">
-              {formatMessage(messages.createLaunch)}
+            <Button
+              variant="primary"
+              data-automation-id="createLaunchButton"
+              onClick={openCreateLaunchModal}
+            >
+              {formatMessage(messages.addToLaunch)}
             </Button>
           )}
         </>

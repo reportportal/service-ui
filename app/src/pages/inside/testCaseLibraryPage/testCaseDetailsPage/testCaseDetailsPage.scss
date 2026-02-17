@@ -47,7 +47,31 @@
     min-height: 400px;
     display: flex;
     flex-direction: column;
+  }
+
+  &__loading-state {
+    justify-content: center;
+  }
+
+  &__loader {
+    display: flex;
+    justify-content: center;
+  }
+
+  &__main-content-with-data {
     padding: 24px 32px;
-    gap: 16px;
+
+    & > div {
+      margin-bottom: 16px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &__attachments-list > div {
+    width: 120px;
+    min-width: auto;
   }
 }

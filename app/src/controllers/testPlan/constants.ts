@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { ExtendedTestCase, Attribute } from 'pages/inside/testCaseLibraryPage/types';
 import { Folder } from 'controllers/testCase';
 
 export const GET_TEST_PLANS = 'getTestPlans' as const;
@@ -42,6 +42,7 @@ export type TestPlanDto = {
     total: number;
   };
   description?: string;
+  attributes?: Attribute[];
 };
 
 export interface PageInfo {
@@ -60,3 +61,9 @@ export type TestPlanTestCaseDto = {
   content: ExtendedTestCase[];
   page: PageInfo;
 };
+
+export const TOGGLE_TEST_PLAN_FOLDER_EXPANSION = 'toggleTestPlanFolderExpansion' as const;
+export const EXPAND_TEST_PLAN_FOLDERS_TO_LEVEL = 'expandTestPlanFoldersToLevel' as const;
+export const SET_TEST_PLAN_EXPANDED_FOLDER_IDS = 'setTestPlanExpandedFolderIds' as const;
+export const DELETE_TEST_PLAN_FOLDER_SUCCESS = 'deleteTestPlanFolderSuccess' as const;
+export const SET_TEST_PLAN_INITIAL_EXPANDED_FOLDERS = 'setTestPlanInitialExpandedFolders' as const;

@@ -17,19 +17,33 @@
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ActionItem } from 'components/actionMenu';
+import { useUserPermissions } from 'hooks/useUserPermissions';
+import { messages } from 'pages/inside/manualLaunchesPage/launchSidePanel/messages';
 
-export const useManualLaunchesListRowActions = (): ActionItem[] => {
+interface UseManualLaunchesListRowActionsParams {
+  onDelete: () => void;
+}
+
+export const useManualLaunchesListRowActions = ({
+  onDelete,
+}: UseManualLaunchesListRowActionsParams): ActionItem[] => {
   const { formatMessage } = useIntl();
+  const { canDeleteLaunch } = useUserPermissions();
 
   return useMemo(
     () => [
       {
-        label: formatMessage(COMMON_LOCALE_KEYS.EDIT),
+        label: formatMessage(messages.editLaunch),
         onClick: () => {},
       },
+      {
+        label: formatMessage(messages.deleteLaunch),
+        onClick: onDelete,
+        danger: true,
+        hasPermission: canDeleteLaunch,
+      },
     ],
-    [formatMessage],
+    [formatMessage, onDelete, canDeleteLaunch],
   );
 };

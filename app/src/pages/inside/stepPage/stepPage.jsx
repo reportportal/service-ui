@@ -27,6 +27,7 @@ import {
   isListViewSelector,
   isTestItemsListSelector,
   namespaceSelector,
+  launchSelector,
 } from 'controllers/testItem';
 import { STEP_PAGE_EVENTS, STEP_PAGE } from 'components/main/analytics/events';
 import { debugModeSelector } from 'controllers/launch';
@@ -81,6 +82,7 @@ const getLinkIssueEventsInfo = (place) => ({
   (state) => ({
     debugMode: debugModeSelector(state),
     parentItem: parentItemSelector(state),
+    parentLaunch: launchSelector(state),
     steps: stepsSelector(state),
     lastOperation: lastOperationSelector(state),
     selectedItems: selectedStepsSelector(state),
@@ -150,6 +152,7 @@ export class StepPage extends Component {
     editDefectsAction: PropTypes.func.isRequired,
     linkIssueAction: PropTypes.func,
     postIssueAction: PropTypes.func,
+    parentLaunch: PropTypes.object,
     onFilterAdd: PropTypes.func,
     onFilterRemove: PropTypes.func,
     onFilterValidate: PropTypes.func,
@@ -457,6 +460,7 @@ export class StepPage extends Component {
             sortingDirection={sortingDirection}
             rowHighlightingConfig={rowHighlightingConfig}
             onStatusUpdate={this.props.fetchTestItemsAction}
+            parentLaunch={this.props.parentLaunch}
           />
           {!!pageCount && !loading && (
             <PaginationToolbar

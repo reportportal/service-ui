@@ -16,7 +16,7 @@
 
 import { useCallback, useEffect } from 'react';
 import { useIntl } from 'react-intl';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
 import { Button, RefreshIcon } from '@reportportal/ui-kit';
 
@@ -24,7 +24,15 @@ import { createClassnames } from 'common/utils';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { MANUAL_LAUNCHES_PAGE } from 'controllers/pages';
-import { getManualLaunchAction } from 'controllers/manualLaunch';
+import {
+  getManualLaunchAction,
+  getManualLaunchFoldersAction,
+  getManualLaunchTestCaseExecutionsAction,
+  manualLaunchFoldersSelector,
+  manualLaunchTestCaseExecutionsSelector,
+  isLoadingManualLaunchFoldersSelector,
+  isLoadingManualLaunchTestCaseExecutionsSelector,
+} from 'controllers/manualLaunch';
 import {
   showNotification,
   NOTIFICATION_TYPES,
@@ -35,12 +43,13 @@ import {
   useProjectDetails,
   useManualLaunchId,
   useManualLaunchById,
-  useActiveManualLaunchLoading
+  useActiveManualLaunchLoading,
 } from 'hooks/useTypedSelector';
 
 import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWithBreadcrumbsAndActions';
 import { PageLoader } from '../../testPlansPage/pageLoader';
 import { EmptyManualLaunch } from './emptyState';
+import { ManualLaunchFolders } from './manualLaunchFolders';
 import { messages } from './messages';
 import { messages as manualLaunchesMessages } from '../messages';
 import { commonMessages } from '../../testPlansPage/commonMessages';
@@ -56,6 +65,10 @@ export const ManualLaunchDetailsPage = () => {
   const launchId = useManualLaunchId();
   const launch = useManualLaunchById(launchId);
   const isLoading = useActiveManualLaunchLoading();
+  const folders = useSelector(manualLaunchFoldersSelector);
+  const executions = useSelector(manualLaunchTestCaseExecutionsSelector);
+  const isLoadingFolders = useSelector(isLoadingManualLaunchFoldersSelector);
+  const isLoadingExecutions = useSelector(isLoadingManualLaunchTestCaseExecutionsSelector);
 
   useEffect(() => {
     if (!isLoading && isEmpty(launch) && launchId) {
@@ -78,6 +91,8 @@ export const ManualLaunchDetailsPage = () => {
   const handleRefresh = useCallback(() => {
     if (launchId) {
       dispatch(getManualLaunchAction({ launchId }));
+      dispatch(getManualLaunchFoldersAction({ launchId }));
+      dispatch(getManualLaunchTestCaseExecutionsAction({ launchId }));
     }
   }, [dispatch, launchId]);
 
@@ -114,6 +129,13 @@ export const ManualLaunchDetailsPage = () => {
   }
 
   const renderContent = () => {
+    const hasData = !isEmpty(folders) || !isEmpty(executions);
+    const isLoadingFoldersView = isLoadingFolders || isLoadingExecutions;
+
+    if (hasData || isLoadingFoldersView) {
+      return <ManualLaunchFolders />;
+    }
+
     if (!launch?.statistics?.executions?.total) {
       return <EmptyManualLaunch />;
     }

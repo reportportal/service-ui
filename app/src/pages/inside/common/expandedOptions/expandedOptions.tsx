@@ -21,6 +21,7 @@ import Parser from 'html-react-parser';
 import {
   BaseIconButton,
   SearchIcon,
+  FieldText,
   DragNDropIcon,
   useTreeDropValidation,
 } from '@reportportal/ui-kit';
@@ -33,48 +34,23 @@ import { createClassnames } from 'common/utils';
 import { useStorageFolders } from 'hooks/useStorageFolders';
 import { TransformedFolder } from 'controllers/testCase';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { EmptySearchState } from 'pages/common/emptySearchState';
+import OutlineSearchIcon from 'common/img/search-outline-icon-inline.svg';
+import FilledSearchIcon from 'common/img/search-filled-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { foldersSelector } from 'controllers/testCase';
 import FolderDropIcon from 'common/img/folder-drop-inline.svg';
 
 import { Folder } from './folder';
+import { messages } from './messages';
+import { ExpandedOptionsProps } from './types';
+import { useFolderSearch } from './useFolderSearch';
 
 import styles from './expandedOptions.scss';
 
 const FOLDER_DRAG_TYPE = 'TEST_CASE_FOLDER';
 
 const cx = createClassnames(styles);
-
-const messages = defineMessages({
-  allTestCases: {
-    id: 'expandedOptions.allTestCases',
-    defaultMessage: 'All Test Cases',
-  },
-  folders: {
-    id: 'expandedOptions.folders',
-    defaultMessage: 'Folders',
-  },
-});
-
-interface ExpandedOptionsProps {
-  folders: TransformedFolder[];
-  activeFolderId: number | null;
-  setAllTestCases: () => void;
-  onFolderClick: (id: number) => void;
-  children: ReactNode;
-  instanceKey?: TMS_INSTANCE_KEY;
-  renderCreateFolderButton?: () => ReactNode;
-  onMoveFolder?: (
-    draggedItem: TreeDragItem,
-    targetId: string | number,
-    position: TreeDropPosition,
-  ) => void;
-  onDuplicateFolder?: (
-    draggedItem: TreeDragItem,
-    targetId: string | number,
-    position: TreeDropPosition,
-  ) => void;
-}
 
 export const ExpandedOptions = ({
   folders,
@@ -115,6 +91,25 @@ export const ExpandedOptions = ({
     }),
     [isDragAndDropEnabled],
   );
+
+  const {
+    searchQuery,
+    isSearchVisible,
+    searchInputRef,
+    searchWrapperRef,
+    filteredFolders,
+    hasAnyMatch,
+    effectiveExpandedIds,
+    handleToggleFolder,
+    handleSearchChange,
+    handleSearchClear,
+    handleMagnifierClick,
+  } = useFolderSearch({ folders, expandedIds, onToggleFolder });
+
+  const allItemsTitle =
+    instanceKey === TMS_INSTANCE_KEY.MANUAL_LAUNCH
+      ? formatMessage(messages.allTestExecutions)
+      : formatMessage(messages.allTestCases);
 
   const totalTestCases = folders.reduce((total: number, folder: TransformedFolder): number => {
     const countFolderTestCases = (folder: TransformedFolder): number => {
@@ -182,12 +177,35 @@ export const ExpandedOptions = ({
             <div className={cx('expanded-options__sidebar-actions--title')} id="tree_label">
               {formatMessage(messages.folders)}
             </div>
-            <BaseIconButton className={cx('expanded-options__sidebar-actions--search')}>
-              <SearchIcon />
+            <BaseIconButton
+              className={cx('expanded-options__sidebar-actions--search', {
+                'expanded-options__sidebar-actions--search-panel-open': isSearchVisible,
+                'expanded-options__sidebar-actions--search-has-query': !!searchQuery,
+              })}
+              onClick={handleMagnifierClick}
+            >
+              {searchQuery ? Parser(String(FilledSearchIcon)) : Parser(String(OutlineSearchIcon))}
             </BaseIconButton>
             {renderCreateFolderButton?.()}
           </div>
-          <div className={cx('expanded-options__sidebar-folders-wrapper')}>
+          {isSearchVisible && (
+            <div ref={searchWrapperRef} className={cx('expanded-options__search-wrapper')}>
+              <FieldText
+                ref={searchInputRef}
+                value={searchQuery}
+                onChange={handleSearchChange}
+                onClear={handleSearchClear}
+                placeholder={formatMessage(messages.searchPlaceholder)}
+                defaultWidth={false}
+                clearable
+                startIcon={<SearchIcon />}
+              />
+            </div>
+          )}
+          <div className={cx('expanded-options__sidebar-folders-wrapper', {
+            'expanded-options__sidebar-folders-wrapper--with-search': isSearchVisible,
+          })}
+          >
             <ScrollWrapper className={cx('expanded-options__scroll-wrapper-background')}>
               <div
                 ref={dropZoneRef}
@@ -215,22 +233,23 @@ export const ExpandedOptions = ({
                   role="tree"
                   aria-labelledby="tree_label"
                 >
-                  {folders.map((folder, idx) => (
-                    <Folder
-                      folder={folder}
-                      key={folder.id || `${folder.name}-${idx}`}
-                      activeFolder={activeFolderId}
-                      instanceKey={instanceKey}
-                      expandedIds={expandedIds}
-                      onFolderClick={onFolderClick}
-                      setAllTestCases={setAllTestCases}
-                      onToggleFolder={onToggleFolder}
-                      index={idx}
-                      parentId={null}
-                      enableDragAndDrop={isDragAndDropEnabled}
-                      canDropOn={canDropOn}
-                    />
-                  ))}
+                  {!searchQuery || hasAnyMatch ? (
+                    filteredFolders.map((folder, idx) => (
+                      <Folder
+                        folder={folder}
+                        key={folder.id || `${folder.name}-${idx}`}
+                        activeFolder={activeFolderId}
+                        instanceKey={instanceKey}
+                        expandedIds={effectiveExpandedIds}
+                        onFolderClick={onFolderClick}
+                        setAllTestCases={setAllTestCases}
+                        onToggleFolder={handleToggleFolder}
+                        searchQuery={searchQuery}
+                      />
+                    ))
+                  ) : (
+                    <EmptySearchState />
+                  )}
                 </ul>
               </div>
             </ScrollWrapper>

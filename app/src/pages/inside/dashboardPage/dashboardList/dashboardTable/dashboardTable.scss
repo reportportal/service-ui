@@ -14,12 +14,23 @@
  * limitations under the License.
  */
 
+.name-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.locked-icon {
+  width: 12px;
+  height: 14px;
+}
+
 .name {
   width: 30%;
   color: $COLOR--topaz;
   font-size: 15px;
   font-family: $FONT-SEMIBOLD;
-  line-height: 22px;
+  line-height: 20px;
   cursor: pointer;
   text-decoration: none;
   word-break: break-all;

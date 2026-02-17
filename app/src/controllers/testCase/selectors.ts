@@ -16,11 +16,9 @@
 
 import { createSelector } from 'reselect';
 
-import {
-  transformFoldersToDisplay,
-  transformFoldersWithFullPath,
-} from 'controllers/testCase/utils';
-import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { transformFoldersToDisplay } from 'common/utils/folderUtils';
+import { transformFoldersWithFullPath } from 'controllers/testCase/utils';
+import { ExtendedTestCase, TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Page } from 'types/common';
 import { Folder } from './types';
 import { InitialStateType } from './reducer';
@@ -40,7 +38,8 @@ export interface TestCaseState {
     page: Page | null;
   };
   details?: {
-    data?: TestCase;
+    data?: ExtendedTestCase;
+    loading: boolean;
   };
 }
 
@@ -77,6 +76,8 @@ export const testCasesPageSelector = (state: RootState): Page | null =>
   state.testCase?.testCases?.page || null;
 
 export const testCaseDetailsSelector = (state: RootState) => state.testCase?.details?.data;
+
+export const isLoadingTestCaseDetailsSelector = (state: RootState) => state.testCase?.details?.loading || false;
 
 export const transformedFoldersSelector = createSelector(
   foldersSelector,

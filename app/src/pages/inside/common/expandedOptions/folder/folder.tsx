@@ -20,10 +20,10 @@ import { ChevronDownDropdownIcon, MeatballMenuIcon, DragNDropIcon } from '@repor
 import { TreeSortableItem } from '@reportportal/ui-kit/sortable';
 
 import { createClassnames } from 'common/utils';
-import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { PopoverControl } from 'pages/common/popoverControl';
-import { TransformedFolder } from 'controllers/testCase';
 
+import { highlightText, hasMatchInTree, hasChildMatch } from '../utils';
+import { FolderProps } from './types';
 import { useFolderTooltipItems } from './useFolderTooltipItems';
 
 import styles from './folder.scss';
@@ -31,20 +31,6 @@ import styles from './folder.scss';
 const cx = createClassnames(styles);
 
 const FOLDER_DRAG_TYPE = 'TEST_CASE_FOLDER';
-
-interface FolderProps {
-  folder: TransformedFolder;
-  activeFolder: number | null;
-  instanceKey: TMS_INSTANCE_KEY;
-  expandedIds: number[];
-  setAllTestCases: () => void;
-  onFolderClick: (id: number) => void;
-  onToggleFolder: (folder: TransformedFolder) => void;
-  index: number;
-  parentId?: number | null;
-  enableDragAndDrop?: boolean;
-  canDropOn?: (draggedItem: { id: string | number }, targetId: string | number) => boolean;
-}
 
 export const Folder = ({
   folder,
@@ -54,6 +40,8 @@ export const Folder = ({
   onFolderClick,
   setAllTestCases,
   onToggleFolder,
+  searchQuery = '',
+  ancestorDirectMatch = false,
   index,
   parentId = null,
   enableDragAndDrop = false,
@@ -64,6 +52,15 @@ export const Folder = ({
   const [areToolsOpen, setAreToolsOpen] = useState(false);
   const [isBlockHovered, setIsBlockHovered] = useState(false);
   const [showDragIcon, setShowDragIcon] = useState(false);
+
+  const isDirectMatch = searchQuery
+    ? folder.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
+    : false;
+
+  const childrenMatch = searchQuery ? hasChildMatch(folder, searchQuery) : false;
+
+  const hasIndirectMatch = searchQuery && !isDirectMatch && (childrenMatch || ancestorDirectMatch);
+
   const tooltipItems = useFolderTooltipItems({
     folder,
     activeFolder,
@@ -110,6 +107,7 @@ export const Folder = ({
         <div
           className={cx('folders-tree__item-title', {
             'folders-tree__item-title--active': activeFolder === folder.id,
+            'folders-tree__item-title--dimmed': hasIndirectMatch,
           })}
           onClick={handleFolderTitleClick}
           onFocus={() => setIsBlockHovered(true)}
@@ -124,7 +122,7 @@ export const Folder = ({
           }}
         >
           <span className={cx('folders-tree__item-title--text')} title={folder.name}>
-            {folder.name}
+            {isDirectMatch ? highlightText(folder.name, searchQuery) : folder.name}
           </span>
           <div className={cx('folders-tree__item-actions')}>
             {!isEmpty(tooltipItems) && (
@@ -177,22 +175,34 @@ export const Folder = ({
 
       {isOpen && !isEmpty(folder.folders) && (
         <ul className={cx('folders-tree', 'folders-tree--inner')} role="group">
-          {folder.folders?.map((subfolder: TransformedFolder, idx: number) => (
-            <Folder
-              folder={subfolder}
-              key={subfolder.id}
-              activeFolder={activeFolder}
-              instanceKey={instanceKey}
-              expandedIds={expandedIds}
-              onFolderClick={onFolderClick}
-              setAllTestCases={setAllTestCases}
-              onToggleFolder={onToggleFolder}
-              index={idx}
-              parentId={folder.id}
-              enableDragAndDrop={enableDragAndDrop}
-              canDropOn={canDropOn}
-            />
-          ))}
+          {folder.folders?.map((subfolder: TransformedFolder, idx: number) => {
+            const shouldShow =
+              !searchQuery ||
+              isDirectMatch ||
+              ancestorDirectMatch ||
+              hasMatchInTree(subfolder, searchQuery);
+
+            if (!shouldShow) return null;
+
+            return (
+              <Folder
+                folder={subfolder}
+                key={subfolder.id}
+                activeFolder={activeFolder}
+                instanceKey={instanceKey}
+                expandedIds={expandedIds}
+                onFolderClick={onFolderClick}
+                setAllTestCases={setAllTestCases}
+                onToggleFolder={onToggleFolder}
+                searchQuery={searchQuery}
+                ancestorDirectMatch={isDirectMatch || ancestorDirectMatch}
+                index={idx}
+                parentId={folder.id}
+                enableDragAndDrop={enableDragAndDrop}
+                canDropOn={canDropOn}
+              />
+            );
+          })}
         </ul>
       )}
     </li>

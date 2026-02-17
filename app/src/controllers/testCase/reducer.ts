@@ -15,13 +15,14 @@
  */
 
 import { combineReducers } from 'redux';
-import { isEmpty, isNumber } from 'es-toolkit/compat';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
 import { TEST_CASE_LIBRARY_PAGE } from 'controllers/pages';
-import { getStorageItem } from 'common/utils/storageUtils';
+import { getInitialExpandedFolderIds } from 'controllers/utils/folderReducerUtils';
+import { hasPayloadProps } from 'controllers/utils/types';
 import {
   CREATE_FOLDER_SUCCESS,
   CREATE_FOLDERS_BATCH_SUCCESS,
@@ -52,7 +53,6 @@ import { Page } from 'types/common';
 
 import { queueReducers } from 'common/utils';
 import { Folder } from './types';
-import { getExpandedFoldersStorageKey } from './utils/getExpandedFoldersStorageKey';
 import {
   DeleteFolderSuccessParams,
   DeleteTestCaseParams,
@@ -62,21 +62,6 @@ import {
   ToggleFolderExpansionParams,
   UpdateFolderCounterParams,
 } from './actionCreators';
-
-const getInitialExpandedFolderIds = (): number[] => {
-  try {
-    const storageKey = getExpandedFoldersStorageKey(TMS_INSTANCE_KEY.TEST_CASE);
-    const parsed = getStorageItem(storageKey) as number[] | null;
-
-    if (Array.isArray(parsed) && parsed.every(isNumber)) {
-      return parsed;
-    }
-
-    return [];
-  } catch {
-    return [];
-  }
-};
 
 export type InitialStateType = {
   folders: {
@@ -268,14 +253,6 @@ const getFolderAndDescendantIds = (folders: Folder[], folderId: number): number[
   return [folderId, ...descendants];
 };
 
-const hasPayloadProps = <T>(
-  action: { type: string; payload?: unknown },
-  props: string[],
-): action is { type: string; payload: T } =>
-  !!action.payload &&
-  typeof action.payload === 'object' &&
-  props.every((prop) => prop in (action.payload as Record<string, unknown>));
-
 const hasFolderExpansionPayload = (action: {
   type: string;
   payload?: unknown;
@@ -295,7 +272,7 @@ const hasSetExpandedFolderIdsPayload = (action: {
   hasPayloadProps<SetExpandedFolderIdsParams>(action, ['folderIds']);
 
 const expandedFolderIdsReducer = (
-  state = getInitialExpandedFolderIds(),
+  state = getInitialExpandedFolderIds(TMS_INSTANCE_KEY.TEST_CASE),
   action:
     | { type: typeof TOGGLE_FOLDER_EXPANSION; payload: ToggleFolderExpansionParams }
     | { type: typeof EXPAND_FOLDERS_TO_LEVEL; payload: ToggleFolderExpansionParams }

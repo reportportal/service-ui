@@ -55,7 +55,7 @@ export const EmptyTestPlans = () => {
     canCreateTestPlan
       ? [
           {
-            name: formatMessage(commonMessages.createMilestone),
+            name: formatMessage(commonMessages.createTestPlan),
             dataAutomationId: 'createTestPlansButton',
             isCompact: true,
             handleButton: openModal,

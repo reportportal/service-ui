@@ -31,18 +31,28 @@ import {
 import { projectKeySelector } from 'controllers/project';
 import { locationSelector, MANUAL_LAUNCHES_PAGE } from 'controllers/pages';
 import { LocationInfo } from 'controllers/pages/typed-selectors';
-import { Launch } from 'pages/inside/manualLaunchesPage/types';
-import { UrlsHelper } from 'pages/inside/manualLaunchesPage/types';
+import { Launch, UrlsHelper } from 'pages/inside/manualLaunchesPage/types';
+import { Page } from 'types/common';
 
 import {
   GET_MANUAL_LAUNCHES,
   GET_MANUAL_LAUNCH,
+  GET_MANUAL_LAUNCH_FOLDERS,
+  GET_MANUAL_LAUNCH_TEST_CASE_EXECUTIONS,
   MANUAL_LAUNCHES_NAMESPACE,
   ACTIVE_MANUAL_LAUNCH_NAMESPACE,
+  MANUAL_LAUNCH_FOLDERS_NAMESPACE,
+  MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
   defaultManualLaunchesQueryParams,
 } from './constants';
-import { GetManualLaunchesParams, GetManualLaunchParams } from './actionCreators';
-import { Page } from '../../types/common';
+import {
+  GetManualLaunchesParams,
+  GetManualLaunchParams,
+  GetManualLaunchFoldersParams,
+  GetManualLaunchTestCaseExecutionsParams,
+  ManualLaunchFoldersResponse,
+  TestCaseExecutionsResponse,
+} from './types';
 import { manualLaunchContentSelector } from './selectors';
 
 interface GetManualLaunchesAction extends Action<typeof GET_MANUAL_LAUNCHES> {
@@ -63,9 +73,9 @@ function* getManualLaunches(action: GetManualLaunchesAction): Generator {
 
     const params = action.payload
       ? {
-        limit: action.payload.limit,
-        offset: action.payload.offset,
-      }
+          limit: action.payload.limit,
+          offset: action.payload.offset,
+        }
       : defaultManualLaunchesQueryParams;
     const data = (yield call(
       fetch,
@@ -143,6 +153,84 @@ function* getManualLaunch(action: GetManualLaunchAction): Generator {
   }
 }
 
+interface GetManualLaunchFoldersAction extends Action<typeof GET_MANUAL_LAUNCH_FOLDERS> {
+  payload: GetManualLaunchFoldersParams;
+}
+
+function* getManualLaunchFolders(action: GetManualLaunchFoldersAction): Generator {
+  try {
+    const projectKey = (yield select(projectKeySelector)) as string;
+    const { launchId, offset, limit } = action.payload;
+
+    yield put({
+      type: FETCH_START,
+      payload: { projectKey },
+      meta: { namespace: MANUAL_LAUNCH_FOLDERS_NAMESPACE },
+    });
+
+    const typedURLS = URLS as UrlsHelper;
+    const params = { offset, limit };
+    const data = (yield call(
+      fetch,
+      typedURLS.manualLaunchFolders(projectKey, launchId, params),
+    )) as ManualLaunchFoldersResponse;
+
+    yield put(
+      fetchSuccessAction(MANUAL_LAUNCH_FOLDERS_NAMESPACE, {
+        data,
+      }),
+    );
+  } catch (error) {
+    yield put(fetchErrorAction(MANUAL_LAUNCH_FOLDERS_NAMESPACE, error));
+    yield put(
+      showErrorNotification({
+        messageId: 'errorOccurredTryAgain',
+      }),
+    );
+  }
+}
+
+interface GetManualLaunchTestCaseExecutionsAction extends Action<
+  typeof GET_MANUAL_LAUNCH_TEST_CASE_EXECUTIONS
+> {
+  payload: GetManualLaunchTestCaseExecutionsParams;
+}
+
+function* getManualLaunchTestCaseExecutions(
+  action: GetManualLaunchTestCaseExecutionsAction,
+): Generator {
+  try {
+    const projectKey = (yield select(projectKeySelector)) as string;
+    const { launchId, offset, limit } = action.payload;
+
+    yield put({
+      type: FETCH_START,
+      payload: { projectKey },
+      meta: { namespace: MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE },
+    });
+
+    const typedURLS = URLS as UrlsHelper;
+    const params = { offset, limit };
+    const data = (yield call(
+      fetch,
+      typedURLS.manualLaunchTestCaseExecutions(projectKey, launchId, params),
+    )) as TestCaseExecutionsResponse;
+
+    yield put(
+      fetchSuccessAction(MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE, {
+        data,
+      }),
+    );
+  } catch (error) {
+    yield put(fetchErrorAction(MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE, error));
+    yield put(
+      showErrorNotification({
+        messageId: 'errorOccurredTryAgain',
+      }),
+    );
+  }
+}
+
 function* watchGetManualLaunches() {
   yield takeLatest(GET_MANUAL_LAUNCHES, getManualLaunches);
 }
@@ -151,6 +239,19 @@ function* watchGetManualLaunch() {
   yield takeLatest(GET_MANUAL_LAUNCH, getManualLaunch);
 }
 
+function* watchGetManualLaunchFolders() {
+  yield takeLatest(GET_MANUAL_LAUNCH_FOLDERS, getManualLaunchFolders);
+}
+
+function* watchGetManualLaunchTestCaseExecutions() {
+  yield takeLatest(GET_MANUAL_LAUNCH_TEST_CASE_EXECUTIONS, getManualLaunchTestCaseExecutions);
+}
+
 export function* manualLaunchesSagas() {
-  yield all([watchGetManualLaunches(), watchGetManualLaunch()]);
+  yield all([
+    watchGetManualLaunches(),
+    watchGetManualLaunch(),
+    watchGetManualLaunchFolders(),
+    watchGetManualLaunchTestCaseExecutions(),
+  ]);
 }

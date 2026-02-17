@@ -24,6 +24,7 @@ import {
   activeProjectKeySelector,
 } from 'controllers/user';
 import { isTmsEnabled } from 'controllers/appInfo';
+import { getTmsMilestonesOverride } from 'controllers/appInfo/utils';
 import { fetchProjectAction } from 'controllers/project';
 import {
   LOGIN_PAGE,
@@ -142,13 +143,16 @@ import {
 } from 'controllers/testPlan';
 import {
   MANUAL_LAUNCHES_NAMESPACE,
+  MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
   defaultManualLaunchesQueryParams,
   getManualLaunchesAction,
   getManualLaunchAction,
+  getManualLaunchFoldersAction,
+  getManualLaunchTestCaseExecutionsAction,
 } from 'controllers/manualLaunch';
 import { getRouterParams } from 'common/utils';
 
-const redirectRoute = (path, createNewAction, onRedirect = () => { }) => ({
+const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
   path,
   thunk: (dispatch, getState) => {
     const { location } = getState();
@@ -346,6 +350,30 @@ const routesMap = {
 
       if (launchId) {
         dispatch(getManualLaunchAction({ launchId }));
+
+        // Load folders
+        dispatch(
+          getManualLaunchFoldersAction({
+            launchId,
+            offset: 0,
+            limit: 100, // TODO do we need to implement folder click and fetch test executions for certain folder?
+          }),
+        );
+
+        // Load test case executions with pagination from URL
+        const { offset, limit } = getRouterParams({
+          namespace: MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
+          defaultParams: defaultManualLaunchesQueryParams,
+          state,
+        });
+
+        dispatch(
+          getManualLaunchTestCaseExecutionsAction({
+            launchId,
+            offset,
+            limit,
+          }),
+        );
       }
     },
   },
@@ -485,7 +513,7 @@ const routesMap = {
   },
 
   [PROJECT_TEST_PLANS_PAGE]: {
-    path: '/organizations/:organizationSlug/projects/:projectSlug/milestones',
+    path: `/organizations/:organizationSlug/projects/:projectSlug/${getTmsMilestonesOverride() ? 'milestones' : 'testPlans'}`,
     thunk: (dispatch, getState) => {
       const state = getState();
       const { offset, limit } = getRouterParams({
@@ -498,17 +526,20 @@ const routesMap = {
     },
   },
   [PROJECT_TEST_PLAN_DETAILS_PAGE]: {
-    path: '/organizations/:organizationSlug/projects/:projectSlug/milestones/:testPlanId',
+    path: `/organizations/:organizationSlug/projects/:projectSlug/${getTmsMilestonesOverride() ? 'milestones' : 'testPlans'}/:testPlanId/:testPlanRoute*`,
     thunk: (dispatch, getState) => {
       const state = getState();
       const testPlanId = state.location?.payload?.testPlanId;
+      const testPlanRoute = state.location?.payload?.testPlanRoute;
+      const match = testPlanRoute?.match(/folder\/(\d+)/);
+      const folderId = match ? match[1] : null;
       const { offset, limit } = getRouterParams({
         namespace: TEST_PLAN_TEST_CASES_NAMESPACE,
         defaultParams: defaultTestPlanTestCasesQueryParams,
         state,
       });
 
-      dispatch(getTestPlanAction({ testPlanId, offset, limit }));
+      dispatch(getTestPlanAction({ testPlanId, folderId, offset, limit }));
     },
   },
 };

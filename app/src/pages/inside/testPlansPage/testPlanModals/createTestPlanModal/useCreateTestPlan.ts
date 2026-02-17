@@ -41,6 +41,7 @@ export const useCreateTestPlan = () => {
         data: {
           name: payload.name,
           description: payload.description,
+          attributes: payload.attributes,
         },
       });
 

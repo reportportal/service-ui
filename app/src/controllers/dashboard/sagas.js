@@ -37,6 +37,7 @@ import {
 import { provideEcGA } from 'components/main/analytics/utils';
 import { formatEcDashboardData } from 'components/main/analytics/events/common/widgetPages/utils';
 import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
+import { SORTING_KEY } from 'controllers/sorting';
 import {
   ADD_DASHBOARD,
   CHANGE_VISIBILITY_TYPE,
@@ -63,15 +64,17 @@ import { getDashboardNotificationAction, tryParseConfig } from './utils';
 function* fetchDashboards({ payload: params }) {
   const projectKey = yield select(activeProjectKeySelector);
   const query = yield select(querySelector);
+  const mergedParams = { ...query, ...params };
+  const lockedSorting = 'locked,DESC';
+  const queryOptions = { arrayFormat: 'repeat' };
 
-  yield put(
-    fetchDataAction(NAMESPACE)(URLS.dashboards(projectKey), {
-      params: {
-        ...query,
-        ...params,
-      },
-    }),
-  );
+  if (Array.isArray(mergedParams[SORTING_KEY])) {
+    mergedParams[SORTING_KEY] = [lockedSorting, ...mergedParams[SORTING_KEY]];
+  } else {
+    mergedParams[SORTING_KEY] = [lockedSorting, mergedParams[SORTING_KEY]].filter(Boolean);
+  }
+
+  yield put(fetchDataAction(NAMESPACE)(URLS.dashboards(projectKey, mergedParams, queryOptions)));
 }
 
 function* fetchDashboard() {

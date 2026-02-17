@@ -65,10 +65,82 @@
 
     &--search {
       height: 16px;
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      svg path {
+        fill: var(--rp-ui-base-e-300);
+      }
+
+      &:hover:not(:focus-visible, &-has-query, &-panel-open) svg path {
+        fill: var(--rp-ui-base-e-400);
+      }
+
+      &:focus-visible:not(&-has-query, &-panel-open) svg path {
+        fill: var(--rp-ui-base-topaz-hover);
+      }
+
+      &-panel-open:not(&-has-query) {
+        color: var(--rp-ui-base-topaz-pressed);
+        background-color: var(--rp-ui-base-topaz-focused-10);
+
+        svg path {
+          fill: var(--rp-ui-base-topaz-pressed);
+        }
+
+        &:hover:not(:focus-visible) svg path {
+          fill: var(--rp-ui-base-topaz-hover);
+        }
+      }
+
+      &-has-query {
+        svg path {
+          fill: var(--rp-ui-base-topaz-hover);
+        }
+
+        &:hover:not(.expanded-options__sidebar-actions--search-panel-open) svg path {
+          fill: var(--rp-ui-base-topaz-focused);
+        }
+
+        &:focus-visible:not(:hover, .expanded-options__sidebar-actions--search-panel-open)
+          svg
+          path {
+          fill: var(--rp-ui-base-topaz-hover);
+        }
+
+        &.expanded-options__sidebar-actions--search-panel-open {
+          color: var(--rp-ui-base-topaz-pressed);
+          background-color: var(--rp-ui-base-topaz-focused-10);
+
+          svg path {
+            fill: var(--rp-ui-base-topaz-pressed);
+          }
+
+          &:hover:not(:focus-visible) svg path,
+          &:focus-visible svg path {
+            fill: var(--rp-ui-base-topaz-hover);
+          }
+        }
+      }
     }
 
     &--create {
       margin-left: 16px;
+    }
+  }
+
+  &__search-wrapper {
+    padding: 7px 8px;
+    background-color: var(--rp-ui-base-bg-200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    > div {
+      max-width: 312px;
     }
   }
 
@@ -134,6 +206,10 @@
 
   &__sidebar-folders-wrapper {
     height: calc(100% - 112px);
+
+    &--with-search {
+      height: calc(100% - 160px);
+    }
 
     &::after {
       position: absolute;

@@ -17,7 +17,6 @@
 import { useCallback, ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 import { reduxForm, InjectedFormProps } from 'redux-form';
-import { isEmpty } from 'es-toolkit/compat';
 import { Modal } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
@@ -62,6 +61,8 @@ const MoveTestCaseModal = reduxForm<FolderModalFormValues, MoveTestCaseModalProp
   validate: (values) => validateFolderModalForm(values),
 })(({
   dirty,
+  pristine,
+  invalid,
   data: { testCase, selectedTestCaseIds = [], sourceFolderDeltasMap = {}, onClearSelection },
   handleSubmit,
   change,
@@ -70,7 +71,7 @@ const MoveTestCaseModal = reduxForm<FolderModalFormValues, MoveTestCaseModalProp
   const { isLoading, patchTestCase, batchMove } = useTestCase();
   const { currentMode, handleModeChange } = useFolderModalMode({ change });
 
-  const isBatch = !isEmpty(selectedTestCaseIds.length);
+  const isBatch = selectedTestCaseIds.length > 1;
 
   const moveTestCase = useCallback(
     async (values: FolderModalFormValues) => {
@@ -119,18 +120,19 @@ const MoveTestCaseModal = reduxForm<FolderModalFormValues, MoveTestCaseModalProp
   const { okButton, cancelButton, hideModal } = useModalButtons({
     okButtonText: formatMessage(COMMON_LOCALE_KEYS.MOVE),
     isLoading,
+    isSubmitButtonDisabled: pristine || invalid,
     onSubmit: handleSubmit(onSubmit) as VoidFn,
   });
 
   const description = isBatch
     ? formatMessage(messages.moveTestCasesDescription, {
-        count: selectedTestCaseIds.length,
-        b: (text: ReactNode) => <b>{text}</b>,
-      })
+      count: selectedTestCaseIds.length,
+      b: (text: ReactNode) => <b>{text}</b>,
+    })
     : formatMessage(messages.moveTestCaseDescription, {
-        testCaseName: testCase?.name,
-        b: (text: ReactNode) => <b>{text}</b>,
-      });
+      testCaseName: testCase?.name,
+      b: (text: ReactNode) => <b>{text}</b>,
+    });
 
   const excludeFolderIds = testCase?.testFolder?.id ? [testCase.testFolder.id] : [];
 

@@ -232,6 +232,10 @@ export const notificationMessages = defineMessages({
     id: 'TestCaseLibraryPage.testCasesDeletedSuccess',
     defaultMessage: 'Test cases have been deleted successfully.',
   },
+  executionDeletedSuccess: {
+    id: 'ManualLaunchPage.executionDeletedSuccess',
+    defaultMessage: 'Test execution has been deleted successfully.',
+  },
   testCaseDescriptionUpdateSuccess: {
     id: 'TestCaseLibraryPage.testCaseDescriptionUpdateSuccess',
     defaultMessage: 'Test case description has been updated successfully.',
@@ -338,6 +342,15 @@ export const notificationMessages = defineMessages({
   testPlanDeletedSuccess: {
     id: 'TestPlansPage.testPlanDeletedSuccess',
     defaultMessage: 'Test Plan has been deleted successfully.',
+  },
+  manualLaunchDeletedSuccess: {
+    id: 'ManualLaunchesPage.manualLaunchDeletedSuccess',
+    defaultMessage: "Launch ''{name}'' has been deleted successfully.",
+  },
+  manualLaunchesBatchDeletedSuccess: {
+    id: 'ManualLaunchesPage.manualLaunchesBatchDeletedSuccess',
+    defaultMessage:
+      '{count} {count, plural, one {launch has} other {launches have}} been deleted successfully.',
   },
   importSuccessToFolder: {
     id: 'ImportTestCaseModal.importSuccessToFolder',

@@ -124,6 +124,28 @@ export interface ManualLaunchItem {
   executionStatistic: ExecutionStatistic;
 }
 
+export interface ManualLaunchDto {
+  name: string;
+  uuid: string;
+  startTime: string;
+  description: string;
+  testCaseIds: number[];
+  attributes: LaunchAttribute[];
+  mode: string;
+  testPlanId?: number;
+}
+
 export interface UrlsHelper {
   manualLaunchesListPagination: (projectKey: string, query?: Record<string, unknown>) => string;
+  manualLaunchById: (projectKey: string, launchId: string | number) => string;
+  manualLaunchFolders: (
+    projectKey: string,
+    launchId: string | number,
+    query?: Record<string, unknown>,
+  ) => string;
+  manualLaunchTestCaseExecutions: (
+    projectKey: string,
+    launchId: string | number,
+    query?: Record<string, unknown>,
+  ) => string;
 }

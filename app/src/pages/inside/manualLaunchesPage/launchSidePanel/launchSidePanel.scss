@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
+.launch-side-panel-wrapper {
+  z-index: $Z-INDEX-OVERLAY-PANEL;
+}
+
 .launch-side-panel {
   min-width: 560px;
   max-width: 560px;
-  z-index: $Z-INDEX-POPUP;
 
   .content {
     display: flex;
