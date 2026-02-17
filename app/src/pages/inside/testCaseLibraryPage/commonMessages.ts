@@ -102,4 +102,8 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'TestCaseLibraryPage.createSubfolderAction',
     defaultMessage: 'Create subfolder',
   },
+  editScenario: {
+    id: 'TestCaseLibraryPage.editScenario',
+    defaultMessage: 'Edit Scenario',
+  },
 });
