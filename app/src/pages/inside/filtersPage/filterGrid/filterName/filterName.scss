@@ -14,24 +14,18 @@
  * limitations under the License.
  */
 
-.name-container {
+.name-wrapper {
   width: 100%;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  display: inline-block;
 
   &:hover .pencil-icon {
     display: inline-block;
   }
 }
 
-.name-wrapper {
-  display: inline-block;
+.name {
   font-size: 15px;
   line-height: 20px;
-}
-
-.name {
   word-break: break-all;
   vertical-align: middle;
 
@@ -51,10 +45,6 @@
 
 .name-highlight {
   color: $COLOR--fatal;
-}
-
-.pencil-icon-wrapper {
-  vertical-align: middle;
 }
 
 .pencil-icon {
