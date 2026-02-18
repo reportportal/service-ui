@@ -683,7 +683,7 @@
   "EditPersonalInformationModal.namePlaceholder": "Введите имя пользователя",
   "EditWidgetModal.editWidgetSuccess": "Виджет был изменен успешно",
   "EditWidgetModal.headerText": "Редактировать виджет",
-  "EditWidgetModal.lockedWidget": "Виджет заблокирован. Можно изменять только фильтры.",
+  "EditWidgetModal.lockedWidget": "Виджет заблокирован. Могут быть изменены только фильтры.",
   "EmailFormFields.authLabel": "Авторизация",
   "EmailFormFields.fromEmailLabel": "From Email",
   "EmailFormFields.fromNameLabel": "From name",

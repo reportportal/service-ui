@@ -683,7 +683,7 @@
   "EditPersonalInformationModal.namePlaceholder": "Калі ласка, увядзіце імя карыстальніка",
   "EditWidgetModal.editWidgetSuccess": "Віджэт быў зменены паспяхова",
   "EditWidgetModal.headerText": "Рэдагаваць віджэт",
-  "EditWidgetModal.lockedWidget": "Віджэт заблакаваны. Можна змяняць толькі фільтры.",
+  "EditWidgetModal.lockedWidget": "Віджэт заблакіраваны. Могуць быць зменены толькі фільтры.",
   "EmailFormFields.authLabel": "Аўтарызацыя",
   "EmailFormFields.fromEmailLabel": "From Email",
   "EmailFormFields.fromNameLabel": "From name",

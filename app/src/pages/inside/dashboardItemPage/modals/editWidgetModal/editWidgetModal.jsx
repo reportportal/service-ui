@@ -76,7 +76,7 @@ const EditWidgetModalComponent = ({ data: { widget, onConfirm, eventsInfo } }) =
   const dirty = useSelector(isDirty(WIDGET_WIZARD_FORM));
   const valid = useSelector(isValid(WIDGET_WIZARD_FORM));
   const canLock = useCanLockDashboard();
-  const isDisabled = widget?.locked && !canLock;
+  const isLocked = widget?.locked && !canLock;
 
   const widgetInfo = useMemo(
     () => getWidgets(formatMessage).find((item) => item.id === widget.widgetType),
@@ -151,6 +151,7 @@ const EditWidgetModalComponent = ({ data: { widget, onConfirm, eventsInfo } }) =
               levelsCount: getCreatedWidgetLevelsCount(widgetType, submitData),
               isExcludeSkippedTests: getIsExcludeSkipped(widgetType, submitData),
               isEditModal: true,
+              isLocked: isLocked,
             }),
           );
 
@@ -191,6 +192,7 @@ const EditWidgetModalComponent = ({ data: { widget, onConfirm, eventsInfo } }) =
       eventsInfo,
       preprocessOutputData,
       dispatch,
+      isLocked,
     ],
   );
 
@@ -218,7 +220,7 @@ const EditWidgetModalComponent = ({ data: { widget, onConfirm, eventsInfo } }) =
   );
 
   const renderHeaderElements = useCallback(() => {
-    if (!isDisabled) return null;
+    if (!isLocked) return null;
 
     return (
       <div className={cx('locked-widget-hint')}>
@@ -228,7 +230,7 @@ const EditWidgetModalComponent = ({ data: { widget, onConfirm, eventsInfo } }) =
         {formatMessage(messages.lockedWidget)}
       </div>
     );
-  }, [isDisabled, widget.locked, formatMessage]);
+  }, [isLocked, widget.locked, formatMessage]);
 
   const buttonsMessages = {
     cancel: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -272,7 +274,7 @@ const EditWidgetModalComponent = ({ data: { widget, onConfirm, eventsInfo } }) =
           handleFormAppearanceChange={handleFormAppearanceChange}
           buttonsMessages={buttonsMessages}
           eventsInfo={eventsInfo}
-          isMainControlsDisabled={isDisabled}
+          isMainControlsDisabled={isLocked}
         />
       </div>
     </ModalLayout>
