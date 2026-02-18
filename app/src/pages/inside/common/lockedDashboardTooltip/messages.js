@@ -22,4 +22,9 @@ export const messages = defineMessages({
     defaultMessage:
       'This dashboard is locked by a project manager or administrator and cannot be modified',
   },
+  lockedWidget: {
+    id: 'LockedDashboardTooltip.lockedWidget',
+    defaultMessage:
+      'This widget is part of a locked dashboard. Only filter settings can be modified.',
+  },
 });

@@ -62,11 +62,13 @@ export class AttributesFieldArrayControl extends Component {
     getURI: PropTypes.func.isRequired,
     attributeKeyFieldViewLabels: PropTypes.array,
     showRemainingLevels: PropTypes.bool,
+    disabled: PropTypes.bool,
   };
 
   static defaultProps = {
     attributeKeyFieldViewLabels: [],
     showRemainingLevels: false,
+    disabled: false,
   };
 
   constructor(props) {
@@ -93,6 +95,7 @@ export class AttributesFieldArrayControl extends Component {
       maxAttributesAmount,
       attributeKeyFieldViewLabels,
       showRemainingLevels,
+      disabled,
     } = this.props;
     const attributes = this.getAttributes();
     const canAddNewItems = fields.length < maxAttributesAmount;
@@ -103,7 +106,6 @@ export class AttributesFieldArrayControl extends Component {
           const isFirstItem = index === 0;
           return (
             <ModalField
-              // eslint-disable-next-line
               key={item}
               label={formatMessage(messages.attributeKeyFieldLabel, {
                 number: index + 1,
@@ -112,7 +114,7 @@ export class AttributesFieldArrayControl extends Component {
               labelWidth={FIELD_LABEL_WIDTH}
               className={cx('attribute-modal-field')}
             >
-              <div className={cx({ 'attr-selector': !isFirstItem })}>
+              <div className={cx({ 'attr-selector': !isFirstItem && !disabled })}>
                 <FieldProvider name={item} validate={fieldValidator(attributes)}>
                   <FieldErrorHint hintType="top">
                     <AsyncAutocomplete
@@ -121,11 +123,12 @@ export class AttributesFieldArrayControl extends Component {
                       placeholder={formatMessage(messages.attributeKeyFieldPlaceholder)}
                       creatable
                       filterOption={this.filterAttribute}
+                      disabled={disabled}
                     />
                   </FieldErrorHint>
                 </FieldProvider>
               </div>
-              {!isFirstItem && (
+              {!isFirstItem && !disabled && (
                 <span
                   className={cx('remove-icon')}
                   onClick={() => {
@@ -139,7 +142,7 @@ export class AttributesFieldArrayControl extends Component {
             </ModalField>
           );
         })}
-        {canAddNewItems ? (
+        {canAddNewItems && !disabled ? (
           <ModalField label=" " labelWidth={FIELD_LABEL_WIDTH}>
             <div
               className={cx('add-level')}

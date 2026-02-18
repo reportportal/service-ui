@@ -76,6 +76,11 @@ export class MostFailedTestCasesTableControls extends Component {
     widgetSettings: PropTypes.object.isRequired,
     activeProject: PropTypes.string.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,
+    isMainControlsDisabled: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    isMainControlsDisabled: false,
   };
 
   constructor(props) {
@@ -111,6 +116,7 @@ export class MostFailedTestCasesTableControls extends Component {
     const {
       intl: { formatMessage },
       activeProject,
+      isMainControlsDisabled,
     } = this.props;
 
     return (
@@ -123,6 +129,7 @@ export class MostFailedTestCasesTableControls extends Component {
           <DropdownControl
             fieldLabel={formatMessage(messages.CriteriaFieldLabel)}
             options={this.criteria}
+            disabled={isMainControlsDisabled}
           />
         </FieldProvider>
         <FieldProvider
@@ -135,6 +142,7 @@ export class MostFailedTestCasesTableControls extends Component {
             fieldLabel={formatMessage(messages.ItemsFieldLabel)}
             inputWidth={ITEMS_INPUT_WIDTH}
             maxLength="3"
+            disabled={isMainControlsDisabled}
           />
         </FieldProvider>
         <FieldProvider
@@ -147,12 +155,14 @@ export class MostFailedTestCasesTableControls extends Component {
             minLength={3}
             maxLength={256}
             getURI={URLS.launchNameSearch(activeProject)}
+            disabled={isMainControlsDisabled}
           />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.includeMethods">
           <CheckboxControl
             fieldLabel=" "
             text={formatMessage(messages.IncludeMethodsControlText)}
+            disabled={isMainControlsDisabled}
           />
         </FieldProvider>
       </Fragment>

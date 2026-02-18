@@ -73,10 +73,12 @@ export class MostPopularPatternsControls extends Component {
     onFormAppearanceChange: PropTypes.func.isRequired,
     activeProject: PropTypes.string.isRequired,
     eventsInfo: PropTypes.object,
+    isMainControlsDisabled: PropTypes.bool,
   };
 
   static defaultProps = {
     eventsInfo: {},
+    isMainControlsDisabled: false,
   };
 
   constructor(props) {
@@ -100,7 +102,14 @@ export class MostPopularPatternsControls extends Component {
   formatFilterValue = (value) => value?.[0];
   parseFilterValue = (value) => value && [value];
   render() {
-    const { intl, formAppearance, onFormAppearanceChange, activeProject, eventsInfo } = this.props;
+    const {
+      intl,
+      formAppearance,
+      onFormAppearanceChange,
+      activeProject,
+      eventsInfo,
+      isMainControlsDisabled,
+    } = this.props;
     return (
       <Fragment>
         <FieldProvider name="filters" parse={this.parseFilterValue} format={this.formatFilterValue}>
@@ -117,6 +126,7 @@ export class MostPopularPatternsControls extends Component {
               [CHART_MODES.ALL_LAUNCHES, CHART_MODES.LATEST_LAUNCHES],
               intl.formatMessage,
             )}
+            disabled={isMainControlsDisabled}
           />
         </FieldProvider>
         <FieldProvider
@@ -132,6 +142,7 @@ export class MostPopularPatternsControls extends Component {
             inputWidth={ITEMS_INPUT_WIDTH}
             maxLength="3"
             hintType={'top-right'}
+            disabled={isMainControlsDisabled}
           />
         </FieldProvider>
         <ModalField
@@ -150,6 +161,7 @@ export class MostPopularPatternsControls extends Component {
                 minLength={1}
                 creatable
                 placeholder={intl.formatMessage(messages.attributeKeyFieldPlaceholder)}
+                disabled={isMainControlsDisabled}
               />
             </FieldErrorHint>
           </FieldProvider>
