@@ -21,6 +21,7 @@ import { TreeSortableItem } from '@reportportal/ui-kit/sortable';
 
 import { createClassnames } from 'common/utils';
 import { PopoverControl } from 'pages/common/popoverControl';
+import { TransformedFolder } from 'controllers/testCase';
 
 import { highlightText, hasMatchInTree, hasChildMatch } from '../utils';
 import { FolderProps } from './types';

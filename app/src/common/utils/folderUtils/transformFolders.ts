@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { isEmpty } from 'es-toolkit/compat';
+import { isEmpty, isNil } from 'es-toolkit/compat';
 
 export interface BaseFolder {
   id: number;
@@ -22,6 +22,7 @@ export interface BaseFolder {
   description?: string;
   countOfTestCases?: number;
   parentFolderId?: number | null;
+  index?: number;
 }
 
 export interface TransformedFolder {
@@ -30,6 +31,7 @@ export interface TransformedFolder {
   description?: string;
   testsCount: number;
   parentFolderId: number | null;
+  index?: number;
   folders: TransformedFolder[];
 }
 
@@ -53,6 +55,7 @@ export const transformFoldersToDisplay = (folders: BaseFolder[]): TransformedFol
       description: folder.description,
       id: folder.id,
       parentFolderId: folder.parentFolderId ?? null,
+      index: folder.index,
       folders: [],
     });
   });
@@ -68,7 +71,28 @@ export const transformFoldersToDisplay = (folders: BaseFolder[]): TransformedFol
     }
   });
 
-  return folderMap.get(null)?.folders || [];
+  // Recursively sort folders by index at each level
+  const sortFolders = (folders: TransformedFolder[]): TransformedFolder[] => {
+    return folders
+      .sort((a, b) => {
+        if (!isNil(a.index) && !isNil(b.index)) {
+          return a.index - b.index;
+        }
+
+        if (!isNil(a.index)) return -1;
+
+        if (!isNil(b.index)) return 1;
+
+        return 0;
+      })
+      .map((folder) => ({
+        ...folder,
+        folders: sortFolders(folder.folders),
+      }));
+  };
+
+  const rootFolders = folderMap.get(null)?.folders || [];
+  return sortFolders(rootFolders);
 };
 
 /**

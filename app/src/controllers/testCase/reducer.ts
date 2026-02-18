@@ -15,7 +15,7 @@
  */
 
 import { combineReducers } from 'redux';
-import { isEmpty } from 'es-toolkit/compat';
+import { isEmpty, isNil } from 'es-toolkit/compat';
 
 import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { fetchReducer } from 'controllers/fetch';
@@ -198,7 +198,11 @@ const folderReducer = (state = INITIAL_STATE.folders.data, action: FolderAction)
           return folder;
         }
 
-        return { ...folder, parentFolderId: action.payload.parentTestFolderId };
+        return {
+          ...folder,
+          parentFolderId: action.payload.parentTestFolderId,
+          ...(!isNil(action.payload.index) && { index: action.payload.index }),
+        };
       });
     }
     case CREATE_FOLDER_SUCCESS: {

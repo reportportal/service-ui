@@ -16,55 +16,98 @@
 
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { isEmpty } from 'es-toolkit/compat';
+import { isEmpty, isNil, isUndefined } from 'es-toolkit/compat';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { projectKeySelector } from 'controllers/project';
-import { hideModalAction } from 'controllers/modal';
 import { createFoldersBatchSuccessAction } from 'controllers/testCase/actionCreators';
-import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { Folder } from 'controllers/testCase/types';
 import { fetchAllFolders } from 'controllers/testCase/utils/fetchAllFolders';
 
 import { useFolderActions } from '../../../hooks/useFolderActions';
 import { useNavigateToFolder } from '../../../hooks/useNavigateToFolder';
+import { useFolderOperationUI } from '../../../hooks/useFolderOperationUI';
+import type { MoveFolderResponse } from '../moveFolderModal/types';
 
 export const useDuplicateFolder = () => {
-  const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
+  const {
+    isLoading,
+    handleOperationStart,
+    handleOperationSuccess,
+    handleOperationError,
+    showErrorNotification,
+  } = useFolderOperationUI();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const { createNewStoreFolder } = useFolderActions();
   const { navigateToFolderAfterAction } = useNavigateToFolder();
-  const { showSuccessNotification, showErrorNotification } = useNotification();
 
   const duplicateFolder = useCallback(
     async ({
       folderId,
       folderName,
       parentFolderId,
+      index,
+      fromDragDrop,
     }: {
       folderId: number;
       folderName: string;
-      parentFolderId?: number;
+      parentFolderId?: number | null;
+      index?: number;
+      fromDragDrop?: boolean;
     }) => {
-      showSpinner();
+      const isDragDropOperation = Boolean(fromDragDrop);
+      handleOperationStart({ fromDragDrop: isDragDropOperation });
 
       let duplicatedFolder: Folder;
 
       try {
+        const data: { name: string; parentTestFolderId?: number; index?: number } = {
+          name: folderName,
+          index,
+        };
+
+        if (!isNil(parentFolderId)) {
+          data.parentTestFolderId = parentFolderId;
+        }
+
         duplicatedFolder = await fetch<Folder>(URLS.testFolderDuplicate(projectKey, folderId), {
           method: 'POST',
-          data: {
-            name: folderName,
-            ...(parentFolderId ? { parentTestFolderId: parentFolderId } : {}),
-          },
+          data,
         });
+
+        // TODO Backend doesn't support index in duplicate API, need to move folder to correct position - change this when backend is fixed
+        if (isDragDropOperation && !isUndefined(index)) {
+          try {
+            let moveData: { parentTestFolder?: object; parentTestFolderId?: number; index: number };
+            if (parentFolderId === null) {
+              moveData = { parentTestFolder: {}, index };
+            } else if (!isUndefined(parentFolderId)) {
+              moveData = { parentTestFolderId: parentFolderId, index };
+            } else {
+              moveData = { index };
+            }
+
+            const moveResponse = await fetch<MoveFolderResponse>(
+              URLS.folder(projectKey, duplicatedFolder.id),
+              {
+                method: 'PATCH',
+                data: moveData,
+              },
+            );
+
+            // Update duplicatedFolder with correct index from move response
+            duplicatedFolder.index = moveResponse.index;
+          } catch {
+            // TODO Continue anyway, folder is created even if position is wrong - delete this when backend is fixed
+          }
+        }
       } catch {
         showErrorNotification({
           messageId: 'errorOccurredTryAgain',
         });
-        hideSpinner();
+        handleOperationError({ fromDragDrop: isDragDropOperation });
 
         return;
       }
@@ -74,6 +117,12 @@ export const useDuplicateFolder = () => {
         folderName: duplicatedFolder.name,
         parentFolderId: duplicatedFolder.parentFolderId,
         countOfTestCases: duplicatedFolder.countOfTestCases,
+        index: duplicatedFolder.index,
+      });
+
+      handleOperationSuccess({
+        fromDragDrop: isDragDropOperation,
+        successMessageId: 'testCaseFolderDuplicatedSuccess',
       });
 
       try {
@@ -86,11 +135,8 @@ export const useDuplicateFolder = () => {
           dispatch(createFoldersBatchSuccessAction(subfolders));
         }
       } catch {
-        hideSpinner();
+        handleOperationError({ fromDragDrop: isDragDropOperation });
       }
-
-      dispatch(hideModalAction());
-      showSuccessNotification({ messageId: 'testCaseFolderDuplicatedSuccess' });
 
       navigateToFolderAfterAction({
         targetFolderId: duplicatedFolder.id,
@@ -99,17 +145,15 @@ export const useDuplicateFolder = () => {
           parentTestFolderId: duplicatedFolder.parentFolderId,
         },
       });
-
-      hideSpinner();
     },
     [
       projectKey,
       dispatch,
-      showSpinner,
-      hideSpinner,
+      handleOperationStart,
+      handleOperationSuccess,
+      handleOperationError,
       createNewStoreFolder,
       navigateToFolderAfterAction,
-      showSuccessNotification,
       showErrorNotification,
     ],
   );

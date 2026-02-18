@@ -18,8 +18,6 @@ import { useEffect, useMemo, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, PlusIcon } from '@reportportal/ui-kit';
-import type { TreeDragItem, TreeDropPosition } from '@reportportal/ui-kit/common';
-import { TREE_DROP_POSITIONS } from '@reportportal/ui-kit/common';
 
 import { createClassnames, getStorageItem } from 'common/utils';
 import {
@@ -57,6 +55,7 @@ import { AllTestCasesPage } from '../allTestCasesPage';
 import { useNavigateToFolder } from '../hooks/useNavigateToFolder';
 import { useMoveFolder } from './modals/moveFolderModal/useMoveFolder';
 import { useDuplicateFolder } from './modals/duplicateFolderModal/useDuplicateFolder';
+import { useFolderDragDrop } from './useFolderDragDrop';
 
 import styles from './testCaseFolders.scss';
 
@@ -156,89 +155,11 @@ export const TestCaseFolders = () => {
       </Button>
     ) : null;
 
-  const handleMoveFolder = useCallback(
-    (draggedItem: TreeDragItem, targetId: string | number, position: TreeDropPosition) => {
-      const draggedFolderId = Number(draggedItem.id);
-      const targetFolderId = Number(targetId);
-
-      // Determine the parent folder based on drop position
-      let parentTestFolderId: number | null | undefined;
-
-      if (position === TREE_DROP_POSITIONS.INSIDE) {
-        // Dropped inside target folder
-        parentTestFolderId = targetFolderId;
-      } else {
-        // Dropped before/after target folder - use target folder's parent
-        const targetFolder = initialFolders.find((f) => f.id === targetFolderId);
-
-        if (!targetFolder) {
-          parentTestFolderId = undefined;
-        } else if ('parentFolderId' in targetFolder) {
-          // Target has parentFolderId property - use it (could be null or a number)
-          parentTestFolderId = targetFolder.parentFolderId;
-        } else {
-          // Target doesn't have parentFolderId property - it's a root level folder
-          parentTestFolderId = null;
-        }
-      }
-
-      // Check if this is just a reorder within the same parent (not supported by backend)
-      const draggedFolder = initialFolders.find((f) => f.id === draggedFolderId);
-      const draggedParentId = draggedFolder?.parentFolderId ?? null;
-
-      if (draggedParentId === parentTestFolderId && position !== TREE_DROP_POSITIONS.INSIDE) {
-        // Same parent, just reordering - backend doesn't support this
-        console.warn(
-          'Folder reordering within the same parent is not supported by the backend API',
-        );
-        return;
-      }
-
-      void moveFolder({
-        folderId: draggedFolderId,
-        parentTestFolderId,
-      });
-    },
-    [moveFolder, initialFolders],
-  );
-
-  const handleDuplicateFolder = useCallback(
-    (draggedItem: TreeDragItem, targetId: string | number, position: TreeDropPosition) => {
-      const draggedFolderId = Number(draggedItem.id);
-      const targetFolderId = Number(targetId);
-      const draggedFolderData = initialFolders.find((f) => f.id === draggedFolderId);
-
-      if (!draggedFolderData) return;
-
-      // Determine the parent folder based on drop position
-      let parentFolderId: number | null | undefined;
-
-      if (position === TREE_DROP_POSITIONS.INSIDE) {
-        // Dropped inside target folder
-        parentFolderId = targetFolderId;
-      } else {
-        // Dropped before/after target folder - use target folder's parent
-        const targetFolder = initialFolders.find((f) => f.id === targetFolderId);
-
-        if (!targetFolder) {
-          parentFolderId = undefined;
-        } else if ('parentFolderId' in targetFolder) {
-          // Target has parentFolderId property - use it (could be null or a number)
-          parentFolderId = targetFolder.parentFolderId;
-        } else {
-          // Target doesn't have parentFolderId property - it's a root level folder
-          parentFolderId = null;
-        }
-      }
-
-      void duplicateFolder({
-        folderId: draggedFolderId,
-        folderName: `${draggedFolderData.name} (Copy)`,
-        parentFolderId,
-      });
-    },
-    [duplicateFolder, initialFolders],
-  );
+  const { handleMoveFolder, handleDuplicateFolder } = useFolderDragDrop({
+    folders: initialFolders,
+    onMove: (params) => void moveFolder(params),
+    onDuplicate: (params) => void duplicateFolder(params),
+  });
 
   return (
     <ExpandedOptions

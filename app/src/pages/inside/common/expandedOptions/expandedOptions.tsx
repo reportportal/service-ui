@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { ReactNode, useCallback } from 'react';
-import { defineMessages, useIntl } from 'react-intl';
+import { useCallback } from 'react';
+import { useIntl } from 'react-intl';
 import { useDrop } from 'react-dnd';
 import Parser from 'html-react-parser';
 import {
@@ -164,9 +164,7 @@ export const ExpandedOptions = ({
               })}
               onClick={setAllTestCases}
             >
-              <span className={cx('sidebar-header__title--text')}>
-                {formatMessage(messages.allTestCases)}
-              </span>
+              <span className={cx('sidebar-header__title--text')}>{allItemsTitle}</span>
               <span className={cx('sidebar-header__title--counter')}>
                 {totalTestCases.toLocaleString()}
               </span>
@@ -202,9 +200,10 @@ export const ExpandedOptions = ({
               />
             </div>
           )}
-          <div className={cx('expanded-options__sidebar-folders-wrapper', {
-            'expanded-options__sidebar-folders-wrapper--with-search': isSearchVisible,
-          })}
+          <div
+            className={cx('expanded-options__sidebar-folders-wrapper', {
+              'expanded-options__sidebar-folders-wrapper--with-search': isSearchVisible,
+            })}
           >
             <ScrollWrapper className={cx('expanded-options__scroll-wrapper-background')}>
               <div
@@ -245,6 +244,10 @@ export const ExpandedOptions = ({
                         setAllTestCases={setAllTestCases}
                         onToggleFolder={handleToggleFolder}
                         searchQuery={searchQuery}
+                        index={idx}
+                        parentId={null}
+                        enableDragAndDrop={isDragAndDropEnabled}
+                        canDropOn={canDropOn}
                       />
                     ))
                   ) : (

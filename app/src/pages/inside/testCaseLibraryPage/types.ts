@@ -140,7 +140,7 @@ export interface ExtendedTestCase extends TestCase {
 export interface ActionButton {
   name: string;
   dataAutomationId: string;
-  icon?: FC<SVGProps<SVGSVGElement>>;
+  icon?: FC<SVGProps<SVGSVGElement>> | string;
   isCompact: boolean;
   variant?: string;
   handleButton: () => void;
