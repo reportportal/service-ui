@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,21 +17,28 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  addToLaunch: {
-    id: 'TestPlanDetailsPage.addToLaunch',
-    defaultMessage: 'Add to Launch',
+  testLibrary: {
+    id: 'TestLibrarySidePanel.testLibrary',
+    defaultMessage: 'Test Library',
   },
-  testPlanNotFoundRedirect: {
-    id: 'TestPlanDetailsPage.testPlanNotFoundRedirect',
-    defaultMessage:
-      "The item you are trying to access may have been deleted or doesn't exist. You have been redirected to Test Plans.",
+  hideAdded: {
+    id: 'TestLibrarySidePanel.hideAdded',
+    defaultMessage: 'Hide added',
   },
-  testPlanId: {
-    id: 'TestPlanDetailsPage.testPlanId',
-    defaultMessage: 'Test Plan ID: {testPlanId}',
+  clear: {
+    id: 'TestLibrarySidePanel.clear',
+    defaultMessage: 'Clear',
   },
-  testCasesAddedSuccess: {
-    id: 'TestPlanDetailsPage.testCasesAddedSuccess',
-    defaultMessage: '{count, plural, one {Test case added successfully} other {# test cases added successfully}}',
+  addAndCreateLaunch: {
+    id: 'TestLibrarySidePanel.addAndCreateLaunch',
+    defaultMessage: 'Add & Create Launch',
+  },
+  addToTestPlan: {
+    id: 'TestLibrarySidePanel.addToTestPlan',
+    defaultMessage: 'Add to Test Plan',
+  },
+  selected: {
+    id: 'TestLibrarySidePanel.selected',
+    defaultMessage: 'selected',
   },
 });
