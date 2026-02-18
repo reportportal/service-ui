@@ -93,6 +93,7 @@ export const AllTestCasesPage = ({
   const { openModal: openAddToLaunchModal } = useAddToLaunchModal({
     selectedTestCasesIds: selectedRowIds,
     onClearSelection,
+    isUncoveredTestsCheckboxAvailable: false,
   });
   const { openModal: openBatchDuplicateToFolderModal } = useBatchDuplicateToFolderModal();
   const { openModal: openBatchDeleteTestCasesModal } = useBatchDeleteTestCasesModal();
