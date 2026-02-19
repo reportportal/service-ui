@@ -72,7 +72,6 @@ const AddToLaunchModalComponent = ({
       modalTitle={formatMessage(messages.addToLaunch)}
       okButtonText={COMMON_LOCALE_KEYS.ADD}
       description={descriptionText}
-      isTestPlanFieldDisabled={false}
       className={cx('add-to-launch-modal')}
       onClearSelection={onClearSelection}
       isUncoveredTestsCheckboxAvailable={isUncoveredTestsCheckboxAvailable}
