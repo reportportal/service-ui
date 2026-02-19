@@ -57,6 +57,11 @@ const RemoveTestCasesFromTestPlanModal = ({ data }: RemoveTestCasesFromTestPlanM
     removeTestCasesFromTestPlan(selectedTestCaseIds).catch(noop);
   }, [removeTestCasesFromTestPlan, selectedTestCaseIds]);
 
+  const renderBoldText = useCallback(
+    (text: ReactNode) => <BoldText className={cx('remove-modal__text--bold')}>{text}</BoldText>,
+    [],
+  );
+
   const { okButton, cancelButton, hideModal } = useModalButtons({
     okButtonText: formatMessage(COMMON_LOCALE_KEYS.REMOVE),
     isLoading,
@@ -76,7 +81,7 @@ const RemoveTestCasesFromTestPlanModal = ({ data }: RemoveTestCasesFromTestPlanM
         {formatMessage(messages.removeFromTestPlanDescription, {
           count: selectedTestCaseIds.length,
           testPlanName: testPlan?.name || '',
-          b: (text) => <BoldText className={cx('remove-modal__text--bold')}>{text}</BoldText>,
+          b: renderBoldText,
         })}
         <ModalLoadingOverlay isVisible={isLoading} />
       </div>
