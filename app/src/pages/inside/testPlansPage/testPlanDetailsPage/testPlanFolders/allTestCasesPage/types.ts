@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-export * from './testPlanModal';
-export * from './createTestPlanModal';
-export * from './editTestPlanModal';
-export * from './duplicateTestPlanModal';
-export * from './deleteTestPlanModal';
-export * from './createLaunchModal';
-export * from './removeTestCasesFromTestPlanModal';
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
+import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+
+export interface AllTestCasesPageProps {
+  testCases: ExtendedTestCase[];
+  loading: boolean;
+  instanceKey: TMS_INSTANCE_KEY;
+  folderName?: string;
+}
