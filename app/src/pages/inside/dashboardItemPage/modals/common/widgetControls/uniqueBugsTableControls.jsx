@@ -44,10 +44,12 @@ export class UniqueBugsTableControls extends Component {
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
     eventsInfo: PropTypes.object,
+    isMainControlsDisabled: PropTypes.bool,
   };
 
   static defaultProps = {
     eventsInfo: {},
+    isMainControlsDisabled: false,
   };
 
   constructor(props) {
@@ -74,6 +76,7 @@ export class UniqueBugsTableControls extends Component {
       formAppearance,
       onFormAppearanceChange,
       eventsInfo,
+      isMainControlsDisabled,
     } = this.props;
 
     return (
@@ -100,6 +103,7 @@ export class UniqueBugsTableControls extends Component {
                 inputWidth={ITEMS_INPUT_WIDTH}
                 maxLength="3"
                 hintType={'top-right'}
+                disabled={isMainControlsDisabled}
               />
             </FieldProvider>
             <FieldProvider name="contentParameters.widgetOptions.latest">
@@ -109,6 +113,7 @@ export class UniqueBugsTableControls extends Component {
                   [CHART_MODES.ALL_LAUNCHES, CHART_MODES.LATEST_LAUNCHES],
                   formatMessage,
                 )}
+                disabled={isMainControlsDisabled}
               />
             </FieldProvider>
           </Fragment>

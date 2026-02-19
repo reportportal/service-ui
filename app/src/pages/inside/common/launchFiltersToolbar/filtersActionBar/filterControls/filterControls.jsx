@@ -23,7 +23,6 @@ import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import CloneIcon from 'common/img/clone-inline.svg';
 import DiscardIcon from 'common/img/discard-inline.svg';
 import SaveIcon from 'common/img/save-inline.svg';
-import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardTooltip';
 import styles from './filterControls.scss';
 
 const cx = classNames.bind(styles);
@@ -33,7 +32,6 @@ export const FilterControls = ({
   cloneDisabled,
   editDisabled,
   saveDisabled,
-  isFilterLocked,
   onDiscard,
   onClone,
   onEdit,
@@ -54,18 +52,14 @@ export const FilterControls = ({
         </GhostButton>
       </div>
       <div className={cx('control-button')}>
-        <LockedDashboardTooltip locked={isFilterLocked} variant="filter">
-          <GhostButton icon={PencilIcon} disabled={editDisabled} onClick={onEdit}>
-            {formatMessage(COMMON_LOCALE_KEYS.EDIT)}
-          </GhostButton>
-        </LockedDashboardTooltip>
+        <GhostButton icon={PencilIcon} disabled={editDisabled} onClick={onEdit}>
+          {formatMessage(COMMON_LOCALE_KEYS.EDIT)}
+        </GhostButton>
       </div>
       <div className={cx('control-button')}>
-        <LockedDashboardTooltip locked={isFilterLocked} variant="filter">
-          <GhostButton icon={SaveIcon} disabled={saveDisabled} onClick={onSave}>
-            {formatMessage(COMMON_LOCALE_KEYS.SAVE)}
-          </GhostButton>
-        </LockedDashboardTooltip>
+        <GhostButton icon={SaveIcon} disabled={saveDisabled} onClick={onSave}>
+          {formatMessage(COMMON_LOCALE_KEYS.SAVE)}
+        </GhostButton>
       </div>
     </div>
   );
@@ -76,7 +70,6 @@ FilterControls.propTypes = {
   cloneDisabled: PropTypes.bool,
   editDisabled: PropTypes.bool,
   saveDisabled: PropTypes.bool,
-  isFilterLocked: PropTypes.bool,
   onChangeSorting: PropTypes.func.isRequired,
   onDiscard: PropTypes.func.isRequired,
   onClone: PropTypes.func.isRequired,
@@ -85,7 +78,6 @@ FilterControls.propTypes = {
 };
 FilterControls.defaultProps = {
   discardDisabled: false,
-  isFilterLocked: false,
   cloneDisabled: false,
   editDisabled: false,
   saveDisabled: false,

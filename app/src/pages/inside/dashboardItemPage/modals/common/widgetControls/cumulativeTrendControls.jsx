@@ -106,10 +106,12 @@ export class CumulativeTrendControls extends Component {
     onFormAppearanceChange: PropTypes.func.isRequired,
     activeProject: PropTypes.string.isRequired,
     eventsInfo: PropTypes.object,
+    isMainControlsDisabled: PropTypes.bool,
   };
 
   static defaultProps = {
     eventsInfo: {},
+    isMainControlsDisabled: false,
   };
 
   constructor(props) {
@@ -170,6 +172,7 @@ export class CumulativeTrendControls extends Component {
         this.props.intl.formatMessage(messages.attributeKeyFieldLabelOverview),
         this.props.intl.formatMessage(messages.attributeKeyFieldLabelDetailedView),
       ]}
+      disabled={this.props.isMainControlsDisabled}
     />
   );
 
@@ -179,6 +182,7 @@ export class CumulativeTrendControls extends Component {
       formAppearance,
       onFormAppearanceChange,
       eventsInfo,
+      isMainControlsDisabled,
     } = this.props;
 
     return (
@@ -206,6 +210,7 @@ export class CumulativeTrendControls extends Component {
                 inputWidth={ITEMS_INPUT_WIDTH}
                 maxLength="6"
                 hintType={'top-right'}
+                disabled={isMainControlsDisabled}
               />
             </FieldProvider>
 

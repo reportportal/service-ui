@@ -22,9 +22,6 @@ import DOMPurify from 'dompurify';
 import Link from 'redux-first-router-link';
 import { Icon } from 'components/main/icon';
 import { MarkdownViewer } from 'components/main/markdown';
-import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardTooltip';
-import { LockedIcon } from 'pages/inside/common/lockedIcon';
-import { useCanLockDashboard } from 'common/hooks';
 import styles from './filterName.scss';
 
 const cx = classNames.bind(styles);
@@ -58,9 +55,6 @@ export const FilterName = ({
   isLink,
   nameLink,
 }) => {
-  const canLock = useCanLockDashboard();
-  const isDisabled = filter.locked && !canLock;
-
   const getHighlightName = () => {
     const name = filter.name || '';
 
@@ -76,40 +70,22 @@ export const FilterName = ({
 
   return (
     <Fragment>
-      <div className={cx('name-container')}>
-        {filter.locked && (
-          <LockedDashboardTooltip locked={filter.locked} variant="filter" itemId={filter.id}>
-            <LockedIcon />
-          </LockedDashboardTooltip>
+      <span className={cx('name-wrapper')}>
+        <NameLink link={nameLink}>
+          <span
+            className={cx('name', {
+              bold: isBold,
+              link: isLink || userFilters.find((item) => item.id === filter.id),
+            })}
+            onClick={() => onClickName(filter)}
+          >
+            {Parser(DOMPurify.sanitize(getHighlightName()))}
+          </span>
+        </NameLink>
+        {editable && onEdit && (
+          <Icon type="icon-pencil" onClick={() => onEdit(filter)} className={cx('pencil-icon')} />
         )}
-        <span className={cx('name-wrapper')}>
-          <NameLink link={nameLink}>
-            <span
-              className={cx('name', {
-                bold: isBold,
-                link: isLink || userFilters.find((item) => item.id === filter.id),
-              })}
-              onClick={() => onClickName(filter)}
-            >
-              {Parser(DOMPurify.sanitize(getHighlightName()))}
-            </span>
-          </NameLink>
-          {editable && onEdit && (
-            <LockedDashboardTooltip
-              locked={filter.locked}
-              variant="filter"
-              wrapperClassName={cx('pencil-icon-wrapper')}
-            >
-              <Icon
-                type="icon-pencil"
-                onClick={() => onEdit(filter)}
-                disabled={isDisabled}
-                className={cx('pencil-icon')}
-              />
-            </LockedDashboardTooltip>
-          )}
-        </span>
-      </div>
+      </span>
       {showDesc && <MarkdownViewer value={filter.description} />}
     </Fragment>
   );

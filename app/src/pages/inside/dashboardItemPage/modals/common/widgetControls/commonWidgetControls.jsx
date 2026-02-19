@@ -73,6 +73,7 @@ export class CommonWidgetControls extends Component {
     trackEvent: PropTypes.func,
     dashboards: PropTypes.arrayOf(PropTypes.object),
     activeDashboard: PropTypes.object,
+    isMainControlsDisabled: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -83,6 +84,7 @@ export class CommonWidgetControls extends Component {
     dashboards: [],
     activeDashboard: {},
     intl: {},
+    isMainControlsDisabled: false,
   };
 
   constructor(props) {
@@ -103,6 +105,7 @@ export class CommonWidgetControls extends Component {
       eventsInfo,
       dashboards,
       activeDashboard: { widgets = [] },
+      isMainControlsDisabled,
     } = this.props;
 
     return (
@@ -115,7 +118,7 @@ export class CommonWidgetControls extends Component {
             onChange={() => trackEvent(eventsInfo.changeName)}
           >
             <FieldErrorHint>
-              <Input maxLength="128" />
+              <Input maxLength="128" disabled={isMainControlsDisabled} />
             </FieldErrorHint>
           </FieldProvider>
         </ModalField>
@@ -126,7 +129,7 @@ export class CommonWidgetControls extends Component {
             placeholder={formatMessage(messages.descriptionPlaceholder)}
             onChange={() => trackEvent(eventsInfo.changeDescription)}
           >
-            <InputTextArea />
+            <InputTextArea disabled={isMainControlsDisabled} />
           </FieldProvider>
         </ModalField>
         {this.isShowDashboardsList() && (

@@ -19,13 +19,13 @@
   max-width: fit-content;
 }
 
-.content {
-  max-width: 200px;
-  text-align: center;
+.locked-tooltip {
+  max-width: 220px;
 }
 
 .locked-tooltip-content {
   font-family: $FONT-ROBOTO-REGULAR;
   font-size: 11px;
   line-height: 16px;
+  text-align: center;
 }

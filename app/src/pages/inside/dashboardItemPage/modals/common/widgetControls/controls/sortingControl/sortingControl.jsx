@@ -55,6 +55,7 @@ export class SortingControl extends Component {
     sortingColumn: PropTypes.string,
     sortingDirection: PropTypes.bool,
     onChange: PropTypes.func,
+    disabled: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -62,6 +63,7 @@ export class SortingControl extends Component {
     sortingColumn: null,
     sortingDirection: true,
     onChange: () => {},
+    disabled: false,
   };
 
   getSortOptions = () => [
@@ -88,7 +90,7 @@ export class SortingControl extends Component {
   ];
 
   render() {
-    const { intl, onChange, sortingColumn, sortingDirection } = this.props;
+    const { intl, onChange, sortingColumn, sortingDirection, disabled } = this.props;
 
     return (
       <div className={cx('sorting-block')}>
@@ -99,6 +101,8 @@ export class SortingControl extends Component {
           onChange={onChange}
           sortingMode={sortingDirection}
           positionTop
+          transparent
+          disabled={disabled}
         />
       </div>
     );

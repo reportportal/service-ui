@@ -64,7 +64,7 @@ export const WidgetHeader = ({
   const { formatMessage } = useIntl();
   const dashboard = useSelector(activeDashboardItemSelector);
   const canLock = useCanLockDashboard();
-  const editDeleteDisabled = dashboard?.locked && !canLock;
+  const deleteDisabled = dashboard?.locked && !canLock;
   const isForceUpdateAvailable = MATERIALIZED_VIEW_WIDGETS.includes(data.type);
   const isEditControlHidden = isForceUpdateAvailable && data.state === STATE_RENDERING;
   const { value: startTime, unit } = getRelativeUnits(data.lastRefresh);
@@ -137,15 +137,9 @@ export const WidgetHeader = ({
               </div>
             )}
             {!isEditControlHidden && data.type && (
-              <LockedDashboardTooltip locked={dashboard?.locked}>
-                <button
-                  className={cx('control', 'mobile-hide')}
-                  onClick={onEdit}
-                  disabled={editDeleteDisabled}
-                >
-                  {Parser(PencilIcon)}
-                </button>
-              </LockedDashboardTooltip>
+              <button className={cx('control', 'mobile-hide')} onClick={onEdit}>
+                {Parser(PencilIcon)}
+              </button>
             )}
             {!isForceUpdateAvailable && data.type && (
               <button className={cx('control')} onClick={onRefresh}>
@@ -156,7 +150,7 @@ export const WidgetHeader = ({
               <button
                 className={cx('control', 'mobile-hide')}
                 onClick={onDelete}
-                disabled={editDeleteDisabled}
+                disabled={deleteDisabled}
               >
                 {Parser(CrossIcon)}
               </button>

@@ -21,17 +21,12 @@ import { InputRadio } from 'components/inputs/inputRadio';
 import { FilterOptions } from 'pages/inside/filtersPage/filterGrid/filterOptions';
 import { FilterName } from 'pages/inside/filtersPage/filterGrid/filterName';
 import { Icon } from 'components/main/icon';
-import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardTooltip';
 import styles from './filtersItem.scss';
-import { useCanLockDashboard } from 'common/hooks';
 
 const cx = classNames.bind(styles);
 
 export const FiltersItem = memo(
   ({ filter, onChange, search, activeFilterId, editable, onEdit }) => {
-    const canLock = useCanLockDashboard();
-    const isDisabled = filter.locked && !canLock;
-
     return (
       <div className={cx('filter-item')}>
         <InputRadio
@@ -44,19 +39,7 @@ export const FiltersItem = memo(
           <FilterName search={search} filter={filter} showDesc={false} editable={false} />
           <FilterOptions entities={filter.conditions} sort={filter.orders}>
             {editable && onEdit && (
-              <LockedDashboardTooltip
-                locked={filter.locked}
-                variant="filter"
-                itemId={filter.id}
-                wrapperClassName={cx('pencil-icon-wrapper')}
-              >
-                <Icon
-                  className={cx('pencil-icon')}
-                  type="icon-pencil"
-                  onClick={onEdit}
-                  disabled={isDisabled}
-                />
-              </LockedDashboardTooltip>
+              <Icon className={cx('pencil-icon')} type="icon-pencil" onClick={onEdit} />
             )}
           </FilterOptions>
         </InputRadio>

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
-import track from 'react-tracking';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { useTracking } from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import isEqual from 'fast-deep-equal';
-import { connect } from 'react-redux';
-import { injectIntl, defineMessages } from 'react-intl';
+import { useDispatch, useSelector } from 'react-redux';
+import { useIntl, defineMessages } from 'react-intl';
 import { destroy, getFormInitialValues, getFormValues, isDirty, isValid } from 'redux-form';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -33,6 +33,9 @@ import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets
 import { getWidgetModeValuesString } from 'components/main/analytics/events/common/widgetPages/utils';
 import { WIDGETS_EVENTS } from 'components/main/analytics/events/ga4Events/dashboardsPageEvents';
 import { activeDashboardIdSelector } from 'controllers/pages';
+import { useCanLockDashboard } from 'common/hooks';
+import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardTooltip';
+import { LockedIcon } from 'pages/inside/common/lockedIcon';
 import { EditWidgetControlsSectionForm } from './editWidgetControlsSectionForm';
 import { EditWidgetInfoSection } from './editWidgetInfoSection';
 import { WIDGET_WIZARD_FORM } from '../common/constants';
@@ -56,256 +59,240 @@ const messages = defineMessages({
     id: 'EditWidgetModal.editWidgetSuccess',
     defaultMessage: 'Widget has been updated successfully',
   },
+  lockedWidget: {
+    id: 'EditWidgetModal.lockedWidget',
+    defaultMessage: 'The widget is locked. Only filters can be changed.',
+  },
 });
 
-@withModal('editWidgetModal')
-@connect(
-  (state) => ({
-    projectId: activeProjectSelector(state),
-    widgetSettings: getFormValues(WIDGET_WIZARD_FORM)(state),
-    initiallyFilledWidgetSettings: getFormInitialValues(WIDGET_WIZARD_FORM)(state),
-    activeDashboardId: activeDashboardIdSelector(state),
-    dirty: isDirty(WIDGET_WIZARD_FORM)(state),
-    valid: isValid(WIDGET_WIZARD_FORM)(state),
-  }),
-  {
-    showScreenLockAction,
-    hideScreenLockAction,
-    showNotification,
-    destroyWizardForm: () => destroy(WIDGET_WIZARD_FORM),
-  },
-)
-@track()
-@injectIntl
-export class EditWidgetModal extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    showScreenLockAction: PropTypes.func.isRequired,
-    hideScreenLockAction: PropTypes.func.isRequired,
-    showNotification: PropTypes.func.isRequired,
-    destroyWizardForm: PropTypes.func.isRequired,
-    dirty: PropTypes.bool.isRequired,
-    valid: PropTypes.bool.isRequired,
-    widgetSettings: PropTypes.object,
-    activeDashboardId: PropTypes.number,
-    initiallyFilledWidgetSettings: PropTypes.object,
-    data: PropTypes.shape({
-      onConfirm: PropTypes.func,
-      widget: PropTypes.object,
-      eventsInfo: PropTypes.object,
-    }),
-    projectId: PropTypes.string,
-    eventsInfo: PropTypes.object,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
-  };
+const EditWidgetModalComponent = ({ data: { widget, onConfirm, eventsInfo } }) => {
+  const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
+  const dispatch = useDispatch();
+  const projectId = useSelector(activeProjectSelector);
+  const widgetSettings = useSelector((state) => getFormValues(WIDGET_WIZARD_FORM)(state) || {});
+  const initiallyFilledWidgetSettings = useSelector(getFormInitialValues(WIDGET_WIZARD_FORM));
+  const activeDashboardId = useSelector(activeDashboardIdSelector);
+  const dirty = useSelector(isDirty(WIDGET_WIZARD_FORM));
+  const valid = useSelector(isValid(WIDGET_WIZARD_FORM));
+  const canLock = useCanLockDashboard();
+  const isLocked = widget?.locked && !canLock;
 
-  static defaultProps = {
-    data: {
-      onConfirm: () => {},
-      widget: {},
-    },
-    widgetSettings: {},
-    projectId: '',
-    eventsInfo: {},
-  };
+  const widgetInfo = useMemo(
+    () => getWidgets(formatMessage).find((item) => item.id === widget.widgetType),
+    [widget.widgetType, formatMessage],
+  );
 
-  constructor(props) {
-    super(props);
-    const {
-      data: { widget },
-      intl: { formatMessage },
-    } = props;
+  const preprocessInputData = useCallback(
+    (inputData) => (widgetInfo?.convertInput ? widgetInfo.convertInput(inputData) : inputData),
+    [widgetInfo],
+  );
 
-    this.widgetInfo = getWidgets(formatMessage).find((item) => item.id === widget.widgetType);
-    this.initialValues = {
+  const preprocessOutputData = useCallback(
+    (outputData) => (widgetInfo?.convertOutput ? widgetInfo.convertOutput(outputData) : outputData),
+    [widgetInfo],
+  );
+
+  const initialValues = useMemo(() => {
+    const base = {
       ...widget,
       ...(widget.appliedFilters && {
         filters: widget.appliedFilters.map(({ id, name }) => ({ value: id.toString(), name })),
       }),
     };
-    this.initialValues = this.preprocessInputData(this.initialValues);
-    delete this.initialValues?.appliedFilters;
-    delete this.initialValues.content;
-    delete this.initialValues.id;
+    const result = { ...preprocessInputData(base) };
+    delete result?.appliedFilters;
+    delete result.content;
+    delete result.id;
+    return result;
+  }, [widget, preprocessInputData]);
 
-    this.state = {
-      formAppearance: {
-        mode: FORM_APPEARANCE_MODE_LOCKED,
-        isMainControlsLocked: false,
-        filter: {},
-        predefinedFilter: widget.appliedFilters?.[0] || null,
-      },
-      previousFilter: this.initialValues?.filters,
-    };
-  }
+  const [formAppearance, setFormAppearance] = useState({
+    mode: FORM_APPEARANCE_MODE_LOCKED,
+    isMainControlsLocked: false,
+    filter: {},
+    predefinedFilter: widget.appliedFilters?.[0] || null,
+  });
+  const [previousFilter, setPreviousFilter] = useState(initialValues?.filters);
 
-  componentWillUnmount() {
-    this.props.destroyWizardForm();
-  }
+  useEffect(() => {
+    return () => dispatch(destroy(WIDGET_WIZARD_FORM));
+  }, [dispatch]);
 
-  onSave = (closeModal) => {
-    const {
-      tracking: { trackEvent },
-      data: { onConfirm, widget },
-      intl: { formatMessage },
+  const onSave = useCallback(
+    (closeModal) => {
+      const submitData = prepareWidgetDataForSubmit(preprocessOutputData(widgetSettings));
+      const { widgetType, contentParameters, filterIds } = submitData;
+
+      const isForceUpdateNeeded =
+        !isEqual(widget.contentParameters, contentParameters) ||
+        !isEqual(
+          widget.appliedFilters?.map((filter) => filter.id.toString()),
+          filterIds,
+        );
+
+      dispatch(showScreenLockAction());
+      fetch(URLS.widget(projectId, widget.id), {
+        method: 'put',
+        data: submitData,
+      })
+        .then(() => {
+          trackEvent(
+            WIDGETS_EVENTS.clickOnSaveWidget({
+              type: widgetType,
+              dashboardId: activeDashboardId,
+              modifiedFields: getModifiedFieldsLabels(
+                initiallyFilledWidgetSettings?.contentParameters,
+                submitData?.contentParameters,
+              ),
+              isWidgetNameChanged: submitData.name !== initiallyFilledWidgetSettings?.name,
+              isWidgetDescriptionChanged:
+                submitData?.description !== initiallyFilledWidgetSettings?.description,
+              levelsCount: getCreatedWidgetLevelsCount(widgetType, submitData),
+              isExcludeSkippedTests: getIsExcludeSkipped(widgetType, submitData),
+              isEditModal: true,
+              isLocked: isLocked,
+            }),
+          );
+
+          dispatch(hideScreenLockAction());
+          closeModal();
+          onConfirm(isForceUpdateNeeded);
+          dispatch(
+            showNotification({
+              message: formatMessage(messages.editWidgetSuccess),
+              type: NOTIFICATION_TYPES.SUCCESS,
+            }),
+          );
+        })
+        .catch((err) => {
+          dispatch(hideScreenLockAction());
+          dispatch(showNotification({ message: err.message, type: NOTIFICATION_TYPES.ERROR }));
+        });
+
+      if (widgetSettings?.contentParameters) {
+        trackEvent(eventsInfo.selectCriteria(widgetSettings.contentParameters.contentFields));
+      }
+      const widgetMode =
+        widgetSettings.contentParameters?.widgetOptions &&
+        getWidgetModeValuesString(widgetSettings.contentParameters.widgetOptions);
+      if (widgetMode) {
+        trackEvent(eventsInfo.selectToggleButtons(widgetMode));
+      }
+    },
+    [
+      widget,
       widgetSettings,
       projectId,
       initiallyFilledWidgetSettings,
       activeDashboardId,
-    } = this.props;
+      onConfirm,
+      formatMessage,
+      trackEvent,
+      eventsInfo,
+      preprocessOutputData,
+      dispatch,
+      isLocked,
+    ],
+  );
 
-    const data = prepareWidgetDataForSubmit(this.preprocessOutputData(widgetSettings));
-    const { widgetType, contentParameters, filterIds } = data;
-
-    const isForceUpdateNeeded =
-      !isEqual(widget.contentParameters, contentParameters) ||
-      !isEqual(
-        widget.appliedFilters?.map((filter) => filter.id.toString()),
-        filterIds,
-      );
-
-    this.props.showScreenLockAction();
-    fetch(URLS.widget(projectId, widget.id), {
-      method: 'put',
-      data,
-    })
-      .then(() => {
-        const { name } = data;
-        trackEvent(
-          WIDGETS_EVENTS.clickOnSaveWidget({
-            type: widgetType,
-            dashboardId: activeDashboardId,
-            modifiedFields: getModifiedFieldsLabels(
-              initiallyFilledWidgetSettings?.contentParameters,
-              data?.contentParameters,
-            ),
-            isWidgetNameChanged: name !== initiallyFilledWidgetSettings?.name,
-            isWidgetDescriptionChanged:
-              data?.description !== initiallyFilledWidgetSettings?.description,
-            levelsCount: getCreatedWidgetLevelsCount(widgetType, data),
-            isExcludeSkippedTests: getIsExcludeSkipped(widgetType, data),
-            isEditModal: true,
-          }),
-        );
-
-        this.props.hideScreenLockAction();
-        closeModal();
-        onConfirm(isForceUpdateNeeded);
-        this.props.showNotification({
-          message: formatMessage(messages.editWidgetSuccess),
-          type: NOTIFICATION_TYPES.SUCCESS,
-        });
-      })
-      .catch((err) => {
-        this.props.hideScreenLockAction();
-        this.props.showNotification({ message: err.message, type: NOTIFICATION_TYPES.ERROR });
-      });
-
-    if (widgetSettings.contentParameters) {
-      this.props.tracking.trackEvent(
-        this.props.data.eventsInfo.selectCriteria(widgetSettings.contentParameters.contentFields),
-      );
-    }
-
-    const widgetMode =
-      widgetSettings.contentParameters?.widgetOptions &&
-      getWidgetModeValuesString(widgetSettings.contentParameters.widgetOptions);
-    if (widgetMode) {
-      this.props.tracking.trackEvent(this.props.data.eventsInfo.selectToggleButtons(widgetMode));
-    }
-  };
-
-  getCloseConfirmationConfig = () => {
-    if (!this.props.dirty) {
+  const getCloseConfirmationConfig = useCallback(() => {
+    if (!dirty) {
       return null;
     }
     return {
-      confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
+      confirmationWarning: formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
       confirmationWarningClassName: cx('confirmation-warning-wrapper'),
     };
-  };
+  }, [dirty, formatMessage]);
 
-  preprocessInputData = (data) => {
-    if (this.widgetInfo?.convertInput) {
-      return this.widgetInfo.convertInput(data);
-    }
-    return data;
-  };
-
-  preprocessOutputData = (data) => {
-    if (this.widgetInfo?.convertOutput) {
-      return this.widgetInfo.convertOutput(data);
-    }
-    return data;
-  };
-
-  handleFormAppearanceChange = (mode, filter) =>
-    this.setState({
-      formAppearance: {
-        ...this.state.formAppearance,
+  const handleFormAppearanceChange = useCallback(
+    (mode, filter) => {
+      setFormAppearance((prev) => ({
+        ...prev,
         mode,
         filter,
         isMainControlsLocked: mode !== FORM_APPEARANCE_MODE_LOCKED,
-      },
-      previousFilter: !mode ? this.props.widgetSettings.filters : this.state.previousFilter,
-    });
+      }));
+      setPreviousFilter((prev) => (!mode ? widgetSettings.filters : prev));
+    },
+    [widgetSettings?.filters],
+  );
 
-  render() {
-    const {
-      intl: { formatMessage },
-      data: { widget, eventsInfo },
-      projectId,
-      widgetSettings,
-      valid,
-    } = this.props;
-
-    const buttonsMessages = {
-      cancel: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      submit: formatMessage(COMMON_LOCALE_KEYS.SUBMIT),
-    };
-    const okButton = {
-      text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
-      onClick: this.onSave,
-      disabled: this.state.formAppearance.isMainControlsLocked || !valid,
-      eventInfo: eventsInfo.okBtn,
-    };
-    const cancelButton = {
-      text: buttonsMessages.cancel,
-      disabled: this.state.formAppearance.isMainControlsLocked,
-      eventInfo: eventsInfo.cancelBtn,
-    };
+  const renderHeaderElements = useCallback(() => {
+    if (!isLocked) return null;
 
     return (
-      <ModalLayout
-        title={formatMessage(messages.headerText)}
-        okButton={okButton}
-        cancelButton={cancelButton}
-        className={cx('edit-widget-modal')}
-        closeConfirmation={this.getCloseConfirmationConfig()}
-        closeIconEventInfo={eventsInfo.closeIcon}
-      >
-        <div className={cx('edit-widget-modal-content')}>
-          <EditWidgetInfoSection
-            projectId={projectId}
-            widgetSettings={prepareWidgetDataForSubmit(this.preprocessOutputData(widgetSettings))}
-            activeWidget={this.widgetInfo}
-          />
-          <EditWidgetControlsSectionForm
-            initialValues={this.initialValues}
-            previousFilter={this.state.previousFilter}
-            widget={this.widgetInfo}
-            widgetId={widget.id}
-            widgetSettings={widgetSettings}
-            formAppearance={this.state.formAppearance}
-            handleFormAppearanceChange={this.handleFormAppearanceChange}
-            buttonsMessages={buttonsMessages}
-            eventsInfo={eventsInfo}
-          />
-        </div>
-      </ModalLayout>
+      <div className={cx('locked-widget-hint')}>
+        <LockedDashboardTooltip locked={widget.locked} variant="widget">
+          <LockedIcon />
+        </LockedDashboardTooltip>
+        {formatMessage(messages.lockedWidget)}
+      </div>
     );
-  }
-}
+  }, [isLocked, widget.locked, formatMessage]);
+
+  const buttonsMessages = {
+    cancel: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    submit: formatMessage(COMMON_LOCALE_KEYS.SUBMIT),
+  };
+  const okButton = {
+    text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
+    onClick: onSave,
+    disabled: formAppearance.isMainControlsLocked || !valid,
+    eventInfo: eventsInfo.okBtn,
+  };
+  const cancelButton = {
+    text: buttonsMessages.cancel,
+    disabled: formAppearance.isMainControlsLocked,
+    eventInfo: eventsInfo.cancelBtn,
+  };
+
+  return (
+    <ModalLayout
+      title={formatMessage(messages.headerText)}
+      renderHeaderElements={renderHeaderElements}
+      okButton={okButton}
+      cancelButton={cancelButton}
+      className={cx('edit-widget-modal')}
+      closeConfirmation={getCloseConfirmationConfig()}
+      closeIconEventInfo={eventsInfo.closeIcon}
+    >
+      <div className={cx('edit-widget-modal-content')}>
+        <EditWidgetInfoSection
+          projectId={projectId}
+          widgetSettings={prepareWidgetDataForSubmit(preprocessOutputData(widgetSettings))}
+          activeWidget={widgetInfo}
+        />
+        <EditWidgetControlsSectionForm
+          initialValues={initialValues}
+          previousFilter={previousFilter}
+          widget={widgetInfo}
+          widgetId={widget.id}
+          widgetSettings={widgetSettings}
+          formAppearance={formAppearance}
+          handleFormAppearanceChange={handleFormAppearanceChange}
+          buttonsMessages={buttonsMessages}
+          eventsInfo={eventsInfo}
+          isMainControlsDisabled={isLocked}
+        />
+      </div>
+    </ModalLayout>
+  );
+};
+
+EditWidgetModalComponent.propTypes = {
+  data: PropTypes.shape({
+    onConfirm: PropTypes.func,
+    widget: PropTypes.object,
+    eventsInfo: PropTypes.object,
+  }),
+};
+EditWidgetModalComponent.defaultProps = {
+  data: {
+    onConfirm: () => {},
+    widget: {},
+    eventsInfo: {},
+  },
+};
+export const EditWidgetModal = withModal('editWidgetModal')(EditWidgetModalComponent);
