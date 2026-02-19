@@ -21,7 +21,6 @@ import { TreeSortableItem } from '@reportportal/ui-kit/sortable';
 
 import { createClassnames } from 'common/utils';
 import { PopoverControl } from 'pages/common/popoverControl';
-import { TransformedFolder } from 'controllers/testCase';
 
 import { highlightText, hasMatchInTree, hasChildMatch } from '../utils';
 import { FolderProps } from './types';
@@ -124,52 +123,50 @@ export const Folder: FolderComposite = ({
           <span className={cx('folders-tree__item-title--text')} title={folder.name}>
             {isDirectMatch ? highlightText(folder.name, searchQuery) : folder.name}
           </span>
-          <div className={cx('folders-tree__item-actions')}>
-            {!isEmpty(tooltipItems) && (
-              <button
-                className={cx('folders-tree__tools', {
-                  'folders-tree__tools--shown': areToolsShown,
-                })}
-                onClick={(event) => {
-                  event.preventDefault();
-                  event.stopPropagation();
+          {!isEmpty(tooltipItems) && (
+            <button
+              className={cx('folders-tree__tools', {
+                'folders-tree__tools--shown': areToolsShown,
+              })}
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
 
-                  setAreToolsOpen(true);
-                }}
+                setAreToolsOpen(true);
+              }}
+            >
+              <PopoverControl
+                items={tooltipItems}
+                isOpened={areToolsOpen}
+                setIsOpened={setAreToolsOpen}
+                placement="bottom-end"
               >
-                <PopoverControl
-                  items={tooltipItems}
-                  isOpened={areToolsOpen}
-                  setIsOpened={setAreToolsOpen}
-                  placement="bottom-end"
+                <div
+                  className={cx('folders-tree__meatball', {
+                    'folders-tree__meatball--active': areToolsOpen,
+                  })}
                 >
-                  <div
-                    className={cx('folders-tree__meatball', {
-                      'folders-tree__meatball--active': areToolsOpen,
-                    })}
-                  >
-                    <MeatballMenuIcon />
-                  </div>
-                </PopoverControl>
-              </button>
-            )}
-            {enableDragAndDrop && (showDragIcon || isDraggingFolder) ? (
-              <div
-                ref={dragHandleRef}
-                className={cx('folders-tree__drag-handle')}
-                role="button"
-                aria-label="Drag to reorder"
-                tabIndex={0}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <DragNDropIcon />
-              </div>
-            ) : (
-              <span className={cx('folders-tree__item-title--counter')}>
-                {folder.testsCount || 0}
-              </span>
-            )}
-          </div>
+                  <MeatballMenuIcon />
+                </div>
+              </PopoverControl>
+            </button>
+          )}
+          {enableDragAndDrop && (showDragIcon || isDraggingFolder) ? (
+            <div
+              ref={dragHandleRef}
+              className={cx('folders-tree__drag-handle')}
+              role="button"
+              aria-label="Drag to reorder"
+              tabIndex={0}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <DragNDropIcon />
+            </div>
+          ) : (
+            <span className={cx('folders-tree__item-title--counter')}>
+              {folder.testsCount || 0}
+            </span>
+          )}
         </div>
       </div>
       <Folder.Subfolders shouldDisplay={isOpen && !isEmpty(folder.folders)}>
