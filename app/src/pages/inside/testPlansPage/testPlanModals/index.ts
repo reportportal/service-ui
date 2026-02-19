@@ -20,3 +20,4 @@ export * from './editTestPlanModal';
 export * from './duplicateTestPlanModal';
 export * from './deleteTestPlanModal';
 export * from './createLaunchModal';
+export * from './removeTestCasesFromTestPlanModal';

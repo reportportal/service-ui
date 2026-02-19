@@ -53,7 +53,7 @@ import { useGenerateFolderPath } from 'hooks/useGenerateFolderPath';
 import { TestPlanDto, testPlanFoldersSelector } from 'controllers/testPlan';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { formatDuration, openRouteInNewTab } from 'pages/inside/common/testCaseList/utils';
-import { useRemoveTestCasesFromTestPlanModal } from '../testPlanDetailsPage/testPlanFolders/allTestCasesPage/removeTestCasesFromTestPlanModal';
+import { useRemoveTestCasesFromTestPlanModal } from '../testPlanModals';
 import { messages } from './messages';
 import { CoverStatusCard } from './coverStatusCard';
 import { ExecutionStatusCard } from './executionStatusCard';
@@ -125,13 +125,15 @@ export const TestPlanSidePanel = memo(
       // TODO: Implement quick run functionality
     };
 
-    const menuItems = [
-      {
+    const menuItems = [];
+
+    if (isTestPlanRoute && testPlanId) {
+      menuItems.push({
         label: formatMessage(messages.removeFromTestPlan),
         onClick: handleRemoveFromTestPlan,
         variant: 'danger' as const,
-      },
-    ];
+      });
+    }
 
     const handleCopyId = async () => {
       await copyToClipboard(testPlan.id.toString());

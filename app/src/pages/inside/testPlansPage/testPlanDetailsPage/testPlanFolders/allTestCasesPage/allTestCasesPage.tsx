@@ -34,9 +34,9 @@ import { payloadSelector } from 'controllers/pages';
 import { useProjectDetails, useTestPlanId, useTestPlanById } from 'hooks/useTypedSelector';
 import { useURLBoundPagination } from 'pages/inside/common/testCaseList/useURLBoundPagination';
 
-import { useRemoveTestCasesFromTestPlanModal } from './removeTestCasesFromTestPlanModal';
+import { useRemoveTestCasesFromTestPlanModal } from '../../../testPlanModals';
+import { messages } from '../../../testPlanModals/removeTestCasesFromTestPlanModal/messages';
 import { useAddTestCasesToLaunchModal } from './addTestCasesToLaunchModal';
-import { messages } from './removeTestCasesFromTestPlanModal/messages';
 import { AllTestCasesPageProps } from './types';
 import styles from './allTestCasesPage.scss';
 
@@ -65,18 +65,19 @@ export const AllTestCasesPage = ({
 
   const [selectedRows, setSelectedRows] = useState<SelectedTestCaseRow[]>([]);
   const testPlan = useTestPlanById(testPlanId);
+  const selectedRowIds = useMemo(() => selectedRows.map((row) => row.id), [selectedRows]);
+  const onClearSelection = () => setSelectedRows([]);
+
   const { openModal: openRemoveTestCasesModal } = useRemoveTestCasesFromTestPlanModal();
   const { openModal: openAddToLaunchModal } = useAddTestCasesToLaunchModal({
-    selectedRowsIds: useMemo(() => selectedRows.map((row) => row.id), [selectedRows]),
+    selectedRowsIds: selectedRowIds,
     testCases,
     testPlanId,
     testPlanName: testPlan?.name || '',
-    onClearSelection: () => setSelectedRows([]),
+    onClearSelection,
   });
 
   const isAnyRowSelected = !isEmpty(selectedRows);
-  const selectedRowIds = useMemo(() => selectedRows.map((row) => row.id), [selectedRows]);
-  const onClearSelection = () => setSelectedRows([]);
 
   const handleOpenRemoveModal = () => {
     openRemoveTestCasesModal({
@@ -101,7 +102,7 @@ export const AllTestCasesPage = ({
           selectedRows={selectedRows}
           handleSelectedRows={setSelectedRows}
           folderTitle={folderName || formatMessage(COMMON_LOCALE_KEYS.ALL_TEST_CASES_TITLE)}
-          selectable={true}
+          selectable
           instanceKey={instanceKey}
         />
       </div>

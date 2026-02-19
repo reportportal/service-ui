@@ -31,7 +31,6 @@ import { UseRemoveTestCasesFromTestPlanOptions } from './types';
 
 export const useRemoveTestCasesFromTestPlan = ({
   onSuccess = noop,
-  testCasesToRemove,
 }: UseRemoveTestCasesFromTestPlanOptions) => {
   const { formatMessage } = useIntl();
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
@@ -61,7 +60,7 @@ export const useRemoveTestCasesFromTestPlan = ({
 
         showSuccessNotification({
           messageId: 'removeFromTestPlanSuccess',
-          values: { count: testCasesToRemove },
+          values: { count: testCaseIds.length },
         });
 
         onSuccess?.();
@@ -81,7 +80,6 @@ export const useRemoveTestCasesFromTestPlan = ({
       testPlanId,
       dispatch,
       showSuccessNotification,
-      testCasesToRemove,
       onSuccess,
       showErrorNotification,
       hideSpinner,

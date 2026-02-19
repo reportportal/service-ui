@@ -28,5 +28,4 @@ export type RemoveTestCasesFromTestPlanModalProps =
 
 export interface UseRemoveTestCasesFromTestPlanOptions {
   onSuccess?: VoidFn;
-  testCasesToRemove: number;
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useMemo, useCallback } from 'react';
+import { useCallback, ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { noop } from 'es-toolkit';
@@ -24,8 +24,8 @@ import { createClassnames } from 'common/utils';
 import { withModal, hideModalAction } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
-import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { useTestPlanById } from 'hooks/useTypedSelector';
+import { useModalButtons } from 'pages/inside/testCaseLibraryPage/hooks/useModalButtons';
 
 import { useRemoveTestCasesFromTestPlan } from './useRemoveTestCasesFromTestPlan';
 import { messages } from './messages';
@@ -35,6 +35,10 @@ import { RemoveTestCasesFromTestPlanModalProps } from './types';
 import styles from './removeTestCasesFromTestPlanModal.scss';
 
 const cx = createClassnames(styles);
+
+const BoldText = ({ children, className }: { children: ReactNode; className?: string }) => (
+  <span className={className}>{children}</span>
+);
 
 const RemoveTestCasesFromTestPlanModal = ({ data }: RemoveTestCasesFromTestPlanModalProps) => {
   const { selectedTestCaseIds = [], testPlanId = '', onClearSelection = noop } = data || {};
@@ -47,35 +51,18 @@ const RemoveTestCasesFromTestPlanModal = ({ data }: RemoveTestCasesFromTestPlanM
       dispatch(hideModalAction());
       onClearSelection();
     },
-    testCasesToRemove: selectedTestCaseIds.length,
   });
-
-  const hideModal = useCallback(() => {
-    dispatch(hideModalAction());
-  }, [dispatch]);
 
   const handleRemove = useCallback(() => {
     removeTestCasesFromTestPlan(selectedTestCaseIds).catch(noop);
   }, [removeTestCasesFromTestPlan, selectedTestCaseIds]);
 
-  const okButton = useMemo(
-    () => ({
-      children: <LoadingSubmitButton isLoading={isLoading}>Remove</LoadingSubmitButton>,
-      disabled: isLoading,
-      variant: 'danger' as const,
-      onClick: handleRemove,
-    }),
-    [isLoading, handleRemove],
-  );
-
-  const cancelButton = useMemo(
-    () => ({
-      children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      disabled: isLoading,
-      onClick: hideModal,
-    }),
-    [formatMessage, isLoading, hideModal],
-  );
+  const { okButton, cancelButton, hideModal } = useModalButtons({
+    okButtonText: formatMessage(COMMON_LOCALE_KEYS.REMOVE),
+    isLoading,
+    variant: 'danger',
+    onSubmit: handleRemove,
+  });
 
   return (
     <Modal
@@ -89,7 +76,7 @@ const RemoveTestCasesFromTestPlanModal = ({ data }: RemoveTestCasesFromTestPlanM
         {formatMessage(messages.removeFromTestPlanDescription, {
           count: selectedTestCaseIds.length,
           testPlanName: testPlan?.name || '',
-          b: (text) => <span className={cx('remove-modal__text--bold')}>{text}</span>,
+          b: (text) => <BoldText className={cx('remove-modal__text--bold')}>{text}</BoldText>,
         })}
         <ModalLoadingOverlay isVisible={isLoading} />
       </div>
