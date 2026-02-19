@@ -20,6 +20,5 @@ export interface AddTestCasesToLaunchModalProps {
   selectedRowsIds: number[];
   testCases: ExtendedTestCase[];
   testPlanId: string;
-  testPlanName: string;
   onClearSelection?: () => void;
 }

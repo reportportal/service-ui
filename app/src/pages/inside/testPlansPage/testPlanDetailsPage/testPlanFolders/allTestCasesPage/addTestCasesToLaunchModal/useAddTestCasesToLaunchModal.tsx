@@ -24,7 +24,6 @@ export const useAddTestCasesToLaunchModal = ({
   selectedRowsIds,
   testCases,
   testPlanId,
-  testPlanName,
   onClearSelection,
 }: AddTestCasesToLaunchModalProps) => {
   return useModal({
@@ -34,7 +33,6 @@ export const useAddTestCasesToLaunchModal = ({
         selectedRowsIds={selectedRowsIds}
         testCases={testCases}
         testPlanId={testPlanId}
-        testPlanName={testPlanName}
         onClearSelection={onClearSelection}
       />
     ),

@@ -31,7 +31,7 @@ import {
   testPlanTestCasesPageSelector,
 } from 'controllers/testPlan';
 import { payloadSelector } from 'controllers/pages';
-import { useProjectDetails, useTestPlanId, useTestPlanById } from 'hooks/useTypedSelector';
+import { useProjectDetails, useTestPlanId } from 'hooks/useTypedSelector';
 import { useURLBoundPagination } from 'pages/inside/common/testCaseList/useURLBoundPagination';
 
 import { useRemoveTestCasesFromTestPlanModal } from '../../../testPlanModals';
@@ -64,7 +64,6 @@ export const AllTestCasesPage = ({
     });
 
   const [selectedRows, setSelectedRows] = useState<SelectedTestCaseRow[]>([]);
-  const testPlan = useTestPlanById(testPlanId);
   const selectedRowIds = useMemo(() => selectedRows.map((row) => row.id), [selectedRows]);
   const onClearSelection = () => setSelectedRows([]);
 
@@ -73,7 +72,6 @@ export const AllTestCasesPage = ({
     selectedRowsIds: selectedRowIds,
     testCases,
     testPlanId,
-    testPlanName: testPlan?.name || '',
     onClearSelection,
   });
 

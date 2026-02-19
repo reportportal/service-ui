@@ -18,6 +18,7 @@ import { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { isString } from 'es-toolkit';
+import { isNumber } from 'es-toolkit/compat';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -33,7 +34,7 @@ import { messages } from './messages';
 export const useCreateManualLaunch = (
   testCases: ExtendedTestCase[],
   activeMode: LaunchMode,
-  testPlanId?: number,
+  testPlanId?: number | null,
   selectedLaunchId?: number,
   onClearSelection?: () => void,
 ) => {
@@ -85,7 +86,7 @@ export const useCreateManualLaunch = (
             testCaseIds,
             attributes: formValues.attributes?.filter((attr) => attr.key && attr.value) || [],
             description: formValues.description || '',
-            ...(resolvedTestPlanId && { testPlanId: resolvedTestPlanId }),
+            ...(isNumber(resolvedTestPlanId) && { testPlanId: resolvedTestPlanId }),
           };
 
           await fetch(URLS.manualLaunch(projectKey), {

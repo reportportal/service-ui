@@ -42,7 +42,6 @@ const AddTestCasesToLaunchModalComponent = ({
   selectedRowsIds,
   testCases: allTestCases,
   testPlanId,
-  testPlanName,
   onClearSelection,
   ...reduxFormProps
 }: AddTestCasesToLaunchModalProps & InjectedFormProps<LaunchFormData>) => {
@@ -64,11 +63,10 @@ const AddTestCasesToLaunchModalComponent = ({
       {...reduxFormProps}
       testCases={testCases}
       testPlanId={Number(testPlanId)}
-      testPlanName={testPlanName}
       modalTitle={formatMessage(messages.addToLaunch)}
       okButtonText={COMMON_LOCALE_KEYS.ADD}
       description={descriptionText}
-      isTestPlanFieldDisabled
+      hideTestPlanField
       className={cx('add-test-cases-to-launch-modal')}
       onClearSelection={onClearSelection}
     />
