@@ -55,6 +55,7 @@ import {
   GetFoldersAction,
 } from './types';
 import {
+  setFoldersFetchedAction,
   createFoldersSuccessAction,
   startCreatingFolderAction,
   stopCreatingFolderAction,
@@ -200,6 +201,8 @@ function* getFolders(action: GetFoldersAction) {
         content: allFolders,
       }),
     );
+
+    yield put(setFoldersFetchedAction());
   } catch (error) {
     yield put(fetchErrorAction(NAMESPACE, error));
     yield put(

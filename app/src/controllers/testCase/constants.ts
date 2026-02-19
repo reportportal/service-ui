@@ -42,3 +42,4 @@ export const UPDATE_DESCRIPTION_SUCCESS = 'updateDescriptionSuccess' as const;
 export const TOGGLE_FOLDER_EXPANSION = 'toggleFolderExpansion' as const;
 export const EXPAND_FOLDERS_TO_LEVEL = 'expandFoldersToLevel' as const;
 export const SET_EXPANDED_FOLDER_IDS = 'setExpandedFolderIds' as const;
+export const SET_FOLDERS_FETCHED = 'setFoldersFetched' as const;
