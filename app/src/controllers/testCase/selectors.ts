@@ -31,6 +31,7 @@ export interface TestCaseState {
     activeFolderId?: number | null;
     expandedFolderIds?: number[];
     loading?: boolean;
+    areFoldersFetched?: boolean;
   };
   testCases?: {
     isLoading?: boolean;
@@ -89,10 +90,5 @@ export const transformedFoldersWithFullPathSelector = createSelector(
   transformFoldersWithFullPath,
 );
 
-export const needsToLoadFoldersSelector = createSelector(
-  foldersSelector,
-  areFoldersLoadingSelector,
-  (folders, isLoading): boolean => {
-    return folders.length === 0 && !isLoading;
-  },
-);
+export const areFoldersFetchedSelector = (state: RootState): boolean =>
+  testCaseSelector(state).folders?.areFoldersFetched || false;
