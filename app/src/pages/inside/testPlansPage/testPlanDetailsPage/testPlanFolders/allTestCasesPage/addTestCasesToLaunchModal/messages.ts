@@ -25,4 +25,8 @@ export const messages = defineMessages({
     id: 'AddTestCasesToLaunchModal.addSelectedTestCases',
     defaultMessage: 'You are about to add <bold>{count}</bold> selected test cases to a Launch',
   },
+  addSelectedTestCase: {
+    id: 'AddToLaunchModal.addSelectedTestCase',
+    defaultMessage: 'You are about to add <bold>{testCaseName}</bold> test case to a Launch',
+  },
 });

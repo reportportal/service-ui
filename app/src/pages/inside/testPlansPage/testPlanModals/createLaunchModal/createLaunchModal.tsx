@@ -63,6 +63,7 @@ const CreateLaunchModalComponent = ({
       okButtonText={COMMON_LOCALE_KEYS.ADD}
       description={descriptionText}
       hideTestPlanField
+      isUncoveredTestsCheckboxAvailable={false}
       className={cx('create-launch-modal')}
     />
   );
