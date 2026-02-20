@@ -52,11 +52,17 @@ const AddTestCasesToLaunchModalComponent = ({
   }, [allTestCases, selectedRowsIds]);
 
   const descriptionText = useMemo(() => {
-    return formatMessage(messages.addSelectedTestCases, {
-      count: selectedRowsIds.length,
-      bold: BoldTestCasesCount,
-    });
-  }, [selectedRowsIds.length, formatMessage]);
+    // Switch description text based on the number of selected test cases
+    return testCases.length !== 1
+      ? formatMessage(messages.addSelectedTestCases, {
+          count: testCases.length,
+          bold: BoldTestCasesCount,
+        })
+      : formatMessage(messages.addSelectedTestCase, {
+          testCaseName: testCases[0]?.name,
+          bold: BoldTestCasesCount,
+        });
+  }, [testCases, formatMessage]);
 
   return (
     <BaseLaunchModal
@@ -66,6 +72,7 @@ const AddTestCasesToLaunchModalComponent = ({
       modalTitle={formatMessage(messages.addToLaunch)}
       okButtonText={COMMON_LOCALE_KEYS.ADD}
       description={descriptionText}
+      isUncoveredTestsCheckboxAvailable={false}
       hideTestPlanField
       className={cx('add-test-cases-to-launch-modal')}
       onClearSelection={onClearSelection}
