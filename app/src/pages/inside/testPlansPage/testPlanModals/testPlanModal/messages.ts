@@ -33,4 +33,12 @@ export const messages = defineMessages({
     id: 'CreateMilestoneModal.addAttributes',
     defaultMessage: 'Add Attributes',
   },
+  attributeKeyPlaceholderRequired: {
+    id: 'CreateTestPlanModal.attributeKeyPlaceholderRequired',
+    defaultMessage: 'Key *',
+  },
+  attributeValuePlaceholderRequired: {
+    id: 'CreateTestPlanModal.attributeValuePlaceholderRequired',
+    defaultMessage: 'Value *',
+  },
 });
