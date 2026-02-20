@@ -14,28 +14,4 @@
  * limitations under the License.
  */
 
-export interface MoveFolderApiParams {
-  folderId: number;
-  parentTestFolderId?: number | null;
-  parentTestFolder?: {
-    name?: string;
-    parentTestFolderId?: number | null;
-  };
-  index?: number;
-  fromDragDrop?: boolean;
-}
-
-export interface MoveFolderResponse {
-  id: number;
-  name: string;
-  parentFolderId: number | null;
-  index?: number;
-}
-
-export type MoveFolderRequestData =
-  | {
-      parentTestFolder:
-        | { name?: string; parentTestFolderId?: number | null }
-        | Record<string, never>;
-    }
-  | { parentTestFolderId: number | null };
+export const FOLDER_DRAG_TYPE = 'TEST_CASE_FOLDER';

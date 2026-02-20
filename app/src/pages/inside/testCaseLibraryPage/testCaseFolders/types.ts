@@ -22,11 +22,6 @@ export const hasFolderParent = (
   return 'parentFolderId' in folder;
 };
 
-export interface DropTargetInfo {
-  parentFolderId: number | null | undefined;
-  index?: number;
-}
-
 export interface MoveFolderParams {
   folderId: number;
   parentTestFolderId: number | null | undefined;

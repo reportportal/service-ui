@@ -61,9 +61,12 @@ export const useFolderOperationUI = () => {
     ({ fromDragDrop }: UseFolderOperationUIParams) => {
       if (!fromDragDrop) {
         hideSpinner();
+      } else {
+        // Revert any optimistic UI update by re-syncing with server state
+        dispatch(getFoldersAction({ silent: true }));
       }
     },
-    [hideSpinner],
+    [hideSpinner, dispatch],
   );
 
   return {

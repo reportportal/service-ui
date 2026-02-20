@@ -44,10 +44,9 @@ import { Folder } from './folder';
 import { messages } from './messages';
 import { ExpandedOptionsProps } from './types';
 import { useFolderSearch } from './useFolderSearch';
+import { FOLDER_DRAG_TYPE } from './constants';
 
 import styles from './expandedOptions.scss';
-
-const FOLDER_DRAG_TYPE = 'TEST_CASE_FOLDER';
 
 const cx = createClassnames(styles);
 

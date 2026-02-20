@@ -29,12 +29,11 @@ import { FolderProps } from './types';
 import { useFolderTooltipItems } from './useFolderTooltipItems';
 import { FolderWrapper } from './folderWrapper';
 import { FolderSubfolders } from './folderSubfolders';
+import { FOLDER_DRAG_TYPE } from '../constants';
 
 import styles from './folder.scss';
 
 const cx = createClassnames(styles);
-
-const FOLDER_DRAG_TYPE = 'TEST_CASE_FOLDER';
 
 interface FolderComposite extends FC<FolderProps> {
   Wrapper: typeof FolderWrapper;
