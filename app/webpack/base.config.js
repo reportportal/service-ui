@@ -53,7 +53,6 @@ module.exports = {
     },
     fallback: {
       path: require.resolve('path-browserify'),
-      // buffer: require.resolve('buffer/'),
     },
   },
   module: {
