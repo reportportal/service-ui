@@ -215,3 +215,7 @@ export const hasTagShape = (attr: Tag | Attribute): attr is Tag => {
     (!('value' in attr) || isNil(attr.value))
   );
 };
+
+export const isIconComponent = (
+  icon: FC<SVGProps<SVGSVGElement>> | string,
+): icon is FC<SVGProps<SVGSVGElement>> => !isString(icon);
