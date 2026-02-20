@@ -203,7 +203,7 @@
     > .folders-tree__item > .folders-tree__item-content > .folders-tree__item-title {
       border: 2px dashed var(--rp-ui-base-topaz-focused);
       border-radius: 4px;
-      background-color: #e5f5f8;
+      background-color: var(--rp-ui-base-topaz-bg-light);
     }
   }
 }

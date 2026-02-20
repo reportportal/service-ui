@@ -15,6 +15,7 @@
  */
 
 import { useState, useCallback, MouseEvent as ReactMouseEvent, useEffect, FC } from 'react';
+import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
 import { ChevronDownDropdownIcon, MeatballMenuIcon, DragNDropIcon } from '@reportportal/ui-kit';
 import { TreeSortableItem } from '@reportportal/ui-kit/sortable';
@@ -23,6 +24,7 @@ import { createClassnames } from 'common/utils';
 import { PopoverControl } from 'pages/common/popoverControl';
 
 import { highlightText, hasMatchInTree, hasChildMatch } from '../utils';
+import { messages } from '../messages';
 import { FolderProps } from './types';
 import { useFolderTooltipItems } from './useFolderTooltipItems';
 import { FolderWrapper } from './folderWrapper';
@@ -54,6 +56,7 @@ export const Folder: FolderComposite = ({
   enableDragAndDrop = false,
   canDropOn,
 }: FolderProps) => {
+  const { formatMessage } = useIntl();
   const isOpen = expandedIds.includes(folder.id);
   const [areToolsShown, setAreToolsShown] = useState(false);
   const [areToolsOpen, setAreToolsOpen] = useState(false);
@@ -156,9 +159,14 @@ export const Folder: FolderComposite = ({
               ref={dragHandleRef}
               className={cx('folders-tree__drag-handle')}
               role="button"
-              aria-label="Drag to reorder"
+              aria-label={formatMessage(messages.dragToReorder)}
               tabIndex={0}
               onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.stopPropagation();
+                }
+              }}
             >
               <DragNDropIcon />
             </div>

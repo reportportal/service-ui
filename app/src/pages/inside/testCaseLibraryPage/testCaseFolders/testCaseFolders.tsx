@@ -18,6 +18,7 @@ import { useEffect, useMemo, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, PlusIcon } from '@reportportal/ui-kit';
+import { noop } from 'es-toolkit';
 
 import { createClassnames, getStorageItem } from 'common/utils';
 import {
@@ -157,8 +158,12 @@ export const TestCaseFolders = () => {
 
   const { handleMoveFolder, handleDuplicateFolder } = useFolderDragDrop({
     folders: initialFolders,
-    onMove: (params) => void moveFolder(params),
-    onDuplicate: (params) => void duplicateFolder(params),
+    onMove: (params) => {
+      moveFolder(params).catch(noop);
+    },
+    onDuplicate: (params) => {
+      duplicateFolder(params).catch(noop);
+    },
   });
 
   return (

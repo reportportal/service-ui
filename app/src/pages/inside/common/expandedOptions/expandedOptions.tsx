@@ -32,13 +32,12 @@ import { useSelector } from 'react-redux';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { createClassnames } from 'common/utils';
 import { useStorageFolders } from 'hooks/useStorageFolders';
-import { TransformedFolder } from 'controllers/testCase';
+import { TransformedFolder, foldersSelector } from 'controllers/testCase';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { EmptySearchState } from 'pages/common/emptySearchState';
 import OutlineSearchIcon from 'common/img/search-outline-icon-inline.svg';
 import FilledSearchIcon from 'common/img/search-filled-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { foldersSelector } from 'controllers/testCase';
 import FolderDropIcon from 'common/img/folder-drop-inline.svg';
 
 import { Folder } from './folder';
@@ -67,10 +66,8 @@ export const ExpandedOptions = ({
   const { expandedIds, onToggleFolder } = useStorageFolders(instanceKey);
   const allFolders = useSelector(foldersSelector);
 
-  // Only enable drag and drop if handlers are provided
   const isDragAndDropEnabled = !!(onMoveFolder || onDuplicateFolder);
 
-  // Use the hook from ui-kit to validate drop targets
   const dropValidation = (
     useTreeDropValidation as (params: { items: TransformedFolder[]; childrenKey: string }) => {
       canDropOn: (draggedItem: { id: string | number }, targetId: string | number) => boolean;
@@ -147,7 +144,7 @@ export const ExpandedOptions = ({
             const folder = allFolders.find((f) => f.id === item.id);
             return (
               <>
-                <span>{folder?.name || 'Folder'}</span>
+                <span>{folder?.name || formatMessage(messages.folder)}</span>
                 <DragNDropIcon />
               </>
             );

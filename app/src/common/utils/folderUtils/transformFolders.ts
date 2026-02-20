@@ -71,24 +71,24 @@ export const transformFoldersToDisplay = (folders: BaseFolder[]): TransformedFol
     }
   });
 
-  // Recursively sort folders by index at each level
   const sortFolders = (folders: TransformedFolder[]): TransformedFolder[] => {
-    return folders
-      .sort((a, b) => {
-        if (!isNil(a.index) && !isNil(b.index)) {
-          return a.index - b.index;
-        }
+    const sortedFolders = [...folders];
+    sortedFolders.sort((a, b) => {
+      if (!isNil(a.index) && !isNil(b.index)) {
+        return a.index - b.index;
+      }
 
-        if (!isNil(a.index)) return -1;
+      if (!isNil(a.index)) return -1;
 
-        if (!isNil(b.index)) return 1;
+      if (!isNil(b.index)) return 1;
 
-        return 0;
-      })
-      .map((folder) => ({
-        ...folder,
-        folders: sortFolders(folder.folders),
-      }));
+      return 0;
+    });
+
+    return sortedFolders.map((folder) => ({
+      ...folder,
+      folders: sortFolders(folder.folders),
+    }));
   };
 
   const rootFolders = folderMap.get(null)?.folders || [];

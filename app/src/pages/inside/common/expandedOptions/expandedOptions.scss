@@ -150,16 +150,16 @@
     margin: 0;
 
     &--dragging {
-      @include drop-zone-border();
+      @include drop-zone-border;
 
       &:has(.expanded-options__drop-placeholder)::before {
-        border-color: #a2aab5;
+        border-color: var(--rp-ui-base-e-300);
       }
     }
 
     // Keep border visible when confirmation popup is showing (pending state)
     &:has([class*='tree-sortable-item--pending']) {
-      @include drop-zone-border();
+      @include drop-zone-border;
     }
   }
 
@@ -172,7 +172,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #eceff4;
+    background-color: var(--rp-ui-base-bg-200);
     opacity: 0.9;
     z-index: 10;
     pointer-events: none;

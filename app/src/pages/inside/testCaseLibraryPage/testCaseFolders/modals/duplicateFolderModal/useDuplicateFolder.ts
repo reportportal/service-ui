@@ -83,10 +83,10 @@ export const useDuplicateFolder = () => {
             let moveData: { parentTestFolder?: object; parentTestFolderId?: number; index: number };
             if (parentFolderId === null) {
               moveData = { parentTestFolder: {}, index };
-            } else if (!isUndefined(parentFolderId)) {
-              moveData = { parentTestFolderId: parentFolderId, index };
-            } else {
+            } else if (isUndefined(parentFolderId)) {
               moveData = { index };
+            } else {
+              moveData = { parentTestFolderId: parentFolderId, index };
             }
 
             const moveResponse = await fetch<MoveFolderResponse>(
