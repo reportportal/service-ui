@@ -37,12 +37,11 @@ export const BaseLaunchModal = ({
   change,
   testCases,
   testPlanId,
-  testPlanName,
   modalTitle,
   okButtonText,
   description,
-  isTestPlanFieldDisabled = true,
   isUncoveredTestsCheckboxAvailable,
+  hideTestPlanField = false,
   className,
   onClearSelection,
 }: BaseLaunchModalProps & InjectedFormProps<LaunchFormData>) => {
@@ -54,7 +53,7 @@ export const BaseLaunchModal = ({
   const { handleSubmit: handleCreateLaunch, isLoading } = useCreateManualLaunch(
     testCases,
     activeMode,
-    testPlanId,
+    hideTestPlanField ? null : testPlanId,
     selectedLaunch?.id,
     onClearSelection,
   );
@@ -106,11 +105,8 @@ export const BaseLaunchModal = ({
               onModeChange={handleModeChange}
               onLaunchSelect={setSelectedLaunch}
               description={description}
-              isTestPlanFieldDisabled={isTestPlanFieldDisabled}
               isUncoveredTestsCheckboxAvailable={isUncoveredTestsCheckboxAvailable}
-              testPlanValue={
-                testPlanId && testPlanName ? { id: testPlanId, name: testPlanName } : undefined
-              }
+              hideTestPlanField={hideTestPlanField}
             />
           </div>
         </form>

@@ -37,9 +37,8 @@ export const LaunchFormFields = ({
   onModeChange,
   onLaunchSelect,
   description,
-  isTestPlanFieldDisabled = true,
-  testPlanValue,
   isUncoveredTestsCheckboxAvailable = true,
+  hideTestPlanField = false,
 }: LaunchFormFieldsProps) => {
   const { formatMessage } = useIntl();
 
@@ -85,10 +84,7 @@ export const LaunchFormFields = ({
       {isExistingMode ? (
         <ExistingLaunchFields onLaunchSelect={onLaunchSelect} />
       ) : (
-        <NewLaunchFields
-          isTestPlanFieldDisabled={Boolean(isTestPlanFieldDisabled)}
-          testPlanValue={testPlanValue}
-        />
+        <NewLaunchFields hideTestPlanField={hideTestPlanField} />
       )}
     </>
   );

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
-export * from './testPlanModal';
-export * from './createTestPlanModal';
-export * from './editTestPlanModal';
-export * from './duplicateTestPlanModal';
-export * from './deleteTestPlanModal';
-export * from './createLaunchModal';
-export * from './removeTestCasesFromTestPlanModal';
+import { defineMessages } from 'react-intl';
+
+export const messages = defineMessages({
+  addToLaunch: {
+    id: 'AddTestCasesToLaunchModal.addToLaunch',
+    defaultMessage: 'Add to Launch',
+  },
+  addSelectedTestCases: {
+    id: 'AddTestCasesToLaunchModal.addSelectedTestCases',
+    defaultMessage: 'You are about to add <bold>{count}</bold> selected test cases to a Launch',
+  },
+});

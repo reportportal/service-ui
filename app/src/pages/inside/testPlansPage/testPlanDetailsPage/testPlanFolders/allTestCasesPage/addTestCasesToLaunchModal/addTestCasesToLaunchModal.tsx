@@ -16,22 +16,21 @@
 
 import { useMemo, ReactNode } from 'react';
 import { useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
 import { InjectedFormProps, reduxForm } from 'redux-form';
 
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { testCasesSelector } from 'controllers/testCase';
+import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import {
   BaseLaunchModal,
   LaunchFormData,
   INITIAL_LAUNCH_FORM_VALUES,
 } from 'pages/inside/common/launchFormFields';
 
-import { AddToLaunchModalProps } from './types';
+import { AddTestCasesToLaunchModalProps } from './types';
 import { messages } from './messages';
 
-import styles from './addToLaunchModal.scss';
+import styles from './addTestCasesToLaunchModal.scss';
 
 const cx = createClassnames(styles);
 
@@ -39,48 +38,43 @@ const BoldTestCasesCount = (parts: ReactNode[]) => (
   <b className={cx('selected-test-cases')}>{parts}</b>
 );
 
-const AddToLaunchModalComponent = ({
-  selectedTestCasesIds,
+const AddTestCasesToLaunchModalComponent = ({
+  selectedRowsIds,
+  testCases: allTestCases,
+  testPlanId,
   onClearSelection,
-  isUncoveredTestsCheckboxAvailable,
   ...reduxFormProps
-}: AddToLaunchModalProps & InjectedFormProps<LaunchFormData>) => {
+}: AddTestCasesToLaunchModalProps & InjectedFormProps<LaunchFormData>) => {
   const { formatMessage } = useIntl();
-  const allTestCases = useSelector(testCasesSelector);
 
-  const testCases = useMemo(() => {
-    return allTestCases.filter((testCase) => selectedTestCasesIds.includes(testCase.id));
-  }, [allTestCases, selectedTestCasesIds]);
+  const testCases: ExtendedTestCase[] = useMemo(() => {
+    return allTestCases.filter((testCase) => selectedRowsIds.includes(testCase.id));
+  }, [allTestCases, selectedRowsIds]);
 
   const descriptionText = useMemo(() => {
-    // Switch description text based on the number of selected test cases
-    return selectedTestCasesIds.length > 1
-      ? formatMessage(messages.addSelectedTestCases, {
-          count: selectedTestCasesIds.length,
-          bold: BoldTestCasesCount,
-        })
-      : formatMessage(messages.addSelectedTestCase, {
-          testCaseName: testCases?.[0]?.name,
-          bold: BoldTestCasesCount,
-        });
-  }, [selectedTestCasesIds.length, testCases, formatMessage]);
+    return formatMessage(messages.addSelectedTestCases, {
+      count: selectedRowsIds.length,
+      bold: BoldTestCasesCount,
+    });
+  }, [selectedRowsIds.length, formatMessage]);
 
   return (
     <BaseLaunchModal
       {...reduxFormProps}
       testCases={testCases}
+      testPlanId={Number(testPlanId)}
       modalTitle={formatMessage(messages.addToLaunch)}
       okButtonText={COMMON_LOCALE_KEYS.ADD}
       description={descriptionText}
-      className={cx('add-to-launch-modal')}
+      hideTestPlanField
+      className={cx('add-test-cases-to-launch-modal')}
       onClearSelection={onClearSelection}
-      isUncoveredTestsCheckboxAvailable={isUncoveredTestsCheckboxAvailable}
     />
   );
 };
 
-export const AddToLaunchModal = reduxForm<LaunchFormData, AddToLaunchModalProps>({
-  form: 'add-to-launch-modal-form',
+export const AddTestCasesToLaunchModal = reduxForm<LaunchFormData, AddTestCasesToLaunchModalProps>({
+  form: 'add-test-cases-to-launch-modal-form',
   destroyOnUnmount: true,
   initialValues: INITIAL_LAUNCH_FORM_VALUES,
-})(AddToLaunchModalComponent);
+})(AddTestCasesToLaunchModalComponent);

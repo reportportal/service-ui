@@ -59,11 +59,10 @@ const CreateLaunchModalComponent = ({
       {...reduxFormProps}
       testCases={testCases}
       testPlanId={testPlanId}
-      testPlanName={testPlanName}
       modalTitle={formatMessage(messages.addToLaunch)}
       okButtonText={COMMON_LOCALE_KEYS.ADD}
       description={descriptionText}
-      isTestPlanFieldDisabled={true}
+      hideTestPlanField
       className={cx('create-launch-modal')}
     />
   );
