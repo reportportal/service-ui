@@ -59,11 +59,11 @@ export const useFolderOperationUI = () => {
 
   const handleOperationError = useCallback(
     ({ fromDragDrop }: UseFolderOperationUIParams) => {
-      if (!fromDragDrop) {
-        hideSpinner();
-      } else {
+      if (fromDragDrop) {
         // Revert any optimistic UI update by re-syncing with server state
         dispatch(getFoldersAction({ silent: true }));
+      } else {
+        hideSpinner();
       }
     },
     [hideSpinner, dispatch],
