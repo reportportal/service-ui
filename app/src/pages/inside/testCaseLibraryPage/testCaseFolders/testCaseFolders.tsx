@@ -159,7 +159,7 @@ export const TestCaseFolders = () => {
   const { handleMoveFolder, handleDuplicateFolder } = useFolderDragDrop({
     folders: initialFolders,
     onMove: (params) => {
-      moveFolder(params).catch(noop);
+      moveFolder({ ...params, parentTestFolderId: params.parentFolderId }).catch(noop);
     },
     onDuplicate: (params) => {
       duplicateFolder(params).catch(noop);

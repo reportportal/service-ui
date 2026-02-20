@@ -154,12 +154,11 @@ export const Folder: FolderComposite = ({
             </button>
           )}
           {enableDragAndDrop && (showDragIcon || isDraggingFolder) ? (
-            <div
+            <button
               ref={dragHandleRef}
+              type="button"
               className={cx('folders-tree__drag-handle')}
-              role="button"
               aria-label={formatMessage(messages.dragToReorder)}
-              tabIndex={0}
               onClick={(e) => e.stopPropagation()}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -168,7 +167,7 @@ export const Folder: FolderComposite = ({
               }}
             >
               <DragNDropIcon />
-            </div>
+            </button>
           ) : (
             <span className={cx('folders-tree__item-title--counter')}>
               {folder.testsCount || 0}

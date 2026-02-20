@@ -65,7 +65,7 @@ export const ExpandedOptions = ({
   const { expandedIds, onToggleFolder } = useStorageFolders(instanceKey);
   const allFolders = useSelector(foldersSelector);
 
-  const isDragAndDropEnabled = !!(onMoveFolder || onDuplicateFolder);
+  const isDragAndDropEnabled = !!(onMoveFolder && onDuplicateFolder);
 
   const dropValidation = (
     useTreeDropValidation as (params: { items: TransformedFolder[]; childrenKey: string }) => {

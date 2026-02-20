@@ -30,12 +30,12 @@ export const useFolderDragDrop = ({ folders, onMove, onDuplicate }: UseFolderDra
         return;
       }
 
-      const parentTestFolderId = getParentFolderId(targetFolder, position);
+      const parentFolderId = getParentFolderId(targetFolder, position);
       const index = calculateDropIndex(targetFolder, position, folders, draggedFolderId, false);
 
       onMove({
         folderId: draggedFolderId,
-        parentTestFolderId,
+        parentFolderId,
         index,
         fromDragDrop: true,
       });

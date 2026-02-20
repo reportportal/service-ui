@@ -18,7 +18,6 @@ import type { TreeDropPosition } from '@reportportal/ui-kit/common';
 import { TREE_DROP_POSITIONS } from '@reportportal/ui-kit/common';
 import { isUndefined } from 'es-toolkit/compat';
 import type { Folder } from 'controllers/testCase/types';
-import { hasFolderParent } from './types';
 
 export const getMaxChildIndex = (folders: Folder[], parentId: number): number => {
   const children = folders.filter((f) => f.parentFolderId === parentId);
@@ -38,7 +37,7 @@ export const getParentFolderId = (
     return targetFolder.id;
   }
 
-  return hasFolderParent(targetFolder) ? targetFolder.parentFolderId : null;
+  return targetFolder.parentFolderId;
 };
 
 export const calculateDropIndex = (

@@ -26,7 +26,7 @@ export interface ExpandedOptionsProps {
   setAllTestCases: () => void;
   onFolderClick: (id: number) => void;
   children: ReactNode;
-  instanceKey?: TMS_INSTANCE_KEY;
+  instanceKey: TMS_INSTANCE_KEY;
   renderCreateFolderButton?: () => ReactNode;
   onMoveFolder?: (
     draggedItem: TreeDragItem,

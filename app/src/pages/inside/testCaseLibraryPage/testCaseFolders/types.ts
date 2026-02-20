@@ -16,15 +16,9 @@
 
 import type { Folder } from 'controllers/testCase/types';
 
-export const hasFolderParent = (
-  folder: Folder,
-): folder is Folder & { parentFolderId: number | null } => {
-  return 'parentFolderId' in folder;
-};
-
 export interface MoveFolderParams {
   folderId: number;
-  parentTestFolderId: number | null | undefined;
+  parentFolderId: number | null | undefined;
   index?: number;
   fromDragDrop: boolean;
 }

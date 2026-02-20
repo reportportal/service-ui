@@ -88,6 +88,7 @@
 
   &__sidebar-actions {
     @include flex-center(row, space-between, center);
+
     padding: 8px 32px;
 
     &--title {
@@ -199,6 +200,7 @@
     right: 14px;
     bottom: 6px;
     @include flex-center(row, center, center);
+
     background-color: var(--rp-ui-base-bg-200);
     opacity: 0.9;
     z-index: 10;
@@ -213,6 +215,7 @@
 
   &__drop-placeholder-content {
     @include flex-center(column, center, center);
+
     gap: 16px;
   }
 
@@ -223,6 +226,7 @@
 
   &__drop-placeholder-text {
     @include text-style(13px);
+
     text-align: center;
   }
 
@@ -286,6 +290,7 @@
     &--active {
       padding: 6.4px;
       @include active-border;
+
       height: 36px;
     }
 
@@ -303,6 +308,7 @@
 
 .folders-loading {
   @include flex-center(row, center, center);
+
   padding: 32px 16px;
   color: var(--rp-ui-base-e-400);
 
@@ -314,6 +320,7 @@
 
 .folder-drag-preview {
   @include flex-center(row, space-between, center);
+
   width: 320px;
   height: 44px;
   padding: 0 16px;
