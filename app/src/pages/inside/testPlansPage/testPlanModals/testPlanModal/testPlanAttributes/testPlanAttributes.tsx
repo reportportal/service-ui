@@ -40,6 +40,10 @@ interface AttributeListFieldProps {
   showButton: boolean;
   editable: boolean;
   defaultOpen: boolean;
+  isAttributeKeyRequired?: boolean;
+  isAttributeValueRequired?: boolean;
+  keyPlaceholder?: string;
+  valuePlaceholder?: string;
 }
 
 const AttributeListField = ({ input, ...rest }: AttributeListFieldProps) => (
@@ -79,6 +83,10 @@ export const TestPlanAttributes = () => {
           maxLength={50}
           editable
           defaultOpen={false}
+          isAttributeKeyRequired
+          isAttributeValueRequired
+          keyPlaceholder={formatMessage(messages.attributeKeyPlaceholderRequired)}
+          valuePlaceholder={formatMessage(messages.attributeValuePlaceholderRequired)}
           getURIKey={getURIKey}
           getURIValue={getURIValue}
         />
