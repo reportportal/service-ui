@@ -21,6 +21,7 @@ import { ChevronDownDropdownIcon, MeatballMenuIcon, DragNDropIcon } from '@repor
 import { TreeSortableItem } from '@reportportal/ui-kit/sortable';
 
 import { createClassnames } from 'common/utils';
+import { isEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 import { PopoverControl } from 'pages/common/popoverControl';
 
 import { highlightText, hasMatchInTree, hasChildMatch } from '../utils';
@@ -161,7 +162,7 @@ export const Folder: FolderComposite = ({
               aria-label={formatMessage(messages.dragToReorder)}
               onClick={(e) => e.stopPropagation()}
               onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
+                if (isEnterOrSpaceKey(e)) {
                   e.stopPropagation();
                 }
               }}
