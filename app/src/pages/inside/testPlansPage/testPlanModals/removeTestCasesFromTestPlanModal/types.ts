@@ -19,7 +19,6 @@ import { VoidFn } from '@reportportal/ui-kit/common/types/commonTypes';
 
 export interface RemoveTestCasesFromTestPlanModalData {
   selectedTestCaseIds: number[];
-  testPlanId: string;
   onClearSelection?: () => void;
 }
 

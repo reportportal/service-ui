@@ -24,7 +24,6 @@ import { createClassnames } from 'common/utils';
 import { withModal, hideModalAction } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
-import { useTestPlanById } from 'hooks/useTypedSelector';
 import { useModalButtons } from 'pages/inside/testCaseLibraryPage/hooks/useModalButtons';
 
 import { useRemoveTestCasesFromTestPlan } from './useRemoveTestCasesFromTestPlan';
@@ -41,11 +40,10 @@ const BoldText = ({ children, className }: { children: ReactNode; className?: st
 );
 
 const RemoveTestCasesFromTestPlanModal = ({ data }: RemoveTestCasesFromTestPlanModalProps) => {
-  const { selectedTestCaseIds = [], testPlanId = '', onClearSelection = noop } = data || {};
+  const { selectedTestCaseIds = [], onClearSelection = noop } = data || {};
 
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const testPlan = useTestPlanById(testPlanId);
   const { isLoading, removeTestCasesFromTestPlan } = useRemoveTestCasesFromTestPlan({
     onSuccess: () => {
       dispatch(hideModalAction());
@@ -80,7 +78,6 @@ const RemoveTestCasesFromTestPlanModal = ({ data }: RemoveTestCasesFromTestPlanM
       <div>
         {formatMessage(messages.removeFromTestPlanDescription, {
           count: selectedTestCaseIds.length,
-          testPlanName: testPlan?.name || '',
           b: renderBoldText,
         })}
         <ModalLoadingOverlay isVisible={isLoading} />
