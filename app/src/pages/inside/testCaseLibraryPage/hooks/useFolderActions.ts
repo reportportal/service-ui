@@ -37,11 +37,13 @@ export const useFolderActions = () => {
       folderName,
       parentFolderId,
       countOfTestCases = 0,
+      index,
     }: {
       id: number;
       folderName: string;
       parentFolderId?: number | null;
       countOfTestCases?: number;
+      index?: number;
     }) => {
       dispatch(
         createFoldersSuccessAction({
@@ -49,6 +51,7 @@ export const useFolderActions = () => {
           name: folderName,
           parentFolderId: parentFolderId ?? null,
           countOfTestCases,
+          index,
         }),
       );
     },

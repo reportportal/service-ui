@@ -15,6 +15,13 @@
  */
 
 // SVG imports
+// Inline SVGs (loaded as strings via svg-inline-loader)
+declare module '*-inline.svg' {
+  const content: string;
+  export default content;
+}
+
+// Regular SVGs (loaded as React components)
 declare module '*.svg' {
   import { FC, SVGProps } from 'react';
 

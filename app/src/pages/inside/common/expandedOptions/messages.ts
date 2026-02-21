@@ -33,4 +33,12 @@ export const messages = defineMessages({
     id: 'expandedOptions.searchPlaceholder',
     defaultMessage: 'Type to filter folders by name',
   },
+  folder: {
+    id: 'expandedOptions.folder',
+    defaultMessage: 'Folder',
+  },
+  dragToReorder: {
+    id: 'expandedOptions.dragToReorder',
+    defaultMessage: 'Drag to reorder',
+  },
 });

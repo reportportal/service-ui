@@ -18,6 +18,7 @@ import { ReactNode } from 'react';
 
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { TransformedFolder } from 'controllers/testCase';
+import { TreeDragItem, TreeDropPosition } from '@reportportal/ui-kit/common';
 
 export interface ExpandedOptionsProps {
   folders: TransformedFolder[];
@@ -27,6 +28,16 @@ export interface ExpandedOptionsProps {
   children: ReactNode;
   instanceKey: TMS_INSTANCE_KEY;
   renderCreateFolderButton?: () => ReactNode;
+  onMoveFolder?: (
+    draggedItem: TreeDragItem,
+    targetId: string | number,
+    position: TreeDropPosition,
+  ) => void;
+  onDuplicateFolder?: (
+    draggedItem: TreeDragItem,
+    targetId: string | number,
+    position: TreeDropPosition,
+  ) => void;
 }
 
 export interface UseFolderSearchParams {
