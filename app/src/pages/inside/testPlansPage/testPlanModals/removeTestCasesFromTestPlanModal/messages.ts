@@ -24,7 +24,7 @@ export const messages = defineMessages({
   removeFromTestPlanDescription: {
     id: 'RemoveTestCasesFromTestPlanModal.description',
     defaultMessage:
-      'Are you sure you want to remove <b>{count, number}</b> {count, plural, one {item} other {items}} from the <b>{testPlanName}</b>?',
+      'Are you sure you want to remove the <b>{count, number}</b> test cases from the test plan?',
   },
   removeFromTestPlanError: {
     id: 'RemoveTestCasesFromTestPlanModal.errorMessage',
