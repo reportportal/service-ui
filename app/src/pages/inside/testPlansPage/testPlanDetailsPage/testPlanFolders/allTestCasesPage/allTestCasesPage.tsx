@@ -80,7 +80,6 @@ export const AllTestCasesPage = ({
   const handleOpenRemoveModal = () => {
     openRemoveTestCasesModal({
       selectedTestCaseIds: selectedRowIds,
-      testPlanId,
       onClearSelection,
     });
   };
@@ -116,6 +115,7 @@ export const AllTestCasesPage = ({
               changePage={setPageNumber}
               changePageSize={setPageSize}
               captions={captions}
+              className={cx('pagination-content')}
             />
           </div>
         )}

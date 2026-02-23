@@ -102,7 +102,6 @@ export const TestPlanSidePanel = memo(
     const handleRemoveFromTestPlan = () => {
       openRemoveTestCasesModal({
         selectedTestCaseIds: [testPlan.id],
-        testPlanId: String(testPlanId),
         onClearSelection: () => {
           onClose();
         },
