@@ -190,7 +190,6 @@ export const AllTestCasesPage = ({
           folderTitle={folderTitle}
           instanceKey={instanceKey}
           handleSelectedRows={handleSelectedRows}
-          activePage={activePage}
         />
       </div>
       {Boolean(testCasesPageData?.totalElements) && (
