@@ -68,7 +68,7 @@ export const ExportsBanner = () => {
     <div className={cx('exports-banner-container', `variant-${variant}`)}>
       <div className={cx('exports-banner')}>
         <div className={cx('content')}>
-          <p className={cx('description')}>
+          <div className={cx('description')}>
             <BubblesLoader className={cx('loader')} />
             {exportCount === 1
               ? formatMessage(messages.singleExport)
@@ -77,7 +77,7 @@ export const ExportsBanner = () => {
                   b: (data) => <b>{data}</b>,
                 })}{' '}
             {formatMessage(messages.caution)}
-          </p>
+          </div>
           {variant === EXPORTS_BANNER_VARIANT_MODERN ? (
             <Button
               variant="text-danger"
