@@ -18,46 +18,56 @@ import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { projectKeySelector } from 'controllers/project';
-import { hideModalAction } from 'controllers/modal';
-import {
-  moveFolderSuccessAction,
-} from 'controllers/testCase/actionCreators';
+import { moveFolderSuccessAction } from 'controllers/testCase/actionCreators';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { useDebouncedSpinner, useNotification } from 'common/hooks';
 
 import { useFolderActions } from '../../../hooks/useFolderActions';
 import { useNavigateToFolder } from '../../../hooks/useNavigateToFolder';
-import { FolderDestination } from '../../../utils/getFolderDestinationFromFormValues';
+import { useFolderOperationUI } from '../../../hooks/useFolderOperationUI';
 import { processFolderDestination } from '../../../utils/processFolderDestination';
-
-interface MoveFolderApiParams extends FolderDestination {
-  folderId: number;
-}
-
-interface MoveFolderResponse {
-  id: number;
-  name: string;
-  parentFolderId: number;
-}
+import { MoveFolderApiParams, MoveFolderResponse } from './types';
 
 export const useMoveFolder = () => {
-  const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
+  const {
+    isLoading,
+    handleOperationStart,
+    handleOperationSuccess,
+    handleOperationError,
+    showErrorNotification,
+  } = useFolderOperationUI();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const { createNewStoreFolder } = useFolderActions();
-  const { navigateToFolder, navigateToFolderAfterAction, expandFoldersToLevel } = useNavigateToFolder();
-  const { showSuccessNotification, showErrorNotification } = useNotification();
+  const { navigateToFolder, navigateToFolderAfterAction, expandFoldersToLevel } =
+    useNavigateToFolder();
 
   const moveFolder = useCallback(
-    async ({ folderId, parentTestFolderId, parentTestFolder }: MoveFolderApiParams) => {
-      showSpinner();
+    async ({
+      folderId,
+      parentTestFolderId,
+      parentTestFolder,
+      index,
+      fromDragDrop,
+    }: MoveFolderApiParams) => {
+      const isDragDropOperation = Boolean(fromDragDrop);
+      handleOperationStart({ fromDragDrop: isDragDropOperation });
 
       try {
+        let data;
+        if (parentTestFolder) {
+          data = { parentTestFolder, index };
+        } else if (parentTestFolderId === null) {
+          data = { parentTestFolder: {}, index };
+        } else {
+          data = { parentTestFolderId, index };
+        }
+
         const response = await fetch<MoveFolderResponse>(URLS.folder(projectKey, folderId), {
           method: 'PATCH',
-          data: parentTestFolder ? { parentTestFolder } : { parentTestFolderId },
+          data,
         });
+
         const movedFolderParentId = response.parentFolderId ?? null;
 
         const { targetFolderId, newFolderDetails, isNewFolder } = processFolderDestination({
@@ -77,11 +87,14 @@ export const useMoveFolder = () => {
           moveFolderSuccessAction({
             folderId,
             parentTestFolderId: movedFolderParentId,
+            index: response.index,
           }),
         );
 
-        dispatch(hideModalAction());
-        showSuccessNotification({ messageId: 'testCaseFolderMovedSuccess' });
+        handleOperationSuccess({
+          fromDragDrop: isDragDropOperation,
+          successMessageId: 'testCaseFolderMovedSuccess',
+        });
 
         if (isNewFolder && newFolderDetails) {
           navigateToFolderAfterAction({
@@ -95,13 +108,24 @@ export const useMoveFolder = () => {
             parentIdToExpand: movedFolderParentId,
           });
         }
-      } catch {
+      } catch (error) {
+        console.error('❌ Move folder failed:', error);
         showErrorNotification({ messageId: 'testCaseFolderMoveFailed' });
-      } finally {
-        hideSpinner();
+        handleOperationError({ fromDragDrop: isDragDropOperation });
       }
     },
-    [showSpinner, projectKey, dispatch, showSuccessNotification, createNewStoreFolder, navigateToFolderAfterAction, expandFoldersToLevel, navigateToFolder, showErrorNotification, hideSpinner],
+    [
+      projectKey,
+      dispatch,
+      handleOperationStart,
+      handleOperationSuccess,
+      handleOperationError,
+      showErrorNotification,
+      createNewStoreFolder,
+      navigateToFolderAfterAction,
+      expandFoldersToLevel,
+      navigateToFolder,
+    ],
   );
 
   return { moveFolder, isLoading };

@@ -14,17 +14,4 @@
  * limitations under the License.
  */
 
-import { UseModalData } from 'common/hooks';
-import { VoidFn } from '@reportportal/ui-kit/common/types/commonTypes';
-
-export interface RemoveTestCasesFromTestPlanModalData {
-  selectedTestCaseIds: number[];
-  onClearSelection?: () => void;
-}
-
-export type RemoveTestCasesFromTestPlanModalProps =
-  UseModalData<RemoveTestCasesFromTestPlanModalData>;
-
-export interface UseRemoveTestCasesFromTestPlanOptions {
-  onSuccess?: VoidFn;
-}
+export const FOLDER_DRAG_TYPE = 'TEST_CASE_FOLDER';

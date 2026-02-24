@@ -14,21 +14,28 @@
  * limitations under the License.
  */
 
-import { TransformedFolder } from 'controllers/testCase';
-import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
-
-export interface FolderProps {
-  folder: TransformedFolder;
-  activeFolder: number | null;
-  instanceKey: TMS_INSTANCE_KEY;
-  expandedIds: number[];
-  setAllTestCases: () => void;
-  onFolderClick: (id: number) => void;
-  onToggleFolder: (folder: TransformedFolder) => void;
-  searchQuery?: string;
-  ancestorDirectMatch?: boolean;
+export interface MoveFolderApiParams {
+  folderId: number;
+  parentTestFolderId?: number | null;
+  parentTestFolder?: {
+    name?: string;
+    parentTestFolderId?: number | null;
+  };
   index?: number;
-  parentId?: number | null;
-  enableDragAndDrop?: boolean;
-  canDropOn?: (draggedItem: { id: string | number }, targetId: string | number) => boolean;
+  fromDragDrop?: boolean;
 }
+
+export interface MoveFolderResponse {
+  id: number;
+  name: string;
+  parentFolderId: number | null;
+  index?: number;
+}
+
+export type MoveFolderRequestData =
+  | {
+      parentTestFolder:
+        | { name?: string; parentTestFolderId?: number | null }
+        | Record<string, never>;
+    }
+  | { parentTestFolderId: number | null };

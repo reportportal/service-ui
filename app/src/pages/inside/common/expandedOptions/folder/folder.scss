@@ -44,6 +44,10 @@
       background-color: var(--rp-ui-base-e-100);
     }
 
+    &--dragging {
+      opacity: 0.5;
+    }
+
     &-title {
       display: flex;
       justify-content: space-between;
@@ -60,12 +64,14 @@
         font-family: $FONT-ROBOTO-MEDIUM;
         font-weight: 500;
         color: var(--rp-ui-base-almost-black);
+        flex: 1;
       }
 
       &--counter {
         font-size: 13px;
         font-family: $FONT-ROBOTO-REGULAR;
         color: var(--rp-ui-base-e-400);
+        margin-left: 8px;
       }
 
       &:hover {
@@ -101,18 +107,24 @@
         transform: none;
       }
     }
+
+    &-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+    }
   }
 
   &__tools {
     display: flex;
     align-items: center;
-    margin-left: auto;
-    margin-right: 8px;
     height: 20px;
     visibility: hidden;
     border: 0;
     background-color: transparent;
     cursor: pointer;
+    padding: 0;
 
     button svg {
       width: 16px;
@@ -143,6 +155,88 @@
         fill: var(--rp-ui-base-topaz-pressed);
       }
     }
+  }
+
+  &__drag-handle {
+    display: flex;
+    align-items: center;
+    height: 20px;
+    border: 0;
+    background-color: transparent;
+    cursor: grab;
+    padding: 0;
+    user-select: none;
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+      pointer-events: none;
+    }
+
+    svg path {
+      fill: var(--rp-ui-base-e-300);
+    }
+
+    &:hover svg path {
+      fill: var(--rp-ui-base-topaz-hover);
+    }
+  }
+}
+
+.tree-sortable-wrapper {
+  display: block;
+
+  > * {
+    pointer-events: auto;
+  }
+
+  &[class*='tree-sortable-item--drop-inside'] {
+    &::before {
+      display: none;
+    }
+
+    // Apply border only to the immediate folder title, not subfolders
+    > .folders-tree__item > .folders-tree__item-content > .folders-tree__item-title {
+      border: 2px dashed var(--rp-ui-base-topaz-focused);
+      border-radius: 4px;
+      background-color: var(--rp-ui-base-topaz-bg-light);
+    }
+  }
+}
+
+.folder-drag-preview {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background-color: var(--rp-ui-base-bg-100);
+  border: 1px solid var(--rp-ui-base-e-200);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  svg path {
+    fill: var(--rp-ui-base-e-300);
+  }
+
+  &__text {
+    font-size: 13px;
+    font-family: $FONT-ROBOTO-MEDIUM;
+    font-weight: 500;
+    color: var(--rp-ui-base-almost-black);
   }
 }
 

@@ -14,21 +14,25 @@
  * limitations under the License.
  */
 
-import { TransformedFolder } from 'controllers/testCase';
-import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
+import type { Folder } from 'controllers/testCase/types';
 
-export interface FolderProps {
-  folder: TransformedFolder;
-  activeFolder: number | null;
-  instanceKey: TMS_INSTANCE_KEY;
-  expandedIds: number[];
-  setAllTestCases: () => void;
-  onFolderClick: (id: number) => void;
-  onToggleFolder: (folder: TransformedFolder) => void;
-  searchQuery?: string;
-  ancestorDirectMatch?: boolean;
+export interface MoveFolderParams {
+  folderId: number;
+  parentFolderId: number | null | undefined;
   index?: number;
-  parentId?: number | null;
-  enableDragAndDrop?: boolean;
-  canDropOn?: (draggedItem: { id: string | number }, targetId: string | number) => boolean;
+  fromDragDrop: boolean;
+}
+
+export interface DuplicateFolderParams {
+  folderId: number;
+  folderName: string;
+  parentFolderId: number | null | undefined;
+  index?: number;
+  fromDragDrop: boolean;
+}
+
+export interface UseFolderDragDropParams {
+  folders: Folder[];
+  onMove: (params: MoveFolderParams) => void;
+  onDuplicate: (params: DuplicateFolderParams) => void;
 }

@@ -21,6 +21,8 @@ import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'es-toolkit/compat';
 
+import { isIconComponent } from 'pages/inside/testCaseLibraryPage/types';
+
 import { Button } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ExternalLink } from 'pages/inside/common/externalLink';
@@ -80,7 +82,7 @@ export const EmptyStatePage = ({
                 data-automation-id={dataAutomationId}
                 key={name}
                 variant={variant}
-                {...(icon && { icon: Parser(icon) })}
+                {...(icon && { icon: isIconComponent(icon) ? icon : Parser(icon) })}
               >
                 {name}
               </Button>
