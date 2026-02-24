@@ -25,14 +25,14 @@ import { commonMessages } from '../../commonMessages';
 
 export const DetailsEmptyState = ({ testCase }: DetailsEmptyStateProps) => {
   const { formatMessage } = useIntl();
-  const { canEditTestCaseScenario } = useUserPermissions();
+  const { canManageTestCases } = useUserPermissions();
   const { openModal } = useEditTestCaseModal();
 
   const handleEditScenario = () => {
     openModal({ testCase });
   };
 
-  const buttons = canEditTestCaseScenario
+  const buttons = canManageTestCases
     ? [
         {
           name: formatMessage(commonMessages.editScenario),
