@@ -38,7 +38,9 @@ export const ManualLaunchesPageContent = ({
   fullLaunches = [],
   onRefresh,
 }: ManualLaunchesPageContentProps) => {
-  if (isLoading) {
+  const hasData = !isEmpty(fullLaunches);
+
+  if (isLoading && !hasData) {
     return (
       <div className={cx('loading')}>
         <BubblesLoader />
@@ -46,7 +48,7 @@ export const ManualLaunchesPageContent = ({
     );
   }
 
-  if (isEmpty(fullLaunches)) {
+  if (!hasData) {
     return <ManualLaunchesEmptyState />;
   }
 

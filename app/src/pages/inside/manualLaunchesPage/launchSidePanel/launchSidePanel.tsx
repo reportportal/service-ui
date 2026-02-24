@@ -52,177 +52,183 @@ interface LaunchSidePanelProps {
   launchId: number | null;
   isVisible: boolean;
   onClose: () => void;
+  onRefresh?: () => void;
 }
 
-export const LaunchSidePanel = memo(({ launchId, isVisible, onClose }: LaunchSidePanelProps) => {
-  const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
-  const { organizationSlug, projectSlug } = useProjectDetails();
-  const sidePanelRef = useRef<HTMLDivElement>(null);
-  const { launchDetails, isLoading, refetchLaunchDetails } = useLaunchDetails(launchId);
-  const { openModal: openEditModal } = useEditManualLaunchModal({
-    onSuccess: refetchLaunchDetails,
-  });
+export const LaunchSidePanel = memo(
+  ({ launchId, isVisible, onClose, onRefresh }: LaunchSidePanelProps) => {
+    const { formatMessage } = useIntl();
+    const dispatch = useDispatch();
+    const { organizationSlug, projectSlug } = useProjectDetails();
+    const sidePanelRef = useRef<HTMLDivElement>(null);
+    const { launchDetails, isLoading, refetchLaunchDetails } = useLaunchDetails(launchId);
+    const { openModal: openEditModal } = useEditManualLaunchModal({
+      onSuccess: () => {
+        refetchLaunchDetails();
+        onRefresh?.();
+      },
+    });
 
-  const handleEditLaunchClick = useCallback(() => {
-    if (!launchDetails) return;
+    const handleEditLaunchClick = useCallback(() => {
+      if (!launchDetails) return;
 
-    const { id, name, description, testPlan, attributes } = launchDetails;
+      const { id, name, description, testPlan, attributes } = launchDetails;
 
-    const modalData = {
-      id,
-      name,
-      description,
-      testPlan: testPlan ? { id: testPlan.id, name: testPlan.name } : null,
-      attributes: attributes || [],
+      const modalData = {
+        id,
+        name,
+        description,
+        testPlan: testPlan ? { id: testPlan.id, name: testPlan.name } : null,
+        attributes: attributes || [],
+      };
+
+      openEditModal(modalData);
+    }, [launchDetails, openEditModal]);
+
+    useOnClickOutside(sidePanelRef, onClose);
+
+    if (!launchDetails) {
+      return null;
+    }
+
+    const handleToRunClick = () => {
+      // TODO: Implement to run functionality
     };
 
-    openEditModal(modalData);
-  }, [launchDetails, openEditModal]);
+    const handleOpenDetailsClick = () => {
+      if (launchId) {
+        dispatch({
+          type: MANUAL_LAUNCH_DETAILS_PAGE,
+          payload: { organizationSlug, projectSlug, launchId: launchId.toString() },
+        });
+        onClose();
+      }
+    };
 
-  useOnClickOutside(sidePanelRef, onClose);
+    const { total, passed, failed, skipped, toRun, inProgress } = launchDetails.executionStatistic;
 
-  if (!launchDetails) {
-    return null;
-  }
+    const { testPlan, owner, type, startTime } = launchDetails;
 
-  const handleToRunClick = () => {
-    // TODO: Implement to run functionality
-  };
+    const ownerInfo = owner?.name ?? owner?.email;
 
-  const handleOpenDetailsClick = () => {
-    if (launchId) {
-      dispatch({
-        type: MANUAL_LAUNCH_DETAILS_PAGE,
-        payload: { organizationSlug, projectSlug, launchId: launchId.toString() },
-      });
-      onClose();
-    }
-  };
-
-  const { total, passed, failed, skipped, toRun, inProgress } = launchDetails.executionStatistic;
-
-  const { testPlan, owner, type, startTime } = launchDetails;
-
-  const ownerInfo = owner?.name ?? owner?.email;
-
-  const descriptionComponent = (
-    <div className={cx('header-meta')}>
-      <div className={cx('meta-row', 'meta-row-with-action')}>
-        <div className={cx('meta-item-row')}>
-          <LaunchTypeIcon className={cx('launch-type-icon')} />
-          <span className={cx('meta-label')}>{formatMessage(messages.type)}:</span>
-          <span className={cx('meta-value')}>{type}</span>
+    const descriptionComponent = (
+      <div className={cx('header-meta')}>
+        <div className={cx('meta-row', 'meta-row-with-action')}>
+          <div className={cx('meta-item-row')}>
+            <LaunchTypeIcon className={cx('launch-type-icon')} />
+            <span className={cx('meta-label')}>{formatMessage(messages.type)}:</span>
+            <span className={cx('meta-value')}>{type}</span>
+          </div>
         </div>
-      </div>
-      <div className={cx('meta-row')}>
-        <div className={cx('meta-item-row')}>
-          <UserIcon />
-          <span className={cx('meta-label')}>{formatMessage(messages.owner)}:</span>
-          <span className={cx('meta-value')}>{ownerInfo}</span>
-        </div>
-      </div>
-      <div className={cx('meta-row')}>
-        <div className={cx('meta-item-row')}>
-          <RerunIcon />
-          <span className={cx('meta-label')}>{formatMessage(messages.created)}:</span>
-          <span className={cx('meta-value')}>{formatTimestampForSidePanel(startTime)}</span>
-        </div>
-      </div>
-      {testPlan && (
         <div className={cx('meta-row')}>
           <div className={cx('meta-item-row')}>
-            <TestPlanIcon />
-            <span className={cx('meta-label')}>{formatMessage(messages.testPlan)}:</span>
-            <span className={cx('meta-value')}>{testPlan.name}</span>
+            <UserIcon />
+            <span className={cx('meta-label')}>{formatMessage(messages.owner)}:</span>
+            <span className={cx('meta-value')}>{ownerInfo}</span>
           </div>
         </div>
-      )}
-    </div>
-  );
-
-  const contentComponent = (
-    <div className={cx('content')}>
-      <TestStatisticsChart
-        total={total}
-        passed={passed}
-        failed={failed}
-        skipped={skipped}
-        inProgress={inProgress}
-        toRun={toRun}
-      />
-      <CollapsibleSection
-        title={formatMessage(commonMessages.description)}
-        defaultMessage={formatMessage(commonMessages.descriptionNotSpecified)}
-      >
-        {launchDetails.description && (
-          <ExpandedTextSection text={launchDetails.description} defaultVisibleLines={5} />
-        )}
-      </CollapsibleSection>
-      <CollapsibleSection
-        title={formatMessage(messages.attributesTitle)}
-        defaultMessage={formatMessage(messages.noAttributesAdded)}
-      >
-        {!isEmpty(launchDetails.attributes) && (
-          <div className={cx('attributes-list')}>
-            {launchDetails.attributes.map((attr) => (
-              <LaunchAttribute
-                key={`${attr.key}-${attr.value}`}
-                attributeKey={attr.key}
-                value={attr.value}
-              />
-            ))}
+        <div className={cx('meta-row')}>
+          <div className={cx('meta-item-row')}>
+            <RerunIcon />
+            <span className={cx('meta-label')}>{formatMessage(messages.created)}:</span>
+            <span className={cx('meta-value')}>{formatTimestampForSidePanel(startTime)}</span>
+          </div>
+        </div>
+        {testPlan && (
+          <div className={cx('meta-row')}>
+            <div className={cx('meta-item-row')}>
+              <TestPlanIcon />
+              <span className={cx('meta-label')}>{formatMessage(messages.testPlan)}:</span>
+              <span className={cx('meta-value')}>{testPlan.name}</span>
+            </div>
           </div>
         )}
-      </CollapsibleSection>
-    </div>
-  );
+      </div>
+    );
 
-  const footerComponent = (
-    <div className={cx('footer')}>
-      <Button
-        variant="text"
-        className={cx('action-button')}
-        onClick={handleOpenDetailsClick}
-        data-automation-id="launch-open-details"
-      >
-        {formatMessage(messages.openDetails)}
-      </Button>
-      <Button
-        variant="ghost"
-        className={cx('action-button')}
-        onClick={handleEditLaunchClick}
-        data-automation-id="launch-edit-launch"
-      >
-        {formatMessage(messages.editLaunch)}
-      </Button>
-      <Button
-        variant="primary"
-        className={cx('action-button', 'last-button')}
-        onClick={handleToRunClick}
-        disabled={toRun === 0}
-        data-automation-id="launch-to-run"
-      >
-        {formatMessage(toRun ? messages.toRunWithCount : COMMON_LOCALE_KEYS.DONE, {
-          testCount: toRun,
-        })}
-      </Button>
-    </div>
-  );
+    const contentComponent = (
+      <div className={cx('content')}>
+        <TestStatisticsChart
+          total={total}
+          passed={passed}
+          failed={failed}
+          skipped={skipped}
+          inProgress={inProgress}
+          toRun={toRun}
+        />
+        <CollapsibleSection
+          title={formatMessage(commonMessages.description)}
+          defaultMessage={formatMessage(commonMessages.descriptionNotSpecified)}
+        >
+          {launchDetails.description && (
+            <ExpandedTextSection text={launchDetails.description} defaultVisibleLines={5} />
+          )}
+        </CollapsibleSection>
+        <CollapsibleSection
+          title={formatMessage(messages.attributesTitle)}
+          defaultMessage={formatMessage(messages.noAttributesAdded)}
+        >
+          {!isEmpty(launchDetails.attributes) && (
+            <div className={cx('attributes-list')}>
+              {launchDetails.attributes.map((attr) => (
+                <LaunchAttribute
+                  key={`${attr.key}-${attr.value}`}
+                  attributeKey={attr.key}
+                  value={attr.value}
+                />
+              ))}
+            </div>
+          )}
+        </CollapsibleSection>
+      </div>
+    );
 
-  return (
-    <div ref={sidePanelRef} className={cx('launch-side-panel-wrapper')}>
-      <SidePanel
-        className={cx('launch-side-panel')}
-        title={`${launchDetails.name} #${launchDetails.number}`}
-        descriptionComponent={isLoading ? <BubblesLoader /> : descriptionComponent}
-        contentComponent={isLoading ? <BubblesLoader /> : contentComponent}
-        footerComponent={footerComponent}
-        isOpen={isVisible}
-        onClose={onClose}
-        closeButtonAriaLabel={formatMessage(commonMessages.closePanel)}
-        side="right"
-      />
-    </div>
-  );
-});
+    const footerComponent = (
+      <div className={cx('footer')}>
+        <Button
+          variant="text"
+          className={cx('action-button')}
+          onClick={handleOpenDetailsClick}
+          data-automation-id="launch-open-details"
+        >
+          {formatMessage(messages.openDetails)}
+        </Button>
+        <Button
+          variant="ghost"
+          className={cx('action-button')}
+          onClick={handleEditLaunchClick}
+          data-automation-id="launch-edit-launch"
+        >
+          {formatMessage(messages.editLaunch)}
+        </Button>
+        <Button
+          variant="primary"
+          className={cx('action-button', 'last-button')}
+          onClick={handleToRunClick}
+          disabled={toRun === 0}
+          data-automation-id="launch-to-run"
+        >
+          {formatMessage(toRun ? messages.toRunWithCount : COMMON_LOCALE_KEYS.DONE, {
+            testCount: toRun,
+          })}
+        </Button>
+      </div>
+    );
+
+    return (
+      <div ref={sidePanelRef} className={cx('launch-side-panel-wrapper')}>
+        <SidePanel
+          className={cx('launch-side-panel')}
+          title={`${launchDetails.name} #${launchDetails.number}`}
+          descriptionComponent={isLoading ? <BubblesLoader /> : descriptionComponent}
+          contentComponent={isLoading ? <BubblesLoader /> : contentComponent}
+          footerComponent={footerComponent}
+          isOpen={isVisible}
+          onClose={onClose}
+          closeButtonAriaLabel={formatMessage(commonMessages.closePanel)}
+          side="right"
+        />
+      </div>
+    );
+  },
+);

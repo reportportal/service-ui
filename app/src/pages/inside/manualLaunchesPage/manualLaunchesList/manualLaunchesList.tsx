@@ -134,6 +134,7 @@ export const ManualLaunchesList = ({ fullLaunches, onRefresh }: ManualLaunchesLi
         launchId={selectedLaunchId}
         isVisible={Boolean(selectedLaunchId)}
         onClose={handleCloseSidePanel}
+        onRefresh={onRefresh}
       />
     </div>
   );
