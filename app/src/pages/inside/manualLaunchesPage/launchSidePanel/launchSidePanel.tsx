@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { memo, useRef } from 'react';
+import { memo, useRef, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import {
@@ -40,6 +40,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { LaunchAttribute } from '../launchAttribute';
 import { TestStatisticsChart } from '../testStatisticsChart';
+import { useEditManualLaunchModal } from '../editManualLaunchModal';
 import { useLaunchDetails } from './useLaunchDetails';
 import { messages } from './messages';
 
@@ -58,17 +59,32 @@ export const LaunchSidePanel = memo(({ launchId, isVisible, onClose }: LaunchSid
   const dispatch = useDispatch();
   const { organizationSlug, projectSlug } = useProjectDetails();
   const sidePanelRef = useRef<HTMLDivElement>(null);
-  const { launchDetails, isLoading } = useLaunchDetails(launchId);
+  const { launchDetails, isLoading, refetchLaunchDetails } = useLaunchDetails(launchId);
+  const { openModal: openEditModal } = useEditManualLaunchModal({
+    onSuccess: refetchLaunchDetails,
+  });
+
+  const handleEditLaunchClick = useCallback(() => {
+    if (!launchDetails) return;
+
+    const { id, name, description, testPlan, attributes } = launchDetails;
+
+    const modalData = {
+      id,
+      name,
+      description,
+      testPlan: testPlan ? { id: testPlan.id, name: testPlan.name } : null,
+      attributes: attributes || [],
+    };
+
+    openEditModal(modalData);
+  }, [launchDetails, openEditModal]);
 
   useOnClickOutside(sidePanelRef, onClose);
 
   if (!launchDetails) {
     return null;
   }
-
-  const handleEditLaunchClick = () => {
-    // TODO: Implement edit launch functionality
-  };
 
   const handleToRunClick = () => {
     // TODO: Implement to run functionality

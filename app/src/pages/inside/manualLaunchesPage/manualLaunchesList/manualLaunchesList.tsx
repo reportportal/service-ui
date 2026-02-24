@@ -28,7 +28,10 @@ import { useManualLaunchesColumns } from './hooks/useManualLaunchesColumns/useMa
 import { Launch } from '../types';
 import { useManualLaunchesTableData } from './hooks/useManualLaunchesTableData';
 import { LaunchSidePanel } from '../launchSidePanel';
-import { useDeleteManualLaunchModal, useBatchDeleteManualLaunchesModal } from '../deleteManualLaunchModal';
+import {
+  useDeleteManualLaunchModal,
+  useBatchDeleteManualLaunchesModal,
+} from '../deleteManualLaunchModal';
 import { ManualLaunchRowActions } from './manualLaunchRowActions';
 import { transformLaunchToManualTestCase } from '../useManualLaunches';
 
@@ -38,9 +41,10 @@ const cx = createClassnames(styles);
 
 interface ManualLaunchesListProps {
   fullLaunches: Launch[];
+  onRefresh?: () => void;
 }
 
-export const ManualLaunchesList = ({ fullLaunches }: ManualLaunchesListProps) => {
+export const ManualLaunchesList = ({ fullLaunches, onRefresh }: ManualLaunchesListProps) => {
   const { formatMessage } = useIntl();
   const { canDoTestCaseBulkActions } = useUserPermissions();
   const { openModal: openDeleteModal } = useDeleteManualLaunchModal();
@@ -103,7 +107,11 @@ export const ManualLaunchesList = ({ fullLaunches }: ManualLaunchesListProps) =>
         onToggleAllRowsSelection={handleSelectAll}
         renderRowActions={(metaData) =>
           metaData ? (
-            <ManualLaunchRowActions metaData={metaData} onDelete={openDeleteModal} />
+            <ManualLaunchRowActions
+              metaData={metaData}
+              onDelete={openDeleteModal}
+              onRefresh={onRefresh}
+            />
           ) : null
         }
       />

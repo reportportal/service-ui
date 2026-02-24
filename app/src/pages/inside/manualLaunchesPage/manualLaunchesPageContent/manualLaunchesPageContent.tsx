@@ -30,11 +30,13 @@ const cx = createClassnames(styles);
 export interface ManualLaunchesPageContentProps {
   isLoading: boolean;
   fullLaunches?: Launch[];
+  onRefresh?: () => void;
 }
 
 export const ManualLaunchesPageContent = ({
   isLoading,
   fullLaunches = [],
+  onRefresh,
 }: ManualLaunchesPageContentProps) => {
   if (isLoading) {
     return (
@@ -48,5 +50,5 @@ export const ManualLaunchesPageContent = ({
     return <ManualLaunchesEmptyState />;
   }
 
-  return <ManualLaunchesList fullLaunches={fullLaunches} />;
+  return <ManualLaunchesList fullLaunches={fullLaunches} onRefresh={onRefresh} />;
 };

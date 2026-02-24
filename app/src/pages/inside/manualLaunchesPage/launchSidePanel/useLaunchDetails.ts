@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { projectKeySelector } from 'controllers/project';
@@ -28,8 +28,13 @@ import { ManualLaunchItem } from '../types';
 export const useLaunchDetails = (launchId: number | null) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const [launchDetails, setLaunchDetails] = useState<ManualLaunchItem | null>(null);
+  const [refetchTrigger, setRefetchTrigger] = useState(0);
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+
+  const refetchLaunchDetails = useCallback(() => {
+    setRefetchTrigger((prev) => prev + 1);
+  }, []);
 
   useEffect(() => {
     if (!launchId) {
@@ -44,6 +49,10 @@ export const useLaunchDetails = (launchId: number | null) => {
         showSpinner();
 
         const response = await fetch<ManualLaunchItem>(URLS.manualLaunchById(projectKey, launchId));
+
+        if (abortController.signal.aborted) {
+          return;
+        }
 
         setLaunchDetails(response);
       } catch {
@@ -68,10 +77,11 @@ export const useLaunchDetails = (launchId: number | null) => {
     return () => {
       abortController.abort();
     };
-  }, [projectKey, launchId]);
+  }, [projectKey, launchId, dispatch, refetchTrigger]);
 
   return {
     launchDetails,
     isLoading,
+    refetchLaunchDetails,
   };
 };

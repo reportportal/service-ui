@@ -15,9 +15,15 @@
  */
 
 import { useCallback } from 'react';
+import { useSelector } from 'react-redux';
 import { MetaData } from '@reportportal/ui-kit/components/table/types';
 
 import { ActionMenu } from 'components/actionMenu';
+import { useEditManualLaunchModal } from 'pages/inside/manualLaunchesPage/editManualLaunchModal';
+import { ManualLaunchItem } from 'pages/inside/manualLaunchesPage/types';
+import { fetch } from 'common/utils';
+import { URLS } from 'common/urls';
+import { projectKeySelector } from 'controllers/project';
 
 import { useManualLaunchesListRowActions } from '../hooks/useManualLaunchesListRowActions';
 
@@ -29,14 +35,55 @@ interface SingleDeleteData {
 interface ManualLaunchRowActionsProps {
   metaData: MetaData;
   onDelete: (data: SingleDeleteData) => void;
+  onRefresh?: () => void;
 }
 
-export const ManualLaunchRowActions = ({ metaData, onDelete }: ManualLaunchRowActionsProps) => {
+export const ManualLaunchRowActions = ({
+  metaData,
+  onDelete,
+  onRefresh,
+}: ManualLaunchRowActionsProps) => {
+  const projectKey = useSelector(projectKeySelector);
+  const { openModal: openEditModal } = useEditManualLaunchModal({
+    onSuccess: onRefresh,
+  });
+
+  const handleEdit = useCallback(() => {
+    const launchId = metaData.id as number;
+
+    const fetchAndOpenModal = async () => {
+      try {
+        const launchData = await fetch<ManualLaunchItem>(
+          URLS.manualLaunchById(projectKey, launchId),
+        );
+
+        const modalData = {
+          id: launchData.id,
+          name: launchData.name,
+          description: launchData.description,
+          testPlan: launchData.testPlan
+            ? { id: launchData.testPlan.id, name: launchData.testPlan.name }
+            : null,
+          attributes: launchData.attributes || [],
+        };
+
+        openEditModal(modalData);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    void fetchAndOpenModal();
+  }, [openEditModal, metaData.id, projectKey]);
+
   const handleDelete = useCallback(() => {
     onDelete({ id: metaData.id as number, name: metaData.name as string });
   }, [onDelete, metaData.id, metaData.name]);
 
-  const rowActions = useManualLaunchesListRowActions({ onDelete: handleDelete });
+  const rowActions = useManualLaunchesListRowActions({
+    onEdit: handleEdit,
+    onDelete: handleDelete,
+  });
 
   return <ActionMenu actions={rowActions} />;
 };
