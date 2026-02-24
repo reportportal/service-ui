@@ -14,11 +14,18 @@
  * limitations under the License.
  */
 
-import { ADD_EXPORT, CANCEL_EXPORTS, REMOVE_EXPORT, RESET_EXPORTS } from './constants';
+import {
+  ADD_EXPORT,
+  CANCEL_EXPORTS,
+  REMOVE_EXPORT,
+  RESET_EXPORTS,
+  SET_EXPORTS_BANNER_VARIANT,
+  RESET_EXPORTS_BANNER_VARIANT,
+} from './constants';
 
-export const addExportAction = ({ id, cancelRequest }) => ({
+export const addExportAction = ({ id, cancelRequest, eventsInfo = {} }) => ({
   type: ADD_EXPORT,
-  payload: { id, cancelRequest },
+  payload: { id, cancelRequest, eventsInfo },
 });
 
 export const removeExportAction = (id) => ({
@@ -28,6 +35,15 @@ export const removeExportAction = (id) => ({
 
 export const resetExportsAction = () => ({
   type: RESET_EXPORTS,
+});
+
+export const setExportsBannerVariantAction = (variant) => ({
+  type: SET_EXPORTS_BANNER_VARIANT,
+  payload: variant,
+});
+
+export const resetExportsBannerVariantAction = () => ({
+  type: RESET_EXPORTS_BANNER_VARIANT,
 });
 
 export const cancelExportsAction = () => ({
