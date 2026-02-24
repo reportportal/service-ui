@@ -46,7 +46,8 @@ import { NoCasesBlock } from 'components/main/noCasesBlock';
 import { ItemList } from 'components/main/itemList';
 import { ModalLayout, ModalField } from 'components/main/modal';
 import { showModalAction, hideModalAction } from 'controllers/modal';
-import { fetch } from 'common/utils/fetch';
+import { fetch, ERROR_CANCELED } from 'common/utils/fetch';
+import { downloadFile } from 'common/utils/downloadFile';
 import { isEmptyObject } from 'common/utils/isEmptyObject';
 import {
   getSessionItem,
@@ -122,6 +123,14 @@ import { InputRadio } from 'components/inputs/inputRadio';
 import { URLS } from 'common/urls';
 import { isEmailIntegrationAvailableSelector, SECRET_FIELDS_KEY } from 'controllers/plugins';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
+import {
+  addExportAction,
+  removeExportAction,
+  setExportsBannerVariantAction,
+  resetExportsBannerVariantAction,
+  EXPORTS_BANNER_VARIANT_DEFAULT,
+  EXPORTS_BANNER_VARIANT_MODERN,
+} from 'controllers/exports';
 import {
   showSuccessNotification,
   showErrorNotification,
@@ -371,6 +380,9 @@ export const createImportProps = (pluginName) => ({
     BTS_FIELDS_FORM,
     SORTING_KEY,
     PAGE_KEY,
+    ERROR_CANCELED,
+    EXPORTS_BANNER_VARIANT_DEFAULT,
+    EXPORTS_BANNER_VARIANT_MODERN,
   },
   actions: {
     showModalAction,
@@ -385,6 +397,10 @@ export const createImportProps = (pluginName) => ({
     updatePagePropertiesAction,
     showDefaultErrorNotification,
     loginAction,
+    addExportAction,
+    removeExportAction,
+    setExportsBannerVariantAction,
+    resetExportsBannerVariantAction,
   },
   selectors: {
     pluginRouteSelector,
@@ -430,6 +446,7 @@ export const createImportProps = (pluginName) => ({
   },
   utils: {
     fetch,
+    downloadFile,
     URLS,
     debounce,
     getGroupedDefectTypesOptions,

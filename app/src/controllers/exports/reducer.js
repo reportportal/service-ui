@@ -14,9 +14,17 @@
  * limitations under the License.
  */
 
-import { ADD_EXPORT, REMOVE_EXPORT, RESET_EXPORTS } from './constants';
+import { combineReducers } from 'redux';
+import {
+  ADD_EXPORT,
+  REMOVE_EXPORT,
+  RESET_EXPORTS,
+  SET_EXPORTS_BANNER_VARIANT,
+  RESET_EXPORTS_BANNER_VARIANT,
+  EXPORTS_BANNER_VARIANT_DEFAULT,
+} from './constants';
 
-export const exportsReducer = (state = [], { type, payload }) => {
+const items = (state = [], { type, payload }) => {
   switch (type) {
     case ADD_EXPORT:
       return state.concat(payload);
@@ -28,3 +36,19 @@ export const exportsReducer = (state = [], { type, payload }) => {
       return state;
   }
 };
+
+const bannerVariant = (state = EXPORTS_BANNER_VARIANT_DEFAULT, { type, payload }) => {
+  switch (type) {
+    case SET_EXPORTS_BANNER_VARIANT:
+      return payload;
+    case RESET_EXPORTS_BANNER_VARIANT:
+      return EXPORTS_BANNER_VARIANT_DEFAULT;
+    default:
+      return state;
+  }
+};
+
+export const exportsReducer = combineReducers({
+  items,
+  bannerVariant,
+});
