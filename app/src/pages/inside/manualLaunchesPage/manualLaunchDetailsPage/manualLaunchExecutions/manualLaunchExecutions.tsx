@@ -320,7 +320,7 @@ export const ManualLaunchExecutions = ({
               headerClassName={cx('executions-table-header')}
               bodyClassName={cx('executions-table-body')}
               rowClassName={cx('execution-chip')}
-              selectable={canEditTestCase}
+              selectable
               selectedRowIds={selectedRowIds}
               onToggleRowSelection={handleRowSelect}
               onToggleAllRowsSelection={handleSelectAll}
@@ -346,7 +346,7 @@ export const ManualLaunchExecutions = ({
           captions={captions}
         />
       </div>
-      {isAnyRowSelected && canEditTestCase && (
+      {isAnyRowSelected && (
         <div className={cx('selection')}>
           <Selection selectedCount={selectedRowIds.length} onClearSelection={onClearSelection} />
           <div className={cx('selection-controls')}>
