@@ -57,6 +57,9 @@ export const getUpdatedWidgetsList = (oldWidgets, newWidget) => {
   return newWidgets;
 };
 
+const filtersEqual = (defaultFilters = [], changedFilters = []) =>
+  equal(defaultFilters, changedFilters);
+
 const compareFields = (defaultValues, changedValues, parentKey = '') => {
   const modifiedFields = [];
 
@@ -83,10 +86,14 @@ const compareFields = (defaultValues, changedValues, parentKey = '') => {
 };
 
 export const getModifiedFieldsLabels = (defaultFormValues, changedFormValues) => {
-  return compareFields(
-    { contentParameters: defaultFormValues },
-    { contentParameters: changedFormValues },
+  const modifiedFields = compareFields(
+    { contentParameters: defaultFormValues?.contentParameters },
+    { contentParameters: changedFormValues?.contentParameters },
   );
+  if (!filtersEqual(defaultFormValues?.filters, changedFormValues?.filters)) {
+    modifiedFields.push('filter');
+  }
+  return modifiedFields;
 };
 
 export const getCreatedWidgetLevelsCount = (widgetType, data) => {

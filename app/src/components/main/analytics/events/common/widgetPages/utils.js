@@ -126,6 +126,10 @@ export const formatEcDashboardData = (dashboard) => {
   );
 };
 
+const COMMON_FIELD_EVENT_NAMES = {
+  filter: 'filter',
+};
+
 export const WIDGET_FIELD_EVENT_NAME_BY_TYPE = {
   [LAUNCH_STATISTICS]: {
     'contentParameters.contentFields': 'criteria_for_widget',
@@ -218,8 +222,10 @@ export const WIDGET_FIELD_EVENT_NAME_BY_TYPE = {
 
 export const getJoinedFieldEventNamesByType = (type, keys = []) => {
   const uniqueValues = new Set();
-
-  const changedFields = WIDGET_FIELD_EVENT_NAME_BY_TYPE[type];
+  const changedFields = {
+    ...COMMON_FIELD_EVENT_NAMES,
+    ...(WIDGET_FIELD_EVENT_NAME_BY_TYPE[type] || {}),
+  };
 
   keys.forEach((key) => {
     const value = changedFields[key];
