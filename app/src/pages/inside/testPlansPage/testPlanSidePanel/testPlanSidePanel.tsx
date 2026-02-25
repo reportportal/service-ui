@@ -18,6 +18,7 @@ import { memo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
+import { isEmpty } from 'es-toolkit/compat';
 import {
   Button,
   SidePanel,
@@ -28,31 +29,29 @@ import {
   CopyIcon,
   BubblesLoader,
 } from '@reportportal/ui-kit';
-import { isEmpty } from 'es-toolkit/compat';
+import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { createClassnames, copyToClipboard } from 'common/utils';
 import { useOnClickOutside } from 'common/hooks';
 import { CollapsibleSection } from 'components/collapsibleSection';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
+import { FolderBreadcrumbs } from 'components/folderBreadcrumbs';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
-import { PathBreadcrumb } from 'componentLibrary/breadcrumbs/pathBreadcrumb';
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { commonMessages } from 'pages/inside/common/common-messages';
 import {
   TEST_CASE_LIBRARY_PAGE,
   urlOrganizationAndProjectSelector,
   locationSelector,
-  PROJECT_TEST_PLAN_DETAILS_PAGE,
 } from 'controllers/pages';
 import { ProjectDetails } from 'pages/organization/constants';
 import { Scenario } from 'pages/inside/common/testCaseList/testCaseSidePanel/scenario';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
-import { foldersSelector } from 'controllers/testCase';
-import { useGenerateFolderPath } from 'hooks/useGenerateFolderPath';
-
-import { TestPlanDto, testPlanFoldersSelector } from 'controllers/testPlan';
+import { TestPlanDto } from 'controllers/testPlan';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { formatDuration, openRouteInNewTab } from 'pages/inside/common/testCaseList/utils';
+
 import { useRemoveTestCasesFromTestPlanModal } from '../testPlanModals';
 import { messages } from './messages';
 import { CoverStatusCard } from './coverStatusCard';
@@ -66,7 +65,7 @@ const cx = createClassnames(styles);
 interface TestPlanSidePanelProps {
   testPlan: TestPlanDto | ExtendedTestCase | null;
   isVisible: boolean;
-  onClose: () => void;
+  onClose: VoidFn;
 }
 
 export const TestPlanSidePanel = memo(
@@ -79,19 +78,15 @@ export const TestPlanSidePanel = memo(
     ) as ProjectDetails;
 
     const location = useSelector(locationSelector);
-    const isTestPlanRoute = location.type === PROJECT_TEST_PLAN_DETAILS_PAGE;
-    const testPlanId = location.payload?.testPlanId ?? null;
+    const testPlanId = location.payload?.testPlanId ? Number(location.payload.testPlanId) : null;
 
     const { testCaseDetails, isLoading, isManualCovered } = useTestCaseDetails({
       testCaseId: testPlan?.id ?? null,
-      testPlanId: isTestPlanRoute ? Number(testPlanId) : null,
+      testPlanId,
     });
-
-    const testPlanFolders = useSelector(testPlanFoldersSelector);
-    const testCaseFolders = useSelector(foldersSelector);
-    const folders = isTestPlanRoute ? testPlanFolders : testCaseFolders;
-    const breadcrumbPath = useGenerateFolderPath(testCaseDetails?.testFolder?.id, folders);
     const { openModal: openRemoveTestCasesModal } = useRemoveTestCasesFromTestPlanModal();
+
+    const folderId = testCaseDetails?.testFolder?.id;
 
     useOnClickOutside(sidePanelRef, onClose);
 
@@ -126,7 +121,7 @@ export const TestPlanSidePanel = memo(
 
     const menuItems = [];
 
-    if (isTestPlanRoute && testPlanId) {
+    if (testPlanId) {
       menuItems.push({
         label: formatMessage(messages.removeFromTestPlan),
         onClick: handleRemoveFromTestPlan,
@@ -151,13 +146,13 @@ export const TestPlanSidePanel = memo(
 
     const descriptionComponent = (
       <div className={cx('description-wrapper')}>
-        {!isEmpty(breadcrumbPath) && (
-          <PathBreadcrumb
-            path={breadcrumbPath}
-            color="var(--rp-ui-base-e-400)"
-            isIconVisible={false}
+        <div className={cx('folder-breadcrumbs')}>
+          <FolderBreadcrumbs
+            folderId={folderId}
+            instanceKey={TMS_INSTANCE_KEY.TEST_PLAN}
+            testPlanId={testPlanId || undefined}
           />
-        )}
+        </div>
         <div className={cx('meta-row')}>
           <div className={cx('meta-item-row', 'id-row')}>
             <span className={cx('meta-label')}>{formatMessage(messages.id)}:</span>

@@ -15,6 +15,8 @@
  */
 
 export {
+  getParentFoldersIds,
+  getParentFolders,
   transformFoldersToDisplay,
   getAllFolderIdsToDelete,
   getAllSubfolderIds,

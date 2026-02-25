@@ -136,3 +136,33 @@ export const getAllSubfolderIds = (folderId: number, folders: BaseFolder[]): num
 
   return subfolderIds;
 };
+
+export const getParentFolders = <T extends BaseFolder>(folderId: number, folders: T[]) => {
+  if (isEmpty(folders)) {
+    return [];
+  }
+
+  const folderMap = new Map<number, T>(folders.map((folder) => [folder.id, folder]));
+  const iteratedFolders = new Set<number>();
+
+  const getParentFolder = (id: number | null | undefined): T[] => {
+    if (id === null || id === undefined || iteratedFolders.has(id)) {
+      return [];
+    }
+
+    iteratedFolders.add(id);
+
+    const folder = folderMap.get(id);
+
+    if (!folder) {
+      return [];
+    }
+
+    return [folder, ...getParentFolder(folder.parentFolderId)];
+  };
+
+  return getParentFolder(folderId);
+};
+
+export const getParentFoldersIds = <T extends BaseFolder>(folderId: number, folders: T[]) =>
+  getParentFolders(folderId, folders).map((folder) => folder.id);

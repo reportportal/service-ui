@@ -17,7 +17,10 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { expandTestPlanFoldersToLevelAction, testPlanTestCasesSelector } from 'controllers/testPlan';
+import {
+  expandTestPlanFoldersToLevelAction,
+  testPlanTestCasesSelector,
+} from 'controllers/testPlan';
 import { PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { useTestPlanActiveFolders } from 'pages/inside/testCaseLibraryPage/hooks/useTestPlanActiveFolders';
@@ -32,12 +35,13 @@ interface TestPlanFoldersProps {
 export const TestPlanFolders = ({ isLoading = false }: TestPlanFoldersProps) => {
   const dispatch = useDispatch();
   const testCases = useSelector(testPlanTestCasesSelector);
-  const { activeFolderId, activeFolder, payload, folders, transformedFolders } = useTestPlanActiveFolders();
+  const { activeFolderId, activeFolder, payload, folders, transformedFolders } =
+    useTestPlanActiveFolders();
 
   useEffect(() => {
     dispatch(expandTestPlanFoldersToLevelAction({ folderId: activeFolderId, folders }));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const setAllTestCases = () => {
     if (activeFolderId) {

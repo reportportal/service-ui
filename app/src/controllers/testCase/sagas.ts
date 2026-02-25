@@ -73,7 +73,7 @@ import { getAllFolderIdsToDelete } from 'common/utils/folderUtils';
 import { fetchAllFolders } from './utils/fetchAllFolders';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Page } from 'types/common';
-import { foldersSelector } from 'controllers/testCase/selectors';
+import { areFoldersFetchedSelector, foldersSelector } from 'controllers/testCase/selectors';
 import {
   TEST_CASE_LIBRARY_PAGE,
   urlOrganizationSlugSelector,
@@ -178,15 +178,16 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
 
 function* getFolders(action: GetFoldersAction) {
   const projectKey = (yield select(projectKeySelector)) as string;
+  const areFoldersFetched = (yield select(areFoldersFetchedSelector)) as boolean;
+  const isSilent = action.payload?.silent || false;
 
-  if (!projectKey) {
+  //TODO: Folders should only be fetched once
+  if (!projectKey || (areFoldersFetched && !isSilent)) {
     return;
   }
 
-  const silent = action.payload?.silent || false;
-
   try {
-    if (!silent) {
+    if (!isSilent) {
       yield put({
         type: FETCH_START,
         payload: { projectKey },

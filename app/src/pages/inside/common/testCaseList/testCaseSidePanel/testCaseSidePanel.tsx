@@ -32,16 +32,16 @@ import { createClassnames, copyToClipboard } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useOnClickOutside } from 'common/hooks';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { ProjectDetails } from 'pages/organization/constants';
 import { CollapsibleSection } from 'components/collapsibleSection';
-import { PathBreadcrumb } from 'componentLibrary/breadcrumbs/pathBreadcrumb';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
+import { FolderBreadcrumbs } from 'components/folderBreadcrumbs';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
-import { foldersSelector } from 'controllers/testCase';
 import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
 import {
   ManualScenario,
@@ -57,12 +57,7 @@ import { AddToLaunchButton } from 'pages/inside/testCaseLibraryPage/addToLaunchB
 
 import { RequirementsList } from '../../requirementsList/requirementsList';
 import { TestCaseMenuAction, TestCaseManualScenario } from '../types';
-import {
-  formatTimestamp,
-  formatDuration,
-  getExcludedActionsFromPermissionMap,
-  buildBreadcrumbs,
-} from '../utils';
+import { formatTimestamp, formatDuration, getExcludedActionsFromPermissionMap } from '../utils';
 import { createTestCaseMenuItems } from '../configUtils';
 import { Scenario } from './scenario';
 import { messages } from './messages';
@@ -157,7 +152,6 @@ export const TestCaseSidePanel = memo(
     const { organizationSlug, projectSlug } = useSelector(
       urlOrganizationAndProjectSelector,
     ) as ProjectDetails;
-    const folders = useSelector(foldersSelector);
     const { formatMessage } = useIntl();
     const sidePanelRef = useRef<HTMLDivElement>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -168,7 +162,6 @@ export const TestCaseSidePanel = memo(
     const { openModal: openDuplicateTestCaseModal } = useDuplicateTestCaseModal();
 
     const folderId = testCase?.testFolder?.id;
-    const path = buildBreadcrumbs(folders, folderId);
 
     useOnClickOutside(sidePanelRef, onClose);
 
@@ -180,15 +173,15 @@ export const TestCaseSidePanel = memo(
       openEditTestCaseModal({ testCase });
     };
 
-   const permissionMap = [
-    TestCaseMenuAction.EDIT,
-    TestCaseMenuAction.DELETE,
-    TestCaseMenuAction.DUPLICATE,
-    TestCaseMenuAction.MOVE,
-  ].map(action => ({
-    isAllowed: canManageTestCases,
-    action,
-  }));
+    const permissionMap = [
+      TestCaseMenuAction.EDIT,
+      TestCaseMenuAction.DELETE,
+      TestCaseMenuAction.DUPLICATE,
+      TestCaseMenuAction.MOVE,
+    ].map((action) => ({
+      isAllowed: canManageTestCases,
+      action,
+    }));
 
     const menuItems = createTestCaseMenuItems(
       formatMessage,
@@ -255,7 +248,7 @@ export const TestCaseSidePanel = memo(
               {Parser(CrossIcon as unknown as string)}
             </button>
           </div>
-          {!isEmpty(path) && <PathBreadcrumb path={path} />}
+          <FolderBreadcrumbs folderId={folderId} instanceKey={TMS_INSTANCE_KEY.TEST_CASE} />
           <div className={cx('header-meta')}>
             <div className={cx('meta-row')}>
               <div className={cx('meta-item-row', 'id-row')}>
@@ -340,7 +333,10 @@ export const TestCaseSidePanel = memo(
           </Button>
           {canManageTestCases && (
             <>
-              <AddToLaunchButton manualScenario={testCase?.manualScenario} testCaseId={testCase.id} />
+              <AddToLaunchButton
+                manualScenario={testCase?.manualScenario}
+                testCaseId={testCase.id}
+              />
               <Button
                 variant="primary"
                 className={cx('action-button', 'last-button')}
