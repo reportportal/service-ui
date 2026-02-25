@@ -204,7 +204,7 @@ export const TestCaseList = memo(
                     return (
                       <>
                         <span className={cx('test-case-drag-preview__text')}>
-                          {draggedTestCase?.name ?? 'Test Case'}
+                          {draggedTestCase?.name}
                         </span>
                         <span className={cx('test-case-drag-preview__icon')}>
                           <DragNDropIcon />
