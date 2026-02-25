@@ -213,8 +213,8 @@ export class WidgetWizardContent extends Component {
             type: widgetType,
             dashboardId: activeDashboardId,
             modifiedFields: getModifiedFieldsLabels(
-              initialFormValues?.contentParameters,
-              data?.contentParameters,
+              initialFormValues,
+              data,
             ),
             isWidgetNameChanged: name !== initialFormValues?.name,
             isWidgetDescriptionChanged: data?.description !== initialFormValues?.description,

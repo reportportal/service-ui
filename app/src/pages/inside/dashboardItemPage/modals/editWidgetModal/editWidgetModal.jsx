@@ -142,8 +142,8 @@ const EditWidgetModalComponent = ({ data: { widget, onConfirm, eventsInfo } }) =
               type: widgetType,
               dashboardId: activeDashboardId,
               modifiedFields: getModifiedFieldsLabels(
-                initiallyFilledWidgetSettings?.contentParameters,
-                submitData?.contentParameters,
+                initiallyFilledWidgetSettings,
+                submitData,
               ),
               isWidgetNameChanged: submitData.name !== initiallyFilledWidgetSettings?.name,
               isWidgetDescriptionChanged:

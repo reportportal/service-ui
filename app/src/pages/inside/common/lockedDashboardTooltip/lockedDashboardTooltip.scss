@@ -24,7 +24,8 @@
 }
 
 .locked-tooltip-content {
-  font-family: $FONT-ROBOTO-REGULAR;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
   font-size: 11px;
   line-height: 16px;
   text-align: center;
