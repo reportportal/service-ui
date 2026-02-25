@@ -1,0 +1,5 @@
+{
+  "webpackConfig": "webpack/base.config.js",
+  "fileExtensions": ["js", "jsx", "ts", "tsx"],
+  "excludeRegExp": ["node_modules|gridBody"]
+}
