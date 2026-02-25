@@ -19,6 +19,7 @@ import { ReactNode } from 'react';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { TransformedFolder } from 'controllers/testCase';
 import { TreeDragItem, TreeDropPosition } from '@reportportal/ui-kit/common';
+import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 
 export interface ExpandedOptionsProps {
   folders: TransformedFolder[];
@@ -38,6 +39,14 @@ export interface ExpandedOptionsProps {
     targetId: string | number,
     position: TreeDropPosition,
   ) => void;
+  onMoveTestCase?: (
+    testCase: ExtendedTestCase,
+    targetFolderId: number,
+  ) => void | Promise<void>;
+  onDuplicateTestCase?: (
+    testCase: ExtendedTestCase,
+    targetFolderId: number,
+  ) => void | Promise<void>;
 }
 
 export interface UseFolderSearchParams {

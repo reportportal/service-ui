@@ -33,6 +33,7 @@ import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { createClassnames } from 'common/utils';
 import { useStorageFolders } from 'hooks/useStorageFolders';
 import { TransformedFolder, foldersSelector } from 'controllers/testCase';
+import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { EmptySearchState } from 'pages/common/emptySearchState';
 import OutlineSearchIcon from 'common/img/search-outline-icon-inline.svg';
@@ -44,7 +45,7 @@ import { Folder } from './folder';
 import { messages } from './messages';
 import { ExpandedOptionsProps } from './types';
 import { useFolderSearch } from './useFolderSearch';
-import { FOLDER_DRAG_TYPE } from './constants';
+import { FOLDER_DRAG_TYPE, EXTERNAL_TREE_DROP_TYPE } from './constants';
 
 import styles from './expandedOptions.scss';
 
@@ -60,6 +61,8 @@ export const ExpandedOptions = ({
   onFolderClick,
   onMoveFolder,
   onDuplicateFolder,
+  onMoveTestCase,
+  onDuplicateTestCase,
 }: ExpandedOptionsProps) => {
   const { formatMessage } = useIntl();
   const { expandedIds, onToggleFolder } = useStorageFolders(instanceKey);
@@ -79,7 +82,7 @@ export const ExpandedOptions = ({
 
   const [{ isDraggingAny, isOverFoldersZone }, dropZoneRef] = useDrop(
     () => ({
-      accept: FOLDER_DRAG_TYPE,
+      accept: [FOLDER_DRAG_TYPE, EXTERNAL_TREE_DROP_TYPE],
       collect: (monitor) => ({
         isDraggingAny: isDragAndDropEnabled ? monitor.canDrop() : false,
         isOverFoldersZone: monitor.isOver(),
@@ -131,6 +134,26 @@ export const ExpandedOptions = ({
       onDuplicateFolder?.(draggedItem, targetId, position);
     },
     [onDuplicateFolder],
+  );
+
+  const handleMoveExternal = useCallback(
+    (draggedItem: TreeDragItem, targetId: string | number, _position: TreeDropPosition) => {
+      const item = draggedItem as TreeDragItem & { testCase?: ExtendedTestCase };
+      if (item.testCase && onMoveTestCase) {
+        void onMoveTestCase(item.testCase, Number(targetId));
+      }
+    },
+    [onMoveTestCase],
+  );
+
+  const handleDuplicateExternal = useCallback(
+    (draggedItem: TreeDragItem, targetId: string | number, _position: TreeDropPosition) => {
+      const item = draggedItem as TreeDragItem & { testCase?: ExtendedTestCase };
+      if (item.testCase && onDuplicateTestCase) {
+        void onDuplicateTestCase(item.testCase, Number(targetId));
+      }
+    },
+    [onDuplicateTestCase],
   );
 
   const renderContent = () => (
@@ -265,12 +288,14 @@ export const ExpandedOptions = ({
     <TreeSortableContainer
       showDropConfirmation
       confirmationLabels={{
-        move: formatMessage(COMMON_LOCALE_KEYS.MOVE),
-        duplicate: formatMessage({ id: 'expandedOptions.duplicate', defaultMessage: 'Duplicate' }),
-        cancel: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      move: formatMessage(COMMON_LOCALE_KEYS.MOVE),
+      duplicate: formatMessage({ id: 'expandedOptions.duplicate', defaultMessage: 'Duplicate' }),
+      cancel: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
       }}
       onMove={handleMoveFolder}
       onDuplicate={handleDuplicateFolder}
+      onMoveExternal={handleMoveExternal}
+      onDuplicateExternal={handleDuplicateExternal}
     >
       {renderContent()}
     </TreeSortableContainer>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,43 +14,36 @@
  * limitations under the License.
  */
 
-.name-section {
+.drag-handle {
   display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 14px 0;
-}
-
-.icon-column {
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
   width: 16px;
+  height: 16px;
+  cursor: grab;
+  opacity: 0;
   flex-shrink: 0;
-}
+  margin-top: 4px;
 
-.name-content {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
+  svg {
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+  }
 
-.test-name {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--rp-ui-base-almost-black);
-  line-height: 20px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 4px;
-}
+  svg path {
+    fill: var(--rp-ui-base-e-300);
+  }
 
-.tags-section {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
+  &:hover svg path {
+    fill: var(--rp-ui-base-topaz-hover);
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  :global(.test-case-table-row-global):hover & {
+    opacity: 1;
+  }
 }

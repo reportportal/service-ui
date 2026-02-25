@@ -14,6 +14,5 @@
  * limitations under the License.
  */
 
-export const FOLDER_DRAG_TYPE = 'TEST_CASE_FOLDER';
-export const EXTERNAL_TREE_DROP_TYPE = 'EXTERNAL_TREE_DROP';
-
+export { useDraggableRow } from './draggableTableRow';
+export type { UseDraggableRowParams } from './draggableTableRow';

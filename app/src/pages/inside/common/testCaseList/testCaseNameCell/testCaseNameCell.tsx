@@ -27,12 +27,18 @@ interface TestCaseNameCellProps {
   priority: TestCasePriority;
   name: string;
   tags: string[];
+  dragHandle?: React.ReactNode;
 }
 
-export const TestCaseNameCell = ({ priority, name, tags }: TestCaseNameCellProps) => {
+export const TestCaseNameCell = ({ priority, name, tags, dragHandle }: TestCaseNameCellProps) => {
   return (
     <div className={cx('name-section')}>
-      {priority && <PriorityIcon priority={priority} />}
+      {(priority || dragHandle) && (
+        <div className={cx('icon-column')}>
+          {priority && <PriorityIcon priority={priority} />}
+          {dragHandle}
+        </div>
+      )}
       <div className={cx('name-content')}>
         <div className={cx('test-name')} title={name}>
           {name}
