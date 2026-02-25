@@ -78,8 +78,6 @@ export const DraggableTestCaseNameCell = ({
           <div
             className={cx('drag-handle')}
             onMouseDown={handleDragHandleMouseDown}
-            role="button"
-            tabIndex={0}
           >
             <DragNDropIcon />
           </div>
