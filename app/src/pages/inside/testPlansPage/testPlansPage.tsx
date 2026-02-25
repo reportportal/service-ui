@@ -46,7 +46,7 @@ export const TestPlansPage = () => {
   const dispatch = useDispatch();
   const { openModal } = useCreateTestPlanModal();
   const projectName = useSelector(projectNameSelector);
-  const { canCreateTestPlan } = useUserPermissions();
+  const { canManageTestPlans } = useUserPermissions();
   const isTmsMilestonesEnabled = useTmsMilestonesEnabled();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
@@ -91,7 +91,7 @@ export const TestPlansPage = () => {
                 >
                   {formatMessage(commonMessages.refreshPage)}
                 </Button>
-                {canCreateTestPlan && (
+                {canManageTestPlans && (
                   <Button
                     variant="ghost"
                     data-automation-id="createTestPlanButton"

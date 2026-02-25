@@ -51,7 +51,7 @@ export const DraggableTestCaseNameCell = ({
   name,
   tags,
 }: DraggableTestCaseNameCellProps) => {
-  const { canMoveTestCase } = useUserPermissions();
+  const { canManageTestCases } = useUserPermissions();
 
   const dragItem: ExternalTreeDropItem = useMemo(
     () => ({
@@ -67,14 +67,14 @@ export const DraggableTestCaseNameCell = ({
   const { dragSourceRef, handleDragHandleMouseDown } = useDraggableRow<ExternalTreeDropItem>({
     type: EXTERNAL_TREE_DROP_TYPE,
     item: dragItem,
-    canDrag: canMoveTestCase,
+    canDrag: canManageTestCases,
     rowSelector: '.test-case-table-row-global',
   });
 
   return (
     <div ref={dragSourceRef}>
         <TestCaseNameCell priority={priority} name={name} tags={tags} />
-      {canMoveTestCase && (
+      {canManageTestCases && (
           <div
             className={cx('drag-handle')}
             onMouseDown={handleDragHandleMouseDown}

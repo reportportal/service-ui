@@ -153,14 +153,7 @@ interface TestCaseSidePanelProps {
 export const TestCaseSidePanel = memo(
   ({ testCase, isVisible, onClose }: TestCaseSidePanelProps) => {
     const dispatch = useDispatch();
-    const {
-      canEditTestCase,
-      canDeleteTestCase,
-      canDuplicateTestCase,
-      canMoveTestCase,
-      canAddTestCaseToLaunch,
-      canAddTestCaseToTestPlan,
-    } = useUserPermissions();
+    const { canManageTestCases } = useUserPermissions();
     const { organizationSlug, projectSlug } = useSelector(
       urlOrganizationAndProjectSelector,
     ) as ProjectDetails;
@@ -187,12 +180,15 @@ export const TestCaseSidePanel = memo(
       openEditTestCaseModal({ testCase });
     };
 
-    const permissionMap = [
-      { isAllowed: canEditTestCase, action: TestCaseMenuAction.EDIT },
-      { isAllowed: canDeleteTestCase, action: TestCaseMenuAction.DELETE },
-      { isAllowed: canDuplicateTestCase, action: TestCaseMenuAction.DUPLICATE },
-      { isAllowed: canMoveTestCase, action: TestCaseMenuAction.MOVE },
-    ];
+   const permissionMap = [
+    TestCaseMenuAction.EDIT,
+    TestCaseMenuAction.DELETE,
+    TestCaseMenuAction.DUPLICATE,
+    TestCaseMenuAction.MOVE,
+  ].map(action => ({
+    isAllowed: canManageTestCases,
+    action,
+  }));
 
     const menuItems = createTestCaseMenuItems(
       formatMessage,
@@ -342,18 +338,18 @@ export const TestCaseSidePanel = memo(
           >
             {formatMessage(messages.openDetails)}
           </Button>
-          {canAddTestCaseToLaunch && (
-            <AddToLaunchButton manualScenario={testCase?.manualScenario} testCaseId={testCase.id} />
-          )}
-          {canAddTestCaseToTestPlan && (
-            <Button
-              variant="primary"
-              className={cx('action-button', 'last-button')}
-              onClick={handleAddToTestPlanClick}
-              data-automation-id="test-case-add-to-test-plan"
-            >
-              {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
-            </Button>
+          {canManageTestCases && (
+            <>
+              <AddToLaunchButton manualScenario={testCase?.manualScenario} testCaseId={testCase.id} />
+              <Button
+                variant="primary"
+                className={cx('action-button', 'last-button')}
+                onClick={handleAddToTestPlanClick}
+                data-automation-id="test-case-add-to-test-plan"
+              >
+                {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
+              </Button>
+            </>
           )}
         </div>
       </div>
