@@ -204,7 +204,7 @@ export const TestCaseFolders = () => {
       await duplicateTestCase({
         testCaseId: testCase.id,
         testFolderId: destinationFolder.id,
-        name: `${testCase.name} (Copy)`,
+        name: testCase.name,
       });
     },
     [folders, duplicateTestCase],
