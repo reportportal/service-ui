@@ -18,12 +18,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
+  width: 32px;
+  height: 32px;
   cursor: grab;
+  position: absolute;
+  left: 100%;
+  padding: 8px;
+  top: 50%;
+  transform: translateY(-50%);
   opacity: 0;
-  flex-shrink: 0;
-  margin-top: 4px;
+
+  :global(.test-case-table-row-global):hover &,
+  &:hover {
+    opacity: 1;
+  }
 
   svg {
     width: 16px;
@@ -41,9 +49,5 @@
 
   &:active {
     cursor: grabbing;
-  }
-
-  :global(.test-case-table-row-global):hover & {
-    opacity: 1;
   }
 }

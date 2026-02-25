@@ -72,19 +72,18 @@ export const DraggableTestCaseNameCell = ({
   });
 
   return (
-    <div ref={dragSourceRef} >
-        <TestCaseNameCell
-          priority={priority}
-          name={name}
-          tags={tags}
-          dragHandle={
-            canMoveTestCase ? (
-              <div className={cx('drag-handle')} onMouseDown={handleDragHandleMouseDown}>
-                <DragNDropIcon />
-              </div>
-            ) : undefined
-          }
-        />
+    <div ref={dragSourceRef}>
+        <TestCaseNameCell priority={priority} name={name} tags={tags} />
+      {canMoveTestCase && (
+          <div
+            className={cx('drag-handle')}
+            onMouseDown={handleDragHandleMouseDown}
+            role="button"
+            tabIndex={0}
+          >
+            <DragNDropIcon />
+          </div>
+      )}
     </div>
   );
 };
