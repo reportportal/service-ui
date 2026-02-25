@@ -48,6 +48,8 @@ export const AttributeList = ({
   disabled,
   getURIKey,
   getURIValue,
+  keyPlaceholder,
+  valuePlaceholder,
   newAttrMessage,
   maxLength,
   customClass,
@@ -58,6 +60,7 @@ export const AttributeList = ({
   autocompleteProps,
   allowCustomValues,
   addButtonClassName,
+  isAttributeKeyRequired,
   isAttributeValueRequired,
 }) => {
   const addNewAttrRef = useRef(null);
@@ -262,9 +265,12 @@ export const AttributeList = ({
           onCancel={createCancelEditHandler(indexEditableAttr)}
           getURIKey={getURIKey}
           getURIValue={getURIValue}
+          keyPlaceholder={keyPlaceholder}
+          valuePlaceholder={valuePlaceholder}
           editorDefaultOpen={editorDefaultOpen}
           autocompleteProps={autocompleteProps}
           allowCustomValues={allowCustomValues}
+          isAttributeKeyRequired={isAttributeKeyRequired}
           isAttributeValueRequired={isAttributeValueRequired}
         />
       )}
@@ -351,6 +357,8 @@ AttributeList.propTypes = {
   onAddNew: PropTypes.func,
   getURIKey: PropTypes.func,
   getURIValue: PropTypes.func,
+  keyPlaceholder: PropTypes.string,
+  valuePlaceholder: PropTypes.string,
   showButton: PropTypes.bool,
   editable: PropTypes.bool,
   attributesListClassname: PropTypes.string,
@@ -358,6 +366,7 @@ AttributeList.propTypes = {
   autocompleteProps: PropTypes.object,
   allowCustomValues: PropTypes.bool,
   addButtonClassName: PropTypes.string,
+  isAttributeKeyRequired: PropTypes.bool,
   isAttributeValueRequired: PropTypes.bool,
 };
 AttributeList.defaultProps = {
@@ -377,5 +386,6 @@ AttributeList.defaultProps = {
   autocompleteProps: {},
   allowCustomValues: true,
   addButtonClassName: '',
+  isAttributeKeyRequired: false,
   isAttributeValueRequired: true,
 };

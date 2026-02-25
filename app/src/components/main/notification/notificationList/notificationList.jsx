@@ -347,6 +347,11 @@ export const notificationMessages = defineMessages({
     id: 'TestPlansPage.testPlanDeletedSuccess',
     defaultMessage: 'Test Plan has been deleted successfully.',
   },
+  removeFromTestPlanSuccess: {
+    id: 'RemoveTestCasesFromTestPlanModal.successMessage',
+    defaultMessage:
+      '{count, plural, one {Test case has} other {Test cases have}} been successfully removed from the Test Plan',
+  },
   manualLaunchDeletedSuccess: {
     id: 'ManualLaunchesPage.manualLaunchDeletedSuccess',
     defaultMessage: "Launch ''{name}'' has been deleted successfully.",

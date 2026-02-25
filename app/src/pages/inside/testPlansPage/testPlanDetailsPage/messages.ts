@@ -30,4 +30,8 @@ export const messages = defineMessages({
     id: 'TestPlanDetailsPage.testPlanId',
     defaultMessage: 'Test Plan ID: {testPlanId}',
   },
+  testCasesAddedSuccess: {
+    id: 'TestPlanDetailsPage.testCasesAddedSuccess',
+    defaultMessage: '{count, plural, one {Test case added successfully} other {# test cases added successfully}}',
+  },
 });

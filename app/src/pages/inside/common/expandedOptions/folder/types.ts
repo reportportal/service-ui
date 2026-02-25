@@ -27,4 +27,8 @@ export interface FolderProps {
   onToggleFolder: (folder: TransformedFolder) => void;
   searchQuery?: string;
   ancestorDirectMatch?: boolean;
+  index?: number;
+  parentId?: number | null;
+  enableDragAndDrop?: boolean;
+  canDropOn?: (draggedItem: { id: string | number }, targetId: string | number) => boolean;
 }

@@ -18,6 +18,7 @@ import { useEffect, useMemo, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, PlusIcon } from '@reportportal/ui-kit';
+import { noop } from 'es-toolkit';
 
 import { createClassnames, getStorageItem } from 'common/utils';
 import {
@@ -53,6 +54,9 @@ import { commonMessages } from '../commonMessages';
 import { useCreateFolderModal } from './modals/createFolderModal';
 import { AllTestCasesPage } from '../allTestCasesPage';
 import { useNavigateToFolder } from '../hooks/useNavigateToFolder';
+import { useMoveFolder } from './modals/moveFolderModal/useMoveFolder';
+import { useDuplicateFolder } from './modals/duplicateFolderModal/useDuplicateFolder';
+import { useFolderDragDrop } from './useFolderDragDrop';
 
 import styles from './testCaseFolders.scss';
 
@@ -64,6 +68,8 @@ export const TestCaseFolders = () => {
   const { openModal: openCreateFolderModal } = useCreateFolderModal();
   const { navigateToFolder, expandFoldersToLevel } = useNavigateToFolder();
   const urlFolderId = useSelector(urlFolderIdSelector);
+  const { moveFolder } = useMoveFolder();
+  const { duplicateFolder } = useDuplicateFolder();
   const isLoadingTestCases = useSelector(isLoadingTestCasesSelector);
   const testCases = useSelector(testCasesSelector);
   const testCasesPageData = useSelector(testCasesPageSelector);
@@ -74,7 +80,7 @@ export const TestCaseFolders = () => {
   const areFoldersLoading = useSelector(areFoldersLoadingSelector);
   const { query } = useSelector(locationSelector);
   const userId = useSelector(userIdSelector) as string;
-  const { canCreateTestCaseFolder } = useUserPermissions();
+  const { canManageTestCases } = useUserPermissions();
 
   const urlFolderIdNumber = Number(urlFolderId);
   const activeFolder = useMemo(
@@ -138,7 +144,7 @@ export const TestCaseFolders = () => {
   };
 
   const renderCreateFolderButton = () =>
-    canCreateTestCaseFolder ? (
+    canManageTestCases ? (
       <Button
         variant="text"
         icon={<PlusIcon />}
@@ -150,6 +156,16 @@ export const TestCaseFolders = () => {
       </Button>
     ) : null;
 
+  const { handleMoveFolder, handleDuplicateFolder } = useFolderDragDrop({
+    folders: initialFolders,
+    onMove: (params) => {
+      moveFolder({ ...params, parentTestFolderId: params.parentFolderId }).catch(noop);
+    },
+    onDuplicate: (params) => {
+      duplicateFolder(params).catch(noop);
+    },
+  });
+
   return (
     <ExpandedOptions
       activeFolderId={urlFolderIdNumber || null}
@@ -158,6 +174,8 @@ export const TestCaseFolders = () => {
       setAllTestCases={navigateToAllTestCases}
       onFolderClick={handleFolderClick}
       renderCreateFolderButton={renderCreateFolderButton}
+      onMoveFolder={handleMoveFolder}
+      onDuplicateFolder={handleDuplicateFolder}
     >
       <AllTestCasesPage
         testCases={testCases}

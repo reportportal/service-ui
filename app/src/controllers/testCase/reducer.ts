@@ -15,7 +15,7 @@
  */
 
 import { combineReducers } from 'redux';
-import { isEmpty } from 'es-toolkit/compat';
+import { isEmpty, isNil } from 'es-toolkit/compat';
 
 import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { fetchReducer } from 'controllers/fetch';
@@ -36,6 +36,7 @@ import {
   NAMESPACE,
   RENAME_FOLDER_SUCCESS,
   SET_EXPANDED_FOLDER_IDS,
+  SET_FOLDERS_FETCHED,
   SET_TEST_CASES,
   START_CREATING_FOLDER,
   START_LOADING_FOLDER,
@@ -71,6 +72,7 @@ export type InitialStateType = {
     loading: boolean;
     activeFolderId?: number | null;
     expandedFolderIds: number[];
+    areFoldersFetched: boolean;
   };
   testCases: {
     isLoading: boolean;
@@ -87,6 +89,7 @@ export const INITIAL_STATE: InitialStateType = {
     loading: false,
     activeFolderId: null,
     expandedFolderIds: [],
+    areFoldersFetched: false,
   },
   testCases: {
     isLoading: false,
@@ -138,6 +141,18 @@ const isLoadingFolderReducer = (
       return true;
     case STOP_LOADING_FOLDER:
       return false;
+    default:
+      return state;
+  }
+};
+
+const areFoldersFetchedReducer = (
+  state = INITIAL_STATE.folders.areFoldersFetched,
+  action: { type: string },
+) => {
+  switch (action.type) {
+    case SET_FOLDERS_FETCHED:
+      return true;
     default:
       return state;
   }
@@ -198,7 +213,11 @@ const folderReducer = (state = INITIAL_STATE.folders.data, action: FolderAction)
           return folder;
         }
 
-        return { ...folder, parentFolderId: action.payload.parentTestFolderId };
+        return {
+          ...folder,
+          parentFolderId: action.payload.parentTestFolderId,
+          ...(!isNil(action.payload.index) && { index: action.payload.index }),
+        };
       });
     }
     case CREATE_FOLDER_SUCCESS: {
@@ -357,6 +376,7 @@ const reducer = combineReducers({
     isCreatingFolder: isCreatingFolderReducer,
     isLoadingFolder: isLoadingFolderReducer,
     loading: loadingReducer(NAMESPACE),
+    areFoldersFetched: areFoldersFetchedReducer,
   }),
   testCases: testCasesReducer,
 });
