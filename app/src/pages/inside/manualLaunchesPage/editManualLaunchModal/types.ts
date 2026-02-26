@@ -44,5 +44,5 @@ export interface UseEditManualLaunchModalOptions {
 
 export interface UseEditManualLaunchParams {
   launchId: number;
-  onSuccess?: () => void;
+  onSuccess?: VoidFn;
 }

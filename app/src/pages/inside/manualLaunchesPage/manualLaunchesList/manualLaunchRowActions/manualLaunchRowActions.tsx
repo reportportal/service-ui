@@ -15,15 +15,17 @@
  */
 
 import { useCallback } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { MetaData } from '@reportportal/ui-kit/components/table/types';
+import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { ActionMenu } from 'components/actionMenu';
-import { useEditManualLaunchModal } from 'pages/inside/manualLaunchesPage/editManualLaunchModal';
-import { ManualLaunchItem } from 'pages/inside/manualLaunchesPage/types';
+import { useEditManualLaunchModal } from '../../editManualLaunchModal';
+import { ManualLaunchItem } from '../../types';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
+import { showErrorNotification } from 'controllers/notification';
 
 import { useManualLaunchesListRowActions } from '../hooks/useManualLaunchesListRowActions';
 
@@ -35,7 +37,7 @@ interface SingleDeleteData {
 interface ManualLaunchRowActionsProps {
   metaData: MetaData;
   onDelete: (data: SingleDeleteData) => void;
-  onRefresh?: () => void;
+  onRefresh?: VoidFn;
 }
 
 export const ManualLaunchRowActions = ({
@@ -43,6 +45,7 @@ export const ManualLaunchRowActions = ({
   onDelete,
   onRefresh,
 }: ManualLaunchRowActionsProps) => {
+  const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const { openModal: openEditModal } = useEditManualLaunchModal({
     onSuccess: onRefresh,
@@ -68,13 +71,17 @@ export const ManualLaunchRowActions = ({
         };
 
         openEditModal(modalData);
-      } catch (error) {
-        console.error(error);
+      } catch {
+        dispatch(
+          showErrorNotification({
+            messageId: 'errorOccurredTryAgain',
+          }),
+        );
       }
     };
 
     void fetchAndOpenModal();
-  }, [openEditModal, metaData.id, projectKey]);
+  }, [openEditModal, metaData.id, projectKey, dispatch]);
 
   const handleDelete = useCallback(() => {
     onDelete({ id: metaData.id as number, name: metaData.name as string });

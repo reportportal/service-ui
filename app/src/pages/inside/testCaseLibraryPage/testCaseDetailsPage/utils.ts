@@ -32,6 +32,7 @@ export const hasStepsPreconditionContent = (preconditions: {
 export const hasScenarioContent = (manualScenario: ManualScenario) => {
   return Boolean(
     manualScenario?.preconditions?.value ||
+    !isEmpty(manualScenario?.preconditions?.attachments) ||
     manualScenario?.instructions ||
     manualScenario?.expectedResult,
   );

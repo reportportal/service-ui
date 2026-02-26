@@ -46,7 +46,7 @@ export const useEditManualLaunch = ({ launchId, onSuccess }: UseEditManualLaunch
         const launchData: EditManualLaunchDto = {
           name: launchName,
           description: description || '',
-          attributes: attributes?.filter((attr) => attr.key && attr.value) || [],
+          attributes: attributes?.filter((attr) => attr.value) || [],
           ...(isNumber(testPlan?.id) && { testPlanId: testPlan.id }),
         };
 

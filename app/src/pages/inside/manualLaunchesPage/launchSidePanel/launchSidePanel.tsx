@@ -26,6 +26,7 @@ import {
   SidePanel,
   BubblesLoader,
 } from '@reportportal/ui-kit';
+import { VoidFn } from '@reportportal/ui-kit/common';
 import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
@@ -51,8 +52,8 @@ const cx = createClassnames(styles);
 interface LaunchSidePanelProps {
   launchId: number | null;
   isVisible: boolean;
-  onClose: () => void;
-  onRefresh?: () => void;
+  onClose: VoidFn;
+  onRefresh?: VoidFn;
 }
 
 export const LaunchSidePanel = memo(
@@ -87,7 +88,7 @@ export const LaunchSidePanel = memo(
 
     useOnClickOutside(sidePanelRef, onClose);
 
-    if (!launchDetails) {
+    if (!launchDetails && !isLoading) {
       return null;
     }
 

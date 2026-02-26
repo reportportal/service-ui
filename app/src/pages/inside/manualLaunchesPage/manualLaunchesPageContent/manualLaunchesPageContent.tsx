@@ -16,6 +16,7 @@
 
 import { isEmpty } from 'es-toolkit/compat';
 import { BubblesLoader } from '@reportportal/ui-kit';
+import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { createClassnames } from 'common/utils';
 
@@ -30,7 +31,7 @@ const cx = createClassnames(styles);
 export interface ManualLaunchesPageContentProps {
   isLoading: boolean;
   fullLaunches?: Launch[];
-  onRefresh?: () => void;
+  onRefresh?: VoidFn;
 }
 
 export const ManualLaunchesPageContent = ({

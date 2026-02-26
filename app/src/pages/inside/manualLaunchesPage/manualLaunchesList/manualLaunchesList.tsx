@@ -19,6 +19,7 @@ import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
 import { xor } from 'es-toolkit';
 import { Button, Selection, Table } from '@reportportal/ui-kit';
+import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { createClassnames } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
@@ -41,7 +42,7 @@ const cx = createClassnames(styles);
 
 interface ManualLaunchesListProps {
   fullLaunches: Launch[];
-  onRefresh?: () => void;
+  onRefresh?: VoidFn;
 }
 
 export const ManualLaunchesList = ({ fullLaunches, onRefresh }: ManualLaunchesListProps) => {

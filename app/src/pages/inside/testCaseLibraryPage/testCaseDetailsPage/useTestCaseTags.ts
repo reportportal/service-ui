@@ -112,7 +112,9 @@ export const useTestCaseTags = ({ testCaseId }: UseTestCaseTagsParams) => {
 
       const currentAttributes = testCaseDetails?.attributes || [];
 
-      const updatedAttributes = currentAttributes.filter((attr) => attr.key !== tagKey);
+      const updatedAttributes = currentAttributes.filter(
+        (attr) => attr.key.toLowerCase() !== tagKey.toLowerCase(),
+      );
       await updateTestCaseTags(updatedAttributes);
     },
     [isLoading, updateTestCaseTags, testCaseDetails],

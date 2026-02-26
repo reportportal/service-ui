@@ -48,7 +48,10 @@ export const useLaunchDetails = (launchId: number | null) => {
       try {
         showSpinner();
 
-        const response = await fetch<ManualLaunchItem>(URLS.manualLaunchById(projectKey, launchId));
+        const response = await fetch<ManualLaunchItem>(
+          URLS.manualLaunchById(projectKey, launchId),
+          { signal: abortController.signal },
+        );
 
         if (abortController.signal.aborted) {
           return;
@@ -77,7 +80,7 @@ export const useLaunchDetails = (launchId: number | null) => {
     return () => {
       abortController.abort();
     };
-  }, [projectKey, launchId, dispatch, refetchTrigger]);
+  }, [projectKey, launchId, dispatch, refetchTrigger, hideSpinner, showSpinner]);
 
   return {
     launchDetails,
