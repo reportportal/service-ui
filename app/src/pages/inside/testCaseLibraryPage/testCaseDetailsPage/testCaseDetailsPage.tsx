@@ -58,8 +58,7 @@ import styles from './testCaseDetailsPage.scss';
 const cx = createClassnames(styles);
 
 const SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG = ({
-  canEditTestCaseTag,
-  canEditTestCaseDescription,
+  canManageTestCases,
   tags,
   testCaseDescription,
   headerControlKeys,
@@ -67,8 +66,7 @@ const SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG = ({
   tagAddButton,
   handleDescriptionModal,
 }: {
-  canEditTestCaseTag: boolean;
-  canEditTestCaseDescription: boolean;
+  canManageTestCases: boolean;
   tags: string[];
   testCaseDescription: string;
   headerControlKeys: { ADD: string };
@@ -83,7 +81,7 @@ const SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG = ({
       childComponent: !isEmpty(tags) && (
         <AdaptiveTagList tags={tags} isShowAllView onRemoveTag={onTagRemove} />
       ),
-      headerControl: canEditTestCaseTag && tagAddButton,
+      headerControl: canManageTestCases && tagAddButton,
     },
     {
       titleKey: 'description',
@@ -91,7 +89,7 @@ const SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG = ({
       childComponent: !isEmpty(testCaseDescription) && (
         <ExpandedTextSection text={testCaseDescription} defaultVisibleLines={5} />
       ),
-      headerControl: canEditTestCaseDescription && (
+      headerControl: canManageTestCases && (
         <Button
           variant="text"
           adjustWidthOn="content"
@@ -170,7 +168,7 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
 
 export const TestCaseDetailsPage = () => {
   const { formatMessage } = useIntl();
-  const { canEditTestCaseTag, canEditTestCaseDescription } = useUserPermissions();
+  const { canManageTestCases } = useUserPermissions();
   const { openModal: openAddTestCasesToTestPlanModal } = useAddTestCasesToTestPlanModal();
   const { openModal: openDescriptionModal } = useDescriptionModal();
 
@@ -254,13 +252,12 @@ export const TestCaseDetailsPage = () => {
           <div className={cx('page__sidebar')}>
             {SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG({
               tagAddButton,
-              onTagRemove: canEditTestCaseTag && !isTagsLoading ? handleTagRemove : undefined,
+              onTagRemove: canManageTestCases && !isTagsLoading ? handleTagRemove : undefined,
               handleDescriptionModal,
               headerControlKeys: { ADD: formatMessage(COMMON_LOCALE_KEYS.ADD) },
               testCaseDescription: testCaseDetails.description || '',
               tags,
-              canEditTestCaseTag,
-              canEditTestCaseDescription,
+              canManageTestCases,
             }).map(({ titleKey, defaultMessage, childComponent, headerControl }) => (
               <CollapsibleSectionWithHeaderControl
                 key={titleKey}

@@ -47,7 +47,7 @@ interface ManualLaunchesListProps {
 
 export const ManualLaunchesList = ({ fullLaunches, onRefresh }: ManualLaunchesListProps) => {
   const { formatMessage } = useIntl();
-  const { canDoTestCaseBulkActions } = useUserPermissions();
+  const { canManageTestCases } = useUserPermissions();
   const { openModal: openDeleteModal } = useDeleteManualLaunchModal();
   const { openModal: openBatchDeleteModal } = useBatchDeleteManualLaunchesModal();
   const { primaryColumn, fixedColumns } = useManualLaunchesColumns();
@@ -95,7 +95,7 @@ export const ManualLaunchesList = ({ fullLaunches, onRefresh }: ManualLaunchesLi
   return (
     <div className={cx('manual-launches-list')}>
       <Table
-        selectable={canDoTestCaseBulkActions}
+        selectable={canManageTestCases}
         selectedRowIds={selectedRowIds}
         data={manualLaunchesTableData}
         fixedColumns={fixedColumns}

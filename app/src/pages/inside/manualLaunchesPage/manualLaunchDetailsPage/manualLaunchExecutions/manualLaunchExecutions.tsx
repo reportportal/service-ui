@@ -53,7 +53,7 @@ export const ManualLaunchExecutions = ({
   isLoading,
 }: ManualLaunchExecutionsProps) => {
   const { formatMessage } = useIntl();
-  const { canEditTestCase } = useUserPermissions();
+  const { canManageTestCases } = useUserPermissions();
   const [searchValue, setSearchValue] = useState('');
   const launchId = useManualLaunchId();
   const { organizationSlug, projectSlug } = useProjectDetails();
@@ -106,7 +106,7 @@ export const ManualLaunchExecutions = ({
   };
 
   const getPopoverItems = (executionId: number): PopoverItem[] => {
-    if (!canEditTestCase) {
+    if (!canManageTestCases) {
       return [];
     }
 
@@ -161,7 +161,7 @@ export const ManualLaunchExecutions = ({
       },
       actions: {
         content: '',
-        component: canEditTestCase ? (
+        component: canManageTestCases ? (
           <div className={cx('execution-actions-cell')}>
             <PopoverControl items={getPopoverItems(execution.id)} placement="bottom-end">
               <button type="button" className={cx('execution-actions-button')}>
@@ -194,7 +194,7 @@ export const ManualLaunchExecutions = ({
       width: 64,
       align: 'left' as const,
     },
-    ...(canEditTestCase
+    ...(canManageTestCases
       ? [
           {
             key: 'actions',
