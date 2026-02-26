@@ -14,28 +14,15 @@
  * limitations under the License.
  */
 
-import { useDispatch } from 'react-redux';
+import { useModal } from 'common/hooks';
 
-import { showModalAction } from 'controllers/modal';
+import DuplicateTestCaseModal, {
+  DUPLICATE_TEST_CASE_MODAL_KEY,
+  DuplicateTestCaseModalData,
+} from './duplicateTestCaseModal';
 
-import { ExtendedTestCase } from '../types';
-import { DUPLICATE_TEST_CASE_MODAL_KEY } from './duplicateTestCaseModal';
-
-export const useDuplicateTestCaseModal = () => {
-  const dispatch = useDispatch();
-
-  const openModal = (testCase: ExtendedTestCase) => {
-    dispatch(
-      showModalAction({
-        id: DUPLICATE_TEST_CASE_MODAL_KEY,
-        data: {
-          testCase,
-        },
-      }),
-    );
-  };
-
-  return {
-    openModal,
-  };
-};
+export const useDuplicateTestCaseModal = () =>
+  useModal<DuplicateTestCaseModalData>({
+    modalKey: DUPLICATE_TEST_CASE_MODAL_KEY,
+    renderModal: (data) => <DuplicateTestCaseModal data={data} />,
+  });

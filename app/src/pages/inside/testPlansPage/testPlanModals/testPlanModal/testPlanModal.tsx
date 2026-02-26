@@ -50,6 +50,14 @@ export interface TestPlanFormValues {
   attributes: Attribute[];
 }
 
+const isEmptyAttributeField = (value?: string) => !value?.trim();
+
+const hasInvalidEditableAttributes = (attributes: Attribute[] = []) =>
+  attributes.some(
+    ({ edited, new: isNew, key, value }) =>
+      (edited || isNew) && (isEmptyAttributeField(key) || isEmptyAttributeField(value)),
+  );
+
 interface TestPlanModalProps {
   title: string;
   submitButtonText: string;
@@ -136,8 +144,11 @@ export const TestPlanModal = (props: TestPlanModalProps) => {
       reduxForm<TestPlanFormValues, TestPlanModalProps>({
         form: props.formName,
         enableReinitialize: true,
-        validate: ({ name }: { name: string }) => ({
+        validate: ({ name, attributes }: TestPlanFormValues) => ({
           name: commonValidators.requiredField(name),
+          attributes: hasInvalidEditableAttributes(attributes)
+            ? commonValidators.requiredField('')
+            : undefined,
         }),
       })(TestPlanModalComponent),
     [props.formName],

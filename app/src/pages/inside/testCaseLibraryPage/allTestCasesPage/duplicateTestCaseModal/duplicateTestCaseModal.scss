@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-import { useModal } from 'common/hooks';
-
-import BatchDuplicateToFolderModal, {
-  BATCH_DUPLICATE_TO_FOLDER_MODAL_KEY,
-  BatchDuplicateToFolderModalData,
-} from './batchDuplicateToFolderModal';
-
-export const useBatchDuplicateToFolderModal = () =>
-  useModal<BatchDuplicateToFolderModalData>({
-    modalKey: BATCH_DUPLICATE_TO_FOLDER_MODAL_KEY,
-    renderModal: (data) => <BatchDuplicateToFolderModal data={data} />,
-  });
+.duplicate-test-case-modal {
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}

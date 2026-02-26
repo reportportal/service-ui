@@ -43,7 +43,7 @@ import { commonMessages } from '../../commonMessages';
 import { EDIT_TEST_CASE_MODAL_KEY } from '../editTestCaseModal/editTestCaseModal';
 import { useDeleteTestCaseModal } from '../../deleteTestCaseModal';
 import { useEditTestCaseModal } from '../../editSelectedTestCaseModal';
-import { useDuplicateTestCaseModal } from '../../duplicateTestCaseModal';
+import { useDuplicateTestCaseModal } from '../../allTestCasesPage/duplicateTestCaseModal';
 import { AddToLaunchButton } from '../../addToLaunchButton';
 
 import styles from './testCaseDetailsHeader.scss';
@@ -95,7 +95,12 @@ export const TestCaseDetailsHeader = ({
 
   const handleDeleteTestCase = () => openDeleteTestCaseModal({ testCase, isDetailsPage: true });
 
-  const handleDuplicateTestCase = () => openDuplicateTestCaseModal(testCase);
+  const handleDuplicateTestCase = () =>
+    openDuplicateTestCaseModal({
+      selectedTestCaseIds: [testCase.id],
+      count: 1,
+      testCase,
+    });
 
   const getCreationDate = (timestamp: number) => {
     const date = new Date(timestamp);
@@ -103,7 +108,6 @@ export const TestCaseDetailsHeader = ({
     return moment(date).format(REVERSED_DATE_FORMAT as string);
   };
 
-  
   const items: PopoverItem[] = canManageTestCases ? [
     {
       label: formatMessage(commonMessages.historyOfActions),
@@ -118,12 +122,7 @@ export const TestCaseDetailsHeader = ({
       variant: 'destructive',
       onClick: handleDeleteTestCase,
     }
-  ] : [
-    {
-      label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE),
-      onClick: handleDuplicateTestCase,
-    }
-  ];
+  ] : [];
 
   const openEditScenarioModal = () => {
     openEditTestCaseModal({ testCase });
