@@ -106,11 +106,11 @@ export const TestCaseList = memo(
       const newSelectedRows = isAllCurrentPageSelected
         ? selectedRows.filter((row) => !currentPageTestCaseIds.includes(row.id))
         : [
-            ...selectedRows,
-            ...testCases
-              .filter((testCase) => !selectedRowIds.includes(testCase.id))
-              .map((testCase) => ({ id: testCase.id, folderId: testCase.testFolder.id })),
-          ];
+          ...selectedRows,
+          ...testCases
+            .filter((testCase) => !selectedRowIds.includes(testCase.id))
+            .map((testCase) => ({ id: testCase.id, folderId: testCase.testFolder.id })),
+        ];
 
       handleSelectedRows(newSelectedRows);
     };
@@ -126,7 +126,7 @@ export const TestCaseList = memo(
             type="button"
             className={cx('cell-wrapper', { selected: testCase.id === selectedTestCaseId })}
             onClick={() => setSelectedTestCaseId(testCase.id)}
-                      >
+          >
             <DraggableTestCaseNameCell
               testCase={testCase}
               priority={testCase.priority?.toLowerCase() as TestCasePriority}
@@ -200,7 +200,7 @@ export const TestCaseList = memo(
                   previewClassName={cx('test-case-drag-preview')}
                   renderPreview={(item: { id: number | string; testCase?: ExtendedTestCase }) => {
                     const draggedTestCase =
-                      item.testCase ?? testCases.find((tc) => tc.id === item.id);
+                      item.testCase ?? testCases.find((testCase) => testCase.id === item.id);
                     return (
                       <>
                         <span className={cx('test-case-drag-preview__text')}>

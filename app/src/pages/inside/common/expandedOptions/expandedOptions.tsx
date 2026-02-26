@@ -33,7 +33,6 @@ import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { createClassnames } from 'common/utils';
 import { useStorageFolders } from 'hooks/useStorageFolders';
 import { TransformedFolder, foldersSelector } from 'controllers/testCase';
-import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { EmptySearchState } from 'pages/common/emptySearchState';
 import OutlineSearchIcon from 'common/img/search-outline-icon-inline.svg';
@@ -43,11 +42,12 @@ import FolderDropIcon from 'common/img/folder-drop-inline.svg';
 
 import { Folder } from './folder';
 import { messages } from './messages';
-import { ExpandedOptionsProps } from './types';
+import type { ExpandedOptionsProps } from './types';
 import { useFolderSearch } from './useFolderSearch';
 import { FOLDER_DRAG_TYPE, EXTERNAL_TREE_DROP_TYPE } from './constants';
 
 import styles from './expandedOptions.scss';
+import { createTestCaseDropHandler } from './utils';
 
 const cx = createClassnames(styles);
 
@@ -137,21 +137,15 @@ export const ExpandedOptions = ({
   );
 
   const handleMoveExternal = useCallback(
-    (draggedItem: TreeDragItem, targetId: string | number, _position: TreeDropPosition) => {
-      const item = draggedItem as TreeDragItem & { testCase?: ExtendedTestCase };
-      if (item.testCase && onMoveTestCase) {
-        void onMoveTestCase(item.testCase, Number(targetId));
-      }
+    (draggedItem: TreeDragItem, targetId: string | number, position: TreeDropPosition) => {
+      createTestCaseDropHandler(onMoveTestCase)(draggedItem, targetId, position);
     },
     [onMoveTestCase],
   );
 
   const handleDuplicateExternal = useCallback(
-    (draggedItem: TreeDragItem, targetId: string | number, _position: TreeDropPosition) => {
-      const item = draggedItem as TreeDragItem & { testCase?: ExtendedTestCase };
-      if (item.testCase && onDuplicateTestCase) {
-        void onDuplicateTestCase(item.testCase, Number(targetId));
-      }
+    (draggedItem: TreeDragItem, targetId: string | number, position: TreeDropPosition) => {
+      createTestCaseDropHandler(onDuplicateTestCase)(draggedItem, targetId, position);
     },
     [onDuplicateTestCase],
   );

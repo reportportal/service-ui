@@ -218,7 +218,7 @@ export const Folder: FolderComposite = ({
       hideDefaultPreview
       className={cx('tree-sortable-wrapper')}
       canDropOn={canDropOn}
-      acceptExternalDrop={true}
+      acceptExternalDrop
       externalDropType={EXTERNAL_TREE_DROP_TYPE}
     >
       {({

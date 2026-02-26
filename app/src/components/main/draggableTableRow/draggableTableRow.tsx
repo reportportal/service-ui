@@ -69,11 +69,7 @@ export const useDraggableRow = <T extends Record<string, unknown>>({
   useEffect(() => {
     const row = rowRef.current?.closest<HTMLElement>(rowSelector) ?? null;
     if (row) {
-      if (isDragging) {
-        row.classList.add(customDraggingClass);
-      } else {
-        row.classList.remove(customDraggingClass);
-      }
+      row.classList.toggle(customDraggingClass, isDragging);
     }
     if (!isDragging) {
       isDragFromHandle.current = false;
