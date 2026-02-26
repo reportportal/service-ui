@@ -155,5 +155,5 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
     canDeleteProject,
   ]);
 
-  return <ActionMenu links={links} actions={actions} showDivider={true} />;
+  return <ActionMenu links={links} actions={actions} showDivider />;
 };
