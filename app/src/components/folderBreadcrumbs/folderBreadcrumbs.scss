@@ -14,35 +14,42 @@
  * limitations under the License.
  */
 
-.path-breadcrumb {
+.folder-breadcrumbs {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  font-family: $FONT-ROBOTO-REGULAR;
   color: var(--rp-ui-base-almost-black);
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  &__container {
+    min-width: 0;
+  }
+
+  button {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    display: inline-flex;
+    width: auto;
+    max-width: 100%;
+    min-width: 0;
+
+    &:hover {
+      div {
+        color: var(--rp-ui-base-topaz-hover) !important;
+      }
+    }
+
+    div {
+      font-family: var(--rp-ui-base-font-family);
+      color: var(--rp-ui-base-almost-black) !important;
+    }
+  }
 }
 
-.path-text {
-  line-height: 20px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
 
-.path-item-container {
-  display: flex;
-  align-items: center;
-}
-
-.path-separator {
-  color: var(--rp-ui-base-e-300);
-  height: 12px;
-  display: inline-flex;
-  align-items: center;
-  margin: 0 2px;
-}
-
-.path-item {
-  display: inline;
-}

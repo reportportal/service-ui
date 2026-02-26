@@ -90,6 +90,11 @@
   }
 
   &__files-list {
+    &:has(>:only-child) {
+      grid-template-columns: calc(50% - 4px);
+      justify-content: start;
+    }
+
     div {
       min-width: 0;
     }
