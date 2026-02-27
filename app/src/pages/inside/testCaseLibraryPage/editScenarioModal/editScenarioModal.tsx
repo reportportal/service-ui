@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-import { useEffect, useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { reduxForm, InjectedFormProps } from 'redux-form';
-import { keyBy } from 'es-toolkit';
-import { isEmpty } from 'es-toolkit/compat';
 
-import { uniqueId } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal } from 'controllers/modal';
 import { UseModalData } from 'common/hooks';
 
 import { commonMessages } from '../commonMessages';
-import { CreateTestCaseFormData, hasTagShape } from '../types';
+import { CreateTestCaseFormData } from '../types';
 import { TEST_CASE_FORM_INITIAL_VALUES } from '../createTestCaseModal/constants';
 import { useTestCase } from '../hooks/useTestCase';
+import { useTestCaseFormInitialization } from '../hooks/useTestCaseFormInitialization';
 import { EditScenarioModalContent } from './editScenarioModalContent';
 import { EDIT_SCENARIO_MODAL_KEY, EDIT_SCENARIO_FORM_NAME } from './constants';
 import { EditScenarioModalProps } from './types';
@@ -42,60 +40,15 @@ const EditScenarioModalComponent = ({
 }: UseModalData<EditScenarioModalProps> &
   InjectedFormProps<CreateTestCaseFormData, EditScenarioModalProps>) => {
   const testCase = data?.testCase;
-  const [isInitialized, setIsInitialized] = useState(false);
 
   const { formatMessage } = useIntl();
   const { isLoading: isEditTestCaseLoading, editTestCase } = useTestCase(testCase?.id);
 
-  useEffect(() => {
-    if (testCase) {
-      const manualScenario = testCase?.manualScenario;
-      const stepsObject = manualScenario?.steps
-        ? keyBy(
-            manualScenario.steps.map((step, index) => ({ ...step, position: index })),
-            (step) => step.id,
-          )
-        : undefined;
-
-      const formData = {
-        name: testCase.name,
-        description: testCase.description,
-        folder: testCase.testFolder,
-        priority: (testCase.priority?.toLowerCase() || TEST_CASE_FORM_INITIAL_VALUES.priority) as
-          | 'low'
-          | 'medium'
-          | 'high',
-        attributes: (testCase.attributes ?? []).filter(hasTagShape).map(({ id, key, value }) => ({
-          id,
-          key,
-          value: value ?? '',
-        })),
-        manualScenarioType:
-          manualScenario?.manualScenarioType || TEST_CASE_FORM_INITIAL_VALUES.manualScenarioType,
-        executionEstimationTime:
-          manualScenario?.executionEstimationTime ||
-          TEST_CASE_FORM_INITIAL_VALUES.executionEstimationTime,
-        requirements: isEmpty(manualScenario?.requirements)
-          ? [{ id: uniqueId(), value: '' }]
-          : manualScenario?.requirements,
-        precondition: manualScenario?.preconditions?.value,
-        preconditionAttachments: manualScenario?.preconditions?.attachments || [],
-        instructions: manualScenario?.instructions,
-        expectedResult: manualScenario?.expectedResult,
-        textAttachments: manualScenario?.attachments || [],
-        ...(stepsObject && {
-          steps: stepsObject,
-        }),
-      };
-
-      initialize({ ...formData } as unknown as Partial<CreateTestCaseFormData>);
-
-      setTimeout(() => {
-        reset();
-        setIsInitialized(true);
-      }, 100);
-    }
-  }, [testCase, initialize, reset]);
+  const { isInitialized } = useTestCaseFormInitialization({
+    testCase,
+    initialize,
+    reset,
+  });
 
   const handleUpdate = useCallback(
     (formData: CreateTestCaseFormData) => {
