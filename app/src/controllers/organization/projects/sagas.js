@@ -143,7 +143,7 @@ function* renameProject({ payload: { projectId, newProjectName } }) {
 
   const renameOperation = {
     op: 'replace',
-    path: 'name',
+    path: '/name',
     value: newProjectName,
   };
 
@@ -177,7 +177,7 @@ function* unassignFromProject({ payload = {} }) {
 
   const removeOperation = {
     op: 'remove',
-    path: 'users',
+    path: '/users',
     value: [{ id: user.id }],
   };
 
