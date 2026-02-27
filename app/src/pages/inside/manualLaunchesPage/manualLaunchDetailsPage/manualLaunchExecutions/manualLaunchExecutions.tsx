@@ -137,11 +137,9 @@ export const ManualLaunchExecutions = ({
               )}
               <span className={cx('test-name')}>{execution.testCaseName}</span>
             </div>
-            {!isEmpty(tags) && (
-              <div className={cx('tags-section')}>
-                <AdaptiveTagList tags={tags} isShowAllView />
-              </div>
-            )}
+            <div className={cx('tags-section')}>
+              <AdaptiveTagList tags={tags} isShowAllView />
+            </div>
           </div>
         ),
       },
