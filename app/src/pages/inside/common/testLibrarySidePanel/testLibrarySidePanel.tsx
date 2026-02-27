@@ -82,10 +82,10 @@ export const TestLibrarySidePanel = ({
         onClearSelection={clearSelection}
       />
       <div className={cx('test-library-panel__footer-buttons')}>
-        <Button variant="ghost" onClick={addToTestPlan}>
+        <Button variant="ghost" onClick={addToTestPlan} disabled={selectionCount === 0}>
           {formatMessage(messages.addAndCreateLaunch)}
         </Button>
-        <Button variant="primary" onClick={addToTestPlan}>
+        <Button variant="primary" onClick={addToTestPlan} disabled={selectionCount === 0}>
           {formatMessage(messages.addToTestPlan)}
         </Button>
       </div>

@@ -59,6 +59,7 @@ export class ScrollWrapper extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     backToTopEventEnabled: PropTypes.bool,
+    scrollContainerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.any })]),
   };
   static defaultProps = {
     initialScrollRight: false,
@@ -85,6 +86,7 @@ export class ScrollWrapper extends Component {
     resetRequired: false,
     onReset: () => {},
     backToTopEventEnabled: false,
+    scrollContainerRef: null,
   };
   state = {
     showButton: false,
@@ -98,6 +100,7 @@ export class ScrollWrapper extends Component {
       this.spring.addListener({ onSpringUpdate: this.handleSpringUpdate });
       this.stopScroll = false;
     }
+    this.updateScrollContainerRef();
   }
 
   componentDidUpdate() {
@@ -105,6 +108,7 @@ export class ScrollWrapper extends Component {
       this.scrollbars.scrollTop(0);
       this.props.onReset();
     }
+    this.updateScrollContainerRef();
   }
 
   componentWillUnmount() {
@@ -121,6 +125,20 @@ export class ScrollWrapper extends Component {
 
   setupRef = (scrollbars) => {
     this.scrollbars = scrollbars;
+  };
+
+  updateScrollContainerRef = () => {
+    if (this.props.scrollContainerRef && this.scrollbars) {
+      const viewElement = this.scrollbars.view;
+      
+      if (viewElement) {
+        if (typeof this.props.scrollContainerRef === 'function') {
+          this.props.scrollContainerRef(viewElement);
+        } else if (this.props.scrollContainerRef.current !== undefined) {
+          this.props.scrollContainerRef.current = viewElement;
+        }
+      }
+    }
   };
 
   handleSpringUpdate = (spring) => {

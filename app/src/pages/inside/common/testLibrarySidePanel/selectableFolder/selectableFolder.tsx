@@ -15,22 +15,25 @@
  */
 
 import { useCallback, useEffect, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
 import { isEmpty, size } from 'es-toolkit/compat';
-import { ChevronDownDropdownIcon, DragNDropIcon } from '@reportportal/ui-kit';
+import useInfiniteScroll from 'react-infinite-scroll-hook';
+import { ChevronDownDropdownIcon, DragNDropIcon, BubblesLoader } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
-import { TransformedFolder, getTestCaseByFolderIdAction } from 'controllers/testCase';
+import { TransformedFolder } from 'controllers/testCase';
 import { Folder } from 'pages/inside/common/expandedOptions/folder/folder';
-import { SelectableTestCase } from 'pages/inside/common/testLibrarySidePanel/selectableTestCase/selectableTestCase';
 
 import { DepthAwareCheckbox } from '../depthAwareCheckbox';
 import { useTestLibraryPanelContext } from '../testLibraryPanelContext';
+import { useFolderTestCases } from './useFolderTestCases';
+import { SelectableTestCase } from '../selectableTestCase';
 
 import treeStyles from '../../expandedOptions/folder/folder.scss';
 import styles from './selectableFolder.scss';
 
 const cx = createClassnames(styles, treeStyles);
+
+const LOAD_MORE_SCROLL_THRESHOLD_PX = 100;
 
 interface SelectableFolderProps {
   folder: TransformedFolder;
@@ -47,34 +50,50 @@ export const SelectableFolder = ({ folder, depth = 0 }: SelectableFolderProps) =
   const {
     selectedIds,
     selectedFolderIds,
-    testPlanTestCaseIds,
     testCasesMap,
-    fetchedFolderIds,
     expandedFolderIds,
+    scrollElement,
     toggleTestCasesSelection,
     toggleFolderSelection,
-    onFolderFetched,
     toggleFolder,
   } = useTestLibraryPanelContext();
-  const dispatch = useDispatch();
 
-  const testCases = useMemo(() => testCasesMap.get(folder.id) || [], [testCasesMap, folder.id]);
   const isOpen = expandedFolderIds.has(folder.id);
   const hasChildren = !isEmpty(folder.folders) || folder.testsCount > 0;
 
-  useEffect(() => {
-    if (isOpen && !fetchedFolderIds.has(folder.id)) {
-      dispatch(
-        getTestCaseByFolderIdAction({
-          folderId: folder.id,
-          offset: 0,
-          limit: 50,
-        }),
-      );
+  const {
+    testCases = [],
+    isLoading: isFolderLoading = false,
+    addedToTestPlanIds = [],
+  } = testCasesMap.get(folder.id) ?? {};
 
-      onFolderFetched(folder.id);
+  const selectableTestCases = useMemo(
+    () =>
+      !isEmpty(addedToTestPlanIds)
+        ? testCases.filter((testCase) => !addedToTestPlanIds.includes(testCase.id))
+        : testCases,
+    [testCases, addedToTestPlanIds],
+  );
+
+  const { fetchNextPage, hasNextPage, isLoading } = useFolderTestCases({
+    folderId: folder.id,
+    isOpen,
+    testsCount: folder.testsCount,
+  });
+
+  const [infiniteRef, { rootRef }] = useInfiniteScroll({
+    loading: isLoading || isFolderLoading,
+    hasNextPage,
+    disabled: !isOpen || isEmpty(testCases),
+    rootMargin: `0px 0px ${LOAD_MORE_SCROLL_THRESHOLD_PX}px 0px`,
+    onLoadMore: fetchNextPage,
+  });
+
+  useEffect(() => {
+    if (scrollElement) {
+      rootRef(scrollElement as Element);
     }
-  }, [isOpen, folder.id, fetchedFolderIds, dispatch, onFolderFetched]);
+  }, [scrollElement, rootRef]);
 
   const checkboxState = useMemo(() => {
     if (isEmpty(testCases)) {
@@ -83,18 +102,24 @@ export const SelectableFolder = ({ folder, depth = 0 }: SelectableFolderProps) =
         : CheckboxSelectionState.UNCHECKED;
     }
 
-    const selectedCount = size(testCases.filter((testCase) => selectedIds.has(testCase.id)));
+    if (isEmpty(selectableTestCases)) {
+      return CheckboxSelectionState.UNCHECKED;
+    }
+
+    const selectedCount = size(
+      selectableTestCases.filter((testCase) => selectedIds.has(testCase.id)),
+    );
 
     if (selectedCount === 0) {
       return CheckboxSelectionState.UNCHECKED;
     }
 
-    if (selectedCount === testCases.length) {
+    if (selectedCount === selectableTestCases.length) {
       return CheckboxSelectionState.CHECKED;
     }
 
     return CheckboxSelectionState.INDETERMINATE;
-  }, [testCases, selectedIds, selectedFolderIds, folder.id]);
+  }, [testCases, selectableTestCases, selectedIds, selectedFolderIds, folder.id]);
 
   const onFolderToggle = useCallback(() => {
     if (!hasChildren) {
@@ -108,20 +133,23 @@ export const SelectableFolder = ({ folder, depth = 0 }: SelectableFolderProps) =
     if (isEmpty(testCases)) {
       toggleFolderSelection(folder.id);
     } else {
-      const testCaseIds = testCases.map((testCase) => testCase.id);
+      const selectableIds = selectableTestCases.map((testCase) => testCase.id);
 
       if (checkboxState === CheckboxSelectionState.CHECKED) {
-        toggleTestCasesSelection(testCaseIds);
+        toggleTestCasesSelection(selectableIds);
       } else {
-        const notSelectedTestCases = testCaseIds.filter((id) => !selectedIds.has(id));
+        const notSelectedIds = selectableTestCases
+          .filter((testCase) => !selectedIds.has(testCase.id))
+          .map((testCase) => testCase.id);
 
-        if (!isEmpty(notSelectedTestCases)) {
-          toggleTestCasesSelection(notSelectedTestCases);
+        if (!isEmpty(notSelectedIds)) {
+          toggleTestCasesSelection(notSelectedIds);
         }
       }
     }
   }, [
     testCases,
+    selectableTestCases,
     toggleFolderSelection,
     folder.id,
     checkboxState,
@@ -136,21 +164,39 @@ export const SelectableFolder = ({ folder, depth = 0 }: SelectableFolderProps) =
     [toggleTestCasesSelection],
   );
 
-  const renderTestCases = () =>
-    !isEmpty(testCases) && (
+  const renderTestCases = () => {
+    if (isLoading && isEmpty(testCases)) {
+      return (
+        <div className={cx('selectable-folder__loader')}>
+          <BubblesLoader />
+        </div>
+      );
+    }
+
+    if (isEmpty(testCases)) {
+      return null;
+    }
+
+    return (
       <>
         {testCases.map((testCase) => (
           <SelectableTestCase
             key={testCase.id}
             testCase={testCase}
             isSelected={selectedIds.has(testCase.id)}
-            isAddedToTestPlan={testPlanTestCaseIds.has(testCase.id)}
+            isAddedToTestPlan={addedToTestPlanIds.includes(testCase.id)}
             onToggle={toggleTestCase}
             depth={depth + 1}
           />
         ))}
+        {hasNextPage && (
+          <div ref={infiniteRef} className={cx('selectable-folder__load-more')}>
+            <BubblesLoader />
+          </div>
+        )}
       </>
     );
+  };
 
   return (
     <Folder.Wrapper isOpen={isOpen} className={cx('selectable-tree__item')}>
