@@ -107,7 +107,6 @@ import { fetchClustersAction } from 'controllers/uniqueErrors';
 import {
   GET_TEST_CASE_DETAILS,
   getFoldersAction,
-  areFoldersFetchedSelector,
 } from 'controllers/testCase';
 import {
   API_KEYS_ROUTE,
@@ -475,10 +474,7 @@ const routesMap = {
         dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId } });
       }
 
-      // Only dispatch getFoldersAction if folders are not already loaded
-      if (!areFoldersFetchedSelector(state)) {
-        dispatch(getFoldersAction());
-      }
+      dispatch(getFoldersAction());
     },
   },
   [PRODUCT_VERSIONS_PAGE]: {

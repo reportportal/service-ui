@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,35 +14,13 @@
  * limitations under the License.
  */
 
-.path-breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  font-family: $FONT-ROBOTO-REGULAR;
-  color: var(--rp-ui-base-almost-black);
-}
-
-.path-text {
-  line-height: 20px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.path-item-container {
-  display: flex;
-  align-items: center;
-}
-
-.path-separator {
-  color: var(--rp-ui-base-e-300);
-  height: 12px;
-  display: inline-flex;
-  align-items: center;
-  margin: 0 2px;
-}
-
-.path-item {
-  display: inline;
-}
+export { EditManualLaunchModal } from './editManualLaunchModal';
+export { useEditManualLaunchModal } from './useEditManualLaunchModal';
+export { EDIT_MANUAL_LAUNCH_MODAL_KEY } from './constants';
+export type {
+  ManualLaunchData,
+  EditManualLaunchModalProps,
+  UseEditManualLaunchModalOptions,
+  UseEditManualLaunchParams,
+  EditManualLaunchDto,
+} from './types';

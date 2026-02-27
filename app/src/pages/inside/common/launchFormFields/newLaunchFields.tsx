@@ -39,7 +39,11 @@ import styles from './launchFormFields.scss';
 
 const cx = createClassnames(styles);
 
-export const NewLaunchFields = ({ hideTestPlanField = false }: NewLaunchFieldsProps) => {
+export const NewLaunchFields = ({
+  hideTestPlanField = false,
+  descriptionPlaceholder,
+  testPlanPlaceholder,
+}: NewLaunchFieldsProps) => {
   const { formatMessage } = useIntl();
 
   const validateLaunchName = useCallback(
@@ -71,7 +75,7 @@ export const NewLaunchFields = ({ hideTestPlanField = false }: NewLaunchFieldsPr
   const renderTestPlanField = ({ input }: WrappedFieldProps) => (
     <AsyncAutocompleteV2
       value={input.value as TestPlanOption | undefined}
-      placeholder={formatMessage(messages.selectTestPlanPlaceholder)}
+      placeholder={testPlanPlaceholder || formatMessage(messages.selectTestPlanPlaceholder)}
       getURI={retrieveTestPlans}
       makeOptions={makeTestPlanOptions}
       onChange={(value) => handleTestPlanChange(value, input)}
@@ -99,7 +103,7 @@ export const NewLaunchFields = ({ hideTestPlanField = false }: NewLaunchFieldsPr
 
       <FieldProvider
         name={LAUNCH_FORM_FIELD_NAMES.DESCRIPTION}
-        placeholder={formatMessage(messages.addLaunchDescriptionOptional)}
+        placeholder={descriptionPlaceholder || formatMessage(messages.addLaunchDescriptionOptional)}
       >
         <FieldTextFlex label={formatMessage(commonMessages.description)} value="" />
       </FieldProvider>

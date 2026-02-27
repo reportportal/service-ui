@@ -17,10 +17,9 @@
 import { combineReducers } from 'redux';
 import { isEmpty, isNil } from 'es-toolkit/compat';
 
-import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
+import { getParentFoldersIds } from 'common/utils/folderUtils';
 import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
-import { TEST_CASE_LIBRARY_PAGE } from 'controllers/pages';
 import { getInitialExpandedFolderIds } from 'controllers/utils/folderReducerUtils';
 import { hasPayloadProps } from 'controllers/utils/types';
 import {
@@ -51,8 +50,8 @@ import {
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Page } from 'types/common';
-
 import { queueReducers } from 'common/utils';
+
 import { Folder } from './types';
 import {
   DeleteFolderSuccessParams,
@@ -319,25 +318,8 @@ const expandedFolderIdsReducer = (
     case EXPAND_FOLDERS_TO_LEVEL: {
       if (hasFolderExpansionPayload(action)) {
         const { folderId, folders } = action.payload;
-        const folderMap = new Map(folders.map((folder) => [folder.id, folder]));
 
-        const collectParentIds = (id: number): number[] => {
-          const folder = folderMap.get(id);
-
-          if (!folder) {
-            return [];
-          }
-
-          const currentIds = state.includes(id) ? [] : [id];
-
-          if (folder.parentFolderId === null) {
-            return currentIds;
-          }
-
-          return [...currentIds, ...collectParentIds(folder.parentFolderId)];
-        };
-
-        const idsToExpand = collectParentIds(folderId);
+        const idsToExpand = getParentFoldersIds(folderId, folders);
 
         return !isEmpty(idsToExpand) ? [...state, ...idsToExpand] : state;
       }
@@ -381,4 +363,4 @@ const reducer = combineReducers({
   testCases: testCasesReducer,
 });
 
-export const testCaseReducer = createPageScopedReducer(reducer, [TEST_CASE_LIBRARY_PAGE]);
+export const testCaseReducer = reducer;

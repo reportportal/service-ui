@@ -99,6 +99,8 @@ export interface ExistingLaunchFieldsProps {
 
 export interface NewLaunchFieldsProps {
   hideTestPlanField?: boolean;
+  descriptionPlaceholder?: string;
+  testPlanPlaceholder?: string;
 }
 
 export interface BaseLaunchModalProps {

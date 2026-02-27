@@ -95,7 +95,11 @@ export const ManualLaunchesPage = () => {
           })}
         />
         <div className={cx('content-wrapper')}>
-          <ManualLaunchesPageContent fullLaunches={content} isLoading={isLoading} />
+          <ManualLaunchesPageContent
+            fullLaunches={content}
+            isLoading={isLoading}
+            onRefresh={handleRefresh}
+          />
         </div>
         {Boolean(pageInfo?.totalElements) && (
           <div className={cx('pagination')}>
