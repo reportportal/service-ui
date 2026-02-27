@@ -49,3 +49,17 @@
     }
   }
 }
+
+.selectable-folder {
+  &__loader {
+    display: flex;
+    justify-content: center;
+    padding: 16px;
+  }
+
+  &__load-more {
+    display: flex;
+    justify-content: center;
+    padding: 8px;
+  }
+}

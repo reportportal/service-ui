@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 
-import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import { isEmpty, isNumber } from 'es-toolkit/compat';
+import { useState, useEffect, useMemo, useCallback } from 'react';
+import { isEmpty } from 'es-toolkit/compat';
 import { useDispatch, useSelector } from 'react-redux';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
 import {
   getFoldersAction,
   transformedFoldersSelector,
-  testCasesSelector,
   TransformedFolder,
 } from 'controllers/testCase';
-import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { activeTestPlanSelector } from 'controllers/testPlan';
 
-import { TestLibraryPanelContextValue } from './testLibraryPanelContext';
-import { useTestPlanSelector } from 'hooks/useTypedSelector';
-import { testPlanTestCasesSelector } from 'controllers/testPlan';
+import {
+  TestLibraryPanelContextValue,
+  FolderTestCases,
+  NumberSet,
+} from './testLibraryPanelContext';
 
 interface UseTestLibraryPanelProps {
   onAddTestCases: (testCaseIds: number[]) => void;
@@ -44,8 +45,6 @@ interface UseTestLibraryPanelUtils {
   clearSelection: VoidFn;
   addToTestPlan: VoidFn;
 }
-
-type NumberSet = Set<number>;
 
 const toggleSet = (set: NumberSet, value: number): NumberSet => {
   const updatedSet = new Set(set);
@@ -66,59 +65,43 @@ export const useTestLibraryPanel = ({
   const dispatch = useDispatch();
   const [selectedTestCasesIds, setSelectedTestCasesIds] = useState<NumberSet>(new Set());
   const [selectedFolderIds, setSelectedFolderIds] = useState<NumberSet>(new Set());
-  const [fetchedFolderIds, setFetchedFolderIds] = useState<NumberSet>(new Set());
   const [expandedIds, setExpandedIds] = useState<NumberSet>(new Set());
-  const [testCasesMap, setTestCasesMap] = useState<Map<number, TestCase[]>>(new Map());
+  const [testCasesMap, setTestCasesMap] = useState<Map<number, FolderTestCases>>(new Map());
 
-  const lastExpandedIdRef = useRef<number>();
-  const testCases = useSelector(testCasesSelector);
   const folders = useSelector(transformedFoldersSelector);
-  const testPlanTestCases = useTestPlanSelector(testPlanTestCasesSelector);
+  const activeTestPlan = useSelector(activeTestPlanSelector);
+  const testPlanId = activeTestPlan?.id ?? null;
 
   useEffect(() => {
     dispatch(getFoldersAction());
-  }, []);
+  }, [dispatch]);
 
-  useEffect(() => {
-    if (
-      isNumber(lastExpandedIdRef.current) &&
-      !testCasesMap.has(lastExpandedIdRef.current) &&
-      !isEmpty(testCases)
-    ) {
-      const folderId = lastExpandedIdRef.current;
-
+  const updateFolderTestCases = useCallback(
+    (folderId: number, newTestCases: Partial<FolderTestCases>) => {
       setTestCasesMap((prevMap) => {
         const updatedMap = new Map(prevMap);
 
-        updatedMap.set(folderId, testCases);
+        const currentState = updatedMap.get(folderId) || {
+          testCases: [],
+          page: null,
+          isLoading: false,
+          addedToTestPlanIds: undefined,
+        };
+
+        updatedMap.set(folderId, {
+          ...currentState,
+          ...newTestCases,
+        });
 
         return updatedMap;
       });
-
-      lastExpandedIdRef.current = undefined;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [testCases]);
-
-  const testPlanTestCaseIds = useMemo(
-    () => new Set(testPlanTestCases.map(({ id }) => id)),
-    [testPlanTestCases],
-  );
-
-  const handleFolderFetched = useCallback((folderId: number) => {
-    setFetchedFolderIds((prev) => new Set(prev).add(folderId));
-  }, []);
-
-  const toggleFolder = useCallback(
-    (folder: TransformedFolder) => {
-      if (!expandedIds.has(folder.id)) {
-        lastExpandedIdRef.current = folder.id;
-      }
-
-      setExpandedIds((prevState) => toggleSet(prevState, folder.id));
     },
-    [expandedIds],
+    [],
   );
+
+  const toggleFolder = useCallback((folder: TransformedFolder) => {
+    setExpandedIds((prevState) => toggleSet(prevState, folder.id));
+  }, []);
 
   const toggleFolderSelection = useCallback((folderId: number) => {
     setSelectedFolderIds((prevState) => toggleSet(prevState, folderId));
@@ -134,21 +117,16 @@ export const useTestLibraryPanel = ({
   }, []);
 
   const addToTestPlan = useCallback(() => {
-    const selectedIds = Array.from(selectedTestCasesIds).filter(
-      (id) => !testPlanTestCaseIds.has(id),
-    );
+    const selectedIds = Array.from(selectedTestCasesIds);
 
     if (!isEmpty(selectedIds)) {
       onAddTestCases(selectedIds);
       clearSelection();
       onClose();
     }
-  }, [selectedTestCasesIds, testPlanTestCaseIds, onAddTestCases, clearSelection, onClose]);
+  }, [selectedTestCasesIds, onAddTestCases, clearSelection, onClose]);
 
-  const selectionCount = useMemo(
-    () => Array.from(selectedTestCasesIds).filter((id) => !testPlanTestCaseIds.has(id)).length,
-    [selectedTestCasesIds, testPlanTestCaseIds],
-  );
+  const selectionCount = selectedTestCasesIds.size;
 
   const hasSelection = selectionCount > 0;
 
@@ -156,25 +134,23 @@ export const useTestLibraryPanel = ({
     () => ({
       selectedIds: selectedTestCasesIds,
       selectedFolderIds,
-      testPlanTestCaseIds,
       testCasesMap,
-      fetchedFolderIds,
+      testPlanId,
       expandedFolderIds: expandedIds,
       toggleTestCasesSelection,
       toggleFolderSelection,
-      onFolderFetched: handleFolderFetched,
+      updateFolderTestCases,
       toggleFolder,
     }),
     [
       selectedTestCasesIds,
       selectedFolderIds,
-      testPlanTestCaseIds,
       testCasesMap,
-      fetchedFolderIds,
+      testPlanId,
       expandedIds,
       toggleTestCasesSelection,
       toggleFolderSelection,
-      handleFolderFetched,
+      updateFolderTestCases,
       toggleFolder,
     ],
   );
