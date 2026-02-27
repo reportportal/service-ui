@@ -224,6 +224,10 @@ export const notificationMessages = defineMessages({
     id: 'TestCaseLibraryPage.testCasesDuplicatedSuccess',
     defaultMessage: 'Test cases have been duplicated successfully.',
   },
+  testCaseDuplicatedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseDuplicatedSuccess',
+    defaultMessage: 'Test case has been duplicated successfully.',
+  },
   testCaseDeletedSuccess: {
     id: 'TestCaseLibraryPage.testCaseDeletedSuccess',
     defaultMessage: 'Test case has been deleted successfully.',

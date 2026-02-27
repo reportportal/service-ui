@@ -31,6 +31,9 @@ interface AttributeListFieldProps {
     value: unknown[];
     onChange: VoidFunction;
   };
+  meta?: {
+    submitFailed?: boolean;
+  };
   attributes: Record<string, unknown>[];
   onChange: VoidFunction;
   disabled: boolean;
@@ -46,13 +49,14 @@ interface AttributeListFieldProps {
   valuePlaceholder?: string;
 }
 
-const AttributeListField = ({ input, ...rest }: AttributeListFieldProps) => (
+const AttributeListField = ({ input, meta, ...rest }: AttributeListFieldProps) => (
   <AttributeList
     {...input}
     {...rest}
     attributes={input.value || []}
     onChange={input.onChange}
     customClass=""
+    showValidationErrors={Boolean(meta?.submitFailed)}
   />
 );
 
