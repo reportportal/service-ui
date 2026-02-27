@@ -216,6 +216,17 @@ export const hasTagShape = (attr: Tag | Attribute): attr is Tag => {
   );
 };
 
+export const hasAttributeValue = (attr: Tag | Attribute): attr is Attribute => {
+  return (
+    isObject(attr) &&
+    'key' in attr &&
+    isString((attr as Attribute).key) &&
+    'value' in attr &&
+    !isNil(attr.value) &&
+    isString(attr.value)
+  );
+};
+
 export const isIconComponent = (
   icon: FC<SVGProps<SVGSVGElement>> | string,
 ): icon is FC<SVGProps<SVGSVGElement>> => !isString(icon);

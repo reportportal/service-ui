@@ -19,6 +19,7 @@ import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
 import { xor } from 'es-toolkit';
 import { Button, Selection, Table } from '@reportportal/ui-kit';
+import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { createClassnames } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
@@ -28,7 +29,10 @@ import { useManualLaunchesColumns } from './hooks/useManualLaunchesColumns/useMa
 import { Launch } from '../types';
 import { useManualLaunchesTableData } from './hooks/useManualLaunchesTableData';
 import { LaunchSidePanel } from '../launchSidePanel';
-import { useDeleteManualLaunchModal, useBatchDeleteManualLaunchesModal } from '../deleteManualLaunchModal';
+import {
+  useDeleteManualLaunchModal,
+  useBatchDeleteManualLaunchesModal,
+} from '../deleteManualLaunchModal';
 import { ManualLaunchRowActions } from './manualLaunchRowActions';
 import { transformLaunchToManualTestCase } from '../useManualLaunches';
 
@@ -38,9 +42,10 @@ const cx = createClassnames(styles);
 
 interface ManualLaunchesListProps {
   fullLaunches: Launch[];
+  onRefresh?: VoidFn;
 }
 
-export const ManualLaunchesList = ({ fullLaunches }: ManualLaunchesListProps) => {
+export const ManualLaunchesList = ({ fullLaunches, onRefresh }: ManualLaunchesListProps) => {
   const { formatMessage } = useIntl();
   const { canManageTestCases } = useUserPermissions();
   const { openModal: openDeleteModal } = useDeleteManualLaunchModal();
@@ -103,7 +108,11 @@ export const ManualLaunchesList = ({ fullLaunches }: ManualLaunchesListProps) =>
         onToggleAllRowsSelection={handleSelectAll}
         renderRowActions={(metaData) =>
           metaData ? (
-            <ManualLaunchRowActions metaData={metaData} onDelete={openDeleteModal} />
+            <ManualLaunchRowActions
+              metaData={metaData}
+              onDelete={openDeleteModal}
+              onRefresh={onRefresh}
+            />
           ) : null
         }
       />
@@ -126,6 +135,7 @@ export const ManualLaunchesList = ({ fullLaunches }: ManualLaunchesListProps) =>
         launchId={selectedLaunchId}
         isVisible={Boolean(selectedLaunchId)}
         onClose={handleCloseSidePanel}
+        onRefresh={onRefresh}
       />
     </div>
   );

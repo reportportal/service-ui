@@ -21,29 +21,44 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
 
-import { Tag, TagError, AttributesResponse } from '../types';
+import { Tag, TagError } from '../types';
+import { convertKeysToTags } from '../testCaseDetailsPage/utils';
 
 export const useTagSearch = (searchValue: string = '') => {
   const [allTags, setAllTags] = useState<Tag[]>([]);
+  const [tags, setTags] = useState<Tag[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<TagError | null>(null);
   const projectKey = useSelector(projectKeySelector);
 
-  const fetchTags = useCallback(async () => {
+  const fetchAllTags = useCallback(async () => {
+    try {
+      const keys = await fetch<string[]>(URLS.tmsAttributeKeysSearch(projectKey, {}));
+      setAllTags(convertKeysToTags(keys));
+    } catch {
+      setAllTags([]);
+    }
+  }, [projectKey]);
+
+  const fetchFilteredTags = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const response = await fetch<AttributesResponse>(URLS.tmsAttributes(projectKey, {}));
+      const keys = await fetch<string[]>(
+        URLS.tmsAttributeKeysSearch(projectKey, {
+          search: searchValue.trim(),
+        }),
+      );
 
-      setAllTags(response.content || []);
+      setTags(convertKeysToTags(keys));
     } catch {
-      setAllTags([]);
+      setTags([]);
       setError(null);
     } finally {
       setLoading(false);
     }
-  }, [projectKey]);
+  }, [projectKey, searchValue]);
 
   const createTag = useCallback(
     (tagKey: string, selectedTags: Tag[] = []) => {
@@ -62,10 +77,10 @@ export const useTagSearch = (searchValue: string = '') => {
       const newTag: Tag = {
         id: -Date.now(),
         key: tagKey,
-        value: tagKey,
       };
 
       setAllTags((prevTags) => [...prevTags, newTag]);
+      setTags((prevTags) => [...prevTags, newTag]);
 
       return newTag;
     },
@@ -74,12 +89,13 @@ export const useTagSearch = (searchValue: string = '') => {
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    fetchTags();
-  }, [fetchTags]);
+    fetchAllTags();
+  }, [fetchAllTags]);
 
-  const filteredTags = searchValue.trim()
-    ? allTags.filter((tag) => tag.key.toLowerCase().includes(searchValue.toLowerCase()))
-    : allTags;
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    fetchFilteredTags();
+  }, [fetchFilteredTags]);
 
   const clearError = useCallback(() => {
     setError(null);
@@ -87,11 +103,11 @@ export const useTagSearch = (searchValue: string = '') => {
 
   return {
     allTags,
-    tags: filteredTags,
+    tags,
     loading,
     error,
     createTag,
     clearError,
-    refetch: fetchTags,
+    refetch: fetchFilteredTags,
   };
 };

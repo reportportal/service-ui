@@ -24,7 +24,13 @@ import { projectKeySelector } from 'controllers/project';
 import { GET_TEST_CASE_DETAILS_SUCCESS } from 'controllers/testCase/constants';
 import { testCaseDetailsSelector } from 'controllers/testCase';
 
-import { Tag, ExtendedTestCase, hasTagShape, UseTestCaseTagsParams } from '../types';
+import {
+  Tag,
+  ExtendedTestCase,
+  UseTestCaseTagsParams,
+  Attribute,
+  hasAttributeValue,
+} from '../types';
 
 export const useTestCaseTags = ({ testCaseId }: UseTestCaseTagsParams) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
@@ -34,15 +40,18 @@ export const useTestCaseTags = ({ testCaseId }: UseTestCaseTagsParams) => {
   const { showSuccessNotification, showErrorNotification } = useNotification();
 
   const updateTestCaseTags = useCallback(
-    async (attributes: Tag[]) => {
+    async (attributes: (Tag | Attribute)[]) => {
       try {
         showSpinner();
 
         const dataToSend = {
           attributes: attributes.map((attr) => {
-            const payload: { id?: number; key: string } = { key: attr.key };
+            const payload: { id?: number; key: string; value?: string } = { key: attr.key };
             if (attr.id > 0) {
               payload.id = attr.id;
+            }
+            if (hasAttributeValue(attr)) {
+              payload.value = attr.value;
             }
             return payload;
           }),
@@ -80,13 +89,13 @@ export const useTestCaseTags = ({ testCaseId }: UseTestCaseTagsParams) => {
   );
 
   const addTag = useCallback(
-    async (tag: Tag) => {
+    async (tag: Tag | Attribute) => {
       if (isLoading) return;
 
-      const currentAttributes = (testCaseDetails?.attributes || []).filter(hasTagShape);
+      const currentAttributes = testCaseDetails?.attributes || [];
 
       const isTagExists = currentAttributes.some(
-        ({ key }) => key.toLowerCase() === tag.key.toLowerCase(),
+        (attr) => attr.key.toLowerCase() === tag.key.toLowerCase(),
       );
 
       if (!isTagExists) {
@@ -101,9 +110,11 @@ export const useTestCaseTags = ({ testCaseId }: UseTestCaseTagsParams) => {
     async (tagKey: string) => {
       if (isLoading) return;
 
-      const currentAttributes = (testCaseDetails?.attributes || []).filter(hasTagShape);
+      const currentAttributes = testCaseDetails?.attributes || [];
 
-      const updatedAttributes = currentAttributes.filter(({ key }) => key !== tagKey);
+      const updatedAttributes = currentAttributes.filter(
+        (attr) => attr.key.toLowerCase() !== tagKey.toLowerCase(),
+      );
       await updateTestCaseTags(updatedAttributes);
     },
     [isLoading, updateTestCaseTags, testCaseDetails],
