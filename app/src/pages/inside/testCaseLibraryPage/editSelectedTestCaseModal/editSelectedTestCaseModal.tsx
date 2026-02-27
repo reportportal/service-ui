@@ -42,7 +42,6 @@ const EditTestCaseModalComponent = ({
   initialize,
   pristine,
   handleSubmit,
-  reset,
 }: UseModalData<EditTestCaseModalProps> &
   InjectedFormProps<CreateTestCaseFormData, EditTestCaseModalProps>) => {
   const testCase = data?.testCase;
@@ -53,7 +52,6 @@ const EditTestCaseModalComponent = ({
   const { isInitialized } = useTestCaseFormInitialization({
     testCase,
     initialize,
-    reset,
   });
 
   const handleUpdate = useCallback(

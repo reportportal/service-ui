@@ -36,7 +36,6 @@ const EditScenarioModalComponent = ({
   initialize,
   pristine,
   handleSubmit,
-  reset,
 }: UseModalData<EditScenarioModalProps> &
   InjectedFormProps<CreateTestCaseFormData, EditScenarioModalProps>) => {
   const testCase = data?.testCase;
@@ -47,7 +46,6 @@ const EditScenarioModalComponent = ({
   const { isInitialized } = useTestCaseFormInitialization({
     testCase,
     initialize,
-    reset,
   });
 
   const handleUpdate = useCallback(
