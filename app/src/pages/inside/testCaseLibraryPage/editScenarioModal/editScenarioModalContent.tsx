@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-import { FormEvent, MouseEvent, useMemo, useCallback } from 'react';
-import { useIntl } from 'react-intl';
-import { useDispatch } from 'react-redux';
 import { Modal } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { hideModalAction } from 'controllers/modal';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
-import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 
+import { useModalActions } from '../hooks/useModalActions';
 import { ScenarioFields } from './scenarioFields';
 import { EditScenarioModalContentProps } from './types';
 
@@ -41,34 +36,13 @@ export const EditScenarioModalContent = ({
   pristine,
   handleSubmit,
 }: EditScenarioModalContentProps) => {
-  const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
-
-  const okButton = useMemo(
-    () => ({
-      children: <LoadingSubmitButton isLoading={isLoading}>{submitButtonText}</LoadingSubmitButton>,
-      onClick: handleSubmit(onSubmitHandler) as (event: MouseEvent<HTMLButtonElement>) => void,
-      disabled: isLoading || pristine,
-    }),
-    [isLoading, pristine, submitButtonText, handleSubmit, onSubmitHandler],
-  );
-
-  const cancelButton = useMemo(
-    () => ({
-      children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      disabled: isLoading,
-    }),
-    [formatMessage, isLoading],
-  );
-
-  const handleClose = useCallback(() => {
-    dispatch(hideModalAction());
-  }, [dispatch]);
-
-  const handleFormSubmit = useMemo(
-    () => handleSubmit(onSubmitHandler) as (event: FormEvent) => void,
-    [handleSubmit, onSubmitHandler],
-  );
+  const { okButton, cancelButton, handleClose, handleFormSubmit } = useModalActions({
+    submitButtonText,
+    isLoading,
+    pristine,
+    handleSubmit,
+    onSubmitHandler,
+  });
 
   return (
     <Modal
