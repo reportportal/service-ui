@@ -25,6 +25,7 @@ import { hideModalAction } from 'controllers/modal';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 
+import { ModalCommonProps } from '../../editScenarioModal/types';
 import { CreateTestCaseFormData } from '../../types';
 import { BasicInformation } from '../basicInformation';
 import { TestCaseDetails } from '../testCaseDetails';
@@ -33,11 +34,7 @@ import styles from '../testCaseModal.scss';
 
 const cx = createClassnames(styles);
 
-interface TestCaseModalProps {
-  title: string;
-  submitButtonText: string;
-  isLoading: boolean;
-  onSubmitHandler: (formData: CreateTestCaseFormData) => void | Promise<void>;
+interface TestCaseModalProps extends ModalCommonProps {
   formName: string;
   pristine?: boolean;
   handleSubmit: (

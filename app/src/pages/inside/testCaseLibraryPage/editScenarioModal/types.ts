@@ -23,11 +23,14 @@ export interface UseEditScenarioModalOptions {
 
 export type EditScenarioModalProps = Partial<UseEditScenarioModalOptions>;
 
-export interface EditScenarioModalContentProps {
+export interface ModalCommonProps {
   title: string;
   submitButtonText: string;
   isLoading: boolean;
   onSubmitHandler: (formData: CreateTestCaseFormData) => void | Promise<void>;
+}
+
+export interface EditScenarioModalContentProps extends ModalCommonProps {
   formName: string;
   pristine?: boolean;
   handleSubmit: (

@@ -50,7 +50,7 @@ export const useTestCaseFormInitialization = ({
         name: testCase.name,
         description: testCase.description,
         folder: testCase.testFolder,
-        priority: (testCase.priority?.toLowerCase() || TEST_CASE_FORM_INITIAL_VALUES.priority) as
+        priority: (testCase.priority?.toLowerCase() ?? TEST_CASE_FORM_INITIAL_VALUES.priority) as
           | 'low'
           | 'medium'
           | 'high'
@@ -63,18 +63,18 @@ export const useTestCaseFormInitialization = ({
           value: value ?? '',
         })),
         manualScenarioType:
-          manualScenario?.manualScenarioType || TEST_CASE_FORM_INITIAL_VALUES.manualScenarioType,
+          manualScenario?.manualScenarioType ?? TEST_CASE_FORM_INITIAL_VALUES.manualScenarioType,
         executionEstimationTime:
-          manualScenario?.executionEstimationTime ||
+          manualScenario?.executionEstimationTime ??
           TEST_CASE_FORM_INITIAL_VALUES.executionEstimationTime,
         requirements: isEmpty(manualScenario?.requirements)
           ? [{ id: uniqueId(), value: '' }]
           : manualScenario?.requirements,
         precondition: manualScenario?.preconditions?.value,
-        preconditionAttachments: manualScenario?.preconditions?.attachments || [],
+        preconditionAttachments: manualScenario?.preconditions?.attachments ?? [],
         instructions: manualScenario?.instructions,
         expectedResult: manualScenario?.expectedResult,
-        textAttachments: manualScenario?.attachments || [],
+        textAttachments: manualScenario?.attachments ?? [],
         ...(stepsObject && {
           steps: stepsObject,
         }),
@@ -82,10 +82,12 @@ export const useTestCaseFormInitialization = ({
 
       initialize({ ...formData } as unknown as Partial<CreateTestCaseFormData>);
 
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         reset();
         setIsInitialized(true);
       }, 100);
+
+      return () => clearTimeout(timeoutId);
     }
   }, [testCase, initialize, reset]);
 

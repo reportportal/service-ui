@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux';
 import { MIME_TYPES } from '@reportportal/ui-kit/fileDropArea';
 import { FieldNumber } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
+import { noop } from 'es-toolkit';
 
 import { createClassnames } from 'common/utils';
 import { FieldProvider } from 'components/fields';
@@ -59,7 +60,7 @@ export const ScenarioFields = ({ formName }: ScenarioFieldsProps) => {
           <FieldNumber
             min={1}
             label={formatMessage(commonMessages.executionTime)}
-            onChange={() => {}}
+            onChange={noop}
           />
         </div>
       </FieldProvider>

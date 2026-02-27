@@ -74,14 +74,14 @@ export const EditScenarioModalContent = ({
     <Modal
       title={title}
       okButton={okButton}
-      className={cx('edit-scenario-modal')}
+      className={cx('scenario-edit-modal')}
       cancelButton={cancelButton}
       allowCloseOutside={pristine}
       onClose={handleClose}
     >
-      <div className={cx('edit-scenario-modal__content-wrapper')}>
+      <div className={cx('scenario-edit-modal__wrapper')}>
         <form onSubmit={handleFormSubmit}>
-          <div className={cx('edit-scenario-modal__container')}>
+          <div className={cx('scenario-edit-modal__form-container')}>
             <ScenarioFields formName={formName} />
           </div>
         </form>

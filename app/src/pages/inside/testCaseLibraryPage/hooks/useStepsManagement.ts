@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { change, touch, untouch } from 'redux-form';
-import { keyBy, isEmpty, isNumber } from 'es-toolkit/compat';
+import { keyBy, isNumber, isEmpty } from 'es-toolkit/compat';
 
 import { Step } from '../types';
 
@@ -41,16 +41,19 @@ export const useStepsManagement = ({
 }: UseStepsManagementParams) => {
   const dispatch = useDispatch();
 
-  const [steps, setSteps] = useState<Step[]>(() => {
-    if (!isEmpty(stepsData)) {
-      return Object.values(stepsData)
-        .filter(Boolean)
-        .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
-    }
-    return [createEmptyStepFn()];
-  });
+  const isEditMode = !Array.isArray(stepsData) && !isEmpty(stepsData);
 
-  const [isEditMode] = useState(() => !isEmpty(stepsData));
+  const normalizedSteps = useMemo(() => {
+    const source = Array.isArray(stepsData) ? stepsData : Object.values(stepsData || {});
+    const sorted = source.filter(Boolean).sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+    return sorted.length ? sorted : [createEmptyStepFn()];
+  }, [stepsData, createEmptyStepFn]);
+
+  const [steps, setSteps] = useState<Step[]>(normalizedSteps);
+
+  useEffect(() => {
+    setSteps(normalizedSteps);
+  }, [normalizedSteps]);
 
   const buildStepsObjectWithPositions = useCallback(
     (updatedSteps: Step[]) =>

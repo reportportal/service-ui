@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-.edit-scenario-modal {
+.scenario-edit-modal {
   width: 720px;
   border-radius: 16px;
   padding: 32px 40px;
 
-  &__content-wrapper {
+  &__wrapper {
     position: relative;
     width: 100%;
     overflow: hidden;
   }
 
-  &__container {
+  &__form-container {
     max-height: 70vh;
     overflow-y: auto;
     overflow-x: hidden;

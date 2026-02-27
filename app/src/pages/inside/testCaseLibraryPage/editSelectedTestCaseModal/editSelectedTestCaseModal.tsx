@@ -21,7 +21,6 @@ import { reduxForm, InjectedFormProps } from 'redux-form';
 import { commonValidators } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal } from 'controllers/modal';
-import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { UseModalData } from 'common/hooks';
 
 import { commonMessages } from '../commonMessages';
