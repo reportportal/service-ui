@@ -38,6 +38,10 @@
   height: 56px;
   overflow: hidden;
   letter-spacing: 0.4px;
+
+  &:empty {
+    display: none;
+  }
 }
 
 .bottom-block {
