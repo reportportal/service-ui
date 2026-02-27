@@ -183,13 +183,13 @@ export const ManualLaunchExecutions = ({
     {
       key: 'steps',
       header: formatMessage(messages.stepsColumn),
-      width: 75,
+      width: 80,
       align: 'left' as const,
     },
     {
       key: 'status',
       header: formatMessage(messages.statusColumn),
-      width: 64,
+      width: 72,
       align: 'left' as const,
     },
     ...(canManageTestCases
@@ -197,7 +197,7 @@ export const ManualLaunchExecutions = ({
           {
             key: 'actions',
             header: '',
-            width: 40,
+            width: 42,
             align: 'center' as const,
           },
         ]
