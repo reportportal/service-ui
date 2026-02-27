@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,33 +14,20 @@
  * limitations under the License.
  */
 
-import { FormEvent } from 'react';
 import { Modal } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 
-import { ModalCommonProps } from '../../editScenarioModal/types';
-import { CreateTestCaseFormData } from '../../types';
-import { useModalActions } from '../../hooks/useModalActions';
-import { BasicInformation } from '../basicInformation';
-import { TestCaseDetails } from '../testCaseDetails';
+import { useModalActions } from '../hooks/useModalActions';
+import { ScenarioFields } from './scenarioFields';
+import { EditScenarioModalContentProps } from './types';
 
-import styles from '../testCaseModal.scss';
+import styles from './editScenarioModal.scss';
 
 const cx = createClassnames(styles);
 
-interface TestCaseModalProps extends ModalCommonProps {
-  formName: string;
-  pristine?: boolean;
-  handleSubmit: (
-    handler: (formData: CreateTestCaseFormData) => void | Promise<void>,
-  ) => (event: FormEvent) => void;
-  hideFolderField?: boolean;
-  isTemplateFieldDisabled?: boolean;
-}
-
-export const TestCaseModal = ({
+export const EditScenarioModalContent = ({
   title,
   submitButtonText,
   isLoading,
@@ -48,9 +35,7 @@ export const TestCaseModal = ({
   formName,
   pristine,
   handleSubmit,
-  hideFolderField = false,
-  isTemplateFieldDisabled = false,
-}: TestCaseModalProps) => {
+}: EditScenarioModalContentProps) => {
   const { okButton, cancelButton, handleClose, handleFormSubmit } = useModalActions({
     submitButtonText,
     isLoading,
@@ -63,24 +48,15 @@ export const TestCaseModal = ({
     <Modal
       title={title}
       okButton={okButton}
-      className={cx('test-case-modal')}
+      className={cx('scenario-edit-modal')}
       cancelButton={cancelButton}
       allowCloseOutside={pristine}
       onClose={handleClose}
     >
-      <div className={cx('test-case-modal__content-wrapper')}>
+      <div className={cx('scenario-edit-modal__wrapper')}>
         <form onSubmit={handleFormSubmit}>
-          <div className={cx('test-case-modal__container')}>
-            <BasicInformation
-              className={cx('test-case-modal__scrollable-section')}
-              hideFolderField={hideFolderField}
-              formName={formName}
-            />
-            <TestCaseDetails
-              className={cx('test-case-modal__scrollable-section')}
-              formName={formName}
-              isTemplateFieldDisabled={isTemplateFieldDisabled}
-            />
+          <div className={cx('scenario-edit-modal__form-container')}>
+            <ScenarioFields formName={formName} />
           </div>
         </form>
         <ModalLoadingOverlay isVisible={isLoading} />

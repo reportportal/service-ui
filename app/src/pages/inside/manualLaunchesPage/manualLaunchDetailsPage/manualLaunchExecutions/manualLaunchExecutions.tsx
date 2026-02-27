@@ -137,11 +137,9 @@ export const ManualLaunchExecutions = ({
               )}
               <span className={cx('test-name')}>{execution.testCaseName}</span>
             </div>
-            {!isEmpty(tags) && (
-              <div className={cx('tags-section')}>
-                <AdaptiveTagList tags={tags} isShowAllView />
-              </div>
-            )}
+            <div className={cx('tags-section')}>
+              <AdaptiveTagList tags={tags} isShowAllView />
+            </div>
           </div>
         ),
       },
@@ -185,13 +183,13 @@ export const ManualLaunchExecutions = ({
     {
       key: 'steps',
       header: formatMessage(messages.stepsColumn),
-      width: 75,
+      width: 80,
       align: 'left' as const,
     },
     {
       key: 'status',
       header: formatMessage(messages.statusColumn),
-      width: 64,
+      width: 72,
       align: 'left' as const,
     },
     ...(canManageTestCases
@@ -199,7 +197,7 @@ export const ManualLaunchExecutions = ({
           {
             key: 'actions',
             header: '',
-            width: 40,
+            width: 42,
             align: 'center' as const,
           },
         ]
