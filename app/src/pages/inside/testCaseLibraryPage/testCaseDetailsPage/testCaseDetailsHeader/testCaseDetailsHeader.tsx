@@ -42,7 +42,7 @@ import { messages } from './messages';
 import { commonMessages } from '../../commonMessages';
 import { EDIT_TEST_CASE_MODAL_KEY } from '../editTestCaseModal/editTestCaseModal';
 import { useDeleteTestCaseModal } from '../../deleteTestCaseModal';
-import { useEditTestCaseModal } from '../../editSelectedTestCaseModal';
+import { useEditScenarioModal } from '../../editScenarioModal';
 import { useDuplicateTestCaseModal } from '../../duplicateTestCaseModal';
 import { AddToLaunchButton } from '../../addToLaunchButton';
 
@@ -73,7 +73,7 @@ export const TestCaseDetailsHeader = ({
   const dispatch = useDispatch();
   const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
   const { openModal: openDuplicateTestCaseModal } = useDuplicateTestCaseModal();
-  const { openModal: openEditTestCaseModal } = useEditTestCaseModal();
+  const { openModal: openEditScenarioModal } = useEditScenarioModal();
 
   const breadcrumbsTitles = {
     mainTitle: formatMessage(commonMessages.testCaseLibraryBreadcrumb),
@@ -103,30 +103,31 @@ export const TestCaseDetailsHeader = ({
     return moment(date).format(REVERSED_DATE_FORMAT as string);
   };
 
-  
-  const items: PopoverItem[] = canManageTestCases ? [
-    {
-      label: formatMessage(commonMessages.historyOfActions),
-      onClick: handleHistoryOfActions,
-    },
-    {
-      label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE),
-      onClick: handleDuplicateTestCase,
-    },
-    {
-      label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-      variant: 'destructive',
-      onClick: handleDeleteTestCase,
-    }
-  ] : [
-    {
-      label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE),
-      onClick: handleDuplicateTestCase,
-    }
-  ];
+  const items: PopoverItem[] = canManageTestCases
+    ? [
+        {
+          label: formatMessage(commonMessages.historyOfActions),
+          onClick: handleHistoryOfActions,
+        },
+        {
+          label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE),
+          onClick: handleDuplicateTestCase,
+        },
+        {
+          label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+          variant: 'destructive',
+          onClick: handleDeleteTestCase,
+        },
+      ]
+    : [
+        {
+          label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE),
+          onClick: handleDuplicateTestCase,
+        },
+      ];
 
-  const openEditScenarioModal = () => {
-    openEditTestCaseModal({ testCase });
+  const handleEditScenario = () => {
+    openEditScenarioModal({ testCase });
   };
 
   const openEditNameAndPriorityModal = () => {
@@ -193,15 +194,12 @@ export const TestCaseDetailsHeader = ({
             </Button>
           </PopoverControl>
           {!isScenarioEmpty && canManageTestCases && (
-            <Button onClick={openEditScenarioModal} variant="ghost">
+            <Button onClick={handleEditScenario} variant="ghost">
               {formatMessage(commonMessages.editScenario)}
             </Button>
           )}
           {canManageTestCases && (
-            <AddToLaunchButton
-              manualScenario={testCase?.manualScenario}
-              testCaseId={testCase.id}
-            />
+            <AddToLaunchButton manualScenario={testCase?.manualScenario} testCaseId={testCase.id} />
           )}
           {canManageTestCases && (
             <Button onClick={onAddToTestPlan} variant="primary">

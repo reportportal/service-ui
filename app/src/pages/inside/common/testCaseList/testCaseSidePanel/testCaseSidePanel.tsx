@@ -89,7 +89,7 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
   requirements: Requirement[];
 }) => {
   const firstStep = scenario?.steps?.[0];
-  const isStepsManualScenario = scenario.manualScenarioType === TestCaseManualScenario.STEPS;
+  const isStepsManualScenario = scenario?.manualScenarioType === TestCaseManualScenario.STEPS;
   const isEmptyPreconditions =
     !scenario?.preconditions?.value &&
     isEmpty(scenario?.preconditions?.attachments) &&
