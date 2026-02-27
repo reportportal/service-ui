@@ -124,12 +124,7 @@ export const TestCaseDetailsHeader = ({
           onClick: handleDeleteTestCase,
         },
       ]
-    : [
-        {
-          label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE),
-          onClick: handleDuplicateTestCase,
-        },
-      ];
+    : [];
 
   const handleEditScenario = () => {
     openEditScenarioModal({ testCase });
