@@ -30,7 +30,7 @@ import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { LAUNCH_NAME_FILTER_KEY } from 'pages/inside/common/constants';
 
-import { NewLaunchFieldsProps } from './types';
+import { NewLaunchFieldsProps, TestPlanOption } from './types';
 import { LAUNCH_FORM_FIELD_NAMES } from './constants';
 import { messages } from './messages';
 import { AttributeListField } from './attributeListField';
@@ -40,8 +40,9 @@ import styles from './launchFormFields.scss';
 const cx = createClassnames(styles);
 
 export const NewLaunchFields = ({
-  isTestPlanFieldDisabled = true,
-  testPlanValue,
+  hideTestPlanField = false,
+  descriptionPlaceholder,
+  testPlanPlaceholder,
 }: NewLaunchFieldsProps) => {
   const { formatMessage } = useIntl();
 
@@ -73,14 +74,12 @@ export const NewLaunchFields = ({
 
   const renderTestPlanField = ({ input }: WrappedFieldProps) => (
     <AsyncAutocompleteV2
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      value={isTestPlanFieldDisabled && testPlanValue ? testPlanValue : input.value}
-      placeholder={formatMessage(messages.selectTestPlanPlaceholder)}
+      value={input.value as TestPlanOption | undefined}
+      placeholder={testPlanPlaceholder || formatMessage(messages.selectTestPlanPlaceholder)}
       getURI={retrieveTestPlans}
       makeOptions={makeTestPlanOptions}
       onChange={(value) => handleTestPlanChange(value, input)}
       parseValueToString={(value: { name?: string }) => value?.name || ''}
-      disabled={Boolean(isTestPlanFieldDisabled)}
       createWithoutConfirmation
       skipOptionCreation
       isDropdownMode
@@ -104,15 +103,17 @@ export const NewLaunchFields = ({
 
       <FieldProvider
         name={LAUNCH_FORM_FIELD_NAMES.DESCRIPTION}
-        placeholder={formatMessage(messages.addLaunchDescriptionOptional)}
+        placeholder={descriptionPlaceholder || formatMessage(messages.addLaunchDescriptionOptional)}
       >
         <FieldTextFlex label={formatMessage(commonMessages.description)} value="" />
       </FieldProvider>
 
-      <div className={cx('test-plan-field')}>
-        <FieldLabel>{formatMessage(messages.testPlanLabel)}</FieldLabel>
-        <Field name={LAUNCH_FORM_FIELD_NAMES.TEST_PLAN} component={renderTestPlanField} />
-      </div>
+      {!hideTestPlanField && (
+        <div className={cx('test-plan-field')}>
+          <FieldLabel>{formatMessage(messages.testPlanLabel)}</FieldLabel>
+          <Field name={LAUNCH_FORM_FIELD_NAMES.TEST_PLAN} component={renderTestPlanField} />
+        </div>
+      )}
 
       <div className={cx('attributes-section')}>
         <FieldElement

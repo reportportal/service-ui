@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { compact } from 'es-toolkit/compat';
 import { useIntl } from 'react-intl';
 
 import { TransformedFolder } from 'controllers/testCase';
@@ -50,14 +49,7 @@ export const useTestCaseFolderMenu = ({
   const { openModal: openImportTestCaseModal } = useImportTestCaseModal();
   const { openModal: openCreateSubfolderModal } = useCreateSubfolderModal();
 
-  const {
-    canDeleteTestCaseFolder,
-    canDuplicateTestCaseFolder,
-    canRenameTestCaseFolder,
-    canMoveTestCase,
-    canCreateTestCaseFolder,
-    canImportTestCases,
-  } = useUserPermissions();
+  const { canManageTestCases } = useUserPermissions();
 
   const handleDeleteFolder = () => {
     openDeleteModal({
@@ -78,36 +70,36 @@ export const useTestCaseFolderMenu = ({
 
   const handleCreateSubfolder = () => openCreateSubfolderModal({ folder });
 
-  const testCaseFolderTooltipItems: PopoverItem[] = compact([
-    canCreateTestCaseFolder && {
+  const testCaseFolderTooltipItems: PopoverItem[] = canManageTestCases ? [
+    {
       label: formatMessage(commonMessages.createSubfolder),
       onClick: handleCreateSubfolder,
     },
-    canRenameTestCaseFolder && {
+    {
       label: formatMessage(COMMON_LOCALE_KEYS.RENAME),
       onClick: handleRenameFolder,
     },
-    canMoveTestCase && {
+    {
       label: formatMessage(commonMessages.moveFolderTo),
       variant: 'text' as const,
       onClick: handleMoveFolder,
     },
-    canDuplicateTestCaseFolder && {
+    {
       label: formatMessage(commonMessages.duplicateFolder),
       variant: 'text' as const,
       onClick: handleDuplicateFolder,
     },
-    canImportTestCases && {
+    {
       label: formatMessage(COMMON_LOCALE_KEYS.IMPORT),
       variant: 'text' as const,
       onClick: handleImportTestCase,
     },
-    canDeleteTestCaseFolder && {
+    {
       label: formatMessage(commonMessages.deleteFolder),
       variant: 'destructive' as const,
       onClick: handleDeleteFolder,
     },
-  ]);
+  ] : [];
 
   return {
     testCaseFolderTooltipItems,

@@ -18,21 +18,21 @@ import { useIntl } from 'react-intl';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 
-import { useEditTestCaseModal } from '../../editSelectedTestCaseModal';
+import { useEditScenarioModal } from '../../editScenarioModal';
 import { DetailsEmptyStateProps } from '../../types';
 import { messages } from '../messages';
 import { commonMessages } from '../../commonMessages';
 
 export const DetailsEmptyState = ({ testCase }: DetailsEmptyStateProps) => {
   const { formatMessage } = useIntl();
-  const { canEditTestCaseScenario } = useUserPermissions();
-  const { openModal } = useEditTestCaseModal();
+  const { canManageTestCases } = useUserPermissions();
+  const { openModal } = useEditScenarioModal();
 
   const handleEditScenario = () => {
     openModal({ testCase });
   };
 
-  const buttons = canEditTestCaseScenario
+  const buttons = canManageTestCases
     ? [
         {
           name: formatMessage(commonMessages.editScenario),

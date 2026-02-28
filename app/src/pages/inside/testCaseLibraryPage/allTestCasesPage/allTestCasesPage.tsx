@@ -17,7 +17,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { isEmpty, noop, compact, countBy } from 'es-toolkit/compat';
+import { isEmpty, noop, countBy } from 'es-toolkit/compat';
 import { Button, MeatballMenuIcon, Pagination, Selection } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
@@ -43,7 +43,7 @@ import { CHANGE_PRIORITY_MODAL_KEY } from './changePriorityModal';
 import { messages } from './messages';
 import { FolderEmptyState } from '../emptyState/folder/folderEmptyState';
 import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
-import { useBatchDuplicateToFolderModal } from './batchDuplicateToFolderModal';
+import { useDuplicateTestCaseModal } from './duplicateTestCaseModal';
 import { useBatchDeleteTestCasesModal } from './batchDeleteTestCasesModal';
 import { useMoveTestCaseModal } from '../moveTestCaseModal';
 import { useBatchEditTagsModal } from './batchEditTagsModal';
@@ -96,11 +96,11 @@ export const AllTestCasesPage = ({
     onClearSelection,
     isUncoveredTestsCheckboxAvailable: false,
   });
-  const { openModal: openBatchDuplicateToFolderModal } = useBatchDuplicateToFolderModal();
+  const { openModal: openDuplicateToFolderModal } = useDuplicateTestCaseModal();
   const { openModal: openBatchDeleteTestCasesModal } = useBatchDeleteTestCasesModal();
   const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
   const { openModal: openBatchEditTagsModal } = useBatchEditTagsModal();
-  const { canDeleteTestCase, canDuplicateTestCase, canEditTestCase } = useUserPermissions();
+  const { canManageTestCases } = useUserPermissions();
 
   const handleSelectedRows = (rows: SelectedTestCaseRow[]) => setSelectedRows(rows);
 
@@ -109,18 +109,18 @@ export const AllTestCasesPage = ({
     return selectedFolder?.name || formatMessage(COMMON_LOCALE_KEYS.ALL_TEST_CASES_TITLE);
   }, [folderId, folders, formatMessage]);
 
-  const popoverItems: PopoverItem[] = compact([
-    canDuplicateTestCase && {
+  const popoverItems: PopoverItem[] = canManageTestCases ? [
+    {
       label: formatMessage(messages.duplicateToFolder),
       onClick: () => {
-        openBatchDuplicateToFolderModal({
+        openDuplicateToFolderModal({
           selectedTestCaseIds: selectedRowIds,
           count: selectedRowIds.length,
           onClearSelection,
         });
       },
     },
-    canEditTestCase && {
+    {
       label: formatMessage(messages.changePriority),
       onClick: () => {
         dispatch(
@@ -135,7 +135,7 @@ export const AllTestCasesPage = ({
         );
       },
     },
-    canEditTestCase && {
+    {
       label: formatMessage(messages.editTags),
       onClick: () => {
         openBatchEditTagsModal({
@@ -145,7 +145,7 @@ export const AllTestCasesPage = ({
         });
       },
     },
-    canDeleteTestCase && {
+    {
       label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
       variant: 'destructive',
       onClick: () => {
@@ -158,7 +158,7 @@ export const AllTestCasesPage = ({
         });
       },
     },
-  ]);
+  ] : []; 
 
   const handleOpenAddToTestPlanModal = useCallback(() => {
     openAddToTestPlanModal({ selectedTestCaseIds: selectedRowIds });
@@ -198,7 +198,6 @@ export const AllTestCasesPage = ({
           folderTitle={folderTitle}
           instanceKey={instanceKey}
           handleSelectedRows={handleSelectedRows}
-          activePage={activePage}
         />
       </div>
       {Boolean(testCasesPageData?.totalElements) && (

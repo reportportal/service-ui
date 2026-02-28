@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { useSelector } from "react-redux";
-import { isEmpty } from "es-toolkit/compat";
+import { useSelector } from 'react-redux';
+import { isEmpty } from 'es-toolkit/compat';
 
-import { payloadSelector } from "controllers/pages";
-import { TransformedFolder } from "controllers/testCase/types";
-import { testPlanFoldersSelector, testPlanTransformedFoldersSelector } from "controllers/testPlan";
+import { payloadSelector } from 'controllers/pages';
+import { TransformedFolder } from 'controllers/testCase/types';
+import { testPlanFoldersSelector, testPlanTransformedFoldersSelector } from 'controllers/testPlan';
 
-
-export const findFolderById = (folders: TransformedFolder[], id: number): TransformedFolder | undefined => {
+export const findFolderById = (
+  folders: TransformedFolder[],
+  id: number,
+): TransformedFolder | undefined => {
   for (const folder of folders) {
     if (folder.id === id) {
       return folder;
@@ -45,5 +47,5 @@ export const useTestPlanActiveFolders = () => {
   const activeFolderId = match ? Number(match[1]) : null;
   const activeFolder = activeFolderId ? findFolderById(transformedFolders, activeFolderId) : null;
 
-  return { activeFolderId, activeFolder, payload, folders, transformedFolders};
-}
+  return { activeFolderId, activeFolder, payload, folders, transformedFolders };
+};

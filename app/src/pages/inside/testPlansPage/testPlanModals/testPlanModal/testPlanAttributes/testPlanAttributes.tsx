@@ -31,6 +31,9 @@ interface AttributeListFieldProps {
     value: unknown[];
     onChange: VoidFunction;
   };
+  meta?: {
+    submitFailed?: boolean;
+  };
   attributes: Record<string, unknown>[];
   onChange: VoidFunction;
   disabled: boolean;
@@ -40,15 +43,20 @@ interface AttributeListFieldProps {
   showButton: boolean;
   editable: boolean;
   defaultOpen: boolean;
+  isAttributeKeyRequired?: boolean;
+  isAttributeValueRequired?: boolean;
+  keyPlaceholder?: string;
+  valuePlaceholder?: string;
 }
 
-const AttributeListField = ({ input, ...rest }: AttributeListFieldProps) => (
+const AttributeListField = ({ input, meta, ...rest }: AttributeListFieldProps) => (
   <AttributeList
     {...input}
     {...rest}
     attributes={input.value || []}
     onChange={input.onChange}
     customClass=""
+    showValidationErrors={Boolean(meta?.submitFailed)}
   />
 );
 
@@ -79,6 +87,10 @@ export const TestPlanAttributes = () => {
           maxLength={50}
           editable
           defaultOpen={false}
+          isAttributeKeyRequired
+          isAttributeValueRequired
+          keyPlaceholder={formatMessage(messages.attributeKeyPlaceholderRequired)}
+          valuePlaceholder={formatMessage(messages.attributeValuePlaceholderRequired)}
           getURIKey={getURIKey}
           getURIValue={getURIValue}
         />

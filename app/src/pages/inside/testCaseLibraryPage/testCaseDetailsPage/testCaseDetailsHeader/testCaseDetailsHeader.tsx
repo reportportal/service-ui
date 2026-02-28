@@ -42,8 +42,8 @@ import { messages } from './messages';
 import { commonMessages } from '../../commonMessages';
 import { EDIT_TEST_CASE_MODAL_KEY } from '../editTestCaseModal/editTestCaseModal';
 import { useDeleteTestCaseModal } from '../../deleteTestCaseModal';
-import { useEditTestCaseModal } from '../../editSelectedTestCaseModal';
-import { useDuplicateTestCaseModal } from '../../duplicateTestCaseModal';
+import { useEditScenarioModal } from '../../editScenarioModal';
+import { useDuplicateTestCaseModal } from '../../allTestCasesPage/duplicateTestCaseModal';
 import { AddToLaunchButton } from '../../addToLaunchButton';
 
 import styles from './testCaseDetailsHeader.scss';
@@ -66,21 +66,14 @@ export const TestCaseDetailsHeader = ({
   isScenarioEmpty = false,
 }: TestCaseDetailsHeaderProps) => {
   const { formatMessage } = useIntl();
-  const {
-    canDeleteTestCase,
-    canDuplicateTestCase,
-    canEditTestCase,
-    canAddTestCaseToLaunch,
-    canAddTestCaseToTestPlan,
-    canEditTestCaseScenario,
-  } = useUserPermissions();
+  const { canManageTestCases } = useUserPermissions();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
   const dispatch = useDispatch();
   const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
   const { openModal: openDuplicateTestCaseModal } = useDuplicateTestCaseModal();
-  const { openModal: openEditTestCaseModal } = useEditTestCaseModal();
+  const { openModal: openEditScenarioModal } = useEditScenarioModal();
 
   const breadcrumbsTitles = {
     mainTitle: formatMessage(commonMessages.testCaseLibraryBreadcrumb),
@@ -102,7 +95,12 @@ export const TestCaseDetailsHeader = ({
 
   const handleDeleteTestCase = () => openDeleteTestCaseModal({ testCase, isDetailsPage: true });
 
-  const handleDuplicateTestCase = () => openDuplicateTestCaseModal(testCase);
+  const handleDuplicateTestCase = () =>
+    openDuplicateTestCaseModal({
+      selectedTestCaseIds: [testCase.id],
+      count: 1,
+      testCase,
+    });
 
   const getCreationDate = (timestamp: number) => {
     const date = new Date(timestamp);
@@ -110,34 +108,26 @@ export const TestCaseDetailsHeader = ({
     return moment(date).format(REVERSED_DATE_FORMAT as string);
   };
 
-  const getMenuItems = () => {
-    const items: PopoverItem[] = [
-      {
-        label: formatMessage(commonMessages.historyOfActions),
-        onClick: handleHistoryOfActions,
-      },
-    ];
+  const items: PopoverItem[] = canManageTestCases
+    ? [
+        {
+          label: formatMessage(commonMessages.historyOfActions),
+          onClick: handleHistoryOfActions,
+        },
+        {
+          label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE),
+          onClick: handleDuplicateTestCase,
+        },
+        {
+          label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+          variant: 'destructive',
+          onClick: handleDeleteTestCase,
+        },
+      ]
+    : [];
 
-    if (canDuplicateTestCase) {
-      items.unshift({
-        label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE),
-        onClick: handleDuplicateTestCase,
-      });
-    }
-
-    if (canDeleteTestCase) {
-      items.push({
-        label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-        variant: 'destructive',
-        onClick: handleDeleteTestCase,
-      });
-    }
-
-    return items;
-  };
-
-  const openEditScenarioModal = () => {
-    openEditTestCaseModal({ testCase });
+  const handleEditScenario = () => {
+    openEditScenarioModal({ testCase });
   };
 
   const openEditNameAndPriorityModal = () => {
@@ -168,7 +158,7 @@ export const TestCaseDetailsHeader = ({
           className={cx('header__title-icon')}
         />
         {testCase.name}
-        {canEditTestCase && (
+        {canManageTestCases && (
           <button
             type="button"
             className={cx('header__edit-button')}
@@ -193,7 +183,7 @@ export const TestCaseDetailsHeader = ({
           </div>
         </div>
         <div className={cx('header__actions')}>
-          <PopoverControl items={getMenuItems()} placement="bottom-end">
+          <PopoverControl items={items} placement="bottom-end">
             <Button
               variant="ghost"
               adjustWidthOn="content"
@@ -203,18 +193,15 @@ export const TestCaseDetailsHeader = ({
               <MeatballMenuIcon />
             </Button>
           </PopoverControl>
-          {!isScenarioEmpty && canEditTestCaseScenario && (
-            <Button onClick={openEditScenarioModal} variant="ghost">
+          {!isScenarioEmpty && canManageTestCases && (
+            <Button onClick={handleEditScenario} variant="ghost">
               {formatMessage(commonMessages.editScenario)}
             </Button>
           )}
-          {canAddTestCaseToLaunch && (
-            <AddToLaunchButton
-              manualScenario={testCase?.manualScenario}
-              testCaseId={testCase.id}
-            />
+          {canManageTestCases && (
+            <AddToLaunchButton manualScenario={testCase?.manualScenario} testCaseId={testCase.id} />
           )}
-          {canAddTestCaseToTestPlan && (
+          {canManageTestCases && (
             <Button onClick={onAddToTestPlan} variant="primary">
               {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
             </Button>

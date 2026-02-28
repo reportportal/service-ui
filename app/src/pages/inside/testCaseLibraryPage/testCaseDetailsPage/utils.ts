@@ -17,7 +17,7 @@
 import { isEmpty } from 'es-toolkit/compat';
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 
-import { Attachment, ManualScenario, Step } from '../types';
+import { Attachment, ManualScenario, Step, Tag } from '../types';
 
 export const hasStepContent = (step: Step) =>
   !!step?.instructions || !!step?.expectedResult || !isEmpty(step?.attachments);
@@ -30,9 +30,12 @@ export const hasStepsPreconditionContent = (preconditions: {
 };
 
 export const hasScenarioContent = (manualScenario: ManualScenario) => {
-  return Boolean(manualScenario?.preconditions?.value ||
+  return Boolean(
+    manualScenario?.preconditions?.value ||
+    !isEmpty(manualScenario?.preconditions?.attachments) ||
     manualScenario?.instructions ||
-    manualScenario?.expectedResult);
+    manualScenario?.expectedResult,
+  );
 };
 
 export const checkScenario = (manualScenario: ManualScenario | undefined): boolean => {
@@ -50,4 +53,11 @@ export const checkScenario = (manualScenario: ManualScenario | undefined): boole
   const hasScenario = hasScenarioContent(manualScenario);
 
   return !hasRequirements && !hasScenario && isEmpty(manualScenario.attachments);
+};
+
+export const convertKeysToTags = (keys: string[]): Tag[] => {
+  return keys.map((key, index) => ({
+    id: -Date.now() - index,
+    key,
+  }));
 };

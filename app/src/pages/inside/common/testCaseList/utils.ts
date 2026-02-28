@@ -20,7 +20,6 @@ import qs from 'qs';
 import { actionToPath, history } from 'redux-first-router';
 
 import routesMap from 'routes/routesMap';
-import { Folder } from 'controllers/testCase';
 import { TestCaseMenuAction } from 'pages/inside/common/testCaseList/types';
 import { ExecutionStatus } from 'pages/inside/testCaseLibraryPage/types';
 
@@ -80,20 +79,6 @@ export const getExcludedActionsFromPermissionMap = (
   permissionMap: PermissionMapEntry[],
 ): TestCaseMenuAction[] =>
   permissionMap.filter(({ isAllowed }) => !isAllowed).map(({ action }) => action);
-
-export function buildBreadcrumbs(folders: Folder[], folderId: number): string[] {
-  const folder = folders.find(({ id }) => id === folderId);
-
-  if (!folder) {
-    return [];
-  }
-
-  if (folder.parentFolderId) {
-    return [...buildBreadcrumbs(folders, folder.parentFolderId), folder.name];
-  }
-
-  return [folder.name];
-}
 
 export const formatTimestampForSidePanel = (timestamp: string, locale = 'enUS'): string => {
   if (!timestamp) {

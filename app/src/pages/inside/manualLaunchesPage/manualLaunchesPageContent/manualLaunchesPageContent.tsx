@@ -16,6 +16,7 @@
 
 import { isEmpty } from 'es-toolkit/compat';
 import { BubblesLoader } from '@reportportal/ui-kit';
+import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { createClassnames } from 'common/utils';
 
@@ -30,13 +31,17 @@ const cx = createClassnames(styles);
 export interface ManualLaunchesPageContentProps {
   isLoading: boolean;
   fullLaunches?: Launch[];
+  onRefresh?: VoidFn;
 }
 
 export const ManualLaunchesPageContent = ({
   isLoading,
   fullLaunches = [],
+  onRefresh,
 }: ManualLaunchesPageContentProps) => {
-  if (isLoading) {
+  const hasData = !isEmpty(fullLaunches);
+
+  if (isLoading && !hasData) {
     return (
       <div className={cx('loading')}>
         <BubblesLoader />
@@ -44,9 +49,9 @@ export const ManualLaunchesPageContent = ({
     );
   }
 
-  if (isEmpty(fullLaunches)) {
+  if (!hasData) {
     return <ManualLaunchesEmptyState />;
   }
 
-  return <ManualLaunchesList fullLaunches={fullLaunches} />;
+  return <ManualLaunchesList fullLaunches={fullLaunches} onRefresh={onRefresh} />;
 };

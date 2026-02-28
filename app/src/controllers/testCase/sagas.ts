@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { Action } from 'redux';
 import { takeEvery, call, select, all, put, fork, cancel, takeLatest } from 'redux-saga/effects';
 import { Task } from 'redux-saga';
 import { URLS } from 'common/urls';
@@ -45,7 +44,16 @@ import {
   NAMESPACE,
   RENAME_FOLDER,
 } from './constants';
-import { Folder } from './types';
+import {
+  Folder,
+  GetTestCasesByFolderIdAction,
+  GetAllTestCasesAction,
+  CreateFolderAction,
+  DeleteFolderAction,
+  RenameFolderAction,
+  TestCaseDetailsAction,
+  GetFoldersAction,
+} from './types';
 import {
   setFoldersFetchedAction,
   createFoldersSuccessAction,
@@ -54,53 +62,23 @@ import {
   startLoadingFolderAction,
   stopLoadingFolderAction,
   CreateFolderParams,
-  DeleteFolderParams,
-  RenameFolderParams,
-  GetTestCasesByFolderIdParams,
   startLoadingTestCasesAction,
   stopLoadingTestCasesAction,
   setTestCasesAction,
   deleteFolderSuccessAction,
   renameFolderSuccessAction,
-  GetAllTestCases,
   expandFoldersToLevelAction,
 } from './actionCreators';
 import { getAllFolderIdsToDelete } from 'common/utils/folderUtils';
 import { fetchAllFolders } from './utils/fetchAllFolders';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Page } from 'types/common';
-import { foldersSelector } from 'controllers/testCase/selectors';
+import { areFoldersFetchedSelector, foldersSelector } from 'controllers/testCase/selectors';
 import {
   TEST_CASE_LIBRARY_PAGE,
   urlOrganizationSlugSelector,
   urlProjectSlugSelector,
 } from 'controllers/pages';
-
-interface GetTestCasesByFolderIdAction extends Action<typeof GET_TEST_CASES_BY_FOLDER_ID> {
-  payload: GetTestCasesByFolderIdParams;
-}
-
-interface GetAllTestCasesAction extends Action<typeof GET_ALL_TEST_CASES> {
-  payload: GetAllTestCases;
-}
-
-interface CreateFolderAction extends Action<typeof CREATE_FOLDER> {
-  payload: CreateFolderParams;
-}
-
-interface DeleteFolderAction extends Action<typeof DELETE_FOLDER> {
-  payload: DeleteFolderParams;
-}
-
-interface RenameFolderAction extends Action<typeof RENAME_FOLDER> {
-  payload: RenameFolderParams;
-}
-
-interface TestCaseDetailsAction extends Action<typeof GET_TEST_CASE_DETAILS> {
-  payload: {
-    testCaseId: string;
-  };
-}
 
 function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generator {
   yield put(startLoadingTestCasesAction());
@@ -198,19 +176,24 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
   }
 }
 
-function* getFolders() {
+function* getFolders(action: GetFoldersAction) {
   const projectKey = (yield select(projectKeySelector)) as string;
+  const areFoldersFetched = (yield select(areFoldersFetchedSelector)) as boolean;
+  const isSilent = action.payload?.silent || false;
 
-  if (!projectKey) {
+  //TODO: Folders should only be fetched once
+  if (!projectKey || (areFoldersFetched && !isSilent)) {
     return;
   }
 
   try {
-    yield put({
-      type: FETCH_START,
-      payload: { projectKey },
-      meta: { namespace: NAMESPACE },
-    });
+    if (!isSilent) {
+      yield put({
+        type: FETCH_START,
+        payload: { projectKey },
+        meta: { namespace: NAMESPACE },
+      });
+    }
 
     const allFolders = (yield call(fetchAllFolders, { projectKey })) as Folder[];
 

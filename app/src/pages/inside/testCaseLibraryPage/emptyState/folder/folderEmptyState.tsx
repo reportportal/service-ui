@@ -39,36 +39,27 @@ interface FolderEmptyStateProps {
 
 export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
   const { formatMessage } = useIntl();
-  const { canCreateTestCase, canImportTestCases } = useUserPermissions();
+  const { canManageTestCases } = useUserPermissions();
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
   const { openModal: openImportTestCaseModal } = useImportTestCaseModal();
 
-  const getAvailableButtons = () => {
-    const buttons: ActionButton[] = [];
-
-    if (canCreateTestCase) {
-      buttons.push({
-        name: formatMessage(commonMessages.createTestCase),
-        dataAutomationId: 'createTestCaseButton',
-        icon: PlusIconInline,
-        isCompact: true,
-        handleButton: openCreateTestCaseModal,
-      });
+  const buttons: ActionButton[] = canManageTestCases ? [
+    {
+      name: formatMessage(commonMessages.createTestCase),
+      dataAutomationId: 'createTestCaseButton',
+      icon: PlusIconInline,
+      isCompact: true,
+      handleButton: openCreateTestCaseModal,
+    },
+    {
+      name: formatMessage(commonMessages.importTestCases),
+      dataAutomationId: 'importTestCaseButton',
+      variant: 'ghost',
+      icon: ImportIcon,
+      isCompact: true,
+      handleButton: () => openImportTestCaseModal({ folderName: folderTitle ?? '' }),
     }
-
-    if (canImportTestCases) {
-      buttons.push({
-        name: formatMessage(commonMessages.importTestCases),
-        dataAutomationId: 'importTestCaseButton',
-        variant: 'ghost',
-        icon: ImportIcon,
-        isCompact: true,
-        handleButton: () => openImportTestCaseModal({ folderName: folderTitle ?? '' }),
-      });
-    }
-
-    return buttons;
-  };
+  ] : [];
 
   return (
     <div className={cx('folder-empty-state')}>
@@ -77,7 +68,7 @@ export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
         title={formatMessage(messages.emptyPageTitle)}
         description={Parser(formatMessage(messages.folderEmptyPageDescription))}
         imageType="docs"
-        buttons={getAvailableButtons()}
+        buttons={buttons}
       />
     </div>
   );

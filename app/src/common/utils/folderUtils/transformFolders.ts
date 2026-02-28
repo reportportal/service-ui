@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { isEmpty } from 'es-toolkit/compat';
+import { isEmpty, isNil } from 'es-toolkit/compat';
 
 export interface BaseFolder {
   id: number;
@@ -22,6 +22,7 @@ export interface BaseFolder {
   description?: string;
   countOfTestCases?: number;
   parentFolderId?: number | null;
+  index?: number;
 }
 
 export interface TransformedFolder {
@@ -30,6 +31,7 @@ export interface TransformedFolder {
   description?: string;
   testsCount: number;
   parentFolderId: number | null;
+  index?: number;
   folders: TransformedFolder[];
 }
 
@@ -53,6 +55,7 @@ export const transformFoldersToDisplay = (folders: BaseFolder[]): TransformedFol
       description: folder.description,
       id: folder.id,
       parentFolderId: folder.parentFolderId ?? null,
+      index: folder.index,
       folders: [],
     });
   });
@@ -68,7 +71,28 @@ export const transformFoldersToDisplay = (folders: BaseFolder[]): TransformedFol
     }
   });
 
-  return folderMap.get(null)?.folders || [];
+  const sortFolders = (folders: TransformedFolder[]): TransformedFolder[] => {
+    const sortedFolders = [...folders];
+    sortedFolders.sort((a, b) => {
+      if (!isNil(a.index) && !isNil(b.index)) {
+        return a.index - b.index;
+      }
+
+      if (!isNil(a.index)) return -1;
+
+      if (!isNil(b.index)) return 1;
+
+      return 0;
+    });
+
+    return sortedFolders.map((folder) => ({
+      ...folder,
+      folders: sortFolders(folder.folders),
+    }));
+  };
+
+  const rootFolders = folderMap.get(null)?.folders || [];
+  return sortFolders(rootFolders);
 };
 
 /**
@@ -112,3 +136,33 @@ export const getAllSubfolderIds = (folderId: number, folders: BaseFolder[]): num
 
   return subfolderIds;
 };
+
+export const getParentFolders = <T extends BaseFolder>(folderId: number, folders: T[]) => {
+  if (isEmpty(folders)) {
+    return [];
+  }
+
+  const folderMap = new Map<number, T>(folders.map((folder) => [folder.id, folder]));
+  const iteratedFolders = new Set<number>();
+
+  const getParentFolder = (id: number | null | undefined): T[] => {
+    if (id === null || id === undefined || iteratedFolders.has(id)) {
+      return [];
+    }
+
+    iteratedFolders.add(id);
+
+    const folder = folderMap.get(id);
+
+    if (!folder) {
+      return [];
+    }
+
+    return [folder, ...getParentFolder(folder.parentFolderId)];
+  };
+
+  return getParentFolder(folderId);
+};
+
+export const getParentFoldersIds = <T extends BaseFolder>(folderId: number, folders: T[]) =>
+  getParentFolders(folderId, folders).map((folder) => folder.id);

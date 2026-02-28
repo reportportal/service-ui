@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { createSelector } from 'reselect';
+
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Page } from 'types/common';
 
-import { EMPTY_FOLDERS } from '../testCase';
-import { transformFoldersToDisplay } from 'common/utils/folderUtils';
+import { EMPTY_FOLDERS, areFoldersFetchedSelector, foldersSelector, Folder } from '../testCase';
+import { getParentFolders, transformFoldersToDisplay } from 'common/utils/folderUtils';
 import { TestPlanDto, TestPlanFoldersDto, TestPlanTestCaseDto } from './constants';
+import { isEmpty } from 'es-toolkit/compat';
 
 export interface TestPlanState {
   data: {
@@ -36,6 +39,7 @@ export interface TestPlanState {
 
 interface RootState {
   testPlan?: TestPlanState;
+  testCase?: unknown;
 }
 
 export const testPlanSelector = (state: RootState): TestPlanState =>
@@ -56,6 +60,38 @@ export const isLoadingActiveSelector = (state: RootState) =>
 export const testPlanFoldersSelector = (state: RootState) =>
   testPlanSelector(state).testPlanFolders?.content || EMPTY_FOLDERS;
 
+export const testPlanFoldersTreeWithParents = createSelector(
+  testPlanFoldersSelector,
+  foldersSelector,
+  areFoldersFetchedSelector,
+  (testPlanFolders, folders, areFoldersFetched): Folder[] => {
+    if (!areFoldersFetched || isEmpty(folders) || isEmpty(testPlanFolders)) {
+      return testPlanFolders;
+    }
+
+    const folderById = new Map<number, Folder>();
+
+    testPlanFolders.forEach((folder) => {
+      folderById.set(folder.id, folder);
+    });
+
+    testPlanFolders.forEach((folder) => {
+      const ancestors = getParentFolders(folder.id, folders);
+
+      ancestors.forEach((ancestor) => {
+        if (!folderById.has(ancestor.id)) {
+          folderById.set(ancestor.id, {
+            ...ancestor,
+            countOfTestCases: 0,
+          });
+        }
+      });
+    });
+
+    return Array.from(folderById.values());
+  },
+);
+
 export const EMPTY_TEST_CASES: ExtendedTestCase[] = [];
 
 export const testPlanTestCasesSelector = (state: RootState) =>
@@ -65,7 +101,7 @@ export const testPlanTestCasesPageSelector = (state: RootState) =>
   testPlanSelector(state).testPlanTestCases?.page;
 
 export const testPlanTransformedFoldersSelector = (state: RootState) =>
-  transformFoldersToDisplay(testPlanFoldersSelector(state));
+  transformFoldersToDisplay(testPlanFoldersTreeWithParents(state));
 
 export const testPlanExpandedFolderIdsSelector = (state: RootState): number[] =>
   testPlanSelector(state).expandedFolderIds || [];

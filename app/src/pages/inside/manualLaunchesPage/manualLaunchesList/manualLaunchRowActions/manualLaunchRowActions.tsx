@@ -15,9 +15,17 @@
  */
 
 import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { MetaData } from '@reportportal/ui-kit/components/table/types';
+import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { ActionMenu } from 'components/actionMenu';
+import { useEditManualLaunchModal } from '../../editManualLaunchModal';
+import { ManualLaunchItem } from '../../types';
+import { fetch } from 'common/utils';
+import { URLS } from 'common/urls';
+import { projectKeySelector } from 'controllers/project';
+import { showErrorNotification } from 'controllers/notification';
 
 import { useManualLaunchesListRowActions } from '../hooks/useManualLaunchesListRowActions';
 
@@ -29,14 +37,60 @@ interface SingleDeleteData {
 interface ManualLaunchRowActionsProps {
   metaData: MetaData;
   onDelete: (data: SingleDeleteData) => void;
+  onRefresh?: VoidFn;
 }
 
-export const ManualLaunchRowActions = ({ metaData, onDelete }: ManualLaunchRowActionsProps) => {
+export const ManualLaunchRowActions = ({
+  metaData,
+  onDelete,
+  onRefresh,
+}: ManualLaunchRowActionsProps) => {
+  const dispatch = useDispatch();
+  const projectKey = useSelector(projectKeySelector);
+  const { openModal: openEditModal } = useEditManualLaunchModal({
+    onSuccess: onRefresh,
+  });
+
+  const handleEdit = useCallback(() => {
+    const launchId = metaData.id as number;
+
+    const fetchAndOpenModal = async () => {
+      try {
+        const launchData = await fetch<ManualLaunchItem>(
+          URLS.manualLaunchById(projectKey, launchId),
+        );
+
+        const modalData = {
+          id: launchData.id,
+          name: launchData.name,
+          description: launchData.description,
+          testPlan: launchData.testPlan
+            ? { id: launchData.testPlan.id, name: launchData.testPlan.name }
+            : null,
+          attributes: launchData.attributes || [],
+        };
+
+        openEditModal(modalData);
+      } catch {
+        dispatch(
+          showErrorNotification({
+            messageId: 'errorOccurredTryAgain',
+          }),
+        );
+      }
+    };
+
+    void fetchAndOpenModal();
+  }, [openEditModal, metaData.id, projectKey, dispatch]);
+
   const handleDelete = useCallback(() => {
     onDelete({ id: metaData.id as number, name: metaData.name as string });
   }, [onDelete, metaData.id, metaData.name]);
 
-  const rowActions = useManualLaunchesListRowActions({ onDelete: handleDelete });
+  const rowActions = useManualLaunchesListRowActions({
+    onEdit: handleEdit,
+    onDelete: handleDelete,
+  });
 
   return <ActionMenu actions={rowActions} />;
 };

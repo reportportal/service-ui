@@ -224,6 +224,10 @@ export const notificationMessages = defineMessages({
     id: 'TestCaseLibraryPage.testCasesDuplicatedSuccess',
     defaultMessage: 'Test cases have been duplicated successfully.',
   },
+  testCaseDuplicatedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseDuplicatedSuccess',
+    defaultMessage: 'Test case has been duplicated successfully.',
+  },
   testCaseDeletedSuccess: {
     id: 'TestCaseLibraryPage.testCaseDeletedSuccess',
     defaultMessage: 'Test case has been deleted successfully.',
@@ -342,6 +346,11 @@ export const notificationMessages = defineMessages({
   testPlanDeletedSuccess: {
     id: 'TestPlansPage.testPlanDeletedSuccess',
     defaultMessage: 'Test Plan has been deleted successfully.',
+  },
+  removeFromTestPlanSuccess: {
+    id: 'RemoveTestCasesFromTestPlanModal.successMessage',
+    defaultMessage:
+      '{count, plural, one {Test case has} other {Test cases have}} been successfully removed from the Test Plan',
   },
   manualLaunchDeletedSuccess: {
     id: 'ManualLaunchesPage.manualLaunchDeletedSuccess',

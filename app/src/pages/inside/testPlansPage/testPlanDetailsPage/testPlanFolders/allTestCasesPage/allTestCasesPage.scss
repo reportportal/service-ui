@@ -19,6 +19,10 @@
   flex-direction: column;
   height: fit-content;
   padding: 20px 32px 0 32px;
+
+  &__with-panel {
+    padding-bottom: 40px;
+  }
 }
 
 .pagination {
@@ -33,9 +37,61 @@
   width: 100%;
 }
 
+.pagination-content {
+  padding: 0;
+}
+
+.pagination-with-panel {
+  padding: 0 32px;
+  height: 40px;
+}
+
 .sticky-wrapper {
   position: sticky;
   width: 100%;
   bottom: 0;
   z-index: $Z-INDEX-POPUP;
+}
+
+.selection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  background: var(--rp-ui-base-bg-000);
+  padding: 12px 32px;
+  border-top: 1px solid var(--rp-ui-base-e-100);
+  margin-top: auto;
+  height: 64px;
+  width: 100%;
+
+  &-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &__remove-button {
+      border: 1px solid var(--rp-ui-base-error);
+      color: var(--rp-ui-base-error);
+      font-family: var(--rp-ui-base-font-family);
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 20px;
+      letter-spacing: 0;
+      text-align: center;
+      vertical-align: bottom;
+
+      &:hover {
+        color: var(--rp-ui-base-error-hover);
+        border-color: var(--rp-ui-base-error-hover);
+        background-color: transparent;
+      }
+
+      &:active {
+        color: var(--rp-ui-base-error-pressed);
+        border-color: var(--rp-ui-base-error-pressed);
+        background-color: transparent;
+      }
+    }
+  }
 }

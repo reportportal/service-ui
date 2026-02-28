@@ -35,6 +35,10 @@ import styles from './attributeEditor.scss';
 const cx = classNames.bind(styles);
 
 const attributeKeyValidator = commonValidators.attributeKey;
+const requiredAttributeKeyValidator = composeBoundValidators([
+  commonValidators.requiredField,
+  commonValidators.attributeKey,
+]);
 const attributeValueValidator = composeBoundValidators([
   commonValidators.requiredField,
   bindMessageToValidator(validate.attributeValue, 'attributeValueLengthHint'),
@@ -57,11 +61,16 @@ export const AttributeEditor = ({
   valueLabel,
   editorDefaultOpen,
   autocompleteProps,
+  showValidationErrors,
+  isAttributeKeyRequired,
   isAttributeValueRequired,
   allowCustomValues = true,
 }) => {
   const [keyTouched, setTouchKey] = useState(false);
   const [valueTouched, setTouchValue] = useState(false);
+
+  const getAttributeKeyValidator = (key) =>
+    isAttributeKeyRequired ? requiredAttributeKeyValidator(key) : attributeKeyValidator(key);
 
   const getAttributeValueValidator = (value) =>
     isAttributeValueRequired
@@ -69,7 +78,7 @@ export const AttributeEditor = ({
       : attributeFilterValueValidator(value);
 
   const getValidationErrors = (key, value) => ({
-    key: attributeKeyValidator(key),
+    key: getAttributeKeyValidator(key),
     value: getAttributeValueValidator(value),
   });
 
@@ -98,6 +107,13 @@ export const AttributeEditor = ({
     const { key, value } = attribute;
     setState({ key, value, errors: getValidationErrors(key, value), isKeyEdited: false });
   }, [attribute]);
+
+  useEffect(() => {
+    if (showValidationErrors) {
+      setTouchKey(true);
+      setTouchValue(true);
+    }
+  }, [showValidationErrors]);
 
   const byKeyComparator = (attr, item, key, value) => attr.key === item && attr.value === value;
 
@@ -218,6 +234,7 @@ export const AttributeEditor = ({
           value={state.key}
           attributeKey={state.key}
           attributeValue={state.value}
+          isRequired={isAttributeKeyRequired}
           onInputChange={handleAttributeKeyInputChange}
           optionVariant="key-variant"
           menuClassName={cx('menu', keyMenuClassName)}
@@ -290,6 +307,8 @@ AttributeEditor.propTypes = {
   valueLabel: PropTypes.string,
   editorDefaultOpen: PropTypes.bool,
   autocompleteProps: PropTypes.object,
+  showValidationErrors: PropTypes.bool,
+  isAttributeKeyRequired: PropTypes.bool,
   isAttributeValueRequired: PropTypes.bool,
   allowCustomValues: PropTypes.bool,
 };
@@ -309,6 +328,8 @@ AttributeEditor.defaultProps = {
   valueLabel: '',
   editorDefaultOpen: false,
   autocompleteProps: {},
+  showValidationErrors: false,
+  isAttributeKeyRequired: false,
   isAttributeValueRequired: true,
   allowCustomValues: true,
 };

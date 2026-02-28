@@ -24,12 +24,12 @@ import { getExcludedActionsFromPermissionMap } from 'pages/inside/common/testCas
 export const useTestPlanTooltipItems = () => {
   const { formatMessage } = useIntl();
 
-  const { canDeleteTestCase, canDuplicateTestCase, canEditTestCase } = useUserPermissions();
+  const { canManageTestCases } = useUserPermissions();
 
   const permissionMap = [
-    { isAllowed: canEditTestCase, action: TestCaseMenuAction.EDIT },
-    { isAllowed: canDuplicateTestCase, action: TestCaseMenuAction.DUPLICATE },
-    { isAllowed: canDeleteTestCase, action: TestCaseMenuAction.DELETE },
+    { isAllowed: canManageTestCases, action: TestCaseMenuAction.EDIT },
+    { isAllowed: canManageTestCases, action: TestCaseMenuAction.DUPLICATE },
+    { isAllowed: canManageTestCases, action: TestCaseMenuAction.DELETE },
     { isAllowed: false, action: TestCaseMenuAction.HISTORY },
     { isAllowed: false, action: TestCaseMenuAction.MOVE },
   ];

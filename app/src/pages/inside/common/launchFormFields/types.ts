@@ -74,9 +74,8 @@ export interface LaunchFormFieldsProps {
   onModeChange?: (mode: LaunchMode) => void;
   onLaunchSelect?: OnLaunchChangeHandler;
   description?: ReactNode;
-  isTestPlanFieldDisabled?: boolean;
-  testPlanValue?: TestPlanOption;
   isUncoveredTestsCheckboxAvailable?: boolean;
+  hideTestPlanField?: boolean;
 }
 
 export interface AttributeListFieldProps {
@@ -99,19 +98,19 @@ export interface ExistingLaunchFieldsProps {
 }
 
 export interface NewLaunchFieldsProps {
-  isTestPlanFieldDisabled?: boolean;
-  testPlanValue?: TestPlanOption;
+  hideTestPlanField?: boolean;
+  descriptionPlaceholder?: string;
+  testPlanPlaceholder?: string;
 }
 
 export interface BaseLaunchModalProps {
   testCases: ExtendedTestCase[];
   testPlanId?: number;
-  testPlanName?: string;
   modalTitle: string;
   okButtonText: MessageDescriptor;
   description?: ReactNode;
-  isTestPlanFieldDisabled?: boolean;
   className?: string;
   isUncoveredTestsCheckboxAvailable?: boolean;
+  hideTestPlanField?: boolean;
   onClearSelection?: () => void;
 }

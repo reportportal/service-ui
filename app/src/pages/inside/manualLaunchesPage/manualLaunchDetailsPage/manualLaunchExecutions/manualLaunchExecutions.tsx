@@ -53,7 +53,7 @@ export const ManualLaunchExecutions = ({
   isLoading,
 }: ManualLaunchExecutionsProps) => {
   const { formatMessage } = useIntl();
-  const { canEditTestCase } = useUserPermissions();
+  const { canManageTestCases } = useUserPermissions();
   const [searchValue, setSearchValue] = useState('');
   const launchId = useManualLaunchId();
   const { organizationSlug, projectSlug } = useProjectDetails();
@@ -106,7 +106,7 @@ export const ManualLaunchExecutions = ({
   };
 
   const getPopoverItems = (executionId: number): PopoverItem[] => {
-    if (!canEditTestCase) {
+    if (!canManageTestCases) {
       return [];
     }
 
@@ -137,11 +137,9 @@ export const ManualLaunchExecutions = ({
               )}
               <span className={cx('test-name')}>{execution.testCaseName}</span>
             </div>
-            {!isEmpty(tags) && (
-              <div className={cx('tags-section')}>
-                <AdaptiveTagList tags={tags} isShowAllView />
-              </div>
-            )}
+            <div className={cx('tags-section')}>
+              <AdaptiveTagList tags={tags} isShowAllView />
+            </div>
           </div>
         ),
       },
@@ -161,7 +159,7 @@ export const ManualLaunchExecutions = ({
       },
       actions: {
         content: '',
-        component: canEditTestCase ? (
+        component: canManageTestCases ? (
           <div className={cx('execution-actions-cell')}>
             <PopoverControl items={getPopoverItems(execution.id)} placement="bottom-end">
               <button type="button" className={cx('execution-actions-button')}>
@@ -185,21 +183,21 @@ export const ManualLaunchExecutions = ({
     {
       key: 'steps',
       header: formatMessage(messages.stepsColumn),
-      width: 75,
+      width: 80,
       align: 'left' as const,
     },
     {
       key: 'status',
       header: formatMessage(messages.statusColumn),
-      width: 64,
+      width: 72,
       align: 'left' as const,
     },
-    ...(canEditTestCase
+    ...(canManageTestCases
       ? [
           {
             key: 'actions',
             header: '',
-            width: 40,
+            width: 42,
             align: 'center' as const,
           },
         ]

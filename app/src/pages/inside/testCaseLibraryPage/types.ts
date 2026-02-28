@@ -140,7 +140,7 @@ export interface ExtendedTestCase extends TestCase {
 export interface ActionButton {
   name: string;
   dataAutomationId: string;
-  icon?: FC<SVGProps<SVGSVGElement>>;
+  icon?: FC<SVGProps<SVGSVGElement>> | string;
   isCompact: boolean;
   variant?: string;
   handleButton: () => void;
@@ -215,3 +215,18 @@ export const hasTagShape = (attr: Tag | Attribute): attr is Tag => {
     (!('value' in attr) || isNil(attr.value))
   );
 };
+
+export const hasAttributeValue = (attr: Tag | Attribute): attr is Attribute => {
+  return (
+    isObject(attr) &&
+    'key' in attr &&
+    isString((attr as Attribute).key) &&
+    'value' in attr &&
+    !isNil(attr.value) &&
+    isString(attr.value)
+  );
+};
+
+export const isIconComponent = (
+  icon: FC<SVGProps<SVGSVGElement>> | string,
+): icon is FC<SVGProps<SVGSVGElement>> => !isString(icon);

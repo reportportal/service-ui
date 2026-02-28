@@ -25,6 +25,7 @@ import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 
 import { useEditTestCaseModal } from '../editSelectedTestCaseModal';
 import { useMoveTestCaseModal } from '../moveTestCaseModal/useMoveTestCaseModal';
+import { useDuplicateTestCaseModal } from './duplicateTestCaseModal';
 
 interface TestCaseTooltipItemsProps {
   testCase: ExtendedTestCase;
@@ -32,18 +33,21 @@ interface TestCaseTooltipItemsProps {
 
 export const useTestCaseTooltipItems = ({ testCase }: TestCaseTooltipItemsProps) => {
   const { formatMessage } = useIntl();
-  const { canDeleteTestCase, canDuplicateTestCase, canEditTestCase, canMoveTestCase } =
-    useUserPermissions();
+  const { canManageTestCases } = useUserPermissions();
   const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
   const { openModal: openEditTestCaseModal } = useEditTestCaseModal();
   const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
+  const { openModal: openDuplicateTestCaseModal } = useDuplicateTestCaseModal();
 
   const permissionMap = [
-    { isAllowed: canDuplicateTestCase, action: TestCaseMenuAction.DUPLICATE },
-    { isAllowed: canEditTestCase, action: TestCaseMenuAction.EDIT },
-    { isAllowed: canMoveTestCase, action: TestCaseMenuAction.MOVE },
-    { isAllowed: canDeleteTestCase, action: TestCaseMenuAction.DELETE },
-  ];
+    TestCaseMenuAction.DUPLICATE,
+    TestCaseMenuAction.EDIT,
+    TestCaseMenuAction.MOVE,
+    TestCaseMenuAction.DELETE,
+  ].map(action => ({
+    isAllowed: canManageTestCases,
+    action,
+  }));
 
   return createTestCaseMenuItems(
     formatMessage,
@@ -51,6 +55,12 @@ export const useTestCaseTooltipItems = ({ testCase }: TestCaseTooltipItemsProps)
       [TestCaseMenuAction.DELETE]: () => openDeleteTestCaseModal({ testCase }),
       [TestCaseMenuAction.EDIT]: () => openEditTestCaseModal({ testCase }),
       [TestCaseMenuAction.MOVE]: () => openMoveTestCaseModal({ testCase }),
+      [TestCaseMenuAction.DUPLICATE]: () =>
+        openDuplicateTestCaseModal({
+          selectedTestCaseIds: [testCase.id],
+          count: 1,
+          testCase,
+        }),
     },
     getExcludedActionsFromPermissionMap(permissionMap),
   );

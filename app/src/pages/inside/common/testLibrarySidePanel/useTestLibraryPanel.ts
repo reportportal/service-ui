@@ -20,7 +20,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
 import {
-  areFoldersFetchedSelector,
   getFoldersAction,
   transformedFoldersSelector,
   testCasesSelector,
@@ -72,16 +71,13 @@ export const useTestLibraryPanel = ({
   const [testCasesMap, setTestCasesMap] = useState<Map<number, TestCase[]>>(new Map());
 
   const lastExpandedIdRef = useRef<number>();
-  const areFoldersFetched = useSelector(areFoldersFetchedSelector);
   const testCases = useSelector(testCasesSelector);
   const folders = useSelector(transformedFoldersSelector);
   const testPlanTestCases = useTestPlanSelector(testPlanTestCasesSelector);
 
   useEffect(() => {
-    if (!areFoldersFetched) {
-      dispatch(getFoldersAction());
-    }
-  }, [areFoldersFetched, dispatch]);
+    dispatch(getFoldersAction());
+  }, []);
 
   useEffect(() => {
     if (

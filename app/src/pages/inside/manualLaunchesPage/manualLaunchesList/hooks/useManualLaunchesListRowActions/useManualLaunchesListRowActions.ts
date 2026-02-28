@@ -22,10 +22,12 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 import { messages } from 'pages/inside/manualLaunchesPage/launchSidePanel/messages';
 
 interface UseManualLaunchesListRowActionsParams {
+  onEdit: () => void;
   onDelete: () => void;
 }
 
 export const useManualLaunchesListRowActions = ({
+  onEdit,
   onDelete,
 }: UseManualLaunchesListRowActionsParams): ActionItem[] => {
   const { formatMessage } = useIntl();
@@ -35,7 +37,7 @@ export const useManualLaunchesListRowActions = ({
     () => [
       {
         label: formatMessage(messages.editLaunch),
-        onClick: () => {},
+        onClick: onEdit,
       },
       {
         label: formatMessage(messages.deleteLaunch),
@@ -44,6 +46,6 @@ export const useManualLaunchesListRowActions = ({
         hasPermission: canDeleteLaunch,
       },
     ],
-    [formatMessage, onDelete, canDeleteLaunch],
+    [formatMessage, onEdit, onDelete, canDeleteLaunch],
   );
 };

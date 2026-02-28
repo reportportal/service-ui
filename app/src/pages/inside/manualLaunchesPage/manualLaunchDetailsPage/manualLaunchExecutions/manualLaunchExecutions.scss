@@ -21,7 +21,7 @@ $sidebar-width: calc(100vw - 408px);
   display: flex;
   flex-direction: column;
   height: fit-content;
-  padding: 20px 32px 64px;
+  padding: 20px 32px 72px;
 
   &__loader {
     display: flex;
@@ -163,13 +163,14 @@ $sidebar-width: calc(100vw - 408px);
 
   &-header {
     --table-header-bg-color: transparent;
-    margin-bottom: 8px;
+    margin-bottom: 0;
   }
 }
 
 .execution-name-cell {
   display: flex;
   flex-direction: column;
+  gap: 8px;
 }
 
 .first-row {
@@ -180,26 +181,44 @@ $sidebar-width: calc(100vw - 408px);
 
 .test-name {
   font-family: var(--rp-ui-base-font-family);
-  font-weight: var(--rp-ui-base-fw-regular);
+  font-weight: var(--rp-ui-base-fw-medium);
   font-size: 13px;
   line-height: 20px;
   color: var(--rp-ui-base-almost-black);
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+
+  &:hover {
+    color: var(--rp-ui-base-topaz);
+  }
+
+  &:active {
+    color: var(--rp-ui-base-topaz-pressed);
+  }
 }
 
 .tags-section {
-  margin-top: 24px;
+  padding-left: 24px;
+
+  :global([class*='tag-list__item-title']) {
+    font-weight: var(--rp-ui-base-fw-regular);
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--rp-ui-base-almost-black);
+  }
 }
 
 .execution-chip {
   position: relative;
-  height: max-content;
-  min-height: 76px;
+  height: 80px;
+  min-height: 72px;
   border-radius: 4px;
   box-sizing: content-box;
 
   :global([class*='table-row-content']) {
     align-items: center;
-    min-height: 76px;
+    height: 80px;
+    min-height: 72px;
     cursor: pointer;
   }
 
@@ -235,6 +254,15 @@ $sidebar-width: calc(100vw - 408px);
   display: flex;
   align-items: center;
   justify-content: flex-end;
+
+  :global([class*='_popover_']) {
+    min-height: unset;
+    padding: 8px 0px;
+  }
+
+  :global([class*='popover-control__item-button']) {
+    padding: 8px 12px;
+  }
 }
 
 .execution-actions-button {

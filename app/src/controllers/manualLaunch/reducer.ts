@@ -18,6 +18,7 @@ import { combineReducers } from 'redux';
 import { isEmpty } from 'es-toolkit/compat';
 
 import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
+import { getParentFoldersIds } from 'common/utils/folderUtils';
 import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
 import { MANUAL_LAUNCHES_PAGE, MANUAL_LAUNCH_DETAILS_PAGE } from 'controllers/pages';
@@ -73,25 +74,9 @@ const expandedFolderIdsReducer = (
     case EXPAND_MANUAL_LAUNCH_FOLDERS_TO_LEVEL: {
       if (hasFolderExpansionPayload(action)) {
         const { folderId, folders } = action.payload;
-        const folderMap = new Map(folders.map((folder) => [folder.id, folder]));
-
-        const collectParentIds = (id: number): number[] => {
-          const folder = folderMap.get(id);
-
-          if (!folder) {
-            return [];
-          }
-
-          const currentIds = state.includes(id) ? [] : [id];
-
-          if (folder.parentFolderId === null || folder.parentFolderId === undefined) {
-            return currentIds;
-          }
-
-          return [...currentIds, ...collectParentIds(folder.parentFolderId)];
-        };
-
-        const idsToExpand = collectParentIds(folderId);
+        const idsToExpand = getParentFoldersIds(folderId, folders).filter(
+          (id) => !state.includes(id),
+        );
 
         if (!isEmpty(idsToExpand)) {
           const newState = [...state, ...idsToExpand];

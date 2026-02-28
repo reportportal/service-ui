@@ -66,6 +66,7 @@ export interface CreateFolderParams {
 
 export interface GetFoldersParams {
   projectKey?: string;
+  silent?: boolean;
 }
 
 export interface DeleteFolderParams {
@@ -90,6 +91,7 @@ export interface RenameFolderParams {
 export interface MoveFolderParams {
   folderId: number;
   parentTestFolderId: number | null;
+  index?: number;
 }
 
 export interface UpdateFolderCounterParams {
