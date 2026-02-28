@@ -29,6 +29,7 @@ import {
 } from 'controllers/pages';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { createClassnames } from 'common/utils';
+import { manualLaunchFoldersSelector } from 'controllers/manualLaunch';
 import { foldersSelector } from 'controllers/testCase';
 
 import styles from './folderBreadcrumbs.scss';
@@ -78,7 +79,9 @@ export const FolderBreadcrumbs = ({
   const dispatch = useDispatch();
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const projectSlug = useSelector(urlProjectSlugSelector);
-  const folders = useSelector(foldersSelector);
+  const selector = instanceKey === TMS_INSTANCE_KEY.MANUAL_LAUNCH_EXECUTION ? manualLaunchFoldersSelector : foldersSelector;
+  const folders = useSelector(selector);
+
 
   const items = getPath({ folderId, folders });
 
