@@ -46,6 +46,7 @@ import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/u
 import { useDuplicateTestCaseModal } from './duplicateTestCaseModal';
 import { useBatchDeleteTestCasesModal } from './batchDeleteTestCasesModal';
 import { useMoveTestCaseModal } from '../moveTestCaseModal';
+import { useBatchEditTagsModal } from './batchEditTagsModal';
 import { useAddToLaunchModal } from '../addToLaunchModal';
 
 import styles from './allTestCasesPage.scss';
@@ -98,6 +99,7 @@ export const AllTestCasesPage = ({
   const { openModal: openDuplicateToFolderModal } = useDuplicateTestCaseModal();
   const { openModal: openBatchDeleteTestCasesModal } = useBatchDeleteTestCasesModal();
   const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
+  const { openModal: openBatchEditTagsModal } = useBatchEditTagsModal();
   const { canManageTestCases } = useUserPermissions();
 
   const handleSelectedRows = (rows: SelectedTestCaseRow[]) => setSelectedRows(rows);
@@ -135,7 +137,13 @@ export const AllTestCasesPage = ({
     },
     {
       label: formatMessage(messages.editTags),
-      onClick: noop,
+      onClick: () => {
+        openBatchEditTagsModal({
+          selectedTestCaseIds: selectedRowIds,
+          count: selectedRowIds.length,
+          onClearSelection,
+        });
+      },
     },
     {
       label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
