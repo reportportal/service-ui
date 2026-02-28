@@ -23,14 +23,14 @@ import { hideModalAction } from 'controllers/modal';
 import { useNotification } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
 
-import { Tag } from '../types';
+import { Attribute } from '../types';
 import { useRefetchCurrentTestCases } from '../hooks/useRefetchCurrentTestCases';
 
 interface GetBatchEditTagsParams {
   testCaseIds: number[];
 }
 interface GetBatchEditTagsResponse {
-  content: Tag[];
+  content: Attribute[];
 }
 interface PostBatchEditTagsParams {
   testCaseIds: number[];
@@ -51,11 +51,10 @@ export const useBatchEditTags = ({ onSuccess }: UseBatchEditTagsParams) => {
 
   const getTags = useCallback(
     async ({ testCaseIds }: GetBatchEditTagsParams) => {
-      let response: GetBatchEditTagsResponse;
       setIsLoadingTags(true);
 
       try {
-        response = await fetch<GetBatchEditTagsResponse>(
+        return await fetch<GetBatchEditTagsResponse>(
           URLS.testCasesTags(projectKey),
           {
             method: 'POST',
@@ -64,11 +63,11 @@ export const useBatchEditTags = ({ onSuccess }: UseBatchEditTagsParams) => {
         );
       } catch {
         showErrorNotification({ messageId: 'errorOccurredTryAgain' });
+
+        return { content: [] };
       } finally {
         setIsLoadingTags(false);
       }
-
-      return response;
     },
     [
       setIsLoadingTags,

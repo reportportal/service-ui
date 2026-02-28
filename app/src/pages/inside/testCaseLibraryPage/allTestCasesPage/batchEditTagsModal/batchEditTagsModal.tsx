@@ -36,7 +36,7 @@ import { messages } from './messages';
 import { EditableTagsSection } from '../../editableTagsSection';
 import { useBatchEditTags } from '../../hooks/useBatchEditTags';
 import { TagPopover } from '../../tagPopover';
-import { Tag } from '../../types';
+import { Attribute } from '../../types';
 import { useFormFieldValue } from '../../hooks/useFormFieldValue';
 
 import styles from './batchEditTagsModal.scss';
@@ -79,7 +79,7 @@ const BatchEditTagsModal = reduxForm<
   change,
 }: BatchEditTagsModalProps & InjectedFormProps<BatchEditTagsModalFormValues, BatchEditTagsModalProps>) => {
   const { formatMessage } = useIntl();
-  const [tagsList, setTagsList] = useState<Tag[]>([]);
+  const [tagsList, setTagsList] = useState<Attribute[]>([]);
   const {
     getTags,
     updateTags,
@@ -108,8 +108,8 @@ const BatchEditTagsModal = reduxForm<
   }, []);
 
   const onRemoveTag = (tagKey: string): void => {
-    let tagToRemove: Tag;
-    const updatedTags = tagsList.filter((tag: Tag) => {
+    let tagToRemove: Attribute;
+    const updatedTags = tagsList.filter((tag: Attribute) => {
       if (tag.key !== tagKey) {
         return true;
       }
@@ -117,13 +117,15 @@ const BatchEditTagsModal = reduxForm<
       tagToRemove = tag;
     });
 
-    change(BATCH_EDIT_TAGS_FORM_NAMES.tagsToRemove, [...safeTagsToRemove, tagToRemove.key]);
-    change(BATCH_EDIT_TAGS_FORM_NAMES.tagsToAdd, safeTagsToAdd?.filter((key: string) => key !== tagToRemove.key));
+    if (tagToRemove?.key) {
+      change(BATCH_EDIT_TAGS_FORM_NAMES.tagsToRemove, [...safeTagsToRemove, tagToRemove.key]);
+      change(BATCH_EDIT_TAGS_FORM_NAMES.tagsToAdd, safeTagsToAdd?.filter((key: string) => key !== tagToRemove.key));
 
-    setTagsList(updatedTags);
+      setTagsList(updatedTags);
+    }
   };
 
-  const onAddTag = (tag: Tag): void => {
+  const onAddTag = (tag: Attribute): void => {
     change(BATCH_EDIT_TAGS_FORM_NAMES.tagsToRemove, safeTagsToRemove?.filter((key: string) => key !== tag.key));
     change(BATCH_EDIT_TAGS_FORM_NAMES.tagsToAdd, [...safeTagsToAdd, tag.key]);
 
