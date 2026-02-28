@@ -46,6 +46,7 @@ import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/u
 import { useBatchDuplicateToFolderModal } from './batchDuplicateToFolderModal';
 import { useBatchDeleteTestCasesModal } from './batchDeleteTestCasesModal';
 import { useMoveTestCaseModal } from '../moveTestCaseModal';
+import { useBatchEditTagsModal } from './batchEditTagsModal';
 import { useAddToLaunchModal } from '../addToLaunchModal';
 
 import styles from './allTestCasesPage.scss';
@@ -98,6 +99,7 @@ export const AllTestCasesPage = ({
   const { openModal: openBatchDuplicateToFolderModal } = useBatchDuplicateToFolderModal();
   const { openModal: openBatchDeleteTestCasesModal } = useBatchDeleteTestCasesModal();
   const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
+  const { openModal: openBatchEditTagsModal } = useBatchEditTagsModal();
   const { canDeleteTestCase, canDuplicateTestCase, canEditTestCase } = useUserPermissions();
 
   const handleSelectedRows = (rows: SelectedTestCaseRow[]) => setSelectedRows(rows);
@@ -135,7 +137,13 @@ export const AllTestCasesPage = ({
     },
     canEditTestCase && {
       label: formatMessage(messages.editTags),
-      onClick: noop,
+      onClick: () => {
+        openBatchEditTagsModal({
+          selectedTestCaseIds: selectedRowIds,
+          count: selectedRowIds.length,
+          onClearSelection,
+        });
+      },
     },
     canDeleteTestCase && {
       label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
