@@ -50,9 +50,11 @@ import type { TestCaseExecution } from 'controllers/manualLaunch';
 
 import { ManualLaunchExecutionsProps } from './types';
 import { ExecutionStatusChip } from './executionStatusChip';
+import { ExecutionSidePanel } from './executionSidePanel/executionSidePanel';
 import { ITEMS_PER_PAGE_OPTIONS } from './constants';
 import { useDeleteExecutionModal } from './deleteExecutionModal';
 import { messages } from './messages';
+
 import styles from './manualLaunchExecutions.scss';
 
 const cx = createClassnames(styles);
@@ -71,6 +73,7 @@ export const ManualLaunchExecutions = ({
   const { organizationSlug, projectSlug } = useProjectDetails();
   const { openModal: openDeleteExecutionModal } = useDeleteExecutionModal();
   const isAnyRowSelected = !isEmpty(selectedRowIds);
+  const [selectedExecutionId, setSelectedExecutionId] = useState<number | null>(null);
 
   const { activePage, pageSize, setPageNumber, setPageSize, totalPages, captions } =
     useURLBoundPagination({
@@ -185,12 +188,16 @@ export const ManualLaunchExecutions = ({
     const stepsCount = execution.manualScenario?.steps?.length ?? null;
     const tags = execution.attributes?.map((attr) => attr.key).filter(Boolean) || [];
 
+    const handleOpenSidePanel = () => {
+      setSelectedExecutionId(execution.id)
+    };
+
     return {
       id: execution.id,
       name: {
         content: execution.testCaseName,
         component: (
-          <div className={cx('execution-name-cell')}>
+          <div className={cx('execution-name-cell')} onClick={handleOpenSidePanel}>
             <div className={cx('first-row')}>
               {execution.testCasePriority && (
                 <PriorityIcon priority={execution.testCasePriority as TestCasePriority} />
@@ -212,13 +219,13 @@ export const ManualLaunchExecutions = ({
       steps: {
         content: stepsCount ?? '',
         component: (
-          <div className={cx('execution-steps-cell')}>{stepsCount === null ? '—' : stepsCount}</div>
+          <div className={cx('execution-steps-cell')} onClick={handleOpenSidePanel}>{stepsCount === null ? '—' : stepsCount}</div>
         ),
       },
       status: {
         content: execution.executionStatus,
         component: (
-          <div className={cx('execution-status-cell')}>
+          <div className={cx('execution-status-cell')} onClick={handleOpenSidePanel}>
             <ExecutionStatusChip status={execution.executionStatus} />
           </div>
         ),
@@ -377,6 +384,11 @@ export const ManualLaunchExecutions = ({
           </div>
         </div>
       )}
+      <ExecutionSidePanel
+        executionId={selectedExecutionId}
+        isVisible={!!selectedExecutionId}
+        onClose={() => setSelectedExecutionId(null)}
+      />
     </>
   );
 };
