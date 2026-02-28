@@ -27,5 +27,10 @@
     gap: 80px;
     justify-content: center;
     padding: 0;
+
+    & > * > [class*="scrollWrapper__scroll-component"] [class*="scrollWrapper__scrolling-content"] {
+        z-index: 15;
+      }
+    
   }
 }
