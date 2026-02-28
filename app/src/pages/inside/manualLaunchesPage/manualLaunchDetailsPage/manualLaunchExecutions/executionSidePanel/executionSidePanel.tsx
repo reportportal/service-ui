@@ -1,20 +1,19 @@
 
 import { useRef } from 'react';
 import { useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
 import { AdaptiveTagList, BubblesLoader, Button, ChevronDownDropdownIcon, DurationIcon, RerunIcon, RunManualIcon, SidePanel } from '@reportportal/ui-kit';
 
 import { useOnClickOutside } from 'common/hooks';
 import { createClassnames } from 'common/utils';
-import { PathBreadcrumb } from 'componentLibrary/breadcrumbs/pathBreadcrumb';
 import { CollapsibleSection } from 'components/collapsibleSection';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
-import { manualLaunchFoldersSelector } from 'controllers/manualLaunch';
+import { FolderBreadcrumbs } from 'components/folderBreadcrumbs';
 import { commonMessages } from "pages/inside/common/common-messages";
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { RequirementsList } from 'pages/inside/common/requirementsList/requirementsList';
 import { Scenario } from 'pages/inside/common/testCaseList/testCaseSidePanel/scenario/scenario';
-import { buildBreadcrumbs, formatTimestamp } from 'pages/inside/common/testCaseList/utils';
+import { formatTimestamp } from 'pages/inside/common/testCaseList/utils';
 import { Divider } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
 import { Attachment } from 'pages/inside/testCaseLibraryPage/types';
@@ -36,8 +35,6 @@ export const ExecutionSidePanel = ({ executionId, isVisible, onClose }: Executio
   const { formatMessage } = useIntl();
   const { executionDetails, isLoading } = useExecutionDetails(executionId);
   const sidePanelRef = useRef<HTMLDivElement>(null);
-  const folders = useSelector(manualLaunchFoldersSelector);
-  const path = buildBreadcrumbs(folders, executionDetails?.testFolder?.testItemId)
 
   useOnClickOutside(sidePanelRef, onClose);
 
@@ -52,7 +49,7 @@ export const ExecutionSidePanel = ({ executionId, isVisible, onClose }: Executio
 
   const descriptionComponent = (
     <div className={cx('sidepanel-description')}>
-      <PathBreadcrumb path={path} />
+      <FolderBreadcrumbs folderId={executionDetails?.testFolder?.testItemId} instanceKey={TMS_INSTANCE_KEY.MANUAL_LAUNCH_EXECUTION} />
       <div className={cx('meta-row')}>
         <div className={cx('meta-row-item')}>
           <span className={cx('meta-label')}>{formatMessage(messages.executionId)}:</span>
