@@ -23,6 +23,7 @@ export enum TMS_INSTANCE_KEY {
   TEST_CASE = 'testCase',
   TEST_PLAN = 'testPlan',
   MANUAL_LAUNCH = 'manualLaunch',
+  MANUAL_LAUNCH_EXECUTION = 'manualLaunchExecution',
 }
 
 export const actionMessages = defineMessages({
