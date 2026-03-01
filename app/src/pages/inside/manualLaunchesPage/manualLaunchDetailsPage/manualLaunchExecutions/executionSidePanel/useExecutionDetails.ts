@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Issue } from "@reportportal/ui-kit/issueList";
 
 import { useDebouncedSpinner } from "common/hooks";
 import { URLS } from 'common/urls';
@@ -31,6 +32,7 @@ interface ExecutionItem {
   requirements?: Requirement[];
   tags?: string[];
   attachments: Attachment[];
+  btsIssues: Issue[];
 };
 
 export const useExecutionDetails = (executionId: number | null) => {
