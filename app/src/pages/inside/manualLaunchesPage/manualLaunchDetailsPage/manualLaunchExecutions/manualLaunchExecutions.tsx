@@ -386,7 +386,6 @@ export const ManualLaunchExecutions = ({
       )}
       <ExecutionSidePanel
         executionId={selectedExecutionId}
-        isVisible={!!selectedExecutionId}
         onClose={() => setSelectedExecutionId(null)}
       />
     </>
