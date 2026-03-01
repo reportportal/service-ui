@@ -29,7 +29,6 @@ import {
 } from 'controllers/pages';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { createClassnames } from 'common/utils';
-import { manualLaunchFoldersSelector } from 'controllers/manualLaunch';
 import { foldersSelector } from 'controllers/testCase';
 
 import styles from './folderBreadcrumbs.scss';
@@ -45,6 +44,7 @@ interface FolderBreadcrumbsProps {
   folderId: number | null | undefined;
   instanceKey: TMS_INSTANCE_KEY;
   testPlanId?: number;
+  customFoldersSelector?: (state: unknown) => Folder[];
 }
 
 interface BreadcrumbButtonLinkProps {
@@ -75,13 +75,14 @@ export const FolderBreadcrumbs = ({
   folderId,
   instanceKey,
   testPlanId,
+  customFoldersSelector
 }: FolderBreadcrumbsProps) => {
   const dispatch = useDispatch();
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const projectSlug = useSelector(urlProjectSlugSelector);
-  const selector = instanceKey === TMS_INSTANCE_KEY.MANUAL_LAUNCH_EXECUTION ? manualLaunchFoldersSelector : foldersSelector;
-  const folders = useSelector(selector);
-
+  const folders = useSelector(
+    customFoldersSelector ?? foldersSelector
+  );
 
   const items = getPath({ folderId, folders });
 
