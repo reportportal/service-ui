@@ -52,7 +52,16 @@ export const useExecutionDetails = (executionId: number | null) => {
       try {
         showSpinner();
 
-        const response = await fetch<ExecutionItem>((URLS as UrlsHelper).manualLaunchExecutionById(projectKey, launchId, executionId));
+        const response = await fetch<ExecutionItem>(
+          (URLS as UrlsHelper).manualLaunchExecutionById(
+            projectKey,
+            launchId,
+            executionId
+          ),
+          {
+            signal: abortController.signal,
+          }
+        );
 
         setExecutionDetails(response);
       } catch {
