@@ -60,7 +60,7 @@ export const ExecutionSidePanel = ({ executionId, isVisible, onClose }: Executio
           <RerunIcon />
           <span className={cx('meta-value')}>{formatTimestamp(executionDetails.startedAt)}</span>
         </div>)}
-        {executionDetails?.duration && (
+        {executionDetails?.duration != null && (
           <div className={cx('meta-row-item')}>
             <DurationIcon />
             <span className={cx('meta-value')}>{executionDetails.duration}</span>
