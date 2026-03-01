@@ -95,10 +95,10 @@ export const ExecutionSidePanel = ({ executionId, isVisible, onClose }: Executio
           <ExpandedTextSection text={executionDetails.testCaseDescription} defaultVisibleLines={5} />
         </CollapsibleSection>
       )}
-      {executionDetails?.requirements && <CollapsibleSection title={formatMessage(commonMessages.requirements)}>
+      {executionDetails?.requirements?.length && <CollapsibleSection title={formatMessage(commonMessages.requirements)}>
         <RequirementsList items={executionDetails.requirements} />
       </CollapsibleSection>}
-      {executionDetails?.tags && <CollapsibleSection title={formatMessage(commonMessages.tags)}>
+      {executionDetails?.tags?.length && <CollapsibleSection title={formatMessage(commonMessages.tags)}>
         <AdaptiveTagList tags={executionDetails.tags} isShowAllView />
       </CollapsibleSection>}
       {executionDetails?.manualScenario && <CollapsibleSection title={formatMessage(commonMessages.scenario)}>
