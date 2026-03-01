@@ -27,7 +27,6 @@
 
   .title-name {
     font-size: 20px;
-    font-weight: 400;
   }
 }
 
@@ -40,9 +39,7 @@
 
 .meta-row {
     display: flex;
-    align-items: center;
     font-size: 13px;
-    font-weight: 400;
     line-height: 20px;
     font-family: $FONT-ROBOTO-REGULAR;
     gap: 16px;
@@ -56,12 +53,10 @@
 
 .meta-label {
   color: var(--rp-ui-base-e-400);
-  font-weight: 400;
 }
 
 .meta-value {
   color: var(--rp-ui-base-almost-black);
-  font-weight: 400;
 }
 
 .content-wrapper {
@@ -90,10 +85,6 @@
 
     .info-label {
       font-weight: 500;
-    }
-
-    .info-value {
-      font-weight: 400;
     }
   }
 }

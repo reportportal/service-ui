@@ -28,11 +28,10 @@ const cx = createClassnames(styles);
 
 interface ExecutionSidePanelProps {
   executionId: number | null;
-  isVisible: boolean;
   onClose: () => void;
 };
 
-export const ExecutionSidePanel = ({ executionId, isVisible, onClose }: ExecutionSidePanelProps) => {
+export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelProps) => {
   const { formatMessage } = useIntl();
   const { executionDetails, isLoading } = useExecutionDetails(executionId);
   const sidePanelRef = useRef<HTMLDivElement>(null);
@@ -72,25 +71,29 @@ export const ExecutionSidePanel = ({ executionId, isVisible, onClose }: Executio
 
   const contentComponent = (
     <div className={cx('content-wrapper')}>
-      <div className={cx('execution-info')}>
-        <div className={cx('info-item')}>
-          <span className={cx('info-label')}>{formatMessage(messages.linkedToBTS)}</span>
-          <IssueList issues={executionDetails.btsIssues} className={cx('bts-issues')} />
+      {(executionDetails?.btsIssues?.length || executionDetails?.executionComment || executionDetails?.attachments?.length) &&  (
+        <div className={cx('execution-info')}>
+          {executionDetails?.btsIssues?.length &&  (
+            <div className={cx('info-item')}>
+              <span className={cx('info-label')}>{formatMessage(messages.linkedToBTS)}</span>
+              <IssueList issues={executionDetails?.btsIssues} className={cx('bts-issues')} />
+            </div>
+          )}
+          {executionDetails?.executionComment && (
+            <div className={cx('info-item')}>
+              <span className={cx('info-label')}>{formatMessage(messages.executionComment)}</span>
+              <span className={cx('info-value')}>{executionDetails?.executionComment?.comment}</span>
+            </div>
+          )}
+          <Divider />
+          {executionDetails?.attachments?.length && (
+            <div className={cx('info-item')}>
+              <span className={cx('meta-label')}>{`${formatMessage(commonMessages.attachments)} ${executionDetails.attachments?.length}`}</span>
+              <AttachmentList attachments={executionDetails.attachments as Attachment[]} />
+            </div>
+          )}
         </div>
-        {executionDetails?.executionComment && (
-          <div className={cx('info-item')}>
-            <span className={cx('info-label')}>{formatMessage(messages.executionComment)}</span>
-            <span className={cx('info-value')}>{executionDetails?.executionComment?.comment}</span>
-          </div>
-        )}
-        <Divider />
-        {executionDetails?.attachments?.length && (
-          <div className={cx('info-item')}>
-            <span className={cx('meta-label')}>{`${formatMessage(commonMessages.attachments)} ${executionDetails.attachments?.length}`}</span>
-            <AttachmentList attachments={executionDetails.attachments as Attachment[]} />
-          </div>
-        )}
-      </div>
+      )}
       {executionDetails?.testCaseDescription && (
         <CollapsibleSection title={formatMessage(commonMessages.description)}>
           <ExpandedTextSection text={executionDetails.testCaseDescription} defaultVisibleLines={5} />
@@ -139,7 +142,7 @@ export const ExecutionSidePanel = ({ executionId, isVisible, onClose }: Executio
         descriptionComponent={isLoading ? <BubblesLoader /> : descriptionComponent}
         contentComponent={isLoading ? <BubblesLoader /> : contentComponent}
         footerComponent={isLoading ? <BubblesLoader /> : footerComponent}
-        isOpen={isVisible}
+        isOpen={!!executionId}
         onClose={onClose}
       />
     </div>
