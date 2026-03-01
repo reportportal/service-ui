@@ -1,10 +1,10 @@
 
 import { useRef } from 'react';
 import { useIntl } from 'react-intl';
-import { AdaptiveTagList, BubblesLoader, Button, ChevronDownDropdownIcon, DurationIcon, RerunIcon, RunManualIcon, SidePanel } from '@reportportal/ui-kit';
+import { AdaptiveTagList, BubblesLoader, Button, ChevronDownDropdownIcon, DurationIcon, IssueList, RerunIcon, RunManualIcon, SidePanel } from '@reportportal/ui-kit';
 
 import { useOnClickOutside } from 'common/hooks';
-import { createClassnames } from 'common/utils';
+import { createClassnames, formatDuration } from 'common/utils';
 import { CollapsibleSection } from 'components/collapsibleSection';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { FolderBreadcrumbs } from 'components/folderBreadcrumbs';
@@ -42,9 +42,9 @@ export const ExecutionSidePanel = ({ executionId, isVisible, onClose }: Executio
   const titleComponent = (
     <div className={cx('title-wrapper')}>
       {executionDetails?.testCasePriority && <PriorityIcon priority={executionDetails.testCasePriority} />}
-      <span className={cx('title-name')}>
-        {`${executionDetails?.testCaseId} ${executionDetails?.testCaseName}`}
-      </span>
+      {(executionDetails?.testCaseId || executionDetails?.testCaseName) && <span className={cx('title-name')}>
+        {executionDetails.testCaseId} {executionDetails.testCaseName}
+      </span>}
     </div>
   )
 
@@ -63,7 +63,7 @@ export const ExecutionSidePanel = ({ executionId, isVisible, onClose }: Executio
         {executionDetails?.duration != null && (
           <div className={cx('meta-row-item')}>
             <DurationIcon />
-            <span className={cx('meta-value')}>{executionDetails.duration}</span>
+            <span className={cx('meta-value')}>{formatDuration(executionDetails.duration)}</span>
           </div>
         )}
       </div>
@@ -75,6 +75,7 @@ export const ExecutionSidePanel = ({ executionId, isVisible, onClose }: Executio
       <div className={cx('execution-info')}>
         <div className={cx('info-item')}>
           <span className={cx('info-label')}>{formatMessage(messages.linkedToBTS)}</span>
+          <IssueList issues={executionDetails.btsIssues} className={cx('bts-issues')} />
         </div>
         {executionDetails?.executionComment && (
           <div className={cx('info-item')}>
