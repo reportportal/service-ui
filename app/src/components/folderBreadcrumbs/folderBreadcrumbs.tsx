@@ -29,7 +29,6 @@ import {
 } from 'controllers/pages';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { createClassnames } from 'common/utils';
-import { manualLaunchFoldersSelector } from 'controllers/manualLaunch';
 import { foldersSelector } from 'controllers/testCase';
 import { NavLink } from 'components/main/navLink';
 
@@ -47,6 +46,7 @@ interface FolderBreadcrumbsProps {
   instanceKey: TMS_INSTANCE_KEY;
   testPlanId?: number;
   onNavigate?: VoidFn;
+  customFoldersSelector?: (state: unknown) => Folder[];
 }
 
 const amountToShowWithoutCollapsing = 4;
@@ -73,12 +73,13 @@ export const FolderBreadcrumbs = ({
   instanceKey,
   testPlanId,
   onNavigate,
+  customFoldersSelector
 }: FolderBreadcrumbsProps) => {
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const projectSlug = useSelector(urlProjectSlugSelector);
-  const selector = instanceKey === TMS_INSTANCE_KEY.MANUAL_LAUNCH_EXECUTION ? manualLaunchFoldersSelector : foldersSelector;
-  const folders = useSelector(selector);
-
+  const folders = useSelector(
+    customFoldersSelector ?? foldersSelector
+  );
 
   const items = getPath({ folderId, folders });
 

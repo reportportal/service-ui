@@ -8,6 +8,7 @@ import { createClassnames } from 'common/utils';
 import { CollapsibleSection } from 'components/collapsibleSection';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { FolderBreadcrumbs } from 'components/folderBreadcrumbs';
+import { manualLaunchFoldersSelector } from 'controllers/manualLaunch';
 import { commonMessages } from "pages/inside/common/common-messages";
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
@@ -49,7 +50,7 @@ export const ExecutionSidePanel = ({ executionId, isVisible, onClose }: Executio
 
   const descriptionComponent = (
     <div className={cx('sidepanel-description')}>
-      <FolderBreadcrumbs folderId={executionDetails?.testFolder?.testItemId} instanceKey={TMS_INSTANCE_KEY.MANUAL_LAUNCH_EXECUTION} />
+      <FolderBreadcrumbs folderId={executionDetails?.testFolder?.testItemId} instanceKey={TMS_INSTANCE_KEY.MANUAL_LAUNCH} customFoldersSelector={manualLaunchFoldersSelector} />
       <div className={cx('meta-row')}>
         <div className={cx('meta-row-item')}>
           <span className={cx('meta-label')}>{formatMessage(messages.executionId)}:</span>
