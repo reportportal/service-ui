@@ -428,6 +428,8 @@ export const URLS = {
     `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case/batch`,
   deleteExecutionFromLaunch: (projectKey, launchId, executionId) =>
     `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case/execution/${executionId}`,
+  batchDeleteExecutionsFromLaunch: (projectKey, launchId) =>
+    `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case/execution`,
   importTestCase: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-case/import${getQueryParams(query)}`,
   tmsAttributes: (projectKey, query = {}) =>

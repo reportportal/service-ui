@@ -240,6 +240,10 @@ export const notificationMessages = defineMessages({
     id: 'ManualLaunchPage.executionDeletedSuccess',
     defaultMessage: 'Test execution has been deleted successfully.',
   },
+  executionsDeletedSuccess: {
+    id: 'ManualLaunchPage.executionsDeletedSuccess',
+    defaultMessage: 'Test executions have been deleted successfully.',
+  },
   testCaseDescriptionUpdateSuccess: {
     id: 'TestCaseLibraryPage.testCaseDescriptionUpdateSuccess',
     defaultMessage: 'Test case description has been updated successfully.',

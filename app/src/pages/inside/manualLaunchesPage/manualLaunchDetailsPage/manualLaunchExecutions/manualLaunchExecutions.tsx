@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
-import { FilterOutlineIcon, Pagination, MeatballMenuIcon, Table } from '@reportportal/ui-kit';
+import {
+  FilterOutlineIcon,
+  Pagination,
+  MeatballMenuIcon,
+  Table,
+  Selection,
+  Button,
+} from '@reportportal/ui-kit';
 
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { SearchField } from 'components/fields/searchField';
@@ -42,6 +49,7 @@ import { ManualLaunchExecutionsProps } from './types';
 import { ExecutionStatusChip } from './executionStatusChip';
 import { ITEMS_PER_PAGE_OPTIONS } from './constants';
 import { useDeleteExecutionModal } from './deleteExecutionModal';
+import { useBatchDeleteExecutionsModal } from './batchDeleteExecutionsModal';
 import { messages } from './messages';
 import styles from './manualLaunchExecutions.scss';
 
@@ -55,9 +63,12 @@ export const ManualLaunchExecutions = ({
   const { formatMessage } = useIntl();
   const { canManageTestCases } = useUserPermissions();
   const [searchValue, setSearchValue] = useState('');
+  const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
   const launchId = useManualLaunchId();
   const { organizationSlug, projectSlug } = useProjectDetails();
   const { openModal: openDeleteExecutionModal } = useDeleteExecutionModal();
+  const { openModal: openBatchDeleteExecutionsModal } = useBatchDeleteExecutionsModal();
+  const isAnyRowSelected = !isEmpty(selectedRowIds);
 
   const { activePage, pageSize, setPageNumber, setPageSize, totalPages, captions } =
     useURLBoundPagination({
@@ -98,12 +109,46 @@ export const ManualLaunchExecutions = ({
     setPageSize(size);
   };
 
+  const paginatedExecutions = searchValue.trim() ? filteredExecutions : executions;
+
   const handleDeleteExecution = (executionId: number) => {
     const execution = executions.find((exec) => exec.id === executionId);
     if (execution && launchId) {
       openDeleteExecutionModal({ execution, launchId });
     }
   };
+
+  const onClearSelection = useCallback(() => setSelectedRowIds([]), []);
+
+  const handleRowSelect = useCallback((id: number | string) => {
+    const numericId = Number(id);
+    setSelectedRowIds((prev) =>
+      prev.includes(numericId)
+        ? prev.filter((rowId) => rowId !== numericId)
+        : [...prev, numericId],
+    );
+  }, []);
+
+  const handleSelectAll = useCallback(() => {
+    const currentPageIds = paginatedExecutions.map(({ id }) => id);
+    const isAllCurrentPageSelected = currentPageIds.every((id) => selectedRowIds.includes(id));
+
+    setSelectedRowIds((prev) =>
+      isAllCurrentPageSelected
+        ? prev.filter((id) => !currentPageIds.includes(id))
+        : [...prev, ...currentPageIds.filter((id) => !prev.includes(id))],
+    );
+  }, [paginatedExecutions, selectedRowIds]);
+
+  const handleBatchDelete = useCallback(() => {
+    if (launchId) {
+      openBatchDeleteExecutionsModal({
+        selectedExecutionIds: selectedRowIds,
+        launchId,
+        onClearSelection,
+      });
+    }
+  }, [selectedRowIds, launchId, openBatchDeleteExecutionsModal, onClearSelection]);
 
   const getPopoverItems = (executionId: number): PopoverItem[] => {
     if (!canManageTestCases) {
@@ -118,8 +163,6 @@ export const ManualLaunchExecutions = ({
       },
     ];
   };
-
-  const paginatedExecutions = searchValue.trim() ? filteredExecutions : executions;
 
   const tableData = paginatedExecutions.map((execution) => {
     const stepsCount = execution.manualScenario?.steps?.length ?? null;
@@ -228,7 +271,12 @@ export const ManualLaunchExecutions = ({
 
   return (
     <>
-      <div className={cx('manual-launch-executions')}>
+      <div
+        className={cx(
+          'manual-launch-executions',
+          isAnyRowSelected ? 'manual-launch-executions--with-panel' : '',
+        )}
+      >
         <div className={cx('controls')}>
           <div className={cx('controls-title')}>{formatMessage(messages.allTestExecutions)}</div>
           <div className={cx('controls-actions')}>
@@ -270,11 +318,21 @@ export const ManualLaunchExecutions = ({
               headerClassName={cx('executions-table-header')}
               bodyClassName={cx('executions-table-body')}
               rowClassName={cx('execution-chip')}
+              selectable={canManageTestCases}
+              selectedRowIds={selectedRowIds}
+              onToggleRowSelection={handleRowSelect}
+              onToggleAllRowsSelection={handleSelectAll}
+              isSelectAllCheckboxAlwaysVisible
             />
           </div>
         )}
       </div>
-      <div className={cx('manual-launch-executions__pagination')}>
+      <div
+        className={cx(
+          'manual-launch-executions__pagination',
+          isAnyRowSelected ? 'manual-launch-executions__pagination--with-panel' : '',
+        )}
+      >
         <Pagination
           pageSize={pageSize}
           activePage={activePage}
@@ -286,6 +344,16 @@ export const ManualLaunchExecutions = ({
           captions={captions}
         />
       </div>
+      {isAnyRowSelected && canManageTestCases && (
+        <div className={cx('selection')}>
+          <Selection selectedCount={selectedRowIds.length} onClearSelection={onClearSelection} />
+          <div className={cx('selection-controls')}>
+            <Button variant="danger" onClick={handleBatchDelete}>
+              {formatMessage(COMMON_LOCALE_KEYS.DELETE)}
+            </Button>
+          </div>
+        </div>
+      )}
     </>
   );
 };
