@@ -78,6 +78,7 @@ export default defineConfig([
       'no-await-in-loop': 'error',
       'no-nested-ternary': 'error',
       'react/no-array-index-key': 'error',
+      'react/jsx-boolean-value': 'error',
       'no-plusplus': 'error',
       'global-require': 'error',
       'func-names': 'error',

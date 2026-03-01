@@ -16,11 +16,14 @@
 
 import { ReactNode } from 'react';
 import { isEmpty } from 'es-toolkit/compat';
+import { TreeDragItem, TreeDropPosition } from '@reportportal/ui-kit/common';
 
 import { createClassnames } from 'common/utils';
 import { TransformedFolder } from 'controllers/testCase';
+import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 
 import styles from './folder/folder.scss';
+import type { TestCaseFolderActionCallback } from './types';
 
 const cx = createClassnames(styles);
 
@@ -103,3 +106,12 @@ export const highlightText = (text: string, query: string): ReactNode => {
 
   return <>{nodes.nodes}</>;
 };
+
+export const createTestCaseDropHandler = (action: TestCaseFolderActionCallback | undefined) => {
+  return (draggedItem: TreeDragItem, targetId: string | number, _position: TreeDropPosition) => {
+    const item = draggedItem as TreeDragItem & { testCase?: ExtendedTestCase };
+    if (item.testCase && action) {
+      void action(item.testCase, Number(targetId));
+    }
+  };
+}

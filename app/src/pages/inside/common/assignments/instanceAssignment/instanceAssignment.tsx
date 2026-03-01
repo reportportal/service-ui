@@ -273,7 +273,7 @@ export const InstanceAssignment = ({
                   getURI={URLS.organizationSearches}
                   getRequestParams={getRequestOrganizationsParams}
                   makeOptions={makeOrganizationsOptions}
-                  createWithoutConfirmation={true}
+                  createWithoutConfirmation
                   onChange={(organizationName: string) => {
                     setSelectedOrganizationId(
                       notAssignedOrganizations.find(({ name }) => name === organizationName)?.id,
@@ -310,7 +310,7 @@ export const InstanceAssignment = ({
                   getRequestParams={getRequestOrganizationsParams}
                   makeOptions={makeProjectsOptions}
                   onChange={handleProjectChange}
-                  createWithoutConfirmation={true}
+                  createWithoutConfirmation
                   className={cx('autocomplete')}
                   disabled={!selectedOrganizationId}
                 />

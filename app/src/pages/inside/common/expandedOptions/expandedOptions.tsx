@@ -42,11 +42,12 @@ import FolderDropIcon from 'common/img/folder-drop-inline.svg';
 
 import { Folder } from './folder';
 import { messages } from './messages';
-import { ExpandedOptionsProps } from './types';
+import type { ExpandedOptionsProps } from './types';
 import { useFolderSearch } from './useFolderSearch';
-import { FOLDER_DRAG_TYPE } from './constants';
+import { FOLDER_DRAG_TYPE, EXTERNAL_TREE_DROP_TYPE } from './constants';
 
 import styles from './expandedOptions.scss';
+import { createTestCaseDropHandler } from './utils';
 
 const cx = createClassnames(styles);
 
@@ -60,6 +61,8 @@ export const ExpandedOptions = ({
   onFolderClick,
   onMoveFolder,
   onDuplicateFolder,
+  onMoveTestCase,
+  onDuplicateTestCase,
 }: ExpandedOptionsProps) => {
   const { formatMessage } = useIntl();
   const { expandedIds, onToggleFolder } = useStorageFolders(instanceKey);
@@ -79,7 +82,7 @@ export const ExpandedOptions = ({
 
   const [{ isDraggingAny, isOverFoldersZone }, dropZoneRef] = useDrop(
     () => ({
-      accept: FOLDER_DRAG_TYPE,
+      accept: [FOLDER_DRAG_TYPE, EXTERNAL_TREE_DROP_TYPE],
       collect: (monitor) => ({
         isDraggingAny: isDragAndDropEnabled ? monitor.canDrop() : false,
         isOverFoldersZone: monitor.isOver(),
@@ -131,6 +134,20 @@ export const ExpandedOptions = ({
       onDuplicateFolder?.(draggedItem, targetId, position);
     },
     [onDuplicateFolder],
+  );
+
+  const handleMoveExternal = useCallback(
+    (draggedItem: TreeDragItem, targetId: string | number, position: TreeDropPosition) => {
+      createTestCaseDropHandler(onMoveTestCase)(draggedItem, targetId, position);
+    },
+    [onMoveTestCase],
+  );
+
+  const handleDuplicateExternal = useCallback(
+    (draggedItem: TreeDragItem, targetId: string | number, position: TreeDropPosition) => {
+      createTestCaseDropHandler(onDuplicateTestCase)(draggedItem, targetId, position);
+    },
+    [onDuplicateTestCase],
   );
 
   const renderContent = () => (
@@ -265,12 +282,14 @@ export const ExpandedOptions = ({
     <TreeSortableContainer
       showDropConfirmation
       confirmationLabels={{
-        move: formatMessage(COMMON_LOCALE_KEYS.MOVE),
-        duplicate: formatMessage({ id: 'expandedOptions.duplicate', defaultMessage: 'Duplicate' }),
-        cancel: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      move: formatMessage(COMMON_LOCALE_KEYS.MOVE),
+      duplicate: formatMessage({ id: 'expandedOptions.duplicate', defaultMessage: 'Duplicate' }),
+      cancel: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
       }}
       onMove={handleMoveFolder}
       onDuplicate={handleDuplicateFolder}
+      onMoveExternal={handleMoveExternal}
+      onDuplicateExternal={handleDuplicateExternal}
     >
       {renderContent()}
     </TreeSortableContainer>

@@ -18,7 +18,8 @@ import { memo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
-import { BubblesLoader, Table } from '@reportportal/ui-kit';
+import { BubblesLoader, Table, DragNDropIcon } from '@reportportal/ui-kit';
+import { DragLayer } from '@reportportal/ui-kit/sortable';
 
 import { createClassnames } from 'common/utils';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
@@ -36,7 +37,8 @@ import { EmptyPageState } from 'pages/common';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 
-import { TestCaseNameCell } from './testCaseNameCell';
+import { EXTERNAL_TREE_DROP_TYPE } from 'pages/inside/common/expandedOptions/constants';
+import { DraggableTestCaseNameCell } from './draggableTestCaseNameCell';
 import { TestCaseExecutionCell } from './testCaseExecutionCell';
 import { TestCaseSidePanel } from './testCaseSidePanel';
 import { messages } from './messages';
@@ -104,11 +106,11 @@ export const TestCaseList = memo(
       const newSelectedRows = isAllCurrentPageSelected
         ? selectedRows.filter((row) => !currentPageTestCaseIds.includes(row.id))
         : [
-            ...selectedRows,
-            ...testCases
-              .filter((testCase) => !selectedRowIds.includes(testCase.id))
-              .map((testCase) => ({ id: testCase.id, folderId: testCase.testFolder.id })),
-          ];
+          ...selectedRows,
+          ...testCases
+            .filter((testCase) => !selectedRowIds.includes(testCase.id))
+            .map((testCase) => ({ id: testCase.id, folderId: testCase.testFolder.id })),
+        ];
 
       handleSelectedRows(newSelectedRows);
     };
@@ -125,7 +127,8 @@ export const TestCaseList = memo(
             className={cx('cell-wrapper', { selected: testCase.id === selectedTestCaseId })}
             onClick={() => setSelectedTestCaseId(testCase.id)}
           >
-            <TestCaseNameCell
+            <DraggableTestCaseNameCell
+              testCase={testCase}
               priority={testCase.priority?.toLowerCase() as TestCasePriority}
               name={testCase.name}
               tags={testCase?.attributes?.map(({ key }) => key)}
@@ -191,19 +194,39 @@ export const TestCaseList = memo(
                 </div>
               </div>
             ) : (
-              <Table
-                selectable={selectable && canManageTestCases}
-                onToggleRowSelection={handleRowSelect}
-                selectedRowIds={selectedRowIds}
-                data={tableData}
-                fixedColumns={fixedColumns}
-                primaryColumn={primaryColumn}
-                sortableColumns={[]}
-                onToggleAllRowsSelection={handleSelectAll}
-                className={cx('test-case-table')}
-                rowClassName={cx('test-case-table-row')}
-                isSelectAllCheckboxAlwaysVisible
-              />
+              <>
+                <DragLayer
+                  type={EXTERNAL_TREE_DROP_TYPE}
+                  previewClassName={cx('test-case-drag-preview')}
+                  renderPreview={(item: { id: number | string; testCase?: ExtendedTestCase }) => {
+                    const draggedTestCase =
+                      item.testCase ?? testCases.find((testCase) => testCase.id === item.id);
+                    return (
+                      <>
+                        <span className={cx('test-case-drag-preview__text')}>
+                          {draggedTestCase?.name}
+                        </span>
+                        <span className={cx('test-case-drag-preview__icon')}>
+                          <DragNDropIcon />
+                        </span>
+                      </>
+                    );
+                  }}
+                />
+                <Table
+                  selectable={selectable && canManageTestCases}
+                  onToggleRowSelection={handleRowSelect}
+                  selectedRowIds={selectedRowIds}
+                  data={tableData}
+                  fixedColumns={fixedColumns}
+                  primaryColumn={primaryColumn}
+                  sortableColumns={[]}
+                  onToggleAllRowsSelection={handleSelectAll}
+                  className={cx('test-case-table')}
+                  rowClassName={`${cx('test-case-table-row')} test-case-table-row-global`}
+                  isSelectAllCheckboxAlwaysVisible
+                />
+              </>
             )}
             {isTestLibraryRoute && (
               <TestCaseSidePanel
