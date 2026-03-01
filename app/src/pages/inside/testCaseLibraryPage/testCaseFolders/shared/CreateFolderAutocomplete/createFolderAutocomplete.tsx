@@ -99,7 +99,17 @@ export const CreateFolderAutocomplete = ({
   }, [inputValue, filteredFolders, shouldDisplayNewFolderButton]);
 
   const getTargetFolder = () => {
-    if (!value) {
+    if (!value) return null;
+
+    if (typeof value !== 'object') {
+
+      if (typeof value === 'number') {
+        return findFolderById(filteredFolders, value);
+      }
+
+      if (isString(value)) {
+        return value;
+      }
       return null;
     }
 
