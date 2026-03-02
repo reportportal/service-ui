@@ -22,12 +22,14 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { projectKeySelector } from 'controllers/project';
 import { createFoldersBatchSuccessAction } from 'controllers/testCase/actionCreators';
+import { foldersSelector } from 'controllers/testCase';
 import { Folder } from 'controllers/testCase/types';
 import { fetchAllFolders } from 'controllers/testCase/utils/fetchAllFolders';
 
 import { useFolderActions } from '../../../hooks/useFolderActions';
 import { useNavigateToFolder } from '../../../hooks/useNavigateToFolder';
 import { useFolderOperationUI } from '../../../hooks/useFolderOperationUI';
+import { getFolderNames } from '../../../utils/getFolderNames';
 import type { MoveFolderResponse } from '../moveFolderModal/types';
 
 export const useDuplicateFolder = () => {
@@ -40,6 +42,7 @@ export const useDuplicateFolder = () => {
   } = useFolderOperationUI();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+  const allFolders = useSelector(foldersSelector);
   const { createNewStoreFolder } = useFolderActions();
   const { navigateToFolderAfterAction } = useNavigateToFolder();
 
@@ -120,9 +123,19 @@ export const useDuplicateFolder = () => {
         index: duplicatedFolder.index,
       });
 
+      const { folderName: originalFolderName, targetFolderName } = getFolderNames(
+        allFolders,
+        folderId,
+        duplicatedFolder.parentFolderId,
+      );
+
       handleOperationSuccess({
         fromDragDrop: isDragDropOperation,
         successMessageId: 'testCaseFolderDuplicatedSuccess',
+        messageValues: {
+          folderName: originalFolderName,
+          targetFolderName,
+        },
       });
 
       try {
@@ -155,6 +168,7 @@ export const useDuplicateFolder = () => {
       createNewStoreFolder,
       navigateToFolderAfterAction,
       showErrorNotification,
+      allFolders,
     ],
   );
 

@@ -57,7 +57,7 @@
     position: absolute;
     top: 0px;
     left: 2px;
-    right: 14px;
+    right: 10px;
     bottom: 6px;
     border: 2px dashed $border-color;
     border-radius: 4px;
@@ -176,7 +176,7 @@
 
   &__sidebar-folders {
     position: relative;
-    padding: 0 24px 20px;
+    padding: 0 16px 20px 24px;
     margin: 0;
 
     &--dragging {
@@ -195,11 +195,13 @@
 
   &__drop-placeholder {
     position: absolute;
-    top: 0px;
+    top: 0;
     left: 2px;
-    right: 14px;
-    bottom: 6px;
-    @include flex-center(row, center, center);
+    right: 10px;
+    bottom: 0;
+    height: auto;
+    min-height: 100%;
+    @include flex-center(column, center, center);
 
     background-color: var(--rp-ui-base-bg-200);
     opacity: 0.9;
@@ -215,8 +217,12 @@
 
   &__drop-placeholder-content {
     @include flex-center(column, center, center);
-
     gap: 16px;
+    position: fixed;
+    top: 50%;
+    left: 218px;
+    transform: translate(-50%, -50%);
+    z-index: 11;
   }
 
   &__drop-placeholder-icon {
@@ -232,21 +238,10 @@
 
   &__sidebar-folders-wrapper {
     height: calc(100% - 112px);
+    position: relative;
 
     &--with-search {
       height: calc(100% - 160px);
-    }
-
-    &::after {
-      position: absolute;
-      content: '';
-      left: 0;
-      bottom: 0;
-      height: 30px;
-      width: 352px;
-      opacity: 0.8;
-      pointer-events: none;
-      background: linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
     }
   }
 
@@ -319,29 +314,20 @@
 }
 
 .folder-drag-preview {
-  @include flex-center(row, space-between, center);
+  @include flex-center(row, flex-start, center);
 
   width: 320px;
   height: 44px;
   padding: 0 16px;
-  gap: 4px;
-  background-color: var(--rp-ui-base-bg-100);
-  border: 1px solid var(--rp-ui-base-e-200);
+  gap: 16px;
+  background-color: rgba(255, 255, 255, 0.93);
+  border: none;
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  opacity: 0.93;
   cursor: grabbing;
 
   span {
     @include text-style(13px);
     @include text-ellipsis;
-  }
-
-  svg {
-    @include svg-icon(16px, 0);
-  }
-
-  svg path {
-    fill: var(--rp-ui-base-e-300);
   }
 }

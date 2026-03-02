@@ -218,7 +218,8 @@ export const notificationMessages = defineMessages({
   },
   testCaseFolderDuplicatedSuccess: {
     id: 'TestCaseLibraryPage.testCaseFolderDuplicatedSuccess',
-    defaultMessage: 'Folder has been duplicated successfully.',
+    defaultMessage:
+      "Folder ''{folderName}'' has been successfully duplicated to {targetFolderName}.",
   },
   testCasesDuplicatedSuccess: {
     id: 'TestCaseLibraryPage.testCasesDuplicatedSuccess',
@@ -274,7 +275,7 @@ export const notificationMessages = defineMessages({
   },
   testCaseFolderMovedSuccess: {
     id: 'TestCaseLibraryPage.testCaseFolderMovedSuccess',
-    defaultMessage: 'Folder has been moved successfully.',
+    defaultMessage: "Folder ''{folderName}'' has been successfully moved to {targetFolderName}.",
   },
   testCaseFolderMoveFailed: {
     id: 'TestCaseLibraryPage.testCaseFolderMoveFailed',
