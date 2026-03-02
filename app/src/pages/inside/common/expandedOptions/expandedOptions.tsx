@@ -22,7 +22,6 @@ import {
   BaseIconButton,
   SearchIcon,
   FieldText,
-  DragNDropIcon,
   useTreeDropValidation,
 } from '@reportportal/ui-kit';
 import { TreeSortableContainer, DragLayer } from '@reportportal/ui-kit/sortable';

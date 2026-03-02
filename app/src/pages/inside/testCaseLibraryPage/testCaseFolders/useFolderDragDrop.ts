@@ -61,11 +61,7 @@ export const useFolderDragDrop = ({ folders, onMove, onDuplicate }: UseFolderDra
       const parentFolderId = getParentFolderId(targetFolder, position);
       const index = calculateDropIndex(targetFolder, position, folders, draggedFolderId, true);
 
-      const siblingsInTargetParent = getTargetParentSiblings(
-        folders,
-        parentFolderId,
-        draggedFolderId,
-      );
+      const siblingsInTargetParent = getTargetParentSiblings(folders, parentFolderId);
 
       const uniqueName = generateUniqueFolderName(draggedFolderData.name, siblingsInTargetParent);
 

@@ -18,15 +18,17 @@
  * Get sibling folders in the target parent, excluding the dragged folder
  * @param allFolders - Array of all folders
  * @param targetParentId - ID of the target parent folder
- * @param excludeFolderId - ID of the folder to exclude (usually the dragged folder)
+ * @param excludeFolderId - ID of the folder to exclude (optional, usually the dragged folder for move operations)
  * @returns Array of sibling folders
  */
 export const getTargetParentSiblings = <T extends { id: number; parentFolderId: number | null }>(
   allFolders: T[],
   targetParentId: number | null,
-  excludeFolderId: number,
+  excludeFolderId?: number,
 ): T[] => {
-  return allFolders.filter((f) => f.parentFolderId === targetParentId && f.id !== excludeFolderId);
+  return allFolders.filter(
+    (f) => f.parentFolderId === targetParentId && (excludeFolderId == null || f.id !== excludeFolderId),
+  );
 };
 
 /**

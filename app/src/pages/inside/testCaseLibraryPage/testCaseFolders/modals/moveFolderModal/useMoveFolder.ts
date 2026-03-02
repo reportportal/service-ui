@@ -99,13 +99,15 @@ export const useMoveFolder = () => {
           folderId,
           movedFolderParentId,
         );
+        const resolvedTargetFolderName =
+          isNewFolder && newFolderDetails ? newFolderDetails.name : targetFolderName;
 
         handleOperationSuccess({
           fromDragDrop: isDragDropOperation,
           successMessageId: 'testCaseFolderMovedSuccess',
           messageValues: {
             folderName,
-            targetFolderName,
+            targetFolderName: resolvedTargetFolderName,
           },
         });
 
