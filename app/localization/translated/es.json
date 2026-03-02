@@ -1123,7 +1123,7 @@
   "InstanceSidebar.allUsers": "Todos los usuarios",
   "InstanceSidebar.organizations": "Organizations",
   "InstanceSidebar.plugins": "Plugins",
-  "InstanceSidebar.settings": "Settings",
+  "InstanceSidebar.settings": "Configuración del servidor",
   "InstancesSection.addIntegrationButtonTitle": "Agregar integración",
   "InstancesSection.addIntegrationSuccess": "Integración añadida exitosamente",
   "InstancesSection.allGlobalIntegrations": "Todas las integraciones globales",

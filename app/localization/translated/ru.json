@@ -1122,7 +1122,7 @@
   "InstanceSidebar.allUsers": "Все пользователи",
   "InstanceSidebar.organizations": "Организации",
   "InstanceSidebar.plugins": "Плагины",
-  "InstanceSidebar.settings": "Настройки",
+  "InstanceSidebar.settings": "Настройки сервера",
   "InstancesSection.addIntegrationButtonTitle": "Добавить интеграцию",
   "InstancesSection.addIntegrationSuccess": "Интеграция успешно добавлена",
   "InstancesSection.allGlobalIntegrations": "Все глобальные интеграции",
