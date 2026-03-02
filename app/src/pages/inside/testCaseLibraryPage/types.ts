@@ -190,7 +190,7 @@ export interface TagPopoverProps {
   trigger: ReactNode;
   onTagSelect: (tag: Tag | Attribute) => void;
   selectedTags?: (Tag | Attribute)[];
-  placement?: 'top' | 'bottom' | 'left' | 'right';
+  placement?: 'top' | 'bottom' | 'left' | 'right' | 'bottom-end';
   className?: string;
 }
 

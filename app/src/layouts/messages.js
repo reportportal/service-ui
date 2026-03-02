@@ -83,7 +83,7 @@ export const messages = defineMessages({
   },
   settings: {
     id: 'InstanceSidebar.settings',
-    defaultMessage: 'Settings',
+    defaultMessage: 'Server Settings',
   },
   plugins: {
     id: 'InstanceSidebar.plugins',
