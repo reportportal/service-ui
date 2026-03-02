@@ -397,6 +397,10 @@ export const notificationMessages = defineMessages({
     id: 'LogTypeModal.delete.deleteLogTypeError',
     defaultMessage: 'Failed to delete the log type. Please try again',
   },
+  updateTestCasesTagsSuccess: {
+    id: 'TestCasesTags.update.deleteTagsSuccess',
+    defaultMessage: 'Tags for selected test cases have been updated successfully!',
+  },
 });
 
 @injectIntl

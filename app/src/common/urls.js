@@ -214,6 +214,8 @@ export const URLS = {
   notificationById: (projectKey, notificationId) =>
     `${urlBase}${projectKey}/settings/notification/${notificationId}`,
 
+  testCasesTags: (projectKey) => `${urlBase}project/${projectKey}/tms/test-case/attribute`,
+  testCasesTagsBatch: (projectKey) => `${urlBase}project/${projectKey}/tms/test-case/attributes/batch`,
   testItems: (projectKey, ids) =>
     removeTrailingSlash(`${urlBase}${projectKey}/item${getQueryParams({ ids })}`),
   testItemsWithProviderType: (projectKey, ids) =>
