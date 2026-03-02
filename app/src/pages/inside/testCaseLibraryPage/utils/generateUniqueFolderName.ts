@@ -39,7 +39,7 @@ export const generateUniqueFolderName = (
   baseName: string,
   existingFolders: Array<{ name: string }>,
 ): string => {
-  const baseNamePattern = baseName.replace(/\s*\(\d+\)$/, '');
+  const baseNamePattern = baseName.replace(/ \(\d+\)$/, '');
   let counter = 1;
   let newName = `${baseNamePattern} (${counter})`;
 
