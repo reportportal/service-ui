@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,14 @@ export const messages = defineMessages({
     id: 'Assignment.unassignProjectSelfDescription',
     defaultMessage:
       'Are you sure you want to unassign yourself from the project <b>{project}</b>? Assignment to the organization will remain unchanged.',
+  },
+  changeToCanView: {
+    id: 'Assignment.changeToCanView',
+    defaultMessage: 'Change to Can View',
+  },
+  changeToCanEdit: {
+    id: 'Assignment.changeToCanEdit',
+    defaultMessage: 'Change to Can Edit',
   },
   manageAssignments: {
     id: 'Assignment.manageAssignments',
