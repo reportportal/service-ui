@@ -24,6 +24,7 @@ import {
   Modal,
   PlusIcon,
 } from '@reportportal/ui-kit';
+import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { UseModalData } from 'common/hooks';
 import { createClassnames } from 'common/utils';
@@ -145,7 +146,7 @@ const BatchEditTagsModal = reduxForm<
     okButtonText: formatMessage(COMMON_LOCALE_KEYS.SAVE),
     isLoading,
     isSubmitButtonDisabled: pristine,
-    onSubmit: handleSubmit(onSubmit) as () => void,
+    onSubmit: handleSubmit(onSubmit) as VoidFn,
   });
 
   const tagAddButton = (

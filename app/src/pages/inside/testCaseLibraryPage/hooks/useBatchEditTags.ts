@@ -16,6 +16,7 @@
 
 import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
@@ -38,12 +39,12 @@ interface PostBatchEditTagsParams {
   attributeKeysToAdd: string[];
 }
 interface UseBatchEditTagsParams {
-  onSuccess: () => void;
+  onSuccess: VoidFn;
 }
 
 export const useBatchEditTags = ({ onSuccess }: UseBatchEditTagsParams) => {
-  const [isLoadingTags, setIsLoadingTags] = useState<boolean>(false);
-  const [isLoadingTagsUpdating, setIsLoadingTagsUpdating] = useState<boolean>(false);
+  const [isLoadingTags, setIsLoadingTags] = useState(false);
+  const [isLoadingTagsUpdating, setIsLoadingTagsUpdating] = useState(false);
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const refetchCurrentTestCases = useRefetchCurrentTestCases();
