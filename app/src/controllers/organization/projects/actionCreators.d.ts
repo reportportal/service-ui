@@ -15,7 +15,7 @@
  */
 
 export interface ChangeProjectRolePayload {
-  user: { id: number; fullName: string; userId?: string };
+  user: { id: number; fullName: string; userId: string };
   projectKey: string;
   newProjectRole: string;
   onSuccess?: () => void;

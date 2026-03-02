@@ -203,9 +203,9 @@ function* unassignFromProject({ payload = {} }) {
 
 function* changeProjectRole({ payload = {} }) {
   const { user, projectKey, newProjectRole, onSuccess } = payload;
-  const login = user.userId;
+  const login = user?.userId;
 
-  if (!login) {
+  if (!login || !projectKey || !newProjectRole) {
     yield put(showErrorNotification({ messageId: 'changeProjectRoleError' }));
     return;
   }
@@ -224,7 +224,7 @@ function* changeProjectRole({ payload = {} }) {
     );
 
     onSuccess?.();
-  } catch (_err) {
+  } catch {
     yield put(showErrorNotification({ messageId: 'changeProjectRoleError' }));
   }
 }
