@@ -1122,7 +1122,7 @@
   "InstanceSidebar.allUsers": "所有用户",
   "InstanceSidebar.organizations": "Organizations",
   "InstanceSidebar.plugins": "插件",
-  "InstanceSidebar.settings": "Settings",
+  "InstanceSidebar.settings": "服务器设置",
   "InstancesSection.addIntegrationButtonTitle": "添加集成",
   "InstancesSection.addIntegrationSuccess": "已成功添加集成",
   "InstancesSection.allGlobalIntegrations": "所有全局{pluginName}集成",
