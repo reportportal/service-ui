@@ -176,7 +176,7 @@ const BatchEditTagsModal = reduxForm<
             messages.batchEditTagsModalDescription,
             {
               count,
-              b: (text) => <b>{text}</b>,
+              b: (text) => <span className={cx('batch-edit-tags-modal__test-cases-count')}>{text}</span>,
             },
           )}
         </p>
