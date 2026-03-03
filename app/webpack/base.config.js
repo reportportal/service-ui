@@ -178,6 +178,10 @@ module.exports = {
           singleton: true,
           requiredVersion: pjson.dependencies['react-copy-to-clipboard'],
         },
+        '@reportportal/ui-kit': {
+          singleton: true,
+          requiredVersion: pjson.dependencies['@reportportal/ui-kit'],
+        },
       },
     }),
   ],
