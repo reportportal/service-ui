@@ -37,4 +37,5 @@ export {
   FETCH_FILTERED_PROJECTS,
   UNASSIGN_FROM_PROJECT,
 } from './constants';
+export type { ChangeProjectRolePayload } from './actionCreators';
 export type { ProjectsSearchesItem, ProjectsSearchesResponseData } from './types';

@@ -50,7 +50,7 @@ const cx = createClassnames(styles);
 interface User {
   id: number;
   fullName: string;
-  userId?: string;
+  userId: string;
   projectRole?: string;
   organizationRole?: string;
 }
