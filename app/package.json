@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "license": "Apache-2.0",
   "scripts": {
+    "postinstall": "patch-package",
     "prepare": "node scripts/setup-husky.js",
     "eslint": "eslint \"./**/*.jsx\" \"./**/*.js\"",
     "stylelint": "stylelint \"./**/*.scss\"",
@@ -141,6 +142,7 @@
     "lint-staged": "^16.2.7",
     "madge": "^8.0.0",
     "mini-css-extract-plugin": "^2.9.4",
+    "patch-package": "^8.0.1",
     "postcss": "^8.5.6",
     "postcss-loader": "^8.2.0",
     "prettier": "^3.7.4",
