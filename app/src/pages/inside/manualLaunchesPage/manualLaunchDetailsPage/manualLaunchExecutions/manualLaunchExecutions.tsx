@@ -49,7 +49,6 @@ import { ManualLaunchExecutionsProps } from './types';
 import { ExecutionStatusChip } from './executionStatusChip';
 import { ITEMS_PER_PAGE_OPTIONS } from './constants';
 import { useDeleteExecutionModal } from './deleteExecutionModal';
-import { useBatchDeleteExecutionsModal } from './batchDeleteExecutionsModal';
 import { messages } from './messages';
 import styles from './manualLaunchExecutions.scss';
 
@@ -67,7 +66,6 @@ export const ManualLaunchExecutions = ({
   const launchId = useManualLaunchId();
   const { organizationSlug, projectSlug } = useProjectDetails();
   const { openModal: openDeleteExecutionModal } = useDeleteExecutionModal();
-  const { openModal: openBatchDeleteExecutionsModal } = useBatchDeleteExecutionsModal();
   const isAnyRowSelected = !isEmpty(selectedRowIds);
 
   const { activePage, pageSize, setPageNumber, setPageSize, totalPages, captions } =
@@ -114,7 +112,7 @@ export const ManualLaunchExecutions = ({
   const handleDeleteExecution = (executionId: number) => {
     const execution = executions.find((exec) => exec.id === executionId);
     if (execution && launchId) {
-      openDeleteExecutionModal({ execution, launchId });
+      openDeleteExecutionModal({ type: 'single', execution, launchId });
     }
   };
 
@@ -142,13 +140,14 @@ export const ManualLaunchExecutions = ({
 
   const handleBatchDelete = useCallback(() => {
     if (launchId) {
-      openBatchDeleteExecutionsModal({
-        selectedExecutionIds: selectedRowIds,
+      openDeleteExecutionModal({
+        type: 'batch',
+        executionIds: selectedRowIds,
         launchId,
         onClearSelection,
       });
     }
-  }, [selectedRowIds, launchId, openBatchDeleteExecutionsModal, onClearSelection]);
+  }, [selectedRowIds, launchId, openDeleteExecutionModal, onClearSelection]);
 
   const getPopoverItems = (executionId: number): PopoverItem[] => {
     if (!canManageTestCases) {
