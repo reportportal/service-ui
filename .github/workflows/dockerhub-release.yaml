@@ -12,8 +12,8 @@ jobs:
     uses: reportportal/.github/.github/workflows/dockerhub-release.yaml@main
     secrets:
       AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
-      REGESTRY_USERNAME: ${{ secrets.REGESTRY_USERNAME }}
-      REGESTRY_PASSWORD: ${{ secrets.REGESTRY_PASSWORD }}
+      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
     with:
       aws-region: ${{ vars.AWS_REGION }}
       ecr-repository: ${{ vars.ECR_REPOSITORY || 'service-ui' }}
