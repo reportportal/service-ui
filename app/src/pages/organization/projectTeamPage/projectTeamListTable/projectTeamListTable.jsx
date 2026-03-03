@@ -99,6 +99,9 @@ const ProjectTeamListTableWrapped = ({
             metaData: {
               id,
               fullName,
+              projectRole,
+              organizationRole,
+              userId,
             },
           };
         },

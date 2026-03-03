@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,6 +50,14 @@ export const notificationMessages = defineMessages({
   unassignProjectError: {
     id: 'Assignment.unassignProjectError',
     defaultMessage: 'An error occurred during unassigning from the project',
+  },
+  changeProjectRoleSuccess: {
+    id: 'Assignment.changeProjectRoleSuccess',
+    defaultMessage: 'User {name} role has been changed successfully',
+  },
+  changeProjectRoleError: {
+    id: 'Assignment.changeProjectRoleError',
+    defaultMessage: 'An error occurred during changing the user role',
   },
   unassignOrganizationError: {
     id: 'Assignment.unassignOrganizationError',

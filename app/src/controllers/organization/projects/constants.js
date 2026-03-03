@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ export const CREATE_PROJECT = 'createProject';
 export const DELETE_PROJECT = 'deleteProject';
 export const RENAME_PROJECT = 'renameProject';
 export const UNASSIGN_FROM_PROJECT = 'unassignFromProject';
+export const CHANGE_PROJECT_ROLE = 'changeProjectRole';
 export const DEFAULT_LIMITATION = 20;
 export const DEFAULT_OFFSET = 0;
 export const DEFAULT_SORT_COLUMN = 'name';

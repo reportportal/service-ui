@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import {
   FETCH_FILTERED_PROJECTS,
   RENAME_PROJECT,
   UNASSIGN_FROM_PROJECT,
+  CHANGE_PROJECT_ROLE,
 } from './constants';
 
 export const fetchOrganizationProjectsAction = (params) => {
@@ -52,4 +53,9 @@ export const fetchFilteredProjectAction = () => ({
 export const unassignFromProjectAction = (user, project, onSuccess) => ({
   type: UNASSIGN_FROM_PROJECT,
   payload: { user, project, onSuccess },
+});
+
+export const changeProjectRoleAction = (user, projectKey, newProjectRole, onSuccess) => ({
+  type: CHANGE_PROJECT_ROLE,
+  payload: { user, projectKey, newProjectRole, onSuccess },
 });
