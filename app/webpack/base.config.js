@@ -122,6 +122,10 @@ module.exports = {
           singleton: true,
           requiredVersion: pjson.dependencies['react-dom'],
         },
+        '@reportportal/ui-kit': {
+          singleton: true,
+          requiredVersion: pjson.dependencies['@reportportal/ui-kit'],
+        },
         'react-redux': {
           singleton: true,
           requiredVersion: pjson.dependencies['react-redux'],
