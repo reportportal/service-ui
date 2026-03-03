@@ -18,10 +18,39 @@
   width: 480px;
   padding: 32px 40px;
   border-radius: 16px;
-}
 
-.edit-launch-form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  &__wrapper {
+    position: relative;
+    width: 100%;
+    max-height: 55vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+      border-radius: 100px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--rp-ui-base-e-300);
+      border-radius: 100px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: var(--rp-ui-base-e-400);
+    }
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--rp-ui-base-e-300) transparent;
+  }
+
+  &__form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
 }

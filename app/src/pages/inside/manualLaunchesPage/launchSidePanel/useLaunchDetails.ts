@@ -80,7 +80,8 @@ export const useLaunchDetails = (launchId: number | null) => {
     return () => {
       abortController.abort();
     };
-  }, [projectKey, launchId, dispatch, refetchTrigger, hideSpinner, showSpinner]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectKey, launchId, dispatch, refetchTrigger]);
 
   return {
     launchDetails,
