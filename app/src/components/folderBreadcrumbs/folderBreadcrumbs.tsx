@@ -44,6 +44,7 @@ interface FolderBreadcrumbsProps {
   folderId: number | null | undefined;
   instanceKey: TMS_INSTANCE_KEY;
   testPlanId?: number;
+  customFoldersSelector?: (state: unknown) => Folder[];
 }
 
 interface BreadcrumbButtonLinkProps {
@@ -74,11 +75,14 @@ export const FolderBreadcrumbs = ({
   folderId,
   instanceKey,
   testPlanId,
+  customFoldersSelector
 }: FolderBreadcrumbsProps) => {
   const dispatch = useDispatch();
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const projectSlug = useSelector(urlProjectSlugSelector);
-  const folders = useSelector(foldersSelector);
+  const folders = useSelector(
+    customFoldersSelector ?? foldersSelector
+  );
 
   const items = getPath({ folderId, folders });
 
