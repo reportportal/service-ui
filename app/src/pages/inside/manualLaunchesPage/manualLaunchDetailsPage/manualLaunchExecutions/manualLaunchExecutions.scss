@@ -146,8 +146,6 @@ $sidebar-width: calc(100vw - 408px);
 }
 
 .executions-table-wrapper {
-  margin-top: 16px;
-
   &--empty {
     padding-top: 116px;
   }
@@ -214,7 +212,7 @@ $sidebar-width: calc(100vw - 408px);
     font-weight: var(--rp-ui-base-fw-regular);
     font-size: 13px;
     line-height: 20px;
-    color: var(--rp-ui-base-almost-black);
+    color: var(--rp-ui-base-e-400);
   }
 }
 
