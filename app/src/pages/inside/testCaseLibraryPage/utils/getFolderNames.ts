@@ -16,20 +16,13 @@
 
 import { Folder } from 'controllers/testCase/types';
 
-/**
- * Get folder names for notification messages
- * @param allFolders - Array of all folders
- * @param folderId - ID of the folder being operated on
- * @param targetParentId - ID of the target parent folder (null for root folder)
- * @returns Object with folderName and targetFolderName (without quotes or i18n keys)
- */
 export const getFolderNames = (
   allFolders: Folder[],
   folderId: number,
   targetParentId: number | null,
 ): { folderName: string; targetFolderName: string | null } => {
-  const folder = allFolders.find((f) => f.id === folderId);
-  const targetFolder = targetParentId ? allFolders.find((f) => f.id === targetParentId) : null;
+  const folder = allFolders.find((folder) => folder.id === folderId);
+  const targetFolder = targetParentId ? allFolders.find((folder) => folder.id === targetParentId) : null;
 
   return {
     folderName: folder?.name || '',

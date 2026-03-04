@@ -14,29 +14,16 @@
  * limitations under the License.
  */
 
-/**
- * Get sibling folders in the target parent, excluding the dragged folder
- * @param allFolders - Array of all folders
- * @param targetParentId - ID of the target parent folder
- * @param excludeFolderId - ID of the folder to exclude (optional, usually the dragged folder for move operations)
- * @returns Array of sibling folders
- */
-export const getTargetParentSiblings = <T extends { id: number; parentFolderId: number | null }>(
+export const getSiblingFoldersInParent = <T extends { id: number; parentFolderId: number | null }>(
   allFolders: T[],
-  targetParentId: number | null,
+  targetParentFolderId: number | null,
   excludeFolderId?: number,
 ): T[] => {
   return allFolders.filter(
-    (f) => f.parentFolderId === targetParentId && (excludeFolderId == null || f.id !== excludeFolderId),
+    (folder) => folder.parentFolderId === targetParentFolderId && (excludeFolderId == null || folder.id !== excludeFolderId),
   );
 };
 
-/**
- * Generate a unique folder name by adding (1), (2), etc. suffix
- * @param baseName - The base name of the folder
- * @param existingFolders - Array of existing folders to check for name conflicts
- * @returns A unique folder name with (number) suffix
- */
 export const generateUniqueFolderName = (
   baseName: string,
   existingFolders: Array<{ name: string }>,
