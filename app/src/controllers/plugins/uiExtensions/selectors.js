@@ -159,4 +159,3 @@ export const disablePluginPopupContentSelector = (state, pluginName) => {
   const manifest = extensionManifestSelector(state, pluginName);
   return manifest?.[MANIFEST_OVERRIDES_KEY]?.[MANIFEST_OVERRIDE_DISABLE_POPUP_CONTENT_KEY] || null;
 };
-

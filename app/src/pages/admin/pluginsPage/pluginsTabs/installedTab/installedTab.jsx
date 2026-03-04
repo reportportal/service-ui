@@ -174,11 +174,14 @@ export class InstalledTab extends Component {
     const manifestLookupName = pluginId || pluginName;
 
     const customMessageData = disablePluginPopupContent(manifestLookupName);
-    const customMessage = typeof customMessageData === 'object'
-      ? (customMessageData?.[locale] || customMessageData?.en)
-      : customMessageData;
+    const customMessage =
+      typeof customMessageData === 'object'
+        ? customMessageData?.[locale] || customMessageData?.en
+        : customMessageData;
 
-    const message = customMessage || formatMessage(messages.disablePluginMessage, { pluginName: displayName, pluginLocation });
+    const message =
+      customMessage ||
+      formatMessage(messages.disablePluginMessage, { pluginName: displayName, pluginLocation });
 
     this.props.showModalAction({
       id: 'confirmationModal',
