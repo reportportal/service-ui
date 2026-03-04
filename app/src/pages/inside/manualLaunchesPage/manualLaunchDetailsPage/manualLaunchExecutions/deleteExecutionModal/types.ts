@@ -14,9 +14,20 @@
  * limitations under the License.
  */
 
+import { VoidFn } from '@reportportal/ui-kit/common/types/commonTypes';
 import { TestCaseExecution } from 'controllers/manualLaunch';
 
-export interface DeleteExecutionModalData {
+export interface SingleDeleteExecutionData {
+  type: 'single';
   execution: TestCaseExecution;
   launchId: string | number;
 }
+
+export interface BatchDeleteExecutionData {
+  type: 'batch';
+  executionIds: number[];
+  launchId: string | number;
+  onClearSelection?: VoidFn;
+}
+
+export type DeleteExecutionModalData = SingleDeleteExecutionData | BatchDeleteExecutionData;

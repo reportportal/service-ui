@@ -18,7 +18,7 @@ import { useModal } from 'common/hooks';
 
 import DeleteExecutionModal from './deleteExecutionModal';
 import { DELETE_EXECUTION_MODAL_KEY } from './constants';
-import { DeleteExecutionModalData } from './types';
+import type { DeleteExecutionModalData } from './types';
 
 export const useDeleteExecutionModal = () =>
   useModal<DeleteExecutionModalData>({

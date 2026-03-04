@@ -23,6 +23,10 @@ $sidebar-width: calc(100vw - 408px);
   height: fit-content;
   padding: 20px 32px 72px;
 
+  &--with-panel {
+    padding-bottom: 124px;
+  }
+
   &__loader {
     display: flex;
     justify-content: center;
@@ -53,6 +57,12 @@ $sidebar-width: calc(100vw - 408px);
     width: $sidebar-width;
     bottom: 0;
     z-index: $Z-INDEX-POPUP;
+
+    &--with-panel {
+      padding: 0 32px;
+      height: 40px;
+      bottom: 64px;
+    }
   }
 }
 
@@ -292,5 +302,27 @@ $sidebar-width: calc(100vw - 408px);
   svg {
     width: 16px;
     height: 16px;
+  }
+}
+
+.selection {
+  position: fixed;
+  width: $sidebar-width;
+  bottom: 0;
+  z-index: $Z-INDEX-POPUP;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  background: var(--rp-ui-base-bg-000);
+  padding: 12px 32px;
+  border-top: 1px solid var(--rp-ui-base-e-100);
+  margin-top: auto;
+  height: 64px;
+
+  &-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 }
