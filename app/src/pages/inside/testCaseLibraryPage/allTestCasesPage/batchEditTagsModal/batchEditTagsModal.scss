@@ -19,6 +19,10 @@
     margin-bottom: 16px;
   }
 
+  &__test-cases-count {
+    font-weight: var(--rp-ui-base-fw-bold);
+  }
+
   &__loader {
     justify-content: center;
   }

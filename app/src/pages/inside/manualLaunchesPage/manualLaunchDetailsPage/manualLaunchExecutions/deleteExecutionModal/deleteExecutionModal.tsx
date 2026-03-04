@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useCallback } from 'react';
 import { useIntl } from 'react-intl';
+import { noop } from 'es-toolkit';
 import { Modal } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
@@ -24,6 +25,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal } from 'controllers/modal';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { useModalButtons } from 'pages/inside/testCaseLibraryPage/hooks/useModalButtons';
+import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 
 import { useDeleteExecution } from './useDeleteExecution';
 import { DELETE_EXECUTION_MODAL_KEY } from './constants';
@@ -41,12 +43,15 @@ const BoldText: FC<{ children: ReactNode }> = ({ children }) => (
 const boldFormatter = (chunks: ReactNode) => <BoldText>{chunks}</BoldText>;
 
 const DeleteExecutionModalComponent = ({
-  data: { execution, launchId },
+  data,
 }: UseModalData<DeleteExecutionModalData>) => {
   const { formatMessage } = useIntl();
-  const { deleteExecution, isLoading } = useDeleteExecution();
+  const isBatch = data.type === 'batch';
+  const { deleteExecutions, isLoading } = useDeleteExecution();
 
-  const onSubmit = () => deleteExecution(launchId, execution.id);
+  const handleSubmit = useCallback(() => {
+    deleteExecutions(data).catch(noop);
+  }, [deleteExecutions, data]);
 
   const { okButton, cancelButton, hideModal } = useModalButtons({
     okButtonText: (
@@ -56,20 +61,31 @@ const DeleteExecutionModalComponent = ({
     ),
     isLoading,
     variant: 'danger',
-    onSubmit: onSubmit as () => void,
+    onSubmit: handleSubmit as () => void,
   });
+
+  const title = isBatch ? messages.batchDeleteExecutionsTitle : messages.deleteExecutionTitle;
+  const description = isBatch
+    ? formatMessage(messages.batchDeleteDescription, {
+        count: data.executionIds.length,
+        b: boldFormatter,
+      })
+    : formatMessage(messages.deleteExecutionText, {
+        b: boldFormatter,
+        name: data.execution.testCaseName,
+      });
 
   return (
     <Modal
-      title={formatMessage(messages.deleteExecutionTitle)}
+      title={formatMessage(title)}
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={hideModal}
     >
-      {formatMessage(messages.deleteExecutionText, {
-        b: boldFormatter,
-        name: execution.testCaseName,
-      })}
+      <div>
+        {description}
+        <ModalLoadingOverlay isVisible={isLoading} />
+      </div>
     </Modal>
   );
 };

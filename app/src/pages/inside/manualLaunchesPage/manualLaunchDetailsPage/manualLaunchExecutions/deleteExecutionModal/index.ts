@@ -16,5 +16,9 @@
 
 export { default as DeleteExecutionModal } from './deleteExecutionModal';
 export { DELETE_EXECUTION_MODAL_KEY } from './constants';
-export type { DeleteExecutionModalData } from './types';
+export type {
+  DeleteExecutionModalData,
+  SingleDeleteExecutionData,
+  BatchDeleteExecutionData,
+} from './types';
 export { useDeleteExecutionModal } from './useDeleteExecutionModal';
