@@ -16,7 +16,7 @@
 
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { isEmpty, isNil, isUndefined } from 'es-toolkit/compat';
+import { isEmpty, isNil } from 'es-toolkit/compat';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -30,7 +30,6 @@ import { useFolderActions } from '../../../hooks/useFolderActions';
 import { useNavigateToFolder } from '../../../hooks/useNavigateToFolder';
 import { useFolderOperationUI } from '../../../hooks/useFolderOperationUI';
 import { getFolderNames } from '../../../utils/getFolderNames';
-import type { MoveFolderResponse } from '../moveFolderModal/types';
 
 export const useDuplicateFolder = () => {
   const {
@@ -79,33 +78,6 @@ export const useDuplicateFolder = () => {
           method: 'POST',
           data,
         });
-
-        // TODO Backend doesn't support index in duplicate API, need to move folder to correct position - change this when backend is fixed
-        if (isDragDropOperation && !isUndefined(index)) {
-          try {
-            let moveData: { parentTestFolder?: object; parentTestFolderId?: number; index: number };
-            if (parentFolderId === null) {
-              moveData = { parentTestFolder: {}, index };
-            } else if (isUndefined(parentFolderId)) {
-              moveData = { index };
-            } else {
-              moveData = { parentTestFolderId: parentFolderId, index };
-            }
-
-            const moveResponse = await fetch<MoveFolderResponse>(
-              URLS.folder(projectKey, duplicatedFolder.id),
-              {
-                method: 'PATCH',
-                data: moveData,
-              },
-            );
-
-            // Update duplicatedFolder with correct index from move response
-            duplicatedFolder.index = moveResponse.index;
-          } catch {
-            // TODO Continue anyway, folder is created even if position is wrong - delete this when backend is fixed
-          }
-        }
       } catch {
         showErrorNotification({
           messageId: 'errorOccurredTryAgain',

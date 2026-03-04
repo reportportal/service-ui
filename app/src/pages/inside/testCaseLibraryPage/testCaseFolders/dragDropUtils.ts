@@ -32,12 +32,12 @@ export const getMaxChildIndex = (folders: Folder[], parentId: number): number =>
 export const getParentFolderId = (
   targetFolder: Folder,
   position: TreeDropPosition,
-): number | null | undefined => {
+): number | null => {
   if (position === TREE_DROP_POSITIONS.INSIDE) {
     return targetFolder.id;
   }
 
-  return targetFolder.parentFolderId;
+  return targetFolder.parentFolderId ?? null;
 };
 
 export const calculateDropIndex = (
@@ -62,6 +62,11 @@ export const calculateDropIndex = (
       targetPositionInSiblings >= 0 ? (siblings[targetPositionInSiblings].index ?? 0) : 0;
   }
 
+  if (position === TREE_DROP_POSITIONS.INSIDE) {
+    const maxIndex = getMaxChildIndex(folders, targetFolder.id);
+    return maxIndex + 1;
+  }
+
   const draggedParentId = draggedFolder?.parentFolderId ?? null;
   const targetParentId = targetFolder.parentFolderId ?? null;
   const sameParent = draggedParentId === targetParentId;
@@ -69,13 +74,11 @@ export const calculateDropIndex = (
   const isMovingDownWithinSameParent =
     !isDuplicate && sameParent && !isUndefined(draggedIndex) && draggedIndex < targetIndex;
 
-  if (position === TREE_DROP_POSITIONS.INSIDE) {
-    const maxIndex = getMaxChildIndex(folders, targetFolder.id);
-    return maxIndex + 1;
-  }
-
   if (position === TREE_DROP_POSITIONS.BEFORE) {
     if (isMovingDownWithinSameParent) {
+      return targetIndex - 1;
+    }
+    if (isDuplicate) {
       return targetIndex - 1;
     }
     return targetIndex;
