@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { projectKeySelector } from 'controllers/project';
 import { moveFolderSuccessAction } from 'controllers/testCase/actionCreators';
+import { foldersSelector } from 'controllers/testCase';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 
@@ -26,6 +27,7 @@ import { useFolderActions } from '../../../hooks/useFolderActions';
 import { useNavigateToFolder } from '../../../hooks/useNavigateToFolder';
 import { useFolderOperationUI } from '../../../hooks/useFolderOperationUI';
 import { processFolderDestination } from '../../../utils/processFolderDestination';
+import { getFolderNames } from '../../../utils/getFolderNames';
 import { MoveFolderApiParams, MoveFolderResponse } from './types';
 
 export const useMoveFolder = () => {
@@ -38,6 +40,7 @@ export const useMoveFolder = () => {
   } = useFolderOperationUI();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+  const allFolders = useSelector(foldersSelector);
   const { createNewStoreFolder } = useFolderActions();
   const { navigateToFolder, navigateToFolderAfterAction, expandFoldersToLevel } =
     useNavigateToFolder();
@@ -91,9 +94,21 @@ export const useMoveFolder = () => {
           }),
         );
 
+        const { folderName, targetFolderName } = getFolderNames(
+          allFolders,
+          folderId,
+          movedFolderParentId,
+        );
+        const resolvedTargetFolderName =
+          isNewFolder && newFolderDetails ? newFolderDetails.name : targetFolderName;
+
         handleOperationSuccess({
           fromDragDrop: isDragDropOperation,
           successMessageId: 'testCaseFolderMovedSuccess',
+          messageValues: {
+            folderName,
+            targetFolderName: resolvedTargetFolderName,
+          },
         });
 
         if (isNewFolder && newFolderDetails) {
@@ -125,6 +140,7 @@ export const useMoveFolder = () => {
       navigateToFolderAfterAction,
       expandFoldersToLevel,
       navigateToFolder,
+      allFolders,
     ],
   );
 

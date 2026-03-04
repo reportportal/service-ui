@@ -22,7 +22,6 @@ import {
   BaseIconButton,
   SearchIcon,
   FieldText,
-  DragNDropIcon,
   useTreeDropValidation,
 } from '@reportportal/ui-kit';
 import { TreeSortableContainer, DragLayer } from '@reportportal/ui-kit/sortable';
@@ -141,12 +140,7 @@ export const ExpandedOptions = ({
           previewClassName={cx('folder-drag-preview')}
           renderPreview={(item) => {
             const folder = allFolders.find((f) => f.id === item.id);
-            return (
-              <>
-                <span>{folder?.name || formatMessage(messages.folder)}</span>
-                <DragNDropIcon />
-              </>
-            );
+            return <span>{folder?.name || formatMessage(messages.folder)}</span>;
           }}
         />
       )}
