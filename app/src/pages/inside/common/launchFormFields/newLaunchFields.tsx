@@ -101,7 +101,7 @@ export const NewLaunchFields = ({
       skipOptionCreation
       isDropdownMode
       minLength={0}
-      useFixedPositioning={testPlanMenuClassName ? true : false}
+      useFixedPositioning={!!testPlanMenuClassName}
       menuClassName={testPlanMenuClassName}
     />
   );

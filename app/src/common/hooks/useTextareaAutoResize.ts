@@ -25,7 +25,7 @@ export const useTextareaAutoResize = (
     const timeoutId = setTimeout(() => {
       if (textareaRef.current) {
         textareaRef.current.style.height = `${textareaRef.current.scrollHeight + BORDER}px`;
-        window.dispatchEvent(new Event('resize'));
+        globalThis.dispatchEvent(new Event('resize'));
       }
     }, 0);
 
@@ -41,7 +41,7 @@ export const useTextareaAutoResize = (
     }
 
     const handleResize = () => {
-      window.dispatchEvent(new Event('resize'));
+      globalThis.dispatchEvent(new Event('resize'));
     };
 
     const resizeObserver = new ResizeObserver(handleResize);
