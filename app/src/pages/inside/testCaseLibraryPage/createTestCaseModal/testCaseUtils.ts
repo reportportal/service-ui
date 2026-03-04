@@ -19,6 +19,7 @@ import { isString } from 'es-toolkit';
 
 import { ManualScenarioDto, ManualScenarioType, CreateTestCaseFormData, Attribute } from '../types';
 import { NewFolderData, isNewFolderData } from '../utils/getFolderFromFormValues';
+import { hasStepContent } from '../testCaseDetailsPage/utils';
 
 export const buildManualScenario = (payload: CreateTestCaseFormData): ManualScenarioDto => {
   const commonData = {
@@ -46,6 +47,7 @@ export const buildManualScenario = (payload: CreateTestCaseFormData): ManualScen
     ...commonData,
     steps: Object.values(payload?.steps ?? {})
       .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+      .filter(hasStepContent)
       .map((step) => ({
         instructions: step.instructions,
         expectedResult: step.expectedResult,

@@ -26,11 +26,13 @@ import { TEST_CASE_FORM_INITIAL_VALUES } from '../createTestCaseModal/constants'
 interface UseTestCaseFormInitializationParams {
   testCase?: ExtendedTestCase;
   initialize: (values: Partial<CreateTestCaseFormData>) => void;
+  reset?: () => void;
 }
 
 export const useTestCaseFormInitialization = ({
   testCase,
   initialize,
+  reset,
 }: UseTestCaseFormInitializationParams) => {
   const [isInitialized, setIsInitialized] = useState(false);
 
@@ -80,14 +82,17 @@ export const useTestCaseFormInitialization = ({
 
       initialize({ ...formData } as unknown as Partial<CreateTestCaseFormData>);
 
-      // Set initialized state asynchronously to avoid React warning about setState in effect
+      // Reset form to pristine state and set initialized flag
       const timeoutId = setTimeout(() => {
+        if (reset) {
+          reset();
+        }
         setIsInitialized(true);
-      }, 0);
+      }, 50);
 
       return () => clearTimeout(timeoutId);
     }
-  }, [testCase, initialize]);
+  }, [testCase, initialize, reset]);
 
   return { isInitialized };
 };
