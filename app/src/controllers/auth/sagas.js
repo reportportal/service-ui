@@ -18,7 +18,6 @@ import { all, call, put, select, takeEvery, take } from 'redux-saga/effects';
 import { fetch, updateToken } from 'common/utils/fetch';
 import {
   getSessionItem,
-  getStorageItem,
   removeSessionItem,
   removeStorageItem,
   setStorageItem,
