@@ -67,7 +67,6 @@ export const useTestCaseTags = ({ testCaseId }: UseTestCaseTagsParams) => {
 
         if (response) {
           dispatch({ type: GET_TEST_CASE_DETAILS_SUCCESS, payload: response });
-          showSuccessNotification({ messageId: 'testCaseUpdatedSuccess' });
         }
       } catch (error: unknown) {
         showErrorNotification({
