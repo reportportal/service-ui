@@ -17,6 +17,10 @@
 import { useCallback } from 'react';
 import type { TreeDragItem, TreeDropPosition } from '@reportportal/ui-kit/common';
 import { getParentFolderId, calculateDropIndex } from './dragDropUtils';
+import {
+  generateUniqueFolderName,
+  getSiblingFoldersInParent,
+} from '../utils/generateUniqueFolderName';
 import type { UseFolderDragDropParams } from './types';
 
 export const useFolderDragDrop = ({ folders, onMove, onDuplicate }: UseFolderDragDropParams) => {
@@ -57,9 +61,13 @@ export const useFolderDragDrop = ({ folders, onMove, onDuplicate }: UseFolderDra
       const parentFolderId = getParentFolderId(targetFolder, position);
       const index = calculateDropIndex(targetFolder, position, folders, draggedFolderId, true);
 
+      const siblingsInTargetParent = getSiblingFoldersInParent(folders, parentFolderId);
+
+      const uniqueName = generateUniqueFolderName(draggedFolderData.name, siblingsInTargetParent);
+
       onDuplicate({
         folderId: draggedFolderId,
-        folderName: `${draggedFolderData.name} (Copy)`,
+        folderName: uniqueName,
         parentFolderId,
         index,
         fromDragDrop: true,

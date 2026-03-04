@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useMemo, FC } from 'react';
+import { useMemo, FC, useRef } from 'react';
 import { useIntl } from 'react-intl';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { Modal } from '@reportportal/ui-kit';
@@ -23,6 +23,7 @@ import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { useTextareaAutoResize } from 'common/hooks';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { LaunchFormData } from 'pages/inside/common/launchFormFields/types';
 import { NewLaunchFields } from 'pages/inside/common/launchFormFields/newLaunchFields';
@@ -44,8 +45,12 @@ const EditManualLaunchModalComponent = ({
   handleSubmit,
   invalid,
   pristine,
+  dirty,
 }: EditManualLaunchModalProps & InjectedFormProps<LaunchFormData, EditManualLaunchModalProps>) => {
   const { formatMessage } = useIntl();
+  const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
+
+  useTextareaAutoResize(descriptionRef);
 
   const { handleSubmit: handleEditLaunch, isLoading } = useEditManualLaunch({
     launchId: data.id,
@@ -75,20 +80,27 @@ const EditManualLaunchModalComponent = ({
       title={formatMessage(messages.editLaunch)}
       okButton={okButton}
       cancelButton={cancelButton}
+      allowCloseOutside={!dirty}
       onClose={hideModal}
       className={cx('edit-manual-launch-modal')}
     >
-      <div className={cx('edit-manual-launch-modal__wrapper')}>
-        <form onSubmit={handleSubmit(onSubmit) as (event: React.FormEvent) => void}>
-          <div className={cx('edit-manual-launch-modal__form-container')}>
-            <NewLaunchFields
-              hideTestPlanField={false}
-              descriptionPlaceholder={formatMessage(messages.descriptionPlaceholder)}
-              testPlanPlaceholder={formatMessage(messages.testPlanPlaceholder)}
-            />
-          </div>
-        </form>
-      </div>
+      <form
+        onSubmit={handleSubmit(onSubmit) as (event: React.FormEvent) => void}
+        className={cx('edit-manual-launch-modal__form')}
+      >
+        <NewLaunchFields
+          hideTestPlanField={false}
+          descriptionPlaceholder={formatMessage(messages.descriptionPlaceholder)}
+          testPlanPlaceholder={formatMessage(messages.testPlanPlaceholder)}
+          descriptionRef={descriptionRef}
+          testPlanMenuClassName="test-plan-dropdown"
+          autocompleteProps={{
+            useFixedPositioning: true,
+            keyMenuClassName: 'attribute-key-dropdown',
+            valueMenuClassName: 'attribute-value-dropdown',
+          }}
+        />
+      </form>
     </Modal>
   );
 };

@@ -14,27 +14,18 @@
  * limitations under the License.
  */
 
-.edit-manual-launch-modal {
-  width: 480px;
-  max-height: 90vh;
-  padding: 32px 40px;
-  border-radius: 16px;
+import { Folder } from 'controllers/testCase/types';
 
-  &__form {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    max-height: calc(90vh - 160px);
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-}
+export const getFolderNames = (
+  allFolders: Folder[],
+  folderId: number,
+  targetParentId: number | null,
+): { folderName: string; targetFolderName: string | null } => {
+  const folder = allFolders.find((folder) => folder.id === folderId);
+  const targetFolder = targetParentId ? allFolders.find((folder) => folder.id === targetParentId) : null;
 
-:global(.attribute-value-dropdown) {
-  z-index: 1000;
-}
-
-:global(.test-plan-dropdown) {
-  min-width: 400px;
-  max-width: 400px;
-}
+  return {
+    folderName: folder?.name || '',
+    targetFolderName: targetFolder?.name || null,
+  };
+};

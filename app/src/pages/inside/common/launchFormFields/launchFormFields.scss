@@ -24,13 +24,31 @@
   letter-spacing: 0;
 }
 
+.launch-name-field {
+  margin-top: 16px;
+}
+
 .description-field {
+  margin-top: 16px;
+
   :global(.labeled-input__label) {
     margin-bottom: 4px;
   }
 
   :global(textarea) {
     resize: vertical;
+  }
+}
+
+.test-plan-field {
+  margin-top: 16px;
+}
+
+.attributes-section {
+  margin-top: 16px;
+
+  .attributes-content {
+    margin-top: 12px;
   }
 }
 
@@ -46,12 +64,6 @@
 
 .test-plan-name {
   font-weight: 600;
-}
-
-.attributes-section {
-  .attributes-content {
-    margin-top: 12px;
-  }
 }
 
 .add-attribute-button {
