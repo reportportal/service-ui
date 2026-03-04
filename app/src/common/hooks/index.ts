@@ -25,3 +25,4 @@ export type { BaseAttachmentFile } from './useFileProcessing';
 export { useQueryParams } from './useQueryParams';
 export { useNavigationTabsExtensionsConfig } from './useNavigationTabsExtensionsConfig';
 export { useNotification } from './useNotification';
+export { useTextareaAutoResize } from './useTextareaAutoResize';
