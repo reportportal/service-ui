@@ -35,6 +35,7 @@ const EditScenarioModalComponent = ({
   data,
   initialize,
   pristine,
+  reset,
   handleSubmit,
 }: UseModalData<EditScenarioModalProps> &
   InjectedFormProps<CreateTestCaseFormData, EditScenarioModalProps>) => {
@@ -46,6 +47,7 @@ const EditScenarioModalComponent = ({
   const { isInitialized } = useTestCaseFormInitialization({
     testCase,
     initialize,
+    reset,
   });
 
   const handleUpdate = useCallback(
@@ -55,9 +57,11 @@ const EditScenarioModalComponent = ({
     [editTestCase, testCase],
   );
 
+  const isSaveDisabled = !isInitialized || pristine;
+
   return (
     <EditScenarioModalContent
-      pristine={!isInitialized || pristine}
+      pristine={isSaveDisabled}
       handleSubmit={handleSubmit}
       title={formatMessage(commonMessages.editScenario)}
       submitButtonText={formatMessage(COMMON_LOCALE_KEYS.SAVE)}
@@ -73,6 +77,7 @@ const ReduxFormComponent = reduxForm<CreateTestCaseFormData, EditScenarioModalPr
   initialValues: TEST_CASE_FORM_INITIAL_VALUES,
   validate: () => ({}),
   enableReinitialize: false,
+  destroyOnUnmount: true,
 })(EditScenarioModalComponent);
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
