@@ -29,14 +29,13 @@ import {
 
 const userSelector = (state) => state.user || {};
 export const userInfoSelector = (state) => userSelector(state).info || {};
-export const defaultProjectSelector = (state) => userInfoSelector(state).defaultProject || '';
 
 /**
  * @param {Object} state
- * @returns {{ organizationSlug: string, projectSlug: string } | string}
+ * @returns {{ organizationSlug: string, projectSlug: string } | {}}
  */
 export const activeProjectSelector = (state) =>
-  userSelector(state).activeProject || defaultProjectSelector(state) || '';
+  userSelector(state).activeProject || {};
 export const idSelector = (state) => userInfoSelector(state).id;
 export const userIdSelector = (state) => userInfoSelector(state).userId;
 export const userEmailSelector = (state) => userInfoSelector(state).email || '';

@@ -29,26 +29,18 @@ import {
   ERROR_CODE_LOGIN_BAD_CREDENTIALS,
   ERROR_CODE_LOGIN_MAX_LIMIT,
 } from 'common/constants/apiErrorCodes';
-import { ALL } from 'common/constants/reservedFilterIds';
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { fetchAppInfoAction, isDemoInstanceSelector } from 'controllers/appInfo';
-import {
-  OAUTH_SUCCESS,
-  pagePropertiesSelector,
-  PROJECT_DASHBOARD_PAGE,
-  LOGIN_PAGE,
-  PROJECT_LAUNCHES_PAGE,
-} from 'controllers/pages';
+import { fetchAppInfoAction } from 'controllers/appInfo';
+import { OAUTH_SUCCESS, pagePropertiesSelector, LOGIN_PAGE } from 'controllers/pages';
 import {
   FETCH_USER_ERROR,
   FETCH_USER_SUCCESS,
   fetchUserAction,
+  getUserSettingsFromStorage,
   userIdSelector,
-  activeProjectSelector,
-  activeProjectKeySelector,
+  userInfoSelector,
 } from 'controllers/user';
-import { FETCH_PROJECT_SUCCESS, fetchProjectAction } from 'controllers/project';
 import {
   fetchPluginsAction,
   fetchGlobalIntegrationsAction,
@@ -56,8 +48,8 @@ import {
 } from 'controllers/plugins';
 import { redirect, pathToAction } from 'redux-first-router';
 import qs, { stringify } from 'qs';
-import routesMap from 'routes/routesMap';
-import { SET_ACTIVE_PROJECT_KEY, ACTIVITY_TIMESTAMP } from 'controllers/user/constants';
+import routesMap, { getRedirectRoute } from 'routes/routesMap';
+import { ACTIVITY_TIMESTAMP } from 'controllers/user/constants';
 import {
   authSuccessAction,
   resetTokenAction,
@@ -110,34 +102,29 @@ function* loginSuccessHandler({ payload }) {
     }),
   );
   yield put(fetchUserAction());
-  yield all([take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]), take(SET_ACTIVE_PROJECT_KEY)]);
-  const projectKey = yield select(activeProjectKeySelector);
-  yield put(fetchProjectAction(projectKey));
-  yield take(FETCH_PROJECT_SUCCESS);
+  const userResult = yield take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]);
+  if (userResult.error) {
+    return;
+  }
+
   yield put(fetchPluginsAction());
   yield put(fetchGlobalIntegrationsAction());
   yield put(authSuccessAction());
+
   const userId = yield select(userIdSelector);
+  const user = yield select(userInfoSelector);
   const anonymousRedirectPath = getSessionItem(ANONYMOUS_REDIRECT_PATH_STORAGE_KEY);
-  const userSettings = getStorageItem(`${userId}_settings`) || {};
+  const userSettings = getUserSettingsFromStorage(userId);
   const redirectPath = anonymousRedirectPath || userSettings.lastPath;
+
   if (redirectPath) {
     yield put(redirect(pathToAction(redirectPath, routesMap, qs)));
     if (anonymousRedirectPath) {
-      removeSessionItem('anonymousRedirectPath');
+      removeSessionItem(ANONYMOUS_REDIRECT_PATH_STORAGE_KEY);
     }
   } else {
-    const isDemoInstance = yield select(isDemoInstanceSelector);
-    const { organizationSlug, projectSlug } = yield select(activeProjectSelector);
-    const page = isDemoInstance
-      ? {
-          type: PROJECT_LAUNCHES_PAGE,
-          payload: { organizationSlug, projectSlug, filterId: ALL },
-        }
-      : {
-          type: PROJECT_DASHBOARD_PAGE,
-          payload: { organizationSlug, projectSlug },
-        };
+    // Demo instance specific redirect to be implemented
+    const page = getRedirectRoute(user);
     yield put(redirect(page));
   }
 
