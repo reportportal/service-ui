@@ -17,7 +17,7 @@
 import { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { isNumber, isString } from 'es-toolkit/compat';
+import { isString } from 'es-toolkit/compat';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -45,9 +45,9 @@ export const useEditManualLaunch = ({ launchId, onSuccess }: UseEditManualLaunch
 
         const launchData: EditManualLaunchDto = {
           name: launchName,
-          description: description || '',
-          attributes: attributes?.filter((attr) => attr.value) || [],
-          ...(isNumber(testPlan?.id) && { testPlanId: testPlan.id }),
+          description: description?.trim() || '',
+          attributes: attributes?.filter((attr) => attr.key && attr.value) || [],
+          testPlan: testPlan?.id ? { id: testPlan.id } : {},
         };
 
         await fetch(URLS.manualLaunchById(projectKey, launchId), {

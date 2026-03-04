@@ -28,13 +28,12 @@ import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { createClassnames } from 'common/utils';
-import { UseModalData } from 'common/hooks';
+import { UseModalData, useTextareaAutoResize } from 'common/hooks';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { Validator } from 'common/utils/validation/types';
 import { bindMessageToValidator, validate, MAX_FIELD_LENGTH } from 'common/utils/validation';
 
 import { useDescription } from './useDescription';
-import { useDescriptionModalResize } from './useDescriptionModalResize';
 
 import styles from './descriptionModal.scss';
 
@@ -82,7 +81,7 @@ const DescriptionModalComponent = ({
   const testCaseDescription = testCaseDetails.description;
   const isDescriptionExist = !isEmpty(testCaseDescription);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  useDescriptionModalResize(textareaRef);
+  useTextareaAutoResize(textareaRef);
 
   useEffect(() => {
     if (isDescriptionExist) {
