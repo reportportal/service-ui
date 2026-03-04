@@ -43,6 +43,7 @@ const EditManualLaunchModalComponent = ({
   onSuccess = noop,
   handleSubmit,
   invalid,
+  pristine,
 }: EditManualLaunchModalProps & InjectedFormProps<LaunchFormData, EditManualLaunchModalProps>) => {
   const { formatMessage } = useIntl();
 
@@ -65,7 +66,7 @@ const EditManualLaunchModalComponent = ({
       </LoadingSubmitButton>
     ),
     isLoading,
-    isSubmitButtonDisabled: invalid,
+    isSubmitButtonDisabled: invalid || pristine,
     onSubmit: handleSubmit(onSubmit) as VoidFn,
   });
 
@@ -77,13 +78,17 @@ const EditManualLaunchModalComponent = ({
       onClose={hideModal}
       className={cx('edit-manual-launch-modal')}
     >
-      <form className={cx('edit-launch-form')}>
-        <NewLaunchFields
-          hideTestPlanField={false}
-          descriptionPlaceholder={formatMessage(messages.descriptionPlaceholder)}
-          testPlanPlaceholder={formatMessage(messages.testPlanPlaceholder)}
-        />
-      </form>
+      <div className={cx('edit-manual-launch-modal__wrapper')}>
+        <form onSubmit={handleSubmit(onSubmit) as (event: React.FormEvent) => void}>
+          <div className={cx('edit-manual-launch-modal__form-container')}>
+            <NewLaunchFields
+              hideTestPlanField={false}
+              descriptionPlaceholder={formatMessage(messages.descriptionPlaceholder)}
+              testPlanPlaceholder={formatMessage(messages.testPlanPlaceholder)}
+            />
+          </div>
+        </form>
+      </div>
     </Modal>
   );
 };

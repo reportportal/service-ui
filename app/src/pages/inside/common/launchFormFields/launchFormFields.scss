@@ -24,8 +24,14 @@
   letter-spacing: 0;
 }
 
-.launch-name-field {
-  margin: 16px 0;
+.description-field {
+  :global(.labeled-input__label) {
+    margin-bottom: 4px;
+  }
+
+  :global(textarea) {
+    resize: vertical;
+  }
 }
 
 .uncovered-tests-checkbox {
@@ -42,13 +48,7 @@
   font-weight: 600;
 }
 
-.test-plan-field {
-  margin-top: 16px;
-}
-
 .attributes-section {
-  margin-top: 16px;
-
   .attributes-content {
     margin-top: 12px;
   }
