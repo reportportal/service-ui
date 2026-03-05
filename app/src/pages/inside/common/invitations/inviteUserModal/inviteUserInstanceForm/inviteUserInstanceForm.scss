@@ -14,8 +14,22 @@
  * limitations under the License.
  */
 
-import { Level } from './constants';
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 
-export const getFormName = (level: Level) => `inviteUserForm_${level}`;
+.invite-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 
-export const INSTANCE_FORM_NAME = getFormName(Level.INSTANCE);
+  .invite {
+    font-weight: var(--rp-ui-base-fw-medium);
+  }
+
+  .invite-description {
+    color: var(--rp-ui-base-e-400);
+  }
+}

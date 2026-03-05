@@ -56,10 +56,7 @@ import { prepareQueryFilters } from 'components/filterEntities/utils';
 import { URLS } from 'common/urls';
 import { AddItemButton } from '../organizationAssignment/organizationItem/addItemButton';
 import { MEMBER, EDITOR, VIEWER, MANAGER } from 'common/constants/projectRoles';
-import {
-  CREATE_USER_FORM,
-  ORGANIZATIONS,
-} from 'pages/instance/allUsersPage/allUsersHeader/createUserModal/constants';
+import { ORGANIZATIONS } from 'pages/instance/allUsersPage/allUsersHeader/createUserModal/constants';
 
 import styles from './instanceAssignment.scss';
 
@@ -287,9 +284,9 @@ export const InstanceAssignment = ({
               <Checkbox
                 onChange={(e) => {
                   const checked = e.target.checked;
-                  dispatch(change(CREATE_USER_FORM, FORM_FIELDS.ORGANIZATION.ROLE, checked));
+                  dispatch(change(formName, FORM_FIELDS.ORGANIZATION.ROLE, checked));
                   dispatch(
-                    change(CREATE_USER_FORM, FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE, checked),
+                    change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE, checked),
                   );
                 }}
                 className={cx('autocomplete-checkbox')}

@@ -74,6 +74,14 @@ export const messages = defineMessages({
     id: 'InviteUser.inputPlaceholder',
     defaultMessage: 'Enter email (e.g. example@mail.com)',
   },
+  inputPlaceholderInstance: {
+    id: 'InviteUser.inputPlaceholderInstance',
+    defaultMessage: 'Enter email to search (e.g. example@mail.com)',
+  },
+  noMatchesContinueTyping: {
+    id: 'InviteUser.noMatchesContinueTyping',
+    defaultMessage: 'No matches found. Continue typing to invite new user by email...',
+  },
   memberWasInvited: {
     id: 'InviteUser.memberWasInvited',
     defaultMessage: 'User <b>{name}</b> has been invited and assigned successfully',
