@@ -62,6 +62,7 @@ import {
   FETCH_PROJECT_NOTIFICATIONS,
   UPDATE_LOG_TYPE,
   DELETE_LOG_TYPE,
+  PREPARE_ACTIVE_PROJECT,
 } from './constants';
 import {
   updateDefectTypeSuccessAction,
@@ -71,6 +72,7 @@ import {
   updatePatternSuccessAction,
   deletePatternSuccessAction,
   updateConfigurationAttributesAction,
+  fetchProjectAction,
   fetchProjectPreferencesAction,
   fetchProjectSuccessAction,
   fetchProjectErrorAction,
@@ -88,6 +90,8 @@ import {
   deleteLogTypeSuccessAction,
 } from './actionCreators';
 import { patternsSelector, projectKeySelector } from './selectors';
+import { withActiveOrganization } from 'controllers/organization/sagas';
+import { setActiveProjectKeyAction } from 'controllers/user';
 
 function* updateDefectType({ payload: defectTypes }) {
   yield put(showScreenLockAction());
@@ -455,6 +459,25 @@ function* watchFetchProject() {
   yield takeEvery(FETCH_PROJECT, fetchProject);
 }
 
+function* prepareActiveProject({ payload: { organizationSlug, projectSlug } }) {
+  yield* withActiveOrganization(organizationSlug, function* onActiveOrgReady(organizationId) {
+    try {
+      const { items } = yield call(fetch, URLS.organizationProjects(organizationId, { slug: projectSlug }));
+      const project = items?.[0];
+      if (project?.key) {
+        yield put(setActiveProjectKeyAction(project.key));
+        yield put(fetchProjectAction(project.key));
+      }
+    } catch (error) {
+      yield put(showDefaultErrorNotification(error));
+    }
+  });
+}
+
+function* watchPrepareActiveProject() {
+  yield takeEvery(PREPARE_ACTIVE_PROJECT, prepareActiveProject);
+}
+
 function* fetchProjectPreferences({ payload: projectKey }) {
   const preferences = yield call(fetch, URLS.projectPreferences(projectKey));
   yield put(fetchProjectPreferencesSuccessAction(preferences));
@@ -577,6 +600,7 @@ export function* projectSagas() {
     watchUpdatePAState(),
     watchDeletePattern(),
     watchFetchProject(),
+    watchPrepareActiveProject(),
     watchFetchProjectPreferences(),
     watchFetchConfigurationAttributes(),
     watchHideFilterOnLaunches(),

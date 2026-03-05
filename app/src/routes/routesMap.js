@@ -21,7 +21,6 @@ import {
   userInfoSelector,
   setActiveProjectAction,
   setActiveProjectKeyAction,
-  activeProjectKeySelector,
   getUserSettingsFromStorage,
 } from 'controllers/user';
 import { isTmsEnabled } from 'controllers/appInfo';
@@ -117,6 +116,7 @@ import {
   prepareActiveOrganizationProjectsAction,
   prepareActiveOrganizationSettingsAction,
 } from 'controllers/organization/actionCreators';
+import { prepareActiveProjectAction } from 'controllers/project';
 import { activeOrganizationSelector } from 'controllers/organization';
 import { prepareActiveOrganizationUsersAction } from 'controllers/organization/users';
 import { LIST_OF_VERSIONS } from 'pages/inside/productVersionsPage/constants';
@@ -594,12 +594,15 @@ const routesMap = {
 export const onBeforeRouteChange = (dispatch, getState, { action }) => {
   const {
     type: nextPageType,
-    payload: { organizationSlug: hashOrganizationSlug, projectSlug: hashProjectSlug },
+    payload: {
+      organizationSlug: hashOrganizationSlug,
+      projectSlug: hashProjectSlug,
+      projectKey: hashProjectKey,
+    } = {},
   } = action;
 
   let { slug: organizationSlug } = activeOrganizationSelector(getState());
   let { projectSlug } = activeProjectSelector(getState());
-  const hashProjectKey = activeProjectKeySelector(getState());
   const currentPageType = pageSelector(getState());
   const authorized = isAuthorizedSelector(getState());
   const user = userInfoSelector(getState());
@@ -623,29 +626,43 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
   // For project pages check project-level permission, for org pages — org-level
   const hasPageAccess = isProjectPage ? hasPermission : hasPermissionOrganization;
 
-  // No access — redirect to a guaranteed accessible route
-  if (isOrganizationPage && !hasPageAccess) {
-    dispatch(redirect(getRedirectRoute(user)));
+  if (authorized) {
+    // No access — redirect to a guaranteed accessible route
+    if (isOrganizationPage && !hasPageAccess) {
+      dispatch(redirect(getRedirectRoute(user)));
 
-    return;
-  } else if (isProjectPage && isChangedProject) {
-    // Project changed — update active project and fetch its data
-    dispatch(
-      setActiveProjectAction({
-        organizationSlug: hashOrganizationSlug,
-        projectSlug: hashProjectSlug,
-      }),
-    );
-    dispatch(setActiveProjectKeyAction(projectKey));
-    dispatch(fetchProjectAction(projectKey));
-    organizationSlug = hashOrganizationSlug;
-    projectSlug = hashProjectSlug;
-  }
+      return;
+    }
 
-  // Organization changed — fetch its data (runs independently of project change above)
-  if (isOrganizationPage && hasPageAccess && isChangedOrganization) {
-    dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
-    organizationSlug = hashOrganizationSlug;
+    if (isProjectPage && isChangedProject) {
+      // Project changed — update active project and fetch its data
+      dispatch(
+        setActiveProjectAction({
+          organizationSlug: hashOrganizationSlug,
+          projectSlug: hashProjectSlug,
+        }),
+      );
+      if (projectKey) {
+        dispatch(setActiveProjectKeyAction(projectKey));
+        dispatch(fetchProjectAction(projectKey));
+      } else {
+        // TODO: Resolve project by slug on manual URL change and reload https://jiraeu.epam.com/browse/EPMRPP-113309
+        dispatch(
+          prepareActiveProjectAction({
+            organizationSlug: hashOrganizationSlug,
+            projectSlug: hashProjectSlug,
+          }),
+        );
+      }
+      organizationSlug = hashOrganizationSlug;
+      projectSlug = hashProjectSlug;
+    }
+
+    // Organization changed — fetch its data (runs independently of project change above)
+    if (isOrganizationPage && hasPageAccess && isChangedOrganization) {
+      dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
+      organizationSlug = hashOrganizationSlug;
+    }
   }
 
   if (nextPageType !== currentPageType) {
