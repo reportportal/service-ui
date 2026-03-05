@@ -160,7 +160,7 @@ const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
 
 const getLastPathRoute = (userId) => {
   const userSettings = getUserSettingsFromStorage(userId);
-  if (userSettings.lastPath) {
+  if (userSettings?.lastPath) {
     return pathToAction(userSettings.lastPath, routesMap, qs);
   }
   return null;
