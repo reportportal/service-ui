@@ -16,7 +16,7 @@
 
 import { useDispatch, useSelector } from 'react-redux';
 import { FC, useCallback, useMemo } from 'react';
-import { setActiveProjectKeyAction, UserInfo, userInfoSelector } from 'controllers/user';
+import { UserInfo, userInfoSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import {
   deleteProjectAction,
@@ -72,10 +72,6 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
     dispatch(showModalAction({ component: <RenameProjectModal data={data} /> }));
   }, [dispatch, projectId, projectName]);
 
-  const handleLinkClick = useCallback(() => {
-    dispatch(setActiveProjectKeyAction(projectKey));
-  }, [dispatch, projectKey]);
-
   const handleAssignClick = useCallback(() => {
     // TODO: Implement assign action
   }, []);
@@ -98,20 +94,18 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
         label: formatMessage(messages.team),
         to: {
           type: 'PROJECT_MEMBERS_PAGE',
-          payload: { projectSlug, organizationSlug },
+          payload: { projectSlug, organizationSlug, projectKey },
         },
-        onClick: handleLinkClick,
       },
       {
         label: formatMessage(messages.settings),
         to: {
           type: 'PROJECT_SETTINGS_PAGE',
-          payload: { projectSlug, organizationSlug },
+          payload: { projectSlug, organizationSlug, projectKey },
         },
-        onClick: handleLinkClick,
       },
     ],
-    [formatMessage, projectSlug, organizationSlug, handleLinkClick],
+    [formatMessage, projectSlug, organizationSlug, projectKey],
   );
 
   const actions = useMemo((): ActionItem[] => {

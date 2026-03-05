@@ -16,10 +16,8 @@
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { useDispatch } from 'react-redux';
 import { NavLink } from 'components/main/navLink';
 import { PROJECT_PAGE } from 'controllers/pages/constants';
-import { setActiveProjectKeyAction } from 'controllers/user';
 import { useLayoutEffect, useRef } from 'react';
 import styles from './projectItem.scss';
 
@@ -34,18 +32,12 @@ export const ProjectItem = ({
   isActive,
 }) => {
   const projectItemRef = useRef(null);
-  const dispatch = useDispatch();
 
   useLayoutEffect(() => {
     if (isActive) {
       projectItemRef.current.scrollIntoView({ block: 'end' });
     }
   }, [isActive]);
-
-  const onClickHandler = () => {
-    dispatch(setActiveProjectKeyAction(projectKey));
-    onClick();
-  };
 
   return (
     <div ref={projectItemRef} className={cx('project-item')}>
@@ -55,11 +47,12 @@ export const ProjectItem = ({
           payload: {
             projectSlug,
             organizationSlug,
+            projectKey,
           },
         }}
         className={cx('project-item-link')}
         activeClassName={cx('active')}
-        onClick={onClickHandler}
+        onClick={onClick}
       >
         <span title={projectName}>{projectName}</span>
       </NavLink>

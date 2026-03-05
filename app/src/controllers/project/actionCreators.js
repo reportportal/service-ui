@@ -56,6 +56,7 @@ import {
   CREATE_LOG_TYPE_SUCCESS,
   UPDATE_LOG_TYPE_SUCCESS,
   DELETE_LOG_TYPE_SUCCESS,
+  PREPARE_ACTIVE_PROJECT,
 } from './constants';
 
 export const fetchProjectSuccessAction = (project) => ({
@@ -101,6 +102,11 @@ export const fetchProjectPreferencesAction = (projectKey) => ({
 export const fetchProjectAction = (projectKey, fetchInfoOnly) => ({
   type: FETCH_PROJECT,
   payload: { projectKey, fetchInfoOnly },
+});
+
+export const prepareActiveProjectAction = (payload) => ({
+  type: PREPARE_ACTIVE_PROJECT,
+  payload,
 });
 
 export const fetchConfigurationAttributesAction = (projectKey) => ({
