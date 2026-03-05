@@ -25,7 +25,7 @@ import {
 } from 'controllers/user';
 import { isTmsEnabled } from 'controllers/appInfo';
 import { getTmsMilestonesOverride } from 'controllers/appInfo/utils';
-import { fetchProjectAction } from 'controllers/project';
+import { fetchProjectAction, prepareActiveProjectAction } from 'controllers/project';
 import {
   LOGIN_PAGE,
   REGISTRATION_PAGE,
@@ -116,7 +116,6 @@ import {
   prepareActiveOrganizationProjectsAction,
   prepareActiveOrganizationSettingsAction,
 } from 'controllers/organization/actionCreators';
-import { prepareActiveProjectAction } from 'controllers/project';
 import { activeOrganizationSelector } from 'controllers/organization';
 import { prepareActiveOrganizationUsersAction } from 'controllers/organization/users';
 import { LIST_OF_VERSIONS } from 'pages/inside/productVersionsPage/constants';
