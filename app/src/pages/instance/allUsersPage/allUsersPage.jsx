@@ -15,8 +15,9 @@
  */
 
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useIntl, defineMessages } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import PropTypes from 'prop-types';
 import { EmptyPageState } from 'pages/common';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
@@ -33,7 +34,11 @@ import {
 } from 'controllers/instance/allUsers/constants';
 import { withPagination } from 'controllers/pagination';
 import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
+import { showModalAction } from 'controllers/modal';
+import { fetchAllUsersAction } from 'controllers/instance/allUsers';
 import classNames from 'classnames/bind';
+import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
+import { InviteUserModalInstance } from './allUsersHeader/inviteUserModal';
 import { AllUsersHeader } from './allUsersHeader';
 import { AllUsersListTable } from './allUsersListTable';
 import styles from './allUsersPage.scss';
@@ -57,11 +62,26 @@ const AllUsersPageComponent = ({
   onChangePage,
   onChangePageSize,
 }) => {
+  const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
   const users = useSelector(allUsersSelector);
   const isLoading = useSelector(loadingSelector);
   const [searchValue, setSearchValue] = useState(null);
   const [appliedFiltersCount, setAppliedFiltersCount] = useState(0);
+
+  const onInvite = (withProject) => {
+    dispatch(fetchAllUsersAction());
+    trackEvent(ALL_USERS_PAGE_EVENTS.inviteUser(withProject));
+  };
+
+  const showInviteUserModal = () => {
+    dispatch(
+      showModalAction({
+        component: <InviteUserModalInstance onInvite={onInvite} />,
+      }),
+    );
+  };
 
   return (
     <div className={cx('all-users-page')}>
@@ -71,6 +91,7 @@ const AllUsersPageComponent = ({
         setSearchValue={setSearchValue}
         appliedFiltersCount={appliedFiltersCount}
         setAppliedFiltersCount={setAppliedFiltersCount}
+        onInvite={showInviteUserModal}
       />
       {itemCount === 0 && !isLoading ? (
         <EmptyPageState

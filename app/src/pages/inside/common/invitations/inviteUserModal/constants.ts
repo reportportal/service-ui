@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ export enum InvitationStatus {
 export enum Level {
   PROJECT = 'project',
   ORGANIZATION = 'organization',
+  INSTANCE = 'instance',
 }
 
 export const ERROR_CODES = {

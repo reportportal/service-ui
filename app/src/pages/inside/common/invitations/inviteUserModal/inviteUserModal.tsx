@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import { ApiError } from 'types/api';
 import { BoundValidator } from 'common/utils/validation/types';
 import { InviteUserProjectForm } from './inviteUserProjectForm';
 import { InviteUserOrganizationForm } from './inviteUserOrganizationForm/inviteUserOrganizationForm';
+import { InviteUserInstanceForm } from './inviteUserInstanceForm';
 import { MEMBER } from 'common/constants/projectRoles';
 import {
   activeOrganizationIdSelector,
@@ -47,8 +48,72 @@ import {
   ModalProps,
   InvitationRequestData,
 } from './types';
+import type { ComponentType, ReactNode } from 'react';
+import type { InjectedFormProps } from 'redux-form';
 import { Organization } from '../../assignments/organizationAssignment';
 import { getFormName } from './utils';
+import {
+  createInviteUserFormInstance,
+  type InstanceFormInnerProps,
+} from './inviteUserModalForms';
+import styles from './inviteUserModal.scss';
+import { createClassnames } from 'common/utils';
+
+const cx = createClassnames(styles);
+
+function validateProject(
+  formData: FormDataMap[Level.PROJECT],
+): { email?: string } {
+  const { email: rawEmail } = formData;
+  const emailStr =
+    typeof rawEmail === 'string' ? rawEmail : (rawEmail as { email?: string } | undefined)?.email ?? '';
+  const emailValidator: BoundValidator = commonValidators.emailInviteUserValidator();
+  return { email: emailValidator(emailStr.trim()) };
+}
+
+function validateOrganization(
+  formData: FormDataMap[Level.ORGANIZATION],
+): Record<string, unknown> {
+  const { email: rawEmail } = formData;
+  const emailStr =
+    typeof rawEmail === 'string' ? rawEmail : (rawEmail as { email?: string } | undefined)?.email ?? '';
+  const emailValidator: BoundValidator = commonValidators.emailInviteUserValidator();
+  return { email: emailValidator(emailStr.trim()) };
+}
+
+type InviteUserFormInnerProps = InviteUserProps<Level> & { content: ReactNode };
+
+const InviteUserFormInner = (props: InviteUserFormInnerProps) => (
+  <InviteUser {...props} content={props.content} />
+);
+
+type FormInnerProps<FD> = InjectedFormProps<FD> & ModalProps<Level> & { content: ReactNode };
+
+const InviteUserFormInnerInstance = (props: InstanceFormInnerProps) => (
+  <InviteUser {...props} content={props.content} />
+);
+
+const InviteUserFormProject = reduxForm<FormDataMap[Level.PROJECT]>({
+  form: getFormName(Level.PROJECT),
+  validate: validateProject,
+  enableReinitialize: true,
+})(InviteUserFormInner as ComponentType<FormInnerProps<FormDataMap[Level.PROJECT]>>);
+
+const InviteUserFormOrganization = reduxForm<FormDataMap[Level.ORGANIZATION]>({
+  form: getFormName(Level.ORGANIZATION),
+  validate: validateOrganization as Parameters<
+    typeof reduxForm<FormDataMap[Level.ORGANIZATION]>
+  >[0]['validate'],
+  enableReinitialize: true,
+})(InviteUserFormInner as ComponentType<FormInnerProps<FormDataMap[Level.ORGANIZATION]>>);
+
+const InviteUserFormInstance = createInviteUserFormInstance(InviteUserFormInnerInstance);
+
+const FORM_COMPONENTS = {
+  [Level.PROJECT]: InviteUserFormProject,
+  [Level.ORGANIZATION]: InviteUserFormOrganization,
+  [Level.INSTANCE]: InviteUserFormInstance,
+} as const;
 
 export const InviteUser = <L extends keyof FormDataMap>({
   level,
@@ -140,38 +205,36 @@ export const InviteUser = <L extends keyof FormDataMap>({
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
       size="large"
+      className={cx('modal')}
       allowCloseOutside={!dirty}
+      scrollable
     >
-      {content}
+      <div className={cx('modal-content')}>{content}</div>
     </Modal>
   );
 };
+
+const FORM_CONTENT = {
+  [Level.PROJECT]: <InviteUserProjectForm />,
+  [Level.ORGANIZATION]: <InviteUserOrganizationForm />,
+  [Level.INSTANCE]: <InviteUserInstanceForm />,
+} as const;
 
 export const InviteUserModal = <L extends keyof FormDataMap>(props: ModalProps<L>) => {
   const id = useSelector(activeOrganizationIdSelector) as number;
   const name = useSelector(activeOrganizationNameSelector) as string;
   const level = props.level;
-  const forms = {
-    project: <InviteUserProjectForm />,
-    organization: <InviteUserOrganizationForm />,
-  };
 
-  let initialValues = {};
-
+  let initialValues: Record<string, unknown> = {};
   if (level === Level.ORGANIZATION) {
     const organization: Organization = { id, name, role: MEMBER, projects: [] };
     initialValues = { organization };
   }
 
-  const Form = reduxForm<FormDataMap[L]>({
-    form: getFormName(level),
-    validate: (formData) => {
-      const { email } = formData;
-      const emailValidator: BoundValidator = commonValidators.emailInviteUserValidator();
-      return { email: emailValidator(email?.trim()) };
-    },
-    enableReinitialize: true,
-  })((formProps) => <InviteUser {...formProps} {...props} content={forms[level]} />);
-
-  return <Form initialValues={initialValues} />;
+  const FormComponent = FORM_COMPONENTS[level] as unknown as ComponentType<
+    ModalProps<L> & { content: ReactNode; initialValues?: Record<string, unknown> }
+  >;
+  return (
+    <FormComponent {...props} content={FORM_CONTENT[level]} initialValues={initialValues} />
+  );
 };

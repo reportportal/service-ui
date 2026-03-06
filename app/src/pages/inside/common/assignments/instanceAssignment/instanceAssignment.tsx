@@ -42,7 +42,7 @@ import {
 } from 'pages/inside/common/assignments/organizationAssignment';
 import { Project } from 'pages/inside/common/assignments/organizationAssignment/organizationItem/projectItems';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
-import { AsyncAutocomplete } from 'componentLibrary/autocompletes/asyncAutocomplete';
+import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 import {
   OrganizationsSearchesResponseData,
   OrganizationSearchesItem,
@@ -56,10 +56,7 @@ import { prepareQueryFilters } from 'components/filterEntities/utils';
 import { URLS } from 'common/urls';
 import { AddItemButton } from '../organizationAssignment/organizationItem/addItemButton';
 import { MEMBER, EDITOR, VIEWER, MANAGER } from 'common/constants/projectRoles';
-import {
-  CREATE_USER_FORM,
-  ORGANIZATIONS,
-} from 'pages/instance/allUsersPage/allUsersHeader/createUserModal/constants';
+import { ORGANIZATIONS } from 'pages/instance/allUsersPage/allUsersHeader/createUserModal/constants';
 
 import styles from './instanceAssignment.scss';
 
@@ -265,7 +262,7 @@ export const InstanceAssignment = ({
           <div className={cx('autocomplete-wrapper')}>
             <FieldProvider name={FORM_FIELDS.ORGANIZATION.NAME}>
               <FieldErrorHint provideHint={false}>
-                <AsyncAutocomplete
+                <AsyncAutocompleteV2
                   inputProps={{
                     label: formatMessage(messages.organization),
                   }}
@@ -274,12 +271,15 @@ export const InstanceAssignment = ({
                   getRequestParams={getRequestOrganizationsParams}
                   makeOptions={makeOrganizationsOptions}
                   createWithoutConfirmation={true}
+                  popoverClassName={cx('popover-organization')}
                   onChange={(organizationName: string) => {
                     setSelectedOrganizationId(
                       notAssignedOrganizations.find(({ name }) => name === organizationName)?.id,
                     );
                   }}
                   isRequired={isOrganizationRequired}
+                  useFixedPositioning
+                  dropdownMatchInputWidth
                 />
               </FieldErrorHint>
             </FieldProvider>
@@ -287,9 +287,9 @@ export const InstanceAssignment = ({
               <Checkbox
                 onChange={(e) => {
                   const checked = e.target.checked;
-                  dispatch(change(CREATE_USER_FORM, FORM_FIELDS.ORGANIZATION.ROLE, checked));
+                  dispatch(change(formName, FORM_FIELDS.ORGANIZATION.ROLE, checked));
                   dispatch(
-                    change(CREATE_USER_FORM, FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE, checked),
+                    change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE, checked),
                   );
                 }}
                 className={cx('autocomplete-checkbox')}
@@ -301,7 +301,7 @@ export const InstanceAssignment = ({
           <div className={cx('autocomplete-wrapper')}>
             <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.NAME}>
               <FieldErrorHint provideHint={false}>
-                <AsyncAutocomplete
+                <AsyncAutocompleteV2
                   inputProps={{
                     label: formatMessage(messages.project),
                   }}
@@ -313,6 +313,8 @@ export const InstanceAssignment = ({
                   createWithoutConfirmation={true}
                   className={cx('autocomplete')}
                   disabled={!selectedOrganizationId}
+                  useFixedPositioning
+                  dropdownMatchInputWidth
                 />
               </FieldErrorHint>
             </FieldProvider>
