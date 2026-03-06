@@ -23,7 +23,7 @@
   color: $COLOR--charcoal-grey;
   min-width: 15px;
   line-height: 18px;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 
   &.active {
     color: $COLOR--topaz;

@@ -16,7 +16,7 @@
 
 .message {
   line-height: 22px;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
   b {
     font-family: $FONT-SEMIBOLD;
   }
