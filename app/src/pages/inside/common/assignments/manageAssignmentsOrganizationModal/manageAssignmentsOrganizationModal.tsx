@@ -112,6 +112,7 @@ const ManageAssignmentsOrganizationModalView = ({
   const isBusy = assignmentsLoading || assignmentsUpdateLoading || !currentOrganization;
 
   const initialSnapshotTakenRef = useRef(false);
+  const wasLoadingRef = useRef(false);
 
   const resetModalState = useCallback(() => {
     setShowUnassignConfirmation(false);
@@ -119,6 +120,7 @@ const ManageAssignmentsOrganizationModalView = ({
     setCurrentOrganization(null);
     setInitialOrganization(null);
     initialSnapshotTakenRef.current = false;
+    wasLoadingRef.current = false;
   }, []);
 
   useEffect(() => {
@@ -126,9 +128,13 @@ const ManageAssignmentsOrganizationModalView = ({
   }, [dispatch, organization.id, user.id]);
 
   const handleOrganizationAssignment = useCallback(() => {
+    const wasLoading = wasLoadingRef.current;
+    wasLoadingRef.current = assignmentsLoading;
+
     if (!assignmentsLoading && assignmentsData !== null && organization && user) {
       const next = getCurrentOrganizationAssignment(organization, assignmentsData, user);
-      if (!initialSnapshotTakenRef.current) {
+      const loadingJustFinished = wasLoading === true;
+      if (loadingJustFinished && !initialSnapshotTakenRef.current) {
         initialSnapshotTakenRef.current = true;
         setCurrentOrganization(next);
         setInitialOrganization(next);
@@ -312,9 +318,13 @@ const ManageAssignmentsOrganizationModalView = ({
     if (next) setCurrentOrganization(next);
   };
   const handleModalClose = useCallback(() => {
-    resetModalState();
-    dispatch(hideModalAction());
-  }, [resetModalState, dispatch]);
+    if (isDirty) {
+      setShowDiscardConfirmation(true);
+    } else {
+      resetModalState();
+      dispatch(hideModalAction());
+    }
+  }, [isDirty, resetModalState, dispatch]);
 
   return (
     <Modal
