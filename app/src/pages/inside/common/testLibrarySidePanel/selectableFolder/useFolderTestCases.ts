@@ -37,6 +37,25 @@ interface TestCasesResponse {
   page: Page;
 }
 
+const fetchTestPlanTestCasesForFolder = async (
+  projectKey: string,
+  params: Record<string, string | number>,
+  fetchedTestCases: TestCase[] = [],
+): Promise<TestCase[]> => {
+  const response = await fetch<TestCasesResponse>(URLS.testCases(projectKey, params));
+  const testCases = [...fetchedTestCases, ...response.content];
+
+  if (response.page.number < response.page.totalPages) {
+    return fetchTestPlanTestCasesForFolder(
+      projectKey,
+      { ...params, offset: response.page.number * response.page.size },
+      testCases,
+    );
+  }
+
+  return testCases;
+};
+
 export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTestCasesProps) => {
   const { testPlanId, testCasesMap, updateFolderTestCases } = useTestLibraryPanelContext();
   const projectKey = useSelector(projectKeySelector);
@@ -44,11 +63,7 @@ export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTe
 
   const isFetchingFirstPageRef = useRef(false);
 
-  const {
-    testCases = [],
-    isLoading: isFolderLoading = false,
-    page = null,
-  } = testCasesMap.get(folderId) ?? {};
+  const { isLoading: isFolderLoading = false, page = null } = testCasesMap.get(folderId) ?? {};
 
   const hasFetched = page != null;
   const hasNextPage = page ? page.number < page.totalPages : false;
@@ -70,7 +85,7 @@ export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTe
       }
 
       const isFirstPage = offset === 0;
-      const shouldFetchTestPlanTestCases = isFirstPage && testPlanId;
+      const shouldFetchTestPlanTestCases = isFirstPage && testPlanId != null;
 
       showSpinner();
 
@@ -84,27 +99,26 @@ export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTe
         );
 
         const testPlanTestCasesForFolderPromise = shouldFetchTestPlanTestCases
-          ? fetch<TestCasesResponse>(
-              URLS.testCases(projectKey, {
-                'filter.eq.testPlanId': testPlanId,
-                'filter.eq.testFolderId': folderId,
-                offset: 0,
-                limit: 9999,
-              }),
-            ).catch(() => ({ content: [] as TestCase[] }))
-          : Promise.resolve({ content: [] as TestCase[] });
+          ? fetchTestPlanTestCasesForFolder(projectKey, {
+              'filter.eq.testPlanId': testPlanId,
+              'filter.eq.testFolderId': folderId,
+              offset: 0,
+              limit: 200,
+            }).catch(() => [] as TestCase[])
+          : Promise.resolve([] as TestCase[]);
 
-        const [testCasesResponse, testPlanTestCasesResponse] = await Promise.all([
+        const [testCasesResponse, testPlanTestCases] = await Promise.all([
           testCasesPromise,
           testPlanTestCasesForFolderPromise,
         ]);
 
-        const testCasesAddedToTestPlanIds = testPlanTestCasesResponse.content.map(({ id }) => id);
-
         updateFolderTestCases(folderId, {
-          testCases: [...testCases, ...testCasesResponse.content],
+          testCases: [
+            ...(testCasesMap.get(folderId)?.testCases ?? []),
+            ...testCasesResponse.content,
+          ],
           page: testCasesResponse.page,
-          ...(isFirstPage && { addedToPlanIds: testCasesAddedToTestPlanIds }),
+          ...(isFirstPage && { addedToTestPlanIds: testPlanTestCases.map(({ id }) => id) }),
         });
       } catch (error) {
         console.error('Failed to fetch test cases:', error);
@@ -112,7 +126,15 @@ export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTe
         hideSpinner();
       }
     },
-    [projectKey, testPlanId, updateFolderTestCases, folderId, testCases, showSpinner, hideSpinner],
+    [
+      projectKey,
+      testPlanId,
+      showSpinner,
+      folderId,
+      updateFolderTestCases,
+      testCasesMap,
+      hideSpinner,
+    ],
   );
 
   const fetchNextPage = useCallback(() => {
