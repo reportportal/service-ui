@@ -24,7 +24,6 @@ import {
   setTokenAction,
   authSuccessAction,
 } from 'controllers/auth';
-import { FETCH_PROJECT_SUCCESS, fetchProjectAction } from 'controllers/project';
 import {
   fetchGlobalIntegrationsAction,
   fetchPluginsAction,
@@ -32,7 +31,6 @@ import {
 } from 'controllers/plugins';
 import { createFetchPredicate } from 'controllers/fetch';
 import { getStorageItem } from 'common/utils';
-import { SET_ACTIVE_PROJECT_KEY } from 'controllers/user/constants';
 import { setInitialDataReadyAction } from './actionCreators';
 import { FETCH_INITIAL_DATA } from './constants';
 
@@ -44,9 +42,6 @@ function* fetchInitialData() {
   const userResult = yield take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]);
   if (!userResult.error) {
     yield put(authSuccessAction());
-    const { payload: activeProjectKey } = yield take(SET_ACTIVE_PROJECT_KEY);
-    yield put(fetchProjectAction(activeProjectKey));
-    yield take(FETCH_PROJECT_SUCCESS);
     yield put(fetchPluginsAction());
     yield put(fetchGlobalIntegrationsAction());
   } else {

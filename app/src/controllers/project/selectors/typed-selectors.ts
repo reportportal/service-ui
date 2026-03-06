@@ -3,6 +3,7 @@ type ProjectInfo = {
   projectName?: string;
   projectKey: string;
   projectId?: number;
+  projectSlug?: string;
 };
 
 type Project = {

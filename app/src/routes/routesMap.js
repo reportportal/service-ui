@@ -14,18 +14,11 @@
  * limitations under the License.
  */
 
-import { redirect, actionToPath } from 'redux-first-router';
+import { redirect, actionToPath, pathToAction } from 'redux-first-router';
 import qs from 'qs';
-import {
-  activeProjectSelector,
-  userInfoSelector,
-  setActiveProjectAction,
-  setActiveProjectKeyAction,
-  activeProjectKeySelector,
-} from 'controllers/user';
+import { userInfoSelector, getUserSettingsFromStorage, isAdminSelector } from 'controllers/user';
 import { isTmsEnabled } from 'controllers/appInfo';
 import { getTmsMilestonesOverride } from 'controllers/appInfo/utils';
-import { fetchProjectAction } from 'controllers/project';
 import {
   LOGIN_PAGE,
   REGISTRATION_PAGE,
@@ -55,11 +48,9 @@ import {
   TEST_ITEM_PAGE,
   pageSelector,
   clearPageStateAction,
-  adminPageNames,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   ACCOUNT_REMOVED_PAGE,
   PROJECT_PLUGIN_PAGE,
-  userAssignedSelector,
   ORGANIZATION_PROJECTS_PAGE,
   ORGANIZATION_USERS_PAGE,
   ORGANIZATION_SETTINGS_PAGE,
@@ -114,7 +105,6 @@ import {
 import { parseQueryToFilterEntityAction } from 'controllers/filter/actionCreators';
 import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
 import {
-  fetchOrganizationBySlugAction,
   prepareActiveOrganizationProjectsAction,
   prepareActiveOrganizationSettingsAction,
 } from 'controllers/organization/actionCreators';
@@ -159,6 +149,59 @@ const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
     dispatch(redirect(newAction));
   },
 });
+
+const getLastPathRoute = (userId) => {
+  const userSettings = getUserSettingsFromStorage(userId);
+  if (userSettings?.lastPath) {
+    return pathToAction(userSettings.lastPath, routesMap, qs);
+  }
+  return null;
+};
+
+/*
+ * Define the correct redirect route based on user assignments.
+ * See EPMRPP-105682:
+ * a) instance only — 'All organizations' page
+ * b) single project — project 'Dashboards' page
+ * c) one organization, several projects — organization 'Projects' page
+ * d) several organizations — 'All organizations' page
+ * e) one organization only — organization 'Projects' page
+ */
+export const getRedirectRoute = (user) => {
+  const assignedOrganizations = user?.assignedOrganizations || {};
+  const assignedProjects = user?.assignedProjects || {};
+  const orgCount = Object.keys(assignedOrganizations).length;
+  const projCount = Object.keys(assignedProjects).length;
+
+  // Single project — find its organization and go to project dashboard
+  if (projCount === 1) {
+    const project = Object.values(assignedProjects)[0];
+    const organization = Object.values(assignedOrganizations).find(
+      (org) => org.organizationId === project.organizationId,
+    );
+    if (organization) {
+      return {
+        type: PROJECT_DASHBOARD_PAGE,
+        payload: {
+          organizationSlug: organization.organizationSlug,
+          projectSlug: project.projectSlug,
+        },
+      };
+    }
+  }
+
+  // Single organization — go to organization projects page
+  if (orgCount === 1) {
+    const organization = Object.values(assignedOrganizations)[0];
+    return {
+      type: ORGANIZATION_PROJECTS_PAGE,
+      payload: { organizationSlug: organization.organizationSlug },
+    };
+  }
+
+  // No assignments, multiple organizations, or fallback
+  return { type: ORGANIZATIONS_PAGE };
+};
 
 const routesMap = {
   [HOME_PAGE]: redirectRoute('/', (payload) => ({ type: LOGIN_PAGE, payload })),
@@ -550,61 +593,16 @@ const routesMap = {
   },
 };
 
-export const onBeforeRouteChange = (dispatch, getState, { action }) => {
-  const {
-    type: nextPageType,
-    payload: { organizationSlug: hashOrganizationSlug, projectSlug: hashProjectSlug },
-  } = action;
+export const ROUTE_ACTION_TYPES = new Set(Object.keys(routesMap));
 
-  let { organizationSlug, projectSlug } = activeProjectSelector(getState());
-  const hashProjectKey = activeProjectKeySelector(getState());
+export const onBeforeRouteChange = (dispatch, getState, { action }) => {
+  const { type: nextPageType, payload: { organizationSlug, projectSlug } = {} } = action;
+
   const currentPageType = pageSelector(getState());
   const authorized = isAuthorizedSelector(getState());
-  const userId = userInfoSelector(getState())?.userId;
-  const {
-    isAdmin,
-    hasPermission,
-    assignedProjectKey,
-    assignmentNotRequired,
-    isAssignedToTargetOrganization,
-  } = userAssignedSelector(hashProjectSlug, hashOrganizationSlug)(getState());
-
-  const isAdminNewPageType = !!adminPageNames[nextPageType];
-  const isAdminCurrentPageType = !!adminPageNames[currentPageType];
-
-  const projectKey = assignedProjectKey || (assignmentNotRequired && hashProjectKey);
-
-  const isChangedProject =
-    organizationSlug !== hashOrganizationSlug || projectSlug !== hashProjectSlug;
-
-  if (hashOrganizationSlug && (isChangedProject || isAdminCurrentPageType) && !isAdminNewPageType) {
-    if (hashProjectSlug && hasPermission) {
-      dispatch(
-        setActiveProjectAction({
-          organizationSlug: hashOrganizationSlug,
-          projectSlug: hashProjectSlug,
-        }),
-      );
-      dispatch(setActiveProjectKeyAction(projectKey));
-      dispatch(fetchProjectAction(projectKey));
-      dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
-
-      organizationSlug = hashOrganizationSlug;
-      projectSlug = hashProjectSlug;
-    } else if (!hashProjectSlug && (isAssignedToTargetOrganization || assignmentNotRequired)) {
-      dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
-
-      organizationSlug = hashOrganizationSlug;
-    } else if (isChangedProject) {
-      dispatch(
-        redirect({
-          ...action,
-          payload: { ...action.payload, organizationSlug, projectSlug },
-          meta: {},
-        }),
-      );
-    }
-  }
+  const user = userInfoSelector(getState());
+  const userId = user?.userId;
+  const isAdmin = isAdminSelector(getState());
 
   if (nextPageType !== currentPageType) {
     dispatch(clearPageStateAction(currentPageType, nextPageType));
@@ -630,12 +628,8 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
     switch (access) {
       case ANONYMOUS_ACCESS:
         if (authorized) {
-          dispatch(
-            redirect({
-              type: PROJECT_DASHBOARD_PAGE,
-              payload: { organizationSlug, projectSlug },
-            }),
-          );
+          const redirectRoute = getLastPathRoute(userId) || getRedirectRoute(user);
+          dispatch(redirect(redirectRoute));
         }
         break;
       case ADMIN_ACCESS:
