@@ -1,0 +1,106 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { redirect } from 'redux-first-router';
+import {
+  userInfoSelector,
+  activeProjectSelector,
+  setActiveProjectAction,
+  setActiveProjectKeyAction,
+} from 'controllers/user';
+import { isAuthorizedSelector } from 'controllers/auth';
+import { userAssignedSelector } from 'controllers/pages';
+import { fetchProjectAction, prepareActiveProjectAction } from 'controllers/project';
+import {
+  fetchOrganizationBySlugAction,
+  activeOrganizationSelector,
+} from 'controllers/organization';
+import { getRedirectRoute, ROUTE_ACTION_TYPES } from 'routes/routesMap';
+
+/**
+ * Organization/project route middleware: access check, sync of active org/project from URL, redirect on no access.
+ * Must run before redux-first-router so route thunks see correct activeProjectKey/activeOrganization;
+ * otherwise page thunks (e.g. fetchDashboards) would use the previous project and fire duplicate requests.
+ */
+export const organizationProjectRouteMiddleware = (store) => (next) => (action) => {
+  if (!ROUTE_ACTION_TYPES.has(action.type)) return next(action);
+
+  const { getState, dispatch } = store;
+  const {
+    organizationSlug: hashOrganizationSlug,
+    projectSlug: hashProjectSlug,
+    projectKey: hashProjectKey,
+  } = action.payload || {};
+
+  let { slug: organizationSlug } = activeOrganizationSelector(getState());
+  let { projectSlug } = activeProjectSelector(getState());
+  const authorized = isAuthorizedSelector(getState());
+  const user = userInfoSelector(getState());
+  const { hasPermission, hasPermissionOrganization, assignedProjectKey, assignmentNotRequired } =
+    userAssignedSelector(hashProjectSlug, hashOrganizationSlug)(getState());
+
+  const projectKey = assignedProjectKey || (assignmentNotRequired && hashProjectKey);
+
+  const isOrganizationPage = !!hashOrganizationSlug;
+  const isProjectPage = isOrganizationPage && !!hashProjectSlug;
+
+  const isChangedOrganization = organizationSlug !== hashOrganizationSlug;
+  const isChangedProject = isChangedOrganization || projectSlug !== hashProjectSlug;
+
+  // For project pages check project-level permission, for org pages — org-level
+  const hasPageAccess = isProjectPage ? hasPermission : hasPermissionOrganization;
+
+  if (authorized) {
+    // No access — redirect to a guaranteed accessible route
+    if (isOrganizationPage && !hasPageAccess) {
+      dispatch(redirect(getRedirectRoute(user)));
+
+      return;
+    }
+
+    // Organization changed — fetch its data (runs independently of project change)
+    if (isOrganizationPage && hasPageAccess && isChangedOrganization) {
+      dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
+    }
+
+    if (isProjectPage && isChangedProject) {
+      // Project changed — update active project and fetch its data
+      dispatch(
+        setActiveProjectAction({
+          organizationSlug: hashOrganizationSlug,
+          projectSlug: hashProjectSlug,
+        }),
+      );
+      if (projectKey) {
+        dispatch(setActiveProjectKeyAction(projectKey));
+        dispatch(fetchProjectAction(projectKey));
+      } else {
+        // Resolve project by slug on manual URL change and reload
+        dispatch(
+          prepareActiveProjectAction({
+            organizationSlug: hashOrganizationSlug,
+            projectSlug: hashProjectSlug,
+            action,
+          }),
+        );
+
+        return;
+      }
+    }
+  }
+
+  return next(action);
+};
