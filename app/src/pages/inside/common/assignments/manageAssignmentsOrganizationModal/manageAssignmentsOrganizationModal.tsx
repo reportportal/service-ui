@@ -78,6 +78,7 @@ export const AssignmentDescriptionLink = ({
 );
 
 const renderDescriptionLink = (chunks: ReactNode) => (
+  // TODO: currently the link does not lead anywhere, as the url is not clarified yet.
   <AssignmentDescriptionLink href="#" className={cx('description-link')}>
     {chunks}
   </AssignmentDescriptionLink>

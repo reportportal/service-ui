@@ -48,7 +48,7 @@
     margin-left: 4px;
 
     svg path {
-      fill: $COLOR--e-300;
+      fill: var(--rp-ui-color-field-icon);
     }
   }
 }
