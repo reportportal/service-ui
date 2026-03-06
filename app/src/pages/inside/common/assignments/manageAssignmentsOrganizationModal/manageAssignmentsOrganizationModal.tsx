@@ -19,7 +19,7 @@ import {
   isAssignmentDirty,
   MANAGE_ASSIGNMENTS_FORM,
 } from './constants';
-import { type ReactNode, useCallback, useEffect, useState } from 'react';
+import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { MessageDescriptor, useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
@@ -102,6 +102,7 @@ const ManageAssignmentsOrganizationModalView = ({
   const dispatch = useDispatch();
   const currentUserId = useSelector(idSelector) as number;
   const [showUnassignConfirmation, setShowUnassignConfirmation] = useState(false);
+  const [showDiscardConfirmation, setShowDiscardConfirmation] = useState(false);
   const [currentOrganization, setCurrentOrganization] = useState<OrganizationValue | null>(null);
   const [initialOrganization, setInitialOrganization] = useState<OrganizationValue | null>(null);
   const handleUnassignSuccess = useHandleUnassignSuccess(user, onUnassign);
@@ -109,15 +110,28 @@ const ManageAssignmentsOrganizationModalView = ({
   const isDirty = isAssignmentDirty(currentOrganization, initialOrganization);
   const isBusy = assignmentsLoading || assignmentsUpdateLoading || !currentOrganization;
 
+  const initialSnapshotTakenRef = useRef(false);
+
+  const resetModalState = useCallback(() => {
+    setShowUnassignConfirmation(false);
+    setShowDiscardConfirmation(false);
+    setCurrentOrganization(null);
+    setInitialOrganization(null);
+    initialSnapshotTakenRef.current = false;
+  }, []);
+
   useEffect(() => {
     dispatch(fetchUserAssignmentsAction(organization.id, user.id));
   }, [dispatch, organization.id, user.id]);
 
   const handleOrganizationAssignment = useCallback(() => {
-    if (!assignmentsLoading && organization && user) {
+    if (!assignmentsLoading && assignmentsData !== null && organization && user) {
       const next = getCurrentOrganizationAssignment(organization, assignmentsData, user);
-      setCurrentOrganization(next);
-      setInitialOrganization((prev) => prev ?? next);
+      if (!initialSnapshotTakenRef.current) {
+        initialSnapshotTakenRef.current = true;
+        setCurrentOrganization(next);
+        setInitialOrganization(next);
+      }
     }
   }, [assignmentsLoading, assignmentsData, organization, user]);
 
@@ -139,15 +153,18 @@ const ManageAssignmentsOrganizationModalView = ({
   };
 
   const onSaveAssignments = (_values: { organizations?: Organization[] }) => {
+    if (!currentOrganization || !isDirty) return;
     trackEvent(ORGANIZATION_PAGE_EVENTS.manageAssignments('save'));
-    if (!currentOrganization) return;
     const payload = buildUpdateAssignmentsPayload(currentOrganization);
     dispatch(
       updateUserAssignmentsAction(
         organization.id,
         user.id,
         payload,
-        () => dispatch(hideModalAction()),
+        () => {
+          resetModalState();
+          dispatch(hideModalAction());
+        },
         user,
       ),
     );
@@ -199,6 +216,22 @@ const ManageAssignmentsOrganizationModalView = ({
     );
   };
 
+  const handleCancelClick = (closeModal: () => void) => {
+    if (isBusy) return;
+    if (isDirty) {
+      setShowDiscardConfirmation(true);
+    } else {
+      resetModalState();
+      closeModal();
+    }
+  };
+
+  const handleDiscardConfirm = (closeModal: () => void) => {
+    setShowDiscardConfirmation(false);
+    resetModalState();
+    closeModal();
+  };
+
   const createFooter = (closeModal: () => void) => {
     if (showUnassignConfirmation) {
       return (
@@ -220,17 +253,47 @@ const ManageAssignmentsOrganizationModalView = ({
       );
     }
 
+    if (showDiscardConfirmation) {
+      return (
+        <div className={cx('footer', 'footer-confirmation')}>
+          <div className={cx('confirmation-text')}>
+            {formatMessage(messages.discardChangesConfirmation as MessageDescriptor)}
+          </div>
+          <div className={cx('action-buttons')}>
+            <Button
+              variant="ghost"
+              onClick={() => setShowDiscardConfirmation(false)}
+              disabled={isBusy}
+            >
+              {formatMessage(COMMON_LOCALE_KEYS.NO)}
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => handleDiscardConfirm(closeModal)}
+              disabled={isBusy}
+            >
+              {formatMessage(COMMON_LOCALE_KEYS.DISCARD)}
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className={cx('footer')}>
         {renderUnassignButton()}
         <div className={cx('action-buttons')}>
-          <Button variant="ghost" onClick={closeModal} disabled={isBusy}>
+          <Button
+            variant="ghost"
+            onClick={() => handleCancelClick(closeModal)}
+            disabled={isBusy}
+          >
             {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
           </Button>
           <Button
             variant="primary"
             onClick={() => formHandleSubmit(onSaveAssignments)()}
-            disabled={isBusy}
+            disabled={isBusy || !isDirty}
           >
             {formatMessage(COMMON_LOCALE_KEYS.SAVE)}
           </Button>
@@ -247,6 +310,11 @@ const ManageAssignmentsOrganizationModalView = ({
     const next = Array.isArray(value) ? value[0] : value;
     if (next) setCurrentOrganization(next);
   };
+  const handleModalClose = useCallback(() => {
+    resetModalState();
+    dispatch(hideModalAction());
+  }, [resetModalState, dispatch]);
+
   return (
     <Modal
       description={description}
@@ -255,6 +323,7 @@ const ManageAssignmentsOrganizationModalView = ({
       createFooter={createFooter}
       scrollable
       allowCloseOutside={!isDirty}
+      onClose={handleModalClose}
     >
       <div className={cx('modal-content')}>
         <ModalLoadingOverlay isVisible={assignmentsLoading || assignmentsUpdateLoading} />
