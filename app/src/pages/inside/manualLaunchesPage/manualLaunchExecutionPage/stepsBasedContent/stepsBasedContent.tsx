@@ -49,7 +49,7 @@ export const StepsBasedContent = ({ execution }: ExecutionContentProps) => {
     <div className={cx('steps-based-content')}>
       <CollapsibleSection
         title={formatMessage(messages.requirementsLink)}
-        defaultMessage={!hasRequirements ? formatMessage(messages.noAttachments) : undefined}
+        defaultMessage={hasRequirements ? undefined : formatMessage(messages.noAttachments)}
       >
         {hasRequirements ? <RequirementsList items={requirements} /> : null}
       </CollapsibleSection>

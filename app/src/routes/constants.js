@@ -146,19 +146,19 @@ export const pageRendering = {
   PROJECT_DASHBOARD_PRINT_PAGE: { component: DashboardPrintPage, layout: EmptyLayout },
   PROJECT_FILTERS_PAGE: { component: FiltersPage, layout: ProjectLayout },
   [LAUNCHES_PAGE]: { component: LaunchesPage, layout: ProjectLayout },
-  MANUAL_LAUNCHES_PAGE: {
+  [MANUAL_LAUNCHES_PAGE]: {
     component: ManualLaunchesPage,
     layout: ProjectLayout,
     rawContent: true,
     isTMS: true,
   },
-  MANUAL_LAUNCH_DETAILS_PAGE: {
+  [MANUAL_LAUNCH_DETAILS_PAGE]: {
     component: ManualLaunchDetailsPage,
     layout: ProjectLayout,
     rawContent: true,
     isTMS: true,
   },
-  MANUAL_LAUNCH_EXECUTION_PAGE: {
+  [MANUAL_LAUNCH_EXECUTION_PAGE]: {
     component: ManualLaunchExecutionPage,
     layout: ProjectLayout,
     rawContent: true,

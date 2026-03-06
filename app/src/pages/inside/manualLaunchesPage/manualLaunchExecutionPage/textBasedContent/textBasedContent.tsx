@@ -51,7 +51,7 @@ export const TextBasedContent = ({ execution }: ExecutionContentProps) => {
     <div className={cx('text-based-content')}>
       <CollapsibleSection
         title={formatMessage(messages.requirementsLink)}
-        defaultMessage={!hasRequirements ? formatMessage(messages.noAttachments) : undefined}
+        defaultMessage={hasRequirements ? undefined : formatMessage(messages.noAttachments)}
       >
         {hasRequirements ? <RequirementsList items={requirements} /> : null}
       </CollapsibleSection>
@@ -93,7 +93,7 @@ export const TextBasedContent = ({ execution }: ExecutionContentProps) => {
 
       <CollapsibleSection
         title={formatMessage(commonMessages.attachments)}
-        defaultMessage={!hasAttachments ? formatMessage(messages.noAttachments) : undefined}
+        defaultMessage={hasAttachments ? undefined : formatMessage(messages.noAttachments)}
       >
         {hasAttachments ? (
           <AttachmentList attachments={attachments as unknown as Attachment[]} />
