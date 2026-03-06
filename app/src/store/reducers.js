@@ -28,6 +28,7 @@ import {
   manualLaunchesReducer,
   manualLaunchFoldersReducer,
   manualLaunchTestCaseExecutionsReducer,
+  activeManualLaunchExecutionReducer,
 } from 'controllers/manualLaunch';
 import { notificationReducer } from 'controllers/notification';
 import { suiteReducer } from 'controllers/suite/reducer';
@@ -63,6 +64,7 @@ export default {
   manualLaunch: manualLaunchesReducer,
   manualLaunchFolders: manualLaunchFoldersReducer,
   manualLaunchTestCaseExecutions: manualLaunchTestCaseExecutionsReducer,
+  activeManualLaunchExecution: activeManualLaunchExecutionReducer,
   suites: suiteReducer,
   filters: filterReducer,
   tests: testReducer,

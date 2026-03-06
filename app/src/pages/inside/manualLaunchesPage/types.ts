@@ -148,4 +148,9 @@ export interface UrlsHelper {
     launchId: string | number,
     query?: Record<string, unknown>,
   ) => string;
+  manualLaunchExecutionById: (
+    projectKey: string,
+    launchId: string | number,
+    executionId: string | number,
+  ) => string;
 }

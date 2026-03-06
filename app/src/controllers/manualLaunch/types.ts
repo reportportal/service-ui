@@ -46,6 +46,12 @@ export interface GetManualLaunchTestCaseExecutionsParams {
   limit?: string | number;
 }
 
+export interface GetManualLaunchExecutionParams {
+  launchId: string | number;
+  testCaseId: string | number;
+  executionId: string | number;
+}
+
 // State types
 export interface ManualLaunchState {
   data: {
@@ -71,6 +77,11 @@ export interface ManualLaunchTestCaseExecutionsState {
     content: TestCaseExecution[];
     page: Page | null;
   } | null;
+  isLoading?: boolean;
+}
+
+export interface ActiveManualLaunchExecutionState {
+  data: TestCaseExecution | null;
   isLoading?: boolean;
 }
 
@@ -152,16 +163,25 @@ export interface ManualScenarioStep {
   attachments?: Attachment[];
 }
 
-export type ManualScenarioType = 'STEPS';
+export type ManualScenarioType = 'STEPS' | 'TEXT';
+
+export interface ManualScenarioRequirement {
+  id: string;
+  value: string;
+}
 
 export interface ManualScenario {
   id: number;
   executionEstimationTime: number;
   linkToRequirements?: string;
+  requirements?: ManualScenarioRequirement[];
   preconditions?: Preconditions;
   attributes?: Attribute[];
   manualScenarioType: ManualScenarioType;
   steps?: ManualScenarioStep[];
+  instructions?: string;
+  expectedResult?: string;
+  attachments?: Attachment[];
 }
 
 export interface TestCaseExecution {

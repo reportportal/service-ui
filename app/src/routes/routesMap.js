@@ -45,6 +45,7 @@ import {
   LAUNCHES_PAGE,
   MANUAL_LAUNCHES_PAGE,
   MANUAL_LAUNCH_DETAILS_PAGE,
+  MANUAL_LAUNCH_EXECUTION_PAGE,
   PROJECT_LAUNCHES_PAGE,
   PLUGINS_PAGE,
   PLUGINS_TAB_PAGE,
@@ -104,10 +105,7 @@ import { fetchLogPageData } from 'controllers/log';
 import { fetchHistoryPageInfoAction } from 'controllers/itemsHistory';
 import { setSessionItem, updateStorageItem } from 'common/utils/storageUtils';
 import { fetchClustersAction } from 'controllers/uniqueErrors';
-import {
-  GET_TEST_CASE_DETAILS,
-  getFoldersAction,
-} from 'controllers/testCase';
+import { GET_TEST_CASE_DETAILS, getFoldersAction } from 'controllers/testCase';
 import {
   API_KEYS_ROUTE,
   CONFIG_EXAMPLES_ROUTE,
@@ -148,6 +146,7 @@ import {
   getManualLaunchAction,
   getManualLaunchFoldersAction,
   getManualLaunchTestCaseExecutionsAction,
+  getManualLaunchExecutionAction,
 } from 'controllers/manualLaunch';
 import { getRouterParams } from 'common/utils';
 
@@ -373,6 +372,17 @@ const routesMap = {
             limit,
           }),
         );
+      }
+    },
+  },
+  [MANUAL_LAUNCH_EXECUTION_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/manualLaunches/:launchId/testCase/:testCaseId/execution/:executionId',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      const { launchId, testCaseId, executionId } = state.location?.payload || {};
+
+      if (launchId && testCaseId && executionId) {
+        dispatch(getManualLaunchExecutionAction({ launchId, testCaseId, executionId }));
       }
     },
   },

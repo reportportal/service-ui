@@ -21,6 +21,7 @@ import {
   ManualLaunchState,
   ManualLaunchFoldersState,
   ManualLaunchTestCaseExecutionsState,
+  ActiveManualLaunchExecutionState,
 } from 'controllers/manualLaunch/types';
 import { UserState } from 'controllers/user/types';
 import { NotificationState } from 'controllers/notification/types';
@@ -53,6 +54,7 @@ export interface AppState extends BaseAppState {
   manualLaunch?: ManualLaunchState;
   manualLaunchFolders?: ManualLaunchFoldersState;
   manualLaunchTestCaseExecutions?: ManualLaunchTestCaseExecutionsState;
+  activeManualLaunchExecution?: ActiveManualLaunchExecutionState;
   user?: UserState;
   notifications?: NotificationState;
   modal?: ModalState;
