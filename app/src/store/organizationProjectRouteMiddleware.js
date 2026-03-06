@@ -45,60 +45,59 @@ export const organizationProjectRouteMiddleware = (store) => (next) => (action) 
     projectKey: hashProjectKey,
   } = action.payload || {};
 
-  let { slug: organizationSlug } = activeOrganizationSelector(getState());
-  let { projectSlug } = activeProjectSelector(getState());
   const authorized = isAuthorizedSelector(getState());
+  const isOrganizationPage = !!hashOrganizationSlug;
+
+  if (!authorized || !isOrganizationPage) return next(action);
+
+  const { slug: organizationSlug } = activeOrganizationSelector(getState());
+  const { projectSlug } = activeProjectSelector(getState());
   const user = userInfoSelector(getState());
   const { hasPermission, hasPermissionOrganization, assignedProjectKey, assignmentNotRequired } =
     userAssignedSelector(hashProjectSlug, hashOrganizationSlug)(getState());
 
   const projectKey = assignedProjectKey || (assignmentNotRequired && hashProjectKey);
-
-  const isOrganizationPage = !!hashOrganizationSlug;
-  const isProjectPage = isOrganizationPage && !!hashProjectSlug;
-
-  const isChangedOrganization = organizationSlug !== hashOrganizationSlug;
-  const isChangedProject = isChangedOrganization || projectSlug !== hashProjectSlug;
+  const isProjectPage = !!hashProjectSlug;
 
   // For project pages check project-level permission, for org pages — org-level
   const hasPageAccess = isProjectPage ? hasPermission : hasPermissionOrganization;
 
-  if (authorized) {
-    // No access — redirect to a guaranteed accessible route
-    if (isOrganizationPage && !hasPageAccess) {
-      dispatch(redirect(getRedirectRoute(user)));
+  // No access — redirect to a guaranteed accessible route
+  if (!hasPageAccess) {
+    dispatch(redirect(getRedirectRoute(user)));
+    return;
+  }
 
-      return;
-    }
+  const isChangedOrganization = organizationSlug !== hashOrganizationSlug;
+  const isChangedProject = isChangedOrganization || projectSlug !== hashProjectSlug;
 
-    // Organization changed — fetch its data (runs independently of project change)
-    if (isOrganizationPage && hasPageAccess && isChangedOrganization) {
-      dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
-    }
+  // Organization changed — fetch its data (runs independently of project change)
+  if (isChangedOrganization) {
+    dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
+  }
 
-    if (isProjectPage && isChangedProject) {
-      // Project changed — update active project and fetch its data
+  if (isProjectPage && isChangedProject) {
+    // Project changed — update active project and fetch its data
+    dispatch(
+      setActiveProjectAction({
+        organizationSlug: hashOrganizationSlug,
+        projectSlug: hashProjectSlug,
+      }),
+    );
+    if (projectKey) {
+      dispatch(setActiveProjectKeyAction(projectKey));
+      dispatch(fetchProjectAction(projectKey));
+    } else {
+      // Resolve project by slug on manual URL change and reload
       dispatch(
-        setActiveProjectAction({
+        prepareActiveProjectAction({
           organizationSlug: hashOrganizationSlug,
           projectSlug: hashProjectSlug,
+          action,
         }),
       );
-      if (projectKey) {
-        dispatch(setActiveProjectKeyAction(projectKey));
-        dispatch(fetchProjectAction(projectKey));
-      } else {
-        // Resolve project by slug on manual URL change and reload
-        dispatch(
-          prepareActiveProjectAction({
-            organizationSlug: hashOrganizationSlug,
-            projectSlug: hashProjectSlug,
-            action,
-          }),
-        );
 
-        return;
-      }
+      return;
     }
   }
 
