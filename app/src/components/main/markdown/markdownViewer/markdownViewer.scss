@@ -27,7 +27,7 @@
   color: $COLOR--charcoal-grey;
   font-size: 12px;
   overflow: hidden;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 
   .CodeMirror {
     .CodeMirror-lines {

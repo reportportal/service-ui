@@ -58,7 +58,7 @@
   font-family: $FONT-REGULAR;
   font-size: 13px;
   line-height: 18px;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 
   div {
     max-width: 132px;

@@ -39,7 +39,7 @@
 .data-value {
   flex: 300px;
   color: $COLOR--charcoal-grey;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 
   &.multiple-data {
     display: flex;

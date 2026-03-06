@@ -41,14 +41,14 @@
 }
 
 .id {
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 .code-ref {
   display: flex;
   justify-content: flex-start;
   white-space: pre-line;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
   padding-right: 10px;
 }
 
