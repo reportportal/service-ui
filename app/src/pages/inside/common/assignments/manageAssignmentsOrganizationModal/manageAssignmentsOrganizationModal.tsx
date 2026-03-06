@@ -14,44 +14,91 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useIntl, MessageDescriptor } from 'react-intl';
-import { Modal, Button, Tooltip } from '@reportportal/ui-kit';
+import { type ReactNode, useCallback, useEffect, useState } from 'react';
+import { connect, useDispatch, useSelector } from 'react-redux';
+import { MessageDescriptor, useIntl } from 'react-intl';
+import { reduxForm } from 'redux-form';
+import { Button, Modal, Tooltip } from '@reportportal/ui-kit';
 import { useTracking } from 'react-tracking';
-
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { UserInfo, idSelector } from 'controllers/user';
-import { unassignFromOrganizationAction } from 'controllers/organization/users';
+import { ExternalLink } from 'pages/inside/common/externalLink';
+import { idSelector, UserInfo } from 'controllers/user';
+import {
+  fetchUserAssignmentsAction,
+  unassignFromOrganizationAction,
+  updateUserAssignmentsAction,
+  userAssignmentsDataSelector,
+  userAssignmentsLoadingSelector,
+  userAssignmentsUpdateLoadingSelector,
+} from 'controllers/organization/users';
+import type { UserOrganizationProjectsResponse } from 'controllers/organization/users/types';
 import { Organization, OrganizationType } from 'controllers/organization';
 import { messages } from 'common/constants/localization/assignmentsLocalization';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { UPSA } from 'common/constants/accountType';
+import { hideModalAction } from 'controllers/modal';
+import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 
 import { useHandleUnassignSuccess } from '..';
+import { buildUpdateAssignmentsPayload, getCurrentOrganizationAssignment, MANAGE_ASSIGNMENTS_FORM, } from './constants';
+import {
+  type Organization as OrganizationValue,
+  OrganizationAssignment,
+} from 'pages/inside/common/assignments/organizationAssignment';
 
 import styles from './manageAssignmentsOrganizationModal.scss';
 
 const cx = createClassnames(styles);
 
-interface ManageAssignmentsOrganizationModalProps {
+interface ManageAssignmentsOrganizationModalOwnProps {
   user: UserInfo;
   organization: Organization;
   onUnassign?: () => void;
 }
 
-export const ManageAssignmentsOrganizationModal = ({
+const ManageAssignmentsOrganizationModalView = ({
   user,
   organization,
   onUnassign,
-}: ManageAssignmentsOrganizationModalProps) => {
+  handleSubmit: formHandleSubmit,
+  assignmentsData,
+  assignmentsLoading,
+  assignmentsUpdateLoading,
+  hasNoAssignments: _hasNoAssignments,
+}: ManageAssignmentsOrganizationModalOwnProps & {
+  handleSubmit: (submit: (values: { organizations?: unknown[] }) => void) => () => void;
+  assignmentsData: UserOrganizationProjectsResponse | null;
+  assignmentsLoading: boolean;
+  assignmentsUpdateLoading: boolean;
+  hasNoAssignments: boolean;
+}) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const currentUserId = useSelector(idSelector) as number;
   const [showUnassignConfirmation, setShowUnassignConfirmation] = useState(false);
+  const [currentOrganization, setCurrentOrganization] = useState<OrganizationValue | null>(null);
   const handleUnassignSuccess = useHandleUnassignSuccess(user, onUnassign);
+
+  useEffect(() => {
+    dispatch(fetchUserAssignmentsAction(organization.id, user.id));
+  }, [dispatch, organization.id, user.id]);
+
+  const handleOrganizationAssignment = useCallback(() => {
+    if (!assignmentsLoading && organization && user) {
+      setCurrentOrganization(
+        getCurrentOrganizationAssignment(organization, assignmentsData, user)
+      );
+    }
+  }, [assignmentsLoading, assignmentsData, organization, user, setCurrentOrganization]);
+
+
+  useEffect(() => {
+    handleOrganizationAssignment();
+  }, [handleOrganizationAssignment]);
+
+
   const confirmationMessage =
     currentUserId === user.id ? messages.unassignConfirmation : messages.unassignConfirmationUser;
 
@@ -63,6 +110,21 @@ export const ManageAssignmentsOrganizationModal = ({
   const handleUnassignConfirm = () => {
     dispatch(unassignFromOrganizationAction(user, organization, handleUnassignSuccess));
     trackEvent(ORGANIZATION_PAGE_EVENTS.manageAssignments('yes_unassign'));
+  };
+
+  const onSaveAssignments = (_values: { organizations?: Organization[] }) => {
+    trackEvent(ORGANIZATION_PAGE_EVENTS.manageAssignments('save'));
+    if (!currentOrganization) return;
+    const payload = buildUpdateAssignmentsPayload(currentOrganization);
+    dispatch(
+      updateUserAssignmentsAction(
+        organization.id,
+        user.id,
+        payload,
+        () => dispatch(hideModalAction()),
+        user,
+      ),
+    );
   };
 
   const renderUnassignButton = () => {
@@ -77,16 +139,18 @@ export const ManageAssignmentsOrganizationModal = ({
     let isDisabled = false;
     let tooltipMessage: MessageDescriptor = null;
 
-    if (isUpsaUser && isExternalOrg) {
+    if (isCurrentUser) {
+      isDisabled = true;
+      tooltipMessage =
+        isPersonalOrg && isOrganizationOwner
+          ? messages.unassignPersonalOwnerSelfMessage
+          : messages.unassignSelfMessage;
+    } else if (isUpsaUser && isExternalOrg) {
       isDisabled = true;
       tooltipMessage = messages.unassignUpsaMessage;
-    }
-
-    if (isPersonalOrg && isOrganizationOwner) {
+    } else if (isPersonalOrg && isOrganizationOwner) {
       isDisabled = true;
-      tooltipMessage = isCurrentUser
-        ? messages.unassignPersonalOwnerSelfMessage
-        : messages.unassignPersonalOwnerMessage;
+      tooltipMessage = messages.unassignPersonalOwnerMessage;
     }
 
     const button = (
@@ -133,19 +197,92 @@ export const ManageAssignmentsOrganizationModal = ({
           <Button variant="ghost" onClick={closeModal}>
             {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
           </Button>
-          <Button variant="primary">{formatMessage(COMMON_LOCALE_KEYS.SAVE)}</Button>
+          <Button
+            variant="primary"
+            onClick={() => formHandleSubmit(onSaveAssignments)()}
+            disabled={assignmentsUpdateLoading}
+          >
+            {formatMessage(COMMON_LOCALE_KEYS.SAVE)}
+          </Button>
         </div>
       </div>
     );
   };
 
+  const description = formatMessage(messages.manageAssignmentsDescription, {
+    link: (chunks: ReactNode) => (
+      <ExternalLink
+        href={'#'}
+        className={cx('description-link')}
+      >
+        {chunks}
+      </ExternalLink>
+    ),
+  });
+
+  const handleOrganizationChange = (value: OrganizationValue | OrganizationValue[]) => {
+    const next = Array.isArray(value) ? value[0] : value;
+    if (next) setCurrentOrganization(next);
+  };
+
   return (
     <Modal
+      description={description}
       title={formatMessage(messages.manageAssignmentsHeader, { name: user.fullName })}
       size="large"
       createFooter={createFooter}
+      scrollable
     >
-      <div className={cx('modal-content')}></div>
+      <div className={cx('modal-content')}>
+        <ModalLoadingOverlay isVisible={assignmentsLoading || assignmentsUpdateLoading} />
+        <div className={cx('assigned-to-header')}>
+          <span className={cx('assigned-to-label')}>
+            {formatMessage(messages.assignedTo as MessageDescriptor)}
+          </span>
+        </div>
+        {currentOrganization && (
+          <OrganizationAssignment
+            isMultiple={false}
+            value={currentOrganization}
+            onChange={handleOrganizationChange}
+          />
+        )}
+      </div>
     </Modal>
   );
 };
+
+function isEmptyAssignmentsResponse(data: UserOrganizationProjectsResponse | null): boolean {
+  return data == null || !data.items || data.items.length === 0;
+}
+
+const mapStateToProps = (state: unknown) => {
+  const assignmentsData = userAssignmentsDataSelector(state as never) as UserOrganizationProjectsResponse | null;
+  const assignmentsLoading = Boolean(userAssignmentsLoadingSelector(state as never)) ;
+  let hasNoAssignments = false;
+  if (!assignmentsLoading) {
+    hasNoAssignments = assignmentsData != null && isEmptyAssignmentsResponse(assignmentsData) ;
+  }
+  const assignmentsUpdateLoading = Boolean(userAssignmentsUpdateLoadingSelector(state as never));
+  return {
+    initialValues: { organizations: [] },
+    assignmentsData,
+    assignmentsLoading,
+    assignmentsUpdateLoading,
+    hasNoAssignments,
+  };
+};
+
+const FormWrapper = reduxForm<
+  { organizations?: unknown[] },
+  ManageAssignmentsOrganizationModalOwnProps & {
+    assignmentsData: UserOrganizationProjectsResponse | null;
+    assignmentsLoading: boolean;
+    assignmentsUpdateLoading: boolean;
+    hasNoAssignments: boolean;
+  }
+>({
+  form: MANAGE_ASSIGNMENTS_FORM,
+})(ManageAssignmentsOrganizationModalView);
+
+export const ManageAssignmentsOrganizationModal = connect(mapStateToProps)(FormWrapper);

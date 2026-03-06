@@ -16,7 +16,7 @@
 
 import { fetchDataAction } from 'controllers/fetch';
 import { URLS } from 'common/urls';
-import { all, put, select, takeEvery, call } from 'redux-saga/effects';
+import { put, select, takeEvery, call, all } from 'redux-saga/effects';
 import { querySelector } from './selectors';
 import { fetchOrganizationUsersAction } from './actionCreators';
 import { withActiveOrganization } from '../sagas';
@@ -24,10 +24,17 @@ import { showSuccessNotification, showErrorNotification } from 'controllers/noti
 import { fetch } from 'common/utils';
 import {
   FETCH_ORGANIZATION_USERS,
+  FETCH_USER_ASSIGNMENTS,
+  FETCH_USER_ASSIGNMENTS_SUCCESS,
+  FETCH_USER_ASSIGNMENTS_FAILURE,
   NAMESPACE,
   PREPARE_ACTIVE_ORGANIZATION_USERS,
   UNASSIGN_FROM_ORGANIZATION,
+  UPDATE_USER_ASSIGNMENTS,
+  UPDATE_USER_ASSIGNMENTS_SUCCESS,
+  UPDATE_USER_ASSIGNMENTS_FAILURE,
 } from './constants';
+
 
 function* fetchOrganizationUsers({ payload: organizationId }) {
   const query = yield select(querySelector);
@@ -58,8 +65,58 @@ function* unassignFromOrganization({ payload = {} }) {
   }
 }
 
+function* fetchUserAssignments({ payload }) {
+  const { organizationId, userId } = payload;
+  try {
+    const response = yield call(fetch, URLS.organizationUserProjects(organizationId, userId), {
+      method: 'get',
+    });
+    yield put({ type: FETCH_USER_ASSIGNMENTS_SUCCESS, payload: response });
+  } catch (_err) {
+    yield put({ type: FETCH_USER_ASSIGNMENTS_FAILURE });
+  }
+}
+
+function* updateUserAssignments({ payload }) {
+  const { organizationId, userId, payload: body, onSuccess, user } = payload;
+  try {
+    yield call(fetch, URLS.organizationUserAssignments(organizationId, userId), {
+      method: 'put',
+      data: body,
+    });
+    yield put({ type: UPDATE_USER_ASSIGNMENTS_SUCCESS, payload: { organizationId, userId } });
+    yield put(
+      showSuccessNotification({
+        messageId: 'assignmentUpdatedSuccess',
+        values: { name: user?.fullName ?? '' },
+      }),
+    );
+    yield put(fetchOrganizationUsersAction(organizationId));
+    onSuccess?.();
+  } catch (err) {
+    yield put({ type: UPDATE_USER_ASSIGNMENTS_FAILURE });
+    const message =
+      err?.message ||
+      err?.response?.data?.message ||
+      (typeof err?.response?.data === 'string' ? err.response.data : null);
+    yield put(
+      showErrorNotification(
+        message ? { message } : { messageId: 'updateAssignmentsError' },
+      ),
+    );
+  }
+}
+
 function* watchFetchUsers() {
   yield takeEvery(FETCH_ORGANIZATION_USERS, fetchOrganizationUsers);
+}
+
+function* watchFetchUserAssignments() {
+  yield takeEvery(FETCH_USER_ASSIGNMENTS, fetchUserAssignments);
+}
+
+function* watchUpdateUserAssignments() {
+  yield takeEvery(UPDATE_USER_ASSIGNMENTS, updateUserAssignments);
 }
 
 function* prepareActiveOrganizationUsers({ payload: { organizationSlug } }) {
@@ -77,5 +134,11 @@ function* watchUnassignFromOrganization() {
 }
 
 export function* usersSagas() {
-  yield all([watchFetchUsers(), watchFetchOrganizationUsers(), watchUnassignFromOrganization()]);
+  yield all([
+    watchFetchUsers(),
+    watchFetchOrganizationUsers(),
+    watchUnassignFromOrganization(),
+    watchFetchUserAssignments(),
+    watchUpdateUserAssignments(),
+  ]);
 }

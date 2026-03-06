@@ -81,6 +81,27 @@ export const messages = defineMessages({
     id: 'Assignment.manageAssignmentsHeader',
     defaultMessage: 'Manage Assignments of {name}',
   },
+  manageAssignmentsDescription: {
+    id: 'Assignment.manageAssignmentsDescription',
+    defaultMessage:
+      'View detailed guidelines on assignment rules, user roles and permissions in our <link>Documentation</link>',
+  },
+  assignedTo: {
+    id: 'Assignment.assignedTo',
+    defaultMessage: 'Assigned to',
+  },
+  assignmentUpdatedSuccess: {
+    id: 'Assignment.assignmentUpdatedSuccess',
+    defaultMessage: 'Assignment of {name} has been updated successfully',
+  },
+  addProject: {
+    id: 'Assignment.addProject',
+    defaultMessage: 'Add project',
+  },
+  noAssignmentsYet: {
+    id: 'Assignment.noAssignmentsYet',
+    defaultMessage: 'No assignments yet',
+  },
   unassignUpsaMessage: {
     id: 'Assignment.unassignUpsaMessage',
     defaultMessage:
@@ -93,5 +114,9 @@ export const messages = defineMessages({
   unassignPersonalOwnerSelfMessage: {
     id: 'Assignment.unassignPersonalOwnerSelfMessage',
     defaultMessage: 'As the owner, you cannot unassign yourself from a Personal Organization',
+  },
+  unassignSelfMessage: {
+    id: 'Assignment.unassignSelfMessage',
+    defaultMessage: 'You cannot unassign yourself from the organization',
   },
 });

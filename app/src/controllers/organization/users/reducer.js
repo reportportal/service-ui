@@ -20,7 +20,15 @@ import { alternativePaginationReducer } from 'controllers/pagination';
 import { loadingReducer } from 'controllers/loading';
 import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { ORGANIZATION_USERS_PAGE } from 'controllers/pages/constants';
-import { NAMESPACE } from './constants';
+import {
+  NAMESPACE,
+  FETCH_USER_ASSIGNMENTS,
+  FETCH_USER_ASSIGNMENTS_SUCCESS,
+  FETCH_USER_ASSIGNMENTS_FAILURE,
+  UPDATE_USER_ASSIGNMENTS,
+  UPDATE_USER_ASSIGNMENTS_SUCCESS,
+  UPDATE_USER_ASSIGNMENTS_FAILURE,
+} from './constants';
 import { initialPaginationState } from '../projects/constants';
 
 export const usersFetchReducer = fetchReducer(NAMESPACE, {
@@ -28,10 +36,34 @@ export const usersFetchReducer = fetchReducer(NAMESPACE, {
   initialState: [],
 });
 
+const initialAssignmentsState = { data: null, loading: false, updateLoading: false };
+
+const assignmentsReducer = (state = initialAssignmentsState, action) => {
+  const { type, payload } = action;
+  switch (type) {
+    case FETCH_USER_ASSIGNMENTS_SUCCESS:
+      return { ...state, data: payload, loading: false };
+    case FETCH_USER_ASSIGNMENTS_FAILURE:
+      return { ...state, loading: false };
+    case UPDATE_USER_ASSIGNMENTS:
+      return { ...state, updateLoading: true };
+    case UPDATE_USER_ASSIGNMENTS_SUCCESS:
+      return { ...state, updateLoading: false };
+    case UPDATE_USER_ASSIGNMENTS_FAILURE:
+      return { ...state, updateLoading: false };
+    default:
+      if (type === FETCH_USER_ASSIGNMENTS) {
+        return { ...state, loading: true };
+      }
+      return state;
+  }
+};
+
 export const reducer = combineReducers({
   pagination: alternativePaginationReducer(NAMESPACE, initialPaginationState),
   loading: loadingReducer(NAMESPACE),
   users: usersFetchReducer,
+  assignments: assignmentsReducer,
 });
 
 export const usersReducer = createPageScopedReducer(reducer, ORGANIZATION_USERS_PAGE);

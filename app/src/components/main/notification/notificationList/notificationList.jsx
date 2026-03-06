@@ -63,6 +63,14 @@ export const notificationMessages = defineMessages({
     id: 'Assignment.unassignOrganizationError',
     defaultMessage: 'An error occurred during unassigning from the organization',
   },
+  assignmentUpdatedSuccess: {
+    id: 'Assignment.assignmentUpdatedSuccess',
+    defaultMessage: 'Assignment of {name} has been updated successfully',
+  },
+  updateAssignmentsError: {
+    id: 'Assignment.updateAssignmentsError',
+    defaultMessage: 'An error occurred while updating assignments',
+  },
   deleteError: {
     id: 'ProjectsPage.deleteError',
     defaultMessage: 'An error occurred during deleting the project',
