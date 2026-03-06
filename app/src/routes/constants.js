@@ -29,6 +29,7 @@ import { FiltersPage } from 'pages/inside/filtersPage';
 import { LaunchesPage } from 'pages/inside/launchesPage';
 import { ManualLaunchesPage } from 'pages/inside/manualLaunchesPage';
 import { ManualLaunchDetailsPage } from 'pages/inside/manualLaunchesPage/manualLaunchDetailsPage';
+import { ManualLaunchExecutionPage } from 'pages/inside/manualLaunchesPage/manualLaunchExecutionPage';
 import { ProfilePage } from 'pages/inside/profilePage';
 import { SandboxPage } from 'pages/inside/sandboxPage';
 import { ProjectSettingsPageContainer } from 'pages/inside/projectSettingsPageContainer';
@@ -66,6 +67,9 @@ import {
   TEST_CASE_LIBRARY_PAGE,
   TEST_CASE_DETAILS_PAGE,
   PROJECT_TEST_PLAN_DETAILS_PAGE,
+  MANUAL_LAUNCHES_PAGE,
+  MANUAL_LAUNCH_DETAILS_PAGE,
+  MANUAL_LAUNCH_EXECUTION_PAGE,
 } from 'controllers/pages/constants';
 import { AdminUiExtensionPage } from 'pages/instance/adminUiExtensionPage';
 import { AccountRemovedPage } from 'pages/outside/accountRemovedPage';
@@ -142,14 +146,20 @@ export const pageRendering = {
   PROJECT_DASHBOARD_PRINT_PAGE: { component: DashboardPrintPage, layout: EmptyLayout },
   PROJECT_FILTERS_PAGE: { component: FiltersPage, layout: ProjectLayout },
   [LAUNCHES_PAGE]: { component: LaunchesPage, layout: ProjectLayout },
-  MANUAL_LAUNCHES_PAGE: {
+  [MANUAL_LAUNCHES_PAGE]: {
     component: ManualLaunchesPage,
     layout: ProjectLayout,
     rawContent: true,
     isTMS: true,
   },
-  MANUAL_LAUNCH_DETAILS_PAGE: {
+  [MANUAL_LAUNCH_DETAILS_PAGE]: {
     component: ManualLaunchDetailsPage,
+    layout: ProjectLayout,
+    rawContent: true,
+    isTMS: true,
+  },
+  [MANUAL_LAUNCH_EXECUTION_PAGE]: {
+    component: ManualLaunchExecutionPage,
     layout: ProjectLayout,
     rawContent: true,
     isTMS: true,

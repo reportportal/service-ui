@@ -39,10 +39,12 @@ import {
   GET_MANUAL_LAUNCH,
   GET_MANUAL_LAUNCH_FOLDERS,
   GET_MANUAL_LAUNCH_TEST_CASE_EXECUTIONS,
+  GET_MANUAL_LAUNCH_EXECUTION,
   MANUAL_LAUNCHES_NAMESPACE,
   ACTIVE_MANUAL_LAUNCH_NAMESPACE,
   MANUAL_LAUNCH_FOLDERS_NAMESPACE,
   MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
+  ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE,
   defaultManualLaunchesQueryParams,
 } from './constants';
 import {
@@ -50,8 +52,10 @@ import {
   GetManualLaunchParams,
   GetManualLaunchFoldersParams,
   GetManualLaunchTestCaseExecutionsParams,
+  GetManualLaunchExecutionParams,
   ManualLaunchFoldersResponse,
   TestCaseExecutionsResponse,
+  TestCaseExecution,
 } from './types';
 import { manualLaunchContentSelector } from './selectors';
 
@@ -231,6 +235,57 @@ function* getManualLaunchTestCaseExecutions(
   }
 }
 
+interface GetManualLaunchExecutionAction extends Action<typeof GET_MANUAL_LAUNCH_EXECUTION> {
+  payload: GetManualLaunchExecutionParams;
+}
+
+function* getManualLaunchExecution(action: GetManualLaunchExecutionAction): Generator {
+  try {
+    const projectKey = (yield select(projectKeySelector)) as string;
+    const { launchId, executionId } = action.payload;
+
+    yield put({
+      type: FETCH_START,
+      payload: { projectKey },
+      meta: { namespace: ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE },
+    });
+
+    const typedURLS = URLS as UrlsHelper;
+    const data = (yield call(
+      fetch,
+      typedURLS.manualLaunchExecutionById(projectKey, launchId, executionId),
+    )) as TestCaseExecution;
+
+    if (data) {
+      yield put(fetchSuccessAction(ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE, data));
+    } else {
+      yield put(
+        fetchErrorAction(
+          ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE,
+          new Error('Execution not found'),
+        ),
+      );
+      yield put(
+        showErrorNotification({
+          messageId: 'errorOccurredTryAgain',
+        }),
+      );
+    }
+  } catch (error) {
+    yield put(
+      fetchErrorAction(
+        ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE,
+        error instanceof Error ? error : new Error(String(error)),
+      ),
+    );
+    yield put(
+      showErrorNotification({
+        messageId: 'errorOccurredTryAgain',
+      }),
+    );
+  }
+}
+
 function* watchGetManualLaunches() {
   yield takeLatest(GET_MANUAL_LAUNCHES, getManualLaunches);
 }
@@ -247,11 +302,16 @@ function* watchGetManualLaunchTestCaseExecutions() {
   yield takeLatest(GET_MANUAL_LAUNCH_TEST_CASE_EXECUTIONS, getManualLaunchTestCaseExecutions);
 }
 
+function* watchGetManualLaunchExecution() {
+  yield takeLatest(GET_MANUAL_LAUNCH_EXECUTION, getManualLaunchExecution);
+}
+
 export function* manualLaunchesSagas() {
   yield all([
     watchGetManualLaunches(),
     watchGetManualLaunch(),
     watchGetManualLaunchFolders(),
     watchGetManualLaunchTestCaseExecutions(),
+    watchGetManualLaunchExecution(),
   ]);
 }
