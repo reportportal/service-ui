@@ -17,7 +17,9 @@
 import { FolderWithFullPath } from 'controllers/testCase';
 import { isString } from 'es-toolkit';
 
-import { ManualScenarioDto, ManualScenarioType, CreateTestCaseFormData, Attribute } from '../types';
+import { Attribute } from 'types/testCase';
+
+import { ManualScenarioDto, ManualScenarioType, CreateTestCaseFormData } from '../types';
 import { NewFolderData, isNewFolderData } from '../utils/getFolderFromFormValues';
 import { hasStepContent } from '../../common/scenarioUtils';
 

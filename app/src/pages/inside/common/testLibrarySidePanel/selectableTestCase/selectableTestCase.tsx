@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
+import { memo, useCallback } from 'react';
 import { CheckmarkIcon, DragNDropIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
-import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { TestCase } from 'types/testCase';
 
 import { DepthAwareCheckbox } from '../depthAwareCheckbox';
 
@@ -33,42 +34,36 @@ interface SelectableTestCaseItemProps {
   onToggle: (id: number) => void;
 }
 
-export const SelectableTestCase = ({
-  testCase,
-  isSelected,
-  isAddedToTestPlan,
-  depth,
-  onToggle,
-}: SelectableTestCaseItemProps) => {
-  const handleChange = () => {
-    if (!isAddedToTestPlan) {
+export const SelectableTestCase = memo(
+  ({ testCase, isSelected, isAddedToTestPlan, depth, onToggle }: SelectableTestCaseItemProps) => {
+    const handleChange = useCallback(() => {
       onToggle(testCase.id);
-    }
-  };
+    }, [onToggle, testCase.id]);
 
-  return (
-    <li className={cx('selectable-test-case')}>
-      <div className={cx('selectable-test-case__content')}>
-        {!isAddedToTestPlan && (
-          <DepthAwareCheckbox
-            depth={depth}
-            checked={isSelected || isAddedToTestPlan}
-            disabled={isAddedToTestPlan}
-            onChange={handleChange}
-          />
-        )}
-        <span
-          className={cx('selectable-test-case__name', {
-            'selectable-test-case__name--added': isAddedToTestPlan,
-          })}
-          title={testCase.name}
-        >
-          {testCase.name}
-        </span>
-        <span className={cx('selectable-test-case__indicator')}>
-          {isAddedToTestPlan ? <CheckmarkIcon /> : <DragNDropIcon />}
-        </span>
-      </div>
-    </li>
-  );
-};
+    return (
+      <li className={cx('selectable-test-case')}>
+        <div className={cx('selectable-test-case__content')}>
+          {!isAddedToTestPlan && (
+            <DepthAwareCheckbox
+              depth={depth}
+              isChecked={isSelected || isAddedToTestPlan}
+              isDisabled={isAddedToTestPlan}
+              onChange={handleChange}
+            />
+          )}
+          <span
+            className={cx('selectable-test-case__name', {
+              'selectable-test-case__name--added': isAddedToTestPlan,
+            })}
+            title={testCase.name}
+          >
+            {testCase.name}
+          </span>
+          <span className={cx('selectable-test-case__indicator')}>
+            {isAddedToTestPlan ? <CheckmarkIcon /> : <DragNDropIcon />}
+          </span>
+        </div>
+      </li>
+    );
+  },
+);

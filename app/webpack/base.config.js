@@ -50,6 +50,7 @@ module.exports = {
       routes: path.resolve(__dirname, '../src/routes'),
       layouts: path.resolve(__dirname, '../src/layouts'),
       analyticsEvents: path.resolve(__dirname, '../src/components/main/analytics/events/ga4Events'),
+      types: path.resolve(__dirname, '../src/types'),
     },
     fallback: {
       path: require.resolve('path-browserify'),

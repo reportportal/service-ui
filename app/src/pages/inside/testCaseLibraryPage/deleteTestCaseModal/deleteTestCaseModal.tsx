@@ -24,8 +24,8 @@ import { UseModalData } from 'common/hooks';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
+import { TestCase } from 'types/testCase';
 
-import { TestCase } from '../types';
 import { useDeleteTestCase } from './useDeleteTestCase';
 
 import styles from './deleteTestCaseModal.scss';

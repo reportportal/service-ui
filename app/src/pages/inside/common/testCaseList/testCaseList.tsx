@@ -22,7 +22,7 @@ import { BubblesLoader, Table, DragNDropIcon } from '@reportportal/ui-kit';
 import { DragLayer } from '@reportportal/ui-kit/sortable';
 
 import { createClassnames } from 'common/utils';
-import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { ExtendedTestCase } from 'types/testCase';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { SelectedTestCaseRow } from 'pages/inside/testCaseLibraryPage/allTestCasesPage/allTestCasesPage';

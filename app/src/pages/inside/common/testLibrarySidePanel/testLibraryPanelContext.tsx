@@ -14,27 +14,29 @@
  * limitations under the License.
  */
 
-import { createContext, useContext, ReactNode } from 'react';
-import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { createContext, useContext, Dispatch, SetStateAction, ReactNode, RefObject } from 'react';
+import { TestCase } from 'types/testCase';
 import { TransformedFolder } from 'controllers/testCase';
 import { Page } from 'types/common';
 
 export type NumberSet = Set<number>;
+export type SetState<T> = Dispatch<SetStateAction<T>>;
+
+export enum CheckboxSelectionState {
+  CHECKED = 'checked',
+  UNCHECKED = 'unchecked',
+  INDETERMINATE = 'indeterminate',
+}
 
 export interface FolderTestCases {
   testCases: TestCase[];
   page: Page | null;
   isLoading: boolean;
-  addedToTestPlanIds?: number[];
+  addedToTestPlanIds?: Set<number>;
 }
 
-export interface TestLibraryPanelContextValue {
-  selectedIds: NumberSet;
-  selectedFolderIds: NumberSet;
-  testCasesMap: Map<number, FolderTestCases>;
-  testPlanId: number | null;
-  expandedFolderIds: NumberSet;
-  scrollElement: HTMLElement | null;
+export interface PanelActionsContextValue {
+  isOpenRef: RefObject<boolean>;
   setScrollElement: (element: HTMLElement | null) => void;
   toggleTestCasesSelection: (testCaseIds: number[]) => void;
   toggleFolderSelection: (folderId: number) => void;
@@ -43,24 +45,55 @@ export interface TestLibraryPanelContextValue {
     updatedFolderTestCases: Partial<FolderTestCases>,
   ) => void;
   toggleFolder: (folder: TransformedFolder) => void;
+  batchSelectFolder: (folder: TransformedFolder) => Promise<void>;
+  batchDeselectFolder: (folder: TransformedFolder) => void;
 }
 
-const TestLibraryPanelContext = createContext<TestLibraryPanelContextValue | null>(null);
+export interface PanelStateContextValue {
+  selectedIds: NumberSet;
+  selectedFolderIds: NumberSet;
+  testCasesMap: Map<number, FolderTestCases>;
+  checkboxStatesMap: Map<number, CheckboxSelectionState>;
+  expandedFolderIds: NumberSet;
+  batchLoadingFolderIds: NumberSet;
+  testPlanId: number | null;
+  scrollElement: HTMLElement | null;
+}
+
+const PanelActionsContext = createContext<PanelActionsContextValue | null>(null);
+const PanelStateContext = createContext<PanelStateContextValue | null>(null);
 
 interface TestLibraryPanelProviderProps {
-  value: TestLibraryPanelContextValue;
+  actions: PanelActionsContextValue;
+  state: PanelStateContextValue;
   children: ReactNode;
 }
 
-export const TestLibraryPanelProvider = ({ value, children }: TestLibraryPanelProviderProps) => (
-  <TestLibraryPanelContext.Provider value={value}>{children}</TestLibraryPanelContext.Provider>
+export const TestLibraryPanelProvider = ({
+  actions,
+  state,
+  children,
+}: TestLibraryPanelProviderProps) => (
+  <PanelActionsContext.Provider value={actions}>
+    <PanelStateContext.Provider value={state}>{children}</PanelStateContext.Provider>
+  </PanelActionsContext.Provider>
 );
 
-export const useTestLibraryPanelContext = (): TestLibraryPanelContextValue => {
-  const context = useContext(TestLibraryPanelContext);
+export const usePanelActions = (): PanelActionsContextValue => {
+  const context = useContext(PanelActionsContext);
 
   if (!context) {
-    throw new Error('useTestLibraryPanelContext must be used within TestLibraryPanelProvider');
+    throw new Error('usePanelActions must be used within TestLibraryPanelProvider');
+  }
+
+  return context;
+};
+
+export const usePanelState = (): PanelStateContextValue => {
+  const context = useContext(PanelStateContext);
+
+  if (!context) {
+    throw new Error('usePanelState must be used within TestLibraryPanelProvider');
   }
 
   return context;

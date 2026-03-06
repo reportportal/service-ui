@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { isEmpty } from 'es-toolkit/compat';
 import { useDispatch, useSelector } from 'react-redux';
 import { VoidFn } from '@reportportal/ui-kit/common';
@@ -27,18 +27,25 @@ import {
 import { activeTestPlanSelector } from 'controllers/testPlan';
 
 import {
-  TestLibraryPanelContextValue,
+  PanelActionsContextValue,
+  PanelStateContextValue,
+  CheckboxSelectionState,
   FolderTestCases,
   NumberSet,
-} from './testLibraryPanelContext';
+} from '../testLibraryPanelContext';
+import { getAllCheckboxStates } from '../utils';
+
+import { useBatchFolderSelection } from './useBatchFolderSelection';
 
 interface UseTestLibraryPanelProps {
+  isOpen: boolean;
   onAddTestCases: (testCaseIds: number[]) => void;
   onClose: VoidFn;
 }
 
 interface UseTestLibraryPanelUtils {
-  contextValue: TestLibraryPanelContextValue;
+  actionsValue: PanelActionsContextValue;
+  stateValue: PanelStateContextValue;
   selectionCount: number;
   folders: ReturnType<typeof transformedFoldersSelector>;
   hasSelection: boolean;
@@ -59,6 +66,7 @@ const toggleSet = (set: NumberSet, value: number): NumberSet => {
 };
 
 export const useTestLibraryPanel = ({
+  isOpen,
   onAddTestCases,
   onClose,
 }: UseTestLibraryPanelProps): UseTestLibraryPanelUtils => {
@@ -68,6 +76,9 @@ export const useTestLibraryPanel = ({
   const [expandedIds, setExpandedIds] = useState<NumberSet>(new Set());
   const [testCasesMap, setTestCasesMap] = useState<Map<number, FolderTestCases>>(new Map());
   const [scrollElement, setScrollElement] = useState<HTMLElement | null>(null);
+  const [batchLoadingFolderIds, setBatchLoadingFolderIds] = useState<NumberSet>(new Set());
+
+  const isOpenRef = useRef(isOpen);
 
   const folders = useSelector(transformedFoldersSelector);
   const activeTestPlan = useSelector(activeTestPlanSelector);
@@ -77,8 +88,24 @@ export const useTestLibraryPanel = ({
     dispatch(getFoldersAction());
   }, [dispatch]);
 
+  useEffect(() => {
+    isOpenRef.current = isOpen;
+
+    if (!isOpen) {
+      setSelectedTestCasesIds(new Set());
+      setSelectedFolderIds(new Set());
+      setExpandedIds(new Set());
+      setTestCasesMap(new Map());
+      setBatchLoadingFolderIds(new Set());
+    }
+  }, [isOpen]);
+
   const updateFolderTestCases = useCallback(
     (folderId: number, newTestCases: Partial<FolderTestCases>) => {
+      if (!isOpenRef.current) {
+        return;
+      }
+
       setTestCasesMap((prevMap) => {
         const updatedMap = new Map(prevMap);
 
@@ -109,7 +136,9 @@ export const useTestLibraryPanel = ({
   }, []);
 
   const toggleTestCasesSelection = useCallback((testCaseIds: number[]) => {
-    setSelectedTestCasesIds((prev) => testCaseIds.reduce((acc, id) => toggleSet(acc, id), prev));
+    setSelectedTestCasesIds((prev) =>
+      testCaseIds.reduce((acc, testCaseId) => toggleSet(acc, testCaseId), prev),
+    );
   }, []);
 
   const clearSelection = useCallback(() => {
@@ -127,41 +156,76 @@ export const useTestLibraryPanel = ({
     }
   }, [selectedTestCasesIds, onAddTestCases, clearSelection, onClose]);
 
+  const { batchSelectFolder, batchDeselectFolder } = useBatchFolderSelection({
+    isOpenRef,
+    testPlanId,
+    testCasesMap,
+    setTestCasesMap,
+    setSelectedTestCasesIds,
+    setSelectedFolderIds,
+    setBatchLoadingFolderIds,
+  });
+
+  const checkboxStatesMap = useMemo(() => {
+    if (selectedTestCasesIds.size === 0 && selectedFolderIds.size === 0) {
+      return new Map<number, CheckboxSelectionState>();
+    }
+    return getAllCheckboxStates(folders, selectedTestCasesIds, selectedFolderIds, testCasesMap);
+  }, [folders, selectedTestCasesIds, selectedFolderIds, testCasesMap]);
+
   const selectionCount = selectedTestCasesIds.size;
 
   const hasSelection = selectionCount > 0 || selectedFolderIds.size > 0;
 
-  const contextValue: TestLibraryPanelContextValue = useMemo(
+  const actionsValue: PanelActionsContextValue = useMemo(
     () => ({
-      selectedIds: selectedTestCasesIds,
-      selectedFolderIds,
-      testCasesMap,
-      testPlanId,
-      expandedFolderIds: expandedIds,
-      scrollElement,
+      isOpenRef,
       setScrollElement,
       toggleTestCasesSelection,
       toggleFolderSelection,
       updateFolderTestCases,
       toggleFolder,
+      batchSelectFolder,
+      batchDeselectFolder,
+    }),
+    [
+      isOpenRef,
+      setScrollElement,
+      toggleTestCasesSelection,
+      toggleFolderSelection,
+      updateFolderTestCases,
+      toggleFolder,
+      batchSelectFolder,
+      batchDeselectFolder,
+    ],
+  );
+
+  const stateValue: PanelStateContextValue = useMemo(
+    () => ({
+      selectedIds: selectedTestCasesIds,
+      selectedFolderIds,
+      testCasesMap,
+      checkboxStatesMap,
+      testPlanId,
+      expandedFolderIds: expandedIds,
+      scrollElement,
+      batchLoadingFolderIds,
     }),
     [
       selectedTestCasesIds,
       selectedFolderIds,
       testCasesMap,
+      checkboxStatesMap,
       testPlanId,
       expandedIds,
       scrollElement,
-      setScrollElement,
-      toggleTestCasesSelection,
-      toggleFolderSelection,
-      updateFolderTestCases,
-      toggleFolder,
+      batchLoadingFolderIds,
     ],
   );
 
   return {
-    contextValue,
+    actionsValue,
+    stateValue,
     folders,
     selectionCount,
     hasSelection,

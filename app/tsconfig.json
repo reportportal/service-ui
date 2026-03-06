@@ -71,6 +71,9 @@
       ],
       "analyticsEvents/*": [
         "components/main/analytics/events/ga4Events/*"
+      ],
+      "types/*": [
+        "types/*"
       ]
     },
     "incremental": true,

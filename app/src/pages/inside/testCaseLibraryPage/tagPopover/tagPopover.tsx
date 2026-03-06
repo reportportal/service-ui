@@ -21,8 +21,9 @@ import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
 import { SearchField } from 'components/fields/searchField';
+import { Tag } from 'types/testCase';
 
-import { TagPopoverProps, Tag, TagError } from '../types';
+import { TagPopoverProps, TagError } from '../types';
 import { useTagSearch } from './useTagSearch';
 import { messages } from './messages';
 import { commonMessages } from '../commonMessages';
@@ -57,11 +58,10 @@ export const TagPopover = ({
   const hasAvailableTags = !isEmpty(availableTags);
   const tagsToParse = shouldParseSelectedTags ? selectedTags : [...allTags, ...selectedTags];
   const isTagNameAlreadyAdded =
-    hasSearchValue &&
-    tagsToParse.some((tag) => normalizeTagKey(tag.key) === normalizedSearchValue);
-  const isTagNameExist = shouldParseSelectedTags ?
-    allTags.some((tag) => normalizeTagKey(tag.key) === normalizedSearchValue) :
-    false;
+    hasSearchValue && tagsToParse.some((tag) => normalizeTagKey(tag.key) === normalizedSearchValue);
+  const isTagNameExist = shouldParseSelectedTags
+    ? allTags.some((tag) => normalizeTagKey(tag.key) === normalizedSearchValue)
+    : false;
 
   const handleSearchChange = (value: string) => {
     setSearchValue(value);

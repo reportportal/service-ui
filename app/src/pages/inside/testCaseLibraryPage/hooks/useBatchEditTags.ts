@@ -23,8 +23,8 @@ import { URLS } from 'common/urls';
 import { hideModalAction } from 'controllers/modal';
 import { useNotification } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
+import { Attribute } from 'types/testCase';
 
-import { Attribute } from '../types';
 import { useRefetchCurrentTestCases } from '../hooks/useRefetchCurrentTestCases';
 
 interface GetBatchEditTagsParams {
@@ -55,13 +55,10 @@ export const useBatchEditTags = ({ onSuccess }: UseBatchEditTagsParams) => {
       setIsLoadingTags(true);
 
       try {
-        return await fetch<GetBatchEditTagsResponse>(
-          URLS.testCasesTags(projectKey),
-          {
-            method: 'POST',
-            data: { testCaseIds },
-          },
-        );
+        return await fetch<GetBatchEditTagsResponse>(URLS.testCasesTags(projectKey), {
+          method: 'POST',
+          data: { testCaseIds },
+        });
       } catch {
         showErrorNotification({ messageId: 'errorOccurredTryAgain' });
 
@@ -70,11 +67,7 @@ export const useBatchEditTags = ({ onSuccess }: UseBatchEditTagsParams) => {
         setIsLoadingTags(false);
       }
     },
-    [
-      setIsLoadingTags,
-      projectKey,
-      showErrorNotification,
-    ],
+    [setIsLoadingTags, projectKey, showErrorNotification],
   );
 
   const updateTags = useCallback(
@@ -82,13 +75,10 @@ export const useBatchEditTags = ({ onSuccess }: UseBatchEditTagsParams) => {
       setIsLoadingTagsUpdating(true);
 
       try {
-        await fetch<undefined>(
-          URLS.testCasesTagsBatch(projectKey),
-          {
-            method: 'PATCH',
-            data: { testCaseIds, attributeKeysToRemove, attributeKeysToAdd },
-          },
-        );
+        await fetch<undefined>(URLS.testCasesTagsBatch(projectKey), {
+          method: 'PATCH',
+          data: { testCaseIds, attributeKeysToRemove, attributeKeysToAdd },
+        });
 
         onSuccess();
         dispatch(hideModalAction());

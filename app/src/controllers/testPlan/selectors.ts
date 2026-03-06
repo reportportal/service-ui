@@ -15,7 +15,7 @@
  */
 import { createSelector } from 'reselect';
 
-import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { ExtendedTestCase } from 'types/testCase';
 import { Page } from 'types/common';
 
 import { EMPTY_FOLDERS, areFoldersFetchedSelector, foldersSelector, Folder } from '../testCase';

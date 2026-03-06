@@ -27,7 +27,7 @@ import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 
 import { LaunchFormData, LaunchMode, isLaunchObject, CreateManualLaunchDto } from './types';
-import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { ExtendedTestCase } from 'types/testCase';
 import { generateUUID } from './utils';
 import { messages } from './messages';
 

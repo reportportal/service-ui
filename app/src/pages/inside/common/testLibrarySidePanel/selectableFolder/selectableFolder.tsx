@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { useCallback, useEffect, useMemo } from 'react';
-import { isEmpty, size } from 'es-toolkit/compat';
+import { useCallback, useEffect } from 'react';
+import { isEmpty } from 'es-toolkit/compat';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import { ChevronDownDropdownIcon, DragNDropIcon, BubblesLoader } from '@reportportal/ui-kit';
 
@@ -24,9 +24,9 @@ import { TransformedFolder } from 'controllers/testCase';
 import { Folder } from 'pages/inside/common/expandedOptions/folder/folder';
 
 import { DepthAwareCheckbox } from '../depthAwareCheckbox';
-import { useTestLibraryPanelContext } from '../testLibraryPanelContext';
-import { useFolderTestCases } from './useFolderTestCases';
+import { usePanelActions, usePanelState, CheckboxSelectionState } from '../testLibraryPanelContext';
 import { SelectableTestCase } from '../selectableTestCase';
+import { useFolderTestCases } from '../hooks/useFolderTestCases';
 
 import treeStyles from '../../expandedOptions/folder/folder.scss';
 import styles from './selectableFolder.scss';
@@ -34,46 +34,34 @@ import styles from './selectableFolder.scss';
 const cx = createClassnames(styles, treeStyles);
 
 const LOAD_MORE_SCROLL_THRESHOLD_PX = 100;
+const EMPTY_NUMBER_SET = new Set<number>();
 
 interface SelectableFolderProps {
   folder: TransformedFolder;
   depth?: number;
 }
 
-enum CheckboxSelectionState {
-  CHECKED = 'checked',
-  UNCHECKED = 'unchecked',
-  INDETERMINATE = 'indeterminate',
-}
-
 export const SelectableFolder = ({ folder, depth = 0 }: SelectableFolderProps) => {
+  const { toggleTestCasesSelection, toggleFolder, batchSelectFolder, batchDeselectFolder } =
+    usePanelActions();
   const {
     selectedIds,
-    selectedFolderIds,
     testCasesMap,
+    checkboxStatesMap,
     expandedFolderIds,
     scrollElement,
-    toggleTestCasesSelection,
-    toggleFolderSelection,
-    toggleFolder,
-  } = useTestLibraryPanelContext();
+    batchLoadingFolderIds,
+  } = usePanelState();
 
+  const isBatchLoading = batchLoadingFolderIds.has(folder.id);
   const isOpen = expandedFolderIds.has(folder.id);
   const hasChildren = !isEmpty(folder.folders) || folder.testsCount > 0;
 
   const {
     testCases = [],
     isLoading: isFolderLoading = false,
-    addedToTestPlanIds = [],
+    addedToTestPlanIds = EMPTY_NUMBER_SET,
   } = testCasesMap.get(folder.id) ?? {};
-
-  const selectableTestCases = useMemo(
-    () =>
-      !isEmpty(addedToTestPlanIds)
-        ? testCases.filter((testCase) => !addedToTestPlanIds.includes(testCase.id))
-        : testCases,
-    [testCases, addedToTestPlanIds],
-  );
 
   const { fetchNextPage, hasNextPage, isLoading } = useFolderTestCases({
     folderId: folder.id,
@@ -95,31 +83,7 @@ export const SelectableFolder = ({ folder, depth = 0 }: SelectableFolderProps) =
     }
   }, [scrollElement, rootRef]);
 
-  const checkboxState = useMemo(() => {
-    if (isEmpty(testCases)) {
-      return selectedFolderIds.has(folder.id)
-        ? CheckboxSelectionState.CHECKED
-        : CheckboxSelectionState.UNCHECKED;
-    }
-
-    if (isEmpty(selectableTestCases)) {
-      return CheckboxSelectionState.UNCHECKED;
-    }
-
-    const selectedCount = size(
-      selectableTestCases.filter((testCase) => selectedIds.has(testCase.id)),
-    );
-
-    if (selectedCount === 0) {
-      return CheckboxSelectionState.UNCHECKED;
-    }
-
-    if (selectedCount === selectableTestCases.length) {
-      return CheckboxSelectionState.CHECKED;
-    }
-
-    return CheckboxSelectionState.INDETERMINATE;
-  }, [testCases, selectableTestCases, selectedIds, selectedFolderIds, folder.id]);
+  const checkboxState = checkboxStatesMap.get(folder.id) ?? CheckboxSelectionState.UNCHECKED;
 
   const onFolderToggle = useCallback(() => {
     if (!hasChildren) {
@@ -130,32 +94,12 @@ export const SelectableFolder = ({ folder, depth = 0 }: SelectableFolderProps) =
   }, [folder, hasChildren, toggleFolder]);
 
   const handleFolderCheckboxChange = useCallback(() => {
-    if (isEmpty(testCases)) {
-      toggleFolderSelection(folder.id);
+    if (checkboxState === CheckboxSelectionState.CHECKED) {
+      batchDeselectFolder(folder);
     } else {
-      const selectableIds = selectableTestCases.map((testCase) => testCase.id);
-
-      if (checkboxState === CheckboxSelectionState.CHECKED) {
-        toggleTestCasesSelection(selectableIds);
-      } else {
-        const notSelectedIds = selectableTestCases
-          .filter((testCase) => !selectedIds.has(testCase.id))
-          .map((testCase) => testCase.id);
-
-        if (!isEmpty(notSelectedIds)) {
-          toggleTestCasesSelection(notSelectedIds);
-        }
-      }
+      void batchSelectFolder(folder);
     }
-  }, [
-    testCases,
-    selectableTestCases,
-    toggleFolderSelection,
-    folder.id,
-    checkboxState,
-    selectedIds,
-    toggleTestCasesSelection,
-  ]);
+  }, [checkboxState, batchDeselectFolder, batchSelectFolder, folder]);
 
   const toggleTestCase = useCallback(
     (testCaseId: number) => {
@@ -184,9 +128,9 @@ export const SelectableFolder = ({ folder, depth = 0 }: SelectableFolderProps) =
             key={testCase.id}
             testCase={testCase}
             isSelected={selectedIds.has(testCase.id)}
-            isAddedToTestPlan={addedToTestPlanIds.includes(testCase.id)}
-            onToggle={toggleTestCase}
+            isAddedToTestPlan={addedToTestPlanIds.has(testCase.id)}
             depth={depth + 1}
+            onToggle={toggleTestCase}
           />
         ))}
         {hasNextPage && (
@@ -219,9 +163,10 @@ export const SelectableFolder = ({ folder, depth = 0 }: SelectableFolderProps) =
         </span>
         <DepthAwareCheckbox
           depth={depth}
-          checked={checkboxState === CheckboxSelectionState.CHECKED}
-          partiallyChecked={checkboxState === CheckboxSelectionState.INDETERMINATE}
+          isChecked={checkboxState === CheckboxSelectionState.CHECKED}
+          isPartiallyChecked={checkboxState === CheckboxSelectionState.INDETERMINATE}
           onChange={handleFolderCheckboxChange}
+          isLoading={isBatchLoading}
         />
       </div>
       <Folder.Subfolders shouldDisplay={isOpen && hasChildren}>

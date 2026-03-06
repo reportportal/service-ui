@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Step } from '../types';
+import { Step } from 'types/testCase';
 
 export const EDIT_SCENARIO_MODAL_KEY = 'editScenarioModalKey';
 export const EDIT_SCENARIO_FORM_NAME = 'edit-scenario-modal-form';

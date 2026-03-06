@@ -20,7 +20,7 @@ import { FieldText, Button, PlusIcon, FieldLabel, CloseIcon } from '@reportporta
 
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { createClassnames, uniqueId } from 'common/utils';
-import { Requirement } from 'pages/inside/testCaseLibraryPage/types';
+import { Requirement } from 'types/testCase';
 import { commonMessages } from 'pages/inside/common/common-messages';
 
 import styles from './requirements.scss';

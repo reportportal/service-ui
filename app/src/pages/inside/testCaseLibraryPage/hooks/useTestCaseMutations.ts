@@ -25,8 +25,9 @@ import { fetch } from 'common/utils';
 import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { NotificationMessageKey } from 'common/hooks/useNotification';
 import { URLS } from 'common/urls';
+import { Attribute } from 'types/testCase';
 
-import { Attribute, CreateTestCaseFormData } from '../types';
+import { CreateTestCaseFormData } from '../types';
 import {
   buildManualScenario,
   buildTestCaseData,
@@ -178,7 +179,10 @@ export const useTestCaseMutations = (testCaseId?: number) => {
   );
 
   const createTestCase = useCallback(
-    (payload: CreateTestCaseFormData, successMessageId: NotificationMessageKey = 'testCaseCreatedSuccess') =>
+    (
+      payload: CreateTestCaseFormData,
+      successMessageId: NotificationMessageKey = 'testCaseCreatedSuccess',
+    ) =>
       handleTestCaseCreation(payload, {
         url: URLS.testCases(projectKey),
         method: 'POST',

@@ -27,7 +27,7 @@ import { EditableTagsSection } from 'pages/inside/testCaseLibraryPage/editableTa
 import { CreateFolderAutocomplete } from 'pages/inside/testCaseLibraryPage/testCaseFolders/shared/CreateFolderAutocomplete';
 import { commonMessages as globalCommonMessages } from 'pages/inside/common/common-messages';
 import { TagPopover } from 'pages/inside/testCaseLibraryPage/tagPopover';
-import { Attribute } from 'pages/inside/testCaseLibraryPage/types';
+import { Attribute } from 'types/testCase';
 
 import { messages } from './messages';
 import { commonMessages } from '../../commonMessages';

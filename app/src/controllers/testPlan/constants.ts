@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ExtendedTestCase, Attribute } from 'pages/inside/testCaseLibraryPage/types';
+import { ExtendedTestCase, Attribute } from 'types/testCase';
 import { Folder } from 'controllers/testCase';
 
 export const GET_TEST_PLANS = 'getTestPlans' as const;

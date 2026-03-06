@@ -18,7 +18,7 @@ import { isEmpty } from 'es-toolkit/compat';
 import { createClassnames } from 'common/utils';
 import { AttachmentArea } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/attachmentArea';
 import { Step } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/testCaseDetails/steps/step';
-import { Step as StepType } from 'pages/inside/testCaseLibraryPage/types';
+import { Step as StepType } from 'types/testCase';
 
 import styles from './stepsList.scss';
 

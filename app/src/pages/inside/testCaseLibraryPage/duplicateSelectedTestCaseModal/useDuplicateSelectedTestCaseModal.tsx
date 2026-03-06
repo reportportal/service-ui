@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 import { useModal } from 'common/hooks';
+import { ExtendedTestCase } from 'types/testCase';
 
-import { ExtendedTestCase } from '../types';
 import DuplicateSelectedTestCaseModal, {
   DUPLICATE_SELECTED_TEST_CASE_MODAL_KEY,
 } from './duplicateSelectedTestCaseModal';

@@ -27,11 +27,12 @@ import { withModal } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { useModalButtons } from 'hooks/useModalButtons';
+import { Attribute } from 'types/testCase';
+
 import { messages } from './messages';
 import { EditableTagsSection } from '../../editableTagsSection';
 import { useBatchEditTags } from '../../hooks/useBatchEditTags';
 import { TagPopover } from '../../tagPopover';
-import { Attribute } from '../../types';
 import { useFormFieldValue } from '../../hooks/useFormFieldValue';
 
 import styles from './batchEditTagsModal.scss';

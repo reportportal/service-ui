@@ -47,7 +47,7 @@ import {
   ManualScenario,
   ExtendedTestCase,
   Requirement,
-} from 'pages/inside/testCaseLibraryPage/types';
+} from 'types/testCase';
 import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
 import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';

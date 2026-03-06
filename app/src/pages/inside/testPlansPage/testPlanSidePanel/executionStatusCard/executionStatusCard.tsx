@@ -19,7 +19,7 @@ import { memo } from 'react';
 import { createClassnames } from 'common/utils';
 import { isEmpty } from 'es-toolkit/compat';
 
-import { Execution, ExecutionStatus } from 'pages/inside/testCaseLibraryPage/types';
+import { Execution, ExecutionStatus } from 'types/testCase';
 
 import styles from './executionStatusCard.scss';
 
