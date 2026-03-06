@@ -119,4 +119,8 @@ export const messages = defineMessages({
     id: 'Assignment.unassignSelfMessage',
     defaultMessage: 'You cannot unassign yourself from the organization',
   },
+  updateAssignmentsError: {
+    id: 'Assignment.updateAssignmentsError',
+    defaultMessage: 'An error occurred while updating assignments',
+  },
 });

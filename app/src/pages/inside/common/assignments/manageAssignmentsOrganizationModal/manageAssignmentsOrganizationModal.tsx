@@ -57,6 +57,22 @@ interface ManageAssignmentsOrganizationModalOwnProps {
   onUnassign?: () => void;
 }
 
+type AssignmentDescriptionLinkProps = {
+  children: ReactNode;
+  className?: string;
+  href: string;
+};
+
+export const AssignmentDescriptionLink = ({
+  children,
+  className,
+  href,
+}: AssignmentDescriptionLinkProps) => (
+  <ExternalLink href={href} className={className}>
+    {children}
+  </ExternalLink>
+);
+
 const ManageAssignmentsOrganizationModalView = ({
   user,
   organization,
@@ -211,12 +227,7 @@ const ManageAssignmentsOrganizationModalView = ({
 
   const description = formatMessage(messages.manageAssignmentsDescription, {
     link: (chunks: ReactNode) => (
-      <ExternalLink
-        href={'#'}
-        className={cx('description-link')}
-      >
-        {chunks}
-      </ExternalLink>
+   <AssignmentDescriptionLink href={'#'}   className={cx('description-link')}>{chunks}</AssignmentDescriptionLink>
     ),
   });
 
@@ -224,7 +235,6 @@ const ManageAssignmentsOrganizationModalView = ({
     const next = Array.isArray(value) ? value[0] : value;
     if (next) setCurrentOrganization(next);
   };
-
   return (
     <Modal
       description={description}
@@ -253,7 +263,7 @@ const ManageAssignmentsOrganizationModalView = ({
 };
 
 function isEmptyAssignmentsResponse(data: UserOrganizationProjectsResponse | null): boolean {
-  return data == null || !data.items || data.items.length === 0;
+  return !data?.items?.length;
 }
 
 const mapStateToProps = (state: unknown) => {

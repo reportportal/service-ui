@@ -60,7 +60,8 @@ function* unassignFromOrganization({ payload = {} }) {
     );
 
     onSuccess?.();
-  } catch (_err) {
+  }
+  catch {
     yield put(showErrorNotification({ messageId: 'unassignOrganizationError' }));
   }
 }
@@ -72,7 +73,7 @@ function* fetchUserAssignments({ payload }) {
       method: 'get',
     });
     yield put({ type: FETCH_USER_ASSIGNMENTS_SUCCESS, payload: response });
-  } catch (_err) {
+  } catch  {
     yield put({ type: FETCH_USER_ASSIGNMENTS_FAILURE });
   }
 }
