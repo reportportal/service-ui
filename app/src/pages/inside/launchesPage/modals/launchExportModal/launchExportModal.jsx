@@ -23,7 +23,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import classNames from 'classnames/bind';
-import { LAUNCHES_MODAL_EVENTS } from 'components/main/analytics/events';
+import { LAUNCHES_MODAL_EVENTS, LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { downloadFile } from 'common/utils/downloadFile';
 import { URLS } from 'common/urls';
 import { addExportAction, removeExportAction } from 'controllers/exports';
@@ -35,6 +35,12 @@ import { PDF_EXPORT, XLS_EXPORT, HTML_EXPORT } from './constants';
 import styles from './launchExportModal.scss';
 
 const cx = classNames.bind(styles);
+
+const LAUNCHES_EXPORT_EVENTS_INFO = {
+  groupId: 'launches',
+  clickInterruptBanner: LAUNCHES_PAGE_EVENTS.CLICK_INTERRUPT_EXPORT_BANNER_BTN,
+  clickInterruptModal: LAUNCHES_PAGE_EVENTS.CLICK_INTERRUPT_EXPORT_MODAL_BTN,
+};
 
 const messages = defineMessages({
   title: {
@@ -113,7 +119,14 @@ export const LaunchExportModal = ({ id, name }) => {
     try {
       await downloadFile(URLS.exportLaunch(projectId, id, exportType), {
         params: { includeAttachments: isWithAttachments },
-        abort: (cancelRequest) => dispatch(addExportAction({ id: requestId, cancelRequest })),
+        abort: (cancelRequest) =>
+          dispatch(
+            addExportAction({
+              id: requestId,
+              cancelRequest,
+              eventsInfo: LAUNCHES_EXPORT_EVENTS_INFO,
+            }),
+          ),
       });
       dispatch(
         showSuccessNotification({

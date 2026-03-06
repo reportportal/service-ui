@@ -55,7 +55,7 @@ const BASIC_EVENT_PARAMETERS_GENERAL = getBasicClickEventParameters(PROJECT_SETT
 
 export const PROJECT_SETTINGS_VIEWS = {
   getProjectSettingsPageView: (settingsTab, subTab) => ({
-    action: 'pageview',
+    action: 'page_view',
     page: PROJECT_SETTINGS,
     place: subTab
       ? `${PROJECT_SETTINGS}_${settingsTab.toLowerCase()}_${subTab.toLowerCase()}`

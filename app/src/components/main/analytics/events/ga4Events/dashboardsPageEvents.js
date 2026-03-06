@@ -45,11 +45,13 @@ export const WIDGETS_EVENTS = {
     modifiedFields,
     isEditModal = false,
     isExcludeSkippedTests = null,
+    isLocked = false,
   }) => {
     const actionType = isEditModal
       ? {
           element_name: 'save',
           modal: 'edit_widget',
+          icon_name: `${isLocked ? '' : 'un'}locked_widget`,
         }
       : {
           element_name: 'add',

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+$scrollbar-width: 12px;
+
 .modal-layout {
   position: absolute;
   top: 0;
@@ -72,6 +74,7 @@
     margin-top: -100px;
   }
 }
+
 .modal-window {
   position: absolute;
   display: inline-block;
@@ -85,7 +88,9 @@
   text-align: left;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
   opacity: 1;
-  transition: margin-top 300ms ease-in, opacity 300ms ease-in;
+  transition:
+    margin-top 300ms ease-in,
+    opacity 300ms ease-in;
 
   @media (max-width: $SCREEN_XS_MAX) {
     right: 10px;
@@ -93,4 +98,24 @@
     width: auto;
     margin-left: 0;
   }
+
+  &.scrollable {
+    max-height: 90%;
+  }
+}
+
+.scrollable-wrapper {
+  margin-right: -$scrollbar-width;
+}
+
+.scrollable-content {
+  padding-right: $scrollbar-width;
+}
+
+.scrollable-modal-content {
+  padding-bottom: 0;
+}
+
+.footer-wrapper.scrollable {
+  padding-top: 30px;
 }

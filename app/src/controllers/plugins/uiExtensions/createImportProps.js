@@ -46,8 +46,14 @@ import { NoCasesBlock } from 'components/main/noCasesBlock';
 import { ItemList } from 'components/main/itemList';
 import { ModalLayout, ModalField } from 'components/main/modal';
 import { showModalAction, hideModalAction } from 'controllers/modal';
-import { fetch } from 'common/utils/fetch';
+import { fetch, ERROR_CANCELED } from 'common/utils/fetch';
+import { downloadFile } from 'common/utils/downloadFile';
 import { isEmptyObject } from 'common/utils/isEmptyObject';
+import {
+  getSessionItem,
+  setSessionItem,
+  removeSessionItem,
+} from 'common/utils/storageUtils';
 import {
   STATS_PB_TOTAL,
   STATS_AB_TOTAL,
@@ -66,8 +72,10 @@ import {
 import {
   activeProjectSelector,
   activeProjectRoleSelector,
+  userAccountRoleSelector,
   isAdminSelector,
   userIdSelector,
+  idSelector,
   getUserProjectSettingsFromStorage,
   updateUserProjectSettingsInStorage,
   logsSizeSelector,
@@ -82,8 +90,10 @@ import {
   projectIdSelector,
   querySelector,
   payloadSelector,
+  locationSelector,
 } from 'controllers/pages';
 import { attributesArray, isNotEmptyArray } from 'common/utils/validation/validate';
+import { canDeleteTestItem } from 'common/utils/permissions';
 import {
   requiredField,
   btsUrl,
@@ -113,6 +123,14 @@ import { InputRadio } from 'components/inputs/inputRadio';
 import { URLS } from 'common/urls';
 import { isEmailIntegrationAvailableSelector, SECRET_FIELDS_KEY } from 'controllers/plugins';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
+import {
+  addExportAction,
+  removeExportAction,
+  setExportsBannerVariantAction,
+  resetExportsBannerVariantAction,
+  EXPORTS_BANNER_VARIANT_DEFAULT,
+  EXPORTS_BANNER_VARIANT_MODERN,
+} from 'controllers/exports';
 import {
   showSuccessNotification,
   showErrorNotification,
@@ -184,6 +202,8 @@ import {
 } from 'components/integrations/elements';
 import { updateLaunchLocallyAction } from 'controllers/launch';
 import { getDefectTypeLabel } from 'components/main/analytics/events/common/utils';
+import { provideEcGA } from 'components/main/analytics/utils';
+import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
 import { formatAttribute, parseQueryAttributes } from 'common/utils/attributeUtils';
 import { createNamespacedQuery } from 'common/utils/routingUtils';
 import { formatMethodType } from 'common/utils/localizationUtils';
@@ -212,8 +232,10 @@ import { Tabs } from 'components/main/tabs';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { PlainTable } from 'componentLibrary/plainTable';
+import { AdaptiveIssueList } from 'pages/inside/common/adaptiveIssueList';
 import { withFilter } from 'controllers/filter';
 import { SORTING_KEY, withSortingURL } from 'controllers/sorting';
+import { PAGE_KEY } from 'controllers/pagination';
 import {
   DateRangeFormField,
   formatDisplayedValue,
@@ -327,6 +349,7 @@ export const createImportProps = (pluginName) => ({
     PlainTable,
     BubblesPreloader: BubblesLoader,
     DateRangeFormField,
+    AdaptiveIssueList,
   },
   componentLibrary: { DraggableRuleList },
   HOCs: {
@@ -356,6 +379,10 @@ export const createImportProps = (pluginName) => ({
     SECRET_FIELDS_KEY,
     BTS_FIELDS_FORM,
     SORTING_KEY,
+    PAGE_KEY,
+    ERROR_CANCELED,
+    EXPORTS_BANNER_VARIANT_DEFAULT,
+    EXPORTS_BANNER_VARIANT_MODERN,
   },
   actions: {
     showModalAction,
@@ -370,6 +397,10 @@ export const createImportProps = (pluginName) => ({
     updatePagePropertiesAction,
     showDefaultErrorNotification,
     loginAction,
+    addExportAction,
+    removeExportAction,
+    setExportsBannerVariantAction,
+    resetExportsBannerVariantAction,
   },
   selectors: {
     pluginRouteSelector,
@@ -377,6 +408,7 @@ export const createImportProps = (pluginName) => ({
     payloadSelector,
     activeProjectSelector,
     userIdSelector,
+    idSelector,
     projectIdSelector,
     // TODO: must be removed when the common plugin commands will be used
     globalIntegrationsSelector: createGlobalNamedIntegrationsSelector(pluginName),
@@ -384,6 +416,7 @@ export const createImportProps = (pluginName) => ({
     projectInfoSelector,
     projectAttributesSelector,
     activeProjectRoleSelector,
+    userAccountRoleSelector,
     projectInfoLoadingSelector,
     isEmailIntegrationAvailableSelector,
     isAdminSelector,
@@ -395,6 +428,9 @@ export const createImportProps = (pluginName) => ({
     publicPluginsSelector,
     querySelector,
     logsSizeSelector,
+    analyticsEnabledSelector,
+    baseEventParametersSelector,
+    locationSelector,
   },
   icons: {
     PlusIcon,
@@ -410,6 +446,7 @@ export const createImportProps = (pluginName) => ({
   },
   utils: {
     fetch,
+    downloadFile,
     URLS,
     debounce,
     getGroupedDefectTypesOptions,
@@ -428,6 +465,11 @@ export const createImportProps = (pluginName) => ({
     getUserProjectSettingsFromStorage,
     updateUserProjectSettingsInStorage,
     formatMethodType,
+    provideEcGA,
+    getSessionItem,
+    setSessionItem,
+    removeSessionItem,
+    canDeleteTestItem,
   },
   validators: {
     attributesArray,

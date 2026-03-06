@@ -201,7 +201,7 @@ export class UniqueErrorsPage extends Component {
     });
     this.props.tracking.trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEMS_ACTION);
   };
-  handleEditDefects = (eventData) => {
+  handleEditDefects = (eventData, actionPlace = '') => {
     const { selectedItems, tracking } = this.props;
     const items = eventData?.id ? [eventData] : selectedItems;
 
@@ -210,7 +210,7 @@ export class UniqueErrorsPage extends Component {
         items.length === 1
           ? items[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
           : undefined,
-        eventData?.id ? '' : 'actions',
+        eventData?.id ? actionPlace : 'actions',
       ),
     );
     this.props.editDefectsAction(items, {

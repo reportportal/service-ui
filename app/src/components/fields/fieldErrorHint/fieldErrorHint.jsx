@@ -109,7 +109,7 @@ const messages = defineMessages({
   },
   descriptionEntityHint: {
     id: 'LaunchLevelEntities.descriptionEntityHint',
-    defaultMessage: 'Description should have size from 3 to 18',
+    defaultMessage: 'Description should have size from 1 to 256',
   },
   descriptionStepLevelEntityHint: {
     id: 'LaunchLevelEntities.descriptionStepLevelEntityHint',
@@ -287,7 +287,7 @@ const messages = defineMessages({
   logTypeNameInvalidHint: {
     id: 'LogTypeModal.logTypeNameInvalidHint',
     defaultMessage:
-      'Log type name may contain only Latin, numeric characters, hyphen, underscore (from 3 to 16 symbols)',
+      'Log type name may contain only Latin, numeric characters, space (from 3 to 16 symbols)',
   },
   logTypeLevelInvalidHint: {
     id: 'LogTypeModal.logTypeLevelInvalidHint',

@@ -27,9 +27,9 @@ const cx = classNames.bind(styles);
 const MeatballPopoverContent = ({ descriptors }) => (
   <div className={cx('meatball-popover-content')}>
     {descriptors.map((descriptor, index) => (
-      <div className={cx('meatball-popover-content-row')} style={{ paddingLeft: (index - 1) * 18 }}>
+      <div key={descriptor.id} className={cx('meatball-popover-content-row')} style={{ paddingLeft: (index - 1) * 18 }}>
         {index !== 0 && <div className={cx('next-level-icon')} />}
-        <Breadcrumb key={descriptor.id} maxBreadcrumbWidth={132} descriptor={descriptor} />
+        <Breadcrumb maxBreadcrumbWidth={132} descriptor={descriptor} />
       </div>
     ))}
   </div>

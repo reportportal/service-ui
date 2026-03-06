@@ -37,7 +37,9 @@
   color: $COLOR--charcoal-grey;
   box-shadow: none;
   flex-grow: 1;
-  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  transition:
+    border-color ease-in-out 0.15s,
+    box-shadow ease-in-out 0.15s;
 
   &.clearable {
     padding-right: 32px;

@@ -19,9 +19,10 @@ import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
+import { connect } from 'react-redux';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { groupItemsByParent } from 'controllers/testItem';
+import { groupItemsByParent, isItemOwner } from 'controllers/testItem';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { formatMethodType } from 'common/utils/localizationUtils';
 import { FAILED } from 'common/constants/testStatuses';
@@ -36,6 +37,8 @@ import {
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { formatAttribute } from 'common/utils/attributeUtils';
 import { StatusDropdown } from 'pages/inside/common/statusDropdown/statusDropdown';
+import { canChangeStatus } from 'common/utils/permissions';
+import { userAccountRoleSelector, activeProjectRoleSelector, userIdSelector } from 'controllers/user';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
 import { DefectType } from './defectType';
 import { GroupHeader } from './groupHeader';
@@ -82,11 +85,14 @@ NameColumn.defaultProps = {
   customProps: {},
 };
 
-const StatusColumn = ({ className, value, customProps: { viewOnly, onChange, fetchFunc } }) => {
+const StatusColumn = ({ className, value, customProps: { viewOnly, onChange, fetchFunc, userRole, projectRole, userId, parentLaunch } }) => {
   const { id, status, attributes, description } = value;
+  const isOwner = userId && value ? isItemOwner(userId, value, parentLaunch) : false;
+  const canChange = canChangeStatus(userRole, projectRole, isOwner);
+
   return (
     <div className={cx('status-col', className)}>
-      {viewOnly ? (
+      {viewOnly || !canChange ? (
         <span className={cx('status-value')}>{status.toLowerCase()}</span>
       ) : (
         <StatusDropdown
@@ -109,6 +115,10 @@ StatusColumn.propTypes = {
     onChange: PropTypes.func,
     fetchFunc: PropTypes.func,
     viewOnly: PropTypes.bool,
+    userRole: PropTypes.string,
+    projectRole: PropTypes.string,
+    userId: PropTypes.string,
+    parentLaunch: PropTypes.object,
   }).isRequired,
 };
 StatusColumn.defaultProps = {
@@ -154,7 +164,7 @@ const DefectTypeColumn = ({
         issue={value.issue}
         patternTemplates={value.patternTemplates}
         hideEdit={hideEdit}
-        onEdit={() => onEdit(value)}
+        onEdit={(actionPlace) => onEdit(value, actionPlace)}
         onRemove={onUnlinkSingleTicket(value)}
         events={events}
       />
@@ -190,6 +200,11 @@ PredefinedFilterSwitcherCell.defaultProps = {
 
 @injectIntl
 @track()
+@connect((state) => ({
+  userRole: userAccountRoleSelector(state),
+  projectRole: activeProjectRoleSelector(state),
+  userId: userIdSelector(state),
+}))
 export class StepGrid extends Component {
   static propTypes = {
     data: PropTypes.array,
@@ -221,6 +236,10 @@ export class StepGrid extends Component {
     modifyColumnsFunc: PropTypes.func,
     isTestSearchView: PropTypes.bool,
     errorMessage: PropTypes.string,
+    userRole: PropTypes.string,
+    projectRole: PropTypes.string,
+    userId: PropTypes.string,
+    parentLaunch: PropTypes.object,
   };
 
   static defaultProps = {
@@ -318,6 +337,10 @@ export class StepGrid extends Component {
           onChange: (status) => tracking.trackEvent(events.getChangeItemStatusEvent(status)),
           fetchFunc: onStatusUpdate,
           viewOnly: isTestSearchView,
+          userRole: this.props.userRole,
+          projectRole: this.props.projectRole,
+          userId: this.props.userId,
+          parentLaunch: this.props.parentLaunch,
         },
         withFilter: !isTestSearchView,
         filterEventInfo: events.STATUS_FILTER,
@@ -351,9 +374,7 @@ export class StepGrid extends Component {
         component: DefectTypeColumn,
         customProps: {
           hideEdit: isTestSearchView,
-          onEdit: (data) => {
-            onEditDefect(data);
-          },
+          onEdit: (data, actionPlace) => onEditDefect(data, actionPlace),
           onUnlinkSingleTicket,
           events: {
             onEditEvent: events.MAKE_DECISION_MODAL_EVENTS?.getOpenModalEvent,

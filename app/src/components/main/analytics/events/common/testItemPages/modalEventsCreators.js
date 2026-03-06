@@ -50,6 +50,7 @@ const getOpenModalEventCreator = (place) => (defectFromTIGroup, actionPlace = ''
   ...basicClickEventParametersMakeDecision,
   place: `${place}${actionPlace && `#${actionPlace}`}`,
   condition: DEFECT_FROM_TI_GROUP_MAP[defectFromTIGroup] || 'bulk',
+  element_name: 'open_md',
 });
 
 const getClickOnApplyEventCreator = (place) => (

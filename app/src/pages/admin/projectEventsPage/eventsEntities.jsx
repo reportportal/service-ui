@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,6 +49,8 @@ import {
   UNLINK_ISSUE,
   CREATE_DASHBOARD,
   UPDATE_DASHBOARD,
+  UPDATE_DASHBOARD_STATE,
+  ACTIONS_UPDATE_DASHBOARD,
   DELETE_DASHBOARD,
   CREATE_WIDGET,
   UPDATE_WIDGET,
@@ -178,6 +180,8 @@ export class EventsEntities extends Component {
           actionToGroup: {
             [START_IMPORT]: ACTIONS_WITH_IMPORT,
             [FINISH_IMPORT]: ACTIONS_WITH_IMPORT,
+            [UPDATE_DASHBOARD]: ACTIONS_UPDATE_DASHBOARD,
+            [UPDATE_DASHBOARD_STATE]: ACTIONS_UPDATE_DASHBOARD,
           },
           options: [
             {
@@ -186,7 +190,7 @@ export class EventsEntities extends Component {
             },
             {
               label: intl.formatMessage(actionMessages[UPDATE_DASHBOARD]),
-              value: UPDATE_DASHBOARD,
+              value: ACTIONS_UPDATE_DASHBOARD,
             },
             {
               label: intl.formatMessage(actionMessages[DELETE_DASHBOARD]),

@@ -26,8 +26,8 @@ export const Triangles = ({ growthDuration }) => {
   const count = calculateTrianglesCount(growthDuration);
   return (
     <div className={cx('triangles')}>
-      {new Array(count).fill(0).map(() => (
-        <span className={cx('triangle')} />
+      {new Array(count).fill(0).map((_, index) => (
+        <span key={index} className={cx('triangle')} />
       ))}
     </div>
   );

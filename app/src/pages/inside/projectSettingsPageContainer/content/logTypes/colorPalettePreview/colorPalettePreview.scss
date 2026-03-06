@@ -19,6 +19,7 @@
   background-color: var(--rp-ui-base-bg-000);
   border-radius: 5px;
   padding: 9px 12px 8px;
+  box-sizing: border-box;
 
   .log-sample {
     display: flex;

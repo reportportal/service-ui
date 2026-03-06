@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,4 +14,19 @@
  * limitations under the License.
  */
 
-export { DatePickerHeader } from './datePickerHeader';
+.locked-tooltip-wrapper {
+  display: inline-flex;
+  max-width: fit-content;
+}
+
+.locked-tooltip {
+  max-width: 220px;
+}
+
+.locked-tooltip-content {
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
+  font-size: 11px;
+  line-height: 16px;
+  text-align: center;
+}

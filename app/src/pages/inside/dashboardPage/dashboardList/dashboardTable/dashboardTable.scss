@@ -14,12 +14,21 @@
  * limitations under the License.
  */
 
-.name {
+.name-cell {
   width: 30%;
+}
+
+.name-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.name {
   color: $COLOR--topaz;
   font-size: 15px;
   font-family: $FONT-SEMIBOLD;
-  line-height: 22px;
+  line-height: 20px;
   cursor: pointer;
   text-decoration: none;
   word-break: break-all;
@@ -172,7 +181,7 @@
 }
 
 @media (max-width: $SCREEN_SM_MAX) {
-  .name,
+  .name-cell,
   .description,
   .owner,
   .icon-cell {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,6 +65,7 @@ import { Launch } from './activities/launch';
 import { TestItem } from './activities/testItem';
 import { UpdateItem } from './activities/updateItem';
 import { CommonEntity } from './activities/commonEntity';
+import { Dashboard } from './activities/dashboard';
 import { DefectType } from './activities/defectType';
 import { LogType } from './activities/logType';
 import { Notifications } from './activities/notifications';
@@ -166,6 +167,7 @@ export class ProjectActivity extends Component {
       case ACTIONS_UPDATE_TEST_ITEM:
         return activity.details?.history?.length > 0 && <UpdateItem activity={activity} />;
       case ACTIONS_WITH_DASHBOARDS:
+        return <Dashboard activity={activity} />;
       case ACTIONS_WITH_WIDGETS:
       case ACTIONS_WITH_FILTERS:
       case CREATE_PATTERN:

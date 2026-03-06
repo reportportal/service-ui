@@ -2,6 +2,7 @@ import React from 'react';
 import { loadComponent } from './loadComponent';
 
 const useDynamicScript = (scope, url) => {
+  // eslint-disable-next-line no-undef
   const isDev = process.env.NODE_ENV === 'development';
   const loaded = isDev ? false : !!window[scope];
   const [ready, setReady] = React.useState(loaded);

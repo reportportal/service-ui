@@ -62,6 +62,7 @@ export const LOGS_PAGINATION_ENABLED_KEY = 'logsPaginationEnabled';
 export const LOGS_SIZE_KEY = 'logsSize';
 export const LOGS_FULL_WIDTH_MODE_KEY = 'logsFullWidthMode';
 export const LOGS_COLORIZED_BACKGROUND_KEY = 'logsColorizedBackground';
+export const LOG_TIME_FORMAT_STORAGE_KEY = 'logTimeFormat';
 
 export const ACTIVE_PROJECT_SETTINGS_INITIAL_STATE = {
   [NO_LOGS_COLLAPSING_KEY]: false,

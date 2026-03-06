@@ -21,6 +21,8 @@ import {
   LOGS_PAGINATION_ENABLED_KEY,
   LOGS_FULL_WIDTH_MODE_KEY,
   LOGS_COLORIZED_BACKGROUND_KEY,
+  LOG_TIME_FORMAT_STORAGE_KEY,
+  LOG_TIME_FORMAT_ABSOLUTE,
 } from './constants';
 
 export const getUserSettingsFromStorage = (userId) => getStorageItem(`${userId}_settings`) || {};
@@ -68,3 +70,9 @@ export const setLogsColorizedBackgroundInStorage = (userId, projectId, value) =>
   updateUserProjectSettingsInStorage(userId, projectId, {
     [LOGS_COLORIZED_BACKGROUND_KEY]: value,
   });
+
+export const getLogTimeFormatFromStorage = (userId) =>
+  getUserSettingsFromStorage(userId)[LOG_TIME_FORMAT_STORAGE_KEY] || LOG_TIME_FORMAT_ABSOLUTE;
+
+export const setLogTimeFormatInStorage = (userId, format) =>
+  updateUserSettingsInStorage(userId, { [LOG_TIME_FORMAT_STORAGE_KEY]: format });

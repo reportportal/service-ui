@@ -18,7 +18,7 @@
   padding: 7px 24px 16px 24px;
 }
 
-.text {
+%text {
   display: block;
   font-family: $FONT-ROBOTO-REGULAR;
   font-size: 13px;
@@ -26,13 +26,13 @@
 }
 
 .field {
-  @extend .text;
+  @extend %text;
   color: $COLOR--e-300;
   text-transform: capitalize;
 }
 
 .value {
-  @extend .text;
+  @extend %text;
   margin-top: 4px;
   color: $COLOR--almost-black;
   margin-bottom: 16px;
