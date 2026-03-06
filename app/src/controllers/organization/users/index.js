@@ -14,11 +14,20 @@
  * limitations under the License.
  */
 
-export { NAMESPACE, FETCH_ORGANIZATION_USERS, SEARCH_KEY } from './constants';
+export { NAMESPACE, FETCH_ORGANIZATION_USERS, FETCH_USER_ASSIGNMENTS, SEARCH_KEY } from './constants';
 export {
   prepareActiveOrganizationUsersAction,
   fetchOrganizationUsersAction,
+  fetchUserAssignmentsAction,
   unassignFromOrganizationAction,
+  updateUserAssignmentsAction,
 } from './actionCreators';
-export { usersPaginationSelector, usersSelector, loadingSelector } from './selectors';
+export {
+  usersPaginationSelector,
+  usersSelector,
+  loadingSelector,
+  userAssignmentsDataSelector,
+  userAssignmentsLoadingSelector,
+  userAssignmentsUpdateLoadingSelector,
+} from './selectors';
 export { usersSagas } from './sagas';
