@@ -15,15 +15,10 @@
  */
 
 import { redirect } from 'redux-first-router';
-import {
-  userInfoSelector,
-  activeProjectSelector,
-  setActiveProjectAction,
-  setActiveProjectKeyAction,
-} from 'controllers/user';
+import { userInfoSelector, activeProjectSelector, setActiveProjectAction } from 'controllers/user';
 import { isAuthorizedSelector } from 'controllers/auth';
 import { userAssignedSelector } from 'controllers/pages';
-import { fetchProjectAction, prepareActiveProjectAction } from 'controllers/project';
+import { prepareActiveProjectAction } from 'controllers/project';
 import {
   fetchOrganizationBySlugAction,
   activeOrganizationSelector,
@@ -39,11 +34,8 @@ export const organizationProjectRouteMiddleware = (store) => (next) => (action) 
   if (!ROUTE_ACTION_TYPES.has(action.type)) return next(action);
 
   const { getState, dispatch } = store;
-  const {
-    organizationSlug: hashOrganizationSlug,
-    projectSlug: hashProjectSlug,
-    projectKey: hashProjectKey,
-  } = action.payload || {};
+  const { organizationSlug: hashOrganizationSlug, projectSlug: hashProjectSlug } =
+    action.payload || {};
 
   const authorized = isAuthorizedSelector(getState());
   const isOrganizationPage = !!hashOrganizationSlug;
