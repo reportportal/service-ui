@@ -101,6 +101,13 @@ export interface NewLaunchFieldsProps {
   hideTestPlanField?: boolean;
   descriptionPlaceholder?: string;
   testPlanPlaceholder?: string;
+  descriptionRef?: React.RefObject<HTMLTextAreaElement>;
+  testPlanMenuClassName?: string;
+  autocompleteProps?: {
+    useFixedPositioning?: boolean;
+    keyMenuClassName?: string;
+    valueMenuClassName?: string;
+  };
 }
 
 export interface BaseLaunchModalProps {

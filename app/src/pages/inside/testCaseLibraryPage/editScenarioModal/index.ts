@@ -14,34 +14,6 @@
  * limitations under the License.
  */
 
-@mixin input-placeholder($line-height) {
-  font-family: var(--rp-ui-base-font-family);
-  font-weight: 400;
-  font-size: 13px;
-  line-height: $line-height;
-  text-indent: 1px;
-  letter-spacing: 0;
-  color: var(--rp-ui-base-e-300);
-}
-
-.folder-select {
-  margin-top: 16px;
-
-  input::placeholder {
-    @include input-placeholder(28px);
-
-    vertical-align: middle;
-  }
-}
-
-.folder-description {
-  display: block;
-  margin-top: 4px;
-  font-family: var(--rp-ui-base-font-family);
-  font-size: 11px;
-  color: var(--rp-ui-base-e-400);
-}
-
-form input::placeholder {
-  @include input-placeholder(20px);
-}
+export { EditScenarioModal } from './editScenarioModal';
+export { EDIT_SCENARIO_MODAL_KEY } from './constants';
+export { useEditScenarioModal } from './useEditScenarioModal';

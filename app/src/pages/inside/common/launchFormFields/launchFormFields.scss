@@ -25,7 +25,31 @@
 }
 
 .launch-name-field {
-  margin: 16px 0;
+  margin-top: 16px;
+}
+
+.description-field {
+  margin-top: 16px;
+
+  :global(.labeled-input__label) {
+    margin-bottom: 4px;
+  }
+
+  :global(textarea) {
+    resize: vertical;
+  }
+}
+
+.test-plan-field {
+  margin-top: 16px;
+}
+
+.attributes-section {
+  margin-top: 16px;
+
+  .attributes-content {
+    margin-top: 12px;
+  }
 }
 
 .uncovered-tests-checkbox {
@@ -40,18 +64,6 @@
 
 .test-plan-name {
   font-weight: 600;
-}
-
-.test-plan-field {
-  margin-top: 16px;
-}
-
-.attributes-section {
-  margin-top: 16px;
-
-  .attributes-content {
-    margin-top: 12px;
-  }
 }
 
 .add-attribute-button {

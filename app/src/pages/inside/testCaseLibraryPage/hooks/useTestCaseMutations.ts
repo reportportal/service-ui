@@ -129,6 +129,7 @@ export const useTestCaseMutations = (testCaseId?: number) => {
         successMessageId: NotificationMessageKey;
         errorMessageId: NotificationMessageKey;
         currentFolderId?: number;
+        isDetailsPage?: boolean;
       },
     ) => {
       try {
@@ -144,14 +145,20 @@ export const useTestCaseMutations = (testCaseId?: number) => {
           data: buildTestCaseData(payload, manualScenario, updatedAttributes),
         });
 
+        if (options.isDetailsPage && testCaseId) {
+          dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId } });
+        }
+
         dispatch(hideModalAction());
         showSuccessNotification({ messageId: options.successMessageId });
 
-        completeFolderDestination({
-          newFolderDetails,
-          existingFolderId,
-          responseFolderId: response?.testFolder?.id,
-        });
+        if (!options.isDetailsPage) {
+          completeFolderDestination({
+            newFolderDetails,
+            existingFolderId,
+            responseFolderId: response?.testFolder?.id,
+          });
+        }
       } catch {
         showErrorNotification({ messageId: options.errorMessageId });
       } finally {
@@ -166,6 +173,7 @@ export const useTestCaseMutations = (testCaseId?: number) => {
       completeFolderDestination,
       showSuccessNotification,
       showErrorNotification,
+      testCaseId,
     ],
   );
 
@@ -181,7 +189,7 @@ export const useTestCaseMutations = (testCaseId?: number) => {
   );
 
   const editTestCase = useCallback(
-    async (payload: CreateTestCaseFormData, currentFolderId?: number) => {
+    async (payload: CreateTestCaseFormData, currentFolderId?: number, isDetailsPage?: boolean) => {
       if (!testCaseId) {
         showErrorNotification({ messageId: 'testCaseUpdateFailed' });
 
@@ -194,6 +202,7 @@ export const useTestCaseMutations = (testCaseId?: number) => {
         successMessageId: 'testCaseUpdatedSuccess',
         errorMessageId: 'testCaseUpdateFailed',
         currentFolderId,
+        isDetailsPage,
       });
     },
     [testCaseId, projectKey, handleTestCaseCreation, showErrorNotification],

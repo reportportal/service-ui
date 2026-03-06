@@ -60,6 +60,7 @@ export const AttributeList = ({
   autocompleteProps,
   allowCustomValues,
   addButtonClassName,
+  showValidationErrors,
   isAttributeKeyRequired,
   isAttributeValueRequired,
 }) => {
@@ -270,6 +271,7 @@ export const AttributeList = ({
           editorDefaultOpen={editorDefaultOpen}
           autocompleteProps={autocompleteProps}
           allowCustomValues={allowCustomValues}
+          showValidationErrors={showValidationErrors}
           isAttributeKeyRequired={isAttributeKeyRequired}
           isAttributeValueRequired={isAttributeValueRequired}
         />
@@ -366,6 +368,7 @@ AttributeList.propTypes = {
   autocompleteProps: PropTypes.object,
   allowCustomValues: PropTypes.bool,
   addButtonClassName: PropTypes.string,
+  showValidationErrors: PropTypes.bool,
   isAttributeKeyRequired: PropTypes.bool,
   isAttributeValueRequired: PropTypes.bool,
 };
@@ -386,6 +389,7 @@ AttributeList.defaultProps = {
   autocompleteProps: {},
   allowCustomValues: true,
   addButtonClassName: '',
+  showValidationErrors: false,
   isAttributeKeyRequired: false,
   isAttributeValueRequired: true,
 };

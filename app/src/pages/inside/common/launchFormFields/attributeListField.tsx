@@ -27,6 +27,8 @@ export const AttributeListField = ({
   defaultOpen = false,
   disabled = false,
   customClass = '',
+  getURIKey,
+  getURIValue,
   ...rest
 }: AttributeListFieldProps) => (
   <EditableAttributeList
@@ -39,6 +41,8 @@ export const AttributeListField = ({
     showButton={showButton}
     editable={editable}
     defaultOpen={defaultOpen}
+    getURIKey={getURIKey}
+    getURIValue={getURIValue}
     {...rest}
   />
 );

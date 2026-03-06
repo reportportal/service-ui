@@ -31,6 +31,8 @@ interface EditableTagsSectionProps {
   addButton?: ReactNode;
   tags?: Attribute[];
   onTagRemove?: (tagKey: string) => void;
+  title?: string;
+  emptyMessage?: string;
 }
 
 export const EditableTagsSection = ({
@@ -39,6 +41,8 @@ export const EditableTagsSection = ({
   addButton,
   tags = [],
   onTagRemove,
+  title,
+  emptyMessage,
 }: EditableTagsSectionProps) => {
   const { formatMessage } = useIntl();
 
@@ -46,13 +50,13 @@ export const EditableTagsSection = ({
 
   return (
     <SectionWithHeader
-      title={formatMessage(commonMessages.tags)}
+      title={title || formatMessage(commonMessages.tags)}
       headerControl={addButton}
       className={className}
       variant={variant}
     >
       {isEmpty(tags) ? (
-        <InfoBlock label={formatMessage(commonMessages.noTagsAdded)} />
+        <InfoBlock label={emptyMessage || formatMessage(commonMessages.noTagsAdded)} />
       ) : (
         <AdaptiveTagList
           tags={tagKeys}

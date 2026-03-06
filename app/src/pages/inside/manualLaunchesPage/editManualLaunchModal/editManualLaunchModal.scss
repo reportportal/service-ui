@@ -16,12 +16,25 @@
 
 .edit-manual-launch-modal {
   width: 480px;
+  max-height: 90vh;
   padding: 32px 40px;
   border-radius: 16px;
+
+  &__form {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(90vh - 160px);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
 }
 
-.edit-launch-form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+:global(.attribute-value-dropdown) {
+  z-index: 1000;
+}
+
+:global(.test-plan-dropdown) {
+  min-width: 400px;
+  max-width: 400px;
 }

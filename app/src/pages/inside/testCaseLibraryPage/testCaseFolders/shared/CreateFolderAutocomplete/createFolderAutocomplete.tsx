@@ -20,7 +20,7 @@ import { useSelector } from 'react-redux';
 import { FieldLabel, SingleAutocomplete } from '@reportportal/ui-kit';
 import { AutocompleteOption } from '@reportportal/ui-kit/autocompletes';
 
-import { isEmpty, isString, noop } from 'es-toolkit/compat';
+import { isEmpty, isString, noop, isNumber } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
 import { FolderWithFullPath, transformedFoldersWithFullPathSelector } from 'controllers/testCase';
@@ -99,7 +99,17 @@ export const CreateFolderAutocomplete = ({
   }, [inputValue, filteredFolders, shouldDisplayNewFolderButton]);
 
   const getTargetFolder = () => {
-    if (!value) {
+    if (!value) return null;
+
+    if (isNumber(value)) {
+      return findFolderById(filteredFolders, value);
+    }
+
+    if (isString(value)) {
+      return value;
+    }
+
+    if (typeof value !== 'object') {
       return null;
     }
 

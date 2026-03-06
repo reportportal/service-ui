@@ -29,7 +29,7 @@ export interface ManualLaunchData {
 export interface EditManualLaunchDto {
   name: string;
   description?: string;
-  testPlanId?: number;
+  testPlan?: { id: number } | Record<string, never>;
   attributes: Attribute[];
 }
 

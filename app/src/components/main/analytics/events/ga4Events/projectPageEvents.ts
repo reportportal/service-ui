@@ -32,4 +32,14 @@ export const PROJECT_PAGE_EVENTS = {
     element_name: 'unassign',
     modal: `unassign${isCurrentUser ? '' : '_user'}_from_project`,
   }),
+  CHANGE_TO_VIEW_ONLY: {
+    ...BASIC_EVENT_PARAMETERS,
+    category: 'project_team',
+    element_name: 'change to view only',
+  },
+  CHANGE_TO_CAN_EDIT: {
+    ...BASIC_EVENT_PARAMETERS,
+    category: 'project_team',
+    element_name: 'change to can edit',
+  },
 };

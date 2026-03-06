@@ -106,4 +106,8 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'TestCaseLibraryPage.editScenario',
     defaultMessage: 'Edit Scenario',
   },
+  executionTime: {
+    id: 'CreateTestCaseModal.executionTime',
+    defaultMessage: 'Execution time, min',
+  },
 });

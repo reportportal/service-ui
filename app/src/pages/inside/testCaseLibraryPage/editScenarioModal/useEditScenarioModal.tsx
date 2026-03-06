@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,5 +14,14 @@
  * limitations under the License.
  */
 
-export { useBatchDuplicateToFolderModal } from './useBatchDuplicateToFolderModal';
-export { BATCH_DUPLICATE_TO_FOLDER_MODAL_KEY } from './batchDuplicateToFolderModal';
+import { useModal } from 'common/hooks';
+
+import { EditScenarioModal } from './editScenarioModal';
+import { EDIT_SCENARIO_MODAL_KEY } from './constants';
+import { UseEditScenarioModalOptions } from './types';
+
+export const useEditScenarioModal = () =>
+  useModal<UseEditScenarioModalOptions>({
+    modalKey: EDIT_SCENARIO_MODAL_KEY,
+    renderModal: (data) => <EditScenarioModal data={data} />,
+  });

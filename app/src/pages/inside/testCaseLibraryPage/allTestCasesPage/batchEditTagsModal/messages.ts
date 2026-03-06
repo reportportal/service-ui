@@ -17,20 +17,25 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  duplicateTestCase: {
-    id: 'DuplicateTestCaseModal.duplicateTestCase',
-    defaultMessage: 'Duplicate Test Case',
+  batchEditTagsModalTitle: {
+    id: 'BatchEditTagsModal.title',
+    defaultMessage: 'Edit Tags',
   },
-  testCaseDuplicatedSuccess: {
-    id: 'DuplicateTestCaseModal.testCaseDuplicatedSuccess',
-    defaultMessage: 'Test case has been duplicated successfully',
+  batchEditTagsModalDescription: {
+    id: 'BatchEditTagsModal.description',
+    defaultMessage:
+      'You are about to edit similar tags for <b>{count}</b> selected test {count, plural, one {case} other {cases}}',
   },
-  selectFolderForDuplicate: {
-    id: 'DuplicateTestCaseModal.selectFolderForDuplicate',
-    defaultMessage: 'Please enter a name for the folder where all test cases will be organized',
+  batchEditTagsModalNoTags: {
+    id: 'batchEditTagsModal.noTags',
+    defaultMessage: 'No similar tags added yet',
   },
-  enterTestCaseName: {
-    id: 'DuplicateTestCaseModal.enterTestCaseName',
-    defaultMessage: 'Enter name for the test case',
+  batchEditTagsModalSimilarTags: {
+    id: 'batchEditTagsModal.similarTags',
+    defaultMessage: 'Similar tags',
+  },
+  batchEditTagsModalAddButton: {
+    id: 'batchEditTagsModal.addButton',
+    defaultMessage: 'Add New Tag',
   },
 });

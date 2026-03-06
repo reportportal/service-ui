@@ -29,6 +29,7 @@ import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocom
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { LAUNCH_NAME_FILTER_KEY } from 'pages/inside/common/constants';
+import { MAX_FIELD_LENGTH } from 'common/utils/validation';
 
 import { NewLaunchFieldsProps, TestPlanOption } from './types';
 import { LAUNCH_FORM_FIELD_NAMES } from './constants';
@@ -43,6 +44,9 @@ export const NewLaunchFields = ({
   hideTestPlanField = false,
   descriptionPlaceholder,
   testPlanPlaceholder,
+  descriptionRef,
+  testPlanMenuClassName,
+  autocompleteProps,
 }: NewLaunchFieldsProps) => {
   const { formatMessage } = useIntl();
 
@@ -65,6 +69,18 @@ export const NewLaunchFields = ({
       value ? { [LAUNCH_NAME_FILTER_KEY]: value, pageSize: 50 } : { pageSize: 50 },
     );
 
+  const getURIKey = useCallback(
+    (search = '') => URLS.launchAttributeKeysSearch(projectKey)(search),
+    [projectKey],
+  );
+
+  const getURIValue = useCallback(
+    (key?: string) =>
+      (search = '') =>
+        URLS.launchAttributeValuesSearch(projectKey, key)(search),
+    [projectKey],
+  );
+
   const makeTestPlanOptions = (response: { content: Array<{ id: number; name: string }> }) =>
     response.content;
 
@@ -80,10 +96,13 @@ export const NewLaunchFields = ({
       makeOptions={makeTestPlanOptions}
       onChange={(value) => handleTestPlanChange(value, input)}
       parseValueToString={(value: { name?: string }) => value?.name || ''}
+      getUniqKey={(value: { id?: number }) => value?.id}
       createWithoutConfirmation
       skipOptionCreation
       isDropdownMode
       minLength={0}
+      useFixedPositioning={!!testPlanMenuClassName}
+      menuClassName={testPlanMenuClassName}
     />
   );
 
@@ -101,12 +120,25 @@ export const NewLaunchFields = ({
         </FieldProvider>
       </div>
 
-      <FieldProvider
-        name={LAUNCH_FORM_FIELD_NAMES.DESCRIPTION}
-        placeholder={descriptionPlaceholder || formatMessage(messages.addLaunchDescriptionOptional)}
-      >
-        <FieldTextFlex label={formatMessage(commonMessages.description)} value="" />
-      </FieldProvider>
+      <div className={cx('description-field')}>
+        <FieldProvider
+          name={LAUNCH_FORM_FIELD_NAMES.DESCRIPTION}
+          placeholder={
+            descriptionPlaceholder || formatMessage(messages.addLaunchDescriptionOptional)
+          }
+        >
+          <FieldErrorHint provideHint={false}>
+            <FieldTextFlex
+              ref={descriptionRef}
+              label={formatMessage(commonMessages.description)}
+              maxLength={MAX_FIELD_LENGTH as number}
+              maxLengthDisplay={MAX_FIELD_LENGTH as number}
+              minHeight={120}
+              value=""
+            />
+          </FieldErrorHint>
+        </FieldProvider>
+      </div>
 
       {!hideTestPlanField && (
         <div className={cx('test-plan-field')}>
@@ -130,6 +162,9 @@ export const NewLaunchFields = ({
             maxLength={50}
             editable
             defaultOpen={false}
+            getURIKey={getURIKey}
+            getURIValue={getURIValue}
+            autocompleteProps={autocompleteProps}
           />
         </FieldElement>
       </div>

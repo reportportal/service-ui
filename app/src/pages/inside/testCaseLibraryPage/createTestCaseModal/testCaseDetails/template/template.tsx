@@ -21,6 +21,7 @@ import { FieldNumber } from '@reportportal/ui-kit';
 import { createClassnames } from 'common/utils';
 import { FieldProvider } from 'components/fields';
 import { ManualScenarioType } from 'pages/inside/testCaseLibraryPage/types';
+import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 
 import { DropdownWithDescription } from '../../dropdownWithDescription';
 
@@ -48,10 +49,6 @@ const messages = defineMessages({
   idealForSimple: {
     id: 'CreateTestCaseModal.idealForSimple',
     defaultMessage: 'Ideal for simple cases or exploratory testing',
-  },
-  executionTime: {
-    id: 'CreateTestCaseModal.executionTime',
-    defaultMessage: 'Execution time, min',
   },
 });
 
@@ -87,7 +84,11 @@ export const Template = ({ isTemplateFieldDisabled = false }: TemplateProps) => 
       </FieldProvider>
       <FieldProvider name="executionEstimationTime">
         <div className={cx('template__execution-time')}>
-          <FieldNumber min={1} label={formatMessage(messages.executionTime)} onChange={noop} />
+          <FieldNumber
+            min={1}
+            label={formatMessage(commonMessages.executionTime)}
+            onChange={noop}
+          />
         </div>
       </FieldProvider>
     </div>

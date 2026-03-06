@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-import { useCallback } from 'react';
+import { useCallback, useMemo, ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { noop } from 'es-toolkit';
+import { isEmpty } from 'es-toolkit/compat';
 import { Modal } from '@reportportal/ui-kit';
+import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { UseModalData } from 'common/hooks';
 import { createClassnames } from 'common/utils';
@@ -26,40 +28,37 @@ import { withModal } from 'controllers/modal';
 import { coerceToNumericId } from 'pages/inside/testCaseLibraryPage/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
-import { ButtonSwitcherOption } from 'pages/inside/common/buttonSwitcher';
 
+import { ButtonSwitcherOption } from 'pages/inside/common/buttonSwitcher';
 import { DestinationFolderSwitch } from '../../testCaseFolders/shared/DestinationFolderSwitch';
 import { useFolderModalMode } from '../../hooks/useFolderModalMode';
 import { useModalButtons } from '../../hooks/useModalButtons';
 import { validateFolderModalForm } from '../../utils/validateFolderModalForm';
 import { FolderModalFormValues } from '../../utils/folderModalFormConfig';
 import { commonFolderMessages } from '../../testCaseFolders/modals/commonFolderMessages';
-import { useBatchDuplicateToFolder } from './useBatchDuplicateToFolder';
+import { useDuplicateTestCase } from './useDuplicateTestCase';
 import { messages } from './messages';
+import { ExtendedTestCase } from '../../types';
 
-import styles from './batchDuplicateToFolderModal.scss';
+import styles from './duplicateTestCaseModal.scss';
 
 const cx = createClassnames(styles);
 
-export const BATCH_DUPLICATE_TO_FOLDER_MODAL_KEY = 'batchDuplicateToFolderModalKey';
-const BATCH_DUPLICATE_TO_FOLDER_FORM = 'batchDuplicateToFolderForm';
+export const DUPLICATE_TEST_CASE_MODAL_KEY = 'duplicateTestCaseModalKey';
+const DUPLICATE_TEST_CASE_FORM = 'duplicateTestCaseForm';
 
-export interface BatchDuplicateToFolderModalData {
+export interface DuplicateTestCaseModalData {
   selectedTestCaseIds: number[];
   count: number;
-  onClearSelection: () => void;
+  testCase?: ExtendedTestCase;
+  onClearSelection?: VoidFn;
 }
 
-type BatchDuplicateToFolderModalProps = UseModalData<BatchDuplicateToFolderModalData>;
+type DuplicateTestCaseModalProps = UseModalData<DuplicateTestCaseModalData>;
 
-const BatchDuplicateToFolderModal = reduxForm<
-  FolderModalFormValues,
-  BatchDuplicateToFolderModalProps
->({
-  form: BATCH_DUPLICATE_TO_FOLDER_FORM,
+const DuplicateTestCaseModal = reduxForm<FolderModalFormValues, DuplicateTestCaseModalProps>({
+  form: DUPLICATE_TEST_CASE_FORM,
   destroyOnUnmount: true,
-  shouldValidate: () => true,
-  validate: (values) => validateFolderModalForm(values),
   initialValues: {
     mode: ButtonSwitcherOption.EXISTING,
     destinationFolder: undefined,
@@ -67,18 +66,32 @@ const BatchDuplicateToFolderModal = reduxForm<
     parentFolder: undefined,
     isRootFolder: false,
   },
+  shouldValidate: () => true,
+  validate: (values) => validateFolderModalForm(values),
 })(({
   dirty,
   pristine,
   invalid,
-  data: { selectedTestCaseIds = [], count = 0, onClearSelection },
+  data: { selectedTestCaseIds = [], count = 0, testCase, onClearSelection = noop },
   handleSubmit,
   change,
-}: BatchDuplicateToFolderModalProps &
-  InjectedFormProps<FolderModalFormValues, BatchDuplicateToFolderModalProps>) => {
+}: DuplicateTestCaseModalProps &
+  InjectedFormProps<FolderModalFormValues, DuplicateTestCaseModalProps>) => {
   const { formatMessage } = useIntl();
-  const { isLoading, batchDuplicate } = useBatchDuplicateToFolder({ onSuccess: onClearSelection });
+  const { isLoading, duplicateTestCase } = useDuplicateTestCase({ onSuccess: onClearSelection });
   const { currentMode, handleModeChange } = useFolderModalMode({ change });
+
+  const testCaseIds = useMemo(() => {
+    if (testCase) {
+      return [testCase.id];
+    }
+    if (!isEmpty(selectedTestCaseIds)) {
+      return selectedTestCaseIds;
+    }
+
+    return [];
+  }, [selectedTestCaseIds, testCase]);
+  const isBatch = testCaseIds.length > 1 || !testCase;
 
   const onSubmit = useCallback(
     (values: FolderModalFormValues) => {
@@ -86,14 +99,14 @@ const BatchDuplicateToFolderModal = reduxForm<
         const testFolderId = coerceToNumericId(values.destinationFolder?.id);
 
         if (testFolderId) {
-          batchDuplicate({
-            testCaseIds: selectedTestCaseIds,
+          duplicateTestCase({
+            testCaseIds,
             testFolderId,
           }).catch(noop);
         }
       } else {
-        batchDuplicate({
-          testCaseIds: selectedTestCaseIds,
+        duplicateTestCase({
+          testCaseIds,
           testFolder: {
             name: values.folderName || '',
             parentTestFolderId: coerceToNumericId(values.parentFolder?.id ?? null),
@@ -101,7 +114,7 @@ const BatchDuplicateToFolderModal = reduxForm<
         }).catch(noop);
       }
     },
-    [currentMode, batchDuplicate, selectedTestCaseIds],
+    [currentMode, duplicateTestCase, testCaseIds],
   );
 
   const { okButton, cancelButton, hideModal } = useModalButtons({
@@ -111,21 +124,32 @@ const BatchDuplicateToFolderModal = reduxForm<
     onSubmit: handleSubmit(onSubmit) as () => void,
   });
 
+  const description = isBatch
+    ? formatMessage(messages.batchDuplicateDescription, {
+        count,
+        b: (text: ReactNode) => <b>{text}</b>,
+      })
+    : formatMessage(messages.duplicateTestCaseDescription, {
+        testCaseName: testCase?.name || '',
+        b: (text: ReactNode) => <b>{text}</b>,
+      });
+
   return (
     <Modal
-      title={formatMessage(messages.batchDuplicateToFolderTitle)}
+      title={
+        isBatch
+          ? formatMessage(messages.duplicateToFolderTitle)
+          : formatMessage(messages.duplicateTestCaseTitle)
+      }
       okButton={okButton}
       cancelButton={cancelButton}
       allowCloseOutside={!dirty}
       onClose={hideModal}
     >
-      <form className={cx('batch-duplicate-modal__form')}>
+      <form className={cx('duplicate-test-case-modal__form')}>
         <DestinationFolderSwitch
-          formName={BATCH_DUPLICATE_TO_FOLDER_FORM}
-          description={formatMessage(messages.batchDuplicateDescription, {
-            count,
-            b: (text) => <b>{text}</b>,
-          })}
+          formName={DUPLICATE_TEST_CASE_FORM}
+          description={description}
           existingFolderButtonLabel={formatMessage(messages.duplicateToExistingFolder)}
           newFolderButtonLabel={formatMessage(commonFolderMessages.createNewFolder)}
           rootFolderToggleLabel={formatMessage(messages.duplicateToRootDirectory)}
@@ -139,4 +163,4 @@ const BatchDuplicateToFolderModal = reduxForm<
   );
 });
 
-export default withModal(BATCH_DUPLICATE_TO_FOLDER_MODAL_KEY)(BatchDuplicateToFolderModal);
+export default withModal(DUPLICATE_TEST_CASE_MODAL_KEY)(DuplicateTestCaseModal);

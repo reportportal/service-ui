@@ -14,28 +14,14 @@
  * limitations under the License.
  */
 
-import { useDispatch } from 'react-redux';
+import { Step } from '../types';
 
-import { showModalAction } from 'controllers/modal';
+export const EDIT_SCENARIO_MODAL_KEY = 'editScenarioModalKey';
+export const EDIT_SCENARIO_FORM_NAME = 'edit-scenario-modal-form';
 
-import { ExtendedTestCase } from '../types';
-import { DUPLICATE_TEST_CASE_MODAL_KEY } from './duplicateTestCaseModal';
-
-export const useDuplicateTestCaseModal = () => {
-  const dispatch = useDispatch();
-
-  const openModal = (testCase: ExtendedTestCase) => {
-    dispatch(
-      showModalAction({
-        id: DUPLICATE_TEST_CASE_MODAL_KEY,
-        data: {
-          testCase,
-        },
-      }),
-    );
-  };
-
-  return {
-    openModal,
-  };
-};
+export const createEmptyStep = (): Step => ({
+  id: Date.now(),
+  instructions: '',
+  expectedResult: '',
+  attachments: [],
+});

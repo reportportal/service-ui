@@ -24,6 +24,7 @@ import { getFoldersAction } from 'controllers/testCase/actionCreators';
 interface UseFolderOperationUIParams {
   fromDragDrop: boolean;
   successMessageId?: NotificationMessageKey;
+  messageValues?: Record<string, string | number>;
 }
 
 export const useFolderOperationUI = () => {
@@ -41,15 +42,17 @@ export const useFolderOperationUI = () => {
   );
 
   const handleOperationSuccess = useCallback(
-    ({ fromDragDrop, successMessageId }: UseFolderOperationUIParams) => {
+    ({ fromDragDrop, successMessageId, messageValues }: UseFolderOperationUIParams) => {
       if (fromDragDrop) {
-        // Silent refresh when triggered from drag-and-drop
         dispatch(getFoldersAction({ silent: true }));
+        if (successMessageId) {
+          showSuccessNotification({ messageId: successMessageId, values: messageValues });
+        }
       } else {
         // Show UI feedback when triggered from menu/modal
         dispatch(hideModalAction());
         if (successMessageId) {
-          showSuccessNotification({ messageId: successMessageId });
+          showSuccessNotification({ messageId: successMessageId, values: messageValues });
         }
         hideSpinner();
       }

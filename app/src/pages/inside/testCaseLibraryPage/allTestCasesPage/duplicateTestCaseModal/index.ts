@@ -14,9 +14,5 @@
  * limitations under the License.
  */
 
-export {
-  default as DuplicateTestCaseModal,
-  DUPLICATE_TEST_CASE_MODAL_KEY,
-} from './duplicateTestCaseModal';
-export { useDuplicateTestCase } from './useDuplicateTestCase';
 export { useDuplicateTestCaseModal } from './useDuplicateTestCaseModal';
+export { DUPLICATE_TEST_CASE_MODAL_KEY } from './duplicateTestCaseModal';

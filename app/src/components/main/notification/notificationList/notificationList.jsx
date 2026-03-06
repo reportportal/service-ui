@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,6 +50,14 @@ export const notificationMessages = defineMessages({
   unassignProjectError: {
     id: 'Assignment.unassignProjectError',
     defaultMessage: 'An error occurred during unassigning from the project',
+  },
+  changeProjectRoleSuccess: {
+    id: 'Assignment.changeProjectRoleSuccess',
+    defaultMessage: 'User {name} role has been changed successfully',
+  },
+  changeProjectRoleError: {
+    id: 'Assignment.changeProjectRoleError',
+    defaultMessage: 'An error occurred during changing the user role',
   },
   unassignOrganizationError: {
     id: 'Assignment.unassignOrganizationError',
@@ -218,11 +226,16 @@ export const notificationMessages = defineMessages({
   },
   testCaseFolderDuplicatedSuccess: {
     id: 'TestCaseLibraryPage.testCaseFolderDuplicatedSuccess',
-    defaultMessage: 'Folder has been duplicated successfully.',
+    defaultMessage:
+      "Folder ''{folderName}'' has been successfully duplicated to {targetFolderName, select, null {root folder} other {''{targetFolderName}''}}.",
   },
   testCasesDuplicatedSuccess: {
     id: 'TestCaseLibraryPage.testCasesDuplicatedSuccess',
     defaultMessage: 'Test cases have been duplicated successfully.',
+  },
+  testCaseDuplicatedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseDuplicatedSuccess',
+    defaultMessage: 'Test case has been duplicated successfully.',
   },
   testCaseDeletedSuccess: {
     id: 'TestCaseLibraryPage.testCaseDeletedSuccess',
@@ -235,6 +248,10 @@ export const notificationMessages = defineMessages({
   executionDeletedSuccess: {
     id: 'ManualLaunchPage.executionDeletedSuccess',
     defaultMessage: 'Test execution has been deleted successfully.',
+  },
+  executionsDeletedSuccess: {
+    id: 'ManualLaunchPage.executionsDeletedSuccess',
+    defaultMessage: 'Test executions have been deleted successfully.',
   },
   testCaseDescriptionUpdateSuccess: {
     id: 'TestCaseLibraryPage.testCaseDescriptionUpdateSuccess',
@@ -270,7 +287,7 @@ export const notificationMessages = defineMessages({
   },
   testCaseFolderMovedSuccess: {
     id: 'TestCaseLibraryPage.testCaseFolderMovedSuccess',
-    defaultMessage: 'Folder has been moved successfully.',
+    defaultMessage: "Folder ''{folderName}'' has been successfully moved to {targetFolderName, select, null {root folder} other {''{targetFolderName}''}}.",
   },
   testCaseFolderMoveFailed: {
     id: 'TestCaseLibraryPage.testCaseFolderMoveFailed',
@@ -392,6 +409,10 @@ export const notificationMessages = defineMessages({
   deleteLogTypeError: {
     id: 'LogTypeModal.delete.deleteLogTypeError',
     defaultMessage: 'Failed to delete the log type. Please try again',
+  },
+  updateTestCasesTagsSuccess: {
+    id: 'TestCasesTags.update.deleteTagsSuccess',
+    defaultMessage: 'Tags for selected test cases have been updated successfully!',
   },
 });
 

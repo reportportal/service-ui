@@ -71,7 +71,9 @@
         font-size: 13px;
         font-family: $FONT-ROBOTO-REGULAR;
         color: var(--rp-ui-base-e-400);
-        margin-left: 8px;
+        margin-left: 16px;
+        min-width: 16px;
+        text-align: right;
       }
 
       &:hover {
@@ -111,7 +113,7 @@
     &-actions {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 16px;
       margin-left: auto;
     }
   }
@@ -160,7 +162,10 @@
   &__drag-handle {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     height: 20px;
+    min-width: 16px;
+    margin-left: 16px;
     border: 0;
     background-color: transparent;
     cursor: grab;
@@ -203,40 +208,8 @@
     > .folders-tree__item > .folders-tree__item-content > .folders-tree__item-title {
       border: 2px dashed var(--rp-ui-base-topaz-focused);
       border-radius: 4px;
-      background-color: var(--rp-ui-base-topaz-bg-light);
+      background-color: var(--rp-ui-base-topaz-100);
     }
-  }
-}
-
-.folder-drag-preview {
-  position: fixed;
-  pointer-events: none;
-  z-index: 9999;
-  left: 0;
-  top: 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  background-color: var(--rp-ui-base-bg-100);
-  border: 1px solid var(--rp-ui-base-e-200);
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-
-  svg {
-    width: 16px;
-    height: 16px;
-  }
-
-  svg path {
-    fill: var(--rp-ui-base-e-300);
-  }
-
-  &__text {
-    font-size: 13px;
-    font-family: $FONT-ROBOTO-MEDIUM;
-    font-weight: 500;
-    color: var(--rp-ui-base-almost-black);
   }
 }
 

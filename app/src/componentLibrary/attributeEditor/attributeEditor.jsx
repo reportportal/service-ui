@@ -61,6 +61,7 @@ export const AttributeEditor = ({
   valueLabel,
   editorDefaultOpen,
   autocompleteProps,
+  showValidationErrors,
   isAttributeKeyRequired,
   isAttributeValueRequired,
   allowCustomValues = true,
@@ -106,6 +107,13 @@ export const AttributeEditor = ({
     const { key, value } = attribute;
     setState({ key, value, errors: getValidationErrors(key, value), isKeyEdited: false });
   }, [attribute]);
+
+  useEffect(() => {
+    if (showValidationErrors) {
+      setTouchKey(true);
+      setTouchValue(true);
+    }
+  }, [showValidationErrors]);
 
   const byKeyComparator = (attr, item, key, value) => attr.key === item && attr.value === value;
 
@@ -299,6 +307,7 @@ AttributeEditor.propTypes = {
   valueLabel: PropTypes.string,
   editorDefaultOpen: PropTypes.bool,
   autocompleteProps: PropTypes.object,
+  showValidationErrors: PropTypes.bool,
   isAttributeKeyRequired: PropTypes.bool,
   isAttributeValueRequired: PropTypes.bool,
   allowCustomValues: PropTypes.bool,
@@ -319,6 +328,7 @@ AttributeEditor.defaultProps = {
   valueLabel: '',
   editorDefaultOpen: false,
   autocompleteProps: {},
+  showValidationErrors: false,
   isAttributeKeyRequired: false,
   isAttributeValueRequired: true,
   allowCustomValues: true,

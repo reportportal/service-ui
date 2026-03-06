@@ -92,6 +92,24 @@ export const LaunchSidePanel = memo(
       return null;
     }
 
+    if (!launchDetails) {
+      return (
+        <div ref={sidePanelRef} className={cx('launch-side-panel-wrapper')}>
+          <SidePanel
+            className={cx('launch-side-panel')}
+            title=""
+            descriptionComponent={<BubblesLoader />}
+            contentComponent={<BubblesLoader />}
+            footerComponent={null}
+            isOpen={isVisible}
+            onClose={onClose}
+            closeButtonAriaLabel={formatMessage(commonMessages.closePanel)}
+            side="right"
+          />
+        </div>
+      );
+    }
+
     const handleToRunClick = () => {
       // TODO: Implement to run functionality
     };

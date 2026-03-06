@@ -43,9 +43,10 @@ import { CHANGE_PRIORITY_MODAL_KEY } from './changePriorityModal';
 import { messages } from './messages';
 import { FolderEmptyState } from '../emptyState/folder/folderEmptyState';
 import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
-import { useBatchDuplicateToFolderModal } from './batchDuplicateToFolderModal';
+import { useDuplicateTestCaseModal } from './duplicateTestCaseModal';
 import { useBatchDeleteTestCasesModal } from './batchDeleteTestCasesModal';
 import { useMoveTestCaseModal } from '../moveTestCaseModal';
+import { useBatchEditTagsModal } from './batchEditTagsModal';
 import { useAddToLaunchModal } from '../addToLaunchModal';
 
 import styles from './allTestCasesPage.scss';
@@ -95,9 +96,10 @@ export const AllTestCasesPage = ({
     onClearSelection,
     isUncoveredTestsCheckboxAvailable: false,
   });
-  const { openModal: openBatchDuplicateToFolderModal } = useBatchDuplicateToFolderModal();
+  const { openModal: openDuplicateToFolderModal } = useDuplicateTestCaseModal();
   const { openModal: openBatchDeleteTestCasesModal } = useBatchDeleteTestCasesModal();
   const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
+  const { openModal: openBatchEditTagsModal } = useBatchEditTagsModal();
   const { canManageTestCases } = useUserPermissions();
 
   const handleSelectedRows = (rows: SelectedTestCaseRow[]) => setSelectedRows(rows);
@@ -111,7 +113,7 @@ export const AllTestCasesPage = ({
     {
       label: formatMessage(messages.duplicateToFolder),
       onClick: () => {
-        openBatchDuplicateToFolderModal({
+        openDuplicateToFolderModal({
           selectedTestCaseIds: selectedRowIds,
           count: selectedRowIds.length,
           onClearSelection,
@@ -135,7 +137,13 @@ export const AllTestCasesPage = ({
     },
     {
       label: formatMessage(messages.editTags),
-      onClick: noop,
+      onClick: () => {
+        openBatchEditTagsModal({
+          selectedTestCaseIds: selectedRowIds,
+          count: selectedRowIds.length,
+          onClearSelection,
+        });
+      },
     },
     {
       label: formatMessage(COMMON_LOCALE_KEYS.DELETE),

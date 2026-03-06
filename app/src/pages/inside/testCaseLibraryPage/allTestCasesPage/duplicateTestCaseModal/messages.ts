@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,21 +17,29 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  batchDuplicateToFolderTitle: {
-    id: 'BatchDuplicateToFolderModal.title',
+  duplicateToFolderTitle: {
+    id: 'DuplicateTestCaseModal.title',
     defaultMessage: 'Duplicate to Folder',
   },
+  duplicateTestCaseTitle: {
+    id: 'DuplicateTestCaseModal.duplicateTestCaseTitle',
+    defaultMessage: 'Duplicate test case',
+  },
   batchDuplicateDescription: {
-    id: 'BatchDuplicateToFolderModal.description',
+    id: 'DuplicateTestCaseModal.description',
     defaultMessage:
       'You are about to copy <b>{count}</b> selected test {count, plural, one {case} other {cases}} to a new location',
   },
+  duplicateTestCaseDescription: {
+    id: 'DuplicateTestCaseModal.duplicateTestCaseDescription',
+    defaultMessage: 'You are about to copy <b>{testCaseName}</b> to a new location',
+  },
   duplicateToExistingFolder: {
-    id: 'BatchDuplicateToFolderModal.duplicateToExistingFolder',
+    id: 'DuplicateTestCaseModal.duplicateToExistingFolder',
     defaultMessage: 'Duplicate to existing folder',
   },
   duplicateToRootDirectory: {
-    id: 'BatchDuplicateToFolderModal.duplicateToRootDirectory',
+    id: 'DuplicateTestCaseModal.duplicateToRootDirectory',
     defaultMessage: 'Duplicate to root directory',
   },
 });

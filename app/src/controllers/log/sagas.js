@@ -170,7 +170,7 @@ function* fetchAllErrorLogs({
   excludeLogContent = true,
   level,
 }) {
-  const { id } = logItem;
+  const id = logItem?.id;
   const { projectKey, query, filterLevel } = yield call(collectLogPayload);
   let retryId = null;
   const logViewMode = yield select(logViewModeSelector);

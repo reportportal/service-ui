@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
 
 import { useModal } from 'common/hooks';
 
-import BatchDuplicateToFolderModal, {
-  BATCH_DUPLICATE_TO_FOLDER_MODAL_KEY,
-  BatchDuplicateToFolderModalData,
-} from './batchDuplicateToFolderModal';
+import BatchEditTagsModal, {
+  BATCH_EDIT_TAGS_MODAL_KEY,
+  BatchEditTagsModalData,
+} from './batchEditTagsModal';
 
-export const useBatchDuplicateToFolderModal = () =>
-  useModal<BatchDuplicateToFolderModalData>({
-    modalKey: BATCH_DUPLICATE_TO_FOLDER_MODAL_KEY,
-    renderModal: (data) => <BatchDuplicateToFolderModal data={data} />,
+export const useBatchEditTagsModal = () =>
+  useModal<BatchEditTagsModalData>({
+    modalKey: BATCH_EDIT_TAGS_MODAL_KEY,
+    renderModal: (data) => <BatchEditTagsModal data={data} />,
   });

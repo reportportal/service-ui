@@ -17,61 +17,61 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import { URLS } from 'common/urls';
+import { hideModalAction } from 'controllers/modal';
 import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
-import { hideModalAction } from 'controllers/modal';
-import { getFoldersAction } from 'controllers/testCase';
+import { FolderWithFullPath } from 'controllers/testCase';
 
-import { DuplicateTestCasePayload, DuplicateTestCaseResponse } from './types';
+import { useFolderActions } from '../../hooks/useFolderActions';
 
-export const useDuplicateTestCase = () => {
+interface BatchDuplicateParams {
+  testCaseIds: number[];
+  testFolderId?: number;
+  testFolder?: {
+    name: string;
+    parentTestFolderId?: number;
+  };
+}
+
+interface BatchDuplicateResponse {
+  testFolderId: number;
+}
+
+export const useDuplicateTestCase = ({ onSuccess }: { onSuccess: () => void }) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+  const { processFolderDestinationAndComplete } = useFolderActions();
   const { showSuccessNotification, showErrorNotification } = useNotification();
 
   const duplicateTestCase = useCallback(
-    async ({ testCaseId, testFolderId, name }: DuplicateTestCasePayload) => {
+    async ({ testCaseIds, testFolder, testFolderId }: BatchDuplicateParams) => {
       showSpinner();
 
       try {
-        const response = await fetch<DuplicateTestCaseResponse>(
+        const response = await fetch<BatchDuplicateResponse>(
           URLS.testCaseBatchDuplicate(projectKey),
           {
             method: 'POST',
-            data: {
-              testCaseIds: [testCaseId],
-              testFolderId,
-            },
+            data: { testCaseIds, testFolder, testFolderId },
           },
         );
 
-        // Update the name of the duplicated test case
-        const duplicatedTestCaseId = response.testCases?.[0]?.id;
-
-        if (duplicatedTestCaseId) {
-          try {
-            await fetch(URLS.testCaseDetails(projectKey, duplicatedTestCaseId), {
-              method: 'PATCH',
-              data: { name },
-            });
-          } catch (patchError) {
-            // Rollback: delete the duplicate if rename failed
-            await fetch(URLS.testCasesBatch(projectKey), {
-              method: 'DELETE',
-              data: { testCaseIds: [duplicatedTestCaseId] },
-            });
-            throw patchError;
-          }
-        }
+        processFolderDestinationAndComplete({
+          destination: testFolder ?? ({ id: response.testFolderId } as FolderWithFullPath),
+          responseFolderId: response.testFolderId,
+          testCaseCount: testCaseIds.length,
+        });
 
         dispatch(hideModalAction());
-        dispatch(getFoldersAction());
-
+        onSuccess();
         showSuccessNotification({
-          messageId: 'testCasesDuplicatedSuccess',
+          messageId:
+            testCaseIds.length > 1
+              ? 'testCasesDuplicatedSuccess'
+              : 'testCaseDuplicatedSuccess',
         });
       } catch {
         showErrorNotification({
@@ -85,14 +85,13 @@ export const useDuplicateTestCase = () => {
       showSpinner,
       projectKey,
       dispatch,
+      onSuccess,
+      processFolderDestinationAndComplete,
+      hideSpinner,
       showSuccessNotification,
       showErrorNotification,
-      hideSpinner,
     ],
   );
 
-  return {
-    isLoading,
-    duplicateTestCase,
-  };
+  return { duplicateTestCase, isLoading };
 };

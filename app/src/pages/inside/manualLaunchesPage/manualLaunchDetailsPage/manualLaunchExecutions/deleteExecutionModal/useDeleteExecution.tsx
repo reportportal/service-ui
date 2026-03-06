@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { hideModalAction } from 'controllers/modal';
 import { projectKeySelector } from 'controllers/project';
@@ -26,35 +27,58 @@ import {
   getManualLaunchAction,
 } from 'controllers/manualLaunch';
 
+import type { DeleteExecutionModalData } from './types';
+
 export const useDeleteExecution = () => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const { showSuccessNotification, showErrorNotification } = useNotification();
 
-  const deleteExecution = async (launchId: string | number, executionId: number) => {
-    try {
+  const deleteExecutions = useCallback(
+    async (payload: DeleteExecutionModalData) => {
       showSpinner();
 
-      const deleteUrl = URLS.deleteExecutionFromLaunch(projectKey, launchId, executionId);
-      await fetch(deleteUrl, {
-        method: 'delete',
-      });
+      try {
+        if (payload.type === 'single') {
+          await fetch(
+            URLS.deleteExecutionFromLaunch(projectKey, payload.launchId, payload.execution.id),
+            { method: 'delete' },
+          );
+          showSuccessNotification({ messageId: 'executionDeletedSuccess' });
+        } else {
+          await fetch(URLS.batchDeleteExecutionsFromLaunch(projectKey, payload.launchId), {
+            method: 'DELETE',
+            data: { executionIds: payload.executionIds },
+          });
+          showSuccessNotification({
+            messageId:
+              payload.executionIds.length > 1 ? 'executionsDeletedSuccess' : 'executionDeletedSuccess',
+          });
+          payload.onClearSelection?.();
+        }
 
-      dispatch(hideModalAction());
-      showSuccessNotification({ messageId: 'executionDeletedSuccess' });
+        dispatch(hideModalAction());
+        dispatch(getManualLaunchTestCaseExecutionsAction({ launchId: payload.launchId }));
+        dispatch(getManualLaunchFoldersAction({ launchId: payload.launchId }));
+        dispatch(getManualLaunchAction({ launchId: payload.launchId }));
+      } catch {
+        showErrorNotification({
+          messageId: 'errorOccurredTryAgain',
+        });
+      } finally {
+        hideSpinner();
+      }
+    },
+    [
+      projectKey,
+      dispatch,
+      showSpinner,
+      hideSpinner,
+      showSuccessNotification,
+      showErrorNotification,
+    ],
+  );
 
-      dispatch(getManualLaunchTestCaseExecutionsAction({ launchId }));
-      dispatch(getManualLaunchFoldersAction({ launchId }));
-      dispatch(getManualLaunchAction({ launchId }));
-    } catch (error: unknown) {
-      showErrorNotification({
-        message: (error as Error).message,
-      });
-    } finally {
-      hideSpinner();
-    }
-  };
-
-  return { isLoading, deleteExecution };
+  return { isLoading, deleteExecutions };
 };

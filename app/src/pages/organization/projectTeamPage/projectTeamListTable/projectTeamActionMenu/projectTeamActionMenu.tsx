@@ -1,5 +1,5 @@
 /*!
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,21 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useCallback, useMemo } from 'react';
 import { useIntl } from 'react-intl';
+import { createClassnames } from 'common/utils';
+import styles from './projectTeamActionMenu.scss';
 import { idSelector } from 'controllers/user';
 import { redirect } from 'redux-first-router';
-import { canAssignUnassignInternalUser } from 'common/utils/permissions/permissions';
+import {
+  canAssignUnassignInternalUser,
+  canChangeUserRole,
+} from 'common/utils/permissions/permissions';
 import { urlOrganizationSlugSelector, userRolesSelector } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
-import { ActionMenu } from 'components/actionMenu';
+import { ActionMenu } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { messages as assignmentMessages } from 'common/constants/localization/assignmentsLocalization';
 import { UnassignProjectModal } from 'pages/inside/common/assignments/unassignProjectModal';
+import { changeProjectRoleAction } from 'controllers/organization/projects';
 import {
   projectInfoIdSelector,
   projectNameSelector,
@@ -36,11 +43,16 @@ import { PROJECT_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/
 import { fetchMembersAction } from 'controllers/members';
 import { ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages/constants';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
-import { MANAGER } from 'common/constants/projectRoles';
+import { EDITOR, MANAGER, VIEWER } from 'common/constants/projectRoles';
+
+const cx = createClassnames(styles);
 
 interface User {
   id: number;
   fullName: string;
+  userId: string;
+  projectRole?: string;
+  organizationRole?: string;
 }
 
 interface ProjectTeamActionMenuProps {
@@ -101,15 +113,73 @@ export const ProjectTeamActionMenu = ({ user }: ProjectTeamActionMenuProps) => {
     projectKey,
   ]);
 
-  const actions = useMemo(() => {
-    return [
+  const handleChangeRoleClick = useCallback(
+    (newProjectRole: string) => {
+      const onSuccess = () => {
+        dispatch(fetchMembersAction());
+        dispatch(fetchProjectAction(projectKey, true));
+        if (newProjectRole === VIEWER) {
+          trackEvent(PROJECT_PAGE_EVENTS.CHANGE_TO_VIEW_ONLY);
+        } else if (newProjectRole === EDITOR) {
+          trackEvent(PROJECT_PAGE_EVENTS.CHANGE_TO_CAN_EDIT);
+        }
+      };
+      dispatch(
+        changeProjectRoleAction(user, projectKey, newProjectRole, onSuccess),
+      );
+    },
+    [dispatch, user, projectKey, trackEvent],
+  );
+
+  const isCurrentUser = currentUserId === user.id;
+  const isTargetManager = user.organizationRole === MANAGER;
+  const canShowChangeRole =
+    !isCurrentUser && !isTargetManager && canChangeUserRole(roles);
+  const showChangeToView = canShowChangeRole && user.projectRole === EDITOR;
+  const showChangeToEdit = canShowChangeRole && user.projectRole === VIEWER;
+
+  const items = useMemo(
+    () => [
       {
+        id: 'unassign',
         label: formatMessage(COMMON_LOCALE_KEYS.UNASSIGN),
         onClick: handleUnassignClick,
         hasPermission: canAssignUnassignInternalUser(roles),
       },
-    ];
-  }, [roles, formatMessage, handleUnassignClick]);
+      ...(showChangeToView
+        ? [
+            {
+              id: 'changeToView',
+              label: formatMessage(assignmentMessages.changeToCanView),
+              onClick: () => handleChangeRoleClick(VIEWER),
+              hasPermission: true,
+            },
+          ]
+        : []),
+      ...(showChangeToEdit
+        ? [
+            {
+              id: 'changeToEdit',
+              label: formatMessage(assignmentMessages.changeToCanEdit),
+              onClick: () => handleChangeRoleClick(EDITOR),
+              hasPermission: true,
+            },
+          ]
+        : []),
+    ],
+    [
+    roles,
+    formatMessage,
+    handleUnassignClick,
+    handleChangeRoleClick,
+    showChangeToView,
+    showChangeToEdit,
+  ]);
 
-  return <ActionMenu actions={actions} />;
+  return (
+    <ActionMenu
+      items={items}
+      popoverClassName={cx('popover')}
+    />
+  );
 };
