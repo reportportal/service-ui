@@ -77,6 +77,12 @@ export const AssignmentDescriptionLink = ({
   </ExternalLink>
 );
 
+const renderDescriptionLink = (chunks: ReactNode) => (
+  <AssignmentDescriptionLink href="#" className={cx('description-link')}>
+    {chunks}
+  </AssignmentDescriptionLink>
+);
+
 const ManageAssignmentsOrganizationModalView = ({
   user,
   organization,
@@ -234,11 +240,7 @@ const ManageAssignmentsOrganizationModalView = ({
   };
 
   const description = formatMessage(messages.manageAssignmentsDescription, {
-    link: (chunks: ReactNode) => (
-      <AssignmentDescriptionLink href={'#'} className={cx('description-link')}>
-        {chunks}
-      </AssignmentDescriptionLink>
-    ),
+    link: renderDescriptionLink,
   });
 
   const handleOrganizationChange = (value: OrganizationValue | OrganizationValue[]) => {
