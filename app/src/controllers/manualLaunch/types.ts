@@ -48,7 +48,6 @@ export interface GetManualLaunchTestCaseExecutionsParams {
 
 export interface GetManualLaunchExecutionParams {
   launchId: string | number;
-  testCaseId: string | number;
   executionId: string | number;
 }
 

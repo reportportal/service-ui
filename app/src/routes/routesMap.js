@@ -422,10 +422,11 @@ const routesMap = {
     path: '/organizations/:organizationSlug/projects/:projectSlug/manualLaunches/:launchId/testCase/:testCaseId/execution/:executionId',
     thunk: (dispatch, getState) => {
       const state = getState();
-      const { launchId, testCaseId, executionId } = state.location?.payload || {};
+      const { launchId, executionId } = state.location?.payload || {};
 
-      if (launchId && testCaseId && executionId) {
-        dispatch(getManualLaunchExecutionAction({ launchId, testCaseId, executionId }));
+      if (launchId && executionId) {
+        dispatch(getManualLaunchAction({ launchId }));
+        dispatch(getManualLaunchExecutionAction({ launchId, executionId }));
       }
     },
   },
