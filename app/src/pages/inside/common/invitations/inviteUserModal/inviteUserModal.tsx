@@ -56,6 +56,10 @@ import {
   createInviteUserFormInstance,
   type InstanceFormInnerProps,
 } from './inviteUserModalForms';
+import styles from './inviteUserModal.scss';
+import { createClassnames } from 'common/utils';
+
+const cx = createClassnames(styles);
 
 function validateProject(
   formData: FormDataMap[Level.PROJECT],
@@ -201,9 +205,11 @@ export const InviteUser = <L extends keyof FormDataMap>({
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
       size="large"
+      className={cx('modal')}
       allowCloseOutside={!dirty}
+      scrollable
     >
-      {content}
+      <div className={cx('modal-content')}>{content}</div>
     </Modal>
   );
 };

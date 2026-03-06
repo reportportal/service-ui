@@ -14,36 +14,12 @@
  * limitations under the License.
  */
 
-.option {
+.modal {
+  width: 720px;
+}
+
+.modal-content {
   display: flex;
-  align-items: center;
-  min-height: 36px;
-  padding: 8px 12px;
-  cursor: pointer;
-  box-sizing: border-box;
-  color: var(--rp-ui-color-text-2);
-  font-family: var(--rp-ui-base-font-family);
-  font-size: 13px;
-
-  &:hover,
-  &.active {
-    background-color: var(--rp-ui-color-bg-3);
-  }
-}
-
-.avatar {
-  flex-shrink: 0;
-  margin-right: 8px;
-}
-
-.img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
-
-.email {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  flex-direction: column;
+  gap: 16px;
 }

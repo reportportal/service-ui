@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import {
   Button,
   Checkbox,
@@ -26,7 +26,7 @@ import {
 import { createClassnames } from 'common/utils';
 import { useIntl } from 'react-intl';
 import { messages } from 'common/constants/localization/invitationsLocalization';
-import { AsyncAutocomplete } from 'componentLibrary/autocompletes/asyncAutocomplete';
+import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 import { URLS } from 'common/urls';
 import {
   ProjectsSearchesItem,
@@ -56,15 +56,9 @@ export const AddProjectForm = ({
   onCancel,
 }: AddProjectFormProps) => {
   const { formatMessage } = useIntl();
-  const [canEdit, setCanEdit] = useState(false);
+  const [canEdit, setCanEdit] = useState(canEditByDefault);
   const [items, setItems] = useState<ProjectsSearchesItem[]>([]);
   const [selectedProject, setSelectedProject] = useState<Pick<Project, 'id' | 'name'>>(null);
-
-  useEffect(() => {
-    if (canEditByDefault) {
-      setCanEdit(canEditByDefault);
-    }
-  }, [canEditByDefault]);
 
   const getRequestParams = (inputValue: string) => {
     return {
@@ -114,13 +108,15 @@ export const AddProjectForm = ({
   return (
     <div className={cx('form')}>
       <div className={cx('projects')}>
-        <AsyncAutocomplete
+        <AsyncAutocompleteV2
           placeholder={formatMessage(messages.selectSearchProject)}
           getURI={() => URLS.organizationProjectsSearches(organizationId)}
           getRequestParams={getRequestParams}
           makeOptions={makeOptions}
           onChange={handleChangeProject}
           createWithoutConfirmation={true}
+          useFixedPositioning
+          dropdownMatchInputWidth
         />
       </div>
       <div className={cx('checkbox-wrapper')}>

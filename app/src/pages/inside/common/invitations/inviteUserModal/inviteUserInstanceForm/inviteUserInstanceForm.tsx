@@ -21,7 +21,7 @@ import { InstanceAssignment } from 'pages/inside/common/assignments/instanceAssi
 import { ORGANIZATIONS } from 'pages/instance/allUsersPage/allUsersHeader/createUserModal/constants';
 import { getFormName } from '../utils';
 import { Level } from '../constants';
-import { InviteUserInstanceEmailField } from './inviteUserInstanceEmailField';
+import { InviteUserEmailAutocompleteField } from '../InviteUserEmailAutocompleteField';
 
 import styles from './inviteUserInstanceForm.scss';
 
@@ -44,7 +44,7 @@ export const InviteUserInstanceForm = () => {
 
   return (
     <form className={cx('form')}>
-      <InviteUserInstanceEmailField />
+      <InviteUserEmailAutocompleteField />
       <div className={cx('invite-wrapper')}>
         <span className={cx('invite')}>{formatMessage(messages.invite)}</span>
         <span className={cx('invite-description')}>
