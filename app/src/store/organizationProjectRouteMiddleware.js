@@ -53,10 +53,11 @@ export const organizationProjectRouteMiddleware = (store) => (next) => (action) 
   const { slug: organizationSlug } = activeOrganizationSelector(getState());
   const { projectSlug } = activeProjectSelector(getState());
   const user = userInfoSelector(getState());
-  const { hasPermission, hasPermissionOrganization, assignedProjectKey, assignmentNotRequired } =
-    userAssignedSelector(hashProjectSlug, hashOrganizationSlug)(getState());
+  const { hasPermission, hasPermissionOrganization } = userAssignedSelector(
+    hashProjectSlug,
+    hashOrganizationSlug,
+  )(getState());
 
-  const projectKey = assignedProjectKey || (assignmentNotRequired && hashProjectKey);
   const isProjectPage = !!hashProjectSlug;
 
   // For project pages check project-level permission, for org pages — org-level
@@ -84,21 +85,15 @@ export const organizationProjectRouteMiddleware = (store) => (next) => (action) 
         projectSlug: hashProjectSlug,
       }),
     );
-    if (projectKey) {
-      dispatch(setActiveProjectKeyAction(projectKey));
-      dispatch(fetchProjectAction(projectKey));
-    } else {
-      // Resolve project by slug on manual URL change and reload
-      dispatch(
-        prepareActiveProjectAction({
-          organizationSlug: hashOrganizationSlug,
-          projectSlug: hashProjectSlug,
-          action,
-        }),
-      );
+    dispatch(
+      prepareActiveProjectAction({
+        organizationSlug: hashOrganizationSlug,
+        projectSlug: hashProjectSlug,
+        action,
+      }),
+    );
 
-      return;
-    }
+    return;
   }
 
   return next(action);
