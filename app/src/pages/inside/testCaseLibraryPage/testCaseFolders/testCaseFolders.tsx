@@ -30,6 +30,7 @@ import {
   testCasesSelector,
   foldersSelector,
   testCasesPageSelector,
+  FolderWithFullPath,
 } from 'controllers/testCase';
 import {
   locationSelector,
@@ -48,6 +49,8 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
 import { userIdSelector } from 'controllers/user';
+import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { findFolderById } from 'pages/inside/testCaseLibraryPage/hooks/useTestPlanActiveFolders';
 
 import { ExpandedOptions } from '../../common/expandedOptions';
 import { commonMessages } from '../commonMessages';
@@ -57,6 +60,8 @@ import { useNavigateToFolder } from '../hooks/useNavigateToFolder';
 import { useMoveFolder } from './modals/moveFolderModal/useMoveFolder';
 import { useDuplicateFolder } from './modals/duplicateFolderModal/useDuplicateFolder';
 import { useFolderDragDrop } from './useFolderDragDrop';
+import { useTestCase } from '../hooks/useTestCase';
+import { useDuplicateTestCase } from '../duplicateTestCaseModal/useDuplicateTestCase';
 
 import styles from './testCaseFolders.scss';
 
@@ -70,6 +75,8 @@ export const TestCaseFolders = () => {
   const urlFolderId = useSelector(urlFolderIdSelector);
   const { moveFolder } = useMoveFolder();
   const { duplicateFolder } = useDuplicateFolder();
+  const { patchTestCase } = useTestCase();
+  const { duplicateTestCase } = useDuplicateTestCase();
   const isLoadingTestCases = useSelector(isLoadingTestCasesSelector);
   const testCases = useSelector(testCasesSelector);
   const testCasesPageData = useSelector(testCasesPageSelector);
@@ -166,6 +173,43 @@ export const TestCaseFolders = () => {
     },
   });
 
+  const handleMoveTestCase = useCallback(
+    async (testCase: ExtendedTestCase, targetFolderId: number) => {
+      const destinationFolder = findFolderById(folders, targetFolderId);
+
+      if (!destinationFolder) return;
+
+      const destinationFolderPayload: FolderWithFullPath = {
+        id: destinationFolder.id,
+        name: destinationFolder.name,
+        description: destinationFolder.description ?? '',
+        fullPath: '',
+      };
+
+      await patchTestCase({
+        testCaseId: testCase.id,
+        testCasesSourceFolderId: testCase.testFolder?.id,
+        destinationFolder: destinationFolderPayload,
+      });
+    },
+    [folders, patchTestCase],
+  );
+
+  const handleDuplicateTestCase = useCallback(
+    async (testCase: ExtendedTestCase, targetFolderId: number) => {
+      const destinationFolder = findFolderById(folders, targetFolderId);
+      
+      if (!destinationFolder) return;
+
+      await duplicateTestCase({
+        testCaseId: testCase.id,
+        testFolderId: destinationFolder.id,
+        name: testCase.name,
+      });
+    },
+    [folders, duplicateTestCase],
+  );
+
   return (
     <ExpandedOptions
       activeFolderId={urlFolderIdNumber || null}
@@ -176,6 +220,8 @@ export const TestCaseFolders = () => {
       renderCreateFolderButton={renderCreateFolderButton}
       onMoveFolder={handleMoveFolder}
       onDuplicateFolder={handleDuplicateFolder}
+      onMoveTestCase={handleMoveTestCase}
+      onDuplicateTestCase={handleDuplicateTestCase}
     >
       <AllTestCasesPage
         testCases={testCases}
