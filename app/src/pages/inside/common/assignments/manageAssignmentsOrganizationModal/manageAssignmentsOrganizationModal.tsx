@@ -264,7 +264,7 @@ const ManageAssignmentsOrganizationModalView = ({
       return (
         <div className={cx('footer', 'footer-confirmation')}>
           <div className={cx('confirmation-text')}>
-            {formatMessage(messages.discardChangesConfirmation as MessageDescriptor)}
+            {formatMessage(messages.discardChangesConfirmation)}
           </div>
           <div className={cx('action-buttons')}>
             <Button
