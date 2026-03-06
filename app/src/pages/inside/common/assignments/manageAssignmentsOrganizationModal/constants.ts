@@ -5,7 +5,10 @@ import type {
   UserOrganizationProjectItem,
   UserOrganizationProjectsResponse,
 } from 'controllers/organization/users/types';
-import type { Organization } from 'pages/inside/common/assignments/organizationAssignment';
+import type {
+  Organization as OrganizationValue,
+  Organization,
+} from 'pages/inside/common/assignments/organizationAssignment';
 import type { Project } from 'pages/inside/common/assignments/organizationAssignment/organizationItem/projectItems';
 import type { Organization as OrgType } from 'controllers/organization';
 
@@ -16,6 +19,17 @@ function normalizeProjectRole(projectRole: string): string {
   const upper = (projectRole || '').toUpperCase();
   if (upper.includes('EDIT') || upper === 'EDITOR') return EDITOR;
   return VIEWER;
+}
+
+export function isAssignmentDirty(
+  current: OrganizationValue | null,
+  initial: OrganizationValue | null,
+): boolean {
+  if (!current || !initial) return false;
+  if (current.role !== initial.role) return true;
+  const currentProjects = JSON.stringify((current.projects ?? []).map((p) => ({ id: p.id, role: p.role })).sort((a, b) => a.id - b.id));
+  const initialProjects = JSON.stringify((initial.projects ?? []).map((p) => ({ id: p.id, role: p.role })).sort((a, b) => a.id - b.id));
+  return currentProjects !== initialProjects;
 }
 
 export function getCurrentOrganizationAssignment(

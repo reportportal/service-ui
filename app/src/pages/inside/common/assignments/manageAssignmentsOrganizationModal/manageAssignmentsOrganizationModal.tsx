@@ -13,7 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import {
+  buildUpdateAssignmentsPayload,
+  getCurrentOrganizationAssignment,
+  isAssignmentDirty,
+  MANAGE_ASSIGNMENTS_FORM,
+} from './constants';
 import { type ReactNode, useCallback, useEffect, useState } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { MessageDescriptor, useIntl } from 'react-intl';
@@ -41,7 +46,6 @@ import { hideModalAction } from 'controllers/modal';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 
 import { useHandleUnassignSuccess } from '..';
-import { buildUpdateAssignmentsPayload, getCurrentOrganizationAssignment, MANAGE_ASSIGNMENTS_FORM, } from './constants';
 import {
   type Organization as OrganizationValue,
   OrganizationAssignment,
@@ -81,13 +85,11 @@ const ManageAssignmentsOrganizationModalView = ({
   assignmentsData,
   assignmentsLoading,
   assignmentsUpdateLoading,
-  hasNoAssignments: _hasNoAssignments,
 }: ManageAssignmentsOrganizationModalOwnProps & {
   handleSubmit: (submit: (values: { organizations?: unknown[] }) => void) => () => void;
   assignmentsData: UserOrganizationProjectsResponse | null;
   assignmentsLoading: boolean;
   assignmentsUpdateLoading: boolean;
-  hasNoAssignments: boolean;
 }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
@@ -95,7 +97,11 @@ const ManageAssignmentsOrganizationModalView = ({
   const currentUserId = useSelector(idSelector) as number;
   const [showUnassignConfirmation, setShowUnassignConfirmation] = useState(false);
   const [currentOrganization, setCurrentOrganization] = useState<OrganizationValue | null>(null);
+  const [initialOrganization, setInitialOrganization] = useState<OrganizationValue | null>(null);
   const handleUnassignSuccess = useHandleUnassignSuccess(user, onUnassign);
+
+  const isDirty = isAssignmentDirty(currentOrganization, initialOrganization);
+  const isBusy = assignmentsLoading || assignmentsUpdateLoading || !currentOrganization;
 
   useEffect(() => {
     dispatch(fetchUserAssignmentsAction(organization.id, user.id));
@@ -103,17 +109,15 @@ const ManageAssignmentsOrganizationModalView = ({
 
   const handleOrganizationAssignment = useCallback(() => {
     if (!assignmentsLoading && organization && user) {
-      setCurrentOrganization(
-        getCurrentOrganizationAssignment(organization, assignmentsData, user)
-      );
+      const next = getCurrentOrganizationAssignment(organization, assignmentsData, user);
+      setCurrentOrganization(next);
+      setInitialOrganization((prev) => prev ?? next);
     }
-  }, [assignmentsLoading, assignmentsData, organization, user, setCurrentOrganization]);
-
+  }, [assignmentsLoading, assignmentsData, organization, user]);
 
   useEffect(() => {
     handleOrganizationAssignment();
   }, [handleOrganizationAssignment]);
-
 
   const confirmationMessage =
     currentUserId === user.id ? messages.unassignConfirmation : messages.unassignConfirmationUser;
@@ -152,7 +156,7 @@ const ManageAssignmentsOrganizationModalView = ({
     const isOrganizationOwner = userId === ownerId;
     const isCurrentUser = currentUserId === userId;
 
-    let isDisabled = false;
+    let isDisabled = isBusy;
     let tooltipMessage: MessageDescriptor = null;
 
     if (isCurrentUser) {
@@ -195,10 +199,14 @@ const ManageAssignmentsOrganizationModalView = ({
         <div className={cx('footer', 'footer-confirmation')}>
           <div className={cx('confirmation-text')}>{formatMessage(confirmationMessage)}</div>
           <div className={cx('action-buttons')}>
-            <Button variant="ghost" onClick={() => setShowUnassignConfirmation(false)}>
+            <Button
+              variant="ghost"
+              onClick={() => setShowUnassignConfirmation(false)}
+              disabled={isBusy}
+            >
               {formatMessage(COMMON_LOCALE_KEYS.NO)}
             </Button>
-            <Button variant="danger" onClick={handleUnassignConfirm}>
+            <Button variant="danger" onClick={handleUnassignConfirm} disabled={isBusy}>
               {formatMessage(messages.yesUnassign)}
             </Button>
           </div>
@@ -210,13 +218,13 @@ const ManageAssignmentsOrganizationModalView = ({
       <div className={cx('footer')}>
         {renderUnassignButton()}
         <div className={cx('action-buttons')}>
-          <Button variant="ghost" onClick={closeModal}>
+          <Button variant="ghost" onClick={closeModal} disabled={isBusy}>
             {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
           </Button>
           <Button
             variant="primary"
             onClick={() => formHandleSubmit(onSaveAssignments)()}
-            disabled={assignmentsUpdateLoading}
+            disabled={isBusy}
           >
             {formatMessage(COMMON_LOCALE_KEYS.SAVE)}
           </Button>
@@ -227,7 +235,9 @@ const ManageAssignmentsOrganizationModalView = ({
 
   const description = formatMessage(messages.manageAssignmentsDescription, {
     link: (chunks: ReactNode) => (
-   <AssignmentDescriptionLink href={'#'}   className={cx('description-link')}>{chunks}</AssignmentDescriptionLink>
+      <AssignmentDescriptionLink href={'#'} className={cx('description-link')}>
+        {chunks}
+      </AssignmentDescriptionLink>
     ),
   });
 
@@ -242,6 +252,7 @@ const ManageAssignmentsOrganizationModalView = ({
       size="large"
       createFooter={createFooter}
       scrollable
+      allowCloseOutside={!isDirty}
     >
       <div className={cx('modal-content')}>
         <ModalLoadingOverlay isVisible={assignmentsLoading || assignmentsUpdateLoading} />
@@ -262,24 +273,17 @@ const ManageAssignmentsOrganizationModalView = ({
   );
 };
 
-function isEmptyAssignmentsResponse(data: UserOrganizationProjectsResponse | null): boolean {
-  return !data?.items?.length;
-}
-
 const mapStateToProps = (state: unknown) => {
-  const assignmentsData = userAssignmentsDataSelector(state as never) as UserOrganizationProjectsResponse | null;
-  const assignmentsLoading = Boolean(userAssignmentsLoadingSelector(state as never)) ;
-  let hasNoAssignments = false;
-  if (!assignmentsLoading) {
-    hasNoAssignments = assignmentsData != null && isEmptyAssignmentsResponse(assignmentsData) ;
-  }
+  const assignmentsData = userAssignmentsDataSelector(
+    state as never,
+  ) as UserOrganizationProjectsResponse | null;
+  const assignmentsLoading = Boolean(userAssignmentsLoadingSelector(state as never));
   const assignmentsUpdateLoading = Boolean(userAssignmentsUpdateLoadingSelector(state as never));
   return {
     initialValues: { organizations: [] },
     assignmentsData,
     assignmentsLoading,
     assignmentsUpdateLoading,
-    hasNoAssignments,
   };
 };
 
@@ -289,7 +293,6 @@ const FormWrapper = reduxForm<
     assignmentsData: UserOrganizationProjectsResponse | null;
     assignmentsLoading: boolean;
     assignmentsUpdateLoading: boolean;
-    hasNoAssignments: boolean;
   }
 >({
   form: MANAGE_ASSIGNMENTS_FORM,
