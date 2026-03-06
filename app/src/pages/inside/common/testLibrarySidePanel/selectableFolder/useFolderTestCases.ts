@@ -44,11 +44,7 @@ export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTe
 
   const isFetchingFirstPageRef = useRef(false);
 
-  const {
-    testCases = [],
-    isLoading: isFolderLoading = false,
-    page = null,
-  } = testCasesMap.get(folderId) ?? {};
+  const { isLoading: isFolderLoading = false, page = null } = testCasesMap.get(folderId) ?? {};
 
   const hasFetched = page != null;
   const hasNextPage = page ? page.number < page.totalPages : false;
@@ -102,9 +98,12 @@ export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTe
         const testCasesAddedToTestPlanIds = testPlanTestCasesResponse.content.map(({ id }) => id);
 
         updateFolderTestCases(folderId, {
-          testCases: [...testCases, ...testCasesResponse.content],
+          testCases: [
+            ...(testCasesMap.get(folderId)?.testCases ?? []),
+            ...testCasesResponse.content,
+          ],
           page: testCasesResponse.page,
-          ...(isFirstPage && { addedToPlanIds: testCasesAddedToTestPlanIds }),
+          ...(isFirstPage && { addedToTestPlanIds: testCasesAddedToTestPlanIds }),
         });
       } catch (error) {
         console.error('Failed to fetch test cases:', error);
@@ -112,7 +111,15 @@ export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTe
         hideSpinner();
       }
     },
-    [projectKey, testPlanId, updateFolderTestCases, folderId, testCases, showSpinner, hideSpinner],
+    [
+      projectKey,
+      testPlanId,
+      showSpinner,
+      folderId,
+      updateFolderTestCases,
+      testCasesMap,
+      hideSpinner,
+    ],
   );
 
   const fetchNextPage = useCallback(() => {
