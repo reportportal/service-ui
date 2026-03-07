@@ -122,7 +122,6 @@ export const InviteUser = <L extends keyof FormDataMap>({
   handleSubmit,
   dirty,
   invalid,
-  anyTouched,
 }: InviteUserProps<L>) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -189,7 +188,7 @@ export const InviteUser = <L extends keyof FormDataMap>({
   const okButton: ModalButtonProps = {
     children: okButtonTitle,
     onClick: handleSubmit(inviteUserAndCloseModal) as () => void,
-    disabled: anyTouched && invalid,
+    disabled: !dirty || invalid,
     'data-automation-id': 'submitButton',
   };
 

@@ -226,6 +226,7 @@ export const InstanceAssignment = ({
     setOrganizationProjects([]);
     setSelectedOrganizationId(null);
     setSelectedProjectId(null);
+    setNotAssignedOrganizations((prev) => prev.filter((org) => org.id !== selectedOrganizationId));
 
     fields.push({
       id: selectedOrganizationId,
