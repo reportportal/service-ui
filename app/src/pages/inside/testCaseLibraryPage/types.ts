@@ -45,6 +45,8 @@ export interface Attachment {
   fileSize: number;
   id: number;
   fileType: string;
+  src?: string;
+  hasThumbnail?: boolean;
 }
 
 export enum ManualScenarioType {
