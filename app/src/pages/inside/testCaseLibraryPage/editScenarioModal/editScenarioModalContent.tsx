@@ -52,6 +52,7 @@ export const EditScenarioModalContent = ({
       cancelButton={cancelButton}
       allowCloseOutside={pristine}
       onClose={handleClose}
+      scrollable
     >
       <div className={cx('scenario-edit-modal__wrapper')}>
         <form onSubmit={handleFormSubmit}>

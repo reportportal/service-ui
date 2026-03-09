@@ -22,35 +22,10 @@
   &__wrapper {
     position: relative;
     width: 100%;
-    overflow: hidden;
   }
 
   &__form-container {
-    max-height: 70vh;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 0;
-
-    &::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: transparent;
-      border-radius: 100px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: var(--rp-ui-base-e-300);
-      border-radius: 100px;
-      width: 4px;
-    }
-
-    &::-webkit-scrollbar-thumb:hover {
-      background: var(--rp-ui-base-e-400);
-    }
-
-    scrollbar-width: thin;
-    scrollbar-color: var(--rp-ui-base-e-300) transparent;
+    position: relative;
+    overflow: auto;
   }
 }

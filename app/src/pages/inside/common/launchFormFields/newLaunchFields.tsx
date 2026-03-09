@@ -165,6 +165,8 @@ export const NewLaunchFields = ({
             getURIKey={getURIKey}
             getURIValue={getURIValue}
             autocompleteProps={autocompleteProps}
+            isAttributeKeyRequired
+            isAttributeValueRequired
           />
         </FieldElement>
       </div>

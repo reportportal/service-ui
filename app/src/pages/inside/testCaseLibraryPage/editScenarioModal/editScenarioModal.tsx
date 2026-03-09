@@ -19,11 +19,13 @@ import { useIntl } from 'react-intl';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { EMPTY_STEP_ERROR } from 'common/utils/validation/constants';
 import { withModal } from 'controllers/modal';
 import { UseModalData } from 'common/hooks';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { commonMessages } from '../commonMessages';
-import { CreateTestCaseFormData } from '../types';
+import { CreateTestCaseFormData, TestStep } from '../types';
 import { TEST_CASE_FORM_INITIAL_VALUES } from '../createTestCaseModal/constants';
 import { useTestCase } from '../hooks/useTestCase';
 import { useTestCaseFormInitialization } from '../hooks/useTestCaseFormInitialization';
@@ -35,6 +37,7 @@ const EditScenarioModalComponent = ({
   data,
   initialize,
   pristine,
+  invalid,
   reset,
   handleSubmit,
 }: UseModalData<EditScenarioModalProps> &
@@ -57,7 +60,7 @@ const EditScenarioModalComponent = ({
     [editTestCase, testCase],
   );
 
-  const isSaveDisabled = !isInitialized || pristine;
+  const isSaveDisabled = !isInitialized || pristine || invalid;
 
   return (
     <EditScenarioModalContent
@@ -75,7 +78,22 @@ const EditScenarioModalComponent = ({
 const ReduxFormComponent = reduxForm<CreateTestCaseFormData, EditScenarioModalProps>({
   form: EDIT_SCENARIO_FORM_NAME,
   initialValues: TEST_CASE_FORM_INITIAL_VALUES,
-  validate: () => ({}),
+  validate: (values) => {
+    const errors: Partial<Record<keyof CreateTestCaseFormData, string>> = {};
+
+    if (values.steps) {
+      const stepsArray = Array.isArray(values.steps) ? values.steps : Object.values(values.steps);
+
+      const hasEmptyStep = stepsArray.some(
+        (step: TestStep) => !step.instructions && !step.expectedResult && isEmpty(step.attachments),
+      );
+      if (hasEmptyStep) {
+        errors.steps = EMPTY_STEP_ERROR as string;
+      }
+    }
+
+    return errors;
+  },
   enableReinitialize: false,
   destroyOnUnmount: true,
 })(EditScenarioModalComponent);
