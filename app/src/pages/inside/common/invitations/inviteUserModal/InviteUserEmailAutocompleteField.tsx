@@ -23,12 +23,13 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { URLS } from 'common/urls';
-import { messages } from 'common/constants/localization/invitationsLocalization';
+import { messages as invitationsMessages } from 'common/constants/localization/invitationsLocalization';
 import { email as emailValidator } from 'common/utils/validation/validate';
 import { MailIcon } from '@reportportal/ui-kit';
-import type { MessageDescriptor } from 'react-intl';
+import { MessageDescriptorMap } from 'types/intl';
 import styles from './InviteUserEmailAutocompleteField.scss';
 
+const messages = invitationsMessages as MessageDescriptorMap;
 
 const cx = createClassnames(styles);
 
@@ -173,13 +174,9 @@ const InviteUserEmailAutocompleteFieldContent = ({
     return baseOptions;
   }, [inputValueRef]);
 
-  const placeholder = formatMessage(
-    messages.inputPlaceholderInstance as unknown as MessageDescriptor,
-  );
-  const customEmptyListMessage = formatMessage(
-    messages.noMatchesContinueTyping as unknown as MessageDescriptor,
-  );
-  const label = formatMessage(messages.email as unknown as MessageDescriptor);
+  const placeholder = formatMessage(messages.inputPlaceholderInstance);
+  const customEmptyListMessage = formatMessage(messages.noMatchesContinueTyping);
+  const label = formatMessage(messages.email);
 
   return (
     <AsyncAutocompleteV2

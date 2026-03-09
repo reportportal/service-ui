@@ -169,6 +169,7 @@ export const InstanceAssignment = ({
   const [notAssignedOrganizations, setNotAssignedOrganizations] = useState<
     OrganizationSearchesItem[]
   >([]);
+  const [areOrganizationsExhausted, setAreOrganizationsExhausted] = useState(false);
   const [organizationProjects, setOrganizationProjects] = useState<ProjectsSearchesItem[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
   const [selectedOrganizationId, setSelectedOrganizationId] = useState<number | null>(null);
@@ -199,11 +200,13 @@ export const InstanceAssignment = ({
       );
 
       setNotAssignedOrganizations(filteredOrganizations);
+      setAreOrganizationsExhausted(response.total_count <= (allOrganizations?.length ?? 0));
 
       return filteredOrganizations.map(({ name }) => name);
     }
 
     setNotAssignedOrganizations([]);
+    setAreOrganizationsExhausted(false);
     return [];
   };
 
@@ -382,7 +385,7 @@ export const InstanceAssignment = ({
             tooltipClassname={cx('tooltip')}
             onClick={() => setIsOpen(true)}
             tooltipContent={messages.availableOrganizations}
-            disabled={notAssignedOrganizations.length === 0}
+            disabled={areOrganizationsExhausted}
             text={formatMessage(messages.addOrganization)}
           />
         </div>
