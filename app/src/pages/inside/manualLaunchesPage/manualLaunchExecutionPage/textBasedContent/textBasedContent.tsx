@@ -33,18 +33,15 @@ import styles from './textBasedContent.scss';
 
 const cx = createClassnames(styles);
 
-export const TextBasedContent = ({ execution }: ExecutionContentProps) => {
+export const TextBasedContent = ({ execution: { manualScenario } }: ExecutionContentProps) => {
   const { formatMessage } = useIntl();
-  const scenario = execution.manualScenario;
-  if (!scenario) return null;
+  if (!manualScenario) return null;
 
-  const requirements = requirementsToItems(scenario.requirements);
+  const requirements = requirementsToItems(manualScenario.requirements);
   const hasRequirements = !isEmpty(requirements);
-  const preconditionValue = scenario.preconditions?.value;
-  const hasPreconditionAttachments = !isEmpty(scenario.preconditions?.attachments);
-  const instructions = scenario.instructions;
-  const expectedResult = scenario.expectedResult;
-  const attachments = scenario.attachments ?? [];
+  const preconditionValue = manualScenario.preconditions?.value;
+  const hasPreconditionAttachments = !isEmpty(manualScenario.preconditions?.attachments);
+  const { instructions, expectedResult, attachments = [] } = manualScenario;
   const hasAttachments = !isEmpty(attachments);
 
   return (
@@ -58,25 +55,21 @@ export const TextBasedContent = ({ execution }: ExecutionContentProps) => {
 
       <CollapsibleSection title={formatMessage(commonMessages.scenario)}>
         <div className={cx('scenario-sections')}>
-          {(preconditionValue || hasPreconditionAttachments) && (
-            <>
-              {preconditionValue && (
-                <FieldSection title={formatMessage(commonMessages.precondition)}>
-                  <div className={cx('text-block')}>{preconditionValue}</div>
-                </FieldSection>
-              )}
-              {hasPreconditionAttachments && (
-                <FieldSection
-                  title={`${formatMessage(commonMessages.attachments)} ${scenario.preconditions?.attachments?.length ?? 0}`}
-                >
-                  <AttachmentList
-                    attachments={
-                      (scenario.preconditions?.attachments ?? []) as unknown as Attachment[]
-                    }
-                  />
-                </FieldSection>
-              )}
-            </>
+          {preconditionValue && (
+            <FieldSection title={formatMessage(commonMessages.precondition)}>
+              <div className={cx('text-block')}>{preconditionValue}</div>
+            </FieldSection>
+          )}
+          {hasPreconditionAttachments && (
+            <FieldSection
+              title={`${formatMessage(commonMessages.attachments)} ${manualScenario.preconditions?.attachments?.length ?? 0}`}
+            >
+              <AttachmentList
+                attachments={
+                  (manualScenario.preconditions?.attachments ?? []) as unknown as Attachment[]
+                }
+              />
+            </FieldSection>
           )}
           {instructions && (
             <FieldSection title={formatMessage(commonMessages.instructions)}>

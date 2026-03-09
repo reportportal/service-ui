@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-import type { MessageDescriptor } from 'react-intl';
+import { commonMessages } from 'pages/inside/common/common-messages';
 
-import type { TestCaseExecution } from 'controllers/manualLaunch';
+import type { StatusButtonConfig } from './types';
 
-export interface ExecutionContentProps {
-  execution: TestCaseExecution;
-}
+export const EXECUTION_STATUS_SKIPPED = 'skipped' as const;
+export const EXECUTION_STATUS_FAILED = 'failed' as const;
+export const EXECUTION_STATUS_PASSED = 'passed' as const;
 
-export interface StatusButtonConfig {
-  status: string;
-  message: MessageDescriptor;
-}
+export const STATUS_BUTTONS: StatusButtonConfig[] = [
+  { status: EXECUTION_STATUS_SKIPPED, message: commonMessages.skipped },
+  { status: EXECUTION_STATUS_FAILED, message: commonMessages.failed },
+  { status: EXECUTION_STATUS_PASSED, message: commonMessages.passed },
+];

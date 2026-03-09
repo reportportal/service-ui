@@ -17,7 +17,8 @@
 import { useIntl } from 'react-intl';
 
 import { createClassnames } from 'common/utils';
-import { commonMessages } from 'pages/inside/common/common-messages';
+
+import { STATUS_BUTTONS } from '../constants';
 
 import styles from './executionStatusButtons.scss';
 
@@ -28,15 +29,15 @@ export const ExecutionStatusButtons = () => {
 
   return (
     <div className={cx('execution-status-buttons')}>
-      <button type="button" className={cx('status-button', 'status-button--skipped')}>
-        {formatMessage(commonMessages.skipped)}
-      </button>
-      <button type="button" className={cx('status-button', 'status-button--failed')}>
-        {formatMessage(commonMessages.failed)}
-      </button>
-      <button type="button" className={cx('status-button', 'status-button--passed')}>
-        {formatMessage(commonMessages.passed)}
-      </button>
+      {STATUS_BUTTONS.map(({ status, message }) => (
+        <button
+          key={status}
+          type="button"
+          className={cx('status-button', `status-button--${status}`)}
+        >
+          {formatMessage(message)}
+        </button>
+      ))}
     </div>
   );
 };

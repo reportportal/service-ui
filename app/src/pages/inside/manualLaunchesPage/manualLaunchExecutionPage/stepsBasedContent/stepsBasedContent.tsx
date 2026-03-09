@@ -34,16 +34,15 @@ import styles from './stepsBasedContent.scss';
 
 const cx = createClassnames(styles);
 
-export const StepsBasedContent = ({ execution }: ExecutionContentProps) => {
+export const StepsBasedContent = ({ execution: { manualScenario } }: ExecutionContentProps) => {
   const { formatMessage } = useIntl();
-  const scenario = execution.manualScenario;
-  if (!scenario) return null;
+  if (!manualScenario) return null;
 
-  const requirements = requirementsToItems(scenario.requirements);
+  const requirements = requirementsToItems(manualScenario.requirements);
   const hasRequirements = !isEmpty(requirements);
-  const preconditionValue = scenario.preconditions?.value;
-  const hasPreconditionAttachments = !isEmpty(scenario.preconditions?.attachments);
-  const steps = (scenario.steps ?? []) as StepType[];
+  const preconditionValue = manualScenario.preconditions?.value;
+  const hasPreconditionAttachments = !isEmpty(manualScenario.preconditions?.attachments);
+  const { steps = [] } = manualScenario;
 
   return (
     <div className={cx('steps-based-content')}>
@@ -61,11 +60,11 @@ export const StepsBasedContent = ({ execution }: ExecutionContentProps) => {
             <>
               {preconditionValue && <div className={cx('section-divider')} />}
               <FieldSection
-                title={`${formatMessage(commonMessages.attachments)} ${scenario.preconditions?.attachments?.length ?? 0}`}
+                title={`${formatMessage(commonMessages.attachments)} ${manualScenario.preconditions?.attachments?.length ?? 0}`}
               >
                 <AttachmentList
                   attachments={
-                    (scenario.preconditions?.attachments ?? []) as unknown as Attachment[]
+                    (manualScenario.preconditions?.attachments ?? []) as unknown as Attachment[]
                   }
                 />
               </FieldSection>
@@ -81,7 +80,7 @@ export const StepsBasedContent = ({ execution }: ExecutionContentProps) => {
         {isEmpty(steps) ? (
           <div className={cx('empty-hint')}>{formatMessage(messages.noAttachments)}</div>
         ) : (
-          <StepsList steps={steps} />
+          <StepsList steps={steps as StepType[]} />
         )}
       </CollapsibleSection>
     </div>

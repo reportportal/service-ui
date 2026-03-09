@@ -52,7 +52,7 @@
   }
 
   &--failed {
-    background-color: $COLOR--execution-status-button-failed;
+    background-color: var(--rp-ui-color-execution-status-btn-failed);
     color: var(--rp-ui-base-bg-000);
 
     &:hover {
@@ -61,7 +61,7 @@
   }
 
   &--passed {
-    background-color: $COLOR--execution-status-button-passed;
+    background-color: var(--rp-ui-color-execution-status-btn-passed);
     color: var(--rp-ui-base-bg-000);
 
     &:hover {
