@@ -120,7 +120,7 @@ export const AddProjectForm = ({
           getRequestParams={getRequestParams}
           makeOptions={makeOptions}
           onChange={handleChangeProject}
-          createWithoutConfirmation={true}
+          createWithoutConfirmation
         />
       </div>
       <div className={cx('checkbox-wrapper')}>

@@ -45,6 +45,10 @@
   border-radius: 4px;
   box-sizing: content-box;
 
+  &:global(.is-dragging-row) :global([class*='table-row-content']) {
+    opacity: 0.3;
+  }
+
   :global([class*='table-row-content']) {
     align-items: flex-start;
     min-height: 76px;
@@ -119,4 +123,55 @@
   line-height: 24px;
   color: var(--rp-ui-base-almost-black);
   flex-shrink: 0;
+}
+
+.test-case-drag-preview {
+  position: fixed;
+  pointer-events: none;
+  z-index: $Z-INDEX-OVERLAY-PANEL;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  width: 320px;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 4px;
+  background: var(--rp-ui-base-bg-100);
+  box-shadow: 0 8px 40px 0 rgba(0, 0, 0, 0.15);
+  opacity: 0.93;
+
+  &__text {
+    flex: 1;
+    min-width: 0;
+    font-family: $FONT-ROBOTO-MEDIUM;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 20px;
+    letter-spacing: 0;
+    color: var(--rp-ui-base-almost-black);
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-left: 8px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    svg path {
+      fill: var(--rp-ui-base-e-300);
+    }
+  }
 }
