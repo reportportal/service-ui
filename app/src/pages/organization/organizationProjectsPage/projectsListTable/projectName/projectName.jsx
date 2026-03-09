@@ -18,10 +18,9 @@ import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import Link from 'redux-first-router-link';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { ADMIN_PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { SCREEN_XS_MAX_MEDIA } from 'common/constants/screenSizeVariables';
-import { setActiveProjectKeyAction } from 'controllers/user';
 import { userAssignedSelector, PROJECT_PAGE } from 'controllers/pages';
 import styles from './projectName.scss';
 
@@ -30,7 +29,6 @@ const cx = classNames.bind(styles);
 export const ProjectName = ({ project, disableAnalytics = false }) => {
   const { projectSlug, organizationSlug, projectName, projectKey } = project;
   const { hasPermission } = useSelector(userAssignedSelector(projectSlug, organizationSlug));
-  const dispatch = useDispatch();
   const { trackEvent } = useTracking();
 
   const onProjectClick = (event) => {
@@ -38,8 +36,6 @@ export const ProjectName = ({ project, disableAnalytics = false }) => {
       event.preventDefault();
       return;
     }
-
-    dispatch(setActiveProjectKeyAction(projectKey));
 
     if (!disableAnalytics) {
       trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.PROJECT_NAME);
@@ -54,6 +50,7 @@ export const ProjectName = ({ project, disableAnalytics = false }) => {
         payload: {
           projectSlug,
           organizationSlug,
+          projectKey,
         },
       }}
       onClick={onProjectClick}

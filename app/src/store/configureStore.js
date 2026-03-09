@@ -23,6 +23,7 @@ import queryString from 'qs';
 import { initAuthInterceptor } from 'common/utils/fetch';
 import { LOGOUT } from 'controllers/auth';
 import routesMap, { onBeforeRouteChange } from 'routes/routesMap';
+import { organizationProjectRouteMiddleware } from './organizationProjectRouteMiddleware';
 import reducers from './reducers';
 import { rootSagas } from './rootSaga';
 
@@ -50,7 +51,7 @@ export const configureStore = (history, preloadedState) => {
   const appReducer = combineReducers({ ...reducers, location: reducer });
   const rootReducer = createRootReducer(appReducer);
   const saga = createSagaMiddleware();
-  const middlewares = applyMiddleware(saga, middleware);
+  const middlewares = applyMiddleware(saga, organizationProjectRouteMiddleware, middleware);
   const enhancers = composeEnhancers(enhancer, middlewares);
   const store = createStore(rootReducer, preloadedState, enhancers);
 

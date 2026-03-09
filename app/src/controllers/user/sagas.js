@@ -15,7 +15,6 @@
  */
 
 import { takeLatest, takeEvery, call, all, put, select } from 'redux-saga/effects';
-import { redirect } from 'redux-first-router';
 import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 import {
@@ -24,14 +23,7 @@ import {
   showErrorNotification,
 } from 'controllers/notification';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
-import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
-import {
-  userAssignedSelector,
-  urlOrganizationAndProjectSelector,
-  ORGANIZATIONS_PAGE,
-} from 'controllers/pages';
 import { getLogTimeFormatFromStorage } from 'controllers/log/storageUtils';
-import { setActiveOrganizationAction } from 'controllers/organization/actionCreators';
 import {
   getUserProjectSettingsFromStorage,
   setNoLogsCollapsingInStorage,
@@ -40,24 +32,20 @@ import {
   setLogsFullWidthModeInStorage,
   setLogsColorizedBackgroundInStorage,
 } from './storageUtils';
-import {  findAssignedProjectByOrganization} from 'common/utils';
 import {
   assignToProjectSuccessAction,
   assignToProjectErrorAction,
-  setActiveProjectAction,
   fetchUserSuccessAction,
   fetchUserErrorAction,
   setApiKeysAction,
   addApiKeySuccessAction,
   deleteApiKeySuccessAction,
-  setActiveProjectKeyAction,
   setLogTimeFormatAction,
   setActiveProjectSettingsAction,
   updateActiveProjectSettingsAction,
 } from './actionCreators';
 import {
   ASSIGN_TO_PROJECT,
-  SET_ACTIVE_PROJECT,
   SET_ACTIVE_PROJECT_KEY,
   ADD_API_KEY,
   FETCH_API_KEYS,
@@ -138,95 +126,9 @@ function* fetchUserWorker() {
   const user = yield call(fetchUserInfo);
   if (!user) return;
 
-  const urlOrganizationAndProject = yield select(urlOrganizationAndProjectSelector);
-  const { userId, assignedOrganizations, assignedProjects } = user;
-
+  const { userId } = user;
   const format = getLogTimeFormatFromStorage(userId);
   yield put(setLogTimeFormatAction(format));
-
-  if (
-    Object.keys(assignedOrganizations).length === 0 ||
-    Object.keys(assignedProjects).length === 0
-  ) {
-    yield put(setActiveProjectKeyAction(null));
-    yield put(
-      redirect({
-        type: ORGANIZATIONS_PAGE,
-      }),
-    );
-  } else {
-    const userSettings = getStorageItem(`${userId}_settings`) || {};
-    const targetActiveProject = urlOrganizationAndProject || userSettings?.activeProject;
-    const { organizationSlug: targetOrganizationSlug, projectSlug: targetProjectSlug } =
-      targetActiveProject || {};
-
-    const { assignmentNotRequired, isAssignedToTargetProject } = yield select(
-      userAssignedSelector(targetProjectSlug, targetOrganizationSlug),
-    );
-
-    const defaultProject = Object.keys(assignedProjects)[0];
-    const {
-      projectSlug: defaultProjectSlug,
-      projectKey: defaultProjectKey,
-      organizationId,
-    } = assignedProjects[defaultProject];
-    const defaultOrganization = Object.keys(assignedOrganizations).find(
-      (key) => assignedOrganizations[key].organizationId === organizationId,
-    );
-    const { organizationSlug: defaultOrganizationSlug } = defaultOrganization
-      ? assignedOrganizations[defaultOrganization]
-      : Object.keys(assignedOrganizations)[0];
-
-    let projectKey;
-    let activeOrganization;
-
-    try {
-      const activeOrganizationResponse = yield call(
-        fetch,
-        URLS.organizationList({ slug: targetOrganizationSlug }),
-      );
-
-      activeOrganization = activeOrganizationResponse?.items?.[0];
-    } catch {} // eslint-disable-line no-empty
-
-    if (!isAssignedToTargetProject && assignmentNotRequired) {
-      try {
-        const currentProject = yield call(
-          fetch,
-          URLS.organizationProjects(activeOrganization?.id, { slug: targetProjectSlug }),
-        );
-        projectKey = currentProject?.items?.[0]?.key;
-      } catch {} // eslint-disable-line no-empty
-    }
-
-    const activeProject =
-      targetActiveProject && (isAssignedToTargetProject || projectKey)
-        ? targetActiveProject
-        : { organizationSlug: defaultOrganizationSlug, projectSlug: defaultProjectSlug };
-
-    if (!projectKey) {
-      const assignedProject = findAssignedProjectByOrganization(
-        assignedProjects,
-        assignedOrganizations[targetOrganizationSlug]?.organizationId,
-        targetProjectSlug,
-      );
-
-      projectKey = isAssignedToTargetProject ? assignedProject.projectKey : defaultProjectKey;
-    }
-
-    yield put(setActiveProjectAction(activeProject));
-    yield put(setActiveProjectKeyAction(projectKey));
-    yield put(setActiveOrganizationAction(activeOrganization));
-  }
-}
-
-function* saveActiveProjectWorker({ payload: activeProject }) {
-  const user = yield select(userInfoSelector);
-  const currentUserSettings = getStorageItem(`${user.userId}_settings`) || {};
-  setStorageItem(`${user.userId}_settings`, {
-    ...currentUserSettings,
-    activeProject,
-  });
 }
 
 function* loadProjectSettingsWorker({ payload: projectKey }) {
@@ -414,10 +316,6 @@ function* watchDeleteUserAccount() {
   yield takeEvery(DELETE_USER_ACCOUNT, deleteUserAccount);
 }
 
-function* watchSaveActiveProject() {
-  yield takeEvery(SET_ACTIVE_PROJECT, saveActiveProjectWorker);
-}
-
 function* watchFetchUserInfo() {
   yield takeEvery(FETCH_USER_INFO, fetchUserInfo);
 }
@@ -463,7 +361,6 @@ export function* userSagas() {
     watchAssignToProject(),
     watchFetchUser(),
     watchFetchUserInfo(),
-    watchSaveActiveProject(),
     watchLoadProjectSettings(),
     watchSetNoLogsCollapsing(),
     watchSetLogsPagination(),

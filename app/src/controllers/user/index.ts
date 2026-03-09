@@ -58,7 +58,6 @@ export {
 export { userReducer } from './reducer';
 export {
   userInfoSelector,
-  defaultProjectSelector,
   activeProjectSelector,
   idSelector,
   userIdSelector,

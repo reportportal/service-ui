@@ -242,11 +242,14 @@ export const userAssignedSelector = (projectSlug, organizationSlug) => (state) =
 
   const hasPermission = isAssignedToTargetProject || assignmentNotRequired;
 
+  const hasPermissionOrganization = isAssignedToTargetOrganization || assignmentNotRequired;
+
   const assignedProjectKey = assignedProject?.projectKey;
 
   return {
     isAdmin,
     hasPermission,
+    hasPermissionOrganization,
     assignedProjectKey,
     assignmentNotRequired,
     isAssignedToTargetProject,
