@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import {
   Button,
   Checkbox,
@@ -59,6 +59,10 @@ export const AddProjectForm = ({
   const [canEdit, setCanEdit] = useState(canEditByDefault);
   const [items, setItems] = useState<ProjectsSearchesItem[]>([]);
   const [selectedProject, setSelectedProject] = useState<Pick<Project, 'id' | 'name'>>(null);
+
+  useEffect(() => {
+    setCanEdit(canEditByDefault);
+  }, [canEditByDefault]);
 
   const getRequestParams = (inputValue: string) => {
     return {

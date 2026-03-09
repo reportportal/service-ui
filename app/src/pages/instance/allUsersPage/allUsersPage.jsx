@@ -26,6 +26,7 @@ import {
   loadingSelector,
   allUsersSelector,
   allUsersPaginationSelector,
+  fetchAllUsersAction
 } from 'controllers/instance/allUsers';
 import {
   NAMESPACE,
@@ -35,7 +36,6 @@ import {
 import { withPagination } from 'controllers/pagination';
 import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
 import { showModalAction } from 'controllers/modal';
-import { fetchAllUsersAction } from 'controllers/instance/allUsers';
 import classNames from 'classnames/bind';
 import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
 import { InviteUserModalInstance } from './allUsersHeader/inviteUserModal';
