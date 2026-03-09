@@ -24,3 +24,5 @@ export const capitalize = (str) => {
   }
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 };
+
+export const stringEqual = (value1, value2) => String(value1) === String(value2);

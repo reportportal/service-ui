@@ -24,6 +24,7 @@ import {
   activeOrganizationSelector,
 } from 'controllers/organization';
 import { getRedirectRoute, ROUTE_ACTION_TYPES } from 'routes/routesMap';
+import { stringEqual } from 'common/utils/stringUtils';
 
 /**
  * Organization/project route middleware: access check, sync of active org/project from URL, redirect on no access.
@@ -61,8 +62,8 @@ export const organizationProjectRouteMiddleware = (store) => (next) => (action) 
     return;
   }
 
-  const isChangedOrganization = organizationSlug !== hashOrganizationSlug;
-  const isChangedProject = isChangedOrganization || projectSlug !== hashProjectSlug;
+  const isChangedOrganization = !stringEqual(organizationSlug, hashOrganizationSlug);
+  const isChangedProject = isChangedOrganization || !stringEqual(projectSlug, hashProjectSlug);
 
   // Organization changed — fetch its data (runs independently of project change)
   if (isChangedOrganization) {

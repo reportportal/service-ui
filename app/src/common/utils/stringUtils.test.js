@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { isString, capitalize } from './stringUtils';
+import { isString, capitalize, stringEqual } from './stringUtils';
 
 describe('isString', () => {
   test('should return true for string values', () => {
@@ -55,5 +55,33 @@ describe('capitalize', () => {
     expect(capitalize(undefined)).toBe(undefined);
     expect(capitalize({})).toEqual({});
     expect(capitalize([])).toEqual([]);
+  });
+});
+
+describe('stringEqual', () => {
+  test('should return true for equal string values', () => {
+    expect(stringEqual('hello', 'hello')).toBe(true);
+    expect(stringEqual('123', '123')).toBe(true);
+    expect(stringEqual('', '')).toBe(true);
+  });
+
+  test('should return false for different string values', () => {
+    expect(stringEqual('hello', 'world')).toBe(false);
+    expect(stringEqual('123', '456')).toBe(false);
+    expect(stringEqual('test', 'TEST')).toBe(false);
+  });
+
+  test('should handle type coercion for numbers', () => {
+    expect(stringEqual(123, '123')).toBe(true);
+    expect(stringEqual('123', 123)).toBe(true);
+    expect(stringEqual(123, 123)).toBe(true);
+    expect(stringEqual(456, '123')).toBe(false);
+  });
+
+  test('should handle edge cases', () => {
+    expect(stringEqual(null, 'null')).toBe(true);
+    expect(stringEqual(undefined, 'undefined')).toBe(true);
+    expect(stringEqual(true, 'true')).toBe(true);
+    expect(stringEqual(false, 'false')).toBe(true);
   });
 });
