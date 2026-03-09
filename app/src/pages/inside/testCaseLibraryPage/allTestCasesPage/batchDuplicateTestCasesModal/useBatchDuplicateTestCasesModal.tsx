@@ -14,5 +14,15 @@
  * limitations under the License.
  */
 
-export { useDuplicateTestCaseModal } from './useDuplicateTestCaseModal';
-export { DUPLICATE_TEST_CASE_MODAL_KEY } from './duplicateTestCaseModal';
+import { useModal } from 'common/hooks';
+
+import BatchDuplicateTestCasesModal, {
+  BATCH_DUPLICATE_TEST_CASES_MODAL_KEY,
+  BatchDuplicateTestCasesModalData,
+} from './batchDuplicateTestCasesModal';
+
+export const useBatchDuplicateTestCasesModal = () =>
+  useModal<BatchDuplicateTestCasesModalData>({
+    modalKey: BATCH_DUPLICATE_TEST_CASES_MODAL_KEY,
+    renderModal: (data) => <BatchDuplicateTestCasesModal data={data} />,
+  });

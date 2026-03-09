@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import { useCallback, useMemo, ReactNode } from 'react';
+import { useCallback, ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { noop } from 'es-toolkit';
-import { isEmpty } from 'es-toolkit/compat';
 import { Modal } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
@@ -36,28 +35,29 @@ import { useModalButtons } from '../../hooks/useModalButtons';
 import { validateFolderModalForm } from '../../utils/validateFolderModalForm';
 import { FolderModalFormValues } from '../../utils/folderModalFormConfig';
 import { commonFolderMessages } from '../../testCaseFolders/modals/commonFolderMessages';
-import { useDuplicateTestCase } from './useDuplicateTestCase';
+import { useBatchDuplicateTestCases } from './useBatchDuplicateTestCases';
 import { messages } from './messages';
-import { ExtendedTestCase } from '../../types';
 
-import styles from './duplicateTestCaseModal.scss';
+import styles from './batchDuplicateTestCasesModal.scss';
 
 const cx = createClassnames(styles);
 
-export const DUPLICATE_TEST_CASE_MODAL_KEY = 'duplicateTestCaseModalKey';
-const DUPLICATE_TEST_CASE_FORM = 'duplicateTestCaseForm';
+export const BATCH_DUPLICATE_TEST_CASES_MODAL_KEY = 'batchDuplicateTestCasesModalKey';
+const BATCH_DUPLICATE_TEST_CASES_FORM = 'batchDuplicateTestCasesForm';
 
-export interface DuplicateTestCaseModalData {
+export interface BatchDuplicateTestCasesModalData {
   selectedTestCaseIds: number[];
   count: number;
-  testCase?: ExtendedTestCase;
   onClearSelection?: VoidFn;
 }
 
-type DuplicateTestCaseModalProps = UseModalData<DuplicateTestCaseModalData>;
+type BatchDuplicateTestCasesModalProps = UseModalData<BatchDuplicateTestCasesModalData>;
 
-const DuplicateTestCaseModal = reduxForm<FolderModalFormValues, DuplicateTestCaseModalProps>({
-  form: DUPLICATE_TEST_CASE_FORM,
+const BatchDuplicateTestCasesModal = reduxForm<
+  FolderModalFormValues,
+  BatchDuplicateTestCasesModalProps
+>({
+  form: BATCH_DUPLICATE_TEST_CASES_FORM,
   destroyOnUnmount: true,
   initialValues: {
     mode: ButtonSwitcherOption.EXISTING,
@@ -72,26 +72,16 @@ const DuplicateTestCaseModal = reduxForm<FolderModalFormValues, DuplicateTestCas
   dirty,
   pristine,
   invalid,
-  data: { selectedTestCaseIds = [], count = 0, testCase, onClearSelection = noop },
+  data: { selectedTestCaseIds = [], count = 0, onClearSelection = noop },
   handleSubmit,
   change,
-}: DuplicateTestCaseModalProps &
-  InjectedFormProps<FolderModalFormValues, DuplicateTestCaseModalProps>) => {
+}: BatchDuplicateTestCasesModalProps &
+  InjectedFormProps<FolderModalFormValues, BatchDuplicateTestCasesModalProps>) => {
   const { formatMessage } = useIntl();
-  const { isLoading, duplicateTestCase } = useDuplicateTestCase({ onSuccess: onClearSelection });
+  const { isLoading, batchDuplicateTestCases } = useBatchDuplicateTestCases({
+    onSuccess: onClearSelection,
+  });
   const { currentMode, handleModeChange } = useFolderModalMode({ change });
-
-  const testCaseIds = useMemo(() => {
-    if (testCase) {
-      return [testCase.id];
-    }
-    if (!isEmpty(selectedTestCaseIds)) {
-      return selectedTestCaseIds;
-    }
-
-    return [];
-  }, [selectedTestCaseIds, testCase]);
-  const isBatch = testCaseIds.length > 1 || !testCase;
 
   const onSubmit = useCallback(
     (values: FolderModalFormValues) => {
@@ -99,14 +89,14 @@ const DuplicateTestCaseModal = reduxForm<FolderModalFormValues, DuplicateTestCas
         const testFolderId = coerceToNumericId(values.destinationFolder?.id);
 
         if (testFolderId) {
-          duplicateTestCase({
-            testCaseIds,
+          batchDuplicateTestCases({
+            testCaseIds: selectedTestCaseIds,
             testFolderId,
           }).catch(noop);
         }
       } else {
-        duplicateTestCase({
-          testCaseIds,
+        batchDuplicateTestCases({
+          testCaseIds: selectedTestCaseIds,
           testFolder: {
             name: values.folderName || '',
             parentTestFolderId: coerceToNumericId(values.parentFolder?.id ?? null),
@@ -114,7 +104,7 @@ const DuplicateTestCaseModal = reduxForm<FolderModalFormValues, DuplicateTestCas
         }).catch(noop);
       }
     },
-    [currentMode, duplicateTestCase, testCaseIds],
+    [currentMode, batchDuplicateTestCases, selectedTestCaseIds],
   );
 
   const { okButton, cancelButton, hideModal } = useModalButtons({
@@ -124,31 +114,22 @@ const DuplicateTestCaseModal = reduxForm<FolderModalFormValues, DuplicateTestCas
     onSubmit: handleSubmit(onSubmit) as () => void,
   });
 
-  const description = isBatch
-    ? formatMessage(messages.batchDuplicateDescription, {
-        count,
-        b: (text: ReactNode) => <b>{text}</b>,
-      })
-    : formatMessage(messages.duplicateTestCaseDescription, {
-        testCaseName: testCase?.name || '',
-        b: (text: ReactNode) => <b>{text}</b>,
-      });
+  const description = formatMessage(messages.batchDuplicateDescription, {
+    count,
+    b: (text: ReactNode) => <b>{text}</b>,
+  });
 
   return (
     <Modal
-      title={
-        isBatch
-          ? formatMessage(messages.duplicateToFolderTitle)
-          : formatMessage(messages.duplicateTestCaseTitle)
-      }
+      title={formatMessage(messages.title)}
       okButton={okButton}
       cancelButton={cancelButton}
       allowCloseOutside={!dirty}
       onClose={hideModal}
     >
-      <form className={cx('duplicate-test-case-modal__form')}>
+      <form className={cx('batch-duplicate-test-cases-modal__form')}>
         <DestinationFolderSwitch
-          formName={DUPLICATE_TEST_CASE_FORM}
+          formName={BATCH_DUPLICATE_TEST_CASES_FORM}
           description={description}
           existingFolderButtonLabel={formatMessage(messages.duplicateToExistingFolder)}
           newFolderButtonLabel={formatMessage(commonFolderMessages.createNewFolder)}
@@ -163,4 +144,4 @@ const DuplicateTestCaseModal = reduxForm<FolderModalFormValues, DuplicateTestCas
   );
 });
 
-export default withModal(DUPLICATE_TEST_CASE_MODAL_KEY)(DuplicateTestCaseModal);
+export default withModal(BATCH_DUPLICATE_TEST_CASES_MODAL_KEY)(BatchDuplicateTestCasesModal);

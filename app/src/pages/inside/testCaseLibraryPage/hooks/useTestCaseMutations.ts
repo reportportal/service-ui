@@ -178,11 +178,11 @@ export const useTestCaseMutations = (testCaseId?: number) => {
   );
 
   const createTestCase = useCallback(
-    (payload: CreateTestCaseFormData) =>
+    (payload: CreateTestCaseFormData, successMessageId: NotificationMessageKey = 'testCaseCreatedSuccess') =>
       handleTestCaseCreation(payload, {
         url: URLS.testCases(projectKey),
         method: 'POST',
-        successMessageId: 'testCaseCreatedSuccess',
+        successMessageId,
         errorMessageId: 'testCaseCreationFailed',
       }),
     [projectKey, handleTestCaseCreation],

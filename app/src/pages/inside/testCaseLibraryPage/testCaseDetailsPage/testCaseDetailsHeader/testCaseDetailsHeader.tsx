@@ -43,7 +43,7 @@ import { commonMessages } from '../../commonMessages';
 import { EDIT_TEST_CASE_MODAL_KEY } from '../editTestCaseModal/editTestCaseModal';
 import { useDeleteTestCaseModal } from '../../deleteTestCaseModal';
 import { useEditScenarioModal } from '../../editScenarioModal';
-import { useDuplicateTestCaseModal } from '../../allTestCasesPage/duplicateTestCaseModal';
+import { useDuplicateSelectedTestCaseModal } from '../../duplicateSelectedTestCaseModal';
 import { AddToLaunchButton } from '../../addToLaunchButton';
 
 import styles from './testCaseDetailsHeader.scss';
@@ -72,7 +72,7 @@ export const TestCaseDetailsHeader = ({
   ) as ProjectDetails;
   const dispatch = useDispatch();
   const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
-  const { openModal: openDuplicateTestCaseModal } = useDuplicateTestCaseModal();
+  const { openModal: openDuplicateSelectedTestCaseModal } = useDuplicateSelectedTestCaseModal();
   const { openModal: openEditScenarioModal } = useEditScenarioModal();
 
   const breadcrumbsTitles = {
@@ -95,12 +95,7 @@ export const TestCaseDetailsHeader = ({
 
   const handleDeleteTestCase = () => openDeleteTestCaseModal({ testCase, isDetailsPage: true });
 
-  const handleDuplicateTestCase = () =>
-    openDuplicateTestCaseModal({
-      selectedTestCaseIds: [testCase.id],
-      count: 1,
-      testCase,
-    });
+  const handleDuplicateTestCase = () => openDuplicateSelectedTestCaseModal({ testCase });
 
   const getCreationDate = (timestamp: number) => {
     const date = new Date(timestamp);
