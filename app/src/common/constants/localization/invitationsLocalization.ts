@@ -15,8 +15,9 @@
  */
 
 import { defineMessages } from 'react-intl';
+import { MessageDescriptorMap } from 'types/intl';
 
-export const messages = defineMessages({
+export const messages: MessageDescriptorMap = defineMessages({
   addProject: {
     id: 'InviteUser.addProject',
     defaultMessage: 'Add project',

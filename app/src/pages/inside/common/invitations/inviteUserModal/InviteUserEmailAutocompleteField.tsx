@@ -23,13 +23,10 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { URLS } from 'common/urls';
-import { messages as invitationsMessages } from 'common/constants/localization/invitationsLocalization';
+import { messages } from 'common/constants/localization/invitationsLocalization';
 import { email as emailValidator } from 'common/utils/validation/validate';
 import { MailIcon } from '@reportportal/ui-kit';
-import { MessageDescriptorMap } from 'types/intl';
 import styles from './InviteUserEmailAutocompleteField.scss';
-
-const messages = invitationsMessages as MessageDescriptorMap;
 
 const cx = createClassnames(styles);
 
