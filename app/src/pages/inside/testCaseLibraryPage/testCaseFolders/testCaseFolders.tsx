@@ -171,6 +171,7 @@ export const TestCaseFolders = () => {
       activeFolderId={urlFolderIdNumber || null}
       folders={folders}
       instanceKey={TMS_INSTANCE_KEY.TEST_CASE}
+      searchQuery={queryParams.testCasesSearchParams}
       setAllTestCases={navigateToAllTestCases}
       onFolderClick={handleFolderClick}
       renderCreateFolderButton={renderCreateFolderButton}

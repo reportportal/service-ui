@@ -27,6 +27,7 @@ export interface ExpandedOptionsProps {
   onFolderClick: (id: number) => void;
   children: ReactNode;
   instanceKey: TMS_INSTANCE_KEY;
+  searchQuery?: string;
   renderCreateFolderButton?: () => ReactNode;
   onMoveFolder?: (
     draggedItem: TreeDragItem,
