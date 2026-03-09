@@ -54,6 +54,7 @@ export const Precondition = ({ preconditions }: PreconditionProps) => {
               <AttachmentList
                 attachments={preconditions.attachments}
                 className={cx('precondition__attachments-list')}
+                withPreview
               />
             </div>
         }

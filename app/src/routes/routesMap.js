@@ -16,16 +16,9 @@
 
 import { redirect, actionToPath, pathToAction } from 'redux-first-router';
 import qs from 'qs';
-import {
-  activeProjectSelector,
-  userInfoSelector,
-  setActiveProjectAction,
-  setActiveProjectKeyAction,
-  getUserSettingsFromStorage,
-} from 'controllers/user';
+import { userInfoSelector, getUserSettingsFromStorage, isAdminSelector } from 'controllers/user';
 import { isTmsEnabled } from 'controllers/appInfo';
 import { getTmsMilestonesOverride } from 'controllers/appInfo/utils';
-import { fetchProjectAction, prepareActiveProjectAction } from 'controllers/project';
 import {
   LOGIN_PAGE,
   REGISTRATION_PAGE,
@@ -57,7 +50,6 @@ import {
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   ACCOUNT_REMOVED_PAGE,
   PROJECT_PLUGIN_PAGE,
-  userAssignedSelector,
   ORGANIZATION_PROJECTS_PAGE,
   ORGANIZATION_USERS_PAGE,
   ORGANIZATION_SETTINGS_PAGE,
@@ -112,11 +104,9 @@ import {
 import { parseQueryToFilterEntityAction } from 'controllers/filter/actionCreators';
 import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
 import {
-  fetchOrganizationBySlugAction,
   prepareActiveOrganizationProjectsAction,
   prepareActiveOrganizationSettingsAction,
 } from 'controllers/organization/actionCreators';
-import { activeOrganizationSelector } from 'controllers/organization';
 import { prepareActiveOrganizationUsersAction } from 'controllers/organization/users';
 import { LIST_OF_VERSIONS } from 'pages/inside/productVersionsPage/constants';
 import {
@@ -590,79 +580,16 @@ const routesMap = {
   },
 };
 
-export const onBeforeRouteChange = (dispatch, getState, { action }) => {
-  const {
-    type: nextPageType,
-    payload: {
-      organizationSlug: hashOrganizationSlug,
-      projectSlug: hashProjectSlug,
-      projectKey: hashProjectKey,
-    } = {},
-  } = action;
+export const ROUTE_ACTION_TYPES = new Set(Object.keys(routesMap));
 
-  let { slug: organizationSlug } = activeOrganizationSelector(getState());
-  let { projectSlug } = activeProjectSelector(getState());
+export const onBeforeRouteChange = (dispatch, getState, { action }) => {
+  const { type: nextPageType, payload: { organizationSlug, projectSlug } = {} } = action;
+
   const currentPageType = pageSelector(getState());
   const authorized = isAuthorizedSelector(getState());
   const user = userInfoSelector(getState());
   const userId = user?.userId;
-  const {
-    isAdmin,
-    hasPermission,
-    hasPermissionOrganization,
-    assignedProjectKey,
-    assignmentNotRequired,
-  } = userAssignedSelector(hashProjectSlug, hashOrganizationSlug)(getState());
-
-  const projectKey = assignedProjectKey || (assignmentNotRequired && hashProjectKey);
-
-  const isOrganizationPage = !!hashOrganizationSlug;
-  const isProjectPage = isOrganizationPage && !!hashProjectSlug;
-
-  const isChangedOrganization = organizationSlug !== hashOrganizationSlug;
-  const isChangedProject = isChangedOrganization || projectSlug !== hashProjectSlug;
-
-  // For project pages check project-level permission, for org pages — org-level
-  const hasPageAccess = isProjectPage ? hasPermission : hasPermissionOrganization;
-
-  if (authorized) {
-    // No access — redirect to a guaranteed accessible route
-    if (isOrganizationPage && !hasPageAccess) {
-      dispatch(redirect(getRedirectRoute(user)));
-
-      return;
-    }
-
-    if (isProjectPage && isChangedProject) {
-      // Project changed — update active project and fetch its data
-      dispatch(
-        setActiveProjectAction({
-          organizationSlug: hashOrganizationSlug,
-          projectSlug: hashProjectSlug,
-        }),
-      );
-      if (projectKey) {
-        dispatch(setActiveProjectKeyAction(projectKey));
-        dispatch(fetchProjectAction(projectKey));
-      } else {
-        // TODO: Resolve project by slug on manual URL change and reload https://jiraeu.epam.com/browse/EPMRPP-113309
-        dispatch(
-          prepareActiveProjectAction({
-            organizationSlug: hashOrganizationSlug,
-            projectSlug: hashProjectSlug,
-          }),
-        );
-      }
-      organizationSlug = hashOrganizationSlug;
-      projectSlug = hashProjectSlug;
-    }
-
-    // Organization changed — fetch its data (runs independently of project change above)
-    if (isOrganizationPage && hasPageAccess && isChangedOrganization) {
-      dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
-      organizationSlug = hashOrganizationSlug;
-    }
-  }
+  const isAdmin = isAdminSelector(getState());
 
   if (nextPageType !== currentPageType) {
     dispatch(clearPageStateAction(currentPageType, nextPageType));

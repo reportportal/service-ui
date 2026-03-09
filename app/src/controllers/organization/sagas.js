@@ -51,19 +51,21 @@ function* fetchOrganizationBySlug({ payload: slug }) {
 }
 
 export function* withActiveOrganization(organizationSlug, onActiveOrgReady) {
+  const fallbackRedirect = redirect({ type: ORGANIZATIONS_PAGE });
   let activeOrganization = yield select(activeOrganizationSelector);
   try {
     if (!activeOrganization || organizationSlug !== activeOrganization?.slug) {
       yield take(createFetchPredicate(FETCH_ORGANIZATION_BY_SLUG));
       activeOrganization = yield select(activeOrganizationSelector);
     }
+    if (!activeOrganization || organizationSlug !== activeOrganization?.slug) {
+      yield put(fallbackRedirect);
+      return;
+    }
     yield* onActiveOrgReady(activeOrganization.id);
-  } catch {
-    yield put(
-      redirect({
-        type: ORGANIZATIONS_PAGE,
-      }),
-    );
+  } catch (error) {
+    yield put(fallbackRedirect);
+    yield put(showDefaultErrorNotification(error));
   }
 }
 

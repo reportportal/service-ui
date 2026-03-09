@@ -65,6 +65,7 @@ export const Step = ({
             <AttachmentList
               attachments={attachments}
               className={cx('step__attachments-list')}
+              withPreview
             />
           </div>
         }
