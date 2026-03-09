@@ -124,7 +124,7 @@ export const useSearchFilteredFolders = ({
       }
     };
 
-    fetchFilteredFolders();
+    void fetchFilteredFolders();
 
     return () => {
       abortController.abort();

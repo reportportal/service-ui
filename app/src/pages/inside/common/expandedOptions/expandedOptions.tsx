@@ -142,51 +142,42 @@ export const ExpandedOptions = ({
     [onDuplicateFolder],
   );
 
+  const renderFolderList = (
+    folderList: TransformedFolder[],
+    expandedFolderIds: number[],
+    query: string,
+  ) =>
+    folderList.map((folder, idx) => (
+      <Folder
+        folder={folder}
+        key={folder.id || `${folder.name}-${idx}`}
+        activeFolder={activeFolderId}
+        instanceKey={instanceKey}
+        expandedIds={expandedFolderIds}
+        onFolderClick={onFolderClick}
+        setAllTestCases={setAllTestCases}
+        onToggleFolder={handleToggleFolder}
+        searchQuery={query}
+        index={idx}
+        parentId={null}
+        enableDragAndDrop={isDragAndDropEnabled}
+        canDropOn={canDropOn}
+      />
+    ));
+
   const renderFolderTree = () => {
     if (pageSearchQuery) {
       if (isSearchFilteredLoading) {
         return <BubblesLoader />;
-      }
+      };
       if (!hasSearchFilteredFolders) {
         return <EmptySearchState />;
-      }
-      return searchFilteredFolders.map((folder, idx) => (
-        <Folder
-          folder={folder}
-          key={folder.id || `${folder.name}-${idx}`}
-          activeFolder={activeFolderId}
-          instanceKey={instanceKey}
-          expandedIds={searchFilteredExpandedIds}
-          onFolderClick={onFolderClick}
-          setAllTestCases={setAllTestCases}
-          onToggleFolder={handleToggleFolder}
-          searchQuery=""
-          index={idx}
-          parentId={null}
-          enableDragAndDrop={isDragAndDropEnabled}
-          canDropOn={canDropOn}
-        />
-      ));
+      };
+      return renderFolderList(searchFilteredFolders, searchFilteredExpandedIds, '');
     }
 
     if (!searchQuery || hasAnyMatch) {
-      return filteredFolders.map((folder, idx) => (
-        <Folder
-          folder={folder}
-          key={folder.id || `${folder.name}-${idx}`}
-          activeFolder={activeFolderId}
-          instanceKey={instanceKey}
-          expandedIds={effectiveExpandedIds}
-          onFolderClick={onFolderClick}
-          setAllTestCases={setAllTestCases}
-          onToggleFolder={handleToggleFolder}
-          searchQuery={searchQuery}
-          index={idx}
-          parentId={null}
-          enableDragAndDrop={isDragAndDropEnabled}
-          canDropOn={canDropOn}
-        />
-      ));
+      return renderFolderList(filteredFolders, effectiveExpandedIds, searchQuery);
     }
 
     return <EmptySearchState />;
