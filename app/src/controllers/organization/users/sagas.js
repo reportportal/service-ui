@@ -58,10 +58,8 @@ function* unassignFromOrganization({ payload = {} }) {
         values: { name: fullName },
       }),
     );
-
     onSuccess?.();
-  }
-  catch {
+  } catch {
     yield put(showErrorNotification({ messageId: 'unassignOrganizationError' }));
   }
 }
@@ -69,9 +67,7 @@ function* unassignFromOrganization({ payload = {} }) {
 function* fetchUserAssignments({ payload }) {
   const { organizationId, userId } = payload;
   try {
-    const response = yield call(fetch, URLS.organizationUserProjects(organizationId, userId), {
-      method: 'get',
-    });
+    const response = yield call(fetch, URLS.organizationUserProjects(organizationId, userId));
     yield put({ type: FETCH_USER_ASSIGNMENTS_SUCCESS, payload: response });
   } catch  {
     yield put({ type: FETCH_USER_ASSIGNMENTS_FAILURE });
@@ -94,17 +90,9 @@ function* updateUserAssignments({ payload }) {
     );
     yield put(fetchOrganizationUsersAction(organizationId));
     onSuccess?.();
-  } catch (err) {
+  } catch {
     yield put({ type: UPDATE_USER_ASSIGNMENTS_FAILURE });
-    const message =
-      err?.message ||
-      err?.response?.data?.message ||
-      (typeof err?.response?.data === 'string' ? err.response.data : null);
-    yield put(
-      showErrorNotification(
-        message ? { message } : { messageId: 'updateAssignmentsError' },
-      ),
-    );
+    yield put(showErrorNotification({ messageId: 'updateAssignmentsError' }));
   }
 }
 

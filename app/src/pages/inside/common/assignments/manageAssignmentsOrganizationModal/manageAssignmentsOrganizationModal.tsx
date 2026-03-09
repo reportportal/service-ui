@@ -103,7 +103,6 @@ const ManageAssignmentsOrganizationModalView = ({
   const dispatch = useDispatch();
   const currentUserId = useSelector(idSelector) as number;
   const [showUnassignConfirmation, setShowUnassignConfirmation] = useState(false);
-  const [showDiscardConfirmation, setShowDiscardConfirmation] = useState(false);
   const [currentOrganization, setCurrentOrganization] = useState<OrganizationValue | null>(null);
   const [initialOrganization, setInitialOrganization] = useState<OrganizationValue | null>(null);
   const handleUnassignSuccess = useHandleUnassignSuccess(user, onUnassign);
@@ -116,7 +115,6 @@ const ManageAssignmentsOrganizationModalView = ({
 
   const resetModalState = useCallback(() => {
     setShowUnassignConfirmation(false);
-    setShowDiscardConfirmation(false);
     setCurrentOrganization(null);
     setInitialOrganization(null);
     initialSnapshotTakenRef.current = false;
@@ -223,22 +221,6 @@ const ManageAssignmentsOrganizationModalView = ({
     );
   };
 
-  const handleCancelClick = (closeModal: () => void) => {
-    if (isBusy) return;
-    if (isDirty) {
-      setShowDiscardConfirmation(true);
-    } else {
-      resetModalState();
-      closeModal();
-    }
-  };
-
-  const handleDiscardConfirm = (closeModal: () => void) => {
-    setShowDiscardConfirmation(false);
-    resetModalState();
-    closeModal();
-  };
-
   const createFooter = (closeModal: () => void) => {
     if (showUnassignConfirmation) {
       return (
@@ -260,39 +242,16 @@ const ManageAssignmentsOrganizationModalView = ({
       );
     }
 
-    if (showDiscardConfirmation) {
-      return (
-        <div className={cx('footer', 'footer-confirmation')}>
-          <div className={cx('confirmation-text')}>
-            {formatMessage(messages.discardChangesConfirmation)}
-          </div>
-          <div className={cx('action-buttons')}>
-            <Button
-              variant="ghost"
-              onClick={() => setShowDiscardConfirmation(false)}
-              disabled={isBusy}
-            >
-              {formatMessage(COMMON_LOCALE_KEYS.NO)}
-            </Button>
-            <Button
-              variant="primary"
-              onClick={() => handleDiscardConfirm(closeModal)}
-              disabled={isBusy}
-            >
-              {formatMessage(COMMON_LOCALE_KEYS.DISCARD)}
-            </Button>
-          </div>
-        </div>
-      );
-    }
-
     return (
       <div className={cx('footer')}>
         {renderUnassignButton()}
         <div className={cx('action-buttons')}>
           <Button
             variant="ghost"
-            onClick={() => handleCancelClick(closeModal)}
+            onClick={() => {
+              resetModalState();
+              closeModal();
+            }}
             disabled={isBusy}
           >
             {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
@@ -318,13 +277,9 @@ const ManageAssignmentsOrganizationModalView = ({
     if (next) setCurrentOrganization(next);
   };
   const handleModalClose = useCallback(() => {
-    if (isDirty) {
-      setShowDiscardConfirmation(true);
-    } else {
-      resetModalState();
-      dispatch(hideModalAction());
-    }
-  }, [isDirty, resetModalState, dispatch]);
+    resetModalState();
+    dispatch(hideModalAction());
+  }, [resetModalState, dispatch]);
 
   return (
     <Modal

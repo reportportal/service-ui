@@ -51,10 +51,9 @@ const assignmentsReducer = (state = initialAssignmentsState, action) => {
       return { ...state, updateLoading: false };
     case UPDATE_USER_ASSIGNMENTS_FAILURE:
       return { ...state, updateLoading: false };
+    case FETCH_USER_ASSIGNMENTS:
+      return { ...state, loading: true };
     default:
-      if (type === FETCH_USER_ASSIGNMENTS) {
-        return { ...state, loading: true };
-      }
       return state;
   }
 };

@@ -1,4 +1,4 @@
-import { EDITOR, VIEWER } from 'common/constants/projectRoles';
+import { EDITOR, MEMBER, VIEWER } from 'common/constants/projectRoles';
 import type { UserInfo } from 'controllers/user/types';
 import type {
   UpdateUserAssignmentsPayload,
@@ -16,9 +16,8 @@ export const MANAGE_ASSIGNMENTS_FORM = 'manageAssignmentsForm';
 
 function normalizeProjectRole(projectRole: string): string {
   if (projectRole === EDITOR || projectRole === VIEWER) return projectRole;
-  const upper = (projectRole || '').toUpperCase();
-  if (upper.includes('EDIT') || upper === 'EDITOR') return EDITOR;
-  return VIEWER;
+  const role = (projectRole ?? '').toUpperCase();
+  return role === EDITOR || role.includes('EDIT') ? EDITOR : VIEWER;
 }
 
 export function isAssignmentDirty(
@@ -39,7 +38,7 @@ export function getCurrentOrganizationAssignment(
 ): Organization {
   const orgs = user.assignedOrganizations || {};
   const assignedOrg = Object.values(orgs).find((o) => o.organizationId === organization.id);
-  const orgRole = assignedOrg?.organizationRole || 'MEMBER';
+  const orgRole = assignedOrg?.organizationRole || MEMBER;
   const projects: Project[] = (assignmentsData?.items ?? []).map(
     (item: UserOrganizationProjectItem) => ({
       id: item.id,
