@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { takeEvery, all, put, select, call } from 'redux-saga/effects';
+import { takeEvery, take, all, put, select, call } from 'redux-saga/effects';
+import { redirect } from 'redux-first-router';
 import { URLS } from 'common/urls';
 import {
   showNotification,
@@ -33,7 +34,7 @@ import {
   removeFilterAction,
   activeFilterSelector,
 } from 'controllers/filter';
-import { userRolesSelector } from 'controllers/pages';
+import { userRolesSelector, ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages';
 import { canWorkWithFilters } from 'common/utils/permissions';
 import { fetchDataAction } from 'controllers/fetch';
 import {
@@ -62,6 +63,9 @@ import {
   FETCH_PROJECT_NOTIFICATIONS,
   UPDATE_LOG_TYPE,
   DELETE_LOG_TYPE,
+  PREPARE_ACTIVE_PROJECT,
+  FETCH_PROJECT_SUCCESS,
+  FETCH_PROJECT_ERROR,
 } from './constants';
 import {
   updateDefectTypeSuccessAction,
@@ -71,6 +75,7 @@ import {
   updatePatternSuccessAction,
   deletePatternSuccessAction,
   updateConfigurationAttributesAction,
+  fetchProjectAction,
   fetchProjectPreferencesAction,
   fetchProjectSuccessAction,
   fetchProjectErrorAction,
@@ -88,6 +93,44 @@ import {
   deleteLogTypeSuccessAction,
 } from './actionCreators';
 import { patternsSelector, projectKeySelector } from './selectors';
+import { withActiveOrganization } from 'controllers/organization/sagas';
+import { setActiveProjectKeyAction } from 'controllers/user';
+
+export function* withActiveProject(organizationSlug, projectSlug, onActiveProjectReady) {
+  const fallbackRedirect = redirect({
+    type: ORGANIZATION_PROJECTS_PAGE,
+    payload: { organizationSlug },
+  });
+
+  yield* withActiveOrganization(organizationSlug, function* onActiveOrgReady(organizationId) {
+    try {
+      const { items } = yield call(
+        fetch,
+        URLS.organizationProjects(organizationId, { slug: projectSlug }),
+      );
+      const project = items?.[0];
+
+      if (!project?.key) {
+        yield put(fallbackRedirect);
+        return;
+      }
+
+      yield put(setActiveProjectKeyAction(project.key));
+      yield put(fetchProjectAction(project.key));
+
+      const { type } = yield take([FETCH_PROJECT_SUCCESS, FETCH_PROJECT_ERROR]);
+      if (type === FETCH_PROJECT_ERROR) {
+        yield put(fallbackRedirect);
+        return;
+      }
+
+      yield* onActiveProjectReady(project.key);
+    } catch (error) {
+      yield put(showDefaultErrorNotification(error));
+      yield put(fallbackRedirect);
+    }
+  });
+}
 
 function* updateDefectType({ payload: defectTypes }) {
   yield put(showScreenLockAction());
@@ -455,6 +498,16 @@ function* watchFetchProject() {
   yield takeEvery(FETCH_PROJECT, fetchProject);
 }
 
+function* prepareActiveProject({ payload: { organizationSlug, projectSlug, action } }) {
+  yield* withActiveProject(organizationSlug, projectSlug, function* onActiveProjectReady() {
+    yield put(action);
+  });
+}
+
+function* watchPrepareActiveProject() {
+  yield takeEvery(PREPARE_ACTIVE_PROJECT, prepareActiveProject);
+}
+
 function* fetchProjectPreferences({ payload: projectKey }) {
   const preferences = yield call(fetch, URLS.projectPreferences(projectKey));
   yield put(fetchProjectPreferencesSuccessAction(preferences));
@@ -577,6 +630,7 @@ export function* projectSagas() {
     watchUpdatePAState(),
     watchDeletePattern(),
     watchFetchProject(),
+    watchPrepareActiveProject(),
     watchFetchProjectPreferences(),
     watchFetchConfigurationAttributes(),
     watchHideFilterOnLaunches(),

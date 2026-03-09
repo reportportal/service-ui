@@ -23,6 +23,7 @@ export {
 } from './constants';
 export {
   fetchProjectAction,
+  prepareActiveProjectAction,
   updateProjectFilterPreferencesAction,
   showFilterOnLaunchesAction,
   hideFilterOnLaunchesAction,

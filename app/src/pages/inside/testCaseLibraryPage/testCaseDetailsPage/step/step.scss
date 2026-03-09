@@ -57,9 +57,5 @@
   &__attachments-list {
     flex-direction: row;
     flex-wrap: wrap;
-
-    & > div {
-      min-width: auto;
-    }
   }
 }
