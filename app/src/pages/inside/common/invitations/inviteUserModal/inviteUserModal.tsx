@@ -61,24 +61,28 @@ import { createClassnames } from 'common/utils';
 
 const cx = createClassnames(styles);
 
+function extractEmailString(rawEmail: unknown): string {
+  return typeof rawEmail === 'string'
+    ? rawEmail
+    : (rawEmail as { email?: string } | undefined)?.email ?? '';
+}
+
+function validateEmail(formData: { email?: unknown }): { email?: string } {
+  const emailStr = extractEmailString(formData.email);
+  const emailValidator: BoundValidator = commonValidators.emailInviteUserValidator();
+  return { email: emailValidator(emailStr.trim()) };
+}
+
 function validateProject(
   formData: FormDataMap[Level.PROJECT],
 ): { email?: string } {
-  const { email: rawEmail } = formData;
-  const emailStr =
-    typeof rawEmail === 'string' ? rawEmail : (rawEmail as { email?: string } | undefined)?.email ?? '';
-  const emailValidator: BoundValidator = commonValidators.emailInviteUserValidator();
-  return { email: emailValidator(emailStr.trim()) };
+  return validateEmail(formData);
 }
 
 function validateOrganization(
   formData: FormDataMap[Level.ORGANIZATION],
 ): Record<string, unknown> {
-  const { email: rawEmail } = formData;
-  const emailStr =
-    typeof rawEmail === 'string' ? rawEmail : (rawEmail as { email?: string } | undefined)?.email ?? '';
-  const emailValidator: BoundValidator = commonValidators.emailInviteUserValidator();
-  return { email: emailValidator(emailStr.trim()) };
+  return validateEmail(formData);
 }
 
 type InviteUserFormInnerProps = InviteUserProps<Level> & { content: ReactNode };

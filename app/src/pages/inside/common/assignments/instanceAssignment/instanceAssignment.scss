@@ -62,15 +62,40 @@
   width: 16px;
 }
 
+.checkbox-tooltip-wrapper {
+  width: 13px;
+  height: 13px;
+  position: relative;
+  margin-right: 11px;
+}
+
+.can-edit-container {
+  display: flex;
+  align-items: center;
+}
+
+.disabled-checkbox {
+  position: relative;
+  top: -8px;
+}
+
+.can-edit-label {
+  font-weight: var(--rp-ui-base-fw-regular);
+
+  &--disabled {
+    opacity: var(--rp-ui-opacity-default);
+  }
+}
+
+.checkbox-tooltip-content {
+  width: 236px;
+}
+
 .checkbox-wrapper {
   display: flex;
   align-items: center;
   gap: 8px;
   margin-top: 8px;
-
-  label {
-    font-weight: var(--rp-ui-base-fw-regular);
-  }
 }
 
 .controls {

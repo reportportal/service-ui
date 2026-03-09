@@ -15,7 +15,7 @@
  */
 
 .modal {
-  width: 720px;
+  width: min(720px, 90vw);
 }
 
 .modal-content {

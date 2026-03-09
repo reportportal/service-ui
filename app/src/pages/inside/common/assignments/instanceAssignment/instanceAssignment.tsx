@@ -100,6 +100,10 @@ const messages = defineMessages({
     id: 'InstanceAssignment.addOrganization',
     defaultMessage: 'Add Organization',
   },
+  disabledCanEditProjectHint: {
+    id: 'InstanceAssignment.disabledCanEditProjectHint',
+    defaultMessage: "Users with the Manager's role possess 'Can edit' permissions across all projects within the organization",
+  },
 });
 
 interface InstanceAssignmentItem {
@@ -320,11 +324,27 @@ export const InstanceAssignment = ({
               </FieldErrorHint>
             </FieldProvider>
             <div className={cx('checkbox-wrapper', { 'can-edit-hint': hasOrgNameError })}>
-              <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE}>
-                <Checkbox disabled={!selectedOrganizationId || !!organization.role}>
+              <div className={cx('can-edit-container')}>
+                {organization?.role ? (
+                  <Tooltip
+                    content={formatMessage(messages.disabledCanEditProjectHint)}
+                    placement="top-start"
+                    contentClassName={cx('checkbox-tooltip-content')}
+                    wrapperClassName={cx('checkbox-tooltip-wrapper')}
+                  >
+                    <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE}>
+                      <Checkbox className={cx('disabled-checkbox')} disabled />
+                    </FieldProvider>
+                  </Tooltip>
+                ) : (
+                  <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE}>
+                    <Checkbox disabled={!selectedOrganizationId} />
+                  </FieldProvider>
+                )}
+                <span className={cx('can-edit-label', { 'can-edit-label--disabled': organization?.role || !selectedOrganizationId })}>
                   {formatMessage(messages.canEditProject)}
-                </Checkbox>
-              </FieldProvider>
+                </span>
+              </div>
               <Tooltip
                 content={formatMessage(messages.hintMessage)}
                 placement="top"
