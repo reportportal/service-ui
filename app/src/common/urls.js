@@ -154,6 +154,12 @@ export const URLS = {
     `${urlCommonBase}organizations/${organizationId}/users${getQueryParams(preferencesObj)}`,
   organizationUserById: ({ organizationId, userId }) =>
     `${urlCommonBase}organizations/${organizationId}/users/${userId}`,
+  /** GET - fetch all projects of a user in an organization */
+  organizationUserProjects: (organizationId, userId) =>
+    `${urlCommonBase}organizations/${organizationId}/users/${userId}/projects`,
+  /** PUT - update user roles and assignments in an organization */
+  organizationUserAssignments: (organizationId, userId) =>
+    `${urlCommonBase}organizations/${organizationId}/users/${userId}`,
   organizationProjectById: ({ organizationId, projectId }) =>
     `${urlCommonBase}organizations/${organizationId}/projects/${projectId}`,
   organizationSettings: (organizationId) =>

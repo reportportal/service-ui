@@ -278,7 +278,7 @@ export const InstanceAssignment = ({
                   getURI={URLS.organizationSearches}
                   getRequestParams={getRequestOrganizationsParams}
                   makeOptions={makeOrganizationsOptions}
-                  createWithoutConfirmation={true}
+                  createWithoutConfirmation
                   popoverClassName={cx('popover-organization')}
                   onChange={(organizationName: string) => {
                     setSelectedOrganizationId(
@@ -318,7 +318,7 @@ export const InstanceAssignment = ({
                   getRequestParams={getRequestOrganizationsParams}
                   makeOptions={makeProjectsOptions}
                   onChange={handleProjectChange}
-                  createWithoutConfirmation={true}
+                  createWithoutConfirmation
                   className={cx('autocomplete')}
                   disabled={!selectedOrganizationId}
                   useFixedPositioning

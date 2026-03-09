@@ -118,7 +118,7 @@ export const AddProjectForm = ({
           getRequestParams={getRequestParams}
           makeOptions={makeOptions}
           onChange={handleChangeProject}
-          createWithoutConfirmation={true}
+          createWithoutConfirmation
           useFixedPositioning
           dropdownMatchInputWidth
         />

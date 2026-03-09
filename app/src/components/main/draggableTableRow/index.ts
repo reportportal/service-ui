@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,34 +14,5 @@
  * limitations under the License.
  */
 
- .name-section {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 14px 0;
-}
-
-.name-content {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.test-name {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--rp-ui-base-almost-black);
-  line-height: 20px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 4px;
-}
-
-.tags-section {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
+export { useDraggableRow } from './draggableTableRow';
+export type { UseDraggableRowParams } from './draggableTableRow';
