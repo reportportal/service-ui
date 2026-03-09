@@ -22,39 +22,15 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
-import { Page } from 'types/common';
 
 import { useTestLibraryPanelContext } from '../testLibraryPanelContext';
+import { TestCasesResponse, fetchAllTestCases } from '../testCaseFetchUtils';
 
 interface UseFolderTestCasesProps {
   folderId: number;
   isOpen: boolean;
   testsCount: number;
 }
-
-interface TestCasesResponse {
-  content: TestCase[];
-  page: Page;
-}
-
-const fetchTestPlanTestCasesForFolder = async (
-  projectKey: string,
-  params: Record<string, string | number>,
-  fetchedTestCases: TestCase[] = [],
-): Promise<TestCase[]> => {
-  const response = await fetch<TestCasesResponse>(URLS.testCases(projectKey, params));
-  const testCases = [...fetchedTestCases, ...response.content];
-
-  if (response.page.number < response.page.totalPages) {
-    return fetchTestPlanTestCasesForFolder(
-      projectKey,
-      { ...params, offset: response.page.number * response.page.size },
-      testCases,
-    );
-  }
-
-  return testCases;
-};
 
 export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTestCasesProps) => {
   const { testPlanId, testCasesMap, updateFolderTestCases } = useTestLibraryPanelContext();
@@ -99,7 +75,7 @@ export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTe
         );
 
         const testPlanTestCasesForFolderPromise = shouldFetchTestPlanTestCases
-          ? fetchTestPlanTestCasesForFolder(projectKey, {
+          ? fetchAllTestCases(projectKey, {
               'filter.eq.testPlanId': testPlanId,
               'filter.eq.testFolderId': folderId,
               offset: 0,

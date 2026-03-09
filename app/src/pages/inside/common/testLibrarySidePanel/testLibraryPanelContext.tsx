@@ -43,6 +43,8 @@ export interface TestLibraryPanelContextValue {
     updatedFolderTestCases: Partial<FolderTestCases>,
   ) => void;
   toggleFolder: (folder: TransformedFolder) => void;
+  batchSelectFolder: (folder: TransformedFolder) => Promise<void>;
+  batchDeselectFolder: (folder: TransformedFolder) => void;
 }
 
 const TestLibraryPanelContext = createContext<TestLibraryPanelContextValue | null>(null);

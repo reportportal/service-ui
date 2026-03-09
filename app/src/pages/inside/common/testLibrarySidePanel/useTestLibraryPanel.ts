@@ -31,6 +31,7 @@ import {
   FolderTestCases,
   NumberSet,
 } from './testLibraryPanelContext';
+import { useBatchFolderSelection } from './useBatchFolderSelection';
 
 interface UseTestLibraryPanelProps {
   onAddTestCases: (testCaseIds: number[]) => void;
@@ -127,6 +128,14 @@ export const useTestLibraryPanel = ({
     }
   }, [selectedTestCasesIds, onAddTestCases, clearSelection, onClose]);
 
+  const { batchSelectFolder, batchDeselectFolder } = useBatchFolderSelection({
+    testPlanId,
+    testCasesMap,
+    setTestCasesMap,
+    setSelectedTestCasesIds,
+    setSelectedFolderIds,
+  });
+
   const selectionCount = selectedTestCasesIds.size;
 
   const hasSelection = selectionCount > 0 || selectedFolderIds.size > 0;
@@ -144,6 +153,8 @@ export const useTestLibraryPanel = ({
       toggleFolderSelection,
       updateFolderTestCases,
       toggleFolder,
+      batchSelectFolder,
+      batchDeselectFolder,
     }),
     [
       selectedTestCasesIds,
@@ -157,6 +168,8 @@ export const useTestLibraryPanel = ({
       toggleFolderSelection,
       updateFolderTestCases,
       toggleFolder,
+      batchSelectFolder,
+      batchDeselectFolder,
     ],
   );
 

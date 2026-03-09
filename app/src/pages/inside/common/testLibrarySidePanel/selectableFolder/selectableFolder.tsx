@@ -15,13 +15,14 @@
  */
 
 import { useCallback, useEffect, useMemo } from 'react';
-import { isEmpty, size } from 'es-toolkit/compat';
+import { isEmpty } from 'es-toolkit/compat';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import { ChevronDownDropdownIcon, DragNDropIcon, BubblesLoader } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { TransformedFolder } from 'controllers/testCase';
 import { Folder } from 'pages/inside/common/expandedOptions/folder/folder';
+import { NumberSet, FolderTestCases } from '../testLibraryPanelContext';
 
 import { DepthAwareCheckbox } from '../depthAwareCheckbox';
 import { useTestLibraryPanelContext } from '../testLibraryPanelContext';
@@ -46,6 +47,64 @@ enum CheckboxSelectionState {
   INDETERMINATE = 'indeterminate',
 }
 
+interface SubtreeSelectionCounts {
+  totalSelectable: number;
+  totalSelected: number;
+  emptyFolderCount: number;
+  selectedEmptyFolderCount: number;
+}
+
+const getSubtreeSelectionCounts = (
+  folder: TransformedFolder,
+  selectedIds: NumberSet,
+  selectedFolderIds: NumberSet,
+  testCasesMap: Map<number, FolderTestCases>,
+): SubtreeSelectionCounts => {
+  let totalSelectable = 0;
+  let totalSelected = 0;
+  let emptyFolderCount = 0;
+  let selectedEmptyFolderCount = 0;
+
+  const folderData = testCasesMap.get(folder.id);
+  const addedToTestPlanIds = folderData?.addedToTestPlanIds ?? [];
+  const addedIdsSet = new Set(addedToTestPlanIds);
+  const testCases = folderData?.testCases ?? [];
+
+  const selectableTestCases = isEmpty(addedToTestPlanIds)
+    ? testCases
+    : testCases.filter((testCase) => !addedIdsSet.has(testCase.id));
+
+  totalSelectable += selectableTestCases.length;
+  totalSelected += selectableTestCases.filter((testCase) => selectedIds.has(testCase.id)).length;
+
+  if (folder.testsCount === 0 && isEmpty(folder.folders)) {
+    emptyFolderCount += 1;
+    if (selectedFolderIds.has(folder.id)) {
+      selectedEmptyFolderCount += 1;
+    }
+  }
+
+  folder.folders.forEach((subfolder) => {
+    const subfolderCounts = getSubtreeSelectionCounts(
+      subfolder,
+      selectedIds,
+      selectedFolderIds,
+      testCasesMap,
+    );
+    totalSelectable += subfolderCounts.totalSelectable;
+    totalSelected += subfolderCounts.totalSelected;
+    emptyFolderCount += subfolderCounts.emptyFolderCount;
+    selectedEmptyFolderCount += subfolderCounts.selectedEmptyFolderCount;
+  });
+
+  return {
+    totalSelectable,
+    totalSelected,
+    emptyFolderCount,
+    selectedEmptyFolderCount,
+  };
+};
+
 export const SelectableFolder = ({ folder, depth = 0 }: SelectableFolderProps) => {
   const {
     selectedIds,
@@ -54,8 +113,9 @@ export const SelectableFolder = ({ folder, depth = 0 }: SelectableFolderProps) =
     expandedFolderIds,
     scrollElement,
     toggleTestCasesSelection,
-    toggleFolderSelection,
     toggleFolder,
+    batchSelectFolder,
+    batchDeselectFolder,
   } = useTestLibraryPanelContext();
 
   const isOpen = expandedFolderIds.has(folder.id);
@@ -66,14 +126,6 @@ export const SelectableFolder = ({ folder, depth = 0 }: SelectableFolderProps) =
     isLoading: isFolderLoading = false,
     addedToTestPlanIds = [],
   } = testCasesMap.get(folder.id) ?? {};
-
-  const selectableTestCases = useMemo(
-    () =>
-      !isEmpty(addedToTestPlanIds)
-        ? testCases.filter((testCase) => !addedToTestPlanIds.includes(testCase.id))
-        : testCases,
-    [testCases, addedToTestPlanIds],
-  );
 
   const { fetchNextPage, hasNextPage, isLoading } = useFolderTestCases({
     folderId: folder.id,
@@ -96,30 +148,37 @@ export const SelectableFolder = ({ folder, depth = 0 }: SelectableFolderProps) =
   }, [scrollElement, rootRef]);
 
   const checkboxState = useMemo(() => {
-    if (isEmpty(testCases)) {
-      return selectedFolderIds.has(folder.id)
-        ? CheckboxSelectionState.CHECKED
-        : CheckboxSelectionState.UNCHECKED;
-    }
-
-    if (isEmpty(selectableTestCases)) {
-      return CheckboxSelectionState.UNCHECKED;
-    }
-
-    const selectedCount = size(
-      selectableTestCases.filter((testCase) => selectedIds.has(testCase.id)),
+    const subtreeCounts = getSubtreeSelectionCounts(
+      folder,
+      selectedIds,
+      selectedFolderIds,
+      testCasesMap,
     );
 
-    if (selectedCount === 0) {
+    if (subtreeCounts.totalSelectable === 0 && subtreeCounts.emptyFolderCount === 0) {
       return CheckboxSelectionState.UNCHECKED;
     }
 
-    if (selectedCount === selectableTestCases.length) {
+    const allTestCasesSelected =
+      subtreeCounts.totalSelectable > 0 &&
+      subtreeCounts.totalSelected === subtreeCounts.totalSelectable;
+    const allEmptyFoldersSelected =
+      subtreeCounts.emptyFolderCount > 0 &&
+      subtreeCounts.selectedEmptyFolderCount === subtreeCounts.emptyFolderCount;
+
+    if (
+      (subtreeCounts.totalSelectable === 0 || allTestCasesSelected) &&
+      (subtreeCounts.emptyFolderCount === 0 || allEmptyFoldersSelected)
+    ) {
       return CheckboxSelectionState.CHECKED;
     }
 
+    if (subtreeCounts.totalSelected === 0 && subtreeCounts.selectedEmptyFolderCount === 0) {
+      return CheckboxSelectionState.UNCHECKED;
+    }
+
     return CheckboxSelectionState.INDETERMINATE;
-  }, [testCases, selectableTestCases, selectedIds, selectedFolderIds, folder.id]);
+  }, [folder, selectedIds, selectedFolderIds, testCasesMap]);
 
   const onFolderToggle = useCallback(() => {
     if (!hasChildren) {
@@ -130,32 +189,12 @@ export const SelectableFolder = ({ folder, depth = 0 }: SelectableFolderProps) =
   }, [folder, hasChildren, toggleFolder]);
 
   const handleFolderCheckboxChange = useCallback(() => {
-    if (isEmpty(testCases)) {
-      toggleFolderSelection(folder.id);
+    if (checkboxState === CheckboxSelectionState.CHECKED) {
+      batchDeselectFolder(folder);
     } else {
-      const selectableIds = selectableTestCases.map((testCase) => testCase.id);
-
-      if (checkboxState === CheckboxSelectionState.CHECKED) {
-        toggleTestCasesSelection(selectableIds);
-      } else {
-        const notSelectedIds = selectableTestCases
-          .filter((testCase) => !selectedIds.has(testCase.id))
-          .map((testCase) => testCase.id);
-
-        if (!isEmpty(notSelectedIds)) {
-          toggleTestCasesSelection(notSelectedIds);
-        }
-      }
+      void batchSelectFolder(folder);
     }
-  }, [
-    testCases,
-    selectableTestCases,
-    toggleFolderSelection,
-    folder.id,
-    checkboxState,
-    selectedIds,
-    toggleTestCasesSelection,
-  ]);
+  }, [checkboxState, batchDeselectFolder, batchSelectFolder, folder]);
 
   const toggleTestCase = useCallback(
     (testCaseId: number) => {
