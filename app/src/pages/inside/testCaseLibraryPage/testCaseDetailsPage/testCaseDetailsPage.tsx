@@ -157,6 +157,7 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
           <AttachmentList
             attachments={manualScenario.attachments}
             className={cx('page__attachments-list')}
+            withPreview
           />
         ),
       },
