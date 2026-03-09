@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   WrappedFieldArrayProps,
@@ -170,6 +170,7 @@ export const InstanceAssignment = ({
     OrganizationSearchesItem[]
   >([]);
   const [areOrganizationsExhausted, setAreOrganizationsExhausted] = useState(false);
+  const organizationSearchQueryRef = useRef('');
   const [organizationProjects, setOrganizationProjects] = useState<ProjectsSearchesItem[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
   const [selectedOrganizationId, setSelectedOrganizationId] = useState<number | null>(null);
@@ -187,6 +188,7 @@ export const InstanceAssignment = ({
   };
 
   const getRequestOrganizationsParams = (inputValue: string) => {
+    organizationSearchQueryRef.current = inputValue;
     return {
       method: 'post',
       data: prepareQueryFilters({ limit: 20, [SEARCH_KEY]: inputValue }),
@@ -200,7 +202,10 @@ export const InstanceAssignment = ({
       );
 
       setNotAssignedOrganizations(filteredOrganizations);
-      setAreOrganizationsExhausted(response.total_count <= (allOrganizations?.length ?? 0));
+
+      if (!organizationSearchQueryRef.current) {
+        setAreOrganizationsExhausted(response.total_count <= (allOrganizations?.length ?? 0));
+      }
 
       return filteredOrganizations.map(({ name }) => name);
     }
