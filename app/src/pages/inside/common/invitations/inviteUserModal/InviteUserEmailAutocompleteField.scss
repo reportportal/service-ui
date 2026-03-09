@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,54 +14,52 @@
  * limitations under the License.
  */
 
-.footer {
+.option {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-}
-
-.confirmation-text {
+  min-height: 36px;
+  padding: 8px 12px;
+  cursor: pointer;
+  box-sizing: border-box;
+  color: var(--rp-ui-color-text-2);
   font-family: var(--rp-ui-base-font-family);
   font-size: 13px;
-  line-height: 20px;
-}
 
-.action-buttons {
-  display: flex;
-  gap: 8px;
-  margin-left: auto;
-}
-
-.tooltip-wrapper {
-  max-width: max-content;
-}
-
-.custom-tooltip {
-  width: 248px;
-}
-
-.description-link {
-  display: inline-flex;
-  align-items: center;
-
-  > div:last-child {
-    margin-left: 4px;
-
-    svg path {
-      fill: var(--rp-ui-color-field-icon);
-    }
+  &:hover,
+  &.active {
+    background-color: var(--rp-ui-color-bg-3);
   }
 }
 
-.assigned-to-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
+.avatar {
+  flex-shrink: 0;
+  margin-right: 8px;
+  overflow: hidden;
 }
 
-.assigned-to-label {
-  font-family: var(--rp-ui-base-font-family);
-  font-size: 15px;
-  font-weight: 500;
-  line-height: 24px;
+.img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.email {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.name {
+  font-weight: var(--rp-ui-base-fw-bold);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

@@ -14,8 +14,5 @@
  * limitations under the License.
  */
 
-import { Level } from './constants';
-
-export const getFormName = (level: Level) => `inviteUserForm_${level}`;
-
-export const INSTANCE_FORM_NAME = getFormName(Level.INSTANCE);
+export { useDraggableRow } from './draggableTableRow';
+export type { UseDraggableRowParams } from './draggableTableRow';

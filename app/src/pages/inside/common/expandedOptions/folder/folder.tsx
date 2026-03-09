@@ -30,7 +30,7 @@ import { FolderProps } from './types';
 import { useFolderTooltipItems } from './useFolderTooltipItems';
 import { FolderWrapper } from './folderWrapper';
 import { FolderSubfolders } from './folderSubfolders';
-import { FOLDER_DRAG_TYPE } from '../constants';
+import { EXTERNAL_TREE_DROP_TYPE, FOLDER_DRAG_TYPE } from '../constants';
 
 import styles from './folder.scss';
 
@@ -218,6 +218,8 @@ export const Folder: FolderComposite = ({
       hideDefaultPreview
       className={cx('tree-sortable-wrapper')}
       canDropOn={canDropOn}
+      acceptExternalDrop
+      externalDropType={EXTERNAL_TREE_DROP_TYPE}
     >
       {({
         isDragging: isDraggingFolder,

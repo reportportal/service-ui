@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { FC } from 'react';
+import type { ReactElement } from 'react';
 
 import { createClassnames } from 'common/utils';
 import { URLS } from 'common/urls';
@@ -28,22 +28,24 @@ const cx = createClassnames(styles);
 interface UserAvatarProps {
   userId: string | number;
   className?: string;
+  imageClassName?: string;
   thumbnail?: boolean;
   timestamp?: number;
 }
 
-export const UserAvatar: FC<UserAvatarProps> = ({
+export const UserAvatar = ({
   userId,
   className = '',
+  imageClassName = '',
   thumbnail = false,
   timestamp,
-}) => {
+}: UserAvatarProps): ReactElement => {
   const src = URLS.userAvatar(userId, thumbnail, timestamp);
 
   return (
     <div className={cx('user-avatar', className)}>
       <Image
-        className={cx('avatar')}
+        className={cx('avatar', imageClassName)}
         src={src}
         alt="avatar"
         fallback={DefaultUserImage}
