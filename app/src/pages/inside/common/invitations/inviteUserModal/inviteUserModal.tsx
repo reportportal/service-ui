@@ -17,6 +17,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
+import { isString } from 'es-toolkit';
 import DOMPurify from 'dompurify';
 import { Modal } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -62,7 +63,7 @@ import { createClassnames } from 'common/utils';
 const cx = createClassnames(styles);
 
 function extractEmailString(rawEmail: unknown): string {
-  return typeof rawEmail === 'string'
+  return isString(rawEmail)
     ? rawEmail
     : (rawEmail as { email?: string } | undefined)?.email ?? '';
 }
