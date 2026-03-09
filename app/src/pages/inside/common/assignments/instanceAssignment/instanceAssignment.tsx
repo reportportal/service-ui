@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   WrappedFieldArrayProps,
@@ -42,7 +42,7 @@ import {
 } from 'pages/inside/common/assignments/organizationAssignment';
 import { Project } from 'pages/inside/common/assignments/organizationAssignment/organizationItem/projectItems';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
-import { AsyncAutocomplete } from 'componentLibrary/autocompletes/asyncAutocomplete';
+import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 import {
   OrganizationsSearchesResponseData,
   OrganizationSearchesItem,
@@ -56,10 +56,7 @@ import { prepareQueryFilters } from 'components/filterEntities/utils';
 import { URLS } from 'common/urls';
 import { AddItemButton } from '../organizationAssignment/organizationItem/addItemButton';
 import { MEMBER, EDITOR, VIEWER, MANAGER } from 'common/constants/projectRoles';
-import {
-  CREATE_USER_FORM,
-  ORGANIZATIONS,
-} from 'pages/instance/allUsersPage/allUsersHeader/createUserModal/constants';
+import { ORGANIZATIONS } from 'pages/instance/allUsersPage/allUsersHeader/createUserModal/constants';
 
 import styles from './instanceAssignment.scss';
 
@@ -102,6 +99,10 @@ const messages = defineMessages({
   addOrganization: {
     id: 'InstanceAssignment.addOrganization',
     defaultMessage: 'Add Organization',
+  },
+  disabledCanEditProjectHint: {
+    id: 'InstanceAssignment.disabledCanEditProjectHint',
+    defaultMessage: "Users with the Manager's role possess 'Can edit' permissions across all projects within the organization",
   },
 });
 
@@ -168,6 +169,8 @@ export const InstanceAssignment = ({
   const [notAssignedOrganizations, setNotAssignedOrganizations] = useState<
     OrganizationSearchesItem[]
   >([]);
+  const [areOrganizationsExhausted, setAreOrganizationsExhausted] = useState(false);
+  const organizationSearchQueryRef = useRef('');
   const [organizationProjects, setOrganizationProjects] = useState<ProjectsSearchesItem[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
   const [selectedOrganizationId, setSelectedOrganizationId] = useState<number | null>(null);
@@ -185,6 +188,7 @@ export const InstanceAssignment = ({
   };
 
   const getRequestOrganizationsParams = (inputValue: string) => {
+    organizationSearchQueryRef.current = inputValue;
     return {
       method: 'post',
       data: prepareQueryFilters({ limit: 20, [SEARCH_KEY]: inputValue }),
@@ -199,10 +203,15 @@ export const InstanceAssignment = ({
 
       setNotAssignedOrganizations(filteredOrganizations);
 
+      if (!organizationSearchQueryRef.current) {
+        setAreOrganizationsExhausted(response.total_count <= (allOrganizations?.length ?? 0));
+      }
+
       return filteredOrganizations.map(({ name }) => name);
     }
 
     setNotAssignedOrganizations([]);
+    setAreOrganizationsExhausted(false);
     return [];
   };
 
@@ -229,6 +238,7 @@ export const InstanceAssignment = ({
     setOrganizationProjects([]);
     setSelectedOrganizationId(null);
     setSelectedProjectId(null);
+    setNotAssignedOrganizations((prev) => prev.filter((org) => org.id !== selectedOrganizationId));
 
     fields.push({
       id: selectedOrganizationId,
@@ -265,7 +275,7 @@ export const InstanceAssignment = ({
           <div className={cx('autocomplete-wrapper')}>
             <FieldProvider name={FORM_FIELDS.ORGANIZATION.NAME}>
               <FieldErrorHint provideHint={false}>
-                <AsyncAutocomplete
+                <AsyncAutocompleteV2
                   inputProps={{
                     label: formatMessage(messages.organization),
                   }}
@@ -274,12 +284,15 @@ export const InstanceAssignment = ({
                   getRequestParams={getRequestOrganizationsParams}
                   makeOptions={makeOrganizationsOptions}
                   createWithoutConfirmation
+                  popoverClassName={cx('popover-organization')}
                   onChange={(organizationName: string) => {
                     setSelectedOrganizationId(
                       notAssignedOrganizations.find(({ name }) => name === organizationName)?.id,
                     );
                   }}
                   isRequired={isOrganizationRequired}
+                  useFixedPositioning
+                  dropdownMatchInputWidth
                 />
               </FieldErrorHint>
             </FieldProvider>
@@ -287,9 +300,9 @@ export const InstanceAssignment = ({
               <Checkbox
                 onChange={(e) => {
                   const checked = e.target.checked;
-                  dispatch(change(CREATE_USER_FORM, FORM_FIELDS.ORGANIZATION.ROLE, checked));
+                  dispatch(change(formName, FORM_FIELDS.ORGANIZATION.ROLE, checked));
                   dispatch(
-                    change(CREATE_USER_FORM, FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE, checked),
+                    change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE, checked),
                   );
                 }}
                 className={cx('autocomplete-checkbox')}
@@ -301,7 +314,7 @@ export const InstanceAssignment = ({
           <div className={cx('autocomplete-wrapper')}>
             <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.NAME}>
               <FieldErrorHint provideHint={false}>
-                <AsyncAutocomplete
+                <AsyncAutocompleteV2
                   inputProps={{
                     label: formatMessage(messages.project),
                   }}
@@ -313,15 +326,33 @@ export const InstanceAssignment = ({
                   createWithoutConfirmation
                   className={cx('autocomplete')}
                   disabled={!selectedOrganizationId}
+                  useFixedPositioning
+                  dropdownMatchInputWidth
                 />
               </FieldErrorHint>
             </FieldProvider>
             <div className={cx('checkbox-wrapper', { 'can-edit-hint': hasOrgNameError })}>
-              <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE}>
-                <Checkbox disabled={!selectedOrganizationId || !!organization.role}>
+              <div className={cx('can-edit-container')}>
+                {organization?.role ? (
+                  <Tooltip
+                    content={formatMessage(messages.disabledCanEditProjectHint)}
+                    placement="top-start"
+                    contentClassName={cx('checkbox-tooltip-content')}
+                    wrapperClassName={cx('checkbox-tooltip-wrapper')}
+                  >
+                    <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE}>
+                      <Checkbox className={cx('disabled-checkbox')} disabled />
+                    </FieldProvider>
+                  </Tooltip>
+                ) : (
+                  <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE}>
+                    <Checkbox disabled={!selectedOrganizationId} />
+                  </FieldProvider>
+                )}
+                <span className={cx('can-edit-label', { 'can-edit-label--disabled': organization?.role || !selectedOrganizationId })}>
                   {formatMessage(messages.canEditProject)}
-                </Checkbox>
-              </FieldProvider>
+                </span>
+              </div>
               <Tooltip
                 content={formatMessage(messages.hintMessage)}
                 placement="top"
@@ -359,7 +390,7 @@ export const InstanceAssignment = ({
             tooltipClassname={cx('tooltip')}
             onClick={() => setIsOpen(true)}
             tooltipContent={messages.availableOrganizations}
-            disabled={notAssignedOrganizations.length === 0}
+            disabled={areOrganizationsExhausted}
             text={formatMessage(messages.addOrganization)}
           />
         </div>

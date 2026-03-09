@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
-import { Level } from './constants';
+import { InviteUserModal, Level } from 'pages/inside/common/invitations/inviteUserModal';
 
-export const getFormName = (level: Level) => `inviteUserForm_${level}`;
+export interface InviteUserModalInstanceProps {
+  onInvite?: (withProject: boolean) => void;
+}
 
-export const INSTANCE_FORM_NAME = getFormName(Level.INSTANCE);
+export const InviteUserModalInstance = ({ onInvite = () => {} }: InviteUserModalInstanceProps) => (
+  <InviteUserModal level={Level.INSTANCE} onInvite={onInvite} />
+);

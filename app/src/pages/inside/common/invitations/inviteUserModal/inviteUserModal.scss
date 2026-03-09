@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
-import { Level } from './constants';
+.modal {
+  height: auto;
+}
 
-export const getFormName = (level: Level) => `inviteUserForm_${level}`;
-
-export const INSTANCE_FORM_NAME = getFormName(Level.INSTANCE);
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
