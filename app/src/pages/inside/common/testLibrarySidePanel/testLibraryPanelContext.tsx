@@ -17,19 +17,31 @@
 import { createContext, useContext, ReactNode } from 'react';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { TransformedFolder } from 'controllers/testCase';
+import { Page } from 'types/common';
 
 export type NumberSet = Set<number>;
+
+export interface FolderTestCases {
+  testCases: TestCase[];
+  page: Page | null;
+  isLoading: boolean;
+  addedToTestPlanIds?: number[];
+}
 
 export interface TestLibraryPanelContextValue {
   selectedIds: NumberSet;
   selectedFolderIds: NumberSet;
-  testPlanTestCaseIds: NumberSet;
-  testCasesMap: Map<number, TestCase[]>;
-  fetchedFolderIds: NumberSet;
+  testCasesMap: Map<number, FolderTestCases>;
+  testPlanId: number | null;
   expandedFolderIds: NumberSet;
+  scrollElement: HTMLElement | null;
+  setScrollElement: (element: HTMLElement | null) => void;
   toggleTestCasesSelection: (testCaseIds: number[]) => void;
   toggleFolderSelection: (folderId: number) => void;
-  onFolderFetched: (folderId: number) => void;
+  updateFolderTestCases: (
+    folderId: number,
+    updatedFolderTestCases: Partial<FolderTestCases>,
+  ) => void;
   toggleFolder: (folder: TransformedFolder) => void;
 }
 
