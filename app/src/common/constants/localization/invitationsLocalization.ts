@@ -15,8 +15,9 @@
  */
 
 import { defineMessages } from 'react-intl';
+import { MessageDescriptorMap } from 'types/intl';
 
-export const messages = defineMessages({
+export const messages: MessageDescriptorMap = defineMessages({
   addProject: {
     id: 'InviteUser.addProject',
     defaultMessage: 'Add project',
@@ -73,6 +74,14 @@ export const messages = defineMessages({
   inputPlaceholder: {
     id: 'InviteUser.inputPlaceholder',
     defaultMessage: 'Enter email (e.g. example@mail.com)',
+  },
+  inputPlaceholderInstance: {
+    id: 'InviteUser.inputPlaceholderInstance',
+    defaultMessage: 'Enter email to search (e.g. example@mail.com)',
+  },
+  noMatchesContinueTyping: {
+    id: 'InviteUser.noMatchesContinueTyping',
+    defaultMessage: 'No matches found. Continue typing to invite new user by email...',
   },
   memberWasInvited: {
     id: 'InviteUser.memberWasInvited',
