@@ -61,7 +61,7 @@ import { useMoveFolder } from './modals/moveFolderModal/useMoveFolder';
 import { useDuplicateFolder } from './modals/duplicateFolderModal/useDuplicateFolder';
 import { useFolderDragDrop } from './useFolderDragDrop';
 import { useTestCase } from '../hooks/useTestCase';
-import { useDuplicateTestCase } from '../duplicateTestCaseModal/useDuplicateTestCase';
+import { useDuplicateTestCase } from '../allTestCasesPage/duplicateTestCaseModal/useDuplicateTestCase';
 
 import styles from './testCaseFolders.scss';
 
@@ -76,7 +76,7 @@ export const TestCaseFolders = () => {
   const { moveFolder } = useMoveFolder();
   const { duplicateFolder } = useDuplicateFolder();
   const { patchTestCase } = useTestCase();
-  const { duplicateTestCase } = useDuplicateTestCase();
+  const { duplicateTestCase } = useDuplicateTestCase({ onSuccess: ()=> noop });
   const isLoadingTestCases = useSelector(isLoadingTestCasesSelector);
   const testCases = useSelector(testCasesSelector);
   const testCasesPageData = useSelector(testCasesPageSelector);
@@ -202,9 +202,8 @@ export const TestCaseFolders = () => {
       if (!destinationFolder) return;
 
       await duplicateTestCase({
-        testCaseId: testCase.id,
+        testCaseIds: [testCase.id],
         testFolderId: destinationFolder.id,
-        name: testCase.name,
       });
     },
     [folders, duplicateTestCase],
