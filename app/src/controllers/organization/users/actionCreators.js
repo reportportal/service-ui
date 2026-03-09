@@ -16,8 +16,10 @@
 
 import {
   FETCH_ORGANIZATION_USERS,
+  FETCH_USER_ASSIGNMENTS,
   PREPARE_ACTIVE_ORGANIZATION_USERS,
   UNASSIGN_FROM_ORGANIZATION,
+  UPDATE_USER_ASSIGNMENTS,
 } from './constants';
 
 export const prepareActiveOrganizationUsersAction = (payload) => ({
@@ -32,7 +34,17 @@ export const fetchOrganizationUsersAction = (params) => {
   };
 };
 
+export const fetchUserAssignmentsAction = (organizationId, userId) => ({
+  type: FETCH_USER_ASSIGNMENTS,
+  payload: { organizationId, userId },
+});
+
 export const unassignFromOrganizationAction = (user, organization, onSuccess) => ({
   type: UNASSIGN_FROM_ORGANIZATION,
   payload: { user, organization, onSuccess },
+});
+
+export const updateUserAssignmentsAction = (organizationId, userId, payload, onSuccess, user = null) => ({
+  type: UPDATE_USER_ASSIGNMENTS,
+  payload: { organizationId, userId, payload, onSuccess, user },
 });

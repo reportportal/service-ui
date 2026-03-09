@@ -26,6 +26,13 @@ export const usersPaginationSelector = (state) => domainSelector(state).paginati
 export const usersSelector = (state) => domainSelector(state).users;
 export const loadingSelector = (state) => domainSelector(state).loading || false;
 
+export const userAssignmentsDataSelector = (state) =>
+  domainSelector(state).assignments?.data ?? null;
+export const userAssignmentsLoadingSelector = (state) =>
+  domainSelector(state).assignments?.loading ?? false;
+export const userAssignmentsUpdateLoadingSelector = (state) =>
+  domainSelector(state).assignments?.updateLoading ?? false;
+
 export const querySelector = createAlternativeQueryParametersSelector({
   defaultPagination: DEFAULT_PAGINATION,
   defaultSorting: SORTING_ASC,
