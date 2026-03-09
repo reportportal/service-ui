@@ -152,7 +152,7 @@ export const NotificationRuleContent = ({
       {launchNames.length > 0 && (
         <>
           <span className={cx('field')}>{formatMessage(messages.launchNameLabel)}</span>
-          <span className={cx('value')}>{launchNames.join(SEPARATOR)}</span>
+          <span className={cx('value', 'launch-name')}>{launchNames.join(SEPARATOR)}</span>
         </>
       )}
       <span className={cx('field')}>{formatMessage(messages.inCaseLabel)}</span>
