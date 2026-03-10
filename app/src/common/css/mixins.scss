@@ -54,3 +54,19 @@
   bottom: 0;
   z-index: $z-index;
 }
+
+@mixin centered-content($max-width: 967px, $padding-x: 32px) {
+  width: 100%;
+  max-width: $max-width;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: $padding-x;
+  padding-right: $padding-x;
+  box-sizing: border-box;
+}
+
+@mixin horizontal-padding($padding: 32px) {
+  padding-left: $padding;
+  padding-right: $padding;
+  box-sizing: border-box;
+}

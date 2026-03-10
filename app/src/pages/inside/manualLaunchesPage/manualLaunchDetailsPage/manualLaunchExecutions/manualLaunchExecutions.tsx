@@ -16,6 +16,7 @@
 
 import { useState, useMemo, useCallback } from 'react';
 import { useIntl } from 'react-intl';
+import { useDispatch } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
 import {
   FilterOutlineIcon,
@@ -35,6 +36,7 @@ import { useURLBoundPagination } from 'pages/inside/common/testCaseList/useURLBo
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useManualLaunchId, useProjectDetails } from 'hooks/useTypedSelector';
+import { MANUAL_LAUNCH_EXECUTION_PAGE } from 'controllers/pages';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
@@ -44,6 +46,7 @@ import {
   MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
   defaultManualLaunchesQueryParams,
 } from 'controllers/manualLaunch';
+import type { TestCaseExecution } from 'controllers/manualLaunch';
 
 import { ManualLaunchExecutionsProps } from './types';
 import { ExecutionStatusChip } from './executionStatusChip';
@@ -60,6 +63,7 @@ export const ManualLaunchExecutions = ({
   isLoading,
 }: ManualLaunchExecutionsProps) => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
   const { canManageTestCases } = useUserPermissions();
   const [searchValue, setSearchValue] = useState('');
   const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
@@ -121,9 +125,7 @@ export const ManualLaunchExecutions = ({
   const handleRowSelect = useCallback((id: number | string) => {
     const numericId = Number(id);
     setSelectedRowIds((prev) =>
-      prev.includes(numericId)
-        ? prev.filter((rowId) => rowId !== numericId)
-        : [...prev, numericId],
+      prev.includes(numericId) ? prev.filter((rowId) => rowId !== numericId) : [...prev, numericId],
     );
   }, []);
 
@@ -163,6 +165,22 @@ export const ManualLaunchExecutions = ({
     ];
   };
 
+  const handleExecutionNameClick = useCallback(
+    (execution: TestCaseExecution) => {
+      dispatch({
+        type: MANUAL_LAUNCH_EXECUTION_PAGE,
+        payload: {
+          organizationSlug,
+          projectSlug,
+          launchId,
+          testCaseId: execution.testCaseId,
+          executionId: execution.id,
+        },
+      });
+    },
+    [dispatch, organizationSlug, projectSlug, launchId],
+  );
+
   const tableData = paginatedExecutions.map((execution) => {
     const stepsCount = execution.manualScenario?.steps?.length ?? null;
     const tags = execution.attributes?.map((attr) => attr.key).filter(Boolean) || [];
@@ -177,7 +195,13 @@ export const ManualLaunchExecutions = ({
               {execution.testCasePriority && (
                 <PriorityIcon priority={execution.testCasePriority as TestCasePriority} />
               )}
-              <span className={cx('test-name')}>{execution.testCaseName}</span>
+              <button
+                type="button"
+                className={cx('test-name-link')}
+                onClick={() => handleExecutionNameClick(execution)}
+              >
+                {execution.testCaseName}
+              </button>
             </div>
             <div className={cx('tags-section')}>
               <AdaptiveTagList tags={tags} isShowAllView />

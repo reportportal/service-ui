@@ -38,6 +38,7 @@ import {
   LAUNCHES_PAGE,
   MANUAL_LAUNCHES_PAGE,
   MANUAL_LAUNCH_DETAILS_PAGE,
+  MANUAL_LAUNCH_EXECUTION_PAGE,
   PROJECT_LAUNCHES_PAGE,
   PLUGINS_PAGE,
   PLUGINS_TAB_PAGE,
@@ -135,6 +136,7 @@ import {
   getManualLaunchAction,
   getManualLaunchFoldersAction,
   getManualLaunchTestCaseExecutionsAction,
+  getManualLaunchExecutionAction,
 } from 'controllers/manualLaunch';
 import { getRouterParams } from 'common/utils';
 
@@ -413,6 +415,18 @@ const routesMap = {
             limit,
           }),
         );
+      }
+    },
+  },
+  [MANUAL_LAUNCH_EXECUTION_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/manualLaunches/:launchId/testCase/:testCaseId/execution/:executionId',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      const { launchId, executionId } = state.location?.payload || {};
+
+      if (launchId && executionId) {
+        dispatch(getManualLaunchAction({ launchId }));
+        dispatch(getManualLaunchExecutionAction({ launchId, executionId }));
       }
     },
   },
