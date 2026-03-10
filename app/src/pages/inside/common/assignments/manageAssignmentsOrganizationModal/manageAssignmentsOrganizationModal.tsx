@@ -304,7 +304,7 @@ const ManageAssignmentsOrganizationModalView = ({
             isMultiple={false}
             value={currentOrganization}
             onChange={handleOrganizationChange}
-            hideOrganizationRole={isCurrentUser}
+            disableOrganizationRole={isCurrentUser}
           />
         )}
       </div>

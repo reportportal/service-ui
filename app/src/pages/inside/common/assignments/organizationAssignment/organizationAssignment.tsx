@@ -20,14 +20,14 @@ interface OrganizationAssignmentProps {
   onChange?: (value: Organization | Organization[]) => void;
   value?: Organization | Organization[];
   isMultiple?: boolean;
-  hideOrganizationRole?: boolean;
+  disableOrganizationRole?: boolean;
 }
 
 export const OrganizationAssignment = ({
   value,
   onChange,
   isMultiple = false,
-  hideOrganizationRole = false,
+  disableOrganizationRole = false,
 }: OrganizationAssignmentProps) => {
   const updateItem = (updates: Partial<Organization>, index?: number) => {
     if (isMultiple) {
@@ -72,7 +72,7 @@ export const OrganizationAssignment = ({
     <OrganizationItem
       value={value as Organization}
       onChange={(updates) => updateItem(updates)}
-      hideOrganizationRole={hideOrganizationRole}
+      disableOrganizationRole={disableOrganizationRole}
     />
   );
 };

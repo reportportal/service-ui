@@ -46,7 +46,7 @@ interface OrganizationItemProps {
   onChange: (updates: Partial<Organization>) => void;
   onRemove?: () => void;
   collapsable?: boolean;
-  hideOrganizationRole?: boolean;
+  disableOrganizationRole?: boolean;
 }
 
 export const OrganizationItem = ({
@@ -54,7 +54,7 @@ export const OrganizationItem = ({
   onChange,
   onRemove,
   collapsable,
-  hideOrganizationRole = false,
+  disableOrganizationRole = false,
 }: OrganizationItemProps) => {
   const { formatMessage } = useIntl();
   const { id, name, role, projects } = value;
@@ -129,7 +129,7 @@ export const OrganizationItem = ({
         </div>
         <div className={cx('controls')}>
               <Dropdown
-                disabled={hideOrganizationRole}
+                disabled={disableOrganizationRole}
                 className={cx('role')}
                 value={role}
                 options={roleOptions}
