@@ -56,6 +56,13 @@
   display: flex;
   gap: 24px;
   align-items: center;
+  min-height: 37px;
+}
+
+.role-readonly {
+  min-width: 80px;
+  justify-content: start;
+  padding: 9px 0 7px;
 }
 
 .remove-button {
