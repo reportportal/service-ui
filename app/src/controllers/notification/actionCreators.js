@@ -19,6 +19,7 @@ import {
   SHOW_NOTIFICATION,
   SHOW_DEFAULT_ERROR_NOTIFICATION,
   NOTIFICATION_TYPES,
+  NOTIFICATION_TYPOGRAPHY_COLOR_TYPES,
 } from './constants';
 
 /**
@@ -72,3 +73,13 @@ export const showSuccessNotification = ({ message = '', messageId = '', values =
   showNotification({ message, messageId, values, type: NOTIFICATION_TYPES.SUCCESS });
 export const showErrorNotification = ({ message = '', messageId = '', values = {} }) =>
   showNotification({ message, messageId, values, type: NOTIFICATION_TYPES.ERROR });
+export const showInfoNotification = ({ message = '', messageId = '', values = {} }) =>
+  showNotification({ message, messageId, values, type: NOTIFICATION_TYPES.INFO });
+export const showWarningNotification = ({ message = '', messageId = '', values = {} }) =>
+  showNotification({
+    message,
+    messageId,
+    values,
+    type: NOTIFICATION_TYPES.WARNING,
+    typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
+  });

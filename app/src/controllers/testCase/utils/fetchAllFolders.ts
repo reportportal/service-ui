@@ -32,9 +32,11 @@ interface FoldersDto {
 export const fetchAllFolders = async ({
   projectKey,
   filters = {},
+  signal,
 }: {
   projectKey: string;
   filters?: Record<string, string | number>;
+  signal?: AbortSignal;
 }): Promise<Folder[]> => {
   const limit = 1000;
   let offset = 0;
@@ -42,6 +44,10 @@ export const fetchAllFolders = async ({
   let totalElements = Infinity;
 
   while (offset < totalElements) {
+    if (signal?.aborted) {
+      break;
+    }
+
     // eslint-disable-next-line no-await-in-loop
     const response = await fetch<FoldersDto>(
       URLS.testFolders(projectKey, {
@@ -50,6 +56,7 @@ export const fetchAllFolders = async ({
         sort: 'id,ASC',
         ...filters,
       }),
+      { signal },
     );
 
     allFolders.push(...response.content);

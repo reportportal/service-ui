@@ -22,6 +22,8 @@ export {
   showDefaultErrorNotification,
   showErrorNotification,
   showSuccessNotification,
+  showInfoNotification,
+  showWarningNotification,
 } from './actionCreators';
 export {
   NOTIFICATION_TYPES,

@@ -23,6 +23,7 @@ import {
   GET_ALL_TEST_CASES,
   GET_TEST_CASE_DETAILS,
   RENAME_FOLDER,
+  GET_FILTERED_FOLDERS,
 } from './constants';
 import type {
   GetTestCasesByFolderIdParams,
@@ -31,6 +32,7 @@ import type {
   DeleteFolderParams,
   RenameFolderParams,
   GetFoldersParams,
+  GetFilteredFoldersParams,
 } from './actionCreators';
 
 export type Folder = {
@@ -89,4 +91,8 @@ export interface TestCaseDetailsAction extends Action<typeof GET_TEST_CASE_DETAI
 
 export interface GetFoldersAction extends Action<typeof GET_FOLDERS> {
   payload?: GetFoldersParams;
+}
+
+export interface GetFilteredFoldersAction extends Action<typeof GET_FILTERED_FOLDERS> {
+  payload: GetFilteredFoldersParams;
 }

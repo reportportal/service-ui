@@ -35,3 +35,7 @@ export const DEFAULT_PAGINATION = {
   [PAGE_KEY]: 1,
   [SIZE_KEY]: DEFAULT_LIMITATION,
 };
+
+export const ERROR_CODES = {
+  USER_EXISTS: 4094,
+};

@@ -28,7 +28,7 @@ import { useTracking } from 'react-tracking';
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ExternalLink } from 'pages/inside/common/externalLink';
-import { idSelector, UserInfo } from 'controllers/user';
+import { idSelector } from 'controllers/user';
 import {
   fetchUserAssignmentsAction,
   unassignFromOrganizationAction,
@@ -52,11 +52,12 @@ import {
 } from 'pages/inside/common/assignments/organizationAssignment';
 
 import styles from './manageAssignmentsOrganizationModal.scss';
+import { OrganizationUserInfo } from 'controllers/user/types';
 
 const cx = createClassnames(styles);
 
 interface ManageAssignmentsOrganizationModalOwnProps {
-  user: UserInfo;
+  user: OrganizationUserInfo;
   organization: Organization;
   onUnassign?: () => void;
 }
@@ -106,7 +107,7 @@ const ManageAssignmentsOrganizationModalView = ({
   const [currentOrganization, setCurrentOrganization] = useState<OrganizationValue | null>(null);
   const [initialOrganization, setInitialOrganization] = useState<OrganizationValue | null>(null);
   const handleUnassignSuccess = useHandleUnassignSuccess(user, onUnassign);
-
+  const isCurrentUser = currentUserId === user?.id;
   const isDirty = isAssignmentDirty(currentOrganization, initialOrganization);
   const isBusy = assignmentsLoading || assignmentsUpdateLoading || !currentOrganization;
 
@@ -145,7 +146,7 @@ const ManageAssignmentsOrganizationModalView = ({
   }, [handleOrganizationAssignment]);
 
   const confirmationMessage =
-    currentUserId === user.id ? messages.unassignConfirmation : messages.unassignConfirmationUser;
+    isCurrentUser ? messages.unassignConfirmation : messages.unassignConfirmationUser;
 
   const handleUnassignClick = () => {
     setShowUnassignConfirmation(true);
@@ -303,6 +304,7 @@ const ManageAssignmentsOrganizationModalView = ({
             isMultiple={false}
             value={currentOrganization}
             onChange={handleOrganizationChange}
+            hideOrganizationRole={isCurrentUser}
           />
         )}
       </div>
