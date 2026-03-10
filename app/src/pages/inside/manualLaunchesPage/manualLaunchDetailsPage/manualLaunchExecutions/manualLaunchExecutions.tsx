@@ -197,7 +197,7 @@ export const ManualLaunchExecutions = ({
       name: {
         content: execution.testCaseName,
         component: (
-          <div className={cx('execution-name-cell')} onClick={handleOpenSidePanel}>
+          <button type="button" className={cx('execution-name-cell', 'execution-cell-button')} onClick={handleOpenSidePanel}>
             <div className={cx('first-row')}>
               {execution.testCasePriority && (
                 <PriorityIcon priority={execution.testCasePriority as TestCasePriority} />
@@ -213,21 +213,21 @@ export const ManualLaunchExecutions = ({
             <div className={cx('tags-section')}>
               <AdaptiveTagList tags={tags} isShowAllView />
             </div>
-          </div>
+          </button>
         ),
       },
       steps: {
         content: stepsCount ?? '',
         component: (
-          <div className={cx('execution-steps-cell')} onClick={handleOpenSidePanel}>{stepsCount === null ? '—' : stepsCount}</div>
+          <button type="button" className={cx('execution-steps-cell', 'execution-cell-button')} onClick={handleOpenSidePanel}>{stepsCount === null ? '—' : stepsCount}</button>
         ),
       },
       status: {
         content: execution.executionStatus,
         component: (
-          <div className={cx('execution-status-cell')} onClick={handleOpenSidePanel}>
+          <button type="button" className={cx('execution-status-cell', 'execution-cell-button')} onClick={handleOpenSidePanel}>
             <ExecutionStatusChip status={execution.executionStatus} />
-          </div>
+          </button>
         ),
       },
       actions: {
