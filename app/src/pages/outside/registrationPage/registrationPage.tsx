@@ -75,7 +75,7 @@ export const RegistrationPage = ({
     <div className={cx('registration-page')}>
       <div className={cx('registration-page-content')}>
         <div className={cx(backgroundClasses)} />
-        <a href={referenceDictionary.rpLanding} target="_blank">
+        <a href={referenceDictionary.rpLanding} target="_blank" rel="noopener noreferrer" aria-label="ReportPortal landing page">
           <div className={cx('logo')} />
         </a>
         <RegistrationPageSection left>

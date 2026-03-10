@@ -109,7 +109,7 @@ const RegistrationFormComponent = ({
 
   const submitHandler = (values: RegistrationFormValues) =>
     submitForm(values).catch((message: string) => {
-      throw new SubmissionError({ login: message });
+      throw new SubmissionError({ email: message });
     });
 
   return (

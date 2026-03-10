@@ -20,6 +20,6 @@ export const validationLocalization = defineMessages({
   passwordHint: {
     id: 'RegistrationForm.passwordHint',
     defaultMessage:
-      'Password must include minimum {minLength} characters: at least one digit, one special symbol, one uppercase, and one lowercase letter.',
+      'Password must include a minimum of {minLength} characters: at least one digit, one special symbol, one uppercase, and one lowercase letter.',
   },
 });
