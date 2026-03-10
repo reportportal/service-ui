@@ -128,19 +128,14 @@ export const OrganizationItem = ({
           {name}
         </div>
         <div className={cx('controls')}>
-            {hideOrganizationRole ? (
-              <span className={cx('role-readonly')}>
-                {formatMessage(getOrgRoleTitle(role))}
-              </span>
-            ) : (
               <Dropdown
+                disabled={hideOrganizationRole}
                 className={cx('role')}
                 value={role}
                 options={roleOptions}
                 onChange={handleRoleChange}
                 variant="ghost"
               />
-            )}
           {onRemove && (
             <BaseIconButton className={cx('remove-button')} onClick={onRemove}>
               <CloseIcon />
