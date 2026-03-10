@@ -38,7 +38,8 @@ function* watchShowDefaultErrorNotification() {
 }
 
 function* hideNotificationDelay({ payload }) {
-  yield call(delay, 8000);
+  if ([NOTIFICATION_TYPES.WARNING, NOTIFICATION_TYPES.ERROR].includes(payload.type)) return;
+  yield call(delay, payload.duration ?? 8000);
   yield put(hideNotification(payload.uid));
 }
 
