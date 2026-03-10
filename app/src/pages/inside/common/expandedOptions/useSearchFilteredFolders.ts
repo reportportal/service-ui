@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-import { useState, useEffect, useMemo, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
 
-import { ERROR_CANCELED } from 'common/utils';
-import { projectKeySelector } from 'controllers/project';
-import { TransformedFolder, foldersSelector } from 'controllers/testCase';
-import { fetchAllFolders } from 'controllers/testCase/utils/fetchAllFolders';
+import {
+  TransformedFolder,
+  foldersSelector,
+  filteredFoldersSelector,
+  isLoadingFilteredFoldersSelector,
+  getFilteredFoldersAction,
+  clearFilteredFoldersAction,
+} from 'controllers/testCase';
 import { transformFoldersToDisplay, getParentFoldersIds } from 'common/utils/folderUtils';
 
 const collectAllFolderIds = (folders: TransformedFolder[]): number[] => {
@@ -49,75 +53,63 @@ interface UseSearchFilteredFoldersParams {
 export const useSearchFilteredFolders = ({
   searchQuery,
 }: UseSearchFilteredFoldersParams) => {
-  const projectKey = useSelector(projectKeySelector);
+  const dispatch = useDispatch();
   const allFolders = useSelector(foldersSelector);
-  const [filteredFolderIds, setFilteredFolderIds] = useState<Set<number>>(new Set());
-  const [isLoading, setIsLoading] = useState(false);
-  const abortControllerRef = useRef<AbortController | null>(null);
+  const filteredFolderData = useSelector(filteredFoldersSelector);
+  const isLoading = useSelector(isLoadingFilteredFoldersSelector);
+  const testCases = useSelector((state: { testCase?: { testCases?: { list?: unknown[] } } }) =>
+    state.testCase?.testCases?.list || []
+  );
 
   useEffect(() => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-
-    if (!searchQuery || !projectKey) {
-      setFilteredFolderIds(new Set());
-      setIsLoading(false);
-
+    if (!searchQuery) {
+      dispatch(clearFilteredFoldersAction());
       return;
     }
 
-    const abortController = new AbortController();
-    abortControllerRef.current = abortController;
+    dispatch(getFilteredFoldersAction({ searchQuery }));
+  }, [searchQuery, dispatch]);
 
-    const fetchFilteredFolders = async () => {
-      setIsLoading(true);
-
-      try {
-        const folders = await fetchAllFolders({
-          projectKey,
-          filters: { 'filter.cnt.testCaseName': searchQuery },
-          signal: abortController.signal,
-        });
-
-        if (!abortController.signal.aborted) {
-          setFilteredFolderIds(new Set(folders.map((f) => f.id)));
-        }
-      } catch (err) {
-        if (err instanceof Error && err.message !== ERROR_CANCELED && !abortController.signal.aborted) {
-          setFilteredFolderIds(new Set());
-        }
-      } finally {
-        if (!abortController.signal.aborted) {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    void fetchFilteredFolders();
-
-    return () => {
-      abortController.abort();
-    };
-  }, [searchQuery, projectKey]);
+  // Refetch filtered folders when test cases change (e.g., after delete/move)
+  useEffect(() => {
+    if (searchQuery) {
+      dispatch(getFilteredFoldersAction({ searchQuery }));
+    }
+  }, [testCases.length, searchQuery, dispatch]);
 
   const relevantFolderIds = useMemo(() => {
-    if (!searchQuery || filteredFolderIds.size === 0) return new Set<number>();
+    if (!searchQuery || filteredFolderData.length === 0) return new Set<number>();
 
-    const idsWithAncestors = new Set<number>(filteredFolderIds);
+    const filteredIds = new Set(filteredFolderData.map((folder) => folder.id));
+    const idsWithAncestors = new Set<number>(filteredIds);
 
-    filteredFolderIds.forEach((id) => {
+    filteredIds.forEach((id) => {
       getParentFoldersIds(id, allFolders).forEach((parentId) => idsWithAncestors.add(parentId));
     });
 
     return idsWithAncestors;
-  }, [filteredFolderIds, allFolders, searchQuery]);
+  }, [filteredFolderData, allFolders, searchQuery]);
 
   const relevantFolders = useMemo(() => {
     if (!searchQuery || relevantFolderIds.size === 0) return [];
 
-    return allFolders.filter((folder) => relevantFolderIds.has(folder.id));
-  }, [allFolders, relevantFolderIds, searchQuery]);
+    // Create a map of filtered folder IDs to their filtered counts
+    const filteredCountsMap = new Map(
+      filteredFolderData.map((folder) => [folder.id, folder.countOfTestCases]),
+    );
+
+    return allFolders
+      .filter((folder) => relevantFolderIds.has(folder.id))
+      .map((folder) => {
+        if (filteredCountsMap.has(folder.id)) {
+          const count = filteredCountsMap.get(folder.id);
+
+          return count === undefined ? folder : { ...folder, countOfTestCases: count };
+        }
+
+        return { ...folder, countOfTestCases: 0 };
+      });
+  }, [allFolders, relevantFolderIds, searchQuery, filteredFolderData]);
 
   const transformedFilteredFolders = useMemo(
     () => (searchQuery ? transformFoldersToDisplay(relevantFolders) : []),

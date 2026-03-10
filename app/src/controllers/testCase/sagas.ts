@@ -43,6 +43,7 @@ import {
   GET_TEST_CASE_DETAILS_SUCCESS,
   NAMESPACE,
   RENAME_FOLDER,
+  GET_FILTERED_FOLDERS,
 } from './constants';
 import {
   Folder,
@@ -53,6 +54,7 @@ import {
   RenameFolderAction,
   TestCaseDetailsAction,
   GetFoldersAction,
+  GetFilteredFoldersAction,
 } from './types';
 import {
   setFoldersFetchedAction,
@@ -68,6 +70,9 @@ import {
   deleteFolderSuccessAction,
   renameFolderSuccessAction,
   expandFoldersToLevelAction,
+  setFilteredFoldersAction,
+  startLoadingFilteredFoldersAction,
+  stopLoadingFilteredFoldersAction,
 } from './actionCreators';
 import { getAllFolderIdsToDelete } from 'common/utils/folderUtils';
 import { fetchAllFolders } from './utils/fetchAllFolders';
@@ -365,6 +370,36 @@ function* renameFolder(action: RenameFolderAction) {
   }
 }
 
+function* getFilteredFolders(action: GetFilteredFoldersAction) {
+  const projectKey = (yield select(projectKeySelector)) as string;
+  const { searchQuery } = action.payload;
+
+  if (!projectKey || !searchQuery) {
+    yield put(setFilteredFoldersAction([]));
+    return;
+  }
+
+  try {
+    yield put(startLoadingFilteredFoldersAction());
+
+    const folders = (yield call(fetchAllFolders, {
+      projectKey,
+      filters: { 'filter.cnt.testCaseName': searchQuery },
+    })) as Folder[];
+
+    yield put(setFilteredFoldersAction(folders));
+  } catch (error) {
+    yield put(setFilteredFoldersAction([]));
+    yield put(
+      showDefaultErrorNotification({
+        message: error instanceof Error ? error.message : undefined,
+      }),
+    );
+  } finally {
+    yield put(stopLoadingFilteredFoldersAction());
+  }
+}
+
 function* watchGetFolders() {
   yield takeEvery(GET_FOLDERS, getFolders);
 }
@@ -385,6 +420,10 @@ function* watchGetTestCaseDetails() {
   yield takeEvery(GET_TEST_CASE_DETAILS, getTestCaseDetails);
 }
 
+function* watchGetFilteredFolders() {
+  yield takeLatest(GET_FILTERED_FOLDERS, getFilteredFolders);
+}
+
 export function* testCaseSagas() {
   yield all([
     watchGetTestCaseDetails(),
@@ -392,6 +431,7 @@ export function* testCaseSagas() {
     watchCreateFolder(),
     watchGetTestCasesByFolderId(),
     watchGetAllTestCases(),
+    watchGetFilteredFolders(),
     takeEvery(DELETE_FOLDER, deleteFolder),
     takeEvery(RENAME_FOLDER, renameFolder),
   ]);

@@ -26,6 +26,7 @@ import {
   TEST_CASE_LIBRARY_PAGE,
   urlOrganizationAndProjectSelector,
   urlFolderIdSelector,
+  locationSelector,
 } from 'controllers/pages';
 import { ProjectDetails } from 'pages/organization/constants';
 
@@ -43,6 +44,7 @@ export const useNavigateToFolder = () => {
   const urlFolderId = useSelector(urlFolderIdSelector);
   const testCasesPageData = useSelector(testCasesPageSelector);
   const folders = useSelector(foldersSelector);
+  const { query } = useSelector(locationSelector);
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
@@ -65,6 +67,7 @@ export const useNavigateToFolder = () => {
           getTestCaseByFolderIdAction({
             folderId,
             ...paginationParams,
+            testCasesSearchParams: query?.testCasesSearchParams,
           }),
         );
       } else {
@@ -75,6 +78,9 @@ export const useNavigateToFolder = () => {
             organizationSlug,
             projectSlug,
           },
+          query: {
+            ...(query?.testCasesSearchParams && { testCasesSearchParams: query.testCasesSearchParams }),
+          },
         });
       }
 
@@ -82,7 +88,7 @@ export const useNavigateToFolder = () => {
         expandFoldersToLevel(parentIdToExpand);
       }
     },
-    [urlFolderId, testCasesPageData, dispatch, organizationSlug, projectSlug, expandFoldersToLevel],
+    [urlFolderId, testCasesPageData, query, dispatch, organizationSlug, projectSlug, expandFoldersToLevel],
   );
 
   const navigateToFolderAfterAction = useCallback(

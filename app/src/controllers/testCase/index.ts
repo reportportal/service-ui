@@ -23,6 +23,8 @@ export {
   toggleFolderExpansionAction,
   expandFoldersToLevelAction,
   setExpandedFolderIdsAction,
+  getFilteredFoldersAction,
+  clearFilteredFoldersAction,
 } from './actionCreators';
 export { testCaseSagas } from './sagas';
 export * from './constants';

@@ -46,6 +46,10 @@ import {
   TOGGLE_FOLDER_EXPANSION,
   UPDATE_DESCRIPTION_SUCCESS,
   UPDATE_FOLDER_COUNTER,
+  SET_FILTERED_FOLDERS,
+  START_LOADING_FILTERED_FOLDERS,
+  STOP_LOADING_FILTERED_FOLDERS,
+  CLEAR_FILTERED_FOLDERS,
 } from 'controllers/testCase/constants';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
@@ -72,6 +76,8 @@ export type InitialStateType = {
     activeFolderId?: number | null;
     expandedFolderIds: number[];
     areFoldersFetched: boolean;
+    filteredFolders: Folder[];
+    isLoadingFilteredFolders: boolean;
   };
   testCases: {
     isLoading: boolean;
@@ -89,6 +95,8 @@ export const INITIAL_STATE: InitialStateType = {
     activeFolderId: null,
     expandedFolderIds: [],
     areFoldersFetched: false,
+    filteredFolders: [],
+    isLoadingFilteredFolders: false,
   },
   testCases: {
     isLoading: false,
@@ -289,6 +297,34 @@ const hasSetExpandedFolderIdsPayload = (action: {
 }): action is { type: string; payload: SetExpandedFolderIdsParams } =>
   hasPayloadProps<SetExpandedFolderIdsParams>(action, ['folderIds']);
 
+const filteredFoldersReducer = (
+  state = INITIAL_STATE.folders.filteredFolders,
+  action: { type: string; payload?: Folder[] },
+) => {
+  switch (action.type) {
+    case SET_FILTERED_FOLDERS:
+      return action.payload || [];
+    case CLEAR_FILTERED_FOLDERS:
+      return [];
+    default:
+      return state;
+  }
+};
+
+const isLoadingFilteredFoldersReducer = (
+  state = INITIAL_STATE.folders.isLoadingFilteredFolders,
+  action: { type: string },
+) => {
+  switch (action.type) {
+    case START_LOADING_FILTERED_FOLDERS:
+      return true;
+    case STOP_LOADING_FILTERED_FOLDERS:
+      return false;
+    default:
+      return state;
+  }
+};
+
 const expandedFolderIdsReducer = (
   state = getInitialExpandedFolderIds(TMS_INSTANCE_KEY.TEST_CASE),
   action:
@@ -359,6 +395,8 @@ const reducer = combineReducers({
     isLoadingFolder: isLoadingFolderReducer,
     loading: loadingReducer(NAMESPACE),
     areFoldersFetched: areFoldersFetchedReducer,
+    filteredFolders: filteredFoldersReducer,
+    isLoadingFilteredFolders: isLoadingFilteredFoldersReducer,
   }),
   testCases: testCasesReducer,
 });
