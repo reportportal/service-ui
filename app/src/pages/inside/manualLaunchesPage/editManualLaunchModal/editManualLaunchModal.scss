@@ -22,11 +22,7 @@
 
   &__form {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    max-height: calc(90vh - 160px);
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: auto;
   }
 }
 

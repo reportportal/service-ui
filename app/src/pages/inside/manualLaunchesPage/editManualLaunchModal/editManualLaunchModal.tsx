@@ -23,9 +23,10 @@ import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { INCOMPLETE_ATTRIBUTE_ERROR } from 'common/utils/validation/constants';
 import { useTextareaAutoResize } from 'common/hooks';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
-import { LaunchFormData } from 'pages/inside/common/launchFormFields/types';
+import { LaunchFormData, Attribute } from 'pages/inside/common/launchFormFields/types';
 import { NewLaunchFields } from 'pages/inside/common/launchFormFields/newLaunchFields';
 import { LAUNCH_FORM_FIELD_NAMES } from 'pages/inside/common/launchFormFields/constants';
 import { useModalButtons } from 'pages/inside/testCaseLibraryPage/hooks/useModalButtons';
@@ -83,6 +84,7 @@ const EditManualLaunchModalComponent = ({
       allowCloseOutside={!dirty}
       onClose={hideModal}
       className={cx('edit-manual-launch-modal')}
+      scrollable
     >
       <form
         onSubmit={handleSubmit(onSubmit) as (event: React.FormEvent) => void}
@@ -109,6 +111,19 @@ const EditManualLaunchModalReduxForm = reduxForm<LaunchFormData, EditManualLaunc
   form: EDIT_MANUAL_LAUNCH_FORM,
   destroyOnUnmount: true,
   enableReinitialize: true,
+  validate: (values) => {
+    const errors: Partial<Record<keyof LaunchFormData, string>> = {};
+
+    // Disable Save button if any attribute is being edited (incomplete)
+    if (Array.isArray(values.attributes)) {
+      const hasIncompleteAttribute = values.attributes.some((attr: Attribute) => attr.edited);
+      if (hasIncompleteAttribute) {
+        errors.attributes = INCOMPLETE_ATTRIBUTE_ERROR as string;
+      }
+    }
+
+    return errors;
+  },
 })(EditManualLaunchModalComponent);
 
 export const EditManualLaunchModal: FC<EditManualLaunchModalProps> = (props) => {

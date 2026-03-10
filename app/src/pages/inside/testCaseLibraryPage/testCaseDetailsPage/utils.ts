@@ -19,8 +19,9 @@ import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 
 import { Attachment, ManualScenario, Step, Tag } from '../types';
 
-export const hasStepContent = (step: Step) =>
-  !!step?.instructions || !!step?.expectedResult || !isEmpty(step?.attachments);
+export const hasStepContent = (
+  step: Pick<Step, 'instructions' | 'expectedResult' | 'attachments'>,
+) => !!step?.instructions?.trim() || !!step?.expectedResult?.trim() || !isEmpty(step?.attachments);
 
 export const hasStepsPreconditionContent = (preconditions: {
   value?: string;

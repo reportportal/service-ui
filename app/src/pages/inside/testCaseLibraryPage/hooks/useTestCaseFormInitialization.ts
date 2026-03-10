@@ -88,9 +88,11 @@ export const useTestCaseFormInitialization = ({
           reset();
         }
         setIsInitialized(true);
-      }, 50);
+      }, 100);
 
       return () => clearTimeout(timeoutId);
+    } else {
+      setIsInitialized(false);
     }
   }, [testCase, initialize, reset]);
 
