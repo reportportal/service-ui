@@ -132,7 +132,7 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
       {
         titleKey: 'steps',
         defaultMessage: messages.noSteps,
-        childComponent: hasStepContent(manualScenario?.steps?.[0]) && (
+        childComponent: manualScenario?.steps?.some(hasStepContent) && (
           <StepsList steps={manualScenario.steps.filter(hasStepContent)} />
         ),
       },
@@ -225,8 +225,9 @@ export const TestCaseDetailsPage = () => {
 
   const isScenarioEmpty = checkScenario(testCaseDetails?.manualScenario);
 
-  const mainContent = isScenarioEmpty ?
-    <DetailsEmptyState testCase={testCaseDetails} /> :
+  const mainContent = isScenarioEmpty ? (
+    <DetailsEmptyState testCase={testCaseDetails} />
+  ) : (
     MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG({
       manualScenario: testCaseDetails.manualScenario,
     }).map(({ titleKey, defaultMessage, childComponent }) => (
@@ -237,7 +238,8 @@ export const TestCaseDetailsPage = () => {
       >
         {childComponent}
       </CollapsibleSectionWithHeaderControl>
-    ));
+    ))
+  );
 
   return (
     <SettingsLayout>
@@ -278,12 +280,13 @@ export const TestCaseDetailsPage = () => {
                 isLoadingTestCaseDetails ? 'page__loading-state' : '',
               )}
             >
-              {isLoadingTestCaseDetails ?
+              {isLoadingTestCaseDetails ? (
                 <div className={cx('page__loader')}>
                   <BubblesLoader />
-                </div> :
+                </div>
+              ) : (
                 mainContent
-              }
+              )}
             </div>
           </ScrollWrapper>
         </div>

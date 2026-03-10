@@ -115,7 +115,7 @@ const EditManualLaunchModalReduxForm = reduxForm<LaunchFormData, EditManualLaunc
     const errors: Partial<Record<keyof LaunchFormData, string>> = {};
 
     // Disable Save button if any attribute is being edited (incomplete)
-    if (values.attributes && Array.isArray(values.attributes)) {
+    if (Array.isArray(values.attributes)) {
       const hasIncompleteAttribute = values.attributes.some((attr: Attribute) => attr.edited);
       if (hasIncompleteAttribute) {
         errors.attributes = INCOMPLETE_ATTRIBUTE_ERROR as string;
