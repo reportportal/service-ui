@@ -83,18 +83,15 @@ export const useTestCaseFormInitialization = ({
       initialize({ ...formData } as unknown as Partial<CreateTestCaseFormData>);
 
       // Reset form to pristine state and set initialized flag
-      // Use timeout to ensure initialize completes before reset
       const timeoutId = setTimeout(() => {
         if (reset) {
           reset();
         }
-        // Only mark as initialized after reset is called
         setIsInitialized(true);
       }, 100);
 
       return () => clearTimeout(timeoutId);
     } else {
-      // If no testCase, mark as not initialized
       setIsInitialized(false);
     }
   }, [testCase, initialize, reset]);
