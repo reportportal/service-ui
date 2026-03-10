@@ -43,6 +43,11 @@ import {
   EXPAND_FOLDERS_TO_LEVEL,
   SET_EXPANDED_FOLDER_IDS,
   SET_FOLDERS_FETCHED,
+  GET_FILTERED_FOLDERS,
+  SET_FILTERED_FOLDERS,
+  START_LOADING_FILTERED_FOLDERS,
+  STOP_LOADING_FILTERED_FOLDERS,
+  CLEAR_FILTERED_FOLDERS,
 } from './constants';
 import { Folder, TransformedFolder } from './types';
 
@@ -224,4 +229,30 @@ export const setExpandedFolderIdsAction = (params: SetExpandedFolderIdsParams) =
 
 export const setFoldersFetchedAction = () => ({
   type: SET_FOLDERS_FETCHED,
+});
+
+export interface GetFilteredFoldersParams {
+  searchQuery: string;
+}
+
+export const getFilteredFoldersAction = (params: GetFilteredFoldersParams) => ({
+  type: GET_FILTERED_FOLDERS,
+  payload: params,
+});
+
+export const setFilteredFoldersAction = (folders: Folder[]) => ({
+  type: SET_FILTERED_FOLDERS,
+  payload: folders,
+});
+
+export const startLoadingFilteredFoldersAction = () => ({
+  type: START_LOADING_FILTERED_FOLDERS,
+});
+
+export const stopLoadingFilteredFoldersAction = () => ({
+  type: STOP_LOADING_FILTERED_FOLDERS,
+});
+
+export const clearFilteredFoldersAction = () => ({
+  type: CLEAR_FILTERED_FOLDERS,
 });

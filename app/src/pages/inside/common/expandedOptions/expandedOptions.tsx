@@ -20,6 +20,7 @@ import { useDrop } from 'react-dnd';
 import Parser from 'html-react-parser';
 import {
   BaseIconButton,
+  BubblesLoader,
   SearchIcon,
   FieldText,
   useTreeDropValidation,
@@ -43,6 +44,7 @@ import { Folder } from './folder';
 import { messages } from './messages';
 import type { ExpandedOptionsProps } from './types';
 import { useFolderSearch } from './useFolderSearch';
+import { useSearchFilteredFolders } from './useSearchFilteredFolders';
 import { FOLDER_DRAG_TYPE, EXTERNAL_TREE_DROP_TYPE } from './constants';
 
 import styles from './expandedOptions.scss';
@@ -55,6 +57,7 @@ export const ExpandedOptions = ({
   activeFolderId,
   instanceKey,
   children,
+  searchQuery: pageSearchQuery,
   setAllTestCases,
   renderCreateFolderButton,
   onFolderClick,
@@ -66,6 +69,13 @@ export const ExpandedOptions = ({
   const { formatMessage } = useIntl();
   const { expandedIds, onToggleFolder } = useStorageFolders(instanceKey);
   const allFolders = useSelector(foldersSelector);
+
+  const {
+    searchFilteredFolders,
+    searchFilteredExpandedIds,
+    isSearchFilteredLoading,
+    hasSearchFilteredFolders,
+  } = useSearchFilteredFolders({ searchQuery: pageSearchQuery });
 
   const isDragAndDropEnabled = !!(onMoveFolder && onDuplicateFolder);
 
@@ -134,6 +144,47 @@ export const ExpandedOptions = ({
     },
     [onDuplicateFolder],
   );
+
+  const renderFolderList = (
+    folderList: TransformedFolder[],
+    expandedFolderIds: number[],
+    query: string,
+  ) =>
+    folderList.map((folder, idx) => (
+      <Folder
+        folder={folder}
+        key={folder.id || `${folder.name}-${idx}`}
+        activeFolder={activeFolderId}
+        instanceKey={instanceKey}
+        expandedIds={expandedFolderIds}
+        onFolderClick={onFolderClick}
+        setAllTestCases={setAllTestCases}
+        onToggleFolder={handleToggleFolder}
+        searchQuery={query}
+        index={idx}
+        parentId={null}
+        enableDragAndDrop={isDragAndDropEnabled}
+        canDropOn={canDropOn}
+      />
+    ));
+
+  const renderFolderTree = () => {
+    if (pageSearchQuery) {
+      if (isSearchFilteredLoading) {
+        return <BubblesLoader />;
+      };
+      if (!hasSearchFilteredFolders) {
+        return <EmptySearchState />;
+      };
+      return renderFolderList(searchFilteredFolders, searchFilteredExpandedIds, '');
+    }
+
+    if (!searchQuery || hasAnyMatch) {
+      return renderFolderList(filteredFolders, effectiveExpandedIds, searchQuery);
+    }
+
+    return <EmptySearchState />;
+  };
 
   const handleMoveExternal = useCallback(
     (draggedItem: TreeDragItem, targetId: string | number, position: TreeDropPosition) => {
@@ -239,27 +290,7 @@ export const ExpandedOptions = ({
                   role="tree"
                   aria-labelledby="tree_label"
                 >
-                  {!searchQuery || hasAnyMatch ? (
-                    filteredFolders.map((folder, idx) => (
-                      <Folder
-                        folder={folder}
-                        key={folder.id || `${folder.name}-${idx}`}
-                        activeFolder={activeFolderId}
-                        instanceKey={instanceKey}
-                        expandedIds={effectiveExpandedIds}
-                        onFolderClick={onFolderClick}
-                        setAllTestCases={setAllTestCases}
-                        onToggleFolder={handleToggleFolder}
-                        searchQuery={searchQuery}
-                        index={idx}
-                        parentId={null}
-                        enableDragAndDrop={isDragAndDropEnabled}
-                        canDropOn={canDropOn}
-                      />
-                    ))
-                  ) : (
-                    <EmptySearchState />
-                  )}
+                  {renderFolderTree()}
                 </ul>
               </div>
             </ScrollWrapper>
