@@ -1,4 +1,4 @@
-{
+﻿{
   "AALabel.investigatedByAA": "Проанализировано Авто-Анализом",
   "AccountRemovedPage.description": "Ваша учетная запись и личные данные были удалены из базы данных ReportPortal.\nНам жаль, что вы уходите. Уведомление по электронной почте было отправлено на адрес электронной почты, связанный с вашей учетной записью.",
   "AccountRemovedPage.header": "учетная запись была удалена",
@@ -347,6 +347,7 @@
   "Common.refresh": "Обновить",
   "Common.rename": "Переименовать",
   "Common.requiredFieldHint": "Это поле обязательно",
+  "Common.requiredFieldWithPeriodHint": "Это поле обязательно.",
   "Common.reset": "Сбросить",
   "Common.saturday": "Суббота",
   "Common.save": "Сохранить",
@@ -2007,7 +2008,8 @@
   "ProjectsPage.updateProjectSuccess": "Проект успешно обновлен",
   "RallyConnectionFormFields.accessKeyLabel": "Ключ доступа",
   "RallyConnectionFormFields.projectIdLabel": "ID проекта в СОД",
-  "RegistrationForm.confirmPasswordHint": "Пароли не совпадают",
+  "RegistrationForm.confirmPasswordHint": "Введённые пароли не совпадают. Пожалуйста, попробуйте ещё раз.",
+  "RegistrationForm.fullNameHint": "Имена должны содержать от 3 до 60 символов, допускаются только латиница или кириллица, цифры, пробелы, точки, дефисы, подчеркивания и апострофы.",
   "RegistrationForm.loginConstraints": "Имя пользователя будет использоваться для входа в систему ReportPortal",
   "RegistrationForm.loginHint": "Неверный адрес электронной почты. Введите правильный адрес электронной почты",
   "RegistrationForm.loginPlaceholder": "Электронная почта",
@@ -2016,7 +2018,7 @@
   "RegistrationForm.namePlaceholder": "Полное имя",
   "RegistrationForm.oldPasswordHint": "Пароль должен содержать не менее 4 символов; специальный символ; верхний регистр (A - Z); нижний регистр",
   "RegistrationForm.passwordConfirmPlaceholder": "Подтвердите пароль",
-  "RegistrationForm.passwordHint": "Минимум {minLength} символов: как минимум одна цифра, один специальный символ, одна заглавная и одна строчная буква",
+  "RegistrationForm.passwordHint": "Пароль должен содержать не менее {minLength} символов: как минимум одну цифру, один специальный символ, одну заглавную и одну строчную букву.",
   "RegistrationForm.passwordPlaceholder": "Придумайте пароль",
   "RegistrationForm.register": "Зарегистрироваться",
   "RegistrationPage.again": " опять",

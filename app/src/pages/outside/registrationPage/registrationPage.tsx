@@ -14,41 +14,58 @@
  * limitations under the License.
  */
 
-import classNames from 'classnames/bind';
-import PropTypes from 'prop-types';
+import { ComponentType } from 'react';
+import { createClassnames } from 'common/utils/createClassnames';
 import { referenceDictionary } from 'common/utils';
-import { defineMessages, FormattedMessage } from 'react-intl';
-import React from 'react';
+import { FormattedMessage, defineMessages, type MessageDescriptor } from 'react-intl';
 import Link from 'redux-first-router-link';
 import { LOGIN_PAGE } from 'controllers/pages';
-import { BlockHeader } from '../common/pageBlockContainer/blockHeader';
+import { BlockHeader as BlockHeaderBase } from '../common/pageBlockContainer/blockHeader';
 import { RegistrationPageSection } from './registrationPageSection';
 import { RegistrationFailBlock } from './registrationFailBlock';
 import { RegistrationForm } from './registrationForm';
+import type { RegistrationFormValues } from './registrationForm/registrationForm';
 import styles from './registrationPage.scss';
 
-const cx = classNames.bind(styles);
+const cx = createClassnames(styles);
+
+// TODO: remove it when BlockHeader will be converted to TS and will accept MessageDescriptor as header and hint props
+const BlockHeader = BlockHeaderBase as ComponentType<{
+  header?: MessageDescriptor;
+  hint?: MessageDescriptor;
+  hintParams?: Record<string, unknown>;
+}>;
 
 const messages = defineMessages({
   welcome: {
     id: 'RegistrationPage.welcome',
-    defaultMessage: ' ',
+    defaultMessage: 'Welcome,',
   },
   registration: {
     id: 'RegistrationPage.registration',
-    defaultMessage: 'Welcome, create your profile',
+    defaultMessage: 'create your account',
   },
 });
 
+interface RegistrationPageProps {
+  tokenActive?: boolean;
+  tokenProvided?: boolean;
+  email?: string;
+  onRegistrationSubmit?: (values: RegistrationFormValues) => Promise<unknown>;
+  loading?: boolean;
+  initialData?: Record<string, string | undefined>;
+  submitButtonTitle?: string;
+}
+
 export const RegistrationPage = ({
-  tokenActive,
-  tokenProvided,
-  email,
-  onRegistrationSubmit,
-  loading,
-  initialData,
-  submitButtonTitle,
-}) => {
+  tokenActive = false,
+  tokenProvided = false,
+  email = '',
+  onRegistrationSubmit = () => Promise.resolve(),
+  loading = false,
+  initialData = {},
+  submitButtonTitle = '',
+}: RegistrationPageProps) => {
   const backgroundClasses = {
     background: true,
     failed: !tokenProvided || !tokenActive,
@@ -91,26 +108,12 @@ export const RegistrationPage = ({
     </div>
   );
 };
-RegistrationPage.propTypes = {
-  tokenActive: PropTypes.bool,
-  tokenProvided: PropTypes.bool,
-  email: PropTypes.string,
-  onRegistrationSubmit: PropTypes.func,
-  loading: PropTypes.bool,
-  initialData: PropTypes.object,
-  submitButtonTitle: PropTypes.string,
-};
-RegistrationPage.defaultProps = {
-  tokenActive: false,
-  tokenProvided: false,
-  email: '',
-  onRegistrationSubmit: () => {},
-  loading: false,
-  initialData: {},
-  submitButtonTitle: '',
-};
 
-const TokenErrorSection = ({ tokenProvided }) => (
+interface TokenErrorSectionProps {
+  tokenProvided?: boolean;
+}
+
+const TokenErrorSection = ({ tokenProvided = false }: TokenErrorSectionProps) => (
   <RegistrationFailBlock>
     <span className={cx('fail-msg')}>
       <span className={cx('big')}>
@@ -143,9 +146,3 @@ const TokenErrorSection = ({ tokenProvided }) => (
     </div>
   </RegistrationFailBlock>
 );
-TokenErrorSection.propTypes = {
-  tokenProvided: PropTypes.bool,
-};
-TokenErrorSection.defaultProps = {
-  tokenProvided: false,
-};

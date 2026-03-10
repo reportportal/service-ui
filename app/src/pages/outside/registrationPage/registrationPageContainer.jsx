@@ -56,6 +56,7 @@ export class RegistrationPageContainer extends Component {
   state = {
     isTokenActive: false,
     email: '',
+    fullName: '',
     isLoadingFinished: false,
   };
 
@@ -75,25 +76,32 @@ export class RegistrationPageContainer extends Component {
       return;
     }
 
-    fetch(URLS.userRegistration(), { params: { uuid } }).then((data) =>
-      this.setState({
-        isTokenActive: data.isActive,
-        email: data.email,
-        isLoadingFinished: true,
-      }),
-    );
+    fetch(URLS.invitation(uuid))
+      .then((data) =>
+        this.setState({
+          isTokenActive: data.status === 'PENDING',
+          email: data.email,
+          fullName: data.full_name || '',
+          isLoadingFinished: true,
+        }),
+      )
+      .catch(() =>
+        this.setState({
+          isTokenActive: false,
+          isLoadingFinished: true,
+        }),
+      );
   };
 
-  registrationHandler = ({ name, login, password, email }) => {
+  registrationHandler = ({ name, password, email }) => {
     const uuid = this.props.uuid;
     const data = {
-      fullName: name,
-      login,
+      full_name: name,
       password,
-      email,
+      status: 'ACTIVATED',
     };
-    return fetch(URLS.userRegistration(), { method: 'post', data, params: { uuid } })
-      .then(() => this.props.loginAction({ login, password }))
+    return fetch(URLS.invitation(uuid), { method: 'put', data })
+      .then(() => this.props.loginAction({ login: email, password }))
       .catch(({ message }) => {
         this.props.showNotification({
           type: NOTIFICATION_TYPES.ERROR,
@@ -131,6 +139,7 @@ export class RegistrationPageContainer extends Component {
             tokenProvided={Boolean(uuid)}
             tokenActive={this.state.isTokenActive}
             email={this.state.email}
+            initialData={{ fullName: this.state.fullName }}
             onRegistrationSubmit={this.registrationHandler}
           />
         )))

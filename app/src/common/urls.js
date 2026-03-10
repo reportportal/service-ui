@@ -309,6 +309,7 @@ export const URLS = {
   logSearch: (projectKey, itemId) => `${urlBase}${projectKey}/log/search/${itemId}`,
   bulkLastLogs: (projectKey) => `${urlBase}${projectKey}/log/under`,
   users: (ids = []) => `${urlBase}users?ids=${ids.join(',')}`,
+  invitation: (uuid) => `${urlCommonBase}invitations/${uuid}`,
   userRegistration: () => `${urlBase}users/registration`,
   userPasswordReset: () => `${urlBase}users/password/reset`,
   userPasswordResetToken: (token) => `${urlBase}users/password/reset/${token}`,

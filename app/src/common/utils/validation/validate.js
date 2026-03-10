@@ -62,7 +62,7 @@ export const createPasswordValidator = (passwordMinLength) =>
     ),
   ]);
 
-export const userName = composeValidators([isNotEmpty, regex(/^[A-Za-z0-9.'_\- ]{3,60}$/)]);
+export const userName = composeValidators([isNotEmpty, regex(/^[A-Za-z\u0400-\u04FF0-9.'_\- ]{3,60}$/)]);
 export const filterName = composeValidators([isNotEmpty, lengthRange(3, 128)]);
 export const launchName = composeValidators([isNotEmpty, maxLength(256)]);
 export const launchDescription = maxLength(2048);
