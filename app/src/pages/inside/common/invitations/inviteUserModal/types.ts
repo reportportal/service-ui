@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,26 @@
  */
 
 import { InjectedFormProps } from 'redux-form';
+import { Organization } from '../../assignments/organizationAssignment';
 import { InvitationStatus, Level } from './constants';
 import { InviteUserProjectFormData } from './inviteUserProjectForm';
 import { InviteUserOrganizationFormData } from './inviteUserOrganizationForm';
 
+export interface InviteUserInstanceEmailOption {
+  id: number;
+  email: string;
+}
+
+export interface InviteUserInstanceFormData {
+  email: string | InviteUserInstanceEmailOption;
+  organizations: Organization[];
+  organization?: { name?: string };
+}
+
 export type FormDataMap = {
   [Level.PROJECT]: InviteUserProjectFormData;
   [Level.ORGANIZATION]: InviteUserOrganizationFormData;
+  [Level.INSTANCE]: InviteUserInstanceFormData;
 };
 
 export type ModalProps<L extends keyof FormDataMap> = {

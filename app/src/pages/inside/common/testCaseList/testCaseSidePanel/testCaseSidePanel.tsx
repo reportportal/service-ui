@@ -253,7 +253,7 @@ export const TestCaseSidePanel = memo(
               {Parser(CrossIcon as unknown as string)}
             </button>
           </div>
-          <FolderBreadcrumbs folderId={folderId} instanceKey={TMS_INSTANCE_KEY.TEST_CASE} />
+          <FolderBreadcrumbs folderId={folderId} instanceKey={TMS_INSTANCE_KEY.TEST_CASE} onNavigate={onClose} />
           <div className={cx('header-meta')}>
             <div className={cx('meta-row')}>
               <div className={cx('meta-item-row', 'id-row')}>

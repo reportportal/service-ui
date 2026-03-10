@@ -38,6 +38,10 @@
     flex-direction: column;
   }
 
+  :global([class*='footer']) {
+    background-color: var(--rp-ui-base-bg-000);
+  }
+
   &__footer {
     display: flex;
     justify-content: space-between;

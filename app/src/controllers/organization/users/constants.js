@@ -17,6 +17,12 @@
 export const FETCH_ORGANIZATION_USERS = 'fetchOrganizationUsers';
 export const PREPARE_ACTIVE_ORGANIZATION_USERS = 'prepareActiveOrganizationUsers';
 export const UNASSIGN_FROM_ORGANIZATION = 'unassignFromOrganization';
+export const FETCH_USER_ASSIGNMENTS = 'fetchUserAssignments';
+export const FETCH_USER_ASSIGNMENTS_SUCCESS = 'fetchUserAssignmentsSuccess';
+export const FETCH_USER_ASSIGNMENTS_FAILURE = 'fetchUserAssignmentsFailure';
+export const UPDATE_USER_ASSIGNMENTS = 'updateUserAssignments';
+export const UPDATE_USER_ASSIGNMENTS_SUCCESS = 'updateUserAssignmentsSuccess';
+export const UPDATE_USER_ASSIGNMENTS_FAILURE = 'updateUserAssignmentsFailure';
 export const NAMESPACE = 'organizationUsers';
 export const SEARCH_KEY = 'full_name';
 export const SORTING_KEY = 'order';

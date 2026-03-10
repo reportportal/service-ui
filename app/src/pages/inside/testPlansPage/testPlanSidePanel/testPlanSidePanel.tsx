@@ -151,6 +151,7 @@ export const TestPlanSidePanel = memo(
             folderId={folderId}
             instanceKey={TMS_INSTANCE_KEY.TEST_PLAN}
             testPlanId={testPlanId || undefined}
+            onNavigate={onClose}
           />
         </div>
         <div className={cx('meta-row')}>

@@ -38,6 +38,7 @@ import {
 import { activeOrganizationSelector } from './selectors';
 import { usersSagas } from './users';
 import { fetch } from 'common/utils';
+import { stringEqual } from 'common/utils/stringUtils';
 import { updateOrganizationSettingsSuccessAction } from './actionCreators';
 import { hideModalAction } from 'controllers/modal';
 import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
@@ -54,11 +55,11 @@ export function* withActiveOrganization(organizationSlug, onActiveOrgReady) {
   const fallbackRedirect = redirect({ type: ORGANIZATIONS_PAGE });
   let activeOrganization = yield select(activeOrganizationSelector);
   try {
-    if (!activeOrganization || organizationSlug !== activeOrganization?.slug) {
+    if (!activeOrganization || !stringEqual(organizationSlug, activeOrganization?.slug)) {
       yield take(createFetchPredicate(FETCH_ORGANIZATION_BY_SLUG));
       activeOrganization = yield select(activeOrganizationSelector);
     }
-    if (!activeOrganization || organizationSlug !== activeOrganization?.slug) {
+    if (!activeOrganization || !stringEqual(organizationSlug, activeOrganization?.slug)) {
       yield put(fallbackRedirect);
       return;
     }

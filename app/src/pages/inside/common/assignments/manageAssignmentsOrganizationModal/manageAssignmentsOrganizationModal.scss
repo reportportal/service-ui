@@ -39,3 +39,29 @@
 .custom-tooltip {
   width: 248px;
 }
+
+.description-link {
+  display: inline-flex;
+  align-items: center;
+
+  > div:last-child {
+    margin-left: 4px;
+
+    svg path {
+      fill: var(--rp-ui-color-field-icon);
+    }
+  }
+}
+
+.assigned-to-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.assigned-to-label {
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 24px;
+}
