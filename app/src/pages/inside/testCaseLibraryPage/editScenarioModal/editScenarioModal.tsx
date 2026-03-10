@@ -22,11 +22,11 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { EMPTY_STEP_ERROR } from 'common/utils/validation/constants';
 import { withModal } from 'controllers/modal';
 import { UseModalData } from 'common/hooks';
-import { isEmpty } from 'es-toolkit/compat';
 
 import { commonMessages } from '../commonMessages';
 import { CreateTestCaseFormData, TestStep } from '../types';
 import { TEST_CASE_FORM_INITIAL_VALUES } from '../createTestCaseModal/constants';
+import { hasStepContent } from '../testCaseDetailsPage/utils';
 import { useTestCase } from '../hooks/useTestCase';
 import { useTestCaseFormInitialization } from '../hooks/useTestCaseFormInitialization';
 import { EditScenarioModalContent } from './editScenarioModalContent';
@@ -84,9 +84,7 @@ const ReduxFormComponent = reduxForm<CreateTestCaseFormData, EditScenarioModalPr
     if (values.steps) {
       const stepsArray = Array.isArray(values.steps) ? values.steps : Object.values(values.steps);
 
-      const hasEmptyStep = stepsArray.some(
-        (step: TestStep) => !step.instructions && !step.expectedResult && isEmpty(step.attachments),
-      );
+      const hasEmptyStep = stepsArray.some((step: TestStep) => !hasStepContent(step));
       if (hasEmptyStep) {
         errors.steps = EMPTY_STEP_ERROR as string;
       }
