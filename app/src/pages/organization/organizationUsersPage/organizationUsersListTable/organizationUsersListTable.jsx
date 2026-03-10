@@ -86,6 +86,7 @@ export const OrganizationTeamListTable = ({
               id,
               fullName,
               accountType,
+              orgRole,
             },
           };
         },

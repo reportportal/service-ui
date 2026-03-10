@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { OrganizationRoles } from '../../types/roles';
+
 export interface AssignedProject {
   projectRole: string;
   projectKey: string;
@@ -51,6 +53,11 @@ export interface UserInfo {
   defaultProject?: string;
   photoId?: string;
 }
+
+export interface OrganizationUserInfo extends UserInfo {
+  orgRole: OrganizationRoles;
+}
+
 
 export interface UserSettings {
   startTimeFormat: string;

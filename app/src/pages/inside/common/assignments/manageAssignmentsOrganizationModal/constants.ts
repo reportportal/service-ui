@@ -1,5 +1,5 @@
-import { EDITOR, MEMBER, VIEWER } from 'common/constants/projectRoles';
-import type { UserInfo } from 'controllers/user/types';
+import { EDITOR, VIEWER } from 'common/constants/projectRoles';
+import { OrganizationUserInfo } from 'controllers/user/types';
 import type {
   UpdateUserAssignmentsPayload,
   UserOrganizationProjectItem,
@@ -34,11 +34,9 @@ export function isAssignmentDirty(
 export function getCurrentOrganizationAssignment(
   organization: OrgType,
   assignmentsData: UserOrganizationProjectsResponse | null,
-  user: UserInfo,
+  user: OrganizationUserInfo,
 ): Organization {
-  const orgs = user.assignedOrganizations || {};
-  const assignedOrg = Object.values(orgs).find((o) => o.organizationId === organization.id);
-  const orgRole = assignedOrg?.organizationRole || MEMBER;
+  const orgRole = user.orgRole;
   const projects: Project[] = (assignmentsData?.items ?? []).map(
     (item: UserOrganizationProjectItem) => ({
       id: item.id,

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useMemo, useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
@@ -24,20 +24,18 @@ import { showModalAction } from 'controllers/modal';
 import { activeOrganizationSelector, Organization } from 'controllers/organization';
 import { ORGANIZATIONS_PAGE, userRolesSelector } from 'controllers/pages';
 import { fetchOrganizationUsersAction } from 'controllers/organization/users';
-import { idSelector, UserInfo } from 'controllers/user';
+import { idSelector } from 'controllers/user';
 import { messages } from 'common/constants/localization/assignmentsLocalization';
 import { ManageAssignmentsOrganizationModal } from 'pages/inside/common/assignments/manageAssignmentsOrganizationModal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
-import {
-  useCanUnassignOrganization,
-  UnassignOrganizationModal,
-} from 'pages/inside/common/assignments';
+import { UnassignOrganizationModal, useCanUnassignOrganization, } from 'pages/inside/common/assignments';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { OrganizationUserInfo } from 'controllers/user/types';
 
 interface OrganizationUsersActionMenuProps {
-  user: UserInfo;
+  user: OrganizationUserInfo;
 }
 
 export const OrganizationUsersActionMenu = ({ user }: OrganizationUsersActionMenuProps) => {

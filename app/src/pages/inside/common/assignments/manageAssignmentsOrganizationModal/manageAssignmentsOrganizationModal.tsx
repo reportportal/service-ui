@@ -28,7 +28,7 @@ import { useTracking } from 'react-tracking';
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ExternalLink } from 'pages/inside/common/externalLink';
-import { idSelector, UserInfo } from 'controllers/user';
+import { idSelector } from 'controllers/user';
 import {
   fetchUserAssignmentsAction,
   unassignFromOrganizationAction,
@@ -52,11 +52,12 @@ import {
 } from 'pages/inside/common/assignments/organizationAssignment';
 
 import styles from './manageAssignmentsOrganizationModal.scss';
+import { OrganizationUserInfo } from 'controllers/user/types';
 
 const cx = createClassnames(styles);
 
 interface ManageAssignmentsOrganizationModalOwnProps {
-  user: UserInfo;
+  user: OrganizationUserInfo;
   organization: Organization;
   onUnassign?: () => void;
 }
