@@ -21,6 +21,7 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { createClassnames } from 'common/utils';
 
 import { SelectableFolder } from '../selectableFolder/selectableFolder';
+import { useTestLibraryPanelContext } from '../testLibraryPanelContext';
 
 import treeStyles from '../../expandedOptions/folder/folder.scss';
 import styles from './selectableFolderTree.scss';
@@ -29,10 +30,14 @@ const cx = createClassnames(styles, treeStyles);
 
 export const SelectableFolderTree = () => {
   const folders = useSelector(transformedFoldersSelector);
+  const { setScrollElement } = useTestLibraryPanelContext();
 
   return (
     <div className={cx('selectable-folder-tree')}>
-      <ScrollWrapper className={cx('selectable-folder-tree__scroll-wrapper')}>
+      <ScrollWrapper
+        className={cx('selectable-folder-tree__scroll-wrapper')}
+        scrollContainerRef={setScrollElement}
+      >
         <ul className={cx('folders-tree', 'selectable-folder-tree__outer')} role="tree">
           {folders.map((folder, index) => (
             <SelectableFolder folder={folder} key={folder.id || `${folder.name}-${index}`} />

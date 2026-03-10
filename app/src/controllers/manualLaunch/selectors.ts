@@ -22,6 +22,7 @@ import {
   ManualLaunchTestCaseExecutionsState,
   ManualLaunchFolder,
   TestCaseExecution,
+  ActiveManualLaunchExecutionState,
 } from './types';
 
 export const manualLaunchesSelector = (state: AppState): ManualLaunchState =>
@@ -91,3 +92,16 @@ export const manualLaunchTestCaseExecutionsPageSelector = (state: AppState): Pag
 
 export const isLoadingManualLaunchTestCaseExecutionsSelector = (state: AppState): boolean =>
   Boolean(manualLaunchTestCaseExecutionsStateSelector(state)?.isLoading);
+
+// Selectors for Active Manual Launch Execution (execution detail page)
+const activeManualLaunchExecutionStateSelector = (
+  state: AppState,
+): ActiveManualLaunchExecutionState | undefined => state.activeManualLaunchExecution;
+
+export const activeManualLaunchExecutionSelector = (state: AppState): TestCaseExecution | null => {
+  const data = activeManualLaunchExecutionStateSelector(state)?.data;
+  return data != null && !(data instanceof Error) ? data : null;
+};
+
+export const isLoadingActiveManualLaunchExecutionSelector = (state: AppState): boolean =>
+  Boolean(activeManualLaunchExecutionStateSelector(state)?.isLoading);

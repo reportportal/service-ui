@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { ReactNode } from 'react';
 import { isEmpty } from 'es-toolkit/compat';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Breadcrumbs, MoveToFolderIcon } from '@reportportal/ui-kit';
+import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { getParentFolders } from 'common/utils/folderUtils';
 import { Folder } from 'controllers/testCase/types';
@@ -30,6 +30,7 @@ import {
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { createClassnames } from 'common/utils';
 import { foldersSelector } from 'controllers/testCase';
+import { NavLink } from 'components/main/navLink';
 
 import styles from './folderBreadcrumbs.scss';
 
@@ -44,11 +45,7 @@ interface FolderBreadcrumbsProps {
   folderId: number | null | undefined;
   instanceKey: TMS_INSTANCE_KEY;
   testPlanId?: number;
-}
-
-interface BreadcrumbButtonLinkProps {
-  to: string;
-  children: ReactNode;
+  onNavigate?: VoidFn;
 }
 
 const amountToShowWithoutCollapsing = 4;
@@ -74,8 +71,8 @@ export const FolderBreadcrumbs = ({
   folderId,
   instanceKey,
   testPlanId,
+  onNavigate,
 }: FolderBreadcrumbsProps) => {
-  const dispatch = useDispatch();
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const projectSlug = useSelector(urlProjectSlugSelector);
   const folders = useSelector(foldersSelector);
@@ -86,55 +83,46 @@ export const FolderBreadcrumbs = ({
     return null;
   }
 
-  const handleFolderClick = (itemId: number) => {
+  const getItemLink = (itemId: number) => {
     if (instanceKey === TMS_INSTANCE_KEY.TEST_PLAN) {
-      if (!testPlanId) {
-        return;
-      }
-
-      dispatch({
+      return {
         type: PROJECT_TEST_PLAN_DETAILS_PAGE,
         payload: {
           organizationSlug,
           projectSlug,
-          testPlanId,
+          testPlanId: testPlanId ?? 0,
           testPlanRoute: `folder/${itemId}`,
         },
-      });
-
-      return;
+      };
     }
 
-    dispatch({
+    return {
       type: TEST_CASE_LIBRARY_PAGE,
       payload: {
         organizationSlug,
         projectSlug,
         testCasePageRoute: `folder/${itemId}`,
       },
-    });
+    };
   };
 
   const descriptors = items.map((item) => ({
+    id: item.id,
     title: item.name,
-    link: String(item.id),
+    link: getItemLink(item.id),
+    onClick: onNavigate,
   }));
-
-  const BreadcrumbButtonLink = ({ to, children }: BreadcrumbButtonLinkProps) => (
-    <button type="button" onClick={() => handleFolderClick(Number(to))}>
-      {children}
-    </button>
-  );
 
   return (
     <div className={cx('folder-breadcrumbs')}>
       <MoveToFolderIcon />
       <Breadcrumbs
         descriptors={descriptors}
-        LinkComponent={BreadcrumbButtonLink}
+        LinkComponent={NavLink}
         maxShownDescriptors={
           descriptors.length === 4 ? amountToShowWithoutCollapsing : amountToShowWhenCollapsing
         }
+        isSingleItemClickable
         titleTailNumChars={0}
         isLastClickable
         className={cx('folder-breadcrumbs__container')}

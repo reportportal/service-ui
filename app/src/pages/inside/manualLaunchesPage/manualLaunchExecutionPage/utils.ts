@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-.depth-aware-checkbox {
-  position: absolute;
-  left: attr(data-offset px);
-  top: 4px;
-}
+import type { ManualScenarioRequirement } from 'controllers/manualLaunch';
+import type { Requirement } from 'pages/inside/testCaseLibraryPage/types';
+
+export const requirementsToItems = (requirements?: ManualScenarioRequirement[]): Requirement[] =>
+  requirements?.map((requirement) => ({ id: requirement.id, value: requirement.value })) ?? [];

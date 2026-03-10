@@ -21,7 +21,11 @@ import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { getParentFoldersIds } from 'common/utils/folderUtils';
 import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
-import { MANUAL_LAUNCHES_PAGE, MANUAL_LAUNCH_DETAILS_PAGE } from 'controllers/pages';
+import {
+  MANUAL_LAUNCHES_PAGE,
+  MANUAL_LAUNCH_DETAILS_PAGE,
+  MANUAL_LAUNCH_EXECUTION_PAGE,
+} from 'controllers/pages';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import {
   getInitialExpandedFolderIds,
@@ -34,6 +38,7 @@ import {
   ACTIVE_MANUAL_LAUNCH_NAMESPACE,
   MANUAL_LAUNCH_FOLDERS_NAMESPACE,
   MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
+  ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE,
   TOGGLE_MANUAL_LAUNCH_FOLDER_EXPANSION,
   EXPAND_MANUAL_LAUNCH_FOLDERS_TO_LEVEL,
   SET_MANUAL_LAUNCH_EXPANDED_FOLDER_IDS,
@@ -135,6 +140,15 @@ export const manualLaunchFoldersReducer = createPageScopedReducer(foldersReducer
   MANUAL_LAUNCH_DETAILS_PAGE,
 ]);
 
+const activeExecutionReducer = combineReducers({
+  data: fetchReducer(ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE, { initialState: null }),
+  isLoading: loadingReducer(ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE),
+});
+
 export const manualLaunchTestCaseExecutionsReducer = createPageScopedReducer(executionsReducer, [
   MANUAL_LAUNCH_DETAILS_PAGE,
+]);
+
+export const activeManualLaunchExecutionReducer = createPageScopedReducer(activeExecutionReducer, [
+  MANUAL_LAUNCH_EXECUTION_PAGE,
 ]);

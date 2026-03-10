@@ -14,8 +14,16 @@
  * limitations under the License.
  */
 
-.depth-aware-checkbox {
-  position: absolute;
-  left: attr(data-offset px);
-  top: 4px;
-}
+import { commonMessages } from 'pages/inside/common/common-messages';
+
+import type { StatusButtonConfig } from './types';
+
+export const EXECUTION_STATUS_SKIPPED = 'skipped' as const;
+export const EXECUTION_STATUS_FAILED = 'failed' as const;
+export const EXECUTION_STATUS_PASSED = 'passed' as const;
+
+export const STATUS_BUTTONS: StatusButtonConfig[] = [
+  { status: EXECUTION_STATUS_SKIPPED, message: commonMessages.skipped },
+  { status: EXECUTION_STATUS_FAILED, message: commonMessages.failed },
+  { status: EXECUTION_STATUS_PASSED, message: commonMessages.passed },
+];

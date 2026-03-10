@@ -19,6 +19,7 @@ export {
   getManualLaunchAction,
   getManualLaunchFoldersAction,
   getManualLaunchTestCaseExecutionsAction,
+  getManualLaunchExecutionAction,
   toggleManualLaunchFolderExpansionAction,
   expandManualLaunchFoldersToLevelAction,
   setManualLaunchExpandedFolderIdsAction,
@@ -29,6 +30,7 @@ export {
   manualLaunchesReducer,
   manualLaunchFoldersReducer,
   manualLaunchTestCaseExecutionsReducer,
+  activeManualLaunchExecutionReducer,
 } from './reducer';
 export * from './selectors';
 export * from './types';

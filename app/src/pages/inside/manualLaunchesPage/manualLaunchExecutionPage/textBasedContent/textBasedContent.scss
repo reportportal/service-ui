@@ -14,8 +14,22 @@
  * limitations under the License.
  */
 
-.depth-aware-checkbox {
-  position: absolute;
-  left: attr(data-offset px);
-  top: 4px;
+.text-based-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.scenario-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.text-block {
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--rp-ui-base-almost-black);
 }

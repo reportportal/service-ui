@@ -14,8 +14,15 @@
  * limitations under the License.
  */
 
-.depth-aware-checkbox {
-  position: absolute;
-  left: attr(data-offset px);
-  top: 4px;
+import type { MessageDescriptor } from 'react-intl';
+
+import type { TestCaseExecution } from 'controllers/manualLaunch';
+
+export interface ExecutionContentProps {
+  execution: TestCaseExecution;
+}
+
+export interface StatusButtonConfig {
+  status: string;
+  message: MessageDescriptor;
 }
