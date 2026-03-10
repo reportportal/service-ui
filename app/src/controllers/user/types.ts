@@ -55,7 +55,7 @@ export interface UserInfo {
 }
 
 export interface OrganizationUserInfo extends UserInfo {
-  orgRole: OrganizationRoles
+  orgRole: OrganizationRoles;
 }
 
 
