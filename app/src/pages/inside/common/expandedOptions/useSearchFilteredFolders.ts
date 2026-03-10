@@ -18,21 +18,11 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
 
-import { URLS } from 'common/urls';
-import { fetch } from 'common/utils';
+import { ERROR_CANCELED } from 'common/utils';
 import { projectKeySelector } from 'controllers/project';
-import { TransformedFolder, Folder, foldersSelector } from 'controllers/testCase';
+import { TransformedFolder, foldersSelector } from 'controllers/testCase';
+import { fetchAllFolders } from 'controllers/testCase/utils/fetchAllFolders';
 import { transformFoldersToDisplay, getParentFoldersIds } from 'common/utils/folderUtils';
-
-interface FoldersDto {
-  content: Folder[];
-  page: {
-    number: number;
-    size: number;
-    totalElements: number;
-    totalPages: number;
-  };
-}
 
 const collectAllFolderIds = (folders: TransformedFolder[]): number[] => {
   const ids: number[] = [];
@@ -84,37 +74,17 @@ export const useSearchFilteredFolders = ({
       setIsLoading(true);
 
       try {
-        const limit = 1000;
-        const ids = new Set<number>();
-
-        let offset = 0;
-        let totalElements = Infinity;
-
-        while (offset < totalElements) {
-          if (abortController.signal.aborted) {
-            return;
-          }
-
-          // eslint-disable-next-line no-await-in-loop
-          const response = await fetch<FoldersDto>(
-            URLS.testFolders(projectKey, {
-              offset,
-              limit,
-              sort: 'id,ASC',
-              'filter.cnt.testCaseName': searchQuery,
-            }),
-          );
-
-          response.content.forEach((folder) => ids.add(folder.id));
-          totalElements = response.page.totalElements;
-          offset += limit;
-        }
+        const folders = await fetchAllFolders({
+          projectKey,
+          filters: { 'filter.cnt.testCaseName': searchQuery },
+          signal: abortController.signal,
+        });
 
         if (!abortController.signal.aborted) {
-          setFilteredFolderIds(ids);
+          setFilteredFolderIds(new Set(folders.map((f) => f.id)));
         }
-      } catch {
-        if (!abortController.signal.aborted) {
+      } catch (err) {
+        if (err instanceof Error && err.message !== ERROR_CANCELED && !abortController.signal.aborted) {
           setFilteredFolderIds(new Set());
         }
       } finally {
