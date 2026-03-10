@@ -107,7 +107,7 @@ const ManageAssignmentsOrganizationModalView = ({
   const [currentOrganization, setCurrentOrganization] = useState<OrganizationValue | null>(null);
   const [initialOrganization, setInitialOrganization] = useState<OrganizationValue | null>(null);
   const handleUnassignSuccess = useHandleUnassignSuccess(user, onUnassign);
-
+  const isCurrentUser = currentUserId === user?.id;
   const isDirty = isAssignmentDirty(currentOrganization, initialOrganization);
   const isBusy = assignmentsLoading || assignmentsUpdateLoading || !currentOrganization;
 
@@ -146,7 +146,7 @@ const ManageAssignmentsOrganizationModalView = ({
   }, [handleOrganizationAssignment]);
 
   const confirmationMessage =
-    currentUserId === user.id ? messages.unassignConfirmation : messages.unassignConfirmationUser;
+    isCurrentUser ? messages.unassignConfirmation : messages.unassignConfirmationUser;
 
   const handleUnassignClick = () => {
     setShowUnassignConfirmation(true);
@@ -304,6 +304,7 @@ const ManageAssignmentsOrganizationModalView = ({
             isMultiple={false}
             value={currentOrganization}
             onChange={handleOrganizationChange}
+            hideOrganizationRole={isCurrentUser}
           />
         )}
       </div>
