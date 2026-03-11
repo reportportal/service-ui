@@ -108,6 +108,14 @@ const ManageAssignmentsOrganizationModalView = ({
   const [initialOrganization, setInitialOrganization] = useState<OrganizationValue | null>(null);
   const handleUnassignSuccess = useHandleUnassignSuccess(user, onUnassign);
   const isCurrentUser = currentUserId === user?.id;
+  const tooltipMessage = formatMessage(
+    isCurrentUser
+      ? messages.organizationRoleDisabledOwnAccount
+      : messages.organizationRoleDisabledOwner,
+  );
+  const isOrganizationOwner = user?.id === organization?.owner_id;
+  const organizationRoleDisabledTooltip =
+    isCurrentUser || isOrganizationOwner ? tooltipMessage : null;
   const isDirty = isAssignmentDirty(currentOrganization, initialOrganization);
   const isBusy = assignmentsLoading || assignmentsUpdateLoading || !currentOrganization;
 
@@ -304,7 +312,7 @@ const ManageAssignmentsOrganizationModalView = ({
             isMultiple={false}
             value={currentOrganization}
             onChange={handleOrganizationChange}
-            disableOrganizationRole={isCurrentUser}
+            organizationRoleDisabledTooltip={organizationRoleDisabledTooltip}
           />
         )}
       </div>
