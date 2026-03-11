@@ -165,6 +165,8 @@
   "Assignment.unassignPersonalOwnerMessage": "You can't unassign the owner of Personal organization",
   "Assignment.unassignPersonalOwnerSelfMessage": "As the owner, you cannot unassign yourself from a Personal Organization",
   "Assignment.unassignSelfMessage": "You cannot unassign yourself from the organization",
+  "Assignment.organizationRoleDisabledOwnAccount": "No puede cambiar su propia función. Pida a otro administrador de la organización o a un administrador que la actualice.",
+  "Assignment.organizationRoleDisabledOwner": "No puede cambiar la función del propietario de la organización.",
   "Assignment.unassignProjectError": "An error occurred during unassigning from the project",
   "Assignment.unassignProjectSelf": "Unassign from Project",
   "Assignment.unassignProjectSelfDescription": "Are you sure you want to unassign yourself from the project <b>{project}</b>? Assignment to the organization will remain unchanged.",
