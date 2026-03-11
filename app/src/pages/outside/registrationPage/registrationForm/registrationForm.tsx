@@ -15,15 +15,19 @@
  */
 
 import { useEffect, type FormEventHandler } from 'react';
-import { isString } from 'es-toolkit';
 import { createClassnames } from 'common/utils/createClassnames';
 import { injectIntl, defineMessages, IntlShape } from 'react-intl';
-import { reduxForm, InjectedFormProps, SubmissionError } from 'redux-form';
+import { reduxForm, InjectedFormProps } from 'redux-form';
 import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
+import {
+  PASSWORD_MAX_ALLOWED_LENGTH,
+  REGISTRATION_NAME_MIN_LENGTH,
+  REGISTRATION_NAME_MAX_LENGTH,
+} from 'common/constants/validation';
 import { commonValidators } from 'common/utils/validation';
 import { passwordMinLengthSelector } from 'controllers/appInfo';
 import { validationLocalization } from 'common/constants/localization/validationLocalization';
@@ -50,11 +54,7 @@ const messages = defineMessages({
   nameHint: {
     id: 'RegistrationForm.nameHint',
     defaultMessage:
-      'Names must be 3-60 characters, using only Latin or Cyrillic letters, numbers, spaces, dots, hyphens, underscores, and apostrophes.',
-  },
-  failed: {
-    id: 'RegistrationForm.failed',
-    defaultMessage: 'Registration failed',
+      'Names must be {minLength}-{maxLength} characters, using only Latin or Cyrillic letters, numbers, spaces, dots, hyphens, underscores, and apostrophes.',
   },
   register: {
     id: 'RegistrationForm.register',
@@ -116,11 +116,7 @@ const RegistrationFormComponent = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const submitHandler = (values: RegistrationFormValues) =>
-    submitForm(values).catch((error: unknown) => {
-      const message = isString(error) ? error : formatMessage(messages.failed);
-      throw new SubmissionError({ email: message });
-    });
+  const submitHandler = (values: RegistrationFormValues) => submitForm(values);
 
   return (
     <form
@@ -132,10 +128,13 @@ const RegistrationFormComponent = ({
           <FieldErrorHint provideHint={false} errorsWithHint={['requiredFieldWithPeriodHint']}>
             <InputOutside
               icon={NameIcon}
-              maxLength="256"
+              maxLength={Number(REGISTRATION_NAME_MAX_LENGTH)}
               placeholder={formatMessage(messages.name)}
               hasDynamicValidation
-              hint={formatMessage(messages.nameHint)}
+              hint={formatMessage(messages.nameHint, {
+                minLength: Number(REGISTRATION_NAME_MIN_LENGTH),
+                maxLength: Number(REGISTRATION_NAME_MAX_LENGTH),
+              })}
               provideErrorHint
             />
           </FieldErrorHint>
@@ -152,7 +151,7 @@ const RegistrationFormComponent = ({
             <InputOutside
               type={'password'}
               icon={PasswordIcon}
-              maxLength="256"
+              maxLength={PASSWORD_MAX_ALLOWED_LENGTH}
               placeholder={formatMessage(messages.password)}
               hasDynamicValidation
               hint={formatMessage(validationLocalization.passwordHint, { minLength })}
@@ -171,7 +170,7 @@ const RegistrationFormComponent = ({
             <InputOutside
               type={'password'}
               icon={PasswordIcon}
-              maxLength="256"
+              maxLength={PASSWORD_MAX_ALLOWED_LENGTH}
               placeholder={formatMessage(messages.confirmPassword)}
               hasDynamicValidation
               provideErrorHint

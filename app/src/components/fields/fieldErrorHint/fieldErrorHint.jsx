@@ -18,6 +18,10 @@ import { cloneElement, Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
+import {
+  REGISTRATION_NAME_MIN_LENGTH,
+  REGISTRATION_NAME_MAX_LENGTH,
+} from 'common/constants/validation';
 import styles from './fieldErrorHint.scss';
 
 const cx = classNames.bind(styles);
@@ -30,7 +34,7 @@ const messages = defineMessages({
   nameHint: {
     id: 'RegistrationForm.nameHint',
     defaultMessage:
-      'Names must be 3-60 characters, using only Latin or Cyrillic letters, numbers, spaces, dots, hyphens, underscores, and apostrophes.',
+      'Names must be {minLength}-{maxLength} characters, using only Latin or Cyrillic letters, numbers, spaces, dots, hyphens, underscores, and apostrophes.',
   },
   passwordCreateUserHint: {
     id: 'CreateUserModal.passwordCreateUserHint',
@@ -344,6 +348,13 @@ const messages = defineMessages({
   },
 });
 
+const MESSAGE_VALUES = {
+  nameHint: {
+    minLength: REGISTRATION_NAME_MIN_LENGTH,
+    maxLength: REGISTRATION_NAME_MAX_LENGTH,
+  },
+};
+
 @injectIntl
 export class FieldErrorHint extends Component {
   static propTypes = {
@@ -410,7 +421,7 @@ export class FieldErrorHint extends Component {
       <div className={classes} data-automation-id={dataAutomationId}>
         {children &&
           cloneElement(children, {
-            error: error && messages[error] ? intl.formatMessage(messages[error]) : error,
+            error: error && messages[error] ? intl.formatMessage(messages[error], MESSAGE_VALUES[error] || {}) : error,
             active,
             showHintWithError,
             ...rest,
@@ -437,7 +448,7 @@ export class FieldErrorHint extends Component {
                 'dark-view': darkView,
               })}
             >
-              {error && messages[error] ? intl.formatMessage(messages[error]) : error}
+              {error && messages[error] ? intl.formatMessage(messages[error], MESSAGE_VALUES[error] || {}) : error}
             </div>
           </div>
         )}

@@ -2013,7 +2013,7 @@
   "RegistrationForm.loginHint": "Няправільны адрас электроннай пошты. Увядзіце правільны адрас электроннай пошты",
   "RegistrationForm.loginPlaceholder": "Электронная пошта",
   "RegistrationForm.nameConstraints": "Поўнае імя будзе выкарыстоўвацца для ідэнтыфікацыі асобы ў камандзе",
-  "RegistrationForm.nameHint": "Імёны павінны змяшчаць ад 3 да 60 сімвалаў, дапускаюцца толькі лацінка або кірыліца, лічбы, прабелы, кропкі, дэфісы, падкрэслення і апастрафы.",
+  "RegistrationForm.nameHint": "Імёны павінны змяшчаць ад {minLength} да {maxLength} сімвалаў, дапускаюцца толькі лацінка або кірыліца, лічбы, прабелы, кропкі, дэфісы, падкрэслення і апастрафы.",
   "RegistrationForm.namePlaceholder": "Поўнае імя",
   "RegistrationForm.oldPasswordHint": "Пароль павінен утрымліваць не менш за 4 сімвалаў; спецыяльны сімвал; верхні рэгістр (A - Z); ніжні рэгістр",
   "RegistrationForm.passwordConfirmPlaceholder": "Падцвердзіць пароль",

@@ -2013,7 +2013,7 @@
   "RegistrationForm.loginHint": "Неверный адрес электронной почты. Введите правильный адрес электронной почты",
   "RegistrationForm.loginPlaceholder": "Электронная почта",
   "RegistrationForm.nameConstraints": "Полное имя будет использоваться для идентификации человека в команде",
-  "RegistrationForm.nameHint": "Имена должны содержать от 3 до 60 символов, допускаются только латиница или кириллица, цифры, пробелы, точки, дефисы, подчеркивания и апострофы.",
+  "RegistrationForm.nameHint": "Имена должны содержать от {minLength} до {maxLength} символов, допускаются только латиница или кириллица, цифры, пробелы, точки, дефисы, подчеркивания и апострофы.",
   "RegistrationForm.namePlaceholder": "Полное имя",
   "RegistrationForm.oldPasswordHint": "Пароль должен содержать не менее 4 символов; специальный символ; верхний регистр (A - Z); нижний регистр",
   "RegistrationForm.passwordConfirmPlaceholder": "Подтвердите пароль",
