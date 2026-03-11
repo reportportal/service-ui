@@ -56,7 +56,12 @@
   display: flex;
   gap: 24px;
   align-items: center;
+}
+
+.role-slot {
   min-height: 37px;
+  display: flex;
+  align-items: center;
 }
 
 .remove-button {

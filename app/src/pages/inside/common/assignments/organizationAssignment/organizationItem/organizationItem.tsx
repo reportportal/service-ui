@@ -16,7 +16,7 @@
 
 import { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { BaseIconButton, CloseIcon, Dropdown, DropdownIcon } from '@reportportal/ui-kit';
+import { BaseIconButton, CloseIcon, Dropdown, DropdownIcon, Tooltip } from '@reportportal/ui-kit';
 
 import { createClassnames, fetch } from 'common/utils';
 import { EDITOR, MANAGER, MEMBER } from 'common/constants/projectRoles';
@@ -46,7 +46,7 @@ interface OrganizationItemProps {
   onChange: (updates: Partial<Organization>) => void;
   onRemove?: () => void;
   collapsable?: boolean;
-  disableOrganizationRole?: boolean;
+  organizationRoleDisabledTooltip?: string | null;
 }
 
 export const OrganizationItem = ({
@@ -54,8 +54,9 @@ export const OrganizationItem = ({
   onChange,
   onRemove,
   collapsable,
-  disableOrganizationRole = false,
+  organizationRoleDisabledTooltip = null,
 }: OrganizationItemProps) => {
+  const disableOrganizationRole = Boolean(organizationRoleDisabledTooltip);
   const { formatMessage } = useIntl();
   const { id, name, role, projects } = value;
   const [totalProjects, setTotalProjects] = useState(0);
@@ -128,6 +129,23 @@ export const OrganizationItem = ({
           {name}
         </div>
         <div className={cx('controls')}>
+          <div className={cx('role-slot')}>
+            {disableOrganizationRole ? (
+              <Tooltip
+                placement="top"
+                content={organizationRoleDisabledTooltip}
+                wrapperClassName={cx('tooltip-wrapper')}
+              >
+                <Dropdown
+                  disabled
+                  className={cx('role')}
+                  value={role}
+                  options={roleOptions}
+                  onChange={handleRoleChange}
+                  variant="ghost"
+                />
+              </Tooltip>
+            ) : (
               <Dropdown
                 disabled={disableOrganizationRole}
                 className={cx('role')}
@@ -136,6 +154,8 @@ export const OrganizationItem = ({
                 onChange={handleRoleChange}
                 variant="ghost"
               />
+            )}
+          </div>
           {onRemove && (
             <BaseIconButton className={cx('remove-button')} onClick={onRemove}>
               <CloseIcon />

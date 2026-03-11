@@ -165,6 +165,8 @@
   "Assignment.unassignPersonalOwnerMessage": "Вы не можаце адмяніць прызначэнне ўладальніка персанальнай арганізацыі",
   "Assignment.unassignPersonalOwnerSelfMessage": "Як уладальнік, вы не можаце адмяніць сваё прызначэнне ў персанальнай арганізацыі",
   "Assignment.unassignSelfMessage": "Вы не можаце адмяніць сваё прызначэнне ў арганізацыі",
+  "Assignment.organizationRoleDisabledOwnAccount": "Вы не можаце змяніць сваю ролю. Папросіце іншага менеджара арганізацыі або адміністратара абнавіць яе.",
+  "Assignment.organizationRoleDisabledOwner": "Вы не можаце змяніць ролю ўладальніка арганізацыі.",
   "Assignment.unassignProjectError": "Падчас адмены прызначэння з праекта адбылася памылка",
   "Assignment.unassignProjectSelf": "Адмяніць прызначэнне з Праекта",
   "Assignment.unassignProjectSelfDescription": "Вы ўпэўненыя, што хочаце адмяніць прызначэнне сябе да праекта <b>{project}</b>? Прызначэнне арганізацыі застанецца нязменным.",
