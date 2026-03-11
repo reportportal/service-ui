@@ -96,7 +96,12 @@ import { patternsSelector, projectKeySelector } from './selectors';
 import { withActiveOrganization } from 'controllers/organization/sagas';
 import { setActiveProjectKeyAction } from 'controllers/user';
 
-export function* withActiveProject(organizationSlug, projectSlug, onActiveProjectReady) {
+export function* withActiveProject(
+  organizationSlug,
+  projectSlug,
+  projectKey,
+  onActiveProjectReady,
+) {
   const fallbackRedirect = redirect({
     type: ORGANIZATION_PROJECTS_PAGE,
     payload: { organizationSlug },
@@ -104,19 +109,23 @@ export function* withActiveProject(organizationSlug, projectSlug, onActiveProjec
 
   yield* withActiveOrganization(organizationSlug, function* onActiveOrgReady(organizationId) {
     try {
-      const { items } = yield call(
-        fetch,
-        URLS.organizationProjects(organizationId, { slug: projectSlug }),
-      );
-      const project = items?.[0];
+      let resolvedKey = projectKey;
 
-      if (!project?.key) {
+      if (!resolvedKey) {
+        const { items } = yield call(
+          fetch,
+          URLS.organizationProjects(organizationId, { slug: projectSlug }),
+        );
+        resolvedKey = items?.[0]?.key;
+      }
+
+      if (!resolvedKey) {
         yield put(fallbackRedirect);
         return;
       }
 
-      yield put(setActiveProjectKeyAction(project.key));
-      yield put(fetchProjectAction(project.key));
+      yield put(setActiveProjectKeyAction(resolvedKey));
+      yield put(fetchProjectAction(resolvedKey));
 
       const { type } = yield take([FETCH_PROJECT_SUCCESS, FETCH_PROJECT_ERROR]);
       if (type === FETCH_PROJECT_ERROR) {
@@ -124,7 +133,7 @@ export function* withActiveProject(organizationSlug, projectSlug, onActiveProjec
         return;
       }
 
-      yield* onActiveProjectReady(project.key);
+      yield* onActiveProjectReady(resolvedKey);
     } catch (error) {
       yield put(showDefaultErrorNotification(error));
       yield put(fallbackRedirect);
@@ -498,10 +507,15 @@ function* watchFetchProject() {
   yield takeEvery(FETCH_PROJECT, fetchProject);
 }
 
-function* prepareActiveProject({ payload: { organizationSlug, projectSlug, action } }) {
-  yield* withActiveProject(organizationSlug, projectSlug, function* onActiveProjectReady() {
-    yield put(action);
-  });
+function* prepareActiveProject({ payload: { organizationSlug, projectSlug, projectKey, action } }) {
+  yield* withActiveProject(
+    organizationSlug,
+    projectSlug,
+    projectKey,
+    function* onActiveProjectReady() {
+      yield put(action);
+    },
+  );
 }
 
 function* watchPrepareActiveProject() {
