@@ -19,7 +19,7 @@ import { defineMessages } from 'react-intl';
 export const messages = defineMessages({
   executionId: {
     id: 'ExecutionSidePanel.executionId',
-    defaultMessage: 'ID',
+    defaultMessage: 'Test case ID',
   },
   linkedToBTS: {
     id: 'ExecutionSidePanel.linkedToBTS',
