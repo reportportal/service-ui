@@ -2012,7 +2012,7 @@
   "RegistrationForm.loginHint": "用户名只能包含拉丁文、数字字符、连字符、下划线、点（长度为1到128个字符）",
   "RegistrationForm.loginPlaceholder": "请输入用户名",
   "RegistrationForm.nameConstraints": "全名将用于识别团队中的人员",
-  "RegistrationForm.nameHint": "Full name may contain only Latin, numeric characters, symbols: hyphen, underscore, apostrophe, dot. Space is permitted (from 3 to 60 symbols)",
+  "RegistrationForm.nameHint": "Names must be 3-60 characters, using only Latin or Cyrillic letters, numbers, spaces, dots, hyphens, underscores, and apostrophes.",
   "RegistrationForm.namePlaceholder": "请输入全名",
   "RegistrationForm.oldPasswordHint": "密码应包含：至少4个字符；特殊符号；大写（A-Z）；小写",
   "RegistrationForm.passwordConfirmPlaceholder": "请再次输入密码",

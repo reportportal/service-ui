@@ -2014,7 +2014,7 @@
   "RegistrationForm.loginHint": "El correo electrónico es incorrecto. Introduce una dirección de correo electrónico válidos",
   "RegistrationForm.loginPlaceholder": "Correo electrónico",
   "RegistrationForm.nameConstraints": "El nombre completo se usará para identificar a la persona en el equipo",
-  "RegistrationForm.nameHint": "Full name may contain only Latin, numeric characters, symbols: hyphen, underscore, apostrophe, dot. Space is permitted (from 3 to 60 symbols)",
+  "RegistrationForm.nameHint": "Names must be 3-60 characters, using only Latin or Cyrillic letters, numbers, spaces, dots, hyphens, underscores, and apostrophes.",
   "RegistrationForm.namePlaceholder": "Nombre completo",
   "RegistrationForm.oldPasswordHint": "La contraseña debe contener al menos 4 caracteres; símbolo especial; mayúsculas (A - Z); minúsculas",
   "RegistrationForm.passwordConfirmPlaceholder": "Confirmar contraseña",

@@ -26,6 +26,7 @@
   &:not(.left) {
     display: flex;
     align-items: center;
+    justify-content: center;
   }
 
   @media (max-width: $SCREEN_SM_MAX) {

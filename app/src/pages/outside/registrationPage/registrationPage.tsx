@@ -154,16 +154,16 @@ const TokenErrorSection = ({ tokenProvided = false }: TokenErrorSectionProps) =>
         {formatMessage(tokenProvided ? messages.tokenExpired : messages.tokenNotProvided)}
       </span>
       <div className={cx('visit-rp')}>
-        {formatMessage(messages.visit)}
+        {`${formatMessage(messages.visit)} `}
         <a className={cx('backlink')} href={referenceDictionary.rpLanding}>
           ReportPortal.io
         </a>
         <br />
-        {formatMessage(COMMON_LOCALE_KEYS.OR)}
+        {`${formatMessage(COMMON_LOCALE_KEYS.OR).toLocaleLowerCase()} `}
         <Link to={{ type: LOGIN_PAGE }} className={cx('backlink')}>
           {formatMessage(messages.login)}
         </Link>
-        {formatMessage(messages.again)}
+        {` ${formatMessage(messages.again)}`}
       </div>
     </RegistrationFailBlock>
   );

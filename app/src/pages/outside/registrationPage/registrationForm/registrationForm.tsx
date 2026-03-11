@@ -47,8 +47,8 @@ const messages = defineMessages({
     id: 'RegistrationForm.passwordConfirmPlaceholder',
     defaultMessage: 'Confirm Password',
   },
-  fullNameHint: {
-    id: 'RegistrationForm.fullNameHint',
+  nameHint: {
+    id: 'RegistrationForm.nameHint',
     defaultMessage:
       'Names must be 3-60 characters, using only Latin or Cyrillic letters, numbers, spaces, dots, hyphens, underscores, and apostrophes.',
   },
@@ -135,7 +135,7 @@ const RegistrationFormComponent = ({
               maxLength="256"
               placeholder={formatMessage(messages.name)}
               hasDynamicValidation
-              hint={formatMessage(messages.fullNameHint)}
+              hint={formatMessage(messages.nameHint)}
               provideErrorHint
             />
           </FieldErrorHint>
