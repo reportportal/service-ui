@@ -1,4 +1,4 @@
-﻿{
+{
   "AALabel.investigatedByAA": "通过自动分析服务进行分析",
   "AccountRemovedPage.description": "您在ReportPortal数据库里的的账号和个人信息已经被删除。\n我们对您的离开感到遗憾，您注册所使用的邮箱将收到一封邮件。",
   "AccountRemovedPage.header": "该账号已被删除",
@@ -347,7 +347,7 @@
   "Common.refresh": "刷新",
   "Common.rename": "Rename",
   "Common.requiredFieldHint": "此项为必填项",
-  "Common.requiredFieldWithPeriodHint": "此项为必填项.",
+  "Common.requiredFieldWithPeriodHint": "此项为必填项。",
   "Common.reset": "重置",
   "Common.saturday": "星期六",
   "Common.save": "保存",

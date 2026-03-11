@@ -17,7 +17,7 @@
 import { ComponentType } from 'react';
 import { createClassnames } from 'common/utils/createClassnames';
 import { referenceDictionary } from 'common/utils';
-import { FormattedMessage, defineMessages, type MessageDescriptor } from 'react-intl';
+import { useIntl, defineMessages, type MessageDescriptor } from 'react-intl';
 import Link from 'redux-first-router-link';
 import { LOGIN_PAGE } from 'controllers/pages';
 import { BlockHeader as BlockHeaderBase } from '../common/pageBlockContainer/blockHeader';
@@ -26,6 +26,7 @@ import { RegistrationFailBlock } from './registrationFailBlock';
 import { RegistrationForm } from './registrationForm';
 import type { RegistrationFormValues } from './registrationForm/registrationForm';
 import styles from './registrationPage.scss';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 const cx = createClassnames(styles);
 
@@ -44,6 +45,35 @@ const messages = defineMessages({
   registration: {
     id: 'RegistrationPage.registration',
     defaultMessage: 'create your account',
+  },
+  coupleMinutes: {
+    id: 'RegistrationPage.coupleMinutes',
+    defaultMessage: 'It only takes a couple of minutes to get started',
+  },
+  oops:
+  {
+    id: 'RegistrationPage.oops',
+    defaultMessage: 'Oops',
+  },
+  tokenExpired: {
+    id: 'RegistrationPage.tokenExpired',
+    defaultMessage: 'this invitation has expired or already used',
+  },
+  tokenNotProvided: {
+    id: 'RegistrationPage.tokenNotProvided',
+    defaultMessage: 'invitation token was not provided in URL parameters',
+  },
+  visit: {
+    id: 'RegistrationPage.visit',
+    defaultMessage: 'Visit',
+  },
+  login: {
+    id: 'RegistrationPage.login',
+    defaultMessage: 'Log In',
+  },
+  again: {
+    id: 'RegistrationPage.again',
+    defaultMessage: 'again',
   },
 });
 
@@ -71,6 +101,8 @@ export const RegistrationPage = ({
     failed: !tokenProvided || !tokenActive,
   };
 
+  const { formatMessage } = useIntl();
+
   return (
     <div className={cx('registration-page')}>
       <div className={cx('registration-page-content')}>
@@ -81,10 +113,7 @@ export const RegistrationPage = ({
         <RegistrationPageSection left>
           {tokenProvided && tokenActive && (
             <div className={cx('couple-minutes')}>
-              <FormattedMessage
-                id={'RegistrationPage.coupleMinutes'}
-                defaultMessage={'It only takes a couple of minutes to get started'}
-              />
+              {formatMessage(messages.coupleMinutes)}
             </div>
           )}
         </RegistrationPageSection>
@@ -113,36 +142,30 @@ interface TokenErrorSectionProps {
   tokenProvided?: boolean;
 }
 
-const TokenErrorSection = ({ tokenProvided = false }: TokenErrorSectionProps) => (
-  <RegistrationFailBlock>
-    <span className={cx('fail-msg')}>
-      <span className={cx('big')}>
-        <FormattedMessage id={'RegistrationPage.oops'} defaultMessage={'Oops,'} />
+const TokenErrorSection = ({ tokenProvided = false }: TokenErrorSectionProps) => {
+
+  const { formatMessage } = useIntl();
+
+  return (
+    <RegistrationFailBlock>
+      <span className={cx('fail-msg')}>
+        <span className={cx('big')}>{formatMessage(messages.oops)},</span>
+        <br />
+        {formatMessage(tokenProvided ? messages.tokenExpired : messages.tokenNotProvided)}
       </span>
-      <br />
-      {tokenProvided ? (
-        <FormattedMessage
-          id={'RegistrationPage.tokenExpired'}
-          defaultMessage={'this invitation has expired or already used'}
-        />
-      ) : (
-        <FormattedMessage
-          id={'RegistrationPage.tokenNotProvided'}
-          defaultMessage={'invitation token was not provided in URL parameters'}
-        />
-      )}
-    </span>
-    <div className={cx('visit-rp')}>
-      <FormattedMessage id={'RegistrationPage.visit'} defaultMessage={'Visit '} />
-      <a className={cx('backlink')} href={referenceDictionary.rpLanding}>
-        ReportPortal.io
-      </a>
-      <br />
-      <FormattedMessage id={'RegistrationPage.or'} defaultMessage={'or '} />
-      <Link to={{ type: LOGIN_PAGE }} className={cx('backlink')}>
-        <FormattedMessage id={'RegistrationPage.login'} defaultMessage={'Log In'} />
-      </Link>
-      <FormattedMessage id={'RegistrationPage.again'} defaultMessage={' again'} />
-    </div>
-  </RegistrationFailBlock>
-);
+      <div className={cx('visit-rp')}>
+        {formatMessage(messages.visit)}
+        <a className={cx('backlink')} href={referenceDictionary.rpLanding}>
+          ReportPortal.io
+        </a>
+        <br />
+        {formatMessage(COMMON_LOCALE_KEYS.OR)}
+        <Link to={{ type: LOGIN_PAGE }} className={cx('backlink')}>
+          {formatMessage(messages.login)}
+        </Link>
+        {formatMessage(messages.again)}
+      </div>
+    </RegistrationFailBlock>
+  );
+};
+

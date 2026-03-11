@@ -15,8 +15,9 @@
  */
 
 import { useEffect, type FormEventHandler } from 'react';
+import { isString } from 'es-toolkit';
 import { createClassnames } from 'common/utils/createClassnames';
-import { FormattedMessage, injectIntl, defineMessages, IntlShape } from 'react-intl';
+import { injectIntl, defineMessages, IntlShape } from 'react-intl';
 import { reduxForm, InjectedFormProps, SubmissionError } from 'redux-form';
 import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -50,6 +51,14 @@ const messages = defineMessages({
     id: 'RegistrationForm.fullNameHint',
     defaultMessage:
       'Names must be 3-60 characters, using only Latin or Cyrillic letters, numbers, spaces, dots, hyphens, underscores, and apostrophes.',
+  },
+  failed: {
+    id: 'RegistrationForm.failed',
+    defaultMessage: 'Registration failed',
+  },
+  register: {
+    id: 'RegistrationForm.register',
+    defaultMessage: 'Register',
   },
 });
 
@@ -108,7 +117,8 @@ const RegistrationFormComponent = ({
   }, []);
 
   const submitHandler = (values: RegistrationFormValues) =>
-    submitForm(values).catch((message: string) => {
+    submitForm(values).catch((error: unknown) => {
+      const message = isString(error) ? error : formatMessage(messages.failed);
       throw new SubmissionError({ email: message });
     });
 
@@ -173,9 +183,7 @@ const RegistrationFormComponent = ({
       <div className={cx('buttons-container')}>
         <div className={cx('button-register')}>
           <BigButton type={'submit'} roundedCorners color={'booger'} disabled={loading || invalid}>
-            {submitButtonTitle || (
-              <FormattedMessage id={'RegistrationForm.register'} defaultMessage={'Register'} />
-            )}
+            {submitButtonTitle || formatMessage(messages.register)}
           </BigButton>
         </div>
       </div>
@@ -202,7 +210,7 @@ export const RegistrationForm = connect((state) => ({
           password: passwordValidator(password),
           confirmPassword:
             (!confirmPassword || confirmPassword !== password) && 'confirmPasswordHint',
-          name: !name?.trim() ? 'requiredFieldWithPeriodHint' : commonValidators.userName(name),
+          name: name?.trim() ? commonValidators.userName(name) : 'requiredFieldWithPeriodHint',
         };
       },
     })(RegistrationFormComponent),
