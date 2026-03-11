@@ -194,6 +194,7 @@ export interface TagPopoverProps {
   selectedTags?: (Tag | Attribute)[];
   placement?: 'top' | 'bottom' | 'left' | 'right' | 'bottom-end';
   className?: string;
+  shouldParseSelectedTags?: boolean;
 }
 
 export interface UseTestCaseTagsParams {

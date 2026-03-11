@@ -33,10 +33,14 @@ export const useTagSearch = (searchValue: string = '') => {
 
   const fetchAllTags = useCallback(async () => {
     try {
+      setLoading(true);
+
       const keys = await fetch<string[]>(URLS.tmsAttributeKeysSearch(projectKey, {}));
       setAllTags(convertKeysToTags(keys));
     } catch {
       setAllTags([]);
+    } finally {
+      setLoading(false);
     }
   }, [projectKey]);
 
