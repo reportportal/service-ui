@@ -131,11 +131,13 @@ export interface Attachment {
 
 export interface BtsTicket {
   id: number;
+  name: string;
+  link: string;
 }
 
 export interface ExecutionComment {
   comment?: string;
-  btsTicket?: BtsTicket;
+  btsTickets?: BtsTicket[];
   attachments?: Attachment[];
 }
 

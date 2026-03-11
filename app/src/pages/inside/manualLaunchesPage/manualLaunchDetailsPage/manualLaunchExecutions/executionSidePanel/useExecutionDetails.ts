@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Issue } from "@reportportal/ui-kit/issueList";
 
 import { useDebouncedSpinner } from "common/hooks";
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { showErrorNotification } from "controllers/notification";
 import { projectKeySelector } from "controllers/project";
-import { Attachment, Attribute, ExecutionComment, TestFolder } from "controllers/manualLaunch/types";
+import { Attribute, ExecutionComment, TestFolder } from "controllers/manualLaunch/types";
 import { useManualLaunchId } from "hooks/useTypedSelector";
 import { TestCasePriority } from "pages/inside/common/priorityIcon/types";
 import { UrlsHelper } from "pages/inside/manualLaunchesPage/types";
@@ -30,9 +29,6 @@ interface ExecutionItem {
   manualScenario: ManualScenario | null;
   attributes: Attribute[];
   requirements?: Requirement[];
-  tags?: string[];
-  attachments: Attachment[];
-  btsIssues: Issue[];
 };
 
 export const useExecutionDetails = (executionId: number | null) => {
