@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ import {
   FETCH_FILTERED_PROJECTS,
   RENAME_PROJECT,
   UNASSIGN_FROM_PROJECT,
+  CHANGE_PROJECT_ROLE,
 } from './constants';
 import { fetchOrganizationBySlugAction } from '..';
 import { querySelector } from './selectors';
@@ -143,7 +144,7 @@ function* renameProject({ payload: { projectId, newProjectName } }) {
 
   const renameOperation = {
     op: 'replace',
-    path: 'name',
+    path: '/name',
     value: newProjectName,
   };
 
@@ -177,7 +178,7 @@ function* unassignFromProject({ payload = {} }) {
 
   const removeOperation = {
     op: 'remove',
-    path: 'users',
+    path: '/users',
     value: [{ id: user.id }],
   };
 
@@ -200,6 +201,34 @@ function* unassignFromProject({ payload = {} }) {
   }
 }
 
+function* changeProjectRole({ payload = {} }) {
+  const { user, projectKey, newProjectRole, onSuccess } = payload;
+  const login = user?.userId;
+
+  if (!login || !projectKey || !newProjectRole) {
+    yield put(showErrorNotification({ messageId: 'changeProjectRoleError' }));
+    return;
+  }
+
+  try {
+    yield call(fetch, URLS.projectByName(projectKey), {
+      method: 'put',
+      data: { users: { [login]: newProjectRole } },
+    });
+
+    yield put(
+      showSuccessNotification({
+        messageId: 'changeProjectRoleSuccess',
+        values: { name: user.fullName },
+      }),
+    );
+
+    onSuccess?.();
+  } catch {
+    yield put(showErrorNotification({ messageId: 'changeProjectRoleError' }));
+  }
+}
+
 function* watchDeleteProject() {
   yield takeEvery(DELETE_PROJECT, deleteProject);
 }
@@ -216,6 +245,10 @@ function* watchUnassignFromProject() {
   yield takeEvery(UNASSIGN_FROM_PROJECT, unassignFromProject);
 }
 
+function* watchChangeProjectRole() {
+  yield takeEvery(CHANGE_PROJECT_ROLE, changeProjectRole);
+}
+
 export function* projectsSagas() {
   yield all([
     watchFetchProjects(),
@@ -224,5 +257,6 @@ export function* projectsSagas() {
     watchFetchFilteredProjects(),
     watchRenameProject(),
     watchUnassignFromProject(),
+    watchChangeProjectRole(),
   ]);
 }

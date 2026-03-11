@@ -18,6 +18,7 @@ import {
   normalizeEventParameter,
   getBasicClickEventParameters,
   getBasicEventParameters,
+  normalizeEventParameterCase,
 } from './ga4Utils';
 
 describe('ga4Utils', () => {
@@ -52,6 +53,20 @@ describe('ga4Utils', () => {
       const expectedResult = 'helloworld';
 
       expect(normalizeEventParameter(input)).toBe(expectedResult);
+    });
+  });
+
+  describe('normalizeEventParameterCase', () => {
+    test('returns empty string when no argument is provided', () => {
+      expect(normalizeEventParameterCase()).toBe('');
+    });
+
+    test('returns the same string when no uppercase letters are present', () => {
+      expect(normalizeEventParameterCase('lowercase')).toBe('lowercase');
+    });
+
+    test('converts simple camelCase to snake_case', () => {
+      expect(normalizeEventParameterCase('camelCase')).toBe('camel_case');
     });
   });
 });

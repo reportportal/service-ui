@@ -27,6 +27,10 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.delete',
     defaultMessage: 'Delete',
   },
+  REMOVE: {
+    id: 'Common.remove',
+    defaultMessage: 'Remove',
+  },
   CANCEL: {
     id: 'Common.cancel',
     defaultMessage: 'Cancel',
@@ -391,6 +395,10 @@ export const COMMON_LOCALE_KEYS = defineMessages({
   ADD_TO_LAUNCH_TOOLTIP_TEXT: {
     id: 'Common.addToLaunchTooltipText',
     defaultMessage: 'Add scenario details to be able to add this test case to launch',
+  },
+  REFRESH: {
+    id: 'Common.refresh',
+    defaultMessage: 'Refresh',
   },
 });
 

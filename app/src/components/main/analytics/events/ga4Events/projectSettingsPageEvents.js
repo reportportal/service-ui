@@ -24,6 +24,7 @@ const NOTIFICATIONS = 'notifications';
 const DEFECT_TYPES = 'defect_types';
 const INTEGRATIONS = 'integrations';
 const PATTERN_ANALYSIS = 'pattern_analysis';
+const LOG_TYPES = 'log_types';
 const GENERAL = 'general';
 const BASIC_EVENT_PARAMETERS_ANALYZER_TAB = getBasicClickEventParameters(PROJECT_SETTINGS);
 const BASIC_EVENT_PARAMETERS_NOTIFICATIONS = {
@@ -45,11 +46,16 @@ const BASIC_EVENT_PARAMETERS_PATTERN_ANALYSIS = {
   place: PATTERN_ANALYSIS,
 };
 
+const BASIC_EVENT_PARAMETERS_LOG_TYPES = {
+  ...getBasicClickEventParameters(PROJECT_SETTINGS),
+  place: LOG_TYPES,
+};
+
 const BASIC_EVENT_PARAMETERS_GENERAL = getBasicClickEventParameters(PROJECT_SETTINGS);
 
 export const PROJECT_SETTINGS_VIEWS = {
   getProjectSettingsPageView: (settingsTab, subTab) => ({
-    action: 'pageview',
+    action: 'page_view',
     page: PROJECT_SETTINGS,
     place: subTab
       ? `${PROJECT_SETTINGS}_${settingsTab.toLowerCase()}_${subTab.toLowerCase()}`
@@ -300,4 +306,51 @@ export const PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS = {
     ...(place && { place }),
     link_name: 'documentation',
   }),
+};
+
+export const PROJECT_SETTINGS_LOG_TYPES_EVENTS = {
+  CLICK_CREATE_TYPES: {
+    ...BASIC_EVENT_PARAMETERS_LOG_TYPES,
+    element_name: 'icon_create_type',
+  },
+
+  CLICK_CREATE_IN_MODAL: {
+    ...BASIC_EVENT_PARAMETERS_LOG_TYPES,
+    modal: 'create_log_types',
+    element_name: 'create_log_type',
+  },
+
+  CLICK_EDIT_ICON: {
+    ...BASIC_EVENT_PARAMETERS_LOG_TYPES,
+    icon_name: 'edit_log_type',
+  },
+
+  clickSaveInEditModal: (isSystem) => ({
+    ...BASIC_EVENT_PARAMETERS_LOG_TYPES,
+    modal: 'edit_log_types',
+    element_name: 'save_edit_log_type',
+    condition: isSystem ? 'default_log_type' : 'custom_log_type',
+  }),
+
+  toggleShowInLogFilter: (isSystem, isFilterable) => ({
+    ...BASIC_EVENT_PARAMETERS_LOG_TYPES,
+    condition: isSystem ? 'default_log_type' : 'custom_log_type',
+    switcher: getSwitcher(isFilterable),
+  }),
+
+  CLICK_DELETE_ICON: {
+    ...BASIC_EVENT_PARAMETERS_LOG_TYPES,
+    icon_name: 'delete_log_type',
+  },
+
+  CLICK_DELETE_IN_MODAL: {
+    ...BASIC_EVENT_PARAMETERS_LOG_TYPES,
+    modal: 'delete_log_type',
+    element_name: 'delete_log_type',
+  },
+
+  CLICK_DOCUMENTATION_LINK: {
+    ...BASIC_EVENT_PARAMETERS_LOG_TYPES,
+    link_name: 'documentation',
+  },
 };

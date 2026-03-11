@@ -23,6 +23,7 @@ import { SpringSystem } from 'rebound';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import { FOOTER_EVENTS } from 'components/main/analytics/events';
 import { forceCheck } from 'react-lazyload';
+import { scrollEventObserver, BACK_TO_TOP_EVENT } from 'common/observers/scrollObserver';
 import BackToTopIcon from './img/back-to-top-inline.svg';
 import styles from './scrollWrapper.scss';
 
@@ -57,6 +58,8 @@ export class ScrollWrapper extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    backToTopEventEnabled: PropTypes.bool,
+    scrollContainerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.any })]),
   };
   static defaultProps = {
     initialScrollRight: false,
@@ -82,6 +85,8 @@ export class ScrollWrapper extends Component {
     withFooter: false,
     resetRequired: false,
     onReset: () => {},
+    backToTopEventEnabled: false,
+    scrollContainerRef: null,
   };
   state = {
     showButton: false,
@@ -95,6 +100,7 @@ export class ScrollWrapper extends Component {
       this.spring.addListener({ onSpringUpdate: this.handleSpringUpdate });
       this.stopScroll = false;
     }
+    this.updateScrollContainerRef();
   }
 
   componentDidUpdate() {
@@ -102,6 +108,7 @@ export class ScrollWrapper extends Component {
       this.scrollbars.scrollTop(0);
       this.props.onReset();
     }
+    this.updateScrollContainerRef();
   }
 
   componentWillUnmount() {
@@ -118,6 +125,20 @@ export class ScrollWrapper extends Component {
 
   setupRef = (scrollbars) => {
     this.scrollbars = scrollbars;
+  };
+
+  updateScrollContainerRef = () => {
+    if (this.props.scrollContainerRef && this.scrollbars) {
+      const viewElement = this.scrollbars.view;
+      
+      if (viewElement) {
+        if (typeof this.props.scrollContainerRef === 'function') {
+          this.props.scrollContainerRef(viewElement);
+        } else if (this.props.scrollContainerRef.current !== undefined) {
+          this.props.scrollContainerRef.current = viewElement;
+        }
+      }
+    }
   };
 
   handleSpringUpdate = (spring) => {
@@ -138,6 +159,10 @@ export class ScrollWrapper extends Component {
     const scrollTop = this.scrollbars.getScrollTop();
     this.spring.setCurrentValue(scrollTop).setAtRest();
     this.spring.setEndValue(0);
+
+    if (this.props.backToTopEventEnabled) {
+      scrollEventObserver.publish(BACK_TO_TOP_EVENT);
+    }
   };
 
   handleScrollFrame = ({ scrollTop, scrollLeft, top }) => {

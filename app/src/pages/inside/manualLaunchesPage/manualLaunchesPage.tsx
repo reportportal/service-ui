@@ -16,53 +16,106 @@
 
 import { useCallback } from 'react';
 import { useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
-import { Button, RefreshIcon } from '@reportportal/ui-kit';
+import { Button, RefreshIcon, Pagination } from '@reportportal/ui-kit';
 
 import { projectNameSelector } from 'controllers/project';
-import { activeOrganizationNameSelector } from 'controllers/organization';
-import { LocationHeaderLayout } from 'layouts/locationHeaderLayout';
+import { SettingsLayout } from 'layouts/settingsLayout';
 import { createClassnames } from 'common/utils';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { ProjectDetails } from 'pages/organization/constants';
+import {
+  manualLaunchContentSelector,
+  isLoadingSelector,
+  manualLaunchPageSelector,
+  getManualLaunchesAction,
+  MANUAL_LAUNCHES_NAMESPACE,
+  defaultManualLaunchesQueryParams,
+} from 'controllers/manualLaunch';
 
 import { messages } from './messages';
-import styles from './manualLaunchesPage.scss';
 import { ManualLaunchesPageContent } from './manualLaunchesPageContent';
-import { useManualLaunches } from './useManualLaunches';
 import { commonMessages } from '../testPlansPage/commonMessages';
+import { ITEMS_PER_PAGE_OPTIONS } from './manualLaunchesList/contants';
+import { useURLBoundPagination } from '../common/testCaseList/useURLBoundPagination';
+import { PageHeaderWithBreadcrumbsAndActions } from '../common/pageHeaderWithBreadcrumbsAndActions';
+
+import styles from './manualLaunchesPage.scss';
 
 const cx = createClassnames(styles);
 
 export const ManualLaunchesPage = () => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+
   const projectName = useSelector(projectNameSelector);
-  const organizationName = useSelector(activeOrganizationNameSelector) as string;
-  const { fullLaunches, isLoading, refetch } = useManualLaunches();
+  const content = useSelector(manualLaunchContentSelector);
+  const pageInfo = useSelector(manualLaunchPageSelector);
+  const isLoading = useSelector(isLoadingSelector);
+  const { organizationSlug, projectSlug } = useSelector(
+    urlOrganizationAndProjectSelector,
+  ) as ProjectDetails;
+
+  const { activePage, pageSize, setPageNumber, setPageSize, totalPages, captions, offset } =
+    useURLBoundPagination({
+      pageData: pageInfo,
+      defaultQueryParams: defaultManualLaunchesQueryParams,
+      namespace: MANUAL_LAUNCHES_NAMESPACE,
+      shouldSaveUserPreferences: true,
+      baseUrl: `/organizations/${organizationSlug}/projects/${projectSlug}/manualLaunches`,
+    });
 
   const handleRefresh = useCallback(() => {
-    refetch().catch(() => {});
-  }, [refetch]);
+    dispatch(getManualLaunchesAction({ offset, limit: pageSize }));
+  }, [dispatch, offset, pageSize]);
+
+  const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
+  const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
 
   return (
-    <div className={cx('manual-launches-page')}>
-      <LocationHeaderLayout
-        title={formatMessage(messages.manualLaunchesTitle)}
-        organizationName={organizationName}
-        projectName={projectName}
-      >
-        {!isEmpty(fullLaunches) && (
-          <Button
-            variant="text"
-            data-automation-id="refreshPageButton"
-            icon={<RefreshIcon />}
-            disabled={isLoading}
-            onClick={handleRefresh}
-          >
-            {formatMessage(commonMessages.refreshPage)}
-          </Button>
+    <SettingsLayout>
+      <ScrollWrapper resetRequired>
+        <PageHeaderWithBreadcrumbsAndActions
+          title={formatMessage(messages.manualLaunchesTitle)}
+          breadcrumbDescriptors={breadcrumbDescriptors}
+          {...(!isEmpty(content) && {
+            actions: (
+              <Button
+                variant="text"
+                data-automation-id="refreshPageButton"
+                icon={<RefreshIcon />}
+                disabled={isLoading}
+                onClick={handleRefresh}
+              >
+                {formatMessage(commonMessages.refreshPage)}
+              </Button>
+            ),
+          })}
+        />
+        <div className={cx('content-wrapper')}>
+          <ManualLaunchesPageContent
+            fullLaunches={content}
+            isLoading={isLoading}
+            onRefresh={handleRefresh}
+          />
+        </div>
+        {Boolean(pageInfo?.totalElements) && (
+          <div className={cx('pagination')}>
+            <Pagination
+              pageSize={pageSize}
+              activePage={activePage}
+              totalItems={pageInfo?.totalElements || 0}
+              totalPages={totalPages}
+              pageSizeOptions={ITEMS_PER_PAGE_OPTIONS}
+              captions={captions}
+              changePage={setPageNumber}
+              changePageSize={setPageSize}
+            />
+          </div>
         )}
-      </LocationHeaderLayout>
-      <ManualLaunchesPageContent fullLaunches={fullLaunches} isLoading={isLoading} />
-    </div>
+      </ScrollWrapper>
+    </SettingsLayout>
   );
 };

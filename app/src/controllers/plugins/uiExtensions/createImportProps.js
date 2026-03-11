@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useIntl } from 'react-intl';
+import { useIntl, defineMessages } from 'react-intl';
 import moment from 'moment';
 import Parser from 'html-react-parser';
 import {
@@ -41,6 +41,8 @@ import {
   FieldTextFlex,
   FieldNumber,
 } from '@reportportal/ui-kit';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { ALL } from 'common/constants/reservedFilterIds';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { BigButton } from 'components/buttons/bigButton';
 import { NavigationTabs } from 'components/main/navigationTabs';
@@ -50,6 +52,11 @@ import { ModalLayout, ModalField } from 'components/main/modal';
 import { showModalAction, hideModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils/fetch';
 import { isEmptyObject } from 'common/utils/isEmptyObject';
+import {
+  getSessionItem,
+  setSessionItem,
+  removeSessionItem,
+} from 'common/utils/storageUtils';
 import {
   STATS_PB_TOTAL,
   STATS_AB_TOTAL,
@@ -76,9 +83,18 @@ import {
   updateConfigurationAttributesAction,
 } from 'controllers/project';
 import {
+  userIdSelector,
+  idSelector,
+  userAccountRoleSelector,
+  getUserProjectSettingsFromStorage,
+  updateUserProjectSettingsInStorage,
+  logsSizeSelector,
+} from 'controllers/user';
+import {
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   PROJECT_SETTINGS_TAB_PAGE,
   pluginRouteSelector,
+  pluginPageSelector,
   updatePagePropertiesAction,
   pagePropertiesSelector,
   urlOrganizationAndProjectSelector,
@@ -89,8 +105,10 @@ import {
   ORGANIZATION_SETTINGS_TAB_PAGE,
   ORGANIZATION_PROJECTS_PAGE,
   urlOrganizationSlugSelector,
+  locationSelector,
 } from 'controllers/pages';
 import { attributesArray, isNotEmptyArray } from 'common/utils/validation/validate';
+import { canDeleteTestItem } from 'common/utils/permissions';
 import {
   requiredField,
   btsUrl,
@@ -131,6 +149,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { SimpleBreadcrumbs } from 'components/main/simpleBreadcrumbs';
 import { statisticsLinkSelector, defectLinkSelector, launchSelector } from 'controllers/testItem';
+import { NameLink } from 'pages/inside/common/nameLink';
 import { Grid } from 'components/main/grid';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { AttributeListContainer as AttributeListField } from 'components/containers/attributeListContainer';
@@ -158,10 +177,12 @@ import { StripedMessage } from 'components/main/stripedMessage';
 import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
 import { DependentFieldsControl } from 'components/main/dependentFieldsControl';
 import { GeneralTab } from 'pages/organization/organizationSettingsPage/content/generalTab';
+import { TestItemStatus } from 'pages/inside/common/testItemStatus';
 import { RuleList, ItemContent } from 'components/main/ruleList';
 import { RuleListHeader } from 'components/main/ruleListHeader';
 import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
 import { DEFECT_TYPES_SEQUENCE, TO_INVESTIGATE } from 'common/constants/defectTypes';
+import { METHOD_TYPES_SEQUENCE } from 'common/constants/methodTypes';
 import {
   getDefaultTestItemLinkParams,
   getItemNameConfig,
@@ -177,13 +198,19 @@ import {
 } from 'components/integrations/elements';
 import { updateLaunchLocallyAction } from 'controllers/launch';
 import { getDefectTypeLabel } from 'components/main/analytics/events/common/utils';
-import { formatAttribute } from 'common/utils/attributeUtils';
+import { provideEcGA } from 'components/main/analytics/utils';
+import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
+import { formatAttribute, parseQueryAttributes } from 'common/utils/attributeUtils';
 import { createNamespacedQuery } from 'common/utils/routingUtils';
+import { formatMethodType } from 'common/utils/localizationUtils';
 import {
   publicPluginsSelector,
   createGlobalNamedIntegrationsSelector,
 } from 'controllers/plugins/selectors';
 import { loginAction } from 'controllers/auth';
+import { AttributeEditor } from 'componentLibrary/attributeEditor';
+import { EditableAttribute } from 'componentLibrary/attributeList/editableAttribute';
+
 import {
   FieldElement,
   RuleList as RuleListComponent,
@@ -200,6 +227,16 @@ import { PlainTable } from 'componentLibrary/plainTable';
 import { ProjectName } from 'pages/organization/organizationProjectsPage/projectsListTable/projectName';
 import { SidebarButton } from 'componentLibrary/sidebar/sidebarButton';
 import { activeOrganizationSelector } from 'controllers/organization';
+import { AdaptiveIssueList } from 'pages/inside/common/adaptiveIssueList';
+import { withFilter } from 'controllers/filter';
+import { SORTING_KEY, withSortingURL } from 'controllers/sorting';
+import { PAGE_KEY } from 'controllers/pagination';
+import {
+  DateRangeFormField,
+  formatDisplayedValue,
+  parseFormattedDate,
+  formatDateRangeToMinutesString,
+} from 'components/main/dateRange';
 
 const BUTTONS = {
   GhostButton,
@@ -238,6 +275,7 @@ export const createImportProps = (pluginName) => ({
     useSelector,
     useDispatch,
     useIntl,
+    defineMessages,
     moment,
     Parser,
     reduxForm,
@@ -263,11 +301,13 @@ export const createImportProps = (pluginName) => ({
     FieldErrorHint,
     SimpleBreadcrumbs,
     Link,
+    NameLink,
     Grid,
     PaginationToolbar,
     ProjectName,
     ScrollWrapper,
     AbsRelTime,
+    TestItemStatus,
     MarkdownEditor,
     MarkdownViewer,
     GeneralTab,
@@ -288,6 +328,8 @@ export const createImportProps = (pluginName) => ({
     ModalLayoutComponent,
     FieldText,
     FieldTextFlex,
+    AttributeEditor,
+    EditableAttribute,
     FieldElement,
     Checkbox,
     Toggle,
@@ -301,15 +343,22 @@ export const createImportProps = (pluginName) => ({
     Breadcrumbs,
     PlainTable,
     BubblesPreloader: BubblesLoader,
+    DateRangeFormField,
+    AdaptiveIssueList,
   },
   componentLibrary: { DraggableRuleList },
   HOCs: {
     withTooltip,
+    withFilter,
+    withSortingURL,
   },
   constants: {
+    COMMON_LOCALE_KEYS,
     PLUGIN_UI_EXTENSION_ADMIN_PAGE,
     PROJECT_SETTINGS_TAB_PAGE,
+    ALL,
     DEFECT_TYPES_SEQUENCE,
+    METHOD_TYPES_SEQUENCE,
     TO_INVESTIGATE,
     STATS_PB_TOTAL,
     STATS_AB_TOTAL,
@@ -326,6 +375,8 @@ export const createImportProps = (pluginName) => ({
     BTS_FIELDS_FORM,
     ORGANIZATION_SETTINGS_TAB_PAGE,
     ORGANIZATION_PROJECTS_PAGE,
+    SORTING_KEY,
+    PAGE_KEY,
   },
   actions: {
     showModalAction,
@@ -343,8 +394,11 @@ export const createImportProps = (pluginName) => ({
   },
   selectors: {
     pluginRouteSelector,
+    pluginPageSelector,
     payloadSelector,
     activeProjectKeySelector,
+    userIdSelector,
+    idSelector,
     urlOrganizationAndProjectSelector,
     // TODO: must be removed when the common plugin commands will be used
     globalIntegrationsSelector: createGlobalNamedIntegrationsSelector(pluginName),
@@ -353,6 +407,7 @@ export const createImportProps = (pluginName) => ({
     projectAttributesSelector,
     activeProjectRoleSelector,
     userRolesSelector,
+    userAccountRoleSelector,
     projectInfoLoadingSelector,
     isEmailIntegrationAvailableSelector,
     isAdminSelector,
@@ -365,6 +420,10 @@ export const createImportProps = (pluginName) => ({
     querySelector,
     activeOrganizationSelector,
     urlOrganizationSlugSelector,
+    logsSizeSelector,
+    analyticsEnabledSelector,
+    baseEventParametersSelector,
+    locationSelector,
   },
   icons: {
     PlusIcon,
@@ -390,7 +449,19 @@ export const createImportProps = (pluginName) => ({
     getDefectTypeLabel,
     getDefectFormFields,
     formatAttribute,
+    parseQueryAttributes,
     createNamespacedQuery,
+    formatDisplayedValue,
+    parseFormattedDate,
+    formatDateRangeToMinutesString,
+    getUserProjectSettingsFromStorage,
+    updateUserProjectSettingsInStorage,
+    formatMethodType,
+    provideEcGA,
+    getSessionItem,
+    setSessionItem,
+    removeSessionItem,
+    canDeleteTestItem,
   },
   validators: {
     attributesArray,
@@ -403,5 +474,12 @@ export const createImportProps = (pluginName) => ({
     btsIntegrationName,
     helpers: { composeValidators, bindMessageToValidator },
     email,
+  },
+  portalRootIds: {
+    tooltipRoot: 'tooltip-root',
+    modalRoot: 'modal-root',
+    popoverRoot: 'popover-root',
+    notificationRoot: 'notification-root',
+    screenLockRoot: 'screen-lock-root',
   },
 });

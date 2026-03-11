@@ -83,11 +83,14 @@ export const useURLBoundPagination = ({
     }
   };
 
+  const offset = (activePage - 1) * pageSize;
+
   return {
     setPageNumber,
     setPageSize,
     captions,
     activePage,
+    offset,
     pageSize,
     totalPages,
   };

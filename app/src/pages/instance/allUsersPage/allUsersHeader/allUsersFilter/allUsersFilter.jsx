@@ -29,7 +29,7 @@ import {
   timeRangeLastLoginValues,
   getAccountTypes,
   getEmailComparisons,
-  getLastLogin,
+  getLastLoginOptions,
   getPermissions,
   LAST_LOGIN_FILTER_NAME,
   USERS_PERMISSIONS_FILTER_NAME,
@@ -40,8 +40,6 @@ import { getApplyFilterEventParams } from 'components/main/analytics/utils';
 import {
   DateRangeFormField,
   formatDisplayedValue,
-  parseFormattedDate,
-  formatDateRangeToMinutesString,
 } from 'components/main/dateRange';
 import { messages } from './messages';
 import styles from './allUsersFilter.scss';
@@ -60,7 +58,7 @@ export const AllUsersFilter = ({
 
   const permissions = getPermissions(formatMessage);
   const accountTypes = getAccountTypes(formatMessage);
-  const lastLogin = getLastLogin(formatMessage);
+  const lastLogin = getLastLoginOptions(formatMessage);
   const emailComparisons = getEmailComparisons(formatMessage);
   const lastLoginDate = useSelector((state) => selector(state, LAST_LOGIN_FILTER_NAME));
 
@@ -111,12 +109,11 @@ export const AllUsersFilter = ({
             formatDisplayedValue: (displayedValue) =>
               formatDisplayedValue(displayedValue, lastLoginDate, timeRangeLastLoginValues),
             notScrollable: true,
-            footer: (
+            footer: (closeDropdown) => (
               <Field
                 name={LAST_LOGIN_FILTER_NAME}
                 component={DateRangeFormField}
-                format={parseFormattedDate}
-                parse={formatDateRangeToMinutesString}
+                onClose={closeDropdown}
               />
             ),
           },

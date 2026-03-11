@@ -16,60 +16,99 @@
 
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { isEmpty } from 'es-toolkit/compat';
+import { isEmpty, isNil } from 'es-toolkit/compat';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { projectKeySelector } from 'controllers/project';
-import { hideModalAction } from 'controllers/modal';
-import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
-import {
-  createFoldersSuccessAction,
-  createFoldersBatchSuccessAction,
-} from 'controllers/testCase/actionCreators';
-import { useDebouncedSpinner } from 'common/hooks/useDebouncedSpinner';
+import { createFoldersBatchSuccessAction } from 'controllers/testCase/actionCreators';
+import { foldersSelector } from 'controllers/testCase';
 import { Folder } from 'controllers/testCase/types';
 import { fetchAllFolders } from 'controllers/testCase/utils/fetchAllFolders';
 
+import { useFolderActions } from '../../../hooks/useFolderActions';
+import { useNavigateToFolder } from '../../../hooks/useNavigateToFolder';
+import { useFolderOperationUI } from '../../../hooks/useFolderOperationUI';
+import { getFolderNames } from '../../../utils/getFolderNames';
+
 export const useDuplicateFolder = () => {
-  const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
+  const {
+    isLoading,
+    handleOperationStart,
+    handleOperationSuccess,
+    handleOperationError,
+    showErrorNotification,
+  } = useFolderOperationUI();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+  const allFolders = useSelector(foldersSelector);
+  const { createNewStoreFolder } = useFolderActions();
+  const { navigateToFolderAfterAction } = useNavigateToFolder();
 
   const duplicateFolder = useCallback(
     async ({
       folderId,
       folderName,
       parentFolderId,
+      index,
+      fromDragDrop,
     }: {
       folderId: number;
       folderName: string;
-      parentFolderId?: number;
+      parentFolderId?: number | null;
+      index?: number;
+      fromDragDrop?: boolean;
     }) => {
-      showSpinner();
+      const isDragDropOperation = Boolean(fromDragDrop);
+      handleOperationStart({ fromDragDrop: isDragDropOperation });
 
       let duplicatedFolder: Folder;
 
       try {
+        const data: { name: string; parentTestFolderId?: number; index?: number } = {
+          name: folderName,
+          index,
+        };
+
+        if (!isNil(parentFolderId)) {
+          data.parentTestFolderId = parentFolderId;
+        }
+
         duplicatedFolder = await fetch<Folder>(URLS.testFolderDuplicate(projectKey, folderId), {
           method: 'POST',
-          data: {
-            name: folderName,
-            ...(parentFolderId ? { parentTestFolderId: parentFolderId } : {}),
-          },
+          data,
         });
       } catch {
-        dispatch(
-          showErrorNotification({
-            messageId: 'errorOccurredTryAgain',
-          }),
-        );
-        hideSpinner();
+        showErrorNotification({
+          messageId: 'errorOccurredTryAgain',
+        });
+        handleOperationError({ fromDragDrop: isDragDropOperation });
 
         return;
       }
 
-      dispatch(createFoldersSuccessAction(duplicatedFolder));
+      createNewStoreFolder({
+        id: duplicatedFolder.id,
+        folderName: duplicatedFolder.name,
+        parentFolderId: duplicatedFolder.parentFolderId,
+        countOfTestCases: duplicatedFolder.countOfTestCases,
+        index: duplicatedFolder.index,
+      });
+
+      const { folderName: originalFolderName, targetFolderName } = getFolderNames(
+        allFolders,
+        folderId,
+        duplicatedFolder.parentFolderId,
+      );
+
+      handleOperationSuccess({
+        fromDragDrop: isDragDropOperation,
+        successMessageId: 'testCaseFolderDuplicatedSuccess',
+        messageValues: {
+          folderName: originalFolderName,
+          targetFolderName,
+        },
+      });
 
       try {
         const subfolders = await fetchAllFolders({
@@ -81,15 +120,28 @@ export const useDuplicateFolder = () => {
           dispatch(createFoldersBatchSuccessAction(subfolders));
         }
       } catch {
-        hideSpinner();
+        handleOperationError({ fromDragDrop: isDragDropOperation });
       }
 
-      dispatch(hideModalAction());
-      dispatch(showSuccessNotification({ messageId: 'testCaseFolderDuplicatedSuccess' }));
-
-      hideSpinner();
+      navigateToFolderAfterAction({
+        targetFolderId: duplicatedFolder.id,
+        newFolderDetails: {
+          name: duplicatedFolder.name,
+          parentTestFolderId: duplicatedFolder.parentFolderId,
+        },
+      });
     },
-    [projectKey, dispatch, showSpinner, hideSpinner],
+    [
+      projectKey,
+      dispatch,
+      handleOperationStart,
+      handleOperationSuccess,
+      handleOperationError,
+      createNewStoreFolder,
+      navigateToFolderAfterAction,
+      showErrorNotification,
+      allFolders,
+    ],
   );
 
   return { duplicateFolder, isLoading };

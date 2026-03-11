@@ -48,6 +48,7 @@ export class InputDropdown extends Component {
     title: PropTypes.string,
     readOnly: PropTypes.bool,
     placeholder: PropTypes.string,
+    useFixedPositioning: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -76,6 +77,7 @@ export class InputDropdown extends Component {
     title: '',
     readOnly: false,
     placeholder: '',
+    useFixedPositioning: false,
   };
   state = {
     opened: false,
@@ -225,6 +227,7 @@ export class InputDropdown extends Component {
       customClasses,
       title,
       placeholder,
+      useFixedPositioning,
     } = this.props;
     const displayedValue = this.displayedValue();
     return (
@@ -265,6 +268,7 @@ export class InputDropdown extends Component {
           {!this.props.readOnly && (
             <Popper
               placement="bottom-start"
+              positionFixed={useFixedPositioning}
               eventsEnabled={false}
               modifiers={{
                 preventOverflow: { enabled: true },
@@ -275,10 +279,13 @@ export class InputDropdown extends Component {
             >
               {({ placement, ref, style, scheduleUpdate }) => {
                 this.updatePosition = scheduleUpdate;
+                const maxWidth = this.node?.offsetWidth || 'auto';
+                const popperStyle = useFixedPositioning ? { ...style, maxWidth } : style;
+
                 return (
                   <div
                     ref={ref}
-                    style={style}
+                    style={popperStyle}
                     data-placement={placement}
                     className={cx('select-list', customClasses.selectList, {
                       opened: this.state.opened,

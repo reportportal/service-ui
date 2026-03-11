@@ -25,6 +25,7 @@
   background-color: $COLOR--white-two;
   border-radius: 4px;
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.07);
+  box-sizing: border-box;
 }
 
 .retries {

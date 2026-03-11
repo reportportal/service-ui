@@ -31,6 +31,11 @@
   > div:first-child > div:first-child {
     padding: 4px 0 4px;
   }
+
+  // TODO: delete after it is fixed in ui-kit
+  :global([class*='_table-header_']) {
+    background: none !important;
+  }
 }
 
 .test-case-table-row {
@@ -39,6 +44,10 @@
   min-height: 76px;
   border-radius: 4px;
   box-sizing: content-box;
+
+  &:global(.is-dragging-row) :global([class*='table-row-content']) {
+    opacity: 0.3;
+  }
 
   :global([class*='table-row-content']) {
     align-items: flex-start;
@@ -81,6 +90,10 @@
   justify-content: center;
   min-height: 200px;
   padding: 40px 20px;
+
+  &--search {
+    padding-top: 132px;
+  }
 }
 
 .no-results-message {
@@ -112,67 +125,53 @@
   flex-shrink: 0;
 }
 
-.controls-actions {
+.test-case-drag-preview {
+  position: fixed;
+  pointer-events: none;
+  z-index: $Z-INDEX-OVERLAY-PANEL;
+  left: 0;
+  top: 0;
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-right: 12px;
-}
+  justify-content: flex-start;
+  gap: 4px;
+  width: 320px;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 4px;
+  background: var(--rp-ui-base-bg-100);
+  box-shadow: 0 8px 40px 0 rgba(0, 0, 0, 0.15);
+  opacity: 0.93;
 
-.search-section {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex: 0 0 auto;
-  max-width: 400px;
-}
-
-.filter-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 0 8px;
-  height: 32px;
-  border: none;
-  border-radius: 12px;
-  background: transparent;
-  color: var(--rp-ui-base-e-400);
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  position: relative;
-
-  &:hover {
-    background-color: var(--rp-ui-base-bg-200);
+  &__text {
+    flex: 1;
+    min-width: 0;
+    font-family: $FONT-ROBOTO-MEDIUM;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 20px;
+    letter-spacing: 0;
+    color: var(--rp-ui-base-almost-black);
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
-  svg {
-    width: 16px;
-    height: 16px;
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
-    color: var(--rp-ui-base-e-400);
-    transition: color 0.2s ease-in-out;
+    margin-left: 8px;
 
-    path {
-      fill: currentColor;
-    }
-  }
-
-  &.active {
     svg {
-      color: var(--rp-ui-base-topaz);
+      width: 16px;
+      height: 16px;
     }
 
-    &:hover {
-      background-color: var(--rp-ui-base-bg-200);
+    svg path {
+      fill: var(--rp-ui-base-e-300);
     }
   }
-}
-
-.filter-count {
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 20px;
-  color: var(--rp-ui-base-topaz);
-  font-family: $FONT-ROBOTO-MEDIUM;
 }

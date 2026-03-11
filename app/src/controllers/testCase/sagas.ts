@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { Action } from 'redux';
 import { takeEvery, call, select, all, put, fork, cancel, takeLatest } from 'redux-saga/effects';
 import { Task } from 'redux-saga';
 import { URLS } from 'common/urls';
@@ -44,82 +43,68 @@ import {
   GET_TEST_CASE_DETAILS_SUCCESS,
   NAMESPACE,
   RENAME_FOLDER,
+  GET_FILTERED_FOLDERS,
 } from './constants';
-import { Folder } from './types';
 import {
+  Folder,
+  GetTestCasesByFolderIdAction,
+  GetAllTestCasesAction,
+  CreateFolderAction,
+  DeleteFolderAction,
+  RenameFolderAction,
+  TestCaseDetailsAction,
+  GetFoldersAction,
+  GetFilteredFoldersAction,
+} from './types';
+import {
+  setFoldersFetchedAction,
   createFoldersSuccessAction,
   startCreatingFolderAction,
   stopCreatingFolderAction,
   startLoadingFolderAction,
   stopLoadingFolderAction,
   CreateFolderParams,
-  DeleteFolderParams,
-  RenameFolderParams,
-  GetTestCasesByFolderIdParams,
   startLoadingTestCasesAction,
   stopLoadingTestCasesAction,
   setTestCasesAction,
   deleteFolderSuccessAction,
   renameFolderSuccessAction,
-  GetAllTestCases,
-  setActiveFolderId,
+  expandFoldersToLevelAction,
+  setFilteredFoldersAction,
+  startLoadingFilteredFoldersAction,
+  stopLoadingFilteredFoldersAction,
 } from './actionCreators';
-import { getAllFolderIdsToDelete } from './utils';
+import { getAllFolderIdsToDelete } from 'common/utils/folderUtils';
 import { fetchAllFolders } from './utils/fetchAllFolders';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Page } from 'types/common';
-import { foldersSelector } from 'controllers/testCase/selectors';
+import { areFoldersFetchedSelector, foldersSelector } from 'controllers/testCase/selectors';
 import {
   TEST_CASE_LIBRARY_PAGE,
   urlOrganizationSlugSelector,
   urlProjectSlugSelector,
 } from 'controllers/pages';
 
-interface GetTestCasesByFolderIdAction extends Action<typeof GET_TEST_CASES_BY_FOLDER_ID> {
-  payload: GetTestCasesByFolderIdParams;
-}
-
-interface GetAllTestCasesAction extends Action<typeof GET_ALL_TEST_CASES> {
-  payload: GetAllTestCases;
-}
-
-interface CreateFolderAction extends Action<typeof CREATE_FOLDER> {
-  payload: CreateFolderParams;
-}
-
-interface DeleteFolderAction extends Action<typeof DELETE_FOLDER> {
-  payload: DeleteFolderParams;
-}
-
-interface RenameFolderAction extends Action<typeof RENAME_FOLDER> {
-  payload: RenameFolderParams;
-}
-
-interface TestCaseDetailsAction extends Action<typeof GET_TEST_CASE_DETAILS> {
-  payload: {
-    testCaseId: string;
-  };
-}
-
 function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generator {
   yield put(startLoadingTestCasesAction());
 
   try {
-    const { folderId, offset, limit, setPageData } = action.payload;
+    const { folderId, offset, limit, testCasesSearchParams } = action.payload;
     const projectKey = (yield select(projectKeySelector)) as string;
     const result = (yield call(
       fetch,
-      URLS.testCases(projectKey, { 'filter.eq.testFolderId': folderId, offset, limit }),
+      URLS.testCases(projectKey, {
+        'filter.eq.testFolderId': folderId,
+        'filter.cnt.name': testCasesSearchParams,
+        offset,
+        limit,
+      }),
     )) as {
       content: TestCase[];
       page: Page;
     };
 
     yield put(setTestCasesAction(result));
-
-    if (setPageData) {
-      setPageData();
-    }
   } catch {
     yield put(
       showErrorNotification({
@@ -175,17 +160,16 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
   yield put(startLoadingTestCasesAction());
 
   try {
-    const { offset, limit, setPageData } = action.payload;
+    const { offset, limit, testCasesSearchParams } = action.payload;
     const projectKey = (yield select(projectKeySelector)) as string;
-    const result = (yield call(fetch, URLS.testCases(projectKey, { offset, limit }))) as {
+    const result = (yield call(
+      fetch,
+      URLS.testCases(projectKey, { offset, limit, 'filter.cnt.name': testCasesSearchParams }),
+    )) as {
       content: TestCase[];
       page: Page;
     };
     yield put(setTestCasesAction(result));
-
-    if (setPageData) {
-      setPageData();
-    }
   } catch {
     yield put(
       showErrorNotification({
@@ -197,19 +181,24 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
   }
 }
 
-function* getFolders() {
+function* getFolders(action: GetFoldersAction) {
   const projectKey = (yield select(projectKeySelector)) as string;
+  const areFoldersFetched = (yield select(areFoldersFetchedSelector)) as boolean;
+  const isSilent = action.payload?.silent || false;
 
-  if (!projectKey) {
+  //TODO: Folders should only be fetched once
+  if (!projectKey || (areFoldersFetched && !isSilent)) {
     return;
   }
 
   try {
-    yield put({
-      type: FETCH_START,
-      payload: { projectKey },
-      meta: { namespace: NAMESPACE },
-    });
+    if (!isSilent) {
+      yield put({
+        type: FETCH_START,
+        payload: { projectKey },
+        meta: { namespace: NAMESPACE },
+      });
+    }
 
     const allFolders = (yield call(fetchAllFolders, { projectKey })) as Folder[];
 
@@ -218,6 +207,8 @@ function* getFolders() {
         content: allFolders,
       }),
     );
+
+    yield put(setFoldersFetchedAction());
   } catch (error) {
     yield put(fetchErrorAction(NAMESPACE, error));
     yield put(
@@ -234,6 +225,9 @@ function* handleFolderCreation(
 ): Generator {
   try {
     const projectKey = (yield select(projectKeySelector)) as string;
+    const organizationSlug = (yield select(urlOrganizationSlugSelector)) as string;
+    const projectSlug = (yield select(urlProjectSlugSelector)) as string;
+
     const spinnerTask = (yield fork(
       delayedPut,
       startCreatingFolderAction(),
@@ -251,7 +245,29 @@ function* handleFolderCreation(
 
     yield put(createFoldersSuccessAction({ ...folder, countOfTestCases: 0 }));
     yield put(hideModalAction());
-    yield put(setActiveFolderId({ activeFolderId: folder.id }));
+
+    if (folder.parentFolderId) {
+      const folders = (yield select(foldersSelector)) as Folder[];
+
+      yield put(expandFoldersToLevelAction({ folderId: folder.parentFolderId, folders }));
+    }
+
+    yield put({
+      type: GET_TEST_CASES_BY_FOLDER_ID,
+      payload: {
+        folderId: folder.id,
+        limit: 50,
+        offset: 0,
+      },
+    });
+    yield put({
+      type: TEST_CASE_LIBRARY_PAGE,
+      payload: {
+        testCasePageRoute: `folder/${folder.id}`,
+        organizationSlug,
+        projectSlug,
+      },
+    });
     yield put(
       showSuccessNotification({
         message: null,
@@ -289,7 +305,7 @@ function* deleteFolder(action: DeleteFolderAction) {
     const deletedFolderIds = getAllFolderIdsToDelete(id, folders);
     const isActiveFolder = id === activeFolderId;
 
-    yield call(fetch, URLS.deleteFolder(projectKey, id), {
+    yield call(fetch, URLS.folder(projectKey, id), {
       method: 'DELETE',
     });
 
@@ -325,7 +341,7 @@ function* renameFolder(action: RenameFolderAction) {
     const projectKey = (yield select(projectKeySelector)) as string;
     const { folderId, folderName } = action.payload;
 
-    yield call(fetch, URLS.deleteFolder(projectKey, folderId), {
+    yield call(fetch, URLS.folder(projectKey, folderId), {
       method: 'PATCH',
       data: {
         name: folderName,
@@ -354,6 +370,36 @@ function* renameFolder(action: RenameFolderAction) {
   }
 }
 
+function* getFilteredFolders(action: GetFilteredFoldersAction) {
+  const projectKey = (yield select(projectKeySelector)) as string;
+  const { searchQuery } = action.payload;
+
+  if (!projectKey || !searchQuery) {
+    yield put(setFilteredFoldersAction([]));
+    return;
+  }
+
+  try {
+    yield put(startLoadingFilteredFoldersAction());
+
+    const folders = (yield call(fetchAllFolders, {
+      projectKey,
+      filters: { 'filter.cnt.testCaseName': searchQuery },
+    })) as Folder[];
+
+    yield put(setFilteredFoldersAction(folders));
+  } catch (error) {
+    yield put(setFilteredFoldersAction([]));
+    yield put(
+      showDefaultErrorNotification({
+        message: error instanceof Error ? error.message : undefined,
+      }),
+    );
+  } finally {
+    yield put(stopLoadingFilteredFoldersAction());
+  }
+}
+
 function* watchGetFolders() {
   yield takeEvery(GET_FOLDERS, getFolders);
 }
@@ -374,6 +420,10 @@ function* watchGetTestCaseDetails() {
   yield takeEvery(GET_TEST_CASE_DETAILS, getTestCaseDetails);
 }
 
+function* watchGetFilteredFolders() {
+  yield takeLatest(GET_FILTERED_FOLDERS, getFilteredFolders);
+}
+
 export function* testCaseSagas() {
   yield all([
     watchGetTestCaseDetails(),
@@ -381,6 +431,7 @@ export function* testCaseSagas() {
     watchCreateFolder(),
     watchGetTestCasesByFolderId(),
     watchGetAllTestCases(),
+    watchGetFilteredFolders(),
     takeEvery(DELETE_FOLDER, deleteFolder),
     takeEvery(RENAME_FOLDER, renameFolder),
   ]);

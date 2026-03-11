@@ -33,11 +33,12 @@ import {
   defaultQueryParams,
 } from 'controllers/testPlan';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { useTmsMilestonesEnabled } from 'hooks/useTmsMilestonesEnabled';
 import { useQueryParams } from 'common/hooks';
 
 import { useCreateTestPlanModal } from './testPlanModals';
 import { TestPlansTable } from './testPlansTable';
-import { TestPlansHeader } from './testPlansHeader';
+import { PageHeaderWithBreadcrumbsAndActions } from '../common/pageHeaderWithBreadcrumbsAndActions';
 import { commonMessages } from './commonMessages';
 
 export const TestPlansPage = () => {
@@ -45,7 +46,8 @@ export const TestPlansPage = () => {
   const dispatch = useDispatch();
   const { openModal } = useCreateTestPlanModal();
   const projectName = useSelector(projectNameSelector);
-  const { canCreateTestPlan } = useUserPermissions();
+  const { canManageTestPlans } = useUserPermissions();
+  const isTmsMilestonesEnabled = useTmsMilestonesEnabled();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
@@ -72,8 +74,10 @@ export const TestPlansPage = () => {
   return (
     <SettingsLayout>
       <ScrollWrapper resetRequired>
-        <TestPlansHeader
-          title={formatMessage(commonMessages.pageTitle)}
+        <PageHeaderWithBreadcrumbsAndActions
+          title={formatMessage(
+            isTmsMilestonesEnabled ? commonMessages.pageTitle : commonMessages.pageTestPlansTitle,
+          )}
           breadcrumbDescriptors={breadcrumbDescriptors}
           {...(!isEmpty(testPlans) && {
             actions: (
@@ -87,13 +91,13 @@ export const TestPlansPage = () => {
                 >
                   {formatMessage(commonMessages.refreshPage)}
                 </Button>
-                {canCreateTestPlan && (
+                {canManageTestPlans && (
                   <Button
                     variant="ghost"
                     data-automation-id="createTestPlanButton"
                     onClick={openModal}
                   >
-                    {formatMessage(commonMessages.createMilestone)}
+                    {formatMessage(commonMessages.createTestPlan)}
                   </Button>
                 )}
               </>

@@ -23,7 +23,7 @@ export const messages = defineMessages({
   },
   noTagsFound: {
     id: 'TagPopover.noTagsFound',
-    defaultMessage: 'No tags found',
+    defaultMessage: 'No tags to add. Start typing to create a new one',
   },
   tagAlreadyAdded: {
     id: 'TagPopover.tagAlreadyAdded',

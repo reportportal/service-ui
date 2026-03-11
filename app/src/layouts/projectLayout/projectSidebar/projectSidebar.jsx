@@ -59,6 +59,7 @@ import { OrganizationsControlWithPopover } from '../../organizationsControl';
 import { messages } from '../../messages';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useTmsEnabled } from 'hooks/useTmsEnabled';
+import { useTmsMilestonesEnabled } from 'hooks/useTmsMilestonesEnabled';
 
 const ORGANIZATION_CONTROL = 'Organization control';
 
@@ -67,6 +68,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
   const { formatMessage } = useIntl();
   const { canSeeMembers, canWorkWithFilters } = useUserPermissions();
   const isTmsEnabled = useTmsEnabled();
+  const isTmsMilestonesEnabled = useTmsMilestonesEnabled();
   const sidebarExtensions = useSelector(uiExtensionSidebarComponentsSelector);
   const projectPageExtensions = useSelector(uiExtensionProjectPagesSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
@@ -76,10 +78,15 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
 
   const onClickButton = (eventInfo) => {
     onClickNavBtn();
-    trackEvent(SIDEBAR_EVENTS.onClickItem(eventInfo));
+    if (eventInfo) {
+      trackEvent(SIDEBAR_EVENTS.onClickItem(eventInfo));
+    }
   };
 
   const getSidebarItems = () => {
+    let menuCounter = 0;
+    const menuStep = 10;
+
     const sidebarItems = [
       {
         onClick: (isSidebarCollapsed) =>
@@ -87,6 +94,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         link: { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } },
         icon: DashboardIcon,
         message: formatMessage(messages.dashboards),
+        menuOrder: (menuCounter += menuStep),
       },
       {
         onClick: (isSidebarCollapsed) =>
@@ -97,6 +105,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         },
         icon: LaunchesIcon,
         message: formatMessage(messages.launches),
+        menuOrder: (menuCounter += menuStep),
       },
       ...(isTmsEnabled
         ? [
@@ -112,6 +121,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
               },
               icon: ManualLaunchesIcon,
               message: formatMessage(messages.manualLaunches),
+              menuOrder: (menuCounter += menuStep),
             },
           ]
         : []),
@@ -124,6 +134,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         },
         icon: DebugIcon,
         message: formatMessage(messages.debugMode),
+        menuOrder: (menuCounter += menuStep),
       },
     ];
 
@@ -134,6 +145,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         link: { type: PROJECT_FILTERS_PAGE, payload: { organizationSlug, projectSlug } },
         icon: FiltersIcon,
         message: formatMessage(messages.filters),
+        menuOrder: (menuCounter += menuStep),
       });
     }
 
@@ -147,6 +159,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         },
         icon: MembersIcon,
         message: formatMessage(messages.projectTeam),
+        menuOrder: (menuCounter += menuStep),
       });
     }
 
@@ -164,16 +177,24 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
           },
           icon: TestCaseIcon,
           message: formatMessage(messages.testCaseLibrary),
+          menuOrder: (menuCounter += menuStep),
         },
         {
           onClick: (isSidebarCollapsed) =>
-            onClickButton({ itemName: messages.milestones.defaultMessage, isSidebarCollapsed }),
+            onClickButton({
+              itemName: (isTmsMilestonesEnabled ? messages.milestones : messages.testPlans)
+                .defaultMessage,
+              isSidebarCollapsed,
+            }),
           link: {
             type: PROJECT_TEST_PLANS_PAGE,
             payload: { organizationSlug, projectSlug },
           },
           icon: TestPlansIcon,
-          message: formatMessage(messages.milestones),
+          message: formatMessage(
+            isTmsMilestonesEnabled ? messages.milestones : messages.testPlans,
+          ),
+          menuOrder: (menuCounter += menuStep),
         },
         {
           onClick: (isSidebarCollapsed) =>
@@ -187,6 +208,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
           },
           icon: ProductVersionsIcon,
           message: formatMessage(messages.productVersions),
+          menuOrder: (menuCounter += menuStep),
         },
       );
     }
@@ -200,17 +222,20 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       },
       icon: SettingsIcon,
       message: formatMessage(messages.projectsSettings),
+      menuOrder: (menuCounter += menuStep),
     });
-    projectPageExtensions.forEach(({ icon, internalRoute, name, title }) => {
+    projectPageExtensions.forEach(({ icon, internalRoute, name, title, iconName, menuOrder }) => {
       if (icon) {
+        const itemName = iconName || title;
         sidebarItems.push({
-          onClick: onClickNavBtn,
+          onClick: (isSidebarCollapsed) => onClickButton({ itemName, isSidebarCollapsed }),
           link: {
             type: PROJECT_PLUGIN_PAGE,
             payload: { organizationSlug, projectSlug, pluginPage: internalRoute || name },
           },
           icon: icon.svg,
           message: icon.title || title,
+          menuOrder: menuOrder || (menuCounter += menuStep),
         });
       }
     });
@@ -219,10 +244,11 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         name: extension.name,
         component: <ExtensionLoader extension={extension} />,
         onClick: onClickNavBtn,
+        menuOrder: (menuCounter += menuStep),
       }),
     );
 
-    return sidebarItems;
+    return sidebarItems.sort((a, b) => a.menuOrder - b.menuOrder);
   };
 
   const link = { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug } };

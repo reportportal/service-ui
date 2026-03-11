@@ -15,10 +15,10 @@
  */
 
 import { noop } from 'es-toolkit';
+import { VoidFn } from '@reportportal/ui-kit/common/types/commonTypes';
 
 import { TestPlanDto } from 'controllers/testPlan';
 import { useModal } from 'common/hooks';
-import { VoidFn } from '@reportportal/ui-kit/common/types/commonTypes';
 
 import { DELETE_TEST_PLAN_MODAL_KEY, DeleteTestPlanModal } from './deleteTestPlanModal';
 

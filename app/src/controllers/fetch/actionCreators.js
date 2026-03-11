@@ -22,6 +22,8 @@ import {
   BULK_FETCH_DATA,
   CONCAT_FETCH_DATA,
   CONCAT_FETCH_SUCCESS,
+  PREPEND_FETCH_DATA,
+  PREPEND_FETCH_SUCCESS,
 } from './constants';
 
 export const fetchSuccessAction = (namespace, payload) => ({
@@ -48,11 +50,12 @@ export const fetchStartAction = (namespace, payload) => ({
   },
 });
 
-export const fetchDataAction = (namespace, silent) => (url, options) => ({
+export const fetchDataAction = (namespace, silent) => (url, options, direction) => ({
   type: FETCH_DATA,
   payload: {
     url,
     options,
+    direction,
   },
   meta: {
     namespace,
@@ -80,13 +83,34 @@ export const concatFetchSuccessAction = (namespace, payload, concat) => ({
   concat,
 });
 
-export const concatFetchDataAction = (namespace, concat) => (url, options) => ({
+export const concatFetchDataAction = (namespace, concat) => (url, options, direction) => ({
   type: CONCAT_FETCH_DATA,
   payload: {
     url,
     options,
     concat,
+    direction,
   },
+  meta: {
+    namespace,
+  },
+});
+
+export const prependFetchDataAction = (namespace) => (url, options, direction) => ({
+  type: PREPEND_FETCH_DATA,
+  payload: {
+    url,
+    options,
+    direction,
+  },
+  meta: {
+    namespace,
+  },
+});
+
+export const prependFetchSuccessAction = (namespace, payload) => ({
+  type: PREPEND_FETCH_SUCCESS,
+  payload,
   meta: {
     namespace,
   },

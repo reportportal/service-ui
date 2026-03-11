@@ -128,12 +128,18 @@ export class LoginForm extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    const { badCredentials, isDemoInstance, initialize } = this.props;
+
     if (prevProps.lastFailedLoginTime !== this.props.lastFailedLoginTime) {
       this.blockLoginForm();
     }
-    const { badCredentials } = this.props;
+
     if (badCredentials !== prevProps.badCredentials && badCredentials) {
       this.badCredentialsHandler();
+    }
+
+    if (isDemoInstance !== prevProps.isDemoInstance && isDemoInstance) {
+      initialize(DEFAULT_USER_CREDENTIALS);
     }
   }
 

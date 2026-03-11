@@ -15,24 +15,60 @@
  */
 
 import PropTypes from 'prop-types';
+import { useRef, useState, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import styles from './testItemStatus.scss';
 
 const cx = classNames.bind(styles);
 
-export const TestItemStatus = ({ status, className }) => (
-  <div className={cx('status-container', className)}>
-    <div className={cx('indicator', status.toLowerCase())} />
-    <div className={cx('status')}>{status}</div>
-  </div>
-);
+export const TestItemStatus = ({ status, className, captionClassName }) => {
+  const statusRef = useRef(null);
+  const [isStatusOverflowed, setIsStatusOverflowed] = useState(false);
+
+  useEffect(() => {
+    const element = statusRef.current;
+    if (!element) return;
+
+    const checkOverflow = () => {
+      const { offsetWidth, scrollWidth } = element;
+      setIsStatusOverflowed(scrollWidth > offsetWidth);
+    };
+
+    checkOverflow();
+
+    const resizeObserver = new ResizeObserver(() => {
+      checkOverflow();
+    });
+
+    resizeObserver.observe(element);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [status]);
+
+  return (
+    <div className={cx('status-container', className)}>
+      <div className={cx('indicator', status.toLowerCase())} />
+      <div
+        ref={statusRef}
+        className={cx('status', captionClassName)}
+        title={isStatusOverflowed ? status : undefined}
+      >
+        {status}
+      </div>
+    </div>
+  );
+};
 
 TestItemStatus.propTypes = {
   status: PropTypes.string,
   className: PropTypes.string,
+  captionClassName: PropTypes.string,
 };
 
 TestItemStatus.defaultProps = {
   status: '',
   className: '',
+  captionClassName: '',
 };

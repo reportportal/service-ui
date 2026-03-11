@@ -30,12 +30,14 @@ export class MarkdownViewer extends Component {
     value: PropTypes.string,
     mode: PropTypes.string,
     onResize: PropTypes.func,
+    className: PropTypes.string,
   };
 
   static defaultProps = {
     value: '',
     mode: MODE_DEFAULT,
     onResize: () => {},
+    className: '',
   };
 
   constructor(props) {
@@ -76,8 +78,11 @@ export class MarkdownViewer extends Component {
     const { value, mode } = this.props;
     return (
       <div className={cx('viewer-wrapper')}>
-        <div ref={this.container} className={cx('markdown-viewer', { [`mode-${mode}`]: mode })}>
-          {Parser(DOMPurify.sanitize(this.simpleMDE.markdown(value)))}
+        <div
+          ref={this.container}
+          className={cx('markdown-viewer', { [`mode-${mode}`]: mode }, this.props.className)}
+        >
+          {Parser(DOMPurify.sanitize(this.simpleMDE.markdown(value || '').trim()))}
         </div>
       </div>
     );

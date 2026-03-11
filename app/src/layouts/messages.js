@@ -37,6 +37,10 @@ export const messages = defineMessages({
     id: 'Sidebar.milestonesBtn',
     defaultMessage: 'Milestones',
   },
+  testPlans: {
+    id: 'Sidebar.testPlansBtn',
+    defaultMessage: 'Test Plans',
+  },
   projectTeam: {
     id: 'Sidebar.membersBtn',
     defaultMessage: 'Project Team',
@@ -79,7 +83,7 @@ export const messages = defineMessages({
   },
   settings: {
     id: 'InstanceSidebar.settings',
-    defaultMessage: 'Settings',
+    defaultMessage: 'Server Settings',
   },
   plugins: {
     id: 'InstanceSidebar.plugins',

@@ -8,3 +8,5 @@ localization/translated/en.json
 .env
 .DS_Store
 jest_0
+.vscode
+.cursor

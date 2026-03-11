@@ -16,10 +16,13 @@
 
 import { useIntl } from 'react-intl';
 import { Field } from 'redux-form';
-import { noop } from 'es-toolkit';
+import { useSelector } from 'react-redux';
+import { useCallback } from 'react';
 
 import { AttributeList } from 'componentLibrary/attributeList';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
+import { projectKeySelector } from 'controllers/project';
+import { URLS } from 'common/urls';
 
 import { messages } from '../messages';
 
@@ -27,6 +30,9 @@ interface AttributeListFieldProps {
   input: {
     value: unknown[];
     onChange: VoidFunction;
+  };
+  meta?: {
+    submitFailed?: boolean;
   };
   attributes: Record<string, unknown>[];
   onChange: VoidFunction;
@@ -37,24 +43,42 @@ interface AttributeListFieldProps {
   showButton: boolean;
   editable: boolean;
   defaultOpen: boolean;
+  isAttributeKeyRequired?: boolean;
+  isAttributeValueRequired?: boolean;
+  keyPlaceholder?: string;
+  valuePlaceholder?: string;
 }
 
-const AttributeListField = ({ input, ...rest }: AttributeListFieldProps) => (
+const AttributeListField = ({ input, meta, ...rest }: AttributeListFieldProps) => (
   <AttributeList
     {...input}
     {...rest}
     attributes={input.value || []}
     onChange={input.onChange}
     customClass=""
+    showValidationErrors={Boolean(meta?.submitFailed)}
   />
 );
 
 export const TestPlanAttributes = () => {
   const { formatMessage } = useIntl();
+  const projectKey = useSelector(projectKeySelector);
+
+  const getURIKey = useCallback(
+    (search = '') => URLS.tmsAttributeKeysSearch(projectKey, { search }),
+    [projectKey],
+  );
+
+  const getURIValue = useCallback(
+    () =>
+      (search = '') =>
+        URLS.tmsAttributeValuesSearch(projectKey, { search }),
+    [projectKey],
+  );
 
   return (
     <div>
-      <FieldElement label={formatMessage(messages.milestoneAttributes)} withoutProvider>
+      <FieldElement label={formatMessage(messages.testPlanAttributes)} withoutProvider>
         <Field
           name="attributes"
           component={AttributeListField}
@@ -63,14 +87,12 @@ export const TestPlanAttributes = () => {
           maxLength={50}
           editable
           defaultOpen={false}
-          getURIKey={noop}
-          getURIValue={noop}
-          minLength={9999}
-          autocompleteProps={{
-            onStateChange: () => {},
-            options: [],
-            async: false,
-          }}
+          isAttributeKeyRequired
+          isAttributeValueRequired
+          keyPlaceholder={formatMessage(messages.attributeKeyPlaceholderRequired)}
+          valuePlaceholder={formatMessage(messages.attributeValuePlaceholderRequired)}
+          getURIKey={getURIKey}
+          getURIValue={getURIValue}
         />
       </FieldElement>
     </div>

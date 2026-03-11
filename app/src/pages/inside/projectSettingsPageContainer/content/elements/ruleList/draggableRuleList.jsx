@@ -30,6 +30,8 @@ const DraggableRuleListComponent = ({
   onRuleDrop,
   dragControlTooltipContent,
   readMode,
+  className,
+  itemClassNames,
 }) => {
   const onDrop = (fromIndex, toIndex) => {
     const updatedItems = [...items];
@@ -46,6 +48,8 @@ const DraggableRuleListComponent = ({
         <DraggableRuleItem
           key={item.id}
           item={{ ...item, index }}
+          className={className}
+          itemClassNames={itemClassNames}
           actions={actions}
           onToggle={onToggle}
           disabled={disabled}

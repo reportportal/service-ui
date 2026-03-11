@@ -50,6 +50,14 @@ export interface TestPlanFormValues {
   attributes: Attribute[];
 }
 
+const isEmptyAttributeField = (value?: string) => !value?.trim();
+
+const hasInvalidEditableAttributes = (attributes: Attribute[] = []) =>
+  attributes.some(
+    ({ edited, new: isNew, key, value }) =>
+      (edited || isNew) && (isEmptyAttributeField(key) || isEmptyAttributeField(value)),
+  );
+
 interface TestPlanModalProps {
   title: string;
   submitButtonText: string;
@@ -104,7 +112,7 @@ const TestPlanModalComponent = ({
       <div className={cx('test-plan-modal__content-wrapper')}>
         <form onSubmit={handleSubmit(onSubmit) as (event: FormEvent) => void}>
           <div className={cx('test-plan-modal__container')}>
-            <FieldProvider name="name" placeholder={formatMessage(messages.enterMilestoneName)}>
+            <FieldProvider name="name" placeholder={formatMessage(messages.enterTestPlanName)}>
               <FieldErrorHint provideHint={false}>
                 <FieldText
                   label={formatMessage(COMMON_LOCALE_KEYS.NAME)}
@@ -115,7 +123,7 @@ const TestPlanModalComponent = ({
             </FieldProvider>
             <FieldProvider
               name="description"
-              placeholder={formatMessage(messages.addMilestoneDescription)}
+              placeholder={formatMessage(messages.addTestPlanDescription)}
             >
               <FieldErrorHint provideHint={false}>
                 <FieldTextFlex label={formatMessage(commonMessages.description)} value="" />
@@ -136,8 +144,11 @@ export const TestPlanModal = (props: TestPlanModalProps) => {
       reduxForm<TestPlanFormValues, TestPlanModalProps>({
         form: props.formName,
         enableReinitialize: true,
-        validate: ({ name }: { name: string }) => ({
+        validate: ({ name, attributes }: TestPlanFormValues) => ({
           name: commonValidators.requiredField(name),
+          attributes: hasInvalidEditableAttributes(attributes)
+            ? commonValidators.requiredField('')
+            : undefined,
         }),
       })(TestPlanModalComponent),
     [props.formName],

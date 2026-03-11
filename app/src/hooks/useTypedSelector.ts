@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux';
 
 import { BaseAppState, TestPlanAppState, TestCaseAppState, AppState } from 'types/store';
 import { testPlanByIdSelector } from 'controllers/testPlan';
+import { manualLaunchByIdSelector, isLoadingActiveSelector } from 'controllers/manualLaunch';
 
 export const useBaseSelector = <T>(selector: (state: BaseAppState) => T): T =>
   useSelector<BaseAppState, T>(selector);
@@ -76,3 +77,11 @@ export const useTestPlanById = (testPlanId: string) =>
 
 export const useTestPlanFolders = () =>
   useTestPlanSelector((state) => state.testPlan?.testPlanFolders?.content || []);
+
+export const useManualLaunchId = () =>
+  useBaseSelector((state) => state.location?.payload?.launchId) || '';
+
+export const useManualLaunchById = (launchId: string | number) =>
+  useFullSelector(manualLaunchByIdSelector(launchId));
+
+export const useActiveManualLaunchLoading = () => useFullSelector(isLoadingActiveSelector);

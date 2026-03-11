@@ -16,9 +16,11 @@
 
 @mixin responsive-ellipsis($breakpoint) {
   @media (max-width: $breakpoint) {
+    /* stylelint-disable no-invalid-position-declaration */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    /* stylelint-enable no-invalid-position-declaration */
   }
 }
 

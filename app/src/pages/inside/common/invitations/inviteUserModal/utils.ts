@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,3 +17,5 @@
 import { Level } from './constants';
 
 export const getFormName = (level: Level) => `inviteUserForm_${level}`;
+
+export const INSTANCE_FORM_NAME = getFormName(Level.INSTANCE);

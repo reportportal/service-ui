@@ -1,3 +1,4 @@
+import { uniqueId } from 'common/utils';
 import { ManualScenarioType } from '../types';
 
 export const MAX_FILE_SIZE = 128 * 1024 * 1024;
@@ -9,4 +10,5 @@ export const TEST_CASE_FORM_INITIAL_VALUES = {
   manualScenarioType: ManualScenarioType.STEPS,
   executionEstimationTime: DEFAULT_EXECUTION_ESTIMATION_TIME,
   attributes: [],
+  requirements: [{ id: uniqueId(), value: '' }],
 };

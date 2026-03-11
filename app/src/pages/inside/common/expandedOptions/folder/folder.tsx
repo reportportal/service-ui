@@ -14,39 +14,63 @@
  * limitations under the License.
  */
 
-import { useState, useCallback, MouseEvent as ReactMouseEvent, useEffect } from 'react';
+import { useState, useCallback, MouseEvent as ReactMouseEvent, useEffect, FC } from 'react';
+import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
-import { ChevronDownDropdownIcon, MeatballMenuIcon } from '@reportportal/ui-kit';
+import { ChevronDownDropdownIcon, MeatballMenuIcon, DragNDropIcon } from '@reportportal/ui-kit';
+import { TreeSortableItem } from '@reportportal/ui-kit/sortable';
 
 import { createClassnames } from 'common/utils';
+import { isEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 import { PopoverControl } from 'pages/common/popoverControl';
-import { TransformedFolder } from 'controllers/testCase';
 
-import { INSTANCE_KEYS, useFolderTooltipItems } from './useFolderTooltipItems';
+import { highlightText, hasMatchInTree, hasChildMatch } from '../utils';
+import { messages } from '../messages';
+import { FolderProps } from './types';
+import { useFolderTooltipItems } from './useFolderTooltipItems';
+import { FolderWrapper } from './folderWrapper';
+import { FolderSubfolders } from './folderSubfolders';
+import { EXTERNAL_TREE_DROP_TYPE, FOLDER_DRAG_TYPE } from '../constants';
 
 import styles from './folder.scss';
 
 const cx = createClassnames(styles);
 
-interface FolderProps {
-  folder: TransformedFolder;
-  activeFolder: number | null;
-  setActiveFolder: (id: number) => void;
-  setAllTestCases: () => void;
-  instanceKey: INSTANCE_KEYS;
+interface FolderComposite extends FC<FolderProps> {
+  Wrapper: typeof FolderWrapper;
+  Subfolders: typeof FolderSubfolders;
 }
 
-export const Folder = ({
+export const Folder: FolderComposite = ({
   folder,
-  setActiveFolder,
-  setAllTestCases,
   activeFolder,
   instanceKey,
+  expandedIds,
+  onFolderClick,
+  setAllTestCases,
+  onToggleFolder,
+  searchQuery = '',
+  ancestorDirectMatch = false,
+  index,
+  parentId = null,
+  enableDragAndDrop = false,
+  canDropOn,
 }: FolderProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const { formatMessage } = useIntl();
+  const isOpen = expandedIds.includes(folder.id);
   const [areToolsShown, setAreToolsShown] = useState(false);
   const [areToolsOpen, setAreToolsOpen] = useState(false);
   const [isBlockHovered, setIsBlockHovered] = useState(false);
+  const [showDragIcon, setShowDragIcon] = useState(false);
+
+  const isDirectMatch = searchQuery
+    ? folder.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
+    : false;
+
+  const childrenMatch = searchQuery ? hasChildMatch(folder, searchQuery) : false;
+
+  const hasIndirectMatch = searchQuery && !isDirectMatch && (childrenMatch || ancestorDirectMatch);
+
   const tooltipItems = useFolderTooltipItems({
     folder,
     activeFolder,
@@ -58,42 +82,49 @@ export const Folder = ({
     setAreToolsShown(areToolsOpen || isBlockHovered);
   }, [areToolsOpen, isBlockHovered]);
 
-  const handleChevronClick = useCallback((event: ReactMouseEvent<SVGSVGElement, MouseEvent>) => {
-    event.stopPropagation();
-    setIsOpen((prevState) => !prevState);
-  }, []);
+  const handleChevronClick = useCallback(
+    (event: ReactMouseEvent<SVGSVGElement, MouseEvent>) => {
+      event.stopPropagation();
+      onToggleFolder(folder);
+    },
+    [folder, onToggleFolder],
+  );
 
   const handleFolderTitleClick = useCallback(
     (event: ReactMouseEvent<HTMLDivElement, MouseEvent>) => {
       event.stopPropagation();
-      setActiveFolder(folder.id);
+
+      onFolderClick(folder.id);
     },
-    [setActiveFolder, folder.id],
+    [folder.id, onFolderClick],
   );
 
-  return (
-    <li
-      className={cx('folders-tree__item', {
-        'folders-tree__item--open': isOpen,
-      })}
-      role="treeitem"
-      aria-expanded={isOpen}
-      aria-selected={activeFolder === folder.id}
-    >
+  const renderFolderContent = (
+    isDraggingFolder: boolean,
+    dragHandleRef?: (node: HTMLElement | null) => void,
+  ) => (
+    <Folder.Wrapper isOpen={isOpen} ariaSelected={activeFolder === folder.id}>
       <div className={cx('folders-tree__item-content')}>
         {!isEmpty(folder.folders) && <ChevronDownDropdownIcon onClick={handleChevronClick} />}
         <div
           className={cx('folders-tree__item-title', {
             'folders-tree__item-title--active': activeFolder === folder.id,
+            'folders-tree__item-title--dimmed': hasIndirectMatch,
           })}
           onClick={handleFolderTitleClick}
           onFocus={() => setIsBlockHovered(true)}
           onBlur={() => setIsBlockHovered(false)}
-          onMouseEnter={() => setIsBlockHovered(true)}
-          onMouseLeave={() => setIsBlockHovered(false)}
+          onMouseEnter={() => {
+            setIsBlockHovered(true);
+            setShowDragIcon(true);
+          }}
+          onMouseLeave={() => {
+            setIsBlockHovered(false);
+            setShowDragIcon(false);
+          }}
         >
           <span className={cx('folders-tree__item-title--text')} title={folder.name}>
-            {folder.name}
+            {isDirectMatch ? highlightText(folder.name, searchQuery) : folder.name}
           </span>
           {!isEmpty(tooltipItems) && (
             <button
@@ -123,24 +154,85 @@ export const Folder = ({
               </PopoverControl>
             </button>
           )}
-          <span className={cx('folders-tree__item-title--counter')}>{folder.testsCount || 0}</span>
+          {enableDragAndDrop && (showDragIcon || isDraggingFolder) ? (
+            <button
+              ref={dragHandleRef}
+              type="button"
+              className={cx('folders-tree__drag-handle')}
+              aria-label={formatMessage(messages.dragToReorder)}
+              onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => {
+                if (isEnterOrSpaceKey(e)) {
+                  e.stopPropagation();
+                }
+              }}
+            >
+              <DragNDropIcon />
+            </button>
+          ) : (
+            <span className={cx('folders-tree__item-title--counter')}>
+              {folder.testsCount || 0}
+            </span>
+          )}
         </div>
       </div>
+      <Folder.Subfolders shouldDisplay={isOpen && !isEmpty(folder.folders)}>
+        {folder.folders?.map((subfolder, idx: number) => {
+          const shouldShow =
+            !searchQuery ||
+            isDirectMatch ||
+            ancestorDirectMatch ||
+            hasMatchInTree(subfolder, searchQuery);
 
-      {isOpen && !isEmpty(folder.folders) && (
-        <ul className={cx('folders-tree', 'folders-tree--inner')} role="group">
-          {folder.folders?.map((subfolder) => (
+          if (!shouldShow) return null;
+
+          return (
             <Folder
               folder={subfolder}
               key={subfolder.id}
               activeFolder={activeFolder}
-              setActiveFolder={setActiveFolder}
-              setAllTestCases={setAllTestCases}
               instanceKey={instanceKey}
+              expandedIds={expandedIds}
+              onFolderClick={onFolderClick}
+              setAllTestCases={setAllTestCases}
+              onToggleFolder={onToggleFolder}
+              searchQuery={searchQuery}
+              ancestorDirectMatch={isDirectMatch || ancestorDirectMatch}
+              index={idx}
+              parentId={folder.id}
+              enableDragAndDrop={enableDragAndDrop}
+              canDropOn={canDropOn}
             />
-          ))}
-        </ul>
-      )}
-    </li>
+          );
+        })}
+      </Folder.Subfolders>
+    </Folder.Wrapper>
+  );
+
+  return enableDragAndDrop ? (
+    <TreeSortableItem
+      id={folder.id}
+      index={index}
+      parentId={parentId}
+      type={FOLDER_DRAG_TYPE}
+      hideDefaultPreview
+      className={cx('tree-sortable-wrapper')}
+      canDropOn={canDropOn}
+      acceptExternalDrop
+      externalDropType={EXTERNAL_TREE_DROP_TYPE}
+    >
+      {({
+        isDragging: isDraggingFolder,
+        dragRef: dragHandleRef,
+      }: {
+        isDragging: boolean;
+        dragRef: (node: HTMLElement | null) => void;
+      }) => renderFolderContent(isDraggingFolder, dragHandleRef)}
+    </TreeSortableItem>
+  ) : (
+    renderFolderContent(false)
   );
 };
+
+Folder.Wrapper = FolderWrapper;
+Folder.Subfolders = FolderSubfolders;

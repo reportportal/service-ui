@@ -18,6 +18,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { PAGE_KEY } from 'controllers/pagination';
 import { connectRouter, debounce } from 'common/utils';
+import { SEARCH_DELAY } from 'common/constants/delayTime';
 
 const FILTER_KEY = 'filter.cnt.name';
 
@@ -48,7 +49,7 @@ export const withFilter =
 
         handleFilterChange = debounce((value) => {
           this.props.updateFilter(value || undefined);
-        }, 1000);
+        }, SEARCH_DELAY);
 
         render() {
           const { filter, updateFilter, ...rest } = this.props;

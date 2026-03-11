@@ -17,9 +17,17 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
+  openDetails: {
+    id: 'LaunchSidePanel.openDetails',
+    defaultMessage: 'Open Details',
+  },
   editLaunch: {
     id: 'LaunchSidePanel.editLaunch',
-    defaultMessage: 'Edit Launch',
+    defaultMessage: 'Edit launch',
+  },
+  deleteLaunch: {
+    id: 'LaunchSidePanel.deleteLaunch',
+    defaultMessage: 'Delete launch',
   },
   toRunWithCount: {
     id: 'LaunchSidePanel.toRunWithCount',

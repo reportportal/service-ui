@@ -80,6 +80,7 @@ export const createAttachment = (item, projectKey) => {
     thumbnailSrc: isImage ? URLS.getFileById(projectKey, item.id, true) : null,
     alt: item.contentType,
     contentType: item.contentType,
+    fileName: item.fileName,
     isImage,
   };
 };

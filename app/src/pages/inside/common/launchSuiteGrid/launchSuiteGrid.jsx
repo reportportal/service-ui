@@ -103,6 +103,7 @@ const TotalColumn = ({ className, ...rest }) => (
         SKIPPED.toUpperCase(),
         INTERRUPTED.toUpperCase(),
       ]}
+      onClick={() => rest.customProps.onStatisticClick('total')}
     />
   </div>
 );
@@ -117,6 +118,7 @@ const PassedColumn = ({ className, ...rest }) => (
       title={rest.title}
       value={rest.value.statistics.executions?.passed}
       statuses={[PASSED.toUpperCase()]}
+      onClick={() => rest.customProps.onStatisticClick('passed')}
     />
   </div>
 );
@@ -131,6 +133,7 @@ const FailedColumn = ({ className, ...rest }) => (
       title={rest.title}
       value={rest.value.statistics.executions?.failed}
       statuses={[FAILED.toUpperCase(), INTERRUPTED.toUpperCase()]}
+      onClick={() => rest.customProps.onStatisticClick('failed')}
     />
   </div>
 );
@@ -145,6 +148,7 @@ const SkippedColumn = ({ className, ...rest }) => (
       title={rest.title}
       value={rest.value.statistics.executions?.skipped}
       statuses={[SKIPPED.toUpperCase()]}
+      onClick={() => rest.customProps.onStatisticClick('skipped')}
     />
   </div>
 );
@@ -280,6 +284,14 @@ export const LaunchSuiteGrid = React.memo(
       [onFilterClick],
     );
 
+    const handleExecutionStatisticClick = useCallback(
+      (type) => {
+        events?.getClickOnExecutionStatisticIconEvent &&
+          trackEvent(events.getClickOnExecutionStatisticIconEvent(type));
+      },
+      [events, trackEvent],
+    );
+
     const columns = useMemo(() => {
       const hamburgerColumn = {
         component: HamburgerColumn,
@@ -336,6 +348,9 @@ export const LaunchSuiteGrid = React.memo(
           withFilter: true,
           filterEventInfo: events.TOTAL_FILTER,
           sortingEventInfo: events.TOTAL_SORTING,
+          customProps: {
+            onStatisticClick: handleExecutionStatisticClick,
+          },
         },
         {
           id: STATS_PASSED,
@@ -348,6 +363,9 @@ export const LaunchSuiteGrid = React.memo(
           withFilter: true,
           filterEventInfo: events.PASSED_FILTER,
           sortingEventInfo: events.PASSED_SORTING,
+          customProps: {
+            onStatisticClick: handleExecutionStatisticClick,
+          },
         },
         {
           id: STATS_FAILED,
@@ -360,6 +378,9 @@ export const LaunchSuiteGrid = React.memo(
           withFilter: true,
           filterEventInfo: events.FAILED_FILTER,
           sortingEventInfo: events.FAILED_SORTING,
+          customProps: {
+            onStatisticClick: handleExecutionStatisticClick,
+          },
         },
         {
           id: STATS_SKIPPED,
@@ -372,6 +393,9 @@ export const LaunchSuiteGrid = React.memo(
           withFilter: true,
           filterEventInfo: events.SKIPPED_FILTER,
           sortingEventInfo: events.SKIPPED_SORTING,
+          customProps: {
+            onStatisticClick: handleExecutionStatisticClick,
+          },
         },
         {
           id: STATS_PB_TOTAL,

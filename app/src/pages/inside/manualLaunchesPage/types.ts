@@ -60,6 +60,7 @@ export interface Launch {
   statistics: LaunchStatistics;
   attributes: LaunchAttribute[];
   mode: string;
+  type: string;
   analysing: string[];
   approximateDuration: number;
   hasRetries: boolean;
@@ -85,4 +86,71 @@ export interface ManualTestCase {
   inProgressTests: number;
   skippedTests: number;
   testsToRun: number;
+}
+
+export interface LaunchOwner {
+  id: number;
+  email: string;
+  name?: string;
+}
+
+export interface LaunchTestPlan {
+  id: number;
+  name: string;
+}
+
+export interface ExecutionStatistic {
+  total: number;
+  failed: number;
+  passed: number;
+  skipped: number;
+  toRun: number;
+  inProgress: number;
+}
+
+export interface ManualLaunchItem {
+  id: number;
+  name: string;
+  description: string;
+  owner: LaunchOwner;
+  number: number;
+  status: string;
+  attributes: LaunchAttribute[];
+  startTime: string;
+  createdAt: string;
+  type: string;
+  mode: string;
+  testPlan: LaunchTestPlan | null;
+  executionStatistic: ExecutionStatistic;
+}
+
+export interface ManualLaunchDto {
+  name: string;
+  uuid: string;
+  startTime: string;
+  description: string;
+  testCaseIds: number[];
+  attributes: LaunchAttribute[];
+  mode: string;
+  testPlanId?: number;
+}
+
+export interface UrlsHelper {
+  manualLaunchesListPagination: (projectKey: string, query?: Record<string, unknown>) => string;
+  manualLaunchById: (projectKey: string, launchId: string | number) => string;
+  manualLaunchFolders: (
+    projectKey: string,
+    launchId: string | number,
+    query?: Record<string, unknown>,
+  ) => string;
+  manualLaunchTestCaseExecutions: (
+    projectKey: string,
+    launchId: string | number,
+    query?: Record<string, unknown>,
+  ) => string;
+  manualLaunchExecutionById: (
+    projectKey: string,
+    launchId: string | number,
+    executionId: string | number,
+  ) => string;
 }

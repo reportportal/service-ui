@@ -93,6 +93,7 @@ export class HistoryLine extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    className: PropTypes.string,
   };
 
   static defaultProps = {
@@ -102,6 +103,7 @@ export class HistoryLine extends Component {
     changeActiveItem: () => {},
     fetchHistoryItemsAction: () => {},
     setShouldShowLoadMoreAction: () => {},
+    className: '',
   };
 
   componentDidUpdate() {
@@ -144,9 +146,16 @@ export class HistoryLine extends Component {
   }
 
   render() {
-    const { historyItems, activeItemId, changeActiveItem, intl, shouldShowLoadMore } = this.props;
+    const {
+      historyItems,
+      activeItemId,
+      changeActiveItem,
+      intl,
+      shouldShowLoadMore,
+      className,
+    } = this.props;
     return (
-      <div className={cx('history-line')}>
+      <div className={cx('history-line', className)}>
         <ScrollWrapper autoHeight hideTracksWhenNotNeeded autoHide initialScrollRight>
           <div className={cx('history-line-items')}>
             {shouldShowLoadMore && (

@@ -42,6 +42,7 @@ interface CreateFolderFormProps {
   toggleDisabled?: boolean;
   isInvertedToggle?: boolean;
   className?: string;
+  excludeFolderIds?: number[];
   change: (field: string, value: unknown) => void;
 }
 
@@ -55,6 +56,7 @@ export const CreateFolderForm = ({
   toggleDisabled = false,
   isInvertedToggle = false,
   className,
+  excludeFolderIds = [],
   change,
 }: CreateFolderFormProps) => {
   const { formatMessage } = useIntl();
@@ -84,7 +86,7 @@ export const CreateFolderForm = ({
       {shouldRenderToggle && (
         <ParentFolderToggle
           isToggled={isToggled}
-          disabled={toggleDisabled}
+          isDisabled={toggleDisabled}
           label={toggleLabel}
           className={cx('create-folder-form__toggle')}
           onToggle={handleToggleChange}
@@ -98,6 +100,7 @@ export const CreateFolderForm = ({
               label={parentFolderFieldLabel}
               placeholder={formatMessage(commonMessages.searchFolderToSelect)}
               className={cx('create-folder-form__autocomplete')}
+              excludeFolderIds={excludeFolderIds}
               onStateChange={handleFolderSelection}
             />
           </FieldErrorHint>

@@ -53,4 +53,8 @@ export const messages = defineMessages({
     id: 'SettingsPage.testData',
     defaultMessage: 'Test data',
   },
+  logTypes: {
+    id: 'SettingsPage.logTypes',
+    defaultMessage: 'Log types',
+  },
 });

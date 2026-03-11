@@ -18,6 +18,7 @@ import { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'fast-deep-equal';
 import { connectRouter, debounce, isEmptyObject } from 'common/utils';
+import { SEARCH_DELAY } from "common/constants/delayTime";
 import { defaultPaginationSelector, PAGE_KEY } from 'controllers/pagination';
 import { collectFilterEntities, createFilterQuery } from './utils';
 
@@ -26,7 +27,7 @@ const FilterEntitiesURL = ({
   updateFilters = () => {},
   render,
   debounced = true,
-  debounceTime = 1000,
+  debounceTime = SEARCH_DELAY,
   defaultPagination,
   prefixQueryKey,
   additionalFilter,

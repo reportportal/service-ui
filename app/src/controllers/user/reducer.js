@@ -27,6 +27,9 @@ import {
   DELETE_API_KEY_SUCCESS,
   SET_ACTIVE_PROJECT_KEY,
   SET_LOG_TIME_FORMAT,
+  SET_ACTIVE_PROJECT_SETTINGS,
+  UPDATE_ACTIVE_PROJECT_SETTINGS,
+  ACTIVE_PROJECT_SETTINGS_INITIAL_STATE,
 } from './constants';
 
 export const settingsReducer = (state = SETTINGS_INITIAL_STATE, { type = '', payload = {} }) => {
@@ -100,10 +103,25 @@ export const apiKeysReducer = (state = [], { type, payload }) => {
   }
 };
 
+export const activeProjectSettingsReducer = (
+  state = ACTIVE_PROJECT_SETTINGS_INITIAL_STATE,
+  { type = '', payload = {} },
+) => {
+  switch (type) {
+    case SET_ACTIVE_PROJECT_SETTINGS:
+      return payload;
+    case UPDATE_ACTIVE_PROJECT_SETTINGS:
+      return { ...state, ...payload };
+    default:
+      return state;
+  }
+};
+
 export const userReducer = combineReducers({
   info: userInfoReducer,
   activeProject: activeProjectReducer,
   activeProjectKey: activeProjectKeyReducer,
   settings: settingsReducer,
   apiKeys: apiKeysReducer,
+  activeProjectSettings: activeProjectSettingsReducer,
 });

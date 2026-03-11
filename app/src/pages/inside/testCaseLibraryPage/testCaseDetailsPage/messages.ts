@@ -29,4 +29,28 @@ export const messages = defineMessages({
     id: 'TestCaseLibraryPage.enterTestCaseName',
     defaultMessage: 'Enter test case name',
   },
+  copyRequirementsLink: {
+    id: 'TestCaseDetailsPage.copyRequirementsLink',
+    defaultMessage: 'Copy requirements link',
+  },
+  noRequirements: {
+    id: 'TestCaseDetailsPage.noRequirements',
+    defaultMessage: 'No requirements yet',
+  },
+  noPrecondition: {
+    id: 'TestCaseDetailsPage.noPrecondition',
+    defaultMessage: 'No precondition yet',
+  },
+  noSteps: {
+    id: 'TestCaseDetailsPage.noSteps',
+    defaultMessage: 'No steps yet',
+  },
+  noAttachments: {
+    id: 'TestCaseDetailsPage.noAttachments',
+    defaultMessage: 'No attachments added yet',
+  },
+  noScenario: {
+    id: 'TestCaseDetailsPage.noScenario',
+    defaultMessage: 'No details for this scenario yet',
+  },
 });

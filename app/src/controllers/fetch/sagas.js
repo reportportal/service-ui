@@ -17,12 +17,19 @@
 import { takeEvery, call, all, put, cancelled } from 'redux-saga/effects';
 import { fetch } from 'common/utils/fetch';
 import { showDefaultErrorNotification } from 'controllers/notification';
-import { FETCH_DATA, FETCH_ERROR, BULK_FETCH_DATA, CONCAT_FETCH_DATA } from './constants';
+import {
+  FETCH_DATA,
+  FETCH_ERROR,
+  BULK_FETCH_DATA,
+  CONCAT_FETCH_DATA,
+  PREPEND_FETCH_DATA,
+} from './constants';
 import {
   fetchSuccessAction,
   fetchStartAction,
   fetchErrorAction,
   concatFetchSuccessAction,
+  prependFetchSuccessAction,
 } from './actionCreators';
 
 const silentFetch = (...args) => fetch(...args).catch(() => null);
@@ -40,17 +47,27 @@ function* bulkFetchData({ payload, meta }) {
   }
 }
 
-function* concatFetchData({ payload, meta }) {
+function* commonFetchData({ payload, meta }, successCallback) {
   const { namespace } = meta;
-  const { url, options, concat } = payload;
+  const { url, options } = payload;
 
   try {
     yield put(fetchStartAction(namespace, payload));
     const response = yield call(fetch, url, options);
-    yield put(concatFetchSuccessAction(namespace, response, concat));
+    yield put(successCallback(namespace, response));
   } catch (err) {
     yield put(fetchErrorAction(namespace, err));
   }
+}
+
+function* concatFetchData({ payload, meta }) {
+  const successCallback = (namespace, response) =>
+    concatFetchSuccessAction(namespace, response, payload.concat);
+  yield* commonFetchData({ payload, meta }, successCallback);
+}
+
+function* prependFetchData({ payload, meta }) {
+  yield* commonFetchData({ payload, meta }, prependFetchSuccessAction);
 }
 
 function* fetchData({ payload, meta }) {
@@ -82,6 +99,10 @@ function* watchConcatFetchData() {
   yield takeEvery(CONCAT_FETCH_DATA, concatFetchData);
 }
 
+function* watchPrependFetchData() {
+  yield takeEvery(PREPEND_FETCH_DATA, prependFetchData);
+}
+
 function* watchFetchData() {
   yield takeEvery(FETCH_DATA, fetchData);
 }
@@ -98,5 +119,11 @@ function* watchFetchError() {
 }
 
 export function* fetchSagas() {
-  yield all([watchFetchData(), watchFetchError(), watchBulkFetchData(), watchConcatFetchData()]);
+  yield all([
+    watchFetchData(),
+    watchFetchError(),
+    watchBulkFetchData(),
+    watchConcatFetchData(),
+    watchPrependFetchData(),
+  ]);
 }

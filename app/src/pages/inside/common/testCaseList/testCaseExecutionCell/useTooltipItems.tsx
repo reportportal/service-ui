@@ -14,23 +14,34 @@
  * limitations under the License.
  */
 
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { useTestCaseTooltipItems } from 'pages/inside/testCaseLibraryPage/allTestCasesPage/useTestCaseTooltipItems';
-import { useTestPlanTooltipItems } from 'pages/inside/testPlansPage/testPlanDetailsPage/testPlanFolders/allTestCasesPage/useTestPlanTooltipItems';
-import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { useIntl } from 'react-intl';
+import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
+
+import { messages } from '../messages';
 
 interface UseTooltipItemsProps {
-  instanceKey: INSTANCE_KEYS;
+  instanceKey: TMS_INSTANCE_KEY;
   testCase: ExtendedTestCase;
 }
 
 export const useTooltipItems = ({ instanceKey, testCase }: UseTooltipItemsProps) => {
-  const testPlanTooltipItems = useTestPlanTooltipItems();
+  const { formatMessage } = useIntl();
   const testCaseTooltipItems = useTestCaseTooltipItems({ testCase });
 
-  const tooltipItemsByInstance: Record<INSTANCE_KEYS, typeof testPlanTooltipItems> = {
-    [INSTANCE_KEYS.TEST_PLAN]: testPlanTooltipItems,
-    [INSTANCE_KEYS.TEST_CASE]: testCaseTooltipItems,
+
+  const tooltipItemsByInstance: Partial<Record<TMS_INSTANCE_KEY, PopoverItem[]>> = {
+    [TMS_INSTANCE_KEY.TEST_PLAN]: [
+      {
+        label: formatMessage(messages.removeTestCase),
+        variant: 'danger',
+        onClick: () => {},
+      },
+    ],
+    [TMS_INSTANCE_KEY.TEST_CASE]: testCaseTooltipItems,
+    [TMS_INSTANCE_KEY.MANUAL_LAUNCH]: testCaseTooltipItems,
   };
 
   return tooltipItemsByInstance[instanceKey];

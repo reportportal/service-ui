@@ -18,12 +18,15 @@ import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
+import { useSelector } from 'react-redux';
 import commentIcon from 'common/img/comment-inline.svg';
 import asteriskIcon from 'common/img/asterisk-inline.svg';
 import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
 import { uniqueId } from 'common/utils';
 import { useIntl } from 'react-intl';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { logTypesSelector } from 'controllers/project';
+import { getLogLevelStyles } from 'controllers/log/storageUtils';
 import { DEFAULT_TEST_ITEM_DETAILS, ERROR_LOGS_SIZE } from '../../constants';
 import { ItemHeader } from './itemHeader';
 import { messages } from '../../messages';
@@ -47,6 +50,7 @@ export const TestItemDetails = ({
 }) => {
   const { formatMessage } = useIntl();
   const [showDetails, setShowDetails] = useState(showErrorLogs);
+  const logLevels = useSelector(logTypesSelector);
 
   useEffect(() => {
     setShowDetails(showErrorLogs);
@@ -83,25 +87,29 @@ export const TestItemDetails = ({
               </div>
             )}
             {showDetails &&
-              logs.slice(0, ERROR_LOGS_SIZE).map((log) => (
-                <div key={uniqueId()} className={cx('error-log')}>
-                  <StackTraceMessageBlock
-                    level={log.level}
-                    designMode="dark"
-                    maxHeight={90}
-                    eventsInfo={eventsInfo}
-                  >
-                    <div className={cx('highlighted-log')}>
-                      {highlightedLogId === log.id && (
-                        <p className={cx('highlighted-log-title')}>
-                          {Parser(asteriskIcon)} {highlightedMessage}
-                        </p>
-                      )}
-                      {log.message}
-                    </div>
-                  </StackTraceMessageBlock>
-                </div>
-              ))}
+              logs.slice(0, ERROR_LOGS_SIZE).map((log) => {
+                const { labelColor } = getLogLevelStyles(log.level, logLevels);
+                return (
+                  <div key={uniqueId()} className={cx('error-log')}>
+                    <StackTraceMessageBlock
+                      level={log.level}
+                      designMode="dark"
+                      maxHeight={90}
+                      eventsInfo={eventsInfo}
+                      rowWrapperStyles={{ labelColor }}
+                    >
+                      <div className={cx('highlighted-log')}>
+                        {highlightedLogId === log.id && (
+                          <p className={cx('highlighted-log-title')}>
+                            {Parser(asteriskIcon)} {highlightedMessage}
+                          </p>
+                        )}
+                        {log.message}
+                      </div>
+                    </StackTraceMessageBlock>
+                  </div>
+                );
+              })}
             {showDetails && !logs.length && (
               <div className={cx('no-logs')}>
                 <p className={cx('no-logs-text')}>{formatMessage(messages.noLogs)}</p>

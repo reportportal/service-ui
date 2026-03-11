@@ -15,92 +15,99 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 import { fetch } from 'common/utils';
-import { getErrorMessage } from 'common/utils/helperUtils/errorUtils';
 import { URLS } from 'common/urls';
+import { projectKeySelector } from 'controllers/project';
 
-import { Attribute } from '../types';
-
-export enum TagError {
-  TAG_ALREADY_ADDED = 'tagAlreadyAdded',
-  CREATE_TAG_FAILED = 'createTagFailed',
-}
-
-interface AttributesResponse {
-  content: Attribute[];
-}
+import { Tag, TagError } from '../types';
+import { convertKeysToTags } from '../testCaseDetailsPage/utils';
 
 export const useTagSearch = (searchValue: string = '') => {
-  const [tags, setTags] = useState<Attribute[]>([]);
+  const [allTags, setAllTags] = useState<Tag[]>([]);
+  const [tags, setTags] = useState<Tag[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<TagError | null>(null);
+  const projectKey = useSelector(projectKeySelector);
 
-  const fetchTags = useCallback(async () => {
-    if (!searchValue.trim()) {
-      setTags([]);
-      setLoading(false);
-      return;
+  const fetchAllTags = useCallback(async () => {
+    try {
+      const keys = await fetch<string[]>(URLS.tmsAttributeKeysSearch(projectKey, {}));
+      setAllTags(convertKeysToTags(keys));
+    } catch {
+      setAllTags([]);
     }
+  }, [projectKey]);
 
+  const fetchFilteredTags = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const response = await fetch<AttributesResponse>(
-        URLS.tmsAttributes({ 'filter.fts.search': searchValue }),
+      const keys = await fetch<string[]>(
+        URLS.tmsAttributeKeysSearch(projectKey, {
+          search: searchValue.trim(),
+        }),
       );
 
-      setTags(response.content || []);
+      setTags(convertKeysToTags(keys));
     } catch {
       setTags([]);
       setError(null);
     } finally {
       setLoading(false);
     }
-  }, [searchValue]);
+  }, [projectKey, searchValue]);
 
   const createTag = useCallback(
-    async (tagKey: string): Promise<Attribute | null> => {
-      try {
-        setLoading(true);
-        setError(null);
+    (tagKey: string, selectedTags: Tag[] = []) => {
+      const tagExists = allTags.some((tag) => tag.key.toLowerCase() === tagKey.toLowerCase());
+      const tagAlreadySelected = selectedTags.some(
+        (tag) => tag.key.toLowerCase() === tagKey.toLowerCase(),
+      );
 
-        const newTag = await fetch<Attribute>(URLS.createTmsAttribute(), {
-          method: 'POST',
-          data: { key: tagKey, value: tagKey },
-        });
-
-        await fetchTags();
-
-        return newTag;
-      } catch (error: unknown) {
-        const errorMessage = getErrorMessage(error);
-
-        setError(
-          errorMessage.includes('already exists')
-            ? TagError.TAG_ALREADY_ADDED
-            : TagError.CREATE_TAG_FAILED,
-        );
-
+      if (tagExists || tagAlreadySelected) {
+        setError(TagError.TAG_ALREADY_ADDED);
         return null;
-      } finally {
-        setLoading(false);
       }
+
+      setError(null);
+
+      const newTag: Tag = {
+        id: -Date.now(),
+        key: tagKey,
+      };
+
+      setAllTags((prevTags) => [...prevTags, newTag]);
+      setTags((prevTags) => [...prevTags, newTag]);
+
+      return newTag;
     },
-    [fetchTags],
+    [allTags],
   );
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    fetchTags();
-  }, [fetchTags]);
+    fetchAllTags();
+  }, [fetchAllTags]);
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    fetchFilteredTags();
+  }, [fetchFilteredTags]);
+
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
 
   return {
+    allTags,
     tags,
     loading,
     error,
     createTag,
-    refetch: fetchTags,
+    clearError,
+    refetch: fetchFilteredTags,
   };
 };

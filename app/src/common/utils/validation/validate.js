@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { PASSWORD_MAX_ALLOWED_LENGTH } from 'common/constants/validation';
 import {
   composeValidators,
   isEmpty,
@@ -42,16 +43,25 @@ export const email = composeValidators([
 export const requiredEmail = composeValidators([isNotEmpty, email]);
 export const login = composeValidators([isNotEmpty, email]);
 export const oldPassword = composeValidators([isNotEmpty, regex(/^(.){4,256}$/)]);
-export const password = composeValidators([
-  isNotEmpty,
-  regex(/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^a-zA-Z\d\s])([^\s]){8,256}$/),
-]);
+
+// TODO: Remove this validator in favor of createPasswordValidator
 export const passwordCreateUser = composeValidators([
   isNotEmpty,
   minLength(8),
   maxLength(256),
   regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/),
 ]);
+
+export const createPasswordValidator = (passwordMinLength) =>
+  composeValidators([
+    isNotEmpty,
+    regex(
+      new RegExp(
+        `^(?=.*\\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^a-zA-Z\\d\\s])([^\\s]){${passwordMinLength},${PASSWORD_MAX_ALLOWED_LENGTH}}$`,
+      ),
+    ),
+  ]);
+
 export const userName = composeValidators([isNotEmpty, regex(/^[A-Za-z0-9.'_\- ]{3,60}$/)]);
 export const filterName = composeValidators([isNotEmpty, lengthRange(3, 128)]);
 export const launchName = composeValidators([isNotEmpty, maxLength(256)]);

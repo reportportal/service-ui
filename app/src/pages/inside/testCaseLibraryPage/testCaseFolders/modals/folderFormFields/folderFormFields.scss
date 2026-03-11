@@ -46,4 +46,9 @@
       color: var(--rp-ui-color-text-secondary);
     }
   }
+
+  &__toggle-tooltip {
+    display: flex;
+    width: fit-content;
+  }
 }

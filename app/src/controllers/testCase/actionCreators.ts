@@ -35,10 +35,19 @@ import {
   SET_TEST_CASES,
   RENAME_FOLDER,
   RENAME_FOLDER_SUCCESS,
+  MOVE_FOLDER_SUCCESS,
   DELETE_TEST_CASE_SUCCESS,
   UPDATE_FOLDER_COUNTER,
-  SELECT_ACTIVE_FOLDER,
   UPDATE_DESCRIPTION_SUCCESS,
+  TOGGLE_FOLDER_EXPANSION,
+  EXPAND_FOLDERS_TO_LEVEL,
+  SET_EXPANDED_FOLDER_IDS,
+  SET_FOLDERS_FETCHED,
+  GET_FILTERED_FOLDERS,
+  SET_FILTERED_FOLDERS,
+  START_LOADING_FILTERED_FOLDERS,
+  STOP_LOADING_FILTERED_FOLDERS,
+  CLEAR_FILTERED_FOLDERS,
 } from './constants';
 import { Folder, TransformedFolder } from './types';
 
@@ -46,13 +55,13 @@ export interface GetTestCasesByFolderIdParams {
   folderId: number;
   offset: number;
   limit: number;
-  setPageData?: () => void;
+  testCasesSearchParams?: string;
 }
 
 export interface GetAllTestCases {
   offset: number;
   limit: number;
-  setPageData?: () => void;
+  testCasesSearchParams?: string;
 }
 
 export interface CreateFolderParams {
@@ -62,6 +71,7 @@ export interface CreateFolderParams {
 
 export interface GetFoldersParams {
   projectKey?: string;
+  silent?: boolean;
 }
 
 export interface DeleteFolderParams {
@@ -83,8 +93,10 @@ export interface RenameFolderParams {
   folderName: string;
 }
 
-export interface SetActiveFolderIdParams {
-  activeFolderId: number;
+export interface MoveFolderParams {
+  folderId: number;
+  parentTestFolderId: number | null;
+  index?: number;
 }
 
 export interface UpdateFolderCounterParams {
@@ -127,13 +139,6 @@ export const getFoldersAction = (params?: GetFoldersParams) => ({
   type: GET_FOLDERS,
   payload: params,
 });
-
-export const setActiveFolderId = (payload: SetActiveFolderIdParams) => {
-  return {
-    type: SELECT_ACTIVE_FOLDER,
-    payload: payload,
-  };
-};
 
 export const createFoldersAction = (folder: CreateFolderParams) => ({
   type: CREATE_FOLDER,
@@ -183,6 +188,11 @@ export const renameFolderSuccessAction = (folderId: RenameFolderParams) => ({
   payload: folderId,
 });
 
+export const moveFolderSuccessAction = (params: MoveFolderParams) => ({
+  type: MOVE_FOLDER_SUCCESS,
+  payload: params,
+});
+
 export const updateFolderCounterAction = (params: UpdateFolderCounterParams) => ({
   type: UPDATE_FOLDER_COUNTER,
   payload: params,
@@ -191,4 +201,58 @@ export const updateFolderCounterAction = (params: UpdateFolderCounterParams) => 
 export const updateDescriptionSuccessAction = (description: string) => ({
   type: UPDATE_DESCRIPTION_SUCCESS,
   payload: description,
+});
+
+export interface ToggleFolderExpansionParams {
+  folderId: number;
+  folders: Folder[];
+}
+
+export const toggleFolderExpansionAction = (params: ToggleFolderExpansionParams) => ({
+  type: TOGGLE_FOLDER_EXPANSION,
+  payload: params,
+});
+
+export const expandFoldersToLevelAction = (params: ToggleFolderExpansionParams) => ({
+  type: EXPAND_FOLDERS_TO_LEVEL,
+  payload: params,
+});
+
+export interface SetExpandedFolderIdsParams {
+  folderIds: number[];
+}
+
+export const setExpandedFolderIdsAction = (params: SetExpandedFolderIdsParams) => ({
+  type: SET_EXPANDED_FOLDER_IDS,
+  payload: params,
+});
+
+export const setFoldersFetchedAction = () => ({
+  type: SET_FOLDERS_FETCHED,
+});
+
+export interface GetFilteredFoldersParams {
+  searchQuery: string;
+}
+
+export const getFilteredFoldersAction = (params: GetFilteredFoldersParams) => ({
+  type: GET_FILTERED_FOLDERS,
+  payload: params,
+});
+
+export const setFilteredFoldersAction = (folders: Folder[]) => ({
+  type: SET_FILTERED_FOLDERS,
+  payload: folders,
+});
+
+export const startLoadingFilteredFoldersAction = () => ({
+  type: START_LOADING_FILTERED_FOLDERS,
+});
+
+export const stopLoadingFilteredFoldersAction = () => ({
+  type: STOP_LOADING_FILTERED_FOLDERS,
+});
+
+export const clearFilteredFoldersAction = () => ({
+  type: CLEAR_FILTERED_FOLDERS,
 });

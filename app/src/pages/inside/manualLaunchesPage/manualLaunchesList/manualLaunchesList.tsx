@@ -19,17 +19,21 @@ import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
 import { xor } from 'es-toolkit';
 import { Button, Selection, Table } from '@reportportal/ui-kit';
+import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { createClassnames } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { ActionMenu } from 'components/actionMenu';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 import { useManualLaunchesColumns } from './hooks/useManualLaunchesColumns/useManualLaunchesColumns';
 import { Launch } from '../types';
-import { useManualLaunchesListRowActions } from './hooks/useManualLaunchesListRowActions';
 import { useManualLaunchesTableData } from './hooks/useManualLaunchesTableData';
 import { LaunchSidePanel } from '../launchSidePanel';
+import {
+  useDeleteManualLaunchModal,
+  useBatchDeleteManualLaunchesModal,
+} from '../deleteManualLaunchModal';
+import { ManualLaunchRowActions } from './manualLaunchRowActions';
 import { transformLaunchToManualTestCase } from '../useManualLaunches';
 
 import styles from './manualLaunchesList.scss';
@@ -38,12 +42,14 @@ const cx = createClassnames(styles);
 
 interface ManualLaunchesListProps {
   fullLaunches: Launch[];
+  onRefresh?: VoidFn;
 }
 
-export const ManualLaunchesList = ({ fullLaunches }: ManualLaunchesListProps) => {
+export const ManualLaunchesList = ({ fullLaunches, onRefresh }: ManualLaunchesListProps) => {
   const { formatMessage } = useIntl();
-  const { canDoTestCaseBulkActions } = useUserPermissions();
-  const rowActions = useManualLaunchesListRowActions();
+  const { canManageTestCases } = useUserPermissions();
+  const { openModal: openDeleteModal } = useDeleteManualLaunchModal();
+  const { openModal: openBatchDeleteModal } = useBatchDeleteManualLaunchesModal();
   const { primaryColumn, fixedColumns } = useManualLaunchesColumns();
 
   const data = useMemo(() => fullLaunches.map(transformLaunchToManualTestCase), [fullLaunches]);
@@ -73,44 +79,63 @@ export const ManualLaunchesList = ({ fullLaunches }: ManualLaunchesListProps) =>
     setSelectedLaunchId(null);
   }, []);
 
+  const handleBatchDelete = useCallback(() => {
+    openBatchDeleteModal({
+      launchIds: selectedRowIds,
+      onClearSelection: () => setSelectedRowIds([]),
+    });
+  }, [openBatchDeleteModal, selectedRowIds]);
+
   const manualLaunchesTableData = useManualLaunchesTableData(
     data,
     selectedLaunchId,
     setSelectedLaunchId,
   );
 
-  const selectedLaunch = fullLaunches.find((launch) => launch.id === selectedLaunchId);
-
   return (
     <div className={cx('manual-launches-list')}>
       <Table
-        selectable={canDoTestCaseBulkActions}
-        onToggleRowSelection={handleRowSelect}
+        selectable={canManageTestCases}
         selectedRowIds={selectedRowIds}
         data={manualLaunchesTableData}
         fixedColumns={fixedColumns}
         primaryColumn={primaryColumn}
         sortableColumns={[]}
-        onToggleAllRowsSelection={handleSelectAll}
         className={cx('manual-launches-list-table')}
         rowClassName={cx('manual-launches-list-table-row')}
-        renderRowActions={() => <ActionMenu actions={rowActions} />}
+        headerClassName={cx('manual-launches-list-table-header')}
+        onToggleRowSelection={handleRowSelect}
+        onToggleAllRowsSelection={handleSelectAll}
+        renderRowActions={(metaData) =>
+          metaData ? (
+            <ManualLaunchRowActions
+              metaData={metaData}
+              onDelete={openDeleteModal}
+              onRefresh={onRefresh}
+            />
+          ) : null
+        }
       />
       {isAnyRowSelected && (
         <div className={cx('selection')}>
-          <Selection
-            selectedCount={selectedRowIds.length}
-            onClearSelection={() => setSelectedRowIds([])}
-          />
-          <div className={cx('selection-controls')}>
-            <Button>{formatMessage(COMMON_LOCALE_KEYS.DELETE)}</Button>
+          <div className={cx('selection-container')}>
+            <Selection
+              selectedCount={selectedRowIds.length}
+              onClearSelection={() => setSelectedRowIds([])}
+            />
+            <div className={cx('selection-controls')}>
+              <Button variant="danger" onClick={handleBatchDelete}>
+                {formatMessage(COMMON_LOCALE_KEYS.DELETE)}
+              </Button>
+            </div>
           </div>
         </div>
       )}
       <LaunchSidePanel
-        launch={selectedLaunch}
+        launchId={selectedLaunchId}
         isVisible={Boolean(selectedLaunchId)}
         onClose={handleCloseSidePanel}
+        onRefresh={onRefresh}
       />
     </div>
   );

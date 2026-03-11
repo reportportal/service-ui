@@ -66,6 +66,8 @@ export class InputSlider extends Component {
     this.props.options.reduce((acc, item, index) => ({ ...acc, [index]: item }), {});
 
   render() {
+    const { options, value, onChange, trackChange, ...restProps } = this.props;
+
     return (
       <div className={cx('input-slider')}>
         <Slider
@@ -75,6 +77,7 @@ export class InputSlider extends Component {
           step={1}
           value={this.getSliderValue()}
           onChange={this.onChange}
+          {...restProps}
         />
       </div>
     );

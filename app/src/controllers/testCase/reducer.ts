@@ -15,40 +15,55 @@
  */
 
 import { combineReducers } from 'redux';
-import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
+import { isEmpty, isNil } from 'es-toolkit/compat';
+
+import { getParentFoldersIds } from 'common/utils/folderUtils';
 import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
-import { TEST_CASE_LIBRARY_PAGE } from 'controllers/pages';
+import { getInitialExpandedFolderIds } from 'controllers/utils/folderReducerUtils';
+import { hasPayloadProps } from 'controllers/utils/types';
 import {
-  NAMESPACE,
-  START_CREATING_FOLDER,
-  STOP_CREATING_FOLDER,
-  START_LOADING_FOLDER,
-  STOP_LOADING_FOLDER,
-  START_LOADING_TEST_CASES,
-  STOP_LOADING_TEST_CASES,
-  SET_TEST_CASES,
-  DELETE_TEST_CASE_SUCCESS,
   CREATE_FOLDER_SUCCESS,
   CREATE_FOLDERS_BATCH_SUCCESS,
-  RENAME_FOLDER_SUCCESS,
   DELETE_FOLDER_SUCCESS,
+  DELETE_TEST_CASE_SUCCESS,
+  EXPAND_FOLDERS_TO_LEVEL,
   GET_TEST_CASE_DETAILS,
-  GET_TEST_CASE_DETAILS_SUCCESS,
   GET_TEST_CASE_DETAILS_FAILURE,
-  UPDATE_FOLDER_COUNTER,
-  SELECT_ACTIVE_FOLDER,
+  GET_TEST_CASE_DETAILS_SUCCESS,
+  MOVE_FOLDER_SUCCESS,
+  NAMESPACE,
+  RENAME_FOLDER_SUCCESS,
+  SET_EXPANDED_FOLDER_IDS,
+  SET_FOLDERS_FETCHED,
+  SET_TEST_CASES,
+  START_CREATING_FOLDER,
+  START_LOADING_FOLDER,
+  START_LOADING_TEST_CASES,
+  STOP_CREATING_FOLDER,
+  STOP_LOADING_FOLDER,
+  STOP_LOADING_TEST_CASES,
+  TOGGLE_FOLDER_EXPANSION,
   UPDATE_DESCRIPTION_SUCCESS,
+  UPDATE_FOLDER_COUNTER,
+  SET_FILTERED_FOLDERS,
+  START_LOADING_FILTERED_FOLDERS,
+  STOP_LOADING_FILTERED_FOLDERS,
+  CLEAR_FILTERED_FOLDERS,
 } from 'controllers/testCase/constants';
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Page } from 'types/common';
 import { queueReducers } from 'common/utils';
+
 import { Folder } from './types';
 import {
   DeleteFolderSuccessParams,
   DeleteTestCaseParams,
+  MoveFolderParams,
   RenameFolderParams,
-  SetActiveFolderIdParams,
+  SetExpandedFolderIdsParams,
+  ToggleFolderExpansionParams,
   UpdateFolderCounterParams,
 } from './actionCreators';
 
@@ -59,6 +74,10 @@ export type InitialStateType = {
     isLoadingFolder: boolean;
     loading: boolean;
     activeFolderId?: number | null;
+    expandedFolderIds: number[];
+    areFoldersFetched: boolean;
+    filteredFolders: Folder[];
+    isLoadingFilteredFolders: boolean;
   };
   testCases: {
     isLoading: boolean;
@@ -74,6 +93,10 @@ export const INITIAL_STATE: InitialStateType = {
     isLoadingFolder: false,
     loading: false,
     activeFolderId: null,
+    expandedFolderIds: [],
+    areFoldersFetched: false,
+    filteredFolders: [],
+    isLoadingFilteredFolders: false,
   },
   testCases: {
     isLoading: false,
@@ -97,6 +120,7 @@ const INITIAL_DETAILS_STATE: InitialDetailsStateType = {
 type FolderAction =
   | { type: typeof DELETE_FOLDER_SUCCESS; payload: DeleteFolderSuccessParams }
   | { type: typeof RENAME_FOLDER_SUCCESS; payload: RenameFolderParams }
+  | { type: typeof MOVE_FOLDER_SUCCESS; payload: MoveFolderParams }
   | { type: typeof CREATE_FOLDER_SUCCESS; payload: Folder }
   | { type: typeof CREATE_FOLDERS_BATCH_SUCCESS; payload: Folder[] }
   | { type: typeof UPDATE_FOLDER_COUNTER; payload: UpdateFolderCounterParams };
@@ -124,6 +148,18 @@ const isLoadingFolderReducer = (
       return true;
     case STOP_LOADING_FOLDER:
       return false;
+    default:
+      return state;
+  }
+};
+
+const areFoldersFetchedReducer = (
+  state = INITIAL_STATE.folders.areFoldersFetched,
+  action: { type: string },
+) => {
+  switch (action.type) {
+    case SET_FOLDERS_FETCHED:
+      return true;
     default:
       return state;
   }
@@ -178,6 +214,19 @@ const folderReducer = (state = INITIAL_STATE.folders.data, action: FolderAction)
         return { ...folder, name: action.payload.folderName };
       });
     }
+    case MOVE_FOLDER_SUCCESS: {
+      return state.map((folder) => {
+        if (folder.id !== action.payload.folderId) {
+          return folder;
+        }
+
+        return {
+          ...folder,
+          parentFolderId: action.payload.parentTestFolderId,
+          ...(!isNil(action.payload.index) && { index: action.payload.index }),
+        };
+      });
+    }
     case CREATE_FOLDER_SUCCESS: {
       return [...state, action.payload];
     }
@@ -216,13 +265,119 @@ const testCaseDetailsReducer = (
   }
 };
 
-const activeFolderReducer = (
-  state: number | null = INITIAL_STATE.folders.activeFolderId || null,
-  action: { type: string; payload: SetActiveFolderIdParams },
+const getFolderAndDescendantIds = (folders: Folder[], folderId: number): number[] => {
+  const folder = folders.find((folder) => folder.id === folderId);
+
+  if (!folder) {
+    return [];
+  }
+
+  const descendants = folders
+    .filter((folder) => folder.parentFolderId === folderId)
+    .flatMap((child) => [child.id, ...getFolderAndDescendantIds(folders, child.id)]);
+
+  return [folderId, ...descendants];
+};
+
+const hasFolderExpansionPayload = (action: {
+  type: string;
+  payload?: unknown;
+}): action is { type: string; payload: ToggleFolderExpansionParams } =>
+  hasPayloadProps<ToggleFolderExpansionParams>(action, ['folderId', 'folders']);
+
+const hasDeleteFolderPayload = (action: {
+  type: string;
+  payload?: unknown;
+}): action is { type: string; payload: DeleteFolderSuccessParams } =>
+  hasPayloadProps<DeleteFolderSuccessParams>(action, ['deletedFolderIds']);
+
+const hasSetExpandedFolderIdsPayload = (action: {
+  type: string;
+  payload?: unknown;
+}): action is { type: string; payload: SetExpandedFolderIdsParams } =>
+  hasPayloadProps<SetExpandedFolderIdsParams>(action, ['folderIds']);
+
+const filteredFoldersReducer = (
+  state = INITIAL_STATE.folders.filteredFolders,
+  action: { type: string; payload?: Folder[] },
 ) => {
   switch (action.type) {
-    case SELECT_ACTIVE_FOLDER:
-      return action.payload.activeFolderId || null;
+    case SET_FILTERED_FOLDERS:
+      return action.payload || [];
+    case CLEAR_FILTERED_FOLDERS:
+      return [];
+    default:
+      return state;
+  }
+};
+
+const isLoadingFilteredFoldersReducer = (
+  state = INITIAL_STATE.folders.isLoadingFilteredFolders,
+  action: { type: string },
+) => {
+  switch (action.type) {
+    case START_LOADING_FILTERED_FOLDERS:
+      return true;
+    case STOP_LOADING_FILTERED_FOLDERS:
+      return false;
+    default:
+      return state;
+  }
+};
+
+const expandedFolderIdsReducer = (
+  state = getInitialExpandedFolderIds(TMS_INSTANCE_KEY.TEST_CASE),
+  action:
+    | { type: typeof TOGGLE_FOLDER_EXPANSION; payload: ToggleFolderExpansionParams }
+    | { type: typeof EXPAND_FOLDERS_TO_LEVEL; payload: ToggleFolderExpansionParams }
+    | { type: typeof SET_EXPANDED_FOLDER_IDS; payload: SetExpandedFolderIdsParams }
+    | { type: typeof DELETE_FOLDER_SUCCESS; payload: DeleteFolderSuccessParams }
+    | { type: string },
+) => {
+  switch (action.type) {
+    case TOGGLE_FOLDER_EXPANSION: {
+      if (hasFolderExpansionPayload(action)) {
+        const { folderId, folders } = action.payload;
+        const isExpanded = state.includes(folderId);
+
+        if (isExpanded) {
+          const idsToRemove = getFolderAndDescendantIds(folders, folderId);
+
+          return state.filter((id) => !idsToRemove.includes(id));
+        }
+
+        return [...state, folderId];
+      }
+
+      return state;
+    }
+    case EXPAND_FOLDERS_TO_LEVEL: {
+      if (hasFolderExpansionPayload(action)) {
+        const { folderId, folders } = action.payload;
+
+        const idsToExpand = getParentFoldersIds(folderId, folders);
+
+        return !isEmpty(idsToExpand) ? [...state, ...idsToExpand] : state;
+      }
+
+      return state;
+    }
+    case SET_EXPANDED_FOLDER_IDS: {
+      if (hasSetExpandedFolderIdsPayload(action)) {
+        return action.payload.folderIds;
+      }
+
+      return state;
+    }
+    case DELETE_FOLDER_SUCCESS: {
+      if (hasDeleteFolderPayload(action)) {
+        const { deletedFolderIds } = action.payload;
+
+        return state.filter((id) => !deletedFolderIds.includes(id));
+      }
+
+      return state;
+    }
     default:
       return state;
   }
@@ -235,12 +390,15 @@ const reducer = combineReducers({
       fetchReducer(NAMESPACE, { initialState: [], contentPath: 'content' }),
       folderReducer,
     ),
-    activeFolderId: activeFolderReducer,
+    expandedFolderIds: expandedFolderIdsReducer,
     isCreatingFolder: isCreatingFolderReducer,
     isLoadingFolder: isLoadingFolderReducer,
     loading: loadingReducer(NAMESPACE),
+    areFoldersFetched: areFoldersFetchedReducer,
+    filteredFolders: filteredFoldersReducer,
+    isLoadingFilteredFolders: isLoadingFilteredFoldersReducer,
   }),
   testCases: testCasesReducer,
 });
 
-export const testCaseReducer = createPageScopedReducer(reducer, [TEST_CASE_LIBRARY_PAGE]);
+export const testCaseReducer = reducer;

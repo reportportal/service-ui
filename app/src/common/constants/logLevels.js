@@ -20,3 +20,4 @@ export const DEBUG = 'DEBUG';
 export const WARN = 'WARN';
 export const INFO = 'INFO';
 export const TRACE = 'TRACE';
+export const ALL = 'ALL';

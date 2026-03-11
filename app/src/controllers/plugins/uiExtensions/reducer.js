@@ -25,13 +25,13 @@ const extensionManifestsReducer = (state = [], { type = '', payload = {} }) => {
   switch (type) {
     case FETCH_EXTENSION_MANIFESTS_SUCCESS:
       return payload;
-    case UPDATE_EXTENSION_MANIFEST:
-      return state.map((item) => {
-        if (item.pluginName === payload.pluginName) {
-          return payload;
-        }
-        return item;
-      });
+    case UPDATE_EXTENSION_MANIFEST: {
+      const index = state.findIndex((item) => item.pluginName === payload.pluginName);
+      if (index === -1) {
+        return state.concat(payload);
+      }
+      return state.map((item, i) => (i === index ? payload : item));
+    }
     case ADD_EXTENSION_MANIFEST:
       return [...state, payload];
     default:

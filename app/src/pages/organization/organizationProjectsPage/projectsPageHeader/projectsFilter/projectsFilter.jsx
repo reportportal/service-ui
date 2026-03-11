@@ -29,7 +29,7 @@ import {
   LAUNCHES_FILTER_NAME_CONDITION,
   TEAMMATES_FILTER_NAME_CONDITION,
   getRangeComparisons,
-  getTimeRange,
+  getTimeRangeOptions,
   messages as helpMessage,
   timeRangeValues,
 } from 'components/main/filterButton';
@@ -38,8 +38,6 @@ import { getApplyFilterEventParams } from 'components/main/analytics/utils';
 import {
   DateRangeFormField,
   formatDisplayedValue,
-  parseFormattedDate,
-  formatDateRangeToMinutesString,
 } from 'components/main/dateRange';
 import classNames from 'classnames/bind';
 import { messages } from './messages';
@@ -57,7 +55,7 @@ export const ProjectsFilter = ({
 }) => {
   const { formatMessage } = useIntl();
 
-  const timeRange = getTimeRange(formatMessage);
+  const timeRange = getTimeRangeOptions(formatMessage);
   const rangeComparisons = getRangeComparisons(formatMessage);
   const lastRunDate = useSelector((state) => selector(state, LAST_RUN_DATE_FILTER_NAME));
 
@@ -83,12 +81,11 @@ export const ProjectsFilter = ({
             formatDisplayedValue: (displayedValue) =>
               formatDisplayedValue(displayedValue, lastRunDate, timeRangeValues),
             notScrollable: true,
-            footer: (
+            footer: (closeDropdown) => (
               <Field
                 name={LAST_RUN_DATE_FILTER_NAME}
                 component={DateRangeFormField}
-                format={parseFormattedDate}
-                parse={formatDateRangeToMinutesString}
+                onClose={closeDropdown}
               />
             ),
           },

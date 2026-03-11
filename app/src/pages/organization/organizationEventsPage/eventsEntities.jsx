@@ -62,6 +62,9 @@ import {
   CREATE_DEFECT,
   UPDATE_DEFECT,
   DELETE_DEFECT,
+  CREATE_LOG_TYPE,
+  UPDATE_LOG_TYPE,
+  DELETE_LOG_TYPE,
   ACTIONS_WITH_IMPORT,
   UPDATE_ITEM,
   LINK_ISSUE_AA,
@@ -96,11 +99,13 @@ import {
   IMPORT,
   PROJECT,
   DEFECT_TYPE,
+  LOG_TYPE,
   USER,
   ITEM_ISSUE,
   INTEGRATION,
   PATTERN_RULE,
   DEFECT_TYPE_FILTERING_OPTION,
+  LOG_TYPE_FILTERING_OPTION,
   ITEM_ISSUE_FILTERING_OPTION,
   PATTERN_RULE_FILTERING_OPTION,
   INDEX,
@@ -234,6 +239,18 @@ export const EventsEntities = (props) => {
             {
               label: formatMessage(actionMessages[DELETE_DEFECT]),
               value: DELETE_DEFECT,
+            },
+            {
+              label: formatMessage(actionMessages[CREATE_LOG_TYPE]),
+              value: CREATE_LOG_TYPE,
+            },
+            {
+              label: formatMessage(actionMessages[UPDATE_LOG_TYPE]),
+              value: UPDATE_LOG_TYPE,
+            },
+            {
+              label: formatMessage(actionMessages[DELETE_LOG_TYPE]),
+              value: DELETE_LOG_TYPE,
             },
             {
               label: formatMessage(actionMessages[CREATE_INTEGRATION]),
@@ -417,6 +434,14 @@ export const EventsEntities = (props) => {
             {
               label: formatMessage(objectTypesMessages[LAUNCH]),
               value: LAUNCH,
+            },
+            {
+              label: formatMessage(objectTypesMessages[LOG_TYPE]),
+              value: LOG_TYPE_FILTERING_OPTION,
+            },
+            {
+              label: formatMessage(objectTypesMessages[LOG_TYPE]),
+              value: LOG_TYPE_FILTERING_OPTION,
             },
             {
               label: formatMessage(objectTypesMessages[INTEGRATION]),

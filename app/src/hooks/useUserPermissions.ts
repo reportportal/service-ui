@@ -17,7 +17,7 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { userRolesSelector } from 'controllers/pages';
-import * as permissions from 'common/utils/permissions';
+import * as permissions from 'common/utils/permissions/permissions';
 
 type PermissionFunctions = typeof permissions;
 type PermissionBooleans = {

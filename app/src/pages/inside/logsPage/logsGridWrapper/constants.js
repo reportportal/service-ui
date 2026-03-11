@@ -17,3 +17,4 @@
 import { NEXT, PREVIOUS } from 'controllers/log';
 
 export const DIRECTION_SHIFT_MAP = { [PREVIOUS]: -1, [NEXT]: 1 };
+export const FIRST_PAGE = 1;

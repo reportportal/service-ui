@@ -14,52 +14,110 @@
  * limitations under the License.
  */
 
-import { ReactNode } from 'react';
-import { defineMessages, useIntl } from 'react-intl';
-import { BaseIconButton, SearchIcon } from '@reportportal/ui-kit';
+import { useCallback } from 'react';
+import { useIntl } from 'react-intl';
+import { useDrop } from 'react-dnd';
+import Parser from 'html-react-parser';
+import {
+  BaseIconButton,
+  BubblesLoader,
+  SearchIcon,
+  FieldText,
+  useTreeDropValidation,
+} from '@reportportal/ui-kit';
+import { TreeSortableContainer, DragLayer } from '@reportportal/ui-kit/sortable';
+import type { TreeDragItem, TreeDropPosition } from '@reportportal/ui-kit/common';
+import { useSelector } from 'react-redux';
 
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { createClassnames } from 'common/utils';
-import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
-import { TransformedFolder } from 'controllers/testCase';
+import { useStorageFolders } from 'hooks/useStorageFolders';
+import { TransformedFolder, foldersSelector } from 'controllers/testCase';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { EmptySearchState } from 'pages/common/emptySearchState';
+import OutlineSearchIcon from 'common/img/search-outline-icon-inline.svg';
+import FilledSearchIcon from 'common/img/search-filled-icon-inline.svg';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import FolderDropIcon from 'common/img/folder-drop-inline.svg';
 
 import { Folder } from './folder';
+import { messages } from './messages';
+import type { ExpandedOptionsProps } from './types';
+import { useFolderSearch } from './useFolderSearch';
+import { useSearchFilteredFolders } from './useSearchFilteredFolders';
+import { FOLDER_DRAG_TYPE, EXTERNAL_TREE_DROP_TYPE } from './constants';
 
 import styles from './expandedOptions.scss';
+import { createTestCaseDropHandler } from './utils';
 
 const cx = createClassnames(styles);
 
-const messages = defineMessages({
-  allTestCases: {
-    id: 'expandedOptions.allTestCases',
-    defaultMessage: 'All Test Cases',
-  },
-  folders: {
-    id: 'expandedOptions.folders',
-    defaultMessage: 'Folders',
-  },
-});
-
-interface ExpandedOptionsProps {
-  folders: TransformedFolder[];
-  activeFolder: number | null;
-  setAllTestCases: () => void;
-  onFolderClick: (id: number) => void;
-  children: ReactNode;
-  instanceKey?: INSTANCE_KEYS;
-  renderCreateFolderButton?: () => ReactNode;
-}
-
 export const ExpandedOptions = ({
   folders,
-  activeFolder,
-  setAllTestCases,
-  onFolderClick,
-  renderCreateFolderButton,
+  activeFolderId,
   instanceKey,
   children,
+  searchQuery: pageSearchQuery,
+  setAllTestCases,
+  renderCreateFolderButton,
+  onFolderClick,
+  onMoveFolder,
+  onDuplicateFolder,
+  onMoveTestCase,
+  onDuplicateTestCase,
 }: ExpandedOptionsProps) => {
   const { formatMessage } = useIntl();
+  const { expandedIds, onToggleFolder } = useStorageFolders(instanceKey);
+  const allFolders = useSelector(foldersSelector);
+
+  const {
+    searchFilteredFolders,
+    searchFilteredExpandedIds,
+    isSearchFilteredLoading,
+    hasSearchFilteredFolders,
+  } = useSearchFilteredFolders({ searchQuery: pageSearchQuery });
+
+  const isDragAndDropEnabled = !!(onMoveFolder && onDuplicateFolder);
+
+  const dropValidation = (
+    useTreeDropValidation as (params: { items: TransformedFolder[]; childrenKey: string }) => {
+      canDropOn: (draggedItem: { id: string | number }, targetId: string | number) => boolean;
+    }
+  )({
+    items: folders,
+    childrenKey: 'folders',
+  });
+  const canDropOn = dropValidation.canDropOn;
+
+  const [{ isDraggingAny, isOverFoldersZone }, dropZoneRef] = useDrop(
+    () => ({
+      accept: [FOLDER_DRAG_TYPE, EXTERNAL_TREE_DROP_TYPE],
+      collect: (monitor) => ({
+        isDraggingAny: isDragAndDropEnabled ? monitor.canDrop() : false,
+        isOverFoldersZone: monitor.isOver(),
+      }),
+    }),
+    [isDragAndDropEnabled],
+  );
+
+  const {
+    searchQuery,
+    isSearchVisible,
+    searchInputRef,
+    searchWrapperRef,
+    filteredFolders,
+    hasAnyMatch,
+    effectiveExpandedIds,
+    handleToggleFolder,
+    handleSearchChange,
+    handleSearchClear,
+    handleMagnifierClick,
+  } = useFolderSearch({ folders, expandedIds, onToggleFolder });
+
+  const allItemsTitle =
+    instanceKey === TMS_INSTANCE_KEY.MANUAL_LAUNCH
+      ? formatMessage(messages.allTestExecutions)
+      : formatMessage(messages.allTestCases);
 
   const totalTestCases = folders.reduce((total: number, folder: TransformedFolder): number => {
     const countFolderTestCases = (folder: TransformedFolder): number => {
@@ -69,64 +127,198 @@ export const ExpandedOptions = ({
         folder.testsCount || 0,
       );
     };
+
     return total + countFolderTestCases(folder);
   }, 0);
 
-  return (
-    <div className={cx('expanded-options')}>
-      <div className={cx('expanded-options__sidebar')}>
-        <div className={cx('sidebar-header')}>
-          <button
-            type="button"
-            className={cx('sidebar-header__title', {
-              'sidebar-header__title--active': activeFolder === null,
-            })}
-            onClick={setAllTestCases}
-          >
-            <span className={cx('sidebar-header__title--text')}>
-              {formatMessage(messages.allTestCases)}
-            </span>
-            <span className={cx('sidebar-header__title--counter')}>
-              {totalTestCases.toLocaleString()}
-            </span>
-          </button>
-        </div>
-        <div className={cx('expanded-options__sidebar-separator')} />
-        <div className={cx('expanded-options__sidebar-actions')}>
-          <div className={cx('expanded-options__sidebar-actions--title')} id="tree_label">
-            {formatMessage(messages.folders)}
+  const handleMoveFolder = useCallback(
+    (draggedItem: TreeDragItem, targetId: string | number, position: TreeDropPosition) => {
+      onMoveFolder?.(draggedItem, targetId, position);
+    },
+    [onMoveFolder],
+  );
+
+  const handleDuplicateFolder = useCallback(
+    (draggedItem: TreeDragItem, targetId: string | number, position: TreeDropPosition) => {
+      onDuplicateFolder?.(draggedItem, targetId, position);
+    },
+    [onDuplicateFolder],
+  );
+
+  const renderFolderList = (
+    folderList: TransformedFolder[],
+    expandedFolderIds: number[],
+    query: string,
+  ) =>
+    folderList.map((folder, idx) => (
+      <Folder
+        folder={folder}
+        key={folder.id || `${folder.name}-${idx}`}
+        activeFolder={activeFolderId}
+        instanceKey={instanceKey}
+        expandedIds={expandedFolderIds}
+        onFolderClick={onFolderClick}
+        setAllTestCases={setAllTestCases}
+        onToggleFolder={handleToggleFolder}
+        searchQuery={query}
+        index={idx}
+        parentId={null}
+        enableDragAndDrop={isDragAndDropEnabled}
+        canDropOn={canDropOn}
+      />
+    ));
+
+  const renderFolderTree = () => {
+    if (pageSearchQuery) {
+      if (isSearchFilteredLoading) {
+        return <BubblesLoader />;
+      };
+      if (!hasSearchFilteredFolders) {
+        return <EmptySearchState />;
+      };
+      return renderFolderList(searchFilteredFolders, searchFilteredExpandedIds, '');
+    }
+
+    if (!searchQuery || hasAnyMatch) {
+      return renderFolderList(filteredFolders, effectiveExpandedIds, searchQuery);
+    }
+
+    return <EmptySearchState />;
+  };
+
+  const handleMoveExternal = useCallback(
+    (draggedItem: TreeDragItem, targetId: string | number, position: TreeDropPosition) => {
+      createTestCaseDropHandler(onMoveTestCase)(draggedItem, targetId, position);
+    },
+    [onMoveTestCase],
+  );
+
+  const handleDuplicateExternal = useCallback(
+    (draggedItem: TreeDragItem, targetId: string | number, position: TreeDropPosition) => {
+      createTestCaseDropHandler(onDuplicateTestCase)(draggedItem, targetId, position);
+    },
+    [onDuplicateTestCase],
+  );
+
+  const renderContent = () => (
+    <>
+      {isDragAndDropEnabled && (
+        <DragLayer
+          type={FOLDER_DRAG_TYPE}
+          previewClassName={cx('folder-drag-preview')}
+          renderPreview={(item) => {
+            const folder = allFolders.find((f) => f.id === item.id);
+            return <span>{folder?.name || formatMessage(messages.folder)}</span>;
+          }}
+        />
+      )}
+      <div className={cx('expanded-options')}>
+        <div className={cx('expanded-options__sidebar')}>
+          <div className={cx('sidebar-header')}>
+            <button
+              type="button"
+              className={cx('sidebar-header__title', {
+                'sidebar-header__title--active': activeFolderId === null,
+              })}
+              onClick={setAllTestCases}
+            >
+              <span className={cx('sidebar-header__title--text')}>{allItemsTitle}</span>
+              <span className={cx('sidebar-header__title--counter')}>
+                {totalTestCases.toLocaleString()}
+              </span>
+            </button>
           </div>
-          <BaseIconButton className={cx('expanded-options__sidebar-actions--search')}>
-            <SearchIcon />
-          </BaseIconButton>
-          {renderCreateFolderButton?.()}
-        </div>
-        <div className={cx('expanded-options__sidebar-folders-wrapper')}>
-          <ScrollWrapper className={cx('expanded-options__scroll-wrapper-background')}>
-            <div className={cx('expanded-options__sidebar-folders')}>
-              <ul
-                className={cx('folders-tree', 'folders-tree--outer')}
-                role="tree"
-                aria-labelledby="tree_label"
-              >
-                {folders.map((folder, idx) => (
-                  <Folder
-                    folder={folder}
-                    key={folder.id || `${folder.name}-${idx}`}
-                    activeFolder={activeFolder}
-                    setActiveFolder={onFolderClick}
-                    setAllTestCases={setAllTestCases}
-                    instanceKey={instanceKey}
-                  />
-                ))}
-              </ul>
+          <div className={cx('expanded-options__sidebar-separator')} />
+          <div className={cx('expanded-options__sidebar-actions')}>
+            <div className={cx('expanded-options__sidebar-actions--title')} id="tree_label">
+              {formatMessage(messages.folders)}
             </div>
-          </ScrollWrapper>
+            <BaseIconButton
+              className={cx('expanded-options__sidebar-actions--search', {
+                'expanded-options__sidebar-actions--search-panel-open': isSearchVisible,
+                'expanded-options__sidebar-actions--search-has-query': !!searchQuery,
+              })}
+              onClick={handleMagnifierClick}
+            >
+              {searchQuery ? Parser(String(FilledSearchIcon)) : Parser(String(OutlineSearchIcon))}
+            </BaseIconButton>
+            {renderCreateFolderButton?.()}
+          </div>
+          {isSearchVisible && (
+            <div ref={searchWrapperRef} className={cx('expanded-options__search-wrapper')}>
+              <FieldText
+                ref={searchInputRef}
+                value={searchQuery}
+                onChange={handleSearchChange}
+                onClear={handleSearchClear}
+                placeholder={formatMessage(messages.searchPlaceholder)}
+                defaultWidth={false}
+                clearable
+                startIcon={<SearchIcon />}
+              />
+            </div>
+          )}
+          <div
+            className={cx('expanded-options__sidebar-folders-wrapper', {
+              'expanded-options__sidebar-folders-wrapper--with-search': isSearchVisible,
+            })}
+          >
+            <ScrollWrapper className={cx('expanded-options__scroll-wrapper-background')}>
+              <div
+                ref={dropZoneRef}
+                className={cx('expanded-options__sidebar-folders', {
+                  'expanded-options__sidebar-folders--dragging': isDraggingAny,
+                })}
+              >
+                {isDraggingAny && !isOverFoldersZone && (
+                  <div className={cx('expanded-options__drop-placeholder')}>
+                    <div className={cx('expanded-options__drop-placeholder-content')}>
+                      <i className={cx('expanded-options__drop-placeholder-icon')}>
+                        {Parser(FolderDropIcon)}
+                      </i>
+                      <span className={cx('expanded-options__drop-placeholder-text')}>
+                        {formatMessage({
+                          id: 'expandedOptions.dropPlaceholder',
+                          defaultMessage: 'Drop items here to move them into a folder',
+                        })}
+                      </span>
+                    </div>
+                  </div>
+                )}
+                <ul
+                  className={cx('folders-tree', 'folders-tree--outer')}
+                  role="tree"
+                  aria-labelledby="tree_label"
+                >
+                  {renderFolderTree()}
+                </ul>
+              </div>
+            </ScrollWrapper>
+          </div>
         </div>
+        <ScrollWrapper>
+          <div className={cx('expanded-options__content')}>{children}</div>
+        </ScrollWrapper>
       </div>
-      <ScrollWrapper>
-        <div className={cx('expanded-options__content')}>{children}</div>
-      </ScrollWrapper>
-    </div>
+    </>
+  );
+
+  return isDragAndDropEnabled ? (
+    <TreeSortableContainer
+      showDropConfirmation
+      confirmationLabels={{
+      move: formatMessage(COMMON_LOCALE_KEYS.MOVE),
+      duplicate: formatMessage({ id: 'expandedOptions.duplicate', defaultMessage: 'Duplicate' }),
+      cancel: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      }}
+      onMove={handleMoveFolder}
+      onDuplicate={handleDuplicateFolder}
+      onMoveExternal={handleMoveExternal}
+      onDuplicateExternal={handleDuplicateExternal}
+    >
+      {renderContent()}
+    </TreeSortableContainer>
+  ) : (
+    renderContent()
   );
 };

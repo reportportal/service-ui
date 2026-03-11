@@ -77,6 +77,17 @@ export const PatternAnalysis = ({ setHeaderTitleNode }) => {
     );
   };
 
+  const getButtons = () =>
+    canUpdateSettings
+      ? [
+          {
+            name: formatMessage(messages.create),
+            dataAutomationId: 'createPatternButton',
+            handleButton: onAddPattern,
+          },
+        ]
+      : [];
+
   return (
     <>
       {patterns.length > 0 ? (
@@ -100,13 +111,7 @@ export const PatternAnalysis = ({ setHeaderTitleNode }) => {
           )}
           documentationLink={docsReferences.emptyStatePatternAnalysisDocs}
           handleDocumentationClick={handleDocumentationClick}
-          buttons={[
-            {
-              name: canUpdateSettings && formatMessage(messages.create),
-              dataAutomationId: 'createPatternButton',
-              handleButton: onAddPattern,
-            },
-          ]}
+          buttons={getButtons()}
         />
       )}
     </>

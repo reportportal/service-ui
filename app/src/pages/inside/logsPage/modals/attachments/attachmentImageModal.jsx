@@ -37,6 +37,7 @@ export class AttachmentImageModal extends Component {
   static propTypes = {
     data: PropTypes.shape({
       image: PropTypes.string,
+      fileName: PropTypes.string,
     }).isRequired,
     intl: PropTypes.object.isRequired,
     tracking: PropTypes.shape({
@@ -112,13 +113,14 @@ export class AttachmentImageModal extends Component {
   render() {
     const {
       intl: { formatMessage },
-      data: { image },
+      data: { image, fileName },
     } = this.props;
     const imageStyle = this.getRotatedImageStyle();
+    const title = fileName || formatMessage(messages.title);
 
     return (
       <ModalLayout
-        title={formatMessage(messages.title)}
+        title={title}
         cancelButton={this.renderCancelButton()}
         customButton={this.renderCustomButton()}
         className={cx('attachment-image-modal')}

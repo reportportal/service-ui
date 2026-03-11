@@ -19,7 +19,7 @@
 > │   ├── componentName.jsx
 > │   ├── componentName.scss
 > │   ├── index.js (with component's export)
-> │   ├── constants.js (if component has local constants, which are used several times by sub components)
+> │   ├── constants.ts (if component has local constants, which are used several times by sub components)
 > │   ├── utils.js (if component has local utilities, which are used several times by sub components)
 > │   └── subComponentFolder (if has)
 > │       └── ...
@@ -31,7 +31,7 @@ The application uses Redux First Router for routing. To create a new route, foll
 
 ### 1. Define Route Constants
 
-Add your route constant to `/src/controllers/pages/constants.js`:
+Add your route constant to `/src/controllers/pages/constants.ts`:
 
 ```javascript
 export const MY_NEW_PAGE = 'MY_NEW_PAGE';
@@ -105,7 +105,7 @@ For routes with thunks/sagas:
 
 ### 5. Configure Page Rendering
 
-Add page rendering configuration to `/src/routes/constants.js`:
+Add page rendering configuration to `/src/routes/constants.ts`:
 
 Import your component:
 
@@ -153,7 +153,7 @@ const MyComponent = () => {
 
 ### 7. Route Access Control (Optional)
 
-Add access control to your page in `/src/routes/constants.js`:
+Add access control to your page in `/src/routes/constants.ts`:
 
 ```javascript
 export const pageRendering = {
@@ -169,10 +169,10 @@ export const pageRendering = {
 
 When creating a new route, you need to modify these files:
 
-1. `/src/controllers/pages/constants.js` - Add route constant and pageNames entry
+1. `/src/controllers/pages/constants.ts` - Add route constant and pageNames entry
 2. `/src/controllers/pages/index.js` - Export the route constant  
 3. `/src/routes/routesMap.js` - Define the URL pattern
-4. `/src/routes/constants.js` - Configure page rendering and layout
+4. `/src/routes/constants.ts` - Configure page rendering and layout
 5. `/src/pages/inside/yourPage/` - Create the page component
 
 ### Common Route Patterns
@@ -203,7 +203,7 @@ The application uses Redux First Router for routing. To create a new route, foll
 
 ### 1. Define Route Constants
 
-Add your route constant to `/src/controllers/pages/constants.js`:
+Add your route constant to `/src/controllers/pages/constants.ts`:
 
 ```javascript
 export const MY_NEW_PAGE = 'MY_NEW_PAGE';
@@ -277,7 +277,7 @@ For routes with thunks/sagas:
 
 ### 5. Configure Page Rendering
 
-Add page rendering configuration to `/src/routes/constants.js`:
+Add page rendering configuration to `/src/routes/constants.ts`:
 
 Import your component:
 
@@ -325,7 +325,7 @@ const MyComponent = () => {
 
 ### 7. Route Access Control (Optional)
 
-Add access control to your page in `/src/routes/constants.js`:
+Add access control to your page in `/src/routes/constants.ts`:
 
 ```javascript
 export const pageRendering = {
@@ -341,10 +341,10 @@ export const pageRendering = {
 
 When creating a new route, you need to modify these files:
 
-1. `/src/controllers/pages/constants.js` - Add route constant and pageNames entry
+1. `/src/controllers/pages/constants.ts` - Add route constant and pageNames entry
 2. `/src/controllers/pages/index.js` - Export the route constant  
 3. `/src/routes/routesMap.js` - Define the URL pattern
-4. `/src/routes/constants.js` - Configure page rendering and layout
+4. `/src/routes/constants.ts` - Configure page rendering and layout
 5. `/src/pages/inside/yourPage/` - Create the page component
 
 ### Common Route Patterns

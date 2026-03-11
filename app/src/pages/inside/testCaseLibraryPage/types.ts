@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { FC, SVGProps } from 'react';
+import { FC, SVGProps, ReactNode } from 'react';
+import { isString, isObject, isNil } from 'es-toolkit/compat';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { FolderWithFullPath } from 'controllers/testCase/types';
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
@@ -44,6 +45,8 @@ export interface Attachment {
   fileSize: number;
   id: number;
   fileType: string;
+  src?: string;
+  hasThumbnail?: boolean;
 }
 
 export enum ManualScenarioType {
@@ -53,12 +56,11 @@ export enum ManualScenarioType {
 
 interface ManualScenarioCommon {
   executionEstimationTime: number;
-  linkToRequirements: string;
+  requirements: Requirement[];
   manualScenarioType: ManualScenarioType;
   preconditions?: {
     value: string;
   };
-  attributes?: Attribute[];
 }
 
 interface ManualScenarioSteps extends ManualScenarioCommon {
@@ -80,24 +82,22 @@ export interface TestCase {
   createdAt: number;
   description?: string;
   path: string[];
-  attributes?: Tag[];
+  attributes?: (Tag | Attribute)[];
   updatedAt: number;
   durationTime?: number;
   testFolder: {
     id: number;
   };
-  lastExecution?: {
-    startedAt: string;
-    duration: number;
-  };
+  lastExecution?: Execution;
   tags?: { key: string }[];
+  manualScenario?: ManualScenario;
 }
 
 export interface ManualScenario {
   manualScenarioType: TestCaseManualScenario;
   id: number;
   executionEstimationTime: number;
-  linkToRequirements: string;
+  requirements: Requirement[];
   preconditions: {
     value: string;
     attachments: Attachment[];
@@ -109,14 +109,40 @@ export interface ManualScenario {
   attachments?: Attachment[];
 }
 
+export enum ExecutionStatus {
+  PASSED = 'PASSED',
+  FAILED = 'FAILED',
+  STOPPED = 'STOPPED',
+  SKIPPED = 'SKIPPED',
+  INTERRUPTED = 'INTERRUPTED',
+  CANCELLED = 'CANCELLED',
+  INFO = 'INFO',
+  WARN = 'WARN',
+  TO_RUN = 'TO_RUN',
+}
+
+export interface Execution {
+  id: number;
+  launch: {
+    id: number;
+    name: string;
+    number: number;
+  };
+  status: ExecutionStatus;
+  startedAt: number;
+  duration: number;
+}
+
 export interface ExtendedTestCase extends TestCase {
   manualScenario?: ManualScenario;
+  lastExecution?: Execution;
+  executions?: Execution[];
 }
 
 export interface ActionButton {
   name: string;
   dataAutomationId: string;
-  icon?: FC<SVGProps<SVGSVGElement>>;
+  icon?: FC<SVGProps<SVGSVGElement>> | string;
   isCompact: boolean;
   variant?: string;
   handleButton: () => void;
@@ -128,12 +154,17 @@ export interface Attribute {
   value: string;
 }
 
+export interface Requirement {
+  id: string;
+  value: string;
+}
+
 export interface CreateTestCaseFormData {
   name: string;
   description?: string;
   folder: FolderWithFullPath | string;
   priority?: TestCasePriority;
-  linkToRequirements?: string;
+  requirements?: Requirement[];
   executionEstimationTime?: number;
   manualScenarioType: ManualScenarioType;
   precondition?: string;
@@ -152,3 +183,52 @@ export interface TestStep {
   attachments?: Attachment[];
   position?: number;
 }
+
+export interface DetailsEmptyStateProps {
+  testCase: ExtendedTestCase;
+}
+
+export interface TagPopoverProps {
+  trigger: ReactNode;
+  onTagSelect: (tag: Tag | Attribute) => void;
+  selectedTags?: (Tag | Attribute)[];
+  placement?: 'top' | 'bottom' | 'left' | 'right' | 'bottom-end';
+  className?: string;
+}
+
+export interface UseTestCaseTagsParams {
+  testCaseId: number;
+}
+
+export enum TagError {
+  TAG_ALREADY_ADDED = 'tagAlreadyAdded',
+  CREATE_TAG_FAILED = 'createTagFailed',
+}
+
+export interface AttributesResponse {
+  content: Tag[];
+}
+
+export const hasTagShape = (attr: Tag | Attribute): attr is Tag => {
+  return (
+    isObject(attr) &&
+    'key' in attr &&
+    isString((attr as Tag).key) &&
+    (!('value' in attr) || isNil(attr.value))
+  );
+};
+
+export const hasAttributeValue = (attr: Tag | Attribute): attr is Attribute => {
+  return (
+    isObject(attr) &&
+    'key' in attr &&
+    isString((attr as Attribute).key) &&
+    'value' in attr &&
+    !isNil(attr.value) &&
+    isString(attr.value)
+  );
+};
+
+export const isIconComponent = (
+  icon: FC<SVGProps<SVGSVGElement>> | string,
+): icon is FC<SVGProps<SVGSVGElement>> => !isString(icon);

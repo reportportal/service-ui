@@ -44,6 +44,10 @@
       background-color: var(--rp-ui-base-e-100);
     }
 
+    &--dragging {
+      opacity: 0.5;
+    }
+
     &-title {
       display: flex;
       justify-content: space-between;
@@ -60,12 +64,16 @@
         font-family: $FONT-ROBOTO-MEDIUM;
         font-weight: 500;
         color: var(--rp-ui-base-almost-black);
+        flex: 1;
       }
 
       &--counter {
         font-size: 13px;
         font-family: $FONT-ROBOTO-REGULAR;
         color: var(--rp-ui-base-e-400);
+        margin-left: 16px;
+        min-width: 16px;
+        text-align: right;
       }
 
       &:hover {
@@ -80,6 +88,12 @@
         box-sizing: border-box;
         height: 36px;
       }
+
+      &--dimmed {
+        .folders-tree__item-title--text {
+          color: var(--rp-ui-base-e-300);
+        }
+      }
     }
 
     &-content > svg {
@@ -87,6 +101,7 @@
       top: 8px;
       left: -16px;
       transform: rotate(-90deg);
+      cursor: pointer;
     }
 
     &--open > div {
@@ -94,18 +109,24 @@
         transform: none;
       }
     }
+
+    &-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-left: auto;
+    }
   }
 
   &__tools {
     display: flex;
     align-items: center;
-    margin-left: auto;
-    margin-right: 8px;
     height: 20px;
     visibility: hidden;
     border: 0;
     background-color: transparent;
     cursor: pointer;
+    padding: 0;
 
     button svg {
       width: 16px;
@@ -137,4 +158,61 @@
       }
     }
   }
+
+  &__drag-handle {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 20px;
+    min-width: 16px;
+    margin-left: 16px;
+    border: 0;
+    background-color: transparent;
+    cursor: grab;
+    padding: 0;
+    user-select: none;
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+      pointer-events: none;
+    }
+
+    svg path {
+      fill: var(--rp-ui-base-e-300);
+    }
+
+    &:hover svg path {
+      fill: var(--rp-ui-base-topaz-hover);
+    }
+  }
+}
+
+.tree-sortable-wrapper {
+  display: block;
+
+  > * {
+    pointer-events: auto;
+  }
+
+  &[class*='tree-sortable-item--drop-inside'] {
+    &::before {
+      display: none;
+    }
+
+    // Apply border only to the immediate folder title, not subfolders
+    > .folders-tree__item > .folders-tree__item-content > .folders-tree__item-title {
+      border: 2px dashed var(--rp-ui-base-topaz-focused);
+      border-radius: 4px;
+      background-color: var(--rp-ui-base-topaz-100);
+    }
+  }
+}
+
+.highlight {
+  color: var(--rp-ui-color-primary-text);
 }

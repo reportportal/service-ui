@@ -14,17 +14,11 @@
  * limitations under the License.
  */
 
-import { redirect, actionToPath } from 'redux-first-router';
+import { redirect, actionToPath, pathToAction } from 'redux-first-router';
 import qs from 'qs';
-import {
-  activeProjectSelector,
-  userInfoSelector,
-  setActiveProjectAction,
-  setActiveProjectKeyAction,
-  activeProjectKeySelector,
-} from 'controllers/user';
+import { userInfoSelector, getUserSettingsFromStorage, isAdminSelector } from 'controllers/user';
 import { isTmsEnabled } from 'controllers/appInfo';
-import { fetchProjectAction } from 'controllers/project';
+import { getTmsMilestonesOverride } from 'controllers/appInfo/utils';
 import {
   LOGIN_PAGE,
   REGISTRATION_PAGE,
@@ -43,6 +37,8 @@ import {
   SERVER_SETTINGS_TAB_PAGE,
   LAUNCHES_PAGE,
   MANUAL_LAUNCHES_PAGE,
+  MANUAL_LAUNCH_DETAILS_PAGE,
+  MANUAL_LAUNCH_EXECUTION_PAGE,
   PROJECT_LAUNCHES_PAGE,
   PLUGINS_PAGE,
   PLUGINS_TAB_PAGE,
@@ -52,11 +48,9 @@ import {
   TEST_ITEM_PAGE,
   pageSelector,
   clearPageStateAction,
-  adminPageNames,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   ACCOUNT_REMOVED_PAGE,
   PROJECT_PLUGIN_PAGE,
-  userAssignedSelector,
   ORGANIZATION_PROJECTS_PAGE,
   ORGANIZATION_USERS_PAGE,
   ORGANIZATION_SETTINGS_PAGE,
@@ -102,11 +96,7 @@ import { fetchLogPageData } from 'controllers/log';
 import { fetchHistoryPageInfoAction } from 'controllers/itemsHistory';
 import { setSessionItem, updateStorageItem } from 'common/utils/storageUtils';
 import { fetchClustersAction } from 'controllers/uniqueErrors';
-import {
-  GET_TEST_CASE_DETAILS,
-  getFoldersAction,
-  needsToLoadFoldersSelector,
-} from 'controllers/testCase';
+import { GET_TEST_CASE_DETAILS, getFoldersAction } from 'controllers/testCase';
 import {
   API_KEYS_ROUTE,
   CONFIG_EXAMPLES_ROUTE,
@@ -115,7 +105,6 @@ import {
 import { parseQueryToFilterEntityAction } from 'controllers/filter/actionCreators';
 import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
 import {
-  fetchOrganizationBySlugAction,
   prepareActiveOrganizationProjectsAction,
   prepareActiveOrganizationSettingsAction,
 } from 'controllers/organization/actionCreators';
@@ -129,7 +118,7 @@ import {
 } from 'controllers/pages/constants';
 import { DOCUMENTATION } from 'pages/inside/productVersionPage/constants';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
-import { fetchOrganizationEventsDataAction } from '../controllers/instance/actionCreators';
+import { fetchOrganizationEventsDataAction } from 'controllers/instance/actionCreators';
 import { canSeeActivityOption } from 'common/utils/permissions';
 import {
   getTestPlansAction,
@@ -139,6 +128,16 @@ import {
   TEST_PLAN_TEST_CASES_NAMESPACE,
   defaultTestPlanTestCasesQueryParams,
 } from 'controllers/testPlan';
+import {
+  MANUAL_LAUNCHES_NAMESPACE,
+  MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
+  defaultManualLaunchesQueryParams,
+  getManualLaunchesAction,
+  getManualLaunchAction,
+  getManualLaunchFoldersAction,
+  getManualLaunchTestCaseExecutionsAction,
+  getManualLaunchExecutionAction,
+} from 'controllers/manualLaunch';
 import { getRouterParams } from 'common/utils';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
@@ -150,6 +149,59 @@ const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
     dispatch(redirect(newAction));
   },
 });
+
+const getLastPathRoute = (userId) => {
+  const userSettings = getUserSettingsFromStorage(userId);
+  if (userSettings?.lastPath) {
+    return pathToAction(userSettings.lastPath, routesMap, qs);
+  }
+  return null;
+};
+
+/*
+ * Define the correct redirect route based on user assignments.
+ * See EPMRPP-105682:
+ * a) instance only — 'All organizations' page
+ * b) single project — project 'Dashboards' page
+ * c) one organization, several projects — organization 'Projects' page
+ * d) several organizations — 'All organizations' page
+ * e) one organization only — organization 'Projects' page
+ */
+export const getRedirectRoute = (user) => {
+  const assignedOrganizations = user?.assignedOrganizations || {};
+  const assignedProjects = user?.assignedProjects || {};
+  const orgCount = Object.keys(assignedOrganizations).length;
+  const projCount = Object.keys(assignedProjects).length;
+
+  // Single project — find its organization and go to project dashboard
+  if (projCount === 1) {
+    const project = Object.values(assignedProjects)[0];
+    const organization = Object.values(assignedOrganizations).find(
+      (org) => org.organizationId === project.organizationId,
+    );
+    if (organization) {
+      return {
+        type: PROJECT_DASHBOARD_PAGE,
+        payload: {
+          organizationSlug: organization.organizationSlug,
+          projectSlug: project.projectSlug,
+        },
+      };
+    }
+  }
+
+  // Single organization — go to organization projects page
+  if (orgCount === 1) {
+    const organization = Object.values(assignedOrganizations)[0];
+    return {
+      type: ORGANIZATION_PROJECTS_PAGE,
+      payload: { organizationSlug: organization.organizationSlug },
+    };
+  }
+
+  // No assignments, multiple organizations, or fallback
+  return { type: ORGANIZATIONS_PAGE };
+};
 
 const routesMap = {
   [HOME_PAGE]: redirectRoute('/', (payload) => ({ type: LOGIN_PAGE, payload })),
@@ -322,16 +374,59 @@ const routesMap = {
     path: '/organizations/:organizationSlug/projects/:projectSlug/manualLaunches',
     thunk: (dispatch, getState) => {
       const state = getState();
-      if (!isTmsEnabled(state)) {
-        return dispatch(
-          redirect({
-            type: PROJECT_DASHBOARD_PAGE,
-            payload: {
-              organizationSlug: state.location.payload.organizationSlug,
-              projectSlug: state.location.payload.projectSlug,
-            },
+      const { offset, limit } = getRouterParams({
+        namespace: MANUAL_LAUNCHES_NAMESPACE,
+        defaultParams: defaultManualLaunchesQueryParams,
+        state,
+      });
+
+      dispatch(getManualLaunchesAction({ offset, limit }));
+    },
+  },
+  [MANUAL_LAUNCH_DETAILS_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/manualLaunches/:launchId',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      const launchId = state.location?.payload?.launchId;
+
+      if (launchId) {
+        dispatch(getManualLaunchAction({ launchId }));
+
+        // Load folders
+        dispatch(
+          getManualLaunchFoldersAction({
+            launchId,
+            offset: 0,
+            limit: 100, // TODO do we need to implement folder click and fetch test executions for certain folder?
           }),
         );
+
+        // Load test case executions with pagination from URL
+        const { offset, limit } = getRouterParams({
+          namespace: MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
+          defaultParams: defaultManualLaunchesQueryParams,
+          state,
+        });
+
+        dispatch(
+          getManualLaunchTestCaseExecutionsAction({
+            launchId,
+            offset,
+            limit,
+          }),
+        );
+      }
+    },
+  },
+  [MANUAL_LAUNCH_EXECUTION_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/manualLaunches/:launchId/testCase/:testCaseId/execution/:executionId',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      const { launchId, executionId } = state.location?.payload || {};
+
+      if (launchId && executionId) {
+        dispatch(getManualLaunchAction({ launchId }));
+        dispatch(getManualLaunchExecutionAction({ launchId, executionId }));
       }
     },
   },
@@ -426,17 +521,6 @@ const routesMap = {
     path: '/organizations/:organizationSlug/projects/:projectSlug/testLibrary/:testCasePageRoute*',
     thunk: (dispatch, getState) => {
       const state = getState();
-      if (!isTmsEnabled(state)) {
-        return dispatch(
-          redirect({
-            type: PROJECT_DASHBOARD_PAGE,
-            payload: {
-              organizationSlug: state.location.payload.organizationSlug,
-              projectSlug: state.location.payload.projectSlug,
-            },
-          }),
-        );
-      }
       const match = state.location.payload?.testCasePageRoute?.match(/test-cases\/(\d+)/);
       const testCaseId = match ? match[1] : null;
 
@@ -444,28 +528,13 @@ const routesMap = {
         dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId } });
       }
 
-      // Only dispatch getFoldersAction if folders are not already loaded
-      if (needsToLoadFoldersSelector(state)) {
-        dispatch(getFoldersAction());
-      }
+      dispatch(getFoldersAction());
     },
   },
   [PRODUCT_VERSIONS_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug/productVersions',
     thunk: (dispatch, getState) => {
-      const state = getState();
-      if (!isTmsEnabled(state)) {
-        return dispatch(
-          redirect({
-            type: PROJECT_DASHBOARD_PAGE,
-            payload: {
-              organizationSlug: state.location.payload.organizationSlug,
-              projectSlug: state.location.payload.projectSlug,
-            },
-          }),
-        );
-      }
-      const { location } = state;
+      const { location } = getState();
       dispatch(
         redirect({
           type: PRODUCT_VERSIONS_TAB_PAGE,
@@ -476,37 +545,11 @@ const routesMap = {
   },
   [PRODUCT_VERSIONS_TAB_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug/productVersions/:subPage',
-    thunk: (dispatch, getState) => {
-      const state = getState();
-      if (!isTmsEnabled(state)) {
-        return dispatch(
-          redirect({
-            type: PROJECT_DASHBOARD_PAGE,
-            payload: {
-              organizationSlug: state.location.payload.organizationSlug,
-              projectSlug: state.location.payload.projectSlug,
-            },
-          }),
-        );
-      }
-    },
   },
   [PRODUCT_VERSION_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug/productVersions/listOfVersions/:productVersionId',
     thunk: (dispatch, getState) => {
-      const state = getState();
-      if (!isTmsEnabled(state)) {
-        return dispatch(
-          redirect({
-            type: PROJECT_DASHBOARD_PAGE,
-            payload: {
-              organizationSlug: state.location.payload.organizationSlug,
-              projectSlug: state.location.payload.projectSlug,
-            },
-          }),
-        );
-      }
-      const { location } = state;
+      const { location } = getState();
       dispatch(
         redirect({
           type: PRODUCT_VERSION_TAB_PAGE,
@@ -517,37 +560,12 @@ const routesMap = {
   },
   [PRODUCT_VERSION_TAB_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug/productVersions/listOfVersions/:productVersionId/:productVersionTab',
-    thunk: (dispatch, getState) => {
-      const state = getState();
-      if (!isTmsEnabled(state)) {
-        return dispatch(
-          redirect({
-            type: PROJECT_DASHBOARD_PAGE,
-            payload: {
-              organizationSlug: state.location.payload.organizationSlug,
-              projectSlug: state.location.payload.projectSlug,
-            },
-          }),
-        );
-      }
-    },
   },
 
   [PROJECT_TEST_PLANS_PAGE]: {
-    path: '/organizations/:organizationSlug/projects/:projectSlug/milestones',
+    path: `/organizations/:organizationSlug/projects/:projectSlug/${getTmsMilestonesOverride() ? 'milestones' : 'testPlans'}`,
     thunk: (dispatch, getState) => {
       const state = getState();
-      if (!isTmsEnabled(state)) {
-        return dispatch(
-          redirect({
-            type: PROJECT_DASHBOARD_PAGE,
-            payload: {
-              organizationSlug: state.location.payload.organizationSlug,
-              projectSlug: state.location.payload.projectSlug,
-            },
-          }),
-        );
-      }
       const { offset, limit } = getRouterParams({
         namespace: TEST_PLANS_NAMESPACE,
         defaultParams: defaultQueryParams,
@@ -558,87 +576,34 @@ const routesMap = {
     },
   },
   [PROJECT_TEST_PLAN_DETAILS_PAGE]: {
-    path: '/organizations/:organizationSlug/projects/:projectSlug/milestones/:testPlanId',
+    path: `/organizations/:organizationSlug/projects/:projectSlug/${getTmsMilestonesOverride() ? 'milestones' : 'testPlans'}/:testPlanId/:testPlanRoute*`,
     thunk: (dispatch, getState) => {
       const state = getState();
-      if (!isTmsEnabled(state)) {
-        return dispatch(
-          redirect({
-            type: PROJECT_DASHBOARD_PAGE,
-            payload: {
-              organizationSlug: state.location.payload.organizationSlug,
-              projectSlug: state.location.payload.projectSlug,
-            },
-          }),
-        );
-      }
       const testPlanId = state.location?.payload?.testPlanId;
+      const testPlanRoute = state.location?.payload?.testPlanRoute;
+      const match = testPlanRoute?.match(/folder\/(\d+)/);
+      const folderId = match ? match[1] : null;
       const { offset, limit } = getRouterParams({
         namespace: TEST_PLAN_TEST_CASES_NAMESPACE,
         defaultParams: defaultTestPlanTestCasesQueryParams,
         state,
       });
 
-      dispatch(getTestPlanAction({ testPlanId, offset, limit }));
+      dispatch(getTestPlanAction({ testPlanId, folderId, offset, limit }));
     },
   },
 };
 
-export const onBeforeRouteChange = (dispatch, getState, { action }) => {
-  const {
-    type: nextPageType,
-    payload: { organizationSlug: hashOrganizationSlug, projectSlug: hashProjectSlug },
-  } = action;
+export const ROUTE_ACTION_TYPES = new Set(Object.keys(routesMap));
 
-  let { organizationSlug, projectSlug } = activeProjectSelector(getState());
-  const hashProjectKey = activeProjectKeySelector(getState());
+export const onBeforeRouteChange = (dispatch, getState, { action }) => {
+  const { type: nextPageType, payload: { organizationSlug, projectSlug } = {} } = action;
+
   const currentPageType = pageSelector(getState());
   const authorized = isAuthorizedSelector(getState());
-  const userId = userInfoSelector(getState())?.userId;
-  const {
-    isAdmin,
-    hasPermission,
-    assignedProjectKey,
-    assignmentNotRequired,
-    isAssignedToTargetOrganization,
-  } = userAssignedSelector(hashProjectSlug, hashOrganizationSlug)(getState());
-
-  const isAdminNewPageType = !!adminPageNames[nextPageType];
-  const isAdminCurrentPageType = !!adminPageNames[currentPageType];
-
-  const projectKey = assignedProjectKey || (assignmentNotRequired && hashProjectKey);
-
-  const isChangedProject =
-    organizationSlug !== hashOrganizationSlug || projectSlug !== hashProjectSlug;
-
-  if (hashOrganizationSlug && (isChangedProject || isAdminCurrentPageType) && !isAdminNewPageType) {
-    if (hashProjectSlug && hasPermission) {
-      dispatch(
-        setActiveProjectAction({
-          organizationSlug: hashOrganizationSlug,
-          projectSlug: hashProjectSlug,
-        }),
-      );
-      dispatch(setActiveProjectKeyAction(projectKey));
-      dispatch(fetchProjectAction(projectKey));
-      dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
-
-      organizationSlug = hashOrganizationSlug;
-      projectSlug = hashProjectSlug;
-    } else if (!hashProjectSlug && (isAssignedToTargetOrganization || assignmentNotRequired)) {
-      dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
-
-      organizationSlug = hashOrganizationSlug;
-    } else if (isChangedProject) {
-      dispatch(
-        redirect({
-          ...action,
-          payload: { ...action.payload, organizationSlug, projectSlug },
-          meta: {},
-        }),
-      );
-    }
-  }
+  const user = userInfoSelector(getState());
+  const userId = user?.userId;
+  const isAdmin = isAdminSelector(getState());
 
   if (nextPageType !== currentPageType) {
     dispatch(clearPageStateAction(currentPageType, nextPageType));
@@ -646,17 +611,26 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
 
   const page = pageRendering[nextPageType];
   const redirectPath = actionToPath(action, routesMap, qs);
+
   if (page) {
-    const { access } = page;
+    const { access, isTMS = false } = page;
+
+    if (isTMS && !isTmsEnabled(getState())) {
+      dispatch(
+        redirect({
+          type: PROJECT_DASHBOARD_PAGE,
+          payload: { organizationSlug, projectSlug },
+        }),
+      );
+
+      return;
+    }
+
     switch (access) {
       case ANONYMOUS_ACCESS:
         if (authorized) {
-          dispatch(
-            redirect({
-              type: PROJECT_DASHBOARD_PAGE,
-              payload: { organizationSlug, projectSlug },
-            }),
-          );
+          const redirectRoute = getLastPathRoute(userId) || getRedirectRoute(user);
+          dispatch(redirect(redirectRoute));
         }
         break;
       case ADMIN_ACCESS:

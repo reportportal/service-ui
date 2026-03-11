@@ -83,4 +83,12 @@ export const ALL_USERS_PAGE_EVENTS = {
     number: pageSize,
     place: 'all_users',
   }),
+  inviteUser: (withProject = false) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_users',
+    element_name: 'invite',
+    modal: 'invite_user',
+    type: 'instance_level',
+    condition: withProject ? 'with_project' : 'without_project',
+  }),
 };

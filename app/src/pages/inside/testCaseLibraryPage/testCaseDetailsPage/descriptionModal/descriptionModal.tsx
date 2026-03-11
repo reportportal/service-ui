@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { MouseEvent, useEffect } from 'react';
+import { MouseEvent, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import { reduxForm, InjectedFormProps } from 'redux-form';
@@ -28,7 +28,7 @@ import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { createClassnames } from 'common/utils';
-import { UseModalData } from 'common/hooks';
+import { UseModalData, useTextareaAutoResize } from 'common/hooks';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { Validator } from 'common/utils/validation/types';
 import { bindMessageToValidator, validate, MAX_FIELD_LENGTH } from 'common/utils/validation';
@@ -80,6 +80,8 @@ const DescriptionModalComponent = ({
   const { formatMessage } = useIntl();
   const testCaseDescription = testCaseDetails.description;
   const isDescriptionExist = !isEmpty(testCaseDescription);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  useTextareaAutoResize(textareaRef);
 
   useEffect(() => {
     if (isDescriptionExist) {
@@ -90,7 +92,7 @@ const DescriptionModalComponent = ({
   const hideModal = () => dispatch(hideModalAction());
 
   const onSubmit = async (values: DescriptionFormValues) => {
-    await updateDescription(values.description);
+    await updateDescription(values.description.trim());
   };
 
   const okButton = {
@@ -121,12 +123,14 @@ const DescriptionModalComponent = ({
       cancelButton={cancelButton}
       allowCloseOutside={!dirty}
       onClose={hideModal}
+      scrollable
     >
       {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
       <form onSubmit={handleSubmit(onSubmit)} className={cx('description-modal__form')}>
         <FieldProvider name="description" placeholder={formatMessage(messages.enterDescription)}>
           <FieldErrorHint provideHint={false}>
             <FieldTextFlex
+              ref={textareaRef}
               label={formatMessage(globalCommonMessages.description)}
               maxLength={MAX_FIELD_LENGTH as number}
               maxLengthDisplay={MAX_FIELD_LENGTH as number}

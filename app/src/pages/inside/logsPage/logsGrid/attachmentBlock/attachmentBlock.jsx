@@ -32,6 +32,7 @@ import {
   isFileActionAllowed,
 } from 'controllers/log/attachments';
 import { AttachmentActions } from 'pages/inside/logsPage/attachmentActions';
+import { LOGS_SIZE, DEFAULT_LOGS_SIZE } from 'common/constants/logsSettings';
 import styles from './attachmentBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -76,11 +77,8 @@ export class AttachmentBlock extends Component {
   };
 
   render() {
-    const {
-      value,
-      customProps: { consoleView },
-      projectKey,
-    } = this.props;
+    const { value, customProps, projectKey } = this.props;
+    const { consoleView, logsSize = DEFAULT_LOGS_SIZE } = customProps;
     const isValidToOpenInModal = isFileActionAllowed(
       value.contentType,
       OPEN_ATTACHMENT_IN_MODAL_ACTION,
@@ -88,14 +86,14 @@ export class AttachmentBlock extends Component {
 
     return (
       <div className={cx('attachment-block')}>
-        {consoleView ? (
-          <div onClick={this.downloadAttachment} className={cx('attachment', 'console-view')}>
+        {consoleView || logsSize === LOGS_SIZE.SMALL ? (
+          <button onClick={this.downloadAttachment} className={cx('attachment-icon')}>
             {Parser(AttachIcon)}
-          </div>
+          </button>
         ) : (
           <Fragment>
             <Image
-              className={cx('attachment')}
+              className={cx('attachment', `attachment-size-${logsSize}`)}
               src={getFileIconSource(value, projectKey, true)}
               alt={value.contentType}
               onClick={isValidToOpenInModal ? this.openAttachmentInModal : null}

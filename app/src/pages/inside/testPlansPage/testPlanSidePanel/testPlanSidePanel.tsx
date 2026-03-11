@@ -15,8 +15,10 @@
  */
 
 import { memo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useIntl } from 'react-intl';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { isEmpty } from 'es-toolkit/compat';
 import {
   Button,
   SidePanel,
@@ -25,41 +27,49 @@ import {
   MeatballMenuIcon,
   DurationIcon,
   CopyIcon,
+  BubblesLoader,
 } from '@reportportal/ui-kit';
-import { isEmpty } from 'es-toolkit/compat';
+import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { createClassnames, copyToClipboard } from 'common/utils';
 import { useOnClickOutside } from 'common/hooks';
 import { CollapsibleSection } from 'components/collapsibleSection';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
+import { FolderBreadcrumbs } from 'components/folderBreadcrumbs';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
-import { PathBreadcrumb } from 'componentLibrary/breadcrumbs/pathBreadcrumb';
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { commonMessages } from 'pages/inside/common/common-messages';
-import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import {
+  TEST_CASE_LIBRARY_PAGE,
+  urlOrganizationAndProjectSelector,
+  locationSelector,
+} from 'controllers/pages';
 import { ProjectDetails } from 'pages/organization/constants';
 import { Scenario } from 'pages/inside/common/testCaseList/testCaseSidePanel/scenario';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
-
 import { TestPlanDto } from 'controllers/testPlan';
+import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { formatDuration, openRouteInNewTab } from 'pages/inside/common/testCaseList/utils';
+
+import { useRemoveTestCasesFromTestPlanModal } from '../testPlanModals';
 import { messages } from './messages';
-import { MOCK_DATA_1, MOCK_DATA_2 } from './mocks';
 import { CoverStatusCard } from './coverStatusCard';
-import { ExecutionStatus } from './executionStatus';
+import { ExecutionStatusCard } from './executionStatusCard';
+import { useTestCaseDetails } from './useTestCaseDetails';
 
 import styles from './testPlanSidePanel.scss';
 
 const cx = createClassnames(styles);
 
 interface TestPlanSidePanelProps {
-  testPlan: TestPlanDto | null;
+  testPlan: TestPlanDto | ExtendedTestCase | null;
   isVisible: boolean;
-  onClose: () => void;
+  onClose: VoidFn;
 }
 
 export const TestPlanSidePanel = memo(
   ({ testPlan, isVisible, onClose }: TestPlanSidePanelProps) => {
-    const dispatch = useDispatch();
     const { formatMessage } = useIntl();
     const sidePanelRef = useRef<HTMLDivElement>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -67,22 +77,35 @@ export const TestPlanSidePanel = memo(
       urlOrganizationAndProjectSelector,
     ) as ProjectDetails;
 
+    const location = useSelector(locationSelector);
+    const testPlanId = location.payload?.testPlanId ? Number(location.payload.testPlanId) : null;
+
+    const { testCaseDetails, isLoading, isManualCovered } = useTestCaseDetails({
+      testCaseId: testPlan?.id ?? null,
+      testPlanId,
+    });
+    const { openModal: openRemoveTestCasesModal } = useRemoveTestCasesFromTestPlanModal();
+
+    const folderId = testCaseDetails?.testFolder?.id;
+
     useOnClickOutside(sidePanelRef, onClose);
 
-    if (!testPlan) {
+    if (!testCaseDetails || !testPlan) {
       return null;
     }
 
-    // Select mock data based on even/odd ID
-    const mockData = Number(testPlan.id) % 2 === 0 ? MOCK_DATA_1 : MOCK_DATA_2;
-
     const handleRemoveFromTestPlan = () => {
-      // TODO: Implement remove from test plan functionality
+      openRemoveTestCasesModal({
+        selectedTestCaseIds: [testPlan.id],
+        onClearSelection: () => {
+          onClose();
+        },
+      });
       setIsMenuOpen(false);
     };
 
     const handleOpenInLibraryClick = () => {
-      dispatch({
+      openRouteInNewTab({
         type: TEST_CASE_LIBRARY_PAGE,
         payload: {
           organizationSlug,
@@ -96,13 +119,15 @@ export const TestPlanSidePanel = memo(
       // TODO: Implement quick run functionality
     };
 
-    const menuItems = [
-      {
+    const menuItems = [];
+
+    if (testPlanId) {
+      menuItems.push({
         label: formatMessage(messages.removeFromTestPlan),
         onClick: handleRemoveFromTestPlan,
         variant: 'danger' as const,
-      },
-    ];
+      });
+    }
 
     const handleCopyId = async () => {
       await copyToClipboard(testPlan.id.toString());
@@ -110,18 +135,25 @@ export const TestPlanSidePanel = memo(
 
     const titleComponent = (
       <div className={cx('test-plan-title')}>
-        <PriorityIcon priority={mockData.priority} className={cx('priority-icon')} />
+        <PriorityIcon priority={testCaseDetails?.priority} className={cx('priority-icon')} />
         <span>{testPlan.name}</span>
       </div>
     );
 
+    const duration = testCaseDetails?.lastExecution?.duration
+      ? formatDuration(testCaseDetails.lastExecution.duration)
+      : '';
+
     const descriptionComponent = (
       <div className={cx('description-wrapper')}>
-        <PathBreadcrumb
-          path={mockData.breadcrumbPath}
-          color="var(--rp-ui-base-e-400)"
-          isIconVisible={false}
-        />
+        <div className={cx('folder-breadcrumbs')}>
+          <FolderBreadcrumbs
+            folderId={folderId}
+            instanceKey={TMS_INSTANCE_KEY.TEST_PLAN}
+            testPlanId={testPlanId || undefined}
+            onNavigate={onClose}
+          />
+        </div>
         <div className={cx('meta-row')}>
           <div className={cx('meta-item-row', 'id-row')}>
             <span className={cx('meta-label')}>{formatMessage(messages.id)}:</span>
@@ -136,41 +168,52 @@ export const TestPlanSidePanel = memo(
               <CopyIcon />
             </button>
           </div>
-          <div className={cx('meta-item-row')}>
-            <DurationIcon />
-            <span className={cx('meta-value')}>{mockData.duration}</span>
-          </div>
+          {duration && (
+            <div className={cx('meta-item-row')}>
+              <DurationIcon />
+              <span className={cx('meta-value')}>{duration}</span>
+            </div>
+          )}
         </div>
       </div>
     );
 
     const contentComponent = (
       <div className={cx('content')}>
-        <CoverStatusCard status={mockData.coverStatus} />
+        <CoverStatusCard isManualCovered={isManualCovered} />
         <CollapsibleSection
           title={formatMessage(messages.executionsInLaunchesTitle)}
           defaultMessage={formatMessage(commonMessages.noExecutions)}
         >
-          {!isEmpty(mockData.executions) && <ExecutionStatus executions={mockData.executions} />}
+          {!isEmpty(testCaseDetails?.executions) && (
+            <ExecutionStatusCard executions={testCaseDetails.executions} />
+          )}
         </CollapsibleSection>
         <CollapsibleSection
           title={formatMessage(messages.manualScenarioTitle)}
           defaultMessage={formatMessage(messages.noManualScenario)}
         >
-          {!isEmpty(mockData.scenario) && <Scenario scenario={mockData.scenario} />}
+          {!isEmpty(testCaseDetails?.manualScenario) && (
+            <Scenario scenario={testCaseDetails.manualScenario} />
+          )}
         </CollapsibleSection>
         <CollapsibleSection
           title={formatMessage(commonMessages.tags)}
           defaultMessage={formatMessage(commonMessages.noTagsAdded)}
         >
-          {!isEmpty(mockData.tags) && <AdaptiveTagList tags={mockData.tags} isShowAllView />}
+          {!isEmpty(testCaseDetails?.attributes) && (
+            <AdaptiveTagList
+              tags={testCaseDetails.attributes.map(({ key }) => key)}
+              isShowAllView
+            />
+          )}
         </CollapsibleSection>
         <CollapsibleSection
           title={formatMessage(commonMessages.description)}
           defaultMessage={formatMessage(commonMessages.descriptionNotSpecified)}
         >
-          {!isEmpty(mockData.description) && (
-            <ExpandedTextSection text={mockData.description} defaultVisibleLines={4} />
+          {!isEmpty(testCaseDetails?.description) && (
+            <ExpandedTextSection text={testCaseDetails.description} defaultVisibleLines={4} />
           )}
         </CollapsibleSection>
       </div>
@@ -216,20 +259,21 @@ export const TestPlanSidePanel = memo(
       </div>
     );
 
-    return (
+    return createPortal(
       <div ref={sidePanelRef}>
         <SidePanel
           className={cx('test-plan-side-panel')}
           title={titleComponent}
-          descriptionComponent={descriptionComponent}
-          contentComponent={contentComponent}
+          descriptionComponent={isLoading ? <BubblesLoader /> : descriptionComponent}
+          contentComponent={isLoading ? <BubblesLoader /> : contentComponent}
           footerComponent={footerComponent}
           isOpen={isVisible}
           onClose={onClose}
           closeButtonAriaLabel={formatMessage(commonMessages.closePanel)}
           side="right"
         />
-      </div>
+      </div>,
+      document.body,
     );
   },
 );

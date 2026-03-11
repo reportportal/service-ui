@@ -43,6 +43,7 @@ export class AttachmentCodeModal extends Component {
       extension: PropTypes.string.isRequired,
       content: PropTypes.string.isRequired,
       id: PropTypes.number.isRequired,
+      fileName: PropTypes.string,
     }).isRequired,
     intl: PropTypes.object.isRequired,
     openAttachmentInBrowserAction: PropTypes.func.isRequired,
@@ -69,17 +70,18 @@ export class AttachmentCodeModal extends Component {
   render() {
     const {
       intl,
-      data: { extension, content },
+      data: { extension, content, fileName },
     } = this.props;
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE),
       eventInfo: LOG_PAGE_EVENTS.CLOSE_BTN_ATTACHMENT_MODAL,
     };
+    const title = fileName || intl.formatMessage(messages.title);
 
     return (
       <ModalLayout
         closeIconEventInfo={LOG_PAGE_EVENTS.CLOSE_ICON_ATTACHMENT_MODAL}
-        title={intl.formatMessage(messages.title)}
+        title={title}
         cancelButton={cancelButton}
         renderFooterElements={this.renderCustomButton}
       >

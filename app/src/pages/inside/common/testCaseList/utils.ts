@@ -16,8 +16,12 @@
 
 import { formatDistanceToNow, format } from 'date-fns';
 import { enUS, ru, es, de } from 'date-fns/locale';
-import { Folder } from 'controllers/testCase';
+import qs from 'qs';
+import { actionToPath, history } from 'redux-first-router';
+
+import routesMap from 'routes/routesMap';
 import { TestCaseMenuAction } from 'pages/inside/common/testCaseList/types';
+import { ExecutionStatus } from 'pages/inside/testCaseLibraryPage/types';
 
 const dateFnsLocales: Record<string, Locale> = {
   en: enUS,
@@ -76,20 +80,6 @@ export const getExcludedActionsFromPermissionMap = (
 ): TestCaseMenuAction[] =>
   permissionMap.filter(({ isAllowed }) => !isAllowed).map(({ action }) => action);
 
-export function buildBreadcrumbs(folders: Folder[], folderId: number): string[] {
-  const folder = folders.find(({ id }) => id === folderId);
-
-  if (!folder) {
-    return [];
-  }
-
-  if (folder.parentFolderId) {
-    return [...buildBreadcrumbs(folders, folder.parentFolderId), folder.name];
-  }
-
-  return [folder.name];
-}
-
 export const formatTimestampForSidePanel = (timestamp: string, locale = 'enUS'): string => {
   if (!timestamp) {
     return '';
@@ -98,4 +88,27 @@ export const formatTimestampForSidePanel = (timestamp: string, locale = 'enUS'):
   return format(new Date(timestamp), 'MMM d, yyyy, hh:mm a', {
     locale: dateFnsLocales[locale],
   });
+};
+
+export const getIsManualCovered = (status?: ExecutionStatus) => {
+  if (!status) {
+    return false;
+  }
+
+  return status === ExecutionStatus.FAILED || status === ExecutionStatus.PASSED;
+};
+
+type RouteActionInput = {
+  type: string;
+  payload?: Record<string, unknown>;
+  meta?: Record<string, unknown>;
+};
+
+export const openRouteInNewTab = (action: RouteActionInput) => {
+  const normalizedAction = { ...action, payload: action.payload ?? {} };
+  const path = actionToPath(normalizedAction, routesMap, qs);
+  const href = history().createHref({ pathname: path });
+  const url = new URL(href, window.location.href).toString();
+
+  window.open(url, '_blank', 'noopener,noreferrer');
 };

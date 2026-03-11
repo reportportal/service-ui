@@ -20,7 +20,8 @@ import { defineMessages, useIntl } from 'react-intl';
 import { URLS } from 'common/urls';
 import { validate } from 'common/utils/validation';
 import { projectKeySelector } from 'controllers/project';
-import { AsyncMultipleAutocomplete } from 'componentLibrary/autocompletes/asyncMultipleAutocomplete';
+import { AsyncMultipleAutocompleteV2 } from 'componentLibrary/autocompletes/asyncMultipleAutocompleteV2';
+
 import PropTypes from 'prop-types';
 
 const messages = defineMessages({
@@ -63,9 +64,10 @@ export const RecipientsContainer = ({ error, ...rest }) => {
     recipientsWithError.length > 0 ? formatMessage(messages.recipientsError) : '';
 
   return (
-    <AsyncMultipleAutocomplete
+    <AsyncMultipleAutocompleteV2
       placeholder={formatMessage(messages.recipientsPlaceholder)}
       minLength={1}
+      isDropdownMode
       getURI={URLS.projectUsernamesSearch(projectKey)}
       creatable
       editable

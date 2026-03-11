@@ -30,12 +30,13 @@ export const DragControl = ({
   isDragging,
   disabled,
   title,
+  className,
 }) => (
   <i
     ref={dragRef}
     onDragStart={disabled ? null : handleDragStart}
     onDragEnd={disabled ? null : handleDragEnd}
-    className={cx('drag-control', { 'dragging-control': isDragging, disabled })}
+    className={cx('drag-control', className, { 'dragging-control': isDragging, disabled })}
     title={title}
   >
     {Parser(DragAndDropIcon)}
@@ -48,6 +49,7 @@ DragControl.propTypes = {
   isDragging: PropTypes.bool,
   disabled: PropTypes.bool,
   title: PropTypes.string,
+  className: PropTypes.string,
 };
 DragControl.defaultProps = {
   dragRef: () => {},
@@ -56,4 +58,5 @@ DragControl.defaultProps = {
   isDragging: false,
   disabled: false,
   title: '',
+  className: '',
 };

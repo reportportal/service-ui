@@ -39,7 +39,7 @@
 .data-value {
   flex: 300px;
   color: $COLOR--charcoal-grey;
-  word-break: break-all;
+  overflow-wrap: break-word;
 
   &.multiple-data {
     display: flex;
@@ -55,10 +55,6 @@
 
   & > :first-child {
     margin-right: 5px;
-  }
-
-  @supports (word-break: break-word) {
-    word-break: break-word;
   }
 }
 

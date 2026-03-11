@@ -17,6 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { MultipleAutocomplete } from 'componentLibrary/autocompletes/multipleAutocomplete';
+import { isString } from 'common/utils';
 import { DynamicField } from '../dynamicField';
 
 export class ArrayField extends Component {
@@ -32,8 +33,8 @@ export class ArrayField extends Component {
 
   formatOptions = (values = []) =>
     values.map((item) => ({
-      value: item[this.props.defaultOptionValueKey],
-      label: item.valueName,
+      value: isString(item) ? item : item[this.props.defaultOptionValueKey],
+      label: isString(item) ? item : item.valueName,
     }));
 
   creatable = !this.props.field?.definedValues?.length;
@@ -50,9 +51,9 @@ export class ArrayField extends Component {
     return this.formatOptions(values);
   };
 
-  parseValueToString = (option) => option?.value || '';
+  parseValueToString = (option) => (isString(option) ? option.trim() : option?.value || '');
 
-  parseTags = (options) => options?.map(this.parseValueToString) || undefined;
+  parseTags = (options) => options?.map(this.parseValueToString).filter(Boolean) || undefined;
 
   render() {
     const { field, darkView, ...rest } = this.props;

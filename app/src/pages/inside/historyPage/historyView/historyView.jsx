@@ -21,6 +21,7 @@ import classNames from 'classnames/bind';
 import { getStorageItem, setStorageItem } from 'common/utils';
 import { HISTORY_DEPTH_CONFIG } from 'controllers/itemsHistory';
 import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
+import { CELL_PREVIEW_CONFIG, ATTRIBUTE_KEY_CONFIG, HIGHLIGHT_LESS_THAN_CONFIG } from './constants';
 import { HistoryControls } from './historyControls';
 import { HistoryTable } from './historyTable';
 import styles from './historyView.scss';
@@ -45,18 +46,79 @@ export class HistoryView extends Component {
 
   state = {
     historyDepth: getStorageItem(HISTORY_DEPTH_CONFIG.name) || HISTORY_DEPTH_CONFIG.defaultValue,
+    cellPreview: getStorageItem(CELL_PREVIEW_CONFIG.name) || CELL_PREVIEW_CONFIG.defaultValue,
+    attributeKey: getStorageItem(ATTRIBUTE_KEY_CONFIG.name) || ATTRIBUTE_KEY_CONFIG.defaultValue,
+    highlightLessThan:
+      getStorageItem(HIGHLIGHT_LESS_THAN_CONFIG.name) || HIGHLIGHT_LESS_THAN_CONFIG.defaultValue,
+    lastTrackedConfig: { attributeKey: '', highlightLessThan: '' },
+  };
+
+  checkAndTrackConfiguration = () => {
+    const { attributeKey, highlightLessThan, lastTrackedConfig } = this.state;
+
+    if (attributeKey.trim() && highlightLessThan.trim()) {
+      const currentConfig = {
+        attributeKey: attributeKey.trim(),
+        highlightLessThan: highlightLessThan.trim(),
+      };
+
+      if (
+        currentConfig.attributeKey !== lastTrackedConfig.attributeKey ||
+        currentConfig.highlightLessThan !== lastTrackedConfig.highlightLessThan
+      ) {
+        this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.CELL_PREVIEW_ATTRIBUTE_CONFIGURED);
+        this.setState({ lastTrackedConfig: currentConfig });
+      }
+    }
   };
 
   changeHistoryDepth = (historyDepth) => {
-    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.getSelectHistoryDepthEvent(historyDepth));
-
     if (historyDepth !== this.state.historyDepth) {
+      this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.getSelectHistoryDepthEvent(historyDepth));
       this.setState({
         historyDepth,
       });
       setStorageItem(HISTORY_DEPTH_CONFIG.name, historyDepth);
       this.props.refreshHistory();
     }
+  };
+
+  changeCellPreview = (cellPreview) => {
+    this.props.tracking.trackEvent(
+      HISTORY_PAGE_EVENTS.getSelectHistoryCellPreviewEvent(cellPreview),
+    );
+    if (cellPreview !== this.state.cellPreview) {
+      this.setState({
+        cellPreview,
+      });
+      setStorageItem(CELL_PREVIEW_CONFIG.name, cellPreview);
+    }
+  };
+
+  changeAttributeKey = (attributeKey) => {
+    if (attributeKey !== this.state.attributeKey) {
+      this.setState({
+        attributeKey,
+      });
+      setStorageItem(ATTRIBUTE_KEY_CONFIG.name, attributeKey);
+    }
+  };
+
+  onAttributeKeyBlur = () => {
+    this.checkAndTrackConfiguration();
+  };
+
+  changeHighlightLessThan = (highlightLessThan) => {
+    if (highlightLessThan !== this.state.highlightLessThan) {
+      this.setState({
+        highlightLessThan,
+      });
+      setStorageItem(HIGHLIGHT_LESS_THAN_CONFIG.name, highlightLessThan);
+    }
+  };
+
+  onHighlightLessThanBlur = () => {
+    this.checkAndTrackConfiguration();
   };
 
   render() {
@@ -68,20 +130,31 @@ export class HistoryView extends Component {
       onChangeHistoryBase,
       isTestItemsList,
     } = this.props;
-    const { historyDepth } = this.state;
+    const { historyDepth, cellPreview, attributeKey, highlightLessThan } = this.state;
 
     return (
       <div className={cx('history-view-wrapper')}>
         <HistoryControls
           historyDepth={historyDepth}
           historyBase={historyBase}
+          cellPreview={cellPreview}
+          attributeKey={attributeKey}
+          highlightLessThan={highlightLessThan}
           onChangeHistoryBase={onChangeHistoryBase}
           onChangeHistoryDepth={this.changeHistoryDepth}
+          onChangeCellPreview={this.changeCellPreview}
+          onChangeAttributeKey={this.changeAttributeKey}
+          onChangeHighlightLessThan={this.changeHighlightLessThan}
+          onAttributeKeyBlur={this.onAttributeKeyBlur}
+          onHighlightLessThanBlur={this.onHighlightLessThanBlur}
           isTestItemsList={isTestItemsList}
         />
         <HistoryTable
           historyDepth={historyDepth}
           historyBase={historyBase}
+          cellPreview={cellPreview}
+          attributeKey={attributeKey}
+          highlightLessThan={highlightLessThan}
           onSelectItem={onSelectItem}
           selectedItems={selectedItems}
           withGroupOperations={withGroupOperations}

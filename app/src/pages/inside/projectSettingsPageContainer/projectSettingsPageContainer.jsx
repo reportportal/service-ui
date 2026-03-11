@@ -31,6 +31,7 @@ import {
   DEMO_DATA,
   GENERAL,
   INTEGRATIONS,
+  LOG_TYPES,
   NOTIFICATIONS,
   PATTERN_ANALYSIS,
   ENVIRONMENTS,
@@ -40,6 +41,7 @@ import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Integrations } from 'pages/inside/projectSettingsPageContainer/content/integrations';
 import { DefectTypes } from 'pages/inside/projectSettingsPageContainer/content/defectTypes';
 import { DemoDataTab } from 'pages/inside/projectSettingsPageContainer/content/demoDataContent';
+import { LogTypes } from 'pages/inside/projectSettingsPageContainer/content/logTypes';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { uiExtensionSettingsTabsSelector } from 'controllers/plugins';
 import { useNavigationTabsExtensionsConfig } from 'common/hooks';
@@ -117,6 +119,12 @@ export const ProjectSettingsPageContainer = () => {
           <DefectTypes setHeaderTitleNode={(node) => setHeaderNodes({ titleNode: node })} />
         ),
         eventInfo: SETTINGS_PAGE_EVENTS.DEFECT_TYPE_TAB,
+        mobileDisabled: true,
+      },
+      [LOG_TYPES]: {
+        name: formatMessage(messages.logTypes),
+        link: createTabLink(LOG_TYPES),
+        component: <LogTypes setHeaderTitleNode={(node) => setHeaderNodes({ titleNode: node })} />,
         mobileDisabled: true,
       },
       [ANALYSIS]: {

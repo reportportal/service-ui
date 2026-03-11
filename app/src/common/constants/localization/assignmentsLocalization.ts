@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,14 @@ export const messages = defineMessages({
     id: 'Assignment.unassignProjectSelfDescription',
     defaultMessage:
       'Are you sure you want to unassign yourself from the project <b>{project}</b>? Assignment to the organization will remain unchanged.',
+  },
+  changeToCanView: {
+    id: 'Assignment.changeToCanView',
+    defaultMessage: 'Change to Can View',
+  },
+  changeToCanEdit: {
+    id: 'Assignment.changeToCanEdit',
+    defaultMessage: 'Change to Can Edit',
   },
   manageAssignments: {
     id: 'Assignment.manageAssignments',
@@ -73,6 +81,27 @@ export const messages = defineMessages({
     id: 'Assignment.manageAssignmentsHeader',
     defaultMessage: 'Manage Assignments of {name}',
   },
+  manageAssignmentsDescription: {
+    id: 'Assignment.manageAssignmentsDescription',
+    defaultMessage:
+      'View detailed guidelines on assignment rules, user roles and permissions in our <link>Documentation</link>',
+  },
+  assignedTo: {
+    id: 'Assignment.assignedTo',
+    defaultMessage: 'Assigned to',
+  },
+  assignmentUpdatedSuccess: {
+    id: 'Assignment.assignmentUpdatedSuccess',
+    defaultMessage: 'Assignment of {name} has been updated successfully',
+  },
+  addProject: {
+    id: 'Assignment.addProject',
+    defaultMessage: 'Add project',
+  },
+  noAssignmentsYet: {
+    id: 'Assignment.noAssignmentsYet',
+    defaultMessage: 'No assignments yet',
+  },
   unassignUpsaMessage: {
     id: 'Assignment.unassignUpsaMessage',
     defaultMessage:
@@ -85,5 +114,13 @@ export const messages = defineMessages({
   unassignPersonalOwnerSelfMessage: {
     id: 'Assignment.unassignPersonalOwnerSelfMessage',
     defaultMessage: 'As the owner, you cannot unassign yourself from a Personal Organization',
+  },
+  unassignSelfMessage: {
+    id: 'Assignment.unassignSelfMessage',
+    defaultMessage: 'You cannot unassign yourself from the organization',
+  },
+  discardChangesConfirmation: {
+    id: 'Assignment.discardChangesConfirmation',
+    defaultMessage: 'You have unsaved changes. Discard them?',
   },
 });

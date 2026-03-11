@@ -16,11 +16,9 @@
 
 import { createSelector } from 'reselect';
 
-import {
-  transformFoldersToDisplay,
-  transformFoldersWithFullPath,
-} from 'controllers/testCase/utils';
-import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { transformFoldersToDisplay } from 'common/utils/folderUtils';
+import { transformFoldersWithFullPath } from 'controllers/testCase/utils';
+import { ExtendedTestCase, TestCase } from 'pages/inside/testCaseLibraryPage/types';
 import { Page } from 'types/common';
 import { Folder } from './types';
 import { InitialStateType } from './reducer';
@@ -31,7 +29,11 @@ export interface TestCaseState {
     isCreatingFolder?: boolean;
     isLoadingFolder?: boolean;
     activeFolderId?: number | null;
+    expandedFolderIds?: number[];
     loading?: boolean;
+    areFoldersFetched?: boolean;
+    filteredFolders?: Folder[];
+    isLoadingFilteredFolders?: boolean;
   };
   testCases?: {
     isLoading?: boolean;
@@ -39,7 +41,8 @@ export interface TestCaseState {
     page: Page | null;
   };
   details?: {
-    data?: TestCase;
+    data?: ExtendedTestCase;
+    loading: boolean;
   };
 }
 
@@ -52,9 +55,6 @@ export const testCaseSelector = (state: RootState): TestCaseState => state.testC
 export const areFoldersLoadingSelector = (state: RootState): boolean =>
   testCaseSelector(state).folders?.loading || false;
 
-export const activeFolderIdSelector = (state: RootState): number | null =>
-  testCaseSelector(state).folders?.activeFolderId || null;
-
 export const EMPTY_FOLDERS: Folder[] = [];
 
 export const foldersSelector = (state: RootState): Folder[] =>
@@ -65,6 +65,9 @@ export const isCreatingFolderSelector = (state: RootState): boolean =>
 
 export const isLoadingFolderSelector = (state: RootState): boolean =>
   testCaseSelector(state).folders?.isLoadingFolder || false;
+
+export const expandedFolderIdsSelector = (state: RootState): number[] =>
+  testCaseSelector(state).folders?.expandedFolderIds || [];
 
 export const isLoadingTestCasesSelector = (state: RootState) =>
   state.testCase?.testCases?.isLoading || false;
@@ -77,6 +80,8 @@ export const testCasesPageSelector = (state: RootState): Page | null =>
 
 export const testCaseDetailsSelector = (state: RootState) => state.testCase?.details?.data;
 
+export const isLoadingTestCaseDetailsSelector = (state: RootState) => state.testCase?.details?.loading || false;
+
 export const transformedFoldersSelector = createSelector(
   foldersSelector,
   transformFoldersToDisplay,
@@ -87,10 +92,11 @@ export const transformedFoldersWithFullPathSelector = createSelector(
   transformFoldersWithFullPath,
 );
 
-export const needsToLoadFoldersSelector = createSelector(
-  foldersSelector,
-  areFoldersLoadingSelector,
-  (folders, isLoading): boolean => {
-    return folders.length === 0 && !isLoading;
-  },
-);
+export const areFoldersFetchedSelector = (state: RootState): boolean =>
+  testCaseSelector(state).folders?.areFoldersFetched || false;
+
+export const filteredFoldersSelector = (state: RootState): Folder[] =>
+  testCaseSelector(state).folders?.filteredFolders || EMPTY_FOLDERS;
+
+export const isLoadingFilteredFoldersSelector = (state: RootState): boolean =>
+  testCaseSelector(state).folders?.isLoadingFilteredFolders || false;

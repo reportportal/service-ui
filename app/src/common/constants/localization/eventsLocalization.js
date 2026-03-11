@@ -23,6 +23,7 @@ import {
   IMPORT,
   PROJECT,
   DEFECT_TYPE,
+  LOG_TYPE,
   USER,
   ITEM_ISSUE,
   INTEGRATION,
@@ -49,6 +50,9 @@ import {
   CREATE_DEFECT,
   UPDATE_DEFECT,
   DELETE_DEFECT,
+  CREATE_LOG_TYPE,
+  UPDATE_LOG_TYPE,
+  DELETE_LOG_TYPE,
   POST_ISSUE,
   LINK_ISSUE,
   UNLINK_ISSUE,
@@ -213,6 +217,18 @@ export const actionMessages = defineMessages({
     id: 'EventActions.createDefect',
     defaultMessage: 'Create custom defect type',
   },
+  [CREATE_LOG_TYPE]: {
+    id: 'EventActions.createLogType',
+    defaultMessage: 'Create Log type',
+  },
+  [UPDATE_LOG_TYPE]: {
+    id: 'EventActions.updateLogType',
+    defaultMessage: 'Update Log type',
+  },
+  [DELETE_LOG_TYPE]: {
+    id: 'EventActions.deleteLogType',
+    defaultMessage: 'Delete Log type',
+  },
   [UPDATE_ITEM]: {
     id: 'EventActions.updateItem',
     defaultMessage: 'Update item',
@@ -303,6 +319,10 @@ export const objectTypesMessages = defineMessages({
   [DEFECT_TYPE]: {
     id: 'EventObjectTypes.defectType',
     defaultMessage: 'Custom defect type',
+  },
+  [LOG_TYPE]: {
+    id: 'EventObjectTypes.logType',
+    defaultMessage: 'Log Type',
   },
   [USER]: {
     id: 'EventObjectTypes.user',

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
-import DOMPurify from 'dompurify';
 import classNames from 'classnames/bind';
 import { getFormValues, reduxForm, FieldArray } from 'redux-form';
 import { Modal, FieldText, SystemMessage, Checkbox } from '@reportportal/ui-kit';
@@ -27,12 +26,16 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { ClipboardButton } from 'components/buttons/copyClipboardButton';
 import { commonValidators } from 'common/utils/validation';
-import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
+import {
+  showSuccessNotification,
+  showErrorNotification,
+  showWarningNotification,
+} from 'controllers/notification';
 import { withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { InstanceAssignment } from 'pages/inside/common/assignments/instanceAssignment';
 import { hideModalAction } from 'controllers/modal';
-import { fetchAllUsersAction } from 'controllers/instance/allUsers';
+import { fetchAllUsersAction, ERROR_CODES } from 'controllers/instance/allUsers';
 import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
 import { URLS } from 'common/urls';
 import { ADMINISTRATOR, USER } from 'common/constants/accountRoles';
@@ -103,7 +106,28 @@ const messages = defineMessages({
   },
   createdSuccessfully: {
     id: 'CreateUserModal.createdSuccessfully',
-    defaultMessage: 'User <b>{fullName}</b> has been created and assigned successfully',
+    defaultMessage: 'User has been created successfully',
+  },
+  assignedSuccessfully: {
+    id: 'CreateUserModal.assignedSuccessfully',
+    defaultMessage: 'User has been assigned successfully',
+  },
+  assignAllFailed: {
+    id: 'CreateUserModal.assignAllFailed',
+    defaultMessage: 'Failed to assign to {failedOrgNames}',
+  },
+  assignPartialFailed: {
+    id: 'CreateUserModal.assignPartialFailed',
+    defaultMessage:
+      '{fullName} has been successfully assigned to {successCount, plural, one {# organization} other {# organizations}}. Failed to assign to {failedOrgNames}',
+  },
+  createError: {
+    id: 'CreateUserModal.createError',
+    defaultMessage: 'Failed to create user',
+  },
+  userExistsDuplicate: {
+    id: 'CreateUserModal.userExistsDuplicate',
+    defaultMessage: "User with email={email} already exists. You couldn't create the duplicate",
   },
 });
 
@@ -149,34 +173,63 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
   };
 
   const onCreateUser = async (formData) => {
-    const { fullName, email, adminRights, password, organizations } = formData;
+    const { fullName, email, adminRights, password, organizations = [] } = formData;
     trackEvent(ALL_USERS_PAGE_EVENTS.createUser(adminRights));
-    hideModal();
 
     try {
       const response = await createUserResponse({ fullName, email, adminRights, password });
 
       if (response.id) {
-        const message = formatMessage(messages.createdSuccessfully, {
-          b: (innerData) => DOMPurify.sanitize(`<b>${innerData}</b>`),
-          fullName,
-        });
-        dispatch(
-          showNotification({
-            message,
-            type: NOTIFICATION_TYPES.SUCCESS,
-          }),
-        );
+        hideModal();
+        dispatch(showSuccessNotification({ message: formatMessage(messages.createdSuccessfully) }));
 
         const assignPromises = organizations.map((organization) =>
           assignOrganization({ email, organization }),
         );
-        await Promise.all(assignPromises);
+        const results = await Promise.allSettled(assignPromises);
+        const { failedNames, successCount } = results.reduce(
+          (acc, res, idx) => {
+            if (res.status === 'fulfilled') {
+              acc.successCount += 1;
+            } else {
+              acc.failedNames.push(organizations[idx]?.name);
+            }
+            return acc;
+          },
+          { failedNames: [], successCount: 0 },
+        );
+        const failedOrgNames = failedNames.join(', ');
+
+        if (failedNames.length === organizations.length) {
+          dispatch(
+            showErrorNotification({
+              message: formatMessage(messages.assignAllFailed, { failedOrgNames }),
+            }),
+          );
+        } else if (failedNames.length > 0) {
+          dispatch(
+            showWarningNotification({
+              message: formatMessage(messages.assignPartialFailed, {
+                fullName,
+                successCount,
+                failedOrgNames,
+              }),
+            }),
+          );
+        } else {
+          dispatch(
+            showSuccessNotification({ message: formatMessage(messages.assignedSuccessfully) }),
+          );
+        }
 
         dispatch(fetchAllUsersAction());
       }
-    } catch {
-      /* empty */
+    } catch (error) {
+      let message = error?.message ?? formatMessage(messages.createError);
+      if (error?.errorCode === ERROR_CODES.USER_EXISTS) {
+        message = formatMessage(messages.userExistsDuplicate, { email: email || '' });
+      }
+      dispatch(showErrorNotification({ message }));
     }
   };
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,22 +15,28 @@
  */
 
 import { useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { forOwn } from 'es-toolkit/compat';
+import { useSelector } from 'react-redux';
+import { VoidFn } from '@reportportal/ui-kit/common/types/commonTypes';
 
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { useDebouncedSpinner } from 'common/hooks';
+import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
-import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
-import { updateFolderCounterAction } from 'controllers/testCase';
 import { useRefetchCurrentTestCases } from '../../hooks/useRefetchCurrentTestCases';
+import { useFolderCounterUpdate } from '../../hooks/useFolderCounterUpdate';
 
-export const useBatchDeleteTestCases = ({ onSuccess }: { onSuccess: () => void }) => {
+export const useBatchDeleteTestCases = ({
+  onSuccess,
+  testCasesToDelete,
+}: {
+  onSuccess: VoidFn;
+  testCasesToDelete: number;
+}) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
-  const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
-  const refetchCurrentTestCases = useRefetchCurrentTestCases();
+  const refetchCurrentTestCases = useRefetchCurrentTestCases(testCasesToDelete);
+  const { batchFolderCounterUpdate } = useFolderCounterUpdate();
+  const { showSuccessNotification, showErrorNotification } = useNotification();
 
   const batchDelete = useCallback(
     async (testCaseIds: number[], folderDeltasMap: Record<string, number>) => {
@@ -42,13 +48,9 @@ export const useBatchDeleteTestCases = ({ onSuccess }: { onSuccess: () => void }
           data: { testCaseIds },
         });
 
-        forOwn(folderDeltasMap, (delta, folderId) => {
-          dispatch(
-            updateFolderCounterAction({
-              folderId: Number(folderId),
-              delta: -delta,
-            }),
-          );
+        batchFolderCounterUpdate({
+          folderDeltasMap,
+          isRemoval: true,
         });
 
         refetchCurrentTestCases();
@@ -56,7 +58,7 @@ export const useBatchDeleteTestCases = ({ onSuccess }: { onSuccess: () => void }
         onSuccess();
 
         showSuccessNotification({
-          messageId: 'testCasesDeletedSuccess',
+          messageId: testCaseIds.length > 1 ? 'testCasesDeletedSuccess' : 'testCaseDeletedSuccess',
         });
       } catch {
         showErrorNotification({
@@ -66,7 +68,16 @@ export const useBatchDeleteTestCases = ({ onSuccess }: { onSuccess: () => void }
         hideSpinner();
       }
     },
-    [projectKey, dispatch, showSpinner, hideSpinner, refetchCurrentTestCases, onSuccess],
+    [
+      projectKey,
+      showSpinner,
+      hideSpinner,
+      refetchCurrentTestCases,
+      onSuccess,
+      batchFolderCounterUpdate,
+      showSuccessNotification,
+      showErrorNotification,
+    ],
   );
 
   return { batchDelete, isLoading };

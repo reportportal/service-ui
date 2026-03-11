@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import styles from './notificationList.scss';
 
 const cx = classNames.bind(styles);
 
-const messages = defineMessages({
+export const notificationMessages = defineMessages({
   successLogin: { id: 'NotificationItem.successLogin', defaultMessage: 'Signed in successfully' },
   failureDefault: {
     id: 'NotificationItem.failureDefault',
@@ -51,9 +51,25 @@ const messages = defineMessages({
     id: 'Assignment.unassignProjectError',
     defaultMessage: 'An error occurred during unassigning from the project',
   },
+  changeProjectRoleSuccess: {
+    id: 'Assignment.changeProjectRoleSuccess',
+    defaultMessage: 'User {name} role has been changed successfully',
+  },
+  changeProjectRoleError: {
+    id: 'Assignment.changeProjectRoleError',
+    defaultMessage: 'An error occurred during changing the user role',
+  },
   unassignOrganizationError: {
     id: 'Assignment.unassignOrganizationError',
     defaultMessage: 'An error occurred during unassigning from the organization',
+  },
+  assignmentUpdatedSuccess: {
+    id: 'Assignment.assignmentUpdatedSuccess',
+    defaultMessage: 'Assignment of {name} has been updated successfully',
+  },
+  updateAssignmentsError: {
+    id: 'Assignment.updateAssignmentsError',
+    defaultMessage: 'An error occurred while updating assignments',
   },
   deleteError: {
     id: 'ProjectsPage.deleteError',
@@ -218,15 +234,32 @@ const messages = defineMessages({
   },
   testCaseFolderDuplicatedSuccess: {
     id: 'TestCaseLibraryPage.testCaseFolderDuplicatedSuccess',
-    defaultMessage: 'Folder has been duplicated successfully.',
+    defaultMessage:
+      "Folder ''{folderName}'' has been successfully duplicated to {targetFolderName, select, null {root folder} other {''{targetFolderName}''}}.",
   },
   testCasesDuplicatedSuccess: {
     id: 'TestCaseLibraryPage.testCasesDuplicatedSuccess',
     defaultMessage: 'Test cases have been duplicated successfully.',
   },
+  testCaseDuplicatedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseDuplicatedSuccess',
+    defaultMessage: 'Test case has been duplicated successfully.',
+  },
   testCaseDeletedSuccess: {
     id: 'TestCaseLibraryPage.testCaseDeletedSuccess',
     defaultMessage: 'Test case has been deleted successfully.',
+  },
+  testCasesDeletedSuccess: {
+    id: 'TestCaseLibraryPage.testCasesDeletedSuccess',
+    defaultMessage: 'Test cases have been deleted successfully.',
+  },
+  executionDeletedSuccess: {
+    id: 'ManualLaunchPage.executionDeletedSuccess',
+    defaultMessage: 'Test execution has been deleted successfully.',
+  },
+  executionsDeletedSuccess: {
+    id: 'ManualLaunchPage.executionsDeletedSuccess',
+    defaultMessage: 'Test executions have been deleted successfully.',
   },
   testCaseDescriptionUpdateSuccess: {
     id: 'TestCaseLibraryPage.testCaseDescriptionUpdateSuccess',
@@ -252,6 +285,22 @@ const messages = defineMessages({
     id: 'TestCaseLibraryPage.testCaseUpdatedSuccess',
     defaultMessage: 'Test Case has been updated successfully.',
   },
+  testCaseMovedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseMovedSuccess',
+    defaultMessage: 'Test Case has been moved successfully.',
+  },
+  testCasesMovedSuccess: {
+    id: 'TestCaseLibraryPage.testCasesMovedSuccess',
+    defaultMessage: 'Test Cases have been moved successfully.',
+  },
+  testCaseFolderMovedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseFolderMovedSuccess',
+    defaultMessage: "Folder ''{folderName}'' has been successfully moved to {targetFolderName, select, null {root folder} other {''{targetFolderName}''}}.",
+  },
+  testCaseFolderMoveFailed: {
+    id: 'TestCaseLibraryPage.testCaseFolderMoveFailed',
+    defaultMessage: 'Failed to move Folder.',
+  },
   testCaseBulkUpdateSuccess: {
     id: 'TestCaseLibraryPage.testCaseBulkUpdateSuccess',
     defaultMessage: 'Test Cases have been updated successfully.',
@@ -263,6 +312,10 @@ const messages = defineMessages({
   testCaseUpdateFailed: {
     id: 'TestCaseLibraryPage.testCaseUpdateFailed',
     defaultMessage: 'Failed to update Test Case.',
+  },
+  testCaseMoveFailed: {
+    id: 'TestCaseLibraryPage.testCaseMoveFailed',
+    defaultMessage: 'Failed to move Test Case.',
   },
   testCasesAddingToTestPlanFailed: {
     id: 'TestCaseLibraryPage.testCasesAddingToTestPlanFailed',
@@ -289,6 +342,20 @@ const messages = defineMessages({
     id: 'TestPlansPage.testPlanLoadingFailed',
     defaultMessage: 'Failed to load Test Plans.',
   },
+  testPlanRedirectWarningMessage: {
+    id: 'TestPlansPage.testPlanRedirectWarningMessage',
+    defaultMessage:
+      "The item you are trying to access may have been deleted or doesn't exist. You have been redirected to Test Plans.",
+  },
+  manualLaunchesLoadingFailed: {
+    id: 'ManualLaunchesPage.manualLaunchesLoadingFailed',
+    defaultMessage: 'Failed to load Manual Launches.',
+  },
+  manualLaunchRedirectWarningMessage: {
+    id: 'ManualLaunchesPage.manualLaunchRedirectWarningMessage',
+    defaultMessage:
+      "The item you are trying to access may have been deleted or doesn't exist. You have been redirected to Manual Launches.",
+  },
   testPlanUpdatedSuccess: {
     id: 'TestPlansPage.testPlanUpdatedSuccess',
     defaultMessage: 'Test Plan has been updated successfully.',
@@ -301,6 +368,20 @@ const messages = defineMessages({
     id: 'TestPlansPage.testPlanDeletedSuccess',
     defaultMessage: 'Test Plan has been deleted successfully.',
   },
+  removeFromTestPlanSuccess: {
+    id: 'RemoveTestCasesFromTestPlanModal.successMessage',
+    defaultMessage:
+      '{count, plural, one {Test case has} other {Test cases have}} been successfully removed from the Test Plan',
+  },
+  manualLaunchDeletedSuccess: {
+    id: 'ManualLaunchesPage.manualLaunchDeletedSuccess',
+    defaultMessage: "Launch ''{name}'' has been deleted successfully.",
+  },
+  manualLaunchesBatchDeletedSuccess: {
+    id: 'ManualLaunchesPage.manualLaunchesBatchDeletedSuccess',
+    defaultMessage:
+      '{count} {count, plural, one {launch has} other {launches have}} been deleted successfully.',
+  },
   importSuccessToFolder: {
     id: 'ImportTestCaseModal.importSuccessToFolder',
     defaultMessage: 'Test cases have been imported successfully to folder {folderName}.',
@@ -312,6 +393,34 @@ const messages = defineMessages({
   importTestCaseFailed: {
     id: 'ImportTestCaseModal.testCaseImportFailed',
     defaultMessage: 'Failed to import Test Case.',
+  },
+  createLogTypeSuccess: {
+    id: 'LogTypeModal.create.createLogTypeSuccess',
+    defaultMessage: 'Log type has been created successfully',
+  },
+  createLogTypeError: {
+    id: 'LogTypeModal.create.createLogTypeError',
+    defaultMessage: 'Failed to save new log type. Please try again',
+  },
+  updateLogTypeSuccess: {
+    id: 'LogTypeModal.update.updateLogTypeSuccess',
+    defaultMessage: 'The log type has been updated successfully',
+  },
+  updateLogTypeError: {
+    id: 'LogTypeModal.update.updateLogTypeError',
+    defaultMessage: 'Failed to update the log type. Please try again',
+  },
+  deleteLogTypeSuccess: {
+    id: 'LogTypeModal.delete.deleteLogTypeSuccess',
+    defaultMessage: 'The log type has been deleted successfully',
+  },
+  deleteLogTypeError: {
+    id: 'LogTypeModal.delete.deleteLogTypeError',
+    defaultMessage: 'Failed to delete the log type. Please try again',
+  },
+  updateTestCasesTagsSuccess: {
+    id: 'TestCasesTags.update.deleteTagsSuccess',
+    defaultMessage: 'Tags for selected test cases have been updated successfully!',
   },
 });
 
@@ -346,7 +455,9 @@ export class NotificationList extends PureComponent {
                     duration={duration}
                     title={Parser(
                       DOMPurify.sanitize(
-                        messageId ? formatMessage(messages[messageId], values) : message,
+                        messageId
+                          ? formatMessage(notificationMessages[messageId], values)
+                          : message,
                         { ADD_ATTR: ['target'] },
                       ),
                     )}

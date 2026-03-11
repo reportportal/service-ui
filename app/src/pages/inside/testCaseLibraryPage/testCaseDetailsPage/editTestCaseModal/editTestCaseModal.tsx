@@ -14,22 +14,25 @@
  * limitations under the License.
  */
 
-import { MouseEventHandler, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { InjectedFormProps, reduxForm } from 'redux-form';
 import { FieldText, Modal } from '@reportportal/ui-kit';
+import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { UseModalData } from 'common/hooks';
 import { createClassnames } from 'common/utils';
-import { hideModalAction, withModal } from 'controllers/modal';
+import { withModal } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { commonValidators } from 'common/utils/validation';
-import { FieldErrorHint, FieldProvider } from 'components/fields';
+import { useModalButtons } from 'pages/inside/testCaseLibraryPage/hooks/useModalButtons';
 
-import { UpdateTestCasePayload, useUpdateTestCase } from './useUpdateTestCase';
+import { FieldErrorHint, FieldProvider } from 'components/fields';
+import { UpdateTestCasePayload } from '../../hooks/useTestCaseMutations';
+import { useTestCase } from '../../hooks/useTestCase';
 import { messages } from '../messages';
 import { commonMessages } from '../../commonMessages';
+
 import { PrioritySelect } from '../../prioritySelect/prioritySelect';
 
 import styles from './editTestCaseModal.scss';
@@ -44,33 +47,28 @@ type EditTestCaseModalProps = UseModalData<{
 }>;
 
 const EditTestCaseModal = ({
-  handleSubmit,
+  data: { testCaseId, initialValues },
   pristine,
   invalid,
+  handleSubmit,
   initialize,
-  data: { testCaseId, initialValues },
 }: InjectedFormProps<UpdateTestCasePayload> & EditTestCaseModalProps) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
-  const { updateTestCase, isUpdateTestCaseLoading } = useUpdateTestCase();
+  const { patchTestCase, isLoading } = useTestCase(testCaseId);
 
-  const hideModal = () => dispatch(hideModalAction());
-  const handleUpdate = (formData: UpdateTestCasePayload) => updateTestCase(testCaseId, formData);
+  const handleUpdate = (formData: UpdateTestCasePayload) =>
+    patchTestCase({ testCaseId, payload: formData });
+
+  const { okButton, cancelButton, hideModal } = useModalButtons({
+    okButtonText: formatMessage(COMMON_LOCALE_KEYS.SAVE),
+    isLoading: isLoading,
+    isSubmitButtonDisabled: pristine || invalid,
+    onSubmit: handleSubmit(handleUpdate) as VoidFn,
+  });
 
   useEffect(() => {
     initialize(initialValues);
   }, [initialValues, initialize]);
-
-  const okButton = {
-    children: formatMessage(COMMON_LOCALE_KEYS.SAVE),
-    onClick: handleSubmit(handleUpdate) as unknown as MouseEventHandler<HTMLButtonElement>,
-    disabled: pristine || invalid || isUpdateTestCaseLoading,
-  };
-
-  const cancelButton = {
-    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-    onClick: hideModal,
-  };
 
   return (
     <Modal
@@ -89,7 +87,6 @@ const EditTestCaseModal = ({
             />
           </FieldErrorHint>
         </FieldProvider>
-
         <div className={cx('priority-select')}>
           <FieldProvider name="priority">
             <PrioritySelect />

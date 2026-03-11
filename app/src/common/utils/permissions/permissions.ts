@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,36 +15,8 @@
  */
 
 import { PERMISSIONS_MAP, ACTIONS } from 'common/constants/permissions';
-import { ADMINISTRATOR } from 'common/constants/accountRoles';
-import { MANAGER } from 'common/constants/projectRoles';
-import { UserRoles, OrganizationRoles, ProjectRoles, PermissionsMap } from '../../../types/roles';
 
-export const createCheckPermission =
-  (permissionMap: PermissionsMap) =>
-  (permission: string) =>
-  ({
-    userRole,
-    organizationRole,
-    projectRole,
-  }: {
-    userRole: UserRoles;
-    organizationRole: OrganizationRoles;
-    projectRole: ProjectRoles;
-  }) => {
-    if (userRole === ADMINISTRATOR) {
-      return true;
-    }
-
-    if (organizationRole === MANAGER) {
-      return !!permissionMap[organizationRole][permission];
-    }
-
-    if (permissionMap[organizationRole]?.[projectRole]) {
-      return !!permissionMap[organizationRole][projectRole][permission];
-    }
-
-    return false;
-  };
+import { createCheckPermission } from './createCheckPermissions';
 
 const checkPermission = createCheckPermission(PERMISSIONS_MAP);
 
@@ -102,29 +74,9 @@ export const canUpdateUserInstanceRole = checkPermission(ACTIONS.UPDATE_USER_INS
 export const canExportOrganizations = checkPermission(ACTIONS.EXPORT_ORGANIZATIONS);
 export const canSeeActivityOption = checkPermission(ACTIONS.ACTIVITY_OPTION);
 export const canSeeInstanceLevelPluginsPages = checkPermission(ACTIONS.INSTANCE_LEVEL_PLUGIN_PAGES);
-// MANUAL LAUNCHES
+export const canLockDashboard = checkPermission(ACTIONS.LOCK_DASHBOARD);
+
+// TMS FEATURES:
 export const canCreateManualLaunch = checkPermission(ACTIONS.CREATE_MANUAL_LAUNCH);
-// TEST CASE
-export const canAddTestCaseToLaunch = checkPermission(ACTIONS.ADD_TEST_CASE_TO_LAUNCH);
-export const canAddTestCaseToTestPlan = checkPermission(ACTIONS.ADD_TEST_CASE_TO_TEST_PLAN);
-export const canCreateTestCase = checkPermission(ACTIONS.CREATE_TEST_CASE);
-export const canDeleteTestCase = checkPermission(ACTIONS.DELETE_TEST_CASE);
-export const canDuplicateTestCase = checkPermission(ACTIONS.DUPLICATE_TEST_CASE);
-export const canEditTestCase = checkPermission(ACTIONS.EDIT_TEST_CASE);
-export const canEditTestCaseDescription = checkPermission(ACTIONS.EDIT_TEST_CASE_DESCRIPTION);
-export const canEditTestCaseScenario = checkPermission(ACTIONS.EDIT_TEST_CASE_SCENARIO);
-export const canEditTestCaseTag = checkPermission(ACTIONS.EDIT_TEST_CASE_TAG);
-export const canMoveTestCase = checkPermission(ACTIONS.MOVE_TEST_CASE);
-export const canDoTestCaseBulkActions = checkPermission(ACTIONS.TEST_CASE_BULK_ACTIONS);
-// TEST CASES
-export const canImportTestCases = checkPermission(ACTIONS.IMPORT_TEST_CASES);
-// TEST PLAN
-export const canCreateTestPlan = checkPermission(ACTIONS.CREATE_TEST_PLAN);
-export const canDeleteTestPlan = checkPermission(ACTIONS.DELETE_TEST_PLAN);
-export const canDuplicateTestPlan = checkPermission(ACTIONS.DUPLICATE_TEST_PLAN);
-export const canEditTestPlan = checkPermission(ACTIONS.EDIT_TEST_PLAN);
-// TEST CASE FOLDER
-export const canCreateTestCaseFolder = checkPermission(ACTIONS.CREATE_TEST_CASE_FOLDER);
-export const canDeleteTestCaseFolder = checkPermission(ACTIONS.DELETE_TEST_CASE_FOLDER);
-export const canDuplicateTestCaseFolder = checkPermission(ACTIONS.DUPLICATE_TEST_CASE_FOLDER);
-export const canRenameTestCaseFolder = checkPermission(ACTIONS.RENAME_TEST_CASE_FOLDER);
+export const canManageTestCases = checkPermission(ACTIONS.MANAGE_TEST_CASES);
+export const canManageTestPlans = checkPermission(ACTIONS.MANAGE_TEST_PLANS);

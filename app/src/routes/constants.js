@@ -28,6 +28,8 @@ import { DashboardPrintPage } from 'pages/inside/dashboardItemPage/dashboardPrin
 import { FiltersPage } from 'pages/inside/filtersPage';
 import { LaunchesPage } from 'pages/inside/launchesPage';
 import { ManualLaunchesPage } from 'pages/inside/manualLaunchesPage';
+import { ManualLaunchDetailsPage } from 'pages/inside/manualLaunchesPage/manualLaunchDetailsPage';
+import { ManualLaunchExecutionPage } from 'pages/inside/manualLaunchesPage/manualLaunchExecutionPage';
 import { ProfilePage } from 'pages/inside/profilePage';
 import { SandboxPage } from 'pages/inside/sandboxPage';
 import { ProjectSettingsPageContainer } from 'pages/inside/projectSettingsPageContainer';
@@ -37,7 +39,7 @@ import { LoginPage } from 'pages/outside/loginPage';
 import { NotFoundPage } from 'pages/outside/notFoundPage';
 import { RegistrationPage } from 'pages/outside/registrationPage';
 import { TestItemPage } from 'pages/inside/testItemPage';
-import { LogsPage } from 'pages/inside/logsPage';
+import { LogsPageContainer } from 'pages/inside/logsPage';
 import { TestPlansPage } from 'pages/inside/testPlansPage';
 import { TestPlanDetailsPage } from 'pages/inside/testPlansPage/testPlanDetailsPage';
 import {
@@ -65,6 +67,9 @@ import {
   TEST_CASE_LIBRARY_PAGE,
   TEST_CASE_DETAILS_PAGE,
   PROJECT_TEST_PLAN_DETAILS_PAGE,
+  MANUAL_LAUNCHES_PAGE,
+  MANUAL_LAUNCH_DETAILS_PAGE,
+  MANUAL_LAUNCH_EXECUTION_PAGE,
 } from 'controllers/pages/constants';
 import { AdminUiExtensionPage } from 'pages/instance/adminUiExtensionPage';
 import { AccountRemovedPage } from 'pages/outside/accountRemovedPage';
@@ -77,7 +82,7 @@ import { InstanceLayout } from 'layouts/instanceLayout';
 import { OrganizationUsersPage } from 'pages/organization/organizationUsersPage';
 import { OrganizationsPage } from 'pages/instance/organizationsPage';
 import { OrganizationSettingsPage } from 'pages/organization/organizationSettingsPage';
-import { OrganizationEventsPage } from '../pages/organization/organizationEventsPage';
+import { OrganizationEventsPage } from 'pages/organization/organizationEventsPage';
 import { ProductVersionsPage } from 'pages/inside/productVersionsPage/productVersionsPage';
 import { TestCaseDetailsPage, TestCaseLibraryPageWrapper } from 'pages/inside/testCaseLibraryPage';
 
@@ -141,7 +146,24 @@ export const pageRendering = {
   PROJECT_DASHBOARD_PRINT_PAGE: { component: DashboardPrintPage, layout: EmptyLayout },
   PROJECT_FILTERS_PAGE: { component: FiltersPage, layout: ProjectLayout },
   [LAUNCHES_PAGE]: { component: LaunchesPage, layout: ProjectLayout },
-  MANUAL_LAUNCHES_PAGE: { component: ManualLaunchesPage, layout: ProjectLayout, rawContent: true },
+  [MANUAL_LAUNCHES_PAGE]: {
+    component: ManualLaunchesPage,
+    layout: ProjectLayout,
+    rawContent: true,
+    isTMS: true,
+  },
+  [MANUAL_LAUNCH_DETAILS_PAGE]: {
+    component: ManualLaunchDetailsPage,
+    layout: ProjectLayout,
+    rawContent: true,
+    isTMS: true,
+  },
+  [MANUAL_LAUNCH_EXECUTION_PAGE]: {
+    component: ManualLaunchExecutionPage,
+    layout: ProjectLayout,
+    rawContent: true,
+    isTMS: true,
+  },
   PROJECT_LAUNCHES_PAGE: { component: LaunchesPage, layout: ProjectLayout },
   PROJECT_MEMBERS_PAGE: { component: ProjectTeamPage, rawContent: true, layout: ProjectLayout },
   PROJECT_SANDBOX_PAGE: { component: SandboxPage, layout: ProjectLayout },
@@ -159,6 +181,7 @@ export const pageRendering = {
     component: TestPlansPage,
     layout: ProjectLayout,
     rawContent: true,
+    isTMS: true,
   },
   PROJECT_USERDEBUG_PAGE: { component: LaunchesPage, layout: ProjectLayout },
   PROJECT_USERDEBUG_TEST_ITEM_PAGE: { component: TestItemPage, layout: ProjectLayout },
@@ -188,8 +211,12 @@ export const pageRendering = {
     rawContent: true,
   },
   [TEST_ITEM_PAGE]: { component: TestItemPage, layout: ProjectLayout },
-  [PROJECT_LOG_PAGE]: { component: LogsPage, layout: ProjectLayout },
-  [PROJECT_USERDEBUG_LOG_PAGE]: { component: LogsPage, layout: ProjectLayout },
+  [PROJECT_LOG_PAGE]: { component: LogsPageContainer, layout: ProjectLayout, rawContent: true },
+  [PROJECT_USERDEBUG_LOG_PAGE]: {
+    component: LogsPageContainer,
+    layout: ProjectLayout,
+    rawContent: true,
+  },
   [HISTORY_PAGE]: { component: HistoryPage, layout: ProjectLayout },
   [UNIQUE_ERRORS_PAGE]: { component: UniqueErrorsPage, layout: ProjectLayout },
   [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: {
@@ -207,6 +234,7 @@ export const pageRendering = {
     component: TestCaseLibraryPageWrapper,
     layout: ProjectLayout,
     rawContent: true,
+    isTMS: true,
   },
   [TEST_CASE_DETAILS_PAGE]: {
     component: TestCaseDetailsPage,
@@ -217,25 +245,30 @@ export const pageRendering = {
     component: ProductVersionsPage,
     layout: ProjectLayout,
     rawContent: true,
+    isTMS: true,
   },
   [PRODUCT_VERSIONS_TAB_PAGE]: {
     component: ProductVersionsPage,
     layout: ProjectLayout,
     rawContent: true,
+    isTMS: true,
   },
   [PRODUCT_VERSION_PAGE]: {
     component: ProductVersionsPage,
     layout: ProjectLayout,
     rawContent: true,
+    isTMS: true,
   },
   [PRODUCT_VERSION_TAB_PAGE]: {
     component: ProductVersionsPage,
     layout: ProjectLayout,
     rawContent: true,
+    isTMS: true,
   },
   [PROJECT_TEST_PLAN_DETAILS_PAGE]: {
     component: TestPlanDetailsPage,
     layout: ProjectLayout,
     rawContent: true,
+    isTMS: true,
   },
 };

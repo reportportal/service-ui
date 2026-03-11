@@ -208,6 +208,7 @@ export class ActionPanelWithGroupOperations extends Component {
 
     return [
       <GhostMenuButton
+        key="actions"
         title={formatMessage(COMMON_LOCALE_KEYS.ACTIONS)}
         items={actionDescriptors}
         disabled={!selectedItems.length}

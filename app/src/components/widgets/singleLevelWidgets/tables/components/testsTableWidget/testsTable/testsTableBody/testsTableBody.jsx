@@ -15,7 +15,7 @@
  */
 
 import * as React from 'react';
-import { func } from 'prop-types';
+import { func, bool } from 'prop-types';
 import classNames from 'classnames/bind';
 import { formatDuration } from 'common/utils';
 import { PTTests, PTColumns } from '../../pTypes';
@@ -31,12 +31,14 @@ export class TestsTableBody extends React.Component {
     columns: PTColumns.isRequired,
     getMatrixTooltip: func,
     onItemClick: func,
+    opensLinkInNewTab: bool,
   };
 
   static defaultProps = {
     tests: [],
     getMatrixTooltip: null,
     onItemClick: null,
+    opensLinkInNewTab: false,
   };
 
   constructor(props) {
@@ -46,7 +48,7 @@ export class TestsTableBody extends React.Component {
   }
 
   renderRow = (test) => {
-    const { columns, getMatrixTooltip, onItemClick } = this.props;
+    const { columns, getMatrixTooltip, onItemClick, opensLinkInNewTab } = this.props;
     const { name, date, count, status, duration } = columns;
 
     const rowProps = {
@@ -61,6 +63,7 @@ export class TestsTableBody extends React.Component {
       duration: duration && formatDuration(test[duration.durationKey]),
       getMatrixTooltip,
       onItemClick,
+      opensLinkInNewTab,
     };
 
     return <TestsTableRow {...rowProps} />;

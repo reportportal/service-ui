@@ -15,7 +15,7 @@
  */
 
 import { put, takeEvery, take, all } from 'redux-saga/effects';
-import { fetchAppInfoAction } from 'controllers/appInfo';
+import { fetchAppInfoAction, APP_INFO_NAMESPACE } from 'controllers/appInfo';
 import { FETCH_USER_ERROR, FETCH_USER_SUCCESS, fetchUserAction } from 'controllers/user';
 import {
   DEFAULT_TOKEN,
@@ -24,27 +24,24 @@ import {
   setTokenAction,
   authSuccessAction,
 } from 'controllers/auth';
-import { FETCH_PROJECT_SUCCESS, fetchProjectAction } from 'controllers/project';
 import {
   fetchGlobalIntegrationsAction,
   fetchPluginsAction,
   fetchPublicPluginsAction,
 } from 'controllers/plugins';
+import { createFetchPredicate } from 'controllers/fetch';
 import { getStorageItem } from 'common/utils';
-import { SET_ACTIVE_PROJECT_KEY } from 'controllers/user/constants';
 import { setInitialDataReadyAction } from './actionCreators';
 import { FETCH_INITIAL_DATA } from './constants';
 
 function* fetchInitialData() {
   yield put(setTokenAction(getStorageItem(TOKEN_KEY) || DEFAULT_TOKEN));
   yield put(fetchAppInfoAction());
+  yield take(createFetchPredicate(APP_INFO_NAMESPACE));
   yield put(fetchUserAction());
   const userResult = yield take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]);
   if (!userResult.error) {
     yield put(authSuccessAction());
-    const { payload: activeProjectKey } = yield take(SET_ACTIVE_PROJECT_KEY);
-    yield put(fetchProjectAction(activeProjectKey));
-    yield take(FETCH_PROJECT_SUCCESS);
     yield put(fetchPluginsAction());
     yield put(fetchGlobalIntegrationsAction());
   } else {

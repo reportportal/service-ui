@@ -26,7 +26,8 @@ export const STATUS_TYPES = {
 export const ITEMS_PER_PAGE_OPTIONS: number[] = [10, 20, 50, 100];
 
 export const TestCasePageDefaultValues = {
-  size: 10,
   limit: 50,
   offset: 0,
 };
+
+export const TEST_CASE_LIST_NAMESPACE = 'testCaseList';

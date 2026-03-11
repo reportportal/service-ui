@@ -29,7 +29,8 @@ const urlBase = `${DEFAULT_API_URL_PREFIX}/`;
 const urlCommonBase = `${DEFAULT_COMMON_API_URL_PREFIX}/`;
 const uatBase = `${UAT_API_URL_PREFIX}/`;
 const compositeBase = COMPOSITE_API_URL_PREFIX;
-const getQueryParams = (paramsObj) => stringify(paramsObj, { addQueryPrefix: true });
+const getQueryParams = (paramsObj, options = {}) =>
+  stringify(paramsObj, { addQueryPrefix: true, ...options });
 const removeTrailingSlash = (url) => (url.endsWith('/') ? url.slice(0, -1) : url);
 
 export const URLS = {
@@ -41,8 +42,8 @@ export const URLS = {
   createUser: () => `${urlCommonBase}users`,
 
   dashboard: (projectKey, id) => `${urlBase}${projectKey}/dashboard/${id}`,
-  dashboards: (projectKey, params) =>
-    `${urlBase}${projectKey}/dashboard${getQueryParams({ ...params })}`,
+  dashboards: (projectKey, params = {}, queryOptions = {}) =>
+    `${urlBase}${projectKey}/dashboard${getQueryParams(params, queryOptions)}`,
   dashboardConfig: (projectKey, id) => `${urlBase}${projectKey}/dashboard/${id}/config`,
   dashboardPreconfigured: (projectKey) => `${urlBase}${projectKey}/dashboard/preconfigured`,
 
@@ -153,6 +154,10 @@ export const URLS = {
     `${urlCommonBase}organizations/${organizationId}/users${getQueryParams(preferencesObj)}`,
   organizationUserById: ({ organizationId, userId }) =>
     `${urlCommonBase}organizations/${organizationId}/users/${userId}`,
+  organizationUserProjects: (organizationId, userId) =>
+    `${urlCommonBase}organizations/${organizationId}/users/${userId}/projects`,
+  organizationUserAssignments: (organizationId, userId) =>
+    `${urlCommonBase}organizations/${organizationId}/users/${userId}`,
   organizationProjectById: ({ organizationId, projectId }) =>
     `${urlCommonBase}organizations/${organizationId}/projects/${projectId}`,
   organizationSettings: (organizationId) =>
@@ -190,6 +195,9 @@ export const URLS = {
     (searchTerm = '') =>
       `${urlBase}project/${projectKey}/usernames?filter.cnt.users=${searchTerm}`,
   projectIndex: (projectKey) => `${urlBase}project/${projectKey}/index`,
+  projectLogTypes: (projectKey) => `${urlCommonBase}projects/${projectKey}/log-types`,
+  projectLogTypeById: (projectKey, logTypeId) =>
+    `${urlCommonBase}projects/${projectKey}/log-types/${logTypeId}`,
 
   projectStatus: (projectKey, interval) =>
     `${urlBase}project/list/${projectKey}${getQueryParams({
@@ -210,10 +218,14 @@ export const URLS = {
   notificationById: (projectKey, notificationId) =>
     `${urlBase}${projectKey}/settings/notification/${notificationId}`,
 
+  testCasesTags: (projectKey) => `${urlBase}project/${projectKey}/tms/test-case/attribute`,
+  testCasesTagsBatch: (projectKey) =>
+    `${urlBase}project/${projectKey}/tms/test-case/attributes/batch`,
   testItems: (projectKey, ids) =>
     removeTrailingSlash(`${urlBase}${projectKey}/item${getQueryParams({ ids })}`),
   testItemsWithProviderType: (projectKey, ids) =>
     `${urlBase}${projectKey}/item/v2${getQueryParams({ ids })}`,
+  testItemsBulk: (projectKey) => `${urlBase}${projectKey}/item/bulk`,
   testItem: (projectKey, id = '') => removeTrailingSlash(`${urlBase}${projectKey}/item/${id}`),
   testItemStatistics: (projectKey) => `${urlBase}${projectKey}/item/statistics`,
   testItemUpdate: (projectKey, id = '') => `${urlBase}${projectKey}/item/${id}/update`,
@@ -256,18 +268,23 @@ export const URLS = {
   logItem: (projectKey, itemId, level) =>
     `${urlBase}${projectKey}/log${getQueryParams({
       'filter.eq.item': itemId,
-      'filter.gte.level': level,
+      ...(level && { 'filter.gte.level': level }),
       'page.page': 1,
       'page.size': 1,
       'page.sort': 'logTime,DESC',
     })}`,
   logItems: (projectKey, itemId, level) =>
     `${urlBase}${projectKey}/log/nested/${itemId}${getQueryParams({
-      'filter.gte.level': level,
+      ...(level && { 'filter.gte.level': level }),
     })}`,
   errorLogs: (projectKey, itemId, level) =>
     `${urlBase}${projectKey}/log/locations/${itemId}${getQueryParams({
-      'filter.gte.level': level,
+      ...(level && { 'filter.gte.level': level }),
+    })}`,
+  searchLogs: (projectKey, itemId, level) =>
+    `${urlBase}${projectKey}/log/locations/search/${itemId}${getQueryParams({
+      excludeLogContent: false,
+      ...(level && { 'filter.gte.level': level }),
     })}`,
   logsUnderPath: (projectKey, path, excludedRetryParentId) =>
     `${urlBase}${projectKey}/log${getQueryParams({
@@ -277,7 +294,7 @@ export const URLS = {
   launchLogs: (projectKey, itemId, level) =>
     `${urlBase}${projectKey}/log${getQueryParams({
       'filter.eq.launch': itemId,
-      'filter.gte.level': level,
+      ...(level && { 'filter.gte.level': level }),
     })}`,
   logItemActivity: (projectKey, itemId) =>
     removeTrailingSlash(`${urlBase}${projectKey}/activity/item/${itemId}`),
@@ -293,7 +310,6 @@ export const URLS = {
   bulkLastLogs: (projectKey) => `${urlBase}${projectKey}/log/under`,
   users: (ids = []) => `${urlBase}users?ids=${ids.join(',')}`,
   userRegistration: () => `${urlBase}users/registration`,
-  userValidateRegistrationInfo: () => `${urlBase}users/registration/info`,
   userPasswordReset: () => `${urlBase}users/password/reset`,
   userPasswordResetToken: (token) => `${urlBase}users/password/reset/${token}`,
   userPasswordRestore: () => `${urlBase}users/password/restore`,
@@ -378,6 +394,8 @@ export const URLS = {
 
   testCaseDetails: (projectKey, testCaseId) =>
     `${urlBase}project/${projectKey}/tms/test-case/${testCaseId}`,
+  testPlanTestCaseDetails: (projectKey, testPlanId, testCaseId) =>
+    `${urlBase}project/${projectKey}/tms/test-plan/${testPlanId}/test-case/${testCaseId}`,
   testCasesBatch: (projectKey) => `${urlBase}project/${projectKey}/tms/test-case/batch`,
   testCaseBatchDuplicate: (projectKey) =>
     `${urlBase}project/${projectKey}/tms/test-case/batch/duplicate`,
@@ -397,13 +415,38 @@ export const URLS = {
     `${urlBase}project/${projectKey}/tms/folder${getQueryParams(query)}`,
   testFolderDuplicate: (projectKey, folderId) =>
     `${urlBase}project/${projectKey}/tms/folder/${folderId}/duplicate`,
-  deleteFolder: (projectKey, folderId) => `${urlBase}project/${projectKey}/tms/folder/${folderId}`,
+  folder: (projectKey, folderId) => `${urlBase}project/${projectKey}/tms/folder/${folderId}`,
+  attachmentThumbnail: (projectKey, attachmentId) => `${urlBase}project/${projectKey}/tms/attachment/${attachmentId}/thumbnail`,
   tmsAttachmentUpload: (projectKey) => `${urlBase}project/${projectKey}/tms/attachment/upload`,
   tmsAttachmentDownload: (projectKey, attachmentId) =>
     `${urlBase}project/${projectKey}/tms/attachment/${attachmentId}`,
   manualLaunchesList: (projectKey) => `${urlBase}/${projectKey}/launch`,
+  manualLaunchById: (projectKey, launchId) =>
+    `${urlBase}project/${projectKey}/launch/manual/${launchId}`,
+  manualLaunchesListPagination: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/launch/manual${getQueryParams(query)}`,
+  manualLaunchFolders: (projectKey, launchId, query = {}) =>
+    `${urlBase}project/${projectKey}/launch/manual/${launchId}/folder${getQueryParams(query)}`,
+  manualLaunchTestCaseExecutions: (projectKey, launchId, query = {}) =>
+    `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case/execution${getQueryParams(query)}`,
+  manualLaunchExecutionById: (projectKey, launchId, executionId) =>
+    `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case/execution/${executionId}`,
+  manualLaunch: (projectKey) => `${urlBase}project/${projectKey}/launch/manual`,
+  addTestCaseToLaunch: (projectKey, launchId) =>
+    `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case`,
+  batchAddTestCasesToLaunch: (projectKey, launchId) =>
+    `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case/batch`,
+  deleteExecutionFromLaunch: (projectKey, launchId, executionId) =>
+    `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case/execution/${executionId}`,
+  batchDeleteExecutionsFromLaunch: (projectKey, launchId) =>
+    `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case/execution`,
   importTestCase: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-case/import${getQueryParams(query)}`,
-  tmsAttributes: (query = {}) => `${urlBase}tms/attribute${getQueryParams(query)}`,
-  createTmsAttribute: () => `${urlBase}tms/attribute`,
+  tmsAttributes: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/attribute${getQueryParams(query)}`,
+  createTmsAttribute: (projectKey) => `${urlBase}project/${projectKey}/tms/attribute`,
+  tmsAttributeKeysSearch: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/attribute/key${getQueryParams(query)}`,
+  tmsAttributeValuesSearch: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/attribute/value${getQueryParams(query)}`,
 };

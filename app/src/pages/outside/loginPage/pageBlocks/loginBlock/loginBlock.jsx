@@ -63,7 +63,7 @@ export const LoginBlock = () => {
       <div className={cx('bottom-content')}>
         {extensions &&
           extensions.length !== 0 &&
-          extensions.map((extension) => <ExtensionLoader extension={extension} />)}
+          extensions.map((extension) => <ExtensionLoader key={extension.name} extension={extension} />)}
       </div>
     </>
   );

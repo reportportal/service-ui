@@ -14,6 +14,58 @@
  * limitations under the License.
  */
 
+@mixin text-style(
+  $size,
+  $weight: var(--rp-ui-base-fw-medium),
+  $color: var(--rp-ui-base-almost-black),
+  $family: var(--rp-ui-base-font-family)
+) {
+  font-size: $size;
+  font-family: $family;
+  font-weight: $weight;
+  color: $color;
+}
+
+@mixin flex-center($direction: row, $justify: center, $align: center) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+@mixin active-border($color: var(--rp-ui-base-topaz-focused), $width: 2px) {
+  border: $width solid $color;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+@mixin text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin svg-icon($size, $shrink: 0) {
+  width: $size;
+  height: $size;
+  flex-shrink: $shrink;
+}
+
+@mixin drop-zone-border($border-color: var(--rp-ui-color-primary-focused)) {
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0px;
+    left: 2px;
+    right: 10px;
+    bottom: 6px;
+    border: 2px dashed $border-color;
+    border-radius: 4px;
+    pointer-events: none;
+    z-index: 100;
+  }
+}
+
 .expanded-options {
   display: flex;
   position: relative;
@@ -35,21 +87,76 @@
   }
 
   &__sidebar-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    @include flex-center(row, space-between, center);
+
     padding: 8px 32px;
 
     &--title {
       margin-right: auto;
-      font-size: 15px;
-      font-family: $FONT-ROBOTO-MEDIUM;
-      font-weight: 500;
-      color: var(--rp-ui-base-almost-black);
+      @include text-style(15px);
     }
 
     &--search {
       height: 16px;
+
+      svg {
+        @include svg-icon(16px);
+      }
+
+      svg path {
+        fill: var(--rp-ui-base-e-300);
+      }
+
+      &:hover:not(:focus-visible, &-has-query, &-panel-open) svg path {
+        fill: var(--rp-ui-base-e-400);
+      }
+
+      &:focus-visible:not(&-has-query, &-panel-open) svg path {
+        fill: var(--rp-ui-base-topaz-hover);
+      }
+
+      &-panel-open:not(&-has-query) {
+        color: var(--rp-ui-base-topaz-pressed);
+        background-color: var(--rp-ui-base-topaz-focused-10);
+
+        svg path {
+          fill: var(--rp-ui-base-topaz-pressed);
+        }
+
+        &:hover:not(:focus-visible) svg path {
+          fill: var(--rp-ui-base-topaz-hover);
+        }
+      }
+
+      &-has-query {
+        svg path {
+          fill: var(--rp-ui-base-topaz-hover);
+        }
+
+        &:hover:not(.expanded-options__sidebar-actions--search-panel-open) svg path {
+          fill: var(--rp-ui-base-topaz-focused);
+        }
+
+        &:focus-visible:not(:hover, .expanded-options__sidebar-actions--search-panel-open)
+          svg
+          path {
+          fill: var(--rp-ui-base-topaz-hover);
+        }
+
+        &.expanded-options__sidebar-actions--search-panel-open {
+          color: var(--rp-ui-base-topaz-pressed);
+          background-color: var(--rp-ui-base-topaz-focused-10);
+
+          svg path {
+            fill: var(--rp-ui-base-topaz-pressed);
+          }
+
+          &:hover:not(:focus-visible) svg path,
+          &:focus-visible svg path {
+            fill: var(--rp-ui-base-topaz-hover);
+          }
+        }
+      }
     }
 
     &--create {
@@ -57,23 +164,84 @@
     }
   }
 
+  &__search-wrapper {
+    padding: 7px 8px;
+    background-color: var(--rp-ui-base-bg-200);
+    @include flex-center(row, center, center);
+
+    > div {
+      max-width: 312px;
+    }
+  }
+
   &__sidebar-folders {
-    padding: 0 24px 20px;
+    position: relative;
+    padding: 0 16px 20px 24px;
+    margin: 0;
+
+    &--dragging {
+      @include drop-zone-border;
+
+      &:has(.expanded-options__drop-placeholder)::before {
+        border-color: var(--rp-ui-base-e-300);
+      }
+    }
+
+    // Keep border visible when confirmation popup is showing (pending state)
+    &:has([class*='tree-sortable-item--pending']) {
+      @include drop-zone-border;
+    }
+  }
+
+  &__drop-placeholder {
+    position: absolute;
+    top: 0;
+    left: 2px;
+    right: 10px;
+    bottom: 0;
+    height: auto;
+    min-height: 100%;
+    @include flex-center(column, center, center);
+
+    background-color: var(--rp-ui-base-bg-200);
+    opacity: 0.9;
+    z-index: 10;
+    pointer-events: none;
+    border-radius: 4px;
+
+    ~ .folders-tree {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
+
+  &__drop-placeholder-content {
+    @include flex-center(column, center, center);
+    gap: 16px;
+    position: fixed;
+    top: 50%;
+    left: 218px;
+    transform: translate(-50%, -50%);
+    z-index: 11;
+  }
+
+  &__drop-placeholder-icon {
+    width: 30px;
+    height: 24px;
+  }
+
+  &__drop-placeholder-text {
+    @include text-style(13px);
+
+    text-align: center;
   }
 
   &__sidebar-folders-wrapper {
     height: calc(100% - 112px);
+    position: relative;
 
-    &::after {
-      position: absolute;
-      content: '';
-      left: 0;
-      bottom: 0;
-      height: 30px;
-      width: 352px;
-      opacity: 0.8;
-      pointer-events: none;
-      background: linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
+    &--with-search {
+      height: calc(100% - 160px);
     }
   }
 
@@ -102,9 +270,7 @@
   padding: 20px 24px 0 24px;
 
   &__title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    @include flex-center(row, space-between, center);
     height: 36px;
     padding: 8px;
     cursor: pointer;
@@ -118,17 +284,13 @@
 
     &--active {
       padding: 6.4px;
-      border: 2px solid var(--rp-ui-base-topaz-focused);
-      border-radius: 4px;
-      box-sizing: border-box;
+      @include active-border;
+
       height: 36px;
     }
 
     &--text {
-      font-size: 13px;
-      font-family: $FONT-ROBOTO-MEDIUM;
-      font-weight: 500;
-      color: var(--rp-ui-base-almost-black);
+      @include text-style(13px);
     }
 
     &--counter {
@@ -140,14 +302,32 @@
 }
 
 .folders-loading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include flex-center(row, center, center);
+
   padding: 32px 16px;
   color: var(--rp-ui-base-e-400);
 
   &__text {
     font-size: 14px;
     font-style: italic;
+  }
+}
+
+.folder-drag-preview {
+  @include flex-center(row, flex-start, center);
+
+  width: 320px;
+  height: 44px;
+  padding: 0 16px;
+  gap: 16px;
+  background-color: rgba(255, 255, 255, 0.93);
+  border: none;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  cursor: grabbing;
+
+  span {
+    @include text-style(13px);
+    @include text-ellipsis;
   }
 }

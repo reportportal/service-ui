@@ -17,10 +17,10 @@
 import { useEffect, useMemo, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
-import { noop } from 'es-toolkit/compat';
 import { Button, PlusIcon } from '@reportportal/ui-kit';
+import { noop } from 'es-toolkit';
 
-import { createClassnames } from 'common/utils';
+import { createClassnames, getStorageItem } from 'common/utils';
 import {
   transformedFoldersSelector,
   areFoldersLoadingSelector,
@@ -30,9 +30,10 @@ import {
   testCasesSelector,
   foldersSelector,
   testCasesPageSelector,
-  activeFolderIdSelector,
+  FolderWithFullPath,
 } from 'controllers/testCase';
 import {
+  locationSelector,
   TEST_CASE_LIBRARY_PAGE,
   urlFolderIdSelector,
   urlOrganizationSlugSelector,
@@ -44,15 +45,23 @@ import {
   WARNING_NOTIFICATION_DURATION,
   showNotification,
 } from 'controllers/notification';
-import { setActiveFolderId } from 'controllers/testCase/actionCreators';
-import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
+import { userIdSelector } from 'controllers/user';
+import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { findFolderById } from 'pages/inside/testCaseLibraryPage/hooks/useTestPlanActiveFolders';
 
 import { ExpandedOptions } from '../../common/expandedOptions';
 import { commonMessages } from '../commonMessages';
 import { useCreateFolderModal } from './modals/createFolderModal';
 import { AllTestCasesPage } from '../allTestCasesPage';
+import { useNavigateToFolder } from '../hooks/useNavigateToFolder';
+import { useMoveFolder } from './modals/moveFolderModal/useMoveFolder';
+import { useDuplicateFolder } from './modals/duplicateFolderModal/useDuplicateFolder';
+import { useFolderDragDrop } from './useFolderDragDrop';
+import { useTestCase } from '../hooks/useTestCase';
+import { useDuplicateTestCase } from '../allTestCasesPage/duplicateTestCaseModal/useDuplicateTestCase';
 
 import styles from './testCaseFolders.scss';
 
@@ -62,8 +71,12 @@ export const TestCaseFolders = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { openModal: openCreateFolderModal } = useCreateFolderModal();
-  const folderId = useSelector(urlFolderIdSelector);
-  const activeFolderId = useSelector(activeFolderIdSelector);
+  const { navigateToFolder, expandFoldersToLevel } = useNavigateToFolder();
+  const urlFolderId = useSelector(urlFolderIdSelector);
+  const { moveFolder } = useMoveFolder();
+  const { duplicateFolder } = useDuplicateFolder();
+  const { patchTestCase } = useTestCase();
+  const { duplicateTestCase } = useDuplicateTestCase({ onSuccess: ()=> noop });
   const isLoadingTestCases = useSelector(isLoadingTestCasesSelector);
   const testCases = useSelector(testCasesSelector);
   const testCasesPageData = useSelector(testCasesPageSelector);
@@ -72,26 +85,27 @@ export const TestCaseFolders = () => {
   const initialFolders = useSelector(foldersSelector);
   const folders = useSelector(transformedFoldersSelector);
   const areFoldersLoading = useSelector(areFoldersLoadingSelector);
-  const { canCreateTestCaseFolder } = useUserPermissions();
-  const folderIdNumber = Number(folderId);
-  const actionParams = useMemo(
+  const { query } = useSelector(locationSelector);
+  const userId = useSelector(userIdSelector) as string;
+  const { canManageTestCases } = useUserPermissions();
+
+  const urlFolderIdNumber = Number(urlFolderId);
+  const activeFolder = useMemo(
+    () => initialFolders.find(({ id }) => id === Number(urlFolderId)),
+    [urlFolderId, initialFolders],
+  );
+  const userSettings = getStorageItem(`${userId}_settings`) as Record<string, unknown> | undefined;
+  const savedLimit = userSettings?.testCaseListPageSize as number;
+  const queryParams = useMemo(
     () => ({
-      limit: testCasesPageData?.size || TestCasePageDefaultValues.limit,
-      offset: TestCasePageDefaultValues.offset,
+      limit: Number(query?.limit) || savedLimit || TestCasePageDefaultValues.limit,
+      offset: Number(query?.offset) || TestCasePageDefaultValues.offset,
+      testCasesSearchParams: query?.testCasesSearchParams,
     }),
-    [testCasesPageData?.size],
+    [query, savedLimit],
   );
 
-  const currentFolder = useMemo(() => {
-    return initialFolders.find(({ id }) => id === Number(folderId));
-  }, [folderId, initialFolders]);
-
-  const setAllTestCases = useCallback(() => {
-    dispatch(
-      setActiveFolderId({
-        activeFolderId: null,
-      }),
-    );
+  const navigateToAllTestCases = useCallback(() => {
     dispatch({
       type: TEST_CASE_LIBRARY_PAGE,
       payload: {
@@ -102,8 +116,8 @@ export const TestCaseFolders = () => {
   }, [dispatch, organizationSlug, projectSlug]);
 
   useEffect(() => {
-    if (folderId && !currentFolder) {
-      setAllTestCases();
+    if (urlFolderId && !activeFolder) {
+      navigateToAllTestCases();
 
       dispatch(
         showNotification({
@@ -114,61 +128,30 @@ export const TestCaseFolders = () => {
         }),
       );
     }
-  }, [currentFolder, folderId, dispatch, setAllTestCases]);
+  }, [activeFolder, urlFolderId, dispatch, navigateToAllTestCases]);
 
   useEffect(() => {
-    if (currentFolder && activeFolderId !== folderIdNumber) {
+    if (urlFolderId) {
       dispatch(
         getTestCaseByFolderIdAction({
-          folderId: folderIdNumber,
-          ...actionParams,
+          folderId: urlFolderIdNumber,
+          ...queryParams,
         }),
       );
-    } else if (!currentFolder && folderId === '') {
-      dispatch(getAllTestCasesAction(actionParams));
-    }
-  }, [
-    currentFolder,
-    folderId,
-    activeFolderId,
-    folderIdNumber,
-    dispatch,
-    testCasesPageData?.size,
-    actionParams,
-  ]);
 
-  useEffect(() => {
-    dispatch(
-      setActiveFolderId({
-        activeFolderId: folderId ? folderIdNumber : null,
-      }),
-    );
-  }, [folderId, folderIdNumber, dispatch]);
+      expandFoldersToLevel(urlFolderIdNumber);
+    } else if (!activeFolder && urlFolderId === '') {
+      dispatch(getAllTestCasesAction(queryParams));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urlFolderId, queryParams.limit, queryParams.offset, queryParams.testCasesSearchParams]);
 
   const handleFolderClick = (id: number) => {
-    dispatch(
-      setActiveFolderId({
-        activeFolderId: id,
-      }),
-    );
-    dispatch(
-      getTestCaseByFolderIdAction({
-        folderId: id,
-        ...actionParams,
-      }),
-    );
-    dispatch({
-      type: TEST_CASE_LIBRARY_PAGE,
-      payload: {
-        testCasePageRoute: `folder/${id}`,
-        organizationSlug,
-        projectSlug,
-      },
-    });
+    navigateToFolder({ folderId: id });
   };
 
-  const renderCreateFolderButton = () => {
-    return canCreateTestCaseFolder ? (
+  const renderCreateFolderButton = () =>
+    canManageTestCases ? (
       <Button
         variant="text"
         icon={<PlusIcon />}
@@ -179,24 +162,72 @@ export const TestCaseFolders = () => {
         {formatMessage(commonMessages.createFolder)}
       </Button>
     ) : null;
-  };
+
+  const { handleMoveFolder, handleDuplicateFolder } = useFolderDragDrop({
+    folders: initialFolders,
+    onMove: (params) => {
+      moveFolder({ ...params, parentTestFolderId: params.parentFolderId }).catch(noop);
+    },
+    onDuplicate: (params) => {
+      duplicateFolder(params).catch(noop);
+    },
+  });
+
+  const handleMoveTestCase = useCallback(
+    async (testCase: ExtendedTestCase, targetFolderId: number) => {
+      const destinationFolder = findFolderById(folders, targetFolderId);
+
+      if (!destinationFolder) return;
+
+      const destinationFolderPayload: FolderWithFullPath = {
+        id: destinationFolder.id,
+        name: destinationFolder.name,
+        description: destinationFolder.description ?? '',
+        fullPath: '',
+      };
+
+      await patchTestCase({
+        testCaseId: testCase.id,
+        testCasesSourceFolderId: testCase.testFolder?.id,
+        destinationFolder: destinationFolderPayload,
+      });
+    },
+    [folders, patchTestCase],
+  );
+
+  const handleDuplicateTestCase = useCallback(
+    async (testCase: ExtendedTestCase, targetFolderId: number) => {
+      const destinationFolder = findFolderById(folders, targetFolderId);
+      
+      if (!destinationFolder) return;
+
+      await duplicateTestCase({
+        testCaseIds: [testCase.id],
+        testFolderId: destinationFolder.id,
+      });
+    },
+    [folders, duplicateTestCase],
+  );
 
   return (
     <ExpandedOptions
-      activeFolder={activeFolderId}
-      setAllTestCases={setAllTestCases}
+      activeFolderId={urlFolderIdNumber || null}
       folders={folders}
+      instanceKey={TMS_INSTANCE_KEY.TEST_CASE}
+      searchQuery={queryParams.testCasesSearchParams}
+      setAllTestCases={navigateToAllTestCases}
       onFolderClick={handleFolderClick}
       renderCreateFolderButton={renderCreateFolderButton}
-      instanceKey={INSTANCE_KEYS.TEST_CASE}
+      onMoveFolder={handleMoveFolder}
+      onDuplicateFolder={handleDuplicateFolder}
+      onMoveTestCase={handleMoveTestCase}
+      onDuplicateTestCase={handleDuplicateTestCase}
     >
       <AllTestCasesPage
         testCases={testCases}
         testCasesPageData={testCasesPageData}
-        searchValue=""
-        setSearchValue={noop}
-        loading={isLoadingTestCases || areFoldersLoading}
-        instanceKey={INSTANCE_KEYS.TEST_CASE}
+        instanceKey={TMS_INSTANCE_KEY.TEST_CASE}
+        isLoading={isLoadingTestCases || areFoldersLoading}
       />
     </ExpandedOptions>
   );

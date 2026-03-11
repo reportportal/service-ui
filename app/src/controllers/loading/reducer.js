@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-import { FETCH_START, FETCH_SUCCESS, FETCH_ERROR, CONCAT_FETCH_SUCCESS } from 'controllers/fetch';
+import {
+  FETCH_START,
+  FETCH_SUCCESS,
+  FETCH_ERROR,
+  CONCAT_FETCH_SUCCESS,
+  PREPEND_FETCH_SUCCESS,
+} from 'controllers/fetch';
 
 export const loadingReducer =
   (namespace) =>
@@ -29,8 +35,30 @@ export const loadingReducer =
         return false;
       case CONCAT_FETCH_SUCCESS:
         return false;
+      case PREPEND_FETCH_SUCCESS:
+        return false;
       case FETCH_ERROR:
         return false;
+      default:
+        return state;
+    }
+  };
+
+export const loadingDirectionReducer =
+  (namespace) =>
+  (state = null, { type = '', payload = {}, meta = {} }) => {
+    if (meta?.namespace !== namespace) {
+      return state;
+    }
+
+    switch (type) {
+      case FETCH_START:
+        return payload?.direction ?? null;
+      case FETCH_SUCCESS:
+      case FETCH_ERROR:
+      case CONCAT_FETCH_SUCCESS:
+      case PREPEND_FETCH_SUCCESS:
+        return null;
       default:
         return state;
     }

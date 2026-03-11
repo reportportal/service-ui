@@ -27,12 +27,7 @@
   color: $COLOR--charcoal-grey;
   font-size: 12px;
   overflow: hidden;
-  word-wrap: break-word;
-  word-break: break-all;
-
-  @supports (word-break: break-word) {
-    word-break: break-word;
-  }
+  overflow-wrap: break-word;
 
   .CodeMirror {
     .CodeMirror-lines {
@@ -76,7 +71,7 @@
     background: none;
 
     & > code {
-      word-wrap: break-word;
+      overflow-wrap: break-word;
       white-space: pre-wrap;
       word-break: normal;
       background: $COLOR--gray-91;

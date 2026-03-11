@@ -21,8 +21,13 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { fetchSuccessAction, fetchErrorAction } from 'controllers/fetch';
 import { FETCH_START } from 'controllers/fetch/constants';
-import { BaseAppState } from 'types/store';
-import { showErrorNotification } from 'controllers/notification';
+import {
+  showNotification,
+  NOTIFICATION_TYPES,
+  NOTIFICATION_TYPOGRAPHY_COLOR_TYPES,
+  WARNING_NOTIFICATION_DURATION,
+  showErrorNotification,
+} from 'controllers/notification';
 import { projectKeySelector } from 'controllers/project';
 import { locationSelector, PROJECT_TEST_PLANS_PAGE } from 'controllers/pages';
 import { LocationInfo } from 'controllers/pages/typed-selectors';
@@ -63,10 +68,10 @@ function* getTestPlans(action: GetTestPlansAction): Generator {
 
     const params = action.payload
       ? {
-          limit: action.payload.limit,
-          offset: action.payload.offset,
-          sortBy: defaultQueryParams.sortBy,
-        }
+        limit: action.payload.limit,
+        offset: action.payload.offset,
+        sortBy: defaultQueryParams.sortBy,
+      }
       : defaultQueryParams;
     const data = (yield call(fetch, URLS.testPlan(projectKey, params))) as {
       content: TestPlanDto[];
@@ -99,8 +104,6 @@ function* getTestPlan(action: GetTestPlanAction): Generator {
 
   try {
     if (
-      location.query?.offset !== String(offset) ||
-      location.query?.limit !== String(limit) ||
       String(location?.prev?.payload?.testPlanId) !== String(location?.payload?.testPlanId)
     ) {
       yield put({
@@ -119,15 +122,21 @@ function* getTestPlan(action: GetTestPlanAction): Generator {
       yield put(fetchSuccessAction(TEST_PLAN_FOLDERS_NAMESPACE, planFolders));
     }
   } catch (error) {
-    const locationPayload = (yield select(
-      (state: BaseAppState) => state.location?.payload,
-    )) as BaseAppState['location']['payload'];
-
-    yield put(fetchErrorAction(ACTIVE_TEST_PLAN_NAMESPACE, error));
+    yield put(fetchErrorAction(ACTIVE_TEST_PLAN_NAMESPACE, error, true));
+    yield put(
+      showNotification({
+        messageId: 'testPlanRedirectWarningMessage',
+        type: NOTIFICATION_TYPES.WARNING,
+        typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
+        duration: WARNING_NOTIFICATION_DURATION,
+      }),
+    );
     yield put({
       type: PROJECT_TEST_PLANS_PAGE,
-      payload: locationPayload,
+      payload: location.payload,
     });
+
+    return;
   }
 
   try {
@@ -137,10 +146,19 @@ function* getTestPlan(action: GetTestPlanAction): Generator {
       meta: { namespace: TEST_PLAN_TEST_CASES_NAMESPACE },
     });
 
-    const planTestCases = (yield call(
-      fetch,
-      URLS.testPlanTestCases(projectKey, testPlanId, params),
-    )) as TestPlanTestCaseDto;
+    let planTestCases: TestPlanTestCaseDto;
+
+    if (!action.payload.folderId) {
+      planTestCases = (yield call(
+        fetch,
+        URLS.testPlanTestCases(projectKey, testPlanId, params),
+      )) as TestPlanTestCaseDto;
+    } else {
+      planTestCases = (yield call(
+        fetch,
+        URLS.testPlanTestCases(projectKey, testPlanId, { 'testFolderId': action.payload.folderId, ...params })
+      )) as TestPlanTestCaseDto;
+    }
 
     yield put(fetchSuccessAction(TEST_PLAN_TEST_CASES_NAMESPACE, planTestCases));
   } catch (error) {

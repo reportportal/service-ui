@@ -14,11 +14,17 @@
  * limitations under the License.
  */
 
+$sidebar-width: calc(100vw - 408px);
+
 .all-test-cases-page {
   display: flex;
   flex-direction: column;
   height: fit-content;
-  padding: 20px 32px 0 32px;
+  padding: 20px 32px 64px;
+
+  &__with-panel {
+    padding-bottom: 104px;
+  }
 }
 
 .pagination {
@@ -31,22 +37,23 @@
   margin-top: auto;
   height: 64px;
   box-sizing: border-box;
-  width: 100%;
+  position: fixed;
+  width: $sidebar-width;
+  bottom: 0;
+  z-index: $Z-INDEX-POPUP;
 }
 
 .pagination-with-panel {
   padding: 0 32px;
   height: 40px;
-}
-
-.sticky-wrapper {
-  position: sticky;
-  width: 100%;
-  bottom: 0;
-  z-index: $Z-INDEX-POPUP;
+  bottom: 64px;
 }
 
 .selection {
+  position: fixed;
+  width: $sidebar-width;
+  bottom: 0;
+  z-index: $Z-INDEX-POPUP;
   display: flex;
   justify-content: space-between;
   align-items: center;

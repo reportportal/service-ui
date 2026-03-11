@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-import { RowData } from '@reportportal/ui-kit/components/table/types';
-import { Dispatch, SetStateAction, useMemo } from 'react';
+import { Dispatch, SetStateAction, useMemo, KeyboardEvent, useCallback, MouseEvent } from 'react';
 import { useIntl } from 'react-intl';
+import { useDispatch } from 'react-redux';
+import { RowData } from '@reportportal/ui-kit/components/table/types';
 
-import { AbsRelTime } from 'components/main/absRelTime/absRelTime';
+import { AbsRelTime } from 'components/main/absRelTime';
 import { SegmentStatus, SegmentedStatusBar } from 'components/statusBar';
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { isEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
+import { MANUAL_LAUNCH_DETAILS_PAGE } from 'controllers/pages';
+import { useProjectDetails } from 'hooks/useTypedSelector';
 
 import { TestRunButton } from '../../testRunButton/testRunButton';
 import { CountTag } from '../../countTag';
@@ -38,6 +41,37 @@ export const useManualLaunchesTableData = (
   setSelectedLaunchId: Dispatch<SetStateAction<number | null>>,
 ): RowData[] => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const { organizationSlug, projectSlug } = useProjectDetails();
+
+  const navigateToDetails = useCallback(
+    (id: number) => {
+      dispatch({
+        type: MANUAL_LAUNCH_DETAILS_PAGE,
+        payload: { organizationSlug, projectSlug, launchId: id.toString() },
+      });
+    },
+    [dispatch, organizationSlug, projectSlug],
+  );
+
+  const getHandlers = useCallback(
+    ({ id, handler }: { id: number; handler: (id: number) => void }) => ({
+      onClick: (event: MouseEvent) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        handler(id);
+      },
+      onKeyDown: (event: KeyboardEvent) => {
+        if (isEnterOrSpaceKey(event)) {
+          event.preventDefault();
+
+          handler(id);
+        }
+      },
+    }),
+    [],
+  );
 
   return useMemo(
     () =>
@@ -54,13 +88,22 @@ export const useManualLaunchesTableData = (
           successTests,
           inProgressTests,
         }) => {
-          const handleRowClick = () => setSelectedLaunchId(id);
           const isSelected = id === selectedLaunchId;
-          const handleKeyDown = (e: React.KeyboardEvent) => {
-            if (isEnterOrSpaceKey(e)) {
-              e.preventDefault();
-              handleRowClick();
-            }
+
+          const navigateToDetailsHandlers = getHandlers({
+            id,
+            handler: navigateToDetails,
+          });
+
+          const openSidePanelHandlers = getHandlers({
+            id,
+            handler: setSelectedLaunchId,
+          });
+
+          const baseCellProps = {
+            role: 'button' as const,
+            tabIndex: 0,
+            className: cx('cell-content', { selected: isSelected }),
           };
 
           return {
@@ -68,41 +111,44 @@ export const useManualLaunchesTableData = (
             count: {
               content: count,
               component: (
-                <div
-                  className={cx('cell-content', { selected: isSelected })}
-                  onClick={handleRowClick}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={handleKeyDown}
-                >
-                  <CountTag count={count} className={cx('manual-launches-list-table-cell-count')} />
+                <div {...baseCellProps} {...openSidePanelHandlers}>
+                  <button
+                    {...navigateToDetailsHandlers}
+                    className={cx('manual-launches-list-table__details-button')}
+                    type="button"
+                  >
+                    <CountTag
+                      count={count}
+                      className={cx(
+                        'manual-launches-list-table-cell-count',
+                        'manual-launches-list-table-cell-hoverable',
+                      )}
+                    />
+                  </button>
                 </div>
               ),
             },
             name: {
               content: name,
               component: (
-                <div
-                  className={cx('cell-content', { selected: isSelected })}
-                  onClick={handleRowClick}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={handleKeyDown}
-                >
-                  {name}
+                <div {...baseCellProps} {...openSidePanelHandlers}>
+                  <button
+                    {...navigateToDetailsHandlers}
+                    className={cx(
+                      'manual-launches-list-table__details-button',
+                      'manual-launches-list-table-cell-hoverable',
+                    )}
+                    type="button"
+                  >
+                    {name}
+                  </button>
                 </div>
               ),
             },
             startTime: {
               content: startTime,
               component: (
-                <div
-                  className={cx('cell-content', { selected: isSelected })}
-                  onClick={handleRowClick}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={handleKeyDown}
-                >
+                <div {...baseCellProps} {...openSidePanelHandlers}>
                   {startTime ? (
                     <AbsRelTime
                       startTime={startTime}
@@ -119,13 +165,7 @@ export const useManualLaunchesTableData = (
             totalTests: {
               content: totalTests,
               component: (
-                <div
-                  className={cx('cell-content', { selected: isSelected })}
-                  onClick={handleRowClick}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={handleKeyDown}
-                >
+                <div {...baseCellProps} {...openSidePanelHandlers}>
                   {totalTests}
                 </div>
               ),
@@ -133,13 +173,7 @@ export const useManualLaunchesTableData = (
             testRunStatus: {
               content: testsToRun,
               component: (
-                <div
-                  className={cx('cell-content', { selected: isSelected })}
-                  onClick={handleRowClick}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={handleKeyDown}
-                >
+                <div {...baseCellProps} {...openSidePanelHandlers}>
                   <SegmentedStatusBar
                     data={[
                       { status: SegmentStatus.Passed, value: successTests ?? 0 },
@@ -156,13 +190,7 @@ export const useManualLaunchesTableData = (
             failedTests: {
               content: failedTests,
               component: (
-                <div
-                  className={cx('cell-content', { selected: isSelected })}
-                  onClick={handleRowClick}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={handleKeyDown}
-                >
+                <div {...baseCellProps} {...openSidePanelHandlers}>
                   <span className={cx('manual-launches-list-table-cell-failed-tests')}>
                     {failedTests}
                   </span>
@@ -173,9 +201,10 @@ export const useManualLaunchesTableData = (
               content: testsToRun,
               component: <TestRunButton count={testsToRun} />,
             },
+            metaData: { id, name },
           };
         },
       ),
-    [data, formatMessage, selectedLaunchId, setSelectedLaunchId],
+    [data, selectedLaunchId, getHandlers, navigateToDetails, setSelectedLaunchId, formatMessage],
   );
 };

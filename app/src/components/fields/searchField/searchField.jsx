@@ -33,9 +33,10 @@ export const SearchField = ({
   event = null,
   className,
   isFullWidth = false,
+  isAlwaysActive = false,
 }) => {
   const { trackEvent } = useTracking();
-  const [isSearchActive, setIsSearchActive] = useState(false);
+  const [isSearchActive, setIsSearchActive] = useState(isAlwaysActive);
   const [isTouched, setIsTouched] = useState(false);
 
   const handleSearchChange = (e) => {
@@ -84,7 +85,7 @@ export const SearchField = ({
       startIcon={<SearchIcon />}
       className={cx('search-field', { 'search-field--full-width': isFullWidth }, className)}
       maxLength={256}
-      collapsible
+      collapsible={!isAlwaysActive}
       clearable
     />
   );
@@ -100,4 +101,5 @@ SearchField.propTypes = {
   isLoading: PropTypes.bool,
   event: PropTypes.object,
   isFullWidth: PropTypes.bool,
+  isAlwaysActive: PropTypes.bool,
 };

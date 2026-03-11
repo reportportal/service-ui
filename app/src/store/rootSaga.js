@@ -19,6 +19,7 @@ import { notificationSagas } from 'controllers/notification';
 import { authSagas } from 'controllers/auth/sagas';
 import { fetchSagas } from 'controllers/fetch';
 import { launchSagas } from 'controllers/launch';
+import { manualLaunchesSagas } from 'controllers/manualLaunch';
 import { groupOperationsSagas } from 'controllers/groupOperations';
 import { suiteSagas } from 'controllers/suite';
 import { dashboardSagas } from 'controllers/dashboard';
@@ -41,8 +42,10 @@ import { serverSettingsSagas } from 'controllers/appInfo';
 import { exportsSagas } from 'controllers/exports/sagas';
 import { testCaseSagas } from 'controllers/testCase';
 import { testPlanSagas } from 'controllers/testPlan';
+import { analyticsSagas } from 'controllers/analytics';
 
 const sagas = [
+  manualLaunchesSagas,
   notificationSagas,
   authSagas,
   fetchSagas,
@@ -69,6 +72,7 @@ const sagas = [
   exportsSagas,
   testCaseSagas,
   testPlanSagas,
+  analyticsSagas,
 ];
 
 export function* rootSagas() {

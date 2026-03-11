@@ -31,6 +31,7 @@ import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { projectKeySelector } from 'controllers/project';
 import { TestPlanDto } from 'controllers/testPlan';
 import { URLS } from 'common/urls';
+import { LAUNCH_NAME_FILTER_KEY } from 'pages/inside/common/constants';
 
 import { messages } from './messages';
 import { AddTestCasesToTestPlanFormData, AddTestCasesToTestPlanModalProps } from './types';
@@ -90,7 +91,7 @@ export const AddTestCasesToTestPlanModal = ({
   }, [formatMessage, selectedTestCasesLength]);
 
   const retrieveTestPlans = (value: string) =>
-    URLS.testPlan(projectKey, value ? { 'filter.fts.search': value } : {});
+    URLS.testPlan(projectKey, value ? { [LAUNCH_NAME_FILTER_KEY]: value } : {});
 
   return (
     <Modal

@@ -40,20 +40,20 @@ export const EMAIL_FILTER_NAME = 'email';
 export const EMAIL_FILTER_NAME_CONDITION = 'email_condition';
 
 export const timeRangeValues = [
-  '0;1440;+0300',
-  '-1440;1440;+0300',
-  '-8640;1440;+0300',
-  '-41760;1440;+0300',
+  '0;1439;+0300',
+  '-1440;1439;+0300',
+  '-8640;1439;+0300',
+  '-41760;1439;+0300',
 ];
 
 export const timeRangeLastLoginValues = [
-  '-8640;1440;+0300',
-  '-41760;1440;+0300',
-  '-128160;1440;+0300',
-  '-525600;1440;+0300',
+  '-8640;1439;+0300',
+  '-41760;1439;+0300',
+  '-128160;1439;+0300',
+  '-525600;1439;+0300',
 ];
 
-export const getTimeRange = (formatMessage) => [
+export const getTimeRangeOptions = (formatMessage) => [
   { label: formatMessage(messages.any), value: '' },
   { label: formatMessage(messages.today), value: timeRangeValues[0] },
   { label: formatMessage(messages.last2days), value: timeRangeValues[1] },
@@ -61,7 +61,7 @@ export const getTimeRange = (formatMessage) => [
   { label: formatMessage(messages.last30days), value: timeRangeValues[3] },
 ];
 
-export const getLastLogin = (formatMessage) => [
+export const getLastLoginOptions = (formatMessage) => [
   { label: formatMessage(messages.any), value: '' },
   { label: formatMessage(messages.last7days), value: timeRangeLastLoginValues[0] },
   { label: formatMessage(messages.last30days), value: timeRangeLastLoginValues[1] },

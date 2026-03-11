@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-import { takeEvery, all, put, select, call } from 'redux-saga/effects';
+import { takeEvery, take, all, put, select, call } from 'redux-saga/effects';
+import { redirect } from 'redux-first-router';
 import { URLS } from 'common/urls';
 import {
   showNotification,
   showDefaultErrorNotification,
   NOTIFICATION_TYPES,
+  showSuccessNotification,
+  showErrorNotification,
 } from 'controllers/notification';
 import { hideModalAction } from 'controllers/modal';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
@@ -31,8 +34,9 @@ import {
   removeFilterAction,
   activeFilterSelector,
 } from 'controllers/filter';
-import { userRolesSelector } from 'controllers/pages';
+import { userRolesSelector, ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages';
 import { canWorkWithFilters } from 'common/utils/permissions';
+import { fetchDataAction } from 'controllers/fetch';
 import {
   UPDATE_DEFECT_TYPE,
   ADD_DEFECT_TYPE,
@@ -47,6 +51,9 @@ import {
   FETCH_CONFIGURATION_ATTRIBUTES,
   HIDE_FILTER_ON_LAUNCHES,
   SHOW_FILTER_ON_LAUNCHES,
+  FETCH_LOG_TYPES,
+  LOG_TYPES_NAMESPACE,
+  CREATE_LOG_TYPE,
   UPDATE_PROJECT_FILTER_PREFERENCES,
   ADD_PROJECT_NOTIFICATION,
   NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY,
@@ -54,6 +61,11 @@ import {
   UPDATE_PROJECT_NOTIFICATION,
   DELETE_PROJECT_NOTIFICATION,
   FETCH_PROJECT_NOTIFICATIONS,
+  UPDATE_LOG_TYPE,
+  DELETE_LOG_TYPE,
+  PREPARE_ACTIVE_PROJECT,
+  FETCH_PROJECT_SUCCESS,
+  FETCH_PROJECT_ERROR,
 } from './constants';
 import {
   updateDefectTypeSuccessAction,
@@ -63,8 +75,10 @@ import {
   updatePatternSuccessAction,
   deletePatternSuccessAction,
   updateConfigurationAttributesAction,
+  fetchProjectAction,
   fetchProjectPreferencesAction,
   fetchProjectSuccessAction,
+  fetchProjectErrorAction,
   fetchProjectPreferencesSuccessAction,
   updateProjectFilterPreferencesAction,
   addProjectNotificationSuccessAction,
@@ -73,8 +87,59 @@ import {
   updateProjectNotificationSuccessAction,
   setProjectNotificationsLoadingAction,
   fetchExistingLaunchNamesSuccessAction,
+  fetchLogTypesAction,
+  createLogTypeSuccessAction,
+  updateLogTypeSuccessAction,
+  deleteLogTypeSuccessAction,
 } from './actionCreators';
 import { patternsSelector, projectKeySelector } from './selectors';
+import { withActiveOrganization } from 'controllers/organization/sagas';
+import { setActiveProjectKeyAction } from 'controllers/user';
+
+export function* withActiveProject(
+  organizationSlug,
+  projectSlug,
+  projectKey,
+  onActiveProjectReady,
+) {
+  const fallbackRedirect = redirect({
+    type: ORGANIZATION_PROJECTS_PAGE,
+    payload: { organizationSlug },
+  });
+
+  yield* withActiveOrganization(organizationSlug, function* onActiveOrgReady(organizationId) {
+    try {
+      let resolvedKey = projectKey;
+
+      if (!resolvedKey) {
+        const { items } = yield call(
+          fetch,
+          URLS.organizationProjects(organizationId, { slug: projectSlug }),
+        );
+        resolvedKey = items?.[0]?.key;
+      }
+
+      if (!resolvedKey) {
+        yield put(fallbackRedirect);
+        return;
+      }
+
+      yield put(setActiveProjectKeyAction(resolvedKey));
+      yield put(fetchProjectAction(resolvedKey));
+
+      const { type } = yield take([FETCH_PROJECT_SUCCESS, FETCH_PROJECT_ERROR]);
+      if (type === FETCH_PROJECT_ERROR) {
+        yield put(fallbackRedirect);
+        return;
+      }
+
+      yield* onActiveProjectReady(resolvedKey);
+    } catch (error) {
+      yield put(showDefaultErrorNotification(error));
+      yield put(fallbackRedirect);
+    }
+  });
+}
 
 function* updateDefectType({ payload: defectTypes }) {
   yield put(showScreenLockAction());
@@ -426,16 +491,35 @@ function* fetchProject({ payload: { projectKey, fetchInfoOnly } }) {
     const userRoles = yield select(userRolesSelector);
     const hasFilterPermissions = canWorkWithFilters(userRoles);
 
-    if (!fetchInfoOnly && hasFilterPermissions && projectKey) {
-      yield put(fetchProjectPreferencesAction(project.projectKey));
+    if (!fetchInfoOnly && projectKey) {
+      if (hasFilterPermissions) {
+        yield put(fetchProjectPreferencesAction(project.projectKey));
+      }
+      yield put(fetchLogTypesAction(project.projectKey));
     }
   } catch (error) {
+    yield put(fetchProjectErrorAction(error, projectKey));
     yield put(showDefaultErrorNotification(error));
   }
 }
 
 function* watchFetchProject() {
   yield takeEvery(FETCH_PROJECT, fetchProject);
+}
+
+function* prepareActiveProject({ payload: { organizationSlug, projectSlug, projectKey, action } }) {
+  yield* withActiveProject(
+    organizationSlug,
+    projectSlug,
+    projectKey,
+    function* onActiveProjectReady() {
+      yield put(action);
+    },
+  );
+}
+
+function* watchPrepareActiveProject() {
+  yield takeEvery(PREPARE_ACTIVE_PROJECT, prepareActiveProject);
 }
 
 function* fetchProjectPreferences({ payload: projectKey }) {
@@ -488,6 +572,68 @@ function* watchUpdateProjectFilterPreferences() {
   yield takeEvery(UPDATE_PROJECT_FILTER_PREFERENCES, updateProjectFilterPreferences);
 }
 
+function* fetchLogTypes({ payload: projectKey }) {
+  yield put(fetchDataAction(LOG_TYPES_NAMESPACE)(URLS.projectLogTypes(projectKey)));
+}
+
+function* watchFetchLogTypes() {
+  yield takeEvery(FETCH_LOG_TYPES, fetchLogTypes);
+}
+
+function* createLogType({ payload: { data, projectKey, onSuccess } }) {
+  yield put(showScreenLockAction());
+  try {
+    const response = yield call(fetch, URLS.projectLogTypes(projectKey), { method: 'POST', data });
+    yield put(createLogTypeSuccessAction(response));
+    yield put(showSuccessNotification({ messageId: 'createLogTypeSuccess' }));
+    onSuccess?.();
+  } catch {
+    yield put(showErrorNotification({ messageId: 'createLogTypeError' }));
+  } finally {
+    yield put(hideScreenLockAction());
+  }
+}
+
+function* watchCreateLogType() {
+  yield takeEvery(CREATE_LOG_TYPE, createLogType);
+}
+
+function* updateLogType({ payload: { data, logTypeId, projectKey, onSuccess } }) {
+  yield put(showScreenLockAction());
+  try {
+    yield call(fetch, URLS.projectLogTypeById(projectKey, logTypeId), { method: 'PUT', data });
+    yield put(updateLogTypeSuccessAction({ ...data, id: logTypeId }));
+    yield put(showSuccessNotification({ messageId: 'updateLogTypeSuccess' }));
+    onSuccess?.();
+  } catch {
+    yield put(showErrorNotification({ messageId: 'updateLogTypeError' }));
+  } finally {
+    yield put(hideScreenLockAction());
+  }
+}
+
+function* watchUpdateLogType() {
+  yield takeEvery(UPDATE_LOG_TYPE, updateLogType);
+}
+
+function* deleteLogType({ payload: { logTypeId, projectKey, onSuccess } }) {
+  yield put(showScreenLockAction());
+  try {
+    yield call(fetch, URLS.projectLogTypeById(projectKey, logTypeId), { method: 'DELETE' });
+    yield put(deleteLogTypeSuccessAction(logTypeId));
+    yield put(showSuccessNotification({ messageId: 'deleteLogTypeSuccess' }));
+    onSuccess?.();
+  } catch {
+    yield put(showErrorNotification({ messageId: 'deleteLogTypeError' }));
+  } finally {
+    yield put(hideScreenLockAction());
+  }
+}
+
+function* watchDeleteLogType() {
+  yield takeEvery(DELETE_LOG_TYPE, deleteLogType);
+}
+
 export function* projectSagas() {
   yield all([
     watchUpdateDefectType(),
@@ -498,6 +644,7 @@ export function* projectSagas() {
     watchUpdatePAState(),
     watchDeletePattern(),
     watchFetchProject(),
+    watchPrepareActiveProject(),
     watchFetchProjectPreferences(),
     watchFetchConfigurationAttributes(),
     watchHideFilterOnLaunches(),
@@ -508,5 +655,9 @@ export function* projectSagas() {
     watchUpdateProjectNotification(),
     watchDeleteProjectNotification(),
     watchFetchProjectNotifications(),
+    watchFetchLogTypes(),
+    watchCreateLogType(),
+    watchUpdateLogType(),
+    watchDeleteLogType(),
   ]);
 }

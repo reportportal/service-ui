@@ -111,6 +111,7 @@ export class LogToolbar extends Component {
     restorePath: PropTypes.func,
     parentItem: PropTypes.object,
     debugMode: PropTypes.bool,
+    className: PropTypes.string,
   };
 
   static defaultProps = {
@@ -127,6 +128,7 @@ export class LogToolbar extends Component {
     logViewMode: DETAILED_LOG_VIEW,
     restorePath: () => {},
     parentItem: null,
+    className: '',
   };
 
   handleBackClick = () => {
@@ -169,9 +171,10 @@ export class LogToolbar extends Component {
       parentItem,
       includeAllLaunches,
       debugMode,
+      className,
     } = this.props;
     return (
-      <div className={cx('log-toolbar')}>
+      <div className={cx('log-toolbar', className)}>
         <Breadcrumbs
           descriptors={breadcrumbs}
           onRestorePath={restorePath}

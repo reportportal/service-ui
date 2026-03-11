@@ -28,7 +28,9 @@ import {
   SET_ACTIVE_TAB_ID,
   FETCH_HISTORY_ITEMS_WITH_LOADING,
   FETCH_ERROR_LOGS,
-  FETCH_ERROR_LOG,
+  FETCH_LOG,
+  LOAD_MORE_LOGS,
+  FETCH_LOG_ITEMS_FOR_PAGE,
 } from './constants';
 
 export const fetchLogPageData = () => ({
@@ -66,9 +68,9 @@ export const fetchErrorLogs = (logItem) => ({
   payload: logItem,
 });
 
-export const fetchErrorLog = (errorLogInfo, callback) => ({
-  type: FETCH_ERROR_LOG,
-  payload: { errorLogInfo, callback },
+export const fetchLog = (logInfo, callback, shouldClearSearchFilter = false) => ({
+  type: FETCH_LOG,
+  payload: { logInfo, callback, shouldClearSearchFilter },
 });
 
 export const setPageLoadingAction = (isLoading) => ({
@@ -103,4 +105,14 @@ export const setActiveTabIdAction = (activeTabId) => ({
 
 export const fetchHistoryItemsWithLoadingAction = () => ({
   type: FETCH_HISTORY_ITEMS_WITH_LOADING,
+});
+
+export const loadMoreLogsAction = (direction) => ({
+  type: LOAD_MORE_LOGS,
+  payload: { direction },
+});
+
+export const fetchLogItemsForPageAction = (pageNumber) => ({
+  type: FETCH_LOG_ITEMS_FOR_PAGE,
+  payload: pageNumber,
 });

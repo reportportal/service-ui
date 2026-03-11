@@ -75,12 +75,17 @@ export class LogItemInfo extends Component {
     updateRetryId: PropTypes.func,
     retryItemId: PropTypes.number,
     retries: PropTypes.arrayOf(PropTypes.object),
+    className: PropTypes.string,
+    detailsClassName: PropTypes.string,
+    parentLaunch: PropTypes.object,
   };
   static defaultProps = {
     logItem: null,
     updateRetryId: () => {},
     retryItemId: null,
     retries: [],
+    className: '',
+    detailsClassName: '',
   };
 
   hasRetries = () => {
@@ -122,13 +127,21 @@ export class LogItemInfo extends Component {
       isSauceLabsIntegrationView,
       debugMode,
       intl: { formatMessage },
+      className,
+      detailsClassName,
+      parentLaunch,
     } = this.props;
 
     return (
       logItem && (
-        <div className={cx('log-item-info')}>
-          <div className={cx('details')}>
-            <DefectDetails logItem={logItem} debugMode={debugMode} fetchFunc={fetchFunc} />
+        <div className={cx('log-item-info', className)}>
+          <div className={cx('details', detailsClassName)}>
+            <DefectDetails
+              logItem={logItem}
+              debugMode={debugMode}
+              fetchFunc={fetchFunc}
+              parentLaunch={parentLaunch}
+            />
             {this.hasRetries() && (
               <div
                 className={cx('retries', {

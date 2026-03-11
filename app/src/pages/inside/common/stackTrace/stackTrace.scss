@@ -32,24 +32,30 @@
 }
 
 .cell {
-  padding: 12px 16px;
-  font-size: 11px;
-  line-height: 1.82;
+  font-size: 12px;
+  line-height: 20px;
   font-family: $FONT-MONOSPACE;
   max-width: calc(100% - 25px);
+  color: var(--text-color, $COLOR--charcoal-grey);
+
+  .bold & {
+    font-family: $FONT-MONOSPACE-BOLD;
+  }
 }
 
 .message-cell {
   flex-grow: 10;
-  word-break: break-all;
+  overflow-wrap: break-word;
   white-space: pre-wrap;
-  @supports (word-break: break-word) {
-    word-break: break-word;
-  }
 }
 
 .time-cell {
   white-space: nowrap;
+  font-family: $FONT-REGULAR;
+
+  .bold & {
+    font-family: $FONT-BOLD;
+  }
 }
 
 .navigate-btn {
@@ -105,4 +111,30 @@
 }
 .design-mode-dark.load-more-container {
   border-top: none;
+}
+
+.container-size-small .cell,
+.container-size-medium .cell,
+.container-size-large .cell {
+  padding: 2px 7.5px;
+
+  &:first-child {
+    padding-left: 13px;
+  }
+
+  &:last-child {
+    padding-right: 16px;
+  }
+}
+
+.container-size-medium .cell {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  font-size: 13px;
+}
+
+.container-size-large .cell {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 14px;
 }

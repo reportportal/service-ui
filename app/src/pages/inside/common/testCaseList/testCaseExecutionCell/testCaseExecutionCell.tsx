@@ -19,15 +19,15 @@ import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
 import { MeatballMenuIcon, CoveredManuallyIcon } from '@reportportal/ui-kit';
 
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { createClassnames } from 'common/utils';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { handleEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
-import { INSTANCE_KEYS } from 'pages/inside/common/expandedOptions/folder/useFolderTooltipItems';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 
 import { useTooltipItems } from '../testCaseExecutionCell/useTooltipItems';
-import { formatRelativeTime } from '../utils';
+import { formatRelativeTime, getIsManualCovered } from '../utils';
 
 import styles from './testCaseExecutionCell.scss';
 
@@ -35,7 +35,7 @@ const cx = createClassnames(styles);
 
 interface TestCaseExecutionCellProps {
   testCase: ExtendedTestCase;
-  instanceKey: INSTANCE_KEYS;
+  instanceKey: TMS_INSTANCE_KEY;
   onRowClick: () => void;
 }
 
@@ -48,9 +48,8 @@ export const TestCaseExecutionCell = ({
   const tooltipItems = useTooltipItems({ instanceKey, testCase });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const isTestPlan = instanceKey === INSTANCE_KEYS.TEST_PLAN;
-  // TODO: align this condition to check execution status after BE integration.
-  const isCoveredManually = isTestPlan && testCase.manualScenario.executionEstimationTime > 5;
+  const isTestPlan = instanceKey === TMS_INSTANCE_KEY.TEST_PLAN;
+  const isCoveredManually = isTestPlan && getIsManualCovered(testCase.lastExecution?.status);
 
   return (
     <button type="button" className={cx('execution-content')} onClick={onRowClick}>

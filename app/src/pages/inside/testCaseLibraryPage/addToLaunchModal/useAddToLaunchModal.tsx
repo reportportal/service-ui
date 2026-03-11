@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,26 @@
  */
 
 import { useModal } from 'common/hooks';
+import { ADD_TO_LAUNCH_MODAL_KEY } from './constants';
+import { AddToLaunchModal } from './addToLaunchModal';
 
-import { ADD_TO_LAUNCH_MODAL_KEY, AddToLaunchModal } from './addToLaunchModal';
-import { AddToLaunchModalData } from './types';
-
-export const useAddToLaunchModal = () =>
-  useModal<AddToLaunchModalData>({
+export const useAddToLaunchModal = ({
+  selectedTestCasesIds,
+  onClearSelection,
+  isUncoveredTestsCheckboxAvailable,
+}: {
+  selectedTestCasesIds: number[];
+  onClearSelection?: () => void;
+  isUncoveredTestsCheckboxAvailable?: boolean;
+}) => {
+  return useModal({
     modalKey: ADD_TO_LAUNCH_MODAL_KEY,
-    renderModal: (data) => <AddToLaunchModal data={data} />,
+    renderModal: () => (
+      <AddToLaunchModal
+        selectedTestCasesIds={selectedTestCasesIds}
+        isUncoveredTestsCheckboxAvailable={isUncoveredTestsCheckboxAvailable}
+        onClearSelection={onClearSelection}
+      />
+    ),
   });
+};

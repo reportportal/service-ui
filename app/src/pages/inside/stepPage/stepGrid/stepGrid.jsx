@@ -19,9 +19,10 @@ import { useTracking } from 'react-tracking';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
+import { useSelector } from 'react-redux';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { groupItemsByParent } from 'controllers/testItem';
+import { groupItemsByParent, isItemOwner } from 'controllers/testItem';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { formatMethodType } from 'common/utils/localizationUtils';
 import { FAILED } from 'common/constants/testStatuses';
@@ -37,6 +38,7 @@ import { NoItemMessage } from 'components/main/noItemMessage';
 import { formatAttribute } from 'common/utils/attributeUtils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { StatusDropdown } from 'pages/inside/common/statusDropdown/statusDropdown';
+import { userIdSelector } from 'controllers/user';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
 import { DefectType } from './defectType';
 import { GroupHeader } from './groupHeader';
@@ -86,12 +88,17 @@ NameColumn.defaultProps = {
 const StatusColumn = ({
   className,
   value,
-  customProps: { viewOnly, onChange, fetchFunc, readOnly },
+  customProps: { viewOnly, onChange, fetchFunc, readOnly, parentLaunch },
 }) => {
   const { id, status, attributes, description } = value;
+  const userId = useSelector(userIdSelector);
+  const isOwner = userId && value ? isItemOwner(userId, value, parentLaunch) : false;
+  const { canChangeTestItemStatus } = useUserPermissions();
+  const canChange = canChangeTestItemStatus || isOwner;
+
   return (
     <div className={cx('status-col', className)}>
-      {viewOnly ? (
+      {viewOnly || !canChange ? (
         <span className={cx('status-value')}>{status.toLowerCase()}</span>
       ) : (
         <StatusDropdown
@@ -116,6 +123,7 @@ StatusColumn.propTypes = {
     fetchFunc: PropTypes.func,
     readOnly: PropTypes.bool,
     viewOnly: PropTypes.bool,
+    parentLaunch: PropTypes.object,
   }).isRequired,
 };
 StatusColumn.defaultProps = {
@@ -126,7 +134,7 @@ StatusColumn.defaultProps = {
 
 const StartTimeColumn = ({ className, value }) => (
   <div className={cx('start-time-col', className)}>
-    <AbsRelTime startTime={value.startTime} />
+    <AbsRelTime startTime={value.startTime} customClass={cx('start-time-text')} />
   </div>
 );
 StartTimeColumn.propTypes = {
@@ -134,6 +142,18 @@ StartTimeColumn.propTypes = {
   value: PropTypes.object,
 };
 StartTimeColumn.defaultProps = {
+  className: null,
+  value: {},
+};
+
+const AnalysisOwnerColumn = ({ className, value }) => (
+  <div className={cx('analysis-owner-col', className)}>{value.analysisOwner || ''}</div>
+);
+AnalysisOwnerColumn.propTypes = {
+  className: PropTypes.string,
+  value: PropTypes.object,
+};
+AnalysisOwnerColumn.defaultProps = {
   className: null,
   value: {},
 };
@@ -206,6 +226,7 @@ export const StepGrid = ({
   modifyColumnsFunc,
   isTestSearchView,
   errorMessage,
+  parentLaunch,
 }) => {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
@@ -290,6 +311,7 @@ export const StepGrid = ({
           fetchFunc: onStatusUpdate,
           readOnly: !canWorkWithTests,
           viewOnly: isTestSearchView,
+          parentLaunch,
         },
         withFilter: !isTestSearchView,
         filterEventInfo: events.STATUS_FILTER,
@@ -303,6 +325,14 @@ export const StepGrid = ({
         withFilter: !isTestSearchView,
         filterEventInfo: events.START_TIME_FILTER,
         sortingEventInfo: events.START_TIME_SORTING,
+      },
+      {
+        id: 'analysisOwner',
+        title: {
+          full: 'analysis owner',
+        },
+        sortable: false,
+        component: AnalysisOwnerColumn,
       },
       {
         id: ENTITY_DEFECT_TYPE,
@@ -397,6 +427,7 @@ StepGrid.propTypes = {
   modifyColumnsFunc: PropTypes.func,
   isTestSearchView: PropTypes.bool,
   errorMessage: PropTypes.string,
+  parentLaunch: PropTypes.object,
 };
 
 StepGrid.defaultProps = {
@@ -423,4 +454,5 @@ StepGrid.defaultProps = {
   modifyColumnsFunc: null,
   isTestSearchView: false,
   errorMessage: null,
+  parentLaunch: {},
 };

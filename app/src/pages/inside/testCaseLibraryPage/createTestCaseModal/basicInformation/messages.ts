@@ -11,7 +11,7 @@ export const messages = defineMessages({
   },
   selectOrCreateFolder: {
     id: 'CreateTestCaseModal.selectOrCreateFolder',
-    defaultMessage: 'Select or create the folder',
+    defaultMessage: 'Start typing to select or create the folder',
   },
   addDetailsOrContext: {
     id: 'CreateTestCaseModal.addDetailsOrContext',

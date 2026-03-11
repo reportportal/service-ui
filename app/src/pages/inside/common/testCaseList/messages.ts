@@ -61,4 +61,13 @@ export const messages = defineMessages({
     id: 'TestCaseList.filterButton',
     defaultMessage: 'Filter test cases',
   },
+  noResultsDescription: {
+    id: 'Common.noResultsDescription',
+    defaultMessage:
+      "Your search or filter criteria didn't match any results. Please try different keywords or adjust your filter settings.",
+  },
+  removeTestCase: {
+    id: 'TestCaseList.removeTestCase',
+    defaultMessage: 'Remove test case',
+  },
 });

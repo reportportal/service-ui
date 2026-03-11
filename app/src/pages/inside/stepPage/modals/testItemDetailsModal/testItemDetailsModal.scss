@@ -41,23 +41,15 @@
 }
 
 .id {
-  word-break: break-all;
-
-  @supports (word-break: break-word) {
-    word-break: break-word;
-  }
+  overflow-wrap: break-word;
 }
 
 .code-ref {
   display: flex;
   justify-content: flex-start;
   white-space: pre-line;
-  word-break: break-all;
+  overflow-wrap: break-word;
   padding-right: 10px;
-
-  @supports (word-break: break-word) {
-    word-break: break-word;
-  }
 }
 
 .tags {

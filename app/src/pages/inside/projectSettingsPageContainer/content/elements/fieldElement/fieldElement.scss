@@ -35,7 +35,7 @@
   }
 }
 
-.description {
+%description {
   display: block;
   margin: 0 0 4px 0;
   color: var(--rp-ui-base-e-300);
@@ -45,7 +45,11 @@
   font-weight: var(--rp-ui-base-fw-regular);
 }
 
+.description {
+  @extend %description;
+}
+
 .description-alt {
-  @extend .description;
+  @extend %description;
   margin: 4px 0 0 0;
 }

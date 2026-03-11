@@ -14,12 +14,34 @@
  * limitations under the License.
  */
 
+import { Action } from 'redux';
+import {
+  GET_FOLDERS,
+  CREATE_FOLDER,
+  DELETE_FOLDER,
+  GET_TEST_CASES_BY_FOLDER_ID,
+  GET_ALL_TEST_CASES,
+  GET_TEST_CASE_DETAILS,
+  RENAME_FOLDER,
+  GET_FILTERED_FOLDERS,
+} from './constants';
+import type {
+  GetTestCasesByFolderIdParams,
+  GetAllTestCases,
+  CreateFolderParams,
+  DeleteFolderParams,
+  RenameFolderParams,
+  GetFoldersParams,
+  GetFilteredFoldersParams,
+} from './actionCreators';
+
 export type Folder = {
   id: number;
   name: string;
   description?: string;
   countOfTestCases: number;
   parentFolderId: number | null;
+  index?: number;
   subFolders?: Folder[];
 };
 
@@ -29,6 +51,7 @@ export type TransformedFolder = {
   description?: string;
   testsCount: number;
   parentFolderId: number | null;
+  index?: number;
   folders: TransformedFolder[];
 };
 
@@ -37,4 +60,39 @@ export interface FolderWithFullPath {
   description: string;
   name: string;
   fullPath: string;
+}
+
+// Action types for sagas
+export interface GetTestCasesByFolderIdAction extends Action<typeof GET_TEST_CASES_BY_FOLDER_ID> {
+  payload: GetTestCasesByFolderIdParams;
+}
+
+export interface GetAllTestCasesAction extends Action<typeof GET_ALL_TEST_CASES> {
+  payload: GetAllTestCases;
+}
+
+export interface CreateFolderAction extends Action<typeof CREATE_FOLDER> {
+  payload: CreateFolderParams;
+}
+
+export interface DeleteFolderAction extends Action<typeof DELETE_FOLDER> {
+  payload: DeleteFolderParams;
+}
+
+export interface RenameFolderAction extends Action<typeof RENAME_FOLDER> {
+  payload: RenameFolderParams;
+}
+
+export interface TestCaseDetailsAction extends Action<typeof GET_TEST_CASE_DETAILS> {
+  payload: {
+    testCaseId: string;
+  };
+}
+
+export interface GetFoldersAction extends Action<typeof GET_FOLDERS> {
+  payload?: GetFoldersParams;
+}
+
+export interface GetFilteredFoldersAction extends Action<typeof GET_FILTERED_FOLDERS> {
+  payload: GetFilteredFoldersParams;
 }

@@ -48,6 +48,8 @@ export const AttributeList = ({
   disabled,
   getURIKey,
   getURIValue,
+  keyPlaceholder,
+  valuePlaceholder,
   newAttrMessage,
   maxLength,
   customClass,
@@ -56,6 +58,11 @@ export const AttributeList = ({
   attributesListClassname,
   editorDefaultOpen,
   autocompleteProps,
+  allowCustomValues,
+  addButtonClassName,
+  showValidationErrors,
+  isAttributeKeyRequired,
+  isAttributeValueRequired,
 }) => {
   const addNewAttrRef = useRef(null);
   const attributesRefs = useRef(null);
@@ -259,8 +266,14 @@ export const AttributeList = ({
           onCancel={createCancelEditHandler(indexEditableAttr)}
           getURIKey={getURIKey}
           getURIValue={getURIValue}
+          keyPlaceholder={keyPlaceholder}
+          valuePlaceholder={valuePlaceholder}
           editorDefaultOpen={editorDefaultOpen}
           autocompleteProps={autocompleteProps}
+          allowCustomValues={allowCustomValues}
+          showValidationErrors={showValidationErrors}
+          isAttributeKeyRequired={isAttributeKeyRequired}
+          isAttributeValueRequired={isAttributeValueRequired}
         />
       )}
       <div className={cx('attributes-wrapper')}>
@@ -321,7 +334,7 @@ export const AttributeList = ({
         {!hasEditedAttribute && !disabled && showButton && attributes.length < maxLength && (
           <Button
             refCallback={addNewAttButtonRefCb}
-            className={cx('button-focused')}
+            className={cx('button-focused', addButtonClassName)}
             icon={Parser(PlusIcon)}
             onClick={onAddNew}
             variant={'text'}
@@ -346,11 +359,18 @@ AttributeList.propTypes = {
   onAddNew: PropTypes.func,
   getURIKey: PropTypes.func,
   getURIValue: PropTypes.func,
+  keyPlaceholder: PropTypes.string,
+  valuePlaceholder: PropTypes.string,
   showButton: PropTypes.bool,
   editable: PropTypes.bool,
   attributesListClassname: PropTypes.string,
   editorDefaultOpen: PropTypes.bool,
   autocompleteProps: PropTypes.object,
+  allowCustomValues: PropTypes.bool,
+  addButtonClassName: PropTypes.string,
+  showValidationErrors: PropTypes.bool,
+  isAttributeKeyRequired: PropTypes.bool,
+  isAttributeValueRequired: PropTypes.bool,
 };
 AttributeList.defaultProps = {
   attributes: [],
@@ -367,4 +387,9 @@ AttributeList.defaultProps = {
   attributesListClassname: '',
   editorDefaultOpen: false,
   autocompleteProps: {},
+  allowCustomValues: true,
+  addButtonClassName: '',
+  showValidationErrors: false,
+  isAttributeKeyRequired: false,
+  isAttributeValueRequired: true,
 };

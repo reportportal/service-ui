@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,30 +32,32 @@ import { createClassnames, copyToClipboard } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useOnClickOutside } from 'common/hooks';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { ProjectDetails } from 'pages/organization/constants';
 import { CollapsibleSection } from 'components/collapsibleSection';
-import { PathBreadcrumb } from 'componentLibrary/breadcrumbs/pathBreadcrumb';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
+import { FolderBreadcrumbs } from 'components/folderBreadcrumbs';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
-import { foldersSelector } from 'controllers/testCase';
 import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
-import { ManualScenario, ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import {
+  ManualScenario,
+  ExtendedTestCase,
+  Requirement,
+} from 'pages/inside/testCaseLibraryPage/types';
 import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
 import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
+import { useMoveTestCaseModal } from 'pages/inside/testCaseLibraryPage/moveTestCaseModal/useMoveTestCaseModal';
+import { useDuplicateTestCaseModal } from 'pages/inside/testCaseLibraryPage/allTestCasesPage/duplicateTestCaseModal';
 import { AddToLaunchButton } from 'pages/inside/testCaseLibraryPage/addToLaunchButton';
 
+import { RequirementsList } from '../../requirementsList/requirementsList';
 import { TestCaseMenuAction, TestCaseManualScenario } from '../types';
-import {
-  formatTimestamp,
-  formatDuration,
-  getExcludedActionsFromPermissionMap,
-  buildBreadcrumbs,
-} from '../utils';
+import { formatTimestamp, formatDuration, getExcludedActionsFromPermissionMap } from '../utils';
 import { createTestCaseMenuItems } from '../configUtils';
 import { Scenario } from './scenario';
 import { messages } from './messages';
@@ -79,13 +81,15 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
   attributes,
   scenario,
   testCaseDescription,
+  requirements,
 }: {
   attributes: string[];
   scenario: ManualScenario;
   testCaseDescription: string;
+  requirements: Requirement[];
 }) => {
   const firstStep = scenario?.steps?.[0];
-  const isStepsManualScenario = scenario.manualScenarioType === TestCaseManualScenario.STEPS;
+  const isStepsManualScenario = scenario?.manualScenarioType === TestCaseManualScenario.STEPS;
   const isEmptyPreconditions =
     !scenario?.preconditions?.value &&
     isEmpty(scenario?.preconditions?.attachments) &&
@@ -103,6 +107,11 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
       childComponent: isEmpty(attributes) ? null : (
         <AdaptiveTagList tags={attributes} isShowAllView />
       ),
+    },
+    {
+      titleKey: 'requirements',
+      defaultMessageKey: 'requirementsAreNotSpecified',
+      childComponent: isEmpty(requirements) ? null : <RequirementsList items={requirements} />,
     },
     {
       titleKey: 'scenarioTitle',
@@ -139,27 +148,20 @@ interface TestCaseSidePanelProps {
 export const TestCaseSidePanel = memo(
   ({ testCase, isVisible, onClose }: TestCaseSidePanelProps) => {
     const dispatch = useDispatch();
-    const {
-      canEditTestCase,
-      canDeleteTestCase,
-      canDuplicateTestCase,
-      canMoveTestCase,
-      canAddTestCaseToLaunch,
-      canAddTestCaseToTestPlan,
-    } = useUserPermissions();
+    const { canManageTestCases } = useUserPermissions();
     const { organizationSlug, projectSlug } = useSelector(
       urlOrganizationAndProjectSelector,
     ) as ProjectDetails;
-    const folders = useSelector(foldersSelector);
     const { formatMessage } = useIntl();
     const sidePanelRef = useRef<HTMLDivElement>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { openModal: openEditTestCaseModal } = useEditTestCaseModal();
     const { openModal: openAddTestCasesToTestPlanModal } = useAddTestCasesToTestPlanModal();
     const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
+    const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
+    const { openModal: openDuplicateTestCaseModal } = useDuplicateTestCaseModal();
 
     const folderId = testCase?.testFolder?.id;
-    const path = buildBreadcrumbs(folders, folderId);
 
     useOnClickOutside(sidePanelRef, onClose);
 
@@ -172,17 +174,27 @@ export const TestCaseSidePanel = memo(
     };
 
     const permissionMap = [
-      { isAllowed: canEditTestCase, action: TestCaseMenuAction.EDIT },
-      { isAllowed: canDeleteTestCase, action: TestCaseMenuAction.DELETE },
-      { isAllowed: canDuplicateTestCase, action: TestCaseMenuAction.DUPLICATE },
-      { isAllowed: canMoveTestCase, action: TestCaseMenuAction.MOVE },
-    ];
+      TestCaseMenuAction.EDIT,
+      TestCaseMenuAction.DELETE,
+      TestCaseMenuAction.DUPLICATE,
+      TestCaseMenuAction.MOVE,
+    ].map((action) => ({
+      isAllowed: canManageTestCases,
+      action,
+    }));
 
     const menuItems = createTestCaseMenuItems(
       formatMessage,
       {
         [TestCaseMenuAction.EDIT]: handleEditTestCase,
         [TestCaseMenuAction.DELETE]: () => openDeleteTestCaseModal({ testCase }),
+        [TestCaseMenuAction.MOVE]: () => openMoveTestCaseModal({ testCase }),
+        [TestCaseMenuAction.DUPLICATE]: () =>
+          openDuplicateTestCaseModal({
+            selectedTestCaseIds: [testCase.id],
+            count: 1,
+            testCase,
+          }),
         [TestCaseMenuAction.HISTORY]: () => {
           dispatch({
             type: TEST_CASE_LIBRARY_PAGE,
@@ -241,7 +253,7 @@ export const TestCaseSidePanel = memo(
               {Parser(CrossIcon as unknown as string)}
             </button>
           </div>
-          {!isEmpty(path) && <PathBreadcrumb path={path} />}
+          <FolderBreadcrumbs folderId={folderId} instanceKey={TMS_INSTANCE_KEY.TEST_CASE} onNavigate={onClose} />
           <div className={cx('header-meta')}>
             <div className={cx('meta-row')}>
               <div className={cx('meta-item-row', 'id-row')}>
@@ -285,9 +297,10 @@ export const TestCaseSidePanel = memo(
         </div>
         <div className={cx('content')}>
           {COLLAPSIBLE_SECTIONS_CONFIG({
-            attributes: testCase?.manualScenario?.attributes?.map(({ key }) => key),
+            attributes: testCase?.attributes?.map(({ key }) => key),
             scenario: testCase?.manualScenario,
             testCaseDescription: testCase.description,
+            requirements: testCase?.manualScenario?.requirements || [],
           }).map(({ titleKey, defaultMessageKey, childComponent }) => (
             <CollapsibleSection
               key={titleKey}
@@ -323,21 +336,21 @@ export const TestCaseSidePanel = memo(
           >
             {formatMessage(messages.openDetails)}
           </Button>
-          {canAddTestCaseToLaunch && (
-            <AddToLaunchButton
-              isButtonDisabled={isEmpty(testCase?.manualScenario?.preconditions?.value)}
-              testCaseName={testCase.name}
-            />
-          )}
-          {canAddTestCaseToTestPlan && (
-            <Button
-              variant="primary"
-              className={cx('action-button', 'last-button')}
-              onClick={handleAddToTestPlanClick}
-              data-automation-id="test-case-add-to-test-plan"
-            >
-              {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
-            </Button>
+          {canManageTestCases && (
+            <>
+              <AddToLaunchButton
+                manualScenario={testCase?.manualScenario}
+                testCaseId={testCase.id}
+              />
+              <Button
+                variant="primary"
+                className={cx('action-button', 'last-button')}
+                onClick={handleAddToTestPlanClick}
+                data-automation-id="test-case-add-to-test-plan"
+              >
+                {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
+              </Button>
+            </>
           )}
         </div>
       </div>

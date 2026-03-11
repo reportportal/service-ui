@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { compact } from 'es-toolkit/compat';
 import { useIntl } from 'react-intl';
 
 import { TransformedFolder } from 'controllers/testCase';
@@ -25,6 +24,9 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useDeleteFolderModal } from '../../testCaseFolders/modals/deleteFolderModal';
 import { useRenameFolderModal } from '../../testCaseFolders/modals/renameFolderModal';
 import { useDuplicateFolderModal } from '../../testCaseFolders/modals/duplicateFolderModal';
+import { useMoveFolderModal } from '../../testCaseFolders/modals/moveFolderModal';
+import { useImportTestCaseModal } from '../../importTestCaseModal';
+import { useCreateSubfolderModal } from '../../testCaseFolders/modals/createSubfolderModal';
 import { commonMessages } from '../../commonMessages';
 
 interface UseTestCaseFolderMenuProps {
@@ -39,12 +41,15 @@ export const useTestCaseFolderMenu = ({
   setAllTestCases,
 }: UseTestCaseFolderMenuProps) => {
   const { formatMessage } = useIntl();
+  const { name: folderName } = folder;
   const { openModal: openDeleteModal } = useDeleteFolderModal();
   const { openModal: openRenameModal } = useRenameFolderModal();
   const { openModal: openDuplicateModal } = useDuplicateFolderModal();
+  const { openModal: openMoveModal } = useMoveFolderModal();
+  const { openModal: openImportTestCaseModal } = useImportTestCaseModal();
+  const { openModal: openCreateSubfolderModal } = useCreateSubfolderModal();
 
-  const { canDeleteTestCaseFolder, canDuplicateTestCaseFolder, canRenameTestCaseFolder } =
-    useUserPermissions();
+  const { canManageTestCases } = useUserPermissions();
 
   const handleDeleteFolder = () => {
     openDeleteModal({
@@ -58,22 +63,43 @@ export const useTestCaseFolderMenu = ({
 
   const handleDuplicateFolder = () => openDuplicateModal({ folder });
 
-  const testCaseFolderTooltipItems: PopoverItem[] = compact([
-    canRenameTestCaseFolder && {
+  const handleMoveFolder = () => openMoveModal({ folder });
+
+  const handleImportTestCase = () =>
+    openImportTestCaseModal({ folderName, importTarget: 'existing' });
+
+  const handleCreateSubfolder = () => openCreateSubfolderModal({ folder });
+
+  const testCaseFolderTooltipItems: PopoverItem[] = canManageTestCases ? [
+    {
+      label: formatMessage(commonMessages.createSubfolder),
+      onClick: handleCreateSubfolder,
+    },
+    {
       label: formatMessage(COMMON_LOCALE_KEYS.RENAME),
       onClick: handleRenameFolder,
     },
-    canDuplicateTestCaseFolder && {
+    {
+      label: formatMessage(commonMessages.moveFolderTo),
+      variant: 'text' as const,
+      onClick: handleMoveFolder,
+    },
+    {
       label: formatMessage(commonMessages.duplicateFolder),
       variant: 'text' as const,
       onClick: handleDuplicateFolder,
     },
-    canDeleteTestCaseFolder && {
+    {
+      label: formatMessage(COMMON_LOCALE_KEYS.IMPORT),
+      variant: 'text' as const,
+      onClick: handleImportTestCase,
+    },
+    {
       label: formatMessage(commonMessages.deleteFolder),
       variant: 'destructive' as const,
       onClick: handleDeleteFolder,
     },
-  ]);
+  ] : [];
 
   return {
     testCaseFolderTooltipItems,

@@ -15,7 +15,6 @@
  */
 
 import { useEffect } from 'react';
-import { isEmpty } from 'es-toolkit/compat';
 
 export const useOnClickOutside = (ref, handler) => {
   useEffect(() => {

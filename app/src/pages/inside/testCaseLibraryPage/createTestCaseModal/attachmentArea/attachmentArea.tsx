@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, Ref } from 'react';
 import { useIntl } from 'react-intl';
 import { isNumber } from 'es-toolkit/compat';
 import { noop } from 'es-toolkit';
@@ -43,6 +43,8 @@ import styles from './attachmentArea.scss';
 
 const cx = createClassnames(styles);
 
+const MIN_STEPS_FOR_REORDERING_CONTROLS = 2;
+
 interface AttachmentAreaProps {
   formName?: string;
   isDraggable?: boolean;
@@ -59,6 +61,8 @@ interface AttachmentAreaProps {
   canAttachFiles?: boolean;
   onRemove?: () => void;
   onMove?: (direction: 'up' | 'down') => void;
+  dragHandleRef?: Ref<HTMLButtonElement>;
+  isDraggingActive?: boolean;
 }
 
 export const AttachmentArea = ({
@@ -78,6 +82,8 @@ export const AttachmentArea = ({
   canAttachFiles = true,
   onRemove,
   onMove = noop,
+  dragHandleRef,
+  isDraggingActive = false,
 }: PropsWithChildren<AttachmentAreaProps>) => {
   const { formatMessage } = useIntl();
   const { attachedFiles, addFiles, removeFile, downloadFile } = useTmsFileUpload({
@@ -107,7 +113,7 @@ export const AttachmentArea = ({
             <div className={cx('attachment-area__number')}>
               <div className={cx('attachment-area__drag')}>
                 {areaNumber}
-                {isDraggable && (
+                {isDraggable && totalCount && totalCount >= MIN_STEPS_FOR_REORDERING_CONTROLS && (
                   <>
                     <Button
                       variant="text"
@@ -118,7 +124,13 @@ export const AttachmentArea = ({
                     >
                       <ArrowUpIcon />
                     </Button>
-                    <Button variant="text" adjustWidthOn="content">
+                    <Button
+                      ref={dragHandleRef}
+                      variant="text"
+                      adjustWidthOn="content"
+                      className={cx('drag-handle', { 'drag-handle--active': isDraggingActive })}
+                      aria-label={formatMessage(attachmentAreaMessages.dragToReorder)}
+                    >
                       <DragNDropIcon />
                     </Button>
                     <Button

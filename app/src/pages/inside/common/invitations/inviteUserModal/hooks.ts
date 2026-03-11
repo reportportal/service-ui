@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,11 @@ import { EDITOR, VIEWER } from 'common/constants/projectRoles';
 import { messages } from 'common/constants/localization/invitationsLocalization';
 import { showErrorNotification } from 'controllers/notification';
 import { ApiError } from 'types/api';
-import { FormDataMap, InvitationRequestData } from './types';
+import {
+  FormDataMap,
+  InvitationRequestData,
+  InviteUserInstanceFormData,
+} from './types';
 import { InviteUserProjectFormData } from './inviteUserProjectForm';
 import { InviteUserOrganizationFormData } from './inviteUserOrganizationForm';
 import { Organization } from '../../assignments/organizationAssignment';
@@ -49,6 +53,10 @@ export const useInviteUser = <L extends keyof FormDataMap>(level: L) => {
       return `${formatMessage(message)} ${projectName}`;
     }
 
+    if (level === Level.INSTANCE) {
+      return formatMessage(messages.inviteUser);
+    }
+
     const message = ssoUsersOnly ? messages.assignUser : messages.inviteUser;
     return formatMessage(message);
   };
@@ -65,8 +73,16 @@ export const useInviteUser = <L extends keyof FormDataMap>(level: L) => {
   };
 
   const buildUserData = (formData: FormDataMap[L]) => {
-    const { email } = formData;
     let organizations = [];
+    let email: string;
+
+    if (level === Level.INSTANCE) {
+      const instanceData = formData as FormDataMap['instance'];
+      const rawEmail = instanceData.email;
+      email = typeof rawEmail === 'string' ? rawEmail : rawEmail?.email ?? '';
+    } else {
+      email = (formData as InviteUserProjectFormData | InviteUserOrganizationFormData).email;
+    }
 
     if (level === Level.PROJECT) {
       const projectData = formData as InviteUserProjectFormData;
@@ -89,6 +105,11 @@ export const useInviteUser = <L extends keyof FormDataMap>(level: L) => {
       organizations = buildOrganizationsData([organizationData.organization]);
     }
 
+    if (level === Level.INSTANCE) {
+      const instanceData = formData as InviteUserInstanceFormData;
+      organizations = buildOrganizationsData(instanceData.organizations ?? []);
+    }
+
     return { email, organizations };
   };
 
@@ -101,7 +122,9 @@ export const useInviteUser = <L extends keyof FormDataMap>(level: L) => {
 
     if (duplicatedInvite) {
       message = formatMessage(
-        level === Level.PROJECT ? messages.duplicationProject : messages.duplicationOrganization,
+        level === Level.PROJECT
+          ? messages.duplicationProject
+          : messages.duplicationOrganization,
       );
     }
 
