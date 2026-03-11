@@ -37,6 +37,7 @@ import { pluginSagas } from 'controllers/plugins';
 import { uniqueErrorsSagas } from 'controllers/uniqueErrors';
 import { serverSettingsSagas } from 'controllers/appInfo';
 import { exportsSagas } from 'controllers/exports/sagas';
+import { analyticsSagas } from 'controllers/analytics';
 
 const sagas = [
   notificationSagas,
@@ -61,6 +62,7 @@ const sagas = [
   pluginSagas,
   uniqueErrorsSagas,
   exportsSagas,
+  analyticsSagas,
 ];
 
 export function* rootSagas() {

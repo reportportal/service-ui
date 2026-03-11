@@ -18,6 +18,7 @@ import * as COLORS from 'common/constants/colors';
 import { messages } from './messages';
 import { EXECUTIONS, DEFECTS } from '../../common/constants';
 
+// eslint-disable-next-line no-undef
 const Color = require('color');
 
 const getDefects = (fields) => fields.filter((item) => /defects/.test(item));

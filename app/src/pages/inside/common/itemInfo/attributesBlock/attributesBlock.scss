@@ -49,7 +49,7 @@
   text-decoration: none;
   margin: 3px 8px 0;
   word-break: break-all;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
   line-height: 16px;
 
   &:hover:not(.no-hover-effects) {

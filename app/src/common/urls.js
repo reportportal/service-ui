@@ -29,7 +29,8 @@ const urlBase = `${DEFAULT_API_URL_PREFIX}/`;
 const urlCommonBase = `${DEFAULT_COMMON_API_URL_PREFIX}/`;
 const uatBase = `${UAT_API_URL_PREFIX}/`;
 const compositeBase = COMPOSITE_API_URL_PREFIX;
-const getQueryParams = (paramsObj) => stringify(paramsObj, { addQueryPrefix: true });
+const getQueryParams = (paramsObj, options = {}) =>
+  stringify(paramsObj, { addQueryPrefix: true, ...options });
 const removeTrailingSlash = (url) => (url.endsWith('/') ? url.slice(0, -1) : url);
 
 export const URLS = {
@@ -40,8 +41,8 @@ export const URLS = {
     `${urlBase}data/${activeProject}/userphoto${getQueryParams({ login, loadThumbnail })}`,
 
   dashboard: (activeProject, id) => `${urlBase}${activeProject}/dashboard/${id}`,
-  dashboards: (activeProject, params) =>
-    `${urlBase}${activeProject}/dashboard${getQueryParams({ ...params })}`,
+  dashboards: (activeProject, params = {}, queryOptions = {}) =>
+    `${urlBase}${activeProject}/dashboard${getQueryParams(params, queryOptions)}`,
   dashboardConfig: (activeProject, id) => `${urlBase}${activeProject}/dashboard/${id}/config`,
   dashboardPreconfigured: (activeProject) => `${urlBase}${activeProject}/dashboard/preconfigured`,
 
@@ -188,6 +189,7 @@ export const URLS = {
     removeTrailingSlash(`${urlBase}${activeProject}/item${getQueryParams({ ids })}`),
   testItemsWithProviderType: (activeProject, ids) =>
     `${urlBase}${activeProject}/item/v2${getQueryParams({ ids })}`,
+  testItemsBulk: (activeProject) => `${urlBase}${activeProject}/item/bulk`,
   testItem: (activeProject, id = '') =>
     removeTrailingSlash(`${urlBase}${activeProject}/item/${id}`),
   testItemStatistics: (activeProject) => `${urlBase}${activeProject}/item/statistics`,

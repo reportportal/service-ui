@@ -15,7 +15,7 @@
  */
 
 import { createSelector } from 'reselect';
-import { capitalize } from 'common/utils';
+import { capitalize } from 'common/utils/stringUtils';
 import { OWNER } from 'common/constants/permissions';
 import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
 import * as logLevels from 'common/constants/logLevels';

@@ -16,6 +16,7 @@
 export { isEmptyObject } from './isEmptyObject';
 export { referenceDictionary, docsReferences } from './referenceDictionary';
 export { isString, capitalize } from './stringUtils';
+export { trimStringValues } from './objectUtils';
 export { fetch, ERROR_CANCELED, ERROR_UNAUTHORIZED } from './fetch';
 export {
   getStorageItem,

@@ -25,6 +25,7 @@ import { Button } from '@reportportal/ui-kit';
 import { isIntegrationSupportsMultipleInstances } from 'components/integrations/utils';
 import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { removeNoneValues } from 'components/fields/dynamicFieldsSection/utils';
+import { trimStringValues } from 'common/utils';
 import styles from './integrationForm.scss';
 
 const cx = classNames.bind(styles);
@@ -90,14 +91,16 @@ export class IntegrationForm extends Component {
     this.setState({ disabled: !this.state.disabled });
   };
 
-  submitIntegrationSuccess = () => {
+  submitIntegrationSuccess = (formData) => {
     this.setState({ disabled: true });
+    this.props.initialize(formData);
   };
 
   submitIntegration = (formData) => {
+    const trimmedFormData = trimStringValues(formData);
     this.props.onSubmit(
-      removeNoneValues(formData),
-      this.submitIntegrationSuccess,
+      removeNoneValues(trimmedFormData),
+      () => this.submitIntegrationSuccess(trimmedFormData),
       this.state.metaData,
     );
     this.props.tracking.trackEvent(

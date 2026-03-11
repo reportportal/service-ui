@@ -30,6 +30,11 @@ import styles from './modalLayout.scss';
 
 const cx = classNames.bind(styles);
 
+const MODAL_MAX_RATIO = 0.9;
+const MODAL_HEADER_HEIGHT = 42;
+const MODAL_FOOTER_HEIGHT = 30 + 30;
+const MODAL_LAYOUT_PADDING = 20 * 2;
+
 @connect(null, {
   hideModalAction,
 })
@@ -80,6 +85,7 @@ export class ModalLayout extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     CustomFooter: PropTypes.node,
+    scrollable: PropTypes.bool,
   };
   static defaultProps = {
     className: '',
@@ -96,19 +102,30 @@ export class ModalLayout extends Component {
     renderHeaderElements: () => {},
     renderFooterElements: () => {},
     CustomFooter: null,
+    scrollable: false,
+  };
+  getContentMaxHeight = () => {
+    const modalMaxHeight = this.state.windowHeight * MODAL_MAX_RATIO;
+    return modalMaxHeight - MODAL_LAYOUT_PADDING - MODAL_HEADER_HEIGHT - MODAL_FOOTER_HEIGHT;
   };
   state = {
     shown: false,
     closeConfirmed: false,
     showConfirmation: !!this.props.closeConfirmation?.confirmSubmit,
+    windowHeight: typeof window !== 'undefined' ? window.innerHeight : 0,
   };
   componentDidMount() {
     document.addEventListener('keydown', this.onKeydown, false);
+    window.addEventListener('resize', this.onWindowResize);
     this.onMount();
   }
   componentWillUnmount() {
     document.removeEventListener('keydown', this.onKeydown, false);
+    window.removeEventListener('resize', this.onWindowResize);
   }
+  onWindowResize = () => {
+    this.setState({ windowHeight: window.innerHeight });
+  };
   onMount() {
     this.setState({ shown: true });
   }
@@ -204,6 +221,8 @@ export class ModalLayout extends Component {
       closeConfirmation,
       renderFooterElements,
       CustomFooter,
+      scrollable,
+      contentClassName,
     } = this.props;
     const footerProps = {
       warningMessage,
@@ -243,16 +262,34 @@ export class ModalLayout extends Component {
                     ref={(modal) => {
                       this.modal = modal;
                     }}
-                    className={cx('modal-window', this.props.className)}
+                    className={cx('modal-window', this.props.className, { scrollable })}
                   >
                     <ModalHeader
                       text={title}
                       onClose={this.onClickCloseIcon}
                       renderHeaderElements={this.props.renderHeaderElements}
                     />
-                    <ModalContent className={this.props.contentClassName}>
-                      {status !== 'exited' ? children : null}
-                    </ModalContent>
+                    {scrollable ? (
+                      <div className={cx('scrollable-wrapper')}>
+                        <Scrollbars
+                          autoHeight
+                          autoHeightMax={this.getContentMaxHeight()}
+                          hideTracksWhenNotNeeded
+                        >
+                          <div className={cx('scrollable-content')}>
+                            <ModalContent
+                              className={cx('scrollable-modal-content', contentClassName)}
+                            >
+                              {status !== 'exited' ? children : null}
+                            </ModalContent>
+                          </div>
+                        </Scrollbars>
+                      </div>
+                    ) : (
+                      <ModalContent className={contentClassName}>
+                        {status !== 'exited' ? children : null}
+                      </ModalContent>
+                    )}
 
                     {CustomFooter ? (
                       <CustomFooter
@@ -261,12 +298,14 @@ export class ModalLayout extends Component {
                         closeHandler={this.onClickCancelButton}
                       />
                     ) : (
-                      <ModalFooter
-                        {...footerProps}
-                        onClickOk={this.closeModalWithOk}
-                        closeHandler={this.onClickCancelButton}
-                        className={this.props.className}
-                      />
+                      <div className={cx('footer-wrapper', { scrollable })}>
+                        <ModalFooter
+                          {...footerProps}
+                          onClickOk={this.closeModalWithOk}
+                          closeHandler={this.onClickCancelButton}
+                          className={this.props.className}
+                        />
+                      </div>
                     )}
                   </div>
                 )}

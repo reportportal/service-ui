@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,12 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames/bind';
-import Parser from 'html-react-parser';
-import BinIcon from 'common/img/bin-icon-inline.svg';
-import styles from './deleteFilterButton.scss';
-
-const cx = classNames.bind(styles);
+import { Icon } from 'components/main/icon';
 
 export const DeleteFilterButton = ({ onDelete, filter }) => (
-  <div className={cx('bin-icon')} onClick={() => onDelete(filter)}>
-    {Parser(BinIcon)}
-  </div>
+  <Icon type="icon-delete" onClick={() => onDelete(filter)} />
 );
+
 DeleteFilterButton.propTypes = {
   onDelete: PropTypes.func,
   filter: PropTypes.object,

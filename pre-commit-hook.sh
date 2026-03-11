@@ -1,1 +1,0 @@
-cd app && npm run eslint && npm run test

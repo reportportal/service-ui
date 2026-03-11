@@ -34,15 +34,16 @@ import { initPluginRegistration } from 'controllers/plugins/uiExtensions/registe
 import App from './app';
 import { configureStore } from './store';
 
+// eslint-disable-next-line no-undef
 if (!process.env.production) {
   const query = parse(location.search, { ignoreQueryPrefix: true });
   const whyDidYouUpdateComponent =
     'whyDidYouUpdateComponent' in query && (query.whyDidYouUpdateComponent || '.*');
 
   if (whyDidYouUpdateComponent) {
-    const { whyDidYouUpdate } = require('why-did-you-update'); // eslint-disable-line global-require
+    // eslint-disable-next-line no-undef
+    const { whyDidYouUpdate } = require('why-did-you-update');
     whyDidYouUpdate(React, { include: new RegExp(whyDidYouUpdateComponent) });
-    // eslint-disable-next-line no-console
     console.log(
       'Use http://localhost:3000/?whyDidYouUpdateComponent=^Component$# (with regex as a query value) to check why certain component rerender.',
     );
@@ -63,10 +64,12 @@ const rerenderApp = (TheApp) => {
   );
 };
 
+/* eslint-disable no-undef */
 if (module.hot) {
   module.hot.accept('./app', () => {
-    const app = require('./app').default; // eslint-disable-line global-require
+    const app = require('./app').default;
     rerenderApp(app);
   });
 }
+/* eslint-enable no-undef */
 rerenderApp(App);

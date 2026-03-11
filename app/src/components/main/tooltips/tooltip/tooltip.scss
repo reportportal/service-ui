@@ -63,7 +63,7 @@ $ARROW_WIDTH: 16px;
   font-family: $FONT-REGULAR;
   font-size: 13px;
   color: $COLOR--charcoal-grey;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
   white-space: pre-wrap;
 }
 

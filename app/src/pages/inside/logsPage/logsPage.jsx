@@ -26,7 +26,7 @@ import {
   DETAILED_LOG_VIEW,
   logViewModeSelector,
 } from 'controllers/log';
-import { parentItemSelector } from 'controllers/testItem';
+import { parentItemSelector, launchSelector } from 'controllers/testItem';
 import { debugModeSelector } from 'controllers/launch';
 import { logsFullWidthModeSelector } from 'controllers/user';
 import { LOG_PAGE, LOG_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -47,6 +47,7 @@ const cx = classNames.bind(styles);
     debugMode: debugModeSelector(state),
     logViewMode: logViewModeSelector(state),
     parentItem: parentItemSelector(state),
+    parentLaunch: launchSelector(state),
     logsFullWidthMode: logsFullWidthModeSelector(state),
   }),
   {
@@ -66,6 +67,7 @@ export class LogsPage extends Component {
     pageLoading: PropTypes.bool,
     logViewMode: PropTypes.string,
     parentItem: PropTypes.object,
+    parentLaunch: PropTypes.object,
     logsFullWidthMode: PropTypes.bool,
   };
 
@@ -134,6 +136,7 @@ export class LogsPage extends Component {
                   fetchFunc={refresh}
                   debugMode={debugMode}
                   loading={loading}
+                  parentLaunch={this.props.parentLaunch}
                 />
               </Fragment>
             ) : (

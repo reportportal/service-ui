@@ -18,7 +18,7 @@
   height: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-  grid-gap: 30px 30px;
+  gap: 30px 30px;
   flex-wrap: wrap;
   background-color: $COLOR--white-two;
   padding: 15px;

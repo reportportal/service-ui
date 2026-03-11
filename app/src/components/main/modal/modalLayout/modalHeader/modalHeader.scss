@@ -19,14 +19,15 @@
   font-family: $FONT-CONDBOLD;
   font-size: 15px;
   color: $COLOR--topaz;
-  line-height: 25px;
+  line-height: 24px;
   text-transform: uppercase;
 }
 .modal-header-content {
   display: flex;
   justify-content: stretch;
+  align-items: center;
   width: 100%;
-  padding-right: 30px;
+  padding-right: 48px;
   box-sizing: border-box;
 }
 .header-elements {
@@ -37,13 +38,13 @@
 .modal-title {
   flex-grow: 1;
   text-overflow: ellipsis;
-  line-height: 25px;
+  line-height: 24px;
   vertical-align: middle;
 }
 
 .close-modal-icon {
   position: absolute;
-  top: 0;
+  top: 2px;
   right: 0;
   display: block;
   width: 20px;

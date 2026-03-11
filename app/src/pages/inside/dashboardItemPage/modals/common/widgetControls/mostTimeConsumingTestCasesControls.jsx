@@ -74,6 +74,11 @@ export class MostTimeConsumingTestCasesControls extends Component {
     widgetSettings: PropTypes.object.isRequired,
     activeProject: PropTypes.string.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,
+    isMainControlsDisabled: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    isMainControlsDisabled: false,
   };
 
   constructor(props) {
@@ -100,6 +105,7 @@ export class MostTimeConsumingTestCasesControls extends Component {
     const {
       intl: { formatMessage },
       activeProject,
+      isMainControlsDisabled,
     } = this.props;
 
     return (
@@ -113,6 +119,7 @@ export class MostTimeConsumingTestCasesControls extends Component {
             multiple
             selectAll
             options={this.criteria}
+            disabled={isMainControlsDisabled}
           />
         </FieldProvider>
         <FieldProvider
@@ -125,6 +132,7 @@ export class MostTimeConsumingTestCasesControls extends Component {
             minLength={3}
             maxLength={256}
             getURI={URLS.launchNameSearch(activeProject)}
+            disabled={isMainControlsDisabled}
           />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.viewMode">
@@ -134,12 +142,14 @@ export class MostTimeConsumingTestCasesControls extends Component {
               [CHART_MODES.BAR_VIEW, CHART_MODES.TABLE_VIEW],
               formatMessage,
             )}
+            disabled={isMainControlsDisabled}
           />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.includeMethods">
           <CheckboxControl
             fieldLabel=" "
             text={formatMessage(messages.IncludeMethodsControlText)}
+            disabled={isMainControlsDisabled}
           />
         </FieldProvider>
       </Fragment>

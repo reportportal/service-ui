@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,4 @@
  * limitations under the License.
  */
 
-.bin-icon {
-  width: 20px;
-  display: inline-block;
-  cursor: pointer;
-  fill: $COLOR--gray-60;
-
-  &:hover {
-    fill: $COLOR--gray-47;
-  }
-}
+export { AdaptiveIssueList } from './adaptiveIssueList';

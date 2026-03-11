@@ -32,13 +32,17 @@
   }
 
   .name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 70px 0 13px;
+    border-bottom: 1px solid $COLOR--gray-91;
+    background: $COLOR--white;
+
     h3 {
       letter-spacing: 1px;
       line-height: 47px;
-      padding: 0 70px 0 13px;
       font-size: 15px;
-      border-bottom: 1px solid $COLOR--gray-91;
-      background: $COLOR--white;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -57,7 +61,7 @@
       left: 15px;
       right: 15px;
       white-space: pre-wrap;
-      word-wrap: break-word;
+      overflow-wrap: break-word;
       color: $COLOR--gray-47;
       font-size: 13px;
       line-height: 1.5;

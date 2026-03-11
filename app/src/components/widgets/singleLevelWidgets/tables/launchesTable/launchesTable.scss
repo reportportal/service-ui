@@ -53,6 +53,7 @@
   font-family: $FONT-REGULAR;
   font-size: 13px;
   line-height: 20px;
+  overflow-wrap: normal;
   word-break: keep-all;
 
   .mobile-hint {

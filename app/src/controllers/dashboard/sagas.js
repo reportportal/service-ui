@@ -15,7 +15,11 @@
  */
 
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
-import { showNotification, showDefaultErrorNotification } from 'controllers/notification';
+import {
+  showNotification,
+  showDefaultErrorNotification,
+  showSuccessNotification,
+} from 'controllers/notification';
 import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import { redirect } from 'redux-first-router';
 import { URLS } from 'common/urls';
@@ -35,6 +39,7 @@ import {
 import { provideEcGA } from 'components/main/analytics/utils';
 import { formatEcDashboardData } from 'components/main/analytics/events/common/widgetPages/utils';
 import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
+import { SORTING_KEY } from 'controllers/sorting';
 import {
   ADD_DASHBOARD,
   CHANGE_VISIBILITY_TYPE,
@@ -49,6 +54,7 @@ import {
   INCREASE_TOTAL_DASHBOARDS_LOCALLY,
   DECREASE_TOTAL_DASHBOARDS_LOCALLY,
   DUPLICATE_DASHBOARD,
+  UPDATE_DASHBOARD_LOCKED,
 } from './constants';
 import { querySelector } from './selectors';
 import {
@@ -61,15 +67,17 @@ import { getDashboardNotificationAction, tryParseConfig } from './utils';
 function* fetchDashboards({ payload: params }) {
   const activeProject = yield select(activeProjectSelector);
   const query = yield select(querySelector);
+  const mergedParams = { ...query, ...params };
+  const lockedSorting = 'locked,DESC';
+  const queryOptions = { arrayFormat: 'repeat' };
 
-  yield put(
-    fetchDataAction(NAMESPACE)(URLS.dashboards(activeProject), {
-      params: {
-        ...query,
-        ...params,
-      },
-    }),
-  );
+  if (Array.isArray(mergedParams[SORTING_KEY])) {
+    mergedParams[SORTING_KEY] = [lockedSorting, ...mergedParams[SORTING_KEY]];
+  } else {
+    mergedParams[SORTING_KEY] = [lockedSorting, mergedParams[SORTING_KEY]].filter(Boolean);
+  }
+
+  yield put(fetchDataAction(NAMESPACE)(URLS.dashboards(activeProject, mergedParams, queryOptions)));
 }
 
 function* fetchDashboard() {
@@ -280,6 +288,21 @@ function changeVisibilityType({ payload: visibilityType }) {
   setStorageItem(DASHBOARDS_VISIBILITY_TYPE_STORAGE_KEY, visibilityType);
 }
 
+function* updateDashboardLocked({ payload: { locked, dashboard } }) {
+  const activeProject = yield select(activeProjectSelector);
+
+  try {
+    yield call(fetch, URLS.dashboard(activeProject, dashboard.id), {
+      method: 'patch',
+      data: { locked },
+    });
+    yield put(updateDashboardItemSuccessAction({ ...dashboard, locked }));
+    yield put(showSuccessNotification({ messageId: 'updateDashboardLockedSuccess' }));
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  }
+}
+
 export function* dashboardSagas() {
   yield all([
     yield takeEvery(FETCH_DASHBOARDS, fetchDashboards),
@@ -291,5 +314,6 @@ export function* dashboardSagas() {
     yield takeEvery(CHANGE_VISIBILITY_TYPE, changeVisibilityType),
     yield takeEvery(REMOVE_DASHBOARD_SUCCESS, redirectAfterDelete),
     yield takeEvery(DUPLICATE_DASHBOARD, duplicateDashboard),
+    yield takeEvery(UPDATE_DASHBOARD_LOCKED, updateDashboardLocked),
   ]);
 }

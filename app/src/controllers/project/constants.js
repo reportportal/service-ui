@@ -22,6 +22,7 @@ export const PROJECT_ATTRIBUTES_DELIMITER = '.';
 
 export const FETCH_PROJECT = 'fetchProject';
 export const FETCH_PROJECT_SUCCESS = 'fetchProjectSuccess';
+export const FETCH_PROJECT_ERROR = 'fetchProjectError';
 export const FETCH_PROJECT_PREFERENCES = 'fetchProjectPreferences';
 export const FETCH_PROJECT_PREFERENCES_SUCCESS = 'fetchProjectPreferencesSuccess';
 export const FETCH_CONFIGURATION_ATTRIBUTES = 'fetchConfigurationAttributes';

@@ -34,7 +34,7 @@
   }
 }
 
-.description {
+%description {
   display: block;
   margin: 0 0 4px 0;
   color: $COLOR--e-300;
@@ -43,7 +43,11 @@
   font-family: $FONT-ROBOTO-REGULAR;
 }
 
+.description {
+  @extend %description;
+}
+
 .description-alt {
-  @extend .description;
+  @extend %description;
   margin: 4px 0 0 0;
 }

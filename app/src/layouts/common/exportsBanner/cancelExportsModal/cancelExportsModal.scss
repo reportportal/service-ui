@@ -1,4 +1,12 @@
 .message {
   color: $COLOR--charcoal-grey;
   font-size: 14px;
+
+  &.message-singleline {
+    white-space: normal;
+  }
+
+  &.message-multiline {
+    white-space: pre-line;
+  }
 }

@@ -74,6 +74,7 @@ import {
   updateConfigurationAttributesAction,
   fetchProjectPreferencesAction,
   fetchProjectSuccessAction,
+  fetchProjectErrorAction,
   fetchProjectPreferencesSuccessAction,
   updateProjectFilterPreferencesAction,
   addProjectNotificationSuccessAction,
@@ -437,6 +438,7 @@ function* fetchProject({ payload: { projectId, fetchInfoOnly } }) {
       yield put(fetchLogTypesAction(projectId));
     }
   } catch (error) {
+    yield put(fetchProjectErrorAction(error, projectId));
     yield put(showDefaultErrorNotification(error));
   }
 }
