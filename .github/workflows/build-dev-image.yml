@@ -4,9 +4,12 @@ on:
   push:
     branches:
       - develop
+      - 'feature/orgs'
+      - 'feature/test-library'
     paths-ignore:
       - '.github/**'
       - README.md
+  workflow_dispatch:
 
 jobs:
   variables-setup:
@@ -14,13 +17,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Create variables
         id: vars
         run: |
+          echo "tag=$(echo ${{ github.ref_name }}-${{ github.run_number }} | tr '/' '-')" >> $GITHUB_OUTPUT
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
     outputs:
+      tag: ${{ steps.vars.outputs.tag }}
       date: ${{ steps.vars.outputs.date }}
 
   call-docker-build:
@@ -29,8 +34,11 @@ jobs:
     uses: reportportal/.github/.github/workflows/build-docker-image.yaml@main
     with:
       aws-region: ${{ vars.AWS_REGION }}
-      image-tag: 'develop-${{ github.run_number }}'
+      build-platforms: ${{ vars.BUILD_PLATFORMS || 'linux/amd64,linux/arm64' }}
+      image-tag: ${{ needs.variables-setup.outputs.tag }}
+      version: ${{ needs.variables-setup.outputs.tag }}
+      branch: ${{ github.ref_name }}
       additional-tag: 'develop-latest'
-      version: 'develop-${{ github.run_number }}'
       date: ${{ needs.variables-setup.outputs.date }}
-    secrets: inherit
+    secrets:
+      AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
