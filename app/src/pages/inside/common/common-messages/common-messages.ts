@@ -117,4 +117,8 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'Common.priority',
     defaultMessage: 'Priority',
   },
+  runTest: {
+    id: 'Common.runTest',
+    defaultMessage: 'Run Test',
+  },
 });

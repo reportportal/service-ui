@@ -23,7 +23,7 @@ $execution-page-gutter: 32px;
   &__header {
     width: 100%;
     margin-bottom: 30px;
-    @include mixins.horizontal-padding($execution-page-gutter);
+    @include mixins.horizontal-padding($execution-page-gutter, 0);
     background-color: var(--rp-ui-base-bg-000);
     border-bottom: 1px solid var(--rp-ui-base-e-100);
 
@@ -55,26 +55,35 @@ $execution-page-gutter: 32px;
   flex-wrap: wrap;
 }
 
-.search-filter {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.filter-button {
-  @include mixins.button-reset;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
-  color: var(--rp-ui-base-almost-black);
+.run-test-button {
+  min-width: 120px;
+  width: 120px;
+  height: 36px;
+  background-color: var(--rp-ui-base-topaz);
+  color: var(--rp-ui-base-bg-000);
+  border-radius: 3px;
 
   &:hover {
-    color: var(--rp-ui-base-e-500);
+    background-color: var(--rp-ui-base-topaz-hover);
   }
 
   &:focus-visible {
-    outline: 2px solid currentColor;
+    outline: 2px solid var(--rp-ui-base-topaz-focused);
     outline-offset: 2px;
+  }
+}
+
+.run-test-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 7.5px;
+  width: 12px;
+  height: 16px;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
   }
 }

@@ -426,6 +426,7 @@ const routesMap = {
 
       if (launchId && executionId) {
         dispatch(getManualLaunchAction({ launchId }));
+        dispatch(getManualLaunchFoldersAction({ launchId }));
         dispatch(getManualLaunchExecutionAction({ launchId, executionId }));
       }
     },
