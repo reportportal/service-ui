@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { PASSWORD_MAX_ALLOWED_LENGTH } from 'common/constants/validation';
+import {
+  PASSWORD_MAX_ALLOWED_LENGTH,
+  REGISTRATION_NAME_MIN_LENGTH,
+  REGISTRATION_NAME_MAX_LENGTH,
+} from 'common/constants/validation';
 import {
   composeValidators,
   isEmpty,
@@ -62,7 +66,14 @@ export const createPasswordValidator = (passwordMinLength) =>
     ),
   ]);
 
-export const userName = composeValidators([isNotEmpty, regex(/^[A-Za-z\u0400-\u04FF0-9.'_\- ]{3,60}$/)]);
+export const userName = composeValidators([
+  isNotEmpty,
+  regex(
+    new RegExp(
+      `^[A-Za-z\\u0400-\\u04FF0-9.'_\\- ]{${REGISTRATION_NAME_MIN_LENGTH},${REGISTRATION_NAME_MAX_LENGTH}}$`,
+    ),
+  ),
+]);
 export const filterName = composeValidators([isNotEmpty, lengthRange(3, 128)]);
 export const launchName = composeValidators([isNotEmpty, maxLength(256)]);
 export const launchDescription = maxLength(2048);

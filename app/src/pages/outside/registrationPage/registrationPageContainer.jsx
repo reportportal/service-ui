@@ -81,7 +81,7 @@ export class RegistrationPageContainer extends Component {
         this.setState({
           isTokenActive: data.status === 'PENDING',
           email: data.email,
-          fullName: data.full_name || '',
+          fullName: '',
           isLoadingFinished: true,
         }),
       )
