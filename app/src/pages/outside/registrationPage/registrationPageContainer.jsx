@@ -65,7 +65,7 @@ export class RegistrationPageContainer extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!this.state.isLoadingFinished || prevProps.uuid !== this.props.uuid) {
+    if (prevProps.uuid !== this.props.uuid) {
       this.fetchUserData();
     }
   }
@@ -76,21 +76,36 @@ export class RegistrationPageContainer extends Component {
       return;
     }
 
+    this.setState({
+      isTokenActive: false,
+      email: '',
+      fullName: '',
+      isLoadingFinished: false,
+    });
+
     fetch(URLS.invitation(uuid))
-      .then((data) =>
+      .then((data) => {
+        if (this.props.uuid !== uuid) {
+          return;
+        }
         this.setState({
           isTokenActive: data.status === 'PENDING',
           email: data.email,
           fullName: '',
           isLoadingFinished: true,
-        }),
-      )
-      .catch(() =>
+        });
+      })
+      .catch(() => {
+        if (this.props.uuid !== uuid) {
+          return;
+        }
         this.setState({
           isTokenActive: false,
+          email: '',
+          fullName: '',
           isLoadingFinished: true,
-        }),
-      );
+        });
+      });
   };
 
   registrationHandler = ({ name, password, email }) => {
