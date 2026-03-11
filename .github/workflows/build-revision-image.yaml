@@ -16,12 +16,10 @@ jobs:
       - name: Create variables
         id: vars
         run: |
-          echo "platforms=${{ vars.BUILD_PLATFORMS }}" >> $GITHUB_OUTPUT
           echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
           echo "tag=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
     outputs:
-      platforms: ${{ steps.vars.outputs.platforms }}
       version: ${{ steps.vars.outputs.version }}
       tag: ${{ steps.vars.outputs.tag }}
       date: ${{ steps.vars.outputs.date }}
@@ -34,7 +32,8 @@ jobs:
       aws-region: ${{ vars.AWS_REGION }}
       image-tag: ${{ needs.variables-setup.outputs.tag }}
       additional-tag: 'latest'
-      build-platforms: ${{ needs.variables-setup.outputs.platforms }}
+      build-platforms: ${{ vars.BUILD_PLATFORMS || 'linux/amd64,linux/arm64' }}
       version: ${{ needs.variables-setup.outputs.version }}
       date: ${{ needs.variables-setup.outputs.date }}
-    secrets: inherit
+    secrets:
+      AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
