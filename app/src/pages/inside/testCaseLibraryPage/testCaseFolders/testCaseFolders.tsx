@@ -112,9 +112,11 @@ export const TestCaseFolders = () => {
         organizationSlug,
         projectSlug,
       },
-      query: {},
+      query: {
+        ...(query?.testCasesSearchParams && { testCasesSearchParams: query.testCasesSearchParams }),
+      },
     });
-  }, [dispatch, organizationSlug, projectSlug]);
+  }, [dispatch, organizationSlug, projectSlug, query?.testCasesSearchParams]);
 
   useEffect(() => {
     if (urlFolderId && !activeFolder) {

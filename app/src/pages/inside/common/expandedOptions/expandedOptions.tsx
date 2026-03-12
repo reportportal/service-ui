@@ -102,6 +102,9 @@ export const ExpandedOptions = ({
     [isDragAndDropEnabled],
   );
 
+  const folderSearchSource = pageSearchQuery ? searchFilteredFolders : folders;
+  const folderSearchExpandedIds = pageSearchQuery ? searchFilteredExpandedIds : expandedIds;
+
   const {
     searchQuery,
     isSearchVisible,
@@ -114,7 +117,7 @@ export const ExpandedOptions = ({
     handleSearchChange,
     handleSearchClear,
     handleMagnifierClick,
-  } = useFolderSearch({ folders, expandedIds, onToggleFolder });
+  } = useFolderSearch({ folders: folderSearchSource, expandedIds: folderSearchExpandedIds, onToggleFolder: pageSearchQuery ? handleToggleSearchFilteredFolder : onToggleFolder });
 
   const allItemsTitle =
     instanceKey === TMS_INSTANCE_KEY.MANUAL_LAUNCH
@@ -176,19 +179,12 @@ export const ExpandedOptions = ({
     ));
 
   const renderFolderTree = () => {
-    if (pageSearchQuery) {
-      if (isSearchFilteredLoading) {
-        return <BubblesLoader />;
-      }
-      if (!hasSearchFilteredFolders) {
-        return <EmptySearchState />;
-      }
-      return renderFolderList(
-        searchFilteredFolders,
-        searchFilteredExpandedIds,
-        '',
-        handleToggleSearchFilteredFolder,
-      );
+    if (pageSearchQuery && isSearchFilteredLoading) {
+      return <BubblesLoader />;
+    }
+
+    if (pageSearchQuery && !hasSearchFilteredFolders) {
+      return <EmptySearchState />;
     }
 
     if (!searchQuery || hasAnyMatch) {
