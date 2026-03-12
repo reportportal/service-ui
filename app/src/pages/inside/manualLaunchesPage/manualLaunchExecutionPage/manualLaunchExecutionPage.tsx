@@ -14,25 +14,30 @@
  * limitations under the License.
  */
 
+import { useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
-import { FilterOutlineIcon } from '@reportportal/ui-kit';
+import { Button, RunManualIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { SearchField } from 'components/fields/searchField';
 import { PageHeaderWithBreadcrumbsAndActions } from 'pages/inside/common/pageHeaderWithBreadcrumbsAndActions';
 import { PageLoader } from 'pages/inside/testPlansPage/pageLoader';
 import { MANUAL_LAUNCHES_PAGE, MANUAL_LAUNCH_DETAILS_PAGE } from 'controllers/pages';
 import {
   activeManualLaunchExecutionSelector,
   isLoadingActiveManualLaunchExecutionSelector,
-  activeManualLaunchSelector,
+  manualLaunchFoldersSelector,
   MANUAL_SCENARIO_TYPE_TEXT,
 } from 'controllers/manualLaunch';
-import { useProjectDetails, useManualLaunchId } from 'hooks/useTypedSelector';
+import {
+  useProjectDetails,
+  useManualLaunchId,
+  useManualLaunchById,
+  useActiveManualLaunchLoading,
+} from 'hooks/useTypedSelector';
 
 import { ExecutionStatusButtons } from './executionStatusButtons';
 import { TextBasedContent } from './textBasedContent';
@@ -49,11 +54,16 @@ export const ManualLaunchExecutionPage = () => {
   const { formatMessage } = useIntl();
   const { organizationSlug, projectSlug } = useProjectDetails();
   const launchId = useManualLaunchId();
-  const launch = useSelector(activeManualLaunchSelector);
+  const launch = useManualLaunchById(launchId);
+  const isLaunchLoading = useActiveManualLaunchLoading();
   const execution = useSelector(activeManualLaunchExecutionSelector);
-  const isLoading = useSelector(isLoadingActiveManualLaunchExecutionSelector);
+  const folders = useSelector(manualLaunchFoldersSelector);
+  const isExecutionLoading = useSelector(isLoadingActiveManualLaunchExecutionSelector);
+  const [showStatusButtons, setShowStatusButtons] = useState(false);
 
   const launchName = launch?.name ?? '';
+  const folder = folders.find((f) => f.id === execution?.testFolder?.id);
+  const folderName = folder?.name ?? '';
 
   const breadcrumbDescriptors = [
     {
@@ -74,42 +84,42 @@ export const ManualLaunchExecutionPage = () => {
           }
         : undefined,
     },
+    ...(folderName
+      ? [
+          {
+            id: 'folder',
+            title: folderName,
+          },
+        ]
+      : []),
     {
       id: 'execution',
       title: execution?.testCaseName ?? '',
     },
   ];
 
-  const handleFilterClick = () => {
-    // TODO: Implement filter functionality
-  };
-
   const isTextBased = execution?.manualScenario?.manualScenarioType === MANUAL_SCENARIO_TYPE_TEXT;
+
+  const handleRunTestClick = () => {
+    setShowStatusButtons(true);
+  };
 
   const renderHeaderActions = () => (
     <div className={cx('header-actions')}>
-      <div className={cx('search-filter')}>
-        <SearchField
-          searchValue=""
-          setSearchValue={() => {}}
-          onFilterChange={() => {}}
-          placeholder={formatMessage(messages.searchPlaceholder)}
-          isLoading={false}
-        />
-        <button
-          type="button"
-          className={cx('filter-button')}
-          onClick={handleFilterClick}
-          aria-label={formatMessage(messages.filterAriaLabel)}
-        >
-          <FilterOutlineIcon />
-        </button>
-      </div>
-      <ExecutionStatusButtons />
+      {showStatusButtons ? (
+        <ExecutionStatusButtons />
+      ) : (
+        <Button className={cx('run-test-button')} onClick={handleRunTestClick}>
+          {formatMessage(commonMessages.runTest)}
+          <span className={cx('run-test-icon')}>
+            <RunManualIcon />
+          </span>
+        </Button>
+      )}
     </div>
   );
 
-  if (isLoading) {
+  if (isLaunchLoading || isExecutionLoading) {
     return (
       <SettingsLayout>
         <PageLoader />

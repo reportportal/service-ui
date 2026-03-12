@@ -65,8 +65,8 @@
   box-sizing: border-box;
 }
 
-@mixin horizontal-padding($padding: 32px) {
-  padding-left: $padding;
-  padding-right: $padding;
+@mixin horizontal-padding($padding-left: 32px, $padding-right: $padding-left) {
+  padding-left: $padding-left;
+  padding-right: $padding-right;
   box-sizing: border-box;
 }

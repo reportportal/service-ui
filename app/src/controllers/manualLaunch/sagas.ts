@@ -57,7 +57,7 @@ import {
   TestCaseExecutionsResponse,
   TestCaseExecution,
 } from './types';
-import { manualLaunchContentSelector } from './selectors';
+import { manualLaunchContentSelector, activeManualLaunchSelector } from './selectors';
 
 interface GetManualLaunchesAction extends Action<typeof GET_MANUAL_LAUNCHES> {
   payload?: GetManualLaunchesParams;
@@ -117,8 +117,14 @@ function* getManualLaunch(action: GetManualLaunchAction): Generator {
   try {
     const prevLaunchId = location?.prev?.payload?.launchId;
     const currentLaunchId = location?.payload?.launchId;
+    const activeManualLaunch = (yield select(activeManualLaunchSelector)) as Launch | null;
 
-    if (!prevLaunchId || String(prevLaunchId) !== String(currentLaunchId)) {
+    if (
+      !prevLaunchId ||
+      String(prevLaunchId) !== String(currentLaunchId) ||
+      !activeManualLaunch ||
+      String(activeManualLaunch.id) !== String(launchId)
+    ) {
       const fetchedLaunches = (yield select(manualLaunchContentSelector)) as Launch[] | null;
       const launchFromList = fetchedLaunches?.find((launch) => launch.id === Number(launchId));
 

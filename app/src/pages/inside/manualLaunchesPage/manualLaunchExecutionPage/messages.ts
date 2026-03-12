@@ -25,16 +25,8 @@ export const messages = defineMessages({
     id: 'ManualLaunchExecutionPage.executionNotFound',
     defaultMessage: 'Execution not found',
   },
-  searchPlaceholder: {
-    id: 'ManualLaunchExecutionPage.searchPlaceholder',
-    defaultMessage: 'Search',
-  },
   noAttachments: {
     id: 'ManualLaunchExecutionPage.noAttachments',
     defaultMessage: 'No attachments added',
-  },
-  filterAriaLabel: {
-    id: 'ManualLaunchExecutionPage.filterAriaLabel',
-    defaultMessage: 'Filter',
   },
 });
