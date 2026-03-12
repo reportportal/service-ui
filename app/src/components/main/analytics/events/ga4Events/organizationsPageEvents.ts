@@ -105,11 +105,12 @@ export const ORGANIZATION_PAGE_EVENTS = {
     place: 'all_users',
     element_name: elementName,
   }),
-  manageAssignments: (elementName: string) => ({
+  manageAssignments: (elementName: string, condition?: string) => ({
     ...BASIC_EVENT_PARAMETERS,
     place: 'all_users',
     element_name: elementName,
     modal: 'manage_assignments_of_user',
+    ...(condition && { condition }),
   }),
   unassignUser: (isCurrentUser: boolean) => ({
     ...BASIC_EVENT_PARAMETERS,

@@ -16,6 +16,7 @@
 import {
   buildUpdateAssignmentsPayload,
   getCurrentOrganizationAssignment,
+  getManageAssignmentsSaveCondition,
   isAssignmentDirty,
   MANAGE_ASSIGNMENTS_FORM,
 } from './constants';
@@ -168,7 +169,12 @@ const ManageAssignmentsOrganizationModalView = ({
 
   const onSaveAssignments = (_values: { organizations?: Organization[] }) => {
     if (!currentOrganization || !isDirty) return;
-    trackEvent(ORGANIZATION_PAGE_EVENTS.manageAssignments('save'));
+    const condition = getManageAssignmentsSaveCondition(
+      initialOrganization,
+      currentOrganization,
+    );
+
+    trackEvent(ORGANIZATION_PAGE_EVENTS.manageAssignments('save', condition));
     const payload = buildUpdateAssignmentsPayload(currentOrganization);
     dispatch(
       updateUserAssignmentsAction(
