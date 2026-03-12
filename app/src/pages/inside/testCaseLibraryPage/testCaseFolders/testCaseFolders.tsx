@@ -112,6 +112,7 @@ export const TestCaseFolders = () => {
         organizationSlug,
         projectSlug,
       },
+      query: {},
     });
   }, [dispatch, organizationSlug, projectSlug]);
 
