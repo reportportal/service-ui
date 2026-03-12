@@ -284,7 +284,10 @@ const routesMap = {
         });
       }
 
-      dispatch(fetchOrganizationEventsDataAction());
+      const {
+        location: { payload },
+      } = state;
+      dispatch(fetchOrganizationEventsDataAction(payload));
     },
   },
 

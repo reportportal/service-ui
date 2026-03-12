@@ -20,6 +20,7 @@ export const fetchProjectDataAction = () => ({
   type: FETCH_PROJECT_DATA,
 });
 
-export const fetchOrganizationEventsDataAction = () => ({
+export const fetchOrganizationEventsDataAction = (payload) => ({
   type: FETCH_ORGANIZATION_EVENTS_DATA,
+  payload,
 });
