@@ -30,6 +30,9 @@ module.exports = () => {
   return {
     devtool: 'eval-source-map',
     mode: 'development',
+    output: {
+      publicPath: '/',
+    },
     module: {
       rules: [
         {

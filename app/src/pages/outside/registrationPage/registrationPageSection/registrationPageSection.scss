@@ -23,6 +23,12 @@
   padding: 60px;
   text-align: center;
 
+  &:not(.left) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   @media (max-width: $SCREEN_SM_MAX) {
     padding: 0;
     float: none;
