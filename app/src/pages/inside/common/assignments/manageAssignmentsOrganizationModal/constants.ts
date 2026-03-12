@@ -63,3 +63,41 @@ export function buildUpdateAssignmentsPayload(
     })),
   };
 }
+
+const MANAGE_ASSIGNMENTS_CONDITIONS = {
+  ADD_PROJECT: 'add project',
+  REMOVE_PROJECT: 'remove project',
+  CHANGE_ROLE: 'change role',
+  CHANGE_PERMISSION: 'change permission',
+} as const;
+
+export function getManageAssignmentsSaveCondition(
+  initial: OrganizationValue | null,
+  current: OrganizationValue | null,
+): string {
+  if (!initial || !current) return '';
+  const parts: string[] = [];
+  if (initial.role !== current.role) {
+    parts.push(MANAGE_ASSIGNMENTS_CONDITIONS.CHANGE_ROLE);
+  }
+  const initialProjectIds = new Set((initial.projects ?? []).map((p) => p.id));
+  const currentProjectIds = new Set((current.projects ?? []).map((p) => p.id));
+  const initialById = new Map((initial.projects ?? []).map((p) => [p.id, p]));
+  const currentById = new Map((current.projects ?? []).map((p) => [p.id, p]));
+  if ([...currentProjectIds].some((id) => !initialProjectIds.has(id))) {
+    parts.push(MANAGE_ASSIGNMENTS_CONDITIONS.ADD_PROJECT);
+  }
+  if ([...initialProjectIds].some((id) => !currentProjectIds.has(id))) {
+    parts.push(MANAGE_ASSIGNMENTS_CONDITIONS.REMOVE_PROJECT);
+  }
+  const permissionChanged = [...currentProjectIds].some((id) => {
+    if (!initialProjectIds.has(id)) return false;
+    const a = initialById.get(id);
+    const b = currentById.get(id);
+    return a && b && a.role !== b.role;
+  });
+  if (permissionChanged) {
+    parts.push(MANAGE_ASSIGNMENTS_CONDITIONS.CHANGE_PERMISSION);
+  }
+  return parts.join('#');
+}

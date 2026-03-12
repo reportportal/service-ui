@@ -126,10 +126,10 @@ export const messages = defineMessages({
   organizationRoleDisabledOwnAccount: {
     id: 'Assignment.organizationRoleDisabledOwnAccount',
     defaultMessage:
-      "You can't change your own role. Ask another Organization Manager or Admin to update it.",
+      "You can't change your own role. Ask another Organization Manager or Admin to update it",
   },
   organizationRoleDisabledOwner: {
     id: 'Assignment.organizationRoleDisabledOwner',
-    defaultMessage: "You can't change the role of the organization owner.",
+    defaultMessage: "You can't change the role of the organization owner",
   },
 });
