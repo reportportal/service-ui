@@ -14,11 +14,17 @@
  * limitations under the License.
  */
 
+.forms-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .organizations {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-bottom: 16px;
+  margin-bottom: 0;
 }
 
 .instance-assignment {
@@ -27,6 +33,7 @@
   align-items: center;
   gap: 16px;
   padding: 16px;
+  border-radius: 4px;
 
   .autocomplete-wrapper {
     width: 270px;
@@ -44,12 +51,22 @@
     width: 36px;
     height: 36px;
     padding: 0;
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
   }
 
   .cancel-button {
     width: 36px;
     height: 36px;
     padding: 10px;
+
+    svg {
+      width: 10px;
+      height: 10px;
+    }
   }
 }
 

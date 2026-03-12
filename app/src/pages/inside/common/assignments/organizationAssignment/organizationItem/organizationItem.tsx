@@ -15,8 +15,10 @@
  */
 
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { BaseIconButton, CloseIcon, Dropdown, DropdownIcon, Tooltip } from '@reportportal/ui-kit';
+import { change } from 'redux-form';
 
 import { createClassnames, fetch } from 'common/utils';
 import { EDITOR, MANAGER, MEMBER } from 'common/constants/projectRoles';
@@ -47,6 +49,7 @@ interface OrganizationItemProps {
   onRemove?: () => void;
   collapsable?: boolean;
   organizationRoleDisabledTooltip?: string | null;
+  formName?: string;
 }
 
 export const OrganizationItem = ({
@@ -55,7 +58,9 @@ export const OrganizationItem = ({
   onRemove,
   collapsable,
   organizationRoleDisabledTooltip = null,
+  formName,
 }: OrganizationItemProps) => {
+  const dispatch = useDispatch();
   const disableOrganizationRole = Boolean(organizationRoleDisabledTooltip);
   const { formatMessage } = useIntl();
   const { id, name, role, projects } = value;
@@ -68,6 +73,12 @@ export const OrganizationItem = ({
   }));
   const noProjects = totalProjects === 0;
   const allProjectsAdded = projects?.length === totalProjects;
+
+  useEffect(() => {
+    if (formName) {
+      dispatch(change(formName, 'isAddingProject', addProjectFormOpen));
+    }
+  }, [addProjectFormOpen, formName, dispatch]);
 
   useEffect(() => {
     const data = { method: 'post', data: { limit: PROJECTS_LIMIT } };

@@ -17,6 +17,7 @@
 import { useIntl } from 'react-intl';
 import {
   Button,
+  CopyIcon,
   FieldText,
   Modal,
   StatusSuccessIcon,
@@ -35,6 +36,19 @@ import styles from './externalUserInvitationModal.scss';
 
 const cx = createClassnames(styles);
 
+const getFullInvitationLink = (link: string): string => {
+  if (link.startsWith('http://') || link.startsWith('https://')) {
+    return link;
+  }
+
+  if (link.startsWith('/')) {
+    const { protocol, host } = window.location;
+    return `${protocol}//${host}${link}`;
+  }
+
+  return link;
+};
+
 interface ExternalUserInvitationModalProps {
   email: string;
   link: string;
@@ -50,6 +64,7 @@ export const ExternalUserInvitationModal = ({
   const dispatch = useDispatch();
   const isEmailIntegrationAvailable = useSelector(isEmailIntegrationAvailableSelector);
   const modalTitle = header || formatMessage(messages.header);
+  const fullLink = getFullInvitationLink(link);
   const invitationMessageText = formatMessage(messages.invitationMessage, {
     email,
     b: (innerData) => <b>{innerData}</b>,
@@ -58,7 +73,7 @@ export const ExternalUserInvitationModal = ({
   const copyLink = () => {
     if (navigator.clipboard) {
       navigator.clipboard
-        .writeText(link)
+        .writeText(fullLink)
         .then(() =>
           dispatch(showSuccessNotification({ message: formatMessage(messages.copyLinkSuccess) })),
         )
@@ -77,7 +92,12 @@ export const ExternalUserInvitationModal = ({
             {formatMessage(messages.warningMessage)}
           </div>
           <div className={cx('buttons')}>
-            <Button onClick={copyLink}>{formatMessage(messages.copyLink)}</Button>
+            <Button
+              icon={<CopyIcon />}
+              iconPlace="start"
+              onClick={copyLink}>
+                {formatMessage(messages.copyLink)}
+              </Button>
             <Button variant="ghost" onClick={closeModal}>
               {formatMessage(messages.gotIt)}
             </Button>
@@ -98,7 +118,7 @@ export const ExternalUserInvitationModal = ({
         )}
         <div className={cx('invitation-link')}>
           <FieldText
-            value={link}
+            value={fullLink}
             label={formatMessage(messages.link)}
             defaultWidth={false}
             disabled

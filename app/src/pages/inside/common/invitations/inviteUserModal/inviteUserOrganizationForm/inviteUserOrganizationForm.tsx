@@ -5,7 +5,9 @@ import {
   OrganizationAssignment,
 } from 'pages/inside/common/assignments/organizationAssignment';
 
-import { InviteUserEmailAutocompleteField } from '../InviteUserEmailAutocompleteField';
+import { InviteUserEmailField } from '../inviteUserEmailField';
+import { getFormName } from '../utils';
+import { Level } from '../constants';
 
 import styles from './inviteUserOrganizationForm.scss';
 
@@ -19,7 +21,7 @@ export interface InviteUserOrganizationFormData {
 export const InviteUserOrganizationForm = () => {
   return (
     <form className={cx('form')}>
-      <InviteUserEmailAutocompleteField />
+      <InviteUserEmailField formName={getFormName(Level.ORGANIZATION)} />
       <FieldElement name="organization">
         <OrganizationAssignment />
       </FieldElement>

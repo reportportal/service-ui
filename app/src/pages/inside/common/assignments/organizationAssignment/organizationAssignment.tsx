@@ -21,6 +21,7 @@ interface OrganizationAssignmentProps {
   value?: Organization | Organization[];
   isMultiple?: boolean;
   organizationRoleDisabledTooltip?: string | null;
+  formName?: string;
 }
 
 export const OrganizationAssignment = ({
@@ -28,6 +29,7 @@ export const OrganizationAssignment = ({
   onChange,
   isMultiple = false,
   organizationRoleDisabledTooltip = null,
+  formName,
 }: OrganizationAssignmentProps) => {
   const updateItem = (updates: Partial<Organization>, index?: number) => {
     if (isMultiple) {
@@ -61,6 +63,7 @@ export const OrganizationAssignment = ({
               onChange={(updates) => updateItem(updates, index)}
               onRemove={() => removeItem(index)}
               collapsable
+              formName={formName}
             />
           </div>
         ))}
@@ -73,6 +76,7 @@ export const OrganizationAssignment = ({
       value={value as Organization}
       onChange={(updates) => updateItem(updates)}
       organizationRoleDisabledTooltip={organizationRoleDisabledTooltip}
+      formName={formName}
     />
   );
 };

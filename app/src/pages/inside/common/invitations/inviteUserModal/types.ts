@@ -29,6 +29,8 @@ export interface InviteUserInstanceFormData {
   email: string | InviteUserInstanceEmailOption;
   organizations: Organization[];
   organization?: { name?: string };
+  isAddingOrganization?: boolean;
+  isAddingProject?: boolean;
 }
 
 export type FormDataMap = {

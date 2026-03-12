@@ -19,7 +19,7 @@ import { Button, PlusIcon, Tooltip } from '@reportportal/ui-kit';
 
 interface AddItemButtonProps {
   onClick: () => void;
-  tooltipContent: MessageDescriptor;
+  tooltipContent?: MessageDescriptor;
   text: string;
   tooltipClassname?: string;
   disabled?: boolean;
@@ -46,7 +46,7 @@ export const AddItemButton = ({
     </Button>
   );
 
-  return disabled ? (
+  return disabled && tooltipContent ? (
     <Tooltip
       wrapperClassName={tooltipClassname}
       placement="top"
