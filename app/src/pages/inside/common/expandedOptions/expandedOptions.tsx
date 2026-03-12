@@ -75,6 +75,8 @@ export const ExpandedOptions = ({
     searchFilteredExpandedIds,
     isSearchFilteredLoading,
     hasSearchFilteredFolders,
+    handleToggleSearchFilteredFolder,
+    filteredTotalTestCases,
   } = useSearchFilteredFolders({ searchQuery: pageSearchQuery });
 
   const isDragAndDropEnabled = !!(onMoveFolder && onDuplicateFolder);
@@ -100,6 +102,9 @@ export const ExpandedOptions = ({
     [isDragAndDropEnabled],
   );
 
+  const folderSearchSource = pageSearchQuery ? searchFilteredFolders : folders;
+  const folderSearchExpandedIds = pageSearchQuery ? searchFilteredExpandedIds : expandedIds;
+
   const {
     searchQuery,
     isSearchVisible,
@@ -112,24 +117,28 @@ export const ExpandedOptions = ({
     handleSearchChange,
     handleSearchClear,
     handleMagnifierClick,
-  } = useFolderSearch({ folders, expandedIds, onToggleFolder });
+  } = useFolderSearch({ folders: folderSearchSource, expandedIds: folderSearchExpandedIds, onToggleFolder: pageSearchQuery ? handleToggleSearchFilteredFolder : onToggleFolder });
 
   const allItemsTitle =
     instanceKey === TMS_INSTANCE_KEY.MANUAL_LAUNCH
       ? formatMessage(messages.allTestExecutions)
       : formatMessage(messages.allTestCases);
 
-  const totalTestCases = folders.reduce((total: number, folder: TransformedFolder): number => {
-    const countFolderTestCases = (folder: TransformedFolder): number => {
-      return (folder.folders ?? []).reduce(
+  const allTestCasesTotal = folders.reduce((total: number, folder: TransformedFolder): number => {
+    const countFolderTestCases = (foldersSelector: TransformedFolder): number => {
+      return (foldersSelector.folders ?? []).reduce(
         (subTotal: number, subFolder: TransformedFolder): number =>
           subTotal + countFolderTestCases(subFolder),
-        folder.testsCount || 0,
+        foldersSelector.testsCount || 0,
       );
     };
 
     return total + countFolderTestCases(folder);
   }, 0);
+
+  const totalTestCases = pageSearchQuery ? filteredTotalTestCases : allTestCasesTotal;
+  const hidePageSearchSidebar =
+    !!pageSearchQuery && !isSearchFilteredLoading && !hasSearchFilteredFolders;
 
   const handleMoveFolder = useCallback(
     (draggedItem: TreeDragItem, targetId: string | number, position: TreeDropPosition) => {
@@ -149,6 +158,7 @@ export const ExpandedOptions = ({
     folderList: TransformedFolder[],
     expandedFolderIds: number[],
     query: string,
+    onToggle: (folder: TransformedFolder) => void,
   ) =>
     folderList.map((folder, idx) => (
       <Folder
@@ -159,7 +169,7 @@ export const ExpandedOptions = ({
         expandedIds={expandedFolderIds}
         onFolderClick={onFolderClick}
         setAllTestCases={setAllTestCases}
-        onToggleFolder={handleToggleFolder}
+        onToggleFolder={onToggle}
         searchQuery={query}
         index={idx}
         parentId={null}
@@ -169,18 +179,16 @@ export const ExpandedOptions = ({
     ));
 
   const renderFolderTree = () => {
-    if (pageSearchQuery) {
-      if (isSearchFilteredLoading) {
-        return <BubblesLoader />;
-      };
-      if (!hasSearchFilteredFolders) {
-        return <EmptySearchState />;
-      };
-      return renderFolderList(searchFilteredFolders, searchFilteredExpandedIds, '');
+    if (pageSearchQuery && isSearchFilteredLoading) {
+      return <BubblesLoader />;
+    }
+
+    if (pageSearchQuery && !hasSearchFilteredFolders) {
+      return <EmptySearchState />;
     }
 
     if (!searchQuery || hasAnyMatch) {
-      return renderFolderList(filteredFolders, effectiveExpandedIds, searchQuery);
+      return renderFolderList(filteredFolders, effectiveExpandedIds, searchQuery, handleToggleFolder);
     }
 
     return <EmptySearchState />;
@@ -213,89 +221,91 @@ export const ExpandedOptions = ({
         />
       )}
       <div className={cx('expanded-options')}>
-        <div className={cx('expanded-options__sidebar')}>
-          <div className={cx('sidebar-header')}>
-            <button
-              type="button"
-              className={cx('sidebar-header__title', {
-                'sidebar-header__title--active': activeFolderId === null,
-              })}
-              onClick={setAllTestCases}
-            >
-              <span className={cx('sidebar-header__title--text')}>{allItemsTitle}</span>
-              <span className={cx('sidebar-header__title--counter')}>
-                {totalTestCases.toLocaleString()}
-              </span>
-            </button>
-          </div>
-          <div className={cx('expanded-options__sidebar-separator')} />
-          <div className={cx('expanded-options__sidebar-actions')}>
-            <div className={cx('expanded-options__sidebar-actions--title')} id="tree_label">
-              {formatMessage(messages.folders)}
-            </div>
-            <BaseIconButton
-              className={cx('expanded-options__sidebar-actions--search', {
-                'expanded-options__sidebar-actions--search-panel-open': isSearchVisible,
-                'expanded-options__sidebar-actions--search-has-query': !!searchQuery,
-              })}
-              onClick={handleMagnifierClick}
-            >
-              {searchQuery ? Parser(String(FilledSearchIcon)) : Parser(String(OutlineSearchIcon))}
-            </BaseIconButton>
-            {renderCreateFolderButton?.()}
-          </div>
-          {isSearchVisible && (
-            <div ref={searchWrapperRef} className={cx('expanded-options__search-wrapper')}>
-              <FieldText
-                ref={searchInputRef}
-                value={searchQuery}
-                onChange={handleSearchChange}
-                onClear={handleSearchClear}
-                placeholder={formatMessage(messages.searchPlaceholder)}
-                defaultWidth={false}
-                clearable
-                startIcon={<SearchIcon />}
-              />
-            </div>
-          )}
-          <div
-            className={cx('expanded-options__sidebar-folders-wrapper', {
-              'expanded-options__sidebar-folders-wrapper--with-search': isSearchVisible,
-            })}
-          >
-            <ScrollWrapper className={cx('expanded-options__scroll-wrapper-background')}>
-              <div
-                ref={dropZoneRef}
-                className={cx('expanded-options__sidebar-folders', {
-                  'expanded-options__sidebar-folders--dragging': isDraggingAny,
+        {hidePageSearchSidebar || (
+          <div className={cx('expanded-options__sidebar')}>
+            <div className={cx('sidebar-header')}>
+              <button
+                type="button"
+                className={cx('sidebar-header__title', {
+                  'sidebar-header__title--active': activeFolderId === null,
                 })}
+                onClick={setAllTestCases}
               >
-                {isDraggingAny && !isOverFoldersZone && (
-                  <div className={cx('expanded-options__drop-placeholder')}>
-                    <div className={cx('expanded-options__drop-placeholder-content')}>
-                      <i className={cx('expanded-options__drop-placeholder-icon')}>
-                        {Parser(FolderDropIcon)}
-                      </i>
-                      <span className={cx('expanded-options__drop-placeholder-text')}>
-                        {formatMessage({
-                          id: 'expandedOptions.dropPlaceholder',
-                          defaultMessage: 'Drop items here to move them into a folder',
-                        })}
-                      </span>
-                    </div>
-                  </div>
-                )}
-                <ul
-                  className={cx('folders-tree', 'folders-tree--outer')}
-                  role="tree"
-                  aria-labelledby="tree_label"
-                >
-                  {renderFolderTree()}
-                </ul>
+                <span className={cx('sidebar-header__title--text')}>{allItemsTitle}</span>
+                <span className={cx('sidebar-header__title--counter')}>
+                  {totalTestCases.toLocaleString()}
+                </span>
+              </button>
+            </div>
+            <div className={cx('expanded-options__sidebar-separator')} />
+            <div className={cx('expanded-options__sidebar-actions')}>
+              <div className={cx('expanded-options__sidebar-actions--title')} id="tree_label">
+                {formatMessage(messages.folders)}
               </div>
-            </ScrollWrapper>
+              <BaseIconButton
+                className={cx('expanded-options__sidebar-actions--search', {
+                  'expanded-options__sidebar-actions--search-panel-open': isSearchVisible,
+                  'expanded-options__sidebar-actions--search-has-query': !!searchQuery,
+                })}
+                onClick={handleMagnifierClick}
+              >
+                {searchQuery ? Parser(String(FilledSearchIcon)) : Parser(String(OutlineSearchIcon))}
+              </BaseIconButton>
+              {renderCreateFolderButton?.()}
+            </div>
+            {isSearchVisible && (
+              <div ref={searchWrapperRef} className={cx('expanded-options__search-wrapper')}>
+                <FieldText
+                  ref={searchInputRef}
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  onClear={handleSearchClear}
+                  placeholder={formatMessage(messages.searchPlaceholder)}
+                  defaultWidth={false}
+                  clearable
+                  startIcon={<SearchIcon />}
+                />
+              </div>
+            )}
+            <div
+              className={cx('expanded-options__sidebar-folders-wrapper', {
+                'expanded-options__sidebar-folders-wrapper--with-search': isSearchVisible,
+              })}
+            >
+              <ScrollWrapper className={cx('expanded-options__scroll-wrapper-background')}>
+                <div
+                  ref={dropZoneRef}
+                  className={cx('expanded-options__sidebar-folders', {
+                    'expanded-options__sidebar-folders--dragging': isDraggingAny,
+                  })}
+                >
+                  {isDraggingAny && !isOverFoldersZone && (
+                    <div className={cx('expanded-options__drop-placeholder')}>
+                      <div className={cx('expanded-options__drop-placeholder-content')}>
+                        <i className={cx('expanded-options__drop-placeholder-icon')}>
+                          {Parser(FolderDropIcon)}
+                        </i>
+                        <span className={cx('expanded-options__drop-placeholder-text')}>
+                          {formatMessage({
+                            id: 'expandedOptions.dropPlaceholder',
+                            defaultMessage: 'Drop items here to move them into a folder',
+                          })}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                  <ul
+                    className={cx('folders-tree', 'folders-tree--outer')}
+                    role="tree"
+                    aria-labelledby="tree_label"
+                  >
+                    {renderFolderTree()}
+                  </ul>
+                </div>
+              </ScrollWrapper>
+            </div>
           </div>
-        </div>
+        )}
         <ScrollWrapper>
           <div className={cx('expanded-options__content')}>{children}</div>
         </ScrollWrapper>

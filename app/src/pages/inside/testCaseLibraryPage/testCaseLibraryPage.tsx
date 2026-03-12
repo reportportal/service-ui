@@ -37,7 +37,7 @@ import {
   locationSelector,
   updatePagePropertiesAction,
 } from 'controllers/pages';
-import { areFoldersLoadingSelector, foldersSelector } from 'controllers/testCase';
+import { areFoldersLoadingSelector, foldersSelector, isLoadingFilteredFoldersSelector } from 'controllers/testCase';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { SearchField } from 'components/fields/searchField';
 import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
@@ -68,6 +68,7 @@ export const TestCaseLibraryPage = () => {
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
   const { openModal: openImportFolderModal } = useImportTestCaseModal();
 
+  const isLoadingFilteredFolders = useSelector(isLoadingFilteredFoldersSelector);
   const [searchValue, setSearchValue] = useState(location?.query?.testCasesSearchParams || '');
   const [isFilterSidePanelVisible, setIsFilterSidePanelVisible] = useState(false);
   const [selectedPriorities, setSelectedPriorities] = useState<string[]>([]);
@@ -76,6 +77,8 @@ export const TestCaseLibraryPage = () => {
   const { canManageTestCases } = useUserPermissions();
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
   const hasFolders = !isEmpty(folders);
+  const isSearchLoading =
+    searchValue !== (location?.query?.testCasesSearchParams || '') || isLoadingFilteredFolders;
 
   const activeFiltersCount =
     (isEmpty(selectedPriorities) ? 0 : 1) + (isEmpty(selectedTags) ? 0 : 1);
@@ -140,7 +143,7 @@ export const TestCaseLibraryPage = () => {
             <div className={cx('test-case-library-page__right-section')}>
               <div className={cx('test-case-library-page__actions')}>
                 <SearchField
-                  isLoading={areFoldersLoading}
+                  isLoading={areFoldersLoading || isSearchLoading}
                   searchValue={searchValue}
                   placeholder={formatMessage(testCaseListMessages.searchPlaceholder)}
                   setSearchValue={setSearchValue}
