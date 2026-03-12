@@ -85,5 +85,3 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- :whale: Docker image: $TARGET_REGISTRY/$TARGET_REPOSITORY:$IMAGE_TAG" >> $GITHUB_STEP_SUMMARY
           echo "- :octocat: The commit SHA from which the build was performed: [$GITHUB_SHA](https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA)" >> $GITHUB_STEP_SUMMARY
-
- 
