@@ -32,8 +32,8 @@ function* watchFetchProjectData() {
   yield takeEvery(FETCH_PROJECT_DATA, fetchProjectData);
 }
 
-function* fetchOrganizationEventsData({ payload: { organizationSlug } }) {
-  yield* withActiveOrganization(organizationSlug, function* onActiveOrgReady() {
+function* fetchOrganizationEventsData({ payload }) {
+  yield* withActiveOrganization(payload?.organizationSlug, function* onActiveOrgReady() {
     yield put(fetchEventsAction());
   });
 }
