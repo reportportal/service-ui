@@ -258,6 +258,13 @@ $sidebar-width: calc(100vw - 408px);
   color: var(--rp-ui-base-almost-black);
 }
 
+.execution-cell-button {
+  all: unset;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+}
+
 .execution-status-cell {
   display: flex;
   align-items: center;
