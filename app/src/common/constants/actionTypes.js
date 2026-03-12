@@ -43,6 +43,7 @@ export const CREATE_INTEGRATION = 'createIntegration';
 export const UPDATE_INTEGRATION = 'updateIntegration';
 export const DELETE_INTEGRATION = 'deleteIntegration';
 export const UPDATE_PROJECT = 'updateProject';
+export const UPDATE_PROJECT_NAME = 'updateProjectName';
 export const UPDATE_NOTIFICATIONS = 'emailConfig';
 export const NOTIFICATION_RULE = 'notificationRule';
 export const UPDATE_NOTIFICATION_SETTINGS = 'updateNotificationSettings';
@@ -85,6 +86,7 @@ export const ACTIONS_WITH_IMPORT = 'importActions';
 export const ACTIONS_WITH_LAUNCH = 'launchActions';
 export const ACTIONS_UPDATE_TEST_ITEM = 'updateTestItemActions';
 export const ACTIONS_WITH_NOTIFICATIONS = 'notificationsActions';
+export const ACTIONS_WITH_PROJECT = 'projectActions';
 
 export const GROUP_TO_ACTION_MAP = {
   [ACTIONS_WITH_BTS_ISSUES]: [POST_ISSUE, LINK_ISSUE, UNLINK_ISSUE],
@@ -98,6 +100,7 @@ export const GROUP_TO_ACTION_MAP = {
   [ACTIONS_WITH_IMPORT]: [START_IMPORT, FINISH_IMPORT],
   [ACTIONS_UPDATE_TEST_ITEM]: [UPDATE_ITEM, ANALYZE_ITEM],
   [ACTIONS_WITH_NOTIFICATIONS]: [NOTIFICATION_RULE_FILTERING_OPTION, EMAIL_CONFIG_FILTERING_OPTION],
+  [ACTIONS_WITH_PROJECT]: [UPDATE_PROJECT, UPDATE_PROJECT_NAME],
 };
 
 export const ACTION_TO_GROUP_MAP = {
@@ -138,4 +141,7 @@ export const ACTION_TO_GROUP_MAP = {
 
   [UPDATE_ITEM]: ACTIONS_UPDATE_TEST_ITEM,
   [ANALYZE_ITEM]: ACTIONS_UPDATE_TEST_ITEM,
+
+  [UPDATE_PROJECT]: ACTIONS_WITH_PROJECT,
+  [UPDATE_PROJECT_NAME]: ACTIONS_WITH_PROJECT,
 };

@@ -16,6 +16,7 @@
 
 import { all, select, put, takeEvery } from 'redux-saga/effects';
 import { projectKeySelector, fetchProjectAction } from 'controllers/project';
+import { withActiveOrganization } from 'controllers/organization/sagas';
 import { FETCH_ORGANIZATION_EVENTS_DATA, FETCH_PROJECT_DATA } from './constants';
 import { allUsersSagas } from './allUsers';
 import { eventsSagas, fetchEventsAction } from './events';
@@ -31,8 +32,10 @@ function* watchFetchProjectData() {
   yield takeEvery(FETCH_PROJECT_DATA, fetchProjectData);
 }
 
-function* fetchOrganizationEventsData() {
-  yield put(fetchEventsAction());
+function* fetchOrganizationEventsData({ payload: { organizationSlug } }) {
+  yield* withActiveOrganization(organizationSlug, function* onActiveOrgReady() {
+    yield put(fetchEventsAction());
+  });
 }
 
 function* watchFetchOrganizationEventsData() {

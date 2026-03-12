@@ -85,6 +85,7 @@ import {
   UPDATE_NOTIFICATION_SETTINGS,
   UPDATE_NOTIFICATION_RULE,
   DELETE_NOTIFICATION_RULE,
+  UPDATE_PROJECT_NAME,
 } from 'common/constants/actionTypes';
 
 export const actionMessages = defineMessages({
@@ -168,6 +169,10 @@ export const actionMessages = defineMessages({
   [UPDATE_PROJECT]: {
     id: 'EventActions.updateProject',
     defaultMessage: 'Update project',
+  },
+  [UPDATE_PROJECT_NAME]: {
+    id: 'EventActions.updateProjectName',
+    defaultMessage: 'Rename project',
   },
   [UPDATE_DEFECT]: {
     id: 'EventActions.updateDefect',
