@@ -73,6 +73,7 @@ module.exports = {
     }),
     // TODO: wait until https://github.com/waysact/webpack-subresource-integrity/issues/176 will be resolved
     // TODO: we are forced to use it because of webpack-subresource-integrity has not introduced the fix yet
+    // Patched @sowtame/webpack-subresource-integrity: findChunks no longer skips wmfSharedChunk so MF chunk hashes are resolved.
     new SubresourceIntegrityPlugin({
       hashFuncNames: ['sha256', 'sha384'],
       hashLoading: 'lazy',
