@@ -241,10 +241,6 @@ export const notificationMessages = defineMessages({
     id: 'TestCaseLibraryPage.testCasesDuplicatedSuccess',
     defaultMessage: 'Test cases have been duplicated successfully.',
   },
-  testCaseDuplicatedSuccess: {
-    id: 'TestCaseLibraryPage.testCaseDuplicatedSuccess',
-    defaultMessage: 'Test case has been duplicated successfully.',
-  },
   testCaseDeletedSuccess: {
     id: 'TestCaseLibraryPage.testCaseDeletedSuccess',
     defaultMessage: 'Test case has been deleted successfully.',
@@ -273,6 +269,10 @@ export const notificationMessages = defineMessages({
     id: 'TestCaseLibraryPage.testCaseCreatedSuccess',
     defaultMessage: 'Test Case has been created successfully.',
   },
+  testCaseDuplicatedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseDuplicatedSuccess',
+    defaultMessage: 'Test Case has been duplicated successfully.',
+  },
   testCasesAddingToTestPlanSuccess: {
     id: 'TestCaseLibraryPage.testCasesAddedToTestPlanSuccess',
     defaultMessage: 'Selected Test Cases have been added to the Test Plan successfully.',
@@ -295,7 +295,8 @@ export const notificationMessages = defineMessages({
   },
   testCaseFolderMovedSuccess: {
     id: 'TestCaseLibraryPage.testCaseFolderMovedSuccess',
-    defaultMessage: "Folder ''{folderName}'' has been successfully moved to {targetFolderName, select, null {root folder} other {''{targetFolderName}''}}.",
+    defaultMessage:
+      "Folder ''{folderName}'' has been successfully moved to {targetFolderName, select, null {root folder} other {''{targetFolderName}''}}.",
   },
   testCaseFolderMoveFailed: {
     id: 'TestCaseLibraryPage.testCaseFolderMoveFailed',

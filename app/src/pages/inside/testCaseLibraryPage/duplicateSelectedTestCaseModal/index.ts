@@ -14,15 +14,5 @@
  * limitations under the License.
  */
 
-import { useModal } from 'common/hooks';
-
-import DuplicateTestCaseModal, {
-  DUPLICATE_TEST_CASE_MODAL_KEY,
-  DuplicateTestCaseModalData,
-} from './duplicateTestCaseModal';
-
-export const useDuplicateTestCaseModal = () =>
-  useModal<DuplicateTestCaseModalData>({
-    modalKey: DUPLICATE_TEST_CASE_MODAL_KEY,
-    renderModal: (data) => <DuplicateTestCaseModal data={data} />,
-  });
+export { DUPLICATE_SELECTED_TEST_CASE_MODAL_KEY } from './duplicateSelectedTestCaseModal';
+export { useDuplicateSelectedTestCaseModal } from './useDuplicateSelectedTestCaseModal';

@@ -17,29 +17,21 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  duplicateToFolderTitle: {
-    id: 'DuplicateTestCaseModal.title',
+  title: {
+    id: 'BatchDuplicateTestCasesModal.title',
     defaultMessage: 'Duplicate to Folder',
   },
-  duplicateTestCaseTitle: {
-    id: 'DuplicateTestCaseModal.duplicateTestCaseTitle',
-    defaultMessage: 'Duplicate test case',
-  },
   batchDuplicateDescription: {
-    id: 'DuplicateTestCaseModal.description',
+    id: 'BatchDuplicateTestCasesModal.description',
     defaultMessage:
       'You are about to copy <b>{count}</b> selected test {count, plural, one {case} other {cases}} to a new location',
   },
-  duplicateTestCaseDescription: {
-    id: 'DuplicateTestCaseModal.duplicateTestCaseDescription',
-    defaultMessage: 'You are about to copy <b>{testCaseName}</b> to a new location',
-  },
   duplicateToExistingFolder: {
-    id: 'DuplicateTestCaseModal.duplicateToExistingFolder',
+    id: 'BatchDuplicateTestCasesModal.duplicateToExistingFolder',
     defaultMessage: 'Duplicate to existing folder',
   },
   duplicateToRootDirectory: {
-    id: 'DuplicateTestCaseModal.duplicateToRootDirectory',
+    id: 'BatchDuplicateTestCasesModal.duplicateToRootDirectory',
     defaultMessage: 'Duplicate to root directory',
   },
 });

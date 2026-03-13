@@ -52,7 +52,7 @@ import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage
 import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
 import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
 import { useMoveTestCaseModal } from 'pages/inside/testCaseLibraryPage/moveTestCaseModal/useMoveTestCaseModal';
-import { useDuplicateTestCaseModal } from 'pages/inside/testCaseLibraryPage/allTestCasesPage/duplicateTestCaseModal';
+import { useDuplicateSelectedTestCaseModal } from 'pages/inside/testCaseLibraryPage/duplicateSelectedTestCaseModal';
 import { AddToLaunchButton } from 'pages/inside/testCaseLibraryPage/addToLaunchButton';
 
 import { RequirementsList } from '../../requirementsList/requirementsList';
@@ -159,7 +159,7 @@ export const TestCaseSidePanel = memo(
     const { openModal: openAddTestCasesToTestPlanModal } = useAddTestCasesToTestPlanModal();
     const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
     const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
-    const { openModal: openDuplicateTestCaseModal } = useDuplicateTestCaseModal();
+    const { openModal: openDuplicateSelectedTestCaseModal } = useDuplicateSelectedTestCaseModal();
 
     const folderId = testCase?.testFolder?.id;
 
@@ -189,12 +189,7 @@ export const TestCaseSidePanel = memo(
         [TestCaseMenuAction.EDIT]: handleEditTestCase,
         [TestCaseMenuAction.DELETE]: () => openDeleteTestCaseModal({ testCase }),
         [TestCaseMenuAction.MOVE]: () => openMoveTestCaseModal({ testCase }),
-        [TestCaseMenuAction.DUPLICATE]: () =>
-          openDuplicateTestCaseModal({
-            selectedTestCaseIds: [testCase.id],
-            count: 1,
-            testCase,
-          }),
+        [TestCaseMenuAction.DUPLICATE]: () => openDuplicateSelectedTestCaseModal({ testCase }),
         [TestCaseMenuAction.HISTORY]: () => {
           dispatch({
             type: TEST_CASE_LIBRARY_PAGE,

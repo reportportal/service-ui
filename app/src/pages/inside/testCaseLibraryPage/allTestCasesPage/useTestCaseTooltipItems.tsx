@@ -25,7 +25,7 @@ import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 
 import { useEditTestCaseModal } from '../editSelectedTestCaseModal';
 import { useMoveTestCaseModal } from '../moveTestCaseModal/useMoveTestCaseModal';
-import { useDuplicateTestCaseModal } from './duplicateTestCaseModal';
+import { useDuplicateSelectedTestCaseModal } from '../duplicateSelectedTestCaseModal';
 
 interface TestCaseTooltipItemsProps {
   testCase: ExtendedTestCase;
@@ -37,7 +37,7 @@ export const useTestCaseTooltipItems = ({ testCase }: TestCaseTooltipItemsProps)
   const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
   const { openModal: openEditTestCaseModal } = useEditTestCaseModal();
   const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
-  const { openModal: openDuplicateTestCaseModal } = useDuplicateTestCaseModal();
+  const { openModal: openDuplicateSelectedTestCaseModal } = useDuplicateSelectedTestCaseModal();
 
   const permissionMap = [
     TestCaseMenuAction.DUPLICATE,
@@ -55,12 +55,7 @@ export const useTestCaseTooltipItems = ({ testCase }: TestCaseTooltipItemsProps)
       [TestCaseMenuAction.DELETE]: () => openDeleteTestCaseModal({ testCase }),
       [TestCaseMenuAction.EDIT]: () => openEditTestCaseModal({ testCase }),
       [TestCaseMenuAction.MOVE]: () => openMoveTestCaseModal({ testCase }),
-      [TestCaseMenuAction.DUPLICATE]: () =>
-        openDuplicateTestCaseModal({
-          selectedTestCaseIds: [testCase.id],
-          count: 1,
-          testCase,
-        }),
+      [TestCaseMenuAction.DUPLICATE]: () => openDuplicateSelectedTestCaseModal({ testCase }),
     },
     getExcludedActionsFromPermissionMap(permissionMap),
   );
