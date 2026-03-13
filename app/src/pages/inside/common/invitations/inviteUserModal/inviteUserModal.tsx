@@ -156,15 +156,11 @@ export const InviteUser = <L extends keyof FormDataMap>({
   };
 
   const inviteUserAndCloseModal = async (formData: FormDataMap[L]) => {
-    const userData = buildUserData(formData);
+    const userData = buildUserData(formData) as InvitationRequestData;
     const getCondition = (): InviteProjectCondition => {
       if (level === Level.PROJECT) return 'without_project';
-      const hasWithProject = userData.organizations.some(
-        (org: Organization) => org.projects && org.projects.length > 0,
-      );
-      const hasWithoutProject = userData.organizations.some(
-        (org: Organization) => !org.projects || org.projects.length === 0,
-      );
+      const hasWithProject = userData.organizations.some((org) => org.projects?.length > 0);
+      const hasWithoutProject = userData.organizations.some((org) => !org.projects?.length);
       if (hasWithProject && hasWithoutProject) return 'with_project#without_project';
       if (hasWithProject) return 'with_project';
       return 'without_project';
