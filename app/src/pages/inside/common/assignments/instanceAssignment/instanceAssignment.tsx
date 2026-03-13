@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   WrappedFieldArrayProps,
@@ -57,6 +57,8 @@ import { URLS } from 'common/urls';
 import { AddItemButton } from '../organizationAssignment/organizationItem/addItemButton';
 import { MEMBER, EDITOR, VIEWER, MANAGER } from 'common/constants/projectRoles';
 import { ORGANIZATIONS } from 'pages/instance/allUsersPage/allUsersHeader/createUserModal/constants';
+import { messages as invitationMessages } from 'common/constants/localization/invitationsLocalization';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 import styles from './instanceAssignment.scss';
 
@@ -69,15 +71,11 @@ const messages = defineMessages({
   },
   project: {
     id: 'InstanceAssignment.project',
-    defaultMessage: 'Project (optional)',
+    defaultMessage: 'Project',
   },
   organizationPlaceholder: {
     id: 'InstanceAssignment.organizationPlaceholder',
     defaultMessage: 'Enter to select organization',
-  },
-  projectPlaceholder: {
-    id: 'InstanceAssignment.projectPlaceholder',
-    defaultMessage: 'Enter to select project',
   },
   setOrganizationManager: {
     id: 'InstanceAssignment.setOrganizationManager',
@@ -156,6 +154,7 @@ export const InstanceAssignment = ({
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const selector = formValueSelector(formName);
+  const isAddingProject = useSelector((state) => selector(state, 'isAddingProject') as boolean | undefined);
   const errors = useSelector((state) => getFormSyncErrors(formName)(state)) as {
     organization: { name: string };
   };
@@ -174,8 +173,14 @@ export const InstanceAssignment = ({
   const [organizationProjects, setOrganizationProjects] = useState<ProjectsSearchesItem[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
   const [selectedOrganizationId, setSelectedOrganizationId] = useState<number | null>(null);
+  const [totalProjects, setTotalProjects] = useState(0);
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const allOrganizations = fields.getAll();
+
+  useEffect(() => {
+    const shouldFormBeOpen = isOpen || allOrganizations?.length === 0;
+    dispatch(change(formName, 'isAddingOrganization', shouldFormBeOpen));
+  }, [isOpen, allOrganizations?.length, dispatch, formName]);
 
   const resetOrganization = () => {
     dispatch(
@@ -266,9 +271,9 @@ export const InstanceAssignment = ({
   };
 
   return (
-    <div>
+    <div className={cx('forms-wrapper')}>
       <FieldElement name={ORGANIZATIONS} className={cx('organizations')}>
-        <OrganizationAssignment isMultiple />
+        <OrganizationAssignment isMultiple formName={formName} />
       </FieldElement>
       {isOpen || allOrganizations?.length === 0 ? (
         <div className={cx('instance-assignment')}>
@@ -278,21 +283,35 @@ export const InstanceAssignment = ({
                 <AsyncAutocompleteV2
                   inputProps={{
                     label: formatMessage(messages.organization),
+                    clearable: true,
+                    onClear: () => {
+                      dispatch(change(formName, FORM_FIELDS.ORGANIZATION.NAME, null));
+                      dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.NAME, null));
+                      setSelectedOrganizationId(null);
+                      setSelectedProjectId(null);
+                      setOrganizationProjects([]);
+                      setTotalProjects(0);
+                    },
                   }}
                   placeholder={formatMessage(messages.organizationPlaceholder)}
                   getURI={URLS.organizationSearches}
                   getRequestParams={getRequestOrganizationsParams}
                   makeOptions={makeOrganizationsOptions}
                   createWithoutConfirmation
+                  skipOptionCreation
                   popoverClassName={cx('popover-organization')}
                   onChange={(organizationName: string) => {
-                    setSelectedOrganizationId(
-                      notAssignedOrganizations.find(({ name }) => name === organizationName)?.id,
-                    );
+                    const selectedOrg = notAssignedOrganizations.find(({ name }) => name === organizationName);
+                    setSelectedOrganizationId(selectedOrg?.id || null);
+                    dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.NAME, null));
+                    setSelectedProjectId(null);
+                    setOrganizationProjects([]);
+                    setTotalProjects(selectedOrg?.relationships?.projects?.meta?.count ?? 0);
                   }}
                   isRequired={isOrganizationRequired}
                   useFixedPositioning
                   dropdownMatchInputWidth
+                  customEmptyListMessage={formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_OPTIONS)}
                 />
               </FieldErrorHint>
             </FieldProvider>
@@ -315,17 +334,28 @@ export const InstanceAssignment = ({
             <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.NAME}>
               <FieldErrorHint provideHint={false}>
                 <AsyncAutocompleteV2
+                  key={`project-${selectedOrganizationId}`}
                   inputProps={{
                     label: formatMessage(messages.project),
+                    clearable: totalProjects > 0 && !!selectedOrganizationId,
+                    placeholder: formatMessage(invitationMessages.selectSearchProject),
+                    onClear: () => {
+                      dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.NAME, null));
+                      setSelectedProjectId(null);
+                    },
                   }}
-                  placeholder={formatMessage(messages.projectPlaceholder)}
+                  placeholder={formatMessage(invitationMessages.selectSearchProject)}
                   getURI={() => URLS.organizationProjectsSearches(selectedOrganizationId)}
                   getRequestParams={getRequestOrganizationsParams}
                   makeOptions={makeProjectsOptions}
                   onChange={handleProjectChange}
                   createWithoutConfirmation
+                  skipOptionCreation
                   className={cx('autocomplete')}
                   disabled={!selectedOrganizationId}
+                  customEmptyListMessage={totalProjects === 0 && selectedOrganizationId ? formatMessage(invitationMessages.noProjectsCreated) : formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_OPTIONS)}
+                  isDropdownMode={totalProjects === 0 && selectedOrganizationId}
+                  icon={totalProjects === 0 && selectedOrganizationId ? <div /> : undefined}
                   useFixedPositioning
                   dropdownMatchInputWidth
                 />
@@ -389,8 +419,8 @@ export const InstanceAssignment = ({
           <AddItemButton
             tooltipClassname={cx('tooltip')}
             onClick={() => setIsOpen(true)}
-            tooltipContent={messages.availableOrganizations}
-            disabled={areOrganizationsExhausted}
+            tooltipContent={areOrganizationsExhausted ? messages.availableOrganizations : undefined}
+            disabled={areOrganizationsExhausted || !!isAddingProject}
             text={formatMessage(messages.addOrganization)}
           />
         </div>

@@ -119,4 +119,21 @@ export const messages: MessageDescriptorMap = defineMessages({
     id: 'InviteUser.duplicationOrganization',
     defaultMessage: 'User with this email is already assigned to the organization',
   },
+  noProjectsCreated: {
+    id: 'InviteUser.noProjectsCreated',
+    defaultMessage: 'No projects created yet',
+  },
+  organizationsAndProjectsToInvite: {
+    id: 'InviteUserInstanceForm.invite',
+    defaultMessage: 'Organizations and projects to invite',
+  },
+  organizationsAndProjectsDescription: {
+    id: 'InviteUserInstanceForm.inviteDescription',
+    defaultMessage:
+      'Add organizations and projects to specify where the invited user will have access',
+  },
+  sendNewInviteViaEmail: {
+    id: 'InviteUser.sendNewInviteViaEmail',
+    defaultMessage: 'Send new invite via email',
+  },
 });
