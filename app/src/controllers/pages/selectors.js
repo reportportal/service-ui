@@ -40,7 +40,7 @@ import {
   locationSelector,
   payloadSelector,
 } from './typed-selectors';
-import { userRolesSelector } from './userRolesSelector';
+import { userRolesSelector } from './'; // TODO: circular dependency — direct import from './userRolesSelector' breaks module resolution
 
 export const searchStringSelector = (state) => locationSelector(state).search || '';
 export const isInitialDispatchDoneSelector = (state) => !!locationSelector(state).kind;
