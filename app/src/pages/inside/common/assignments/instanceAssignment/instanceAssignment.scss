@@ -43,6 +43,14 @@
     .autocomplete-checkbox {
       font-weight: var(--rp-ui-base-fw-regular);
       margin-top: 8px;
+      width: calc(100% - 24px);
+      overflow: hidden;
+
+      & > span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   }
 

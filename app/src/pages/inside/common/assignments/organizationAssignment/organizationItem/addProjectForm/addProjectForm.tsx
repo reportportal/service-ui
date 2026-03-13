@@ -26,6 +26,7 @@ import {
 import { createClassnames } from 'common/utils';
 import { useIntl } from 'react-intl';
 import { messages } from 'common/constants/localization/invitationsLocalization';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 import { URLS } from 'common/urls';
 import {
@@ -119,6 +120,7 @@ export const AddProjectForm = ({
           makeOptions={makeOptions}
           onChange={handleChangeProject}
           createWithoutConfirmation
+          customEmptyListMessage={formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_OPTIONS)}
           useFixedPositioning
           dropdownMatchInputWidth
         />

@@ -95,6 +95,7 @@ export const ExternalUserInvitationModal = ({
             <Button
               icon={<CopyIcon />}
               iconPlace="start"
+              className={cx('copy-button')}
               onClick={copyLink}>
                 {formatMessage(messages.copyLink)}
               </Button>

@@ -16,7 +16,7 @@
 
 import { useCallback, useRef } from 'react';
 import type { MutableRefObject, ReactNode } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { untouch } from 'redux-form';
 import { createClassnames } from 'common/utils';
@@ -103,6 +103,7 @@ function renderOption(
   index: number,
   isNew: boolean,
   getItemProps: GetItemPropsT<string | EmailOption>,
+  formatMessage: (message: typeof messages.sendNewInviteViaEmail) => string,
 ): ReactNode {
   if (isNew) return null;
   const itemProps = getItemProps({ item, index });
@@ -115,10 +116,7 @@ function renderOption(
         </div>
         <div className={cx('info')}>
           <span className={cx('name')}>
-            <FormattedMessage
-              id="InviteUserEmailAutocompleteField.sendNewInviteViaEmail"
-              defaultMessage="Send new invite via email"
-            />
+            {formatMessage(messages.sendNewInviteViaEmail)}
           </span>
           <span className={cx('email')}>{item.email}</span>
         </div>
@@ -150,8 +148,8 @@ const InviteUserEmailAutocompleteFieldContent = ({
   ...rest
 }: {
   inputValueRef: MutableRefObject<string>;
-  input?: { 
-    onChange: (value: unknown) => void; 
+  input?: {
+    onChange: (value: unknown) => void;
     setTouched?: (touched: boolean) => void;
     onFocus?: () => void;
   };
@@ -193,6 +191,12 @@ const InviteUserEmailAutocompleteFieldContent = ({
   const customEmptyListMessage = formatMessage(messages.noMatchesContinueTyping);
   const label = formatMessage(messages.email);
 
+  const handleRenderOption = useCallback(
+    (item: EmailOption, index: number, isNew: boolean, getItemProps: GetItemPropsT<string | EmailOption>) =>
+      renderOption(item, index, isNew, getItemProps, formatMessage),
+    [formatMessage],
+  );
+
   return (
     <AsyncAutocompleteV2
       placeholder={placeholder}
@@ -201,7 +205,7 @@ const InviteUserEmailAutocompleteFieldContent = ({
       makeOptions={makeOptions}
       parseValueToString={parseValueToString}
       getUniqKey={getUniqKey}
-      renderOption={renderOption}
+      renderOption={handleRenderOption}
       createWithoutConfirmation
       minLength={1}
       customEmptyListMessage={customEmptyListMessage}

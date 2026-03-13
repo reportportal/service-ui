@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import { defineMessages, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { FieldArray } from 'redux-form';
 import { createClassnames } from 'common/utils';
 import { InstanceAssignment } from 'pages/inside/common/assignments/instanceAssignment';
 import { ORGANIZATIONS } from 'pages/instance/allUsersPage/allUsersHeader/createUserModal/constants';
+import { messages as invitationMessages } from 'common/constants/localization/invitationsLocalization';
 import { getFormName } from '../utils';
 import { Level } from '../constants';
 import { InviteUserEmailAutocompleteField } from '../InviteUserEmailAutocompleteField';
@@ -27,18 +28,6 @@ import styles from './inviteUserInstanceForm.scss';
 
 const cx = createClassnames(styles);
 
-const messages = defineMessages({
-  invite: {
-    id: 'InviteUserInstanceForm.invite',
-    defaultMessage: 'Organizations and projects to invite',
-  },
-  inviteDescription: {
-    id: 'InviteUserInstanceForm.inviteDescription',
-    defaultMessage:
-      'Add organizations and projects to specify where the invited user will have access',
-  },
-});
-
 export const InviteUserInstanceForm = () => {
   const { formatMessage } = useIntl();
 
@@ -46,9 +35,9 @@ export const InviteUserInstanceForm = () => {
     <form className={cx('form')}>
       <InviteUserEmailAutocompleteField />
       <div className={cx('invite-wrapper')}>
-        <span className={cx('invite')}>{formatMessage(messages.invite)}</span>
+        <span className={cx('invite')}>{formatMessage(invitationMessages.organizationsAndProjectsToInvite)}</span>
         <span className={cx('invite-description')}>
-          {formatMessage(messages.inviteDescription)}
+          {formatMessage(invitationMessages.organizationsAndProjectsDescription)}
         </span>
       </div>
       <FieldArray

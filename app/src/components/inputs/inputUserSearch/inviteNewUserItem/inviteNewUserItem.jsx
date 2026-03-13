@@ -15,34 +15,36 @@
  */
 
 import PropTypes from 'prop-types';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
+import { messages } from 'common/constants/localization/invitationsLocalization';
 import styles from './inviteNewUserItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const InviteNewUserItem = ({ option, itemProps }) => (
-  <li className={cx('item')} {...itemProps}>
-    <div className={cx('invite-new-user', { active: itemProps.isActive })}>
-      <div className={cx('msg-icon')} />
-      <div className={cx('invite-info')}>
-        <p className={cx('action-info')}>
-          <FormattedMessage
-            id={'InputUserSearch.inviteNewUserInfo'}
-            defaultMessage={'Send new invite via email'}
-          />
-        </p>
-        <p className={cx('user-info')}>
-          <FormattedMessage
-            id={'InputUserSearch.inviteNewUser'}
-            defaultMessage={'{userEmail}'}
-            values={{ userEmail: option.userLogin }}
-          />
-        </p>
+export const InviteNewUserItem = ({ option, itemProps }) => {
+  const { formatMessage } = useIntl();
+
+  return (
+    <li className={cx('item')} {...itemProps}>
+      <div className={cx('invite-new-user', { active: itemProps.isActive })}>
+        <div className={cx('msg-icon')} />
+        <div className={cx('invite-info')}>
+          <p className={cx('action-info')}>
+            {formatMessage(messages.sendNewInviteViaEmail)}
+          </p>
+          <p className={cx('user-info')}>
+            <FormattedMessage
+              id={'InputUserSearch.inviteNewUser'}
+              defaultMessage={'{userEmail}'}
+              values={{ userEmail: option.userLogin }}
+            />
+          </p>
+        </div>
       </div>
-    </div>
-  </li>
-);
+    </li>
+  );
+};
 
 InviteNewUserItem.propTypes = {
   option: PropTypes.object,

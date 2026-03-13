@@ -57,6 +57,8 @@ import { URLS } from 'common/urls';
 import { AddItemButton } from '../organizationAssignment/organizationItem/addItemButton';
 import { MEMBER, EDITOR, VIEWER, MANAGER } from 'common/constants/projectRoles';
 import { ORGANIZATIONS } from 'pages/instance/allUsersPage/allUsersHeader/createUserModal/constants';
+import { messages as invitationMessages } from 'common/constants/localization/invitationsLocalization';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 import styles from './instanceAssignment.scss';
 
@@ -74,10 +76,6 @@ const messages = defineMessages({
   organizationPlaceholder: {
     id: 'InstanceAssignment.organizationPlaceholder',
     defaultMessage: 'Enter to select organization',
-  },
-  projectPlaceholder: {
-    id: 'InstanceAssignment.projectPlaceholder',
-    defaultMessage: 'Enter to select project',
   },
   setOrganizationManager: {
     id: 'InstanceAssignment.setOrganizationManager',
@@ -308,6 +306,7 @@ export const InstanceAssignment = ({
                   isRequired={isOrganizationRequired}
                   useFixedPositioning
                   dropdownMatchInputWidth
+                  customEmptyListMessage={formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_OPTIONS)}
                 />
               </FieldErrorHint>
             </FieldProvider>
@@ -333,14 +332,14 @@ export const InstanceAssignment = ({
                   key={`project-${selectedOrganizationId}`}
                   inputProps={{
                     label: formatMessage(messages.project),
-                    clearable: true,
-                    placeholder: formatMessage(messages.projectPlaceholder),
+                    clearable: totalProjects > 0 && !!selectedOrganizationId,
+                    placeholder: formatMessage(invitationMessages.selectSearchProject),
                     onClear: () => {
                       dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.NAME, null));
                       setSelectedProjectId(null);
                     },
                   }}
-                  placeholder={formatMessage(messages.projectPlaceholder)}
+                  placeholder={formatMessage(invitationMessages.selectSearchProject)}
                   getURI={() => URLS.organizationProjectsSearches(selectedOrganizationId)}
                   getRequestParams={getRequestOrganizationsParams}
                   makeOptions={makeProjectsOptions}
@@ -349,7 +348,7 @@ export const InstanceAssignment = ({
                   skipOptionCreation
                   className={cx('autocomplete')}
                   disabled={!selectedOrganizationId}
-                  customEmptyListMessage={totalProjects === 0 && selectedOrganizationId ? 'No projects created yet' : undefined}
+                  customEmptyListMessage={totalProjects === 0 && selectedOrganizationId ? formatMessage(invitationMessages.noProjectsCreated) : formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_OPTIONS)}
                   isDropdownMode={totalProjects === 0 && selectedOrganizationId}
                   icon={totalProjects === 0 && selectedOrganizationId ? <div /> : undefined}
                   useFixedPositioning
