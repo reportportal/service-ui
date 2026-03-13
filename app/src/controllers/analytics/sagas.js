@@ -22,7 +22,7 @@ import {
   projectInfoSelector,
   projectInfoLoadingSelector,
 } from 'controllers/project';
-import { urlProjectSlugSelector, urlOrganizationSlugSelector, APP_LEVEL } from 'controllers/pages';
+import { urlProjectSlugSelector, urlOrganizationSlugSelector } from 'controllers/pages';
 import {
   activeOrganizationSelector,
   activeOrganizationLoadingSelector,
@@ -30,28 +30,30 @@ import {
 import { FETCH_ORGANIZATION_BY_SLUG } from 'controllers/organization/constants';
 import { baseEventParametersSelector } from 'controllers/appInfo';
 import { createFetchPredicate } from 'controllers/fetch';
-import {
-  normalizeDimensionValue,
-  getAutoAnalysisEventValue,
-} from 'components/main/analytics/utils';
+import { buildEventParameters } from 'components/main/analytics/utils';
 import { omit } from 'common/utils';
 import GA4 from 'react-ga4';
 import { INFO_READY_DELAY, SEND_ANALYTICS_EVENT } from './constants';
 
-export function* waitForProjectReady() {
-  const routeProjectSlug = yield select(urlProjectSlugSelector);
+function* waitForEntityReady({
+  slugSelector,
+  entitySelector,
+  loadingSelector,
+  slugKey,
+  raceActions,
+  getData,
+}) {
+  const routeSlug = yield select(slugSelector);
 
-  const getData = (project = {}) => ({ projectId: project?.projectId || null });
-
-  if (!routeProjectSlug) {
+  if (!routeSlug) {
     return getData();
   }
 
-  let projectInfo = yield select(projectInfoSelector);
-  const isLoading = yield select(projectInfoLoadingSelector);
+  let entity = yield select(entitySelector);
+  const isLoading = yield select(loadingSelector);
 
-  if (projectInfo?.projectSlug === routeProjectSlug) {
-    return getData(projectInfo);
+  if (entity?.[slugKey] === routeSlug) {
+    return getData(entity);
   }
 
   if (!isLoading) {
@@ -59,94 +61,60 @@ export function* waitForProjectReady() {
   }
 
   const { success } = yield race({
-    success: take(FETCH_PROJECT_SUCCESS),
-    error: take(FETCH_PROJECT_ERROR),
+    ...raceActions,
     timeout: delay(INFO_READY_DELAY),
   });
 
   if (success) {
-    projectInfo = yield select(projectInfoSelector);
-    if (projectInfo?.projectSlug === routeProjectSlug) {
-      return getData(projectInfo);
+    entity = yield select(entitySelector);
+    if (entity?.[slugKey] === routeSlug) {
+      return getData(entity);
     }
   }
 
   return getData();
+}
+
+export function* waitForProjectReady() {
+  return yield* waitForEntityReady({
+    slugSelector: urlProjectSlugSelector,
+    entitySelector: projectInfoSelector,
+    loadingSelector: projectInfoLoadingSelector,
+    slugKey: 'projectSlug',
+    raceActions: {
+      success: take(FETCH_PROJECT_SUCCESS),
+      error: take(FETCH_PROJECT_ERROR),
+    },
+    getData: (project = {}) => ({ projectInfoId: project?.projectId || null }),
+  });
 }
 
 export function* waitForOrganizationReady() {
-  const routeOrganizationSlug = yield select(urlOrganizationSlugSelector);
-
-  const getData = (org = {}) => ({
-    organizationId: org?.id || null,
-    entryType: org?.type?.toLowerCase() || null,
+  return yield* waitForEntityReady({
+    slugSelector: urlOrganizationSlugSelector,
+    entitySelector: activeOrganizationSelector,
+    loadingSelector: activeOrganizationLoadingSelector,
+    slugKey: 'slug',
+    raceActions: {
+      success: take(createFetchPredicate(FETCH_ORGANIZATION_BY_SLUG)),
+    },
+    getData: (org = {}) => ({
+      organizationId: org?.id || null,
+      entryType: org?.type?.toLowerCase() || null,
+    }),
   });
-
-  if (!routeOrganizationSlug) {
-    return getData();
-  }
-
-  let activeOrganization = yield select(activeOrganizationSelector);
-  const isLoading = yield select(activeOrganizationLoadingSelector);
-
-  if (activeOrganization?.slug === routeOrganizationSlug) {
-    return getData(activeOrganization);
-  }
-
-  if (!isLoading) {
-    return getData();
-  }
-
-  const { success } = yield race({
-    success: take(createFetchPredicate(FETCH_ORGANIZATION_BY_SLUG)),
-    timeout: delay(INFO_READY_DELAY),
-  });
-
-  if (success) {
-    activeOrganization = yield select(activeOrganizationSelector);
-    if (activeOrganization?.slug === routeOrganizationSlug) {
-      return getData(activeOrganization);
-    }
-  }
-
-  return getData();
 }
 
 function* sendAnalyticsEvent({ payload: data }) {
-  const { projectId } = yield call(waitForProjectReady);
-  const { organizationId, entryType } = yield call(waitForOrganizationReady);
+  const projectData = yield call(waitForProjectReady);
+  const organizationData = yield call(waitForOrganizationReady);
   const baseEventParameters = yield select(baseEventParametersSelector);
-  const {
-    instanceId,
-    buildVersion,
-    userId,
-    isAutoAnalyzerEnabled,
-    isPatternAnalyzerEnabled,
-    isAnalyzerAvailable,
-    pageLevel,
-  } = baseEventParameters;
 
   if ('place' in data) {
-    const isProjectLevel = pageLevel === APP_LEVEL.PROJECT;
-    const isOrganizationLevel = pageLevel === APP_LEVEL.ORGANIZATION;
-
-    const eventParameters = {
-      instanceID: instanceId,
-      version: buildVersion,
-      timestamp: Date.now(),
-      uid: `${userId}|${instanceId}`,
-      ...((isOrganizationLevel || isProjectLevel) && {
-        kind: entryType || 'not_set',
-        organization_id: organizationId ? `${organizationId}|${instanceId}` : 'not_set',
-      }),
-      ...(isProjectLevel && {
-        auto_analysis:
-          getAutoAnalysisEventValue(isAnalyzerAvailable, isAutoAnalyzerEnabled) || 'not_set',
-        pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled) || 'not_set',
-        project_id: projectId ? `${projectId}|${instanceId}` : 'not_set',
-      }),
-      ...omit(data, data.place ? ['action'] : ['action', 'place']),
-    };
+    const eventParameters = buildEventParameters(
+      { ...baseEventParameters, ...projectData, ...organizationData },
+      omit(data, data.place ? ['action'] : ['action', 'place']),
+    );
     GA4.event(data.action, eventParameters);
   }
 }

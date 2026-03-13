@@ -30,7 +30,7 @@ export const getAutoAnalysisEventValue = (isAnalyzerAvailable, value) => {
 export const normalizeEventString = (string = '') =>
   string.trim().replace(/\s+|-/g, '_').toLowerCase();
 
-export const provideEcGA = ({ eventName, baseEventParameters, additionalParameters }) => {
+export const buildEventParameters = (baseEventParameters, additionalParameters) => {
   const {
     instanceId,
     buildVersion,
@@ -47,7 +47,7 @@ export const provideEcGA = ({ eventName, baseEventParameters, additionalParamete
   const isProjectLevel = pageLevel === APP_LEVEL.PROJECT;
   const isOrganizationLevel = pageLevel === APP_LEVEL.ORGANIZATION;
 
-  const eventParameters = {
+  return {
     instanceID: instanceId,
     version: buildVersion,
     timestamp: Date.now(),
@@ -64,7 +64,10 @@ export const provideEcGA = ({ eventName, baseEventParameters, additionalParamete
     }),
     ...additionalParameters,
   };
+};
 
+export const provideEcGA = ({ eventName, baseEventParameters, additionalParameters }) => {
+  const eventParameters = buildEventParameters(baseEventParameters, additionalParameters);
   GA4.event(eventName, eventParameters);
 };
 
