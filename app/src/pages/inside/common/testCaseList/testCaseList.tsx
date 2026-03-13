@@ -164,11 +164,16 @@ export const TestCaseList = memo(
       },
     ];
 
+    const showNoSearchResults =
+      !isLoading && isEmpty(testCases) && !!location?.query?.testCasesSearchParams;
+
     return (
       <div className={cx('test-case-list')}>
-        <div className={cx('controls')}>
-          <div className={cx('controls-title')}>{folderTitle}</div>
-        </div>
+        {!showNoSearchResults && (
+          <div className={cx('controls')}>
+            <div className={cx('controls-title')}>{folderTitle}</div>
+          </div>
+        )}
         {isLoading ? (
           <div className={cx('test-case-list', 'loading')}>
             <BubblesLoader />

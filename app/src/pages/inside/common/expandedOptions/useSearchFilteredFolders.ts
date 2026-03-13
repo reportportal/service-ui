@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
 
 import {
+  Folder,
   TransformedFolder,
   foldersSelector,
   filteredFoldersSelector,
@@ -48,13 +49,18 @@ const collectAllFolderIds = (folders: TransformedFolder[]): number[] => {
 
 interface UseSearchFilteredFoldersParams {
   searchQuery?: string;
+  extraFilters?: Record<string, string | number>;
+  allFoldersOverride?: Folder[];
 }
 
 export const useSearchFilteredFolders = ({
   searchQuery,
+  extraFilters,
+  allFoldersOverride,
 }: UseSearchFilteredFoldersParams) => {
   const dispatch = useDispatch();
-  const allFolders = useSelector(foldersSelector);
+  const defaultFolders = useSelector(foldersSelector);
+  const allFolders = allFoldersOverride ?? defaultFolders;
   const filteredFolderData = useSelector(filteredFoldersSelector);
   const isLoading = useSelector(isLoadingFilteredFoldersSelector);
   const [collapsedIds, setCollapsedIds] = useState<Set<number>>(new Set());
@@ -73,8 +79,8 @@ export const useSearchFilteredFolders = ({
     }
 
     initialFoldersRef.current = allFolders;
-    dispatch(getFilteredFoldersAction({ searchQuery }));
-  }, [searchQuery, dispatch]);
+    dispatch(getFilteredFoldersAction({ searchQuery, extraFilters }));
+  }, [searchQuery, extraFilters, dispatch]);
 
   useEffect(() => {
     if (!searchQuery || allFolders === initialFoldersRef.current) {
@@ -82,8 +88,8 @@ export const useSearchFilteredFolders = ({
     }
 
     initialFoldersRef.current = allFolders;
-    dispatch(getFilteredFoldersAction({ searchQuery }));
-  }, [allFolders, searchQuery, dispatch]);
+    dispatch(getFilteredFoldersAction({ searchQuery, extraFilters }));
+  }, [allFolders, searchQuery, extraFilters, dispatch]);
 
   const relevantFolderIds = useMemo(() => {
     if (!searchQuery || filteredFolderData.length === 0) return new Set<number>();

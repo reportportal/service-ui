@@ -233,6 +233,7 @@ export const setFoldersFetchedAction = () => ({
 
 export interface GetFilteredFoldersParams {
   searchQuery: string;
+  extraFilters?: Record<string, string | number>;
 }
 
 export const getFilteredFoldersAction = (params: GetFilteredFoldersParams) => ({

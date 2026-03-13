@@ -590,7 +590,9 @@ const routesMap = {
         state,
       });
 
-      dispatch(getTestPlanAction({ testPlanId, folderId, offset, limit }));
+      const testCasesSearchParams = state.location?.query?.testCasesSearchParams;
+
+      dispatch(getTestPlanAction({ testPlanId, folderId, offset, limit, testCasesSearchParams }));
     },
   },
 };
