@@ -45,6 +45,7 @@ import { useInviteUser } from './hooks';
 import {
   FormDataMap,
   InvitationResponseData,
+  InviteProjectCondition,
   InviteUserProps,
   ModalProps,
   InvitationRequestData,
@@ -133,14 +134,14 @@ export const InviteUser = <L extends keyof FormDataMap>({
   const { header, okButtonTitle, buildUserData, handleError } = useInviteUser(level);
   const currentUser = useSelector(userInfoSelector) as UserInfo;
 
-  const inviteUser = async (userData: InvitationRequestData, withProject: boolean) => {
+  const inviteUser = async (userData: InvitationRequestData, condition: InviteProjectCondition) => {
     try {
       const invitedUser = await fetch<InvitationResponseData>(URLS.userInvitations(), {
         method: 'post',
         data: userData,
       });
 
-      onInvite?.(withProject);
+      onInvite?.(condition);
 
       if (userData.email === currentUser.email) {
         dispatch(fetchUserInfoAction());
@@ -156,13 +157,20 @@ export const InviteUser = <L extends keyof FormDataMap>({
 
   const inviteUserAndCloseModal = async (formData: FormDataMap[L]) => {
     const userData = buildUserData(formData);
-    const withProject =
-      level === Level.PROJECT
-        ? false
-        : userData.organizations.some(
-            (org: Organization) => org.projects && org.projects.length > 0,
-          );
-    const invitedUser = await inviteUser(userData, withProject);
+    const getCondition = (): InviteProjectCondition => {
+      if (level === Level.PROJECT) return 'without_project';
+      const hasWithProject = userData.organizations.some(
+        (org: Organization) => org.projects && org.projects.length > 0,
+      );
+      const hasWithoutProject = userData.organizations.some(
+        (org: Organization) => !org.projects || org.projects.length === 0,
+      );
+      if (hasWithProject && hasWithoutProject) return 'with_project#without_project';
+      if (hasWithProject) return 'with_project';
+      return 'without_project';
+    };
+    const condition = getCondition();
+    const invitedUser = await inviteUser(userData, condition);
 
     if (!invitedUser) {
       return;

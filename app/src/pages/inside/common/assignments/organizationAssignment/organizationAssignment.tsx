@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { change } from 'redux-form';
 
@@ -36,13 +36,16 @@ export const OrganizationAssignment = ({
   formName,
 }: OrganizationAssignmentProps) => {
   const dispatch = useDispatch();
-  const openFormsCount = useRef(0);
+  const [openFormOrgId, setOpenFormOrgId] = useState<number | null>(null);
+  const openFormOrgIdRef = useRef<number | null>(null);
 
   const handleAddProjectFormToggle = useCallback(
-    (isOpen: boolean) => {
-      openFormsCount.current += isOpen ? 1 : -1;
+    (orgId: number, isOpen: boolean) => {
+      const nextId = isOpen ? orgId : null;
+      openFormOrgIdRef.current = nextId;
+      setOpenFormOrgId(nextId);
       if (formName) {
-        dispatch(change(formName, 'isAddingProject', openFormsCount.current > 0));
+        dispatch(change(formName, 'isAddingProject', isOpen));
       }
     },
     [formName, dispatch],
@@ -80,6 +83,7 @@ export const OrganizationAssignment = ({
               onChange={(updates) => updateItem(updates, index)}
               onRemove={() => removeItem(index)}
               collapsable
+              addProjectDisabled={openFormOrgId !== null && openFormOrgId !== org.id}
               onAddProjectFormToggle={handleAddProjectFormToggle}
             />
           </div>
