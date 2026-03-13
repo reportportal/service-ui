@@ -22,7 +22,11 @@ import {
   patternAnalysisEnabledSelector,
   projectInfoIdSelector,
 } from 'controllers/project/selectors';
-import { activeOrganizationIdSelector } from 'controllers/organization/selectors';
+import {
+  activeOrganizationIdSelector,
+  activeOrganizationTypeSelector,
+} from 'controllers/organization/selectors';
+import { pageLevelSelector } from 'controllers/pages/selectors';
 import { PASSWORD_MIN_ALLOWED_LENGTH } from 'common/constants/validation';
 import {
   ANALYTICS_INSTANCE_KEY,
@@ -101,6 +105,8 @@ export const baseEventParametersSelector = createSelector(
   analyzerExtensionsSelector,
   enabledPattersSelector,
   activeOrganizationIdSelector,
+  activeOrganizationTypeSelector,
+  pageLevelSelector,
   (
     instanceId,
     buildVersion,
@@ -112,6 +118,8 @@ export const baseEventParametersSelector = createSelector(
     analyzerExtensions,
     enabledPatterns,
     organizationId,
+    entryType,
+    pageLevel,
   ) => ({
     instanceId,
     buildVersion,
@@ -123,5 +131,7 @@ export const baseEventParametersSelector = createSelector(
     isAdmin,
     isAnalyzerAvailable: !!analyzerExtensions.length,
     organizationId,
+    entryType,
+    pageLevel,
   }),
 );

@@ -149,3 +149,10 @@ export const adminPageNames = {
   [PLUGINS_TAB_PAGE]: PLUGINS_TAB_PAGE,
   [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: PLUGIN_UI_EXTENSION_ADMIN_PAGE,
 };
+
+// Application context levels
+export const APP_LEVEL = {
+  PROJECT: 'project',
+  ORGANIZATION: 'organization',
+  INSTANCE: 'instance',
+};
