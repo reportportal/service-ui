@@ -136,14 +136,14 @@ function* sendAnalyticsEvent({ payload: data }) {
       timestamp: Date.now(),
       uid: `${userId}|${instanceId}`,
       ...((isOrganizationLevel || isProjectLevel) && {
-        kind: entryType,
-        organization_id: `${organizationId}|${instanceId}`,
+        kind: entryType || 'not_set',
+        organization_id: organizationId ? `${organizationId}|${instanceId}` : 'not_set',
       }),
       ...(isProjectLevel && {
         auto_analysis:
           getAutoAnalysisEventValue(isAnalyzerAvailable, isAutoAnalyzerEnabled) || 'not_set',
         pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled) || 'not_set',
-        project_id: `${projectId}|${instanceId}`,
+        project_id: projectId ? `${projectId}|${instanceId}` : 'not_set',
       }),
       ...omit(data, data.place ? ['action'] : ['action', 'place']),
     };

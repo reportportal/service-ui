@@ -53,8 +53,8 @@ export const provideEcGA = ({ eventName, baseEventParameters, additionalParamete
     timestamp: Date.now(),
     uid: `${userId}|${instanceId}`,
     ...((isOrganizationLevel || isProjectLevel) && {
-      kind: entryType,
-      organization_id: `${organizationId}|${instanceId}`,
+      kind: entryType || 'not_set',
+      organization_id: organizationId ? `${organizationId}|${instanceId}` : 'not_set',
     }),
     ...(isProjectLevel && {
       auto_analysis:
