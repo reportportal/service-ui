@@ -16,6 +16,7 @@
 
 import GA4 from 'react-ga4';
 import PropTypes from 'prop-types';
+import { APP_LEVEL } from 'controllers/pages/constants';
 import { parseFormattedDate } from '../dateRange';
 
 export const normalizeDimensionValue = (value) => {
@@ -39,17 +40,28 @@ export const provideEcGA = ({ eventName, baseEventParameters, additionalParamete
     isPatternAnalyzerEnabled,
     projectInfoId,
     organizationId,
+    entryType,
+    pageLevel,
   } = baseEventParameters;
+
+  const isProjectLevel = pageLevel === APP_LEVEL.PROJECT;
+  const isOrganizationLevel = pageLevel === APP_LEVEL.ORGANIZATION;
 
   const eventParameters = {
     instanceID: instanceId,
     version: buildVersion,
-    uid: `${userId}|${instanceId}`,
-    organization_id: `${organizationId}|${instanceId}`,
-    auto_analysis: getAutoAnalysisEventValue(isAnalyzerAvailable, isAutoAnalyzerEnabled),
-    pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled),
     timestamp: Date.now(),
-    project_id: projectInfoId ? `${projectInfoId}|${instanceId}` : 'not_set',
+    uid: `${userId}|${instanceId}`,
+    ...((isOrganizationLevel || isProjectLevel) && {
+      kind: entryType,
+      organization_id: `${organizationId}|${instanceId}`,
+    }),
+    ...(isProjectLevel && {
+      auto_analysis:
+        getAutoAnalysisEventValue(isAnalyzerAvailable, isAutoAnalyzerEnabled) || 'not_set',
+      pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled) || 'not_set',
+      project_id: projectInfoId ? `${projectInfoId}|${instanceId}` : 'not_set',
+    }),
     ...additionalParameters,
   };
 
@@ -64,6 +76,9 @@ export const baseEventParametersShape = PropTypes.shape({
   isPatternAnalyzerEnabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
   projectInfoId: PropTypes.number.isRequired,
   isAdmin: PropTypes.bool.isRequired,
+  organizationId: PropTypes.number,
+  entryType: PropTypes.string,
+  pageLevel: PropTypes.string,
 }).isRequired;
 
 export const getApplyFilterEventParams = (

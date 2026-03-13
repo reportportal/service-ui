@@ -22,8 +22,14 @@ import {
   projectInfoSelector,
   projectInfoLoadingSelector,
 } from 'controllers/project';
-import { urlProjectSlugSelector } from 'controllers/pages';
+import { urlProjectSlugSelector, urlOrganizationSlugSelector, APP_LEVEL } from 'controllers/pages';
+import {
+  activeOrganizationSelector,
+  activeOrganizationLoadingSelector,
+} from 'controllers/organization';
+import { FETCH_ORGANIZATION_BY_SLUG } from 'controllers/organization/constants';
 import { baseEventParametersSelector } from 'controllers/appInfo';
+import { createFetchPredicate } from 'controllers/fetch';
 import {
   normalizeDimensionValue,
   getAutoAnalysisEventValue,
@@ -34,21 +40,22 @@ import { INFO_READY_DELAY, SEND_ANALYTICS_EVENT } from './constants';
 
 export function* waitForProjectReady() {
   const routeProjectSlug = yield select(urlProjectSlugSelector);
-  const noProjectData = { projectId: null, entryType: null };
+
+  const getData = (project = {}) => ({ projectId: project?.projectId || null });
 
   if (!routeProjectSlug) {
-    return noProjectData;
+    return getData();
   }
 
   let projectInfo = yield select(projectInfoSelector);
   const isLoading = yield select(projectInfoLoadingSelector);
 
   if (projectInfo?.projectSlug === routeProjectSlug) {
-    return { projectId: projectInfo.projectId, entryType: projectInfo.entryType };
+    return getData(projectInfo);
   }
 
   if (!isLoading) {
-    return noProjectData;
+    return getData();
   }
 
   const { success } = yield race({
@@ -60,15 +67,54 @@ export function* waitForProjectReady() {
   if (success) {
     projectInfo = yield select(projectInfoSelector);
     if (projectInfo?.projectSlug === routeProjectSlug) {
-      return { projectId: projectInfo.projectId, entryType: projectInfo.entryType };
+      return getData(projectInfo);
     }
   }
 
-  return noProjectData;
+  return getData();
+}
+
+export function* waitForOrganizationReady() {
+  const routeOrganizationSlug = yield select(urlOrganizationSlugSelector);
+
+  const getData = (org = {}) => ({
+    organizationId: org?.id || null,
+    entryType: org?.type?.toLowerCase() || null,
+  });
+
+  if (!routeOrganizationSlug) {
+    return getData();
+  }
+
+  let activeOrganization = yield select(activeOrganizationSelector);
+  const isLoading = yield select(activeOrganizationLoadingSelector);
+
+  if (activeOrganization?.slug === routeOrganizationSlug) {
+    return getData(activeOrganization);
+  }
+
+  if (!isLoading) {
+    return getData();
+  }
+
+  const { success } = yield race({
+    success: take(createFetchPredicate(FETCH_ORGANIZATION_BY_SLUG)),
+    timeout: delay(INFO_READY_DELAY),
+  });
+
+  if (success) {
+    activeOrganization = yield select(activeOrganizationSelector);
+    if (activeOrganization?.slug === routeOrganizationSlug) {
+      return getData(activeOrganization);
+    }
+  }
+
+  return getData();
 }
 
 function* sendAnalyticsEvent({ payload: data }) {
-  const { projectId, entryType } = yield call(waitForProjectReady);
+  const { projectId } = yield call(waitForProjectReady);
+  const { organizationId, entryType } = yield call(waitForOrganizationReady);
   const baseEventParameters = yield select(baseEventParametersSelector);
   const {
     instanceId,
@@ -77,19 +123,28 @@ function* sendAnalyticsEvent({ payload: data }) {
     isAutoAnalyzerEnabled,
     isPatternAnalyzerEnabled,
     isAnalyzerAvailable,
+    pageLevel,
   } = baseEventParameters;
 
   if ('place' in data) {
+    const isProjectLevel = pageLevel === APP_LEVEL.PROJECT;
+    const isOrganizationLevel = pageLevel === APP_LEVEL.ORGANIZATION;
+
     const eventParameters = {
       instanceID: instanceId,
       version: buildVersion,
-      auto_analysis:
-        getAutoAnalysisEventValue(isAnalyzerAvailable, isAutoAnalyzerEnabled) || 'not_set',
-      pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled) || 'not_set',
       timestamp: Date.now(),
       uid: `${userId}|${instanceId}`,
-      kind: entryType || 'not_set',
-      project_id: projectId ? `${projectId}|${instanceId}` : 'not_set',
+      ...((isOrganizationLevel || isProjectLevel) && {
+        kind: entryType,
+        organization_id: `${organizationId}|${instanceId}`,
+      }),
+      ...(isProjectLevel && {
+        auto_analysis:
+          getAutoAnalysisEventValue(isAnalyzerAvailable, isAutoAnalyzerEnabled) || 'not_set',
+        pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled) || 'not_set',
+        project_id: `${projectId}|${instanceId}`,
+      }),
       ...omit(data, data.place ? ['action'] : ['action', 'place']),
     };
     GA4.event(data.action, eventParameters);

@@ -28,5 +28,8 @@ export const activeOrganizationNameSelector = (state) => activeOrganizationSelec
 
 export const activeOrganizationIdSelector = (state) => activeOrganizationSelector(state)?.id;
 
+export const activeOrganizationTypeSelector = (state) =>
+  activeOrganizationSelector(state)?.type?.toLowerCase();
+
 export const activeOrganizationSettingsSelector = (state) =>
   organizationSelector(state).settings || {};

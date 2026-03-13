@@ -30,7 +30,7 @@ import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { MANAGER } from 'common/constants/projectRoles';
 import { getAlternativePaginationAndSortParams } from 'controllers/pagination';
 import { findAssignedProjectByOrganization } from 'common/utils';
-import { pageNames, NO_PAGE, TEST_CASE_LIBRARY_PAGE, TEST_CASE_DETAILS_PAGE } from './constants';
+import { pageNames, NO_PAGE, TEST_CASE_LIBRARY_PAGE, APP_LEVEL } from './constants';
 import { stringToArray } from './utils';
 import {
   urlOrganizationSlugSelector,
@@ -40,7 +40,7 @@ import {
   locationSelector,
   payloadSelector,
 } from './typed-selectors';
-import { userRolesSelector } from './';
+import { userRolesSelector } from './userRolesSelector';
 
 export const searchStringSelector = (state) => locationSelector(state).search || '';
 export const isInitialDispatchDoneSelector = (state) => !!locationSelector(state).kind;
@@ -264,6 +264,19 @@ export const urlTestCaseLibrarySelector = createSelector(
     projectSlug,
     testCaseSlug,
   }),
+);
+
+export const pageLevelSelector = createSelector(
+  [urlProjectSlugSelector, urlOrganizationSlugSelector],
+  (projectSlug, organizationSlug) => {
+    if (projectSlug) {
+      return APP_LEVEL.PROJECT;
+    }
+    if (organizationSlug) {
+      return APP_LEVEL.ORGANIZATION;
+    }
+    return APP_LEVEL.INSTANCE;
+  },
 );
 
 export const testCaseLibraryBreadcrumbsSelector = ({ mainTitle, testTitle, pageTitle = '' }) =>
