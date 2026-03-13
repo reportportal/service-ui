@@ -15,6 +15,7 @@
  */
 
 import { getBasicChooseEventParameters, getBasicClickEventParameters } from '../common/ga4Utils';
+import { InviteProjectCondition } from 'pages/inside/common/invitations/inviteUserModal/types';
 
 const ORGANIZATION_PAGE = 'organization';
 const SETTINGS_PAGE = 'organization_settings';
@@ -82,12 +83,12 @@ export const ORGANIZATION_PAGE_EVENTS = {
     element_name: 'button_submit',
     type: `${keepLaunches}#${keepLogs}#${keepScreenshots}`,
   }),
-  inviteUser: (withProject = false) => ({
+  inviteUser: (condition: InviteProjectCondition = 'without_project') => ({
     ...BASIC_EVENT_PARAMETERS,
     element_name: 'invite',
     modal: 'invite_user',
     type: 'organization_level',
-    condition: `${withProject ? 'with' : 'without'}_project`,
+    condition,
   }),
   CLICK_APPLY_BUTTON: {
     ...BASIC_EVENT_PARAMETERS,

@@ -47,7 +47,8 @@ interface OrganizationItemProps {
   onRemove?: () => void;
   collapsable?: boolean;
   organizationRoleDisabledTooltip?: string | null;
-  onAddProjectFormToggle?: (isOpen: boolean) => void;
+  addProjectDisabled?: boolean;
+  onAddProjectFormToggle?: (orgId: number, isOpen: boolean) => void;
 }
 
 export const OrganizationItem = ({
@@ -56,6 +57,7 @@ export const OrganizationItem = ({
   onRemove,
   collapsable,
   organizationRoleDisabledTooltip = null,
+  addProjectDisabled = false,
   onAddProjectFormToggle,
 }: OrganizationItemProps) => {
   const disableOrganizationRole = Boolean(organizationRoleDisabledTooltip);
@@ -82,16 +84,17 @@ export const OrganizationItem = ({
     const wasOpen = prevAddProjectFormOpen.current;
     prevAddProjectFormOpen.current = addProjectFormOpen;
     if (addProjectFormOpen !== wasOpen) {
-      onAddProjectFormToggleRef.current?.(addProjectFormOpen);
+      onAddProjectFormToggleRef.current?.(id, addProjectFormOpen);
     }
-  }, [addProjectFormOpen]);
+  }, [addProjectFormOpen, id]);
 
   useEffect(() => {
     return () => {
       if (prevAddProjectFormOpen.current) {
-        onAddProjectFormToggleRef.current?.(false);
+        onAddProjectFormToggleRef.current?.(id, false);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -134,7 +137,10 @@ export const OrganizationItem = ({
     onChange({ projects: updatedProjects });
   };
 
+  const collapseDisabled = collapsable && addProjectFormOpen;
+
   const handleCollapsable = () => {
+    if (collapseDisabled) return;
     setIsOpen(!isOpen);
   };
 
@@ -142,12 +148,12 @@ export const OrganizationItem = ({
     <div className={cx('organization')}>
       <div className={cx('header')}>
         <div
-          className={cx('name', { pointer: collapsable })}
+          className={cx('name', { pointer: collapsable && !collapseDisabled })}
           title={name}
           onClick={collapsable ? handleCollapsable : null}
         >
           {collapsable && (
-            <div className={cx('icon', { rotated: !isOpen })}>
+            <div className={cx('icon', { rotated: !isOpen, disabled: collapseDisabled })}>
               <DropdownIcon />
             </div>
           )}
@@ -211,7 +217,7 @@ export const OrganizationItem = ({
                 tooltipClassname={cx('tooltip-wrapper')}
                 onClick={() => setAddProjectFormOpen(true)}
                 tooltipContent={noProjects ? messages.noProjects : messages.allProjectsAdded}
-                disabled={noProjects || allProjectsAdded}
+                disabled={noProjects || allProjectsAdded || addProjectDisabled}
                 text={formatMessage(messages.addProject)}
               />
             )}

@@ -114,12 +114,17 @@ export const AddProjectForm = ({
     <div className={cx('form')}>
       <div className={cx('projects')}>
         <AsyncAutocompleteV2
+          inputProps={{
+            clearable: !!selectedProject,
+            onClear: () => setSelectedProject(null),
+          }}
           placeholder={formatMessage(messages.selectSearchProject)}
           getURI={() => URLS.organizationProjectsSearches(organizationId)}
           getRequestParams={getRequestParams}
           makeOptions={makeOptions}
           onChange={handleChangeProject}
           createWithoutConfirmation
+          skipOptionCreation
           customEmptyListMessage={formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_OPTIONS)}
           useFixedPositioning
           dropdownMatchInputWidth
