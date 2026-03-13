@@ -286,7 +286,11 @@ export const InstanceAssignment = ({
                     clearable: true,
                     onClear: () => {
                       dispatch(change(formName, FORM_FIELDS.ORGANIZATION.NAME, null));
+                      dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.NAME, null));
                       setSelectedOrganizationId(null);
+                      setSelectedProjectId(null);
+                      setOrganizationProjects([]);
+                      setTotalProjects(0);
                     },
                   }}
                   placeholder={formatMessage(messages.organizationPlaceholder)}
@@ -299,9 +303,10 @@ export const InstanceAssignment = ({
                   onChange={(organizationName: string) => {
                     const selectedOrg = notAssignedOrganizations.find(({ name }) => name === organizationName);
                     setSelectedOrganizationId(selectedOrg?.id || null);
-                    if (selectedOrg?.relationships?.projects?.meta?.count !== undefined) {
-                      setTotalProjects(selectedOrg.relationships.projects.meta.count);
-                    }
+                    dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.NAME, null));
+                    setSelectedProjectId(null);
+                    setOrganizationProjects([]);
+                    setTotalProjects(selectedOrg?.relationships?.projects?.meta?.count ?? 0);
                   }}
                   isRequired={isOrganizationRequired}
                   useFixedPositioning

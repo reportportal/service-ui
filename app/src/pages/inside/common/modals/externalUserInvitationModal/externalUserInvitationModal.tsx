@@ -37,16 +37,11 @@ import styles from './externalUserInvitationModal.scss';
 const cx = createClassnames(styles);
 
 const getFullInvitationLink = (link: string): string => {
-  if (link.startsWith('http://') || link.startsWith('https://')) {
+  try {
+    return new URL(link, globalThis.location.origin).toString();
+  } catch {
     return link;
   }
-
-  if (link.startsWith('/')) {
-    const { protocol, host } = window.location;
-    return `${protocol}//${host}${link}`;
-  }
-
-  return link;
 };
 
 interface ExternalUserInvitationModalProps {

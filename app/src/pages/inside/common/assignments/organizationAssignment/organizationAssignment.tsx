@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+import { useCallback, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { change } from 'redux-form';
+
 import { Organization, OrganizationItem } from './organizationItem/organizationItem';
 
 interface OrganizationAssignmentProps {
@@ -31,6 +35,19 @@ export const OrganizationAssignment = ({
   organizationRoleDisabledTooltip = null,
   formName,
 }: OrganizationAssignmentProps) => {
+  const dispatch = useDispatch();
+  const openFormsCount = useRef(0);
+
+  const handleAddProjectFormToggle = useCallback(
+    (isOpen: boolean) => {
+      openFormsCount.current += isOpen ? 1 : -1;
+      if (formName) {
+        dispatch(change(formName, 'isAddingProject', openFormsCount.current > 0));
+      }
+    },
+    [formName, dispatch],
+  );
+
   const updateItem = (updates: Partial<Organization>, index?: number) => {
     if (isMultiple) {
       const updated = [...(value as Organization[])];
@@ -63,7 +80,7 @@ export const OrganizationAssignment = ({
               onChange={(updates) => updateItem(updates, index)}
               onRemove={() => removeItem(index)}
               collapsable
-              formName={formName}
+              onAddProjectFormToggle={handleAddProjectFormToggle}
             />
           </div>
         ))}
@@ -76,7 +93,7 @@ export const OrganizationAssignment = ({
       value={value as Organization}
       onChange={(updates) => updateItem(updates)}
       organizationRoleDisabledTooltip={organizationRoleDisabledTooltip}
-      formName={formName}
+      onAddProjectFormToggle={handleAddProjectFormToggle}
     />
   );
 };

@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { BaseIconButton, CloseIcon, Dropdown, DropdownIcon, Tooltip } from '@reportportal/ui-kit';
-import { change } from 'redux-form';
 
 import { createClassnames, fetch } from 'common/utils';
 import { EDITOR, MANAGER, MEMBER } from 'common/constants/projectRoles';
@@ -49,7 +47,7 @@ interface OrganizationItemProps {
   onRemove?: () => void;
   collapsable?: boolean;
   organizationRoleDisabledTooltip?: string | null;
-  formName?: string;
+  onAddProjectFormToggle?: (isOpen: boolean) => void;
 }
 
 export const OrganizationItem = ({
@@ -58,9 +56,8 @@ export const OrganizationItem = ({
   onRemove,
   collapsable,
   organizationRoleDisabledTooltip = null,
-  formName,
+  onAddProjectFormToggle,
 }: OrganizationItemProps) => {
-  const dispatch = useDispatch();
   const disableOrganizationRole = Boolean(organizationRoleDisabledTooltip);
   const { formatMessage } = useIntl();
   const { id, name, role, projects } = value;
@@ -74,11 +71,28 @@ export const OrganizationItem = ({
   const noProjects = totalProjects === 0;
   const allProjectsAdded = projects?.length === totalProjects;
 
+  const prevAddProjectFormOpen = useRef(false);
+  const onAddProjectFormToggleRef = useRef(onAddProjectFormToggle);
+
   useEffect(() => {
-    if (formName) {
-      dispatch(change(formName, 'isAddingProject', addProjectFormOpen));
+    onAddProjectFormToggleRef.current = onAddProjectFormToggle;
+  });
+
+  useEffect(() => {
+    const wasOpen = prevAddProjectFormOpen.current;
+    prevAddProjectFormOpen.current = addProjectFormOpen;
+    if (addProjectFormOpen !== wasOpen) {
+      onAddProjectFormToggleRef.current?.(addProjectFormOpen);
     }
-  }, [addProjectFormOpen, formName, dispatch]);
+  }, [addProjectFormOpen]);
+
+  useEffect(() => {
+    return () => {
+      if (prevAddProjectFormOpen.current) {
+        onAddProjectFormToggleRef.current?.(false);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const data = { method: 'post', data: { limit: PROJECTS_LIMIT } };
