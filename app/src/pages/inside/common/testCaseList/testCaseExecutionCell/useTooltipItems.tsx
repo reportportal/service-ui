@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
+import { useIntl } from 'react-intl';
+
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { useTestCaseTooltipItems } from 'pages/inside/testCaseLibraryPage/allTestCasesPage/useTestCaseTooltipItems';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
-import { useIntl } from 'react-intl';
 import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
 
 import { messages } from '../messages';
@@ -29,17 +31,18 @@ interface UseTooltipItemsProps {
 
 export const useTooltipItems = ({ instanceKey, testCase }: UseTooltipItemsProps) => {
   const { formatMessage } = useIntl();
+  const { canManageTestCases } = useUserPermissions();
   const testCaseTooltipItems = useTestCaseTooltipItems({ testCase });
 
 
   const tooltipItemsByInstance: Partial<Record<TMS_INSTANCE_KEY, PopoverItem[]>> = {
-    [TMS_INSTANCE_KEY.TEST_PLAN]: [
+    [TMS_INSTANCE_KEY.TEST_PLAN]: canManageTestCases ? [
       {
-        label: formatMessage(messages.removeTestCase),
+        label: formatMessage(messages.removeTestCase) + 11,
         variant: 'danger',
         onClick: () => {},
       },
-    ],
+    ] : [],
     [TMS_INSTANCE_KEY.TEST_CASE]: testCaseTooltipItems,
     [TMS_INSTANCE_KEY.MANUAL_LAUNCH]: testCaseTooltipItems,
   };
