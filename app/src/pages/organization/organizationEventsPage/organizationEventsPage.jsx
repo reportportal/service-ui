@@ -15,7 +15,7 @@
  */
 
 import { useEffect } from 'react';
-import { useSelector, connect } from 'react-redux';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
@@ -28,7 +28,6 @@ import {
 } from 'controllers/instance/events';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { ENTITY_CREATED_AT } from 'components/filterEntities/constants';
-import { activeOrganizationIdSelector } from 'controllers/organization';
 import { SORTING_DESC, withSortingURL } from 'controllers/sorting';
 import { EventsGrid } from './eventsGrid';
 import { EventsToolbar } from './eventsToolbar';
@@ -50,10 +49,9 @@ const OrganizationEventsPageWrapper = ({
   events = [],
 }) => {
   const { trackEvent } = useTracking();
-  const organizationId = useSelector(activeOrganizationIdSelector);
 
   useEffect(() => {
-    trackEvent(ORGANIZATION_PAGE_EVENTS.activityPage('activity', organizationId));
+    trackEvent(ORGANIZATION_PAGE_EVENTS.activityPage('activity'));
   }, [trackEvent]);
 
   return (
