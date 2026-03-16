@@ -145,6 +145,7 @@ const InviteUserEmailAutocompleteFieldContent = ({
   input,
   onFocus,
   onResetTouched,
+  onUserSelect,
   ...rest
 }: {
   inputValueRef: MutableRefObject<string>;
@@ -155,6 +156,7 @@ const InviteUserEmailAutocompleteFieldContent = ({
   };
   onFocus?: () => void;
   onResetTouched?: () => void;
+  onUserSelect?: (userId: number | null) => void;
   [key: string]: unknown;
 }) => {
   const { formatMessage } = useIntl();
@@ -197,6 +199,8 @@ const InviteUserEmailAutocompleteFieldContent = ({
     [formatMessage],
   );
 
+  const { onChange: restOnChange, ...restWithoutOnChange } = rest as { onChange?: (value: unknown) => void; [key: string]: unknown };
+
   return (
     <AsyncAutocompleteV2
       placeholder={placeholder}
@@ -216,17 +220,27 @@ const InviteUserEmailAutocompleteFieldContent = ({
         onClear: () => {
           inputValueRef.current = '';
           input?.onChange(null);
+          onUserSelect?.(null);
         },
         onFocus: handleFocus,
       }}
       isRequired
       useFixedPositioning={false}
-      {...rest}
+      {...restWithoutOnChange}
+      onChange={(selected: EmailOption | null) => {
+        restOnChange?.(selected);
+        const userId = selected && typeof selected.id === 'number' && !selected.isCustom ? selected.id : null;
+        onUserSelect?.(userId);
+      }}
     />
   );
 };
 
-export const InviteUserEmailAutocompleteField = () => {
+interface InviteUserEmailAutocompleteFieldProps {
+  onUserSelect?: (userId: number | null) => void;
+}
+
+export const InviteUserEmailAutocompleteField = ({ onUserSelect }: InviteUserEmailAutocompleteFieldProps) => {
   const inputValueRef = useRef('');
   const dispatch = useDispatch();
 
@@ -237,7 +251,11 @@ export const InviteUserEmailAutocompleteField = () => {
   return (
     <FieldProvider name="email">
       <FieldErrorHint provideHint={false}>
-        <InviteUserEmailAutocompleteFieldContent inputValueRef={inputValueRef} onResetTouched={handleResetTouched} />
+        <InviteUserEmailAutocompleteFieldContent
+          inputValueRef={inputValueRef}
+          onResetTouched={handleResetTouched}
+          onUserSelect={onUserSelect}
+        />
       </FieldErrorHint>
     </FieldProvider>
   );
