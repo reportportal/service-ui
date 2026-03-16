@@ -316,9 +316,9 @@ export const InstanceAssignment = ({
 
   return (
     <div className={cx('forms-wrapper')}>
-        <FieldElement name={ORGANIZATIONS} className={cx('organizations')}>
-          <OrganizationAssignment isMultiple formName={formName} isOrganizationFormOpen={isOpen} />
-        </FieldElement>
+      <FieldElement name={ORGANIZATIONS} className={cx('organizations')}>
+        <OrganizationAssignment isMultiple formName={formName} isOrganizationFormOpen={isOpen} />
+      </FieldElement>
       {isOpen || allOrganizations?.length === 0 ? (
         <div className={cx('instance-assignment')}>
           <div className={cx('autocomplete-wrapper')}>
