@@ -38,9 +38,9 @@ import styles from './registrationForm.scss';
 
 const cx = createClassnames(styles);
 
-const REGISTRATION_VALIDATION_HINTS = {
-  REQUIRED_FIELD: 'requiredFieldWithPeriodHint',
-  CONFIRM_PASSWORD_MISMATCH: 'confirmPasswordHint',
+const ERROR_MESSAGE_KEYS = {
+  REQUIRED_FIELD_WITH_PERIOD: 'requiredFieldWithPeriodHint',
+  CONFIRM_PASSWORD: 'confirmPasswordHint',
 } as const;
 
 const messages = defineMessages({
@@ -132,7 +132,7 @@ const RegistrationFormComponent = ({
         <FieldProvider name="name">
           <FieldErrorHint
             provideHint={false}
-            errorsWithHint={[REGISTRATION_VALIDATION_HINTS.REQUIRED_FIELD]}
+            errorsWithHint={[ERROR_MESSAGE_KEYS.REQUIRED_FIELD_WITH_PERIOD]}
           >
             <InputOutside
               icon={NameIcon}
@@ -215,18 +215,18 @@ export const RegistrationForm = connect((state) => ({
 
         const passwordErrorMessage = password?.trim()
           ? passwordValidator(password)
-          : REGISTRATION_VALIDATION_HINTS.REQUIRED_FIELD;
+          : ERROR_MESSAGE_KEYS.REQUIRED_FIELD_WITH_PERIOD;
 
         let confirmPasswordErrorMessage: string | undefined;
         if (!confirmPassword?.trim()) {
-          confirmPasswordErrorMessage = REGISTRATION_VALIDATION_HINTS.REQUIRED_FIELD;
+          confirmPasswordErrorMessage = ERROR_MESSAGE_KEYS.REQUIRED_FIELD_WITH_PERIOD;
         } else if (confirmPassword !== password) {
-          confirmPasswordErrorMessage = REGISTRATION_VALIDATION_HINTS.CONFIRM_PASSWORD_MISMATCH;
+          confirmPasswordErrorMessage = ERROR_MESSAGE_KEYS.CONFIRM_PASSWORD;
         }
 
         const nameErrorMessage = name?.trim()
           ? commonValidators.userName(name)
-          : REGISTRATION_VALIDATION_HINTS.REQUIRED_FIELD;
+          : ERROR_MESSAGE_KEYS.REQUIRED_FIELD_WITH_PERIOD;
 
         return {
           password: passwordErrorMessage,
