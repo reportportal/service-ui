@@ -205,11 +205,25 @@ export const RegistrationForm = connect((state) => ({
           passwordMessage,
         );
 
+        const passwordErrorMessage = password?.trim()
+          ? passwordValidator(password)
+          : 'requiredFieldWithPeriodHint';
+
+        let confirmPasswordErrorMessage: string | undefined;
+        if (!confirmPassword?.trim()) {
+          confirmPasswordErrorMessage = 'requiredFieldWithPeriodHint';
+        } else if (confirmPassword !== password) {
+          confirmPasswordErrorMessage = 'confirmPasswordHint';
+        }
+
+        const nameErrorMessage = name?.trim()
+          ? commonValidators.userName(name)
+          : 'requiredFieldWithPeriodHint';
+
         return {
-          password: passwordValidator(password),
-          confirmPassword:
-            (!confirmPassword || confirmPassword !== password) && 'confirmPasswordHint',
-          name: name?.trim() ? commonValidators.userName(name) : 'requiredFieldWithPeriodHint',
+          password: passwordErrorMessage,
+          confirmPassword: confirmPasswordErrorMessage,
+          name: nameErrorMessage,
         };
       },
     })(RegistrationFormComponent),
