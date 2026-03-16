@@ -34,7 +34,7 @@ const messages = defineMessages({
   nameHint: {
     id: 'RegistrationForm.nameHint',
     defaultMessage:
-      'Names must be {minLength}-{maxLength} characters, using only Latin or Cyrillic letters, numbers, spaces, dots, hyphens, underscores, and apostrophes.',
+      'Full name may contain {minLength}-{maxLength} characters, using only Latin letters, numbers, spaces, dots, hyphens, underscores, and apostrophes.',
   },
   passwordCreateUserHint: {
     id: 'CreateUserModal.passwordCreateUserHint',

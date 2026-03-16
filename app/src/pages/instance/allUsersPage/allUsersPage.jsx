@@ -70,9 +70,9 @@ const AllUsersPageComponent = ({
   const [searchValue, setSearchValue] = useState(null);
   const [appliedFiltersCount, setAppliedFiltersCount] = useState(0);
 
-  const onInvite = (withProject) => {
+  const onInvite = (condition) => {
     dispatch(fetchAllUsersAction());
-    trackEvent(ALL_USERS_PAGE_EVENTS.inviteUser(withProject));
+    trackEvent(ALL_USERS_PAGE_EVENTS.inviteUser(condition));
   };
 
   const showInviteUserModal = () => {
