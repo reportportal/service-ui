@@ -50,7 +50,7 @@ import type { TestCaseExecution } from 'controllers/manualLaunch';
 
 import { ManualLaunchExecutionsProps } from './types';
 import { ExecutionStatusChip } from './executionStatusChip';
-import { ExecutionSidePanel } from './executionSidePanel/executionSidePanel';
+import { ExecutionSidePanel } from './executionSidePanel';
 import { ITEMS_PER_PAGE_OPTIONS } from './constants';
 import { useDeleteExecutionModal } from './deleteExecutionModal';
 import { messages } from './messages';

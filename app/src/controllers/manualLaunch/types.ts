@@ -131,7 +131,7 @@ export interface Attachment {
 
 export interface BtsTicket {
   id: number;
-  name: string;
+  name?: string;
   link: string;
 }
 
