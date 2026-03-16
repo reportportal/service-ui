@@ -185,6 +185,16 @@ export const InstanceAssignment = ({
     dispatch(change(formName, 'isAddingOrganization', shouldFormBeOpen));
   }, [isOpen, allOrganizations?.length, dispatch, formName]);
 
+  const resetOrganization = () => {
+    dispatch(
+      change(formName, formNamespace, {
+        name: null,
+        role: false,
+        projects: [],
+      }),
+    );
+  };
+
   useEffect(() => {
     setSelectedOrganizationId(null);
     setSelectedProjectId(null);
@@ -194,8 +204,7 @@ export const InstanceAssignment = ({
     setAreOrganizationsExhausted(false);
     setIsOpen(true);
     fields.removeAll();
-    dispatch(change(formName, FORM_FIELDS.ORGANIZATION.NAME, null));
-    dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.NAME, null));
+    resetOrganization();
 
     if (!invitedUserId) {
       setUserOrgIds(new Set());
@@ -216,16 +225,6 @@ export const InstanceAssignment = ({
       .catch(() => setUserOrgIds(new Set()));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [invitedUserId]);
-
-  const resetOrganization = () => {
-    dispatch(
-      change(formName, formNamespace, {
-        name: null,
-        role: false,
-        projects: [],
-      }),
-    );
-  };
 
   const getRequestOrganizationsParams = (inputValue: string) => {
     organizationSearchQueryRef.current = inputValue;
