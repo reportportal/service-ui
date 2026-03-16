@@ -18,7 +18,7 @@ import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
-import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
+import { AttachmentList } from 'pages/inside/common/attachmentList';
 import { commonMessages } from 'pages/inside/common/common-messages';
 
 import { FieldSection } from '../../../fieldSection';

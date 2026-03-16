@@ -30,8 +30,7 @@ import { Scenario } from 'pages/inside/common/testCaseList/testCaseSidePanel/sce
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 import { formatTimestamp } from 'pages/inside/common/testCaseList/utils';
 import { Divider } from 'pages/inside/projectSettingsPageContainer/content/elements';
-import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
-import { Attachment } from 'pages/inside/testCaseLibraryPage/types';
+import { AttachmentList, type Attachment } from 'pages/inside/common/attachmentList';
 
 import { messages } from './messages';
 import { useExecutionDetails } from './useExecutionDetails';
