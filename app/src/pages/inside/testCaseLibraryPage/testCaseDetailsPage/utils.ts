@@ -16,8 +16,9 @@
 
 import { isEmpty } from 'es-toolkit/compat';
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
+import type { Attachment } from 'pages/inside/common/attachmentList';
 
-import { Attachment, ManualScenario, Step, Tag } from '../types';
+import { ManualScenario, Step, Tag } from '../types';
 
 export const hasStepContent = (
   step: Pick<Step, 'instructions' | 'expectedResult' | 'attachments'>,

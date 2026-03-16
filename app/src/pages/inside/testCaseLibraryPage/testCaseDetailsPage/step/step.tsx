@@ -20,8 +20,7 @@ import { useIntl } from 'react-intl';
 import { createClassnames } from 'common/utils';
 import { commonMessages } from 'pages/inside/common/common-messages';
 
-import { AttachmentList } from '../../attachmentList';
-import { Attachment } from '../../types';
+import { AttachmentList, type Attachment } from '../../../common/attachmentList';
 
 import styles from './step.scss';
 
@@ -34,41 +33,31 @@ interface StepProps {
   attachments: Attachment[];
 }
 
-export const Step = ({
-  index,
-  instructions = '',
-  expectedResult = '',
-  attachments,
-}: StepProps) => {
+export const Step = ({ index, instructions = '', expectedResult = '', attachments }: StepProps) => {
   const { formatMessage } = useIntl();
 
   return (
     <li className={cx('step')}>
       <div className={cx('step__number')}>{index}</div>
       <div className={cx('step__content')}>
-        {
-          (instructions || expectedResult) && (
-            <div className={cx('step__description')}>
-              <div className={cx('step__instruction')}>
-                {instructions}
-              </div>
-              <div className={cx('step__expected-result')}>
-                {expectedResult}
-              </div>
-            </div>
-          )
-        }
-        {
-          !isEmpty(attachments) &&
+        {(instructions || expectedResult) && (
+          <div className={cx('step__description')}>
+            <div className={cx('step__instruction')}>{instructions}</div>
+            <div className={cx('step__expected-result')}>{expectedResult}</div>
+          </div>
+        )}
+        {!isEmpty(attachments) && (
           <div className={cx('step__attachments-wrapper')}>
-            <h4>{formatMessage(commonMessages.attachments) } {attachments.length}</h4>
+            <h4>
+              {formatMessage(commonMessages.attachments)} {attachments.length}
+            </h4>
             <AttachmentList
               attachments={attachments}
               className={cx('step__attachments-list')}
               withPreview
             />
           </div>
-        }
+        )}
       </div>
     </li>
   );

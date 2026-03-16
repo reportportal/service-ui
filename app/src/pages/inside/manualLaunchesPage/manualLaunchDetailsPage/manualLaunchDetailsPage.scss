@@ -27,5 +27,10 @@
     gap: 80px;
     justify-content: center;
     padding: 0;
+
+    // this part is used to keep side panel above the page header
+    & > * > [class*="scrollWrapper__scroll-component"] [class*="scrollWrapper__scrolling-content"] {
+      z-index: 15;
+    }
   }
 }

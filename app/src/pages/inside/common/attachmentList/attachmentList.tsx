@@ -22,7 +22,7 @@ import { AttachedFile } from '@reportportal/ui-kit';
 
 import { createClassnames, fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { Attachment } from 'pages/inside/testCaseLibraryPage/types';
+import type { Attachment } from './types';
 
 import styles from './attachmentsList.scss';
 

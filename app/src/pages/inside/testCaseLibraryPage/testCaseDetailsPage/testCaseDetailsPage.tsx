@@ -40,7 +40,7 @@ import { useDescriptionModal } from './descriptionModal';
 import { useTestCaseTags } from './useTestCaseTags';
 import { messages } from './messages';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
-import { AttachmentList } from '../attachmentList';
+import { AttachmentList } from '../../common/attachmentList';
 import { ManualScenario, Tag, hasTagShape } from '../types';
 import { Precondition } from './precondition';
 import { StepsList } from './stepsList';
