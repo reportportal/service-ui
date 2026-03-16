@@ -36,6 +36,7 @@ import { useOnClickOutside } from 'common/hooks';
 import { CollapsibleSection } from 'components/collapsibleSection';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { FolderBreadcrumbs } from 'components/folderBreadcrumbs';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
@@ -73,6 +74,7 @@ export const TestPlanSidePanel = memo(
     const { formatMessage } = useIntl();
     const sidePanelRef = useRef<HTMLDivElement>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { canManageTestCases } = useUserPermissions();
     const { organizationSlug, projectSlug } = useSelector(
       urlOrganizationAndProjectSelector,
     ) as ProjectDetails;
@@ -121,9 +123,9 @@ export const TestPlanSidePanel = memo(
 
     const menuItems = [];
 
-    if (testPlanId) {
+    if (testPlanId && canManageTestCases) {
       menuItems.push({
-        label: formatMessage(messages.removeFromTestPlan),
+        label: formatMessage(messages.removeFromTestPlan) + 11,
         onClick: handleRemoveFromTestPlan,
         variant: 'danger' as const,
       });
@@ -221,21 +223,23 @@ export const TestPlanSidePanel = memo(
 
     const footerComponent = (
       <div className={cx('footer')}>
-        <PopoverControl
-          items={menuItems}
-          placement="top"
-          isOpened={isMenuOpen}
-          setIsOpened={setIsMenuOpen}
-        >
-          <Button
-            variant="ghost"
-            className={cx('action-button', 'menu-button')}
-            data-automation-id="test-plan-more-actions"
-            aria-label={formatMessage(commonMessages.moreActions)}
+        {!isEmpty(menuItems) && (
+          <PopoverControl
+            items={menuItems}
+            placement="top"
+            isOpened={isMenuOpen}
+            setIsOpened={setIsMenuOpen}
           >
-            <MeatballMenuIcon />
-          </Button>
-        </PopoverControl>
+            <Button
+              variant="ghost"
+              className={cx('action-button', 'menu-button')}
+              data-automation-id="test-plan-more-actions"
+              aria-label={formatMessage(commonMessages.moreActions)}
+            >
+              <MeatballMenuIcon />
+            </Button>
+          </PopoverControl>
+        )}
         <div className={cx('footer-right-actions')}>
           <Button
             variant="ghost"
