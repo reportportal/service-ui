@@ -40,7 +40,7 @@ const cx = createClassnames(styles);
 
 const ERROR_MESSAGE_KEYS = {
   REQUIRED_FIELD_WITH_PERIOD: 'requiredFieldWithPeriodHint',
-  CONFIRM_PASSWORD: 'confirmPasswordHint',
+  CONFIRM_PASSWORD_HINT_MESSAGE: 'confirmPasswordHint',
 } as const;
 
 const messages = defineMessages({
@@ -221,7 +221,7 @@ export const RegistrationForm = connect((state) => ({
         if (!confirmPassword?.trim()) {
           confirmPasswordErrorMessage = ERROR_MESSAGE_KEYS.REQUIRED_FIELD_WITH_PERIOD;
         } else if (confirmPassword !== password) {
-          confirmPasswordErrorMessage = ERROR_MESSAGE_KEYS.CONFIRM_PASSWORD;
+          confirmPasswordErrorMessage = ERROR_MESSAGE_KEYS.CONFIRM_PASSWORD_HINT_MESSAGE;
         }
 
         const nameErrorMessage = name?.trim()
