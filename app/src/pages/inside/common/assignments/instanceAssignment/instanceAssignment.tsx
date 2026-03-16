@@ -192,6 +192,8 @@ export const InstanceAssignment = ({
     setTotalProjects(0);
     setNotAssignedOrganizations([]);
     setAreOrganizationsExhausted(false);
+    setIsOpen(true);
+    fields.removeAll();
     dispatch(change(formName, FORM_FIELDS.ORGANIZATION.NAME, null));
     dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.NAME, null));
 
@@ -315,7 +317,7 @@ export const InstanceAssignment = ({
   return (
     <div className={cx('forms-wrapper')}>
         <FieldElement name={ORGANIZATIONS} className={cx('organizations')}>
-          <OrganizationAssignment isMultiple formName={formName} invitedUserId={invitedUserId} />
+          <OrganizationAssignment isMultiple formName={formName} isOrganizationFormOpen={isOpen} />
         </FieldElement>
       {isOpen || allOrganizations?.length === 0 ? (
         <div className={cx('instance-assignment')}>
