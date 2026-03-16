@@ -33,7 +33,7 @@ import {
   Tooltip,
 } from '@reportportal/ui-kit';
 
-import { createClassnames } from 'common/utils';
+import { createClassnames, fetch } from 'common/utils';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import {
@@ -115,6 +115,7 @@ interface InstanceAssignmentProps extends InstanceAssignmentArrayProps<InstanceA
   formName: string;
   formNamespace?: string;
   isOrganizationRequired: boolean;
+  invitedUserId?: number | null;
 }
 
 interface InstanceAssignmentArrayProps<T> extends WrappedFieldArrayProps<T> {
@@ -150,6 +151,7 @@ export const InstanceAssignment = ({
   formName,
   formNamespace,
   isOrganizationRequired = false,
+  invitedUserId = null,
 }: InstanceAssignmentProps) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
@@ -175,12 +177,43 @@ export const InstanceAssignment = ({
   const [selectedOrganizationId, setSelectedOrganizationId] = useState<number | null>(null);
   const [totalProjects, setTotalProjects] = useState(0);
   const [isOpen, setIsOpen] = useState<boolean>(true);
+  const [userOrgIds, setUserOrgIds] = useState<Set<number>>(new Set());
   const allOrganizations = fields.getAll();
 
   useEffect(() => {
     const shouldFormBeOpen = isOpen || allOrganizations?.length === 0;
     dispatch(change(formName, 'isAddingOrganization', shouldFormBeOpen));
   }, [isOpen, allOrganizations?.length, dispatch, formName]);
+
+  useEffect(() => {
+    setSelectedOrganizationId(null);
+    setSelectedProjectId(null);
+    setOrganizationProjects([]);
+    setTotalProjects(0);
+    setNotAssignedOrganizations([]);
+    setAreOrganizationsExhausted(false);
+    dispatch(change(formName, FORM_FIELDS.ORGANIZATION.NAME, null));
+    dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.NAME, null));
+
+    if (!invitedUserId) {
+      setUserOrgIds(new Set());
+      return;
+    }
+
+    fetch(URLS.organizationSearches(), {
+      method: 'post',
+      data: {
+        limit: 300,
+        search_criteria: [{ filter_key: 'org_user_id', operation: 'EQ', value: String(invitedUserId) }],
+      },
+    })
+      .then((response: OrganizationsSearchesResponseData) => {
+        const ids = new Set<number>((response.items ?? []).map((org) => org.id));
+        setUserOrgIds(ids);
+      })
+      .catch(() => setUserOrgIds(new Set()));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [invitedUserId]);
 
   const resetOrganization = () => {
     dispatch(
@@ -200,10 +233,19 @@ export const InstanceAssignment = ({
     };
   };
 
+  const getRequestProjectsParams = (inputValue: string) => {
+    return {
+      method: 'post',
+      data: prepareQueryFilters({ limit: 20, [SEARCH_KEY]: inputValue }),
+    };
+  };
+
   const makeOrganizationsOptions = (response: OrganizationsSearchesResponseData) => {
     if (response.items) {
       const filteredOrganizations = response.items.filter(
-        (organization) => !(allOrganizations || []).some(({ id }) => id === organization.id),
+        (organization) =>
+          !(allOrganizations || []).some(({ id }) => id === organization.id) &&
+          !userOrgIds.has(organization.id),
       );
 
       setNotAssignedOrganizations(filteredOrganizations);
@@ -272,15 +314,16 @@ export const InstanceAssignment = ({
 
   return (
     <div className={cx('forms-wrapper')}>
-      <FieldElement name={ORGANIZATIONS} className={cx('organizations')}>
-        <OrganizationAssignment isMultiple formName={formName} />
-      </FieldElement>
+        <FieldElement name={ORGANIZATIONS} className={cx('organizations')}>
+          <OrganizationAssignment isMultiple formName={formName} invitedUserId={invitedUserId} />
+        </FieldElement>
       {isOpen || allOrganizations?.length === 0 ? (
         <div className={cx('instance-assignment')}>
           <div className={cx('autocomplete-wrapper')}>
             <FieldProvider name={FORM_FIELDS.ORGANIZATION.NAME}>
               <FieldErrorHint provideHint={false}>
                 <AsyncAutocompleteV2
+                  key={`organization-${invitedUserId}`}
                   inputProps={{
                     label: formatMessage(messages.organization),
                     clearable: true,
@@ -334,7 +377,7 @@ export const InstanceAssignment = ({
             <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.NAME}>
               <FieldErrorHint provideHint={false}>
                 <AsyncAutocompleteV2
-                  key={`project-${selectedOrganizationId}`}
+                  key={`project-${selectedOrganizationId}-${invitedUserId}`}
                   inputProps={{
                     label: formatMessage(messages.project),
                     clearable: totalProjects > 0 && !!selectedOrganizationId,
@@ -346,7 +389,7 @@ export const InstanceAssignment = ({
                   }}
                   placeholder={formatMessage(invitationMessages.selectSearchProject)}
                   getURI={() => URLS.organizationProjectsSearches(selectedOrganizationId)}
-                  getRequestParams={getRequestOrganizationsParams}
+                  getRequestParams={getRequestProjectsParams}
                   makeOptions={makeProjectsOptions}
                   onChange={handleProjectChange}
                   createWithoutConfirmation

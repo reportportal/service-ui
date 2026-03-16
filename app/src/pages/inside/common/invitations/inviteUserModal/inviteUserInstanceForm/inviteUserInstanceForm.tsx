@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { useState, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { FieldArray } from 'redux-form';
 import { createClassnames } from 'common/utils';
@@ -30,10 +31,15 @@ const cx = createClassnames(styles);
 
 export const InviteUserInstanceForm = () => {
   const { formatMessage } = useIntl();
+  const [invitedUserId, setInvitedUserId] = useState<number | null>(null);
+
+  const handleUserSelect = useCallback((userId: number | null) => {
+    setInvitedUserId(userId);
+  }, []);
 
   return (
     <form className={cx('form')}>
-      <InviteUserEmailAutocompleteField />
+      <InviteUserEmailAutocompleteField onUserSelect={handleUserSelect} />
       <div className={cx('invite-wrapper')}>
         <span className={cx('invite')}>{formatMessage(invitationMessages.organizationsAndProjectsToInvite)}</span>
         <span className={cx('invite-description')}>
@@ -47,6 +53,7 @@ export const InviteUserInstanceForm = () => {
           formName: getFormName(Level.INSTANCE),
           formNamespace: 'organization',
           isOrganizationRequired: true,
+          invitedUserId,
         }}
       />
     </form>
