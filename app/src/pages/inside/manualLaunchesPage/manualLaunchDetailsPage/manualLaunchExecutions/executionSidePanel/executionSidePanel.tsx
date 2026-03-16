@@ -11,8 +11,8 @@ import {
   RerunIcon,
   RunManualIcon,
   SidePanel,
+  type Issue,
 } from '@reportportal/ui-kit';
-import { Issue } from '@reportportal/ui-kit/issueList';
 
 import { useOnClickOutside } from 'common/hooks';
 import { createClassnames, formatDuration } from 'common/utils';
