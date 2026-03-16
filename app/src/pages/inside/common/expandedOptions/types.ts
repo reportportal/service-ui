@@ -17,7 +17,7 @@
 import { ReactNode } from 'react';
 
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
-import { TransformedFolder } from 'controllers/testCase';
+import { Folder, TransformedFolder } from 'controllers/testCase';
 import { TreeDragItem, TreeDropPosition } from '@reportportal/ui-kit/common';
 import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
 
@@ -34,6 +34,8 @@ export interface ExpandedOptionsProps {
   children: ReactNode;
   instanceKey: TMS_INSTANCE_KEY;
   searchQuery?: string;
+  searchExtraFilters?: Record<string, string | number>;
+  searchAllFolders?: Folder[];
   renderCreateFolderButton?: () => ReactNode;
   onMoveFolder?: (
     draggedItem: TreeDragItem,

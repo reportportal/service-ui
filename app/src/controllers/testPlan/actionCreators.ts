@@ -36,6 +36,7 @@ export interface GetTestPlanParams {
   folderId?: string | number;
   offset?: string | number;
   limit?: string | number;
+  testCasesSearchParams?: string;
 }
 
 export const getTestPlansAction = (params?: GetTestPlansParams) => ({

@@ -14,16 +14,22 @@
  * limitations under the License.
  */
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
 import { Button } from '@reportportal/ui-kit';
 
-import { createClassnames } from 'common/utils';
+import { createClassnames, debounce } from 'common/utils';
+import { SEARCH_DELAY } from 'common/constants/delayTime';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { PROJECT_TEST_PLANS_PAGE, PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
+import {
+  PROJECT_TEST_PLANS_PAGE,
+  PROJECT_TEST_PLAN_DETAILS_PAGE,
+  locationSelector,
+  updatePagePropertiesAction,
+} from 'controllers/pages';
 import {
   showNotification,
   NOTIFICATION_TYPES,
@@ -41,6 +47,10 @@ import {
 } from 'hooks/useTypedSelector';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { testPlanTestCasesSelector } from 'controllers/testPlan';
+import { isLoadingFilteredFoldersSelector } from 'controllers/testCase';
+import { SearchField } from 'components/fields/searchField';
+import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
+import { messages as testCaseListMessages } from 'pages/inside/common/testCaseList/messages';
 
 import { TestLibrarySidePanel } from '../../common/testLibrarySidePanel';
 import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWithBreadcrumbsAndActions';
@@ -75,6 +85,36 @@ export const TestPlanDetailsPage = () => {
   const isTestPlanTestCasesLoading = useTestPlanTestCasesLoading();
   const testPlanFolders = useTestPlanFolders();
   const testCases = useTestPlanSelector(testPlanTestCasesSelector);
+
+  const location = useSelector(locationSelector);
+  const isLoadingFilteredFolders = useSelector(isLoadingFilteredFoldersSelector);
+  const [searchValue, setSearchValue] = useState(
+    location?.query?.testCasesSearchParams || '',
+  );
+
+  useEffect(() => {
+    const querySearch = location?.query?.testCasesSearchParams || '';
+
+    setSearchValue(querySearch);
+  }, [location?.query?.testCasesSearchParams]);
+
+  const isSearchLoading =
+    searchValue !== (location?.query?.testCasesSearchParams || '') ||
+    isTestPlanTestCasesLoading ||
+    isLoadingFilteredFolders;
+
+  const handleFilterChange = useCallback(
+    // eslint-disable-next-line react-hooks/use-memo
+    debounce((value: string) => {
+      dispatch(
+        updatePagePropertiesAction({
+          testCasesSearchParams: value,
+          ...TestCasePageDefaultValues,
+        }),
+      );
+    }, SEARCH_DELAY),
+    [dispatch],
+  );
 
   const { openModal: openEditModal } = useEditTestPlanModal();
   const { openModal: openDuplicateModal } = useDuplicateTestPlanModal({
@@ -145,6 +185,13 @@ export const TestPlanDetailsPage = () => {
       <div className={cx('test-plan-details-page__header-id')}>
         {formatMessage(messages.testPlanId, { testPlanId })}
       </div>
+      <SearchField
+        isLoading={isSearchLoading}
+        searchValue={searchValue}
+        placeholder={formatMessage(testCaseListMessages.searchPlaceholder)}
+        setSearchValue={setSearchValue}
+        onFilterChange={handleFilterChange}
+      />
       <TestPlanActions
         testPlanId={testPlanId}
         variant="header"
@@ -205,11 +252,13 @@ export const TestPlanDetailsPage = () => {
           <div className={cx('test-plan-details-page__content')}>{renderContent()}</div>
         </div>
       </ScrollWrapper>
-      <TestLibrarySidePanel
-        isOpen={isTestLibrarySidePanelOpen}
-        onAddTestCases={handleAddTestCases}
-        onClose={() => setIsTestLibrarySidePanelOpen(false)}
-      />
+      {isTestLibrarySidePanelOpen && (
+        <TestLibrarySidePanel
+          isOpen
+          onAddTestCases={handleAddTestCases}
+          onClose={() => setIsTestLibrarySidePanelOpen(false)}
+        />
+      )}
     </SettingsLayout>
   );
 };
