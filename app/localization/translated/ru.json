@@ -1749,6 +1749,7 @@
   "NotificationRule.launchNameLabel": "Название запуска",
   "NotificationRule.launchOwner": "Владелец запуска",
   "Notifications.dashboardConfigurationCopied": "Конфигурация дашборда была скопирована в буфер обмена успешно.",
+  "ExternalUserInvitationModal.copyLinkFailed": "Не удалось скопировать ссылку",
   "Notifications.duplicateDashboardSuccess": "Дубликат дашборда успешно создан",
   "Notifications.notifications": "Уведомления по электронной почте",
   "Notifications.ruleNameDuplicateHint": "Правило с таким названием уже существует для этого канала связи",

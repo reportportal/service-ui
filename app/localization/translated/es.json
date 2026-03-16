@@ -1750,6 +1750,7 @@
   "NotificationRule.launchNameLabel": "Nombre de la ejecución",
   "NotificationRule.launchOwner": "Propietario de la ejecución",
   "Notifications.dashboardConfigurationCopied": "Dashboard configuration has been copied to clipboard successfully",
+  "ExternalUserInvitationModal.copyLinkFailed": "No se pudo copiar el enlace",
   "Notifications.duplicateDashboardSuccess": "Dashboard has been duplicated successfully",
   "Notifications.notifications": "Notificaciones por correo electrónico",
   "Notifications.ruleNameDuplicateHint": "Ya existe una regla con este nombre en el proyecto",

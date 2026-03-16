@@ -1748,6 +1748,7 @@
   "NotificationRule.launchNameLabel": "测试任务名称",
   "NotificationRule.launchOwner": "测试任务负责人",
   "Notifications.dashboardConfigurationCopied": "Dashboard configuration has been copied to clipboard successfully",
+  "ExternalUserInvitationModal.copyLinkFailed": "复制链接失败",
   "Notifications.duplicateDashboardSuccess": "Dashboard has been duplicated successfully",
   "Notifications.notifications": "电子邮件通知",
   "Notifications.ruleNameDuplicateHint": "此通信渠道已存在同名规则",
