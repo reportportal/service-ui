@@ -92,6 +92,12 @@ export const TestPlanDetailsPage = () => {
     location?.query?.testCasesSearchParams || '',
   );
 
+  useEffect(() => {
+    const querySearch = location?.query?.testCasesSearchParams || '';
+
+    setSearchValue(querySearch);
+  }, [location?.query?.testCasesSearchParams]);
+
   const isSearchLoading =
     searchValue !== (location?.query?.testCasesSearchParams || '') ||
     isTestPlanTestCasesLoading ||
