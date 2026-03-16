@@ -16,7 +16,10 @@
 
 import copy from 'copy-to-clipboard';
 
-export const copyToClipboard = async (text: string): Promise<void> => {
-  copy(text);
+export const copyToClipboard = (text: string): Promise<void> => {
+  const copied = copy(text);
+  if (!copied) {
+    return Promise.reject(new Error('Clipboard copy failed'));
+  }
   return Promise.resolve();
 };
