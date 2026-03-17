@@ -183,6 +183,7 @@ const ExecutionStatusConfirmModalComponent: FC<
   );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 export const ExecutionStatusConfirmModal = withModal(EXECUTION_STATUS_CONFIRM_MODAL)(
   reduxForm<ExecutionStatusConfirmFormValues, ExecutionStatusConfirmModalProps>({
     form: EXECUTION_STATUS_CONFIRM_FORM_NAME,
