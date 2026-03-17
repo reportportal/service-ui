@@ -49,7 +49,7 @@ export const StepsBasedContent = ({ execution: { manualScenario } }: ExecutionCo
       <CollapsibleSection
         title={formatMessage(messages.requirements)}
         defaultMessage={
-          hasRequirements ? undefined : formatMessage(messages.requirementsAreNotSpecified)
+          !hasRequirements ? formatMessage(messages.requirementsAreNotSpecified) : undefined
         }
       >
         {hasRequirements ? <RequirementsList items={requirements} /> : null}

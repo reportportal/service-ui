@@ -22,7 +22,7 @@ import { CollapsibleSection } from 'components/collapsibleSection';
 import { FieldSection } from 'pages/inside/common/fieldSection';
 import { RequirementsList } from 'pages/inside/common/requirementsList/requirementsList';
 import { AttachmentList, type Attachment } from 'pages/inside/common/attachmentList';
-import { Scenario } from 'pages/inside/testCaseLibraryPage/testCaseDetailsPage/scenario';
+import { Scenario } from 'pages/inside/common/scenario';
 
 import { messages } from '../messages';
 import { commonMessages } from 'pages/inside/common/common-messages';
@@ -49,7 +49,7 @@ export const TextBasedContent = ({ execution: { manualScenario } }: ExecutionCon
       <CollapsibleSection
         title={formatMessage(messages.requirements)}
         defaultMessage={
-          hasRequirements ? undefined : formatMessage(messages.requirementsAreNotSpecified)
+          !hasRequirements ? formatMessage(messages.requirementsAreNotSpecified) : undefined
         }
       >
         {hasRequirements ? <RequirementsList items={requirements} /> : null}

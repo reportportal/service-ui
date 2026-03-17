@@ -44,7 +44,7 @@ import { AttachmentList } from '../../common/attachmentList';
 import { ManualScenario, Tag, hasTagShape } from '../types';
 import { Precondition } from './precondition';
 import { StepsList } from './stepsList';
-import { Scenario } from './scenario';
+import { Scenario } from '../../common/scenario';
 import { TagPopover } from '../tagPopover';
 import {
   checkScenario,
