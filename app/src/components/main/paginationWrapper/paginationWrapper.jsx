@@ -15,7 +15,7 @@
  */
 
 import { useTracking } from 'react-tracking';
-import { Pagination } from '@reportportal/ui-kit';
+import { Pagination, BulkPanel } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 
@@ -30,12 +30,15 @@ export const PaginationWrapper = ({
   children,
   showPagination,
   className,
+  paginationClassName,
   changePageSize,
   changePageSizeEvent,
+  bulkPanelProps,
   ...paginationProps
 }) => {
   const { captions } = usePagination({});
   const { trackEvent } = useTracking();
+  const isBulkPanelVisible = bulkPanelProps?.items?.length > 0;
 
   const changePageSizeHandle = (newSize) => {
     changePageSize(newSize);
@@ -48,12 +51,16 @@ export const PaginationWrapper = ({
         {children}
       </ScrollWrapper>
       {showPagination && (
-        <div className={cx('pagination')}>
-          <Pagination
-            changePageSize={changePageSizeHandle}
-            captions={captions}
-            {...paginationProps}
-          />
+        <div className={cx('sticky-footer')}>
+          <div className={cx('pagination-container', { 'pagination-with-panel': isBulkPanelVisible })}>
+            <Pagination
+              className={cx('pagination', paginationClassName)}
+              changePageSize={changePageSizeHandle}
+              captions={captions}
+              {...paginationProps}
+            />
+          </div>
+          {isBulkPanelVisible && <BulkPanel {...bulkPanelProps} />}
         </div>
       )}
     </div>
@@ -65,11 +72,20 @@ PaginationWrapper.propTypes = {
   changePageSize: PropTypes.func.isRequired,
   children: PropTypes.node,
   className: PropTypes.string,
+  paginationClassName: PropTypes.string,
   changePageSizeEvent: PropTypes.func,
+  bulkPanelProps: PropTypes.shape({
+    items: PropTypes.array,
+    actions: PropTypes.array,
+    captions: PropTypes.object,
+    onRemoveItem: PropTypes.func,
+    onClearSelection: PropTypes.func,
+  }),
 };
 
 PaginationWrapper.defaultProps = {
   children: null,
   className: '',
   changePageSizeEvent: () => {},
+  bulkPanelProps: null,
 };

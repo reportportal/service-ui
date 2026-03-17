@@ -26,3 +26,4 @@ export { useQueryParams } from './useQueryParams';
 export { useNavigationTabsExtensionsConfig } from './useNavigationTabsExtensionsConfig';
 export { useNotification } from './useNotification';
 export { useTextareaAutoResize } from './useTextareaAutoResize';
+export { useBulkPanelCaptions } from './useBulkPanelCaptions';

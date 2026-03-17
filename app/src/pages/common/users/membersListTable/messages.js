@@ -54,4 +54,9 @@ export const messages = defineMessages({
     defaultMessage:
       'Admin has full access to all organizations and projects within the instance, regardless of specified role and permissions.',
   },
+  cannotDeleteSelf: {
+    id: 'MembersListTable.cannotDeleteSelf',
+    defaultMessage:
+      "Admin can't delete his own account. Ask another admin for assistance",
+  },
 });

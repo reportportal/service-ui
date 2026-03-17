@@ -402,6 +402,43 @@ export const COMMON_LOCALE_KEYS = defineMessages({
   },
 });
 
+export const BULK_COMMON_LOCALE_KEYS = defineMessages({
+  SELECTED: {
+    id: 'Common.bulk.selected',
+    defaultMessage: 'selected',
+  },
+  CLEAR_SELECTION: {
+    id: 'Common.bulk.clearSelection',
+    defaultMessage: 'Clear selection',
+  },
+  SELECTED_ITEMS: {
+    id: 'Common.bulk.selectedItems',
+    defaultMessage: 'Selected items',
+  },
+  ELIGIBLE_TAB: {
+    id: 'Common.bulk.eligibleTab',
+    defaultMessage: 'Eligible Items',
+  },
+  INELIGIBLE_TAB: {
+    id: 'Common.bulk.ineligibleTab',
+    defaultMessage: 'Ineligible Items',
+  },
+  INELIGIBLE_INFO_MESSAGE: {
+    id: 'Common.bulk.ineligibleInfoMessage',
+    defaultMessage:
+      'You have <b>{count}</b> ineligible {count, plural, one {item} other {items}}',
+  },
+  CANCEL_BUTTON: {
+    id: 'Common.bulk.cancelButton',
+    defaultMessage: 'Cancel "{actionLabel}"',
+  },
+  PROCEED_BUTTON: {
+    id: 'Common.bulk.proceedButton',
+    defaultMessage:
+      'Proceed with {count} eligible {count, plural, one {item} other {items}}',
+  },
+});
+
 export const months = [
   'january',
   'february',

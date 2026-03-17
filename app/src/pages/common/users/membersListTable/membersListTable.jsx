@@ -38,6 +38,13 @@ export const MembersListTable = ({
   onChangePage,
   onChangePageSize,
   changePageSizeEvent,
+  selectable,
+  selectedRowIds,
+  disabledRowIds,
+  getRowCheckboxTooltip,
+  onToggleRowSelection,
+  onToggleAllRowsSelection,
+  bulkPanelProps,
 }) => {
   return (
     <PaginationWrapper
@@ -50,21 +57,32 @@ export const MembersListTable = ({
       changePage={onChangePage}
       changePageSize={onChangePageSize}
       className={cx('members-pagination-wrapper')}
+      paginationClassName={cx('members-pagination')}
       changePageSizeEvent={changePageSizeEvent}
+      bulkPanelProps={bulkPanelProps}
     >
-      <Table
-        className={cx('members-list-table')}
-        headerClassName={cx('table-header')}
-        rowClassName={cx('table-row')}
-        data={data}
-        primaryColumn={primaryColumn}
-        fixedColumns={fixedColumns}
-        renderRowActions={renderRowActions}
-        sortingColumn={primaryColumn}
-        sortingDirection={sortingDirection}
-        onChangeSorting={onTableSorting}
-        sortableColumns={primaryColumn.key}
-      />
+      <div className={cx('members-list-table-wrapper')}>
+        <Table
+          className={cx('members-list-table')}
+          headerClassName={cx('table-header')}
+          rowClassName={cx('table-row')}
+          data={data}
+          primaryColumn={primaryColumn}
+          fixedColumns={fixedColumns}
+          renderRowActions={renderRowActions}
+          sortingColumn={primaryColumn}
+          sortingDirection={sortingDirection}
+          onChangeSorting={onTableSorting}
+          sortableColumns={primaryColumn.key}
+          selectable={selectable}
+          isCheckboxOutside={selectable}
+          selectedRowIds={selectedRowIds}
+          disabledRowIds={disabledRowIds}
+          getRowCheckboxTooltip={getRowCheckboxTooltip}
+          onToggleRowSelection={onToggleRowSelection}
+          onToggleAllRowsSelection={onToggleAllRowsSelection}
+        />
+      </div>
     </PaginationWrapper>
   );
 };
@@ -84,4 +102,11 @@ MembersListTable.propTypes = {
   onChangePage: PropTypes.func.isRequired,
   onChangePageSize: PropTypes.func.isRequired,
   changePageSizeEvent: PropTypes.func.isRequired,
+  selectable: PropTypes.bool,
+  selectedRowIds: PropTypes.array,
+  disabledRowIds: PropTypes.array,
+  getRowCheckboxTooltip: PropTypes.func,
+  onToggleRowSelection: PropTypes.func,
+  onToggleAllRowsSelection: PropTypes.func,
+  bulkPanelProps: PropTypes.object,
 };

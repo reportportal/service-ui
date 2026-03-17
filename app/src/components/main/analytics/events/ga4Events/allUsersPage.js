@@ -59,6 +59,18 @@ export const ALL_USERS_PAGE_EVENTS = {
     element_name: 'delete',
     modal: 'delete_user',
   },
+  BULK_DELETE_USERS: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_users_page',
+    element_name: 'start_delete',
+  },
+  bulkDeleteUsersModal: (count) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_users_page',
+    element_name: 'submit_delete',
+    modal: 'delete_users',
+    type: count === 1 ? 'single' : 'multi',
+  }),
   export: (appliedFiltersCount = 0) => ({
     ...BASIC_EVENT_PARAMETERS,
     place: 'all_users_page',

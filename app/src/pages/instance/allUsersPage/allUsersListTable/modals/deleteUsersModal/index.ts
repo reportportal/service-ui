@@ -14,8 +14,4 @@
  * limitations under the License.
  */
 
-.depth-aware-checkbox {
-  position: absolute;
-  left: attr(data-offset px);
-  top: 10px;
-}
+export { DeleteUsersModal } from './deleteUsersModal';
