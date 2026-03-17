@@ -34,6 +34,7 @@ import { AttachmentList, type Attachment } from 'pages/inside/common/attachmentL
 
 import { messages } from './messages';
 import { useExecutionDetails } from './useExecutionDetails';
+import { useClearStatusModal } from '../clearStatusModal/useClearStatusModal';
 
 import styles from './executionSidePanel.scss';
 
@@ -41,11 +42,13 @@ const cx = createClassnames(styles);
 
 interface ExecutionSidePanelProps {
   executionId: number | null;
+  launchId: string | null;
   onClose: () => void;
 }
 
-export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelProps) => {
+export const ExecutionSidePanel = ({ executionId, launchId, onClose }: ExecutionSidePanelProps) => {
   const { formatMessage } = useIntl();
+  const { openModal: openClearStatusModal } = useClearStatusModal();
   const { executionDetails, isLoading } = useExecutionDetails(executionId);
   const sidePanelRef = useRef<HTMLDivElement>(null);
   const isScenarioProvided =
@@ -182,7 +185,7 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
       <Button
         variant="ghost"
         className={cx('action-button')}
-        onClick={() => {}}
+        onClick={() => openClearStatusModal({ executionId: String(executionId), launchId })}
         data-automation-id="test-plan-open-in-library"
       >
         {formatMessage(messages.changeStatus)}

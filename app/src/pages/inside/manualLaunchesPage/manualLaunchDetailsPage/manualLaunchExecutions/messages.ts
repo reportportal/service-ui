@@ -54,4 +54,13 @@ export const messages = defineMessages({
     id: 'ManualLaunchExecutions.filterAriaLabel',
     defaultMessage: 'Filter',
   },
+  clearStatusDescription: {
+    id: 'ManualLaunchExecutions.clearStatusDescription',
+    defaultMessage:
+      'Are you sure you want to clear the selected status? The test execution will revert to the status "To Run".',
+  },
+  clearStatus: {
+    id: 'ManualLaunchExecutions.clearStatus',
+    defaultMessage: 'Clear Status',
+  },
 });
