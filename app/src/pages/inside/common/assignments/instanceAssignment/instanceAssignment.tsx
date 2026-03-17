@@ -46,6 +46,7 @@ import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocom
 import {
   OrganizationsSearchesResponseData,
   OrganizationSearchesItem,
+  ORGANIZATIONS_SEARCH_KEY,
 } from 'controllers/instance/organizations';
 import {
   ProjectsSearchesResponseData,
@@ -242,7 +243,12 @@ export const InstanceAssignment = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [invitedUserId]);
 
-  const getRequestParams = (inputValue: string) => ({
+  const getRequestOrganizationsParams = (inputValue: string) => ({
+    method: 'post',
+    data: prepareQueryFilters({ limit: 20, [ORGANIZATIONS_SEARCH_KEY]: inputValue }),
+  });
+
+  const getRequestProjectsParams = (inputValue: string) => ({
     method: 'post',
     data: prepareQueryFilters({ limit: 20, [SEARCH_KEY]: inputValue }),
   });
@@ -345,7 +351,7 @@ export const InstanceAssignment = ({
                   }}
                   placeholder={formatMessage(messages.organizationPlaceholder)}
                   getURI={URLS.organizationSearches}
-                  getRequestParams={getRequestParams}
+                  getRequestParams={getRequestOrganizationsParams}
                   makeOptions={makeOrganizationsOptions}
                   createWithoutConfirmation
                   skipOptionCreation
@@ -396,7 +402,7 @@ export const InstanceAssignment = ({
                   }}
                   placeholder={formatMessage(invitationMessages.selectSearchProject)}
                   getURI={() => URLS.organizationProjectsSearches(selectedOrganizationId)}
-                  getRequestParams={getRequestParams}
+                  getRequestParams={getRequestProjectsParams}
                   makeOptions={makeProjectsOptions}
                   onChange={handleProjectChange}
                   createWithoutConfirmation
