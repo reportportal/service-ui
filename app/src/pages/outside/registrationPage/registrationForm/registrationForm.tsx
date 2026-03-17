@@ -38,6 +38,11 @@ import styles from './registrationForm.scss';
 
 const cx = createClassnames(styles);
 
+const ERROR_MESSAGE_KEYS = {
+  REQUIRED_FIELD_WITH_PERIOD: 'requiredFieldWithPeriodHint',
+  CONFIRM_PASSWORD_HINT_MESSAGE: 'confirmPasswordHint',
+} as const;
+
 const messages = defineMessages({
   name: {
     id: 'RegistrationForm.namePlaceholder',
@@ -125,7 +130,10 @@ const RegistrationFormComponent = ({
     >
       <div className={cx('name-field')}>
         <FieldProvider name="name">
-          <FieldErrorHint provideHint={false} errorsWithHint={['requiredFieldWithPeriodHint']}>
+          <FieldErrorHint
+            provideHint={false}
+            errorsWithHint={[ERROR_MESSAGE_KEYS.REQUIRED_FIELD_WITH_PERIOD]}
+          >
             <InputOutside
               icon={NameIcon}
               maxLength={Number(REGISTRATION_NAME_MAX_LENGTH)}
@@ -205,11 +213,25 @@ export const RegistrationForm = connect((state) => ({
           passwordMessage,
         );
 
+        const passwordErrorMessage = password?.trim()
+          ? passwordValidator(password)
+          : ERROR_MESSAGE_KEYS.REQUIRED_FIELD_WITH_PERIOD;
+
+        let confirmPasswordErrorMessage: string | undefined;
+        if (!confirmPassword?.trim()) {
+          confirmPasswordErrorMessage = ERROR_MESSAGE_KEYS.REQUIRED_FIELD_WITH_PERIOD;
+        } else if (confirmPassword !== password) {
+          confirmPasswordErrorMessage = ERROR_MESSAGE_KEYS.CONFIRM_PASSWORD_HINT_MESSAGE;
+        }
+
+        const nameErrorMessage = name?.trim()
+          ? commonValidators.userName(name)
+          : ERROR_MESSAGE_KEYS.REQUIRED_FIELD_WITH_PERIOD;
+
         return {
-          password: passwordValidator(password),
-          confirmPassword:
-            (!confirmPassword || confirmPassword !== password) && 'confirmPasswordHint',
-          name: name?.trim() ? commonValidators.userName(name) : 'requiredFieldWithPeriodHint',
+          password: passwordErrorMessage,
+          confirmPassword: confirmPasswordErrorMessage,
+          name: nameErrorMessage,
         };
       },
     })(RegistrationFormComponent),
