@@ -185,6 +185,7 @@ export const ExecutionSidePanel = ({ executionId, launchId, onClose }: Execution
       <Button
         variant="ghost"
         className={cx('action-button')}
+        // Temporarily attached to the "Change Status" button until the menu is implemented
         onClick={() => openClearStatusModal({ executionId: String(executionId), launchId })}
         data-automation-id="test-plan-open-in-library"
       >
