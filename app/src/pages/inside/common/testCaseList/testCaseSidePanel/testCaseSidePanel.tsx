@@ -227,7 +227,11 @@ export const TestCaseSidePanel = memo(
     };
 
     const handleCopyId = async () => {
-      await copyToClipboard(testCase.id.toString());
+      try {
+        await copyToClipboard(testCase.id.toString());
+      } catch (error) {
+        console.error('Failed to copy ID:', error);
+      }
     };
 
     return (

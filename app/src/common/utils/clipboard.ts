@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-export const copyToClipboard = async (text: string): Promise<void> => {
-  if (!navigator.clipboard && !navigator.clipboard.writeText) {
-    console.error('Clipboard API not supported.');
-  } else {
-    await navigator.clipboard.writeText(text);
+import copy from 'copy-to-clipboard';
+
+export const copyToClipboard = (text: string): Promise<void> => {
+  const copied = copy(text);
+  if (!copied) {
+    return Promise.reject(new Error('Clipboard copy failed'));
   }
+  return Promise.resolve();
 };

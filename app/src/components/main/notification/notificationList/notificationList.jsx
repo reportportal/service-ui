@@ -167,6 +167,10 @@ export const notificationMessages = defineMessages({
     id: 'Notifications.dashboardConfigurationCopied',
     defaultMessage: 'Dashboard configuration has been copied to clipboard successfully',
   },
+  copyLinkFailed: {
+    id: 'ExternalUserInvitationModal.copyLinkFailed',
+    defaultMessage: 'Failed to copy link',
+  },
   dashboardExists: {
     id: 'DashboardPage.dashboardExists',
     defaultMessage: "Dashboard with the same name ''{name}'' already exists on the project",

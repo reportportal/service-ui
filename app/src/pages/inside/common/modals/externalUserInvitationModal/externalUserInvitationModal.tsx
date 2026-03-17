@@ -26,7 +26,7 @@ import {
 } from '@reportportal/ui-kit';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { createClassnames } from 'common/utils';
+import { copyToClipboard, createClassnames } from 'common/utils';
 import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 
@@ -65,14 +65,12 @@ export const ExternalUserInvitationModal = ({
     b: (innerData) => <b>{innerData}</b>,
   });
 
-  const copyLink = () => {
-    if (navigator.clipboard) {
-      navigator.clipboard
-        .writeText(fullLink)
-        .then(() =>
-          dispatch(showSuccessNotification({ message: formatMessage(messages.copyLinkSuccess) })),
-        )
-        .catch((err: Error) => dispatch(showErrorNotification({ message: err.message })));
+  const handleCopyLink = async () => {
+    try {
+      await copyToClipboard(fullLink);
+      dispatch(showSuccessNotification({ message: formatMessage(messages.copyLinkSuccess) }));
+    } catch {
+      dispatch(showErrorNotification({ messageId: 'copyLinkFailed' }));
     }
   };
 
@@ -91,9 +89,11 @@ export const ExternalUserInvitationModal = ({
               icon={<CopyIcon />}
               iconPlace="start"
               className={cx('copy-button')}
-              onClick={copyLink}>
-                {formatMessage(messages.copyLink)}
-              </Button>
+              onClick={() => {
+                handleCopyLink().catch(() => {});
+              }}>
+              {formatMessage(messages.copyLink)}
+            </Button>
             <Button variant="ghost" onClick={closeModal}>
               {formatMessage(messages.gotIt)}
             </Button>

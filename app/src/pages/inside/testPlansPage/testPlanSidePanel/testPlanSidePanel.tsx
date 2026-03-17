@@ -132,7 +132,11 @@ export const TestPlanSidePanel = memo(
     }
 
     const handleCopyId = async () => {
-      await copyToClipboard(testPlan.id.toString());
+      try {
+        await copyToClipboard(testPlan.id.toString());
+      } catch (error) {
+        console.error('Failed to copy ID:', error);
+      }
     };
 
     const titleComponent = (
