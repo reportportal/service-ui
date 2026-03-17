@@ -23,7 +23,7 @@ import {
   InfoIcon,
   Tooltip,
 } from '@reportportal/ui-kit';
-import { createClassnames } from 'common/utils';
+import { createClassnames, fetch } from 'common/utils';
 import { useIntl } from 'react-intl';
 import { messages } from 'common/constants/localization/invitationsLocalization';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -35,7 +35,6 @@ import {
 } from 'controllers/organization/projects';
 import { getAppliedFilters } from 'controllers/instance/events/utils';
 import { SEARCH_KEY } from 'controllers/organization/projects/constants';
-import { fetch } from 'common/utils';
 import { EDITOR, VIEWER } from 'common/constants/projectRoles';
 import { Project } from '../projectItems';
 import styles from './addProjectForm.scss';
@@ -71,9 +70,14 @@ export const AddProjectForm = ({
   }, [canEditByDefault]);
 
   useEffect(() => {
+    let active = true;
+
+    setSelectedProject(null);
+    setUserProjectIds(new Set());
+    setAutocompleteKey((k) => k + 1);
+
     if (!invitedUserId) {
-      setUserProjectIds(new Set());
-      return;
+      return undefined;
     }
 
     fetch(URLS.organizationProjectsSearches(organizationId), {
@@ -84,11 +88,18 @@ export const AddProjectForm = ({
       },
     })
       .then((response: ProjectsSearchesResponseData) => {
+        if (!active) return;
         const ids = new Set<number>((response.items ?? []).map((p) => p.id));
         setUserProjectIds(ids);
         setAutocompleteKey((k) => k + 1);
       })
-      .catch(() => setUserProjectIds(new Set()));
+      .catch(() => {
+        if (active) setUserProjectIds(new Set());
+      });
+
+    return () => {
+      active = false;
+    };
   }, [invitedUserId, organizationId]);
 
   const getRequestParams = (inputValue: string) => {

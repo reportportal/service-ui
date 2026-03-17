@@ -49,10 +49,12 @@ export const InviteUserEmailField = ({ formName, onUserSelect }: InviteUserEmail
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const emailValueRef = useRef<string>('');
+  const lookupIdRef = useRef(0);
 
   const handleClear = useCallback(() => {
     dispatch(change(formName, 'email', ''));
     emailValueRef.current = '';
+    lookupIdRef.current += 1;
     onUserSelect?.(null);
   }, [dispatch, formName, onUserSelect]);
 
@@ -60,44 +62,54 @@ export const InviteUserEmailField = ({ formName, onUserSelect }: InviteUserEmail
     emailValueRef.current = e.target.value ?? '';
   }, []);
 
-  const handleBlur = useCallback(() => {
-    const email = emailValueRef.current;
+  const handleBlur = useCallback(
+    () => {
+      const email = emailValueRef.current.trim();
+      const lookupId = (lookupIdRef.current += 1);
 
-    if (!email?.trim() || isValidEmail(email.trim()) !== true) {
-      onUserSelect?.(null);
-      return;
-    }
+      if (!email || isValidEmail(email) !== true) {
+        onUserSelect?.(null);
+        return;
+      }
 
-    fetch(URLS.searchAllUsers(), {
-      method: 'post',
-      data: {
-        limit: 1,
-        search_criteria: [{ filter_key: 'email', operation: 'EQ', value: email.trim() }],
-      },
-    })
-      .then((response: UserSearchResponse) => {
-        const user = response.items?.[0];
-        onUserSelect?.(user?.id ?? null);
+      fetch(URLS.searchAllUsers(), {
+        method: 'post',
+        data: {
+          limit: 1,
+          search_criteria: [{ filter_key: 'email', operation: 'EQ', value: email }],
+        },
       })
-      .catch(() => onUserSelect?.(null));
-  }, [onUserSelect]);
+        .then((response: UserSearchResponse) => {
+          if (lookupId !== lookupIdRef.current || emailValueRef.current.trim() !== email) {
+            return;
+          }
+          const user = response.items?.[0];
+          onUserSelect?.(user?.id ?? null);
+        })
+        .catch(() => {
+          if (lookupId === lookupIdRef.current && emailValueRef.current.trim() === email) {
+            onUserSelect?.(null);
+          }
+        });
+    },
+    [onUserSelect],
+  );
 
   return (
-    <div className={cx('email')} onBlur={handleBlur}>
-      <FieldElement name="email">
-        <FieldErrorHint provideHint={false}>
-          <FieldText
-            maxLength={128}
-            placeholder={formatMessage(messages.inputPlaceholder)}
-            defaultWidth={false}
-            label={formatMessage(messages.email)}
-            type="email"
-            clearable
-            onClear={handleClear}
-            onChange={handleChange}
-          />
-        </FieldErrorHint>
-      </FieldElement>
-    </div>
+    <FieldElement name="email" className={cx('email')}>
+      <FieldErrorHint provideHint={false}>
+        <FieldText
+          maxLength={128}
+          placeholder={formatMessage(messages.inputPlaceholder)}
+          defaultWidth={false}
+          label={formatMessage(messages.email)}
+          type="email"
+          clearable
+          onClear={handleClear}
+          onChange={handleChange}
+          onBlur={handleBlur}
+        />
+      </FieldErrorHint>
+    </FieldElement>
   );
 };
