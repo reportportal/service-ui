@@ -96,25 +96,29 @@ const AllUsersPageComponent = ({
     });
   }, []);
 
+  const allUsersSelected = useCallback(
+    (selected, selectableIds) => selectableIds.every((id) => selected.some((u) => u.id === id)),
+    [],
+  );
+
+  const newUsersSelected = useCallback(
+    (selected, selectableIds) =>
+      users.filter((u) => selectableIds.includes(u.id) && !selected.some((s) => s.id === u.id)),
+    [users],
+  );
+
   const handleToggleAllUsersSelection = useCallback(
     (selectableUserIds) => {
-      const allUsersSelected = (selectedUsers) =>
-        selectableUserIds.every((id) => selectedUsers.some((u) => u.id === id));
-      const newUsersSelected = (selectedUsers) =>
-        users.filter(
-          (u) => selectableUserIds.includes(u.id) && !selectedUsers.some((s) => s.id === u.id),
-        );
-
       setSelectedUsers((prev) => {
-        const allSelected = allUsersSelected(prev);
+        const allSelected = allUsersSelected(prev, selectableUserIds);
         if (allSelected) {
           return prev.filter((u) => !selectableUserIds.includes(u.id));
         }
-        const newUsers = newUsersSelected(prev);
+        const newUsers = newUsersSelected(prev, selectableUserIds);
         return [...prev, ...newUsers];
       });
     },
-    [users],
+    [allUsersSelected, newUsersSelected],
   );
 
   const handleRemoveBulkItem = useCallback((id) => {
