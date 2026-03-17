@@ -1,3 +1,5 @@
+import { useState, useCallback } from 'react';
+
 import { createClassnames } from 'common/utils';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import {
@@ -19,11 +21,20 @@ export interface InviteUserOrganizationFormData {
 }
 
 export const InviteUserOrganizationForm = () => {
+  const [invitedUserId, setInvitedUserId] = useState<number | null>(null);
+
+  const handleUserSelect = useCallback((userId: number | null) => {
+    setInvitedUserId(userId);
+  }, []);
+
   return (
     <form className={cx('form')}>
-      <InviteUserEmailField formName={getFormName(Level.ORGANIZATION)} />
+      <InviteUserEmailField
+        formName={getFormName(Level.ORGANIZATION)}
+        onUserSelect={handleUserSelect}
+      />
       <FieldElement name="organization">
-        <OrganizationAssignment />
+        <OrganizationAssignment invitedUserId={invitedUserId} />
       </FieldElement>
     </form>
   );
