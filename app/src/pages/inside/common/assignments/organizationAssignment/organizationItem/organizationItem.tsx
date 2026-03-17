@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { BaseIconButton, CloseIcon, Dropdown, DropdownIcon, Tooltip } from '@reportportal/ui-kit';
 
@@ -47,6 +47,8 @@ interface OrganizationItemProps {
   onRemove?: () => void;
   collapsable?: boolean;
   organizationRoleDisabledTooltip?: string | null;
+  addProjectDisabled?: boolean;
+  onAddProjectFormToggle?: (orgId: number, isOpen: boolean) => void;
 }
 
 export const OrganizationItem = ({
@@ -55,6 +57,8 @@ export const OrganizationItem = ({
   onRemove,
   collapsable,
   organizationRoleDisabledTooltip = null,
+  addProjectDisabled = false,
+  onAddProjectFormToggle,
 }: OrganizationItemProps) => {
   const disableOrganizationRole = Boolean(organizationRoleDisabledTooltip);
   const { formatMessage } = useIntl();
@@ -68,6 +72,30 @@ export const OrganizationItem = ({
   }));
   const noProjects = totalProjects === 0;
   const allProjectsAdded = projects?.length === totalProjects;
+
+  const prevAddProjectFormOpen = useRef(false);
+  const onAddProjectFormToggleRef = useRef(onAddProjectFormToggle);
+
+  useEffect(() => {
+    onAddProjectFormToggleRef.current = onAddProjectFormToggle;
+  });
+
+  useEffect(() => {
+    const wasOpen = prevAddProjectFormOpen.current;
+    prevAddProjectFormOpen.current = addProjectFormOpen;
+    if (addProjectFormOpen !== wasOpen) {
+      onAddProjectFormToggleRef.current?.(id, addProjectFormOpen);
+    }
+  }, [addProjectFormOpen, id]);
+
+  useEffect(() => {
+    return () => {
+      if (prevAddProjectFormOpen.current) {
+        onAddProjectFormToggleRef.current?.(id, false);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const data = { method: 'post', data: { limit: PROJECTS_LIMIT } };
@@ -109,7 +137,10 @@ export const OrganizationItem = ({
     onChange({ projects: updatedProjects });
   };
 
+  const collapseDisabled = collapsable && addProjectFormOpen;
+
   const handleCollapsable = () => {
+    if (collapseDisabled) return;
     setIsOpen(!isOpen);
   };
 
@@ -117,12 +148,12 @@ export const OrganizationItem = ({
     <div className={cx('organization')}>
       <div className={cx('header')}>
         <div
-          className={cx('name', { pointer: collapsable })}
+          className={cx('name', { pointer: collapsable && !collapseDisabled })}
           title={name}
           onClick={collapsable ? handleCollapsable : null}
         >
           {collapsable && (
-            <div className={cx('icon', { rotated: !isOpen })}>
+            <div className={cx('icon', { rotated: !isOpen, disabled: collapseDisabled })}>
               <DropdownIcon />
             </div>
           )}
@@ -186,7 +217,7 @@ export const OrganizationItem = ({
                 tooltipClassname={cx('tooltip-wrapper')}
                 onClick={() => setAddProjectFormOpen(true)}
                 tooltipContent={noProjects ? messages.noProjects : messages.allProjectsAdded}
-                disabled={noProjects || allProjectsAdded}
+                disabled={noProjects || allProjectsAdded || addProjectDisabled}
                 text={formatMessage(messages.addProject)}
               />
             )}

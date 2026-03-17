@@ -39,14 +39,14 @@ interface BatchDuplicateResponse {
   testFolderId: number;
 }
 
-export const useDuplicateTestCase = ({ onSuccess }: { onSuccess: () => void }) => {
+export const useBatchDuplicateTestCases = ({ onSuccess }: { onSuccess: () => void }) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const { processFolderDestinationAndComplete } = useFolderActions();
   const { showSuccessNotification, showErrorNotification } = useNotification();
 
-  const duplicateTestCase = useCallback(
+  const batchDuplicateTestCases = useCallback(
     async ({ testCaseIds, testFolder, testFolderId }: BatchDuplicateParams) => {
       showSpinner();
 
@@ -69,9 +69,7 @@ export const useDuplicateTestCase = ({ onSuccess }: { onSuccess: () => void }) =
         onSuccess();
         showSuccessNotification({
           messageId:
-            testCaseIds.length > 1
-              ? 'testCasesDuplicatedSuccess'
-              : 'testCaseDuplicatedSuccess',
+            testCaseIds.length > 1 ? 'testCasesDuplicatedSuccess' : 'testCaseDuplicatedSuccess',
         });
       } catch {
         showErrorNotification({
@@ -93,5 +91,5 @@ export const useDuplicateTestCase = ({ onSuccess }: { onSuccess: () => void }) =
     ],
   );
 
-  return { duplicateTestCase, isLoading };
+  return { batchDuplicateTestCases, isLoading };
 };

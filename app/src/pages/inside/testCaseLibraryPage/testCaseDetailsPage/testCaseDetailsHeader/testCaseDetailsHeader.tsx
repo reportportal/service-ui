@@ -15,6 +15,7 @@
  */
 
 import { useIntl } from 'react-intl';
+import { isEmpty } from 'es-toolkit/compat';
 import Parser from 'html-react-parser';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
@@ -43,7 +44,7 @@ import { commonMessages } from '../../commonMessages';
 import { EDIT_TEST_CASE_MODAL_KEY } from '../editTestCaseModal/editTestCaseModal';
 import { useDeleteTestCaseModal } from '../../deleteTestCaseModal';
 import { useEditScenarioModal } from '../../editScenarioModal';
-import { useDuplicateTestCaseModal } from '../../allTestCasesPage/duplicateTestCaseModal';
+import { useDuplicateSelectedTestCaseModal } from '../../duplicateSelectedTestCaseModal';
 import { AddToLaunchButton } from '../../addToLaunchButton';
 
 import styles from './testCaseDetailsHeader.scss';
@@ -72,7 +73,7 @@ export const TestCaseDetailsHeader = ({
   ) as ProjectDetails;
   const dispatch = useDispatch();
   const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
-  const { openModal: openDuplicateTestCaseModal } = useDuplicateTestCaseModal();
+  const { openModal: openDuplicateSelectedTestCaseModal } = useDuplicateSelectedTestCaseModal();
   const { openModal: openEditScenarioModal } = useEditScenarioModal();
 
   const breadcrumbsTitles = {
@@ -95,12 +96,7 @@ export const TestCaseDetailsHeader = ({
 
   const handleDeleteTestCase = () => openDeleteTestCaseModal({ testCase, isDetailsPage: true });
 
-  const handleDuplicateTestCase = () =>
-    openDuplicateTestCaseModal({
-      selectedTestCaseIds: [testCase.id],
-      count: 1,
-      testCase,
-    });
+  const handleDuplicateTestCase = () => openDuplicateSelectedTestCaseModal({ testCase });
 
   const getCreationDate = (timestamp: number) => {
     const date = new Date(timestamp);
@@ -183,28 +179,30 @@ export const TestCaseDetailsHeader = ({
           </div>
         </div>
         <div className={cx('header__actions')}>
-          <PopoverControl items={items} placement="bottom-end">
-            <Button
-              variant="ghost"
-              adjustWidthOn="content"
-              onClick={onMenuAction}
-              className={cx('header__more-button')}
-            >
-              <MeatballMenuIcon />
-            </Button>
-          </PopoverControl>
-          {!isScenarioEmpty && canManageTestCases && (
-            <Button onClick={handleEditScenario} variant="ghost">
-              {formatMessage(commonMessages.editScenario)}
-            </Button>
+          {!isEmpty(items) && (
+            <PopoverControl items={items} placement="bottom-end">
+              <Button
+                variant="ghost"
+                adjustWidthOn="content"
+                onClick={onMenuAction}
+                className={cx('header__more-button')}
+              >
+                <MeatballMenuIcon />
+              </Button>
+            </PopoverControl>
           )}
           {canManageTestCases && (
-            <AddToLaunchButton manualScenario={testCase?.manualScenario} testCaseId={testCase.id} />
-          )}
-          {canManageTestCases && (
-            <Button onClick={onAddToTestPlan} variant="primary">
-              {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
-            </Button>
+            <>
+              {!isScenarioEmpty && (
+                <Button onClick={handleEditScenario} variant="ghost">
+                  {formatMessage(commonMessages.editScenario)}
+                </Button>
+              )}
+              <AddToLaunchButton manualScenario={testCase?.manualScenario} testCaseId={testCase.id} />
+              <Button onClick={onAddToTestPlan} variant="primary">
+                {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
+              </Button>
+            </>
           )}
         </div>
       </div>

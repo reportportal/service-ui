@@ -110,4 +110,8 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'CreateTestCaseModal.executionTime',
     defaultMessage: 'Execution time, min',
   },
+  duplicateTestCase: {
+    id: 'TestCaseLibraryPage.duplicateTestCase',
+    defaultMessage: 'Duplicate Test Case',
+  },
 });

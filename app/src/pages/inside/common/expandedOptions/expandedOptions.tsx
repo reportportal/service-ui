@@ -58,6 +58,8 @@ export const ExpandedOptions = ({
   instanceKey,
   children,
   searchQuery: pageSearchQuery,
+  searchExtraFilters,
+  searchAllFolders,
   setAllTestCases,
   renderCreateFolderButton,
   onFolderClick,
@@ -77,7 +79,7 @@ export const ExpandedOptions = ({
     hasSearchFilteredFolders,
     handleToggleSearchFilteredFolder,
     filteredTotalTestCases,
-  } = useSearchFilteredFolders({ searchQuery: pageSearchQuery });
+  } = useSearchFilteredFolders({ searchQuery: pageSearchQuery, extraFilters: searchExtraFilters, allFoldersOverride: searchAllFolders });
 
   const isDragAndDropEnabled = !!(onMoveFolder && onDuplicateFolder);
 

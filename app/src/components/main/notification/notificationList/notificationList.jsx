@@ -167,6 +167,10 @@ export const notificationMessages = defineMessages({
     id: 'Notifications.dashboardConfigurationCopied',
     defaultMessage: 'Dashboard configuration has been copied to clipboard successfully',
   },
+  copyLinkFailed: {
+    id: 'ExternalUserInvitationModal.copyLinkFailed',
+    defaultMessage: 'Failed to copy link',
+  },
   dashboardExists: {
     id: 'DashboardPage.dashboardExists',
     defaultMessage: "Dashboard with the same name ''{name}'' already exists on the project",
@@ -241,10 +245,6 @@ export const notificationMessages = defineMessages({
     id: 'TestCaseLibraryPage.testCasesDuplicatedSuccess',
     defaultMessage: 'Test cases have been duplicated successfully.',
   },
-  testCaseDuplicatedSuccess: {
-    id: 'TestCaseLibraryPage.testCaseDuplicatedSuccess',
-    defaultMessage: 'Test case has been duplicated successfully.',
-  },
   testCaseDeletedSuccess: {
     id: 'TestCaseLibraryPage.testCaseDeletedSuccess',
     defaultMessage: 'Test case has been deleted successfully.',
@@ -272,6 +272,10 @@ export const notificationMessages = defineMessages({
   testCaseCreatedSuccess: {
     id: 'TestCaseLibraryPage.testCaseCreatedSuccess',
     defaultMessage: 'Test Case has been created successfully.',
+  },
+  testCaseDuplicatedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseDuplicatedSuccess',
+    defaultMessage: 'Test Case has been duplicated successfully.',
   },
   testCasesAddingToTestPlanSuccess: {
     id: 'TestCaseLibraryPage.testCasesAddedToTestPlanSuccess',

@@ -32,6 +32,12 @@ export function validateInstance(formData: InviteUserInstanceFormData): InviteUs
   const errors: InviteUserFormErrors = {
     email: emailValidator(emailStr.trim()),
   };
+
+  if (formData.isAddingOrganization || formData.isAddingProject) {
+    errors.organizations = 'Form is being edited';
+    return errors;
+  }
+
   const organizations = formData.organizations ?? [];
   if (organizations.length === 0) {
     errors.organizations = commonValidators.requiredField(organizations);

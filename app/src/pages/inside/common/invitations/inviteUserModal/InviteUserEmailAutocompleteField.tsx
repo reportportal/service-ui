@@ -16,7 +16,9 @@
 
 import { useCallback, useRef } from 'react';
 import type { MutableRefObject, ReactNode } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
+import { useDispatch } from 'react-redux';
+import { untouch } from 'redux-form';
 import { createClassnames } from 'common/utils';
 import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -26,6 +28,7 @@ import { URLS } from 'common/urls';
 import { messages } from 'common/constants/localization/invitationsLocalization';
 import { email as emailValidator } from 'common/utils/validation/validate';
 import { MailIcon } from '@reportportal/ui-kit';
+import { INSTANCE_FORM_NAME } from './utils';
 import styles from './InviteUserEmailAutocompleteField.scss';
 
 const cx = createClassnames(styles);
@@ -100,6 +103,7 @@ function renderOption(
   index: number,
   isNew: boolean,
   getItemProps: GetItemPropsT<string | EmailOption>,
+  formatMessage: (message: typeof messages.sendNewInviteViaEmail) => string,
 ): ReactNode {
   if (isNew) return null;
   const itemProps = getItemProps({ item, index });
@@ -112,10 +116,7 @@ function renderOption(
         </div>
         <div className={cx('info')}>
           <span className={cx('name')}>
-            <FormattedMessage
-              id="InviteUserEmailAutocompleteField.sendNewInviteViaEmail"
-              defaultMessage="Send new invite via email"
-            />
+            {formatMessage(messages.sendNewInviteViaEmail)}
           </span>
           <span className={cx('email')}>{item.email}</span>
         </div>
@@ -141,9 +142,21 @@ function renderOption(
 
 const InviteUserEmailAutocompleteFieldContent = ({
   inputValueRef,
+  input,
+  onFocus,
+  onResetTouched,
+  onUserSelect,
   ...rest
 }: {
   inputValueRef: MutableRefObject<string>;
+  input?: {
+    onChange: (value: unknown) => void;
+    setTouched?: (touched: boolean) => void;
+    onFocus?: () => void;
+  };
+  onFocus?: () => void;
+  onResetTouched?: () => void;
+  onUserSelect?: (userId: number | null) => void;
   [key: string]: unknown;
 }) => {
   const { formatMessage } = useIntl();
@@ -171,9 +184,22 @@ const InviteUserEmailAutocompleteFieldContent = ({
     return baseOptions;
   }, [inputValueRef]);
 
+  const handleFocus = useCallback(() => {
+    onFocus?.();
+    onResetTouched?.();
+  }, [onFocus, onResetTouched]);
+
   const placeholder = formatMessage(messages.inputPlaceholderInstance);
   const customEmptyListMessage = formatMessage(messages.noMatchesContinueTyping);
   const label = formatMessage(messages.email);
+
+  const handleRenderOption = useCallback(
+    (item: EmailOption, index: number, isNew: boolean, getItemProps: GetItemPropsT<string | EmailOption>) =>
+      renderOption(item, index, isNew, getItemProps, formatMessage),
+    [formatMessage],
+  );
+
+  const { onChange: restOnChange, ...restWithoutOnChange } = rest as { onChange?: (value: unknown) => void; [key: string]: unknown };
 
   return (
     <AsyncAutocompleteV2
@@ -183,25 +209,53 @@ const InviteUserEmailAutocompleteFieldContent = ({
       makeOptions={makeOptions}
       parseValueToString={parseValueToString}
       getUniqKey={getUniqKey}
-      renderOption={renderOption}
+      renderOption={handleRenderOption}
       createWithoutConfirmation
       minLength={1}
       customEmptyListMessage={customEmptyListMessage}
-      inputProps={{ label, autoComplete: 'one-time-code' }}
+      inputProps={{
+        label,
+        autoComplete: 'one-time-code',
+        clearable: true,
+        onClear: () => {
+          inputValueRef.current = '';
+          input?.onChange(null);
+          onUserSelect?.(null);
+        },
+        onFocus: handleFocus,
+      }}
       isRequired
       useFixedPositioning={false}
-      {...rest}
+      {...restWithoutOnChange}
+      onChange={(selected: EmailOption | null) => {
+        restOnChange?.(selected);
+        const userId = selected && typeof selected.id === 'number' && !selected.isCustom ? selected.id : null;
+        onUserSelect?.(userId);
+      }}
     />
   );
 };
 
-export const InviteUserEmailAutocompleteField = () => {
+interface InviteUserEmailAutocompleteFieldProps {
+  onUserSelect?: (userId: number | null) => void;
+}
+
+export const InviteUserEmailAutocompleteField = ({ onUserSelect }: InviteUserEmailAutocompleteFieldProps) => {
   const inputValueRef = useRef('');
+  const dispatch = useDispatch();
+
+  const handleResetTouched = useCallback(() => {
+    dispatch(untouch(INSTANCE_FORM_NAME, 'email'));
+  }, [dispatch]);
 
   return (
     <FieldProvider name="email">
       <FieldErrorHint provideHint={false}>
-        <InviteUserEmailAutocompleteFieldContent inputValueRef={inputValueRef} />
+        <InviteUserEmailAutocompleteFieldContent
+          inputValueRef={inputValueRef}
+          onResetTouched={handleResetTouched}
+          onUserSelect={onUserSelect}
+        />
       </FieldErrorHint>
     </FieldProvider>
   );

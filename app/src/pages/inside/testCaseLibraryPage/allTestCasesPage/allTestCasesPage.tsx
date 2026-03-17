@@ -43,7 +43,7 @@ import { CHANGE_PRIORITY_MODAL_KEY } from './changePriorityModal';
 import { messages } from './messages';
 import { FolderEmptyState } from '../emptyState/folder/folderEmptyState';
 import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
-import { useDuplicateTestCaseModal } from './duplicateTestCaseModal';
+import { useBatchDuplicateTestCasesModal } from './batchDuplicateTestCasesModal';
 import { useBatchDeleteTestCasesModal } from './batchDeleteTestCasesModal';
 import { useMoveTestCaseModal } from '../moveTestCaseModal';
 import { useBatchEditTagsModal } from './batchEditTagsModal';
@@ -96,7 +96,7 @@ export const AllTestCasesPage = ({
     onClearSelection,
     isUncoveredTestsCheckboxAvailable: false,
   });
-  const { openModal: openDuplicateToFolderModal } = useDuplicateTestCaseModal();
+  const { openModal: openBatchDuplicateToFolderModal } = useBatchDuplicateTestCasesModal();
   const { openModal: openBatchDeleteTestCasesModal } = useBatchDeleteTestCasesModal();
   const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
   const { openModal: openBatchEditTagsModal } = useBatchEditTagsModal();
@@ -113,7 +113,7 @@ export const AllTestCasesPage = ({
     {
       label: formatMessage(messages.duplicateToFolder),
       onClick: () => {
-        openDuplicateToFolderModal({
+        openBatchDuplicateToFolderModal({
           selectedTestCaseIds: selectedRowIds,
           count: selectedRowIds.length,
           onClearSelection,

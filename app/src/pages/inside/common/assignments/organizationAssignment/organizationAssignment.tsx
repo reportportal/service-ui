@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+import { useCallback, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { change } from 'redux-form';
+
 import { Organization, OrganizationItem } from './organizationItem/organizationItem';
 
 interface OrganizationAssignmentProps {
@@ -21,6 +25,8 @@ interface OrganizationAssignmentProps {
   value?: Organization | Organization[];
   isMultiple?: boolean;
   organizationRoleDisabledTooltip?: string | null;
+  formName?: string;
+  isOrganizationFormOpen?: boolean;
 }
 
 export const OrganizationAssignment = ({
@@ -28,7 +34,25 @@ export const OrganizationAssignment = ({
   onChange,
   isMultiple = false,
   organizationRoleDisabledTooltip = null,
+  formName,
+  isOrganizationFormOpen = false,
 }: OrganizationAssignmentProps) => {
+  const dispatch = useDispatch();
+  const [openFormOrgId, setOpenFormOrgId] = useState<number | null>(null);
+  const openFormOrgIdRef = useRef<number | null>(null);
+
+  const handleAddProjectFormToggle = useCallback(
+    (orgId: number, isOpen: boolean) => {
+      const nextId = isOpen ? orgId : null;
+      openFormOrgIdRef.current = nextId;
+      setOpenFormOrgId(nextId);
+      if (formName) {
+        dispatch(change(formName, 'isAddingProject', isOpen));
+      }
+    },
+    [formName, dispatch],
+  );
+
   const updateItem = (updates: Partial<Organization>, index?: number) => {
     if (isMultiple) {
       const updated = [...(value as Organization[])];
@@ -61,6 +85,8 @@ export const OrganizationAssignment = ({
               onChange={(updates) => updateItem(updates, index)}
               onRemove={() => removeItem(index)}
               collapsable
+              addProjectDisabled={(openFormOrgId !== null && openFormOrgId !== org.id) || isOrganizationFormOpen}
+              onAddProjectFormToggle={handleAddProjectFormToggle}
             />
           </div>
         ))}
@@ -73,6 +99,7 @@ export const OrganizationAssignment = ({
       value={value as Organization}
       onChange={(updates) => updateItem(updates)}
       organizationRoleDisabledTooltip={organizationRoleDisabledTooltip}
+      onAddProjectFormToggle={handleAddProjectFormToggle}
     />
   );
 };

@@ -48,6 +48,10 @@
   transform: rotate(270deg);
 }
 
+.disabled {
+  opacity: 0.3;
+}
+
 .collapsable {
   padding-left: 24px;
 }

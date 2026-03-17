@@ -13,13 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { useModal } from 'common/hooks';
 
-import copy from 'copy-to-clipboard';
+import { ExtendedTestCase } from '../types';
+import DuplicateSelectedTestCaseModal, {
+  DUPLICATE_SELECTED_TEST_CASE_MODAL_KEY,
+} from './duplicateSelectedTestCaseModal';
 
-export const copyToClipboard = (text: string): Promise<void> => {
-  const copied = copy(text);
-  if (!copied) {
-    return Promise.reject(new Error('Clipboard copy failed'));
-  }
-  return Promise.resolve();
-};
+interface UseDuplicateSelectedTestCaseModalOptions {
+  testCase: ExtendedTestCase;
+}
+
+export const useDuplicateSelectedTestCaseModal = () =>
+  useModal<UseDuplicateSelectedTestCaseModalOptions>({
+    modalKey: DUPLICATE_SELECTED_TEST_CASE_MODAL_KEY,
+    renderModal: (data) => <DuplicateSelectedTestCaseModal data={data} />,
+  });

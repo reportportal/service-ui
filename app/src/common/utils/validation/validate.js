@@ -70,7 +70,7 @@ export const userName = composeValidators([
   isNotEmpty,
   regex(
     new RegExp(
-      `^[A-Za-z\\u0400-\\u04FF0-9.'_\\- ]{${REGISTRATION_NAME_MIN_LENGTH},${REGISTRATION_NAME_MAX_LENGTH}}$`,
+      `^[A-Za-z0-9.'_\\- ]{${REGISTRATION_NAME_MIN_LENGTH},${REGISTRATION_NAME_MAX_LENGTH}}$`,
     ),
   ),
 ]);

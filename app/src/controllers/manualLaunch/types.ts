@@ -141,6 +141,7 @@ export interface Attachment {
 
 export interface BtsTicket {
   id: number;
+  name?: string;
   link: string;
 }
 

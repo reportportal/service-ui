@@ -372,7 +372,7 @@ function* renameFolder(action: RenameFolderAction) {
 
 function* getFilteredFolders(action: GetFilteredFoldersAction) {
   const projectKey = (yield select(projectKeySelector)) as string;
-  const { searchQuery } = action.payload;
+  const { searchQuery, extraFilters } = action.payload;
 
   if (!projectKey || !searchQuery) {
     yield put(setFilteredFoldersAction([]));
@@ -384,7 +384,7 @@ function* getFilteredFolders(action: GetFilteredFoldersAction) {
 
     const folders = (yield call(fetchAllFolders, {
       projectKey,
-      filters: { 'filter.cnt.testCaseName': searchQuery },
+      filters: { 'filter.cnt.testCaseName': searchQuery, ...extraFilters },
     })) as Folder[];
 
     yield put(setFilteredFoldersAction(folders));
