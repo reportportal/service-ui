@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
@@ -47,6 +47,11 @@ export const AllUsersListTable = ({
   pageCount,
   onChangePage,
   onChangePageSize,
+  selectable,
+  selectedUsers,
+  onToggleUserSelection,
+  onToggleAllUsersSelection,
+  bulkPanelProps,
 }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -122,6 +127,37 @@ export const AllUsersListTable = ({
     },
   ];
 
+  const selectedRowIds = useMemo(() => (selectedUsers || []).map((u) => u.id), [selectedUsers]);
+
+  const selectableUserIds = useMemo(
+    () => users.filter((u) => u.id !== currentUser.id).map((u) => u.id),
+    [users, currentUser.id],
+  );
+
+  const handleToggleRowSelection = useCallback(
+    (rowId) => {
+      if (rowId === currentUser.id) return;
+      const user = users.find((u) => u.id === rowId);
+      if (!user) return;
+      onToggleUserSelection?.(user);
+    },
+    [users, currentUser.id, onToggleUserSelection],
+  );
+
+  const handleToggleAllRowsSelection = useCallback(() => {
+    onToggleAllUsersSelection?.(selectableUserIds);
+  }, [selectableUserIds, onToggleAllUsersSelection]);
+
+  const getRowCheckboxTooltip = useCallback(
+    (rowId) =>
+      rowId === currentUser.id ? (
+        <div className={cx('checkbox-tooltip-content')}>
+          {formatMessage(messages.cannotDeleteSelf)}
+        </div>
+      ) : null,
+    [currentUser.id, formatMessage],
+  );
+
   const onTableSorting = ({ key }) => {
     onChangeSorting(key);
     dispatch(fetchAllUsersAction());
@@ -144,6 +180,13 @@ export const AllUsersListTable = ({
       onChangePageSize={onChangePageSize}
       changePageSizeEvent={ALL_USERS_PAGE_EVENTS.changePageSize}
       renderRowActions={(user) => <AllUsersActionMenu user={user} />}
+      selectable={selectable}
+      selectedRowIds={selectedRowIds}
+      disabledRowIds={selectable ? [currentUser.id] : undefined}
+      getRowCheckboxTooltip={selectable ? getRowCheckboxTooltip : undefined}
+      onToggleRowSelection={handleToggleRowSelection}
+      onToggleAllRowsSelection={handleToggleAllRowsSelection}
+      bulkPanelProps={bulkPanelProps}
     />
   );
 };
@@ -158,10 +201,17 @@ AllUsersListTable.propTypes = {
   pageCount: PropTypes.number.isRequired,
   onChangePage: PropTypes.func.isRequired,
   onChangePageSize: PropTypes.func.isRequired,
+  selectable: PropTypes.bool,
+  selectedUsers: PropTypes.array,
+  onToggleUserSelection: PropTypes.func,
+  onToggleAllUsersSelection: PropTypes.func,
+  bulkPanelProps: PropTypes.object,
 };
 
 AllUsersListTable.defaultProps = {
   users: [],
   pageSize: DEFAULT_PAGE_SIZE,
   activePage: DEFAULT_PAGINATION[PAGE_KEY],
+  selectable: false,
+  selectedUsers: [],
 };

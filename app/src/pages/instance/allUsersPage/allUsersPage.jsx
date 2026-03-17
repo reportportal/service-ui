@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useIntl, defineMessages } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import PropTypes from 'prop-types';
 import { EmptyPageState } from 'pages/common';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { useBulkPanelCaptions } from 'common/hooks';
 import {
   loadingSelector,
   allUsersSelector,
   allUsersPaginationSelector,
-  fetchAllUsersAction
+  fetchAllUsersAction,
 } from 'controllers/instance/allUsers';
 import {
   NAMESPACE,
@@ -41,6 +43,7 @@ import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Event
 import { InviteUserModalInstance } from './allUsersHeader/inviteUserModal';
 import { AllUsersHeader } from './allUsersHeader';
 import { AllUsersListTable } from './allUsersListTable';
+import { useDeleteUsersAction } from './hooks/useDeleteUsersAction';
 import styles from './allUsersPage.scss';
 
 const cx = classNames.bind(styles);
@@ -67,8 +70,64 @@ const AllUsersPageComponent = ({
   const { formatMessage } = useIntl();
   const users = useSelector(allUsersSelector);
   const isLoading = useSelector(loadingSelector);
+  const { canDeleteUser } = useUserPermissions();
   const [searchValue, setSearchValue] = useState(null);
   const [appliedFiltersCount, setAppliedFiltersCount] = useState(0);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+
+  const handleBulkActionSuccess = useCallback(() => {
+    setSelectedUsers([]);
+    dispatch(fetchAllUsersAction());
+  }, [dispatch]);
+
+  const deleteAction = useDeleteUsersAction({ onSuccess: handleBulkActionSuccess });
+  const bulkActions = useMemo(() => [deleteAction], [deleteAction]);
+  const bulkPanelCaptions = useBulkPanelCaptions();
+
+  const bulkPanelItems = useMemo(
+    () => selectedUsers.map((user) => ({ id: user.id, name: user.full_name })),
+    [selectedUsers],
+  );
+
+  const handleToggleUserSelection = useCallback((user) => {
+    setSelectedUsers((prev) => {
+      const isSelected = prev.some((u) => u.id === user.id);
+      return isSelected ? prev.filter((u) => u.id !== user.id) : [...prev, user];
+    });
+  }, []);
+
+  const allUsersSelected = useCallback(
+    (selected, selectableIds) => selectableIds.every((id) => selected.some((u) => u.id === id)),
+    [],
+  );
+
+  const newUsersSelected = useCallback(
+    (selected, selectableIds) =>
+      users.filter((u) => selectableIds.includes(u.id) && !selected.some((s) => s.id === u.id)),
+    [users],
+  );
+
+  const handleToggleAllUsersSelection = useCallback(
+    (selectableUserIds) => {
+      setSelectedUsers((prev) => {
+        const allSelected = allUsersSelected(prev, selectableUserIds);
+        if (allSelected) {
+          return prev.filter((u) => !selectableUserIds.includes(u.id));
+        }
+        const newUsers = newUsersSelected(prev, selectableUserIds);
+        return [...prev, ...newUsers];
+      });
+    },
+    [allUsersSelected, newUsersSelected],
+  );
+
+  const handleRemoveBulkItem = useCallback((id) => {
+    setSelectedUsers((prev) => prev.filter((u) => u.id !== id));
+  }, []);
+
+  const handleClearSelection = useCallback(() => {
+    setSelectedUsers([]);
+  }, []);
 
   const onInvite = (condition) => {
     dispatch(fetchAllUsersAction());
@@ -82,6 +141,28 @@ const AllUsersPageComponent = ({
       }),
     );
   };
+
+  const bulkPanelProps = useMemo(
+    () =>
+      canDeleteUser && selectedUsers.length > 0
+        ? {
+            items: bulkPanelItems,
+            actions: bulkActions,
+            captions: bulkPanelCaptions,
+            onRemoveItem: handleRemoveBulkItem,
+            onClearSelection: handleClearSelection,
+          }
+        : null,
+    [
+      canDeleteUser,
+      selectedUsers.length,
+      bulkPanelItems,
+      bulkActions,
+      bulkPanelCaptions,
+      handleRemoveBulkItem,
+      handleClearSelection,
+    ],
+  );
 
   return (
     <div className={cx('all-users-page')}>
@@ -110,6 +191,11 @@ const AllUsersPageComponent = ({
           pageCount={pageCount}
           onChangePage={onChangePage}
           onChangePageSize={onChangePageSize}
+          selectable={!!canDeleteUser}
+          selectedUsers={selectedUsers}
+          onToggleUserSelection={handleToggleUserSelection}
+          onToggleAllUsersSelection={handleToggleAllUsersSelection}
+          bulkPanelProps={bulkPanelProps}
         />
       )}
     </div>

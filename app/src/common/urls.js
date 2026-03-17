@@ -317,6 +317,7 @@ export const URLS = {
   userChangePassword: () => `${urlBase}users/password/change`,
   userSynchronize: (type) => `${uatBase}sso/me/${type}/synchronize`,
   userInfo: (userId) => `${urlBase}users/${userId}`,
+  deleteUsers: (ids) => `${urlBase}users${getQueryParams({ ids })}`,
   userInviteInternal: (projectKey) => `${urlBase}project/${projectKey}/assign`,
   userInviteExternal: () => `${urlBase}users/bid`,
   userUnassign: (projectKey) => `${urlBase}project/${projectKey}/unassign`,
