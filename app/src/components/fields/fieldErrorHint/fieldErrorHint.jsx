@@ -433,6 +433,14 @@ export class FieldErrorHint extends Component {
                 children.props.onChange(...args);
               }
             },
+            onBlur: (...args) => {
+              if (typeof rest.onBlur === 'function') {
+                rest.onBlur(...args);
+              }
+              if (typeof children.props.onBlur === 'function') {
+                children.props.onBlur(...args);
+              }
+            },
           })}
         {provideHint && (
           <div

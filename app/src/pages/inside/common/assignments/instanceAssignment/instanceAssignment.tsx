@@ -316,7 +316,12 @@ export const InstanceAssignment = ({
   return (
     <div className={cx('forms-wrapper')}>
       <FieldElement name={ORGANIZATIONS} className={cx('organizations')}>
-        <OrganizationAssignment isMultiple formName={formName} isOrganizationFormOpen={isOpen} />
+        <OrganizationAssignment
+          isMultiple
+          formName={formName}
+          invitedUserId={invitedUserId}
+          isOrganizationFormOpen={isOpen}
+        />
       </FieldElement>
       {isOpen || allOrganizations?.length === 0 ? (
         <div className={cx('instance-assignment')}>
