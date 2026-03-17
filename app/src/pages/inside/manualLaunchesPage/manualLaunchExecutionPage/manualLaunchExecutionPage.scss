@@ -23,14 +23,7 @@ $execution-page-gutter: 32px;
   &__header {
     width: 100%;
     margin-bottom: 30px;
-    @include mixins.horizontal-padding($execution-page-gutter, 0);
     background-color: var(--rp-ui-base-bg-000);
-
-    :global([class*='page-header-with-breadcrumbs-and-actions']) {
-      padding-left: 0;
-      padding-right: 0;
-      border-bottom: none;
-    }
   }
 
   &__content {

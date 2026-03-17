@@ -22,6 +22,7 @@ import { CollapsibleSection } from 'components/collapsibleSection';
 import { RequirementsList } from 'pages/inside/common/requirementsList/requirementsList';
 import { Precondition } from 'pages/inside/testCaseLibraryPage/testCaseDetailsPage/precondition';
 import { StepsList } from 'pages/inside/testCaseLibraryPage/testCaseDetailsPage/stepsList';
+import { hasStepContent } from 'pages/inside/testCaseLibraryPage/testCaseDetailsPage/utils';
 import { Step as StepType } from 'pages/inside/testCaseLibraryPage/types';
 import { type Attachment } from 'pages/inside/common/attachmentList';
 
@@ -43,6 +44,8 @@ export const StepsBasedContent = ({ execution: { manualScenario } }: ExecutionCo
   const preconditionValue = manualScenario.preconditions?.value;
   const hasPreconditionAttachments = !isEmpty(manualScenario.preconditions?.attachments);
   const { steps = [] } = manualScenario;
+
+  const hasStepsWithContent = steps.some(hasStepContent);
 
   return (
     <div className={cx('steps-based-content')}>
@@ -76,9 +79,9 @@ export const StepsBasedContent = ({ execution: { manualScenario } }: ExecutionCo
 
       <CollapsibleSection
         title={formatMessage(commonMessages.steps)}
-        defaultMessage={isEmpty(steps) ? formatMessage(messages.noStepsSpecified) : undefined}
+        defaultMessage={hasStepsWithContent ? undefined : formatMessage(messages.noStepsSpecified)}
       >
-        {!isEmpty(steps) && <StepsList steps={steps as StepType[]} />}
+        {hasStepsWithContent && <StepsList steps={steps as StepType[]} />}
       </CollapsibleSection>
     </div>
   );

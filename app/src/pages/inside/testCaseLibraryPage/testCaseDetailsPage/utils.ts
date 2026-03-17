@@ -18,25 +18,35 @@ import { isEmpty } from 'es-toolkit/compat';
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 import type { Attachment } from 'pages/inside/common/attachmentList';
 
-import { ManualScenario, Step, Tag } from '../types';
+import { ManualScenario, Tag } from '../types';
 
-export const hasStepContent = (
-  step: Pick<Step, 'instructions' | 'expectedResult' | 'attachments'>,
+export const hasStepContent = <
+  T extends { instructions?: string; expectedResult?: string; attachments?: unknown[] },
+>(
+  step: T,
 ) => !!step?.instructions?.trim() || !!step?.expectedResult?.trim() || !isEmpty(step?.attachments);
 
 export const hasStepsPreconditionContent = (preconditions: {
   value?: string;
   attachments?: Attachment[];
 }) => {
-  return Boolean(preconditions?.value || !isEmpty(preconditions?.attachments));
+  return Boolean(preconditions?.value?.trim() || !isEmpty(preconditions?.attachments));
 };
 
-export const hasScenarioContent = (manualScenario: ManualScenario) => {
+export const hasScenarioContent = <
+  T extends {
+    preconditions?: { value?: string; attachments?: unknown[] };
+    instructions?: string;
+    expectedResult?: string;
+  },
+>(
+  manualScenario: T,
+) => {
   return Boolean(
-    manualScenario?.preconditions?.value ||
+    manualScenario?.preconditions?.value?.trim() ||
     !isEmpty(manualScenario?.preconditions?.attachments) ||
-    manualScenario?.instructions ||
-    manualScenario?.expectedResult,
+    manualScenario?.instructions?.trim() ||
+    manualScenario?.expectedResult?.trim(),
   );
 };
 
