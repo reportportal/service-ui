@@ -28,7 +28,7 @@ import {
   loadingSelector,
   allUsersSelector,
   allUsersPaginationSelector,
-  fetchAllUsersAction
+  fetchAllUsersAction,
 } from 'controllers/instance/allUsers';
 import {
   NAMESPACE,
@@ -89,38 +89,37 @@ const AllUsersPageComponent = ({
     [selectedUsers],
   );
 
-  const handleToggleUserSelection = useCallback(
-    (user) => {
-      setSelectedUsers((prev) => {
-        const isSelected = prev.some((u) => u.id === user.id);
-        return isSelected ? prev.filter((u) => u.id !== user.id) : [...prev, user];
-      });
-    },
-    [],
-  );
+  const handleToggleUserSelection = useCallback((user) => {
+    setSelectedUsers((prev) => {
+      const isSelected = prev.some((u) => u.id === user.id);
+      return isSelected ? prev.filter((u) => u.id !== user.id) : [...prev, user];
+    });
+  }, []);
 
   const handleToggleAllUsersSelection = useCallback(
     (selectableUserIds) => {
+      const allUsersSelected = (selectedUsers) =>
+        selectableUserIds.every((id) => selectedUsers.some((u) => u.id === id));
+      const newUsersSelected = (selectedUsers) =>
+        users.filter(
+          (u) => selectableUserIds.includes(u.id) && !selectedUsers.some((s) => s.id === u.id),
+        );
+
       setSelectedUsers((prev) => {
-        const allSelected = selectableUserIds.every((id) => prev.some((u) => u.id === id));
+        const allSelected = allUsersSelected(prev);
         if (allSelected) {
           return prev.filter((u) => !selectableUserIds.includes(u.id));
         }
-        const newUsers = users.filter(
-          (u) => selectableUserIds.includes(u.id) && !prev.some((s) => s.id === u.id),
-        );
+        const newUsers = newUsersSelected(prev);
         return [...prev, ...newUsers];
       });
     },
     [users],
   );
 
-  const handleRemoveBulkItem = useCallback(
-    (id) => {
-      setSelectedUsers((prev) => prev.filter((u) => u.id !== id));
-    },
-    [],
-  );
+  const handleRemoveBulkItem = useCallback((id) => {
+    setSelectedUsers((prev) => prev.filter((u) => u.id !== id));
+  }, []);
 
   const handleClearSelection = useCallback(() => {
     setSelectedUsers([]);
