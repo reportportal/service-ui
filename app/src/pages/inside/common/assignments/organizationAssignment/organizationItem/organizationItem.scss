@@ -48,6 +48,10 @@
   transform: rotate(270deg);
 }
 
+.disabled {
+  opacity: 0.3;
+}
+
 .collapsable {
   padding-left: 24px;
 }
@@ -56,7 +60,12 @@
   display: flex;
   gap: 24px;
   align-items: center;
+}
+
+.role-slot {
   min-height: 37px;
+  display: flex;
+  align-items: center;
 }
 
 .remove-button {

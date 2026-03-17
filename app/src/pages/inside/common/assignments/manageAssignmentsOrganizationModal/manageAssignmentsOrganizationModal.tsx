@@ -16,6 +16,7 @@
 import {
   buildUpdateAssignmentsPayload,
   getCurrentOrganizationAssignment,
+  getManageAssignmentsSaveCondition,
   isAssignmentDirty,
   MANAGE_ASSIGNMENTS_FORM,
 } from './constants';
@@ -108,6 +109,14 @@ const ManageAssignmentsOrganizationModalView = ({
   const [initialOrganization, setInitialOrganization] = useState<OrganizationValue | null>(null);
   const handleUnassignSuccess = useHandleUnassignSuccess(user, onUnassign);
   const isCurrentUser = currentUserId === user?.id;
+  const tooltipMessage = formatMessage(
+    isCurrentUser
+      ? messages.organizationRoleDisabledOwnAccount
+      : messages.organizationRoleDisabledOwner,
+  );
+  const isOrganizationOwner = user?.id === organization?.owner_id;
+  const organizationRoleDisabledTooltip =
+    isCurrentUser || isOrganizationOwner ? tooltipMessage : null;
   const isDirty = isAssignmentDirty(currentOrganization, initialOrganization);
   const isBusy = assignmentsLoading || assignmentsUpdateLoading || !currentOrganization;
 
@@ -160,7 +169,12 @@ const ManageAssignmentsOrganizationModalView = ({
 
   const onSaveAssignments = (_values: { organizations?: Organization[] }) => {
     if (!currentOrganization || !isDirty) return;
-    trackEvent(ORGANIZATION_PAGE_EVENTS.manageAssignments('save'));
+    const condition = getManageAssignmentsSaveCondition(
+      initialOrganization,
+      currentOrganization,
+    );
+
+    trackEvent(ORGANIZATION_PAGE_EVENTS.manageAssignments('save', condition));
     const payload = buildUpdateAssignmentsPayload(currentOrganization);
     dispatch(
       updateUserAssignmentsAction(
@@ -304,7 +318,7 @@ const ManageAssignmentsOrganizationModalView = ({
             isMultiple={false}
             value={currentOrganization}
             onChange={handleOrganizationChange}
-            disableOrganizationRole={isCurrentUser}
+            organizationRoleDisabledTooltip={organizationRoleDisabledTooltip}
           />
         )}
       </div>

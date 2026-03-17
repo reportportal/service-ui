@@ -284,7 +284,10 @@ const routesMap = {
         });
       }
 
-      dispatch(fetchOrganizationEventsDataAction());
+      const {
+        location: { payload },
+      } = state;
+      dispatch(fetchOrganizationEventsDataAction(payload));
     },
   },
 
@@ -590,7 +593,9 @@ const routesMap = {
         state,
       });
 
-      dispatch(getTestPlanAction({ testPlanId, folderId, offset, limit }));
+      const testCasesSearchParams = state.location?.query?.testCasesSearchParams;
+
+      dispatch(getTestPlanAction({ testPlanId, folderId, offset, limit, testCasesSearchParams }));
     },
   },
 };

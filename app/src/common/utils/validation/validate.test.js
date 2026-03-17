@@ -191,6 +191,8 @@ describe('validate.userName', () => {
     expect(validate.userName('name#')).toBe(false);
     expect(validate.userName('Hello 世界')).toBe(false);
     expect(validate.userName('полное имя')).toBe(false);
+    expect(validate.userName('Іванов')).toBe(false);
+    expect(validate.userName('Єгор Ўшаков')).toBe(false);
   });
 });
 

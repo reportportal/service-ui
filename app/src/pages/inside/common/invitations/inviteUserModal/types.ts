@@ -29,6 +29,8 @@ export interface InviteUserInstanceFormData {
   email: string | InviteUserInstanceEmailOption;
   organizations: Organization[];
   organization?: { name?: string };
+  isAddingOrganization?: boolean;
+  isAddingProject?: boolean;
 }
 
 export type FormDataMap = {
@@ -37,9 +39,11 @@ export type FormDataMap = {
   [Level.INSTANCE]: InviteUserInstanceFormData;
 };
 
+export type InviteProjectCondition = 'with_project' | 'without_project' | 'with_project#without_project';
+
 export type ModalProps<L extends keyof FormDataMap> = {
   level: L;
-  onInvite: (withProject: boolean) => void;
+  onInvite: (condition: InviteProjectCondition) => void;
 };
 
 export type InviteUserProps<L extends keyof FormDataMap> = InjectedFormProps<FormDataMap[L]> &

@@ -22,76 +22,99 @@ import {
   projectInfoSelector,
   projectInfoLoadingSelector,
 } from 'controllers/project';
-import { urlProjectSlugSelector } from 'controllers/pages';
-import { baseEventParametersSelector } from 'controllers/appInfo';
+import { urlProjectSlugSelector, urlOrganizationSlugSelector } from 'controllers/pages';
 import {
-  normalizeDimensionValue,
-  getAutoAnalysisEventValue,
-} from 'components/main/analytics/utils';
+  activeOrganizationSelector,
+  activeOrganizationLoadingSelector,
+} from 'controllers/organization';
+import { FETCH_ORGANIZATION_BY_SLUG } from 'controllers/organization/constants';
+import { baseEventParametersSelector } from 'controllers/appInfo';
+import { createFetchPredicate } from 'controllers/fetch';
+import { buildEventParameters } from 'components/main/analytics/utils';
 import { omit } from 'common/utils';
 import GA4 from 'react-ga4';
 import { INFO_READY_DELAY, SEND_ANALYTICS_EVENT } from './constants';
 
-export function* waitForProjectReady() {
-  const routeProjectSlug = yield select(urlProjectSlugSelector);
-  const noProjectData = { projectId: null, entryType: null };
+function* waitForEntityReady({
+  slugSelector,
+  entitySelector,
+  loadingSelector,
+  slugKey,
+  raceActions,
+  getData,
+}) {
+  const routeSlug = yield select(slugSelector);
 
-  if (!routeProjectSlug) {
-    return noProjectData;
+  if (!routeSlug) {
+    return getData();
   }
 
-  let projectInfo = yield select(projectInfoSelector);
-  const isLoading = yield select(projectInfoLoadingSelector);
+  let entity = yield select(entitySelector);
+  const isLoading = yield select(loadingSelector);
 
-  if (projectInfo?.projectSlug === routeProjectSlug) {
-    return { projectId: projectInfo.projectId, entryType: projectInfo.entryType };
+  if (entity?.[slugKey] === routeSlug) {
+    return getData(entity);
   }
 
   if (!isLoading) {
-    return noProjectData;
+    return getData();
   }
 
   const { success } = yield race({
-    success: take(FETCH_PROJECT_SUCCESS),
-    error: take(FETCH_PROJECT_ERROR),
+    ...raceActions,
     timeout: delay(INFO_READY_DELAY),
   });
 
   if (success) {
-    projectInfo = yield select(projectInfoSelector);
-    if (projectInfo?.projectSlug === routeProjectSlug) {
-      return { projectId: projectInfo.projectId, entryType: projectInfo.entryType };
+    entity = yield select(entitySelector);
+    if (entity?.[slugKey] === routeSlug) {
+      return getData(entity);
     }
   }
 
-  return noProjectData;
+  return getData();
+}
+
+export function* waitForProjectReady() {
+  return yield* waitForEntityReady({
+    slugSelector: urlProjectSlugSelector,
+    entitySelector: projectInfoSelector,
+    loadingSelector: projectInfoLoadingSelector,
+    slugKey: 'projectSlug',
+    raceActions: {
+      success: take(FETCH_PROJECT_SUCCESS),
+      error: take(FETCH_PROJECT_ERROR),
+    },
+    getData: (project = {}) => ({ projectInfoId: project?.projectId || null }),
+  });
+}
+
+export function* waitForOrganizationReady() {
+  return yield* waitForEntityReady({
+    slugSelector: urlOrganizationSlugSelector,
+    entitySelector: activeOrganizationSelector,
+    loadingSelector: activeOrganizationLoadingSelector,
+    slugKey: 'slug',
+    raceActions: {
+      success: take(createFetchPredicate(FETCH_ORGANIZATION_BY_SLUG)),
+    },
+    getData: (org = {}) => ({
+      organizationId: org?.id || null,
+      entryType: org?.type?.toLowerCase() || null,
+    }),
+  });
 }
 
 function* sendAnalyticsEvent({ payload: data }) {
-  const { projectId, entryType } = yield call(waitForProjectReady);
+  const projectData = yield call(waitForProjectReady);
+  const organizationData = yield call(waitForOrganizationReady);
   const baseEventParameters = yield select(baseEventParametersSelector);
-  const {
-    instanceId,
-    buildVersion,
-    userId,
-    isAutoAnalyzerEnabled,
-    isPatternAnalyzerEnabled,
-    isAnalyzerAvailable,
-  } = baseEventParameters;
 
   if ('place' in data) {
-    const eventParameters = {
-      instanceID: instanceId,
-      version: buildVersion,
-      auto_analysis:
-        getAutoAnalysisEventValue(isAnalyzerAvailable, isAutoAnalyzerEnabled) || 'not_set',
-      pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled) || 'not_set',
-      timestamp: Date.now(),
-      uid: `${userId}|${instanceId}`,
-      kind: entryType || 'not_set',
-      project_id: projectId ? `${projectId}|${instanceId}` : 'not_set',
-      ...omit(data, data.place ? ['action'] : ['action', 'place']),
-    };
+    const eventParameters = buildEventParameters(
+      { ...baseEventParameters, ...projectData, ...organizationData },
+      omit(data, data.place ? ['action'] : ['action', 'place']),
+    );
     GA4.event(data.action, eventParameters);
   }
 }

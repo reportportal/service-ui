@@ -18,6 +18,10 @@ import { cloneElement, Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
+import {
+  REGISTRATION_NAME_MIN_LENGTH,
+  REGISTRATION_NAME_MAX_LENGTH,
+} from 'common/constants/validation';
 import styles from './fieldErrorHint.scss';
 
 const cx = classNames.bind(styles);
@@ -30,7 +34,7 @@ const messages = defineMessages({
   nameHint: {
     id: 'RegistrationForm.nameHint',
     defaultMessage:
-      'Full name may contain only Latin, numeric characters, symbols: hyphen, underscore, apostrophe, dot. Space is permitted (from 3 to 60 symbols)',
+      'Full name may contain {minLength}-{maxLength} characters, using only Latin letters, numbers, spaces, dots, hyphens, underscores, and apostrophes.',
   },
   passwordCreateUserHint: {
     id: 'CreateUserModal.passwordCreateUserHint',
@@ -52,7 +56,7 @@ const messages = defineMessages({
   },
   confirmPasswordHint: {
     id: 'RegistrationForm.confirmPasswordHint',
-    defaultMessage: 'Passwords do not match',
+    defaultMessage: 'The passwords you entered do not match. Please try again.'
   },
   filterNameError: {
     id: 'FiltersPage.filterNameLength',
@@ -158,6 +162,10 @@ const messages = defineMessages({
   requiredFieldHint: {
     id: 'Common.requiredFieldHint',
     defaultMessage: 'Field is required',
+  },
+  requiredFieldWithPeriodHint: {
+    id: 'Common.requiredFieldWithPeriodHint',
+    defaultMessage: 'Field is required.',
   },
   shortRequiredFieldHint: {
     id: 'Common.shortRequiredFieldHint',
@@ -340,6 +348,13 @@ const messages = defineMessages({
   },
 });
 
+const MESSAGE_VALUES = {
+  nameHint: {
+    minLength: REGISTRATION_NAME_MIN_LENGTH,
+    maxLength: REGISTRATION_NAME_MAX_LENGTH,
+  },
+};
+
 @injectIntl
 export class FieldErrorHint extends Component {
   static propTypes = {
@@ -352,6 +367,7 @@ export class FieldErrorHint extends Component {
     widthContent: PropTypes.bool,
     darkView: PropTypes.bool,
     provideHint: PropTypes.bool,
+    errorsWithHint: PropTypes.arrayOf(PropTypes.string),
     touched: PropTypes.bool,
     dataAutomationId: PropTypes.string,
     className: PropTypes.string,
@@ -367,6 +383,7 @@ export class FieldErrorHint extends Component {
     widthContent: false,
     darkView: false,
     provideHint: true,
+    errorsWithHint: [],
     touched: false,
     dataAutomationId: '',
     className: '',
@@ -392,18 +409,21 @@ export class FieldErrorHint extends Component {
       widthContent,
       darkView,
       provideHint,
+      errorsWithHint,
       dataAutomationId,
       className,
       ...rest
     } = this.props;
+    const showHintWithError = errorsWithHint.includes(error);
     const classes = cx('field-error-hint', `type-${hintType}`, className);
 
     return (
       <div className={classes} data-automation-id={dataAutomationId}>
         {children &&
           cloneElement(children, {
-            error: error && messages[error] ? intl.formatMessage(messages[error]) : error,
+            error: error && messages[error] ? intl.formatMessage(messages[error], MESSAGE_VALUES[error] || {}) : error,
             active,
+            showHintWithError,
             ...rest,
             onChange: (...args) => {
               if (typeof rest.onChange === 'function') {
@@ -428,7 +448,7 @@ export class FieldErrorHint extends Component {
                 'dark-view': darkView,
               })}
             >
-              {error && messages[error] ? intl.formatMessage(messages[error]) : error}
+              {error && messages[error] ? intl.formatMessage(messages[error], MESSAGE_VALUES[error] || {}) : error}
             </div>
           </div>
         )}

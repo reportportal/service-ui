@@ -24,6 +24,7 @@ import { RequirementsList } from 'pages/inside/common/requirementsList/requireme
 import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
 import { Scenario } from 'pages/inside/testCaseLibraryPage/testCaseDetailsPage/scenario';
 import { Attachment } from 'pages/inside/testCaseLibraryPage/types';
+import { AttachmentList, type Attachment } from 'pages/inside/common/attachmentList';
 
 import { messages } from '../messages';
 import { commonMessages } from 'pages/inside/common/common-messages';

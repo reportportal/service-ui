@@ -61,7 +61,7 @@ import { useMoveFolder } from './modals/moveFolderModal/useMoveFolder';
 import { useDuplicateFolder } from './modals/duplicateFolderModal/useDuplicateFolder';
 import { useFolderDragDrop } from './useFolderDragDrop';
 import { useTestCase } from '../hooks/useTestCase';
-import { useDuplicateTestCase } from '../allTestCasesPage/duplicateTestCaseModal/useDuplicateTestCase';
+import { useBatchDuplicateTestCases } from '../allTestCasesPage/batchDuplicateTestCasesModal/useBatchDuplicateTestCases';
 
 import styles from './testCaseFolders.scss';
 
@@ -76,7 +76,7 @@ export const TestCaseFolders = () => {
   const { moveFolder } = useMoveFolder();
   const { duplicateFolder } = useDuplicateFolder();
   const { patchTestCase } = useTestCase();
-  const { duplicateTestCase } = useDuplicateTestCase({ onSuccess: ()=> noop });
+  const { batchDuplicateTestCases } = useBatchDuplicateTestCases({ onSuccess: noop });
   const isLoadingTestCases = useSelector(isLoadingTestCasesSelector);
   const testCases = useSelector(testCasesSelector);
   const testCasesPageData = useSelector(testCasesPageSelector);
@@ -112,8 +112,11 @@ export const TestCaseFolders = () => {
         organizationSlug,
         projectSlug,
       },
+      query: {
+        ...(query?.testCasesSearchParams && { testCasesSearchParams: query.testCasesSearchParams }),
+      },
     });
-  }, [dispatch, organizationSlug, projectSlug]);
+  }, [dispatch, organizationSlug, projectSlug, query?.testCasesSearchParams]);
 
   useEffect(() => {
     if (urlFolderId && !activeFolder) {
@@ -201,12 +204,12 @@ export const TestCaseFolders = () => {
       
       if (!destinationFolder) return;
 
-      await duplicateTestCase({
+      await batchDuplicateTestCases({
         testCaseIds: [testCase.id],
         testFolderId: destinationFolder.id,
       });
     },
-    [folders, duplicateTestCase],
+    [folders, batchDuplicateTestCases],
   );
 
   return (

@@ -15,6 +15,7 @@
  */
 
 import { getBasicChooseEventParameters, getBasicClickEventParameters } from '../common/ga4Utils';
+import { InviteProjectCondition } from 'pages/inside/common/invitations/inviteUserModal/types';
 
 const ORGANIZATION_PAGE = 'organization';
 const SETTINGS_PAGE = 'organization_settings';
@@ -66,10 +67,9 @@ export const ORGANIZATION_PAGE_EVENTS = {
     place: 'all_organizations',
     element_name: elementName,
   }),
-  activityPage: (page: string, organizationId: string) => ({
+  activityPage: (page: string) => ({
     ...BASIC_EVENT_PARAMETERS,
     action: 'page_view',
-    organization_id: organizationId,
     place: page,
   }),
   VIEW_ORGANIZATION_USERS: {
@@ -82,12 +82,12 @@ export const ORGANIZATION_PAGE_EVENTS = {
     element_name: 'button_submit',
     type: `${keepLaunches}#${keepLogs}#${keepScreenshots}`,
   }),
-  inviteUser: (withProject = false) => ({
+  inviteUser: (condition: InviteProjectCondition = 'without_project') => ({
     ...BASIC_EVENT_PARAMETERS,
     element_name: 'invite',
     modal: 'invite_user',
     type: 'organization_level',
-    condition: `${withProject ? 'with' : 'without'}_project`,
+    condition,
   }),
   CLICK_APPLY_BUTTON: {
     ...BASIC_EVENT_PARAMETERS,
@@ -105,11 +105,12 @@ export const ORGANIZATION_PAGE_EVENTS = {
     place: 'all_users',
     element_name: elementName,
   }),
-  manageAssignments: (elementName: string) => ({
+  manageAssignments: (elementName: string, condition?: string) => ({
     ...BASIC_EVENT_PARAMETERS,
     place: 'all_users',
     element_name: elementName,
     modal: 'manage_assignments_of_user',
+    ...(condition && { condition }),
   }),
   unassignUser: (isCurrentUser: boolean) => ({
     ...BASIC_EVENT_PARAMETERS,

@@ -17,6 +17,7 @@
 import { useIntl } from 'react-intl';
 import {
   Button,
+  CopyIcon,
   FieldText,
   Modal,
   StatusSuccessIcon,
@@ -25,7 +26,7 @@ import {
 } from '@reportportal/ui-kit';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { createClassnames } from 'common/utils';
+import { copyToClipboard, createClassnames } from 'common/utils';
 import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 
@@ -34,6 +35,14 @@ import { messages } from './messages';
 import styles from './externalUserInvitationModal.scss';
 
 const cx = createClassnames(styles);
+
+const getFullInvitationLink = (link: string): string => {
+  try {
+    return new URL(link, globalThis.location.origin).toString();
+  } catch {
+    return link;
+  }
+};
 
 interface ExternalUserInvitationModalProps {
   email: string;
@@ -50,19 +59,18 @@ export const ExternalUserInvitationModal = ({
   const dispatch = useDispatch();
   const isEmailIntegrationAvailable = useSelector(isEmailIntegrationAvailableSelector);
   const modalTitle = header || formatMessage(messages.header);
+  const fullLink = getFullInvitationLink(link);
   const invitationMessageText = formatMessage(messages.invitationMessage, {
     email,
     b: (innerData) => <b>{innerData}</b>,
   });
 
-  const copyLink = () => {
-    if (navigator.clipboard) {
-      navigator.clipboard
-        .writeText(link)
-        .then(() =>
-          dispatch(showSuccessNotification({ message: formatMessage(messages.copyLinkSuccess) })),
-        )
-        .catch((err: Error) => dispatch(showErrorNotification({ message: err.message })));
+  const handleCopyLink = async () => {
+    try {
+      await copyToClipboard(fullLink);
+      dispatch(showSuccessNotification({ message: formatMessage(messages.copyLinkSuccess) }));
+    } catch {
+      dispatch(showErrorNotification({ messageId: 'copyLinkFailed' }));
     }
   };
 
@@ -77,7 +85,15 @@ export const ExternalUserInvitationModal = ({
             {formatMessage(messages.warningMessage)}
           </div>
           <div className={cx('buttons')}>
-            <Button onClick={copyLink}>{formatMessage(messages.copyLink)}</Button>
+            <Button
+              icon={<CopyIcon />}
+              iconPlace="start"
+              className={cx('copy-button')}
+              onClick={() => {
+                handleCopyLink().catch(() => {});
+              }}>
+              {formatMessage(messages.copyLink)}
+            </Button>
             <Button variant="ghost" onClick={closeModal}>
               {formatMessage(messages.gotIt)}
             </Button>
@@ -98,7 +114,7 @@ export const ExternalUserInvitationModal = ({
         )}
         <div className={cx('invitation-link')}>
           <FieldText
-            value={link}
+            value={fullLink}
             label={formatMessage(messages.link)}
             defaultWidth={false}
             disabled

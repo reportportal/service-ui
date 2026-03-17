@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-export { useDuplicateTestCaseModal } from './useDuplicateTestCaseModal';
-export { DUPLICATE_TEST_CASE_MODAL_KEY } from './duplicateTestCaseModal';
+export { AttachmentList } from './attachmentList';
+export type { Attachment } from './types';

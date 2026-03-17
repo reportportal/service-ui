@@ -19,6 +19,7 @@ import { isString, isObject, isNil } from 'es-toolkit/compat';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { FolderWithFullPath } from 'controllers/testCase/types';
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
+import { Attachment } from '../common/attachmentList';
 
 export type Tag = {
   key: string;
@@ -38,15 +39,6 @@ export interface Step {
   expectedResult: string;
   attachments?: Attachment[];
   position?: number;
-}
-
-export interface Attachment {
-  fileName: string;
-  fileSize: number;
-  id: number;
-  fileType: string;
-  src?: string;
-  hasThumbnail?: boolean;
 }
 
 export enum ManualScenarioType {
@@ -194,6 +186,7 @@ export interface TagPopoverProps {
   selectedTags?: (Tag | Attribute)[];
   placement?: 'top' | 'bottom' | 'left' | 'right' | 'bottom-end';
   className?: string;
+  shouldParseSelectedTags?: boolean;
 }
 
 export interface UseTestCaseTagsParams {

@@ -96,10 +96,11 @@ function* getTestPlans(action: GetTestPlansAction): Generator {
 function* getTestPlan(action: GetTestPlanAction): Generator {
   const projectKey = (yield select(projectKeySelector)) as string;
   const location = (yield select(locationSelector)) as LocationInfo;
-  const { testPlanId, offset, limit } = action.payload;
-  const params = {
+  const { testPlanId, offset, limit, testCasesSearchParams } = action.payload;
+  const params: Record<string, string | number | undefined> = {
     limit: limit || defaultTestPlanTestCasesQueryParams.limit,
     offset: offset || defaultTestPlanTestCasesQueryParams.offset,
+    'filter.cnt.name': testCasesSearchParams || undefined,
   };
 
   try {

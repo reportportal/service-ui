@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,4 +14,15 @@
  * limitations under the License.
  */
 
-export { AttachmentList } from './attachmentList';
+import { useModal } from 'common/hooks';
+
+import BatchDuplicateTestCasesModal, {
+  BATCH_DUPLICATE_TEST_CASES_MODAL_KEY,
+  BatchDuplicateTestCasesModalData,
+} from './batchDuplicateTestCasesModal';
+
+export const useBatchDuplicateTestCasesModal = () =>
+  useModal<BatchDuplicateTestCasesModalData>({
+    modalKey: BATCH_DUPLICATE_TEST_CASES_MODAL_KEY,
+    renderModal: (data) => <BatchDuplicateTestCasesModal data={data} />,
+  });

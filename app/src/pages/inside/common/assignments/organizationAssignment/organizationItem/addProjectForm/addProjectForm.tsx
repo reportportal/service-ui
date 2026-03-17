@@ -26,6 +26,7 @@ import {
 import { createClassnames } from 'common/utils';
 import { useIntl } from 'react-intl';
 import { messages } from 'common/constants/localization/invitationsLocalization';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 import { URLS } from 'common/urls';
 import {
@@ -76,11 +77,11 @@ export const AddProjectForm = ({
 
   const makeOptions = (response: ProjectsSearchesResponseData) => {
     if (response.items) {
-      const items = response.items.filter(
+      const filtered = response.items.filter(
         (item) => !projects.some((project: Project) => project.id === item.id),
       );
-      setItems(items);
-      return items.map((item) => item.name);
+      setItems(filtered);
+      return filtered.map((item) => item.name);
     }
 
     return [];
@@ -113,12 +114,18 @@ export const AddProjectForm = ({
     <div className={cx('form')}>
       <div className={cx('projects')}>
         <AsyncAutocompleteV2
+          inputProps={{
+            clearable: !!selectedProject,
+            onClear: () => setSelectedProject(null),
+          }}
           placeholder={formatMessage(messages.selectSearchProject)}
           getURI={() => URLS.organizationProjectsSearches(organizationId)}
           getRequestParams={getRequestParams}
           makeOptions={makeOptions}
           onChange={handleChangeProject}
           createWithoutConfirmation
+          skipOptionCreation
+          customEmptyListMessage={formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_OPTIONS)}
           useFixedPositioning
           dropdownMatchInputWidth
         />

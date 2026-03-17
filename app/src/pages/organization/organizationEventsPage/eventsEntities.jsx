@@ -90,6 +90,8 @@ import {
   DELETE_NOTIFICATION_RULE,
   NOTIFICATION_RULE,
   ACTIONS_WITH_NOTIFICATIONS,
+  UPDATE_PROJECT_NAME,
+  ACTIONS_WITH_PROJECT,
 } from 'common/constants/actionTypes';
 import {
   DASHBOARD,
@@ -190,6 +192,8 @@ export const EventsEntities = (props) => {
           actionToGroup: {
             [START_IMPORT]: ACTIONS_WITH_IMPORT,
             [FINISH_IMPORT]: ACTIONS_WITH_IMPORT,
+            [UPDATE_PROJECT]: ACTIONS_WITH_PROJECT,
+            [UPDATE_PROJECT_NAME]: ACTIONS_WITH_PROJECT,
           },
           options: [
             {
@@ -286,7 +290,7 @@ export const EventsEntities = (props) => {
             },
             {
               label: formatMessage(actionMessages[UPDATE_PROJECT]),
-              value: UPDATE_PROJECT,
+              value: ACTIONS_WITH_PROJECT,
             },
             {
               label: formatMessage(actionMessages[UPDATE_ANALYZER]),

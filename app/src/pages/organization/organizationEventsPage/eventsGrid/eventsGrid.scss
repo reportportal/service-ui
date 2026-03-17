@@ -24,29 +24,37 @@
   }
 }
 
-.time-col {
+.col-narrow {
+  width: 8%;
+}
+
+.col-medium {
   width: 10%;
+}
+
+.col-wide {
+  width: 17%;
+}
+
+.time-col {
   height: 70px;
   vertical-align: top;
   font-size: 12px;
 }
 
 .subject-name-col {
-  width: 10%;
   vertical-align: top;
   font-size: 13px;
   @include responsive-ellipsis($SCREEN_XS_MAX);
 }
 
 .project-name-col {
-  width: 10%;
   vertical-align: top;
   font-size: 13px;
   @include responsive-ellipsis($SCREEN_XS_MAX);
 }
 
 .subject-type-col {
-  width: 10%;
   vertical-align: top;
   font-size: 13px;
   font-family: $FONT-SEMIBOLD;
@@ -54,30 +62,30 @@
 }
 
 .action-col {
-  width: 10%;
   vertical-align: top;
   font-size: 13px;
   @include responsive-ellipsis($SCREEN_XS_MAX);
 }
 
 .object-type-col {
-  width: 10%;
   vertical-align: top;
   font-size: 13px;
   @include responsive-ellipsis($SCREEN_XS_MAX);
 }
 
 .object-name-col {
-  width: 10%;
   vertical-align: top;
   font-size: 13px;
   @include responsive-ellipsis($SCREEN_XS_MAX);
 }
 
 .value-col {
-  width: 15%;
   vertical-align: top;
   font-size: 13px;
+}
+
+.events-grid {
+  table-layout: fixed;
 }
 
 .events-grid-header,

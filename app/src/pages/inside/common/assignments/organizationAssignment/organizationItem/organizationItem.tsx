@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { BaseIconButton, CloseIcon, Dropdown, DropdownIcon } from '@reportportal/ui-kit';
+import { BaseIconButton, CloseIcon, Dropdown, DropdownIcon, Tooltip } from '@reportportal/ui-kit';
 
 import { createClassnames, fetch } from 'common/utils';
 import { EDITOR, MANAGER, MEMBER } from 'common/constants/projectRoles';
@@ -46,7 +46,9 @@ interface OrganizationItemProps {
   onChange: (updates: Partial<Organization>) => void;
   onRemove?: () => void;
   collapsable?: boolean;
-  disableOrganizationRole?: boolean;
+  organizationRoleDisabledTooltip?: string | null;
+  addProjectDisabled?: boolean;
+  onAddProjectFormToggle?: (orgId: number, isOpen: boolean) => void;
 }
 
 export const OrganizationItem = ({
@@ -54,8 +56,11 @@ export const OrganizationItem = ({
   onChange,
   onRemove,
   collapsable,
-  disableOrganizationRole = false,
+  organizationRoleDisabledTooltip = null,
+  addProjectDisabled = false,
+  onAddProjectFormToggle,
 }: OrganizationItemProps) => {
+  const disableOrganizationRole = Boolean(organizationRoleDisabledTooltip);
   const { formatMessage } = useIntl();
   const { id, name, role, projects } = value;
   const [totalProjects, setTotalProjects] = useState(0);
@@ -67,6 +72,30 @@ export const OrganizationItem = ({
   }));
   const noProjects = totalProjects === 0;
   const allProjectsAdded = projects?.length === totalProjects;
+
+  const prevAddProjectFormOpen = useRef(false);
+  const onAddProjectFormToggleRef = useRef(onAddProjectFormToggle);
+
+  useEffect(() => {
+    onAddProjectFormToggleRef.current = onAddProjectFormToggle;
+  });
+
+  useEffect(() => {
+    const wasOpen = prevAddProjectFormOpen.current;
+    prevAddProjectFormOpen.current = addProjectFormOpen;
+    if (addProjectFormOpen !== wasOpen) {
+      onAddProjectFormToggleRef.current?.(id, addProjectFormOpen);
+    }
+  }, [addProjectFormOpen, id]);
+
+  useEffect(() => {
+    return () => {
+      if (prevAddProjectFormOpen.current) {
+        onAddProjectFormToggleRef.current?.(id, false);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const data = { method: 'post', data: { limit: PROJECTS_LIMIT } };
@@ -108,7 +137,10 @@ export const OrganizationItem = ({
     onChange({ projects: updatedProjects });
   };
 
+  const collapseDisabled = collapsable && addProjectFormOpen;
+
   const handleCollapsable = () => {
+    if (collapseDisabled) return;
     setIsOpen(!isOpen);
   };
 
@@ -116,18 +148,35 @@ export const OrganizationItem = ({
     <div className={cx('organization')}>
       <div className={cx('header')}>
         <div
-          className={cx('name', { pointer: collapsable })}
+          className={cx('name', { pointer: collapsable && !collapseDisabled })}
           title={name}
           onClick={collapsable ? handleCollapsable : null}
         >
           {collapsable && (
-            <div className={cx('icon', { rotated: !isOpen })}>
+            <div className={cx('icon', { rotated: !isOpen, disabled: collapseDisabled })}>
               <DropdownIcon />
             </div>
           )}
           {name}
         </div>
         <div className={cx('controls')}>
+          <div className={cx('role-slot')}>
+            {disableOrganizationRole ? (
+              <Tooltip
+                placement="top"
+                content={organizationRoleDisabledTooltip}
+                wrapperClassName={cx('tooltip-wrapper')}
+              >
+                <Dropdown
+                  disabled
+                  className={cx('role')}
+                  value={role}
+                  options={roleOptions}
+                  onChange={handleRoleChange}
+                  variant="ghost"
+                />
+              </Tooltip>
+            ) : (
               <Dropdown
                 disabled={disableOrganizationRole}
                 className={cx('role')}
@@ -136,6 +185,8 @@ export const OrganizationItem = ({
                 onChange={handleRoleChange}
                 variant="ghost"
               />
+            )}
+          </div>
           {onRemove && (
             <BaseIconButton className={cx('remove-button')} onClick={onRemove}>
               <CloseIcon />
@@ -166,7 +217,7 @@ export const OrganizationItem = ({
                 tooltipClassname={cx('tooltip-wrapper')}
                 onClick={() => setAddProjectFormOpen(true)}
                 tooltipContent={noProjects ? messages.noProjects : messages.allProjectsAdded}
-                disabled={noProjects || allProjectsAdded}
+                disabled={noProjects || allProjectsAdded || addProjectDisabled}
                 text={formatMessage(messages.addProject)}
               />
             )}

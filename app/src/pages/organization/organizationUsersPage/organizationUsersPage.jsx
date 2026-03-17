@@ -74,10 +74,10 @@ const OrganizationUsersPageComponent = ({
     trackEvent(ORGANIZATION_PAGE_EVENTS.VIEW_ORGANIZATION_USERS);
   }, [trackEvent]);
 
-  const onInvite = (withProject) => {
+  const onInvite = (condition) => {
     dispatch(fetchOrganizationUsersAction(organizationId));
     dispatch(fetchOrganizationBySlugAction(organizationSlug));
-    trackEvent(ORGANIZATION_PAGE_EVENTS.inviteUser(withProject));
+    trackEvent(ORGANIZATION_PAGE_EVENTS.inviteUser(condition));
   };
 
   const showInviteUserModal = () => {

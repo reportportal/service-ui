@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import {
   expandTestPlanFoldersToLevelAction,
   testPlanTestCasesSelector,
 } from 'controllers/testPlan';
-import { PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
+import { PROJECT_TEST_PLAN_DETAILS_PAGE, locationSelector } from 'controllers/pages';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { useTestPlanActiveFolders } from 'pages/inside/testCaseLibraryPage/hooks/useTestPlanActiveFolders';
 
@@ -35,8 +35,15 @@ interface TestPlanFoldersProps {
 export const TestPlanFolders = ({ isLoading = false }: TestPlanFoldersProps) => {
   const dispatch = useDispatch();
   const testCases = useSelector(testPlanTestCasesSelector);
+  const location = useSelector(locationSelector);
+  const testCasesSearchParams = location?.query?.testCasesSearchParams;
   const { activeFolderId, activeFolder, payload, folders, transformedFolders } =
     useTestPlanActiveFolders();
+
+  const searchExtraFilters = useMemo(
+    () => ({ 'filter.eq.testPlanId': payload.testPlanId }),
+    [payload.testPlanId],
+  );
 
   useEffect(() => {
     dispatch(expandTestPlanFoldersToLevelAction({ folderId: activeFolderId, folders }));
@@ -51,6 +58,7 @@ export const TestPlanFolders = ({ isLoading = false }: TestPlanFoldersProps) => 
           ...payload,
           testPlanRoute: undefined,
         },
+        meta: { query: { testCasesSearchParams } },
       });
     }
   };
@@ -63,6 +71,7 @@ export const TestPlanFolders = ({ isLoading = false }: TestPlanFoldersProps) => 
           ...payload,
           testPlanRoute: `folder/${id}`,
         },
+        meta: { query: { testCasesSearchParams } },
       });
     }
   };
@@ -72,6 +81,9 @@ export const TestPlanFolders = ({ isLoading = false }: TestPlanFoldersProps) => 
       activeFolderId={activeFolderId}
       folders={transformedFolders}
       instanceKey={TMS_INSTANCE_KEY.TEST_PLAN}
+      searchQuery={testCasesSearchParams}
+      searchExtraFilters={searchExtraFilters}
+      searchAllFolders={folders}
       onFolderClick={handleFolderClick}
       setAllTestCases={setAllTestCases}
     >

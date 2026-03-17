@@ -123,4 +123,13 @@ export const messages = defineMessages({
     id: 'Assignment.discardChangesConfirmation',
     defaultMessage: 'You have unsaved changes. Discard them?',
   },
+  organizationRoleDisabledOwnAccount: {
+    id: 'Assignment.organizationRoleDisabledOwnAccount',
+    defaultMessage:
+      "You can't change your own role. Ask another Organization Manager or Admin to update it",
+  },
+  organizationRoleDisabledOwner: {
+    id: 'Assignment.organizationRoleDisabledOwner',
+    defaultMessage: "You can't change the role of the organization owner",
+  },
 });

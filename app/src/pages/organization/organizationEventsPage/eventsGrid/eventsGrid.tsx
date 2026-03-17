@@ -176,6 +176,7 @@ export const EventsGrid: React.FC<EventsGridProps> = ({
         sortable: true,
         maxHeight: 170,
         component: TimeColumn,
+        customProps: { gridHeaderCellStyles: cx('col-narrow') },
       },
       {
         id: ENTITY_PROJECT_NAME,
@@ -185,6 +186,7 @@ export const EventsGrid: React.FC<EventsGridProps> = ({
         sortable: true,
         maxHeight: 170,
         component: ProjectNameColumn,
+        customProps: { gridHeaderCellStyles: cx('col-medium') },
       },
       {
         id: ENTITY_SUBJECT_TYPE,
@@ -194,6 +196,7 @@ export const EventsGrid: React.FC<EventsGridProps> = ({
         sortable: true,
         maxHeight: 170,
         component: SubjectTypeColumn,
+        customProps: { gridHeaderCellStyles: cx('col-narrow') },
       },
       {
         id: ENTITY_SUBJECT_NAME,
@@ -202,6 +205,7 @@ export const EventsGrid: React.FC<EventsGridProps> = ({
         },
         sortable: true,
         component: SubjectNameColumn,
+        customProps: { gridHeaderCellStyles: cx('col-medium') },
       },
       {
         id: ENTITY_EVENT_NAME,
@@ -212,6 +216,7 @@ export const EventsGrid: React.FC<EventsGridProps> = ({
         component: ActionColumn,
         customProps: {
           formatMessage: intl.formatMessage,
+          gridHeaderCellStyles: cx('col-medium'),
         },
       },
       {
@@ -224,6 +229,7 @@ export const EventsGrid: React.FC<EventsGridProps> = ({
         component: ObjectTypeColumn,
         customProps: {
           formatMessage: intl.formatMessage,
+          gridHeaderCellStyles: cx('col-medium'),
         },
       },
       {
@@ -234,6 +240,7 @@ export const EventsGrid: React.FC<EventsGridProps> = ({
         },
         sortable: true,
         component: ObjectNameColumn,
+        customProps: { gridHeaderCellStyles: cx('col-medium') },
       },
       {
         id: 'oldValue',
@@ -243,6 +250,7 @@ export const EventsGrid: React.FC<EventsGridProps> = ({
         component: ValueColumn,
         customProps: {
           valueType: 'old_value',
+          gridHeaderCellStyles: cx('col-wide'),
         },
       },
       {
@@ -253,6 +261,7 @@ export const EventsGrid: React.FC<EventsGridProps> = ({
         component: ValueColumn,
         customProps: {
           valueType: 'new_value',
+          gridHeaderCellStyles: cx('col-wide'),
         },
       },
     ],

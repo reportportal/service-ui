@@ -15,9 +15,10 @@
  */
 
 import { InviteUserModal, Level } from 'pages/inside/common/invitations/inviteUserModal';
+import { InviteProjectCondition } from 'pages/inside/common/invitations/inviteUserModal/types';
 
 export interface InviteUserModalInstanceProps {
-  onInvite?: (withProject: boolean) => void;
+  onInvite?: (condition: InviteProjectCondition) => void;
 }
 
 export const InviteUserModalInstance = ({ onInvite = () => {} }: InviteUserModalInstanceProps) => (

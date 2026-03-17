@@ -26,6 +26,9 @@ import {
   Step as StepType,
   Attachment as TestCaseLibraryAttachment,
 } from 'pages/inside/testCaseLibraryPage/types';
+import { AttachmentList, type Attachment } from 'pages/inside/common/attachmentList';
+import { StepsList } from 'pages/inside/common/testCaseList/stepsList';
+import { Step as StepType } from 'pages/inside/testCaseLibraryPage/types';
 
 import { messages } from '../messages';
 import { commonMessages } from 'pages/inside/common/common-messages';

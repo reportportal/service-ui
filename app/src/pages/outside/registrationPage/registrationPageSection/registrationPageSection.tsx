@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,18 @@
  * limitations under the License.
  */
 
-import classNames from 'classnames/bind';
-import PropTypes from 'prop-types';
+import { ReactNode } from 'react';
+import { createClassnames } from 'common/utils/createClassnames';
 import styles from './registrationPageSection.scss';
 
-const cx = classNames.bind(styles);
+const cx = createClassnames(styles);
 
-export const RegistrationPageSection = ({ left, children, failed }) => (
+interface Props {
+  children?: ReactNode;
+  left?: boolean;
+  failed?: boolean;
+}
+
+export const RegistrationPageSection = ({ left = false, failed = false, children = null }: Props) => (
   <div className={cx('registration-page-section', { left, failed })}>{children}</div>
 );
-
-RegistrationPageSection.propTypes = {
-  children: PropTypes.node,
-  left: PropTypes.bool,
-  failed: PropTypes.bool,
-};
-
-RegistrationPageSection.defaultProps = {
-  children: null,
-  left: false,
-  failed: false,
-};

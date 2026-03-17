@@ -21,7 +21,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { commonMessages } from 'pages/inside/common/common-messages';
 
 import { SectionWithHeader } from '../sectionWithHeader';
-import { InfoBlock } from '../infoBlock';
+import { InfoBlock } from 'pages/inside/common/infoBlock';
 import { messages } from '../testCaseDetailsPage/messages';
 
 interface EditableDescriptionSectionProps {
