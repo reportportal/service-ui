@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   WrappedFieldArrayProps,
@@ -171,7 +171,7 @@ export const InstanceAssignment = ({
     OrganizationSearchesItem[]
   >([]);
   const [areOrganizationsExhausted, setAreOrganizationsExhausted] = useState(false);
-  const organizationSearchQueryRef = useRef('');
+  const [totalOrganizationsInSystem, setTotalOrganizationsInSystem] = useState(0);
   const [organizationProjects, setOrganizationProjects] = useState<ProjectsSearchesItem[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
   const [selectedOrganizationId, setSelectedOrganizationId] = useState<number | null>(null);
@@ -184,6 +184,12 @@ export const InstanceAssignment = ({
     const shouldFormBeOpen = isOpen || allOrganizations?.length === 0;
     dispatch(change(formName, 'isAddingOrganization', shouldFormBeOpen));
   }, [isOpen, allOrganizations?.length, dispatch, formName]);
+
+  useEffect(() => {
+    const addedCount = (allOrganizations || []).length;
+    const totalAvailableToAdd = totalOrganizationsInSystem - userOrgIds.size;
+    setAreOrganizationsExhausted(totalOrganizationsInSystem > 0 && addedCount >= totalAvailableToAdd);
+  }, [allOrganizations, totalOrganizationsInSystem, userOrgIds]);
 
   const resetOrganization = () => {
     dispatch(
@@ -202,9 +208,19 @@ export const InstanceAssignment = ({
     setTotalProjects(0);
     setNotAssignedOrganizations([]);
     setAreOrganizationsExhausted(false);
+    setTotalOrganizationsInSystem(0);
     setIsOpen(true);
     fields.removeAll();
     resetOrganization();
+
+    fetch(URLS.organizationSearches(), {
+      method: 'post',
+      data: { limit: 1 },
+    })
+      .then((response: OrganizationsSearchesResponseData) => {
+        setTotalOrganizationsInSystem(response.total_count);
+      })
+      .catch(() => setTotalOrganizationsInSystem(0));
 
     if (!invitedUserId) {
       setUserOrgIds(new Set());
@@ -226,20 +242,10 @@ export const InstanceAssignment = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [invitedUserId]);
 
-  const getRequestOrganizationsParams = (inputValue: string) => {
-    organizationSearchQueryRef.current = inputValue;
-    return {
-      method: 'post',
-      data: prepareQueryFilters({ limit: 20, [SEARCH_KEY]: inputValue }),
-    };
-  };
-
-  const getRequestProjectsParams = (inputValue: string) => {
-    return {
-      method: 'post',
-      data: prepareQueryFilters({ limit: 20, [SEARCH_KEY]: inputValue }),
-    };
-  };
+  const getRequestParams = (inputValue: string) => ({
+    method: 'post',
+    data: prepareQueryFilters({ limit: 20, [SEARCH_KEY]: inputValue }),
+  });
 
   const makeOrganizationsOptions = (response: OrganizationsSearchesResponseData) => {
     if (response.items) {
@@ -251,15 +257,10 @@ export const InstanceAssignment = ({
 
       setNotAssignedOrganizations(filteredOrganizations);
 
-      if (!organizationSearchQueryRef.current) {
-        setAreOrganizationsExhausted(response.total_count <= (allOrganizations?.length ?? 0));
-      }
-
       return filteredOrganizations.map(({ name }) => name);
     }
 
     setNotAssignedOrganizations([]);
-    setAreOrganizationsExhausted(false);
     return [];
   };
 
@@ -344,7 +345,7 @@ export const InstanceAssignment = ({
                   }}
                   placeholder={formatMessage(messages.organizationPlaceholder)}
                   getURI={URLS.organizationSearches}
-                  getRequestParams={getRequestOrganizationsParams}
+                  getRequestParams={getRequestParams}
                   makeOptions={makeOrganizationsOptions}
                   createWithoutConfirmation
                   skipOptionCreation
@@ -395,7 +396,7 @@ export const InstanceAssignment = ({
                   }}
                   placeholder={formatMessage(invitationMessages.selectSearchProject)}
                   getURI={() => URLS.organizationProjectsSearches(selectedOrganizationId)}
-                  getRequestParams={getRequestProjectsParams}
+                  getRequestParams={getRequestParams}
                   makeOptions={makeProjectsOptions}
                   onChange={handleProjectChange}
                   createWithoutConfirmation
