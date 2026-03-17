@@ -16,6 +16,23 @@
 
 @use '../../../../../common/css/mixins' as mixins;
 
+@mixin text-base-13 {
+  font-size: 13px;
+  line-height: 20px;
+}
+
+@mixin status-indicator-passed {
+  background-color: var(--rp-ui-base-test-execution-status-passed);
+}
+
+@mixin status-indicator-failed {
+  background-color: var(--rp-ui-base-error);
+}
+
+@mixin status-indicator-skipped {
+  background-color: var(--rp-ui-base-e-400);
+}
+
 .execution-status-dropdown {
   display: flex;
   align-items: center;
@@ -23,16 +40,14 @@
 }
 
 .label {
-  font-family: var(--rp-ui-base-font-family);
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 20px;
-  letter-spacing: 0;
+  @include text-base-13;
+
   color: var(--Text-Primary);
 }
 
 .status-button {
   @include mixins.button-reset;
+  @include text-base-13;
 
   display: flex;
   align-items: center;
@@ -40,12 +55,7 @@
   min-width: 95px;
   height: 28px;
   padding: 2px 8px;
-  border: none;
   border-radius: 6px;
-  font-family: var(--rp-ui-base-font-family);
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 20px;
   color: var(--Text-Primary);
   background: var(--rp-ui-base-bg-200);
   cursor: pointer;
@@ -58,15 +68,15 @@
   flex-shrink: 0;
 
   &--passed {
-    background-color: var(--rp-ui-base-test-execution-status-passed);
+    @include status-indicator-passed;
   }
 
   &--failed {
-    background-color: var(--rp-ui-base-error);
+    @include status-indicator-failed;
   }
 
   &--skipped {
-    background-color: var(--rp-ui-base-e-400);
+    @include status-indicator-skipped;
   }
 }
 

@@ -14,6 +14,26 @@
  * limitations under the License.
  */
 
+@mixin modal-text-base {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--rp-ui-base-almost-black);
+}
+
+@mixin modal-text-regular {
+  @include modal-text-base;
+
+  font-family: $FONT-ROBOTO-REGULAR;
+  text-indent: 1px;
+}
+
+@mixin modal-text-medium {
+  @include modal-text-base;
+
+  font-family: $FONT-ROBOTO-MEDIUM;
+  font-weight: 500;
+}
+
 .execution-status-confirm-modal {
   width: 480px;
   border-radius: 16px;
@@ -30,23 +50,13 @@
   margin-bottom: 24px;
 
   label {
-    font-family: $FONT-ROBOTO-MEDIUM;
-    font-weight: 500;
-    font-size: 13px;
-    line-height: 20px;
+    @include modal-text-medium;
+
     text-indent: 1px;
-    letter-spacing: 0;
-    color: var(--rp-ui-base-almost-black);
   }
 
   textarea {
-    font-family: $FONT-ROBOTO-REGULAR;
-    font-weight: 400;
-    font-size: 13px;
-    line-height: 20px;
-    text-indent: 1px;
-    letter-spacing: 0;
-    color: var(--rp-ui-base-almost-black);
+    @include modal-text-regular;
 
     &::placeholder {
       color: var(--rp-ui-base-e-400);
@@ -58,13 +68,7 @@
   margin-bottom: 24px;
 
   label {
-    font-family: $FONT-ROBOTO-REGULAR;
-    font-weight: 400;
-    font-size: 13px;
-    line-height: 20px;
-    text-indent: 1px;
-    letter-spacing: 0;
-    color: var(--rp-ui-base-almost-black);
+    @include modal-text-regular;
   }
 }
 
@@ -97,11 +101,7 @@
 }
 
 .attachment-title {
-  font-family: $FONT-ROBOTO-MEDIUM;
-  font-weight: 500;
-  font-size: 13px;
-  line-height: 20px;
-  color: var(--rp-ui-base-almost-black);
+  @include modal-text-medium;
 }
 
 .add-attachment {
@@ -115,7 +115,6 @@
   align-items: center;
   column-gap: 4px;
   font-size: 11px;
-  font-weight: 400;
   color: var(--rp-ui-base-e-400);
 
   svg {

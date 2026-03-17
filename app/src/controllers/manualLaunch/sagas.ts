@@ -17,6 +17,7 @@
 import { Action } from 'redux';
 import { takeLatest, call, select, all, put } from 'redux-saga/effects';
 import { isString } from 'es-toolkit';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -389,14 +390,17 @@ function* updateManualLaunchExecutionStatus(
       fileSize: number;
     }>;
 
-    if ((isString(comment) && comment.trim()) || uploadedAttachments.length > 0) {
+    const trimmedComment = isString(comment) ? comment.trim() : '';
+    const hasAttachments = !isEmpty(uploadedAttachments);
+
+    if (trimmedComment || hasAttachments) {
       requestData.executionComment = {};
 
-      if (isString(comment) && comment.trim()) {
-        requestData.executionComment.comment = comment.trim();
+      if (trimmedComment) {
+        requestData.executionComment.comment = trimmedComment;
       }
 
-      if (uploadedAttachments.length > 0) {
+      if (hasAttachments) {
         requestData.executionComment.attachments = uploadedAttachments;
       }
     }
