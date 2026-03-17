@@ -14,45 +14,90 @@
  * limitations under the License.
  */
 
+import { useCallback, useRef } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { change } from 'redux-form';
 import { FieldText } from '@reportportal/ui-kit';
 
-import { createClassnames } from 'common/utils';
+import { createClassnames, fetch } from 'common/utils';
+import { email as isValidEmail } from 'common/utils/validation/validate';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { messages } from 'common/constants/localization/invitationsLocalization';
+import { URLS } from 'common/urls';
 
 import styles from './inviteUserEmailField.scss';
 
 const cx = createClassnames(styles);
 
-interface InviteUserEmailFieldProps {
-  formName: string;
+interface UserSearchItem {
+  id?: number;
+  email?: string;
 }
 
-export const InviteUserEmailField = ({ formName }: InviteUserEmailFieldProps) => {
+interface UserSearchResponse {
+  items?: UserSearchItem[];
+}
+
+interface InviteUserEmailFieldProps {
+  formName: string;
+  onUserSelect?: (userId: number | null) => void;
+}
+
+export const InviteUserEmailField = ({ formName, onUserSelect }: InviteUserEmailFieldProps) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const emailValueRef = useRef<string>('');
 
-  const handleClear = () => {
+  const handleClear = useCallback(() => {
     dispatch(change(formName, 'email', ''));
-  };
+    emailValueRef.current = '';
+    onUserSelect?.(null);
+  }, [dispatch, formName, onUserSelect]);
+
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    emailValueRef.current = e.target.value ?? '';
+  }, []);
+
+  const handleBlur = useCallback(() => {
+    const email = emailValueRef.current;
+
+    if (!email?.trim() || isValidEmail(email.trim()) !== true) {
+      onUserSelect?.(null);
+      return;
+    }
+
+    fetch(URLS.searchAllUsers(), {
+      method: 'post',
+      data: {
+        limit: 1,
+        search_criteria: [{ filter_key: 'email', operation: 'EQ', value: email.trim() }],
+      },
+    })
+      .then((response: UserSearchResponse) => {
+        const user = response.items?.[0];
+        onUserSelect?.(user?.id ?? null);
+      })
+      .catch(() => onUserSelect?.(null));
+  }, [onUserSelect]);
 
   return (
-    <FieldElement name="email" className={cx('email')}>
-      <FieldErrorHint provideHint={false}>
-        <FieldText
-          maxLength={128}
-          placeholder={formatMessage(messages.inputPlaceholder)}
-          defaultWidth={false}
-          label={formatMessage(messages.email)}
-          type="email"
-          clearable
-          onClear={handleClear}
-        />
-      </FieldErrorHint>
-    </FieldElement>
+    <div className={cx('email')} onBlur={handleBlur}>
+      <FieldElement name="email">
+        <FieldErrorHint provideHint={false}>
+          <FieldText
+            maxLength={128}
+            placeholder={formatMessage(messages.inputPlaceholder)}
+            defaultWidth={false}
+            label={formatMessage(messages.email)}
+            type="email"
+            clearable
+            onClear={handleClear}
+            onChange={handleChange}
+          />
+        </FieldErrorHint>
+      </FieldElement>
+    </div>
   );
 };
