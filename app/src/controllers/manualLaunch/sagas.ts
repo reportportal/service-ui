@@ -322,6 +322,50 @@ interface UpdateManualLaunchExecutionStatusAction extends Action<
   payload: UpdateManualLaunchExecutionStatusParams;
 }
 
+function* uploadAttachments(projectKey: string, attachments?: File[]): Generator {
+  const uploadedAttachments: Array<{
+    id: string;
+    fileName: string;
+    fileType: string;
+    fileSize: number;
+  }> = [];
+
+  if (!attachments || attachments.length === 0) {
+    return uploadedAttachments;
+  }
+
+  for (const file of attachments) {
+    try {
+      const formData = new FormData();
+      formData.append('file', file, file.name);
+
+      const uploadResponse = (yield call(fetch, URLS.tmsAttachmentUpload(projectKey), {
+        method: 'POST',
+        data: formData,
+      })) as { id: string };
+
+      uploadedAttachments.push({
+        id: uploadResponse.id,
+        fileName: file.name,
+        fileType: file.type,
+        fileSize: file.size,
+      });
+    } catch {
+      yield put(
+        showNotification({
+          messageId: 'ExecutionStatusConfirmModal.attachmentUploadFailed',
+          type: NOTIFICATION_TYPES.ERROR,
+          typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.WHITE,
+          duration: WARNING_NOTIFICATION_DURATION,
+          values: { fileName: file.name },
+        }),
+      );
+    }
+  }
+
+  return uploadedAttachments;
+}
+
 function* updateManualLaunchExecutionStatus(
   action: UpdateManualLaunchExecutionStatusAction,
 ): Generator {
@@ -338,43 +382,12 @@ function* updateManualLaunchExecutionStatus(
       status,
     };
 
-    const uploadedAttachments: Array<{
+    const uploadedAttachments = (yield call(uploadAttachments, projectKey, attachments)) as Array<{
       id: string;
       fileName: string;
       fileType: string;
       fileSize: number;
-    }> = [];
-
-    if (attachments && attachments.length > 0) {
-      for (const file of attachments) {
-        try {
-          const formData = new FormData();
-          formData.append('file', file, file.name);
-
-          const uploadResponse = (yield call(fetch, URLS.tmsAttachmentUpload(projectKey), {
-            method: 'POST',
-            data: formData,
-          })) as { id: string };
-
-          uploadedAttachments.push({
-            id: uploadResponse.id,
-            fileName: file.name,
-            fileType: file.type,
-            fileSize: file.size,
-          });
-        } catch {
-          yield put(
-            showNotification({
-              messageId: 'ExecutionStatusConfirmModal.attachmentUploadFailed',
-              type: NOTIFICATION_TYPES.ERROR,
-              typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.WHITE,
-              duration: WARNING_NOTIFICATION_DURATION,
-              values: { fileName: file.name },
-            }),
-          );
-        }
-      }
-    }
+    }>;
 
     if ((isString(comment) && comment.trim()) || uploadedAttachments.length > 0) {
       requestData.executionComment = {};
