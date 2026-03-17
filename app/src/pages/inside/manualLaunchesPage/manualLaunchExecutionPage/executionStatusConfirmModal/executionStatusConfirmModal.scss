@@ -77,6 +77,10 @@
 .attachments-section {
   display: flex;
   flex-direction: column;
+
+  :global(.file-drop-area__drop-zone) {
+    display: none;
+  }
 }
 
 .attachment-header {
@@ -117,11 +121,5 @@
   svg {
     width: 16px;
     height: 16px;
-  }
-}
-
-.attachments-section {
-  :global(.file-drop-area__drop-zone) {
-    display: none;
   }
 }
