@@ -20,6 +20,7 @@ import {
   WrappedFieldArrayProps,
   formValueSelector,
   change,
+  untouch,
   getFormSyncErrors,
   getFormMeta,
 } from 'redux-form';
@@ -193,6 +194,7 @@ export const InstanceAssignment = ({
         projects: [],
       }),
     );
+   dispatch(untouch(formName, FORM_FIELDS.ORGANIZATION.NAME));
   };
 
   useEffect(() => {
