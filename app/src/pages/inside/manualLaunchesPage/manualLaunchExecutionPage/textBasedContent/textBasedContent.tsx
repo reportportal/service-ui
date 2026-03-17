@@ -22,6 +22,7 @@ import { CollapsibleSection } from 'components/collapsibleSection';
 import { FieldSection } from 'pages/inside/common/fieldSection';
 import { RequirementsList } from 'pages/inside/common/requirementsList/requirementsList';
 import { AttachmentList, type Attachment } from 'pages/inside/common/attachmentList';
+import { Scenario } from 'pages/inside/common/scenario';
 
 import { messages } from '../messages';
 import { commonMessages } from 'pages/inside/common/common-messages';
@@ -46,18 +47,29 @@ export const TextBasedContent = ({ execution: { manualScenario } }: ExecutionCon
   return (
     <div className={cx('text-based-content')}>
       <CollapsibleSection
-        title={formatMessage(messages.requirementsLink)}
-        defaultMessage={hasRequirements ? undefined : formatMessage(messages.noAttachments)}
+        title={formatMessage(messages.requirements)}
+        defaultMessage={
+          hasRequirements ? undefined : formatMessage(messages.requirementsAreNotSpecified)
+        }
       >
         {hasRequirements ? <RequirementsList items={requirements} /> : null}
       </CollapsibleSection>
 
-      <CollapsibleSection title={formatMessage(commonMessages.scenario)}>
+      <CollapsibleSection
+        title={formatMessage(commonMessages.scenario)}
+        defaultMessage={
+          !preconditionValue && !instructions && !expectedResult && !hasPreconditionAttachments
+            ? formatMessage(messages.noDetailsForScenario)
+            : undefined
+        }
+      >
         <div className={cx('scenario-sections')}>
-          {preconditionValue && (
-            <FieldSection title={formatMessage(commonMessages.precondition)}>
-              <div className={cx('text-block')}>{preconditionValue}</div>
-            </FieldSection>
+          {(preconditionValue || instructions || expectedResult) && (
+            <Scenario
+              precondition={preconditionValue}
+              instructions={instructions}
+              expectedResult={expectedResult}
+            />
           )}
           {hasPreconditionAttachments && (
             <FieldSection
@@ -68,16 +80,6 @@ export const TextBasedContent = ({ execution: { manualScenario } }: ExecutionCon
                   (manualScenario.preconditions?.attachments ?? []) as unknown as Attachment[]
                 }
               />
-            </FieldSection>
-          )}
-          {instructions && (
-            <FieldSection title={formatMessage(commonMessages.instructions)}>
-              <div className={cx('text-block')}>{instructions}</div>
-            </FieldSection>
-          )}
-          {expectedResult && (
-            <FieldSection title={formatMessage(commonMessages.expectedResult)}>
-              <div className={cx('text-block')}>{expectedResult}</div>
             </FieldSection>
           )}
         </div>

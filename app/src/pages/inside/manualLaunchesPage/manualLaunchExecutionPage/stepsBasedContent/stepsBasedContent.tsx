@@ -19,11 +19,11 @@ import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
 import { CollapsibleSection } from 'components/collapsibleSection';
-import { FieldSection } from 'pages/inside/common/fieldSection';
 import { RequirementsList } from 'pages/inside/common/requirementsList/requirementsList';
-import { AttachmentList, type Attachment } from 'pages/inside/common/attachmentList';
-import { StepsList } from 'pages/inside/common/testCaseList/stepsList';
+import { Precondition } from 'pages/inside/testCaseLibraryPage/testCaseDetailsPage/precondition';
+import { StepsList } from 'pages/inside/testCaseLibraryPage/testCaseDetailsPage/stepsList';
 import { Step as StepType } from 'pages/inside/testCaseLibraryPage/types';
+import { type Attachment } from 'pages/inside/common/attachmentList';
 
 import { messages } from '../messages';
 import { commonMessages } from 'pages/inside/common/common-messages';
@@ -47,41 +47,38 @@ export const StepsBasedContent = ({ execution: { manualScenario } }: ExecutionCo
   return (
     <div className={cx('steps-based-content')}>
       <CollapsibleSection
-        title={formatMessage(messages.requirementsLink)}
-        defaultMessage={hasRequirements ? undefined : formatMessage(messages.noAttachments)}
+        title={formatMessage(messages.requirements)}
+        defaultMessage={
+          hasRequirements ? undefined : formatMessage(messages.requirementsAreNotSpecified)
+        }
       >
         {hasRequirements ? <RequirementsList items={requirements} /> : null}
       </CollapsibleSection>
 
-      <CollapsibleSection title={formatMessage(commonMessages.precondition)}>
-        <div className={cx('precondition-block')}>
-          {preconditionValue && <div className={cx('text-block')}>{preconditionValue}</div>}
-          {hasPreconditionAttachments && (
-            <>
-              {preconditionValue && <div className={cx('section-divider')} />}
-              <FieldSection
-                title={`${formatMessage(commonMessages.attachments)} ${manualScenario.preconditions?.attachments?.length ?? 0}`}
-              >
-                <AttachmentList
-                  attachments={
-                    (manualScenario.preconditions?.attachments ?? []) as unknown as Attachment[]
-                  }
-                />
-              </FieldSection>
-            </>
-          )}
-          {!preconditionValue && !hasPreconditionAttachments && (
-            <div className={cx('empty-hint')}>{formatMessage(messages.noAttachments)}</div>
-          )}
-        </div>
+      <CollapsibleSection
+        title={formatMessage(commonMessages.precondition)}
+        defaultMessage={
+          !preconditionValue && !hasPreconditionAttachments
+            ? formatMessage(messages.preconditionIsNotSpecified)
+            : undefined
+        }
+      >
+        {(preconditionValue || hasPreconditionAttachments) && (
+          <Precondition
+            preconditions={{
+              value: preconditionValue || '',
+              attachments: (manualScenario.preconditions?.attachments ||
+                []) as unknown as Attachment[],
+            }}
+          />
+        )}
       </CollapsibleSection>
 
-      <CollapsibleSection title={formatMessage(commonMessages.steps)}>
-        {isEmpty(steps) ? (
-          <div className={cx('empty-hint')}>{formatMessage(messages.noAttachments)}</div>
-        ) : (
-          <StepsList steps={steps as StepType[]} />
-        )}
+      <CollapsibleSection
+        title={formatMessage(commonMessages.steps)}
+        defaultMessage={isEmpty(steps) ? formatMessage(messages.noStepsSpecified) : undefined}
+      >
+        {!isEmpty(steps) && <StepsList steps={steps as StepType[]} />}
       </CollapsibleSection>
     </div>
   );

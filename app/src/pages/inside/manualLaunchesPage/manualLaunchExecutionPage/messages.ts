@@ -17,9 +17,25 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  requirementsLink: {
-    id: 'ManualLaunchExecutionPage.requirementsLink',
-    defaultMessage: 'Requirements link',
+  requirements: {
+    id: 'ManualLaunchExecutionPage.requirements',
+    defaultMessage: 'Requirements',
+  },
+  requirementsAreNotSpecified: {
+    id: 'ManualLaunchExecutionPage.requirementsAreNotSpecified',
+    defaultMessage: 'Requirements are not specified',
+  },
+  preconditionIsNotSpecified: {
+    id: 'ManualLaunchExecutionPage.preconditionIsNotSpecified',
+    defaultMessage: 'Precondition is not specified',
+  },
+  noStepsSpecified: {
+    id: 'ManualLaunchExecutionPage.noStepsSpecified',
+    defaultMessage: 'No steps specified',
+  },
+  noDetailsForScenario: {
+    id: 'ManualLaunchExecutionPage.noDetailsForScenario',
+    defaultMessage: 'No details for this scenario',
   },
   executionNotFound: {
     id: 'ManualLaunchExecutionPage.executionNotFound',

@@ -19,28 +19,3 @@
   flex-direction: column;
   gap: 16px;
 }
-
-.precondition-block {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.text-block {
-  font-family: var(--rp-ui-base-font-family);
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 20px;
-  color: var(--rp-ui-base-almost-black);
-}
-
-.section-divider {
-  height: 1px;
-  background-color: var(--rp-ui-base-e-100);
-  margin: 0;
-}
-
-.empty-hint {
-  font-size: 13px;
-  color: var(--rp-ui-base-e-400);
-}
