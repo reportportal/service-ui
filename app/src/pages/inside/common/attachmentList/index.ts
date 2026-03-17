@@ -15,3 +15,4 @@
  */
 
 export { AttachmentList } from './attachmentList';
+export type { Attachment } from './types';

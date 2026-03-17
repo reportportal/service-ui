@@ -42,7 +42,7 @@ import { FolderBreadcrumbs } from 'components/folderBreadcrumbs';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
-import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
+import { AttachmentList } from 'pages/inside/common/attachmentList';
 import {
   ManualScenario,
   ExtendedTestCase,
@@ -227,7 +227,11 @@ export const TestCaseSidePanel = memo(
     };
 
     const handleCopyId = async () => {
-      await copyToClipboard(testCase.id.toString());
+      try {
+        await copyToClipboard(testCase.id.toString());
+      } catch (error) {
+        console.error('Failed to copy ID:', error);
+      }
     };
 
     return (
@@ -248,7 +252,11 @@ export const TestCaseSidePanel = memo(
               {Parser(CrossIcon as unknown as string)}
             </button>
           </div>
-          <FolderBreadcrumbs folderId={folderId} instanceKey={TMS_INSTANCE_KEY.TEST_CASE} onNavigate={onClose} />
+          <FolderBreadcrumbs
+            folderId={folderId}
+            instanceKey={TMS_INSTANCE_KEY.TEST_CASE}
+            onNavigate={onClose}
+          />
           <div className={cx('header-meta')}>
             <div className={cx('meta-row')}>
               <div className={cx('meta-item-row', 'id-row')}>

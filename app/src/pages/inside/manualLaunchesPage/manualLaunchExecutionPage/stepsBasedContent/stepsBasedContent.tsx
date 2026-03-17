@@ -21,9 +21,9 @@ import { createClassnames } from 'common/utils';
 import { CollapsibleSection } from 'components/collapsibleSection';
 import { FieldSection } from 'pages/inside/common/fieldSection';
 import { RequirementsList } from 'pages/inside/common/requirementsList/requirementsList';
-import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
+import { AttachmentList, type Attachment } from 'pages/inside/common/attachmentList';
 import { StepsList } from 'pages/inside/common/testCaseList/stepsList';
-import { Attachment, Step as StepType } from 'pages/inside/testCaseLibraryPage/types';
+import { Step as StepType } from 'pages/inside/testCaseLibraryPage/types';
 
 import { messages } from '../messages';
 import { commonMessages } from 'pages/inside/common/common-messages';

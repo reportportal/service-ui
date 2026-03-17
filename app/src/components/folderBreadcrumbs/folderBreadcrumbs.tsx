@@ -46,6 +46,7 @@ interface FolderBreadcrumbsProps {
   instanceKey: TMS_INSTANCE_KEY;
   testPlanId?: number;
   onNavigate?: VoidFn;
+  customFoldersSelector?: (state: unknown) => Folder[];
 }
 
 const amountToShowWithoutCollapsing = 4;
@@ -72,10 +73,13 @@ export const FolderBreadcrumbs = ({
   instanceKey,
   testPlanId,
   onNavigate,
+  customFoldersSelector
 }: FolderBreadcrumbsProps) => {
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const projectSlug = useSelector(urlProjectSlugSelector);
-  const folders = useSelector(foldersSelector);
+  const folders = useSelector(
+    customFoldersSelector ?? foldersSelector
+  );
 
   const items = getPath({ folderId, folders });
 

@@ -77,11 +77,11 @@ export const AddProjectForm = ({
 
   const makeOptions = (response: ProjectsSearchesResponseData) => {
     if (response.items) {
-      const items = response.items.filter(
+      const filtered = response.items.filter(
         (item) => !projects.some((project: Project) => project.id === item.id),
       );
-      setItems(items);
-      return items.map((item) => item.name);
+      setItems(filtered);
+      return filtered.map((item) => item.name);
     }
 
     return [];

@@ -26,6 +26,7 @@ interface OrganizationAssignmentProps {
   isMultiple?: boolean;
   organizationRoleDisabledTooltip?: string | null;
   formName?: string;
+  isOrganizationFormOpen?: boolean;
 }
 
 export const OrganizationAssignment = ({
@@ -34,6 +35,7 @@ export const OrganizationAssignment = ({
   isMultiple = false,
   organizationRoleDisabledTooltip = null,
   formName,
+  isOrganizationFormOpen = false,
 }: OrganizationAssignmentProps) => {
   const dispatch = useDispatch();
   const [openFormOrgId, setOpenFormOrgId] = useState<number | null>(null);
@@ -83,7 +85,7 @@ export const OrganizationAssignment = ({
               onChange={(updates) => updateItem(updates, index)}
               onRemove={() => removeItem(index)}
               collapsable
-              addProjectDisabled={openFormOrgId !== null && openFormOrgId !== org.id}
+              addProjectDisabled={(openFormOrgId !== null && openFormOrgId !== org.id) || isOrganizationFormOpen}
               onAddProjectFormToggle={handleAddProjectFormToggle}
             />
           </div>
