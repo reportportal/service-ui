@@ -33,20 +33,22 @@ export function validateInstance(formData: InviteUserInstanceFormData): InviteUs
     email: emailValidator(emailStr.trim()),
   };
 
+  const organizations = formData.organizations ?? [];
+
   if (formData.isAddingOrganization || formData.isAddingProject) {
     errors.organizations = 'Form is being edited';
-    return errors;
+  } else if (organizations.length === 0) {
+    errors.organizations = commonValidators.requiredField(organizations);
   }
 
-  const organizations = formData.organizations ?? [];
-  if (organizations.length === 0) {
-    errors.organizations = commonValidators.requiredField(organizations);
-    const orgName = formData.organization?.name;
-    if (!orgName) {
-      errors.organization = {
-        name: commonValidators.requiredField(orgName),
-      };
-    }
+  const orgName = formData.organization?.name;
+  const isOrganizationNameEmpty =
+    !orgName || (typeof orgName === 'string' && !orgName.trim());
+  if (isOrganizationNameEmpty) {
+    errors.organization = {
+      name: commonValidators.requiredField(orgName),
+    };
   }
+
   return errors;
 }
