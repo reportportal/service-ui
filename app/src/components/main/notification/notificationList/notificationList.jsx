@@ -295,7 +295,8 @@ export const notificationMessages = defineMessages({
   },
   testCaseFolderMovedSuccess: {
     id: 'TestCaseLibraryPage.testCaseFolderMovedSuccess',
-    defaultMessage: "Folder ''{folderName}'' has been successfully moved to {targetFolderName, select, null {root folder} other {''{targetFolderName}''}}.",
+    defaultMessage:
+      "Folder ''{folderName}'' has been successfully moved to {targetFolderName, select, null {root folder} other {''{targetFolderName}''}}.",
   },
   testCaseFolderMoveFailed: {
     id: 'TestCaseLibraryPage.testCaseFolderMoveFailed',
@@ -355,6 +356,10 @@ export const notificationMessages = defineMessages({
     id: 'ManualLaunchesPage.manualLaunchRedirectWarningMessage',
     defaultMessage:
       "The item you are trying to access may have been deleted or doesn't exist. You have been redirected to Manual Launches.",
+  },
+  executionStatusUpdated: {
+    id: 'ManualLaunchesPage.executionStatusUpdated',
+    defaultMessage: 'Status updated: Test marked as {status}.',
   },
   testPlanUpdatedSuccess: {
     id: 'TestPlansPage.testPlanUpdatedSuccess',

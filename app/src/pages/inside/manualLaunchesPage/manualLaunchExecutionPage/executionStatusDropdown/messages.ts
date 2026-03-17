@@ -17,20 +17,8 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  requirementsLink: {
-    id: 'ManualLaunchExecutionPage.requirementsLink',
-    defaultMessage: 'Requirements link',
-  },
-  executionNotFound: {
-    id: 'ManualLaunchExecutionPage.executionNotFound',
-    defaultMessage: 'Execution not found',
-  },
-  noAttachments: {
-    id: 'ManualLaunchExecutionPage.noAttachments',
-    defaultMessage: 'No attachments added',
-  },
-  executionStatusUpdated: {
-    id: 'ManualLaunchExecutionPage.executionStatusUpdated',
-    defaultMessage: 'Execution status updated successfully',
+  currentExecutionStatus: {
+    id: 'ExecutionStatusDropdown.currentExecutionStatus',
+    defaultMessage: 'Current execution status:',
   },
 });
