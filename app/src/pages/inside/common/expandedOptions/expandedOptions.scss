@@ -55,10 +55,10 @@
   &::before {
     content: '';
     position: absolute;
-    top: 0px;
-    left: 2px;
-    right: 10px;
-    bottom: 6px;
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    bottom: 4px;
     border: 2px dashed $border-color;
     border-radius: 4px;
     pointer-events: none;
@@ -181,10 +181,6 @@
 
     &--dragging {
       @include drop-zone-border;
-
-      &:has(.expanded-options__drop-placeholder)::before {
-        border-color: var(--rp-ui-base-e-300);
-      }
     }
 
     // Keep border visible when confirmation popup is showing (pending state)
@@ -195,33 +191,24 @@
 
   &__drop-placeholder {
     position: absolute;
-    top: 0;
-    left: 2px;
-    right: 10px;
-    bottom: 0;
-    height: auto;
-    min-height: 100%;
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    bottom: 4px;
     @include flex-center(column, center, center);
 
     background-color: var(--rp-ui-base-bg-200);
+    border: 2px dashed var(--rp-ui-base-e-300);
+    border-radius: 4px;
     opacity: 0.9;
     z-index: 10;
     pointer-events: none;
-    border-radius: 4px;
-
-    ~ .folders-tree {
-      opacity: 0.5;
-      pointer-events: none;
-    }
   }
 
   &__drop-placeholder-content {
     @include flex-center(column, center, center);
     gap: 16px;
-    position: fixed;
-    top: 50%;
-    left: 218px;
-    transform: translate(-50%, -50%);
+    position: relative;
     z-index: 11;
   }
 
@@ -239,9 +226,21 @@
   &__sidebar-folders-wrapper {
     height: calc(100% - 112px);
     position: relative;
+    overflow: hidden;
 
     &--with-search {
       height: calc(100% - 160px);
+    }
+
+    &:has(.expanded-options__drop-placeholder) {
+      .folders-tree {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+
+      .expanded-options__sidebar-folders--dragging::before {
+        display: none;
+      }
     }
   }
 

@@ -79,7 +79,11 @@ export const ExpandedOptions = ({
     hasSearchFilteredFolders,
     handleToggleSearchFilteredFolder,
     filteredTotalTestCases,
-  } = useSearchFilteredFolders({ searchQuery: pageSearchQuery, extraFilters: searchExtraFilters, allFoldersOverride: searchAllFolders });
+  } = useSearchFilteredFolders({
+    searchQuery: pageSearchQuery,
+    extraFilters: searchExtraFilters,
+    allFoldersOverride: searchAllFolders,
+  });
 
   const isDragAndDropEnabled = !!(onMoveFolder && onDuplicateFolder);
 
@@ -119,7 +123,11 @@ export const ExpandedOptions = ({
     handleSearchChange,
     handleSearchClear,
     handleMagnifierClick,
-  } = useFolderSearch({ folders: folderSearchSource, expandedIds: folderSearchExpandedIds, onToggleFolder: pageSearchQuery ? handleToggleSearchFilteredFolder : onToggleFolder });
+  } = useFolderSearch({
+    folders: folderSearchSource,
+    expandedIds: folderSearchExpandedIds,
+    onToggleFolder: pageSearchQuery ? handleToggleSearchFilteredFolder : onToggleFolder,
+  });
 
   const allItemsTitle =
     instanceKey === TMS_INSTANCE_KEY.MANUAL_LAUNCH
@@ -190,7 +198,12 @@ export const ExpandedOptions = ({
     }
 
     if (!searchQuery || hasAnyMatch) {
-      return renderFolderList(filteredFolders, effectiveExpandedIds, searchQuery, handleToggleFolder);
+      return renderFolderList(
+        filteredFolders,
+        effectiveExpandedIds,
+        searchQuery,
+        handleToggleFolder,
+      );
     }
 
     return <EmptySearchState />;
@@ -274,6 +287,21 @@ export const ExpandedOptions = ({
                 'expanded-options__sidebar-folders-wrapper--with-search': isSearchVisible,
               })}
             >
+              {isDraggingAny && !isOverFoldersZone && (
+                <div className={cx('expanded-options__drop-placeholder')}>
+                  <div className={cx('expanded-options__drop-placeholder-content')}>
+                    <i className={cx('expanded-options__drop-placeholder-icon')}>
+                      {Parser(FolderDropIcon)}
+                    </i>
+                    <span className={cx('expanded-options__drop-placeholder-text')}>
+                      {formatMessage({
+                        id: 'expandedOptions.dropPlaceholder',
+                        defaultMessage: 'Drop items here to move them into a folder',
+                      })}
+                    </span>
+                  </div>
+                </div>
+              )}
               <ScrollWrapper className={cx('expanded-options__scroll-wrapper-background')}>
                 <div
                   ref={dropZoneRef}
@@ -281,21 +309,6 @@ export const ExpandedOptions = ({
                     'expanded-options__sidebar-folders--dragging': isDraggingAny,
                   })}
                 >
-                  {isDraggingAny && !isOverFoldersZone && (
-                    <div className={cx('expanded-options__drop-placeholder')}>
-                      <div className={cx('expanded-options__drop-placeholder-content')}>
-                        <i className={cx('expanded-options__drop-placeholder-icon')}>
-                          {Parser(FolderDropIcon)}
-                        </i>
-                        <span className={cx('expanded-options__drop-placeholder-text')}>
-                          {formatMessage({
-                            id: 'expandedOptions.dropPlaceholder',
-                            defaultMessage: 'Drop items here to move them into a folder',
-                          })}
-                        </span>
-                      </div>
-                    </div>
-                  )}
                   <ul
                     className={cx('folders-tree', 'folders-tree--outer')}
                     role="tree"
@@ -319,9 +332,9 @@ export const ExpandedOptions = ({
     <TreeSortableContainer
       showDropConfirmation
       confirmationLabels={{
-      move: formatMessage(COMMON_LOCALE_KEYS.MOVE),
-      duplicate: formatMessage({ id: 'expandedOptions.duplicate', defaultMessage: 'Duplicate' }),
-      cancel: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+        move: formatMessage(COMMON_LOCALE_KEYS.MOVE),
+        duplicate: formatMessage({ id: 'expandedOptions.duplicate', defaultMessage: 'Duplicate' }),
+        cancel: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
       }}
       onMove={handleMoveFolder}
       onDuplicate={handleDuplicateFolder}

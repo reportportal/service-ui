@@ -206,7 +206,8 @@
 
     // Apply border only to the immediate folder title, not subfolders
     > .folders-tree__item > .folders-tree__item-content > .folders-tree__item-title {
-      border: 2px dashed var(--rp-ui-base-topaz-focused);
+      outline: 2px dashed var(--rp-ui-base-topaz-focused);
+      outline-offset: -2px;
       border-radius: 4px;
       background-color: var(--rp-ui-base-topaz-100);
     }
