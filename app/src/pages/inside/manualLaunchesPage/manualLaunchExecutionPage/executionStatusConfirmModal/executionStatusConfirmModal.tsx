@@ -54,7 +54,7 @@ const cx = createClassnames(styles);
 const ExecutionStatusConfirmModalComponent: FC<
   ExecutionStatusConfirmModalProps &
     InjectedFormProps<ExecutionStatusConfirmFormValues, ExecutionStatusConfirmModalProps>
-> = ({ data, handleSubmit, invalid }) => {
+> = ({ data, handleSubmit, invalid, dirty }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
@@ -109,6 +109,7 @@ const ExecutionStatusConfirmModalComponent: FC<
       size="large"
       okButton={okButton}
       cancelButton={cancelButton}
+      allowCloseOutside={!dirty}
       className={cx('execution-status-confirm-modal')}
     >
       <form
@@ -130,7 +131,7 @@ const ExecutionStatusConfirmModalComponent: FC<
 
         <div className={cx('checkbox-section')}>
           <FieldProvider name="postIssueToBts">
-            <InputCheckbox value={false}>{formatMessage(messages.postIssueToBts)}</InputCheckbox>
+            <InputCheckbox>{formatMessage(messages.postIssueToBts)}</InputCheckbox>
           </FieldProvider>
         </div>
 

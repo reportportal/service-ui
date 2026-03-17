@@ -31,6 +31,6 @@ export const messages = defineMessages({
   },
   executionStatusUpdated: {
     id: 'ManualLaunchExecutionPage.executionStatusUpdated',
-    defaultMessage: 'Execution status updated successfully',
+    defaultMessage: 'Execution status updated to {status}',
   },
 });

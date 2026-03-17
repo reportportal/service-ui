@@ -22,6 +22,7 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { fetchSuccessAction, fetchErrorAction } from 'controllers/fetch';
 import { FETCH_START } from 'controllers/fetch/constants';
+import { AppState } from 'types/store';
 import {
   showNotification,
   NOTIFICATION_TYPES,
@@ -396,9 +397,29 @@ function* updateManualLaunchExecutionStatus(
       },
     )) as TestCaseExecution;
 
+    yield put(fetchSuccessAction(ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE, data));
+
+    const executionsState = (yield select(
+      (state: AppState) => state.manualLaunchTestCaseExecutions?.data,
+    )) as { content: TestCaseExecution[]; page: Page } | null;
+
+    if (executionsState?.content) {
+      const updatedContent = executionsState.content.map((exec) =>
+        exec.id === data.id ? data : exec,
+      );
+
+      yield put(
+        fetchSuccessAction(MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE, {
+          data: {
+            content: updatedContent,
+            page: executionsState.page,
+          },
+        }),
+      );
+    }
+
     const capitalizedStatus = status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
 
-    yield put(fetchSuccessAction(ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE, data));
     yield put(
       showNotification({
         messageId: 'executionStatusUpdated',

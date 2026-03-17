@@ -18,7 +18,7 @@ import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
   markAs: {
-    id: 'ExecutionStatusDropdown.markAs',
+    id: 'ExecutionStatusPopover.markAs',
     defaultMessage: 'Mark as {status}',
   },
 });
