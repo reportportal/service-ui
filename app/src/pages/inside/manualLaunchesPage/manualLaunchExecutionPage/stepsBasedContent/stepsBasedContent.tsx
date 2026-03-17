@@ -22,13 +22,8 @@ import { CollapsibleSection } from 'components/collapsibleSection';
 import { RequirementsList } from 'pages/inside/common/requirementsList/requirementsList';
 import { Precondition } from 'pages/inside/testCaseLibraryPage/testCaseDetailsPage/precondition';
 import { StepsList } from 'pages/inside/testCaseLibraryPage/testCaseDetailsPage/stepsList';
-import {
-  Step as StepType,
-  Attachment as TestCaseLibraryAttachment,
-} from 'pages/inside/testCaseLibraryPage/types';
-import { AttachmentList, type Attachment } from 'pages/inside/common/attachmentList';
-import { StepsList } from 'pages/inside/common/testCaseList/stepsList';
 import { Step as StepType } from 'pages/inside/testCaseLibraryPage/types';
+import { type Attachment } from 'pages/inside/common/attachmentList';
 
 import { messages } from '../messages';
 import { commonMessages } from 'pages/inside/common/common-messages';
@@ -73,7 +68,7 @@ export const StepsBasedContent = ({ execution: { manualScenario } }: ExecutionCo
             preconditions={{
               value: preconditionValue || '',
               attachments: (manualScenario.preconditions?.attachments ||
-                []) as unknown as TestCaseLibraryAttachment[],
+                []) as unknown as Attachment[],
             }}
           />
         )}

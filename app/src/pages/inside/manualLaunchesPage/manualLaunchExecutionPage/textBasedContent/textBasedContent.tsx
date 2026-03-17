@@ -21,10 +21,8 @@ import { createClassnames } from 'common/utils';
 import { CollapsibleSection } from 'components/collapsibleSection';
 import { FieldSection } from 'pages/inside/common/fieldSection';
 import { RequirementsList } from 'pages/inside/common/requirementsList/requirementsList';
-import { AttachmentList } from 'pages/inside/testCaseLibraryPage/attachmentList';
-import { Scenario } from 'pages/inside/testCaseLibraryPage/testCaseDetailsPage/scenario';
-import { Attachment } from 'pages/inside/testCaseLibraryPage/types';
 import { AttachmentList, type Attachment } from 'pages/inside/common/attachmentList';
+import { Scenario } from 'pages/inside/testCaseLibraryPage/testCaseDetailsPage/scenario';
 
 import { messages } from '../messages';
 import { commonMessages } from 'pages/inside/common/common-messages';
