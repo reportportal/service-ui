@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   WrappedFieldArrayProps,
@@ -180,6 +180,7 @@ export const InstanceAssignment = ({
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [userOrgIds, setUserOrgIds] = useState<Set<number>>(new Set());
   const allOrganizations = fields.getAll();
+  const formContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const shouldFormBeOpen = isOpen || allOrganizations?.length === 0;
@@ -192,6 +193,12 @@ export const InstanceAssignment = ({
     setAreOrganizationsExhausted(totalOrganizationsInSystem > 0 && addedCount >= totalAvailableToAdd);
   }, [allOrganizations, totalOrganizationsInSystem, userOrgIds]);
 
+  useEffect(() => {
+    if (isOpen && formContainerRef.current) {
+      formContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, [isOpen]);
+
   const resetOrganization = () => {
     dispatch(
       change(formName, formNamespace, {
@@ -203,6 +210,8 @@ export const InstanceAssignment = ({
   };
 
   useEffect(() => {
+    let isActive = true;
+
     setSelectedOrganizationId(null);
     setSelectedProjectId(null);
     setOrganizationProjects([]);
@@ -219,13 +228,21 @@ export const InstanceAssignment = ({
       data: { limit: 1 },
     })
       .then((response: OrganizationsSearchesResponseData) => {
-        setTotalOrganizationsInSystem(response.total_count);
+        if (isActive) {
+          setTotalOrganizationsInSystem(response.total_count);
+        }
       })
-      .catch(() => setTotalOrganizationsInSystem(0));
+      .catch(() => {
+        if (isActive) {
+          setTotalOrganizationsInSystem(0);
+        }
+      });
 
     if (!invitedUserId) {
       setUserOrgIds(new Set());
-      return;
+      return () => {
+        isActive = false;
+      };
     }
 
     fetch(URLS.organizationSearches(), {
@@ -236,11 +253,22 @@ export const InstanceAssignment = ({
       },
     })
       .then((response: OrganizationsSearchesResponseData) => {
+        if (!isActive) {
+          return;
+        }
         const ids = new Set<number>((response.items ?? []).map((org) => org.id));
         setUserOrgIds(ids);
       })
-      .catch(() => setUserOrgIds(new Set()));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+      .catch(() => {
+        if (isActive) {
+          setUserOrgIds(new Set());
+        }
+      });
+
+    return () => {
+      isActive = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [invitedUserId]);
 
   const getRequestOrganizationsParams = (inputValue: string) => ({
@@ -331,7 +359,7 @@ export const InstanceAssignment = ({
         />
       </FieldElement>
       {isOpen || allOrganizations?.length === 0 ? (
-        <div className={cx('instance-assignment')}>
+        <div className={cx('instance-assignment')} ref={formContainerRef}>
           <div className={cx('autocomplete-wrapper')}>
             <FieldProvider name={FORM_FIELDS.ORGANIZATION.NAME}>
               <FieldErrorHint provideHint={false}>
