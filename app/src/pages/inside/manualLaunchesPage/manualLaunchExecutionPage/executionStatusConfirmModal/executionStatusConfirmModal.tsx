@@ -30,6 +30,7 @@ import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { withModal, hideModalAction } from 'controllers/modal';
 import { createClassnames } from 'common/utils';
+import { isEmpty } from 'es-toolkit/compat';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
@@ -66,8 +67,11 @@ const ExecutionStatusConfirmModalComponent: FC<
     setAttachedFiles((prev) => [...prev, ...files]);
   };
 
-  const handleFileRemove = (index: number) => {
-    setAttachedFiles((prev) => prev.filter((_, i) => i !== index));
+  const handleFileRemove = (fileId: string) => {
+    const index = attachedFiles.findIndex((f, i) => `${f.name}-${i}` === fileId);
+    if (index !== -1) {
+      setAttachedFiles((prev) => prev.filter((_, i) => i !== index));
+    }
   };
 
   const status = data?.status || 'passed';
@@ -160,7 +164,7 @@ const ExecutionStatusConfirmModalComponent: FC<
                 </FileDropArea.BrowseButton>
               </div>
             </div>
-            {attachedFiles.length > 0 && (
+            {!isEmpty(attachedFiles) && (
               <FileDropArea.AttachedFilesList
                 files={attachedFiles.map((file, index) => ({
                   id: `${file.name}-${index}`,
@@ -168,12 +172,7 @@ const ExecutionStatusConfirmModalComponent: FC<
                   file,
                   size: file.size,
                 }))}
-                onRemoveFile={(fileId) => {
-                  const index = attachedFiles.findIndex((f, i) => `${f.name}-${i}` === fileId);
-                  if (index !== -1) {
-                    handleFileRemove(index);
-                  }
-                }}
+                onRemoveFile={handleFileRemove}
               />
             )}
             <FileDropArea.DropZone icon={<div />} />
