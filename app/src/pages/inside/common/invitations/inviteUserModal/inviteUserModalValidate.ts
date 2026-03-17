@@ -42,10 +42,9 @@ export function validateInstance(formData: InviteUserInstanceFormData): InviteUs
   }
 
   const orgName = formData.organization?.name;
-    const shouldValidateOrganizationName =
+  const shouldValidateOrganizationName =
     formData.isAddingOrganization || formData.isAddingProject || organizations.length === 0;
-  const isOrganizationNameEmpty =
-    !orgName || (typeof orgName === 'string' && !orgName.trim());
+  const isOrganizationNameEmpty = !orgName || (typeof orgName === 'string' && !orgName.trim());
   if (shouldValidateOrganizationName && isOrganizationNameEmpty) {
     errors.organization = {
       name: commonValidators.requiredField(orgName),
