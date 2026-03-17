@@ -23,7 +23,7 @@ import {
   InfoIcon,
   Tooltip,
 } from '@reportportal/ui-kit';
-import { createClassnames } from 'common/utils';
+import { createClassnames, fetch } from 'common/utils';
 import { useIntl } from 'react-intl';
 import { messages } from 'common/constants/localization/invitationsLocalization';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -45,6 +45,7 @@ interface AddProjectFormProps {
   projects: Project[];
   organizationId: number;
   canEditByDefault: boolean;
+  invitedUserId?: number | null;
   onSave: (project: Project) => void;
   onCancel: () => void;
 }
@@ -52,6 +53,7 @@ interface AddProjectFormProps {
 export const AddProjectForm = ({
   organizationId,
   canEditByDefault,
+  invitedUserId,
   projects,
   onSave,
   onCancel,
@@ -60,10 +62,45 @@ export const AddProjectForm = ({
   const [canEdit, setCanEdit] = useState(canEditByDefault);
   const [items, setItems] = useState<ProjectsSearchesItem[]>([]);
   const [selectedProject, setSelectedProject] = useState<Pick<Project, 'id' | 'name'>>(null);
+  const [userProjectIds, setUserProjectIds] = useState<Set<number>>(new Set());
+  const [autocompleteKey, setAutocompleteKey] = useState(0);
 
   useEffect(() => {
     setCanEdit(canEditByDefault);
   }, [canEditByDefault]);
+
+  useEffect(() => {
+    let active = true;
+
+    setSelectedProject(null);
+    setUserProjectIds(new Set());
+    setAutocompleteKey((k) => k + 1);
+
+    if (!invitedUserId) {
+      return undefined;
+    }
+
+    fetch(URLS.organizationProjectsSearches(organizationId), {
+      method: 'post',
+      data: {
+        limit: 300,
+        search_criteria: [{ filter_key: 'userId', operation: 'EQ', value: String(invitedUserId) }],
+      },
+    })
+      .then((response: ProjectsSearchesResponseData) => {
+        if (!active) return;
+        const ids = new Set<number>((response.items ?? []).map((p) => p.id));
+        setUserProjectIds(ids);
+        setAutocompleteKey((k) => k + 1);
+      })
+      .catch(() => {
+        if (active) setUserProjectIds(new Set());
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [invitedUserId, organizationId]);
 
   const getRequestParams = (inputValue: string) => {
     return {
@@ -78,7 +115,9 @@ export const AddProjectForm = ({
   const makeOptions = (response: ProjectsSearchesResponseData) => {
     if (response.items) {
       const filtered = response.items.filter(
-        (item) => !projects.some((project: Project) => project.id === item.id),
+        (item) =>
+          !projects.some((project: Project) => project.id === item.id) &&
+          !userProjectIds.has(item.id),
       );
       setItems(filtered);
       return filtered.map((item) => item.name);
@@ -114,6 +153,7 @@ export const AddProjectForm = ({
     <div className={cx('form')}>
       <div className={cx('projects')}>
         <AsyncAutocompleteV2
+          key={autocompleteKey}
           inputProps={{
             clearable: !!selectedProject,
             onClear: () => setSelectedProject(null),

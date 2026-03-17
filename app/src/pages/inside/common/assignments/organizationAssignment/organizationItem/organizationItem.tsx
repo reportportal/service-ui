@@ -48,6 +48,7 @@ interface OrganizationItemProps {
   collapsable?: boolean;
   organizationRoleDisabledTooltip?: string | null;
   addProjectDisabled?: boolean;
+  invitedUserId?: number | null;
   onAddProjectFormToggle?: (orgId: number, isOpen: boolean) => void;
 }
 
@@ -58,6 +59,7 @@ export const OrganizationItem = ({
   collapsable,
   organizationRoleDisabledTooltip = null,
   addProjectDisabled = false,
+  invitedUserId,
   onAddProjectFormToggle,
 }: OrganizationItemProps) => {
   const disableOrganizationRole = Boolean(organizationRoleDisabledTooltip);
@@ -209,6 +211,7 @@ export const OrganizationItem = ({
                 projects={projects}
                 organizationId={id}
                 canEditByDefault={role === MANAGER}
+                invitedUserId={invitedUserId}
                 onSave={handleAddProject}
                 onCancel={() => setAddProjectFormOpen(false)}
               />
