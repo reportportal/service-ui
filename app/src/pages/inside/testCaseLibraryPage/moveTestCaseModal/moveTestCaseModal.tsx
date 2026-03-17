@@ -30,7 +30,7 @@ import { DestinationFolderSwitch } from '../testCaseFolders/shared/DestinationFo
 import { commonFolderMessages } from '../testCaseFolders/modals/commonFolderMessages';
 import { ExtendedTestCase } from '../types';
 import { useFolderModalMode } from '../hooks/useFolderModalMode';
-import { useModalButtons } from '../hooks/useModalButtons';
+import { useModalButtons } from 'hooks/useModalButtons';
 import { validateFolderModalForm } from '../utils/validateFolderModalForm';
 import { getFolderFromFormValues } from '../utils/getFolderFromFormValues';
 import { FolderModalFormValues, FOLDER_MODAL_INITIAL_VALUES } from '../utils/folderModalFormConfig';
@@ -126,13 +126,13 @@ const MoveTestCaseModal = reduxForm<FolderModalFormValues, MoveTestCaseModalProp
 
   const description = isBatch
     ? formatMessage(messages.moveTestCasesDescription, {
-      count: selectedTestCaseIds.length,
-      b: (text: ReactNode) => <b>{text}</b>,
-    })
+        count: selectedTestCaseIds.length,
+        b: (text: ReactNode) => <b>{text}</b>,
+      })
     : formatMessage(messages.moveTestCaseDescription, {
-      testCaseName: testCase?.name,
-      b: (text: ReactNode) => <b>{text}</b>,
-    });
+        testCaseName: testCase?.name,
+        b: (text: ReactNode) => <b>{text}</b>,
+      });
 
   const excludeFolderIds = testCase?.testFolder?.id ? [testCase.testFolder.id] : [];
 

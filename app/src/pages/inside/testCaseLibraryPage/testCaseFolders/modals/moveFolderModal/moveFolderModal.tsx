@@ -31,7 +31,7 @@ import { TransformedFolder } from 'controllers/testCase';
 import { DestinationFolderSwitch } from '../../shared/DestinationFolderSwitch';
 import { commonFolderMessages } from '../commonFolderMessages';
 import { useFolderModalMode } from '../../../hooks/useFolderModalMode';
-import { useModalButtons } from '../../../hooks/useModalButtons';
+import { useModalButtons } from 'hooks/useModalButtons';
 import { validateFolderModalForm } from '../../../utils/validateFolderModalForm';
 import { getFolderDestinationFromFormValues } from '../../../utils/getFolderDestinationFromFormValues';
 import {

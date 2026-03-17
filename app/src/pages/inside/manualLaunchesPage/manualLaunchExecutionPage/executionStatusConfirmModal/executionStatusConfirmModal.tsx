@@ -36,8 +36,8 @@ import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { useManualLaunchId } from 'hooks/useTypedSelector';
 import { updateManualLaunchExecutionStatusAction } from 'controllers/manualLaunch';
 import { projectKeySelector } from 'controllers/project';
-import { MAX_FILE_SIZE } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/constants';
-import { useModalButtons } from 'pages/inside/testCaseLibraryPage/hooks/useModalButtons';
+import { MAX_FILE_SIZE } from 'common/constants/fileConstants';
+import { useModalButtons } from 'hooks/useModalButtons';
 
 import type { ExecutionStatusConfirmFormValues, ExecutionStatusConfirmModalProps } from '../types';
 import {

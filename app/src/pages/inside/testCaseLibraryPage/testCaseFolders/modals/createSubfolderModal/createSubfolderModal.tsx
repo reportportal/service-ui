@@ -38,7 +38,7 @@ import { commonFolderMessages } from '../commonFolderMessages';
 import { CREATE_SUBFOLDER_FORM_NAME } from '../constants';
 import { FolderFormValues } from '../types';
 import { FolderNameField } from '../folderFormFields';
-import { useModalButtons } from '../../../hooks/useModalButtons';
+import { useModalButtons } from 'hooks/useModalButtons';
 
 import styles from './createSubfolderModal.scss';
 

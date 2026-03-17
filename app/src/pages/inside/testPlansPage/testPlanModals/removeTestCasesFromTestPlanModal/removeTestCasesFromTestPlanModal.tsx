@@ -24,7 +24,7 @@ import { createClassnames } from 'common/utils';
 import { withModal, hideModalAction } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
-import { useModalButtons } from 'pages/inside/testCaseLibraryPage/hooks/useModalButtons';
+import { useModalButtons } from 'hooks/useModalButtons';
 
 import { useRemoveTestCasesFromTestPlan } from './useRemoveTestCasesFromTestPlan';
 import { messages } from './messages';
