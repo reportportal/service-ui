@@ -208,6 +208,7 @@
   &__drop-placeholder-content {
     @include flex-center(column, center, center);
     gap: 16px;
+
     position: relative;
     z-index: 11;
   }
