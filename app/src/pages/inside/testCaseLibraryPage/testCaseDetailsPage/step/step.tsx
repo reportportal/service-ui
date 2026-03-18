@@ -21,6 +21,7 @@ import { createClassnames } from 'common/utils';
 import { commonMessages } from 'pages/inside/common/common-messages';
 
 import { AttachmentList, type Attachment } from '../../../common/attachmentList';
+import { hasStepContent } from '../../../common/scenarioUtils';
 
 import styles from './step.scss';
 
@@ -35,6 +36,10 @@ interface StepProps {
 
 export const Step = ({ index, instructions = '', expectedResult = '', attachments }: StepProps) => {
   const { formatMessage } = useIntl();
+
+  if (!hasStepContent({ instructions, expectedResult, attachments })) {
+    return null;
+  }
 
   return (
     <li className={cx('step')}>

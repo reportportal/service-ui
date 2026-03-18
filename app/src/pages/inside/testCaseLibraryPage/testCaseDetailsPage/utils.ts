@@ -16,29 +16,13 @@
 
 import { isEmpty } from 'es-toolkit/compat';
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
-import type { Attachment } from 'pages/inside/common/attachmentList';
+import {
+  hasStepContent,
+  hasStepsPreconditionContent,
+  hasScenarioContent,
+} from 'pages/inside/common/scenarioUtils';
 
-import { ManualScenario, Step, Tag } from '../types';
-
-export const hasStepContent = (
-  step: Pick<Step, 'instructions' | 'expectedResult' | 'attachments'>,
-) => !!step?.instructions?.trim() || !!step?.expectedResult?.trim() || !isEmpty(step?.attachments);
-
-export const hasStepsPreconditionContent = (preconditions: {
-  value?: string;
-  attachments?: Attachment[];
-}) => {
-  return Boolean(preconditions?.value || !isEmpty(preconditions?.attachments));
-};
-
-export const hasScenarioContent = (manualScenario: ManualScenario) => {
-  return Boolean(
-    manualScenario?.preconditions?.value ||
-    !isEmpty(manualScenario?.preconditions?.attachments) ||
-    manualScenario?.instructions ||
-    manualScenario?.expectedResult,
-  );
-};
+import { ManualScenario, Tag } from '../types';
 
 export const checkScenario = (manualScenario: ManualScenario | undefined): boolean => {
   if (!manualScenario) return true;

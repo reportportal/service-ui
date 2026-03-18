@@ -19,7 +19,7 @@ import { isString } from 'es-toolkit';
 
 import { ManualScenarioDto, ManualScenarioType, CreateTestCaseFormData, Attribute } from '../types';
 import { NewFolderData, isNewFolderData } from '../utils/getFolderFromFormValues';
-import { hasStepContent } from '../testCaseDetailsPage/utils';
+import { hasStepContent } from '../../common/scenarioUtils';
 
 export const buildManualScenario = (payload: CreateTestCaseFormData): ManualScenarioDto => {
   const commonData = {

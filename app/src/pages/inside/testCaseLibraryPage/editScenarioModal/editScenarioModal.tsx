@@ -26,7 +26,7 @@ import { UseModalData } from 'common/hooks';
 import { commonMessages } from '../commonMessages';
 import { CreateTestCaseFormData, TestStep } from '../types';
 import { TEST_CASE_FORM_INITIAL_VALUES } from '../createTestCaseModal/constants';
-import { hasStepContent } from '../testCaseDetailsPage/utils';
+import { hasStepContent } from '../../common/scenarioUtils';
 import { useTestCase } from '../hooks/useTestCase';
 import { useTestCaseFormInitialization } from '../hooks/useTestCaseFormInitialization';
 import { EditScenarioModalContent } from './editScenarioModalContent';
