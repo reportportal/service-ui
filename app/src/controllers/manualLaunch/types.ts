@@ -62,7 +62,6 @@ export interface UpdateManualLaunchExecutionStatusParams {
   attachments?: File[];
 }
 
-// State types
 export interface ManualLaunchState {
   data: {
     content: Launch[] | null;
@@ -154,6 +153,7 @@ export interface ExecutionComment {
 
 export interface TestFolder {
   id: number;
+  name?: string;
   testItemId?: number; // Reference to link folder with test case executions
 }
 

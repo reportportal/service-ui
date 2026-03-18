@@ -65,8 +65,13 @@ export const ManualLaunchExecutionPage = () => {
   const [showStatusButtons, setShowStatusButtons] = useState(false);
 
   const launchName = launch?.name ?? '';
-  const folder = folders.find((f) => f.id === execution?.testFolder?.id);
-  const folderName = folder?.name ?? '';
+
+  const folderName =
+    execution?.testFolder?.name ||
+    folders.find((f) => f.id === execution?.testFolder?.testItemId)?.name ||
+    '';
+
+  const folderId = execution?.testFolder?.testItemId;
 
   const breadcrumbDescriptors = [
     {
@@ -87,11 +92,15 @@ export const ManualLaunchExecutionPage = () => {
           }
         : undefined,
     },
-    ...(folderName
+    ...(folderName && folderId
       ? [
           {
             id: 'folder',
             title: folderName,
+            link: {
+              type: MANUAL_LAUNCH_DETAILS_PAGE,
+              payload: { organizationSlug, projectSlug, launchId, folderId },
+            },
           },
         ]
       : []),
