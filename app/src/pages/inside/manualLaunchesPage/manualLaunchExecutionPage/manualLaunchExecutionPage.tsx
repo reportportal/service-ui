@@ -99,7 +99,12 @@ export const ManualLaunchExecutionPage = () => {
             title: folderName,
             link: {
               type: MANUAL_LAUNCH_DETAILS_PAGE,
-              payload: { organizationSlug, projectSlug, launchId, folderId },
+              payload: {
+                organizationSlug,
+                projectSlug,
+                launchId,
+                manualLaunchPageRoute: `folder/${folderId}`,
+              },
             },
           },
         ]

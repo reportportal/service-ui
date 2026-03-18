@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { isNil } from 'es-toolkit/compat';
 
 import {
   manualLaunchFoldersSelector,
@@ -24,10 +23,10 @@ import {
   manualLaunchTestCaseExecutionsPageSelector,
   isLoadingManualLaunchFoldersSelector,
   isLoadingManualLaunchTestCaseExecutionsSelector,
-  getManualLaunchTestCaseExecutionsAction,
-  defaultManualLaunchesQueryParams,
+  urlManualLaunchFolderIdSelector,
 } from 'controllers/manualLaunch';
-import { useManualLaunchId } from 'hooks/useTypedSelector';
+import { MANUAL_LAUNCH_DETAILS_PAGE } from 'controllers/pages';
+import { useManualLaunchId, useProjectDetails } from 'hooks/useTypedSelector';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { transformFoldersToDisplay } from 'common/utils/folderUtils';
 import { ExpandedOptions } from '../../../common/expandedOptions';
@@ -36,48 +35,47 @@ import { ManualLaunchExecutions } from '../manualLaunchExecutions';
 export const ManualLaunchFolders = () => {
   const dispatch = useDispatch();
   const launchId = useManualLaunchId();
+  const { organizationSlug, projectSlug } = useProjectDetails();
   const folders = useSelector(manualLaunchFoldersSelector);
   const executions = useSelector(manualLaunchTestCaseExecutionsSelector);
   const pageInfo = useSelector(manualLaunchTestCaseExecutionsPageSelector);
   const isLoadingFolders = useSelector(isLoadingManualLaunchFoldersSelector);
   const isLoadingExecutions = useSelector(isLoadingManualLaunchTestCaseExecutionsSelector);
 
-  const [activeFolderId, setActiveFolderId] = useState<number | null>(null);
+  const urlFolderId = useSelector(urlManualLaunchFolderIdSelector);
+  const urlFolderIdNumber = urlFolderId ? Number(urlFolderId) : null;
 
   const transformedFolders = useMemo(() => transformFoldersToDisplay(folders), [folders]);
 
-  const fetchExecutions = useCallback(
+  const navigateToFolder = useCallback(
     (folderId?: number) => {
-      if (!launchId) return;
-
-      dispatch(
-        getManualLaunchTestCaseExecutionsAction({
+      dispatch({
+        type: MANUAL_LAUNCH_DETAILS_PAGE,
+        payload: {
+          organizationSlug,
+          projectSlug,
           launchId,
-          ...(!isNil(folderId) && { folderId }),
-          offset: defaultManualLaunchesQueryParams.offset,
-          limit: defaultManualLaunchesQueryParams.limit,
-        }),
-      );
+          ...(folderId && { manualLaunchPageRoute: `folder/${folderId}` }),
+        },
+      });
     },
-    [dispatch, launchId],
+    [dispatch, organizationSlug, projectSlug, launchId],
   );
 
   const handleFolderClick = useCallback(
     (folderId: number) => {
-      setActiveFolderId(folderId);
-      fetchExecutions(folderId);
+      navigateToFolder(folderId);
     },
-    [fetchExecutions],
+    [navigateToFolder],
   );
 
   const handleAllExecutionsClick = useCallback(() => {
-    setActiveFolderId(null);
-    fetchExecutions();
-  }, [fetchExecutions]);
+    navigateToFolder();
+  }, [navigateToFolder]);
 
   return (
     <ExpandedOptions
-      activeFolderId={activeFolderId}
+      activeFolderId={urlFolderIdNumber}
       folders={transformedFolders}
       instanceKey={TMS_INSTANCE_KEY.MANUAL_LAUNCH}
       setAllTestCases={handleAllExecutionsClick}

@@ -33,6 +33,7 @@ export interface BaseAppState {
       testPlanId?: string;
       testCaseId?: string;
       launchId?: string;
+      manualLaunchPageRoute?: string;
     };
     prev?: {
       payload?: ProjectDetails;

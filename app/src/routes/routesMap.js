@@ -387,10 +387,11 @@ const routesMap = {
     },
   },
   [MANUAL_LAUNCH_DETAILS_PAGE]: {
-    path: '/organizations/:organizationSlug/projects/:projectSlug/manualLaunches/:launchId',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/manualLaunches/:launchId/:manualLaunchPageRoute*',
     thunk: (dispatch, getState) => {
       const state = getState();
-      const launchId = state.location?.payload?.launchId;
+      const { launchId, manualLaunchPageRoute } = state.location?.payload || {};
+      const folderId = manualLaunchPageRoute?.split('/')[1];
 
       if (launchId) {
         dispatch(getManualLaunchAction({ launchId }));
@@ -400,7 +401,7 @@ const routesMap = {
           getManualLaunchFoldersAction({
             launchId,
             offset: 0,
-            limit: 100, // TODO do we need to implement folder click and fetch test executions for certain folder?
+            limit: 100,
           }),
         );
 
@@ -414,6 +415,7 @@ const routesMap = {
         dispatch(
           getManualLaunchTestCaseExecutionsAction({
             launchId,
+            ...(folderId && { folderId }),
             offset,
             limit,
           }),
