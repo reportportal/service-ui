@@ -47,6 +47,7 @@ import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocom
 import {
   OrganizationsSearchesResponseData,
   OrganizationSearchesItem,
+  ORGANIZATIONS_SEARCH_KEY,
 } from 'controllers/instance/organizations';
 import {
   ProjectsSearchesResponseData,
@@ -172,7 +173,7 @@ export const InstanceAssignment = ({
     OrganizationSearchesItem[]
   >([]);
   const [areOrganizationsExhausted, setAreOrganizationsExhausted] = useState(false);
-  const organizationSearchQueryRef = useRef('');
+  const [totalOrganizationsInSystem, setTotalOrganizationsInSystem] = useState(0);
   const [organizationProjects, setOrganizationProjects] = useState<ProjectsSearchesItem[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
   const [selectedOrganizationId, setSelectedOrganizationId] = useState<number | null>(null);
@@ -180,11 +181,24 @@ export const InstanceAssignment = ({
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [userOrgIds, setUserOrgIds] = useState<Set<number>>(new Set());
   const allOrganizations = fields.getAll();
+  const formContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const shouldFormBeOpen = isOpen || allOrganizations?.length === 0;
     dispatch(change(formName, 'isAddingOrganization', shouldFormBeOpen));
   }, [isOpen, allOrganizations?.length, dispatch, formName]);
+
+  useEffect(() => {
+    const addedCount = (allOrganizations || []).length;
+    const totalAvailableToAdd = totalOrganizationsInSystem - userOrgIds.size;
+    setAreOrganizationsExhausted(totalOrganizationsInSystem > 0 && addedCount >= totalAvailableToAdd);
+  }, [allOrganizations, totalOrganizationsInSystem, userOrgIds]);
+
+  useEffect(() => {
+    if (isOpen && formContainerRef.current) {
+      formContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, [isOpen]);
 
   const resetOrganization = () => {
     dispatch(
@@ -198,19 +212,39 @@ export const InstanceAssignment = ({
   };
 
   useEffect(() => {
+    let isActive = true;
+
     setSelectedOrganizationId(null);
     setSelectedProjectId(null);
     setOrganizationProjects([]);
     setTotalProjects(0);
     setNotAssignedOrganizations([]);
     setAreOrganizationsExhausted(false);
+    setTotalOrganizationsInSystem(0);
     setIsOpen(true);
     fields.removeAll();
     resetOrganization();
 
+    fetch(URLS.organizationSearches(), {
+      method: 'post',
+      data: { limit: 1 },
+    })
+      .then((response: OrganizationsSearchesResponseData) => {
+        if (isActive) {
+          setTotalOrganizationsInSystem(response.total_count);
+        }
+      })
+      .catch(() => {
+        if (isActive) {
+          setTotalOrganizationsInSystem(0);
+        }
+      });
+
     if (!invitedUserId) {
       setUserOrgIds(new Set());
-      return;
+      return () => {
+        isActive = false;
+      };
     }
 
     fetch(URLS.organizationSearches(), {
@@ -221,27 +255,33 @@ export const InstanceAssignment = ({
       },
     })
       .then((response: OrganizationsSearchesResponseData) => {
+        if (!isActive) {
+          return;
+        }
         const ids = new Set<number>((response.items ?? []).map((org) => org.id));
         setUserOrgIds(ids);
       })
-      .catch(() => setUserOrgIds(new Set()));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+      .catch(() => {
+        if (isActive) {
+          setUserOrgIds(new Set());
+        }
+      });
+
+    return () => {
+      isActive = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [invitedUserId]);
 
-  const getRequestOrganizationsParams = (inputValue: string) => {
-    organizationSearchQueryRef.current = inputValue;
-    return {
-      method: 'post',
-      data: prepareQueryFilters({ limit: 20, [SEARCH_KEY]: inputValue }),
-    };
-  };
+  const getRequestOrganizationsParams = (inputValue: string) => ({
+    method: 'post',
+    data: prepareQueryFilters({ limit: 20, [ORGANIZATIONS_SEARCH_KEY]: inputValue }),
+  });
 
-  const getRequestProjectsParams = (inputValue: string) => {
-    return {
-      method: 'post',
-      data: prepareQueryFilters({ limit: 20, [SEARCH_KEY]: inputValue }),
-    };
-  };
+  const getRequestProjectsParams = (inputValue: string) => ({
+    method: 'post',
+    data: prepareQueryFilters({ limit: 20, [SEARCH_KEY]: inputValue }),
+  });
 
   const makeOrganizationsOptions = (response: OrganizationsSearchesResponseData) => {
     if (response.items) {
@@ -253,15 +293,10 @@ export const InstanceAssignment = ({
 
       setNotAssignedOrganizations(filteredOrganizations);
 
-      if (!organizationSearchQueryRef.current) {
-        setAreOrganizationsExhausted(response.total_count <= (allOrganizations?.length ?? 0));
-      }
-
       return filteredOrganizations.map(({ name }) => name);
     }
 
     setNotAssignedOrganizations([]);
-    setAreOrganizationsExhausted(false);
     return [];
   };
 
@@ -326,7 +361,7 @@ export const InstanceAssignment = ({
         />
       </FieldElement>
       {isOpen || allOrganizations?.length === 0 ? (
-        <div className={cx('instance-assignment')}>
+        <div className={cx('instance-assignment')} ref={formContainerRef}>
           <div className={cx('autocomplete-wrapper')}>
             <FieldProvider name={FORM_FIELDS.ORGANIZATION.NAME}>
               <FieldErrorHint provideHint={false}>

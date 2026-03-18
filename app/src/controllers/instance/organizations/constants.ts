@@ -45,6 +45,8 @@ export enum SortingFields {
 
 export const ORGANIZATIONS_DEFAULT_SORT_COLUMN = SortingFields.NAME;
 
+export const ORGANIZATIONS_SEARCH_KEY = 'filter.CNT.name';
+
 export const ERROR_CODES = {
   NOT_FOUND: 40429,
 };
