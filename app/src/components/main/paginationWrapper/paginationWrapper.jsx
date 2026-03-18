@@ -39,6 +39,7 @@ export const PaginationWrapper = ({
   const { captions } = usePagination({});
   const { trackEvent } = useTracking();
   const isBulkPanelVisible = bulkPanelProps?.items?.length > 0;
+  const bulkPanelPortalRoot = document.getElementById('modal-root') || document.body;
 
   const changePageSizeHandle = (newSize) => {
     changePageSize(newSize);
@@ -60,7 +61,7 @@ export const PaginationWrapper = ({
               {...paginationProps}
             />
           </div>
-          {isBulkPanelVisible && <BulkPanel {...bulkPanelProps} />}
+          {isBulkPanelVisible && <BulkPanel {...bulkPanelProps} portalRoot={bulkPanelPortalRoot} />}
         </div>
       )}
     </div>
