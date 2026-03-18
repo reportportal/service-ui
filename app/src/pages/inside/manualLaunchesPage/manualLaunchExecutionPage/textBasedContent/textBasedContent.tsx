@@ -23,7 +23,7 @@ import { FieldSection } from 'pages/inside/common/fieldSection';
 import { RequirementsList } from 'pages/inside/common/requirementsList/requirementsList';
 import { AttachmentList, type Attachment } from 'pages/inside/common/attachmentList';
 import { Scenario } from 'pages/inside/common/scenario';
-import { hasScenarioContent } from 'pages/inside/testCaseLibraryPage/testCaseDetailsPage/utils';
+import { hasScenarioContent } from 'pages/inside/common/scenarioUtils';
 
 import { messages } from '../messages';
 import { commonMessages } from 'pages/inside/common/common-messages';

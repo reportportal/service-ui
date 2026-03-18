@@ -22,7 +22,7 @@ import { CollapsibleSection } from 'components/collapsibleSection';
 import { RequirementsList } from 'pages/inside/common/requirementsList/requirementsList';
 import { Precondition } from 'pages/inside/testCaseLibraryPage/testCaseDetailsPage/precondition';
 import { StepsList } from 'pages/inside/testCaseLibraryPage/testCaseDetailsPage/stepsList';
-import { hasStepContent } from 'pages/inside/testCaseLibraryPage/testCaseDetailsPage/utils';
+import { hasStepContent } from 'pages/inside/common/scenarioUtils';
 import { Step as StepType } from 'pages/inside/testCaseLibraryPage/types';
 import { type Attachment } from 'pages/inside/common/attachmentList';
 

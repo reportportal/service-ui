@@ -47,11 +47,11 @@ import { StepsList } from './stepsList';
 import { Scenario } from '../../common/scenario';
 import { TagPopover } from '../tagPopover';
 import {
-  checkScenario,
   hasStepContent,
   hasStepsPreconditionContent,
   hasScenarioContent,
-} from './utils';
+} from '../../common/scenarioUtils';
+import { checkScenario } from './utils';
 
 import styles from './testCaseDetailsPage.scss';
 

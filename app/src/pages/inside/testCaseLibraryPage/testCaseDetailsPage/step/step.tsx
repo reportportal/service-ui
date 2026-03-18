@@ -21,7 +21,7 @@ import { createClassnames } from 'common/utils';
 import { commonMessages } from 'pages/inside/common/common-messages';
 
 import { AttachmentList, type Attachment } from '../../../common/attachmentList';
-import { hasStepContent } from '../utils';
+import { hasStepContent } from '../../../common/scenarioUtils';
 
 import styles from './step.scss';
 
