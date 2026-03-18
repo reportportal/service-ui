@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { isString } from 'es-toolkit/compat';
 import { Page } from 'types/common';
 import { AppState } from 'types/store';
 
@@ -105,3 +106,14 @@ export const activeManualLaunchExecutionSelector = (state: AppState): TestCaseEx
 
 export const isLoadingActiveManualLaunchExecutionSelector = (state: AppState): boolean =>
   Boolean(activeManualLaunchExecutionStateSelector(state)?.isLoading);
+
+export const urlManualLaunchFolderIdSelector = (state: AppState): string => {
+  const payload = state.location?.payload;
+  const manualLaunchPageRoute = payload?.manualLaunchPageRoute;
+
+  if (manualLaunchPageRoute && isString(manualLaunchPageRoute)) {
+    return manualLaunchPageRoute.split('/')[1] || '';
+  }
+
+  return '';
+};
