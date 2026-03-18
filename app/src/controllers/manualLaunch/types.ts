@@ -44,6 +44,7 @@ export interface GetManualLaunchTestCaseExecutionsParams {
   launchId: string | number;
   offset?: string | number;
   limit?: string | number;
+  folderId?: string | number;
 }
 
 export interface GetManualLaunchExecutionParams {

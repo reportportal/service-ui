@@ -15,7 +15,8 @@
  */
 
 import { useCallback, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { isNil } from 'es-toolkit/compat';
 
 import {
   manualLaunchFoldersSelector,
@@ -23,13 +24,18 @@ import {
   manualLaunchTestCaseExecutionsPageSelector,
   isLoadingManualLaunchFoldersSelector,
   isLoadingManualLaunchTestCaseExecutionsSelector,
+  getManualLaunchTestCaseExecutionsAction,
+  defaultManualLaunchesQueryParams,
 } from 'controllers/manualLaunch';
+import { useManualLaunchId } from 'hooks/useTypedSelector';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { transformFoldersToDisplay } from 'common/utils/folderUtils';
 import { ExpandedOptions } from '../../../common/expandedOptions';
 import { ManualLaunchExecutions } from '../manualLaunchExecutions';
 
 export const ManualLaunchFolders = () => {
+  const dispatch = useDispatch();
+  const launchId = useManualLaunchId();
   const folders = useSelector(manualLaunchFoldersSelector);
   const executions = useSelector(manualLaunchTestCaseExecutionsSelector);
   const pageInfo = useSelector(manualLaunchTestCaseExecutionsPageSelector);
@@ -40,14 +46,34 @@ export const ManualLaunchFolders = () => {
 
   const transformedFolders = useMemo(() => transformFoldersToDisplay(folders), [folders]);
 
-  const handleFolderClick = useCallback((folderId: number) => {
-    setActiveFolderId(folderId);
-    // TODO: Fetch executions for specific folder from backend
-  }, []);
+  const fetchExecutions = useCallback(
+    (folderId?: number) => {
+      if (!launchId) return;
+
+      dispatch(
+        getManualLaunchTestCaseExecutionsAction({
+          launchId,
+          ...(!isNil(folderId) && { folderId }),
+          offset: defaultManualLaunchesQueryParams.offset,
+          limit: defaultManualLaunchesQueryParams.limit,
+        }),
+      );
+    },
+    [dispatch, launchId],
+  );
+
+  const handleFolderClick = useCallback(
+    (folderId: number) => {
+      setActiveFolderId(folderId);
+      fetchExecutions(folderId);
+    },
+    [fetchExecutions],
+  );
 
   const handleAllExecutionsClick = useCallback(() => {
     setActiveFolderId(null);
-  }, []);
+    fetchExecutions();
+  }, [fetchExecutions]);
 
   return (
     <ExpandedOptions

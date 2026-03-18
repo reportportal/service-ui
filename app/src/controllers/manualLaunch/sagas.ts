@@ -17,7 +17,7 @@
 import { Action } from 'redux';
 import { takeLatest, call, select, all, put } from 'redux-saga/effects';
 import { isString } from 'es-toolkit';
-import { isEmpty } from 'es-toolkit/compat';
+import { isEmpty, isNil } from 'es-toolkit/compat';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -49,6 +49,7 @@ import {
   MANUAL_LAUNCH_FOLDERS_NAMESPACE,
   MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
   ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE,
+  TEST_FOLDER_ID_FILTER_KEY,
   defaultManualLaunchesQueryParams,
 } from './constants';
 import {
@@ -216,7 +217,7 @@ function* getManualLaunchTestCaseExecutions(
 ): Generator {
   try {
     const projectKey = (yield select(projectKeySelector)) as string;
-    const { launchId, offset, limit } = action.payload;
+    const { launchId, offset, limit, folderId } = action.payload;
 
     yield put({
       type: FETCH_START,
@@ -225,7 +226,12 @@ function* getManualLaunchTestCaseExecutions(
     });
 
     const typedURLS = URLS as UrlsHelper;
-    const params = { offset, limit };
+    const params: Record<string, string | number> = { offset, limit };
+
+    if (!isNil(folderId)) {
+      params[TEST_FOLDER_ID_FILTER_KEY as string] = folderId;
+    }
+
     const data = (yield call(
       fetch,
       typedURLS.manualLaunchTestCaseExecutions(projectKey, launchId, params),

@@ -33,6 +33,8 @@ export const ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE = 'activeManualLaunchExecu
 export const MANUAL_SCENARIO_TYPE_TEXT = 'TEXT' as const;
 export const MANUAL_SCENARIO_TYPE_STEPS = 'STEPS' as const;
 
+export const TEST_FOLDER_ID_FILTER_KEY = 'filter.eq.testFolderId' as const;
+
 export const defaultManualLaunchesQueryParams = {
   limit: 20,
   offset: 0,
