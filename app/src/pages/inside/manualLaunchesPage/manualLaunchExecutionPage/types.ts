@@ -17,6 +17,9 @@
 import type { MessageDescriptor } from 'react-intl';
 
 import type { TestCaseExecution } from 'controllers/manualLaunch';
+import type { UseModalData } from 'common/hooks';
+
+export type ExecutionStatusType = 'passed' | 'failed' | 'skipped';
 
 export interface ExecutionContentProps {
   execution: TestCaseExecution;
@@ -26,3 +29,32 @@ export interface StatusButtonConfig {
   status: string;
   message: MessageDescriptor;
 }
+
+export interface StatusConfig {
+  label: MessageDescriptor;
+  colorClass: string;
+}
+
+export interface ExecutionStatusDropdownProps {
+  executionId: number;
+  currentStatus: string;
+}
+
+export interface ExecutionStatusButtonsProps {
+  executionId: number;
+}
+
+export interface ExecutionStatusData {
+  executionId: number;
+  status: ExecutionStatusType;
+}
+
+export type ExecutionStatusConfirmModalData = ExecutionStatusData;
+
+export interface ExecutionStatusConfirmFormValues {
+  comment: string;
+  postIssueToBts: boolean;
+  attachments: File[];
+}
+
+export type ExecutionStatusConfirmModalProps = UseModalData<ExecutionStatusConfirmModalData>;

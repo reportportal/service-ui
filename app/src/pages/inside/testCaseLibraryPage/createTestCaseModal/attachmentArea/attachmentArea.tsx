@@ -36,7 +36,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 import { messages as commonMessages } from '../messages';
 import { messages as attachmentAreaMessages } from './messages';
-import { MAX_FILE_SIZE } from '../constants';
+import { MAX_FILE_SIZE } from 'common/constants/fileConstants';
 import { useTmsFileUpload } from '../useTmsFileUpload';
 
 import styles from './attachmentArea.scss';

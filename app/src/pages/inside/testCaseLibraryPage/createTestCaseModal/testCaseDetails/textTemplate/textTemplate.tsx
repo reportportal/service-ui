@@ -23,7 +23,7 @@ import { FieldErrorHint, FieldProvider } from 'components/fields';
 
 import { messages as commonMessages } from '../../messages';
 import { messages } from './messages';
-import { MAX_FILE_SIZE } from '../../constants';
+import { MAX_FILE_SIZE } from 'common/constants/fileConstants';
 import { useTmsFileUpload } from '../../useTmsFileUpload';
 
 import styles from './textTemplate.scss';

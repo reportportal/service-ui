@@ -14,14 +14,7 @@
  * limitations under the License.
  */
 
-export enum ExecutionStatus {
-  TO_RUN = 'TO_RUN',
-  IN_PROGRESS = 'IN_PROGRESS',
-  PASSED = 'PASSED',
-  FAILED = 'FAILED',
-  SKIPPED = 'SKIPPED',
-}
-
-export interface ExecutionStatusChipProps {
-  status: string;
-}
+/**
+ * Maximum file size for uploads (128 MB)
+ */
+export const MAX_FILE_SIZE = 128 * 1024 * 1024;

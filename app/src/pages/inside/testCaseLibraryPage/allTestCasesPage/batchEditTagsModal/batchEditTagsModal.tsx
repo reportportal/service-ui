@@ -18,12 +18,7 @@ import { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { noop } from 'es-toolkit';
-import {
-  BubblesLoader,
-  Button,
-  Modal,
-  PlusIcon,
-} from '@reportportal/ui-kit';
+import { BubblesLoader, Button, Modal, PlusIcon } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { UseModalData } from 'common/hooks';
@@ -31,8 +26,7 @@ import { createClassnames } from 'common/utils';
 import { withModal } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
-
-import { useModalButtons } from '../../hooks/useModalButtons';
+import { useModalButtons } from 'hooks/useModalButtons';
 import { messages } from './messages';
 import { EditableTagsSection } from '../../editableTagsSection';
 import { useBatchEditTags } from '../../hooks/useBatchEditTags';
@@ -60,33 +54,24 @@ type BatchEditTagsModalProps = UseModalData<BatchEditTagsModalData>;
 type BatchEditTagsModalFormValues = {
   tagsToRemove: string[];
   tagsToAdd: string[];
-}
+};
 
-const BatchEditTagsModal = reduxForm<
-  BatchEditTagsModalFormValues,
-  BatchEditTagsModalProps
->({
+const BatchEditTagsModal = reduxForm<BatchEditTagsModalFormValues, BatchEditTagsModalProps>({
   form: BATCH_EDIT_TAGS_FORM_NAMES.form,
   destroyOnUnmount: true,
 })(({
   dirty,
   pristine,
-  data: {
-    selectedTestCaseIds = [],
-    count = 0,
-    onClearSelection,
-  },
+  data: { selectedTestCaseIds = [], count = 0, onClearSelection },
   handleSubmit,
   change,
-}: BatchEditTagsModalProps & InjectedFormProps<BatchEditTagsModalFormValues, BatchEditTagsModalProps>) => {
+}: BatchEditTagsModalProps &
+  InjectedFormProps<BatchEditTagsModalFormValues, BatchEditTagsModalProps>) => {
   const { formatMessage } = useIntl();
   const [tagsList, setTagsList] = useState<Attribute[]>([]);
-  const {
-    getTags,
-    updateTags,
-    isLoadingTagsUpdating,
-    isLoadingTags,
-  } = useBatchEditTags({ onSuccess: onClearSelection });
+  const { getTags, updateTags, isLoadingTagsUpdating, isLoadingTags } = useBatchEditTags({
+    onSuccess: onClearSelection,
+  });
   const tagsToRemove = useFormFieldValue({
     formName: BATCH_EDIT_TAGS_FORM_NAMES.form,
     fieldName: BATCH_EDIT_TAGS_FORM_NAMES.tagsToRemove,
@@ -105,7 +90,7 @@ const BatchEditTagsModal = reduxForm<
         setTagsList(data?.content);
       })
       .catch(noop);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onRemoveTag = (tagKey: string): void => {
@@ -120,14 +105,20 @@ const BatchEditTagsModal = reduxForm<
 
     if (tagToRemove?.key) {
       change(BATCH_EDIT_TAGS_FORM_NAMES.tagsToRemove, [...safeTagsToRemove, tagToRemove.key]);
-      change(BATCH_EDIT_TAGS_FORM_NAMES.tagsToAdd, safeTagsToAdd?.filter((key: string) => key !== tagToRemove.key));
+      change(
+        BATCH_EDIT_TAGS_FORM_NAMES.tagsToAdd,
+        safeTagsToAdd?.filter((key: string) => key !== tagToRemove.key),
+      );
 
       setTagsList(updatedTags);
     }
   };
 
   const onAddTag = (tag: Attribute): void => {
-    change(BATCH_EDIT_TAGS_FORM_NAMES.tagsToRemove, safeTagsToRemove?.filter((key: string) => key !== tag.key));
+    change(
+      BATCH_EDIT_TAGS_FORM_NAMES.tagsToRemove,
+      safeTagsToRemove?.filter((key: string) => key !== tag.key),
+    );
     change(BATCH_EDIT_TAGS_FORM_NAMES.tagsToAdd, [...safeTagsToAdd, tag.key]);
 
     setTagsList([...tagsList, tag]);
@@ -138,8 +129,7 @@ const BatchEditTagsModal = reduxForm<
       testCaseIds: selectedTestCaseIds,
       attributeKeysToRemove: values.tagsToRemove,
       attributeKeysToAdd: values.tagsToAdd,
-    })
-      .catch(noop);
+    }).catch(noop);
   };
 
   const { okButton, cancelButton, hideModal } = useModalButtons({
@@ -155,7 +145,7 @@ const BatchEditTagsModal = reduxForm<
       selectedTags={tagsList}
       placement="bottom-end"
       trigger={
-        <Button variant="text" adjustWidthOn="content" icon={<PlusIcon/>} disabled={isLoadingTags}>
+        <Button variant="text" adjustWidthOn="content" icon={<PlusIcon />} disabled={isLoadingTags}>
           {formatMessage(messages.batchEditTagsModalAddButton)}
         </Button>
       }
@@ -173,28 +163,26 @@ const BatchEditTagsModal = reduxForm<
     >
       <form>
         <p className={cx('batch-edit-tags-modal__description')}>
-          {formatMessage(
-            messages.batchEditTagsModalDescription,
-            {
-              count,
-              b: (text) => <span className={cx('batch-edit-tags-modal__test-cases-count')}>{text}</span>,
-            },
-          )}
+          {formatMessage(messages.batchEditTagsModalDescription, {
+            count,
+            b: (text) => (
+              <span className={cx('batch-edit-tags-modal__test-cases-count')}>{text}</span>
+            ),
+          })}
         </p>
-        {
-          isLoadingTags ?
-            <BubblesLoader className={cx('batch-edit-tags-modal__loader')} /> : (
-            <EditableTagsSection
-              variant="modal"
-              addButton={tagAddButton}
-              tags={tagsList}
-              onTagRemove={onRemoveTag}
-              title={formatMessage(messages.batchEditTagsModalSimilarTags)}
-              emptyMessage={formatMessage(messages.batchEditTagsModalNoTags)}
-            />
-          )
-        }
-        <ModalLoadingOverlay isVisible={isLoading}/>
+        {isLoadingTags ? (
+          <BubblesLoader className={cx('batch-edit-tags-modal__loader')} />
+        ) : (
+          <EditableTagsSection
+            variant="modal"
+            addButton={tagAddButton}
+            tags={tagsList}
+            onTagRemove={onRemoveTag}
+            title={formatMessage(messages.batchEditTagsModalSimilarTags)}
+            emptyMessage={formatMessage(messages.batchEditTagsModalNoTags)}
+          />
+        )}
+        <ModalLoadingOverlay isVisible={isLoading} />
       </form>
     </Modal>
   );

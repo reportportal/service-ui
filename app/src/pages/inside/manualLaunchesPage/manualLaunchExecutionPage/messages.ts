@@ -45,4 +45,8 @@ export const messages = defineMessages({
     id: 'ManualLaunchExecutionPage.noAttachments',
     defaultMessage: 'No attachments added',
   },
+  executionStatusUpdated: {
+    id: 'ManualLaunchExecutionPage.executionStatusUpdated',
+    defaultMessage: 'Execution status updated to {status}',
+  },
 });
