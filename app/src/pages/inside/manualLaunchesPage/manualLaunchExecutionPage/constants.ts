@@ -16,14 +16,33 @@
 
 import { commonMessages } from 'pages/inside/common/common-messages';
 
-import type { StatusButtonConfig } from './types';
+import type { StatusButtonConfig, StatusConfig, ExecutionStatusType } from './types';
 
-export const EXECUTION_STATUS_SKIPPED = 'skipped' as const;
-export const EXECUTION_STATUS_FAILED = 'failed' as const;
-export const EXECUTION_STATUS_PASSED = 'passed' as const;
+export const EXECUTION_STATUS_TO_RUN = 'TO_RUN' as const;
+export const EXECUTION_STATUS_SKIPPED: ExecutionStatusType = 'skipped';
+export const EXECUTION_STATUS_FAILED: ExecutionStatusType = 'failed';
+export const EXECUTION_STATUS_PASSED: ExecutionStatusType = 'passed';
 
 export const STATUS_BUTTONS: StatusButtonConfig[] = [
   { status: EXECUTION_STATUS_SKIPPED, message: commonMessages.skipped },
   { status: EXECUTION_STATUS_FAILED, message: commonMessages.failed },
   { status: EXECUTION_STATUS_PASSED, message: commonMessages.passed },
 ];
+
+export const STATUS_CONFIG: Record<ExecutionStatusType, StatusConfig> = {
+  [EXECUTION_STATUS_PASSED]: {
+    label: commonMessages.passed,
+    colorClass: EXECUTION_STATUS_PASSED,
+  },
+  [EXECUTION_STATUS_FAILED]: {
+    label: commonMessages.failed,
+    colorClass: EXECUTION_STATUS_FAILED,
+  },
+  [EXECUTION_STATUS_SKIPPED]: {
+    label: commonMessages.skipped,
+    colorClass: EXECUTION_STATUS_SKIPPED,
+  },
+};
+
+export const EXECUTION_STATUS_CONFIRM_MODAL = 'executionStatusConfirmModal';
+export const EXECUTION_STATUS_CONFIRM_FORM_NAME = 'executionStatusConfirmForm';

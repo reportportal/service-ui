@@ -24,7 +24,7 @@ import { UseModalData } from 'common/hooks';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal } from 'controllers/modal';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
-import { useModalButtons } from 'pages/inside/testCaseLibraryPage/hooks/useModalButtons';
+import { useModalButtons } from 'hooks/useModalButtons';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 
 import { useDeleteExecution } from './useDeleteExecution';
@@ -42,9 +42,7 @@ const BoldText: FC<{ children: ReactNode }> = ({ children }) => (
 
 const boldFormatter = (chunks: ReactNode) => <BoldText>{chunks}</BoldText>;
 
-const DeleteExecutionModalComponent = ({
-  data,
-}: UseModalData<DeleteExecutionModalData>) => {
+const DeleteExecutionModalComponent = ({ data }: UseModalData<DeleteExecutionModalData>) => {
   const { formatMessage } = useIntl();
   const isBatch = data.type === 'batch';
   const { deleteExecutions, isLoading } = useDeleteExecution();

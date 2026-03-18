@@ -51,6 +51,16 @@ export interface GetManualLaunchExecutionParams {
   executionId: string | number;
 }
 
+export interface UpdateManualLaunchExecutionStatusParams {
+  projectKey: string;
+  launchId: string | number;
+  executionId: string | number;
+  status: string;
+  comment?: string;
+  postIssueToBts?: boolean;
+  attachments?: File[];
+}
+
 // State types
 export interface ManualLaunchState {
   data: {

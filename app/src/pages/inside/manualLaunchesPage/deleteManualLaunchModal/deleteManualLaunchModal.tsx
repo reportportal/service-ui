@@ -23,7 +23,7 @@ import { VoidFn } from '@reportportal/ui-kit/common';
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
-import { useModalButtons } from 'pages/inside/testCaseLibraryPage/hooks/useModalButtons';
+import { useModalButtons } from 'hooks/useModalButtons';
 
 import { useDeleteManualLaunches } from './useDeleteManualLaunches';
 import { messages } from './messages';
@@ -98,12 +98,10 @@ export const DeleteManualLaunchModal = ({
       onClose={hideModal}
       className={cx('delete-manual-launch-modal')}
     >
-          <>
-            <p>
-              {formatMessage(description, descriptionParams)}
-            </p>
-            <p>{formatMessage(messages.deletePermanentWarning)}</p>
-          </>
+      <>
+        <p>{formatMessage(description, descriptionParams)}</p>
+        <p>{formatMessage(messages.deletePermanentWarning)}</p>
+      </>
     </Modal>
   );
 };

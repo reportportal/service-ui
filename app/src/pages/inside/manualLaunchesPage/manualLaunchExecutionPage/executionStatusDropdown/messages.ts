@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-export enum ExecutionStatus {
-  TO_RUN = 'TO_RUN',
-  IN_PROGRESS = 'IN_PROGRESS',
-  PASSED = 'PASSED',
-  FAILED = 'FAILED',
-  SKIPPED = 'SKIPPED',
-}
+import { defineMessages } from 'react-intl';
 
-export interface ExecutionStatusChipProps {
-  status: string;
-}
+export const messages = defineMessages({
+  currentExecutionStatus: {
+    id: 'ExecutionStatusDropdown.currentExecutionStatus',
+    defaultMessage: 'Current execution status:',
+  },
+});

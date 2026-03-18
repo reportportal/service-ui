@@ -31,7 +31,7 @@ import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { ButtonSwitcherOption } from 'pages/inside/common/buttonSwitcher';
 import { DestinationFolderSwitch } from '../../testCaseFolders/shared/DestinationFolderSwitch';
 import { useFolderModalMode } from '../../hooks/useFolderModalMode';
-import { useModalButtons } from '../../hooks/useModalButtons';
+import { useModalButtons } from 'hooks/useModalButtons';
 import { validateFolderModalForm } from '../../utils/validateFolderModalForm';
 import { FolderModalFormValues } from '../../utils/folderModalFormConfig';
 import { commonFolderMessages } from '../../testCaseFolders/modals/commonFolderMessages';

@@ -40,11 +40,14 @@ import {
 } from 'hooks/useTypedSelector';
 
 import { ExecutionStatusButtons } from './executionStatusButtons';
+import { ExecutionStatusDropdown } from './executionStatusDropdown';
+import { ExecutionStatusConfirmModal } from './executionStatusConfirmModal';
 import { TextBasedContent } from './textBasedContent';
 import { StepsBasedContent } from './stepsBasedContent';
 import { messages } from './messages';
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { messages as manualLaunchesMessages } from '../messages';
+import { EXECUTION_STATUS_TO_RUN } from './constants';
 
 import styles from './manualLaunchExecutionPage.scss';
 
@@ -99,25 +102,33 @@ export const ManualLaunchExecutionPage = () => {
   ];
 
   const isTextBased = execution?.manualScenario?.manualScenarioType === MANUAL_SCENARIO_TYPE_TEXT;
+  const executionStatus = execution?.executionStatus;
+  const hasStatus = executionStatus && executionStatus !== EXECUTION_STATUS_TO_RUN;
 
   const handleRunTestClick = () => {
     setShowStatusButtons(true);
   };
 
-  const renderHeaderActions = () => (
-    <div className={cx('header-actions')}>
-      {showStatusButtons ? (
-        <ExecutionStatusButtons />
-      ) : (
+  const renderHeaderActions = () => {
+    if (hasStatus) {
+      return <ExecutionStatusDropdown executionId={execution.id} currentStatus={executionStatus} />;
+    }
+
+    if (showStatusButtons) {
+      return <ExecutionStatusButtons executionId={execution?.id} />;
+    }
+
+    return (
+      <div className={cx('header-actions')}>
         <Button className={cx('run-test-button')} onClick={handleRunTestClick}>
           {formatMessage(commonMessages.runTest)}
           <span className={cx('run-test-icon')}>
             <RunManualIcon />
           </span>
         </Button>
-      )}
-    </div>
-  );
+      </div>
+    );
+  };
 
   if (isLaunchLoading || isExecutionLoading) {
     return (
@@ -167,6 +178,7 @@ export const ManualLaunchExecutionPage = () => {
           </div>
         </div>
       </ScrollWrapper>
+      <ExecutionStatusConfirmModal />
     </SettingsLayout>
   );
 };

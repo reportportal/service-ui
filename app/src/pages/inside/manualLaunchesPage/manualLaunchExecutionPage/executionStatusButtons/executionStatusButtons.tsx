@@ -15,17 +15,36 @@
  */
 
 import { useIntl } from 'react-intl';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { createClassnames } from 'common/utils';
+import { useManualLaunchId } from 'hooks/useTypedSelector';
+import { updateManualLaunchExecutionStatusAction } from 'controllers/manualLaunch';
+import { projectKeySelector } from 'controllers/project';
 
 import { STATUS_BUTTONS } from '../constants';
+import type { ExecutionStatusButtonsProps } from '../types';
 
 import styles from './executionStatusButtons.scss';
 
 const cx = createClassnames(styles);
 
-export const ExecutionStatusButtons = () => {
+export const ExecutionStatusButtons = ({ executionId }: ExecutionStatusButtonsProps) => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const projectKey = useSelector(projectKeySelector);
+  const launchId = useManualLaunchId();
+
+  const handleStatusClick = (status: string) => {
+    dispatch(
+      updateManualLaunchExecutionStatusAction({
+        projectKey,
+        launchId,
+        executionId,
+        status: status.toUpperCase(),
+      }),
+    );
+  };
 
   return (
     <div className={cx('execution-status-buttons')}>
@@ -34,6 +53,7 @@ export const ExecutionStatusButtons = () => {
           key={status}
           type="button"
           className={cx('status-button', `status-button--${status}`)}
+          onClick={() => handleStatusClick(status)}
         >
           {formatMessage(message)}
         </button>

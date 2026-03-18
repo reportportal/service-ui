@@ -29,7 +29,7 @@ import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { LaunchFormData, Attribute } from 'pages/inside/common/launchFormFields/types';
 import { NewLaunchFields } from 'pages/inside/common/launchFormFields/newLaunchFields';
 import { LAUNCH_FORM_FIELD_NAMES } from 'pages/inside/common/launchFormFields/constants';
-import { useModalButtons } from 'pages/inside/testCaseLibraryPage/hooks/useModalButtons';
+import { useModalButtons } from 'hooks/useModalButtons';
 
 import { useEditManualLaunch } from './useEditManualLaunch';
 import { EditManualLaunchModalProps } from './types';

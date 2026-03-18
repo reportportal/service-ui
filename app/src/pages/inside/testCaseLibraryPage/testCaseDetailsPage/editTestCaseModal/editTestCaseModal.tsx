@@ -25,7 +25,7 @@ import { createClassnames } from 'common/utils';
 import { withModal } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { commonValidators } from 'common/utils/validation';
-import { useModalButtons } from 'pages/inside/testCaseLibraryPage/hooks/useModalButtons';
+import { useModalButtons } from 'hooks/useModalButtons';
 
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { UpdateTestCasePayload } from '../../hooks/useTestCaseMutations';

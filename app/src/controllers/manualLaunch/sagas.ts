@@ -16,11 +16,14 @@
 
 import { Action } from 'redux';
 import { takeLatest, call, select, all, put } from 'redux-saga/effects';
+import { isString } from 'es-toolkit';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { fetchSuccessAction, fetchErrorAction } from 'controllers/fetch';
 import { FETCH_START } from 'controllers/fetch/constants';
+import { AppState } from 'types/store';
 import {
   showNotification,
   NOTIFICATION_TYPES,
@@ -40,6 +43,7 @@ import {
   GET_MANUAL_LAUNCH_FOLDERS,
   GET_MANUAL_LAUNCH_TEST_CASE_EXECUTIONS,
   GET_MANUAL_LAUNCH_EXECUTION,
+  UPDATE_MANUAL_LAUNCH_EXECUTION_STATUS,
   MANUAL_LAUNCHES_NAMESPACE,
   ACTIVE_MANUAL_LAUNCH_NAMESPACE,
   MANUAL_LAUNCH_FOLDERS_NAMESPACE,
@@ -53,6 +57,7 @@ import {
   GetManualLaunchFoldersParams,
   GetManualLaunchTestCaseExecutionsParams,
   GetManualLaunchExecutionParams,
+  UpdateManualLaunchExecutionStatusParams,
   ManualLaunchFoldersResponse,
   TestCaseExecutionsResponse,
   TestCaseExecution,
@@ -312,6 +317,148 @@ function* watchGetManualLaunchExecution() {
   yield takeLatest(GET_MANUAL_LAUNCH_EXECUTION, getManualLaunchExecution);
 }
 
+interface UpdateManualLaunchExecutionStatusAction extends Action<
+  typeof UPDATE_MANUAL_LAUNCH_EXECUTION_STATUS
+> {
+  payload: UpdateManualLaunchExecutionStatusParams;
+}
+
+function* uploadAttachments(projectKey: string, attachments?: File[]): Generator {
+  const uploadedAttachments: Array<{
+    id: string;
+    fileName: string;
+    fileType: string;
+    fileSize: number;
+  }> = [];
+
+  if (!attachments || attachments.length === 0) {
+    return uploadedAttachments;
+  }
+
+  for (const file of attachments) {
+    try {
+      const formData = new FormData();
+      formData.append('file', file, file.name);
+
+      const uploadResponse = (yield call(fetch, URLS.tmsAttachmentUpload(projectKey), {
+        method: 'POST',
+        data: formData,
+      })) as { id: string };
+
+      uploadedAttachments.push({
+        id: uploadResponse.id,
+        fileName: file.name,
+        fileType: file.type,
+        fileSize: file.size,
+      });
+    } catch {
+      yield put(
+        showNotification({
+          messageId: 'ExecutionStatusConfirmModal.attachmentUploadFailed',
+          type: NOTIFICATION_TYPES.ERROR,
+          typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.WHITE,
+          duration: WARNING_NOTIFICATION_DURATION,
+          values: { fileName: file.name },
+        }),
+      );
+    }
+  }
+
+  return uploadedAttachments;
+}
+
+function* updateManualLaunchExecutionStatus(
+  action: UpdateManualLaunchExecutionStatusAction,
+): Generator {
+  const { projectKey, launchId, executionId, status, comment, attachments } = action.payload;
+
+  try {
+    const requestData: {
+      status: string;
+      executionComment?: {
+        comment?: string;
+        attachments?: Array<{ id: string; fileName: string; fileType: string; fileSize: number }>;
+      };
+    } = {
+      status,
+    };
+
+    const uploadedAttachments = (yield call(uploadAttachments, projectKey, attachments)) as Array<{
+      id: string;
+      fileName: string;
+      fileType: string;
+      fileSize: number;
+    }>;
+
+    const trimmedComment = isString(comment) ? comment.trim() : '';
+    const hasAttachments = !isEmpty(uploadedAttachments);
+
+    if (trimmedComment || hasAttachments) {
+      requestData.executionComment = {};
+
+      if (trimmedComment) {
+        requestData.executionComment.comment = trimmedComment;
+      }
+
+      if (hasAttachments) {
+        requestData.executionComment.attachments = uploadedAttachments;
+      }
+    }
+
+    const data = (yield call(
+      fetch,
+      URLS.manualLaunchExecutionById(projectKey, launchId, executionId),
+      {
+        method: 'PATCH',
+        data: requestData,
+      },
+    )) as TestCaseExecution;
+
+    yield put(fetchSuccessAction(ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE, data));
+
+    const executionsState = (yield select(
+      (state: AppState) => state.manualLaunchTestCaseExecutions?.data,
+    )) as { content: TestCaseExecution[]; page: Page } | null;
+
+    if (executionsState?.content) {
+      const updatedContent = executionsState.content.map((exec) =>
+        exec.id === data.id ? data : exec,
+      );
+
+      yield put(
+        fetchSuccessAction(MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE, {
+          data: {
+            content: updatedContent,
+            page: executionsState.page,
+          },
+        }),
+      );
+    }
+
+    const capitalizedStatus = status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+
+    yield put(
+      showNotification({
+        messageId: 'executionStatusUpdated',
+        type: NOTIFICATION_TYPES.SUCCESS,
+        typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.WHITE,
+        duration: WARNING_NOTIFICATION_DURATION,
+        values: { status: capitalizedStatus },
+      }),
+    );
+  } catch {
+    yield put(
+      showErrorNotification({
+        messageId: 'errorOccurredTryAgain',
+      }),
+    );
+  }
+}
+
+function* watchUpdateManualLaunchExecutionStatus() {
+  yield takeLatest(UPDATE_MANUAL_LAUNCH_EXECUTION_STATUS, updateManualLaunchExecutionStatus);
+}
+
 export function* manualLaunchesSagas() {
   yield all([
     watchGetManualLaunches(),
@@ -319,5 +466,6 @@ export function* manualLaunchesSagas() {
     watchGetManualLaunchFolders(),
     watchGetManualLaunchTestCaseExecutions(),
     watchGetManualLaunchExecution(),
+    watchUpdateManualLaunchExecutionStatus(),
   ]);
 }

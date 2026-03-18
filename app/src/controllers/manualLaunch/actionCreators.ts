@@ -20,6 +20,7 @@ import {
   GET_MANUAL_LAUNCH_FOLDERS,
   GET_MANUAL_LAUNCH_TEST_CASE_EXECUTIONS,
   GET_MANUAL_LAUNCH_EXECUTION,
+  UPDATE_MANUAL_LAUNCH_EXECUTION_STATUS,
   TOGGLE_MANUAL_LAUNCH_FOLDER_EXPANSION,
   EXPAND_MANUAL_LAUNCH_FOLDERS_TO_LEVEL,
   SET_MANUAL_LAUNCH_EXPANDED_FOLDER_IDS,
@@ -30,6 +31,7 @@ import {
   GetManualLaunchFoldersParams,
   GetManualLaunchTestCaseExecutionsParams,
   GetManualLaunchExecutionParams,
+  UpdateManualLaunchExecutionStatusParams,
   ToggleManualLaunchFolderExpansionParams,
   SetManualLaunchExpandedFolderIdsParams,
 } from './types';
@@ -58,6 +60,13 @@ export const getManualLaunchTestCaseExecutionsAction = (
 
 export const getManualLaunchExecutionAction = (params: GetManualLaunchExecutionParams) => ({
   type: GET_MANUAL_LAUNCH_EXECUTION,
+  payload: params,
+});
+
+export const updateManualLaunchExecutionStatusAction = (
+  params: UpdateManualLaunchExecutionStatusParams,
+) => ({
+  type: UPDATE_MANUAL_LAUNCH_EXECUTION_STATUS,
   payload: params,
 });
 

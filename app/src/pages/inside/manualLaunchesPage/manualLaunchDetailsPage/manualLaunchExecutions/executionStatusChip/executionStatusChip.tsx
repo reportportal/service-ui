@@ -31,6 +31,10 @@ export const ExecutionStatusChip = memo(({ status }: ExecutionStatusChipProps) =
   const statusClass = STATUS_CLASS_MAP[statusKey];
   const statusIcon = STATUS_ICON_MAP[statusKey];
 
+  if (!statusIcon) {
+    return null;
+  }
+
   return (
     <div className={cx('execution-status-chip', statusClass)}>
       <div className={cx('status-icon')}>{Parser(statusIcon)}</div>

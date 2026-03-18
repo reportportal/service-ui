@@ -361,6 +361,10 @@ export const notificationMessages = defineMessages({
     defaultMessage:
       "The item you are trying to access may have been deleted or doesn't exist. You have been redirected to Manual Launches.",
   },
+  executionStatusUpdated: {
+    id: 'ManualLaunchesPage.executionStatusUpdated',
+    defaultMessage: 'Status updated: Test marked as {status}.',
+  },
   testPlanUpdatedSuccess: {
     id: 'TestPlansPage.testPlanUpdatedSuccess',
     defaultMessage: 'Test Plan has been updated successfully.',

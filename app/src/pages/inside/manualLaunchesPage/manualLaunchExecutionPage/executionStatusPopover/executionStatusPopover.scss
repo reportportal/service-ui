@@ -16,54 +16,36 @@
 
 @use '../../../../../common/css/mixins' as mixins;
 
-.execution-status-buttons {
-  display: flex;
-  gap: 8px;
-  align-items: center;
+.popover {
+  padding: 8px 0;
 }
 
-.status-button {
+.status-options {
+  display: flex;
+  flex-direction: column;
+  min-width: 150px;
+}
+
+.status-option {
   @include mixins.button-reset;
 
-  min-width: 120px;
-  width: 120px;
-  height: 36px;
+  display: flex;
+  align-items: center;
+  width: 100%;
   padding: 7px 16px;
-  gap: 10px;
-  border-radius: 3px;
-  font-weight: var(--rp-ui-base-fw-medium);
+  border-radius: 0;
+  color: var(--rp-ui-base-almost-black);
   font-size: 13px;
   line-height: 20px;
-  text-align: center;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
+  cursor: pointer;
 
-  &--skipped {
-    background-color: var(--rp-ui-base-e-200);
+  &:hover,
+  &:active,
+  &:focus {
     color: var(--rp-ui-base-almost-black);
-
-    &:hover {
-      background-color: var(--rp-ui-base-e-300);
-    }
   }
 
-  &--failed {
-    background-color: var(--rp-ui-color-execution-status-btn-failed);
-    color: var(--rp-ui-base-bg-000);
-
-    &:hover {
-      opacity: 0.9;
-    }
-  }
-
-  &--passed {
-    background-color: var(--rp-ui-color-execution-status-btn-passed);
-    color: var(--rp-ui-base-bg-000);
-
-    &:hover {
-      opacity: 0.9;
-    }
+  &:hover {
+    background-color: var(--rp-ui-base-bg-200);
   }
 }
