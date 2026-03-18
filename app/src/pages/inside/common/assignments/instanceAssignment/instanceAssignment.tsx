@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   WrappedFieldArrayProps,
@@ -211,6 +211,10 @@ export const InstanceAssignment = ({
    dispatch(untouch(formName, FORM_FIELDS.ORGANIZATION.NAME));
   };
 
+  const handleOrganizationNameFocus = useCallback(() => {
+    dispatch(untouch(formName, FORM_FIELDS.ORGANIZATION.NAME));
+  }, [dispatch, formName]);
+
   useEffect(() => {
     let isActive = true;
 
@@ -368,6 +372,7 @@ export const InstanceAssignment = ({
                 <AsyncAutocompleteV2
                   key={`organization-${invitedUserId}`}
                   inputProps={{
+                    onFocus: handleOrganizationNameFocus,
                     label: formatMessage(messages.organization),
                     clearable: true,
                     onClear: () => {
