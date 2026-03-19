@@ -57,4 +57,12 @@ export const messages = defineMessages({
     id: 'ExecutionStatusConfirmModal.attachmentUploadFailed',
     defaultMessage: 'Failed to upload attachment: {fileName}',
   },
+  confirmStatusChange: {
+    id: 'ExecutionStatusConfirmModal.confirmStatusChange',
+    defaultMessage: 'Are you sure you want to mark test execution as {status}?',
+  },
+  updateCommentIfNeeded: {
+    id: 'ExecutionStatusConfirmModal.updateCommentIfNeeded',
+    defaultMessage: 'Please, update the execution comment if needed.',
+  },
 });

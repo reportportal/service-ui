@@ -47,6 +47,7 @@ export interface ExecutionStatusButtonsProps {
 export interface ExecutionStatusData {
   executionId: number;
   status: ExecutionStatusType;
+  currentStatus?: string;
 }
 
 export type ExecutionStatusConfirmModalData = ExecutionStatusData;

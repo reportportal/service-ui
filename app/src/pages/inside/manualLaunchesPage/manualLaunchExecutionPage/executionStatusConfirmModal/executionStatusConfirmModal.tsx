@@ -45,6 +45,7 @@ import {
   EXECUTION_STATUS_CONFIRM_MODAL,
   EXECUTION_STATUS_CONFIRM_FORM_NAME,
   STATUS_CONFIG,
+  EXECUTION_STATUS_TO_RUN,
 } from '../constants';
 import { messages } from './messages';
 
@@ -76,7 +77,9 @@ const ExecutionStatusConfirmModalComponent: FC<
 
   const status = data?.status || 'passed';
   const executionId = data?.executionId;
+  const currentStatus = data?.currentStatus;
   const statusLabel = formatMessage(STATUS_CONFIG[status].label);
+  const isStatusChange = currentStatus && currentStatus !== EXECUTION_STATUS_TO_RUN;
 
   const onSubmit = (values: ExecutionStatusConfirmFormValues) => {
     if (!executionId) return;
@@ -114,70 +117,97 @@ const ExecutionStatusConfirmModalComponent: FC<
       okButton={okButton}
       cancelButton={cancelButton}
       allowCloseOutside={!dirty}
-      className={cx('execution-status-confirm-modal')}
+      className={cx('execution-status-confirm-modal', {
+        'execution-status-confirm-modal--simple': isStatusChange,
+      })}
     >
       <form
         className={cx('modal-content')}
         onSubmit={handleSubmit(onSubmit) as (event: FormEvent) => void}
       >
-        <div className={cx('comment-section')}>
-          <FieldProvider name="comment">
-            <FieldErrorHint>
-              <FieldTextFlex
-                label={formatMessage(messages.executionComment)}
-                placeholder={formatMessage(messages.commentPlaceholder)}
-                value=""
-                minHeight={100}
-              />
-            </FieldErrorHint>
-          </FieldProvider>
-        </div>
-
-        <div className={cx('checkbox-section')}>
-          <FieldProvider name="postIssueToBts">
-            <InputCheckbox>{formatMessage(messages.postIssueToBts)}</InputCheckbox>
-          </FieldProvider>
-        </div>
-
-        <div className={cx('divider')} />
-
-        <div className={cx('attachments-section')}>
-          <FileDropArea
-            variant="overlay"
-            maxFileSize={MAX_FILE_SIZE}
-            acceptFileMimeTypes={[MIME_TYPES.jpeg, MIME_TYPES.png, MIME_TYPES.pdf]}
-            onFilesAdded={handleFilesAdded}
-            messages={{
-              incorrectFileSize: formatMessage(messages.incorrectFileSize),
-              incorrectFileFormat: formatMessage(messages.incorrectFileFormat),
-            }}
-          >
-            <div className={cx('attachment-header')}>
-              <span className={cx('attachment-title')}>{formatMessage(messages.attachments)}</span>
-              <div className={cx('add-attachment')}>
-                <span className={cx('dropzone-text')}>
-                  <DragAndDropIcon />
-                  {formatMessage(messages.dropFilesHere)}
-                </span>
-                <FileDropArea.BrowseButton icon={<PlusIcon />}>
-                  {formatMessage(messages.add)}
-                </FileDropArea.BrowseButton>
+        {isStatusChange ? (
+          <>
+            <div className={cx('confirmation-text')}>
+              <div className={cx('confirmation-question')}>
+                {formatMessage(messages.confirmStatusChange, {
+                  status: <strong>{statusLabel}</strong>,
+                })}
+              </div>
+              <div className={cx('confirmation-hint')}>
+                {formatMessage(messages.updateCommentIfNeeded)}
               </div>
             </div>
-            {!isEmpty(attachedFiles) && (
-              <FileDropArea.AttachedFilesList
-                files={attachedFiles.map((file, index) => ({
-                  id: `${file.name}-${index}`,
-                  fileName: file.name,
-                  file,
-                  size: file.size,
-                }))}
-                onRemoveFile={handleFileRemove}
-              />
-            )}
-            <FileDropArea.DropZone icon={<div />} />
-          </FileDropArea>
-        </div>
+
+            <div className={cx('checkbox-section')}>
+              <FieldProvider name="postIssueToBts">
+                <InputCheckbox>{formatMessage(messages.postIssueToBts)}</InputCheckbox>
+              </FieldProvider>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className={cx('comment-section')}>
+              <FieldProvider name="comment">
+                <FieldErrorHint>
+                  <FieldTextFlex
+                    label={formatMessage(messages.executionComment)}
+                    placeholder={formatMessage(messages.commentPlaceholder)}
+                    value=""
+                    minHeight={100}
+                  />
+                </FieldErrorHint>
+              </FieldProvider>
+            </div>
+
+            <div className={cx('checkbox-section')}>
+              <FieldProvider name="postIssueToBts">
+                <InputCheckbox>{formatMessage(messages.postIssueToBts)}</InputCheckbox>
+              </FieldProvider>
+            </div>
+
+            <div className={cx('divider')} />
+
+            <div className={cx('attachments-section')}>
+              <FileDropArea
+                variant="overlay"
+                maxFileSize={MAX_FILE_SIZE}
+                acceptFileMimeTypes={[MIME_TYPES.jpeg, MIME_TYPES.png, MIME_TYPES.pdf]}
+                onFilesAdded={handleFilesAdded}
+                messages={{
+                  incorrectFileSize: formatMessage(messages.incorrectFileSize),
+                  incorrectFileFormat: formatMessage(messages.incorrectFileFormat),
+                }}
+              >
+                <div className={cx('attachment-header')}>
+                  <span className={cx('attachment-title')}>
+                    {formatMessage(messages.attachments)}
+                  </span>
+                  <div className={cx('add-attachment')}>
+                    <span className={cx('dropzone-text')}>
+                      <DragAndDropIcon />
+                      {formatMessage(messages.dropFilesHere)}
+                    </span>
+                    <FileDropArea.BrowseButton icon={<PlusIcon />}>
+                      {formatMessage(messages.add)}
+                    </FileDropArea.BrowseButton>
+                  </div>
+                </div>
+                {!isEmpty(attachedFiles) && (
+                  <FileDropArea.AttachedFilesList
+                    files={attachedFiles.map((file, index) => ({
+                      id: `${file.name}-${index}`,
+                      fileName: file.name,
+                      file,
+                      size: file.size,
+                    }))}
+                    onRemoveFile={handleFileRemove}
+                  />
+                )}
+                <FileDropArea.DropZone icon={<div />} />
+              </FileDropArea>
+            </div>
+          </>
+        )}
       </form>
     </Modal>
   );

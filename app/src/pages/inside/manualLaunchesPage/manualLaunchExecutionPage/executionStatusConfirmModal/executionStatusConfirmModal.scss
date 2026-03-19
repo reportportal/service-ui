@@ -38,6 +38,12 @@
   width: 480px;
   border-radius: 16px;
   padding: 32px 40px;
+
+  &--simple {
+    .checkbox-section {
+      margin-bottom: 0;
+    }
+  }
 }
 
 .modal-content {
@@ -121,4 +127,28 @@
     width: 16px;
     height: 16px;
   }
+}
+
+.confirmation-text {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+}
+
+.confirmation-question {
+  @include modal-text-regular;
+
+  color: var(--rp-ui-base-almost-black);
+
+  strong {
+    font-family: $FONT-ROBOTO-MEDIUM;
+    font-weight: 500;
+    color: var(--rp-ui-base-almost-black);
+  }
+}
+
+.confirmation-hint {
+  @include modal-text-regular;
+
+  color: var(--rp-ui-base-almost-black);
 }
