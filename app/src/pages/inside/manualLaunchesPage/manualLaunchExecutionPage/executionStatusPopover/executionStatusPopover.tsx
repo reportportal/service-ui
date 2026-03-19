@@ -24,6 +24,7 @@ import { Divider } from 'pages/inside/projectSettingsPageContainer/content/eleme
 import { STATUS_CONFIG } from '../constants';
 import { useExecutionStatusModal } from '../executionStatusConfirmModal';
 import { messages } from './messages';
+import { messages as commonExecutionMessages } from '../messages';
 import { EXECUTION_STATUSES } from '../../manualLaunchDetailsPage/manualLaunchExecutions/types';
 
 import styles from './executionStatusPopover.scss';
@@ -79,7 +80,7 @@ export const ExecutionStatusPopover: FC<ExecutionStatusPopoverProps> = ({
                 className={cx('status-option')}
                 onClick={() => handleClearStatus()}
               >
-                {'Clear Status'}
+                {formatMessage(commonExecutionMessages.clearStatus)}
               </button>
             </>
           );
