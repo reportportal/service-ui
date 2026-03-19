@@ -18,6 +18,7 @@ import type { MessageDescriptor } from 'react-intl';
 
 import type { TestCaseExecution } from 'controllers/manualLaunch';
 import type { UseModalData } from 'common/hooks';
+
 import { EXECUTION_STATUSES } from '../manualLaunchDetailsPage/manualLaunchExecutions/types';
 
 export interface ExecutionContentProps {
@@ -25,7 +26,7 @@ export interface ExecutionContentProps {
 }
 
 export interface StatusButtonConfig {
-  status: string;
+  status: EXECUTION_STATUSES;
   message: MessageDescriptor;
 }
 
