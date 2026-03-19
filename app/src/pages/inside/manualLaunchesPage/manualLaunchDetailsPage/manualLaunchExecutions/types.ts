@@ -22,3 +22,10 @@ export interface ManualLaunchExecutionsProps {
   pageInfo: Page | null;
   isLoading: boolean;
 }
+
+export enum EXECUTION_STATUSES {
+  FAILED = 'FAILED',
+  PASSED = 'PASSED',
+  SKIPPED = 'SKIPPED',
+  TO_RUN = 'TO_RUN',
+}

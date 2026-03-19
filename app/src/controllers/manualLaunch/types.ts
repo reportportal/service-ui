@@ -17,6 +17,7 @@
 import { Page } from 'types/common';
 
 import { Launch } from 'pages/inside/manualLaunchesPage/types';
+import { EXECUTION_STATUSES } from 'pages/inside/manualLaunchesPage/manualLaunchDetailsPage/manualLaunchExecutions/types';
 import { hasPayloadProps } from 'controllers/utils/types';
 import {
   TOGGLE_MANUAL_LAUNCH_FOLDER_EXPANSION,
@@ -198,7 +199,7 @@ export interface ManualScenario {
 
 export interface TestCaseExecution {
   id: number;
-  executionStatus: string;
+  executionStatus: EXECUTION_STATUSES;
   executionComment?: ExecutionComment;
   startedAt?: number;
   finishedAt?: number;

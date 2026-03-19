@@ -17,11 +17,11 @@
 import { useDispatch } from 'react-redux';
 import { showModalAction } from 'controllers/modal';
 import { EXECUTION_STATUS_CONFIRM_MODAL } from '../constants';
-import type { ExecutionStatusType } from '../types';
+import { EXECUTION_STATUSES } from '../../manualLaunchDetailsPage/manualLaunchExecutions/types';
 
 interface OpenModalParams {
   executionId: number;
-  status: ExecutionStatusType;
+  status: EXECUTION_STATUSES;
 }
 
 export const useExecutionStatusModal = () => {

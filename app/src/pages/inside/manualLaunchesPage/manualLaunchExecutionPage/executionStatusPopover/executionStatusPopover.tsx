@@ -19,11 +19,12 @@ import { useIntl } from 'react-intl';
 import { Popover } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
+import { Divider } from 'pages/inside/projectSettingsPageContainer/content/elements';
 
 import { STATUS_CONFIG } from '../constants';
-import type { ExecutionStatusType } from '../types';
 import { useExecutionStatusModal } from '../executionStatusConfirmModal';
 import { messages } from './messages';
+import { EXECUTION_STATUSES } from '../../manualLaunchDetailsPage/manualLaunchExecutions/types';
 
 import styles from './executionStatusPopover.scss';
 
@@ -31,7 +32,7 @@ const cx = createClassnames(styles);
 
 interface ExecutionStatusPopoverProps {
   executionId: number;
-  currentStatus: string;
+  currentStatus: EXECUTION_STATUSES;
   isOpened: boolean;
   setIsOpened: (isOpened: boolean) => void;
   children: ReactNode;
@@ -47,23 +48,42 @@ export const ExecutionStatusPopover: FC<ExecutionStatusPopoverProps> = ({
   const { formatMessage } = useIntl();
   const { openModal } = useExecutionStatusModal();
 
-  const statusKey = currentStatus.toLowerCase() as ExecutionStatusType;
-  const availableStatuses = (Object.keys(STATUS_CONFIG) as ExecutionStatusType[]).filter(
-    (status) => status !== statusKey,
+  const availableStatuses = (Object.keys(STATUS_CONFIG) as EXECUTION_STATUSES[]).filter(
+    (status) => status !== currentStatus,
   );
 
-  const handleStatusChange = (newStatus: string) => {
+  const handleStatusChange = (newStatus: EXECUTION_STATUSES) => {
     openModal({
       executionId,
-      status: newStatus as ExecutionStatusType,
+      status: newStatus,
     });
     setIsOpened(false);
+  };
+
+  const handleClearStatus = () => {
+    // TODO: implement later
   };
 
   const renderPopoverContent = () => (
     <div className={cx('status-options')}>
       {availableStatuses.map((status) => {
         const config = STATUS_CONFIG[status];
+
+        if (status === EXECUTION_STATUSES.TO_RUN) {
+          return (
+            <>
+              <Divider />
+              <button
+                key={currentStatus}
+                type="button"
+                className={cx('status-option')}
+                onClick={() => handleClearStatus()}
+              >
+                {'Clear Status'}
+              </button>
+            </>
+          );
+        }
 
         return (
           <button
