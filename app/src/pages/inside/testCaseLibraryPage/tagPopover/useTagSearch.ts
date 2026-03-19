@@ -20,8 +20,9 @@ import { useSelector } from 'react-redux';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
+import { Tag } from 'types/testCase';
 
-import { Tag, TagError } from '../types';
+import { TagError } from '../types';
 import { convertKeysToTags } from '../testCaseDetailsPage/utils';
 
 export const useTagSearch = (searchValue: string = '') => {

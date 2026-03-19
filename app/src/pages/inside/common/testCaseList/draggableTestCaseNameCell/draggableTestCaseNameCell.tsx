@@ -19,7 +19,7 @@ import { DragNDropIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
-import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { ExtendedTestCase } from 'types/testCase';
 import { EXTERNAL_TREE_DROP_TYPE } from 'pages/inside/common/expandedOptions/constants';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useDraggableRow } from 'components/main/draggableTableRow';

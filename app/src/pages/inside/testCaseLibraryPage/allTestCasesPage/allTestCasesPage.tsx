@@ -27,7 +27,7 @@ import {
   TEST_CASE_LIST_NAMESPACE,
   TestCasePageDefaultValues,
 } from 'pages/inside/common/testCaseList/constants';
-import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { TestCase } from 'types/testCase';
 import { Page } from 'types/common';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';

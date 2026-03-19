@@ -18,8 +18,8 @@ import { useIntl } from 'react-intl';
 
 import { createClassnames } from 'common/utils';
 import { commonMessages } from 'pages/inside/common/common-messages';
+import { Step as StepProp } from 'types/testCase';
 
-import { Step as StepProp } from '../../types';
 import { Step } from '../step';
 
 import styles from './stepsList.scss';
@@ -38,8 +38,12 @@ export const StepsList = ({ steps }: StepsListProps) => {
       <div className={cx('steps-list__columns')}>
         <div className={cx('steps-list__columns_number')}>№</div>
         <div>
-          <div className={cx('steps-list__columns_name')}>{formatMessage(commonMessages.instructions)}</div>
-          <div className={cx('steps-list__columns_name')}>{formatMessage(commonMessages.expectedResult)}</div>
+          <div className={cx('steps-list__columns_name')}>
+            {formatMessage(commonMessages.instructions)}
+          </div>
+          <div className={cx('steps-list__columns_name')}>
+            {formatMessage(commonMessages.expectedResult)}
+          </div>
         </div>
       </div>
       <ul className={cx('steps-list__content')}>

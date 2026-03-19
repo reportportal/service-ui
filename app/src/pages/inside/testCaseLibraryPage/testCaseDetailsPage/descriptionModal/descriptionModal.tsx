@@ -21,7 +21,7 @@ import { reduxForm, InjectedFormProps } from 'redux-form';
 import { FieldTextFlex, Modal } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
-import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { TestCase } from 'types/testCase';
 import { commonMessages as globalCommonMessages } from 'pages/inside/common/common-messages';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { ChangeEvent } from 'react';
-import { Checkbox } from '@reportportal/ui-kit';
+import { ChangeEvent, memo } from 'react';
+import { Checkbox, SpinLoader } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 
@@ -25,31 +25,39 @@ const cx = createClassnames(styles);
 
 interface DepthAwareCheckboxProps {
   depth: number;
-  checked?: boolean;
-  partiallyChecked?: boolean;
-  disabled?: boolean;
+  isChecked?: boolean;
+  isPartiallyChecked?: boolean;
+  isDisabled?: boolean;
+  isLoading?: boolean;
   onChange: (event: ChangeEvent) => void;
 }
 
-export const DepthAwareCheckbox = ({
-  depth,
-  checked,
-  partiallyChecked,
-  disabled,
-  onChange,
-}: DepthAwareCheckboxProps) => {
-  const indentPerLevel = 24;
-  const baseIndent = 46;
-  const totalIndent = baseIndent + indentPerLevel * depth;
+export const DepthAwareCheckbox = memo(
+  ({
+    depth,
+    isChecked,
+    isPartiallyChecked,
+    isDisabled,
+    isLoading,
+    onChange,
+  }: DepthAwareCheckboxProps) => {
+    const indentPerLevel = 24;
+    const baseIndent = 46;
+    const totalIndent = baseIndent + indentPerLevel * depth;
 
-  return (
-    <div className={cx('depth-aware-checkbox')} style={{ left: `${-totalIndent}px` }}>
-      <Checkbox
-        value={checked}
-        partiallyChecked={partiallyChecked}
-        disabled={disabled}
-        onChange={onChange}
-      />
-    </div>
-  );
-};
+    return (
+      <div className={cx('depth-aware-checkbox')} style={{ left: `${-totalIndent}px` }}>
+        {isLoading ? (
+          <SpinLoader className={cx('depth-aware-checkbox__spinner')} />
+        ) : (
+          <Checkbox
+            value={isChecked}
+            partiallyChecked={isPartiallyChecked}
+            disabled={isDisabled}
+            onChange={onChange}
+          />
+        )}
+      </div>
+    );
+  },
+);

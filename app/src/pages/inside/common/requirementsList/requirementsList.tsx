@@ -16,7 +16,7 @@
 
 import { ClipboardButton } from 'components/buttons/copyClipboardButton';
 import { createClassnames } from 'common/utils';
-import { Requirement } from 'pages/inside/testCaseLibraryPage/types';
+import { Requirement } from 'types/testCase';
 
 import { processText } from './utils';
 

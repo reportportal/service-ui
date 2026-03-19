@@ -20,7 +20,7 @@ import { TreeDragItem, TreeDropPosition } from '@reportportal/ui-kit/common';
 
 import { createClassnames } from 'common/utils';
 import { TransformedFolder } from 'controllers/testCase';
-import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { ExtendedTestCase } from 'types/testCase';
 
 import styles from './folder/folder.scss';
 import type { TestCaseFolderActionCallback } from './types';

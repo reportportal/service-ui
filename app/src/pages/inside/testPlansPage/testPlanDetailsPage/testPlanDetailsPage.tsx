@@ -47,7 +47,12 @@ import {
 } from 'hooks/useTypedSelector';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { testPlanTestCasesSelector } from 'controllers/testPlan';
-import { isLoadingFilteredFoldersSelector } from 'controllers/testCase';
+import {
+  areFoldersFetchedSelector,
+  areFoldersLoadingSelector,
+  getFoldersAction,
+  isLoadingFilteredFoldersSelector,
+} from 'controllers/testCase';
 import { SearchField } from 'components/fields/searchField';
 import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
 import { messages as testCaseListMessages } from 'pages/inside/common/testCaseList/messages';
@@ -88,9 +93,15 @@ export const TestPlanDetailsPage = () => {
 
   const location = useSelector(locationSelector);
   const isLoadingFilteredFolders = useSelector(isLoadingFilteredFoldersSelector);
-  const [searchValue, setSearchValue] = useState(
-    location?.query?.testCasesSearchParams || '',
-  );
+  const areFoldersLoading = useSelector(areFoldersLoadingSelector);
+  const areFoldersFetched = useSelector(areFoldersFetchedSelector);
+
+  useEffect(() => {
+    if (!areFoldersFetched) {
+      dispatch(getFoldersAction());
+    }
+  }, [areFoldersFetched, dispatch]);
+  const [searchValue, setSearchValue] = useState(location?.query?.testCasesSearchParams || '');
 
   useEffect(() => {
     const querySearch = location?.query?.testCasesSearchParams || '';
@@ -224,7 +235,7 @@ export const TestPlanDetailsPage = () => {
     </>
   );
 
-  if (isLoading) {
+  if (isLoading || areFoldersLoading) {
     return (
       <SettingsLayout>
         <PageLoader />

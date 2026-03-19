@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { ExtendedTestCase } from 'types/testCase';
 
 export interface AddTestCasesToLaunchModalProps {
   selectedRowsIds: number[];

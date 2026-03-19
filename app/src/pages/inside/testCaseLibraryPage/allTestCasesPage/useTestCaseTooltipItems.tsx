@@ -21,7 +21,7 @@ import { TestCaseMenuAction } from 'pages/inside/common/testCaseList/types';
 import { createTestCaseMenuItems } from 'pages/inside/common/testCaseList/configUtils';
 import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
 import { getExcludedActionsFromPermissionMap } from 'pages/inside/common/testCaseList/utils';
-import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { ExtendedTestCase } from 'types/testCase';
 
 import { useEditTestCaseModal } from '../editSelectedTestCaseModal';
 import { useMoveTestCaseModal } from '../moveTestCaseModal/useMoveTestCaseModal';

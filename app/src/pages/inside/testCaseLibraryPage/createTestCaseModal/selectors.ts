@@ -15,9 +15,11 @@
  */
 
 import { formValueSelector } from 'redux-form';
-import type { AppState } from 'types/store';
 
-import { ManualScenarioType, Step } from '../types';
+import type { AppState } from 'types/store';
+import { Step } from 'types/testCase';
+
+import { ManualScenarioType } from '../types';
 
 export const manualScenarioTypeSelector = (formName: string) => (state: AppState) => {
   const formSelector = formValueSelector(formName);

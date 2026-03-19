@@ -15,7 +15,7 @@
  */
 
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
-import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { ExtendedTestCase } from 'types/testCase';
 
 export interface AllTestCasesPageProps {
   testCases: ExtendedTestCase[];

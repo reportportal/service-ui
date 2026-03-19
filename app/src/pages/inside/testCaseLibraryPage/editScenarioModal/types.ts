@@ -15,7 +15,10 @@
  */
 
 import { FormEvent } from 'react';
-import { ExtendedTestCase, CreateTestCaseFormData } from '../types';
+
+import { ExtendedTestCase } from 'types/testCase';
+
+import { CreateTestCaseFormData } from '../types';
 
 export interface UseEditScenarioModalOptions {
   testCase: ExtendedTestCase;

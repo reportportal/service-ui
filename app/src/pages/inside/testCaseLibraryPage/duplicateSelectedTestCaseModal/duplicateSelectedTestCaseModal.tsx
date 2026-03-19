@@ -22,9 +22,10 @@ import { commonValidators } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal } from 'controllers/modal';
 import { UseModalData } from 'common/hooks';
+import { ExtendedTestCase } from 'types/testCase';
 
 import { commonMessages } from '../commonMessages';
-import { ExtendedTestCase, CreateTestCaseFormData } from '../types';
+import { CreateTestCaseFormData } from '../types';
 import { TestCaseModal } from '../createTestCaseModal/testCaseModal/testCaseModal';
 import { TEST_CASE_FORM_INITIAL_VALUES } from '../createTestCaseModal/constants';
 import { useTestCase } from '../hooks/useTestCase';

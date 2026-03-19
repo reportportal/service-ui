@@ -50,7 +50,7 @@ import { ProjectDetails } from 'pages/organization/constants';
 import { Scenario } from 'pages/inside/common/testCaseList/testCaseSidePanel/scenario';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import { TestPlanDto } from 'controllers/testPlan';
-import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { ExtendedTestCase } from 'types/testCase';
 import { formatDuration, openRouteInNewTab } from 'pages/inside/common/testCaseList/utils';
 
 import { useRemoveTestCasesFromTestPlanModal } from '../testPlanModals';

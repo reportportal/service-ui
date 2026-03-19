@@ -52,7 +52,7 @@ import {
   CLEAR_FILTERED_FOLDERS,
 } from 'controllers/testCase/constants';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
-import { TestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { TestCase } from 'types/testCase';
 import { Page } from 'types/common';
 import { queueReducers } from 'common/utils';
 

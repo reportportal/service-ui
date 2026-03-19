@@ -23,14 +23,9 @@ import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
 import { GET_TEST_CASE_DETAILS_SUCCESS } from 'controllers/testCase/constants';
 import { testCaseDetailsSelector } from 'controllers/testCase';
+import { Tag, ExtendedTestCase, Attribute } from 'types/testCase';
 
-import {
-  Tag,
-  ExtendedTestCase,
-  UseTestCaseTagsParams,
-  Attribute,
-  hasAttributeValue,
-} from '../types';
+import { UseTestCaseTagsParams, hasAttributeValue } from '../types';
 
 export const useTestCaseTags = ({ testCaseId }: UseTestCaseTagsParams) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();

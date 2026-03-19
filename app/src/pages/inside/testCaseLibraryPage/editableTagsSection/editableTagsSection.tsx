@@ -21,8 +21,8 @@ import { isEmpty } from 'es-toolkit/compat';
 import { commonMessages } from 'pages/inside/common/common-messages/common-messages';
 import { InfoBlock } from 'pages/inside/common/infoBlock';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
+import { Attribute } from 'types/testCase';
 
-import { Attribute } from '../types';
 import { SectionWithHeader } from '../sectionWithHeader';
 
 interface EditableTagsSectionProps {

@@ -1,16 +1,16 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { useDebouncedSpinner } from "common/hooks";
+import { useDebouncedSpinner } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import { showErrorNotification } from "controllers/notification";
-import { projectKeySelector } from "controllers/project";
-import { Attribute, ExecutionComment, TestFolder } from "controllers/manualLaunch/types";
-import { useManualLaunchId } from "hooks/useTypedSelector";
-import { TestCasePriority } from "pages/inside/common/priorityIcon/types";
-import { UrlsHelper } from "pages/inside/manualLaunchesPage/types";
-import { ManualScenario, Requirement } from "pages/inside/testCaseLibraryPage/types";
+import { showErrorNotification } from 'controllers/notification';
+import { projectKeySelector } from 'controllers/project';
+import { Attribute, ExecutionComment, TestFolder } from 'controllers/manualLaunch/types';
+import { useManualLaunchId } from 'hooks/useTypedSelector';
+import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
+import { UrlsHelper } from 'pages/inside/manualLaunchesPage/types';
+import { ManualScenario, Requirement } from 'types/testCase';
 
 interface ExecutionItem {
   id: number;
@@ -29,7 +29,7 @@ interface ExecutionItem {
   manualScenario: ManualScenario | null;
   attributes: Attribute[];
   requirements?: Requirement[];
-};
+}
 
 export const useExecutionDetails = (executionId: number | null) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
@@ -51,14 +51,10 @@ export const useExecutionDetails = (executionId: number | null) => {
         showSpinner();
 
         const response = await fetch<ExecutionItem>(
-          (URLS as UrlsHelper).manualLaunchExecutionById(
-            projectKey,
-            launchId,
-            executionId
-          ),
+          (URLS as UrlsHelper).manualLaunchExecutionById(projectKey, launchId, executionId),
           {
             signal: abortController.signal,
-          }
+          },
         );
 
         setExecutionDetails(response);

@@ -16,29 +16,17 @@
 
 import { FC, SVGProps, ReactNode } from 'react';
 import { isString, isObject, isNil } from 'es-toolkit/compat';
+
+import type { Tag, Attribute, Requirement, ExtendedTestCase } from 'types/testCase';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { FolderWithFullPath } from 'controllers/testCase/types';
-import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
-import { Attachment } from '../common/attachmentList';
 
-export type Tag = {
-  key: string;
-  value?: string;
-  id: number;
-};
+import { Attachment } from '../common/attachmentList';
 
 // The structure must be corrected after BE integration
 export interface IAttachment {
   fileName: string;
   size: number;
-}
-
-export interface Step {
-  id: number;
-  instructions: string;
-  expectedResult: string;
-  attachments?: Attachment[];
-  position?: number;
 }
 
 export enum ManualScenarioType {
@@ -67,70 +55,6 @@ interface ManualScenarioText extends ManualScenarioCommon {
 
 export type ManualScenarioDto = ManualScenarioSteps | ManualScenarioText;
 
-export interface TestCase {
-  id: number;
-  name: string;
-  priority: TestCasePriority;
-  createdAt: number;
-  description?: string;
-  path: string[];
-  attributes?: (Tag | Attribute)[];
-  updatedAt: number;
-  durationTime?: number;
-  testFolder: {
-    id: number;
-  };
-  lastExecution?: Execution;
-  tags?: { key: string }[];
-  manualScenario?: ManualScenario;
-}
-
-export interface ManualScenario {
-  manualScenarioType: TestCaseManualScenario;
-  id: number;
-  executionEstimationTime: number;
-  requirements: Requirement[];
-  preconditions: {
-    value: string;
-    attachments: Attachment[];
-  };
-  attributes?: Tag[];
-  steps: Step[];
-  instructions?: string;
-  expectedResult?: string;
-  attachments?: Attachment[];
-}
-
-export enum ExecutionStatus {
-  PASSED = 'PASSED',
-  FAILED = 'FAILED',
-  STOPPED = 'STOPPED',
-  SKIPPED = 'SKIPPED',
-  INTERRUPTED = 'INTERRUPTED',
-  CANCELLED = 'CANCELLED',
-  INFO = 'INFO',
-  WARN = 'WARN',
-  TO_RUN = 'TO_RUN',
-}
-
-export interface Execution {
-  id: number;
-  launch: {
-    id: number;
-    name: string;
-    number: number;
-  };
-  status: ExecutionStatus;
-  startedAt: number;
-  duration: number;
-}
-
-export interface ExtendedTestCase extends TestCase {
-  manualScenario?: ManualScenario;
-  lastExecution?: Execution;
-  executions?: Execution[];
-}
-
 export interface ActionButton {
   name: string;
   dataAutomationId: string;
@@ -138,17 +62,6 @@ export interface ActionButton {
   isCompact: boolean;
   variant?: string;
   handleButton: () => void;
-}
-
-export interface Attribute {
-  id: number;
-  key: string;
-  value: string;
-}
-
-export interface Requirement {
-  id: string;
-  value: string;
 }
 
 export interface CreateTestCaseFormData {

@@ -19,7 +19,7 @@ import { useDispatch } from 'react-redux';
 import { change, touch, untouch } from 'redux-form';
 import { keyBy, isNumber, isEmpty } from 'es-toolkit/compat';
 
-import { Step } from '../types';
+import { Step } from 'types/testCase';
 
 const createEmptyStep = (): Step => ({
   id: Date.now(),
