@@ -20,10 +20,10 @@ import Parser from 'html-react-parser';
 
 import ArrowDownIcon from 'common/img/arrow-down-inline.svg';
 import { createClassnames } from 'common/utils';
-import { EXECUTION_STATUSES } from 'controllers/manualLaunch';
-import { ExecutionStatusPopover, STATUS_CONFIG } from 'pages/inside/manualLaunchesPage';
+import { STATUS_CONFIG } from 'pages/inside/manualLaunchesPage/constants';
+import { ExecutionStatusPopover } from 'pages/inside/manualLaunchesPage';
 
-import type { ExecutionStatusData, StatusConfig } from '../types';
+import type { ExecutionStatusData } from '../types';
 import { messages } from './messages';
 
 import styles from './executionStatusDropdown.scss';
@@ -34,7 +34,7 @@ export const ExecutionStatusDropdown: FC<ExecutionStatusData> = ({ executionId, 
   const { formatMessage } = useIntl();
   const [isOpened, setIsOpened] = useState(false);
 
-  const currentConfig = (STATUS_CONFIG as Record<EXECUTION_STATUSES, StatusConfig>)[status];
+  const currentConfig = STATUS_CONFIG[status];
 
   if (!currentConfig) {
     return null;

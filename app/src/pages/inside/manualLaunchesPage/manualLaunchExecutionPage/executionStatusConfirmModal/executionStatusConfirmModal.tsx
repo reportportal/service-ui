@@ -46,12 +46,11 @@ import {
   EXECUTION_STATUS_CONFIRM_MODAL,
   EXECUTION_STATUS_CONFIRM_FORM_NAME,
   STATUS_CONFIG,
-} from 'pages/inside/manualLaunchesPage';
+} from 'pages/inside/manualLaunchesPage/constants';
 
 import type {
   ExecutionStatusConfirmFormValues,
   ExecutionStatusConfirmModalProps,
-  StatusConfig,
 } from '../types';
 import { messages } from './messages';
 
@@ -83,8 +82,7 @@ const ExecutionStatusConfirmModalComponent: FC<
 
   const status = data?.status || EXECUTION_STATUSES.PASSED;
   const executionId = data?.executionId;
-  const safeStatusConfig = STATUS_CONFIG as Record<EXECUTION_STATUSES, StatusConfig>;
-  const statusLabel = formatMessage(safeStatusConfig[status].label);
+  const statusLabel = formatMessage(STATUS_CONFIG[status].label);
 
   const onSubmit = (values: ExecutionStatusConfirmFormValues) => {
     if (!executionId) return;

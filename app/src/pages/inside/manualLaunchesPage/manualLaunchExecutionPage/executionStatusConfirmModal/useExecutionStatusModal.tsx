@@ -18,7 +18,7 @@ import { useDispatch } from 'react-redux';
 
 import { showModalAction } from 'controllers/modal';
 import { EXECUTION_STATUSES } from 'controllers/manualLaunch';
-import { EXECUTION_STATUS_CONFIRM_MODAL } from 'pages/inside/manualLaunchesPage';
+import { EXECUTION_STATUS_CONFIRM_MODAL } from 'pages/inside/manualLaunchesPage/constants';
 
 interface OpenModalParams {
   executionId: number;
@@ -31,7 +31,7 @@ export const useExecutionStatusModal = () => {
   const openModal = ({ executionId, status }: OpenModalParams) => {
     dispatch(
       showModalAction({
-        id: EXECUTION_STATUS_CONFIRM_MODAL as string,
+        id: EXECUTION_STATUS_CONFIRM_MODAL,
         data: {
           executionId,
           status,
