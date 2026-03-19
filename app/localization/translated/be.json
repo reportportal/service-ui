@@ -97,7 +97,7 @@
   "AllUsersFilter.lastLogin": "Апошні ўваход у сістэму",
   "AllUsersFilter.type": "Тып",
   "AllUsersFilter.typePlaceholder": "Выберыце тып карыстальніка",
-  "AllUsersPage.bulkDelete.success": "{count, plural, one {Выбраны карыстальнік быў паспяхова выдалены} other {Выбраныя карыстальнікі былі паспяхова выдалены}}",
+  "AllUsersPage.bulkDelete.success": "{count, plural, one {Вылучаны карыстальнік быў паспяхова выдалены} other {Вылучаныя карыстальнікі былі паспяхова выдалены}}",
   "AllUsersPage.createUser": "Стварыць карыстальніка",
   "AllUsersPage.export": "Экспартаваць",
   "AllUsersPage.invite": "Запрасіць Карыстальніка",
