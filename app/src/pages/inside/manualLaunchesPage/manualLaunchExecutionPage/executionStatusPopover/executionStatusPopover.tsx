@@ -20,7 +20,7 @@ import { Popover } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { EXECUTION_STATUSES } from 'controllers/manualLaunch';
-import { Divider } from 'pages/inside/projectSettingsPageContainer/content/elements';
+import { Divider } from 'pages/common';
 
 import { STATUS_CONFIG } from '../constants';
 import { useExecutionStatusModal } from '../executionStatusConfirmModal';

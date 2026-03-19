@@ -16,3 +16,4 @@
 
 export { EmptyPageState } from './emptyPageState';
 export { ConfirmationModal } from './modals/confirmationModal';
+export { Divider } from './divider';

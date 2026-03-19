@@ -17,7 +17,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { Divider, TabDescription } from '../elements';
+
+import { Divider } from 'pages/common';
+
+import { TabDescription } from '../elements';
+
 import styles from './layout.scss';
 
 const cx = classNames.bind(styles);

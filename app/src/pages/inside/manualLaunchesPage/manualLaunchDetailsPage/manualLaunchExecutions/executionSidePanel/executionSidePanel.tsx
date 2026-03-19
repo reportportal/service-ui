@@ -34,7 +34,7 @@ import { RequirementsList } from 'pages/inside/common/requirementsList/requireme
 import { Scenario } from 'pages/inside/common/testCaseList/testCaseSidePanel/scenario';
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 import { formatTimestamp } from 'pages/inside/common/testCaseList/utils';
-import { Divider } from 'pages/inside/projectSettingsPageContainer/content/elements';
+import { Divider } from 'pages/common';
 import { AttachmentList, type Attachment } from 'pages/inside/common/attachmentList';
 
 import { messages } from './messages';

@@ -21,9 +21,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
+import { Button } from '@reportportal/ui-kit';
+
 import { addDefectTypeAction, defectTypesSelector } from 'controllers/project';
 import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
-import { Button } from '@reportportal/ui-kit';
 import CreateDefectIcon from 'common/img/newIcons/create-subtype-inline.svg';
 import DefectGroupIcon from 'common/img/newIcons/defect-group-inline.svg';
 import { withTooltip } from 'componentLibrary/tooltip';
@@ -33,11 +34,14 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { PROJECT_SETTINGS_DEFECT_TYPES_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { docsReferences, createExternalLink } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { Divider, TabDescription, MODAL_ACTION_TYPE_ADD, FormattedDescription } from '../elements';
+import { Divider } from 'pages/common';
+
+import { TabDescription, MODAL_ACTION_TYPE_ADD, FormattedDescription } from '../elements';
 import { MAX_DEFECT_TYPES_COUNT, WARNING_DEFECT_TYPES_COUNT } from './constants';
 import { SettingsPageContent } from '../settingsPageContent';
 import { DefectTypeRow } from './defectTypeRow';
 import { messages } from './defectTypesMessages';
+
 import styles from './defectTypes.scss';
 
 const cx = classNames.bind(styles);
