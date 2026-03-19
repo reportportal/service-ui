@@ -57,6 +57,12 @@
 
 .meta-value {
   color: var(--rp-ui-base-almost-black);
+  text-decoration: none;
+}
+
+.meta-empty-value {
+  color: var(--rp-ui-base-almost-black);
+  font-size: 20px;
 }
 
 .content-wrapper {
@@ -118,4 +124,13 @@
   &.menu-button {
     padding: 7px 12px;
   }
+}
+
+.id-button {
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  color: var(--rp-ui-base-almost-black);
+  cursor: pointer;
 }

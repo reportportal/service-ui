@@ -23,7 +23,7 @@ import ArrowDownIcon from 'common/img/arrow-down-inline.svg';
 import { createClassnames } from 'common/utils';
 
 import { STATUS_CONFIG } from '../constants';
-import type { ExecutionStatusDropdownProps, ExecutionStatusType } from '../types';
+import type { ExecutionStatusData } from '../types';
 import { ExecutionStatusPopover } from '../executionStatusPopover';
 import { messages } from './messages';
 
@@ -31,15 +31,14 @@ import styles from './executionStatusDropdown.scss';
 
 const cx = createClassnames(styles);
 
-export const ExecutionStatusDropdown: FC<ExecutionStatusDropdownProps> = ({
+export const ExecutionStatusDropdown: FC<ExecutionStatusData> = ({
   executionId,
-  currentStatus,
+  status,
 }) => {
   const { formatMessage } = useIntl();
   const [isOpened, setIsOpened] = useState(false);
 
-  const statusKey = currentStatus.toLowerCase() as ExecutionStatusType;
-  const currentConfig = STATUS_CONFIG[statusKey];
+  const currentConfig = STATUS_CONFIG[status];
 
   if (!currentConfig) {
     return null;
@@ -50,7 +49,7 @@ export const ExecutionStatusDropdown: FC<ExecutionStatusDropdownProps> = ({
       <span className={cx('label')}>{formatMessage(messages.currentExecutionStatus)}</span>
       <ExecutionStatusPopover
         executionId={executionId}
-        currentStatus={currentStatus}
+        currentStatus={status}
         isOpened={isOpened}
         setIsOpened={setIsOpened}
       >
@@ -60,7 +59,7 @@ export const ExecutionStatusDropdown: FC<ExecutionStatusDropdownProps> = ({
             open: isOpened,
           })}
         >
-          <span className={cx('status-indicator', `status-indicator--${statusKey}`)} />
+          <span className={cx('status-indicator', `status-indicator--${status.toLowerCase()}`)} />
           {formatMessage(currentConfig.label)}
           <span className={cx('arrow-icon', { rotated: isOpened })}>
             {Parser(ArrowDownIcon as unknown as string)}

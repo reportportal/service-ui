@@ -80,3 +80,4 @@ export const canLockDashboard = checkPermission(ACTIONS.LOCK_DASHBOARD);
 export const canCreateManualLaunch = checkPermission(ACTIONS.CREATE_MANUAL_LAUNCH);
 export const canManageTestCases = checkPermission(ACTIONS.MANAGE_TEST_CASES);
 export const canManageTestPlans = checkPermission(ACTIONS.MANAGE_TEST_PLANS);
+export const canManageExecutions = checkPermission(ACTIONS.MANAGE_EXECUTIONS);

@@ -196,9 +196,16 @@ export interface ManualScenario {
   attachments?: Attachment[];
 }
 
+export enum EXECUTION_STATUSES {
+  FAILED = 'FAILED',
+  PASSED = 'PASSED',
+  SKIPPED = 'SKIPPED',
+  TO_RUN = 'TO_RUN',
+}
+
 export interface TestCaseExecution {
   id: number;
-  executionStatus: string;
+  executionStatus: EXECUTION_STATUSES;
   executionComment?: ExecutionComment;
   startedAt?: number;
   finishedAt?: number;

@@ -17,9 +17,10 @@
 import { useIntl } from 'react-intl';
 
 import { createClassnames } from 'common/utils';
+import { EXECUTION_STATUSES } from 'controllers/manualLaunch';
 
 import { STATUS_BUTTONS } from '../constants';
-import type { ExecutionStatusButtonsProps, ExecutionStatusType } from '../types';
+import type { ExecutionStatusButtonsProps, } from '../types';
 import { useExecutionStatusModal } from '../executionStatusConfirmModal';
 
 import styles from './executionStatusButtons.scss';
@@ -30,10 +31,10 @@ export const ExecutionStatusButtons = ({ executionId }: ExecutionStatusButtonsPr
   const { formatMessage } = useIntl();
   const { openModal } = useExecutionStatusModal();
 
-  const handleStatusClick = (status: string) => {
+  const handleStatusClick = (status: EXECUTION_STATUSES) => {
     openModal({
       executionId,
-      status: status as ExecutionStatusType,
+      status,
     });
   };
 

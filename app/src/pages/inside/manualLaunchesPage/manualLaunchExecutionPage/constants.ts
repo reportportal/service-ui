@@ -15,33 +15,33 @@
  */
 
 import { commonMessages } from 'pages/inside/common/common-messages';
+import { EXECUTION_STATUSES } from 'controllers/manualLaunch';
 
-import type { StatusButtonConfig, StatusConfig, ExecutionStatusType } from './types';
-
-export const EXECUTION_STATUS_TO_RUN = 'TO_RUN' as const;
-export const EXECUTION_STATUS_SKIPPED: ExecutionStatusType = 'skipped';
-export const EXECUTION_STATUS_FAILED: ExecutionStatusType = 'failed';
-export const EXECUTION_STATUS_PASSED: ExecutionStatusType = 'passed';
+import type { StatusButtonConfig, StatusConfig } from './types';
 
 export const STATUS_BUTTONS: StatusButtonConfig[] = [
-  { status: EXECUTION_STATUS_SKIPPED, message: commonMessages.skipped },
-  { status: EXECUTION_STATUS_FAILED, message: commonMessages.failed },
-  { status: EXECUTION_STATUS_PASSED, message: commonMessages.passed },
+  { status: EXECUTION_STATUSES.SKIPPED, message: commonMessages.skipped },
+  { status: EXECUTION_STATUSES.FAILED, message: commonMessages.failed },
+  { status: EXECUTION_STATUSES.PASSED, message: commonMessages.passed },
 ];
 
-export const STATUS_CONFIG: Record<ExecutionStatusType, StatusConfig> = {
-  [EXECUTION_STATUS_PASSED]: {
+export const STATUS_CONFIG: Record<EXECUTION_STATUSES, StatusConfig> = {
+  [EXECUTION_STATUSES.PASSED]: {
     label: commonMessages.passed,
-    colorClass: EXECUTION_STATUS_PASSED,
+    colorClass: EXECUTION_STATUSES.PASSED.toLowerCase(),
   },
-  [EXECUTION_STATUS_FAILED]: {
+  [EXECUTION_STATUSES.FAILED]: {
     label: commonMessages.failed,
-    colorClass: EXECUTION_STATUS_FAILED,
+    colorClass: EXECUTION_STATUSES.FAILED.toLowerCase(),
   },
-  [EXECUTION_STATUS_SKIPPED]: {
+  [EXECUTION_STATUSES.SKIPPED]: {
     label: commonMessages.skipped,
-    colorClass: EXECUTION_STATUS_SKIPPED,
+    colorClass: EXECUTION_STATUSES.SKIPPED.toLowerCase(),
   },
+  [EXECUTION_STATUSES.TO_RUN]: {
+    label: commonMessages.toRun,
+    colorClass: EXECUTION_STATUSES.TO_RUN.toLowerCase()
+  }
 };
 
 export const EXECUTION_STATUS_CONFIRM_MODAL = 'executionStatusConfirmModal';

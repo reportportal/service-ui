@@ -31,6 +31,7 @@ import {
   isLoadingActiveManualLaunchExecutionSelector,
   manualLaunchFoldersSelector,
   MANUAL_SCENARIO_TYPE_TEXT,
+  EXECUTION_STATUSES
 } from 'controllers/manualLaunch';
 import {
   useProjectDetails,
@@ -47,7 +48,6 @@ import { StepsBasedContent } from './stepsBasedContent';
 import { messages } from './messages';
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { messages as manualLaunchesMessages } from '../messages';
-import { EXECUTION_STATUS_TO_RUN } from './constants';
 
 import styles from './manualLaunchExecutionPage.scss';
 
@@ -117,7 +117,7 @@ export const ManualLaunchExecutionPage = () => {
 
   const isTextBased = execution?.manualScenario?.manualScenarioType === MANUAL_SCENARIO_TYPE_TEXT;
   const executionStatus = execution?.executionStatus;
-  const hasStatus = executionStatus && executionStatus !== EXECUTION_STATUS_TO_RUN;
+  const hasStatus = executionStatus && executionStatus !== EXECUTION_STATUSES.TO_RUN;
 
   const handleRunTestClick = () => {
     setShowStatusButtons(true);
@@ -125,7 +125,7 @@ export const ManualLaunchExecutionPage = () => {
 
   const renderHeaderActions = () => {
     if (hasStatus) {
-      return <ExecutionStatusDropdown executionId={execution.id} currentStatus={executionStatus} />;
+      return <ExecutionStatusDropdown executionId={execution.id} status={executionStatus} />;
     }
 
     if (showStatusButtons) {

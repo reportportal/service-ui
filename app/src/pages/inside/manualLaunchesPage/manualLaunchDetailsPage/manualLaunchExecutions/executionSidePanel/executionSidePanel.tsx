@@ -1,4 +1,5 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
 import {
@@ -16,10 +17,14 @@ import type { Issue } from '@reportportal/ui-kit/issueList';
 
 import { useOnClickOutside } from 'common/hooks';
 import { createClassnames, formatDuration } from 'common/utils';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { CollapsibleSection } from 'components/collapsibleSection';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { FolderBreadcrumbs } from 'components/folderBreadcrumbs';
-import { BtsTicket, manualLaunchFoldersSelector } from 'controllers/manualLaunch';
+import { BtsTicket, EXECUTION_STATUSES } from 'controllers/manualLaunch';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { ProjectDetails } from 'pages/organization/constants';
+import { ExecutionStatusPopover } from 'pages/inside/manualLaunchesPage/manualLaunchExecutionPage/executionStatusPopover';
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { messages as testCaseMessages } from 'pages/inside/common/testCaseList/testCaseSidePanel/messages';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
@@ -29,7 +34,7 @@ import { RequirementsList } from 'pages/inside/common/requirementsList/requireme
 import { Scenario } from 'pages/inside/common/testCaseList/testCaseSidePanel/scenario';
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 import { formatTimestamp } from 'pages/inside/common/testCaseList/utils';
-import { Divider } from 'pages/inside/projectSettingsPageContainer/content/elements';
+import { Divider } from 'pages/common';
 import { AttachmentList, type Attachment } from 'pages/inside/common/attachmentList';
 
 import { messages } from './messages';
@@ -46,8 +51,15 @@ interface ExecutionSidePanelProps {
 
 export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelProps) => {
   const { formatMessage } = useIntl();
-  const { executionDetails, isLoading } = useExecutionDetails(executionId);
+  const { canManageExecutions } = useUserPermissions();
+  const [isPopoverOpened, setIsPopoverOpened] = useState(false);
   const sidePanelRef = useRef<HTMLDivElement>(null);
+  const { executionDetails, isLoading } = useExecutionDetails(executionId);
+
+  const { organizationSlug, projectSlug } = useSelector(
+    urlOrganizationAndProjectSelector,
+  ) as ProjectDetails;
+
   const isScenarioProvided =
     (executionDetails?.manualScenario?.manualScenarioType === TestCaseManualScenario.STEPS &&
       !isEmpty(executionDetails?.manualScenario?.steps)) ||
@@ -80,27 +92,38 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
   const descriptionComponent = (
     <div className={cx('sidepanel-description')}>
       <FolderBreadcrumbs
-        folderId={executionDetails?.testFolder?.testItemId}
-        instanceKey={TMS_INSTANCE_KEY.MANUAL_LAUNCH}
-        customFoldersSelector={manualLaunchFoldersSelector}
+        folderId={executionDetails?.testFolder?.id}
+        instanceKey={TMS_INSTANCE_KEY.TEST_CASE}
       />
       <div className={cx('meta-row')}>
         <div className={cx('meta-row-item')}>
           <span className={cx('meta-label')}>{formatMessage(messages.executionId)}:</span>
-          <span className={cx('meta-value')}>{executionDetails?.id}</span>
+          <a
+            href={`/#/organizations/${organizationSlug}/projects/${projectSlug}/testLibrary/test-cases/${executionDetails?.testCaseId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cx('meta-value')}
+          >
+            {executionDetails?.testCaseId}
+          </a>
         </div>
-        {executionDetails?.startedAt && (
-          <div className={cx('meta-row-item')}>
-            <RerunIcon />
-            <span className={cx('meta-value')}>{formatTimestamp(executionDetails.startedAt)}</span>
-          </div>
-        )}
-        {executionDetails?.duration != null && (
-          <div className={cx('meta-row-item')}>
-            <DurationIcon />
+        {executionDetails?.executionStatus !== EXECUTION_STATUSES.TO_RUN &&
+          executionDetails?.startedAt && (
+            <div className={cx('meta-row-item')}>
+              <RerunIcon />
+              <span className={cx('meta-value')}>
+                {formatTimestamp(executionDetails.startedAt)}
+              </span>
+            </div>
+          )}
+        <div className={cx('meta-row-item')}>
+          <DurationIcon />
+          {executionDetails?.duration ? (
             <span className={cx('meta-value')}>{formatDuration(executionDetails.duration)}</span>
-          </div>
-        )}
+          ) : (
+            <span className={cx('meta-empty-value')}> - </span>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -177,26 +200,37 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
     </div>
   );
 
-  const footerComponent = (
+  const footerComponent = canManageExecutions && (
     <div className={cx('footer')}>
-      <Button
-        variant="ghost"
-        className={cx('action-button')}
-        onClick={() => {}}
-        data-automation-id="test-plan-open-in-library"
-      >
-        {formatMessage(messages.changeStatus)}
-        <ChevronDownDropdownIcon />
-      </Button>
-      <Button
-        variant="primary"
-        className={cx('action-button')}
-        onClick={() => {}}
-        data-automation-id="test-plan-quick-run"
-      >
-        {formatMessage(messages.runTest)}
-        <RunManualIcon />
-      </Button>
+      {executionDetails && (
+        <ExecutionStatusPopover
+          executionId={executionDetails.id}
+          currentStatus={executionDetails.executionStatus}
+          isOpened={isPopoverOpened}
+          setIsOpened={setIsPopoverOpened}
+        >
+          <Button
+            variant="ghost"
+            className={cx('action-button')}
+            onClick={() => setIsPopoverOpened(true)}
+            data-automation-id="test-plan-open-in-library"
+          >
+            {formatMessage(messages.changeStatus)}
+            <ChevronDownDropdownIcon />
+          </Button>
+        </ExecutionStatusPopover>
+      )}
+      {executionDetails?.executionStatus === EXECUTION_STATUSES.TO_RUN && (
+        <Button
+          variant="primary"
+          className={cx('action-button')}
+          onClick={() => {}}
+          data-automation-id="test-plan-quick-run"
+        >
+          {formatMessage(messages.runTest)}
+          <RunManualIcon />
+        </Button>
+      )}
     </div>
   );
 

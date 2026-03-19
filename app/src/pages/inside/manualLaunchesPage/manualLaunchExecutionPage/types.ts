@@ -16,17 +16,15 @@
 
 import type { MessageDescriptor } from 'react-intl';
 
-import type { TestCaseExecution } from 'controllers/manualLaunch';
+import type { TestCaseExecution, EXECUTION_STATUSES } from 'controllers/manualLaunch';
 import type { UseModalData } from 'common/hooks';
-
-export type ExecutionStatusType = 'passed' | 'failed' | 'skipped';
 
 export interface ExecutionContentProps {
   execution: TestCaseExecution;
 }
 
 export interface StatusButtonConfig {
-  status: string;
+  status: EXECUTION_STATUSES;
   message: MessageDescriptor;
 }
 
@@ -35,18 +33,13 @@ export interface StatusConfig {
   colorClass: string;
 }
 
-export interface ExecutionStatusDropdownProps {
-  executionId: number;
-  currentStatus: string;
-}
-
 export interface ExecutionStatusButtonsProps {
   executionId: number;
 }
 
 export interface ExecutionStatusData {
   executionId: number;
-  status: ExecutionStatusType;
+  status: EXECUTION_STATUSES;
 }
 
 export type ExecutionStatusConfirmModalData = ExecutionStatusData;

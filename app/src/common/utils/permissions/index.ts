@@ -73,6 +73,7 @@ export {
   canCreateManualLaunch,
   canManageTestCases,
   canManageTestPlans,
+  canManageExecutions,
 } from './permissions';
 
 export { getRoleTitle, getRoleBadgesData, getOrgRoleTitle } from './getRoleTitle';
