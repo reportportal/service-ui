@@ -16,10 +16,8 @@
 
 import type { MessageDescriptor } from 'react-intl';
 
-import type { TestCaseExecution } from 'controllers/manualLaunch';
+import type { TestCaseExecution, EXECUTION_STATUSES } from 'controllers/manualLaunch';
 import type { UseModalData } from 'common/hooks';
-
-import { EXECUTION_STATUSES } from '../manualLaunchDetailsPage/manualLaunchExecutions/types';
 
 export interface ExecutionContentProps {
   execution: TestCaseExecution;

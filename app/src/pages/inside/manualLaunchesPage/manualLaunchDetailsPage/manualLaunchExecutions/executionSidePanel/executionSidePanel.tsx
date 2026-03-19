@@ -21,7 +21,7 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 import { CollapsibleSection } from 'components/collapsibleSection';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { FolderBreadcrumbs } from 'components/folderBreadcrumbs';
-import { BtsTicket } from 'controllers/manualLaunch';
+import { BtsTicket, EXECUTION_STATUSES } from 'controllers/manualLaunch';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { ProjectDetails } from 'pages/organization/constants';
 import { ExecutionStatusPopover } from 'pages/inside/manualLaunchesPage/manualLaunchExecutionPage/executionStatusPopover';
@@ -38,7 +38,6 @@ import { Divider } from 'pages/inside/projectSettingsPageContainer/content/eleme
 import { AttachmentList, type Attachment } from 'pages/inside/common/attachmentList';
 
 import { messages } from './messages';
-import { EXECUTION_STATUSES } from '../types';
 import { useExecutionDetails } from './useExecutionDetails';
 
 import styles from './executionSidePanel.scss';

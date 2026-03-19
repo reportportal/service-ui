@@ -6,13 +6,11 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { showErrorNotification } from 'controllers/notification';
 import { projectKeySelector } from 'controllers/project';
-import { Attribute, ExecutionComment, TestFolder } from 'controllers/manualLaunch/types';
+import { Attribute, ExecutionComment, TestFolder, EXECUTION_STATUSES } from 'controllers/manualLaunch';
 import { useManualLaunchId } from 'hooks/useTypedSelector';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { UrlsHelper } from 'pages/inside/manualLaunchesPage/types';
 import { ManualScenario, Requirement } from 'pages/inside/testCaseLibraryPage/types';
-
-import { EXECUTION_STATUSES } from '../types';
 
 interface ExecutionItem {
   id: number;

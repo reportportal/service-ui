@@ -15,9 +15,11 @@
  */
 
 import { useDispatch } from 'react-redux';
+
 import { showModalAction } from 'controllers/modal';
+import { EXECUTION_STATUSES } from 'controllers/manualLaunch';
+
 import { EXECUTION_STATUS_CONFIRM_MODAL } from '../constants';
-import { EXECUTION_STATUSES } from '../../manualLaunchDetailsPage/manualLaunchExecutions/types';
 
 interface OpenModalParams {
   executionId: number;

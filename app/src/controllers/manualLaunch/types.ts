@@ -17,7 +17,6 @@
 import { Page } from 'types/common';
 
 import { Launch } from 'pages/inside/manualLaunchesPage/types';
-import { EXECUTION_STATUSES } from 'pages/inside/manualLaunchesPage/manualLaunchDetailsPage/manualLaunchExecutions/types';
 import { hasPayloadProps } from 'controllers/utils/types';
 import {
   TOGGLE_MANUAL_LAUNCH_FOLDER_EXPANSION,
@@ -195,6 +194,13 @@ export interface ManualScenario {
   instructions?: string;
   expectedResult?: string;
   attachments?: Attachment[];
+}
+
+export enum EXECUTION_STATUSES {
+  FAILED = 'FAILED',
+  PASSED = 'PASSED',
+  SKIPPED = 'SKIPPED',
+  TO_RUN = 'TO_RUN',
 }
 
 export interface TestCaseExecution {

@@ -15,9 +15,9 @@
  */
 
 import { commonMessages } from 'pages/inside/common/common-messages';
+import { EXECUTION_STATUSES } from 'controllers/manualLaunch';
 
 import type { StatusButtonConfig, StatusConfig } from './types';
-import { EXECUTION_STATUSES } from '../manualLaunchDetailsPage/manualLaunchExecutions/types';
 
 export const STATUS_BUTTONS: StatusButtonConfig[] = [
   { status: EXECUTION_STATUSES.SKIPPED, message: commonMessages.skipped },

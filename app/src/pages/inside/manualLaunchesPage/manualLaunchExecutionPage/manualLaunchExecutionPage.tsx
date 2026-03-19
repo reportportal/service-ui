@@ -31,6 +31,7 @@ import {
   isLoadingActiveManualLaunchExecutionSelector,
   manualLaunchFoldersSelector,
   MANUAL_SCENARIO_TYPE_TEXT,
+  EXECUTION_STATUSES
 } from 'controllers/manualLaunch';
 import {
   useProjectDetails,
@@ -46,7 +47,6 @@ import { TextBasedContent } from './textBasedContent';
 import { StepsBasedContent } from './stepsBasedContent';
 import { messages } from './messages';
 import { commonMessages } from 'pages/inside/common/common-messages';
-import { EXECUTION_STATUSES } from '../manualLaunchDetailsPage/manualLaunchExecutions/types';
 import { messages as manualLaunchesMessages } from '../messages';
 
 import styles from './manualLaunchExecutionPage.scss';
