@@ -72,17 +72,16 @@ export const ExecutionStatusPopover: FC<ExecutionStatusPopoverProps> = ({
 
         if (status === EXECUTION_STATUSES.TO_RUN) {
           return (
-            <>
+            <div key={currentStatus}>
               <Divider />
               <button
-                key={currentStatus}
                 type="button"
                 className={cx('status-option')}
                 onClick={() => handleClearStatus()}
               >
                 {formatMessage(commonExecutionMessages.clearStatus)}
               </button>
-            </>
+            </div>
           );
         }
 
