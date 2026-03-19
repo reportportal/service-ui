@@ -17,7 +17,7 @@
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { EXECUTION_STATUSES } from 'controllers/manualLaunch';
 
-import type { StatusButtonConfig, StatusConfig } from './types';
+import type { StatusButtonConfig, StatusConfig } from './manualLaunchExecutionPage/types';
 
 export const STATUS_BUTTONS: StatusButtonConfig[] = [
   { status: EXECUTION_STATUSES.SKIPPED, message: commonMessages.skipped },
@@ -40,8 +40,8 @@ export const STATUS_CONFIG: Record<EXECUTION_STATUSES, StatusConfig> = {
   },
   [EXECUTION_STATUSES.TO_RUN]: {
     label: commonMessages.toRun,
-    colorClass: EXECUTION_STATUSES.TO_RUN.toLowerCase()
-  }
+    colorClass: EXECUTION_STATUSES.TO_RUN.toLowerCase(),
+  },
 };
 
 export const EXECUTION_STATUS_CONFIRM_MODAL = 'executionStatusConfirmModal';

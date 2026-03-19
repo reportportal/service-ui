@@ -23,9 +23,9 @@ import { EXECUTION_STATUSES } from 'controllers/manualLaunch';
 import { Divider } from 'pages/common';
 
 import { STATUS_CONFIG } from '../constants';
-import { useExecutionStatusModal } from '../executionStatusConfirmModal';
+import { useExecutionStatusModal } from '../manualLaunchExecutionPage/executionStatusConfirmModal';
 import { messages } from './messages';
-import { messages as commonExecutionMessages } from '../messages';
+import { messages as commonExecutionMessages } from '../manualLaunchExecutionPage/messages';
 
 import styles from './executionStatusPopover.scss';
 

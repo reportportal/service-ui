@@ -19,8 +19,8 @@ import { useIntl } from 'react-intl';
 import { createClassnames } from 'common/utils';
 import { EXECUTION_STATUSES } from 'controllers/manualLaunch';
 
-import { STATUS_BUTTONS } from '../constants';
-import type { ExecutionStatusButtonsProps, } from '../types';
+import { STATUS_BUTTONS } from 'pages/inside/manualLaunchesPage';
+import type { ExecutionStatusButtonsProps, StatusButtonConfig } from '../types';
 import { useExecutionStatusModal } from '../executionStatusConfirmModal';
 
 import styles from './executionStatusButtons.scss';
@@ -40,11 +40,11 @@ export const ExecutionStatusButtons = ({ executionId }: ExecutionStatusButtonsPr
 
   return (
     <div className={cx('execution-status-buttons')}>
-      {STATUS_BUTTONS.map(({ status, message }) => (
+      {(STATUS_BUTTONS as StatusButtonConfig[]).map(({ status, message }) => (
         <button
           key={status}
           type="button"
-          className={cx('status-button', `status-button--${status}`)}
+          className={cx('status-button', `status-button--${status.toLowerCase()}`)}
           onClick={() => handleStatusClick(status)}
         >
           {formatMessage(message)}

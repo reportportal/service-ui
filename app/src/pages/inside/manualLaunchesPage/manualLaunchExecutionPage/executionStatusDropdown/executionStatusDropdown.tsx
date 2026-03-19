@@ -19,26 +19,22 @@ import { useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 
 import ArrowDownIcon from 'common/img/arrow-down-inline.svg';
-
 import { createClassnames } from 'common/utils';
+import { EXECUTION_STATUSES } from 'controllers/manualLaunch';
+import { ExecutionStatusPopover, STATUS_CONFIG } from 'pages/inside/manualLaunchesPage';
 
-import { STATUS_CONFIG } from '../constants';
-import type { ExecutionStatusData } from '../types';
-import { ExecutionStatusPopover } from '../executionStatusPopover';
+import type { ExecutionStatusData, StatusConfig } from '../types';
 import { messages } from './messages';
 
 import styles from './executionStatusDropdown.scss';
 
 const cx = createClassnames(styles);
 
-export const ExecutionStatusDropdown: FC<ExecutionStatusData> = ({
-  executionId,
-  status,
-}) => {
+export const ExecutionStatusDropdown: FC<ExecutionStatusData> = ({ executionId, status }) => {
   const { formatMessage } = useIntl();
   const [isOpened, setIsOpened] = useState(false);
 
-  const currentConfig = STATUS_CONFIG[status];
+  const currentConfig = (STATUS_CONFIG as Record<EXECUTION_STATUSES, StatusConfig>)[status];
 
   if (!currentConfig) {
     return null;

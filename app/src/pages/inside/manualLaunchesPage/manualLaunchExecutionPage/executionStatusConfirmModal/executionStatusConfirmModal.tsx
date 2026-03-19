@@ -27,25 +27,32 @@ import {
 } from '@reportportal/ui-kit';
 import { MIME_TYPES, FileWithValidation } from '@reportportal/ui-kit/fileDropArea';
 import { VoidFn } from '@reportportal/ui-kit/common';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { withModal, hideModalAction } from 'controllers/modal';
 import { createClassnames } from 'common/utils';
-import { isEmpty } from 'es-toolkit/compat';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { useManualLaunchId } from 'hooks/useTypedSelector';
-import { updateManualLaunchExecutionStatusAction } from 'controllers/manualLaunch';
+import {
+  EXECUTION_STATUSES,
+  updateManualLaunchExecutionStatusAction,
+} from 'controllers/manualLaunch';
 import { projectKeySelector } from 'controllers/project';
 import { MAX_FILE_SIZE } from 'common/constants/fileConstants';
 import { useModalButtons } from 'hooks/useModalButtons';
-
-import type { ExecutionStatusConfirmFormValues, ExecutionStatusConfirmModalProps } from '../types';
 import {
   EXECUTION_STATUS_CONFIRM_MODAL,
   EXECUTION_STATUS_CONFIRM_FORM_NAME,
   STATUS_CONFIG,
-} from '../constants';
+} from 'pages/inside/manualLaunchesPage';
+
+import type {
+  ExecutionStatusConfirmFormValues,
+  ExecutionStatusConfirmModalProps,
+  StatusConfig,
+} from '../types';
 import { messages } from './messages';
 
 import styles from './executionStatusConfirmModal.scss';
@@ -74,9 +81,10 @@ const ExecutionStatusConfirmModalComponent: FC<
     }
   };
 
-  const status = data?.status || 'passed';
+  const status = data?.status || EXECUTION_STATUSES.PASSED;
   const executionId = data?.executionId;
-  const statusLabel = formatMessage(STATUS_CONFIG[status].label);
+  const safeStatusConfig = STATUS_CONFIG as Record<EXECUTION_STATUSES, StatusConfig>;
+  const statusLabel = formatMessage(safeStatusConfig[status].label);
 
   const onSubmit = (values: ExecutionStatusConfirmFormValues) => {
     if (!executionId) return;
@@ -186,7 +194,7 @@ const ExecutionStatusConfirmModalComponent: FC<
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 export const ExecutionStatusConfirmModal = withModal(EXECUTION_STATUS_CONFIRM_MODAL)(
   reduxForm<ExecutionStatusConfirmFormValues, ExecutionStatusConfirmModalProps>({
-    form: EXECUTION_STATUS_CONFIRM_FORM_NAME,
+    form: EXECUTION_STATUS_CONFIRM_FORM_NAME as string,
     destroyOnUnmount: true,
   })(ExecutionStatusConfirmModalComponent),
 );

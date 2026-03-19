@@ -24,7 +24,7 @@ import { FolderBreadcrumbs } from 'components/folderBreadcrumbs';
 import { BtsTicket, EXECUTION_STATUSES } from 'controllers/manualLaunch';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { ProjectDetails } from 'pages/organization/constants';
-import { ExecutionStatusPopover } from 'pages/inside/manualLaunchesPage/manualLaunchExecutionPage/executionStatusPopover';
+import { ExecutionStatusPopover } from 'pages/inside/manualLaunchesPage';
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { messages as testCaseMessages } from 'pages/inside/common/testCaseList/testCaseSidePanel/messages';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
