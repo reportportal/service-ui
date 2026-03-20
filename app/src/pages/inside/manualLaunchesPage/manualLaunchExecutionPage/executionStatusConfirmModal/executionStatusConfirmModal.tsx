@@ -46,6 +46,7 @@ import {
   EXECUTION_STATUS_CONFIRM_FORM_NAME,
   STATUS_CONFIG,
   EXECUTION_STATUS_TO_RUN,
+  EXECUTION_STATUS_FAILED,
 } from '../constants';
 import { messages } from './messages';
 
@@ -80,6 +81,7 @@ const ExecutionStatusConfirmModalComponent: FC<
   const currentStatus = data?.currentStatus;
   const statusLabel = formatMessage(STATUS_CONFIG[status].label);
   const isStatusChange = currentStatus && currentStatus !== EXECUTION_STATUS_TO_RUN;
+  const showPostIssueToBts = status === EXECUTION_STATUS_FAILED;
 
   const onSubmit = (values: ExecutionStatusConfirmFormValues) => {
     if (!executionId) return;
@@ -138,11 +140,13 @@ const ExecutionStatusConfirmModalComponent: FC<
               </div>
             </div>
 
-            <div className={cx('checkbox-section')}>
-              <FieldProvider name="postIssueToBts">
-                <InputCheckbox>{formatMessage(messages.postIssueToBts)}</InputCheckbox>
-              </FieldProvider>
-            </div>
+            {showPostIssueToBts && (
+              <div className={cx('checkbox-section')}>
+                <FieldProvider name="postIssueToBts">
+                  <InputCheckbox>{formatMessage(messages.postIssueToBts)}</InputCheckbox>
+                </FieldProvider>
+              </div>
+            )}
           </>
         ) : (
           <>
@@ -159,13 +163,15 @@ const ExecutionStatusConfirmModalComponent: FC<
               </FieldProvider>
             </div>
 
-            <div className={cx('checkbox-section')}>
-              <FieldProvider name="postIssueToBts">
-                <InputCheckbox>{formatMessage(messages.postIssueToBts)}</InputCheckbox>
-              </FieldProvider>
-            </div>
+            {showPostIssueToBts && (
+              <div className={cx('checkbox-section')}>
+                <FieldProvider name="postIssueToBts">
+                  <InputCheckbox>{formatMessage(messages.postIssueToBts)}</InputCheckbox>
+                </FieldProvider>
+              </div>
+            )}
 
-            <div className={cx('divider')} />
+            {showPostIssueToBts && <div className={cx('divider')} />}
 
             <div className={cx('attachments-section')}>
               <FileDropArea
@@ -178,6 +184,7 @@ const ExecutionStatusConfirmModalComponent: FC<
                   incorrectFileFormat: formatMessage(messages.incorrectFileFormat),
                 }}
               >
+                <FileDropArea.DropZone className={cx('dropzone')} icon={<div />} />
                 <div className={cx('attachment-header')}>
                   <span className={cx('attachment-title')}>
                     {formatMessage(messages.attachments)}
@@ -203,7 +210,6 @@ const ExecutionStatusConfirmModalComponent: FC<
                     onRemoveFile={handleFileRemove}
                   />
                 )}
-                <FileDropArea.DropZone icon={<div />} />
               </FileDropArea>
             </div>
           </>
