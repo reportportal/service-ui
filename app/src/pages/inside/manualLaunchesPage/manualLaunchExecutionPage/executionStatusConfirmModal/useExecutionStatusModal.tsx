@@ -22,18 +22,20 @@ import type { ExecutionStatusType } from '../types';
 interface OpenModalParams {
   executionId: number;
   status: ExecutionStatusType;
+  currentStatus?: string;
 }
 
 export const useExecutionStatusModal = () => {
   const dispatch = useDispatch();
 
-  const openModal = ({ executionId, status }: OpenModalParams) => {
+  const openModal = ({ executionId, status, currentStatus }: OpenModalParams) => {
     dispatch(
       showModalAction({
         id: EXECUTION_STATUS_CONFIRM_MODAL,
         data: {
           executionId,
           status,
+          currentStatus,
         },
       }),
     );

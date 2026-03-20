@@ -56,6 +56,7 @@ export const ExecutionStatusPopover: FC<ExecutionStatusPopoverProps> = ({
     openModal({
       executionId,
       status: newStatus as ExecutionStatusType,
+      currentStatus,
     });
     setIsOpened(false);
   };

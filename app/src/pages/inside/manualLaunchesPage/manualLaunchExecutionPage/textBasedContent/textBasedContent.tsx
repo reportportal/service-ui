@@ -19,7 +19,6 @@ import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
 import { CollapsibleSection } from 'components/collapsibleSection';
-import { FieldSection } from 'pages/inside/common/fieldSection';
 import { RequirementsList } from 'pages/inside/common/requirementsList/requirementsList';
 import { AttachmentList, type Attachment } from 'pages/inside/common/attachmentList';
 import { Scenario } from 'pages/inside/common/scenario';
@@ -41,7 +40,6 @@ export const TextBasedContent = ({ execution: { manualScenario } }: ExecutionCon
   const requirements = requirementsToItems(manualScenario.requirements);
   const hasRequirements = !isEmpty(requirements);
   const preconditionValue = manualScenario.preconditions?.value;
-  const hasPreconditionAttachments = !isEmpty(manualScenario.preconditions?.attachments);
   const { instructions, expectedResult, attachments = [] } = manualScenario;
   const hasAttachments = !isEmpty(attachments);
 
@@ -63,28 +61,11 @@ export const TextBasedContent = ({ execution: { manualScenario } }: ExecutionCon
         defaultMessage={hasScenario ? undefined : formatMessage(messages.noDetailsForScenario)}
       >
         {hasScenario && (
-          <div className={cx('scenario-sections')}>
-            {(preconditionValue || instructions || expectedResult) && (
-              <Scenario
-                precondition={preconditionValue}
-                instructions={instructions}
-                expectedResult={expectedResult}
-              />
-            )}
-            {hasPreconditionAttachments && (
-              <FieldSection
-                title={`${formatMessage(commonMessages.attachments)} ${manualScenario.preconditions?.attachments?.length ?? 0}`}
-              >
-                <AttachmentList
-                  attachments={
-                    (manualScenario.preconditions?.attachments ?? []) as unknown as Attachment[]
-                  }
-                  className={cx('attachments-list')}
-                  withPreview
-                />
-              </FieldSection>
-            )}
-          </div>
+          <Scenario
+            precondition={preconditionValue}
+            instructions={instructions}
+            expectedResult={expectedResult}
+          />
         )}
       </CollapsibleSection>
 
