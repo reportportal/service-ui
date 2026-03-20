@@ -23,7 +23,7 @@ import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { createClassnames } from 'common/utils';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { handleEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
-import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { ExtendedTestCase } from 'types/testCase';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 
 import { useTooltipItems } from '../testCaseExecutionCell/useTooltipItems';

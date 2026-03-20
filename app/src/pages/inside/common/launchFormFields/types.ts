@@ -17,7 +17,7 @@
 import { ReactNode } from 'react';
 import { MessageDescriptor } from 'react-intl';
 import { isPlainObject } from 'es-toolkit';
-import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { ExtendedTestCase } from 'types/testCase';
 
 export enum LaunchMode {
   NEW = 'new',

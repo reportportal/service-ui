@@ -49,7 +49,7 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
 import { userIdSelector } from 'controllers/user';
-import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { ExtendedTestCase } from 'types/testCase';
 import { findFolderById } from 'pages/inside/testCaseLibraryPage/hooks/useTestPlanActiveFolders';
 
 import { ExpandedOptions } from '../../common/expandedOptions';

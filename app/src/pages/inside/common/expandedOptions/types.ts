@@ -19,7 +19,7 @@ import { ReactNode } from 'react';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { Folder, TransformedFolder } from 'controllers/testCase';
 import { TreeDragItem, TreeDropPosition } from '@reportportal/ui-kit/common';
-import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { ExtendedTestCase } from 'types/testCase';
 
 export type TestCaseFolderActionCallback = (
   testCase: ExtendedTestCase,

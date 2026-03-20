@@ -24,7 +24,7 @@ import { commonMessages } from 'pages/inside/common/common-messages';
 
 import { SelectableFolderTree } from './selectableFolderTree/selectableFolderTree';
 import { TestLibraryPanelProvider } from './testLibraryPanelContext';
-import { useTestLibraryPanel } from './useTestLibraryPanel';
+import { useTestLibraryPanel } from './hooks/useTestLibraryPanel';
 import { messages } from './messages';
 
 import styles from './testLibrarySidePanel.scss';
@@ -45,8 +45,9 @@ export const TestLibrarySidePanel = ({
   const { formatMessage } = useIntl();
   const [shouldHideAddedTestCases, setShouldHideAddedTestCases] = useState(false);
 
-  const { contextValue, selectionCount, hasSelection, clearSelection, addToTestPlan } =
+  const { actionsValue, stateValue, selectionCount, hasSelection, clearSelection, addToTestPlan } =
     useTestLibraryPanel({
+      isOpen,
       onAddTestCases,
       onClose,
     });
@@ -64,9 +65,9 @@ export const TestLibrarySidePanel = ({
   );
 
   const contentComponent = (
-    <TestLibraryPanelProvider value={contextValue}>
+    <TestLibraryPanelProvider actions={actionsValue} state={stateValue}>
       <div className={cx('test-library-panel__content')}>
-        <SelectableFolderTree />
+        {isOpen && <SelectableFolderTree />}
       </div>
     </TestLibraryPanelProvider>
   );

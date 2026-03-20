@@ -15,7 +15,7 @@
  */
 
 import { useModal } from 'common/hooks';
-import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { ExtendedTestCase } from 'types/testCase';
 import { CREATE_LAUNCH_MODAL_KEY } from './constants';
 import { CreateLaunchModal } from './createLaunchModal';
 

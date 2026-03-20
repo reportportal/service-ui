@@ -19,7 +19,7 @@ import { useIntl } from 'react-intl';
 import { Button, Tooltip } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
-import { ManualScenario } from 'pages/inside/testCaseLibraryPage/types';
+import { ManualScenario } from 'types/testCase';
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';

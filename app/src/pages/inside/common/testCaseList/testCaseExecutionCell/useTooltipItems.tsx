@@ -19,7 +19,7 @@ import { useIntl } from 'react-intl';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { useTestCaseTooltipItems } from 'pages/inside/testCaseLibraryPage/allTestCasesPage/useTestCaseTooltipItems';
-import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { ExtendedTestCase } from 'types/testCase';
 import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
 
 import { messages } from '../messages';

@@ -15,8 +15,8 @@
  */
 
 import { useModal } from 'common/hooks';
+import { ExtendedTestCase } from 'types/testCase';
 
-import { ExtendedTestCase } from '../types';
 import {
   EditSelectedTestCaseModal,
   EDIT_SELECTED_TEST_CASE_MODAL_KEY,

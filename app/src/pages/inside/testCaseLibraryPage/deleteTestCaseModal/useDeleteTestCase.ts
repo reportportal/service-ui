@@ -26,8 +26,8 @@ import {
   urlOrganizationSlugSelector,
   urlProjectSlugSelector,
 } from 'controllers/pages';
+import { TestCase } from 'types/testCase';
 
-import { TestCase } from '../types';
 import { useLastItemOnThePage } from '../hooks/useLastItemOnThePage';
 import { useFolderCounterUpdate } from '../hooks/useFolderCounterUpdate';
 

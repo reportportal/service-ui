@@ -19,8 +19,9 @@ import { keyBy } from 'es-toolkit';
 import { isEmpty } from 'es-toolkit/compat';
 
 import { uniqueId } from 'common/utils';
+import { ExtendedTestCase } from 'types/testCase';
 
-import { ExtendedTestCase, CreateTestCaseFormData, hasTagShape } from '../types';
+import { CreateTestCaseFormData, hasTagShape } from '../types';
 import { TEST_CASE_FORM_INITIAL_VALUES } from '../createTestCaseModal/constants';
 
 interface UseTestCaseFormInitializationParams {

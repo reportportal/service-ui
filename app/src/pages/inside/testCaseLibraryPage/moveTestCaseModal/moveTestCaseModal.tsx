@@ -25,10 +25,10 @@ import { createClassnames } from 'common/utils';
 import { withModal } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
+import { ExtendedTestCase } from 'types/testCase';
 
 import { DestinationFolderSwitch } from '../testCaseFolders/shared/DestinationFolderSwitch';
 import { commonFolderMessages } from '../testCaseFolders/modals/commonFolderMessages';
-import { ExtendedTestCase } from '../types';
 import { useFolderModalMode } from '../hooks/useFolderModalMode';
 import { useModalButtons } from 'hooks/useModalButtons';
 import { validateFolderModalForm } from '../utils/validateFolderModalForm';

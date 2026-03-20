@@ -21,9 +21,10 @@
   &__content {
     display: flex;
     justify-content: space-between;
-    align-content: center;
+    align-items: center;
     margin-left: -24px;
     height: 36px;
+    padding-right: 8px;
   }
 
   &__name {
@@ -45,5 +46,7 @@
 
   &__indicator {
     cursor: pointer;
+    display: flex;
+    align-items: center;
   }
 }

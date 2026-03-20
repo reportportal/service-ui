@@ -22,7 +22,7 @@ import {
   hasScenarioContent,
 } from 'pages/inside/common/scenarioUtils';
 
-import { ManualScenario, Tag } from '../types';
+import { ManualScenario, Tag } from 'types/testCase';
 
 export const checkScenario = (manualScenario: ManualScenario | undefined): boolean => {
   if (!manualScenario) return true;

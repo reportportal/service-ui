@@ -18,4 +18,9 @@
   position: absolute;
   left: attr(data-offset px);
   top: 10px;
+
+  &__spinner {
+    position: relative;
+    top: -3px;
+  }
 }

@@ -22,7 +22,7 @@ import { AttachmentList } from 'pages/inside/common/attachmentList';
 import { commonMessages } from 'pages/inside/common/common-messages';
 
 import { FieldSection } from '../../../fieldSection';
-import { ManualScenario } from 'pages/inside/testCaseLibraryPage/types';
+import { ManualScenario } from 'types/testCase';
 import { messages } from './messages';
 import { StepsList } from '../../stepsList';
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';

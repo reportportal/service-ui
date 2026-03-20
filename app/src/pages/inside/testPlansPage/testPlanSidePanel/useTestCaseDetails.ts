@@ -22,7 +22,7 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { showErrorNotification } from 'controllers/notification';
 import { useDebouncedSpinner } from 'common/hooks';
-import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { ExtendedTestCase } from 'types/testCase';
 import { getIsManualCovered } from 'pages/inside/common/testCaseList/utils';
 
 interface UseTestCaseDetailsParams {

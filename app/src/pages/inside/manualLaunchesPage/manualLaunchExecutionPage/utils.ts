@@ -15,7 +15,7 @@
  */
 
 import type { ManualScenarioRequirement } from 'controllers/manualLaunch';
-import type { Requirement } from 'pages/inside/testCaseLibraryPage/types';
+import type { Requirement } from 'types/testCase';
 
 export const requirementsToItems = (requirements?: ManualScenarioRequirement[]): Requirement[] =>
   requirements?.map((requirement) => ({ id: requirement.id, value: requirement.value })) ?? [];

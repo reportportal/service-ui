@@ -21,7 +21,7 @@ import { actionToPath, history } from 'redux-first-router';
 
 import routesMap from 'routes/routesMap';
 import { TestCaseMenuAction } from 'pages/inside/common/testCaseList/types';
-import { ExecutionStatus } from 'pages/inside/testCaseLibraryPage/types';
+import { ExecutionStatus } from 'types/testCase';
 
 const dateFnsLocales: Record<string, Locale> = {
   en: enUS,

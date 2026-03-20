@@ -1,4 +1,4 @@
-import { Step } from 'pages/inside/testCaseLibraryPage/types';
+import { Step } from 'types/testCase';
 
 export interface StepsProps {
   steps: Step[];

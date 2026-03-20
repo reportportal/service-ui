@@ -20,7 +20,7 @@ import { InjectedFormProps, reduxForm } from 'redux-form';
 
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { ExtendedTestCase } from 'pages/inside/testCaseLibraryPage/types';
+import { ExtendedTestCase } from 'types/testCase';
 import {
   BaseLaunchModal,
   LaunchFormData,

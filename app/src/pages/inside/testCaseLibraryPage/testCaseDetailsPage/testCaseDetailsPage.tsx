@@ -33,6 +33,7 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 import { isLoadingTestCaseDetailsSelector, testCaseDetailsSelector } from 'controllers/testCase';
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
+import { ManualScenario, Tag } from 'types/testCase';
 
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
 import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
@@ -41,7 +42,7 @@ import { useTestCaseTags } from './useTestCaseTags';
 import { messages } from './messages';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
 import { AttachmentList } from '../../common/attachmentList';
-import { ManualScenario, Tag, hasTagShape } from '../types';
+import { hasTagShape } from '../types';
 import { Precondition } from './precondition';
 import { StepsList } from './stepsList';
 import { Scenario } from '../../common/scenario';

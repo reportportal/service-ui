@@ -37,8 +37,8 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { testCaseLibraryBreadcrumbsSelector } from 'controllers/pages/selectors';
+import { ExtendedTestCase } from 'types/testCase';
 
-import { ExtendedTestCase } from '../../types';
 import { messages } from './messages';
 import { commonMessages } from '../../commonMessages';
 import { EDIT_TEST_CASE_MODAL_KEY } from '../editTestCaseModal/editTestCaseModal';
@@ -198,7 +198,10 @@ export const TestCaseDetailsHeader = ({
                   {formatMessage(commonMessages.editScenario)}
                 </Button>
               )}
-              <AddToLaunchButton manualScenario={testCase?.manualScenario} testCaseId={testCase.id} />
+              <AddToLaunchButton
+                manualScenario={testCase?.manualScenario}
+                testCaseId={testCase.id}
+              />
               <Button onClick={onAddToTestPlan} variant="primary">
                 {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
               </Button>
