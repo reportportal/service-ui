@@ -189,7 +189,7 @@ export const ManualLaunchExecutions = ({
     const tags = execution.attributes?.map((attr) => attr.key).filter(Boolean) || [];
 
     const handleOpenSidePanel = () => {
-      setSelectedExecutionId(execution.id)
+      setSelectedExecutionId(execution.id);
     };
 
     return {
@@ -197,7 +197,13 @@ export const ManualLaunchExecutions = ({
       name: {
         content: execution.testCaseName,
         component: (
-          <button type="button" className={cx('execution-name-cell', 'execution-cell-button')} onClick={handleOpenSidePanel}>
+          <button
+            type="button"
+            className={cx('execution-name-cell', 'execution-cell-button', 'cell-wrapper', {
+              selected: execution.id === selectedExecutionId,
+            })}
+            onClick={handleOpenSidePanel}
+          >
             <div className={cx('first-row')}>
               {execution.testCasePriority && (
                 <PriorityIcon priority={execution.testCasePriority as TestCasePriority} />
@@ -219,13 +225,23 @@ export const ManualLaunchExecutions = ({
       steps: {
         content: stepsCount ?? '',
         component: (
-          <button type="button" className={cx('execution-steps-cell', 'execution-cell-button')} onClick={handleOpenSidePanel}>{stepsCount === null ? '—' : stepsCount}</button>
+          <button
+            type="button"
+            className={cx('execution-steps-cell', 'execution-cell-button')}
+            onClick={handleOpenSidePanel}
+          >
+            {stepsCount === null ? '—' : stepsCount}
+          </button>
         ),
       },
       status: {
         content: execution.executionStatus,
         component: (
-          <button type="button" className={cx('execution-status-cell', 'execution-cell-button')} onClick={handleOpenSidePanel}>
+          <button
+            type="button"
+            className={cx('execution-status-cell', 'execution-cell-button')}
+            onClick={handleOpenSidePanel}
+          >
             <ExecutionStatusChip status={execution.executionStatus} />
           </button>
         ),
@@ -347,7 +363,7 @@ export const ManualLaunchExecutions = ({
               className={cx('executions-table')}
               headerClassName={cx('executions-table-header')}
               bodyClassName={cx('executions-table-body')}
-              rowClassName={cx('execution-chip')}
+              rowClassName={cx('execution-table-row')}
               selectable={canManageTestCases}
               selectedRowIds={selectedRowIds}
               onToggleRowSelection={handleRowSelect}
