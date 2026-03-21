@@ -21,6 +21,7 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { hideModalAction } from 'controllers/modal';
 import { useDebouncedSpinner, useNotification } from 'common/hooks';
+import { NotificationMessageKey } from 'common/hooks/useNotification';
 import { projectKeySelector } from 'controllers/project';
 import { FolderWithFullPath } from 'controllers/testCase';
 
@@ -33,6 +34,8 @@ interface BatchDuplicateParams {
     name: string;
     parentTestFolderId?: number;
   };
+  successMessageId?: NotificationMessageKey;
+  successMessageValues?: Record<string, unknown>;
 }
 
 interface BatchDuplicateResponse {
@@ -47,7 +50,13 @@ export const useBatchDuplicateTestCases = ({ onSuccess }: { onSuccess: () => voi
   const { showSuccessNotification, showErrorNotification } = useNotification();
 
   const batchDuplicateTestCases = useCallback(
-    async ({ testCaseIds, testFolder, testFolderId }: BatchDuplicateParams) => {
+    async ({
+      testCaseIds,
+      testFolder,
+      testFolderId,
+      successMessageId,
+      successMessageValues,
+    }: BatchDuplicateParams) => {
       showSpinner();
 
       try {
@@ -67,9 +76,13 @@ export const useBatchDuplicateTestCases = ({ onSuccess }: { onSuccess: () => voi
 
         dispatch(hideModalAction());
         onSuccess();
+
+        const defaultMessageId: NotificationMessageKey =
+          testCaseIds.length > 1 ? 'testCasesDuplicatedSuccess' : 'testCaseDuplicatedSuccess';
+
         showSuccessNotification({
-          messageId:
-            testCaseIds.length > 1 ? 'testCasesDuplicatedSuccess' : 'testCaseDuplicatedSuccess',
+          messageId: successMessageId ?? defaultMessageId,
+          values: successMessageValues,
         });
       } catch {
         showErrorNotification({
