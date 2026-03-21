@@ -18,7 +18,7 @@ import { memo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
-import { BubblesLoader, Table, DragNDropIcon } from '@reportportal/ui-kit';
+import { BubblesLoader, Table } from '@reportportal/ui-kit';
 import { DragLayer } from '@reportportal/ui-kit/sortable';
 
 import { createClassnames } from 'common/utils';
@@ -207,14 +207,9 @@ export const TestCaseList = memo(
                     const draggedTestCase =
                       item.testCase ?? testCases.find((testCase) => testCase.id === item.id);
                     return (
-                      <>
-                        <span className={cx('test-case-drag-preview__text')}>
-                          {draggedTestCase?.name}
-                        </span>
-                        <span className={cx('test-case-drag-preview__icon')}>
-                          <DragNDropIcon />
-                        </span>
-                      </>
+                      <span className={cx('test-case-drag-preview__text')}>
+                        {draggedTestCase?.name}
+                      </span>
                     );
                   }}
                 />
