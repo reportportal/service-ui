@@ -219,6 +219,9 @@ const AddEditNotificationModal = ({
   useEffect(() => {
     initialize(data.notification);
     dispatch(fetchProjectAction(projectKey, false));
+
+  // Initialization  be called only once when the modal is opened 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const caseOptions = [
