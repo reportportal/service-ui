@@ -220,7 +220,7 @@ const AddEditNotificationModal = ({
     initialize(data.notification);
     dispatch(fetchProjectAction(projectKey, false));
 
-  // Initialization  be called only once when the modal is opened 
+  // Initialization should be called only once when the modal is opened 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
