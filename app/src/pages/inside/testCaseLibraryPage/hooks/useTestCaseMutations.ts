@@ -48,6 +48,7 @@ interface UpdateTestCaseOptions {
   testCasesSourceFolderId?: number;
   destinationFolder?: FolderWithFullPath | NewFolderData;
   successMessageId?: NotificationMessageKey;
+  successMessageValues?: Record<string, unknown>;
   errorMessageId?: NotificationMessageKey;
   payload?: UpdateTestCasePayload;
   onSuccess?: (response: unknown) => void;
@@ -219,6 +220,7 @@ export const useTestCaseMutations = (testCaseId?: number) => {
       destinationFolder,
       payload = {},
       successMessageId = 'testCaseUpdatedSuccess',
+      successMessageValues,
       errorMessageId = 'testCaseUpdateFailed',
       onSuccess,
     }: UpdateTestCaseOptions) => {
@@ -255,7 +257,7 @@ export const useTestCaseMutations = (testCaseId?: number) => {
         }
 
         dispatch(hideModalAction());
-        showSuccessNotification({ messageId: successMessageId });
+        showSuccessNotification({ messageId: successMessageId, values: successMessageValues });
 
         if (destinationFolder) {
           completeFolderDestination({

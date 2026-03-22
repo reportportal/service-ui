@@ -40,6 +40,7 @@ import {
   FieldText,
   FieldTextFlex,
   FieldNumber,
+  SystemMessage,
 } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ALL } from 'common/constants/reservedFilterIds';
@@ -217,7 +218,6 @@ import {
   DraggableRuleList,
 } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
-import { SystemMessage } from 'componentLibrary/systemMessage';
 import { AsyncAutocomplete as AsyncAutocompleteField } from 'componentLibrary/autocompletes/asyncAutocomplete';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
 import { Tabs } from 'components/main/tabs';

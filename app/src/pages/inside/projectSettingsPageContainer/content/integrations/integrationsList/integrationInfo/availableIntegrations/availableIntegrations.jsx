@@ -16,7 +16,7 @@
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { SystemMessage } from 'componentLibrary/systemMessage';
+import { SystemMessage } from '@reportportal/ui-kit';
 import { defineMessages, useIntl } from 'react-intl';
 import { IntegrationCollection } from '../integrationCollection';
 import styles from './availableIntegrations.scss';

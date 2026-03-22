@@ -51,6 +51,7 @@ import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/cons
 import { userIdSelector } from 'controllers/user';
 import { ExtendedTestCase } from 'types/testCase';
 import { findFolderById } from 'pages/inside/testCaseLibraryPage/hooks/useTestPlanActiveFolders';
+import type { NotificationMessageKey } from 'common/hooks/useNotification';
 
 import { ExpandedOptions } from '../../common/expandedOptions';
 import { commonMessages } from '../commonMessages';
@@ -193,6 +194,11 @@ export const TestCaseFolders = () => {
         testCaseId: testCase.id,
         testCasesSourceFolderId: testCase.testFolder?.id,
         destinationFolder: destinationFolderPayload,
+        successMessageId: 'testCaseMovedSuccessWithDetails' as NotificationMessageKey,
+        successMessageValues: {
+          testCaseName: testCase.name,
+          folderName: destinationFolder.name,
+        },
       });
     },
     [folders, patchTestCase],
@@ -207,6 +213,11 @@ export const TestCaseFolders = () => {
       await batchDuplicateTestCases({
         testCaseIds: [testCase.id],
         testFolderId: destinationFolder.id,
+        successMessageId: 'testCaseDuplicatedSuccessWithDetails' as NotificationMessageKey,
+        successMessageValues: {
+          testCaseName: testCase.name,
+          folderName: destinationFolder.name,
+        },
       });
     },
     [folders, batchDuplicateTestCases],

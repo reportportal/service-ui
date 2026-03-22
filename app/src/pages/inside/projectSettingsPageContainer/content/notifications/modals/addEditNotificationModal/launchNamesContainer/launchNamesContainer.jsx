@@ -22,7 +22,7 @@ import classNames from 'classnames/bind';
 
 import { URLS } from 'common/urls';
 import { AsyncMultipleAutocompleteV2 } from 'componentLibrary/autocompletes/asyncMultipleAutocompleteV2';
-import { SystemMessage } from 'componentLibrary/systemMessage';
+import { SystemMessage } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { isExistingLaunchNamesSelector } from 'controllers/project/selectors';
 import { projectKeySelector } from 'controllers/project';

@@ -26,7 +26,7 @@ import Parser from 'html-react-parser';
 import { showModalAction } from 'controllers/modal';
 import { namedProjectIntegrationsSelector } from 'controllers/plugins';
 import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { SystemMessage } from 'componentLibrary/systemMessage';
+import { SystemMessage } from '@reportportal/ui-kit';
 import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
 import TrashBin from 'common/img/newIcons/bin-inline.svg';
 import Tick from 'common/img/newIcons/tick-inline.svg';
