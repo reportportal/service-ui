@@ -25,7 +25,6 @@ export const CREATE_PROJECT = 'createProject';
 export const DELETE_PROJECT = 'deleteProject';
 export const RENAME_PROJECT = 'renameProject';
 export const UNASSIGN_FROM_PROJECT = 'unassignFromProject';
-export const ASSIGN_TO_PROJECT = 'assignToProject';
 export const SELF_ASSIGN_TO_PROJECT = 'selfAssignToProject';
 export const CHANGE_PROJECT_ROLE = 'changeProjectRole';
 export const DEFAULT_LIMITATION = 20;

@@ -61,7 +61,7 @@ export const fetchFilteredProjectAction = () => ({
   type: FETCH_FILTERED_PROJECTS,
 } as const);
 
-export const selfAssignToProjectAction = (projectId: number, onSuccess?: () => void) => ({
+export const selfAssignToProjectAction = (projectId: number | string, onSuccess?: () => void) => ({
   type: SELF_ASSIGN_TO_PROJECT,
   payload: { projectId, onSuccess },
 } as const);

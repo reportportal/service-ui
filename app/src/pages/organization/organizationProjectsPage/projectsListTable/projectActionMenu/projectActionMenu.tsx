@@ -15,6 +15,7 @@
  */
 
 import { useDispatch, useSelector } from 'react-redux';
+import { noop } from 'es-toolkit';
 import { FC, useCallback, useMemo } from 'react';
 import { useTracking } from 'react-tracking';
 import { UserInfo, userInfoSelector } from 'controllers/user';
@@ -132,7 +133,7 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
       },
       {
         label: formatMessage(messages.actionInviteUser),
-        onClick: () => { },
+        onClick: noop,
         hasPermission: canInviteUserToProject,
       },
       {

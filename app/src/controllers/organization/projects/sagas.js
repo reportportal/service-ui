@@ -15,6 +15,7 @@
  */
 
 import { takeEvery, all, put, select, call } from 'redux-saga/effects';
+import { EDITOR, MEMBER } from 'common/constants/projectRoles';
 import { fetchDataAction } from 'controllers/fetch';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -184,7 +185,7 @@ function* selfAssignToProject({ payload = {} }) {
   );
   const isAlreadyInOrg = !!matchedOrg;
 
-  const projectAssignment = { id: projectId, project_role: 'EDITOR' };
+  const projectAssignment = { id: projectId, project_role: EDITOR };
 
   try {
     if (isAlreadyInOrg) {
@@ -214,12 +215,11 @@ function* selfAssignToProject({ payload = {} }) {
     } else {
       yield call(fetch, URLS.organizationUsers(activeOrganizationId), {
         method: 'post',
-        data: { id: currentUserId, org_role: 'MEMBER', projects: [projectAssignment] },
+        data: { id: currentUserId, org_role: MEMBER, projects: [projectAssignment] },
       });
     }
 
     yield put(fetchUserInfoAction());
-    yield fetchFilteredProjects();
     yield put(hideModalAction());
     yield put(showSuccessNotification({ messageId: 'assignToProjectSuccess' }));
     onSuccess?.();
