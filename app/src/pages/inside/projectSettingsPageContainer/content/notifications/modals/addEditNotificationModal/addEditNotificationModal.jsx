@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import className from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { withModal } from 'components/main/modal';
-import { Modal, Checkbox, Toggle, Dropdown, FieldText, FieldTextFlex } from '@reportportal/ui-kit';
+import { Modal, Checkbox, Toggle, Dropdown, FieldText, FieldTextFlex, RadioGroup } from '@reportportal/ui-kit';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { FIELD } from 'common/constants/dataAutomation';
@@ -30,7 +30,6 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { URLS } from 'common/urls';
 import { hideModalAction } from 'controllers/modal';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
-import { RadioGroup } from 'componentLibrary/radioGroup';
 import { EMAIL } from 'common/constants/pluginNames';
 import { ruleField } from 'pages/inside/projectSettingsPageContainer/content/notifications/propTypes';
 import { fetchProjectAction } from 'controllers/project/actionCreators';
@@ -220,6 +219,9 @@ const AddEditNotificationModal = ({
   useEffect(() => {
     initialize(data.notification);
     dispatch(fetchProjectAction(projectKey, false));
+
+  // Initialization should be called only once when the modal is opened 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const caseOptions = [
@@ -428,7 +430,7 @@ const AddEditNotificationModal = ({
             name={ATTRIBUTES_OPERATOR_FIELD_KEY}
             dataAutomationId={ATTRIBUTES_OPERATOR_FIELD_KEY + FIELD}
           >
-            <RadioGroup options={getAttributesConditionOptions()} />
+            <RadioGroup options={getAttributesConditionOptions()} className={cx('radio')} />
           </FieldElement>
         )}
       </div>
