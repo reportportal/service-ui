@@ -129,19 +129,18 @@
   position: fixed;
   pointer-events: none;
   z-index: $Z-INDEX-OVERLAY-PANEL;
-  left: 0;
+  left: -350px;
   top: 0;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 4px;
   width: 320px;
   min-height: 44px;
   padding: 0 16px;
   border-radius: 4px;
-  background: var(--rp-ui-base-bg-100);
-  box-shadow: 0 8px 40px 0 rgba(0, 0, 0, 0.15);
   opacity: 0.93;
+  outline: none;
+  border: none;
 
   &__text {
     flex: 1;
@@ -156,22 +155,5 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-
-  &__icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    margin-left: 8px;
-
-    svg {
-      width: 16px;
-      height: 16px;
-    }
-
-    svg path {
-      fill: var(--rp-ui-base-e-300);
-    }
   }
 }

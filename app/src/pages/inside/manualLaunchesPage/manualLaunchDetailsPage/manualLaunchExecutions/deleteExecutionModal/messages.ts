@@ -32,6 +32,6 @@ export const messages = defineMessages({
   batchDeleteDescription: {
     id: 'ManualLaunchExecutions.batchDeleteDescription',
     defaultMessage:
-      'Are you sure you want to remove <b>{count} selected Test {count, plural, one {Execution} other {Executions}}</b> from the Manual Launch? This action cannot be undone.',
+      'Are you sure you want to remove <b>{count}</b> selected Test {count, plural, one {Execution} other {Executions}} from the Manual Launch? This action cannot be undone.',
   },
 });

@@ -293,6 +293,15 @@ export const notificationMessages = defineMessages({
     id: 'TestCaseLibraryPage.testCaseMovedSuccess',
     defaultMessage: 'Test Case has been moved successfully.',
   },
+  testCaseMovedSuccessWithDetails: {
+    id: 'TestCaseLibraryPage.testCaseMovedSuccessWithDetails',
+    defaultMessage: "Test Case ''{testCaseName}'' has been successfully moved to ''{folderName}''.",
+  },
+  testCaseDuplicatedSuccessWithDetails: {
+    id: 'TestCaseLibraryPage.testCaseDuplicatedSuccessWithDetails',
+    defaultMessage:
+      "Test Case ''{testCaseName}'' has been successfully duplicated to ''{folderName}''.",
+  },
   testCasesMovedSuccess: {
     id: 'TestCaseLibraryPage.testCasesMovedSuccess',
     defaultMessage: 'Test Cases have been moved successfully.',

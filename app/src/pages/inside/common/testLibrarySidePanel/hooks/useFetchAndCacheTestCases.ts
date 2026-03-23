@@ -24,6 +24,11 @@ import { TestCase } from 'types/testCase';
 import { FolderTestCases, SetState } from '../testLibraryPanelContext';
 import { fetchAllTestCases, getFolderCacheEntry, getSelectableIdsForFolders } from '../utils';
 
+export interface FetchAndCacheResult {
+  selectableIds: number[];
+  newCacheEntries: Map<number, FolderTestCases>;
+}
+
 interface UseFetchAndCacheTestCasesProps {
   testPlanId: number | null;
   setTestCasesMap: SetState<Map<number, FolderTestCases>>;
@@ -36,9 +41,9 @@ export const useFetchAndCacheTestCases = ({
   const projectKey = useSelector(projectKeySelector);
 
   return useCallback(
-    async (uncachedFolderIds: number[]): Promise<number[]> => {
+    async (uncachedFolderIds: number[]): Promise<FetchAndCacheResult> => {
       if (!projectKey) {
-        return [];
+        return { selectableIds: [], newCacheEntries: new Map() };
       }
 
       const folderIdsString = uncachedFolderIds.join(',');
@@ -71,7 +76,10 @@ export const useFetchAndCacheTestCases = ({
 
       setTestCasesMap((prevMap) => new Map([...prevMap, ...newCacheEntries]));
 
-      return getSelectableIdsForFolders(uncachedFolderIds, newCacheEntries);
+      return {
+        selectableIds: getSelectableIdsForFolders(uncachedFolderIds, newCacheEntries),
+        newCacheEntries,
+      };
     },
     [projectKey, testPlanId, setTestCasesMap],
   );
