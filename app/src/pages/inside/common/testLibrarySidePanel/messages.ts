@@ -41,4 +41,8 @@ export const messages = defineMessages({
     id: 'TestLibrarySidePanel.selected',
     defaultMessage: 'selected',
   },
+  allTestCasesAlreadyInTestPlan: {
+    id: 'TestLibrarySidePanel.allTestCasesAlreadyInTestPlan',
+    defaultMessage: 'All test cases are already in test plan',
+  },
 });

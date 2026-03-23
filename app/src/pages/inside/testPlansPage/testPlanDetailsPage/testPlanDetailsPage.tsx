@@ -70,6 +70,7 @@ import {
   useDeleteTestPlanModal,
   useCreateLaunchModal,
 } from '../testPlanModals';
+import { useAddTestCasesToCurrentTestPlan } from '../testPlanModals';
 import { TestPlanFolders } from './testPlanFolders';
 
 import styles from './testPlanDetailsPage.scss';
@@ -82,7 +83,6 @@ export const TestPlanDetailsPage = () => {
   const { organizationSlug, projectSlug } = useProjectDetails();
   const { canManageTestCases, canCreateManualLaunch } = useUserPermissions();
   const [isTestLibrarySidePanelOpen, setIsTestLibrarySidePanelOpen] = useState(false);
-  const [selectedTestCasesToBeAdded, setSelectedTestCasesToBeAdded] = useState<number[]>([]);
 
   const testPlanId = useTestPlanId();
   const testPlan = useTestPlanById(testPlanId);
@@ -157,9 +157,7 @@ export const TestPlanDetailsPage = () => {
     }
   };
 
-  const handleAddTestCases = (testCaseIds: number[]) => {
-    setSelectedTestCasesToBeAdded([...selectedTestCasesToBeAdded, ...testCaseIds]);
-  };
+  const { addTestCasesToCurrentTestPlan, isAddingTestCases } = useAddTestCasesToCurrentTestPlan();
 
   useEffect(() => {
     if (!isLoading && isEmpty(testPlan)) {
@@ -245,7 +243,7 @@ export const TestPlanDetailsPage = () => {
 
   const renderContent = () => {
     if (!testPlan?.executionStatistic.total && isEmpty(testPlanFolders)) {
-      return <EmptyTestPlan />;
+      return <EmptyTestPlan onOpenTestLibrary={() => setIsTestLibrarySidePanelOpen(true)} />;
     }
 
     return <TestPlanFolders isLoading={isTestPlanTestCasesLoading} />;
@@ -266,8 +264,9 @@ export const TestPlanDetailsPage = () => {
       {isTestLibrarySidePanelOpen && (
         <TestLibrarySidePanel
           isOpen
-          onAddTestCases={handleAddTestCases}
+          onAddTestCases={addTestCasesToCurrentTestPlan}
           onClose={() => setIsTestLibrarySidePanelOpen(false)}
+          isAddingToTestPlan={isAddingTestCases}
         />
       )}
     </SettingsLayout>

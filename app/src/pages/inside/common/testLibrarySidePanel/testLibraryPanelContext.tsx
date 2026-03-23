@@ -39,7 +39,6 @@ export interface PanelActionsContextValue {
   isOpenRef: RefObject<boolean>;
   setScrollElement: (element: HTMLElement | null) => void;
   toggleTestCasesSelection: (testCaseIds: number[]) => void;
-  toggleFolderSelection: (folderId: number) => void;
   updateFolderTestCases: (
     folderId: number,
     updatedFolderTestCases: Partial<FolderTestCases>,
@@ -58,6 +57,9 @@ export interface PanelStateContextValue {
   batchLoadingFolderIds: NumberSet;
   testPlanId: number | null;
   scrollElement: HTMLElement | null;
+  shouldHideAddedTestCases: boolean;
+  testPlanIdsByFolderId: Map<number, Set<number>>;
+  isTestPlanDataComplete: boolean;
 }
 
 const PanelActionsContext = createContext<PanelActionsContextValue | null>(null);
