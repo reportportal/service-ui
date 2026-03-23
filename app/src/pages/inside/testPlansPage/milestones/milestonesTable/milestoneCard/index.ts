@@ -15,4 +15,4 @@
  */
 
 export { MilestoneCard } from './milestoneCard';
-export type { MilestoneCardProps, MilestoneCardStatusButtonProps } from './types';
+export type { MilestoneCardProps } from './types';

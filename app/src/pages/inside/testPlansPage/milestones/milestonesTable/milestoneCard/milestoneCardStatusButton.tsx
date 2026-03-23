@@ -29,13 +29,13 @@ import {
   milestoneStatusToCssModifier,
 } from '../../milestoneStatus';
 
-import type { MilestoneCardStatusButtonProps } from './types';
+import type { MilestoneCardProps } from './types';
 
 import styles from './milestoneCard.scss';
 
 const cx = createClassnames(styles);
 
-export const MilestoneCardStatusButton = ({ milestone }: MilestoneCardStatusButtonProps) => {
+export const MilestoneCardStatusButton = ({ milestone }: MilestoneCardProps) => {
   const { formatMessage } = useIntl();
   const [isOpened, setIsOpened] = useState(false);
   const statusModifier = milestoneStatusToCssModifier(milestone.status);

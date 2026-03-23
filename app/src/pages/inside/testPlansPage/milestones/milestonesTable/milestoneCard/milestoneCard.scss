@@ -162,7 +162,7 @@
   }
 
   &__status-toggle_completed &__status-chevron {
-    color: currentColor;
+    color: var(--rp-ui-color-primary);
   }
 
   &__status-chevron {
@@ -185,24 +185,29 @@
     }
   }
 
-  &__actions-wrap {
-    flex-shrink: 0;
-    line-height: 0;
-  }
-
   &__actions-trigger {
-    @include mixins.button-reset;
-
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 24px;
     height: 24px;
     padding: 4px;
+    border: none;
     border-radius: 4px;
+    background: transparent;
+    box-shadow: none;
     cursor: pointer;
     color: var(--rp-ui-base-e-300);
     line-height: 0;
+
+    :global(svg) {
+      color: var(--rp-ui-base-e-300);
+    }
+
+    :global(path) {
+      fill: var(--rp-ui-base-e-300);
+    }
 
     &:hover {
       background-color: var(--rp-ui-base-e-100);

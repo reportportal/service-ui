@@ -19,5 +19,3 @@ import type { TmsMilestoneRS } from 'controllers/milestone';
 export type MilestoneCardProps = {
   milestone: TmsMilestoneRS;
 };
-
-export type MilestoneCardStatusButtonProps = MilestoneCardProps;

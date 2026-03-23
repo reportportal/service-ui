@@ -16,7 +16,7 @@
 
 import { useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { MeatballMenuIcon } from '@reportportal/ui-kit';
+import { Button, MeatballMenuIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
@@ -55,27 +55,22 @@ export const MilestoneCardActionsMenu = () => {
   );
 
   return (
-    <div
-      className={cx('milestone-card__actions-wrap')}
-      onClick={(e) => e.stopPropagation()}
-      onKeyDown={(e) => e.stopPropagation()}
+    <PopoverControl
+      items={items}
+      placement="bottom-end"
+      isOpened={isOpened}
+      setIsOpened={setIsOpened}
     >
-      <PopoverControl
-        items={items}
-        placement="bottom-end"
-        isOpened={isOpened}
-        setIsOpened={setIsOpened}
+      <Button
+        variant="ghost"
+        adjustWidthOn="content"
+        className={cx('milestone-card__actions-trigger')}
+        aria-expanded={isOpened}
+        aria-haspopup="menu"
+        aria-label={formatMessage(messages.milestoneActions)}
       >
-        <button
-          type="button"
-          className={cx('milestone-card__actions-trigger')}
-          aria-expanded={isOpened}
-          aria-haspopup="menu"
-          aria-label={formatMessage(messages.milestoneActions)}
-        >
-          <MeatballMenuIcon />
-        </button>
-      </PopoverControl>
-    </div>
+        <MeatballMenuIcon />
+      </Button>
+    </PopoverControl>
   );
 };

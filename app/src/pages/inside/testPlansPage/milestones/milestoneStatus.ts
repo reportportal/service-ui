@@ -14,38 +14,38 @@
  * limitations under the License.
  */
 
-import { MilestoneStatus as MILESTONE_STATUS } from 'controllers/milestone';
+import { MilestoneStatus } from 'controllers/milestone';
 import type { TmsMilestoneStatus } from 'controllers/milestone';
 
-export { MILESTONE_STATUS };
+export { MilestoneStatus as MILESTONE_STATUS } from 'controllers/milestone';
 
 export type MilestoneCardStatusCssModifier = 'scheduled' | 'testing' | 'completed';
 
 export const milestoneStatusToCssModifier = (
   status: string | undefined | null,
 ): MilestoneCardStatusCssModifier => {
-  const key = (status ?? MILESTONE_STATUS.SCHEDULED).toString().toUpperCase();
-  if (key === String(MILESTONE_STATUS.TESTING)) return 'testing';
-  if (key === String(MILESTONE_STATUS.COMPLETED)) return 'completed';
+  const key = (status ?? MilestoneStatus.SCHEDULED).toString().toUpperCase();
+  if (key === String(MilestoneStatus.TESTING)) return 'testing';
+  if (key === String(MilestoneStatus.COMPLETED)) return 'completed';
   return 'scheduled';
 };
 
 export const isBackToScheduledPopoverOption = (
   option: TmsMilestoneStatus,
   current: TmsMilestoneStatus,
-): boolean => option === MILESTONE_STATUS.SCHEDULED && current !== MILESTONE_STATUS.SCHEDULED;
+): boolean => option === MilestoneStatus.SCHEDULED && current !== MilestoneStatus.SCHEDULED;
 
 export const getMilestoneStatusPopoverOptions = (
   current: TmsMilestoneStatus,
 ): TmsMilestoneStatus[] => {
   switch (current) {
-    case MILESTONE_STATUS.SCHEDULED:
-      return [MILESTONE_STATUS.TESTING, MILESTONE_STATUS.COMPLETED];
-    case MILESTONE_STATUS.TESTING:
-      return [MILESTONE_STATUS.COMPLETED, MILESTONE_STATUS.SCHEDULED];
-    case MILESTONE_STATUS.COMPLETED:
-      return [MILESTONE_STATUS.TESTING, MILESTONE_STATUS.SCHEDULED];
+    case MilestoneStatus.SCHEDULED:
+      return [MilestoneStatus.TESTING, MilestoneStatus.COMPLETED];
+    case MilestoneStatus.TESTING:
+      return [MilestoneStatus.COMPLETED, MilestoneStatus.SCHEDULED];
+    case MilestoneStatus.COMPLETED:
+      return [MilestoneStatus.TESTING, MilestoneStatus.SCHEDULED];
     default:
-      return [MILESTONE_STATUS.TESTING, MILESTONE_STATUS.COMPLETED];
+      return [MilestoneStatus.TESTING, MilestoneStatus.COMPLETED];
   }
 };
