@@ -155,7 +155,7 @@ const RegistrationFormComponent = ({
       </div>
       <div className={cx('password-field')}>
         <FieldProvider name="password">
-          <FieldErrorHint provideHint={false}>
+          <FieldErrorHint provideHint={false} errorsWithHint={[ERROR_MESSAGE_KEYS.REQUIRED_FIELD_WITH_PERIOD]}>
             <InputOutside
               type={'password'}
               icon={PasswordIcon}
