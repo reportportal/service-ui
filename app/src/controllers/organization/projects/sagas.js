@@ -178,6 +178,12 @@ function* selfAssignToProject({ payload = {} }) {
   const { projectId, onSuccess } = payload;
   const activeOrganizationId = yield select(activeOrganizationIdSelector);
   const currentUserId = yield select(idSelector);
+
+  if (!projectId || !activeOrganizationId || !currentUserId) {
+    yield put(showErrorNotification({ messageId: 'assignToProjectError' }));
+    return;
+  }
+
   const assignedOrganizations = yield select(assignedOrganizationsSelector);
 
   const matchedOrg = Object.values(assignedOrganizations).find(

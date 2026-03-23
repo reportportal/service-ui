@@ -46,7 +46,6 @@ export const AssignProjectModal = ({ project, onSuccess }: AssignProjectModalPro
   };
 
   const okButton = {
-    text: formatMessage(COMMON_LOCALE_KEYS.ASSIGN),
     children: formatMessage(COMMON_LOCALE_KEYS.ASSIGN),
     onClick: handleConfirm,
     'data-automation-id': 'submitButton',

@@ -25,13 +25,6 @@ import {
   CHANGE_PROJECT_ROLE,
 } from './constants';
 
-export interface ChangeProjectRolePayload {
-  user: { id: number; fullName: string; userId: string };
-  projectKey: string;
-  newProjectRole: string;
-  onSuccess?: () => void;
-}
-
 export const fetchOrganizationProjectsAction = (organizationId: number | string) => {
   return {
     type: FETCH_ORGANIZATION_PROJECTS,
@@ -76,11 +69,11 @@ export const unassignFromProjectAction = (
 } as const);
 
 export const changeProjectRoleAction = (
-  user: ChangeProjectRolePayload['user'],
+  user: { id: number; fullName: string; userId: string },
   projectKey: string,
   newProjectRole: string,
   onSuccess?: () => void,
-): { type: string; payload: ChangeProjectRolePayload } => ({
+) => ({
   type: CHANGE_PROJECT_ROLE,
   payload: { user, projectKey, newProjectRole, onSuccess },
 } as const);

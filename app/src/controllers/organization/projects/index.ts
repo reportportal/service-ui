@@ -39,5 +39,4 @@ export {
   UNASSIGN_FROM_PROJECT,
   SELF_ASSIGN_TO_PROJECT,
 } from './constants';
-export type { ChangeProjectRolePayload } from './actionCreators';
 export type { ProjectsSearchesItem, ProjectsSearchesResponseData } from './types';
