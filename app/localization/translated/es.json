@@ -155,7 +155,7 @@
   "Assignment.assignmentUpdatedSuccess": "Assignment of {name} has been updated successfully",
   "Assignment.addProject": "Add project",
   "Assignment.assignProjectSelf": "Asignar al Proyecto",
-  "Assignment.assignProjectSelfDescription": "¿Está seguro de que desea asignarse al proyecto {projectName} con el rol de Editor?",
+  "Assignment.assignProjectSelfDescription": "¿Está seguro de que desea asignarse al proyecto <b>{projectName}</b> con el rol de Editor?",
   "Assignment.assignToProjectError": "Se produjo un error al asignar al proyecto",
   "Assignment.assignToProjectSuccess": "Se ha asignado al proyecto con éxito",
   "Assignment.noAssignmentsYet": "No assignments yet",

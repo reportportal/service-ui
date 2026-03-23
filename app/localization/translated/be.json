@@ -155,7 +155,7 @@
   "Assignment.assignmentUpdatedSuccess": "Прызначэнні {name} былі паспяхова зменены",
   "Assignment.addProject": "Дадаць праект",
   "Assignment.assignProjectSelf": "Прызначыць на праект",
-  "Assignment.assignProjectSelfDescription": "Вы ўпэўнены, што хочаце прызначыць сябе на праект {projectName} з роляй Рэдактар?",
+  "Assignment.assignProjectSelfDescription": "Вы ўпэўнены, што хочаце прызначыць сябе на праект <b>{projectName}</b> з роляй Рэдактар?",
   "Assignment.assignToProjectError": "Адбылася памылка пры прызначэнні на праект",
   "Assignment.assignToProjectSuccess": "Вы былі паспяхова прызначаны на праект",
   "Assignment.noAssignmentsYet": "Яшчэ няма прызначэнняў",

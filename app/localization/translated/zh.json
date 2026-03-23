@@ -155,7 +155,7 @@
   "Assignment.assignmentUpdatedSuccess": "Assignment of {name} has been updated successfully",
   "Assignment.addProject": "Add project",
   "Assignment.assignProjectSelf": "分配到项目",
-  "Assignment.assignProjectSelfDescription": "您确定要以编辑者角色将自己分配到项目 {projectName} 吗？",
+  "Assignment.assignProjectSelfDescription": "您确定要以编辑者角色将自己分配到项目 <b>{projectName}</b> 吗？",
   "Assignment.assignToProjectError": "分配到项目时出错",
   "Assignment.assignToProjectSuccess": "您已成功分配到该项目",
   "Assignment.noAssignmentsYet": "No assignments yet",

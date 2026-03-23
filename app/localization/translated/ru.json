@@ -155,7 +155,7 @@
   "Assignment.assignmentUpdatedSuccess": "Назначения {name} были успешно изменены",
   "Assignment.addProject": "Добавить проект",
   "Assignment.assignProjectSelf": "Назначить на проект",
-  "Assignment.assignProjectSelfDescription": "Вы уверены, что хотите назначить себя на проект {projectName} с ролью Редактор?",
+  "Assignment.assignProjectSelfDescription": "Вы уверены, что хотите назначить себя на проект <b>{projectName}</b> с ролью Редактор?",
   "Assignment.assignToProjectError": "Произошла ошибка при назначении на проект",
   "Assignment.assignToProjectSuccess": "Вы были успешно назначены на проект",
   "Assignment.noAssignmentsYet": "Пока нет назначений",

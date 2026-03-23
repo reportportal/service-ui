@@ -18,12 +18,17 @@ import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { Modal } from '@reportportal/ui-kit';
+import { createClassnames } from 'common/utils';
 import { hideModalAction } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalButtonProps } from 'types/common';
 import { selfAssignToProjectAction } from 'controllers/organization/projects';
 import { messages } from 'common/constants/localization/assignmentsLocalization';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
+
+import styles from './assignProjectModal.scss';
+
+const cx = createClassnames(styles);
 
 interface Project {
   projectId: number;
@@ -63,9 +68,10 @@ export const AssignProjectModal = ({ project, onSuccess }: AssignProjectModalPro
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
     >
-      <div>
+      <div className={cx('modal-content')}>
         {formatMessage(messages.assignProjectSelfDescription, {
           projectName: project.projectName,
+          b: (data) => <b>{data}</b>,
         })}
       </div>
     </Modal>
