@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import { Popover } from '@reportportal/ui-kit';
 import { useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import PropTypes from 'prop-types';
@@ -26,7 +26,6 @@ import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
 import CopyIcon from 'common/img/newIcons/copy-inline.svg';
 import LocatorIcon from 'common/img/newIcons/locator-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { withPopover } from 'componentLibrary/popover';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { showModalAction } from 'controllers/modal';
 import { deleteDefectTypeAction, updateDefectTypeAction } from 'controllers/project';
@@ -60,18 +59,19 @@ DefectLocatorPopoverContent.defaultProps = {
   onCopy: () => {},
 };
 
-const DefectLocatorWithPopover = withPopover({
-  ContentComponent: DefectLocatorPopoverContent,
-  side: 'bottom',
-  arrowPosition: 'right',
-  popoverWrapperClassName: cx('locator-icon-wrapper'),
-})(() => (
-  <div className={cx('locator-wrapper')}>
-    <i className={cx('icon', 'locator-icon')} data-automation-id="defectTypeLocatorIcon">
-      {Parser(LocatorIcon)}
-    </i>
-  </div>
-));
+const DefectLocatorWithPopover = ({ locator, onCopy }) => (
+  <Popover
+    placement="bottom-end"
+    content={<DefectLocatorPopoverContent locator={locator} onCopy={onCopy} />}
+    className={cx('locator-icon-wrapper')}
+  >
+    <div className={cx('locator-wrapper')}>
+      <i className={cx('icon', 'locator-icon')} data-automation-id="defectTypeLocatorIcon">
+        {Parser(LocatorIcon)}
+      </i>
+    </div>
+  </Popover>
+);
 DefectLocatorWithPopover.propTypes = {
   locator: PropTypes.string.isRequired,
   onCopy: PropTypes.func,

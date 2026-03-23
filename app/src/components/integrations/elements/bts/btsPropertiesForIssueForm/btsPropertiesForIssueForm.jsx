@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
-import { BubblesLoader, Dropdown } from '@reportportal/ui-kit';
+import { BubblesLoader, Dropdown, Popover } from '@reportportal/ui-kit';
 import { fetch } from 'common/utils';
 import { projectKeySelector } from 'controllers/project';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -29,7 +29,6 @@ import {
   COMMAND_GET_ISSUE_FIELDS,
 } from 'controllers/plugins/uiExtensions/constants';
 import { URLS } from 'common/urls';
-import { withPopover } from 'componentLibrary/popover';
 import Parser from 'html-react-parser';
 import InfoIcon from 'common/img/newIcons/icon-about-inline.svg';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -71,22 +70,19 @@ const messages = defineMessages({
   },
 });
 
-const Popover = ({ formatMessage }) => (
-  <div className={cx('popover')}>{formatMessage(messages.tooltip)}</div>
-);
-Popover.propTypes = {
-  formatMessage: PropTypes.func.isRequired,
-};
-
 const IconShow = () => {
   return <i>{Parser(InfoIcon)}</i>;
 };
 
-const ShowWithPopover = withPopover({
-  ContentComponent: Popover,
-  side: 'bottom',
-  arrowPosition: 'middle',
-})(IconShow);
+const ShowWithPopover = ({ formatMessage }) => (
+  <Popover
+    placement="bottom"
+    arrowColor="white"
+    content={<div className={cx('popover')}>{formatMessage(messages.tooltip)}</div>}
+  >
+    <IconShow />
+  </Popover>
+);
 ShowWithPopover.propTypes = {
   formatMessage: PropTypes.func.isRequired,
 };
