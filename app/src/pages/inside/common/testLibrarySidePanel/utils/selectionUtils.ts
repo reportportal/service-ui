@@ -64,12 +64,18 @@ const getFolderSelectionCounts = (
   const selectableTestCases = testCases.filter(({ id }) => !addedIds?.has(id));
   const uncachedCount = Math.max(0, folder.testsCount - testCases.length);
   const isEmptyFolderLeaf = folder.testsCount === 0 && isEmpty(folder.folders);
+  const isAllAddedLeaf =
+    isEmpty(folder.folders) &&
+    folder.testsCount > 0 &&
+    selectableTestCases.length === 0 &&
+    uncachedCount === 0;
+  const isNonSelectableLeaf = isEmptyFolderLeaf || isAllAddedLeaf;
 
   return {
     totalSelectable: selectableTestCases.length + uncachedCount,
     totalSelected: selectableTestCases.filter((testCase) => selectedIds.has(testCase.id)).length,
-    emptyFolderCount: isEmptyFolderLeaf ? 1 : 0,
-    selectedEmptyFolderCount: isEmptyFolderLeaf && selectedFolderIds.has(folder.id) ? 1 : 0,
+    emptyFolderCount: isNonSelectableLeaf ? 1 : 0,
+    selectedEmptyFolderCount: isNonSelectableLeaf && selectedFolderIds.has(folder.id) ? 1 : 0,
   };
 };
 

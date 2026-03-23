@@ -23,6 +23,7 @@ import { getAllSubfolderIds } from 'common/utils/folderUtils';
 
 import { FolderTestCases, NumberSet, SetState } from '../testLibraryPanelContext';
 import {
+  getAllAddedLeafFolderIds,
   getEmptyLeafFolderIds,
   getSelectableIdsForFolders,
   partitionFoldersByCache,
@@ -81,8 +82,10 @@ export const useBatchFolderSelection = ({
       const emptyLeafIds = getEmptyLeafFolderIds(folder);
 
       if (isEmpty(uncachedFolderIds)) {
+        const allAddedLeafIds = getAllAddedLeafFolderIds(folder, testCasesMapRef.current);
+
         addToSet({ setter: setSelectedTestCasesIds, ids: cachedIds });
-        addToSet({ setter: setSelectedFolderIds, ids: emptyLeafIds });
+        addToSet({ setter: setSelectedFolderIds, ids: [...emptyLeafIds, ...allAddedLeafIds] });
 
         return;
       }
@@ -90,14 +93,20 @@ export const useBatchFolderSelection = ({
       addToSet({ setter: setBatchLoadingFolderIds, ids: [folder.id] });
 
       try {
-        const fetchedIds = await fetchAndCache(uncachedFolderIds);
+        const { selectableIds: fetchedIds, newCacheEntries } =
+          await fetchAndCache(uncachedFolderIds);
 
         if (!isOpenRef.current) {
           return;
         }
 
+        const allAddedLeafIds = getAllAddedLeafFolderIds(
+          folder,
+          new Map([...testCasesMapRef.current, ...newCacheEntries]),
+        );
+
         addToSet({ setter: setSelectedTestCasesIds, ids: [...cachedIds, ...fetchedIds] });
-        addToSet({ setter: setSelectedFolderIds, ids: emptyLeafIds });
+        addToSet({ setter: setSelectedFolderIds, ids: [...emptyLeafIds, ...allAddedLeafIds] });
       } finally {
         removeFromSet({ setter: setBatchLoadingFolderIds, ids: [folder.id] });
       }
@@ -120,7 +129,13 @@ export const useBatchFolderSelection = ({
         setter: setSelectedTestCasesIds,
         ids: getSelectableIdsForFolders(folderIds, testCasesMapRef.current),
       });
-      removeFromSet({ setter: setSelectedFolderIds, ids: getEmptyLeafFolderIds(folder) });
+      removeFromSet({
+        setter: setSelectedFolderIds,
+        ids: [
+          ...getEmptyLeafFolderIds(folder),
+          ...getAllAddedLeafFolderIds(folder, testCasesMapRef.current),
+        ],
+      });
     },
     [flatFolders, setSelectedTestCasesIds, setSelectedFolderIds],
   );

@@ -29,15 +29,8 @@
     min-width: 0;
   }
 
-  button {
-    border: none;
-    background: none;
-    padding: 0;
+  a {
     cursor: pointer;
-    display: inline-flex;
-    width: auto;
-    max-width: 100%;
-    min-width: 0;
 
     &:hover {
       div {

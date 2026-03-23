@@ -17,6 +17,7 @@ export { fetchAllTestCases } from './fetchAllTestCases';
 export type { TestCasesResponse } from './fetchAllTestCases';
 export { getFolderCacheEntry } from './getFolderCacheEntry';
 export { getAllCheckboxStates } from './selectionUtils';
+export { getAllAddedLeafFolderIds } from './getAllAddedLeafFolderIds';
 export { getEmptyLeafFolderIds } from './getEmptyLeafFolderIds';
 export { getSelectableIdsForFolders } from './getSelectableIdsForFolders';
 export { isFolderFullyCached } from './isFolderFullyCached';
