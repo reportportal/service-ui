@@ -13,13 +13,13 @@
 @mixin milestone-body-13-medium {
   @include milestone-body-13;
 
-  font-weight: 500;
+  font-weight: var(--rp-ui-base-fw-medium);
 }
 
 @mixin milestone-metric-value {
   @include milestone-font-body;
 
-  font-weight: 500;
+  font-weight: var(--rp-ui-base-fw-medium);
   font-size: 17px;
   line-height: 24px;
   letter-spacing: 0;
@@ -30,7 +30,7 @@
 @mixin milestone-metric-label {
   @include milestone-font-body;
 
-  font-weight: 400;
+  font-weight: var(--rp-ui-base-fw-regular);
   font-size: 11px;
   line-height: 16px;
   letter-spacing: 0;
