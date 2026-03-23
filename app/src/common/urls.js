@@ -407,6 +407,8 @@ export const URLS = {
     `${urlBase}project/${projectKey}/tms/test-plan/${id}/test-case${getQueryParams(query)}`,
   testPlan: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-plan${getQueryParams(query)}`,
+  tmsMilestone: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/milestone${getQueryParams(query)}`,
   testPlanTestCasesBatch: (projectKey, testPlanId) =>
     `${urlBase}project/${projectKey}/tms/test-plan/${testPlanId}/test-case/batch`,
   testPlanById: (projectKey, testPlanId) =>
@@ -418,7 +420,8 @@ export const URLS = {
   testFolderDuplicate: (projectKey, folderId) =>
     `${urlBase}project/${projectKey}/tms/folder/${folderId}/duplicate`,
   folder: (projectKey, folderId) => `${urlBase}project/${projectKey}/tms/folder/${folderId}`,
-  attachmentThumbnail: (projectKey, attachmentId) => `${urlBase}project/${projectKey}/tms/attachment/${attachmentId}/thumbnail`,
+  attachmentThumbnail: (projectKey, attachmentId) =>
+    `${urlBase}project/${projectKey}/tms/attachment/${attachmentId}/thumbnail`,
   tmsAttachmentUpload: (projectKey) => `${urlBase}project/${projectKey}/tms/attachment/upload`,
   tmsAttachmentDownload: (projectKey, attachmentId) =>
     `${urlBase}project/${projectKey}/tms/attachment/${attachmentId}`,

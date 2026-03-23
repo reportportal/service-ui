@@ -16,6 +16,7 @@
 
 import { ProjectDetails } from 'pages/organization/constants';
 import { TestPlanState } from 'controllers/testPlan/selectors';
+import { MilestoneState } from 'controllers/milestone/types';
 import { TestCaseState } from 'controllers/testCase/selectors';
 import {
   ManualLaunchState,
@@ -51,6 +52,7 @@ export interface TestCaseAppState extends BaseAppState {
 
 export interface AppState extends BaseAppState {
   testPlan?: TestPlanAppState['testPlan'];
+  milestone?: MilestoneState;
   testCase?: TestCaseAppState['testCase'];
   manualLaunch?: ManualLaunchState;
   manualLaunchFolders?: ManualLaunchFoldersState;

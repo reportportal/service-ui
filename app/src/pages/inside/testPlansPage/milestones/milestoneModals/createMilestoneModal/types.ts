@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,25 @@
  * limitations under the License.
  */
 
-export const STATUS_TYPES = {
-  BLOCKER: 'blocker',
-  CRITICAL: 'critical',
-  HIGH: 'high',
-  MEDIUM: 'medium',
-  LOW: 'low',
-  UNSPECIFIED: 'unspecified',
-} as const;
+import { ComponentProps } from 'react';
 
-export { TABLE_PAGE_SIZE_OPTIONS as ITEMS_PER_PAGE_OPTIONS } from '../paginationConstants';
+import { Dropdown } from '@reportportal/ui-kit';
 
-export const TestCasePageDefaultValues = {
-  limit: 50,
-  offset: 0,
+import { TmsMilestoneType } from 'controllers/milestone';
+
+export interface MilestoneFormValues {
+  name: string;
+  type: TmsMilestoneType | '';
+  startDate: string;
+  endDate: string;
+}
+
+export type MilestoneTypeDropdownOption = {
+  value: TmsMilestoneType;
+  label: string;
+  description: string;
 };
 
-export const TEST_CASE_LIST_NAMESPACE = 'testCaseList';
+export type MilestoneTypeDropdownOptionRenderProps = Parameters<
+  NonNullable<ComponentProps<typeof Dropdown>['renderOption']>
+>[0];

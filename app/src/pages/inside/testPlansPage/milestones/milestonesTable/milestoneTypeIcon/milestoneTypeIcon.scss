@@ -1,0 +1,15 @@
+.milestone-type-icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  line-height: 0;
+
+  svg {
+    display: block;
+    width: 32px;
+    height: 32px;
+  }
+}

@@ -347,6 +347,14 @@ export const notificationMessages = defineMessages({
     id: 'TestPlansPage.testPlanLoadingFailed',
     defaultMessage: 'Failed to load Test Plans.',
   },
+  milestoneLoadingFailed: {
+    id: 'MilestonesPage.milestoneLoadingFailed',
+    defaultMessage: 'Failed to load Milestones.',
+  },
+  milestoneCreatedSuccess: {
+    id: 'MilestonesPage.milestoneCreatedSuccess',
+    defaultMessage: 'Milestone has been created successfully.',
+  },
   testPlanRedirectWarningMessage: {
     id: 'TestPlansPage.testPlanRedirectWarningMessage',
     defaultMessage:

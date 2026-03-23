@@ -47,6 +47,7 @@ import { organizationsReducer } from 'controllers/instance/organizations';
 import { exportsReducer } from 'controllers/exports/reducer';
 import { testCaseReducer } from 'controllers/testCase';
 import { testPlanReducer } from 'controllers/testPlan';
+import { milestoneReducer } from 'controllers/milestone';
 
 export default {
   appInfo: appInfoReducer,
@@ -80,4 +81,5 @@ export default {
   exports: exportsReducer,
   testCase: testCaseReducer,
   testPlan: testPlanReducer,
+  milestone: milestoneReducer,
 };

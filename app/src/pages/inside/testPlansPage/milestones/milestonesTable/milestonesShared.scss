@@ -1,0 +1,55 @@
+@mixin milestone-font-body {
+  font-family: var(--rp-ui-base-font-family);
+}
+
+@mixin milestone-body-13 {
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0;
+}
+
+@mixin milestone-body-13-medium {
+  @include milestone-body-13;
+
+  font-weight: 500;
+}
+
+@mixin milestone-metric-value {
+  @include milestone-font-body;
+
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 24px;
+  letter-spacing: 0;
+  text-align: center;
+  color: var(--rp-ui-color-text);
+}
+
+@mixin milestone-metric-label {
+  @include milestone-font-body;
+
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0;
+  text-align: center;
+  color: var(--rp-ui-color-text-secondary);
+}
+
+@mixin milestone-status-pill {
+  @include milestone-body-13-medium;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-sizing: border-box;
+  min-width: 118px;
+  height: 36px;
+  padding: 7px 16px;
+  border: none;
+  border-radius: 3px;
+  text-align: center;
+}

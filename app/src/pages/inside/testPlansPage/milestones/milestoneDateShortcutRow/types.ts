@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,13 @@
  * limitations under the License.
  */
 
-export const STATUS_TYPES = {
-  BLOCKER: 'blocker',
-  CRITICAL: 'critical',
-  HIGH: 'high',
-  MEDIUM: 'medium',
-  LOW: 'low',
-  UNSPECIFIED: 'unspecified',
-} as const;
-
-export { TABLE_PAGE_SIZE_OPTIONS as ITEMS_PER_PAGE_OPTIONS } from '../paginationConstants';
-
-export const TestCasePageDefaultValues = {
-  limit: 50,
-  offset: 0,
+export type MilestoneDateShortcutItem = {
+  id: string;
+  label: string;
+  onClick: () => void;
 };
 
-export const TEST_CASE_LIST_NAMESPACE = 'testCaseList';
+export type MilestoneDateShortcutRowProps = {
+  items: MilestoneDateShortcutItem[];
+  disabled?: boolean;
+};

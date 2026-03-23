@@ -1,0 +1,200 @@
+@use './milestonesShared' as ms;
+@use '../../../../common/css/mixins' as mixins;
+
+.milestone-card {
+  box-sizing: border-box;
+  overflow: visible;
+  width: 100%;
+  border-radius: 8px;
+  background: var(--rp-ui-color-bg);
+  box-shadow: var(--rp-ui-base-shadow-hover);
+  cursor: pointer;
+  transition: box-shadow 0.15s ease;
+
+  &:hover {
+    box-shadow:
+      var(--rp-ui-base-shadow-hover),
+      0 0 0 1px var(--rp-ui-base-topaz-focused);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-sizing: border-box;
+    min-height: 86px;
+    padding: 16px 12px;
+  }
+
+  &__expand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  &__chevron {
+    display: flex;
+    transform: rotate(-90deg);
+    transition: transform 0.15s ease;
+
+    &_open {
+      transform: rotate(0);
+    }
+  }
+
+  &__title-block {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__name {
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 20px;
+    color: var(--rp-ui-color-text);
+  }
+
+  &__dates {
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--rp-ui-color-text-secondary);
+  }
+
+  &__metrics {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+
+  &__metric {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 72px;
+  }
+
+  &__metric-value {
+    @include ms.milestone-metric-value;
+
+    &_alert {
+      color: var(--rp-ui-color-error);
+    }
+  }
+
+  &__metric-label {
+    margin-top: 2px;
+
+    @include ms.milestone-metric-label;
+  }
+
+  &__status-popover {
+    margin-inline-start: -10px;
+    padding: 8px 0;
+  }
+
+  &__status-options {
+    display: flex;
+    flex-direction: column;
+    min-width: 160px;
+  }
+
+  &__status-option {
+    @include mixins.button-reset;
+
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 7px 16px;
+    border-radius: 0;
+    color: var(--rp-ui-color-text);
+    font-size: 13px;
+    line-height: 20px;
+    cursor: pointer;
+    text-align: left;
+
+    &:hover {
+      background-color: var(--rp-ui-base-bg-200);
+    }
+  }
+
+  &__status-toggle {
+    @include ms.milestone-status-pill;
+
+    flex-shrink: 0;
+    text-transform: capitalize;
+    cursor: pointer;
+    justify-content: space-between;
+    gap: 8px;
+    min-width: 118px;
+    padding: 7px 10px 7px 16px;
+
+    &-label {
+      flex: 1;
+      min-width: 0;
+      text-align: center;
+    }
+
+    &_scheduled {
+      color: var(--rp-ui-base-bg-000);
+      background: var(--rp-ui-color-primary);
+    }
+
+    &_testing {
+      color: var(--rp-ui-base-bg-000);
+      background: var(--rp-ui-base-topaz);
+    }
+
+    &_completed {
+      color: var(--rp-ui-base-bg-000);
+      background: var(--rp-ui-base-test-execution-status-passed);
+    }
+  }
+
+  &__status-chevron {
+    display: inline-flex;
+    flex-shrink: 0;
+    line-height: 0;
+    color: var(--rp-ui-base-bg-000);
+    transition: transform 0.2s ease;
+
+    &_open {
+      transform: rotate(180deg);
+    }
+
+    :global(svg) {
+      display: block;
+    }
+
+    :global(path) {
+      fill: currentColor;
+    }
+  }
+
+  &__menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border: none;
+    background: transparent;
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+
+  &__expanded {
+    padding: 16px 24px 20px 56px;
+    background: var(--rp-ui-kit-colors-bg-secondary);
+    border-top: 1px solid var(--rp-ui-kit-colors-border-primary);
+    border-radius: 0 0 8px 8px;
+  }
+
+  &__placeholder {
+    margin: 0;
+    font-size: 13px;
+    color: var(--rp-ui-color-text-secondary);
+  }
+}

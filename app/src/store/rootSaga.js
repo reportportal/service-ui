@@ -42,6 +42,7 @@ import { serverSettingsSagas } from 'controllers/appInfo';
 import { exportsSagas } from 'controllers/exports/sagas';
 import { testCaseSagas } from 'controllers/testCase';
 import { testPlanSagas } from 'controllers/testPlan';
+import { milestoneSagas } from 'controllers/milestone';
 import { analyticsSagas } from 'controllers/analytics';
 
 const sagas = [
@@ -72,6 +73,7 @@ const sagas = [
   exportsSagas,
   testCaseSagas,
   testPlanSagas,
+  milestoneSagas,
   analyticsSagas,
 ];
 

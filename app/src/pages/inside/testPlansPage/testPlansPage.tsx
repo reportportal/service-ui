@@ -15,7 +15,8 @@
  */
 
 import { useIntl } from 'react-intl';
-import { isEmpty, isNull } from 'es-toolkit/compat';
+import { isNotNil, isUndefined } from 'es-toolkit';
+import { isEmpty } from 'es-toolkit/compat';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { Button, RefreshIcon } from '@reportportal/ui-kit';
@@ -23,86 +24,80 @@ import { Button, RefreshIcon } from '@reportportal/ui-kit';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { ProjectDetails } from 'pages/organization/constants';
-import { EmptyTestPlans } from 'pages/inside/testPlansPage/emptyTestPlans';
 import { projectNameSelector } from 'controllers/project';
 import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import {
-  getTestPlansAction,
-  testPlansSelector,
-  isLoadingSelector,
-  defaultQueryParams,
-} from 'controllers/testPlan';
+  getMilestonesAction,
+  milestonesSelector,
+  milestonesLoadingSelector,
+  defaultMilestoneQueryParams,
+} from 'controllers/milestone';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { useTmsMilestonesEnabled } from 'hooks/useTmsMilestonesEnabled';
 import { useQueryParams } from 'common/hooks';
 
-import { useCreateTestPlanModal } from './testPlanModals';
-import { TestPlansTable } from './testPlansTable';
+import { EmptyMilestones, MilestonesTable, useCreateMilestoneModal } from './milestones';
 import { PageHeaderWithBreadcrumbsAndActions } from '../common/pageHeaderWithBreadcrumbsAndActions';
 import { commonMessages } from './commonMessages';
 
 export const TestPlansPage = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const { openModal } = useCreateTestPlanModal();
+  const { openModal: openMilestoneModal } = useCreateMilestoneModal();
   const projectName = useSelector(projectNameSelector);
   const { canManageTestPlans } = useUserPermissions();
-  const isTmsMilestonesEnabled = useTmsMilestonesEnabled();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
-  const testPlans = useSelector(testPlansSelector);
-  const isLoading = useSelector(isLoadingSelector);
+  const milestones = useSelector(milestonesSelector);
+  const milestonesLoading = useSelector(milestonesLoadingSelector);
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
   const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
-  const queryParams = useQueryParams(defaultQueryParams);
+  const queryParams = useQueryParams(defaultMilestoneQueryParams);
 
   useEffect(() => {
-    if (isNull(testPlans) && !isLoading) {
-      dispatch(getTestPlansAction());
+    if (isUndefined(milestones) && !milestonesLoading) {
+      dispatch(getMilestonesAction(queryParams));
     }
-  }, [dispatch, testPlans, isLoading]);
+  }, [dispatch, milestones, milestonesLoading, queryParams]);
 
   const renderContent = () => {
-    if ((testPlans && !isEmpty(testPlans)) || isLoading) {
-      return <TestPlansTable testPlans={testPlans} isLoading={isLoading} />;
+    if ((isNotNil(milestones) && !isEmpty(milestones)) || milestonesLoading) {
+      return <MilestonesTable milestones={milestones ?? []} isLoading={milestonesLoading} />;
     }
 
-    return <EmptyTestPlans />;
+    return <EmptyMilestones />;
   };
+
+  const loading = milestonesLoading;
 
   return (
     <SettingsLayout>
       <ScrollWrapper resetRequired>
         <PageHeaderWithBreadcrumbsAndActions
-          title={formatMessage(
-            isTmsMilestonesEnabled ? commonMessages.pageTitle : commonMessages.pageTestPlansTitle,
-          )}
+          title={formatMessage(commonMessages.pageTitle)}
           breadcrumbDescriptors={breadcrumbDescriptors}
-          {...(!isEmpty(testPlans) && {
-            actions: (
-              <>
+          actions={
+            <>
+              <Button
+                variant="text"
+                data-automation-id="refreshPageButton"
+                icon={<RefreshIcon />}
+                disabled={loading}
+                onClick={() => dispatch(getMilestonesAction(queryParams))}
+              >
+                {formatMessage(commonMessages.refreshPage)}
+              </Button>
+              {canManageTestPlans && (
                 <Button
-                  variant="text"
-                  data-automation-id="refreshPageButton"
-                  icon={<RefreshIcon />}
-                  disabled={isLoading}
-                  onClick={() => dispatch(getTestPlansAction(queryParams))}
+                  variant="ghost"
+                  data-automation-id="createMilestoneButton"
+                  onClick={openMilestoneModal}
                 >
-                  {formatMessage(commonMessages.refreshPage)}
+                  {formatMessage(commonMessages.createMilestone)}
                 </Button>
-                {canManageTestPlans && (
-                  <Button
-                    variant="ghost"
-                    data-automation-id="createTestPlanButton"
-                    onClick={openModal}
-                  >
-                    {formatMessage(commonMessages.createTestPlan)}
-                  </Button>
-                )}
-              </>
-            ),
-          })}
+              )}
+            </>
+          }
         />
         {renderContent()}
       </ScrollWrapper>

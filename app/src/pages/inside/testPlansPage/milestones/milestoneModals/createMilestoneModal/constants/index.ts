@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-export const STATUS_TYPES = {
-  BLOCKER: 'blocker',
-  CRITICAL: 'critical',
-  HIGH: 'high',
-  MEDIUM: 'medium',
-  LOW: 'low',
-  UNSPECIFIED: 'unspecified',
-} as const;
+import type { MilestoneFormValues } from '../types';
 
-export { TABLE_PAGE_SIZE_OPTIONS as ITEMS_PER_PAGE_OPTIONS } from '../paginationConstants';
+export const CREATE_MILESTONE_MODAL_KEY = 'createMilestoneModalKey';
 
-export const TestCasePageDefaultValues = {
-  limit: 50,
-  offset: 0,
+export const CREATE_MILESTONE_FORM_NAME = 'create-milestone-modal-form';
+
+export const NAME_FIELD = 'name';
+
+export const INITIAL_MILESTONE_FORM_VALUES: MilestoneFormValues = {
+  name: '',
+  type: '',
+  startDate: '',
+  endDate: '',
 };
-
-export const TEST_CASE_LIST_NAMESPACE = 'testCaseList';
