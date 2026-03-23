@@ -18,9 +18,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
-import { userRolesSelector } from 'controllers/pages';
 import { useIntl } from 'react-intl';
-import { canSeeMembers } from 'common/utils/permissions';
 import {
   ORGANIZATION_PROJECTS_PAGE,
   ORGANIZATION_USERS_PAGE,
@@ -41,15 +39,11 @@ import {
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
 import { messages } from '../../messages';
-import { useUserPermissions } from 'hooks/useUserPermissions';
-
 const ORGANIZATION_CONTROL = 'Organization control';
 
 export const OrganizationSidebar = ({ onClickNavBtn }) => {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
-  const { canSeeMembers } = useUserPermissions();
-  const userRoles = useSelector(userRolesSelector);
   const sidebarExtensions = useSelector(uiExtensionOrganizationSidebarComponentsSelector);
   const organizationSlug = useSelector(activeOrganizationSelector)?.slug;
   const organizationName = useSelector(activeOrganizationNameSelector);
@@ -71,18 +65,16 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
       },
     ];
 
-    if (canSeeMembers) {
-      sidebarItems.push({
-        onClick: (isSidebarCollapsed) =>
-          onClickButton({ itemName: messages.users.defaultMessage, isSidebarCollapsed }),
-        link: {
-          type: ORGANIZATION_USERS_PAGE,
-          payload: { organizationSlug },
-        },
-        icon: MembersIcon,
-        message: formatMessage(messages.users),
-      });
-    }
+    sidebarItems.push({
+      onClick: (isSidebarCollapsed) =>
+        onClickButton({ itemName: messages.users.defaultMessage, isSidebarCollapsed }),
+      link: {
+        type: ORGANIZATION_USERS_PAGE,
+        payload: { organizationSlug },
+      },
+      icon: MembersIcon,
+      message: formatMessage(messages.users),
+    });
 
     sidebarItems.push({
       onClick: (isSidebarCollapsed) =>

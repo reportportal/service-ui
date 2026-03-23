@@ -57,7 +57,6 @@ import { projectNameSelector } from 'controllers/project';
 import { activeOrganizationNameSelector } from 'controllers/organization';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
 import { messages } from '../../messages';
-import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useTmsEnabled } from 'hooks/useTmsEnabled';
 import { useTmsMilestonesEnabled } from 'hooks/useTmsMilestonesEnabled';
 
@@ -66,7 +65,6 @@ const ORGANIZATION_CONTROL = 'Organization control';
 export const ProjectSidebar = ({ onClickNavBtn }) => {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
-  const { canSeeMembers, canWorkWithFilters } = useUserPermissions();
   const isTmsEnabled = useTmsEnabled();
   const isTmsMilestonesEnabled = useTmsMilestonesEnabled();
   const sidebarExtensions = useSelector(uiExtensionSidebarComponentsSelector);
@@ -136,21 +134,15 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         message: formatMessage(messages.debugMode),
         menuOrder: (menuCounter += menuStep),
       },
-    ];
-
-    if (canWorkWithFilters) {
-      sidebarItems.push({
+      {
         onClick: (isSidebarCollapsed) =>
           onClickButton({ itemName: messages.filters.defaultMessage, isSidebarCollapsed }),
         link: { type: PROJECT_FILTERS_PAGE, payload: { organizationSlug, projectSlug } },
         icon: FiltersIcon,
         message: formatMessage(messages.filters),
         menuOrder: (menuCounter += menuStep),
-      });
-    }
-
-    if (canSeeMembers) {
-      sidebarItems.push({
+      },
+      {
         onClick: (isSidebarCollapsed) =>
           onClickButton({ itemName: messages.projectTeam.defaultMessage, isSidebarCollapsed }),
         link: {
@@ -160,8 +152,9 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         icon: MembersIcon,
         message: formatMessage(messages.projectTeam),
         menuOrder: (menuCounter += menuStep),
-      });
-    }
+      }
+    ];
+
 
     if (isTmsEnabled) {
       sidebarItems.push(
