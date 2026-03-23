@@ -36,12 +36,14 @@ import {
   FETCH_FILTERED_PROJECTS,
   RENAME_PROJECT,
   UNASSIGN_FROM_PROJECT,
+  SELF_ASSIGN_TO_PROJECT,
   CHANGE_PROJECT_ROLE,
 } from './constants';
 import { fetchOrganizationBySlugAction } from '..';
 import { querySelector } from './selectors';
 import { activeOrganizationIdSelector, activeOrganizationSelector } from '../selectors';
 import { fetchOrganizationProjectsAction } from './actionCreators';
+import { fetchUserInfoAction, idSelector, assignedOrganizationsSelector } from 'controllers/user';
 
 function* fetchFilteredProjects() {
   const activeOrganizationId = yield select(activeOrganizationIdSelector);
@@ -171,6 +173,61 @@ function* renameProject({ payload: { projectId, newProjectName } }) {
   }
 }
 
+function* selfAssignToProject({ payload = {} }) {
+  const { projectId, onSuccess } = payload;
+  const activeOrganizationId = yield select(activeOrganizationIdSelector);
+  const currentUserId = yield select(idSelector);
+  const assignedOrganizations = yield select(assignedOrganizationsSelector);
+
+  const matchedOrg = Object.values(assignedOrganizations).find(
+    (org) => org.organizationId === activeOrganizationId,
+  );
+  const isAlreadyInOrg = !!matchedOrg;
+
+  const projectAssignment = { id: projectId, project_role: 'EDITOR' };
+
+  try {
+    if (isAlreadyInOrg) {
+      const userAssignments = yield call(
+        fetch,
+        URLS.organizationUserProjects(activeOrganizationId, currentUserId),
+      );
+
+      const existingProjects = (userAssignments?.items || []).map((p) => ({
+        id: p.id,
+        project_role: p.project_role,
+      }));
+
+      const finalProjects = [
+        ...existingProjects.filter((p) => p.id !== projectId),
+        projectAssignment,
+      ];
+
+      yield call(
+        fetch,
+        URLS.organizationUserById({ organizationId: activeOrganizationId, userId: currentUserId }),
+        {
+          method: 'put',
+          data: { org_role: matchedOrg.organizationRole, projects: finalProjects },
+        },
+      );
+    } else {
+      yield call(fetch, URLS.organizationUsers(activeOrganizationId), {
+        method: 'post',
+        data: { id: currentUserId, org_role: 'MEMBER', projects: [projectAssignment] },
+      });
+    }
+
+    yield put(fetchUserInfoAction());
+    yield fetchFilteredProjects();
+    yield put(hideModalAction());
+    yield put(showSuccessNotification({ messageId: 'assignToProjectSuccess' }));
+    onSuccess?.();
+  } catch {
+    yield put(showErrorNotification({ messageId: 'assignToProjectError' }));
+  }
+}
+
 function* unassignFromProject({ payload = {} }) {
   const { user, project, onSuccess } = payload;
   const { projectId } = project;
@@ -245,6 +302,10 @@ function* watchUnassignFromProject() {
   yield takeEvery(UNASSIGN_FROM_PROJECT, unassignFromProject);
 }
 
+function* watchSelfAssignToProject() {
+  yield takeEvery(SELF_ASSIGN_TO_PROJECT, selfAssignToProject);
+}
+
 function* watchChangeProjectRole() {
   yield takeEvery(CHANGE_PROJECT_ROLE, changeProjectRole);
 }
@@ -257,6 +318,7 @@ export function* projectsSagas() {
     watchFetchFilteredProjects(),
     watchRenameProject(),
     watchUnassignFromProject(),
+    watchSelfAssignToProject(),
     watchChangeProjectRole(),
   ]);
 }

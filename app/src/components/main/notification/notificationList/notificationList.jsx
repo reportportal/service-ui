@@ -67,6 +67,14 @@ export const notificationMessages = defineMessages({
     id: 'Assignment.assignmentUpdatedSuccess',
     defaultMessage: 'Assignment of {name} has been updated successfully',
   },
+  assignToProjectSuccess: {
+    id: 'Assignment.assignToProjectSuccess',
+    defaultMessage: 'You have been assigned to the project successfully',
+  },
+  assignToProjectError: {
+    id: 'Assignment.assignToProjectError',
+    defaultMessage: 'An error occurred while assigning to the project',
+  },
   updateAssignmentsError: {
     id: 'Assignment.updateAssignmentsError',
     defaultMessage: 'An error occurred while updating assignments',

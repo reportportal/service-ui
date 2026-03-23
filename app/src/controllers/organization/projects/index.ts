@@ -22,6 +22,7 @@ export {
   renameProjectAction,
   unassignFromProjectAction,
   changeProjectRoleAction,
+  selfAssignToProjectAction,
 } from './actionCreators';
 export { projectsReducer } from './reducer';
 export { projectsPaginationSelector, projectsSelector, loadingSelector } from './selectors';
@@ -36,6 +37,7 @@ export {
   SORTING_KEY,
   FETCH_FILTERED_PROJECTS,
   UNASSIGN_FROM_PROJECT,
+  SELF_ASSIGN_TO_PROJECT,
 } from './constants';
 export type { ChangeProjectRolePayload } from './actionCreators';
 export type { ProjectsSearchesItem, ProjectsSearchesResponseData } from './types';

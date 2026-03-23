@@ -14,26 +14,34 @@
  * limitations under the License.
  */
 
-export const getBasicEventParameters = (action, category) => ({
+export const getBasicEventParameters = <const ActionType, const CategoryType>(
+  action: ActionType,
+  category: CategoryType,
+) => ({
   action,
   category,
   place: '',
 });
 
-export const getBasicClickEventParameters = (category) =>
-  getBasicEventParameters('click', category);
+export const getBasicClickEventParameters = <const CategoryType>(
+  category: CategoryType,
+) => getBasicEventParameters('click', category);
 
-export const getBasicChooseEventParameters = (category) =>
-  getBasicEventParameters('choose', category);
+export const getBasicChooseEventParameters = <const CategoryType>(
+  category: CategoryType,
+) => getBasicEventParameters('choose', category);
 
-export const getBasicSearchEventParameters = (category) =>
-  getBasicEventParameters('search', category);
+export const getBasicSearchEventParameters = <const CategoryType>(
+  category: CategoryType,
+) => getBasicEventParameters('search', category);
 
-export const getBasicPerformanceEventParameters = (category) =>
-  getBasicEventParameters('performance', category);
+export const getBasicPerformanceEventParameters = <const CategoryType>(
+  category: CategoryType,
+) => getBasicEventParameters('performance', category);
 
-export const getBasicSelectEventParameters = (category) =>
-  getBasicEventParameters('select', category);
+export const getBasicSelectEventParameters = <const CategoryType>(
+  category: CategoryType,
+) => getBasicEventParameters('select', category);
 
 export const normalizeEventParameter = (parameter = '') =>
   parameter.toLowerCase().trim().replace(/\s+|-/g, '_');
