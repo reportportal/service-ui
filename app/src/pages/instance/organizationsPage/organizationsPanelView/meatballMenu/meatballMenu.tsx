@@ -44,6 +44,7 @@ import {
   useCanUnassignOrganization,
   UnassignOrganizationModal,
 } from 'pages/inside/common/assignments';
+import { AssignToOrganizationModal } from '../modals/assignToOrganizationModal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
 import { Organization, OrganizationType } from 'controllers/organization';
@@ -89,6 +90,20 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
   const onConfirm = useCallback(() => {
     dispatch(fetchFilteredOrganizationsAction());
   }, [dispatch]);
+
+  const handleAssignClick = useCallback(() => {
+    dispatch(
+      showModalAction({
+        component: (
+          <AssignToOrganizationModal
+            organization={organization}
+            onAssign={onConfirm}
+          />
+        ),
+      }),
+    );
+    trackEvent(ORGANIZATION_PAGE_EVENTS.ASSIGN_SELF);
+  }, [dispatch, organization, onConfirm, trackEvent]);
 
   const handleUnassignClick = useCallback(() => {
     dispatch(
@@ -166,6 +181,11 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
           organization.type !== OrganizationType.PERSONAL,
       },
       {
+        label: formatMessage(messages.assignToOrganization),
+        onClick: handleAssignClick,
+        hasPermission: !isAssignedToOrganization,
+      },
+      {
         label: formatMessage(COMMON_LOCALE_KEYS.UNASSIGN),
         onClick: handleUnassignClick,
         hasPermission: isAssignedToOrganization && canUnassign(currentUser, organization),
@@ -179,6 +199,7 @@ export const MeatballMenu = ({ organization }: MeatballMenuProps) => {
     ],
     [
       formatMessage,
+      handleAssignClick,
       handleUnassignClick,
       isAssignedToOrganization,
       canUnassign,

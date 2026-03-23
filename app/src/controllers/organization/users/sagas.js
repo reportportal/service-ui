@@ -22,7 +22,9 @@ import { fetchOrganizationUsersAction } from './actionCreators';
 import { withActiveOrganization } from '../sagas';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import { fetch } from 'common/utils';
+import { userInfoSelector, fetchUserInfoAction } from 'controllers/user';
 import {
+  ASSIGN_TO_ORGANIZATION,
   FETCH_ORGANIZATION_USERS,
   FETCH_USER_ASSIGNMENTS,
   FETCH_USER_ASSIGNMENTS_SUCCESS,
@@ -40,6 +42,30 @@ function* fetchOrganizationUsers({ payload: organizationId }) {
   const query = yield select(querySelector);
 
   yield put(fetchDataAction(NAMESPACE)(URLS.organizationUsers(organizationId, { ...query })));
+}
+
+function* assignToOrganization({ payload = {} }) {
+  const { organization, onSuccess } = payload;
+  const { id: organizationId } = organization;
+  const { id: userId, fullName } = yield select(userInfoSelector);
+
+  try {
+    yield call(fetch, URLS.organizationUsers(organizationId), {
+      method: 'post',
+      data: { id: userId },
+    });
+
+    yield put(fetchUserInfoAction());
+    yield put(
+      showSuccessNotification({
+        messageId: 'assignToOrganizationSuccess',
+        values: { name: fullName },
+      }),
+    );
+    onSuccess?.();
+  } catch {
+    yield put(showErrorNotification({ messageId: 'assignToOrganizationError' }));
+  }
 }
 
 function* unassignFromOrganization({ payload = {} }) {
@@ -118,6 +144,10 @@ function* watchFetchOrganizationUsers() {
   yield takeEvery(PREPARE_ACTIVE_ORGANIZATION_USERS, prepareActiveOrganizationUsers);
 }
 
+function* watchAssignToOrganization() {
+  yield takeEvery(ASSIGN_TO_ORGANIZATION, assignToOrganization);
+}
+
 function* watchUnassignFromOrganization() {
   yield takeEvery(UNASSIGN_FROM_ORGANIZATION, unassignFromOrganization);
 }
@@ -126,6 +156,7 @@ export function* usersSagas() {
   yield all([
     watchFetchUsers(),
     watchFetchOrganizationUsers(),
+    watchAssignToOrganization(),
     watchUnassignFromOrganization(),
     watchFetchUserAssignments(),
     watchUpdateUserAssignments(),

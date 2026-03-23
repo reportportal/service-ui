@@ -15,6 +15,7 @@
  */
 
 import {
+  ASSIGN_TO_ORGANIZATION,
   FETCH_ORGANIZATION_USERS,
   FETCH_USER_ASSIGNMENTS,
   PREPARE_ACTIVE_ORGANIZATION_USERS,
@@ -37,6 +38,11 @@ export const fetchOrganizationUsersAction = (params) => {
 export const fetchUserAssignmentsAction = (organizationId, userId) => ({
   type: FETCH_USER_ASSIGNMENTS,
   payload: { organizationId, userId },
+});
+
+export const assignToOrganizationAction = (organization, onSuccess) => ({
+  type: ASSIGN_TO_ORGANIZATION,
+  payload: { organization, onSuccess },
 });
 
 export const unassignFromOrganizationAction = (user, organization, onSuccess) => ({

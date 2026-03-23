@@ -16,6 +16,7 @@
 
 export const FETCH_ORGANIZATION_USERS = 'fetchOrganizationUsers';
 export const PREPARE_ACTIVE_ORGANIZATION_USERS = 'prepareActiveOrganizationUsers';
+export const ASSIGN_TO_ORGANIZATION = 'assignToOrganization';
 export const UNASSIGN_FROM_ORGANIZATION = 'unassignFromOrganization';
 export const FETCH_USER_ASSIGNMENTS = 'fetchUserAssignments';
 export const FETCH_USER_ASSIGNMENTS_SUCCESS = 'fetchUserAssignmentsSuccess';
