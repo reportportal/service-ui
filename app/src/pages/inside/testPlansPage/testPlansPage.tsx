@@ -18,7 +18,7 @@ import { useIntl } from 'react-intl';
 import { isNotNil, isUndefined } from 'es-toolkit';
 import { isEmpty } from 'es-toolkit/compat';
 import { useSelector, useDispatch } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Button, RefreshIcon } from '@reportportal/ui-kit';
 
 import { SettingsLayout } from 'layouts/settingsLayout';
@@ -52,7 +52,8 @@ export const TestPlansPage = () => {
   const milestonesLoading = useSelector(milestonesLoadingSelector);
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
   const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
-  const queryParams = useQueryParams(defaultMilestoneQueryParams);
+  const { offset, limit } = useQueryParams(defaultMilestoneQueryParams);
+  const queryParams = useMemo(() => ({ offset, limit }), [offset, limit]);
 
   useEffect(() => {
     if (isUndefined(milestones) && !milestonesLoading) {
