@@ -93,7 +93,7 @@ const OrganizationUsersPageComponent = ({
       <EmptyUsersPageState
         isLoading={isUsersLoading}
         isNotEmpty={!isEmptyUsers}
-        hasPermission
+        hasPermission={canInviteUserToOrganization}
         showInviteUserModal={showInviteUserModal}
       />
     ) : (
