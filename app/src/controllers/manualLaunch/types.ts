@@ -28,6 +28,7 @@ import {
 export interface GetManualLaunchesParams {
   offset?: string | number;
   limit?: string | number;
+  searchQuery?: string;
 }
 
 export interface GetManualLaunchParams {

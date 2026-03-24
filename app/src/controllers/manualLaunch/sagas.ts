@@ -50,6 +50,7 @@ import {
   MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
   ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE,
   TEST_FOLDER_ID_FILTER_KEY,
+  MANUAL_LAUNCH_NAME_CONTAINS_FILTER_KEY,
   defaultManualLaunchesQueryParams,
 } from './constants';
 import {
@@ -81,10 +82,13 @@ function* getManualLaunches(action: GetManualLaunchesAction): Generator {
 
     const typedURLS = URLS as UrlsHelper;
 
-    const params = action.payload
+    const trimmedNameSearch = action.payload?.searchQuery?.trim();
+
+    const params: Record<string, string | number | undefined> = action.payload
       ? {
           limit: action.payload.limit,
           offset: action.payload.offset,
+          [MANUAL_LAUNCH_NAME_CONTAINS_FILTER_KEY]: trimmedNameSearch || undefined,
         }
       : defaultManualLaunchesQueryParams;
     const data = (yield call(

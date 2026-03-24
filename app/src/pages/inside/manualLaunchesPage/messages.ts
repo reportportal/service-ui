@@ -22,4 +22,8 @@ export const messages = defineMessages({
     id: 'ManualLaunchesPage.testLibraryLink',
     defaultMessage: 'Open Test Library',
   },
+  searchPlaceholder: {
+    id: 'ManualLaunchesPage.searchPlaceholder',
+    defaultMessage: 'Search launches...',
+  },
 });

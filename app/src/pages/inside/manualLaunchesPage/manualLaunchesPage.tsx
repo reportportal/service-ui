@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
@@ -22,9 +22,15 @@ import { Button, RefreshIcon, Pagination } from '@reportportal/ui-kit';
 
 import { projectNameSelector } from 'controllers/project';
 import { SettingsLayout } from 'layouts/settingsLayout';
-import { createClassnames } from 'common/utils';
+import { createClassnames, debounce } from 'common/utils';
+import { SEARCH_DELAY } from 'common/constants/delayTime';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import {
+  PROJECT_DASHBOARD_PAGE,
+  urlOrganizationAndProjectSelector,
+  locationSelector,
+  updatePagePropertiesAction,
+} from 'controllers/pages';
 import { ProjectDetails } from 'pages/organization/constants';
 import {
   manualLaunchContentSelector,
@@ -34,6 +40,7 @@ import {
   MANUAL_LAUNCHES_NAMESPACE,
   defaultManualLaunchesQueryParams,
 } from 'controllers/manualLaunch';
+import { SearchField } from 'components/fields/searchField';
 
 import { messages } from './messages';
 import { ManualLaunchesPageContent } from './manualLaunchesPageContent';
@@ -57,6 +64,38 @@ export const ManualLaunchesPage = () => {
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
+  const location = useSelector(locationSelector);
+
+  const appliedSearchQuery = location?.query?.searchQuery || '';
+  const [searchValue, setSearchValue] = useState(appliedSearchQuery);
+
+  useEffect(() => {
+    setSearchValue(appliedSearchQuery);
+  }, [appliedSearchQuery]);
+
+  const isSearchLoading = searchValue.trim() !== appliedSearchQuery || isLoading;
+
+  const debouncedUpdateSearch = useMemo(
+    () =>
+      debounce((value: string) => {
+        const trimmed = value.trim();
+
+        dispatch(
+          updatePagePropertiesAction({
+            searchQuery: trimmed,
+            ...(trimmed !== appliedSearchQuery && { offset: 0 }),
+          }),
+        );
+      }, SEARCH_DELAY),
+    [dispatch, appliedSearchQuery],
+  );
+
+  const handleFilterChange = useCallback(
+    (value: string) => {
+      debouncedUpdateSearch(value);
+    },
+    [debouncedUpdateSearch],
+  );
 
   const { activePage, pageSize, setPageNumber, setPageSize, totalPages, captions, offset } =
     useURLBoundPagination({
@@ -68,8 +107,14 @@ export const ManualLaunchesPage = () => {
     });
 
   const handleRefresh = useCallback(() => {
-    dispatch(getManualLaunchesAction({ offset, limit: pageSize }));
-  }, [dispatch, offset, pageSize]);
+    dispatch(
+      getManualLaunchesAction({
+        offset,
+        limit: pageSize,
+        searchQuery: appliedSearchQuery || undefined,
+      }),
+    );
+  }, [dispatch, offset, pageSize, appliedSearchQuery]);
 
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
   const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
@@ -80,17 +125,26 @@ export const ManualLaunchesPage = () => {
         <PageHeaderWithBreadcrumbsAndActions
           title={formatMessage(messages.manualLaunchesTitle)}
           breadcrumbDescriptors={breadcrumbDescriptors}
-          {...(!isEmpty(content) && {
+          {...((!isEmpty(content) || appliedSearchQuery || searchValue || isLoading) && {
             actions: (
-              <Button
-                variant="text"
-                data-automation-id="refreshPageButton"
-                icon={<RefreshIcon />}
-                disabled={isLoading}
-                onClick={handleRefresh}
-              >
-                {formatMessage(commonMessages.refreshPage)}
-              </Button>
+              <>
+                <SearchField
+                  isLoading={isSearchLoading}
+                  searchValue={searchValue}
+                  placeholder={formatMessage(messages.searchPlaceholder)}
+                  setSearchValue={setSearchValue}
+                  onFilterChange={handleFilterChange}
+                />
+                <Button
+                  variant="text"
+                  data-automation-id="refreshPageButton"
+                  icon={<RefreshIcon />}
+                  disabled={isLoading}
+                  onClick={handleRefresh}
+                >
+                  {formatMessage(commonMessages.refreshPage)}
+                </Button>
+              </>
             ),
           })}
         />
@@ -99,6 +153,7 @@ export const ManualLaunchesPage = () => {
             fullLaunches={content}
             isLoading={isLoading}
             onRefresh={handleRefresh}
+            searchQuery={appliedSearchQuery}
           />
         </div>
         {Boolean(pageInfo?.totalElements) && (

@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 
+import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
 import { BubblesLoader } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { createClassnames } from 'common/utils';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { EmptyPageState } from 'pages/common/emptyPageState';
+import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
+import { messages as testCaseListMessages } from 'pages/inside/common/testCaseList/messages';
 
 import { ManualLaunchesEmptyState } from '../emptyState/manualLaunchesEmptyState';
 import { ManualLaunchesList } from '../manualLaunchesList';
@@ -32,19 +37,34 @@ export interface ManualLaunchesPageContentProps {
   isLoading: boolean;
   fullLaunches?: Launch[];
   onRefresh?: VoidFn;
+  searchQuery?: string;
 }
 
 export const ManualLaunchesPageContent = ({
   isLoading,
   fullLaunches = [],
   onRefresh,
+  searchQuery,
 }: ManualLaunchesPageContentProps) => {
+  const { formatMessage } = useIntl();
   const hasData = !isEmpty(fullLaunches);
 
   if (isLoading && !hasData) {
     return (
       <div className={cx('loading')}>
         <BubblesLoader />
+      </div>
+    );
+  }
+
+  if (!hasData && searchQuery?.trim()) {
+    return (
+      <div className={cx('no-search-results')}>
+        <EmptyPageState
+          label={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
+          description={formatMessage(testCaseListMessages.noResultsDescription)}
+          emptyIcon={NoResultsIcon}
+        />
       </div>
     );
   }
