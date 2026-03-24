@@ -125,7 +125,7 @@ export const ManualLaunchesPage = () => {
         <PageHeaderWithBreadcrumbsAndActions
           title={formatMessage(messages.manualLaunchesTitle)}
           breadcrumbDescriptors={breadcrumbDescriptors}
-          {...((!isEmpty(content) || appliedSearchQuery || searchValue) && {
+          {...((!isEmpty(content) || appliedSearchQuery || searchValue || isLoading) && {
             actions: (
               <>
                 <SearchField
