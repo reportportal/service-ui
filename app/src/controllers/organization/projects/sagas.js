@@ -28,6 +28,7 @@ import {
   showSuccessNotification,
 } from 'controllers/notification';
 import { prepareQueryFilters } from 'components/filterEntities/utils';
+import { isUserAssignedToOrganization } from 'common/utils/isUserAssignedToOrganization';
 import {
   CREATE_PROJECT,
   FETCH_ORGANIZATION_PROJECTS,
@@ -186,9 +187,7 @@ function* selfAssignToProject({ payload = {} }) {
 
   const assignedOrganizations = yield select(assignedOrganizationsSelector);
 
-  const isAlreadyInOrg = Object.values(assignedOrganizations || {}).some(
-    (org) => org.organizationId === activeOrganizationId,
-  );
+  const isAlreadyInOrg = isUserAssignedToOrganization(assignedOrganizations, activeOrganizationId);
 
   try {
     if (isAlreadyInOrg) {

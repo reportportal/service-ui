@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { Modal } from '@reportportal/ui-kit';
 import { createClassnames } from 'common/utils';
+import { isUserAssignedToOrganization } from 'common/utils/isUserAssignedToOrganization';
 import { hideModalAction } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalButtonProps } from 'types/common';
+import { activeOrganizationIdSelector } from 'controllers/organization';
+import { assignedOrganizationsSelector } from 'controllers/user';
 import { selfAssignToProjectAction } from 'controllers/organization/projects';
 import { messages } from 'common/constants/localization/assignmentsLocalization';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
@@ -44,6 +47,15 @@ export const AssignProjectModal = ({ project, onSuccess }: AssignProjectModalPro
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
+  const activeOrganizationId = useSelector(activeOrganizationIdSelector) as number;
+  const assignedOrganizations = useSelector(assignedOrganizationsSelector);
+  const isAlreadyInOrganization = isUserAssignedToOrganization(
+    assignedOrganizations,
+    activeOrganizationId,
+  );
+  const descriptionMessage = isAlreadyInOrganization
+    ? messages.assignProjectSelfDescription
+    : messages.assignProjectSelfDescriptionWithMemberRole;
 
   const handleConfirm = () => {
     trackEvent(ORGANIZATION_PAGE_EVENTS.assignToProjectModal('assign'));
@@ -69,7 +81,7 @@ export const AssignProjectModal = ({ project, onSuccess }: AssignProjectModalPro
       onClose={() => dispatch(hideModalAction())}
     >
       <div className={cx('modal-content')}>
-        {formatMessage(messages.assignProjectSelfDescription, {
+        {formatMessage(descriptionMessage, {
           projectName: project.projectName,
           b: (data) => <b>{data}</b>,
         })}
