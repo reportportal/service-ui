@@ -15,7 +15,9 @@
  */
 
 import { useDispatch, useSelector } from 'react-redux';
+import { noop } from 'es-toolkit';
 import { FC, useCallback, useMemo } from 'react';
+import { useTracking } from 'react-tracking';
 import { UserInfo, userInfoSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import {
@@ -30,8 +32,10 @@ import { DeleteProjectModal } from '../../modals/deleteProjectModal';
 import { messages } from '../../messages';
 import { ActionMenu, ActionItem, LinkItem } from 'components/actionMenu';
 import { UnassignProjectModal } from 'pages/inside/common/assignments/unassignProjectModal';
+import { AssignProjectModal } from 'pages/inside/common/assignments';
 import { ProjectDetails } from 'pages/organization/constants';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 
 interface ProjectActionMenuProps {
   details: ProjectDetails;
@@ -48,6 +52,7 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
   } = useUserPermissions();
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const user = useSelector(userInfoSelector) as UserInfo;
 
   const handleDeleteProjectClick = useCallback(() => {
@@ -73,8 +78,17 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
   }, [dispatch, projectId, projectName]);
 
   const handleAssignClick = useCallback(() => {
-    // TODO: Implement assign action
-  }, []);
+    const onSuccess = () => {
+      dispatch(fetchFilteredProjectAction());
+    };
+
+    dispatch(
+      showModalAction({
+        component: <AssignProjectModal project={details} onSuccess={onSuccess} />,
+      }),
+    );
+    trackEvent(ORGANIZATION_PAGE_EVENTS.assignToProject());
+  }, [details, dispatch, trackEvent]);
 
   const handleUnassignClick = useCallback(() => {
     const onSuccess = () => {
@@ -119,7 +133,7 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
       },
       {
         label: formatMessage(messages.actionInviteUser),
-        onClick: () => {},
+        onClick: noop,
         hasPermission: canInviteUserToProject,
       },
       {

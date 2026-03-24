@@ -158,4 +158,15 @@ export const ORGANIZATION_PAGE_EVENTS = {
     modal: 'rename_organization',
     place,
   }),
+  assignToProject: () => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations_projects',
+    element_name: 'assign_via_menu',
+  }),
+  assignToProjectModal: (elementName: string) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations',
+    element_name: elementName,
+    modal: 'assign_project',
+  }),
 };

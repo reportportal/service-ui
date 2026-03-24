@@ -17,6 +17,20 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
+  assignProjectSelf: {
+    id: 'Assignment.assignProjectSelf',
+    defaultMessage: 'Assign to Project',
+  },
+  assignProjectSelfDescription: {
+    id: 'Assignment.assignProjectSelfDescription',
+    defaultMessage:
+      'Are you sure you want to assign yourself to the project <b>{projectName}</b>?',
+  },
+  assignProjectSelfDescriptionWithMemberRole: {
+    id: 'Assignment.assignProjectSelfDescriptionWithMemberRole',
+    defaultMessage:
+      'Are you sure you want to assign yourself to the project <b>{projectName}</b> with a {roleName} role in organization?',
+  },
   unassignProjectUser: {
     id: 'Assignment.unassignProjectUser',
     defaultMessage: 'Unassign User from Project',
