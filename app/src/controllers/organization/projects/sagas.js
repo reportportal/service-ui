@@ -186,42 +186,26 @@ function* selfAssignToProject({ payload = {} }) {
 
   const assignedOrganizations = yield select(assignedOrganizationsSelector);
 
-  const matchedOrg = Object.values(assignedOrganizations).find(
+  const isAlreadyInOrg = Object.values(assignedOrganizations || {}).some(
     (org) => org.organizationId === activeOrganizationId,
   );
-  const isAlreadyInOrg = !!matchedOrg;
-
-  const projectAssignment = { id: projectId, project_role: EDITOR };
 
   try {
     if (isAlreadyInOrg) {
-      const userAssignments = yield call(
-        fetch,
-        URLS.organizationUserProjects(activeOrganizationId, currentUserId),
-      );
+      const addOperation = {
+        op: 'add',
+        path: '/users/-',
+        value: { id: currentUserId, project_role: EDITOR },
+      };
 
-      const existingProjects = (userAssignments?.items || []).map((p) => ({
-        id: p.id,
-        project_role: p.project_role,
-      }));
-
-      const finalProjects = [
-        ...existingProjects.filter((p) => p.id !== projectId),
-        projectAssignment,
-      ];
-
-      yield call(
-        fetch,
-        URLS.organizationUserById({ organizationId: activeOrganizationId, userId: currentUserId }),
-        {
-          method: 'put',
-          data: { org_role: matchedOrg.organizationRole, projects: finalProjects },
-        },
-      );
+      yield call(fetch, URLS.organizationProjectById({ organizationId: activeOrganizationId, projectId }), {
+        method: 'patch',
+        data: [addOperation],
+      });
     } else {
       yield call(fetch, URLS.organizationUsers(activeOrganizationId), {
         method: 'post',
-        data: { id: currentUserId, org_role: MEMBER, projects: [projectAssignment] },
+        data: { id: currentUserId, org_role: MEMBER, projects: [{ id: projectId, project_role: EDITOR }] },
       });
     }
 
