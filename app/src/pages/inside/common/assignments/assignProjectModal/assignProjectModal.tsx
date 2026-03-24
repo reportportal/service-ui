@@ -24,7 +24,7 @@ import { hideModalAction } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalButtonProps } from 'types/common';
 import { activeOrganizationIdSelector } from 'controllers/organization';
-import { assignedOrganizationsSelector } from 'controllers/user';
+import { AssignedOrganizations, assignedOrganizationsSelector } from 'controllers/user';
 import { selfAssignToProjectAction } from 'controllers/organization/projects';
 import { messages } from 'common/constants/localization/assignmentsLocalization';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
@@ -48,7 +48,7 @@ export const AssignProjectModal = ({ project, onSuccess }: AssignProjectModalPro
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const activeOrganizationId = useSelector(activeOrganizationIdSelector) as number;
-  const assignedOrganizations = useSelector(assignedOrganizationsSelector);
+  const assignedOrganizations = useSelector(assignedOrganizationsSelector) as AssignedOrganizations;
   const isAlreadyInOrganization = isUserAssignedToOrganization(
     assignedOrganizations,
     activeOrganizationId,
