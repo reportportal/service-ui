@@ -66,7 +66,7 @@ export const ManualLaunchesPage = () => {
   ) as ProjectDetails;
   const location = useSelector(locationSelector);
 
-  const appliedSearchQuery = (location?.query?.searchQuery as string) || '';
+  const appliedSearchQuery = location?.query?.searchQuery || '';
   const [searchValue, setSearchValue] = useState(appliedSearchQuery);
 
   useEffect(() => {
