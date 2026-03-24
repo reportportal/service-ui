@@ -15,7 +15,7 @@
  */
 
 import { getStorageItem } from 'common/utils/storageUtils';
-import { queryParamsType } from 'types/common';
+import { PaginationOffsetLimit } from 'types/common';
 
 interface UserSettings {
   [key: string]: string | number | undefined;
@@ -34,11 +34,11 @@ type GetRouterParamsType = {
       };
     };
     location: {
-      query?: queryParamsType;
+      query?: PaginationOffsetLimit;
     };
   };
   namespace: string;
-  defaultParams: queryParamsType;
+  defaultParams: PaginationOffsetLimit;
 };
 
 export const getRouterParams = ({

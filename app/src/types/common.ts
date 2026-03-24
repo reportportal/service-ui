@@ -30,7 +30,7 @@ export interface Page {
   totalPages: number;
 }
 
-export type queryParamsType = {
+export interface PaginationOffsetLimit {
   offset?: number;
   limit?: number;
-};
+}

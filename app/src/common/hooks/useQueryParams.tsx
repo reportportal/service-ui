@@ -17,9 +17,9 @@
 import { useSelector } from 'react-redux';
 import { locationQuerySelector } from 'controllers/pages';
 
-import { queryParamsType } from '../../types/common';
+import { PaginationOffsetLimit } from '../../types/common';
 
-export const useQueryParams = ({ offset, limit }: queryParamsType): queryParamsType => {
+export const useQueryParams = ({ offset, limit }: PaginationOffsetLimit): PaginationOffsetLimit => {
   const query = useSelector(locationQuerySelector);
 
   if (query?.offset === undefined || query?.limit === undefined) {

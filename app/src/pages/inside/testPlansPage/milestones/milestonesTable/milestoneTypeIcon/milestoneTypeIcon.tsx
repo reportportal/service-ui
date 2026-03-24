@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
-import Parser from 'html-react-parser';
+import type { ComponentType, SVGProps } from 'react';
 
-import ReleaseIcon from 'common/img/milestones/release-inline.svg';
-import SprintIcon from 'common/img/milestones/sprint-inline.svg';
-import PlanIcon from 'common/img/milestones/plan-inline.svg';
-import FeatureIcon from 'common/img/milestones/feature-inline.svg';
-import OtherIcon from 'common/img/milestones/other-inline.svg';
+import { BoltIcon, CycleArrowsIcon, DiamondIcon, FlagIcon, RocketIcon } from '@reportportal/ui-kit';
 import { MilestoneType, TmsMilestoneType } from 'controllers/milestone';
 
 import { createClassnames } from 'common/utils';
@@ -29,20 +25,33 @@ import styles from './milestoneTypeIcon.scss';
 
 const cx = createClassnames(styles);
 
-const ICONS: Record<TmsMilestoneType, string> = {
-  [MilestoneType.RELEASE]: ReleaseIcon,
-  [MilestoneType.SPRINT]: SprintIcon,
-  [MilestoneType.PLAN]: PlanIcon,
-  [MilestoneType.FEATURE]: FeatureIcon,
-  [MilestoneType.OTHER]: OtherIcon,
+const ICONS: Record<TmsMilestoneType, ComponentType<SVGProps<SVGSVGElement>>> = {
+  [MilestoneType.RELEASE]: RocketIcon,
+  [MilestoneType.SPRINT]: CycleArrowsIcon,
+  [MilestoneType.PLAN]: FlagIcon,
+  [MilestoneType.FEATURE]: BoltIcon,
+  [MilestoneType.OTHER]: DiamondIcon,
 };
+
+export type MilestoneTypeIconPlacement = 'default' | 'toggle' | 'menu';
 
 interface MilestoneTypeIconProps {
   type: TmsMilestoneType;
+  placement?: MilestoneTypeIconPlacement;
 }
 
-export const MilestoneTypeIcon = ({ type }: MilestoneTypeIconProps) => (
-  <span className={cx('milestone-type-icon')} aria-hidden>
-    {Parser(ICONS[type])}
-  </span>
-);
+export const MilestoneTypeIcon = ({ type, placement = 'default' }: MilestoneTypeIconProps) => {
+  const Icon = ICONS[type];
+
+  return (
+    <span
+      className={cx('milestone-type-icon', `milestone-type-icon--${type}`, {
+        'milestone-type-icon--toggle': placement === 'toggle',
+        'milestone-type-icon--menu': placement === 'menu',
+      })}
+      aria-hidden
+    >
+      <Icon />
+    </span>
+  );
+};

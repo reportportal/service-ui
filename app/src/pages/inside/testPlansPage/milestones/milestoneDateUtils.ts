@@ -14,17 +14,22 @@
  * limitations under the License.
  */
 
+import { format, isValid, parse, parseISO } from 'date-fns';
+import { enUS } from 'date-fns/locale';
+
+export const formatIsoDateShort = (iso: string): string =>
+  format(parseISO(iso), 'P', { locale: enUS });
+
 export const parseDateOnly = (value: string): Date | null => {
   if (!value) return null;
-  const parts = value.split('-').map(Number);
-  if (parts.length !== 3 || parts.some((n) => Number.isNaN(n))) return null;
-  const [y, m, d] = parts;
-  return new Date(y, m - 1, d);
+  const d = parse(value, 'yyyy-MM-dd', new Date());
+  return isValid(d) ? d : null;
 };
 
-export const toDateOnlyString = (date: Date) => {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const d = String(date.getDate()).padStart(2, '0');
-  return `${y}-${m}-${d}`;
+export const toDateOnlyString = (date: Date): string => format(date, 'yyyy-MM-dd');
+
+export const dateOnlyStringToUtcIso = (value: string): string | null => {
+  const d = parseDateOnly(value);
+  if (!d) return null;
+  return new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())).toISOString();
 };

@@ -30,7 +30,9 @@ export const EmptyMilestones = () => {
   return (
     <div className={cx('empty-milestones')}>
       <h3 className={cx('empty-milestones__title')}>{formatMessage(messages.emptyTitle)}</h3>
-      <p className={cx('empty-milestones__description')}>{formatMessage(messages.emptyDescription)}</p>
+      <p className={cx('empty-milestones__description')}>
+        {formatMessage(messages.emptyDescription)}
+      </p>
     </div>
   );
 };

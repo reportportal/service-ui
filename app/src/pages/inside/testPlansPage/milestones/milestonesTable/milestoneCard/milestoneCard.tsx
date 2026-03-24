@@ -20,6 +20,7 @@ import { ChevronDownDropdownIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 
+import { formatIsoDateShort } from '../../milestoneDateUtils';
 import { aggregateMilestoneCoverage, daysLeftUntil } from '../milestoneUtils';
 import { MilestoneCardActionsMenu } from './milestoneCardActionsMenu';
 import { MilestoneCardStatusButton } from './milestoneCardStatusButton';
@@ -32,21 +33,13 @@ import styles from './milestoneCard.scss';
 
 const cx = createClassnames(styles);
 
-const formatShortDate = (iso: string, locale: string) =>
-  new Intl.DateTimeFormat(locale, { month: '2-digit', day: '2-digit', year: 'numeric' }).format(
-    new Date(iso),
-  );
-
 export const MilestoneCard = ({ milestone }: MilestoneCardProps) => {
-  const { formatMessage, locale } = useIntl();
+  const { formatMessage } = useIntl();
   const [expanded, setExpanded] = useState(false);
   const { coveredPct, plansCount } = aggregateMilestoneCoverage(milestone);
   const daysLeft = daysLeftUntil(milestone.endDate);
 
-  const dateRange = `${formatShortDate(milestone.startDate, locale)} — ${formatShortDate(
-    milestone.endDate,
-    locale,
-  )}`;
+  const dateRange = `${formatIsoDateShort(milestone.startDate)} — ${formatIsoDateShort(milestone.endDate)}`;
 
   return (
     <div className={cx('milestone-card')}>
@@ -66,14 +59,11 @@ export const MilestoneCard = ({ milestone }: MilestoneCardProps) => {
             <ChevronDownDropdownIcon />
           </span>
         </button>
-
         <MilestoneTypeIcon type={milestone.type} />
-
         <div className={cx('milestone-card__title-block')}>
           <div className={cx('milestone-card__name')}>{milestone.name}</div>
           <div className={cx('milestone-card__dates')}>{dateRange}</div>
         </div>
-
         <div className={cx('milestone-card__metrics')}>
           <div className={cx('milestone-card__metric')}>
             <span className={cx('milestone-card__metric-value')}>{coveredPct}%</span>
@@ -100,12 +90,9 @@ export const MilestoneCard = ({ milestone }: MilestoneCardProps) => {
             </span>
           </div>
         </div>
-
         <MilestoneCardStatusButton milestone={milestone} />
-
         <MilestoneCardActionsMenu />
       </div>
-
       {expanded && (
         <div className={cx('milestone-card__expanded')}>
           <p className={cx('milestone-card__placeholder')}>

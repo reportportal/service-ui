@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
+import type { PaginationOffsetLimit } from 'types/common';
+
 import { GET_MILESTONES } from './constants';
 
-export type GetMilestonesParams = {
-  limit?: number;
-  offset?: number;
-};
-
-export const getMilestonesAction = (params?: GetMilestonesParams) => ({
+export const getMilestonesAction = (params?: PaginationOffsetLimit) => ({
   type: GET_MILESTONES,
   payload: params,
 });

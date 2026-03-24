@@ -28,7 +28,7 @@ export type {
   CreateMilestonePayload,
 } from './constants';
 export { getMilestonesAction } from './actionCreators';
-export type { GetMilestonesParams } from './actionCreators';
+export type { PaginationOffsetLimit } from 'types/common';
 export { milestoneSagas } from './sagas';
 export { milestoneReducer } from './reducer';
 export { milestonesSelector, milestonesPageSelector, milestonesLoadingSelector } from './selectors';

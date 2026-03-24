@@ -15,3 +15,4 @@
  */
 
 export { MilestoneTypeIcon } from './milestoneTypeIcon';
+export type { MilestoneTypeIconPlacement } from './milestoneTypeIcon';

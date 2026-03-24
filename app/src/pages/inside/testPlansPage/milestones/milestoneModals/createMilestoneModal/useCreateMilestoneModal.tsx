@@ -16,7 +16,8 @@
 
 import { useModal } from 'common/hooks';
 
-import { CREATE_MILESTONE_MODAL_KEY, CreateMilestoneModal } from './createMilestoneModal';
+import { CREATE_MILESTONE_MODAL_KEY } from './constants';
+import { CreateMilestoneModal } from './createMilestoneModal';
 
 export const useCreateMilestoneModal = () =>
   useModal({

@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
+import { VoidFn } from '@reportportal/ui-kit/common/types/commonTypes';
+
 export type MilestoneDateShortcutItem = {
   id: string;
   label: string;
-  onClick: () => void;
+  onClick: VoidFn;
 };
 
 export type MilestoneDateShortcutRowProps = {

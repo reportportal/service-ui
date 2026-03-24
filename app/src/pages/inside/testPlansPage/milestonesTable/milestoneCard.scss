@@ -119,6 +119,12 @@
     &:hover {
       background-color: var(--rp-ui-base-bg-200);
     }
+
+    &:focus-visible {
+      outline: 1px solid var(--rp-ui-base-topaz-focused);
+      outline-offset: -1px;
+      background-color: var(--rp-ui-base-bg-200);
+    }
   }
 
   &__status-toggle {

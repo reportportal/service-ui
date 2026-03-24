@@ -32,7 +32,12 @@ export {
   endDateDaysAfterStart,
   endDateMonthsAfterStart,
 } from './datePickerConstants';
-export { parseDateOnly, toDateOnlyString } from './milestoneDateUtils';
+export {
+  parseDateOnly,
+  toDateOnlyString,
+  dateOnlyStringToUtcIso,
+  formatIsoDateShort,
+} from './milestoneDateUtils';
 
 export { MilestoneType, MilestoneStatus } from 'controllers/milestone';
 
@@ -47,4 +52,3 @@ export {
   getMilestoneStatusMessageDescriptor,
   getMilestoneStatusPopoverOptionMessageDescriptor,
 } from './milestoneStatusMessages';
-

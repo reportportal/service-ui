@@ -14,13 +14,57 @@
  * limitations under the License.
  */
 
+import { isBefore } from 'date-fns';
+import { defineMessages, type MessageDescriptor } from 'react-intl';
+
 import { commonValidators } from 'common/utils/validation';
+
+import { parseDateOnly } from '../../milestoneDateUtils';
 
 import type { MilestoneFormValues } from './types';
 
-export const validateMilestoneForm = (values: MilestoneFormValues) => ({
-  name: commonValidators.requiredField(values.name),
-  type: commonValidators.requiredField(values.type),
-  startDate: commonValidators.requiredField(values.startDate),
-  endDate: commonValidators.requiredField(values.endDate),
+const validationMessages = defineMessages({
+  invalidDateOnly: {
+    id: 'MilestonesTable.invalidDateOnly',
+    defaultMessage: 'Enter a valid date',
+  },
+  endDateBeforeStartDate: {
+    id: 'MilestonesTable.endDateBeforeStartDate',
+    defaultMessage: 'End date must be on or after start date',
+  },
 });
+
+export const createValidateMilestoneForm =
+  (formatMessage: (descriptor: MessageDescriptor) => string) =>
+  (values: MilestoneFormValues) => {
+    const errors: Record<string, string> = {};
+
+    const nameErr = commonValidators.requiredField(values.name);
+    if (nameErr) errors.name = nameErr;
+
+    const typeErr = commonValidators.requiredField(values.type);
+    if (typeErr) errors.type = typeErr;
+
+    const startReq = commonValidators.requiredField(values.startDate);
+    if (startReq) errors.startDate = startReq;
+
+    const endReq = commonValidators.requiredField(values.endDate);
+    if (endReq) errors.endDate = endReq;
+
+    const start = values.startDate?.trim() ?? '';
+    const end = values.endDate?.trim() ?? '';
+
+    if (!errors.startDate && !errors.endDate && start && end) {
+      const startParsed = parseDateOnly(start);
+      const endParsed = parseDateOnly(end);
+      if (!startParsed) {
+        errors.startDate = formatMessage(validationMessages.invalidDateOnly);
+      } else if (!endParsed) {
+        errors.endDate = formatMessage(validationMessages.invalidDateOnly);
+      } else if (isBefore(endParsed, startParsed)) {
+        errors.endDate = formatMessage(validationMessages.endDateBeforeStartDate);
+      }
+    }
+
+    return errors;
+  };

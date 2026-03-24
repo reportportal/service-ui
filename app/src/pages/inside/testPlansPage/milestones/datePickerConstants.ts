@@ -14,50 +14,25 @@
  * limitations under the License.
  */
 
+import { addDays, addMonths, nextDay, startOfDay } from 'date-fns';
+
 import { parseDateOnly, toDateOnlyString } from './milestoneDateUtils';
 
-const todayMidnightLocal = (): Date => {
-  const d = new Date();
-  d.setHours(0, 0, 0, 0);
-  return d;
-};
+export const tomorrowDateOnly = (): string => toDateOnlyString(addDays(startOfDay(new Date()), 1));
 
-export const tomorrowDateOnly = (): string => {
-  const d = todayMidnightLocal();
-  d.setDate(d.getDate() + 1);
-  return toDateOnlyString(d);
-};
-
-/** If today is Monday, the Monday one week later; otherwise the next calendar Monday. */
-export const nextMondayDateOnly = (): string => {
-  const d = todayMidnightLocal();
-  const day = d.getDay();
-  let add: number;
-  if (day === 0) add = 1;
-  else if (day === 1) add = 7;
-  else add = 8 - day;
-  d.setDate(d.getDate() + add);
-  return toDateOnlyString(d);
-};
+export const nextMondayDateOnly = (): string =>
+  toDateOnlyString(nextDay(startOfDay(new Date()), 1));
 
 const anchorDateForEndShortcuts = (startDate: string | undefined): Date => {
   const parsed = startDate ? parseDateOnly(startDate) : null;
   if (parsed) {
-    const d = new Date(parsed);
-    d.setHours(0, 0, 0, 0);
-    return d;
+    return startOfDay(parsed);
   }
-  return todayMidnightLocal();
+  return startOfDay(new Date());
 };
 
-export const endDateDaysAfterStart = (startDate: string | undefined, days: number): string => {
-  const d = anchorDateForEndShortcuts(startDate);
-  d.setDate(d.getDate() + days);
-  return toDateOnlyString(d);
-};
+export const endDateDaysAfterStart = (startDate: string | undefined, days: number): string =>
+  toDateOnlyString(addDays(anchorDateForEndShortcuts(startDate), days));
 
-export const endDateMonthsAfterStart = (startDate: string | undefined, months: number): string => {
-  const d = anchorDateForEndShortcuts(startDate);
-  d.setMonth(d.getMonth() + months);
-  return toDateOnlyString(d);
-};
+export const endDateMonthsAfterStart = (startDate: string | undefined, months: number): string =>
+  toDateOnlyString(addMonths(anchorDateForEndShortcuts(startDate), months));

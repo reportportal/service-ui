@@ -37,25 +37,23 @@ import {
   nextMondayDateOnly,
   tomorrowDateOnly,
 } from '../../datePickerConstants';
+import { dateOnlyStringToUtcIso } from '../../milestoneDateUtils';
 import { MilestoneDateShortcutRow } from '../../milestoneDateShortcutRow/milestoneDateShortcutRow';
 import { MilestoneDateField } from '../../milestoneDateField/milestoneDateField';
 import { MilestoneTypeDropdown } from '../../milestoneTypeDropdown/milestoneTypeDropdown';
 import type { MilestoneFormValues } from './types';
 import { useCreateMilestone } from './useCreateMilestone';
-import { validateMilestoneForm } from './validateMilestoneForm';
+import { createValidateMilestoneForm } from './validateMilestoneForm';
 
 import styles from './createMilestoneModal.scss';
 
 const cx = createClassnames(styles);
 
-export type { MilestoneFormValues } from './types';
-export { CREATE_MILESTONE_MODAL_KEY } from './constants';
-
 type FormProps = InjectedFormProps<MilestoneFormValues>;
 
 const milestoneFormValues = formValueSelector(CREATE_MILESTONE_FORM_NAME);
 
-const CreateMilestoneModalComponent = ({ handleSubmit, invalid, dirty, change }: FormProps) => {
+const CreateMilestoneModalForm = ({ handleSubmit, invalid, dirty, change }: FormProps) => {
   const { formatMessage } = useIntl();
   const { isLoading, submitMilestone } = useCreateMilestone();
   const startDate = useSelector(
@@ -99,14 +97,19 @@ const CreateMilestoneModalComponent = ({ handleSubmit, invalid, dirty, change }:
     [change, formatMessage, startDate],
   );
 
-  const onSubmit = (values: MilestoneFormValues) =>
-    submitMilestone({
+  const onSubmit = (values: MilestoneFormValues) => {
+    const startIso = dateOnlyStringToUtcIso(values.startDate.trim());
+    const endIso = dateOnlyStringToUtcIso(values.endDate.trim());
+    if (!startIso || !endIso) return;
+
+    void submitMilestone({
       name: values.name.trim(),
       type: values.type as TmsMilestoneType,
       status: MilestoneStatus.SCHEDULED,
-      startDate: new Date(values.startDate).toISOString(),
-      endDate: new Date(values.endDate).toISOString(),
+      startDate: startIso,
+      endDate: endIso,
     });
+  };
 
   const { okButton, cancelButton, hideModal } = useModalButtons({
     okButtonText: (
@@ -145,7 +148,6 @@ const CreateMilestoneModalComponent = ({ handleSubmit, invalid, dirty, change }:
               </FieldErrorHint>
             </FieldProvider>
           </div>
-
           <div className={cx('create-milestone-modal__field')}>
             <Field
               name="type"
@@ -153,7 +155,6 @@ const CreateMilestoneModalComponent = ({ handleSubmit, invalid, dirty, change }:
               props={{ label: formatMessage(createMilestoneModalMessages.typeLabel) }}
             />
           </div>
-
           <div className={cx('create-milestone-modal__dates')}>
             <div className={cx('create-milestone-modal__field')}>
               <Field
@@ -190,8 +191,14 @@ const CreateMilestoneModalComponent = ({ handleSubmit, invalid, dirty, change }:
   );
 };
 
-export const CreateMilestoneModal = reduxForm<MilestoneFormValues>({
+const CreateMilestoneModalRedux = reduxForm<MilestoneFormValues>({
   form: CREATE_MILESTONE_FORM_NAME,
   initialValues: INITIAL_MILESTONE_FORM_VALUES,
-  validate: validateMilestoneForm,
-})(CreateMilestoneModalComponent);
+})(CreateMilestoneModalForm);
+
+export const CreateMilestoneModal = () => {
+  const { formatMessage } = useIntl();
+  const validate = useMemo(() => createValidateMilestoneForm(formatMessage), [formatMessage]);
+
+  return <CreateMilestoneModalRedux validate={validate} />;
+};

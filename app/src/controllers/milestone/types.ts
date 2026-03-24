@@ -16,9 +16,7 @@
 
 import { Action } from 'redux';
 
-import { Page } from 'types/common';
-
-import type { GetMilestonesParams } from './actionCreators';
+import type { Page, PaginationOffsetLimit } from 'types/common';
 import { GET_MILESTONES, TmsMilestoneRS } from './constants';
 
 export interface MilestoneState {
@@ -34,5 +32,5 @@ export interface MilestoneSelectorsRootState {
 }
 
 export interface GetMilestonesAction extends Action<typeof GET_MILESTONES> {
-  payload?: GetMilestonesParams;
+  payload?: PaginationOffsetLimit;
 }

@@ -25,8 +25,6 @@ import styles from './milestoneDateField.scss';
 
 import type { MilestoneDateFieldProps } from './types';
 
-export type { MilestoneDateFieldProps } from './types';
-
 const cx = createClassnames(styles);
 
 export const MilestoneDateField = (props: MilestoneDateFieldProps) => {

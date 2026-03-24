@@ -12,9 +12,14 @@
   }
 
   &__type-dropdown-toggle-icon {
-    position: relative;
-    bottom: 6px;
-    right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    margin: 0;
+    line-height: 0;
   }
 
   &__content {
@@ -65,23 +70,29 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    box-sizing: border-box;
     max-width: 100%;
+    padding: 8px 12px;
     text-align: left;
+    border-radius: 4px;
+
+    &_selected {
+      background: var(--Background-Brand-Light, #e5f5f8);
+    }
+
+    &_highlight {
+      background: var(--Field-Dropdown-Bg-Hover, #eceff4);
+    }
   }
 
   &__type-option-icon {
     display: flex;
-    flex-shrink: 0;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
     width: 32px;
     height: 32px;
     line-height: 0;
-
-    span svg {
-      display: block;
-      transform: translate(-1px, -2px);
-    }
   }
 
   &__type-option-text {
