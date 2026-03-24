@@ -35,6 +35,8 @@ export const MANUAL_SCENARIO_TYPE_STEPS = 'STEPS' as const;
 
 export const TEST_FOLDER_ID_FILTER_KEY = 'filter.eq.testFolderId' as const;
 
+export const MANUAL_LAUNCH_NAME_CONTAINS_FILTER_KEY = 'filter.cnt.name' as const;
+
 export const defaultManualLaunchesQueryParams = {
   limit: 20,
   offset: 0,

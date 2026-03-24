@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
@@ -74,19 +74,28 @@ export const ManualLaunchesPage = () => {
     setSearchValue(querySearch);
   }, [location?.query?.searchQuery]);
 
-  const isSearchLoading = searchValue !== (location?.query?.searchQuery || '') || isLoading;
+  const appliedSearchQuery = location?.query?.searchQuery || '';
+
+  const isSearchLoading = searchValue !== appliedSearchQuery || isLoading;
+
+  const debouncedUpdateSearch = useMemo(
+    () =>
+      debounce((value: string) => {
+        dispatch(
+          updatePagePropertiesAction({
+            searchQuery: value.trim(),
+            offset: 0,
+          }),
+        );
+      }, SEARCH_DELAY),
+    [dispatch],
+  );
 
   const handleFilterChange = useCallback(
-    // eslint-disable-next-line react-hooks/use-memo
-    debounce((value: string) => {
-      dispatch(
-        updatePagePropertiesAction({
-          searchQuery: value,
-          offset: 0,
-        }),
-      );
-    }, SEARCH_DELAY),
-    [dispatch],
+    (value: string) => {
+      debouncedUpdateSearch(value);
+    },
+    [debouncedUpdateSearch],
   );
 
   const { activePage, pageSize, setPageNumber, setPageSize, totalPages, captions, offset } =
@@ -98,11 +107,15 @@ export const ManualLaunchesPage = () => {
       baseUrl: `/organizations/${organizationSlug}/projects/${projectSlug}/manualLaunches`,
     });
 
-  const searchQuery = location?.query?.searchQuery;
-
   const handleRefresh = useCallback(() => {
-    dispatch(getManualLaunchesAction({ offset, limit: pageSize, searchQuery }));
-  }, [dispatch, offset, pageSize, searchQuery]);
+    dispatch(
+      getManualLaunchesAction({
+        offset,
+        limit: pageSize,
+        searchQuery: appliedSearchQuery || undefined,
+      }),
+    );
+  }, [dispatch, offset, pageSize, appliedSearchQuery]);
 
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
   const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
@@ -113,7 +126,7 @@ export const ManualLaunchesPage = () => {
         <PageHeaderWithBreadcrumbsAndActions
           title={formatMessage(messages.manualLaunchesTitle)}
           breadcrumbDescriptors={breadcrumbDescriptors}
-          {...((!isEmpty(content) || searchQuery) && {
+          {...((!isEmpty(content) || appliedSearchQuery || searchValue) && {
             actions: (
               <>
                 <SearchField
@@ -141,7 +154,7 @@ export const ManualLaunchesPage = () => {
             fullLaunches={content}
             isLoading={isLoading}
             onRefresh={handleRefresh}
-            searchQuery={searchQuery}
+            searchQuery={appliedSearchQuery}
           />
         </div>
         {Boolean(pageInfo?.totalElements) && (

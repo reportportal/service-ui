@@ -57,7 +57,7 @@ export const ManualLaunchesPageContent = ({
     );
   }
 
-  if (!hasData && searchQuery) {
+  if (!hasData && searchQuery?.trim()) {
     return (
       <div className={cx('no-search-results')}>
         <EmptyPageState
