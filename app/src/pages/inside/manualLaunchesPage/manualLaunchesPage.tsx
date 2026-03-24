@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
@@ -66,15 +66,8 @@ export const ManualLaunchesPage = () => {
   ) as ProjectDetails;
   const location = useSelector(locationSelector);
 
-  const [searchValue, setSearchValue] = useState(location?.query?.searchQuery || '');
-
-  useEffect(() => {
-    const querySearch = location?.query?.searchQuery || '';
-
-    setSearchValue(querySearch);
-  }, [location?.query?.searchQuery]);
-
-  const appliedSearchQuery = location?.query?.searchQuery || '';
+  const appliedSearchQuery = (location?.query?.searchQuery as string) || '';
+  const [searchValue, setSearchValue] = useState(appliedSearchQuery);
 
   const isSearchLoading = searchValue !== appliedSearchQuery || isLoading;
 
