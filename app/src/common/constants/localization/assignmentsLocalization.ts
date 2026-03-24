@@ -29,7 +29,7 @@ export const messages = defineMessages({
   assignProjectSelfDescriptionWithMemberRole: {
     id: 'Assignment.assignProjectSelfDescriptionWithMemberRole',
     defaultMessage:
-      'Are you sure you want to assign yourself to the project <b>{projectName}</b> with a Member role in organization?',
+      'Are you sure you want to assign yourself to the project <b>{projectName}</b> with a {roleName} role in organization?',
   },
   unassignProjectUser: {
     id: 'Assignment.unassignProjectUser',

@@ -156,7 +156,7 @@
   "Assignment.addProject": "Дадаць праект",
   "Assignment.assignProjectSelf": "Прызначыць на праект",
   "Assignment.assignProjectSelfDescription": "Вы ўпэўнены, што хочаце прызначыць сябе на праект <b>{projectName}</b>?",
-  "Assignment.assignProjectSelfDescriptionWithMemberRole": "Вы ўпэўненыя, што жадаеце прызначыць сябе на праект <b>{projectName}</b> з роляй Мембер у арганізацыі?",
+  "Assignment.assignProjectSelfDescriptionWithMemberRole": "Вы ўпэўненыя, што жадаеце прызначыць сябе на праект <b>{projectName}</b> з роляй {roleName} у арганізацыі?",
   "Assignment.assignToProjectError": "Адбылася памылка пры прызначэнні на праект",
   "Assignment.assignToProjectSuccess": "User has been assigned successfully",
   "Assignment.noAssignmentsYet": "Яшчэ няма прызначэнняў",

@@ -156,7 +156,7 @@
   "Assignment.addProject": "Add project",
   "Assignment.assignProjectSelf": "Asignar al Proyecto",
   "Assignment.assignProjectSelfDescription": "¿Está seguro de que desea asignarse al proyecto <b>{projectName}</b>?",
-  "Assignment.assignProjectSelfDescriptionWithMemberRole": "¿Está seguro de que desea asignarse al proyecto <b>{projectName}</b> con el rol de Miembro en la organización?",
+  "Assignment.assignProjectSelfDescriptionWithMemberRole": "¿Está seguro de que desea asignarse al proyecto <b>{projectName}</b> con el rol de {roleName} en la organización?",
   "Assignment.assignToProjectError": "Se produjo un error al asignar al proyecto",
   "Assignment.assignToProjectSuccess": "User has been assigned successfully",
   "Assignment.noAssignmentsYet": "No assignments yet",

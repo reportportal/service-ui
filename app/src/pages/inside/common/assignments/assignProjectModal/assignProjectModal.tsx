@@ -18,8 +18,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { Modal } from '@reportportal/ui-kit';
+import { MEMBER } from 'common/constants/projectRoles';
 import { createClassnames } from 'common/utils';
 import { isUserAssignedToOrganization } from 'common/utils/isUserAssignedToOrganization';
+import { getOrgRoleTitle } from 'common/utils/permissions';
 import { hideModalAction } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalButtonProps } from 'types/common';
@@ -56,6 +58,7 @@ export const AssignProjectModal = ({ project, onSuccess }: AssignProjectModalPro
   const descriptionMessage = isAlreadyInOrganization
     ? messages.assignProjectSelfDescription
     : messages.assignProjectSelfDescriptionWithMemberRole;
+  const memberRoleName = formatMessage(getOrgRoleTitle(MEMBER));
 
   const handleConfirm = () => {
     trackEvent(ORGANIZATION_PAGE_EVENTS.assignToProjectModal('assign'));
@@ -83,6 +86,7 @@ export const AssignProjectModal = ({ project, onSuccess }: AssignProjectModalPro
       <div className={cx('modal-content')}>
         {formatMessage(descriptionMessage, {
           projectName: project.projectName,
+          roleName: memberRoleName,
           b: (data) => <b>{data}</b>,
         })}
       </div>

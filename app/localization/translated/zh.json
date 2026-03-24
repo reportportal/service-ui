@@ -156,7 +156,7 @@
   "Assignment.addProject": "Add project",
   "Assignment.assignProjectSelf": "分配到项目",
   "Assignment.assignProjectSelfDescription": "您确定要将自己分配到项目 <b>{projectName}</b> 吗？",
-  "Assignment.assignProjectSelfDescriptionWithMemberRole": "您确定要将自己分配到项目 <b>{projectName}</b>，并在组织中授予成员角色吗？",
+  "Assignment.assignProjectSelfDescriptionWithMemberRole": "您确定要将自己分配到项目 <b>{projectName}</b>，并在组织中授予{roleName}角色吗？",
   "Assignment.assignToProjectError": "分配到项目时出错",
   "Assignment.assignToProjectSuccess": "User has been assigned successfully",
   "Assignment.noAssignmentsYet": "No assignments yet",
