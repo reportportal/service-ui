@@ -63,32 +63,31 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
         icon: ProjectsIcon,
         message: formatMessage(messages.projects),
       },
+      {
+        onClick: (isSidebarCollapsed) =>
+          onClickButton({ itemName: messages.users.defaultMessage, isSidebarCollapsed }),
+        link: {
+          type: ORGANIZATION_USERS_PAGE,
+          payload: { organizationSlug },
+        },
+        icon: MembersIcon,
+        message: formatMessage(messages.users),
+      },
+      {
+        onClick: (isSidebarCollapsed) =>
+          onClickButton({
+            itemName: messages.organizationSettings.defaultMessage,
+            isSidebarCollapsed,
+          }),
+        link: {
+          type: ORGANIZATION_SETTINGS_PAGE,
+          payload: { organizationSlug },
+        },
+        icon: SettingsIcon,
+        message: formatMessage(messages.organizationSettings),
+      }
     ];
 
-    sidebarItems.push({
-      onClick: (isSidebarCollapsed) =>
-        onClickButton({ itemName: messages.users.defaultMessage, isSidebarCollapsed }),
-      link: {
-        type: ORGANIZATION_USERS_PAGE,
-        payload: { organizationSlug },
-      },
-      icon: MembersIcon,
-      message: formatMessage(messages.users),
-    });
-
-    sidebarItems.push({
-      onClick: (isSidebarCollapsed) =>
-        onClickButton({
-          itemName: messages.organizationSettings.defaultMessage,
-          isSidebarCollapsed,
-        }),
-      link: {
-        type: ORGANIZATION_SETTINGS_PAGE,
-        payload: { organizationSlug },
-      },
-      icon: SettingsIcon,
-      message: formatMessage(messages.organizationSettings),
-    });
 
     sidebarExtensions.forEach((extension) => {
       const itemName = extension.payload?.iconName;
