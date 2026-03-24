@@ -77,11 +77,11 @@
     border-radius: 4px;
 
     &_selected {
-      background: var(--Background-Brand-Light, #e5f5f8);
+      background: var(--Background-Brand-Light, var(--rp-ui-kit-colors-bg-secondary));
     }
 
     &_highlight {
-      background: var(--Field-Dropdown-Bg-Hover, #eceff4);
+      background: var(--Field-Dropdown-Bg-Hover, var(--rp-ui-base-bg-200));
     }
   }
 
