@@ -63,7 +63,7 @@ export const ManualLaunchesPageContent = ({
         <EmptyPageState
           label={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
           description={formatMessage(testCaseListMessages.noResultsDescription)}
-          emptyIcon={NoResultsIcon as unknown as string}
+          emptyIcon={NoResultsIcon}
         />
       </div>
     );
