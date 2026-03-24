@@ -1879,7 +1879,7 @@
   "OrganizationsPage.activity": "Діяльність",
   "OrganizationsPage.assignToOrganization": "Призначити",
   "OrganizationsPage.assignToOrganizationError": "Сталася помилка під час призначення до організації",
-  "OrganizationsPage.assignToOrganizationModalDescription": "Ви впевнені, що хочете призначити себе до організації <b>{organizationName}</b> з роллю учасника?",
+  "OrganizationsPage.assignToOrganizationModalDescription": "Ви впевнені, що хочете призначити себе до організації <b>{organizationName}</b> з роллю Користувача?",
   "OrganizationsPage.assignToOrganizationModalTitle": "Призначити до організації",
   "OrganizationsPage.assignToOrganizationSuccess": "Користувач {name} успішно призначений",
   "OrganizationsPage.confirmOrganizationNameEntry": "Для підтвердження, будь ласка, введіть назву організації",

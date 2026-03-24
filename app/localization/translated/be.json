@@ -1878,7 +1878,7 @@
   "OrganizationsPage.activity": "Дзейнасць",
   "OrganizationsPage.assignToOrganization": "Прызначыць",
   "OrganizationsPage.assignToOrganizationError": "Адбылася памылка пры прызначэнні ў арганізацыю",
-  "OrganizationsPage.assignToOrganizationModalDescription": "Вы ўпэўнены, што хочаце прызначыць сябе ў арганізацыю <b>{organizationName}</b> з роляй удзельніка?",
+  "OrganizationsPage.assignToOrganizationModalDescription": "Вы ўпэўнены, што хочаце прызначыць сябе ў арганізацыю <b>{organizationName}</b> з роляй Карыстальніка?",
   "OrganizationsPage.assignToOrganizationModalTitle": "Прызначыць у арганізацыю",
   "OrganizationsPage.assignToOrganizationSuccess": "Карыстальнік {name} паспяхова прызначаны",
   "OrganizationsPage.confirmOrganizationNameEntry": "Каб пацвердзіць, увядзіце назву арганізацыі",

@@ -22,7 +22,7 @@ import { fetchOrganizationUsersAction } from './actionCreators';
 import { withActiveOrganization } from '../sagas';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import { fetch } from 'common/utils';
-import { userInfoSelector, fetchUserInfoAction } from 'controllers/user';
+import { userInfoSelector } from 'controllers/user';
 import {
   ASSIGN_TO_ORGANIZATION,
   FETCH_ORGANIZATION_USERS,
@@ -55,7 +55,6 @@ function* assignToOrganization({ payload = {} }) {
       data: { id: userId },
     });
 
-    yield put(fetchUserInfoAction());
     yield put(
       showSuccessNotification({
         messageId: 'assignToOrganizationSuccess',

@@ -25,6 +25,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalButtonProps } from 'types/common';
 import { Organization } from 'controllers/organization';
 import { assignToOrganizationAction } from 'controllers/organization/users';
+import { fetchUserInfoAction } from 'controllers/user';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { messages } from 'pages/instance/organizationsPage/messages';
 
@@ -45,12 +46,16 @@ export const AssignToOrganizationModal = ({
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
 
+  const handleAssignSuccess = () => {
+    dispatch(fetchUserInfoAction());
+    dispatch(hideModalAction());
+    onAssign?.();
+  };
+
   const okButton: ModalButtonProps = {
-    text: formatMessage(messages.assignToOrganization),
     children: formatMessage(messages.assignToOrganization),
     onClick: () => {
-      dispatch(assignToOrganizationAction(organization, onAssign));
-      dispatch(hideModalAction());
+      dispatch(assignToOrganizationAction(organization, handleAssignSuccess));
       trackEvent(ORGANIZATION_PAGE_EVENTS.CLICK_ASSIGN_BUTTON);
     },
     'data-automation-id': 'submitButton',
