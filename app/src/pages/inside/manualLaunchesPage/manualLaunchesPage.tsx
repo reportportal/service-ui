@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
@@ -69,19 +69,25 @@ export const ManualLaunchesPage = () => {
   const appliedSearchQuery = (location?.query?.searchQuery as string) || '';
   const [searchValue, setSearchValue] = useState(appliedSearchQuery);
 
-  const isSearchLoading = searchValue !== appliedSearchQuery || isLoading;
+  useEffect(() => {
+    setSearchValue(appliedSearchQuery);
+  }, [appliedSearchQuery]);
+
+  const isSearchLoading = searchValue.trim() !== appliedSearchQuery || isLoading;
 
   const debouncedUpdateSearch = useMemo(
     () =>
       debounce((value: string) => {
+        const trimmed = value.trim();
+
         dispatch(
           updatePagePropertiesAction({
-            searchQuery: value.trim(),
-            offset: 0,
+            searchQuery: trimmed,
+            ...(trimmed !== appliedSearchQuery && { offset: 0 }),
           }),
         );
       }, SEARCH_DELAY),
-    [dispatch],
+    [dispatch, appliedSearchQuery],
   );
 
   const handleFilterChange = useCallback(
