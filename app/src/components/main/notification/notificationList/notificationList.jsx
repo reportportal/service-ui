@@ -69,7 +69,7 @@ export const notificationMessages = defineMessages({
   },
   assignToProjectSuccess: {
     id: 'Assignment.assignToProjectSuccess',
-    defaultMessage: 'You have been assigned to the project successfully',
+    defaultMessage: 'User has been assigned successfully',
   },
   assignToProjectError: {
     id: 'Assignment.assignToProjectError',

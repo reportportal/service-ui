@@ -157,7 +157,7 @@
   "Assignment.assignProjectSelf": "Назначить на проект",
   "Assignment.assignProjectSelfDescription": "Вы уверены, что хотите назначить себя на проект <b>{projectName}</b> с ролью Редактор?",
   "Assignment.assignToProjectError": "Произошла ошибка при назначении на проект",
-  "Assignment.assignToProjectSuccess": "Вы были успешно назначены на проект",
+  "Assignment.assignToProjectSuccess": "User has been assigned successfully",
   "Assignment.noAssignmentsYet": "Пока нет назначений",
   "Assignment.unassignConfirmation": "Вы уверены, что хотите отменить назначение в организации?",
   "Assignment.unassignConfirmationUser": "Вы уверены, что хотите отменить назначение пользователя в организации?",

@@ -157,7 +157,7 @@
   "Assignment.assignProjectSelf": "分配到项目",
   "Assignment.assignProjectSelfDescription": "您确定要以编辑者角色将自己分配到项目 <b>{projectName}</b> 吗？",
   "Assignment.assignToProjectError": "分配到项目时出错",
-  "Assignment.assignToProjectSuccess": "您已成功分配到该项目",
+  "Assignment.assignToProjectSuccess": "User has been assigned successfully",
   "Assignment.noAssignmentsYet": "No assignments yet",
   "Assignment.unassignConfirmation": "Are you sure you want to unassign from the organization?",
   "Assignment.unassignConfirmationUser": "Are you sure you want to unassign user from the organization?",
