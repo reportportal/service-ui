@@ -29,6 +29,7 @@ interface LocationQuery {
   offset: string;
   limit: string;
   testCasesSearchParams?: string;
+  searchQuery?: string;
 }
 
 export type LocationInfo = {

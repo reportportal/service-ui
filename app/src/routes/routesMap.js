@@ -383,7 +383,9 @@ const routesMap = {
         state,
       });
 
-      dispatch(getManualLaunchesAction({ offset, limit }));
+      const searchQuery = state.location?.query?.searchQuery;
+
+      dispatch(getManualLaunchesAction({ offset, limit, searchQuery }));
     },
   },
   [MANUAL_LAUNCH_DETAILS_PAGE]: {

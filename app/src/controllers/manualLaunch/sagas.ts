@@ -81,10 +81,11 @@ function* getManualLaunches(action: GetManualLaunchesAction): Generator {
 
     const typedURLS = URLS as UrlsHelper;
 
-    const params = action.payload
+    const params: Record<string, string | number | undefined> = action.payload
       ? {
           limit: action.payload.limit,
           offset: action.payload.offset,
+          'filter.cnt.name': action.payload.searchQuery || undefined,
         }
       : defaultManualLaunchesQueryParams;
     const data = (yield call(
