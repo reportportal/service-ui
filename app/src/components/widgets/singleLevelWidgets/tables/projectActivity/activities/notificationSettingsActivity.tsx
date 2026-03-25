@@ -117,12 +117,15 @@ export const NotificationSettingsActivity = ({ activity }: NotificationSettingsA
       {chunks}
     </Link>
   );
+  const fieldMessage = SETTINGS_FIELD_MESSAGES[updatedSetting.field];
+  const oldValueMessage = SETTINGS_VALUE_MESSAGES[updatedSetting.oldValue];
+  const newValueMessage = SETTINGS_VALUE_MESSAGES[updatedSetting.newValue];
 
   return formatMessage(messages.updatedNotificationSettings, {
     actor: activity.user,
-    name: formatMessage(SETTINGS_FIELD_MESSAGES[updatedSetting.field]),
-    oldValue: formatMessage(SETTINGS_VALUE_MESSAGES[updatedSetting.oldValue]),
-    newValue: formatMessage(SETTINGS_VALUE_MESSAGES[updatedSetting.newValue]),
+    name: fieldMessage ? formatMessage(fieldMessage) : updatedSetting.field,
+    oldValue: oldValueMessage ? formatMessage(oldValueMessage) : updatedSetting.oldValue,
+    newValue: newValueMessage ? formatMessage(newValueMessage) : updatedSetting.newValue,
     user: renderUser,
     link: renderLink,
   });
