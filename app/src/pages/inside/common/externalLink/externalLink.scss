@@ -24,9 +24,10 @@
 }
 
 .link {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  font-family: $FONT-ROBOTO-REGULAR;
+  gap: 10px;
+  font-family: var(--rp-ui-base-font-family);
   font-size: 13px;
   line-height: 20px;
   text-decoration: none;
@@ -49,14 +50,25 @@
   }
 
   .icon {
+    line-height: 1;
     width: 13px;
     height: 13px;
-    margin-left: 10px;
-    padding-bottom: 3px;
 
     svg {
       width: 13px;
       height: 13px;
     }
+
+    &.default-color {
+      color: var(--rp-ui-color-field-icon);
+
+      svg path {
+        fill: currentColor;
+      }
+    }
+  }
+
+  &.compact {
+    gap: 6px;
   }
 }

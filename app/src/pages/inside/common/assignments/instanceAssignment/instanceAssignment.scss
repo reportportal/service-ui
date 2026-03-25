@@ -18,6 +18,34 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+
+  > *:empty {
+    display: none;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  h4 {
+    font-size: 15px;
+    line-height: 24px;
+    font-weight: var(--rp-ui-base-fw-medium);
+  }
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: var(--rp-ui-base-bg-200);
+  color: var(--rp-ui-base-e-400);
+  box-sizing: border-box;
 }
 
 .organizations {
@@ -138,8 +166,10 @@
 }
 
 .add-button {
-  align-self: self-start;
-  margin-top: 8px;
+  &.bottom {
+    margin-top: 8px;
+    align-self: self-start;
+  }
 }
 
 .can-edit-hint {

@@ -28,6 +28,7 @@ interface OrganizationAssignmentProps {
   formName?: string;
   invitedUserId?: number | null;
   isOrganizationFormOpen?: boolean;
+  onExpandOrganization?: (orgId: number) => void;
 }
 
 export const OrganizationAssignment = ({
@@ -38,6 +39,7 @@ export const OrganizationAssignment = ({
   formName,
   invitedUserId,
   isOrganizationFormOpen = false,
+  onExpandOrganization,
 }: OrganizationAssignmentProps) => {
   const dispatch = useDispatch();
   const [openFormOrgId, setOpenFormOrgId] = useState<number | null>(null);
@@ -90,6 +92,7 @@ export const OrganizationAssignment = ({
               invitedUserId={invitedUserId}
               addProjectDisabled={(openFormOrgId !== null && openFormOrgId !== org.id) || isOrganizationFormOpen}
               onAddProjectFormToggle={handleAddProjectFormToggle}
+              onExpandOrganization={onExpandOrganization}
             />
           </div>
         ))}
@@ -104,6 +107,7 @@ export const OrganizationAssignment = ({
       organizationRoleDisabledTooltip={organizationRoleDisabledTooltip}
       invitedUserId={invitedUserId}
       onAddProjectFormToggle={handleAddProjectFormToggle}
+      onExpandOrganization={onExpandOrganization}
     />
   );
 };

@@ -40,19 +40,6 @@
   width: 248px;
 }
 
-.description-link {
-  display: inline-flex;
-  align-items: center;
-
-  > div:last-child {
-    margin-left: 4px;
-
-    svg path {
-      fill: var(--rp-ui-color-field-icon);
-    }
-  }
-}
-
 .assigned-to-header {
   display: flex;
   align-items: center;
