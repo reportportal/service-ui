@@ -39,10 +39,6 @@
   margin-left: -4px;
   margin-top: 4px;
   transform: translateY(-100%);
-  background-color: var(--rp-ui-base-dark-e-450);
-  & svg {
-    fill: var(--rp-ui-base-dark-e-450);
-  }
 }
 
 .service-popover-control {
@@ -50,9 +46,7 @@
   width: 328px;
   display: flex;
   align-items: center;
-  & > div:first-child {
-    width: 100%;
-  }
+
   &:focus-visible {
     outline: none;
     border: 2px solid $COLOR--topaz-focused;
@@ -84,10 +78,6 @@
   width: 300px;
   max-width: 300px;
   margin-left: -4px;
-  background-color: var(--rp-ui-base-dark-e-450);
-  & svg {
-    fill: var(--rp-ui-base-dark-e-450);
-  }
 }
 
 .faq-popover-control {
@@ -96,9 +86,7 @@
   display: flex;
   align-items: center;
   width: 100%;
-  & > div:first-child {
-    width: 100%;
-  }
+
   .service-block {
     display: none;
   }
