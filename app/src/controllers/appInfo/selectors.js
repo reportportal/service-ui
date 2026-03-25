@@ -27,7 +27,10 @@ import {
   activeOrganizationTypeSelector,
 } from 'controllers/organization/selectors';
 import { pageLevelSelector } from 'controllers/pages/selectors';
-import { PASSWORD_MIN_ALLOWED_LENGTH } from 'common/constants/validation';
+import {
+  PASSWORD_MAX_ALLOWED_LENGTH,
+  PASSWORD_MIN_ALLOWED_LENGTH,
+} from 'common/constants/validation';
 import {
   ANALYTICS_INSTANCE_KEY,
   ANALYTICS_ALL_KEY,
@@ -77,8 +80,13 @@ export const importantLaunchesEnabledSelector = (state) =>
   extensionsConfigSelector(state)[IMPORTANT_LAUNCHES_FEATURE_KEY] === 'true';
 export const sessionExpirationTimeSelector = (state) =>
   Number(extensionsConfigSelector(state)[SERVER_SESSION_EXPIRATION_KEY]) || Infinity;
-export const passwordMinLengthSelector = (state) =>
-  Number(extensionsConfigSelector(state)[PASSWORD_MIN_LENGTH_KEY]) || PASSWORD_MIN_ALLOWED_LENGTH;
+
+export const passwordMinLengthSelector = (state) => {
+  const raw = Number(extensionsConfigSelector(state)[PASSWORD_MIN_LENGTH_KEY]);
+  if (!Number.isFinite(raw) || raw <= 0) return PASSWORD_MIN_ALLOWED_LENGTH;
+  const normalized = Math.trunc(raw);
+  return Math.max(PASSWORD_MIN_ALLOWED_LENGTH, Math.min(normalized, PASSWORD_MAX_ALLOWED_LENGTH));
+};
 export const serverSidebarLinksSelector = createSelector(
   extensionsConfigSelector,
   (extensionsConfig) => JSON.parse(extensionsConfig?.[SERVER_SIDEBAR_LINKS_KEY] || `[]`),
