@@ -44,17 +44,9 @@ export const groupItems = (items) =>
     return groupedItems;
   }, {});
 
-export const isAuthorizationPlugin = (name) =>
-  GROUP_TYPES_BY_PLUGIN_NAMES_MAP[name] === AUTHORIZATION_GROUP_TYPE;
-
-export const resolveIntegrationUrl = (integrationUrl, pluginName, id) =>
-  isAuthorizationPlugin(pluginName) ? URLS.authSettings(pluginName, id) : integrationUrl;
-
 export const isPostIssueActionAvailable = (integrations) =>
   integrations.length &&
   integrations.some((item) => item.integrationParameters.defectFormFields?.length);
-
-export const isPluginSwitchable = (pluginName) => !isAuthorizationPlugin(pluginName);
 
 export const filterEnabledExternalPlugins = (plugins = []) =>
   plugins.filter(

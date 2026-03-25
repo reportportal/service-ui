@@ -18,7 +18,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { isPluginSwitchable } from 'controllers/plugins';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import { PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE } from 'components/integrations/messages';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
@@ -124,7 +123,6 @@ export class InfoSection extends Component {
     } = this.props;
     const { expanded, withShowMore, isEnabled } = this.state;
     const isPartiallyShown = withShowMore && !expanded;
-    const toggleable = isPluginSwitchable(name);
 
     return (
       <div className={cx('info-section')}>
@@ -134,7 +132,7 @@ export class InfoSection extends Component {
           {version && (
             <span className={cx('version')}>{`${formatMessage(messages.version)} ${version}`}</span>
           )}
-          {isGlobal && toggleable && (
+          {isGlobal && (
             <div className={cx('switcher-block')}>
               <span className={cx('switcher-status')}>
                 {isEnabled ? (

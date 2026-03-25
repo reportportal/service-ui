@@ -137,8 +137,8 @@ export const URLS = {
       view: exportType,
     })}`,
   launchAnalyze: (projectKey) => `${urlBase}${projectKey}/launch/analyze`,
-  login: () => `${uatBase}sso/oauth/token`,
-  sessionToken: () => `${uatBase}sso/me`,
+  login: () => `${urlCommonBase}sso/oauth/token`,
+  sessionToken: () => `${urlCommonBase}sso/me`,
 
   apiKeys: (userId) => `${urlBase}users/${userId}/api-keys`,
   apiKeyById: (userId, apiKeyId) => `${urlBase}users/${userId}/api-keys/${apiKeyId}`,
@@ -315,7 +315,7 @@ export const URLS = {
   userPasswordResetToken: (token) => `${urlBase}users/password/reset/${token}`,
   userPasswordRestore: () => `${urlBase}users/password/restore`,
   userChangePassword: () => `${urlBase}users/password/change`,
-  userSynchronize: (type) => `${uatBase}sso/me/${type}/synchronize`,
+  userSynchronize: (type) => `${urlCommonBase}sso/me/${type}/synchronize`,
   userInfo: (userId) => `${urlBase}users/${userId}`,
   deleteUsers: (ids) => `${urlBase}users${getQueryParams({ ids })}`,
   userInviteInternal: (projectKey) => `${urlBase}project/${projectKey}/assign`,
@@ -327,9 +327,7 @@ export const URLS = {
   getFileById: (projectKey, dataId, loadThumbnail) =>
     `${urlBase}data/${projectKey}/${dataId}${getQueryParams({ loadThumbnail })}`,
 
-  authSettings: (authTypeOrId, id = '') =>
-    removeTrailingSlash(`${uatBase}settings/auth/${authTypeOrId}/${id}`),
-  githubAuthSettings: () => `${uatBase}settings/oauth/github`,
+  githubAuthSettings: () => `${uatBase}settings/oauth/github`, // TODO: to be changed in the future
   analyticsServerSettings: () => `${urlBase}settings/analytics`,
   events: () => `${urlCommonBase}activities/searches`,
   searchEventsBySubjectName:

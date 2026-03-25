@@ -41,7 +41,6 @@ import {
   UPDATE_PLUGIN_SUCCESS,
   PUBLIC_PLUGINS,
 } from './constants';
-import { resolveIntegrationUrl } from './utils';
 import { pluginByNameSelector } from './selectors';
 import {
   removePluginSuccessAction,
@@ -61,10 +60,9 @@ function* addIntegration({ payload: { data, isGlobal, pluginName, callback }, me
   yield put(showScreenLockAction());
   try {
     const projectKey = yield select(projectKeySelector);
-    const integrationUrl = isGlobal
+    const url = isGlobal
       ? URLS.newGlobalIntegration(pluginName)
       : URLS.newProjectIntegration(projectKey, pluginName);
-    const url = resolveIntegrationUrl(integrationUrl, pluginName);
     const response = yield call(fetch, url, {
       method: 'post',
       data,
@@ -106,10 +104,9 @@ function* updateIntegration({ payload: { data, isGlobal, pluginName, id, callbac
   yield put(showScreenLockAction());
   try {
     const projectKey = yield select(projectKeySelector);
-    const integrationUrl = isGlobal
+    const url = isGlobal
       ? URLS.globalIntegration(id)
       : URLS.projectIntegration(projectKey, id);
-    const url = resolveIntegrationUrl(integrationUrl, pluginName, id);
 
     yield call(fetch, url, {
       method: 'put',

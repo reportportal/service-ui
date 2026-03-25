@@ -35,8 +35,6 @@ export {
   groupItems,
   sortItemsByGroupType,
   isPostIssueActionAvailable,
-  isAuthorizationPlugin,
-  isPluginSwitchable,
 } from './utils';
 export { isPluginSupportsCommonCommand } from './uiExtensions/utils';
 export {
