@@ -90,6 +90,6 @@ export const RuleNotificationActivity = ({ activity }: NotificationRuleActivityP
     actor: activity.user,
     name: activity.objectName,
     user: renderUser,
-    ruleState: ruleState && formatMessage(ruleState),
+    ruleState: ruleState ? formatMessage(ruleState) : '',
   });
 };
