@@ -17,7 +17,7 @@
 .attribute-editor {
   position: relative;
   display: flex;
-  align-items: center;
+  align-items: end;
   padding-bottom: 10px;
 
   .input {
@@ -29,6 +29,10 @@
       border-right: 0;
       box-shadow: none;
     }
+  }
+
+  &.naked-view {
+    align-items: center;
   }
 
   &.without-indentation {
