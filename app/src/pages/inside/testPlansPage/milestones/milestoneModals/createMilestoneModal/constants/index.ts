@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,17 @@
  * limitations under the License.
  */
 
-import { ButtonProps } from '@reportportal/ui-kit/button';
+import type { MilestoneFormValues } from '../types';
 
-export interface ModalButtonProps extends ButtonProps {
-  text?: string;
-  'data-automation-id'?: string;
-}
+export const CREATE_MILESTONE_MODAL_KEY = 'createMilestoneModalKey';
 
-export type QueryParams = Record<string, string | number>;
+export const CREATE_MILESTONE_FORM_NAME = 'create-milestone-modal-form';
 
-export interface Page {
-  number: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
-}
+export const NAME_FIELD = 'name';
 
-export interface PaginationOffsetLimit {
-  offset?: number;
-  limit?: number;
-}
+export const INITIAL_MILESTONE_FORM_VALUES: MilestoneFormValues = {
+  name: '',
+  type: '',
+  startDate: '',
+  endDate: '',
+};

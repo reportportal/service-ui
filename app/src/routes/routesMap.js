@@ -18,7 +18,6 @@ import { redirect, actionToPath, pathToAction } from 'redux-first-router';
 import qs from 'qs';
 import { userInfoSelector, getUserSettingsFromStorage, isAdminSelector } from 'controllers/user';
 import { isTmsEnabled } from 'controllers/appInfo';
-import { getTmsMilestonesOverride } from 'controllers/appInfo/utils';
 import {
   LOGIN_PAGE,
   REGISTRATION_PAGE,
@@ -121,13 +120,15 @@ import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 import { fetchOrganizationEventsDataAction } from 'controllers/instance/actionCreators';
 import { canSeeActivityOption } from 'common/utils/permissions';
 import {
-  getTestPlansAction,
   getTestPlanAction,
-  defaultQueryParams,
-  TEST_PLANS_NAMESPACE,
   TEST_PLAN_TEST_CASES_NAMESPACE,
   defaultTestPlanTestCasesQueryParams,
 } from 'controllers/testPlan';
+import {
+  getMilestonesAction,
+  MILESTONES_NAMESPACE,
+  defaultMilestoneQueryParams,
+} from 'controllers/milestone';
 import {
   MANUAL_LAUNCHES_NAMESPACE,
   MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
@@ -571,20 +572,20 @@ const routesMap = {
   },
 
   [PROJECT_TEST_PLANS_PAGE]: {
-    path: `/organizations/:organizationSlug/projects/:projectSlug/${getTmsMilestonesOverride() ? 'milestones' : 'testPlans'}`,
+    path: '/organizations/:organizationSlug/projects/:projectSlug/milestones',
     thunk: (dispatch, getState) => {
       const state = getState();
       const { offset, limit } = getRouterParams({
-        namespace: TEST_PLANS_NAMESPACE,
-        defaultParams: defaultQueryParams,
+        namespace: MILESTONES_NAMESPACE,
+        defaultParams: defaultMilestoneQueryParams,
         state,
       });
 
-      dispatch(getTestPlansAction({ offset, limit }));
+      dispatch(getMilestonesAction({ offset, limit }));
     },
   },
   [PROJECT_TEST_PLAN_DETAILS_PAGE]: {
-    path: `/organizations/:organizationSlug/projects/:projectSlug/${getTmsMilestonesOverride() ? 'milestones' : 'testPlans'}/:testPlanId/:testPlanRoute*`,
+    path: '/organizations/:organizationSlug/projects/:projectSlug/milestones/:testPlanId/:testPlanRoute*',
     thunk: (dispatch, getState) => {
       const state = getState();
       const testPlanId = state.location?.payload?.testPlanId;

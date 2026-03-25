@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,25 @@
  * limitations under the License.
  */
 
-import { ButtonProps } from '@reportportal/ui-kit/button';
+import { ComponentProps } from 'react';
 
-export interface ModalButtonProps extends ButtonProps {
-  text?: string;
-  'data-automation-id'?: string;
+import { Dropdown } from '@reportportal/ui-kit';
+
+import { TmsMilestoneType } from 'controllers/milestone';
+
+export interface MilestoneFormValues {
+  name: string;
+  type: TmsMilestoneType | '';
+  startDate: string;
+  endDate: string;
 }
 
-export type QueryParams = Record<string, string | number>;
+export type MilestoneTypeDropdownOption = {
+  value: TmsMilestoneType;
+  label: string;
+  description: string;
+};
 
-export interface Page {
-  number: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
-}
-
-export interface PaginationOffsetLimit {
-  offset?: number;
-  limit?: number;
-}
+export type MilestoneTypeDropdownOptionRenderProps = Parameters<
+  NonNullable<ComponentProps<typeof Dropdown>['renderOption']>
+>[0];

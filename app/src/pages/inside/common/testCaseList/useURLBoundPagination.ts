@@ -21,12 +21,12 @@ import { stringify } from 'qs';
 
 import { usePagination } from 'hooks/usePagination';
 import { locationQuerySelector } from 'controllers/pages';
-import { queryParamsType } from 'types/common';
+import { PaginationOffsetLimit } from 'types/common';
 import { PageInfo } from 'controllers/testPlan';
 
 type UseURLBoundPagination = {
   pageData: PageInfo;
-  defaultQueryParams: queryParamsType;
+  defaultQueryParams: PaginationOffsetLimit;
   namespace: string;
   shouldSaveUserPreferences: boolean;
   baseUrl: string;
@@ -58,7 +58,7 @@ export const useURLBoundPagination = ({
     }
   }, [query?.offset, query?.limit, changePageSize, setActivePage]);
 
-  const changeUrlParams = ({ limit, offset }: queryParamsType): void => {
+  const changeUrlParams = ({ limit, offset }: PaginationOffsetLimit): void => {
     const queryParams = {
       ...query,
       offset,

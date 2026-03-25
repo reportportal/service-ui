@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,11 @@
  * limitations under the License.
  */
 
-import { ButtonProps } from '@reportportal/ui-kit/button';
+import type { PaginationOffsetLimit } from 'types/common';
 
-export interface ModalButtonProps extends ButtonProps {
-  text?: string;
-  'data-automation-id'?: string;
-}
+import { GET_MILESTONES } from './constants';
 
-export type QueryParams = Record<string, string | number>;
-
-export interface Page {
-  number: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
-}
-
-export interface PaginationOffsetLimit {
-  offset?: number;
-  limit?: number;
-}
+export const getMilestonesAction = (params?: PaginationOffsetLimit) => ({
+  type: GET_MILESTONES,
+  payload: params,
+});

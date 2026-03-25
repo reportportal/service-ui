@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,4 @@
  * limitations under the License.
  */
 
-import { ButtonProps } from '@reportportal/ui-kit/button';
-
-export interface ModalButtonProps extends ButtonProps {
-  text?: string;
-  'data-automation-id'?: string;
-}
-
-export type QueryParams = Record<string, string | number>;
-
-export interface Page {
-  number: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
-}
-
-export interface PaginationOffsetLimit {
-  offset?: number;
-  limit?: number;
-}
+export { useCreateMilestoneModal } from './createMilestoneModal/useCreateMilestoneModal';

@@ -23,7 +23,7 @@ export const STATUS_TYPES = {
   UNSPECIFIED: 'unspecified',
 } as const;
 
-export const ITEMS_PER_PAGE_OPTIONS: number[] = [10, 20, 50, 100];
+export { TABLE_PAGE_SIZE_OPTIONS as ITEMS_PER_PAGE_OPTIONS } from '../paginationConstants';
 
 export const TestCasePageDefaultValues = {
   limit: 50,

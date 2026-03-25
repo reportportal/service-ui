@@ -1,0 +1,121 @@
+@use '../../milestonesTable/milestonesShared' as ms;
+
+.create-milestone-modal {
+  &__label-asterisk {
+    @include ms.milestone-body-13;
+
+    position: absolute;
+    top: -3px;
+    padding-left: 4px;
+    color: var(--rp-ui-base-e-300);
+    font-weight: var(--rp-ui-base-fw-medium);
+  }
+
+  &__type-dropdown-toggle-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    margin: 0;
+    line-height: 0;
+  }
+
+  &__content {
+    position: relative;
+    min-width: 400px;
+  }
+
+  &__field {
+    margin-bottom: 16px;
+  }
+
+  &__dates {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  &__date-shortcuts {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  &__date-shortcut {
+    @include ms.milestone-body-13;
+
+    text-indent: 1px;
+    color: var(--rp-ui-color-text-secondary);
+    text-decoration: underline;
+    text-decoration-style: solid;
+    text-underline-offset: 0;
+    -webkit-text-decoration-skip: none;
+    text-decoration-skip-ink: none;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+
+  &__type-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-sizing: border-box;
+    max-width: 100%;
+    padding: 8px 12px;
+    text-align: left;
+    border-radius: 4px;
+
+    &_selected {
+      background: var(--Background-Brand-Light, var(--rp-ui-kit-colors-bg-secondary));
+    }
+
+    &_highlight {
+      background: var(--Field-Dropdown-Bg-Hover, var(--rp-ui-base-bg-200));
+    }
+  }
+
+  &__type-option-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    line-height: 0;
+  }
+
+  &__type-option-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  &__type-option-title {
+    @include ms.milestone-body-13-medium;
+
+    color: var(--rp-ui-color-text);
+
+    &_selected,
+    &_highlight {
+      color: var(--rp-ui-base-topaz);
+    }
+  }
+
+  &__type-option-desc {
+    @include ms.milestone-body-13;
+
+    color: var(--rp-ui-color-text-secondary);
+  }
+}

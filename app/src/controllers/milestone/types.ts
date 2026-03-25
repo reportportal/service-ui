@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-import { ButtonProps } from '@reportportal/ui-kit/button';
+import { Action } from 'redux';
 
-export interface ModalButtonProps extends ButtonProps {
-  text?: string;
-  'data-automation-id'?: string;
+import type { Page, PaginationOffsetLimit } from 'types/common';
+import { GET_MILESTONES, TmsMilestoneRS } from './constants';
+
+export interface MilestoneState {
+  data: {
+    content: TmsMilestoneRS[] | null;
+    page: Page | null;
+  } | null;
+  isLoading?: boolean;
 }
 
-export type QueryParams = Record<string, string | number>;
-
-export interface Page {
-  number: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
+export interface MilestoneSelectorsRootState {
+  milestone?: MilestoneState;
 }
 
-export interface PaginationOffsetLimit {
-  offset?: number;
-  limit?: number;
+export interface GetMilestonesAction extends Action<typeof GET_MILESTONES> {
+  payload?: PaginationOffsetLimit;
 }
