@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -104,9 +104,7 @@ function* updateIntegration({ payload: { data, isGlobal, pluginName, id, callbac
   yield put(showScreenLockAction());
   try {
     const projectKey = yield select(projectKeySelector);
-    const url = isGlobal
-      ? URLS.globalIntegration(id)
-      : URLS.projectIntegration(projectKey, id);
+    const url = isGlobal ? URLS.globalIntegration(id) : URLS.projectIntegration(projectKey, id);
 
     yield call(fetch, url, {
       method: 'put',

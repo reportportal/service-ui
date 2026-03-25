@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { URLS } from 'common/urls';
 import { GROUP_TYPES_BY_PLUGIN_NAMES_MAP } from 'common/constants/pluginNames';
 import { AUTHORIZATION_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import {
