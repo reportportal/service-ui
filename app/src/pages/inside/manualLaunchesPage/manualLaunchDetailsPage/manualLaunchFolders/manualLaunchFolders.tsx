@@ -16,6 +16,7 @@
 
 import { useCallback, useMemo, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { isEmpty } from 'es-toolkit/compat';
 
 import {
   manualLaunchFoldersSelector,
@@ -52,7 +53,7 @@ export const ManualLaunchFolders = () => {
   );
 
   useEffect(() => {
-    if (urlFolderIdNumber && folders.length > 0) {
+    if (urlFolderIdNumber && !isEmpty(folders)) {
       dispatch(
         expandManualLaunchFoldersToLevelAction({
           folderId: urlFolderIdNumber,

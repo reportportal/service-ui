@@ -119,15 +119,7 @@ export const getAllFolderIdsToDelete = (targetId: number, folderList: BaseFolder
 
 export const filterEmptyFolders = (folders: TransformedFolder[]): TransformedFolder[] => {
   const hasContent = (folder: TransformedFolder): boolean => {
-    if (folder.testsCount > 0) {
-      return true;
-    }
-
-    if (!isEmpty(folder.folders)) {
-      return folder.folders.some(hasContent);
-    }
-
-    return false;
+    return folder.testsCount > 0 || folder.folders?.some(hasContent);
   };
 
   const filterRecursive = (folders: TransformedFolder[]): TransformedFolder[] => {
