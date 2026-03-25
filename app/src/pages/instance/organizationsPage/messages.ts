@@ -126,6 +126,19 @@ export const messages = defineMessages({
     id: 'OrganizationsPage.createOrganizationPlaceholder',
     defaultMessage: 'Enter organization’s name ',
   },
+  assignToOrganization: {
+    id: 'OrganizationsPage.assignToOrganization',
+    defaultMessage: 'Assign',
+  },
+  assignToOrganizationModalTitle: {
+    id: 'OrganizationsPage.assignToOrganizationModalTitle',
+    defaultMessage: 'Assign to Organization',
+  },
+  assignToOrganizationModalDescription: {
+    id: 'OrganizationsPage.assignToOrganizationModalDescription',
+    defaultMessage:
+      'Are you sure you want to assign yourself to the organization <b>{organizationName}</b> with a Member role?',
+  },
   deleteOrganization: {
     id: 'OrganizationsPage.deleteOrganization',
     defaultMessage: 'Delete organization',

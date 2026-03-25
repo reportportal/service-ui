@@ -59,6 +59,14 @@ export const notificationMessages = defineMessages({
     id: 'Assignment.changeProjectRoleError',
     defaultMessage: 'An error occurred during changing the user role',
   },
+  assignToOrganizationSuccess: {
+    id: 'OrganizationsPage.assignToOrganizationSuccess',
+    defaultMessage: 'User {name} has been assigned successfully',
+  },
+  assignToOrganizationError: {
+    id: 'OrganizationsPage.assignToOrganizationError',
+    defaultMessage: 'An error occurred during assigning to the organization',
+  },
   unassignOrganizationError: {
     id: 'Assignment.unassignOrganizationError',
     defaultMessage: 'An error occurred during unassigning from the organization',

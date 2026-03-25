@@ -16,6 +16,7 @@
 
 export { NAMESPACE, FETCH_ORGANIZATION_USERS, FETCH_USER_ASSIGNMENTS, SEARCH_KEY } from './constants';
 export {
+  assignToOrganizationAction,
   prepareActiveOrganizationUsersAction,
   fetchOrganizationUsersAction,
   fetchUserAssignmentsAction,

@@ -118,6 +118,17 @@ export const ORGANIZATION_PAGE_EVENTS = {
     element_name: 'unassign',
     modal: `unassign${isCurrentUser ? '' : '_user'}_from_organization`,
   }),
+  ASSIGN_SELF: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations',
+    element_name: 'assign_via_menu',
+  },
+  CLICK_ASSIGN_BUTTON: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations',
+    element_name: 'assign',
+    modal: 'assign_organization',
+  },
   UNASSIGN_SELF: {
     ...BASIC_EVENT_PARAMETERS,
     place: 'all_organizations',
