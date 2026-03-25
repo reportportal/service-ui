@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
@@ -28,10 +28,8 @@ import {
 } from '@reportportal/ui-kit';
 
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { SearchField } from 'components/fields/searchField';
-import { createClassnames, debounce } from 'common/utils';
+import { createClassnames } from 'common/utils';
 import { EmptyPageState } from 'pages/common';
-import { SPINNER_DEBOUNCE } from 'pages/inside/common/constants';
 import { useURLBoundPagination } from 'pages/inside/common/testCaseList/useURLBoundPagination';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { useUserPermissions } from 'hooks/useUserPermissions';
@@ -63,11 +61,11 @@ export const ManualLaunchExecutions = ({
   executions,
   pageInfo,
   isLoading,
+  searchQuery,
 }: ManualLaunchExecutionsProps) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { canManageTestCases } = useUserPermissions();
-  const [searchValue, setSearchValue] = useState('');
   const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
   const launchId = useManualLaunchId();
   const { organizationSlug, projectSlug } = useProjectDetails();
@@ -84,24 +82,6 @@ export const ManualLaunchExecutions = ({
       baseUrl: `/organizations/${organizationSlug}/projects/${projectSlug}/manualLaunches/${launchId}`,
     });
 
-  const filteredExecutions = useMemo(() => {
-    if (!searchValue.trim()) {
-      return executions;
-    }
-    const searchLower = searchValue.toLowerCase();
-    return executions?.filter((execution) =>
-      execution.testCaseName.toLowerCase().includes(searchLower),
-    );
-  }, [executions, searchValue]);
-
-  const handleSearchChange = useMemo(
-    () =>
-      debounce((_value: string) => {
-        setPageNumber(1);
-      }, SPINNER_DEBOUNCE),
-    [setPageNumber],
-  );
-
   const handleFilterClick = () => {
     // TODO: Implement filter functionality
   };
@@ -113,8 +93,6 @@ export const ManualLaunchExecutions = ({
   const handleChangePageSize = (size: number) => {
     setPageSize(size);
   };
-
-  const paginatedExecutions = searchValue.trim() ? filteredExecutions : executions;
 
   const handleDeleteExecution = (executionId: number) => {
     const execution = executions.find((exec) => exec.id === executionId);
@@ -133,7 +111,7 @@ export const ManualLaunchExecutions = ({
   }, []);
 
   const handleSelectAll = useCallback(() => {
-    const currentPageIds = paginatedExecutions.map(({ id }) => id);
+    const currentPageIds = executions.map(({ id }) => id);
     const isAllCurrentPageSelected = currentPageIds.every((id) => selectedRowIds.includes(id));
 
     setSelectedRowIds((prev) =>
@@ -141,7 +119,7 @@ export const ManualLaunchExecutions = ({
         ? prev.filter((id) => !currentPageIds.includes(id))
         : [...prev, ...currentPageIds.filter((id) => !prev.includes(id))],
     );
-  }, [paginatedExecutions, selectedRowIds]);
+  }, [executions, selectedRowIds]);
 
   const handleBatchDelete = useCallback(() => {
     if (launchId) {
@@ -184,7 +162,7 @@ export const ManualLaunchExecutions = ({
     [dispatch, organizationSlug, projectSlug, launchId],
   );
 
-  const tableData = paginatedExecutions.map((execution) => {
+  const tableData = executions.map((execution) => {
     const stepsCount = execution.manualScenario?.steps?.length ?? null;
     const tags = execution.attributes?.map((attr) => attr.key).filter(Boolean) || [];
 
@@ -285,7 +263,7 @@ export const ManualLaunchExecutions = ({
     );
   }
 
-  if (isEmpty(executions)) {
+  if (isEmpty(executions) && !searchQuery) {
     return (
       <div className={cx('manual-launch-executions__empty')}>
         <EmptyPageState
@@ -297,7 +275,7 @@ export const ManualLaunchExecutions = ({
   }
 
   const totalItems = pageInfo?.totalElements || 0;
-  const hasNoSearchResults = isEmpty(filteredExecutions) && !isEmpty(executions);
+  const hasNoSearchResults = isEmpty(executions) && !!searchQuery;
 
   return (
     <>
@@ -311,13 +289,6 @@ export const ManualLaunchExecutions = ({
           <div className={cx('controls-title')}>{formatMessage(messages.allTestExecutions)}</div>
           <div className={cx('controls-actions')}>
             <div className={cx('search-section')}>
-              <SearchField
-                searchValue={searchValue}
-                setSearchValue={setSearchValue}
-                onFilterChange={handleSearchChange}
-                placeholder={formatMessage(messages.searchPlaceholder)}
-                isLoading={false}
-              />
               <button
                 type="button"
                 className={cx('filter-icon')}

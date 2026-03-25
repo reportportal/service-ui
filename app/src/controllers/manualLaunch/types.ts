@@ -46,6 +46,12 @@ export interface GetManualLaunchTestCaseExecutionsParams {
   offset?: string | number;
   limit?: string | number;
   folderId?: string | number;
+  searchQuery?: string;
+}
+
+export interface GetManualLaunchFilteredFoldersParams {
+  launchId: string | number;
+  searchQuery: string;
 }
 
 export interface GetManualLaunchExecutionParams {
@@ -80,6 +86,8 @@ export interface ManualLaunchFoldersState {
   } | null;
   isLoading?: boolean;
   expandedFolderIds?: number[];
+  filteredFolders?: ManualLaunchFolder[];
+  isLoadingFilteredFolders?: boolean;
 }
 
 export interface ManualLaunchTestCaseExecutionsState {

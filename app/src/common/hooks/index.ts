@@ -27,3 +27,8 @@ export { useNavigationTabsExtensionsConfig } from './useNavigationTabsExtensions
 export { useNotification } from './useNotification';
 export { useTextareaAutoResize } from './useTextareaAutoResize';
 export { useBulkPanelCaptions } from './useBulkPanelCaptions';
+export { useSearchFilteredFolderDisplay } from './useSearchFilteredFolderDisplay';
+export type {
+  SearchFilteredFolderRow,
+  UseSearchFilteredFolderDisplayParams,
+} from './useSearchFilteredFolderDisplay';

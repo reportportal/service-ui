@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useIntl } from 'react-intl';
 import { useDrop } from 'react-dnd';
 import Parser from 'html-react-parser';
@@ -60,6 +60,7 @@ export const ExpandedOptions = ({
   searchQuery: pageSearchQuery,
   searchExtraFilters,
   searchAllFolders,
+  searchFilteredData,
   setAllTestCases,
   renderCreateFolderButton,
   onFolderClick,
@@ -72,6 +73,12 @@ export const ExpandedOptions = ({
   const { expandedIds, onToggleFolder } = useStorageFolders(instanceKey);
   const allFolders = useSelector(foldersSelector);
 
+  const internalSearchData = useSearchFilteredFolders({
+    searchQuery: searchFilteredData ? undefined : pageSearchQuery,
+    extraFilters: searchExtraFilters,
+    allFoldersOverride: searchAllFolders,
+  });
+
   const {
     searchFilteredFolders,
     searchFilteredExpandedIds,
@@ -79,11 +86,7 @@ export const ExpandedOptions = ({
     hasSearchFilteredFolders,
     handleToggleSearchFilteredFolder,
     filteredTotalTestCases,
-  } = useSearchFilteredFolders({
-    searchQuery: pageSearchQuery,
-    extraFilters: searchExtraFilters,
-    allFoldersOverride: searchAllFolders,
-  });
+  } = searchFilteredData ?? internalSearchData;
 
   const isDragAndDropEnabled = !!(onMoveFolder && onDuplicateFolder);
 
@@ -147,8 +150,23 @@ export const ExpandedOptions = ({
   }, 0);
 
   const totalTestCases = pageSearchQuery ? filteredTotalTestCases : allTestCasesTotal;
+
+  const prevHadFoldersRef = useRef(true);
+
+  useEffect(() => {
+    if (pageSearchQuery && !isSearchFilteredLoading) {
+      prevHadFoldersRef.current = hasSearchFilteredFolders;
+    }
+
+    if (!pageSearchQuery) {
+      prevHadFoldersRef.current = true;
+    }
+  }, [pageSearchQuery, isSearchFilteredLoading, hasSearchFilteredFolders]);
+
   const hidePageSearchSidebar =
-    !!pageSearchQuery && !isSearchFilteredLoading && !hasSearchFilteredFolders;
+    !!pageSearchQuery &&
+    !hasSearchFilteredFolders &&
+    (!isSearchFilteredLoading || !prevHadFoldersRef.current);
 
   const handleMoveFolder = useCallback(
     (draggedItem: TreeDragItem, targetId: string | number, position: TreeDropPosition) => {
@@ -321,9 +339,15 @@ export const ExpandedOptions = ({
             </div>
           </div>
         )}
-        <ScrollWrapper>
-          <div className={cx('expanded-options__content')}>{children}</div>
-        </ScrollWrapper>
+        {hidePageSearchSidebar ? (
+          <div className={cx('expanded-options__content')}>
+            <EmptySearchState />
+          </div>
+        ) : (
+          <ScrollWrapper>
+            <div className={cx('expanded-options__content')}>{children}</div>
+          </ScrollWrapper>
+        )}
       </div>
     </>
   );

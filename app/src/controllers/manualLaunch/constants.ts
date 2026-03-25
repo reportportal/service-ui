@@ -35,7 +35,16 @@ export const MANUAL_SCENARIO_TYPE_STEPS = 'STEPS' as const;
 
 export const TEST_FOLDER_ID_FILTER_KEY = 'filter.eq.testFolderId' as const;
 
-export const MANUAL_LAUNCH_NAME_CONTAINS_FILTER_KEY = 'filter.cnt.name' as const;
+export const MANUAL_LAUNCH_NAME_FILTER_KEY = 'filter.cnt.name' as const;
+export const MANUAL_LAUNCH_FOLDER_SEARCH_FILTER_KEY = 'filter.cnt.testCaseName' as const;
+
+export const GET_MANUAL_LAUNCH_FILTERED_FOLDERS = 'getManualLaunchFilteredFolders' as const;
+export const SET_MANUAL_LAUNCH_FILTERED_FOLDERS = 'setManualLaunchFilteredFolders' as const;
+export const START_LOADING_MANUAL_LAUNCH_FILTERED_FOLDERS =
+  'startLoadingManualLaunchFilteredFolders' as const;
+export const STOP_LOADING_MANUAL_LAUNCH_FILTERED_FOLDERS =
+  'stopLoadingManualLaunchFilteredFolders' as const;
+export const CLEAR_MANUAL_LAUNCH_FILTERED_FOLDERS = 'clearManualLaunchFilteredFolders' as const;
 
 export const defaultManualLaunchesQueryParams = {
   limit: 20,

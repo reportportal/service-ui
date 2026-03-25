@@ -395,6 +395,7 @@ const routesMap = {
       const state = getState();
       const { launchId, manualLaunchPageRoute } = state.location?.payload || {};
       const folderId = manualLaunchPageRoute?.split('/')[1];
+      const searchQuery = state.location?.query?.searchQuery;
 
       if (launchId) {
         dispatch(getManualLaunchAction({ launchId }));
@@ -421,6 +422,7 @@ const routesMap = {
             ...(folderId && { folderId }),
             offset,
             limit,
+            searchQuery,
           }),
         );
       }
