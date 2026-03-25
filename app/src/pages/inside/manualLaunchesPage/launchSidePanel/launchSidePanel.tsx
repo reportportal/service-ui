@@ -46,6 +46,7 @@ import { useLaunchDetails } from './useLaunchDetails';
 import { messages } from './messages';
 
 import styles from './launchSidePanel.scss';
+import { EXECUTION_STATUS_TO_RUN } from '../manualLaunchExecutionPage/constants';
 
 const cx = createClassnames(styles);
 
@@ -115,7 +116,7 @@ export const LaunchSidePanel = memo(
         dispatch({
           type: MANUAL_LAUNCH_DETAILS_PAGE,
           payload: { organizationSlug, projectSlug, launchId: launchId.toString() },
-          meta: { query: { statusFilter: 'TO_RUN' } },
+          meta: { query: { statusFilter: EXECUTION_STATUS_TO_RUN } },
         });
         onClose();
       }
