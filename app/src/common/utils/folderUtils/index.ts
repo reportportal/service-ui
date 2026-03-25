@@ -20,6 +20,7 @@ export {
   transformFoldersToDisplay,
   getAllFolderIdsToDelete,
   getAllSubfolderIds,
+  filterEmptyFolders,
   type BaseFolder,
   type TransformedFolder,
 } from './transformFolders';
