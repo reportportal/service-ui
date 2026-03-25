@@ -42,9 +42,14 @@ import {
   TOGGLE_MANUAL_LAUNCH_FOLDER_EXPANSION,
   EXPAND_MANUAL_LAUNCH_FOLDERS_TO_LEVEL,
   SET_MANUAL_LAUNCH_EXPANDED_FOLDER_IDS,
+  SET_MANUAL_LAUNCH_FILTERED_FOLDERS,
+  START_LOADING_MANUAL_LAUNCH_FILTERED_FOLDERS,
+  STOP_LOADING_MANUAL_LAUNCH_FILTERED_FOLDERS,
+  CLEAR_MANUAL_LAUNCH_FILTERED_FOLDERS,
 } from './constants';
 import {
   ExpandedFolderIdsAction,
+  ManualLaunchFolder,
   hasFolderExpansionPayload,
   hasSetExpandedFolderIdsPayload,
 } from './types';
@@ -117,10 +122,40 @@ const reducer = combineReducers({
   isLoadingActive: loadingReducer(ACTIVE_MANUAL_LAUNCH_NAMESPACE),
 });
 
+const filteredFoldersReducer = (
+  state: ManualLaunchFolder[] = [],
+  action: { type: string; payload?: ManualLaunchFolder[] },
+): ManualLaunchFolder[] => {
+  switch (action.type) {
+    case SET_MANUAL_LAUNCH_FILTERED_FOLDERS:
+      return action.payload ?? [];
+    case CLEAR_MANUAL_LAUNCH_FILTERED_FOLDERS:
+      return [];
+    default:
+      return state;
+  }
+};
+
+const isLoadingFilteredFoldersReducer = (
+  state = false,
+  action: { type: string },
+): boolean => {
+  switch (action.type) {
+    case START_LOADING_MANUAL_LAUNCH_FILTERED_FOLDERS:
+      return true;
+    case STOP_LOADING_MANUAL_LAUNCH_FILTERED_FOLDERS:
+      return false;
+    default:
+      return state;
+  }
+};
+
 const foldersReducer = combineReducers({
   data: fetchReducer(MANUAL_LAUNCH_FOLDERS_NAMESPACE, { initialState: null, contentPath: 'data' }),
   isLoading: loadingReducer(MANUAL_LAUNCH_FOLDERS_NAMESPACE),
   expandedFolderIds: expandedFolderIdsReducer,
+  filteredFolders: filteredFoldersReducer,
+  isLoadingFilteredFolders: isLoadingFilteredFoldersReducer,
 });
 
 const executionsReducer = combineReducers({

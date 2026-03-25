@@ -21,4 +21,5 @@ export interface ManualLaunchExecutionsProps {
   executions: TestCaseExecution[];
   pageInfo: Page | null;
   isLoading: boolean;
+  searchQuery?: string;
 }

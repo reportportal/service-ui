@@ -18,6 +18,7 @@ import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { hideModalAction } from 'controllers/modal';
 import { projectKeySelector } from 'controllers/project';
+import { locationSelector } from 'controllers/pages';
 import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -33,6 +34,7 @@ export const useDeleteExecution = () => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+  const location = useSelector(locationSelector);
   const { showSuccessNotification, showErrorNotification } = useNotification();
 
   const deleteExecutions = useCallback(
@@ -58,8 +60,15 @@ export const useDeleteExecution = () => {
           payload.onClearSelection?.();
         }
 
+        const searchQuery = location?.query?.searchQuery;
+
         dispatch(hideModalAction());
-        dispatch(getManualLaunchTestCaseExecutionsAction({ launchId: payload.launchId }));
+        dispatch(
+          getManualLaunchTestCaseExecutionsAction({
+            launchId: payload.launchId,
+            ...(searchQuery && { searchQuery }),
+          }),
+        );
         dispatch(getManualLaunchFoldersAction({ launchId: payload.launchId }));
         dispatch(getManualLaunchAction({ launchId: payload.launchId }));
       } catch {
@@ -73,6 +82,7 @@ export const useDeleteExecution = () => {
     [
       projectKey,
       dispatch,
+      location,
       showSpinner,
       hideSpinner,
       showSuccessNotification,

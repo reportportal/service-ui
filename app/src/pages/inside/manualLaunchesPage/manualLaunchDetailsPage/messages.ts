@@ -22,4 +22,8 @@ export const messages = defineMessages({
     defaultMessage:
       "The item you are trying to access may have been deleted or doesn't exist. You have been redirected to Manual Launches.",
   },
+  searchPlaceholder: {
+    id: 'ManualLaunchDetailsPage.searchPlaceholder',
+    defaultMessage: 'Search test executions by name',
+  },
 });

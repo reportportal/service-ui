@@ -80,6 +80,12 @@ export const isLoadingManualLaunchFoldersSelector = (state: AppState): boolean =
 export const manualLaunchExpandedFolderIdsSelector = (state: AppState): number[] =>
   manualLaunchFoldersStateSelector(state)?.expandedFolderIds || [];
 
+export const manualLaunchFilteredFoldersSelector = (state: AppState): ManualLaunchFolder[] =>
+  manualLaunchFoldersStateSelector(state)?.filteredFolders || EMPTY_FOLDERS;
+
+export const isLoadingManualLaunchFilteredFoldersSelector = (state: AppState): boolean =>
+  Boolean(manualLaunchFoldersStateSelector(state)?.isLoadingFilteredFolders);
+
 // Selectors for Test Case Executions
 const manualLaunchTestCaseExecutionsStateSelector = (
   state: AppState,

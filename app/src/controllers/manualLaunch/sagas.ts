@@ -44,13 +44,15 @@ import {
   GET_MANUAL_LAUNCH_TEST_CASE_EXECUTIONS,
   GET_MANUAL_LAUNCH_EXECUTION,
   UPDATE_MANUAL_LAUNCH_EXECUTION_STATUS,
+  GET_MANUAL_LAUNCH_FILTERED_FOLDERS,
   MANUAL_LAUNCHES_NAMESPACE,
   ACTIVE_MANUAL_LAUNCH_NAMESPACE,
   MANUAL_LAUNCH_FOLDERS_NAMESPACE,
   MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
   ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE,
   TEST_FOLDER_ID_FILTER_KEY,
-  MANUAL_LAUNCH_NAME_CONTAINS_FILTER_KEY,
+  MANUAL_LAUNCH_NAME_FILTER_KEY,
+  MANUAL_LAUNCH_FOLDER_SEARCH_FILTER_KEY,
   defaultManualLaunchesQueryParams,
 } from './constants';
 import {
@@ -60,11 +62,18 @@ import {
   GetManualLaunchTestCaseExecutionsParams,
   GetManualLaunchExecutionParams,
   UpdateManualLaunchExecutionStatusParams,
+  GetManualLaunchFilteredFoldersParams,
   ManualLaunchFoldersResponse,
+  ManualLaunchFolder,
   TestCaseExecutionsResponse,
   TestCaseExecution,
 } from './types';
 import { manualLaunchContentSelector, activeManualLaunchSelector } from './selectors';
+import {
+  setManualLaunchFilteredFoldersAction,
+  startLoadingManualLaunchFilteredFoldersAction,
+  stopLoadingManualLaunchFilteredFoldersAction,
+} from './actionCreators';
 
 interface GetManualLaunchesAction extends Action<typeof GET_MANUAL_LAUNCHES> {
   payload?: GetManualLaunchesParams;
@@ -88,7 +97,7 @@ function* getManualLaunches(action: GetManualLaunchesAction): Generator {
       ? {
           limit: action.payload.limit,
           offset: action.payload.offset,
-          [MANUAL_LAUNCH_NAME_CONTAINS_FILTER_KEY]: trimmedNameSearch || undefined,
+          [MANUAL_LAUNCH_NAME_FILTER_KEY]: trimmedNameSearch || undefined,
         }
       : defaultManualLaunchesQueryParams;
     const data = (yield call(
@@ -221,7 +230,7 @@ function* getManualLaunchTestCaseExecutions(
 ): Generator {
   try {
     const projectKey = (yield select(projectKeySelector)) as string;
-    const { launchId, offset, limit, folderId } = action.payload;
+    const { launchId, offset, limit, folderId, searchQuery } = action.payload;
 
     yield put({
       type: FETCH_START,
@@ -234,6 +243,12 @@ function* getManualLaunchTestCaseExecutions(
 
     if (!isNil(folderId)) {
       params[TEST_FOLDER_ID_FILTER_KEY as string] = folderId;
+    }
+
+    const trimmedSearch = searchQuery?.trim();
+
+    if (trimmedSearch) {
+      params[MANUAL_LAUNCH_NAME_FILTER_KEY as string] = trimmedSearch;
     }
 
     const data = (yield call(
@@ -304,6 +319,60 @@ function* getManualLaunchExecution(action: GetManualLaunchExecutionAction): Gene
         messageId: 'errorOccurredTryAgain',
       }),
     );
+  }
+}
+
+interface GetManualLaunchFilteredFoldersAction extends Action<
+  typeof GET_MANUAL_LAUNCH_FILTERED_FOLDERS
+> {
+  payload: GetManualLaunchFilteredFoldersParams;
+}
+
+function* getManualLaunchFilteredFolders(
+  action: GetManualLaunchFilteredFoldersAction,
+): Generator {
+  const projectKey = (yield select(projectKeySelector)) as string;
+  const { launchId, searchQuery } = action.payload;
+
+  if (!projectKey || !searchQuery) {
+    yield put(setManualLaunchFilteredFoldersAction([]));
+    return;
+  }
+
+  try {
+    yield put(startLoadingManualLaunchFilteredFoldersAction());
+
+    const typedURLS = URLS as UrlsHelper;
+    const allFolders: ManualLaunchFolder[] = [];
+    const limit = 100;
+    let offset = 0;
+    let totalElements = Infinity;
+
+    while (offset < totalElements) {
+      const response = (yield call(
+        fetch,
+        typedURLS.manualLaunchFolders(projectKey, launchId, {
+          offset,
+          limit,
+          [MANUAL_LAUNCH_FOLDER_SEARCH_FILTER_KEY]: searchQuery,
+        }),
+      )) as ManualLaunchFoldersResponse;
+
+      allFolders.push(...response.content);
+      totalElements = response.page.totalElements;
+      offset += limit;
+    }
+
+    yield put(setManualLaunchFilteredFoldersAction(allFolders));
+  } catch {
+    yield put(setManualLaunchFilteredFoldersAction([]));
+    yield put(
+      showErrorNotification({
+        messageId: 'errorOccurredTryAgain',
+      }),
+    );
+  } finally {
+    yield put(stopLoadingManualLaunchFilteredFoldersAction());
   }
 }
 
@@ -469,6 +538,10 @@ function* watchUpdateManualLaunchExecutionStatus() {
   yield takeLatest(UPDATE_MANUAL_LAUNCH_EXECUTION_STATUS, updateManualLaunchExecutionStatus);
 }
 
+function* watchGetManualLaunchFilteredFolders() {
+  yield takeLatest(GET_MANUAL_LAUNCH_FILTERED_FOLDERS, getManualLaunchFilteredFolders);
+}
+
 export function* manualLaunchesSagas() {
   yield all([
     watchGetManualLaunches(),
@@ -477,5 +550,6 @@ export function* manualLaunchesSagas() {
     watchGetManualLaunchTestCaseExecutions(),
     watchGetManualLaunchExecution(),
     watchUpdateManualLaunchExecutionStatus(),
+    watchGetManualLaunchFilteredFolders(),
   ]);
 }
