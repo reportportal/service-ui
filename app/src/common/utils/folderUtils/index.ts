@@ -21,6 +21,7 @@ export {
   collectAllTransformedFolderIds,
   getAllFolderIdsToDelete,
   getAllSubfolderIds,
+  filterEmptyFolders,
   type BaseFolder,
   type TransformedFolder,
 } from './transformFolders';

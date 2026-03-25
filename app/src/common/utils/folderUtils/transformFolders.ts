@@ -138,6 +138,21 @@ export const getAllFolderIdsToDelete = (targetId: number, folderList: BaseFolder
   return idsToDelete;
 };
 
+export const filterEmptyFolders = (folders: TransformedFolder[]): TransformedFolder[] => {
+  const hasContent = (folder: TransformedFolder): boolean => {
+    return folder.testsCount > 0 || folder.folders?.some(hasContent);
+  };
+
+  const filterRecursive = (folders: TransformedFolder[]): TransformedFolder[] => {
+    return folders.filter(hasContent).map((folder) => ({
+      ...folder,
+      folders: filterRecursive(folder.folders),
+    }));
+  };
+
+  return filterRecursive(folders);
+};
+
 /**
  * Recursively collects all subfolder IDs for a given folder
  */
