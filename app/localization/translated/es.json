@@ -539,7 +539,6 @@
   "CreateUserModal.invite": "Organizations and projects to invite",
   "CreateUserModal.inviteDescription": "Add organizations and projects to specify where the invited user will have access",
   "CreateUserModal.password": "Password",
-  "CreateUserModal.passwordCreateUserHint": "Minimum {minLength} characters: at least one digit, one special symbol, one uppercase, and one lowercase letter",
   "CreateUserModal.passwordPlaceholder": "Enter password",
   "CreateUserModal.passwordValidateMessage": "Minimum {minLength} characters: at least one digit, one special symbol, one uppercase, and one lowercase letter",
   "CreateUserModal.provideAdminRights": "Provide Admin rights",

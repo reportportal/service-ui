@@ -539,7 +539,6 @@
   "CreateUserModal.invite": "Арганізацыі і праекты, у якія можна запрасіць",
   "CreateUserModal.inviteDescription": "Дадайце арганізацыі і праекты, каб паказаць, куды будзе мець доступ запрошаны карыстальнік",
   "CreateUserModal.password": "Пароль",
-  "CreateUserModal.passwordCreateUserHint": "Мінімум 8 знакаў: як мінімум адна лічба, адзін спецыяльны сімвал, адна загалоўная і адна маленькая літара.",
   "CreateUserModal.passwordPlaceholder": "Увядзіце пароль",
   "CreateUserModal.passwordValidateMessage": "Мінімум {minLength} знакаў: як мінімум адна лічба, адзін спецыяльны сімвал, адна загалоўная і адна маленькая літара.",
   "CreateUserModal.provideAdminRights": "Дайце правы адміністратара",

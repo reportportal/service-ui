@@ -539,7 +539,6 @@
   "CreateUserModal.invite": "Організації та проекти, в які можна запросити",
   "CreateUserModal.inviteDescription": "Додайте організації та проекти, щоб вказати, куди матиме доступ запрошений Користувач",
   "CreateUserModal.password": "Пароль",
-  "CreateUserModal.passwordCreateUserHint": "Мінімум 8 символів: принаймні одна цифра, один спеціальний символ, одна велика та одна мала літера.",
   "CreateUserModal.passwordPlaceholder": "Введіть пароль",
   "CreateUserModal.passwordValidateMessage": "Мінімум {minLength} символів: принаймні одна цифра, один спеціальний символ, одна велика та одна мала літера.",
   "CreateUserModal.provideAdminRights": "Надайте права адміністратора",

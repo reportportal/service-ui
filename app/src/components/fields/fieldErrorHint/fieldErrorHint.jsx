@@ -36,11 +36,6 @@ const messages = defineMessages({
     defaultMessage:
       'Full name may contain {minLength}-{maxLength} characters, using only Latin letters, numbers, spaces, dots, hyphens, underscores, and apostrophes.',
   },
-  passwordCreateUserHint: {
-    id: 'CreateUserModal.passwordCreateUserHint',
-    defaultMessage:
-      'Minimum {minLength} characters: at least one digit, one special symbol, one uppercase, and one lowercase letter',
-  },
   emailCreateUserHint: {
     id: 'CreateUserModal.emailCreateUserHint',
     defaultMessage: 'Email is incorrect. Please enter correct email',
