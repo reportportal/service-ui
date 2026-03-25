@@ -18,10 +18,8 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import Parser from 'html-react-parser';
-import { Button, PlusIcon } from '@reportportal/ui-kit';
+import { Button, PlusIcon, Breadcrumbs } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
-import { ORGANIZATIONS_PAGE } from 'controllers/pages';
-import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { activeOrganizationSelector } from 'controllers/organization';
 import { loadingSelector } from 'controllers/organization/projects';
 import { SearchField } from 'components/fields/searchField';
@@ -40,6 +38,8 @@ const cx = classNames.bind(styles);
 const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY, namespace: NAMESPACE })(
   SearchField,
 );
+
+const ROOT_PATH = '#organizations';
 
 const FilterEntitiesURLContainer = createFilterEntitiesURLContainer(null, NAMESPACE);
 
@@ -62,7 +62,7 @@ export const ProjectsPageHeader = ({
   const breadcrumbs = [
     {
       title: formatMessage(messages.allOrganizations),
-      link: { type: ORGANIZATIONS_PAGE },
+      link: ROOT_PATH,
     },
     {
       title: organizationName,
