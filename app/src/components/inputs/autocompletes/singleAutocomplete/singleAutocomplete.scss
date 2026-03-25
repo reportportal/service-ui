@@ -103,5 +103,12 @@
   input {
     border: 0;
     height: 28px;
+    &:focus {
+      border: 0;
+      background-color: inherit;
+    }
+  }
+  .input-control-btn {
+    height: 28px;
   }
 }
