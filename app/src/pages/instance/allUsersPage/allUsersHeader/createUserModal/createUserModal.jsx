@@ -15,8 +15,8 @@
  */
 
 import PropTypes from 'prop-types';
-import { defineMessages, useIntl } from 'react-intl';
-import { useDispatch, useSelector } from 'react-redux';
+import { defineMessages, injectIntl, useIntl } from 'react-intl';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import { getFormValues, reduxForm, FieldArray } from 'redux-form';
@@ -26,6 +26,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { ClipboardButton } from 'components/buttons/copyClipboardButton';
 import { commonValidators } from 'common/utils/validation';
+import { passwordMinLengthSelector } from 'controllers/appInfo';
 import {
   showSuccessNotification,
   showErrorNotification,
@@ -89,7 +90,7 @@ const messages = defineMessages({
   passwordValidateMessage: {
     id: 'CreateUserModal.passwordValidateMessage',
     defaultMessage:
-      'Minimum 8 characters: at least one digit, one special symbol, one uppercase, and one lowercase letter',
+      'Minimum {minLength} characters: at least one digit, one special symbol, one uppercase, and one lowercase letter',
   },
   provideAdminRights: {
     id: 'CreateUserModal.provideAdminRights',
@@ -136,6 +137,7 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const formValues = useSelector((state) => getFormValues(CREATE_USER_FORM)(state)) || {};
+  const minLength = useSelector(passwordMinLengthSelector);
 
   const hideModal = () => dispatch(hideModalAction());
 
@@ -297,7 +299,7 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
                   defaultWidth={false}
                   placeholder={formatMessage(messages.passwordPlaceholder)}
                   type="password"
-                  helpText={formatMessage(messages.passwordValidateMessage)}
+                  helpText={formatMessage(messages.passwordValidateMessage, { minLength })}
                   classNameHelpText={cx('help-text')}
                   isRequired
                 />
@@ -332,28 +334,39 @@ CreateUserModal.propTypes = {
 };
 
 export default withModal('createUserModal')(
-  reduxForm({
-    form: CREATE_USER_FORM,
-    validate: ({ fullName, email, password, organization, organizations = [] }) => {
-      const errors = {};
+  connect((state) => ({ minLength: passwordMinLengthSelector(state) }))(
+    injectIntl(
+      reduxForm({
+        form: CREATE_USER_FORM,
+        validate: (
+          { fullName, email, password, organization, organizations = [] },
+          { minLength, intl },
+        ) => {
+          const errors = {};
+          const passwordMessage = intl.formatMessage(messages.passwordValidateMessage, {
+            minLength,
+          });
 
-      errors[FULL_NAME_FIELD] = commonValidators.createPatternCreateUserNameValidator()(
-        fullName?.trim(),
-      );
-      errors[EMAIL_FIELD] = commonValidators.emailCreateUserValidator()(email?.trim());
-      errors[PASSWORD_FIELD] = commonValidators.createPatternCreateUserPasswordValidator()(
-        password?.trim(),
-      );
+          errors[FULL_NAME_FIELD] = commonValidators.createPatternCreateUserNameValidator()(
+            fullName?.trim(),
+          );
+          errors[EMAIL_FIELD] = commonValidators.emailCreateUserValidator()(email?.trim());
+          errors[PASSWORD_FIELD] = commonValidators.createPasswordValidator(
+            minLength,
+            passwordMessage,
+          )(password?.trim());
 
-      if (organizations.length === 0) {
-        errors.organizations = commonValidators.requiredField();
+          if (organizations.length === 0) {
+            errors.organizations = commonValidators.requiredField();
 
-        if (!organization?.name) {
-          errors.organization = { name: commonValidators.requiredField() };
-        }
-      }
+            if (!organization?.name) {
+              errors.organization = { name: commonValidators.requiredField() };
+            }
+          }
 
-      return errors;
-    },
-  })(CreateUserModal),
+          return errors;
+        },
+      })(CreateUserModal),
+    ),
+  ),
 );

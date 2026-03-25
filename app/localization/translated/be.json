@@ -541,7 +541,7 @@
   "CreateUserModal.password": "Пароль",
   "CreateUserModal.passwordCreateUserHint": "Мінімум 8 знакаў: як мінімум адна лічба, адзін спецыяльны сімвал, адна загалоўная і адна маленькая літара.",
   "CreateUserModal.passwordPlaceholder": "Увядзіце пароль",
-  "CreateUserModal.passwordValidateMessage": "Мінімум 8 знакаў: як мінімум адна лічба, адзін спецыяльны сімвал, адна загалоўная і адна маленькая літара.",
+  "CreateUserModal.passwordValidateMessage": "Мінімум {minLength} знакаў: як мінімум адна лічба, адзін спецыяльны сімвал, адна загалоўная і адна маленькая літара.",
   "CreateUserModal.provideAdminRights": "Дайце правы адміністратара",
   "CreateUserModal.title": "Стварыць карыстальніка",
   "CreateUserModal.userExistsDuplicate": "Карыстальнік з email={email} ужо існуе. Немагчыма стварыць дублікат",
