@@ -62,6 +62,9 @@ export const useManualLaunchSearchFilteredFolders = ({
   const isLoading = useSelector(isLoadingManualLaunchFilteredFoldersSelector);
   const [collapsedIds, setCollapsedIds] = useState<Set<number>>(new Set());
   const prevSearchQueryRef = useRef(searchQuery);
+  const respondedQueryRef = useRef<string | undefined>(undefined);
+
+  const isQueryPending = !!searchQuery && searchQuery !== respondedQueryRef.current;
 
   useEffect(() => {
     if (prevSearchQueryRef.current !== searchQuery) {
@@ -71,11 +74,18 @@ export const useManualLaunchSearchFilteredFolders = ({
 
     if (!searchQuery) {
       dispatch(clearManualLaunchFilteredFoldersAction());
+      respondedQueryRef.current = undefined;
       return;
     }
 
     dispatch(getManualLaunchFilteredFoldersAction({ launchId, searchQuery }));
   }, [searchQuery, launchId, dispatch]);
+
+  useEffect(() => {
+    if (!isLoading && searchQuery) {
+      respondedQueryRef.current = searchQuery;
+    }
+  }, [isLoading, searchQuery]);
 
   const relevantFolderIds = useMemo(() => {
     if (!searchQuery || filteredFolderData.length === 0) {
@@ -162,7 +172,7 @@ export const useManualLaunchSearchFilteredFolders = ({
   return {
     searchFilteredFolders: transformedFilteredFolders,
     searchFilteredExpandedIds: expandedFilteredFolderIds,
-    isSearchFilteredLoading: isLoading,
+    isSearchFilteredLoading: isLoading || isQueryPending,
     hasSearchFilteredFolders: hasFilteredFolders,
     handleToggleSearchFilteredFolder,
     filteredTotalTestCases,

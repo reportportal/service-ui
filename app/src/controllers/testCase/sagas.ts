@@ -14,7 +14,17 @@
  * limitations under the License.
  */
 
-import { takeEvery, call, select, all, put, fork, cancel, takeLatest } from 'redux-saga/effects';
+import {
+  takeEvery,
+  call,
+  select,
+  all,
+  put,
+  fork,
+  cancel,
+  takeLatest,
+  cancelled,
+} from 'redux-saga/effects';
 import { Task } from 'redux-saga';
 import { URLS } from 'common/urls';
 import { fetch, delayedPut } from 'common/utils';
@@ -396,7 +406,9 @@ function* getFilteredFolders(action: GetFilteredFoldersAction) {
       }),
     );
   } finally {
-    yield put(stopLoadingFilteredFoldersAction());
+    if (!(yield cancelled())) {
+      yield put(stopLoadingFilteredFoldersAction());
+    }
   }
 }
 

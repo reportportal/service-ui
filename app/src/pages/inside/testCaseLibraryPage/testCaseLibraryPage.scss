@@ -60,6 +60,9 @@
   &__actions {
     display: flex;
     align-items: center;
+  }
+
+  &__actions--buttons {
     gap: 12px;
   }
 
@@ -76,8 +79,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    padding: 0 8px;
+    padding: 0 20px 0 18px;
     height: 32px;
     border: none;
     border-radius: 12px;

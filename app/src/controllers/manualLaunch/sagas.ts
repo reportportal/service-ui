@@ -15,7 +15,7 @@
  */
 
 import { Action } from 'redux';
-import { takeLatest, call, select, all, put } from 'redux-saga/effects';
+import { takeLatest, call, select, all, put, cancelled } from 'redux-saga/effects';
 import { isString } from 'es-toolkit';
 import { isEmpty, isNil } from 'es-toolkit/compat';
 
@@ -372,7 +372,9 @@ function* getManualLaunchFilteredFolders(
       }),
     );
   } finally {
-    yield put(stopLoadingManualLaunchFilteredFoldersAction());
+    if (!(yield cancelled())) {
+      yield put(stopLoadingManualLaunchFilteredFoldersAction());
+    }
   }
 }
 
