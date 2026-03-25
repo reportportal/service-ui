@@ -84,7 +84,8 @@ export const sessionExpirationTimeSelector = (state) =>
 export const passwordMinLengthSelector = (state) => {
   const raw = Number(extensionsConfigSelector(state)[PASSWORD_MIN_LENGTH_KEY]);
   if (!Number.isFinite(raw) || raw <= 0) return PASSWORD_MIN_ALLOWED_LENGTH;
-  return Math.min(Math.trunc(raw), PASSWORD_MAX_ALLOWED_LENGTH);
+  const normalized = Math.trunc(raw);
+  return Math.max(PASSWORD_MIN_ALLOWED_LENGTH, Math.min(normalized, PASSWORD_MAX_ALLOWED_LENGTH));
 };
 export const serverSidebarLinksSelector = createSelector(
   extensionsConfigSelector,
