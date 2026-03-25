@@ -111,7 +111,14 @@ export const LaunchSidePanel = memo(
     }
 
     const handleToRunClick = () => {
-      // TODO: Implement to run functionality
+      if (launchId) {
+        dispatch({
+          type: MANUAL_LAUNCH_DETAILS_PAGE,
+          payload: { organizationSlug, projectSlug, launchId: launchId.toString() },
+          meta: { query: { statusFilter: 'TO_RUN' } },
+        });
+        onClose();
+      }
     };
 
     const handleOpenDetailsClick = () => {

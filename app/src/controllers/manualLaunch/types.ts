@@ -47,6 +47,7 @@ export interface GetManualLaunchTestCaseExecutionsParams {
   limit?: string | number;
   folderId?: string | number;
   searchQuery?: string;
+  statusFilter?: string;
 }
 
 export interface GetManualLaunchFilteredFoldersParams {

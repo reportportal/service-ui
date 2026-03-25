@@ -31,7 +31,7 @@ export const messages = defineMessages({
   },
   toRunWithCount: {
     id: 'LaunchSidePanel.toRunWithCount',
-    defaultMessage: 'To Run {testCount}',
+    defaultMessage: 'ShowTo Run {testCount}',
   },
   attributesTitle: {
     id: 'LaunchSidePanel.attributesTitle',

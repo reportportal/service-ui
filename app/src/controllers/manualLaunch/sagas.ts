@@ -52,6 +52,7 @@ import {
   ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE,
   TEST_FOLDER_ID_FILTER_KEY,
   MANUAL_LAUNCH_NAME_FILTER_KEY,
+  MANUAL_LAUNCH_STATUS_FILTER_KEY,
   MANUAL_LAUNCH_FOLDER_SEARCH_FILTER_KEY,
   defaultManualLaunchesQueryParams,
 } from './constants';
@@ -230,7 +231,7 @@ function* getManualLaunchTestCaseExecutions(
 ): Generator {
   try {
     const projectKey = (yield select(projectKeySelector)) as string;
-    const { launchId, offset, limit, folderId, searchQuery } = action.payload;
+    const { launchId, offset, limit, folderId, searchQuery, statusFilter } = action.payload;
 
     yield put({
       type: FETCH_START,
@@ -249,6 +250,10 @@ function* getManualLaunchTestCaseExecutions(
 
     if (trimmedSearch) {
       params[MANUAL_LAUNCH_NAME_FILTER_KEY as string] = trimmedSearch;
+    }
+
+    if (statusFilter) {
+      params[MANUAL_LAUNCH_STATUS_FILTER_KEY as string] = statusFilter;
     }
 
     const data = (yield call(
