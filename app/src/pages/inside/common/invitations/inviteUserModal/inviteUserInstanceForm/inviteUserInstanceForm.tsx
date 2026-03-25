@@ -16,9 +16,10 @@
 
 import { useState, useCallback } from 'react';
 import { useIntl } from 'react-intl';
-import { FieldArray } from 'redux-form';
+import { useDispatch } from 'react-redux';
+import { FieldArray, change, untouch } from 'redux-form';
 import { createClassnames } from 'common/utils';
-import { InstanceAssignment } from 'pages/inside/common/assignments/instanceAssignment';
+import { InstanceAssignment, ORGANIZATION, FORM_FIELDS } from 'pages/inside/common/assignments/instanceAssignment';
 import { ORGANIZATIONS } from 'pages/instance/allUsersPage/allUsersHeader/createUserModal/constants';
 import { messages as invitationMessages } from 'common/constants/localization/invitationsLocalization';
 import { getFormName } from '../utils';
@@ -31,11 +32,23 @@ const cx = createClassnames(styles);
 
 export const InviteUserInstanceForm = () => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
   const [invitedUserId, setInvitedUserId] = useState<number | null>(null);
+  const formName = getFormName(Level.INSTANCE);
 
   const handleUserSelect = useCallback((userId: number | null) => {
     setInvitedUserId(userId);
-  }, []);
+    // When existing user is selected, clear organizations list and current form
+    if (userId !== null) {
+      dispatch(change(formName, ORGANIZATIONS, []));
+      dispatch(change(formName, ORGANIZATION, {
+        name: null,
+        role: false,
+        projects: [],
+      }));
+      dispatch(untouch(formName, FORM_FIELDS.ORGANIZATION.NAME));
+    }
+  }, [dispatch, formName]);
 
   return (
     <form className={cx('form')}>
@@ -50,8 +63,8 @@ export const InviteUserInstanceForm = () => {
         name={ORGANIZATIONS}
         component={InstanceAssignment}
         props={{
-          formName: getFormName(Level.INSTANCE),
-          formNamespace: 'organization',
+          formName: formName,
+          formNamespace: ORGANIZATION,
           isOrganizationRequired: true,
           invitedUserId,
         }}

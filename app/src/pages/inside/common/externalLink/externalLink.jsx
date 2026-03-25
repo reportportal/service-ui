@@ -28,19 +28,21 @@ export const ExternalLink = ({
   children,
   dataAutomationId = '',
   className = '',
+  variant = 'default',
+  isColoredIcon = true,
   onClick = () => {},
 }) => (
   <a
     href={href}
     target="_blank"
-    className={cx('link', className)}
+    className={cx('link', variant, className)}
     data-automation-id={dataAutomationId}
     onClick={onClick}
   >
     <span>{children}</span>
-    <div className={cx('icon')}>
+    <span className={cx('icon', { 'default-color': !isColoredIcon })}>
       <ExternalLinkIcon />
-    </div>
+    </span>
   </a>
 );
 
@@ -49,5 +51,7 @@ ExternalLink.propTypes = {
   children: PropTypes.node.isRequired,
   dataAutomationId: PropTypes.string,
   className: PropTypes.string,
+  variant: PropTypes.oneOf(['default', 'compact']),
+  isColoredIcon: PropTypes.bool,
   onClick: PropTypes.func,
 };

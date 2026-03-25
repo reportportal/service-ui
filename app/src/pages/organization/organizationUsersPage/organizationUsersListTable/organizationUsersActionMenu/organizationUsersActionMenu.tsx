@@ -19,7 +19,7 @@ import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { redirect } from 'redux-first-router';
-import { ActionMenu } from 'components/actionMenu';
+import { ActionMenu } from '@reportportal/ui-kit';
 import { showModalAction } from 'controllers/modal';
 import { activeOrganizationSelector, Organization } from 'controllers/organization';
 import { ORGANIZATIONS_PAGE, userRolesSelector } from 'controllers/pages';
@@ -90,7 +90,7 @@ export const OrganizationUsersActionMenu = ({ user }: OrganizationUsersActionMen
     trackEvent(ORGANIZATION_PAGE_EVENTS.meatballMenuUsers('unassign_via_menu'));
   }, [dispatch, user, organization, trackEvent, onUnassign, currentUserId]);
 
-  const actions = useMemo(() => {
+  const items = useMemo(() => {
     return [
       {
         label: formatMessage(messages.manageAssignments),
@@ -113,5 +113,5 @@ export const OrganizationUsersActionMenu = ({ user }: OrganizationUsersActionMen
     canAssignUnassignInternalUser,
   ]);
 
-  return <ActionMenu actions={actions} />;
+  return <ActionMenu items={items} />;
 };

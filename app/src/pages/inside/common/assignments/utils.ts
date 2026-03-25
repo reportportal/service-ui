@@ -12,12 +12,20 @@ import type {
 import type { Project } from 'pages/inside/common/assignments/organizationAssignment/organizationItem/projectItems';
 import type { Organization as OrgType } from 'controllers/organization';
 
-export const MANAGE_ASSIGNMENTS_FORM = 'manageAssignmentsForm';
-
-function normalizeProjectRole(projectRole: string): string {
+export function normalizeProjectRole(projectRole: string): string {
   if (projectRole === EDITOR || projectRole === VIEWER) return projectRole;
   const role = (projectRole ?? '').toUpperCase();
   return role === EDITOR || role.includes('EDIT') ? EDITOR : VIEWER;
+}
+
+export function mapProjectsFromResponse(
+  response: UserOrganizationProjectsResponse | null | undefined,
+): Project[] {
+  return (response?.items ?? []).map((item: UserOrganizationProjectItem) => ({
+    id: item.id,
+    name: item.name,
+    role: normalizeProjectRole(item.project_role),
+  }));
 }
 
 export function isAssignmentDirty(
@@ -37,13 +45,7 @@ export function getCurrentOrganizationAssignment(
   user: OrganizationUserInfo,
 ): Organization {
   const orgRole = user.orgRole;
-  const projects: Project[] = (assignmentsData?.items ?? []).map(
-    (item: UserOrganizationProjectItem) => ({
-      id: item.id,
-      name: item.name,
-      role: normalizeProjectRole(item.project_role),
-    }),
-  );
+  const projects = mapProjectsFromResponse(assignmentsData);
   return {
     id: organization.id,
     name: organization.name,
@@ -100,4 +102,24 @@ export function getManageAssignmentsSaveCondition(
     parts.push(MANAGE_ASSIGNMENTS_CONDITIONS.CHANGE_PERMISSION);
   }
   return parts.join('#');
+}
+
+export function getManageAssignmentsInstanceChangeSet(
+  initial: OrganizationValue[],
+  current: OrganizationValue[],
+) {
+  const currentIds = new Set(current.map((o) => o.id));
+  const initialIds = new Set(initial.map((o) => o.id));
+
+  const removed = initial.filter((org) => !currentIds.has(org.id));
+  const added = current.filter((org) => !initialIds.has(org.id));
+  const modified = current.filter((org) => {
+    const initialOrg = initial.find((io) => io.id === org.id);
+    if (!initialOrg) {
+      return false;
+    }
+    return isAssignmentDirty(org, initialOrg);
+  });
+
+  return { removed, modified, added };
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import {
   buildUpdateAssignmentsPayload,
   getCurrentOrganizationAssignment,
   getManageAssignmentsSaveCondition,
   isAssignmentDirty,
-  MANAGE_ASSIGNMENTS_FORM,
-} from './constants';
+} from '../utils';
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { MessageDescriptor, useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { Button, Modal, Tooltip } from '@reportportal/ui-kit';
 import { useTracking } from 'react-tracking';
-import { createClassnames } from 'common/utils';
+import { createClassnames, referenceDictionary } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ExternalLink } from 'pages/inside/common/externalLink';
 import { idSelector } from 'controllers/user';
@@ -57,33 +57,19 @@ import { OrganizationUserInfo } from 'controllers/user/types';
 
 const cx = createClassnames(styles);
 
+const MANAGE_ASSIGNMENTS_FORM = 'manageAssignmentsForm';
+
 interface ManageAssignmentsOrganizationModalOwnProps {
   user: OrganizationUserInfo;
   organization: Organization;
   onUnassign?: () => void;
 }
 
-type AssignmentDescriptionLinkProps = {
-  children: ReactNode;
-  className?: string;
-  href: string;
-};
-
-export const AssignmentDescriptionLink = ({
-  children,
-  className,
-  href,
-}: AssignmentDescriptionLinkProps) => (
-  <ExternalLink href={href} className={className}>
-    {children}
-  </ExternalLink>
-);
-
 const renderDescriptionLink = (chunks: ReactNode) => (
   // TODO: currently the link does not lead anywhere, as the url is not clarified yet.
-  <AssignmentDescriptionLink href="#" className={cx('description-link')}>
+  <ExternalLink href={referenceDictionary.rpDoc} variant="compact" isColoredIcon={false}>
     {chunks}
-  </AssignmentDescriptionLink>
+  </ExternalLink>
 );
 
 const ManageAssignmentsOrganizationModalView = ({
@@ -154,8 +140,9 @@ const ManageAssignmentsOrganizationModalView = ({
     handleOrganizationAssignment();
   }, [handleOrganizationAssignment]);
 
-  const confirmationMessage =
-    isCurrentUser ? messages.unassignConfirmation : messages.unassignConfirmationUser;
+  const confirmationMessage = isCurrentUser
+    ? messages.unassignConfirmation
+    : messages.unassignConfirmationUser;
 
   const handleUnassignClick = () => {
     setShowUnassignConfirmation(true);
@@ -169,10 +156,7 @@ const ManageAssignmentsOrganizationModalView = ({
 
   const onSaveAssignments = (_values: { organizations?: Organization[] }) => {
     if (!currentOrganization || !isDirty) return;
-    const condition = getManageAssignmentsSaveCondition(
-      initialOrganization,
-      currentOrganization,
-    );
+    const condition = getManageAssignmentsSaveCondition(initialOrganization, currentOrganization);
 
     trackEvent(ORGANIZATION_PAGE_EVENTS.manageAssignments('save', condition));
     const payload = buildUpdateAssignmentsPayload(currentOrganization);
