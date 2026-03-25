@@ -37,6 +37,7 @@ import { formatTimestampForSidePanel } from 'pages/inside/common/testCaseList/ut
 import { MANUAL_LAUNCH_DETAILS_PAGE } from 'controllers/pages';
 import { useProjectDetails } from 'hooks/useTypedSelector';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { ExecutionStatus } from 'types/testCase';
 
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { LaunchAttribute } from '../launchAttribute';
@@ -111,7 +112,14 @@ export const LaunchSidePanel = memo(
     }
 
     const handleToRunClick = () => {
-      // TODO: Implement to run functionality
+      if (launchId) {
+        dispatch({
+          type: MANUAL_LAUNCH_DETAILS_PAGE,
+          payload: { organizationSlug, projectSlug, launchId: launchId.toString() },
+          meta: { query: { statusFilter: ExecutionStatus.TO_RUN } },
+        });
+        onClose();
+      }
     };
 
     const handleOpenDetailsClick = () => {
