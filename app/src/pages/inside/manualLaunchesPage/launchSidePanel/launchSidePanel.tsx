@@ -37,6 +37,7 @@ import { formatTimestampForSidePanel } from 'pages/inside/common/testCaseList/ut
 import { MANUAL_LAUNCH_DETAILS_PAGE } from 'controllers/pages';
 import { useProjectDetails } from 'hooks/useTypedSelector';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { ExecutionStatus } from 'types/testCase';
 
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { LaunchAttribute } from '../launchAttribute';
@@ -44,7 +45,6 @@ import { TestStatisticsChart } from '../testStatisticsChart';
 import { useEditManualLaunchModal } from '../editManualLaunchModal';
 import { useLaunchDetails } from './useLaunchDetails';
 import { messages } from './messages';
-import { ExecutionStatus } from '../manualLaunchDetailsPage/manualLaunchExecutions/executionStatusChip';
 
 import styles from './launchSidePanel.scss';
 

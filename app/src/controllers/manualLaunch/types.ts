@@ -18,7 +18,8 @@ import { Page } from 'types/common';
 
 import { Launch } from 'pages/inside/manualLaunchesPage/types';
 import { hasPayloadProps } from 'controllers/utils/types';
-import { ExecutionStatus } from 'pages/inside/manualLaunchesPage/manualLaunchDetailsPage/manualLaunchExecutions/executionStatusChip';
+import { ExecutionStatus } from 'types/testCase';
+
 import {
   TOGGLE_MANUAL_LAUNCH_FOLDER_EXPANSION,
   EXPAND_MANUAL_LAUNCH_FOLDERS_TO_LEVEL,
