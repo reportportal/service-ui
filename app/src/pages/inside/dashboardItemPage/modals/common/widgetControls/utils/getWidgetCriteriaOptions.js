@@ -45,6 +45,8 @@ import {
   ACTIONS_WITH_FILTERS,
   ACTIONS_WITH_INTEGRATIONS,
   ACTIONS_WITH_AA_SETTINGS,
+  ACTIONS_WITH_NOTIFICATION_RULE_SETTINGS,
+  ACTIONS_WITH_NOTIFICATION_RULES,
   ACTIONS_WITH_DEFECTS,
   ACTIONS_WITH_LOG_TYPES,
   ACTIONS_WITH_IMPORT,
@@ -163,6 +165,14 @@ const messages = defineMessages({
   [ACTIONS_WITH_AA_SETTINGS]: {
     id: 'WidgetCriteriaOption.aa_settings_actions',
     defaultMessage: 'Update Auto-Analysis settings',
+  },
+  [ACTIONS_WITH_NOTIFICATION_RULE_SETTINGS]: {
+    id: 'WidgetCriteriaOption.notificationRuleSettingsActions',
+    defaultMessage: 'Update notification rule settings',
+  },
+  [ACTIONS_WITH_NOTIFICATION_RULES]: {
+    id: 'WidgetCriteriaOption.notificationRuleActions',
+    defaultMessage: 'Update notification rule',
   },
   [ACTIONS_WITH_DEFECTS]: {
     id: 'WidgetCriteriaOption.defects_actions',
@@ -287,6 +297,14 @@ const getUserActionOptions = (formatMessage) => [
   { value: ACTIONS_WITH_INTEGRATIONS, label: formatMessage(messages[ACTIONS_WITH_INTEGRATIONS]) },
   { value: UPDATE_PROJECT, label: formatMessage(messages[UPDATE_PROJECT]) },
   { value: ACTIONS_WITH_AA_SETTINGS, label: formatMessage(messages[ACTIONS_WITH_AA_SETTINGS]) },
+  {
+    value: ACTIONS_WITH_NOTIFICATION_RULE_SETTINGS,
+    label: formatMessage(messages[ACTIONS_WITH_NOTIFICATION_RULE_SETTINGS]),
+  },
+  {
+    value: ACTIONS_WITH_NOTIFICATION_RULES,
+    label: formatMessage(messages[ACTIONS_WITH_NOTIFICATION_RULES]),
+  },
   { value: ACTIONS_WITH_DEFECTS, label: formatMessage(messages[ACTIONS_WITH_DEFECTS]) },
   { value: ACTIONS_WITH_LOG_TYPES, label: formatMessage(messages[ACTIONS_WITH_LOG_TYPES]) },
   { value: ACTIONS_WITH_IMPORT, label: formatMessage(messages[ACTIONS_WITH_IMPORT]) },
