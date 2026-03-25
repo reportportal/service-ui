@@ -18,6 +18,7 @@ export {
   getParentFoldersIds,
   getParentFolders,
   transformFoldersToDisplay,
+  collectAllTransformedFolderIds,
   getAllFolderIdsToDelete,
   getAllSubfolderIds,
   filterEmptyFolders,

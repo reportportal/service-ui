@@ -14,16 +14,22 @@
  * limitations under the License.
  */
 
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
 import { Button, RefreshIcon } from '@reportportal/ui-kit';
 
-import { createClassnames } from 'common/utils';
+import { createClassnames, debounce } from 'common/utils';
+import { SEARCH_DELAY } from 'common/constants/delayTime';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { MANUAL_LAUNCHES_PAGE } from 'controllers/pages';
+import { SearchField } from 'components/fields/searchField';
+import {
+  MANUAL_LAUNCHES_PAGE,
+  locationSelector,
+  updatePagePropertiesAction,
+} from 'controllers/pages';
 import {
   getManualLaunchAction,
   getManualLaunchFoldersAction,
@@ -32,6 +38,8 @@ import {
   manualLaunchTestCaseExecutionsSelector,
   isLoadingManualLaunchFoldersSelector,
   isLoadingManualLaunchTestCaseExecutionsSelector,
+  isLoadingManualLaunchFilteredFoldersSelector,
+  defaultManualLaunchesQueryParams,
 } from 'controllers/manualLaunch';
 import {
   showNotification,
@@ -69,6 +77,29 @@ export const ManualLaunchDetailsPage = () => {
   const executions = useSelector(manualLaunchTestCaseExecutionsSelector);
   const isLoadingFolders = useSelector(isLoadingManualLaunchFoldersSelector);
   const isLoadingExecutions = useSelector(isLoadingManualLaunchTestCaseExecutionsSelector);
+  const isLoadingFilteredFolders = useSelector(isLoadingManualLaunchFilteredFoldersSelector);
+
+  const location = useSelector(locationSelector);
+  const appliedSearchQuery = location?.query?.searchQuery || '';
+  const [searchValue, setSearchValue] = useState(appliedSearchQuery);
+
+  const isSearchLoading =
+    searchValue !== appliedSearchQuery ||
+    isLoadingExecutions ||
+    isLoadingFilteredFolders;
+
+  const handleFilterChange = useCallback(
+    // eslint-disable-next-line react-hooks/use-memo
+    debounce((value: string) => {
+      dispatch(
+        updatePagePropertiesAction({
+          searchQuery: value,
+          ...defaultManualLaunchesQueryParams,
+        }),
+      );
+    }, SEARCH_DELAY),
+    [dispatch],
+  );
 
   useEffect(() => {
     if (!isLoading && isEmpty(launch) && launchId) {
@@ -92,9 +123,14 @@ export const ManualLaunchDetailsPage = () => {
     if (launchId) {
       dispatch(getManualLaunchAction({ launchId }));
       dispatch(getManualLaunchFoldersAction({ launchId }));
-      dispatch(getManualLaunchTestCaseExecutionsAction({ launchId }));
+      dispatch(
+        getManualLaunchTestCaseExecutionsAction({
+          launchId,
+          searchQuery: appliedSearchQuery,
+        }),
+      );
     }
-  }, [dispatch, launchId]);
+  }, [dispatch, launchId, appliedSearchQuery]);
 
   const breadcrumbDescriptors = [
     {
@@ -109,15 +145,24 @@ export const ManualLaunchDetailsPage = () => {
   ];
 
   const renderActions = () => (
-    <Button
-      variant="text"
-      data-automation-id="refreshPageButton"
-      icon={<RefreshIcon />}
-      disabled={isLoading}
-      onClick={handleRefresh}
-    >
-      {formatMessage(commonMessages.refreshPage)}
-    </Button>
+    <>
+      <SearchField
+        isLoading={isSearchLoading}
+        searchValue={searchValue}
+        placeholder={formatMessage(messages.searchPlaceholder)}
+        setSearchValue={setSearchValue}
+        onFilterChange={handleFilterChange}
+      />
+      <Button
+        variant="text"
+        data-automation-id="refreshPageButton"
+        icon={<RefreshIcon />}
+        disabled={isLoading}
+        onClick={handleRefresh}
+      >
+        {formatMessage(commonMessages.refreshPage)}
+      </Button>
+    </>
   );
 
   if (isLoading) {
@@ -131,8 +176,9 @@ export const ManualLaunchDetailsPage = () => {
   const renderContent = () => {
     const hasData = !isEmpty(folders) || !isEmpty(executions);
     const isLoadingFoldersView = isLoadingFolders || isLoadingExecutions;
+    const hasActiveSearch = !!appliedSearchQuery;
 
-    if (hasData || isLoadingFoldersView) {
+    if (hasData || isLoadingFoldersView || hasActiveSearch) {
       return <ManualLaunchFolders />;
     }
 

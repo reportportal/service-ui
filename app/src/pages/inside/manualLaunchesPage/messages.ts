@@ -24,6 +24,6 @@ export const messages = defineMessages({
   },
   searchPlaceholder: {
     id: 'ManualLaunchesPage.searchPlaceholder',
-    defaultMessage: 'Search launches...',
+    defaultMessage: 'Search launches by name',
   },
 });

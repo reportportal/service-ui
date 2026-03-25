@@ -27,12 +27,13 @@ import {
   urlManualLaunchFolderIdSelector,
   expandManualLaunchFoldersToLevelAction,
 } from 'controllers/manualLaunch';
-import { MANUAL_LAUNCH_DETAILS_PAGE } from 'controllers/pages';
+import { MANUAL_LAUNCH_DETAILS_PAGE, locationSelector } from 'controllers/pages';
 import { useManualLaunchId, useProjectDetails } from 'hooks/useTypedSelector';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { transformFoldersToDisplay, filterEmptyFolders } from 'common/utils/folderUtils';
 import { ExpandedOptions } from '../../../common/expandedOptions';
 import { ManualLaunchExecutions } from '../manualLaunchExecutions';
+import { useManualLaunchSearchFilteredFolders } from './useManualLaunchSearchFilteredFolders';
 
 export const ManualLaunchFolders = () => {
   const dispatch = useDispatch();
@@ -43,6 +44,9 @@ export const ManualLaunchFolders = () => {
   const pageInfo = useSelector(manualLaunchTestCaseExecutionsPageSelector);
   const isLoadingFolders = useSelector(isLoadingManualLaunchFoldersSelector);
   const isLoadingExecutions = useSelector(isLoadingManualLaunchTestCaseExecutionsSelector);
+
+  const location = useSelector(locationSelector);
+  const searchQuery = location?.query?.searchQuery;
 
   const urlFolderId = useSelector(urlManualLaunchFolderIdSelector);
   const urlFolderIdNumber = urlFolderId ? Number(urlFolderId) : null;
@@ -63,6 +67,18 @@ export const ManualLaunchFolders = () => {
     }
   }, [urlFolderIdNumber, folders, dispatch]);
 
+  const {
+    searchFilteredFolders,
+    searchFilteredExpandedIds,
+    isSearchFilteredLoading,
+    hasSearchFilteredFolders,
+    handleToggleSearchFilteredFolder,
+    filteredTotalTestCases,
+  } = useManualLaunchSearchFilteredFolders({
+    searchQuery,
+    launchId,
+  });
+
   const navigateToFolder = useCallback(
     (folderId?: number) => {
       dispatch({
@@ -73,9 +89,10 @@ export const ManualLaunchFolders = () => {
           launchId,
           ...(folderId && { manualLaunchPageRoute: `folder/${folderId}` }),
         },
+        meta: { query: { searchQuery } },
       });
     },
-    [dispatch, organizationSlug, projectSlug, launchId],
+    [dispatch, organizationSlug, projectSlug, launchId, searchQuery],
   );
 
   const handleFolderClick = useCallback(
@@ -89,11 +106,33 @@ export const ManualLaunchFolders = () => {
     navigateToFolder();
   }, [navigateToFolder]);
 
+  const searchFilteredData = useMemo(
+    () => ({
+      searchFilteredFolders,
+      searchFilteredExpandedIds,
+      isSearchFilteredLoading,
+      hasSearchFilteredFolders,
+      handleToggleSearchFilteredFolder,
+      filteredTotalTestCases,
+    }),
+    [
+      searchFilteredFolders,
+      searchFilteredExpandedIds,
+      isSearchFilteredLoading,
+      hasSearchFilteredFolders,
+      handleToggleSearchFilteredFolder,
+      filteredTotalTestCases,
+    ],
+  );
+
   return (
     <ExpandedOptions
       activeFolderId={urlFolderIdNumber}
       folders={transformedFolders}
       instanceKey={TMS_INSTANCE_KEY.MANUAL_LAUNCH}
+      searchQuery={searchQuery}
+      searchAllFolders={folders}
+      searchFilteredData={searchFilteredData}
       setAllTestCases={handleAllExecutionsClick}
       onFolderClick={handleFolderClick}
     >
@@ -101,6 +140,7 @@ export const ManualLaunchFolders = () => {
         executions={executions}
         pageInfo={pageInfo}
         isLoading={isLoadingExecutions || isLoadingFolders}
+        searchQuery={searchQuery}
       />
     </ExpandedOptions>
   );

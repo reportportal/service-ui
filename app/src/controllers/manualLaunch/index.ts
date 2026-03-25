@@ -24,6 +24,9 @@ export {
   toggleManualLaunchFolderExpansionAction,
   expandManualLaunchFoldersToLevelAction,
   setManualLaunchExpandedFolderIdsAction,
+  getManualLaunchFilteredFoldersAction,
+  setManualLaunchFilteredFoldersAction,
+  clearManualLaunchFilteredFoldersAction,
 } from './actionCreators';
 export { manualLaunchesSagas } from './sagas';
 export * from './constants';

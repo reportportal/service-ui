@@ -102,7 +102,8 @@ const messages = defineMessages({
   },
   disabledCanEditProjectHint: {
     id: 'InstanceAssignment.disabledCanEditProjectHint',
-    defaultMessage: "Users with the Manager's role possess 'Can edit' permissions across all projects within the organization",
+    defaultMessage:
+      "Users with the Manager's role possess 'Can edit' permissions across all projects within the organization",
   },
 });
 
@@ -113,11 +114,17 @@ interface InstanceAssignmentItem {
   projects: Project[];
 }
 
-interface InstanceAssignmentProps extends InstanceAssignmentArrayProps<InstanceAssignmentItem> {
+export interface InstanceAssignmentProps extends InstanceAssignmentArrayProps<InstanceAssignmentItem> {
   formName: string;
   formNamespace?: string;
   isOrganizationRequired: boolean;
   invitedUserId?: number | null;
+  header?: string;
+  addButtonPlacement?: 'header' | 'bottom';
+  addFormPlacement?: 'top' | 'bottom';
+  withEmptyState?: boolean;
+  emptyStateText?: string;
+  onExpandOrganization?: (orgId: number) => void;
 }
 
 interface InstanceAssignmentArrayProps<T> extends WrappedFieldArrayProps<T> {
@@ -136,8 +143,8 @@ interface ReduxFormState {
   };
 }
 
-const ORGANIZATION = 'organization';
-const FORM_FIELDS = {
+export const ORGANIZATION = 'organization';
+export const FORM_FIELDS = {
   ORGANIZATION: {
     NAME: `${ORGANIZATION}.name`,
     ROLE: `${ORGANIZATION}.role`,
@@ -154,11 +161,19 @@ export const InstanceAssignment = ({
   formNamespace,
   isOrganizationRequired = false,
   invitedUserId = null,
+  header,
+  addButtonPlacement = 'bottom',
+  addFormPlacement = 'bottom',
+  withEmptyState = false,
+  emptyStateText,
+  onExpandOrganization,
 }: InstanceAssignmentProps) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const selector = formValueSelector(formName);
-  const isAddingProject = useSelector((state) => selector(state, 'isAddingProject') as boolean | undefined);
+  const isAddingProject = useSelector(
+    (state) => selector(state, 'isAddingProject') as boolean | undefined,
+  );
   const errors = useSelector((state) => getFormSyncErrors(formName)(state)) as {
     organization: { name: string };
   };
@@ -178,20 +193,25 @@ export const InstanceAssignment = ({
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
   const [selectedOrganizationId, setSelectedOrganizationId] = useState<number | null>(null);
   const [totalProjects, setTotalProjects] = useState(0);
-  const [isOpen, setIsOpen] = useState<boolean>(true);
   const [userOrgIds, setUserOrgIds] = useState<Set<number>>(new Set());
   const allOrganizations = fields.getAll();
   const formContainerRef = useRef<HTMLDivElement>(null);
+  const emptyList = !allOrganizations?.length;
+  const [isOpen, setIsOpen] = useState<boolean>(emptyList && !withEmptyState);
+  const shouldFormBeOpen = isOpen || (emptyList && !withEmptyState);
+  const shouldShowEmptyState = !shouldFormBeOpen && emptyList && withEmptyState;
+  const shouldShowAddButton = !shouldFormBeOpen && !shouldShowEmptyState;
+  const shouldShowFormCloseButton = withEmptyState || !emptyList;
 
   useEffect(() => {
-    const shouldFormBeOpen = isOpen || allOrganizations?.length === 0;
     dispatch(change(formName, 'isAddingOrganization', shouldFormBeOpen));
-  }, [isOpen, allOrganizations?.length, dispatch, formName]);
+  }, [shouldFormBeOpen, dispatch, formName]);
 
   useEffect(() => {
-    const addedCount = (allOrganizations || []).length;
-    const totalAvailableToAdd = totalOrganizationsInSystem - userOrgIds.size;
-    setAreOrganizationsExhausted(totalOrganizationsInSystem > 0 && addedCount >= totalAvailableToAdd);
+    const allOrganizationsIds = new Set((allOrganizations || []).map(({ id }) => id));
+    const totalAddedIds = new Set([...allOrganizationsIds, ...userOrgIds]);
+    const totalAvailableToAdd = totalOrganizationsInSystem - totalAddedIds.size;
+    setAreOrganizationsExhausted(totalOrganizationsInSystem > 0 && totalAvailableToAdd <= 0);
   }, [allOrganizations, totalOrganizationsInSystem, userOrgIds]);
 
   useEffect(() => {
@@ -208,7 +228,7 @@ export const InstanceAssignment = ({
         projects: [],
       }),
     );
-   dispatch(untouch(formName, FORM_FIELDS.ORGANIZATION.NAME));
+    dispatch(untouch(formName, FORM_FIELDS.ORGANIZATION.NAME));
   };
 
   const handleOrganizationNameFocus = useCallback(() => {
@@ -216,18 +236,16 @@ export const InstanceAssignment = ({
   }, [dispatch, formName]);
 
   useEffect(() => {
-    let isActive = true;
-
     setSelectedOrganizationId(null);
     setSelectedProjectId(null);
     setOrganizationProjects([]);
     setTotalProjects(0);
     setNotAssignedOrganizations([]);
-    setAreOrganizationsExhausted(false);
-    setTotalOrganizationsInSystem(0);
-    setIsOpen(true);
-    fields.removeAll();
     resetOrganization();
+    const orgs = fields.getAll?.();
+    setIsOpen(!orgs?.length && !withEmptyState);
+
+    let isActive = true;
 
     fetch(URLS.organizationSearches(), {
       method: 'post',
@@ -255,7 +273,9 @@ export const InstanceAssignment = ({
       method: 'post',
       data: {
         limit: 300,
-        search_criteria: [{ filter_key: 'org_user_id', operation: 'EQ', value: String(invitedUserId) }],
+        search_criteria: [
+          { filter_key: 'org_user_id', operation: 'EQ', value: String(invitedUserId) },
+        ],
       },
     })
       .then((response: OrganizationsSearchesResponseData) => {
@@ -317,6 +337,10 @@ export const InstanceAssignment = ({
 
   const onCancel = () => {
     setIsOpen(false);
+    setSelectedOrganizationId(null);
+    setSelectedProjectId(null);
+    setOrganizationProjects([]);
+    setTotalProjects(0);
     resetOrganization();
   };
 
@@ -354,168 +378,193 @@ export const InstanceAssignment = ({
     setSelectedProjectId(project ? project.id : null);
   };
 
+  const renderAddOrganizationForm = () => (
+    <div className={cx('instance-assignment')} ref={formContainerRef}>
+      <div className={cx('autocomplete-wrapper')}>
+        <FieldProvider name={FORM_FIELDS.ORGANIZATION.NAME}>
+          <FieldErrorHint provideHint={false}>
+            <AsyncAutocompleteV2
+              key={`organization-${invitedUserId}`}
+              inputProps={{
+                onFocus: handleOrganizationNameFocus,
+                label: formatMessage(messages.organization),
+                clearable: true,
+                onClear: () => {
+                  dispatch(change(formName, FORM_FIELDS.ORGANIZATION.NAME, null));
+                  dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.NAME, null));
+                  setSelectedOrganizationId(null);
+                  setSelectedProjectId(null);
+                  setOrganizationProjects([]);
+                  setTotalProjects(0);
+                },
+              }}
+              placeholder={formatMessage(messages.organizationPlaceholder)}
+              getURI={URLS.organizationSearches}
+              getRequestParams={getRequestOrganizationsParams}
+              makeOptions={makeOrganizationsOptions}
+              createWithoutConfirmation
+              skipOptionCreation
+              popoverClassName={cx('popover-organization')}
+              onChange={(organizationName: string) => {
+                const selectedOrg = notAssignedOrganizations.find(
+                  ({ name }) => name === organizationName,
+                );
+                setSelectedOrganizationId(selectedOrg?.id || null);
+                dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.NAME, null));
+                setSelectedProjectId(null);
+                setOrganizationProjects([]);
+                setTotalProjects(selectedOrg?.relationships?.projects?.meta?.count ?? 0);
+              }}
+              isRequired={isOrganizationRequired}
+              useFixedPositioning
+              dropdownMatchInputWidth
+              customEmptyListMessage={formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_OPTIONS)}
+            />
+          </FieldErrorHint>
+        </FieldProvider>
+        <FieldProvider name={FORM_FIELDS.ORGANIZATION.ROLE}>
+          <Checkbox
+            onChange={(e) => {
+              const checked = e.target.checked;
+              dispatch(change(formName, FORM_FIELDS.ORGANIZATION.ROLE, checked));
+              dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE, checked));
+            }}
+            className={cx('autocomplete-checkbox')}
+          >
+            {formatMessage(messages.setOrganizationManager)}
+          </Checkbox>
+        </FieldProvider>
+      </div>
+      <div className={cx('autocomplete-wrapper')}>
+        <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.NAME}>
+          <FieldErrorHint provideHint={false}>
+            <AsyncAutocompleteV2
+              key={`project-${selectedOrganizationId}-${invitedUserId}`}
+              inputProps={{
+                label: formatMessage(messages.project),
+                clearable: totalProjects > 0 && !!selectedOrganizationId,
+                placeholder: formatMessage(invitationMessages.selectSearchProject),
+                onClear: () => {
+                  dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.NAME, null));
+                  setSelectedProjectId(null);
+                },
+              }}
+              placeholder={formatMessage(invitationMessages.selectSearchProject)}
+              getURI={() => URLS.organizationProjectsSearches(selectedOrganizationId)}
+              getRequestParams={getRequestProjectsParams}
+              makeOptions={makeProjectsOptions}
+              onChange={handleProjectChange}
+              createWithoutConfirmation
+              skipOptionCreation
+              className={cx('autocomplete')}
+              disabled={!selectedOrganizationId}
+              customEmptyListMessage={
+                totalProjects === 0 && selectedOrganizationId
+                  ? formatMessage(invitationMessages.noProjectsCreated)
+                  : formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_OPTIONS)
+              }
+              isDropdownMode={totalProjects === 0 && selectedOrganizationId}
+              icon={totalProjects === 0 && selectedOrganizationId ? <div /> : undefined}
+              useFixedPositioning
+              dropdownMatchInputWidth
+            />
+          </FieldErrorHint>
+        </FieldProvider>
+        <div className={cx('checkbox-wrapper', { 'can-edit-hint': hasOrgNameError })}>
+          <div className={cx('can-edit-container')}>
+            {organization?.role ? (
+              <Tooltip
+                content={formatMessage(messages.disabledCanEditProjectHint)}
+                placement="top-start"
+                contentClassName={cx('checkbox-tooltip-content')}
+                wrapperClassName={cx('checkbox-tooltip-wrapper')}
+              >
+                <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE}>
+                  <Checkbox className={cx('disabled-checkbox')} disabled />
+                </FieldProvider>
+              </Tooltip>
+            ) : (
+              <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE}>
+                <Checkbox disabled={!selectedOrganizationId} />
+              </FieldProvider>
+            )}
+            <span
+              className={cx('can-edit-label', {
+                'can-edit-label--disabled': organization?.role || !selectedOrganizationId,
+              })}
+            >
+              {formatMessage(messages.canEditProject)}
+            </span>
+          </div>
+          <Tooltip
+            content={formatMessage(messages.hintMessage)}
+            placement="top"
+            contentClassName={cx('custom-tooltip')}
+            wrapperClassName={cx('tooltip-wrapper')}
+          >
+            <InfoIcon />
+          </Tooltip>
+        </div>
+      </div>
+      <div className={cx('controls', { 'controls-hint': hasOrgNameError })}>
+        <Button
+          className={cx('button')}
+          adjustWidthOn="content"
+          onClick={handleSubmit}
+          disabled={!selectedOrganizationId}
+        >
+          <CheckmarkIcon />
+        </Button>
+        {shouldShowFormCloseButton && (
+          <Button
+            className={cx('cancel-button')}
+            adjustWidthOn="content"
+            variant="ghost"
+            onClick={onCancel}
+          >
+            <CloseIcon />
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+
+  const renderAddOrganizationButton = () => (
+    <div className={cx('add-button', { bottom: addButtonPlacement === 'bottom' })}>
+      <AddItemButton
+        tooltipClassname={cx('tooltip')}
+        onClick={() => setIsOpen(true)}
+        tooltipContent={areOrganizationsExhausted ? messages.availableOrganizations : undefined}
+        disabled={areOrganizationsExhausted || !!isAddingProject}
+        text={formatMessage(messages.addOrganization)}
+      />
+    </div>
+  );
+
   return (
     <div className={cx('forms-wrapper')}>
+      <div className={cx('header')}>
+        {header && <h4>{header}</h4>}
+        {shouldShowAddButton && addButtonPlacement === 'header' && renderAddOrganizationButton()}
+      </div>
+      {shouldFormBeOpen && addFormPlacement === 'top' && renderAddOrganizationForm()}
+      {shouldShowEmptyState && (
+        <div className={cx('empty-state')}>
+          {emptyStateText && <span>{emptyStateText}</span>}
+          {renderAddOrganizationButton()}
+        </div>
+      )}
       <FieldElement name={ORGANIZATIONS} className={cx('organizations')}>
         <OrganizationAssignment
           isMultiple
           formName={formName}
           invitedUserId={invitedUserId}
           isOrganizationFormOpen={isOpen}
+          onExpandOrganization={onExpandOrganization}
         />
       </FieldElement>
-      {isOpen || allOrganizations?.length === 0 ? (
-        <div className={cx('instance-assignment')} ref={formContainerRef}>
-          <div className={cx('autocomplete-wrapper')}>
-            <FieldProvider name={FORM_FIELDS.ORGANIZATION.NAME}>
-              <FieldErrorHint provideHint={false}>
-                <AsyncAutocompleteV2
-                  key={`organization-${invitedUserId}`}
-                  inputProps={{
-                    onFocus: handleOrganizationNameFocus,
-                    label: formatMessage(messages.organization),
-                    clearable: true,
-                    onClear: () => {
-                      dispatch(change(formName, FORM_FIELDS.ORGANIZATION.NAME, null));
-                      dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.NAME, null));
-                      setSelectedOrganizationId(null);
-                      setSelectedProjectId(null);
-                      setOrganizationProjects([]);
-                      setTotalProjects(0);
-                    },
-                  }}
-                  placeholder={formatMessage(messages.organizationPlaceholder)}
-                  getURI={URLS.organizationSearches}
-                  getRequestParams={getRequestOrganizationsParams}
-                  makeOptions={makeOrganizationsOptions}
-                  createWithoutConfirmation
-                  skipOptionCreation
-                  popoverClassName={cx('popover-organization')}
-                  onChange={(organizationName: string) => {
-                    const selectedOrg = notAssignedOrganizations.find(({ name }) => name === organizationName);
-                    setSelectedOrganizationId(selectedOrg?.id || null);
-                    dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.NAME, null));
-                    setSelectedProjectId(null);
-                    setOrganizationProjects([]);
-                    setTotalProjects(selectedOrg?.relationships?.projects?.meta?.count ?? 0);
-                  }}
-                  isRequired={isOrganizationRequired}
-                  useFixedPositioning
-                  dropdownMatchInputWidth
-                  customEmptyListMessage={formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_OPTIONS)}
-                />
-              </FieldErrorHint>
-            </FieldProvider>
-            <FieldProvider name={FORM_FIELDS.ORGANIZATION.ROLE}>
-              <Checkbox
-                onChange={(e) => {
-                  const checked = e.target.checked;
-                  dispatch(change(formName, FORM_FIELDS.ORGANIZATION.ROLE, checked));
-                  dispatch(
-                    change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE, checked),
-                  );
-                }}
-                className={cx('autocomplete-checkbox')}
-              >
-                {formatMessage(messages.setOrganizationManager)}
-              </Checkbox>
-            </FieldProvider>
-          </div>
-          <div className={cx('autocomplete-wrapper')}>
-            <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.NAME}>
-              <FieldErrorHint provideHint={false}>
-                <AsyncAutocompleteV2
-                  key={`project-${selectedOrganizationId}-${invitedUserId}`}
-                  inputProps={{
-                    label: formatMessage(messages.project),
-                    clearable: totalProjects > 0 && !!selectedOrganizationId,
-                    placeholder: formatMessage(invitationMessages.selectSearchProject),
-                    onClear: () => {
-                      dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.NAME, null));
-                      setSelectedProjectId(null);
-                    },
-                  }}
-                  placeholder={formatMessage(invitationMessages.selectSearchProject)}
-                  getURI={() => URLS.organizationProjectsSearches(selectedOrganizationId)}
-                  getRequestParams={getRequestProjectsParams}
-                  makeOptions={makeProjectsOptions}
-                  onChange={handleProjectChange}
-                  createWithoutConfirmation
-                  skipOptionCreation
-                  className={cx('autocomplete')}
-                  disabled={!selectedOrganizationId}
-                  customEmptyListMessage={totalProjects === 0 && selectedOrganizationId ? formatMessage(invitationMessages.noProjectsCreated) : formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_OPTIONS)}
-                  isDropdownMode={totalProjects === 0 && selectedOrganizationId}
-                  icon={totalProjects === 0 && selectedOrganizationId ? <div /> : undefined}
-                  useFixedPositioning
-                  dropdownMatchInputWidth
-                />
-              </FieldErrorHint>
-            </FieldProvider>
-            <div className={cx('checkbox-wrapper', { 'can-edit-hint': hasOrgNameError })}>
-              <div className={cx('can-edit-container')}>
-                {organization?.role ? (
-                  <Tooltip
-                    content={formatMessage(messages.disabledCanEditProjectHint)}
-                    placement="top-start"
-                    contentClassName={cx('checkbox-tooltip-content')}
-                    wrapperClassName={cx('checkbox-tooltip-wrapper')}
-                  >
-                    <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE}>
-                      <Checkbox className={cx('disabled-checkbox')} disabled />
-                    </FieldProvider>
-                  </Tooltip>
-                ) : (
-                  <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE}>
-                    <Checkbox disabled={!selectedOrganizationId} />
-                  </FieldProvider>
-                )}
-                <span className={cx('can-edit-label', { 'can-edit-label--disabled': organization?.role || !selectedOrganizationId })}>
-                  {formatMessage(messages.canEditProject)}
-                </span>
-              </div>
-              <Tooltip
-                content={formatMessage(messages.hintMessage)}
-                placement="top"
-                contentClassName={cx('custom-tooltip')}
-                wrapperClassName={cx('tooltip-wrapper')}
-              >
-                <InfoIcon />
-              </Tooltip>
-            </div>
-          </div>
-          <div className={cx('controls', { 'controls-hint': hasOrgNameError })}>
-            <Button
-              className={cx('button')}
-              adjustWidthOn="content"
-              onClick={handleSubmit}
-              disabled={!selectedOrganizationId}
-            >
-              <CheckmarkIcon />
-            </Button>
-            {allOrganizations?.length > 0 && (
-              <Button
-                className={cx('cancel-button')}
-                adjustWidthOn="content"
-                variant="ghost"
-                onClick={onCancel}
-              >
-                <CloseIcon />
-              </Button>
-            )}
-          </div>
-        </div>
-      ) : (
-        <div className={cx('add-button')}>
-          <AddItemButton
-            tooltipClassname={cx('tooltip')}
-            onClick={() => setIsOpen(true)}
-            tooltipContent={areOrganizationsExhausted ? messages.availableOrganizations : undefined}
-            disabled={areOrganizationsExhausted || !!isAddingProject}
-            text={formatMessage(messages.addOrganization)}
-          />
-        </div>
-      )}
+      {shouldFormBeOpen && addFormPlacement === 'bottom' && renderAddOrganizationForm()}
+      {shouldShowAddButton && addButtonPlacement === 'bottom' && renderAddOrganizationButton()}
     </div>
   );
 };

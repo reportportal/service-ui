@@ -26,6 +26,15 @@ export type TestCaseFolderActionCallback = (
   targetFolderId: number,
 ) => void | Promise<void>;
 
+export interface SearchFilteredData {
+  searchFilteredFolders: TransformedFolder[];
+  searchFilteredExpandedIds: number[];
+  isSearchFilteredLoading: boolean;
+  hasSearchFilteredFolders: boolean;
+  handleToggleSearchFilteredFolder: (folder: TransformedFolder) => void;
+  filteredTotalTestCases: number;
+}
+
 export interface ExpandedOptionsProps {
   folders: TransformedFolder[];
   activeFolderId: number | null;
@@ -36,6 +45,7 @@ export interface ExpandedOptionsProps {
   searchQuery?: string;
   searchExtraFilters?: Record<string, string | number>;
   searchAllFolders?: Folder[];
+  searchFilteredData?: SearchFilteredData;
   renderCreateFolderButton?: () => ReactNode;
   onMoveFolder?: (
     draggedItem: TreeDragItem,

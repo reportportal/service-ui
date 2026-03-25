@@ -96,6 +96,27 @@ export const transformFoldersToDisplay = (folders: BaseFolder[]): TransformedFol
 };
 
 /**
+ * Collects every folder id in a transformed folder tree (depth-first).
+ */
+export const collectAllTransformedFolderIds = (folders: TransformedFolder[]): number[] => {
+  const ids: number[] = [];
+
+  const traverse = (list: TransformedFolder[]) => {
+    list.forEach((folder) => {
+      ids.push(folder.id);
+
+      if (!isEmpty(folder.folders)) {
+        traverse(folder.folders);
+      }
+    });
+  };
+
+  traverse(folders);
+
+  return ids;
+};
+
+/**
  * Recursively collects all folder IDs that should be deleted when a folder is deleted
  * (including all subfolders)
  */

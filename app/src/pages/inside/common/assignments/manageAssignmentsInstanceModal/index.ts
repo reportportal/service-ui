@@ -14,16 +14,4 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
-
-export const messages = defineMessages({
-  manualLaunchNotFoundRedirect: {
-    id: 'ManualLaunchDetailsPage.manualLaunchNotFoundRedirect',
-    defaultMessage:
-      "The item you are trying to access may have been deleted or doesn't exist. You have been redirected to Manual Launches.",
-  },
-  searchPlaceholder: {
-    id: 'ManualLaunchDetailsPage.searchPlaceholder',
-    defaultMessage: 'Search test execution by name',
-  },
-});
+export { ManageAssignmentsInstanceModal } from './manageAssignmentsInstanceModal';

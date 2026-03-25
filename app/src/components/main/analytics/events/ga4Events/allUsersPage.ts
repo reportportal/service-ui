@@ -26,7 +26,7 @@ export const ALL_USERS_PAGE_EVENTS = {
     place: 'all_users_page',
     element_name: 'search',
   },
-  clickApplyFilterButton: (type, condition) => ({
+  clickApplyFilterButton: (type: string, condition: string) => ({
     ...BASIC_EVENT_PARAMETERS,
     modal: 'filter_all_users',
     element_name: 'apply',
@@ -64,7 +64,7 @@ export const ALL_USERS_PAGE_EVENTS = {
     place: 'all_users_page',
     element_name: 'start_delete',
   },
-  bulkDeleteUsersModal: (count) => ({
+  bulkDeleteUsersModal: (count: number) => ({
     ...BASIC_EVENT_PARAMETERS,
     place: 'all_users_page',
     element_name: 'submit_delete',
@@ -82,14 +82,14 @@ export const ALL_USERS_PAGE_EVENTS = {
     place: 'all_users_page',
     element_name: 'create_user',
   },
-  createUser: (adminRights) => ({
+  createUser: (adminRights?: boolean) => ({
     ...BASIC_EVENT_PARAMETERS,
     place: 'all_users_page',
     element_name: 'create',
     modal: 'create_user',
     condition: adminRights ? 'provide_admin_rights' : 'no_provide_admin_rights',
   }),
-  changePageSize: (pageSize) => ({
+  changePageSize: (pageSize: number) => ({
     ...getBasicChooseEventParameters(ALL_USERS_PAGE),
     element_name: 'page_size_control',
     number: pageSize,
@@ -103,4 +103,14 @@ export const ALL_USERS_PAGE_EVENTS = {
     type: 'instance_level',
     condition,
   }),
+  OPEN_MANAGE_ASSIGNMENTS_MODAL: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_users_page',
+    icon_name: 'manage_assignments',
+  },
+  MANAGE_ASSIGNMENTS_DOCUMENTATION: {
+    ...BASIC_EVENT_PARAMETERS,
+    link_name: 'documentation',
+    place: 'manage_assignment',
+  },
 };

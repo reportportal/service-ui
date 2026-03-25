@@ -166,7 +166,7 @@ export const TestCaseLibraryPage = () => {
                 </button>
               </div>
               {hasFolders && (
-                <div className={cx('test-case-library-page__actions')}>
+                <div className={cx('test-case-library-page__actions', 'test-case-library-page__actions--buttons')}>
                   {canManageTestCases && (
                     <>
                       <Button

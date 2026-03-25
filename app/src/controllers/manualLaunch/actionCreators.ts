@@ -24,6 +24,11 @@ import {
   TOGGLE_MANUAL_LAUNCH_FOLDER_EXPANSION,
   EXPAND_MANUAL_LAUNCH_FOLDERS_TO_LEVEL,
   SET_MANUAL_LAUNCH_EXPANDED_FOLDER_IDS,
+  GET_MANUAL_LAUNCH_FILTERED_FOLDERS,
+  SET_MANUAL_LAUNCH_FILTERED_FOLDERS,
+  START_LOADING_MANUAL_LAUNCH_FILTERED_FOLDERS,
+  STOP_LOADING_MANUAL_LAUNCH_FILTERED_FOLDERS,
+  CLEAR_MANUAL_LAUNCH_FILTERED_FOLDERS,
 } from './constants';
 import {
   GetManualLaunchesParams,
@@ -34,6 +39,8 @@ import {
   UpdateManualLaunchExecutionStatusParams,
   ToggleManualLaunchFolderExpansionParams,
   SetManualLaunchExpandedFolderIdsParams,
+  GetManualLaunchFilteredFoldersParams,
+  ManualLaunchFolder,
 } from './types';
 
 export const getManualLaunchesAction = (params?: GetManualLaunchesParams) => ({
@@ -89,4 +96,28 @@ export const setManualLaunchExpandedFolderIdsAction = (
 ) => ({
   type: SET_MANUAL_LAUNCH_EXPANDED_FOLDER_IDS,
   payload: params,
+});
+
+export const getManualLaunchFilteredFoldersAction = (
+  params: GetManualLaunchFilteredFoldersParams,
+) => ({
+  type: GET_MANUAL_LAUNCH_FILTERED_FOLDERS,
+  payload: params,
+});
+
+export const setManualLaunchFilteredFoldersAction = (folders: ManualLaunchFolder[]) => ({
+  type: SET_MANUAL_LAUNCH_FILTERED_FOLDERS,
+  payload: folders,
+});
+
+export const startLoadingManualLaunchFilteredFoldersAction = () => ({
+  type: START_LOADING_MANUAL_LAUNCH_FILTERED_FOLDERS,
+});
+
+export const stopLoadingManualLaunchFilteredFoldersAction = () => ({
+  type: STOP_LOADING_MANUAL_LAUNCH_FILTERED_FOLDERS,
+});
+
+export const clearManualLaunchFilteredFoldersAction = () => ({
+  type: CLEAR_MANUAL_LAUNCH_FILTERED_FOLDERS,
 });

@@ -133,10 +133,6 @@ export const messages = defineMessages({
     id: 'Assignment.unassignSelfMessage',
     defaultMessage: 'You cannot unassign yourself from the organization',
   },
-  discardChangesConfirmation: {
-    id: 'Assignment.discardChangesConfirmation',
-    defaultMessage: 'You have unsaved changes. Discard them?',
-  },
   organizationRoleDisabledOwnAccount: {
     id: 'Assignment.organizationRoleDisabledOwnAccount',
     defaultMessage:
@@ -145,5 +141,18 @@ export const messages = defineMessages({
   organizationRoleDisabledOwner: {
     id: 'Assignment.organizationRoleDisabledOwner',
     defaultMessage: "You can't change the role of the organization owner",
+  },
+  manageAssignmentsAdminInfo: {
+    id: 'Assignment.manageAssignmentsAdminInfo',
+    defaultMessage:
+      'Be aware that the selected user, as an Admin, has full access to all organizations and projects within the instance, regardless of specified role and permissions.',
+  },
+  manageAssignmentsUpdateAllFailed: {
+    id: 'Assignment.manageAssignmentsUpdateAllFailed',
+    defaultMessage: 'Something went wrong during the assignment update. Please try again',
+  },
+  manageAssignmentsUpdatePartialFailed: {
+    id: 'Assignment.manageAssignmentsUpdatePartialFailed',
+    defaultMessage: 'Failed to update assignment in {organizations}.',
   },
 });

@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { InstanceAssignment } from './instanceAssignment';
+export { InstanceAssignment, ORGANIZATION, FORM_FIELDS } from './instanceAssignment';
