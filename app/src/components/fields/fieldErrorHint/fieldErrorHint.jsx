@@ -39,7 +39,7 @@ const messages = defineMessages({
   passwordCreateUserHint: {
     id: 'CreateUserModal.passwordCreateUserHint',
     defaultMessage:
-      'Minimum 8 characters: at least one digit, one special symbol, one uppercase, and one lowercase letter',
+      'Minimum {minLength} characters: at least one digit, one special symbol, one uppercase, and one lowercase letter',
   },
   emailCreateUserHint: {
     id: 'CreateUserModal.emailCreateUserHint',

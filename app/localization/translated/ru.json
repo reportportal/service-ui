@@ -254,7 +254,7 @@
   "ChangePasswordForm.failedChange": "Не удалось обновить пароль",
   "ChangePasswordForm.newPasswordConfirmPlaceholder": "Подтвердите новый пароль",
   "ChangePasswordForm.newPasswordPlaceholder": "Новый пароль",
-  "ChangePasswordForm.passwordConstraints": "Минимум 8 символов: как минимум одна цифра, один специальный символ, одна заглавная и одна строчная буква",
+  "ChangePasswordForm.passwordConstraints": "Минимум {minLength} символов: как минимум одна цифра, один специальный символ, одна заглавная и одна строчная буква",
   "ChangePasswordForm.successChange": "Ваш пароль успешно изменен",
   "ChangePasswordModal.confirmLabel": "Подтвердить",
   "ChangePasswordModal.confirmPlaceholder": "Подтвердите новый пароль",

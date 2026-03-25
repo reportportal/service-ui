@@ -254,7 +254,7 @@
   "ChangePasswordForm.failedChange": "Не атрымалася абнавіць пароль",
   "ChangePasswordForm.newPasswordConfirmPlaceholder": "Пацвердзіць пароль",
   "ChangePasswordForm.newPasswordPlaceholder": "Новы пароль",
-  "ChangePasswordForm.passwordConstraints": "Мінімум 8 знакаў: як мінімум адна лічба, адзін спецыяльны сімвал, адна загалоўная і адна маленькая літара",
+  "ChangePasswordForm.passwordConstraints": "Мінімум {minLength} знакаў: як мінімум адна лічба, адзін спецыяльны сімвал, адна загалоўная і адна маленькая літара",
   "ChangePasswordForm.successChange": "Ваш пароль паспяхова зменены",
   "ChangePasswordModal.confirmLabel": "Пацвердзіць",
   "ChangePasswordModal.confirmPlaceholder": "Пацвердзіць новы пароль",
