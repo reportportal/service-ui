@@ -207,7 +207,7 @@ export class AttributeEditor extends Component {
       withValidationMessage,
     } = this.props;
     return (
-      <div className={cx('attribute-editor', customClass)}>
+      <div className={cx('attribute-editor', customClass, { 'naked-view': nakedView })}>
         <div className={cx('control')}>
           <FieldErrorHint error={this.state.errors.key} staticHint={withValidationMessage}>
             <AttributeInput
