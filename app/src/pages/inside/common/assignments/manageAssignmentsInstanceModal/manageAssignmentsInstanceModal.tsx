@@ -17,7 +17,13 @@
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { reduxForm, change, formValueSelector, FieldArray } from 'redux-form';
+import {
+  reduxForm,
+  change,
+  formValueSelector,
+  FieldArray,
+  type InjectedFormProps,
+} from 'redux-form';
 import { Modal, SystemMessage } from '@reportportal/ui-kit';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { useTracking } from 'react-tracking';
@@ -73,16 +79,20 @@ interface ManageAssignmentsInstanceModalOwnProps {
   onSuccess?: () => void;
 }
 
-type ManageAssignmentsInstanceModalViewProps = ManageAssignmentsInstanceModalOwnProps & {
-  initialize: (data: { [ORGANIZATIONS]: OrganizationValue[] }) => void;
-  handleSubmit?: (callback: () => void) => () => void;
+type ManageAssignmentsFormValues = {
+  [ORGANIZATIONS]?: unknown[];
+  isAddingOrganization?: boolean;
+  isAddingProject?: boolean;
 };
+
+type ManageAssignmentsInstanceModalViewProps = ManageAssignmentsInstanceModalOwnProps &
+  InjectedFormProps<ManageAssignmentsFormValues, ManageAssignmentsInstanceModalOwnProps>;
 
 const ManageAssignmentsInstanceModalView = ({
   user,
   onSuccess,
   initialize,
-  handleSubmit: formHandleSubmit,
+  handleSubmit,
 }: ManageAssignmentsInstanceModalViewProps) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
@@ -173,7 +183,7 @@ const ManageAssignmentsInstanceModalView = ({
     return modified.length > 0 || added.length > 0 || removed.length > 0;
   }, [organizations]);
 
-  const handleSaveAction = useCallback(async () => {
+  const handleSave = async () => {
     const { modified } = getManageAssignmentsInstanceChangeSet(
       initialOrganizationsRef.current,
       organizations,
@@ -240,38 +250,29 @@ const ManageAssignmentsInstanceModalView = ({
     } finally {
       setIsSavingAssignments(false);
     }
-  }, [organizations, user.id, user.fullName, dispatch, formatMessage, onSuccess]);
-
-  const handleSave = useCallback(() => {
-    if (formHandleSubmit) {
-      formHandleSubmit(() => void handleSaveAction())();
-    } else {
-      void handleSaveAction();
-    }
-  }, [formHandleSubmit, handleSaveAction]);
+  };
 
   const handleModalClose = useCallback(() => {
     dispatch(hideModalAction());
   }, [dispatch]);
 
+  const renderDocumentationLink = useCallback((chunks: ReactNode) => (
+    <ExternalLink
+      href={referenceDictionary.rpDoc}
+      variant="compact"
+      isColoredIcon={false}
+      onClick={() => trackEvent(ALL_USERS_PAGE_EVENTS.MANAGE_ASSIGNMENTS_DOCUMENTATION)}
+    >
+      {chunks}
+    </ExternalLink>
+  ), [trackEvent]);
+
   const description = useMemo(
     () =>
       formatMessage(messages.manageAssignmentsDescription, {
-        link: (chunks: ReactNode) => (
-          // TODO: currently the link does not lead anywhere, as the url is not clarified yet.
-          <ExternalLink
-            href={referenceDictionary.rpDoc}
-            variant="compact"
-            isColoredIcon={false}
-            onClick={() => {
-              trackEvent(ALL_USERS_PAGE_EVENTS.MANAGE_ASSIGNMENTS_DOCUMENTATION);
-            }}
-          >
-            {chunks}
-          </ExternalLink>
-        ),
+        link: renderDocumentationLink,
       }),
-    [formatMessage, trackEvent],
+    [formatMessage, renderDocumentationLink],
   );
 
   return (
@@ -289,7 +290,7 @@ const ManageAssignmentsInstanceModalView = ({
         children: formatMessage(COMMON_LOCALE_KEYS.SAVE),
         disabled:
           !isDirty || isAnyProjectsLoading || isSavingAssignments || isInlineAssignmentFormOpen,
-        onClick: handleSave,
+        onClick: handleSubmit(handleSave) as () => void,
       }}
     >
       <div>
@@ -325,11 +326,7 @@ const ManageAssignmentsInstanceModalView = ({
 };
 
 export const ManageAssignmentsInstanceModal = reduxForm<
-  {
-    [ORGANIZATIONS]?: unknown[];
-    isAddingOrganization?: boolean;
-    isAddingProject?: boolean;
-  },
+  ManageAssignmentsFormValues,
   ManageAssignmentsInstanceModalOwnProps
 >({
   form: MANAGE_ASSIGNMENTS_FORM,

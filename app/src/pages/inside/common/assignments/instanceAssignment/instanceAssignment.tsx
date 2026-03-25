@@ -236,6 +236,15 @@ export const InstanceAssignment = ({
   }, [dispatch, formName]);
 
   useEffect(() => {
+    setSelectedOrganizationId(null);
+    setSelectedProjectId(null);
+    setOrganizationProjects([]);
+    setTotalProjects(0);
+    setNotAssignedOrganizations([]);
+    resetOrganization();
+    const orgs = fields.getAll?.();
+    setIsOpen(!orgs?.length && !withEmptyState);
+
     let isActive = true;
 
     fetch(URLS.organizationSearches(), {
@@ -285,6 +294,7 @@ export const InstanceAssignment = ({
     return () => {
       isActive = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [invitedUserId]);
 
   const getRequestOrganizationsParams = (inputValue: string) => ({
@@ -327,6 +337,10 @@ export const InstanceAssignment = ({
 
   const onCancel = () => {
     setIsOpen(false);
+    setSelectedOrganizationId(null);
+    setSelectedProjectId(null);
+    setOrganizationProjects([]);
+    setTotalProjects(0);
     resetOrganization();
   };
 
