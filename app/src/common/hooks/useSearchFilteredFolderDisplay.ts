@@ -67,7 +67,7 @@ export const useSearchFilteredFolderDisplay = <T extends SearchFilteredFolderRow
   }, [isLoading, searchQuery]);
 
   const relevantFolderIds = useMemo(() => {
-    if (!searchQuery || filteredFolderData.length === 0) {
+    if (!searchQuery || isEmpty(filteredFolderData)) {
       return new Set<number>();
     }
 

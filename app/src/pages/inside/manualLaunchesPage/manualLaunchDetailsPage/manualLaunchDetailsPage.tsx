@@ -80,10 +80,11 @@ export const ManualLaunchDetailsPage = () => {
   const isLoadingFilteredFolders = useSelector(isLoadingManualLaunchFilteredFoldersSelector);
 
   const location = useSelector(locationSelector);
-  const [searchValue, setSearchValue] = useState(location?.query?.searchQuery || '');
+  const appliedSearchQuery = location?.query?.searchQuery || '';
+  const [searchValue, setSearchValue] = useState(appliedSearchQuery);
 
   const isSearchLoading =
-    searchValue !== (location?.query?.searchQuery || '') ||
+    searchValue !== appliedSearchQuery ||
     isLoadingExecutions ||
     isLoadingFilteredFolders;
 
@@ -117,8 +118,6 @@ export const ManualLaunchDetailsPage = () => {
       });
     }
   }, [isLoading, launch, launchId, dispatch, organizationSlug, projectSlug, formatMessage]);
-
-  const appliedSearchQuery = location?.query?.searchQuery || '';
 
   const handleRefresh = useCallback(() => {
     if (launchId) {
