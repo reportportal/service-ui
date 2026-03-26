@@ -24,12 +24,15 @@ import styles from './locationHeaderLayout.scss';
 const cx = classNames.bind(styles);
 
 export const LocationHeaderLayout = ({ title, children, breadcrumbs, tree }) => {
-  const isLastClickable = Boolean(breadcrumbs[breadcrumbs.length - 1].link);
-  const isSingleItemClickable = tree.length && isLastClickable
+  const isLastClickable = Boolean(breadcrumbs?.[breadcrumbs.length - 1]?.link);
+  const isSingleItemClickable = tree?.length && isLastClickable;
+  const shouldShowBreadcrumbs = breadcrumbs?.length || tree?.length;
 
   return (
     <div className={cx('location-header-container')}>
-      <Breadcrumbs descriptors={breadcrumbs} tree={tree} LinkComponent={NavLink} className={cx('crumbs')} isLastClickable={isLastClickable} isSingleItemClickable={isSingleItemClickable} />
+      {shouldShowBreadcrumbs && (
+        <Breadcrumbs descriptors={breadcrumbs} tree={tree} LinkComponent={NavLink} className={cx('crumbs')} isLastClickable={isLastClickable} isSingleItemClickable={isSingleItemClickable} />
+      )}
       <div className={cx('header')}>
         <span className={cx('title')}>{title}</span>
         {children}
@@ -64,5 +67,4 @@ LocationHeaderLayout.propTypes = {
 
 LocationHeaderLayout.defaultProps = {
   children: null,
-  breadcrumbs: null,
 };
