@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { isEmpty } from 'es-toolkit/compat';
 
 import {
   manualLaunchFoldersSelector,
@@ -24,11 +25,12 @@ import {
   isLoadingManualLaunchFoldersSelector,
   isLoadingManualLaunchTestCaseExecutionsSelector,
   urlManualLaunchFolderIdSelector,
+  expandManualLaunchFoldersToLevelAction,
 } from 'controllers/manualLaunch';
 import { MANUAL_LAUNCH_DETAILS_PAGE, locationSelector } from 'controllers/pages';
 import { useManualLaunchId, useProjectDetails } from 'hooks/useTypedSelector';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
-import { transformFoldersToDisplay } from 'common/utils/folderUtils';
+import { transformFoldersToDisplay, filterEmptyFolders } from 'common/utils/folderUtils';
 import { ExpandedOptions } from '../../../common/expandedOptions';
 import { ManualLaunchExecutions } from '../manualLaunchExecutions';
 import { useManualLaunchSearchFilteredFolders } from './useManualLaunchSearchFilteredFolders';
@@ -49,7 +51,21 @@ export const ManualLaunchFolders = () => {
   const urlFolderId = useSelector(urlManualLaunchFolderIdSelector);
   const urlFolderIdNumber = urlFolderId ? Number(urlFolderId) : null;
 
-  const transformedFolders = useMemo(() => transformFoldersToDisplay(folders), [folders]);
+  const transformedFolders = useMemo(
+    () => filterEmptyFolders(transformFoldersToDisplay(folders)),
+    [folders],
+  );
+
+  useEffect(() => {
+    if (urlFolderIdNumber && !isEmpty(folders)) {
+      dispatch(
+        expandManualLaunchFoldersToLevelAction({
+          folderId: urlFolderIdNumber,
+          folders,
+        }),
+      );
+    }
+  }, [urlFolderIdNumber, folders, dispatch]);
 
   const {
     searchFilteredFolders,

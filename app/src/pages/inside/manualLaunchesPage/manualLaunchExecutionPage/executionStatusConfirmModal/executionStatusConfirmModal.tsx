@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { FC, useState, FormEvent } from 'react';
+import { FC, useState, FormEvent, useRef } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { reduxForm, InjectedFormProps } from 'redux-form';
@@ -39,6 +39,7 @@ import { updateManualLaunchExecutionStatusAction } from 'controllers/manualLaunc
 import { projectKeySelector } from 'controllers/project';
 import { MAX_FILE_SIZE } from 'common/constants/fileConstants';
 import { useModalButtons } from 'hooks/useModalButtons';
+import { useTextareaAutoResize } from 'common/hooks';
 
 import type { ExecutionStatusConfirmFormValues, ExecutionStatusConfirmModalProps } from '../types';
 import {
@@ -63,6 +64,8 @@ const ExecutionStatusConfirmModalComponent: FC<
   const projectKey = useSelector(projectKeySelector);
   const launchId = useManualLaunchId();
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  useTextareaAutoResize(textareaRef);
 
   const handleFilesAdded = (filesWithValidation: FileWithValidation[]) => {
     const files = filesWithValidation.map((f) => f.file);
@@ -115,10 +118,10 @@ const ExecutionStatusConfirmModalComponent: FC<
     <Modal
       title={formatMessage(messages.markAsStatus, { status: statusLabel })}
       onClose={hideModal}
-      size="large"
       okButton={okButton}
       cancelButton={cancelButton}
       allowCloseOutside={!dirty}
+      scrollable
       className={cx('execution-status-confirm-modal', {
         'execution-status-confirm-modal--simple': isStatusChange,
       })}
@@ -154,6 +157,7 @@ const ExecutionStatusConfirmModalComponent: FC<
               <FieldProvider name="comment">
                 <FieldErrorHint>
                   <FieldTextFlex
+                    ref={textareaRef}
                     label={formatMessage(messages.executionComment)}
                     placeholder={formatMessage(messages.commentPlaceholder)}
                     value=""

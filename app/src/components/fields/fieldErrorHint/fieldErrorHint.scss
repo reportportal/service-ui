@@ -80,6 +80,11 @@
     width: max-content;
   }
 
+  &.type-bottom,
+  &.type-bottom-left {
+    top: 6px;
+  }
+
   &.type-top,
   &.type-top-right {
     transform: translateY(-100%);

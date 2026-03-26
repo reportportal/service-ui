@@ -1,5 +1,5 @@
-/*
- * Copyright 2025 EPAM Systems
+/*!
+ * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
+.with-popover-wrapper {
+  display: inline-block;
+  width: 100%;
+}
 
-export const messages = defineMessages({
-  renameOrganization: {
-    id: 'RenameOrganizationModal.renameOrganization',
-    defaultMessage: 'Rename organization',
-  },
-  organizationNameLabel: {
-    id: 'RenameOrganizationModal.organizationNameLabel',
-    defaultMessage: 'Name',
-  },
-});
+.with-popover {
+  display: block;
+  width: fit-content;
+  height: fit-content;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
