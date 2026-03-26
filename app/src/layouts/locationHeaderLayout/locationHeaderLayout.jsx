@@ -25,7 +25,7 @@ const cx = classNames.bind(styles);
 export const LocationHeaderLayout = ({ title, children, breadcrumbs, isCrumbClickable }) => {
   return (
     <div className={cx('location-header-container')}>
-      {Boolean(breadcrumbs.length) && <Breadcrumbs descriptors={breadcrumbs} isLastClickable={isCrumbClickable} />}
+      {Boolean(breadcrumbs.length) && <Breadcrumbs descriptors={breadcrumbs} isLastClickable={isCrumbClickable} className={cx('crumbs')} />}
       <div className={cx('header')}>
         <span className={cx('title')}>{title}</span>
         {children}

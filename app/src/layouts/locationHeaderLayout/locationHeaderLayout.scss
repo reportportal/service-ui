@@ -39,3 +39,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.crumbs {
+  display: flex;
+  margin-block-end: 8px;
+}
