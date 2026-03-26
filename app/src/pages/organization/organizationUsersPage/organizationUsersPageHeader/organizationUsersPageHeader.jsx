@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import { useMemo } from "react"
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { NAMESPACE, SEARCH_KEY } from 'controllers/organization/users';
 import { Breadcrumbs } from "@reportportal/ui-kit";
+import { ORGANIZATION_PROJECTS_PAGE, ORGANIZATIONS_PAGE } from 'controllers/pages/constants';
+import { NavLink } from 'components/main/navLink';
 import { SearchField } from 'components/fields/searchField';
 import { withFilter } from 'controllers/filter';
 import { useSelector } from 'react-redux';
@@ -49,23 +50,23 @@ export const OrganizationUsersPageHeader = ({
   const isNotEmpty = usersCount > 0;
   const organizationName = organization.name;
 
-  const breadcrumbs = useMemo(() => [
+  const breadcrumbs = [
     {
       title: formatMessage(messages.allOrganizations),
-      link: '#organizations',
+      link: { type: ORGANIZATIONS_PAGE },
     },
     {
       title: organizationName,
-      link: `#organizations/${organizationName}/projects`,
+      link: { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug: organizationName } },
     },
-  ], [organizationName, formatMessage]);
+  ];
 
 
   return (
     <LocationHeaderLayout
       title={formatMessage(messages.organizationUsersTitle)}
       breadcrumbs={
-        <Breadcrumbs descriptors={breadcrumbs} className={cx('crumbs')} isLastClickable />
+        <Breadcrumbs descriptors={breadcrumbs} LinkComponent={NavLink} className={cx('crumbs')} isLastClickable  />
       }
     >
       <div className={cx('actions')}>
