@@ -37,7 +37,9 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { EmptySearchState } from 'pages/common/emptySearchState';
 import OutlineSearchIcon from 'common/img/search-outline-icon-inline.svg';
 import FilledSearchIcon from 'common/img/search-filled-icon-inline.svg';
+import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { messages as testCaseListMessages } from 'pages/inside/common/testCaseList/messages';
 import FolderDropIcon from 'common/img/folder-drop-inline.svg';
 
 import { Folder } from './folder';
@@ -49,6 +51,7 @@ import { FOLDER_DRAG_TYPE, EXTERNAL_TREE_DROP_TYPE } from './constants';
 
 import styles from './expandedOptions.scss';
 import { createTestCaseDropHandler } from './utils';
+import { EmptyPageState } from 'pages/common/emptyPageState';
 
 const cx = createClassnames(styles);
 
@@ -341,7 +344,13 @@ export const ExpandedOptions = ({
         )}
         {hidePageSearchSidebar ? (
           <div className={cx('expanded-options__content')}>
-            <EmptySearchState />
+            <div className={cx('expanded-options__no-search-results')}>
+              <EmptyPageState
+                label={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
+                description={formatMessage(testCaseListMessages.noResultsDescription)}
+                emptyIcon={NoResultsIcon}
+              />
+            </div>
           </div>
         ) : (
           <ScrollWrapper>

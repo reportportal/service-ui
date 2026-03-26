@@ -254,6 +254,13 @@
     height: 100%;
   }
 
+  &__no-search-results {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 200px);
+  }
+
   &__content-title {
     margin: 24px 0 24px 32px;
     font-size: 17px;
