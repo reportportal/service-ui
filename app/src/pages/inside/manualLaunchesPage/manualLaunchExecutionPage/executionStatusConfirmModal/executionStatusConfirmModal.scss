@@ -36,6 +36,7 @@
 
 .execution-status-confirm-modal {
   width: 480px;
+  max-height: 90vh;
   border-radius: 16px;
   padding: 32px 40px;
 
@@ -51,13 +52,13 @@
 }
 
 .modal-content {
+  position: relative;
   display: flex;
   flex-direction: column;
+  overflow: auto;
 }
 
 .comment-section {
-  padding-top: 16px;
-
   label {
     @include modal-text-medium;
 
@@ -84,7 +85,6 @@
 
 .divider {
   border-top: 1px solid var(--rp-ui-base-e-100);
-  margin: 0 0 16px 0;
 }
 
 .attachments-section {
