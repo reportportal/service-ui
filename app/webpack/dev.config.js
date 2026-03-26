@@ -93,7 +93,7 @@ module.exports = () => {
       port: 3000,
       proxy: [
         {
-          context: ['/composite', '/api/', '/uat/'],
+          context: ['/composite', '/api/'],
           target: process.env.PROXY_PATH,
           changeOrigin: true,
           bypass(req) {
