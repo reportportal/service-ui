@@ -22,7 +22,6 @@ import { Breadcrumbs } from '@reportportal/ui-kit';
 import { NavLink } from 'components/main/navLink';
 import styles from './locationHeaderLayout.scss';
 
-
 const cx = classNames.bind(styles);
 
 export const LocationHeaderLayout = ({ title, children, breadcrumbs, treeView }) => {
