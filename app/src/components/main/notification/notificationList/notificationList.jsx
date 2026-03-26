@@ -137,7 +137,7 @@ export const notificationMessages = defineMessages({
   },
   organizationExists: {
     id: 'OrganizationsPage.organizationExists',
-    defaultMessage: "Organization with the same name ''{name}'' already exists on the instance",
+    defaultMessage: 'An organization with the same name or slug already exists in the instance',
   },
   resetToGlobalSuccess: {
     id: 'InstancesSection.resetToGlobalSuccess',
