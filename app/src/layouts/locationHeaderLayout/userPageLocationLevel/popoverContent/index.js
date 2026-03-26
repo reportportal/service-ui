@@ -1,5 +1,5 @@
 /*!
- * Copyright 2024 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,45 +14,4 @@
  * limitations under the License.
  */
 
-.user-page-location-level {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  color: $COLOR--e-300;
-  font-size: 13px;
-  margin-bottom: 12px;
-
-  svg {
-    width: 16px;
-    height: 16px;
-  }
-}
-
-.tree-button {
-  width: 16px;
-  height: 16px;
-}
-
-.name {
-  font-size: 13px;
-  line-height: 20px;
-}
-
-.open {
-  svg path {
-    fill: $COLOR--topaz-pressed;
-  }
-
-  &:hover:not(.disabled) {
-    svg path {
-      fill: $COLOR--topaz-2;
-    }
-  }
-}
-
-.popover {
-  font-size: 13px;
-  line-height: 20px;
-  min-width: 175px;
-}
-
+export { PopoverContent } from './popoverContent';

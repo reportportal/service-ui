@@ -19,6 +19,7 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Button, FilterOutlineIcon } from '@reportportal/ui-kit';
+import { ORGANIZATION_PROJECTS_PAGE, ORGANIZATIONS_PAGE } from 'controllers/pages/constants';
 import { useIntl } from 'react-intl';
 import { projectMembersSelector, projectNameSelector } from 'controllers/project';
 import { SearchField } from 'components/fields/searchField';
@@ -49,11 +50,25 @@ export const ProjectTeamPageHeader = ({
   const organizationName = useSelector(activeOrganizationNameSelector);
   const isNotEmptyMembers = useSelector(projectMembersSelector).length > 0;
 
+  const breadcrumbs = [
+    {
+      title: formatMessage(messages.allOrganizations),
+      link: { type: ORGANIZATIONS_PAGE },
+    },
+    {
+      title: organizationName,
+      link: { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug: organizationName } },
+    },
+    {
+      title: projectName,
+    },
+  ];
+
   return (
     <LocationHeaderLayout
       title={formatMessage(messages.projectTeamTitle)}
       breadcrumbs={
-        <UserPageLocationLevel rootName={formatMessage(messages.allOrganizations)} organizationName={organizationName} projectName={projectName} />
+        <UserPageLocationLevel descriptors={breadcrumbs} />
       }
       organizationName={organizationName}
       projectName={projectName}

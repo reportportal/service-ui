@@ -20,34 +20,19 @@ import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { BaseIconButton, Popover } from '@reportportal/ui-kit';
 import TreeIcon from './img/tree-inline.svg';
-import SubLevelIcon from './img/sub-level-inline.svg';
+import { PopoverContent } from './popoverContent/popoverContent';
 import styles from './userPageLocationLevel.scss';
 
 const cx = classNames.bind(styles);
 
-export const UserPageLocationLevel = ({ rootName, organizationName, projectName }) => {
+export const UserPageLocationLevel = ({ descriptors }) => {
   const [isOpen, setIsOpen] = useState(false);
-
-  const getContent = () => (
-    <div className={cx('members-page-header-container')}>
-      <div>{rootName}</div>
-      <div className={cx('organization-name', { active: !projectName })}>
-        {Parser(SubLevelIcon)}
-        {organizationName}
-      </div>
-      {projectName && (
-        <div className={cx('project-name')}>
-          {Parser(SubLevelIcon)}
-          {projectName}
-        </div>
-      )}
-    </div>
-  );
+  const lastDescriptor = descriptors[descriptors.length - 1];
 
   return (
     <div className={cx('user-page-location-level')}>
       <Popover
-        content={getContent()}
+        content={<PopoverContent descriptors={descriptors} />}
         placement="bottom-start"
         className={cx('popover')}
         isOpened={isOpen}
@@ -58,15 +43,21 @@ export const UserPageLocationLevel = ({ rootName, organizationName, projectName 
           {Parser(TreeIcon)}
         </BaseIconButton>
       </Popover>
-      <div className={cx('name')}>{projectName || organizationName}</div>
+      <div className={cx('name')}>{lastDescriptor.title}</div>
     </div>
   );
 };
 
 UserPageLocationLevel.propTypes = {
-  rootName: PropTypes.string.isRequired,
-  organizationName: PropTypes.string.isRequired,
-  projectName: PropTypes.string,
+  descriptors: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      link: PropTypes.shape({
+        type: PropTypes.string.isRequired,
+        payload: PropTypes.object,
+      }),
+    })
+  ).isRequired,
 };
 
 UserPageLocationLevel.defaultProps = {
