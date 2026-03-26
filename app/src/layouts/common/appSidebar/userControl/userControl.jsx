@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { Popover } from '@reportportal/ui-kit';
 import { useSelector } from 'react-redux';
 import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
@@ -22,6 +21,7 @@ import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import { userInfoSelector, photoTimeStampSelector } from 'controllers/user';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
+import { withPopover } from 'componentLibrary/popover';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { ProfileMenu } from './profileMenu';
 import ArrowRightIcon from '../img/arrow-right-inline.svg';
@@ -34,7 +34,7 @@ const UserControl = ({ onClick }) => {
   const photoTimeStamp = useSelector(photoTimeStampSelector);
 
   return (
-    <button className={cx('user-block-wrapper')} onClick={onClick} tabIndex={0}>
+    <button className={cx('user-block-wrapper')} onClick={onClick}>
       <button className={cx('avatar-block')}>
         <UserAvatar
           className={cx('user-avatar')}
@@ -68,41 +68,12 @@ UserControl.propTypes = {
   onClick: PropTypes.func.isRequired,
 };
 
-export const UserControlWithPopover = ({
-  linkToUserProfilePage,
-  isOpenPopover,
-  closeSidebar,
-  onClick,
-  togglePopover,
-}) => {
-  const closePopover = () => {
-    togglePopover(false);
-  };
-  return (
-    <div className={cx('popover-control')}>
-      <Popover
-        className={cx('popover')}
-        placement="right"
-        isOpened={isOpenPopover}
-        setIsOpened={togglePopover}
-        content={
-          <ProfileMenu
-            linkToUserProfilePage={linkToUserProfilePage}
-            closePopover={closePopover}
-            closeSidebar={closeSidebar}
-          />
-        }
-      >
-        <UserControl onClick={onClick} />
-      </Popover>
-    </div>
-  );
-};
-
-UserControlWithPopover.propTypes = {
-  linkToUserProfilePage: PropTypes.object.isRequired,
-  isOpenPopover: PropTypes.bool.isRequired,
-  closeSidebar: PropTypes.func.isRequired,
-  onClick: PropTypes.func.isRequired,
-  togglePopover: PropTypes.func.isRequired,
-};
+export const UserControlWithPopover = withPopover({
+  ContentComponent: ProfileMenu,
+  side: 'right',
+  arrowPosition: 'middle',
+  popoverClassName: cx('popover'),
+  popoverWrapperClassName: cx('popover-control'),
+  variant: 'dark',
+  tabIndex: 0,
+})(UserControl);
