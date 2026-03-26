@@ -18,16 +18,14 @@ import { stringify } from 'qs';
 import { CSV } from 'common/constants/fileTypes';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
 
-export const UAT_API_PATH = '/uat';
+export const API_PATH = '/api';
 
 export const DEFAULT_API_URL_PREFIX = '../api/v1';
 export const DEFAULT_COMMON_API_URL_PREFIX = '../api';
-export const UAT_API_URL_PREFIX = '../uat';
 export const COMPOSITE_API_URL_PREFIX = '../composite/';
 
 const urlBase = `${DEFAULT_API_URL_PREFIX}/`;
 const urlCommonBase = `${DEFAULT_COMMON_API_URL_PREFIX}/`;
-const uatBase = `${UAT_API_URL_PREFIX}/`;
 const compositeBase = COMPOSITE_API_URL_PREFIX;
 const getQueryParams = (paramsObj, options = {}) =>
   stringify(paramsObj, { addQueryPrefix: true, ...options });
@@ -137,8 +135,8 @@ export const URLS = {
       view: exportType,
     })}`,
   launchAnalyze: (projectKey) => `${urlBase}${projectKey}/launch/analyze`,
-  login: () => `${uatBase}sso/oauth/token`,
-  sessionToken: () => `${uatBase}sso/me`,
+  login: () => `${urlCommonBase}sso/oauth/token`,
+  sessionToken: () => `${urlCommonBase}sso/me`,
 
   apiKeys: (userId) => `${urlBase}users/${userId}/api-keys`,
   apiKeyById: (userId, apiKeyId) => `${urlBase}users/${userId}/api-keys/${apiKeyId}`,
@@ -315,7 +313,7 @@ export const URLS = {
   userPasswordResetToken: (token) => `${urlBase}users/password/reset/${token}`,
   userPasswordRestore: () => `${urlBase}users/password/restore`,
   userChangePassword: () => `${urlBase}users/password/change`,
-  userSynchronize: (type) => `${uatBase}sso/me/${type}/synchronize`,
+  userSynchronize: (type) => `${urlCommonBase}sso/me/${type}/synchronize`,
   userInfo: (userId) => `${urlBase}users/${userId}`,
   deleteUsers: (ids) => `${urlBase}users${getQueryParams({ ids })}`,
   userInviteInternal: (projectKey) => `${urlBase}project/${projectKey}/assign`,
@@ -327,9 +325,7 @@ export const URLS = {
   getFileById: (projectKey, dataId, loadThumbnail) =>
     `${urlBase}data/${projectKey}/${dataId}${getQueryParams({ loadThumbnail })}`,
 
-  authSettings: (authTypeOrId, id = '') =>
-    removeTrailingSlash(`${uatBase}settings/auth/${authTypeOrId}/${id}`),
-  githubAuthSettings: () => `${uatBase}settings/oauth/github`,
+  githubAuthSettings: () => `${urlCommonBase}settings/oauth/github`, // TODO: to be changed in the future
   analyticsServerSettings: () => `${urlBase}settings/analytics`,
   events: () => `${urlCommonBase}activities/searches`,
   searchEventsBySubjectName:
