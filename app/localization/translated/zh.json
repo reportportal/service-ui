@@ -2064,7 +2064,7 @@
   "ProjectActivityControls.ItemsValidationError": "测试项的数量应为1到600个",
   "ProjectActivityControls.UsernameControlText": "用户名",
   "ProjectActivityControls.UsersPlaceholder": "请输入用户名",
-  "ProjectTeamPage.allOrganizations": "All organizations",
+  "ProjectTeamPage.allOrganizations": "All Organizations",
   "ProjectTeamPage.description": "User list is currently empty. To make the most out of your project, invite your team members and collaborate efficiently.",
   "ProjectTeamPage.inviteUser": "Invite user",
   "ProjectTeamPage.noResultsDescription": "Your search or filter criteria didn't match any results. Please try different keywords or adjust your filter settings.",

@@ -49,6 +49,6 @@ export const messages = defineMessages({
   },
   allOrganizations: {
     id: 'ProjectTeamPage.allOrganizations',
-    defaultMessage: 'All organizations',
+    defaultMessage: 'All Organizations',
   },
 });
