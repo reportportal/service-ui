@@ -51,15 +51,25 @@ export const ProjectTeamPageHeader = ({
 
   const breadcrumbs = [
     {
+      title: projectName,
+    },
+  ];
+
+  const tree = [
+    {
       title: formatMessage(messages.allOrganizations),
       link: { type: ORGANIZATIONS_PAGE },
-    },
-    {
-      title: organizationName,
-      link: { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug: organizationName } },
-    },
-    {
-      title: projectName,
+      children: [
+        {
+          title: organizationName,
+          link: { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug: organizationName } },
+          children: [
+            {
+              title: projectName,
+            },
+          ],
+        },
+      ],
     },
   ];
 
@@ -67,7 +77,7 @@ export const ProjectTeamPageHeader = ({
     <LocationHeaderLayout
       title={formatMessage(messages.projectTeamTitle)}
       breadcrumbs={breadcrumbs}
-      treeView
+      tree={tree}
     >
       <div className={cx('actions')}>
         {isNotEmptyMembers && (
