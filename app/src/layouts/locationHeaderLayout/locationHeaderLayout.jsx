@@ -25,10 +25,11 @@ const cx = classNames.bind(styles);
 
 export const LocationHeaderLayout = ({ title, children, breadcrumbs, tree }) => {
   const isLastClickable = Boolean(breadcrumbs[breadcrumbs.length - 1].link);
+  const isSingleItemClickable = tree.length && isLastClickable
 
   return (
     <div className={cx('location-header-container')}>
-      <Breadcrumbs descriptors={breadcrumbs} tree={tree} LinkComponent={NavLink} className={cx('crumbs')} isLastClickable={isLastClickable} />
+      <Breadcrumbs descriptors={breadcrumbs} tree={tree} LinkComponent={NavLink} className={cx('crumbs')} isLastClickable={isLastClickable} isSingleItemClickable={isSingleItemClickable} />
       <div className={cx('header')}>
         <span className={cx('title')}>{title}</span>
         {children}

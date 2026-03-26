@@ -19,7 +19,7 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Button, FilterOutlineIcon } from '@reportportal/ui-kit';
-import { ORGANIZATION_PROJECTS_PAGE, ORGANIZATIONS_PAGE } from 'controllers/pages/constants';
+import { ORGANIZATION_PROJECTS_PAGE, ORGANIZATIONS_PAGE, PROJECT_MEMBERS_PAGE } from 'controllers/pages/constants';
 import { useIntl } from 'react-intl';
 import { projectMembersSelector, projectNameSelector } from 'controllers/project';
 import { SearchField } from 'components/fields/searchField';
@@ -45,14 +45,18 @@ export const ProjectTeamPageHeader = ({
   setSearchValue,
 }) => {
   const { formatMessage } = useIntl();
-  const projectName = useSelector(projectNameSelector);
-  const organizationName = useSelector(activeOrganizationNameSelector);
+  const projectSlug = useSelector(projectNameSelector);
+  const organizationSlug = useSelector(activeOrganizationNameSelector);
   const isNotEmptyMembers = useSelector(projectMembersSelector).length > 0;
 
-  const breadcrumbs = [
-    {
-      title: projectName,
-    },
+
+  const projectCrumb = {
+    title: projectSlug,
+    link: { type: PROJECT_MEMBERS_PAGE, payload: { organizationSlug, projectSlug } }
+  };
+
+  const lastCrumbs = [
+    projectCrumb,
   ];
 
   const tree = [
@@ -61,13 +65,9 @@ export const ProjectTeamPageHeader = ({
       link: { type: ORGANIZATIONS_PAGE },
       children: [
         {
-          title: organizationName,
-          link: { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug: organizationName } },
-          children: [
-            {
-              title: projectName,
-            },
-          ],
+          title: organizationSlug,
+          link: { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug } },
+          children: lastCrumbs
         },
       ],
     },
@@ -76,7 +76,7 @@ export const ProjectTeamPageHeader = ({
   return (
     <LocationHeaderLayout
       title={formatMessage(messages.projectTeamTitle)}
-      breadcrumbs={breadcrumbs}
+      breadcrumbs={lastCrumbs}
       tree={tree}
     >
       <div className={cx('actions')}>

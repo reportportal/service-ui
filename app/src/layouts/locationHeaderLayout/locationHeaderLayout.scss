@@ -15,7 +15,7 @@
  */
 
 .location-header-container {
-  z-index: $Z_INDEX-GRID_HEADER; // to be above the grid header when scrolling
+  z-index: $Z-INDEX-DEFAULT; // to be above the grid header when scrolling
   padding: 16px 32px 16px 32px;
   border-bottom: 1px solid $COLOR--e-100;
   background: $COLOR--bg-000;
