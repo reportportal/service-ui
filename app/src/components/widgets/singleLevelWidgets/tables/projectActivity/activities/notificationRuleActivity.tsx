@@ -43,15 +43,15 @@ interface NotificationRuleActivityItem extends ProjectActivityItemBase<
 const messages = defineMessages({
   createdRule: {
     id: 'ProjectActivityNotification.createdRuleNamed',
-    defaultMessage: '<user>{actor}</user> created notification rule {name}.',
+    defaultMessage: '<user>{actor}</user> created Notification rule {name}.',
   },
   updatedRule: {
     id: 'ProjectActivityNotification.updatedRuleNamed',
-    defaultMessage: '<user>{actor}</user> updated notification rule {name}. {ruleState}',
+    defaultMessage: '<user>{actor}</user> updated Notification rule {name}. {ruleState}',
   },
   deletedRule: {
     id: 'ProjectActivityNotification.deletedRuleNamed',
-    defaultMessage: '<user>{actor}</user> deleted notification rule {name}.',
+    defaultMessage: '<user>{actor}</user> deleted Notification rule {name}.',
   },
   ruleEnabled: {
     id: 'ProjectActivityNotification.ruleEnabled',
@@ -74,6 +74,16 @@ const RULE_STATE_MESSAGES = {
   false: messages.ruleDisabled,
 };
 
+const getRuleStateMessage = (enabled: string | undefined) => {
+  if (enabled === 'true') {
+    return messages.ruleEnabled;
+  }
+  if (enabled === 'false') {
+    return messages.ruleDisabled;
+  }
+  return undefined;
+}
+
 interface NotificationRuleActivityProps {
   activity: NotificationRuleActivityItem;
 }
@@ -82,8 +92,7 @@ export const RuleNotificationActivity = ({ activity }: NotificationRuleActivityP
   const { formatMessage } = useIntl();
   const actionMessage = ACTION_MESSAGES[activity.actionType];
   const enabledChange = getActivityHistory(activity).find(({ field }) => field === 'enabled');
-  const booleanStringValue = enabledChange.newValue === 'true' ? 'true' : 'false';
-  const ruleState = enabledChange ? RULE_STATE_MESSAGES[booleanStringValue] : undefined;
+  const ruleState = enabledChange ? getRuleStateMessage(enabledChange.newValue) : undefined;
   const renderUser = (chunks: ReactNode) => <span className={cx('user-name')}>{chunks}</span>;
 
   return formatMessage(actionMessage, {

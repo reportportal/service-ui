@@ -168,11 +168,11 @@ const messages = defineMessages({
   },
   [ACTIONS_WITH_NOTIFICATION_RULE_SETTINGS]: {
     id: 'WidgetCriteriaOption.notificationRuleSettingsActions',
-    defaultMessage: 'Update notification rule settings',
+    defaultMessage: 'Update Notification rule settings',
   },
   [ACTIONS_WITH_NOTIFICATION_RULES]: {
     id: 'WidgetCriteriaOption.notificationRuleActions',
-    defaultMessage: 'Update notification rule',
+    defaultMessage: 'Update Notification rule',
   },
   [ACTIONS_WITH_DEFECTS]: {
     id: 'WidgetCriteriaOption.defects_actions',

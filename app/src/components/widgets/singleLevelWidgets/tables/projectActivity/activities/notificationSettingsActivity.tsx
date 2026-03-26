@@ -52,7 +52,12 @@ const messages = defineMessages({
   updatedNotificationSettings: {
     id: 'ProjectActivityNotification.updatedNotificationSettingsWithChanges',
     defaultMessage:
-      '<user>{actor}</user> updated <link>Notification properties</link>: {name} from {oldValue} to {newValue}.',
+      '<user>{actor}</user> updated <link>Notification properties</link>: switch from {oldValue} to {newValue}.',
+  },
+  updatedNotificationChannels: {
+    id: 'ProjectActivityNotification.updatedNotificationSettingsWithChannels',
+    defaultMessage:
+      '<user>{actor}</user> updated <link>Notification properties</link>: switch {name} from {oldValue} to {newValue}.',
   },
   on: {
     id: 'ProjectActivityNotification.on',
@@ -62,29 +67,24 @@ const messages = defineMessages({
     id: 'ProjectActivityNotification.off',
     defaultMessage: 'OFF',
   },
-  allNotifications: {
-    id: 'ProjectActivityNotification.allNotifications',
-    defaultMessage: 'All notifications',
-  },
   emailNotifications: {
     id: 'ProjectActivityNotification.emailNotifications',
-    defaultMessage: 'Email notifications',
-  },
-  telegramNotifications: {
-    id: 'ProjectActivityNotification.telegramNotifications',
-    defaultMessage: 'Telegram notifications',
+    defaultMessage: 'Email',
   },
   slackNotifications: {
     id: 'ProjectActivityNotification.slackNotifications',
-    defaultMessage: 'Slack notifications',
+    defaultMessage: 'Slack',
+  },
+  telegramNotifications: {
+    id: 'ProjectActivityNotification.telegramNotifications',
+    defaultMessage: 'Telegram',
   },
 });
 
 const SETTINGS_FIELD_MESSAGES = {
-  [NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY]: messages.allNotifications,
   'notifications.email.enabled': messages.emailNotifications,
-  'notifications.telegram.enabled': messages.telegramNotifications,
   'notifications.slack.enabled': messages.slackNotifications,
+  'notifications.telegram.enabled': messages.telegramNotifications,
 };
 
 const SETTINGS_VALUE_MESSAGES = {
@@ -117,11 +117,15 @@ export const NotificationSettingsActivity = ({ activity }: NotificationSettingsA
       {chunks}
     </Link>
   );
-  const fieldMessage = SETTINGS_FIELD_MESSAGES[updatedSetting.field];
   const oldValueMessage = SETTINGS_VALUE_MESSAGES[updatedSetting.oldValue];
   const newValueMessage = SETTINGS_VALUE_MESSAGES[updatedSetting.newValue];
+  const fieldMessage = SETTINGS_FIELD_MESSAGES[updatedSetting.field];
+  const activityMessage =
+    updatedSetting.field === NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY
+      ? messages.updatedNotificationSettings
+      : messages.updatedNotificationChannels;
 
-  return formatMessage(messages.updatedNotificationSettings, {
+  return formatMessage(activityMessage, {
     actor: activity.user,
     name: fieldMessage ? formatMessage(fieldMessage) : updatedSetting.field,
     oldValue: oldValueMessage ? formatMessage(oldValueMessage) : updatedSetting.oldValue,
