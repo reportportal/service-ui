@@ -47,7 +47,6 @@ import {
 
 export const appInfoSelector = (state) => state.appInfo || {};
 const apiInfoSelector = (state) => appInfoSelector(state).api || {};
-const uatInfoSelector = (state) => appInfoSelector(state).uat || {};
 const uiInfoSelector = (state) => appInfoSelector(state).ui || {};
 
 export const uiBuildVersionSelector = (state) => {

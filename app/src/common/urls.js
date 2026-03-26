@@ -18,16 +18,14 @@ import { stringify } from 'qs';
 import { CSV } from 'common/constants/fileTypes';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
 
-export const UAT_API_PATH = '/uat';
+export const API_PATH = '/api';
 
 export const DEFAULT_API_URL_PREFIX = '../api/v1';
 export const DEFAULT_COMMON_API_URL_PREFIX = '../api';
-export const UAT_API_URL_PREFIX = '../uat';
 export const COMPOSITE_API_URL_PREFIX = '../composite/';
 
 const urlBase = `${DEFAULT_API_URL_PREFIX}/`;
 const urlCommonBase = `${DEFAULT_COMMON_API_URL_PREFIX}/`;
-const uatBase = `${UAT_API_URL_PREFIX}/`;
 const compositeBase = COMPOSITE_API_URL_PREFIX;
 const getQueryParams = (paramsObj, options = {}) =>
   stringify(paramsObj, { addQueryPrefix: true, ...options });
@@ -327,7 +325,7 @@ export const URLS = {
   getFileById: (projectKey, dataId, loadThumbnail) =>
     `${urlBase}data/${projectKey}/${dataId}${getQueryParams({ loadThumbnail })}`,
 
-  githubAuthSettings: () => `${uatBase}settings/oauth/github`, // TODO: to be changed in the future
+  githubAuthSettings: () => `${urlCommonBase}settings/oauth/github`, // TODO: to be changed in the future
   analyticsServerSettings: () => `${urlBase}settings/analytics`,
   events: () => `${urlCommonBase}activities/searches`,
   searchEventsBySubjectName:
