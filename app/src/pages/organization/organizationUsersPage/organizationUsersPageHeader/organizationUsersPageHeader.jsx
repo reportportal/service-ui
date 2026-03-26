@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { useMemo } from "react"
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
@@ -45,11 +46,24 @@ export const OrganizationUsersPageHeader = ({
   const organization = useSelector(activeOrganizationSelector);
   const usersCount = organization?.relationships?.users?.meta.count;
   const isNotEmpty = usersCount > 0;
+  const organizationName = organization.name;
+
+  const breadcrumbs = useMemo(() => [
+    {
+      title: formatMessage(messages.allOrganizations),
+      link: '#organizations',
+    },
+    {
+      title: organizationName,
+      link: `#organizations/${organizationName}/projects`,
+    },
+  ], [organizationName, formatMessage]);
+
 
   return (
     <LocationHeaderLayout
       title={formatMessage(messages.organizationUsersTitle)}
-      organizationName={organization.name}
+      breadcrumbs={breadcrumbs}
     >
       <div className={cx('actions')}>
         {isNotEmpty && (

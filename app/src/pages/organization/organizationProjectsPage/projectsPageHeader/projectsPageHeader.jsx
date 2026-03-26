@@ -39,8 +39,6 @@ const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY, namespace: NAM
   SearchField,
 );
 
-const ROOT_PATH = '#organizations';
-
 const FilterEntitiesURLContainer = createFilterEntitiesURLContainer(null, NAMESPACE);
 
 export const ProjectsPageHeader = ({
@@ -62,7 +60,7 @@ export const ProjectsPageHeader = ({
   const breadcrumbs = [
     {
       title: formatMessage(messages.allOrganizations),
-      link: ROOT_PATH,
+      link: '#organizations',
     },
     {
       title: organizationName,
