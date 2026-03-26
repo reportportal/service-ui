@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { Popover } from '@reportportal/ui-kit';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
+import { withPopover } from 'componentLibrary/popover';
 import PropTypes from 'prop-types';
 import { FAQContent } from 'layouts/common/appSidebar/helpAndService/FAQcontent';
 import HelpIcon from 'common/img/help-inline.svg';
@@ -28,7 +28,7 @@ const cx = classNames.bind(styles);
 
 const PreviewPopover = ({ title, isFaqTouched, onClick }) => {
   return (
-    <button className={cx('service-wrapper')} onClick={onClick} tabIndex={0}>
+    <button className={cx('service-wrapper')} onClick={onClick}>
       <button className={cx('service-block', { untouched: !isFaqTouched })}>
         <i>{Parser(HelpIcon)}</i>
       </button>
@@ -49,74 +49,29 @@ const PreviewPopover = ({ title, isFaqTouched, onClick }) => {
 PreviewPopover.propTypes = {
   isFaqTouched: PropTypes.bool.isRequired,
   title: PropTypes.string.isRequired,
-  onClick: PropTypes.func,
-};
-
-export const ServiceWithPopover = ({
-  title,
-  isFaqTouched,
-  isOpenPopover,
-  closeSidebar,
-  onClick,
-  onOpen,
-  togglePopover,
-}) => {
-  const closePopover = () => {
-    togglePopover(false);
-  };
-
-  return (
-    <div className={cx('service-popover-control')}>
-      <Popover
-        className={cx('service-popover')}
-        placement="right-end"
-        isOpened={isOpenPopover}
-        setIsOpened={togglePopover}
-        content={
-          <ServicesContent
-            isFaqTouched={isFaqTouched}
-            closePopover={closePopover}
-            closeSidebar={closeSidebar}
-            onOpen={onOpen}
-          />
-        }
-      >
-        <PreviewPopover title={title} isFaqTouched={isFaqTouched} onClick={onClick} />
-      </Popover>
-    </div>
-  );
-};
-
-ServiceWithPopover.propTypes = {
-  title: PropTypes.string.isRequired,
-  isFaqTouched: PropTypes.bool.isRequired,
-  isOpenPopover: PropTypes.bool.isRequired,
-  closeSidebar: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
-  onOpen: PropTypes.func.isRequired,
-  togglePopover: PropTypes.func.isRequired,
 };
 
-export const FAQWithPopover = ({ title, isFaqTouched, closePopover, closeSidebar, onOpen }) => {
-  return (
-    <div className={cx('faq-popover-control')}>
-      <Popover
-        className={cx('faq-popover')}
-        placement="right-start"
-        content={
-          <FAQContent closePopover={closePopover} closeSidebar={closeSidebar} onOpen={onOpen} />
-        }
-      >
-        <PreviewPopover title={title} isFaqTouched={isFaqTouched} />
-      </Popover>
-    </div>
-  );
-};
+export const ServiceWithPopover = withPopover({
+  ContentComponent: ServicesContent,
+  side: 'right',
+  arrowVerticalPosition: 'vertical-bottom',
+  popoverClassName: cx('service-popover'),
+  popoverWrapperClassName: cx('service-popover-control'),
+  variant: 'dark',
+  tabIndex: 0,
+  topPosition: 'auto',
+  arrowVerticalOffset: 16,
+})(PreviewPopover);
 
-FAQWithPopover.propTypes = {
-  title: PropTypes.string.isRequired,
-  isFaqTouched: PropTypes.bool.isRequired,
-  closePopover: PropTypes.func.isRequired,
-  closeSidebar: PropTypes.func.isRequired,
-  onOpen: PropTypes.func.isRequired,
-};
+export const FAQWithPopover = withPopover({
+  ContentComponent: FAQContent,
+  side: 'right',
+  arrowVerticalPosition: 'vertical-top',
+  popoverClassName: cx('faq-popover'),
+  popoverWrapperClassName: cx('faq-popover-control'),
+  variant: 'dark',
+  tabIndex: 0,
+  topPosition: 1,
+  arrowVerticalOffset: 16,
+})(PreviewPopover);

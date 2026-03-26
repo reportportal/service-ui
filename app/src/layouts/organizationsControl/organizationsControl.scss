@@ -134,10 +134,7 @@
 .popover {
   max-height: calc(100% - 112px);
   padding: 8px 0;
-  background-color: var(--rp-ui-base-dark-e-450);
-  & svg {
-    fill: var(--rp-ui-base-dark-e-450);
-  }
+
   &::after {
     border-right-color: $COLOR--darkmode-gray-400;
   }
