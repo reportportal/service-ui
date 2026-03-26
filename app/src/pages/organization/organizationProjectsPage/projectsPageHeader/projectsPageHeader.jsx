@@ -64,10 +64,13 @@ export const ProjectsPageHeader = ({
       title: formatMessage(messages.allOrganizations),
       link: { type: ORGANIZATIONS_PAGE },
     },
-    {
-      title: organizationName,
-    },
   ];
+
+  if (organizationName) {
+    breadcrumbs.push({
+      title: organizationName,
+    });
+  }
 
   return (
     <div className={cx('projects-page-header-container')}>

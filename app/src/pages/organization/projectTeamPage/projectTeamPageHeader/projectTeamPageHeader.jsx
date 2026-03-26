@@ -49,35 +49,42 @@ export const ProjectTeamPageHeader = ({
   const organizationSlug = useSelector(activeOrganizationNameSelector);
   const isNotEmptyMembers = useSelector(projectMembersSelector).length > 0;
 
+  const rootCrumb = {
+    title: formatMessage(messages.allOrganizations),
+    link: { type: ORGANIZATIONS_PAGE },
+    children: []
+  };
+
+  const organizationCrumb = {
+    title: organizationSlug,
+    link: { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug } },
+    children: []
+  };
 
   const projectCrumb = {
     title: projectSlug,
-    link: { type: PROJECT_MEMBERS_PAGE, payload: { organizationSlug, projectSlug } }
+    link: { type: PROJECT_MEMBERS_PAGE, payload: { organizationSlug, projectSlug } },
   };
 
-  const lastCrumbs = [
-    projectCrumb,
-  ];
+  let lastCrumb = rootCrumb;
 
-  const tree = [
-    {
-      title: formatMessage(messages.allOrganizations),
-      link: { type: ORGANIZATIONS_PAGE },
-      children: [
-        {
-          title: organizationSlug,
-          link: { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug } },
-          children: lastCrumbs
-        },
-      ],
-    },
-  ];
+  if (organizationSlug) {
+    rootCrumb.children.push(organizationCrumb)
+    lastCrumb = organizationCrumb;
+  };
+
+  if (projectSlug) {
+    organizationCrumb.children.push(projectCrumb)
+    lastCrumb = projectCrumb;
+  }
+
+ 
 
   return (
     <LocationHeaderLayout
       title={formatMessage(messages.projectTeamTitle)}
-      breadcrumbs={lastCrumbs}
-      tree={tree}
+      breadcrumbs={[lastCrumb]}
+      tree={[rootCrumb]}
     >
       <div className={cx('actions')}>
         {isNotEmptyMembers && (

@@ -46,18 +46,21 @@ export const OrganizationUsersPageHeader = ({
   const organization = useSelector(activeOrganizationSelector);
   const usersCount = organization?.relationships?.users?.meta.count;
   const isNotEmpty = usersCount > 0;
-  const organizationSlug = organization.name;
+  const organizationSlug = organization?.name;
 
   const breadcrumbs = [
     {
       title: formatMessage(messages.allOrganizations),
       link: { type: ORGANIZATIONS_PAGE },
     },
-    {
+  ];
+
+  if (organizationSlug) {
+    breadcrumbs.push({
       title: organizationSlug,
       link: { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug } },
-    },
-  ];
+    });
+  }
 
 
   return (
