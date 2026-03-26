@@ -31,7 +31,13 @@ export const LocationHeaderLayout = ({ title, children, breadcrumbs, tree }) => 
   return (
     <div className={cx('location-header-container')}>
       {shouldShowBreadcrumbs && (
-        <Breadcrumbs descriptors={breadcrumbs} tree={tree} LinkComponent={NavLink} className={cx('crumbs')} isLastClickable={isLastClickable} isSingleItemClickable={isSingleItemClickable} />
+        <Breadcrumbs 
+          descriptors={breadcrumbs} 
+          tree={tree} 
+          LinkComponent={NavLink} 
+          className={cx('crumbs')} 
+          isLastClickable={isLastClickable} 
+          isSingleItemClickable={isSingleItemClickable} />
       )}
       <div className={cx('header')}>
         <span className={cx('title')}>{title}</span>
@@ -39,7 +45,7 @@ export const LocationHeaderLayout = ({ title, children, breadcrumbs, tree }) => 
       </div>
     </div>
   );
-};
+}
 
 
 
