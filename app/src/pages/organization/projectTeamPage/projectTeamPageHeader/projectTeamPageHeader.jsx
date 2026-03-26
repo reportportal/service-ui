@@ -19,6 +19,7 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Button, FilterOutlineIcon } from '@reportportal/ui-kit';
+import { ORGANIZATION_PROJECTS_PAGE, ORGANIZATIONS_PAGE, PROJECT_MEMBERS_PAGE } from 'controllers/pages/constants';
 import { useIntl } from 'react-intl';
 import { projectMembersSelector, projectNameSelector } from 'controllers/project';
 import { SearchField } from 'components/fields/searchField';
@@ -44,15 +45,46 @@ export const ProjectTeamPageHeader = ({
   setSearchValue,
 }) => {
   const { formatMessage } = useIntl();
-  const projectName = useSelector(projectNameSelector);
-  const organizationName = useSelector(activeOrganizationNameSelector);
+  const projectSlug = useSelector(projectNameSelector);
+  const organizationSlug = useSelector(activeOrganizationNameSelector);
   const isNotEmptyMembers = useSelector(projectMembersSelector).length > 0;
+
+  const rootCrumb = {
+    title: formatMessage(messages.allOrganizations),
+    link: { type: ORGANIZATIONS_PAGE },
+    children: []
+  };
+
+  const organizationCrumb = {
+    title: organizationSlug,
+    link: { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug } },
+    children: []
+  };
+
+  const projectCrumb = {
+    title: projectSlug,
+    link: { type: PROJECT_MEMBERS_PAGE, payload: { organizationSlug, projectSlug } },
+  };
+
+  let lastCrumb = rootCrumb;
+
+  if (organizationSlug) {
+    rootCrumb.children.push(organizationCrumb)
+    lastCrumb = organizationCrumb;
+  };
+
+  if (projectSlug) {
+    organizationCrumb.children.push(projectCrumb)
+    lastCrumb = projectCrumb;
+  }
+
+ 
 
   return (
     <LocationHeaderLayout
       title={formatMessage(messages.projectTeamTitle)}
-      organizationName={organizationName}
-      projectName={projectName}
+      breadcrumbs={[lastCrumb]}
+      tree={[rootCrumb]}
     >
       <div className={cx('actions')}>
         {isNotEmptyMembers && (

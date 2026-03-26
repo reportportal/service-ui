@@ -18,10 +18,10 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import Parser from 'html-react-parser';
-import { Button, PlusIcon } from '@reportportal/ui-kit';
+import { Button, PlusIcon, Breadcrumbs } from '@reportportal/ui-kit';
+import { NavLink } from 'components/main/navLink';
 import classNames from 'classnames/bind';
 import { ORGANIZATIONS_PAGE } from 'controllers/pages';
-import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { activeOrganizationSelector } from 'controllers/organization';
 import { loadingSelector } from 'controllers/organization/projects';
 import { SearchField } from 'components/fields/searchField';
@@ -64,15 +64,18 @@ export const ProjectsPageHeader = ({
       title: formatMessage(messages.allOrganizations),
       link: { type: ORGANIZATIONS_PAGE },
     },
-    {
-      title: organizationName,
-    },
   ];
+
+  if (organizationName) {
+    breadcrumbs.push({
+      title: organizationName,
+    });
+  }
 
   return (
     <div className={cx('projects-page-header-container')}>
       <div className={cx('top-breadcrumbs')}>
-        <Breadcrumbs descriptors={breadcrumbs} />
+        <Breadcrumbs descriptors={breadcrumbs} LinkComponent={NavLink} />
       </div>
       <div className={cx('header')}>
         <div className={cx('main-content')}>
