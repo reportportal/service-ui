@@ -172,7 +172,18 @@ function* openAttachmentInBrowser({ payload: id }) {
   } else {
     const url = URL.createObjectURL(data);
     const newWindow = window.open(url);
-    newWindow.onbeforeunload = () => URL.revokeObjectURL(url);
+    if (newWindow) {
+      newWindow.onbeforeunload = () => URL.revokeObjectURL(url);
+    } else {
+      const link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+    }
   }
 }
 
