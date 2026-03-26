@@ -41,6 +41,7 @@ import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { messages as testCaseListMessages } from 'pages/inside/common/testCaseList/messages';
 import FolderDropIcon from 'common/img/folder-drop-inline.svg';
+import { EmptyPageState } from 'pages/common/emptyPageState';
 
 import { Folder } from './folder';
 import { messages } from './messages';
@@ -51,7 +52,6 @@ import { FOLDER_DRAG_TYPE, EXTERNAL_TREE_DROP_TYPE } from './constants';
 
 import styles from './expandedOptions.scss';
 import { createTestCaseDropHandler } from './utils';
-import { EmptyPageState } from 'pages/common/emptyPageState';
 
 const cx = createClassnames(styles);
 
