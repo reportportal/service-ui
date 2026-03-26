@@ -16,24 +16,21 @@
 
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { BaseIconButton, Popover } from '@reportportal/ui-kit';
 import TreeIcon from './img/tree-inline.svg';
 import SubLevelIcon from './img/sub-level-inline.svg';
-import { messages } from '../messages';
 import styles from './userPageLocationLevel.scss';
 
 const cx = classNames.bind(styles);
 
-export const UserPageLocationLevel = ({ organizationName, projectName }) => {
-  const { formatMessage } = useIntl();
+export const UserPageLocationLevel = ({ rootName, organizationName, projectName }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const getContent = () => (
     <div className={cx('members-page-header-container')}>
-      <div>{formatMessage(messages.allOrganizations)}</div>
+      <div>{rootName}</div>
       <div className={cx('organization-name', { active: !projectName })}>
         {Parser(SubLevelIcon)}
         {organizationName}
@@ -67,6 +64,7 @@ export const UserPageLocationLevel = ({ organizationName, projectName }) => {
 };
 
 UserPageLocationLevel.propTypes = {
+  rootName: PropTypes.string.isRequired,
   organizationName: PropTypes.string.isRequired,
   projectName: PropTypes.string,
 };

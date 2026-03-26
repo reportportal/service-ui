@@ -17,15 +17,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { Breadcrumbs } from '@reportportal/ui-kit';
 import styles from './locationHeaderLayout.scss';
 
 const cx = classNames.bind(styles);
 
-export const LocationHeaderLayout = ({ title, children, breadcrumbs, isCrumbClickable }) => {
+export const LocationHeaderLayout = ({ title, children, breadcrumbs }) => {
   return (
     <div className={cx('location-header-container')}>
-      {Boolean(breadcrumbs.length) && <Breadcrumbs descriptors={breadcrumbs} isLastClickable={isCrumbClickable} className={cx('crumbs')} />}
+    {breadcrumbs}
       <div className={cx('header')}>
         <span className={cx('title')}>{title}</span>
         {children}
@@ -37,17 +36,10 @@ export const LocationHeaderLayout = ({ title, children, breadcrumbs, isCrumbClic
 LocationHeaderLayout.propTypes = {
   title: PropTypes.string.isRequired,
   children: PropTypes.node,
-  breadcrumbs: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      link: PropTypes.string,
-    })
-  ),
-  isCrumbClickable: PropTypes.bool,
+  breadcrumbs: PropTypes.node,
 };
 
 LocationHeaderLayout.defaultProps = {
   children: null,
-  breadcrumbs: [],
-  isCrumbClickable: true,
+  breadcrumbs: null,
 };

@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { NAMESPACE, SEARCH_KEY } from 'controllers/organization/users';
+import { Breadcrumbs } from "@reportportal/ui-kit";
 import { SearchField } from 'components/fields/searchField';
 import { withFilter } from 'controllers/filter';
 import { useSelector } from 'react-redux';
@@ -63,7 +64,9 @@ export const OrganizationUsersPageHeader = ({
   return (
     <LocationHeaderLayout
       title={formatMessage(messages.organizationUsersTitle)}
-      breadcrumbs={breadcrumbs}
+      breadcrumbs={
+        <Breadcrumbs descriptors={breadcrumbs} className={cx('crumbs')} isLastClickable />
+      }
     >
       <div className={cx('actions')}>
         {isNotEmpty && (
