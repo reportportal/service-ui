@@ -28,7 +28,6 @@ import { withFilter } from 'controllers/filter';
 import { PROJECT_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectPageEvents';
 import { activeOrganizationNameSelector } from 'controllers/organization';
 import { LocationHeaderLayout } from 'layouts/locationHeaderLayout';
-import { UserPageLocationLevel } from 'layouts/locationHeaderLayout/userPageLocationLevel';
 import { messages } from '../../messages';
 import styles from './projectTeamPageHeader.scss';
 
@@ -67,11 +66,8 @@ export const ProjectTeamPageHeader = ({
   return (
     <LocationHeaderLayout
       title={formatMessage(messages.projectTeamTitle)}
-      breadcrumbs={
-        <UserPageLocationLevel descriptors={breadcrumbs} />
-      }
-      organizationName={organizationName}
-      projectName={projectName}
+      breadcrumbs={breadcrumbs}
+      treeView
     >
       <div className={cx('actions')}>
         {isNotEmptyMembers && (

@@ -17,14 +17,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { UserPageLocationLevel } from 'layouts/locationHeaderLayout/userPageLocationLevel';
+import { Breadcrumbs } from '@reportportal/ui-kit';
+import { NavLink } from 'components/main/navLink';
 import styles from './locationHeaderLayout.scss';
+
 
 const cx = classNames.bind(styles);
 
-export const LocationHeaderLayout = ({ title, children, breadcrumbs }) => {
+export const LocationHeaderLayout = ({ title, children, breadcrumbs, treeView }) => {
+  const isLastClickable = Boolean(breadcrumbs[breadcrumbs.length - 1].link);
+
   return (
     <div className={cx('location-header-container')}>
-    {breadcrumbs}
+      {treeView 
+        ? <UserPageLocationLevel descriptors={breadcrumbs} /> 
+        : <Breadcrumbs descriptors={breadcrumbs} LinkComponent={NavLink} className={cx('crumbs')} isLastClickable={isLastClickable} />
+      }
       <div className={cx('header')}>
         <span className={cx('title')}>{title}</span>
         {children}
@@ -36,10 +45,20 @@ export const LocationHeaderLayout = ({ title, children, breadcrumbs }) => {
 LocationHeaderLayout.propTypes = {
   title: PropTypes.string.isRequired,
   children: PropTypes.node,
-  breadcrumbs: PropTypes.node,
+  breadcrumbs: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      link: PropTypes.shape({
+        type: PropTypes.string.isRequired,
+        payload: PropTypes.object,
+      }),
+    })
+  ),
+  treeView: PropTypes.bool,
 };
 
 LocationHeaderLayout.defaultProps = {
   children: null,
   breadcrumbs: null,
+  treeView: false,
 };
