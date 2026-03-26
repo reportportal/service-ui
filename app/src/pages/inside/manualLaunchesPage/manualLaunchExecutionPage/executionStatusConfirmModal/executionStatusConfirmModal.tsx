@@ -118,10 +118,10 @@ const ExecutionStatusConfirmModalComponent: FC<
     <Modal
       title={formatMessage(messages.markAsStatus, { status: statusLabel })}
       onClose={hideModal}
-      size="large"
       okButton={okButton}
       cancelButton={cancelButton}
       allowCloseOutside={!dirty}
+      scrollable
       className={cx('execution-status-confirm-modal', {
         'execution-status-confirm-modal--simple': isStatusChange,
       })}
