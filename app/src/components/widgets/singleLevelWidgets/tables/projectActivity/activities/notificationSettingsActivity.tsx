@@ -98,7 +98,7 @@ interface NotificationSettingsActivityProps {
 
 export const NotificationSettingsActivity = ({ activity }: NotificationSettingsActivityProps) => {
   const { formatMessage } = useIntl();
-  const updatedSetting = getActivityHistory(activity).at(0);
+  const updatedSetting = getActivityHistory(activity)[0];
   if (!updatedSetting) {
     return null;
   }
