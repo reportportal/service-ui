@@ -28,24 +28,15 @@ import styles from './common.scss';
 
 const cx = createClassnames(styles);
 
-type BooleanString = 'true' | 'false';
-
 type NotificationSettingsHistoryField =
   | typeof NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY
   | 'notifications.email.enabled'
   | 'notifications.telegram.enabled'
   | 'notifications.slack.enabled';
 
-type NotificationSettingsActivityAction = typeof UPDATE_NOTIFICATION_SETTINGS;
-
-type NotificationSettingsHistoryItem = ProjectActivityHistoryItem<
-  NotificationSettingsHistoryField,
-  BooleanString
->;
-
 type NotificationSettingsActivityItem = ProjectActivityItemBase<
-  NotificationSettingsActivityAction,
-  NotificationSettingsHistoryItem
+  typeof UPDATE_NOTIFICATION_SETTINGS,
+  ProjectActivityHistoryItem<NotificationSettingsHistoryField, 'true' | 'false'>
 >;
 
 const messages = defineMessages({
@@ -92,6 +83,10 @@ const SETTINGS_VALUE_MESSAGES = {
   false: messages.off,
 };
 
+const isChannelField = (
+  field: NotificationSettingsHistoryField,
+): field is keyof typeof SETTINGS_FIELD_MESSAGES => field in SETTINGS_FIELD_MESSAGES;
+
 interface NotificationSettingsActivityProps {
   activity: NotificationSettingsActivityItem;
 }
@@ -119,7 +114,9 @@ export const NotificationSettingsActivity = ({ activity }: NotificationSettingsA
   );
   const oldValueMessage = SETTINGS_VALUE_MESSAGES[updatedSetting.oldValue];
   const newValueMessage = SETTINGS_VALUE_MESSAGES[updatedSetting.newValue];
-  const fieldMessage = SETTINGS_FIELD_MESSAGES[updatedSetting.field];
+  const fieldMessage = isChannelField(updatedSetting.field)
+    ? SETTINGS_FIELD_MESSAGES[updatedSetting.field]
+    : undefined;
   const activityMessage =
     updatedSetting.field === NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY
       ? messages.updatedNotificationSettings

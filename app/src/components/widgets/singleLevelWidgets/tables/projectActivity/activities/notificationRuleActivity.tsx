@@ -22,7 +22,7 @@ import {
   DELETE_NOTIFICATION_RULE,
 } from 'common/constants/actionTypes';
 import { createClassnames } from 'common/utils/createClassnames';
-import type { ProjectActivityHistoryItem, ProjectActivityItemBase } from './activityShape';
+import type { ProjectActivityItemBase } from './activityShape';
 import { getActivityHistory } from './activityShape';
 import styles from './common.scss';
 
@@ -33,10 +33,9 @@ type NotificationRuleActivityAction =
   | typeof UPDATE_NOTIFICATION_RULE
   | typeof DELETE_NOTIFICATION_RULE;
 
-interface NotificationRuleActivityItem extends ProjectActivityItemBase<
-  NotificationRuleActivityAction,
-  ProjectActivityHistoryItem
-> {
+type NotificationRuleActivityItem = ProjectActivityItemBase<
+  NotificationRuleActivityAction
+> & {
   objectName: string;
 }
 
@@ -67,11 +66,6 @@ const ACTION_MESSAGES = {
   [CREATE_NOTIFICATION_RULE]: messages.createdRule,
   [UPDATE_NOTIFICATION_RULE]: messages.updatedRule,
   [DELETE_NOTIFICATION_RULE]: messages.deletedRule,
-};
-
-const RULE_STATE_MESSAGES = {
-  true: messages.ruleEnabled,
-  false: messages.ruleDisabled,
 };
 
 const getRuleStateMessage = (enabled: string | undefined) => {
