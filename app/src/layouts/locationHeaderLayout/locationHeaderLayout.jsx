@@ -17,31 +17,60 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { UserPageLocationLevel } from './userPageLocationLevel';
+import { Breadcrumbs } from '@reportportal/ui-kit';
+import { NavLink } from 'components/main/navLink';
 import styles from './locationHeaderLayout.scss';
 
 const cx = classNames.bind(styles);
 
-export const LocationHeaderLayout = ({ title, children, organizationName, projectName }) => {
+export const LocationHeaderLayout = ({ title, children, breadcrumbs, tree }) => {
+  const isLastClickable = Boolean(breadcrumbs?.[breadcrumbs.length - 1]?.link);
+  const isSingleItemClickable = tree?.length && isLastClickable;
+  const shouldShowBreadcrumbs = breadcrumbs?.length || tree?.length;
+
   return (
     <div className={cx('location-header-container')}>
-      <UserPageLocationLevel organizationName={organizationName} projectName={projectName} />
+      {shouldShowBreadcrumbs && (
+        <Breadcrumbs 
+          descriptors={breadcrumbs} 
+          tree={tree} 
+          LinkComponent={NavLink} 
+          className={cx('crumbs')} 
+          isLastClickable={isLastClickable} 
+          isSingleItemClickable={isSingleItemClickable} />
+      )}
       <div className={cx('header')}>
         <span className={cx('title')}>{title}</span>
         {children}
       </div>
     </div>
   );
+}
+
+
+
+const breadcrumbItemShape = {
+  title: PropTypes.string.isRequired,
+  link: PropTypes.shape({
+    type: PropTypes.string.isRequired,
+    payload: PropTypes.object,
+  }),
 };
+
+const breadcrumbItemPropType = PropTypes.shape(breadcrumbItemShape);
+
+const treeItemPropType = PropTypes.shape({
+  ...breadcrumbItemShape,
+  children: PropTypes.arrayOf(breadcrumbItemPropType),
+});
 
 LocationHeaderLayout.propTypes = {
   title: PropTypes.string.isRequired,
   children: PropTypes.node,
-  organizationName: PropTypes.string.isRequired,
-  projectName: PropTypes.string,
+  breadcrumbs: PropTypes.arrayOf(breadcrumbItemPropType),
+  tree: PropTypes.arrayOf(treeItemPropType),
 };
 
 LocationHeaderLayout.defaultProps = {
   children: null,
-  projectName: null,
 };
