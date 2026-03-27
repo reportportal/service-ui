@@ -17,7 +17,7 @@
 .members-list-table-wrapper {
   padding: 0 32px;
   margin: 24px auto 0;
-  max-width: 1600px;
+  max-width: var(--rp-ui-base-max-page-width);
 }
 
 .members-list-table {
@@ -29,7 +29,7 @@
 }
 
 .members-pagination {
-  max-width: 1600px;
+  max-width: var(--rp-ui-base-max-page-width);
 }
 
 .table-header {

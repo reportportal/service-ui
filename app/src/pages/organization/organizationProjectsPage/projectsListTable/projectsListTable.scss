@@ -17,7 +17,8 @@
 .projects-list-table {
   margin: 16px auto;
   padding: 0 32px;
-  max-width: 1264px;
+  max-width: var(--rp-ui-base-max-page-width);
+  width: 100%;
   box-sizing: border-box;
   flex: 1;
 
@@ -52,6 +53,18 @@
 
 .projects-pagination-wrapper {
   flex: 1;
+}
+
+.projects-pagination-container {
+  max-width: var(--rp-ui-base-max-page-width);
+  width: 100%;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.projects-pagination {
+  width: 100%;
 }
 
 .table-header {
