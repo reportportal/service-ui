@@ -54,7 +54,10 @@ import {
 } from '../utils';
 import { OrganizationType } from 'controllers/organization';
 import { UserOrganizationProjectsResponse } from 'controllers/organization/users/types';
-import { OrganizationsSearchesResponseData } from 'controllers/instance/organizations';
+import {
+  type OrganizationSearchesItem,
+  type OrganizationsSearchesResponseData,
+} from 'controllers/instance/organizations';
 import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
 import { ApiError } from 'types/api';
 
@@ -119,61 +122,74 @@ const ManageAssignmentsInstanceModalView = ({
   const isInlineAssignmentFormOpen = isAddingOrganization || isAddingProject;
   const isAdmin = user.instanceRole === ADMINISTRATOR;
 
+  const mergeOrganizationSearchItemsIntoOrgs = useCallback(
+    (orgs: OrganizationValue[], items: OrganizationSearchesItem[]) =>
+      orgs.map((org, orgIndex) => {
+        const nextOrg = items.find((item) => item.id === org.id);
+        const orgField = `${ORGANIZATIONS}[${orgIndex}]`;
+        if (nextOrg?.type) {
+          dispatch(change(MANAGE_ASSIGNMENTS_FORM, `${orgField}.type`, nextOrg.type));
+        }
+        if (nextOrg?.owner_id) {
+          dispatch(change(MANAGE_ASSIGNMENTS_FORM, `${orgField}.owner_id`, nextOrg.owner_id));
+        }
+        return { ...org, type: nextOrg?.type, owner_id: nextOrg?.owner_id };
+      }),
+    [dispatch],
+  );
+
   // Store initial organizations for dirty checking
   useEffect(() => {
-    const initializeForm = () => {
-      if (user?.organizations?.length > 0) {
-        let orgs: OrganizationValue[] = user.organizations
-          .map((org) => ({
-            id: org.id,
-            name: org.name,
-            type: org.type,
-            owner_id: org.owner_id,
-            role: org.org_role,
-            projects: [],
-            isProjectsLoaded: false,
-            isExpanded: false,
-          }))
-          .sort((first, second) => first.name.localeCompare(second.name));
+    let isActive = true;
 
-        initialize({ [ORGANIZATIONS]: orgs });
+    if (!user?.organizations?.length) {
+      return;
+    }
+
+    let orgs: OrganizationValue[] = user.organizations
+      .map((org) => ({
+        id: org.id,
+        name: org.name,
+        type: org.type,
+        owner_id: org.owner_id,
+        role: org.org_role,
+        projects: [],
+        isProjectsLoaded: false,
+        isExpanded: false,
+      }))
+      .sort((first, second) => first.name.localeCompare(second.name));
+
+    initialize({ [ORGANIZATIONS]: orgs });
+    initialOrganizationsRef.current = orgs;
+
+    setOrganizationsLoading(true);
+
+    fetch(URLS.organizationSearches(), {
+      method: 'post',
+      data: {
+        limit: 300,
+        search_criteria: [{ filter_key: 'org_user_id', operation: 'EQ', value: String(user.id) }],
+      },
+    })
+      .then((response: OrganizationsSearchesResponseData) => {
+        if (!isActive) {
+          return;
+        }
+        const items = response.items ?? [];
+        orgs = mergeOrganizationSearchItemsIntoOrgs(orgs, items);
         initialOrganizationsRef.current = orgs;
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (isActive) {
+          setOrganizationsLoading(false);
+        }
+      });
 
-        setOrganizationsLoading(true);
-
-        fetch(URLS.organizationSearches(), {
-          method: 'post',
-          data: {
-            limit: 300,
-            search_criteria: [
-              { filter_key: 'org_user_id', operation: 'EQ', value: String(user.id) },
-            ],
-          },
-        })
-          .then((response: OrganizationsSearchesResponseData) => {
-            const items = response.items ?? [];
-            orgs = orgs.map((org, orgIndex) => {
-              const nextOrg = items.find((item) => item.id === org.id);
-              const orgField = `${ORGANIZATIONS}[${orgIndex}]`;
-              if (nextOrg?.type) {
-                dispatch(change(MANAGE_ASSIGNMENTS_FORM, `${orgField}.type`, nextOrg.type));
-              }
-              if (nextOrg?.owner_id) {
-                dispatch(change(MANAGE_ASSIGNMENTS_FORM, `${orgField}.owner_id`, nextOrg.owner_id));
-              }
-              return { ...org, type: nextOrg?.type, owner_id: nextOrg?.owner_id };
-            });
-            initialOrganizationsRef.current = orgs;
-          })
-          .catch(() => {})
-          .finally(() => {
-            setOrganizationsLoading(false);
-          });
-      }
+    return () => {
+      isActive = false;
     };
-
-    initializeForm();
-  }, [user, initialize, dispatch]);
+  }, [user, initialize, dispatch, mergeOrganizationSearchItemsIntoOrgs]);
 
   // Fetch projects for organization when expanded
   const handleExpandOrganization = useCallback(
@@ -343,33 +359,31 @@ const ManageAssignmentsInstanceModalView = ({
     >
       <div className={cx('modal-content')}>
         <ModalLoadingOverlay isVisible={organizationsLoading} />
-        <>
-          {isAdmin && (
-            <div className={cx('admin-info')}>
-              <SystemMessage mode="info">
-                {formatMessage(messages.manageAssignmentsAdminInfo)}
-              </SystemMessage>
-            </div>
-          )}
-          <FieldArray
-            name={ORGANIZATIONS}
-            component={InstanceAssignment}
-            props={
-              {
-                formName: MANAGE_ASSIGNMENTS_FORM,
-                formNamespace: ORGANIZATION,
-                invitedUserId: user.id,
-                isOrganizationRequired: false,
-                header: formatMessage(messages.assignedTo),
-                addButtonPlacement: 'header',
-                addFormPlacement: 'top',
-                withEmptyState: true,
-                emptyStateText: formatMessage(messages.noAssignmentsYet),
-                onExpandOrganization: handleExpandOrganization,
-              } as InstanceAssignmentProps
-            }
-          />
-        </>
+        {isAdmin && (
+          <div className={cx('admin-info')}>
+            <SystemMessage mode="info">
+              {formatMessage(messages.manageAssignmentsAdminInfo)}
+            </SystemMessage>
+          </div>
+        )}
+        <FieldArray
+          name={ORGANIZATIONS}
+          component={InstanceAssignment}
+          props={
+            {
+              formName: MANAGE_ASSIGNMENTS_FORM,
+              formNamespace: ORGANIZATION,
+              invitedUserId: user.id,
+              isOrganizationRequired: false,
+              header: formatMessage(messages.assignedTo),
+              addButtonPlacement: 'header',
+              addFormPlacement: 'top',
+              withEmptyState: true,
+              emptyStateText: formatMessage(messages.noAssignmentsYet),
+              onExpandOrganization: handleExpandOrganization,
+            } as InstanceAssignmentProps
+          }
+        />
       </div>
     </Modal>
   );

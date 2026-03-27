@@ -45,7 +45,7 @@ export const IconsBlock = ({ lastLaunchDate, hasPermission, organizationType }) 
           <i className={cx('icon')}>{Parser(SynchedIcon)}</i>
         </Tooltip>
       ) : (
-        organizationType !== OrganizationType.INTERNAL && (
+        organizationType === OrganizationType.PERSONAL && (
           <Tooltip
             content={formatMessage(messages.personalOrganization)}
             placement={'top'}
