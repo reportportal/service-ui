@@ -116,6 +116,7 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
       }}
       cancelButton={{ children: formatMessage(COMMON_LOCALE_KEYS.CANCEL) }}
       onClose={hideModal}
+      allowCloseOutside={false}
     >
       <form
         action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8"
