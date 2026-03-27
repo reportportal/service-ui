@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { useSelector } from 'react-redux';
 import {
   BaseIconButton,
   CloseIcon,
@@ -28,9 +29,13 @@ import {
 import { createClassnames, fetch } from 'common/utils';
 import { EDITOR, MANAGER, MEMBER } from 'common/constants/projectRoles';
 import { messages } from 'common/constants/localization/invitationsLocalization';
+import { messages as assignmentMessages } from 'common/constants/localization/assignmentsLocalization';
 import { getOrgRoleTitle } from 'common/utils/permissions';
 import { URLS } from 'common/urls';
 import { ProjectsSearchesResponseData } from 'controllers/organization/projects';
+import { OrganizationType } from 'controllers/organization';
+import { idSelector } from 'controllers/user';
+import { IconsBlock } from 'pages/instance/organizationsPage/organizationsPanelView/iconsBlock/iconsBlock';
 
 import { PROJECTS_LIMIT } from './constants';
 import { AddItemButton } from './addItemButton';
@@ -44,6 +49,9 @@ const cx = createClassnames(styles);
 export interface Organization {
   id: number;
   name: string;
+  type?: OrganizationType;
+  owner_id?: number;
+  isNew?: boolean,
   role: string;
   projects: Project[];
   isProjectsLoaded?: boolean;
@@ -56,9 +64,9 @@ interface OrganizationItemProps {
   onChange: (updates: Partial<Organization>) => void;
   onRemove?: () => void;
   collapsable?: boolean;
-  organizationRoleDisabledTooltip?: string | null;
   addProjectDisabled?: boolean;
   invitedUserId?: number | null;
+  excludeUserAssignments?: boolean;
   onAddProjectFormToggle?: (orgId: number, isOpen: boolean) => void;
   onExpandOrganization?: (orgId: number) => void;
 }
@@ -68,15 +76,43 @@ export const OrganizationItem = ({
   onChange,
   onRemove,
   collapsable,
-  organizationRoleDisabledTooltip = null,
   addProjectDisabled = false,
   invitedUserId,
+  excludeUserAssignments = false,
   onAddProjectFormToggle,
   onExpandOrganization,
 }: OrganizationItemProps) => {
-  const disableOrganizationRole = Boolean(organizationRoleDisabledTooltip);
   const { formatMessage } = useIntl();
-  const { id, name, role, projects, isExpanded = true, isProjectsLoading } = value;
+  const currentUserId = useSelector(idSelector) as number;
+  const {
+    id,
+    name,
+    type,
+    owner_id: ownerId,
+    isNew,
+    role,
+    projects,
+    isExpanded = true,
+    isProjectsLoading,
+  } = value;
+
+  const organizationRoleDisabledTooltip = useMemo(() => {
+    if (invitedUserId == null || isNew) {
+      return null;
+    }
+    const isOwnAccount = currentUserId === invitedUserId;
+    const isAssignedUserOrgOwner = ownerId != null && invitedUserId === ownerId;
+    if (!isOwnAccount && !isAssignedUserOrgOwner) {
+      return null;
+    }
+    return formatMessage(
+      isOwnAccount
+        ? assignmentMessages.organizationRoleDisabledOwnAccount
+        : assignmentMessages.organizationRoleDisabledOwner,
+    );
+  }, [invitedUserId, isNew, currentUserId, ownerId, formatMessage]);
+
+  const disableOrganizationRole = Boolean(organizationRoleDisabledTooltip);
   const [totalProjects, setTotalProjects] = useState(0);
   const [addProjectFormOpen, setAddProjectFormOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(isExpanded);
@@ -177,7 +213,8 @@ export const OrganizationItem = ({
               <DropdownIcon />
             </div>
           )}
-          {name}
+          <span className={cx('name-label')}>{name}</span>
+          {!!type && <IconsBlock organizationType={type} />}
         </div>
         <div className={cx('controls')}>
           <div className={cx('role-slot')}>
@@ -236,6 +273,7 @@ export const OrganizationItem = ({
                     organizationId={id}
                     canEditByDefault={role === MANAGER}
                     invitedUserId={invitedUserId}
+                    excludeUserAssignments={excludeUserAssignments}
                     onSave={handleAddProject}
                     onCancel={() => setAddProjectFormOpen(false)}
                   />

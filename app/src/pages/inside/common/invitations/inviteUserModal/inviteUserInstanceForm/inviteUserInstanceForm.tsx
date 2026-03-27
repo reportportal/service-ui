@@ -67,6 +67,7 @@ export const InviteUserInstanceForm = () => {
           formNamespace: ORGANIZATION,
           isOrganizationRequired: true,
           invitedUserId,
+          excludeUserAssignments: true,
         }}
       />
     </form>
