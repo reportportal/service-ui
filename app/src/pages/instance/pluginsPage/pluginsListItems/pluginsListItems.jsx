@@ -27,7 +27,6 @@ import {
   OTHER_GROUP_TYPE,
   IMPORT_GROUP_TYPE,
 } from 'common/constants/pluginsGroupTypes';
-import { isPluginSwitchable } from 'controllers/plugins';
 import styles from './pluginsListItems.scss';
 import { PluginsItem } from './pluginsItem/index';
 
@@ -102,7 +101,6 @@ export class PluginsListItems extends Component {
               key={item.type}
               onClick={onItemClick}
               data={item}
-              toggleable={isPluginSwitchable(item.name)}
               onToggleActive={onToggleActive}
               showToggleConfirmationModal={showToggleConfirmationModal}
             />

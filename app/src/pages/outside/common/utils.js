@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { UAT_API_PATH } from 'common/urls';
+import { API_PATH } from 'common/urls';
 
 export const normalizePathWithPrefix = (path) => {
-  if (path.indexOf(UAT_API_PATH) === -1) {
-    return `${UAT_API_PATH}${path}`;
+  if (path.indexOf(API_PATH) === -1) {
+    return `${API_PATH}${path}`;
   }
   return path;
 };

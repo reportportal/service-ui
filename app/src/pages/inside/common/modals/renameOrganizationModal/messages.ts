@@ -23,6 +23,6 @@ export const messages = defineMessages({
   },
   organizationNameLabel: {
     id: 'RenameOrganizationModal.organizationNameLabel',
-    defaultMessage: 'Organization name',
+    defaultMessage: 'Name',
   },
 });

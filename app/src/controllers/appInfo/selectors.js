@@ -50,7 +50,6 @@ import {
 
 export const appInfoSelector = (state) => state.appInfo || {};
 const apiInfoSelector = (state) => appInfoSelector(state).api || {};
-const uatInfoSelector = (state) => appInfoSelector(state).uat || {};
 const uiInfoSelector = (state) => appInfoSelector(state).ui || {};
 
 export const uiBuildVersionSelector = (state) => {
@@ -71,7 +70,7 @@ export const instanceIdSelector = (state) =>
 export const analyticsEnabledSelector = (state) =>
   extensionsConfigSelector(state)[ANALYTICS_ALL_KEY] === 'true';
 export const analyzerExtensionsSelector = (state) => extensionsSelector(state).analyzers || [];
-export const authExtensionsSelector = (state) => uatInfoSelector(state).authExtensions || {};
+export const authExtensionsSelector = (state) => apiInfoSelector(state).authExtensions || {};
 export const ssoUsersOnlySelector = (state) =>
   extensionsConfigSelector(state)[SSO_USERS_ONLY_KEY] === 'true';
 export const personalOrganizationsSelector = (state) =>

@@ -21,7 +21,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import SwaggerUI from 'swagger-ui-react';
 import 'swagger-ui-react/swagger-ui.css';
-import { URLS, DEFAULT_COMMON_API_URL_PREFIX, UAT_API_URL_PREFIX } from 'common/urls';
+import { URLS, DEFAULT_COMMON_API_URL_PREFIX } from 'common/urls';
 import { tokenTypeSelector, tokenValueSelector } from 'controllers/auth';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { ToggleButton } from 'components/buttons/toggleButton';
@@ -143,10 +143,6 @@ export class ApiPage extends Component {
     {
       value: DEFAULT_COMMON_API_URL_PREFIX,
       label: 'API',
-    },
-    {
-      value: UAT_API_URL_PREFIX,
-      label: 'UAT',
     },
   ];
 

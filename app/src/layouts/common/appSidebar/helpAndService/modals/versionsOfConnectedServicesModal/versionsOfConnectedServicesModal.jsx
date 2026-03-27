@@ -41,7 +41,6 @@ const VersionsOfConnectedServices = ({ data: { latestServiceVersions } }) => {
 
     const versionsServicesNames = {
       api: 'API Service',
-      uat: 'Authorization Service',
       index: 'Index Service',
       jobs: 'Jobs Service',
       ui: 'Service UI',

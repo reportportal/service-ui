@@ -18,6 +18,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { NAMESPACE, SEARCH_KEY } from 'controllers/organization/users';
+import { ORGANIZATION_PROJECTS_PAGE, ORGANIZATIONS_PAGE } from 'controllers/pages/constants';
 import { SearchField } from 'components/fields/searchField';
 import { withFilter } from 'controllers/filter';
 import { useSelector } from 'react-redux';
@@ -45,11 +46,27 @@ export const OrganizationUsersPageHeader = ({
   const organization = useSelector(activeOrganizationSelector);
   const usersCount = organization?.relationships?.users?.meta.count;
   const isNotEmpty = usersCount > 0;
+  const organizationSlug = organization?.name;
+
+  const breadcrumbs = [
+    {
+      title: formatMessage(messages.allOrganizations),
+      link: { type: ORGANIZATIONS_PAGE },
+    },
+  ];
+
+  if (organizationSlug) {
+    breadcrumbs.push({
+      title: organizationSlug,
+      link: { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug } },
+    });
+  }
+
 
   return (
     <LocationHeaderLayout
       title={formatMessage(messages.organizationUsersTitle)}
-      organizationName={organization.name}
+      breadcrumbs={breadcrumbs}
     >
       <div className={cx('actions')}>
         {isNotEmpty && (
