@@ -53,6 +53,15 @@ export const timeRangeLastLoginValues = [
   '-525600;1439;+0300',
 ];
 
+export const TIME_RANGE_GA4_LABELS = {
+  '': 'any',
+  [timeRangeValues[0]]: 'today',
+  [timeRangeValues[1]]: 'last_2_days',
+  [timeRangeValues[2]]: 'last_7_days',
+  [timeRangeValues[3]]: 'last_30_days',
+};
+
+
 export const getTimeRangeOptions = (formatMessage) => [
   { label: formatMessage(messages.any), value: '' },
   { label: formatMessage(messages.today), value: timeRangeValues[0] },
