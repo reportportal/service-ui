@@ -49,6 +49,8 @@ export function getCurrentOrganizationAssignment(
   return {
     id: organization.id,
     name: organization.name,
+    type: organization.type,
+    owner_id: organization.owner_id,
     role: orgRole,
     projects,
   };

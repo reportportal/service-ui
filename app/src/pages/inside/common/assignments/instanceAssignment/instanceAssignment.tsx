@@ -54,6 +54,7 @@ import {
   ProjectsSearchesItem,
 } from 'controllers/organization/projects';
 import { SEARCH_KEY } from 'controllers/organization/projects/constants';
+import { OrganizationType } from 'controllers/organization';
 import { prepareQueryFilters } from 'components/filterEntities/utils';
 import { URLS } from 'common/urls';
 import { AddItemButton } from '../organizationAssignment/organizationItem/addItemButton';
@@ -110,6 +111,9 @@ const messages = defineMessages({
 interface InstanceAssignmentItem {
   id?: number;
   name: string;
+  type?: OrganizationType;
+  owner_id?: number;
+  isNew?: boolean;
   role: string;
   projects: Project[];
 }
@@ -119,6 +123,7 @@ export interface InstanceAssignmentProps extends InstanceAssignmentArrayProps<In
   formNamespace?: string;
   isOrganizationRequired: boolean;
   invitedUserId?: number | null;
+  excludeUserAssignments?: boolean;
   header?: string;
   addButtonPlacement?: 'header' | 'bottom';
   addFormPlacement?: 'top' | 'bottom';
@@ -161,6 +166,7 @@ export const InstanceAssignment = ({
   formNamespace,
   isOrganizationRequired = false,
   invitedUserId = null,
+  excludeUserAssignments = false,
   header,
   addButtonPlacement = 'bottom',
   addFormPlacement = 'bottom',
@@ -209,10 +215,12 @@ export const InstanceAssignment = ({
 
   useEffect(() => {
     const allOrganizationsIds = new Set((allOrganizations || []).map(({ id }) => id));
-    const totalAddedIds = new Set([...allOrganizationsIds, ...userOrgIds]);
+    const totalAddedIds = excludeUserAssignments
+      ? new Set([...allOrganizationsIds, ...userOrgIds])
+      : allOrganizationsIds;
     const totalAvailableToAdd = totalOrganizationsInSystem - totalAddedIds.size;
     setAreOrganizationsExhausted(totalOrganizationsInSystem > 0 && totalAvailableToAdd <= 0);
-  }, [allOrganizations, totalOrganizationsInSystem, userOrgIds]);
+  }, [allOrganizations, totalOrganizationsInSystem, userOrgIds, excludeUserAssignments]);
 
   useEffect(() => {
     if (isOpen && formContainerRef.current) {
@@ -312,7 +320,7 @@ export const InstanceAssignment = ({
       const filteredOrganizations = response.items.filter(
         (organization) =>
           !(allOrganizations || []).some(({ id }) => id === organization.id) &&
-          !userOrgIds.has(organization.id),
+          (!excludeUserAssignments || !userOrgIds.has(organization.id)),
       );
 
       setNotAssignedOrganizations(filteredOrganizations);
@@ -346,6 +354,7 @@ export const InstanceAssignment = ({
 
   const handleSubmit = () => {
     const { name, role, projects } = organization as InstanceAssignmentItem;
+    const selectedOrg = notAssignedOrganizations.find((org) => org.id === selectedOrganizationId);
 
     setIsOpen(false);
     setOrganizationProjects([]);
@@ -356,6 +365,9 @@ export const InstanceAssignment = ({
     fields.push({
       id: selectedOrganizationId,
       name,
+      type: selectedOrg?.type,
+      owner_id: selectedOrg?.owner_id,
+      isNew: !userOrgIds.has(selectedOrganizationId),
       role: role ? MANAGER : MEMBER,
       projects:
         projects?.length > 0 && selectedProjectId
@@ -559,6 +571,7 @@ export const InstanceAssignment = ({
           isMultiple
           formName={formName}
           invitedUserId={invitedUserId}
+          excludeUserAssignments={excludeUserAssignments}
           isOrganizationFormOpen={isOpen}
           onExpandOrganization={onExpandOrganization}
         />
