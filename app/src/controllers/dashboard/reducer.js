@@ -27,6 +27,7 @@ import {
 import { paginationReducer } from 'controllers/pagination';
 import {
   ADD_DASHBOARD_SUCCESS,
+  CHANGE_FULL_WIDTH_MODE,
   CHANGE_FULL_SCREEN_MODE,
   CHANGE_VISIBILITY_TYPE,
   DECREASE_TOTAL_DASHBOARDS_LOCALLY,
@@ -73,6 +74,9 @@ const activeDashboardReducer = (
 const gridTypeReducer = (state = INITIAL_STATE.gridType, { type = '', payload = {} }) =>
   type === CHANGE_VISIBILITY_TYPE ? payload : state;
 
+const fullWidthModeReducer = (state = INITIAL_STATE.fullWidthMode, { type = '', payload = {} }) =>
+  type === CHANGE_FULL_WIDTH_MODE ? payload : state;
+
 const fullScreenModeReducer = (
   state = INITIAL_STATE.fullScreenMode,
   { type = '', payload = {} },
@@ -102,6 +106,7 @@ const reducer = combineReducers({
   dashboards: queueReducers(fetchReducer(NAMESPACE, { contentPath: 'content' }), dashboardsReducer),
   activeDashboardItem: activeDashboardReducer,
   gridType: gridTypeReducer,
+  fullWidthMode: fullWidthModeReducer,
   fullScreenMode: fullScreenModeReducer,
   loading: loadingReducer(NAMESPACE),
   pagination: queueReducers(paginationReducer(NAMESPACE), totalDashboardsReducer),

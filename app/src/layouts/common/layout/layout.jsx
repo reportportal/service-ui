@@ -165,6 +165,7 @@ export class Layout extends Component {
                 <div className={cx('scrolling-content')}>
                   {header}
                   <div
+                    data-page-container
                     className={cx('page-container', {
                       'extension-page-container': this.props.isExtensionPage,
                     })}

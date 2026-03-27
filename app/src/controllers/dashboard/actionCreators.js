@@ -18,8 +18,10 @@ import { getStorageItem } from 'common/utils/storageUtils';
 import {
   ADD_DASHBOARD,
   ADD_DASHBOARD_SUCCESS,
+  CHANGE_FULL_WIDTH_MODE,
   CHANGE_FULL_SCREEN_MODE,
   CHANGE_VISIBILITY_TYPE,
+  DASHBOARDS_FULL_WIDTH_MODE_STORAGE_KEY,
   DASHBOARDS_TABLE_VIEW,
   DASHBOARDS_VISIBILITY_TYPE_STORAGE_KEY,
   FETCH_DASHBOARD,
@@ -95,6 +97,14 @@ export const toggleFullScreenModeAction = () => ({
 export const changeFullScreenModeAction = (mode) => ({
   type: CHANGE_FULL_SCREEN_MODE,
   payload: mode,
+});
+
+export const changeFullWidthModeAction = (mode) => ({
+  type: CHANGE_FULL_WIDTH_MODE,
+  payload:
+    typeof mode === 'boolean'
+      ? mode
+      : getStorageItem(DASHBOARDS_FULL_WIDTH_MODE_STORAGE_KEY) ?? false,
 });
 
 export const changeVisibilityTypeAction = (type) => {
