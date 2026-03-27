@@ -89,6 +89,7 @@ export const getApplyFilterEventParams = (
   initialState,
   initialDateState = '',
   conditionProp,
+  predefinedLabels = {},
 ) => {
   const { [conditionProp]: dateField, ...fieldsWithoutDate } = fields;
 
@@ -96,21 +97,27 @@ export const getApplyFilterEventParams = (
     .filter((field) => fields[field].value.toString() !== initialState[field].toString())
     .join('#');
 
-  let condition;
-  let countDays;
+  let conditionValue;
 
   if (dateField.value !== initialDateState) {
-    condition = dateField?.value;
+    conditionValue = dateField?.value;
     type = type ? `${type}#${conditionProp}` : conditionProp;
   }
 
-  if (condition) {
-    const { startDate, endDate } = parseFormattedDate(condition);
-    const timestampStartDate = new Date(startDate);
-    const timestampEndDate = new Date(endDate);
-    const msInDay = 1000 * 60 * 60 * 24;
-    countDays = Math.round((timestampEndDate - timestampStartDate) / msInDay);
+  let condition = 'not_set';
+
+  if (conditionValue !== undefined) {
+    if (conditionValue in predefinedLabels) {
+      condition = predefinedLabels[conditionValue];
+    } else {
+      const { startDate, endDate } = parseFormattedDate(conditionValue);
+      const timestampStartDate = new Date(startDate);
+      const timestampEndDate = new Date(endDate);
+      const msInDay = 1000 * 60 * 60 * 24;
+      const countDays = Math.round((timestampEndDate - timestampStartDate) / msInDay);
+      condition = countDays || 'not_set';
+    }
   }
 
-  return { type, condition: countDays || 'not_set' };
+  return { type, condition };
 };

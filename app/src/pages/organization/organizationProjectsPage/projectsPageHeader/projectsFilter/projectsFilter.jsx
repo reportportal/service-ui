@@ -32,6 +32,7 @@ import {
   getTimeRangeOptions,
   messages as helpMessage,
   timeRangeValues,
+  TIME_RANGE_GA4_LABELS,
 } from 'components/main/filterButton';
 import { PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectsPageEvents';
 import { getApplyFilterEventParams } from 'components/main/analytics/utils';
@@ -178,6 +179,7 @@ export const ProjectsFilter = ({
       initialFilterState,
       entities[LAST_RUN_DATE_FILTER_NAME]?.value,
       LAST_RUN_DATE_FILTER_NAME,
+      TIME_RANGE_GA4_LABELS,
     );
 
     return PROJECTS_PAGE_EVENTS.clickApplyFilterButton(type, condition);
