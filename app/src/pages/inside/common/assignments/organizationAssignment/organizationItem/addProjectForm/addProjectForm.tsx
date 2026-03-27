@@ -46,6 +46,7 @@ interface AddProjectFormProps {
   organizationId: number;
   canEditByDefault: boolean;
   invitedUserId?: number | null;
+  excludeUserAssignments?: boolean;
   onSave: (project: Project) => void;
   onCancel: () => void;
 }
@@ -54,6 +55,7 @@ export const AddProjectForm = ({
   organizationId,
   canEditByDefault,
   invitedUserId,
+  excludeUserAssignments = false,
   projects,
   onSave,
   onCancel,
@@ -76,7 +78,7 @@ export const AddProjectForm = ({
     setUserProjectIds(new Set());
     setAutocompleteKey((k) => k + 1);
 
-    if (!invitedUserId) {
+    if (!invitedUserId || !excludeUserAssignments) {
       return undefined;
     }
 
@@ -100,7 +102,7 @@ export const AddProjectForm = ({
     return () => {
       active = false;
     };
-  }, [invitedUserId, organizationId]);
+  }, [invitedUserId, organizationId, excludeUserAssignments]);
 
   const getRequestParams = (inputValue: string) => {
     return {

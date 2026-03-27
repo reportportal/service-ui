@@ -36,26 +36,25 @@ export const IconsBlock = ({ lastLaunchDate, hasPermission, organizationType }) 
 
   return (
     <>
-      {hasPermission &&
-        (organizationType === OrganizationType.EXTERNAL ? (
+      {organizationType === OrganizationType.EXTERNAL ? (
+        <Tooltip
+          content={formatMessage(messages.synchedOrganization)}
+          placement={'top'}
+          wrapperClassName={cx('tooltip-wrapper')}
+        >
+          <i className={cx('icon')}>{Parser(SynchedIcon)}</i>
+        </Tooltip>
+      ) : (
+        organizationType !== OrganizationType.INTERNAL && (
           <Tooltip
-            content={formatMessage(messages.synchedOrganization)}
+            content={formatMessage(messages.personalOrganization)}
             placement={'top'}
             wrapperClassName={cx('tooltip-wrapper')}
           >
-            <i className={cx('icon')}>{Parser(SynchedIcon)}</i>
+            <i className={cx('icon')}>{Parser(PersonalIcon)}</i>
           </Tooltip>
-        ) : (
-          organizationType !== OrganizationType.INTERNAL && (
-            <Tooltip
-              content={formatMessage(messages.personalOrganization)}
-              placement={'top'}
-              wrapperClassName={cx('tooltip-wrapper')}
-            >
-              <i className={cx('icon')}>{Parser(PersonalIcon)}</i>
-            </Tooltip>
-          )
-        ))}
+        )
+      )}
       {hasPermission && isOutdated && (
         <Tooltip
           content={formatMessage(messages.lastLaunch)}
