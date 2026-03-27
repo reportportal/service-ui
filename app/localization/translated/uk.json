@@ -1,5 +1,13 @@
 {
   "AALabel.investigatedByAA": "Проаналізовано Авто-Аналізом",
+  "ServiceUnavailableScreen.descriptionApi": "Схоже, що Service API наразі може бути недоступний. Оновіть сторінку через деякий час або зверніться по допомогу до системного адміністратора.",
+  "ServiceUnavailableScreen.footerMiddle": "щоб перевірити коректність розгортання, або наш",
+  "ServiceUnavailableScreen.footerPrefix": "Ви також можете звернутися до наших",
+  "ServiceUnavailableScreen.footerSuffix": "для порад від спільноти.",
+  "ServiceUnavailableScreen.installationGuides": "інструкцій з встановлення",
+  "ServiceUnavailableScreen.refreshPage": "Оновити сторінку",
+  "ServiceUnavailableScreen.slackChannel": "канал Slack",
+  "ServiceUnavailableScreen.title": "Сервіси недоступні",
   "AccountRemovedPage.description": "Ваш обліковий запис і особисті дані видалено з бази даних ReportPortal.\nНам шкода, що ви йдете. Сповіщення електронною поштою надіслано на адресу електронної пошти, пов’язану з вашим обліковим записом.",
   "AccountRemovedPage.header": "обліковий запис видалено",
   "AccountRemovedPage.login": "Авторизуватися",

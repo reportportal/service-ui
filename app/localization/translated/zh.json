@@ -1,5 +1,13 @@
 {
   "AALabel.investigatedByAA": "通过自动分析服务进行分析",
+  "ServiceUnavailableScreen.descriptionApi": "Service API 当前可能不可用。请稍后刷新页面，或联系系统管理员获取帮助。",
+  "ServiceUnavailableScreen.footerMiddle": "以检查部署是否正确，或访问我们的",
+  "ServiceUnavailableScreen.footerPrefix": "您还可以参考我们的",
+  "ServiceUnavailableScreen.footerSuffix": "获取社区建议。",
+  "ServiceUnavailableScreen.installationGuides": "安装指南",
+  "ServiceUnavailableScreen.refreshPage": "刷新页面",
+  "ServiceUnavailableScreen.slackChannel": "Slack 频道",
+  "ServiceUnavailableScreen.title": "服务不可用",
   "AccountRemovedPage.description": "您在ReportPortal数据库里的的账号和个人信息已经被删除。\n我们对您的离开感到遗憾，您注册所使用的邮箱将收到一封邮件。",
   "AccountRemovedPage.header": "该账号已被删除",
   "AccountRemovedPage.login": "登录",

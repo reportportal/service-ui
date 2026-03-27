@@ -14,10 +14,19 @@
  * limitations under the License.
  */
 
-import { SET_INITIAL_DATA_READY, FETCH_INITIAL_DATA } from './constants';
+import {
+  SET_INITIAL_DATA_READY,
+  FETCH_INITIAL_DATA,
+  SET_SERVICE_AVAILABILITY,
+} from './constants';
 
 export const fetchInitialDataAction = () => ({ type: FETCH_INITIAL_DATA });
 
 export const setInitialDataReadyAction = () => ({
   type: SET_INITIAL_DATA_READY,
+});
+
+export const setServiceAvailabilityAction = (payload) => ({
+  type: SET_SERVICE_AVAILABILITY,
+  payload,
 });

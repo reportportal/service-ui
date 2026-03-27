@@ -31,13 +31,37 @@ import {
 } from 'controllers/plugins';
 import { createFetchPredicate } from 'controllers/fetch';
 import { getStorageItem } from 'common/utils';
-import { setInitialDataReadyAction } from './actionCreators';
+import { setInitialDataReadyAction, setServiceAvailabilityAction } from './actionCreators';
 import { FETCH_INITIAL_DATA } from './constants';
 
 function* fetchInitialData() {
   yield put(setTokenAction(getStorageItem(TOKEN_KEY) || DEFAULT_TOKEN));
+  yield put(
+    setServiceAvailabilityAction({
+      checked: false,
+      apiUnavailable: false,
+    }),
+  );
   yield put(fetchAppInfoAction());
-  yield take(createFetchPredicate(APP_INFO_NAMESPACE));
+  const appInfoResult = yield take(createFetchPredicate(APP_INFO_NAMESPACE));
+
+  if (appInfoResult.error) {
+    yield put(
+      setServiceAvailabilityAction({
+        checked: true,
+        apiUnavailable: true,
+      }),
+    );
+    return;
+  }
+
+  yield put(
+    setServiceAvailabilityAction({
+      checked: true,
+      apiUnavailable: false,
+    }),
+  );
+
   yield put(fetchUserAction());
   const userResult = yield take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]);
   if (!userResult.error) {

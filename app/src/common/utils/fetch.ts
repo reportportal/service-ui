@@ -19,6 +19,7 @@ import { stringify } from 'qs';
 import { Store } from 'redux';
 
 import { isAuthorizedSelector, logoutAction } from 'controllers/auth';
+import { setServiceAvailabilityAction } from 'controllers/initialData/actionCreators';
 
 export const ERROR_CANCELED = 'REQUEST_CANCELED';
 export const ERROR_UNAUTHORIZED = 'UNAUTHORIZED';
@@ -95,15 +96,35 @@ export const updateToken = (newToken: string): void => {
   axios.defaults.headers.common.Authorization = newToken;
 };
 
+const isCompositeInfoRequest = (url = ''): boolean => /\/composite\/info/.test(url);
+const isServiceUnavailableError = (error: AxiosError): boolean => {
+  const status = error.response?.status;
+  return !error.response || status === 500 || status === 502 || status === 503 || status === 504;
+};
+
 export const initAuthInterceptor = (store: Store): void => {
   axios.interceptors.response.use(
-    (response: AxiosResponse) => response,
+    (response: AxiosResponse) => {
+      const responseUrl = response.config?.url || '';
+
+      if (isCompositeInfoRequest(responseUrl)) {
+        store.dispatch(setServiceAvailabilityAction({ checked: true, apiUnavailable: false }));
+      }
+
+      return response;
+    },
     (error: AxiosError) => {
+      const requestUrl = error.config?.url || '';
+
       if (error.response && error.response.status === 401) {
         const isAuthorized = isAuthorizedSelector(store.getState());
         if (isAuthorized) {
           store.dispatch(logoutAction());
         }
+      }
+
+      if (isCompositeInfoRequest(requestUrl) && isServiceUnavailableError(error)) {
+        store.dispatch(setServiceAvailabilityAction({ checked: true, apiUnavailable: true }));
       }
 
       return Promise.reject(error);

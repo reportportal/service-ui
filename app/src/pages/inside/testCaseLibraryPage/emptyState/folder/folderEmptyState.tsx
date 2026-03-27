@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
 
 import { createClassnames } from 'common/utils';
@@ -66,7 +65,7 @@ export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
       <div className={cx('folder-empty-state__title')}>{folderTitle}</div>
       <EmptyStatePage
         title={formatMessage(messages.emptyPageTitle)}
-        description={Parser(formatMessage(messages.folderEmptyPageDescription))}
+        description={formatMessage(messages.folderEmptyPageDescription)}
         imageType="docs"
         buttons={buttons}
       />
