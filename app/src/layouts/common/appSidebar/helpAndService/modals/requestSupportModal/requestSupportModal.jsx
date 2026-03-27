@@ -40,14 +40,17 @@ import styles from './requestSupportModal.scss';
 const cx = classNames.bind(styles);
 
 const REQUEST_FORM_ID = 'requestFormId';
+const DEFAULT_IS_CONSENT_CHECKED = false;
 
-const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
+const RequestSupport = ({ handleSubmit, initialize, invalid, dirty }) => {
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
   const email = useSelector(userEmailSelector);
   const [iframe, setIframe] = useState(null);
-  const [isConsentChecked, setIsConsentChecked] = useState(false);
+  const [isConsentChecked, setIsConsentChecked] = useState(DEFAULT_IS_CONSENT_CHECKED);
+
+  const allowCloseOutside = !dirty && isConsentChecked === DEFAULT_IS_CONSENT_CHECKED;
 
   useEffect(() => {
     const dummyframe = document.createElement('iframe');
@@ -57,7 +60,7 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
     document.body.appendChild(dummyframe);
 
     setIframe(dummyframe);
-    initialize({ email });
+    initialize({ email, wouldLikeToReceiveAds__c: false });
 
     return () => {
       dummyframe.parentNode.removeChild(dummyframe);
@@ -116,7 +119,7 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
       }}
       cancelButton={{ children: formatMessage(COMMON_LOCALE_KEYS.CANCEL) }}
       onClose={hideModal}
-      allowCloseOutside={false}
+      allowCloseOutside={allowCloseOutside}
     >
       <form
         action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8"
@@ -175,7 +178,7 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
           </FieldProvider>
 
           <FieldProvider name="wouldLikeToReceiveAds__c" format={Boolean}>
-            <Checkbox className={cx('check-item')}>
+            <Checkbox className={cx('check-item')} >
               {formatMessage(messages.subscribeToNews)}
             </Checkbox>
           </FieldProvider>
@@ -192,6 +195,7 @@ RequestSupport.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   initialize: PropTypes.func.isRequired,
   invalid: PropTypes.bool.isRequired,
+  dirty: PropTypes.bool.isRequired,
 };
 
 export const RequestSupportModal = withModal('requestSupportModal')(
