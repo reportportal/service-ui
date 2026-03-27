@@ -23,7 +23,7 @@ import {
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { MessageDescriptor, useIntl } from 'react-intl';
-import { reduxForm } from 'redux-form';
+import { formValueSelector, reduxForm } from 'redux-form';
 import { Button, Modal, Tooltip } from '@reportportal/ui-kit';
 import { useTracking } from 'react-tracking';
 import { createClassnames, referenceDictionary } from 'common/utils';
@@ -80,11 +80,13 @@ const ManageAssignmentsOrganizationModalView = ({
   assignmentsData,
   assignmentsLoading,
   assignmentsUpdateLoading,
+  isAddingProject,
 }: ManageAssignmentsOrganizationModalOwnProps & {
   handleSubmit: (submit: (values: { organizations?: unknown[] }) => void) => () => void;
   assignmentsData: UserOrganizationProjectsResponse | null;
   assignmentsLoading: boolean;
   assignmentsUpdateLoading: boolean;
+  isAddingProject: boolean;
 }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
@@ -258,7 +260,7 @@ const ManageAssignmentsOrganizationModalView = ({
           <Button
             variant="primary"
             onClick={() => formHandleSubmit(onSaveAssignments)()}
-            disabled={isBusy || !isDirty}
+            disabled={isBusy || !isDirty || isAddingProject}
           >
             {formatMessage(COMMON_LOCALE_KEYS.SAVE)}
           </Button>
@@ -303,6 +305,7 @@ const ManageAssignmentsOrganizationModalView = ({
             value={currentOrganization}
             onChange={handleOrganizationChange}
             organizationRoleDisabledTooltip={organizationRoleDisabledTooltip}
+            formName={MANAGE_ASSIGNMENTS_FORM}
           />
         )}
       </div>
@@ -310,17 +313,21 @@ const ManageAssignmentsOrganizationModalView = ({
   );
 };
 
+const formSelector = formValueSelector(MANAGE_ASSIGNMENTS_FORM);
+
 const mapStateToProps = (state: unknown) => {
   const assignmentsData = userAssignmentsDataSelector(
     state as never,
   ) as UserOrganizationProjectsResponse | null;
   const assignmentsLoading = Boolean(userAssignmentsLoadingSelector(state as never));
   const assignmentsUpdateLoading = Boolean(userAssignmentsUpdateLoadingSelector(state as never));
+  const isAddingProject = Boolean(formSelector(state as never, 'isAddingProject'));
   return {
     initialValues: { organizations: [] },
     assignmentsData,
     assignmentsLoading,
     assignmentsUpdateLoading,
+    isAddingProject,
   };
 };
 
@@ -330,6 +337,7 @@ const FormWrapper = reduxForm<
     assignmentsData: UserOrganizationProjectsResponse | null;
     assignmentsLoading: boolean;
     assignmentsUpdateLoading: boolean;
+    isAddingProject: boolean
   }
 >({
   form: MANAGE_ASSIGNMENTS_FORM,
