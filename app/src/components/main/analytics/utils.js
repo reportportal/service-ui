@@ -115,7 +115,7 @@ export const getApplyFilterEventParams = (
       const timestampEndDate = new Date(endDate);
       const msInDay = 1000 * 60 * 60 * 24;
       const countDays = Math.round((timestampEndDate - timestampStartDate) / msInDay);
-      condition = countDays || 'not_set';
+      condition = countDays !== null && !isNaN(countDays) ? countDays : 'not_set';
     }
   }
 
