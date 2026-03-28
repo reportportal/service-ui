@@ -25,7 +25,7 @@ import {
   serviceAvailabilitySelector,
   LAST_VISITED_PATH_STORAGE_KEY,
 } from 'controllers/initialData';
-import { getSessionItem } from 'common/utils';
+import { getSessionItem, removeSessionItem } from 'common/utils';
 import { ServiceUnavailableScreen } from './serviceUnavailableScreen';
 
 @connect(
@@ -70,6 +70,8 @@ export class InitialDataContainer extends Component {
 
   refreshPage = () => {
     const storedLastPath = getSessionItem(LAST_VISITED_PATH_STORAGE_KEY);
+    removeSessionItem(LAST_VISITED_PATH_STORAGE_KEY);
+
     const targetPath =
       typeof storedLastPath === 'string' && storedLastPath.startsWith('/')
         ? storedLastPath
