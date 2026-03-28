@@ -233,7 +233,7 @@ export class ComponentHealthCheckTableViewControls extends Component {
     } = this.props;
     const attrUrlKeys = this.getItemAttributeKeysAllSearchURL();
     const sortObj = this.getSortObj();
-    const disabled = !this.props.widgetSettings.filters?.length;
+    const disabled = !this.props.widgetSettings?.filters?.length;
     const inputTooltipProps = disabled ? { content: formatMessage(messages.inputTooltip) } : {};
 
     return (
