@@ -24,8 +24,10 @@ import { ModalField } from 'components/main/modal';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
+import { ConditionalTooltip } from 'components/main/conditionalTooltip';
 import { FIELD_LABEL_WIDTH } from '../constants';
 import styles from './attributesFieldArrayControl.scss';
+import { Button } from '@reportportal/ui-kit';
 
 const cx = classNames.bind(styles);
 
@@ -62,11 +64,20 @@ export class AttributesFieldArrayControl extends Component {
     getURI: PropTypes.func.isRequired,
     attributeKeyFieldViewLabels: PropTypes.array,
     showRemainingLevels: PropTypes.bool,
+    messages: PropTypes.shape({
+      inputsTooltipMessage: PropTypes.string,
+      addButtonTooltipMessage: PropTypes.string,
+    }),
+    disabled: PropTypes.bool,
   };
 
   static defaultProps = {
     attributeKeyFieldViewLabels: [],
     showRemainingLevels: false,
+    messages: {
+      inputsTooltipMessage: '',
+      addButtonTooltipMessage: '',
+    },
   };
 
   constructor(props) {
@@ -93,6 +104,8 @@ export class AttributesFieldArrayControl extends Component {
       maxAttributesAmount,
       attributeKeyFieldViewLabels,
       showRemainingLevels,
+      disabled,
+      messages: { inputsTooltipMessage, addButtonTooltipMessage },
     } = this.props;
     const attributes = this.getAttributes();
     const canAddNewItems = fields.length < maxAttributesAmount;
@@ -115,6 +128,8 @@ export class AttributesFieldArrayControl extends Component {
                 <FieldProvider name={item} validate={fieldValidator(attributes)}>
                   <FieldErrorHint hintType="top">
                     <AsyncAutocomplete
+                      disabled={disabled}
+                      tooltipMessage={inputsTooltipMessage}
                       getURI={getURI}
                       minLength={1}
                       placeholder={formatMessage(messages.attributeKeyFieldPlaceholder)}
@@ -140,15 +155,24 @@ export class AttributesFieldArrayControl extends Component {
         })}
         {canAddNewItems ? (
           <ModalField label=" " labelWidth={FIELD_LABEL_WIDTH}>
-            <div
-              className={cx('add-level')}
-              onClick={() => {
-                this.numberRemainingLevels -= 1;
-                return fields.push('');
-              }}
+            <ConditionalTooltip
+              shouldDisplayTooltip={Boolean(addButtonTooltipMessage)}
+              content={addButtonTooltipMessage}
+              wrapperClassName={cx('tooltip-wrapper')}
+              tooltipClassName={cx("tooltip")}
             >
-              {formatMessage(messages.addOneMoreLevel)}
-            </div>
+              <Button
+                variant='text'
+                className={cx('add-level')}
+                disabled={disabled}
+                onClick={() => {
+                  this.numberRemainingLevels -= 1;
+                  return fields.push('');
+                }}
+              >
+                {formatMessage(messages.addOneMoreLevel)}
+              </Button>
+            </ConditionalTooltip>
             {showRemainingLevels && (
               <div className={cx('remaining-level')}>
                 {this.numberRemainingLevels === 1

@@ -21,6 +21,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Manager, Reference, Popper } from 'react-popper';
 import { AutocompleteMenu } from './../common/autocompleteMenu';
+import { ConditionalTooltip } from 'components/main/conditionalTooltip';
 import styles from './singleAutocomplete.scss';
 
 const cx = classNames.bind(styles);
@@ -55,6 +56,7 @@ export class SingleAutocomplete extends Component {
     customClass: PropTypes.string,
     isOptionUnique: PropTypes.func,
     nakedView: PropTypes.bool,
+    tooltipMessage: PropTypes.string,
   };
 
   static defaultProps = {
@@ -81,6 +83,7 @@ export class SingleAutocomplete extends Component {
     customClass: '',
     isOptionUnique: null,
     nakedView: false,
+    tooltipMessage: "",
   };
 
   getOptionProps =
@@ -111,6 +114,7 @@ export class SingleAutocomplete extends Component {
       customClass,
       maxLength,
       nakedView,
+      tooltipMessage,
       ...props
     } = this.props;
     return (
@@ -138,26 +142,30 @@ export class SingleAutocomplete extends Component {
                     ref={ref}
                     className={cx('autocomplete', customClass, { 'naked-view': nakedView })}
                   >
-                    <input
-                      {...getInputProps({
-                        placeholder: !disabled ? placeholder : '',
-                        maxLength,
-                        onFocus: () => {
-                          !value && openMenu();
-                          onFocus();
-                        },
-                        onBlur,
-                        disabled,
-                        ...inputProps,
-                      })}
-                      className={cx('input', {
-                        'mobile-disabled': mobileDisabled,
-                        error,
-                        touched,
-                        disabled,
-                        // 'naked-view': nakedView,
-                      })}
-                    />
+                    <ConditionalTooltip 
+                      shouldDisplayTooltip={Boolean(tooltipMessage)} 
+                      content={tooltipMessage}
+                    >
+                      <input
+                        {...getInputProps({
+                          placeholder: !disabled ? placeholder : '',
+                          maxLength,
+                          onFocus: () => {
+                            !value && openMenu();
+                            onFocus();
+                          },
+                          onBlur,
+                          disabled,
+                          ...inputProps,
+                        })}
+                        className={cx('input', {
+                          'mobile-disabled': mobileDisabled,
+                          error,
+                          touched,
+                          disabled,
+                        })}
+                      />
+                    </ConditionalTooltip>
                     {selectedItem && !disabled && (
                       <button
                         className={cx('input-control-btn', { 'mobile-disabled': mobileDisabled })}
