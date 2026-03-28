@@ -108,6 +108,8 @@ export class AttributesFieldArrayControl extends Component {
     } = this.props;
     const attributes = this.getAttributes();
     const canAddNewItems = fields.length < maxAttributesAmount;
+    const addButtonTooltip = disabled ? formatMessage(messages.addButtonTooltip) : null;
+    const inputTooltipProps = disabled ? { content: formatMessage(messages.inputTooltip) } : {};
 
     return (
       <Fragment>
@@ -128,7 +130,7 @@ export class AttributesFieldArrayControl extends Component {
                   <FieldErrorHint hintType="top">
                     <AsyncAutocomplete
                       disabled={disabled}
-                      tooltipMessage={disabled ? formatMessage(messages.inputTooltip) : null}
+                      tooltipProps={inputTooltipProps}
                       getURI={getURI}
                       minLength={1}
                       placeholder={formatMessage(messages.attributeKeyFieldPlaceholder)}
@@ -155,7 +157,7 @@ export class AttributesFieldArrayControl extends Component {
         {canAddNewItems ? (
           <ModalField label=" " labelWidth={FIELD_LABEL_WIDTH}>
             <ConditionalTooltip
-              content={disabled ? formatMessage(messages.addButtonTooltip) : null}
+              content={addButtonTooltip}
               wrapperClassName={cx('tooltip-wrapper')}
               tooltipClassName={cx("tooltip")}
             >

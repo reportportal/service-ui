@@ -44,6 +44,7 @@ export class SingleAutocomplete extends Component {
     disabled: PropTypes.bool,
     mobileDisabled: PropTypes.bool,
     inputProps: PropTypes.object,
+    tooltipProps: PropTypes.object,
     parseValueToString: PropTypes.func,
     renderOption: PropTypes.func,
     createNewOption: PropTypes.func,
@@ -56,7 +57,6 @@ export class SingleAutocomplete extends Component {
     customClass: PropTypes.string,
     isOptionUnique: PropTypes.func,
     nakedView: PropTypes.bool,
-    tooltipMessage: PropTypes.string,
   };
 
   static defaultProps = {
@@ -74,6 +74,7 @@ export class SingleAutocomplete extends Component {
     disabled: false,
     mobileDisabled: false,
     inputProps: {},
+    tooltipProps: {},
     parseValueToString: (value) => value || '',
     renderOption: null,
     createNewOption: (inputValue) => inputValue,
@@ -83,7 +84,6 @@ export class SingleAutocomplete extends Component {
     customClass: '',
     isOptionUnique: null,
     nakedView: false,
-    tooltipMessage: null,
   };
 
   getOptionProps =
@@ -114,7 +114,7 @@ export class SingleAutocomplete extends Component {
       customClass,
       maxLength,
       nakedView,
-      tooltipMessage,
+      tooltipProps,
       ...props
     } = this.props;
     return (
@@ -142,9 +142,7 @@ export class SingleAutocomplete extends Component {
                     ref={ref}
                     className={cx('autocomplete', customClass, { 'naked-view': nakedView })}
                   >
-                    <ConditionalTooltip
-                      content={tooltipMessage}
-                    >
+                    <ConditionalTooltip {...tooltipProps}>
                       <input
                         {...getInputProps({
                           placeholder: !disabled ? placeholder : '',
