@@ -26,8 +26,8 @@ export const ConditionalTooltip = ({ children, ...tooltipProps }) => {
 
 ConditionalTooltip.propTypes = {
   children: PropTypes.node.isRequired,
-  content: PropTypes.node.isRequired,
-
+  
+  content: PropTypes.node,
   wrapperClassName: PropTypes.string,
   tooltipClassName: PropTypes.string,
   contentClassName: PropTypes.string,
