@@ -112,7 +112,6 @@
 .page-container {
   margin-left: auto;
   margin-right: auto;
-  max-width: 1370px;
   padding-left: 15px;
   padding-right: 15px;
   height: 100%;
@@ -121,11 +120,6 @@
     padding-left: 0;
     padding-right: 0;
   }
-}
-.extension-page-container {
-  padding-left: 0;
-  padding-right: 0;
-  max-width: none;
 }
 
 .scrolling-content {

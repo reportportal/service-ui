@@ -16,6 +16,7 @@
 
 import {
   ADD_DASHBOARD_SUCCESS,
+  CHANGE_FULL_WIDTH_MODE,
   CHANGE_FULL_SCREEN_MODE,
   CHANGE_VISIBILITY_TYPE,
   DASHBOARDS_GRID_VIEW,
@@ -115,6 +116,21 @@ describe('dashboard reducer', () => {
     expect(newState).toEqual({
       ...oldState,
       fullScreenMode: true,
+    });
+  });
+
+  test('should handle CHANGE_FULL_WIDTH_MODE', () => {
+    const oldState = {
+      ...INITIAL_STATE,
+      fullWidthMode: false,
+    };
+    const newState = dashboardReducer(oldState, {
+      type: CHANGE_FULL_WIDTH_MODE,
+      payload: true,
+    });
+    expect(newState).toEqual({
+      ...oldState,
+      fullWidthMode: true,
     });
   });
 

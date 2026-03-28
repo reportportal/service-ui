@@ -40,7 +40,9 @@ import { analyticsEnabledSelector, baseEventParametersSelector } from 'controlle
 import { SORTING_KEY } from 'controllers/sorting';
 import {
   ADD_DASHBOARD,
+  CHANGE_FULL_WIDTH_MODE,
   CHANGE_VISIBILITY_TYPE,
+  DASHBOARDS_FULL_WIDTH_MODE_STORAGE_KEY,
   DASHBOARDS_VISIBILITY_TYPE_STORAGE_KEY,
   FETCH_DASHBOARD,
   FETCH_DASHBOARDS,
@@ -287,6 +289,10 @@ function changeVisibilityType({ payload: visibilityType }) {
   setStorageItem(DASHBOARDS_VISIBILITY_TYPE_STORAGE_KEY, visibilityType);
 }
 
+function changeFullWidthMode({ payload: fullWidthMode }) {
+  setStorageItem(DASHBOARDS_FULL_WIDTH_MODE_STORAGE_KEY, fullWidthMode);
+}
+
 export function* dashboardSagas() {
   yield all([
     yield takeEvery(FETCH_DASHBOARDS, fetchDashboards),
@@ -296,6 +302,7 @@ export function* dashboardSagas() {
     yield takeEvery(UPDATE_DASHBOARD_WIDGETS, updateDashboardWidgets),
     yield takeEvery(REMOVE_DASHBOARD, removeDashboard),
     yield takeEvery(CHANGE_VISIBILITY_TYPE, changeVisibilityType),
+    yield takeEvery(CHANGE_FULL_WIDTH_MODE, changeFullWidthMode),
     yield takeEvery(REMOVE_DASHBOARD_SUCCESS, redirectAfterDelete),
     yield takeEvery(DUPLICATE_DASHBOARD, duplicateDashboard),
   ]);

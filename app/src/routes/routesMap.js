@@ -78,6 +78,7 @@ import { ANONYMOUS_REDIRECT_PATH_STORAGE_KEY, isAuthorizedSelector } from 'contr
 import {
   fetchDashboardsAction,
   fetchDashboardAction,
+  changeFullWidthModeAction,
   changeVisibilityTypeAction,
 } from 'controllers/dashboard';
 import {
@@ -355,6 +356,7 @@ const routesMap = {
   [PROJECT_DASHBOARD_ITEM_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug/dashboard/:dashboardId',
     thunk: (dispatch) => {
+      dispatch(changeFullWidthModeAction());
       dispatch(fetchDashboardAction());
     },
   },

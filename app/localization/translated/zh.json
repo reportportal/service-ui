@@ -585,6 +585,8 @@
   "DashboardItemPage.editDashboard": "编辑",
   "DashboardItemPage.fullscreen": "全屏化",
   "DashboardItemPage.notMyDashboardEmptyHeader": "No widgets yet",
+  "DashboardLayoutSettings.dashboardLayout": "仪表板布局",
+  "DashboardLayoutSettings.fullWidthMode": "全宽模式",
   "DashboardList.lockedDashboardTooltip": "This dashboard is locked by a project manager or administrator and cannot be modified",
   "DashboardPage.addDashboardSuccess": "Dashboard has been created successfully.",
   "DashboardPage.addPreconfigDashboardError": "Dashboard can't be created. Please check the pasted configuration.",

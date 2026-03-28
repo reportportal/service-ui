@@ -42,7 +42,6 @@ export class Layout extends Component {
     Header: PropTypes.elementType,
     Sidebar: PropTypes.elementType,
     rawContent: PropTypes.bool,
-    isExtensionPage: PropTypes.bool,
     sessionExpirationConfig: PropTypes.number.isRequired,
     logout: PropTypes.func.isRequired,
   };
@@ -52,7 +51,6 @@ export class Layout extends Component {
     Header: null,
     Sidebar: null,
     rawContent: false,
-    isExtensionPage: false,
   };
 
   state = {
@@ -164,13 +162,7 @@ export class Layout extends Component {
               >
                 <div className={cx('scrolling-content')}>
                   {header}
-                  <div
-                    className={cx('page-container', {
-                      'extension-page-container': this.props.isExtensionPage,
-                    })}
-                  >
-                    {children}
-                  </div>
+                  <div className={cx('page-container')}>{children}</div>
                 </div>
               </ScrollWrapper>
             )}

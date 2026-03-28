@@ -27,8 +27,10 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import {
   activeDashboardItemSelector,
+  dashboardFullWidthModeSelector,
   updateDashboardWidgetsAction,
   dashboardFullScreenModeSelector,
+  changeFullWidthModeAction,
   changeFullScreenModeAction,
   toggleFullScreenModeAction,
   deleteDashboardAction,
@@ -61,6 +63,7 @@ import { getUpdatedWidgetsList } from './modals/common/utils';
 import EditIcon from './img/edit-inline.svg';
 import CancelIcon from './img/cancel-inline.svg';
 import FullscreenIcon from './img/full-screen-inline.svg';
+import { DashboardLayoutSettings } from './dashboardLayoutSettings';
 import { WidgetsGrid } from './widgetsGrid';
 import styles from './dashboardItemPage.scss';
 
@@ -118,6 +121,7 @@ const messages = defineMessages({
     projectKey: projectKeySelector(state),
     dashboard: activeDashboardItemSelector(state),
     userInfo: userInfoSelector(state),
+    fullWidthMode: dashboardFullWidthModeSelector(state),
     fullScreenMode: dashboardFullScreenModeSelector(state),
     activeDashboardId: activeDashboardIdSelector(state),
     userRoles: userRolesSelector(state),
@@ -128,6 +132,7 @@ const messages = defineMessages({
     updateDashboardWidgetsAction,
     showNotification,
     hideScreenLockAction,
+    changeFullWidthModeAction,
     changeFullScreenModeAction,
     toggleFullScreenModeAction,
     deleteDashboard: deleteDashboardAction,
@@ -148,7 +153,9 @@ export class DashboardItemPage extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    fullWidthMode: PropTypes.bool,
     fullScreenMode: PropTypes.bool,
+    changeFullWidthModeAction: PropTypes.func.isRequired,
     changeFullScreenModeAction: PropTypes.func.isRequired,
     toggleFullScreenModeAction: PropTypes.func.isRequired,
     deleteDashboard: PropTypes.func.isRequired,
@@ -164,6 +171,7 @@ export class DashboardItemPage extends Component {
   };
 
   static defaultProps = {
+    fullWidthMode: false,
     fullScreenMode: false,
     activeDashboardId: undefined,
     userRoles: {},
@@ -288,6 +296,30 @@ export class DashboardItemPage extends Component {
     this.props.toggleFullScreenModeAction();
   };
 
+  onOpenDashboardLayoutSettings = () => {
+    const {
+      dashboard: { id },
+      tracking: { trackEvent },
+    } = this.props;
+
+    trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('dashboard_layout_settings', id));
+  };
+
+  toggleFullWidthMode = () => {
+    const {
+      fullWidthMode,
+      changeFullWidthModeAction,
+      tracking: { trackEvent },
+    } = this.props;
+    const newValue = !fullWidthMode;
+    
+    requestAnimationFrame(() => {
+      globalThis.dispatchEvent(new Event('resize'));
+    });
+    trackEvent(DASHBOARD_EVENTS.clickOnFullWidthModeCheckbox(newValue));
+    changeFullWidthModeAction(newValue);
+  };
+
   onPrintDashboard = () => {
     const {
       dashboard: { id },
@@ -334,6 +366,7 @@ export class DashboardItemPage extends Component {
       intl: { formatMessage },
       dashboard,
       projectKey,
+      fullWidthMode,
       fullScreenMode,
       changeFullScreenModeAction: changeFullScreenMode,
       slugs: { organizationSlug, projectSlug },
@@ -343,7 +376,7 @@ export class DashboardItemPage extends Component {
     const isWorkWithWidgets = canWorkWithWidgets(userRoles);
 
     return (
-      <PageLayout>
+      <PageLayout fullWidth={fullWidthMode}>
         <PageHeader breadcrumbs={this.getBreadcrumbs()}>
           <DashboardPageHeader />
         </PageHeader>
@@ -358,6 +391,12 @@ export class DashboardItemPage extends Component {
                 )}
               </div>
               <div className={cx('buttons-block')}>
+                <DashboardLayoutSettings
+                  className={cx('dashboard-layout-settings-control')}
+                  fullWidthMode={fullWidthMode}
+                  onOpen={this.onOpenDashboardLayoutSettings}
+                  onToggleFullWidthMode={this.toggleFullWidthMode}
+                />
                 {isWorkWithWidgets && (
                   <GhostButton icon={EditIcon} onClick={this.onEditDashboardItem}>
                     {formatMessage(messages.editDashboard)}
