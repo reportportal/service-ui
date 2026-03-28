@@ -26,6 +26,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { ConditionalTooltip } from 'components/main/conditionalTooltip';
 import { FIELD_LABEL_WIDTH } from '../constants';
+import { sharedMessages } from "common/sharedMessages"
 import styles from './attributesFieldArrayControl.scss';
 import { Button } from '@reportportal/ui-kit';
 
@@ -52,14 +53,6 @@ const messages = defineMessages({
     id: 'AttributesFieldArrayControl.levelCanBeAddedMessage',
     defaultMessage: '1 level can be added',
   },
-  addButtonTooltip: {
-    id: 'Tooltip.addAttributeKeyButton',
-    defaultMessage: 'New levels cannot be added until filter is selected',
-  },
-  inputTooltip: {
-    id: 'Tooltip.attributeKeyInput',
-    defaultMessage: 'Please select a filter first',
-  }
 });
 
 @injectIntl
@@ -101,9 +94,20 @@ export class AttributesFieldArrayControl extends Component {
     } = this.props;
     const attributes = this.getAttributes();
     const canAddNewItems = fields.length < maxAttributesAmount;
-    const addButtonTooltip = disabled ? formatMessage(messages.addButtonTooltip) : null;
-    const inputTooltipProps = disabled ? { content: formatMessage(messages.inputTooltip) } : {};
     const numberRemainingLevels = maxAttributesAmount - fields.length;
+
+
+    const inputTooltipProps = disabled 
+      ? { content: formatMessage(sharedMessages.attributeKeyInputTooltip) } 
+      : {};
+
+    const addButtonTooltip = disabled 
+      ? { content: formatMessage(sharedMessages.addAttributeKeyButtonTooltip),
+          wrapperClassName: cx('tooltip-wrapper'),
+          tooltipClassName: cx("tooltip"),
+        }
+      : {};
+
 
     return (
       <Fragment>
@@ -148,11 +152,7 @@ export class AttributesFieldArrayControl extends Component {
         })}
         {canAddNewItems ? (
           <ModalField label=" " labelWidth={FIELD_LABEL_WIDTH}>
-            <ConditionalTooltip
-              content={addButtonTooltip}
-              wrapperClassName={cx('tooltip-wrapper')}
-              tooltipClassName={cx("tooltip")}
-            >
+            <ConditionalTooltip {...addButtonTooltip}>
               <Button
                 variant='text'
                 className={cx('add-level')}

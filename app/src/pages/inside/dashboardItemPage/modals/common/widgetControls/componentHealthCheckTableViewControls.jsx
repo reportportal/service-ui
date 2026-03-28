@@ -46,6 +46,7 @@ import {
 } from './controls';
 import { WIDGET_WIZARD_FORM } from '../constants';
 import { ITEMS_INPUT_WIDTH, WIDGET_OPTIONS } from './constants';
+import { sharedMessages } from "common/sharedMessages"
 import styles from './widgetControls.scss';
 
 const cx = classNames.bind(styles);
@@ -89,10 +90,6 @@ const messages = defineMessages({
     id: 'ComponentHealthCheckTableViewControls.excludeSkipped',
     defaultMessage: 'Exclude Skipped tests from statistics',
   },
-  inputTooltip: {
-    id: 'Tooltip.attributeKeyInput',
-    defaultMessage: 'Please select a filter first',
-  }
 });
 
 const passingRateValidator = (formatMessage) =>
@@ -234,7 +231,7 @@ export class ComponentHealthCheckTableViewControls extends Component {
     const attrUrlKeys = this.getItemAttributeKeysAllSearchURL();
     const sortObj = this.getSortObj();
     const disabled = !this.props.widgetSettings?.filters?.length;
-    const inputTooltipProps = disabled ? { content: formatMessage(messages.inputTooltip) } : {};
+    const inputTooltipProps = disabled ? { content: formatMessage(sharedMessages.attributeKeyInputTooltip) } : {};
 
     return (
       <Fragment>
