@@ -41,25 +41,10 @@ const messages = defineMessages({
     id: 'ServiceUnavailableScreen.refreshPage',
     defaultMessage: 'Refresh page',
   },
-  footerPrefix: {
-    id: 'ServiceUnavailableScreen.footerPrefix',
-    defaultMessage: 'You can also refer to our',
-  },
-  installationGuides: {
-    id: 'ServiceUnavailableScreen.installationGuides',
-    defaultMessage: 'Installation guides',
-  },
-  footerMiddle: {
-    id: 'ServiceUnavailableScreen.footerMiddle',
-    defaultMessage: 'to check the deployment correctness or our',
-  },
-  slackChannel: {
-    id: 'ServiceUnavailableScreen.slackChannel',
-    defaultMessage: 'Slack channel',
-  },
-  footerSuffix: {
-    id: 'ServiceUnavailableScreen.footerSuffix',
-    defaultMessage: 'for community advice.',
+  footer: {
+    id: 'ServiceUnavailableScreen.footer',
+    defaultMessage:
+      'You can also refer to our <installationGuides>Installation guides</installationGuides> to check the deployment correctness or our <slackChannel>Slack channel</slackChannel> for community advice.',
   },
 });
 
@@ -87,15 +72,18 @@ const ServiceUnavailableContent = ({ onRefresh }) => {
       </div>
 
       <div className={cx('footer')}>
-        {formatMessage(messages.footerPrefix)}{' '}
-        <LinkComponent to={INSTALLATION_GUIDES_LINK} className={cx('link')} target="_blank">
-          {formatMessage(messages.installationGuides)}
-        </LinkComponent>{' '}
-        {formatMessage(messages.footerMiddle)}{' '}
-        <LinkComponent to={referenceDictionary.rpSlack} className={cx('link')} target="_blank">
-          {formatMessage(messages.slackChannel)}
-        </LinkComponent>{' '}
-        {formatMessage(messages.footerSuffix)}
+        {formatMessage(messages.footer, {
+          installationGuides: chunks => (
+            <LinkComponent to={INSTALLATION_GUIDES_LINK} className={cx('link')} target="_blank">
+              {chunks}
+            </LinkComponent>
+          ),
+          slackChannel: chunks => (
+            <LinkComponent to={referenceDictionary.rpSlack} className={cx('link')} target="_blank">
+              {chunks}
+            </LinkComponent>
+          ),
+        })}
       </div>
     </>
   );
