@@ -27,6 +27,18 @@ import styles from './serviceUnavailableScreen.scss';
 const cx = classNames.bind(styles);
 const INSTALLATION_GUIDES_LINK = `${referenceDictionary.rpDoc}/installation-steps`;
 
+const renderInstallationGuidesLink = (chunks) => (
+  <LinkComponent to={INSTALLATION_GUIDES_LINK} className={cx('link')} target="_blank">
+    {chunks}
+  </LinkComponent>
+);
+
+const renderSlackChannelLink = (chunks) => (
+  <LinkComponent to={referenceDictionary.rpSlack} className={cx('link')} target="_blank">
+    {chunks}
+  </LinkComponent>
+);
+
 const messages = defineMessages({
   title: {
     id: 'ServiceUnavailableScreen.title',
@@ -73,16 +85,8 @@ const ServiceUnavailableContent = ({ onRefresh }) => {
 
       <div className={cx('footer')}>
         {formatMessage(messages.footer, {
-          installationGuides: chunks => (
-            <LinkComponent to={INSTALLATION_GUIDES_LINK} className={cx('link')} target="_blank">
-              {chunks}
-            </LinkComponent>
-          ),
-          slackChannel: chunks => (
-            <LinkComponent to={referenceDictionary.rpSlack} className={cx('link')} target="_blank">
-              {chunks}
-            </LinkComponent>
-          ),
+          installationGuides: renderInstallationGuidesLink,
+          slackChannel: renderSlackChannelLink,
         })}
       </div>
     </>
