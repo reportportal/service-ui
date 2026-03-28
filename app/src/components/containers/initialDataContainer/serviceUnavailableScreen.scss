@@ -21,7 +21,7 @@
   min-height: 100vh;
   width: 100%;
   padding: 64px 32px;
-  background: $COLOR--white-two;
+  background: var(--rp-ui-base-bg-000);
 
   @media (max-width: $SCREEN_XS_MAX) {
     padding: 32px 16px;
@@ -72,8 +72,8 @@
 .footer {
   max-width: 480px;
   align-self: center;
-  color: $COLOR--e-400;
-  font-family: $FONT-ROBOTO-REGULAR;
+  color: var(--rp-ui-base-e-400);
+  font-family: var(--rp-ui-base-font-family);
   font-size: 13px;
   line-height: 20px;
   text-align: center;
