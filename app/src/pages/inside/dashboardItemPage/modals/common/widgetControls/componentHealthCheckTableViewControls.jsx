@@ -20,7 +20,7 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
-import { FieldArray } from 'redux-form';
+import { FieldArray, change, untouch } from 'redux-form';
 import {
   validate,
   commonValidators,
@@ -44,6 +44,7 @@ import {
   TogglerControl,
   SortingControl,
 } from './controls';
+import { WIDGET_WIZARD_FORM } from '../constants';
 import { ITEMS_INPUT_WIDTH, WIDGET_OPTIONS } from './constants';
 import styles from './widgetControls.scss';
 
@@ -51,6 +52,8 @@ const cx = classNames.bind(styles);
 
 const MAX_ATTRIBUTES_AMOUNT = 10;
 const DEFAULT_PASSING_RATE = '100';
+const DEFAULT_ATTRIBUTE_KEY = '';
+const DEFAULT_CUSTOM_COLUMN = '';
 
 const messages = defineMessages({
   passingRateFieldLabel: {
@@ -105,7 +108,10 @@ const attributeKeyValidator = (formatMessage) => (attributes) =>
 
 @connect((state) => ({
   projectKey: projectKeySelector(state),
-}))
+}), {
+  changeField: (field, value) => change(WIDGET_WIZARD_FORM, field, value, null),
+  untouchField: (field) => untouch(WIDGET_WIZARD_FORM, field),
+})
 @track()
 @injectIntl
 export class ComponentHealthCheckTableViewControls extends Component {
@@ -120,6 +126,8 @@ export class ComponentHealthCheckTableViewControls extends Component {
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
     }).isRequired,
+    changeField: PropTypes.func.isRequired,
+    untouchField: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -137,8 +145,8 @@ export class ComponentHealthCheckTableViewControls extends Component {
         widgetOptions: {
           minPassingRate: DEFAULT_PASSING_RATE,
           latest: MODES_VALUES[CHART_MODES.ALL_LAUNCHES],
-          attributeKeys: [],
-          customColumn: '',
+          attributeKeys: [DEFAULT_ATTRIBUTE_KEY],
+          customColumn: DEFAULT_CUSTOM_COLUMN,
           sort: {
             asc: false,
             sortingColumn: WIDGET_OPTIONS.SORT.PASSING_RATE,
@@ -197,6 +205,19 @@ export class ComponentHealthCheckTableViewControls extends Component {
         disabled={!filters?.length}
       />
     );
+  };
+
+  componentDidUpdate = (prevProps) => {
+    const prevFilterId = prevProps?.widgetSettings?.filters?.[0]?.value;
+    const currentFilterId = this.props.widgetSettings?.filters?.[0]?.value;
+
+    if (prevProps && prevFilterId !== currentFilterId) {
+      this.props.changeField('contentParameters.widgetOptions.attributeKeys', [DEFAULT_ATTRIBUTE_KEY]);
+      this.props.untouchField('contentParameters.widgetOptions.attributeKeys[0]');
+
+      this.props.changeField('contentParameters.widgetOptions.customColumn', DEFAULT_CUSTOM_COLUMN);
+      this.props.untouchField('contentParameters.widgetOptions.customColumn');
+    }
   };
 
   render() {

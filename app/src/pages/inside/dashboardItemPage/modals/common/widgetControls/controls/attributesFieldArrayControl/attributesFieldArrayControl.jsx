@@ -82,13 +82,6 @@ export class AttributesFieldArrayControl extends Component {
 
   constructor(props) {
     super(props);
-
-    if (props.fields.length) {
-      this.numberRemainingLevels = props.maxAttributesAmount - props.fields.length;
-    } else {
-      this.numberRemainingLevels = props.maxAttributesAmount - 1;
-      props.fields.push('');
-    }
   }
 
   getAttributes = () => this.props.fields.getAll() || [];
@@ -110,6 +103,7 @@ export class AttributesFieldArrayControl extends Component {
     const canAddNewItems = fields.length < maxAttributesAmount;
     const addButtonTooltip = disabled ? formatMessage(messages.addButtonTooltip) : null;
     const inputTooltipProps = disabled ? { content: formatMessage(messages.inputTooltip) } : {};
+    const numberRemainingLevels = maxAttributesAmount - fields.length;
 
     return (
       <Fragment>
@@ -143,10 +137,7 @@ export class AttributesFieldArrayControl extends Component {
               {!isFirstItem && (
                 <span
                   className={cx('remove-icon')}
-                  onClick={() => {
-                    this.numberRemainingLevels += 1;
-                    return fields.remove(index);
-                  }}
+                  onClick={() => fields.remove(index)}
                 >
                   {Parser(CrossIcon)}
                 </span>
@@ -165,20 +156,17 @@ export class AttributesFieldArrayControl extends Component {
                 variant='text'
                 className={cx('add-level')}
                 disabled={disabled}
-                onClick={() => {
-                  this.numberRemainingLevels -= 1;
-                  return fields.push('');
-                }}
+                onClick={() => fields.push('')}
               >
                 {formatMessage(messages.addOneMoreLevel)}
               </Button>
             </ConditionalTooltip>
             {showRemainingLevels && (
               <div className={cx('remaining-level')}>
-                {this.numberRemainingLevels === 1
+                {numberRemainingLevels === 1
                   ? formatMessage(messages.levelCanBeAddedMessage)
                   : formatMessage(messages.levelsCanBeAddedMessage, {
-                      amount: this.numberRemainingLevels,
+                      amount: numberRemainingLevels,
                     })}
               </div>
             )}
