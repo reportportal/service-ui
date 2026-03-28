@@ -160,7 +160,7 @@ export class ComponentHealthCheckControls extends Component {
         maxAttributesAmount={MAX_ATTRIBUTES_AMOUNT}
         showRemainingLevels
         disabled={isInputDisabled}
-        messages={isInputDisabled && tooltipMessages}
+        messages={isInputDisabled ? tooltipMessages : {}}
         getURI={URLS.itemAttributeKeysAllSearch(
           projectKey,
           filterId,

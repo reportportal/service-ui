@@ -86,6 +86,14 @@ const messages = defineMessages({
     id: 'ComponentHealthCheckTableViewControls.excludeSkipped',
     defaultMessage: 'Exclude Skipped tests from statistics',
   },
+  addButtonTooltip: {
+    id: 'ComponentHealthCheckControls.addButtonTooltip',
+    defaultMessage: 'New levels cannot be added until filter is selected',
+  },
+  inputTooltip: {
+    id: 'ComponentHealthCheckControls.inputTooltip',
+    defaultMessage: 'Please select a filter first',
+  }
 });
 
 const passingRateValidator = (formatMessage) =>
@@ -184,7 +192,16 @@ export class ComponentHealthCheckTableViewControls extends Component {
   };
 
   renderAttributesFieldArray = ({ fields, fieldValidator }) => {
+    const { widgetSettings: { filters } } = this.props;
+    const isInputDisabled = !filters?.length;
+
     const url = this.getItemAttributeKeysAllSearchURL();
+
+    const { formatMessage } = this.props.intl;
+    const tooltipMessages =  {
+      inputsTooltipMessage: formatMessage(messages.inputTooltip),
+      addButtonTooltipMessage: formatMessage(messages.addButtonTooltip),
+    };
 
     return (
       <AttributesFieldArrayControl
@@ -193,6 +210,8 @@ export class ComponentHealthCheckTableViewControls extends Component {
         maxAttributesAmount={MAX_ATTRIBUTES_AMOUNT}
         showRemainingLevels
         getURI={url}
+        disabled={isInputDisabled}
+        messages={isInputDisabled ? tooltipMessages : {}}
       />
     );
   };
