@@ -72,10 +72,12 @@ export class InitialDataContainer extends Component {
     const storedLastPath = getSessionItem(LAST_VISITED_PATH_STORAGE_KEY);
     removeSessionItem(LAST_VISITED_PATH_STORAGE_KEY);
 
+    const currentPath = window.location.hash.replace(/^#/, '');
+    const fallbackPath = currentPath.startsWith('/') ? currentPath : '/login';
     const targetPath =
       typeof storedLastPath === 'string' && storedLastPath.startsWith('/')
         ? storedLastPath
-        : '/login';
+        : fallbackPath;
     const normalizedHash = targetPath.startsWith('#') ? targetPath : `#${targetPath}`;
 
     if (window.location.hash !== normalizedHash) {
