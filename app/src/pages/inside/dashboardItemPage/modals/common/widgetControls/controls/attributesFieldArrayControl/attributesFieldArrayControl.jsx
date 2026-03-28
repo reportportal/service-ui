@@ -135,12 +135,13 @@ export class AttributesFieldArrayControl extends Component {
                 </FieldProvider>
               </div>
               {!isFirstItem && (
-                <span
-                  className={cx('remove-icon')}
+                <Button
+                  variant='text'
+                  className={cx('remove-icon', "with-hover")}
                   onClick={() => fields.remove(index)}
                 >
                   {Parser(CrossIcon)}
-                </span>
+                </Button>
               )}
             </ModalField>
           );
