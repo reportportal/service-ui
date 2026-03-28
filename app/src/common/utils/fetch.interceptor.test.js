@@ -127,4 +127,46 @@ describe('initAuthInterceptor', () => {
     });
   });
 
+  test('marks API unavailable on composite info bad gateway error', async () => {
+    axiosMock.onGet('/composite/info').reply(502);
+
+    await expect(axios.get('/composite/info')).rejects.toBeTruthy();
+
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: 'setServiceAvailability',
+      payload: {
+        checked: true,
+        apiUnavailable: true,
+      },
+    });
+  });
+
+  test('marks API unavailable on composite info gateway timeout', async () => {
+    axiosMock.onGet('/composite/info').reply(504);
+
+    await expect(axios.get('/composite/info')).rejects.toBeTruthy();
+
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: 'setServiceAvailability',
+      payload: {
+        checked: true,
+        apiUnavailable: true,
+      },
+    });
+  });
+
+  test('marks API unavailable on composite info network error', async () => {
+    axiosMock.onGet('/composite/info').networkError();
+
+    await expect(axios.get('/composite/info')).rejects.toBeTruthy();
+
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: 'setServiceAvailability',
+      payload: {
+        checked: true,
+        apiUnavailable: true,
+      },
+    });
+  });
+
 });
