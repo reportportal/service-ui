@@ -31,6 +31,7 @@ export const PaginationWrapper = ({
   showPagination,
   className,
   paginationClassName,
+  paginationContainerClassName,
   changePageSize,
   changePageSizeEvent,
   bulkPanelProps,
@@ -53,7 +54,13 @@ export const PaginationWrapper = ({
       </ScrollWrapper>
       {showPagination && (
         <div className={cx('sticky-footer')}>
-          <div className={cx('pagination-container', { 'pagination-with-panel': isBulkPanelVisible })}>
+          <div
+            className={cx(
+              'pagination-container',
+              { 'pagination-with-panel': isBulkPanelVisible },
+              paginationContainerClassName,
+            )}
+          >
             <Pagination
               className={cx('pagination', paginationClassName)}
               changePageSize={changePageSizeHandle}
@@ -74,6 +81,7 @@ PaginationWrapper.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   paginationClassName: PropTypes.string,
+  paginationContainerClassName: PropTypes.string,
   changePageSizeEvent: PropTypes.func,
   bulkPanelProps: PropTypes.shape({
     items: PropTypes.array,
@@ -87,6 +95,8 @@ PaginationWrapper.propTypes = {
 PaginationWrapper.defaultProps = {
   children: null,
   className: '',
+  paginationClassName: '',
+  paginationContainerClassName: '',
   changePageSizeEvent: () => {},
   bulkPanelProps: null,
 };

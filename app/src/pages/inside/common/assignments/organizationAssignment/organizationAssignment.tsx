@@ -24,9 +24,9 @@ interface OrganizationAssignmentProps {
   onChange?: (value: Organization | Organization[]) => void;
   value?: Organization | Organization[];
   isMultiple?: boolean;
-  organizationRoleDisabledTooltip?: string | null;
   formName?: string;
   invitedUserId?: number | null;
+  excludeUserAssignments?: boolean;
   isOrganizationFormOpen?: boolean;
   onExpandOrganization?: (orgId: number) => void;
 }
@@ -35,9 +35,9 @@ export const OrganizationAssignment = ({
   value,
   onChange,
   isMultiple = false,
-  organizationRoleDisabledTooltip = null,
   formName,
   invitedUserId,
+  excludeUserAssignments = false,
   isOrganizationFormOpen = false,
   onExpandOrganization,
 }: OrganizationAssignmentProps) => {
@@ -90,6 +90,7 @@ export const OrganizationAssignment = ({
               onRemove={() => removeItem(index)}
               collapsable
               invitedUserId={invitedUserId}
+              excludeUserAssignments={excludeUserAssignments}
               addProjectDisabled={(openFormOrgId !== null && openFormOrgId !== org.id) || isOrganizationFormOpen}
               onAddProjectFormToggle={handleAddProjectFormToggle}
               onExpandOrganization={onExpandOrganization}
@@ -104,8 +105,8 @@ export const OrganizationAssignment = ({
     <OrganizationItem
       value={value as Organization}
       onChange={(updates) => updateItem(updates)}
-      organizationRoleDisabledTooltip={organizationRoleDisabledTooltip}
       invitedUserId={invitedUserId}
+      excludeUserAssignments={excludeUserAssignments}
       onAddProjectFormToggle={handleAddProjectFormToggle}
       onExpandOrganization={onExpandOrganization}
     />

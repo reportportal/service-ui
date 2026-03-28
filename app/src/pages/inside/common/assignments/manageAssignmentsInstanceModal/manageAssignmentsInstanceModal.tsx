@@ -52,7 +52,12 @@ import {
   getManageAssignmentsInstanceChangeSet,
   mapProjectsFromResponse,
 } from '../utils';
+import { OrganizationType } from 'controllers/organization';
 import { UserOrganizationProjectsResponse } from 'controllers/organization/users/types';
+import {
+  type OrganizationSearchesItem,
+  type OrganizationsSearchesResponseData,
+} from 'controllers/instance/organizations';
 import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
 import { ApiError } from 'types/api';
 
@@ -71,6 +76,8 @@ interface InstanceUser {
     org_role: string;
     name: string;
     slug: string;
+    type?: OrganizationType;
+    owner_id?: number;
   }>;
 }
 
@@ -99,6 +106,7 @@ const ManageAssignmentsInstanceModalView = ({
   const dispatch = useDispatch();
 
   const [isSavingAssignments, setIsSavingAssignments] = useState(false);
+  const [organizationsLoading, setOrganizationsLoading] = useState(false);
   const initialOrganizationsRef = useRef<OrganizationValue[]>([]);
 
   const formSelector = formValueSelector(MANAGE_ASSIGNMENTS_FORM);
@@ -114,25 +122,74 @@ const ManageAssignmentsInstanceModalView = ({
   const isInlineAssignmentFormOpen = isAddingOrganization || isAddingProject;
   const isAdmin = user.instanceRole === ADMINISTRATOR;
 
+  const mergeOrganizationSearchItemsIntoOrgs = useCallback(
+    (orgs: OrganizationValue[], items: OrganizationSearchesItem[]) =>
+      orgs.map((org, orgIndex) => {
+        const nextOrg = items.find((item) => item.id === org.id);
+        const orgField = `${ORGANIZATIONS}[${orgIndex}]`;
+        if (nextOrg?.type) {
+          dispatch(change(MANAGE_ASSIGNMENTS_FORM, `${orgField}.type`, nextOrg.type));
+        }
+        if (nextOrg?.owner_id) {
+          dispatch(change(MANAGE_ASSIGNMENTS_FORM, `${orgField}.owner_id`, nextOrg.owner_id));
+        }
+        return { ...org, type: nextOrg?.type, owner_id: nextOrg?.owner_id };
+      }),
+    [dispatch],
+  );
+
   // Store initial organizations for dirty checking
   useEffect(() => {
-    const initializeForm = () => {
-      if (user?.organizations?.length > 0) {
-        const orgs: OrganizationValue[] = user.organizations.map((org) => ({
-          id: org.id,
-          name: org.name,
-          role: org.org_role,
-          projects: [],
-          isProjectsLoaded: false,
-          isExpanded: false,
-        }));
-        initialize({ [ORGANIZATIONS]: orgs });
-        initialOrganizationsRef.current = orgs;
-      }
-    };
+    let isActive = true;
 
-    initializeForm();
-  }, [user, initialize]);
+    if (!user?.organizations?.length) {
+      return;
+    }
+
+    let orgs: OrganizationValue[] = user.organizations
+      .map((org) => ({
+        id: org.id,
+        name: org.name,
+        type: org.type,
+        owner_id: org.owner_id,
+        role: org.org_role,
+        projects: [],
+        isProjectsLoaded: false,
+        isExpanded: false,
+      }))
+      .sort((first, second) => first.name.localeCompare(second.name));
+
+    initialize({ [ORGANIZATIONS]: orgs });
+    initialOrganizationsRef.current = orgs;
+
+    setOrganizationsLoading(true);
+
+    fetch(URLS.organizationSearches(), {
+      method: 'post',
+      data: {
+        limit: 300,
+        search_criteria: [{ filter_key: 'org_user_id', operation: 'EQ', value: String(user.id) }],
+      },
+    })
+      .then((response: OrganizationsSearchesResponseData) => {
+        if (!isActive) {
+          return;
+        }
+        const items = response.items ?? [];
+        orgs = mergeOrganizationSearchItemsIntoOrgs(orgs, items);
+        initialOrganizationsRef.current = orgs;
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (isActive) {
+          setOrganizationsLoading(false);
+        }
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, [user, initialize, dispatch, mergeOrganizationSearchItemsIntoOrgs]);
 
   // Fetch projects for organization when expanded
   const handleExpandOrganization = useCallback(
@@ -256,16 +313,19 @@ const ManageAssignmentsInstanceModalView = ({
     dispatch(hideModalAction());
   }, [dispatch]);
 
-  const renderDocumentationLink = useCallback((chunks: ReactNode) => (
-    <ExternalLink
-      href={referenceDictionary.rpDoc}
-      variant="compact"
-      isColoredIcon={false}
-      onClick={() => trackEvent(ALL_USERS_PAGE_EVENTS.MANAGE_ASSIGNMENTS_DOCUMENTATION)}
-    >
-      {chunks}
-    </ExternalLink>
-  ), [trackEvent]);
+  const renderDocumentationLink = useCallback(
+    (chunks: ReactNode) => (
+      <ExternalLink
+        href={referenceDictionary.rpDoc}
+        variant="compact"
+        isColoredIcon={false}
+        onClick={() => trackEvent(ALL_USERS_PAGE_EVENTS.MANAGE_ASSIGNMENTS_DOCUMENTATION)}
+      >
+        {chunks}
+      </ExternalLink>
+    ),
+    [trackEvent],
+  );
 
   const description = useMemo(
     () =>
@@ -289,12 +349,16 @@ const ManageAssignmentsInstanceModalView = ({
       okButton={{
         children: formatMessage(COMMON_LOCALE_KEYS.SAVE),
         disabled:
-          !isDirty || isAnyProjectsLoading || isSavingAssignments || isInlineAssignmentFormOpen,
+          !isDirty ||
+          organizationsLoading ||
+          isAnyProjectsLoading ||
+          isSavingAssignments ||
+          isInlineAssignmentFormOpen,
         onClick: handleSubmit(handleSave) as () => void,
       }}
     >
-      <div>
-        <ModalLoadingOverlay isVisible={isSavingAssignments} />
+      <div className={cx('modal-content')}>
+        <ModalLoadingOverlay isVisible={organizationsLoading} />
         {isAdmin && (
           <div className={cx('admin-info')}>
             <SystemMessage mode="info">

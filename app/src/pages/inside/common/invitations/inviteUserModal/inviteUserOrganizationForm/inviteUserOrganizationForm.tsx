@@ -34,7 +34,7 @@ export const InviteUserOrganizationForm = () => {
         onUserSelect={handleUserSelect}
       />
       <FieldElement name="organization">
-        <OrganizationAssignment invitedUserId={invitedUserId} />
+        <OrganizationAssignment invitedUserId={invitedUserId} excludeUserAssignments />
       </FieldElement>
     </form>
   );

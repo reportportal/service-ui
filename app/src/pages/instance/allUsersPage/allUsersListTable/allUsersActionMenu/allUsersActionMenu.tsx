@@ -31,6 +31,7 @@ import { messages as assignmentMessages } from 'common/constants/localization/as
 import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
 import { createClassnames } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { OrganizationType } from 'controllers/organization';
 import { ManageAssignmentsInstanceModal } from 'pages/inside/common/assignments/manageAssignmentsInstanceModal';
 import styles from './allUsersActionMenu.scss';
 
@@ -46,6 +47,8 @@ interface User {
     org_role: string;
     name: string;
     slug: string;
+    type?: OrganizationType;
+    owner_id?: number;
   }>;
 }
 
