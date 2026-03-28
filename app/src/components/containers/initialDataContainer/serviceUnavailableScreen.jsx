@@ -106,6 +106,7 @@ export const ServiceUnavailableScreen = ({ onRefresh }) => {
           href={referenceDictionary.rpLanding}
           target="_blank"
           rel="noreferrer"
+          aria-label="ReportPortal"
         >
           <div className={cx('logo')} />
         </a>
