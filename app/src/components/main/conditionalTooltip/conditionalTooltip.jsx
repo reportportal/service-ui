@@ -43,7 +43,3 @@ ConditionalTooltip.propTypes = {
   portalRoot: PropTypes.instanceOf(Element),
   isFloating: PropTypes.bool,
 };
-
-ConditionalTooltip.defaultProps = {
-  shouldDisplayTooltip: true,
-};
