@@ -46,21 +46,8 @@ function* fetchInitialData() {
   const appInfoResult = yield take(createFetchPredicate(APP_INFO_NAMESPACE));
 
   if (appInfoResult.error) {
-    yield put(
-      setServiceAvailabilityAction({
-        checked: true,
-        apiUnavailable: true,
-      }),
-    );
     return;
   }
-
-  yield put(
-    setServiceAvailabilityAction({
-      checked: true,
-      apiUnavailable: false,
-    }),
-  );
 
   yield put(fetchUserAction());
   const userResult = yield take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]);
