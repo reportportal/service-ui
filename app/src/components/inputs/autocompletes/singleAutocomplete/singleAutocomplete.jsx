@@ -142,8 +142,7 @@ export class SingleAutocomplete extends Component {
                     ref={ref}
                     className={cx('autocomplete', customClass, { 'naked-view': nakedView })}
                   >
-                    <ConditionalTooltip 
-                      shouldDisplayTooltip={Boolean(tooltipMessage)} 
+                    <ConditionalTooltip
                       content={tooltipMessage}
                     >
                       <input

@@ -16,8 +16,8 @@
 import { Tooltip } from '@reportportal/ui-kit';
 import PropTypes from 'prop-types';
 
-export const ConditionalTooltip = ({ children, shouldDisplayTooltip, ...tooltipProps }) => {
-  if (!shouldDisplayTooltip) {
+export const ConditionalTooltip = ({ children, ...tooltipProps }) => {
+  if (tooltipProps.content !== 0 && !tooltipProps.content) {
     return children;
   }
 
@@ -27,8 +27,6 @@ export const ConditionalTooltip = ({ children, shouldDisplayTooltip, ...tooltipP
 ConditionalTooltip.propTypes = {
   children: PropTypes.node.isRequired,
   content: PropTypes.node.isRequired,
-  
-  shouldDisplayTooltip: PropTypes.bool,
 
   wrapperClassName: PropTypes.string,
   tooltipClassName: PropTypes.string,

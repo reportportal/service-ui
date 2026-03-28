@@ -52,6 +52,14 @@ const messages = defineMessages({
     id: 'AttributesFieldArrayControl.levelCanBeAddedMessage',
     defaultMessage: '1 level can be added',
   },
+  addButtonTooltip: {
+    id: 'AttributesFieldArrayControl.addButtonTooltip',
+    defaultMessage: 'New levels cannot be added until filter is selected',
+  },
+  inputTooltip: {
+    id: 'AttributesFieldArrayControl.inputTooltip',
+    defaultMessage: 'Please select a filter first',
+  }
 });
 
 @injectIntl
@@ -64,20 +72,12 @@ export class AttributesFieldArrayControl extends Component {
     getURI: PropTypes.func.isRequired,
     attributeKeyFieldViewLabels: PropTypes.array,
     showRemainingLevels: PropTypes.bool,
-    messages: PropTypes.shape({
-      inputsTooltipMessage: PropTypes.string,
-      addButtonTooltipMessage: PropTypes.string,
-    }),
     disabled: PropTypes.bool,
   };
 
   static defaultProps = {
     attributeKeyFieldViewLabels: [],
     showRemainingLevels: false,
-    messages: {
-      inputsTooltipMessage: '',
-      addButtonTooltipMessage: '',
-    },
   };
 
   constructor(props) {
@@ -105,7 +105,6 @@ export class AttributesFieldArrayControl extends Component {
       attributeKeyFieldViewLabels,
       showRemainingLevels,
       disabled,
-      messages: { inputsTooltipMessage, addButtonTooltipMessage },
     } = this.props;
     const attributes = this.getAttributes();
     const canAddNewItems = fields.length < maxAttributesAmount;
@@ -129,7 +128,7 @@ export class AttributesFieldArrayControl extends Component {
                   <FieldErrorHint hintType="top">
                     <AsyncAutocomplete
                       disabled={disabled}
-                      tooltipMessage={inputsTooltipMessage}
+                      tooltipMessage={disabled ? formatMessage(messages.inputTooltip) : null}
                       getURI={getURI}
                       minLength={1}
                       placeholder={formatMessage(messages.attributeKeyFieldPlaceholder)}
@@ -156,8 +155,7 @@ export class AttributesFieldArrayControl extends Component {
         {canAddNewItems ? (
           <ModalField label=" " labelWidth={FIELD_LABEL_WIDTH}>
             <ConditionalTooltip
-              shouldDisplayTooltip={Boolean(addButtonTooltipMessage)}
-              content={addButtonTooltipMessage}
+              content={disabled ? formatMessage(messages.addButtonTooltip) : null}
               wrapperClassName={cx('tooltip-wrapper')}
               tooltipClassName={cx("tooltip")}
             >
