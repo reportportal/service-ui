@@ -91,7 +91,7 @@ export class InitialDataContainer extends Component {
     const { isAnalyticsEnabled, isInitialDataReady, children } = this.props;
     const { checked, apiUnavailable } = this.props.serviceAvailability;
 
-    if (!isInitialDataReady && checked && apiUnavailable) {
+    if (checked && apiUnavailable) {
       return <ServiceUnavailableScreen onRefresh={this.refreshPage} />;
     }
 
