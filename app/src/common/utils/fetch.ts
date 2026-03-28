@@ -99,7 +99,15 @@ export const updateToken = (newToken: string): void => {
 const isCompositeInfoRequest = (url = ''): boolean => /\/composite\/info/.test(url);
 const isServiceUnavailableError = (error: AxiosError): boolean => {
   const status = error.response?.status;
-  return !error.response || status === 500 || status === 502 || status === 503 || status === 504;
+  return (
+    !error.response ||
+    status === 408 ||
+    status === 429 ||
+    status === 500 ||
+    status === 502 ||
+    status === 503 ||
+    status === 504
+  );
 };
 
 export const initAuthInterceptor = (store: Store): void => {

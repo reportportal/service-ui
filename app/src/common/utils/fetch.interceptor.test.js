@@ -99,4 +99,32 @@ describe('initAuthInterceptor', () => {
     });
   });
 
+  test('marks API unavailable on composite info request timeout', async () => {
+    axiosMock.onGet('/composite/info').reply(408);
+
+    await expect(axios.get('/composite/info')).rejects.toBeTruthy();
+
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: 'setServiceAvailability',
+      payload: {
+        checked: true,
+        apiUnavailable: true,
+      },
+    });
+  });
+
+  test('marks API unavailable on composite info rate limiting', async () => {
+    axiosMock.onGet('/composite/info').reply(429);
+
+    await expect(axios.get('/composite/info')).rejects.toBeTruthy();
+
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: 'setServiceAvailability',
+      payload: {
+        checked: true,
+        apiUnavailable: true,
+      },
+    });
+  });
+
 });
