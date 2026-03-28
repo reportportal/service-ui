@@ -53,11 +53,11 @@ const messages = defineMessages({
     defaultMessage: '1 level can be added',
   },
   addButtonTooltip: {
-    id: 'AttributesFieldArrayControl.addButtonTooltip',
+    id: 'Tooltip.addAttributeKeyButton',
     defaultMessage: 'New levels cannot be added until filter is selected',
   },
   inputTooltip: {
-    id: 'AttributesFieldArrayControl.inputTooltip',
+    id: 'Tooltip.attributeKeyInput',
     defaultMessage: 'Please select a filter first',
   }
 });

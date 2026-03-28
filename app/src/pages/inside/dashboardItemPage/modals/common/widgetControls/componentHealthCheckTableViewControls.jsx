@@ -89,6 +89,10 @@ const messages = defineMessages({
     id: 'ComponentHealthCheckTableViewControls.excludeSkipped',
     defaultMessage: 'Exclude Skipped tests from statistics',
   },
+  inputTooltip: {
+    id: 'Tooltip.attributeKeyInput',
+    defaultMessage: 'Please select a filter first',
+  }
 });
 
 const passingRateValidator = (formatMessage) =>
@@ -229,6 +233,8 @@ export class ComponentHealthCheckTableViewControls extends Component {
     } = this.props;
     const attrUrlKeys = this.getItemAttributeKeysAllSearchURL();
     const sortObj = this.getSortObj();
+    const disabled = !this.props.widgetSettings.filters?.length;
+    const inputTooltipProps = disabled ? { content: formatMessage(messages.inputTooltip) } : {};
 
     return (
       <Fragment>
@@ -286,6 +292,8 @@ export class ComponentHealthCheckTableViewControls extends Component {
               >
                 <FieldErrorHint hintType="top">
                   <AsyncAutocomplete
+                    disabled={disabled}
+                    tooltipProps={inputTooltipProps}
                     getURI={attrUrlKeys}
                     minLength={1}
                     creatable
