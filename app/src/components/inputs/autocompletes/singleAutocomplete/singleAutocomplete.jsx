@@ -83,7 +83,7 @@ export class SingleAutocomplete extends Component {
     customClass: '',
     isOptionUnique: null,
     nakedView: false,
-    tooltipMessage: "",
+    tooltipMessage: null,
   };
 
   getOptionProps =

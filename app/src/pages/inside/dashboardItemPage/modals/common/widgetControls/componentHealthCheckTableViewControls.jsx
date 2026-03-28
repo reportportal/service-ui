@@ -85,7 +85,7 @@ const messages = defineMessages({
   excludeSkipped: {
     id: 'ComponentHealthCheckTableViewControls.excludeSkipped',
     defaultMessage: 'Exclude Skipped tests from statistics',
-  }
+  },
 });
 
 const passingRateValidator = (formatMessage) =>
