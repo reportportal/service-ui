@@ -26,6 +26,7 @@ import {
   Tooltip,
 } from '@reportportal/ui-kit';
 
+import { isBrowser } from 'es-toolkit';
 import { capitalize, createClassnames, fetch } from 'common/utils';
 import { EDITOR, MANAGER, MEMBER } from 'common/constants/projectRoles';
 import { messages } from 'common/constants/localization/invitationsLocalization';
@@ -276,6 +277,7 @@ export const OrganizationItem = ({
                   options={roleOptions}
                   onChange={handleRoleChange}
                   variant="ghost"
+                  menuPortalRoot={(isBrowser() && document.body) || undefined}
                 />
               </Tooltip>
             ) : (
@@ -286,6 +288,7 @@ export const OrganizationItem = ({
                 options={roleOptions}
                 onChange={handleRoleChange}
                 variant="ghost"
+                menuPortalRoot={(isBrowser() && document.body) || undefined}
               />
             )}
           </div>
