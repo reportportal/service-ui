@@ -276,6 +276,7 @@
   "Charts.skipped": "Omitido",
   "Charts.testCasesCaption": "Casos de prueba",
   "Charts.total": "Total {type}",
+  "Charts.totalCaption": "Total",
   "ClusterItemsGridRow.loadLabel": "Cargar más",
   "CommandItem.commandTitle": "Comando",
   "CommandItem.parametersTitle": "Parámetros",

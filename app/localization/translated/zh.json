@@ -276,6 +276,7 @@
   "Charts.skipped": "跳过",
   "Charts.testCasesCaption": "测试用例",
   "Charts.total": "全部{type}",
+  "Charts.totalCaption": "全部",
   "ClusterItemsGridRow.loadLabel": "加载更多",
   "CommandItem.commandTitle": "指令",
   "CommandItem.parametersTitle": "参数",

@@ -276,6 +276,7 @@
   "Charts.skipped": "Пропущено",
   "Charts.testCasesCaption": "Тествовые випадки",
   "Charts.total": "Всього {type}",
+  "Charts.totalCaption": "Всього",
   "ClusterItemsGridRow.loadLabel": "Завантажити",
   "CommandItem.commandTitle": "Команда",
   "CommandItem.parametersTitle": "Параметри",

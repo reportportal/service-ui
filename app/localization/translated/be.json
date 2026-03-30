@@ -276,6 +276,7 @@
   "Charts.skipped": "Прапушчана",
   "Charts.testCasesCaption": "Тэставыя выпадкі",
   "Charts.total": "Усяго {type}",
+  "Charts.totalCaption": "Усяго",
   "ClusterItemsGridRow.loadLabel": "Загрузіць яшчэ",
   "CommandItem.commandTitle": "Каманда",
   "CommandItem.parametersTitle": "Параметры",
