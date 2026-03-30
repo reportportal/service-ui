@@ -26,6 +26,7 @@ interface OrganizationAssignmentProps {
   isMultiple?: boolean;
   formName?: string;
   invitedUserId?: number | null;
+  userType?: string;
   excludeUserAssignments?: boolean;
   isOrganizationFormOpen?: boolean;
   onExpandOrganization?: (orgId: number) => void;
@@ -37,6 +38,7 @@ export const OrganizationAssignment = ({
   isMultiple = false,
   formName,
   invitedUserId,
+  userType,
   excludeUserAssignments = false,
   isOrganizationFormOpen = false,
   onExpandOrganization,
@@ -90,8 +92,9 @@ export const OrganizationAssignment = ({
               onRemove={() => removeItem(index)}
               collapsable
               invitedUserId={invitedUserId}
+              userType={userType}
               excludeUserAssignments={excludeUserAssignments}
-              addProjectDisabled={(openFormOrgId !== null && openFormOrgId !== org.id) || isOrganizationFormOpen}
+              disabled={(openFormOrgId !== null && openFormOrgId !== org.id) || isOrganizationFormOpen}
               onAddProjectFormToggle={handleAddProjectFormToggle}
               onExpandOrganization={onExpandOrganization}
             />
@@ -106,6 +109,7 @@ export const OrganizationAssignment = ({
       value={value as Organization}
       onChange={(updates) => updateItem(updates)}
       invitedUserId={invitedUserId}
+      userType={userType}
       excludeUserAssignments={excludeUserAssignments}
       onAddProjectFormToggle={handleAddProjectFormToggle}
       onExpandOrganization={onExpandOrganization}

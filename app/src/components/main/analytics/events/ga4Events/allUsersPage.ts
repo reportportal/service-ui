@@ -113,4 +113,11 @@ export const ALL_USERS_PAGE_EVENTS = {
     link_name: 'documentation',
     place: 'manage_assignment',
   },
+  manageAssignmentsSave: (condition: string) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_users',
+    element_name: 'save',
+    modal: 'manage_assignment',
+    condition,
+  }),
 };

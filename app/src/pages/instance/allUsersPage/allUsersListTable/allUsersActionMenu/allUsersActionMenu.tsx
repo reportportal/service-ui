@@ -42,6 +42,7 @@ interface User {
   email: string;
   fullName: string;
   instanceRole: string;
+  accountType: string;
   organizations: Array<{
     id: number;
     org_role: string;
