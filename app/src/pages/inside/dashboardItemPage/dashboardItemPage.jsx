@@ -302,7 +302,7 @@ export class DashboardItemPage extends Component {
       tracking: { trackEvent },
     } = this.props;
 
-    trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('dashboard_layout_settings', id));
+    trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('dashboard_layout', id));
   };
 
   toggleFullWidthMode = () => {
