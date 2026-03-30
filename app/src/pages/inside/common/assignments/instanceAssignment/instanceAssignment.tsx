@@ -123,6 +123,7 @@ export interface InstanceAssignmentProps extends InstanceAssignmentArrayProps<In
   formNamespace?: string;
   isOrganizationRequired: boolean;
   invitedUserId?: number | null;
+  userType?: string;
   excludeUserAssignments?: boolean;
   header?: string;
   addButtonPlacement?: 'header' | 'bottom';
@@ -166,6 +167,7 @@ export const InstanceAssignment = ({
   formNamespace,
   isOrganizationRequired = false,
   invitedUserId = null,
+  userType,
   excludeUserAssignments = false,
   header,
   addButtonPlacement = 'bottom',
@@ -571,6 +573,7 @@ export const InstanceAssignment = ({
           isMultiple
           formName={formName}
           invitedUserId={invitedUserId}
+          userType={userType}
           excludeUserAssignments={excludeUserAssignments}
           isOrganizationFormOpen={isOpen}
           onExpandOrganization={onExpandOrganization}

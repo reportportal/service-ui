@@ -35,6 +35,7 @@ export interface Project {
 interface ProjectItemsProps {
   projects: Project[];
   canEditByDefault: boolean;
+  disabled?: boolean;
   onChange: (id: number, updates: Partial<Project>) => void;
   onRemove: (id: number) => void;
 }
@@ -42,6 +43,7 @@ interface ProjectItemsProps {
 export const ProjectItems = ({
   projects = [],
   canEditByDefault,
+  disabled,
   onChange,
   onRemove,
 }: ProjectItemsProps) => {
@@ -62,13 +64,13 @@ export const ProjectItems = ({
       options={roleOptions}
       onChange={handleRoleChange(project.id)}
       variant="ghost"
-      disabled={canEditByDefault}
+      disabled={canEditByDefault || disabled}
     />
   );
 
   return projects.map((project) => (
     <div className={cx('project')} key={project.id}>
-      <div className={cx('name')}>{project.name}</div>
+      <div className={cx('name', { disabled })}>{project.name}</div>
       <div className={cx('controls')}>
         {canEditByDefault ? (
           <Tooltip
@@ -81,7 +83,11 @@ export const ProjectItems = ({
         ) : (
           renderRole(project)
         )}
-        <BaseIconButton className={cx('remove-button')} onClick={() => onRemove(project.id)}>
+        <BaseIconButton
+          className={cx('remove-button')}
+          onClick={() => onRemove(project.id)}
+          disabled={disabled}
+        >
           <CloseIcon />
         </BaseIconButton>
       </div>

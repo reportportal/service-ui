@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-export { useCanUnassignOrganization, useHandleUnassignSuccess } from './hooks';
+export { useCanUnassignOrganization, useHandleUnassignSuccess, useAssignmentsUtils } from './hooks';
 export { UnassignOrganizationModal } from './unassignOrganizationModal';
 export { AssignProjectModal } from './assignProjectModal';

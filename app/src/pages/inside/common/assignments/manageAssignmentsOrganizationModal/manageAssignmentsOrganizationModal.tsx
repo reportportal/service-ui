@@ -39,14 +39,13 @@ import {
   userAssignmentsUpdateLoadingSelector,
 } from 'controllers/organization/users';
 import type { UserOrganizationProjectsResponse } from 'controllers/organization/users/types';
-import { Organization, OrganizationType } from 'controllers/organization';
+import { Organization } from 'controllers/organization';
 import { messages } from 'common/constants/localization/assignmentsLocalization';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
-import { UPSA } from 'common/constants/accountType';
 import { hideModalAction } from 'controllers/modal';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 
-import { useHandleUnassignSuccess } from '..';
+import { useHandleUnassignSuccess, useAssignmentsUtils } from '..';
 import {
   type Organization as OrganizationValue,
   OrganizationAssignment,
@@ -99,6 +98,13 @@ const ManageAssignmentsOrganizationModalView = ({
   const isCurrentUser = currentUserId === user?.id;
   const isDirty = isAssignmentDirty(currentOrganization, initialOrganization);
   const isBusy = assignmentsLoading || assignmentsUpdateLoading || !currentOrganization;
+  const { unassignTooltip } = useAssignmentsUtils({
+    currentUserId,
+    userId: user.id,
+    userType: user.accountType,
+    organizationType: organization.type,
+    ownerId: organization.owner_id,
+  });
 
   const initialSnapshotTakenRef = useRef(false);
   const wasLoadingRef = useRef(false);
@@ -169,41 +175,17 @@ const ManageAssignmentsOrganizationModalView = ({
   };
 
   const renderUnassignButton = () => {
-    const { id: userId, accountType: userType } = user;
-    const { owner_id: ownerId, type: organizationType } = organization;
-    const isUpsaUser = userType === UPSA;
-    const isExternalOrg = organizationType === OrganizationType.EXTERNAL;
-    const isPersonalOrg = organizationType === OrganizationType.PERSONAL;
-    const isOrganizationOwner = userId === ownerId;
-    const isCurrentUser = currentUserId === userId;
-
-    let isDisabled = isBusy;
-    let tooltipMessage: MessageDescriptor = null;
-
-    if (isCurrentUser) {
-      isDisabled = true;
-      tooltipMessage =
-        isPersonalOrg && isOrganizationOwner
-          ? messages.unassignPersonalOwnerSelfMessage
-          : messages.unassignSelfMessage;
-    } else if (isUpsaUser && isExternalOrg) {
-      isDisabled = true;
-      tooltipMessage = messages.unassignUpsaMessage;
-    } else if (isPersonalOrg && isOrganizationOwner) {
-      isDisabled = true;
-      tooltipMessage = messages.unassignPersonalOwnerMessage;
-    }
-
+    const isDisabled = isBusy || !!unassignTooltip;
     const button = (
       <Button variant="text-danger" onClick={handleUnassignClick} disabled={isDisabled}>
         {formatMessage(messages.unassignFromOrganization)}
       </Button>
     );
 
-    return tooltipMessage ? (
+    return unassignTooltip ? (
       <Tooltip
         placement="top"
-        content={formatMessage(tooltipMessage)}
+        content={formatMessage(unassignTooltip)}
         tooltipClassName={cx('custom-tooltip')}
         wrapperClassName={cx('tooltip-wrapper')}
       >
@@ -298,6 +280,7 @@ const ManageAssignmentsOrganizationModalView = ({
             onChange={handleOrganizationChange}
             invitedUserId={user.id}
             formName={MANAGE_ASSIGNMENTS_FORM}
+            userType={user.accountType}
           />
         )}
       </div>
