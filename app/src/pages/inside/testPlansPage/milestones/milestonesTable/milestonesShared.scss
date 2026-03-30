@@ -53,3 +53,26 @@
   border-radius: 3px;
   text-align: center;
 }
+
+@mixin milestone-notice-typography($font-weight, $text-color) {
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: $font-weight;
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0;
+  text-indent: 1px;
+  color: $text-color;
+}
+
+@mixin duplicate-milestone-notice-title {
+  @include milestone-notice-typography(var(--rp-ui-base-fw-bold), var(--rp-ui-color-text));
+
+  text-transform: none;
+}
+
+@mixin duplicate-milestone-notice-body {
+  @include milestone-notice-typography(
+    var(--rp-ui-base-fw-regular),
+    var(--rp-ui-color-text-secondary)
+  );
+}
