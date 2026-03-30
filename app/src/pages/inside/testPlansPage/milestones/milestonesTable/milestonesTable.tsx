@@ -37,9 +37,16 @@ const cx = createClassnames(styles);
 interface MilestonesTableProps {
   milestones: TmsMilestoneRS[];
   isLoading: boolean;
+  onEditMilestone?: (milestone: TmsMilestoneRS) => void;
+  onDuplicateMilestone?: (milestone: TmsMilestoneRS) => void;
 }
 
-export const MilestonesTable = ({ milestones, isLoading }: MilestonesTableProps) => {
+export const MilestonesTable = ({
+  milestones,
+  isLoading,
+  onEditMilestone,
+  onDuplicateMilestone,
+}: MilestonesTableProps) => {
   const milestonesPageData = useSelector(milestonesPageSelector);
   const { organizationSlug, projectSlug } = useProjectDetails();
   const baseUrl = `/organizations/${organizationSlug}/projects/${projectSlug}/milestones`;
@@ -65,7 +72,14 @@ export const MilestonesTable = ({ milestones, isLoading }: MilestonesTableProps)
         {isLoading ? (
           <PageLoader />
         ) : (
-          milestones.map((milestone) => <MilestoneCard key={milestone.id} milestone={milestone} />)
+          milestones.map((milestone) => (
+            <MilestoneCard
+              key={milestone.id}
+              milestone={milestone}
+              onEditMilestone={onEditMilestone}
+              onDuplicateMilestone={onDuplicateMilestone}
+            />
+          ))
         )}
       </div>
       {showPagination && (

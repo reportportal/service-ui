@@ -16,8 +16,14 @@
 
 import type { TmsMilestoneRS } from 'controllers/milestone';
 
-export type MilestoneCardProps = {
-  milestone: TmsMilestoneRS;
-  onEditMilestone?: (milestone: TmsMilestoneRS) => void;
-  onDuplicateMilestone?: (milestone: TmsMilestoneRS) => void;
-};
+export interface DuplicateMilestoneOwnProps {
+  sourceMilestone: TmsMilestoneRS;
+}
+
+export interface DuplicateMilestoneModalProps {
+  data?: TmsMilestoneRS | null;
+}
+
+export interface UseDuplicateMilestoneParams {
+  sourceMilestoneId: number;
+}

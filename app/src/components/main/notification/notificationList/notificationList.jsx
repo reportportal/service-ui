@@ -380,6 +380,14 @@ export const notificationMessages = defineMessages({
     id: 'MilestonesPage.milestoneCreatedSuccess',
     defaultMessage: 'Milestone has been created successfully.',
   },
+  milestoneUpdatedSuccess: {
+    id: 'MilestonesPage.milestoneUpdatedSuccess',
+    defaultMessage: 'Changes for the Milestone has been saved successfully.',
+  },
+  milestoneDuplicatedSuccess: {
+    id: 'MilestonesPage.milestoneDuplicatedSuccess',
+    defaultMessage: 'Milestone has been duplicated successfully.',
+  },
   testPlanRedirectWarningMessage: {
     id: 'TestPlansPage.testPlanRedirectWarningMessage',
     defaultMessage:

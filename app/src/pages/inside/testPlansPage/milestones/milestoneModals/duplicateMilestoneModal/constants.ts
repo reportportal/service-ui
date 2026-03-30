@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-import type { TmsMilestoneRS } from 'controllers/milestone';
+export const DUPLICATE_MILESTONE_MODAL_KEY = 'duplicateMilestoneModalKey';
 
-export type MilestoneCardProps = {
-  milestone: TmsMilestoneRS;
-  onEditMilestone?: (milestone: TmsMilestoneRS) => void;
-  onDuplicateMilestone?: (milestone: TmsMilestoneRS) => void;
-};
+export const DUPLICATE_MILESTONE_FORM_NAME = 'duplicate-milestone-modal-form';

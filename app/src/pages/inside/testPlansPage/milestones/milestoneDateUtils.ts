@@ -33,3 +33,8 @@ export const dateOnlyStringToUtcIso = (value: string): string | null => {
   if (!d) return null;
   return new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())).toISOString();
 };
+
+export const isoToDateOnlyFormValue = (iso: string): string => {
+  const d = parseISO(iso);
+  return isValid(d) ? toDateOnlyString(d) : '';
+};

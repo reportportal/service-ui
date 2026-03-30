@@ -33,7 +33,11 @@ import styles from './milestoneCard.scss';
 
 const cx = createClassnames(styles);
 
-export const MilestoneCard = ({ milestone }: MilestoneCardProps) => {
+export const MilestoneCard = ({
+  milestone,
+  onEditMilestone,
+  onDuplicateMilestone,
+}: MilestoneCardProps) => {
   const { formatMessage } = useIntl();
   const [expanded, setExpanded] = useState(false);
   const { coveredPct, plansCount } = aggregateMilestoneCoverage(milestone);
@@ -91,7 +95,11 @@ export const MilestoneCard = ({ milestone }: MilestoneCardProps) => {
           </div>
         </div>
         <MilestoneCardStatusButton milestone={milestone} />
-        <MilestoneCardActionsMenu />
+        <MilestoneCardActionsMenu
+          milestone={milestone}
+          onEditMilestone={onEditMilestone}
+          onDuplicateMilestone={onDuplicateMilestone}
+        />
       </div>
       {expanded && (
         <div className={cx('milestone-card__expanded')}>

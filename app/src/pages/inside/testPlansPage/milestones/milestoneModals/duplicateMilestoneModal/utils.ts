@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-import type { TmsMilestoneRS } from 'controllers/milestone';
-
-export type MilestoneCardProps = {
-  milestone: TmsMilestoneRS;
-  onEditMilestone?: (milestone: TmsMilestoneRS) => void;
-  onDuplicateMilestone?: (milestone: TmsMilestoneRS) => void;
+/**
+ * Builds the next name when duplicating a milestone:
+ * "My milestone" → "My milestone (1)"
+ * "My milestone (1)" → "My milestone (2)"
+ */
+export const getNextDuplicateMilestoneName = (currentName: string): string => {
+  const suffixMatch = currentName.match(/\s+\((\d+)\)$/);
+  if (suffixMatch) {
+    const next = parseInt(suffixMatch[1], 10) + 1;
+    const base = currentName.slice(0, currentName.length - suffixMatch[0].length).trimEnd();
+    return `${base} (${next})`;
+  }
+  return `${currentName} (1)`;
 };

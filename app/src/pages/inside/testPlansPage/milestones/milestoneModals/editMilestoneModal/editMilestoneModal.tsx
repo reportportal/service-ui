@@ -21,29 +21,33 @@ import { Modal } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { createClassnames } from 'common/utils';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { MilestoneStatus, TmsMilestoneType } from 'controllers/milestone';
+import { TmsMilestoneType } from 'controllers/milestone';
 import { useModalButtons } from 'hooks/useModalButtons';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 
-import { CREATE_MILESTONE_FORM_NAME, INITIAL_MILESTONE_FORM_VALUES } from './constants';
-import { createMilestoneModalMessages } from './messages';
-import { dateOnlyStringToUtcIso } from '../../milestoneDateUtils';
+import { createMilestoneModalMessages } from '../createMilestoneModal/messages';
+import { dateOnlyStringToUtcIso, isoToDateOnlyFormValue } from '../../milestoneDateUtils';
 import { MilestoneFormModalContent } from '../milestoneFormModalContent';
-import type { MilestoneFormValues } from './types';
-import { useCreateMilestone } from './useCreateMilestone';
-import { createValidateMilestoneForm } from './validateMilestoneForm';
+import type { MilestoneFormValues } from '../createMilestoneModal/types';
+import { createValidateMilestoneForm } from '../createMilestoneModal/validateMilestoneForm';
+import { EDIT_MILESTONE_FORM_NAME } from './constants';
+import type { EditMilestoneModalProps, EditMilestoneOwnProps } from './types';
+import { useEditMilestone } from './useEditMilestone';
 
-import styles from './createMilestoneModal.scss';
+import styles from '../createMilestoneModal/createMilestoneModal.scss';
 
 const cx = createClassnames(styles);
 
-type FormProps = InjectedFormProps<MilestoneFormValues>;
-
-const CreateMilestoneModalForm = ({ handleSubmit, invalid, dirty, change }: FormProps) => {
+const EditMilestoneModalForm = ({
+  handleSubmit,
+  invalid,
+  dirty,
+  change,
+  milestone,
+}: InjectedFormProps<MilestoneFormValues> & EditMilestoneOwnProps) => {
   const { formatMessage } = useIntl();
-  const { isLoading, submitMilestone } = useCreateMilestone();
+  const { isLoading, submitMilestone } = useEditMilestone({ milestoneId: milestone.id });
 
   const onSubmit = (values: MilestoneFormValues) => {
     const startIso = dateOnlyStringToUtcIso(values.startDate.trim());
@@ -53,7 +57,7 @@ const CreateMilestoneModalForm = ({ handleSubmit, invalid, dirty, change }: Form
     void submitMilestone({
       name: values.name.trim(),
       type: values.type as TmsMilestoneType,
-      status: MilestoneStatus.SCHEDULED,
+      status: milestone.status,
       startDate: startIso,
       endDate: endIso,
     });
@@ -62,17 +66,17 @@ const CreateMilestoneModalForm = ({ handleSubmit, invalid, dirty, change }: Form
   const { okButton, cancelButton, hideModal } = useModalButtons({
     okButtonText: (
       <LoadingSubmitButton isLoading={isLoading}>
-        {formatMessage(COMMON_LOCALE_KEYS.CREATE)}
+        {formatMessage(createMilestoneModalMessages.saveMilestoneChanges)}
       </LoadingSubmitButton>
     ),
     isLoading,
-    isSubmitButtonDisabled: invalid,
+    isSubmitButtonDisabled: invalid || !dirty,
     onSubmit: handleSubmit(onSubmit) as VoidFn,
   });
 
   return (
     <Modal
-      title={formatMessage(createMilestoneModalMessages.createMilestoneModalTitle)}
+      title={formatMessage(createMilestoneModalMessages.editMilestoneModalTitle)}
       okButton={okButton}
       className={cx('create-milestone-modal')}
       cancelButton={cancelButton}
@@ -83,7 +87,7 @@ const CreateMilestoneModalForm = ({ handleSubmit, invalid, dirty, change }: Form
         <ModalLoadingOverlay isVisible={isLoading} />
         <form onSubmit={handleSubmit(onSubmit) as (event: FormEvent) => void}>
           <MilestoneFormModalContent
-            formName={CREATE_MILESTONE_FORM_NAME}
+            formName={EDIT_MILESTONE_FORM_NAME}
             isLoading={isLoading}
             change={change}
           />
@@ -93,15 +97,32 @@ const CreateMilestoneModalForm = ({ handleSubmit, invalid, dirty, change }: Form
   );
 };
 
-const CreateMilestoneModalRedux = reduxForm<MilestoneFormValues>({
-  form: CREATE_MILESTONE_FORM_NAME,
-  initialValues: INITIAL_MILESTONE_FORM_VALUES,
+const EditMilestoneModalConnected = reduxForm<MilestoneFormValues, EditMilestoneOwnProps>({
+  form: EDIT_MILESTONE_FORM_NAME,
   destroyOnUnmount: true,
-})(CreateMilestoneModalForm);
+})(EditMilestoneModalForm);
 
-export const CreateMilestoneModal = () => {
+export const EditMilestoneModal = ({ data }: EditMilestoneModalProps) => {
   const { formatMessage } = useIntl();
   const validate = useMemo(() => createValidateMilestoneForm(formatMessage), [formatMessage]);
 
-  return <CreateMilestoneModalRedux validate={validate} />;
+  if (!data) {
+    return null;
+  }
+
+  const initialValues: MilestoneFormValues = {
+    name: data.name,
+    type: data.type,
+    startDate: isoToDateOnlyFormValue(data.startDate),
+    endDate: isoToDateOnlyFormValue(data.endDate),
+  };
+
+  return (
+    <EditMilestoneModalConnected
+      key={data.id}
+      validate={validate}
+      initialValues={initialValues}
+      milestone={data}
+    />
+  );
 };

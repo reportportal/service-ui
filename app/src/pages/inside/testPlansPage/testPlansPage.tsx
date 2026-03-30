@@ -35,7 +35,13 @@ import {
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useQueryParams } from 'common/hooks';
 
-import { EmptyMilestones, MilestonesTable, useCreateMilestoneModal } from './milestones';
+import {
+  EmptyMilestones,
+  MilestonesTable,
+  useCreateMilestoneModal,
+  useDuplicateMilestoneModal,
+  useEditMilestoneModal,
+} from './milestones';
 import { PageHeaderWithBreadcrumbsAndActions } from '../common/pageHeaderWithBreadcrumbsAndActions';
 import { commonMessages } from './commonMessages';
 
@@ -43,6 +49,8 @@ export const TestPlansPage = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { openModal: openMilestoneModal } = useCreateMilestoneModal();
+  const { openModal: openEditMilestoneModal } = useEditMilestoneModal();
+  const { openModal: openDuplicateMilestoneModal } = useDuplicateMilestoneModal();
   const projectName = useSelector(projectNameSelector);
   const { canManageTestPlans } = useUserPermissions();
   const { organizationSlug, projectSlug } = useSelector(
@@ -63,7 +71,14 @@ export const TestPlansPage = () => {
 
   const renderContent = () => {
     if ((isNotNil(milestones) && !isEmpty(milestones)) || milestonesLoading) {
-      return <MilestonesTable milestones={milestones ?? []} isLoading={milestonesLoading} />;
+      return (
+        <MilestonesTable
+          milestones={milestones ?? []}
+          isLoading={milestonesLoading}
+          onEditMilestone={canManageTestPlans ? openEditMilestoneModal : undefined}
+          onDuplicateMilestone={canManageTestPlans ? openDuplicateMilestoneModal : undefined}
+        />
+      );
     }
 
     return <EmptyMilestones />;
