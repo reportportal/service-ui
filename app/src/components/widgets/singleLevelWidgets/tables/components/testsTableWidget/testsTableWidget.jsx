@@ -34,8 +34,12 @@ export const TestsTableWidget = ({
   onItemClick,
   opensLinkInNewTab,
   passFullRowOnItemClick,
+  omitLaunchExecutionNumber,
 }) => {
-  const launchName = launch.number ? `${launch.name} #${launch.number}` : launch.name;
+  const launchName =
+    omitLaunchExecutionNumber || !launch.number
+      ? launch.name
+      : `${launch.name} #${launch.number}`;
 
   return (
     <div className={cx('tests-table-widget')}>
@@ -64,6 +68,7 @@ TestsTableWidget.propTypes = {
   hideInfoBlock: bool,
   opensLinkInNewTab: bool,
   passFullRowOnItemClick: bool,
+  omitLaunchExecutionNumber: bool,
 };
 
 TestsTableWidget.defaultProps = {
@@ -73,4 +78,5 @@ TestsTableWidget.defaultProps = {
   onItemClick: null,
   opensLinkInNewTab: false,
   passFullRowOnItemClick: false,
+  omitLaunchExecutionNumber: false,
 };
