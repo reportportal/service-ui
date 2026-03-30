@@ -30,6 +30,7 @@ export {
   EMAIL_FILTER_NAME_CONDITION,
   timeRangeValues,
   timeRangeLastLoginValues,
+  TIME_RANGE_GA4_LABELS,
   getRangeComparisons,
   getTimeRangeOptions,
   getLastLoginOptions,

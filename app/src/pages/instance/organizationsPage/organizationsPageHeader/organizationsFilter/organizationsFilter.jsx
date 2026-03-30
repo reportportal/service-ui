@@ -32,6 +32,7 @@ import {
   TEAMMATES_FILTER_NAME_CONDITION,
   ORGANIZATION_TYPE_FILTER_NAME,
   timeRangeValues,
+  TIME_RANGE_GA4_LABELS,
   getRangeComparisons,
   getTimeRangeOptions,
   messages as helpMessage,
@@ -206,6 +207,7 @@ export const OrganizationsFilter = ({
       initialFilterState,
       entities[LAST_RUN_DATE_FILTER_NAME]?.value,
       LAST_RUN_DATE_FILTER_NAME,
+      TIME_RANGE_GA4_LABELS,
     );
 
     return ORGANIZATION_PAGE_EVENTS.clickApplyFilterButton(type, condition);

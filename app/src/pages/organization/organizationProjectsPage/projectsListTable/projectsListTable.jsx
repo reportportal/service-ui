@@ -128,6 +128,8 @@ export const ProjectsListTable = ({
       changePage={onChangePage}
       changePageSize={onChangePageSize}
       className={cx('projects-pagination-wrapper')}
+      paginationContainerClassName={cx('projects-pagination-container')}
+      paginationClassName={cx('projects-pagination')}
       changePageSizeEvent={PROJECTS_PAGE_EVENTS.changePageSize}
     >
       <Table

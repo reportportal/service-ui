@@ -30,6 +30,8 @@ import {
   ACTIONS_WITH_FILTERS,
   ACTIONS_WITH_INTEGRATIONS,
   ACTIONS_WITH_AA_SETTINGS,
+  ACTIONS_WITH_NOTIFICATION_RULE_SETTINGS,
+  ACTIONS_WITH_NOTIFICATION_RULES,
   ACTIONS_WITH_DEFECTS,
   ACTIONS_WITH_LOG_TYPES,
   ACTIONS_WITH_IMPORT,
@@ -67,13 +69,15 @@ import { UpdateItem } from './activities/updateItem';
 import { CommonEntity } from './activities/commonEntity';
 import { DefectType } from './activities/defectType';
 import { LogType } from './activities/logType';
-import { Notifications } from './activities/notifications';
 import styles from './projectActivity.scss';
 import { AssignUser } from './activities/assignUser';
 import { UnassignUser } from './activities/unassignUser';
 import { ChangeRole } from './activities/changeRole';
 import { CreateProject } from './activities/createProject';
 import { UpdateAutoPatternAnalysis } from './activities/updatePatternAnalysis';
+import { LegacyNotificationActivity } from './activities/legacyNotificationActivity';
+import { RuleNotificationActivity } from './activities/notificationRuleActivity';
+import { NotificationSettingsActivity } from './activities/notificationSettingsActivity';
 
 const cx = classNames.bind(styles);
 
@@ -190,6 +194,10 @@ export class ProjectActivity extends Component {
         ) : (
           <AnalysisConfigurations activity={activity} />
         );
+      case ACTIONS_WITH_NOTIFICATION_RULE_SETTINGS:
+        return <NotificationSettingsActivity activity={activity} />;
+      case ACTIONS_WITH_NOTIFICATION_RULES:
+        return <RuleNotificationActivity activity={activity} />;
       case ACTIONS_WITH_DEFECTS:
         return <DefectType activity={activity} />;
       case ACTIONS_WITH_LOG_TYPES:
@@ -203,7 +211,7 @@ export class ProjectActivity extends Component {
         return <Launch activity={activity} />;
       case UPDATE_PROJECT:
         return activity.objectType === UPDATE_NOTIFICATIONS ? (
-          <Notifications activity={activity} />
+          <LegacyNotificationActivity activity={activity} />
         ) : (
           <DefaultProjectSettings activity={activity} lang={this.props.lang} />
         );
