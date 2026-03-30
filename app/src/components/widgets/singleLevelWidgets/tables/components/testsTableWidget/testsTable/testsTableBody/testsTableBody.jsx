@@ -32,6 +32,7 @@ export class TestsTableBody extends React.Component {
     getMatrixTooltip: func,
     onItemClick: func,
     opensLinkInNewTab: bool,
+    passFullRowOnItemClick: bool,
   };
 
   static defaultProps = {
@@ -39,6 +40,7 @@ export class TestsTableBody extends React.Component {
     getMatrixTooltip: null,
     onItemClick: null,
     opensLinkInNewTab: false,
+    passFullRowOnItemClick: false,
   };
 
   constructor(props) {
@@ -48,7 +50,8 @@ export class TestsTableBody extends React.Component {
   }
 
   renderRow = (test) => {
-    const { columns, getMatrixTooltip, onItemClick, opensLinkInNewTab } = this.props;
+    const { columns, getMatrixTooltip, onItemClick, opensLinkInNewTab, passFullRowOnItemClick } =
+      this.props;
     const { name, date, count, status, duration } = columns;
 
     const rowProps = {
@@ -64,6 +67,7 @@ export class TestsTableBody extends React.Component {
       getMatrixTooltip,
       onItemClick,
       opensLinkInNewTab,
+      passFullRowOnItemClick,
     };
 
     return <TestsTableRow {...rowProps} />;

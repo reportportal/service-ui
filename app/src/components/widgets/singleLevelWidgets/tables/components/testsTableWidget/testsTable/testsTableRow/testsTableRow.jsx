@@ -42,6 +42,7 @@ export class TestsTableRow extends Component {
     getMatrixTooltip: func,
     onItemClick: func,
     opensLinkInNewTab: bool,
+    passFullRowOnItemClick: bool,
   };
 
   static defaultProps = {
@@ -53,13 +54,18 @@ export class TestsTableRow extends Component {
     getMatrixTooltip: null,
     onItemClick: null,
     opensLinkInNewTab: false,
+    passFullRowOnItemClick: false,
   };
 
   itemClickHandler = () => {
-    const { onItemClick, data } = this.props;
+    const { onItemClick, data, passFullRowOnItemClick } = this.props;
 
     if (onItemClick) {
-      onItemClick(data.id || data.uniqueId);
+      if (passFullRowOnItemClick) {
+        onItemClick(data);
+      } else {
+        onItemClick(data.id || data.uniqueId);
+      }
     }
   };
 
