@@ -104,6 +104,7 @@ export class FlakyTests extends Component {
         getMatrixTooltip={this.getMatrixTooltip}
         onItemClick={this.itemClickHandler}
         passFullRowOnItemClick
+        omitLaunchExecutionNumber
       />
     );
   }
