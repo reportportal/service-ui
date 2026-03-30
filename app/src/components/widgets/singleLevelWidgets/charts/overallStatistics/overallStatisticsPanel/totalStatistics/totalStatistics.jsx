@@ -16,14 +16,17 @@
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
+import { messages } from 'components/widgets/common/messages';
 import { ProgressBar } from './progressBar';
 import styles from './totalStatistics.scss';
 
 const cx = classNames.bind(styles);
 
+@injectIntl
 export class TotalStatistics extends React.PureComponent {
   static propTypes = {
+    intl: PropTypes.object.isRequired,
     values: PropTypes.object.isRequired,
     onChartClick: PropTypes.func.isRequired,
     separateInterrupted: PropTypes.bool,
@@ -34,7 +37,12 @@ export class TotalStatistics extends React.PureComponent {
   };
 
   render() {
-    const { values, onChartClick, separateInterrupted } = this.props;
+    const {
+      intl: { formatMessage },
+      values,
+      onChartClick,
+      separateInterrupted,
+    } = this.props;
     const total = values.statistics$executions$total;
     const passed = values.statistics$executions$passed;
     const failed = values.statistics$executions$failed;
@@ -56,7 +64,7 @@ export class TotalStatistics extends React.PureComponent {
             <div className={cx('total')}>
               <div className={cx('amount')}>{total}</div>
 
-              <div>Total</div>
+              <div>{formatMessage(messages.totalCaption)}</div>
             </div>
             <ProgressBar onChartClick={onChartClick} progressData={progressData} />
           </div>
@@ -69,7 +77,7 @@ export class TotalStatistics extends React.PureComponent {
                 <div className={cx('amount')}>{passed}</div>
 
                 <div className={cx('label')}>
-                  <div className={cx('marker', 'passed')} /> Passed
+                  <div className={cx('marker', 'passed')} /> {formatMessage(messages.passed)}
                 </div>
               </div>
             )}
@@ -78,7 +86,7 @@ export class TotalStatistics extends React.PureComponent {
                 <div className={cx('amount')}>{failed}</div>
 
                 <div className={cx('label')}>
-                  <div className={cx('marker', 'failed')} /> Failed
+                  <div className={cx('marker', 'failed')} /> {formatMessage(messages.failed)}
                 </div>
               </div>
             )}
@@ -87,7 +95,7 @@ export class TotalStatistics extends React.PureComponent {
                 <div className={cx('amount')}>{skipped}</div>
 
                 <div className={cx('label')}>
-                  <div className={cx('marker')} /> Skipped
+                  <div className={cx('marker')} /> {formatMessage(messages.skipped)}
                 </div>
               </div>
             )}
@@ -98,8 +106,7 @@ export class TotalStatistics extends React.PureComponent {
                 <div className={cx('amount')}>{interrupted}</div>
 
                 <div className={cx('label')}>
-                  <div className={cx('marker', 'interrupted')} />
-                  <FormattedMessage id="TestStatuses.interrupted" defaultMessage="Interrupted" />
+                  <div className={cx('marker', 'interrupted')} /> {formatMessage(messages.interrupted)}
                 </div>
               </div>
             </div>

@@ -30,6 +30,10 @@ export const messages = defineMessages({
     id: 'Charts.total',
     defaultMessage: 'Total {type}',
   },
+  totalCaption: {
+    id: 'Charts.totalCaption',
+    defaultMessage: 'Total',
+  },
   passed: {
     id: 'Charts.passed',
     defaultMessage: 'Passed',
