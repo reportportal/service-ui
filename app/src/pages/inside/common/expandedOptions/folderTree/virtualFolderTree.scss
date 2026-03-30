@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,4 +14,34 @@
  * limitations under the License.
  */
 
-export { Folder } from './folder';
+.virtual-folder-tree {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  padding: 0 16px 20px 24px;
+
+  &__list {
+    position: relative;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__sortable-item {
+    display: block;
+
+    > * {
+      pointer-events: auto;
+    }
+
+    &[class*='tree-sortable-item--drop-inside'] {
+      &::before {
+        display: none;
+      }
+    }
+  }
+}

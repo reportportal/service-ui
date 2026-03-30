@@ -14,28 +14,21 @@
  * limitations under the License.
  */
 
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useDrop } from 'react-dnd';
 import { isEmpty } from 'es-toolkit/compat';
 import Parser from 'html-react-parser';
-import {
-  BaseIconButton,
-  BubblesLoader,
-  SearchIcon,
-  FieldText,
-  useTreeDropValidation,
-} from '@reportportal/ui-kit';
+import { useSelector } from 'react-redux';
+import { BaseIconButton, SearchIcon, FieldText, useTreeDropValidation } from '@reportportal/ui-kit';
 import { TreeSortableContainer, DragLayer } from '@reportportal/ui-kit/sortable';
 import type { TreeDragItem, TreeDropPosition } from '@reportportal/ui-kit/common';
-import { useSelector } from 'react-redux';
 
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { createClassnames } from 'common/utils';
 import { useStorageFolders } from 'hooks/useStorageFolders';
 import { TransformedFolder, foldersSelector } from 'controllers/testCase';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { EmptySearchState } from 'pages/common/emptySearchState';
 import OutlineSearchIcon from 'common/img/search-outline-icon-inline.svg';
 import FilledSearchIcon from 'common/img/search-filled-icon-inline.svg';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
@@ -44,15 +37,15 @@ import { messages as testCaseListMessages } from 'pages/inside/common/testCaseLi
 import FolderDropIcon from 'common/img/folder-drop-inline.svg';
 import { EmptyPageState } from 'pages/common/emptyPageState';
 
-import { Folder } from './folder';
 import { messages } from './messages';
+import { VirtualFolderTree } from './folderTree/virtualFolderTree';
 import type { ExpandedOptionsProps } from './types';
 import { useFolderSearch } from './useFolderSearch';
 import { useSearchFilteredFolders } from './useSearchFilteredFolders';
 import { FOLDER_DRAG_TYPE, EXTERNAL_TREE_DROP_TYPE } from './constants';
+import { createTestCaseDropHandler } from './utils';
 
 import styles from './expandedOptions.scss';
-import { createTestCaseDropHandler } from './utils';
 
 const cx = createClassnames(styles);
 
@@ -101,15 +94,10 @@ export const ExpandedOptions = ({
 
   const isDragAndDropEnabled = !!(onMoveFolder && onDuplicateFolder);
 
-  const dropValidation = (
-    useTreeDropValidation as (params: { items: TransformedFolder[]; childrenKey: string }) => {
-      canDropOn: (draggedItem: { id: string | number }, targetId: string | number) => boolean;
-    }
-  )({
+  const { canDropOn } = useTreeDropValidation<TransformedFolder>({
     items: folders,
     childrenKey: 'folders',
   });
-  const canDropOn = dropValidation.canDropOn;
 
   const [{ isDraggingAny, isOverFoldersZone }, dropZoneRef] = useDrop(
     () => ({
@@ -164,22 +152,22 @@ export const ExpandedOptions = ({
 
   const totalTestCases = hasFolderSidebarFilters ? filteredTotalTestCases : allTestCasesTotal;
 
-  const prevHadFoldersRef = useRef(true);
+  const [prevHadFolders, setPrevHadFolders] = useState(true);
 
   useEffect(() => {
     if (hasFolderSidebarFilters && !isSearchFilteredLoading) {
-      prevHadFoldersRef.current = hasSearchFilteredFolders;
+      setPrevHadFolders(hasSearchFilteredFolders);
     }
 
     if (!hasFolderSidebarFilters) {
-      prevHadFoldersRef.current = true;
+      setPrevHadFolders(true);
     }
   }, [hasFolderSidebarFilters, isSearchFilteredLoading, hasSearchFilteredFolders]);
 
   const hidePageSearchSidebar =
     hasFolderSidebarFilters &&
     !hasSearchFilteredFolders &&
-    (!isSearchFilteredLoading || !prevHadFoldersRef.current);
+    (!isSearchFilteredLoading || !prevHadFolders);
 
   const hideSidebar = hidePageSearchSidebar || hideFolderSidebar;
 
@@ -196,51 +184,6 @@ export const ExpandedOptions = ({
     },
     [onDuplicateFolder],
   );
-
-  const renderFolderList = (
-    folderList: TransformedFolder[],
-    expandedFolderIds: number[],
-    query: string,
-    onToggle: (folder: TransformedFolder) => void,
-  ) =>
-    folderList.map((folder, idx) => (
-      <Folder
-        folder={folder}
-        key={folder.id || `${folder.name}-${idx}`}
-        activeFolder={activeFolderId}
-        instanceKey={instanceKey}
-        expandedIds={expandedFolderIds}
-        onFolderClick={onFolderClick}
-        setAllTestCases={setAllTestCases}
-        onToggleFolder={onToggle}
-        searchQuery={query}
-        index={idx}
-        parentId={null}
-        enableDragAndDrop={isDragAndDropEnabled}
-        canDropOn={canDropOn}
-      />
-    ));
-
-  const renderFolderTree = () => {
-    if (hasFolderSidebarFilters && isSearchFilteredLoading) {
-      return <BubblesLoader />;
-    }
-
-    if (hasFolderSidebarFilters && !hasSearchFilteredFolders) {
-      return <EmptySearchState />;
-    }
-
-    if (!searchQuery || hasAnyMatch) {
-      return renderFolderList(
-        filteredFolders,
-        effectiveExpandedIds,
-        searchQuery,
-        handleToggleFolder,
-      );
-    }
-
-    return <EmptySearchState />;
-  };
 
   const handleMoveExternal = useCallback(
     (draggedItem: TreeDragItem, targetId: string | number, position: TreeDropPosition) => {
@@ -316,6 +259,7 @@ export const ExpandedOptions = ({
               </div>
             )}
             <div
+              ref={dropZoneRef}
               className={cx('expanded-options__sidebar-folders-wrapper', {
                 'expanded-options__sidebar-folders-wrapper--with-search': isSearchVisible,
               })}
@@ -335,22 +279,22 @@ export const ExpandedOptions = ({
                   </div>
                 </div>
               )}
-              <ScrollWrapper className={cx('expanded-options__scroll-wrapper-background')}>
-                <div
-                  ref={dropZoneRef}
-                  className={cx('expanded-options__sidebar-folders', {
-                    'expanded-options__sidebar-folders--dragging': isDraggingAny,
-                  })}
-                >
-                  <ul
-                    className={cx('folders-tree', 'folders-tree--outer')}
-                    role="tree"
-                    aria-labelledby="tree_label"
-                  >
-                    {renderFolderTree()}
-                  </ul>
-                </div>
-              </ScrollWrapper>
+              <VirtualFolderTree
+                folders={filteredFolders}
+                expandedIds={effectiveExpandedIds}
+                searchQuery={searchQuery}
+                pageSearchQuery={pageSearchQuery}
+                activeFolderId={activeFolderId}
+                instanceKey={instanceKey}
+                isSearchFilteredLoading={isSearchFilteredLoading}
+                hasSearchFilteredFolders={hasSearchFilteredFolders}
+                hasAnyMatch={hasAnyMatch}
+                enableDragAndDrop={isDragAndDropEnabled}
+                canDropOn={isDragAndDropEnabled ? canDropOn : undefined}
+                setAllTestCases={setAllTestCases}
+                onToggleFolder={handleToggleFolder}
+                onFolderClick={onFolderClick}
+              />
             </div>
           </div>
         )}

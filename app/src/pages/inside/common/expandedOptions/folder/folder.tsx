@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,66 +14,87 @@
  * limitations under the License.
  */
 
-import { useState, useCallback, MouseEvent as ReactMouseEvent, useEffect, FC } from 'react';
+import {
+  useState,
+  useCallback,
+  MouseEvent as ReactMouseEvent,
+  useEffect,
+  CSSProperties,
+} from 'react';
 import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
 import { ChevronDownDropdownIcon, MeatballMenuIcon, DragNDropIcon } from '@reportportal/ui-kit';
-import { TreeSortableItem } from '@reportportal/ui-kit/sortable';
+import { VoidFn } from '@reportportal/ui-kit/common';
 
-import { createClassnames } from 'common/utils';
 import { isEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
+import { createClassnames } from 'common/utils';
+import { TransformedFolder } from 'controllers/testCase';
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
+
 import { PopoverControl } from 'pages/common/popoverControl';
-
-import { highlightText, hasMatchInTree, hasChildMatch } from '../utils';
+import { highlightText, hasChildMatch } from '../utils';
 import { messages } from '../messages';
-import { FolderProps } from './types';
 import { useFolderTooltipItems } from './useFolderTooltipItems';
-import { FolderWrapper } from './folderWrapper';
-import { FolderSubfolders } from './folderSubfolders';
-import { EXTERNAL_TREE_DROP_TYPE, FOLDER_DRAG_TYPE } from '../constants';
+import { ConnectorLines, INDENT_PX } from './connectorLines';
 
+import type { FlatFolderNode } from '../useFlattenedTree';
 import styles from './folder.scss';
 
 const cx = createClassnames(styles);
 
-interface FolderComposite extends FC<FolderProps> {
-  Wrapper: typeof FolderWrapper;
-  Subfolders: typeof FolderSubfolders;
+interface FolderRowProps {
+  node: FlatFolderNode;
+  activeFolderId: number | null;
+  instanceKey: TMS_INSTANCE_KEY;
+  searchQuery: string;
+  nextNodeDepth: number;
+  enableDragAndDrop?: boolean;
+  isDragging?: boolean;
+  dragRef?: (element: HTMLElement | null) => void;
+  style?: CSSProperties;
+  onToggleFolder: (folder: TransformedFolder) => void;
+  onFolderClick: (id: number) => void;
+  setAllTestCases: VoidFn;
 }
 
-export const Folder: FolderComposite = ({
-  folder,
-  activeFolder,
+export const Folder = ({
+  node,
+  activeFolderId,
   instanceKey,
-  expandedIds,
+  searchQuery,
+  nextNodeDepth,
+  enableDragAndDrop = false,
+  isDragging: isDraggingFolder = false,
+  dragRef,
+  style,
   onFolderClick,
   setAllTestCases,
   onToggleFolder,
-  searchQuery = '',
-  ancestorDirectMatch = false,
-  index,
-  parentId = null,
-  enableDragAndDrop = false,
-  canDropOn,
-}: FolderProps) => {
+}: FolderRowProps) => {
   const { formatMessage } = useIntl();
-  const isOpen = expandedIds.includes(folder.id);
+  const {
+    folder,
+    depth,
+    hasChildren,
+    isOpen,
+    isDirectMatch,
+    hasAncestorDirectMatch,
+    connectorDepths,
+    isLastChild,
+  } = node;
+
   const [areToolsShown, setAreToolsShown] = useState(false);
   const [areToolsOpen, setAreToolsOpen] = useState(false);
   const [isBlockHovered, setIsBlockHovered] = useState(false);
   const [showDragIcon, setShowDragIcon] = useState(false);
 
-  const isDirectMatch = searchQuery
-    ? folder.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
-    : false;
-
   const childrenMatch = searchQuery ? hasChildMatch(folder, searchQuery) : false;
-
-  const hasIndirectMatch = searchQuery && !isDirectMatch && (childrenMatch || ancestorDirectMatch);
+  const hasIndirectMatch =
+    searchQuery && !isDirectMatch && (childrenMatch || hasAncestorDirectMatch);
 
   const tooltipItems = useFolderTooltipItems({
     folder,
-    activeFolder,
+    activeFolder: activeFolderId,
     setAllTestCases,
     instanceKey,
   });
@@ -85,6 +106,7 @@ export const Folder: FolderComposite = ({
   const handleChevronClick = useCallback(
     (event: ReactMouseEvent<SVGSVGElement, MouseEvent>) => {
       event.stopPropagation();
+
       onToggleFolder(folder);
     },
     [folder, onToggleFolder],
@@ -99,16 +121,29 @@ export const Folder: FolderComposite = ({
     [folder.id, onFolderClick],
   );
 
-  const renderFolderContent = (
-    isDraggingFolder: boolean,
-    dragHandleRef?: (node: HTMLElement | null) => void,
-  ) => (
-    <Folder.Wrapper isOpen={isOpen} ariaSelected={activeFolder === folder.id}>
+  return (
+    <div
+      className={cx('folders-tree__item', {
+        'folders-tree__item--open': isOpen,
+      })}
+      role="treeitem"
+      tabIndex={0}
+      aria-level={depth + 1}
+      aria-expanded={hasChildren ? isOpen : undefined}
+      aria-selected={activeFolderId === folder.id}
+      style={{ ...style, paddingLeft: depth * INDENT_PX }}
+    >
+      <ConnectorLines
+        depth={depth}
+        connectorDepths={connectorDepths}
+        nextRowDepth={nextNodeDepth}
+        isLastChild={isLastChild}
+      />
       <div className={cx('folders-tree__item-content')}>
-        {!isEmpty(folder.folders) && <ChevronDownDropdownIcon onClick={handleChevronClick} />}
+        {hasChildren && <ChevronDownDropdownIcon onClick={handleChevronClick} />}
         <div
           className={cx('folders-tree__item-title', {
-            'folders-tree__item-title--active': activeFolder === folder.id,
+            'folders-tree__item-title--active': activeFolderId === folder.id,
             'folders-tree__item-title--dimmed': hasIndirectMatch,
           })}
           onClick={handleFolderTitleClick}
@@ -134,7 +169,6 @@ export const Folder: FolderComposite = ({
               onClick={(event) => {
                 event.preventDefault();
                 event.stopPropagation();
-
                 setAreToolsOpen(true);
               }}
             >
@@ -156,14 +190,14 @@ export const Folder: FolderComposite = ({
           )}
           {enableDragAndDrop && (showDragIcon || isDraggingFolder) ? (
             <button
-              ref={dragHandleRef}
+              ref={dragRef}
               type="button"
               className={cx('folders-tree__drag-handle')}
               aria-label={formatMessage(messages.dragToReorder)}
-              onClick={(e) => e.stopPropagation()}
-              onKeyDown={(e) => {
-                if (isEnterOrSpaceKey(e)) {
-                  e.stopPropagation();
+              onClick={(event) => event.stopPropagation()}
+              onKeyDown={(event) => {
+                if (isEnterOrSpaceKey(event)) {
+                  event.stopPropagation();
                 }
               }}
             >
@@ -176,63 +210,6 @@ export const Folder: FolderComposite = ({
           )}
         </div>
       </div>
-      <Folder.Subfolders shouldDisplay={isOpen && !isEmpty(folder.folders)}>
-        {folder.folders?.map((subfolder, idx: number) => {
-          const shouldShow =
-            !searchQuery ||
-            isDirectMatch ||
-            ancestorDirectMatch ||
-            hasMatchInTree(subfolder, searchQuery);
-
-          if (!shouldShow) return null;
-
-          return (
-            <Folder
-              folder={subfolder}
-              key={subfolder.id}
-              activeFolder={activeFolder}
-              instanceKey={instanceKey}
-              expandedIds={expandedIds}
-              onFolderClick={onFolderClick}
-              setAllTestCases={setAllTestCases}
-              onToggleFolder={onToggleFolder}
-              searchQuery={searchQuery}
-              ancestorDirectMatch={isDirectMatch || ancestorDirectMatch}
-              index={idx}
-              parentId={folder.id}
-              enableDragAndDrop={enableDragAndDrop}
-              canDropOn={canDropOn}
-            />
-          );
-        })}
-      </Folder.Subfolders>
-    </Folder.Wrapper>
-  );
-
-  return enableDragAndDrop ? (
-    <TreeSortableItem
-      id={folder.id}
-      index={index}
-      parentId={parentId}
-      type={FOLDER_DRAG_TYPE}
-      hideDefaultPreview
-      className={cx('tree-sortable-wrapper')}
-      canDropOn={canDropOn}
-      acceptExternalDrop
-      externalDropType={EXTERNAL_TREE_DROP_TYPE}
-    >
-      {({
-        isDragging: isDraggingFolder,
-        dragRef: dragHandleRef,
-      }: {
-        isDragging: boolean;
-        dragRef: (node: HTMLElement | null) => void;
-      }) => renderFolderContent(isDraggingFolder, dragHandleRef)}
-    </TreeSortableItem>
-  ) : (
-    renderFolderContent(false)
+    </div>
   );
 };
-
-Folder.Wrapper = FolderWrapper;
-Folder.Subfolders = FolderSubfolders;
