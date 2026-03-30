@@ -88,6 +88,7 @@ export const AllUsersListTable = ({
             email: user.email,
             fullName: user.full_name,
             instanceRole: user.instance_role,
+            accountType: user.account_type,
             id: user.id,
             organizations: user.organizations,
           },

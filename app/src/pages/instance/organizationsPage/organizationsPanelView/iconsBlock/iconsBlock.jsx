@@ -29,7 +29,12 @@ import styles from './iconsBlock.scss';
 const cx = classNames.bind(styles);
 const THREE_MONTHS_IN_MS = 1000 * 60 * 60 * 24 * 30 * 3;
 
-export const IconsBlock = ({ lastLaunchDate, hasPermission, organizationType }) => {
+export const IconsBlock = ({
+  lastLaunchDate,
+  hasPermission,
+  organizationType,
+  iconClassName,
+}) => {
   const { formatMessage } = useIntl();
   const isOutdated =
     lastLaunchDate && Date.now() - new Date(lastLaunchDate).getTime() > THREE_MONTHS_IN_MS;
@@ -42,7 +47,7 @@ export const IconsBlock = ({ lastLaunchDate, hasPermission, organizationType }) 
           placement={'top'}
           wrapperClassName={cx('tooltip-wrapper')}
         >
-          <i className={cx('icon')}>{Parser(SynchedIcon)}</i>
+          <i className={cx('icon', iconClassName)}>{Parser(SynchedIcon)}</i>
         </Tooltip>
       ) : (
         organizationType === OrganizationType.PERSONAL && (
@@ -51,7 +56,7 @@ export const IconsBlock = ({ lastLaunchDate, hasPermission, organizationType }) 
             placement={'top'}
             wrapperClassName={cx('tooltip-wrapper')}
           >
-            <i className={cx('icon')}>{Parser(PersonalIcon)}</i>
+            <i className={cx('icon', iconClassName)}>{Parser(PersonalIcon)}</i>
           </Tooltip>
         )
       )}
@@ -61,7 +66,7 @@ export const IconsBlock = ({ lastLaunchDate, hasPermission, organizationType }) 
           placement={'top'}
           wrapperClassName={cx('tooltip-wrapper')}
         >
-          <i className={cx('icon')}>{Parser(OutdatedIcon)}</i>
+          <i className={cx('icon', iconClassName)}>{Parser(OutdatedIcon)}</i>
         </Tooltip>
       )}
     </>
@@ -70,6 +75,7 @@ export const IconsBlock = ({ lastLaunchDate, hasPermission, organizationType }) 
 
 IconsBlock.propTypes = {
   organizationType: PropTypes.string.isRequired,
-  lastLaunchDate: PropTypes.string.isRequired,
-  hasPermission: PropTypes.bool.isRequired,
+  lastLaunchDate: PropTypes.string,
+  hasPermission: PropTypes.bool,
+  iconClassName: PropTypes.string,
 };

@@ -50,6 +50,7 @@ import { ORGANIZATIONS } from 'pages/instance/allUsersPage/allUsersHeader/create
 import {
   buildUpdateAssignmentsPayload,
   getManageAssignmentsInstanceChangeSet,
+  getManageAssignmentsInstanceSaveCondition,
   mapProjectsFromResponse,
 } from '../utils';
 import { OrganizationType } from 'controllers/organization';
@@ -71,6 +72,7 @@ interface InstanceUser {
   id: number;
   fullName: string;
   instanceRole?: string;
+  accountType?: string;
   organizations: Array<{
     id: number;
     org_role: string;
@@ -241,37 +243,59 @@ const ManageAssignmentsInstanceModalView = ({
   }, [organizations]);
 
   const handleSave = async () => {
-    const { modified } = getManageAssignmentsInstanceChangeSet(
+    const { modified, removed } = getManageAssignmentsInstanceChangeSet(
       initialOrganizationsRef.current,
       organizations,
     );
+    const saveCondition = getManageAssignmentsInstanceSaveCondition(
+      initialOrganizationsRef.current,
+      organizations,
+    );
+    if (saveCondition) {
+      trackEvent(ALL_USERS_PAGE_EVENTS.manageAssignmentsSave(saveCondition));
+    }
 
     setIsSavingAssignments(true);
 
     try {
-      const updatePromises = modified.map(async (org) => {
-        let orgToSave = org;
-        if (org.isProjectsLoaded === false) {
-          const response: UserOrganizationProjectsResponse = await fetch(
-            URLS.organizationUserProjects(org.id, user.id),
-          );
-          orgToSave = {
-            ...org,
-            projects: mapProjectsFromResponse(response),
-            isProjectsLoaded: true,
-          };
-        }
-        return fetch(URLS.organizationUserAssignments(org.id, user.id), {
-          method: 'PUT',
-          data: buildUpdateAssignmentsPayload(orgToSave),
-        });
-      });
-      const results = await Promise.allSettled(updatePromises);
+      const removeOperations = removed.map((org) => ({
+        name: org.name,
+        promise: fetch(URLS.organizationUserById({ organizationId: org.id, userId: user.id }), {
+          method: 'DELETE',
+        }),
+      }));
+
+      const updateOperations = modified.map((org) => ({
+        name: org.name,
+        promise: (async () => {
+          let orgToSave = org;
+
+          if (org.isProjectsLoaded === false) {
+            const response: UserOrganizationProjectsResponse = await fetch(
+              URLS.organizationUserProjects(org.id, user.id),
+            );
+
+            orgToSave = {
+              ...org,
+              projects: mapProjectsFromResponse(response),
+              isProjectsLoaded: true,
+            };
+          }
+
+          return fetch(URLS.organizationUserAssignments(org.id, user.id), {
+            method: 'PUT',
+            data: buildUpdateAssignmentsPayload(orgToSave),
+          });
+        })(),
+      }));
+
+      const operations = [...removeOperations, ...updateOperations];
+      const results = await Promise.allSettled(operations.map((op) => op.promise));
       const failedNames = results
-        .map((res, i) => (res.status === 'rejected' ? modified[i]?.name : null))
+        .map((res, i) => (res.status === 'rejected' ? operations[i].name : null))
         .filter(Boolean);
 
-      const allFailed = failedNames.length === modified.length;
+      const allFailed = failedNames.length === operations.length;
       const someFailed = failedNames.length > 0 && !allFailed;
 
       if (allFailed) {
@@ -374,6 +398,7 @@ const ManageAssignmentsInstanceModalView = ({
               formName: MANAGE_ASSIGNMENTS_FORM,
               formNamespace: ORGANIZATION,
               invitedUserId: user.id,
+              userType: user.accountType,
               isOrganizationRequired: false,
               header: formatMessage(messages.assignedTo),
               addButtonPlacement: 'header',
