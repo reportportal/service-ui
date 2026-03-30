@@ -81,7 +81,11 @@ function validateProject(
 function validateOrganization(
   formData: FormDataMap[Level.ORGANIZATION],
 ): Record<string, unknown> {
-  return validateEmail(formData);
+  const errors: Record<string, unknown> = validateEmail(formData);
+  if (formData.isAddingProject) {
+    errors.organization = 'Form is being edited';
+  }
+  return errors;
 }
 
 type InviteUserFormInnerProps = InviteUserProps<Level> & { content: ReactNode };
