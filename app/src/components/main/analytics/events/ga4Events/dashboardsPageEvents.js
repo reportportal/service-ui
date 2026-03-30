@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { getJoinedFieldEventNamesByType } from 'components/main/analytics/events/common/widgetPages/utils';
+import {
+  getJoinedFieldEventNamesByType,
+  getOverallStatisticsInterruptAnalyticsToken,
+  mergeOverallStatisticsAnalyticsCondition,
+} from 'components/main/analytics/events/common/widgetPages/utils';
+import { OVERALL_STATISTICS } from 'common/constants/widgetTypes';
 import {
   getBasicClickEventParameters,
   getBasicPerformanceEventParameters,
@@ -46,6 +51,8 @@ export const WIDGETS_EVENTS = {
     isEditModal = false,
     isExcludeSkippedTests = null,
     isLocked = false,
+    initialSeparateInterrupted,
+    finalSeparateInterrupted,
   }) => {
     const actionType = isEditModal
       ? {
@@ -58,9 +65,19 @@ export const WIDGETS_EVENTS = {
           modal: 'add_new_widget',
         };
 
+    let condition = getJoinedFieldEventNamesByType(type, modifiedFields);
+    if (type === OVERALL_STATISTICS) {
+      const interruptToken = getOverallStatisticsInterruptAnalyticsToken({
+        isEdit: isEditModal,
+        initialSeparateInterrupted,
+        finalSeparateInterrupted,
+      });
+      condition = mergeOverallStatisticsAnalyticsCondition(condition, interruptToken);
+    }
+
     return {
       ...getBasicClickEventParameters(DASHBOARDS),
-      condition: getJoinedFieldEventNamesByType(type, modifiedFields),
+      condition,
       number: dashboardId,
       link_name: isWidgetDescriptionChanged,
       status: isWidgetNameChanged,

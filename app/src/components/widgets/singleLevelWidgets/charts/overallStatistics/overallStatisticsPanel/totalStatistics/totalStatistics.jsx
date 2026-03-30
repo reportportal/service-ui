@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { FormattedMessage } from 'react-intl';
 import { ProgressBar } from './progressBar';
 import styles from './totalStatistics.scss';
 
@@ -25,15 +26,28 @@ export class TotalStatistics extends React.PureComponent {
   static propTypes = {
     values: PropTypes.object.isRequired,
     onChartClick: PropTypes.func.isRequired,
+    separateInterrupted: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    separateInterrupted: false,
   };
 
   render() {
-    const { values, onChartClick } = this.props;
+    const { values, onChartClick, separateInterrupted } = this.props;
     const total = values.statistics$executions$total;
     const passed = values.statistics$executions$passed;
     const failed = values.statistics$executions$failed;
     const skipped = values.statistics$executions$skipped;
-    const progressData = { total, passed, failed, skipped };
+    const interrupted = values.statistics$executions$interrupted ?? 0;
+    const progressData = {
+      total,
+      passed,
+      failed,
+      skipped,
+      interrupted,
+      separateInterrupted,
+    };
 
     return (
       <div className={cx('container')}>
@@ -49,30 +63,44 @@ export class TotalStatistics extends React.PureComponent {
         )}
 
         <div className={cx('details')}>
-          {passed >= 0 && (
-            <div className={cx('details-item')}>
-              <div className={cx('amount')}>{passed}</div>
+          <div className={cx('details-row')}>
+            {passed >= 0 && (
+              <div className={cx('details-item')}>
+                <div className={cx('amount')}>{passed}</div>
 
-              <div className={cx('label')}>
-                <div className={cx('marker', 'passed')} /> Passed
+                <div className={cx('label')}>
+                  <div className={cx('marker', 'passed')} /> Passed
+                </div>
               </div>
-            </div>
-          )}
-          {failed >= 0 && (
-            <div className={cx('details-item')}>
-              <div className={cx('amount')}>{failed}</div>
+            )}
+            {failed >= 0 && (
+              <div className={cx('details-item')}>
+                <div className={cx('amount')}>{failed}</div>
 
-              <div className={cx('label')}>
-                <div className={cx('marker', 'failed')} /> Failed
+                <div className={cx('label')}>
+                  <div className={cx('marker', 'failed')} /> Failed
+                </div>
               </div>
-            </div>
-          )}
-          {skipped >= 0 && (
-            <div className={cx('details-item')}>
-              <div className={cx('amount')}>{skipped}</div>
+            )}
+            {skipped >= 0 && (
+              <div className={cx('details-item')}>
+                <div className={cx('amount')}>{skipped}</div>
 
-              <div className={cx('label')}>
-                <div className={cx('marker')} /> Skipped
+                <div className={cx('label')}>
+                  <div className={cx('marker')} /> Skipped
+                </div>
+              </div>
+            )}
+          </div>
+          {separateInterrupted && (
+            <div className={cx('details-row', 'details-row-interrupted')}>
+              <div className={cx('details-item')}>
+                <div className={cx('amount')}>{interrupted}</div>
+
+                <div className={cx('label')}>
+                  <div className={cx('marker', 'interrupted')} />
+                  <FormattedMessage id="TestStatuses.interrupted" defaultMessage="Interrupted" />
+                </div>
               </div>
             </div>
           )}

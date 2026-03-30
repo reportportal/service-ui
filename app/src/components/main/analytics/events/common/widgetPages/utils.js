@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -220,11 +220,50 @@ export const WIDGET_FIELD_EVENT_NAME_BY_TYPE = {
   },
 };
 
+export const SEPARATE_INTERRUPTED_FIELD_PATH =
+  'contentParameters.widgetOptions.separateInterrupted';
+
+export const normalizeSeparateInterrupted = (value) =>
+  value === true || value === 'true';
+
+export const getOverallStatisticsInterruptAnalyticsToken = ({
+  isEdit,
+  initialSeparateInterrupted,
+  finalSeparateInterrupted,
+}) => {
+  const finalOn = normalizeSeparateInterrupted(finalSeparateInterrupted);
+  if (!isEdit) {
+    return finalOn ? 'mark_interrupted' : 'no_interrupt_action';
+  }
+  const initialOn = normalizeSeparateInterrupted(initialSeparateInterrupted);
+  if (initialOn === finalOn) {
+    return 'no_interrupt_action';
+  }
+  return finalOn ? 'mark_interrupted' : 'unmark_interrupted';
+};
+
+export const mergeOverallStatisticsAnalyticsCondition = (baseCondition, interruptToken) => {
+  if (!interruptToken) {
+    return baseCondition;
+  }
+  if (baseCondition === 'not_set') {
+    if (interruptToken === 'no_interrupt_action') {
+      return `not_set#${interruptToken}`;
+    }
+    return interruptToken;
+  }
+  return `${baseCondition}#${interruptToken}`;
+};
+
 export const getJoinedFieldEventNamesByType = (type, keys = []) => {
   const uniqueValues = new Set();
   const changedFields = { ...COMMON_FIELD_EVENT_NAMES, ...WIDGET_FIELD_EVENT_NAME_BY_TYPE[type] };
+  const keysFiltered =
+    type === OVERALL_STATISTICS
+      ? keys.filter((key) => key !== SEPARATE_INTERRUPTED_FIELD_PATH)
+      : keys;
 
-  keys.forEach((key) => {
+  keysFiltered.forEach((key) => {
     const value = changedFields[key];
     if (value) {
       uniqueValues.add(value);
