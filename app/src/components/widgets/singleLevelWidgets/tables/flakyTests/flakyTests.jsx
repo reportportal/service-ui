@@ -72,15 +72,21 @@ export class FlakyTests extends Component {
     });
   };
 
-  itemClickHandler = (uniqueId) => {
+  itemClickHandler = (row) => {
     const {
       widget: {
-        content: { latestLaunch },
+        content: { latestLaunch = {} },
       },
       getTestCaseNameLink,
       navigate,
     } = this.props;
-    const link = getTestCaseNameLink({ uniqueId, testItemIds: latestLaunch.id });
+    const uniqueId = row?.uniqueId;
+    const launchId = row?.launchId ?? latestLaunch.id;
+    if (!uniqueId || launchId == null) {
+      return;
+    }
+    const testItemIds = String(launchId);
+    const link = getTestCaseNameLink({ uniqueId, testItemIds });
 
     navigate(link);
   };
@@ -97,6 +103,7 @@ export class FlakyTests extends Component {
         columns={cfg.columns}
         getMatrixTooltip={this.getMatrixTooltip}
         onItemClick={this.itemClickHandler}
+        passFullRowOnItemClick
       />
     );
   }
