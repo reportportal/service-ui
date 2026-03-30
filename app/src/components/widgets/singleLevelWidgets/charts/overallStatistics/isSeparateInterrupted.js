@@ -14,29 +14,7 @@
  * limitations under the License.
  */
 
-.container {
-  display: flex;
-  width: 100%;
-  height: 12px;
-  border-radius: 6px;
-  overflow: hidden;
-  border: 1px $COLOR--gray-80 solid;
-  background-color: $COLOR--white;
-  cursor: pointer;
-}
-
-.passed {
-  background-color: $COLOR--passed;
-}
-
-.failed {
-  background-color: $COLOR--failed;
-}
-
-.interrupted {
-  background-color: $COLOR--blush;
-}
-
-.skipped {
-  background-color: $COLOR--skipped;
-}
+export const isSeparateInterrupted = (widget) => {
+  const value = widget?.contentParameters?.widgetOptions?.separateInterrupted;
+  return value === true || value === 'true';
+};

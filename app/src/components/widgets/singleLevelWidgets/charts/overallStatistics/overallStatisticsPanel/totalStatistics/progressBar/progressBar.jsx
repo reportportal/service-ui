@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 
 import PropTypes from 'prop-types';
+import { Fragment } from 'react';
 import classNames from 'classnames/bind';
 import { FAILED, INTERRUPTED, SKIPPED, PASSED } from 'common/constants/testStatuses';
 import styles from './progressBar.scss';
@@ -27,10 +28,22 @@ export class ProgressBar extends React.PureComponent {
     onChartClick: PropTypes.func.isRequired,
   };
 
-  static getPercentage = (value, totalVal) => `${(value / totalVal) * 100}%`;
+  static getPercentage = (value, totalVal) => {
+    if (!totalVal || totalVal <= 0) {
+      return '0%';
+    }
+    return `${(value / totalVal) * 100}%`;
+  };
 
   render() {
-    const { total, passed, failed, skipped } = this.props.progressData;
+    const {
+      total,
+      passed,
+      failed,
+      skipped,
+      interrupted = 0,
+      separateInterrupted,
+    } = this.props.progressData;
     const { getPercentage } = ProgressBar;
 
     return (
@@ -40,11 +53,26 @@ export class ProgressBar extends React.PureComponent {
           style={{ width: getPercentage(passed, total) }}
           className={cx('passed')}
         />
-        <div
-          onClick={() => this.props.onChartClick(FAILED, INTERRUPTED)}
-          style={{ width: getPercentage(failed, total) }}
-          className={cx('failed')}
-        />
+        {separateInterrupted ? (
+          <Fragment>
+            <div
+              onClick={() => this.props.onChartClick(FAILED)}
+              style={{ width: getPercentage(failed, total) }}
+              className={cx('failed')}
+            />
+            <div
+              onClick={() => this.props.onChartClick(INTERRUPTED)}
+              style={{ width: getPercentage(interrupted, total) }}
+              className={cx('interrupted')}
+            />
+          </Fragment>
+        ) : (
+          <div
+            onClick={() => this.props.onChartClick(FAILED, INTERRUPTED)}
+            style={{ width: getPercentage(failed, total) }}
+            className={cx('failed')}
+          />
+        )}
         <div
           onClick={() => this.props.onChartClick(SKIPPED)}
           style={{ width: getPercentage(skipped, total) }}
