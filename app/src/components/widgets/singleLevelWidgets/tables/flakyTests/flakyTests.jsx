@@ -80,8 +80,12 @@ export class FlakyTests extends Component {
       getTestCaseNameLink,
       navigate,
     } = this.props;
-    const uniqueId = row.uniqueId;
-    const testItemIds = String(row.launchId ?? latestLaunch.id);
+    const uniqueId = row?.uniqueId;
+    const launchId = row?.launchId ?? latestLaunch.id;
+    if (!uniqueId || launchId == null) {
+      return;
+    }
+    const testItemIds = String(launchId);
     const link = getTestCaseNameLink({ uniqueId, testItemIds });
 
     navigate(link);
