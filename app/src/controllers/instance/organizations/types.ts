@@ -32,7 +32,7 @@ interface OrganizationRelationships {
   };
 }
 
-export interface OrganizationSearchesItem extends Omit<Organization, 'owner_id'> {
+export interface OrganizationSearchesItem extends Organization {
   relationships: OrganizationRelationships;
   created_at: string;
   updated_at: string;

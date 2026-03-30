@@ -18,7 +18,6 @@ const cx = createClassnames(styles);
 export interface InviteUserOrganizationFormData {
   email: string;
   organization: Organization;
-  isAddingProject?: boolean;
 }
 
 export const InviteUserOrganizationForm = () => {
@@ -38,6 +37,7 @@ export const InviteUserOrganizationForm = () => {
         <OrganizationAssignment
           invitedUserId={invitedUserId}
           formName={getFormName(Level.ORGANIZATION)}
+          excludeUserAssignments
         />
       </FieldElement>
     </form>

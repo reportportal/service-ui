@@ -33,10 +33,7 @@ import { InviteUserProjectForm } from './inviteUserProjectForm';
 import { InviteUserOrganizationForm } from './inviteUserOrganizationForm/inviteUserOrganizationForm';
 import { InviteUserInstanceForm } from './inviteUserInstanceForm';
 import { MEMBER } from 'common/constants/projectRoles';
-import {
-  activeOrganizationIdSelector,
-  activeOrganizationNameSelector,
-} from 'controllers/organization';
+import { activeOrganizationSelector } from 'controllers/organization';
 import { messages } from 'common/constants/localization/invitationsLocalization';
 import { fetchUserInfoAction, UserInfo, userInfoSelector } from 'controllers/user';
 import { InvitationStatus, Level } from './constants';
@@ -233,13 +230,12 @@ const FORM_CONTENT = {
 } as const;
 
 export const InviteUserModal = <L extends keyof FormDataMap>(props: ModalProps<L>) => {
-  const id = useSelector(activeOrganizationIdSelector) as number;
-  const name = useSelector(activeOrganizationNameSelector) as string;
+  const { id, name, type } = useSelector(activeOrganizationSelector) as Organization;
   const level = props.level;
 
   let initialValues: Record<string, unknown> = {};
   if (level === Level.ORGANIZATION) {
-    const organization: Organization = { id, name, role: MEMBER, projects: [] };
+    const organization: Organization = { id, name, type, role: MEMBER, projects: [] };
     initialValues = { organization };
   }
 

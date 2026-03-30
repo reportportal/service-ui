@@ -28,11 +28,23 @@
 .name {
   flex: 1;
   font-weight: var(--rp-ui-base-fw-medium);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+}
+
+.name-label {
+  min-width: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.type-icons {
+  flex-shrink: 0;
   display: flex;
-  gap: 8px;
+  align-items: center;
 }
 
 .pointer {
