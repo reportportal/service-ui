@@ -31,3 +31,18 @@ export const TestCasePageDefaultValues = {
 };
 
 export const TEST_CASE_LIST_NAMESPACE = 'testCaseList';
+
+export interface FilterKeyMap {
+  readonly priority: string;
+  readonly attributeKey: string;
+}
+
+export const TEST_CASE_FILTER_KEYS: FilterKeyMap = {
+  priority: 'filter.in.priority',
+  attributeKey: 'filter.has.attributeKey',
+} as const;
+
+export const FOLDER_FILTER_KEYS: FilterKeyMap = {
+  priority: 'filter.in.testCasePriority',
+  attributeKey: 'filter.has.testCaseAttributeKey',
+} as const;

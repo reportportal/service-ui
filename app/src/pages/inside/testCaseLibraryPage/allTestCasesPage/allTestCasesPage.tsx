@@ -178,7 +178,13 @@ export const AllTestCasesPage = ({
     });
   }, [selectedRowIds, selectedRows, openMoveTestCaseModal]);
 
-  if (isEmpty(testCases) && !isLoading && !query?.testCasesSearchParams) {
+  if (
+    isEmpty(testCases) &&
+    !isLoading &&
+    !query?.testCasesSearchParams &&
+    !query?.filterPriorities &&
+    !query?.filterTags
+  ) {
     return <FolderEmptyState folderTitle={folderTitle} />;
   }
 

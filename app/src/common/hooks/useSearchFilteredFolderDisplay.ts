@@ -35,6 +35,7 @@ export interface UseSearchFilteredFolderDisplayParams<T extends SearchFilteredFo
   allFolders: BaseFolder[];
   filteredFolderData: T[];
   isLoading: boolean;
+  isFilterActive?: boolean;
 }
 
 export const useSearchFilteredFolderDisplay = <T extends SearchFilteredFolderRow>({
@@ -42,10 +43,12 @@ export const useSearchFilteredFolderDisplay = <T extends SearchFilteredFolderRow
   allFolders,
   filteredFolderData,
   isLoading,
+  isFilterActive = false,
 }: UseSearchFilteredFolderDisplayParams<T>) => {
   const [collapsedIds, setCollapsedIds] = useState<Set<number>>(new Set());
   const prevSearchQueryRef = useRef(searchQuery);
   const respondedQueryRef = useRef<string | undefined>(undefined);
+  const hasActiveQuery = !!searchQuery || isFilterActive;
 
   const isQueryPending = !!searchQuery && searchQuery !== respondedQueryRef.current;
 
@@ -67,7 +70,7 @@ export const useSearchFilteredFolderDisplay = <T extends SearchFilteredFolderRow
   }, [isLoading, searchQuery]);
 
   const relevantFolderIds = useMemo(() => {
-    if (!searchQuery || isEmpty(filteredFolderData)) {
+    if (!hasActiveQuery || isEmpty(filteredFolderData)) {
       return new Set<number>();
     }
 
@@ -79,7 +82,7 @@ export const useSearchFilteredFolderDisplay = <T extends SearchFilteredFolderRow
     });
 
     return idsWithAncestors;
-  }, [filteredFolderData, allFolders, searchQuery]);
+  }, [filteredFolderData, allFolders, hasActiveQuery]);
 
   const filteredCountsMap = useMemo(
     () => new Map(filteredFolderData.map((folder) => [folder.id, folder.countOfTestCases])),
@@ -87,7 +90,7 @@ export const useSearchFilteredFolderDisplay = <T extends SearchFilteredFolderRow
   );
 
   const relevantFolders = useMemo(() => {
-    if (!searchQuery || relevantFolderIds.size === 0) {
+    if (!hasActiveQuery || relevantFolderIds.size === 0) {
       return [];
     }
 
@@ -98,16 +101,16 @@ export const useSearchFilteredFolderDisplay = <T extends SearchFilteredFolderRow
 
         return { ...folder, countOfTestCases: filteredCount ?? 0 };
       });
-  }, [allFolders, relevantFolderIds, searchQuery, filteredCountsMap]);
+  }, [allFolders, relevantFolderIds, hasActiveQuery, filteredCountsMap]);
 
   const transformedFilteredFolders = useMemo(
-    () => (searchQuery ? transformFoldersToDisplay(relevantFolders) : []),
-    [relevantFolders, searchQuery],
+    () => (hasActiveQuery ? transformFoldersToDisplay(relevantFolders) : []),
+    [relevantFolders, hasActiveQuery],
   );
 
   const allFilteredFolderIds = useMemo(
-    () => (searchQuery ? collectAllTransformedFolderIds(transformedFilteredFolders) : []),
-    [transformedFilteredFolders, searchQuery],
+    () => (hasActiveQuery ? collectAllTransformedFolderIds(transformedFilteredFolders) : []),
+    [transformedFilteredFolders, hasActiveQuery],
   );
 
   const expandedFilteredFolderIds = useMemo(
@@ -132,7 +135,7 @@ export const useSearchFilteredFolderDisplay = <T extends SearchFilteredFolderRow
   const hasFilteredFolders = !isEmpty(transformedFilteredFolders);
 
   const filteredTotalTestCases = useMemo(() => {
-    if (!searchQuery) {
+    if (!hasActiveQuery) {
       return 0;
     }
 
@@ -140,7 +143,7 @@ export const useSearchFilteredFolderDisplay = <T extends SearchFilteredFolderRow
       (sum, folder) => sum + (folder.countOfTestCases || 0),
       0,
     );
-  }, [filteredFolderData, searchQuery]);
+  }, [filteredFolderData, hasActiveQuery]);
 
   return {
     searchFilteredFolders: transformedFilteredFolders,
