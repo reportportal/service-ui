@@ -24,6 +24,7 @@ export {
   updateDashboardWidgetsAction,
   toggleFullScreenModeAction,
   changeFullScreenModeAction,
+  changeFullWidthModeAction,
   duplicateDashboardAction,
   duplicateDashboardSuccessAction,
 } from './actionCreators';
@@ -32,6 +33,7 @@ export {
   dashboardItemsSelector,
   dashboardGridTypeSelector,
   activeDashboardItemSelector,
+  dashboardFullWidthModeSelector,
   dashboardFullScreenModeSelector,
   loadingSelector,
   totalDashboardsSelector,
@@ -43,6 +45,7 @@ export {
   DASHBOARDS_TABLE_VIEW,
   DASHBOARDS_GRID_VIEW,
   dashboardItemPropTypes,
+  CHANGE_FULL_WIDTH_MODE,
   CHANGE_FULL_SCREEN_MODE,
   TOGGLE_FULL_SCREEN_MODE,
 } from './constants';

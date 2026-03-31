@@ -585,6 +585,8 @@
   "DashboardItemPage.editDashboard": "Editar",
   "DashboardItemPage.fullscreen": "Modo pantalla completa",
   "DashboardItemPage.notMyDashboardEmptyHeader": "No widgets yet",
+  "DashboardLayoutSettings.dashboardLayout": "Diseño del panel",
+  "DashboardLayoutSettings.fullWidthMode": "Modo de ancho completo",
   "DashboardList.lockedDashboardTooltip": "This dashboard is locked by a project manager or administrator and cannot be modified",
   "DashboardPage.addDashboardSuccess": "Dashboard has been created successfully.",
   "DashboardPage.addPreconfigDashboardError": "Dashboard can't be created. Please check the pasted configuration.",
