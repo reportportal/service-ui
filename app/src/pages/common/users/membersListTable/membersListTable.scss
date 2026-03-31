@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
+@use '../../../../common/css/mixins';
+
 .members-list-table-wrapper {
   padding: 0 32px;
   margin: 24px auto 0;
-  max-width: var(--rp-ui-base-max-page-width);
+  max-width: calc(var(--rp-ui-base-max-page-width) + 64px);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .members-list-table {
@@ -26,10 +30,14 @@
 
 .members-pagination-wrapper {
   flex: 1;
+
+  .members-pagination-container {
+    @include mixins.page-layout-pagination-container;
+  }
 }
 
 .members-pagination {
-  max-width: var(--rp-ui-base-max-page-width);
+  width: 100%;
 }
 
 .table-header {

@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
+@use '../../../../common/css/mixins';
+
 .organizations-pagination-wrapper {
   flex: 1;
-}
 
-.organizations-pagination-container {
-  max-width: var(--rp-ui-base-max-page-width);
-  width: 100%;
-  box-sizing: border-box;
-  margin-left: auto;
-  margin-right: auto;
+  .organizations-pagination-container {
+    @include mixins.page-layout-pagination-container;
+  }
 }
 
 .organizations-pagination {
