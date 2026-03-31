@@ -44,6 +44,8 @@ export type InviteProjectCondition = 'with_project' | 'without_project' | 'with_
 export type ModalProps<L extends keyof FormDataMap> = {
   level: L;
   onInvite: (condition: InviteProjectCondition) => void;
+  projectId?: number;
+  projectName?: string;
 };
 
 export type InviteUserProps<L extends keyof FormDataMap> = InjectedFormProps<FormDataMap[L]> &
