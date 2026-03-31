@@ -31,7 +31,14 @@
 
 .tooltip-wrapper {
   width: fit-content;
-  cursor: default;
+
+  &.default-cursor {
+    cursor: default;
+  }
+}
+
+.custom-tooltip {
+  max-width: 248px;
 }
 
 .remove-button {

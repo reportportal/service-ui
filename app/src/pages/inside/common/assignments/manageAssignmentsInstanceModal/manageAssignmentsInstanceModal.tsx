@@ -406,6 +406,7 @@ const ManageAssignmentsInstanceModalView = ({
               withEmptyState: true,
               emptyStateText: formatMessage(messages.noAssignmentsYet),
               onExpandOrganization: handleExpandOrganization,
+              showUnassignProjectTooltip: true,
             } as InstanceAssignmentProps
           }
         />

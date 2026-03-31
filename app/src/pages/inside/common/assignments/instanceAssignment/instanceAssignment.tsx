@@ -131,6 +131,7 @@ export interface InstanceAssignmentProps extends InstanceAssignmentArrayProps<In
   withEmptyState?: boolean;
   emptyStateText?: string;
   onExpandOrganization?: (orgId: number) => void;
+  showUnassignProjectTooltip?: boolean;
 }
 
 interface InstanceAssignmentArrayProps<T> extends WrappedFieldArrayProps<T> {
@@ -175,6 +176,7 @@ export const InstanceAssignment = ({
   withEmptyState = false,
   emptyStateText,
   onExpandOrganization,
+  showUnassignProjectTooltip,
 }: InstanceAssignmentProps) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
@@ -577,6 +579,7 @@ export const InstanceAssignment = ({
           excludeUserAssignments={excludeUserAssignments}
           isOrganizationFormOpen={isOpen}
           onExpandOrganization={onExpandOrganization}
+          showUnassignProjectTooltip={showUnassignProjectTooltip}
         />
       </FieldElement>
       {shouldFormBeOpen && addFormPlacement === 'bottom' && renderAddOrganizationForm()}

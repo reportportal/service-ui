@@ -281,6 +281,7 @@ const ManageAssignmentsOrganizationModalView = ({
             invitedUserId={user.id}
             formName={MANAGE_ASSIGNMENTS_FORM}
             userType={user.accountType}
+            showUnassignProjectTooltip
           />
         )}
       </div>
