@@ -23,7 +23,7 @@ import {
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { MessageDescriptor, useIntl } from 'react-intl';
-import { reduxForm } from 'redux-form';
+import { formValueSelector, reduxForm } from 'redux-form';
 import { Button, Modal, Tooltip } from '@reportportal/ui-kit';
 import { useTracking } from 'react-tracking';
 import { createClassnames, referenceDictionary } from 'common/utils';
@@ -39,14 +39,13 @@ import {
   userAssignmentsUpdateLoadingSelector,
 } from 'controllers/organization/users';
 import type { UserOrganizationProjectsResponse } from 'controllers/organization/users/types';
-import { Organization, OrganizationType } from 'controllers/organization';
+import { Organization } from 'controllers/organization';
 import { messages } from 'common/constants/localization/assignmentsLocalization';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
-import { UPSA } from 'common/constants/accountType';
 import { hideModalAction } from 'controllers/modal';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 
-import { useHandleUnassignSuccess } from '..';
+import { useHandleUnassignSuccess, useAssignmentsUtils } from '..';
 import {
   type Organization as OrganizationValue,
   OrganizationAssignment,
@@ -80,11 +79,13 @@ const ManageAssignmentsOrganizationModalView = ({
   assignmentsData,
   assignmentsLoading,
   assignmentsUpdateLoading,
+  isAddingProject,
 }: ManageAssignmentsOrganizationModalOwnProps & {
   handleSubmit: (submit: (values: { organizations?: unknown[] }) => void) => () => void;
   assignmentsData: UserOrganizationProjectsResponse | null;
   assignmentsLoading: boolean;
   assignmentsUpdateLoading: boolean;
+  isAddingProject: boolean;
 }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
@@ -97,6 +98,13 @@ const ManageAssignmentsOrganizationModalView = ({
   const isCurrentUser = currentUserId === user?.id;
   const isDirty = isAssignmentDirty(currentOrganization, initialOrganization);
   const isBusy = assignmentsLoading || assignmentsUpdateLoading || !currentOrganization;
+  const { unassignTooltip } = useAssignmentsUtils({
+    currentUserId,
+    userId: user.id,
+    userType: user.accountType,
+    organizationType: organization.type,
+    ownerId: organization.owner_id,
+  });
 
   const initialSnapshotTakenRef = useRef(false);
   const wasLoadingRef = useRef(false);
@@ -167,41 +175,17 @@ const ManageAssignmentsOrganizationModalView = ({
   };
 
   const renderUnassignButton = () => {
-    const { id: userId, accountType: userType } = user;
-    const { owner_id: ownerId, type: organizationType } = organization;
-    const isUpsaUser = userType === UPSA;
-    const isExternalOrg = organizationType === OrganizationType.EXTERNAL;
-    const isPersonalOrg = organizationType === OrganizationType.PERSONAL;
-    const isOrganizationOwner = userId === ownerId;
-    const isCurrentUser = currentUserId === userId;
-
-    let isDisabled = isBusy;
-    let tooltipMessage: MessageDescriptor = null;
-
-    if (isCurrentUser) {
-      isDisabled = true;
-      tooltipMessage =
-        isPersonalOrg && isOrganizationOwner
-          ? messages.unassignPersonalOwnerSelfMessage
-          : messages.unassignSelfMessage;
-    } else if (isUpsaUser && isExternalOrg) {
-      isDisabled = true;
-      tooltipMessage = messages.unassignUpsaMessage;
-    } else if (isPersonalOrg && isOrganizationOwner) {
-      isDisabled = true;
-      tooltipMessage = messages.unassignPersonalOwnerMessage;
-    }
-
+    const isDisabled = isBusy || !!unassignTooltip;
     const button = (
       <Button variant="text-danger" onClick={handleUnassignClick} disabled={isDisabled}>
         {formatMessage(messages.unassignFromOrganization)}
       </Button>
     );
 
-    return tooltipMessage ? (
+    return unassignTooltip ? (
       <Tooltip
         placement="top"
-        content={formatMessage(tooltipMessage)}
+        content={formatMessage(unassignTooltip)}
         tooltipClassName={cx('custom-tooltip')}
         wrapperClassName={cx('tooltip-wrapper')}
       >
@@ -250,7 +234,7 @@ const ManageAssignmentsOrganizationModalView = ({
           <Button
             variant="primary"
             onClick={() => formHandleSubmit(onSaveAssignments)()}
-            disabled={isBusy || !isDirty}
+            disabled={isBusy || !isDirty || isAddingProject}
           >
             {formatMessage(COMMON_LOCALE_KEYS.SAVE)}
           </Button>
@@ -295,6 +279,9 @@ const ManageAssignmentsOrganizationModalView = ({
             value={currentOrganization}
             onChange={handleOrganizationChange}
             invitedUserId={user.id}
+            formName={MANAGE_ASSIGNMENTS_FORM}
+            userType={user.accountType}
+            showUnassignProjectTooltip
           />
         )}
       </div>
@@ -302,17 +289,21 @@ const ManageAssignmentsOrganizationModalView = ({
   );
 };
 
+const formSelector = formValueSelector(MANAGE_ASSIGNMENTS_FORM);
+
 const mapStateToProps = (state: unknown) => {
   const assignmentsData = userAssignmentsDataSelector(
     state as never,
   ) as UserOrganizationProjectsResponse | null;
   const assignmentsLoading = Boolean(userAssignmentsLoadingSelector(state as never));
   const assignmentsUpdateLoading = Boolean(userAssignmentsUpdateLoadingSelector(state as never));
+  const isAddingProject = Boolean(formSelector(state as never, 'isAddingProject'));
   return {
     initialValues: { organizations: [] },
     assignmentsData,
     assignmentsLoading,
     assignmentsUpdateLoading,
+    isAddingProject,
   };
 };
 
@@ -322,6 +313,7 @@ const FormWrapper = reduxForm<
     assignmentsData: UserOrganizationProjectsResponse | null;
     assignmentsLoading: boolean;
     assignmentsUpdateLoading: boolean;
+    isAddingProject: boolean
   }
 >({
   form: MANAGE_ASSIGNMENTS_FORM,

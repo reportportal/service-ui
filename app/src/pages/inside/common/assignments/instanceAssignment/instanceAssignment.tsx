@@ -123,6 +123,7 @@ export interface InstanceAssignmentProps extends InstanceAssignmentArrayProps<In
   formNamespace?: string;
   isOrganizationRequired: boolean;
   invitedUserId?: number | null;
+  userType?: string;
   excludeUserAssignments?: boolean;
   header?: string;
   addButtonPlacement?: 'header' | 'bottom';
@@ -130,6 +131,7 @@ export interface InstanceAssignmentProps extends InstanceAssignmentArrayProps<In
   withEmptyState?: boolean;
   emptyStateText?: string;
   onExpandOrganization?: (orgId: number) => void;
+  showUnassignProjectTooltip?: boolean;
 }
 
 interface InstanceAssignmentArrayProps<T> extends WrappedFieldArrayProps<T> {
@@ -166,6 +168,7 @@ export const InstanceAssignment = ({
   formNamespace,
   isOrganizationRequired = false,
   invitedUserId = null,
+  userType,
   excludeUserAssignments = false,
   header,
   addButtonPlacement = 'bottom',
@@ -173,6 +176,7 @@ export const InstanceAssignment = ({
   withEmptyState = false,
   emptyStateText,
   onExpandOrganization,
+  showUnassignProjectTooltip,
 }: InstanceAssignmentProps) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
@@ -571,9 +575,11 @@ export const InstanceAssignment = ({
           isMultiple
           formName={formName}
           invitedUserId={invitedUserId}
+          userType={userType}
           excludeUserAssignments={excludeUserAssignments}
           isOrganizationFormOpen={isOpen}
           onExpandOrganization={onExpandOrganization}
+          showUnassignProjectTooltip={showUnassignProjectTooltip}
         />
       </FieldElement>
       {shouldFormBeOpen && addFormPlacement === 'bottom' && renderAddOrganizationForm()}

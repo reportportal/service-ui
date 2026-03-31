@@ -57,6 +57,7 @@ export const MembersListTable = ({
       changePage={onChangePage}
       changePageSize={onChangePageSize}
       className={cx('members-pagination-wrapper')}
+      paginationContainerClassName={cx('members-pagination-container')}
       paginationClassName={cx('members-pagination')}
       changePageSizeEvent={changePageSizeEvent}
       bulkPanelProps={bulkPanelProps}

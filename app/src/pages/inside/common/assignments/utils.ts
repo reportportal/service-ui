@@ -125,3 +125,37 @@ export function getManageAssignmentsInstanceChangeSet(
 
   return { removed, modified, added };
 }
+
+/** Maps org-level save condition parts to instance GA labels */
+const ORG_SAVE_CONDITION_TO_INSTANCE: Record<string, string> = {
+  [MANAGE_ASSIGNMENTS_CONDITIONS.CHANGE_ROLE]: 'change org role',
+  [MANAGE_ASSIGNMENTS_CONDITIONS.CHANGE_PERMISSION]: 'change project role',
+};
+
+function mergeOrgSaveConditionIntoSet(orgCondition: string, target: Set<string>): void {
+  if (!orgCondition) return;
+  orgCondition.split('#').forEach((part) => {
+    target.add(ORG_SAVE_CONDITION_TO_INSTANCE[part] || part);
+  });
+}
+
+export function getManageAssignmentsInstanceSaveCondition(
+  initial: OrganizationValue[],
+  current: OrganizationValue[],
+): string {
+  const { removed, added, modified } = getManageAssignmentsInstanceChangeSet(initial, current);
+  const parts = new Set<string>();
+  if (removed.length > 0) {
+    parts.add('remove organization');
+  }
+  if (added.length > 0) {
+    parts.add('add organization');
+  }
+  modified.forEach((org) => {
+    const initialOrg = initial.find((io) => io.id === org.id);
+    if (initialOrg) {
+      mergeOrgSaveConditionIntoSet(getManageAssignmentsSaveCondition(initialOrg, org), parts);
+    }
+  });
+  return [...parts].join('#');
+}

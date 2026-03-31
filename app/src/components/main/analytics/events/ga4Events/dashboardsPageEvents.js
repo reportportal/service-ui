@@ -188,6 +188,11 @@ export const DASHBOARD_EVENTS = {
     number: dashboardId,
   }),
 
+  clickOnFullWidthModeCheckbox: (isEnabled) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: isEnabled ? 'full_width_mode_selected' : 'full_width_mode_unselected',
+  }),
+
   clickOnDuplicateMenuOption: (option) => ({
     ...getBasicClickEventParameters(DASHBOARDS),
     element_name: option,

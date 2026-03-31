@@ -26,7 +26,8 @@ import {
   Tooltip,
 } from '@reportportal/ui-kit';
 
-import { createClassnames, fetch } from 'common/utils';
+import { isBrowser } from 'es-toolkit';
+import { capitalize, createClassnames, fetch } from 'common/utils';
 import { EDITOR, MANAGER, MEMBER } from 'common/constants/projectRoles';
 import { messages } from 'common/constants/localization/invitationsLocalization';
 import { messages as assignmentMessages } from 'common/constants/localization/assignmentsLocalization';
@@ -36,6 +37,7 @@ import { ProjectsSearchesResponseData } from 'controllers/organization/projects'
 import { OrganizationType } from 'controllers/organization';
 import { idSelector } from 'controllers/user';
 import { IconsBlock } from 'pages/instance/organizationsPage/organizationsPanelView/iconsBlock/iconsBlock';
+import { useAssignmentsUtils } from 'pages/inside/common/assignments/hooks';
 
 import { PROJECTS_LIMIT } from './constants';
 import { AddItemButton } from './addItemButton';
@@ -51,7 +53,7 @@ export interface Organization {
   name: string;
   type?: OrganizationType;
   owner_id?: number;
-  isNew?: boolean,
+  isNew?: boolean;
   role: string;
   projects: Project[];
   isProjectsLoaded?: boolean;
@@ -64,11 +66,13 @@ interface OrganizationItemProps {
   onChange: (updates: Partial<Organization>) => void;
   onRemove?: () => void;
   collapsable?: boolean;
-  addProjectDisabled?: boolean;
+  disabled?: boolean;
   invitedUserId?: number | null;
+  userType?: string;
   excludeUserAssignments?: boolean;
   onAddProjectFormToggle?: (orgId: number, isOpen: boolean) => void;
   onExpandOrganization?: (orgId: number) => void;
+  showUnassignProjectTooltip?: boolean;
 }
 
 export const OrganizationItem = ({
@@ -76,11 +80,13 @@ export const OrganizationItem = ({
   onChange,
   onRemove,
   collapsable,
-  addProjectDisabled = false,
+  disabled = false,
   invitedUserId,
+  userType,
   excludeUserAssignments = false,
   onAddProjectFormToggle,
   onExpandOrganization,
+  showUnassignProjectTooltip,
 }: OrganizationItemProps) => {
   const { formatMessage } = useIntl();
   const currentUserId = useSelector(idSelector) as number;
@@ -113,6 +119,9 @@ export const OrganizationItem = ({
   }, [invitedUserId, isNew, currentUserId, ownerId, formatMessage]);
 
   const disableOrganizationRole = Boolean(organizationRoleDisabledTooltip);
+  const menuPortalRoot = isBrowser()
+    ? document.getElementById('tooltip-root') ?? document.body
+    : undefined;
   const [totalProjects, setTotalProjects] = useState(0);
   const [addProjectFormOpen, setAddProjectFormOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(isExpanded);
@@ -193,11 +202,51 @@ export const OrganizationItem = ({
     onChange({ projects: updatedProjects });
   };
 
-  const collapseDisabled = collapsable && addProjectFormOpen;
+  const itemDisabled = disabled || addProjectFormOpen;
+  const collapseDisabled = collapsable && itemDisabled;
 
   const handleCollapsable = () => {
     if (collapseDisabled) return;
     setIsOpen(!isOpen);
+  };
+
+  const { unassignTooltip } = useAssignmentsUtils({
+    currentUserId,
+    userId: invitedUserId,
+    userType,
+    organizationType: type,
+    ownerId,
+  });
+
+  const renderRemoveButton = () => {
+    if (!onRemove) return null;
+
+    const commonTooltipMessage = assignmentMessages.unassignOrganizationUser;
+
+    const button = (
+      <BaseIconButton
+        className={cx('remove-button')}
+        onClick={onRemove}
+        disabled={!!unassignTooltip || itemDisabled}
+      >
+        <CloseIcon />
+      </BaseIconButton>
+    );
+
+    return (
+      <Tooltip
+        placement="top"
+        content={
+          unassignTooltip
+            ? `${formatMessage(unassignTooltip)}`
+            : `${capitalize(formatMessage(commonTooltipMessage))}`
+        }
+        tooltipClassName={cx('custom-tooltip')}
+        wrapperClassName={cx('tooltip-wrapper')}
+      >
+        {button}
+      </Tooltip>
+    );
   };
 
   return (
@@ -213,8 +262,10 @@ export const OrganizationItem = ({
               <DropdownIcon />
             </div>
           )}
-          <span className={cx('name-label')}>{name}</span>
-          {!!type && <IconsBlock organizationType={type} />}
+          <span className={cx('name-label', { disabled: itemDisabled })}>{name}</span>
+          {!!type && (
+            <IconsBlock organizationType={type} iconClassName={cx({ disabled: itemDisabled })} />
+          )}
         </div>
         <div className={cx('controls')}>
           <div className={cx('role-slot')}>
@@ -231,24 +282,22 @@ export const OrganizationItem = ({
                   options={roleOptions}
                   onChange={handleRoleChange}
                   variant="ghost"
+                  menuPortalRoot={menuPortalRoot}
                 />
               </Tooltip>
             ) : (
               <Dropdown
-                disabled={disableOrganizationRole}
+                disabled={disableOrganizationRole || itemDisabled}
                 className={cx('role')}
                 value={role}
                 options={roleOptions}
                 onChange={handleRoleChange}
                 variant="ghost"
+                menuPortalRoot={menuPortalRoot}
               />
             )}
           </div>
-          {onRemove && (
-            <BaseIconButton className={cx('remove-button')} onClick={onRemove}>
-              <CloseIcon />
-            </BaseIconButton>
-          )}
+          {renderRemoveButton()}
         </div>
       </div>
       {isOpen && (
@@ -262,8 +311,10 @@ export const OrganizationItem = ({
               <ProjectItems
                 projects={projects}
                 canEditByDefault={role === MANAGER}
+                disabled={itemDisabled}
                 onChange={handleProjectChange}
                 onRemove={handleProjectRemove}
+                showUnassignProjectTooltip={showUnassignProjectTooltip}
               />
 
               <div className={cx('add-project')}>
@@ -282,7 +333,7 @@ export const OrganizationItem = ({
                     tooltipClassname={cx('tooltip-wrapper')}
                     onClick={() => setAddProjectFormOpen(true)}
                     tooltipContent={noProjects ? messages.noProjects : messages.allProjectsAdded}
-                    disabled={noProjects || allProjectsAdded || addProjectDisabled}
+                    disabled={noProjects || allProjectsAdded || disabled}
                     text={formatMessage(messages.addProject)}
                   />
                 )}

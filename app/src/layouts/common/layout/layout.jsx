@@ -41,8 +41,8 @@ export class Layout extends Component {
     Banner: PropTypes.elementType,
     Header: PropTypes.elementType,
     Sidebar: PropTypes.elementType,
+    fullWidthContainer: PropTypes.bool,
     rawContent: PropTypes.bool,
-    isExtensionPage: PropTypes.bool,
     sessionExpirationConfig: PropTypes.number.isRequired,
     logout: PropTypes.func.isRequired,
   };
@@ -51,8 +51,8 @@ export class Layout extends Component {
     Banner: null,
     Header: null,
     Sidebar: null,
+    fullWidthContainer: false,
     rawContent: false,
-    isExtensionPage: false,
   };
 
   state = {
@@ -121,7 +121,7 @@ export class Layout extends Component {
   };
 
   render() {
-    const { Header, Sidebar, Banner, rawContent, children } = this.props;
+    const { Header, Sidebar, Banner, rawContent, fullWidthContainer, children } = this.props;
     const header = (
       <div className={cx('header-container')}>
         {Header && (
@@ -166,7 +166,7 @@ export class Layout extends Component {
                   {header}
                   <div
                     className={cx('page-container', {
-                      'extension-page-container': this.props.isExtensionPage,
+                      'full-width-page-container': fullWidthContainer,
                     })}
                   >
                     {children}

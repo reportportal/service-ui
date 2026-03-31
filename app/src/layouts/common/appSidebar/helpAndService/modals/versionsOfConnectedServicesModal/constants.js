@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,5 @@
  * limitations under the License.
  */
 
-export { useCanUnassignOrganization, useHandleUnassignSuccess, useAssignmentsUtils } from './hooks';
-export { UnassignOrganizationModal } from './unassignOrganizationModal';
-export { AssignProjectModal } from './assignProjectModal';
+export const PRODUCT_VERSION = 'RP-26.0.2';
+export const PRODUCT_VERSION_LINK = 'https://reportportal.io/docs/releases/Version26.0.2/';
