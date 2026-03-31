@@ -14,17 +14,8 @@
  * limitations under the License.
  */
 
-/**
- * Builds the next name when duplicating a milestone:
- * "My milestone" → "My milestone (1)"
- * "My milestone (1)" → "My milestone (2)"
- */
-export const getNextDuplicateMilestoneName = (currentName: string): string => {
-  const suffixMatch = currentName.match(/ \((\d+)\)$/);
-  if (suffixMatch) {
-    const next = parseInt(suffixMatch[1], 10) + 1;
-    const base = currentName.slice(0, currentName.length - suffixMatch[0].length).trimEnd();
-    return `${base} (${next})`;
-  }
-  return `${currentName} (1)`;
-};
+export interface UseMilestoneSubmitParams {
+  url: string;
+  method: 'post' | 'patch';
+  successMessageId: string;
+}

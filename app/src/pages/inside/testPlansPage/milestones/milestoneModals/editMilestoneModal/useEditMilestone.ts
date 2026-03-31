@@ -14,64 +14,25 @@
  * limitations under the License.
  */
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { URLS } from 'common/urls';
-import { fetch } from 'common/utils';
-import { useDebouncedSpinner, useQueryParams } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
-import { hideModalAction } from 'controllers/modal';
-import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
-import {
-  defaultMilestoneQueryParams,
-  getMilestonesAction,
-  TmsMilestoneRS,
-  CreateMilestonePayload,
-} from 'controllers/milestone';
+import { useMilestoneSubmit } from '../useMilestoneSubmit';
 
 import type { UseEditMilestoneParams } from './types';
 
 export const useEditMilestone = ({ milestoneId }: UseEditMilestoneParams) => {
-  const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
-  const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
-  const queryParams = useQueryParams(defaultMilestoneQueryParams);
 
-  const submitMilestone = async (payload: CreateMilestonePayload) => {
-    try {
-      showSpinner();
-
-      await fetch<TmsMilestoneRS>(URLS.tmsMilestoneById(projectKey, milestoneId), {
-        method: 'patch',
-        data: {
-          name: payload.name,
-          type: payload.type,
-          status: payload.status,
-          startDate: payload.startDate,
-          endDate: payload.endDate,
-        },
-      });
-
-      dispatch(hideModalAction());
-      dispatch(
-        showSuccessNotification({
-          messageId: 'milestoneUpdatedSuccess',
-        }),
-      );
-      dispatch(getMilestonesAction(queryParams));
-    } catch {
-      dispatch(
-        showErrorNotification({
-          messageId: 'errorOccurredTryAgain',
-        }),
-      );
-    } finally {
-      hideSpinner();
-    }
-  };
+  const { isLoading, submit } = useMilestoneSubmit({
+    url: URLS.tmsMilestoneById(projectKey, milestoneId),
+    method: 'patch',
+    successMessageId: 'milestoneUpdatedSuccess',
+  });
 
   return {
     isLoading,
-    submitMilestone,
+    submitMilestone: submit,
   };
 };
