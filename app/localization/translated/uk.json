@@ -2214,6 +2214,7 @@
   "Sidebar.footer.documentation": "Документація",
   "Sidebar.footer.github": "Зробіть форк на GitHub",
   "Sidebar.footer.openAPI": "OpenAPI",
+  "Sidebar.footer.productVersion": "Версія {version}",
   "Sidebar.footer.rights": "© ReportPortal 2013-{currentYear}. Всі права захищені.",
   "Sidebar.footer.serviceIsOutdated": "Сервіс застарів",
   "Sidebar.footer.serviceIsOutdatedDescription": "Будь ласка, оновіть до останньої версії, щоб розширити можливості і підвищити безпеку",

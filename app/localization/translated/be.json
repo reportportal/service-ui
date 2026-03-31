@@ -2213,6 +2213,7 @@
   "Sidebar.footer.documentation": "Дакументацыя",
   "Sidebar.footer.github": "Зрабіце форк на GitHub",
   "Sidebar.footer.openAPI": "OpenAPI",
+  "Sidebar.footer.productVersion": "Версія {version}",
   "Sidebar.footer.rights": "© ReportPortal 2013-{currentYear}. Усе правы абаронены.",
   "Sidebar.footer.serviceIsOutdated": "Сэрвіс састарэў",
   "Sidebar.footer.serviceIsOutdatedDescription": "Калі ласка, абновіце да апошняй версіі, каб пашырыць магчымасці і павысіць бяспеку",
