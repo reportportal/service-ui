@@ -20,9 +20,9 @@
  * "My milestone (1)" → "My milestone (2)"
  */
 export const getNextDuplicateMilestoneName = (currentName: string): string => {
-  const suffixMatch = currentName.match(/ \((\d+)\)$/);
+  const suffixMatch = / \((\d+)\)$/.exec(currentName);
   if (suffixMatch) {
-    const next = parseInt(suffixMatch[1], 10) + 1;
+    const next = Number.parseInt(suffixMatch[1], 10) + 1;
     const base = currentName.slice(0, currentName.length - suffixMatch[0].length).trimEnd();
     return `${base} (${next})`;
   }
