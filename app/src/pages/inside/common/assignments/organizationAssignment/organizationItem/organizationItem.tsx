@@ -72,6 +72,7 @@ interface OrganizationItemProps {
   excludeUserAssignments?: boolean;
   onAddProjectFormToggle?: (orgId: number, isOpen: boolean) => void;
   onExpandOrganization?: (orgId: number) => void;
+  showUnassignProjectTooltip?: boolean;
 }
 
 export const OrganizationItem = ({
@@ -85,6 +86,7 @@ export const OrganizationItem = ({
   excludeUserAssignments = false,
   onAddProjectFormToggle,
   onExpandOrganization,
+  showUnassignProjectTooltip,
 }: OrganizationItemProps) => {
   const { formatMessage } = useIntl();
   const currentUserId = useSelector(idSelector) as number;
@@ -312,6 +314,7 @@ export const OrganizationItem = ({
                 disabled={itemDisabled}
                 onChange={handleProjectChange}
                 onRemove={handleProjectRemove}
+                showUnassignProjectTooltip={showUnassignProjectTooltip}
               />
 
               <div className={cx('add-project')}>
