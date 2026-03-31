@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@use '../../../../common/css/mixins';
+
 .projects-list-table {
   margin: 16px auto;
   padding: 0 32px;
@@ -55,13 +57,7 @@
   flex: 1;
 
   .projects-pagination-container {
-    max-width: calc(var(--rp-ui-base-max-page-width) + 64px);
-    padding-left: 32px;
-    padding-right: 32px;
-    width: 100%;
-    box-sizing: border-box;
-    margin-left: auto;
-    margin-right: auto;
+    @include mixins.page-layout-pagination-container;
   }
 }
 
