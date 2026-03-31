@@ -30,6 +30,8 @@ interface LocationQuery {
   limit: string;
   testCasesSearchParams?: string;
   searchQuery?: string;
+  filterPriorities?: string;
+  filterTags?: string;
 }
 
 export type LocationInfo = {

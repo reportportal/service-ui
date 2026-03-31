@@ -27,8 +27,8 @@ import { messages as priorityMessages } from 'pages/inside/testCaseLibraryPage/c
 
 import { STATUS_TYPES } from '../constants';
 import { messages } from './messages';
-import { MOCK_TAG_OPTIONS } from './mocks';
 import { ensureArray, normalizeSelection } from './utils';
+import { useTagOptions } from './useTagOptions';
 
 import styles from './filterSidePanel.scss';
 
@@ -41,7 +41,7 @@ interface FilterSidePanelProps {
   selectedTags: string[];
   onPrioritiesChange: (priorities: string[]) => void;
   onTagsChange: (tags: string[]) => void;
-  onApply: () => void;
+  onApply: (priorities: string[], tags: string[]) => void;
 }
 
 const FilterSidePanelComponent = ({
@@ -55,6 +55,7 @@ const FilterSidePanelComponent = ({
 }: FilterSidePanelProps) => {
   const { formatMessage } = useIntl();
   const wasVisibleRef = useRef(false);
+  const { tagOptions, fetchTagOptions } = useTagOptions();
 
   const [localSelectedPriorities, setLocalSelectedPriorities] =
     useState<string[]>(selectedPriorities);
@@ -64,10 +65,12 @@ const FilterSidePanelComponent = ({
     if (isVisible && !wasVisibleRef.current) {
       setLocalSelectedPriorities(selectedPriorities);
       setLocalSelectedTags(selectedTags);
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      fetchTagOptions();
     }
 
     wasVisibleRef.current = isVisible;
-  }, [isVisible, selectedPriorities, selectedTags]);
+  }, [isVisible, selectedPriorities, selectedTags, fetchTagOptions]);
 
   const priorityOptions = useMemo(
     () => [
@@ -92,7 +95,7 @@ const FilterSidePanelComponent = ({
   const handleApplyFilters = () => {
     onPrioritiesChange(localSelectedPriorities);
     onTagsChange(localSelectedTags);
-    onApply();
+    onApply(localSelectedPriorities, localSelectedTags);
     onClose();
   };
 
@@ -143,7 +146,7 @@ const FilterSidePanelComponent = ({
       <div className={cx('filter-section')}>
         <div className={cx('filter-label')}>{formatMessage(commonMessages.tags)}</div>
         <Dropdown
-          options={MOCK_TAG_OPTIONS}
+          options={tagOptions}
           value={localSelectedTags}
           onChange={handleTagsChange}
           placeholder={formatMessage(messages.selectTags)}
@@ -183,23 +186,28 @@ const FilterSidePanelComponent = ({
     </div>
   );
 
-  return createPortal(
-    <div>
-      <SidePanel
-        className={cx('filter-side-panel')}
-        overlayClassName={cx('filter-overlay')}
-        title={titleComponent}
-        contentComponent={contentComponent}
-        footerComponent={footerComponent}
-        isOpen={isVisible}
-        onClose={onClose}
-        closeButtonAriaLabel={formatMessage(commonMessages.closePanel)}
-        side="right"
-        showOverlay
-        allowCloseOutside={!hasChanges}
-      />
-    </div>,
-    document.body,
+  return (
+    <>
+      {isVisible &&
+        createPortal(
+          <div>
+            <SidePanel
+              className={cx('filter-side-panel')}
+              overlayClassName={cx('filter-overlay')}
+              title={titleComponent}
+              contentComponent={contentComponent}
+              footerComponent={footerComponent}
+              isOpen={isVisible}
+              onClose={onClose}
+              closeButtonAriaLabel={formatMessage(commonMessages.closePanel)}
+              side="right"
+              showOverlay
+              allowCloseOutside={!hasChanges}
+            />
+          </div>,
+          document.body,
+        )}
+    </>
   );
 };
 

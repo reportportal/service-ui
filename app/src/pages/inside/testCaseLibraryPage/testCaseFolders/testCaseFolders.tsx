@@ -21,6 +21,7 @@ import { Button, PlusIcon } from '@reportportal/ui-kit';
 import { noop } from 'es-toolkit';
 
 import { createClassnames, getStorageItem } from 'common/utils';
+import { buildFolderFilterParams } from 'pages/inside/common/testCaseList/filterSidePanel/utils';
 import {
   transformedFoldersSelector,
   areFoldersLoadingSelector,
@@ -102,8 +103,15 @@ export const TestCaseFolders = () => {
       limit: Number(query?.limit) || savedLimit || TestCasePageDefaultValues.limit,
       offset: Number(query?.offset) || TestCasePageDefaultValues.offset,
       testCasesSearchParams: query?.testCasesSearchParams,
+      filterPriorities: query?.filterPriorities,
+      filterTags: query?.filterTags,
     }),
     [query, savedLimit],
+  );
+
+  const searchExtraFilters = useMemo(
+    () => buildFolderFilterParams(queryParams.filterPriorities, queryParams.filterTags),
+    [queryParams.filterPriorities, queryParams.filterTags],
   );
 
   const navigateToAllTestCases = useCallback(() => {
@@ -115,9 +123,11 @@ export const TestCaseFolders = () => {
       },
       query: {
         ...(query?.testCasesSearchParams && { testCasesSearchParams: query.testCasesSearchParams }),
+        ...(query?.filterPriorities && { filterPriorities: query.filterPriorities }),
+        ...(query?.filterTags && { filterTags: query.filterTags }),
       },
     });
-  }, [dispatch, organizationSlug, projectSlug, query?.testCasesSearchParams]);
+  }, [dispatch, organizationSlug, projectSlug, query?.testCasesSearchParams, query?.filterPriorities, query?.filterTags]);
 
   useEffect(() => {
     if (urlFolderId && !activeFolder) {
@@ -148,7 +158,7 @@ export const TestCaseFolders = () => {
       dispatch(getAllTestCasesAction(queryParams));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [urlFolderId, queryParams.limit, queryParams.offset, queryParams.testCasesSearchParams]);
+  }, [urlFolderId, queryParams.limit, queryParams.offset, queryParams.testCasesSearchParams, queryParams.filterPriorities, queryParams.filterTags]);
 
   const handleFolderClick = (id: number) => {
     navigateToFolder({ folderId: id });
@@ -207,7 +217,7 @@ export const TestCaseFolders = () => {
   const handleDuplicateTestCase = useCallback(
     async (testCase: ExtendedTestCase, targetFolderId: number) => {
       const destinationFolder = findFolderById(folders, targetFolderId);
-      
+
       if (!destinationFolder) return;
 
       await batchDuplicateTestCases({
@@ -229,6 +239,7 @@ export const TestCaseFolders = () => {
       folders={folders}
       instanceKey={TMS_INSTANCE_KEY.TEST_CASE}
       searchQuery={queryParams.testCasesSearchParams}
+      searchExtraFilters={searchExtraFilters}
       setAllTestCases={navigateToAllTestCases}
       onFolderClick={handleFolderClick}
       renderCreateFolderButton={renderCreateFolderButton}

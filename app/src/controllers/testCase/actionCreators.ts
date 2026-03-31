@@ -56,12 +56,16 @@ export interface GetTestCasesByFolderIdParams {
   offset: number;
   limit: number;
   testCasesSearchParams?: string;
+  filterPriorities?: string;
+  filterTags?: string;
 }
 
 export interface GetAllTestCases {
   offset: number;
   limit: number;
   testCasesSearchParams?: string;
+  filterPriorities?: string;
+  filterTags?: string;
 }
 
 export interface CreateFolderParams {
@@ -232,7 +236,7 @@ export const setFoldersFetchedAction = () => ({
 });
 
 export interface GetFilteredFoldersParams {
-  searchQuery: string;
+  searchQuery?: string;
   extraFilters?: Record<string, string | number>;
 }
 
