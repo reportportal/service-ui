@@ -17,10 +17,11 @@
 import { useIntl } from 'react-intl';
 
 import { BaseIconButton, CloseIcon, Dropdown, Tooltip } from '@reportportal/ui-kit';
-import { createClassnames } from 'common/utils';
+import { capitalize, createClassnames } from 'common/utils';
 import { EDITOR, VIEWER } from 'common/constants/projectRoles';
 import { getRoleTitle } from 'common/utils/permissions';
 import { messages } from 'common/constants/localization/invitationsLocalization';
+import { messages as assignmentMessages } from 'common/constants/localization/assignmentsLocalization';
 
 import styles from './projectItems.scss';
 
@@ -38,6 +39,7 @@ interface ProjectItemsProps {
   disabled?: boolean;
   onChange: (id: number, updates: Partial<Project>) => void;
   onRemove: (id: number) => void;
+  showUnassignProjectTooltip?: boolean;
 }
 
 export const ProjectItems = ({
@@ -46,6 +48,7 @@ export const ProjectItems = ({
   disabled,
   onChange,
   onRemove,
+  showUnassignProjectTooltip,
 }: ProjectItemsProps) => {
   const { formatMessage } = useIntl();
   const roleOptions = [VIEWER, EDITOR].map((role) => ({
@@ -68,13 +71,38 @@ export const ProjectItems = ({
     />
   );
 
+  const renderRemoveButton = (project: Project) => {
+    const button = (
+      <BaseIconButton
+        className={cx('remove-button')}
+        onClick={() => onRemove(project.id)}
+        disabled={disabled}
+      >
+        <CloseIcon />
+      </BaseIconButton>
+    );
+
+    return showUnassignProjectTooltip ? (
+      <Tooltip
+        placement="top"
+        content={`${capitalize(formatMessage(assignmentMessages.unassignProjectUser))}`}
+        tooltipClassName={cx('custom-tooltip')}
+        wrapperClassName={cx('tooltip-wrapper')}
+      >
+        {button}
+      </Tooltip>
+    ) : (
+      button
+    );
+  };
+
   return projects.map((project) => (
     <div className={cx('project')} key={project.id}>
       <div className={cx('name', { disabled })}>{project.name}</div>
       <div className={cx('controls')}>
         {canEditByDefault ? (
           <Tooltip
-            wrapperClassName={cx('tooltip-wrapper')}
+            wrapperClassName={cx('tooltip-wrapper', 'default-cursor')}
             content={formatMessage(messages.managersCanEditAll)}
             placement="top"
           >
@@ -83,13 +111,7 @@ export const ProjectItems = ({
         ) : (
           renderRole(project)
         )}
-        <BaseIconButton
-          className={cx('remove-button')}
-          onClick={() => onRemove(project.id)}
-          disabled={disabled}
-        >
-          <CloseIcon />
-        </BaseIconButton>
+        {renderRemoveButton(project)}
       </div>
     </div>
   ));
