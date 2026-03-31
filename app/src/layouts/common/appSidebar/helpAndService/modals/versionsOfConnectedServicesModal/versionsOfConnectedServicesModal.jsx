@@ -21,10 +21,14 @@ import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { Modal } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import Logo from 'common/img/logo.svg';
+import OpenIcon from 'common/img/open-in-new-tab-inline.svg';
 import { appInfoSelector } from 'controllers/appInfo';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { servicesUpdate } from 'common/utils/referenceDictionary';
-import { messages } from '../../../messages';
+import { LinkItem } from 'layouts/common/appSidebar/helpAndService/linkItem';
+import { messages } from 'layouts/common/appSidebar/messages';
+import { PRODUCT_VERSION, PRODUCT_VERSION_LINK } from './constants';
 import { ServiceVersion } from './serviceVersion';
 import styles from './versionsOfConnectedServicesModal.scss';
 
@@ -79,6 +83,15 @@ const VersionsOfConnectedServices = ({ data: { latestServiceVersions } }) => {
       onClose={hideModal}
       size="large"
     >
+      <div className={cx('product-version-header')}>
+        <img className={cx('logo')} src={Logo} alt="ReportPortal" />
+        <LinkItem
+          link={PRODUCT_VERSION_LINK}
+          content={formatMessage(messages.productVersion, { version: PRODUCT_VERSION })}
+          className={cx('version-link')}
+          icon={OpenIcon}
+        />
+      </div>
       <div className={cx('title')}>{formatMessage(messages.titleServicesVersionsModal)}</div>
       <div className={cx('header')}>
         <div className={cx('service-name')}>{formatMessage(messages.serviceName)}</div>

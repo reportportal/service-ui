@@ -31,3 +31,46 @@
 .service-name {
   width: 272px;
 }
+
+.product-version-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.logo {
+  height: 32px;
+}
+
+.version-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: $COLOR--topaz-2;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &::before {
+    content: '';
+    align-self: stretch;
+    width: 1px;
+    background-color: $COLOR--e-100;
+    margin-right: 2px;
+  }
+
+  i {
+    display: flex;
+
+    svg {
+      width: 16px;
+      height: 16px;
+
+      path {
+        fill: $COLOR--topaz-2;
+      }
+    }
+  }
+}

@@ -86,6 +86,10 @@ export const messages = defineMessages({
     id: 'Sidebar.footer.github',
     defaultMessage: 'Fork us on GitHub',
   },
+  productVersion: {
+    id: 'Sidebar.footer.productVersion',
+    defaultMessage: 'Version {version}',
+  },
   servicesVersions: {
     id: 'Sidebar.footer.servicesVersions',
     defaultMessage: 'Versions of connected services',
