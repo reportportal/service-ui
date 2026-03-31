@@ -26,6 +26,7 @@ import {
   Tooltip,
 } from '@reportportal/ui-kit';
 
+import { isBrowser } from 'es-toolkit';
 import { capitalize, createClassnames, fetch } from 'common/utils';
 import { EDITOR, MANAGER, MEMBER } from 'common/constants/projectRoles';
 import { messages } from 'common/constants/localization/invitationsLocalization';
@@ -116,6 +117,9 @@ export const OrganizationItem = ({
   }, [invitedUserId, isNew, currentUserId, ownerId, formatMessage]);
 
   const disableOrganizationRole = Boolean(organizationRoleDisabledTooltip);
+  const menuPortalRoot = isBrowser()
+    ? document.getElementById('tooltip-root') ?? document.body
+    : undefined;
   const [totalProjects, setTotalProjects] = useState(0);
   const [addProjectFormOpen, setAddProjectFormOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(isExpanded);
@@ -276,6 +280,7 @@ export const OrganizationItem = ({
                   options={roleOptions}
                   onChange={handleRoleChange}
                   variant="ghost"
+                  menuPortalRoot={menuPortalRoot}
                 />
               </Tooltip>
             ) : (
@@ -286,6 +291,7 @@ export const OrganizationItem = ({
                 options={roleOptions}
                 onChange={handleRoleChange}
                 variant="ghost"
+                menuPortalRoot={menuPortalRoot}
               />
             )}
           </div>
