@@ -103,8 +103,8 @@ export const TestCaseFolders = () => {
       limit: Number(query?.limit) || savedLimit || TestCasePageDefaultValues.limit,
       offset: Number(query?.offset) || TestCasePageDefaultValues.offset,
       testCasesSearchParams: query?.testCasesSearchParams,
-      filterPriorities: query?.filterPriorities as string | undefined,
-      filterTags: query?.filterTags as string | undefined,
+      filterPriorities: query?.filterPriorities,
+      filterTags: query?.filterTags,
     }),
     [query, savedLimit],
   );
@@ -217,7 +217,7 @@ export const TestCaseFolders = () => {
   const handleDuplicateTestCase = useCallback(
     async (testCase: ExtendedTestCase, targetFolderId: number) => {
       const destinationFolder = findFolderById(folders, targetFolderId);
-      
+
       if (!destinationFolder) return;
 
       await batchDuplicateTestCases({
