@@ -117,6 +117,9 @@ export const OrganizationItem = ({
   }, [invitedUserId, isNew, currentUserId, ownerId, formatMessage]);
 
   const disableOrganizationRole = Boolean(organizationRoleDisabledTooltip);
+  const menuPortalRoot = isBrowser()
+    ? document.getElementById('tooltip-root') ?? document.body
+    : undefined;
   const [totalProjects, setTotalProjects] = useState(0);
   const [addProjectFormOpen, setAddProjectFormOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(isExpanded);
@@ -277,7 +280,7 @@ export const OrganizationItem = ({
                   options={roleOptions}
                   onChange={handleRoleChange}
                   variant="ghost"
-                  menuPortalRoot={(isBrowser() && document.body) || undefined}
+                  menuPortalRoot={menuPortalRoot}
                 />
               </Tooltip>
             ) : (
@@ -288,7 +291,7 @@ export const OrganizationItem = ({
                 options={roleOptions}
                 onChange={handleRoleChange}
                 variant="ghost"
-                menuPortalRoot={(isBrowser() && document.body) || undefined}
+                menuPortalRoot={menuPortalRoot}
               />
             )}
           </div>
