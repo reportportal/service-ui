@@ -31,6 +31,7 @@ export class WidgetPreview extends PureComponent {
     data: PropTypes.object,
     loading: PropTypes.bool,
     defaultPreview: PropTypes.any,
+    className: PropTypes.string,
   };
 
   static defaultProps = {
@@ -38,6 +39,7 @@ export class WidgetPreview extends PureComponent {
     defaultPreview: null,
     data: null,
     loading: false,
+    className: '',
   };
 
   constructor(props) {
@@ -85,7 +87,7 @@ export class WidgetPreview extends PureComponent {
   render = () => (
     <div
       ref={this.widgetContainerRef}
-      className={cx('widget-preview', { table: !!this.getWidgetStaticPreview() })}
+      className={cx('widget-preview', { table: !!this.getWidgetStaticPreview() }, this.props.className)}
     >
       {this.getWidgetContent()}
     </div>
