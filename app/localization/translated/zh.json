@@ -2213,6 +2213,7 @@
   "Sidebar.footer.documentation": "文档",
   "Sidebar.footer.github": "Fork us on GitHub",
   "Sidebar.footer.openAPI": "OpenAPI",
+  "Sidebar.footer.productVersion": "版本 {version}",
   "Sidebar.footer.rights": "© 报告门户 2013-{currentYear}。 版权所有",
   "Sidebar.footer.serviceIsOutdated": "Service is outdated",
   "Sidebar.footer.serviceIsOutdatedDescription": "Please, update to the latest version for enhanced features and improved security",

@@ -2215,6 +2215,7 @@
   "Sidebar.footer.documentation": "Documentation",
   "Sidebar.footer.github": "Fork us on GitHub",
   "Sidebar.footer.openAPI": "OpenAPI",
+  "Sidebar.footer.productVersion": "Versión {version}",
   "Sidebar.footer.rights": "© ReportPortal 2013-{currentYear}. All rights reserved.",
   "Sidebar.footer.serviceIsOutdated": "Service is outdated",
   "Sidebar.footer.serviceIsOutdatedDescription": "Please, update to the latest version for enhanced features and improved security",
