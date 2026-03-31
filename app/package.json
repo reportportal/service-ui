@@ -39,7 +39,7 @@
     "d3": "7.8.5",
     "d3-selection": "1.4.0",
     "date-fns": "2.29.3",
-    "dompurify": "^3.2.4",
+    "dompurify": "^3.3.2",
     "dotenv": "5.0.1",
     "downshift": "6.1.7",
     "es-toolkit": "^1.39.10",
@@ -95,7 +95,7 @@
     "reset-css": "2.2.1",
     "semver-diff": "3.1.1",
     "simplemde": "1.11.2",
-    "swagger-ui-react": "^5.30.2",
+    "swagger-ui-react": "^5.32.1",
     "video.js": "7.17.0"
   },
   "devDependencies": {

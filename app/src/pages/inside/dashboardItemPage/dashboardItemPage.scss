@@ -15,36 +15,7 @@
  */
 
 .dashboard-item {
-  background: $COLOR--white-two;
-
-  &:hover .icon-close {
-    opacity: 1;
-  }
-}
-
-.buttons-container {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  min-height: 30px;
-  margin: 0;
-  padding: 20px 10px 0 10px;
-  border-bottom: 1px solid $COLOR--gray-91;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    display: none;
-  }
-}
-
-.buttons-block {
-  display: flex;
-  padding-bottom: 20px;
-
-  button {
-    &:not(:last-child) {
-      margin-right: 10px;
-    }
-  }
+  background: var(--rp-ui-base-bg-000);
 }
 
 .icon-close {
@@ -54,14 +25,46 @@
   width: 24px;
   height: 24px;
   opacity: 0;
-  fill: $COLOR--gray-60;
+  fill: var(--rp-ui-base-e-400);
   cursor: pointer;
   transition: opacity 0.5s ease;
 }
 
+.dashboard-item:hover .icon-close {
+  opacity: 1;
+}
+
+.buttons-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  min-height: 30px;
+  margin: 0;
+  padding: 20px 10px 0 10px;
+  border-bottom: 1px solid var(--rp-ui-base-e-91);
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
+.buttons-block {
+  display: flex;
+  align-items: center;
+  padding-bottom: 20px;
+
+  & > *:not(:last-child) {
+    margin-right: 10px;
+  }
+
+  & > .dashboard-layout-settings-control:not(:last-child) {
+    margin-right: 24px;
+  }
+}
+
 :global {
   .fullscreen {
-    background: $COLOR--white-two;
+    background: var(--rp-ui-base-bg-000);
   }
 }
 
