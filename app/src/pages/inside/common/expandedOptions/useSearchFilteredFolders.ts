@@ -16,6 +16,7 @@
 
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { isEmpty } from 'es-toolkit/compat';
 
 import {
   Folder,
@@ -26,7 +27,6 @@ import {
   clearFilteredFoldersAction,
 } from 'controllers/testCase';
 import { useSearchFilteredFolderDisplay } from 'common/hooks';
-import { isEmpty } from 'es-toolkit/compat';
 
 interface UseSearchFilteredFoldersParams {
   searchQuery?: string;

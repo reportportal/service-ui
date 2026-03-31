@@ -186,27 +186,28 @@ const FilterSidePanelComponent = ({
     </div>
   );
 
-  if (!isVisible) {
-    return null;
-  }
-
-  return createPortal(
-    <div>
-      <SidePanel
-        className={cx('filter-side-panel')}
-        overlayClassName={cx('filter-overlay')}
-        title={titleComponent}
-        contentComponent={contentComponent}
-        footerComponent={footerComponent}
-        isOpen={isVisible}
-        onClose={onClose}
-        closeButtonAriaLabel={formatMessage(commonMessages.closePanel)}
-        side="right"
-        showOverlay
-        allowCloseOutside={!hasChanges}
-      />
-    </div>,
-    document.body,
+  return (
+    <>
+      {isVisible &&
+        createPortal(
+          <div>
+            <SidePanel
+              className={cx('filter-side-panel')}
+              overlayClassName={cx('filter-overlay')}
+              title={titleComponent}
+              contentComponent={contentComponent}
+              footerComponent={footerComponent}
+              isOpen={isVisible}
+              onClose={onClose}
+              closeButtonAriaLabel={formatMessage(commonMessages.closePanel)}
+              side="right"
+              showOverlay
+              allowCloseOutside={!hasChanges}
+            />
+          </div>,
+          document.body,
+        )}
+    </>
   );
 };
 

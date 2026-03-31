@@ -26,6 +26,7 @@ import {
   cancelled,
 } from 'redux-saga/effects';
 import { Task } from 'redux-saga';
+import { isEmpty } from 'es-toolkit/compat';
 import { URLS } from 'common/urls';
 import { fetch, delayedPut } from 'common/utils';
 import { fetchSuccessAction, fetchErrorAction } from 'controllers/fetch';
@@ -90,7 +91,6 @@ import { fetchAllFolders } from './utils/fetchAllFolders';
 import { TestCase } from 'types/testCase';
 import { Page } from 'types/common';
 import { areFoldersFetchedSelector, foldersSelector } from 'controllers/testCase/selectors';
-import { isEmpty } from 'es-toolkit/compat';
 import {
   TEST_CASE_LIBRARY_PAGE,
   urlOrganizationSlugSelector,

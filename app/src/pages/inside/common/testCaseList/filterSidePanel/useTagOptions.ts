@@ -32,6 +32,11 @@ export const useTagOptions = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchTagOptions = useCallback(async () => {
+    if (!projectKey) {
+      setTagOptions([]);
+      return;
+    }
+
     try {
       setIsLoading(true);
 
