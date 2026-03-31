@@ -68,6 +68,14 @@ export class WidgetInfoBlock extends PureComponent {
       return;
     }
 
+    const prevSeparateInterrupted =
+      prevProps.widgetSettings.contentParameters?.widgetOptions?.separateInterrupted;
+    const nextSeparateInterrupted = contentParameters.widgetOptions?.separateInterrupted;
+    const isPanelView = contentParameters.widgetOptions?.viewMode === 'panel';
+    if (isPanelView && prevSeparateInterrupted !== nextSeparateInterrupted) {
+      this.setState({ widgetData: null, loading: true });
+    }
+
     const prevData = {
       filterIds: prevProps.widgetSettings.filterIds,
       contentParameters: prevProps.widgetSettings.contentParameters,
@@ -129,9 +137,11 @@ export class WidgetInfoBlock extends PureComponent {
       dashboardId,
     } = this.props;
     const { loading, widgetData } = this.state;
+    const widgetOptions = this.props.widgetSettings.contentParameters?.widgetOptions;
     const isSeparateInterrupted =
       activeWidget.id === OVERALL_STATISTICS &&
-      this.props.widgetSettings.contentParameters?.widgetOptions?.separateInterrupted;
+      widgetOptions?.viewMode === 'panel' &&
+      widgetOptions?.separateInterrupted;
     const isExpanded = isSeparateInterrupted && (loading || !!widgetData);
 
     return (
