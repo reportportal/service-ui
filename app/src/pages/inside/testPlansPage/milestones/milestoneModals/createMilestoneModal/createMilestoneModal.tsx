@@ -41,7 +41,12 @@ const cx = createClassnames(styles);
 
 type FormProps = InjectedFormProps<MilestoneFormValues>;
 
-const CreateMilestoneModalForm = ({ handleSubmit, invalid, dirty, change }: FormProps) => {
+const CreateMilestoneModalForm = ({
+  handleSubmit,
+  invalid,
+  dirty,
+  change: onChange,
+}: FormProps) => {
   const { formatMessage } = useIntl();
   const { isLoading, submitMilestone } = useCreateMilestone();
 
@@ -85,7 +90,7 @@ const CreateMilestoneModalForm = ({ handleSubmit, invalid, dirty, change }: Form
           <MilestoneFormModalContent
             formName={CREATE_MILESTONE_FORM_NAME}
             isLoading={isLoading}
-            change={change}
+            onChange={onChange}
           />
         </form>
       </div>

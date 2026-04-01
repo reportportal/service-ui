@@ -47,7 +47,7 @@ const DuplicateMilestoneModalForm = ({
   handleSubmit,
   invalid,
   dirty,
-  change,
+  change: onChange,
   sourceMilestone,
 }: InjectedFormProps<MilestoneFormValues> & DuplicateMilestoneOwnProps) => {
   const { formatMessage } = useIntl();
@@ -104,7 +104,7 @@ const DuplicateMilestoneModalForm = ({
             <MilestoneFormModalContent
               formName={DUPLICATE_MILESTONE_FORM_NAME}
               isLoading={isLoading}
-              change={change}
+              onChange={onChange}
             />
           </form>
         </div>

@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux';
 
 import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
+
 import { useMilestoneSubmit } from '../useMilestoneSubmit';
 
 import type { UseDuplicateMilestoneParams } from './types';

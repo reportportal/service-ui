@@ -22,19 +22,21 @@ export const formatIsoDateShort = (iso: string): string =>
 
 export const parseDateOnly = (value: string): Date | null => {
   if (!value) return null;
-  const d = parse(value, 'yyyy-MM-dd', new Date());
-  return isValid(d) ? d : null;
+  const parsedDate = parse(value, 'yyyy-MM-dd', new Date());
+  return isValid(parsedDate) ? parsedDate : null;
 };
 
 export const toDateOnlyString = (date: Date): string => format(date, 'yyyy-MM-dd');
 
 export const dateOnlyStringToUtcIso = (value: string): string | null => {
-  const d = parseDateOnly(value);
-  if (!d) return null;
-  return new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())).toISOString();
+  const parsedDate = parseDateOnly(value);
+  if (!parsedDate) return null;
+  return new Date(
+    Date.UTC(parsedDate.getFullYear(), parsedDate.getMonth(), parsedDate.getDate()),
+  ).toISOString();
 };
 
 export const isoToDateOnlyFormValue = (iso: string): string => {
-  const d = parseISO(iso);
-  return isValid(d) ? toDateOnlyString(d) : '';
+  const parsedDate = parseISO(iso);
+  return isValid(parsedDate) ? toDateOnlyString(parsedDate) : '';
 };

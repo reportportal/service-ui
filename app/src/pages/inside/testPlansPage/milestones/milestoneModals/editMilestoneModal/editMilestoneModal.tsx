@@ -43,7 +43,7 @@ const EditMilestoneModalForm = ({
   handleSubmit,
   invalid,
   dirty,
-  change,
+  change: onChange,
   milestone,
 }: InjectedFormProps<MilestoneFormValues> & EditMilestoneOwnProps) => {
   const { formatMessage } = useIntl();
@@ -89,7 +89,7 @@ const EditMilestoneModalForm = ({
           <MilestoneFormModalContent
             formName={EDIT_MILESTONE_FORM_NAME}
             isLoading={isLoading}
-            change={change}
+            onChange={onChange}
           />
         </form>
       </div>

@@ -17,5 +17,5 @@
 export interface MilestoneFormModalContentProps {
   formName: string;
   isLoading: boolean;
-  change: (field: string, value: string) => void;
+  onChange: (field: string, value: string) => void;
 }

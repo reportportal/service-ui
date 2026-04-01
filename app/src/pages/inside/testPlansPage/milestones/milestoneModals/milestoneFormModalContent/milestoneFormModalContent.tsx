@@ -45,7 +45,7 @@ const cx = createClassnames(styles);
 export const MilestoneFormModalContent = ({
   formName,
   isLoading,
-  change,
+  onChange,
 }: MilestoneFormModalContentProps) => {
   const { formatMessage } = useIntl();
   const milestoneFormValues = useMemo(() => formValueSelector(formName), [formName]);
@@ -58,15 +58,15 @@ export const MilestoneFormModalContent = ({
       {
         id: 'tomorrow',
         label: formatMessage(createMilestoneModalMessages.dateShortcutTomorrow),
-        onClick: () => change('startDate', tomorrowDateOnly()),
+        onClick: () => onChange('startDate', tomorrowDateOnly()),
       },
       {
         id: 'nextMonday',
         label: formatMessage(createMilestoneModalMessages.dateShortcutNextMonday),
-        onClick: () => change('startDate', nextMondayDateOnly()),
+        onClick: () => onChange('startDate', nextMondayDateOnly()),
       },
     ],
-    [change, formatMessage],
+    [onChange, formatMessage],
   );
 
   const endDateShortcuts = useMemo(
@@ -74,20 +74,20 @@ export const MilestoneFormModalContent = ({
       {
         id: 'week',
         label: formatMessage(createMilestoneModalMessages.dateShortcutWeek),
-        onClick: () => change('endDate', endDateDaysAfterStart(startDate, 7)),
+        onClick: () => onChange('endDate', endDateDaysAfterStart(startDate, 7)),
       },
       {
         id: 'twoWeeks',
         label: formatMessage(createMilestoneModalMessages.dateShortcutTwoWeeks),
-        onClick: () => change('endDate', endDateDaysAfterStart(startDate, 14)),
+        onClick: () => onChange('endDate', endDateDaysAfterStart(startDate, 14)),
       },
       {
         id: 'oneMonth',
         label: formatMessage(createMilestoneModalMessages.dateShortcutOneMonth),
-        onClick: () => change('endDate', endDateMonthsAfterStart(startDate, 1)),
+        onClick: () => onChange('endDate', endDateMonthsAfterStart(startDate, 1)),
       },
     ],
-    [change, formatMessage, startDate],
+    [onChange, formatMessage, startDate],
   );
 
   return (
