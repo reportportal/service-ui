@@ -21,6 +21,19 @@ const PROJECTS_PAGE = 'project_page';
 const BASIC_EVENT_PARAMETERS = getBasicClickEventParameters(PROJECTS_PAGE);
 
 export const PROJECTS_PAGE_EVENTS = {
+  projectPageMenuOptionClick: (elementName, projectId) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'project_page',
+    element_name: elementName,
+    project_id: projectId,
+  }),
+  projectPageModalSubmitSuccess: (elementName, modal, projectId) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'project_page',
+    element_name: elementName,
+    modal,
+    project_id: projectId,
+  }),
   SEARCH_PROJECTS_FIELD: {
     ...BASIC_EVENT_PARAMETERS,
     place: 'projects',
