@@ -26,7 +26,6 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { ConditionalTooltip } from 'components/main/conditionalTooltip';
 import { FIELD_LABEL_WIDTH } from '../constants';
-import { componentHealthCheckMessages } from '../../messages';
 import styles from './attributesFieldArrayControl.scss';
 import { Button } from '@reportportal/ui-kit';
 
@@ -66,11 +65,15 @@ export class AttributesFieldArrayControl extends Component {
     attributeKeyFieldViewLabels: PropTypes.array,
     showRemainingLevels: PropTypes.bool,
     disabled: PropTypes.bool,
+    inputTooltip: PropTypes.string | PropTypes.null,
+    addButtonTooltip: PropTypes.string | PropTypes.null,
   };
 
   static defaultProps = {
     attributeKeyFieldViewLabels: [],
     showRemainingLevels: false,
+    inputTooltip: null,
+    addButtonTooltip: null,
   };
 
   constructor(props) {
@@ -90,23 +93,14 @@ export class AttributesFieldArrayControl extends Component {
       maxAttributesAmount,
       attributeKeyFieldViewLabels,
       showRemainingLevels,
+      inputTooltip,
+      addButtonTooltip,
       disabled,
     } = this.props;
     const attributes = this.getAttributes();
     const canAddNewItems = fields.length < maxAttributesAmount;
     const numberRemainingLevels = maxAttributesAmount - fields.length;
 
-
-    const inputTooltipProps = disabled 
-      ? { content: formatMessage(componentHealthCheckMessages.attributeKeyInput) } 
-      : {};
-
-    const addButtonTooltip = disabled 
-      ? { content: formatMessage(componentHealthCheckMessages.addAttributeKeyButton),
-          wrapperClassName: cx('tooltip-wrapper'),
-          tooltipClassName: cx("tooltip"),
-        }
-      : {};
 
 
     return (
@@ -124,19 +118,20 @@ export class AttributesFieldArrayControl extends Component {
               className={cx('attribute-modal-field')}
             >
               <div className={cx({ 'attr-selector': !isFirstItem })}>
-                <FieldProvider name={item} validate={fieldValidator(attributes)}>
-                  <FieldErrorHint hintType="top">
-                    <AsyncAutocomplete
-                      disabled={disabled}
-                      tooltipProps={inputTooltipProps}
-                      getURI={getURI}
-                      minLength={1}
-                      placeholder={formatMessage(messages.attributeKeyFieldPlaceholder)}
-                      creatable
-                      filterOption={this.filterAttribute}
-                    />
-                  </FieldErrorHint>
-                </FieldProvider>
+                <ConditionalTooltip content={inputTooltip}>
+                  <FieldProvider name={item} validate={fieldValidator(attributes)}>
+                    <FieldErrorHint hintType="top">
+                      <AsyncAutocomplete
+                        disabled={disabled}
+                        getURI={getURI}
+                        minLength={1}
+                        placeholder={formatMessage(messages.attributeKeyFieldPlaceholder)}
+                        creatable
+                        filterOption={this.filterAttribute}
+                      />
+                    </FieldErrorHint>
+                  </FieldProvider>
+                </ConditionalTooltip>
               </div>
               {!isFirstItem && (
                 <Button
@@ -152,7 +147,11 @@ export class AttributesFieldArrayControl extends Component {
         })}
         {canAddNewItems ? (
           <ModalField label=" " labelWidth={FIELD_LABEL_WIDTH}>
-            <ConditionalTooltip {...addButtonTooltip}>
+            <ConditionalTooltip 
+              content={addButtonTooltip} 
+              wrapperClassName={cx('tooltip-wrapper')} 
+              tooltipClassName={cx("tooltip")}
+            >
               <Button
                 variant='text'
                 className={cx('add-level')}
