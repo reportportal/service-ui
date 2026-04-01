@@ -46,8 +46,8 @@ import {
 } from './controls';
 import { WIDGET_WIZARD_FORM } from '../constants';
 import { ITEMS_INPUT_WIDTH, WIDGET_OPTIONS } from './constants';
-import { componentHealthCheckMessages } from './messages';
 import styles from './widgetControls.scss';
+import { ConditionalTooltip } from 'components/main/conditionalTooltip';
 
 const cx = classNames.bind(styles);
 
@@ -89,6 +89,14 @@ const messages = defineMessages({
   excludeSkipped: {
     id: 'ComponentHealthCheckTableViewControls.excludeSkipped',
     defaultMessage: 'Exclude Skipped tests from statistics',
+  },
+   addAttributeKeyButton: {
+    id: 'ComponentHealthCheckTableViewControls.addAttributeKeyButton',
+    defaultMessage: 'New levels cannot be added until filter is selected',
+  },
+  attributeKeyInput: {
+    id: 'ComponentHealthCheckTableViewControls.attributeKeyInput',
+    defaultMessage: 'Please select a filter first',
   },
 });
 
@@ -193,8 +201,9 @@ export class ComponentHealthCheckTableViewControls extends Component {
   };
 
   renderAttributesFieldArray = ({ fields, fieldValidator }) => {
-    const { widgetSettings: { filters } } = this.props;
+    const { widgetSettings: { filters }, intl: { formatMessage } } = this.props;
     const url = this.getItemAttributeKeysAllSearchURL();
+    const isInputDisabled = !filters?.length;
 
     return (
       <AttributesFieldArrayControl
@@ -203,7 +212,9 @@ export class ComponentHealthCheckTableViewControls extends Component {
         maxAttributesAmount={MAX_ATTRIBUTES_AMOUNT}
         showRemainingLevels
         getURI={url}
-        disabled={!filters?.length}
+        disabled={isInputDisabled}
+        inputTooltip={isInputDisabled ? formatMessage(messages.attributeKeyInput) : null}
+        addButtonTooltip={isInputDisabled ? formatMessage(messages.addAttributeKeyButton) : null}
       />
     );
   };
@@ -231,7 +242,6 @@ export class ComponentHealthCheckTableViewControls extends Component {
     const attrUrlKeys = this.getItemAttributeKeysAllSearchURL();
     const sortObj = this.getSortObj();
     const disabled = !this.props.widgetSettings?.filters?.length;
-    const inputTooltipProps = disabled ? { content: formatMessage(componentHealthCheckMessages.attributeKeyInput) } : {};
 
     return (
       <Fragment>
@@ -283,21 +293,22 @@ export class ComponentHealthCheckTableViewControls extends Component {
               {formatMessage(messages.customColumnTitle)}
             </div>
             <div className={cx('component-wrap')}>
-              <FieldProvider
-                name="contentParameters.widgetOptions.customColumn"
-                validate={commonValidators.attributeKey}
-              >
-                <FieldErrorHint hintType="top">
-                  <AsyncAutocomplete
-                    disabled={disabled}
-                    tooltipProps={inputTooltipProps}
-                    getURI={attrUrlKeys}
-                    minLength={1}
-                    creatable
-                    placeholder={formatMessage(messages.customColumnPlaceholder)}
-                  />
-                </FieldErrorHint>
-              </FieldProvider>
+              <ConditionalTooltip content={disabled ? formatMessage(messages.attributeKeyInput) : null}>
+                <FieldProvider
+                  name="contentParameters.widgetOptions.customColumn"
+                  validate={commonValidators.attributeKey}
+                >
+                  <FieldErrorHint hintType="top">
+                    <AsyncAutocomplete
+                      disabled={disabled}
+                      getURI={attrUrlKeys}
+                      minLength={1}
+                      creatable
+                      placeholder={formatMessage(messages.customColumnPlaceholder)}
+                    />
+                  </FieldErrorHint>
+                </FieldProvider>
+              </ConditionalTooltip>
             </div>
             <div className={cx('component-header')}>{formatMessage(messages.sortingTitle)}</div>
             <FieldProvider

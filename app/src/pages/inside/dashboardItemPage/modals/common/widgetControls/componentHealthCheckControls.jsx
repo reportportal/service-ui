@@ -72,6 +72,14 @@ const messages = defineMessages({
     id: 'ComponentHealthCheckControls.excludeSkipped',
     defaultMessage: 'Exclude Skipped tests from statistics',
   },
+  addAttributeKeyButton: {
+    id: 'ComponentHealthCheckControls.addAttributeKeyButton',
+    defaultMessage: 'New levels cannot be added until filter is selected',
+  },
+  attributeKeyInput: {
+    id: 'ComponentHealthCheckControls.attributeKeyInput',
+    defaultMessage: 'Please select a filter first',
+  },
 });
 
 const passingRateValidator = (formatMessage) =>
@@ -149,6 +157,7 @@ export class ComponentHealthCheckControls extends Component {
   renderAttributesFieldArray = ({ fields, fieldValidator }) => {
     const {
       projectKey,
+      intl: { formatMessage },
       widgetSettings: { contentParameters, filters },
     } = this.props;
     const filterId = filters?.length && filters[0].value;
@@ -162,6 +171,8 @@ export class ComponentHealthCheckControls extends Component {
         maxAttributesAmount={MAX_ATTRIBUTES_AMOUNT}
         showRemainingLevels
         disabled={!filterId}
+        inputTooltip={!filterId ? formatMessage(messages.attributeKeyInput) : null}
+        addButtonTooltip={!filterId ? formatMessage(messages.addAttributeKeyButton) : null}
         getURI={URLS.itemAttributeKeysAllSearch(
           projectKey,
           filterId,
