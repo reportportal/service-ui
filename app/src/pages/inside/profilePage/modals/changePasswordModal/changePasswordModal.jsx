@@ -26,7 +26,7 @@ import { commonValidators } from 'common/utils/validation';
 import { passwordMinLengthSelector } from 'controllers/appInfo';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { validationLocalization } from 'common/constants/localization/validationLocalization';
-import { reduxForm } from 'redux-form';
+import { reduxForm, SubmissionError } from 'redux-form';
 import { Input } from 'components/inputs/input';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -121,10 +121,17 @@ export class ChangePasswordModal extends Component {
     };
   };
 
-  changePasswordAndCloseModal = (closeModal) => (formData) => {
-    this.props.data.onChangePassword(formData);
-    closeModal();
-  };
+  changePasswordAndCloseModal = (closeModal) => (formData) =>
+    this.props.data
+      .onChangePassword(formData)
+      .then(() => {
+        closeModal();
+      })
+      .catch((error) => {
+        throw new SubmissionError({
+          oldPassword: error?.message || ' ',
+        });
+      });
 
   render() {
     const { intl, invalid, handleSubmit, tracking } = this.props;
