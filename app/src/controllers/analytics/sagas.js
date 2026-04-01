@@ -106,17 +106,19 @@ export function* waitForOrganizationReady() {
 }
 
 function* sendAnalyticsEvent({ payload: data }) {
+  if (!data?.action) {
+    return;
+  }
+
   const projectData = yield call(waitForProjectReady);
   const organizationData = yield call(waitForOrganizationReady);
   const baseEventParameters = yield select(baseEventParametersSelector);
 
-  if ('place' in data) {
-    const eventParameters = buildEventParameters(
-      { ...baseEventParameters, ...projectData, ...organizationData },
-      omit(data, data.place ? ['action'] : ['action', 'place']),
-    );
-    GA4.event(data.action, eventParameters);
-  }
+  const eventParameters = buildEventParameters(
+    { ...baseEventParameters, ...projectData, ...organizationData },
+    omit(data, data.place ? ['action'] : ['action', 'place']),
+  );
+  GA4.event(data.action, eventParameters);
 }
 
 function* watchSendAnalyticsEvent() {

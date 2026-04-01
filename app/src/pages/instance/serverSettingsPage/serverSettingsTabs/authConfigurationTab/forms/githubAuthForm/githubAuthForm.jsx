@@ -24,7 +24,6 @@ import { reduxForm, formValueSelector } from 'redux-form';
 import { FormController } from 'pages/instance/serverSettingsPage/common/formController';
 import { ENABLED_KEY, messages } from 'pages/instance/serverSettingsPage/common/constants';
 import { commonValidators } from 'common/utils/validation';
-import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { joinOrganizations, splitOrganizations } from './utils';
 import { GITHUB_AUTH_FORM, DEFAULT_FORM_CONFIG } from './constants';
 import { GithubAuthFormFields } from './githubAuthFormFields';
@@ -110,10 +109,6 @@ export class GithubAuthForm extends Component {
           initialize={initialize}
           formOptions={formOptions}
           handleSubmit={handleSubmit}
-          eventsInfo={{
-            bigSwitcher: ADMIN_SERVER_SETTINGS_PAGE_EVENTS.ACTIVATE_GITHUB_SWITCHER,
-            submitBtn: ADMIN_SERVER_SETTINGS_PAGE_EVENTS.SUBMIT_GITHUB_BTN,
-          }}
         />
       </div>
     );

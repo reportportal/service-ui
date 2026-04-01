@@ -51,7 +51,6 @@ import { commonValidators, validate } from 'common/utils/validation';
 import { ContainerWithTabs } from 'components/main/containerWithTabs';
 import { StackTrace } from 'pages/inside/common/stackTrace';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { STEP_PAGE_EVENTS } from 'components/main/analytics/events/stepPageEvents';
 import { projectKeySelector } from 'controllers/project';
 import { messages } from './messages';
 import styles from './testItemDetailsModal.scss';
@@ -183,13 +182,8 @@ export class TestItemDetailsModal extends Component {
     const {
       intl: { formatMessage },
       projectKey,
-      data: { item, type, fetchFunc, eventsInfo },
-      tracking,
+      data: { item, type, fetchFunc },
     } = this.props;
-
-    if (item.description !== data.description) {
-      tracking.trackEvent(eventsInfo.editDescription);
-    }
 
     fetch(URLS.launchesItemsUpdate(projectKey, item.id, type), {
       method: 'put',
@@ -243,11 +237,7 @@ export class TestItemDetailsModal extends Component {
           <ModalField label={intl.formatMessage(messages.codeRef)}>
             <div className={cx('code-ref')} title={item.codeRef}>
               {item.codeRef}
-              <CopyToClipboard
-                text={item.codeRef}
-                className={cx('copy')}
-                onCopy={() => trackEvent(STEP_PAGE_EVENTS.COPY_CODE_REFERENCE_EDIT_ITEM_MODAL)}
-              >
+              <CopyToClipboard text={item.codeRef} className={cx('copy')}>
                 {Parser(IconDuplicate)}
               </CopyToClipboard>
             </div>
@@ -360,7 +350,6 @@ export class TestItemDetailsModal extends Component {
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: eventsInfo.cancelBtn,
     };
 
     const editable = canEditLaunch(userRoles);
@@ -376,7 +365,6 @@ export class TestItemDetailsModal extends Component {
         }
         warningType={!this.props.invalid && 'info'}
         contentClassName={cx('tab-container')}
-        closeIconEventInfo={eventsInfo.closeIcon}
       >
         <ContainerWithTabs data={this.getTabsConfig(editable)} customClass={cx('tab-header')} />
       </ModalLayout>

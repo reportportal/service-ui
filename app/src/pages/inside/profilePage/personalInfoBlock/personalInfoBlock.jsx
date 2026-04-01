@@ -15,7 +15,6 @@
  */
 
 import PropTypes from 'prop-types';
-import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -31,7 +30,6 @@ import { userInfoSelector } from 'controllers/user';
 import { logoutAction } from 'controllers/auth';
 import { isDemoInstanceSelector } from 'controllers/appInfo';
 import { GhostButton } from 'components/buttons/ghostButton';
-import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Image } from 'components/main/image';
 import styles from './personalInfoBlock.scss';
 import { BlockContainerBody } from '../blockContainer';
@@ -93,7 +91,6 @@ const messages = defineMessages({
   },
 )
 @injectIntl
-@track()
 export class PersonalInfoBlock extends Component {
   static propTypes = {
     userLogin: PropTypes.string,
@@ -103,10 +100,6 @@ export class PersonalInfoBlock extends Component {
     showModalAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     logoutAction: PropTypes.func.isRequired,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
     isDemoInstance: PropTypes.bool,
   };
   static defaultProps = {
@@ -122,7 +115,6 @@ export class PersonalInfoBlock extends Component {
   };
 
   onChangePassword = () => {
-    this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.CHANGE_PASSWORD_CLICK);
     this.props.showModalAction({
       id: 'changePasswordModal',
       data: { onChangePassword: this.changePasswordHandler },

@@ -19,10 +19,6 @@ import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import track from 'react-tracking';
-import {
-  getPluginItemClickEvent,
-  getDisablePluginItemClickEvent,
-} from 'components/main/analytics/events';
 import { PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE } from 'components/integrations/messages';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
@@ -71,10 +67,6 @@ export class PluginsItem extends Component {
       isEnabled,
     });
 
-    if (!isEnabled) {
-      tracking.trackEvent(getDisablePluginItemClickEvent(data.name));
-    }
-
     onToggleActive(data).catch(() => {
       this.setState({
         isEnabled: data.enabled,
@@ -83,7 +75,6 @@ export class PluginsItem extends Component {
   };
 
   itemClickHandler = () => {
-    this.props.tracking.trackEvent(getPluginItemClickEvent(this.props.data.name));
     this.props.onClick(this.props.data);
   };
 

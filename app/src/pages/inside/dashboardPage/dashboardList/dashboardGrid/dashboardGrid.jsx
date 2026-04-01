@@ -17,7 +17,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
-import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { DashboardGridList } from './dashboardGridList';
 
 @injectIntl
@@ -34,12 +33,6 @@ export class DashboardGrid extends Component {
   render() {
     const { dashboardItems, intl, ...rest } = this.props;
 
-    return (
-      <DashboardGridList
-        dashboardList={dashboardItems}
-        nameEventInfo={DASHBOARD_PAGE_EVENTS.DASHBOARD_NAME_CLICK}
-        {...rest}
-      />
-    );
+    return <DashboardGridList dashboardList={dashboardItems} {...rest} />;
   }
 }

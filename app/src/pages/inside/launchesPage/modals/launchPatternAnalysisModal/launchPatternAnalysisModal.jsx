@@ -187,7 +187,6 @@ export class LaunchPatternAnalysisModal extends Component {
     };
     const cancelButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_PATTERN_ANALYSIS_MODAL,
     };
     const { errorMessage } = this.state;
     return (
@@ -195,7 +194,6 @@ export class LaunchPatternAnalysisModal extends Component {
         title={formatMessage(messages.MODAL_TITLE)}
         okButton={okButton}
         cancelButton={cancelButton}
-        closeIconEventInfo={LAUNCHES_MODAL_EVENTS.CLOSE_BTN_PATTERN_ANALYSIS_MODAL}
         warningMessage={errorMessage}
       >
         <p className={cx('launch-analysis-modal-text')}>{formatMessage(messages.OPTIONS_TITLE)}</p>

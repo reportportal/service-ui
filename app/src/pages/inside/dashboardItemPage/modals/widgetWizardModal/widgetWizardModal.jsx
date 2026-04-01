@@ -15,7 +15,6 @@
  */
 
 import React, { Component } from 'react';
-import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { destroy, getFormValues } from 'redux-form';
@@ -50,7 +49,6 @@ const messages = defineMessages({
     hideModalAction,
   },
 )
-@track()
 export class WidgetWizardModal extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -61,10 +59,6 @@ export class WidgetWizardModal extends Component {
     hideModalAction: PropTypes.func.isRequired,
     destroyWizardForm: PropTypes.func.isRequired,
     formValues: PropTypes.object,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
   };
 
   static defaultProps = {
@@ -119,7 +113,6 @@ export class WidgetWizardModal extends Component {
     this.props.destroyWizardForm();
   };
   closeModal = () => {
-    this.props.tracking.trackEvent(this.props.data.eventsInfo.closeIcon);
     this.setState({ shown: false });
   };
 

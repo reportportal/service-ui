@@ -72,7 +72,6 @@ export class ModalLayout extends Component {
       confirmSubmit: PropTypes.bool,
       eventInfo: PropTypes.func,
     }),
-    closeIconEventInfo: PropTypes.object,
     renderHeaderElements: PropTypes.func,
     renderFooterElements: PropTypes.func,
     tracking: PropTypes.shape({
@@ -92,7 +91,6 @@ export class ModalLayout extends Component {
     cancelButton: null,
     customButton: null,
     closeConfirmation: null,
-    closeIconEventInfo: {},
     renderHeaderElements: () => {},
     renderFooterElements: () => {},
     CustomFooter: null,
@@ -151,13 +149,7 @@ export class ModalLayout extends Component {
   };
 
   onClickCloseIcon = () => {
-    const {
-      closeIconEventInfo,
-      tracking: { trackEvent },
-    } = this.props;
-
     this.closeModal();
-    closeIconEventInfo && trackEvent(closeIconEventInfo);
   };
 
   closeModalWithOk = () => {

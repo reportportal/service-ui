@@ -17,7 +17,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
-import track from 'react-tracking';
 import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import RotateImage from 'common/img/rotate-inline.svg';
@@ -31,7 +30,6 @@ import styles from './attachmentImageModal.scss';
 const cx = classNames.bind(styles);
 
 @withModal(ATTACHMENT_IMAGE_MODAL_ID)
-@track()
 @injectIntl
 export class AttachmentImageModal extends Component {
   static propTypes = {
@@ -40,10 +38,6 @@ export class AttachmentImageModal extends Component {
       fileName: PropTypes.string,
     }).isRequired,
     intl: PropTypes.object.isRequired,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
   };
 
   state = {
@@ -89,7 +83,6 @@ export class AttachmentImageModal extends Component {
   generateRotationCommand = (amount) => `rotate(${amount}deg)`;
 
   rotateImageHandler = () => {
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ROTATE_ICON_ATTACHMENT_MODAL);
     this.setState((state) => ({
       rotationAmount: state.rotationAmount + 90,
     }));
@@ -106,7 +99,6 @@ export class AttachmentImageModal extends Component {
 
   renderCancelButton = () => ({
     text: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE),
-    eventInfo: LOG_PAGE_EVENTS.CLOSE_BTN_ATTACHMENT_MODAL,
     onClick: (closeModal) => closeModal(),
   });
 
@@ -124,7 +116,6 @@ export class AttachmentImageModal extends Component {
         cancelButton={this.renderCancelButton()}
         customButton={this.renderCustomButton()}
         className={cx('attachment-image-modal')}
-        closeIconEventInfo={LOG_PAGE_EVENTS.CLOSE_ICON_ATTACHMENT_MODAL}
       >
         <div className={cx('attachment-modal-content-wrapper')}>
           <div className={cx('attachment-image-wrapper')}>

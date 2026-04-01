@@ -15,8 +15,6 @@
  */
 
 import { PureComponent } from 'react';
-import track from 'react-tracking';
-import { FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
@@ -40,13 +38,8 @@ const cx = classNames.bind(styles);
   userRoles: userRolesSelector(state),
   slugs: urlOrganizationAndProjectSelector(state),
 }))
-@track()
 export class NoFiltersBlock extends PureComponent {
   static propTypes = {
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
     onAddFilter: PropTypes.func,
     slugs: PropTypes.shape({
       organizationSlug: PropTypes.string.isRequired,
@@ -59,7 +52,6 @@ export class NoFiltersBlock extends PureComponent {
     userRoles: {},
   };
   onClickAddFilter = () => {
-    this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_ADD_BTN_EMPTY_FILTER_PAGE);
     this.props.onAddFilter();
   };
   render() {

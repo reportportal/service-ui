@@ -21,20 +21,3 @@ export const MEMBERS_PAGE_VIEWS = {
     place: MEMBERS_PAGE,
   },
 };
-export const MEMBERS_PAGE_EVENTS = {
-  CLOSE_ICON_INVITE_USER_MODAL: {
-    category: MEMBERS_PAGE,
-    action: 'Click on icon Close on Modal Invite user',
-    label: 'Close Modal Invite user',
-  },
-  CANCEL_BTN_INVITE_USER_MODAL: {
-    category: MEMBERS_PAGE,
-    action: 'Click on Btn Cancel on Modal Invite user',
-    label: 'Close Modal Invite user',
-  },
-  INVITE_BTN_INVITE_USER_MODAL: {
-    category: MEMBERS_PAGE,
-    action: 'Click on Btn Invite on Modal Invite user',
-    label: 'Invite user',
-  },
-};

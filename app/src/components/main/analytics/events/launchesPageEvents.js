@@ -33,23 +33,12 @@ import {
   getCommonActionEvents,
   getClickBreadcrumbsEvents,
 } from './common/testItemPages/actionEventsCreators';
-import {
-  getAddBtnAddNewFilterAddWidgetModal,
-  getAddFilterBtnAddWidgetModal,
-  getCancelBtnAddNewFilterAddWidgetModal,
-  getChooseFilterAddWidgetModal,
-  getSelectCriteriaNewWidget,
-  getSelectSortingFilterAddWidgetModal,
-  getSelectToggleButtonsAddWidgetModal,
-} from './common/widgetPages/actionEventCreators';
 import { getBasicClickEventParameters } from './common/ga4Utils';
 import { LAUNCH_ANALYZE_TYPES_TO_ANALYTICS_TITLES_MAP } from './common/constants';
 
 export const LAUNCHES_PAGE = 'launches';
 const LAUNCH_VIEW = 'launches';
 const DEBUG_VIEW = 'debug_mode';
-const LAUNCHES_MODAL = 'Modal launches';
-
 export const LAUNCHES_PAGE_VIEWS = {
   LAUNCHES: {
     page: LAUNCHES_PAGE,
@@ -267,105 +256,5 @@ export const LAUNCHES_MODAL_EVENTS = {
     type,
     status: isWithAttachments ? 'active' : 'disable',
   }),
-  // GA3 events and GA4 events
-  // EDIT_ITEMS_MODAL
-  EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(LAUNCHES_PAGE, 'Launch'),
-  CLOSE_ICON_MOVE_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Close Icon on Modal "Move to Debug"',
-    label: 'Close modal "Move to Debug"',
-  },
-  CLICK_CANCEL_BTN_MOVE_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Btn Cancel on Modal "Move to Debug"',
-    label: 'Close modal "Move to Debug"',
-  },
-  CLOSE_ICON_MERGE_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Close Icon on Modal "Merge Launches"',
-    label: 'Close modal "Merge Launches"',
-  },
-  CANCEL_BTN_MERGE_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Btn Cancel on Modal "Merge Launches"',
-    label: 'Close modal "Merge Launches"',
-  },
-  CLOSE_ICON_IMPORT_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Close Icon on Modal "Import Launch"',
-    label: 'Close Modal Import Launch',
-  },
-  CANCEL_BTN_IMPORT_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Btn Cancel on Modal "Import Launch"',
-    label: 'Close Modal Import Launch',
-  },
-  LINEAR_MERGE_BTN_MERGE_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Btn Linear Merge on Modal "Merge Launches"',
-    label: 'Linear Merge',
-  },
-  DEEP_MERGE_BTN_MERGE_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Btn Deep Merge on Modal "Merge Launches"',
-    label: 'Deep Merge',
-  },
-  CLOSE_BTN_ANALYSIS_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Close Icon on Modal "Analyze Launch"',
-    label: 'Close Analyze Launch Modal',
-  },
-  CANCEL_BTN_ANALYSIS_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Btn Cancel on Modal "Analyze Launch"',
-    label: 'Cancel Modal "Analyze Launch"',
-  },
-  OK_BTN_PATTERN_ANALYSIS_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Btn Analyze on Modal "Pattern Analyze Launch"',
-    label: 'Analyze launch mentioned in modal "Pattern Analyze Launch"',
-  },
-  CLOSE_BTN_PATTERN_ANALYSIS_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Close Icon on Modal "Pattern Analyze Launch"',
-    label: 'Close Pattern Analyze Launch Modal',
-  },
-  CANCEL_BTN_PATTERN_ANALYSIS_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Btn Cancel on Modal "Pattern Analyze Launch"',
-    label: 'Cancel Modal "Pattern Analyze Launch"',
-  },
-  CLOSE_ICON_ADD_WIDGET_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on icon Close on Modal Add New Widget',
-    label: 'Close Modal Add New Widget',
-  },
-  CHOOSE_WIDGET_TYPE_ADD_WIDGET_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Choose radio Btn of Widget type in Modal Add New Widget',
-    label: 'Choose Widget type in Modal Add New Widget',
-  },
-  CHOOSE_FILTER_ADD_WIDGET_MODAL: getChooseFilterAddWidgetModal(LAUNCHES_MODAL),
-  ADD_FILTER_BTN_ADD_WIDGET_MODAL: getAddFilterBtnAddWidgetModal(LAUNCHES_MODAL),
-  ADD_BTN_ADD_NEW_FILTER_ADD_WIDGET_MODAL: getAddBtnAddNewFilterAddWidgetModal(LAUNCHES_MODAL),
-  CANCEL_BTN_ADD_NEW_FILTER_ADD_WIDGET_MODAL:
-    getCancelBtnAddNewFilterAddWidgetModal(LAUNCHES_MODAL),
-  NEXT_STEP_ADD_WIDGET_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Btn Next Step on Modal Add New Widget',
-    label: 'Transition to Next Step on Modal Add New Widget',
-  },
-  PREVIOUS_STEP_ADD_WIDGET_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Btn Previous Step on Modal Add New Widget',
-    label: 'Transition to Previous Step in Modal Add New Widget',
-  },
-  ENTER_WIDGET_DESCRIPTION_ADD_WIDGET_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Enter Widget description in Modal Add New Widget',
-    label: 'Widget description in Modal Add New Widget',
-  },
-  SELECT_CRITERIA_ADD_NEW_WIDGET_MODAL: getSelectCriteriaNewWidget(LAUNCHES_MODAL),
-  SELECT_SORTING_FILTER_ADD_WIDGET_MODAL: getSelectSortingFilterAddWidgetModal(LAUNCHES_PAGE),
-  SELECT_TOGGLE_BUTTONS_ADD_NEW_WIDGET_MODAL: getSelectToggleButtonsAddWidgetModal(LAUNCHES_PAGE),
+  EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(LAUNCHES_PAGE),
 };

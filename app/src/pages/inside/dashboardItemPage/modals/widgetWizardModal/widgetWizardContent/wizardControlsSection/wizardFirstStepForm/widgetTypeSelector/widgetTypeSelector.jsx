@@ -64,7 +64,10 @@ export class WidgetTypeSelector extends Component {
   };
 
   handleWidgetSelect = (e) => {
-    this.props.tracking.trackEvent(this.props.eventsInfo.chooseWidgetType);
+    const chooseWidgetType = this.props.eventsInfo?.chooseWidgetType;
+    if (chooseWidgetType) {
+      this.props.tracking.trackEvent(chooseWidgetType);
+    }
     this.props.initializeWizardForm({ widgetType: e.target.value });
     this.props.touchField();
   };

@@ -15,7 +15,6 @@
  */
 
 import PropTypes from 'prop-types';
-import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
@@ -24,7 +23,6 @@ import Parser from 'html-react-parser';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showModalAction } from 'controllers/modal';
 import { userInfoSelector, fetchUserAction } from 'controllers/user';
-import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { INTERNAL } from 'common/constants/accountType';
@@ -52,7 +50,6 @@ const messages = defineMessages({
   { showNotification, showModalAction, fetchUserAction },
 )
 @injectIntl
-@track()
 export class UserInfo extends Component {
   static propTypes = {
     userId: PropTypes.string,
@@ -63,10 +60,6 @@ export class UserInfo extends Component {
     showModalAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     fetchUserAction: PropTypes.func,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
   };
   static defaultProps = {
     userId: '',
@@ -118,7 +111,6 @@ export class UserInfo extends Component {
             <span
               className={cx('pencil-icon')}
               onClick={() => {
-                this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.EDIT_USER_NAME_ICON);
                 this.onEdit();
               }}
             >
@@ -132,7 +124,6 @@ export class UserInfo extends Component {
             <div
               className={cx('pencil-icon')}
               onClick={() => {
-                this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.EDIT_EMAIL_ICON);
                 this.onEdit();
               }}
             >

@@ -15,7 +15,6 @@
  */
 
 import React, { Component } from 'react';
-import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -29,7 +28,6 @@ import { validationLocalization } from 'common/constants/localization/validation
 import { reduxForm } from 'redux-form';
 import { Input } from 'components/inputs/input';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
-import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import classNames from 'classnames/bind';
 import styles from './changePasswordModal.scss';
 
@@ -88,7 +86,6 @@ const messages = defineMessages({
     };
   },
 })
-@track()
 export class ChangePasswordModal extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -98,10 +95,6 @@ export class ChangePasswordModal extends Component {
     }).isRequired,
     invalid: PropTypes.bool.isRequired,
     dirty: PropTypes.bool.isRequired,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
   };
 
   state = {
@@ -127,25 +120,22 @@ export class ChangePasswordModal extends Component {
   };
 
   render() {
-    const { intl, invalid, handleSubmit, tracking } = this.props;
+    const { intl, invalid, handleSubmit } = this.props;
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.SUBMIT),
       onClick: (closeModal) => {
-        tracking.trackEvent(PROFILE_PAGE_EVENTS.SUBMIT_BTN_CHANGE_PASSWORD_MODAL);
         handleSubmit(this.changePasswordAndCloseModal(closeModal))();
       },
       disabled: invalid,
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: PROFILE_PAGE_EVENTS.CANCEL_BTN_CHANGE_PASSWORD_MODAL,
     };
     return (
       <ModalLayout
         title={intl.formatMessage(messages.header)}
         okButton={okButton}
         cancelButton={cancelButton}
-        closeIconEventInfo={PROFILE_PAGE_EVENTS.CLOSE_ICON_CHANGE_PASSWORD_MODAL}
         closeConfirmation={this.getCloseConfirmationConfig()}
       >
         <form className={cx('form')}>

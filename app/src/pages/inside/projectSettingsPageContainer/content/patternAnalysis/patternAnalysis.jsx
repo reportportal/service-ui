@@ -22,7 +22,6 @@ import PropTypes from 'prop-types';
 
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { addPatternAction, patternsSelector } from 'controllers/project';
-import { getSaveNewPatternEvent, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { hideModalAction, showModalAction } from 'controllers/modal';
 import { PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { STRING_PATTERN } from 'common/constants/patternTypes';
@@ -48,13 +47,11 @@ export const PatternAnalysis = ({ setHeaderTitleNode }) => {
         pattern.enabled,
       ),
     );
-    trackEvent(getSaveNewPatternEvent(pattern.type));
     dispatch(addPatternAction(pattern));
     dispatch(hideModalAction());
   };
   const onAddPattern = () => {
     trackEvent(PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.CLICK_CREATE_PATTERN_ANALYSIS);
-    trackEvent(SETTINGS_PAGE_EVENTS.CREATE_PATTERN_BTN);
     dispatch(
       showModalAction({
         id: 'createPatternAnalysisModal',

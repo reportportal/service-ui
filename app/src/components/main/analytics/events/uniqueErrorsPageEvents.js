@@ -16,13 +16,11 @@
 
 import { getBasicClickEventParameters } from './common/ga4Utils';
 import {
-  getClickExpandStackTraceArrowEvent,
   getClickIssueTicketEvent,
   getClickSelectAllItemsEvent,
   getClickSelectOneItemEvent,
   getCommonActionEvents,
   getDeleteActionEvent,
-  getIncludeBtnIncludeInAAModalEvent,
   getLinkIssueActionEvent,
   getPostIssueActionEvent,
   getUnlinkIssueActionEvent,
@@ -96,8 +94,6 @@ export const UNIQUE_ERRORS_PAGE_EVENTS = {
   MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(UNIQUE_ERRORS_PAGE),
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(UNIQUE_ERRORS_PAGE),
   EDIT_ITEM_DETAILS_MODAL_EVENTS: getEditItemDetailsModalEvents(UNIQUE_ERRORS_PAGE),
-  CLICK_EXPAND_STACK_TRACE_ARROW: getClickExpandStackTraceArrowEvent(UNIQUE_ERRORS_PAGE),
   getClickOnDeleteBtnDeleteItemModalEvent:
     getClickOnDeleteBtnDeleteItemModalEventCreator(UNIQUE_ERRORS_PAGE),
-  INCLUDE_BTN_INCLUDE_IN_AA_MODAL: getIncludeBtnIncludeInAAModalEvent(UNIQUE_ERRORS_PAGE),
 };

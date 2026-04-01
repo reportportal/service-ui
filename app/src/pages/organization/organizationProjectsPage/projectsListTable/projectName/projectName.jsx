@@ -36,10 +36,6 @@ export const ProjectName = ({ project, disableAnalytics = false }) => {
       event.preventDefault();
       return;
     }
-
-    if (!disableAnalytics) {
-      trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.PROJECT_NAME);
-    }
   };
 
   return (

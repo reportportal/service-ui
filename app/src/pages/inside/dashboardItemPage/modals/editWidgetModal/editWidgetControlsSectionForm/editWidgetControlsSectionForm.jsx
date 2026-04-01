@@ -56,23 +56,19 @@ export class EditWidgetControlsSectionForm extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     buttonsMessages: PropTypes.object,
-    eventsInfo: PropTypes.object,
   };
 
   static defaultProps = {
     previousFilter: [],
     buttonsMessages: {},
-    eventsInfo: {},
   };
 
   onClickCancel = () => {
-    this.props.tracking.trackEvent(this.props.eventsInfo.cancelEditFilter);
     this.props.handleFormAppearanceChange(FORM_APPEARANCE_MODE_LOCKED, {});
     this.props.change('filters', this.props.previousFilter);
   };
 
   onClickSubmit = () => {
-    this.props.tracking.trackEvent(this.props.eventsInfo.submitChanges);
     this.props.handleFormAppearanceChange(FORM_APPEARANCE_MODE_LOCKED, {});
   };
 
@@ -85,8 +81,6 @@ export class EditWidgetControlsSectionForm extends Component {
       formAppearance,
       handleFormAppearanceChange,
       buttonsMessages,
-      eventsInfo,
-      tracking,
     } = this.props;
     const ControlsForm = widget.controls;
 
@@ -99,14 +93,11 @@ export class EditWidgetControlsSectionForm extends Component {
             onFormAppearanceChange={handleFormAppearanceChange}
             initializeControlsForm={initializeWidgetControls}
             widgetSettings={widgetSettings}
-            eventsInfo={eventsInfo}
           />
         )}
         {!formAppearance.isMainControlsLocked && (
           <div className={cx('common-controls-wrapper')}>
             <CommonWidgetControls
-              trackEvent={tracking.trackEvent}
-              eventsInfo={eventsInfo}
               widgetId={widgetId}
             />
           </div>

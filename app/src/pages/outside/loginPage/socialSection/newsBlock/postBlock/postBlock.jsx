@@ -17,14 +17,12 @@
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
-import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events';
 import DOMPurify from 'dompurify';
 import { marked } from 'marked-lts';
 
 import styles from './postBlock.scss';
 
 const cx = classNames.bind(styles);
-const HREF_TAG_NAME = 'A';
 
 export const renderer = {
   link(href, text, title) {
@@ -59,15 +57,8 @@ const getPostContent = (text) => {
   return result;
 };
 
-const handleClick = (e, tracking) => {
-  const { href, tagName } = e.target;
-  if (tagName === HREF_TAG_NAME) {
-    tracking.trackEvent(LOGIN_PAGE_EVENTS.click_twitter_link(href));
-  }
-};
-
 export const PostBlock = ({ tweetData, tracking }) => (
-  <div className={cx('post-block')} onClick={(e) => handleClick(e, tracking)}>
+  <div className={cx('post-block')}>
     {Parser(DOMPurify.sanitize(getPostContent(tweetData.text)))}
   </div>
 );

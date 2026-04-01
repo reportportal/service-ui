@@ -25,7 +25,6 @@ import moment from 'moment';
 import Parser from 'html-react-parser';
 import { showModalAction } from 'controllers/modal';
 import { namedProjectIntegrationsSelector } from 'controllers/plugins';
-import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { SystemMessage } from '@reportportal/ui-kit';
 import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
 import TrashBin from 'common/img/newIcons/bin-inline.svg';
@@ -92,7 +91,6 @@ export class ConnectionSection extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     isEditable: PropTypes.bool.isRequired,
-    isGlobal: PropTypes.bool,
     data: PropTypes.shape({
       creationDate: PropTypes.number,
       creator: PropTypes.string,
@@ -111,23 +109,13 @@ export class ConnectionSection extends Component {
     connected: true,
     editAuthConfig: null,
     pluginName: null,
-    isGlobal: false,
   };
 
   removeIntegrationHandler = () => {
     const {
       intl: { formatMessage },
-      tracking,
-      pluginName,
-      isGlobal,
       data,
     } = this.props;
-
-    tracking.trackEvent(
-      (isGlobal ? PLUGINS_PAGE_EVENTS : SETTINGS_PAGE_EVENTS).pluginRemoveIntegrationClick(
-        pluginName,
-      ),
-    );
 
     this.props.showModalAction({
       id: 'deleteIntegrationModal',
@@ -140,12 +128,7 @@ export class ConnectionSection extends Component {
   };
 
   onEditAuth = () => {
-    const { editAuthConfig, testConnection, tracking, pluginName, isGlobal } = this.props;
-    tracking.trackEvent(
-      (isGlobal ? PLUGINS_PAGE_EVENTS : SETTINGS_PAGE_EVENTS).pluginEditAuthorizationClick(
-        pluginName,
-      ),
-    );
+    const { editAuthConfig, testConnection } = this.props;
     editAuthConfig.onClick(testConnection);
   };
 
