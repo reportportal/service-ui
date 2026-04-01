@@ -97,6 +97,7 @@ import { fetchHistoryPageInfoAction } from 'controllers/itemsHistory';
 import { setSessionItem, updateStorageItem } from 'common/utils/storageUtils';
 import { fetchClustersAction } from 'controllers/uniqueErrors';
 import { GET_TEST_CASE_DETAILS, getFoldersAction } from 'controllers/testCase';
+import { LAST_VISITED_PATH_STORAGE_KEY } from 'controllers/initialData/constants';
 import {
   API_KEYS_ROUTE,
   CONFIG_EXAMPLES_ROUTE,
@@ -628,6 +629,10 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
 
   const page = pageRendering[nextPageType];
   const redirectPath = actionToPath(action, routesMap, qs);
+
+  if (redirectPath) {
+    setSessionItem(LAST_VISITED_PATH_STORAGE_KEY, redirectPath);
+  }
 
   if (page) {
     const { access, isTMS = false } = page;

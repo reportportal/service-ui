@@ -405,6 +405,10 @@ export const URLS = {
     `${urlBase}project/${projectKey}/tms/test-plan${getQueryParams(query)}`,
   tmsMilestone: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/milestone${getQueryParams(query)}`,
+  tmsMilestoneById: (projectKey, milestoneId) =>
+    `${urlBase}project/${projectKey}/tms/milestone/${milestoneId}`,
+  tmsMilestoneDuplicate: (projectKey, milestoneId) =>
+    `${urlBase}project/${projectKey}/tms/milestone/${milestoneId}/duplicate`,
   testPlanTestCasesBatch: (projectKey, testPlanId) =>
     `${urlBase}project/${projectKey}/tms/test-plan/${testPlanId}/test-case/batch`,
   testPlanById: (projectKey, testPlanId) =>

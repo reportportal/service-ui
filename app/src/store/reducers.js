@@ -41,7 +41,7 @@ import { itemsHistoryReducer } from 'controllers/itemsHistory';
 import { logReducer } from 'controllers/log';
 import { instanceReducer } from 'controllers/instance';
 import { pluginsReducer } from 'controllers/plugins';
-import { initialDataReadyReducer } from 'controllers/initialData';
+import { initialDataReadyReducer, serviceAvailabilityReducer } from 'controllers/initialData';
 import { uniqueErrorsReducer } from 'controllers/uniqueErrors';
 import { organizationsReducer } from 'controllers/instance/organizations';
 import { exportsReducer } from 'controllers/exports/reducer';
@@ -78,6 +78,7 @@ export default {
   administrate: instanceReducer,
   plugins: pluginsReducer,
   initialDataReady: initialDataReadyReducer,
+  serviceAvailability: serviceAvailabilityReducer,
   exports: exportsReducer,
   testCase: testCaseReducer,
   testPlan: testPlanReducer,

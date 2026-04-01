@@ -18,10 +18,12 @@ import { useSelector } from 'react-redux';
 
 import { transformedFoldersSelector } from 'controllers/testCase';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { BubblesLoader } from '@reportportal/ui-kit';
 import { createClassnames } from 'common/utils';
 
 import { SelectableFolder } from '../selectableFolder/selectableFolder';
-import { usePanelActions } from '../testLibraryPanelContext';
+import { usePanelActions, usePanelState } from '../testLibraryPanelContext';
+import { isFolderVisibleInTree } from '../utils';
 
 import treeStyles from '../../expandedOptions/folder/folder.scss';
 import styles from './selectableFolderTree.scss';
@@ -31,6 +33,16 @@ const cx = createClassnames(styles, treeStyles);
 export const SelectableFolderTree = () => {
   const folders = useSelector(transformedFoldersSelector);
   const { setScrollElement } = usePanelActions();
+  const { shouldHideAddedTestCases, testPlanIdsByFolderId, isTestPlanDataComplete } =
+    usePanelState();
+
+  if (shouldHideAddedTestCases && !isTestPlanDataComplete) {
+    return (
+      <div className={cx('selectable-folder-tree__loader')}>
+        <BubblesLoader />
+      </div>
+    );
+  }
 
   return (
     <div className={cx('selectable-folder-tree')}>
@@ -39,9 +51,13 @@ export const SelectableFolderTree = () => {
         scrollContainerRef={setScrollElement}
       >
         <ul className={cx('folders-tree', 'selectable-folder-tree__outer')} role="tree">
-          {folders.map((folder, index) => (
-            <SelectableFolder folder={folder} key={folder.id || `${folder.name}-${index}`} />
-          ))}
+          {folders
+            .filter((folder) =>
+              isFolderVisibleInTree({ folder, testPlanIdsByFolderId, shouldHideAddedTestCases }),
+            )
+            .map((folder, index) => (
+              <SelectableFolder folder={folder} key={folder.id || `${folder.name}-${index}`} />
+            ))}
         </ul>
       </ScrollWrapper>
     </div>

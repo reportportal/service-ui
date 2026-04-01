@@ -1,0 +1,22 @@
+@use '../../milestonesTable/milestonesShared' as ms;
+
+.duplicate-milestone-modal {
+  &__notice {
+    margin-bottom: 16px;
+
+    :global([class*='system-message'])
+      :global([class*='text-container'])
+      :global([class*='message-header']) {
+      @include ms.duplicate-milestone-notice-title;
+
+      margin: 0;
+      margin-bottom: 4px;
+    }
+
+    :global([class*='system-message'])
+      :global([class*='text-container'])
+      :global([class*='children']) {
+      @include ms.duplicate-milestone-notice-body;
+    }
+  }
+}

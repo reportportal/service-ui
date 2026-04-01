@@ -26,10 +26,12 @@ import styles from './emptyTestPlan.scss';
 
 const cx = createClassnames(styles);
 
-export const EmptyTestPlan = () => {
-  const { formatMessage } = useIntl();
+interface EmptyTestPlanProps {
+  onOpenTestLibrary: () => void;
+}
 
-  const handleAddTestsFromLibrary = () => {};
+export const EmptyTestPlan = ({ onOpenTestLibrary }: EmptyTestPlanProps) => {
+  const { formatMessage } = useIntl();
 
   return (
     <div className={cx('empty-test-plan')}>
@@ -42,7 +44,7 @@ export const EmptyTestPlan = () => {
             name: formatMessage(commonMessages.addTestsFromLibrary),
             dataAutomationId: 'addTestsFromLibraryButton',
             isCompact: true,
-            handleButton: handleAddTestsFromLibrary,
+            handleButton: onOpenTestLibrary,
           },
         ]}
       />

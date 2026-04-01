@@ -15,7 +15,11 @@
  */
 
 export { MilestonesTable, EmptyMilestones } from './milestonesTable';
-export { useCreateMilestoneModal } from './milestoneModals';
+export {
+  useCreateMilestoneModal,
+  useEditMilestoneModal,
+  useDuplicateMilestoneModal,
+} from './milestoneModals';
 
 export { MilestoneDateField } from './milestoneDateField/milestoneDateField';
 export type { MilestoneDateFieldProps } from './milestoneDateField/types';

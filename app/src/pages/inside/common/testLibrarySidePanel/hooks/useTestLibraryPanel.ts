@@ -36,10 +36,12 @@ import {
 import { getAllCheckboxStates } from '../utils';
 
 import { useBatchFolderSelection } from './useBatchFolderSelection';
+import { usePrefetchTestPlanCounts } from './usePrefetchTestPlanCounts';
 
 interface UseTestLibraryPanelProps {
   isOpen: boolean;
-  onAddTestCases: (testCaseIds: number[]) => void;
+  shouldHideAddedTestCases: boolean;
+  onAddTestCases: (testCaseIds: number[]) => Promise<boolean>;
   onClose: VoidFn;
 }
 
@@ -50,7 +52,7 @@ interface UseTestLibraryPanelUtils {
   folders: ReturnType<typeof transformedFoldersSelector>;
   hasSelection: boolean;
   clearSelection: VoidFn;
-  addToTestPlan: VoidFn;
+  addToTestPlan: () => Promise<void>;
 }
 
 const toggleSet = (set: NumberSet, value: number): NumberSet => {
@@ -67,6 +69,7 @@ const toggleSet = (set: NumberSet, value: number): NumberSet => {
 
 export const useTestLibraryPanel = ({
   isOpen,
+  shouldHideAddedTestCases,
   onAddTestCases,
   onClose,
 }: UseTestLibraryPanelProps): UseTestLibraryPanelUtils => {
@@ -77,6 +80,9 @@ export const useTestLibraryPanel = ({
   const [testCasesMap, setTestCasesMap] = useState<Map<number, FolderTestCases>>(new Map());
   const [scrollElement, setScrollElement] = useState<HTMLElement | null>(null);
   const [batchLoadingFolderIds, setBatchLoadingFolderIds] = useState<NumberSet>(new Set());
+  const [testPlanIdsByFolderId, setTestPlanIdsByFolderId] = useState<Map<number, Set<number>>>(
+    new Map(),
+  );
 
   const isOpenRef = useRef(isOpen);
 
@@ -88,6 +94,13 @@ export const useTestLibraryPanel = ({
     dispatch(getFoldersAction());
   }, [dispatch]);
 
+  const { fetchTestPlanTestCases, resetPrefetchCache, isInitialPrefetchDone } =
+    usePrefetchTestPlanCounts({
+      testPlanId,
+      isOpenRef,
+      setTestPlanIdsByFolderId,
+    });
+
   useEffect(() => {
     isOpenRef.current = isOpen;
 
@@ -97,8 +110,16 @@ export const useTestLibraryPanel = ({
       setExpandedIds(new Set());
       setTestCasesMap(new Map());
       setBatchLoadingFolderIds(new Set());
+      setTestPlanIdsByFolderId(new Map());
+      resetPrefetchCache();
     }
-  }, [isOpen]);
+  }, [isOpen, resetPrefetchCache]);
+
+  useEffect(() => {
+    if (isOpen && testPlanId != null) {
+      fetchTestPlanTestCases();
+    }
+  }, [isOpen, testPlanId, fetchTestPlanTestCases]);
 
   const updateFolderTestCases = useCallback(
     (folderId: number, newTestCases: Partial<FolderTestCases>) => {
@@ -131,10 +152,6 @@ export const useTestLibraryPanel = ({
     setExpandedIds((prevState) => toggleSet(prevState, folder.id));
   }, []);
 
-  const toggleFolderSelection = useCallback((folderId: number) => {
-    setSelectedFolderIds((prevState) => toggleSet(prevState, folderId));
-  }, []);
-
   const toggleTestCasesSelection = useCallback((testCaseIds: number[]) => {
     setSelectedTestCasesIds((prev) =>
       testCaseIds.reduce((acc, testCaseId) => toggleSet(acc, testCaseId), prev),
@@ -146,11 +163,16 @@ export const useTestLibraryPanel = ({
     setSelectedFolderIds(new Set());
   }, []);
 
-  const addToTestPlan = useCallback(() => {
+  const addToTestPlan = useCallback(async () => {
     const selectedIds = Array.from(selectedTestCasesIds);
 
-    if (!isEmpty(selectedIds)) {
-      onAddTestCases(selectedIds);
+    if (isEmpty(selectedIds)) {
+      return;
+    }
+
+    const isSuccess = await onAddTestCases(selectedIds);
+
+    if (isSuccess) {
       clearSelection();
       onClose();
     }
@@ -160,6 +182,8 @@ export const useTestLibraryPanel = ({
     isOpenRef,
     testPlanId,
     testCasesMap,
+    testPlanIdsByFolderId,
+    isTestPlanDataComplete: isInitialPrefetchDone,
     setTestCasesMap,
     setSelectedTestCasesIds,
     setSelectedFolderIds,
@@ -182,7 +206,6 @@ export const useTestLibraryPanel = ({
       isOpenRef,
       setScrollElement,
       toggleTestCasesSelection,
-      toggleFolderSelection,
       updateFolderTestCases,
       toggleFolder,
       batchSelectFolder,
@@ -192,7 +215,6 @@ export const useTestLibraryPanel = ({
       isOpenRef,
       setScrollElement,
       toggleTestCasesSelection,
-      toggleFolderSelection,
       updateFolderTestCases,
       toggleFolder,
       batchSelectFolder,
@@ -210,6 +232,9 @@ export const useTestLibraryPanel = ({
       expandedFolderIds: expandedIds,
       scrollElement,
       batchLoadingFolderIds,
+      shouldHideAddedTestCases,
+      testPlanIdsByFolderId,
+      isTestPlanDataComplete: isInitialPrefetchDone,
     }),
     [
       selectedTestCasesIds,
@@ -220,6 +245,9 @@ export const useTestLibraryPanel = ({
       expandedIds,
       scrollElement,
       batchLoadingFolderIds,
+      shouldHideAddedTestCases,
+      testPlanIdsByFolderId,
+      isInitialPrefetchDone,
     ],
   );
 

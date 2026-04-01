@@ -17,7 +17,7 @@
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { Tooltip } from '@reportportal/ui-kit';
+import { Tooltip, useEllipsisTitle } from '@reportportal/ui-kit';
 import { ADMIN_TYPE } from 'common/utils/permissions/constants';
 import { messages } from 'pages/common/users/membersListTable/messages';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
@@ -27,12 +27,13 @@ const cx = classNames.bind(styles);
 
 export const UserNameCell = ({ userId, fullName, badges }) => {
   const { formatMessage } = useIntl();
+  const { ref: fullNameRef, title: fullNameTitle } = useEllipsisTitle(fullName);
 
   return (
     <div className={cx('user-name-cell')}>
       <UserAvatar className={cx('user-avatar')} userId={userId} thumbnail />
       <div className={cx('name-badge-wrapper')}>
-        <div className={cx('full-name')}>{fullName}</div>
+        <div ref={fullNameRef} title={fullNameTitle} className={cx('full-name')}>{fullName}</div>
         {badges.length > 0 && (
           <div className={cx('badges')}>
             {badges.map(({ title, type }) => {

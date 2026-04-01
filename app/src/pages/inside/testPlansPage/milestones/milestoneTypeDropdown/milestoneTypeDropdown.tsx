@@ -100,6 +100,7 @@ export const MilestoneTypeDropdown = (props: WrappedFieldProps & { label: string
         ) : undefined
       }
       menuPortalRoot={(isBrowser() && document.body) || undefined}
+      selectListClassName="milestone-type-dropdown-menu--compact"
     />
   );
 };

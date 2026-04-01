@@ -15,7 +15,6 @@
  */
 
 import { useDispatch, useSelector } from 'react-redux';
-import { noop } from 'es-toolkit';
 import { FC, useCallback, useMemo } from 'react';
 import { useTracking } from 'react-tracking';
 import { UserInfo, userInfoSelector } from 'controllers/user';
@@ -36,6 +35,7 @@ import { AssignProjectModal } from 'pages/inside/common/assignments';
 import { ProjectDetails } from 'pages/organization/constants';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
+import { InviteUserModal, Level } from 'pages/inside/common/invitations/inviteUserModal';
 
 interface ProjectActionMenuProps {
   details: ProjectDetails;
@@ -102,6 +102,25 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
     );
   }, [details, dispatch, user]);
 
+  const handleInviteUserClick = useCallback(() => {
+    const onInvite = () => {
+      dispatch(fetchFilteredProjectAction());
+    };
+
+    dispatch(
+      showModalAction({
+        component: (
+          <InviteUserModal
+            level={Level.PROJECT}
+            onInvite={onInvite}
+            projectId={projectId}
+            projectName={projectName}
+          />
+        ),
+      }),
+    );
+  }, [dispatch, projectId, projectName]);
+
   const links = useMemo(
     (): LinkItem[] => [
       {
@@ -133,7 +152,7 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
       },
       {
         label: formatMessage(messages.actionInviteUser),
-        onClick: noop,
+        onClick: handleInviteUserClick,
         hasPermission: canInviteUserToProject,
       },
       {
@@ -156,6 +175,7 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
     handleRenameProjectClick,
     canRenameProject,
     canInviteUserToProject,
+    handleInviteUserClick,
     handleUnassignClick,
     handleAssignClick,
     canAssignUnassignInternalUser,

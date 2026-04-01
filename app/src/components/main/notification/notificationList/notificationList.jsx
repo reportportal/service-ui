@@ -301,6 +301,10 @@ export const notificationMessages = defineMessages({
     id: 'TestCaseLibraryPage.testCaseAddedToTestPlanSuccess',
     defaultMessage: 'Selected Test Case has been added to the Test Plan successfully.',
   },
+  testCasesAddedToTestPlanFromLibrarySuccess: {
+    id: 'TestPlanDetailsPage.testCasesAddedToTestPlanFromLibrarySuccess',
+    defaultMessage: 'Test Cases were successfully added to Test Plan.',
+  },
   testCaseUpdatedSuccess: {
     id: 'TestCaseLibraryPage.testCaseUpdatedSuccess',
     defaultMessage: 'Test Case has been updated successfully.',
@@ -379,6 +383,14 @@ export const notificationMessages = defineMessages({
   milestoneCreatedSuccess: {
     id: 'MilestonesPage.milestoneCreatedSuccess',
     defaultMessage: 'Milestone has been created successfully.',
+  },
+  milestoneUpdatedSuccess: {
+    id: 'MilestonesPage.milestoneUpdatedSuccess',
+    defaultMessage: 'Changes for the Milestone has been saved successfully.',
+  },
+  milestoneDuplicatedSuccess: {
+    id: 'MilestonesPage.milestoneDuplicatedSuccess',
+    defaultMessage: 'Milestone has been duplicated successfully.',
   },
   testPlanRedirectWarningMessage: {
     id: 'TestPlansPage.testPlanRedirectWarningMessage',

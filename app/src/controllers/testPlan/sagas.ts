@@ -157,7 +157,7 @@ function* getTestPlan(action: GetTestPlanAction): Generator {
     } else {
       planTestCases = (yield call(
         fetch,
-        URLS.testPlanTestCases(projectKey, testPlanId, { 'testFolderId': action.payload.folderId, ...params })
+        URLS.testPlanTestCases(projectKey, testPlanId, { 'filter.eq.testFolderId': action.payload.folderId, ...params })
       )) as TestPlanTestCaseDto;
     }
 
