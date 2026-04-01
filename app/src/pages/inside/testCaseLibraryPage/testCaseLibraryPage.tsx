@@ -41,7 +41,10 @@ import { areFoldersLoadingSelector, foldersSelector, isLoadingFilteredFoldersSel
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { SearchField } from 'components/fields/searchField';
 import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
-import { FilterSidePanel } from 'pages/inside/common/testCaseList/filterSidePanel';
+import {
+  FilterSidePanel,
+  type FilterApplyPayload,
+} from 'pages/inside/common/testCaseList/filterSidePanel';
 import { toBackendPriority, parsePrioritiesFromQuery, parseTagsFromQuery } from 'pages/inside/common/testCaseList/filterSidePanel/utils';
 import { messages as testCaseListMessages } from 'pages/inside/common/testCaseList/messages';
 
@@ -115,7 +118,7 @@ export const TestCaseLibraryPage = () => {
     setIsFilterSidePanelVisible(true);
   };
 
-  const handleApplyFilters = (priorities: string[], tags: string[]) => {
+  const handleApplyFilters = ({ priorities, tags }: FilterApplyPayload) => {
     const filterPriorities = isEmpty(priorities)
       ? undefined
       : toBackendPriority(priorities);

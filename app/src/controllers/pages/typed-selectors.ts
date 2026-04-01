@@ -32,6 +32,7 @@ interface LocationQuery {
   searchQuery?: string;
   filterPriorities?: string;
   filterTags?: string;
+  statusFilter?: string;
 }
 
 export type LocationInfo = {

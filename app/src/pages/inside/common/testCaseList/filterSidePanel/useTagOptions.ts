@@ -21,7 +21,7 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
 
-interface TagOption {
+export interface TagOption {
   value: string;
   label: string;
 }
@@ -29,7 +29,6 @@ interface TagOption {
 export const useTagOptions = () => {
   const projectKey = useSelector(projectKeySelector);
   const [tagOptions, setTagOptions] = useState<TagOption[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
 
   const fetchTagOptions = useCallback(async () => {
     if (!projectKey) {
@@ -38,17 +37,12 @@ export const useTagOptions = () => {
     }
 
     try {
-      setIsLoading(true);
-
       const keys = await fetch<string[]>(URLS.tmsAttributeKeysSearch(projectKey, {}));
-
       setTagOptions(keys.map((key) => ({ value: key, label: key })));
     } catch {
       setTagOptions([]);
-    } finally {
-      setIsLoading(false);
     }
   }, [projectKey]);
 
-  return { tagOptions, isLoading, fetchTagOptions };
+  return { tagOptions, fetchTagOptions };
 };

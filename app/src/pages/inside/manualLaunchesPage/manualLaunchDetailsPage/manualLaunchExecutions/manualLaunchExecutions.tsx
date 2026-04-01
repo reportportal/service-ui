@@ -14,27 +14,21 @@
  * limitations under the License.
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo, type KeyboardEvent, type MouseEvent } from 'react';
 import { useIntl } from 'react-intl';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
-import {
-  FilterOutlineIcon,
-  Pagination,
-  MeatballMenuIcon,
-  Table,
-  Selection,
-  Button,
-} from '@reportportal/ui-kit';
+import { Pagination, MeatballMenuIcon, Table, Selection, Button } from '@reportportal/ui-kit';
 
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { createClassnames } from 'common/utils';
+import { isEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 import { EmptyPageState } from 'pages/common';
 import { useURLBoundPagination } from 'pages/inside/common/testCaseList/useURLBoundPagination';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useManualLaunchId, useProjectDetails } from 'hooks/useTypedSelector';
-import { MANUAL_LAUNCH_EXECUTION_PAGE } from 'controllers/pages';
+import { MANUAL_LAUNCH_EXECUTION_PAGE, locationSelector } from 'controllers/pages';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
@@ -42,6 +36,7 @@ import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCases
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import {
   MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
+  MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE,
   defaultManualLaunchesQueryParams,
 } from 'controllers/manualLaunch';
 import type { TestCaseExecution } from 'controllers/manualLaunch';
@@ -65,6 +60,7 @@ export const ManualLaunchExecutions = ({
 }: ManualLaunchExecutionsProps) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const location = useSelector(locationSelector);
   const { canManageTestCases } = useUserPermissions();
   const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
   const launchId = useManualLaunchId();
@@ -82,9 +78,16 @@ export const ManualLaunchExecutions = ({
       baseUrl: `/organizations/${organizationSlug}/projects/${projectSlug}/manualLaunches/${launchId}`,
     });
 
-  const handleFilterClick = () => {
-    // TODO: Implement filter functionality
-  };
+  const hasActiveSearchOrFilters = useMemo(() => {
+    const query = location?.query;
+
+    return (
+      !!searchQuery ||
+      !!query?.filterPriorities ||
+      !!query?.filterTags ||
+      query?.statusFilter === MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE
+    );
+  }, [searchQuery, location?.query]);
 
   const handleChangePage = (page: number) => {
     setPageNumber(page);
@@ -167,7 +170,19 @@ export const ManualLaunchExecutions = ({
     const tags = execution.attributes?.map((attr) => attr.key).filter(Boolean) || [];
 
     const handleOpenSidePanel = () => {
-      setSelectedExecutionId(execution.id)
+      setSelectedExecutionId(execution.id);
+    };
+
+    const handleNameCellKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+      if (isEnterOrSpaceKey(event)) {
+        event.preventDefault();
+        handleOpenSidePanel();
+      }
+    };
+
+    const handleTestNameLinkClick = (event: MouseEvent<HTMLButtonElement>) => {
+      event.stopPropagation();
+      handleExecutionNameClick(execution);
     };
 
     return {
@@ -175,7 +190,13 @@ export const ManualLaunchExecutions = ({
       name: {
         content: execution.testCaseName,
         component: (
-          <button type="button" className={cx('execution-name-cell', 'execution-cell-button')} onClick={handleOpenSidePanel}>
+          <div
+            role="button"
+            tabIndex={0}
+            className={cx('execution-name-cell', 'execution-cell-button')}
+            onClick={handleOpenSidePanel}
+            onKeyDown={handleNameCellKeyDown}
+          >
             <div className={cx('first-row')}>
               {execution.testCasePriority && (
                 <PriorityIcon priority={execution.testCasePriority as TestCasePriority} />
@@ -183,7 +204,7 @@ export const ManualLaunchExecutions = ({
               <button
                 type="button"
                 className={cx('test-name-link')}
-                onClick={() => handleExecutionNameClick(execution)}
+                onClick={handleTestNameLinkClick}
               >
                 {execution.testCaseName}
               </button>
@@ -191,7 +212,7 @@ export const ManualLaunchExecutions = ({
             <div className={cx('tags-section')}>
               <AdaptiveTagList tags={tags} isShowAllView />
             </div>
-          </button>
+          </div>
         ),
       },
       steps: {
@@ -263,7 +284,7 @@ export const ManualLaunchExecutions = ({
     );
   }
 
-  if (isEmpty(executions) && !searchQuery) {
+  if (isEmpty(executions) && !hasActiveSearchOrFilters) {
     return (
       <div className={cx('manual-launch-executions__empty')}>
         <EmptyPageState
@@ -275,7 +296,7 @@ export const ManualLaunchExecutions = ({
   }
 
   const totalItems = pageInfo?.totalElements || 0;
-  const hasNoSearchResults = isEmpty(executions) && !!searchQuery;
+  const hasNoMatchingResults = isEmpty(executions) && hasActiveSearchOrFilters;
 
   return (
     <>
@@ -285,22 +306,12 @@ export const ManualLaunchExecutions = ({
           isAnyRowSelected ? 'manual-launch-executions--with-panel' : '',
         )}
       >
-        <div className={cx('controls')}>
-          <div className={cx('controls-title')}>{formatMessage(messages.allTestExecutions)}</div>
-          <div className={cx('controls-actions')}>
-            <div className={cx('search-section')}>
-              <button
-                type="button"
-                className={cx('filter-icon')}
-                onClick={handleFilterClick}
-                aria-label={formatMessage(messages.filterAriaLabel)}
-              >
-                <FilterOutlineIcon />
-              </button>
-            </div>
+        {!hasNoMatchingResults && (
+          <div className={cx('controls')}>
+            <div className={cx('controls-title')}>{formatMessage(messages.allTestExecutions)}</div>
           </div>
-        </div>
-        {hasNoSearchResults ? (
+        )}
+        {hasNoMatchingResults ? (
           <div className={cx('executions-table-wrapper', 'executions-table-wrapper--empty')}>
             <EmptyPageState
               emptyIcon={NoResultsIcon as unknown as string}

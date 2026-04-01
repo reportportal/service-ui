@@ -51,3 +51,5 @@ export const defaultManualLaunchesQueryParams = {
   limit: 20,
   offset: 0,
 };
+
+export const MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE = 'TO_RUN' as const;
