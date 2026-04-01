@@ -35,13 +35,21 @@ import { InviteUserOrganizationFormData } from './inviteUserOrganizationForm';
 import { Organization } from '../../assignments/organizationAssignment';
 import { ERROR_CODES, Level, settingsLink, settingsLinkName } from './constants';
 
-export const useInviteUser = <L extends keyof FormDataMap>(level: L) => {
+interface UseInviteUserOverrides {
+  projectId?: number;
+  projectName?: string;
+}
+
+export const useInviteUser = <L extends keyof FormDataMap>(level: L, overrides?: UseInviteUserOverrides) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const projectName = useSelector(projectNameSelector);
+  const projectNameFromStore = useSelector(projectNameSelector);
   const ssoUsersOnly = useSelector(ssoUsersOnlySelector);
   const organizationId = useSelector(activeOrganizationIdSelector) as number;
-  const projectId = useSelector(projectInfoIdSelector);
+  const projectIdFromStore = useSelector(projectInfoIdSelector);
+
+  const projectName = overrides?.projectName ?? projectNameFromStore;
+  const projectId = overrides?.projectId ?? projectIdFromStore;
 
   const okButtonTitle = formatMessage(
     ssoUsersOnly ? COMMON_LOCALE_KEYS.ASSIGN : COMMON_LOCALE_KEYS.INVITE,

@@ -129,10 +129,15 @@ export const InviteUser = <L extends keyof FormDataMap>({
   handleSubmit,
   dirty,
   invalid,
+  projectId,
+  projectName,
 }: InviteUserProps<L>) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const { header, okButtonTitle, buildUserData, handleError } = useInviteUser(level);
+  const { header, okButtonTitle, buildUserData, handleError } = useInviteUser(level, {
+    projectId,
+    projectName,
+  });
   const currentUser = useSelector(userInfoSelector) as UserInfo;
 
   const inviteUser = async (userData: InvitationRequestData, condition: InviteProjectCondition) => {
