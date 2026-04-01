@@ -16,6 +16,7 @@
 
 import { useCallback } from 'react';
 import { groupBy } from 'es-toolkit';
+import { isEmpty } from 'es-toolkit/compat';
 import { useSelector } from 'react-redux';
 
 import { projectKeySelector } from 'controllers/project';
@@ -31,11 +32,15 @@ export interface FetchAndCacheResult {
 
 interface UseFetchAndCacheTestCasesProps {
   testPlanId: number | null;
+  testPlanIdsByFolderId: Map<number, Set<number>>;
+  isTestPlanDataComplete: boolean;
   setTestCasesMap: SetState<Map<number, FolderTestCases>>;
 }
 
 export const useFetchAndCacheTestCases = ({
   testPlanId,
+  testPlanIdsByFolderId,
+  isTestPlanDataComplete,
   setTestCasesMap,
 }: UseFetchAndCacheTestCasesProps) => {
   const projectKey = useSelector(projectKeySelector);
@@ -48,29 +53,39 @@ export const useFetchAndCacheTestCases = ({
 
       const folderIdsString = uncachedFolderIds.join(',');
 
+      const folderIdsWithoutTestPlanData = isTestPlanDataComplete
+        ? []
+        : uncachedFolderIds.filter((id) => !testPlanIdsByFolderId.has(id));
+      const shouldFetchTestPlanTestCases =
+        testPlanId != null && !isEmpty(folderIdsWithoutTestPlanData);
+      const testPlanFolderIdsString = folderIdsWithoutTestPlanData.join(',');
+
       const [allTestCases, testPlanTestCases] = await Promise.all([
         fetchAllTestCases(projectKey, {
           'filter.in.testFolderId': folderIdsString,
           offset: 0,
           limit: 50,
         }),
-        testPlanId
+        shouldFetchTestPlanTestCases
           ? fetchAllTestCases(projectKey, {
               'filter.eq.testPlanId': testPlanId,
-              'filter.in.testFolderId': folderIdsString,
+              'filter.in.testFolderId': testPlanFolderIdsString,
               offset: 0,
               limit: 200,
             })
           : Promise.resolve([] as TestCase[]),
       ]);
 
-      const testPlanTestCaseIds = new Set(testPlanTestCases.map(({ id }) => id));
+      const fetchedTestPlanIds = new Set(testPlanTestCases.map(({ id }) => id));
       const testCasesByFolder = groupBy(allTestCases, (testCase) => testCase.testFolder.id);
+
+      const getTestPlanIdsForFolder = (folderId: number) =>
+        testPlanIdsByFolderId.get(folderId) ?? fetchedTestPlanIds;
 
       const newCacheEntries = new Map<number, FolderTestCases>(
         uncachedFolderIds.map((folderId) => [
           folderId,
-          getFolderCacheEntry(testCasesByFolder[folderId] ?? [], testPlanTestCaseIds),
+          getFolderCacheEntry(testCasesByFolder[folderId] ?? [], getTestPlanIdsForFolder(folderId)),
         ]),
       );
 
@@ -81,6 +96,6 @@ export const useFetchAndCacheTestCases = ({
         newCacheEntries,
       };
     },
-    [projectKey, testPlanId, setTestCasesMap],
+    [projectKey, testPlanId, testPlanIdsByFolderId, isTestPlanDataComplete, setTestCasesMap],
   );
 };

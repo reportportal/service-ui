@@ -46,11 +46,6 @@
         cursor: default;
       }
     }
-
-    &::before,
-    &::after {
-      display: none !important;
-    }
   }
 }
 

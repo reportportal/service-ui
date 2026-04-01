@@ -37,6 +37,8 @@ interface UseBatchFolderSelectionProps {
   isOpenRef: RefObject<boolean>;
   testPlanId: number | null;
   testCasesMap: Map<number, FolderTestCases>;
+  testPlanIdsByFolderId: Map<number, Set<number>>;
+  isTestPlanDataComplete: boolean;
   setTestCasesMap: SetState<Map<number, FolderTestCases>>;
   setSelectedTestCasesIds: SetState<NumberSet>;
   setSelectedFolderIds: SetState<NumberSet>;
@@ -47,6 +49,8 @@ export const useBatchFolderSelection = ({
   isOpenRef,
   testPlanId,
   testCasesMap,
+  testPlanIdsByFolderId,
+  isTestPlanDataComplete,
   setTestCasesMap,
   setSelectedTestCasesIds,
   setSelectedFolderIds,
@@ -58,6 +62,8 @@ export const useBatchFolderSelection = ({
 
   const fetchAndCache = useFetchAndCacheTestCases({
     testPlanId,
+    testPlanIdsByFolderId,
+    isTestPlanDataComplete,
     setTestCasesMap,
   });
 

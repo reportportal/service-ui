@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { isEmpty } from 'es-toolkit/compat';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
-import { ChevronDownDropdownIcon, DragNDropIcon, BubblesLoader } from '@reportportal/ui-kit';
+import {
+  ChevronDownDropdownIcon,
+  DragNDropIcon,
+  BubblesLoader,
+} from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { TransformedFolder } from 'controllers/testCase';
@@ -27,6 +31,7 @@ import { DepthAwareCheckbox } from '../depthAwareCheckbox';
 import { usePanelActions, usePanelState, CheckboxSelectionState } from '../testLibraryPanelContext';
 import { SelectableTestCase } from '../selectableTestCase';
 import { useFolderTestCases } from '../hooks/useFolderTestCases';
+import { isFolderVisibleInTree } from '../utils';
 
 import treeStyles from '../../expandedOptions/folder/folder.scss';
 import styles from './selectableFolder.scss';
@@ -42,8 +47,12 @@ interface SelectableFolderProps {
 }
 
 export const SelectableFolder = ({ folder, depth = 0 }: SelectableFolderProps) => {
-  const { toggleTestCasesSelection, toggleFolder, batchSelectFolder, batchDeselectFolder } =
-    usePanelActions();
+  const {
+    toggleTestCasesSelection,
+    toggleFolder,
+    batchSelectFolder,
+    batchDeselectFolder,
+  } = usePanelActions();
   const {
     selectedIds,
     testCasesMap,
@@ -51,11 +60,13 @@ export const SelectableFolder = ({ folder, depth = 0 }: SelectableFolderProps) =
     expandedFolderIds,
     scrollElement,
     batchLoadingFolderIds,
+    shouldHideAddedTestCases,
+    testPlanIdsByFolderId,
   } = usePanelState();
 
   const isBatchLoading = batchLoadingFolderIds.has(folder.id);
   const isOpen = expandedFolderIds.has(folder.id);
-  const hasChildren = !isEmpty(folder.folders) || folder.testsCount > 0;
+  const subfolders = folder.folders;
 
   const {
     testCases = [],
@@ -63,11 +74,31 @@ export const SelectableFolder = ({ folder, depth = 0 }: SelectableFolderProps) =
     addedToTestPlanIds = EMPTY_NUMBER_SET,
   } = testCasesMap.get(folder.id) ?? {};
 
+  const prefetchedIds = testPlanIdsByFolderId.get(folder.id);
+  const isKnownAllAdded =
+    prefetchedIds != null && prefetchedIds.size >= folder.testsCount && folder.testsCount > 0;
+  const shouldSkipFetch = shouldHideAddedTestCases && isKnownAllAdded && isEmpty(subfolders);
+
   const { fetchNextPage, hasNextPage, isLoading } = useFolderTestCases({
     folderId: folder.id,
-    isOpen,
+    isOpen: isOpen && !shouldSkipFetch,
     testsCount: folder.testsCount,
   });
+
+  const visibleSubfolders = useMemo(
+    () =>
+      subfolders.filter((subfolder) =>
+        isFolderVisibleInTree({
+          folder: subfolder,
+          testPlanIdsByFolderId,
+          shouldHideAddedTestCases,
+        }),
+      ),
+    [subfolders, testPlanIdsByFolderId, shouldHideAddedTestCases],
+  );
+
+  const hasChildren =
+    !isEmpty(visibleSubfolders) || (folder.testsCount > 0 && !(shouldHideAddedTestCases && isKnownAllAdded));
 
   const [infiniteRef, { rootRef }] = useInfiniteScroll({
     loading: isLoading || isFolderLoading,
@@ -121,9 +152,13 @@ export const SelectableFolder = ({ folder, depth = 0 }: SelectableFolderProps) =
       return null;
     }
 
+    const visibleTestCases = shouldHideAddedTestCases
+      ? testCases.filter(({ id }) => !addedToTestPlanIds.has(id))
+      : testCases;
+
     return (
       <>
-        {testCases.map((testCase) => (
+        {visibleTestCases.map((testCase) => (
           <SelectableTestCase
             key={testCase.id}
             testCase={testCase}
@@ -170,7 +205,7 @@ export const SelectableFolder = ({ folder, depth = 0 }: SelectableFolderProps) =
         />
       </div>
       <Folder.Subfolders shouldDisplay={isOpen && hasChildren}>
-        {folder.folders?.map((subfolder) => (
+        {visibleSubfolders.map((subfolder) => (
           <SelectableFolder folder={subfolder} key={subfolder.id} depth={depth + 1} />
         ))}
         {renderTestCases()}

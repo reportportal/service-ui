@@ -23,3 +23,4 @@ export { getSelectableIdsForFolders } from './getSelectableIdsForFolders';
 export { isFolderFullyCached } from './isFolderFullyCached';
 export { partitionFoldersByCache } from './partitionFoldersByCache';
 export { addToSet, removeFromSet } from './setUtils';
+export { isFolderVisibleInTree } from './isFolderVisibleInTree';

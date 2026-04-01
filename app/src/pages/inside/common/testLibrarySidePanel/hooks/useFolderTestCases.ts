@@ -34,7 +34,8 @@ interface UseFolderTestCasesProps {
 
 export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTestCasesProps) => {
   const { isOpenRef, updateFolderTestCases } = usePanelActions();
-  const { testPlanId, testCasesMap, scrollElement } = usePanelState();
+  const { testPlanId, testCasesMap, scrollElement, testPlanIdsByFolderId, isTestPlanDataComplete } =
+    usePanelState();
   const projectKey = useSelector(projectKeySelector);
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
 
@@ -70,7 +71,9 @@ export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTe
       }
 
       const isFirstPage = offset === 0;
-      const shouldFetchTestPlanTestCases = isFirstPage && testPlanId != null;
+      const prefetchedIds = testPlanIdsByFolderId.get(folderId);
+      const shouldFetchTestPlanTestCases =
+        isFirstPage && testPlanId != null && !prefetchedIds && !isTestPlanDataComplete;
 
       showSpinner();
 
@@ -105,15 +108,16 @@ export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTe
           scrollRestoreRef.current = scrollElement.scrollTop;
         }
 
+        const addedToTestPlanIds = prefetchedIds
+          ?? new Set(testPlanTestCases.map((testCase) => testCase.id));
+
         updateFolderTestCases(folderId, {
           testCases: [
             ...(testCasesMap.get(folderId)?.testCases ?? []),
             ...testCasesResponse.content,
           ],
           page: testCasesResponse.page,
-          ...(isFirstPage && {
-            addedToTestPlanIds: new Set(testPlanTestCases.map((testCase) => testCase.id)),
-          }),
+          ...(isFirstPage && { addedToTestPlanIds }),
         });
       } catch (error) {
         console.error('Failed to fetch test cases:', error);
@@ -131,6 +135,8 @@ export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTe
       testCasesMap,
       hideSpinner,
       scrollElement,
+      testPlanIdsByFolderId,
+      isTestPlanDataComplete,
     ],
   );
 
