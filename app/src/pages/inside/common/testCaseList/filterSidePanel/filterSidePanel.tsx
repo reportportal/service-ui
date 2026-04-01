@@ -80,6 +80,7 @@ const FilterSidePanelComponent = ({
       setLocalSelectedPriorities(selectedPriorities);
       setLocalSelectedTags(selectedTags);
       setLocalToRunOnly(Boolean(selectedToRunOnly));
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- fire-and-forget when panel opens
       fetchTagOptions();
     }
 
@@ -103,11 +104,13 @@ const FilterSidePanelComponent = ({
 
   const tagDropdownOptions = useMemo(() => {
     const byValue = new Map(tagOptions.map((option) => [option.value, option]));
+
     localSelectedTags.forEach((tag) => {
       if (!byValue.has(tag)) {
         byValue.set(tag, { value: tag, label: tag });
       }
     });
+
     return Array.from(byValue.values());
   }, [tagOptions, localSelectedTags]);
 
@@ -123,6 +126,7 @@ const FilterSidePanelComponent = ({
       tags: localSelectedTags,
       toRunOnly: showToRunOnly ? localToRunOnly : false,
     };
+
     onPrioritiesChange(payload.priorities);
     onTagsChange(payload.tags);
     onApply(payload);

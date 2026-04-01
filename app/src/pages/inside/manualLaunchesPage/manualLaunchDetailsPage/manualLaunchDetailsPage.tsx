@@ -166,6 +166,7 @@ export const ManualLaunchDetailsPage = () => {
 
   const handleRefresh = useCallback(() => {
     const params = getManualLaunchDetailsFetchParams(store.getState());
+
     if (!params.launchId) {
       return;
     }
