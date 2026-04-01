@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useMemo, useState, useCallback } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
@@ -42,6 +42,7 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 import { SearchField } from 'components/fields/searchField';
 import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
 import { FilterSidePanel } from 'pages/inside/common/testCaseList/filterSidePanel';
+import { toBackendPriority, parsePrioritiesFromQuery, parseTagsFromQuery } from 'pages/inside/common/testCaseList/filterSidePanel/utils';
 import { messages as testCaseListMessages } from 'pages/inside/common/testCaseList/messages';
 
 import { TestCaseFolders } from './testCaseFolders';
@@ -71,8 +72,17 @@ export const TestCaseLibraryPage = () => {
   const isLoadingFilteredFolders = useSelector(isLoadingFilteredFoldersSelector);
   const [searchValue, setSearchValue] = useState(location?.query?.testCasesSearchParams || '');
   const [isFilterSidePanelVisible, setIsFilterSidePanelVisible] = useState(false);
-  const [selectedPriorities, setSelectedPriorities] = useState<string[]>([]);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedPriorities, setSelectedPriorities] = useState<string[]>(
+    () => parsePrioritiesFromQuery(location?.query?.filterPriorities),
+  );
+  const [selectedTags, setSelectedTags] = useState<string[]>(
+    () => parseTagsFromQuery(location?.query?.filterTags),
+  );
+
+  useEffect(() => {
+    setSelectedPriorities(parsePrioritiesFromQuery(location?.query?.filterPriorities));
+    setSelectedTags(parseTagsFromQuery(location?.query?.filterTags));
+  }, [location?.query?.filterPriorities, location?.query?.filterTags]);
 
   const { canManageTestCases } = useUserPermissions();
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
@@ -105,8 +115,19 @@ export const TestCaseLibraryPage = () => {
     setIsFilterSidePanelVisible(true);
   };
 
-  const handleApplyFilters = () => {
-    // TODO: Implement apply filters functionality
+  const handleApplyFilters = (priorities: string[], tags: string[]) => {
+    const filterPriorities = isEmpty(priorities)
+      ? undefined
+      : toBackendPriority(priorities);
+    const filterTags = isEmpty(tags) ? undefined : tags.join(',');
+
+    dispatch(
+      updatePagePropertiesAction({
+        filterPriorities,
+        filterTags,
+        ...TestCasePageDefaultValues,
+      }),
+    );
   };
 
   const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];

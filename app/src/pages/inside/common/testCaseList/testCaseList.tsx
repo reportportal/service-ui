@@ -164,8 +164,11 @@ export const TestCaseList = memo(
       },
     ];
 
-    const showNoSearchResults =
-      !isLoading && isEmpty(testCases) && !!location?.query?.testCasesSearchParams;
+    const hasActiveSearchOrFilters =
+      !!location?.query?.testCasesSearchParams ||
+      !!location?.query?.filterPriorities ||
+      !!location?.query?.filterTags;
+    const showNoSearchResults = !isLoading && isEmpty(testCases) && hasActiveSearchOrFilters;
 
     return (
       <div className={cx('test-case-list')}>
@@ -183,11 +186,11 @@ export const TestCaseList = memo(
             {isEmpty(testCases) ? (
               <div
                 className={cx('no-results', {
-                  'no-results--search': location?.query?.testCasesSearchParams,
+                  'no-results--search': hasActiveSearchOrFilters,
                 })}
               >
                 <div className={cx('no-results-message')}>
-                  {location?.query?.testCasesSearchParams ? (
+                  {hasActiveSearchOrFilters ? (
                     <EmptyPageState
                       label={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
                       description={formatMessage(messages.noResultsDescription)}
