@@ -31,8 +31,8 @@ const createRootReducer = (appReducer) => (state, action) => {
   let newState = state;
 
   if (action.type === LOGOUT) {
-    const { appInfo, lang, initialDataReady, location } = state;
-    newState = { appInfo, lang, initialDataReady, location };
+    const { appInfo, lang, initialDataReady, serviceAvailability, location } = state;
+    newState = { appInfo, lang, initialDataReady, serviceAvailability, location };
   }
 
   return appReducer(newState, action);

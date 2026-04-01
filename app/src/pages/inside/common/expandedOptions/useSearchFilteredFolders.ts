@@ -16,6 +16,7 @@
 
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { isEmpty } from 'es-toolkit/compat';
 
 import {
   Folder,
@@ -44,9 +45,11 @@ export const useSearchFilteredFolders = ({
   const filteredFolderData = useSelector(filteredFoldersSelector);
   const isLoading = useSelector(isLoadingFilteredFoldersSelector);
   const initialFoldersRef = useRef(allFolders);
+  const hasExtraFilters = extraFilters && !isEmpty(extraFilters);
+  const hasActiveQuery = !!searchQuery || hasExtraFilters;
 
   useEffect(() => {
-    if (!searchQuery) {
+    if (!hasActiveQuery) {
       dispatch(clearFilteredFoldersAction());
       return;
     }
@@ -56,7 +59,7 @@ export const useSearchFilteredFolders = ({
   }, [searchQuery, extraFilters, dispatch]);
 
   useEffect(() => {
-    if (!searchQuery || allFolders === initialFoldersRef.current) {
+    if (!hasActiveQuery || allFolders === initialFoldersRef.current) {
       return;
     }
 
@@ -69,5 +72,6 @@ export const useSearchFilteredFolders = ({
     allFolders,
     filteredFolderData,
     isLoading,
+    isFilterActive: hasExtraFilters,
   });
 };

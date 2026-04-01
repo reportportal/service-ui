@@ -28,7 +28,9 @@ const cx = classNames.bind(styles);
 export const LinkComponent = ({ to, children, icon, className, event, automationId, target }) => {
   const { trackEvent } = useTracking();
   const handleLinkTracking = () => {
-    trackEvent(event);
+    if (event) {
+      trackEvent(event);
+    }
   };
   return isInternalLink(to) ? (
     <Link

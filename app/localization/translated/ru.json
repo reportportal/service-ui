@@ -1,5 +1,9 @@
 {
   "AALabel.investigatedByAA": "Проанализировано Авто-Анализом",
+  "ServiceUnavailableScreen.descriptionApi": "Похоже, что Service API сейчас может быть недоступен. Обновите страницу через некоторое время или обратитесь за помощью к системному администратору.",
+  "ServiceUnavailableScreen.footer": "Вы также можете обратиться к нашим <installationGuides>руководствам по установке</installationGuides>, чтобы проверить корректность развертывания, или в наш <slackChannel>канал Slack</slackChannel> для советов от сообщества.",
+  "ServiceUnavailableScreen.refreshPage": "Обновить страницу",
+  "ServiceUnavailableScreen.title": "Сервисы недоступны",
   "AccountRemovedPage.description": "Ваша учетная запись и личные данные были удалены из базы данных ReportPortal.\nНам жаль, что вы уходите. Уведомление по электронной почте было отправлено на адрес электронной почты, связанный с вашей учетной записью.",
   "AccountRemovedPage.header": "учетная запись была удалена",
   "AccountRemovedPage.login": "Авторизоваться",
