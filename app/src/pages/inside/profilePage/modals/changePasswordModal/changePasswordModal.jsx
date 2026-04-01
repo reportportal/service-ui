@@ -121,6 +121,34 @@ export class ChangePasswordModal extends Component {
     };
   };
 
+  isOldPasswordValidationError = (error) => {
+    const status = error?.status || error?.response?.status;
+    const field = error?.field || error?.fieldName;
+    const code = error?.code || error?.errorCode;
+    const errorsPayload =
+      error?.validationErrors || error?.errors || error?.violations || error?.details;
+
+    const hasOldPasswordInArrayPayload =
+      Array.isArray(errorsPayload) &&
+      errorsPayload.some((item) => {
+        const itemField = item?.field || item?.fieldName || item?.name || item?.path;
+        return itemField === 'oldPassword';
+      });
+
+    const hasOldPasswordInObjectPayload =
+      !!errorsPayload &&
+      !Array.isArray(errorsPayload) &&
+      typeof errorsPayload === 'object' &&
+      Object.prototype.hasOwnProperty.call(errorsPayload, 'oldPassword');
+
+    return (
+      code === 'INVALID_OLD_PASSWORD' ||
+      field === 'oldPassword' ||
+      ((status === 400 || status === '400') &&
+        (hasOldPasswordInArrayPayload || hasOldPasswordInObjectPayload))
+    );
+  };
+
   changePasswordAndCloseModal = (closeModal) => (formData) =>
     this.props.data
       .onChangePassword(formData)
@@ -128,8 +156,14 @@ export class ChangePasswordModal extends Component {
         closeModal();
       })
       .catch((error) => {
+        const errorMessage = error?.message || 'Unexpected error';
+        if (this.isOldPasswordValidationError(error)) {
+          throw new SubmissionError({
+            oldPassword: errorMessage,
+          });
+        }
         throw new SubmissionError({
-          oldPassword: error?.message || ' ',
+          _error: errorMessage,
         });
       });
 
