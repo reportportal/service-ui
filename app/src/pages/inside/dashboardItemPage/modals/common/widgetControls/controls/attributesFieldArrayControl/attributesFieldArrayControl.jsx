@@ -78,6 +78,10 @@ export class AttributesFieldArrayControl extends Component {
 
   constructor(props) {
     super(props);
+
+    if (!props.fields.length) {
+      props.fields.push(''); 
+    }
   }
 
   getAttributes = () => this.props.fields.getAll() || [];
@@ -100,8 +104,6 @@ export class AttributesFieldArrayControl extends Component {
     const attributes = this.getAttributes();
     const canAddNewItems = fields.length < maxAttributesAmount;
     const numberRemainingLevels = maxAttributesAmount - fields.length;
-
-
 
     return (
       <Fragment>
