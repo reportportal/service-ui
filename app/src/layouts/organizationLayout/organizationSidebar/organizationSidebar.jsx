@@ -39,10 +39,12 @@ import {
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
 import { messages } from '../../messages';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 const ORGANIZATION_CONTROL = 'Organization control';
 
 export const OrganizationSidebar = ({ onClickNavBtn }) => {
   const { trackEvent } = useTracking();
+  const { canSeeOrganizationMembers } = useUserPermissions();
   const { formatMessage } = useIntl();
   const sidebarExtensions = useSelector(uiExtensionOrganizationSidebarComponentsSelector);
   const organizationSlug = useSelector(activeOrganizationSelector)?.slug;
@@ -63,16 +65,20 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
         icon: ProjectsIcon,
         message: formatMessage(messages.projects),
       },
-      {
-        onClick: (isSidebarCollapsed) =>
-          onClickButton({ itemName: messages.users.defaultMessage, isSidebarCollapsed }),
-        link: {
-          type: ORGANIZATION_USERS_PAGE,
-          payload: { organizationSlug },
-        },
-        icon: MembersIcon,
-        message: formatMessage(messages.users),
-      },
+      ...(canSeeOrganizationMembers
+        ? [
+            {
+              onClick: (isSidebarCollapsed) =>
+                onClickButton({ itemName: messages.users.defaultMessage, isSidebarCollapsed }),
+              link: {
+                type: ORGANIZATION_USERS_PAGE,
+                payload: { organizationSlug },
+              },
+              icon: MembersIcon,
+              message: formatMessage(messages.users),
+            },
+          ]
+        : []),
       {
         onClick: (isSidebarCollapsed) =>
           onClickButton({
@@ -85,9 +91,8 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
         },
         icon: SettingsIcon,
         message: formatMessage(messages.organizationSettings),
-      }
+      },
     ];
-
 
     sidebarExtensions.forEach((extension) => {
       const itemName = extension.payload?.iconName;

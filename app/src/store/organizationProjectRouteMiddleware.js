@@ -17,7 +17,11 @@
 import { redirect } from 'redux-first-router';
 import { userInfoSelector, activeProjectSelector, setActiveProjectAction } from 'controllers/user';
 import { isAuthorizedSelector } from 'controllers/auth';
-import { userAssignedSelector } from 'controllers/pages';
+import {
+  ORGANIZATION_USERS_PAGE,
+  userAssignedSelector,
+  userRolesSelector,
+} from 'controllers/pages';
 import { prepareActiveProjectAction } from 'controllers/project';
 import {
   fetchOrganizationBySlugAction,
@@ -25,6 +29,7 @@ import {
 } from 'controllers/organization';
 import { getRedirectRoute, ROUTE_ACTION_TYPES } from 'routes/routesMap';
 import { stringEqual } from 'common/utils/stringUtils';
+import { canSeeOrganizationMembers } from 'common/utils/permissions';
 
 /**
  * Organization/project route middleware: access check, sync of active org/project from URL, redirect on no access.
@@ -43,6 +48,7 @@ export const organizationProjectRouteMiddleware = (store) => (next) => (action) 
 
   const authorized = isAuthorizedSelector(getState());
   const isOrganizationPage = !!hashOrganizationSlug;
+  const isOrganizationUsersPage = action.type === ORGANIZATION_USERS_PAGE;
 
   if (!authorized || !isOrganizationPage) return next(action);
 
@@ -54,8 +60,15 @@ export const organizationProjectRouteMiddleware = (store) => (next) => (action) 
 
   const isProjectPage = !!hashProjectSlug;
 
+  const hasPermissionOrganizationUsers = canSeeOrganizationMembers(userRolesSelector(getState()));
+
   // For project pages check project-level permission, for org pages — org-level
-  const hasPageAccess = isProjectPage ? hasPermission : hasPermissionOrganization;
+  const hasOrganizationPageAccess =
+    hasPermissionOrganization && isOrganizationUsersPage
+      ? hasPermissionOrganizationUsers
+      : hasPermissionOrganization;
+
+  const hasPageAccess = isProjectPage ? hasPermission : hasOrganizationPageAccess;
 
   // No access — redirect to a guaranteed accessible route
   if (!hasPageAccess) {
