@@ -24,11 +24,11 @@ interface AppProps {
 }
 
 const App: FC<AppProps> = ({ initialDispatch }) => (
-  <InitialDataContainer initialDispatch={initialDispatch}>
-    <LocalizationContainer>
+  <LocalizationContainer>
+    <InitialDataContainer initialDispatch={initialDispatch}>
       <PageSwitcher />
-    </LocalizationContainer>
-  </InitialDataContainer>
+    </InitialDataContainer>
+  </LocalizationContainer>
 );
 
 export default App;

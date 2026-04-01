@@ -67,7 +67,7 @@ export const MainPageEmptyState = () => {
     <>
       <EmptyStatePage
         title={formatMessage(messages.emptyPageTitle)}
-        description={Parser(formatMessage(messages.emptyPageDescription))}
+        description={formatMessage(messages.emptyPageDescription)}
         imageType="docs"
         documentationLink={referenceDictionary.rpDoc}
         buttons={buttons}

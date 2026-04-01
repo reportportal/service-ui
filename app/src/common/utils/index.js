@@ -24,6 +24,7 @@ export {
   updateStorageItem,
   getSessionItem,
   setSessionItem,
+  removeSessionItem,
   updateSessionItem,
 } from './storageUtils';
 export {

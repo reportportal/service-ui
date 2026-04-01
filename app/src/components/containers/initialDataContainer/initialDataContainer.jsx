@@ -19,12 +19,20 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { analyticsEnabledSelector } from 'controllers/appInfo';
 import { AnalyticsWrapper } from 'components/main/analytics';
-import { fetchInitialDataAction, initialDataReadySelector } from 'controllers/initialData';
+import {
+  fetchInitialDataAction,
+  initialDataReadySelector,
+  serviceAvailabilitySelector,
+  LAST_VISITED_PATH_STORAGE_KEY,
+} from 'controllers/initialData';
+import { getSessionItem, removeSessionItem } from 'common/utils';
+import { ServiceUnavailableScreen } from './serviceUnavailableScreen';
 
 @connect(
   (state) => ({
     isAnalyticsEnabled: analyticsEnabledSelector(state),
     isInitialDataReady: initialDataReadySelector(state),
+    serviceAvailability: serviceAvailabilitySelector(state),
   }),
   {
     fetchInitialDataAction,
@@ -37,14 +45,14 @@ export class InitialDataContainer extends Component {
     isAnalyticsEnabled: PropTypes.bool.isRequired,
     fetchInitialDataAction: PropTypes.func.isRequired,
     isInitialDataReady: PropTypes.bool.isRequired,
+    serviceAvailability: PropTypes.shape({
+      checked: PropTypes.bool.isRequired,
+      apiUnavailable: PropTypes.bool.isRequired,
+    }).isRequired,
   };
 
   static defaultProps = {
     children: null,
-  };
-
-  state = {
-    initialDataReady: false,
   };
 
   componentDidMount() {
@@ -60,8 +68,32 @@ export class InitialDataContainer extends Component {
     }
   }
 
+  refreshPage = () => {
+    const storedLastPath = getSessionItem(LAST_VISITED_PATH_STORAGE_KEY);
+    removeSessionItem(LAST_VISITED_PATH_STORAGE_KEY);
+
+    const currentPath = window.location.hash.replace(/^#/, '');
+    const fallbackPath = currentPath.startsWith('/') ? currentPath : '/login';
+    const targetPath =
+      typeof storedLastPath === 'string' && storedLastPath.startsWith('/')
+        ? storedLastPath
+        : fallbackPath;
+    const normalizedHash = targetPath.startsWith('#') ? targetPath : `#${targetPath}`;
+
+    if (window.location.hash !== normalizedHash) {
+      window.location.hash = normalizedHash;
+    }
+
+    window.location.reload();
+  };
+
   render() {
     const { isAnalyticsEnabled, isInitialDataReady, children } = this.props;
+    const { checked, apiUnavailable } = this.props.serviceAvailability;
+
+    if (checked && apiUnavailable) {
+      return <ServiceUnavailableScreen onRefresh={this.refreshPage} />;
+    }
 
     return isInitialDataReady ? (
       <AnalyticsWrapper isEnabled={isAnalyticsEnabled}>{children}</AnalyticsWrapper>

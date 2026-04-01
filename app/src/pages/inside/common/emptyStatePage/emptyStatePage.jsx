@@ -31,6 +31,7 @@ import styles from './emptyStatePage.scss';
 import plus from './img/empty-state-inline.svg';
 import play from './img/empty-manual-launches-icon-inline.svg';
 import bell from './img/notifications-empty-state-inline.svg';
+import error from './img/services-empty-state-inline.svg';
 import rhombus from './img/quality-gates-empty-inline.svg';
 import lines from './img/environments-empty-state-inline.svg';
 import branches from './img/product-empty-state-inline.svg';
@@ -41,6 +42,7 @@ const cx = classNames.bind(styles);
 
 const images = {
   bell,
+  error,
   rhombus,
   plus,
   play,
@@ -51,19 +53,20 @@ const images = {
 };
 
 export const EmptyStatePage = ({
-  description,
-  documentationLink,
-  title,
-  descriptionClassName,
-  handleDocumentationClick,
-  imageType,
-  documentationDataAutomationId,
+  description = '',
+  documentationLink = '',
+  title = '',
+  containerClassName = '',
+  descriptionClassName = '',
+  handleDocumentationClick = null,
+  imageType = 'plus',
+  documentationDataAutomationId = 'emptyStatePageDocsLink',
   buttons,
 }) => {
   const { formatMessage } = useIntl();
 
   return (
-    <div className={cx('container')}>
+    <div className={cx('container', containerClassName)}>
       <span className={cx('img')}>{Parser(images[imageType])}</span>
       <span className={cx('title')}>{title}</span>
       <span className={cx('description', descriptionClassName)}>{description}</span>
@@ -108,6 +111,7 @@ EmptyStatePage.propTypes = {
   title: PropTypes.string,
   description: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   documentationLink: PropTypes.string,
+  containerClassName: PropTypes.string,
   descriptionClassName: PropTypes.string,
   handleDocumentationClick: PropTypes.oneOfType([PropTypes.func, PropTypes.instanceOf(null)]),
   imageType: PropTypes.oneOf([
@@ -115,6 +119,7 @@ EmptyStatePage.propTypes = {
     'play',
     'rhombus',
     'bell',
+    'error',
     'lines',
     'branches',
     'docs',
@@ -127,19 +132,9 @@ EmptyStatePage.propTypes = {
       dataAutomationId: PropTypes.string,
       isDisabled: PropTypes.bool,
       handleButton: PropTypes.func,
-      icon: PropTypes.elementType,
+      icon: PropTypes.oneOfType([PropTypes.elementType, PropTypes.string]),
       isCompact: PropTypes.bool,
       variant: PropTypes.oneOf(['primary', 'ghost', 'danger', 'text']),
     }),
   ),
-};
-
-EmptyStatePage.defaultProps = {
-  title: '',
-  description: '',
-  documentationLink: '',
-  descriptionClassName: '',
-  handleDocumentationClick: null,
-  imageType: 'plus',
-  documentationDataAutomationId: 'emptyStatePageDocsLink',
 };
