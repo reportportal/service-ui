@@ -46,7 +46,7 @@ import {
 } from './controls';
 import { WIDGET_WIZARD_FORM } from '../constants';
 import { ITEMS_INPUT_WIDTH, WIDGET_OPTIONS } from './constants';
-import { sharedMessages } from "common/sharedMessages"
+import { componentHealthCheckMessages } from './messages';
 import styles from './widgetControls.scss';
 
 const cx = classNames.bind(styles);
@@ -231,7 +231,7 @@ export class ComponentHealthCheckTableViewControls extends Component {
     const attrUrlKeys = this.getItemAttributeKeysAllSearchURL();
     const sortObj = this.getSortObj();
     const disabled = !this.props.widgetSettings?.filters?.length;
-    const inputTooltipProps = disabled ? { content: formatMessage(sharedMessages.attributeKeyInputTooltip) } : {};
+    const inputTooltipProps = disabled ? { content: formatMessage(componentHealthCheckMessages.attributeKeyInput) } : {};
 
     return (
       <Fragment>

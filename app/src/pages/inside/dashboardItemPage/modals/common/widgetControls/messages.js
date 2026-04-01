@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,13 +16,13 @@
 
 import { defineMessages } from 'react-intl';
 
-export const sharedMessages = defineMessages({
-   addAttributeKeyButtonTooltip: {
-      id: 'Tooltip.addAttributeKeyButton',
-      defaultMessage: 'New levels cannot be added until filter is selected',
-    },
-    attributeKeyInputTooltip: {
-      id: 'Tooltip.attributeKeyInput',
-      defaultMessage: 'Please select a filter first',
-    }
+export const componentHealthCheckMessages = defineMessages({
+  addAttributeKeyButton: {
+    id: 'ComponentHealthCheck.addAttributeKeyButton',
+    defaultMessage: 'New levels cannot be added until filter is selected',
+  },
+  attributeKeyInput: {
+    id: 'ComponentHealthCheck.attributeKeyInput',
+    defaultMessage: 'Please select a filter first',
+  },
 });

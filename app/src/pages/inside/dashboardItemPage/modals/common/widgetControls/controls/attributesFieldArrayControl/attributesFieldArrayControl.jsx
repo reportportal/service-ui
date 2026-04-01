@@ -26,7 +26,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { ConditionalTooltip } from 'components/main/conditionalTooltip';
 import { FIELD_LABEL_WIDTH } from '../constants';
-import { sharedMessages } from "common/sharedMessages"
+import { componentHealthCheckMessages } from '../../messages';
 import styles from './attributesFieldArrayControl.scss';
 import { Button } from '@reportportal/ui-kit';
 
@@ -98,11 +98,11 @@ export class AttributesFieldArrayControl extends Component {
 
 
     const inputTooltipProps = disabled 
-      ? { content: formatMessage(sharedMessages.attributeKeyInputTooltip) } 
+      ? { content: formatMessage(componentHealthCheckMessages.attributeKeyInput) } 
       : {};
 
     const addButtonTooltip = disabled 
-      ? { content: formatMessage(sharedMessages.addAttributeKeyButtonTooltip),
+      ? { content: formatMessage(componentHealthCheckMessages.addAttributeKeyButton),
           wrapperClassName: cx('tooltip-wrapper'),
           tooltipClassName: cx("tooltip"),
         }
