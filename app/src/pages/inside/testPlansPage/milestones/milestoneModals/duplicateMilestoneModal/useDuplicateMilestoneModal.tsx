@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-import type { TmsMilestoneRS } from 'controllers/milestone';
+import { TmsMilestoneRS } from 'controllers/milestone';
+import { useModal } from 'common/hooks';
 
-export type MilestoneCardProps = {
-  milestone: TmsMilestoneRS;
-  onEditMilestone?: (milestone: TmsMilestoneRS) => void;
-  onDuplicateMilestone?: (milestone: TmsMilestoneRS) => void;
-};
+import { DUPLICATE_MILESTONE_MODAL_KEY } from './constants';
+import { DuplicateMilestoneModal } from './duplicateMilestoneModal';
+
+export const useDuplicateMilestoneModal = () =>
+  useModal<TmsMilestoneRS>({
+    modalKey: DUPLICATE_MILESTONE_MODAL_KEY,
+    renderModal: (data) => <DuplicateMilestoneModal data={data} />,
+  });

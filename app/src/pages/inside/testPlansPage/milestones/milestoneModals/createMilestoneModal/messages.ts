@@ -79,7 +79,7 @@ export const createMilestoneModalMessages = defineMessages({
   },
   endDateLabel: {
     id: 'MilestonesTable.endDateLabel',
-    defaultMessage: 'End date',
+    defaultMessage: 'Deadline',
   },
   dateFieldPlaceholder: {
     id: 'MilestonesTable.dateFieldPlaceholder',
@@ -104,5 +104,26 @@ export const createMilestoneModalMessages = defineMessages({
   dateShortcutOneMonth: {
     id: 'MilestonesTable.dateShortcutOneMonth',
     defaultMessage: '1 month',
+  },
+  editMilestoneModalTitle: {
+    id: 'MilestonesTable.editMilestoneModalTitle',
+    defaultMessage: 'Edit Milestone',
+  },
+  saveMilestoneChanges: {
+    id: 'MilestonesTable.saveMilestoneChanges',
+    defaultMessage: 'Save changes',
+  },
+  duplicateMilestoneModalTitle: {
+    id: 'MilestonesTable.duplicateMilestoneModalTitle',
+    defaultMessage: 'Duplicate Milestone',
+  },
+  duplicateMilestoneInfoTitle: {
+    id: 'MilestonesTable.duplicateMilestoneInfoTitle',
+    defaultMessage: 'Test progress and coverage statistics cannot be duplicated',
+  },
+  duplicateMilestoneInfoBody: {
+    id: 'MilestonesTable.duplicateMilestoneInfoBody',
+    defaultMessage:
+      'Only the structure of the test plans, test cases, and their settings will be copied. Please be cautious when duplicating test plan attributes, as they may affect statistics and future filtering.',
   },
 });

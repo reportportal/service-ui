@@ -31,20 +31,17 @@
     height: 14px;
   }
 
-  /* Closed dropdown: optical alignment inside ui-kit trigger */
   &--toggle {
     position: relative;
     right: 10px;
     bottom: 8px;
   }
 
-  /* Same as menu: sprint/feature artwork sits low in viewBox — move only svg, not the chip */
   &--toggle#{&}--SPRINT svg,
   &--toggle#{&}--FEATURE svg {
     transform: translateY(-3px);
   }
 
-  /* Menu row: light chip on light background — ring so the circle reads */
   &--menu#{&}--SPRINT,
   &--menu#{&}--FEATURE {
     box-shadow: 0 0 0 1px var(--rp-ui-base-bg-200);
@@ -52,5 +49,20 @@
     svg {
       transform: translateY(-3px);
     }
+  }
+
+  &--menu {
+    width: 24px;
+    height: 24px;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  &--menu#{&}--PLAN svg {
+    width: 11px;
+    height: 11px;
   }
 }

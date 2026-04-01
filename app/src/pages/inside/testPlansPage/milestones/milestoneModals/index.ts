@@ -15,3 +15,5 @@
  */
 
 export { useCreateMilestoneModal } from './createMilestoneModal/useCreateMilestoneModal';
+export { useEditMilestoneModal } from './editMilestoneModal/useEditMilestoneModal';
+export { useDuplicateMilestoneModal } from './duplicateMilestoneModal/useDuplicateMilestoneModal';

@@ -23,11 +23,17 @@ import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popover
 
 import { messages } from '../messages';
 
+import type { MilestoneCardProps } from './types';
+
 import styles from './milestoneCard.scss';
 
 const cx = createClassnames(styles);
 
-export const MilestoneCardActionsMenu = () => {
+export const MilestoneCardActionsMenu = ({
+  milestone,
+  onEditMilestone,
+  onDuplicateMilestone,
+}: Pick<MilestoneCardProps, 'milestone' | 'onEditMilestone' | 'onDuplicateMilestone'>) => {
   const { formatMessage } = useIntl();
   const [isOpened, setIsOpened] = useState(false);
 
@@ -35,7 +41,10 @@ export const MilestoneCardActionsMenu = () => {
     () => [
       {
         label: formatMessage(messages.menuEditMilestone),
-        onClick: () => setIsOpened(false),
+        onClick: () => {
+          setIsOpened(false);
+          onEditMilestone?.(milestone);
+        },
       },
       {
         label: formatMessage(messages.menuCreateTestPlan),
@@ -43,7 +52,10 @@ export const MilestoneCardActionsMenu = () => {
       },
       {
         label: formatMessage(messages.menuDuplicateMilestone),
-        onClick: () => setIsOpened(false),
+        onClick: () => {
+          setIsOpened(false);
+          onDuplicateMilestone?.(milestone);
+        },
       },
       {
         label: formatMessage(messages.menuDeleteMilestone),
@@ -51,7 +63,7 @@ export const MilestoneCardActionsMenu = () => {
         onClick: () => setIsOpened(false),
       },
     ],
-    [formatMessage],
+    [formatMessage, milestone, onDuplicateMilestone, onEditMilestone],
   );
 
   return (

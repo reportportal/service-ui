@@ -69,10 +69,11 @@
   &__type-option {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
     box-sizing: border-box;
     max-width: 100%;
-    padding: 8px 12px;
+    padding: 0;
+    min-height: 42px;
     text-align: left;
     border-radius: 4px;
 
@@ -90,21 +91,22 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     line-height: 0;
   }
 
   &__type-option-text {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 0;
     min-width: 0;
   }
 
   &__type-option-title {
     @include ms.milestone-body-13-medium;
 
+    line-height: 20px;
     color: var(--rp-ui-color-text);
 
     &_selected,
@@ -116,6 +118,18 @@
   &__type-option-desc {
     @include ms.milestone-body-13;
 
+    font-size: 12px;
+    line-height: 20px;
     color: var(--rp-ui-color-text-secondary);
+  }
+}
+
+:global(.milestone-type-dropdown-menu--compact) {
+  [class*='dropdown-option'] {
+    box-sizing: border-box;
+    min-height: 56px;
+    max-height: 56px;
+    padding: 7px 12px !important;
+    align-items: center;
   }
 }
