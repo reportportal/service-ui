@@ -112,10 +112,6 @@ export class DashboardPage extends Component {
     gridType: PropTypes.string,
     onFilterChange: PropTypes.func,
     changeVisibilityType: PropTypes.func,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
     loading: PropTypes.bool,
     pageCount: PropTypes.number,
     activePage: PropTypes.number,
@@ -153,7 +149,6 @@ export class DashboardPage extends Component {
       userInfo: { userId },
       showModal,
       deleteDashboard,
-      tracking,
     } = this.props;
     const { id } = item;
 
@@ -208,7 +203,7 @@ export class DashboardPage extends Component {
   };
 
   onAddDashboardItem = () => {
-    const { showModal, addDashboard, tracking } = this.props;
+    const { showModal, addDashboard } = this.props;
 
     showModal({
       id: 'dashboardAddEditModal',

@@ -23,7 +23,6 @@ import RotateImage from 'common/img/rotate-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { ATTACHMENT_IMAGE_MODAL_ID } from 'controllers/log/attachments';
-import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { messages } from './messages';
 import styles from './attachmentImageModal.scss';
 

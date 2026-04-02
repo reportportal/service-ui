@@ -15,7 +15,6 @@
  */
 
 import React, { Component } from 'react';
-import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';

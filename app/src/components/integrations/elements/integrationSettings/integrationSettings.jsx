@@ -108,7 +108,7 @@ export const IntegrationSettings = (props) => {
 
   const removeIntegration = () => {
     const {
-      data: { id, integrationType },
+      data: { id },
       isGlobal,
       goToPreviousPage,
     } = props;

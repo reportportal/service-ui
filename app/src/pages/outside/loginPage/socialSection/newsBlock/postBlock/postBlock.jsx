@@ -57,7 +57,7 @@ const getPostContent = (text) => {
   return result;
 };
 
-export const PostBlock = ({ tweetData, tracking }) => (
+export const PostBlock = ({ tweetData }) => (
   <div className={cx('post-block')}>
     {Parser(DOMPurify.sanitize(getPostContent(tweetData.text)))}
   </div>
@@ -65,10 +65,6 @@ export const PostBlock = ({ tweetData, tracking }) => (
 
 PostBlock.propTypes = {
   tweetData: PropTypes.object,
-  tracking: PropTypes.shape({
-    trackEvent: PropTypes.func,
-    getTrackingData: PropTypes.func,
-  }).isRequired,
 };
 
 PostBlock.defaultProps = {

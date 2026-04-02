@@ -210,7 +210,6 @@ export class InstancesSection extends Component {
     const {
       intl: { formatMessage },
       instanceType,
-      tracking,
       pluginDetails,
     } = this.props;
     this.props.showModalAction({

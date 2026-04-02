@@ -212,7 +212,6 @@ export class TestItemDetailsModal extends Component {
     const {
       intl,
       data: { item },
-      tracking: { trackEvent },
     } = this.props;
 
     return (
@@ -336,12 +335,7 @@ export class TestItemDetailsModal extends Component {
   };
 
   render() {
-    const {
-      intl,
-      data: { eventsInfo },
-      userRoles,
-      handleSubmit,
-    } = this.props;
+    const { intl, userRoles, handleSubmit } = this.props;
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.SAVE),
       onClick: (closeModal) => {

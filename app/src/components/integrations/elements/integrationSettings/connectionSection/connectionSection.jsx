@@ -20,7 +20,6 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import track from 'react-tracking';
 import moment from 'moment';
 import Parser from 'html-react-parser';
 import { showModalAction } from 'controllers/modal';
@@ -73,7 +72,6 @@ const messages = defineMessages({
     showModalAction,
   },
 )
-@track()
 @injectIntl
 export class ConnectionSection extends Component {
   static propTypes = {
@@ -86,10 +84,6 @@ export class ConnectionSection extends Component {
     connected: PropTypes.bool,
     editAuthConfig: PropTypes.object,
     pluginName: PropTypes.string,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
     isEditable: PropTypes.bool.isRequired,
     data: PropTypes.shape({
       creationDate: PropTypes.number,

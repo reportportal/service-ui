@@ -18,7 +18,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
-import track from 'react-tracking';
 import { PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE } from 'components/integrations/messages';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
@@ -36,7 +35,6 @@ const messages = defineMessages({
 const maxVersionLengthForTitle = 17;
 
 @injectIntl
-@track()
 export class PluginsItem extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -45,10 +43,6 @@ export class PluginsItem extends Component {
     showToggleConfirmationModal: PropTypes.func.isRequired,
     toggleable: PropTypes.bool,
     onClick: PropTypes.func,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
   };
 
   static defaultProps = {
@@ -61,7 +55,7 @@ export class PluginsItem extends Component {
   };
 
   toggleActiveHandler = () => {
-    const { data, onToggleActive, tracking } = this.props;
+    const { data, onToggleActive } = this.props;
     const isEnabled = !data.enabled;
     this.setState({
       isEnabled,

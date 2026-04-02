@@ -342,8 +342,6 @@ export class GeneralTab extends Component {
     return newOptions;
   };
 
-  formatInterruptJobTimes = this.createValueFormatter(this.interruptJobTime);
-
   render() {
     const { intl, userRoles, isLoading, projectName } = this.props;
     const { processingData } = this.state;
