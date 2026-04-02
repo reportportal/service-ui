@@ -139,7 +139,7 @@ export class FilterEditModal extends Component {
     const okButton = {
       text: this.getOkButtonTitle(),
       onClick: (closeModal) => {
-        tracking.trackEvent(this.events.clickOkBtn);
+        this.events.clickOkBtn && tracking.trackEvent(this.events.clickOkBtn);
         handleSubmit(this.saveFilterAndCloseModal(closeModal))();
       },
     };
