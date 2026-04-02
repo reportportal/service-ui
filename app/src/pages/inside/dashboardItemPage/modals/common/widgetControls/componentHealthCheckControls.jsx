@@ -97,12 +97,15 @@ const attributeKeyValidator = (formatMessage) => (attributes) =>
     commonValidators.uniqueAttributeKey(attributes),
   ]);
 
-@connect((state) => ({
-  projectKey: projectKeySelector(state),
-}), {
-  changeField: (field, value) => change(WIDGET_WIZARD_FORM, field, value, null),
-  untouchField: (field) => untouch(WIDGET_WIZARD_FORM, field),
-})
+@connect(
+  (state) => ({
+    projectKey: projectKeySelector(state),
+  }),
+  {
+    changeField: (field, value) => change(WIDGET_WIZARD_FORM, field, value, null),
+    untouchField: (field) => untouch(WIDGET_WIZARD_FORM, field),
+  },
+)
 @injectIntl
 export class ComponentHealthCheckControls extends Component {
   static propTypes = {
@@ -144,7 +147,9 @@ export class ComponentHealthCheckControls extends Component {
     const currentFilterId = this.props.widgetSettings?.filters?.[0]?.value;
 
     if (prevProps && prevFilterId !== currentFilterId) {
-      this.props.changeField('contentParameters.widgetOptions.attributeKeys', [DEFAULT_ATTRIBUTE_KEY]);
+      this.props.changeField('contentParameters.widgetOptions.attributeKeys', [
+        DEFAULT_ATTRIBUTE_KEY,
+      ]);
       this.props.untouchField('contentParameters.widgetOptions.attributeKeys[0]');
     }
   };

@@ -80,7 +80,7 @@ export class AttributesFieldArrayControl extends Component {
     super(props);
 
     if (!props.fields.length) {
-      props.fields.push(''); 
+      props.fields.push('');
     }
   }
 
@@ -137,8 +137,8 @@ export class AttributesFieldArrayControl extends Component {
               </div>
               {!isFirstItem && (
                 <Button
-                  variant='text'
-                  className={cx('remove-icon', "with-hover")}
+                  variant="text"
+                  className={cx('remove-icon', 'with-hover')}
                   onClick={() => fields.remove(index)}
                 >
                   {Parser(CrossIcon)}
@@ -149,13 +149,13 @@ export class AttributesFieldArrayControl extends Component {
         })}
         {canAddNewItems ? (
           <ModalField label=" " labelWidth={FIELD_LABEL_WIDTH}>
-            <ConditionalTooltip 
-              content={addButtonTooltip} 
-              wrapperClassName={cx('tooltip-wrapper')} 
-              tooltipClassName={cx("tooltip")}
+            <ConditionalTooltip
+              content={addButtonTooltip}
+              wrapperClassName={cx('tooltip-wrapper')}
+              tooltipClassName={cx('tooltip')}
             >
               <Button
-                variant='text'
+                variant="text"
                 className={cx('add-level')}
                 disabled={disabled}
                 onClick={() => fields.push('')}

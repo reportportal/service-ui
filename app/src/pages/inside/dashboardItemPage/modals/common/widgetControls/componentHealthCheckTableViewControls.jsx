@@ -90,7 +90,7 @@ const messages = defineMessages({
     id: 'ComponentHealthCheckTableViewControls.excludeSkipped',
     defaultMessage: 'Exclude Skipped tests from statistics',
   },
-   addAttributeKeyButton: {
+  addAttributeKeyButton: {
     id: 'ComponentHealthCheckTableViewControls.addAttributeKeyButton',
     defaultMessage: 'New levels cannot be added until filter is selected',
   },
@@ -115,12 +115,15 @@ const attributeKeyValidator = (formatMessage) => (attributes) =>
     commonValidators.uniqueAttributeKey(attributes),
   ]);
 
-@connect((state) => ({
-  projectKey: projectKeySelector(state),
-}), {
-  changeField: (field, value) => change(WIDGET_WIZARD_FORM, field, value, null),
-  untouchField: (field) => untouch(WIDGET_WIZARD_FORM, field),
-})
+@connect(
+  (state) => ({
+    projectKey: projectKeySelector(state),
+  }),
+  {
+    changeField: (field, value) => change(WIDGET_WIZARD_FORM, field, value, null),
+    untouchField: (field) => untouch(WIDGET_WIZARD_FORM, field),
+  },
+)
 @track()
 @injectIntl
 export class ComponentHealthCheckTableViewControls extends Component {
@@ -201,7 +204,10 @@ export class ComponentHealthCheckTableViewControls extends Component {
   };
 
   renderAttributesFieldArray = ({ fields, fieldValidator }) => {
-    const { widgetSettings: { filters }, intl: { formatMessage } } = this.props;
+    const {
+      widgetSettings: { filters },
+      intl: { formatMessage },
+    } = this.props;
     const url = this.getItemAttributeKeysAllSearchURL();
     const isInputDisabled = !filters?.length;
 
@@ -224,7 +230,9 @@ export class ComponentHealthCheckTableViewControls extends Component {
     const currentFilterId = this.props.widgetSettings?.filters?.[0]?.value;
 
     if (prevProps && prevFilterId !== currentFilterId) {
-      this.props.changeField('contentParameters.widgetOptions.attributeKeys', [DEFAULT_ATTRIBUTE_KEY]);
+      this.props.changeField('contentParameters.widgetOptions.attributeKeys', [
+        DEFAULT_ATTRIBUTE_KEY,
+      ]);
       this.props.untouchField('contentParameters.widgetOptions.attributeKeys[0]');
 
       this.props.changeField('contentParameters.widgetOptions.customColumn', DEFAULT_CUSTOM_COLUMN);
@@ -293,7 +301,9 @@ export class ComponentHealthCheckTableViewControls extends Component {
               {formatMessage(messages.customColumnTitle)}
             </div>
             <div className={cx('component-wrap')}>
-              <ConditionalTooltip content={disabled ? formatMessage(messages.attributeKeyInput) : null}>
+              <ConditionalTooltip
+                content={disabled ? formatMessage(messages.attributeKeyInput) : null}
+              >
                 <FieldProvider
                   name="contentParameters.widgetOptions.customColumn"
                   validate={commonValidators.attributeKey}
