@@ -27,7 +27,6 @@ import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomp
 import { ConditionalTooltip } from 'components/main/conditionalTooltip';
 import { FIELD_LABEL_WIDTH } from '../constants';
 import styles from './attributesFieldArrayControl.scss';
-import { Button } from '@reportportal/ui-kit';
 
 const cx = classNames.bind(styles);
 
@@ -136,13 +135,12 @@ export class AttributesFieldArrayControl extends Component {
                 </ConditionalTooltip>
               </div>
               {!isFirstItem && (
-                <Button
-                  variant="text"
-                  className={cx('remove-icon', 'with-hover')}
+                <button
+                  className={cx('remove-button', 'button')}
                   onClick={() => fields.remove(index)}
                 >
                   {Parser(CrossIcon)}
-                </Button>
+                </button>
               )}
             </ModalField>
           );
@@ -154,14 +152,13 @@ export class AttributesFieldArrayControl extends Component {
               wrapperClassName={cx('tooltip-wrapper')}
               tooltipClassName={cx('tooltip')}
             >
-              <Button
-                variant="text"
-                className={cx('add-level')}
+              <button
+                className={cx('add-level', 'button')}
                 disabled={disabled}
                 onClick={() => fields.push('')}
               >
                 {formatMessage(messages.addOneMoreLevel)}
-              </Button>
+              </button>
             </ConditionalTooltip>
             {showRemainingLevels && (
               <div className={cx('remaining-level')}>

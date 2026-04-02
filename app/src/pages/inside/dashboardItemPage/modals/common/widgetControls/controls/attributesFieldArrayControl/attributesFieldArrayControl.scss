@@ -22,9 +22,18 @@
   margin-right: 25px;
 }
 
-button.remove-icon.with-hover {
+.button {
   padding: 0;
-  min-width: auto;
+  border: none;
+  background: transparent;
+
+  &:disabled {
+    opacity: 0.4;
+  }
+}
+
+.remove-button {
+
   position: absolute;
   top: 7px;
   right: 3px;
@@ -45,7 +54,9 @@ button.remove-icon.with-hover {
 
 .add-level {
   color: $COLOR--topaz;
+  font-size: 13px;
   font-family: $FONT-REGULAR;
+  cursor: pointer;
 }
 
 .remaining-level {
