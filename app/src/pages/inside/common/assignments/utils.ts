@@ -31,7 +31,7 @@ export function resolveUserRolesForProjectRow(
 ): UserRolesSnapshot {
   return {
     ...base,
-    projectRole:rowProjectRole || base.projectRole,
+    projectRole: rowProjectRole || base.projectRole,
   };
 }
 
