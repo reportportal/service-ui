@@ -18,3 +18,9 @@ export interface UpdateUserAssignmentsPayload {
   org_role: string;
   projects: Array<{ id: number; project_role: string }>;
 }
+
+export interface AssignOrganizationPayload {
+  id: number;
+  org_role: string;
+  projects: Array<{ id: number; project_role: string }>;
+}

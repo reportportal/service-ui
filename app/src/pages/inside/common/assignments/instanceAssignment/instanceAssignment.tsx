@@ -59,6 +59,7 @@ import { prepareQueryFilters } from 'components/filterEntities/utils';
 import { URLS } from 'common/urls';
 import { AddItemButton } from '../organizationAssignment/organizationItem/addItemButton';
 import { MEMBER, EDITOR, VIEWER, MANAGER } from 'common/constants/projectRoles';
+import { UPSA } from 'common/constants/accountType';
 import { ORGANIZATIONS } from 'pages/instance/allUsersPage/allUsersHeader/createUserModal/constants';
 import { messages as invitationMessages } from 'common/constants/localization/invitationsLocalization';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -321,10 +322,12 @@ export const InstanceAssignment = ({
 
   const makeOrganizationsOptions = (response: OrganizationsSearchesResponseData) => {
     if (response.items) {
+      const isUpsaUser = userType === UPSA;
       const filteredOrganizations = response.items.filter(
         (organization) =>
           !(allOrganizations || []).some(({ id }) => id === organization.id) &&
-          (!excludeUserAssignments || !userOrgIds.has(organization.id)),
+          (!excludeUserAssignments || !userOrgIds.has(organization.id)) &&
+          !(isUpsaUser && organization.type === OrganizationType.EXTERNAL),
       );
 
       setNotAssignedOrganizations(filteredOrganizations);
