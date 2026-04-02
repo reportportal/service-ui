@@ -133,13 +133,14 @@ import {
 } from 'controllers/milestone';
 import {
   MANUAL_LAUNCHES_NAMESPACE,
-  MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
   defaultManualLaunchesQueryParams,
   getManualLaunchesAction,
   getManualLaunchAction,
   getManualLaunchFoldersAction,
   getManualLaunchTestCaseExecutionsAction,
   getManualLaunchExecutionAction,
+  buildGetManualLaunchTestCaseExecutionsParams,
+  getManualLaunchDetailsFetchParams,
 } from 'controllers/manualLaunch';
 import { getRouterParams } from 'common/utils';
 
@@ -396,10 +397,8 @@ const routesMap = {
     path: '/organizations/:organizationSlug/projects/:projectSlug/manualLaunches/:launchId/:manualLaunchPageRoute*',
     thunk: (dispatch, getState) => {
       const state = getState();
-      const { launchId, manualLaunchPageRoute } = state.location?.payload || {};
-      const folderId = manualLaunchPageRoute?.split('/')[1];
-      const searchQuery = state.location?.query?.searchQuery;
-      const statusFilter = state.location?.query?.statusFilter;
+      const params = getManualLaunchDetailsFetchParams(state);
+      const { launchId, filterPriorities, filterTags } = params;
 
       if (launchId) {
         dispatch(getManualLaunchAction({ launchId }));
@@ -410,26 +409,16 @@ const routesMap = {
             launchId,
             offset: 0,
             limit: 100,
+            ...(filterPriorities && { filterPriorities }),
+            ...(filterTags && { filterTags }),
           }),
         );
 
-        // Load test case executions with pagination from URL
-        const { offset, limit } = getRouterParams({
-          namespace: MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
-          defaultParams: defaultManualLaunchesQueryParams,
-          state,
-        });
+        const executionsParams = buildGetManualLaunchTestCaseExecutionsParams(params);
 
-        dispatch(
-          getManualLaunchTestCaseExecutionsAction({
-            launchId,
-            ...(folderId && { folderId }),
-            offset,
-            limit,
-            searchQuery,
-            ...(statusFilter && { statusFilter }),
-          }),
-        );
+        if (executionsParams) {
+          dispatch(getManualLaunchTestCaseExecutionsAction(executionsParams));
+        }
       }
     },
   },

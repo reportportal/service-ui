@@ -30,11 +30,15 @@ import { useSearchFilteredFolderDisplay } from 'common/hooks';
 interface UseManualLaunchSearchFilteredFoldersParams {
   searchQuery?: string;
   launchId: string | number;
+  filterPriorities?: string;
+  filterTags?: string;
 }
 
 export const useManualLaunchSearchFilteredFolders = ({
   searchQuery,
   launchId,
+  filterPriorities,
+  filterTags,
 }: UseManualLaunchSearchFilteredFoldersParams) => {
   const dispatch = useDispatch();
   const allFolders = useSelector(manualLaunchFoldersSelector);
@@ -47,8 +51,15 @@ export const useManualLaunchSearchFilteredFolders = ({
       return;
     }
 
-    dispatch(getManualLaunchFilteredFoldersAction({ launchId, searchQuery }));
-  }, [searchQuery, launchId, dispatch]);
+    dispatch(
+      getManualLaunchFilteredFoldersAction({
+        launchId,
+        searchQuery,
+        ...(filterPriorities && { filterPriorities }),
+        ...(filterTags && { filterTags }),
+      }),
+    );
+  }, [searchQuery, launchId, filterPriorities, filterTags, dispatch]);
 
   return useSearchFilteredFolderDisplay<ManualLaunchFolder>({
     searchQuery,

@@ -10,7 +10,7 @@
 .scannerwork
 .cursor
 app/.env
-CLAUDE.md
+*.claude
 
 ## Compiled
 build/

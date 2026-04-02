@@ -28,6 +28,16 @@ import { UserState } from 'controllers/user/types';
 import { NotificationState } from 'controllers/notification/types';
 import { ModalState } from 'controllers/modal/types';
 
+export interface LocationQuery {
+  offset?: string;
+  limit?: string;
+  testCasesSearchParams?: string;
+  searchQuery?: string;
+  filterPriorities?: string;
+  filterTags?: string;
+  statusFilter?: string;
+}
+
 export interface BaseAppState {
   location?: {
     payload?: ProjectDetails & {
@@ -36,8 +46,10 @@ export interface BaseAppState {
       launchId?: string;
       manualLaunchPageRoute?: string;
     };
+    query?: LocationQuery;
     prev?: {
       payload?: ProjectDetails;
+      query?: LocationQuery;
     };
   };
 }

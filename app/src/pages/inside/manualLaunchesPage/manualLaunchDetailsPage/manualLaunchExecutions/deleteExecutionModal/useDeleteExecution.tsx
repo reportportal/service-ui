@@ -15,17 +15,18 @@
  */
 
 import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import { hideModalAction } from 'controllers/modal';
 import { projectKeySelector } from 'controllers/project';
-import { locationSelector } from 'controllers/pages';
 import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import {
+  buildGetManualLaunchTestCaseExecutionsParams,
   getManualLaunchTestCaseExecutionsAction,
   getManualLaunchFoldersAction,
   getManualLaunchAction,
+  getManualLaunchDetailsFetchParams,
 } from 'controllers/manualLaunch';
 
 import type { DeleteExecutionModalData } from './types';
@@ -33,8 +34,8 @@ import type { DeleteExecutionModalData } from './types';
 export const useDeleteExecution = () => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
+  const store = useStore();
   const projectKey = useSelector(projectKeySelector);
-  const location = useSelector(locationSelector);
   const { showSuccessNotification, showErrorNotification } = useNotification();
 
   const deleteExecutions = useCallback(
@@ -60,16 +61,25 @@ export const useDeleteExecution = () => {
           payload.onClearSelection?.();
         }
 
-        const searchQuery = location?.query?.searchQuery;
+        const params = getManualLaunchDetailsFetchParams(store.getState());
+        const executionsParams = buildGetManualLaunchTestCaseExecutionsParams(
+          params,
+          payload.launchId,
+        );
 
         dispatch(hideModalAction());
+        if (executionsParams) {
+          dispatch(getManualLaunchTestCaseExecutionsAction(executionsParams));
+        }
         dispatch(
-          getManualLaunchTestCaseExecutionsAction({
+          getManualLaunchFoldersAction({
             launchId: payload.launchId,
-            ...(searchQuery && { searchQuery }),
+            offset: 0,
+            limit: 100,
+            ...(params.filterPriorities && { filterPriorities: params.filterPriorities }),
+            ...(params.filterTags && { filterTags: params.filterTags }),
           }),
         );
-        dispatch(getManualLaunchFoldersAction({ launchId: payload.launchId }));
         dispatch(getManualLaunchAction({ launchId: payload.launchId }));
       } catch {
         showErrorNotification({
@@ -82,7 +92,7 @@ export const useDeleteExecution = () => {
     [
       projectKey,
       dispatch,
-      location,
+      store,
       showSpinner,
       hideSpinner,
       showSuccessNotification,

@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useIntl } from 'react-intl';
 import { useDrop } from 'react-dnd';
+import { isEmpty } from 'es-toolkit/compat';
 import Parser from 'html-react-parser';
 import {
   BaseIconButton,
@@ -64,6 +65,7 @@ export const ExpandedOptions = ({
   searchExtraFilters,
   searchAllFolders,
   searchFilteredData,
+  hideFolderSidebar = false,
   setAllTestCases,
   renderCreateFolderButton,
   onFolderClick,
@@ -91,6 +93,12 @@ export const ExpandedOptions = ({
     filteredTotalTestCases,
   } = searchFilteredData ?? internalSearchData;
 
+  const hasFolderSidebarFilters = useMemo(
+    () =>
+      Boolean(pageSearchQuery || (searchExtraFilters && !isEmpty(searchExtraFilters))),
+    [pageSearchQuery, searchExtraFilters],
+  );
+
   const isDragAndDropEnabled = !!(onMoveFolder && onDuplicateFolder);
 
   const dropValidation = (
@@ -114,8 +122,10 @@ export const ExpandedOptions = ({
     [isDragAndDropEnabled],
   );
 
-  const folderSearchSource = pageSearchQuery ? searchFilteredFolders : folders;
-  const folderSearchExpandedIds = pageSearchQuery ? searchFilteredExpandedIds : expandedIds;
+  const folderSearchSource = hasFolderSidebarFilters ? searchFilteredFolders : folders;
+  const folderSearchExpandedIds = hasFolderSidebarFilters
+    ? searchFilteredExpandedIds
+    : expandedIds;
 
   const {
     searchQuery,
@@ -132,7 +142,7 @@ export const ExpandedOptions = ({
   } = useFolderSearch({
     folders: folderSearchSource,
     expandedIds: folderSearchExpandedIds,
-    onToggleFolder: pageSearchQuery ? handleToggleSearchFilteredFolder : onToggleFolder,
+    onToggleFolder: hasFolderSidebarFilters ? handleToggleSearchFilteredFolder : onToggleFolder,
   });
 
   const allItemsTitle =
@@ -152,24 +162,26 @@ export const ExpandedOptions = ({
     return total + countFolderTestCases(folder);
   }, 0);
 
-  const totalTestCases = pageSearchQuery ? filteredTotalTestCases : allTestCasesTotal;
+  const totalTestCases = hasFolderSidebarFilters ? filteredTotalTestCases : allTestCasesTotal;
 
   const prevHadFoldersRef = useRef(true);
 
   useEffect(() => {
-    if (pageSearchQuery && !isSearchFilteredLoading) {
+    if (hasFolderSidebarFilters && !isSearchFilteredLoading) {
       prevHadFoldersRef.current = hasSearchFilteredFolders;
     }
 
-    if (!pageSearchQuery) {
+    if (!hasFolderSidebarFilters) {
       prevHadFoldersRef.current = true;
     }
-  }, [pageSearchQuery, isSearchFilteredLoading, hasSearchFilteredFolders]);
+  }, [hasFolderSidebarFilters, isSearchFilteredLoading, hasSearchFilteredFolders]);
 
   const hidePageSearchSidebar =
-    !!pageSearchQuery &&
+    hasFolderSidebarFilters &&
     !hasSearchFilteredFolders &&
     (!isSearchFilteredLoading || !prevHadFoldersRef.current);
+
+  const hideSidebar = hidePageSearchSidebar || hideFolderSidebar;
 
   const handleMoveFolder = useCallback(
     (draggedItem: TreeDragItem, targetId: string | number, position: TreeDropPosition) => {
@@ -210,11 +222,11 @@ export const ExpandedOptions = ({
     ));
 
   const renderFolderTree = () => {
-    if (pageSearchQuery && isSearchFilteredLoading) {
+    if (hasFolderSidebarFilters && isSearchFilteredLoading) {
       return <BubblesLoader />;
     }
 
-    if (pageSearchQuery && !hasSearchFilteredFolders) {
+    if (hasFolderSidebarFilters && !hasSearchFilteredFolders) {
       return <EmptySearchState />;
     }
 
@@ -257,7 +269,7 @@ export const ExpandedOptions = ({
         />
       )}
       <div className={cx('expanded-options')}>
-        {hidePageSearchSidebar || (
+        {hideSidebar || (
           <div className={cx('expanded-options__sidebar')}>
             <div className={cx('sidebar-header')}>
               <button

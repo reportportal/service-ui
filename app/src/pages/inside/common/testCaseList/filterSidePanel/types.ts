@@ -14,5 +14,8 @@
  * limitations under the License.
  */
 
-export { FilterSidePanel } from './filterSidePanel';
-export type { FilterApplyPayload } from './types';
+export interface FilterApplyPayload {
+  priorities: string[];
+  tags: string[];
+  toRunOnly: boolean;
+}

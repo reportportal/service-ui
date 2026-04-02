@@ -41,6 +41,8 @@ export interface GetManualLaunchFoldersParams {
   launchId: string | number;
   offset?: string | number;
   limit?: string | number;
+  filterPriorities?: string;
+  filterTags?: string;
 }
 
 export interface GetManualLaunchTestCaseExecutionsParams {
@@ -50,11 +52,15 @@ export interface GetManualLaunchTestCaseExecutionsParams {
   folderId?: string | number;
   searchQuery?: string;
   statusFilter?: ExecutionStatus;
+  filterPriorities?: string;
+  filterTags?: string;
 }
 
 export interface GetManualLaunchFilteredFoldersParams {
   launchId: string | number;
   searchQuery: string;
+  filterPriorities?: string;
+  filterTags?: string;
 }
 
 export interface GetManualLaunchExecutionParams {

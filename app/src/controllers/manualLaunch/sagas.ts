@@ -21,6 +21,10 @@ import { isEmpty, isNil } from 'es-toolkit/compat';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import {
+  buildFolderFilterParams,
+  buildTestCaseFilterParams,
+} from 'pages/inside/common/testCaseList/filterSidePanel/utils';
 import { fetchSuccessAction, fetchErrorAction } from 'controllers/fetch';
 import { FETCH_START } from 'controllers/fetch/constants';
 import { AppState } from 'types/store';
@@ -190,7 +194,7 @@ interface GetManualLaunchFoldersAction extends Action<typeof GET_MANUAL_LAUNCH_F
 function* getManualLaunchFolders(action: GetManualLaunchFoldersAction): Generator {
   try {
     const projectKey = (yield select(projectKeySelector)) as string;
-    const { launchId, offset, limit } = action.payload;
+    const { launchId, offset, limit, filterPriorities, filterTags } = action.payload;
 
     yield put({
       type: FETCH_START,
@@ -199,7 +203,11 @@ function* getManualLaunchFolders(action: GetManualLaunchFoldersAction): Generato
     });
 
     const typedURLS = URLS as UrlsHelper;
-    const params = { offset, limit };
+    const params: Record<string, string | number> = {
+      offset,
+      limit,
+      ...buildFolderFilterParams(filterPriorities, filterTags),
+    };
     const data = (yield call(
       fetch,
       typedURLS.manualLaunchFolders(projectKey, launchId, params),
@@ -231,7 +239,16 @@ function* getManualLaunchTestCaseExecutions(
 ): Generator {
   try {
     const projectKey = (yield select(projectKeySelector)) as string;
-    const { launchId, offset, limit, folderId, searchQuery, statusFilter } = action.payload;
+    const {
+      launchId,
+      offset,
+      limit,
+      folderId,
+      searchQuery,
+      statusFilter,
+      filterPriorities,
+      filterTags,
+    } = action.payload;
 
     yield put({
       type: FETCH_START,
@@ -240,7 +257,11 @@ function* getManualLaunchTestCaseExecutions(
     });
 
     const typedURLS = URLS as UrlsHelper;
-    const params: Record<string, string | number> = { offset, limit };
+    const params: Record<string, string | number> = {
+      offset,
+      limit,
+      ...buildTestCaseFilterParams(filterPriorities, filterTags),
+    };
 
     if (!isNil(folderId)) {
       params[TEST_FOLDER_ID_FILTER_KEY as string] = folderId;
@@ -337,7 +358,7 @@ function* getManualLaunchFilteredFolders(
   action: GetManualLaunchFilteredFoldersAction,
 ): Generator {
   const projectKey = (yield select(projectKeySelector)) as string;
-  const { launchId, searchQuery } = action.payload;
+  const { launchId, searchQuery, filterPriorities, filterTags } = action.payload;
 
   if (!projectKey || !searchQuery) {
     yield put(setManualLaunchFilteredFoldersAction([]));
@@ -360,6 +381,7 @@ function* getManualLaunchFilteredFolders(
           offset,
           limit,
           [MANUAL_LAUNCH_FOLDER_SEARCH_FILTER_KEY]: searchQuery,
+          ...buildFolderFilterParams(filterPriorities, filterTags),
         }),
       )) as ManualLaunchFoldersResponse;
 
