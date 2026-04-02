@@ -27,11 +27,11 @@ export type UserRolesSnapshot = {
 
 export function resolveUserRolesForProjectRow(
   base: UserRolesSnapshot,
-  rowProjectRole: ProjectRoles,
+  rowProjectRole?: ProjectRoles | '',
 ): UserRolesSnapshot {
   return {
     ...base,
-    projectRole:rowProjectRole ?? base.projectRole,
+    projectRole:rowProjectRole || base.projectRole,
   };
 }
 
