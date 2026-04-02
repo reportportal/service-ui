@@ -71,8 +71,10 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
   const { trackEvent } = useTracking();
   const user = useSelector(userInfoSelector) as UserInfo;
   const ssoUsersOnly = useSelector(ssoUsersOnlySelector);
-  const elementName = ssoUsersOnly ? 'button_assign_user' : 'button_invite_user';
-  const modalName = ssoUsersOnly ? 'assign_user' : 'invite_user';
+  const action = ssoUsersOnly ? 'assign' : 'invite';
+  const elementName = `${action}_menu`;
+  const buttonElementName = `button_${action}_user`;
+  const modalName = `${action}_user`;
 
   const handleDeleteProjectClick = useCallback(() => {
     const data = {
@@ -125,11 +127,7 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
     const onInvite = () => {
       dispatch(fetchFilteredProjectAction());
       trackEvent(
-        PROJECTS_PAGE_EVENTS.projectPageModalSubmitSuccess(
-          elementName,
-          modalName,
-          projectId,
-        ),
+        PROJECTS_PAGE_EVENTS.projectPageModalSubmitSuccess(buttonElementName, modalName, projectId),
       );
     };
 
@@ -145,10 +143,8 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
         ),
       }),
     );
-    trackEvent(
-      PROJECTS_PAGE_EVENTS.projectPageMenuOptionClick(modalName, projectId),
-    );
-  }, [dispatch, elementName, modalName, projectId, projectName, trackEvent]);
+    trackEvent(PROJECTS_PAGE_EVENTS.projectPageMenuOptionClick(elementName, projectId));
+  }, [dispatch, projectId, projectName, trackEvent, elementName, buttonElementName, modalName]);
 
   const links = useMemo(
     (): LinkItem[] => [
@@ -189,7 +185,8 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
           ? formatMessage(COMMON_LOCALE_KEYS.UNASSIGN)
           : formatMessage(COMMON_LOCALE_KEYS.ASSIGN),
         onClick: isAssigned ? handleUnassignClick : handleAssignClick,
-        hasPermission: projectRowPermissions.canAssignUnassignInternalUser ?? canAssignUnassignInternalUser,
+        hasPermission:
+          projectRowPermissions.canAssignUnassignInternalUser ?? canAssignUnassignInternalUser,
       },
       {
         label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
