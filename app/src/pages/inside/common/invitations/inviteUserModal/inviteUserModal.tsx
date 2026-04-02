@@ -104,6 +104,7 @@ const InviteUserFormProject = reduxForm<FormDataMap[Level.PROJECT]>({
   form: getFormName(Level.PROJECT),
   validate: validateProject,
   enableReinitialize: true,
+  shouldValidate: () => true,
 })(InviteUserFormInner as ComponentType<FormInnerProps<FormDataMap[Level.PROJECT]>>);
 
 const InviteUserFormOrganization = reduxForm<FormDataMap[Level.ORGANIZATION]>({

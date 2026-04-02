@@ -29,13 +29,15 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { RenameProjectModal } from '../../modals/renameProjectModal';
 import { DeleteProjectModal } from '../../modals/deleteProjectModal';
 import { messages } from '../../messages';
-import { ActionMenu, ActionItem, LinkItem } from 'components/actionMenu';
+import { ActionItem, ActionMenu, LinkItem } from 'components/actionMenu';
 import { UnassignProjectModal } from 'pages/inside/common/assignments/unassignProjectModal';
 import { AssignProjectModal } from 'pages/inside/common/assignments';
 import { ProjectDetails } from 'pages/organization/constants';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
+import { ssoUsersOnlySelector } from 'controllers/appInfo';
+import { PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectsPageEvents';
 import { InviteUserModal, Level } from 'pages/inside/common/invitations/inviteUserModal';
+import { ORGANIZATION_PAGE_EVENTS } from 'analyticsEvents/organizationsPageEvents';
 
 interface ProjectActionMenuProps {
   details: ProjectDetails;
@@ -54,6 +56,9 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const user = useSelector(userInfoSelector) as UserInfo;
+  const ssoUsersOnly = useSelector(ssoUsersOnlySelector);
+  const elementName = ssoUsersOnly ? 'button_assign_user' : 'button_invite_user';
+  const modalName = ssoUsersOnly ? 'assign_user' : 'invite_user';
 
   const handleDeleteProjectClick = useCallback(() => {
     const data = {
@@ -105,6 +110,13 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
   const handleInviteUserClick = useCallback(() => {
     const onInvite = () => {
       dispatch(fetchFilteredProjectAction());
+      trackEvent(
+        PROJECTS_PAGE_EVENTS.projectPageModalSubmitSuccess(
+          elementName,
+          modalName,
+          projectId,
+        ),
+      );
     };
 
     dispatch(
@@ -119,7 +131,10 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
         ),
       }),
     );
-  }, [dispatch, projectId, projectName]);
+    trackEvent(
+      PROJECTS_PAGE_EVENTS.projectPageMenuOptionClick(modalName, projectId),
+    );
+  }, [dispatch, elementName, modalName, projectId, projectName, trackEvent]);
 
   const links = useMemo(
     (): LinkItem[] => [
