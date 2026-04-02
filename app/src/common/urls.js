@@ -173,13 +173,6 @@ export const URLS = {
   projectPreferences: (projectKey, filterId = '') =>
     removeTrailingSlash(`${urlBase}project/${projectKey}/preference/${filterId}`),
   projectUsers: (projectKey) => `${urlBase}project/${projectKey}/users`,
-  projectUserSearchUser: (projectKey) => (searchTerm) =>
-    `${urlBase}project/${projectKey}/usernames/search${getQueryParams({
-      'page.page': 1,
-      'page.size': 10,
-      'page.sort': 'user,ASC',
-      term: searchTerm,
-    })}`,
   searchUsers: (term) =>
     `${urlBase}users/search${getQueryParams({
       term,
