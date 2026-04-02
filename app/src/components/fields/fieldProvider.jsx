@@ -22,7 +22,7 @@ const InnerComponent = ({
   children,
   dumbOnBlur = false,
   input: { onChange, onBlur, onFocus, value, name },
-  meta: { error, active, touched, asyncValidating },
+  meta: { error, submitError, submitFailed, active, touched, asyncValidating },
   ...rest
 }) =>
   cloneElement(children, {
@@ -36,9 +36,9 @@ const InnerComponent = ({
     onFocus,
     value,
     name,
-    error,
+    error: error || submitError,
     active,
-    touched,
+    touched: touched || (!!submitError && submitFailed),
     asyncValidating,
     ...rest,
   });

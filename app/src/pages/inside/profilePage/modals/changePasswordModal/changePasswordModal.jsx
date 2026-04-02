@@ -25,7 +25,8 @@ import { commonValidators } from 'common/utils/validation';
 import { passwordMinLengthSelector } from 'controllers/appInfo';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { validationLocalization } from 'common/constants/localization/validationLocalization';
-import { reduxForm } from 'redux-form';
+import { ERROR_CODE_LOGIN_BAD_CREDENTIALS } from 'common/constants/apiErrorCodes';
+import { reduxForm, SubmissionError } from 'redux-form';
 import { Input } from 'components/inputs/input';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import classNames from 'classnames/bind';
@@ -99,6 +100,7 @@ export class ChangePasswordModal extends Component {
 
   state = {
     showPassword: false,
+    isSubmitting: false,
   };
 
   onChangeShowPassword = () => {
@@ -114,19 +116,74 @@ export class ChangePasswordModal extends Component {
     };
   };
 
+  isOldPasswordValidationError = (error) => {
+    const status = error?.status || error?.response?.status;
+    const field = error?.field || error?.fieldName;
+    const code = error?.code || error?.errorCode;
+    const message = String(error?.message || '').toLowerCase();
+    const errorsPayload =
+      error?.validationErrors || error?.errors || error?.violations || error?.details;
+
+    const hasOldPasswordInArrayPayload =
+      Array.isArray(errorsPayload) &&
+      errorsPayload.some((item) => {
+        const itemField = item?.field || item?.fieldName || item?.name || item?.path;
+        return itemField === 'oldPassword';
+      });
+
+    const hasOldPasswordInObjectPayload =
+      !!errorsPayload &&
+      !Array.isArray(errorsPayload) &&
+      typeof errorsPayload === 'object' &&
+      Object.prototype.hasOwnProperty.call(errorsPayload, 'oldPassword');
+
+    return (
+      code === 'INVALID_OLD_PASSWORD' ||
+      code === ERROR_CODE_LOGIN_BAD_CREDENTIALS ||
+      field === 'oldPassword' ||
+      message.includes('old password') ||
+      message.includes('current password') ||
+      ((status === 400 || status === '400') &&
+        (hasOldPasswordInArrayPayload || hasOldPasswordInObjectPayload))
+    );
+  };
+
   changePasswordAndCloseModal = (closeModal) => (formData) => {
-    this.props.data.onChangePassword(formData);
-    closeModal();
+    if (this.state.isSubmitting) {
+      return Promise.resolve();
+    }
+
+    this.setState({ isSubmitting: true });
+    return this.props.data
+      .onChangePassword(formData)
+      .then(() => {
+        closeModal();
+      })
+      .catch((error) => {
+        const errorMessage = error?.message || 'Unexpected error';
+        if (this.isOldPasswordValidationError(error)) {
+          throw new SubmissionError({
+            oldPassword: errorMessage,
+          });
+        }
+        throw new SubmissionError({
+          _error: errorMessage,
+        });
+      })
+      .finally(() => {
+        this.setState({ isSubmitting: false });
+      });
   };
 
   render() {
     const { intl, invalid, handleSubmit } = this.props;
+    const { isSubmitting } = this.state;
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.SUBMIT),
       onClick: (closeModal) => {
         handleSubmit(this.changePasswordAndCloseModal(closeModal))();
       },
-      disabled: invalid,
+      disabled: invalid || isSubmitting,
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),

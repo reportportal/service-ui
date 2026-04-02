@@ -158,7 +158,7 @@ export class PersonalInfoBlock extends Component {
   };
 
   changePasswordHandler = (data) => {
-    fetch(URLS.userChangePassword(), {
+    return fetch(URLS.userChangePassword(), {
       method: 'post',
       data: { oldPassword: data.oldPassword, newPassword: data.newPassword },
     })
@@ -173,6 +173,7 @@ export class PersonalInfoBlock extends Component {
           message: error.message,
           type: NOTIFICATION_TYPES.ERROR,
         });
+        throw error;
       });
   };
 
