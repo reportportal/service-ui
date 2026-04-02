@@ -16,9 +16,7 @@
 
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import Parser from 'html-react-parser';
 import { useSelector } from 'react-redux';
-import { Tooltip } from '@reportportal/ui-kit';
 import { NavLink } from 'components/main/navLink';
 import { ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages/constants';
 import { userRolesSelector } from 'controllers/pages';
@@ -45,8 +43,8 @@ export const OrganizationCard = ({ organization }) => {
   const { value: relativeTime, unit } = getRelativeUnits(new Date(lastLaunchDate));
   */
 
+ /* EPMRPP-107936: remove organizations statistics (restore when bringing back API data)
   const cartInfo = [
-    /* EPMRPP-107936: remove organizations statistics (restore when bringing back API data)
     {
       icon: UserIcon,
       className: cx('icon-wrapper'),
@@ -69,8 +67,8 @@ export const OrganizationCard = ({ organization }) => {
         formatMessage(messages.noLaunches)
       ),
     },
-    */
   ];
+  */
 
   return (
     <div className={cx('organization-card')}>
@@ -90,6 +88,7 @@ export const OrganizationCard = ({ organization }) => {
           <MeatballMenu organization={organization} />
         </div>
       </div>
+      {/* EPMRPP-107936: remove organizations statistics (restore when bringing back API data)
       {hasPermission && (
         <div className={cx('cart-info')}>
           {cartInfo.map(({ icon, className, content, bottomElement }) => (
@@ -102,6 +101,7 @@ export const OrganizationCard = ({ organization }) => {
           ))}
         </div>
       )}
+      */}
     </div>
   );
 };
