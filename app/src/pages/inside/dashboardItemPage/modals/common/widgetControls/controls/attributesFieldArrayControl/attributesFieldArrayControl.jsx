@@ -24,6 +24,7 @@ import { ModalField } from 'components/main/modal';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
+import { ConditionalTooltip } from 'components/main/conditionalTooltip';
 import { FIELD_LABEL_WIDTH } from '../constants';
 import styles from './attributesFieldArrayControl.scss';
 
@@ -62,20 +63,22 @@ export class AttributesFieldArrayControl extends Component {
     getURI: PropTypes.func.isRequired,
     attributeKeyFieldViewLabels: PropTypes.array,
     showRemainingLevels: PropTypes.bool,
+    disabled: PropTypes.bool,
+    inputTooltip: PropTypes.string | PropTypes.null,
+    addButtonTooltip: PropTypes.string | PropTypes.null,
   };
 
   static defaultProps = {
     attributeKeyFieldViewLabels: [],
     showRemainingLevels: false,
+    inputTooltip: null,
+    addButtonTooltip: null,
   };
 
   constructor(props) {
     super(props);
 
-    if (props.fields.length) {
-      this.numberRemainingLevels = props.maxAttributesAmount - props.fields.length;
-    } else {
-      this.numberRemainingLevels = props.maxAttributesAmount - 1;
+    if (!props.fields.length) {
       props.fields.push('');
     }
   }
@@ -93,9 +96,13 @@ export class AttributesFieldArrayControl extends Component {
       maxAttributesAmount,
       attributeKeyFieldViewLabels,
       showRemainingLevels,
+      inputTooltip,
+      addButtonTooltip,
+      disabled,
     } = this.props;
     const attributes = this.getAttributes();
     const canAddNewItems = fields.length < maxAttributesAmount;
+    const numberRemainingLevels = maxAttributesAmount - fields.length;
 
     return (
       <Fragment>
@@ -112,49 +119,53 @@ export class AttributesFieldArrayControl extends Component {
               className={cx('attribute-modal-field')}
             >
               <div className={cx({ 'attr-selector': !isFirstItem })}>
-                <FieldProvider name={item} validate={fieldValidator(attributes)}>
-                  <FieldErrorHint hintType="top">
-                    <AsyncAutocomplete
-                      getURI={getURI}
-                      minLength={1}
-                      placeholder={formatMessage(messages.attributeKeyFieldPlaceholder)}
-                      creatable
-                      filterOption={this.filterAttribute}
-                    />
-                  </FieldErrorHint>
-                </FieldProvider>
+                <ConditionalTooltip content={inputTooltip}>
+                  <FieldProvider name={item} validate={fieldValidator(attributes)}>
+                    <FieldErrorHint hintType="top">
+                      <AsyncAutocomplete
+                        disabled={disabled}
+                        getURI={getURI}
+                        minLength={1}
+                        placeholder={formatMessage(messages.attributeKeyFieldPlaceholder)}
+                        creatable
+                        filterOption={this.filterAttribute}
+                      />
+                    </FieldErrorHint>
+                  </FieldProvider>
+                </ConditionalTooltip>
               </div>
               {!isFirstItem && (
-                <span
-                  className={cx('remove-icon')}
-                  onClick={() => {
-                    this.numberRemainingLevels += 1;
-                    return fields.remove(index);
-                  }}
+                <button
+                  className={cx('remove-button', 'button')}
+                  onClick={() => fields.remove(index)}
                 >
                   {Parser(CrossIcon)}
-                </span>
+                </button>
               )}
             </ModalField>
           );
         })}
         {canAddNewItems ? (
           <ModalField label=" " labelWidth={FIELD_LABEL_WIDTH}>
-            <div
-              className={cx('add-level')}
-              onClick={() => {
-                this.numberRemainingLevels -= 1;
-                return fields.push('');
-              }}
+            <ConditionalTooltip
+              content={addButtonTooltip}
+              wrapperClassName={cx('tooltip-wrapper')}
+              tooltipClassName={cx('tooltip')}
             >
-              {formatMessage(messages.addOneMoreLevel)}
-            </div>
+              <button
+                className={cx('add-level', 'button')}
+                disabled={disabled}
+                onClick={() => fields.push('')}
+              >
+                {formatMessage(messages.addOneMoreLevel)}
+              </button>
+            </ConditionalTooltip>
             {showRemainingLevels && (
               <div className={cx('remaining-level')}>
-                {this.numberRemainingLevels === 1
+                {numberRemainingLevels === 1
                   ? formatMessage(messages.levelCanBeAddedMessage)
                   : formatMessage(messages.levelsCanBeAddedMessage, {
-                      amount: this.numberRemainingLevels,
+                      amount: numberRemainingLevels,
                     })}
               </div>
             )}

@@ -66,14 +66,12 @@ export class DeleteItemsModal extends Component {
     };
     const cancelButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: eventsInfo.cancelBtn,
     };
     return (
       <ModalLayout
         title={header}
         okButton={okButton}
         cancelButton={cancelButton}
-        closeIconEventInfo={eventsInfo.closeIcon}
         warningMessage={warning}
       >
         <p className={cx('message')}>{Parser(DOMPurify.sanitize(mainContent))}</p>

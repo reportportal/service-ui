@@ -76,7 +76,11 @@ export const SelectDefectManually = ({
 
   const source = modalState.selectManualChoice;
 
-  const handleManualChange = (value = {}, extraAnalyticsParams = {}) => {
+  const handleManualChange = (
+    value = {},
+    extraAnalyticsParams = {},
+    shouldFocusCommentWhenEmpty = true,
+  ) => {
     const issue = {
       ...(modalState.decisionType === SELECT_DEFECT_MANUALLY ? source.issue : itemData.issue),
       ...value,
@@ -90,13 +94,13 @@ export const SelectDefectManually = ({
         ...extraAnalyticsParams,
       },
     });
-    if (!issue.comment) {
+    if (shouldFocusCommentWhenEmpty && !issue.comment && commentEditor) {
       commentEditor.focus();
     }
   };
 
   const selectDefectTypeManually = (value) => {
-    handleManualChange({ issueType: value });
+    handleManualChange({ issueType: value }, {}, false);
   };
   const handleIgnoreAnalyzerChange = (e) => {
     handleManualChange({ ignoreAnalyzer: e.target.checked });

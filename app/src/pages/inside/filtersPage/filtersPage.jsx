@@ -43,7 +43,7 @@ import {
   hideFilterOnLaunchesAction,
   projectKeySelector,
 } from 'controllers/project';
-import { FILTERS_PAGE, FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { FILTERS_PAGE } from 'components/main/analytics/events';
 import { NoResultsForFilter } from 'pages/inside/common/noResultsForFilter';
 import { NoFiltersBlock } from './noFiltersBlock';
 import { FilterPageToolbar } from './filterPageToolbar';
@@ -111,10 +111,6 @@ export class FiltersPage extends Component {
     showModalAction: PropTypes.func,
     userFilters: PropTypes.arrayOf(PropTypes.object),
     loading: PropTypes.bool,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
     removeUserFilter: PropTypes.func,
     showFilterOnLaunchesAction: PropTypes.func,
     hideFilterOnLaunchesAction: PropTypes.func,
@@ -200,7 +196,6 @@ export class FiltersPage extends Component {
   };
 
   addFilter = () => {
-    this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_ADD_FILTER_BTN);
     this.props.createFilter();
   };
 

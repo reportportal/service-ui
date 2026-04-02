@@ -90,10 +90,6 @@ export const UploadPluginModal = ({ data: { onImport } }) => {
   return (
     <UploadModalLayout
       title={messages.modalTitle}
-      eventsInfo={{
-        closeIcon: PLUGINS_PAGE_EVENTS.CLOSE_ICON_UPLOAD_MODAL,
-        cancelButton: PLUGINS_PAGE_EVENTS.CANCEL_BTN_UPLOAD_MODAL,
-      }}
       importConfirmationWarning={messages.importConfirmationWarning}
       uploadButtonTitle={messages.uploadButton}
       files={files}

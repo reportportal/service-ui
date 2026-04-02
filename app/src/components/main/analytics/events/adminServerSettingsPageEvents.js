@@ -105,40 +105,4 @@ export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
     ...basicClickEventParametersAdminServerSettingsPage,
     element_name: 'submit_password_length',
   },
-  // GA3 events
-  ACTIVATE_GITHUB_SWITCHER: {
-    category: ADMIN_SERVER_SETTINGS_PAGE,
-    action: 'Click on switcher Activate Github authorization on tab Authorization Configuration',
-    label: 'On/off Activate Github authorization on tab Authorization Configuration',
-  },
-  ADD_GITHUB_ORGANIZATION_BTN: {
-    category: ADMIN_SERVER_SETTINGS_PAGE,
-    action: 'Click on Btn Add Github Organization on tab Authorization Configuration',
-    label: 'Arise field to Add Github Organization on tab Authorization Configuration',
-  },
-  SUBMIT_GITHUB_BTN: {
-    category: ADMIN_SERVER_SETTINGS_PAGE,
-    action: 'Click on Btn Submit on GitHub block on tab Authorization Configuration',
-    label: 'Submit changes for GitHub on tab Authorization Configuration',
-  },
-  ACTIVATE_LDAP_SWITCHER: {
-    category: ADMIN_SERVER_SETTINGS_PAGE,
-    action: 'Click on switcher Activate LDAP authorization on tab Authorization Configuration',
-    label: 'On/off Activate LDAP authorization on tab Authorization Configuration',
-  },
-  SUBMIT_LDAP_BTN: {
-    category: ADMIN_SERVER_SETTINGS_PAGE,
-    action: 'Click on Btn Submit on LDAP block on tab Authorization Configuration',
-    label: 'Submit changes for LDAP on tab Authorization Configuration',
-  },
-  MAKE_RP_GREAT_AGAIN_CHECK: {
-    category: ADMIN_SERVER_SETTINGS_PAGE,
-    action: 'Edit checkbox Help make ReportPortal better on tab Analytics',
-    label: 'Check Help make ReportPortal better on tab Analytics',
-  },
-  MAKE_RP_GREAT_AGAIN_UNCHECK: {
-    category: ADMIN_SERVER_SETTINGS_PAGE,
-    action: 'Edit checkbox Help make ReportPortal better on tab Analytics',
-    label: 'Uncheck Help make ReportPortal better on tab Analytics',
-  },
 };

@@ -31,11 +31,7 @@ import {
   enabledPluginSelector,
 } from 'controllers/plugins';
 import { showModalAction } from 'controllers/modal';
-import {
-  PLUGINS_PAGE_EVENTS,
-  getUninstallPluginBtnClickEvent,
-  getIntegrationUnlinkGlobalEvent,
-} from 'components/main/analytics/events';
+import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { BigButton } from 'components/buttons/bigButton';
 import {
@@ -214,11 +210,8 @@ export class InstancesSection extends Component {
     const {
       intl: { formatMessage },
       instanceType,
-      tracking,
       pluginDetails,
     } = this.props;
-    tracking.trackEvent(getUninstallPluginBtnClickEvent(instanceType));
-
     this.props.showModalAction({
       id: 'confirmationModal',
       data: {
@@ -232,8 +225,6 @@ export class InstancesSection extends Component {
         dangerConfirm: true,
         eventsInfo: {
           confirmBtn: PLUGINS_PAGE_EVENTS.clickConfirmUninstallPlugin(instanceType),
-          closeIcon: PLUGINS_PAGE_EVENTS.CLOSE_ICON_UNINSTALL_PLUGIN_MODAL,
-          cancelBtn: PLUGINS_PAGE_EVENTS.CANCEL_BTN_UNINSTALL_PLUGIN_MODAL,
         },
       },
     });
@@ -283,9 +274,6 @@ export class InstancesSection extends Component {
   };
 
   unlinkAndSetupManuallyClickHandler = () => {
-    const { instanceType, tracking } = this.props;
-
-    tracking.trackEvent(getIntegrationUnlinkGlobalEvent(instanceType));
     this.showAddIntegrationModal();
   };
 
@@ -344,7 +332,6 @@ export class InstancesSection extends Component {
               )}
               items={globalIntegrations}
               onItemClick={onItemClick}
-              isGlobal={isGlobal}
               {...(isGlobal
                 ? {}
                 : {

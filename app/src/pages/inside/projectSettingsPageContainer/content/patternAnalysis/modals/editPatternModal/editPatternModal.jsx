@@ -18,7 +18,6 @@ import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
 import { defineMessages, useIntl } from 'react-intl';
-import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { withModal } from 'components/main/modal';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -26,7 +25,6 @@ import { commonValidators } from 'common/utils/validation';
 import { useDispatch } from 'react-redux';
 import { FieldText, Modal } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
-import { useTracking } from 'react-tracking';
 import { FieldElement } from '../../../elements';
 
 const messages = defineMessages({
@@ -43,14 +41,12 @@ const messages = defineMessages({
 const EditPatternModal = ({ data, handleSubmit, initialize, dirty }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
-  const { trackEvent } = useTracking();
 
   useEffect(() => {
     initialize(data.pattern);
   }, []);
 
   const saveAndClose = (pattern) => {
-    trackEvent(SETTINGS_PAGE_EVENTS.SAVE_BTN_RENAME_PATTERN_MODAL);
     data.onSave(pattern);
     dispatch(hideModalAction());
   };

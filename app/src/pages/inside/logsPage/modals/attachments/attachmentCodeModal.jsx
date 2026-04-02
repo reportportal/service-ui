@@ -74,13 +74,11 @@ export class AttachmentCodeModal extends Component {
     } = this.props;
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE),
-      eventInfo: LOG_PAGE_EVENTS.CLOSE_BTN_ATTACHMENT_MODAL,
     };
     const title = fileName || intl.formatMessage(messages.title);
 
     return (
       <ModalLayout
-        closeIconEventInfo={LOG_PAGE_EVENTS.CLOSE_ICON_ATTACHMENT_MODAL}
         title={title}
         cancelButton={cancelButton}
         renderFooterElements={this.renderCustomButton}

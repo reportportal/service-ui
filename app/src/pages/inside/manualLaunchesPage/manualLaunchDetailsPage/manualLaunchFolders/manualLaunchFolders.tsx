@@ -26,6 +26,7 @@ import {
   isLoadingManualLaunchTestCaseExecutionsSelector,
   urlManualLaunchFolderIdSelector,
   expandManualLaunchFoldersToLevelAction,
+  defaultManualLaunchesQueryParams,
 } from 'controllers/manualLaunch';
 import { MANUAL_LAUNCH_DETAILS_PAGE, locationSelector } from 'controllers/pages';
 import { useManualLaunchId, useProjectDetails } from 'hooks/useTypedSelector';
@@ -45,8 +46,13 @@ export const ManualLaunchFolders = () => {
   const isLoadingFolders = useSelector(isLoadingManualLaunchFoldersSelector);
   const isLoadingExecutions = useSelector(isLoadingManualLaunchTestCaseExecutionsSelector);
 
-  const location = useSelector(locationSelector);
-  const searchQuery = location?.query?.searchQuery;
+  const {
+    searchQuery,
+    filterPriorities,
+    filterTags,
+    statusFilter,
+    limit: queryLimit,
+  } = useSelector(locationSelector)?.query ?? {};
 
   const urlFolderId = useSelector(urlManualLaunchFolderIdSelector);
   const urlFolderIdNumber = urlFolderId ? Number(urlFolderId) : null;
@@ -77,6 +83,8 @@ export const ManualLaunchFolders = () => {
   } = useManualLaunchSearchFilteredFolders({
     searchQuery,
     launchId,
+    filterPriorities,
+    filterTags,
   });
 
   const navigateToFolder = useCallback(
@@ -89,10 +97,29 @@ export const ManualLaunchFolders = () => {
           launchId,
           ...(folderId && { manualLaunchPageRoute: `folder/${folderId}` }),
         },
-        meta: { query: { searchQuery } },
+        meta: {
+          query: {
+            ...defaultManualLaunchesQueryParams,
+            ...(searchQuery && { searchQuery }),
+            ...(filterPriorities && { filterPriorities }),
+            ...(filterTags && { filterTags }),
+            ...(statusFilter && { statusFilter }),
+            limit: queryLimit ?? defaultManualLaunchesQueryParams.limit,
+          },
+        },
       });
     },
-    [dispatch, organizationSlug, projectSlug, launchId, searchQuery],
+    [
+      dispatch,
+      organizationSlug,
+      projectSlug,
+      launchId,
+      searchQuery,
+      filterPriorities,
+      filterTags,
+      statusFilter,
+      queryLimit,
+    ],
   );
 
   const handleFolderClick = useCallback(
@@ -125,6 +152,17 @@ export const ManualLaunchFolders = () => {
     ],
   );
 
+  const hasExecutionFilters = !!(filterPriorities || filterTags || statusFilter);
+  const hasFetchedExecutions = pageInfo !== undefined && pageInfo !== null;
+  const executionTotal = pageInfo?.totalElements ?? 0;
+  const hideFolderSidebar =
+    hasExecutionFilters &&
+    hasFetchedExecutions &&
+    !isLoadingExecutions &&
+    !isLoadingFolders &&
+    isEmpty(executions) &&
+    executionTotal === 0;
+
   return (
     <ExpandedOptions
       activeFolderId={urlFolderIdNumber}
@@ -133,6 +171,7 @@ export const ManualLaunchFolders = () => {
       searchQuery={searchQuery}
       searchAllFolders={folders}
       searchFilteredData={searchFilteredData}
+      hideFolderSidebar={hideFolderSidebar}
       setAllTestCases={handleAllExecutionsClick}
       onFolderClick={handleFolderClick}
     >

@@ -142,7 +142,6 @@ export class CopySendDefectModal extends Component {
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: eventsInfo.cancelBtn,
     };
 
     return (
@@ -150,7 +149,6 @@ export class CopySendDefectModal extends Component {
         title={this.getTitle(MESSAGE_TYPES.header)}
         okButton={okButton}
         cancelButton={cancelButton}
-        closeIconEventInfo={eventsInfo.cancelBtn}
       >
         {this.getTitle(MESSAGE_TYPES.content)}
       </ModalLayout>

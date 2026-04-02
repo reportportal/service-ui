@@ -143,7 +143,7 @@ export const actionMessages = defineMessages({
   },
   [UNMARK_LAUNCH_AS_IMPORTANT]: {
     id: 'EventActions.unmarkLaunchAsImportant',
-    defaultMessage: 'Unmark as launch as Important',
+    defaultMessage: 'Unmark launch as Important',
   },
   [EVENT_ACTIONS_IMPORT]: {
     id: 'EventActions.import',

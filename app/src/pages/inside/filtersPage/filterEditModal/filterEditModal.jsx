@@ -139,20 +139,18 @@ export class FilterEditModal extends Component {
     const okButton = {
       text: this.getOkButtonTitle(),
       onClick: (closeModal) => {
-        tracking.trackEvent(this.events.clickOkBtn);
+        this.events.clickOkBtn && tracking.trackEvent(this.events.clickOkBtn);
         handleSubmit(this.saveFilterAndCloseModal(closeModal))();
       },
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: this.events.clickCancelBtn,
     };
     return (
       <ModalLayout
         title={this.getTitle()}
         okButton={okButton}
         cancelButton={cancelButton}
-        closeIconEventInfo={this.events.clickCloseIcon}
         closeConfirmation={this.getCloseConfirmationConfig()}
       >
         <form>
@@ -166,7 +164,6 @@ export class FilterEditModal extends Component {
           <ModalField>
             <FieldProvider name="description">
               <MarkdownEditor
-                eventsInfo={{ onChange: this.events.editDescription }}
                 placeholder={intl.formatMessage(messages.descriptionPlaceholder)}
               />
             </FieldProvider>

@@ -1,4 +1,5 @@
 import { EDITOR, VIEWER } from 'common/constants/projectRoles';
+import type { OrganizationRoles, ProjectRoles, UserRoles } from 'types/roles';
 import { OrganizationUserInfo } from 'controllers/user/types';
 import type {
   AssignOrganizationPayload,
@@ -17,6 +18,22 @@ export function normalizeProjectRole(projectRole: string): string {
   if (projectRole === EDITOR || projectRole === VIEWER) return projectRole;
   const role = (projectRole ?? '').toUpperCase();
   return role === EDITOR || role.includes('EDIT') ? EDITOR : VIEWER;
+}
+
+export type UserRolesSnapshot = {
+  userRole: UserRoles;
+  organizationRole: OrganizationRoles;
+  projectRole: ProjectRoles;
+};
+
+export function resolveUserRolesForProjectRow(
+  base: UserRolesSnapshot,
+  rowProjectRole?: ProjectRoles | '',
+): UserRolesSnapshot {
+  return {
+    ...base,
+    projectRole: rowProjectRole || base.projectRole,
+  };
 }
 
 export function mapProjectsFromResponse(

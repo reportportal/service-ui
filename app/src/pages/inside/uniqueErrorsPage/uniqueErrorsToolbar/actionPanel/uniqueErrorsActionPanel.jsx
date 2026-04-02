@@ -187,7 +187,6 @@ export class UniqueErrorsActionPanel extends Component {
     const { tracking } = this.props;
     this.props.includeInAutoAnalysisAction(this.props.selectedItems, {
       fetchFunc: this.props.unselectAndFetchItems,
-      eventsInfo: { includeBtn: UNIQUE_ERRORS_PAGE_EVENTS.INCLUDE_BTN_INCLUDE_IN_AA_MODAL },
     });
     tracking.trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.INCLUDE_IN_AA_ACTION);
   };

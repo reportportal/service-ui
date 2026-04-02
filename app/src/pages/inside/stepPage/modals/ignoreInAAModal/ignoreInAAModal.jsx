@@ -169,7 +169,6 @@ export class IgnoreInAAModal extends Component {
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: eventsInfo.cancelBtn,
     };
     return (
       <ModalLayout
@@ -177,7 +176,6 @@ export class IgnoreInAAModal extends Component {
         title={this.getModalTitle()}
         okButton={okButton}
         cancelButton={cancelButton}
-        closeIconEventInfo={eventsInfo.closeIcon}
       >
         {this.getModalText()}
       </ModalLayout>

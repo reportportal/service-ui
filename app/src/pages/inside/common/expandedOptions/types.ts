@@ -46,6 +46,7 @@ export interface ExpandedOptionsProps {
   searchExtraFilters?: Record<string, string | number>;
   searchAllFolders?: Folder[];
   searchFilteredData?: SearchFilteredData;
+  hideFolderSidebar?: boolean;
   renderCreateFolderButton?: () => ReactNode;
   onMoveFolder?: (
     draggedItem: TreeDragItem,

@@ -15,3 +15,4 @@
  */
 
 export { FilterSidePanel } from './filterSidePanel';
+export type { FilterApplyPayload } from './types';

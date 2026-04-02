@@ -26,9 +26,6 @@ import {
   getChangeItemStatusEventCreator,
 } from './common/testItemPages/actionEventsCreators';
 import {
-  getEditToInvestigateChangeSearchModeEvent,
-  getEditToInvestigateSelectAllSimilarItemsEvent,
-  getEditToInvestigateSelectSpecificSimilarItemEvent,
   getLinkIssueModalEvents,
   getMakeDecisionModalEvents,
   getPostIssueModalEvents,
@@ -289,80 +286,13 @@ export const LOG_PAGE_EVENTS = {
     place: 'all_logs',
     element_name: 'search',
   },
-  // GA3 events
-  DEFECT_TYPE_TAG: {
-    category: LOG_PAGE,
-    action: 'Click on Defect type tag',
-    label: 'Arise Modal Edit Defect type',
-  },
-  PREVIOUS_LOG_MSG_PAGE: {
-    category: LOG_PAGE,
-    action: 'Click on Btn Previous Log message page',
-    label: 'Transition to previous log message page',
-  },
-  NEXT_LOG_MSG_PAGE: {
-    category: LOG_PAGE,
-    action: 'Click on Btn Next Log message page',
-    label: 'Transition to next log message page',
-  },
   UNLINK_ISSUES_ACTION: getUnlinkIssueActionEvent(LOG_PAGE),
-  // EDIT_DEFECT_MODAL
-  SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL:
-    getEditToInvestigateSelectAllSimilarItemsEvent(LOG_PAGE),
-  SELECT_SPECIFIC_SIMILAR_ITEM_EDIT_DEFECT_MODAL:
-    getEditToInvestigateSelectSpecificSimilarItemEvent(LOG_PAGE),
-  CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL: getEditToInvestigateChangeSearchModeEvent(LOG_PAGE),
   // UNLINK_ISSUE_MODAL
   UNLINK_ISSUE_MODAL_EVENTS: getUnlinkIssueModalEvents(LOG_PAGE),
   // POST_ISSUE_MODAL
   POST_ISSUE_MODAL_EVENTS: getPostIssueModalEvents(LOG_PAGE),
   // LINK_ISSUE_MODAL
   LINK_ISSUE_MODAL_EVENTS: getLinkIssueModalEvents(LOG_PAGE),
-  CLOSE_ICON_ATTACHMENT_MODAL: {
-    category: LOG_PAGE,
-    action: 'Click on icon Close on Modal Attachment',
-    label: 'Close Modal Attachment',
-  },
-  CLOSE_BTN_ATTACHMENT_MODAL: {
-    category: LOG_PAGE,
-    action: 'Click on Btn Close on Modal Attachment',
-    label: 'Close Modal Attachment',
-  },
-  COPY_DEFECT_FROM_BTN: {
-    category: LOG_PAGE,
-    action: 'Click on Btn "Copy defect from #"',
-    label: 'Arise Modal "Receive previous result"',
-  },
-  RECEIVE_BTN_RECEIVE_PREVIOUS_RESULT_MODAL: {
-    category: LOG_PAGE,
-    action: 'Click on button Receive in Modal "Receive previous result"',
-    label: 'Receive defect from previouse result',
-  },
-  CANCEL_BTN_RECEIVE_PREVIOUS_RESULT_MODAL: {
-    category: LOG_PAGE,
-    action: 'Click on Copy defect from #',
-    label: 'Close Modal "Receive previous result"',
-  },
-  SEND_DEFECT_TO_BTN: {
-    category: LOG_PAGE,
-    action: 'Click on Btn "Send defect to #"',
-    label: 'Arise Modal "Send defect to the last item"',
-  },
-  SEND_BTN_SEND_DEFECT_MODAL: {
-    category: LOG_PAGE,
-    action: 'Click on button Send in Modal "Send defect to the last item"',
-    label: 'Send defect to the last item',
-  },
-  CANCEL_BTN_SEND_DEFECT_MODAL: {
-    category: LOG_PAGE,
-    action: 'Click on button Cancel in Modal "Send defect to the last item"',
-    label: 'Close Modal "Send defect to the last item"',
-  },
-  LOAD_MORE_CLICK_STACK_TRACE: {
-    category: LOG_PAGE,
-    action: 'Click on Load more in Stake Trace',
-    label: 'Load more logs in Stak Trace tab on Log view',
-  },
   MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(LOG_PAGE),
   onClickIssueTicketEvent: getClickIssueTicketEvent(LOG_PAGE),
 };

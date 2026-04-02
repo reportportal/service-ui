@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
-import { Button, RefreshIcon } from '@reportportal/ui-kit';
+import { Button, FilterFilledIcon, FilterOutlineIcon, RefreshIcon } from '@reportportal/ui-kit';
 
 import { createClassnames, debounce } from 'common/utils';
 import { SEARCH_DELAY } from 'common/constants/delayTime';
@@ -40,6 +40,9 @@ import {
   isLoadingManualLaunchTestCaseExecutionsSelector,
   isLoadingManualLaunchFilteredFoldersSelector,
   defaultManualLaunchesQueryParams,
+  buildGetManualLaunchTestCaseExecutionsParams,
+  getManualLaunchDetailsFetchParams,
+  MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE,
 } from 'controllers/manualLaunch';
 import {
   showNotification,
@@ -53,6 +56,17 @@ import {
   useManualLaunchById,
   useActiveManualLaunchLoading,
 } from 'hooks/useTypedSelector';
+import {
+  FilterSidePanel,
+  type FilterApplyPayload,
+} from 'pages/inside/common/testCaseList/filterSidePanel';
+import {
+  parsePrioritiesFromQuery,
+  parseTagsFromQuery,
+  toBackendPriority,
+} from 'pages/inside/common/testCaseList/filterSidePanel/utils';
+import { messages as testCaseListMessages } from 'pages/inside/common/testCaseList/messages';
+import { ExecutionStatus } from 'types/testCase';
 
 import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWithBreadcrumbsAndActions';
 import { PageLoader } from '../../testPlansPage/pageLoader';
@@ -69,6 +83,7 @@ const cx = createClassnames(styles);
 export const ManualLaunchDetailsPage = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const store = useStore();
   const { organizationSlug, projectSlug } = useProjectDetails();
   const launchId = useManualLaunchId();
   const launch = useManualLaunchById(launchId);
@@ -79,9 +94,40 @@ export const ManualLaunchDetailsPage = () => {
   const isLoadingExecutions = useSelector(isLoadingManualLaunchTestCaseExecutionsSelector);
   const isLoadingFilteredFolders = useSelector(isLoadingManualLaunchFilteredFoldersSelector);
 
-  const location = useSelector(locationSelector);
-  const appliedSearchQuery = location?.query?.searchQuery || '';
+  const {
+    searchQuery: querySearch,
+    filterPriorities: queryFilterPriorities,
+    filterTags: queryFilterTags,
+    statusFilter: queryStatusFilter,
+  } = useSelector(locationSelector)?.query ?? {};
+
+  const appliedSearchQuery = querySearch || '';
   const [searchValue, setSearchValue] = useState(appliedSearchQuery);
+  const [isFilterSidePanelVisible, setIsFilterSidePanelVisible] = useState(false);
+  const [selectedPriorities, setSelectedPriorities] = useState<string[]>(() =>
+    parsePrioritiesFromQuery(queryFilterPriorities),
+  );
+  const [selectedTags, setSelectedTags] = useState<string[]>(() =>
+    parseTagsFromQuery(queryFilterTags),
+  );
+
+  useEffect(() => {
+    setSelectedPriorities(parsePrioritiesFromQuery(queryFilterPriorities));
+    setSelectedTags(parseTagsFromQuery(queryFilterTags));
+  }, [queryFilterPriorities, queryFilterTags]);
+
+  const selectedToRunOnly =
+    queryStatusFilter === MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE;
+
+  const activeFiltersCount = useMemo(() => {
+    const priorities = parsePrioritiesFromQuery(queryFilterPriorities);
+    const tags = parseTagsFromQuery(queryFilterTags);
+    const toRun = queryStatusFilter === MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE;
+
+    return (isEmpty(priorities) ? 0 : 1) + (isEmpty(tags) ? 0 : 1) + (toRun ? 1 : 0);
+  }, [queryFilterPriorities, queryFilterTags, queryStatusFilter]);
+
+  const hasActiveFilters = activeFiltersCount > 0;
 
   const isSearchLoading =
     searchValue !== appliedSearchQuery ||
@@ -120,17 +166,51 @@ export const ManualLaunchDetailsPage = () => {
   }, [isLoading, launch, launchId, dispatch, organizationSlug, projectSlug, formatMessage]);
 
   const handleRefresh = useCallback(() => {
-    if (launchId) {
-      dispatch(getManualLaunchAction({ launchId }));
-      dispatch(getManualLaunchFoldersAction({ launchId }));
-      dispatch(
-        getManualLaunchTestCaseExecutionsAction({
-          launchId,
-          searchQuery: appliedSearchQuery,
-        }),
-      );
+    const params = getManualLaunchDetailsFetchParams(store.getState());
+
+    if (!params.launchId) {
+      return;
     }
-  }, [dispatch, launchId, appliedSearchQuery]);
+
+    dispatch(getManualLaunchAction({ launchId: params.launchId }));
+    dispatch(
+      getManualLaunchFoldersAction({
+        launchId: params.launchId,
+        offset: 0,
+        limit: 100,
+        ...(params.filterPriorities && { filterPriorities: params.filterPriorities }),
+        ...(params.filterTags && { filterTags: params.filterTags }),
+      }),
+    );
+    const executionsParams = buildGetManualLaunchTestCaseExecutionsParams(params);
+
+    if (executionsParams) {
+      dispatch(getManualLaunchTestCaseExecutionsAction(executionsParams));
+    }
+  }, [dispatch, store]);
+
+  const handleCloseFilterSidePanel = () => {
+    setIsFilterSidePanelVisible(false);
+  };
+
+  const handleFilterIconClick = () => {
+    setIsFilterSidePanelVisible(true);
+  };
+
+  const handleApplyFilters = ({ priorities, tags, toRunOnly }: FilterApplyPayload) => {
+    const filterPriorities = isEmpty(priorities) ? undefined : toBackendPriority(priorities);
+    const filterTags = isEmpty(tags) ? undefined : tags.join(',');
+    const statusFilter = toRunOnly ? ExecutionStatus.TO_RUN : undefined;
+
+    dispatch(
+      updatePagePropertiesAction({
+        filterPriorities,
+        filterTags,
+        statusFilter,
+        ...defaultManualLaunchesQueryParams,
+      }),
+    );
+  };
 
   const breadcrumbDescriptors = [
     {
@@ -145,7 +225,7 @@ export const ManualLaunchDetailsPage = () => {
   ];
 
   const renderActions = () => (
-    <>
+    <div className={cx('manual-launch-details-page__header-actions')}>
       <SearchField
         isLoading={isSearchLoading}
         searchValue={searchValue}
@@ -153,6 +233,21 @@ export const ManualLaunchDetailsPage = () => {
         setSearchValue={setSearchValue}
         onFilterChange={handleFilterChange}
       />
+      <button
+        type="button"
+        className={cx('manual-launch-details-page__filter-icon', { active: hasActiveFilters })}
+        aria-label={formatMessage(testCaseListMessages.filterButton)}
+        onClick={handleFilterIconClick}
+      >
+        {hasActiveFilters ? (
+          <>
+            <FilterFilledIcon />
+            <span className={cx('manual-launch-details-page__filter-count')}>{activeFiltersCount}</span>
+          </>
+        ) : (
+          <FilterOutlineIcon />
+        )}
+      </button>
       <Button
         variant="text"
         data-automation-id="refreshPageButton"
@@ -162,7 +257,7 @@ export const ManualLaunchDetailsPage = () => {
       >
         {formatMessage(commonMessages.refreshPage)}
       </Button>
-    </>
+    </div>
   );
 
   if (isLoading) {
@@ -173,12 +268,17 @@ export const ManualLaunchDetailsPage = () => {
     );
   }
 
+  const hasActiveSearchOrFilters =
+    !!appliedSearchQuery ||
+    !!queryFilterPriorities ||
+    !!queryFilterTags ||
+    queryStatusFilter === MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE;
+
   const renderContent = () => {
     const hasData = !isEmpty(folders) || !isEmpty(executions);
     const isLoadingFoldersView = isLoadingFolders || isLoadingExecutions;
-    const hasActiveSearch = !!appliedSearchQuery;
 
-    if (hasData || isLoadingFoldersView || hasActiveSearch) {
+    if (hasData || isLoadingFoldersView || hasActiveSearchOrFilters) {
       return <ManualLaunchFolders />;
     }
 
@@ -199,6 +299,17 @@ export const ManualLaunchDetailsPage = () => {
             actions={renderActions()}
           />
           <div className={cx('manual-launch-details-page__content')}>{renderContent()}</div>
+          <FilterSidePanel
+            isVisible={isFilterSidePanelVisible}
+            onClose={handleCloseFilterSidePanel}
+            selectedPriorities={selectedPriorities}
+            selectedTags={selectedTags}
+            selectedToRunOnly={selectedToRunOnly}
+            showToRunOnly
+            onPrioritiesChange={setSelectedPriorities}
+            onTagsChange={setSelectedTags}
+            onApply={handleApplyFilters}
+          />
         </div>
       </ScrollWrapper>
     </SettingsLayout>

@@ -14,42 +14,10 @@
  * limitations under the License.
  */
 
-import {
-  getClickDeleteBtnRemoveIntegrationEvent,
-  getClickSaveBtnEditAuthorizationEvent,
-  getPluginChoosePropertiesCheckboxClickEvent,
-  getPluginConfigureClickEvent,
-  getPluginEditAuthorizationClickEvent,
-  getPluginInstanceItemClickEvent,
-  getPluginRemoveIntegrationClickEvent,
-  getSaveIntegrationModalEvents,
-} from 'components/main/analytics/events/common/pluginsPage/actionEventCreators';
 import { getBasicClickEventParameters, normalizeEventParameter } from './common/ga4Utils';
 
 export const PLUGINS_PAGE = 'plugins';
 
-export const getPluginFilterTabClickEvent = (tabKey) => ({
-  category: PLUGINS_PAGE,
-  action: `Click on tab ${tabKey} in Plugins`,
-  label: `Open tab ${tabKey} in Plugins`,
-});
-export const getPluginItemClickEvent = (pluginName) => ({
-  category: PLUGINS_PAGE,
-  action: `Click on ${pluginName} plugin in Plugins`,
-  label: `Open page with info for ${pluginName} plugin in Plugins`,
-});
-export const getDisablePluginItemClickEvent = (pluginName) => ({
-  category: PLUGINS_PAGE,
-  action: `Click on ${pluginName} plugin enabled switcher`,
-  label: `Disable ${pluginName} plugin`,
-});
-export const getUninstallPluginBtnClickEvent = (pluginName) => ({
-  category: PLUGINS_PAGE,
-  action: `Click on Btn uninstall plugin for ${pluginName}`,
-  label: `Arise Modal uninstall plugin for ${pluginName}`,
-});
-
-const PLUGINS_MODAL = 'Modal plugins';
 const BASIC_PLUGINS_EVENT_PARAMS = getBasicClickEventParameters(PLUGINS_PAGE);
 
 export const PLUGINS_PAGE_EVENTS = {
@@ -124,44 +92,4 @@ export const PLUGINS_PAGE_EVENTS = {
     place: 'configuration_view',
     type,
   }),
-  // GA 3
-  CANCEL_BTN_UPLOAD_MODAL: {
-    category: PLUGINS_MODAL,
-    action: 'Click on Btn Cancel on Modal "Upload plugins"',
-    label: 'Close Modal Upload Plugins',
-  },
-  CLOSE_ICON_UPLOAD_MODAL: {
-    category: PLUGINS_MODAL,
-    action: 'Click on Close Icon on Modal "Upload plugin"',
-    label: 'Close Modal Upload plugin',
-  },
-  STORE_TAB: {
-    category: PLUGINS_PAGE,
-    action: 'Click on tab Store in Plugins',
-    label: 'Open tab Store in Plugins',
-  },
-  INSTALLED_TAB: {
-    category: PLUGINS_PAGE,
-    action: 'Click on tab Installed in Plugins',
-    label: 'Open tab Installed in Plugins',
-  },
-
-  CLOSE_ICON_UNINSTALL_PLUGIN_MODAL: {
-    category: PLUGINS_MODAL,
-    action: 'Click on Close Icon on Modal "Uninstall Plugin"',
-    label: 'Close Modal Uninstall Plugin',
-  },
-  CANCEL_BTN_UNINSTALL_PLUGIN_MODAL: {
-    category: PLUGINS_MODAL,
-    action: 'Click on Btn Cancel on Modal "Uninstall Plugin"',
-    label: 'Close Modal Uninstall Plugin',
-  },
-  clickSaveEditAuthorizationBtn: getClickSaveBtnEditAuthorizationEvent(PLUGINS_MODAL),
-  clickDeleteBtnRemoveIntegration: getClickDeleteBtnRemoveIntegrationEvent(PLUGINS_MODAL),
-  pluginInstanceItemClick: getPluginInstanceItemClickEvent(PLUGINS_PAGE),
-  pluginEditAuthorizationClick: getPluginEditAuthorizationClickEvent(PLUGINS_PAGE),
-  pluginRemoveIntegrationClick: getPluginRemoveIntegrationClickEvent(PLUGINS_PAGE),
-  pluginConfigureClick: getPluginConfigureClickEvent(PLUGINS_PAGE),
-  pluginChoosePropertiesCheckboxClick: getPluginChoosePropertiesCheckboxClickEvent(PLUGINS_PAGE),
-  saveIntegrationModalEvents: getSaveIntegrationModalEvents(PLUGINS_PAGE),
 };

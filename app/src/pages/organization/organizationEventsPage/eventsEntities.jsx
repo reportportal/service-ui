@@ -123,7 +123,6 @@ import {
   objectTypesMessages,
   subjectTypesMessages,
 } from 'common/constants/localization/eventsLocalization';
-import { ADMIN_EVENT_MONITORING_PAGE_EVENTS } from 'components/main/analytics/events';
 import { useSelector } from 'react-redux';
 
 const messages = defineMessages({
@@ -403,7 +402,6 @@ export const EventsEntities = (props) => {
         removable: false,
         customProps: {
           withoutDynamic: true,
-          events: ADMIN_EVENT_MONITORING_PAGE_EVENTS.REFINE_FILTERS_PANEL_EVENTS.commonEvents,
         },
       },
       {

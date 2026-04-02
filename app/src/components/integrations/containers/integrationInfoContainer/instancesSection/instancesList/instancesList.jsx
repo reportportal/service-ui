@@ -17,8 +17,6 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import moment from 'moment';
-import { useTracking } from 'react-tracking';
-import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { InstancesListItem } from './instancesListItem';
 import styles from './instancesList.scss';
 
@@ -31,15 +29,8 @@ export const InstancesList = ({
   disabled,
   disabledHint,
   blocked,
-  isGlobal,
 }) => {
-  const { trackEvent } = useTracking();
   const onClick = (item) => {
-    trackEvent(
-      (isGlobal ? PLUGINS_PAGE_EVENTS : SETTINGS_PAGE_EVENTS).pluginInstanceItemClick(
-        item.integrationType.name,
-      ),
-    );
     onItemClick({ ...item, blocked }, title);
   };
 
@@ -71,12 +62,10 @@ InstancesList.propTypes = {
   disabled: PropTypes.bool,
   disabledHint: PropTypes.string,
   blocked: PropTypes.bool,
-  isGlobal: PropTypes.bool,
 };
 
 InstancesList.defaultProps = {
   disabled: false,
   disabledHint: '',
   blocked: false,
-  isGlobal: false,
 };

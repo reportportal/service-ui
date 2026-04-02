@@ -21,7 +21,7 @@ import {
   normalizeEventParameter,
 } from '../common/ga4Utils';
 
-const DASHBOARDS = 'dashboards';
+export const DASHBOARDS = 'dashboards';
 
 export const WIDGETS_EVENTS = {
   clickOnDeleteWidgetButton: (type, dashboardId) => ({

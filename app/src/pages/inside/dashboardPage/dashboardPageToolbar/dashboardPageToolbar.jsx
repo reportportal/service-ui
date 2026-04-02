@@ -26,7 +26,6 @@ import TableViewDashboardIcon from 'common/img/table-inline.svg';
 import { reduxForm } from 'redux-form';
 import { InputSearch } from 'components/inputs/inputSearch';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import styles from './dashboardPageToolbar.scss';
 
@@ -70,7 +69,6 @@ export class DashboardPageToolbar extends Component {
 
   handleFilterChange = (e, filter) => {
     if (validate.searchFilter(filter)) {
-      this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.ENTER_PARAM_FOR_SEARCH);
       this.props.onFilterChange(filter);
     }
   };

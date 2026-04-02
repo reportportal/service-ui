@@ -33,4 +33,8 @@ export const messages = defineMessages({
     id: 'FilterSidePanel.selectTags',
     defaultMessage: 'Search and select tags to filter',
   },
+  showToRunOnly: {
+    id: 'FilterSidePanel.showToRunOnly',
+    defaultMessage: "Show 'To Run' only",
+  },
 });

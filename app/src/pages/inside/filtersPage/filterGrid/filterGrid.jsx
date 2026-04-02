@@ -15,13 +15,11 @@
  */
 
 import React, { Component } from 'react';
-import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { ALIGN_CENTER, Grid } from 'components/main/grid';
-import { FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
   PROJECT_LAUNCHES_PAGE,
   urlOrganizationAndProjectSelector,
@@ -151,7 +149,6 @@ DeleteColumn.defaultProps = {
   userRoles: userRolesSelector(state),
 }))
 @injectIntl
-@track()
 export class FilterGrid extends Component {
   static propTypes = {
     filters: PropTypes.arrayOf(PropTypes.object),
@@ -162,10 +159,6 @@ export class FilterGrid extends Component {
     hideFilterOnLaunchesAction: PropTypes.func,
     onDelete: PropTypes.func,
     loading: PropTypes.bool,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
     userRoles: userRolesType,
     slugs: PropTypes.shape({
       organizationSlug: PropTypes.string.isRequired,
@@ -202,11 +195,9 @@ export class FilterGrid extends Component {
             if (!isActiveFilter) {
               this.props.showFilterOnLaunchesAction(filter);
             }
-            this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_FILTER_NAME);
           },
           onEdit: (filter) => {
             this.props.onEdit(filter);
-            this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_EDIT_ICON);
           },
           organizationSlug: this.props.slugs.organizationSlug,
           projectSlug: this.props.slugs.projectSlug,
@@ -240,7 +231,6 @@ export class FilterGrid extends Component {
             isFilterDisplayed
               ? this.props.hideFilterOnLaunchesAction(filter)
               : this.props.showFilterOnLaunchesAction(filter);
-            this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_DISPLAY_ON_LAUNCH_SWITCHER);
           },
           readOnly: !editable,
         },
@@ -258,7 +248,6 @@ export class FilterGrid extends Component {
         customProps: {
           onDelete: (filter) => {
             this.props.onDelete(filter);
-            this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_DELETE_FILTER_ICON);
           },
         },
       });
