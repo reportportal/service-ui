@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import { NavLink } from 'components/main/navLink';
 import { ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages/constants';
 import { userRolesSelector } from 'controllers/pages';
 import { assignedOrganizationsSelector } from 'controllers/user';
-import { AbsRelTime } from 'components/main/absRelTime';
 import { MANAGER } from 'common/constants/projectRoles';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { useTracking } from 'react-tracking';
@@ -56,6 +55,34 @@ export const OrganizationsTable = ({
   const data = useMemo(
     () =>
       organizationsList.map((organization) => {
+        const { id, name, type, slug } = organization;
+        const hasPermission =
+          userRole === ADMINISTRATOR || assignedOrganizations[slug]?.organizationRole === MANAGER;
+
+        return {
+          id,
+          metaData: organization,
+          [SortingFields.NAME]: {
+            content: name,
+            component: (
+              <div className={cx('name-column')}>
+                <NavLink
+                  to={{
+                    type: ORGANIZATION_PROJECTS_PAGE,
+                    payload: { organizationSlug: slug },
+                  }}
+                  className={cx('organization-link')}
+                  title={name}
+                >
+                  {name}
+                </NavLink>
+                <IconsBlock hasPermission={hasPermission} organizationType={type} />
+              </div>
+            ),
+          },
+        };
+
+        /* EPMRPP-107936: remove organizations statistics (restore when bringing back API data)
         const { id, name, relationships, type, slug } = organization;
         const lastLaunch = relationships.launches.meta.last_occurred_at;
         const hasPermission =
@@ -110,6 +137,7 @@ export const OrganizationsTable = ({
               }
             : {}),
         };
+        */
       }),
     [organizationsList, userRole, assignedOrganizations],
   );
@@ -120,6 +148,7 @@ export const OrganizationsTable = ({
   };
 
   const fixedColumns = [
+    /* EPMRPP-107936: remove organizations statistics (restore when bringing back API data)
     {
       key: SortingFields.PROJECTS,
       header: formatMessage(messages.projects),
@@ -144,6 +173,7 @@ export const OrganizationsTable = ({
       width: 156,
       align: 'left',
     },
+    */
   ];
 
   const renderRowActions = (data) => {
@@ -160,7 +190,8 @@ export const OrganizationsTable = ({
 
   const getSortableColumns = () => {
     if (canWorkWithOrganizationsSorting({ userRole })) {
-      return Object.values(SortingFields);
+      // EPMRPP-107936: remove organizations statistics (restore when bringing back API data) — was Object.values(SortingFields);
+      return [SortingFields.NAME];
     }
 
     return [];

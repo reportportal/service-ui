@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,9 +45,11 @@ const OrganizationsSortingWrapped: FC<OrganizationsSortingWrappedProps> = ({
   const sortingOptions = [
     { value: SortingFields.CREATED_AT, label: formatMessage(messages.creationDate) },
     { value: SortingFields.NAME, label: formatMessage(messages.name) },
+    /* EPMRPP-107936: remove organizations statistics (restore when bringing back API data)
     { value: SortingFields.USERS, label: formatMessage(messages.users) },
     { value: SortingFields.PROJECTS, label: formatMessage(messages.projects) },
     { value: SortingFields.LAST_LAUNCH_DATE, label: formatMessage(messages.lastLaunchDate) },
+    */
   ];
 
   const handleChangeSorting = ({ value }: { value: string }) => {
