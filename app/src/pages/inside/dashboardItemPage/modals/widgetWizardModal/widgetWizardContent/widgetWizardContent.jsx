@@ -158,15 +158,20 @@ export class WidgetWizardContent extends Component {
       });
     }
 
-    tracking.trackEvent(eventsInfo.nextStep);
+    if (eventsInfo?.nextStep) {
+      tracking.trackEvent(eventsInfo.nextStep);
+    }
     if (this.state.step === 1 && formValues.contentParameters.contentFields) {
-      tracking.trackEvent(eventsInfo.selectCriteria(formValues.contentParameters.contentFields));
+      const ev = eventsInfo?.selectCriteria?.(formValues.contentParameters.contentFields);
+      if (ev) {
+        tracking.trackEvent(ev);
+      }
     }
 
     const widgetMode =
       formValues.contentParameters &&
       getWidgetModeValuesString(formValues.contentParameters.widgetOptions);
-    if (this.state.step === 1 && widgetMode) {
+    if (this.state.step === 1 && widgetMode && eventsInfo?.selectToggleButtons) {
       tracking.trackEvent(eventsInfo.selectToggleButtons(widgetMode));
     }
 
@@ -176,7 +181,10 @@ export class WidgetWizardContent extends Component {
   onClickPrevStep = () => {
     const offsetStep = this.getOffsetStep();
     this.setState({ step: this.state.step - offsetStep });
-    this.props.tracking.trackEvent(this.props.eventsInfo.prevStep);
+    const prevStep = this.props.eventsInfo?.prevStep;
+    if (prevStep) {
+      this.props.tracking.trackEvent(prevStep);
+    }
   };
 
   onAddWidget = (formData) => {

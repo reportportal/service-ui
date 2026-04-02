@@ -18,7 +18,7 @@ const PROJECT_TEAM = 'project_team';
 
 export const PROJECT_TEAM_PAGE_VIEWS = {
   PROJECT_TEAM: {
-    action: 'pageview',
+    action: 'page_view',
     page: PROJECT_TEAM,
     place: PROJECT_TEAM,
   },

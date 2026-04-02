@@ -15,12 +15,10 @@
  */
 
 import classNames from 'classnames/bind';
-import track from 'react-tracking';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Manager, Popper, Reference } from 'react-popper';
 import { PROJECT_PAGE } from 'controllers/pages/constants';
-import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { NavLink } from 'components/main/navLink';
 import { withTooltip } from 'components/main/tooltips/tooltip';
@@ -58,16 +56,11 @@ const CurrentProjectNameWithTooltip = withTooltip({
   },
 })(CurrentProjectBlock);
 
-@track()
 export class ProjectSelector extends Component {
   static propTypes = {
     projects: PropTypes.arrayOf(PropTypes.string),
     projectName: PropTypes.string.isRequired,
     mobileOnly: PropTypes.bool,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
   };
   static defaultProps = {
     projects: [],
@@ -88,12 +81,7 @@ export class ProjectSelector extends Component {
     document.removeEventListener('click', this.handleOutsideClick);
   }
 
-  onClickProjectName = () => {
-    this.props.tracking.trackEvent(SIDEBAR_EVENTS.CLICK_PROJECT_NAME_LINK);
-  };
-
   toggleShowList = () => {
-    this.props.tracking.trackEvent(SIDEBAR_EVENTS.CLICK_PROJECT_DROPDOWN);
     this.setState({ opened: !this.state.opened });
   };
 
@@ -169,7 +157,6 @@ export class ProjectSelector extends Component {
                           key={projectSlug}
                           className={cx('project-list-item')}
                           activeClassName={cx('active')}
-                          onClick={this.onClickProjectName}
                         >
                           <span title={projectName}>{projectName}</span>
                         </NavLink>

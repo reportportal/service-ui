@@ -37,7 +37,6 @@ import {
   ENVIRONMENTS,
   TEST_DATA,
 } from 'common/constants/settingsTabs';
-import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Integrations } from 'pages/inside/projectSettingsPageContainer/content/integrations';
 import { DefectTypes } from 'pages/inside/projectSettingsPageContainer/content/defectTypes';
 import { DemoDataTab } from 'pages/inside/projectSettingsPageContainer/content/demoDataContent';
@@ -84,7 +83,6 @@ export const ProjectSettingsPageContainer = () => {
     extensions,
     createTabLink,
     setHeaderNodes,
-    getEventInfo: (title) => SETTINGS_PAGE_EVENTS.extensionTabClick(title),
     ExtensionLoaderComponent: ExtensionLoader,
   });
 
@@ -94,14 +92,12 @@ export const ProjectSettingsPageContainer = () => {
         name: formatMessage(messages.general),
         link: createTabLink(GENERAL),
         component: <GeneralTab />,
-        eventInfo: SETTINGS_PAGE_EVENTS.GENERAL_TAB,
         mobileDisabled: true,
       },
       [INTEGRATIONS]: {
         name: formatMessage(messages.integrations),
         link: createTabLink(INTEGRATIONS),
         component: <Integrations />,
-        eventInfo: SETTINGS_PAGE_EVENTS.INTEGRATIONS_TAB,
       },
       [NOTIFICATIONS]: {
         name: formatMessage(messages.notifications),
@@ -109,7 +105,6 @@ export const ProjectSettingsPageContainer = () => {
         component: (
           <Notifications setHeaderTitleNode={(node) => setHeaderNodes({ titleNode: node })} />
         ),
-        eventInfo: SETTINGS_PAGE_EVENTS.NOTIFICATIONS_TAB,
         mobileDisabled: true,
       },
       [DEFECT]: {
@@ -118,7 +113,6 @@ export const ProjectSettingsPageContainer = () => {
         component: (
           <DefectTypes setHeaderTitleNode={(node) => setHeaderNodes({ titleNode: node })} />
         ),
-        eventInfo: SETTINGS_PAGE_EVENTS.DEFECT_TYPE_TAB,
         mobileDisabled: true,
       },
       [LOG_TYPES]: {
@@ -135,7 +129,6 @@ export const ProjectSettingsPageContainer = () => {
         component: (
           <AnalyzerContainer setHeaderNodes={(node) => setHeaderNodes({ children: node })} />
         ),
-        eventInfo: SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_TAB,
         mobileDisabled: true,
       },
       [PATTERN_ANALYSIS]: {
@@ -144,14 +137,12 @@ export const ProjectSettingsPageContainer = () => {
         component: (
           <PatternAnalysis setHeaderTitleNode={(node) => setHeaderNodes({ titleNode: node })} />
         ),
-        eventInfo: SETTINGS_PAGE_EVENTS.PATTERN_ANALYSIS_TAB,
         mobileDisabled: true,
       },
       [DEMO_DATA]: {
         name: formatMessage(messages.demoData),
         link: createTabLink(DEMO_DATA),
         component: <DemoDataTab />,
-        eventInfo: SETTINGS_PAGE_EVENTS.DEMO_DATA_TAB,
         mobileDisabled: true,
       },
       ...(isTmsEnabled && {

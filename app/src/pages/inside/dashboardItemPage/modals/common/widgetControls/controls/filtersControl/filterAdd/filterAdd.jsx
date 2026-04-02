@@ -17,7 +17,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import track from 'react-tracking';
 import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
@@ -58,7 +57,6 @@ const localMessages = defineMessages({
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
 })
-@track()
 @connect((state) => ({
   name: selector(state, FILTER_NAME_KEY),
 }))
@@ -66,17 +64,12 @@ const localMessages = defineMessages({
 export class FilterAdd extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
     filter: PropTypes.object.isRequired,
     onSave: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     valid: PropTypes.bool.isRequired,
     name: PropTypes.string,
-    eventsInfo: PropTypes.object,
     projectKey: PropTypes.string.isRequired,
   };
 
@@ -85,22 +78,17 @@ export class FilterAdd extends Component {
     onSave: () => {},
     onCancel: () => {},
     onChange: () => {},
-    eventsInfo: {},
   };
 
   getCustomBlock = () => {
     const {
       intl: { formatMessage },
-      tracking,
     } = this.props;
 
     return (
       <div className={cx('filter-add-custom-block')}>
         <span className={cx('custom-block-text')}>{formatMessage(localMessages.filterName)}</span>
-        <FieldProvider
-          name={FILTER_NAME_KEY}
-          onChange={() => tracking.trackEvent(this.props.eventsInfo.editFilterName)}
-        >
+        <FieldProvider name={FILTER_NAME_KEY}>
           <FieldErrorHint>
             <Input
               placeholder={formatMessage(localMessages.placeholderFilterName)}
@@ -120,21 +108,15 @@ export class FilterAdd extends Component {
   };
 
   handlerFilterCancel = () => {
-    this.props.tracking.trackEvent(this.props.eventsInfo.cancelAddNewFilter);
     this.props.onCancel();
   };
 
   handlerFilterSubmit = () => {
-    const { eventsInfo, filter, tracking, onSave } = this.props;
-    tracking.trackEvent(eventsInfo.addNewFilter);
-    tracking.trackEvent(
-      eventsInfo.sortingSelectParameters(filter.orders[0].sortingColumn, 'Tab add new filter'),
-    );
-    onSave();
+    this.props.onSave();
   };
 
   render() {
-    const { filter, valid, eventsInfo } = this.props;
+    const { filter, valid } = this.props;
 
     return (
       <AddEditFilter
@@ -145,7 +127,6 @@ export class FilterAdd extends Component {
         isValid={valid}
         blockTitle={messages.addTitle}
         customBlock={this.getCustomBlock()}
-        eventsInfo={eventsInfo}
       />
     );
   }

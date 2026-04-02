@@ -19,7 +19,6 @@ import {
   getLinkIssueActionEvent,
   getUnlinkIssueActionEvent,
   getPostIssueActionEvent,
-  getChangeFilterEvent,
   getCommonActionEvents,
   getClickRefreshButtonEvent,
   getClickDefectTooltipEvents,
@@ -27,12 +26,8 @@ import {
   getClickOnTestItemsTabsEvents,
   getClickBreadcrumbsEvents,
   getRefineParametersEventCreator,
-  getRefineFiltersPanelEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
-  getEditToInvestigateSelectAllSimilarItemsEvent,
-  getEditToInvestigateSelectSpecificSimilarItemEvent,
-  getEditToInvestigateChangeSearchModeEvent,
   getUnlinkIssueModalEvents,
   getPostIssueModalEvents,
   getLinkIssueModalEvents,
@@ -107,23 +102,9 @@ export const HISTORY_PAGE_EVENTS = {
   PROCEED_VALID_ITEMS,
   REFINE_FILTERS_PANEL_EVENTS: {
     commonEvents: {
-      getRefineFiltersPanelEvents: getRefineFiltersPanelEvents(HISTORY_PAGE),
       getRefineParametersEvent: getRefineParametersEventCreator(HISTORY_PAGE),
     },
-    getChangeFilterEvent: getChangeFilterEvent(HISTORY_PAGE),
   },
-  // GA3 events
-  CLICK_CLOSE_ICON_FROM_SELECTION: {
-    category: HISTORY_PAGE,
-    action: 'Click on icon "close" on selected item',
-    label: 'Remove item from the selected items',
-  },
-  // EDIT_DEFECT_MODAL
-  SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL:
-    getEditToInvestigateSelectAllSimilarItemsEvent(HISTORY_PAGE),
-  SELECT_SPECIFIC_SIMILAR_ITEM_EDIT_DEFECT_MODAL:
-    getEditToInvestigateSelectSpecificSimilarItemEvent(HISTORY_PAGE),
-  CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL: getEditToInvestigateChangeSearchModeEvent(HISTORY_PAGE),
   // UNLINK_ISSUE_MODAL
   UNLINK_ISSUE_MODAL_EVENTS: getUnlinkIssueModalEvents(HISTORY_PAGE),
   // POST_ISSUE_MODAL

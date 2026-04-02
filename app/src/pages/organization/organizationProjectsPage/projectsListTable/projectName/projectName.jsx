@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import Link from 'redux-first-router-link';
 import { useSelector } from 'react-redux';
-import { ADMIN_PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { SCREEN_XS_MAX_MEDIA } from 'common/constants/screenSizeVariables';
 import { userAssignedSelector, PROJECT_PAGE } from 'controllers/pages';
 import styles from './projectName.scss';
@@ -29,16 +27,10 @@ const cx = classNames.bind(styles);
 export const ProjectName = ({ project, disableAnalytics = false }) => {
   const { projectSlug, organizationSlug, projectName, projectKey } = project;
   const { hasPermission } = useSelector(userAssignedSelector(projectSlug, organizationSlug));
-  const { trackEvent } = useTracking();
 
   const onProjectClick = (event) => {
     if (!hasPermission && window.matchMedia(SCREEN_XS_MAX_MEDIA).matches) {
       event.preventDefault();
-      return;
-    }
-
-    if (!disableAnalytics) {
-      trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.PROJECT_NAME);
     }
   };
 

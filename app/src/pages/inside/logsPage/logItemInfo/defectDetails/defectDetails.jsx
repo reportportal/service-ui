@@ -98,20 +98,14 @@ const messages = defineMessages({
 
 const getPostIssueEventsInfo = (place) => ({
   postBtn: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.getClickPostIssueButtonEventParameters(place),
-  cancelBtn: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
-  closeIcon: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
 });
 const getLinkIssueEventsInfo = (place) => ({
   loadBtn: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickLoadButtonEventParameters(place),
-  cancelBtn: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
   addNewIssue:
     LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickAddNewIssueButtonEventParameters(place),
-  closeIcon: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
 });
 const getUnlinkIssueEventsInfo = (place) => ({
   unlinkBtn: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(place),
-  cancelBtn: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
-  closeIcon: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
 });
 
 export const DefectDetails = ({ fetchFunc, debugMode, logItem, parentLaunch }) => {
@@ -203,9 +197,6 @@ export const DefectDetails = ({ fetchFunc, debugMode, logItem, parentLaunch }) =
       editDefectsAction([logItem], {
         fetchFunc: onDefectEdited,
         eventsInfo: {
-          changeSearchMode: LOG_PAGE_EVENTS.CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL,
-          selectAllSimilarItems: LOG_PAGE_EVENTS.SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL,
-          selectSpecificSimilarItem: LOG_PAGE_EVENTS.SELECT_SPECIFIC_SIMILAR_ITEM_EDIT_DEFECT_MODAL,
           editDefectsEvents: LOG_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS,
           unlinkIssueEvents: getUnlinkIssueEventsInfo(MAKE_DECISION),
           postIssueEvents: getPostIssueEventsInfo(MAKE_DECISION),

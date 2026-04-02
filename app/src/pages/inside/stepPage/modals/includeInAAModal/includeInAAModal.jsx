@@ -157,18 +157,13 @@ export class IncludeInAAModal extends Component {
   };
 
   render() {
-    const {
-      intl,
-      data: { eventsInfo = {} },
-    } = this.props;
+    const { intl } = this.props;
     const okButton = {
       text: intl.formatMessage(messages.includeButton),
       onClick: this.onInclude,
-      eventInfo: eventsInfo.includeBtn,
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: eventsInfo.cancelBtn,
     };
     return (
       <ModalLayout
@@ -176,7 +171,6 @@ export class IncludeInAAModal extends Component {
         title={this.getModalTitle()}
         okButton={okButton}
         cancelButton={cancelButton}
-        closeIconEventInfo={eventsInfo.closeIcon}
       >
         {this.getModalText()}
       </ModalLayout>

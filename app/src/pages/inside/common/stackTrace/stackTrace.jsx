@@ -162,7 +162,6 @@ export class StackTrace extends Component {
   fetchItems = () => this.props.fetchLogPageStackTrace(this.props.logItem);
 
   loadMore = () => {
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.LOAD_MORE_CLICK_STACK_TRACE);
     this.fetchItems();
   };
 

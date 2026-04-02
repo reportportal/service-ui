@@ -60,22 +60,16 @@ import { StepGrid } from './stepGrid';
 
 const getUnlinkIssueEventsInfo = (place) => ({
   unlinkBtn: STEP_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(place),
-  cancelBtn: STEP_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
-  closeIcon: STEP_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
 });
 
 const getPostIssueEventsInfo = (place) => ({
   postBtn: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.getClickPostIssueButtonEventParameters(place),
-  cancelBtn: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
-  closeIcon: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
 });
 
 const getLinkIssueEventsInfo = (place) => ({
   loadBtn: STEP_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickLoadButtonEventParameters(place),
-  cancelBtn: STEP_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
   addNewIssue:
     STEP_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickAddNewIssueButtonEventParameters(place),
-  closeIcon: STEP_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
 });
 
 @connect(
@@ -272,12 +266,10 @@ export class StepPage extends Component {
   };
 
   unselectAllItems = () => {
-    this.props.tracking.trackEvent(STEP_PAGE_EVENTS.CLOSE_ICON_FOR_ALL_SELECTIONS);
     this.props.unselectAllSteps();
   };
 
   unselectItem = (item) => {
-    this.props.tracking.trackEvent(STEP_PAGE_EVENTS.CLOSE_ICON_SELECTED_ITEM);
     this.props.toggleStepSelection(item);
   };
 
@@ -301,7 +293,6 @@ export class StepPage extends Component {
         },
       },
     ];
-    this.props.tracking.trackEvent(STEP_PAGE_EVENTS.UNLINK_SINGLE_ISSUE);
     this.props.unlinkIssueAction(items, {
       fetchFunc: this.unselectAndFetchItems,
       eventsInfo: getUnlinkIssueEventsInfo(),
@@ -325,8 +316,6 @@ export class StepPage extends Component {
     this.props.ignoreInAutoAnalysisAction(this.props.selectedItems, {
       fetchFunc: this.unselectAndFetchItems,
       eventsInfo: {
-        closeIcon: STEP_PAGE_EVENTS.CLOSE_ICON_IGNORE_ITEMS_IN_AA_MODAL,
-        cancelBtn: STEP_PAGE_EVENTS.CANCEL_BTN_IGNORE_ITEMS_IN_AA_MODAL,
         ignoreBtn: STEP_PAGE_EVENTS.IGNORE_BTN_IGNORE_ITEMS_IN_AA_MODAL,
       },
     });
@@ -336,11 +325,7 @@ export class StepPage extends Component {
     this.props.tracking.trackEvent(STEP_PAGE_EVENTS.INCLUDE_IN_AA_ACTION);
     this.props.includeInAutoAnalysisAction(this.props.selectedItems, {
       fetchFunc: this.unselectAndFetchItems,
-      eventsInfo: {
-        closeIcon: STEP_PAGE_EVENTS.CLOSE_ICON_INCLUDE_ITEMS_IN_AA_MODAL,
-        cancelBtn: STEP_PAGE_EVENTS.CANCEL_BTN_INCLUDE_IN_AA_MODAL,
-        includeBtn: STEP_PAGE_EVENTS.INCLUDE_BTN_INCLUDE_IN_AA_MODAL,
-      },
+      eventsInfo: {},
     });
   };
 

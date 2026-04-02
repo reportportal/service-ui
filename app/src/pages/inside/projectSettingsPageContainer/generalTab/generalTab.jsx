@@ -43,7 +43,6 @@ import {
   projectKeySelector,
   projectNameSelector,
 } from 'controllers/project';
-import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { userRolesType } from 'common/constants/projectRoles';
 import { userRolesSelector } from 'controllers/pages';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -343,15 +342,6 @@ export class GeneralTab extends Component {
     return newOptions;
   };
 
-  createTrackingFunction =
-    (createEvent, formatValue = this.formatRetention) =>
-    (value) => {
-      const label = formatValue(value).label;
-      this.props.tracking.trackEvent(createEvent(label));
-    };
-
-  formatInterruptJobTimes = this.createValueFormatter(this.interruptJobTime);
-
   render() {
     const { intl, userRoles, isLoading, projectName } = this.props;
     const { processingData } = this.state;
@@ -373,10 +363,6 @@ export class GeneralTab extends Component {
           <FieldElement
             name="interruptJobTime"
             label={intl.formatMessage(messages.interruptedJob)}
-            onChange={this.createTrackingFunction(
-              SETTINGS_PAGE_EVENTS.inactivityTimeoutGeneral,
-              this.formatInterruptJobTimes,
-            )}
             description={intl.formatMessage(messages.interruptedJobDescription)}
             disabled={isDisabled}
           >
@@ -385,10 +371,6 @@ export class GeneralTab extends Component {
           <FieldElement
             name="keepLaunches"
             label={intl.formatMessage(settingsMessages.keepLaunches)}
-            onChange={this.createTrackingFunction(
-              SETTINGS_PAGE_EVENTS.keepLaunchesGeneral,
-              this.formatRetention('keepLaunches'),
-            )}
             description={intl.formatMessage(settingsMessages.keepLaunchesDescription)}
             disabled={isDisabled}
           >
@@ -401,10 +383,6 @@ export class GeneralTab extends Component {
           <FieldElement
             name="keepLogs"
             label={intl.formatMessage(settingsMessages.keepLogs)}
-            onChange={this.createTrackingFunction(
-              SETTINGS_PAGE_EVENTS.keepLogsGeneral,
-              this.formatRetention('keepLogs'),
-            )}
             description={intl.formatMessage(settingsMessages.keepLogsDescription)}
             disabled={isDisabled}
           >
@@ -413,10 +391,6 @@ export class GeneralTab extends Component {
           <FieldElement
             name="keepScreenshots"
             label={intl.formatMessage(settingsMessages.keepScreenshots)}
-            onChange={this.createTrackingFunction(
-              SETTINGS_PAGE_EVENTS.keepScreenshotsGeneral,
-              this.formatRetention('keepScreenshots'),
-            )}
             description={intl.formatMessage(settingsMessages.keepScreenshotsDescription)}
             disabled={isDisabled}
           >

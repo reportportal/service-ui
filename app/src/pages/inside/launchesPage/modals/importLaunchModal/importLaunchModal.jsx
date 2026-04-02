@@ -113,10 +113,6 @@ const ImportLaunchModal = ({ data: { onImport }, activeProjectKey, importPlugins
   return (
     <UploadModalLayout
       title={messages.modalTitle}
-      eventsInfo={{
-        closeIcon: LAUNCHES_MODAL_EVENTS.CLOSE_ICON_IMPORT_MODAL,
-        cancelButton: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_IMPORT_MODAL,
-      }}
       importConfirmationWarning={messages.importConfirmationWarning}
       uploadButtonTitle={messages.importButton}
       files={files}

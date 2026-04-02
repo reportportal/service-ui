@@ -248,7 +248,6 @@ export class LaunchMergeModal extends Component {
       endTime,
       syncErrors,
       fields,
-      tracking,
     } = this.props;
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.MERGE),
@@ -258,7 +257,6 @@ export class LaunchMergeModal extends Component {
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_MERGE_MODAL,
     };
     return (
       <ModalLayout
@@ -266,7 +264,6 @@ export class LaunchMergeModal extends Component {
         className={cx('launch-merge-modal')}
         okButton={okButton}
         cancelButton={cancelButton}
-        closeIconEventInfo={LAUNCHES_MODAL_EVENTS.CLOSE_ICON_MERGE_MODAL}
         closeConfirmation={this.getCloseConfirmationConfig()}
       >
         <form>
@@ -280,22 +277,12 @@ export class LaunchMergeModal extends Component {
           <ModalField>
             <div className={cx('merge-type-section')}>
               <div className={cx('merge-type-options')}>
-                <FieldProvider
-                  name="mergeType"
-                  onChange={() =>
-                    tracking.trackEvent(LAUNCHES_MODAL_EVENTS.LINEAR_MERGE_BTN_MERGE_MODAL)
-                  }
-                >
+                <FieldProvider name="mergeType">
                   <InputRadio ownValue={MERGE_TYPE_BASIC}>
                     {intl.formatMessage(messages.mergeTypeLinear)}
                   </InputRadio>
                 </FieldProvider>
-                <FieldProvider
-                  name="mergeType"
-                  onChange={() =>
-                    tracking.trackEvent(LAUNCHES_MODAL_EVENTS.DEEP_MERGE_BTN_MERGE_MODAL)
-                  }
-                >
+                <FieldProvider name="mergeType">
                   <InputRadio ownValue={MERGE_TYPE_DEEP}>
                     {intl.formatMessage(messages.mergeTypeDeep)}
                   </InputRadio>

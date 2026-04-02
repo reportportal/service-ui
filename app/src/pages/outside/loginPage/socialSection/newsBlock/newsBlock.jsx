@@ -16,7 +16,6 @@
 
 import classNames from 'classnames/bind';
 import React, { Component } from 'react';
-import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
@@ -25,14 +24,9 @@ import { PostBlock } from './postBlock';
 
 const cx = classNames.bind(styles);
 
-@track()
 export class NewsBlock extends Component {
   static propTypes = {
     tweets: PropTypes.array,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
   };
 
   static defaultProps = {
@@ -69,7 +63,7 @@ export class NewsBlock extends Component {
           <div className={cx('twitter-news')}>
             <ScrollWrapper autoHeight autoHeightMax={this.state.twitterBlockHeight}>
               {this.props.tweets.map((tweet, index) => (
-                <PostBlock key={tweet.id || index} tweetData={tweet} tracking={this.props.tracking} />
+                <PostBlock key={tweet.id || index} tweetData={tweet} />
               ))}
             </ScrollWrapper>
           </div>

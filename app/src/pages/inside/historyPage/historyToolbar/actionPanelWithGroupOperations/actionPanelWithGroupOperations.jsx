@@ -52,23 +52,17 @@ import { HistoryActionPanel } from '../actionPanel';
 const getUnlinkIssueEventsInfo = (place) => ({
   unlinkBtn:
     HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(place),
-  cancelBtn: HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
-  closeIcon: HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
 });
 
 const getPostIssueEventsInfo = (place) => ({
   postBtn:
     HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.getClickPostIssueButtonEventParameters(place),
-  cancelBtn: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
-  closeIcon: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
 });
 
 const getLinkIssueEventsInfo = (place) => ({
   loadBtn: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickLoadButtonEventParameters(place),
-  cancelBtn: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
   addNewIssue:
     HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickAddNewIssueButtonEventParameters(place),
-  closeIcon: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
 });
 
 @connect(

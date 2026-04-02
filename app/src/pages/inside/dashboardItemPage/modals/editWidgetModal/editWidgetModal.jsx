@@ -29,7 +29,6 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets';
-import { getWidgetModeValuesString } from 'components/main/analytics/events/common/widgetPages/utils';
 import { projectKeySelector } from 'controllers/project';
 import { WIDGETS_EVENTS } from 'components/main/analytics/events/ga4Events/dashboardsPageEvents';
 import { activeDashboardIdSelector } from 'controllers/pages';
@@ -92,9 +91,7 @@ export class EditWidgetModal extends Component {
     data: PropTypes.shape({
       onConfirm: PropTypes.func,
       widget: PropTypes.object,
-      eventsInfo: PropTypes.object,
     }),
-    eventsInfo: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -108,7 +105,6 @@ export class EditWidgetModal extends Component {
       widget: {},
     },
     widgetSettings: {},
-    eventsInfo: {},
   };
 
   constructor(props) {
@@ -202,19 +198,6 @@ export class EditWidgetModal extends Component {
         this.props.hideScreenLockAction();
         this.props.showNotification({ message: err.message, type: NOTIFICATION_TYPES.ERROR });
       });
-
-    if (widgetSettings.contentParameters) {
-      this.props.tracking.trackEvent(
-        this.props.data.eventsInfo.selectCriteria(widgetSettings.contentParameters.contentFields),
-      );
-    }
-
-    const widgetMode =
-      widgetSettings.contentParameters?.widgetOptions &&
-      getWidgetModeValuesString(widgetSettings.contentParameters.widgetOptions);
-    if (widgetMode) {
-      this.props.tracking.trackEvent(this.props.data.eventsInfo.selectToggleButtons(widgetMode));
-    }
   };
 
   getCloseConfirmationConfig = () => {
@@ -255,7 +238,7 @@ export class EditWidgetModal extends Component {
   render() {
     const {
       intl: { formatMessage },
-      data: { widget, eventsInfo },
+      data: { widget },
       projectKey,
       widgetSettings,
       valid,
@@ -269,12 +252,10 @@ export class EditWidgetModal extends Component {
       text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
       onClick: this.onSave,
       disabled: this.state.formAppearance.isMainControlsLocked || !valid,
-      eventInfo: eventsInfo.okBtn,
     };
     const cancelButton = {
       text: buttonsMessages.cancel,
       disabled: this.state.formAppearance.isMainControlsLocked,
-      eventInfo: eventsInfo.cancelBtn,
     };
 
     return (
@@ -284,7 +265,6 @@ export class EditWidgetModal extends Component {
         cancelButton={cancelButton}
         className={cx('edit-widget-modal')}
         closeConfirmation={this.getCloseConfirmationConfig()}
-        closeIconEventInfo={eventsInfo.closeIcon}
       >
         <div className={cx('edit-widget-modal-content')}>
           <EditWidgetInfoSection
@@ -301,7 +281,6 @@ export class EditWidgetModal extends Component {
             formAppearance={this.state.formAppearance}
             handleFormAppearanceChange={this.handleFormAppearanceChange}
             buttonsMessages={buttonsMessages}
-            eventsInfo={eventsInfo}
           />
         </div>
       </ModalLayout>

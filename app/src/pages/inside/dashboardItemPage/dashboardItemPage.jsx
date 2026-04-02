@@ -53,7 +53,6 @@ import { hideScreenLockAction } from 'controllers/screenLock';
 import { GhostButton } from 'components/buttons/ghostButton';
 import Link from 'redux-first-router-link';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
-import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { DashboardPageHeader } from 'pages/inside/common/dashboardPageHeader';
 import AddWidgetIcon from 'common/img/add-widget-inline.svg';
 import ExportIcon from 'common/img/export-inline.svg';
@@ -203,8 +202,6 @@ export class DashboardItemPage extends Component {
         }),
         warning,
         eventsInfo: {
-          closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_DELETE_DASHBOARD_MODAL,
-          cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_DELETE_DASHBOARD_MODAL,
           deleteBtn: DASHBOARD_EVENTS.clickOnButtonDeleteInModalDeleteDashboard(id),
         },
       },
@@ -246,7 +243,6 @@ export class DashboardItemPage extends Component {
             query,
           },
         },
-        eventInfo: DASHBOARD_PAGE_EVENTS.BREADCRUMB_ALL_DASHBOARD,
       },
       {
         title: this.getDashboardName(),
@@ -336,27 +332,6 @@ export class DashboardItemPage extends Component {
       id: modalId,
       data: {
         onConfirm: this.addWidget,
-        eventsInfo: {
-          closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_ADD_WIDGET_MODAL,
-          cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_ADD_WIDGET_MODAL,
-          changeName: DASHBOARD_PAGE_EVENTS.WIDGET_NAME_ADD_WIDGET_MODAL,
-          chooseWidgetType: DASHBOARD_PAGE_EVENTS.CHOOSE_WIDGET_TYPE_ADD_WIDGET_MODAL,
-          nextStep: DASHBOARD_PAGE_EVENTS.NEXT_STEP_ADD_WIDGET_MODAL,
-          prevStep: DASHBOARD_PAGE_EVENTS.PREVIOUS_STEP_ADD_WIDGET_MODAL,
-          changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_WIDGET_DESCRIPTION_ADD_WIDGET_MODAL,
-          editFilterIcon: DASHBOARD_PAGE_EVENTS.EDIT_FILTER_ADD_WIDGET_MODAL,
-          enterSearchParams: DASHBOARD_PAGE_EVENTS.ENTER_SEARCH_PARAMS_ADD_WIDGET_MODAL,
-          chooseFilter: DASHBOARD_PAGE_EVENTS.CHOOSE_FILTER_ADD_WIDGET_MODAL,
-          addFilter: DASHBOARD_PAGE_EVENTS.ADD_FILTER_BTN_ADD_WIDGET_MODAL,
-          cancelAddNewFilter: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_ADD_NEW_FILTER_ADD_WIDGET_MODAL,
-          addNewFilter: DASHBOARD_PAGE_EVENTS.ADD_BTN_ADD_NEW_FILTER_ADD_WIDGET_MODAL,
-          sortingSelectParameters: DASHBOARD_PAGE_EVENTS.SELECT_SORTING_FILTER_ADD_WIDGET_MODAL,
-          editFilterName: DASHBOARD_PAGE_EVENTS.EDIT_FILTER_NAME_ADD_WIDGET_MODAL,
-          selectParamsForFilter: DASHBOARD_PAGE_EVENTS.SELECT_PARAMS_FILTER_ADD_WIDGET_MODAL,
-          clickOnZoomWidgetArea: DASHBOARD_PAGE_EVENTS.CLICK_ZOOM_ADD_WIDGET_AREA,
-          selectCriteria: DASHBOARD_PAGE_EVENTS.SELECT_CRITERIA_ADD_NEW_WIDGET_MODAL,
-          selectToggleButtons: DASHBOARD_PAGE_EVENTS.SELECT_TOGGLE_BUTTONS_ADD_NEW_WIDGET_MODAL,
-        },
       },
     });
   };

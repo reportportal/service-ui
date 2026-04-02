@@ -15,13 +15,11 @@
  */
 
 import React, { Component } from 'react';
-import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import { SpringSystem } from 'rebound';
 import { Scrollbars } from 'react-custom-scrollbars-2';
-import { FOOTER_EVENTS } from 'components/main/analytics/events';
 import { forceCheck } from 'react-lazyload';
 import { scrollEventObserver, BACK_TO_TOP_EVENT } from 'common/observers/scrollObserver';
 import BackToTopIcon from './img/back-to-top-inline.svg';
@@ -30,7 +28,6 @@ import styles from './scrollWrapper.scss';
 const cx = classNames.bind(styles);
 const SCROLL_HEIGHT = 800;
 
-@track()
 export class ScrollWrapper extends Component {
   static propTypes = {
     initialScrollRight: PropTypes.bool,
@@ -54,10 +51,6 @@ export class ScrollWrapper extends Component {
     onReset: PropTypes.func,
     className: PropTypes.string,
     classNameBackToTop: PropTypes.string,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
     backToTopEventEnabled: PropTypes.bool,
     scrollContainerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.any })]),
   };
@@ -130,7 +123,7 @@ export class ScrollWrapper extends Component {
   updateScrollContainerRef = () => {
     if (this.props.scrollContainerRef && this.scrollbars) {
       const viewElement = this.scrollbars.view;
-      
+
       if (viewElement) {
         if (typeof this.props.scrollContainerRef === 'function') {
           this.props.scrollContainerRef(viewElement);
@@ -154,7 +147,6 @@ export class ScrollWrapper extends Component {
   };
 
   scrollTop = () => {
-    this.props.tracking.trackEvent(FOOTER_EVENTS.BACK_TO_TOP_CLICK);
     this.stopScroll = false;
     const scrollTop = this.scrollbars.getScrollTop();
     this.spring.setCurrentValue(scrollTop).setAtRest();

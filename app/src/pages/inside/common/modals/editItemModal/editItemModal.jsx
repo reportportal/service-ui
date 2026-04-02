@@ -194,14 +194,7 @@ export class EditItemModal extends Component {
       : this.testItemAttributeValueURLCreator;
   };
 
-  updateItemAndCloseModal = (closeModal) => (formData, dispatch, props) => {
-    const {
-      data: { eventsInfo },
-      tracking,
-    } = this.props;
-    if (props.data.item.description !== formData.description) {
-      tracking.trackEvent(eventsInfo.EDIT_ITEM_DESCRIPTION);
-    }
+  updateItemAndCloseModal = (closeModal) => (formData) => {
     this.props.dirty && this.updateItem(formData);
     closeModal();
   };
@@ -277,7 +270,6 @@ export class EditItemModal extends Component {
     };
     const cancelButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: eventsInfo.CANCEL_BTN_EDIT_ITEM_MODAL,
     };
 
     const editable = canEditLaunch(userRoles);
@@ -288,7 +280,6 @@ export class EditItemModal extends Component {
         okButton={editable ? okButton : undefined}
         cancelButton={cancelButton}
         closeConfirmation={this.getCloseConfirmationConfig()}
-        closeIconEventInfo={eventsInfo.CLOSE_ICON_EDIT_ITEM_MODAL}
         warningMessage={
           (this.props.invalid && formatMessage(COMMON_LOCALE_KEYS.changesWarning)) ||
           (type === LAUNCH_ITEM_TYPES.launch && editable && formatMessage(messages.launchWarning))

@@ -25,7 +25,6 @@ import { DEBUG, DEFAULT } from 'common/constants/common';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { LAUNCHES_MODAL_EVENTS } from 'components/main/analytics/events';
 import { projectKeySelector } from 'controllers/project';
 import { messages } from './translations';
 
@@ -131,7 +130,6 @@ export class MoveToDebugModal extends Component {
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: LAUNCHES_MODAL_EVENTS.CLICK_CANCEL_BTN_MOVE_MODAL,
     };
     let text;
     if (data.ids.length > 1) {
@@ -152,7 +150,6 @@ export class MoveToDebugModal extends Component {
         }
         okButton={okButton}
         cancelButton={cancelButton}
-        closeIconEventInfo={LAUNCHES_MODAL_EVENTS.CLOSE_ICON_MOVE_MODAL}
       >
         <p>{text}</p>
       </ModalLayout>

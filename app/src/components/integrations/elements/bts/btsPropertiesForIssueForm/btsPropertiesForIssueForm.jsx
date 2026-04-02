@@ -40,7 +40,6 @@ import {
   mapFieldsToValues,
   mergeFields,
 } from 'components/fields/dynamicFieldsSection/utils';
-import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { getDefaultOptionValueKey } from 'pages/inside/stepPage/modals/postIssueModal/utils';
 import { ISSUE_TYPE_FIELD_KEY } from '../constants';
 import styles from './btsPropertiesForIssueForm.scss';
@@ -161,12 +160,6 @@ export class BtsPropertiesForIssueForm extends Component {
   }
 
   onChangeFieldCheckbox = (fieldId, fieldName) => {
-    this.props.tracking.trackEvent(
-      (this.props.isGlobal
-        ? PLUGINS_PAGE_EVENTS
-        : SETTINGS_PAGE_EVENTS
-      ).pluginChoosePropertiesCheckboxClick(this.props.pluginName, fieldName),
-    );
     const fieldsIds = {
       ...this.state.checkedFieldsIds,
       [fieldId]: !this.state.checkedFieldsIds[fieldId],

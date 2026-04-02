@@ -23,7 +23,7 @@ import classNames from 'classnames/bind';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { Button } from '@reportportal/ui-kit';
 import { isIntegrationSupportsMultipleInstances } from 'components/integrations/utils';
-import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { removeNoneValues } from 'components/fields/dynamicFieldsSection/utils';
 import styles from './integrationForm.scss';
 
@@ -82,11 +82,6 @@ export class IntegrationForm extends Component {
     if (this.props.dirty && !this.state.disabled) {
       this.props.reset();
     }
-    this.props.tracking.trackEvent(
-      (this.props.isGlobal ? PLUGINS_PAGE_EVENTS : SETTINGS_PAGE_EVENTS).pluginConfigureClick(
-        this.props.data.integrationType.name,
-      ),
-    );
     this.setState({ disabled: !this.state.disabled });
   };
 

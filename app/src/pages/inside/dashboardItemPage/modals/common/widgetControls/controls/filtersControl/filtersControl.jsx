@@ -16,7 +16,6 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import track from 'react-tracking';
 import { injectIntl, defineMessages } from 'react-intl';
 import { change } from 'redux-form';
 import PropTypes from 'prop-types';
@@ -89,7 +88,6 @@ const messages = defineMessages({
   },
 });
 
-@track()
 @connect(
   (state) => ({
     projectKey: projectKeySelector(state),
@@ -125,11 +123,6 @@ export class FiltersControl extends Component {
     updateFilterSuccessAction: PropTypes.func,
     onFormAppearanceChange: PropTypes.func.isRequired,
     notify: PropTypes.func.isRequired,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
-    eventsInfo: PropTypes.object,
     userRoles: userRolesType,
   };
 
@@ -147,7 +140,6 @@ export class FiltersControl extends Component {
     updateFilterSuccessAction: () => {},
     onFormAppearanceChange: () => {},
     notify: () => {},
-    eventsInfo: {},
     userRoles: {},
   };
 
@@ -174,7 +166,6 @@ export class FiltersControl extends Component {
   }
 
   onFilterAdd = (event) => {
-    this.props.tracking.trackEvent(this.props.eventsInfo.addFilter);
     this.handleFormAppearanceMode(event, FORM_APPEARANCE_MODE_ADD);
   };
 
@@ -182,7 +173,6 @@ export class FiltersControl extends Component {
     const {
       formAppearance: { mode: formAppearanceMode, filter: formAppearanceFilter },
       projectKey,
-      eventsInfo,
     } = this.props;
 
     const getComponent = () => {
@@ -194,7 +184,6 @@ export class FiltersControl extends Component {
               onChange={this.handleFilterChange}
               onCancel={this.clearFormAppearance}
               onSave={this.handleFilterUpdate}
-              eventsInfo={eventsInfo}
             />
           );
         }
@@ -208,7 +197,6 @@ export class FiltersControl extends Component {
               onChange={this.handleFilterChange}
               onCancel={this.clearFormAppearance}
               onSave={this.handleFilterInsert}
-              eventsInfo={eventsInfo}
             />
           );
         }
@@ -291,12 +279,10 @@ export class FiltersControl extends Component {
   };
 
   handleSearchValueChange = debounce((value) => {
-    this.props.tracking.trackEvent(this.props.eventsInfo.enterSearchParams);
     return this.fetchFilter({ page: 1, searchValue: value });
   }, 300);
 
   editLockedActiveFilter = () => {
-    this.props.tracking.trackEvent(this.props.eventsInfo.editFilterIcon);
     this.clearFormAppearance();
   };
 
@@ -379,7 +365,6 @@ export class FiltersControl extends Component {
   };
 
   handleFilterListChange = (event) => {
-    this.props.tracking.trackEvent(this.props.eventsInfo.chooseFilter);
     return this.handleActiveFilterChange(event.target.value);
   };
 

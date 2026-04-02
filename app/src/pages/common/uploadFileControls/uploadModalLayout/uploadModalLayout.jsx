@@ -35,7 +35,6 @@ export const UploadModalLayout = ({
   files,
   onSave,
   onCancel,
-  eventsInfo,
   importConfirmationWarning,
   uploadButtonTitle,
 }) => {
@@ -87,11 +86,9 @@ export const UploadModalLayout = ({
       okButton={getOkButtonConfig()}
       cancelButton={{
         text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-        eventInfo: eventsInfo.cancelBtn,
         disabled: uploadFinished,
       }}
       closeConfirmation={getCloseConfirmationConfig()}
-      closeIconEventInfo={eventsInfo.closeIcon}
     >
       {children}
     </ModalLayout>
@@ -105,14 +102,9 @@ UploadModalLayout.propTypes = {
   children: PropTypes.node,
   onSave: PropTypes.func,
   onCancel: PropTypes.func,
-  eventsInfo: PropTypes.shape({
-    cancelBtn: PropTypes.object,
-    closeIcon: PropTypes.object,
-  }),
 };
 UploadModalLayout.defaultProps = {
   children: null,
   onSave: () => {},
   onCancel: () => {},
-  eventsInfo: { cancelBtn: {}, closeIcon: {} },
 };
