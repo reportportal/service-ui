@@ -22,7 +22,17 @@
   margin-right: 25px;
 }
 
-.remove-icon {
+.button {
+  padding: 0;
+  border: none;
+  background: transparent;
+
+  &:disabled {
+    opacity: 0.4;
+  }
+}
+
+.remove-button {
   position: absolute;
   top: 7px;
   right: 3px;
@@ -53,4 +63,12 @@
   line-height: 28px;
   font-size: 13px;
   font-family: $FONT-REGULAR;
+}
+
+.tooltip-wrapper {
+  width: fit-content;
+}
+
+.tooltip {
+  max-width: 300px;
 }

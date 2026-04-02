@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
-import { FieldArray } from 'redux-form';
+import { FieldArray, change, untouch } from 'redux-form';
 import {
   validate,
   commonValidators,
@@ -32,6 +32,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { DEFAULT_LAUNCHES_LIMIT } from 'controllers/testItem';
 import { projectKeySelector } from 'controllers/project';
+import { WIDGET_WIZARD_FORM } from '../constants';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import {
   CheckboxControl,
@@ -47,6 +48,7 @@ const cx = classNames.bind(styles);
 
 const MAX_ATTRIBUTES_AMOUNT = 10;
 const DEFAULT_PASSING_RATE = '100';
+const DEFAULT_ATTRIBUTE_KEY = '';
 
 const messages = defineMessages({
   passingRateFieldLabel: {
@@ -70,6 +72,14 @@ const messages = defineMessages({
     id: 'ComponentHealthCheckControls.excludeSkipped',
     defaultMessage: 'Exclude Skipped tests from statistics',
   },
+  addAttributeKeyButton: {
+    id: 'ComponentHealthCheckControls.addAttributeKeyButton',
+    defaultMessage: 'New levels cannot be added until filter is selected',
+  },
+  attributeKeyInput: {
+    id: 'ComponentHealthCheckControls.attributeKeyInput',
+    defaultMessage: 'Please select a filter first',
+  },
 });
 
 const passingRateValidator = (formatMessage) =>
@@ -87,9 +97,15 @@ const attributeKeyValidator = (formatMessage) => (attributes) =>
     commonValidators.uniqueAttributeKey(attributes),
   ]);
 
-@connect((state) => ({
-  projectKey: projectKeySelector(state),
-}))
+@connect(
+  (state) => ({
+    projectKey: projectKeySelector(state),
+  }),
+  {
+    changeField: (field, value) => change(WIDGET_WIZARD_FORM, field, value, null),
+    untouchField: (field) => untouch(WIDGET_WIZARD_FORM, field),
+  },
+)
 @injectIntl
 export class ComponentHealthCheckControls extends Component {
   static propTypes = {
@@ -100,6 +116,8 @@ export class ComponentHealthCheckControls extends Component {
     onFormAppearanceChange: PropTypes.func.isRequired,
     eventsInfo: PropTypes.object,
     projectKey: PropTypes.string.isRequired,
+    changeField: PropTypes.func.isRequired,
+    untouchField: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -117,12 +135,24 @@ export class ComponentHealthCheckControls extends Component {
         widgetOptions: {
           minPassingRate: DEFAULT_PASSING_RATE,
           latest: MODES_VALUES[CHART_MODES.ALL_LAUNCHES],
-          attributeKeys: [],
+          attributeKeys: [DEFAULT_ATTRIBUTE_KEY],
           excludeSkipped: false,
         },
       },
     });
   }
+
+  componentDidUpdate = (prevProps) => {
+    const prevFilterId = prevProps?.widgetSettings?.filters?.[0]?.value;
+    const currentFilterId = this.props.widgetSettings?.filters?.[0]?.value;
+
+    if (prevProps && prevFilterId !== currentFilterId) {
+      this.props.changeField('contentParameters.widgetOptions.attributeKeys', [
+        DEFAULT_ATTRIBUTE_KEY,
+      ]);
+      this.props.untouchField('contentParameters.widgetOptions.attributeKeys[0]');
+    }
+  };
 
   normalizeValue = (value) => value && `${value}`.replace(/\D+/g, '');
 
@@ -132,6 +162,7 @@ export class ComponentHealthCheckControls extends Component {
   renderAttributesFieldArray = ({ fields, fieldValidator }) => {
     const {
       projectKey,
+      intl: { formatMessage },
       widgetSettings: { contentParameters, filters },
     } = this.props;
     const filterId = filters?.length && filters[0].value;
@@ -144,6 +175,9 @@ export class ComponentHealthCheckControls extends Component {
         fieldValidator={fieldValidator}
         maxAttributesAmount={MAX_ATTRIBUTES_AMOUNT}
         showRemainingLevels
+        disabled={!filterId}
+        inputTooltip={filterId ? null : formatMessage(messages.attributeKeyInput)}
+        addButtonTooltip={filterId ? null : formatMessage(messages.addAttributeKeyButton)}
         getURI={URLS.itemAttributeKeysAllSearch(
           projectKey,
           filterId,

@@ -20,7 +20,7 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
-import { FieldArray } from 'redux-form';
+import { FieldArray, change, untouch } from 'redux-form';
 import {
   validate,
   commonValidators,
@@ -44,13 +44,17 @@ import {
   TogglerControl,
   SortingControl,
 } from './controls';
+import { WIDGET_WIZARD_FORM } from '../constants';
 import { ITEMS_INPUT_WIDTH, WIDGET_OPTIONS } from './constants';
 import styles from './widgetControls.scss';
+import { ConditionalTooltip } from 'components/main/conditionalTooltip';
 
 const cx = classNames.bind(styles);
 
 const MAX_ATTRIBUTES_AMOUNT = 10;
 const DEFAULT_PASSING_RATE = '100';
+const DEFAULT_ATTRIBUTE_KEY = '';
+const DEFAULT_CUSTOM_COLUMN = '';
 
 const messages = defineMessages({
   passingRateFieldLabel: {
@@ -86,6 +90,14 @@ const messages = defineMessages({
     id: 'ComponentHealthCheckTableViewControls.excludeSkipped',
     defaultMessage: 'Exclude Skipped tests from statistics',
   },
+  addAttributeKeyButton: {
+    id: 'ComponentHealthCheckTableViewControls.addAttributeKeyButton',
+    defaultMessage: 'New levels cannot be added until filter is selected',
+  },
+  attributeKeyInput: {
+    id: 'ComponentHealthCheckTableViewControls.attributeKeyInput',
+    defaultMessage: 'Please select a filter first',
+  },
 });
 
 const passingRateValidator = (formatMessage) =>
@@ -103,9 +115,15 @@ const attributeKeyValidator = (formatMessage) => (attributes) =>
     commonValidators.uniqueAttributeKey(attributes),
   ]);
 
-@connect((state) => ({
-  projectKey: projectKeySelector(state),
-}))
+@connect(
+  (state) => ({
+    projectKey: projectKeySelector(state),
+  }),
+  {
+    changeField: (field, value) => change(WIDGET_WIZARD_FORM, field, value, null),
+    untouchField: (field) => untouch(WIDGET_WIZARD_FORM, field),
+  },
+)
 @track()
 @injectIntl
 export class ComponentHealthCheckTableViewControls extends Component {
@@ -120,6 +138,8 @@ export class ComponentHealthCheckTableViewControls extends Component {
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
     }).isRequired,
+    changeField: PropTypes.func.isRequired,
+    untouchField: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -137,8 +157,8 @@ export class ComponentHealthCheckTableViewControls extends Component {
         widgetOptions: {
           minPassingRate: DEFAULT_PASSING_RATE,
           latest: MODES_VALUES[CHART_MODES.ALL_LAUNCHES],
-          attributeKeys: [],
-          customColumn: '',
+          attributeKeys: [DEFAULT_ATTRIBUTE_KEY],
+          customColumn: DEFAULT_CUSTOM_COLUMN,
           sort: {
             asc: false,
             sortingColumn: WIDGET_OPTIONS.SORT.PASSING_RATE,
@@ -184,7 +204,12 @@ export class ComponentHealthCheckTableViewControls extends Component {
   };
 
   renderAttributesFieldArray = ({ fields, fieldValidator }) => {
+    const {
+      widgetSettings: { filters },
+      intl: { formatMessage },
+    } = this.props;
     const url = this.getItemAttributeKeysAllSearchURL();
+    const isInputDisabled = !filters?.length;
 
     return (
       <AttributesFieldArrayControl
@@ -193,8 +218,26 @@ export class ComponentHealthCheckTableViewControls extends Component {
         maxAttributesAmount={MAX_ATTRIBUTES_AMOUNT}
         showRemainingLevels
         getURI={url}
+        disabled={isInputDisabled}
+        inputTooltip={isInputDisabled ? formatMessage(messages.attributeKeyInput) : null}
+        addButtonTooltip={isInputDisabled ? formatMessage(messages.addAttributeKeyButton) : null}
       />
     );
+  };
+
+  componentDidUpdate = (prevProps) => {
+    const prevFilterId = prevProps?.widgetSettings?.filters?.[0]?.value;
+    const currentFilterId = this.props.widgetSettings?.filters?.[0]?.value;
+
+    if (prevProps && prevFilterId !== currentFilterId) {
+      this.props.changeField('contentParameters.widgetOptions.attributeKeys', [
+        DEFAULT_ATTRIBUTE_KEY,
+      ]);
+      this.props.untouchField('contentParameters.widgetOptions.attributeKeys[0]');
+
+      this.props.changeField('contentParameters.widgetOptions.customColumn', DEFAULT_CUSTOM_COLUMN);
+      this.props.untouchField('contentParameters.widgetOptions.customColumn');
+    }
   };
 
   render() {
@@ -206,6 +249,7 @@ export class ComponentHealthCheckTableViewControls extends Component {
     } = this.props;
     const attrUrlKeys = this.getItemAttributeKeysAllSearchURL();
     const sortObj = this.getSortObj();
+    const disabled = !this.props.widgetSettings?.filters?.length;
 
     return (
       <Fragment>
@@ -257,19 +301,24 @@ export class ComponentHealthCheckTableViewControls extends Component {
               {formatMessage(messages.customColumnTitle)}
             </div>
             <div className={cx('component-wrap')}>
-              <FieldProvider
-                name="contentParameters.widgetOptions.customColumn"
-                validate={commonValidators.attributeKey}
+              <ConditionalTooltip
+                content={disabled ? formatMessage(messages.attributeKeyInput) : null}
               >
-                <FieldErrorHint hintType="top">
-                  <AsyncAutocomplete
-                    getURI={attrUrlKeys}
-                    minLength={1}
-                    creatable
-                    placeholder={formatMessage(messages.customColumnPlaceholder)}
-                  />
-                </FieldErrorHint>
-              </FieldProvider>
+                <FieldProvider
+                  name="contentParameters.widgetOptions.customColumn"
+                  validate={commonValidators.attributeKey}
+                >
+                  <FieldErrorHint hintType="top">
+                    <AsyncAutocomplete
+                      disabled={disabled}
+                      getURI={attrUrlKeys}
+                      minLength={1}
+                      creatable
+                      placeholder={formatMessage(messages.customColumnPlaceholder)}
+                    />
+                  </FieldErrorHint>
+                </FieldProvider>
+              </ConditionalTooltip>
             </div>
             <div className={cx('component-header')}>{formatMessage(messages.sortingTitle)}</div>
             <FieldProvider
