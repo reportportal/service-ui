@@ -176,8 +176,8 @@ export class ComponentHealthCheckControls extends Component {
         maxAttributesAmount={MAX_ATTRIBUTES_AMOUNT}
         showRemainingLevels
         disabled={!filterId}
-        inputTooltip={!filterId ? formatMessage(messages.attributeKeyInput) : null}
-        addButtonTooltip={!filterId ? formatMessage(messages.addAttributeKeyButton) : null}
+        inputTooltip={filterId ? null : formatMessage(messages.attributeKeyInput)}
+        addButtonTooltip={filterId ? null : formatMessage(messages.addAttributeKeyButton)}
         getURI={URLS.itemAttributeKeysAllSearch(
           projectKey,
           filterId,
