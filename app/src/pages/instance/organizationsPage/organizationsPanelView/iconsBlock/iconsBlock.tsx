@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,35 @@
  * limitations under the License.
  */
 
-import classNames from 'classnames/bind';
-import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
-import { OrganizationType } from 'controllers/organization';
 import Parser from 'html-react-parser';
 import { Tooltip } from '@reportportal/ui-kit';
+
+import { createClassnames } from 'common/utils';
+import { OrganizationType } from 'controllers/organization';
+
 import SynchedIcon from './img/synched-organization-inline.svg';
 import OutdatedIcon from './img/outdated-inline.svg';
 import PersonalIcon from './img/personal-organization-inline.svg';
 import { messages } from '../../messages';
 import styles from './iconsBlock.scss';
 
-const cx = classNames.bind(styles);
+const cx = createClassnames(styles);
 const THREE_MONTHS_IN_MS = 1000 * 60 * 60 * 24 * 30 * 3;
+
+interface IconsBlockProps {
+  organizationType: OrganizationType;
+  lastLaunchDate?: string;
+  hasPermission?: boolean;
+  iconClassName?: string;
+}
 
 export const IconsBlock = ({
   lastLaunchDate,
   hasPermission,
   organizationType,
   iconClassName,
-}) => {
+}: IconsBlockProps) => {
   const { formatMessage } = useIntl();
   const isOutdated =
     lastLaunchDate && Date.now() - new Date(lastLaunchDate).getTime() > THREE_MONTHS_IN_MS;
@@ -71,11 +79,4 @@ export const IconsBlock = ({
       )}
     </>
   );
-};
-
-IconsBlock.propTypes = {
-  organizationType: PropTypes.string.isRequired,
-  lastLaunchDate: PropTypes.string,
-  hasPermission: PropTypes.bool,
-  iconClassName: PropTypes.string,
 };

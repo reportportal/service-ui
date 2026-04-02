@@ -99,7 +99,7 @@ export const getApplyFilterEventParams = (
 
   let conditionValue;
 
-  if (dateField.value !== initialDateState) {
+  if (dateField && dateField?.value !== initialDateState) {
     conditionValue = dateField?.value;
     type = type ? `${type}#${conditionProp}` : conditionProp;
   }
