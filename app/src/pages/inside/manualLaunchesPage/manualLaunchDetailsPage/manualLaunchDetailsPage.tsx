@@ -40,6 +40,7 @@ import {
   isLoadingManualLaunchTestCaseExecutionsSelector,
   isLoadingManualLaunchFilteredFoldersSelector,
   defaultManualLaunchesQueryParams,
+  buildGetManualLaunchTestCaseExecutionsParams,
   getManualLaunchDetailsFetchParams,
   MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE,
 } from 'controllers/manualLaunch';
@@ -181,18 +182,11 @@ export const ManualLaunchDetailsPage = () => {
         ...(params.filterTags && { filterTags: params.filterTags }),
       }),
     );
-    dispatch(
-      getManualLaunchTestCaseExecutionsAction({
-        launchId: params.launchId,
-        ...(params.folderId && { folderId: params.folderId }),
-        offset: params.offset,
-        limit: params.limit,
-        ...(params.searchQuery && { searchQuery: params.searchQuery }),
-        ...(params.filterPriorities && { filterPriorities: params.filterPriorities }),
-        ...(params.filterTags && { filterTags: params.filterTags }),
-        ...(params.statusFilter && { statusFilter: params.statusFilter }),
-      }),
-    );
+    const executionsParams = buildGetManualLaunchTestCaseExecutionsParams(params);
+
+    if (executionsParams) {
+      dispatch(getManualLaunchTestCaseExecutionsAction(executionsParams));
+    }
   }, [dispatch, store]);
 
   const handleCloseFilterSidePanel = () => {

@@ -16,6 +16,8 @@
 
 import { isString } from 'es-toolkit';
 
+import type { LocationQuery } from 'types/store';
+
 interface LocationPayload {
   organizationSlug: string;
   projectSlug: string;
@@ -23,16 +25,6 @@ interface LocationPayload {
   testPlanId?: string;
   testPlanRoute?: string;
   launchId?: string;
-}
-
-interface LocationQuery {
-  offset: string;
-  limit: string;
-  testCasesSearchParams?: string;
-  searchQuery?: string;
-  filterPriorities?: string;
-  filterTags?: string;
-  statusFilter?: string;
 }
 
 export type LocationInfo = {

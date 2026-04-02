@@ -38,4 +38,8 @@ export {
 } from './reducer';
 export * from './selectors';
 export * from './types';
-export { getManualLaunchDetailsFetchParams } from './manualLaunchDetailsFetchParams';
+export {
+  buildGetManualLaunchTestCaseExecutionsParams,
+  getManualLaunchDetailsFetchParams,
+} from './manualLaunchDetailsFetchParams';
+export type { ManualLaunchDetailsFetchParams } from './manualLaunchDetailsFetchParams';

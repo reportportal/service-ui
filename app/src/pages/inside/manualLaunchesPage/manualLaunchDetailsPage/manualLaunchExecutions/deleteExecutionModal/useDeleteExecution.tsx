@@ -22,6 +22,7 @@ import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import {
+  buildGetManualLaunchTestCaseExecutionsParams,
   getManualLaunchTestCaseExecutionsAction,
   getManualLaunchFoldersAction,
   getManualLaunchAction,
@@ -61,20 +62,15 @@ export const useDeleteExecution = () => {
         }
 
         const params = getManualLaunchDetailsFetchParams(store.getState());
+        const executionsParams = buildGetManualLaunchTestCaseExecutionsParams(
+          params,
+          payload.launchId,
+        );
 
         dispatch(hideModalAction());
-        dispatch(
-          getManualLaunchTestCaseExecutionsAction({
-            launchId: payload.launchId,
-            ...(params.folderId && { folderId: params.folderId }),
-            offset: params.offset,
-            limit: params.limit,
-            ...(params.searchQuery && { searchQuery: params.searchQuery }),
-            ...(params.filterPriorities && { filterPriorities: params.filterPriorities }),
-            ...(params.filterTags && { filterTags: params.filterTags }),
-            ...(params.statusFilter && { statusFilter: params.statusFilter }),
-          }),
-        );
+        if (executionsParams) {
+          dispatch(getManualLaunchTestCaseExecutionsAction(executionsParams));
+        }
         dispatch(
           getManualLaunchFoldersAction({
             launchId: payload.launchId,

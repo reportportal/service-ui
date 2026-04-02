@@ -103,13 +103,12 @@ const FilterSidePanelComponent = ({
   );
 
   const tagDropdownOptions = useMemo(() => {
-    const byValue = new Map(tagOptions.map((option) => [option.value, option]));
-
-    localSelectedTags.forEach((tag) => {
-      if (!byValue.has(tag)) {
-        byValue.set(tag, { value: tag, label: tag });
+    const byValue = localSelectedTags.reduce((acc, tag) => {
+      if (!acc.has(tag)) {
+        acc.set(tag, { value: tag, label: tag });
       }
-    });
+      return acc;
+    }, new Map(tagOptions.map((option) => [option.value, option])));
 
     return Array.from(byValue.values());
   }, [tagOptions, localSelectedTags]);

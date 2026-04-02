@@ -19,18 +19,18 @@ import type { AppState } from 'types/store';
 import { ExecutionStatus } from 'types/testCase';
 
 import { MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE, defaultManualLaunchesQueryParams } from './constants';
+import type { GetManualLaunchTestCaseExecutionsParams } from './types';
 
 export const getManualLaunchDetailsFetchParams = (state: AppState) => {
   const { launchId, manualLaunchPageRoute } = state.location?.payload || {};
   const folderSegment = manualLaunchPageRoute?.split('/')[1];
   const folderId = folderSegment || undefined;
-  const query =
-    (state.location as { query?: Record<string, string | undefined> } | undefined)?.query || {};
+  const query = state.location?.query || {};
 
   const { offset, limit } = getRouterParams({
     namespace: MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
     defaultParams: defaultManualLaunchesQueryParams,
-    state: state as Parameters<typeof getRouterParams>[0]['state'],
+    state,
   });
 
   const rawStatus = query.statusFilter;
@@ -45,5 +45,29 @@ export const getManualLaunchDetailsFetchParams = (state: AppState) => {
     filterPriorities: query.filterPriorities,
     filterTags: query.filterTags,
     ...(statusFilter ? { statusFilter } : {}),
+  };
+};
+
+export type ManualLaunchDetailsFetchParams = ReturnType<typeof getManualLaunchDetailsFetchParams>;
+
+export const buildGetManualLaunchTestCaseExecutionsParams = (
+  params: ManualLaunchDetailsFetchParams,
+  launchIdOverride?: string | number,
+): GetManualLaunchTestCaseExecutionsParams | null => {
+  const launchId = launchIdOverride ?? params.launchId;
+
+  if (launchId === undefined || launchId === '') {
+    return null;
+  }
+
+  return {
+    launchId,
+    ...(params.folderId && { folderId: params.folderId }),
+    offset: params.offset,
+    limit: params.limit,
+    ...(params.searchQuery && { searchQuery: params.searchQuery }),
+    ...(params.filterPriorities && { filterPriorities: params.filterPriorities }),
+    ...(params.filterTags && { filterTags: params.filterTags }),
+    ...(params.statusFilter && { statusFilter: params.statusFilter }),
   };
 };

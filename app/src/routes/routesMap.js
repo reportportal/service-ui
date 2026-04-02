@@ -139,6 +139,7 @@ import {
   getManualLaunchFoldersAction,
   getManualLaunchTestCaseExecutionsAction,
   getManualLaunchExecutionAction,
+  buildGetManualLaunchTestCaseExecutionsParams,
   getManualLaunchDetailsFetchParams,
 } from 'controllers/manualLaunch';
 import { getRouterParams } from 'common/utils';
@@ -396,16 +397,8 @@ const routesMap = {
     path: '/organizations/:organizationSlug/projects/:projectSlug/manualLaunches/:launchId/:manualLaunchPageRoute*',
     thunk: (dispatch, getState) => {
       const state = getState();
-      const {
-        launchId,
-        folderId,
-        offset,
-        limit,
-        searchQuery,
-        filterPriorities,
-        filterTags,
-        statusFilter,
-      } = getManualLaunchDetailsFetchParams(state);
+      const params = getManualLaunchDetailsFetchParams(state);
+      const { launchId, filterPriorities, filterTags } = params;
 
       if (launchId) {
         dispatch(getManualLaunchAction({ launchId }));
@@ -421,18 +414,11 @@ const routesMap = {
           }),
         );
 
-        dispatch(
-          getManualLaunchTestCaseExecutionsAction({
-            launchId,
-            ...(folderId && { folderId }),
-            offset,
-            limit,
-            ...(searchQuery && { searchQuery }),
-            ...(filterPriorities && { filterPriorities }),
-            ...(filterTags && { filterTags }),
-            ...(statusFilter && { statusFilter }),
-          }),
-        );
+        const executionsParams = buildGetManualLaunchTestCaseExecutionsParams(params);
+
+        if (executionsParams) {
+          dispatch(getManualLaunchTestCaseExecutionsAction(executionsParams));
+        }
       }
     },
   },
