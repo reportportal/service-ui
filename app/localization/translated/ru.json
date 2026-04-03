@@ -2507,7 +2507,7 @@
   "WidgetCriteriaOption.updateAutoPatternAnalysisSettings": "Обновить настройки Pattern-Analysis",
   "WidgetCriteriaOption.updateTestItem": "Update test item",
   "WidgetCriteriaOption.update_pattern": "Обновить паттерн",
-  "WidgetCriteriaOption.update_project": "Обновить настройки проекта",
+  "WidgetCriteriaOption.project_actions": "Обновить настройки проекта",
   "WidgetCriteriaOption.user": "Пользователь",
   "WidgetCriteriaOption.widgets_actions": "Обновить виджет",
   "WidgetHeader.forceUpdate": "Обновить",

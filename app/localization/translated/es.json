@@ -2508,7 +2508,7 @@
   "WidgetCriteriaOption.updateAutoPatternAnalysisSettings": "Actualizar configuraciones de Pattern-Analysis",
   "WidgetCriteriaOption.updateTestItem": "Update test item",
   "WidgetCriteriaOption.update_pattern": "Actualizar patrón",
-  "WidgetCriteriaOption.update_project": "Actualizar configuraciones del proyecto",
+  "WidgetCriteriaOption.project_actions": "Actualizar configuraciones del proyecto",
   "WidgetCriteriaOption.user": "Usuario",
   "WidgetCriteriaOption.widgets_actions": "Actualizar widget",
   "WidgetHeader.forceUpdate": "Actualizar",
