@@ -45,6 +45,10 @@ export const messages = defineMessages({
     id: 'ManualLaunchesFilterSidePanel.selectStartTime',
     defaultMessage: 'Select launch start time',
   },
+  clearStartTime: {
+    id: 'ManualLaunchesFilterSidePanel.clearStartTime',
+    defaultMessage: 'Clear start time',
+  },
   presetToday: {
     id: 'ManualLaunchesFilterSidePanel.presetToday',
     defaultMessage: 'Today',

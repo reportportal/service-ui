@@ -85,6 +85,7 @@ export const StartTimeFilter = ({ value, onChange }: StartTimeFilterProps) => {
     ([startDate, endDate]: [Date | undefined, Date | undefined]) => {
       if (startDate && endDate) {
         const normalizedEnd = new Date(endDate);
+
         normalizedEnd.setHours(END_OF_DAY_HOURS, END_OF_DAY_MINUTES, END_OF_DAY_SECONDS, END_OF_DAY_MS);
         onChange({ startDate, endDate: normalizedEnd });
         setIsOpen(false);
@@ -109,7 +110,7 @@ export const StartTimeFilter = ({ value, onChange }: StartTimeFilterProps) => {
       });
     }
     return '';
-  }, [value, presetOptions]);
+  }, [value, presetOptions, formatMessage]);
 
   const handleClear = useCallback(
     (event: React.MouseEvent) => {
@@ -123,29 +124,44 @@ export const StartTimeFilter = ({ value, onChange }: StartTimeFilterProps) => {
 
   return (
     <div className={cx('start-time-filter')} ref={containerRef}>
-      <button type="button" className={cx('trigger', { open: isOpen })} onClick={toggleOpen}>
-        <span className={cx('trigger-text', { placeholder: !displayValue })}>
-          {displayValue || formatMessage(messages.selectStartTime)}
-        </span>
-        <span className={cx('trigger-icons')}>
+      <div className={cx('trigger', { open: isOpen })}>
+        <button
+          type="button"
+          className={cx('trigger-open')}
+          onClick={toggleOpen}
+          aria-expanded={isOpen}
+          aria-haspopup="listbox"
+        >
+          <span className={cx('trigger-text', { placeholder: !displayValue })}>
+            {displayValue || formatMessage(messages.selectStartTime)}
+          </span>
+        </button>
+        <div className={cx('trigger-icons')}>
           {displayValue && (
-            <span
+            <button
+              type="button"
               className={cx('clear-icon')}
               onClick={handleClear}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => { if (e.key === 'Enter') handleClear(e as unknown as React.MouseEvent); }}
+              aria-label={formatMessage(messages.clearStartTime)}
             >
               <ClearIcon />
-            </span>
+            </button>
           )}
-          <span className={cx('trigger-arrow', { open: isOpen })}>
-            <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
-              <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </span>
-        </span>
-      </button>
+          <button
+            type="button"
+            className={cx('trigger-chevron')}
+            onClick={toggleOpen}
+            aria-hidden
+            tabIndex={-1}
+          >
+            <span className={cx('trigger-arrow', { open: isOpen })}>
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
+                <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
 
       {isOpen && (
         <div className={cx('dropdown')}>

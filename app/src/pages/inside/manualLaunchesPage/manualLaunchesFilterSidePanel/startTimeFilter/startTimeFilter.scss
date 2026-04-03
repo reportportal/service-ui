@@ -16,19 +16,25 @@
 
 .start-time-filter {
   position: relative;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .trigger {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   height: 36px;
   padding: 0 12px;
   border: 1px solid var(--rp-ui-base-e-200);
   border-radius: 4px;
   background: var(--rp-ui-base-bg-000);
-  cursor: pointer;
+  box-sizing: border-box;
   transition: border-color 0.2s ease-in-out;
 
   &:hover {
@@ -40,7 +46,37 @@
   }
 }
 
+.trigger-open {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+}
+
+.trigger-chevron {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: inherit;
+}
+
 .trigger-text {
+  flex: 1 1 auto;
+  min-width: 0;
   font-size: 13px;
   line-height: 20px;
   color: var(--rp-ui-base-almost-black);
@@ -66,10 +102,15 @@
   justify-content: center;
   width: 16px;
   height: 16px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
   cursor: pointer;
   flex-shrink: 0;
   opacity: 0.8;
   transition: opacity 0.2s ease-in-out;
+  color: inherit;
 
   &:hover {
     opacity: 1;

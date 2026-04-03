@@ -22,7 +22,7 @@ import isEqual from 'fast-deep-equal';
 import { Button, SidePanel, Dropdown, Checkbox } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
-import { createClassnames } from 'common/utils';
+import { createClassnames, compareStringsLocale } from 'common/utils';
 import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
 import { EditableAttributeList } from 'componentLibrary/attributeList/editableAttributeList';
@@ -99,10 +99,11 @@ const ManualLaunchesFilterSidePanelComponent = ({
     [formatMessage],
   );
 
-  const handleStatusToggle = useCallback(
-    (status: string) => (event: ChangeEvent<HTMLInputElement>) => {
+  const handleStatusChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>, status: string) => {
+      const { checked } = event.target;
       setLocalStatuses((prev) =>
-        event.target.checked ? [...prev, status] : prev.filter((state) => state !== status),
+        checked ? [...prev, status] : prev.filter((state) => state !== status),
       );
     },
     [],
@@ -141,14 +142,14 @@ const ManualLaunchesFilterSidePanelComponent = ({
 
   const hasChanges = useMemo(() => {
     const pending: ManualLaunchesFilterPayload = {
-      statuses: [...localStatuses].sort(),
+      statuses: [...localStatuses].sort(compareStringsLocale),
       completion: localCompletion,
       startTime: localStartTime,
       testPlan: localTestPlan,
       attributes: localAttributes,
     };
     const applied: ManualLaunchesFilterPayload = {
-      statuses: [...appliedFilters.statuses].sort(),
+      statuses: [...appliedFilters.statuses].sort(compareStringsLocale),
       completion: appliedFilters.completion,
       startTime: appliedFilters.startTime,
       testPlan: appliedFilters.testPlan,
@@ -190,7 +191,7 @@ const ManualLaunchesFilterSidePanelComponent = ({
             <Checkbox
               key={option.value}
               value={localStatuses.includes(option.value)}
-              onChange={handleStatusToggle(option.value)}
+              onChange={(event) => handleStatusChange(event, option.value)}
             >
               {option.label}
             </Checkbox>
