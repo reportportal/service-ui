@@ -38,7 +38,6 @@ import {
   START_LAUNCH,
   FINISH_LAUNCH,
   DELETE_LAUNCH,
-  UPDATE_PROJECT,
   ACTIONS_WITH_BTS_ISSUES,
   ACTIONS_WITH_DASHBOARDS,
   ACTIONS_WITH_WIDGETS,
@@ -62,6 +61,7 @@ import {
   MARK_LAUNCH_AS_IMPORTANT,
   UNMARK_LAUNCH_AS_IMPORTANT,
   ACTIONS_UPDATE_TEST_ITEM,
+  ACTIONS_WITH_PROJECT,
 } from 'common/constants/actionTypes';
 import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
 import { defectTypesLocalization } from 'common/constants/localization/defectTypesLocalization';
@@ -158,8 +158,8 @@ const messages = defineMessages({
     id: 'WidgetCriteriaOption.integration_actions',
     defaultMessage: 'Update integration',
   },
-  [UPDATE_PROJECT]: {
-    id: 'WidgetCriteriaOption.update_project',
+  [ACTIONS_WITH_PROJECT]: {
+    id: 'WidgetCriteriaOption.project_actions',
     defaultMessage: 'Update project settings',
   },
   [ACTIONS_WITH_AA_SETTINGS]: {
@@ -295,7 +295,7 @@ const getUserActionOptions = (formatMessage) => [
   { value: ACTIONS_WITH_WIDGETS, label: formatMessage(messages[ACTIONS_WITH_WIDGETS]) },
   { value: ACTIONS_WITH_FILTERS, label: formatMessage(messages[ACTIONS_WITH_FILTERS]) },
   { value: ACTIONS_WITH_INTEGRATIONS, label: formatMessage(messages[ACTIONS_WITH_INTEGRATIONS]) },
-  { value: UPDATE_PROJECT, label: formatMessage(messages[UPDATE_PROJECT]) },
+  { value: ACTIONS_WITH_PROJECT, label: formatMessage(messages[ACTIONS_WITH_PROJECT]) },
   { value: ACTIONS_WITH_AA_SETTINGS, label: formatMessage(messages[ACTIONS_WITH_AA_SETTINGS]) },
   {
     value: ACTIONS_WITH_NOTIFICATION_RULE_SETTINGS,

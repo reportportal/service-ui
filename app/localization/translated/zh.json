@@ -2506,7 +2506,7 @@
   "WidgetCriteriaOption.updateAutoPatternAnalysisSettings": "Update Pattern-Analysis settings",
   "WidgetCriteriaOption.updateTestItem": "Update test item",
   "WidgetCriteriaOption.update_pattern": "更新模板",
-  "WidgetCriteriaOption.update_project": "更新项目设置",
+  "WidgetCriteriaOption.project_actions": "更新项目设置",
   "WidgetCriteriaOption.user": "用户",
   "WidgetCriteriaOption.widgets_actions": "更新小部件",
   "WidgetHeader.forceUpdate": "更新",
