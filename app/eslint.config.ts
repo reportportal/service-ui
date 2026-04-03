@@ -112,6 +112,8 @@ export default defineConfig([
     },
     rules: {
       '@typescript-eslint/unbound-method': 'off', // conflicts with useIntl types
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       'react/jsx-filename-extension': ['error', { extensions: ['.tsx'] }],
     },

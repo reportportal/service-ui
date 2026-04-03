@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { times } from 'es-toolkit/compat';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 
@@ -39,30 +40,39 @@ export const fetchAllFolders = async ({
   signal?: AbortSignal;
 }): Promise<Folder[]> => {
   const limit = 1000;
-  let offset = 0;
-  const allFolders: Folder[] = [];
-  let totalElements = Infinity;
 
-  while (offset < totalElements) {
-    if (signal?.aborted) {
-      break;
-    }
+  const firstPageResponse = await fetch<FoldersDto>(
+    URLS.testFolders(projectKey, {
+      ...filters,
+      offset: 0,
+      limit,
+      sort: 'id,ASC',
+    }),
+    { signal },
+  );
 
-    // eslint-disable-next-line no-await-in-loop
-    const response = await fetch<FoldersDto>(
-      URLS.testFolders(projectKey, {
-        offset,
-        limit,
-        sort: 'id,ASC',
-        ...filters,
-      }),
-      { signal },
-    );
+  const { totalPages } = firstPageResponse.page;
+  const allFolders: Folder[] = [...firstPageResponse.content];
 
-    allFolders.push(...response.content);
-    totalElements = response.page.totalElements;
-    offset += limit;
+  if (totalPages <= 1 || signal?.aborted) {
+    return allFolders;
   }
+
+  const responses = await Promise.all(
+    times(totalPages - 1, (index) =>
+      fetch<FoldersDto>(
+        URLS.testFolders(projectKey, {
+          ...filters,
+          offset: (index + 1) * limit,
+          limit,
+          sort: 'id,ASC',
+        }),
+        { signal },
+      ),
+    ),
+  );
+
+  responses.forEach((response) => allFolders.push(...response.content));
 
   return allFolders;
 };
