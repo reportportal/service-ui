@@ -1,0 +1,150 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.filter-side-panel {
+  width: 460px;
+  z-index: $Z-INDEX-OVERLAY-PANEL;
+
+  :global([class*='header-section']) {
+    margin-bottom: 8px;
+  }
+}
+
+.filter-overlay {
+  z-index: $Z-INDEX-OVERLAY-PANEL;
+}
+
+.filter-title {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.55em;
+  color: var(--rp-ui-base-almost-black);
+}
+
+.filter-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.filter-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filter-label {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5em;
+  color: var(--rp-ui-base-almost-black);
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.radio-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-top: 4px;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.radio-input {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--rp-ui-base-e-200);
+  border-radius: 50%;
+  margin: 0;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+
+  &:checked {
+    border-color: var(--rp-ui-base-topaz);
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--rp-ui-base-topaz);
+    }
+  }
+}
+
+.radio-label {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--rp-ui-base-almost-black);
+}
+
+.filter-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 50px;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.footer-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.clear-button,
+.cancel-button,
+.apply-button {
+  padding: 7px 16px;
+  height: auto;
+}
+
+.clear-button {
+  border: none !important;
+  color: var(--rp-ui-base-topaz);
+
+  &:hover {
+    border: none !important;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+  }
+}

@@ -1,0 +1,148 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.start-time-filter {
+  position: relative;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--rp-ui-base-e-200);
+  border-radius: 4px;
+  background: var(--rp-ui-base-bg-000);
+  cursor: pointer;
+  transition: border-color 0.2s ease-in-out;
+
+  &:hover {
+    border-color: var(--rp-ui-base-e-300);
+  }
+
+  &.open {
+    border-color: var(--rp-ui-base-topaz);
+  }
+}
+
+.trigger-text {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--rp-ui-base-almost-black);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &.placeholder {
+    color: var(--rp-ui-base-e-300);
+  }
+}
+
+.trigger-icons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.clear-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+  opacity: 0.8;
+  transition: opacity 0.2s ease-in-out;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.trigger-arrow {
+  display: flex;
+  align-items: center;
+  color: var(--rp-ui-base-e-400);
+  transition: transform 0.2s ease-in-out;
+  flex-shrink: 0;
+
+  &.open {
+    transform: rotate(180deg);
+  }
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--rp-ui-base-bg-000);
+  border: 1px solid var(--rp-ui-base-e-200);
+  border-radius: 4px;
+  box-shadow: var(--rp-ui-base-shadow);
+  z-index: 10;
+}
+
+.preset-list {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+}
+
+.preset-option {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--rp-ui-base-almost-black);
+  text-align: left;
+
+  &:hover {
+    background-color: var(--rp-ui-base-bg-100);
+  }
+
+  &.selected {
+    color: var(--rp-ui-base-topaz);
+    font-weight: 500;
+  }
+}
+
+.divider {
+  height: 1px;
+  background-color: var(--rp-ui-base-e-100);
+  margin: 0 12px;
+}
+
+.custom-range-section {
+  padding: 12px 16px 16px;
+}
+
+.custom-range-label {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--rp-ui-base-almost-black);
+  margin-bottom: 8px;
+}
