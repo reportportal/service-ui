@@ -23,7 +23,7 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import {
   buildFolderFilterParams,
-  buildTestCaseFilterParams,
+  buildManualLaunchExecutionFilterParams,
 } from 'pages/inside/common/testCaseList/filterSidePanel/utils';
 import { fetchSuccessAction, fetchErrorAction } from 'controllers/fetch';
 import { FETCH_START } from 'controllers/fetch/constants';
@@ -260,7 +260,7 @@ function* getManualLaunchTestCaseExecutions(
     const params: Record<string, string | number> = {
       offset,
       limit,
-      ...buildTestCaseFilterParams(filterPriorities, filterTags),
+      ...buildManualLaunchExecutionFilterParams(filterPriorities, filterTags),
     };
 
     if (!isNil(folderId)) {

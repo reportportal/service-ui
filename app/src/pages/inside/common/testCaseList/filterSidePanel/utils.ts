@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { TEST_CASE_FILTER_KEYS, FOLDER_FILTER_KEYS, type FilterKeyMap } from '../constants';
+import {
+  TEST_CASE_FILTER_KEYS,
+  FOLDER_FILTER_KEYS,
+  MANUAL_LAUNCH_EXECUTION_FILTER_KEYS,
+  type FilterKeyMap,
+} from '../constants';
 
 export const ensureArray = <T>(value?: T | T[] | null): T[] => {
   if (value === null || value === undefined) {
@@ -57,3 +62,27 @@ export const buildTestCaseFilterParams = (filterPriorities?: string, filterTags?
 
 export const buildFolderFilterParams = (filterPriorities?: string, filterTags?: string) =>
   buildFilterParams(FOLDER_FILTER_KEYS, filterPriorities, filterTags);
+
+const normalizePrioritiesForExecutionApi = (filterPriorities?: string): string | undefined => {
+  if (!filterPriorities?.trim()) {
+    return undefined;
+  }
+
+  const normalized = filterPriorities
+    .split(',')
+    .map((priority) => priority.trim().toLowerCase())
+    .filter(Boolean)
+    .join(',');
+
+  return normalized || undefined;
+};
+
+export const buildManualLaunchExecutionFilterParams = (
+  filterPriorities?: string,
+  filterTags?: string,
+) =>
+  buildFilterParams(
+    MANUAL_LAUNCH_EXECUTION_FILTER_KEYS,
+    normalizePrioritiesForExecutionApi(filterPriorities),
+    filterTags,
+  );
