@@ -2,6 +2,7 @@ import { EDITOR, VIEWER } from 'common/constants/projectRoles';
 import type { OrganizationRoles, ProjectRoles, UserRoles } from 'types/roles';
 import { OrganizationUserInfo } from 'controllers/user/types';
 import type {
+  AssignOrganizationPayload,
   UpdateUserAssignmentsPayload,
   UserOrganizationProjectItem,
   UserOrganizationProjectsResponse,
@@ -81,6 +82,20 @@ export function buildUpdateAssignmentsPayload(
     projects: (currentOrganization.projects ?? []).map((p) => ({
       id: p.id,
       project_role: p.role,
+    })),
+  };
+}
+
+export function buildAssignOrganizationPayload(
+  organization: Organization,
+  userId: number,
+): AssignOrganizationPayload {
+  return {
+    id: userId,
+    org_role: organization.role,
+    projects: (organization.projects ?? []).map((project) => ({
+      id: project.id,
+      project_role: project.role,
     })),
   };
 }
