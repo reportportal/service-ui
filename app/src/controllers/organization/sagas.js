@@ -100,7 +100,7 @@ function* prepareActiveOrganizationSettings({ payload: { organizationSlug } }) {
   });
 }
 
-function* updateOrganizationSettings({ payload: { organizationId, retentionPolicy } }) {
+function* updateOrganizationSettings({ payload: { organizationId, retentionPolicy, onComplete } }) {
   try {
     yield call(fetch, URLS.organizationSettings(organizationId), {
       method: 'put',
@@ -112,6 +112,8 @@ function* updateOrganizationSettings({ payload: { organizationId, retentionPolic
     yield put(showSuccessNotification({ messageId: 'updateOrganizationSettingsSuccess' }));
   } catch ({ message }) {
     yield put(showDefaultErrorNotification({ message }));
+  } finally {
+    onComplete?.();
   }
 }
 
