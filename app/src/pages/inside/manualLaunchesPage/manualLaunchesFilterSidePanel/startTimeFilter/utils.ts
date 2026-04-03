@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import { format } from 'date-fns';
+
+import { DATE_FORMAT } from 'common/constants/timeDateFormat';
 
 import {
   START_TIME_PRESETS,
@@ -52,10 +56,4 @@ export const getPresetDateRange = (preset: string): { startDate: Date; endDate: 
   return { startDate, endDate };
 };
 
-export const formatDateDisplay = (date: Date): string => {
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const year = date.getFullYear();
-
-  return `${month}-${day}-${year}`;
-};
+export const formatDateDisplay = (date: Date): string => format(date, DATE_FORMAT);

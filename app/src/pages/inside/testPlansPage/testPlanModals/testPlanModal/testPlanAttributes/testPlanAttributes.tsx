@@ -21,6 +21,7 @@ import { useCallback } from 'react';
 
 import { AttributeList } from 'componentLibrary/attributeList';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
+import { commonMessages } from 'pages/inside/common/common-messages';
 import { projectKeySelector } from 'controllers/project';
 import { URLS } from 'common/urls';
 
@@ -83,7 +84,7 @@ export const TestPlanAttributes = () => {
           name="attributes"
           component={AttributeListField}
           showButton
-          newAttrMessage={formatMessage(messages.addAttributes)}
+          newAttrMessage={formatMessage(commonMessages.addAttributes)}
           maxLength={50}
           editable
           defaultOpen={false}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { useIntl } from 'react-intl';
-import { DatePicker, ClearIcon } from '@reportportal/ui-kit';
+import { DatePicker, ClearIcon, ChevronDownDropdownIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 
@@ -155,9 +155,7 @@ export const StartTimeFilter = ({ value, onChange }: StartTimeFilterProps) => {
             tabIndex={-1}
           >
             <span className={cx('trigger-arrow', { open: isOpen })}>
-              <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
-                <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              <ChevronDownDropdownIcon />
             </span>
           </button>
         </div>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,16 +29,13 @@ import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import isEqual from 'fast-deep-equal';
 import { Button, SidePanel, Dropdown, Checkbox } from '@reportportal/ui-kit';
-import { isEmpty } from 'es-toolkit/compat';
+import { isEmpty, isString } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
 import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
 import { EditableAttributeList } from 'componentLibrary/attributeList/editableAttributeList';
 import { commonMessages } from 'pages/inside/common/common-messages';
-import { messages as filterSidePanelMessages } from 'pages/inside/common/testCaseList/filterSidePanel/messages';
-import { messages as launchFormMessages } from 'pages/inside/common/launchFormFields/messages';
-import { messages as testPlanModalMessages } from 'pages/inside/testPlansPage/testPlanModals/testPlanModal/messages';
 
 import { LAUNCH_STATUSES, COMPLETION_VALUES, EMPTY_FILTER } from './constants';
 import {
@@ -70,12 +67,13 @@ const FilterSectionBlock = ({ label, children }: FilterSectionBlockProps) => (
   </div>
 );
 
-const ManualLaunchesFilterSidePanelComponent = ({
-  isVisible,
-  onClose,
-  appliedFilters,
-  onApply,
-}: ManualLaunchesFilterSidePanelProps) => {
+export const ManualLaunchesFilterSidePanel = memo(
+  ({
+    isVisible,
+    onClose,
+    appliedFilters,
+    onApply,
+  }: ManualLaunchesFilterSidePanelProps) => {
   const { formatMessage } = useIntl();
   const wasVisibleRef = useRef(false);
   const projectKey = useSelector(projectKeySelector);
@@ -143,7 +141,7 @@ const ManualLaunchesFilterSidePanelComponent = ({
   }, []);
 
   const handleTestPlanChange = useCallback((value: string | string[] | null) => {
-    setLocalTestPlan(typeof value === 'string' ? value : null);
+    setLocalTestPlan(isString(value) ? value : null);
   }, []);
 
   const handleAttributesChange = useCallback((attrs: LaunchAttribute[]) => {
@@ -200,7 +198,7 @@ const ManualLaunchesFilterSidePanelComponent = ({
   }, [localFilterPayload, onApply, onClose]);
 
   const titleComponent = (
-    <div className={cx('filter-title')}>{formatMessage(filterSidePanelMessages.filterTitle)}</div>
+    <div className={cx('filter-title')}>{formatMessage(commonMessages.filterTitle)}</div>
   );
 
   const contentComponent = (
@@ -241,23 +239,23 @@ const ManualLaunchesFilterSidePanelComponent = ({
         <StartTimeFilter value={localStartTime} onChange={setLocalStartTime} />
       </FilterSectionBlock>
 
-      <FilterSectionBlock label={formatMessage(launchFormMessages.testPlanLabel)}>
+      <FilterSectionBlock label={formatMessage(commonMessages.testPlanLabel)}>
         <Dropdown
           options={[]}
           value={localTestPlan}
           onChange={handleTestPlanChange}
-          placeholder={formatMessage(launchFormMessages.selectTestPlanPlaceholder)}
+          placeholder={formatMessage(commonMessages.selectTestPlanPlaceholder)}
           clearable
         />
       </FilterSectionBlock>
 
-      <FilterSectionBlock label={formatMessage(launchFormMessages.launchAttributes)}>
+      <FilterSectionBlock label={formatMessage(commonMessages.launchAttributes)}>
         <EditableAttributeList
           attributes={localAttributes}
           onChange={handleAttributesChange}
           disabled={false}
           showButton
-          newAttrMessage={formatMessage(testPlanModalMessages.addAttributes)}
+          newAttrMessage={formatMessage(commonMessages.addAttributes)}
           maxLength={50}
           customClass=""
           editable
@@ -280,7 +278,7 @@ const ManualLaunchesFilterSidePanelComponent = ({
           className={cx('clear-button')}
           disabled={!hasActiveFilters}
         >
-          {formatMessage(filterSidePanelMessages.clearAllFilters)}
+          {formatMessage(commonMessages.clearAllFilters)}
         </Button>
       </div>
       <div className={cx('footer-right')}>
@@ -322,6 +320,5 @@ const ManualLaunchesFilterSidePanelComponent = ({
         )}
     </>
   );
-};
-
-export const ManualLaunchesFilterSidePanel = memo(ManualLaunchesFilterSidePanelComponent);
+  },
+);
