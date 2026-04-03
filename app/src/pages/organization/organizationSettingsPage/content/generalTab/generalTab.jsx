@@ -18,7 +18,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import PropTypes from 'prop-types';
-import { BubblesLoader, Button, FieldText, SystemMessage, Dropdown } from '@reportportal/ui-kit';
+import { Button, FieldText, SystemMessage, Dropdown } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
@@ -61,7 +61,7 @@ const GeneralTabForm = ({ initialize, handleSubmit, retention = null }) => {
     formValues,
     retention,
   );
-  const isDisabled = !canUpdateOrganizationSettings || processingData;
+  const isDisabled = !canUpdateOrganizationSettings;
 
   useEffect(() => {
     if (organizationName) {
@@ -136,17 +136,9 @@ const GeneralTabForm = ({ initialize, handleSubmit, retention = null }) => {
           <Dropdown className={cx('dropdown')} options={getScreenshotsOptions()} mobileDisabled />
         </FieldElement>
         <div className={cx('submit-block')}>
-          <Button type="submit" disabled={isDisabled}>
+          <Button type="submit" disabled={isDisabled || processingData}>
             {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
           </Button>
-          {processingData && (
-            <div className={cx('preloader-block')}>
-              <BubblesLoader className={cx('preloader')} />
-              <span className={cx('preloader-text')}>
-                {formatMessage(COMMON_LOCALE_KEYS.processData)}
-              </span>
-            </div>
-          )}
         </div>
       </form>
     </div>
