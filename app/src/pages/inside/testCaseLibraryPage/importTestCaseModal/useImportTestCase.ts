@@ -39,10 +39,10 @@ type ApiError = {
 };
 
 type ImportResponseItem = {
-  id: number;
-  testFolder?: {
-    id?: number;
-  };
+  testFolderId?: number;
+  createdTestCaseIds?: number[];
+  totalRows?: number;
+  successCount?: number;
 };
 
 const createQuery = ({ testFolderId, testFolderName }: ImportQuery) => {
@@ -133,18 +133,14 @@ export const useImportTestCase = () => {
 
       formData.append('file', file);
 
-      const response = await fetch<ImportResponseItem[]>(URLS.importTestCase(projectKey, query), {
+      const response = await fetch<ImportResponseItem>(URLS.importTestCase(projectKey, query), {
         method: 'post',
         data: formData,
       });
 
-      const createdFolderId = Array.isArray(response) ? response[0]?.testFolder?.id : undefined;
+      const createdFolderId = response?.testFolderId;
 
       const resolvedFolderId = query.testFolderId ?? createdFolderId;
-
-      if (resolvedFolderId) {
-        redirectToFolder(resolvedFolderId);
-      }
 
       dispatch(hideModalAction());
       showSuccessNotification({
@@ -152,11 +148,19 @@ export const useImportTestCase = () => {
         values: resolvedFolderName ? { folderName: resolvedFolderName } : undefined,
       });
 
-      if (resolvedFolderId) {
-        refetchTestCases(resolvedFolderId);
-      }
+      dispatch(
+        getFoldersAction({
+          silent: true,
+          onSuccess: () => {
+            if (resolvedFolderId) {
+              redirectToFolder(resolvedFolderId);
+            }
+          },
+        }),
+      );
 
-      dispatch(getFoldersAction());
+
+
     } catch (error: unknown) {
       const apiError = error as ApiError;
 

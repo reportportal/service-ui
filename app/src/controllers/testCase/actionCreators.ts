@@ -67,6 +67,7 @@ export interface CreateFolderParams {
 export interface GetFoldersParams {
   projectKey?: string;
   silent?: boolean;
+  onSuccess?: () => void;
 }
 
 export interface DeleteFolderParams {
@@ -130,9 +131,9 @@ export const stopCreatingFolderAction = () => ({
   type: STOP_CREATING_FOLDER,
 });
 
-export const getFoldersAction = (params?: GetFoldersParams) => ({
+export const getFoldersAction = (payload?: { silent?: boolean; onSuccess?: () => void }) => ({
   type: GET_FOLDERS,
-  payload: params,
+  payload,
 });
 
 export const createFoldersAction = (folder: CreateFolderParams) => ({

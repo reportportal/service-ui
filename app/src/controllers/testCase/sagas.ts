@@ -203,6 +203,10 @@ function* getFolders(action: GetFoldersAction) {
     );
 
     yield put(setFoldersFetchedAction());
+    const onSuccess = action.payload?.onSuccess;
+    if (onSuccess) {
+      yield call(onSuccess);
+    }
   } catch (error) {
     yield put(fetchErrorAction(NAMESPACE, error));
     yield put(
