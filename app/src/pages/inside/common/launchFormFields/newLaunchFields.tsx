@@ -91,7 +91,7 @@ export const NewLaunchFields = ({
   const renderTestPlanField = ({ input }: WrappedFieldProps) => (
     <AsyncAutocompleteV2
       value={input.value as TestPlanOption | undefined}
-      placeholder={testPlanPlaceholder || formatMessage(messages.selectTestPlanPlaceholder)}
+      placeholder={testPlanPlaceholder || formatMessage(commonMessages.selectTestPlanPlaceholder)}
       getURI={retrieveTestPlans}
       makeOptions={makeTestPlanOptions}
       onChange={(value) => handleTestPlanChange(value, input)}
@@ -142,14 +142,14 @@ export const NewLaunchFields = ({
 
       {!hideTestPlanField && (
         <div className={cx('test-plan-field')}>
-          <FieldLabel>{formatMessage(messages.testPlanLabel)}</FieldLabel>
+          <FieldLabel>{formatMessage(commonMessages.testPlanLabel)}</FieldLabel>
           <Field name={LAUNCH_FORM_FIELD_NAMES.TEST_PLAN} component={renderTestPlanField} />
         </div>
       )}
 
       <div className={cx('attributes-section')}>
         <FieldElement
-          label={formatMessage(messages.launchAttributes)}
+          label={formatMessage(commonMessages.launchAttributes)}
           withoutProvider
           childrenClassName={cx('attributes-content')}
         >

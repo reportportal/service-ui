@@ -18,7 +18,13 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
-import { Button, RefreshIcon, Pagination } from '@reportportal/ui-kit';
+import {
+  Button,
+  RefreshIcon,
+  Pagination,
+  FilterOutlineIcon,
+  FilterFilledIcon,
+} from '@reportportal/ui-kit';
 
 import { projectNameSelector } from 'controllers/project';
 import { SettingsLayout } from 'layouts/settingsLayout';
@@ -48,6 +54,12 @@ import { commonMessages } from '../testPlansPage/commonMessages';
 import { ITEMS_PER_PAGE_OPTIONS } from './manualLaunchesList/contants';
 import { useURLBoundPagination } from '../common/testCaseList/useURLBoundPagination';
 import { PageHeaderWithBreadcrumbsAndActions } from '../common/pageHeaderWithBreadcrumbsAndActions';
+import {
+  ManualLaunchesFilterSidePanel,
+  EMPTY_FILTER,
+  filterSidePanelMessages,
+  type ManualLaunchesFilterPayload,
+} from './manualLaunchesFilterSidePanel';
 
 import styles from './manualLaunchesPage.scss';
 
@@ -68,6 +80,22 @@ export const ManualLaunchesPage = () => {
 
   const appliedSearchQuery = location?.query?.searchQuery || '';
   const [searchValue, setSearchValue] = useState(appliedSearchQuery);
+  const [isFilterSidePanelVisible, setIsFilterSidePanelVisible] = useState(false);
+  const [appliedFilters, setAppliedFilters] = useState<ManualLaunchesFilterPayload>(EMPTY_FILTER);
+
+  const activeFiltersCount = useMemo(() => {
+    let count = 0;
+
+    if (!isEmpty(appliedFilters.statuses)) count += 1;
+    if (appliedFilters.completion !== EMPTY_FILTER.completion) count += 1;
+    if (appliedFilters.startTime !== null) count += 1;
+    if (appliedFilters.testPlan !== null) count += 1;
+    if (!isEmpty(appliedFilters.attributes)) count += 1;
+
+    return count;
+  }, [appliedFilters]);
+
+  const hasActiveFilters = activeFiltersCount > 0;
 
   useEffect(() => {
     setSearchValue(appliedSearchQuery);
@@ -106,6 +134,18 @@ export const ManualLaunchesPage = () => {
       baseUrl: `/organizations/${organizationSlug}/projects/${projectSlug}/manualLaunches`,
     });
 
+  const handleFilterIconClick = useCallback(() => {
+    setIsFilterSidePanelVisible(true);
+  }, []);
+
+  const handleCloseFilterSidePanel = useCallback(() => {
+    setIsFilterSidePanelVisible(false);
+  }, []);
+
+  const handleApplyFilters = useCallback((payload: ManualLaunchesFilterPayload) => {
+    setAppliedFilters(payload);
+  }, []);
+
   const handleRefresh = useCallback(() => {
     dispatch(
       getManualLaunchesAction({
@@ -125,9 +165,9 @@ export const ManualLaunchesPage = () => {
         <PageHeaderWithBreadcrumbsAndActions
           title={formatMessage(messages.manualLaunchesTitle)}
           breadcrumbDescriptors={breadcrumbDescriptors}
-          {...((!isEmpty(content) || appliedSearchQuery || searchValue || isLoading) && {
+          {...((!isEmpty(content) || appliedSearchQuery || searchValue || isLoading || hasActiveFilters) && {
             actions: (
-              <>
+              <div className={cx('header-actions')}>
                 <SearchField
                   isLoading={isSearchLoading}
                   searchValue={searchValue}
@@ -135,6 +175,21 @@ export const ManualLaunchesPage = () => {
                   setSearchValue={setSearchValue}
                   onFilterChange={handleFilterChange}
                 />
+                <button
+                  type="button"
+                  className={cx('filter-icon', { active: hasActiveFilters })}
+                  aria-label={formatMessage(filterSidePanelMessages.filterButton)}
+                  onClick={handleFilterIconClick}
+                >
+                  {hasActiveFilters ? (
+                    <>
+                      <FilterFilledIcon />
+                      <span className={cx('filter-count')}>{activeFiltersCount}</span>
+                    </>
+                  ) : (
+                    <FilterOutlineIcon />
+                  )}
+                </button>
                 <Button
                   variant="text"
                   data-automation-id="refreshPageButton"
@@ -144,7 +199,7 @@ export const ManualLaunchesPage = () => {
                 >
                   {formatMessage(commonMessages.refreshPage)}
                 </Button>
-              </>
+              </div>
             ),
           })}
         />
@@ -171,6 +226,12 @@ export const ManualLaunchesPage = () => {
           </div>
         )}
       </ScrollWrapper>
+      <ManualLaunchesFilterSidePanel
+        isVisible={isFilterSidePanelVisible}
+        onClose={handleCloseFilterSidePanel}
+        appliedFilters={appliedFilters}
+        onApply={handleApplyFilters}
+      />
     </SettingsLayout>
   );
 };

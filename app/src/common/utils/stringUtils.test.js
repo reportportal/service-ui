@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { isString, capitalize, stringEqual } from './stringUtils';
+import { isString, capitalize, stringEqual, compareStringsLocale } from './stringUtils';
 
 describe('isString', () => {
   test('should return true for string values', () => {
@@ -55,6 +55,12 @@ describe('capitalize', () => {
     expect(capitalize(undefined)).toBe(undefined);
     expect(capitalize({})).toEqual({});
     expect(capitalize([])).toEqual([]);
+  });
+});
+
+describe('compareStringsLocale', () => {
+  test('should sort strings in locale order when used as Array.sort comparator', () => {
+    expect(['b', 'a', 'c'].sort(compareStringsLocale)).toEqual(['a', 'b', 'c']);
   });
 });
 

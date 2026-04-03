@@ -37,10 +37,6 @@ export const messages = defineMessages({
     id: 'LaunchFormFields.addLaunchDescriptionOptional',
     defaultMessage: 'Please provide details about the launch (optional).',
   },
-  launchAttributes: {
-    id: 'LaunchFormFields.launchAttributes',
-    defaultMessage: 'Launch attributes',
-  },
   addAttributes: {
     id: 'LaunchFormFields.addAttributes',
     defaultMessage: 'Add Attribute',
@@ -57,14 +53,6 @@ export const messages = defineMessages({
     id: 'LaunchFormFields.addTestCasesFromTestPlan',
     defaultMessage:
       'You are about to add test cases from <bold>{testPlanName}</bold> test plan to a Launch',
-  },
-  testPlanLabel: {
-    id: 'LaunchFormFields.testPlanLabel',
-    defaultMessage: 'Test plan',
-  },
-  selectTestPlanPlaceholder: {
-    id: 'LaunchFormFields.selectTestPlanPlaceholder',
-    defaultMessage: 'Select test plan',
   },
   tooManyLaunchesResult: {
     id: 'LaunchFormFields.tooManyLaunchesResult',
