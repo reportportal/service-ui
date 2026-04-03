@@ -116,10 +116,12 @@
 }
 
 .checkbox-tooltip-wrapper {
-  width: 13px;
-  height: 13px;
-  position: relative;
-  margin-right: 11px;
+  display: flex;
+  align-items: center;
+  width: auto;
+  height: auto;
+  position: static;
+  margin: 0;
 }
 
 .can-edit-container {
@@ -129,8 +131,7 @@
 }
 
 .disabled-checkbox {
-  position: relative;
-  top: -8px;
+  position: static;
 }
 
 .can-edit-label {
