@@ -14,7 +14,16 @@
  * limitations under the License.
  */
 
-import { memo, useRef, useMemo, useState, useEffect, useCallback, type ChangeEvent } from 'react';
+import {
+  memo,
+  useRef,
+  useMemo,
+  useState,
+  useEffect,
+  useCallback,
+  type ChangeEvent,
+  type ReactNode,
+} from 'react';
 import { createPortal } from 'react-dom';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
@@ -22,7 +31,7 @@ import isEqual from 'fast-deep-equal';
 import { Button, SidePanel, Dropdown, Checkbox } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
-import { createClassnames, compareStringsLocale } from 'common/utils';
+import { createClassnames } from 'common/utils';
 import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
 import { EditableAttributeList } from 'componentLibrary/attributeList/editableAttributeList';
@@ -32,6 +41,10 @@ import { messages as launchFormMessages } from 'pages/inside/common/launchFormFi
 import { messages as testPlanModalMessages } from 'pages/inside/testPlansPage/testPlanModals/testPlanModal/messages';
 
 import { LAUNCH_STATUSES, COMPLETION_VALUES, EMPTY_FILTER } from './constants';
+import {
+  buildManualLaunchesFilterPayload,
+  normalizeManualLaunchesFilterForCompare,
+} from './filterPayloadUtils';
 import { StartTimeFilter } from './startTimeFilter/startTimeFilter';
 import type {
   ManualLaunchesFilterSidePanelProps,
@@ -44,6 +57,18 @@ import { messages } from './messages';
 import styles from './manualLaunchesFilterSidePanel.scss';
 
 const cx = createClassnames(styles);
+
+interface FilterSectionBlockProps {
+  label: ReactNode;
+  children: ReactNode;
+}
+
+const FilterSectionBlock = ({ label, children }: FilterSectionBlockProps) => (
+  <div className={cx('filter-section')}>
+    <div className={cx('filter-label')}>{label}</div>
+    {children}
+  </div>
+);
 
 const ManualLaunchesFilterSidePanelComponent = ({
   isVisible,
@@ -65,17 +90,21 @@ const ManualLaunchesFilterSidePanelComponent = ({
     appliedFilters.attributes,
   );
 
+  const syncLocalStateFromPayload = useCallback((payload: ManualLaunchesFilterPayload) => {
+    setLocalStatuses(payload.statuses);
+    setLocalCompletion(payload.completion);
+    setLocalStartTime(payload.startTime);
+    setLocalTestPlan(payload.testPlan);
+    setLocalAttributes(payload.attributes);
+  }, []);
+
   useEffect(() => {
     if (isVisible && !wasVisibleRef.current) {
-      setLocalStatuses(appliedFilters.statuses);
-      setLocalCompletion(appliedFilters.completion);
-      setLocalStartTime(appliedFilters.startTime);
-      setLocalTestPlan(appliedFilters.testPlan);
-      setLocalAttributes(appliedFilters.attributes);
+      syncLocalStateFromPayload(appliedFilters);
     }
 
     wasVisibleRef.current = isVisible;
-  }, [isVisible, appliedFilters]);
+  }, [isVisible, appliedFilters, syncLocalStateFromPayload]);
 
   const statusOptions = useMemo(
     () => [
@@ -140,43 +169,35 @@ const ManualLaunchesFilterSidePanelComponent = ({
     localTestPlan !== null ||
     !isEmpty(localAttributes);
 
-  const hasChanges = useMemo(() => {
-    const pending: ManualLaunchesFilterPayload = {
-      statuses: [...localStatuses].sort(compareStringsLocale),
-      completion: localCompletion,
-      startTime: localStartTime,
-      testPlan: localTestPlan,
-      attributes: localAttributes,
-    };
-    const applied: ManualLaunchesFilterPayload = {
-      statuses: [...appliedFilters.statuses].sort(compareStringsLocale),
-      completion: appliedFilters.completion,
-      startTime: appliedFilters.startTime,
-      testPlan: appliedFilters.testPlan,
-      attributes: appliedFilters.attributes,
-    };
+  const localFilterPayload = useMemo(
+    () =>
+      buildManualLaunchesFilterPayload(
+        localStatuses,
+        localCompletion,
+        localStartTime,
+        localTestPlan,
+        localAttributes,
+      ),
+    [localStatuses, localCompletion, localStartTime, localTestPlan, localAttributes],
+  );
 
-    return !isEqual(applied, pending);
-  }, [localStatuses, localCompletion, localStartTime, localTestPlan, localAttributes, appliedFilters]);
+  const hasChanges = useMemo(
+    () =>
+      !isEqual(
+        normalizeManualLaunchesFilterForCompare(appliedFilters),
+        normalizeManualLaunchesFilterForCompare(localFilterPayload),
+      ),
+    [appliedFilters, localFilterPayload],
+  );
 
   const handleClearAllFilters = useCallback(() => {
-    setLocalStatuses(EMPTY_FILTER.statuses);
-    setLocalCompletion(EMPTY_FILTER.completion);
-    setLocalStartTime(EMPTY_FILTER.startTime);
-    setLocalTestPlan(EMPTY_FILTER.testPlan);
-    setLocalAttributes(EMPTY_FILTER.attributes);
-  }, []);
+    syncLocalStateFromPayload(EMPTY_FILTER);
+  }, [syncLocalStateFromPayload]);
 
   const handleApplyFilters = useCallback(() => {
-    onApply({
-      statuses: localStatuses,
-      completion: localCompletion,
-      startTime: localStartTime,
-      testPlan: localTestPlan,
-      attributes: localAttributes,
-    });
+    onApply(localFilterPayload);
     onClose();
-  }, [localStatuses, localCompletion, localStartTime, localTestPlan, localAttributes, onApply, onClose]);
+  }, [localFilterPayload, onApply, onClose]);
 
   const titleComponent = (
     <div className={cx('filter-title')}>{formatMessage(filterSidePanelMessages.filterTitle)}</div>
@@ -184,8 +205,7 @@ const ManualLaunchesFilterSidePanelComponent = ({
 
   const contentComponent = (
     <div className={cx('filter-content')}>
-      <div className={cx('filter-section')}>
-        <div className={cx('filter-label')}>{formatMessage(messages.containsStatuses)}</div>
+      <FilterSectionBlock label={formatMessage(messages.containsStatuses)}>
         <div className={cx('checkbox-group')}>
           {statusOptions.map((option) => (
             <Checkbox
@@ -197,10 +217,9 @@ const ManualLaunchesFilterSidePanelComponent = ({
             </Checkbox>
           ))}
         </div>
-      </div>
+      </FilterSectionBlock>
 
-      <div className={cx('filter-section')}>
-        <div className={cx('filter-label')}>{formatMessage(messages.launchCompletion)}</div>
+      <FilterSectionBlock label={formatMessage(messages.launchCompletion)}>
         <div className={cx('radio-group')}>
           {completionOptions.map((option) => (
             <label key={option.value} className={cx('radio-option')}>
@@ -216,15 +235,13 @@ const ManualLaunchesFilterSidePanelComponent = ({
             </label>
           ))}
         </div>
-      </div>
+      </FilterSectionBlock>
 
-      <div className={cx('filter-section')}>
-        <div className={cx('filter-label')}>{formatMessage(messages.startTime)}</div>
+      <FilterSectionBlock label={formatMessage(messages.startTime)}>
         <StartTimeFilter value={localStartTime} onChange={setLocalStartTime} />
-      </div>
+      </FilterSectionBlock>
 
-      <div className={cx('filter-section')}>
-        <div className={cx('filter-label')}>{formatMessage(launchFormMessages.testPlanLabel)}</div>
+      <FilterSectionBlock label={formatMessage(launchFormMessages.testPlanLabel)}>
         <Dropdown
           options={[]}
           value={localTestPlan}
@@ -232,10 +249,9 @@ const ManualLaunchesFilterSidePanelComponent = ({
           placeholder={formatMessage(launchFormMessages.selectTestPlanPlaceholder)}
           clearable
         />
-      </div>
+      </FilterSectionBlock>
 
-      <div className={cx('filter-section')}>
-        <div className={cx('filter-label')}>{formatMessage(launchFormMessages.launchAttributes)}</div>
+      <FilterSectionBlock label={formatMessage(launchFormMessages.launchAttributes)}>
         <EditableAttributeList
           attributes={localAttributes}
           onChange={handleAttributesChange}
@@ -251,7 +267,7 @@ const ManualLaunchesFilterSidePanelComponent = ({
           isAttributeKeyRequired
           isAttributeValueRequired
         />
-      </div>
+      </FilterSectionBlock>
     </div>
   );
 
