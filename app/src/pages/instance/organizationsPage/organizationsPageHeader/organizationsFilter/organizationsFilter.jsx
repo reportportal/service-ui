@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,40 +14,23 @@
  * limitations under the License.
  */
 
-import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { Field, formValueSelector } from 'redux-form';
-import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { Dropdown, FieldText } from '@reportportal/ui-kit';
-import { CONDITION_BETWEEN, CONDITION_IN } from 'components/filterEntities/constants';
+import { Dropdown } from '@reportportal/ui-kit';
+import { CONDITION_IN } from 'components/filterEntities/constants';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import {
   FilterButton,
-  FILTER_FORM,
   LAUNCHES_FILTER_NAME,
   TEAMMATES_FILTER_NAME,
   LAST_RUN_DATE_FILTER_NAME,
   LAUNCHES_FILTER_NAME_CONDITION,
   TEAMMATES_FILTER_NAME_CONDITION,
   ORGANIZATION_TYPE_FILTER_NAME,
-  timeRangeValues,
   TIME_RANGE_GA4_LABELS,
-  getRangeComparisons,
-  getTimeRangeOptions,
-  messages as helpMessage,
 } from 'components/main/filterButton';
 import { getApplyFilterEventParams } from 'components/main/analytics/utils';
-import {
-  DateRangeFormField,
-  formatDisplayedValue,
-} from 'components/main/dateRange';
 import { messages } from './messages';
-import styles from './organizationFilter.scss';
-
-const cx = classNames.bind(styles);
-
-const selector = formValueSelector(FILTER_FORM);
 
 export const OrganizationsFilter = ({
   entities,
@@ -57,6 +40,13 @@ export const OrganizationsFilter = ({
 }) => {
   const { formatMessage } = useIntl();
 
+  const organizationTypes = [
+    { label: formatMessage(messages.typePersonal), value: 'PERSONAL' },
+    { label: formatMessage(messages.typeInternal), value: 'INTERNAL' },
+    { label: formatMessage(messages.typeSynched), value: 'EXTERNAL' },
+  ];
+
+  /* EPMRPP-107936: remove organizations statistics (restore when bringing back API data)
   const timeRange = getTimeRangeOptions(formatMessage);
   const rangeComparisons = getRangeComparisons(formatMessage);
   const organizationTypes = [
@@ -72,6 +62,7 @@ export const OrganizationsFilter = ({
     const cleaned = filtered.replace(/^0+/, '');
     e.target.value = cleaned;
   };
+  */
 
   const filters = {
     [ORGANIZATION_TYPE_FILTER_NAME]: {
@@ -91,6 +82,7 @@ export const OrganizationsFilter = ({
         },
       ],
     },
+    /* EPMRPP-107936: remove organizations statistics (restore when bringing back API data)
     [LAST_RUN_DATE_FILTER_NAME]: {
       filterName: LAST_RUN_DATE_FILTER_NAME,
       title: formatMessage(messages.lastRunDate),
@@ -178,20 +170,24 @@ export const OrganizationsFilter = ({
         },
       ],
     },
+    */
   };
 
   const defaultFilterState = {
     [ORGANIZATION_TYPE_FILTER_NAME]: [],
+    /* EPMRPP-107936: remove organizations statistics (restore when bringing back API data)
     [LAST_RUN_DATE_FILTER_NAME]: '',
     [LAUNCHES_FILTER_NAME]: '',
     [LAUNCHES_FILTER_NAME_CONDITION]: rangeComparisons[0].value,
     [TEAMMATES_FILTER_NAME]: '',
     [TEAMMATES_FILTER_NAME_CONDITION]: rangeComparisons[0].value,
+    */
   };
 
   const initialFilterState = {
     [ORGANIZATION_TYPE_FILTER_NAME]:
       entities[ORGANIZATION_TYPE_FILTER_NAME]?.value?.split(',') || [],
+    /* EPMRPP-107936: remove organizations statistics (restore when bringing back API data)
     [LAST_RUN_DATE_FILTER_NAME]: entities[LAST_RUN_DATE_FILTER_NAME]?.value || timeRange[0].value,
     [LAUNCHES_FILTER_NAME]: entities[LAUNCHES_FILTER_NAME]?.value || '',
     [LAUNCHES_FILTER_NAME_CONDITION]:
@@ -199,6 +195,7 @@ export const OrganizationsFilter = ({
     [TEAMMATES_FILTER_NAME]: entities[TEAMMATES_FILTER_NAME]?.value || '',
     [TEAMMATES_FILTER_NAME_CONDITION]:
       entities[TEAMMATES_FILTER_NAME]?.condition || rangeComparisons[0].value,
+    */
   };
 
   const eventHandler = (fields) => {
