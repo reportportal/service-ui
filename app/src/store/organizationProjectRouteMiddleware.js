@@ -19,8 +19,11 @@ import { userInfoSelector, activeProjectSelector, setActiveProjectAction } from 
 import { isAuthorizedSelector } from 'controllers/auth';
 import {
   ORGANIZATION_USERS_PAGE,
+  ORGANIZATIONS_PAGE,
+  adminPageNames,
   userAssignedSelector,
   userRolesSelector,
+  PLUGIN_UI_EXTENSION_ADMIN_PAGE,
 } from 'controllers/pages';
 import { prepareActiveProjectAction } from 'controllers/project';
 import {
@@ -29,7 +32,11 @@ import {
 } from 'controllers/organization';
 import { getRedirectRoute, ROUTE_ACTION_TYPES } from 'routes/routesMap';
 import { stringEqual } from 'common/utils/stringUtils';
-import { canSeeOrganizationMembers } from 'common/utils/permissions';
+import {
+  canSeeOrganizationMembers,
+  canSeeSidebarOptions,
+  canSeeInstanceLevelPluginsPages,
+} from 'common/utils/permissions';
 
 /**
  * Organization/project route middleware: access check, sync of active org/project from URL, redirect on no access.
@@ -47,6 +54,20 @@ export const organizationProjectRouteMiddleware = (store) => (next) => (action) 
   } = action.payload || {};
 
   const authorized = isAuthorizedSelector(getState());
+  const isAdminPage = action.type in adminPageNames;
+
+  if (authorized && isAdminPage) {
+    const hasInstanceLevelAccess =
+      action.type === PLUGIN_UI_EXTENSION_ADMIN_PAGE
+        ? canSeeInstanceLevelPluginsPages(userRolesSelector(getState()))
+        : canSeeSidebarOptions(userRolesSelector(getState()));
+
+    if (!hasInstanceLevelAccess) {
+      dispatch(redirect({ type: ORGANIZATIONS_PAGE }));
+      return;
+    }
+  }
+
   const isOrganizationPage = !!hashOrganizationSlug;
   const isOrganizationUsersPage = action.type === ORGANIZATION_USERS_PAGE;
 
