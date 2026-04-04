@@ -20,6 +20,9 @@ import { enUS } from 'date-fns/locale';
 export const formatIsoDateShort = (iso: string): string =>
   format(parseISO(iso), 'P', { locale: enUS });
 
+export const formatIsoDateShortDashed = (iso: string): string =>
+  format(parseISO(iso), 'MM-dd-yyyy', { locale: enUS });
+
 export const parseDateOnly = (value: string): Date | null => {
   if (!value) return null;
   const parsedDate = parse(value, 'yyyy-MM-dd', new Date());

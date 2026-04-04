@@ -18,7 +18,11 @@ import type { MessageDescriptor } from 'react-intl';
 
 import type { TmsMilestoneStatus } from 'controllers/milestone';
 
-import { isBackToScheduledPopoverOption, MILESTONE_STATUS } from './milestoneStatus';
+import {
+  isBackToScheduledPopoverOption,
+  MILESTONE_STATUS,
+  normalizeMilestoneStatus,
+} from './milestoneStatus';
 import { messages } from './milestonesTable/messages';
 
 export const getMilestoneStatusMessageDescriptor = (
@@ -40,8 +44,17 @@ export const getMilestoneStatusPopoverOptionMessageDescriptor = (
   option: TmsMilestoneStatus,
   current: TmsMilestoneStatus,
 ): MessageDescriptor => {
-  if (isBackToScheduledPopoverOption(option, current)) {
+  const normalizedOption = normalizeMilestoneStatus(option);
+  const normalizedCurrent = normalizeMilestoneStatus(current);
+
+  if (
+    normalizedOption === MILESTONE_STATUS.TESTING &&
+    normalizedCurrent === MILESTONE_STATUS.COMPLETED
+  ) {
+    return messages.milestoneStatusBackToTesting;
+  }
+  if (isBackToScheduledPopoverOption(normalizedOption, normalizedCurrent)) {
     return messages.milestoneStatusBackToScheduled;
   }
-  return getMilestoneStatusMessageDescriptor(option);
+  return getMilestoneStatusMessageDescriptor(normalizedOption);
 };
