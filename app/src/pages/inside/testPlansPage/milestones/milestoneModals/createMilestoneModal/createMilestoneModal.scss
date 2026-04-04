@@ -157,7 +157,7 @@
   padding: 8px 0;
   overflow-y: auto;
   border-radius: 3px;
-  background: var(--rp-ui-color-field-bg, #fff);
+  background: var(--rp-ui-color-field-bg);
   box-shadow: 0 8px 40px rgb(0 0 0 / 15%);
 
   [class*='dropdown-option'] {
