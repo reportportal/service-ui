@@ -1,5 +1,6 @@
 {
   "AALabel.investigatedByAA": "Прааналізавана Аўта-аналізам",
+  "StorageStatistics.storageUsageTooltip": "Сярэдні аб'ём усіх запускаў, элементаў, логаў і ўкладанняў у праекце за бягучы каляндарны месяц",
   "ServiceUnavailableScreen.descriptionApi": "Падобна, што Service API зараз можа быць недаступны. Абнавіце старонку праз некаторы час або звярніцеся па дапамогу да сістэмнага адміністратара.",
   "ServiceUnavailableScreen.footer": "Вы таксама можаце звярнуцца да нашых <installationGuides>інструкцый па ўсталяванні</installationGuides>, каб праверыць карэктнасць разгортвання, або ў наш <slackChannel>канал Slack</slackChannel> для парад ад супольнасці.",
   "ServiceUnavailableScreen.refreshPage": "Абнавіць старонку",

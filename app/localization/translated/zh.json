@@ -1,5 +1,6 @@
 {
   "AALabel.investigatedByAA": "通过自动分析服务进行分析",
+  "StorageStatistics.storageUsageTooltip": "当前日历月内项目中所有启动、条目、日志和附件的平均总量",
   "ServiceUnavailableScreen.descriptionApi": "Service API 当前可能不可用。请稍后刷新页面，或联系系统管理员获取帮助。",
   "ServiceUnavailableScreen.footer": "您还可以参考我们的<installationGuides>安装指南</installationGuides>以检查部署是否正确，或访问我们的<slackChannel>Slack 频道</slackChannel>获取社区建议。",
   "ServiceUnavailableScreen.refreshPage": "刷新页面",
