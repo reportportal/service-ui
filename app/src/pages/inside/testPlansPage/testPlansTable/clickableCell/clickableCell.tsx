@@ -26,12 +26,19 @@ interface ClickableCellProps {
   isSelected: boolean;
   onClick?: () => void;
   onKeyDown?: (event: KeyboardEvent<HTMLDivElement>) => void;
+  contentClassName?: string;
   children: ReactNode;
 }
 
-export const ClickableCell = ({ isSelected, onClick, onKeyDown, children }: ClickableCellProps) => (
+export const ClickableCell = ({
+  isSelected,
+  onClick,
+  onKeyDown,
+  contentClassName,
+  children,
+}: ClickableCellProps) => (
   <div
-    className={cx('cell-content', { selected: isSelected })}
+    className={cx('cell-content', contentClassName, { selected: isSelected })}
     onClick={onClick}
     role="button"
     tabIndex={0}

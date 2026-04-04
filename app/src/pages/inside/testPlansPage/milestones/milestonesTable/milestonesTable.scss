@@ -1,4 +1,6 @@
 .milestones-table {
+  --milestones-table-inline-gutter: 34px;
+
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -6,7 +8,7 @@
   width: 100%;
   max-width: 1324px;
   margin-top: 24px;
-  padding: 0 34px;
+  padding: 0 var(--milestones-table-inline-gutter);
 
   &_with-pagination {
     padding-bottom: 90px;

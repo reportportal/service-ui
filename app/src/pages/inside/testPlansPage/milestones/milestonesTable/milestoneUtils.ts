@@ -16,7 +16,21 @@
 
 import { differenceInCalendarDays, parseISO, startOfDay } from 'date-fns';
 
-import { TmsMilestoneRS } from 'controllers/milestone';
+import type { TmsMilestoneRS, TmsTestPlanInMilestoneRS } from 'controllers/milestone';
+import type { TestPlanDto } from 'controllers/testPlan';
+
+export const milestoneTestPlansAsTestPlanDtos = (
+  plans: TmsTestPlanInMilestoneRS[] | undefined,
+): TestPlanDto[] =>
+  (plans ?? []).map((plan) => ({
+    id: plan.id,
+    name: plan.name,
+    description: plan.description,
+    executionStatistic: {
+      covered: plan.executionStatistic?.covered ?? 0,
+      total: plan.executionStatistic?.total ?? 0,
+    },
+  }));
 
 export const aggregateMilestoneCoverage = (
   milestone: TmsMilestoneRS,
@@ -25,9 +39,9 @@ export const aggregateMilestoneCoverage = (
   let covered = 0;
   let total = 0;
 
-  plans.forEach((p) => {
-    covered += p.executionStatistic?.covered ?? 0;
-    total += p.executionStatistic?.total ?? 0;
+  plans.forEach((plan) => {
+    covered += plan.executionStatistic?.covered ?? 0;
+    total += plan.executionStatistic?.total ?? 0;
   });
 
   const coveredPct = total > 0 ? Math.round((covered / total) * 100) : 0;

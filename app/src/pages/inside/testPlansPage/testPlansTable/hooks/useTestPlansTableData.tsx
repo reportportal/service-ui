@@ -50,12 +50,16 @@ export const useTestPlansTableData = ({
 
   const data = useMemo(
     () =>
-      testPlans?.map(({ id, name, executionStatistic: { total = 0, covered = 0 } }) => {
+      testPlans?.map(({ id, name, executionStatistic }) => {
+        const total = executionStatistic?.total ?? 0;
+        const covered = executionStatistic?.covered ?? 0;
         const coverage = total === 0 ? 0 : covered / total;
 
         const cellProps = {
           isSelected: false,
         };
+
+        const ratioContent = `${covered} / ${total}`;
 
         return {
           id,
@@ -64,13 +68,17 @@ export const useTestPlansTableData = ({
             component: <ClickableCell {...cellProps}>{name}</ClickableCell>,
           },
           coveredTotal: {
-            content: `${covered} / ${total}`,
-            component: <ClickableCell {...cellProps}>{`${covered} / ${total}`}</ClickableCell>,
+            content: ratioContent,
+            component: (
+              <ClickableCell {...cellProps} contentClassName={cx('test-plans__cell-content_end')}>
+                <span className={cx('test-plans__coverage-ratio')}>{ratioContent}</span>
+              </ClickableCell>
+            ),
           },
           coverage: {
             content: coverage,
             component: (
-              <ClickableCell {...cellProps}>
+              <ClickableCell {...cellProps} contentClassName={cx('test-plans__cell-content_end')}>
                 <div className={cx('test-plans__table-cell-coverage')}>
                   {formatNumber(coverage, {
                     style: 'percent',
@@ -84,7 +92,7 @@ export const useTestPlansTableData = ({
           progressBar: {
             content: coverage,
             component: (
-              <ClickableCell {...cellProps}>
+              <ClickableCell {...cellProps} contentClassName={cx('test-plans__cell-content_progress')}>
                 <ProgressBar progress={coverage * 100} />
               </ClickableCell>
             ),

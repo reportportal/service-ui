@@ -9,10 +9,8 @@
   border-radius: 8px;
   background: var(--rp-ui-color-bg);
   box-shadow: var(--rp-ui-base-shadow-hover);
-  cursor: pointer;
   transition: box-shadow 0.15s ease;
 
-  /* Hover ring: same token as test case / manual launches table rows (see testCaseList.scss) */
   &:hover {
     box-shadow:
       var(--rp-ui-base-shadow-hover),
@@ -227,11 +225,31 @@
     }
   }
 
-  &__expanded {
-    padding: 16px 24px 20px 56px;
-    background: var(--rp-ui-kit-colors-bg-secondary);
-    border-top: 1px solid var(--rp-ui-kit-colors-border-primary);
-    border-radius: 0 0 8px 8px;
+  &__test-plans {
+    box-sizing: border-box;
+    max-width: 100%;
+    min-width: 0;
+    overflow: visible;
+
+    :global([class*='table-header-cell']:first-child) {
+      padding-inline-start: 0;
+    }
+
+    :global([class*='primary-cell']) {
+      padding-inline-start: 0;
+    }
+  }
+
+  &__test-plans-empty {
+    @include ms.milestone-body-13;
+
+    margin: 0 0 12px;
+    color: var(--rp-ui-color-text-secondary);
+  }
+
+  &__test-plans-footer {
+    margin-top: 8px;
+    padding-top: 4px;
   }
 
   &__placeholder {
@@ -240,4 +258,19 @@
     margin: 0;
     color: var(--rp-ui-color-text-secondary);
   }
+}
+
+.milestone-card__drawer {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 16px 12px 37px 104px;
+  border-radius: 0;
+  background: var(--rp-ui-base-bg-100);
+  overflow: visible;
+}
+
+.milestone-card__group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
