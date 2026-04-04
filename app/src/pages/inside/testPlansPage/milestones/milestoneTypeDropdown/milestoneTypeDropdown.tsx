@@ -77,6 +77,7 @@ export const MilestoneTypeDropdown = (props: WrappedFieldProps & { label: string
 
   return (
     <Dropdown
+      className={cx('milestone-type-dropdown')}
       label={
         <>
           {label}
@@ -100,6 +101,7 @@ export const MilestoneTypeDropdown = (props: WrappedFieldProps & { label: string
         ) : undefined
       }
       menuPortalRoot={(isBrowser() && document.body) || undefined}
+      notScrollable
       selectListClassName="milestone-type-dropdown-menu--compact"
     />
   );
