@@ -227,6 +227,54 @@
     }
   }
 
+  &__actions-popover {
+    box-sizing: border-box;
+    min-width: 160px;
+    max-width: 160px;
+    width: 160px;
+    padding: 8px 0;
+    font-size: 13px;
+  }
+
+  &__actions-menu {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__actions-menu-item {
+    @include mixins.button-reset;
+    @include ms.milestone-body-13;
+
+    display: block;
+    width: 100%;
+    min-width: 0;
+    padding: 7px 16px;
+    text-align: left;
+    color: var(--rp-ui-base-almost-black);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--rp-ui-base-bg-200);
+    }
+
+    &:focus-visible {
+      outline: 1px solid var(--rp-ui-base-topaz-focused);
+      outline-offset: -1px;
+      background-color: var(--rp-ui-base-bg-200);
+    }
+
+    &_destructive {
+      color: var(--rp-ui-base-error);
+
+      &:hover,
+      &:active,
+      &:focus {
+        color: var(--rp-ui-base-error);
+      }
+    }
+  }
+
   &__expanded {
     padding: 16px 24px 20px 56px;
     background: var(--rp-ui-kit-colors-bg-secondary);
