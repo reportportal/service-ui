@@ -1,5 +1,27 @@
 @use '../../milestonesTable/milestonesShared' as ms;
 
+.milestone-type-dropdown {
+  :global(div[role='button'][class*='_dropdown_']) {
+    align-items: center;
+  }
+
+  :global([class*='value-wrapper']) {
+    align-items: center;
+  }
+
+  :global(span[class*='_icon_']) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 24px;
+    min-width: 24px;
+    height: 24px;
+    margin-top: 0;
+    align-self: center;
+  }
+}
+
 .create-milestone-modal {
   &__label-asterisk {
     @include ms.milestone-body-13;
@@ -16,10 +38,11 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     margin: 0;
     line-height: 0;
+    background: none;
   }
 
   &__content {
@@ -71,11 +94,12 @@
     align-items: center;
     gap: 8px;
     box-sizing: border-box;
+    width: 100%;
     max-width: 100%;
-    padding: 0;
-    min-height: 42px;
+    min-height: 40px;
+    padding: 8px 12px;
     text-align: left;
-    border-radius: 4px;
+    border-radius: 3px;
 
     &_selected {
       background: var(--Background-Brand-Light, var(--rp-ui-kit-colors-bg-secondary));
@@ -100,7 +124,9 @@
     display: flex;
     flex-direction: column;
     gap: 0;
+    flex: 1;
     min-width: 0;
+    justify-content: center;
   }
 
   &__type-option-title {
@@ -125,11 +151,38 @@
 }
 
 :global(.milestone-type-dropdown-menu--compact) {
+  box-sizing: border-box;
+  min-width: 400px;
+  max-height: 280px;
+  padding: 8px 0;
+  overflow-y: auto;
+  border-radius: 3px;
+  background: var(--rp-ui-color-field-bg);
+  box-shadow: 0 8px 40px rgb(0 0 0 / 15%);
+
   [class*='dropdown-option'] {
     box-sizing: border-box;
-    min-height: 56px;
-    max-height: 56px;
-    padding: 7px 12px !important;
+    padding: 0 !important;
+    min-height: 0;
+    max-height: none;
     align-items: center;
+  }
+
+  [class*='dropdown-option'] [class*='single-option'] {
+    flex: 1;
+    min-width: 0;
+    height: auto;
+    max-height: 100%;
+    white-space: normal;
+    overflow: visible;
+    display: flex;
+    align-items: center;
+  }
+
+  [class*='dropdown-option']:is(:hover, [class*='_hover_'], [class*='_selected_'])
+    [class*='type-option-icon']
+    > span {
+    background-color: var(--rp-ui-base-bg-000);
+    border-radius: 50%;
   }
 }

@@ -33,7 +33,7 @@ const ICONS: Record<TmsMilestoneType, ComponentType<SVGProps<SVGSVGElement>>> = 
   [MilestoneType.OTHER]: DiamondIcon,
 };
 
-export type MilestoneTypeIconPlacement = 'default' | 'toggle' | 'menu';
+export type MilestoneTypeIconPlacement = 'default' | 'toggle' | 'menu' | 'card';
 
 interface MilestoneTypeIconProps {
   type: TmsMilestoneType;
@@ -48,6 +48,7 @@ export const MilestoneTypeIcon = ({ type, placement = 'default' }: MilestoneType
       className={cx('milestone-type-icon', `milestone-type-icon--${type}`, {
         'milestone-type-icon--toggle': placement === 'toggle',
         'milestone-type-icon--menu': placement === 'menu',
+        'milestone-type-icon--card': placement === 'card',
       })}
       aria-hidden
     >

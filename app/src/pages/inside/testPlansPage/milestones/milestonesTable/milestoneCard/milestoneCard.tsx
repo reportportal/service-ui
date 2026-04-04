@@ -20,7 +20,7 @@ import { ChevronDownDropdownIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 
-import { formatIsoDateShort } from '../../milestoneDateUtils';
+import { formatIsoDateShortDashed } from '../../milestoneDateUtils';
 import { aggregateMilestoneCoverage, daysLeftUntil } from '../milestoneUtils';
 import { MilestoneCardActionsMenu } from './milestoneCardActionsMenu';
 import { MilestoneCardStatusButton } from './milestoneCardStatusButton';
@@ -43,7 +43,7 @@ export const MilestoneCard = ({
   const { coveredPct, plansCount } = aggregateMilestoneCoverage(milestone);
   const daysLeft = daysLeftUntil(milestone.endDate);
 
-  const dateRange = `${formatIsoDateShort(milestone.startDate)} — ${formatIsoDateShort(milestone.endDate)}`;
+  const dateRange = `${formatIsoDateShortDashed(milestone.startDate)} — ${formatIsoDateShortDashed(milestone.endDate)}`;
 
   return (
     <div className={cx('milestone-card')}>
@@ -63,7 +63,7 @@ export const MilestoneCard = ({
             <ChevronDownDropdownIcon />
           </span>
         </button>
-        <MilestoneTypeIcon type={milestone.type} />
+        <MilestoneTypeIcon type={milestone.type} placement="card" />
         <div className={cx('milestone-card__title-block')}>
           <div className={cx('milestone-card__name')}>{milestone.name}</div>
           <div className={cx('milestone-card__dates')}>{dateRange}</div>

@@ -1,5 +1,8 @@
 .empty-milestones {
-  padding: 48px 24px;
+  box-sizing: border-box;
+  max-width: 1200px;
+  margin: 24px auto 0;
+  padding: 48px 34px;
   text-align: center;
 
   &__title {

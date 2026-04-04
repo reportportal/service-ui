@@ -16,10 +16,9 @@
 
 import { useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { Button, MeatballMenuIcon } from '@reportportal/ui-kit';
+import { Button, MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
-import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
 
 import { messages } from '../messages';
 
@@ -37,7 +36,7 @@ export const MilestoneCardActionsMenu = ({
   const { formatMessage } = useIntl();
   const [isOpened, setIsOpened] = useState(false);
 
-  const items: PopoverItem[] = useMemo(
+  const items = useMemo(
     () => [
       {
         label: formatMessage(messages.menuEditMilestone),
@@ -59,7 +58,7 @@ export const MilestoneCardActionsMenu = ({
       },
       {
         label: formatMessage(messages.menuDeleteMilestone),
-        variant: 'destructive',
+        destructive: true,
         onClick: () => setIsOpened(false),
       },
     ],
@@ -67,8 +66,25 @@ export const MilestoneCardActionsMenu = ({
   );
 
   return (
-    <PopoverControl
-      items={items}
+    <Popover
+      className={cx('milestone-card__actions-popover')}
+      content={
+        <ul className={cx('milestone-card__actions-menu')}>
+          {items.map((item) => (
+            <li key={item.label}>
+              <button
+                type="button"
+                className={cx('milestone-card__actions-menu-item', {
+                  'milestone-card__actions-menu-item_destructive': Boolean(item.destructive),
+                })}
+                onClick={item.onClick}
+              >
+                {item.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      }
       placement="bottom-end"
       isOpened={isOpened}
       setIsOpened={setIsOpened}
@@ -83,6 +99,6 @@ export const MilestoneCardActionsMenu = ({
       >
         <MeatballMenuIcon />
       </Button>
-    </PopoverControl>
+    </Popover>
   );
 };

@@ -21,12 +21,19 @@ export { MilestoneStatus as MILESTONE_STATUS } from 'controllers/milestone';
 
 export type MilestoneCardStatusCssModifier = 'scheduled' | 'testing' | 'completed';
 
+export function normalizeMilestoneStatus(status: string | undefined | null): TmsMilestoneStatus {
+  const key = (status ?? MilestoneStatus.SCHEDULED).toString().toUpperCase();
+  if (key === String(MilestoneStatus.TESTING)) return MilestoneStatus.TESTING;
+  if (key === String(MilestoneStatus.COMPLETED)) return MilestoneStatus.COMPLETED;
+  return MilestoneStatus.SCHEDULED;
+}
+
 export const milestoneStatusToCssModifier = (
   status: string | undefined | null,
 ): MilestoneCardStatusCssModifier => {
-  const key = (status ?? MilestoneStatus.SCHEDULED).toString().toUpperCase();
-  if (key === String(MilestoneStatus.TESTING)) return 'testing';
-  if (key === String(MilestoneStatus.COMPLETED)) return 'completed';
+  const normalized = normalizeMilestoneStatus(status);
+  if (normalized === MilestoneStatus.TESTING) return 'testing';
+  if (normalized === MilestoneStatus.COMPLETED) return 'completed';
   return 'scheduled';
 };
 
@@ -38,7 +45,7 @@ export const isBackToScheduledPopoverOption = (
 export const getMilestoneStatusPopoverOptions = (
   current: TmsMilestoneStatus,
 ): TmsMilestoneStatus[] => {
-  switch (current) {
+  switch (normalizeMilestoneStatus(current)) {
     case MilestoneStatus.SCHEDULED:
       return [MilestoneStatus.TESTING, MilestoneStatus.COMPLETED];
     case MilestoneStatus.TESTING:
