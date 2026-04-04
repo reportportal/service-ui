@@ -1,6 +1,5 @@
 {
   "AALabel.investigatedByAA": "Analizado por Auto-Análisis",
-  "StorageStatistics.storageUsageTooltip": "Cantidad media de todas las ejecuciones, elementos, registros y adjuntos del proyecto durante el mes calendario actual",
   "ServiceUnavailableScreen.descriptionApi": "Parece que Service API podría no estar disponible en este momento. Actualice la página después de un tiempo o contacte con su administrador del sistema para obtener ayuda.",
   "ServiceUnavailableScreen.footer": "También puede consultar nuestras <installationGuides>guías de instalación</installationGuides> para comprobar la corrección del despliegue o nuestro <slackChannel>canal de Slack</slackChannel> para recibir consejos de la comunidad.",
   "ServiceUnavailableScreen.refreshPage": "Actualizar página",
@@ -2314,6 +2313,7 @@
   "StepLevelEntities.TypeStep": "Prueba",
   "StepLevelEntities.TypeTest": "Tipo de prueba",
   "StepLevelEntities.entityItemBTSIssue.placeholder": "Ingrese defecto en BTS",
+  "StorageStatistics.storageUsageTooltip": "Cantidad media de todas las ejecuciones, elementos, registros y adjuntos del proyecto durante el mes calendario actual",
   "SuiteLevelEntities.AUTOMATION_BUG_title": "Error de automatización",
   "SuiteLevelEntities.AUTOMATION_BUG_totalTitle": "Total de errores de automatización",
   "SuiteLevelEntities.DescriptionTitle": "Descripción",
