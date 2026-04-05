@@ -205,6 +205,7 @@ export const InstanceAssignment = ({
   const [selectedOrganizationId, setSelectedOrganizationId] = useState<number | null>(null);
   const [totalProjects, setTotalProjects] = useState(0);
   const [userOrgIds, setUserOrgIds] = useState<Set<number>>(new Set());
+  const [upsaExternalOrgError, setUpsaExternalOrgError] = useState<string | null>(null);
   const allOrganizations = fields.getAll();
   const formContainerRef = useRef<HTMLDivElement>(null);
   const emptyList = !allOrganizations?.length;
@@ -234,6 +235,7 @@ export const InstanceAssignment = ({
   }, [isOpen]);
 
   const resetOrganization = () => {
+    setUpsaExternalOrgError(null);
     dispatch(
       change(formName, formNamespace, {
         name: null,
@@ -245,6 +247,7 @@ export const InstanceAssignment = ({
   };
 
   const handleOrganizationNameFocus = useCallback(() => {
+    setUpsaExternalOrgError(null);
     dispatch(untouch(formName, FORM_FIELDS.ORGANIZATION.NAME));
   }, [dispatch, formName]);
 
@@ -327,7 +330,11 @@ export const InstanceAssignment = ({
         (organization) =>
           !(allOrganizations || []).some(({ id }) => id === organization.id) &&
           (!excludeUserAssignments || !userOrgIds.has(organization.id)) &&
-          !(isUpsaUser && organization.type === OrganizationType.EXTERNAL),
+          !(
+            isUpsaUser &&
+            organization.type === OrganizationType.EXTERNAL &&
+            !excludeUserAssignments
+          ),
       );
 
       setNotAssignedOrganizations(filteredOrganizations);
@@ -362,6 +369,13 @@ export const InstanceAssignment = ({
   const handleSubmit = () => {
     const { name, role, projects } = organization as InstanceAssignmentItem;
     const selectedOrg = notAssignedOrganizations.find((org) => org.id === selectedOrganizationId);
+
+    if (userType === UPSA && selectedOrg?.type === OrganizationType.EXTERNAL) {
+      setUpsaExternalOrgError(formatMessage(invitationMessages.epamInviteForbidden));
+      return;
+    }
+
+
 
     setIsOpen(false);
     setOrganizationProjects([]);
@@ -399,48 +413,52 @@ export const InstanceAssignment = ({
 
   const renderAddOrganizationForm = () => (
     <div className={cx('instance-assignment')} ref={formContainerRef}>
-      <div className={cx('autocomplete-wrapper')}>
-        <FieldProvider name={FORM_FIELDS.ORGANIZATION.NAME}>
-          <FieldErrorHint provideHint={false}>
-            <AsyncAutocompleteV2
-              key={`organization-${invitedUserId}`}
-              inputProps={{
-                onFocus: handleOrganizationNameFocus,
-                label: formatMessage(messages.organization),
-                clearable: true,
-                onClear: () => {
-                  dispatch(change(formName, FORM_FIELDS.ORGANIZATION.NAME, null));
+      <div className={cx('instance-assignment-main')}>
+        <div className={cx('autocomplete-wrapper')}>
+          <FieldProvider name={FORM_FIELDS.ORGANIZATION.NAME}>
+            <FieldErrorHint provideHint={false}>
+              <AsyncAutocompleteV2
+                key={`organization-${invitedUserId}`}
+                inputProps={{
+                  onFocus: handleOrganizationNameFocus,
+                  label: formatMessage(messages.organization),
+                  clearable: true,
+                  className: upsaExternalOrgError ? cx('organization-field-ups-error') : undefined,
+                  onClear: () => {
+                    setUpsaExternalOrgError(null);
+                    dispatch(change(formName, FORM_FIELDS.ORGANIZATION.NAME, null));
+                    dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.NAME, null));
+                    setSelectedOrganizationId(null);
+                    setSelectedProjectId(null);
+                    setOrganizationProjects([]);
+                    setTotalProjects(0);
+                  },
+                }}
+                placeholder={formatMessage(messages.organizationPlaceholder)}
+                getURI={URLS.organizationSearches}
+                getRequestParams={getRequestOrganizationsParams}
+                makeOptions={makeOrganizationsOptions}
+                createWithoutConfirmation
+                skipOptionCreation
+                popoverClassName={cx('popover-organization')}
+                onChange={(organizationName: string) => {
+                  setUpsaExternalOrgError(null);
+                  const selectedOrg = notAssignedOrganizations.find(
+                    ({ name }) => name === organizationName,
+                  );
+                  setSelectedOrganizationId(selectedOrg?.id || null);
                   dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.NAME, null));
-                  setSelectedOrganizationId(null);
                   setSelectedProjectId(null);
                   setOrganizationProjects([]);
-                  setTotalProjects(0);
-                },
-              }}
-              placeholder={formatMessage(messages.organizationPlaceholder)}
-              getURI={URLS.organizationSearches}
-              getRequestParams={getRequestOrganizationsParams}
-              makeOptions={makeOrganizationsOptions}
-              createWithoutConfirmation
-              skipOptionCreation
-              popoverClassName={cx('popover-organization')}
-              onChange={(organizationName: string) => {
-                const selectedOrg = notAssignedOrganizations.find(
-                  ({ name }) => name === organizationName,
-                );
-                setSelectedOrganizationId(selectedOrg?.id || null);
-                dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.NAME, null));
-                setSelectedProjectId(null);
-                setOrganizationProjects([]);
-                setTotalProjects(selectedOrg?.relationships?.projects?.meta?.count ?? 0);
-              }}
-              isRequired={isOrganizationRequired}
-              useFixedPositioning
-              dropdownMatchInputWidth
-              customEmptyListMessage={formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_OPTIONS)}
-            />
-          </FieldErrorHint>
-        </FieldProvider>
+                  setTotalProjects(selectedOrg?.relationships?.projects?.meta?.count ?? 0);
+                }}
+                isRequired={isOrganizationRequired}
+                useFixedPositioning
+                dropdownMatchInputWidth
+                customEmptyListMessage={formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_OPTIONS)}
+              />
+            </FieldErrorHint>
+          </FieldProvider>
         <FieldProvider name={FORM_FIELDS.ORGANIZATION.ROLE}>
           <Checkbox
             onChange={(e) => {
@@ -524,27 +542,31 @@ export const InstanceAssignment = ({
             <InfoIcon />
           </Tooltip>
         </div>
-      </div>
-      <div className={cx('controls', { 'controls-hint': hasOrgNameError })}>
-        <Button
-          className={cx('button')}
-          adjustWidthOn="content"
-          onClick={handleSubmit}
-          disabled={!selectedOrganizationId}
-        >
-          <CheckmarkIcon />
-        </Button>
-        {shouldShowFormCloseButton && (
+        </div>
+        <div className={cx('controls', { 'controls-hint': hasOrgNameError })}>
           <Button
-            className={cx('cancel-button')}
+            className={cx('button')}
             adjustWidthOn="content"
-            variant="ghost"
-            onClick={onCancel}
+            onClick={handleSubmit}
+            disabled={!selectedOrganizationId}
           >
-            <CloseIcon />
+            <CheckmarkIcon />
           </Button>
-        )}
+          {shouldShowFormCloseButton && (
+            <Button
+              className={cx('cancel-button')}
+              adjustWidthOn="content"
+              variant="ghost"
+              onClick={onCancel}
+            >
+              <CloseIcon />
+            </Button>
+          )}
+        </div>
       </div>
+      {upsaExternalOrgError && (
+        <div className={cx('ups-external-org-error')}>{upsaExternalOrgError}</div>
+      )}
     </div>
   );
 
