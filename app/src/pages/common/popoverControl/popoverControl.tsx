@@ -35,6 +35,8 @@ export interface PopoverItem {
 interface PopoverControlProps {
   items: PopoverItem[];
   placement?: ComponentProps<typeof Popover>['placement'];
+  strategy?: ComponentProps<typeof Popover>['strategy'];
+  shouldUsePortal?: ComponentProps<typeof Popover>['shouldUsePortal'];
   children?: ReactNode;
   isOpened?: boolean;
   setIsOpened?: (isOpened: boolean) => void;
@@ -43,6 +45,8 @@ interface PopoverControlProps {
 export const PopoverControl = ({
   items,
   placement,
+  strategy,
+  shouldUsePortal,
   children,
   isOpened,
   setIsOpened,
@@ -68,6 +72,8 @@ export const PopoverControl = ({
       </ul>
     }
     placement={placement}
+    strategy={strategy}
+    shouldUsePortal={shouldUsePortal}
     setIsOpened={setIsOpened}
   >
     {children}
