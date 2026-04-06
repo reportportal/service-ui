@@ -16,7 +16,7 @@
 
 import { all, select, put, takeEvery } from 'redux-saga/effects';
 import { projectKeySelector, fetchProjectAction } from 'controllers/project';
-import { withActiveOrganization } from 'controllers/organization/sagas';
+import { withActiveOrganization } from 'controllers/organization/withActiveOrganizationSaga';
 import { FETCH_ORGANIZATION_EVENTS_DATA, FETCH_PROJECT_DATA } from './constants';
 import { allUsersSagas } from './allUsers';
 import { eventsSagas, fetchEventsAction } from './events';

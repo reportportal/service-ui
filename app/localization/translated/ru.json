@@ -2312,6 +2312,7 @@
   "StepLevelEntities.TypeStep": "Тест",
   "StepLevelEntities.TypeTest": "Тестовый класс",
   "StepLevelEntities.entityItemBTSIssue.placeholder": "Enter Issue in BTS",
+  "StorageStatistics.storageUsageTooltip": "Средний объем всех запусков, элементов, логов и вложений в проекте за текущий календарный месяц",
   "SuiteLevelEntities.AUTOMATION_BUG_title": "Automation Bug",
   "SuiteLevelEntities.AUTOMATION_BUG_totalTitle": "Всего Automation Bugs",
   "SuiteLevelEntities.DescriptionTitle": "Описание",

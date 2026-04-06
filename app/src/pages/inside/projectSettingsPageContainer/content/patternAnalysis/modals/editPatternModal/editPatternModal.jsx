@@ -65,6 +65,7 @@ const EditPatternModal = ({ data, handleSubmit, initialize, dirty }) => {
       }}
       onClose={() => dispatch(hideModalAction())}
       allowCloseOutside={!dirty}
+      scrollable
     >
       <FieldElement
         name="name"
