@@ -205,8 +205,13 @@ export const InstanceAssignment = ({
   const [selectedOrganizationId, setSelectedOrganizationId] = useState<number | null>(null);
   const [totalProjects, setTotalProjects] = useState(0);
   const [userOrgIds, setUserOrgIds] = useState<Set<number>>(new Set());
-  const [upsaExternalOrgError, setUpsaExternalOrgError] = useState<string | null>(null);
   const allOrganizations = fields.getAll();
+  const selectedOrgFromList =
+    selectedOrganizationId != null
+      ? notAssignedOrganizations.find((o) => o.id === selectedOrganizationId)
+      : undefined;
+  const isUpsaExternalOrgSelection =
+    userType === UPSA && selectedOrgFromList?.type === OrganizationType.EXTERNAL;
   const formContainerRef = useRef<HTMLDivElement>(null);
   const emptyList = !allOrganizations?.length;
   const [isOpen, setIsOpen] = useState<boolean>(emptyList && !withEmptyState);
@@ -235,7 +240,6 @@ export const InstanceAssignment = ({
   }, [isOpen]);
 
   const resetOrganization = () => {
-    setUpsaExternalOrgError(null);
     dispatch(
       change(formName, formNamespace, {
         name: null,
@@ -247,7 +251,6 @@ export const InstanceAssignment = ({
   };
 
   const handleOrganizationNameFocus = useCallback(() => {
-    setUpsaExternalOrgError(null);
     dispatch(untouch(formName, FORM_FIELDS.ORGANIZATION.NAME));
   }, [dispatch, formName]);
 
@@ -367,15 +370,11 @@ export const InstanceAssignment = ({
   };
 
   const handleSubmit = () => {
-    const { name, role, projects } = organization as InstanceAssignmentItem;
-    const selectedOrg = notAssignedOrganizations.find((org) => org.id === selectedOrganizationId);
-
-    if (userType === UPSA && selectedOrg?.type === OrganizationType.EXTERNAL) {
-      setUpsaExternalOrgError(formatMessage(invitationMessages.epamInviteForbidden));
+    if (isUpsaExternalOrgSelection) {
       return;
     }
 
-
+    const { name, role, projects } = organization as InstanceAssignmentItem;
 
     setIsOpen(false);
     setOrganizationProjects([]);
@@ -386,8 +385,8 @@ export const InstanceAssignment = ({
     fields.push({
       id: selectedOrganizationId,
       name,
-      type: selectedOrg?.type,
-      owner_id: selectedOrg?.owner_id,
+      type: selectedOrgFromList?.type,
+      owner_id: selectedOrgFromList?.owner_id,
       isNew: !userOrgIds.has(selectedOrganizationId),
       role: role ? MANAGER : MEMBER,
       projects:
@@ -423,9 +422,8 @@ export const InstanceAssignment = ({
                   onFocus: handleOrganizationNameFocus,
                   label: formatMessage(messages.organization),
                   clearable: true,
-                  className: upsaExternalOrgError ? cx('organization-field-ups-error') : undefined,
+                  className: isUpsaExternalOrgSelection ? cx('organization-field-ups-error') : undefined,
                   onClear: () => {
-                    setUpsaExternalOrgError(null);
                     dispatch(change(formName, FORM_FIELDS.ORGANIZATION.NAME, null));
                     dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.NAME, null));
                     setSelectedOrganizationId(null);
@@ -442,7 +440,6 @@ export const InstanceAssignment = ({
                 skipOptionCreation
                 popoverClassName={cx('popover-organization')}
                 onChange={(organizationName: string) => {
-                  setUpsaExternalOrgError(null);
                   const selectedOrg = notAssignedOrganizations.find(
                     ({ name }) => name === organizationName,
                   );
@@ -548,7 +545,7 @@ export const InstanceAssignment = ({
             className={cx('button')}
             adjustWidthOn="content"
             onClick={handleSubmit}
-            disabled={!selectedOrganizationId}
+            disabled={!selectedOrganizationId || isUpsaExternalOrgSelection}
           >
             <CheckmarkIcon />
           </Button>
@@ -564,8 +561,10 @@ export const InstanceAssignment = ({
           )}
         </div>
       </div>
-      {upsaExternalOrgError && (
-        <div className={cx('ups-external-org-error')}>{upsaExternalOrgError}</div>
+      {isUpsaExternalOrgSelection && (
+        <div className={cx('ups-external-org-error')}>
+          {formatMessage(invitationMessages.epamInviteForbidden)}
+        </div>
       )}
     </div>
   );
