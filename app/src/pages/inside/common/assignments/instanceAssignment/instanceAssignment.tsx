@@ -422,7 +422,9 @@ export const InstanceAssignment = ({
                   onFocus: handleOrganizationNameFocus,
                   label: formatMessage(messages.organization),
                   clearable: true,
-                  className: isUpsaExternalOrgSelection ? cx('organization-field-ups-error') : undefined,
+                  className: isUpsaExternalOrgSelection
+                    ? cx('organization-field-ups-error')
+                    : undefined,
                   onClear: () => {
                     dispatch(change(formName, FORM_FIELDS.ORGANIZATION.NAME, null));
                     dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.NAME, null));
@@ -456,89 +458,90 @@ export const InstanceAssignment = ({
               />
             </FieldErrorHint>
           </FieldProvider>
-        <FieldProvider name={FORM_FIELDS.ORGANIZATION.ROLE}>
-          <Checkbox
-            onChange={(e) => {
-              const checked = e.target.checked;
-              dispatch(change(formName, FORM_FIELDS.ORGANIZATION.ROLE, checked));
-              dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE, checked));
-            }}
-            className={cx('autocomplete-checkbox')}
-          >
-            {formatMessage(messages.setOrganizationManager)}
-          </Checkbox>
-        </FieldProvider>
-      </div>
-      <div className={cx('autocomplete-wrapper')}>
-        <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.NAME}>
-          <FieldErrorHint provideHint={false}>
-            <AsyncAutocompleteV2
-              key={`project-${selectedOrganizationId}-${invitedUserId}`}
-              inputProps={{
-                label: formatMessage(messages.project),
-                clearable: totalProjects > 0 && !!selectedOrganizationId,
-                placeholder: formatMessage(invitationMessages.selectSearchProject),
-                onClear: () => {
-                  dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.NAME, null));
-                  setSelectedProjectId(null);
-                },
+          <FieldProvider name={FORM_FIELDS.ORGANIZATION.ROLE}>
+            <Checkbox
+              onChange={(e) => {
+                const checked = e.target.checked;
+                dispatch(change(formName, FORM_FIELDS.ORGANIZATION.ROLE, checked));
+                dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE, checked));
               }}
-              placeholder={formatMessage(invitationMessages.selectSearchProject)}
-              getURI={() => URLS.organizationProjectsSearches(selectedOrganizationId)}
-              getRequestParams={getRequestProjectsParams}
-              makeOptions={makeProjectsOptions}
-              onChange={handleProjectChange}
-              createWithoutConfirmation
-              skipOptionCreation
-              className={cx('autocomplete')}
-              disabled={!selectedOrganizationId}
-              customEmptyListMessage={
-                totalProjects === 0 && selectedOrganizationId
-                  ? formatMessage(invitationMessages.noProjectsCreated)
-                  : formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_OPTIONS)
-              }
-              isDropdownMode={totalProjects === 0 && selectedOrganizationId}
-              icon={totalProjects === 0 && selectedOrganizationId ? <div /> : undefined}
-              useFixedPositioning
-              dropdownMatchInputWidth
-            />
-          </FieldErrorHint>
-        </FieldProvider>
-        <div className={cx('checkbox-wrapper', { 'can-edit-hint': hasOrgNameError })}>
-          <div className={cx('can-edit-container')}>
-            {organization?.role ? (
-              <Tooltip
-                content={formatMessage(messages.disabledCanEditProjectHint)}
-                placement="top-start"
-                contentClassName={cx('checkbox-tooltip-content')}
-                wrapperClassName={cx('checkbox-tooltip-wrapper')}
-              >
-                <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE}>
-                  <Checkbox className={cx('disabled-checkbox')} disabled />
-                </FieldProvider>
-              </Tooltip>
-            ) : (
-              <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE}>
-                <Checkbox disabled={!selectedOrganizationId} />
-              </FieldProvider>
-            )}
-            <span
-              className={cx('can-edit-label', {
-                'can-edit-label--disabled': organization?.role || !selectedOrganizationId,
-              })}
+              className={cx('autocomplete-checkbox')}
             >
-              {formatMessage(messages.canEditProject)}
-            </span>
-          </div>
-          <Tooltip
-            content={formatMessage(messages.hintMessage)}
-            placement="top"
-            contentClassName={cx('custom-tooltip')}
-            wrapperClassName={cx('tooltip-wrapper')}
-          >
-            <InfoIcon />
-          </Tooltip>
+              {formatMessage(messages.setOrganizationManager)}
+            </Checkbox>
+          </FieldProvider>
         </div>
+        <div className={cx('autocomplete-wrapper')}>
+          <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.NAME}>
+            <FieldErrorHint provideHint={false}>
+              <AsyncAutocompleteV2
+                key={`project-${selectedOrganizationId}-${invitedUserId}`}
+                inputProps={{
+                  label: formatMessage(messages.project),
+                  clearable: totalProjects > 0 && !!selectedOrganizationId,
+                  placeholder: formatMessage(invitationMessages.selectSearchProject),
+                  onClear: () => {
+                    dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.NAME, null));
+                    setSelectedProjectId(null);
+                  },
+                }}
+                placeholder={formatMessage(invitationMessages.selectSearchProject)}
+                getURI={() => URLS.organizationProjectsSearches(selectedOrganizationId)}
+                getRequestParams={getRequestProjectsParams}
+                makeOptions={makeProjectsOptions}
+                onChange={handleProjectChange}
+                createWithoutConfirmation
+                skipOptionCreation
+                className={cx('autocomplete')}
+                disabled={!selectedOrganizationId || isUpsaExternalOrgSelection}
+                customEmptyListMessage={
+                  totalProjects === 0 && selectedOrganizationId
+                    ? formatMessage(invitationMessages.noProjectsCreated)
+                    : formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_OPTIONS)
+                }
+                isDropdownMode={totalProjects === 0 && selectedOrganizationId}
+                icon={totalProjects === 0 && selectedOrganizationId ? <div /> : undefined}
+                useFixedPositioning
+                dropdownMatchInputWidth
+              />
+            </FieldErrorHint>
+          </FieldProvider>
+          <div className={cx('checkbox-wrapper', { 'can-edit-hint': hasOrgNameError })}>
+            <div className={cx('can-edit-container')}>
+              {organization?.role ? (
+                <Tooltip
+                  content={formatMessage(messages.disabledCanEditProjectHint)}
+                  placement="top-start"
+                  contentClassName={cx('checkbox-tooltip-content')}
+                  wrapperClassName={cx('checkbox-tooltip-wrapper')}
+                >
+                  <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE}>
+                    <Checkbox className={cx('disabled-checkbox')} disabled />
+                  </FieldProvider>
+                </Tooltip>
+              ) : (
+                <FieldProvider name={FORM_FIELDS.ORGANIZATION.PROJECTS.ROLE}>
+                  <Checkbox disabled={!selectedOrganizationId || isUpsaExternalOrgSelection} />
+                </FieldProvider>
+              )}
+              <span
+                className={cx('can-edit-label', {
+                  'can-edit-label--disabled':
+                    organization?.role || !selectedOrganizationId || isUpsaExternalOrgSelection,
+                })}
+              >
+                {formatMessage(messages.canEditProject)}
+              </span>
+            </div>
+            <Tooltip
+              content={formatMessage(messages.hintMessage)}
+              placement="top"
+              contentClassName={cx('custom-tooltip')}
+              wrapperClassName={cx('tooltip-wrapper')}
+            >
+              <InfoIcon />
+            </Tooltip>
+          </div>
         </div>
         <div className={cx('controls', { 'controls-hint': hasOrgNameError })}>
           <Button
