@@ -29,10 +29,6 @@ export const messages = defineMessages({
     id: 'ExecutionStatusConfirmModal.commentPlaceholder',
     defaultMessage: 'Add a comment about this test execution',
   },
-  postIssueToBts: {
-    id: 'ExecutionStatusConfirmModal.postIssueToBts',
-    defaultMessage: 'Post or link issue to BTS',
-  },
   attachments: {
     id: 'ExecutionStatusConfirmModal.attachments',
     defaultMessage: 'Attachments',
