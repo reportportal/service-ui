@@ -383,9 +383,10 @@ export const InstanceAssignment = ({
   };
 
   const handleSubmit = () => {
-    if (isUpsaExternalOrgSelection) {
+    if (isUpsaExternalOrgSelection || selectedOrganizationId == null) {
       return;
     }
+
 
     const { name, role, projects } = organization as InstanceAssignmentItem;
 
