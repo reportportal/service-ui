@@ -16,7 +16,7 @@
 
 import { PropsWithChildren } from 'react';
 import { Layout } from 'layouts/common/layout';
-import { dashboardFullWidthModeSelector } from 'controllers/dashboard';
+import { dashboardFullScreenModeSelector, dashboardFullWidthModeSelector } from 'controllers/dashboard';
 import { pageSelector, PROJECT_DASHBOARD_ITEM_PAGE } from 'controllers/pages';
 import { useFullSelector } from 'hooks/useTypedSelector';
 import { AppState } from 'types/store';
@@ -36,6 +36,10 @@ export const ProjectLayout = ({
   const fullWidthMode = useFullSelector((state: AppState) =>
     Boolean(dashboardFullWidthModeSelector(state)),
   );
+  const fullScreenMode = useFullSelector((state: AppState) =>
+    Boolean(dashboardFullScreenModeSelector(state)),
+  );
+  const isDashboardFullscreen = page === PROJECT_DASHBOARD_ITEM_PAGE && fullScreenMode;
 
   return (
     <Layout
@@ -44,6 +48,9 @@ export const ProjectLayout = ({
       Banner={AppBanner}
       rawContent={rawContent}
       fullWidthContainer={page === PROJECT_DASHBOARD_ITEM_PAGE && fullWidthMode}
+      hideHeader={isDashboardFullscreen}
+      hideSidebar={isDashboardFullscreen}
+      hideBanner={isDashboardFullscreen}
     >
       {children}
     </Layout>

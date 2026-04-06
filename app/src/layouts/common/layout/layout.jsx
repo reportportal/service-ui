@@ -42,6 +42,9 @@ export class Layout extends Component {
     Header: PropTypes.elementType,
     Sidebar: PropTypes.elementType,
     fullWidthContainer: PropTypes.bool,
+    hideBanner: PropTypes.bool,
+    hideHeader: PropTypes.bool,
+    hideSidebar: PropTypes.bool,
     rawContent: PropTypes.bool,
     sessionExpirationConfig: PropTypes.number.isRequired,
     logout: PropTypes.func.isRequired,
@@ -52,6 +55,9 @@ export class Layout extends Component {
     Header: null,
     Sidebar: null,
     fullWidthContainer: false,
+    hideBanner: false,
+    hideHeader: false,
+    hideSidebar: false,
     rawContent: false,
   };
 
@@ -121,10 +127,20 @@ export class Layout extends Component {
   };
 
   render() {
-    const { Header, Sidebar, Banner, rawContent, fullWidthContainer, children } = this.props;
+    const {
+      Header,
+      Sidebar,
+      Banner,
+      rawContent,
+      fullWidthContainer,
+      hideBanner,
+      hideHeader,
+      hideSidebar,
+      children,
+    } = this.props;
     const header = (
       <div className={cx('header-container')}>
-        {Header && (
+        {!hideHeader && Header && (
           <Header
             isSideMenuOpened={this.state.sideMenuOpened}
             toggleSideMenu={this.toggleSideMenu}
@@ -135,25 +151,31 @@ export class Layout extends Component {
 
     return (
       <div className={cx('layout')}>
-        <div className={cx('slide-container', { 'side-menu-opened': this.state.sideMenuOpened })}>
-          <div className={cx('sidebar-container')}>
-            {Sidebar && (
-              <Sidebar
-                onClickNavBtn={() => {
-                  this.state.sideMenuOpened && this.setState({ sideMenuOpened: false });
-                }}
-              />
-            )}
-          </div>
-          <div className={cx('content')}>
-            {Banner && (
+        <div
+          className={cx('slide-container', {
+            'side-menu-opened': !hideSidebar && this.state.sideMenuOpened,
+          })}
+        >
+          {!hideSidebar && (
+            <div className={cx('sidebar-container')}>
+              {Sidebar && (
+                <Sidebar
+                  onClickNavBtn={() => {
+                    this.state.sideMenuOpened && this.setState({ sideMenuOpened: false });
+                  }}
+                />
+              )}
+            </div>
+          )}
+          <div className={cx('content', { 'content-without-sidebar': hideSidebar })}>
+            {!hideBanner && Banner && (
               <div className={cx('banner-container')}>
                 <Banner />
               </div>
             )}
             {rawContent ? (
               <>
-                {header}
+                {!hideHeader && header}
                 {children}
               </>
             ) : (
@@ -163,7 +185,7 @@ export class Layout extends Component {
                 onReset={this.unmarkScrollToReset}
               >
                 <div className={cx('scrolling-content')}>
-                  {header}
+                  {!hideHeader && header}
                   <div
                     className={cx('page-container', {
                       'full-width-page-container': fullWidthContainer,
@@ -174,10 +196,12 @@ export class Layout extends Component {
                 </div>
               </ScrollWrapper>
             )}
-            <div
-              className={cx('sidebar-close-area', { visible: this.state.sideMenuOpened })}
-              onClick={this.toggleSideMenu}
-            />
+            {!hideSidebar && (
+              <div
+                className={cx('sidebar-close-area', { visible: this.state.sideMenuOpened })}
+                onClick={this.toggleSideMenu}
+              />
+            )}
           </div>
         </div>
       </div>
