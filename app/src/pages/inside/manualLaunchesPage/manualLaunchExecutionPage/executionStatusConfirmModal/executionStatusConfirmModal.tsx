@@ -50,6 +50,8 @@ import {
   EXECUTION_STATUS_FAILED,
 } from '../constants';
 import { messages } from './messages';
+import { messages as commonMessages } from '../messages';
+import { useBTSIssuesModal } from '../BTSIssuesModal/useBTSIssuesModal';
 
 import styles from './executionStatusConfirmModal.scss';
 
@@ -66,6 +68,7 @@ const ExecutionStatusConfirmModalComponent: FC<
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   useTextareaAutoResize(textareaRef);
+  const { openModal } = useBTSIssuesModal();
 
   const handleFilesAdded = (filesWithValidation: FileWithValidation[]) => {
     const files = filesWithValidation.map((f) => f.file);
@@ -101,6 +104,8 @@ const ExecutionStatusConfirmModalComponent: FC<
       }),
     );
     dispatch(hideModalAction());
+
+    if (values.postIssueToBts) openModal();
   };
 
   const { okButton, cancelButton, hideModal } = useModalButtons({
@@ -146,7 +151,7 @@ const ExecutionStatusConfirmModalComponent: FC<
             {showPostIssueToBts && (
               <div className={cx('checkbox-section')}>
                 <FieldProvider name="postIssueToBts">
-                  <InputCheckbox>{formatMessage(messages.postIssueToBts)}</InputCheckbox>
+                  <InputCheckbox>{formatMessage(commonMessages.postIssueToBts)}</InputCheckbox>
                 </FieldProvider>
               </div>
             )}
@@ -170,7 +175,7 @@ const ExecutionStatusConfirmModalComponent: FC<
             {showPostIssueToBts && (
               <div className={cx('checkbox-section')}>
                 <FieldProvider name="postIssueToBts">
-                  <InputCheckbox>{formatMessage(messages.postIssueToBts)}</InputCheckbox>
+                  <InputCheckbox>{formatMessage(commonMessages.postIssueToBts)}</InputCheckbox>
                 </FieldProvider>
               </div>
             )}

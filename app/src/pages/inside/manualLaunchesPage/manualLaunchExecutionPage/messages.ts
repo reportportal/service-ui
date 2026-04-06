@@ -49,4 +49,8 @@ export const messages = defineMessages({
     id: 'ManualLaunchExecutionPage.executionStatusUpdated',
     defaultMessage: 'Execution status updated to {status}',
   },
+  postIssueToBts: {
+    id: 'ExecutionStatusConfirmModal.postIssueToBts',
+    defaultMessage: 'Post or link issue to BTS',
+  },
 });
