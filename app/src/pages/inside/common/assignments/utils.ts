@@ -105,6 +105,8 @@ const MANAGE_ASSIGNMENTS_CONDITIONS = {
   REMOVE_PROJECT: 'remove project',
   CHANGE_ROLE: 'change role',
   CHANGE_PERMISSION: 'change permission',
+  ADD_ORGANIZATION: 'add organization',
+  REMOVE_ORGANIZATION: 'remove organization',
 } as const;
 
 export function getManageAssignmentsSaveCondition(
@@ -178,10 +180,14 @@ export function getManageAssignmentsInstanceSaveCondition(
   const { removed, added, modified } = getManageAssignmentsInstanceChangeSet(initial, current);
   const parts = new Set<string>();
   if (removed.length > 0) {
-    parts.add('remove organization');
+    parts.add(MANAGE_ASSIGNMENTS_CONDITIONS.REMOVE_ORGANIZATION);
   }
   if (added.length > 0) {
-    parts.add('add organization');
+    parts.add(MANAGE_ASSIGNMENTS_CONDITIONS.ADD_ORGANIZATION);
+
+    if (added.some((org) => org.projects.length)) {
+      parts.add(MANAGE_ASSIGNMENTS_CONDITIONS.ADD_PROJECT);
+    }
   }
   modified.forEach((org) => {
     const initialOrg = initial.find((io) => io.id === org.id);
