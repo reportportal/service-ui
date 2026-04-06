@@ -347,16 +347,10 @@ export const InstanceAssignment = ({
 
   const makeOrganizationsOptions = (response: OrganizationsSearchesResponseData) => {
     if (response.items) {
-      const isUpsaUser = userType === UPSA;
       const filteredOrganizations = response.items.filter(
         (organization) =>
           !(allOrganizations || []).some(({ id }) => id === organization.id) &&
-          (!excludeUserAssignments || !userOrgIds.has(organization.id)) &&
-          !(
-            isUpsaUser &&
-            organization.type === OrganizationType.EXTERNAL &&
-            !excludeUserAssignments
-          ),
+          (!excludeUserAssignments || !userOrgIds.has(organization.id)),
       );
 
       setNotAssignedOrganizations(filteredOrganizations);
