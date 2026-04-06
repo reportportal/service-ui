@@ -109,6 +109,15 @@ const isServiceUnavailableError = (error: AxiosError): boolean => {
     status === 504
   );
 };
+const isApiServiceAvailable = (data: unknown): boolean => {
+  if (typeof data !== 'object' || data === null) {
+    return false;
+  }
+  const responseData = data as Record<string, unknown>;
+  const api = responseData.api as Record<string, unknown> | undefined;
+  const build = api?.build as Record<string, unknown> | undefined;
+  return build?.name === 'API Service';
+};
 
 export const initAuthInterceptor = (store: Store): void => {
   axios.interceptors.response.use(
@@ -116,7 +125,10 @@ export const initAuthInterceptor = (store: Store): void => {
       const responseUrl = response.config?.url || '';
 
       if (isCompositeInfoRequest(responseUrl)) {
-        store.dispatch(setServiceAvailabilityAction({ checked: true, apiUnavailable: false }));
+        store.dispatch(setServiceAvailabilityAction({ 
+          checked: true, 
+          apiUnavailable: !isApiServiceAvailable(response.data) 
+        }));
       }
 
       return response;
