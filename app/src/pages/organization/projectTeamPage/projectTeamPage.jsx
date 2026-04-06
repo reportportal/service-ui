@@ -21,10 +21,15 @@ import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import { loadingSelector, membersSelector, fetchMembersAction } from 'controllers/members';
 import { showModalAction } from 'controllers/modal';
-import { fetchProjectAction, projectKeySelector } from 'controllers/project';
+import {
+  fetchProjectAction,
+  projectInfoIdSelector,
+  projectKeySelector,
+} from 'controllers/project';
 import { EmptyPageState } from 'pages/common';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { PROJECT_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectPageEvents';
 import { PROJECT_TEAM_PAGE_VIEWS } from 'components/main/analytics/events/ga4Events/projectTeamPageEvents';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { InviteUserModal, Level } from 'pages/inside/common/invitations/inviteUserModal';
@@ -44,6 +49,7 @@ export const ProjectTeamPage = () => {
   const members = useSelector(membersSelector);
   const isMembersLoading = useSelector(loadingSelector);
   const projectKey = useSelector(projectKeySelector);
+  const projectId = useSelector(projectInfoIdSelector);
   const [searchValue, setSearchValue] = useState(null);
   const isEmptyMembers = members.length === 0;
 
@@ -54,6 +60,7 @@ export const ProjectTeamPage = () => {
   const onInvite = () => {
     dispatch(fetchMembersAction());
     dispatch(fetchProjectAction(projectKey, true));
+    trackEvent(PROJECT_PAGE_EVENTS.projectTeamInviteUserModalSubmit(projectId));
   };
 
   const showInviteUserModal = () => {
@@ -62,6 +69,7 @@ export const ProjectTeamPage = () => {
         component: <InviteUserModal level={Level.PROJECT} onInvite={onInvite} />,
       }),
     );
+    trackEvent(PROJECT_PAGE_EVENTS.projectTeamClickInvite(projectId));
   };
 
   const getEmptyPageState = () => {
