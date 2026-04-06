@@ -22,7 +22,7 @@ import { Button, ChevronDownDropdownIcon, PlusIcon } from '@reportportal/ui-kit'
 import { createClassnames } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 
-import { formatIsoDateShort } from '../../milestoneDateUtils';
+import { formatIsoDateShortDashed } from '../../milestoneDateUtils';
 import {
   aggregateMilestoneCoverage,
   daysLeftUntil,
@@ -53,7 +53,7 @@ export const MilestoneCard = ({
   const { coveredPct, plansCount } = aggregateMilestoneCoverage(milestone);
   const daysLeft = daysLeftUntil(milestone.endDate);
 
-  const dateRange = `${formatIsoDateShort(milestone.startDate)} — ${formatIsoDateShort(milestone.endDate)}`;
+  const dateRange = `${formatIsoDateShortDashed(milestone.startDate)} — ${formatIsoDateShortDashed(milestone.endDate)}`;
 
   const testPlanRows = useMemo(
     () => milestoneTestPlansAsTestPlanDtos(milestone.testPlans),
@@ -63,59 +63,59 @@ export const MilestoneCard = ({
   return (
     <div className={cx('milestone-card__group')}>
       <div className={cx('milestone-card')}>
-        <div className={cx('milestone-card__header')}>
-          <button
-            type="button"
-            className={cx('milestone-card__expand')}
-            aria-expanded={expanded}
-            aria-label={formatMessage(messages.expandMilestone, { name: milestone.name })}
-            onClick={() => setExpanded((v) => !v)}
+      <div className={cx('milestone-card__header')}>
+        <button
+          type="button"
+          className={cx('milestone-card__expand')}
+          aria-expanded={expanded}
+          aria-label={formatMessage(messages.expandMilestone, { name: milestone.name })}
+          onClick={() => setExpanded((v) => !v)}
+        >
+          <span
+            className={cx('milestone-card__chevron', {
+              'milestone-card__chevron_open': expanded,
+            })}
           >
+            <ChevronDownDropdownIcon />
+          </span>
+        </button>
+        <MilestoneTypeIcon type={milestone.type} />
+        <div className={cx('milestone-card__title-block')}>
+          <div className={cx('milestone-card__name')}>{milestone.name}</div>
+          <div className={cx('milestone-card__dates')}>{dateRange}</div>
+        </div>
+        <div className={cx('milestone-card__metrics')}>
+          <div className={cx('milestone-card__metric')}>
+            <span className={cx('milestone-card__metric-value')}>{coveredPct}%</span>
+            <span className={cx('milestone-card__metric-label')}>
+              {formatMessage(messages.coveredLabel)}
+            </span>
+          </div>
+          <div className={cx('milestone-card__metric')}>
+            <span className={cx('milestone-card__metric-value')}>{daysLeft}</span>
+            <span className={cx('milestone-card__metric-label')}>
+              {formatMessage(messages.daysLeftLabel)}
+            </span>
+          </div>
+          <div className={cx('milestone-card__metric')}>
             <span
-              className={cx('milestone-card__chevron', {
-                'milestone-card__chevron_open': expanded,
+              className={cx('milestone-card__metric-value', {
+                'milestone-card__metric-value_alert': plansCount <= 0,
               })}
             >
-              <ChevronDownDropdownIcon />
+              {plansCount}
             </span>
-          </button>
-          <MilestoneTypeIcon type={milestone.type} />
-          <div className={cx('milestone-card__title-block')}>
-            <div className={cx('milestone-card__name')}>{milestone.name}</div>
-            <div className={cx('milestone-card__dates')}>{dateRange}</div>
+            <span className={cx('milestone-card__metric-label')}>
+              {formatMessage(messages.plansLabel)}
+            </span>
           </div>
-          <div className={cx('milestone-card__metrics')}>
-            <div className={cx('milestone-card__metric')}>
-              <span className={cx('milestone-card__metric-value')}>{coveredPct}%</span>
-              <span className={cx('milestone-card__metric-label')}>
-                {formatMessage(messages.coveredLabel)}
-              </span>
-            </div>
-            <div className={cx('milestone-card__metric')}>
-              <span className={cx('milestone-card__metric-value')}>{daysLeft}</span>
-              <span className={cx('milestone-card__metric-label')}>
-                {formatMessage(messages.daysLeftLabel)}
-              </span>
-            </div>
-            <div className={cx('milestone-card__metric')}>
-              <span
-                className={cx('milestone-card__metric-value', {
-                  'milestone-card__metric-value_alert': plansCount <= 0,
-                })}
-              >
-                {plansCount}
-              </span>
-              <span className={cx('milestone-card__metric-label')}>
-                {formatMessage(messages.plansLabel)}
-              </span>
-            </div>
-          </div>
-          <MilestoneCardStatusButton milestone={milestone} />
-          <MilestoneCardActionsMenu
-            milestone={milestone}
-            onEditMilestone={onEditMilestone}
-            onDuplicateMilestone={onDuplicateMilestone}
-          />
+        </div>
+        <MilestoneCardStatusButton milestone={milestone} />
+        <MilestoneCardActionsMenu
+          milestone={milestone}
+          onEditMilestone={onEditMilestone}
+          onDuplicateMilestone={onDuplicateMilestone}
+        />
         </div>
       </div>
       {expanded && (

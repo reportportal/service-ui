@@ -42,4 +42,17 @@ export const PROJECT_PAGE_EVENTS = {
     category: 'project_team',
     element_name: 'change to can edit',
   },
+  projectTeamClickInvite: (projectId?: number) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    category: 'project_team',
+    element_name: 'invite',
+    ...(projectId != null && { project_id: projectId }),
+  }),
+  projectTeamInviteUserModalSubmit: (projectId?: number) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    category: 'project_team',
+    element_name: 'button_invite_user',
+    modal: 'invite_user',
+    ...(projectId != null && { project_id: projectId }),
+  }),
 };

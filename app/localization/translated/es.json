@@ -2313,6 +2313,7 @@
   "StepLevelEntities.TypeStep": "Prueba",
   "StepLevelEntities.TypeTest": "Tipo de prueba",
   "StepLevelEntities.entityItemBTSIssue.placeholder": "Ingrese defecto en BTS",
+  "StorageStatistics.storageUsageTooltip": "Cantidad media de todas las ejecuciones, elementos, registros y adjuntos del proyecto durante el mes calendario actual",
   "SuiteLevelEntities.AUTOMATION_BUG_title": "Error de automatización",
   "SuiteLevelEntities.AUTOMATION_BUG_totalTitle": "Total de errores de automatización",
   "SuiteLevelEntities.DescriptionTitle": "Descripción",

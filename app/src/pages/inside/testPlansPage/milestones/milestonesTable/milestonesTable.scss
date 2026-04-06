@@ -6,9 +6,9 @@
   gap: 4px;
   box-sizing: border-box;
   width: 100%;
-  max-width: 1324px;
-  margin-top: 24px;
-  padding: 0 var(--milestones-table-inline-gutter);
+  max-width: 1200px;
+  margin: 24px auto 0;
+  padding: 0 34px;
 
   &_with-pagination {
     padding-bottom: 90px;
