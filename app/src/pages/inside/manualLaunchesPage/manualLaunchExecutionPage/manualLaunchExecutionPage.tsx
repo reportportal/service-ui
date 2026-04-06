@@ -48,6 +48,7 @@ import { StepsBasedContent } from './stepsBasedContent';
 import { messages } from './messages';
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { messages as manualLaunchesMessages } from '../messages';
+import { BTSIssuesModal } from './BTSIssuesModal/BTSIssuesModal';
 
 import styles from './manualLaunchExecutionPage.scss';
 
@@ -203,6 +204,7 @@ export const ManualLaunchExecutionPage = () => {
         </div>
       </ScrollWrapper>
       <ExecutionStatusConfirmModal />
+      <BTSIssuesModal />
     </SettingsLayout>
   );
 };
