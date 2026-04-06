@@ -93,7 +93,7 @@ import {
   deleteLogTypeSuccessAction,
 } from './actionCreators';
 import { patternsSelector, projectKeySelector } from './selectors';
-import { withActiveOrganization } from 'controllers/organization/sagas';
+import { withActiveOrganization } from 'controllers/organization/withActiveOrganizationSaga';
 import { setActiveProjectKeyAction } from 'controllers/user';
 
 export function* withActiveProject(
