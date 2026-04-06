@@ -411,12 +411,20 @@ export class FieldErrorHint extends Component {
     } = this.props;
     const showHintWithError = errorsWithHint.includes(error);
     const classes = cx('field-error-hint', `type-${hintType}`, className);
+    let childErrorProp;
+    if (error === 'inviteUserEpamForbidden') {
+      childErrorProp = '';
+    } else if (error && messages[error]) {
+      childErrorProp = intl.formatMessage(messages[error], MESSAGE_VALUES[error] || {});
+    } else {
+      childErrorProp = error;
+    }
 
     return (
       <div className={classes} data-automation-id={dataAutomationId}>
         {children &&
           cloneElement(children, {
-            error: error && messages[error] ? intl.formatMessage(messages[error], MESSAGE_VALUES[error] || {}) : error,
+            error: childErrorProp,
             active,
             showHintWithError,
             ...rest,

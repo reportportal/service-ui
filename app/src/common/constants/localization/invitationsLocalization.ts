@@ -17,6 +17,9 @@
 import { defineMessages } from 'react-intl';
 import { MessageDescriptorMap } from 'types/intl';
 
+
+export const EPAM_DELIVERY_PORTAL_URL = 'https://delivery.epam.com';
+
 export const messages: MessageDescriptorMap = defineMessages({
   addProject: {
     id: 'InviteUser.addProject',
@@ -105,7 +108,7 @@ export const messages: MessageDescriptorMap = defineMessages({
   epamInviteForbidden: {
     id: 'InviteUser.epamInviteForbidden',
     defaultMessage:
-      'Unable to assign user to the organization. Please verify user assignment to the organization in EPAM internal system: delivery.epam.com',
+      'Unable to assign user to the organization. Please verify user assignment to the organization in EPAM internal system: <link>delivery.epam.com</link>',
   },
   managersCanEditAll: {
     id: 'InviteUser.managersCanEditAll',

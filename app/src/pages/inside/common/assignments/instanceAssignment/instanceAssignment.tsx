@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo, type ReactNode } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   WrappedFieldArrayProps,
@@ -61,8 +61,12 @@ import { AddItemButton } from '../organizationAssignment/organizationItem/addIte
 import { MEMBER, EDITOR, VIEWER, MANAGER } from 'common/constants/projectRoles';
 import { UPSA } from 'common/constants/accountType';
 import { ORGANIZATIONS } from 'pages/instance/allUsersPage/allUsersHeader/createUserModal/constants';
-import { messages as invitationMessages } from 'common/constants/localization/invitationsLocalization';
+import {
+  EPAM_DELIVERY_PORTAL_URL,
+  messages as invitationMessages,
+} from 'common/constants/localization/invitationsLocalization';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { ExternalLink } from 'pages/inside/common/externalLink';
 
 import styles from './instanceAssignment.scss';
 
@@ -212,6 +216,21 @@ export const InstanceAssignment = ({
       : undefined;
   const isUpsaExternalOrgSelection =
     userType === UPSA && selectedOrgFromList?.type === OrganizationType.EXTERNAL;
+  const renderEpamDeliveryLink = useCallback(
+    (chunks: ReactNode) => (
+      <ExternalLink href={EPAM_DELIVERY_PORTAL_URL} variant="compact" isColoredIcon={false}>
+        {chunks}
+      </ExternalLink>
+    ),
+    [],
+  );
+  const epamInviteForbiddenDescription = useMemo(
+    () =>
+      formatMessage(invitationMessages.epamInviteForbidden, {
+        link: renderEpamDeliveryLink,
+      }),
+    [formatMessage, renderEpamDeliveryLink],
+  );
   const formContainerRef = useRef<HTMLDivElement>(null);
   const emptyList = !allOrganizations?.length;
   const [isOpen, setIsOpen] = useState<boolean>(emptyList && !withEmptyState);
@@ -565,9 +584,7 @@ export const InstanceAssignment = ({
         </div>
       </div>
       {isUpsaExternalOrgSelection && (
-        <div className={cx('ups-external-org-error')}>
-          {formatMessage(invitationMessages.epamInviteForbidden)}
-        </div>
+        <div className={cx('ups-external-org-error')}>{epamInviteForbiddenDescription}</div>
       )}
     </div>
   );
