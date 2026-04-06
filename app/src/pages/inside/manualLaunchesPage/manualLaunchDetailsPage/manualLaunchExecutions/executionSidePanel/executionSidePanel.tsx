@@ -12,6 +12,7 @@ import {
   RunManualIcon,
   SidePanel,
 } from '@reportportal/ui-kit';
+import { useDispatch } from 'react-redux';
 import type { Issue } from '@reportportal/ui-kit/issueList';
 
 import { useOnClickOutside } from 'common/hooks';
@@ -20,6 +21,9 @@ import { CollapsibleSection } from 'components/collapsibleSection';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { FolderBreadcrumbs } from 'components/folderBreadcrumbs';
 import { BtsTicket, manualLaunchFoldersSelector } from 'controllers/manualLaunch';
+import { MANUAL_LAUNCH_DETAILS_PAGE } from 'controllers/pages/constants';
+import { useManualLaunchId, useProjectDetails } from 'hooks/useTypedSelector';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { messages as testCaseMessages } from 'pages/inside/common/testCaseList/testCaseSidePanel/messages';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
@@ -46,6 +50,10 @@ interface ExecutionSidePanelProps {
 
 export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelProps) => {
   const { formatMessage } = useIntl();
+  const launchId = useManualLaunchId();
+  const { canManageExecutions } = useUserPermissions();
+  const { organizationSlug, projectSlug } = useProjectDetails();
+  const dispatch = useDispatch();
   const { executionDetails, isLoading } = useExecutionDetails(executionId);
   const sidePanelRef = useRef<HTMLDivElement>(null);
   const isScenarioProvided =
@@ -54,6 +62,23 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
     executionDetails?.manualScenario?.manualScenarioType === TestCaseManualScenario.TEXT;
 
   useOnClickOutside(sidePanelRef, onClose);
+
+  const onFolderClick = (e?: React.MouseEvent, folderId?: number) => {
+    e?.preventDefault();
+
+    dispatch({
+      type: MANUAL_LAUNCH_DETAILS_PAGE,
+      payload: {
+        organizationSlug,
+        projectSlug,
+        launchId,
+        ...(folderId && {
+          manualLaunchPageRoute: `folder/${folderId}`,
+        }),
+      },
+    });
+    onClose();
+  };
 
   const convertBTSTicketsToIssues = (tickets: BtsTicket[]): Issue[] => {
     return tickets.map(
@@ -81,8 +106,10 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
     <div className={cx('sidepanel-description')}>
       <FolderBreadcrumbs
         folderId={executionDetails?.testFolder?.testItemId}
-        instanceKey={TMS_INSTANCE_KEY.MANUAL_LAUNCH}
+        instanceKey={TMS_INSTANCE_KEY.TEST_CASE}
+        onNavigate={onFolderClick}
         customFoldersSelector={manualLaunchFoldersSelector}
+        withoutRedirect
       />
       <div className={cx('meta-row')}>
         <div className={cx('meta-row-item')}>
@@ -177,7 +204,7 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
     </div>
   );
 
-  const footerComponent = (
+  const footerComponent = canManageExecutions ? (
     <div className={cx('footer')}>
       <Button
         variant="ghost"
@@ -198,7 +225,7 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
         <RunManualIcon />
       </Button>
     </div>
-  );
+  ) : null;
 
   return (
     <div ref={sidePanelRef}>

@@ -18,6 +18,10 @@
   min-width: 560px;
   max-width: 560px;
   z-index: 15;
+
+  & [class*='bubbles-loader']:nth-child(2) {
+    padding: 24px;
+  }
 }
 
 .title-wrapper {
