@@ -84,4 +84,48 @@ describe('ProjectLayout', () => {
       }),
     );
   });
+
+  test('should keep shell chrome on non-dashboard page even when fullscreen is enabled', () => {
+    mockUseFullSelector
+      .mockReturnValueOnce('projectLaunchesPage')
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(true);
+
+    mount(
+      <ProjectLayout>
+        <div>Non dashboard content</div>
+      </ProjectLayout>,
+    );
+
+    expect(mockLayout).toHaveBeenCalledWith(
+      expect.objectContaining({
+        hideBanner: false,
+        hideHeader: false,
+        hideSidebar: false,
+        fullWidthContainer: false,
+      }),
+    );
+  });
+
+  test('should prioritize dashboard fullscreen shell hiding when fullWidth and fullScreen are both enabled', () => {
+    mockUseFullSelector
+      .mockReturnValueOnce('projectDashboardItemPage')
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(true);
+
+    mount(
+      <ProjectLayout>
+        <div>Dashboard content</div>
+      </ProjectLayout>,
+    );
+
+    expect(mockLayout).toHaveBeenCalledWith(
+      expect.objectContaining({
+        hideBanner: true,
+        hideHeader: true,
+        hideSidebar: true,
+        fullWidthContainer: false,
+      }),
+    );
+  });
 });

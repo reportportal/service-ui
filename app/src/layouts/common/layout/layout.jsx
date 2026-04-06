@@ -140,7 +140,7 @@ export class Layout extends Component {
     } = this.props;
     const header = (
       <div className={cx('header-container')}>
-        {!hideHeader && Header && (
+        {Header && (
           <Header
             isSideMenuOpened={this.state.sideMenuOpened}
             toggleSideMenu={this.toggleSideMenu}

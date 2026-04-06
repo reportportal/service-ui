@@ -47,7 +47,7 @@ export const ProjectLayout = ({
       Sidebar={ProjectSidebar}
       Banner={AppBanner}
       rawContent={rawContent}
-      fullWidthContainer={page === PROJECT_DASHBOARD_ITEM_PAGE && fullWidthMode}
+      fullWidthContainer={page === PROJECT_DASHBOARD_ITEM_PAGE && fullWidthMode && !fullScreenMode}
       hideHeader={isDashboardFullscreen}
       hideSidebar={isDashboardFullscreen}
       hideBanner={isDashboardFullscreen}
