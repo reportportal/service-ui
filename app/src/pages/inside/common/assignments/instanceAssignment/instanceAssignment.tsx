@@ -445,8 +445,7 @@ export const InstanceAssignment = ({
                     ? cx('organization-field-ups-error')
                     : undefined,
                   onClear: () => {
-                    dispatch(change(formName, FORM_FIELDS.ORGANIZATION.NAME, null));
-                    dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.NAME, null));
+                    resetOrganization();
                     setSelectedOrganizationId(null);
                     setSelectedProjectId(null);
                     setOrganizationProjects([]);
@@ -584,7 +583,9 @@ export const InstanceAssignment = ({
         </div>
       </div>
       {isUpsaExternalOrgSelection && (
-        <div className={cx('ups-external-org-error')}>{epamInviteForbiddenDescription}</div>
+        <div className={cx('ups-external-org-error')} role="alert">
+          {epamInviteForbiddenDescription}
+        </div>
       )}
     </div>
   );
