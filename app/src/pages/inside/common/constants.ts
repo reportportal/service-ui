@@ -76,7 +76,7 @@ export const actionMessages = defineMessages({
   },
 });
 
-export enum PromiseStatus {
-  Fulfilled = 'fulfilled',
-  Rejected = 'rejected',
-}
+export const PromiseStatus = {
+  fulfilled: 'fulfilled',
+  rejected: 'rejected',
+} as const;

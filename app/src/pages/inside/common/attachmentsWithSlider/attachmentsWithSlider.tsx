@@ -46,7 +46,8 @@ import {
   ZoomPlugin,
   ExtendedLightGalleryInstance,
 } from './types';
-import { useAttachmentsWithSlider } from './hooks';
+import { useAttachmentsWithSlider } from './hooks/useAttachmentsWithSlider';
+import { lightGalleryClassNames } from './constants';
 
 import 'lightgallery/css/lightgallery.css';
 import 'lightgallery/css/lg-zoom.css';
@@ -72,18 +73,6 @@ const svgFallbacks = {
   webp: ImageIcon,
   xls: XlsIcon,
   xlsx: XlsIcon,
-} as const;
-
-const lightGalleryClassNames = {
-  zoomIn: 'lg-zoom-plus',
-  zoomOut: 'lg-zoom-minus',
-  externalLink: 'lg-external-link',
-  toolbar: 'lg-toolbar',
-  closeButton: 'lg-close',
-  customDownloadButton: 'lg-download-custom',
-  attachmentsList: 'attachments-list',
-  galleryItem: 'gallery-item',
-  icon: 'lg-icon',
 } as const;
 
 export const AttachmentsWithSlider = ({

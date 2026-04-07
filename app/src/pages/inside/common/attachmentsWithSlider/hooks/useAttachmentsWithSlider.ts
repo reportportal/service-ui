@@ -47,12 +47,12 @@ export const useAttachmentsWithSlider = () => {
     let thumbnailSrc: string | undefined;
     let src: string | undefined;
 
-    if (!abortSignal.aborted && thumbnailResult.status === PromiseStatus.Fulfilled) {
+    if (!abortSignal.aborted && thumbnailResult.status === PromiseStatus.fulfilled) {
       thumbnailSrc = URL.createObjectURL(thumbnailResult.value.data as MediaSource);
       objectUrls.push(thumbnailSrc);
     }
 
-    if (!abortSignal.aborted && imageResult.status === PromiseStatus.Fulfilled) {
+    if (!abortSignal.aborted && imageResult.status === PromiseStatus.fulfilled) {
       src = URL.createObjectURL(imageResult.value.data as MediaSource);
       objectUrls.push(src);
     }
