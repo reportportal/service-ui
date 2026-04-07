@@ -11,7 +11,7 @@ const mockLayout = jest.fn(({ children }: MockLayoutProps) =>
 );
 
 const createProjectLayoutElement = (content: string): MountNode =>
-  createElement(ProjectLayout, null, createElement('div', null, content)) as MountNode;
+  createElement(ProjectLayout, null, createElement('div', null, content));
 
 jest.mock('hooks/useTypedSelector', () => ({
   useFullSelector: (selector: unknown) => mockUseFullSelector(selector),
