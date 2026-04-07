@@ -34,11 +34,11 @@ import { ActionItem, ActionMenu, LinkItem } from 'components/actionMenu';
 import { UnassignProjectModal } from 'pages/inside/common/assignments/unassignProjectModal';
 import { AssignProjectModal } from 'pages/inside/common/assignments';
 import { ProjectDetails } from 'pages/organization/constants';
-import { ssoUsersOnlySelector } from 'controllers/appInfo';
 import { PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectsPageEvents';
 import { InviteUserModal, Level } from 'pages/inside/common/invitations/inviteUserModal';
 import { ORGANIZATION_PAGE_EVENTS } from 'analyticsEvents/organizationsPageEvents';
 import { userRolesSelector } from 'controllers/pages';
+import { ssoUsersOnlySelector } from 'controllers/appInfo';
 import { resolveUserRolesForProjectRow } from 'pages/inside/common/assignments/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 
@@ -56,6 +56,7 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
     canDeleteProject,
     canAssignUnassignInternalUser,
   } = useUserPermissions();
+  const ssoOnlyEnabled = useSelector(ssoUsersOnlySelector);
 
   const projectRowPermissions = useMemo(() => {
     const roles = resolveUserRolesForProjectRow(userRoles, projectRole);
@@ -176,7 +177,7 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
         hasPermission: projectRowPermissions.canRenameProject ?? canRenameProject,
       },
       {
-        label: formatMessage(messages.actionInviteUser),
+        label: ssoOnlyEnabled ? formatMessage(messages.actionAssignUser) : formatMessage(messages.actionInviteUser),
         onClick: handleInviteUserClick,
         hasPermission: projectRowPermissions.canInviteUserToProject ?? canInviteUserToProject,
       },

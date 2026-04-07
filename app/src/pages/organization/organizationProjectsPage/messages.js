@@ -99,6 +99,10 @@ export const messages = defineMessages({
     id: 'OrganizationProjectsPage.actionInviteUser',
     defaultMessage: 'Invite user',
   },
+  actionAssignUser: {
+    id: 'OrganizationProjectsPage.actionAssignUser',
+    defaultMessage: 'Assign user',
+  },
   actionUnassign: {
     id: 'OrganizationProjectsPage.actionUnassign',
     defaultMessage: 'Unassign',
