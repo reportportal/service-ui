@@ -1,28 +1,36 @@
-import React from 'react';
+import { createElement, type PropsWithChildren } from 'react';
 import { mount } from 'enzyme';
-import { ProjectLayout } from './projectLayout';
+import { ProjectLayout } from './index';
 
-const mockUseFullSelector = jest.fn();
-const mockLayout = jest.fn(({ children }) => <div>{children}</div>);
+type MockLayoutProps = PropsWithChildren<Record<string, unknown>>;
+type MountNode = Parameters<typeof mount>[0];
+
+const mockUseFullSelector = jest.fn((selector: unknown) => selector);
+const mockLayout = jest.fn(({ children }: MockLayoutProps) =>
+  createElement('div', null, children),
+);
+
+const createProjectLayoutElement = (content: string): MountNode =>
+  createElement(ProjectLayout, null, createElement('div', null, content)) as MountNode;
 
 jest.mock('hooks/useTypedSelector', () => ({
-  useFullSelector: (...args) => mockUseFullSelector(...args),
+  useFullSelector: (selector: unknown) => mockUseFullSelector(selector),
 }));
 
 jest.mock('layouts/common/layout', () => ({
-  Layout: (props) => mockLayout(props),
+  Layout: (props: MockLayoutProps) => mockLayout(props),
 }));
 
 jest.mock('./projectSidebar', () => ({
-  ProjectSidebar: () => <div>Project Sidebar</div>,
+  ProjectSidebar: () => null,
 }));
 
 jest.mock('../headerLayout', () => ({
-  HeaderLayout: () => <div>Header Layout</div>,
+  HeaderLayout: () => null,
 }));
 
 jest.mock('./appBanner', () => ({
-  AppBanner: () => <div>App Banner</div>,
+  AppBanner: () => null,
 }));
 
 jest.mock('controllers/dashboard', () => ({
@@ -47,11 +55,7 @@ describe('ProjectLayout', () => {
       .mockReturnValueOnce(false)
       .mockReturnValueOnce(true);
 
-    mount(
-      <ProjectLayout>
-        <div>Dashboard content</div>
-      </ProjectLayout>,
-    );
+    mount(createProjectLayoutElement('Dashboard content'));
 
     expect(mockLayout).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -69,11 +73,7 @@ describe('ProjectLayout', () => {
       .mockReturnValueOnce(true)
       .mockReturnValueOnce(false);
 
-    mount(
-      <ProjectLayout>
-        <div>Dashboard content</div>
-      </ProjectLayout>,
-    );
+    mount(createProjectLayoutElement('Dashboard content'));
 
     expect(mockLayout).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -91,11 +91,7 @@ describe('ProjectLayout', () => {
       .mockReturnValueOnce(true)
       .mockReturnValueOnce(true);
 
-    mount(
-      <ProjectLayout>
-        <div>Non dashboard content</div>
-      </ProjectLayout>,
-    );
+    mount(createProjectLayoutElement('Non dashboard content'));
 
     expect(mockLayout).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -113,11 +109,7 @@ describe('ProjectLayout', () => {
       .mockReturnValueOnce(true)
       .mockReturnValueOnce(true);
 
-    mount(
-      <ProjectLayout>
-        <div>Dashboard content</div>
-      </ProjectLayout>,
-    );
+    mount(createProjectLayoutElement('Dashboard content'));
 
     expect(mockLayout).toHaveBeenCalledWith(
       expect.objectContaining({
