@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useMemo, useEffect, useRef } from 'react';
+import { useCallback, useMemo, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
 
@@ -86,15 +86,6 @@ export const ManualLaunchFolders = () => {
     filterPriorities,
     filterTags,
   });
-
-  const foldersRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!urlFolderIdNumber) return;
-
-    const el = foldersRef.current?.querySelector(`[data-folder-id="${urlFolderIdNumber}"]`);
-    el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, [urlFolderIdNumber]);
 
   const navigateToFolder = useCallback(
     (folderId?: number) => {
