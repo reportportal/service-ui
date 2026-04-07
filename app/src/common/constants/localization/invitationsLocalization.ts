@@ -17,9 +17,6 @@
 import { defineMessages } from 'react-intl';
 import { MessageDescriptorMap } from 'types/intl';
 
-
-export const EPAM_DELIVERY_PORTAL_URL = 'https://delivery.epam.com';
-
 export const messages: MessageDescriptorMap = defineMessages({
   addProject: {
     id: 'InviteUser.addProject',

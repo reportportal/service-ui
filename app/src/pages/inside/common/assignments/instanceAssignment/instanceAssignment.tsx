@@ -14,57 +14,41 @@
  * limitations under the License.
  */
 
-import { useState, useRef, useEffect, useCallback, useMemo, type ReactNode } from 'react';
+import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  WrappedFieldArrayProps,
-  formValueSelector,
   change,
-  untouch,
-  getFormSyncErrors,
+  formValueSelector,
   getFormMeta,
+  getFormSyncErrors,
+  untouch,
+  WrappedFieldArrayProps,
 } from 'redux-form';
 import { defineMessages, useIntl } from 'react-intl';
-import {
-  Button,
-  Checkbox,
-  CheckmarkIcon,
-  CloseIcon,
-  InfoIcon,
-  Tooltip,
-} from '@reportportal/ui-kit';
+import { Button, Checkbox, CheckmarkIcon, CloseIcon, InfoIcon, Tooltip, } from '@reportportal/ui-kit';
 
-import { createClassnames, fetch } from 'common/utils';
+import { createClassnames, fetch, referenceDictionary } from 'common/utils';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import {
-  Organization,
-  OrganizationAssignment,
-} from 'pages/inside/common/assignments/organizationAssignment';
+import { Organization, OrganizationAssignment, } from 'pages/inside/common/assignments/organizationAssignment';
 import { Project } from 'pages/inside/common/assignments/organizationAssignment/organizationItem/projectItems';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 import {
-  OrganizationsSearchesResponseData,
-  OrganizationSearchesItem,
   ORGANIZATIONS_SEARCH_KEY,
+  OrganizationSearchesItem,
+  OrganizationsSearchesResponseData,
 } from 'controllers/instance/organizations';
-import {
-  ProjectsSearchesResponseData,
-  ProjectsSearchesItem,
-} from 'controllers/organization/projects';
+import { ProjectsSearchesItem, ProjectsSearchesResponseData, } from 'controllers/organization/projects';
 import { SEARCH_KEY } from 'controllers/organization/projects/constants';
 import { OrganizationType } from 'controllers/organization';
 import { prepareQueryFilters } from 'components/filterEntities/utils';
 import { URLS } from 'common/urls';
 import { AddItemButton } from '../organizationAssignment/organizationItem/addItemButton';
-import { MEMBER, EDITOR, VIEWER, MANAGER } from 'common/constants/projectRoles';
+import { EDITOR, MANAGER, MEMBER, VIEWER } from 'common/constants/projectRoles';
 import { UPSA } from 'common/constants/accountType';
 import { ORGANIZATIONS } from 'pages/instance/allUsersPage/allUsersHeader/createUserModal/constants';
-import {
-  EPAM_DELIVERY_PORTAL_URL,
-  messages as invitationMessages,
-} from 'common/constants/localization/invitationsLocalization';
+import { messages as invitationMessages, } from 'common/constants/localization/invitationsLocalization';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ExternalLink } from 'pages/inside/common/externalLink';
 
@@ -218,7 +202,7 @@ export const InstanceAssignment = ({
     userType === UPSA && selectedOrgFromList?.type === OrganizationType.EXTERNAL;
   const renderEpamDeliveryLink = useCallback(
     (chunks: ReactNode) => (
-      <ExternalLink href={EPAM_DELIVERY_PORTAL_URL} variant="compact" isColoredIcon={false}>
+      <ExternalLink href={referenceDictionary.deliveryEpam} variant="compact" isColoredIcon={false}>
         {chunks}
       </ExternalLink>
     ),
@@ -386,7 +370,6 @@ export const InstanceAssignment = ({
     if (isUpsaExternalOrgSelection || selectedOrganizationId == null) {
       return;
     }
-
 
     const { name, role, projects } = organization as InstanceAssignmentItem;
 
