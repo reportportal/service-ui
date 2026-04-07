@@ -206,10 +206,9 @@ export const InstanceAssignment = ({
   const [totalProjects, setTotalProjects] = useState(0);
   const [userOrgIds, setUserOrgIds] = useState<Set<number>>(new Set());
   const allOrganizations = fields.getAll();
-  const selectedOrgFromList =
-    selectedOrganizationId != null
-      ? notAssignedOrganizations.find((o) => o.id === selectedOrganizationId)
-      : undefined;
+  const selectedOrgFromList = selectedOrganizationId == null
+    ? undefined
+    : notAssignedOrganizations.find((o) => o.id === selectedOrganizationId);
   const isUpsaExternalOrgSelection =
     userType === UPSA && selectedOrgFromList?.type === OrganizationType.EXTERNAL;
   const renderEpamDeliveryLink = useCallback(
