@@ -65,6 +65,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ExternalLink } from 'pages/inside/common/externalLink';
 
 import styles from './instanceAssignment.scss';
+import { isBrowser } from 'es-toolkit';
 
 const cx = createClassnames(styles);
 
@@ -234,6 +235,7 @@ export const InstanceAssignment = ({
   const shouldShowEmptyState = !shouldFormBeOpen && emptyList && withEmptyState;
   const shouldShowAddButton = !shouldFormBeOpen && !shouldShowEmptyState;
   const shouldShowFormCloseButton = withEmptyState || !emptyList;
+  const menuPortalRoot = isBrowser() ? document.body : undefined;
 
   useEffect(() => {
     dispatch(change(formName, 'isAddingOrganization', shouldFormBeOpen));
@@ -442,6 +444,8 @@ export const InstanceAssignment = ({
                     setTotalProjects(0);
                   },
                 }}
+                withMenuFlip
+                menuPortalRoot={menuPortalRoot}
                 placeholder={formatMessage(messages.organizationPlaceholder)}
                 getURI={URLS.organizationSearches}
                 getRequestParams={getRequestOrganizationsParams}
@@ -493,6 +497,8 @@ export const InstanceAssignment = ({
                     setSelectedProjectId(null);
                   },
                 }}
+                withMenuFlip
+                menuPortalRoot={menuPortalRoot}
                 placeholder={formatMessage(invitationMessages.selectSearchProject)}
                 getURI={() => URLS.organizationProjectsSearches(selectedOrganizationId)}
                 getRequestParams={getRequestProjectsParams}
