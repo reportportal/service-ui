@@ -2312,6 +2312,7 @@
   "StepLevelEntities.TypeStep": "Тест",
   "StepLevelEntities.TypeTest": "Тестовий клас",
   "StepLevelEntities.entityItemBTSIssue.placeholder": "Enter Issue in BTS",
+  "StorageStatistics.storageUsageTooltip": "Середній обсяг усіх запусків, елементів, логів і вкладень у проєкті за поточний календарний місяць",
   "SuiteLevelEntities.AUTOMATION_BUG_title": "Помилка Автоматизації",
   "SuiteLevelEntities.AUTOMATION_BUG_totalTitle": "Автоматизація Всього Помилок",
   "SuiteLevelEntities.DescriptionTitle": "Опис",

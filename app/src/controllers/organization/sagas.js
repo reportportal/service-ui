@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { takeEvery, all, put, select, take, call } from 'redux-saga/effects';
-import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
+import { takeEvery, all, put, call } from 'redux-saga/effects';
+import { fetchDataAction } from 'controllers/fetch';
 import { redirect } from 'redux-first-router';
-import { ORGANIZATIONS_PAGE } from 'controllers/pages';
+import { ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages';
 import { URLS } from 'common/urls';
 import {
   showDefaultErrorNotification,
@@ -35,37 +35,16 @@ import {
   RENAME_ORGANIZATION,
   UPDATE_ORGANIZATION_SETTINGS,
 } from './constants';
-import { activeOrganizationSelector } from './selectors';
 import { usersSagas } from './users';
 import { fetch } from 'common/utils';
-import { stringEqual } from 'common/utils/stringUtils';
 import { updateOrganizationSettingsSuccessAction } from './actionCreators';
 import { hideModalAction } from 'controllers/modal';
-import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
+import { withActiveOrganization } from './withActiveOrganizationSaga';
 
 function* fetchOrganizationBySlug({ payload: slug }) {
   try {
     yield put(fetchDataAction(FETCH_ORGANIZATION_BY_SLUG)(URLS.organizationList({ slug })));
   } catch (error) {
-    yield put(showDefaultErrorNotification(error));
-  }
-}
-
-export function* withActiveOrganization(organizationSlug, onActiveOrgReady) {
-  const fallbackRedirect = redirect({ type: ORGANIZATIONS_PAGE });
-  let activeOrganization = yield select(activeOrganizationSelector);
-  try {
-    if (!activeOrganization || !stringEqual(organizationSlug, activeOrganization?.slug)) {
-      yield take(createFetchPredicate(FETCH_ORGANIZATION_BY_SLUG));
-      activeOrganization = yield select(activeOrganizationSelector);
-    }
-    if (!activeOrganization || !stringEqual(organizationSlug, activeOrganization?.slug)) {
-      yield put(fallbackRedirect);
-      return;
-    }
-    yield* onActiveOrgReady(activeOrganization.id);
-  } catch (error) {
-    yield put(fallbackRedirect);
     yield put(showDefaultErrorNotification(error));
   }
 }
@@ -100,7 +79,7 @@ function* prepareActiveOrganizationSettings({ payload: { organizationSlug } }) {
   });
 }
 
-function* updateOrganizationSettings({ payload: { organizationId, retentionPolicy } }) {
+function* updateOrganizationSettings({ payload: { organizationId, retentionPolicy, onComplete } }) {
   try {
     yield call(fetch, URLS.organizationSettings(organizationId), {
       method: 'put',
@@ -112,6 +91,8 @@ function* updateOrganizationSettings({ payload: { organizationId, retentionPolic
     yield put(showSuccessNotification({ messageId: 'updateOrganizationSettingsSuccess' }));
   } catch ({ message }) {
     yield put(showDefaultErrorNotification({ message }));
+  } finally {
+    onComplete?.();
   }
 }
 
@@ -125,7 +106,7 @@ function* watchUpdateOrganizationSettings() {
 
 function* createOrganization({ payload: { name, type } }) {
   try {
-    yield call(fetch, URLS.organizationList(), {
+    const created = yield call(fetch, URLS.organizationList(), {
       method: 'post',
       data: {
         name,
@@ -134,7 +115,12 @@ function* createOrganization({ payload: { name, type } }) {
     });
     yield put(hideModalAction());
     yield put(showSuccessNotification({ messageId: 'createOrganizationSuccess' }));
-    yield put(fetchFilteredOrganizationsAction());
+    yield put(
+      redirect({
+        type: ORGANIZATION_PROJECTS_PAGE,
+        payload: { organizationSlug: created.slug },
+      }),
+    );
   } catch (err) {
     if (ERROR_CODES.ORGANIZATION_EXISTS.includes(err.errorCode)) {
       yield put(

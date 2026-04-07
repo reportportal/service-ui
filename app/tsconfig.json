@@ -76,6 +76,10 @@
         "types/*"
       ]
     },
+    "types": [
+      "jest",
+      "node"
+    ],
     "incremental": true,
     "tsBuildInfoFile": "./.tsbuildinfo"
   },
@@ -90,7 +94,6 @@
     "node_modules",
     "build",
     "dist",
-    "**/*.test.*",
     "**/*.spec.*",
     "localization"
   ],
