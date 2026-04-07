@@ -26,6 +26,7 @@ import { SearchField } from 'components/fields/searchField';
 import { NAMESPACE, SEARCH_KEY } from 'controllers/members/constants';
 import { withFilter } from 'controllers/filter';
 import { PROJECT_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectPageEvents';
+import { ssoUsersOnlySelector } from 'controllers/appInfo';
 import { activeOrganizationNameSelector } from 'controllers/organization';
 import { LocationHeaderLayout } from 'layouts/locationHeaderLayout';
 import { messages } from '../../messages';
@@ -46,6 +47,8 @@ export const ProjectTeamPageHeader = ({
 }) => {
   const { formatMessage } = useIntl();
   const projectSlug = useSelector(projectNameSelector);
+  const ssoOnlyEnabled = useSelector(ssoUsersOnlySelector);
+  
   const organizationSlug = useSelector(activeOrganizationNameSelector);
   const isNotEmptyMembers = useSelector(projectMembersSelector).length > 0;
 
@@ -105,7 +108,7 @@ export const ProjectTeamPageHeader = ({
             </div>
             {hasPermission && (
               <Button variant={'ghost'} onClick={onInvite}>
-                {formatMessage(messages.inviteUser)}
+                {ssoOnlyEnabled ? formatMessage(messages.assignUser) : formatMessage(messages.inviteUser)}
               </Button>
             )}
           </>
