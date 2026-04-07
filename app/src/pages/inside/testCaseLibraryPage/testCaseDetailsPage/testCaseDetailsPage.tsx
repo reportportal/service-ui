@@ -41,7 +41,7 @@ import { useDescriptionModal } from './descriptionModal';
 import { useTestCaseTags } from './useTestCaseTags';
 import { messages } from './messages';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
-import { AttachmentList } from '../../common/attachmentList';
+import { AttachmentsWithSlider } from '../../common/attachmentsWithSlider';
 import { hasTagShape } from '../types';
 import { Precondition } from './precondition';
 import { StepsList } from './stepsList';
@@ -155,10 +155,9 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
         titleKey: 'attachments',
         defaultMessage: messages.noAttachments,
         childComponent: !isEmpty(manualScenario?.attachments) && (
-          <AttachmentList
+          <AttachmentsWithSlider
             attachments={manualScenario.attachments}
             className={cx('page__attachments-list')}
-            withPreview
           />
         ),
       },

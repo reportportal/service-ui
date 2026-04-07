@@ -105,7 +105,7 @@ export const messages: MessageDescriptorMap = defineMessages({
   epamInviteForbidden: {
     id: 'InviteUser.epamInviteForbidden',
     defaultMessage:
-      'Unable to assign user to the organization. Please verify user assignment to the organization in EPAM internal system: delivery.epam.com',
+      'Unable to assign user to the organization. Please verify user assignment to the organization in EPAM internal system: <link>delivery.epam.com</link>',
   },
   managersCanEditAll: {
     id: 'InviteUser.managersCanEditAll',

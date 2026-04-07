@@ -79,6 +79,7 @@ export const ACTIONS: Record<string, string> = {
   CREATE_MANUAL_LAUNCH: 'CREATE_MANUAL_LAUNCH',
   MANAGE_TEST_CASES: 'MANAGE_TEST_CASES',
   MANAGE_TEST_PLANS: 'MANAGE_TEST_PLANS',
+  MANAGE_EXECUTIONS: 'MANAGE_EXECUTIONS',
 };
 
 export const PERMISSIONS_MAP: PermissionsMap = {
@@ -126,6 +127,7 @@ export const PERMISSIONS_MAP: PermissionsMap = {
     [VIEWER]: {
       [ACTIONS.SEE_SETTINGS]: false,
       [ACTIONS.SEE_MEMBERS]: false,
+      [ACTIONS.MANAGE_EXECUTIONS]: false,
     },
     [EDITOR]: {
       [ACTIONS.SEE_SETTINGS]: true,
@@ -158,6 +160,7 @@ export const PERMISSIONS_MAP: PermissionsMap = {
       [ACTIONS.SEE_ROW_ACTION_MENU]: true,
       // MANUAL LAUNCHES
       [ACTIONS.CREATE_MANUAL_LAUNCH]: true,
+      [ACTIONS.MANAGE_EXECUTIONS]: true,
       // TEST CASE
       [ACTIONS.MANAGE_TEST_CASES]: true,
       // TEST PLAN

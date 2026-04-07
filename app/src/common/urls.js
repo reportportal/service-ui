@@ -289,6 +289,8 @@ export const URLS = {
     })}`,
   logItemActivity: (projectKey, itemId) =>
     removeTrailingSlash(`${urlBase}${projectKey}/activity/item/${itemId}`),
+  testCaseActivity: (projectKey, testCaseId, query = {}) =>
+    removeTrailingSlash(`${urlBase}${projectKey}/activity/test-case/${testCaseId}${getQueryParams(query)}`),
   logItemStackTrace: (projectKey, path, pageSize) =>
     `${urlBase}${projectKey}/log${getQueryParams({
       'filter.under.path': path,

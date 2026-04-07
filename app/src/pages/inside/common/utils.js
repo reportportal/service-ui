@@ -190,3 +190,11 @@ export const getGroupedDefectTypesOptions = (
 export const isInternalLink = (to) => {
   return typeof to === 'object' && to.type;
 };
+
+export const svgToBase64 = (svgString) => {
+  const bytes = new TextEncoder().encode(svgString);
+  const binaryString = Array.from(bytes, (byte) => String.fromCodePoint(byte)).join('');
+  const base64 = btoa(binaryString);
+
+  return `data:image/svg+xml;base64,${base64}`;
+};

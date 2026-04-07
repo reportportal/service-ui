@@ -38,6 +38,7 @@ interface EmailOption {
   email: string;
   fullName: string;
   isCustom?: boolean;
+  accountType?: string;
 }
 
 const USER_SEARCH_LIMIT = 20;
@@ -70,6 +71,7 @@ interface InstanceUserSearchItem {
   id?: number;
   email?: string;
   full_name?: string;
+  account_type?: string;
 }
 
 const makeBaseOptions = (response: { items?: InstanceUserSearchItem[] }): EmailOption[] => {
@@ -82,6 +84,7 @@ const makeBaseOptions = (response: { items?: InstanceUserSearchItem[] }): EmailO
       id: item.id,
       email: item.email,
       fullName: item.full_name ?? '',
+      accountType: item.account_type,
     }));
 };
 
@@ -156,7 +159,7 @@ const InviteUserEmailAutocompleteFieldContent = ({
   };
   onFocus?: () => void;
   onResetTouched?: () => void;
-  onUserSelect?: (userId: number | null) => void;
+  onUserSelect?: (userId: number | null, accountType?: string | null) => void;
   [key: string]: unknown;
 }) => {
   const { formatMessage } = useIntl();
@@ -229,15 +232,18 @@ const InviteUserEmailAutocompleteFieldContent = ({
       {...restWithoutOnChange}
       onChange={(selected: EmailOption | null) => {
         restOnChange?.(selected);
-        const userId = selected && typeof selected.id === 'number' && !selected.isCustom ? selected.id : null;
-        onUserSelect?.(userId);
+        if (selected && typeof selected.id === 'number' && !selected.isCustom) {
+          onUserSelect?.(selected.id, selected.accountType ?? null);
+        } else {
+          onUserSelect?.(null);
+        }
       }}
     />
   );
 };
 
 interface InviteUserEmailAutocompleteFieldProps {
-  onUserSelect?: (userId: number | null) => void;
+  onUserSelect?: (userId: number | null, accountType?: string | null) => void;
 }
 
 export const InviteUserEmailAutocompleteField = ({ onUserSelect }: InviteUserEmailAutocompleteFieldProps) => {
