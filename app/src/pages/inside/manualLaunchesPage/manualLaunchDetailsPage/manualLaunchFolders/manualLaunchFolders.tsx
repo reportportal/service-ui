@@ -29,6 +29,7 @@ import {
   defaultManualLaunchesQueryParams,
 } from 'controllers/manualLaunch';
 import { MANUAL_LAUNCH_DETAILS_PAGE, locationSelector } from 'controllers/pages';
+import { ExecutionStatus } from 'types/testCase';
 import { useManualLaunchId, useProjectDetails } from 'hooks/useTypedSelector';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { transformFoldersToDisplay, filterEmptyFolders } from 'common/utils/folderUtils';
@@ -85,6 +86,7 @@ export const ManualLaunchFolders = () => {
     launchId,
     filterPriorities,
     filterTags,
+    statusFilter: statusFilter as ExecutionStatus | undefined,
   });
 
   const navigateToFolder = useCallback(
@@ -152,7 +154,7 @@ export const ManualLaunchFolders = () => {
     ],
   );
 
-  const hasExecutionFilters = !!(filterPriorities || filterTags || statusFilter);
+  const hasExecutionFilters = !!(filterPriorities || filterTags);
   const hasFetchedExecutions = pageInfo !== undefined && pageInfo !== null;
   const executionTotal = pageInfo?.totalElements ?? 0;
   const hideFolderSidebar =
