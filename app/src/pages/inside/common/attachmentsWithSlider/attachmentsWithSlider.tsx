@@ -266,7 +266,7 @@ export const AttachmentsWithSlider = ({
     setTollbarButtonsVisibility(instance);
 
     const outer = instance.outer as { selector?: HTMLElement } | undefined;
-    const toolbar = outer?.selector?.querySelector(`.${lightGalleryClassNames.toolbar}`);
+    const toolbar = outer?.selector?.querySelector(`.${lightGalleryClassNames.toolbar}`) as HTMLElement | null;
 
     if (toolbar) {
       addCustomCloseButton(toolbar);
