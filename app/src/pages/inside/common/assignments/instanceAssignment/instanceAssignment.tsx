@@ -33,6 +33,7 @@ import {
   InfoIcon,
   Tooltip,
 } from '@reportportal/ui-kit';
+import { isBrowser } from 'es-toolkit';
 import { createClassnames, fetch, referenceDictionary } from 'common/utils';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -65,7 +66,6 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ExternalLink } from 'pages/inside/common/externalLink';
 
 import styles from './instanceAssignment.scss';
-import { isBrowser } from 'es-toolkit';
 
 const cx = createClassnames(styles);
 
