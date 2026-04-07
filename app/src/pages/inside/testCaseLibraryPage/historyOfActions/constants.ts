@@ -14,4 +14,9 @@
  * limitations under the License.
  */
 
-export { HistoryOfActionsHeader } from './historyOfActionsHeader';
+export const HISTORY_OF_ACTIONS_NAMESPACE = 'historyOfActions';
+
+export const HistoryOfActionsPageDefaultValues = {
+  limit: 20,
+  offset: 0,
+};

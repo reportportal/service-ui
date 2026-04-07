@@ -118,4 +118,5 @@ export {
   urlProjectSlugSelector,
   urlOrganizationSlugSelector,
   locationQuerySelector,
+  urlTestCaseSlugSelector,
 } from './typed-selectors';
