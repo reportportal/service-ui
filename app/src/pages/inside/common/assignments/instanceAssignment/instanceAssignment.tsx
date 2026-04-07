@@ -235,7 +235,9 @@ export const InstanceAssignment = ({
   const shouldShowEmptyState = !shouldFormBeOpen && emptyList && withEmptyState;
   const shouldShowAddButton = !shouldFormBeOpen && !shouldShowEmptyState;
   const shouldShowFormCloseButton = withEmptyState || !emptyList;
-  const menuPortalRoot = isBrowser() ? document.body : undefined;
+  const menuPortalRoot = isBrowser()
+    ? (document.getElementById('tooltip-root') ?? document.body)
+    : undefined;
 
   useEffect(() => {
     dispatch(change(formName, 'isAddingOrganization', shouldFormBeOpen));
