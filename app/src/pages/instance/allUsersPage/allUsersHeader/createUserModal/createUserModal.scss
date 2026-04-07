@@ -79,7 +79,7 @@
     overflow: hidden !important; // important to override inline styles applied by react-custom-scrollbars
   }
 
-  :global(.rc-scrollbars-thumb) {
-    display: none !important; // hide scrollbar thumb when scroll is disabled
-  }
+  // :global(.rc-scrollbars-thumb) {
+  //   display: none !important; // hide scrollbar thumb when scroll is disabled
+  // }
 }

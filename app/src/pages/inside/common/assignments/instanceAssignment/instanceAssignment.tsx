@@ -134,7 +134,6 @@ export interface InstanceAssignmentProps extends InstanceAssignmentArrayProps<In
   emptyStateText?: string;
   onExpandOrganization?: (orgId: number) => void;
   showUnassignProjectTooltip?: boolean;
-  onMenuStateChange?: (isOpen: boolean) => void;
 }
 
 interface InstanceAssignmentArrayProps<T> extends WrappedFieldArrayProps<T> {
@@ -179,7 +178,6 @@ export const InstanceAssignment = ({
   withEmptyState = false,
   emptyStateText,
   onExpandOrganization,
-  onMenuStateChange,
   showUnassignProjectTooltip,
 }: InstanceAssignmentProps) => {
   const dispatch = useDispatch();
@@ -401,12 +399,6 @@ export const InstanceAssignment = ({
     setSelectedProjectId(project ? project.id : null);
   };
 
-  const handleMenuStateChange = (changes: { isOpen?: boolean }) => {
-    if (changes.isOpen !== undefined && onMenuStateChange) {
-      onMenuStateChange(changes.isOpen);
-    }
-  };
-
   const renderAddOrganizationForm = () => (
     <div className={cx('instance-assignment')} ref={formContainerRef}>
       <div className={cx('autocomplete-wrapper')}>
@@ -429,7 +421,6 @@ export const InstanceAssignment = ({
               }}
               withMenuFlip
               menuPortalRoot={menuPortalRoot}
-              onStateChange={handleMenuStateChange}
               placeholder={formatMessage(messages.organizationPlaceholder)}
               getURI={URLS.organizationSearches}
               getRequestParams={getRequestOrganizationsParams}
@@ -483,7 +474,6 @@ export const InstanceAssignment = ({
               }}
               withMenuFlip
               menuPortalRoot={menuPortalRoot}
-              onStateChange={handleMenuStateChange}
               placeholder={formatMessage(invitationMessages.selectSearchProject)}
               getURI={() => URLS.organizationProjectsSearches(selectedOrganizationId)}
               getRequestParams={getRequestProjectsParams}
