@@ -58,6 +58,7 @@ import {
   MANUAL_LAUNCH_NAME_FILTER_KEY,
   MANUAL_LAUNCH_STATUS_FILTER_KEY,
   MANUAL_LAUNCH_FOLDER_SEARCH_FILTER_KEY,
+  MANUAL_LAUNCH_FOLDER_STATUS_FILTER_KEY,
   defaultManualLaunchesQueryParams,
 } from './constants';
 import {
@@ -194,7 +195,7 @@ interface GetManualLaunchFoldersAction extends Action<typeof GET_MANUAL_LAUNCH_F
 function* getManualLaunchFolders(action: GetManualLaunchFoldersAction): Generator {
   try {
     const projectKey = (yield select(projectKeySelector)) as string;
-    const { launchId, offset, limit, filterPriorities, filterTags } = action.payload;
+    const { launchId, offset, limit, filterPriorities, filterTags, statusFilter } = action.payload;
 
     yield put({
       type: FETCH_START,
@@ -208,6 +209,11 @@ function* getManualLaunchFolders(action: GetManualLaunchFoldersAction): Generato
       limit,
       ...buildFolderFilterParams(filterPriorities, filterTags),
     };
+
+    if (statusFilter) {
+      params[MANUAL_LAUNCH_FOLDER_STATUS_FILTER_KEY as string] = statusFilter;
+    }
+
     const data = (yield call(
       fetch,
       typedURLS.manualLaunchFolders(projectKey, launchId, params),
@@ -358,7 +364,7 @@ function* getManualLaunchFilteredFolders(
   action: GetManualLaunchFilteredFoldersAction,
 ): Generator {
   const projectKey = (yield select(projectKeySelector)) as string;
-  const { launchId, searchQuery, filterPriorities, filterTags } = action.payload;
+  const { launchId, searchQuery, filterPriorities, filterTags, statusFilter } = action.payload;
 
   if (!projectKey || !searchQuery) {
     yield put(setManualLaunchFilteredFoldersAction([]));
@@ -382,6 +388,7 @@ function* getManualLaunchFilteredFolders(
           limit,
           [MANUAL_LAUNCH_FOLDER_SEARCH_FILTER_KEY]: searchQuery,
           ...buildFolderFilterParams(filterPriorities, filterTags),
+          ...(statusFilter && { [MANUAL_LAUNCH_FOLDER_STATUS_FILTER_KEY]: statusFilter }),
         }),
       )) as ManualLaunchFoldersResponse;
 
