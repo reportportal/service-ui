@@ -178,7 +178,7 @@ const FilterSidePanelComponent = ({
   ]);
 
   const titleComponent = (
-    <div className={cx('filter-title')}>{formatMessage(messages.filterTitle)}</div>
+    <div className={cx('filter-title')}>{formatMessage(commonMessages.filterTitle)}</div>
   );
 
   const contentComponent = (
@@ -225,7 +225,7 @@ const FilterSidePanelComponent = ({
           className={cx('clear-button')}
           disabled={!hasActiveFilters}
         >
-          {formatMessage(messages.clearAllFilters)}
+          {formatMessage(commonMessages.clearAllFilters)}
         </Button>
       </div>
       <div className={cx('footer-right')}>

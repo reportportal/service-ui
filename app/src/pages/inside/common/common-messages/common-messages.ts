@@ -121,4 +121,28 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'Common.runTest',
     defaultMessage: 'Run Test',
   },
+  filterTitle: {
+    id: 'FilterSidePanel.filterTitle',
+    defaultMessage: 'Filter',
+  },
+  clearAllFilters: {
+    id: 'FilterSidePanel.clearAllFilters',
+    defaultMessage: 'Clear all filters',
+  },
+  testPlanLabel: {
+    id: 'LaunchFormFields.testPlanLabel',
+    defaultMessage: 'Test plan',
+  },
+  selectTestPlanPlaceholder: {
+    id: 'LaunchFormFields.selectTestPlanPlaceholder',
+    defaultMessage: 'Select test plan',
+  },
+  launchAttributes: {
+    id: 'LaunchFormFields.launchAttributes',
+    defaultMessage: 'Launch attributes',
+  },
+  addAttributes: {
+    id: 'CreateMilestoneModal.addAttributes',
+    defaultMessage: 'Add Attributes',
+  },
 });

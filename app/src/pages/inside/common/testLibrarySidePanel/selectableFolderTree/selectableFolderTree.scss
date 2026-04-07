@@ -16,13 +16,19 @@
 
 .selectable-folder-tree {
   height: 100%;
+  position: relative;
 
-  &__scroll-wrapper {
-    height: 100%;
+  &__scroll-container {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
   }
 
   &__outer {
-    padding: 0 0 0 48px;
+    position: relative;
+    padding: 0;
+    margin: 0;
+    list-style: none;
   }
 
   &__loader {

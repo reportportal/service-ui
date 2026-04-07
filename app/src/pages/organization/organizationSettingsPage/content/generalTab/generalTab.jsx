@@ -18,7 +18,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import PropTypes from 'prop-types';
-import { BubblesLoader, Button, FieldText, SystemMessage, Dropdown } from '@reportportal/ui-kit';
+import { Button, FieldText, SystemMessage, Dropdown } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
@@ -30,7 +30,6 @@ import {
   activeOrganizationSettingsSelector,
 } from 'controllers/organization';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { settingsMessages } from 'common/constants/localization/settingsLocalization';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { useUserPermissions } from 'hooks/useUserPermissions';
@@ -43,7 +42,10 @@ const cx = classNames.bind(styles);
 
 const selector = formValueSelector(GENERAL_TAB_FORM);
 
-const GeneralTabForm = ({ initialize, handleSubmit }) => {
+const getMinRetentionValue = (value, retention) =>
+  retention === null || retention > value || retention === 0 ? value : retention;
+
+const GeneralTabForm = ({ initialize, handleSubmit, retention = null }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
@@ -51,27 +53,29 @@ const GeneralTabForm = ({ initialize, handleSubmit }) => {
   const organizationName = useSelector(activeOrganizationNameSelector);
   const { attachments, launches, logs } = useSelector(activeOrganizationSettingsSelector);
   const { canUpdateOrganizationSettings } = useUserPermissions();
-  const [processingData] = useState(false);
-  const [isLoading] = useState(false);
+  const [processingData, setProcessingData] = useState(false);
   const formValues = useSelector((state) =>
     selector(state, 'keepLaunches', 'keepLogs', 'keepScreenshots'),
   );
-  const { getLaunchesOptions, getLogOptions, getScreenshotsOptions } =
-    useRetentionUtils(formValues);
-  const isDisabled = !canUpdateOrganizationSettings || processingData;
+  const { getLaunchesOptions, getLogOptions, getScreenshotsOptions } = useRetentionUtils(
+    formValues,
+    retention,
+  );
+  const isDisabled = !canUpdateOrganizationSettings;
 
   useEffect(() => {
     if (organizationName) {
       initialize({
         name: organizationName,
-        keepLaunches: launches?.period || 0,
-        keepLogs: logs?.period || 0,
-        keepScreenshots: attachments?.period || 0,
+        keepLaunches: getMinRetentionValue(launches?.period ?? 0, retention),
+        keepLogs: getMinRetentionValue(logs?.period ?? 0, retention),
+        keepScreenshots: getMinRetentionValue(attachments?.period ?? 0, retention),
       });
     }
-  }, [attachments, initialize, launches, logs, organizationName]);
+  }, [attachments, initialize, launches, logs, organizationName, retention]);
 
   const onFormSubmit = (formData) => {
+    setProcessingData(true);
     const { keepLaunches, keepLogs, keepScreenshots } = formData;
 
     const retentionPolicy = {
@@ -80,13 +84,17 @@ const GeneralTabForm = ({ initialize, handleSubmit }) => {
       attachments: { ...attachments, period: keepScreenshots },
     };
 
-    dispatch(updateOrganizationSettingsAction({ organizationId, retentionPolicy }));
+    dispatch(
+      updateOrganizationSettingsAction({
+        organizationId,
+        retentionPolicy,
+        onComplete: () => setProcessingData(false),
+      }),
+    );
     trackEvent(ORGANIZATION_PAGE_EVENTS.updateOrganizationSettings(formData));
   };
 
-  return isLoading ? (
-    <SpinningPreloader />
-  ) : (
+  return (
     <div className={cx('general-tab')}>
       <form className={cx('form')} onSubmit={handleSubmit(onFormSubmit)}>
         <SystemMessage header={formatMessage(messages.informationTitle)}>
@@ -128,17 +136,9 @@ const GeneralTabForm = ({ initialize, handleSubmit }) => {
           <Dropdown className={cx('dropdown')} options={getScreenshotsOptions()} mobileDisabled />
         </FieldElement>
         <div className={cx('submit-block')}>
-          <Button type="submit" disabled={isDisabled}>
+          <Button type="submit" disabled={isDisabled || processingData}>
             {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
           </Button>
-          {processingData && (
-            <div className={cx('preloader-block')}>
-              <BubblesLoader className={cx('preloader')} />
-              <span className={cx('preloader-text')}>
-                {formatMessage(COMMON_LOCALE_KEYS.processData)}
-              </span>
-            </div>
-          )}
         </div>
       </form>
     </div>
@@ -148,6 +148,7 @@ const GeneralTabForm = ({ initialize, handleSubmit }) => {
 GeneralTabForm.propTypes = {
   initialize: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  retention: PropTypes.number,
 };
 
 export const GeneralTab = reduxForm({

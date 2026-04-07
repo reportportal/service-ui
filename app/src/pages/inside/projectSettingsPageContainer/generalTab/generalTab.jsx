@@ -226,9 +226,9 @@ export class GeneralTab extends Component {
     const { attachments, launches, logs } = this.props.organizationSettings;
 
     return {
-      keepLaunches: launches?.period ? daysToSeconds(launches.period) : null,
-      keepLogs: logs?.period ? daysToSeconds(logs.period) : null,
-      keepScreenshots: attachments?.period ? daysToSeconds(attachments.period) : null,
+      keepLaunches: launches?.period ?? null,
+      keepLogs: logs?.period ?? null,
+      keepScreenshots: attachments?.period ?? null,
     };
   };
 

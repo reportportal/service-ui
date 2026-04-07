@@ -29,10 +29,6 @@ export const messages = defineMessages({
     id: 'CreateTestPlanModal.testPlanAttributes',
     defaultMessage: 'Test plan attributes',
   },
-  addAttributes: {
-    id: 'CreateMilestoneModal.addAttributes',
-    defaultMessage: 'Add Attributes',
-  },
   attributeKeyPlaceholderRequired: {
     id: 'CreateTestPlanModal.attributeKeyPlaceholderRequired',
     defaultMessage: 'Key *',

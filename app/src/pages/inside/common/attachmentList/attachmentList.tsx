@@ -20,7 +20,7 @@ import { projectKeySelector } from 'controllers/project';
 import { isEmpty } from 'es-toolkit/compat';
 import { AttachedFile } from '@reportportal/ui-kit';
 
-import { createClassnames, fetch } from 'common/utils';
+import { createClassnames, fetch, convertBytesToMB } from 'common/utils';
 import { URLS } from 'common/urls';
 import type { Attachment } from './types';
 
@@ -39,7 +39,6 @@ export const AttachmentList = ({
   className = '',
   withPreview = false,
 }: AttachmentsListProps) => {
-  const convertBytesToMB = (bytes: number) => Math.round((bytes / (1000 * 1000)) * 100) / 100;
   const projectKey = useSelector(projectKeySelector);
   const [attachmentsWithPreview, setAttachmentsWithPreview] = useState<Attachment[] | null>(null);
   const getAttachmentWithThumbnail = async (attachment: Attachment, objectUrls: string[]) => {

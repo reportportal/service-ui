@@ -26,3 +26,5 @@ export const capitalize = (str) => {
 };
 
 export const stringEqual = (value1, value2) => String(value1) === String(value2);
+
+export const compareStringsLocale = (a, b) => a.localeCompare(b);

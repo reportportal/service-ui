@@ -17,14 +17,6 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  filterTitle: {
-    id: 'FilterSidePanel.filterTitle',
-    defaultMessage: 'Filter',
-  },
-  clearAllFilters: {
-    id: 'FilterSidePanel.clearAllFilters',
-    defaultMessage: 'Clear all filters',
-  },
   selectPriority: {
     id: 'FilterSidePanel.selectPriority',
     defaultMessage: 'Select priority level',

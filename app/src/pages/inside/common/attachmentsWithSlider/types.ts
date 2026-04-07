@@ -26,33 +26,28 @@ export interface AttachmentWithSlider {
   thumbnailSrc?: string;
 }
 
-export type LightGalleryInstance = ReturnType<typeof LG>;
-
 export interface LightGalleryEvent {
   detail: {
     index: number;
     [key: string]: unknown;
   };
-
   [key: string]: unknown;
 }
 
-export interface GalleryItem {
+export type LightGalleryInstance = ReturnType<typeof LG>;
+
+export type GalleryItem = {
   dataset?: DOMStringMap;
   download?: string;
-}
+};
 
-export interface ZoomPlugin {
-  zoomIn?: () => void;
-  resetZoom?: () => void;
-  init?: () => void
-}
+export type ZoomPlugin = { zoomIn?: () => void; resetZoom?: () => void; init?: () => void };
 
-export interface ExtendedLightGalleryInstance extends LightGalleryInstance {
+export type ExtendedLightGalleryInstance = LightGalleryInstance & {
   outer: { selector?: HTMLElement };
   LGel: { on: (event: string, cb: (event: LightGalleryEvent) => void) => void };
   galleryItems: Array<{ src?: string; href?: string }>;
   items: Array<{ dataset?: DOMStringMap; download?: string }>;
   index: number;
   plugins?: Array<{ zoomIn?: () => void; resetZoom?: () => void; init?: () => void }>;
-}
+};

@@ -1,4 +1,7 @@
 .milestone-type-icon {
+  --milestone-icon-sprint-feature-nudge-up-list: 4px;
+  --milestone-icon-sprint-feature-nudge-up-compact: 2px;
+
   display: grid;
   place-items: center;
   box-sizing: border-box;
@@ -10,13 +13,18 @@
 
   &--RELEASE,
   &--PLAN,
-  &--OTHER {
+  &--OTHER,
+  &--SPRINT,
+  &--FEATURE {
     background-color: var(--rp-ui-base-bg-200);
   }
 
-  &--SPRINT,
-  &--FEATURE {
-    background-color: var(--rp-ui-base-bg-000);
+  &--card#{&}--RELEASE,
+  &--card#{&}--PLAN,
+  &--card#{&}--OTHER,
+  &--card#{&}--SPRINT,
+  &--card#{&}--FEATURE {
+    background-color: transparent;
   }
 
   svg {
@@ -32,33 +40,53 @@
   }
 
   &--toggle {
-    position: relative;
-    right: 10px;
-    bottom: 8px;
+    position: static;
+    box-sizing: border-box;
+    width: 24px;
+    height: 24px;
+    border-radius: 0;
+    background-color: transparent;
   }
 
-  &--toggle#{&}--SPRINT svg,
-  &--toggle#{&}--FEATURE svg {
-    transform: translateY(-3px);
+  &--RELEASE#{&}--toggle,
+  &--SPRINT#{&}--toggle,
+  &--PLAN#{&}--toggle,
+  &--FEATURE#{&}--toggle,
+  &--OTHER#{&}--toggle {
+    background-color: transparent;
   }
 
-  &--menu#{&}--SPRINT,
-  &--menu#{&}--FEATURE {
-    box-shadow: 0 0 0 1px var(--rp-ui-base-bg-200);
+  &--toggle svg {
+    width: 24px;
+    height: 24px;
+  }
 
-    svg {
-      transform: translateY(-3px);
-    }
+  &--toggle#{&}--PLAN svg {
+    width: 14px;
+    height: 14px;
   }
 
   &--menu {
     width: 24px;
     height: 24px;
+    background-color: var(--rp-ui-base-bg-200);
 
     svg {
       width: 24px;
       height: 24px;
     }
+  }
+
+  &--SPRINT:not(#{&}--menu):not(#{&}--toggle) svg,
+  &--FEATURE:not(#{&}--menu):not(#{&}--toggle) svg {
+    transform: translateY(calc(-1 * var(--milestone-icon-sprint-feature-nudge-up-list)));
+  }
+
+  &--SPRINT#{&}--menu svg,
+  &--FEATURE#{&}--menu svg,
+  &--SPRINT#{&}--toggle svg,
+  &--FEATURE#{&}--toggle svg {
+    transform: translateY(calc(-1 * var(--milestone-icon-sprint-feature-nudge-up-compact)));
   }
 
   &--menu#{&}--PLAN svg {

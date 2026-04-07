@@ -66,6 +66,10 @@ export const messages = defineMessages({
     id: 'MilestonesTable.milestoneStatusBackToScheduled',
     defaultMessage: 'Back to Scheduled',
   },
+  milestoneStatusBackToTesting: {
+    id: 'MilestonesTable.milestoneStatusBackToTesting',
+    defaultMessage: 'Back to Testing',
+  },
   menuEditMilestone: {
     id: 'MilestonesTable.menuEditMilestone',
     defaultMessage: 'Edit milestone',

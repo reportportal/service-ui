@@ -48,6 +48,7 @@ import {
 import type { Organization as OrganizationValue } from 'pages/inside/common/assignments/organizationAssignment';
 import { ORGANIZATIONS } from 'pages/instance/allUsersPage/allUsersHeader/createUserModal';
 import {
+  buildAssignOrganizationPayload,
   buildUpdateAssignmentsPayload,
   getManageAssignmentsInstanceChangeSet,
   getManageAssignmentsInstanceSaveCondition,
@@ -243,7 +244,7 @@ const ManageAssignmentsInstanceModalView = ({
   }, [organizations]);
 
   const handleSave = async () => {
-    const { modified, removed } = getManageAssignmentsInstanceChangeSet(
+    const { modified, removed, added } = getManageAssignmentsInstanceChangeSet(
       initialOrganizationsRef.current,
       organizations,
     );
@@ -258,6 +259,14 @@ const ManageAssignmentsInstanceModalView = ({
     setIsSavingAssignments(true);
 
     try {
+      const addOperations = added.map((org) => ({
+        name: org.name,
+        promise: fetch(URLS.organizationUsers(org.id), {
+          method: 'POST',
+          data: buildAssignOrganizationPayload(org, user.id),
+        }),
+      }));
+
       const removeOperations = removed.map((org) => ({
         name: org.name,
         promise: fetch(URLS.organizationUserById({ organizationId: org.id, userId: user.id }), {
@@ -289,7 +298,7 @@ const ManageAssignmentsInstanceModalView = ({
         })(),
       }));
 
-      const operations = [...removeOperations, ...updateOperations];
+      const operations = [...addOperations, ...removeOperations, ...updateOperations];
       const results = await Promise.allSettled(operations.map((op) => op.promise));
       const failedNames = results
         .map((res, i) => (res.status === 'rejected' ? operations[i].name : null))

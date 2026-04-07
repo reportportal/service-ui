@@ -14,28 +14,25 @@
  * limitations under the License.
  */
 
-import { ReactNode } from 'react';
+import type { LaunchAttribute } from '../types';
 
-import { createClassnames } from 'common/utils';
-
-import treeStyles from './folder.scss';
-
-const cx = createClassnames(treeStyles);
-
-interface FolderSubfoldersProps {
-  shouldDisplay: boolean;
-  children: ReactNode;
-  className?: string;
+export interface StartTimeValue {
+  preset?: string;
+  startDate?: Date;
+  endDate?: Date;
 }
 
-export const FolderSubfolders = ({ shouldDisplay, className, children }: FolderSubfoldersProps) => {
-  if (!shouldDisplay) {
-    return null;
-  }
+export interface ManualLaunchesFilterPayload {
+  statuses: string[];
+  completion: string;
+  startTime: StartTimeValue | null;
+  testPlan: string | null;
+  attributes: LaunchAttribute[];
+}
 
-  return (
-    <ul className={cx('folders-tree', 'folders-tree--inner', className)} role="group">
-      {children}
-    </ul>
-  );
-};
+export interface ManualLaunchesFilterSidePanelProps {
+  isVisible: boolean;
+  appliedFilters: ManualLaunchesFilterPayload;
+  onClose: () => void;
+  onApply: (payload: ManualLaunchesFilterPayload) => void;
+}

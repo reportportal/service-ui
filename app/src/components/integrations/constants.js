@@ -36,7 +36,7 @@ export const PLUGIN_DEFAULT_IMAGE = DefaultPluginIcon;
 
 export const PLUGINS_SUPPORTS_MULTIPLE_INSTANCES = [JIRA, RALLY, SAML];
 
-export const BUILTIN_PLUGINS = [EMAIL, SAML, LDAP];
+export const BUILTIN_PLUGINS = [EMAIL];
 
 export const PLUGIN_ICON_TYPES = {
   BASE_64: 'base64',

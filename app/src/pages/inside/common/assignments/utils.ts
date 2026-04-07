@@ -2,6 +2,7 @@ import { EDITOR, VIEWER } from 'common/constants/projectRoles';
 import type { OrganizationRoles, ProjectRoles, UserRoles } from 'types/roles';
 import { OrganizationUserInfo } from 'controllers/user/types';
 import type {
+  AssignOrganizationPayload,
   UpdateUserAssignmentsPayload,
   UserOrganizationProjectItem,
   UserOrganizationProjectsResponse,
@@ -85,11 +86,27 @@ export function buildUpdateAssignmentsPayload(
   };
 }
 
+export function buildAssignOrganizationPayload(
+  organization: Organization,
+  userId: number,
+): AssignOrganizationPayload {
+  return {
+    id: userId,
+    org_role: organization.role,
+    projects: (organization.projects ?? []).map((project) => ({
+      id: project.id,
+      project_role: project.role,
+    })),
+  };
+}
+
 const MANAGE_ASSIGNMENTS_CONDITIONS = {
   ADD_PROJECT: 'add project',
   REMOVE_PROJECT: 'remove project',
   CHANGE_ROLE: 'change role',
   CHANGE_PERMISSION: 'change permission',
+  ADD_ORGANIZATION: 'add organization',
+  REMOVE_ORGANIZATION: 'remove organization',
 } as const;
 
 export function getManageAssignmentsSaveCondition(
@@ -163,10 +180,14 @@ export function getManageAssignmentsInstanceSaveCondition(
   const { removed, added, modified } = getManageAssignmentsInstanceChangeSet(initial, current);
   const parts = new Set<string>();
   if (removed.length > 0) {
-    parts.add('remove organization');
+    parts.add(MANAGE_ASSIGNMENTS_CONDITIONS.REMOVE_ORGANIZATION);
   }
   if (added.length > 0) {
-    parts.add('add organization');
+    parts.add(MANAGE_ASSIGNMENTS_CONDITIONS.ADD_ORGANIZATION);
+
+    if (added.some((org) => org.projects.length)) {
+      parts.add(MANAGE_ASSIGNMENTS_CONDITIONS.ADD_PROJECT);
+    }
   }
   modified.forEach((org) => {
     const initialOrg = initial.find((io) => io.id === org.id);

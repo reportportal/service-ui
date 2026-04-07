@@ -15,7 +15,7 @@
  */
 export { isEmptyObject } from './isEmptyObject';
 export { referenceDictionary, docsReferences } from './referenceDictionary';
-export { isString, capitalize } from './stringUtils';
+export { isString, capitalize, compareStringsLocale } from './stringUtils';
 export { fetch, ERROR_CANCELED, ERROR_UNAUTHORIZED } from './fetch';
 export {
   getStorageItem,
@@ -71,3 +71,4 @@ export { createClassnames } from './createClassnames';
 export { commonValidators } from './validation';
 export { copyToClipboard } from './clipboard';
 export { getRouterParams } from './getRouterParams';
+export { convertBytesToMB } from './convertBytesToMB';

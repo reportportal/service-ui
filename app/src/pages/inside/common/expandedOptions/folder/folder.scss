@@ -17,35 +17,51 @@
 .folders-tree {
   &--inner {
     margin-left: 24px;
+  }
 
-    .folders-tree__item::after {
-      position: absolute;
-      top: 16px;
-      left: -32px;
-      content: '';
-      display: block;
-      width: 12px;
-      height: 1px;
-      background-color: var(--rp-ui-base-e-100);
+  &__connector {
+    position: absolute;
+    top: 0;
+    background-color: var(--rp-ui-base-e-100);
+    pointer-events: none;
+  }
+
+  &__connector-vertical {
+    width: 1px;
+    height: 100%;
+
+    &--last {
+      height: 19px;
     }
+  }
+
+  &__connector-corner {
+    width: 1px;
+    height: 100%;
+
+    &--last {
+      height: 19px;
+    }
+  }
+
+  &__connector-horizontal {
+    top: 18px;
+    width: 12px;
+    height: 1px;
   }
 
   &__item {
     position: relative;
 
-    &::before {
-      position: absolute;
-      top: 24px;
-      left: -9px;
-      content: '';
-      display: block;
-      width: 1px;
-      height: calc(100% - 42px);
-      background-color: var(--rp-ui-base-e-100);
+    :global([class*='tree-sortable-item--drop-inside']) & &-title {
+      outline: 2px dashed var(--rp-ui-base-topaz-focused);
+      outline-offset: -2px;
+      border-radius: 4px;
+      background-color: var(--rp-ui-base-topaz-100);
     }
 
-    &--dragging {
-      opacity: 0.5;
+    &-content {
+      position: relative;
     }
 
     &-title {
@@ -108,13 +124,6 @@
       > svg {
         transform: none;
       }
-    }
-
-    &-actions {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-left: auto;
     }
   }
 
@@ -188,28 +197,6 @@
 
     &:hover svg path {
       fill: var(--rp-ui-base-topaz-hover);
-    }
-  }
-}
-
-.tree-sortable-wrapper {
-  display: block;
-
-  > * {
-    pointer-events: auto;
-  }
-
-  &[class*='tree-sortable-item--drop-inside'] {
-    &::before {
-      display: none;
-    }
-
-    // Apply border only to the immediate folder title, not subfolders
-    > .folders-tree__item > .folders-tree__item-content > .folders-tree__item-title {
-      outline: 2px dashed var(--rp-ui-base-topaz-focused);
-      outline-offset: -2px;
-      border-radius: 4px;
-      background-color: var(--rp-ui-base-topaz-100);
     }
   }
 }

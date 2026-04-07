@@ -32,7 +32,7 @@ import {
 import LightGallery from 'lightgallery/react';
 import lgThumbnail from 'lightgallery/plugins/thumbnail';
 import lgZoom from 'lightgallery/plugins/zoom';
-import { createClassnames, fetch } from 'common/utils';
+import { createClassnames, fetch, convertBytesToMB } from 'common/utils';
 import { URLS } from 'common/urls';
 
 import closeIcon from './sliderControls/close-inline.svg';
@@ -170,15 +170,9 @@ export const AttachmentsWithSlider = ({
       const currentItem = instance.galleryItems[index] as { src?: string };
       const isImage = currentItem.src && !currentItem.src.startsWith('data:image/svg+xml');
 
-      if (isImage) {
-        externalLinkButton?.classList.remove('hidden');
-        zoomInButton?.classList.remove('hidden');
-        zoomOutButton?.classList.remove('hidden');
-      } else {
-        externalLinkButton?.classList.add('hidden');
-        zoomInButton?.classList.add('hidden');
-        zoomOutButton?.classList.add('hidden');
-      }
+      externalLinkButton?.classList.toggle('hidden', !isImage);
+      zoomInButton?.classList.toggle('hidden', !isImage);
+      zoomOutButton?.classList.toggle('hidden', !isImage);
     });
   };
 
@@ -233,16 +227,18 @@ export const AttachmentsWithSlider = ({
           const attachmentId = currentItem.dataset?.id;
           const fileName = currentItem.download;
 
-          try {
-            const response = await fetch(
-              URLS.tmsAttachmentDownload(projectKey, attachmentId),
-              { responseType: 'blob' },
-              true
-            );
+          if (attachmentId) {
+            try {
+              const response = await fetch(
+                URLS.tmsAttachmentDownload(projectKey, attachmentId),
+                { responseType: 'blob' },
+                true
+              );
 
-            saveAs(response.data as Blob, fileName);
-          } catch (error) {
-            console.error('Download failed:', error);
+              saveAs(response.data as Blob, fileName);
+            } catch (error) {
+              console.error('Download failed:', error);
+            }
           }
         };
       }
@@ -322,7 +318,7 @@ export const AttachmentsWithSlider = ({
               <AttachedFile
                 key={id}
                 fileName={fileName}
-                size={fileSize}
+                size={convertBytesToMB(fileSize)}
                 textPosition="bottom"
                 imageSrc={thumbnailSrc}
                 withPreview

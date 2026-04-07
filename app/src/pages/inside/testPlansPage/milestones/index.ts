@@ -41,6 +41,7 @@ export {
   toDateOnlyString,
   dateOnlyStringToUtcIso,
   formatIsoDateShort,
+  formatIsoDateShortDashed,
 } from './milestoneDateUtils';
 
 export { MilestoneType, MilestoneStatus } from 'controllers/milestone';
@@ -48,6 +49,7 @@ export { MilestoneType, MilestoneStatus } from 'controllers/milestone';
 export {
   MILESTONE_STATUS,
   isBackToScheduledPopoverOption,
+  normalizeMilestoneStatus,
   milestoneStatusToCssModifier,
   getMilestoneStatusPopoverOptions,
 } from './milestoneStatus';

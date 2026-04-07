@@ -14,22 +14,41 @@
  * limitations under the License.
  */
 
+import { useMemo } from 'react';
 import { settingsMessages } from 'common/constants/localization/settingsLocalization';
-import { humanizeDays } from 'common/utils';
+import { daysToSeconds, secondsToDays } from 'common/utils';
 import { useIntl } from 'react-intl';
 
-export const useRetentionUtils = (formValues) => {
+export const useRetentionUtils = (formValues, retention) => {
   const { locale, formatMessage } = useIntl();
 
-  const baseOptions = [
-    { label: formatMessage(settingsMessages.week1), value: 7 },
-    { label: formatMessage(settingsMessages.week2), value: 14 },
-    { label: formatMessage(settingsMessages.week3), value: 21 },
-    { label: formatMessage(settingsMessages.month1), value: 30 },
-    { label: formatMessage(settingsMessages.month3), value: 90 },
-    { label: formatMessage(settingsMessages.month6), value: 180 },
-    { label: formatMessage(settingsMessages.forever), value: 0 },
-  ];
+  const baseOptions = useMemo(() => {
+    const retentionOptions = [
+      { label: formatMessage(settingsMessages.week1), value: daysToSeconds(7) },
+      { label: formatMessage(settingsMessages.week2), value: daysToSeconds(14) },
+      { label: formatMessage(settingsMessages.week3), value: daysToSeconds(21) },
+      { label: formatMessage(settingsMessages.month1), value: daysToSeconds(30) },
+      { label: formatMessage(settingsMessages.month3), value: daysToSeconds(90) },
+      { label: formatMessage(settingsMessages.month6), value: daysToSeconds(180) },
+      { label: formatMessage(settingsMessages.forever), value: 0 },
+    ];
+
+    if (!retention || retention === 0) {
+      return retentionOptions;
+    }
+
+    const options = retentionOptions.filter(
+      (option) => option.value <= retention && option.value !== 0,
+    );
+    if ((options.length && options[options.length - 1].value !== retention) || !options.length) {
+      options.push({
+        label: secondsToDays(retention, locale),
+        value: retention,
+      });
+    }
+
+    return options;
+  }, [formatMessage, retention, locale]);
 
   const sortValues = (a, b) => {
     if (a.value === 0) {
@@ -47,7 +66,9 @@ export const useRetentionUtils = (formValues) => {
     const options = [...baseOptions];
 
     if (!options.some((elem) => elem.value === value)) {
-      options.push({ label: humanizeDays(value, locale), value });
+      const label =
+        value === 0 ? formatMessage(settingsMessages.forever) : secondsToDays(value, locale);
+      options.push({ label, value });
       options.sort(sortValues);
     }
 
