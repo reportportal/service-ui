@@ -71,3 +71,4 @@ export { createClassnames } from './createClassnames';
 export { commonValidators } from './validation';
 export { copyToClipboard } from './clipboard';
 export { getRouterParams } from './getRouterParams';
+export { convertBytesToMB } from './convertBytesToMB';

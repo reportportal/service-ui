@@ -20,7 +20,8 @@ import { useIntl } from 'react-intl';
 import { createClassnames } from 'common/utils';
 import { commonMessages } from 'pages/inside/common/common-messages';
 
-import { AttachmentList, type Attachment } from '../../../common/attachmentList';
+import { AttachmentsWithSlider } from '../../../common/attachmentsWithSlider';
+import { type Attachment } from '../../../common/attachmentList';
 import { hasStepContent } from '../../../common/scenarioUtils';
 
 import styles from './step.scss';
@@ -56,10 +57,9 @@ export const Step = ({ index, instructions = '', expectedResult = '', attachment
             <h4>
               {formatMessage(commonMessages.attachments)} {attachments.length}
             </h4>
-            <AttachmentList
+            <AttachmentsWithSlider
               attachments={attachments}
               className={cx('step__attachments-list')}
-              withPreview
             />
           </div>
         )}

@@ -20,7 +20,8 @@ import { isEmpty } from 'es-toolkit/compat';
 import { createClassnames } from 'common/utils';
 import { commonMessages } from 'pages/inside/common/common-messages';
 
-import { AttachmentList, type Attachment } from '../../../common/attachmentList';
+import { AttachmentsWithSlider } from '../../../common/attachmentsWithSlider';
+import { type Attachment } from '../../../common/attachmentList';
 
 import styles from './preconditions.scss';
 
@@ -48,10 +49,9 @@ export const Precondition = ({ preconditions }: PreconditionProps) => {
             <h4>
               {formatMessage(commonMessages.attachments)} {preconditions.attachments.length}
             </h4>
-            <AttachmentList
+            <AttachmentsWithSlider
               attachments={preconditions.attachments}
               className={cx('precondition__attachments-list')}
-              withPreview
             />
           </div>
         )}
