@@ -104,7 +104,6 @@ export const AttachmentsWithSlider = ({
 
   const addSrcAttributesToAttachments = useCallback((
     objectUrls: string[],
-    isMounted: boolean,
     abortSignal: AbortSignal,
     isCleanedUpRef: MutableRefObject<boolean>,
   ): void => {
@@ -114,7 +113,7 @@ export const AttachmentsWithSlider = ({
       const promises = attachments
         .map(async (attachment: AttachmentWithSlider): Promise<AttachmentWithSlider> => {
           if (attachment.hasThumbnail) {
-            return getAttachmentWithThumbnail(attachment, objectUrls,abortSignal, isCleanedUpRef);
+            return getAttachmentWithThumbnail(attachment, objectUrls, abortSignal);
           } else {
             return { ...attachment };
           }
@@ -122,7 +121,7 @@ export const AttachmentsWithSlider = ({
 
       void Promise.all(promises)
         .then((newList) => {
-          if (isMounted) {
+          if (!abortSignal.aborted && !isCleanedUpRef.current) {
             setAttachmentsWithPreview(newList);
           }
         });
@@ -130,15 +129,13 @@ export const AttachmentsWithSlider = ({
   }, [attachments, getAttachmentWithThumbnail, setAttachmentsWithPreview]);
 
   useEffect(() => {
-    let isMounted = true;
     const objectUrls: string[] = [];
     const abortController = new AbortController();
 
     isCleanedUpRef.current = false;
-    addSrcAttributesToAttachments(objectUrls, isMounted, abortController.signal, isCleanedUpRef);
+    addSrcAttributesToAttachments(objectUrls, abortController.signal, isCleanedUpRef);
 
     return () => {
-      isMounted = false;
       isCleanedUpRef.current = true;
       abortController.abort();
       objectUrls.forEach((url) => {
@@ -266,9 +263,9 @@ export const AttachmentsWithSlider = ({
     setTollbarButtonsVisibility(instance);
 
     const outer = instance.outer as { selector?: HTMLElement } | undefined;
-    const toolbar = outer?.selector?.querySelector(`.${lightGalleryClassNames.toolbar}`) as HTMLElement | null;
+    const toolbar = outer?.selector?.querySelector(`.${lightGalleryClassNames.toolbar}`);
 
-    if (toolbar) {
+    if (toolbar && toolbar instanceof HTMLElement) {
       addCustomCloseButton(toolbar);
 
       if (!toolbar?.querySelector(`.${lightGalleryClassNames.externalLink}`)) {

@@ -15,7 +15,7 @@
  */
 
 import { useSelector } from 'react-redux';
-import { useCallback, MutableRefObject } from 'react';
+import { useCallback } from 'react';
 import { saveAs } from 'file-saver';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
@@ -30,7 +30,6 @@ export const useAttachmentsWithSlider = () => {
     attachment: AttachmentWithSlider,
     objectUrls: string[],
     abortSignal: AbortSignal,
-    isCleanedUpRef: MutableRefObject<boolean>
   ): Promise<AttachmentWithSlider> => {
     const thumbnailPromise = fetch(
       URLS.attachmentThumbnail(projectKey, attachment.id),
@@ -48,12 +47,12 @@ export const useAttachmentsWithSlider = () => {
     let thumbnailSrc: string | undefined;
     let src: string | undefined;
 
-    if (!isCleanedUpRef.current && thumbnailResult.status === PromiseStatus.Fulfilled) {
+    if (!abortSignal.aborted && thumbnailResult.status === PromiseStatus.Fulfilled) {
       thumbnailSrc = URL.createObjectURL(thumbnailResult.value.data as MediaSource);
       objectUrls.push(thumbnailSrc);
     }
 
-    if (!isCleanedUpRef.current && imageResult.status === PromiseStatus.Fulfilled) {
+    if (!abortSignal.aborted && imageResult.status === PromiseStatus.Fulfilled) {
       src = URL.createObjectURL(imageResult.value.data as MediaSource);
       objectUrls.push(src);
     }
