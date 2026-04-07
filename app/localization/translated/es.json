@@ -3,7 +3,7 @@
   "ServiceUnavailableScreen.descriptionApi": "Parece que Service API podría no estar disponible en este momento. Actualice la página después de un tiempo o contacte con su administrador del sistema para obtener ayuda.",
   "ServiceUnavailableScreen.footer": "También puede consultar nuestras <installationGuides>guías de instalación</installationGuides> para comprobar la corrección del despliegue o nuestro <slackChannel>canal de Slack</slackChannel> para recibir consejos de la comunidad.",
   "ServiceUnavailableScreen.refreshPage": "Actualizar página",
-  "ServiceUnavailableScreen.title": "Servicios no disponibles",
+  "ServiceUnavailableScreen.title": "Servicio no disponible",
   "AccountRemovedPage.description": "Su cuenta y datos personales han sido eliminados de la base de datos de ReportPortal.\nLamentamos que se vaya. Se ha enviado una notificación por correo electrónico a la dirección de correo electrónico asociada con su cuenta.",
   "AccountRemovedPage.header": "la cuenta ha sido eliminada",
   "AccountRemovedPage.login": "Iniciar sesión",
@@ -1289,7 +1289,7 @@
   "InviteUser.duplicationProject": "User with this email is already assigned to the project",
   "InviteUser.noProjectsCreated": "Aún no se han creado proyectos",
   "InviteUser.email": "Correo electrónico",
-  "InviteUser.epamInviteForbidden": "Unable to assign user to the organization. Please verify user assignment to the organization in EPAM internal system: delivery.epam.com",
+  "InviteUser.epamInviteForbidden": "Unable to assign user to the organization. Please verify user assignment to the organization in EPAM internal system: <link>delivery.epam.com</link>",
   "InviteUser.externalInviteForbidden": "User with {email} is not in ReportPortal yet. New users can be added only via SSO. More info <a>{linkName}</a>",
   "InviteUser.hintMessage": "By default, invited users receive 'View only' permissions. Users with 'Can edit' permissions can modify the project and all its data (report launches, change defect types, etc.).",
   "InviteUser.inputPlaceholder": "Enter email (e.g. example@mail.com)",
@@ -2606,5 +2606,7 @@
   "launchPatternAnalysisModal.title": "Análisis de patrones de ejecuciones",
   "notFoundPage.oops": "Ups. Página no encontrada.",
   "notFoundPage.pageNotExist": "La página que busca no existe.",
-  "notFoundPage.toHome": "Llévame de aquí"
+  "notFoundPage.toHome": "Llévame de aquí",
+  "OrganizationProjectsPage.actionAssignUser": "Asignar usuario",
+  "ProjectTeamPage.assignUser": "Asignar usuario"
 }

@@ -3,7 +3,7 @@
   "ServiceUnavailableScreen.descriptionApi": "Похоже, что Service API сейчас может быть недоступен. Обновите страницу через некоторое время или обратитесь за помощью к системному администратору.",
   "ServiceUnavailableScreen.footer": "Вы также можете обратиться к нашим <installationGuides>руководствам по установке</installationGuides>, чтобы проверить корректность развертывания, или в наш <slackChannel>канал Slack</slackChannel> для советов от сообщества.",
   "ServiceUnavailableScreen.refreshPage": "Обновить страницу",
-  "ServiceUnavailableScreen.title": "Сервисы недоступны",
+  "ServiceUnavailableScreen.title": "Сервис недоступен",
   "AccountRemovedPage.description": "Ваша учетная запись и личные данные были удалены из базы данных ReportPortal.\nНам жаль, что вы уходите. Уведомление по электронной почте было отправлено на адрес электронной почты, связанный с вашей учетной записью.",
   "AccountRemovedPage.header": "учетная запись была удалена",
   "AccountRemovedPage.login": "Авторизоваться",
@@ -1288,7 +1288,7 @@
   "InviteUser.duplicationProject": "Пользователь с этим адресом электронной почты уже назначен на проект",
   "InviteUser.noProjectsCreated": "Проекты еще не созданы",
   "InviteUser.email": "Эл. почта",
-  "InviteUser.epamInviteForbidden": "Невозможно назначить пользователя в организацию. Проверьте назначения пользователя во внутренней системе ЭПАМ: delivery.epam.com",
+  "InviteUser.epamInviteForbidden": "Невозможно назначить пользователя в организацию. Проверьте назначения пользователя во внутренней системе ЭПАМ: <link>delivery.epam.com</link>",
   "InviteUser.externalInviteForbidden": "Пользователь {email} отсутствует в системе. Добавление новых пользователей возможно только через SSO.",
   "InviteUser.hintMessage": "По умолчанию приглашенные пользователи получают права 'Только просмотр'. Пользователи с правами 'Может редактировать' могут изменять проект и все его данные (создавать отчеты о запусках, изменять типы дефектов и т.д.).",
   "InviteUser.inputPlaceholder": "Введите эл. почту (например, example@mail.com)",
@@ -2605,5 +2605,7 @@
   "launchPatternAnalysisModal.title": "Паттерн-анализ запусков",
   "notFoundPage.oops": "Упс. Страница не найдена.",
   "notFoundPage.pageNotExist": "Страница, которую Вы ищете, не существует.",
-  "notFoundPage.toHome": "Заберите меня отсюда"
+  "notFoundPage.toHome": "Заберите меня отсюда",
+  "OrganizationProjectsPage.actionAssignUser": "Назначить пользователя",
+  "ProjectTeamPage.assignUser": "Назначить пользователя"
 }

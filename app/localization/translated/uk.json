@@ -3,7 +3,7 @@
   "ServiceUnavailableScreen.descriptionApi": "Схоже, що Service API наразі може бути недоступний. Оновіть сторінку через деякий час або зверніться по допомогу до системного адміністратора.",
   "ServiceUnavailableScreen.footer": "Ви також можете звернутися до наших <installationGuides>інструкцій з встановлення</installationGuides>, щоб перевірити коректність розгортання, або до нашого <slackChannel>каналу Slack</slackChannel> для порад від спільноти.",
   "ServiceUnavailableScreen.refreshPage": "Оновити сторінку",
-  "ServiceUnavailableScreen.title": "Сервіси недоступні",
+  "ServiceUnavailableScreen.title": "Сервіс недоступний",
   "AccountRemovedPage.description": "Ваш обліковий запис і особисті дані видалено з бази даних ReportPortal.\nНам шкода, що ви йдете. Сповіщення електронною поштою надіслано на адресу електронної пошти, пов’язану з вашим обліковим записом.",
   "AccountRemovedPage.header": "обліковий запис видалено",
   "AccountRemovedPage.login": "Авторизуватися",
@@ -1288,7 +1288,7 @@
   "InviteUser.duplicationProject": "Користувач із цією електронною адресою вже призначений до проєкту",
   "InviteUser.noProjectsCreated": "Проєктів ще не створено",
   "InviteUser.email": "Ел. пошта",
-  "InviteUser.epamInviteForbidden": "Не вдалося долучити користувача до організації. Будь ласка, здійсніть долучення користувача до організації у внутрішній системі EPAM: delivery.epam.com",
+  "InviteUser.epamInviteForbidden": "Не вдалося долучити користувача до організації. Будь ласка, здійсніть долучення користувача до організації у внутрішній системі EPAM: <link>delivery.epam.com</link>",
   "InviteUser.externalInviteForbidden": "Користувач {email} відсутній у системі. Додавання нових користувачів можливе лише через SSO.",
   "InviteUser.hintMessage": "За замовчуванням запрошені користувачі отримують права 'Тільки перегляд'. Користувачі з правами 'Може редагувати' можуть змінювати проект і всі його дані (створювати звіти про запуски, змінювати типи дефектів і т.д.).",
   "InviteUser.inputPlaceholder": "Введіть ел. пошту (наприклад, example@mail.com)",
@@ -2605,5 +2605,7 @@
   "launchPatternAnalysisModal.title": "Патерн-аналіз запусків",
   "notFoundPage.oops": "Упс. Сторінка не знайдена.",
   "notFoundPage.pageNotExist": "Сторінка, яку Ви шукаєте, не існує.",
-  "notFoundPage.toHome": "Заберіть мене звідси"
+  "notFoundPage.toHome": "Заберіть мене звідси",
+  "OrganizationProjectsPage.actionAssignUser": "Призначити користувача",
+  "ProjectTeamPage.assignUser": "Призначити користувача"
 }
