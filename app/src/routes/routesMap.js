@@ -398,7 +398,7 @@ const routesMap = {
     thunk: (dispatch, getState) => {
       const state = getState();
       const params = getManualLaunchDetailsFetchParams(state);
-      const { launchId, filterPriorities, filterTags } = params;
+      const { launchId, filterPriorities, filterTags, statusFilter } = params;
 
       if (launchId) {
         dispatch(getManualLaunchAction({ launchId }));
@@ -411,6 +411,7 @@ const routesMap = {
             limit: 100,
             ...(filterPriorities && { filterPriorities }),
             ...(filterTags && { filterTags }),
+            ...(statusFilter && { statusFilter }),
           }),
         );
 

@@ -33,6 +33,7 @@ import {
   InfoIcon,
   Tooltip,
 } from '@reportportal/ui-kit';
+import { isBrowser } from 'es-toolkit';
 import { createClassnames, fetch, referenceDictionary } from 'common/utils';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -206,9 +207,10 @@ export const InstanceAssignment = ({
   const [totalProjects, setTotalProjects] = useState(0);
   const [userOrgIds, setUserOrgIds] = useState<Set<number>>(new Set());
   const allOrganizations = fields.getAll();
-  const selectedOrgFromList = selectedOrganizationId == null
-    ? undefined
-    : notAssignedOrganizations.find((o) => o.id === selectedOrganizationId);
+  const selectedOrgFromList =
+    selectedOrganizationId == null
+      ? undefined
+      : notAssignedOrganizations.find((o) => o.id === selectedOrganizationId);
   const isUpsaExternalOrgSelection =
     userType === UPSA && selectedOrgFromList?.type === OrganizationType.EXTERNAL;
   const renderEpamDeliveryLink = useCallback(
@@ -233,6 +235,9 @@ export const InstanceAssignment = ({
   const shouldShowEmptyState = !shouldFormBeOpen && emptyList && withEmptyState;
   const shouldShowAddButton = !shouldFormBeOpen && !shouldShowEmptyState;
   const shouldShowFormCloseButton = withEmptyState || !emptyList;
+  const menuPortalRoot = isBrowser()
+    ? (document.getElementById('tooltip-root') ?? document.body)
+    : undefined;
 
   useEffect(() => {
     dispatch(change(formName, 'isAddingOrganization', shouldFormBeOpen));
@@ -441,6 +446,8 @@ export const InstanceAssignment = ({
                     setTotalProjects(0);
                   },
                 }}
+                withMenuFlip
+                menuPortalRoot={menuPortalRoot}
                 placeholder={formatMessage(messages.organizationPlaceholder)}
                 getURI={URLS.organizationSearches}
                 getRequestParams={getRequestOrganizationsParams}
@@ -492,6 +499,8 @@ export const InstanceAssignment = ({
                     setSelectedProjectId(null);
                   },
                 }}
+                withMenuFlip
+                menuPortalRoot={menuPortalRoot}
                 placeholder={formatMessage(invitationMessages.selectSearchProject)}
                 getURI={() => URLS.organizationProjectsSearches(selectedOrganizationId)}
                 getRequestParams={getRequestProjectsParams}
