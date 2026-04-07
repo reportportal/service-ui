@@ -133,27 +133,45 @@ export const MilestoneCard = ({
         </div>
       </div>
       {expanded && (
-        <div className={cx('milestone-card__drawer')}>
-          <div className={cx('milestone-card__test-plans')}>
-            {isEmpty(testPlanRows) ? (
-              <p className={cx('milestone-card__test-plans-empty')}>
-                {formatMessage(messages.noTestPlansInMilestone)}
-              </p>
-            ) : (
-              <TestPlansTable testPlans={testPlanRows} isLoading={false} />
-            )}
-          </div>
-          {canManageTestPlans && (
-            <div className={cx('milestone-card__test-plans-footer')}>
-              <Button
-                variant="text"
-                adjustWidthOn="content"
-                icon={<PlusIcon />}
-                onClick={() => openCreateTestPlanModal({ milestoneId: milestone.id })}
-              >
-                {formatMessage(messages.createTestPlanUnderMilestone)}
-              </Button>
+        <div
+          className={cx('milestone-card__drawer', {
+            'milestone-card__drawer_empty': isEmpty(testPlanRows),
+          })}
+        >
+          {isEmpty(testPlanRows) ? (
+            <div className={cx('milestone-card__test-plans-empty-bar-wrap')}>
+              <div className={cx('milestone-card__test-plans-empty-bar')}>
+                <p className={cx('milestone-card__test-plans-empty-text')}>
+                  {formatMessage(messages.noTestPlansInMilestone)}
+                </p>
+                {canManageTestPlans && (
+                  <Button
+                    variant="primary"
+                    onClick={() => openCreateTestPlanModal({ milestoneId: milestone.id })}
+                  >
+                    {formatMessage(messages.createTestPlanUnderMilestone)}
+                  </Button>
+                )}
+              </div>
             </div>
+          ) : (
+            <>
+              <div className={cx('milestone-card__test-plans')}>
+                <TestPlansTable testPlans={testPlanRows} isLoading={false} />
+              </div>
+              {canManageTestPlans && (
+                <div className={cx('milestone-card__test-plans-footer')}>
+                  <Button
+                    variant="text"
+                    adjustWidthOn="content"
+                    icon={<PlusIcon />}
+                    onClick={() => openCreateTestPlanModal({ milestoneId: milestone.id })}
+                  >
+                    {formatMessage(messages.createTestPlanUnderMilestone)}
+                  </Button>
+                </div>
+              )}
+            </>
           )}
         </div>
       )}
