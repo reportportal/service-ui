@@ -33,6 +33,7 @@ import {
   InfoIcon,
   Tooltip,
 } from '@reportportal/ui-kit';
+import { isBrowser } from 'es-toolkit';
 
 import { createClassnames, fetch } from 'common/utils';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -215,6 +216,7 @@ export const InstanceAssignment = ({
   const shouldShowEmptyState = !shouldFormBeOpen && emptyList && withEmptyState;
   const shouldShowAddButton = !shouldFormBeOpen && !shouldShowEmptyState;
   const shouldShowFormCloseButton = withEmptyState || !emptyList;
+  const menuPortalRoot = isBrowser() ? document.body : undefined;
 
   useEffect(() => {
     dispatch(change(formName, 'isAddingOrganization', shouldFormBeOpen));
@@ -412,8 +414,6 @@ export const InstanceAssignment = ({
           <FieldErrorHint provideHint={false}>
             <AsyncAutocompleteV2
               key={`organization-${invitedUserId}`}
-              menuPortalRoot={document.body}
-              onStateChange={handleMenuStateChange}
               inputProps={{
                 onFocus: handleOrganizationNameFocus,
                 label: formatMessage(messages.organization),
@@ -427,6 +427,9 @@ export const InstanceAssignment = ({
                   setTotalProjects(0);
                 },
               }}
+              withMenuFlip
+              menuPortalRoot={menuPortalRoot}
+              onStateChange={handleMenuStateChange}
               placeholder={formatMessage(messages.organizationPlaceholder)}
               getURI={URLS.organizationSearches}
               getRequestParams={getRequestOrganizationsParams}
@@ -478,7 +481,8 @@ export const InstanceAssignment = ({
                   setSelectedProjectId(null);
                 },
               }}
-              menuPortalRoot={document.body}
+              withMenuFlip
+              menuPortalRoot={menuPortalRoot}
               onStateChange={handleMenuStateChange}
               placeholder={formatMessage(invitationMessages.selectSearchProject)}
               getURI={() => URLS.organizationProjectsSearches(selectedOrganizationId)}
