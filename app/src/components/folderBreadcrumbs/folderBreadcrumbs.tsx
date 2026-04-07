@@ -17,7 +17,6 @@
 import { isEmpty } from 'es-toolkit/compat';
 import { useSelector } from 'react-redux';
 import { Breadcrumbs, MoveToFolderIcon } from '@reportportal/ui-kit';
-import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { getParentFolders } from 'common/utils/folderUtils';
 import { Folder } from 'controllers/testCase/types';
@@ -45,8 +44,10 @@ interface FolderBreadcrumbsProps {
   folderId: number | null | undefined;
   instanceKey: TMS_INSTANCE_KEY;
   testPlanId?: number;
-  onNavigate?: VoidFn;
+  onNavigate?: (e?: React.MouseEvent, folderId?: number) => void;
   customFoldersSelector?: (state: unknown) => Folder[];
+  // This prop is used to prevent redirection to different pages when clicking on breadcrumb items. It allows using breadcrumbs solely for displaying the path without navigation.
+  withoutRedirect?: boolean;
 }
 
 const amountToShowWithoutCollapsing = 4;
@@ -73,13 +74,12 @@ export const FolderBreadcrumbs = ({
   instanceKey,
   testPlanId,
   onNavigate,
-  customFoldersSelector
+  withoutRedirect = false,
+  customFoldersSelector,
 }: FolderBreadcrumbsProps) => {
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const projectSlug = useSelector(urlProjectSlugSelector);
-  const folders = useSelector(
-    customFoldersSelector ?? foldersSelector
-  );
+  const folders = useSelector(customFoldersSelector ?? foldersSelector);
 
   const items = getPath({ folderId, folders });
 
@@ -113,8 +113,8 @@ export const FolderBreadcrumbs = ({
   const descriptors = items.map((item) => ({
     id: item.id,
     title: item.name,
-    link: getItemLink(item.id),
-    onClick: onNavigate,
+    link: withoutRedirect ? undefined : getItemLink(item.id),
+    onClick: onNavigate ? () => onNavigate(undefined, item.id) : undefined,
   }));
 
   return (
