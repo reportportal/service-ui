@@ -57,8 +57,6 @@ export const useTestCaseActivityHistory = (
 
     let cancelled = false;
 
-    // Reset list and show loading before the network request (standard fetch-hook pattern).
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional loading state before async fetch
     setState({ content: [], page: null, isLoading: true });
 
     const safeOffset = Number(offset);

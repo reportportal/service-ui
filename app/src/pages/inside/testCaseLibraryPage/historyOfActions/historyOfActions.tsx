@@ -37,7 +37,11 @@ import type { Page } from 'types/common';
 import { useProjectDetails } from 'hooks/useTypedSelector';
 
 import { HistoryOfActionsHeader } from './historyOfActionsHeader';
-import { HISTORY_OF_ACTIONS_NAMESPACE, HistoryOfActionsPageDefaultValues } from './constants';
+import {
+  HISTORY_OF_ACTIONS_NAMESPACE,
+  HistoryOfActionsPageDefaultValues,
+  TMS_TEST_CASE_OBJECT_TYPE,
+} from './constants';
 import { messages } from './messages';
 import { useTestCaseActivityHistory } from './useTestCaseActivityHistory';
 import { flattenActivityContent } from './utils';
@@ -95,7 +99,7 @@ export const HistoryOfActions = () => {
     }
     const first = fetchedContent[0];
 
-    if (first?.object_type === 'tmsTestCase' && first.object_name) {
+    if (first?.object_type === TMS_TEST_CASE_OBJECT_TYPE && first.object_name) {
       return first.object_name;
     }
     return testCaseId || '';

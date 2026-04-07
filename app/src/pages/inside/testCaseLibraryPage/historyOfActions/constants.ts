@@ -16,6 +16,8 @@
 
 export const HISTORY_OF_ACTIONS_NAMESPACE = 'historyOfActions';
 
+export const TMS_TEST_CASE_OBJECT_TYPE = 'tmsTestCase';
+
 export const HistoryOfActionsPageDefaultValues = {
   limit: 20,
   offset: 0,
