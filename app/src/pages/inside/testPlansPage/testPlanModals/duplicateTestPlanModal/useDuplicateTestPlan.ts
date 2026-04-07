@@ -15,7 +15,7 @@
  */
 
 import { useDispatch, useSelector } from 'react-redux';
-import { noop } from 'es-toolkit';
+import { isNotNil, noop } from 'es-toolkit';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -23,17 +23,20 @@ import { useDebouncedSpinner, useQueryParams } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
+import { getMilestonesAction } from 'controllers/milestone';
 import { defaultQueryParams, getTestPlansAction, TestPlanDto } from 'controllers/testPlan';
 
 import { TestPlanFormValues } from '../testPlanModal';
 
 interface UseDuplicateTestPlanOptions {
   testPlanId: number;
+  milestoneId?: number;
   onSuccess?: (testPlanId: number) => void;
 }
 
 export const useDuplicateTestPlan = ({
   testPlanId,
+  milestoneId,
   onSuccess = noop,
 }: UseDuplicateTestPlanOptions) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
@@ -50,6 +53,8 @@ export const useDuplicateTestPlan = ({
         data: {
           name: payload.name,
           description: payload.description,
+          attributes: payload.attributes,
+          ...(isNotNil(milestoneId) ? { milestoneId } : {}),
         },
       });
 
@@ -60,6 +65,7 @@ export const useDuplicateTestPlan = ({
         }),
       );
       dispatch(getTestPlansAction(queryParams));
+      dispatch(getMilestonesAction(queryParams));
       onSuccess(response.id);
     } catch {
       dispatch(

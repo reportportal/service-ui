@@ -9,13 +9,6 @@
   border-radius: 8px;
   background: var(--rp-ui-color-bg);
   box-shadow: var(--rp-ui-base-shadow-hover);
-  transition: box-shadow 0.15s ease;
-
-  &:hover {
-    box-shadow:
-      var(--rp-ui-base-shadow-hover),
-      0 0 0 1px var(--rp-ui-base-topaz-focused);
-  }
 
   &__header {
     display: flex;
@@ -23,17 +16,14 @@
     gap: 12px;
     box-sizing: border-box;
     min-height: 86px;
-    padding: 16px 12px;
-  }
-
-  &__expand {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4px;
-    border: none;
-    background: transparent;
+    padding: 16px 28px;
     cursor: pointer;
+    border-radius: 8px 8px 0 0;
+
+    &:focus-visible {
+      outline: 2px solid var(--rp-ui-base-topaz-focused);
+      outline-offset: -2px;
+    }
   }
 
   &__chevron {
@@ -165,10 +155,6 @@
     }
   }
 
-  &__status-toggle_completed &__status-chevron {
-    color: var(--rp-ui-color-primary);
-  }
-
   &__status-chevron {
     display: inline-flex;
     flex-shrink: 0;
@@ -187,6 +173,10 @@
     :global(path) {
       fill: currentcolor;
     }
+  }
+
+  &__status-toggle_completed &__status-chevron {
+    color: var(--rp-ui-color-primary);
   }
 
   &__actions-trigger {
@@ -273,11 +263,13 @@
     }
   }
 
-  &__expanded {
-    padding: 16px 24px 20px 56px;
+  &__drawer {
+    padding: 16px 0 37px 104px;
     background: var(--rp-ui-kit-colors-bg-secondary);
     border-top: 1px solid var(--rp-ui-kit-colors-border-primary);
     border-radius: 0 0 8px 8px;
+  }
+
   &__test-plans {
     box-sizing: border-box;
     max-width: 100%;
@@ -302,7 +294,6 @@
 
   &__test-plans-footer {
     margin-top: 8px;
-    padding-top: 4px;
   }
 
   &__placeholder {
@@ -312,16 +303,6 @@
     color: var(--rp-ui-color-text-secondary);
   }
 }
-
-.milestone-card__drawer {
-  box-sizing: border-box;
-  width: 100%;
-  padding: 16px 12px 37px 104px;
-  border-radius: 0;
-  background: var(--rp-ui-base-bg-100);
-  overflow: visible;
-}
-
 .milestone-card__group {
   display: flex;
   flex-direction: column;

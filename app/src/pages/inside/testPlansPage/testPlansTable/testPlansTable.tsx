@@ -24,6 +24,7 @@ import { PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
 import { useProjectDetails } from 'hooks/useTypedSelector';
 import { TestPlanDto } from 'controllers/testPlan';
 
+import { FIXED_COLUMN_WIDTH_PX } from './constants';
 import { messages } from './messages';
 import {
   useDeleteTestPlanModal,
@@ -33,14 +34,11 @@ import {
 import { PageLoader } from '../pageLoader';
 import { useTestPlansTableData } from './hooks';
 
+import type { TestPlansTableProps } from './types';
+
 import styles from './testPlansTable.scss';
 
 const cx = createClassnames(styles);
-
-interface TestPlansTableProps {
-  testPlans: TestPlanDto[];
-  isLoading: boolean;
-}
 
 export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) => {
   const { formatMessage } = useIntl();
@@ -141,31 +139,31 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
       {
         key: 'coveredTotal' as const,
         header: formatMessage(messages.coveredTotal),
-        width: 111,
-        align: 'right' as const,
+        width: FIXED_COLUMN_WIDTH_PX.coveredTotal,
+        align: 'left' as const,
       },
       {
         key: 'progressBar' as const,
         header: '',
-        width: 92,
+        width: FIXED_COLUMN_WIDTH_PX.progressBar,
         align: 'center' as const,
       },
       {
         key: 'coverage' as const,
         header: formatMessage(messages.coverage),
-        width: 95,
-        align: 'right' as const,
+        width: FIXED_COLUMN_WIDTH_PX.coverage,
+        align: 'left' as const,
       },
       {
         key: 'options' as const,
         header: '',
-        width: 36,
+        width: FIXED_COLUMN_WIDTH_PX.options,
         align: 'center' as const,
       },
       {
         key: 'icon' as const,
         header: '',
-        width: 39,
+        width: FIXED_COLUMN_WIDTH_PX.icon,
         align: 'center' as const,
       },
     ],

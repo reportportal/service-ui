@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
@@ -105,8 +105,11 @@ export const TestPlanDetailsPage = () => {
 
   useEffect(() => {
     const querySearch = location?.query?.testCasesSearchParams || '';
+    const frameId = requestAnimationFrame(() => {
+      setSearchValue(querySearch);
+    });
 
-    setSearchValue(querySearch);
+    return () => cancelAnimationFrame(frameId);
   }, [location?.query?.testCasesSearchParams]);
 
   const isSearchLoading =
@@ -114,17 +117,24 @@ export const TestPlanDetailsPage = () => {
     isTestPlanTestCasesLoading ||
     isLoadingFilteredFolders;
 
-  const handleFilterChange = useCallback(
-    // eslint-disable-next-line react-hooks/use-memo
-    debounce((value: string) => {
-      dispatch(
-        updatePagePropertiesAction({
-          testCasesSearchParams: value,
-          ...TestCasePageDefaultValues,
-        }),
-      );
-    }, SEARCH_DELAY),
+  const debouncedDispatchSearch = useMemo(
+    () =>
+      debounce((value: string) => {
+        dispatch(
+          updatePagePropertiesAction({
+            testCasesSearchParams: value,
+            ...TestCasePageDefaultValues,
+          }),
+        );
+      }, SEARCH_DELAY),
     [dispatch],
+  );
+
+  const handleFilterChange = useCallback(
+    (value: string) => {
+      debouncedDispatchSearch(value);
+    },
+    [debouncedDispatchSearch],
   );
 
   const { openModal: openEditModal } = useEditTestPlanModal();

@@ -17,6 +17,8 @@
 @use '../../../../common/css/mixins';
 @use '../milestones/milestonesTable/milestonesShared' as ms;
 
+$test-plans-progress-column-inline-pad: 16px;
+
 .test-plans {
   &__table-container {
     box-sizing: border-box;
@@ -40,13 +42,11 @@
     }
 
     :global([class*='table-cell']) {
+      box-sizing: border-box;
       height: 100%;
       display: flex;
       align-items: center;
-    }
-
-    &-header {
-      --table-header-bg-color: transparent;
+      min-width: 0;
     }
 
     :global([class*='table-header']) {
@@ -67,16 +67,45 @@
     :global([class*='primary-cell']) {
       justify-content: flex-start;
     }
+
+    :global([class*='table-row-content']) > :global(div[class*='_table-cell_']):nth-child(2),
+    :global([class*='table-row-content']) > :global(div[class*='_table-cell_']):nth-child(4) {
+      padding-inline: 0;
+    }
+
+    :global([class*='table-row-content']) > :global(div[class*='_table-cell_']):nth-child(3) {
+      padding-inline: 0;
+    }
+
+    &-header {
+      --table-header-bg-color: transparent;
+
+      > :global(button):nth-child(2),
+      > :global(button):nth-child(4) {
+        padding-inline: 0;
+      }
+
+      > :global(button):nth-child(3) {
+        box-sizing: border-box;
+        padding-inline: $test-plans-progress-column-inline-pad;
+      }
+    }
   }
 
-  &__cell-content_end {
-    justify-content: flex-end;
+  &__coverage-cell-wrapper {
+    flex: 1 1 auto;
+    min-width: 0;
     width: 100%;
+    max-width: 100%;
   }
 
   &__cell-content_progress {
+    box-sizing: border-box;
     justify-content: center;
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding-inline: $test-plans-progress-column-inline-pad;
   }
 
   &__plan-name {
@@ -86,7 +115,7 @@
 
   &__coverage-ratio {
     @include ms.milestone-test-plans-cell-ratio;
-    text-align: right;
+    text-align: left;
   }
 
   &__table-row {
@@ -115,6 +144,13 @@
 
   &__table-cell-coverage {
     @include ms.milestone-test-plans-cell-coverage-pct;
+
+    box-sizing: border-box;
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    min-width: 0;
+    text-align: left;
   }
 
   &__table-cell-clickable {

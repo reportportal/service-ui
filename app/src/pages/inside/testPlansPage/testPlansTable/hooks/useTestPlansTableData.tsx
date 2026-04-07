@@ -70,7 +70,7 @@ export const useTestPlansTableData = ({
           coveredTotal: {
             content: ratioContent,
             component: (
-              <ClickableCell {...cellProps} contentClassName={cx('test-plans__cell-content_end')}>
+              <ClickableCell {...cellProps}>
                 <span className={cx('test-plans__coverage-ratio')}>{ratioContent}</span>
               </ClickableCell>
             ),
@@ -78,7 +78,10 @@ export const useTestPlansTableData = ({
           coverage: {
             content: coverage,
             component: (
-              <ClickableCell {...cellProps} contentClassName={cx('test-plans__cell-content_end')}>
+              <ClickableCell
+                {...cellProps}
+                contentClassName={cx('test-plans__coverage-cell-wrapper')}
+              >
                 <div className={cx('test-plans__table-cell-coverage')}>
                   {formatNumber(coverage, {
                     style: 'percent',

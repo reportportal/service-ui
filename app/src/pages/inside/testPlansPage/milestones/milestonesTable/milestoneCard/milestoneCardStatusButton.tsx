@@ -35,7 +35,7 @@ import styles from './milestoneCard.scss';
 
 const cx = createClassnames(styles);
 
-export const MilestoneCardStatusButton = ({ milestone }: MilestoneCardProps) => {
+export const MilestoneCardStatusButton = ({ milestone }: Pick<MilestoneCardProps, 'milestone'>) => {
   const { formatMessage } = useIntl();
   const [isOpened, setIsOpened] = useState(false);
   const statusModifier = milestoneStatusToCssModifier(milestone.status);

@@ -43,6 +43,7 @@ export type TestPlanDto = {
   };
   description?: string;
   attributes?: Attribute[];
+  milestoneId?: number;
 };
 
 export interface PageInfo {
