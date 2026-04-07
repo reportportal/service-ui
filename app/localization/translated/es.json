@@ -3,7 +3,7 @@
   "ServiceUnavailableScreen.descriptionApi": "Parece que Service API podría no estar disponible en este momento. Actualice la página después de un tiempo o contacte con su administrador del sistema para obtener ayuda.",
   "ServiceUnavailableScreen.footer": "También puede consultar nuestras <installationGuides>guías de instalación</installationGuides> para comprobar la corrección del despliegue o nuestro <slackChannel>canal de Slack</slackChannel> para recibir consejos de la comunidad.",
   "ServiceUnavailableScreen.refreshPage": "Actualizar página",
-  "ServiceUnavailableScreen.title": "Servicios no disponibles",
+  "ServiceUnavailableScreen.title": "Servicio no disponible",
   "AccountRemovedPage.description": "Su cuenta y datos personales han sido eliminados de la base de datos de ReportPortal.\nLamentamos que se vaya. Se ha enviado una notificación por correo electrónico a la dirección de correo electrónico asociada con su cuenta.",
   "AccountRemovedPage.header": "la cuenta ha sido eliminada",
   "AccountRemovedPage.login": "Iniciar sesión",

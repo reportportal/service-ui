@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,20 +51,22 @@ export const HistoryOfActionsHeader = ({
   const breadcrumbs = useSelector(testCaseLibraryBreadcrumbsSelector(breadcrumbsTitles));
 
   return (
-    <div className={cx('header', className)}>
-      <div className={cx('header__breadcrumb')}>
+    <div className={cx('history-of-actions-header', className)}>
+      <div className={cx('history-of-actions-header__breadcrumb')}>
         <BreadcrumbsTreeIcon />
         <Breadcrumbs descriptors={breadcrumbs} />
       </div>
-      <div className={cx('header__title')}>{formatMessage(messages.historyOfActionsTitle)}</div>
-      <div className={cx('header__actions')}>
+      <div className={cx('history-of-actions-header__title')}>
+        {formatMessage(messages.historyOfActionsTitle)}
+      </div>
+      <div className={cx('history-of-actions-header__actions')}>
         <FieldText
           value={searchValue}
           onChange={({ target }) => setSearchValue(target.value)}
           onClear={() => setSearchValue('')}
           placeholder={formatMessage(messages.searchInputPlaceholder)}
           startIcon={<SearchIcon />}
-          className={cx('header__search')}
+          className={cx('history-of-actions-header__search')}
           maxLength={256}
           clearable
         />

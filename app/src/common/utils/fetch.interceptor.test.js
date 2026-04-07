@@ -43,8 +43,11 @@ describe('initAuthInterceptor', () => {
     clearResponseInterceptors();
   });
 
-  test('marks API available on successful composite info response', async () => {
-    axiosMock.onGet('/composite/info').reply(200, { api: false, uat: true });
+  test('marks API available on successful composite info response with valid API service', async () => {
+    axiosMock.onGet('/composite/info').reply(200, { 
+      api: { build: { name: 'API Service' } },
+      uat: true 
+    });
 
     await axios.get('/composite/info');
 
@@ -57,8 +60,8 @@ describe('initAuthInterceptor', () => {
     });
   });
 
-  test('ignores composite payload for availability flags', async () => {
-    axiosMock.onGet('/composite/info').reply(200, { api: true });
+  test('marks API unavailable when api.build.name is missing', async () => {
+    axiosMock.onGet('/composite/info').reply(200, { api: { build: {} }, uat: true });
 
     await axios.get('/composite/info');
 
@@ -66,7 +69,83 @@ describe('initAuthInterceptor', () => {
       type: 'setServiceAvailability',
       payload: {
         checked: true,
-        apiUnavailable: false,
+        apiUnavailable: true,
+      },
+    });
+  });
+
+  test('marks API unavailable when api.build.name is not "API Service"', async () => {
+    axiosMock.onGet('/composite/info').reply(200, { 
+      api: { build: { name: 'Unknown Service' } },
+      uat: true 
+    });
+
+    await axios.get('/composite/info');
+
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: 'setServiceAvailability',
+      payload: {
+        checked: true,
+        apiUnavailable: true,
+      },
+    });
+  });
+
+  test('marks API unavailable when api is missing', async () => {
+    axiosMock.onGet('/composite/info').reply(200, { uat: true });
+
+    await axios.get('/composite/info');
+
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: 'setServiceAvailability',
+      payload: {
+        checked: true,
+        apiUnavailable: true,
+      },
+    });
+  });
+
+  test('marks API unavailable when api.build is missing', async () => {
+    axiosMock.onGet('/composite/info').reply(200, { api: {}, uat: true });
+
+    await axios.get('/composite/info');
+
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: 'setServiceAvailability',
+      payload: {
+        checked: true,
+        apiUnavailable: true,
+      },
+    });
+  });
+
+  test.each([
+    { api: false, label: 'boolean value' },
+    { api: 'string', label: 'string value' },
+  ])('marks API unavailable when api is a non-object ($label)', async ({ api }) => {
+    axiosMock.onGet('/composite/info').reply(200, { api, uat: true });
+
+    await axios.get('/composite/info');
+
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: 'setServiceAvailability',
+      payload: {
+        checked: true,
+        apiUnavailable: true,
+      },
+    });
+  });
+
+  test('marks API unavailable when composite info response is empty', async () => {
+    axiosMock.onGet('/composite/info').reply(200, {});
+
+    await axios.get('/composite/info');
+
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: 'setServiceAvailability',
+      payload: {
+        checked: true,
+        apiUnavailable: true,
       },
     });
   });

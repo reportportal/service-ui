@@ -42,7 +42,7 @@ const renderSlackChannelLink = (chunks) => (
 const messages = defineMessages({
   title: {
     id: 'ServiceUnavailableScreen.title',
-    defaultMessage: 'Services unavailable',
+    defaultMessage: 'Service unavailable',
   },
   descriptionApi: {
     id: 'ServiceUnavailableScreen.descriptionApi',
