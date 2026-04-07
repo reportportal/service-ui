@@ -2605,5 +2605,7 @@
   "launchPatternAnalysisModal.title": "Патерн-аналіз запусків",
   "notFoundPage.oops": "Упс. Сторінка не знайдена.",
   "notFoundPage.pageNotExist": "Сторінка, яку Ви шукаєте, не існує.",
-  "notFoundPage.toHome": "Заберіть мене звідси"
+  "notFoundPage.toHome": "Заберіть мене звідси",
+  "OrganizationProjectsPage.actionAssignUser": "Призначити користувача",
+  "ProjectTeamPage.assignUser": "Призначити користувача"
 }

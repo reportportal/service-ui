@@ -2606,5 +2606,7 @@
   "launchPatternAnalysisModal.title": "Análisis de patrones de ejecuciones",
   "notFoundPage.oops": "Ups. Página no encontrada.",
   "notFoundPage.pageNotExist": "La página que busca no existe.",
-  "notFoundPage.toHome": "Llévame de aquí"
+  "notFoundPage.toHome": "Llévame de aquí",
+  "OrganizationProjectsPage.actionAssignUser": "Asignar usuario",
+  "ProjectTeamPage.assignUser": "Asignar usuario"
 }
