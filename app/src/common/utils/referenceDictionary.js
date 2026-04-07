@@ -25,6 +25,7 @@ export const referenceDictionary = {
   rpSlack: 'https://slack.epmrpp.reportportal.io',
   rpEmail: 'mailto:support@reportportal.io',
   rpEpam: 'https://www.epam.com/',
+  deliveryEpam: 'https://delivery.epam.com',
   rpEpamPolicy: 'https://privacy.epam.com/core/interaction/showpolicy?type=PrivacyPolicy',
   rpEpamNotice: 'https://privacy.epam.com/core/interaction/showpolicy?type=CommonPrivacyNotice',
   rpEpamCommonPolicy:

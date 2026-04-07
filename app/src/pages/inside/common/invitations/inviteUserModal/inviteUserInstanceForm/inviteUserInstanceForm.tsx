@@ -34,10 +34,12 @@ export const InviteUserInstanceForm = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const [invitedUserId, setInvitedUserId] = useState<number | null>(null);
+  const [invitedUserAccountType, setInvitedUserAccountType] = useState<string | null>(null);
   const formName = getFormName(Level.INSTANCE);
 
-  const handleUserSelect = useCallback((userId: number | null) => {
+  const handleUserSelect = useCallback((userId: number | null, accountType?: string | null) => {
     setInvitedUserId(userId);
+    setInvitedUserAccountType(accountType ?? null);
     // When existing user is selected, clear organizations list and current form
     if (userId !== null) {
       dispatch(change(formName, ORGANIZATIONS, []));
@@ -67,6 +69,7 @@ export const InviteUserInstanceForm = () => {
           formNamespace: ORGANIZATION,
           isOrganizationRequired: true,
           invitedUserId,
+          userType: invitedUserAccountType ?? undefined,
           excludeUserAssignments: true,
         }}
       />
