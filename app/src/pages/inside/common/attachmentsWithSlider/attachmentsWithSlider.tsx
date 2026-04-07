@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback, MutableRefObject } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { useSelector } from 'react-redux';
-import { saveAs } from 'file-saver';
-import { projectKeySelector } from 'controllers/project';
 import { isEmpty } from 'es-toolkit/compat';
 import {
   AttachedFile,
@@ -32,8 +29,7 @@ import {
 import LightGallery from 'lightgallery/react';
 import lgThumbnail from 'lightgallery/plugins/thumbnail';
 import lgZoom from 'lightgallery/plugins/zoom';
-import { createClassnames, fetch, convertBytesToMB } from 'common/utils';
-import { URLS } from 'common/urls';
+import { createClassnames, convertBytesToMB } from 'common/utils';
 
 import closeIcon from './sliderControls/close-inline.svg';
 import zoomPlusIcon from './sliderControls/zoom-plus-inline.svg';
@@ -50,6 +46,7 @@ import {
   ZoomPlugin,
   ExtendedLightGalleryInstance,
 } from './types';
+import { useAttachmentsWithSlider } from './hooks';
 
 import 'lightgallery/css/lightgallery.css';
 import 'lightgallery/css/lg-zoom.css';
@@ -77,50 +74,26 @@ const svgFallbacks = {
   xlsx: XlsIcon,
 } as const;
 
+const lightGalleryClassNames = {
+  zoomIn: 'lg-zoom-plus',
+  zoomOut: 'lg-zoom-minus',
+  externalLink: 'lg-external-link',
+  toolbar: 'lg-toolbar',
+  closeButton: 'lg-close',
+  customDownloadButton: 'lg-download-custom',
+  attachmentsList: 'attachments-list',
+  galleryItem: 'gallery-item',
+  icon: 'lg-icon',
+} as const;
+
 export const AttachmentsWithSlider = ({
   attachments,
   className = '',
 }: AttachmentWithSliderProps) => {
+  const { getAttachmentWithThumbnail, downloadAttachment } = useAttachmentsWithSlider();
   const lightGalleryRef = useRef<LightGalleryInstance | null>(null);
-  const projectKey = useSelector(projectKeySelector);
+  const isCleanedUpRef = useRef(false);
   const [attachmentsWithPreview, setAttachmentsWithPreview] = useState<AttachmentWithSlider[] | null>(null);
-
-  const getAttachmentWithThumbnail = useCallback(async (
-    attachment: AttachmentWithSlider,
-    objectUrls: string[]
-  ): Promise<AttachmentWithSlider> => {
-    const thumbnailPromise = fetch(
-      URLS.attachmentThumbnail(projectKey, attachment.id),
-      { responseType: 'blob' },
-      true
-    );
-    const imagePromise = fetch(
-      URLS.tmsAttachmentDownload(projectKey, attachment.id),
-      { responseType: 'blob' },
-      true
-    );
-
-    const [thumbnailResult, imageResult] = await Promise.allSettled([thumbnailPromise, imagePromise]);
-
-    let thumbnailSrc: string | undefined;
-    let src: string | undefined;
-
-    if (thumbnailResult.status === 'fulfilled') {
-      thumbnailSrc = URL.createObjectURL(thumbnailResult.value.data as MediaSource);
-      objectUrls.push(thumbnailSrc);
-    }
-
-    if (imageResult.status === 'fulfilled') {
-      src = URL.createObjectURL(imageResult.value.data as MediaSource);
-      objectUrls.push(src);
-    }
-
-    return {
-      ...attachment,
-      ...(thumbnailSrc && { thumbnailSrc }),
-      ...(src && { src }),
-    };
-  }, [projectKey]);
 
   const getFallbackIcon = (fileExtension: string): string => {
     const FallbackIcon = svgFallbacks[fileExtension as keyof typeof svgFallbacks] || FileOtherIcon;
@@ -129,15 +102,19 @@ export const AttachmentsWithSlider = ({
     return svgToBase64(svgFallbackString);
   };
 
-  useEffect(() => {
-    let isMounted = true;
-    const objectUrls: string[] = [];
+  const addSrcAttributesToAttachments = useCallback((
+    objectUrls: string[],
+    isMounted: boolean,
+    abortSignal: AbortSignal,
+    isCleanedUpRef: MutableRefObject<boolean>,
+  ): void => {
+    setAttachmentsWithPreview(null);
 
     if (!isEmpty(attachments)) {
       const promises = attachments
         .map(async (attachment: AttachmentWithSlider): Promise<AttachmentWithSlider> => {
           if (attachment.hasThumbnail) {
-            return getAttachmentWithThumbnail(attachment, objectUrls);
+            return getAttachmentWithThumbnail(attachment, objectUrls,abortSignal, isCleanedUpRef);
           } else {
             return { ...attachment };
           }
@@ -150,20 +127,31 @@ export const AttachmentsWithSlider = ({
           }
         });
     }
+  }, [attachments, getAttachmentWithThumbnail, setAttachmentsWithPreview]);
+
+  useEffect(() => {
+    let isMounted = true;
+    const objectUrls: string[] = [];
+    const abortController = new AbortController();
+
+    isCleanedUpRef.current = false;
+    addSrcAttributesToAttachments(objectUrls, isMounted, abortController.signal, isCleanedUpRef);
 
     return () => {
       isMounted = false;
+      isCleanedUpRef.current = true;
+      abortController.abort();
       objectUrls.forEach((url) => {
         URL.revokeObjectURL(url);
       });
     };
-  }, [attachments, getAttachmentWithThumbnail, setAttachmentsWithPreview]);
+  }, [addSrcAttributesToAttachments]);
 
   const setTollbarButtonsVisibility = (instance: ExtendedLightGalleryInstance): void => {
     const outer = instance.outer as { selector?: HTMLElement } | undefined;
-    const zoomInButton = outer?.selector?.querySelector('.lg-zoom-plus');
-    const zoomOutButton = outer?.selector?.querySelector('.lg-zoom-minus');
-    const externalLinkButton = outer?.selector?.querySelector('.lg-external-link');
+    const zoomInButton = outer?.selector?.querySelector(`.${lightGalleryClassNames.zoomIn}`);
+    const zoomOutButton = outer?.selector?.querySelector(`.${lightGalleryClassNames.zoomOut}`);
+    const externalLinkButton = outer?.selector?.querySelector(`.${lightGalleryClassNames.externalLink}`);
 
     instance.LGel.on('lgBeforeSlide', (event: { detail: { index: number }}): void => {
       const { index } = event.detail;
@@ -174,6 +162,96 @@ export const AttachmentsWithSlider = ({
       zoomInButton?.classList.toggle('hidden', !isImage);
       zoomOutButton?.classList.toggle('hidden', !isImage);
     });
+  };
+
+  const addCustomCloseButton = (toolbar: HTMLElement): void => {
+    const closeButton = toolbar.querySelector(`.${lightGalleryClassNames.closeButton}`);
+
+    if (closeButton) {
+      closeButton.innerHTML = closeIcon;
+    }
+  };
+
+  const addCustomExternalLinkButton = (
+    toolbar: HTMLElement,
+    instance: ExtendedLightGalleryInstance,
+  ): void => {
+    const externalLinkButton = document.createElement('button');
+
+    externalLinkButton.className = `${lightGalleryClassNames.icon} ${lightGalleryClassNames.externalLink}`;
+    externalLinkButton.innerHTML = externalLinkIcon;
+    externalLinkButton.onclick = () => {
+      const currentItem = instance.galleryItems[instance.index];
+      const imageUrl = currentItem.src || currentItem.href;
+
+      if (imageUrl) {
+        window.open(imageUrl, '_blank', 'noopener,noreferrer');
+      }
+    };
+
+    toolbar.append(externalLinkButton);
+  };
+
+  const addCustomDownloadButton = (
+    toolbar: HTMLElement,
+    instance: ExtendedLightGalleryInstance,
+  ): void => {
+    const downloadButton = document.createElement('button');
+
+    downloadButton.className = `${lightGalleryClassNames.icon} ${lightGalleryClassNames.customDownloadButton}`;
+    downloadButton.innerHTML = downloadIcon;
+    toolbar.appendChild(downloadButton);
+
+    downloadButton.onclick = async () => {
+      const items = instance.items as GalleryItem[];
+      const index = instance.index;
+      const currentItem = items[index];
+      const attachmentId = currentItem.dataset?.id;
+      const fileName = currentItem.download;
+
+      if (attachmentId) {
+        await downloadAttachment(attachmentId, fileName);
+      }
+    };
+  };
+
+  const addCustomZoomButtons = (
+    toolbar: HTMLElement,
+    instance: ExtendedLightGalleryInstance,
+  ): void => {
+    const zoomInButton = document.createElement('button');
+
+    zoomInButton.className = `${lightGalleryClassNames.icon} ${lightGalleryClassNames.zoomIn}`;
+    zoomInButton.innerHTML = zoomPlusIcon;
+
+    const zoomOutButton = document.createElement('button');
+
+    zoomOutButton.className = `${lightGalleryClassNames.icon} ${lightGalleryClassNames.zoomOut}`;
+    zoomOutButton.innerHTML = zoomMinusIcon;
+
+    const zoomPlugin = instance.plugins?.find(
+      (plugin): plugin is ZoomPlugin => typeof (plugin as ZoomPlugin).zoomIn === 'function'
+    );
+
+    zoomInButton.onclick = (e) => {
+      e.preventDefault();
+
+      if (zoomPlugin) {
+        zoomPlugin.zoomIn();
+      }
+    };
+
+    zoomOutButton.onclick = (e) => {
+      e.preventDefault();
+
+      if (zoomPlugin) {
+        zoomPlugin.resetZoom();
+        zoomPlugin.init();
+      }
+    };
+
+    toolbar.append(zoomInButton);
+    toolbar.append(zoomOutButton);
   };
 
   const onInit = (detail: { instance: ExtendedLightGalleryInstance }): void => {
@@ -188,95 +266,21 @@ export const AttachmentsWithSlider = ({
     setTollbarButtonsVisibility(instance);
 
     const outer = instance.outer as { selector?: HTMLElement } | undefined;
-    const toolbar = outer?.selector?.querySelector('.lg-toolbar');
+    const toolbar = outer?.selector?.querySelector(`.${lightGalleryClassNames.toolbar}`);
 
     if (toolbar) {
-      const closeButton = toolbar.querySelector('.lg-close');
+      addCustomCloseButton(toolbar);
 
-      if (closeButton) {
-        closeButton.innerHTML = closeIcon;
+      if (!toolbar?.querySelector(`.${lightGalleryClassNames.externalLink}`)) {
+        addCustomExternalLinkButton(toolbar, instance);
       }
 
-      if (!toolbar?.querySelector('.lg-external-link')) {
-        const externalLinkButton = document.createElement('button');
-
-        externalLinkButton.className = 'lg-icon lg-external-link';
-        externalLinkButton.innerHTML = externalLinkIcon;
-        externalLinkButton.onclick = () => {
-          const currentItem = instance.galleryItems[instance.index];
-          const imageUrl = currentItem.src || currentItem.href;
-
-          if (imageUrl) {
-            window.open(imageUrl, '_blank', 'noopener,noreferrer');
-          }
-        };
-
-        toolbar.append(externalLinkButton);
+      if (!toolbar.querySelector(`.${lightGalleryClassNames.customDownloadButton}`)) {
+        addCustomDownloadButton(toolbar, instance);
       }
 
-      if (!toolbar.querySelector('.lg-download-custom')) {
-        const downloadButton = document.createElement('button');
-        downloadButton.className = 'lg-icon lg-download-custom';
-        downloadButton.innerHTML = downloadIcon;
-        toolbar.appendChild(downloadButton);
-
-        downloadButton.onclick = async () => {
-          const items = instance.items as GalleryItem[];
-          const index = instance.index;
-          const currentItem = items[index];
-          const attachmentId = currentItem.dataset?.id;
-          const fileName = currentItem.download;
-
-          if (attachmentId) {
-            try {
-              const response = await fetch(
-                URLS.tmsAttachmentDownload(projectKey, attachmentId),
-                { responseType: 'blob' },
-                true
-              );
-
-              saveAs(response.data as Blob, fileName);
-            } catch (error) {
-              console.error('Download failed:', error);
-            }
-          }
-        };
-      }
-
-      if (!toolbar.querySelector('.lg-zoom-plus')) {
-        const zoomInButton = document.createElement('button');
-
-        zoomInButton.className = 'lg-icon lg-zoom-plus';
-        zoomInButton.innerHTML = zoomPlusIcon;
-
-        const zoomOutButton = document.createElement('button');
-
-        zoomOutButton.className = 'lg-icon lg-zoom-minus';
-        zoomOutButton.innerHTML = zoomMinusIcon;
-
-        const zoomPlugin = instance.plugins?.find(
-          (plugin): plugin is ZoomPlugin => typeof (plugin as ZoomPlugin).zoomIn === 'function'
-        );
-
-        zoomInButton.onclick = (e) => {
-          e.preventDefault();
-
-          if (zoomPlugin) {
-            zoomPlugin.zoomIn();
-          }
-        };
-
-        zoomOutButton.onclick = (e) => {
-          e.preventDefault();
-
-          if (zoomPlugin) {
-            zoomPlugin.resetZoom();
-            zoomPlugin.init();
-          }
-        };
-
-        toolbar.append(zoomInButton);
-        toolbar.append(zoomOutButton);
+      if (!toolbar.querySelector(`.${lightGalleryClassNames.zoomIn}`)) {
+        addCustomZoomButtons(toolbar, instance);
       }
     }
   };
@@ -290,7 +294,7 @@ export const AttachmentsWithSlider = ({
         onInit={onInit}
         speed={500}
         plugins={[lgThumbnail, lgZoom]}
-        elementClassNames={cx('attachments-list', className)}
+        elementClassNames={cx(lightGalleryClassNames.attachmentsList, className)}
         exThumbImage="data-thumb"
         nextHtml={nextIcon}
         prevHtml={prevIcon}
@@ -298,7 +302,7 @@ export const AttachmentsWithSlider = ({
         escKey
       >
         {displayedAttachments.map(({ id, fileName, fileSize, src, thumbnailSrc }: AttachmentWithSlider) => {
-          const fileExtension = fileName.split('.').pop();
+          const fileExtension = fileName.split('.').pop()?.toLowerCase();
           const svgFallback = getFallbackIcon(fileExtension);
           const finalSrc = src || svgFallback;
           const finalThumb = thumbnailSrc || svgFallback;
@@ -307,7 +311,7 @@ export const AttachmentsWithSlider = ({
             // eslint-disable-next-line jsx-a11y/anchor-is-valid
             <a
               key={id}
-              className={cx('gallery-item', {
+              className={cx(lightGalleryClassNames.galleryItem, {
                 'loading': !isReady,
               })}
               data-src={finalSrc}

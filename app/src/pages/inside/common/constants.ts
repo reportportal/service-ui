@@ -75,3 +75,8 @@ export const actionMessages = defineMessages({
     defaultMessage: 'This operation can be done only for 300 items simultaneously',
   },
 });
+
+export enum PromiseStatus {
+  Fulfilled = 'fulfilled',
+  Rejected = 'rejected',
+}
