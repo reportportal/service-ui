@@ -38,6 +38,10 @@ export const messages = defineMessages({
     id: 'ProjectTeamPage.inviteUser',
     defaultMessage: 'Invite user',
   },
+   assignUser: {
+    id: 'ProjectTeamPage.assignUser',
+    defaultMessage: 'Assign user',
+  },
   searchPlaceholder: {
     id: 'ProjectTeamPage.searchPlaceholder',
     defaultMessage: 'Type to search by name',

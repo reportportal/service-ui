@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,5 +44,9 @@ export const messages = defineMessages({
   historyOfActionsTitle: {
     id: 'HistoryOfActions.historyOfActions',
     defaultMessage: 'History of Actions',
+  },
+  timeNotApplicable: {
+    id: 'HistoryOfActions.timeNotApplicable',
+    defaultMessage: 'n/a',
   },
 });

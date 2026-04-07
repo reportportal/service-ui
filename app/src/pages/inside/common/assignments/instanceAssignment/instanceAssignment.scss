@@ -58,10 +58,32 @@
 .instance-assignment {
   background-color: var(--rp-ui-base-bg-000);
   display: flex;
-  align-items: center;
-  gap: 16px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
   padding: 16px;
   border-radius: 4px;
+
+  .instance-assignment-main {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .organization-field-ups-error {
+    border-color: var(--rp-ui-base-error);
+  }
+
+  .ups-external-org-error {
+    display: inline-block;
+    width: 100%;
+    font-family: var(--rp-ui-base-font-family);
+    font-weight: var(--rp-ui-base-fw-regular);
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--rp-ui-base-error);
+  }
 
   .autocomplete-wrapper {
     width: 270px;

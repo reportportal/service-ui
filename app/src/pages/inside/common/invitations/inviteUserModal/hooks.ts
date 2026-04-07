@@ -137,7 +137,9 @@ export const useInviteUser = <L extends keyof FormDataMap>(level: L, overrides?:
     }
 
     if (epamInviteForbidden) {
-      message = formatMessage(messages.epamInviteForbidden);
+      message = formatMessage(messages.epamInviteForbidden, {
+        link: (chunks) => (Array.isArray(chunks) ? chunks.join('') : String(chunks)),
+      });
     }
 
     if (externalInviteForbidden) {
