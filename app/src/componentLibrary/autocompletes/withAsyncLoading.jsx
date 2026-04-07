@@ -26,6 +26,7 @@ export const WithAsyncLoading = (AutocompleteComponent) =>
       makeOptions: PropTypes.func,
       filterOption: PropTypes.func,
       minLength: PropTypes.number,
+      onStateChange: PropTypes.func,
     };
 
     static defaultProps = {
@@ -88,7 +89,11 @@ export const WithAsyncLoading = (AutocompleteComponent) =>
       this.cancelDebounce = this.debouncedFetch(inputValue);
     };
 
-    handleStateChange = (changes, { isOpen, inputValue }) => {
+    handleStateChange = (...args) => {
+      this.props.onStateChange?.(...args);
+
+      const [changes, { isOpen, inputValue }] = args;
+
       if (!isOpen) return;
 
       if (
@@ -103,11 +108,11 @@ export const WithAsyncLoading = (AutocompleteComponent) =>
       const { options, loading } = this.state;
       return (
         <AutocompleteComponent
+          {...this.props}
           options={options}
           loading={loading}
           onStateChange={this.handleStateChange}
           async
-          {...this.props}
         />
       );
     }

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl, useIntl } from 'react-intl';
 import { connect, useDispatch, useSelector } from 'react-redux';
@@ -138,6 +139,7 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
   const { formatMessage } = useIntl();
   const formValues = useSelector((state) => getFormValues(CREATE_USER_FORM)(state)) || {};
   const minLength = useSelector(passwordMinLengthSelector);
+  const [isScrollDisabled, setIsScrollDisabled] = useState(false);
 
   const hideModal = () => dispatch(hideModalAction());
 
@@ -252,7 +254,7 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
         children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
       }}
       onClose={hideModal}
-      className={cx('modal')}
+      className={cx('modal', { 'scroll-disabled': isScrollDisabled })}
       footerNode={
         <FieldProvider name={ADMIN_RIGHTS} format={Boolean}>
           <Checkbox className={cx('checkbox')}>
@@ -321,6 +323,7 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
             formName: CREATE_USER_FORM,
             formNamespace: 'organization',
             isOrganizationRequired: true,
+            onMenuStateChange: setIsScrollDisabled,
           }}
         />
       </form>

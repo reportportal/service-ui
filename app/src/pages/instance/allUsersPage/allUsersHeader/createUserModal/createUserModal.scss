@@ -16,6 +16,9 @@
 
 .modal {
   width: 720px;
+  :global(.rc-scrollbars-view) {
+    scrollbar-gutter: stable; // to prevent layout shift when scrollbar appears and disappears
+  }
 }
 
 .modal-content {
@@ -68,4 +71,10 @@
 
 .field-element {
   margin-bottom: 0;
+}
+
+.scroll-disabled {
+  :global(.rc-scrollbars-view) {
+    overflow: hidden !important; // important to override inline styles applied by react-custom-scrollbars
+  }
 }
