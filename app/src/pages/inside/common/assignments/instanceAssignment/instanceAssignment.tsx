@@ -14,35 +14,55 @@
  * limitations under the License.
  */
 
-import {type ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {change, formValueSelector, getFormMeta, getFormSyncErrors, untouch, WrappedFieldArrayProps,} from 'redux-form';
-import {defineMessages, useIntl} from 'react-intl';
-import {Button, Checkbox, CheckmarkIcon, CloseIcon, InfoIcon, Tooltip,} from '@reportportal/ui-kit';
-import {createClassnames, fetch, referenceDictionary} from 'common/utils';
-import {FieldErrorHint} from 'components/fields/fieldErrorHint';
-import {FieldProvider} from 'components/fields/fieldProvider';
-import {Organization, OrganizationAssignment,} from 'pages/inside/common/assignments/organizationAssignment';
-import {Project} from 'pages/inside/common/assignments/organizationAssignment/organizationItem/projectItems';
-import {FieldElement} from 'pages/inside/projectSettingsPageContainer/content/elements';
-import {AsyncAutocompleteV2} from 'componentLibrary/autocompletes/asyncAutocompleteV2';
+import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  change,
+  formValueSelector,
+  getFormMeta,
+  getFormSyncErrors,
+  untouch,
+  WrappedFieldArrayProps,
+} from 'redux-form';
+import { defineMessages, useIntl } from 'react-intl';
+import {
+  Button,
+  Checkbox,
+  CheckmarkIcon,
+  CloseIcon,
+  InfoIcon,
+  Tooltip,
+} from '@reportportal/ui-kit';
+import { createClassnames, fetch, referenceDictionary } from 'common/utils';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
+import { FieldProvider } from 'components/fields/fieldProvider';
+import {
+  Organization,
+  OrganizationAssignment,
+} from 'pages/inside/common/assignments/organizationAssignment';
+import { Project } from 'pages/inside/common/assignments/organizationAssignment/organizationItem/projectItems';
+import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
+import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 import {
   ORGANIZATIONS_SEARCH_KEY,
   OrganizationSearchesItem,
   OrganizationsSearchesResponseData,
 } from 'controllers/instance/organizations';
-import {ProjectsSearchesItem, ProjectsSearchesResponseData,} from 'controllers/organization/projects';
-import {SEARCH_KEY} from 'controllers/organization/projects/constants';
-import {OrganizationType} from 'controllers/organization';
-import {prepareQueryFilters} from 'components/filterEntities/utils';
-import {URLS} from 'common/urls';
-import {AddItemButton} from '../organizationAssignment/organizationItem/addItemButton';
-import {EDITOR, MANAGER, MEMBER, VIEWER} from 'common/constants/projectRoles';
-import {UPSA} from 'common/constants/accountType';
-import {ORGANIZATIONS} from 'pages/instance/allUsersPage/allUsersHeader/createUserModal/constants';
-import {messages as invitationMessages,} from 'common/constants/localization/invitationsLocalization';
-import {COMMON_LOCALE_KEYS} from 'common/constants/localization';
-import {ExternalLink} from 'pages/inside/common/externalLink';
+import {
+  ProjectsSearchesItem,
+  ProjectsSearchesResponseData,
+} from 'controllers/organization/projects';
+import { SEARCH_KEY } from 'controllers/organization/projects/constants';
+import { OrganizationType } from 'controllers/organization';
+import { prepareQueryFilters } from 'components/filterEntities/utils';
+import { URLS } from 'common/urls';
+import { AddItemButton } from '../organizationAssignment/organizationItem/addItemButton';
+import { EDITOR, MANAGER, MEMBER, VIEWER } from 'common/constants/projectRoles';
+import { UPSA } from 'common/constants/accountType';
+import { ORGANIZATIONS } from 'pages/instance/allUsersPage/allUsersHeader/createUserModal/constants';
+import { messages as invitationMessages } from 'common/constants/localization/invitationsLocalization';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { ExternalLink } from 'pages/inside/common/externalLink';
 
 import styles from './instanceAssignment.scss';
 
