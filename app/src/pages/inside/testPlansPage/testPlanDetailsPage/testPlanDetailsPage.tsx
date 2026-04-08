@@ -102,8 +102,14 @@ export const TestPlanDetailsPage = () => {
     }
   }, [areFoldersFetched, dispatch]);
   const [searchValue, setSearchValue] = useState(location?.query?.testCasesSearchParams || '');
+  const searchDebounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
+    if (searchDebounceTimeoutRef.current != null) {
+      clearTimeout(searchDebounceTimeoutRef.current);
+      searchDebounceTimeoutRef.current = null;
+    }
+
     const querySearch = location?.query?.testCasesSearchParams || '';
     const frameId = requestAnimationFrame(() => {
       setSearchValue(querySearch);
@@ -116,8 +122,6 @@ export const TestPlanDetailsPage = () => {
     searchValue !== (location?.query?.testCasesSearchParams || '') ||
     isTestPlanTestCasesLoading ||
     isLoadingFilteredFolders;
-
-  const searchDebounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(
     () => () => {
