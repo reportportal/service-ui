@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { PureComponent, Fragment } from 'react';
+import { Fragment, memo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
@@ -24,117 +24,129 @@ import styles from './cumulativeChartLegend.scss';
 
 const cx = classNames.bind(styles);
 
-export class CumulativeChartLegend extends PureComponent {
-  static propTypes = {
-    onChangeUserSettings: PropTypes.func.isRequired,
-    attributes: PropTypes.array,
-    activeAttribute: PropTypes.object,
-    activeAttributes: PropTypes.array,
-    clearAttributes: PropTypes.func,
-    userSettings: PropTypes.object,
-    isChartDataAvailable: PropTypes.bool,
-    isPrintMode: PropTypes.bool,
-    isLegendControlsShown: PropTypes.bool,
-  };
+function CumulativeChartLegendComponent(props) {
+  const {
+    onChangeUserSettings,
+    attributes = [],
+    activeAttribute = null,
+    activeAttributes = [],
+    clearAttributes = () => {},
+    userSettings = {},
+    isChartDataAvailable = false,
+    isPrintMode = false,
+    isLegendControlsShown = true,
+  } = props;
 
-  static defaultProps = {
-    attributes: [],
-    activeAttribute: null,
-    activeAttributes: [],
-    clearAttributes: () => {},
-    userSettings: {},
-    isChartDataAvailable: false,
-    isPrintMode: false,
-    isLegendControlsShown: true,
-  };
+  const onChangeFocusType = useCallback(
+    (e) => {
+      onChangeUserSettings({ defectTypes: e.target.checked });
+    },
+    [onChangeUserSettings],
+  );
 
-  onChangeFocusType = (e) => {
-    this.props.onChangeUserSettings({ defectTypes: e.target.checked });
-  };
+  const onChangeTotals = useCallback(
+    (e) => {
+      onChangeUserSettings({ showTotal: e.target.checked });
+    },
+    [onChangeUserSettings],
+  );
 
-  onChangeTotals = (e) => {
-    this.props.onChangeUserSettings({ showTotal: e.target.checked });
-  };
+  const onChangeSeparate = useCallback(
+    (e) => {
+      onChangeUserSettings({ separate: e.target.checked });
+    },
+    [onChangeUserSettings],
+  );
 
-  onChangeSeparate = (e) => {
-    this.props.onChangeUserSettings({ separate: e.currentTarget.querySelector('input').checked });
-  };
+  const onChangePercentage = useCallback(
+    (e) => {
+      onChangeUserSettings({ percentage: e.target.checked });
+    },
+    [onChangeUserSettings],
+  );
 
-  onChangePercentage = (e) => {
-    this.props.onChangeUserSettings({ percentage: e.currentTarget.querySelector('input').checked });
-  };
+  const { defectTypes, showTotal, separate, percentage } = userSettings;
 
-  render() {
-    const {
-      attributes,
-      activeAttribute,
-      activeAttributes,
-      clearAttributes,
-      userSettings,
-      isChartDataAvailable,
-      isPrintMode,
-      isLegendControlsShown,
-    } = this.props;
-    const { defectTypes, showTotal, separate, percentage } = userSettings;
-    return (
-      <div className={cx('cumulative-trend-chart-legend')}>
-        <div className={cx('legend-first-row')}>
-          <CumulativeChartBreadcrumbs
-            attributes={attributes}
-            activeAttribute={activeAttribute}
-            activeAttributes={activeAttributes}
-            clearAttributes={clearAttributes}
-          />
+  return (
+    <div className={cx('cumulative-trend-chart-legend')}>
+      <div className={cx('legend-first-row')}>
+        <CumulativeChartBreadcrumbs
+          attributes={attributes}
+          activeAttribute={activeAttribute}
+          activeAttributes={activeAttributes}
+          clearAttributes={clearAttributes}
+        />
 
-          {isChartDataAvailable && (
-            <Fragment>
-              {!isPrintMode && <Legend className={cx('legend')} {...this.props} />}
-              {isLegendControlsShown && (
-                <div className={cx('controls')}>
-                  <div className={cx('control')}>
-                    <InputCheckbox value={defectTypes} onChange={this.onChangeFocusType}>
-                      Defect Types
-                    </InputCheckbox>
-                  </div>
-
-                  <div className={cx('control')}>
-                    <InputCheckbox
-                      className={cx('control')}
-                      value={showTotal}
-                      onChange={this.onChangeTotals}
-                    >
-                      Totals
-                    </InputCheckbox>
-                  </div>
-
-                  <div
-                    className={cx('control', 'separate', { 'separate-active': separate })}
-                    onClick={this.onChangeSeparate}
-                  >
-                    <InputCheckbox className={cx('control')} value={separate}>
-                      Separate
-                    </InputCheckbox>
-                  </div>
-
-                  <div
-                    className={cx('control', 'percentage', { 'percentage-active': percentage })}
-                    onClick={this.onChangePercentage}
-                  >
-                    <InputCheckbox className={cx('control')} value={percentage}>
-                      Percentage
-                    </InputCheckbox>
-                  </div>
+        {isChartDataAvailable && (
+          <Fragment>
+            {!isPrintMode && <Legend className={cx('legend')} {...props} />}
+            {isLegendControlsShown && (
+              <div className={cx('controls')}>
+                <div className={cx('control')}>
+                  <InputCheckbox value={defectTypes} onChange={onChangeFocusType}>
+                    Defect Types
+                  </InputCheckbox>
                 </div>
-              )}
-            </Fragment>
-          )}
-        </div>
-        {isChartDataAvailable && isPrintMode && (
-          <div className={cx('legend-second-row')}>
-            <Legend className={cx('legend')} {...this.props} />
-          </div>
+
+                <div className={cx('control')}>
+                  <InputCheckbox
+                    className={cx('control')}
+                    value={showTotal}
+                    onChange={onChangeTotals}
+                  >
+                    Totals
+                  </InputCheckbox>
+                </div>
+
+                <div
+                  className={cx('control', 'separate', { 'separate-active': separate })}
+                >
+                  <InputCheckbox
+                    className={cx('separate-checkbox')}
+                    value={separate}
+                    onChange={onChangeSeparate}
+                  >
+                    Separate
+                  </InputCheckbox>
+                </div>
+
+                <div
+                  className={cx('control', 'percentage', { 'percentage-active': percentage })}
+                >
+                  <InputCheckbox
+                    className={cx('percentage-checkbox')}
+                    value={percentage}
+                    onChange={onChangePercentage}
+                  >
+                    Percentage
+                  </InputCheckbox>
+                </div>
+              </div>
+            )}
+          </Fragment>
         )}
       </div>
-    );
-  }
+      {isChartDataAvailable && isPrintMode && (
+        <div className={cx('legend-second-row')}>
+          <Legend className={cx('legend')} {...props} />
+        </div>
+      )}
+    </div>
+  );
 }
+
+CumulativeChartLegendComponent.propTypes = {
+  onChangeUserSettings: PropTypes.func.isRequired,
+  attributes: PropTypes.array,
+  activeAttribute: PropTypes.object,
+  activeAttributes: PropTypes.array,
+  clearAttributes: PropTypes.func,
+  userSettings: PropTypes.object,
+  isChartDataAvailable: PropTypes.bool,
+  isPrintMode: PropTypes.bool,
+  isLegendControlsShown: PropTypes.bool,
+};
+
+export const CumulativeChartLegend = memo(CumulativeChartLegendComponent);
+CumulativeChartLegend.displayName = 'CumulativeChartLegend';
+CumulativeChartLegend.propTypes = CumulativeChartLegendComponent.propTypes;
