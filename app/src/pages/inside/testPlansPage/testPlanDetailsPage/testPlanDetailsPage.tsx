@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
 import { Button } from '@reportportal/ui-kit';
 
-import { createClassnames, debounce } from 'common/utils';
+import { createClassnames } from 'common/utils';
 import { SEARCH_DELAY } from 'common/constants/delayTime';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
@@ -117,24 +117,34 @@ export const TestPlanDetailsPage = () => {
     isTestPlanTestCasesLoading ||
     isLoadingFilteredFolders;
 
-  const debouncedDispatchSearch = useMemo(
-    () =>
-      debounce((value: string) => {
+  const searchDebounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(
+    () => () => {
+      if (searchDebounceTimeoutRef.current != null) {
+        clearTimeout(searchDebounceTimeoutRef.current);
+        searchDebounceTimeoutRef.current = null;
+      }
+    },
+    [],
+  );
+
+  const handleFilterChange = useCallback(
+    (value: string) => {
+      if (searchDebounceTimeoutRef.current != null) {
+        clearTimeout(searchDebounceTimeoutRef.current);
+      }
+      searchDebounceTimeoutRef.current = setTimeout(() => {
+        searchDebounceTimeoutRef.current = null;
         dispatch(
           updatePagePropertiesAction({
             testCasesSearchParams: value,
             ...TestCasePageDefaultValues,
           }),
         );
-      }, SEARCH_DELAY),
-    [dispatch],
-  );
-
-  const handleFilterChange = useCallback(
-    (value: string) => {
-      debouncedDispatchSearch(value);
+      }, SEARCH_DELAY);
     },
-    [debouncedDispatchSearch],
+    [dispatch],
   );
 
   const { openModal: openEditModal } = useEditTestPlanModal();

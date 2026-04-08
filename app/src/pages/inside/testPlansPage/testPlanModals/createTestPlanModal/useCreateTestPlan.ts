@@ -50,9 +50,21 @@ export const useCreateTestPlan = ({ milestoneId }: CreateTestPlanModalData = {})
       });
 
       if (isNotNil(milestoneId)) {
-        await fetch(URLS.tmsMilestoneAddTestPlan(projectKey, milestoneId, created.id), {
-          method: 'post',
-        });
+        try {
+          await fetch(URLS.tmsMilestoneAddTestPlan(projectKey, milestoneId, created.id), {
+            method: 'post',
+          });
+        } catch {
+          dispatch(hideModalAction());
+          dispatch(
+            showErrorNotification({
+              messageId: 'testPlanCreatedButNotLinkedToMilestone',
+            }),
+          );
+          dispatch(getTestPlansAction(queryParams));
+          dispatch(getMilestonesAction());
+          return;
+        }
       }
 
       dispatch(hideModalAction());
@@ -63,7 +75,7 @@ export const useCreateTestPlan = ({ milestoneId }: CreateTestPlanModalData = {})
       );
       dispatch(getTestPlansAction(queryParams));
       if (isNotNil(milestoneId)) {
-        dispatch(getMilestonesAction(queryParams));
+        dispatch(getMilestonesAction());
       }
     } catch {
       dispatch(

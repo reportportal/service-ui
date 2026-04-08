@@ -17,13 +17,31 @@
     box-sizing: border-box;
     min-height: 86px;
     padding: 16px 28px;
-    cursor: pointer;
     border-radius: 8px 8px 0 0;
+  }
+
+  &__header-toggle {
+    @include mixins.button-reset;
+
+    display: flex;
+    flex: 1;
+    gap: 12px;
+    align-items: center;
+    min-width: 0;
+    cursor: pointer;
+    text-align: left;
 
     &:focus-visible {
       outline: 2px solid var(--rp-ui-base-topaz-focused);
       outline-offset: -2px;
     }
+  }
+
+  &__header-actions {
+    display: flex;
+    flex-shrink: 0;
+    gap: 8px;
+    align-items: center;
   }
 
   &__chevron {

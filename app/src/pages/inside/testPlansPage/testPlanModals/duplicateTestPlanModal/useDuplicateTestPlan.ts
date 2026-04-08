@@ -65,7 +65,7 @@ export const useDuplicateTestPlan = ({
         }),
       );
       dispatch(getTestPlansAction(queryParams));
-      dispatch(getMilestonesAction(queryParams));
+      dispatch(getMilestonesAction());
       onSuccess(response.id);
     } catch {
       dispatch(

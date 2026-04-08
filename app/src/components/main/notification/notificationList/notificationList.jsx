@@ -372,6 +372,11 @@ export const notificationMessages = defineMessages({
     id: 'TestPlansPage.testPlanCreatedSuccess',
     defaultMessage: 'Test Plan has been created successfully.',
   },
+  testPlanCreatedButNotLinkedToMilestone: {
+    id: 'TestPlansPage.testPlanCreatedButNotLinkedToMilestone',
+    defaultMessage:
+      'Test Plan was created, but it could not be linked to the Milestone. You can link it manually later.',
+  },
   testPlanLoadingFailed: {
     id: 'TestPlansPage.testPlanLoadingFailed',
     defaultMessage: 'Failed to load Test Plans.',

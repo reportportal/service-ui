@@ -46,7 +46,7 @@ export const useMilestoneSubmit = ({ url, method, successMessageId }: UseMilesto
           status: payload.status,
           startDate: payload.startDate,
           endDate: payload.endDate,
-          ...(!isUndefined(payload.testPlans) ? { testPlans: payload.testPlans } : {}),
+          ...(isUndefined(payload.testPlans) ? {} : { testPlans: payload.testPlans }),
         },
       });
 

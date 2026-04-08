@@ -32,7 +32,8 @@ export const MilestoneCardActionsMenu = ({
   milestone,
   onEditMilestone,
   onDuplicateMilestone,
-}: Pick<MilestoneCardProps, 'milestone' | 'onEditMilestone' | 'onDuplicateMilestone'>) => {
+  onCreateTestPlan,
+}: MilestoneCardProps) => {
   const { formatMessage } = useIntl();
   const [isOpened, setIsOpened] = useState(false);
 
@@ -45,10 +46,17 @@ export const MilestoneCardActionsMenu = ({
           onEditMilestone?.(milestone);
         },
       },
-      {
-        label: formatMessage(messages.menuCreateTestPlan),
-        onClick: () => setIsOpened(false),
-      },
+      ...(onCreateTestPlan
+        ? [
+            {
+              label: formatMessage(messages.menuCreateTestPlan),
+              onClick: () => {
+                setIsOpened(false);
+                onCreateTestPlan(milestone);
+              },
+            },
+          ]
+        : []),
       {
         label: formatMessage(messages.menuDuplicateMilestone),
         onClick: () => {
@@ -62,7 +70,7 @@ export const MilestoneCardActionsMenu = ({
         onClick: () => setIsOpened(false),
       },
     ],
-    [formatMessage, milestone, onDuplicateMilestone, onEditMilestone],
+    [formatMessage, milestone, onCreateTestPlan, onDuplicateMilestone, onEditMilestone],
   );
 
   return (
