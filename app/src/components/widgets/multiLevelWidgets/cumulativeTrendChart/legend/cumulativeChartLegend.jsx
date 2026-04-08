@@ -23,6 +23,7 @@ import { CumulativeChartBreadcrumbs } from './cumulativeChartBreadcrumbs';
 import styles from './cumulativeChartLegend.scss';
 
 const cx = classNames.bind(styles);
+const noop = () => {};
 
 function CumulativeChartLegendComponent(props) {
   const {
@@ -30,7 +31,7 @@ function CumulativeChartLegendComponent(props) {
     attributes = [],
     activeAttribute = null,
     activeAttributes = [],
-    clearAttributes = () => {},
+    clearAttributes = noop,
     userSettings = {},
     isChartDataAvailable = false,
     isPrintMode = false,
