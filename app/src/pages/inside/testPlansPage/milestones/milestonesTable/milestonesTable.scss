@@ -1,4 +1,6 @@
 .milestones-table {
+  --milestones-table-inline-gutter: 34px;
+
   display: flex;
   flex-direction: column;
   gap: 4px;

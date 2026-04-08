@@ -20,4 +20,5 @@ export type MilestoneCardProps = {
   milestone: TmsMilestoneRS;
   onEditMilestone?: (milestone: TmsMilestoneRS) => void;
   onDuplicateMilestone?: (milestone: TmsMilestoneRS) => void;
+  onCreateTestPlan?: (milestone: TmsMilestoneRS) => void;
 };

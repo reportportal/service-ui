@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,9 @@
  * limitations under the License.
  */
 
-.progress-bar {
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  height: 4px;
-  background-color: var(--rp-ui-base-e-100);
-  border-radius: 1px;
-  overflow: hidden;
+import type { TestPlanDto } from 'controllers/testPlan';
 
-  &__indicator {
-    height: 4px;
-    background-color: var(--rp-ui-base-topaz-focused);
-  }
+export interface TestPlansTableProps {
+  testPlans: TestPlanDto[];
+  isLoading: boolean;
 }

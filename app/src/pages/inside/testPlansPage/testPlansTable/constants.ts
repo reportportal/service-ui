@@ -14,17 +14,11 @@
  * limitations under the License.
  */
 
-.progress-bar {
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  height: 4px;
-  background-color: var(--rp-ui-base-e-100);
-  border-radius: 1px;
-  overflow: hidden;
-
-  &__indicator {
-    height: 4px;
-    background-color: var(--rp-ui-base-topaz-focused);
-  }
-}
+/** Fixed column widths (px) for ui-kit `Table`. */
+export const FIXED_COLUMN_WIDTH_PX = {
+  coveredTotal: 101,
+  progressBar: 130,
+  coverage: 51,
+  options: 45,
+  icon: 54,
+} as const;

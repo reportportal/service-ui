@@ -15,28 +15,107 @@
  */
 
 @use '../../../../common/css/mixins';
+@use '../milestones/milestonesTable/milestonesShared' as ms;
+
+$test-plans-progress-column-inline-pad: 16px;
 
 .test-plans {
   &__table-container {
-    padding: 26px 32px 90px;
+    box-sizing: border-box;
+    max-width: 100%;
+    min-width: 0;
+    padding: 0;
+    overflow: visible;
+    background: transparent;
   }
 
   &__table {
-    margin: 0 auto;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0;
+    isolation: auto;
 
     :global([class*='table-body']) {
-      gap: 4px;
+      gap: 0;
     }
 
     :global([class*='table-cell']) {
+      box-sizing: border-box;
       height: 100%;
       display: flex;
       align-items: center;
+      min-width: 0;
+    }
+
+    :global([class*='table-header']) {
+      @include ms.milestone-test-plans-divider;
+      --table-header-bg-color: transparent;
+
+      :global([class*='table-header-cell']) {
+        color: var(--Text-Secondary, var(--rp-ui-base-e-400));
+      }
+
+      :global([class*='table-cell']) {
+        @include ms.milestone-test-plans-header-label;
+        white-space: normal;
+        overflow: visible;
+      }
+    }
+
+    :global([class*='primary-cell']) {
+      justify-content: flex-start;
+    }
+
+    :global([class*='table-row-content']) > :global(div[class*='_table-cell_']):nth-child(2),
+    :global([class*='table-row-content']) > :global(div[class*='_table-cell_']):nth-child(4) {
+      padding-inline: 0;
+    }
+
+    :global([class*='table-row-content']) > :global(div[class*='_table-cell_']):nth-child(3) {
+      padding-inline: 0;
     }
 
     &-header {
       --table-header-bg-color: transparent;
+
+      > :global(button):nth-child(2),
+      > :global(button):nth-child(4) {
+        padding-inline: 0;
+      }
+
+      > :global(button):nth-child(3) {
+        box-sizing: border-box;
+        padding-inline: $test-plans-progress-column-inline-pad;
+      }
     }
+  }
+
+  &__coverage-cell-wrapper {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  &__cell-content_progress {
+    box-sizing: border-box;
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding-inline: $test-plans-progress-column-inline-pad;
+  }
+
+  &__plan-name {
+    @include ms.milestone-test-plans-cell-name;
+    text-align: left;
+  }
+
+  &__coverage-ratio {
+    @include ms.milestone-test-plans-cell-ratio;
+    text-align: left;
   }
 
   &__table-row {
@@ -44,18 +123,34 @@
     min-height: 64px;
     box-sizing: content-box;
 
+    @include ms.milestone-test-plans-divider;
+
+    :global([class*='row-content-wrapper']) {
+      min-width: 0;
+    }
+
     :global([class*='table-row-content']) {
+      box-sizing: border-box;
       align-items: center;
-      border: 1px solid transparent;
-      padding: 1px;
+      min-width: 0;
+      border: none;
+      border-radius: 0;
+      padding: 8px 0;
+      min-height: 48px;
+      background-color: transparent;
+      box-shadow: none;
     }
   }
 
   &__table-cell-coverage {
-    font-size: 15px;
-    color: var(--rp-ui-base-almost-black);
-    font-family: $FONT-ROBOTO-MEDIUM;
-    font-weight: 500;
+    @include ms.milestone-test-plans-cell-coverage-pct;
+
+    box-sizing: border-box;
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    min-width: 0;
+    text-align: left;
   }
 
   &__table-cell-clickable {
@@ -80,6 +175,19 @@
       rotate: -90deg;
     }
   }
+
+  &__table-cell-clickable_name {
+    justify-content: flex-start;
+    width: 100%;
+    max-width: 100%;
+    text-align: left;
+    background: transparent;
+    font: inherit;
+  }
+
+  &__table-cell-clickable_chevron {
+    justify-content: center;
+  }
 }
 
 .cell-content {
@@ -87,23 +195,4 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
-
-.pagination-wrapper {
-  position: fixed;
-  width: calc(100vw - 48px);
-  bottom: 0;
-  z-index: $Z-INDEX-POPUP;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: var(--rp-ui-base-bg-100);
-  padding: 5px 32px;
-  border-top: 1px solid var(--rp-ui-base-e-100);
-  height: 64px;
-  box-sizing: border-box;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    width: 100vw;
-  }
 }

@@ -1,3 +1,5 @@
+@use '../../../common/css/variables/z-index-variables' as z;
+
 /*
  * Copyright 2025 EPAM Systems
  *
@@ -15,6 +17,7 @@
  */
 
 .popover-control {
+  z-index: z.$Z-INDEX-OVERLAY-PANEL;
   padding: 8px 0;
   font-size: 13px;
   min-width: 192px;

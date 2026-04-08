@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+import type { CreateMilestonePayload, TmsTestPlanInMilestoneRS } from 'controllers/milestone';
+
+export type MilestoneSubmitPayload = CreateMilestonePayload & {
+  testPlans?: Pick<TmsTestPlanInMilestoneRS, 'id'>[];
+};
+
 export interface UseMilestoneSubmitParams {
   url: string;
   method: 'post' | 'patch';

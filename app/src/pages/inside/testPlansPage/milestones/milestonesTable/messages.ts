@@ -41,6 +41,14 @@ export const messages = defineMessages({
     id: 'MilestonesTable.placeholderExpanded',
     defaultMessage: 'Test plans will appear here in next task as well as empty state of it',
   },
+  noTestPlansInMilestone: {
+    id: 'MilestonesTable.noTestPlansInMilestone',
+    defaultMessage: 'No test plans yet',
+  },
+  createTestPlanUnderMilestone: {
+    id: 'MilestonesTable.createTestPlanUnderMilestone',
+    defaultMessage: 'Create Test Plan',
+  },
   emptyTitle: {
     id: 'MilestonesTable.emptyTitle',
     defaultMessage: 'No Milestones created yet',

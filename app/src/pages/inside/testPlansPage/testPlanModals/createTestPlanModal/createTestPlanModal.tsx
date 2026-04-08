@@ -20,13 +20,14 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 import { TestPlanModal } from '../testPlanModal';
 import { commonMessages } from '../../commonMessages';
+import type { CreateTestPlanModalData } from './types';
 import { useCreateTestPlan } from './useCreateTestPlan';
 
 export const CREATE_TEST_PLAN_MODAL_KEY = 'createTestPlanModalKey';
 
-export const CreateTestPlanModal = () => {
+export const CreateTestPlanModal = ({ milestoneId }: CreateTestPlanModalData) => {
   const { formatMessage } = useIntl();
-  const { isLoading, submitTestPlan } = useCreateTestPlan();
+  const { isLoading, submitTestPlan } = useCreateTestPlan({ milestoneId });
 
   return (
     <TestPlanModal
