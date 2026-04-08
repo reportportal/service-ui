@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,4 +14,14 @@
  * limitations under the License.
  */
 
-export { IntegrationFormField } from './integrationFormField';
+export const CLIENT_ID_KEY = 'clientId';
+export const CLIENT_SECRET_KEY = 'clientSecret';
+export const ORGANIZATIONS_FIELD = 'restrictions.organizations';
+
+export const DEFAULT_FORM_CONFIG = {
+  [CLIENT_ID_KEY]: '',
+  [CLIENT_SECRET_KEY]: '',
+  restrictions: {
+    organizations: [] as string[],
+  },
+};

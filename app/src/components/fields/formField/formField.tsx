@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,44 +14,42 @@
  * limitations under the License.
  */
 
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
+import type { ReactNode } from 'react';
+import { PureComponent } from 'react';
 import classNames from 'classnames/bind';
+import type { BaseFieldProps } from 'redux-form';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import styles from './formField.scss';
 
 const cx = classNames.bind(styles);
 
-export class FormField extends PureComponent {
-  static propTypes = {
-    containerClassName: PropTypes.string,
-    labelClassName: PropTypes.string,
-    fieldWrapperClassName: PropTypes.string,
-    customBlock: PropTypes.shape({
-      wrapperClassName: PropTypes.string,
-      node: PropTypes.node,
-    }),
-    label: PropTypes.string,
-    onChange: PropTypes.func,
-    normalize: PropTypes.func,
-    format: PropTypes.func,
-    parse: PropTypes.func,
-    disabled: PropTypes.bool,
-    children: PropTypes.any,
-    required: PropTypes.bool,
-    withoutProvider: PropTypes.bool,
-  };
+export type FormFieldProps = Partial<BaseFieldProps> & {
+  containerClassName?: string;
+  labelClassName?: string;
+  fieldWrapperClassName?: string;
+  customBlock?: {
+    wrapperClassName?: string;
+    node: ReactNode;
+  } | null;
+  label?: string;
+  disabled?: boolean;
+  children?: ReactNode;
+  required?: boolean;
+  withoutProvider?: boolean;
+  placeholder?: string;
+};
 
-  static defaultProps = {
+export class FormField extends PureComponent<FormFieldProps> {
+  static defaultProps: Partial<FormFieldProps> = {
     containerClassName: '',
     labelClassName: '',
     fieldWrapperClassName: '',
     customBlock: null,
     label: '',
     onChange: () => {},
-    normalize: (value) => value,
-    format: (value) => value,
-    parse: (value) => value,
+    normalize: (value: unknown) => value,
+    format: (value: unknown) => value,
+    parse: (value: unknown) => value,
     disabled: false,
     children: null,
     required: false,
@@ -72,7 +70,9 @@ export class FormField extends PureComponent {
     } = this.props;
     return (
       <div className={cx('form-field', containerClassName)}>
-        <span className={cx('form-group-label', labelClassName, { required })}>{label}</span>
+        {label && (
+          <span className={cx('form-group-label', labelClassName, { required })}>{label}</span>
+        )}
         <div className={cx('field-wrapper', fieldWrapperClassName)}>
           {withoutProvider ? children : <FieldProvider {...rest}>{children}</FieldProvider>}
         </div>

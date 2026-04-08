@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,4 @@
  * limitations under the License.
  */
 
-export { SauceLabsSettings, SauceLabsFormFields } from './sauceLabsIntegration';
-export { EmailSettings, EmailFormFields } from './emailIntegration';
-export { JiraSettings, JiraConnectionFormFields } from './jiraIntegration';
-export { RallySettings, RallyConnectionFormFields } from './rallyIntegration';
-export { SamlSettings, SamlFormFields } from './samlIntegration';
-export { LdapSettings, LdapFormFields } from './ldapIntegration';
+export { FormField, type FormFieldProps } from './formField';

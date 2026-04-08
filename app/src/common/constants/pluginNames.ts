@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ export const SAUCE_LABS = 'saucelabs';
 export const SAUCE_LABS_TITLE = 'Sauce Labs';
 export const SAML = 'saml';
 export const LDAP = 'ldap';
+export const GITHUB = 'github';
 export const ORGANIZATION = 'organization';
 
 // TODO: calculate it dynamically
@@ -35,7 +36,7 @@ export const PLUGIN_NAMES_BY_GROUP_TYPES_MAP = {
   [BTS_GROUP_TYPE]: [JIRA, RALLY],
   [NOTIFICATION_GROUP_TYPE]: [EMAIL],
   [OTHER_GROUP_TYPE]: [SAUCE_LABS],
-  [AUTHORIZATION_GROUP_TYPE]: [SAML, LDAP],
+  [AUTHORIZATION_GROUP_TYPE]: [SAML, LDAP, GITHUB],
 };
 
 // TODO: calculate it dynamically
@@ -45,5 +46,6 @@ export const GROUP_TYPES_BY_PLUGIN_NAMES_MAP = {
   [EMAIL]: NOTIFICATION_GROUP_TYPE,
   [SAML]: AUTHORIZATION_GROUP_TYPE,
   [LDAP]: AUTHORIZATION_GROUP_TYPE,
+  [GITHUB]: AUTHORIZATION_GROUP_TYPE,
   [SAUCE_LABS]: OTHER_GROUP_TYPE,
 };
