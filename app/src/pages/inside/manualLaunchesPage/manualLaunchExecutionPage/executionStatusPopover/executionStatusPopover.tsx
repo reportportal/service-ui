@@ -54,7 +54,7 @@ export const ExecutionStatusPopover: FC<ExecutionStatusPopoverProps> = ({
   const executions = useSelector(manualLaunchTestCaseExecutionsSelector);
 
   const status =
-    (executions.find((e) => e.id === executionId)?.executionStatus as ExecutionStatus) ??
+    (executions.find((e) => e.id === executionId)?.executionStatus) ??
     currentStatus;
   const statusKey = status.toLowerCase() as ExecutionStatusType;
   const availableStatuses = (Object.keys(STATUS_CONFIG) as ExecutionStatusType[]).filter(
