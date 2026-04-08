@@ -100,6 +100,9 @@ export class CumulativeTrendChart extends PureComponent {
     activeAttribute: null,
     isActionsPopupShown: false,
     selectedItem: null,
+    selectedStatus: null,
+    selectedStatKey: null,
+    selectedDefectLocators: null,
     isLegendControlsShown: true,
     isLoading: false,
   };
@@ -135,9 +138,15 @@ export class CumulativeTrendChart extends PureComponent {
     this.left = event.offsetX;
     this.top = event.offsetY + this.getLegendHeight();
     const selectedItem = this.getSelectedItem(elementModel.label);
+    const selectedStatKey = this.getSelectedStatKey(element);
+    const selectedStatus = this.getSelectedStatus(selectedStatKey);
+    const selectedDefectLocators = this.getSelectedDefectLocators(selectedStatKey);
 
     this.setState({
       selectedItem,
+      selectedStatus,
+      selectedStatKey,
+      selectedDefectLocators,
       isActionsPopupShown: true,
     });
   };
@@ -169,6 +178,9 @@ export class CumulativeTrendChart extends PureComponent {
     this.setState({
       isActionsPopupShown: false,
       selectedItem: null,
+      selectedStatus: null,
+      selectedStatKey: null,
+      selectedDefectLocators: null,
       chartData: {
         labels,
         datasets,
@@ -184,6 +196,53 @@ export class CumulativeTrendChart extends PureComponent {
 
   getSelectedItem = (focusedAttributeValue) =>
     this.props.widget.content.result.find((item) => item.attributeValue === focusedAttributeValue);
+
+  getSelectedStatKey = (element) => {
+    const datasetLabel = element?._model?.datasetLabel;
+    if (datasetLabel) {
+      return datasetLabel;
+    }
+    // eslint-disable-next-line no-underscore-dangle
+    const datasetIndex = element?._datasetIndex;
+    return this.state.chartData?.datasets?.[datasetIndex]?.label || null;
+  };
+
+  getSelectedStatus = (statKey) => {
+    if (!statKey) {
+      return null;
+    }
+    const [, groupKey, statusKey] = statKey.split('$');
+
+    if (groupKey !== 'executions') {
+      return null;
+    }
+
+    switch (statusKey) {
+      case 'failed':
+        return FAILED;
+      case 'passed':
+        return PASSED;
+      case 'skipped':
+        return SKIPPED;
+      case 'interrupted':
+        return INTERRUPTED;
+      default:
+        return null;
+    }
+  };
+
+  getSelectedDefectLocators = (statKey) => {
+    if (!statKey) {
+      return null;
+    }
+    const nameConfig = getItemNameConfig(statKey);
+
+    if (nameConfig.itemType !== DEFECTS) {
+      return null;
+    }
+
+    return getDefectTypeLocators(nameConfig, this.props.defectTypes);
+  };
 
   getPopupActionItems = () => [
     {
@@ -244,6 +303,9 @@ export class CumulativeTrendChart extends PureComponent {
     this.setState({
       isActionsPopupShown: false,
       selectedItem: null,
+      selectedStatus: null,
+      selectedStatKey: null,
+      selectedDefectLocators: null,
     });
 
   fetchWidgetWithActiveAttributes = () => {
@@ -266,6 +328,9 @@ export class CumulativeTrendChart extends PureComponent {
     this.setState({
       activeAttribute: null,
       activeAttributes: [],
+      selectedStatus: null,
+      selectedStatKey: null,
+      selectedDefectLocators: null,
     });
 
     this.props.clearQueryParams();
@@ -282,15 +347,9 @@ export class CumulativeTrendChart extends PureComponent {
   };
 
   navigateToTestListView = () => {
-    const { selectedItem, activeAttributes } = this.state;
-    const {
-      widget,
-      userSettings,
-      getStatisticsLink,
-      getDefectLink,
-      defectTypes,
-      project,
-    } = this.props;
+    const { selectedItem, activeAttributes, selectedStatus, selectedDefectLocators } = this.state;
+    const { widget, userSettings, getStatisticsLink, getDefectLink, defectTypes, project } =
+      this.props;
     const navigationParams = getDefaultTestItemLinkParams(
       project,
       widget.appliedFilters[0].id,
@@ -302,9 +361,11 @@ export class CumulativeTrendChart extends PureComponent {
       const namesConfig = Object.keys(selectedItem.content.statistics)
         .map((item) => getItemNameConfig(item))
         .filter((item) => item.itemType === DEFECTS && item.locator !== TOTAL_KEY);
-      const defectLocators = namesConfig.map((item) => getDefectTypeLocators(item, defectTypes));
+      const defectLocators = namesConfig
+        .map((item) => getDefectTypeLocators(item, defectTypes))
+        .filter(Boolean);
       link = getDefectLink({
-        defects: defectLocators,
+        defects: selectedDefectLocators?.length ? selectedDefectLocators : defectLocators,
         itemId: TEST_ITEMS_TYPE_LIST,
         providerType: PROVIDER_TYPE_WIDGET,
         widgetId: widget.id,
@@ -315,7 +376,7 @@ export class CumulativeTrendChart extends PureComponent {
       });
     } else {
       link = getStatisticsLink({
-        statuses: [PASSED, FAILED, SKIPPED, INTERRUPTED],
+        statuses: selectedStatus ? [selectedStatus] : [PASSED, FAILED, SKIPPED, INTERRUPTED],
         levelAttribute: activeAttributes.map(formatAttribute).join(','),
         launchesLimit: widget.contentParameters.itemsCount,
         providerType: PROVIDER_TYPE_WIDGET,
