@@ -32,6 +32,10 @@
     opacity: 0.3;
     pointer-events: none;
   }
+
+  &:focus-visible {
+    outline: 2px auto $COLOR--topaz;
+  }
 }
 
 .icon-check {

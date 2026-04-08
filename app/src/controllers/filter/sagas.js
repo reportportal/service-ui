@@ -180,11 +180,7 @@ function* saveNewFilter({ payload: filter }) {
   yield put(changeActiveFilterAction(newId));
 }
 
-function* parseQueryToFilterEntity({ payload: refreshPreferences }) {
-  if (refreshPreferences) {
-    const activeProject = yield select(activeProjectSelector);
-    yield put(fetchProjectPreferencesAction(activeProject));
-  }
+function* parseQueryToFilterEntity() {
   const filterConditions = yield select(filterFromQuerySelector);
   if (filterConditions) {
     yield put(createFilterFromParsedQueryAction(filterConditions));

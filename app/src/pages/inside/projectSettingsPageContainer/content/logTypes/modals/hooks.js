@@ -44,7 +44,7 @@ export const useLogTypeFormState = (initialColors = null, initialTextBold = fals
   };
 
   const getFormData = (formValues, isFilterable = false, isSystem = false) => ({
-    name: formValues[NAME_FIELD_KEY],
+    name: (formValues[NAME_FIELD_KEY] || '').trim(),
     level: Number(formValues[LEVEL_FIELD_KEY]),
     style: {
       label_color: colors[LABEL_COLOR_FIELD_KEY],

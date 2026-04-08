@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { defectTypesSelector } from 'controllers/project';
@@ -25,9 +26,25 @@ import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { LAUNCH_STATUSES_OPTIONS, DEFECT_TYPES_OPTIONS, ITEMS_INPUT_WIDTH } from './constants';
-import { FiltersControl, DropdownControl, InputControl, TogglerControl } from './controls';
+import {
+  FiltersControl,
+  DropdownControl,
+  InputControl,
+  TogglerControl,
+  CheckboxControl,
+} from './controls';
+import styles from './overallStatisticsControls.scss';
+
+const cx = classNames.bind(styles);
 
 const DEFAULT_ITEMS_COUNT = '50';
+
+const DEFAULT_WIDGET_OPTIONS = {
+  viewMode: MODES_VALUES[CHART_MODES.PANEL_VIEW],
+  latest: MODES_VALUES[CHART_MODES.ALL_LAUNCHES],
+  separateInterrupted: false,
+};
+
 const messages = defineMessages({
   CriteriaFieldLabel: {
     id: 'OverallStatisticsControls.CriteriaFieldLabel',
@@ -45,6 +62,10 @@ const messages = defineMessages({
     id: 'OverallStatisticsControls.ContentFieldsValidationError',
     defaultMessage: 'You must select at least one item',
   },
+  SeparateInterruptedLabel: {
+    id: 'OverallStatisticsControls.SeparateInterruptedLabel',
+    defaultMessage: 'Show the "Interrupted" status independently from "Failed" items',
+  },
 });
 
 @injectIntl
@@ -60,12 +81,14 @@ export class OverallStatisticsControls extends Component {
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
     eventsInfo: PropTypes.object,
+    isMainControlsDisabled: PropTypes.bool,
   };
 
   static defaultProps = {
     formAppearance: {},
     onFormAppearanceChange: () => {},
     eventsInfo: {},
+    isMainControlsDisabled: false,
   };
 
   constructor(props) {
@@ -76,13 +99,17 @@ export class OverallStatisticsControls extends Component {
       intl.formatMessage,
       { defectTypes },
     );
+    const contentParameters = widgetSettings.contentParameters || {
+      contentFields: this.criteria.map((criteria) => criteria.value),
+      itemsCount: DEFAULT_ITEMS_COUNT,
+      widgetOptions: { ...DEFAULT_WIDGET_OPTIONS },
+    };
     initializeControlsForm({
-      contentParameters: widgetSettings.contentParameters || {
-        contentFields: this.criteria.map((criteria) => criteria.value),
-        itemsCount: DEFAULT_ITEMS_COUNT,
+      contentParameters: {
+        ...contentParameters,
         widgetOptions: {
-          viewMode: MODES_VALUES[CHART_MODES.PANEL_VIEW],
-          latest: MODES_VALUES[CHART_MODES.ALL_LAUNCHES],
+          ...DEFAULT_WIDGET_OPTIONS,
+          ...contentParameters.widgetOptions,
         },
       },
     });
@@ -93,12 +120,15 @@ export class OverallStatisticsControls extends Component {
   formatFilterValue = (value) => value?.[0];
   parseFilterValue = (value) => value && [value];
 
+  formatSeparateInterrupted = (value) => value === true || value === 'true';
+
   render() {
     const {
       intl: { formatMessage },
       formAppearance,
       onFormAppearanceChange,
       eventsInfo,
+      isMainControlsDisabled,
     } = this.props;
 
     return (
@@ -123,6 +153,7 @@ export class OverallStatisticsControls extends Component {
                 multiple
                 selectAll
                 options={this.criteria}
+                disabled={isMainControlsDisabled}
               />
             </FieldProvider>
             <FieldProvider
@@ -138,6 +169,7 @@ export class OverallStatisticsControls extends Component {
                 inputWidth={ITEMS_INPUT_WIDTH}
                 maxLength="3"
                 hintType={'top-right'}
+                disabled={isMainControlsDisabled}
               />
             </FieldProvider>
             <FieldProvider name="contentParameters.widgetOptions.viewMode">
@@ -147,6 +179,7 @@ export class OverallStatisticsControls extends Component {
                   [CHART_MODES.PANEL_VIEW, CHART_MODES.DONUT_VIEW],
                   formatMessage,
                 )}
+                disabled={isMainControlsDisabled}
               />
             </FieldProvider>
             <FieldProvider name="contentParameters.widgetOptions.latest">
@@ -156,6 +189,18 @@ export class OverallStatisticsControls extends Component {
                   [CHART_MODES.ALL_LAUNCHES, CHART_MODES.LATEST_LAUNCHES],
                   formatMessage,
                 )}
+                disabled={isMainControlsDisabled}
+              />
+            </FieldProvider>
+            <FieldProvider
+              name="contentParameters.widgetOptions.separateInterrupted"
+              format={this.formatSeparateInterrupted}
+              className={cx('separate-interrupted-checkbox')}
+            >
+              <CheckboxControl
+                fieldLabel=" "
+                text={formatMessage(messages.SeparateInterruptedLabel)}
+                disabled={isMainControlsDisabled}
               />
             </FieldProvider>
           </Fragment>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -213,13 +213,16 @@ export class WidgetWizardContent extends Component {
             type: widgetType,
             dashboardId: activeDashboardId,
             modifiedFields: getModifiedFieldsLabels(
-              initialFormValues?.contentParameters,
-              data?.contentParameters,
+              initialFormValues,
+              data,
             ),
             isWidgetNameChanged: name !== initialFormValues?.name,
             isWidgetDescriptionChanged: data?.description !== initialFormValues?.description,
             levelsCount: getCreatedWidgetLevelsCount(widgetType, data),
             isExcludeSkippedTests: getIsExcludeSkipped(widgetType, data),
+            initialSeparateInterrupted:
+              initialFormValues?.contentParameters?.widgetOptions?.separateInterrupted,
+            finalSeparateInterrupted: data?.contentParameters?.widgetOptions?.separateInterrupted,
           }),
         );
 

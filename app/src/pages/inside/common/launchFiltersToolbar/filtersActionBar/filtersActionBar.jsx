@@ -61,7 +61,6 @@ export const FiltersActionBar = ({
         onClone={onClone}
         onEdit={onEdit}
         onSave={onSave}
-        isFilterLocked={filter.locked}
       />
     </div>
   </div>

@@ -35,6 +35,7 @@ export const PTTest = shape({
   criteria: number,
   flakyCount: number,
   statuses: arrayOf(PTStatus),
+  launchId: oneOfType([number, string]),
 });
 
 export const PTColumns = shape({

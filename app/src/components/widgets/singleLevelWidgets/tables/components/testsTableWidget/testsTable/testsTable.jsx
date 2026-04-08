@@ -31,6 +31,7 @@ export const TestsTable = ({
   getMatrixTooltip,
   onItemClick,
   opensLinkInNewTab,
+  passFullRowOnItemClick,
 }) => (
   <div className={cx('tests-table')}>
     <ScrollWrapper>
@@ -41,6 +42,7 @@ export const TestsTable = ({
         getMatrixTooltip={getMatrixTooltip}
         onItemClick={onItemClick}
         opensLinkInNewTab={opensLinkInNewTab}
+        passFullRowOnItemClick={passFullRowOnItemClick}
       />
     </ScrollWrapper>
   </div>
@@ -52,10 +54,12 @@ TestsTable.propTypes = {
   getMatrixTooltip: func,
   onItemClick: func,
   opensLinkInNewTab: bool,
+  passFullRowOnItemClick: bool,
 };
 
 TestsTable.defaultProps = {
   getMatrixTooltip: null,
   onItemClick: null,
   opensLinkInNewTab: false,
+  passFullRowOnItemClick: false,
 };

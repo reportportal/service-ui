@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,25 +14,14 @@
  * limitations under the License.
  */
 
-.filter-item {
-  padding: 10px 0;
-  border-bottom: 1px solid $COLOR--gray-91;
+import { isString } from './stringUtils';
 
-  &:hover {
-    .pencil-icon {
-      display: inline-block;
+export const trimStringValues = (inputObj) => {
+  const obj = { ...inputObj };
+  Object.keys(obj).forEach((key) => {
+    if (isString(obj[key])) {
+      obj[key] = obj[key].trim();
     }
-  }
-}
-
-.pencil-icon {
-  width: 20px;
-  height: 18px;
-  margin-left: 10px;
-  display: none;
-  vertical-align: top;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    display: inline-block;
-  }
-}
+  });
+  return obj;
+};

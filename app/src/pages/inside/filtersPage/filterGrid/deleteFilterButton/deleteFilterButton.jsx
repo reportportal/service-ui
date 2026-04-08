@@ -17,19 +17,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Icon } from 'components/main/icon';
-import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardTooltip';
-import { useCanLockDashboard } from 'common/hooks';
 
-export const DeleteFilterButton = ({ onDelete, filter }) => {
-  const canLock = useCanLockDashboard();
-  const isDisabled = filter.locked && !canLock;
-
-  return (
-    <LockedDashboardTooltip locked={filter.locked} variant="filter">
-      <Icon type="icon-delete" onClick={() => onDelete(filter)} disabled={isDisabled} />
-    </LockedDashboardTooltip>
-  );
-};
+export const DeleteFilterButton = ({ onDelete, filter }) => (
+  <Icon type="icon-delete" onClick={() => onDelete(filter)} />
+);
 
 DeleteFilterButton.propTypes = {
   onDelete: PropTypes.func,

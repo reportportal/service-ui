@@ -37,7 +37,6 @@ import { levelSelector } from 'controllers/testItem';
 import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
-import { useCanLockDashboard } from 'common/hooks';
 import { FilterList } from './filterList';
 import { FiltersActionBar } from './filtersActionBar';
 import { ExpandToggler } from './expandToggler';
@@ -70,8 +69,6 @@ export const LaunchFiltersToolbar = ({
   const dirtyFilterIds = useSelector(dirtyFilterIdsSelector);
   const launchDistinct = useSelector(launchDistinctSelector);
   const level = useSelector(levelSelector);
-  const canLock = useCanLockDashboard();
-  const isFilterLocked = !!activeFilter?.locked;
 
   const showModal = useCallback((payload) => dispatch(showModalAction(payload)), [dispatch]);
   const updateFilter = useCallback((payload) => dispatch(updateFilterAction(payload)), [dispatch]);
@@ -148,17 +145,13 @@ export const LaunchFiltersToolbar = ({
     [dirtyFilterIds, activeFilterId],
   );
   const isSaveDisabled = useCallback(
-    () =>
-      !isFilterUnsaved() ||
-      !isEmptyObject(filterErrors) ||
-      isNoFilterValues() ||
-      (!canLock && isFilterLocked),
-    [canLock, isFilterLocked, isFilterUnsaved, filterErrors, isNoFilterValues],
+    () => !isFilterUnsaved() || !isEmptyObject(filterErrors) || isNoFilterValues(),
+    [isFilterUnsaved, filterErrors, isNoFilterValues],
   );
   const isDiscardDisabled = useCallback(() => !isFilterDirty(), [isFilterDirty]);
   const isEditDisabled = useCallback(
-    () => isFilterUnsaved() || isNewFilter() || (!canLock && isFilterLocked),
-    [canLock, isFilterLocked, isFilterUnsaved, isNewFilter],
+    () => isFilterUnsaved() || isNewFilter(),
+    [isFilterUnsaved, isNewFilter],
   );
 
   return (

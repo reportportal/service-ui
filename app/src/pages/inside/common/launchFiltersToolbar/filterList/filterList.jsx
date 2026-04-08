@@ -30,7 +30,6 @@ export const FilterList = ({ filters, activeFilterId, unsavedFilterIds, onRemove
           id={filter.id}
           name={filter.name}
           description={filter.description}
-          locked={filter.locked}
           active={filter.id === activeFilterId}
           unsaved={unsavedFilterIds.indexOf(filter.id) > -1}
           onRemove={() => onRemoveFilter(filter)}

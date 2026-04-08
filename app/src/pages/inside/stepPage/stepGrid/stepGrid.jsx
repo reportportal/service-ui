@@ -164,7 +164,7 @@ const DefectTypeColumn = ({
         issue={value.issue}
         patternTemplates={value.patternTemplates}
         hideEdit={hideEdit}
-        onEdit={() => onEdit(value)}
+        onEdit={(actionPlace) => onEdit(value, actionPlace)}
         onRemove={onUnlinkSingleTicket(value)}
         events={events}
       />
@@ -374,9 +374,7 @@ export class StepGrid extends Component {
         component: DefectTypeColumn,
         customProps: {
           hideEdit: isTestSearchView,
-          onEdit: (data) => {
-            onEditDefect(data);
-          },
+          onEdit: (data, actionPlace) => onEditDefect(data, actionPlace),
           onUnlinkSingleTicket,
           events: {
             onEditEvent: events.MAKE_DECISION_MODAL_EVENTS?.getOpenModalEvent,

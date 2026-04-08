@@ -172,13 +172,21 @@ const widgetFilterDashboardMessages = defineMessages({
     id: 'PermissionMap.editDeleteDashboardUnlocked',
     defaultMessage: 'Edit, delete dashboard (unlocked)',
   },
-  [ACTIONS.EDIT_DELETE_WIDGETS_FILTERS_LOCKED]: {
-    id: 'PermissionMap.editDeleteWidgetsFiltersLocked',
-    defaultMessage: 'Edit, delete widgets/filters (locked dashboard)',
+  [ACTIONS.EDIT_DELETE_WIDGETS_LOCKED]: {
+    id: 'PermissionMap.editDeleteWidgetsLocked',
+    defaultMessage: 'Edit, delete widgets (locked dashboard)\n(except updating applied filter in the widget)',
   },
-  [ACTIONS.EDIT_DELETE_WIDGETS_FILTERS_UNLOCKED]: {
-    id: 'PermissionMap.editDeleteWidgetsFiltersUnlocked',
-    defaultMessage: 'Edit, delete widgets/filters (unlocked dashboard)',
+  [ACTIONS.EDIT_WIDGETS_FILTER_ONLY_LOCKED]: {
+    id: 'PermissionMap.editWidgetsFiltersOnlyLocked',
+    defaultMessage: 'Edit widgets (locked dashboard)\n(updating applied filter in the widget)',
+  },
+  [ACTIONS.EDIT_DELETE_WIDGETS_UNLOCKED]: {
+    id: 'PermissionMap.editDeleteWidgetsUnlocked',
+    defaultMessage: 'Edit, delete widgets (unlocked dashboard)',
+  },
+  [ACTIONS.EDIT_DELETE_FILTERS]: {
+    id: 'PermissionMap.editDeleteFilters',
+    defaultMessage: 'Edit, delete filters (locked/unlocked dashboard)',
   },
   [ACTIONS.CHANGE_DASHBOARD_STATE]: {
     id: 'PermissionMap.changeDashboardState',

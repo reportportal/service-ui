@@ -46,10 +46,12 @@ export class TestCasesGrowthTrendControls extends Component {
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
     eventsInfo: PropTypes.object,
+    isMainControlsDisabled: PropTypes.bool,
   };
 
   static defaultProps = {
     eventsInfo: {},
+    isMainControlsDisabled: false,
   };
 
   constructor(props) {
@@ -77,6 +79,7 @@ export class TestCasesGrowthTrendControls extends Component {
       formAppearance,
       onFormAppearanceChange,
       eventsInfo,
+      isMainControlsDisabled,
     } = this.props;
 
     return (
@@ -103,6 +106,7 @@ export class TestCasesGrowthTrendControls extends Component {
                 inputWidth={ITEMS_INPUT_WIDTH}
                 maxLength="3"
                 hintType={'top-right'}
+                disabled={isMainControlsDisabled}
               />
             </FieldProvider>
             <FieldProvider name="contentParameters.widgetOptions.timeline">
@@ -112,6 +116,7 @@ export class TestCasesGrowthTrendControls extends Component {
                   [CHART_MODES.LAUNCH_MODE, CHART_MODES.TIMELINE_MODE],
                   formatMessage,
                 )}
+                disabled={isMainControlsDisabled}
               />
             </FieldProvider>
           </Fragment>
