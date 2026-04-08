@@ -155,3 +155,11 @@ export interface UrlsHelper {
     executionId: string | number,
   ) => string;
 }
+
+export enum ExecutionStatus {
+  TO_RUN = 'TO_RUN',
+  IN_PROGRESS = 'IN_PROGRESS',
+  PASSED = 'PASSED',
+  FAILED = 'FAILED',
+  SKIPPED = 'SKIPPED',
+}

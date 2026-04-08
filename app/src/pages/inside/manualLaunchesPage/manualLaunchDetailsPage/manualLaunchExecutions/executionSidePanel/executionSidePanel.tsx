@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
 import {
@@ -33,6 +33,7 @@ import { RequirementsList } from 'pages/inside/common/requirementsList/requireme
 import { Scenario } from 'pages/inside/common/testCaseList/testCaseSidePanel/scenario';
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 import { formatTimestamp } from 'pages/inside/common/testCaseList/utils';
+import { ExecutionStatusPopover } from 'pages/inside/manualLaunchesPage/manualLaunchExecutionPage/executionStatusPopover';
 import { Divider } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { AttachmentList, type Attachment } from 'pages/inside/common/attachmentList';
 
@@ -60,6 +61,7 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
     (executionDetails?.manualScenario?.manualScenarioType === TestCaseManualScenario.STEPS &&
       !isEmpty(executionDetails?.manualScenario?.steps)) ||
     executionDetails?.manualScenario?.manualScenarioType === TestCaseManualScenario.TEXT;
+  const [isStatusPopoverOpen, setIsStatusPopoverOpen] = useState(false);
 
   useOnClickOutside(sidePanelRef, onClose);
 
@@ -204,17 +206,23 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
     </div>
   );
 
-  const footerComponent = canManageExecutions ? (
+  const footerComponent = (canManageExecutions && executionDetails) ? (
     <div className={cx('footer')}>
-      <Button
-        variant="ghost"
-        className={cx('action-button')}
-        onClick={() => {}}
-        data-automation-id="test-plan-open-in-library"
+      <ExecutionStatusPopover
+        executionId={executionId}
+        isOpened={isStatusPopoverOpen}
+        setIsOpened={setIsStatusPopoverOpen}
+        currentStatus={executionDetails.executionStatus}
       >
-        {formatMessage(messages.changeStatus)}
-        <ChevronDownDropdownIcon />
-      </Button>
+        <Button
+          variant="ghost"
+          className={cx('action-button')}
+          data-automation-id="test-plan-open-in-library"
+        >
+          {formatMessage(messages.changeStatus)}
+          <ChevronDownDropdownIcon />
+        </Button>
+      </ExecutionStatusPopover>
       <Button
         variant="primary"
         className={cx('action-button')}

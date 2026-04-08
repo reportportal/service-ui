@@ -16,14 +16,19 @@
 
 import { FC, ReactNode } from 'react';
 import { useIntl } from 'react-intl';
+import { useSelector } from 'react-redux';
 import { Popover } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
+import { manualLaunchTestCaseExecutionsSelector } from 'controllers/manualLaunch';
+import { Divider } from 'pages/inside/projectSettingsPageContainer/content/elements';
+import { ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
 
 import { STATUS_CONFIG } from '../constants';
 import type { ExecutionStatusType } from '../types';
 import { useExecutionStatusModal } from '../executionStatusConfirmModal';
 import { messages } from './messages';
+import { messages as commonMessages } from '../messages';
 
 import styles from './executionStatusPopover.scss';
 
@@ -31,7 +36,7 @@ const cx = createClassnames(styles);
 
 interface ExecutionStatusPopoverProps {
   executionId: number;
-  currentStatus: string;
+  currentStatus: ExecutionStatus;
   isOpened: boolean;
   setIsOpened: (isOpened: boolean) => void;
   children: ReactNode;
@@ -46,17 +51,21 @@ export const ExecutionStatusPopover: FC<ExecutionStatusPopoverProps> = ({
 }) => {
   const { formatMessage } = useIntl();
   const { openModal } = useExecutionStatusModal();
+  const executions = useSelector(manualLaunchTestCaseExecutionsSelector);
 
-  const statusKey = currentStatus.toLowerCase() as ExecutionStatusType;
+  const status =
+    (executions.find((e) => e.id === executionId)?.executionStatus as ExecutionStatus) ??
+    currentStatus;
+  const statusKey = status.toLowerCase() as ExecutionStatusType;
   const availableStatuses = (Object.keys(STATUS_CONFIG) as ExecutionStatusType[]).filter(
-    (status) => status !== statusKey,
+    (s) => s !== statusKey,
   );
 
   const handleStatusChange = (newStatus: string) => {
     openModal({
       executionId,
       status: newStatus as ExecutionStatusType,
-      currentStatus,
+      currentStatus: status,
     });
     setIsOpened(false);
   };
@@ -77,6 +86,19 @@ export const ExecutionStatusPopover: FC<ExecutionStatusPopoverProps> = ({
           </button>
         );
       })}
+      {status !== ExecutionStatus.TO_RUN && (
+        <>
+          <Divider />
+          <button
+            key={status}
+            type="button"
+            className={cx('status-option')}
+            onClick={() => handleStatusChange(ExecutionStatus.TO_RUN)}
+          >
+            {formatMessage(commonMessages.clearStatus)}
+          </button>
+        </>
+      )}
     </div>
   );
 
