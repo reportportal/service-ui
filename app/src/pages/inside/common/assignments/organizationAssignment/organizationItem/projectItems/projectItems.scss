@@ -19,6 +19,12 @@
   align-items: center;
 }
 
+.role {
+  [role='listbox'] {
+    max-width: unset;
+  }
+}
+
 .name {
   flex: 1 0 auto;
 }
