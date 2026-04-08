@@ -52,6 +52,7 @@
 
   &__item {
     position: relative;
+    box-sizing: border-box;
 
     :global([class*='tree-sortable-item--drop-inside']) & &-title {
       outline: 2px dashed var(--rp-ui-base-topaz-focused);
