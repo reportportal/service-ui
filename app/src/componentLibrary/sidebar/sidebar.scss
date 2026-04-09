@@ -44,11 +44,11 @@
   gap: 32px;
   background-image: linear-gradient(
     to right,
-    $COLOR--darkmode-gray-500 0 48px,
-    $COLOR--darkmode-gray-450 48px 100%
+    $COLOR--darkmode-gray-500 0 var(--sidebar-collapsed-width),
+    $COLOR--darkmode-gray-450 var(--sidebar-collapsed-width) 100%
   );
   z-index: 3;
-  width: 328px;
+  width: var(--sidebar-full-width);
   align-items: start;
 }
 

@@ -31,7 +31,7 @@ const SIDEBAR_OPEN_DURATION_MS = SIDEBAR_TRANSITION_DELAY_MS + SIDEBAR_TRANSITIO
 
 const SIDEBAR_CSS_VARS = {
   '--sidebar-collapsed-width': `${COLLAPSED_WIDTH_PX}px`,
-  '--sidebar-full-width': '328px',
+  '--sidebar-full-width': `${SIDEBAR_FULL_WIDTH_PX}px`,
   '--sidebar-transition-duration': `${SIDEBAR_TRANSITION_DURATION_MS}ms`,
   '--sidebar-transition-delay': `${SIDEBAR_TRANSITION_DELAY_MS}ms`,
   '--sidebar-open-duration': `${SIDEBAR_OPEN_DURATION_MS}ms`,
