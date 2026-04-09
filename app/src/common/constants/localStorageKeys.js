@@ -15,3 +15,4 @@
  */
 
 export const APPLICATION_SETTINGS = 'applicationSettings';
+export const LAUNCH_EXPORT_MODAL = 'launchExportModal';

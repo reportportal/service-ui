@@ -335,12 +335,13 @@ export const LAUNCHES_MODAL_EVENTS = {
     element_name: 'delete',
     condition: isBulk ? 'bulk' : 'single',
   }),
-  getClickExportLaunchBtnModalEvent: (type, isWithAttachments) => ({
+  getClickExportLaunchBtnModalEvent: (type, isWithAttachments, folderStructureCondition) => ({
     ...basicClickEventParametersLaunchPage,
     modal: 'export_report',
     element_name: 'export',
-    type,
+    type: String(type).toLowerCase(),
     status: isWithAttachments ? 'active' : 'disable',
+    condition: folderStructureCondition,
   }),
   // GA3 events and GA4 events
   // EDIT_ITEMS_MODAL
