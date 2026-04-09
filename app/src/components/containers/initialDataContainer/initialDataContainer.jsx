@@ -61,11 +61,12 @@ export class InitialDataContainer extends Component {
     const { isInitialDataReady, serviceAvailability } = this.props;
     const { checked, apiUnavailable } = serviceAvailability;
 
-    if (!isInitialDataReady || this.hasPerformedInitialDispatch) {
-      return;
-    }
-
-    if (checked && apiUnavailable) {
+    if (
+      !isInitialDataReady ||
+      !checked ||
+      apiUnavailable ||
+      this.hasPerformedInitialDispatch
+    ) {
       return;
     }
 
