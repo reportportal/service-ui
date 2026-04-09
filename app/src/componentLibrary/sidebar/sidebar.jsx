@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useOnClickOutside } from 'common/hooks';
@@ -48,8 +48,11 @@ export const Sidebar = ({
 
   const sidebarRef = useRef(null);
   const openTimerRef = useRef(null);
+  const openRequestIdRef = useRef(0);
 
   const onCloseSidebar = () => {
+    openRequestIdRef.current += 1;
+    clearTimeout(openTimerRef.current);
     setIsOpenSidebar(false);
   };
 
@@ -60,6 +63,8 @@ export const Sidebar = ({
   }, [isOpenSidebar]);
 
   useOnClickOutside(sidebarRef, handleClickOutside);
+
+  useEffect(() => () => clearTimeout(openTimerRef.current), []);
 
   const onOpenSidebar = () => {
     setIsOpenSidebar(true);
@@ -75,6 +80,8 @@ export const Sidebar = ({
 
   const afterOpenSidebar = (callback) => {
     const el = sidebarRef.current;
+    openRequestIdRef.current += 1;
+    const requestId = openRequestIdRef.current;
     if (!el) {
       callback();
       return;
@@ -84,7 +91,7 @@ export const Sidebar = ({
 
     let fired = false;
     const fire = () => {
-      if (!fired) {
+      if (!fired && requestId === openRequestIdRef.current) {
         fired = true;
         callback();
       }
