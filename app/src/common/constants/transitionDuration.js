@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,17 +14,4 @@
  * limitations under the License.
  */
 
-.with-popover-wrapper {
-  display: inline-block;
-  width: 100%;
-}
-
-.with-popover {
-  display: block;
-  width: fit-content;
-  height: fit-content;
-  padding: 0;
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-}
+export const transitionDuration = { open: 800, close: 0 };

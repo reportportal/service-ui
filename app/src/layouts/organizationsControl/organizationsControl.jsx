@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
+import { Popover } from '@reportportal/ui-kit';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
+import { transitionDuration } from 'common/constants/transitionDuration';
 import { NavLink } from 'components/main/navLink';
-import { withPopover } from 'componentLibrary/popover';
 import { useTracking } from 'react-tracking';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import ArrowLeftIcon from './img/arrow-left-inline.svg';
@@ -29,16 +30,16 @@ import styles from './organizationsControl.scss';
 const cx = classNames.bind(styles);
 
 export const OrganizationsControl = ({
-  isPopoverOpen,
-  onClick,
-  closeSidebar,
   link,
   titles,
-  isExtendedNav,
+  isExtendedNav = false,
+  isPopoverOpen,
+  closeSidebar,
+  onClick,
 }) => {
   const { trackEvent } = useTracking();
   return (
-    <button className={cx('organizations-control-wrapper')} onClick={onClick}>
+    <button className={cx('organizations-control-wrapper')} onClick={onClick} tabIndex={0}>
       <button className={cx('short-title', { 'no-uppercase': !isExtendedNav })}>
         {titles.shortTitle}
       </button>
@@ -82,25 +83,58 @@ export const OrganizationsControl = ({
 };
 
 OrganizationsControl.propTypes = {
-  isPopoverOpen: PropTypes.bool.isRequired,
-  onClick: PropTypes.func.isRequired,
-  closeSidebar: PropTypes.func.isRequired,
   link: PropTypes.object.isRequired,
   titles: PropTypes.object.isRequired,
   isExtendedNav: PropTypes.bool,
+  isPopoverOpen: PropTypes.bool.isRequired,
+  closeSidebar: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 
-OrganizationsControl.defaultProps = {
-  isExtendedNav: false,
+export const OrganizationsControlWithPopover = ({
+  link,
+  titles,
+  isExtendedNav,
+  isOpenPopover,
+  closeSidebar,
+  onClick,
+  togglePopover,
+}) => {
+  const closePopover = () => {
+    togglePopover(false);
+  };
+
+  return (
+    <div className={cx('popover-control')}>
+      <Popover
+        isFocusDisabled
+        className={cx('popover')}
+        placement="right-start"
+        strategy="fixed"
+        transitionDuration={transitionDuration}
+        isOpened={isOpenPopover}
+        content={<OrganizationsPopover closePopover={closePopover} closeSidebar={closeSidebar} />}
+        setIsOpened={togglePopover}
+      >
+        <OrganizationsControl
+          link={link}
+          titles={titles}
+          isPopoverOpen={isOpenPopover}
+          isExtendedNav={isExtendedNav}
+          closeSidebar={closeSidebar}
+          onClick={onClick}
+        />
+      </Popover>
+    </div>
+  );
 };
 
-export const OrganizationsControlWithPopover = withPopover({
-  ContentComponent: OrganizationsPopover,
-  side: 'right',
-  popoverClassName: cx('popover'),
-  popoverWrapperClassName: cx('popover-control'),
-  variant: 'dark',
-  arrowVerticalPosition: 'vertical-top',
-  topPosition: 96,
-  tabIndex: 0,
-})(OrganizationsControl);
+OrganizationsControlWithPopover.propTypes = {
+  link: PropTypes.object.isRequired,
+  titles: PropTypes.object.isRequired,
+  isExtendedNav: PropTypes.bool,
+  isOpenPopover: PropTypes.bool.isRequired,
+  closeSidebar: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
+  togglePopover: PropTypes.func.isRequired,
+};
