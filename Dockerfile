@@ -1,7 +1,8 @@
 # Only for technical/build aims, built image will be with nginxinc/nginx-unprivileged:alpine according to the last step
 
 
-FROM alpine:3.20.3 AS generate-build-info
+FROM alpine:3.23.3 AS generate-build-info
+RUN apk update && apk upgrade --no-cache zlib
 RUN mkdir -p /usr/src/app/build
 WORKDIR /usr/src
 ARG APP_VERSION=develop
@@ -10,6 +11,7 @@ ARG BUILD_DATE
 RUN echo {\"build\": { \"version\": \"${APP_VERSION}\", \"branch\": \"${BUILD_BRANCH}\", \"build_date\": \"${BUILD_DATE}\", \"name\": \"Service UI\", \"repo\": \"reportportal/service-ui\"}} > ./app/build/buildInfo.json
 
 FROM node:20-alpine AS build-frontend
+RUN apk update && apk upgrade --no-cache zlib
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY ./app/ /usr/src/app/
@@ -19,6 +21,8 @@ RUN npm ci --legacy-peer-deps && npm run build
 FROM nginxinc/nginx-unprivileged:alpine
 
 USER root
+
+RUN apk update && apk upgrade --no-cache zlib
 
 COPY --from=build-frontend /usr/src/app/build /usr/share/nginx/html
 COPY --from=generate-build-info /usr/src/app/build /usr/share/nginx/html
