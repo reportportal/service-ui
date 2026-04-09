@@ -157,7 +157,7 @@ export class ActionPanel extends Component {
       selectedLaunches,
     } = this.props;
 
-    const isLaunchInProgress = (launch) => launch?.status === IN_PROGRESS.toUpperCase();
+    const isLaunchInProgress = (launch) => String(launch?.status || '').toLowerCase() === IN_PROGRESS;
     const hasLaunchInProgressInSelection = selectedLaunches.some(isLaunchInProgress);
     const exportReportDisabled = !selectedLaunches.length || hasLaunchInProgressInSelection;
     const exportReportTitle = hasLaunchInProgressInSelection
