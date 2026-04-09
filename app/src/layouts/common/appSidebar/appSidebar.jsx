@@ -63,7 +63,7 @@ export const AppSidebar = ({
     </div>
   );
 
-  const createFooterBlock = (openSidebar, closeSidebar, getIsSidebarCollapsed) => (
+  const createFooterBlock = (openSidebar, closeSidebar, getIsSidebarCollapsed, afterOpenSidebar) => (
     <>
       {isEnabled && (
         <div className={cx('policy-block')}>
@@ -81,13 +81,18 @@ export const AppSidebar = ({
       <ServiceWithPopover
         closeSidebar={closeSidebar}
         isOpenPopover={isOpenSupportPopover}
-        togglePopover={setIsOpenSupportPopover}
+        togglePopover={(open) => {
+          if (open) {
+            openSidebar();
+            afterOpenSidebar(() => setIsOpenSupportPopover(true));
+          } else {
+            setIsOpenSupportPopover(false);
+          }
+        }}
         isFaqTouched={isFaqTouched}
         onOpen={setIsFaqTouched}
         title={formatMessage(messages.helpAndServiceVersions)}
         onClick={() => {
-          openSidebar();
-          setIsOpenSupportPopover(!isOpenSupportPopover);
           const isSidebarCollapsed = getIsSidebarCollapsed();
           trackEvent(
             SIDEBAR_EVENTS.onClickItem({
@@ -100,11 +105,16 @@ export const AppSidebar = ({
       <UserControlWithPopover
         closeSidebar={closeSidebar}
         isOpenPopover={isOpenAvatarPopover}
-        togglePopover={setIsOpenAvatarPopover}
+        togglePopover={(open) => {
+          if (open) {
+            openSidebar();
+            afterOpenSidebar(() => setIsOpenAvatarPopover(true));
+          } else {
+            setIsOpenAvatarPopover(false);
+          }
+        }}
         linkToUserProfilePage={linkToUserProfilePage}
         onClick={() => {
-          openSidebar();
-          setIsOpenAvatarPopover(!isOpenAvatarPopover);
           const isSidebarCollapsed = getIsSidebarCollapsed();
           trackEvent(
             SIDEBAR_EVENTS.onClickItem({

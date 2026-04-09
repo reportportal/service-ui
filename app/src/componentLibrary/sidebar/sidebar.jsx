@@ -23,7 +23,19 @@ import styles from './sidebar.scss';
 
 const cx = classNames.bind(styles);
 
-const COLLAPSED_WIDTH = 48;
+const COLLAPSED_WIDTH_PX = 48;
+const SIDEBAR_FULL_WIDTH_PX = 328;
+const SIDEBAR_TRANSITION_DELAY_MS = 500;
+const SIDEBAR_TRANSITION_DURATION_MS = 300;
+const SIDEBAR_OPEN_DURATION_MS = SIDEBAR_TRANSITION_DELAY_MS + SIDEBAR_TRANSITION_DURATION_MS;
+
+const SIDEBAR_CSS_VARS = {
+  '--sidebar-collapsed-width': `${COLLAPSED_WIDTH_PX}px`,
+  '--sidebar-full-width': '328px',
+  '--sidebar-transition-duration': `${SIDEBAR_TRANSITION_DURATION_MS}ms`,
+  '--sidebar-transition-delay': `${SIDEBAR_TRANSITION_DELAY_MS}ms`,
+  '--sidebar-open-duration': `${SIDEBAR_OPEN_DURATION_MS}ms`,
+};
 
 export const Sidebar = ({
   logoBlock,
@@ -35,6 +47,7 @@ export const Sidebar = ({
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
 
   const sidebarRef = useRef(null);
+  const openTimerRef = useRef(null);
 
   const onCloseSidebar = () => {
     setIsOpenSidebar(false);
@@ -58,11 +71,61 @@ export const Sidebar = ({
     }
   };
 
-  const getIsSidebarCollapsed = () => COLLAPSED_WIDTH === sidebarRef.current?.offsetWidth;
+  const getIsSidebarCollapsed = () => COLLAPSED_WIDTH_PX === sidebarRef.current?.offsetWidth;
+
+  const afterOpenSidebar = (callback) => {
+    const el = sidebarRef.current;
+    if (!el) {
+      callback();
+      return;
+    }
+
+    clearTimeout(openTimerRef.current);
+
+    let fired = false;
+    const fire = () => {
+      if (!fired) {
+        fired = true;
+        callback();
+      }
+    };
+
+    // Double rAF ensures the browser has started the CSS transition before we measure width.
+    // getComputedStyle called synchronously after adding .open returns the CSS target value
+    // (328px), not the current animated value.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (!sidebarRef.current) {
+          fire();
+          return;
+        }
+        const currentWidth = parseFloat(window.getComputedStyle(el).width);
+        if (currentWidth >= SIDEBAR_FULL_WIDTH_PX - 1) {
+          fire();
+          return;
+        }
+
+        const handleTransitionEnd = (e) => {
+          if (e.propertyName === 'width' && e.target === el) {
+            el.removeEventListener('transitionend', handleTransitionEnd);
+            clearTimeout(openTimerRef.current);
+            fire();
+          }
+        };
+
+        el.addEventListener('transitionend', handleTransitionEnd);
+        openTimerRef.current = setTimeout(() => {
+          el.removeEventListener('transitionend', handleTransitionEnd);
+          fire();
+        }, SIDEBAR_OPEN_DURATION_MS);
+      });
+    });
+  };
 
   return (
     <div
       ref={sidebarRef}
+      style={SIDEBAR_CSS_VARS}
       className={cx('sidebar-container', { open: isOpenSidebar })}
       onMouseEnter={onOpenSidebar}
       onMouseLeave={onLeaveSidebar}
@@ -70,7 +133,7 @@ export const Sidebar = ({
       <aside className={cx('sidebar')}>
         {logoBlock}
         <div className={cx('main-block-wrapper')}>
-          {createMainBlock(onOpenSidebar, onCloseSidebar, getIsSidebarCollapsed)}
+          {createMainBlock(onOpenSidebar, onCloseSidebar, getIsSidebarCollapsed, afterOpenSidebar)}
         </div>
         {items.length > 0 && (
           <div className={cx('items-block')}>
@@ -95,7 +158,7 @@ export const Sidebar = ({
           </div>
         )}
         <div className={cx('footer-block')}>
-          {createFooterBlock(onOpenSidebar, onCloseSidebar, getIsSidebarCollapsed)}
+          {createFooterBlock(onOpenSidebar, onCloseSidebar, getIsSidebarCollapsed, afterOpenSidebar)}
         </div>
       </aside>
     </div>
