@@ -37,6 +37,7 @@ const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY, namespace: NAM
 
 export const OrganizationUsersPageHeader = ({
   hasPermission,
+  isNotEmpty,
   onInvite,
   isUsersLoading,
   searchValue,
@@ -44,8 +45,6 @@ export const OrganizationUsersPageHeader = ({
 }) => {
   const { formatMessage } = useIntl();
   const organization = useSelector(activeOrganizationSelector);
-  const usersCount = organization?.relationships?.users?.meta.count;
-  const isNotEmpty = usersCount > 0;
   const organizationSlug = organization?.name;
 
   const breadcrumbs = [
@@ -90,6 +89,7 @@ export const OrganizationUsersPageHeader = ({
 
 OrganizationUsersPageHeader.propTypes = {
   hasPermission: PropTypes.bool,
+  isNotEmpty: PropTypes.bool,
   isUsersLoading: PropTypes.bool.isRequired,
   searchValue: PropTypes.string.isRequired,
   setSearchValue: PropTypes.func.isRequired,
@@ -97,5 +97,6 @@ OrganizationUsersPageHeader.propTypes = {
 };
 
 OrganizationUsersPageHeader.defaultProps = {
+  isNotEmpty: false,
   onInvite: () => {},
 };

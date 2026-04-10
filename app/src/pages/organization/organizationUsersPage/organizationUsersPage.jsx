@@ -111,6 +111,7 @@ const OrganizationUsersPageComponent = ({
       <div className={cx('organization-users-page')}>
         <OrganizationUsersPageHeader
           hasPermission={canInviteUserToOrganization}
+          isNotEmpty={itemCount > 0}
           isUsersLoading={isUsersLoading}
           searchValue={searchValue}
           setSearchValue={setSearchValue}

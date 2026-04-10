@@ -161,6 +161,8 @@ const OrganizationProjectsPageComponent = ({
     <div className={cx('organization-projects-container')}>
       <ProjectsPageHeader
         hasPermission={canCreateProject}
+        isNotEmpty={itemCount > 0}
+        projectsCount={itemCount}
         onCreateProject={showCreateProjectModal}
         searchValue={searchValue}
         setSearchValue={setSearchValue}
