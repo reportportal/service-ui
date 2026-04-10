@@ -118,11 +118,11 @@ export const LaunchExportModal = ({ id, name, launches: launchesProp }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const [exportType, setExportType] = useState(PDF_EXPORT);
-  const [includeAttachments, setIncludeAttachments] = useState(
-    () => readInitialAttachmentPreferences().includeAttachments,
-  );
+  const { includeAttachments: initialInclude, exportAttachmentsWithoutPreservingFolders: initialNoFolders } =
+    readInitialAttachmentPreferences();
+  const [includeAttachments, setIncludeAttachments] = useState(initialInclude);
   const [exportAttachmentsWithoutPreservingFolders, setExportAttachmentsWithoutPreservingFolders] =
-    useState(() => readInitialAttachmentPreferences().exportAttachmentsWithoutPreservingFolders);
+    useState(initialNoFolders);
   const dispatch = useDispatch();
   const projectId = useSelector(activeProjectSelector);
   const launches = normalizeLaunches(launchesProp, id, name);
