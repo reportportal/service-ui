@@ -37,6 +37,7 @@ export const MilestoneCard = ({
   milestone,
   onEditMilestone,
   onDuplicateMilestone,
+  onChangeMilestoneStatus,
 }: MilestoneCardProps) => {
   const { formatMessage } = useIntl();
   const [expanded, setExpanded] = useState(false);
@@ -94,7 +95,10 @@ export const MilestoneCard = ({
             </span>
           </div>
         </div>
-        <MilestoneCardStatusButton milestone={milestone} />
+        <MilestoneCardStatusButton
+          milestone={milestone}
+          onChangeMilestoneStatus={onChangeMilestoneStatus}
+        />
         <MilestoneCardActionsMenu
           milestone={milestone}
           onEditMilestone={onEditMilestone}

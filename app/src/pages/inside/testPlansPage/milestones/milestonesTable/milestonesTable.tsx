@@ -23,6 +23,7 @@ import {
   MILESTONES_NAMESPACE,
   milestonesPageSelector,
   TmsMilestoneRS,
+  TmsMilestoneStatus,
 } from 'controllers/milestone';
 import { useProjectDetails } from 'hooks/useTypedSelector';
 import { TABLE_PAGE_SIZE_OPTIONS } from 'pages/inside/common/paginationConstants';
@@ -39,6 +40,7 @@ interface MilestonesTableProps {
   isLoading: boolean;
   onEditMilestone?: (milestone: TmsMilestoneRS) => void;
   onDuplicateMilestone?: (milestone: TmsMilestoneRS) => void;
+  onChangeMilestoneStatus?: (milestone: TmsMilestoneRS, targetStatus: TmsMilestoneStatus) => void;
 }
 
 export const MilestonesTable = ({
@@ -46,6 +48,7 @@ export const MilestonesTable = ({
   isLoading,
   onEditMilestone,
   onDuplicateMilestone,
+  onChangeMilestoneStatus,
 }: MilestonesTableProps) => {
   const milestonesPageData = useSelector(milestonesPageSelector);
   const { organizationSlug, projectSlug } = useProjectDetails();
@@ -78,6 +81,7 @@ export const MilestonesTable = ({
               milestone={milestone}
               onEditMilestone={onEditMilestone}
               onDuplicateMilestone={onDuplicateMilestone}
+              onChangeMilestoneStatus={onChangeMilestoneStatus}
             />
           ))
         )}
