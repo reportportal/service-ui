@@ -17,7 +17,7 @@
 import { Action } from 'redux';
 import { takeLatest, call, select, all, put, cancelled } from 'redux-saga/effects';
 import { isString } from 'es-toolkit';
-import { isEmpty, isNil } from 'es-toolkit/compat';
+import { isEmpty, isNil, isNumber } from 'es-toolkit/compat';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -59,6 +59,13 @@ import {
   MANUAL_LAUNCH_STATUS_FILTER_KEY,
   MANUAL_LAUNCH_FOLDER_SEARCH_FILTER_KEY,
   MANUAL_LAUNCH_FOLDER_STATUS_FILTER_KEY,
+  MANUAL_LAUNCH_ITEM_STATUS_FILTER_KEY,
+  MANUAL_LAUNCH_COMPLETION_FILTER_KEY,
+  MANUAL_LAUNCH_START_TIME_GT_FILTER_KEY,
+  MANUAL_LAUNCH_END_TIME_LT_FILTER_KEY,
+  MANUAL_LAUNCH_TEST_PLAN_ID_FILTER_KEY,
+  MANUAL_LAUNCH_ATTRIBUTE_KEY_FILTER_KEY,
+  MANUAL_LAUNCH_ATTRIBUTE_VALUE_FILTER_KEY,
   defaultManualLaunchesQueryParams,
 } from './constants';
 import {
@@ -99,13 +106,57 @@ function* getManualLaunches(action: GetManualLaunchesAction): Generator {
 
     const trimmedNameSearch = action.payload?.searchQuery?.trim();
 
-    const params: Record<string, string | number | undefined> = action.payload
-      ? {
-          limit: action.payload.limit,
-          offset: action.payload.offset,
-          [MANUAL_LAUNCH_NAME_FILTER_KEY]: trimmedNameSearch || undefined,
+    let params: Record<string, string | number | undefined>;
+
+    if (action.payload) {
+      const {
+        limit,
+        offset,
+        filterStatuses,
+        filterCompletion,
+        filterStartTimeFrom,
+        filterEndTimeTo,
+        filterTestPlan,
+        filterAttributeKey,
+        filterAttributeValue,
+      } = action.payload;
+
+      params = {
+        limit,
+        offset,
+        [MANUAL_LAUNCH_NAME_FILTER_KEY]: trimmedNameSearch || undefined,
+      };
+
+      if (filterStatuses && !isEmpty(filterStatuses)) {
+        params[MANUAL_LAUNCH_ITEM_STATUS_FILTER_KEY] = filterStatuses.join(',');
+      }
+
+      if (filterCompletion) {
+        params[MANUAL_LAUNCH_COMPLETION_FILTER_KEY] = filterCompletion;
+      }
+
+      if (isNumber(filterStartTimeFrom)) {
+        params[MANUAL_LAUNCH_START_TIME_GT_FILTER_KEY] = filterStartTimeFrom;
+      }
+
+      if (isNumber(filterEndTimeTo)) {
+        params[MANUAL_LAUNCH_END_TIME_LT_FILTER_KEY] = filterEndTimeTo;
+      }
+
+      if (filterTestPlan) {
+        params[MANUAL_LAUNCH_TEST_PLAN_ID_FILTER_KEY] = filterTestPlan;
+      }
+
+      if (filterAttributeKey) {
+        params[MANUAL_LAUNCH_ATTRIBUTE_KEY_FILTER_KEY] = filterAttributeKey;
+        if (filterAttributeValue) {
+          params[MANUAL_LAUNCH_ATTRIBUTE_VALUE_FILTER_KEY] = filterAttributeValue;
         }
-      : defaultManualLaunchesQueryParams;
+      }
+    } else {
+      params = { ...defaultManualLaunchesQueryParams };
+    }
+
     const data = (yield call(
       fetch,
       typedURLS.manualLaunchesListPagination(projectKey, params),

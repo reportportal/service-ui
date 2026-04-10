@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useIntl } from 'react-intl';
-import { DatePicker, ClearIcon, ChevronDownDropdownIcon } from '@reportportal/ui-kit';
+import { DatePicker, Dropdown } from '@reportportal/ui-kit';
 
-import { createClassnames } from 'common/utils';
+import { createClassnames, isString } from 'common/utils';
 
 import {
   START_TIME_PRESETS,
@@ -32,8 +32,11 @@ import type { StartTimeValue } from '../types';
 import { getPresetDateRange, formatDateDisplay } from './utils';
 import { messages } from '../messages';
 import styles from './startTimeFilter.scss';
+import { isEmpty } from 'es-toolkit/compat';
 
 const cx = createClassnames(styles);
+
+const CUSTOM_RANGE_VALUE = '__custom_range__';
 
 interface StartTimeFilterProps {
   value: StartTimeValue | null;
@@ -42,8 +45,6 @@ interface StartTimeFilterProps {
 
 export const StartTimeFilter = ({ value, onChange }: StartTimeFilterProps) => {
   const { formatMessage } = useIntl();
-  const [isOpen, setIsOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   const presetOptions = useMemo(
     () => [
@@ -55,141 +56,97 @@ export const StartTimeFilter = ({ value, onChange }: StartTimeFilterProps) => {
     [formatMessage],
   );
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen]);
-
-  const handlePresetClick = useCallback(
-    (preset: string) => {
-      const range = getPresetDateRange(preset);
-
-      onChange({ preset, ...range });
-      setIsOpen(false);
-    },
-    [onChange],
-  );
-
-  const handleDateRangeChange = useCallback(
-    ([startDate, endDate]: [Date | undefined, Date | undefined]) => {
-      if (startDate && endDate) {
-        const normalizedEnd = new Date(endDate);
-
-        normalizedEnd.setHours(END_OF_DAY_HOURS, END_OF_DAY_MINUTES, END_OF_DAY_SECONDS, END_OF_DAY_MS);
-        onChange({ startDate, endDate: normalizedEnd });
-        setIsOpen(false);
-      } else if (startDate) {
-        onChange({ startDate, endDate: undefined });
-      }
-    },
-    [onChange],
-  );
-
-  const displayValue = useMemo(() => {
+  const dropdownValue = useMemo(() => {
     if (!value) {
       return '';
     }
     if (value.preset) {
-      return presetOptions.find((opt) => opt.value === value.preset)?.label ?? '';
+      return value.preset;
     }
     if (value.startDate && value.endDate) {
-      return formatMessage(messages.dateRangeSeparator, {
-        startDate: formatDateDisplay(value.startDate),
-        endDate: formatDateDisplay(value.endDate),
-      });
+      return CUSTOM_RANGE_VALUE;
     }
     return '';
-  }, [value, presetOptions, formatMessage]);
+  }, [value]);
 
-  const handleClear = useCallback(
-    (event: React.MouseEvent) => {
-      event.stopPropagation();
-      onChange(null);
+  const handleDropdownChange = useCallback(
+    (selected: string) => {
+      if (!isString(selected) || isEmpty(selected) || selected === CUSTOM_RANGE_VALUE) {
+        return;
+      }
+      const range = getPresetDateRange(selected);
+
+      onChange({ preset: selected, ...range });
     },
     [onChange],
   );
 
-  const toggleOpen = () => setIsOpen((prev) => !prev);
+  const handleClear = useCallback(() => {
+    onChange(null);
+  }, [onChange]);
+
+  const formatDisplayedValue = useCallback(
+    (displayedValue: string | undefined) => {
+      if (value && !value.preset && value.startDate && value.endDate) {
+        return formatMessage(messages.dateRangeSeparator, {
+          startDate: formatDateDisplay(value.startDate),
+          endDate: formatDateDisplay(value.endDate),
+        });
+      }
+      return displayedValue ?? '';
+    },
+    [value, formatMessage],
+  );
+
+  const renderFooter = useCallback(
+    (closeDropdown: () => void) => {
+      const handleDateRangeChange = ([startDate, endDate]: [
+        Date | undefined,
+        Date | undefined,
+      ]) => {
+        if (startDate && endDate) {
+          const normalizedEnd = new Date(endDate);
+
+          normalizedEnd.setHours(
+            END_OF_DAY_HOURS,
+            END_OF_DAY_MINUTES,
+            END_OF_DAY_SECONDS,
+            END_OF_DAY_MS,
+          );
+          onChange({ startDate, endDate: normalizedEnd });
+          closeDropdown();
+        } else if (startDate) {
+          onChange({ startDate, endDate: undefined });
+        }
+      };
+
+      return (
+        <div className={cx('custom-range-section')}>
+          <div className={cx('custom-range-label')}>{formatMessage(messages.customRange)}</div>
+          <DatePicker
+            selectsRange
+            value={value?.preset ? [undefined, undefined] : [value?.startDate, value?.endDate]}
+            onChange={handleDateRangeChange}
+            dateFormat="MM-dd-yyyy"
+            placeholder={formatMessage(messages.customRangePlaceholder)}
+          />
+        </div>
+      );
+    },
+    [value, onChange, formatMessage],
+  );
 
   return (
-    <div className={cx('start-time-filter')} ref={containerRef}>
-      <div className={cx('trigger', { open: isOpen })}>
-        <button
-          type="button"
-          className={cx('trigger-open')}
-          onClick={toggleOpen}
-          aria-expanded={isOpen}
-          aria-haspopup="listbox"
-        >
-          <span className={cx('trigger-text', { placeholder: !displayValue })}>
-            {displayValue || formatMessage(messages.selectStartTime)}
-          </span>
-        </button>
-        <div className={cx('trigger-icons')}>
-          {displayValue && (
-            <button
-              type="button"
-              className={cx('clear-icon')}
-              onClick={handleClear}
-              aria-label={formatMessage(messages.clearStartTime)}
-            >
-              <ClearIcon />
-            </button>
-          )}
-          <button
-            type="button"
-            className={cx('trigger-chevron')}
-            onClick={toggleOpen}
-            aria-hidden
-            tabIndex={-1}
-          >
-            <span className={cx('trigger-arrow', { open: isOpen })}>
-              <ChevronDownDropdownIcon />
-            </span>
-          </button>
-        </div>
-      </div>
-
-      {isOpen && (
-        <div className={cx('dropdown')}>
-          <div className={cx('preset-list')}>
-            {presetOptions.map((option) => (
-              <button
-                key={option.value}
-                type="button"
-                className={cx('preset-option', { selected: value?.preset === option.value })}
-                onClick={() => handlePresetClick(option.value)}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
-          <div className={cx('divider')} />
-          <div className={cx('custom-range-section')}>
-            <div className={cx('custom-range-label')}>
-              {formatMessage(messages.customRange)}
-            </div>
-            <DatePicker
-              selectsRange
-              value={value?.preset ? [undefined, undefined] : [value?.startDate, value?.endDate]}
-              onChange={handleDateRangeChange}
-              dateFormat="MM-dd-yyyy"
-              placeholder={formatMessage(messages.customRangePlaceholder)}
-            />
-          </div>
-        </div>
-      )}
-    </div>
+    <Dropdown
+      options={presetOptions}
+      value={dropdownValue}
+      onChange={handleDropdownChange}
+      placeholder={formatMessage(messages.selectStartTime)}
+      formatDisplayedValue={formatDisplayedValue}
+      footer={renderFooter}
+      clearable
+      onClear={handleClear}
+      notScrollable
+    />
   );
 };

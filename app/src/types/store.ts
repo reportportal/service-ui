@@ -36,6 +36,13 @@ export interface LocationQuery {
   filterPriorities?: string;
   filterTags?: string;
   statusFilter?: string;
+  filterStatuses?: string;
+  filterCompletion?: string;
+  filterStartTimeFrom?: string;
+  filterStartTimeTo?: string;
+  filterTestPlan?: string;
+  filterAttributeKey?: string;
+  filterAttributeValue?: string;
 }
 
 export interface BaseAppState {

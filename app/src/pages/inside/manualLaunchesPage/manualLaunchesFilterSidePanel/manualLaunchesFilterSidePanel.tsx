@@ -28,7 +28,7 @@ import { createPortal } from 'react-dom';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import isEqual from 'fast-deep-equal';
-import { Button, SidePanel, Dropdown, Checkbox } from '@reportportal/ui-kit';
+import { Button, SidePanel, Dropdown, Checkbox, Radio } from '@reportportal/ui-kit';
 import { isEmpty, isString } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
@@ -116,12 +116,21 @@ export const ManualLaunchesFilterSidePanel = memo(
 
   const completionOptions = useMemo(
     () => [
-      { value: COMPLETION_VALUES.ALL, label: formatMessage(messages.completionAll) },
+      {
+        value: COMPLETION_VALUES.ALL,
+        label: formatMessage(messages.completionAll),
+        disabled: false,
+      },
       {
         value: COMPLETION_VALUES.HAS_NOT_EXECUTED_TESTS,
         label: formatMessage(messages.completionHasNotExecutedTests),
+        disabled: false,
       },
-      { value: COMPLETION_VALUES.DONE, label: formatMessage(messages.completionDone) },
+      {
+        value: COMPLETION_VALUES.DONE,
+        label: formatMessage(messages.completionDone),
+        disabled: false,
+      },
     ],
     [formatMessage],
   );
@@ -136,8 +145,8 @@ export const ManualLaunchesFilterSidePanel = memo(
     [],
   );
 
-  const handleCompletionChange = useCallback((value: string) => {
-    setLocalCompletion(value);
+  const handleCompletionChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    setLocalCompletion(event.target.value);
   }, []);
 
   const handleTestPlanChange = useCallback((value: string | string[] | null) => {
@@ -220,17 +229,12 @@ export const ManualLaunchesFilterSidePanel = memo(
       <FilterSectionBlock label={formatMessage(messages.launchCompletion)}>
         <div className={cx('radio-group')}>
           {completionOptions.map((option) => (
-            <label key={option.value} className={cx('radio-option')}>
-              <input
-                type="radio"
-                name="launchCompletion"
-                value={option.value}
-                checked={localCompletion === option.value}
-                onChange={() => handleCompletionChange(option.value)}
-                className={cx('radio-input')}
-              />
-              <span className={cx('radio-label')}>{option.label}</span>
-            </label>
+            <Radio
+              key={option.value}
+              option={option}
+              value={localCompletion}
+              onChange={handleCompletionChange}
+            />
           ))}
         </div>
       </FilterSectionBlock>

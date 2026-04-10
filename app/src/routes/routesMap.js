@@ -142,6 +142,7 @@ import {
   buildGetManualLaunchTestCaseExecutionsParams,
   getManualLaunchDetailsFetchParams,
 } from 'controllers/manualLaunch';
+import { MANUAL_LAUNCHES_FILTER_URL_KEYS } from 'pages/inside/manualLaunchesPage/manualLaunchesFilterSidePanel';
 import { getRouterParams } from 'common/utils';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
@@ -388,9 +389,36 @@ const routesMap = {
         state,
       });
 
-      const searchQuery = state.location?.query?.searchQuery;
+      const query = state.location?.query ?? {};
+      const searchQuery = query.searchQuery;
 
-      dispatch(getManualLaunchesAction({ offset, limit, searchQuery }));
+      const rawStatuses = query[MANUAL_LAUNCHES_FILTER_URL_KEYS.STATUSES];
+      const filterStatuses = rawStatuses
+        ? rawStatuses.split(',').filter(Boolean)
+        : undefined;
+
+      const rawStartTimeFrom = query[MANUAL_LAUNCHES_FILTER_URL_KEYS.START_TIME_FROM];
+      const filterStartTimeFrom = rawStartTimeFrom ? Number(rawStartTimeFrom) : undefined;
+
+      const rawStartTimeTo = query[MANUAL_LAUNCHES_FILTER_URL_KEYS.START_TIME_TO];
+      const filterEndTimeTo = rawStartTimeTo ? Number(rawStartTimeTo) : undefined;
+
+      dispatch(
+        getManualLaunchesAction({
+          offset,
+          limit,
+          searchQuery,
+          filterStatuses,
+          filterCompletion: query[MANUAL_LAUNCHES_FILTER_URL_KEYS.COMPLETION] || undefined,
+          filterStartTimeFrom:
+            Number.isFinite(filterStartTimeFrom) ? filterStartTimeFrom : undefined,
+          filterEndTimeTo: Number.isFinite(filterEndTimeTo) ? filterEndTimeTo : undefined,
+          filterTestPlan: query[MANUAL_LAUNCHES_FILTER_URL_KEYS.TEST_PLAN] || undefined,
+          filterAttributeKey: query[MANUAL_LAUNCHES_FILTER_URL_KEYS.ATTRIBUTE_KEY] || undefined,
+          filterAttributeValue:
+            query[MANUAL_LAUNCHES_FILTER_URL_KEYS.ATTRIBUTE_VALUE] || undefined,
+        }),
+      );
     },
   },
   [MANUAL_LAUNCH_DETAILS_PAGE]: {

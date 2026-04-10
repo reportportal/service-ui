@@ -34,7 +34,10 @@
     }
 
     &--filter-icon-wrapper {
-      height: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
     }
 
     .filters-icon-container {
@@ -42,7 +45,8 @@
       align-items: center;
       justify-content: center;
       width: 57px;
-      border-radius: 20px;
+      height: 36px;
+      border-radius: 16px;
 
       &:focus-visible {
         outline: 2px solid var(--rp-ui-base-dark-topaz-main);
@@ -80,7 +84,6 @@
 
       &.with-applied {
         gap: 8px;
-        height: 36px;
         background-color: var(--rp-ui-base-bg-200);
 
         i.filter-icon {

@@ -81,4 +81,8 @@ export const messages = defineMessages({
     id: 'ManualLaunchesFilterSidePanel.filterButton',
     defaultMessage: 'Filter launches',
   },
+  clearAllFiltersAriaLabel: {
+    id: 'ManualLaunchesFilterSidePanel.clearAllFiltersAriaLabel',
+    defaultMessage: 'Clear all filters',
+  },
 });
