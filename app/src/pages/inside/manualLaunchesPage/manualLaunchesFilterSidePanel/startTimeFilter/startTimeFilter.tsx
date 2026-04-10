@@ -17,6 +17,7 @@
 import { useCallback, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { DatePicker, Dropdown } from '@reportportal/ui-kit';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames, isString } from 'common/utils';
 
@@ -32,7 +33,6 @@ import type { StartTimeValue } from '../types';
 import { getPresetDateRange, formatDateDisplay } from './utils';
 import { messages } from '../messages';
 import styles from './startTimeFilter.scss';
-import { isEmpty } from 'es-toolkit/compat';
 
 const cx = createClassnames(styles);
 

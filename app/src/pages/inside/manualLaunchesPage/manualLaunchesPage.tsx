@@ -59,6 +59,7 @@ import {
   ManualLaunchesFilterSidePanel,
   EMPTY_FILTER,
   filterSidePanelMessages,
+  buildManualLaunchesBackendFilterParams,
   buildURLQueryFromFilters,
   parseFiltersFromURLQuery,
   MANUAL_LAUNCHES_FILTER_URL_KEYS,
@@ -171,6 +172,8 @@ export const ManualLaunchesPage = () => {
   }, [dispatch]);
 
   const handleRefresh = useCallback(() => {
+    const attributeParams = buildManualLaunchesBackendFilterParams(appliedFilters);
+
     dispatch(
       getManualLaunchesAction({
         offset,
@@ -185,8 +188,7 @@ export const ManualLaunchesPage = () => {
           ? appliedFilters.startTime.endDate.getTime()
           : undefined,
         filterTestPlan: appliedFilters.testPlan || undefined,
-        filterAttributeKey: appliedFilters.attributes[0]?.key,
-        filterAttributeValue: appliedFilters.attributes[0]?.value,
+        filterCompositeAttribute: attributeParams.filterCompositeAttribute,
       }),
     );
   }, [dispatch, offset, pageSize, appliedSearchQuery, appliedFilters, location?.query]);

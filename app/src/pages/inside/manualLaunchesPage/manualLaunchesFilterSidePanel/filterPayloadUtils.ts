@@ -16,6 +16,7 @@
 import { isEmpty } from 'es-toolkit/compat';
 
 import { compareStringsLocale } from 'common/utils';
+import { formatAttribute, parseQueryAttributes } from 'common/utils/attributeUtils';
 
 import { COMPLETION_VALUES, EMPTY_FILTER, LAUNCH_STATUSES } from './constants';
 import type { LaunchAttribute } from '../types';
@@ -72,8 +73,7 @@ export interface ManualLaunchesBackendFilterParams {
   startTimeFrom?: number;
   endTimeTo?: number;
   testPlanId?: string;
-  attributeKey?: string;
-  attributeValue?: string;
+  filterCompositeAttribute?: string;
 }
 
 export const buildManualLaunchesBackendFilterParams = (
@@ -86,11 +86,13 @@ export const buildManualLaunchesBackendFilterParams = (
   }
 
   const backendCompletion = COMPLETION_BACKEND_VALUES[payload.completion];
+
   if (backendCompletion) {
     params.completion = backendCompletion;
   }
 
   const { from, to } = getStartTimeRange(payload.startTime);
+
   if (from !== undefined) {
     params.startTimeFrom = from;
   }
@@ -102,17 +104,10 @@ export const buildManualLaunchesBackendFilterParams = (
     params.testPlanId = payload.testPlan;
   }
 
-  // TODO: multi-attribute semantics need backend confirmation (likely
-  // filter.has.compositeAttribute=k1:v1,k2:v2). Until then, only the first
-  // attribute chip is sent so the `.has.attributeKey` / `.has.attributeValue`
-  // pair remains unambiguous.
-  const [firstAttribute] = payload.attributes;
+  const attributesWithKey = payload.attributes.filter((a) => a.key?.trim());
 
-  if (firstAttribute?.key) {
-    params.attributeKey = firstAttribute.key;
-    if (firstAttribute.value) {
-      params.attributeValue = firstAttribute.value;
-    }
+  if (!isEmpty(attributesWithKey)) {
+    params.filterCompositeAttribute = attributesWithKey.map(formatAttribute).join(',');
   }
 
   return params;
@@ -124,9 +119,12 @@ const URL_KEYS = {
   START_TIME_FROM: 'filterStartTimeFrom',
   START_TIME_TO: 'filterStartTimeTo',
   TEST_PLAN: 'filterTestPlan',
-  ATTRIBUTE_KEY: 'filterAttributeKey',
-  ATTRIBUTE_VALUE: 'filterAttributeValue',
+  COMPOSITE_ATTRIBUTE: 'filterCompositeAttribute',
 } as const;
+
+const COMPOSITE_ATTRIBUTE_QUERY_KEY = 'filterAttributeComposite';
+const ATTRIBUTE_KEY_QUERY_KEY = 'filterAttributeKey';
+const ATTRIBUTE_VALUE_QUERY_KEY = 'filterAttributeValue';
 
 export const MANUAL_LAUNCHES_FILTER_URL_KEYS = URL_KEYS;
 
@@ -138,7 +136,7 @@ export const buildURLQueryFromFilters = (
   payload: ManualLaunchesFilterPayload,
 ): ManualLaunchesFilterURLQuery => {
   const { from, to } = getStartTimeRange(payload.startTime);
-  const [firstAttribute] = payload.attributes;
+  const backendAttributes = buildManualLaunchesBackendFilterParams(payload);
 
   return {
     [URL_KEYS.STATUSES]:
@@ -147,8 +145,7 @@ export const buildURLQueryFromFilters = (
     [URL_KEYS.START_TIME_FROM]: from !== undefined ? String(from) : undefined,
     [URL_KEYS.START_TIME_TO]: to !== undefined ? String(to) : undefined,
     [URL_KEYS.TEST_PLAN]: payload.testPlan ?? undefined,
-    [URL_KEYS.ATTRIBUTE_KEY]: firstAttribute?.key ?? undefined,
-    [URL_KEYS.ATTRIBUTE_VALUE]: firstAttribute?.value ?? undefined,
+    [URL_KEYS.COMPOSITE_ATTRIBUTE]: backendAttributes.filterCompositeAttribute,
   };
 };
 
@@ -194,11 +191,54 @@ const parseStartTime = (fromRaw?: string, toRaw?: string): StartTimeValue | null
   return { startDate, endDate };
 };
 
-const parseAttributes = (keyRaw?: string, valueRaw?: string): LaunchAttribute[] => {
+const parseAttributesFromKeyValue = (keyRaw?: string, valueRaw?: string): LaunchAttribute[] => {
   if (!keyRaw) {
     return [];
   }
   return [{ key: keyRaw, value: valueRaw ?? '' }];
+};
+
+const readCompositeFromQuery = (
+  query: Record<string, string | undefined>,
+): string | undefined => {
+  const raw =
+    query[URL_KEYS.COMPOSITE_ATTRIBUTE]?.trim() ||
+    query[COMPOSITE_ATTRIBUTE_QUERY_KEY]?.trim();
+
+  return raw || undefined;
+};
+
+export const resolveFilterCompositeAttributeForApi = (
+  query: Record<string, string | undefined> | undefined,
+): string | undefined => {
+  if (!query) {
+    return undefined;
+  }
+  const fromComposite = readCompositeFromQuery(query);
+
+  if (fromComposite) {
+    return fromComposite;
+  }
+  const keyRaw = query[ATTRIBUTE_KEY_QUERY_KEY]?.trim();
+
+  if (!keyRaw) {
+    return undefined;
+  }
+  return formatAttribute({
+    key: keyRaw,
+    value: query[ATTRIBUTE_VALUE_QUERY_KEY] ?? '',
+  });
+};
+
+const parseAttributesFromURL = (query: Record<string, string | undefined>): LaunchAttribute[] => {
+  const compositeRaw = readCompositeFromQuery(query);
+  if (compositeRaw) {
+    return parseQueryAttributes({ value: compositeRaw }).filter((a) => a.key?.trim());
+  }
+  const keyRaw = query[ATTRIBUTE_KEY_QUERY_KEY];
+  const valueRaw = query[ATTRIBUTE_VALUE_QUERY_KEY];
+
+  return parseAttributesFromKeyValue(keyRaw, valueRaw);
 };
 
 export const parseFiltersFromURLQuery = (
@@ -216,9 +256,6 @@ export const parseFiltersFromURLQuery = (
       query[URL_KEYS.START_TIME_TO],
     ),
     testPlan: query[URL_KEYS.TEST_PLAN] || null,
-    attributes: parseAttributes(
-      query[URL_KEYS.ATTRIBUTE_KEY],
-      query[URL_KEYS.ATTRIBUTE_VALUE],
-    ),
+    attributes: parseAttributesFromURL(query as Record<string, string | undefined>),
   };
 };

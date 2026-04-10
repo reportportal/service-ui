@@ -36,8 +36,7 @@ export interface GetManualLaunchesParams {
   filterStartTimeFrom?: number;
   filterEndTimeTo?: number;
   filterTestPlan?: string;
-  filterAttributeKey?: string;
-  filterAttributeValue?: string;
+  filterCompositeAttribute?: string;
 }
 
 export interface GetManualLaunchParams {

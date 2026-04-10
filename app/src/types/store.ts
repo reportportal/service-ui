@@ -41,8 +41,7 @@ export interface LocationQuery {
   filterStartTimeFrom?: string;
   filterStartTimeTo?: string;
   filterTestPlan?: string;
-  filterAttributeKey?: string;
-  filterAttributeValue?: string;
+  filterCompositeAttribute?: string;
 }
 
 export interface BaseAppState {

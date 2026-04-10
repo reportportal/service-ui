@@ -45,8 +45,8 @@ export const MANUAL_LAUNCH_COMPLETION_FILTER_KEY = 'filter.eq.completion' as con
 export const MANUAL_LAUNCH_START_TIME_GT_FILTER_KEY = 'filter.gt.startTime' as const;
 export const MANUAL_LAUNCH_END_TIME_LT_FILTER_KEY = 'filter.lt.endTime' as const;
 export const MANUAL_LAUNCH_TEST_PLAN_ID_FILTER_KEY = 'filter.eq.testPlanId' as const;
-export const MANUAL_LAUNCH_ATTRIBUTE_KEY_FILTER_KEY = 'filter.has.attributeKey' as const;
-export const MANUAL_LAUNCH_ATTRIBUTE_VALUE_FILTER_KEY = 'filter.has.attributeValue' as const;
+export const MANUAL_LAUNCH_COMPOSITE_ATTRIBUTE_FILTER_KEY =
+  'filter.has.compositeAttribute' as const;
 
 export const GET_MANUAL_LAUNCH_FILTERED_FOLDERS = 'getManualLaunchFilteredFolders' as const;
 export const SET_MANUAL_LAUNCH_FILTERED_FOLDERS = 'setManualLaunchFilteredFolders' as const;

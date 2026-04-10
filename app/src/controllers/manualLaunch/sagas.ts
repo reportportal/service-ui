@@ -64,8 +64,7 @@ import {
   MANUAL_LAUNCH_START_TIME_GT_FILTER_KEY,
   MANUAL_LAUNCH_END_TIME_LT_FILTER_KEY,
   MANUAL_LAUNCH_TEST_PLAN_ID_FILTER_KEY,
-  MANUAL_LAUNCH_ATTRIBUTE_KEY_FILTER_KEY,
-  MANUAL_LAUNCH_ATTRIBUTE_VALUE_FILTER_KEY,
+  MANUAL_LAUNCH_COMPOSITE_ATTRIBUTE_FILTER_KEY,
   defaultManualLaunchesQueryParams,
 } from './constants';
 import {
@@ -117,8 +116,7 @@ function* getManualLaunches(action: GetManualLaunchesAction): Generator {
         filterStartTimeFrom,
         filterEndTimeTo,
         filterTestPlan,
-        filterAttributeKey,
-        filterAttributeValue,
+        filterCompositeAttribute,
       } = action.payload;
 
       params = {
@@ -147,11 +145,8 @@ function* getManualLaunches(action: GetManualLaunchesAction): Generator {
         params[MANUAL_LAUNCH_TEST_PLAN_ID_FILTER_KEY] = filterTestPlan;
       }
 
-      if (filterAttributeKey) {
-        params[MANUAL_LAUNCH_ATTRIBUTE_KEY_FILTER_KEY] = filterAttributeKey;
-        if (filterAttributeValue) {
-          params[MANUAL_LAUNCH_ATTRIBUTE_VALUE_FILTER_KEY] = filterAttributeValue;
-        }
+      if (filterCompositeAttribute) {
+        params[MANUAL_LAUNCH_COMPOSITE_ATTRIBUTE_FILTER_KEY] = filterCompositeAttribute;
       }
     } else {
       params = { ...defaultManualLaunchesQueryParams };

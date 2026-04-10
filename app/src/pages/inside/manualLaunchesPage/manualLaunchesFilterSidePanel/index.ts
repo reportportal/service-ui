@@ -22,6 +22,7 @@ export {
   buildManualLaunchesBackendFilterParams,
   buildURLQueryFromFilters,
   parseFiltersFromURLQuery,
+  resolveFilterCompositeAttributeForApi,
   MANUAL_LAUNCHES_FILTER_URL_KEYS,
 } from './filterPayloadUtils';
 export type {

@@ -142,7 +142,10 @@ import {
   buildGetManualLaunchTestCaseExecutionsParams,
   getManualLaunchDetailsFetchParams,
 } from 'controllers/manualLaunch';
-import { MANUAL_LAUNCHES_FILTER_URL_KEYS } from 'pages/inside/manualLaunchesPage/manualLaunchesFilterSidePanel';
+import {
+  MANUAL_LAUNCHES_FILTER_URL_KEYS,
+  resolveFilterCompositeAttributeForApi,
+} from 'pages/inside/manualLaunchesPage/manualLaunchesFilterSidePanel';
 import { getRouterParams } from 'common/utils';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
@@ -414,9 +417,7 @@ const routesMap = {
             Number.isFinite(filterStartTimeFrom) ? filterStartTimeFrom : undefined,
           filterEndTimeTo: Number.isFinite(filterEndTimeTo) ? filterEndTimeTo : undefined,
           filterTestPlan: query[MANUAL_LAUNCHES_FILTER_URL_KEYS.TEST_PLAN] || undefined,
-          filterAttributeKey: query[MANUAL_LAUNCHES_FILTER_URL_KEYS.ATTRIBUTE_KEY] || undefined,
-          filterAttributeValue:
-            query[MANUAL_LAUNCHES_FILTER_URL_KEYS.ATTRIBUTE_VALUE] || undefined,
+          filterCompositeAttribute: resolveFilterCompositeAttributeForApi(query),
         }),
       );
     },
