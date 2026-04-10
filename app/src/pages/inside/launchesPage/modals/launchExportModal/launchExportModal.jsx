@@ -180,7 +180,7 @@ export const LaunchExportModal = ({ id, name, launches: launchesProp }) => {
       includeAttachments,
     };
     if (includeAttachments) {
-      queryParams.preserveAttachmentFolderStructure = !exportAttachmentsWithoutPreservingFolders;
+      queryParams.flatAttachments = exportAttachmentsWithoutPreservingFolders;
     }
 
     try {
