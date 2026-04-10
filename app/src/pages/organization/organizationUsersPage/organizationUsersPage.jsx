@@ -70,6 +70,8 @@ const OrganizationUsersPageComponent = ({
   const isEmptyUsers = users.length === 0;
   const { canInviteUserToOrganization } = useUserPermissions();
 
+  const shouldShowHeaderActions = itemCount > 0 || searchValue !== null;
+
   useEffect(() => {
     trackEvent(ORGANIZATION_PAGE_EVENTS.VIEW_ORGANIZATION_USERS);
   }, [trackEvent]);
@@ -111,7 +113,7 @@ const OrganizationUsersPageComponent = ({
       <div className={cx('organization-users-page')}>
         <OrganizationUsersPageHeader
           hasPermission={canInviteUserToOrganization}
-          isNotEmpty={itemCount > 0}
+          isNotEmpty={shouldShowHeaderActions}
           isUsersLoading={isUsersLoading}
           searchValue={searchValue}
           setSearchValue={setSearchValue}

@@ -86,6 +86,8 @@ const OrganizationProjectsPageComponent = ({
   const [searchValue, setSearchValue] = useState(null);
   const [appliedFiltersCount, setAppliedFiltersCount] = useState(0);
 
+  const shouldShowHeaderActions = itemCount > 0 || searchValue !== null || appliedFiltersCount > 0;
+
   const showCreateProjectModal = () => {
     dispatch(
       showModalAction({
@@ -161,7 +163,7 @@ const OrganizationProjectsPageComponent = ({
     <div className={cx('organization-projects-container')}>
       <ProjectsPageHeader
         hasPermission={canCreateProject}
-        isNotEmpty={itemCount > 0}
+        isNotEmpty={shouldShowHeaderActions}
         projectsCount={itemCount}
         onCreateProject={showCreateProjectModal}
         searchValue={searchValue}
