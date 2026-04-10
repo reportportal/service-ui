@@ -244,14 +244,15 @@ export const resolveFilterCompositeAttributeForApi = (
   return formatAttribute({
     key: keyRaw,
     value: query[ATTRIBUTE_VALUE_QUERY_KEY] ?? '',
-  });
+  }) as string;
 };
 
 const parseAttributesFromURL = (query: Record<string, string | undefined>): LaunchAttribute[] => {
   const compositeRaw = readCompositeFromQuery(query);
 
   if (compositeRaw) {
-    return parseQueryAttributes({ value: compositeRaw }).filter((a) => a.key?.trim());
+    const parsed = parseQueryAttributes({ value: compositeRaw }) as LaunchAttribute[];
+    return parsed.filter((attribute) => attribute.key?.trim());
   }
 
   const keyRaw = query[ATTRIBUTE_KEY_QUERY_KEY];
