@@ -19,6 +19,7 @@ import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { NAMESPACE, SEARCH_KEY } from 'controllers/organization/users';
 import { ORGANIZATION_PROJECTS_PAGE, ORGANIZATIONS_PAGE } from 'controllers/pages/constants';
+import { urlOrganizationSlugSelector } from 'controllers/pages';
 import { SearchField } from 'components/fields/searchField';
 import { withFilter } from 'controllers/filter';
 import { useSelector } from 'react-redux';
@@ -45,7 +46,8 @@ export const OrganizationUsersPageHeader = ({
 }) => {
   const { formatMessage } = useIntl();
   const organization = useSelector(activeOrganizationSelector);
-  const organizationSlug = organization?.name;
+  const organizationName = organization?.name;
+  const organizationSlug = useSelector(urlOrganizationSlugSelector);
 
   const breadcrumbs = [
     {
@@ -56,7 +58,7 @@ export const OrganizationUsersPageHeader = ({
 
   if (organizationSlug) {
     breadcrumbs.push({
-      title: organizationSlug,
+      title: organizationName,
       link: { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug } },
     });
   }
