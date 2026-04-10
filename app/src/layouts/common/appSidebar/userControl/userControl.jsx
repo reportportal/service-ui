@@ -22,7 +22,6 @@ import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import { userInfoSelector, photoTimeStampSelector } from 'controllers/user';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
-import { transitionDuration } from 'common/constants/transitionDuration';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { ProfileMenu } from './profileMenu';
 import ArrowRightIcon from '../img/arrow-right-inline.svg';
@@ -87,7 +86,6 @@ export const UserControlWithPopover = ({
         isOpened={isOpenPopover}
         setIsOpened={togglePopover}
         strategy="fixed"
-        transitionDuration={transitionDuration}
         content={
           <ProfileMenu
             linkToUserProfilePage={linkToUserProfilePage}

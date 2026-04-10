@@ -18,7 +18,6 @@ import { Popover } from '@reportportal/ui-kit';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { transitionDuration } from 'common/constants/transitionDuration';
 import { NavLink } from 'components/main/navLink';
 import { useTracking } from 'react-tracking';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
@@ -111,7 +110,6 @@ export const OrganizationsControlWithPopover = ({
         className={cx('popover')}
         placement="right-start"
         strategy="fixed"
-        transitionDuration={transitionDuration}
         isOpened={isOpenPopover}
         content={<OrganizationsPopover closePopover={closePopover} closeSidebar={closeSidebar} />}
         setIsOpened={togglePopover}

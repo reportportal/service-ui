@@ -19,7 +19,6 @@ import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { FAQContent } from 'layouts/common/appSidebar/helpAndService/FAQcontent';
-import { transitionDuration } from 'common/constants/transitionDuration';
 import HelpIcon from 'common/img/help-inline.svg';
 import { ServicesContent } from './servicesContent';
 import ArrowRightIcon from '../img/arrow-right-inline.svg';
@@ -74,7 +73,6 @@ export const ServiceWithPopover = ({
         isOpened={isOpenPopover}
         setIsOpened={togglePopover}
         strategy="fixed"
-        transitionDuration={transitionDuration}
         content={
           <ServicesContent
             isFaqTouched={isFaqTouched}
@@ -106,7 +104,6 @@ export const FAQWithPopover = ({ title, isFaqTouched, closePopover, closeSidebar
       <Popover
         className={cx('faq-popover')}
         placement="right-start"
-        transitionDuration={transitionDuration}
         content={
           <FAQContent closePopover={closePopover} closeSidebar={closeSidebar} onOpen={onOpen} />
         }

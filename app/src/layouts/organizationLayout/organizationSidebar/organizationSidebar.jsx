@@ -120,14 +120,19 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
     level: 'organization',
   };
 
-  const createMainBlock = (openSidebar, closeSidebar, getIsSidebarCollapsed) => (
+  const createMainBlock = (openSidebar, closeSidebar, getIsSidebarCollapsed, afterOpenSidebar) => (
     <OrganizationsControlWithPopover
       closeSidebar={closeSidebar}
       isOpenPopover={isOpenOrganizationPopover}
-      togglePopover={setIsOpenOrganizationPopover}
+      togglePopover={(open) => {
+        if (open) {
+          openSidebar();
+          afterOpenSidebar(() => setIsOpenOrganizationPopover(true));
+        } else {
+          setIsOpenOrganizationPopover(false);
+        }
+      }}
       onClick={() => {
-        openSidebar();
-        setIsOpenOrganizationPopover(!isOpenOrganizationPopover);
         const isSidebarCollapsed = getIsSidebarCollapsed();
         trackEvent(
           SIDEBAR_EVENTS.onClickItem({
