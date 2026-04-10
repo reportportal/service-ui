@@ -31,7 +31,6 @@ import { MilestoneDateShortcutRow } from '../../milestoneDateShortcutRow/milesto
 import { MilestoneDateField } from '../../milestoneDateField/milestoneDateField';
 import { MilestoneTypeDropdown } from '../../milestoneTypeDropdown/milestoneTypeDropdown';
 import { createMilestoneModalMessages } from '../createMilestoneModal/messages';
-
 import { ADJUST_FORM_DOM_ID, CHANGE_MILESTONE_STATUS_ADJUST_FORM_NAME } from './constants';
 import { changeMilestoneStatusModalMessages } from './messages';
 import type { MilestoneAdjustFormValues } from './types';

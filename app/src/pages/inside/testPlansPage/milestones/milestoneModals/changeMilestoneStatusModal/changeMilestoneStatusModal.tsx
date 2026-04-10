@@ -19,13 +19,11 @@ import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { formValueSelector } from 'redux-form';
-import { Button, Toggle } from '@reportportal/ui-kit';
+import { Toggle } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction } from 'controllers/modal';
 import { MilestoneStatus, type TmsMilestoneType } from 'controllers/milestone';
-import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 
 import {
   dateOnlyStringToUtcIso,
@@ -37,16 +35,21 @@ import { messages as milestoneTableMessages } from '../../milestonesTable/messag
 import { todayDateOnly } from '../../datePickerConstants';
 import { BackToScheduledAdjustFormConnected } from './backToScheduledAdjustForm';
 import {
-  ADJUST_FORM_DOM_ID,
+  createBackToScheduledStatusModalFooter,
+  createBackToTestingStatusModalFooter,
+  createCompleteDateChoiceStatusModalFooter,
+  createCompleteNoDeadlineStatusModalFooter,
+  createCompleteSimpleStatusModalFooter,
+  createStartTestingDateChoiceStatusModalFooter,
+  createStartTestingNoStartDateStatusModalFooter,
+  createStartTestingSimpleStatusModalFooter,
+} from './changeMilestoneStatusModalFooters';
+import {
   CHANGE_MILESTONE_STATUS_ADJUST_FORM_NAME,
   changeMilestoneStatusFlowType,
 } from './constants';
 import { changeMilestoneStatusModalMessages } from './messages';
-import {
-  MilestoneStatusModalFooter,
-  MilestoneStatusModalFooterButtonWrap,
-  MilestoneStatusModalFrame,
-} from './milestoneStatusModalFrame';
+import { MilestoneStatusModalFrame } from './milestoneStatusModalFrame';
 import type {
   ChangeMilestoneStatusModalProps,
   MilestoneAdjustFormValues,
@@ -59,7 +62,9 @@ import styles from './changeMilestoneStatusModal.scss';
 
 const cx = createClassnames(styles);
 
-const bold = (text: ReactNode[]) => <span className={cx('change-milestone-status-modal__bold')}>{text}</span>;
+const bold = (text: ReactNode[]) => (
+  <span className={cx('change-milestone-status-modal__bold')}>{text}</span>
+);
 
 export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalProps) => {
   const { formatMessage } = useIntl();
@@ -178,7 +183,8 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
 
   const startTestingKeepStartDate = () => transitionMilestoneToTesting({});
 
-  const startTestingWithTodayStartDate = () => transitionMilestoneToTesting({ startDate: todayIso });
+  const startTestingWithTodayStartDate = () =>
+    transitionMilestoneToTesting({ startDate: todayIso });
 
   const startTestingClearStartDate = () => transitionMilestoneToTesting({ startDate: null });
 
@@ -249,28 +255,13 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
           allowCloseOutside={!adjustMilestone}
           onClose={hideModal}
           isLoading={isLoading}
-          createFooter={(closeModal) => (
-            <MilestoneStatusModalFooter>
-              <MilestoneStatusModalFooterButtonWrap>
-                <Button variant="ghost" disabled={isLoading} onClick={closeModal}>
-                  {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
-                </Button>
-              </MilestoneStatusModalFooterButtonWrap>
-              <MilestoneStatusModalFooterButtonWrap>
-                <Button
-                  variant="primary"
-                  disabled={isLoading || (adjustMilestone && isAdjustChangeDisabled)}
-                  {...(adjustMilestone
-                    ? { type: 'submit' as const, form: ADJUST_FORM_DOM_ID }
-                    : { onClick: confirmBackToScheduledKeepingFields })}
-                >
-                  <LoadingSubmitButton isLoading={isLoading}>
-                    {formatMessage(changeMilestoneStatusModalMessages.changeAction)}
-                  </LoadingSubmitButton>
-                </Button>
-              </MilestoneStatusModalFooterButtonWrap>
-            </MilestoneStatusModalFooter>
-          )}
+          createFooter={createBackToScheduledStatusModalFooter({
+            formatMessage,
+            isLoading,
+            adjustMilestone,
+            isAdjustChangeDisabled,
+            onConfirmKeepingFields: confirmBackToScheduledKeepingFields,
+          })}
         >
           <p className={bodyClass}>
             {formatMessage(changeMilestoneStatusModalMessages.backToScheduledBody, {
@@ -303,22 +294,11 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
           title={formatMessage(changeMilestoneStatusModalMessages.backToTestingTitle)}
           onClose={hideModal}
           isLoading={isLoading}
-          createFooter={(closeModal) => (
-            <MilestoneStatusModalFooter>
-              <MilestoneStatusModalFooterButtonWrap>
-                <Button variant="ghost" disabled={isLoading} onClick={closeModal}>
-                  {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
-                </Button>
-              </MilestoneStatusModalFooterButtonWrap>
-              <MilestoneStatusModalFooterButtonWrap>
-                <Button variant="primary" disabled={isLoading} onClick={confirmBackToTesting}>
-                  <LoadingSubmitButton isLoading={isLoading}>
-                    {formatMessage(changeMilestoneStatusModalMessages.changeAction)}
-                  </LoadingSubmitButton>
-                </Button>
-              </MilestoneStatusModalFooterButtonWrap>
-            </MilestoneStatusModalFooter>
-          )}
+          createFooter={createBackToTestingStatusModalFooter({
+            formatMessage,
+            isLoading,
+            onConfirm: confirmBackToTesting,
+          })}
         >
           <p className={bodyClass}>
             {formatMessage(changeMilestoneStatusModalMessages.backToTestingBody, {
@@ -336,18 +316,11 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
           title={formatMessage(changeMilestoneStatusModalMessages.startTestingTitle)}
           onClose={hideModal}
           isLoading={isLoading}
-          createFooter={(closeModal) => (
-            <MilestoneStatusModalFooter>
-              <Button variant="ghost" disabled={isLoading} onClick={closeModal}>
-                {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
-              </Button>
-              <Button variant="primary" disabled={isLoading} onClick={startTestingKeepStartDate}>
-                <LoadingSubmitButton isLoading={isLoading}>
-                  {formatMessage(changeMilestoneStatusModalMessages.startTestingPrimary)}
-                </LoadingSubmitButton>
-              </Button>
-            </MilestoneStatusModalFooter>
-          )}
+          createFooter={createStartTestingSimpleStatusModalFooter({
+            formatMessage,
+            isLoading,
+            onStart: startTestingKeepStartDate,
+          })}
         >
           <p className={bodyClass}>
             {formatMessage(changeMilestoneStatusModalMessages.startTestingSimpleBody, {
@@ -365,21 +338,12 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
           onClose={hideModal}
           isLoading={isLoading}
           className={cx('change-milestone-status-modal_wide')}
-          createFooter={(closeModal) => (
-            <MilestoneStatusModalFooter>
-              <Button variant="ghost" disabled={isLoading} onClick={closeModal}>
-                {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
-              </Button>
-              <Button variant="ghost" disabled={isLoading} onClick={startTestingKeepStartDate}>
-                {formatMessage(changeMilestoneStatusModalMessages.startWithoutReplacing)}
-              </Button>
-              <Button variant="primary" disabled={isLoading} onClick={startTestingWithTodayStartDate}>
-                <LoadingSubmitButton isLoading={isLoading}>
-                  {formatMessage(changeMilestoneStatusModalMessages.startWithToday)}
-                </LoadingSubmitButton>
-              </Button>
-            </MilestoneStatusModalFooter>
-          )}
+          createFooter={createStartTestingDateChoiceStatusModalFooter({
+            formatMessage,
+            isLoading,
+            onKeepStartDate: startTestingKeepStartDate,
+            onStartWithToday: startTestingWithTodayStartDate,
+          })}
         >
           <div className={bodyTextClass}>
             <p className={bodyClass}>
@@ -403,21 +367,12 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
           onClose={hideModal}
           isLoading={isLoading}
           className={cx('change-milestone-status-modal_wide')}
-          createFooter={(closeModal) => (
-            <MilestoneStatusModalFooter>
-              <Button variant="ghost" disabled={isLoading} onClick={closeModal}>
-                {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
-              </Button>
-              <Button variant="ghost" disabled={isLoading} onClick={startTestingClearStartDate}>
-                {formatMessage(changeMilestoneStatusModalMessages.startWithoutDate)}
-              </Button>
-              <Button variant="primary" disabled={isLoading} onClick={startTestingWithTodayStartDate}>
-                <LoadingSubmitButton isLoading={isLoading}>
-                  {formatMessage(changeMilestoneStatusModalMessages.startWithToday)}
-                </LoadingSubmitButton>
-              </Button>
-            </MilestoneStatusModalFooter>
-          )}
+          createFooter={createStartTestingNoStartDateStatusModalFooter({
+            formatMessage,
+            isLoading,
+            onStartWithoutDate: startTestingClearStartDate,
+            onStartWithToday: startTestingWithTodayStartDate,
+          })}
         >
           <div className={bodyTextClass}>
             <p className={bodyClass}>
@@ -439,18 +394,11 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
           title={formatMessage(changeMilestoneStatusModalMessages.completeMilestoneTitle)}
           onClose={hideModal}
           isLoading={isLoading}
-          createFooter={(closeModal) => (
-            <MilestoneStatusModalFooter>
-              <Button variant="ghost" disabled={isLoading} onClick={closeModal}>
-                {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
-              </Button>
-              <Button variant="primary" disabled={isLoading} onClick={completeMilestoneKeepDeadline}>
-                <LoadingSubmitButton isLoading={isLoading}>
-                  {formatMessage(changeMilestoneStatusModalMessages.completeMilestonePrimary)}
-                </LoadingSubmitButton>
-              </Button>
-            </MilestoneStatusModalFooter>
-          )}
+          createFooter={createCompleteSimpleStatusModalFooter({
+            formatMessage,
+            isLoading,
+            onComplete: completeMilestoneKeepDeadline,
+          })}
         >
           <p className={bodyClass}>
             {formatMessage(changeMilestoneStatusModalMessages.completeSimpleBody, {
@@ -468,21 +416,12 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
           onClose={hideModal}
           isLoading={isLoading}
           className={cx('change-milestone-status-modal_wide')}
-          createFooter={(closeModal) => (
-            <MilestoneStatusModalFooter>
-              <Button variant="ghost" disabled={isLoading} onClick={closeModal}>
-                {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
-              </Button>
-              <Button variant="ghost" disabled={isLoading} onClick={completeMilestoneKeepDeadline}>
-                {formatMessage(changeMilestoneStatusModalMessages.completeWithoutReplacing)}
-              </Button>
-              <Button variant="primary" disabled={isLoading} onClick={completeMilestoneWithTodayDeadline}>
-                <LoadingSubmitButton isLoading={isLoading}>
-                  {formatMessage(changeMilestoneStatusModalMessages.completeWithToday)}
-                </LoadingSubmitButton>
-              </Button>
-            </MilestoneStatusModalFooter>
-          )}
+          createFooter={createCompleteDateChoiceStatusModalFooter({
+            formatMessage,
+            isLoading,
+            onKeepDeadline: completeMilestoneKeepDeadline,
+            onCompleteWithToday: completeMilestoneWithTodayDeadline,
+          })}
         >
           <div className={bodyTextClass}>
             <p className={bodyClass}>
@@ -508,21 +447,12 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
           onClose={hideModal}
           isLoading={isLoading}
           className={cx('change-milestone-status-modal_wide')}
-          createFooter={(closeModal) => (
-            <MilestoneStatusModalFooter>
-              <Button variant="ghost" disabled={isLoading} onClick={closeModal}>
-                {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
-              </Button>
-              <Button variant="ghost" disabled={isLoading} onClick={completeMilestoneClearDeadline}>
-                {formatMessage(changeMilestoneStatusModalMessages.completeWithoutDeadline)}
-              </Button>
-              <Button variant="primary" disabled={isLoading} onClick={completeMilestoneWithTodayDeadline}>
-                <LoadingSubmitButton isLoading={isLoading}>
-                  {formatMessage(changeMilestoneStatusModalMessages.completeWithToday)}
-                </LoadingSubmitButton>
-              </Button>
-            </MilestoneStatusModalFooter>
-          )}
+          createFooter={createCompleteNoDeadlineStatusModalFooter({
+            formatMessage,
+            isLoading,
+            onCompleteWithoutDeadline: completeMilestoneClearDeadline,
+            onCompleteWithToday: completeMilestoneWithTodayDeadline,
+          })}
         >
           <div className={bodyTextClass}>
             <p className={bodyClass}>

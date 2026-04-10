@@ -16,7 +16,11 @@
 
 import { isSameDay, isValid, parseISO, startOfDay } from 'date-fns';
 
-import { MilestoneStatus, type TmsMilestoneRS, type TmsMilestoneStatus } from 'controllers/milestone';
+import {
+  MilestoneStatus,
+  type TmsMilestoneRS,
+  type TmsMilestoneStatus,
+} from 'controllers/milestone';
 
 import { isoToDateOnlyFormValue } from '../milestoneDateUtils';
 import { changeMilestoneStatusFlowType } from './changeMilestoneStatusModal/constants';
@@ -34,6 +38,40 @@ const isIsoOnLocalCalendarDay = (iso: string, day: Date): boolean => {
   return isSameDay(parsed, startOfDay(day));
 };
 
+const getFlowForStartTestingFromScheduled = (
+  milestone: TmsMilestoneRS,
+): ChangeMilestoneStatusFlow => {
+  if (!hasMeaningfulDateOnly(milestone.startDate)) {
+    return { type: changeMilestoneStatusFlowType.START_TESTING_NO_START_DATE };
+  }
+
+  if (!isIsoOnLocalCalendarDay(milestone.startDate, new Date())) {
+    return {
+      type: changeMilestoneStatusFlowType.START_TESTING_DATE_CHOICE,
+      startDateIso: milestone.startDate,
+    };
+  }
+
+  return { type: changeMilestoneStatusFlowType.START_TESTING_SIMPLE };
+};
+
+const getFlowForCompleteFromTestingOrScheduled = (
+  milestone: TmsMilestoneRS,
+): ChangeMilestoneStatusFlow => {
+  if (!hasMeaningfulDateOnly(milestone.endDate)) {
+    return { type: changeMilestoneStatusFlowType.COMPLETE_NO_DEADLINE };
+  }
+
+  if (!isIsoOnLocalCalendarDay(milestone.endDate, new Date())) {
+    return {
+      type: changeMilestoneStatusFlowType.COMPLETE_DATE_CHOICE,
+      deadlineIso: milestone.endDate,
+    };
+  }
+
+  return { type: changeMilestoneStatusFlowType.COMPLETE_SIMPLE };
+};
+
 export const getChangeMilestoneStatusFlow = (
   milestone: TmsMilestoneRS,
   targetStatus: TmsMilestoneStatus,
@@ -41,36 +79,14 @@ export const getChangeMilestoneStatusFlow = (
   const current = milestone.status;
 
   if (targetStatus === MilestoneStatus.TESTING && current === MilestoneStatus.SCHEDULED) {
-    if (!hasMeaningfulDateOnly(milestone.startDate)) {
-      return { type: changeMilestoneStatusFlowType.START_TESTING_NO_START_DATE };
-    }
-
-    if (!isIsoOnLocalCalendarDay(milestone.startDate, new Date())) {
-      return {
-        type: changeMilestoneStatusFlowType.START_TESTING_DATE_CHOICE,
-        startDateIso: milestone.startDate,
-      };
-    }
-
-    return { type: changeMilestoneStatusFlowType.START_TESTING_SIMPLE };
+    return getFlowForStartTestingFromScheduled(milestone);
   }
 
   if (
     targetStatus === MilestoneStatus.COMPLETED &&
     (current === MilestoneStatus.TESTING || current === MilestoneStatus.SCHEDULED)
   ) {
-    if (!hasMeaningfulDateOnly(milestone.endDate)) {
-      return { type: changeMilestoneStatusFlowType.COMPLETE_NO_DEADLINE };
-    }
-
-    if (!isIsoOnLocalCalendarDay(milestone.endDate, new Date())) {
-      return {
-        type: changeMilestoneStatusFlowType.COMPLETE_DATE_CHOICE,
-        deadlineIso: milestone.endDate,
-      };
-    }
-
-    return { type: changeMilestoneStatusFlowType.COMPLETE_SIMPLE };
+    return getFlowForCompleteFromTestingOrScheduled(milestone);
   }
 
   if (targetStatus === MilestoneStatus.TESTING && current === MilestoneStatus.COMPLETED) {

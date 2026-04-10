@@ -27,7 +27,6 @@ const cx = createClassnames(styles);
 const MODAL_CLASS = cx('change-milestone-status-modal');
 const CONTENT_CLASS = cx('change-milestone-status-modal__content');
 const FOOTER_CLASS = cx('change-milestone-status-modal__footer');
-const FOOTER_BUTTON_WRAP_CLASS = cx('change-milestone-status-modal__footer-button');
 
 export type MilestoneStatusModalFrameProps = {
   title: ReactNode;
@@ -46,7 +45,7 @@ export const MilestoneStatusModalFrame = ({
   isLoading,
   createFooter,
   children,
-  className,
+  className = '',
 }: MilestoneStatusModalFrameProps) => (
   <Modal
     title={title}
@@ -64,8 +63,4 @@ export const MilestoneStatusModalFrame = ({
 
 export const MilestoneStatusModalFooter = ({ children }: { children: ReactNode }) => (
   <div className={FOOTER_CLASS}>{children}</div>
-);
-
-export const MilestoneStatusModalFooterButtonWrap = ({ children }: { children: ReactNode }) => (
-  <div className={FOOTER_BUTTON_WRAP_CLASS}>{children}</div>
 );
