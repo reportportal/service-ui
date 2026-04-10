@@ -376,6 +376,7 @@ export class CumulativeTrendChart extends PureComponent {
       });
     } else {
       link = getStatisticsLink({
+        ...(selectedDefectLocators?.length && { defects: selectedDefectLocators }),
         statuses: selectedStatus ? [selectedStatus] : [PASSED, FAILED, SKIPPED, INTERRUPTED],
         levelAttribute: activeAttributes.map(formatAttribute).join(','),
         launchesLimit: widget.contentParameters.itemsCount,
