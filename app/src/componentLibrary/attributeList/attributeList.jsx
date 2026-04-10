@@ -63,6 +63,7 @@ export const AttributeList = ({
   showValidationErrors,
   isAttributeKeyRequired,
   isAttributeValueRequired,
+  maxCellWidth,
 }) => {
   const addNewAttrRef = useRef(null);
   const attributesRefs = useRef(null);
@@ -320,6 +321,7 @@ export const AttributeList = ({
                   onCancelEdit={createCancelEditHandler(i)}
                   disabled={disabled}
                   customClass={customClass}
+                  maxCellWidth={maxCellWidth}
                   keyValueRefCallback={attributeKeyValueRefCb}
                   crossIconRefCallback={attributeCrossIconRefCb}
                   wrapperRefCallback={attributeWrapperRefCb}
@@ -371,6 +373,7 @@ AttributeList.propTypes = {
   showValidationErrors: PropTypes.bool,
   isAttributeKeyRequired: PropTypes.bool,
   isAttributeValueRequired: PropTypes.bool,
+  maxCellWidth: PropTypes.number,
 };
 AttributeList.defaultProps = {
   attributes: [],
@@ -392,4 +395,5 @@ AttributeList.defaultProps = {
   showValidationErrors: false,
   isAttributeKeyRequired: false,
   isAttributeValueRequired: true,
+  maxCellWidth: undefined,
 };

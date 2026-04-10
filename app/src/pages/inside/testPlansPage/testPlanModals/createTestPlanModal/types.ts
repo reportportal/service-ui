@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,4 +14,7 @@
  * limitations under the License.
  */
 
-export { withPopover } from './withPopover/withPopover';
+/** Optional context when opening create-test-plan (e.g. from a milestone card → link plan after create). */
+export type CreateTestPlanModalData = {
+  milestoneId?: number;
+};

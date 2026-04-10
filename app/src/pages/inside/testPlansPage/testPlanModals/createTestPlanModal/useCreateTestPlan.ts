@@ -15,6 +15,7 @@
  */
 
 import { useDispatch, useSelector } from 'react-redux';
+import { isNotNil } from 'es-toolkit';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -23,10 +24,13 @@ import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import { defaultQueryParams, getTestPlansAction, TestPlanDto } from 'controllers/testPlan';
+import { getMilestonesAction } from 'controllers/milestone';
 
 import { TestPlanFormValues } from '../testPlanModal';
 
-export const useCreateTestPlan = () => {
+import type { CreateTestPlanModalData } from './types';
+
+export const useCreateTestPlan = ({ milestoneId }: CreateTestPlanModalData = {}) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
@@ -36,7 +40,7 @@ export const useCreateTestPlan = () => {
     try {
       showSpinner();
 
-      await fetch<TestPlanDto>(URLS.testPlan(projectKey), {
+      const created = await fetch<TestPlanDto>(URLS.testPlan(projectKey), {
         method: 'post',
         data: {
           name: payload.name,
@@ -45,6 +49,24 @@ export const useCreateTestPlan = () => {
         },
       });
 
+      if (isNotNil(milestoneId)) {
+        try {
+          await fetch(URLS.tmsMilestoneAddTestPlan(projectKey, milestoneId, created.id), {
+            method: 'post',
+          });
+        } catch {
+          dispatch(hideModalAction());
+          dispatch(
+            showErrorNotification({
+              messageId: 'testPlanCreatedButNotLinkedToMilestone',
+            }),
+          );
+          dispatch(getTestPlansAction(queryParams));
+          dispatch(getMilestonesAction());
+          return;
+        }
+      }
+
       dispatch(hideModalAction());
       dispatch(
         showSuccessNotification({
@@ -52,6 +74,9 @@ export const useCreateTestPlan = () => {
         }),
       );
       dispatch(getTestPlansAction(queryParams));
+      if (isNotNil(milestoneId)) {
+        dispatch(getMilestonesAction());
+      }
     } catch {
       dispatch(
         showErrorNotification({

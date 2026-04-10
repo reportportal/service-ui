@@ -17,6 +17,10 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
+  testPlanNameColumn: {
+    id: 'TestPlansTable.testPlanNameColumn',
+    defaultMessage: 'Test plan name',
+  },
   coveredTotal: {
     id: 'TestPlansTable.coveredTotal',
     defaultMessage: 'Covered / Total',

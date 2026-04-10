@@ -43,7 +43,7 @@ const buildFilterParams = (
 ): Record<string, string> => {
   const params: Record<string, string> = {};
   if (filterPriorities) {
-    params[keys.priority] = filterPriorities;
+    params[keys.priority] = filterPriorities.toUpperCase();
   }
   if (filterTags) {
     params[keys.attributeKey] = filterTags;
@@ -70,7 +70,7 @@ const normalizePrioritiesForExecutionApi = (filterPriorities?: string): string |
 
   const normalized = filterPriorities
     .split(',')
-    .map((priority) => priority.trim().toLowerCase())
+    .map((priority) => priority.trim().toUpperCase())
     .filter(Boolean)
     .join(',');
 

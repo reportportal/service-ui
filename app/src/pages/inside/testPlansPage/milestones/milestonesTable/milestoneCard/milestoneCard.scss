@@ -9,15 +9,6 @@
   border-radius: 8px;
   background: var(--rp-ui-color-bg);
   box-shadow: var(--rp-ui-base-shadow-hover);
-  cursor: pointer;
-  transition: box-shadow 0.15s ease;
-
-  /* Hover ring: same token as test case / manual launches table rows (see testCaseList.scss) */
-  &:hover {
-    box-shadow:
-      var(--rp-ui-base-shadow-hover),
-      0 0 0 1px var(--rp-ui-base-topaz-focused);
-  }
 
   &__header {
     display: flex;
@@ -25,17 +16,32 @@
     gap: 12px;
     box-sizing: border-box;
     min-height: 86px;
-    padding: 16px 12px;
+    padding: 16px 28px;
+    border-radius: 8px 8px 0 0;
   }
 
-  &__expand {
+  &__header-toggle {
+    @include mixins.button-reset;
+
     display: flex;
+    flex: 1;
+    gap: 12px;
     align-items: center;
-    justify-content: center;
-    padding: 4px;
-    border: none;
-    background: transparent;
+    min-width: 0;
     cursor: pointer;
+    text-align: left;
+
+    &:focus-visible {
+      outline: 2px solid var(--rp-ui-base-topaz-focused);
+      outline-offset: -2px;
+    }
+  }
+
+  &__header-actions {
+    display: flex;
+    flex-shrink: 0;
+    gap: 8px;
+    align-items: center;
   }
 
   &__chevron {
@@ -168,10 +174,6 @@
     }
   }
 
-  &__status-toggle_completed &__status-chevron {
-    color: var(--rp-ui-color-primary);
-  }
-
   &__status-chevron {
     display: inline-flex;
     flex-shrink: 0;
@@ -190,6 +192,10 @@
     :global(path) {
       fill: currentcolor;
     }
+  }
+
+  &__status-toggle_completed &__status-chevron {
+    color: var(--rp-ui-color-primary);
   }
 
   &__actions-trigger {
@@ -276,11 +282,63 @@
     }
   }
 
-  &__expanded {
-    padding: 16px 24px 20px 56px;
+  &__drawer {
+    padding: 16px 0 37px 104px;
     background: var(--rp-ui-kit-colors-bg-secondary);
     border-top: 1px solid var(--rp-ui-kit-colors-border-primary);
     border-radius: 0 0 8px 8px;
+
+    &_empty {
+      padding: 0;
+      background: transparent;
+      border-top: none;
+    }
+  }
+
+  &__test-plans-empty-bar-wrap {
+    box-sizing: border-box;
+    padding: 16px 52px 16px 104px;
+    background: var(--rp-ui-kit-colors-bg-secondary);
+    border-top: 1px solid var(--rp-ui-kit-colors-border-primary);
+    border-radius: 0 0 8px 8px;
+  }
+
+  &__test-plans-empty-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    box-sizing: border-box;
+    min-height: 52px;
+    padding: 0 16px;
+    background: var(--Background-Tertiary, var(--rp-ui-base-bg-200));
+    border-radius: 4px;
+  }
+
+  &__test-plans-empty-text {
+    @include ms.milestone-body-13;
+
+    margin: 0;
+    color: var(--rp-ui-color-text-secondary);
+  }
+
+  &__test-plans {
+    box-sizing: border-box;
+    max-width: 100%;
+    min-width: 0;
+    overflow: visible;
+
+    :global([class*='table-header-cell']:first-child) {
+      padding-inline-start: 0;
+    }
+
+    :global([class*='primary-cell']) {
+      padding-inline-start: 0;
+    }
+  }
+
+  &__test-plans-footer {
+    margin-top: 8px;
   }
 
   &__placeholder {
@@ -289,4 +347,9 @@
     margin: 0;
     color: var(--rp-ui-color-text-secondary);
   }
+}
+.milestone-card__group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }

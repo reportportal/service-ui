@@ -76,3 +76,44 @@
     var(--rp-ui-color-text-secondary)
   );
 }
+
+@mixin milestone-test-plans-divider {
+  border-bottom: 1px solid var(--rp-ui-base-e-100);
+}
+
+@mixin milestone-test-plans-header-label {
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0;
+  color: var(--Text-Secondary, var(--rp-ui-base-e-400));
+}
+
+@mixin milestone-test-plans-cell-name {
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-medium);
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0;
+  color: var(--rp-ui-color-text);
+}
+
+@mixin milestone-test-plans-cell-ratio {
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0;
+  text-indent: 1px;
+  color: var(--rp-ui-color-text);
+}
+
+@mixin milestone-test-plans-cell-coverage-pct {
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-medium);
+  font-size: 15px;
+  line-height: 24px;
+  letter-spacing: 0;
+  color: var(--rp-ui-color-text);
+}

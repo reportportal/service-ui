@@ -14,24 +14,17 @@
  * limitations under the License.
  */
 
-import { ReactNode, useMemo } from 'react';
+import { ReactNode, useCallback, useMemo } from 'react';
 import { useIntl } from 'react-intl';
-import { useDispatch, useSelector } from 'react-redux';
-import { Table, ChevronDownDropdownIcon, Pagination } from '@reportportal/ui-kit';
+import { useDispatch } from 'react-redux';
+import { Table, ChevronDownDropdownIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
-import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/common/testCaseList';
 import { useProjectDetails } from 'hooks/useTypedSelector';
-import {
-  defaultQueryParams,
-  TEST_PLANS_NAMESPACE,
-  TestPlanDto,
-  testPlansPageSelector,
-} from 'controllers/testPlan';
-import { useURLBoundPagination } from 'pages/inside/common/testCaseList/useURLBoundPagination';
+import { TestPlanDto } from 'controllers/testPlan';
 
+import { FIXED_COLUMN_WIDTH_PX } from './constants';
 import { messages } from './messages';
 import {
   useDeleteTestPlanModal,
@@ -41,27 +34,15 @@ import {
 import { PageLoader } from '../pageLoader';
 import { useTestPlansTableData } from './hooks';
 
+import type { TestPlansTableProps } from './types';
+
 import styles from './testPlansTable.scss';
 
 const cx = createClassnames(styles);
 
-interface TestPlansTableProps {
-  testPlans: TestPlanDto[];
-  isLoading: boolean;
-}
-
 export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) => {
   const { formatMessage } = useIntl();
-  const testPlansPageData = useSelector(testPlansPageSelector);
   const { organizationSlug, projectSlug } = useProjectDetails();
-  const { setPageNumber, setPageSize, captions, activePage, pageSize, totalPages } =
-    useURLBoundPagination({
-      pageData: testPlansPageData,
-      namespace: TEST_PLANS_NAMESPACE,
-      shouldSaveUserPreferences: true,
-      baseUrl: `/organizations/${organizationSlug}/projects/${projectSlug}/milestones`,
-      defaultQueryParams,
-    });
   const dispatch = useDispatch();
   const { openModal: openEditModal } = useEditTestPlanModal();
   const { openModal: openDuplicateModal } = useDuplicateTestPlanModal();
@@ -72,12 +53,15 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
     [testPlans],
   );
 
-  const handleRowClick = (testPlanId: number) => {
-    dispatch({
-      type: PROJECT_TEST_PLAN_DETAILS_PAGE,
-      payload: { organizationSlug, projectSlug, testPlanId: testPlanId.toString() },
-    });
-  };
+  const handleRowClick = useCallback(
+    (testPlanId: number) => {
+      dispatch({
+        type: PROJECT_TEST_PLAN_DETAILS_PAGE,
+        payload: { organizationSlug, projectSlug, testPlanId: testPlanId.toString() },
+      });
+    },
+    [dispatch, organizationSlug, projectSlug],
+  );
 
   const getActionHandler = (action: (testPlan: TestPlanDto) => void) => (testPlanId: number) => {
     const actionTestPlan = testPlansById.get(testPlanId);
@@ -87,19 +71,21 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
     }
   };
 
-  const getOpenTestPlanDetailsButton = (
-    testPlanId: number,
-    testPlanName: string,
-    children: ReactNode,
-  ) => (
-    <button
-      type="button"
-      className={cx('test-plans__table-cell-clickable')}
-      aria-label={formatMessage(messages.viewTestPlanDetails, { testPlanName })}
-      onClick={() => handleRowClick(testPlanId)}
-    >
-      {children}
-    </button>
+  const getOpenTestPlanDetailsButton = useCallback(
+    (testPlanId: number, testPlanName: string, children: ReactNode, kind: 'name' | 'chevron') => (
+      <button
+        type="button"
+        className={cx('test-plans__table-cell-clickable', {
+          'test-plans__table-cell-clickable_name': kind === 'name',
+          'test-plans__table-cell-clickable_chevron': kind === 'chevron',
+        })}
+        aria-label={formatMessage(messages.viewTestPlanDetails, { testPlanName })}
+        onClick={() => handleRowClick(testPlanId)}
+      >
+        {children}
+      </button>
+    ),
+    [formatMessage, handleRowClick],
   );
 
   const { data: testPlansTableData } = useTestPlansTableData({
@@ -109,95 +95,96 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
     onDelete: getActionHandler(openDeleteModal),
   });
 
-  const currentTestPlans = testPlansTableData.map((row) => {
-    const testPlanName = testPlansById.get(row.id as number)?.name || '';
+  const currentTestPlans = useMemo(
+    () =>
+      testPlansTableData.map((row) => {
+        const testPlanName = testPlansById.get(row.id as number)?.name || '';
 
-    return {
-      ...row,
-      testPlanName: {
-        component: getOpenTestPlanDetailsButton(row.id as number, testPlanName, testPlanName),
-      },
-      icon: {
-        component: getOpenTestPlanDetailsButton(
-          row.id as number,
-          testPlanName,
-          <ChevronDownDropdownIcon />,
-        ),
-      },
-    };
-  });
+        return {
+          ...row,
+          testPlanName: {
+            component: getOpenTestPlanDetailsButton(
+              row.id as number,
+              testPlanName,
+              <span className={cx('test-plans__plan-name')}>{testPlanName}</span>,
+              'name',
+            ),
+          },
+          icon: {
+            component: getOpenTestPlanDetailsButton(
+              row.id as number,
+              testPlanName,
+              <ChevronDownDropdownIcon />,
+              'chevron',
+            ),
+          },
+        };
+      }),
+    [getOpenTestPlanDetailsButton, testPlansById, testPlansTableData],
+  );
 
-  const primaryColumn = {
-    key: 'testPlanName',
-    header: formatMessage(COMMON_LOCALE_KEYS.NAME),
-    width: 520,
-    align: 'left' as const,
-  };
-
-  const fixedColumns = [
-    {
-      key: 'coveredTotal',
-      header: formatMessage(messages.coveredTotal),
-      width: 120,
-      align: 'center' as const,
-    },
-    {
-      key: 'progressBar',
-      header: '',
-      width: 120,
-      align: 'center' as const,
-    },
-    {
-      key: 'coverage',
-      header: formatMessage(messages.coverage),
-      width: 70,
+  const primaryColumn = useMemo(
+    () => ({
+      key: 'testPlanName' as const,
+      header: formatMessage(messages.testPlanNameColumn),
+      /* ui-kit: primary uses minmax(width, 1fr); large min width forces horizontal scroll */
+      width: 1,
       align: 'left' as const,
-    },
-    {
-      key: 'options',
-      header: '',
-      width: 60,
-      align: 'center' as const,
-    },
-    {
-      key: 'icon',
-      header: '',
-      width: 50,
-      align: 'center' as const,
-    },
-  ];
+    }),
+    [formatMessage],
+  );
+
+  const fixedColumns = useMemo(
+    () => [
+      {
+        key: 'coveredTotal' as const,
+        header: formatMessage(messages.coveredTotal),
+        width: FIXED_COLUMN_WIDTH_PX.coveredTotal,
+        align: 'left' as const,
+      },
+      {
+        key: 'progressBar' as const,
+        header: '',
+        width: FIXED_COLUMN_WIDTH_PX.progressBar,
+        align: 'center' as const,
+      },
+      {
+        key: 'coverage' as const,
+        header: formatMessage(messages.coverage),
+        width: FIXED_COLUMN_WIDTH_PX.coverage,
+        align: 'left' as const,
+      },
+      {
+        key: 'options' as const,
+        header: '',
+        width: FIXED_COLUMN_WIDTH_PX.options,
+        align: 'center' as const,
+      },
+      {
+        key: 'icon' as const,
+        header: '',
+        width: FIXED_COLUMN_WIDTH_PX.icon,
+        align: 'center' as const,
+      },
+    ],
+    [formatMessage],
+  );
 
   return (
-    <>
-      <div className={cx('test-plans__table-container')}>
-        {isLoading ? (
-          <PageLoader />
-        ) : (
-          <Table
-            data={currentTestPlans}
-            fixedColumns={fixedColumns}
-            primaryColumn={primaryColumn}
-            sortableColumns={[]}
-            className={cx('test-plans__table')}
-            rowClassName={cx('test-plans__table-row')}
-            headerClassName={cx('test-plans__table-header')}
-          />
-        )}
-      </div>
-      {Boolean(testPlansPageData?.totalElements) && (
-        <div className={cx('pagination-wrapper')}>
-          <Pagination
-            pageSize={pageSize}
-            activePage={activePage}
-            totalItems={testPlansPageData.totalElements}
-            totalPages={totalPages}
-            pageSizeOptions={ITEMS_PER_PAGE_OPTIONS}
-            changePage={setPageNumber}
-            changePageSize={setPageSize}
-            captions={captions}
-          />
-        </div>
+    <div className={cx('test-plans__table-container')}>
+      {isLoading ? (
+        <PageLoader />
+      ) : (
+        <Table
+          data={currentTestPlans}
+          fixedColumns={fixedColumns}
+          primaryColumn={primaryColumn}
+          sortableColumns={[]}
+          className={cx('test-plans__table')}
+          rowClassName={cx('test-plans__table-row')}
+          headerClassName={cx('test-plans__table-header')}
+        />
       )}
-    </>
+    </div>
   );
 };

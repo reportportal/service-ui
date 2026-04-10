@@ -79,7 +79,13 @@ const ShowWithPopover = ({ formatMessage }) => (
     arrowColor="white"
     content={<div className={cx('popover')}>{formatMessage(messages.tooltip)}</div>}
   >
-    <IconShow />
+    <button
+      type="button"
+      className={cx('show-popover-trigger')}
+      aria-label={formatMessage(messages.tooltip)}
+    >
+      <IconShow />
+    </button>
   </Popover>
 );
 ShowWithPopover.propTypes = {
