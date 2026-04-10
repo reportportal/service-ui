@@ -19,7 +19,11 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Button, FilterOutlineIcon } from '@reportportal/ui-kit';
-import { ORGANIZATION_PROJECTS_PAGE, ORGANIZATIONS_PAGE, PROJECT_MEMBERS_PAGE } from 'controllers/pages/constants';
+import {
+  ORGANIZATION_PROJECTS_PAGE,
+  ORGANIZATIONS_PAGE,
+  PROJECT_DASHBOARD_PAGE,
+} from 'controllers/pages/constants';
 import { useIntl } from 'react-intl';
 import { projectMembersSelector, projectNameSelector } from 'controllers/project';
 import { SearchField } from 'components/fields/searchField';
@@ -28,6 +32,7 @@ import { withFilter } from 'controllers/filter';
 import { PROJECT_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectPageEvents';
 import { ssoUsersOnlySelector } from 'controllers/appInfo';
 import { activeOrganizationNameSelector } from 'controllers/organization';
+import { urlOrganizationSlugSelector, urlProjectSlugSelector } from 'controllers/pages';
 import { LocationHeaderLayout } from 'layouts/locationHeaderLayout';
 import { messages } from '../../messages';
 import styles from './projectTeamPageHeader.scss';
@@ -46,10 +51,12 @@ export const ProjectTeamPageHeader = ({
   setSearchValue,
 }) => {
   const { formatMessage } = useIntl();
-  const projectSlug = useSelector(projectNameSelector);
+  const projectName = useSelector(projectNameSelector);
   const ssoOnlyEnabled = useSelector(ssoUsersOnlySelector);
-  
-  const organizationSlug = useSelector(activeOrganizationNameSelector);
+
+  const organizationName = useSelector(activeOrganizationNameSelector);
+  const organizationSlug = useSelector(urlOrganizationSlugSelector);
+  const projectSlug = useSelector(urlProjectSlugSelector);
   const isNotEmptyMembers = useSelector(projectMembersSelector).length > 0;
 
   const rootCrumb = {
@@ -59,14 +66,14 @@ export const ProjectTeamPageHeader = ({
   };
 
   const organizationCrumb = {
-    title: organizationSlug,
+    title: organizationName,
     link: { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug } },
     children: []
   };
 
   const projectCrumb = {
-    title: projectSlug,
-    link: { type: PROJECT_MEMBERS_PAGE, payload: { organizationSlug, projectSlug } },
+    title: projectName,
+    link: { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } },
   };
 
   let lastCrumb = rootCrumb;
