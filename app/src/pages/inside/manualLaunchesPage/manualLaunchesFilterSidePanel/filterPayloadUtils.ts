@@ -104,7 +104,7 @@ export const buildManualLaunchesBackendFilterParams = (
     params.testPlanId = payload.testPlan;
   }
 
-  const attributesWithKey = payload.attributes.filter((a) => a.key?.trim());
+  const attributesWithKey = payload.attributes.filter((attribute) => attribute.key?.trim());
 
   if (!isEmpty(attributesWithKey)) {
     params.filterCompositeAttribute = attributesWithKey.map(formatAttribute).join(',');
@@ -153,10 +153,15 @@ const parseStatuses = (raw?: string): string[] => {
   if (!raw) {
     return [];
   }
-  return raw
-    .split(',')
-    .map((value) => value.trim())
-    .filter((value) => VALID_STATUS_VALUES.has(value));
+  return raw.split(',').reduce<string[]>((acc, part) => {
+    const value = part.trim();
+
+    if (VALID_STATUS_VALUES.has(value)) {
+      acc.push(value);
+    }
+
+    return acc;
+  }, []);
 };
 
 const parseCompletion = (raw?: string): string => {
@@ -167,18 +172,26 @@ const parseCompletion = (raw?: string): string => {
   if (Object.values(COMPLETION_VALUES).includes(raw as (typeof COMPLETION_VALUES)[keyof typeof COMPLETION_VALUES])) {
     return raw;
   }
+
   return COMPLETION_FROM_BACKEND_VALUES[raw] ?? COMPLETION_VALUES.ALL;
 };
 
 const parseTimestamp = (raw?: string): Date | undefined => {
-  if (!raw) {
+  const normalized = raw?.trim();
+
+  if (!normalized) {
     return undefined;
   }
-  const ms = Number(raw);
+
+  const ms = Number(normalized);
+
   if (!Number.isFinite(ms)) {
     return undefined;
   }
-  return new Date(ms);
+
+  const date = new Date(ms);
+
+  return Number.isNaN(date.getTime()) ? undefined : date;
 };
 
 const parseStartTime = (fromRaw?: string, toRaw?: string): StartTimeValue | null => {
@@ -188,6 +201,7 @@ const parseStartTime = (fromRaw?: string, toRaw?: string): StartTimeValue | null
   if (!startDate && !endDate) {
     return null;
   }
+
   return { startDate, endDate };
 };
 
@@ -214,16 +228,19 @@ export const resolveFilterCompositeAttributeForApi = (
   if (!query) {
     return undefined;
   }
+
   const fromComposite = readCompositeFromQuery(query);
 
   if (fromComposite) {
     return fromComposite;
   }
+
   const keyRaw = query[ATTRIBUTE_KEY_QUERY_KEY]?.trim();
 
   if (!keyRaw) {
     return undefined;
   }
+
   return formatAttribute({
     key: keyRaw,
     value: query[ATTRIBUTE_VALUE_QUERY_KEY] ?? '',
@@ -232,9 +249,11 @@ export const resolveFilterCompositeAttributeForApi = (
 
 const parseAttributesFromURL = (query: Record<string, string | undefined>): LaunchAttribute[] => {
   const compositeRaw = readCompositeFromQuery(query);
+
   if (compositeRaw) {
     return parseQueryAttributes({ value: compositeRaw }).filter((a) => a.key?.trim());
   }
+
   const keyRaw = query[ATTRIBUTE_KEY_QUERY_KEY];
   const valueRaw = query[ATTRIBUTE_VALUE_QUERY_KEY];
 
