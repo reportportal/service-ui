@@ -77,25 +77,29 @@ export const getChangeMilestoneStatusFlow = (
   targetStatus: TmsMilestoneStatus,
 ): ChangeMilestoneStatusFlow | null => {
   const current = milestone.status;
+  const isTargetTestingStatus = targetStatus === MilestoneStatus.TESTING;
+  const isCurrentTestingStatus = current === MilestoneStatus.TESTING;
+  const isCurrentScheduledStatus = current === MilestoneStatus.SCHEDULED;
+  const isCurrentCompletedStatus = current === MilestoneStatus.COMPLETED;
 
-  if (targetStatus === MilestoneStatus.TESTING && current === MilestoneStatus.SCHEDULED) {
+  if (isTargetTestingStatus && isCurrentScheduledStatus) {
     return getFlowForStartTestingFromScheduled(milestone);
   }
 
   if (
     targetStatus === MilestoneStatus.COMPLETED &&
-    (current === MilestoneStatus.TESTING || current === MilestoneStatus.SCHEDULED)
+    (isCurrentTestingStatus || isCurrentScheduledStatus)
   ) {
     return getFlowForCompleteFromTestingOrScheduled(milestone);
   }
 
-  if (targetStatus === MilestoneStatus.TESTING && current === MilestoneStatus.COMPLETED) {
+  if (isTargetTestingStatus && isCurrentCompletedStatus) {
     return { type: changeMilestoneStatusFlowType.BACK_TO_TESTING };
   }
 
   if (
     targetStatus === MilestoneStatus.SCHEDULED &&
-    (current === MilestoneStatus.TESTING || current === MilestoneStatus.COMPLETED)
+    (isCurrentTestingStatus || isCurrentCompletedStatus)
   ) {
     return { type: changeMilestoneStatusFlowType.BACK_TO_SCHEDULED };
   }

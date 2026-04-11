@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import type { ComponentType, JSX } from 'react';
 import type { MessageDescriptor } from 'react-intl';
 import { Button } from '@reportportal/ui-kit';
 
@@ -31,69 +32,95 @@ type FormatMessageFn = (
   values?: Record<string, string | number | boolean | Date | null | undefined>,
 ) => string;
 
-export type BackToScheduledStatusModalFooterProps = {
+type MilestoneStatusModalFooterBaseProps = {
   closeModal: () => void;
   formatMessage: FormatMessageFn;
   isLoading: boolean;
+};
+
+type BackToScheduledStatusModalFooterProps = MilestoneStatusModalFooterBaseProps & {
   adjustMilestone: boolean;
   isAdjustChangeDisabled: boolean;
   onConfirmKeepingFields: () => void;
 };
 
-export type BackToTestingStatusModalFooterProps = {
-  closeModal: () => void;
-  formatMessage: FormatMessageFn;
-  isLoading: boolean;
+type BackToTestingStatusModalFooterProps = MilestoneStatusModalFooterBaseProps & {
   onConfirm: () => void;
 };
 
-export type StartTestingSimpleStatusModalFooterProps = {
-  closeModal: () => void;
-  formatMessage: FormatMessageFn;
-  isLoading: boolean;
+type StartTestingSimpleStatusModalFooterProps = MilestoneStatusModalFooterBaseProps & {
   onStart: () => void;
 };
 
-export type StartTestingDateChoiceStatusModalFooterProps = {
-  closeModal: () => void;
-  formatMessage: FormatMessageFn;
-  isLoading: boolean;
+type StartTestingDateChoiceStatusModalFooterProps = MilestoneStatusModalFooterBaseProps & {
   onKeepStartDate: () => void;
   onStartWithToday: () => void;
 };
 
-export type StartTestingNoStartDateStatusModalFooterProps = {
-  closeModal: () => void;
-  formatMessage: FormatMessageFn;
-  isLoading: boolean;
+type StartTestingNoStartDateStatusModalFooterProps = MilestoneStatusModalFooterBaseProps & {
   onStartWithoutDate: () => void;
   onStartWithToday: () => void;
 };
 
-export type CompleteSimpleStatusModalFooterProps = {
-  closeModal: () => void;
-  formatMessage: FormatMessageFn;
-  isLoading: boolean;
+type CompleteSimpleStatusModalFooterProps = MilestoneStatusModalFooterBaseProps & {
   onComplete: () => void;
 };
 
-export type CompleteDateChoiceStatusModalFooterProps = {
-  closeModal: () => void;
-  formatMessage: FormatMessageFn;
-  isLoading: boolean;
+type CompleteDateChoiceStatusModalFooterProps = MilestoneStatusModalFooterBaseProps & {
   onKeepDeadline: () => void;
   onCompleteWithToday: () => void;
 };
 
-export type CompleteNoDeadlineStatusModalFooterProps = {
-  closeModal: () => void;
-  formatMessage: FormatMessageFn;
-  isLoading: boolean;
+type CompleteNoDeadlineStatusModalFooterProps = MilestoneStatusModalFooterBaseProps & {
   onCompleteWithoutDeadline: () => void;
   onCompleteWithToday: () => void;
 };
 
-export const BackToScheduledStatusModalFooter = ({
+const MilestoneModalCancelButton = ({
+  closeModal,
+  formatMessage,
+  isLoading,
+}: Pick<MilestoneStatusModalFooterBaseProps, 'closeModal' | 'formatMessage' | 'isLoading'>) => (
+  <Button variant="ghost" disabled={isLoading} onClick={closeModal}>
+    {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
+  </Button>
+);
+
+const MilestoneModalGhostTextButton = ({
+  isLoading,
+  onClick,
+  formatMessage,
+  message,
+}: {
+  isLoading: boolean;
+  onClick: () => void;
+  formatMessage: FormatMessageFn;
+  message: MessageDescriptor;
+}) => (
+  <Button variant="ghost" disabled={isLoading} onClick={onClick}>
+    {formatMessage(message)}
+  </Button>
+);
+
+const MilestoneModalPrimaryLoadingButton = ({
+  isLoading,
+  onClick,
+  formatMessage,
+  message,
+}: {
+  isLoading: boolean;
+  onClick: () => void;
+  formatMessage: FormatMessageFn;
+  message: MessageDescriptor;
+}) => (
+  <Button variant="primary" disabled={isLoading} onClick={onClick}>
+    <LoadingSubmitButton isLoading={isLoading}>
+      {formatMessage(message)}
+    </LoadingSubmitButton>
+  </Button>
+);
+
+const BackToScheduledStatusModalFooter = ({
   closeModal,
   formatMessage,
   isLoading,
@@ -102,9 +129,7 @@ export const BackToScheduledStatusModalFooter = ({
   onConfirmKeepingFields,
 }: BackToScheduledStatusModalFooterProps) => (
   <MilestoneStatusModalFooter>
-    <Button variant="ghost" disabled={isLoading} onClick={closeModal}>
-      {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
-    </Button>
+    <MilestoneModalCancelButton closeModal={closeModal} formatMessage={formatMessage} isLoading={isLoading} />
     <Button
       variant="primary"
       disabled={isLoading || (adjustMilestone && isAdjustChangeDisabled)}
@@ -119,43 +144,41 @@ export const BackToScheduledStatusModalFooter = ({
   </MilestoneStatusModalFooter>
 );
 
-export const BackToTestingStatusModalFooter = ({
+const BackToTestingStatusModalFooter = ({
   closeModal,
   formatMessage,
   isLoading,
   onConfirm,
 }: BackToTestingStatusModalFooterProps) => (
   <MilestoneStatusModalFooter>
-    <Button variant="ghost" disabled={isLoading} onClick={closeModal}>
-      {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
-    </Button>
-    <Button variant="primary" disabled={isLoading} onClick={onConfirm}>
-      <LoadingSubmitButton isLoading={isLoading}>
-        {formatMessage(changeMilestoneStatusModalMessages.changeAction)}
-      </LoadingSubmitButton>
-    </Button>
+    <MilestoneModalCancelButton closeModal={closeModal} formatMessage={formatMessage} isLoading={isLoading} />
+    <MilestoneModalPrimaryLoadingButton
+      isLoading={isLoading}
+      onClick={onConfirm}
+      formatMessage={formatMessage}
+      message={changeMilestoneStatusModalMessages.changeAction}
+    />
   </MilestoneStatusModalFooter>
 );
 
-export const StartTestingSimpleStatusModalFooter = ({
+const StartTestingSimpleStatusModalFooter = ({
   closeModal,
   formatMessage,
   isLoading,
   onStart,
 }: StartTestingSimpleStatusModalFooterProps) => (
   <MilestoneStatusModalFooter>
-    <Button variant="ghost" disabled={isLoading} onClick={closeModal}>
-      {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
-    </Button>
-    <Button variant="primary" disabled={isLoading} onClick={onStart}>
-      <LoadingSubmitButton isLoading={isLoading}>
-        {formatMessage(changeMilestoneStatusModalMessages.startTestingPrimary)}
-      </LoadingSubmitButton>
-    </Button>
+    <MilestoneModalCancelButton closeModal={closeModal} formatMessage={formatMessage} isLoading={isLoading} />
+    <MilestoneModalPrimaryLoadingButton
+      isLoading={isLoading}
+      onClick={onStart}
+      formatMessage={formatMessage}
+      message={changeMilestoneStatusModalMessages.startTestingPrimary}
+    />
   </MilestoneStatusModalFooter>
 );
 
-export const StartTestingDateChoiceStatusModalFooter = ({
+const StartTestingDateChoiceStatusModalFooter = ({
   closeModal,
   formatMessage,
   isLoading,
@@ -163,21 +186,23 @@ export const StartTestingDateChoiceStatusModalFooter = ({
   onStartWithToday,
 }: StartTestingDateChoiceStatusModalFooterProps) => (
   <MilestoneStatusModalFooter>
-    <Button variant="ghost" disabled={isLoading} onClick={closeModal}>
-      {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
-    </Button>
-    <Button variant="ghost" disabled={isLoading} onClick={onKeepStartDate}>
-      {formatMessage(changeMilestoneStatusModalMessages.startWithoutReplacing)}
-    </Button>
-    <Button variant="primary" disabled={isLoading} onClick={onStartWithToday}>
-      <LoadingSubmitButton isLoading={isLoading}>
-        {formatMessage(changeMilestoneStatusModalMessages.startWithToday)}
-      </LoadingSubmitButton>
-    </Button>
+    <MilestoneModalCancelButton closeModal={closeModal} formatMessage={formatMessage} isLoading={isLoading} />
+    <MilestoneModalGhostTextButton
+      isLoading={isLoading}
+      onClick={onKeepStartDate}
+      formatMessage={formatMessage}
+      message={changeMilestoneStatusModalMessages.startWithoutReplacing}
+    />
+    <MilestoneModalPrimaryLoadingButton
+      isLoading={isLoading}
+      onClick={onStartWithToday}
+      formatMessage={formatMessage}
+      message={changeMilestoneStatusModalMessages.startWithToday}
+    />
   </MilestoneStatusModalFooter>
 );
 
-export const StartTestingNoStartDateStatusModalFooter = ({
+const StartTestingNoStartDateStatusModalFooter = ({
   closeModal,
   formatMessage,
   isLoading,
@@ -185,39 +210,40 @@ export const StartTestingNoStartDateStatusModalFooter = ({
   onStartWithToday,
 }: StartTestingNoStartDateStatusModalFooterProps) => (
   <MilestoneStatusModalFooter>
-    <Button variant="ghost" disabled={isLoading} onClick={closeModal}>
-      {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
-    </Button>
-    <Button variant="ghost" disabled={isLoading} onClick={onStartWithoutDate}>
-      {formatMessage(changeMilestoneStatusModalMessages.startWithoutDate)}
-    </Button>
-    <Button variant="primary" disabled={isLoading} onClick={onStartWithToday}>
-      <LoadingSubmitButton isLoading={isLoading}>
-        {formatMessage(changeMilestoneStatusModalMessages.startWithToday)}
-      </LoadingSubmitButton>
-    </Button>
+    <MilestoneModalCancelButton closeModal={closeModal} formatMessage={formatMessage} isLoading={isLoading} />
+    <MilestoneModalGhostTextButton
+      isLoading={isLoading}
+      onClick={onStartWithoutDate}
+      formatMessage={formatMessage}
+      message={changeMilestoneStatusModalMessages.startWithoutDate}
+    />
+    <MilestoneModalPrimaryLoadingButton
+      isLoading={isLoading}
+      onClick={onStartWithToday}
+      formatMessage={formatMessage}
+      message={changeMilestoneStatusModalMessages.startWithToday}
+    />
   </MilestoneStatusModalFooter>
 );
 
-export const CompleteSimpleStatusModalFooter = ({
+const CompleteSimpleStatusModalFooter = ({
   closeModal,
   formatMessage,
   isLoading,
   onComplete,
 }: CompleteSimpleStatusModalFooterProps) => (
   <MilestoneStatusModalFooter>
-    <Button variant="ghost" disabled={isLoading} onClick={closeModal}>
-      {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
-    </Button>
-    <Button variant="primary" disabled={isLoading} onClick={onComplete}>
-      <LoadingSubmitButton isLoading={isLoading}>
-        {formatMessage(changeMilestoneStatusModalMessages.completeMilestonePrimary)}
-      </LoadingSubmitButton>
-    </Button>
+    <MilestoneModalCancelButton closeModal={closeModal} formatMessage={formatMessage} isLoading={isLoading} />
+    <MilestoneModalPrimaryLoadingButton
+      isLoading={isLoading}
+      onClick={onComplete}
+      formatMessage={formatMessage}
+      message={changeMilestoneStatusModalMessages.completeMilestonePrimary}
+    />
   </MilestoneStatusModalFooter>
 );
 
-export const CompleteDateChoiceStatusModalFooter = ({
+const CompleteDateChoiceStatusModalFooter = ({
   closeModal,
   formatMessage,
   isLoading,
@@ -225,21 +251,23 @@ export const CompleteDateChoiceStatusModalFooter = ({
   onCompleteWithToday,
 }: CompleteDateChoiceStatusModalFooterProps) => (
   <MilestoneStatusModalFooter>
-    <Button variant="ghost" disabled={isLoading} onClick={closeModal}>
-      {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
-    </Button>
-    <Button variant="ghost" disabled={isLoading} onClick={onKeepDeadline}>
-      {formatMessage(changeMilestoneStatusModalMessages.completeWithoutReplacing)}
-    </Button>
-    <Button variant="primary" disabled={isLoading} onClick={onCompleteWithToday}>
-      <LoadingSubmitButton isLoading={isLoading}>
-        {formatMessage(changeMilestoneStatusModalMessages.completeWithToday)}
-      </LoadingSubmitButton>
-    </Button>
+    <MilestoneModalCancelButton closeModal={closeModal} formatMessage={formatMessage} isLoading={isLoading} />
+    <MilestoneModalGhostTextButton
+      isLoading={isLoading}
+      onClick={onKeepDeadline}
+      formatMessage={formatMessage}
+      message={changeMilestoneStatusModalMessages.completeWithoutReplacing}
+    />
+    <MilestoneModalPrimaryLoadingButton
+      isLoading={isLoading}
+      onClick={onCompleteWithToday}
+      formatMessage={formatMessage}
+      message={changeMilestoneStatusModalMessages.completeWithToday}
+    />
   </MilestoneStatusModalFooter>
 );
 
-export const CompleteNoDeadlineStatusModalFooter = ({
+const CompleteNoDeadlineStatusModalFooter = ({
   closeModal,
   formatMessage,
   isLoading,
@@ -247,80 +275,52 @@ export const CompleteNoDeadlineStatusModalFooter = ({
   onCompleteWithToday,
 }: CompleteNoDeadlineStatusModalFooterProps) => (
   <MilestoneStatusModalFooter>
-    <Button variant="ghost" disabled={isLoading} onClick={closeModal}>
-      {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
-    </Button>
-    <Button variant="ghost" disabled={isLoading} onClick={onCompleteWithoutDeadline}>
-      {formatMessage(changeMilestoneStatusModalMessages.completeWithoutDeadline)}
-    </Button>
-    <Button variant="primary" disabled={isLoading} onClick={onCompleteWithToday}>
-      <LoadingSubmitButton isLoading={isLoading}>
-        {formatMessage(changeMilestoneStatusModalMessages.completeWithToday)}
-      </LoadingSubmitButton>
-    </Button>
+    <MilestoneModalCancelButton closeModal={closeModal} formatMessage={formatMessage} isLoading={isLoading} />
+    <MilestoneModalGhostTextButton
+      isLoading={isLoading}
+      onClick={onCompleteWithoutDeadline}
+      formatMessage={formatMessage}
+      message={changeMilestoneStatusModalMessages.completeWithoutDeadline}
+    />
+    <MilestoneModalPrimaryLoadingButton
+      isLoading={isLoading}
+      onClick={onCompleteWithToday}
+      formatMessage={formatMessage}
+      message={changeMilestoneStatusModalMessages.completeWithToday}
+    />
   </MilestoneStatusModalFooter>
 );
 
-export const createBackToScheduledStatusModalFooter = (
-  props: Omit<BackToScheduledStatusModalFooterProps, 'closeModal'>,
-) => {
-  return (closeModal: () => void) => (
-    <BackToScheduledStatusModalFooter {...props} closeModal={closeModal} />
-  );
-};
+type WithoutCloseModal<T> = Omit<T, 'closeModal'>;
 
-export const createBackToTestingStatusModalFooter = (
-  props: Omit<BackToTestingStatusModalFooterProps, 'closeModal'>,
-) => {
-  return (closeModal: () => void) => (
-    <BackToTestingStatusModalFooter {...props} closeModal={closeModal} />
-  );
-};
+export const createModalFooter =
+  <TProps extends { closeModal: () => void }>(Component: ComponentType<TProps>) =>
+  (props: WithoutCloseModal<TProps>) =>
+  (closeModal: () => void): JSX.Element =>
+    <Component {...(props as TProps)} closeModal={closeModal} />;
 
-export const createStartTestingSimpleStatusModalFooter = (
-  props: Omit<StartTestingSimpleStatusModalFooterProps, 'closeModal'>,
-) => {
-  return (closeModal: () => void) => (
-    <StartTestingSimpleStatusModalFooter {...props} closeModal={closeModal} />
-  );
-};
+export const createBackToScheduledStatusModalFooter = createModalFooter(BackToScheduledStatusModalFooter);
 
-export const createStartTestingDateChoiceStatusModalFooter = (
-  props: Omit<StartTestingDateChoiceStatusModalFooterProps, 'closeModal'>,
-) => {
-  return (closeModal: () => void) => (
-    <StartTestingDateChoiceStatusModalFooter {...props} closeModal={closeModal} />
-  );
-};
+export const createBackToTestingStatusModalFooter = createModalFooter(BackToTestingStatusModalFooter);
 
-export const createStartTestingNoStartDateStatusModalFooter = (
-  props: Omit<StartTestingNoStartDateStatusModalFooterProps, 'closeModal'>,
-) => {
-  return (closeModal: () => void) => (
-    <StartTestingNoStartDateStatusModalFooter {...props} closeModal={closeModal} />
-  );
-};
+export const createStartTestingSimpleStatusModalFooter = createModalFooter(
+  StartTestingSimpleStatusModalFooter,
+);
 
-export const createCompleteSimpleStatusModalFooter = (
-  props: Omit<CompleteSimpleStatusModalFooterProps, 'closeModal'>,
-) => {
-  return (closeModal: () => void) => (
-    <CompleteSimpleStatusModalFooter {...props} closeModal={closeModal} />
-  );
-};
+export const createStartTestingDateChoiceStatusModalFooter = createModalFooter(
+  StartTestingDateChoiceStatusModalFooter,
+);
 
-export const createCompleteDateChoiceStatusModalFooter = (
-  props: Omit<CompleteDateChoiceStatusModalFooterProps, 'closeModal'>,
-) => {
-  return (closeModal: () => void) => (
-    <CompleteDateChoiceStatusModalFooter {...props} closeModal={closeModal} />
-  );
-};
+export const createStartTestingNoStartDateStatusModalFooter = createModalFooter(
+  StartTestingNoStartDateStatusModalFooter,
+);
 
-export const createCompleteNoDeadlineStatusModalFooter = (
-  props: Omit<CompleteNoDeadlineStatusModalFooterProps, 'closeModal'>,
-) => {
-  return (closeModal: () => void) => (
-    <CompleteNoDeadlineStatusModalFooter {...props} closeModal={closeModal} />
-  );
-};
+export const createCompleteSimpleStatusModalFooter = createModalFooter(CompleteSimpleStatusModalFooter);
+
+export const createCompleteDateChoiceStatusModalFooter = createModalFooter(
+  CompleteDateChoiceStatusModalFooter,
+);
+
+export const createCompleteNoDeadlineStatusModalFooter = createModalFooter(
+  CompleteNoDeadlineStatusModalFooter,
+);

@@ -28,7 +28,7 @@ const MODAL_CLASS = cx('change-milestone-status-modal');
 const CONTENT_CLASS = cx('change-milestone-status-modal__content');
 const FOOTER_CLASS = cx('change-milestone-status-modal__footer');
 
-export type MilestoneStatusModalFrameProps = {
+type MilestoneStatusModalFrameProps = {
   title: ReactNode;
   allowCloseOutside?: boolean;
   onClose: () => void;
