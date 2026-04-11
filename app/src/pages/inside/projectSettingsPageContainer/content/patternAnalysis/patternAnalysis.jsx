@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
 
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { addPatternAction, patternsSelector } from 'controllers/project';
@@ -31,6 +32,9 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 import { SettingsPageContent } from '../settingsPageContent';
 import { PatternAnalysisContent } from './patternAnalysisContent';
 import { messages } from './messages';
+import styles from './patternAnalysis.scss';
+
+const cx = classNames.bind(styles);
 
 export const PatternAnalysis = ({ setHeaderTitleNode }) => {
   const patterns = useSelector(patternsSelector);
@@ -106,6 +110,7 @@ export const PatternAnalysis = ({ setHeaderTitleNode }) => {
               ? messages.noPatternAnalysisDescription
               : messages.noPatternsAppearDescription,
           )}
+          containerClassName={cx('pattern-analysis-empty-state')}
           documentationLink={docsReferences.emptyStatePatternAnalysisDocs}
           handleDocumentationClick={handleDocumentationClick}
           buttons={getButtons()}
