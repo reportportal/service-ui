@@ -18,6 +18,8 @@ import { addDays, addMonths, nextDay, startOfDay } from 'date-fns';
 
 import { parseDateOnly, toDateOnlyString } from './milestoneDateUtils';
 
+export const todayDateOnly = (): string => toDateOnlyString(startOfDay(new Date()));
+
 export const tomorrowDateOnly = (): string => toDateOnlyString(addDays(startOfDay(new Date()), 1));
 
 export const nextMondayDateOnly = (): string =>

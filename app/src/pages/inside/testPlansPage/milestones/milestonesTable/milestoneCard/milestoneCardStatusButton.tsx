@@ -35,7 +35,10 @@ import styles from './milestoneCard.scss';
 
 const cx = createClassnames(styles);
 
-export const MilestoneCardStatusButton = ({ milestone }: Pick<MilestoneCardProps, 'milestone'>) => {
+export const MilestoneCardStatusButton = ({
+  milestone,
+  onChangeMilestoneStatus,
+}: MilestoneCardProps) => {
   const { formatMessage } = useIntl();
   const [isOpened, setIsOpened] = useState(false);
   const statusModifier = milestoneStatusToCssModifier(milestone.status);
@@ -46,18 +49,19 @@ export const MilestoneCardStatusButton = ({ milestone }: Pick<MilestoneCardProps
       className={cx('milestone-card__status-popover')}
       content={
         <div className={cx('milestone-card__status-options')}>
-          {options.map((st) => (
+          {options.map((targetStatus) => (
             <button
-              key={st}
+              key={targetStatus}
               type="button"
               className={cx('milestone-card__status-option')}
               onClick={(e) => {
                 e.stopPropagation();
                 setIsOpened(false);
+                onChangeMilestoneStatus?.(milestone, targetStatus);
               }}
             >
               {formatMessage(
-                getMilestoneStatusPopoverOptionMessageDescriptor(st, milestone.status),
+                getMilestoneStatusPopoverOptionMessageDescriptor(targetStatus, milestone.status),
               )}
             </button>
           ))}
