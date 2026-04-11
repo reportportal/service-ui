@@ -20,7 +20,11 @@ import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Dropdown, FieldText } from '@reportportal/ui-kit';
-import { CONDITION_BETWEEN, CONDITION_CNT } from 'components/filterEntities/constants';
+import {
+  CONDITION_BETWEEN,
+  CONDITION_CNT,
+  CONDITION_IN,
+} from 'components/filterEntities/constants';
 import {
   FilterButton,
   ACCOUNT_TYPE_FILTER_NAME,
@@ -37,10 +41,7 @@ import {
 } from 'components/main/filterButton';
 import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
 import { getApplyFilterEventParams } from 'components/main/analytics/utils';
-import {
-  DateRangeFormField,
-  formatDisplayedValue,
-} from 'components/main/dateRange';
+import { DateRangeFormField, formatDisplayedValue } from 'components/main/dateRange';
 import { messages } from './messages';
 import styles from './allUsersFilter.scss';
 
@@ -81,7 +82,7 @@ export const AllUsersFilter = ({
     [ACCOUNT_TYPE_FILTER_NAME]: {
       filterName: ACCOUNT_TYPE_FILTER_NAME,
       title: formatMessage(messages.type),
-      defaultCondition: CONDITION_CNT.toUpperCase(),
+      defaultCondition: CONDITION_IN.toUpperCase(),
       fields: [
         {
           component: Dropdown,
