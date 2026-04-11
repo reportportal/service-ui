@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import LG from 'lightgallery';
+import type { LightGallery } from 'lightgallery/lightgallery';
 
 export interface AttachmentWithSlider {
   fileName: string;
@@ -34,7 +34,7 @@ export interface LightGalleryEvent {
   [key: string]: unknown;
 }
 
-export type LightGalleryInstance = ReturnType<typeof LG>;
+export type LightGalleryInstance = LightGallery;
 
 export type GalleryItem = {
   dataset?: DOMStringMap;
@@ -43,11 +43,4 @@ export type GalleryItem = {
 
 export type ZoomPlugin = { zoomIn?: () => void; resetZoom?: () => void; init?: () => void };
 
-export type ExtendedLightGalleryInstance = LightGalleryInstance & {
-  outer: { selector?: HTMLElement };
-  LGel: { on: (event: string, cb: (event: LightGalleryEvent) => void) => void };
-  galleryItems: Array<{ src?: string; href?: string }>;
-  items: Array<{ dataset?: DOMStringMap; download?: string }>;
-  index: number;
-  plugins?: Array<{ zoomIn?: () => void; resetZoom?: () => void; init?: () => void }>;
-};
+export type ExtendedLightGalleryInstance = LightGalleryInstance;

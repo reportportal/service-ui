@@ -91,6 +91,18 @@
     .lg-content {
       top: 80px !important;
 
+      .lg-item[data-rp-pending-full-load] .lg-image {
+        opacity: 0;
+      }
+
+      .lg-item:has([data-rp-full-image-loading]) {
+        position: relative;
+
+        .lg-image {
+          opacity: 0;
+        }
+      }
+
       .lg-image {
         border-radius: 4px;
       }
@@ -173,4 +185,14 @@
 
 .gallery-item.loading {
   pointer-events: none;
+}
+
+.full-image-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100%;
 }

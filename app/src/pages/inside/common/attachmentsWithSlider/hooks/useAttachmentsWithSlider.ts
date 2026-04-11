@@ -19,57 +19,71 @@ import { useCallback } from 'react';
 import { saveAs } from 'file-saver';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { PromiseStatus } from 'pages/inside/common/constants';
 import { projectKeySelector } from 'controllers/project';
 import { AttachmentWithSlider } from 'pages/inside/common/attachmentsWithSlider/types';
 
 export const useAttachmentsWithSlider = () => {
   const projectKey = useSelector(projectKeySelector);
 
-  const getAttachmentWithThumbnail = useCallback(async (
-    attachment: AttachmentWithSlider,
-    objectUrls: string[],
-    abortSignal: AbortSignal,
-  ): Promise<AttachmentWithSlider> => {
-    const thumbnailPromise = fetch(
-      URLS.attachmentThumbnail(projectKey, attachment.id),
-      { responseType: 'blob', signal: abortSignal },
-      true
-    );
-    const imagePromise = fetch(
-      URLS.tmsAttachmentDownload(projectKey, attachment.id),
-      { responseType: 'blob', signal: abortSignal },
-      true
-    );
+  const getAttachmentThumbnailOnly = useCallback(
+    async (
+      attachment: AttachmentWithSlider,
+      objectUrls: string[],
+      abortSignal: AbortSignal,
+    ): Promise<AttachmentWithSlider> => {
+      try {
+        const thumbnailResult = await fetch(
+          URLS.attachmentThumbnail(projectKey, attachment.id),
+          { responseType: 'blob', signal: abortSignal },
+          true,
+        );
 
-    const [thumbnailResult, imageResult] = await Promise.allSettled([thumbnailPromise, imagePromise]);
+        if (abortSignal.aborted || !thumbnailResult) {
+          return { ...attachment };
+        }
 
-    let thumbnailSrc: string | undefined;
-    let src: string | undefined;
+        const thumbnailSrc = URL.createObjectURL(thumbnailResult.data as MediaSource);
 
-    if (!abortSignal.aborted && thumbnailResult.status === PromiseStatus.fulfilled) {
-      thumbnailSrc = URL.createObjectURL(thumbnailResult.value.data as MediaSource);
-      objectUrls.push(thumbnailSrc);
-    }
+        objectUrls.push(thumbnailSrc);
 
-    if (!abortSignal.aborted && imageResult.status === PromiseStatus.fulfilled) {
-      src = URL.createObjectURL(imageResult.value.data as MediaSource);
-      objectUrls.push(src);
-    }
+        return {
+          ...attachment,
+          thumbnailSrc,
+        };
+      } catch {
+        return { ...attachment };
+      }
+    },
+    [projectKey],
+  );
 
-    return {
-      ...attachment,
-      ...(thumbnailSrc && { thumbnailSrc }),
-      ...(src && { src }),
-    };
-  }, [projectKey]);
+  const fetchAttachmentFullImage = useCallback(
+    async (attachmentId: number, abortSignal: AbortSignal): Promise<string | undefined> => {
+      try {
+        const imageResult = await fetch(
+          URLS.tmsAttachmentDownload(projectKey, attachmentId),
+          { responseType: 'blob', signal: abortSignal },
+          true,
+        );
+
+        if (abortSignal.aborted || !imageResult) {
+          return undefined;
+        }
+
+        return URL.createObjectURL(imageResult.data as MediaSource);
+      } catch {
+        return undefined;
+      }
+    },
+    [projectKey],
+  );
 
   const downloadAttachment = useCallback(async (attachmentId: string, fileName: string): Promise<void> => {
     try {
       const response = await fetch(
         URLS.tmsAttachmentDownload(projectKey, attachmentId),
         { responseType: 'blob' },
-        true
+        true,
       );
 
       saveAs(response.data as Blob, fileName);
@@ -79,7 +93,8 @@ export const useAttachmentsWithSlider = () => {
   }, [projectKey]);
 
   return {
-    getAttachmentWithThumbnail,
+    getAttachmentThumbnailOnly,
+    fetchAttachmentFullImage,
     downloadAttachment,
   };
 };
