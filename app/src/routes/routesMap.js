@@ -145,7 +145,7 @@ import {
 import {
   MANUAL_LAUNCHES_FILTER_URL_KEYS,
   resolveFilterCompositeAttributeForApi,
-} from 'pages/inside/manualLaunchesPage/manualLaunchesFilterSidePanel';
+} from 'common/manualLaunches/manualLaunchesFilterUrl';
 import { getRouterParams } from 'common/utils';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
@@ -392,8 +392,7 @@ const routesMap = {
         state,
       });
 
-      const query = state.location?.query ?? {};
-      const searchQuery = query.searchQuery;
+      const { searchQuery, ...query } = state.location?.query ?? {};
 
       const rawStatuses = query[MANUAL_LAUNCHES_FILTER_URL_KEYS.STATUSES];
       const filterStatuses = rawStatuses

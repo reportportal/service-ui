@@ -17,6 +17,13 @@ import { isEmpty } from 'es-toolkit/compat';
 
 import { compareStringsLocale } from 'common/utils';
 import { formatAttribute, parseQueryAttributes } from 'common/utils/attributeUtils';
+import {
+  MANUAL_LAUNCHES_FILTER_URL_KEYS,
+  MANUAL_LAUNCHES_FILTER_ATTRIBUTE_KEY_QUERY_KEY,
+  MANUAL_LAUNCHES_FILTER_ATTRIBUTE_VALUE_QUERY_KEY,
+  readCompositeFromQuery,
+  type ManualLaunchesFilterURLQuery,
+} from 'common/manualLaunches/manualLaunchesFilterUrl';
 
 import { COMPLETION_VALUES, EMPTY_FILTER, LAUNCH_STATUSES } from './constants';
 import type { LaunchAttribute } from '../types';
@@ -117,25 +124,7 @@ export const buildManualLaunchesBackendFilterParams = (
   return params;
 };
 
-const URL_KEYS = {
-  STATUSES: 'filterStatuses',
-  COMPLETION: 'filterCompletion',
-  START_TIME_FROM: 'filterStartTimeFrom',
-  START_TIME_TO: 'filterStartTimeTo',
-  TEST_PLAN: 'filterTestPlan',
-  TEST_PLAN_NAME: 'filterTestPlanName',
-  COMPOSITE_ATTRIBUTE: 'filterCompositeAttribute',
-} as const;
-
-const COMPOSITE_ATTRIBUTE_QUERY_KEY = 'filterAttributeComposite';
-const ATTRIBUTE_KEY_QUERY_KEY = 'filterAttributeKey';
-const ATTRIBUTE_VALUE_QUERY_KEY = 'filterAttributeValue';
-
-export const MANUAL_LAUNCHES_FILTER_URL_KEYS = URL_KEYS;
-
-export type ManualLaunchesFilterURLQuery = Partial<
-  Record<(typeof URL_KEYS)[keyof typeof URL_KEYS], string | undefined>
->;
+const URL_KEYS = MANUAL_LAUNCHES_FILTER_URL_KEYS;
 
 export const buildURLQueryFromFilters = (
   payload: ManualLaunchesFilterPayload,
@@ -182,21 +171,23 @@ const parseCompletion = (raw?: string): string => {
   return COMPLETION_FROM_BACKEND_VALUES[raw] ?? COMPLETION_VALUES.ALL;
 };
 
-const parseTimestamp = (raw?: string): Date | undefined => {
+const parseTrimmedFiniteNumber = (raw?: string): number | undefined => {
   const normalized = raw?.trim();
-
   if (!normalized) {
     return undefined;
   }
+  const number = Number(normalized);
 
-  const ms = Number(normalized);
+  return Number.isFinite(number) ? number : undefined;
+};
 
-  if (!Number.isFinite(ms)) {
+const parseTimestamp = (raw?: string): Date | undefined => {
+  const ms = parseTrimmedFiniteNumber(raw);
+
+  if (ms === undefined) {
     return undefined;
   }
-
   const date = new Date(ms);
-
   return Number.isNaN(date.getTime()) ? undefined : date;
 };
 
@@ -204,18 +195,11 @@ const parseTestPlan = (
   idRaw?: string,
   nameRaw?: string,
 ): TestPlanFilterOption | null => {
-  const trimmedId = idRaw?.trim();
+  const id = parseTrimmedFiniteNumber(idRaw);
 
-  if (!trimmedId) {
+  if (id === undefined) {
     return null;
   }
-
-  const id = Number(trimmedId);
-
-  if (!Number.isFinite(id)) {
-    return null;
-  }
-
   return { id, name: nameRaw?.trim() || '' };
 };
 
@@ -237,51 +221,17 @@ const parseAttributesFromKeyValue = (keyRaw?: string, valueRaw?: string): Launch
   return [{ key: keyRaw, value: valueRaw ?? '' }];
 };
 
-const readCompositeFromQuery = (
-  query: Record<string, string | undefined>,
-): string | undefined => {
-  const raw =
-    query[URL_KEYS.COMPOSITE_ATTRIBUTE]?.trim() ||
-    query[COMPOSITE_ATTRIBUTE_QUERY_KEY]?.trim();
-
-  return raw || undefined;
-};
-
-export const resolveFilterCompositeAttributeForApi = (
-  query: Record<string, string | undefined> | undefined,
-): string | undefined => {
-  if (!query) {
-    return undefined;
-  }
-
-  const fromComposite = readCompositeFromQuery(query);
-
-  if (fromComposite) {
-    return fromComposite;
-  }
-
-  const keyRaw = query[ATTRIBUTE_KEY_QUERY_KEY]?.trim();
-
-  if (!keyRaw) {
-    return undefined;
-  }
-
-  return formatAttribute({
-    key: keyRaw,
-    value: query[ATTRIBUTE_VALUE_QUERY_KEY] ?? '',
-  }) as string;
-};
-
 const parseAttributesFromURL = (query: Record<string, string | undefined>): LaunchAttribute[] => {
   const compositeRaw = readCompositeFromQuery(query);
 
   if (compositeRaw) {
     const parsed = parseQueryAttributes({ value: compositeRaw }) as LaunchAttribute[];
+
     return parsed.filter((attribute) => attribute.key?.trim());
   }
 
-  const keyRaw = query[ATTRIBUTE_KEY_QUERY_KEY];
-  const valueRaw = query[ATTRIBUTE_VALUE_QUERY_KEY];
+  const keyRaw = query[MANUAL_LAUNCHES_FILTER_ATTRIBUTE_KEY_QUERY_KEY];
+  const valueRaw = query[MANUAL_LAUNCHES_FILTER_ATTRIBUTE_VALUE_QUERY_KEY];
 
   return parseAttributesFromKeyValue(keyRaw, valueRaw);
 };

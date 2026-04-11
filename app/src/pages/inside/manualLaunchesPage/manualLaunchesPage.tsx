@@ -30,6 +30,7 @@ import {
 import { projectNameSelector } from 'controllers/project';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { createClassnames, debounce } from 'common/utils';
+import { MANUAL_LAUNCHES_FILTER_URL_KEYS } from 'common/manualLaunches/manualLaunchesFilterUrl';
 import { SEARCH_DELAY } from 'common/constants/delayTime';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import {
@@ -62,7 +63,6 @@ import {
   buildManualLaunchesBackendFilterParams,
   buildURLQueryFromFilters,
   parseFiltersFromURLQuery,
-  MANUAL_LAUNCHES_FILTER_URL_KEYS,
   type ManualLaunchesFilterPayload,
 } from './manualLaunchesFilterSidePanel';
 
@@ -172,23 +172,20 @@ export const ManualLaunchesPage = () => {
   }, [dispatch]);
 
   const handleRefresh = useCallback(() => {
-    const attributeParams = buildManualLaunchesBackendFilterParams(appliedFilters);
+    const { filterCompositeAttribute } = buildManualLaunchesBackendFilterParams(appliedFilters);
+    const { statuses, startTime, testPlan } = appliedFilters;
 
     dispatch(
       getManualLaunchesAction({
         offset,
         limit: pageSize,
         searchQuery: appliedSearchQuery || undefined,
-        filterStatuses: appliedFilters.statuses,
+        filterStatuses: statuses,
         filterCompletion: location?.query?.[MANUAL_LAUNCHES_FILTER_URL_KEYS.COMPLETION] || undefined,
-        filterStartTimeFrom: appliedFilters.startTime?.startDate
-          ? appliedFilters.startTime.startDate.getTime()
-          : undefined,
-        filterEndTimeTo: appliedFilters.startTime?.endDate
-          ? appliedFilters.startTime.endDate.getTime()
-          : undefined,
-        filterTestPlan: appliedFilters.testPlan ? String(appliedFilters.testPlan.id) : undefined,
-        filterCompositeAttribute: attributeParams.filterCompositeAttribute,
+        filterStartTimeFrom: startTime?.startDate ? startTime.startDate.getTime() : undefined,
+        filterEndTimeTo: startTime?.endDate ? startTime.endDate.getTime() : undefined,
+        filterTestPlan: testPlan ? String(testPlan.id) : undefined,
+        filterCompositeAttribute,
       }),
     );
   }, [dispatch, offset, pageSize, appliedSearchQuery, appliedFilters, location?.query]);

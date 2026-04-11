@@ -22,10 +22,10 @@ export {
   buildManualLaunchesBackendFilterParams,
   buildURLQueryFromFilters,
   parseFiltersFromURLQuery,
-  resolveFilterCompositeAttributeForApi,
+} from './filterPayloadUtils';
+export type { ManualLaunchesBackendFilterParams } from './filterPayloadUtils';
+export {
   MANUAL_LAUNCHES_FILTER_URL_KEYS,
-} from './filterPayloadUtils';
-export type {
-  ManualLaunchesBackendFilterParams,
-  ManualLaunchesFilterURLQuery,
-} from './filterPayloadUtils';
+  resolveFilterCompositeAttributeForApi,
+} from 'common/manualLaunches/manualLaunchesFilterUrl';
+export type { ManualLaunchesFilterURLQuery } from 'common/manualLaunches/manualLaunchesFilterUrl';
