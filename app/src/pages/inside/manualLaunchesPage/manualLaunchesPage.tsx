@@ -187,7 +187,7 @@ export const ManualLaunchesPage = () => {
         filterEndTimeTo: appliedFilters.startTime?.endDate
           ? appliedFilters.startTime.endDate.getTime()
           : undefined,
-        filterTestPlan: appliedFilters.testPlan || undefined,
+        filterTestPlan: appliedFilters.testPlan ? String(appliedFilters.testPlan.id) : undefined,
         filterCompositeAttribute: attributeParams.filterCompositeAttribute,
       }),
     );

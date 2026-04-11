@@ -28,13 +28,14 @@ import { createPortal } from 'react-dom';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import isEqual from 'fast-deep-equal';
-import { Button, SidePanel, Dropdown, Checkbox, Radio } from '@reportportal/ui-kit';
-import { isEmpty, isString } from 'es-toolkit/compat';
+import { Button, SidePanel, Checkbox, Radio } from '@reportportal/ui-kit';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
 import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
 import { EditableAttributeList } from 'componentLibrary/attributeList/editableAttributeList';
+import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 import { commonMessages } from 'pages/inside/common/common-messages';
 
 import { LAUNCH_STATUSES, COMPLETION_VALUES, EMPTY_FILTER } from './constants';
@@ -47,6 +48,7 @@ import type {
   ManualLaunchesFilterSidePanelProps,
   ManualLaunchesFilterPayload,
   StartTimeValue,
+  TestPlanFilterOption,
 } from './types';
 import type { LaunchAttribute } from '../types';
 import { messages } from './messages';
@@ -83,7 +85,9 @@ export const ManualLaunchesFilterSidePanel = memo(
   const [localStartTime, setLocalStartTime] = useState<StartTimeValue | null>(
     appliedFilters.startTime,
   );
-  const [localTestPlan, setLocalTestPlan] = useState<string | null>(appliedFilters.testPlan);
+  const [localTestPlan, setLocalTestPlan] = useState<TestPlanFilterOption | null>(
+    appliedFilters.testPlan,
+  );
   const [localAttributes, setLocalAttributes] = useState<LaunchAttribute[]>(
     appliedFilters.attributes,
   );
@@ -149,9 +153,29 @@ export const ManualLaunchesFilterSidePanel = memo(
     setLocalCompletion(event.target.value);
   }, []);
 
-  const handleTestPlanChange = useCallback((value: string | string[] | null) => {
-    setLocalTestPlan(isString(value) ? value : null);
+  const handleTestPlanChange = useCallback((value: TestPlanFilterOption | null) => {
+    setLocalTestPlan(value ?? null);
   }, []);
+
+  const retrieveTestPlans = useCallback(
+    (search = '') => URLS.testPlanNameSearch(projectKey)(search),
+    [projectKey],
+  );
+
+  const makeTestPlanOptions = useCallback(
+    (response: { content?: TestPlanFilterOption[] }) => response.content ?? [],
+    [],
+  );
+
+  const parseTestPlanValueToString = useCallback(
+    (value: TestPlanFilterOption | null) => value?.name ?? '',
+    [],
+  );
+
+  const getTestPlanUniqKey = useCallback(
+    (value: TestPlanFilterOption) => String(value?.id),
+    [],
+  );
 
   const handleAttributesChange = useCallback((attrs: LaunchAttribute[]) => {
     setLocalAttributes(attrs);
@@ -244,12 +268,19 @@ export const ManualLaunchesFilterSidePanel = memo(
       </FilterSectionBlock>
 
       <FilterSectionBlock label={formatMessage(commonMessages.testPlanLabel)}>
-        <Dropdown
-          options={[]}
+        <AsyncAutocompleteV2
           value={localTestPlan}
-          onChange={handleTestPlanChange}
           placeholder={formatMessage(commonMessages.selectTestPlanPlaceholder)}
-          clearable
+          getURI={retrieveTestPlans}
+          makeOptions={makeTestPlanOptions}
+          onChange={handleTestPlanChange}
+          parseValueToString={parseTestPlanValueToString}
+          getUniqKey={getTestPlanUniqKey}
+          createWithoutConfirmation
+          skipOptionCreation
+          isDropdownMode
+          minLength={0}
+          useFixedPositioning
         />
       </FilterSectionBlock>
 

@@ -20,7 +20,11 @@ import { formatAttribute, parseQueryAttributes } from 'common/utils/attributeUti
 
 import { COMPLETION_VALUES, EMPTY_FILTER, LAUNCH_STATUSES } from './constants';
 import type { LaunchAttribute } from '../types';
-import type { ManualLaunchesFilterPayload, StartTimeValue } from './types';
+import type {
+  ManualLaunchesFilterPayload,
+  StartTimeValue,
+  TestPlanFilterOption,
+} from './types';
 
 export const buildManualLaunchesFilterPayload = (
   statuses: ManualLaunchesFilterPayload['statuses'],
@@ -101,7 +105,7 @@ export const buildManualLaunchesBackendFilterParams = (
   }
 
   if (payload.testPlan) {
-    params.testPlanId = payload.testPlan;
+    params.testPlanId = String(payload.testPlan.id);
   }
 
   const attributesWithKey = payload.attributes.filter((attribute) => attribute.key?.trim());
@@ -119,6 +123,7 @@ const URL_KEYS = {
   START_TIME_FROM: 'filterStartTimeFrom',
   START_TIME_TO: 'filterStartTimeTo',
   TEST_PLAN: 'filterTestPlan',
+  TEST_PLAN_NAME: 'filterTestPlanName',
   COMPOSITE_ATTRIBUTE: 'filterCompositeAttribute',
 } as const;
 
@@ -144,7 +149,8 @@ export const buildURLQueryFromFilters = (
     [URL_KEYS.COMPLETION]: COMPLETION_BACKEND_VALUES[payload.completion],
     [URL_KEYS.START_TIME_FROM]: from !== undefined ? String(from) : undefined,
     [URL_KEYS.START_TIME_TO]: to !== undefined ? String(to) : undefined,
-    [URL_KEYS.TEST_PLAN]: payload.testPlan ?? undefined,
+    [URL_KEYS.TEST_PLAN]: payload.testPlan ? String(payload.testPlan.id) : undefined,
+    [URL_KEYS.TEST_PLAN_NAME]: payload.testPlan?.name ?? undefined,
     [URL_KEYS.COMPOSITE_ATTRIBUTE]: backendAttributes.filterCompositeAttribute,
   };
 };
@@ -192,6 +198,25 @@ const parseTimestamp = (raw?: string): Date | undefined => {
   const date = new Date(ms);
 
   return Number.isNaN(date.getTime()) ? undefined : date;
+};
+
+const parseTestPlan = (
+  idRaw?: string,
+  nameRaw?: string,
+): TestPlanFilterOption | null => {
+  const trimmedId = idRaw?.trim();
+
+  if (!trimmedId) {
+    return null;
+  }
+
+  const id = Number(trimmedId);
+
+  if (!Number.isFinite(id)) {
+    return null;
+  }
+
+  return { id, name: nameRaw?.trim() || '' };
 };
 
 const parseStartTime = (fromRaw?: string, toRaw?: string): StartTimeValue | null => {
@@ -275,7 +300,7 @@ export const parseFiltersFromURLQuery = (
       query[URL_KEYS.START_TIME_FROM],
       query[URL_KEYS.START_TIME_TO],
     ),
-    testPlan: query[URL_KEYS.TEST_PLAN] || null,
+    testPlan: parseTestPlan(query[URL_KEYS.TEST_PLAN], query[URL_KEYS.TEST_PLAN_NAME]),
     attributes: parseAttributesFromURL(query as Record<string, string | undefined>),
   };
 };
