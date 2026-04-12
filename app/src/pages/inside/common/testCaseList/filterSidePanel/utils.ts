@@ -63,7 +63,7 @@ export const buildTestCaseFilterParams = (filterPriorities?: string, filterTags?
 export const buildFolderFilterParams = (filterPriorities?: string, filterTags?: string) =>
   buildFilterParams(FOLDER_FILTER_KEYS, filterPriorities, filterTags);
 
-const normalizePrioritiesForExecutionApi = (filterPriorities?: string): string | undefined => {
+export const normalizePrioritiesForExecutionApi = (filterPriorities?: string): string | undefined => {
   if (!filterPriorities?.trim()) {
     return undefined;
   }

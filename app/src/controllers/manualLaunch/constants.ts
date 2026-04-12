@@ -40,6 +40,14 @@ export const MANUAL_LAUNCH_STATUS_FILTER_KEY = 'filter.eq.status' as const;
 export const MANUAL_LAUNCH_FOLDER_STATUS_FILTER_KEY = 'filter.eq.testCaseExecutionStatus' as const;
 export const MANUAL_LAUNCH_FOLDER_SEARCH_FILTER_KEY = 'filter.cnt.testCaseName' as const;
 
+export const MANUAL_LAUNCH_ITEM_STATUS_FILTER_KEY = 'filter.in.itemStatus' as const;
+export const MANUAL_LAUNCH_COMPLETION_FILTER_KEY = 'filter.eq.completion' as const;
+export const MANUAL_LAUNCH_START_TIME_GT_FILTER_KEY = 'filter.gt.startTime' as const;
+export const MANUAL_LAUNCH_END_TIME_LT_FILTER_KEY = 'filter.lt.endTime' as const;
+export const MANUAL_LAUNCH_TEST_PLAN_ID_FILTER_KEY = 'filter.eq.testPlanId' as const;
+export const MANUAL_LAUNCH_COMPOSITE_ATTRIBUTE_FILTER_KEY =
+  'filter.has.compositeAttribute' as const;
+
 export const GET_MANUAL_LAUNCH_FILTERED_FOLDERS = 'getManualLaunchFilteredFolders' as const;
 export const SET_MANUAL_LAUNCH_FILTERED_FOLDERS = 'setManualLaunchFilteredFolders' as const;
 export const START_LOADING_MANUAL_LAUNCH_FILTERED_FOLDERS =

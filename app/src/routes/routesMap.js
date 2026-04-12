@@ -142,6 +142,10 @@ import {
   buildGetManualLaunchTestCaseExecutionsParams,
   getManualLaunchDetailsFetchParams,
 } from 'controllers/manualLaunch';
+import {
+  MANUAL_LAUNCHES_FILTER_URL_KEYS,
+  resolveFilterCompositeAttributeForApi,
+} from 'common/manualLaunches/manualLaunchesFilterUrl';
 import { getRouterParams } from 'common/utils';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
@@ -388,9 +392,33 @@ const routesMap = {
         state,
       });
 
-      const searchQuery = state.location?.query?.searchQuery;
+      const { searchQuery, ...query } = state.location?.query ?? {};
 
-      dispatch(getManualLaunchesAction({ offset, limit, searchQuery }));
+      const rawStatuses = query[MANUAL_LAUNCHES_FILTER_URL_KEYS.STATUSES];
+      const filterStatuses = rawStatuses
+        ? rawStatuses.split(',').filter(Boolean)
+        : undefined;
+
+      const rawStartTimeFrom = query[MANUAL_LAUNCHES_FILTER_URL_KEYS.START_TIME_FROM];
+      const filterStartTimeFrom = rawStartTimeFrom ? Number(rawStartTimeFrom) : undefined;
+
+      const rawStartTimeTo = query[MANUAL_LAUNCHES_FILTER_URL_KEYS.START_TIME_TO];
+      const filterEndTimeTo = rawStartTimeTo ? Number(rawStartTimeTo) : undefined;
+
+      dispatch(
+        getManualLaunchesAction({
+          offset,
+          limit,
+          searchQuery,
+          filterStatuses,
+          filterCompletion: query[MANUAL_LAUNCHES_FILTER_URL_KEYS.COMPLETION] || undefined,
+          filterStartTimeFrom:
+            Number.isFinite(filterStartTimeFrom) ? filterStartTimeFrom : undefined,
+          filterEndTimeTo: Number.isFinite(filterEndTimeTo) ? filterEndTimeTo : undefined,
+          filterTestPlan: query[MANUAL_LAUNCHES_FILTER_URL_KEYS.TEST_PLAN] || undefined,
+          filterCompositeAttribute: resolveFilterCompositeAttributeForApi(query),
+        }),
+      );
     },
   },
   [MANUAL_LAUNCH_DETAILS_PAGE]: {

@@ -22,11 +22,16 @@ export interface StartTimeValue {
   endDate?: Date;
 }
 
+export interface TestPlanFilterOption {
+  id: number;
+  name: string;
+}
+
 export interface ManualLaunchesFilterPayload {
   statuses: string[];
   completion: string;
   startTime: StartTimeValue | null;
-  testPlan: string | null;
+  testPlan: TestPlanFilterOption | null;
   attributes: LaunchAttribute[];
 }
 
