@@ -23,6 +23,4 @@ export const HistoryOfActionsPageDefaultValues = {
   offset: 0,
 };
 
-export const HISTORY_SEARCH_DEBOUNCE_MS = 300;
-
 export const HISTORY_ACTIVITY_DETAILS_FILTER_KEY = 'filter.cnt.details' as const;
