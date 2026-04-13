@@ -15,9 +15,10 @@
  */
 
 import { useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import { useCallback, useLayoutEffect } from 'react';
 import { push } from 'redux-first-router';
 import { stringify } from 'qs';
+import { isNotNil } from 'es-toolkit';
 
 import { usePagination } from 'hooks/usePagination';
 import { locationQuerySelector } from 'controllers/pages';
@@ -49,8 +50,8 @@ export const useURLBoundPagination = ({
       shouldSaveUserPreferences,
     });
 
-  useEffect(() => {
-    if (query?.offset && query?.limit) {
+  useLayoutEffect(() => {
+    if (isNotNil(query?.offset) && isNotNil(query?.limit)) {
       changePageSize(Number(query.limit));
       setActivePage(Math.floor(Number(query.offset) / Number(query.limit) + 1));
     } else {
@@ -83,11 +84,27 @@ export const useURLBoundPagination = ({
     }
   };
 
+  const resetToFirstPage = useCallback((): void => {
+    const targetOffset = defaultQueryParams.offset;
+
+    if (Number(query?.offset) !== Number(targetOffset)) {
+      const queryParams = {
+        ...query,
+        offset: targetOffset,
+        limit: pageSize,
+      };
+      const url = `${baseUrl}${stringify(queryParams, { addQueryPrefix: true })}`;
+
+      push(url);
+    }
+  }, [baseUrl, defaultQueryParams.offset, pageSize, query]);
+
   const offset = (activePage - 1) * pageSize;
 
   return {
     setPageNumber,
     setPageSize,
+    resetToFirstPage,
     captions,
     activePage,
     offset,
