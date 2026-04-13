@@ -1,0 +1,11 @@
+.pattern-analysis-empty-state {
+  /* Add margin to link when buttons are present (admin view) */
+  div + a[data-automation-id='emptyStatePageDocsLink'] {
+    margin-top: 18px;
+  }
+
+  /* No margin when buttons are absent (member view) */
+  a[data-automation-id='emptyStatePageDocsLink'] {
+    margin-top: 0;
+  }
+}

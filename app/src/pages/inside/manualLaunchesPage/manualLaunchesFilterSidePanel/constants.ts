@@ -17,10 +17,10 @@
 import type { ManualLaunchesFilterPayload } from './types';
 
 export const LAUNCH_STATUSES = {
-  PASSED: 'passed',
-  FAILED: 'failed',
-  SKIPPED: 'skipped',
-  IN_PROGRESS: 'inProgress',
+  PASSED: 'PASSED',
+  FAILED: 'FAILED',
+  SKIPPED: 'SKIPPED',
+  IN_PROGRESS: 'IN_PROGRESS',
 } as const;
 
 export const COMPLETION_VALUES = {

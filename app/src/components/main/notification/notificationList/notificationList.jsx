@@ -397,6 +397,22 @@ export const notificationMessages = defineMessages({
     id: 'MilestonesPage.milestoneDuplicatedSuccess',
     defaultMessage: 'Milestone has been duplicated successfully.',
   },
+  milestoneTestingStartedSuccess: {
+    id: 'MilestonesPage.milestoneTestingStartedSuccess',
+    defaultMessage: 'Testing started for the milestone.',
+  },
+  milestoneCompletedSuccess: {
+    id: 'MilestonesPage.milestoneCompletedSuccess',
+    defaultMessage: 'Milestone completed.',
+  },
+  milestoneStatusChangedToTestingSuccess: {
+    id: 'MilestonesPage.milestoneStatusChangedToTestingSuccess',
+    defaultMessage: 'The status has been changed to Testing.',
+  },
+  milestoneStatusChangedToScheduledSuccess: {
+    id: 'MilestonesPage.milestoneStatusChangedToScheduledSuccess',
+    defaultMessage: 'The status has been changed to Scheduled.',
+  },
   testPlanRedirectWarningMessage: {
     id: 'TestPlansPage.testPlanRedirectWarningMessage',
     defaultMessage:

@@ -66,47 +66,10 @@
   align-items: center;
   gap: 16px;
   padding-top: 4px;
-}
 
-.radio-option {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-}
-
-.radio-input {
-  appearance: none;
-  width: 16px;
-  height: 16px;
-  border: 2px solid var(--rp-ui-base-e-200);
-  border-radius: 50%;
-  margin: 0;
-  cursor: pointer;
-  position: relative;
-  flex-shrink: 0;
-
-  &:checked {
-    border-color: var(--rp-ui-base-topaz);
-
-    &::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background-color: var(--rp-ui-base-topaz);
-    }
+  :global(span[role='radio']) + span {
+    font-weight: var(--rp-ui-base-fw-regular);
   }
-}
-
-.radio-label {
-  font-size: 13px;
-  line-height: 20px;
-  color: var(--rp-ui-base-almost-black);
 }
 
 .filter-footer {

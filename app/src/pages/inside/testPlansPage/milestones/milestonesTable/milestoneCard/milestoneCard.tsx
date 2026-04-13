@@ -45,6 +45,7 @@ export const MilestoneCard = ({
   milestone,
   onEditMilestone,
   onDuplicateMilestone,
+  onChangeMilestoneStatus,
 }: MilestoneCardProps) => {
   const { formatMessage } = useIntl();
   const [expanded, setExpanded] = useState(false);
@@ -117,7 +118,10 @@ export const MilestoneCard = ({
             </div>
           </button>
           <div className={cx('milestone-card__header-actions')}>
-            <MilestoneCardStatusButton milestone={milestone} />
+            <MilestoneCardStatusButton
+              onChangeMilestoneStatus={onChangeMilestoneStatus}
+              milestone={milestone}
+            />
             <MilestoneCardActionsMenu
               milestone={milestone}
               onEditMilestone={onEditMilestone}
