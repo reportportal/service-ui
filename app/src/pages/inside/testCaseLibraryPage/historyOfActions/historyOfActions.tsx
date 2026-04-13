@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-import { useEffect, useMemo, useState } from 'react';
+import type { ChangeEvent } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { BubblesLoader, Pagination, Table } from '@reportportal/ui-kit';
 
-import { createClassnames } from 'common/utils';
+import { createClassnames, debounce } from 'common/utils';
+import { SEARCH_DEBOUNCE_MS } from 'common/constants/delayTime';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { EmptyPageState } from 'pages/common/emptyPageState/emptyPageState';
@@ -66,13 +68,16 @@ export const HistoryOfActions = () => {
   const testCaseDetails = useSelector(testCaseDetailsSelector);
 
   const [pageData, setPageData] = useState<Page>(emptyPageData);
+  const [searchValue, setSearchValue] = useState('');
+  const [appliedDetailsFilter, setAppliedDetailsFilter] = useState('');
+  const debouncedSearchCancelRef = useRef<(() => void) | undefined>(undefined);
 
   const testCasePageRoute = payload?.testCasePageRoute ?? '';
   const baseUrl = testCaseId
     ? `/organizations/${organizationSlug}/projects/${projectSlug}/testLibrary/test-cases/${testCaseId}/historyOfActions`
     : `/organizations/${organizationSlug}/projects/${projectSlug}/testLibrary/${testCasePageRoute}`;
 
-  const { setPageNumber, setPageSize, captions, activePage, pageSize, offset } =
+  const { setPageNumber, setPageSize, resetToFirstPage, captions, activePage, pageSize, offset } =
     useURLBoundPagination({
       pageData,
       defaultQueryParams: HistoryOfActionsPageDefaultValues,
@@ -81,8 +86,52 @@ export const HistoryOfActions = () => {
       baseUrl,
     });
 
+  const applyDebouncedHistorySearch = useMemo(
+    () =>
+      debounce((raw: string) => {
+        resetToFirstPage();
+        setAppliedDetailsFilter(raw.trim());
+      }, SEARCH_DEBOUNCE_MS),
+    [resetToFirstPage],
+  );
+
+  const cancelPendingHistorySearch = useCallback(() => {
+    debouncedSearchCancelRef.current?.();
+    debouncedSearchCancelRef.current = undefined;
+  }, []);
+
+  const clearHistorySearchFields = useCallback(() => {
+    setSearchValue('');
+    setAppliedDetailsFilter('');
+  }, []);
+
+  const handleHistorySearchChange = useCallback(
+    ({ target }: ChangeEvent<HTMLInputElement>) => {
+      const { value } = target;
+
+      setSearchValue(value);
+      cancelPendingHistorySearch();
+      debouncedSearchCancelRef.current = applyDebouncedHistorySearch(value);
+    },
+    [applyDebouncedHistorySearch, cancelPendingHistorySearch],
+  );
+
+  const handleHistorySearchClear = useCallback(() => {
+    cancelPendingHistorySearch();
+    clearHistorySearchFields();
+    resetToFirstPage();
+  }, [cancelPendingHistorySearch, clearHistorySearchFields, resetToFirstPage]);
+
   const { content: fetchedContent, page: fetchedPage, isLoading: isFetching } =
-    useTestCaseActivityHistory(projectKey, testCaseId, offset, pageSize);
+    useTestCaseActivityHistory(projectKey, testCaseId, offset, pageSize, appliedDetailsFilter);
+
+  useEffect(() => {
+    cancelPendingHistorySearch();
+    clearHistorySearchFields();
+  }, [testCaseId, cancelPendingHistorySearch, clearHistorySearchFields]);
+
+  const isSearchFieldLoading =
+    isFetching || searchValue.trim() !== appliedDetailsFilter;
 
   useEffect(() => {
     if (fetchedPage) {
@@ -216,6 +265,10 @@ export const HistoryOfActions = () => {
               <HistoryOfActionsHeader
                 testCaseName={testCaseName}
                 className={cx('history-of-actions__header')}
+                searchValue={searchValue}
+                isSearchLoading={isSearchFieldLoading}
+                onSearchChange={handleHistorySearchChange}
+                onSearchClear={handleHistorySearchClear}
               />
               <div className={cx('history-of-actions__main-content')}>
                 {isFetching && (
