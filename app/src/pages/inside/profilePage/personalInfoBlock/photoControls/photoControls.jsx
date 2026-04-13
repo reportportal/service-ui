@@ -73,6 +73,8 @@ const messages = defineMessages({
 )
 @injectIntl
 export class PhotoControls extends Component {
+  inflightPreviewUrl = null;
+
   static propTypes = {
     accountType: PropTypes.string,
     photoId: PropTypes.string,
@@ -102,10 +104,18 @@ export class PhotoControls extends Component {
     this.clearPreviewObjectUrl();
   }
 
-  clearPreviewObjectUrl = () => {
-    if (this.state.previewObjectUrl) {
-      URL.revokeObjectURL(this.state.previewObjectUrl);
+  revokeObjectUrl = (objectUrl) => {
+    if (objectUrl) {
+      URL.revokeObjectURL(objectUrl);
     }
+  };
+
+  clearPreviewObjectUrl = () => {
+    this.revokeObjectUrl(this.state.previewObjectUrl);
+    if (this.inflightPreviewUrl && this.inflightPreviewUrl !== this.state.previewObjectUrl) {
+      this.revokeObjectUrl(this.inflightPreviewUrl);
+    }
+    this.inflightPreviewUrl = null;
   };
 
   resetFileSelector = () => {
@@ -151,10 +161,16 @@ export class PhotoControls extends Component {
     this.clearPreviewObjectUrl();
     const image = new Image();
     const previewObjectUrl = URL.createObjectURL(file);
+    this.inflightPreviewUrl = previewObjectUrl;
     image.src = previewObjectUrl;
     image.onload = () => {
+      if (this.inflightPreviewUrl !== previewObjectUrl) {
+        this.revokeObjectUrl(previewObjectUrl);
+        return;
+      }
       if (this.validateImageSize(image, file)) {
         this.props.uploadNewImage(previewObjectUrl);
+        this.inflightPreviewUrl = null;
         this.setState({
           newPhotoLoaded: true,
           isValidImage: true,
@@ -162,7 +178,8 @@ export class PhotoControls extends Component {
           previewObjectUrl,
         });
       } else {
-        URL.revokeObjectURL(previewObjectUrl);
+        this.revokeObjectUrl(previewObjectUrl);
+        this.inflightPreviewUrl = null;
         this.props.uploadNewImage(null);
         this.setState({
           isValidImage: false,
@@ -173,7 +190,12 @@ export class PhotoControls extends Component {
       }
     };
     image.onerror = () => {
-      URL.revokeObjectURL(previewObjectUrl);
+      if (this.inflightPreviewUrl !== previewObjectUrl) {
+        this.revokeObjectUrl(previewObjectUrl);
+        return;
+      }
+      this.revokeObjectUrl(previewObjectUrl);
+      this.inflightPreviewUrl = null;
       this.props.uploadNewImage(null);
       this.setState({
         isValidImage: false,
@@ -190,8 +212,14 @@ export class PhotoControls extends Component {
       if (this.validateFileExtension(file)) {
         this.onLoadFile(file);
       } else {
+        this.clearPreviewObjectUrl();
         this.props.uploadNewImage(null);
-        this.setState({ isValidImage: false, image: null, newPhotoLoaded: false });
+        this.setState({
+          isValidImage: false,
+          image: null,
+          newPhotoLoaded: false,
+          previewObjectUrl: null,
+        });
       }
     }
   };
