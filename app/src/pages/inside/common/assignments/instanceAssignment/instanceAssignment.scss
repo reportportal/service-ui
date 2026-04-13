@@ -73,6 +73,10 @@
 
   .organization-field-ups-error {
     border-color: var(--rp-ui-base-error);
+
+    &:hover {
+      border-color: var(--rp-ui-base-error);
+    }
   }
 
   .ups-external-org-error {
