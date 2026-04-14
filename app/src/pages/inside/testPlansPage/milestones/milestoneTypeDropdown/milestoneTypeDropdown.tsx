@@ -57,14 +57,7 @@ export const MilestoneTypeDropdown = (props: WrappedFieldProps & { label: string
             <MilestoneTypeIcon type={option.value} placement="menu" />
           </div>
           <div className={cx('create-milestone-modal__type-option-text')}>
-            <div
-              className={cx('create-milestone-modal__type-option-title', {
-                'create-milestone-modal__type-option-title_selected': optionProps.selected,
-                'create-milestone-modal__type-option-title_highlight': optionProps.highlightHovered,
-              })}
-            >
-              {option.label}
-            </div>
+            <div className={cx('create-milestone-modal__type-option-title')}>{option.label}</div>
             <div className={cx('create-milestone-modal__type-option-desc')}>
               {option.description}
             </div>

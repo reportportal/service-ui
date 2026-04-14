@@ -3,7 +3,6 @@
 
 .milestone-card {
   box-sizing: border-box;
-  /* visible so ui-kit Popover (absolute) is not clipped; toggle lives in header */
   overflow: visible;
   width: 100%;
   border-radius: 8px;
@@ -16,7 +15,7 @@
     gap: 12px;
     box-sizing: border-box;
     min-height: 86px;
-    padding: 16px 28px;
+    padding: 16px 24px;
     border-radius: 8px 8px 0 0;
   }
 
@@ -25,7 +24,7 @@
 
     display: flex;
     flex: 1;
-    gap: 12px;
+    gap: 8px;
     align-items: center;
     min-width: 0;
     cursor: pointer;
@@ -207,8 +206,6 @@
     padding: 4px;
     border: none;
     border-radius: 4px;
-    background: transparent;
-    box-shadow: none;
     cursor: pointer;
     color: var(--rp-ui-base-e-300);
     line-height: 0;
@@ -221,8 +218,9 @@
       fill: var(--rp-ui-base-e-300);
     }
 
-    &:hover {
-      background-color: var(--rp-ui-base-e-100);
+    &:hover,
+    &:focus-visible {
+      border-color: transparent !important;
     }
 
     &:active,
