@@ -14,16 +14,24 @@
  * limitations under the License.
  */
 
-export const GITHUB_CLIENT_CREDENTIAL_MAX_LENGTH = 256;
+import { isString } from 'es-toolkit';
 
-export const CLIENT_ID_KEY = 'clientId';
-export const CLIENT_SECRET_KEY = 'clientSecret';
-export const ORGANIZATIONS_FIELD = 'restrictions.organizations';
+export const prepareGithubIntegrationFormData = (
+  formData: Record<string, unknown>,
+): Record<string, unknown> => {
+  const orgs = (formData.restrictions as { organizations?: string[] } | undefined)?.organizations;
 
-export const DEFAULT_FORM_CONFIG = {
-  [CLIENT_ID_KEY]: '',
-  [CLIENT_SECRET_KEY]: '',
-  restrictions: {
-    organizations: [''],
-  },
+  if (!Array.isArray(orgs)) {
+    return { ...formData };
+  }
+
+  const organizations = orgs
+    .filter((s) => isString(s))
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  return {
+    ...formData,
+    restrictions: { organizations },
+  };
 };

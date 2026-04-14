@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
+import { useCallback } from 'react';
 import { useIntl, defineMessages } from 'react-intl';
 import type { WrappedFieldArrayProps } from 'redux-form';
 import { FieldText, Button, PlusIcon, CloseIcon, FieldLabel } from '@reportportal/ui-kit';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { createClassnames } from 'common/utils';
+import { commonValidators } from 'common/utils/validation';
 import styles from './githubOrganizations.scss';
 
 const cx = createClassnames(styles);
@@ -45,6 +47,17 @@ export interface GithubOrganizationsProps extends WrappedFieldArrayProps<string>
 export const GithubOrganizations = ({ fields, disabled = false }: GithubOrganizationsProps) => {
   const { formatMessage } = useIntl();
 
+  const handleAdd = useCallback(() => {
+    fields.push('');
+  }, [fields]);
+
+  const handleRemove = useCallback(
+    (index: number) => {
+      fields.remove(index);
+    },
+    [fields],
+  );
+
   return (
     <div className={cx('organizations-container')}>
       <FieldLabel>{formatMessage(messages.githubOrganizationLabel)}</FieldLabel>
@@ -55,6 +68,7 @@ export const GithubOrganizations = ({ fields, disabled = false }: GithubOrganiza
               name={item}
               placeholder={formatMessage(messages.organizationPlaceholder)}
               disabled={disabled}
+              validate={commonValidators.githubOrganizationName}
             >
               <FieldErrorHint provideHint={false}>
                 <FieldText defaultWidth={false} />
@@ -67,7 +81,7 @@ export const GithubOrganizations = ({ fields, disabled = false }: GithubOrganiza
             type="button"
             icon={<CloseIcon />}
             className={cx('delete-button')}
-            onClick={() => fields.remove(index)}
+            onClick={() => handleRemove(index)}
             disabled={disabled || fields.length === 1}
           />
         </div>
@@ -76,7 +90,7 @@ export const GithubOrganizations = ({ fields, disabled = false }: GithubOrganiza
         <Button
           variant="text"
           type="button"
-          onClick={() => fields.push('')}
+          onClick={handleAdd}
           className={cx('add-button')}
           iconPlace="start"
           icon={<PlusIcon />}

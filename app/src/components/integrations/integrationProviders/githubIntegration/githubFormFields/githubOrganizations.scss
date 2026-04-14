@@ -19,16 +19,11 @@
   flex-direction: column;
   gap: 8px;
   margin-bottom: 20px;
-  padding-right: 45px;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    padding-right: 0;
-  }
 }
 
 .organization-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
   width: 100%;
 

@@ -51,7 +51,7 @@ const messages = defineMessages({
   },
   confirmPasswordHint: {
     id: 'RegistrationForm.confirmPasswordHint',
-    defaultMessage: 'The passwords you entered do not match. Please try again.'
+    defaultMessage: 'The passwords you entered do not match. Please try again.',
   },
   filterNameError: {
     id: 'FiltersPage.filterNameLength',
@@ -157,6 +157,10 @@ const messages = defineMessages({
   requiredFieldHint: {
     id: 'Common.requiredFieldHint',
     defaultMessage: 'Field is required',
+  },
+  githubOrganizationNameHint: {
+    id: 'GithubFormFields.organizationNameHint',
+    defaultMessage: 'Organization name may contain only Latin, numeric characters and hyphen',
   },
   requiredFieldWithPeriodHint: {
     id: 'Common.requiredFieldWithPeriodHint',
@@ -416,7 +420,10 @@ export class FieldErrorHint extends Component {
       <div className={classes} data-automation-id={dataAutomationId}>
         {children &&
           cloneElement(children, {
-            error: error && messages[error] ? intl.formatMessage(messages[error], MESSAGE_VALUES[error] || {}) : error,
+            error:
+              error && messages[error]
+                ? intl.formatMessage(messages[error], MESSAGE_VALUES[error] || {})
+                : error,
             active,
             showHintWithError,
             ...rest,
@@ -451,7 +458,9 @@ export class FieldErrorHint extends Component {
                 'dark-view': darkView,
               })}
             >
-              {error && messages[error] ? intl.formatMessage(messages[error], MESSAGE_VALUES[error] || {}) : error}
+              {error && messages[error]
+                ? intl.formatMessage(messages[error], MESSAGE_VALUES[error] || {})
+                : error}
             </div>
           </div>
         )}

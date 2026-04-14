@@ -21,28 +21,30 @@ import { FieldArray } from 'redux-form';
 import { SECRET_FIELDS_KEY } from 'controllers/plugins';
 import { isEmptyObject } from 'common/utils';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { IntegrationFormField } from 'components/integrations/elements';
+import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { commonValidators } from 'common/utils/validation';
 import {
   CLIENT_ID_KEY,
   CLIENT_SECRET_KEY,
   ORGANIZATIONS_FIELD,
   DEFAULT_FORM_CONFIG,
+  GITHUB_CLIENT_CREDENTIAL_MAX_LENGTH,
 } from '../constants';
 import { GithubOrganizations } from './githubOrganizations';
+import { GithubFormData } from '../types';
 
 const messages = defineMessages({
   clientIdLabel: {
-    id: 'GithubAuthFormFields.clientIdLabel',
+    id: 'GithubFormFields.clientIdLabel',
     defaultMessage: 'Client ID',
   },
   clientSecretLabel: {
-    id: 'GithubAuthFormFields.clientSecretLabel',
+    id: 'GithubFormFields.clientSecretLabel',
     defaultMessage: 'Client secret',
   },
   clientIdPlaceholder: {
     id: 'GithubFormFields.clientIdPlaceholder',
-    defaultMessage: 'Specify the client ID (e.g. Iv1.a1b2c3)',
+    defaultMessage: 'Specify the client ID (e.g. lv1.a1b2c3)',
   },
   clientSecretPlaceholder: {
     id: 'GithubFormFields.clientSecretPlaceholder',
@@ -51,9 +53,9 @@ const messages = defineMessages({
 });
 
 export interface GithubFormFieldsProps {
-  initialize: (data: Record<string, unknown>) => void;
+  initialize: (data: GithubFormData) => void;
   disabled?: boolean;
-  initialData?: Record<string, unknown>;
+  initialData?: GithubFormData;
   updateMetaData?: (meta: Record<string, unknown>) => void;
   integrationId?: number | string;
 }
@@ -75,13 +77,20 @@ export const GithubFormFields = ({
 
   useEffect(() => {
     const source = !isEmptyObject(initialData) ? initialData : DEFAULT_FORM_CONFIG;
-    initialize(source);
+    const rawOrgs = source.restrictions?.organizations ?? [];
+    const organizations = rawOrgs.length > 0 ? rawOrgs : [''];
+    initialize({
+      ...source,
+      restrictions: {
+        organizations,
+      },
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [initialData]);
 
   return (
     <Fragment>
-      <IntegrationFormField
+      <FieldElement
         name={CLIENT_ID_KEY}
         disabled={disabled}
         label={formatMessage(messages.clientIdLabel)}
@@ -89,22 +98,26 @@ export const GithubFormFields = ({
         validate={commonValidators.requiredField}
         required
       >
-        <FieldErrorHint>
-          <FieldText defaultWidth={false} />
+        <FieldErrorHint provideHint={false}>
+          <FieldText defaultWidth={false} maxLength={GITHUB_CLIENT_CREDENTIAL_MAX_LENGTH} />
         </FieldErrorHint>
-      </IntegrationFormField>
-      <IntegrationFormField
+      </FieldElement>
+      <FieldElement
         name={CLIENT_SECRET_KEY}
         disabled={disabled}
         label={formatMessage(messages.clientSecretLabel)}
         placeholder={formatMessage(messages.clientSecretPlaceholder)}
-        validate={commonValidators.requiredField}
+        {...(integrationId == null ? { validate: commonValidators.requiredField } : {})}
         required={integrationId == null}
       >
-        <FieldErrorHint>
-          <FieldText defaultWidth={false} type="password" />
+        <FieldErrorHint provideHint={false}>
+          <FieldText
+            defaultWidth={false}
+            type="password"
+            maxLength={GITHUB_CLIENT_CREDENTIAL_MAX_LENGTH}
+          />
         </FieldErrorHint>
-      </IntegrationFormField>
+      </FieldElement>
       <FieldArray name={ORGANIZATIONS_FIELD} component={GithubOrganizations} props={{ disabled }} />
     </Fragment>
   );
