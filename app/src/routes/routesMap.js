@@ -16,7 +16,12 @@
 
 import { redirect, actionToPath, pathToAction } from 'redux-first-router';
 import qs from 'qs';
-import { userInfoSelector, getUserSettingsFromStorage, isAdminSelector } from 'controllers/user';
+import {
+  userInfoSelector,
+  getUserSettingsFromStorage,
+  isAdminSelector,
+  activeProjectKeySelector,
+} from 'controllers/user';
 import { isTmsEnabled } from 'controllers/appInfo';
 import {
   LOGIN_PAGE,
@@ -105,6 +110,7 @@ import {
 } from 'common/constants/userProfileRoutes';
 import { parseQueryToFilterEntityAction } from 'controllers/filter/actionCreators';
 import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
+import { fetchProjectAction } from 'controllers/project';
 import {
   prepareActiveOrganizationProjectsAction,
   prepareActiveOrganizationSettingsAction,
@@ -534,10 +540,15 @@ const routesMap = {
   [PROJECT_SETTINGS_TAB_PAGE]: {
     path: `/organizations/:organizationSlug/projects/:projectSlug/settings/:settingsTab/:subTab*`,
     thunk: (dispatch, getState) => {
+      const state = getState();
       const {
         location: { payload },
-      } = getState();
+      } = state;
       dispatch(prepareActiveOrganizationSettingsAction(payload));
+      const projectKey = activeProjectKeySelector(state);
+      if (projectKey) {
+        dispatch(fetchProjectAction(projectKey, true));
+      }
     },
   },
   PROJECT_SANDBOX_PAGE: '/organizations/:organizationSlug/projects/:projectSlug/sandbox',
