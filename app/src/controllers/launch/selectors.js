@@ -34,7 +34,6 @@ import { DEFAULT_SORTING, NAMESPACE } from './constants';
 const domainSelector = (state) => state.launches || {};
 const groupOperationsSelector = (state) => domainSelector(state).groupOperations;
 
-export const selectedLaunchesSelector = createSelectedItemsSelector(groupOperationsSelector);
 export const validationErrorsSelector = createValidationErrorsSelector(groupOperationsSelector);
 export const lastOperationSelector = createLastOperationSelector(groupOperationsSelector);
 
@@ -47,6 +46,15 @@ export const queryParametersSelector = createQueryParametersSelector({
   namespace: NAMESPACE,
   defaultSorting: DEFAULT_SORTING,
 });
+
+export const selectedLaunchesSelector = createSelector(
+  createSelectedItemsSelector(groupOperationsSelector),
+  launchesSelector,
+  (selectedItems, launches) =>
+    selectedItems.map(
+      (selectedItem) => launches.find((launch) => launch.id === selectedItem.id) || selectedItem,
+    ),
+);
 
 export const debugModeSelector = (state) => domainSelector(state).debugMode || false;
 export const launchDistinctSelector = (state) => domainSelector(state).launchDistinct || ALL;
