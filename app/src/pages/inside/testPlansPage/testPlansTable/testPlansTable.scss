@@ -47,6 +47,7 @@ $test-plans-progress-column-inline-pad: 16px;
       display: flex;
       align-items: center;
       min-width: 0;
+      padding-inline: 0;
     }
 
     :global([class*='table-header']) {
@@ -54,6 +55,7 @@ $test-plans-progress-column-inline-pad: 16px;
       --table-header-bg-color: transparent;
 
       :global([class*='table-header-cell']) {
+        padding-inline: 0;
         color: var(--Text-Secondary, var(--rp-ui-base-e-400));
       }
 
@@ -79,6 +81,8 @@ $test-plans-progress-column-inline-pad: 16px;
 
     &-header {
       --table-header-bg-color: transparent;
+      box-sizing: border-box;
+      padding-inline: 24px;
 
       > :global(button):nth-child(2),
       > :global(button):nth-child(4) {
@@ -135,7 +139,7 @@ $test-plans-progress-column-inline-pad: 16px;
       min-width: 0;
       border: none;
       border-radius: 0;
-      padding: 8px 0;
+      padding: 8px 24px;
       min-height: 48px;
       background-color: transparent;
       box-shadow: none;
