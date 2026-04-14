@@ -36,6 +36,7 @@
 
   &__filter-icon {
     @include mixins.header-toolbar-filter-button;
+
     flex-shrink: 0;
   }
 
