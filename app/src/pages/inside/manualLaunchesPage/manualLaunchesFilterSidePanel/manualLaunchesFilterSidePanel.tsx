@@ -281,6 +281,8 @@ export const ManualLaunchesFilterSidePanel = memo(
           isDropdownMode
           minLength={0}
           useFixedPositioning
+          dropdownMatchInputWidth
+          inputProps={{ clearable: true }}
         />
       </FilterSectionBlock>
 
