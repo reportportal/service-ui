@@ -19,7 +19,9 @@ export {
   useCreateMilestoneModal,
   useEditMilestoneModal,
   useDuplicateMilestoneModal,
+  useChangeMilestoneStatusModal,
 } from './milestoneModals';
+export type { ChangeMilestoneStatusModalData } from './milestoneModals';
 
 export { MilestoneDateField } from './milestoneDateField/milestoneDateField';
 export type { MilestoneDateFieldProps } from './milestoneDateField/types';
@@ -31,6 +33,7 @@ export type {
 export { MilestoneTypeDropdown } from './milestoneTypeDropdown/milestoneTypeDropdown';
 
 export {
+  todayDateOnly,
   tomorrowDateOnly,
   nextMondayDateOnly,
   endDateDaysAfterStart,

@@ -19,6 +19,7 @@ import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { NAMESPACE, SEARCH_KEY } from 'controllers/organization/users';
 import { ORGANIZATION_PROJECTS_PAGE, ORGANIZATIONS_PAGE } from 'controllers/pages/constants';
+import { urlOrganizationSlugSelector } from 'controllers/pages';
 import { SearchField } from 'components/fields/searchField';
 import { withFilter } from 'controllers/filter';
 import { useSelector } from 'react-redux';
@@ -37,6 +38,7 @@ const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY, namespace: NAM
 
 export const OrganizationUsersPageHeader = ({
   hasPermission,
+  isNotEmpty,
   onInvite,
   isUsersLoading,
   searchValue,
@@ -44,9 +46,8 @@ export const OrganizationUsersPageHeader = ({
 }) => {
   const { formatMessage } = useIntl();
   const organization = useSelector(activeOrganizationSelector);
-  const usersCount = organization?.relationships?.users?.meta.count;
-  const isNotEmpty = usersCount > 0;
-  const organizationSlug = organization?.name;
+  const organizationName = organization?.name;
+  const organizationSlug = useSelector(urlOrganizationSlugSelector);
 
   const breadcrumbs = [
     {
@@ -57,7 +58,7 @@ export const OrganizationUsersPageHeader = ({
 
   if (organizationSlug) {
     breadcrumbs.push({
-      title: organizationSlug,
+      title: organizationName,
       link: { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug } },
     });
   }
@@ -90,6 +91,7 @@ export const OrganizationUsersPageHeader = ({
 
 OrganizationUsersPageHeader.propTypes = {
   hasPermission: PropTypes.bool,
+  isNotEmpty: PropTypes.bool,
   isUsersLoading: PropTypes.bool.isRequired,
   searchValue: PropTypes.string.isRequired,
   setSearchValue: PropTypes.func.isRequired,
@@ -97,5 +99,6 @@ OrganizationUsersPageHeader.propTypes = {
 };
 
 OrganizationUsersPageHeader.defaultProps = {
+  isNotEmpty: false,
   onInvite: () => {},
 };

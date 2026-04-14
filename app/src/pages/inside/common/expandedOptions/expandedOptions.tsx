@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useDrop } from 'react-dnd';
 import { isEmpty } from 'es-toolkit/compat';
@@ -164,9 +164,27 @@ export const ExpandedOptions = ({
     }
   }, [hasFolderSidebarFilters, isSearchFilteredLoading, hasSearchFilteredFolders]);
 
+  const sidebarFilterKey = useMemo(
+    () => `${pageSearchQuery ?? ''}|${JSON.stringify(searchExtraFilters ?? {})}`,
+    [pageSearchQuery, searchExtraFilters],
+  );
+  const [respondedSidebarFilterKey, setRespondedSidebarFilterKey] = useState<string | null>(null);
+  const prevSidebarLoadingRef = useRef(isSearchFilteredLoading);
+
+  useEffect(() => {
+    if (prevSidebarLoadingRef.current && !isSearchFilteredLoading) {
+      setRespondedSidebarFilterKey(sidebarFilterKey);
+    }
+    prevSidebarLoadingRef.current = isSearchFilteredLoading;
+  }, [isSearchFilteredLoading, sidebarFilterKey]);
+
+  const isSidebarFilterStale =
+    hasFolderSidebarFilters && respondedSidebarFilterKey !== sidebarFilterKey;
+
   const hidePageSearchSidebar =
     hasFolderSidebarFilters &&
     !hasSearchFilteredFolders &&
+    !isSidebarFilterStale &&
     (!isSearchFilteredLoading || !prevHadFolders);
 
   const hideSidebar = hidePageSearchSidebar || hideFolderSidebar;

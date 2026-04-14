@@ -30,14 +30,14 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
-    padding: 0 12px;
-    height: 32px;
+    padding: 0 10px;
+    height: 36px;
     border: none;
-    border-radius: 12px;
+    border-radius: 16px;
     background: transparent;
     color: var(--rp-ui-base-e-400);
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
+    transition: background-color 0.2s ease-in-out;
     position: relative;
     flex-shrink: 0;
 

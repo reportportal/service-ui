@@ -25,6 +25,7 @@ import { useDebouncedSpinner, useQueryParams } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
+import { getMilestonesAction } from 'controllers/milestone';
 import {
   defaultQueryParams,
   getTestPlansAction,
@@ -71,6 +72,7 @@ export const useDeleteTestPlan = ({ onSuccess = noop }: UseDeleteTestPlanOptions
         push(url);
       } else {
         dispatch(getTestPlansAction(queryParams));
+        dispatch(getMilestonesAction(queryParams));
       }
 
       onSuccess();

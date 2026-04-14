@@ -15,6 +15,7 @@
  */
 
 import { useDispatch } from 'react-redux';
+import { isUndefined } from 'es-toolkit';
 
 import { fetch } from 'common/utils';
 import { useDebouncedSpinner, useQueryParams } from 'common/hooks';
@@ -24,17 +25,16 @@ import {
   defaultMilestoneQueryParams,
   getMilestonesAction,
   TmsMilestoneRS,
-  CreateMilestonePayload,
 } from 'controllers/milestone';
 
-import type { UseMilestoneSubmitParams } from './types';
+import type { MilestoneSubmitPayload, UseMilestoneSubmitParams } from './types';
 
 export const useMilestoneSubmit = ({ url, method, successMessageId }: UseMilestoneSubmitParams) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const queryParams = useQueryParams(defaultMilestoneQueryParams);
 
-  const submit = async (payload: CreateMilestonePayload) => {
+  const submit = async (payload: MilestoneSubmitPayload) => {
     try {
       showSpinner();
 
@@ -46,6 +46,7 @@ export const useMilestoneSubmit = ({ url, method, successMessageId }: UseMilesto
           status: payload.status,
           startDate: payload.startDate,
           endDate: payload.endDate,
+          ...(isUndefined(payload.testPlans) ? {} : { testPlans: payload.testPlans }),
         },
       });
 

@@ -17,9 +17,10 @@
 import { useModal } from 'common/hooks';
 
 import { CREATE_TEST_PLAN_MODAL_KEY, CreateTestPlanModal } from './createTestPlanModal';
+import type { CreateTestPlanModalData } from './types';
 
 export const useCreateTestPlanModal = () =>
-  useModal({
+  useModal<CreateTestPlanModalData | undefined>({
     modalKey: CREATE_TEST_PLAN_MODAL_KEY,
-    renderModal: () => <CreateTestPlanModal />,
+    renderModal: (data) => <CreateTestPlanModal milestoneId={data?.milestoneId} />,
   });

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
+import type { ChangeEvent } from 'react';
 import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { BreadcrumbsTreeIcon, FieldText, SearchIcon } from '@reportportal/ui-kit';
@@ -32,14 +32,21 @@ const cx = createClassnames(styles);
 
 interface HistoryOfActionsHeaderProps {
   testCaseName: string;
+  searchValue: string;
+  isSearchLoading: boolean;
+  onSearchChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  onSearchClear: () => void;
   className?: string;
 }
 
 export const HistoryOfActionsHeader = ({
   testCaseName,
+  searchValue,
+  isSearchLoading,
+  onSearchChange,
+  onSearchClear,
   className,
 }: HistoryOfActionsHeaderProps) => {
-  const [searchValue, setSearchValue] = useState('');
   const { formatMessage } = useIntl();
 
   const breadcrumbsTitles = {
@@ -62,12 +69,13 @@ export const HistoryOfActionsHeader = ({
       <div className={cx('history-of-actions-header__actions')}>
         <FieldText
           value={searchValue}
-          onChange={({ target }) => setSearchValue(target.value)}
-          onClear={() => setSearchValue('')}
+          onChange={onSearchChange}
+          onClear={onSearchClear}
           placeholder={formatMessage(messages.searchInputPlaceholder)}
           startIcon={<SearchIcon />}
           className={cx('history-of-actions-header__search')}
           maxLength={256}
+          loading={isSearchLoading}
           clearable
         />
       </div>

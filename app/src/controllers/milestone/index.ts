@@ -23,8 +23,10 @@ export {
 } from './constants';
 export type {
   TmsMilestoneRS,
+  TmsMilestonePageRS,
   TmsMilestoneType,
   TmsMilestoneStatus,
+  TmsTestPlanInMilestoneRS,
   CreateMilestonePayload,
 } from './constants';
 export { getMilestonesAction } from './actionCreators';

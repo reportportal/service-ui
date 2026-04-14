@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { FormEvent, MouseEvent, useMemo } from 'react';
+import { FormEvent, MouseEvent } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { InjectedFormProps, reduxForm } from 'redux-form';
@@ -57,6 +57,13 @@ const hasInvalidEditableAttributes = (attributes: Attribute[] = []) =>
     ({ edited, new: isNew, key, value }) =>
       (edited || isNew) && (isEmptyAttributeField(key) || isEmptyAttributeField(value)),
   );
+
+const validateTestPlanForm = ({ name, attributes }: TestPlanFormValues) => ({
+  name: commonValidators.requiredField(name),
+  attributes: hasInvalidEditableAttributes(attributes)
+    ? commonValidators.requiredField('')
+    : undefined,
+});
 
 interface TestPlanModalProps {
   title: string;
@@ -138,21 +145,35 @@ const TestPlanModalComponent = ({
   );
 };
 
+const CreateTestPlanModalForm = reduxForm<TestPlanFormValues, TestPlanModalProps>({
+  form: 'create-test-plan-modal-form',
+  enableReinitialize: true,
+  validate: validateTestPlanForm,
+})(TestPlanModalComponent);
+
+const EditTestPlanModalForm = reduxForm<TestPlanFormValues, TestPlanModalProps>({
+  form: 'edit-test-plan-modal-form',
+  enableReinitialize: true,
+  validate: validateTestPlanForm,
+})(TestPlanModalComponent);
+
+const DuplicateTestPlanModalForm = reduxForm<TestPlanFormValues, TestPlanModalProps>({
+  form: 'duplicate-test-plan-modal-form',
+  enableReinitialize: true,
+  validate: validateTestPlanForm,
+})(TestPlanModalComponent);
+
+const TEST_PLAN_MODAL_FORMS: Record<
+  TestPlanModalProps['formName'],
+  typeof CreateTestPlanModalForm
+> = {
+  'create-test-plan-modal-form': CreateTestPlanModalForm,
+  'edit-test-plan-modal-form': EditTestPlanModalForm,
+  'duplicate-test-plan-modal-form': DuplicateTestPlanModalForm,
+};
+
 export const TestPlanModal = (props: TestPlanModalProps) => {
-  const FormWrapper = useMemo(
-    () =>
-      reduxForm<TestPlanFormValues, TestPlanModalProps>({
-        form: props.formName,
-        enableReinitialize: true,
-        validate: ({ name, attributes }: TestPlanFormValues) => ({
-          name: commonValidators.requiredField(name),
-          attributes: hasInvalidEditableAttributes(attributes)
-            ? commonValidators.requiredField('')
-            : undefined,
-        }),
-      })(TestPlanModalComponent),
-    [props.formName],
-  );
+  const FormWrapper = TEST_PLAN_MODAL_FORMS[props.formName];
 
   return <FormWrapper {...props} initialValues={props.initialValues || initialValues} />;
 };

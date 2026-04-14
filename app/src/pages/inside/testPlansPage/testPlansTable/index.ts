@@ -15,3 +15,5 @@
  */
 
 export { TestPlansTable } from './testPlansTable';
+export { FIXED_COLUMN_WIDTH_PX } from './constants';
+export type { TestPlansTableProps } from './types';

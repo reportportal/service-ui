@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,4 +14,14 @@
  * limitations under the License.
  */
 
-export { withPopover } from './withPopover/withPopover';
+import { useModal } from 'common/hooks';
+
+import { CHANGE_MILESTONE_STATUS_MODAL_KEY } from './constants';
+import { ChangeMilestoneStatusModal } from './changeMilestoneStatusModal';
+import type { ChangeMilestoneStatusModalData } from './types';
+
+export const useChangeMilestoneStatusModal = () =>
+  useModal<ChangeMilestoneStatusModalData>({
+    modalKey: CHANGE_MILESTONE_STATUS_MODAL_KEY,
+    renderModal: (modalData) => <ChangeMilestoneStatusModal data={modalData} />,
+  });

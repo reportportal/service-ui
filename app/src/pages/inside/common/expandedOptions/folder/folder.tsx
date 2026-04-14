@@ -177,6 +177,8 @@ export const Folder = ({
                 isOpened={areToolsOpen}
                 setIsOpened={setAreToolsOpen}
                 placement="bottom-end"
+                strategy="fixed"
+                shouldUsePortal
               >
                 <div
                   className={cx('folders-tree__meatball', {

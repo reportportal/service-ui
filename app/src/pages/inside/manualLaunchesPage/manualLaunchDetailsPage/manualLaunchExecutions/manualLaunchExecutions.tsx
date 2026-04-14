@@ -18,9 +18,15 @@ import { useState, useCallback, useMemo, type KeyboardEvent, type MouseEvent } f
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
-import { Pagination, MeatballMenuIcon, Table, Selection, Button } from '@reportportal/ui-kit';
+import {
+  Pagination,
+  MeatballMenuIcon,
+  Table,
+  Selection,
+  Button,
+  BubblesLoader,
+} from '@reportportal/ui-kit';
 
-import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { createClassnames } from 'common/utils';
 import { isEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 import { EmptyPageState } from 'pages/common';
@@ -279,7 +285,7 @@ export const ManualLaunchExecutions = ({
   if (isLoading) {
     return (
       <div className={cx('manual-launch-executions__loader')}>
-        <SpinningPreloader />
+        <BubblesLoader />
       </div>
     );
   }
@@ -339,23 +345,25 @@ export const ManualLaunchExecutions = ({
           </div>
         )}
       </div>
-      <div
-        className={cx(
-          'manual-launch-executions__pagination',
-          isAnyRowSelected ? 'manual-launch-executions__pagination--with-panel' : '',
-        )}
-      >
-        <Pagination
-          pageSize={pageSize}
-          activePage={activePage}
-          totalItems={totalItems}
-          totalPages={totalPages}
-          pageSizeOptions={ITEMS_PER_PAGE_OPTIONS}
-          changePage={handleChangePage}
-          changePageSize={handleChangePageSize}
-          captions={captions}
-        />
-      </div>
+      {!hasNoMatchingResults && (
+        <div
+          className={cx(
+            'manual-launch-executions__pagination',
+            isAnyRowSelected ? 'manual-launch-executions__pagination--with-panel' : '',
+          )}
+        >
+          <Pagination
+            pageSize={pageSize}
+            activePage={activePage}
+            totalItems={totalItems}
+            totalPages={totalPages}
+            pageSizeOptions={ITEMS_PER_PAGE_OPTIONS}
+            changePage={handleChangePage}
+            changePageSize={handleChangePageSize}
+            captions={captions}
+          />
+        </div>
+      )}
       {isAnyRowSelected && canManageTestCases && (
         <div className={cx('selection')}>
           <Selection selectedCount={selectedRowIds.length} onClearSelection={onClearSelection} />
