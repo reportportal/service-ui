@@ -336,7 +336,7 @@ export const AttributeList = ({
         {!hasEditedAttribute && !disabled && showButton && attributes.length < maxLength && (
           <Button
             refCallback={addNewAttButtonRefCb}
-            className={cx('button-focused', addButtonClassName)}
+            className={cx(addButtonClassName)}
             icon={Parser(PlusIcon)}
             onClick={onAddNew}
             variant={'text'}
