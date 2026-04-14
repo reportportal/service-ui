@@ -67,9 +67,14 @@ export const AttributeList = ({
 }) => {
   const addNewAttrRef = useRef(null);
   const attributesRefs = useRef(null);
+  const keyEditorRef = useRef(null);
 
   const addNewAttButtonRefCb = (node) => {
     addNewAttrRef.current = node;
+  };
+
+  const keyEditorRefCb = (node) => {
+    keyEditorRef.current = node;
   };
 
   const getAttributesRefsMap = () => {
@@ -175,7 +180,9 @@ export const AttributeList = ({
       ...newAttributes[index],
       edited: true,
     };
-    handleAddNewAttrFocus();
+    scheduleUpdate(() => {
+      handleChangeFocus(keyEditorRef.current);
+    });
     onChange(newAttributes);
   };
 
@@ -258,6 +265,7 @@ export const AttributeList = ({
     <div className={cx(attributesListClassname)} data-automation-id={'attributesField'}>
       {editableAttr && (
         <AttributeEditor
+          refFunction={keyEditorRefCb}
           attribute={editableAttr}
           attributes={attributes}
           onChange={createChangeHandler()}
