@@ -51,6 +51,19 @@
     margin: 0;
     line-height: 0;
     background: none;
+
+    [class*='milestone-type-icon'] {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: auto;
+      height: auto;
+      min-width: 0;
+      min-height: 0;
+      padding: 0;
+      border-radius: 0;
+      background-color: transparent;
+    }
   }
 
   &__content {
