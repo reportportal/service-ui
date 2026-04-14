@@ -31,6 +31,8 @@ import {
   milestonesSelector,
   milestonesLoadingSelector,
   defaultMilestoneQueryParams,
+  TmsMilestoneRS,
+  MilestoneStatus,
 } from 'controllers/milestone';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useQueryParams } from 'common/hooks';
@@ -38,6 +40,7 @@ import { useQueryParams } from 'common/hooks';
 import {
   EmptyMilestones,
   MilestonesTable,
+  useChangeMilestoneStatusModal,
   useCreateMilestoneModal,
   useDuplicateMilestoneModal,
   useEditMilestoneModal,
@@ -51,6 +54,7 @@ export const TestPlansPage = () => {
   const { openModal: openMilestoneModal } = useCreateMilestoneModal();
   const { openModal: openEditMilestoneModal } = useEditMilestoneModal();
   const { openModal: openDuplicateMilestoneModal } = useDuplicateMilestoneModal();
+  const { openModal: openChangeMilestoneStatusModal } = useChangeMilestoneStatusModal();
   const projectName = useSelector(projectNameSelector);
   const { canManageTestPlans } = useUserPermissions();
   const { organizationSlug, projectSlug } = useSelector(
@@ -77,6 +81,12 @@ export const TestPlansPage = () => {
           isLoading={milestonesLoading}
           onEditMilestone={canManageTestPlans ? openEditMilestoneModal : undefined}
           onDuplicateMilestone={canManageTestPlans ? openDuplicateMilestoneModal : undefined}
+          onChangeMilestoneStatus={
+            canManageTestPlans
+              ? (milestone: TmsMilestoneRS, targetStatus: MilestoneStatus) =>
+                  openChangeMilestoneStatusModal({ milestone, targetStatus })
+              : undefined
+          }
         />
       );
     }

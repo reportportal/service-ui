@@ -398,6 +398,11 @@ export const URLS = {
     `${urlBase}project/${projectKey}/tms/test-plan/${id}/test-case${getQueryParams(query)}`,
   testPlan: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-plan${getQueryParams(query)}`,
+  testPlanNameSearch: (projectKey) => (search = '') =>
+    `${urlBase}project/${projectKey}/tms/test-plan/name${getQueryParams({
+      limit: 20,
+      ...(search ? { search } : {}),
+    })}`,
   tmsMilestone: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/milestone${getQueryParams(query)}`,
   tmsMilestoneById: (projectKey, milestoneId) =>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useEffect, useMemo, useCallback } from 'react';
+import { useEffect, useMemo, useCallback, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, PlusIcon } from '@reportportal/ui-kit';
@@ -113,6 +113,37 @@ export const TestCaseFolders = () => {
     () => buildFolderFilterParams(queryParams.filterPriorities, queryParams.filterTags),
     [queryParams.filterPriorities, queryParams.filterTags],
   );
+
+  const currentQueryKey = useMemo(
+    () =>
+      [
+        urlFolderId ?? '',
+        queryParams.limit,
+        queryParams.offset,
+        queryParams.testCasesSearchParams ?? '',
+        queryParams.filterPriorities ?? '',
+        queryParams.filterTags ?? '',
+      ].join('|'),
+    [
+      urlFolderId,
+      queryParams.limit,
+      queryParams.offset,
+      queryParams.testCasesSearchParams,
+      queryParams.filterPriorities,
+      queryParams.filterTags,
+    ],
+  );
+  const [loadedQueryKey, setLoadedQueryKey] = useState<string | null>(null);
+  const prevIsLoadingRef = useRef(isLoadingTestCases);
+
+  useEffect(() => {
+    if (prevIsLoadingRef.current && !isLoadingTestCases) {
+      setLoadedQueryKey(currentQueryKey);
+    }
+    prevIsLoadingRef.current = isLoadingTestCases;
+  }, [isLoadingTestCases, currentQueryKey]);
+
+  const isTestCasesQueryStale = loadedQueryKey !== currentQueryKey;
 
   const navigateToAllTestCases = useCallback(() => {
     dispatch({
@@ -252,7 +283,7 @@ export const TestCaseFolders = () => {
         testCases={testCases}
         testCasesPageData={testCasesPageData}
         instanceKey={TMS_INSTANCE_KEY.TEST_CASE}
-        isLoading={isLoadingTestCases || areFoldersLoading}
+        isLoading={isLoadingTestCases || isTestCasesQueryStale || areFoldersLoading}
       />
     </ExpandedOptions>
   );

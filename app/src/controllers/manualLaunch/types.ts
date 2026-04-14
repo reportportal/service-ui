@@ -31,6 +31,12 @@ export interface GetManualLaunchesParams {
   offset?: string | number;
   limit?: string | number;
   searchQuery?: string;
+  filterStatuses?: string[];
+  filterCompletion?: string;
+  filterStartTimeFrom?: number;
+  filterEndTimeTo?: number;
+  filterTestPlan?: string;
+  filterCompositeAttribute?: string;
 }
 
 export interface GetManualLaunchParams {

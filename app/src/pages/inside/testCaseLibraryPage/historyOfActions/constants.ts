@@ -22,3 +22,5 @@ export const HistoryOfActionsPageDefaultValues = {
   limit: 20,
   offset: 0,
 };
+
+export const HISTORY_ACTIVITY_DETAILS_FILTER_KEY = 'filter.cnt.details' as const;

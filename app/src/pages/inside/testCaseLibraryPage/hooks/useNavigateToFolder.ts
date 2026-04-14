@@ -68,6 +68,8 @@ export const useNavigateToFolder = () => {
             folderId,
             ...paginationParams,
             testCasesSearchParams: query?.testCasesSearchParams,
+            filterPriorities: query?.filterPriorities,
+            filterTags: query?.filterTags,
           }),
         );
       } else {
@@ -80,6 +82,8 @@ export const useNavigateToFolder = () => {
           },
           query: {
             ...(query?.testCasesSearchParams && { testCasesSearchParams: query.testCasesSearchParams }),
+            ...(query?.filterPriorities && { filterPriorities: query.filterPriorities }),
+            ...(query?.filterTags && { filterTags: query.filterTags }),
           },
         });
       }

@@ -22,6 +22,7 @@ import { fetch } from 'common/utils';
 
 import type { Page } from 'types/common';
 
+import { HISTORY_ACTIVITY_DETAILS_FILTER_KEY } from './constants';
 import type { TestCaseActivityItem, TestCaseActivityResponse } from './types';
 
 type UseTestCaseActivityHistoryResult = {
@@ -41,6 +42,7 @@ export const useTestCaseActivityHistory = (
   testCaseId: string,
   offset: number,
   limit: number,
+  detailsContains: string,
 ): UseTestCaseActivityHistoryResult => {
   const { showErrorNotification } = useNotification();
   const enabled = Boolean(projectKey && testCaseId);
@@ -64,6 +66,9 @@ export const useTestCaseActivityHistory = (
     const url = URLS.testCaseActivity(projectKey, testCaseId, {
       offset: safeOffset,
       limit: safeLimit,
+      ...(detailsContains
+        ? { [HISTORY_ACTIVITY_DETAILS_FILTER_KEY]: detailsContains }
+        : {}),
     }) as string;
 
     void fetch<TestCaseActivityResponse>(url)
@@ -86,7 +91,7 @@ export const useTestCaseActivityHistory = (
     return () => {
       cancelled = true;
     };
-  }, [enabled, projectKey, testCaseId, offset, limit, showErrorNotification]);
+  }, [enabled, projectKey, testCaseId, offset, limit, detailsContains, showErrorNotification]);
 
   if (!enabled) {
     return emptyResult;
