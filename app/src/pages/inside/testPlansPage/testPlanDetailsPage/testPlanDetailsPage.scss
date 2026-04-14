@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
+@use '../../../../common/css/mixins';
+
 .test-plan-details-page {
   display: flex;
   flex-direction: column;
   height: 100%;
+
+  @include mixins.header-toolbar-search-button;
 
   &__header-id {
     display: flex;
