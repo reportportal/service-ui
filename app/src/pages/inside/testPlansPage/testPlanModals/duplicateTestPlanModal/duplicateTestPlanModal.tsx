@@ -34,6 +34,7 @@ export const DuplicateTestPlanModal = ({ data, onSuccess }: DuplicateTestPlanMod
   const { formatMessage } = useIntl();
   const { isLoading, duplicateTestPlan } = useDuplicateTestPlan({
     testPlanId: data.id,
+    milestoneId: data.milestoneId,
     onSuccess,
   });
 

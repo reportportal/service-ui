@@ -24,11 +24,13 @@ import {
   Pagination,
   FilterOutlineIcon,
   FilterFilledIcon,
+  ClearIcon,
 } from '@reportportal/ui-kit';
 
 import { projectNameSelector } from 'controllers/project';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { createClassnames, debounce } from 'common/utils';
+import { MANUAL_LAUNCHES_FILTER_URL_KEYS } from 'common/manualLaunches/manualLaunchesFilterUrl';
 import { SEARCH_DELAY } from 'common/constants/delayTime';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import {
@@ -58,6 +60,9 @@ import {
   ManualLaunchesFilterSidePanel,
   EMPTY_FILTER,
   filterSidePanelMessages,
+  buildManualLaunchesBackendFilterParams,
+  buildURLQueryFromFilters,
+  parseFiltersFromURLQuery,
   type ManualLaunchesFilterPayload,
 } from './manualLaunchesFilterSidePanel';
 
@@ -81,7 +86,10 @@ export const ManualLaunchesPage = () => {
   const appliedSearchQuery = location?.query?.searchQuery || '';
   const [searchValue, setSearchValue] = useState(appliedSearchQuery);
   const [isFilterSidePanelVisible, setIsFilterSidePanelVisible] = useState(false);
-  const [appliedFilters, setAppliedFilters] = useState<ManualLaunchesFilterPayload>(EMPTY_FILTER);
+  const appliedFilters = useMemo<ManualLaunchesFilterPayload>(
+    () => parseFiltersFromURLQuery(location?.query),
+    [location?.query],
+  );
 
   const activeFiltersCount = useMemo(() => {
     let count = 0;
@@ -142,19 +150,45 @@ export const ManualLaunchesPage = () => {
     setIsFilterSidePanelVisible(false);
   }, []);
 
-  const handleApplyFilters = useCallback((payload: ManualLaunchesFilterPayload) => {
-    setAppliedFilters(payload);
-  }, []);
+  const handleApplyFilters = useCallback(
+    (payload: ManualLaunchesFilterPayload) => {
+      dispatch(
+        updatePagePropertiesAction({
+          ...buildURLQueryFromFilters(payload),
+          offset: 0,
+        }),
+      );
+    },
+    [dispatch],
+  );
+
+  const handleClearAllFiltersFromToolbar = useCallback(() => {
+    dispatch(
+      updatePagePropertiesAction({
+        ...buildURLQueryFromFilters(EMPTY_FILTER),
+        offset: 0,
+      }),
+    );
+  }, [dispatch]);
 
   const handleRefresh = useCallback(() => {
+    const { filterCompositeAttribute } = buildManualLaunchesBackendFilterParams(appliedFilters);
+    const { statuses, startTime, testPlan } = appliedFilters;
+
     dispatch(
       getManualLaunchesAction({
         offset,
         limit: pageSize,
         searchQuery: appliedSearchQuery || undefined,
+        filterStatuses: statuses,
+        filterCompletion: location?.query?.[MANUAL_LAUNCHES_FILTER_URL_KEYS.COMPLETION] || undefined,
+        filterStartTimeFrom: startTime?.startDate ? startTime.startDate.getTime() : undefined,
+        filterEndTimeTo: startTime?.endDate ? startTime.endDate.getTime() : undefined,
+        filterTestPlan: testPlan ? String(testPlan.id) : undefined,
+        filterCompositeAttribute,
       }),
     );
-  }, [dispatch, offset, pageSize, appliedSearchQuery]);
+  }, [dispatch, offset, pageSize, appliedSearchQuery, appliedFilters, location?.query]);
 
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
   const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
@@ -175,21 +209,36 @@ export const ManualLaunchesPage = () => {
                   setSearchValue={setSearchValue}
                   onFilterChange={handleFilterChange}
                 />
-                <button
-                  type="button"
-                  className={cx('filter-icon', { active: hasActiveFilters })}
-                  aria-label={formatMessage(filterSidePanelMessages.filterButton)}
-                  onClick={handleFilterIconClick}
-                >
-                  {hasActiveFilters ? (
+                <div className={cx('filter-control', { active: hasActiveFilters })}>
+                  <button
+                    type="button"
+                    className={cx('filter-icon')}
+                    aria-label={formatMessage(filterSidePanelMessages.filterButton)}
+                    onClick={handleFilterIconClick}
+                  >
+                    {hasActiveFilters ? (
+                      <>
+                        <FilterFilledIcon />
+                        <span className={cx('filter-count')}>{activeFiltersCount}</span>
+                      </>
+                    ) : (
+                      <FilterOutlineIcon />
+                    )}
+                  </button>
+                  {hasActiveFilters && (
                     <>
-                      <FilterFilledIcon />
-                      <span className={cx('filter-count')}>{activeFiltersCount}</span>
+                      <span className={cx('filter-control-divider')} aria-hidden />
+                      <button
+                        type="button"
+                        className={cx('filter-clear-button')}
+                        aria-label={formatMessage(filterSidePanelMessages.clearAllFiltersAriaLabel)}
+                        onClick={handleClearAllFiltersFromToolbar}
+                      >
+                        <ClearIcon />
+                      </button>
                     </>
-                  ) : (
-                    <FilterOutlineIcon />
                   )}
-                </button>
+                </div>
                 <Button
                   variant="text"
                   data-automation-id="refreshPageButton"

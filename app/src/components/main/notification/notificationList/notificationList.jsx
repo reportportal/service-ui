@@ -372,6 +372,11 @@ export const notificationMessages = defineMessages({
     id: 'TestPlansPage.testPlanCreatedSuccess',
     defaultMessage: 'Test Plan has been created successfully.',
   },
+  testPlanCreatedButNotLinkedToMilestone: {
+    id: 'TestPlansPage.testPlanCreatedButNotLinkedToMilestone',
+    defaultMessage:
+      'Test Plan was created, but it could not be linked to the Milestone. You can link it manually later.',
+  },
   testPlanLoadingFailed: {
     id: 'TestPlansPage.testPlanLoadingFailed',
     defaultMessage: 'Failed to load Test Plans.',
@@ -391,6 +396,22 @@ export const notificationMessages = defineMessages({
   milestoneDuplicatedSuccess: {
     id: 'MilestonesPage.milestoneDuplicatedSuccess',
     defaultMessage: 'Milestone has been duplicated successfully.',
+  },
+  milestoneTestingStartedSuccess: {
+    id: 'MilestonesPage.milestoneTestingStartedSuccess',
+    defaultMessage: 'Testing started for the milestone.',
+  },
+  milestoneCompletedSuccess: {
+    id: 'MilestonesPage.milestoneCompletedSuccess',
+    defaultMessage: 'Milestone completed.',
+  },
+  milestoneStatusChangedToTestingSuccess: {
+    id: 'MilestonesPage.milestoneStatusChangedToTestingSuccess',
+    defaultMessage: 'The status has been changed to Testing.',
+  },
+  milestoneStatusChangedToScheduledSuccess: {
+    id: 'MilestonesPage.milestoneStatusChangedToScheduledSuccess',
+    defaultMessage: 'The status has been changed to Scheduled.',
   },
   testPlanRedirectWarningMessage: {
     id: 'TestPlansPage.testPlanRedirectWarningMessage',

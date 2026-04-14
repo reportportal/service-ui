@@ -43,7 +43,7 @@ const buildFilterParams = (
 ): Record<string, string> => {
   const params: Record<string, string> = {};
   if (filterPriorities) {
-    params[keys.priority] = filterPriorities;
+    params[keys.priority] = filterPriorities.toUpperCase();
   }
   if (filterTags) {
     params[keys.attributeKey] = filterTags;
@@ -63,14 +63,14 @@ export const buildTestCaseFilterParams = (filterPriorities?: string, filterTags?
 export const buildFolderFilterParams = (filterPriorities?: string, filterTags?: string) =>
   buildFilterParams(FOLDER_FILTER_KEYS, filterPriorities, filterTags);
 
-const normalizePrioritiesForExecutionApi = (filterPriorities?: string): string | undefined => {
+export const normalizePrioritiesForExecutionApi = (filterPriorities?: string): string | undefined => {
   if (!filterPriorities?.trim()) {
     return undefined;
   }
 
   const normalized = filterPriorities
     .split(',')
-    .map((priority) => priority.trim().toLowerCase())
+    .map((priority) => priority.trim().toUpperCase())
     .filter(Boolean)
     .join(',');
 

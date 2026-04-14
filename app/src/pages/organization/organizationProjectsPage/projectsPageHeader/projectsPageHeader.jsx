@@ -24,6 +24,7 @@ import classNames from 'classnames/bind';
 import { ORGANIZATIONS_PAGE } from 'controllers/pages';
 import { activeOrganizationSelector } from 'controllers/organization';
 import { loadingSelector } from 'controllers/organization/projects';
+import { usersPaginationSelector } from 'controllers/organization/users';
 import { SearchField } from 'components/fields/searchField';
 import { SEARCH_KEY, NAMESPACE } from 'controllers/organization/projects/constants';
 import { withFilter } from 'controllers/filter';
@@ -45,6 +46,8 @@ const FilterEntitiesURLContainer = createFilterEntitiesURLContainer(null, NAMESP
 
 export const ProjectsPageHeader = ({
   hasPermission,
+  isNotEmpty,
+  projectsCount,
   onCreateProject,
   searchValue,
   setSearchValue,
@@ -54,9 +57,7 @@ export const ProjectsPageHeader = ({
   const { formatMessage } = useIntl();
   const organization = useSelector(activeOrganizationSelector);
   const organizationName = organization?.name;
-  const projectsCount = organization?.relationships?.projects?.meta.count;
-  const usersCount = organization?.relationships?.users?.meta.count;
-  const isNotEmpty = projectsCount > 0;
+  const usersCount = useSelector((state) => usersPaginationSelector(state)?.totalElements);
   const projectsLoading = useSelector(loadingSelector);
 
   const breadcrumbs = [
@@ -134,6 +135,8 @@ export const ProjectsPageHeader = ({
 
 ProjectsPageHeader.propTypes = {
   hasPermission: PropTypes.bool,
+  isNotEmpty: PropTypes.bool,
+  projectsCount: PropTypes.number,
   onCreateProject: PropTypes.func.isRequired,
   searchValue: PropTypes.string || null,
   setSearchValue: PropTypes.func.isRequired,
@@ -143,4 +146,6 @@ ProjectsPageHeader.propTypes = {
 
 ProjectsPageHeader.defaultProps = {
   hasPermission: false,
+  isNotEmpty: false,
+  projectsCount: 0,
 };

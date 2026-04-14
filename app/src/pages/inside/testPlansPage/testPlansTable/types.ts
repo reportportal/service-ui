@@ -1,5 +1,5 @@
-/*!
- * Copyright 2022 EPAM Systems
+/*
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,9 @@
  * limitations under the License.
  */
 
-.with-popover-wrapper {
-  display: inline-block;
-  width: 100%;
-}
+import type { TestPlanDto } from 'controllers/testPlan';
 
-.with-popover {
-  display: block;
-  width: fit-content;
-  height: fit-content;
-  padding: 0;
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
+export interface TestPlansTableProps {
+  testPlans: TestPlanDto[];
+  isLoading: boolean;
 }

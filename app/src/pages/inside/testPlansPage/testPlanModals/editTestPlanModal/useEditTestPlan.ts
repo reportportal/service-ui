@@ -15,6 +15,7 @@
  */
 
 import { useDispatch, useSelector } from 'react-redux';
+import { isNotNil } from 'es-toolkit';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -22,12 +23,14 @@ import { useDebouncedSpinner, useQueryParams } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
+import { getMilestonesAction } from 'controllers/milestone';
 import { getTestPlansAction, getTestPlanAction, defaultQueryParams } from 'controllers/testPlan';
 
 import { TestPlanFormValues } from '../testPlanModal';
 
 interface EditTestPlanFormValues extends TestPlanFormValues {
   id: number;
+  milestoneId?: number;
 }
 
 export const useEditTestPlan = () => {
@@ -41,11 +44,12 @@ export const useEditTestPlan = () => {
       showSpinner();
 
       await fetch(URLS.testPlanById(projectKey, payload.id), {
-        method: 'put',
+        method: 'patch',
         data: {
           name: payload.name,
           description: payload.description,
           attributes: payload.attributes,
+          ...(isNotNil(payload.milestoneId) ? { milestoneId: payload.milestoneId } : {}),
         },
       });
 
@@ -56,6 +60,7 @@ export const useEditTestPlan = () => {
         }),
       );
       dispatch(getTestPlansAction(queryParams));
+      dispatch(getMilestonesAction(queryParams));
       dispatch(getTestPlanAction({ ...queryParams, testPlanId: payload.id }));
     } catch {
       dispatch(

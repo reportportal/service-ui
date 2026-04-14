@@ -17,19 +17,19 @@
 .sidebar-container {
   height: 100%;
   font-family: $FONT-ROBOTO-REGULAR;
-  width: 48px;
-  transition: width 0.3s ease-out;
+  width: var(--sidebar-collapsed-width);
+  transition: width var(--sidebar-transition-duration) ease-out;
   position: relative;
   z-index: 2;
   overflow: hidden;
 }
 
 .open {
-  width: 328px;
+  width: var(--sidebar-full-width);
   animation-name: delay-overflow;
-  animation-delay: 0.8s;
+  animation-delay: var(--sidebar-open-duration);
   animation-fill-mode: forwards;
-  transition-delay: 0.5s;
+  transition-delay: var(--sidebar-transition-delay);
 }
 
 .sidebar {
@@ -44,11 +44,11 @@
   gap: 32px;
   background-image: linear-gradient(
     to right,
-    $COLOR--darkmode-gray-500 0 48px,
-    $COLOR--darkmode-gray-450 48px 100%
+    $COLOR--darkmode-gray-500 0 var(--sidebar-collapsed-width),
+    $COLOR--darkmode-gray-450 var(--sidebar-collapsed-width) 100%
   );
   z-index: 3;
-  width: 328px;
+  width: var(--sidebar-full-width);
   align-items: start;
 }
 

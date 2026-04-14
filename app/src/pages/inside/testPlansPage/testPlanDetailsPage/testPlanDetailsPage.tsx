@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
 import { Button } from '@reportportal/ui-kit';
 
-import { createClassnames, debounce } from 'common/utils';
+import { createClassnames } from 'common/utils';
 import { SEARCH_DELAY } from 'common/constants/delayTime';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
@@ -102,11 +102,20 @@ export const TestPlanDetailsPage = () => {
     }
   }, [areFoldersFetched, dispatch]);
   const [searchValue, setSearchValue] = useState(location?.query?.testCasesSearchParams || '');
+  const searchDebounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    const querySearch = location?.query?.testCasesSearchParams || '';
+    if (searchDebounceTimeoutRef.current != null) {
+      clearTimeout(searchDebounceTimeoutRef.current);
+      searchDebounceTimeoutRef.current = null;
+    }
 
-    setSearchValue(querySearch);
+    const querySearch = location?.query?.testCasesSearchParams || '';
+    const frameId = requestAnimationFrame(() => {
+      setSearchValue(querySearch);
+    });
+
+    return () => cancelAnimationFrame(frameId);
   }, [location?.query?.testCasesSearchParams]);
 
   const isSearchLoading =
@@ -114,16 +123,31 @@ export const TestPlanDetailsPage = () => {
     isTestPlanTestCasesLoading ||
     isLoadingFilteredFolders;
 
+  useEffect(
+    () => () => {
+      if (searchDebounceTimeoutRef.current != null) {
+        clearTimeout(searchDebounceTimeoutRef.current);
+        searchDebounceTimeoutRef.current = null;
+      }
+    },
+    [],
+  );
+
   const handleFilterChange = useCallback(
-    // eslint-disable-next-line react-hooks/use-memo
-    debounce((value: string) => {
-      dispatch(
-        updatePagePropertiesAction({
-          testCasesSearchParams: value,
-          ...TestCasePageDefaultValues,
-        }),
-      );
-    }, SEARCH_DELAY),
+    (value: string) => {
+      if (searchDebounceTimeoutRef.current != null) {
+        clearTimeout(searchDebounceTimeoutRef.current);
+      }
+      searchDebounceTimeoutRef.current = setTimeout(() => {
+        searchDebounceTimeoutRef.current = null;
+        dispatch(
+          updatePagePropertiesAction({
+            testCasesSearchParams: value,
+            ...TestCasePageDefaultValues,
+          }),
+        );
+      }, SEARCH_DELAY);
+    },
     [dispatch],
   );
 

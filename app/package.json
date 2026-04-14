@@ -26,9 +26,9 @@
     "@formatjs/intl-pluralrules": "1.3.9",
     "@formatjs/intl-relativetimeformat": "4.5.1",
     "@formatjs/intl-utils": "1.6.0",
-    "@reportportal/ui-kit": "^0.0.1-alpha.212",
+    "@reportportal/ui-kit": "^0.0.1-alpha.213",
     "@tanstack/react-virtual": "^3.13.23",
-    "axios": "^1.13.2",
+    "axios": "^1.15.0",
     "c3": "0.7.20",
     "chart.js": "2.9.4",
     "chartjs-plugin-datalabels": "0.6.0",
@@ -98,7 +98,7 @@
     "semver-diff": "3.1.1",
     "simplemde": "1.11.2",
     "swagger-ui-react": "^5.32.1",
-    "video.js": "7.17.0"
+    "video.js": "7.21.7"
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",

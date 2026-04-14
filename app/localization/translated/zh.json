@@ -2311,7 +2311,7 @@
   "StepLevelEntities.TypeStep": "测试",
   "StepLevelEntities.TypeTest": "测试类",
   "StepLevelEntities.entityItemBTSIssue.placeholder": "在BTS中输入问题",
-  "StorageStatistics.storageUsageTooltip": "当前日历月内项目中所有启动、条目、日志和附件的平均总量",
+  "StorageStatistics.storageUsageTooltip": "当前日历月内组织所有项目中所有启动、条目、日志和附件的平均总量",
   "SuiteLevelEntities.AUTOMATION_BUG_title": "自动化错误",
   "SuiteLevelEntities.AUTOMATION_BUG_totalTitle": "全部自动化错误",
   "SuiteLevelEntities.DescriptionTitle": "描述",

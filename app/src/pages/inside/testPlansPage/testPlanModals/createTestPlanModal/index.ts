@@ -16,3 +16,4 @@
 
 export { CREATE_TEST_PLAN_MODAL_KEY, CreateTestPlanModal } from './createTestPlanModal';
 export { useCreateTestPlanModal } from './useCreateTestPlanModal';
+export type { CreateTestPlanModalData } from './types';

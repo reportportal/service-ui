@@ -15,6 +15,7 @@
  */
 
 import { useIntl } from 'react-intl';
+import { isNotNil } from 'es-toolkit';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { TestPlanDto } from 'controllers/testPlan';
@@ -37,6 +38,7 @@ export const EditTestPlanModal = ({ data }: EditTestPlanModalProps) => {
     const payload = {
       ...formValues,
       id: data.id,
+      ...(isNotNil(data.milestoneId) ? { milestoneId: data.milestoneId } : {}),
     };
 
     return submitTestPlan(payload);
