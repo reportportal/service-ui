@@ -313,7 +313,7 @@ AttributeEditor.propTypes = {
   isAttributeKeyRequired: PropTypes.bool,
   isAttributeValueRequired: PropTypes.bool,
   allowCustomValues: PropTypes.bool,
-  refFunction: PropTypes.func | undefined,
+  refFunction: PropTypes.func,
 };
 AttributeEditor.defaultProps = {
   attributes: [],

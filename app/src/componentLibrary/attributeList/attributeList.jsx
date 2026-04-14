@@ -180,10 +180,12 @@ export const AttributeList = ({
       ...newAttributes[index],
       edited: true,
     };
+
+    onChange(newAttributes);
+
     scheduleUpdate(() => {
       handleChangeFocus(keyEditorRef.current);
     });
-    onChange(newAttributes);
   };
 
   const editableAttr = getExistEditableAttr();
@@ -343,7 +345,7 @@ export const AttributeList = ({
         )}
         {!hasEditedAttribute && !disabled && showButton && attributes.length < maxLength && (
           <Button
-            refCallback={addNewAttButtonRefCb}
+            ref={addNewAttButtonRefCb}
             className={cx(addButtonClassName)}
             icon={Parser(PlusIcon)}
             onClick={onAddNew}
