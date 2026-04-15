@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,25 @@
  * limitations under the License.
  */
 
-import PropTypes from 'prop-types';
+import type { ReactNode } from 'react';
 import classNames from 'classnames/bind';
-import { FormField } from 'components/fields/formField';
+import { FormField, type FormFieldProps } from 'components/fields/formField';
 import styles from './integrationFormField.scss';
 
 const cx = classNames.bind(styles);
 
+export type IntegrationFormFieldProps = FormFieldProps & {
+  lineAlign?: boolean;
+  formFieldContainerClassName?: string;
+  children: ReactNode;
+};
+
 export const IntegrationFormField = ({
-  lineAlign,
+  lineAlign = false,
   children,
-  formFieldContainerClassName,
+  formFieldContainerClassName = '',
   ...rest
-}) => (
+}: IntegrationFormFieldProps) => (
   <FormField
     containerClassName={cx(
       'form-field-container',
@@ -40,14 +46,3 @@ export const IntegrationFormField = ({
     {children}
   </FormField>
 );
-
-IntegrationFormField.propTypes = {
-  children: PropTypes.node.isRequired,
-  lineAlign: PropTypes.bool,
-  formFieldContainerClassName: PropTypes.string,
-};
-
-IntegrationFormField.defaultProps = {
-  lineAlign: false,
-  formFieldContainerClassName: '',
-};

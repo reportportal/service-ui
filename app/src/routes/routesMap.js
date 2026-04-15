@@ -73,7 +73,7 @@ import {
 } from 'controllers/pages';
 import {
   GENERAL,
-  AUTHORIZATION_CONFIGURATION,
+  ACCESS_CONFIGURATION,
   ANALYTICS,
   LINKS_AND_BRANDING,
   FEATURES,
@@ -263,9 +263,9 @@ const routesMap = {
   },
   [SERVER_SETTINGS_PAGE]: redirectRoute('/settings', () => ({
     type: SERVER_SETTINGS_TAB_PAGE,
-    payload: { settingsTab: AUTHORIZATION_CONFIGURATION },
+    payload: { settingsTab: ACCESS_CONFIGURATION },
   })),
-  [SERVER_SETTINGS_TAB_PAGE]: `/settings/:settingsTab(${AUTHORIZATION_CONFIGURATION}|${FEATURES}|${ANALYTICS}|${LINKS_AND_BRANDING})`,
+  [SERVER_SETTINGS_TAB_PAGE]: `/settings/:settingsTab(${ACCESS_CONFIGURATION}|${FEATURES}|${ANALYTICS}|${LINKS_AND_BRANDING})`,
   [PLUGINS_PAGE]: redirectRoute(
     '/plugins',
     () => ({

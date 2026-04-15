@@ -141,3 +141,8 @@ export const createProjectVersionValidator = () =>
     commonValidators.requiredField,
     bindMessageToValidator(validate.projectVersionLength, 'projectVersionLengthHint'),
   ]);
+
+export const githubOrganizationName = bindMessageToValidator(
+  validate.githubOrganizationNameOptional,
+  'githubOrganizationNameHint',
+);

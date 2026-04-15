@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
+import type { ReactNode } from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
-import { SAUCE_LABS, EMAIL, JIRA, RALLY, SAML, LDAP } from 'common/constants/pluginNames';
+import { SAUCE_LABS, EMAIL, GITHUB, JIRA, RALLY, SAML, LDAP } from 'common/constants/pluginNames';
 import {
   ANALYZER_GROUP_TYPE,
   AUTHORIZATION_GROUP_TYPE,
@@ -25,7 +26,7 @@ import {
   OTHER_GROUP_TYPE,
 } from 'common/constants/pluginsGroupTypes';
 
-export const PLUGIN_DESCRIPTIONS_MAP = {
+export const PLUGIN_DESCRIPTIONS_MAP: Record<string, ReactNode> = {
   [SAUCE_LABS]: (
     <FormattedMessage
       id="Integrations.SauceLabs.description"
@@ -60,6 +61,12 @@ export const PLUGIN_DESCRIPTIONS_MAP = {
     <FormattedMessage
       id="Integrations.Ldap.description"
       defaultMessage="Integration with LDAP, can be help to speed up the process user creation and login to ReportPortal. Integration provides an exchange of information between ReportPortal and LDAP, such as possibility to login to ReportPortal with LDAP credentials."
+    />
+  ),
+  [GITHUB]: (
+    <FormattedMessage
+      id="Integrations.Github.description"
+      defaultMessage="Integration with GitHub, can help to speed up the process of user creation and login to ReportPortal. Integration provides an exchange of information between ReportPortal and GitHub, such as possibility to login to ReportPortal with GitHub credentials."
     />
   ),
 };

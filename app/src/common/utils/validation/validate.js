@@ -29,6 +29,7 @@ import {
   lengthRange,
   range,
   isNotOnlySpaces,
+  trimValue,
 } from './validatorHelpers';
 import { MAX_FIELD_LENGTH } from './constants';
 
@@ -186,3 +187,14 @@ export const organizationNamePattern = composeValidators([
   regex(/^[0-9a-zA-Z-'_. ]+$/),
 ]);
 export const organizationNameLength = composeValidators([isNotEmpty, lengthRange(3, 60)]);
+
+const githubOrganizationNameWhenPresent = composeValidators([
+  maxLength(256),
+  regex(/^[A-Za-z0-9-]+$/),
+]);
+
+export const githubOrganizationNameOptional = (value) => {
+  const v = trimValue(value);
+  return !v?.length || githubOrganizationNameWhenPresent(v);
+};
+

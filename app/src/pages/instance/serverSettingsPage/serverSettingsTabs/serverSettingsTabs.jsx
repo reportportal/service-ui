@@ -21,7 +21,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { SERVER_SETTINGS_TAB_PAGE, settingsTabSelector } from 'controllers/pages';
 import {
-  AUTHORIZATION_CONFIGURATION,
+  ACCESS_CONFIGURATION,
   ANALYTICS,
   LINKS_AND_BRANDING,
   FEATURES,
@@ -38,9 +38,9 @@ import { LinksAndBrandingTab } from './linksAndBrandingTab';
 import { FeaturesTab } from './featuresTab';
 
 const messages = defineMessages({
-  authConfiguration: {
-    id: 'ServerSettingsTabs.authConfiguration',
-    defaultMessage: 'Authorization configuration',
+  accessConfiguration: {
+    id: 'ServerSettingsTabs.accessConfiguration',
+    defaultMessage: 'Access configuration',
   },
   statistics: {
     id: 'ServerSettingsTabs.analytics',
@@ -56,7 +56,7 @@ const messages = defineMessages({
   },
 });
 
-const ServerSettingsTabs = ({ activeTab, onChangeTab, intl }) => {
+const ServerSettingsTabs = ({ activeTab = ACCESS_CONFIGURATION, onChangeTab = () => {}, intl }) => {
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
 
@@ -76,9 +76,9 @@ const ServerSettingsTabs = ({ activeTab, onChangeTab, intl }) => {
   });
 
   const createTabsConfig = () => ({
-    [AUTHORIZATION_CONFIGURATION]: {
-      name: intl.formatMessage(messages.authConfiguration),
-      link: createTabLink(AUTHORIZATION_CONFIGURATION),
+    [ACCESS_CONFIGURATION]: {
+      name: intl.formatMessage(messages.accessConfiguration),
+      link: createTabLink(ACCESS_CONFIGURATION),
       component: <AuthConfigurationTab />,
       mobileDisabled: true,
       eventInfo: ADMIN_SERVER_SETTINGS_PAGE_EVENTS.AUTHORIZATION_CONFIGURATION_TAB,
@@ -119,10 +119,6 @@ ServerSettingsTabs.propTypes = {
   intl: PropTypes.object.isRequired,
   activeTab: PropTypes.string,
   onChangeTab: PropTypes.func,
-};
-ServerSettingsTabs.defaultProps = {
-  activeTab: AUTHORIZATION_CONFIGURATION,
-  onChangeTab: () => {},
 };
 
 export const ServerSettingsTabsWrapper = connect(

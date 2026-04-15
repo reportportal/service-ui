@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,14 @@
  *  limitations under the License.
  */
 
-import { EMAIL, JIRA, LDAP, RALLY, SAML, SAUCE_LABS } from 'common/constants/pluginNames';
+import { EMAIL, GITHUB, JIRA, LDAP, RALLY, SAML, SAUCE_LABS } from 'common/constants/pluginNames';
 import { SauceLabsFormFields } from './integrationProviders/sauceLabsIntegration/sauceLabsFormFields';
 import { EmailFormFields } from './integrationProviders/emailIntegration/emailFormFields';
 import { JiraConnectionFormFields } from './integrationProviders/jiraIntegration/jiraConnectionFormFields';
 import { RallyConnectionFormFields } from './integrationProviders/rallyIntegration/rallyConnectionFormFields';
 import { SamlFormFields } from './integrationProviders/samlIntegration/samlFormFields';
 import { LdapFormFields } from './integrationProviders/ldapIntegration/ldapFormFields';
+import { GithubFormFields } from './integrationProviders/githubIntegration/githubFormFields';
 
 export const INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP = {
   [SAUCE_LABS]: SauceLabsFormFields,
@@ -29,4 +30,5 @@ export const INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP = {
   [RALLY]: RallyConnectionFormFields,
   [SAML]: SamlFormFields,
   [LDAP]: LdapFormFields,
+  [GITHUB]: GithubFormFields,
 };

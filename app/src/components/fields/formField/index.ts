@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,4 @@
  * limitations under the License.
  */
 
-import { ENABLED_KEY } from 'pages/instance/serverSettingsPage/common/constants';
-
-export const CLIENT_ID_KEY = 'clientId';
-export const CLIENT_SECRET_KEY = 'clientSecret';
-export const ORGANIZATIONS_KEY = 'restrictions.organizations';
-
-export const GITHUB_AUTH_FORM = 'githubAuthForm';
-export const DEFAULT_FORM_CONFIG = {
-  [ENABLED_KEY]: false,
-  restrictions: {
-    organizations: [],
-  },
-};
+export { FormField, type FormFieldProps } from './formField';
