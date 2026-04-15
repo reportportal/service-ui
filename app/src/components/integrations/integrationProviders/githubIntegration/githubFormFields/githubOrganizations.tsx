@@ -92,12 +92,11 @@ export const GithubOrganizations = ({ fields, disabled = false }: GithubOrganiza
             />
           </div>
         ))}
-        <div className={cx('add-button-container')}>
+        <div>
           <Button
             variant="text"
             type="button"
             onClick={handleAdd}
-            className={cx('add-button')}
             iconPlace="start"
             icon={<PlusIcon />}
             disabled={disabled}
