@@ -40,39 +40,29 @@ export type FormFieldProps = Partial<BaseFieldProps> & {
 };
 
 export class FormField extends PureComponent<FormFieldProps> {
-  static defaultProps: Partial<FormFieldProps> = {
-    containerClassName: '',
-    labelClassName: '',
-    fieldWrapperClassName: '',
-    customBlock: null,
-    label: '',
-    onChange: () => {},
-    normalize: (value: unknown) => value,
-    format: (value: unknown) => value,
-    parse: (value: unknown) => value,
-    disabled: false,
-    children: null,
-    required: false,
-    withoutProvider: false,
-  };
-
   render() {
     const {
-      containerClassName,
-      labelClassName,
-      fieldWrapperClassName,
-      customBlock,
-      label,
-      children,
-      required,
-      withoutProvider,
+      containerClassName = '',
+      labelClassName = '',
+      fieldWrapperClassName = '',
+      customBlock = null,
+      label = '',
+      onChange = () => {},
+      normalize = (value: unknown) => value,
+      format = (value: unknown) => value,
+      parse = (value: unknown) => value,
+      disabled = false,
+      children = null,
+      required = false,
+      withoutProvider = false,
       ...rest
     } = this.props;
+    const fieldProviderProps = { ...rest, disabled, onChange, normalize, format, parse };
     return (
       <div className={cx('form-field', containerClassName)}>
         <span className={cx('form-group-label', labelClassName, { required })}>{label}</span>
         <div className={cx('field-wrapper', fieldWrapperClassName)}>
-          {withoutProvider ? children : <FieldProvider {...rest}>{children}</FieldProvider>}
+          {withoutProvider ? children : <FieldProvider {...fieldProviderProps}>{children}</FieldProvider>}
         </div>
         {customBlock && (
           <div className={cx('custom-block', customBlock.wrapperClassName)}>{customBlock.node}</div>
