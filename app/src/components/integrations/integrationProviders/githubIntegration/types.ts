@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-export interface GithubFormData {
+export interface GithubFormData extends Record<string, unknown>  {
   restrictions?: {
     organizations: string[];
   }
-  [key: string]: string | { organizations: string[] };
 }

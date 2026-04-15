@@ -38,6 +38,10 @@ const messages = defineMessages({
     id: 'GithubFormFields.organizationPlaceholder',
     defaultMessage: 'Enter the organization name',
   },
+  removeGithubOrganization: {
+    id: 'GithubFormFields.removeGithubOrganization',
+    defaultMessage: 'Remove GitHub organization',
+  },
 });
 
 export interface GithubOrganizationsProps extends WrappedFieldArrayProps<string> {
@@ -59,45 +63,48 @@ export const GithubOrganizations = ({ fields, disabled = false }: GithubOrganiza
   );
 
   return (
-    <div className={cx('organizations-container')}>
+    <div>
       <FieldLabel>{formatMessage(messages.githubOrganizationLabel)}</FieldLabel>
-      {fields.map((item, index) => (
-        <div className={cx('organization-row')} key={item}>
-          <div className={cx('input-container')}>
-            <FieldProvider
-              name={item}
-              placeholder={formatMessage(messages.organizationPlaceholder)}
-              disabled={disabled}
-              validate={commonValidators.githubOrganizationName}
-            >
-              <FieldErrorHint provideHint={false}>
-                <FieldText defaultWidth={false} />
-              </FieldErrorHint>
-            </FieldProvider>
+      <div className={cx('organizations-container')}>
+        {fields.map((item, index) => (
+          <div className={cx('organization-row')} key={item}>
+            <div className={cx('input-container')}>
+              <FieldProvider
+                name={item}
+                placeholder={formatMessage(messages.organizationPlaceholder)}
+                disabled={disabled}
+                validate={commonValidators.githubOrganizationName}
+              >
+                <FieldErrorHint provideHint={false}>
+                  <FieldText defaultWidth={false} />
+                </FieldErrorHint>
+              </FieldProvider>
+            </div>
+            <Button
+              variant="ghost"
+              adjustWidthOn="content"
+              type="button"
+              icon={<CloseIcon />}
+              aria-label={formatMessage(messages.removeGithubOrganization)}
+              className={cx('delete-button')}
+              onClick={() => handleRemove(index)}
+              disabled={disabled || fields.length === 1}
+            />
           </div>
+        ))}
+        <div className={cx('add-button-container')}>
           <Button
-            variant="ghost"
-            adjustWidthOn="content"
+            variant="text"
             type="button"
-            icon={<CloseIcon />}
-            className={cx('delete-button')}
-            onClick={() => handleRemove(index)}
-            disabled={disabled || fields.length === 1}
-          />
+            onClick={handleAdd}
+            className={cx('add-button')}
+            iconPlace="start"
+            icon={<PlusIcon />}
+            disabled={disabled}
+          >
+            {formatMessage(messages.addGithubOrganization)}
+          </Button>
         </div>
-      ))}
-      <div className={cx('add-button-container')}>
-        <Button
-          variant="text"
-          type="button"
-          onClick={handleAdd}
-          className={cx('add-button')}
-          iconPlace="start"
-          icon={<PlusIcon />}
-          disabled={disabled}
-        >
-          {formatMessage(messages.addGithubOrganization)}
-        </Button>
       </div>
     </div>
   );

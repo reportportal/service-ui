@@ -1115,6 +1115,7 @@
   "GithubFormFields.githubOrganizationLabel": "Организация GitHub",
   "GithubFormFields.organizationNameHint": "Имя организации может содержать только латинские буквы, цифры и дефис",
   "GithubFormFields.organizationPlaceholder": "Введите имя организации",
+  "GithubFormFields.removeGithubOrganization": "Удалить организацию GitHub",
   "Hamburger.analysis": "Анализировать",
   "Hamburger.export": "Экспортировать:",
   "Hamburger.launchFinished": "Запуск уже завершён",

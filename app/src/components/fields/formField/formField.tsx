@@ -70,9 +70,7 @@ export class FormField extends PureComponent<FormFieldProps> {
     } = this.props;
     return (
       <div className={cx('form-field', containerClassName)}>
-        {label && (
-          <span className={cx('form-group-label', labelClassName, { required })}>{label}</span>
-        )}
+        <span className={cx('form-group-label', labelClassName, { required })}>{label}</span>
         <div className={cx('field-wrapper', fieldWrapperClassName)}>
           {withoutProvider ? children : <FieldProvider {...rest}>{children}</FieldProvider>}
         </div>

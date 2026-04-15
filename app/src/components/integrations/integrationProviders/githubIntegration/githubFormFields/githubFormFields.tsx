@@ -55,17 +55,15 @@ const messages = defineMessages({
 export interface GithubFormFieldsProps {
   initialize: (data: GithubFormData) => void;
   disabled?: boolean;
-  initialData?: GithubFormData;
+  initialData?: GithubFormData | null;
   updateMetaData?: (meta: Record<string, unknown>) => void;
-  integrationId?: number | string;
 }
 
 export const GithubFormFields = ({
   initialize,
   disabled = false,
-  initialData = {},
+  initialData = null,
   updateMetaData = () => {},
-  integrationId,
 }: GithubFormFieldsProps) => {
   const { formatMessage } = useIntl();
 
@@ -76,7 +74,7 @@ export const GithubFormFields = ({
   }, [updateMetaData]);
 
   useEffect(() => {
-    const source = !isEmptyObject(initialData) ? initialData : DEFAULT_FORM_CONFIG;
+    const source = initialData && !isEmptyObject(initialData) ? initialData : DEFAULT_FORM_CONFIG;
     const rawOrgs = source.restrictions?.organizations ?? [];
     const organizations = rawOrgs.length > 0 ? rawOrgs : [''];
     initialize({
@@ -96,7 +94,7 @@ export const GithubFormFields = ({
         label={formatMessage(messages.clientIdLabel)}
         placeholder={formatMessage(messages.clientIdPlaceholder)}
         validate={commonValidators.requiredField}
-        required
+        isRequired
       >
         <FieldErrorHint provideHint={false}>
           <FieldText defaultWidth={false} maxLength={GITHUB_CLIENT_CREDENTIAL_MAX_LENGTH} />
@@ -107,8 +105,8 @@ export const GithubFormFields = ({
         disabled={disabled}
         label={formatMessage(messages.clientSecretLabel)}
         placeholder={formatMessage(messages.clientSecretPlaceholder)}
-        {...(integrationId == null ? { validate: commonValidators.requiredField } : {})}
-        required={integrationId == null}
+        validate={commonValidators.requiredField}
+        isRequired
       >
         <FieldErrorHint provideHint={false}>
           <FieldText

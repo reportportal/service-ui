@@ -1114,6 +1114,7 @@
   "GithubFormFields.githubOrganizationLabel": "Арганізацыя GitHub",
   "GithubFormFields.organizationNameHint": "Назва арганізацыі можа змяшчаць толькі лацінскія літары, лічбы і злучок",
   "GithubFormFields.organizationPlaceholder": "Увядзіце назву арганізацыі",
+  "GithubFormFields.removeGithubOrganization": "Выдаліць арганізацыю GitHub",
   "Hamburger.analysis": "Аналізаваць",
   "Hamburger.export": "Экспартаваць:",
   "Hamburger.launchFinished": "Запуск ўжо завершаны",
