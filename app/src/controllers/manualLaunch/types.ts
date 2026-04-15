@@ -16,7 +16,10 @@
 
 import { Page } from 'types/common';
 
-import { Launch, ExecutionStatus as ExecutionStatusOptions } from 'pages/inside/manualLaunchesPage/types';
+import {
+  Launch,
+  ExecutionStatus as ExecutionStatusOptions,
+} from 'pages/inside/manualLaunchesPage/types';
 import { hasPayloadProps } from 'controllers/utils/types';
 import { ExecutionStatus } from 'types/testCase';
 
@@ -84,6 +87,7 @@ export interface UpdateManualLaunchExecutionStatusParams {
   comment?: string;
   postIssueToBts?: boolean;
   attachments?: File[];
+  onSuccess?: () => void;
 }
 
 export interface ManualLaunchState {

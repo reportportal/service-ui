@@ -117,19 +117,20 @@ export const ManualLaunchExecutionPage = () => {
 
   const isTextBased = execution?.manualScenario?.manualScenarioType === MANUAL_SCENARIO_TYPE_TEXT;
   const executionStatus = execution?.executionStatus;
-  const hasStatus = executionStatus && executionStatus !== ExecutionStatus.TO_RUN;
+  const isInProgress = executionStatus === ExecutionStatus.IN_PROGRESS;
+  const hasStatus = executionStatus && executionStatus !== ExecutionStatus.TO_RUN && !isInProgress;
 
   const handleRunTestClick = () => {
     setShowStatusButtons(true);
   };
 
   const renderHeaderActions = () => {
-    if (hasStatus) {
-      return <ExecutionStatusDropdown executionId={execution.id} currentStatus={executionStatus} />;
+    if (isInProgress || showStatusButtons) {
+      return <ExecutionStatusButtons executionId={execution?.id} />;
     }
 
-    if (showStatusButtons) {
-      return <ExecutionStatusButtons executionId={execution?.id} />;
+    if (hasStatus) {
+      return <ExecutionStatusDropdown executionId={execution.id} currentStatus={executionStatus} />;
     }
 
     return (
