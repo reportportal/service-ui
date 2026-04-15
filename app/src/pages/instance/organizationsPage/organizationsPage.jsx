@@ -70,10 +70,6 @@ const OrganizationsPageComponent = ({
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    trackEvent(ORGANIZATION_PAGE_EVENTS.VIEW_ALL_ORGANIZATIONS);
-  }, [trackEvent]);
   const { canCreateOrganization } = useUserPermissions();
   const organizationsList = useSelector(organizationsListSelector);
   const isOrganizationsLoading = useSelector(organizationsListLoadingSelector);
@@ -81,6 +77,10 @@ const OrganizationsPageComponent = ({
   const organizationPlugin = useSelector(organizationPluginSelector);
   const [searchValue, setSearchValue] = useState(null);
   const [appliedFiltersCount, setAppliedFiltersCount] = useState(0);
+
+  useEffect(() => {
+    trackEvent(ORGANIZATION_PAGE_EVENTS.VIEW_ALL_ORGANIZATIONS);
+  }, [trackEvent]);
   const isEmptyOrganizations = !isOrganizationsLoading && organizationsList.length === 0;
   const [isOpenTableView, setIsOpenTableView] = useState(
     getStorageItem(`${userId}_settings`)?.organizationsPanel === TABLE_VIEW,

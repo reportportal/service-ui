@@ -68,16 +68,16 @@ const AllUsersPageComponent = ({
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
-
-  useEffect(() => {
-    trackEvent(ALL_USERS_PAGE_EVENTS.VIEW_ALL_USERS);
-  }, [trackEvent]);
   const users = useSelector(allUsersSelector);
   const isLoading = useSelector(loadingSelector);
   const { canDeleteUser } = useUserPermissions();
   const [searchValue, setSearchValue] = useState(null);
   const [appliedFiltersCount, setAppliedFiltersCount] = useState(0);
   const [selectedUsers, setSelectedUsers] = useState([]);
+
+  useEffect(() => {
+    trackEvent(ALL_USERS_PAGE_EVENTS.VIEW_ALL_USERS);
+  }, [trackEvent]);
 
   const handleBulkActionSuccess = useCallback(() => {
     setSelectedUsers([]);
