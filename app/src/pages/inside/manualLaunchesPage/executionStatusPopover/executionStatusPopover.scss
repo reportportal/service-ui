@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-@use '../../../../../common/css/mixins' as mixins;
+@use '../../../../common/css/mixins.scss' as mixins;
 
 .popover {
   padding: 8px 0;
@@ -24,6 +24,10 @@
   display: flex;
   flex-direction: column;
   min-width: 150px;
+
+  [class*='divider'] {
+    margin: 8px 0;
+  }
 }
 
 .status-option {

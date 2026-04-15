@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl'; 
+import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
   executionId: {
@@ -32,9 +32,5 @@ export const messages = defineMessages({
   changeStatus: {
     id: 'ExecutionSidePanel.changeStatus',
     defaultMessage: 'Change Status',
-  },
-  runTest: {
-    id: 'ExecutionSidePanel.runTest',
-    defaultMessage: 'Run Test',
   },
 });

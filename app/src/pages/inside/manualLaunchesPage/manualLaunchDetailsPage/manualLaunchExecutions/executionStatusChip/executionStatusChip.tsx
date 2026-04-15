@@ -18,13 +18,14 @@ import { memo } from 'react';
 import { createClassnames } from 'common/utils';
 import Parser from 'html-react-parser';
 
-import { ExecutionStatus, ExecutionStatusChipProps } from './types';
+import { ExecutionStatus } from "pages/inside/manualLaunchesPage/types";
+
+import { ExecutionStatusChipProps } from './types';
 import { STATUS_CLASS_MAP, STATUS_ICON_MAP } from './constants';
+
 import styles from './executionStatusChip.scss';
 
 const cx = createClassnames(styles);
-
-export { ExecutionStatus } from './types';
 
 export const ExecutionStatusChip = memo(({ status }: ExecutionStatusChipProps) => {
   const statusKey = status.toUpperCase() as ExecutionStatus;
