@@ -21,6 +21,8 @@ import {
   LOGS_PAGINATION_ENABLED_KEY,
   LOGS_FULL_WIDTH_MODE_KEY,
   LOGS_COLORIZED_BACKGROUND_KEY,
+  LAUNCH_EXPORT_INCLUDE_ATTACHMENTS_KEY,
+  LAUNCH_EXPORT_FLAT_ATTACHMENTS_KEY,
   LOG_TIME_FORMAT_STORAGE_KEY,
   LOG_TIME_FORMAT_ABSOLUTE,
 } from './constants';
@@ -69,6 +71,16 @@ export const setLogsFullWidthModeInStorage = (userId, projectId, value) =>
 export const setLogsColorizedBackgroundInStorage = (userId, projectId, value) =>
   updateUserProjectSettingsInStorage(userId, projectId, {
     [LOGS_COLORIZED_BACKGROUND_KEY]: value,
+  });
+
+export const setLaunchExportIncludeAttachmentsInStorage = (userId, projectId, value) =>
+  updateUserProjectSettingsInStorage(userId, projectId, {
+    [LAUNCH_EXPORT_INCLUDE_ATTACHMENTS_KEY]: value,
+  });
+
+export const setLaunchExportFlatAttachmentsInStorage = (userId, projectId, value) =>
+  updateUserProjectSettingsInStorage(userId, projectId, {
+    [LAUNCH_EXPORT_FLAT_ATTACHMENTS_KEY]: value,
   });
 
 export const getLogTimeFormatFromStorage = (userId) =>

@@ -16,12 +16,10 @@
 
 import { useTracking } from 'react-tracking';
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useIntl, defineMessages } from 'react-intl';
 import { ModalLayout, ModalField } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { LAUNCH_EXPORT_MODAL } from 'common/constants/localStorageKeys';
-import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import classNames from 'classnames/bind';
@@ -32,7 +30,13 @@ import { addExportAction, removeExportAction } from 'controllers/exports';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { ERROR_CANCELED } from 'common/utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { activeProjectSelector } from 'controllers/user';
+import {
+  activeProjectSelector,
+  launchExportIncludeAttachmentsSelector,
+  launchExportFlatAttachmentsSelector,
+  setLaunchExportIncludeAttachmentsAction,
+  setLaunchExportFlatAttachmentsAction,
+} from 'controllers/user';
 import { PDF_EXPORT, XLS_EXPORT, HTML_EXPORT } from './constants';
 import styles from './launchExportModal.scss';
 
@@ -53,16 +57,6 @@ const getFolderStructureCondition = (includeAttachments, exportWithoutPreserving
   includeAttachments && exportWithoutPreservingFolders
     ? GA_FOLDER_STRUCTURE.ACTIVE
     : GA_FOLDER_STRUCTURE.DISABLE;
-
-const readInitialAttachmentPreferences = () => {
-  const saved = getStorageItem(LAUNCH_EXPORT_MODAL) || {};
-  const includeAttachments = !!saved.includeAttachments;
-  return {
-    includeAttachments,
-    exportAttachmentsWithoutPreservingFolders:
-      includeAttachments && !!saved.exportAttachmentsWithoutPreservingFolders,
-  };
-};
 
 const messages = defineMessages({
   title: {
@@ -118,23 +112,13 @@ export const LaunchExportModal = ({ id, name, launches: launchesProp }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const [exportType, setExportType] = useState(PDF_EXPORT);
-  const { includeAttachments: initialInclude, exportAttachmentsWithoutPreservingFolders: initialNoFolders } =
-    readInitialAttachmentPreferences();
-  const [includeAttachments, setIncludeAttachments] = useState(initialInclude);
-  const [exportAttachmentsWithoutPreservingFolders, setExportAttachmentsWithoutPreservingFolders] =
-    useState(initialNoFolders);
   const dispatch = useDispatch();
   const projectId = useSelector(activeProjectSelector);
+  const includeAttachments = useSelector(launchExportIncludeAttachmentsSelector);
+  const exportFlatAttachments = useSelector(launchExportFlatAttachmentsSelector);
+  const exportAttachmentsWithoutPreservingFolders =
+    includeAttachments && exportFlatAttachments;
   const launches = normalizeLaunches(launchesProp, id, name);
-
-  useEffect(() => {
-    setStorageItem(LAUNCH_EXPORT_MODAL, {
-      includeAttachments,
-      exportAttachmentsWithoutPreservingFolders: includeAttachments
-        ? exportAttachmentsWithoutPreservingFolders
-        : false,
-    });
-  }, [includeAttachments, exportAttachmentsWithoutPreservingFolders]);
 
   const exportOptions = [
     {
@@ -156,17 +140,11 @@ export const LaunchExportModal = ({ id, name, launches: launchesProp }) => {
   };
 
   const onToggleIncludeAttachments = () => {
-    setIncludeAttachments((prev) => {
-      const next = !prev;
-      if (!next) {
-        setExportAttachmentsWithoutPreservingFolders(false);
-      }
-      return next;
-    });
+    dispatch(setLaunchExportIncludeAttachmentsAction(!includeAttachments));
   };
 
   const onToggleExportWithoutPreservingFolders = () => {
-    setExportAttachmentsWithoutPreservingFolders((current) => !current);
+    dispatch(setLaunchExportFlatAttachmentsAction(!exportFlatAttachments));
   };
 
   const runExportForLaunch = async (launchId, launchName) => {
@@ -267,7 +245,7 @@ export const LaunchExportModal = ({ id, name, launches: launchesProp }) => {
         </InputCheckbox>
         <InputCheckbox
           className={cx('export-without-folder-structure-field')}
-          value={exportAttachmentsWithoutPreservingFolders}
+          value={includeAttachments && exportFlatAttachments}
           disabled={!includeAttachments}
           onChange={onToggleExportWithoutPreservingFolders}
         >

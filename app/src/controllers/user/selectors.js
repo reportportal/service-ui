@@ -25,6 +25,8 @@ import {
   LOGS_PAGINATION_ENABLED_KEY,
   LOGS_FULL_WIDTH_MODE_KEY,
   LOGS_COLORIZED_BACKGROUND_KEY,
+  LAUNCH_EXPORT_INCLUDE_ATTACHMENTS_KEY,
+  LAUNCH_EXPORT_FLAT_ATTACHMENTS_KEY,
   START_TIME_FORMAT_ABSOLUTE,
   START_TIME_FORMAT_RELATIVE,
 } from './constants';
@@ -87,3 +89,9 @@ export const logsFullWidthModeSelector = (state) =>
 
 export const logsColorizedBackgroundSelector = (state) =>
   activeProjectSettingsSelector(state)?.[LOGS_COLORIZED_BACKGROUND_KEY] || false;
+
+export const launchExportIncludeAttachmentsSelector = (state) =>
+  activeProjectSettingsSelector(state)?.[LAUNCH_EXPORT_INCLUDE_ATTACHMENTS_KEY] || false;
+
+export const launchExportFlatAttachmentsSelector = (state) =>
+  activeProjectSettingsSelector(state)?.[LAUNCH_EXPORT_FLAT_ATTACHMENTS_KEY] || false;

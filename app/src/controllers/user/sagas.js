@@ -28,6 +28,8 @@ import {
   setLogsSizeInStorage,
   setLogsFullWidthModeInStorage,
   setLogsColorizedBackgroundInStorage,
+  setLaunchExportIncludeAttachmentsInStorage,
+  setLaunchExportFlatAttachmentsInStorage,
   getLogTimeFormatFromStorage,
 } from './storageUtils';
 import {
@@ -44,11 +46,15 @@ import {
   SET_LOGS_SIZE,
   SET_LOGS_FULL_WIDTH_MODE,
   SET_LOGS_COLORIZED_BACKGROUND,
+  SET_LAUNCH_EXPORT_INCLUDE_ATTACHMENTS,
+  SET_LAUNCH_EXPORT_FLAT_ATTACHMENTS,
   LOGS_SIZE_KEY,
   NO_LOGS_COLLAPSING_KEY,
   LOGS_PAGINATION_ENABLED_KEY,
   LOGS_FULL_WIDTH_MODE_KEY,
   LOGS_COLORIZED_BACKGROUND_KEY,
+  LAUNCH_EXPORT_INCLUDE_ATTACHMENTS_KEY,
+  LAUNCH_EXPORT_FLAT_ATTACHMENTS_KEY,
 } from './constants';
 import {
   assignToProjectSuccessAction,
@@ -217,6 +223,33 @@ function* setLogsColorizedBackground({ payload }) {
   });
 }
 
+function* setLaunchExportIncludeAttachments({ payload }) {
+  const { value } = payload;
+  const userId = yield select(userIdSelector);
+  const projectId = yield select(activeProjectSelector);
+
+  yield call(setLaunchExportIncludeAttachmentsInStorage, userId, projectId, value);
+  if (!value) {
+    yield call(setLaunchExportFlatAttachmentsInStorage, userId, projectId, false);
+    yield put(
+      updateActiveProjectSettingsAction({
+        [LAUNCH_EXPORT_INCLUDE_ATTACHMENTS_KEY]: false,
+        [LAUNCH_EXPORT_FLAT_ATTACHMENTS_KEY]: false,
+      }),
+    );
+  } else {
+    yield put(updateActiveProjectSettingsAction({ [LAUNCH_EXPORT_INCLUDE_ATTACHMENTS_KEY]: value }));
+  }
+}
+
+function* setLaunchExportFlatAttachments({ payload }) {
+  yield call(updateLogsSetting, {
+    payload,
+    setInStorage: setLaunchExportFlatAttachmentsInStorage,
+    settingKey: LAUNCH_EXPORT_FLAT_ATTACHMENTS_KEY,
+  });
+}
+
 function* addApiKey({ payload = {} }) {
   const { name, successMessage, errorMessage, onSuccess } = payload;
   const user = yield select(userInfoSelector);
@@ -358,6 +391,14 @@ function* watchSetLogsColorizedBackground() {
   yield takeEvery(SET_LOGS_COLORIZED_BACKGROUND, setLogsColorizedBackground);
 }
 
+function* watchSetLaunchExportIncludeAttachments() {
+  yield takeEvery(SET_LAUNCH_EXPORT_INCLUDE_ATTACHMENTS, setLaunchExportIncludeAttachments);
+}
+
+function* watchSetLaunchExportFlatAttachments() {
+  yield takeEvery(SET_LAUNCH_EXPORT_FLAT_ATTACHMENTS, setLaunchExportFlatAttachments);
+}
+
 function* watchFetchUser() {
   yield takeEvery(FETCH_USER, fetchUserWorker);
 }
@@ -381,6 +422,8 @@ export function* userSagas() {
     watchSetLogsSize(),
     watchSetLogsFullWidthMode(),
     watchSetLogsColorizedBackground(),
+    watchSetLaunchExportIncludeAttachments(),
+    watchSetLaunchExportFlatAttachments(),
     watchAddApiKey(),
     watchFetchApiKeys(),
     watchDeleteApiKey(),
