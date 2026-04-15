@@ -141,9 +141,9 @@ export class PhotoControls extends Component {
           type: NOTIFICATION_TYPES.SUCCESS,
         });
         this.props.setPhotoTimeStampAction(Date.now());
+        this.props.uploadNewImage(null);
         this.clearPreviewObjectUrl();
         this.resetFileSelector();
-        this.props.uploadNewImage(null);
         this.setState({
           isDefaultImage: false,
           previewObjectUrl: null,
@@ -217,8 +217,8 @@ export class PhotoControls extends Component {
       if (this.validateFileExtension(file)) {
         this.onLoadFile(file);
       } else {
-        this.clearPreviewObjectUrl();
         this.props.uploadNewImage(null);
+        this.clearPreviewObjectUrl();
         this.setState({
           isValidImage: false,
           image: null,
@@ -231,10 +231,10 @@ export class PhotoControls extends Component {
   removeImageHandler = () => {
     fetch(URLS.userAvatar(this.props.userId), { method: 'delete' })
       .then(() => {
-        this.clearPreviewObjectUrl();
-        this.resetFileSelector();
         this.props.removeImage();
         this.props.uploadNewImage(null);
+        this.clearPreviewObjectUrl();
+        this.resetFileSelector();
         this.props.setPhotoTimeStampAction(Date.now());
         this.setState({ isDefaultImage: true, previewObjectUrl: null, newPhotoLoaded: false });
         this.props.showNotification({
