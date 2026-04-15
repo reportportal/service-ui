@@ -16,12 +16,12 @@
 
 import type { ReactNode } from 'react';
 import { PureComponent } from 'react';
-import classNames from 'classnames/bind';
 import type { BaseFieldProps } from 'redux-form';
 import { FieldProvider } from 'components/fields/fieldProvider';
+import { createClassnames } from 'common/utils';
 import styles from './formField.scss';
 
-const cx = classNames.bind(styles);
+const cx = createClassnames(styles);
 
 export type FormFieldProps = Partial<BaseFieldProps> & {
   containerClassName?: string;
