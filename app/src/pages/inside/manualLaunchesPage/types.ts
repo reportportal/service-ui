@@ -58,6 +58,7 @@ export interface Launch {
   lastModified: string;
   status: string;
   statistics: LaunchStatistics;
+  executionStatistic?: ExecutionStatistic;
   attributes: LaunchAttribute[];
   mode: string;
   type: string;

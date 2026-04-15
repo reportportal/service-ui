@@ -140,12 +140,17 @@ export const TestCaseLibraryPage = () => {
     [folderId, folders],
   );
 
+  const hasActiveSearchOrFilters =
+    !!location?.query?.testCasesSearchParams ||
+    !!location?.query?.filterPriorities ||
+    !!location?.query?.filterTags;
+
   const renderContent = () => {
     if (areFoldersLoading) {
       return <BubblesLoader />;
     }
 
-    if (hasFolders) {
+    if (hasFolders || hasActiveSearchOrFilters) {
       return <TestCaseFolders />;
     }
 

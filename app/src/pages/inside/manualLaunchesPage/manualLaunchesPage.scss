@@ -20,6 +20,13 @@
   display: flex;
   align-items: center;
   gap: 12px;
+
+  @include mixins.header-toolbar-search-button;
+
+  // Collapse gap between SearchField (1st) and filter control (2nd); keep gap for the rest
+  > *:nth-child(2) {
+    margin-left: -12px;
+  }
 }
 
 .filter-icon {
