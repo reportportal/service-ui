@@ -24,11 +24,11 @@ import { manualLaunchTestCaseExecutionsSelector } from 'controllers/manualLaunch
 import { Divider } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
 
-import { STATUS_CONFIG } from '../constants';
-import type { ExecutionStatusType } from '../types';
-import { useExecutionStatusModal } from '../executionStatusConfirmModal';
+import { STATUS_CONFIG } from '../manualLaunchExecutionPage/constants';
+import type { ExecutionStatusType } from '../manualLaunchExecutionPage/types';
+import { useExecutionStatusModal } from '../manualLaunchExecutionPage/executionStatusConfirmModal';
 import { messages } from './messages';
-import { messages as commonMessages } from '../messages';
+import { messages as commonMessages } from '../manualLaunchExecutionPage/messages';
 
 import styles from './executionStatusPopover.scss';
 
@@ -53,9 +53,7 @@ export const ExecutionStatusPopover: FC<ExecutionStatusPopoverProps> = ({
   const { openModal } = useExecutionStatusModal();
   const executions = useSelector(manualLaunchTestCaseExecutionsSelector);
 
-  const status =
-    (executions.find((e) => e.id === executionId)?.executionStatus) ??
-    currentStatus;
+  const status = executions.find((e) => e.id === executionId)?.executionStatus ?? currentStatus;
   const statusKey = status.toLowerCase() as ExecutionStatusType;
   const availableStatuses = (Object.keys(STATUS_CONFIG) as ExecutionStatusType[]).filter(
     (s) => s !== statusKey,

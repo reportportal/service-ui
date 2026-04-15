@@ -41,7 +41,7 @@ import { RequirementsList } from 'pages/inside/common/requirementsList/requireme
 import { Scenario } from 'pages/inside/common/testCaseList/testCaseSidePanel/scenario';
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 import { formatTimestamp } from 'pages/inside/common/testCaseList/utils';
-import { ExecutionStatusPopover } from 'pages/inside/manualLaunchesPage/manualLaunchExecutionPage/executionStatusPopover';
+import { ExecutionStatusPopover } from 'pages/inside/manualLaunchesPage/executionStatusPopover';
 import { Divider } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { AttachmentList, type Attachment } from 'pages/inside/common/attachmentList';
 import { IN_PROGRESS } from 'common/constants/testStatuses';
