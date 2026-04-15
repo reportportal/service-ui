@@ -174,7 +174,7 @@ export class SingleAutocomplete extends Component {
                         onFocus: () => {
                           onFocus();
                         },
-                        refFunction,
+                        ref: refFunction,
                         onKeyDown: (event) => {
                           if (event.keyCode === ENTER_KEY_CODE) {
                             event.preventDefault();
