@@ -144,15 +144,20 @@ export class PhotoControls extends Component {
         this.clearPreviewObjectUrl();
         this.resetFileSelector();
         this.props.uploadNewImage(null);
-        this.setState({ isDefaultImage: false, previewObjectUrl: null, image: null });
+        this.setState({
+          isDefaultImage: false,
+          previewObjectUrl: null,
+          image: null,
+          newPhotoLoaded: false,
+        });
       })
       .catch(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.uploadError),
           type: NOTIFICATION_TYPES.ERROR,
         });
+        this.setState({ newPhotoLoaded: true });
       });
-    this.setState({ newPhotoLoaded: false });
   };
   onClickUploadPhoto = () => {
     this.fileSelector.click();
