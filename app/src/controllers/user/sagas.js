@@ -174,7 +174,7 @@ function* saveActiveProject({ payload: project }) {
   yield put(setActiveProjectSettingsAction(projectSettings));
 }
 
-function* updateLogsSetting({ payload, setInStorage, settingKey }) {
+function* updateUserProjectSettings({ payload, setInStorage, settingKey }) {
   const { value } = payload;
   const userId = yield select(userIdSelector);
   const projectId = yield select(activeProjectSelector);
@@ -184,7 +184,7 @@ function* updateLogsSetting({ payload, setInStorage, settingKey }) {
 }
 
 function* setNoLogsCollapsing({ payload }) {
-  yield call(updateLogsSetting, {
+  yield call(updateUserProjectSettings, {
     payload,
     setInStorage: setNoLogsCollapsingInStorage,
     settingKey: NO_LOGS_COLLAPSING_KEY,
@@ -192,7 +192,7 @@ function* setNoLogsCollapsing({ payload }) {
 }
 
 function* setLogsPaginationEnabled({ payload }) {
-  yield call(updateLogsSetting, {
+  yield call(updateUserProjectSettings, {
     payload,
     setInStorage: setLogsPaginationEnabledInStorage,
     settingKey: LOGS_PAGINATION_ENABLED_KEY,
@@ -200,7 +200,7 @@ function* setLogsPaginationEnabled({ payload }) {
 }
 
 function* setLogsSize({ payload }) {
-  yield call(updateLogsSetting, {
+  yield call(updateUserProjectSettings, {
     payload,
     setInStorage: setLogsSizeInStorage,
     settingKey: LOGS_SIZE_KEY,
@@ -208,7 +208,7 @@ function* setLogsSize({ payload }) {
 }
 
 function* setLogsFullWidthMode({ payload }) {
-  yield call(updateLogsSetting, {
+  yield call(updateUserProjectSettings, {
     payload,
     setInStorage: setLogsFullWidthModeInStorage,
     settingKey: LOGS_FULL_WIDTH_MODE_KEY,
@@ -216,7 +216,7 @@ function* setLogsFullWidthMode({ payload }) {
 }
 
 function* setLogsColorizedBackground({ payload }) {
-  yield call(updateLogsSetting, {
+  yield call(updateUserProjectSettings, {
     payload,
     setInStorage: setLogsColorizedBackgroundInStorage,
     settingKey: LOGS_COLORIZED_BACKGROUND_KEY,
@@ -243,7 +243,7 @@ function* setLaunchExportIncludeAttachments({ payload }) {
 }
 
 function* setLaunchExportFlatAttachments({ payload }) {
-  yield call(updateLogsSetting, {
+  yield call(updateUserProjectSettings, {
     payload,
     setInStorage: setLaunchExportFlatAttachmentsInStorage,
     settingKey: LAUNCH_EXPORT_FLAT_ATTACHMENTS_KEY,
