@@ -20,7 +20,6 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import { size } from 'es-toolkit/compat';
 
 import { transformedFoldersSelector } from 'controllers/testCase';
-import { BubblesLoader } from '@reportportal/ui-kit';
 import { createClassnames } from 'common/utils';
 
 import { usePanelActions, usePanelState } from '../testLibraryPanelContext';
@@ -29,7 +28,12 @@ import { SelectableFolderRow } from './selectableFolderRow';
 import { SelectableTestCaseRow } from './selectableTestCaseRow';
 import { LoadingRow } from './loadingRow';
 import { LoadMoreRow } from './loadMoreRow';
-import { useFlattenedSelectableTree, getRowKey, type FlatSelectableRow } from './useFlattenedSelectableTree';
+import { ErrorRow } from './errorRow';
+import {
+  useFlattenedSelectableTree,
+  getRowKey,
+  type FlatSelectableRow,
+} from './useFlattenedSelectableTree';
 import { ROW_HEIGHT_PX } from '../../expandedOptions/folder/connectorLines';
 
 import treeStyles from '../../expandedOptions/folder/folder.scss';
@@ -38,25 +42,35 @@ import styles from './selectableFolderTree.scss';
 const cx = createClassnames(styles, treeStyles);
 
 type FetchNextPageMap = Map<number, () => void>;
+type FetchRetryMap = Map<number, () => void>;
 
 interface FolderFetcherProps {
   folderId: number;
   testsCount: number;
   fetchNextPageMapRef: MutableRefObject<FetchNextPageMap>;
+  fetchRetryMapRef: MutableRefObject<FetchRetryMap>;
 }
 
-const FolderFetcher = ({ folderId, testsCount, fetchNextPageMapRef }: FolderFetcherProps) => {
-  const { fetchNextPage } = useFolderTestCases({ folderId, isOpen: true, testsCount });
+const FolderFetcher = ({
+  folderId,
+  testsCount,
+  fetchNextPageMapRef,
+  fetchRetryMapRef,
+}: FolderFetcherProps) => {
+  const { fetchNextPage, retryFetch } = useFolderTestCases({ folderId, isOpen: true, testsCount });
 
   useEffect(() => {
-    const map = fetchNextPageMapRef.current;
-    
-    map.set(folderId, fetchNextPage);
+    const nextPageMap = fetchNextPageMapRef.current;
+    const retryMap = fetchRetryMapRef.current;
+
+    nextPageMap.set(folderId, fetchNextPage);
+    retryMap.set(folderId, retryFetch);
 
     return () => {
-      map.delete(folderId);
+      nextPageMap.delete(folderId);
+      retryMap.delete(folderId);
     };
-  }, [folderId, fetchNextPage, fetchNextPageMapRef]);
+  }, [folderId, fetchNextPage, retryFetch, fetchNextPageMapRef, fetchRetryMapRef]);
 
   return null;
 };
@@ -64,16 +78,22 @@ const FolderFetcher = ({ folderId, testsCount, fetchNextPageMapRef }: FolderFetc
 export const SelectableFolderTree = () => {
   const folders = useSelector(transformedFoldersSelector);
   const { setScrollElement } = usePanelActions();
-  const { expandedFolderIds, testCasesMap, shouldHideAddedTestCases, testPlanIdsByFolderId, isTestPlanDataComplete } = usePanelState();
+  const {
+    expandedFolderIds,
+    testCasesMap,
+    shouldHideAddedTestCases,
+    testPlanCountByFolderId,
+  } = usePanelState();
   const scrollRef = useRef<HTMLDivElement>(null);
   const fetchNextPageMapRef = useRef<FetchNextPageMap>(new Map());
+  const fetchRetryMapRef = useRef<FetchRetryMap>(new Map());
 
   const flatRows = useFlattenedSelectableTree({
     folders,
     expandedFolderIds,
     testCasesMap,
     shouldHideAddedTestCases,
-    testPlanIdsByFolderId,
+    testPlanCountByFolderId,
   });
 
   const expandedFoldersWithTests = useMemo(
@@ -121,16 +141,18 @@ export const SelectableFolderTree = () => {
             style={style}
           />
         );
+      case 'error':
+        return (
+          <ErrorRow
+            key={key}
+            row={row}
+            nextRowDepth={nextRowDepth}
+            fetchRetryMapRef={fetchRetryMapRef}
+            style={style}
+          />
+        );
     }
   };
-
-  if (shouldHideAddedTestCases && !isTestPlanDataComplete) {
-    return (
-      <div className={cx('selectable-folder-tree__loader')}>
-        <BubblesLoader />
-      </div>
-    );
-  }
 
   return (
     <div className={cx('selectable-folder-tree')}>
@@ -140,6 +162,7 @@ export const SelectableFolderTree = () => {
           folderId={folderId}
           testsCount={testsCount}
           fetchNextPageMapRef={fetchNextPageMapRef}
+          fetchRetryMapRef={fetchRetryMapRef}
         />
       ))}
       <div ref={scrollRef} className={cx('selectable-folder-tree__scroll-container')}>

@@ -46,7 +46,7 @@ export const SelectableTestCase = memo(
           {!isAddedToTestPlan && (
             <DepthAwareCheckbox
               depth={depth}
-              isChecked={isSelected || isAddedToTestPlan}
+              isChecked={isSelected}
               isDisabled={isAddedToTestPlan}
               onChange={handleChange}
             />

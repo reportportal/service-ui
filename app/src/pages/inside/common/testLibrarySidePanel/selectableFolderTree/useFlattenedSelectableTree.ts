@@ -25,7 +25,7 @@ import type { NumberSet, FolderTestCases } from '../testLibraryPanelContext';
 
 const buildVisibilityMap = (
   folders: TransformedFolder[],
-  testPlanIdsByFolderId: Map<number, Set<number>>,
+  testPlanCountByFolderId: Map<number, number>,
   shouldHideAddedTestCases: boolean,
 ): Map<number, boolean> => {
   const map = new Map<number, boolean>();
@@ -46,9 +46,9 @@ const buildVisibilityMap = (
     }
 
     if (shouldHideAddedTestCases) {
-      const prefetchedIds = testPlanIdsByFolderId.get(folder.id);
+      const testPlanCount = testPlanCountByFolderId.get(folder.id);
 
-      if (prefetchedIds != null && prefetchedIds.size >= folder.testsCount) {
+      if (testPlanCount != null && testPlanCount >= folder.testsCount) {
         map.set(folder.id, false);
 
         return false;
@@ -89,7 +89,13 @@ interface LoadMoreRow extends ConnectorNode {
   folderId: number;
 }
 
-export type FlatSelectableRow = FolderRow | TestCaseRow | LoadingRow | LoadMoreRow;
+interface ErrorRow extends ConnectorNode {
+  type: 'error';
+  folderId: number;
+  isLoadMore: boolean;
+}
+
+export type FlatSelectableRow = FolderRow | TestCaseRow | LoadingRow | LoadMoreRow | ErrorRow;
 
 export const getRowKey = (row: FlatSelectableRow): string => {
   switch (row.type) {
@@ -101,6 +107,8 @@ export const getRowKey = (row: FlatSelectableRow): string => {
       return `loading-${row.folderId}`;
     case 'loadMore':
       return `loadMore-${row.folderId}`;
+    case 'error':
+      return `error-${row.folderId}`;
   }
 };
 
@@ -112,7 +120,7 @@ interface FlattenOptions {
   expandedFolderIds: NumberSet;
   testCasesMap: Map<number, FolderTestCases>;
   shouldHideAddedTestCases: boolean;
-  testPlanIdsByFolderId: Map<number, Set<number>>;
+  testPlanCountByFolderId: Map<number, number>;
   visibilityMap: Map<number, boolean>;
   depth?: number;
 }
@@ -122,7 +130,7 @@ const flattenSelectableTree = ({
   expandedFolderIds,
   testCasesMap,
   shouldHideAddedTestCases,
-  testPlanIdsByFolderId,
+  testPlanCountByFolderId,
   visibilityMap,
   depth = 0,
 }: FlattenOptions): FlatSelectableRow[] =>
@@ -131,15 +139,24 @@ const flattenSelectableTree = ({
       return result;
     }
 
-    const prefetchedIds = testPlanIdsByFolderId.get(folder.id);
+    const testPlanCount = testPlanCountByFolderId.get(folder.id);
     const isKnownAllAdded =
-      prefetchedIds != null && prefetchedIds.size >= folder.testsCount && folder.testsCount > 0;
+      testPlanCount != null && testPlanCount >= folder.testsCount && folder.testsCount > 0;
 
     const isOpen = expandedFolderIds.has(folder.id);
     const hasChildren =
-      !isEmpty(folder.folders) || (folder.testsCount > 0 && !(shouldHideAddedTestCases && isKnownAllAdded));
+      !isEmpty(folder.folders) ||
+      (folder.testsCount > 0 && !(shouldHideAddedTestCases && isKnownAllAdded));
 
-    result.push({ type: 'folder', folder, depth, isOpen, hasChildren, connectorDepths: [], isLastChild: false });
+    result.push({
+      type: 'folder',
+      folder,
+      depth,
+      isOpen,
+      hasChildren,
+      connectorDepths: [],
+      isLastChild: false,
+    });
 
     if (!isOpen || !hasChildren) {
       return result;
@@ -151,7 +168,7 @@ const flattenSelectableTree = ({
         expandedFolderIds,
         testCasesMap,
         shouldHideAddedTestCases,
-        testPlanIdsByFolderId,
+        testPlanCountByFolderId,
         visibilityMap,
         depth: depth + 1,
       }),
@@ -164,13 +181,29 @@ const flattenSelectableTree = ({
       ? folderData.page.number < folderData.page.totalPages
       : false;
     const isTestCasesLoading = folderData?.isLoading ?? false;
+    const hasError = folderData?.isError ?? false;
 
     const visibleTestCases = shouldHideAddedTestCases
       ? testCases.filter(({ id }) => !addedToTestPlanIds.has(id))
       : testCases;
 
-    if (isTestCasesLoading && isEmpty(testCases)) {
-      result.push({ type: 'loading', folderId: folder.id, depth: depth + 1, connectorDepths: [], isLastChild: false });
+    if (hasError && isEmpty(testCases)) {
+      result.push({
+        type: 'error',
+        folderId: folder.id,
+        isLoadMore: false,
+        depth: depth + 1,
+        connectorDepths: [],
+        isLastChild: false,
+      });
+    } else if (isTestCasesLoading && isEmpty(testCases)) {
+      result.push({
+        type: 'loading',
+        folderId: folder.id,
+        depth: depth + 1,
+        connectorDepths: [],
+        isLastChild: false,
+      });
     } else {
       visibleTestCases.forEach((testCase) => {
         result.push({
@@ -184,8 +217,23 @@ const flattenSelectableTree = ({
         });
       });
 
-      if (hasNextPage) {
-        result.push({ type: 'loadMore', folderId: folder.id, depth: depth + 1, connectorDepths: [], isLastChild: false });
+      if (hasError) {
+        result.push({
+          type: 'error',
+          folderId: folder.id,
+          isLoadMore: true,
+          depth: depth + 1,
+          connectorDepths: [],
+          isLastChild: false,
+        });
+      } else if (hasNextPage) {
+        result.push({
+          type: 'loadMore',
+          folderId: folder.id,
+          depth: depth + 1,
+          connectorDepths: [],
+          isLastChild: false,
+        });
       }
     }
 
@@ -197,7 +245,7 @@ interface UseFlattenedSelectableTreeOptions {
   expandedFolderIds: NumberSet;
   testCasesMap: Map<number, FolderTestCases>;
   shouldHideAddedTestCases: boolean;
-  testPlanIdsByFolderId: Map<number, Set<number>>;
+  testPlanCountByFolderId: Map<number, number>;
 }
 
 export const useFlattenedSelectableTree = ({
@@ -205,21 +253,25 @@ export const useFlattenedSelectableTree = ({
   expandedFolderIds,
   testCasesMap,
   shouldHideAddedTestCases,
-  testPlanIdsByFolderId,
+  testPlanCountByFolderId,
 }: UseFlattenedSelectableTreeOptions): FlatSelectableRow[] =>
   useMemo(() => {
-    const visibilityMap = buildVisibilityMap(folders, testPlanIdsByFolderId, shouldHideAddedTestCases);
+    const visibilityMap = buildVisibilityMap(
+      folders,
+      testPlanCountByFolderId,
+      shouldHideAddedTestCases,
+    );
 
     const result = flattenSelectableTree({
       folders,
       expandedFolderIds,
       testCasesMap,
       shouldHideAddedTestCases,
-      testPlanIdsByFolderId,
+      testPlanCountByFolderId,
       visibilityMap,
     });
 
     getConnectorDepths(result);
 
     return result;
-  }, [folders, expandedFolderIds, testCasesMap, shouldHideAddedTestCases, testPlanIdsByFolderId]);
+  }, [folders, expandedFolderIds, testCasesMap, shouldHideAddedTestCases, testPlanCountByFolderId]);

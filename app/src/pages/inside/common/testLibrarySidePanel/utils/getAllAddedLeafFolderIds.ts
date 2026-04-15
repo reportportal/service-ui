@@ -24,8 +24,8 @@ export const getAllAddedLeafFolderIds = (
   folder: TransformedFolder,
   testCasesMap: Map<number, FolderTestCases>,
 ): number[] => {
-  const childIds = folder.folders.flatMap((folder) =>
-    getAllAddedLeafFolderIds(folder, testCasesMap),
+  const childIds = folder.folders.flatMap((subfolder) =>
+    getAllAddedLeafFolderIds(subfolder, testCasesMap),
   );
 
   if (!isEmpty(folder.folders) || folder.testsCount === 0) {
