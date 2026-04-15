@@ -229,7 +229,9 @@ function* setLaunchExportIncludeAttachments({ payload }) {
   const projectId = yield select(activeProjectSelector);
 
   yield call(setLaunchExportIncludeAttachmentsInStorage, userId, projectId, value);
-  if (!value) {
+  if (value) {
+    yield put(updateActiveProjectSettingsAction({ [LAUNCH_EXPORT_INCLUDE_ATTACHMENTS_KEY]: value }));
+  } else {
     yield call(setLaunchExportFlatAttachmentsInStorage, userId, projectId, false);
     yield put(
       updateActiveProjectSettingsAction({
@@ -237,8 +239,6 @@ function* setLaunchExportIncludeAttachments({ payload }) {
         [LAUNCH_EXPORT_FLAT_ATTACHMENTS_KEY]: false,
       }),
     );
-  } else {
-    yield put(updateActiveProjectSettingsAction({ [LAUNCH_EXPORT_INCLUDE_ATTACHMENTS_KEY]: value }));
   }
 }
 
