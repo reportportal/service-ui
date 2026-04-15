@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useIntl, defineMessages } from 'react-intl';
@@ -68,6 +68,10 @@ const AllUsersPageComponent = ({
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
+
+  useEffect(() => {
+    trackEvent(ALL_USERS_PAGE_EVENTS.VIEW_ALL_USERS);
+  }, [trackEvent]);
   const users = useSelector(allUsersSelector);
   const isLoading = useSelector(loadingSelector);
   const { canDeleteUser } = useUserPermissions();

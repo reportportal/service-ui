@@ -16,7 +16,7 @@
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
@@ -70,6 +70,10 @@ const OrganizationsPageComponent = ({
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    trackEvent(ORGANIZATION_PAGE_EVENTS.VIEW_ALL_ORGANIZATIONS);
+  }, [trackEvent]);
   const { canCreateOrganization } = useUserPermissions();
   const organizationsList = useSelector(organizationsListSelector);
   const isOrganizationsLoading = useSelector(organizationsListLoadingSelector);

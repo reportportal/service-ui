@@ -21,6 +21,10 @@ const ALL_USERS_PAGE = 'all_users';
 const BASIC_EVENT_PARAMETERS = getBasicClickEventParameters(ALL_USERS_PAGE);
 
 export const ALL_USERS_PAGE_EVENTS = {
+  VIEW_ALL_USERS: {
+    action: 'page_view',
+    place: 'all_users',
+  },
   SEARCH_ALL_USERS_FIELD: {
     ...BASIC_EVENT_PARAMETERS,
     place: 'all_users_page',
