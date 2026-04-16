@@ -73,20 +73,6 @@ export const OrganizationsItem = ({
     setIsCollapsed(isAllOpen);
   }, [isAllOpen]);
 
-  useEffect(() => {
-    if (!isDisabled || !organizationItemRef.current) {
-      return;
-    }
-
-    const disabledTooltipWrapper = organizationItemRef.current.querySelector(
-      `.${styles['disabled-tooltip-wrapper']}`,
-    );
-
-    if (disabledTooltipWrapper) {
-      disabledTooltipWrapper.setAttribute('tabindex', '-1');
-    }
-  }, [isDisabled]);
-
   const onShowOpenButton = () => {
     setIsShowOpenButton(true);
   };
@@ -176,7 +162,6 @@ export const OrganizationsItem = ({
                 {formatMessage(messages.noProjectAssignments)}
               </div>
             }
-            wrapperClassName={cx('disabled-tooltip-wrapper')}
             tooltipClassName={cx('tooltip')}
             portalRoot={tooltipRoot}
             isFloating={false}
