@@ -41,8 +41,16 @@ export const messages = defineMessages({
     id: 'TestLibrarySidePanel.selected',
     defaultMessage: 'selected',
   },
-  allTestCasesAlreadyInTestPlan: {
-    id: 'TestLibrarySidePanel.allTestCasesAlreadyInTestPlan',
-    defaultMessage: 'All test cases are already in test plan',
+  failedToLoadContent: {
+    id: 'TestLibrarySidePanel.failedToLoadContent',
+    defaultMessage: 'Failed to load content.',
+  },
+  failedToLoadMoreContent: {
+    id: 'TestLibrarySidePanel.failedToLoadMoreContent',
+    defaultMessage: 'Failed to load more content.',
+  },
+  retry: {
+    id: 'TestLibrarySidePanel.retry',
+    defaultMessage: 'Retry',
   },
 });

@@ -34,8 +34,7 @@ interface UseFolderTestCasesProps {
 
 export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTestCasesProps) => {
   const { isOpenRef, updateFolderTestCases } = usePanelActions();
-  const { testPlanId, testCasesMap, scrollElement, testPlanIdsByFolderId, isTestPlanDataComplete } =
-    usePanelState();
+  const { testPlanId, testCasesMap, scrollElement } = usePanelState();
   const projectKey = useSelector(projectKeySelector);
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
 
@@ -71,10 +70,9 @@ export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTe
       }
 
       const isFirstPage = offset === 0;
-      const prefetchedIds = testPlanIdsByFolderId.get(folderId);
-      const shouldFetchTestPlanTestCases =
-        isFirstPage && testPlanId != null && !prefetchedIds && !isTestPlanDataComplete;
+      const shouldFetchTestPlanTestCases = isFirstPage && testPlanId != null;
 
+      updateFolderTestCases(folderId, { isError: false });
       showSpinner();
 
       try {
@@ -86,14 +84,14 @@ export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTe
           }),
         );
 
-        const testPlanTestCasesForFolderPromise = shouldFetchTestPlanTestCases
+        const testPlanTestCasesForFolderPromise: Promise<TestCase[] | null> = shouldFetchTestPlanTestCases
           ? fetchAllTestCases(projectKey, {
-              'filter.eq.testPlanId': testPlanId,
-              'filter.eq.testFolderId': folderId,
-              offset: 0,
-              limit: 200,
-            }).catch(() => [] as TestCase[])
-          : Promise.resolve([] as TestCase[]);
+            'filter.eq.testPlanId': testPlanId,
+            'filter.eq.testFolderId': folderId,
+            offset: 0,
+            limit: 200,
+          }).catch((): null => null)
+          : Promise.resolve(null);
 
         const [testCasesResponse, testPlanTestCases] = await Promise.all([
           testCasesPromise,
@@ -108,8 +106,10 @@ export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTe
           scrollRestoreRef.current = scrollElement.scrollTop;
         }
 
-        const addedToTestPlanIds = prefetchedIds
-          ?? new Set(testPlanTestCases.map((testCase) => testCase.id));
+        const addedToTestPlanIds =
+          testPlanTestCases !== null
+            ? new Set<number>(testPlanTestCases.map((testCase) => testCase.id))
+            : testCasesMap.get(folderId)?.addedToTestPlanIds;
 
         updateFolderTestCases(folderId, {
           testCases: [
@@ -119,8 +119,8 @@ export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTe
           page: testCasesResponse.page,
           ...(isFirstPage && { addedToTestPlanIds }),
         });
-      } catch (error) {
-        console.error('Failed to fetch test cases:', error);
+      } catch {
+        updateFolderTestCases(folderId, { isError: true });
       } finally {
         hideSpinner();
       }
@@ -135,8 +135,6 @@ export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTe
       testCasesMap,
       hideSpinner,
       scrollElement,
-      testPlanIdsByFolderId,
-      isTestPlanDataComplete,
     ],
   );
 
@@ -149,6 +147,21 @@ export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTe
 
     void fetchTestCases(offset);
   }, [isFolderLoading, hasNextPage, page, fetchTestCases]);
+
+  const retryFetch = useCallback(() => {
+    const currentFolderData = testCasesMap.get(folderId);
+    const hasExistingTestCases = (currentFolderData?.testCases.length ?? 0) > 0;
+
+    if (hasExistingTestCases && currentFolderData?.page) {
+      const offset = currentFolderData.page.number * currentFolderData.page.size;
+
+      void fetchTestCases(offset);
+    } else {
+      isFetchingFirstPageRef.current = true;
+
+      void fetchTestCases(0);
+    }
+  }, [testCasesMap, folderId, fetchTestCases]);
 
   useEffect(() => {
     if (
@@ -168,6 +181,7 @@ export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTe
 
   return {
     fetchNextPage,
+    retryFetch,
     hasNextPage,
     isLoading,
   };
