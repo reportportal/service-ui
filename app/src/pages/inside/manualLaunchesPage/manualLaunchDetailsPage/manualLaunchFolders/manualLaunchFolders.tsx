@@ -28,12 +28,6 @@ import {
   expandManualLaunchFoldersToLevelAction,
   defaultManualLaunchesQueryParams,
 } from 'controllers/manualLaunch';
-import {
-  NOTIFICATION_TYPES,
-  NOTIFICATION_TYPOGRAPHY_COLOR_TYPES,
-  WARNING_NOTIFICATION_DURATION,
-  showNotification,
-} from 'controllers/notification';
 import { MANUAL_LAUNCH_DETAILS_PAGE, locationSelector } from 'controllers/pages';
 import { ExecutionStatus } from 'types/testCase';
 import { useManualLaunchId, useProjectDetails } from 'hooks/useTypedSelector';
