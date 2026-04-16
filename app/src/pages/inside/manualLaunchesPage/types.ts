@@ -15,6 +15,7 @@
  */
 
 import { PageInfo } from 'controllers/testPlan';
+import type { EntityWithDisplayId } from 'types/common';
 
 export interface LaunchAttribute {
   key: string;
@@ -46,11 +47,9 @@ export interface LaunchStatistics {
   defects: LaunchDefects;
 }
 
-export interface Launch {
+export interface Launch extends EntityWithDisplayId {
   owner: string;
   description: string;
-  id: number;
-  displayId: string;
   uuid: string;
   name: string;
   number: number;
@@ -77,9 +76,7 @@ export interface LaunchesResponse {
   page: PageInfo;
 }
 
-export interface ManualTestCase {
-  id: number;
-  displayId: string;
+export interface ManualTestCase extends EntityWithDisplayId {
   count: number;
   name: string;
   startTime: number;
@@ -111,10 +108,7 @@ export interface ExecutionStatistic {
   inProgress: number;
 }
 
-export interface ManualLaunchItem {
-  id: number;
-  /** Human-readable id from API (e.g. ML3). Display only. */
-  displayId: string;
+export interface ManualLaunchItem extends EntityWithDisplayId {
   name: string;
   description: string;
   owner: LaunchOwner;

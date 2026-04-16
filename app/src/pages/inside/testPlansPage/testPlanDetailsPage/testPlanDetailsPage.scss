@@ -40,7 +40,7 @@
     flex-direction: row;
     align-items: center;
     column-gap: 8px;
-    font-family: $FONT-ROBOTO-REGULAR;
+    font-family: var(--rp-ui-base-font-family);
     font-size: 11px;
     line-height: 16px;
     white-space: nowrap;

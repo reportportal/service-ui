@@ -108,7 +108,9 @@ export const TestPlansTable = ({
 
         const nameCell = showTestPlanBusinessId ? (
           <span className={cx('test-plans__plan-name-row')}>
-            <span className={cx('test-plans__plan-business-id')}>{testPlanDisplayId}</span>
+            {testPlanDisplayId ? (
+              <span className={cx('test-plans__plan-business-id')}>{testPlanDisplayId}</span>
+            ) : null}
             <span className={cx('test-plans__plan-name')}>{testPlanName}</span>
           </span>
         ) : (
@@ -116,7 +118,7 @@ export const TestPlansTable = ({
         );
 
         const contentForRow = showTestPlanBusinessId
-          ? `${testPlanDisplayId} ${testPlanName}`.trim()
+          ? [testPlanDisplayId, testPlanName].filter(Boolean).join(' ')
           : testPlanName;
 
         return {

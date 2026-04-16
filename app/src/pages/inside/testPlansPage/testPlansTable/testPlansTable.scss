@@ -133,6 +133,7 @@ $test-plans-progress-column-inline-pad: 16px;
 
   &__plan-name {
     @include ms.milestone-test-plans-cell-name;
+
     flex: 1;
     min-width: 0;
     text-align: left;

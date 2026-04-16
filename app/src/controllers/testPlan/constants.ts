@@ -15,6 +15,7 @@
  */
 
 import { ExtendedTestCase, Attribute } from 'types/testCase';
+import type { EntityWithDisplayId } from 'types/common';
 import { Folder } from 'controllers/testCase';
 
 export const GET_TEST_PLANS = 'getTestPlans' as const;
@@ -34,9 +35,7 @@ export const defaultTestPlanTestCasesQueryParams = {
   offset: 0,
 };
 
-export type TestPlanDto = {
-  id: number;
-  displayId: string;
+export type TestPlanDto = EntityWithDisplayId & {
   name: string;
   executionStatistic: {
     covered: number;

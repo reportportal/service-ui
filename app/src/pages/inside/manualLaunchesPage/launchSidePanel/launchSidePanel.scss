@@ -102,10 +102,21 @@
           outline: 2px solid var(--rp-ui-base-topaz-focused);
           outline-offset: 2px;
         }
+
+        &:focus-visible {
+          opacity: 1;
+        }
       }
 
-      &:hover .copy-button {
+      &:hover .copy-button,
+      &:focus-within .copy-button {
         opacity: 1;
+      }
+
+      @media (hover: none) {
+        .copy-button {
+          opacity: 1;
+        }
       }
     }
   }
@@ -116,7 +127,7 @@
     width: 17px;
     height: 16px;
     color: var(--Text-Secondary, var(--rp-ui-base-e-400));
-    fill: currentColor;
+    fill: currentcolor;
   }
 
   .meta-value {
