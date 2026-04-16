@@ -25,6 +25,7 @@ import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { PageHeaderWithBreadcrumbsAndActions } from 'pages/inside/common/pageHeaderWithBreadcrumbsAndActions';
 import { PageLoader } from 'pages/inside/testPlansPage/pageLoader';
+import { ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
 import { MANUAL_LAUNCHES_PAGE, MANUAL_LAUNCH_DETAILS_PAGE } from 'controllers/pages';
 import {
   activeManualLaunchExecutionSelector,
@@ -47,7 +48,6 @@ import { StepsBasedContent } from './stepsBasedContent';
 import { messages } from './messages';
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { messages as manualLaunchesMessages } from '../messages';
-import { EXECUTION_STATUS_TO_RUN } from './constants';
 
 import styles from './manualLaunchExecutionPage.scss';
 
@@ -117,19 +117,20 @@ export const ManualLaunchExecutionPage = () => {
 
   const isTextBased = execution?.manualScenario?.manualScenarioType === MANUAL_SCENARIO_TYPE_TEXT;
   const executionStatus = execution?.executionStatus;
-  const hasStatus = executionStatus && executionStatus !== EXECUTION_STATUS_TO_RUN;
+  const isInProgress = executionStatus === ExecutionStatus.IN_PROGRESS;
+  const hasStatus = executionStatus && executionStatus !== ExecutionStatus.TO_RUN && !isInProgress;
 
   const handleRunTestClick = () => {
     setShowStatusButtons(true);
   };
 
   const renderHeaderActions = () => {
-    if (hasStatus) {
-      return <ExecutionStatusDropdown executionId={execution.id} currentStatus={executionStatus} />;
+    if (isInProgress || showStatusButtons) {
+      return <ExecutionStatusButtons executionId={execution?.id} />;
     }
 
-    if (showStatusButtons) {
-      return <ExecutionStatusButtons executionId={execution?.id} />;
+    if (hasStatus) {
+      return <ExecutionStatusDropdown executionId={execution.id} currentStatus={executionStatus} />;
     }
 
     return (

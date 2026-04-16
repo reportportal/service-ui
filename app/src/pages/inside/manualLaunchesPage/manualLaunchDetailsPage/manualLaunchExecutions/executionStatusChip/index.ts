@@ -15,4 +15,3 @@
  */
 
 export { ExecutionStatusChip } from './executionStatusChip';
-export { ExecutionStatus } from './types';

@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
 import {
@@ -12,7 +12,7 @@ import {
   RunManualIcon,
   SidePanel,
 } from '@reportportal/ui-kit';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import type { Issue } from '@reportportal/ui-kit/issueList';
 
 import { useOnClickOutside } from 'common/hooks';
@@ -20,8 +20,16 @@ import { createClassnames, formatDuration } from 'common/utils';
 import { CollapsibleSection } from 'components/collapsibleSection';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { FolderBreadcrumbs } from 'components/folderBreadcrumbs';
-import { BtsTicket, manualLaunchFoldersSelector } from 'controllers/manualLaunch';
-import { MANUAL_LAUNCH_DETAILS_PAGE } from 'controllers/pages/constants';
+import {
+  BtsTicket,
+  manualLaunchFoldersSelector,
+  manualLaunchTestCaseExecutionsSelector,
+  updateManualLaunchExecutionStatusAction,
+} from 'controllers/manualLaunch';
+import {
+  MANUAL_LAUNCH_DETAILS_PAGE,
+  MANUAL_LAUNCH_EXECUTION_PAGE,
+} from 'controllers/pages/constants';
 import { useManualLaunchId, useProjectDetails } from 'hooks/useTypedSelector';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { commonMessages } from 'pages/inside/common/common-messages';
@@ -33,8 +41,12 @@ import { RequirementsList } from 'pages/inside/common/requirementsList/requireme
 import { Scenario } from 'pages/inside/common/testCaseList/testCaseSidePanel/scenario';
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 import { formatTimestamp } from 'pages/inside/common/testCaseList/utils';
+import { ExecutionStatusPopover } from 'pages/inside/manualLaunchesPage/executionStatusPopover';
 import { Divider } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { AttachmentList, type Attachment } from 'pages/inside/common/attachmentList';
+import { IN_PROGRESS } from 'common/constants/testStatuses';
+import { projectKeySelector } from 'controllers/project';
+import { ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
 
 import { messages } from './messages';
 import { useExecutionDetails } from './useExecutionDetails';
@@ -53,13 +65,19 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
   const launchId = useManualLaunchId();
   const { canManageExecutions } = useUserPermissions();
   const { organizationSlug, projectSlug } = useProjectDetails();
+  const projectKey = useSelector(projectKeySelector);
   const dispatch = useDispatch();
   const { executionDetails, isLoading } = useExecutionDetails(executionId);
+  const executions = useSelector(manualLaunchTestCaseExecutionsSelector);
   const sidePanelRef = useRef<HTMLDivElement>(null);
+  const currentStatus =
+    executions.find((e) => e.id === executionId)?.executionStatus ??
+    executionDetails?.executionStatus;
   const isScenarioProvided =
     (executionDetails?.manualScenario?.manualScenarioType === TestCaseManualScenario.STEPS &&
       !isEmpty(executionDetails?.manualScenario?.steps)) ||
     executionDetails?.manualScenario?.manualScenarioType === TestCaseManualScenario.TEXT;
+  const [isStatusPopoverOpen, setIsStatusPopoverOpen] = useState(false);
 
   useOnClickOutside(sidePanelRef, onClose);
 
@@ -78,6 +96,29 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
       },
     });
     onClose();
+  };
+
+  const onRunTestClick = () => {
+    dispatch(
+      updateManualLaunchExecutionStatusAction({
+        projectKey,
+        launchId,
+        executionId,
+        status: IN_PROGRESS,
+        onSuccess: () => {
+          dispatch({
+            type: MANUAL_LAUNCH_EXECUTION_PAGE,
+            payload: {
+              organizationSlug,
+              projectSlug,
+              launchId,
+              testCaseId: executionDetails.testCaseId,
+              executionId: executionDetails.id,
+            },
+          });
+        },
+      }),
+    );
   };
 
   const convertBTSTicketsToIssues = (tickets: BtsTicket[]): Issue[] => {
@@ -207,28 +248,37 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
     </div>
   );
 
-  const footerComponent = canManageExecutions ? (
-    <div className={cx('footer')}>
-      <Button
-        variant="ghost"
-        className={cx('action-button')}
-        onClick={() => {}}
-        data-automation-id="test-plan-open-in-library"
-      >
-        {formatMessage(messages.changeStatus)}
-        <ChevronDownDropdownIcon />
-      </Button>
-      <Button
-        variant="primary"
-        className={cx('action-button')}
-        onClick={() => {}}
-        data-automation-id="test-plan-quick-run"
-      >
-        {formatMessage(messages.runTest)}
-        <RunManualIcon />
-      </Button>
-    </div>
-  ) : null;
+  const footerComponent =
+    canManageExecutions && executionDetails ? (
+      <div className={cx('footer')}>
+        <ExecutionStatusPopover
+          executionId={executionId}
+          isOpened={isStatusPopoverOpen}
+          setIsOpened={setIsStatusPopoverOpen}
+          currentStatus={currentStatus}
+        >
+          <Button
+            variant="ghost"
+            className={cx('action-button')}
+            data-automation-id="test-plan-open-in-library"
+          >
+            {formatMessage(messages.changeStatus)}
+            <ChevronDownDropdownIcon />
+          </Button>
+        </ExecutionStatusPopover>
+        {currentStatus === ExecutionStatus.TO_RUN && (
+          <Button
+            variant="primary"
+            className={cx('action-button')}
+            onClick={onRunTestClick}
+            data-automation-id="test-plan-quick-run"
+          >
+            {formatMessage(commonMessages.runTest)}
+            <RunManualIcon />
+          </Button>
+        )}
+      </div>
+    ) : null;
 
   return (
     <div ref={sidePanelRef}>

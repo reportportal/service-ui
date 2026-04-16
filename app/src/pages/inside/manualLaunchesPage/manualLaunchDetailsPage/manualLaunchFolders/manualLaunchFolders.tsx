@@ -163,7 +163,8 @@ export const ManualLaunchFolders = () => {
     !isLoadingExecutions &&
     !isLoadingFolders &&
     isEmpty(executions) &&
-    executionTotal === 0;
+    executionTotal === 0 &&
+    isEmpty(transformedFolders);
 
   return (
     <ExpandedOptions

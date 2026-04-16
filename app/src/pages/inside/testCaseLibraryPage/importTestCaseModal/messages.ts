@@ -58,4 +58,12 @@ export const messages = defineMessages({
     id: 'ImportTestCaseModal.typeToSearchOrSelect',
     defaultMessage: 'Type to search or select a folder from the suggestions…',
   },
+  csvMissingRequiredHeader: {
+    id: 'ImportTestCaseModal.csvMissingRequiredHeader',
+    defaultMessage: 'CSV file is missing the required "summary" column header.',
+  },
+  noValidDataRows: {
+    id: 'ImportTestCaseModal.noValidDataRows',
+    defaultMessage: 'File contains no valid data rows to import.',
+  },
 });

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
@@ -73,9 +73,9 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
     (ext) => ext.pluginName === data.instanceType,
   );
 
-  const updateMetaData = (newMetaData) => {
-    setMetaData({ ...metaData, ...newMetaData });
-  };
+  const updateMetaData = useCallback((newMetaData) => {
+    setMetaData((prev) => ({ ...prev, ...newMetaData }));
+  }, []);
 
   const onSubmit = (newData) => {
     if (isGlobal) {

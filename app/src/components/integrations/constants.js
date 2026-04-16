@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-import { JIRA, RALLY, EMAIL, SAUCE_LABS, SAML, LDAP } from 'common/constants/pluginNames';
+import { JIRA, RALLY, EMAIL, SAUCE_LABS, SAML, LDAP, GITHUB } from 'common/constants/pluginNames';
 import JiraIcon from 'common/img/plugins/jira.svg';
 import RallyIcon from 'common/img/plugins/rally.png';
 import EmailIcon from 'common/img/plugins/email.png';
 import SauceLabsIcon from 'common/img/plugins/sauce-labs.svg';
 import SamlIcon from 'common/img/plugins/saml.png';
 import LdapIcon from 'common/img/plugins/ldap.png';
+import GithubIcon from 'common/img/plugins/github.svg';
 import DefaultPluginIcon from 'common/img/plugins/default-plugin-icon.svg';
 
 export const PLUGIN_IMAGES_MAP = {
@@ -30,6 +31,7 @@ export const PLUGIN_IMAGES_MAP = {
   [SAUCE_LABS]: SauceLabsIcon,
   [SAML]: SamlIcon,
   [LDAP]: LdapIcon,
+  [GITHUB]: GithubIcon,
 };
 
 export const PLUGIN_DEFAULT_IMAGE = DefaultPluginIcon;

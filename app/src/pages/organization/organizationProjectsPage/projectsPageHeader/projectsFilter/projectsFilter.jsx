@@ -47,6 +47,7 @@ import styles from './projectsFilter.scss';
 const cx = classNames.bind(styles);
 
 const selector = formValueSelector(FILTER_FORM);
+const MAX_NUMERIC_FILTER_DIGITS = 6;
 
 export const ProjectsFilter = ({
   entities,
@@ -64,7 +65,7 @@ export const ProjectsFilter = ({
     const value = e.target.value;
     const filtered = value.replace(/[^0-9]/g, '');
     const cleaned = filtered.replace(/^0+/, '');
-    e.target.value = cleaned;
+    e.target.value = cleaned.slice(0, MAX_NUMERIC_FILTER_DIGITS);
   };
 
   const filters = {
@@ -118,6 +119,7 @@ export const ProjectsFilter = ({
             clearable: true,
             defaultWidth: false,
             type: 'text',
+            maxLengthDisplay: MAX_NUMERIC_FILTER_DIGITS,
             onInput,
           },
         },
@@ -148,6 +150,7 @@ export const ProjectsFilter = ({
             clearable: true,
             defaultWidth: false,
             type: 'text',
+            maxLengthDisplay: MAX_NUMERIC_FILTER_DIGITS,
             onInput,
           },
         },

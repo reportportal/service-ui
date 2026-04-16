@@ -14,14 +14,8 @@
  * limitations under the License.
  */
 
-export enum ExecutionStatus {
-  TO_RUN = 'TO_RUN',
-  IN_PROGRESS = 'IN_PROGRESS',
-  PASSED = 'PASSED',
-  FAILED = 'FAILED',
-  SKIPPED = 'SKIPPED',
-}
+import { ExecutionStatus } from "pages/inside/manualLaunchesPage/types";
 
 export interface ExecutionStatusChipProps {
-  status: string;
+  status: ExecutionStatus;
 }

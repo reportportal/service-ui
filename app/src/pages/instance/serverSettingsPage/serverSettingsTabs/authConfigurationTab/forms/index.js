@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-export { GithubAuthForm } from './githubAuthForm';
 export { SsoUsersForm } from './ssoUsersForm';
 export { InactivityTimeoutForm } from './inactivityTimeoutForm';
 export { PasswordForm } from './passwordForm';

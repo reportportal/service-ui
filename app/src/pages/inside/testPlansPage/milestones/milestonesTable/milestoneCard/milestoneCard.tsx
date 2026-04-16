@@ -85,7 +85,7 @@ export const MilestoneCard = ({
             >
               <ChevronDownDropdownIcon />
             </span>
-            <MilestoneTypeIcon type={milestone.type} placement="card" />
+            <MilestoneTypeIcon type={milestone.type} />
             <div className={cx('milestone-card__title-block')}>
               <div className={cx('milestone-card__name')}>{milestone.name}</div>
               <div className={cx('milestone-card__dates')}>{dateRange}</div>

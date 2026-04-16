@@ -16,20 +16,28 @@
 
   &__pagination {
     position: fixed;
-    width: calc(100vw - 48px);
     bottom: 0;
+    left: 48px;
     z-index: $Z-INDEX-POPUP;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: var(--rp-ui-base-bg-100);
-    padding: 5px 34px;
-    border-top: 1px solid var(--rp-ui-base-e-100);
-    height: 64px;
     box-sizing: border-box;
+    width: calc(100vw - 48px);
+    height: 64px;
+    padding: 5px 32px;
+    background: var(--rp-ui-base-bg-100);
+    border-top: 1px solid var(--rp-ui-base-e-100);
+  }
 
-    @media (max-width: $SCREEN_XS_MAX) {
-      width: 100vw;
-    }
+  &__pagination-inner {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--milestones-table-inline-gutter);
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }

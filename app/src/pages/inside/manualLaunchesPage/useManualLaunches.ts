@@ -14,22 +14,45 @@
  * limitations under the License.
  */
 
-import { Launch, ManualTestCase } from './types';
+import { ExecutionStatistic, Launch, ManualTestCase } from './types';
 
-const getExecutionStatistics = (launch: Launch) => ({
-  total: launch.statistics?.executions?.total ?? 0,
-  passed: launch.statistics?.executions?.passed ?? 0,
-  failed: launch.statistics?.executions?.failed ?? 0,
-  skipped: launch.statistics?.executions?.skipped ?? 0,
-  inProgress: launch.statistics?.executions?.inProgress ?? 5,
+type ResolvedLaunchExecutionStats = {
+  total: number;
+  passed: number;
+  failed: number;
+  skipped: number;
+  inProgress: number;
+  testsToRun: number;
+};
+
+const fromExecutionStatistic = (stats: ExecutionStatistic): ResolvedLaunchExecutionStats => ({
+  total: stats.total ?? 0,
+  passed: stats.passed ?? 0,
+  failed: stats.failed ?? 0,
+  skipped: stats.skipped ?? 0,
+  inProgress: stats.inProgress ?? 0,
+  testsToRun: stats.toRun ?? 0,
 });
 
-export const transformLaunchToManualTestCase = (launch: Launch): ManualTestCase => {
-  const { total, passed, failed, skipped, inProgress } = getExecutionStatistics(launch);
-  const { id, number, name, startTime, displayId } = launch;
+const fromClassicLaunchStatistics = (launch: Launch): ResolvedLaunchExecutionStats => {
+  const executions = launch.statistics?.executions;
+  const total = executions?.total ?? 0;
+  const passed = executions?.passed ?? 0;
+  const failed = executions?.failed ?? 0;
+  const skipped = executions?.skipped ?? 0;
+  const inProgress = executions?.inProgress ?? 0;
+  const testsToRun = Math.max(0, total - passed - failed - skipped - inProgress);
 
-  // TODO: after backend implementation
-  const testsToRun = total - passed - failed - skipped - inProgress;
+  return { total, passed, failed, skipped, inProgress, testsToRun };
+};
+
+const getExecutionStatistics = (launch: Launch): ResolvedLaunchExecutionStats =>
+  launch.executionStatistic
+    ? fromExecutionStatistic(launch.executionStatistic)
+    : fromClassicLaunchStatistics(launch);
+
+export const transformLaunchToManualTestCase = (launch: Launch): ManualTestCase => {
+  const { total, passed, failed, skipped, inProgress, testsToRun, displayId } = getExecutionStatistics(launch);
 
   return {
     id,
@@ -47,10 +70,7 @@ export const transformLaunchToManualTestCase = (launch: Launch): ManualTestCase 
 };
 
 export const getLaunchStatistics = (launch: Launch) => {
-  const { total, passed, failed, skipped } = getExecutionStatistics(launch);
-  // TODO: after backend implementation
-  const inProgressTests = 0;
-  const testsToRun = total - passed - failed - skipped;
+  const { total, passed, failed, skipped, inProgress, testsToRun } = getExecutionStatistics(launch);
 
   return {
     totalTests: total,
@@ -58,6 +78,6 @@ export const getLaunchStatistics = (launch: Launch) => {
     failedTests: failed,
     skippedTests: skipped,
     testsToRun,
-    inProgressTests,
+    inProgressTests: inProgress,
   };
 };
