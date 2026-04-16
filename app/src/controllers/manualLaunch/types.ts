@@ -236,6 +236,7 @@ export interface TestCaseExecution {
   testCaseVersionId?: number;
   testItemId?: number;
   testCaseId: number;
+  testCaseDisplayId: string;
   testCaseName: string;
   testCaseDescription?: string;
   testCasePriority?: string;

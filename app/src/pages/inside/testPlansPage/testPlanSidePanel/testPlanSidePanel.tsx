@@ -96,6 +96,8 @@ export const TestPlanSidePanel = memo(
       return null;
     }
 
+    const testCaseBusinessId = testCaseDetails.displayId;
+
     const handleRemoveFromTestPlan = () => {
       openRemoveTestCasesModal({
         selectedTestCaseIds: [testPlan.id],
@@ -125,18 +127,16 @@ export const TestPlanSidePanel = memo(
 
     if (testPlanId && canManageTestCases) {
       menuItems.push({
-        label: formatMessage(messages.removeFromTestPlan) + 11,
+        label: formatMessage(messages.removeFromTestPlan),
         onClick: handleRemoveFromTestPlan,
         variant: 'danger' as const,
       });
     }
 
-    const handleCopyId = async () => {
-      try {
-        await copyToClipboard(testPlan.id.toString());
-      } catch (error) {
+    const handleCopyId = () => {
+      void copyToClipboard(testCaseBusinessId).catch((error) => {
         console.error('Failed to copy ID:', error);
-      }
+      });
     };
 
     const titleComponent = (
@@ -163,11 +163,10 @@ export const TestPlanSidePanel = memo(
         <div className={cx('meta-row')}>
           <div className={cx('meta-item-row', 'id-row')}>
             <span className={cx('meta-label')}>{formatMessage(messages.id)}:</span>
-            <span className={cx('meta-value')}>{testPlan.id}</span>
+            <span className={cx('meta-value')}>{testCaseBusinessId}</span>
             <button
               type="button"
               className={cx('copy-button')}
-              // eslint-disable-next-line @typescript-eslint/no-misused-promises
               onClick={handleCopyId}
               aria-label="Copy ID"
             >

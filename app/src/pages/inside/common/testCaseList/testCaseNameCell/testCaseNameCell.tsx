@@ -24,18 +24,22 @@ import styles from './testCaseNameCell.scss';
 const cx = createClassnames(styles);
 
 interface TestCaseNameCellProps {
+  displayId: string;
   priority: TestCasePriority;
   name: string;
   tags: string[];
 }
 
-export const TestCaseNameCell = ({ priority, name, tags }: TestCaseNameCellProps) => {
+export const TestCaseNameCell = ({ displayId, priority, name, tags }: TestCaseNameCellProps) => {
+  const title = `${displayId} ${name}`;
+
   return (
     <div className={cx('name-section')}>
       {priority && <PriorityIcon priority={priority} />}
       <div className={cx('name-content')}>
-        <div className={cx('test-name')} title={name}>
-          {name}
+        <div className={cx('test-name-row')} title={title}>
+          <span className={cx('business-id')}>{displayId}</span>
+          <span className={cx('test-name')}>{name}</span>
         </div>
         <div className={cx('tags-section')}>
           <AdaptiveTagList tags={tags} isShowAllView />

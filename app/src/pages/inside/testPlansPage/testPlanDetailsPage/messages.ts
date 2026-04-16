@@ -26,9 +26,9 @@ export const messages = defineMessages({
     defaultMessage:
       "The item you are trying to access may have been deleted or doesn't exist. You have been redirected to Test Plans.",
   },
-  testPlanId: {
-    id: 'TestPlanDetailsPage.testPlanId',
-    defaultMessage: 'Test Plan ID: {testPlanId}',
+  testPlanIdLabel: {
+    id: 'TestPlanDetailsPage.testPlanIdLabel',
+    defaultMessage: 'Test Plan ID:',
   },
   testCasesAddedSuccess: {
     id: 'TestPlanDetailsPage.testCasesAddedSuccess',

@@ -26,4 +26,8 @@ export const messages = defineMessages({
     id: 'ManualLaunchesPage.searchPlaceholder',
     defaultMessage: 'Search launches by name',
   },
+  launchIdColumn: {
+    id: 'ManualLaunchesPage.launchIdColumn',
+    defaultMessage: 'ID',
+  },
 });

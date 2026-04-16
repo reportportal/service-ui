@@ -43,11 +43,7 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import { AttachmentList } from 'pages/inside/common/attachmentList';
-import {
-  ManualScenario,
-  ExtendedTestCase,
-  Requirement,
-} from 'types/testCase';
+import { ManualScenario, ExtendedTestCase, Requirement } from 'types/testCase';
 import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
 import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
@@ -169,6 +165,8 @@ export const TestCaseSidePanel = memo(
       return null;
     }
 
+    const testCaseBusinessId = testCase.displayId;
+
     const handleEditTestCase = () => {
       openEditTestCaseModal({ testCase });
     };
@@ -226,12 +224,10 @@ export const TestCaseSidePanel = memo(
       });
     };
 
-    const handleCopyId = async () => {
-      try {
-        await copyToClipboard(testCase.id.toString());
-      } catch (error) {
+    const handleCopyId = () => {
+      void copyToClipboard(testCaseBusinessId).catch((error) => {
         console.error('Failed to copy ID:', error);
-      }
+      });
     };
 
     return (
@@ -261,11 +257,10 @@ export const TestCaseSidePanel = memo(
             <div className={cx('meta-row')}>
               <div className={cx('meta-item-row', 'id-row')}>
                 <span className={cx('meta-label')}>ID:</span>
-                <span className={cx('meta-value')}>{testCase.id}</span>
+                <span className={cx('meta-value')}>{testCaseBusinessId}</span>
                 <button
                   type="button"
                   className={cx('copy-button')}
-                  // eslint-disable-next-line @typescript-eslint/no-misused-promises
                   onClick={handleCopyId}
                   aria-label={formatMessage(commonMessages.copyId)}
                   data-automation-id="copy-test-case-id"

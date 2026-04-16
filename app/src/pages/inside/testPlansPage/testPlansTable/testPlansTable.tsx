@@ -40,7 +40,11 @@ import styles from './testPlansTable.scss';
 
 const cx = createClassnames(styles);
 
-export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) => {
+export const TestPlansTable = ({
+  testPlans,
+  isLoading,
+  showTestPlanBusinessId = true,
+}: TestPlansTableProps) => {
   const { formatMessage } = useIntl();
   const { organizationSlug, projectSlug } = useProjectDetails();
   const dispatch = useDispatch();
@@ -98,17 +102,31 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
   const currentTestPlans = useMemo(
     () =>
       testPlansTableData.map((row) => {
-        const testPlanName = testPlansById.get(row.id as number)?.name || '';
+        const rowTestPlan = testPlansById.get(row.id as number);
+        const testPlanName = rowTestPlan?.name || '';
+        const testPlanDisplayId = rowTestPlan?.displayId;
+
+        const nameCell = showTestPlanBusinessId ? (
+          <span className={cx('test-plans__plan-name-row')}>
+            {testPlanDisplayId ? (
+              <span className={cx('test-plans__plan-business-id')}>{testPlanDisplayId}</span>
+            ) : null}
+            <span className={cx('test-plans__plan-name')}>{testPlanName}</span>
+          </span>
+        ) : (
+          <span className={cx('test-plans__plan-name')}>{testPlanName}</span>
+        );
+
+        const contentForRow = showTestPlanBusinessId
+          ? [testPlanDisplayId, testPlanName].filter(Boolean).join(' ')
+          : testPlanName;
 
         return {
           ...row,
           testPlanName: {
-            component: getOpenTestPlanDetailsButton(
-              row.id as number,
-              testPlanName,
-              <span className={cx('test-plans__plan-name')}>{testPlanName}</span>,
-              'name',
-            ),
+            ...row.testPlanName,
+            content: contentForRow,
+            component: getOpenTestPlanDetailsButton(row.id as number, testPlanName, nameCell, 'name'),
           },
           icon: {
             component: getOpenTestPlanDetailsButton(
@@ -120,7 +138,7 @@ export const TestPlansTable = ({ testPlans, isLoading }: TestPlansTableProps) =>
           },
         };
       }),
-    [getOpenTestPlanDetailsButton, testPlansById, testPlansTableData],
+    [getOpenTestPlanDetailsButton, showTestPlanBusinessId, testPlansById, testPlansTableData],
   );
 
   const primaryColumn = useMemo(
