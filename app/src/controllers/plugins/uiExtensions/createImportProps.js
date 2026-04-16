@@ -93,6 +93,7 @@ import {
 } from 'controllers/user';
 import {
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
+  PROJECT_PLUGIN_PAGE,
   PROJECT_SETTINGS_TAB_PAGE,
   pluginRouteSelector,
   pluginPageSelector,
@@ -355,6 +356,7 @@ export const createImportProps = (pluginName) => ({
   constants: {
     COMMON_LOCALE_KEYS,
     PLUGIN_UI_EXTENSION_ADMIN_PAGE,
+    PROJECT_PLUGIN_PAGE,
     PROJECT_SETTINGS_TAB_PAGE,
     ALL,
     DEFECT_TYPES_SEQUENCE,
