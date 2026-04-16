@@ -53,6 +53,7 @@ import SettingsIcon from 'common/img/sidebar/settings-icon-inline.svg';
 import ProductVersionsIcon from 'common/img/sidebar/product-versions-inline.svg';
 import TestCaseIcon from 'common/img/sidebar/test-case-icon-inline.svg';
 import TestPlansIcon from 'common/img/sidebar/test-plans-icon-inline.svg';
+import TestExecutionsIcon from 'common/img/sidebar/test-executions-icon-inline.svg';
 import { projectNameSelector } from 'controllers/project';
 import { activeOrganizationNameSelector } from 'controllers/organization';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
@@ -105,6 +106,27 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         message: formatMessage(messages.launches),
         menuOrder: (menuCounter += menuStep),
       },
+    ];
+
+    projectPageExtensions.forEach(({ icon, internalRoute, name, title, iconName, menuOrder, payload = {} }) => {
+      const pluginPage = internalRoute || payload.slug || name;
+
+      if (pluginPage) {
+        const itemName = iconName || title || name;
+        sidebarItems.push({
+          onClick: (isSidebarCollapsed) => onClickButton({ itemName, isSidebarCollapsed }),
+          link: {
+            type: PROJECT_PLUGIN_PAGE,
+            payload: { organizationSlug, projectSlug, pluginPage },
+          },
+          icon: icon?.svg || TestExecutionsIcon,
+          message: icon?.title || title || name,
+          menuOrder: menuOrder || (menuCounter += menuStep),
+        });
+      }
+    });
+
+    sidebarItems.push(
       ...(isTmsEnabled
         ? [
             {
@@ -152,9 +174,8 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         icon: MembersIcon,
         message: formatMessage(messages.projectTeam),
         menuOrder: (menuCounter += menuStep),
-      }
-    ];
-
+      },
+    );
 
     if (isTmsEnabled) {
       sidebarItems.push(
@@ -216,21 +237,6 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       icon: SettingsIcon,
       message: formatMessage(messages.projectsSettings),
       menuOrder: (menuCounter += menuStep),
-    });
-    projectPageExtensions.forEach(({ icon, internalRoute, name, title, iconName, menuOrder }) => {
-      if (icon) {
-        const itemName = iconName || title;
-        sidebarItems.push({
-          onClick: (isSidebarCollapsed) => onClickButton({ itemName, isSidebarCollapsed }),
-          link: {
-            type: PROJECT_PLUGIN_PAGE,
-            payload: { organizationSlug, projectSlug, pluginPage: internalRoute || name },
-          },
-          icon: icon.svg,
-          message: icon.title || title,
-          menuOrder: menuOrder || (menuCounter += menuStep),
-        });
-      }
     });
     sidebarExtensions.forEach((extension) =>
       sidebarItems.push({
