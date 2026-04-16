@@ -81,6 +81,7 @@ const OrganizationsPageComponent = ({
   useEffect(() => {
     trackEvent(ORGANIZATION_PAGE_EVENTS.VIEW_ALL_ORGANIZATIONS);
   }, [trackEvent]);
+
   const isEmptyOrganizations = !isOrganizationsLoading && organizationsList.length === 0;
   const [isOpenTableView, setIsOpenTableView] = useState(
     getStorageItem(`${userId}_settings`)?.organizationsPanel === TABLE_VIEW,
