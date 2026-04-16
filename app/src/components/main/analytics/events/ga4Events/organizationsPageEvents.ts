@@ -33,6 +33,10 @@ export const ORGANIZATION_SETTINGS_VIEWS = {
 };
 
 export const ORGANIZATION_PAGE_EVENTS = {
+  VIEW_ALL_ORGANIZATIONS: {
+    action: 'page_view',
+    place: 'all_organizations',
+  },
   SEARCH_ORGANIZATION_FIELD: {
     ...BASIC_EVENT_PARAMETERS,
     place: 'all_organizations',
