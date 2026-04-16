@@ -24,10 +24,12 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    overflow: hidden;
 
     svg {
-      width: calc(16px * 13.711 / 16);
-      height: calc(16px * 13.711 / 16);
+      display: block;
+      width: 15.7px;
+      height: 15.7px;
       flex-shrink: 0;
       transform: scale(calc(16 / 13.711));
       transform-origin: center center;

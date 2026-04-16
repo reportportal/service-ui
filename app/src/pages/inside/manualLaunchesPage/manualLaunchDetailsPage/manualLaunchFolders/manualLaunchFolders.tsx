@@ -149,17 +149,17 @@ export const ManualLaunchFolders = () => {
   useEffect(() => {
     if (urlFolderId && !activeFolder && !isLoadingFolders) {
       navigateToFolder();
-
-      dispatch(
-        showNotification({
-          messageId: 'redirectWarningMessage',
-          type: NOTIFICATION_TYPES.WARNING,
-          typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
-          duration: WARNING_NOTIFICATION_DURATION,
-        }),
-      );
     }
-  }, [urlFolderId, activeFolder, isLoadingFolders, navigateToFolder, dispatch]);
+  }, [
+    urlFolderId,
+    activeFolder,
+    isLoadingFolders,
+    navigateToFolder,
+    dispatch,
+    filterPriorities,
+    filterTags,
+    statusFilter,
+  ]);
 
   const searchFilteredData = useMemo(
     () => ({
