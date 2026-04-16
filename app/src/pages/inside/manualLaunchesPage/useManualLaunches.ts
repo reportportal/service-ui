@@ -52,7 +52,8 @@ const getExecutionStatistics = (launch: Launch): ResolvedLaunchExecutionStats =>
     : fromClassicLaunchStatistics(launch);
 
 export const transformLaunchToManualTestCase = (launch: Launch): ManualTestCase => {
-  const { total, passed, failed, skipped, inProgress, testsToRun, displayId } = getExecutionStatistics(launch);
+  const { total, passed, failed, skipped, inProgress, testsToRun } = getExecutionStatistics(launch);
+  const { id, number, name, startTime, displayId } = launch;
 
   return {
     id,
