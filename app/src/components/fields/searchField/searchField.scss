@@ -17,6 +17,27 @@
 .search-field {
   overflow: hidden;
 
+  &__search-icon {
+    display: inline-flex;
+    width: 16px;
+    height: 16px;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    svg {
+      width: calc(16px * 13.711 / 16);
+      height: calc(16px * 13.711 / 16);
+      flex-shrink: 0;
+      transform: scale(calc(16 / 13.711));
+      transform-origin: center center;
+    }
+
+    svg path {
+      fill: var(--rp-ui-base-e-400);
+    }
+  }
+
   &--full-width {
     width: 100% !important;
   }

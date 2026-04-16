@@ -287,21 +287,23 @@ export const ManualLaunchesFilterSidePanel = memo(
       </FilterSectionBlock>
 
       <FilterSectionBlock label={formatMessage(commonMessages.launchAttributes)}>
-        <EditableAttributeList
-          attributes={localAttributes}
-          onChange={handleAttributesChange}
-          disabled={false}
-          showButton
-          newAttrMessage={formatMessage(commonMessages.addAttributes)}
-          maxLength={50}
-          customClass=""
-          editable
-          defaultOpen={false}
-          getURIKey={getURIKey}
-          getURIValue={getURIValue}
-          isAttributeKeyRequired
-          isAttributeValueRequired
-        />
+        <div className={cx('filter-launch-attributes')}>
+          <EditableAttributeList
+            attributes={localAttributes}
+            onChange={handleAttributesChange}
+            disabled={false}
+            showButton
+            newAttrMessage={formatMessage(commonMessages.addAttributes)}
+            maxLength={50}
+            customClass=""
+            editable
+            defaultOpen={false}
+            getURIKey={getURIKey}
+            getURIValue={getURIValue}
+            isAttributeKeyRequired
+            isAttributeValueRequired
+          />
+        </div>
       </FilterSectionBlock>
     </div>
   );

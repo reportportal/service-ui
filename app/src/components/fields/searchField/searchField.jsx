@@ -82,7 +82,11 @@ export const SearchField = ({
       onBlur={handleBlur}
       placeholder={placeholder}
       loading={isSearchActive && isLoading}
-      startIcon={<SearchIcon />}
+      startIcon={
+        <span className={cx('search-field__search-icon')}>
+          <SearchIcon />
+        </span>
+      }
       className={cx('search-field', { 'search-field--full-width': isFullWidth }, className)}
       maxLength={256}
       collapsible={!isAlwaysActive}

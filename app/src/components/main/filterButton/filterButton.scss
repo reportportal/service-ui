@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@use '../../../common/css/mixins';
+
 .filters-icon-container {
   all: unset;
   height: 36px;
@@ -29,8 +31,7 @@
     display: block;
 
     svg {
-      width: 16px;
-      height: 16px;
+      @include mixins.header-toolbar-filter-icon-svg-box;
 
       path {
         fill: var(--rp-ui-base-e-300);
