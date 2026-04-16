@@ -33,6 +33,7 @@ export interface FolderTestCases {
   page: Page | null;
   isLoading: boolean;
   addedToTestPlanIds?: Set<number>;
+  isError?: boolean;
 }
 
 export interface PanelActionsContextValue {
@@ -58,8 +59,7 @@ export interface PanelStateContextValue {
   testPlanId: number | null;
   scrollElement: HTMLElement | null;
   shouldHideAddedTestCases: boolean;
-  testPlanIdsByFolderId: Map<number, Set<number>>;
-  isTestPlanDataComplete: boolean;
+  testPlanCountByFolderId: Map<number, number>;
 }
 
 const PanelActionsContext = createContext<PanelActionsContextValue | null>(null);

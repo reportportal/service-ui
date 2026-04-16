@@ -19,12 +19,10 @@ import { BubblesLoader } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 
-import { ConnectorLines, INDENT_PX } from '../../expandedOptions/folder/connectorLines';
+import { ConnectorLines } from '../../expandedOptions/folder/connectorLines';
 import styles from '../selectableFolder/selectableFolder.scss';
 
 const cx = createClassnames(styles);
-
-const BASE_INDENT_PX = 48;
 
 interface LoadingRowProps {
   row: { depth: number; connectorDepths: number[]; isLastChild: boolean };
@@ -41,14 +39,14 @@ export const LoadingRow = ({
 }: LoadingRowProps) => (
   <div
     className={className}
-    style={{ ...style, paddingLeft: BASE_INDENT_PX + row.depth * INDENT_PX }}
+    style={style}
   >
     <ConnectorLines
       depth={row.depth}
       connectorDepths={row.connectorDepths}
       nextRowDepth={nextRowDepth}
       isLastChild={row.isLastChild}
-      baseIndent={BASE_INDENT_PX}
+      baseIndent={0}
       showCorner={false}
     />
     <BubblesLoader />
