@@ -62,6 +62,12 @@ import { useTmsEnabled } from 'hooks/useTmsEnabled';
 import { useTmsMilestonesEnabled } from 'hooks/useTmsMilestonesEnabled';
 
 const ORGANIZATION_CONTROL = 'Organization control';
+const TEST_EXECUTIONS_KEYWORD = 'testexecution';
+
+const normalizeExtensionValue = (value) => value?.toString().toLowerCase().replace(/[\s_-]/g, '');
+
+const isTestExecutionsExtension = (values) =>
+  values.some((value) => normalizeExtensionValue(value)?.includes(TEST_EXECUTIONS_KEYWORD));
 
 export const ProjectSidebar = ({ onClickNavBtn }) => {
   const { trackEvent } = useTracking();
@@ -110,9 +116,10 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
 
     projectPageExtensions.forEach(({ icon, internalRoute, name, title, iconName, menuOrder, payload = {} }) => {
       const pluginPage = internalRoute || payload.slug || name;
+      const isTestExecutionsPlugin = isTestExecutionsExtension([internalRoute, payload.slug, name, title, iconName]);
 
-      if (pluginPage) {
-        const itemName = iconName || title || name;
+      if (pluginPage && (icon || isTestExecutionsPlugin)) {
+        const itemName = iconName || title || (isTestExecutionsPlugin ? messages.testExecutions.defaultMessage : name);
         sidebarItems.push({
           onClick: (isSidebarCollapsed) => onClickButton({ itemName, isSidebarCollapsed }),
           link: {
@@ -120,7 +127,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
             payload: { organizationSlug, projectSlug, pluginPage },
           },
           icon: icon?.svg || TestExecutionsIcon,
-          message: icon?.title || title || name,
+          message: icon?.title || title || (isTestExecutionsPlugin ? formatMessage(messages.testExecutions) : name),
           menuOrder: menuOrder || (menuCounter += menuStep),
         });
       }
