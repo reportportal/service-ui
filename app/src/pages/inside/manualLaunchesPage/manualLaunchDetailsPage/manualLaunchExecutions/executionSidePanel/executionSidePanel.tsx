@@ -158,7 +158,9 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
       <div className={cx('meta-row')}>
         <div className={cx('meta-row-item')}>
           <span className={cx('meta-label')}>{formatMessage(messages.executionId)}:</span>
-          <span className={cx('meta-value')}>{executionDetails?.id}</span>
+          <span className={cx('meta-value')}>
+            {executionDetails?.testCaseDisplayId ?? executionDetails?.testCaseId}
+          </span>
         </div>
         {executionDetails?.startedAt && (
           <div className={cx('meta-row-item')}>

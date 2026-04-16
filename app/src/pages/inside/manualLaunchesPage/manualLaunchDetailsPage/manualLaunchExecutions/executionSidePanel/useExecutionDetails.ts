@@ -22,7 +22,7 @@ interface ExecutionItem {
   testCaseVersionId: number;
   testItemId: number;
   testCaseId: number;
-  testCaseDisplayId: string;
+  testCaseDisplayId?: string;
   testCaseName: string;
   testCaseDescription: string;
   testCasePriority: TestCasePriority;
