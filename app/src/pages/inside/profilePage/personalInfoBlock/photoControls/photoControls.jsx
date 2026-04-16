@@ -73,6 +73,8 @@ const messages = defineMessages({
 )
 @injectIntl
 export class PhotoControls extends Component {
+  inflightPreviewUrl = null;
+
   static propTypes = {
     accountType: PropTypes.string,
     photoId: PropTypes.string,
@@ -94,7 +96,32 @@ export class PhotoControls extends Component {
     newPhotoLoaded: false,
     isValidImage: true,
     image: null,
+    previewObjectUrl: null,
     isDefaultImage: !this.props.photoId,
+  };
+
+  componentWillUnmount() {
+    this.clearPreviewObjectUrl();
+  }
+
+  revokeObjectUrl = (objectUrl) => {
+    if (objectUrl) {
+      URL.revokeObjectURL(objectUrl);
+    }
+  };
+
+  clearPreviewObjectUrl = () => {
+    this.revokeObjectUrl(this.state.previewObjectUrl);
+    if (this.inflightPreviewUrl && this.inflightPreviewUrl !== this.state.previewObjectUrl) {
+      this.revokeObjectUrl(this.inflightPreviewUrl);
+    }
+    this.inflightPreviewUrl = null;
+  };
+
+  resetFileSelector = () => {
+    if (this.fileSelector) {
+      this.fileSelector.value = '';
+    }
   };
 
   onRemove = () => {
@@ -114,46 +141,90 @@ export class PhotoControls extends Component {
           type: NOTIFICATION_TYPES.SUCCESS,
         });
         this.props.setPhotoTimeStampAction(Date.now());
-        this.setState({ isDefaultImage: false });
+        this.props.uploadNewImage(null);
+        this.clearPreviewObjectUrl();
+        this.resetFileSelector();
+        this.setState({
+          isDefaultImage: false,
+          previewObjectUrl: null,
+          image: null,
+          newPhotoLoaded: false,
+        });
       })
       .catch(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.uploadError),
           type: NOTIFICATION_TYPES.ERROR,
         });
+        this.setState({ newPhotoLoaded: true });
       });
-    this.setState({ newPhotoLoaded: false });
   };
   onClickUploadPhoto = () => {
     this.fileSelector.click();
   };
   onLoadFile = (file) => {
-    const reader = new FileReader();
+    this.clearPreviewObjectUrl();
     const image = new Image();
-    reader.readAsDataURL(file);
-    reader.onload = (_file) => {
-      image.src = _file.target.result;
-      image.onload = () => {
-        if (this.validateImageSize(image, file)) {
-          this.props.uploadNewImage(_file.target.result);
-          this.setState({
-            newPhotoLoaded: true,
-            isValidImage: true,
-            image: file,
-          });
-        } else {
-          this.setState({ isValidImage: false });
-        }
-      };
+    const previewObjectUrl = URL.createObjectURL(file);
+    this.inflightPreviewUrl = previewObjectUrl;
+    image.src = previewObjectUrl;
+    image.onload = () => {
+      if (this.inflightPreviewUrl !== previewObjectUrl) {
+        this.revokeObjectUrl(previewObjectUrl);
+        return;
+      }
+      if (this.validateImageSize(image, file)) {
+        this.props.uploadNewImage(previewObjectUrl);
+        this.inflightPreviewUrl = null;
+        this.setState({
+          newPhotoLoaded: true,
+          isValidImage: true,
+          image: file,
+          previewObjectUrl,
+        });
+      } else {
+        this.revokeObjectUrl(previewObjectUrl);
+        this.inflightPreviewUrl = null;
+        this.props.uploadNewImage(null);
+        this.setState({
+          isValidImage: false,
+          previewObjectUrl: null,
+          image: null,
+          newPhotoLoaded: false,
+        });
+      }
+    };
+    image.onerror = () => {
+      if (this.inflightPreviewUrl !== previewObjectUrl) {
+        this.revokeObjectUrl(previewObjectUrl);
+        return;
+      }
+      this.revokeObjectUrl(previewObjectUrl);
+      this.inflightPreviewUrl = null;
+      this.props.uploadNewImage(null);
+      this.setState({
+        isValidImage: false,
+        previewObjectUrl: null,
+        image: null,
+        newPhotoLoaded: false,
+      });
     };
   };
   selectPhotoHandler = (e) => {
     const file = e.currentTarget.files[0];
+    this.resetFileSelector();
     if (file) {
       if (this.validateFileExtension(file)) {
         this.onLoadFile(file);
       } else {
-        this.setState({ isValidImage: false });
+        this.props.uploadNewImage(null);
+        this.clearPreviewObjectUrl();
+        this.setState({
+          isValidImage: false,
+          image: null,
+          newPhotoLoaded: false,
+          previewObjectUrl: null,
+        });
       }
     }
   };
@@ -161,8 +232,11 @@ export class PhotoControls extends Component {
     fetch(URLS.userAvatar(this.props.userId), { method: 'delete' })
       .then(() => {
         this.props.removeImage();
+        this.props.uploadNewImage(null);
+        this.clearPreviewObjectUrl();
+        this.resetFileSelector();
         this.props.setPhotoTimeStampAction(Date.now());
-        this.setState({ isDefaultImage: true });
+        this.setState({ isDefaultImage: true, previewObjectUrl: null, newPhotoLoaded: false });
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.wasDeleted),
           type: NOTIFICATION_TYPES.SUCCESS,

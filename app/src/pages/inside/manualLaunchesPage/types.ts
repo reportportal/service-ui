@@ -58,6 +58,7 @@ export interface Launch {
   lastModified: string;
   status: string;
   statistics: LaunchStatistics;
+  executionStatistic?: ExecutionStatistic;
   attributes: LaunchAttribute[];
   mode: string;
   type: string;
@@ -153,4 +154,12 @@ export interface UrlsHelper {
     launchId: string | number,
     executionId: string | number,
   ) => string;
+}
+
+export enum ExecutionStatus {
+  TO_RUN = 'TO_RUN',
+  IN_PROGRESS = 'IN_PROGRESS',
+  PASSED = 'PASSED',
+  FAILED = 'FAILED',
+  SKIPPED = 'SKIPPED',
 }

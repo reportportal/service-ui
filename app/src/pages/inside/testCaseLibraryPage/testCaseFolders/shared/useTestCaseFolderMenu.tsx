@@ -41,7 +41,6 @@ export const useTestCaseFolderMenu = ({
   setAllTestCases,
 }: UseTestCaseFolderMenuProps) => {
   const { formatMessage } = useIntl();
-  const { name: folderName } = folder;
   const { openModal: openDeleteModal } = useDeleteFolderModal();
   const { openModal: openRenameModal } = useRenameFolderModal();
   const { openModal: openDuplicateModal } = useDuplicateFolderModal();
@@ -65,41 +64,42 @@ export const useTestCaseFolderMenu = ({
 
   const handleMoveFolder = () => openMoveModal({ folder });
 
-  const handleImportTestCase = () =>
-    openImportTestCaseModal({ folderName, importTarget: 'existing' });
+  const handleImportTestCase = () => openImportTestCaseModal({ folderId: folder.id });
 
   const handleCreateSubfolder = () => openCreateSubfolderModal({ folder });
 
-  const testCaseFolderTooltipItems: PopoverItem[] = canManageTestCases ? [
-    {
-      label: formatMessage(commonMessages.createSubfolder),
-      onClick: handleCreateSubfolder,
-    },
-    {
-      label: formatMessage(COMMON_LOCALE_KEYS.RENAME),
-      onClick: handleRenameFolder,
-    },
-    {
-      label: formatMessage(commonMessages.moveFolderTo),
-      variant: 'text' as const,
-      onClick: handleMoveFolder,
-    },
-    {
-      label: formatMessage(commonMessages.duplicateFolder),
-      variant: 'text' as const,
-      onClick: handleDuplicateFolder,
-    },
-    {
-      label: formatMessage(COMMON_LOCALE_KEYS.IMPORT),
-      variant: 'text' as const,
-      onClick: handleImportTestCase,
-    },
-    {
-      label: formatMessage(commonMessages.deleteFolder),
-      variant: 'destructive' as const,
-      onClick: handleDeleteFolder,
-    },
-  ] : [];
+  const testCaseFolderTooltipItems: PopoverItem[] = canManageTestCases
+    ? [
+        {
+          label: formatMessage(commonMessages.createSubfolder),
+          onClick: handleCreateSubfolder,
+        },
+        {
+          label: formatMessage(COMMON_LOCALE_KEYS.RENAME),
+          onClick: handleRenameFolder,
+        },
+        {
+          label: formatMessage(commonMessages.moveFolderTo),
+          variant: 'text' as const,
+          onClick: handleMoveFolder,
+        },
+        {
+          label: formatMessage(commonMessages.duplicateFolder),
+          variant: 'text' as const,
+          onClick: handleDuplicateFolder,
+        },
+        {
+          label: formatMessage(COMMON_LOCALE_KEYS.IMPORT),
+          variant: 'text' as const,
+          onClick: handleImportTestCase,
+        },
+        {
+          label: formatMessage(commonMessages.deleteFolder),
+          variant: 'destructive' as const,
+          onClick: handleDeleteFolder,
+        },
+      ]
+    : [];
 
   return {
     testCaseFolderTooltipItems,

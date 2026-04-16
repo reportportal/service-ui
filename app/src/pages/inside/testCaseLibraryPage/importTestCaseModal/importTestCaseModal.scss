@@ -71,17 +71,6 @@
     text-decoration: none;
   }
 
-  &__external-icon {
-    width: 16px;
-    height: 16px;
-  }
-
-  &__location-block {
-    background-color: var(--rp-ui-base-bg-000);
-    border-radius: 4px;
-    padding: 16px;
-  }
-
   &__location-title {
     font-weight: 400;
     font-size: 13px;
@@ -89,29 +78,37 @@
     margin-bottom: 12px;
   }
 
-  &__segmented {
-    display: flex;
-    gap: 4px;
-    background: var(--rp-ui-base-bg-200);
-    border-radius: 6px;
-    padding: 2px;
+  &__switcher {
+    padding: 16px;
+    border-radius: 4px;
+    box-shadow: var(--rp-ui-base-shadow);
+    background-color: var(--rp-ui-base-bg-000);
   }
 
-  &__segmented-btn {
-    flex: 1 1 0;
-    min-width: 0;
-    border: 0;
-    background: transparent;
+  &__switcher-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    height: 36px;
+    padding: 2px;
+    margin-top: 10px;
+    border-radius: 6px;
+    background-color: var(--rp-ui-base-bg-200);
+  }
+
+  &__switcher-btn {
+    width: 180px;
+    height: 32px;
+    line-height: 32px;
+    border: none;
     border-radius: 4px;
-    padding: 8px 12px;
-    font-weight: 400;
-    font-size: 13px;
-    line-height: 20px;
-    text-indent: 1px;
+    background-color: transparent;
     cursor: pointer;
 
-    &.is-active {
-      background: var(--rp-ui-base-bg-000);
+    &--active {
+      box-shadow: var(--rp-ui-base-shadow);
+      background-color: var(--rp-ui-base-bg-000);
     }
   }
 }

@@ -65,4 +65,16 @@ export const messages = defineMessages({
     id: 'ExecutionStatusConfirmModal.updateCommentIfNeeded',
     defaultMessage: 'Please, update the execution comment if needed.',
   },
+  clearStatus: {
+    id: 'ExecutionStatusConfirmModal.clearStatus',
+    defaultMessage: 'Clear Status',
+  },
+  clearStatusWarning: {
+    id: 'ExecutionStatusConfirmModal.clearStatusWarning',
+    defaultMessage: 'Are you sure you want to clear the selected status? The test execution will revert to the status "To Run".'
+  },
+  clearCommentAndLinksToBTS: {
+    id: 'ExecutionStatusConfirmModal.clearCommentAndLinksToBTS',
+    defaultMessage: 'Clear the execution comment and links to BTS if any',
+  }
 });

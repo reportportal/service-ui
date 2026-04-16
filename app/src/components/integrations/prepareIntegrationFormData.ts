@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,4 +14,24 @@
  * limitations under the License.
  */
 
-export { GithubAuthForm } from './githubAuthForm';
+import { isString } from 'es-toolkit';
+
+export const prepareGithubIntegrationFormData = (
+  formData: Record<string, unknown>,
+): Record<string, unknown> => {
+  const orgs = (formData.restrictions as { organizations?: string[] } | undefined)?.organizations;
+
+  if (!Array.isArray(orgs)) {
+    return { ...formData };
+  }
+
+  const organizations = orgs
+    .filter((s) => isString(s))
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  return {
+    ...formData,
+    restrictions: { organizations },
+  };
+};

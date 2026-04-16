@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,4 @@
  * limitations under the License.
  */
 
-.github-auth-form-fields {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  margin-top: 5px;
-}
-
-.form-field-wrapper {
-  width: 330px;
-  position: relative;
-  @media (max-width: $SCREEN_XS_MAX) {
-    width: 100%;
-  }
-}
-
-.label {
-  padding-right: 4px;
-}
+export { IntegrationFormField, type IntegrationFormFieldProps } from './integrationFormField';

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,14 @@
  *  limitations under the License.
  */
 
-import { EMAIL, JIRA, LDAP, RALLY, SAML, SAUCE_LABS } from 'common/constants/pluginNames';
+import { EMAIL, GITHUB, JIRA, LDAP, RALLY, SAML, SAUCE_LABS } from 'common/constants/pluginNames';
 import { SauceLabsSettings } from './integrationProviders/sauceLabsIntegration/sauceLabsSettings';
 import { EmailSettings } from './integrationProviders/emailIntegration/emailSettings';
 import { JiraSettings } from './integrationProviders/jiraIntegration/jiraSettings';
 import { RallySettings } from './integrationProviders/rallyIntegration/rallySettings';
 import { SamlSettings } from './integrationProviders/samlIntegration/samlSettings';
 import { LdapSettings } from './integrationProviders/ldapIntegration/ldapSettings';
+import { GithubSettings } from './integrationProviders/githubIntegration/githubSettings';
 
 export const INTEGRATIONS_SETTINGS_COMPONENTS_MAP = {
   [SAUCE_LABS]: SauceLabsSettings,
@@ -29,4 +30,5 @@ export const INTEGRATIONS_SETTINGS_COMPONENTS_MAP = {
   [RALLY]: RallySettings,
   [SAML]: SamlSettings,
   [LDAP]: LdapSettings,
+  [GITHUB]: GithubSettings,
 };

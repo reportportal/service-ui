@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,4 +14,41 @@
  * limitations under the License.
  */
 
-export { FormField } from './formField';
+.organizations-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.organization-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+
+  .input-container {
+    flex-grow: 1;
+
+    span {
+      overflow: hidden;
+    }
+  }
+
+  .delete-button {
+    width: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    i {
+      margin: 0;
+      padding-bottom: 3px;
+
+      svg {
+        width: 10px;
+        height: 10px;
+      }
+    }
+  }
+}

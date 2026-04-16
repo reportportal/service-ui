@@ -76,7 +76,6 @@
 
 .checkbox-section {
   margin-top: 16px;
-  padding-bottom: 16px;
 
   label {
     @include modal-text-regular;
@@ -158,7 +157,6 @@
 .confirmation-text {
   display: flex;
   flex-direction: column;
-  margin-bottom: 16px;
 }
 
 .confirmation-question {

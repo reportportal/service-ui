@@ -39,8 +39,8 @@ import {
   isIntegrationSupportsMultipleInstances,
   isPluginBuiltin,
 } from 'components/integrations/utils';
-import { EMAIL, LDAP } from 'common/constants/pluginNames';
-import { combineNameAndEmailToFrom } from 'common/utils';
+import { LDAP } from 'common/constants/pluginNames';
+import { applyIntegrationFormPrepare } from 'components/integrations/integrationFormPrepareMap';
 import { InstancesList } from './instancesList';
 import styles from './instancesSection.scss';
 
@@ -190,7 +190,7 @@ export class InstancesSection extends Component {
 
   createIntegration = (formData, metaData) => {
     const { isGlobal, instanceType, pluginDetails } = this.props;
-    const updatedFormData = instanceType === EMAIL ? combineNameAndEmailToFrom(formData) : formData;
+    const updatedFormData = applyIntegrationFormPrepare(instanceType, formData);
     const data = {
       enabled: true,
       integrationParameters: updatedFormData,
