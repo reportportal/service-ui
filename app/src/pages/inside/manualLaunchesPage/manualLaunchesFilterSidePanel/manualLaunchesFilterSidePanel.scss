@@ -93,7 +93,6 @@
   flex: 1;
 }
 
-.clear-button,
 .cancel-button,
 .apply-button {
   padding: 7px 16px;
@@ -101,6 +100,9 @@
 }
 
 .clear-button {
+  min-width: fit-content;
+  padding: 7px 0;
+  height: auto;
   border: none !important;
   color: var(--rp-ui-base-topaz);
 

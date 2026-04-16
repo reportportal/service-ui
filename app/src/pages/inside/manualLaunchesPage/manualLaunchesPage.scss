@@ -77,6 +77,10 @@
       fill: currentColor;
     }
   }
+
+  &:hover svg {
+    color: var(--rp-ui-base-e-400);
+  }
 }
 
 .filter-control-divider {
@@ -97,6 +101,10 @@
   transition: background-color 0.2s ease-in-out;
 
   &:has(.filter-icon:hover, .filter-clear-button:hover) {
+    background-color: var(--rp-ui-base-bg-200);
+  }
+
+  &.active {
     background-color: var(--rp-ui-base-bg-200);
   }
 
@@ -133,9 +141,3 @@
   min-height: 400px;
 }
 
-.no-search-results {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: calc(100vh - 200px);
-}
