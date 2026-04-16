@@ -20,17 +20,19 @@ import { useIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { commonMessages } from 'pages/inside/common/common-messages';
 
+import { messages } from '../../../messages';
+
 export const useManualLaunchesColumns = () => {
   const { formatMessage } = useIntl();
 
   const primaryColumn = useMemo(
     () => ({
       key: 'count',
-      header: '#',
-      width: 80,
-      align: 'center' as const,
+      header: formatMessage(messages.launchIdColumn),
+      width: 96,
+      align: 'left' as const,
     }),
-    [],
+    [formatMessage],
   );
 
   const fixedColumns = useMemo(

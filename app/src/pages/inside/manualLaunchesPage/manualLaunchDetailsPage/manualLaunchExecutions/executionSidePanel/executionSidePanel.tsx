@@ -96,6 +96,9 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
       {executionDetails?.testCasePriority && (
         <PriorityIcon priority={executionDetails.testCasePriority} />
       )}
+      {executionDetails?.testCaseId != null && (
+        <span className={cx('title-business-id')}>{executionDetails.testCaseDisplayId}</span>
+      )}
       {executionDetails?.testCaseName && (
         <span className={cx('title-name')}>{executionDetails.testCaseName}</span>
       )}

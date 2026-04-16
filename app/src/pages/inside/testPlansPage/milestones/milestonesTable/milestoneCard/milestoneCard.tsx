@@ -156,7 +156,11 @@ export const MilestoneCard = ({
           ) : (
             <>
               <div className={cx('milestone-card__test-plans')}>
-                <TestPlansTable testPlans={testPlanRows} isLoading={false} />
+                <TestPlansTable
+                  testPlans={testPlanRows}
+                  isLoading={false}
+                  showTestPlanBusinessId={false}
+                />
               </div>
               {canManageTestPlans && (
                 <div className={cx('milestone-card__test-plans-footer')}>

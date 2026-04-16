@@ -50,6 +50,7 @@ export interface Launch {
   owner: string;
   description: string;
   id: number;
+  displayId: string;
   uuid: string;
   name: string;
   number: number;
@@ -77,6 +78,7 @@ export interface LaunchesResponse {
 
 export interface ManualTestCase {
   id: number;
+  displayId: string;
   count: number;
   name: string;
   startTime: number;
@@ -110,6 +112,8 @@ export interface ExecutionStatistic {
 
 export interface ManualLaunchItem {
   id: number;
+  /** Human-readable id from API (e.g. ML3). Display only. */
+  displayId: string;
   name: string;
   description: string;
   owner: LaunchOwner;

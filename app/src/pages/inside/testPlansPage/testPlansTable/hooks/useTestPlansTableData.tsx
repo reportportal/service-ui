@@ -50,7 +50,7 @@ export const useTestPlansTableData = ({
 
   const data = useMemo(
     () =>
-      testPlans?.map(({ id, name, executionStatistic }) => {
+      testPlans?.map(({ id, name, displayId, executionStatistic }) => {
         const total = executionStatistic?.total ?? 0;
         const covered = executionStatistic?.covered ?? 0;
         const coverage = total === 0 ? 0 : covered / total;
@@ -60,11 +60,12 @@ export const useTestPlansTableData = ({
         };
 
         const ratioContent = `${covered} / ${total}`;
+        const planTitle = `${displayId} ${name}`;
 
         return {
           id,
           testPlanName: {
-            content: name,
+            content: planTitle,
             component: <ClickableCell {...cellProps}>{name}</ClickableCell>,
           },
           coveredTotal: {
@@ -95,7 +96,10 @@ export const useTestPlansTableData = ({
           progressBar: {
             content: coverage,
             component: (
-              <ClickableCell {...cellProps} contentClassName={cx('test-plans__cell-content_progress')}>
+              <ClickableCell
+                {...cellProps}
+                contentClassName={cx('test-plans__cell-content_progress')}
+              >
                 <ProgressBar progress={coverage * 100} />
               </ClickableCell>
             ),

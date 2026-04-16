@@ -26,13 +26,14 @@ const getExecutionStatistics = (launch: Launch) => ({
 
 export const transformLaunchToManualTestCase = (launch: Launch): ManualTestCase => {
   const { total, passed, failed, skipped, inProgress } = getExecutionStatistics(launch);
-  const { id, number, name, startTime } = launch;
+  const { id, number, name, startTime, displayId } = launch;
 
   // TODO: after backend implementation
   const testsToRun = total - passed - failed - skipped - inProgress;
 
   return {
     id,
+    displayId,
     count: number,
     name,
     startTime: new Date(startTime).getTime(),

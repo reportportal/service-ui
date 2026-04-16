@@ -19,13 +19,33 @@
   flex-direction: column;
   height: 100%;
 
-  &__header-id {
+  &__header-actions {
+    height: auto;
+    min-height: 36px;
+    align-items: center;
+  }
+
+  &__actions-toolbar {
     display: flex;
     align-items: center;
+    min-height: 36px;
+  }
+
+  &__header-id {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 8px;
     font-family: $FONT-ROBOTO-REGULAR;
     font-size: 11px;
-    color: var(--rp-ui-base-e-400);
-    margin-right: 28px;
+    line-height: 16px;
+    white-space: nowrap;
+    color: var(--Text-Secondary, var(--rp-ui-base-e-400));
+  }
+
+  &__search {
+    margin-left: 10px;
+    margin-right: 29px;
   }
 
   &__content {

@@ -36,6 +36,7 @@ export const defaultTestPlanTestCasesQueryParams = {
 
 export type TestPlanDto = {
   id: number;
+  displayId: string;
   name: string;
   executionStatistic: {
     covered: number;
