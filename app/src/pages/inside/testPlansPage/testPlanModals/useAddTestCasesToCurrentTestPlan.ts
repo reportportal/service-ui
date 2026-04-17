@@ -21,7 +21,12 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
-import { getTestPlanAction, defaultTestPlanTestCasesQueryParams } from 'controllers/testPlan';
+import { fetchSuccessAction } from 'controllers/fetch';
+import {
+  getTestPlanAction,
+  defaultTestPlanTestCasesQueryParams,
+  TEST_PLAN_FOLDERS_NAMESPACE,
+} from 'controllers/testPlan';
 import { useTestPlanId } from 'hooks/useTypedSelector';
 
 export const useAddTestCasesToCurrentTestPlan = () => {
@@ -48,6 +53,12 @@ export const useAddTestCasesToCurrentTestPlan = () => {
             testCaseIds,
           },
         });
+
+        const updatedFolders = await fetch(
+          URLS.testFolders(projectKey, { 'filter.eq.testPlanId': numericTestPlanId }),
+        );
+
+        dispatch(fetchSuccessAction(TEST_PLAN_FOLDERS_NAMESPACE, updatedFolders));
 
         dispatch(
           getTestPlanAction({
