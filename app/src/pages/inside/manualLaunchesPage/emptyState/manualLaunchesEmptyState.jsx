@@ -24,7 +24,7 @@ export const ManualLaunchesEmptyState = () => {
   return (
     <div className={cx('manual-launches-empty-state')}>
       <EmptyStatePage
-        imageType="play"
+        imageType="loop"
         title={formatMessage(messages.noLaunches)}
         description={descriptionMessage}
         buttons={buttons}
