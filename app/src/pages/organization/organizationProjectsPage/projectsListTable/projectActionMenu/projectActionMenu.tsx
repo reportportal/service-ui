@@ -80,6 +80,7 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
   const handleDeleteProjectClick = useCallback(() => {
     const data = {
       projectName,
+      projectId,
       onConfirm: () => {
         dispatch(deleteProjectAction({ projectName, projectId }));
       },
@@ -91,6 +92,7 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
   const handleRenameProjectClick = useCallback(() => {
     const data = {
       projectName,
+      projectId,
       onConfirm: (newProjectName: string) => {
         dispatch(renameProjectAction({ projectId, newProjectName }));
       },
