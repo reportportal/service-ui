@@ -25,6 +25,10 @@ import type { AppState } from 'types/store';
 
 import { useAttachmentUpload } from './useAttachmentUpload';
 import { messages } from './messages';
+import {
+  areAttachmentFormListsEqual,
+  normalizeAttachmentsFromUnknown,
+} from './utils';
 
 interface UseTmsFileUploadOptions {
   formName: string;
@@ -37,7 +41,7 @@ export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOption
   const { formatMessage } = useIntl();
   const isInitializedRef = useRef(false);
   const selector = formValueSelector(formName || 'no-form');
-  const initialAttachments =
+  const fieldAttachments =
     useSelector<AppState, BaseAttachmentFile[] | undefined>(
       (state) => selector(state, fieldName) as BaseAttachmentFile[] | undefined,
     ) || [];
@@ -65,35 +69,49 @@ export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOption
     });
 
   useEffect(() => {
-    if (!isEmpty(initialAttachments) && isEmpty(attachedFiles) && !isInitializedRef.current) {
-      const backendAttachments: BaseAttachmentFile[] = initialAttachments
-        .filter((attachment) => attachment.id && attachment.fileName)
+    if (!isEmpty(fieldAttachments) && isEmpty(attachedFiles) && !isInitializedRef.current) {
+      const backendAttachments: BaseAttachmentFile[] = fieldAttachments
+        .filter((attachment) => (attachment.id ?? attachment.attachmentId) && attachment.fileName)
         .map((attachment) => ({
-          id: attachment.id,
+          id: String(attachment.id ?? attachment.attachmentId ?? ''),
           fileName: attachment.fileName || 'Attachment',
           file: new File([], attachment.fileName || 'attachment'),
-          size: attachment.size || 0,
-          attachmentId: attachment.id,
+          size: Number(attachment.size ?? attachment.fileSize ?? 0),
+          attachmentId: attachment.id ?? attachment.attachmentId,
           isUploading: false,
           uploadingProgress: 100,
         }));
 
       setAttachedFiles(backendAttachments);
       isInitializedRef.current = true;
-    }
-  }, [initialAttachments, attachedFiles.length, setAttachedFiles, fieldName]);
 
-  useEffect(() => {
-    const attachments = attachedFiles
-      .filter((file) => file.attachmentId && !file.uploadError)
-      .map(({ attachmentId, fileName, size }) => ({
-        id: attachmentId,
-        fileName,
-        size,
-      }));
+      return;
+    }
+
+    if (!isInitializedRef.current) {
+      isInitializedRef.current = true;
+    }
+
+    const attachments = normalizeAttachmentsFromUnknown(
+      attachedFiles
+        .filter((file) => file.attachmentId && !file.uploadError)
+        .map(({ attachmentId, fileName, size }) => ({
+          id: attachmentId,
+          fileName,
+          size,
+        })) as unknown[],
+    );
+
+    const current = normalizeAttachmentsFromUnknown(
+      (Array.isArray(fieldAttachments) ? fieldAttachments : []) as unknown[],
+    );
+
+    if (areAttachmentFormListsEqual(attachments, current)) {
+      return;
+    }
 
     dispatch(change(formName, fieldName, attachments));
-  }, [attachedFiles, dispatch, formName, fieldName]);
+  }, [fieldAttachments, attachedFiles, dispatch, formName, fieldName, setAttachedFiles]);
 
   return {
     attachedFiles,

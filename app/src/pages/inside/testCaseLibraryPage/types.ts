@@ -17,7 +17,7 @@
 import { FC, SVGProps, ReactNode } from 'react';
 import { isString, isObject, isNil } from 'es-toolkit/compat';
 
-import type { Tag, Attribute, Requirement, ExtendedTestCase } from 'types/testCase';
+import type { Tag, Attribute, Requirement, ExtendedTestCase, Step } from 'types/testCase';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { FolderWithFullPath } from 'controllers/testCase/types';
 
@@ -28,6 +28,19 @@ export interface IAttachment {
   fileName: string;
   size: number;
 }
+
+export interface AttachmentFormValue extends IAttachment {
+  id: number;
+}
+
+export type StepFormValue = Omit<Step, 'attachments'> & {
+  attachments: AttachmentFormValue[];
+};
+
+export type AttachmentInput = Partial<Attachment> & {
+  size?: number;
+  attachmentId?: number;
+};
 
 export enum ManualScenarioType {
   STEPS = 'STEPS',
