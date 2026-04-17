@@ -83,6 +83,7 @@
   "AddIntegrationModal.createProjectTitle": "Створити проектну інтеграцію",
   "AddIntegrationModal.editGlobalIntegrationTitle": "Редагувати глобальну інтеграцію",
   "AddIntegrationModal.editProjectIntegrationTitle": "Редагувати інтеграцію проекту",
+  "AddIntegrationModal.formNotAvailable": "Форма налаштування для цього плагіна недоступна. Встановіть або оновіть розширення інтерфейсу плагіна, яке містить поля інтеграції.",
   "AddLdapIntegrationModal.createLdapTitle": "Створення глобальної інтеграції",
   "AddLdapIntegrationModal.editLdapIntegrationTitle": "Редагувати глобальну інтеграцію",
   "AddLdapIntegrationModal.fieldSettingsTitle": "Налаштування поля",

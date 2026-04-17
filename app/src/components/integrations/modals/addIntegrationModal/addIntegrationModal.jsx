@@ -60,6 +60,11 @@ const messages = defineMessages({
     id: 'AddIntegrationModal.editGlobalIntegrationTitle',
     defaultMessage: 'Edit Global Integration',
   },
+  formNotAvailable: {
+    id: 'AddIntegrationModal.formNotAvailable',
+    defaultMessage:
+      'Configuration form is not available for this plugin. Install or update a plugin UI extension that provides integration fields.',
+  },
 });
 
 const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) => {
@@ -89,12 +94,17 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
     onConfirm(newData, metaData);
   };
 
+  const hasFormFields =
+    Boolean(INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP[data.instanceType]) ||
+    Boolean(integrationFieldsExtension);
+
   const okButton = {
     children: customProps.editAuthMode
       ? formatMessage(COMMON_LOCALE_KEYS.SAVE)
       : formatMessage(COMMON_LOCALE_KEYS.CREATE),
     onClick: () => handleSubmit(onSubmit)(),
     'data-automation-id': 'submitButton',
+    disabled: !hasFormFields,
   };
   const cancelButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -108,7 +118,7 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
 
   const FieldsComponent =
     INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP[data.instanceType] ||
-    (integrationFieldsExtension && ExtensionLoader);
+    (integrationFieldsExtension ? ExtensionLoader : null);
 
   return (
     <Modal
@@ -129,14 +139,18 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
         </SystemMessage>
       )}
 
-      <div className={cx('content')}>
-        <FieldsComponent
-          initialize={initialize}
-          change={change}
-          updateMetaData={updateMetaData}
-          extension={integrationFieldsExtension}
-          {...customProps}
-        />
+      <div className={cx('content', { 'with-form': hasFormFields })}>
+        {FieldsComponent ? (
+          <FieldsComponent
+            initialize={initialize}
+            change={change}
+            updateMetaData={updateMetaData}
+            extension={integrationFieldsExtension}
+            {...customProps}
+          />
+        ) : (
+          <SystemMessage mode="info">{formatMessage(messages.formNotAvailable)}</SystemMessage>
+        )}
       </div>
     </Modal>
   );

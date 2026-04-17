@@ -83,6 +83,7 @@
   "AddIntegrationModal.createProjectTitle": "创建项目集成",
   "AddIntegrationModal.editGlobalIntegrationTitle": "编辑全局集成",
   "AddIntegrationModal.editProjectIntegrationTitle": "编辑项目集成",
+  "AddIntegrationModal.formNotAvailable": "此插件没有可用的配置表单。请安装或更新可提供集成字段的插件界面扩展。",
   "AddLdapIntegrationModal.createLdapTitle": "Create Global Integration",
   "AddLdapIntegrationModal.editLdapIntegrationTitle": "Edit Global Integration",
   "AddLdapIntegrationModal.fieldSettingsTitle": "Field settings",
