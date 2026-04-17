@@ -257,7 +257,6 @@ export const ManualLaunchesPage = () => {
             fullLaunches={content}
             isLoading={isLoading}
             onRefresh={handleRefresh}
-            searchQuery={appliedSearchQuery}
           />
         </div>
         {Boolean(pageInfo?.totalElements) && (

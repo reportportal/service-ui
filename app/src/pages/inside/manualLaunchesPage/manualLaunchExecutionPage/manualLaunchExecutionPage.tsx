@@ -173,13 +173,22 @@ export const ManualLaunchExecutionPage = () => {
     );
   }
 
+  const executionTitle = (
+    <span className={cx('manual-launch-execution-page__title-group')}>
+      <span className={cx('manual-launch-execution-page__title-business-id')}>
+        {execution.testCaseDisplayId}
+      </span>
+      <span className={cx('manual-launch-execution-page__title-name')}>{execution.testCaseName}</span>
+    </span>
+  );
+
   return (
     <SettingsLayout>
       <ScrollWrapper resetRequired>
         <div className={cx('manual-launch-execution-page')}>
           <div className={cx('manual-launch-execution-page__header')}>
             <PageHeaderWithBreadcrumbsAndActions
-              title={execution.testCaseName}
+              title={executionTitle}
               breadcrumbDescriptors={breadcrumbDescriptors}
               actions={renderHeaderActions()}
             />

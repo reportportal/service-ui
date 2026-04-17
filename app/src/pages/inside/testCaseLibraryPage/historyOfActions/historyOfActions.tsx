@@ -46,7 +46,7 @@ import {
 } from './constants';
 import { messages } from './messages';
 import { useTestCaseActivityHistory } from './useTestCaseActivityHistory';
-import { flattenActivityContent } from './utils';
+import { flattenActivityContent, formatHistoryValueCell } from './utils';
 
 import styles from './historyOfActions.scss';
 
@@ -168,8 +168,8 @@ export const HistoryOfActions = () => {
 
         const oldRaw = historyEntry?.oldValue;
         const newRaw = historyEntry?.newValue;
-        const oldDisplay = oldRaw !== undefined && oldRaw !== '' ? oldRaw : '-';
-        const newDisplay = newRaw !== undefined && newRaw !== '' ? newRaw : '-';
+        const oldDisplay = formatHistoryValueCell(historyEntry, oldRaw);
+        const newDisplay = formatHistoryValueCell(historyEntry, newRaw);
 
         return {
           id: rowKey,

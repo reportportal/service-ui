@@ -16,7 +16,7 @@
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
@@ -77,6 +77,11 @@ const OrganizationsPageComponent = ({
   const organizationPlugin = useSelector(organizationPluginSelector);
   const [searchValue, setSearchValue] = useState(null);
   const [appliedFiltersCount, setAppliedFiltersCount] = useState(0);
+
+  useEffect(() => {
+    trackEvent(ORGANIZATION_PAGE_EVENTS.VIEW_ALL_ORGANIZATIONS);
+  }, [trackEvent]);
+
   const isEmptyOrganizations = !isOrganizationsLoading && organizationsList.length === 0;
   const [isOpenTableView, setIsOpenTableView] = useState(
     getStorageItem(`${userId}_settings`)?.organizationsPanel === TABLE_VIEW,

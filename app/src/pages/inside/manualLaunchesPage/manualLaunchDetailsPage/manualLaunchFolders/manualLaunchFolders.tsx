@@ -58,6 +58,11 @@ export const ManualLaunchFolders = () => {
   const urlFolderId = useSelector(urlManualLaunchFolderIdSelector);
   const urlFolderIdNumber = urlFolderId ? Number(urlFolderId) : null;
 
+  const activeFolder = useMemo(
+    () => folders.find(({ id }) => id === urlFolderIdNumber),
+    [urlFolderIdNumber, folders],
+  );
+
   const transformedFolders = useMemo(
     () => filterEmptyFolders(transformFoldersToDisplay(folders)),
     [folders],
@@ -134,6 +139,21 @@ export const ManualLaunchFolders = () => {
   const handleAllExecutionsClick = useCallback(() => {
     navigateToFolder();
   }, [navigateToFolder]);
+
+  useEffect(() => {
+    if (urlFolderId && !activeFolder && !isLoadingFolders) {
+      navigateToFolder();
+    }
+  }, [
+    urlFolderId,
+    activeFolder,
+    isLoadingFolders,
+    navigateToFolder,
+    dispatch,
+    filterPriorities,
+    filterTags,
+    statusFilter,
+  ]);
 
   const searchFilteredData = useMemo(
     () => ({

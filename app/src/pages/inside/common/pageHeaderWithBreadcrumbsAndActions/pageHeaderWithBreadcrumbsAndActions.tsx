@@ -32,15 +32,17 @@ interface BreadcrumbDescriptor {
 }
 
 interface PageHeaderWithBreadcrumbsAndActionsProps {
-  title: string;
+  title: ReactNode;
   breadcrumbDescriptors: BreadcrumbDescriptor[];
   actions?: ReactNode;
+  actionsClassName?: string;
 }
 
 export const PageHeaderWithBreadcrumbsAndActions = ({
   title,
   breadcrumbDescriptors = [],
   actions,
+  actionsClassName,
 }: PageHeaderWithBreadcrumbsAndActionsProps) => (
   <header className={cx('page-header-with-breadcrumbs-and-actions')}>
     <div className={cx('page-header-with-breadcrumbs-and-actions__breadcrumb')}>
@@ -50,7 +52,9 @@ export const PageHeaderWithBreadcrumbsAndActions = ({
     <div className={cx('page-header-with-breadcrumbs-and-actions__title-row')}>
       <h1 className={cx('page-header-with-breadcrumbs-and-actions__title')}>{title}</h1>
       {actions && (
-        <div className={cx('page-header-with-breadcrumbs-and-actions__actions')}>{actions}</div>
+        <div className={cx('page-header-with-breadcrumbs-and-actions__actions', actionsClassName)}>
+          {actions}
+        </div>
       )}
     </div>
   </header>

@@ -82,6 +82,7 @@ export const TestCaseDetailsHeader = ({
   };
 
   const breadcrumbs = useSelector(testCaseLibraryBreadcrumbsSelector(breadcrumbsTitles));
+  const testCaseBusinessId = testCase.displayId;
 
   const handleHistoryOfActions = () => {
     dispatch({
@@ -172,8 +173,8 @@ export const TestCaseDetailsHeader = ({
           </div>
           <div className={cx('header__meta-item')}>
             <span className={cx('header__meta-label')}>{formatMessage(messages.id)}</span>
-            <span className={cx('header__meta-value')}>{testCase.id}</span>
-            <CopyToClipboard text={testCase.id} className={cx('header__copy')}>
+            <span className={cx('header__meta-value')}>{testCaseBusinessId}</span>
+            <CopyToClipboard text={testCaseBusinessId} className={cx('header__copy')}>
               {Parser(IconDuplicate as unknown as string)}
             </CopyToClipboard>
           </div>

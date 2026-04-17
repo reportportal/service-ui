@@ -15,7 +15,24 @@
  */
 import { isEmpty } from 'es-toolkit/compat';
 
-import type { TestCaseActivityItem, TestCaseActivityTableRow } from './types';
+import type {
+  TestCaseActivityHistoryEntry,
+  TestCaseActivityItem,
+  TestCaseActivityTableRow,
+} from './types';
+
+export const formatHistoryValueCell = (
+  historyEntry: TestCaseActivityHistoryEntry | null,
+  raw: string | undefined,
+): string => {
+  if (!historyEntry) {
+    return '-';
+  }
+  const field = historyEntry.field?.trim() ?? '';
+  const value = raw ?? '';
+
+  return field ? `${field}: ${value}` : value;
+};
 
 export const flattenActivityContent = (content: TestCaseActivityItem[]): TestCaseActivityTableRow[] => {
   const rows: TestCaseActivityTableRow[] = [];

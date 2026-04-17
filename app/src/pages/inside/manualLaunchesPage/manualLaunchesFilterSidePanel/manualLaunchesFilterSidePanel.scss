@@ -17,6 +17,11 @@
 .filter-side-panel {
   width: 460px;
   z-index: $Z-INDEX-OVERLAY-PANEL;
+  font-family: $FONT-ROBOTO-REGULAR;
+
+  * {
+    font-family: $FONT-ROBOTO-REGULAR;
+  }
 
   :global([class*='header-section']) {
     margin-bottom: 8px;
@@ -40,6 +45,13 @@
   gap: 16px;
 }
 
+.filter-launch-attributes {
+  [class*='attributes-wrapper'] {
+    height: 36px;
+    margin-left: -8px;
+  }
+}
+
 .filter-section {
   display: flex;
   flex-direction: column;
@@ -51,6 +63,7 @@
   font-size: 13px;
   font-weight: 500;
   line-height: 1.5em;
+  font-family: $FONT-ROBOTO-MEDIUM;
   color: var(--rp-ui-base-almost-black);
 }
 
@@ -93,7 +106,6 @@
   flex: 1;
 }
 
-.clear-button,
 .cancel-button,
 .apply-button {
   padding: 7px 16px;
@@ -101,6 +113,9 @@
 }
 
 .clear-button {
+  min-width: fit-content;
+  padding: 7px 0;
+  height: auto;
   border: none !important;
   color: var(--rp-ui-base-topaz);
 

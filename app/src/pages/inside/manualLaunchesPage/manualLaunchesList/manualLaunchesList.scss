@@ -17,7 +17,7 @@
 @use '../../../../common/css/mixins';
 
 .manual-launches-list {
-  --manual-launches-list-grid: 80px minmax(100px, 1fr) 155px 80px 110px 100px 80px 48px;
+  --manual-launches-list-grid: 96px minmax(100px, 1fr) 155px 80px 110px 100px 80px 48px;
 
   display: flex;
   flex-direction: column;
@@ -144,6 +144,24 @@
 
       border-radius: 50%;
       margin: 8px 0;
+    }
+
+    &-cell-launch-id {
+      border-radius: 0;
+      margin: 0;
+      justify-content: flex-start;
+      align-items: center;
+      width: 100%;
+      padding: 0;
+      padding-left: 1px;
+      box-sizing: border-box;
+      font-family: $FONT-ROBOTO-REGULAR;
+      font-size: 13px;
+      font-weight: 400;
+      font-style: normal;
+      line-height: 20px;
+      letter-spacing: 0;
+      color: var(--Text-Primary);
     }
   }
 }

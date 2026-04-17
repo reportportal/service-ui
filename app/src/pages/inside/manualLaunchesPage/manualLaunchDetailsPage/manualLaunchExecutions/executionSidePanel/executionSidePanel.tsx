@@ -137,6 +137,11 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
       {executionDetails?.testCasePriority && (
         <PriorityIcon priority={executionDetails.testCasePriority} />
       )}
+      {executionDetails?.testCaseId != null && (
+        <span className={cx('title-business-id')}>
+          {executionDetails.testCaseDisplayId ?? executionDetails.testCaseId}
+        </span>
+      )}
       {executionDetails?.testCaseName && (
         <span className={cx('title-name')}>{executionDetails.testCaseName}</span>
       )}
@@ -155,7 +160,9 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
       <div className={cx('meta-row')}>
         <div className={cx('meta-row-item')}>
           <span className={cx('meta-label')}>{formatMessage(messages.executionId)}:</span>
-          <span className={cx('meta-value')}>{executionDetails?.id}</span>
+          <span className={cx('meta-value')}>
+            {executionDetails?.testCaseDisplayId ?? executionDetails?.testCaseId}
+          </span>
         </div>
         {executionDetails?.startedAt && (
           <div className={cx('meta-row-item')}>

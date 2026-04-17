@@ -34,3 +34,8 @@ export interface PaginationOffsetLimit {
   offset?: number;
   limit?: number;
 }
+
+export interface EntityWithDisplayId {
+  id: number;
+  displayId: string;
+}

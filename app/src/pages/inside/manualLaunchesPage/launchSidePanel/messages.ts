@@ -57,4 +57,8 @@ export const messages = defineMessages({
     id: 'LaunchSidePanel.testPlan',
     defaultMessage: 'Test Plan',
   },
+  launchId: {
+    id: 'LaunchSidePanel.launchId',
+    defaultMessage: 'Launch ID:',
+  },
 });

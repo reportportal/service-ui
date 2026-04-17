@@ -71,6 +71,11 @@
   box-sizing: border-box;
 }
 
+@mixin header-toolbar-filter-icon-svg-box {
+  width: calc(15 / 14 * 16px);
+  height: 16px;
+}
+
 @mixin header-toolbar-filter-button {
   display: flex;
   align-items: center;
@@ -92,8 +97,7 @@
   }
 
   svg {
-    width: 16px;
-    height: 16px;
+    @include header-toolbar-filter-icon-svg-box;
     flex-shrink: 0;
     color: var(--rp-ui-base-e-400);
     transition: color 0.2s ease-in-out;

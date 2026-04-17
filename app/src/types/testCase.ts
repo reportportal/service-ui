@@ -85,6 +85,7 @@ export interface ManualScenario {
 
 export interface TestCase {
   id: number;
+  displayId: string;
   name: string;
   priority: TestCasePriority;
   createdAt: number;

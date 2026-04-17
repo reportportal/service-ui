@@ -26,8 +26,19 @@
 
 .title-wrapper {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 8px;
+
+  .title-business-id {
+    flex-shrink: 0;
+    font-family: $FONT-ROBOTO-MEDIUM;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 20px;
+    padding-left: 1px;
+    letter-spacing: 0;
+    color: var(--Text-Secondary, var(--rp-ui-base-e-400));
+  }
 
   .title-name {
     font-size: 20px;
