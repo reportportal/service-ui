@@ -215,23 +215,27 @@ export const TestPlanDetailsPage = () => {
 
   const renderActions = () => (
     <>
-      <div className={cx('test-plan-details-page__header-id')}>
-        {formatMessage(messages.testPlanId, { testPlanId })}
+      <div className={cx('test-plan-details-page__actions-toolbar')}>
+        <div className={cx('test-plan-details-page__header-id')}>
+          <span>{formatMessage(messages.testPlanIdLabel)}</span>
+          {testPlan ? <span>{testPlan.displayId}</span> : null}
+        </div>
+        <SearchField
+          isLoading={isSearchLoading}
+          searchValue={searchValue}
+          placeholder={formatMessage(testCaseListMessages.searchPlaceholder)}
+          setSearchValue={setSearchValue}
+          onFilterChange={handleFilterChange}
+          className={cx('test-plan-details-page__search')}
+        />
+        <TestPlanActions
+          testPlanId={testPlanId}
+          variant="header"
+          onEdit={openActionModal('edit')}
+          onDuplicate={openActionModal('duplicate')}
+          onDelete={openActionModal('delete')}
+        />
       </div>
-      <SearchField
-        isLoading={isSearchLoading}
-        searchValue={searchValue}
-        placeholder={formatMessage(testCaseListMessages.searchPlaceholder)}
-        setSearchValue={setSearchValue}
-        onFilterChange={handleFilterChange}
-      />
-      <TestPlanActions
-        testPlanId={testPlanId}
-        variant="header"
-        onEdit={openActionModal('edit')}
-        onDuplicate={openActionModal('duplicate')}
-        onDelete={openActionModal('delete')}
-      />
       {!isEmpty(testPlanFolders) && (
         <>
           {canManageTestCases && (
@@ -281,6 +285,7 @@ export const TestPlanDetailsPage = () => {
             title={testPlan?.name || ''}
             breadcrumbDescriptors={breadcrumbDescriptors}
             actions={renderActions()}
+            actionsClassName={cx('test-plan-details-page__header-actions')}
           />
           <div className={cx('test-plan-details-page__content')}>{renderContent()}</div>
         </div>

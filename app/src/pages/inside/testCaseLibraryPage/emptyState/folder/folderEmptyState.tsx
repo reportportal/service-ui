@@ -56,7 +56,7 @@ export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
       variant: 'ghost',
       icon: ImportIcon,
       isCompact: true,
-      handleButton: () => openImportTestCaseModal({ folderName: folderTitle ?? '' }),
+      handleButton: () => openImportTestCaseModal(),
     }
   ] : [];
 

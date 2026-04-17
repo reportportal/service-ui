@@ -2,11 +2,11 @@ import { useModal } from 'common/hooks';
 
 import ImportTestCaseModal, {
   IMPORT_TEST_CASE_MODAL_KEY,
-  ImportTestCaseFormValues,
+  ImportTestCaseModalData,
 } from './importTestCaseModal';
 
 export const useImportTestCaseModal = () =>
-  useModal<ImportTestCaseFormValues>({
+  useModal<ImportTestCaseModalData>({
     modalKey: IMPORT_TEST_CASE_MODAL_KEY,
     renderModal: () => <ImportTestCaseModal />,
   });

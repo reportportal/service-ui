@@ -152,18 +152,6 @@ export const ExpandedOptions = ({
 
   const totalTestCases = hasFolderSidebarFilters ? filteredTotalTestCases : allTestCasesTotal;
 
-  const [prevHadFolders, setPrevHadFolders] = useState(true);
-
-  useEffect(() => {
-    if (hasFolderSidebarFilters && !isSearchFilteredLoading) {
-      setPrevHadFolders(hasSearchFilteredFolders);
-    }
-
-    if (!hasFolderSidebarFilters) {
-      setPrevHadFolders(true);
-    }
-  }, [hasFolderSidebarFilters, isSearchFilteredLoading, hasSearchFilteredFolders]);
-
   const sidebarFilterKey = useMemo(
     () => `${pageSearchQuery ?? ''}|${JSON.stringify(searchExtraFilters ?? {})}`,
     [pageSearchQuery, searchExtraFilters],
@@ -181,13 +169,20 @@ export const ExpandedOptions = ({
   const isSidebarFilterStale =
     hasFolderSidebarFilters && respondedSidebarFilterKey !== sidebarFilterKey;
 
-  const hidePageSearchSidebar =
-    hasFolderSidebarFilters &&
-    !hasSearchFilteredFolders &&
-    !isSidebarFilterStale &&
-    (!isSearchFilteredLoading || !prevHadFolders);
+  const isSidebarResolving = isSearchFilteredLoading || isSidebarFilterStale;
+  const [stableHidePageSearchSidebar, setStableHidePageSearchSidebar] = useState(false);
 
-  const hideSidebar = hidePageSearchSidebar || hideFolderSidebar;
+  useEffect(() => {
+    if (!hasFolderSidebarFilters) {
+      setStableHidePageSearchSidebar(false);
+      return;
+    }
+    if (!isSidebarResolving) {
+      setStableHidePageSearchSidebar(!hasSearchFilteredFolders);
+    }
+  }, [hasFolderSidebarFilters, isSidebarResolving, hasSearchFilteredFolders]);
+
+  const hideSidebar = stableHidePageSearchSidebar || hideFolderSidebar;
 
   const handleMoveFolder = useCallback(
     (draggedItem: TreeDragItem, targetId: string | number, position: TreeDropPosition) => {
@@ -316,7 +311,7 @@ export const ExpandedOptions = ({
             </div>
           </div>
         )}
-        {hidePageSearchSidebar ? (
+        {stableHidePageSearchSidebar ? (
           <div className={cx('expanded-options__content')}>
             <div className={cx('expanded-options__no-search-results')}>
               <EmptyPageState

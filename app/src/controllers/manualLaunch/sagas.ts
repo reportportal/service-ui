@@ -22,7 +22,10 @@ import { isEmpty, isNil, isNumber } from 'es-toolkit/compat';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { normalizePrioritiesForExecutionApi } from 'pages/inside/common/testCaseList/filterSidePanel/utils';
-import { FOLDER_FILTER_KEYS, MANUAL_LAUNCH_EXECUTION_FILTER_KEYS } from 'pages/inside/common/testCaseList/constants';
+import {
+  FOLDER_FILTER_KEYS,
+  MANUAL_LAUNCH_EXECUTION_FILTER_KEYS,
+} from 'pages/inside/common/testCaseList/constants';
 import { fetchSuccessAction, fetchErrorAction } from 'controllers/fetch';
 import { FETCH_START } from 'controllers/fetch/constants';
 import { AppState } from 'types/store';
@@ -420,9 +423,7 @@ interface GetManualLaunchFilteredFoldersAction extends Action<
   payload: GetManualLaunchFilteredFoldersParams;
 }
 
-function* getManualLaunchFilteredFolders(
-  action: GetManualLaunchFilteredFoldersAction,
-): Generator {
+function* getManualLaunchFilteredFolders(action: GetManualLaunchFilteredFoldersAction): Generator {
   const projectKey = (yield select(projectKeySelector)) as string;
   const { launchId, searchQuery, filterPriorities, filterTags, statusFilter } = action.payload;
 
@@ -557,7 +558,8 @@ function* uploadAttachments(projectKey: string, attachments?: File[]): Generator
 function* updateManualLaunchExecutionStatus(
   action: UpdateManualLaunchExecutionStatusAction,
 ): Generator {
-  const { projectKey, launchId, executionId, status, comment, attachments } = action.payload;
+  const { projectKey, launchId, executionId, status, comment, attachments, onSuccess } =
+    action.payload;
 
   try {
     const requestData: {
@@ -633,6 +635,10 @@ function* updateManualLaunchExecutionStatus(
         values: { status: capitalizedStatus },
       }),
     );
+
+    if (onSuccess) {
+      onSuccess();
+    }
   } catch {
     yield put(
       showErrorNotification({

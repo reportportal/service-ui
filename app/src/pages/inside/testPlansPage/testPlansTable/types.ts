@@ -19,4 +19,5 @@ import type { TestPlanDto } from 'controllers/testPlan';
 export interface TestPlansTableProps {
   testPlans: TestPlanDto[];
   isLoading: boolean;
+  showTestPlanBusinessId?: boolean;
 }

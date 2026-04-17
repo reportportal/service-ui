@@ -18,8 +18,7 @@ import ToRunIcon from 'common/img/execution-status/to-run-inline.svg';
 import PassedIcon from 'common/img/execution-status/passed-inline.svg';
 import InProgressIcon from 'common/img/execution-status/in-progress-inline.svg';
 import FailedIcon from 'common/img/execution-status/failed-inline.svg';
-
-import { ExecutionStatus } from './types';
+import { ExecutionStatus } from "pages/inside/manualLaunchesPage/types";
 
 export const STATUS_CLASS_MAP: Record<ExecutionStatus, string> = {
   [ExecutionStatus.TO_RUN]: 'to-run',

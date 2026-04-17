@@ -49,4 +49,8 @@ export const messages = defineMessages({
     id: 'ManualLaunchExecutionPage.executionStatusUpdated',
     defaultMessage: 'Execution status updated to {status}',
   },
+  clearStatus: {
+    id: 'ExecutionStatusPopover.clearStatus',
+    defaultMessage: 'Clear status',
+  },
 });

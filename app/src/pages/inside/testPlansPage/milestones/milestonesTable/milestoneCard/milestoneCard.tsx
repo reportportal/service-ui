@@ -85,7 +85,7 @@ export const MilestoneCard = ({
             >
               <ChevronDownDropdownIcon />
             </span>
-            <MilestoneTypeIcon type={milestone.type} placement="card" />
+            <MilestoneTypeIcon type={milestone.type} />
             <div className={cx('milestone-card__title-block')}>
               <div className={cx('milestone-card__name')}>{milestone.name}</div>
               <div className={cx('milestone-card__dates')}>{dateRange}</div>
@@ -156,7 +156,11 @@ export const MilestoneCard = ({
           ) : (
             <>
               <div className={cx('milestone-card__test-plans')}>
-                <TestPlansTable testPlans={testPlanRows} isLoading={false} />
+                <TestPlansTable
+                  testPlans={testPlanRows}
+                  isLoading={false}
+                  showTestPlanBusinessId={false}
+                />
               </div>
               {canManageTestPlans && (
                 <div className={cx('milestone-card__test-plans-footer')}>

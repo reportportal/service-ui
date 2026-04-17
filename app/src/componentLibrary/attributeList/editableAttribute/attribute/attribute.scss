@@ -128,7 +128,6 @@
     position: relative;
     @include label($COLOR--almost-black);
 
-    &:focus:not(.disabled),
     &:focus-visible:not(.disabled) {
       outline: none;
       @include draw-attribute-border(calc(100% - 10px), 66%, 3px, 3px);

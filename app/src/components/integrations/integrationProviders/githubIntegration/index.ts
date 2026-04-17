@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,5 @@
  * limitations under the License.
  */
 
-.github-auth-form {
-  position: relative;
-  margin-bottom: 30px;
-}
+export { GithubSettings } from './githubSettings';
+export { GithubFormFields } from './githubFormFields';

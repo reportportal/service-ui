@@ -28,6 +28,12 @@ import {
   expandManualLaunchFoldersToLevelAction,
   defaultManualLaunchesQueryParams,
 } from 'controllers/manualLaunch';
+import {
+  NOTIFICATION_TYPES,
+  NOTIFICATION_TYPOGRAPHY_COLOR_TYPES,
+  WARNING_NOTIFICATION_DURATION,
+  showNotification,
+} from 'controllers/notification';
 import { MANUAL_LAUNCH_DETAILS_PAGE, locationSelector } from 'controllers/pages';
 import { ExecutionStatus } from 'types/testCase';
 import { useManualLaunchId, useProjectDetails } from 'hooks/useTypedSelector';
@@ -57,6 +63,11 @@ export const ManualLaunchFolders = () => {
 
   const urlFolderId = useSelector(urlManualLaunchFolderIdSelector);
   const urlFolderIdNumber = urlFolderId ? Number(urlFolderId) : null;
+
+  const activeFolder = useMemo(
+    () => folders.find(({ id }) => id === urlFolderIdNumber),
+    [urlFolderIdNumber, folders],
+  );
 
   const transformedFolders = useMemo(
     () => filterEmptyFolders(transformFoldersToDisplay(folders)),
@@ -135,6 +146,21 @@ export const ManualLaunchFolders = () => {
     navigateToFolder();
   }, [navigateToFolder]);
 
+  useEffect(() => {
+    if (urlFolderId && !activeFolder && !isLoadingFolders) {
+      navigateToFolder();
+
+      dispatch(
+        showNotification({
+          messageId: 'redirectWarningMessage',
+          type: NOTIFICATION_TYPES.WARNING,
+          typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
+          duration: WARNING_NOTIFICATION_DURATION,
+        }),
+      );
+    }
+  }, [urlFolderId, activeFolder, isLoadingFolders, navigateToFolder, dispatch]);
+
   const searchFilteredData = useMemo(
     () => ({
       searchFilteredFolders,
@@ -163,7 +189,8 @@ export const ManualLaunchFolders = () => {
     !isLoadingExecutions &&
     !isLoadingFolders &&
     isEmpty(executions) &&
-    executionTotal === 0;
+    executionTotal === 0 &&
+    isEmpty(transformedFolders);
 
   return (
     <ExpandedOptions

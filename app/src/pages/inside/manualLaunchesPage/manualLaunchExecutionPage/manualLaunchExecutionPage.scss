@@ -26,6 +26,29 @@ $execution-page-gutter: 32px;
     background-color: var(--rp-ui-base-bg-000);
   }
 
+  &__title-group {
+    display: inline-flex;
+    align-items: baseline;
+    column-gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  &__title-business-id {
+    flex-shrink: 0;
+    font-family: $FONT-ROBOTO-MEDIUM;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 20px;
+    padding-left: 1px;
+    letter-spacing: 0;
+    color: var(--Text-Secondary, var(--rp-ui-base-e-400));
+  }
+
+  &__title-name {
+    font: inherit;
+    color: inherit;
+  }
+
   &__content {
     margin-top: 24px;
     @include mixins.centered-content($execution-page-content-max-width, $execution-page-gutter);

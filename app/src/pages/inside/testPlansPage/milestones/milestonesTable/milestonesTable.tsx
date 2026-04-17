@@ -88,16 +88,18 @@ export const MilestonesTable = ({
       </div>
       {showPagination && (
         <div className={cx('milestones-table__pagination')}>
-          <Pagination
-            pageSize={pageSize}
-            activePage={activePage}
-            totalItems={milestonesPageData?.totalElements}
-            totalPages={totalPages}
-            pageSizeOptions={TABLE_PAGE_SIZE_OPTIONS}
-            changePage={setPageNumber}
-            changePageSize={setPageSize}
-            captions={captions}
-          />
+          <div className={cx('milestones-table__pagination-inner')}>
+            <Pagination
+              pageSize={pageSize}
+              activePage={activePage}
+              totalItems={milestonesPageData?.totalElements}
+              totalPages={totalPages}
+              pageSizeOptions={TABLE_PAGE_SIZE_OPTIONS}
+              changePage={setPageNumber}
+              changePageSize={setPageSize}
+              captions={captions}
+            />
+          </div>
         </div>
       )}
     </>

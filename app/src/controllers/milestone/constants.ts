@@ -44,6 +44,7 @@ export type TmsMilestoneStatus = `${MilestoneStatus}`;
 
 export type TmsTestPlanInMilestoneRS = {
   id: number;
+  displayId: string;
   name: string;
   description?: string;
   milestoneId?: number;
@@ -55,6 +56,7 @@ export type TmsTestPlanInMilestoneRS = {
 
 export type TmsMilestoneRS = {
   id: number;
+  displayId: string;
   name: string;
   type: TmsMilestoneType;
   status: TmsMilestoneStatus;
@@ -68,4 +70,5 @@ export type TmsMilestonePageRS = {
   page: Page;
 };
 
-export type CreateMilestonePayload = Omit<TmsMilestoneRS, 'id' | 'testPlans'>;
+/** POST body: server assigns `displayId`. */
+export type CreateMilestonePayload = Omit<TmsMilestoneRS, 'id' | 'testPlans' | 'displayId'>;

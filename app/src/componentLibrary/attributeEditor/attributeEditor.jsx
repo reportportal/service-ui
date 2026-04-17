@@ -65,6 +65,7 @@ export const AttributeEditor = ({
   isAttributeKeyRequired,
   isAttributeValueRequired,
   allowCustomValues = true,
+  refFunction,
 }) => {
   const [keyTouched, setTouchKey] = useState(false);
   const [valueTouched, setTouchValue] = useState(false);
@@ -100,6 +101,7 @@ export const AttributeEditor = ({
   useEffect(() => {
     if (keyEditorRef.current) {
       keyEditorRef.current.focus();
+      refFunction?.(keyEditorRef.current);
     }
   }, []);
 
@@ -192,7 +194,7 @@ export const AttributeEditor = ({
       }
     };
 
-  const refFunction = (node) => {
+  const inputRefFunction = (node) => {
     keyEditorRef.current = node;
   };
 
@@ -223,7 +225,7 @@ export const AttributeEditor = ({
         dataAutomationId="keyField"
       >
         <AttributeInput
-          refFunction={refFunction}
+          refFunction={inputRefFunction}
           attributes={attributes}
           minLength={1}
           attributeComparator={byKeyComparator}
@@ -311,6 +313,7 @@ AttributeEditor.propTypes = {
   isAttributeKeyRequired: PropTypes.bool,
   isAttributeValueRequired: PropTypes.bool,
   allowCustomValues: PropTypes.bool,
+  refFunction: PropTypes.func,
 };
 AttributeEditor.defaultProps = {
   attributes: [],

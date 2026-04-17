@@ -25,6 +25,7 @@ export const milestoneTestPlansAsTestPlanDtos = (
 ): TestPlanDto[] =>
   (plans ?? []).map((plan) => ({
     id: plan.id,
+    displayId: plan.displayId,
     name: plan.name,
     description: plan.description,
     milestoneId: plan.milestoneId ?? milestoneId,

@@ -28,7 +28,6 @@ import { MANUAL_LAUNCH_DETAILS_PAGE } from 'controllers/pages';
 import { useProjectDetails } from 'hooks/useTypedSelector';
 
 import { TestRunButton } from '../../testRunButton/testRunButton';
-import { CountTag } from '../../countTag';
 import { ManualTestCase } from '../../../types';
 
 import styles from '../../manualLaunchesList.scss';
@@ -77,9 +76,9 @@ export const useManualLaunchesTableData = (
     () =>
       data.map(
         ({
-          count,
           name,
           id,
+          displayId,
           startTime,
           totalTests,
           failedTests,
@@ -109,21 +108,19 @@ export const useManualLaunchesTableData = (
           return {
             id,
             count: {
-              content: count,
+              content: displayId,
               component: (
                 <div {...baseCellProps} {...openSidePanelHandlers}>
                   <button
                     {...navigateToDetailsHandlers}
-                    className={cx('manual-launches-list-table__details-button')}
+                    className={cx(
+                      'manual-launches-list-table__details-button',
+                      'manual-launches-list-table-cell-launch-id',
+                      'manual-launches-list-table-cell-hoverable',
+                    )}
                     type="button"
                   >
-                    <CountTag
-                      count={count}
-                      className={cx(
-                        'manual-launches-list-table-cell-count',
-                        'manual-launches-list-table-cell-hoverable',
-                      )}
-                    />
+                    {displayId}
                   </button>
                 </div>
               ),
@@ -201,7 +198,7 @@ export const useManualLaunchesTableData = (
               content: testsToRun,
               component: <TestRunButton count={testsToRun} />,
             },
-            metaData: { id, name },
+            metaData: { id, name, displayId },
           };
         },
       ),

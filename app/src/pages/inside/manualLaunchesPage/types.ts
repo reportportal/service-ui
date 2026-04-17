@@ -15,6 +15,7 @@
  */
 
 import { PageInfo } from 'controllers/testPlan';
+import type { EntityWithDisplayId } from 'types/common';
 
 export interface LaunchAttribute {
   key: string;
@@ -46,10 +47,9 @@ export interface LaunchStatistics {
   defects: LaunchDefects;
 }
 
-export interface Launch {
+export interface Launch extends EntityWithDisplayId {
   owner: string;
   description: string;
-  id: number;
   uuid: string;
   name: string;
   number: number;
@@ -58,6 +58,7 @@ export interface Launch {
   lastModified: string;
   status: string;
   statistics: LaunchStatistics;
+  executionStatistic?: ExecutionStatistic;
   attributes: LaunchAttribute[];
   mode: string;
   type: string;
@@ -75,8 +76,7 @@ export interface LaunchesResponse {
   page: PageInfo;
 }
 
-export interface ManualTestCase {
-  id: number;
+export interface ManualTestCase extends EntityWithDisplayId {
   count: number;
   name: string;
   startTime: number;
@@ -108,8 +108,7 @@ export interface ExecutionStatistic {
   inProgress: number;
 }
 
-export interface ManualLaunchItem {
-  id: number;
+export interface ManualLaunchItem extends EntityWithDisplayId {
   name: string;
   description: string;
   owner: LaunchOwner;
@@ -153,4 +152,12 @@ export interface UrlsHelper {
     launchId: string | number,
     executionId: string | number,
   ) => string;
+}
+
+export enum ExecutionStatus {
+  TO_RUN = 'TO_RUN',
+  IN_PROGRESS = 'IN_PROGRESS',
+  PASSED = 'PASSED',
+  FAILED = 'FAILED',
+  SKIPPED = 'SKIPPED',
 }
