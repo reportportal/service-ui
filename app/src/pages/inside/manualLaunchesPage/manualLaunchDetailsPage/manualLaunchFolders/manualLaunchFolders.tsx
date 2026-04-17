@@ -28,12 +28,6 @@ import {
   expandManualLaunchFoldersToLevelAction,
   defaultManualLaunchesQueryParams,
 } from 'controllers/manualLaunch';
-import {
-  NOTIFICATION_TYPES,
-  NOTIFICATION_TYPOGRAPHY_COLOR_TYPES,
-  WARNING_NOTIFICATION_DURATION,
-  showNotification,
-} from 'controllers/notification';
 import { MANUAL_LAUNCH_DETAILS_PAGE, locationSelector } from 'controllers/pages';
 import { ExecutionStatus } from 'types/testCase';
 import { useManualLaunchId, useProjectDetails } from 'hooks/useTypedSelector';
@@ -149,17 +143,17 @@ export const ManualLaunchFolders = () => {
   useEffect(() => {
     if (urlFolderId && !activeFolder && !isLoadingFolders) {
       navigateToFolder();
-
-      dispatch(
-        showNotification({
-          messageId: 'redirectWarningMessage',
-          type: NOTIFICATION_TYPES.WARNING,
-          typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
-          duration: WARNING_NOTIFICATION_DURATION,
-        }),
-      );
     }
-  }, [urlFolderId, activeFolder, isLoadingFolders, navigateToFolder, dispatch]);
+  }, [
+    urlFolderId,
+    activeFolder,
+    isLoadingFolders,
+    navigateToFolder,
+    dispatch,
+    filterPriorities,
+    filterTags,
+    statusFilter,
+  ]);
 
   const searchFilteredData = useMemo(
     () => ({

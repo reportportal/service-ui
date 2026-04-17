@@ -17,6 +17,11 @@
 .filter-side-panel {
   width: 460px;
   z-index: $Z-INDEX-OVERLAY-PANEL;
+  font-family: $FONT-ROBOTO-REGULAR;
+
+  * {
+    font-family: $FONT-ROBOTO-REGULAR;
+  }
 
   :global([class*='header-section']) {
     margin-bottom: 8px;
@@ -58,6 +63,7 @@
   font-size: 13px;
   font-weight: 500;
   line-height: 1.5em;
+  font-family: $FONT-ROBOTO-MEDIUM;
   color: var(--rp-ui-base-almost-black);
 }
 
