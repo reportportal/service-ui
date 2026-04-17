@@ -172,6 +172,13 @@ export class LogsGridToolbar extends Component {
     onHidePassedLogs(!isPassedLogsHidden);
   };
 
+  handleContainerPaginationChange = (nextPage) => {
+    this.props.tracking.trackEvent(
+      LOG_PAGE_EVENTS.getClickLogPaginationEvent('container_toolbar'),
+    );
+    this.props.onChangePage(nextPage);
+  };
+
   toggleHideEmptySteps = () => {
     const { onHideEmptySteps, isEmptyStepsHidden } = this.props;
 
@@ -190,7 +197,6 @@ export class LogsGridToolbar extends Component {
       children,
       activePage,
       pageCount,
-      onChangePage,
       logLevel,
       logPageMode,
       isNestedStepsView,
@@ -278,7 +284,7 @@ export class LogsGridToolbar extends Component {
                 <Pagination
                   activePage={activePage}
                   pageCount={pageCount}
-                  onChangePage={onChangePage}
+                  onChangePage={this.handleContainerPaginationChange}
                 />
               </div>
             )}

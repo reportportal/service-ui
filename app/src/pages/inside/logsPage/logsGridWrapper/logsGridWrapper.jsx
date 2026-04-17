@@ -252,7 +252,6 @@ export class LogsGridWrapper extends Component {
         this.props.filter !== prevProps.filter ||
         this.props.pageSize !== prevProps.pageSize
       ) {
-        // eslint-disable-next-line react/no-did-update-set-state
         this.setState({ errorLogIndex: null, highlightedRowId: null, isGridRowHighlighted: false });
       }
     }
@@ -293,6 +292,16 @@ export class LogsGridWrapper extends Component {
     this.props.fetchLog(logItem, fetchLogCb, true);
   };
 
+  handleFooterPaginationChange = (nextPage) => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.getClickLogPaginationEvent('footer_toolbar'));
+    this.props.onChangePage(nextPage);
+  };
+
+  handleFooterPageSizeChange = (nextPageSize) => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.getChooseLogPaginationPagesEvent(nextPageSize));
+    this.props.onChangePageSize(nextPageSize);
+  };
+
   getLoadNextCb = () => {
     const { logsPaginationEnabled, loadedPagesRange, pageCount } = this.props;
     return !logsPaginationEnabled && loadedPagesRange.end < pageCount
@@ -316,7 +325,6 @@ export class LogsGridWrapper extends Component {
       pageCount,
       pageSize,
       onChangePage,
-      onChangePageSize,
       loading,
       filter,
       logLevelName,
@@ -402,8 +410,8 @@ export class LogsGridWrapper extends Component {
                 itemCount={itemCount}
                 pageCount={pageCount}
                 pageSize={pageSize}
-                onChangePage={onChangePage}
-                onChangePageSize={onChangePageSize}
+                onChangePage={this.handleFooterPaginationChange}
+                onChangePageSize={this.handleFooterPageSizeChange}
               />
             )}
           </Fragment>
