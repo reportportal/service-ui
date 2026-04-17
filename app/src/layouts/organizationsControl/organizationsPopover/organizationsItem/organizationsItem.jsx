@@ -162,6 +162,7 @@ export const OrganizationsItem = ({
                 {formatMessage(messages.noProjectAssignments)}
               </div>
             }
+            wrapperTabIndex={isDisabled ? -1 : undefined}
             tooltipClassName={cx('tooltip')}
             portalRoot={tooltipRoot}
             isFloating={false}
