@@ -15,7 +15,45 @@
  */
 import { isEmpty } from 'es-toolkit/compat';
 
-import type { TestCaseActivityItem, TestCaseActivityTableRow } from './types';
+import type {
+  TestCaseActivityHistoryEntry,
+  TestCaseActivityItem,
+  TestCaseActivityTableRow,
+} from './types';
+
+/**
+ * Splits a string on commas and returns trimmed non-empty segments (one UI line each).
+ */
+export const splitCommaSeparatedValueToLines = (value: string): string[] =>
+  value
+    .split(',')
+    .map((segment) => segment.trim())
+    .filter((segment) => segment.length > 0);
+
+/**
+ * Collapses runs of newlines / blank lines so `white-space: pre-line` does not show empty rows
+ * between content (common when backend stores CRLF or paragraph breaks).
+ */
+export const normalizeHistoryCellMultilineText = (value: string): string =>
+  value
+    .replace(/\r\n/g, '\n')
+    .replace(/\r/g, '\n')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => !isEmpty(line))
+    .join('\n');
+
+export const formatHistoryValueCell = (
+  historyEntry: TestCaseActivityHistoryEntry | null,
+  raw: string | undefined,
+): string => {
+  if (!historyEntry) {
+    return '-';
+  }
+  const field = historyEntry.field?.trim() ?? '';
+
+  return `${field}: ${raw}`;
+};
 
 export const flattenActivityContent = (content: TestCaseActivityItem[]): TestCaseActivityTableRow[] => {
   const rows: TestCaseActivityTableRow[] = [];
