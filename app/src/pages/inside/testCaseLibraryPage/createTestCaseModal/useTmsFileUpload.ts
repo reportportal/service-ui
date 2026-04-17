@@ -131,9 +131,7 @@ export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOption
         })) as unknown[],
     );
 
-    const current = normalizeAttachmentsFromUnknown(
-      (Array.isArray(fieldAttachments) ? fieldAttachments : []) as unknown[],
-    );
+    const current = normalizeAttachmentsFromUnknown(fieldAttachments as unknown[]);
 
     if (areAttachmentFormListsEqual(attachments, current)) {
       return;
