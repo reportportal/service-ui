@@ -29,8 +29,9 @@ export const formatHistoryValueCell = (
     return '-';
   }
   const field = historyEntry.field?.trim() ?? '';
+  const value = raw ?? '';
 
-  return `${field}: ${raw}`;
+  return field ? `${field}: ${value}` : value;
 };
 
 export const flattenActivityContent = (content: TestCaseActivityItem[]): TestCaseActivityTableRow[] => {
