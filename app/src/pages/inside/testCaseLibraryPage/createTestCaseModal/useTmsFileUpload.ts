@@ -81,7 +81,9 @@ export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOption
     if (!isEmpty(fieldAttachments) && !isInitializedRef.current) {
       const backendAttachments: BaseAttachmentFile[] = fieldAttachments.flatMap(
         (attachment: FieldAttachmentRow) => {
-          const id = attachment.id ?? attachment.attachmentId;
+          const id =
+            attachment.id ??
+            ('attachmentId' in attachment ? attachment.attachmentId : undefined);
 
           if (id == null || id === '' || !attachment.fileName) {
             return [];
