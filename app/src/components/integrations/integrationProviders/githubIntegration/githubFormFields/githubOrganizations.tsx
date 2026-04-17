@@ -36,7 +36,7 @@ const messages = defineMessages({
   },
   organizationPlaceholder: {
     id: 'GithubFormFields.organizationPlaceholder',
-    defaultMessage: 'Enter the organization name',
+    defaultMessage: 'Enter the organization name (e.g. reportportal)',
   },
   removeGithubOrganization: {
     id: 'GithubFormFields.removeGithubOrganization',

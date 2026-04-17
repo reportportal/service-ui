@@ -1115,7 +1115,7 @@
   "GithubFormFields.clientSecretPlaceholder": "Вкажіть секрет клієнта (напр. a1b2c3…)",
   "GithubFormFields.githubOrganizationLabel": "Організація GitHub",
   "GithubFormFields.organizationNameHint": "Назва організації може містити лише латинські літери, цифри та дефіс",
-  "GithubFormFields.organizationPlaceholder": "Введіть назву організації",
+  "GithubFormFields.organizationPlaceholder": "Введіть назву організації (наприклад, reportportal)",
   "GithubFormFields.removeGithubOrganization": "Видалити організацію GitHub",
   "Hamburger.analysis": "Аналізувати",
   "Hamburger.export": "Експортувати:",
