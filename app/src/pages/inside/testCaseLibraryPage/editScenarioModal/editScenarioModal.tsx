@@ -80,5 +80,4 @@ const ReduxFormComponent = reduxForm<CreateTestCaseFormData, EditScenarioModalPr
   destroyOnUnmount: true,
 })(EditScenarioModalComponent);
 
- 
 export const EditScenarioModal = withModal(EDIT_SCENARIO_MODAL_KEY)(ReduxFormComponent);
