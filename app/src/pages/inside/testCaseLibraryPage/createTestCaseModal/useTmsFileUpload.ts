@@ -23,12 +23,17 @@ import { isEmpty } from 'es-toolkit/compat';
 import { useFileProcessing, BaseAttachmentFile } from 'common/hooks';
 import type { AppState } from 'types/store';
 
+import type { AttachmentFormValue } from '../types';
 import { useAttachmentUpload } from './useAttachmentUpload';
 import { messages } from './messages';
 import {
   areAttachmentFormListsEqual,
   normalizeAttachmentsFromUnknown,
 } from './utils';
+
+type FieldAttachmentRow = AttachmentFormValue | BaseAttachmentFile;
+
+const EMPTY_FIELD_ATTACHMENTS: FieldAttachmentRow[] = [];
 
 interface UseTmsFileUploadOptions {
   formName: string;
@@ -41,10 +46,14 @@ export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOption
   const { formatMessage } = useIntl();
   const isInitializedRef = useRef(false);
   const selector = formValueSelector(formName || 'no-form');
-  const fieldAttachments =
-    useSelector<AppState, BaseAttachmentFile[] | undefined>(
-      (state) => selector(state, fieldName) as BaseAttachmentFile[] | undefined,
-    ) || [];
+  const fieldAttachmentsRaw = useSelector<
+    AppState,
+    AttachmentFormValue[] | BaseAttachmentFile[] | undefined
+  >(
+    (state) =>
+      selector(state, fieldName) as AttachmentFormValue[] | BaseAttachmentFile[] | undefined,
+  );
+  const fieldAttachments = fieldAttachmentsRaw ?? EMPTY_FIELD_ATTACHMENTS;
 
   const handleUpload = useCallback(
     async (file: File) => {
@@ -52,7 +61,7 @@ export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOption
         const response = await uploadAttachment(file);
 
         return {
-          attachmentId: response.id,
+          attachmentId: String(response.id),
         };
       } catch {
         return {
@@ -69,18 +78,36 @@ export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOption
     });
 
   useEffect(() => {
-    if (!isEmpty(fieldAttachments) && isEmpty(attachedFiles) && !isInitializedRef.current) {
-      const backendAttachments: BaseAttachmentFile[] = fieldAttachments
-        .filter((attachment) => (attachment.id ?? attachment.attachmentId) && attachment.fileName)
-        .map((attachment) => ({
-          id: String(attachment.id ?? attachment.attachmentId ?? ''),
-          fileName: attachment.fileName || 'Attachment',
-          file: new File([], attachment.fileName || 'attachment'),
-          size: Number(attachment.size ?? attachment.fileSize ?? 0),
-          attachmentId: attachment.id ?? attachment.attachmentId,
-          isUploading: false,
-          uploadingProgress: 100,
-        }));
+    if (!isEmpty(fieldAttachments) && !isInitializedRef.current) {
+      const backendAttachments: BaseAttachmentFile[] = fieldAttachments.flatMap(
+        (attachment: FieldAttachmentRow) => {
+          const id = attachment.id ?? attachment.attachmentId;
+
+          if (id == null || id === '' || !attachment.fileName) {
+            return [];
+          }
+
+          const idString = String(id);
+          const fileName = attachment.fileName || 'Attachment';
+          const blobName = attachment.fileName || 'attachment';
+
+          return [
+            {
+              id: idString,
+              fileName,
+              file: new File([], blobName),
+              size: Number(
+                attachment.size ??
+                  ('fileSize' in attachment ? attachment.fileSize : undefined) ??
+                  0,
+              ),
+              attachmentId: idString,
+              isUploading: false,
+              uploadingProgress: 100,
+            },
+          ];
+        },
+      );
 
       setAttachedFiles(backendAttachments);
       isInitializedRef.current = true;
@@ -88,7 +115,7 @@ export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOption
       return;
     }
 
-    if (!isInitializedRef.current) {
+    if (!isInitializedRef.current && isEmpty(fieldAttachments)) {
       isInitializedRef.current = true;
     }
 
