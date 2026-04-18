@@ -26,6 +26,7 @@ import { downloadFileFromBlob, getFileKey } from 'common/utils/fileUtils';
 import { useFileUploadProgressSimulation } from './useFileUploadProgressSimulation';
 
 export interface BaseAttachmentFile {
+  fileSize?: number;
   id: string;
   fileName: string;
   file: File;

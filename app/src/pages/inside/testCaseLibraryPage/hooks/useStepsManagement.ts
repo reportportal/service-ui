@@ -16,7 +16,7 @@
 
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { change, touch, untouch } from 'redux-form';
+import { change } from 'redux-form';
 import { keyBy, isNumber, isEmpty } from 'es-toolkit/compat';
 
 import { Step } from 'types/testCase';
@@ -83,9 +83,7 @@ export const useStepsManagement = ({
     (updatedSteps: Step[]) => {
       const stepsObject = buildStepsObjectWithPositions(updatedSteps);
 
-      dispatch(untouch(formName, 'steps'));
       dispatch(change(formName, 'steps', stepsObject));
-      dispatch(touch(formName, 'steps'));
     },
     [formName, dispatch, buildStepsObjectWithPositions],
   );
