@@ -217,17 +217,19 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       message: formatMessage(messages.projectsSettings),
       menuOrder: (menuCounter += menuStep),
     });
-    projectPageExtensions.forEach(({ icon, internalRoute, name, title, iconName, menuOrder }) => {
-      if (icon) {
+    projectPageExtensions.forEach(({ payload }) => {
+      const { icon, slug, name, title, iconName, menuOrder } = payload;
+      const iconSvg = icon?.content || icon?.svg;
+      if (iconSvg) {
         const itemName = iconName || title;
         sidebarItems.push({
           onClick: (isSidebarCollapsed) => onClickButton({ itemName, isSidebarCollapsed }),
           link: {
             type: PROJECT_PLUGIN_PAGE,
-            payload: { organizationSlug, projectSlug, pluginPage: internalRoute || name },
+            payload: { organizationSlug, projectSlug, pluginPage: slug || name },
           },
-          icon: icon.svg,
-          message: icon.title || title,
+          icon: iconSvg,
+          message: title,
           menuOrder: menuOrder || (menuCounter += menuStep),
         });
       }
