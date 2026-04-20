@@ -15,13 +15,20 @@
  */
 
 import { useIntl } from 'react-intl';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import { isEmpty } from 'es-toolkit/compat';
 import { VoidFn } from '@reportportal/ui-kit/common';
 import { Button, SidePanel, Selection, Toggle } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
+import { useModal } from 'common/hooks';
 import { commonMessages } from 'pages/inside/common/common-messages';
 
+import {
+  AddTestCasesToLaunchModalProps,
+  ADD_TEST_CASES_TO_LAUNCH_MODAL_KEY,
+} from '../../testPlansPage/testPlanDetailsPage/testPlanFolders/allTestCasesPage/addTestCasesToLaunchModal';
+import { AddTestCasesToLaunchModal } from '../../testPlansPage/testPlanDetailsPage/testPlanFolders/allTestCasesPage/addTestCasesToLaunchModal/addTestCasesToLaunchModal';
 import { SelectableFolderTree } from './selectableFolderTree/selectableFolderTree';
 import { TestLibraryPanelProvider } from './testLibraryPanelContext';
 import { useTestLibraryPanel } from './hooks/useTestLibraryPanel';
@@ -47,13 +54,47 @@ export const TestLibrarySidePanel = ({
   const { formatMessage } = useIntl();
   const [shouldHideAddedTestCases, setShouldHideAddedTestCases] = useState(true);
 
-  const { actionsValue, stateValue, selectionCount, hasSelection, clearSelection, addToTestPlan } =
-    useTestLibraryPanel({
-      isOpen,
-      shouldHideAddedTestCases,
-      onAddTestCases,
-      onClose,
-    });
+  const {
+    actionsValue,
+    stateValue,
+    selectionCount,
+    hasSelection,
+    clearSelection,
+    addToTestPlan,
+    selectedTestCases,
+    testPlanId,
+  } = useTestLibraryPanel({
+    isOpen,
+    shouldHideAddedTestCases,
+    onAddTestCases,
+    onClose,
+  });
+
+  const { openModal: openAddToLaunchModal } = useModal<AddTestCasesToLaunchModalProps>({
+    modalKey: ADD_TEST_CASES_TO_LAUNCH_MODAL_KEY,
+    renderModal: (data) => (
+      <AddTestCasesToLaunchModal
+        selectedRowsIds={data.selectedRowsIds}
+        testCases={data.testCases}
+        testPlanId={data.testPlanId}
+      />
+    ),
+  });
+
+  const handleAddAndCreateLaunch = useCallback(async () => {
+    const testCases = [...selectedTestCases];
+    const testCaseIds = testCases.map(({ id }) => id);
+
+    const isSuccess = await addToTestPlan();
+
+    if (isSuccess && !isEmpty(testCaseIds) && testPlanId != null) {
+      openAddToLaunchModal({
+        selectedRowsIds: testCaseIds,
+        testCases,
+        testPlanId: String(testPlanId),
+      });
+    }
+  }, [addToTestPlan, openAddToLaunchModal, testPlanId, selectedTestCases]);
 
   const titleComponent = (
     <div className={cx('test-library-panel__title')}>
@@ -86,7 +127,11 @@ export const TestLibrarySidePanel = ({
         onClearSelection={clearSelection}
       />
       <div className={cx('test-library-panel__footer-buttons')}>
-        <Button variant="ghost" disabled={isSubmitButtonDisabled}>
+        <Button
+          variant="ghost"
+          disabled={isSubmitButtonDisabled}
+          onClick={() => void handleAddAndCreateLaunch()}
+        >
           {formatMessage(messages.addAndCreateLaunch)}
         </Button>
         <Button
