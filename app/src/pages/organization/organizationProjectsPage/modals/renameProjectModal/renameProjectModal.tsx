@@ -73,7 +73,7 @@ const RenameProjectModal: FC<RenameProjectModalProps> = ({
     children: formatMessage(COMMON_LOCALE_KEYS.RENAME),
     onClick: () => {
       trackEvent(PROJECTS_PAGE_EVENTS.clickRenameProjectModalSubmit(projectId));
-      (handleSubmit(onSubmit) as () => void)();
+      (handleSubmit(onSubmit))();
     },
     disabled: anyTouched && invalid,
     'data-automation-id': 'submitButton',

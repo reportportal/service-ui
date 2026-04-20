@@ -70,7 +70,7 @@ const DeleteProjectModal: FC<DeleteProjectModalProps> = ({
     children: formatMessage(COMMON_LOCALE_KEYS.DELETE),
     onClick: () => {
       trackEvent(PROJECTS_PAGE_EVENTS.clickDeleteProjectModalSubmit(projectId));
-      (handleSubmit(onConfirm) as () => void)();
+      (handleSubmit(onConfirm))();
     },
     variant: 'danger',
     disabled: anyTouched && invalid,
