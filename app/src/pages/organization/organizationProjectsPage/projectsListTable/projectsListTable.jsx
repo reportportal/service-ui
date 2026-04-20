@@ -17,6 +17,7 @@
 import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { Table } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
@@ -48,9 +49,11 @@ export const ProjectsListTable = ({
   onChangePageSize,
 }) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const organizationSlug = useSelector(activeOrganizationSelector)?.slug;
   const dispatch = useDispatch();
   const onTableColumnSort = ({ key }) => {
+    trackEvent(PROJECTS_PAGE_EVENTS.projectsSortingArrowClick());
     onChangeSorting(key);
     dispatch(prepareActiveOrganizationProjectsAction());
   };

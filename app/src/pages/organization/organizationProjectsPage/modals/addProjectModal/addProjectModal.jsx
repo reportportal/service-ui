@@ -26,12 +26,15 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { Modal, FieldText } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
 import { useDispatch } from 'react-redux';
+import { useTracking } from 'react-tracking';
+import { PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectsPageEvents';
 import { messages } from '../../messages';
 
 const PROJECT_NAME_FIELD = 'projectName';
 
 export const AddProjectModal = ({ data = {}, handleSubmit, anyTouched, invalid }) => {
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
   const { onSubmit } = data;
   const onCreateProject = ({ projectName }) => {
@@ -45,6 +48,7 @@ export const AddProjectModal = ({ data = {}, handleSubmit, anyTouched, invalid }
       okButton={{
         children: formatMessage(COMMON_LOCALE_KEYS.CREATE),
         onClick: () => {
+          trackEvent(PROJECTS_PAGE_EVENTS.clickCreateProjectModalSubmit());
           handleSubmit(onCreateProject)();
         },
         disabled: anyTouched && invalid,
