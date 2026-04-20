@@ -136,5 +136,5 @@ export const AllUsersActionMenu = ({ user }: AllUsersActionMenuProps) => {
     ],
   );
 
-  return <ActionMenu items={items} />;
+  return <ActionMenu items={items} shouldUsePortal />;
 };
