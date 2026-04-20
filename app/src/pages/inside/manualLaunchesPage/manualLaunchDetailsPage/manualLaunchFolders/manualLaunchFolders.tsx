@@ -85,6 +85,8 @@ export const ManualLaunchFolders = () => {
     isSearchFilteredLoading,
     hasSearchFilteredFolders,
     handleToggleSearchFilteredFolder,
+    setAllExpandedInFilter,
+    setAllCollapsedInFilter,
     filteredTotalTestCases,
   } = useManualLaunchSearchFilteredFolders({
     searchQuery,
@@ -162,6 +164,8 @@ export const ManualLaunchFolders = () => {
       isSearchFilteredLoading,
       hasSearchFilteredFolders,
       handleToggleSearchFilteredFolder,
+      setAllExpandedInFilter,
+      setAllCollapsedInFilter,
       filteredTotalTestCases,
     }),
     [
@@ -170,6 +174,8 @@ export const ManualLaunchFolders = () => {
       isSearchFilteredLoading,
       hasSearchFilteredFolders,
       handleToggleSearchFilteredFolder,
+      setAllExpandedInFilter,
+      setAllCollapsedInFilter,
       filteredTotalTestCases,
     ],
   );
