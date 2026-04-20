@@ -220,8 +220,9 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
     projectPageExtensions.forEach(({ payload }) => {
       const { icon, slug, name, title, iconName, menuOrder } = payload;
       const iconSvg = icon?.content || icon?.svg;
+      const itemTitle = title || icon?.title || name;
       if (iconSvg) {
-        const itemName = iconName || title;
+        const itemName = iconName || itemTitle;
         sidebarItems.push({
           onClick: (isSidebarCollapsed) => onClickButton({ itemName, isSidebarCollapsed }),
           link: {
@@ -229,7 +230,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
             payload: { organizationSlug, projectSlug, pluginPage: slug || name },
           },
           icon: iconSvg,
-          message: title,
+          message: itemTitle,
           menuOrder: menuOrder || (menuCounter += menuStep),
         });
       }
