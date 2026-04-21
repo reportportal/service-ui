@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect, useCallback, Fragment } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl, defineMessages } from 'react-intl';
 import { FieldText, Dropdown } from '@reportportal/ui-kit';
@@ -152,7 +152,7 @@ export const SamlFormFields = ({
   }, [initialData.identityProviderName]);
 
   return (
-    <Fragment>
+    <>
       <IntegrationFormField
         name="identityProviderNameId"
         disabled={disabled}
@@ -235,7 +235,7 @@ export const SamlFormFields = ({
           </FieldErrorHint>
         </IntegrationFormField>
       ) : (
-        <Fragment>
+        <>
           <IntegrationFormField
             name={FIRST_NAME_ATTRIBUTE_KEY}
             disabled={disabled}
@@ -260,9 +260,9 @@ export const SamlFormFields = ({
               <FieldText maxLength="256" defaultWidth={false} />
             </FieldErrorHint>
           </IntegrationFormField>
-        </Fragment>
+        </>
       )}
-    </Fragment>
+    </>
   );
 };
 
