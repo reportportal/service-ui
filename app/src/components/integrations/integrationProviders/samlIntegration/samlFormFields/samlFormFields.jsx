@@ -17,9 +17,8 @@
 import React, { useState, useEffect, useCallback, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl, defineMessages } from 'react-intl';
+import { FieldText, Dropdown } from '@reportportal/ui-kit';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { Input } from 'components/inputs/input';
-import { InputDropdown } from 'components/inputs/inputDropdown';
 import { IntegrationFormField } from 'components/integrations/elements';
 import { commonValidators } from 'common/utils/validation';
 import {
@@ -160,7 +159,7 @@ export const SamlFormFields = ({
         label={formatMessage(messages.identityProviderNameId)}
         lineAlign={lineAlign}
       >
-        <Input mobileDisabled />
+        <FieldText maxLength="256" defaultWidth={false} />
       </IntegrationFormField>
       <IntegrationFormField
         name="identityProviderName"
@@ -172,7 +171,7 @@ export const SamlFormFields = ({
         required
       >
         <FieldErrorHint>
-          <Input mobileDisabled />
+          <FieldText maxLength="256" defaultWidth={false} />
         </FieldErrorHint>
       </IntegrationFormField>
       <IntegrationFormField
@@ -184,7 +183,7 @@ export const SamlFormFields = ({
         required
       >
         <FieldErrorHint>
-          <Input mobileDisabled />
+          <FieldText maxLength="256" defaultWidth={false} />
         </FieldErrorHint>
       </IntegrationFormField>
       <IntegrationFormField
@@ -196,7 +195,7 @@ export const SamlFormFields = ({
         required
       >
         <FieldErrorHint>
-          <Input mobileDisabled />
+          <FieldText maxLength="256" defaultWidth={false} />
         </FieldErrorHint>
       </IntegrationFormField>
       <IntegrationFormField
@@ -206,19 +205,18 @@ export const SamlFormFields = ({
         placeholder={configureCallbackUrl()}
         disabled
       >
-        <Input mobileDisabled />
+        <FieldText maxLength="256" defaultWidth={false} />
       </IntegrationFormField>
       <IntegrationFormField
         label={formatMessage(messages.nameAttributesMode)}
         lineAlign={lineAlign}
         withoutProvider
       >
-        <InputDropdown
+        <Dropdown
           value={isFullNameAttributeMode}
           onChange={onChangeNameAttributesMode}
           options={nameAttributesOptions}
           disabled={disabled}
-          mobileDisabled
         />
       </IntegrationFormField>
       {isFullNameAttributeMode ? (
@@ -231,7 +229,7 @@ export const SamlFormFields = ({
           required
         >
           <FieldErrorHint>
-            <Input mobileDisabled />
+            <FieldText maxLength="256" defaultWidth={false} />
           </FieldErrorHint>
         </IntegrationFormField>
       ) : (
@@ -245,7 +243,7 @@ export const SamlFormFields = ({
             required
           >
             <FieldErrorHint>
-              <Input mobileDisabled />
+              <FieldText maxLength="256" defaultWidth={false} />
             </FieldErrorHint>
           </IntegrationFormField>
           <IntegrationFormField
@@ -257,7 +255,7 @@ export const SamlFormFields = ({
             required
           >
             <FieldErrorHint>
-              <Input mobileDisabled />
+              <FieldText maxLength="256" defaultWidth={false} />
             </FieldErrorHint>
           </IntegrationFormField>
         </Fragment>
