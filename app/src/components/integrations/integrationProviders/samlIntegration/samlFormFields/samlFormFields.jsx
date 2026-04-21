@@ -217,6 +217,8 @@ export const SamlFormFields = ({
           onChange={onChangeNameAttributesMode}
           options={nameAttributesOptions}
           disabled={disabled}
+          defaultWidth={false}
+          mobileDisabled
         />
       </IntegrationFormField>
       {isFullNameAttributeMode ? (
