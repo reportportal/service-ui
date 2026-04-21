@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl, defineMessages } from 'react-intl';
 import { FieldText, Dropdown } from '@reportportal/ui-kit';
@@ -70,6 +70,8 @@ const nameAttributesOptions = [
   { value: false, label: 'First & last name' },
 ];
 
+const MAX_INPUT_LENGTH = 256;
+
 const configureCallbackUrl = (providerName = '') => {
   const { origin, pathname } = location;
 
@@ -96,6 +98,7 @@ export const SamlFormFields = ({
   pluginDetails = {},
 }) => {
   const { formatMessage } = useIntl();
+  const isFirstRender = useRef(true);
   const [isFullNameAttributeMode, setIsFullNameAttributeMode] = useState(
     !!initialData[FULL_NAME_ATTRIBUTE_KEY],
   );
@@ -131,22 +134,23 @@ export const SamlFormFields = ({
       ...pluginDetails,
       [CALLBACK_URL_ATTRIBUTE_KEY]: configureCallbackUrl(initialData.identityProviderName),
     });
+    isFirstRender.current = false;
     // componentDidMount equivalent
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (initialData.fullNameAttribute !== undefined) {
-      initialize(initialData);
-    }
+    if (isFirstRender.current) return;
+
+    initialize(initialData);
     // should handle only fullNameAttribute changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialData.fullNameAttribute]);
 
   useEffect(() => {
-    if (initialData.identityProviderName !== undefined) {
-      change(CALLBACK_URL_ATTRIBUTE_KEY, configureCallbackUrl(initialData.identityProviderName));
-    }
+    if (isFirstRender.current) return;
+
+    change(CALLBACK_URL_ATTRIBUTE_KEY, configureCallbackUrl(initialData.identityProviderName));
     // should handle only identityProviderName changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialData.identityProviderName]);
@@ -159,7 +163,7 @@ export const SamlFormFields = ({
         label={formatMessage(messages.identityProviderNameId)}
         lineAlign={lineAlign}
       >
-        <FieldText maxLength="256" defaultWidth={false} />
+        <FieldText maxLength={MAX_INPUT_LENGTH} defaultWidth={false} />
       </IntegrationFormField>
       <IntegrationFormField
         name="identityProviderName"
@@ -171,7 +175,7 @@ export const SamlFormFields = ({
         required
       >
         <FieldErrorHint>
-          <FieldText maxLength="256" defaultWidth={false} />
+          <FieldText maxLength={MAX_INPUT_LENGTH} defaultWidth={false} />
         </FieldErrorHint>
       </IntegrationFormField>
       <IntegrationFormField
@@ -183,7 +187,7 @@ export const SamlFormFields = ({
         required
       >
         <FieldErrorHint>
-          <FieldText maxLength="256" defaultWidth={false} />
+          <FieldText maxLength={MAX_INPUT_LENGTH} defaultWidth={false} />
         </FieldErrorHint>
       </IntegrationFormField>
       <IntegrationFormField
@@ -195,7 +199,7 @@ export const SamlFormFields = ({
         required
       >
         <FieldErrorHint>
-          <FieldText maxLength="256" defaultWidth={false} />
+          <FieldText maxLength={MAX_INPUT_LENGTH} defaultWidth={false} />
         </FieldErrorHint>
       </IntegrationFormField>
       <IntegrationFormField
@@ -205,7 +209,7 @@ export const SamlFormFields = ({
         placeholder={configureCallbackUrl()}
         disabled
       >
-        <FieldText maxLength="256" defaultWidth={false} />
+        <FieldText maxLength={MAX_INPUT_LENGTH} defaultWidth={false} />
       </IntegrationFormField>
       <IntegrationFormField
         label={formatMessage(messages.nameAttributesMode)}
@@ -231,7 +235,7 @@ export const SamlFormFields = ({
           required
         >
           <FieldErrorHint>
-            <FieldText maxLength="256" defaultWidth={false} />
+            <FieldText maxLength={MAX_INPUT_LENGTH} defaultWidth={false} />
           </FieldErrorHint>
         </IntegrationFormField>
       ) : (
@@ -245,7 +249,7 @@ export const SamlFormFields = ({
             required
           >
             <FieldErrorHint>
-              <FieldText maxLength="256" defaultWidth={false} />
+              <FieldText maxLength={MAX_INPUT_LENGTH} defaultWidth={false} />
             </FieldErrorHint>
           </IntegrationFormField>
           <IntegrationFormField
@@ -257,7 +261,7 @@ export const SamlFormFields = ({
             required
           >
             <FieldErrorHint>
-              <FieldText maxLength="256" defaultWidth={false} />
+              <FieldText maxLength={MAX_INPUT_LENGTH} defaultWidth={false} />
             </FieldErrorHint>
           </IntegrationFormField>
         </>
