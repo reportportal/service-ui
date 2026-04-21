@@ -200,6 +200,25 @@
   font-family: $FONT-REGULAR;
 }
 
+.agentic-label {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  margin-right: 20px;
+  font-size: 12px;
+  font-family: $FONT-REGULAR;
+  color: $COLOR--gray-60;
+  vertical-align: middle;
+}
+
+.agentic-icon {
+  display: inline-flex;
+  align-items: center;
+  height: 16px;
+  width: 16px;
+  padding-right: 4px;
+}
+
 .star-icon {
   display: inline-block;
   height: 16px;

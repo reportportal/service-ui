@@ -32,6 +32,7 @@ import {
 import { IN_PROGRESS } from 'common/constants/testStatuses';
 import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
 import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
+import { LAUNCH_TYPES } from 'common/constants/launchTypes';
 import { MarkdownViewer } from 'components/main/markdown';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { getSauceLabsConfig } from 'components/integrations/integrationProviders/sauceLabsIntegration/utils';
@@ -39,6 +40,7 @@ import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import RetryIcon from 'common/img/retry-inline.svg';
 import StarIcon from 'common/img/star-inline.svg';
+import AgenticIcon from 'common/img/agentic-icon-inline.svg';
 import SauceLabsIcon from 'common/img/plugins/sauce-labs-gray-inline.svg';
 import { NameLink } from 'pages/inside/common/nameLink';
 import { DurationBlock } from 'pages/inside/common/durationBlock';
@@ -230,6 +232,14 @@ export class ItemInfo extends Component {
                   approxTime: value.approximateDuration,
                 }}
               />
+            </span>
+          )}
+          {value.launchType === LAUNCH_TYPES.AGENTIC && (
+            <span className={cx('agentic-label')}>
+              <i className={cx('agentic-icon')} aria-hidden="true">
+                {Parser(AgenticIcon)}
+              </i>
+              <span>Agentic</span>
             </span>
           )}
           {!!startTime && <div className={cx('mobile-start-time')}>{fromNowFormat(startTime)}</div>}
