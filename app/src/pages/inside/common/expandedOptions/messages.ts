@@ -41,4 +41,16 @@ export const messages = defineMessages({
     id: 'expandedOptions.dragToReorder',
     defaultMessage: 'Drag to reorder',
   },
+  flatView: {
+    id: 'expandedOptions.flatView',
+    defaultMessage: 'Flat view',
+  },
+  expandAll: {
+    id: 'expandedOptions.expandAll',
+    defaultMessage: 'Expand All',
+  },
+  collapseAll: {
+    id: 'expandedOptions.collapseAll',
+    defaultMessage: 'Collapse All',
+  },
 });
