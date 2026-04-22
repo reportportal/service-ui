@@ -66,6 +66,7 @@ export const LaunchNamesContainer = ({ highlightUnStoredItem, value, ...rest }) 
 
   const handleSystemMessage = (items, storedItems) =>
     highlightUnStoredItem && setShowMessage(containsNonExistingName(items, storedItems));
+
   return (
     <>
       <AsyncMultipleAutocompleteV2
@@ -78,6 +79,7 @@ export const LaunchNamesContainer = ({ highlightUnStoredItem, value, ...rest }) 
         existingItemsMap={existingItemsMap}
         highlightUnStoredItem={highlightUnStoredItem}
         value={value}
+        shouldShowEmptyListMessage={false}
         {...rest}
       />
       <span className={cx('helper-text')}>{formatMessage(messages.launchNamesNote)}</span>
