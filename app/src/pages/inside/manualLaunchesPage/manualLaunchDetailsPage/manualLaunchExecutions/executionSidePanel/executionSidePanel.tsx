@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
+import Link from 'redux-first-router-link';
 import {
   AdaptiveTagList,
   BubblesLoader,
@@ -29,6 +30,7 @@ import {
 import {
   MANUAL_LAUNCH_DETAILS_PAGE,
   MANUAL_LAUNCH_EXECUTION_PAGE,
+  TEST_CASE_LIBRARY_PAGE,
 } from 'controllers/pages/constants';
 import { useManualLaunchId, useProjectDetails } from 'hooks/useTypedSelector';
 import { useUserPermissions } from 'hooks/useUserPermissions';
@@ -137,21 +139,16 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
       {executionDetails?.testCasePriority && (
         <PriorityIcon priority={executionDetails.testCasePriority} />
       )}
-      {executionDetails?.testCaseId != null && (
-        <span className={cx('title-business-id')}>
-          {executionDetails.testCaseDisplayId ?? executionDetails.testCaseId}
-        </span>
-      )}
       {executionDetails?.testCaseName && (
         <span className={cx('title-name')}>{executionDetails.testCaseName}</span>
       )}
     </div>
   );
 
-  const descriptionComponent = (
+  const descriptionComponent = executionDetails && (
     <div className={cx('sidepanel-description')}>
       <FolderBreadcrumbs
-        folderId={executionDetails?.testFolder?.testItemId}
+        folderId={executionDetails.testFolder?.testItemId}
         instanceKey={TMS_INSTANCE_KEY.TEST_CASE}
         onNavigate={onFolderClick}
         customFoldersSelector={manualLaunchFoldersSelector}
@@ -160,17 +157,30 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
       <div className={cx('meta-row')}>
         <div className={cx('meta-row-item')}>
           <span className={cx('meta-label')}>{formatMessage(messages.executionId)}:</span>
-          <span className={cx('meta-value')}>
-            {executionDetails?.testCaseDisplayId ?? executionDetails?.testCaseId}
-          </span>
+          <Link
+            className={cx('meta-value', 'id-link')}
+            to={{
+              type: TEST_CASE_LIBRARY_PAGE,
+              payload: {
+                organizationSlug,
+                projectSlug,
+                testCasePageRoute: `test-cases/${executionDetails.testCaseId}`,
+              },
+            }}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open test case in a new tab"
+          >
+            {executionDetails.testCaseDisplayId ?? executionDetails.testCaseId}
+          </Link>
         </div>
-        {executionDetails?.startedAt && (
+        {executionDetails.startedAt && (
           <div className={cx('meta-row-item')}>
             <RerunIcon />
             <span className={cx('meta-value')}>{formatTimestamp(executionDetails.startedAt)}</span>
           </div>
         )}
-        {executionDetails?.duration != null && (
+        {executionDetails.duration != null && (
           <div className={cx('meta-row-item')}>
             <DurationIcon />
             <span className={cx('meta-value')}>{formatDuration(executionDetails.duration)}</span>
