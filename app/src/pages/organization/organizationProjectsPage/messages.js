@@ -19,7 +19,7 @@ import { defineMessages } from 'react-intl';
 export const messages = defineMessages({
   allOrganizations: {
     id: 'OrganizationProjectsPage.allOrganizations',
-    defaultMessage: 'All organizations',
+    defaultMessage: 'All Organizations',
   },
   createProject: {
     id: 'OrganizationProjectsPage.createProject',
