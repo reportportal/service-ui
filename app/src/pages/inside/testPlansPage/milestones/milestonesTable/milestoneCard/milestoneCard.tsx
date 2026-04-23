@@ -68,13 +68,12 @@ export const MilestoneCard = ({
     [milestone.id, milestone.testPlans],
   );
 
-  const toggleExpanded = () =>
-    setExpanded((isExpanded) => {
-      if (!isExpanded) {
-        trackEvent(MILESTONES_PAGE_EVENTS.CLICK_MILESTONE_ROW_EXPAND);
-      }
-      return !isExpanded;
-    });
+  const toggleExpanded = () => {
+    if (!expanded) {
+      trackEvent(MILESTONES_PAGE_EVENTS.CLICK_MILESTONE_ROW_EXPAND);
+    }
+    setExpanded((isExpanded) => !isExpanded);
+  };
 
   const handleEmptyStateCreateTestPlan = () => {
     trackEvent(MILESTONES_PAGE_EVENTS.CLICK_CREATE_TEST_PLAN_EMPTY);
