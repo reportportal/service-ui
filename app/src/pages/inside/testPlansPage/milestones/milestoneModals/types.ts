@@ -24,4 +24,5 @@ export interface UseMilestoneSubmitParams {
   url: string;
   method: 'post' | 'patch';
   successMessageId: string;
+  onSuccess?: () => void;
 }

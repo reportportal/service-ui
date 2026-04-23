@@ -15,7 +15,9 @@
  */
 
 import { useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 
+import { MILESTONES_PAGE_EVENTS } from 'analyticsEvents/milestonesPageEvents';
 import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
 
@@ -25,11 +27,13 @@ import type { UseDuplicateMilestoneParams } from './types';
 
 export const useDuplicateMilestone = ({ sourceMilestoneId }: UseDuplicateMilestoneParams) => {
   const projectKey = useSelector(projectKeySelector);
+  const { trackEvent } = useTracking();
 
   const { isLoading, submit } = useMilestoneSubmit({
     url: URLS.tmsMilestoneDuplicate(projectKey, sourceMilestoneId),
     method: 'post',
     successMessageId: 'milestoneDuplicatedSuccess',
+    onSuccess: () => trackEvent(MILESTONES_PAGE_EVENTS.SUBMIT_DUPLICATE_MILESTONE),
   });
 
   return {

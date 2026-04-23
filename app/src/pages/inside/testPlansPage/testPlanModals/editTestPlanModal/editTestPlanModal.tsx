@@ -28,11 +28,12 @@ export const EDIT_TEST_PLAN_MODAL_KEY = 'editTestPlanModalKey';
 
 interface EditTestPlanModalProps {
   data: TestPlanDto;
+  onSubmitSuccess?: (attributesCount: number) => void;
 }
 
-export const EditTestPlanModal = ({ data }: EditTestPlanModalProps) => {
+export const EditTestPlanModal = ({ data, onSubmitSuccess }: EditTestPlanModalProps) => {
   const { formatMessage } = useIntl();
-  const { isLoading, submitTestPlan } = useEditTestPlan();
+  const { isLoading, submitTestPlan } = useEditTestPlan({ onSubmitSuccess });
 
   const handleSubmit = async (formValues: TestPlanFormValues) => {
     const payload = {

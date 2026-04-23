@@ -16,8 +16,10 @@
 
 import { useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { Button, MeatballMenuIcon, Popover } from '@reportportal/ui-kit';
 
+import { MILESTONES_PAGE_EVENTS } from 'analyticsEvents/milestonesPageEvents';
 import { createClassnames } from 'common/utils';
 
 import { messages } from '../messages';
@@ -35,6 +37,7 @@ export const MilestoneCardActionsMenu = ({
   onCreateTestPlan,
 }: MilestoneCardProps) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const [isOpened, setIsOpened] = useState(false);
 
   const items = useMemo(
@@ -43,6 +46,7 @@ export const MilestoneCardActionsMenu = ({
         label: formatMessage(messages.menuEditMilestone),
         onClick: () => {
           setIsOpened(false);
+          trackEvent(MILESTONES_PAGE_EVENTS.CLICK_EDIT_MILESTONE);
           onEditMilestone?.(milestone);
         },
       },
@@ -52,6 +56,7 @@ export const MilestoneCardActionsMenu = ({
               label: formatMessage(messages.menuCreateTestPlan),
               onClick: () => {
                 setIsOpened(false);
+                trackEvent(MILESTONES_PAGE_EVENTS.CLICK_CREATE_TEST_PLAN_KEBAB);
                 onCreateTestPlan(milestone);
               },
             },
@@ -61,16 +66,22 @@ export const MilestoneCardActionsMenu = ({
         label: formatMessage(messages.menuDuplicateMilestone),
         onClick: () => {
           setIsOpened(false);
+          trackEvent(MILESTONES_PAGE_EVENTS.CLICK_DUPLICATE_MILESTONE);
           onDuplicateMilestone?.(milestone);
         },
       },
       {
         label: formatMessage(messages.menuDeleteMilestone),
         destructive: true,
-        onClick: () => setIsOpened(false),
+        onClick: () => {
+          setIsOpened(false);
+          trackEvent(MILESTONES_PAGE_EVENTS.CLICK_DELETE_MILESTONE);
+          // TODO: wire MILESTONES_PAGE_EVENTS.SUBMIT_DELETE_MILESTONE on confirm
+          // when the delete milestone confirmation modal is implemented.
+        },
       },
     ],
-    [formatMessage, milestone, onCreateTestPlan, onDuplicateMilestone, onEditMilestone],
+    [formatMessage, milestone, onCreateTestPlan, onDuplicateMilestone, onEditMilestone, trackEvent],
   );
 
   return (
