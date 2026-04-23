@@ -48,6 +48,7 @@ import {
   DELETE_PROJECT_NOTIFICATION_SUCCESS,
   UPDATE_PROJECT_NOTIFICATION_SUCCESS,
   SET_PROJECT_NOTIFICATION_LOADING,
+  FETCH_EXISTING_LAUNCH_NAMES,
   FETCH_EXISTING_LAUNCH_NAMES_SUCCESS,
   FETCH_LOG_TYPES,
   CREATE_LOG_TYPE,
@@ -226,6 +227,11 @@ export const deleteProjectNotificationSuccessAction = (id) => ({
 export const setProjectNotificationsLoadingAction = (loading) => ({
   type: SET_PROJECT_NOTIFICATION_LOADING,
   payload: loading,
+});
+
+export const fetchExistingLaunchNamesAction = (projectKey) => ({
+  type: FETCH_EXISTING_LAUNCH_NAMES,
+  payload: projectKey,
 });
 
 export const fetchExistingLaunchNamesSuccessAction = (payload) => ({
