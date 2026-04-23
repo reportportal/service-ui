@@ -56,7 +56,6 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
     canDeleteProject,
     canAssignUnassignInternalUser,
   } = useUserPermissions();
-  const ssoOnlyEnabled = useSelector(ssoUsersOnlySelector);
 
   const projectRowPermissions = useMemo(() => {
     const roles = resolveUserRolesForProjectRow(userRoles, projectRole);
@@ -71,8 +70,8 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const user = useSelector(userInfoSelector) as UserInfo;
-  const ssoUsersOnly = useSelector(ssoUsersOnlySelector);
-  const action = ssoUsersOnly ? 'assign' : 'invite';
+  const ssoOnlyEnabled = useSelector(ssoUsersOnlySelector);
+  const action = ssoOnlyEnabled ? 'assign' : 'invite';
   const elementName = `${action}_menu`;
   const buttonElementName = `button_${action}_user`;
   const modalName = `${action}_user`;
