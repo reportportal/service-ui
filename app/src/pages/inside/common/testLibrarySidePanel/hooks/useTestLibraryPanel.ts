@@ -25,6 +25,7 @@ import {
   TransformedFolder,
 } from 'controllers/testCase';
 import { activeTestPlanSelector, testPlanFoldersSelector } from 'controllers/testPlan';
+import { TestCase } from 'types/testCase';
 
 import {
   PanelActionsContextValue,
@@ -51,7 +52,9 @@ interface UseTestLibraryPanelUtils {
   folders: ReturnType<typeof transformedFoldersSelector>;
   hasSelection: boolean;
   clearSelection: VoidFn;
-  addToTestPlan: () => Promise<void>;
+  addToTestPlan: () => Promise<boolean>;
+  selectedTestCases: TestCase[];
+  testPlanId: number | null;
 }
 
 const toggleSet = (set: NumberSet, value: number): NumberSet => {
@@ -154,7 +157,7 @@ export const useTestLibraryPanel = ({
     const selectedIds = Array.from(selectedTestCasesIds);
 
     if (isEmpty(selectedIds)) {
-      return;
+      return false;
     }
 
     const isSuccess = await onAddTestCases(selectedIds);
@@ -163,6 +166,8 @@ export const useTestLibraryPanel = ({
       clearSelection();
       onClose();
     }
+
+    return isSuccess;
   }, [selectedTestCasesIds, onAddTestCases, clearSelection, onClose]);
 
   const { batchSelectFolder, batchDeselectFolder } = useBatchFolderSelection({
@@ -185,6 +190,14 @@ export const useTestLibraryPanel = ({
   const selectionCount = selectedTestCasesIds.size;
 
   const hasSelection = selectionCount > 0 || selectedFolderIds.size > 0;
+
+  const selectedTestCases = useMemo(
+    () =>
+      Array.from(testCasesMap.values())
+        .flatMap((folder) => folder.testCases)
+        .filter(({ id }) => selectedTestCasesIds.has(id)),
+    [testCasesMap, selectedTestCasesIds],
+  );
 
   const actionsValue: PanelActionsContextValue = useMemo(
     () => ({
@@ -242,5 +255,7 @@ export const useTestLibraryPanel = ({
     hasSelection,
     clearSelection,
     addToTestPlan,
+    selectedTestCases,
+    testPlanId,
   };
 };

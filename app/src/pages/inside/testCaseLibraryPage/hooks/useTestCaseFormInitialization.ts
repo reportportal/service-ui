@@ -21,8 +21,15 @@ import { isEmpty } from 'es-toolkit/compat';
 import { uniqueId } from 'common/utils';
 import { ExtendedTestCase } from 'types/testCase';
 
-import { CreateTestCaseFormData, hasTagShape } from '../types';
+import {
+  CreateTestCaseFormData,
+  hasTagShape,
+  ManualScenarioType,
+  StepFormValue,
+} from '../types';
 import { TEST_CASE_FORM_INITIAL_VALUES } from '../createTestCaseModal/constants';
+import { normalizeAttachmentsForForm } from '../createTestCaseModal/utils';
+import { createEmptyStep } from '../editScenarioModal/constants';
 
 interface UseTestCaseFormInitializationParams {
   testCase?: ExtendedTestCase;
@@ -40,12 +47,34 @@ export const useTestCaseFormInitialization = ({
   useEffect(() => {
     if (testCase) {
       const manualScenario = testCase?.manualScenario;
-      const stepsObject = manualScenario?.steps
-        ? keyBy(
-            manualScenario.steps.map((step, index) => ({ ...step, position: index })),
-            (step) => step.id,
-          )
-        : undefined;
+      const manualScenarioType =
+        manualScenario?.manualScenarioType ?? TEST_CASE_FORM_INITIAL_VALUES.manualScenarioType;
+
+      let stepsObject: Record<number, StepFormValue> | undefined;
+
+      if (manualScenario?.steps?.length) {
+        stepsObject = keyBy(
+          manualScenario.steps.map((step, index) => ({
+            ...step,
+            position: index,
+            attachments: normalizeAttachmentsForForm(step.attachments),
+          })),
+          (step) => step.id,
+        );
+      } else if (manualScenarioType === ManualScenarioType.STEPS) {
+        stepsObject = keyBy(
+          [
+            {
+              ...createEmptyStep(),
+              position: 0,
+              attachments: normalizeAttachmentsForForm([]),
+            },
+          ],
+          (step) => step.id,
+        );
+      } else {
+        stepsObject = undefined;
+      }
 
       const formData = {
         name: testCase.name,
@@ -63,19 +92,20 @@ export const useTestCaseFormInitialization = ({
           key,
           value: value ?? '',
         })),
-        manualScenarioType:
-          manualScenario?.manualScenarioType ?? TEST_CASE_FORM_INITIAL_VALUES.manualScenarioType,
+        manualScenarioType,
         executionEstimationTime:
           manualScenario?.executionEstimationTime ??
           TEST_CASE_FORM_INITIAL_VALUES.executionEstimationTime,
         requirements: isEmpty(manualScenario?.requirements)
           ? [{ id: uniqueId(), value: '' }]
           : manualScenario?.requirements,
-        precondition: manualScenario?.preconditions?.value,
-        preconditionAttachments: manualScenario?.preconditions?.attachments ?? [],
-        instructions: manualScenario?.instructions,
-        expectedResult: manualScenario?.expectedResult,
-        textAttachments: manualScenario?.attachments ?? [],
+        precondition: manualScenario?.preconditions?.value ?? '',
+        preconditionAttachments: normalizeAttachmentsForForm(
+          manualScenario?.preconditions?.attachments,
+        ),
+        instructions: manualScenario?.instructions ?? '',
+        expectedResult: manualScenario?.expectedResult ?? '',
+        textAttachments: normalizeAttachmentsForForm(manualScenario?.attachments),
         ...(stepsObject && {
           steps: stepsObject,
         }),
@@ -93,6 +123,7 @@ export const useTestCaseFormInitialization = ({
 
       return () => clearTimeout(timeoutId);
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsInitialized(false);
     }
   }, [testCase, initialize, reset]);

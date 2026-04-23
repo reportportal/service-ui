@@ -28,6 +28,8 @@ import { BoundValidator } from 'common/utils/validation/types';
 import { hideModalAction } from 'controllers/modal';
 import { ModalButtonProps } from 'types/common';
 import { createClassnames } from 'common/utils';
+import { useTracking } from 'react-tracking';
+import { PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectsPageEvents';
 
 import { messages } from '../../messages';
 
@@ -46,25 +48,30 @@ interface ModalProps {
   data: {
     onConfirm: () => void;
     projectName: string;
+    projectId: number;
   };
 }
 
 type DeleteProjectModalProps = InjectedFormProps<DeleteProjectFormProps, ModalProps> & ModalProps;
 
 const DeleteProjectModal: FC<DeleteProjectModalProps> = ({
-  data: { onConfirm, projectName },
+  data: { onConfirm, projectName, projectId },
   handleSubmit,
   anyTouched,
   invalid,
 }) => {
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
 
   const hideModal = () => dispatch(hideModalAction());
 
   const okButton: ModalButtonProps = {
     children: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-    onClick: handleSubmit(onConfirm) as () => void,
+    onClick: () => {
+      trackEvent(PROJECTS_PAGE_EVENTS.clickDeleteProjectModalSubmit(projectId));
+      (handleSubmit(onConfirm))();
+    },
     variant: 'danger',
     disabled: anyTouched && invalid,
   };

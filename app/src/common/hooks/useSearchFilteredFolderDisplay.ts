@@ -132,6 +132,14 @@ export const useSearchFilteredFolderDisplay = <T extends SearchFilteredFolderRow
     });
   }, []);
 
+  const setAllExpandedInFilter = useCallback(() => {
+    setCollapsedIds(new Set());
+  }, []);
+
+  const setAllCollapsedInFilter = useCallback(() => {
+    setCollapsedIds(new Set(allFilteredFolderIds));
+  }, [allFilteredFolderIds]);
+
   const hasFilteredFolders = !isEmpty(transformedFilteredFolders);
 
   const filteredTotalTestCases = useMemo(() => {
@@ -151,6 +159,8 @@ export const useSearchFilteredFolderDisplay = <T extends SearchFilteredFolderRow
     isSearchFilteredLoading: isLoading || isQueryPending,
     hasSearchFilteredFolders: hasFilteredFolders,
     handleToggleSearchFilteredFolder,
+    setAllExpandedInFilter,
+    setAllCollapsedInFilter,
     filteredTotalTestCases,
   };
 };

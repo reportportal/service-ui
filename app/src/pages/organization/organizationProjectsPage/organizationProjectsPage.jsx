@@ -16,6 +16,7 @@
 
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
@@ -38,6 +39,7 @@ import { ProjectsPageHeader } from './projectsPageHeader';
 import EmptyIcon from './img/empty-projects-icon-inline.svg';
 import { messages } from './messages';
 import { ProjectsListTable } from './projectsListTable';
+import { PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectsPageEvents';
 import { withPagination } from 'controllers/pagination';
 import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
 import {
@@ -60,6 +62,7 @@ const OrganizationProjectsPageComponent = ({
   onChangePageSize,
 }) => {
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
   const { canCreateProject } = useUserPermissions();
   const organizationLoading = useSelector(activeOrganizationLoadingSelector);
@@ -88,7 +91,8 @@ const OrganizationProjectsPageComponent = ({
 
   const shouldShowHeaderActions = itemCount > 0 || searchValue !== null || appliedFiltersCount > 0;
 
-  const showCreateProjectModal = () => {
+  const showCreateProjectModal = (place) => {
+    trackEvent(PROJECTS_PAGE_EVENTS.clickOpenCreateProjectModal(place));
     dispatch(
       showModalAction({
         id: 'addProjectModal',
@@ -119,7 +123,7 @@ const OrganizationProjectsPageComponent = ({
         icon={<PlusIcon />}
         buttonTitle={buttonTitle}
         emptyIcon={EmptyIcon}
-        onClick={showCreateProjectModal}
+        onClick={() => showCreateProjectModal('empty_state')}
       />
     ) : (
       <EmptyPageState
@@ -165,7 +169,7 @@ const OrganizationProjectsPageComponent = ({
         hasPermission={canCreateProject}
         isNotEmpty={shouldShowHeaderActions}
         projectsCount={itemCount}
-        onCreateProject={showCreateProjectModal}
+        onCreateProject={() => showCreateProjectModal('header')}
         searchValue={searchValue}
         setSearchValue={setSearchValue}
         appliedFiltersCount={appliedFiltersCount}

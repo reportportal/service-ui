@@ -60,6 +60,7 @@ export class SingleAutocomplete extends Component {
     skipOptionCreation: PropTypes.bool,
     newItemButtonText: PropTypes.string,
     creatable: PropTypes.bool,
+    shouldShowEmptyListMessage: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -93,6 +94,7 @@ export class SingleAutocomplete extends Component {
     skipOptionCreation: false,
     newItemButtonText: '',
     creatable: true,
+    shouldShowEmptyListMessage: true,
   };
 
   getOptionProps =

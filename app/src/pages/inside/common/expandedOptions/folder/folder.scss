@@ -67,13 +67,25 @@
 
     &-title {
       display: flex;
-      justify-content: space-between;
       align-items: center;
       padding: 8px;
       cursor: pointer;
       height: 20px;
 
+      & > .folders-tree__tools {
+        margin-left: auto;
+      }
+
+      &:not(:has(.folders-tree__tools)) {
+        & > .folders-tree__item-title--counter,
+        & > .folders-tree__drag-handle {
+          margin-left: auto;
+        }
+      }
+
       &--text {
+        flex: 0 1 auto;
+        min-width: 0;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -81,7 +93,6 @@
         font-family: $FONT-ROBOTO-MEDIUM;
         font-weight: 500;
         color: var(--rp-ui-base-almost-black);
-        flex: 1;
       }
 
       &--counter {
@@ -91,6 +102,11 @@
         margin-left: 16px;
         min-width: 16px;
         text-align: right;
+      }
+
+      &--icon {
+        flex-shrink: 0;
+        margin-right: 8px;
       }
 
       &:hover {
@@ -110,6 +126,16 @@
         .folders-tree__item-title--text {
           color: var(--rp-ui-base-e-300);
         }
+      }
+
+      &--active-descendant-indicator {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin: 0 8px;
+        border-radius: 50%;
+        background-color: var(--rp-ui-base-topaz);
+        flex-shrink: 0;
       }
     }
 
