@@ -29,7 +29,12 @@ import {
 
 import type { MilestoneSubmitPayload, UseMilestoneSubmitParams } from './types';
 
-export const useMilestoneSubmit = ({ url, method, successMessageId }: UseMilestoneSubmitParams) => {
+export const useMilestoneSubmit = ({
+  url,
+  method,
+  successMessageId,
+  onSuccess,
+}: UseMilestoneSubmitParams) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const queryParams = useQueryParams(defaultMilestoneQueryParams);
@@ -50,6 +55,7 @@ export const useMilestoneSubmit = ({ url, method, successMessageId }: UseMilesto
         },
       });
 
+      onSuccess?.();
       dispatch(hideModalAction());
       dispatch(
         showSuccessNotification({

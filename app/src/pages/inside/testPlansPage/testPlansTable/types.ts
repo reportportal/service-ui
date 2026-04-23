@@ -16,8 +16,11 @@
 
 import type { TestPlanDto } from 'controllers/testPlan';
 
+export type TestPlanRowClickKind = 'name' | 'chevron';
+
 export interface TestPlansTableProps {
   testPlans: TestPlanDto[];
   isLoading: boolean;
   showTestPlanBusinessId?: boolean;
+  analyticsPlace?: 'expanded_milestone_test_plan';
 }

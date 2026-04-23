@@ -17,8 +17,10 @@
 import { ReactNode, useCallback, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { Table, ChevronDownDropdownIcon } from '@reportportal/ui-kit';
 
+import { MILESTONES_PAGE_EVENTS, PLACE_TP_ROW } from 'analyticsEvents/milestonesPageEvents';
 import { createClassnames } from 'common/utils';
 import { PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
 import { useProjectDetails } from 'hooks/useTypedSelector';
@@ -34,7 +36,7 @@ import {
 import { PageLoader } from '../pageLoader';
 import { useTestPlansTableData } from './hooks';
 
-import type { TestPlansTableProps } from './types';
+import type { TestPlanRowClickKind, TestPlansTableProps } from './types';
 
 import styles from './testPlansTable.scss';
 
@@ -44,13 +46,25 @@ export const TestPlansTable = ({
   testPlans,
   isLoading,
   showTestPlanBusinessId = true,
+  analyticsPlace,
 }: TestPlansTableProps) => {
   const { formatMessage } = useIntl();
   const { organizationSlug, projectSlug } = useProjectDetails();
   const dispatch = useDispatch();
-  const { openModal: openEditModal } = useEditTestPlanModal();
+  const { trackEvent } = useTracking();
+  const isInMilestoneContext = analyticsPlace === PLACE_TP_ROW;
+  const { openModal: openEditModal } = useEditTestPlanModal({
+    onSubmitSuccess: isInMilestoneContext
+      ? (attributesCount) =>
+          trackEvent(MILESTONES_PAGE_EVENTS.submitEditTestPlan(attributesCount))
+      : undefined,
+  });
   const { openModal: openDuplicateModal } = useDuplicateTestPlanModal();
-  const { openModal: openDeleteModal } = useDeleteTestPlanModal();
+  const { openModal: openDeleteModal } = useDeleteTestPlanModal({
+    onSuccess: isInMilestoneContext
+      ? () => trackEvent(MILESTONES_PAGE_EVENTS.SUBMIT_DELETE_TEST_PLAN)
+      : undefined,
+  });
 
   const testPlansById = useMemo(
     () => new Map<number, TestPlanDto>(testPlans?.map((testPlan) => [testPlan.id, testPlan])),
@@ -58,13 +72,16 @@ export const TestPlansTable = ({
   );
 
   const handleRowClick = useCallback(
-    (testPlanId: number) => {
+    (testPlanId: number, kind: TestPlanRowClickKind) => {
+      if (isInMilestoneContext && kind === 'chevron') {
+        trackEvent(MILESTONES_PAGE_EVENTS.CLICK_OPEN_ALL_TEST_CASES);
+      }
       dispatch({
         type: PROJECT_TEST_PLAN_DETAILS_PAGE,
         payload: { organizationSlug, projectSlug, testPlanId: testPlanId.toString() },
       });
     },
-    [dispatch, organizationSlug, projectSlug],
+    [dispatch, isInMilestoneContext, organizationSlug, projectSlug, trackEvent],
   );
 
   const getActionHandler = (action: (testPlan: TestPlanDto) => void) => (testPlanId: number) => {
@@ -76,7 +93,7 @@ export const TestPlansTable = ({
   };
 
   const getOpenTestPlanDetailsButton = useCallback(
-    (testPlanId: number, testPlanName: string, children: ReactNode, kind: 'name' | 'chevron') => (
+    (testPlanId: number, testPlanName: string, children: ReactNode, kind: TestPlanRowClickKind) => (
       <button
         type="button"
         className={cx('test-plans__table-cell-clickable', {
@@ -84,7 +101,7 @@ export const TestPlansTable = ({
           'test-plans__table-cell-clickable_chevron': kind === 'chevron',
         })}
         aria-label={formatMessage(messages.viewTestPlanDetails, { testPlanName })}
-        onClick={() => handleRowClick(testPlanId)}
+        onClick={() => handleRowClick(testPlanId, kind)}
       >
         {children}
       </button>
@@ -92,11 +109,32 @@ export const TestPlansTable = ({
     [formatMessage, handleRowClick],
   );
 
+  const onEditTestPlan = (testPlan: TestPlanDto) => {
+    if (isInMilestoneContext) {
+      trackEvent(MILESTONES_PAGE_EVENTS.CLICK_EDIT_TEST_PLAN);
+    }
+    openEditModal(testPlan);
+  };
+
+  const onDuplicateTestPlan = (testPlan: TestPlanDto) => {
+    if (isInMilestoneContext) {
+      trackEvent(MILESTONES_PAGE_EVENTS.CLICK_DUPLICATE_TEST_PLAN);
+    }
+    openDuplicateModal(testPlan);
+  };
+
+  const onDeleteTestPlan = (testPlan: TestPlanDto) => {
+    if (isInMilestoneContext) {
+      trackEvent(MILESTONES_PAGE_EVENTS.CLICK_DELETE_TEST_PLAN);
+    }
+    openDeleteModal(testPlan);
+  };
+
   const { data: testPlansTableData } = useTestPlansTableData({
     testPlans,
-    onEdit: getActionHandler(openEditModal),
-    onDuplicate: getActionHandler(openDuplicateModal),
-    onDelete: getActionHandler(openDeleteModal),
+    onEdit: getActionHandler(onEditTestPlan),
+    onDuplicate: getActionHandler(onDuplicateTestPlan),
+    onDelete: getActionHandler(onDeleteTestPlan),
   });
 
   const currentTestPlans = useMemo(

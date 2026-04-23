@@ -15,8 +15,10 @@
  */
 
 import { useDispatch, useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { isNotNil } from 'es-toolkit';
 
+import { MILESTONES_PAGE_EVENTS } from 'analyticsEvents/milestonesPageEvents';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { useDebouncedSpinner, useQueryParams } from 'common/hooks';
@@ -33,8 +35,16 @@ import type { CreateTestPlanModalData } from './types';
 export const useCreateTestPlan = ({ milestoneId }: CreateTestPlanModalData = {}) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const projectKey = useSelector(projectKeySelector);
   const queryParams = useQueryParams(defaultQueryParams);
+  const isFromMilestonesPage = isNotNil(milestoneId);
+
+  const trackSubmitSuccess = (attributesCount: number) => {
+    if (isFromMilestonesPage) {
+      trackEvent(MILESTONES_PAGE_EVENTS.submitCreateTestPlan(attributesCount));
+    }
+  };
 
   const submitTestPlan = async (payload: TestPlanFormValues) => {
     try {
@@ -67,6 +77,7 @@ export const useCreateTestPlan = ({ milestoneId }: CreateTestPlanModalData = {})
         }
       }
 
+      trackSubmitSuccess(payload.attributes?.length ?? 0);
       dispatch(hideModalAction());
       dispatch(
         showSuccessNotification({
