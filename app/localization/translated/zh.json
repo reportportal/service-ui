@@ -2417,7 +2417,7 @@
   "testCaseSearch.errorLoadingData": "Keep typing to refine your search.",
   "testCaseSearch.letsSearch": "Let's search",
   "testCaseSearch.loadMore": "Load more",
-  "testCaseSearch.maximumItems": "You have loaded the maximum allowed number (300) of test cases.",
+  "testCaseSearch.maximumItems": "Text in case the limit is reached: You have loaded the maximum allowed number (20) of test cases. Upgrade to the Premium Feature to see more.\nPremium feature is a link to https://reportportal.io/docs/features/TestExecutions/",
   "testCaseSearch.oneOption": "Only one option, either test name or attributes, can be active at a time",
   "testCaseSearch.provideParameters": "Provide parameters to activate the test case search.",
   "testCaseSearch.statusPlaceholder": "Select status",

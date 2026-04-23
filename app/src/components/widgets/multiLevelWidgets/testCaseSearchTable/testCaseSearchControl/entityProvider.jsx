@@ -7,9 +7,9 @@ import {
   EntityInputConditionalAttributes,
 } from 'components/filterEntities';
 import {
-  CONDITION_CNT,
   CONDITION_HAS,
   CONDITION_IN,
+  CONDITION_SWT,
   ENTITY_ATTRIBUTE,
   ENTITY_NAME,
   ENTITY_STATUS,
@@ -29,7 +29,7 @@ export const useEntityConfig = (entityType, filterValues) => {
       id: ENTITY_NAME,
       component: EntityInputConditional,
       value: filterValues[ENTITY_NAME] || {
-        condition: CONDITION_CNT,
+        condition: CONDITION_SWT,
       },
       validationFunc: commonValidators.itemNameEntity,
       title: formatMessage(messages.testNameTitle),
@@ -37,8 +37,16 @@ export const useEntityConfig = (entityType, filterValues) => {
       removable: false,
       static: true,
       customProps: {
-        conditions: [CONDITION_CNT],
+        isCustomConditions: true,
+        conditions: [
+          {
+            value: CONDITION_SWT,
+            label: formatMessage(messages.startsWithOperator),
+            shortLabel: formatMessage(messages.startsWithOperator),
+          },
+        ],
         placeholder: formatMessage(messages.testNamePlaceholder),
+        hideConditionArrow: true,
       },
     },
     [ENTITY_ATTRIBUTE]: {

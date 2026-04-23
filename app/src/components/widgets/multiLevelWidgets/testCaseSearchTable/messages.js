@@ -25,6 +25,10 @@ export const messages = defineMessages({
     id: 'testCaseSearch.testNamePlaceholder',
     defaultMessage: 'Enter test name',
   },
+  startsWithOperator: {
+    id: 'testCaseSearch.startsWithOperator',
+    defaultMessage: 'starts with',
+  },
   letsSearch: {
     id: 'testCaseSearch.letsSearch',
     defaultMessage: "Let's search",
@@ -47,7 +51,9 @@ export const messages = defineMessages({
   },
   maximumItems: {
     id: 'testCaseSearch.maximumItems',
-    defaultMessage: 'You have loaded the maximum allowed number (300) of test cases.',
+    defaultMessage:
+      'Text in case the limit is reached: You have loaded the maximum allowed number (20) of test cases. Upgrade to the Premium Feature to see more.\n' +
+      'Premium feature is a link to https://reportportal.io/docs/features/TestExecutions/',
   },
   errorLoadingData: {
     id: 'testCaseSearch.errorLoadingData',

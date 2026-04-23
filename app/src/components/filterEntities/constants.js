@@ -15,6 +15,7 @@
  */
 
 export const CONDITION_CNT = 'cnt';
+export const CONDITION_SWT = 'swt';
 export const CONDITION_NOT_CNT = '!cnt';
 export const CONDITION_NOT_CNT_EVENTS = 'non_cnt';
 export const CONDITION_EQ = 'eq';
