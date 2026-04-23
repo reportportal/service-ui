@@ -139,7 +139,7 @@
       }
     }
 
-    &-content>svg {
+    &-content > svg {
       position: absolute;
       top: 8px;
       left: -16px;
@@ -147,8 +147,8 @@
       cursor: pointer;
     }
 
-    &--open>div {
-      >svg {
+    &--open > div {
+      > svg {
         transform: none;
       }
     }

@@ -98,7 +98,7 @@ export const useRetentionUtils = (formValues, retention) => {
       return {
         ...elem,
         disabled,
-        title: formatMessage(settingsMessages.keepLaunchesTooltip),
+        title: disabled ? formatMessage(settingsMessages.keepLaunchesTooltip) : undefined,
       };
     });
 
@@ -121,7 +121,7 @@ export const useRetentionUtils = (formValues, retention) => {
         ...elem,
         disabled,
         hidden,
-        title: formatMessage(settingsMessages.keepLogsTooltip),
+        title: disabled ? formatMessage(settingsMessages.keepLogsTooltip) : undefined,
       };
     });
 
