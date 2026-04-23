@@ -19,7 +19,10 @@ import { isNotNil, isUndefined } from 'es-toolkit';
 import { isEmpty } from 'es-toolkit/compat';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useMemo } from 'react';
+import { useTracking } from 'react-tracking';
 import { Button, RefreshIcon } from '@reportportal/ui-kit';
+
+import { MILESTONES_PAGE_EVENTS } from 'analyticsEvents/milestonesPageEvents';
 
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
@@ -51,6 +54,7 @@ import { commonMessages } from './commonMessages';
 export const TestPlansPage = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const { openModal: openMilestoneModal } = useCreateMilestoneModal();
   const { openModal: openEditMilestoneModal } = useEditMilestoneModal();
   const { openModal: openDuplicateMilestoneModal } = useDuplicateMilestoneModal();
@@ -72,6 +76,15 @@ export const TestPlansPage = () => {
       dispatch(getMilestonesAction(queryParams));
     }
   }, [dispatch, milestones, milestonesLoading, queryParams]);
+
+  useEffect(() => {
+    trackEvent(MILESTONES_PAGE_EVENTS.VIEW_MILESTONES_PAGE);
+  }, [trackEvent]);
+
+  const handleCreateMilestone = () => {
+    trackEvent(MILESTONES_PAGE_EVENTS.CLICK_CREATE_MILESTONE);
+    openMilestoneModal();
+  };
 
   const renderContent = () => {
     if ((isNotNil(milestones) && !isEmpty(milestones)) || milestonesLoading) {
@@ -117,7 +130,7 @@ export const TestPlansPage = () => {
                 <Button
                   variant="ghost"
                   data-automation-id="createMilestoneButton"
-                  onClick={openMilestoneModal}
+                  onClick={handleCreateMilestone}
                 >
                   {formatMessage(commonMessages.createMilestone)}
                 </Button>
