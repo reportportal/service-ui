@@ -78,6 +78,7 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
   const modalName = `${action}_user`;
 
   const handleDeleteProjectClick = useCallback(() => {
+    trackEvent(PROJECTS_PAGE_EVENTS.projectPageMenuOptionClick('delete_menu', projectId));
     const data = {
       projectName,
       projectId,
@@ -87,9 +88,10 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
     };
 
     dispatch(showModalAction({ component: <DeleteProjectModal data={data} /> }));
-  }, [dispatch, projectId, projectName]);
+  }, [dispatch, trackEvent, projectId, projectName]);
 
   const handleRenameProjectClick = useCallback(() => {
+    trackEvent(PROJECTS_PAGE_EVENTS.projectPageMenuOptionClick('rename_menu', projectId));
     const data = {
       projectName,
       projectId,
@@ -99,7 +101,7 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
     };
 
     dispatch(showModalAction({ component: <RenameProjectModal data={data} /> }));
-  }, [dispatch, projectId, projectName]);
+  }, [dispatch, trackEvent, projectId, projectName]);
 
   const handleAssignClick = useCallback(() => {
     const onSuccess = () => {
@@ -157,6 +159,9 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
           type: 'PROJECT_MEMBERS_PAGE',
           payload: { projectSlug, organizationSlug, projectKey },
         },
+        onClick: () => {
+          trackEvent(PROJECTS_PAGE_EVENTS.projectPageMenuOptionClick('team_menu', projectId));
+        },
       },
       {
         label: formatMessage(messages.settings),
@@ -164,9 +169,12 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
           type: 'PROJECT_SETTINGS_PAGE',
           payload: { projectSlug, organizationSlug, projectKey },
         },
+        onClick: () => {
+          trackEvent(PROJECTS_PAGE_EVENTS.projectPageMenuOptionClick('settings_menu', projectId));
+        },
       },
     ],
-    [formatMessage, projectSlug, organizationSlug, projectKey],
+    [formatMessage, projectSlug, organizationSlug, projectKey, projectId, trackEvent],
   );
 
   const actions = useMemo((): ActionItem[] => {
@@ -207,8 +215,11 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
     handleUnassignClick,
     handleAssignClick,
     canAssignUnassignInternalUser,
+    canInviteUserToProject,
+    canRenameProject,
     handleDeleteProjectClick,
     canDeleteProject,
+    ssoOnlyEnabled,
   ]);
 
   return <ActionMenu links={links} actions={actions} showDivider />;
