@@ -129,17 +129,6 @@ export const SamlFormFields = ({
   );
 
   useEffect(() => {
-    initialize({
-      ...initialData,
-      ...pluginDetails,
-      [CALLBACK_URL_ATTRIBUTE_KEY]: configureCallbackUrl(initialData.identityProviderName),
-    });
-    isFirstRender.current = false;
-    // componentDidMount equivalent
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
     if (isFirstRender.current) return;
 
     initialize(initialData);
@@ -154,6 +143,17 @@ export const SamlFormFields = ({
     // should handle only identityProviderName changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialData.identityProviderName]);
+
+  useEffect(() => {
+    initialize({
+      ...initialData,
+      ...pluginDetails,
+      [CALLBACK_URL_ATTRIBUTE_KEY]: configureCallbackUrl(initialData.identityProviderName),
+    });
+    isFirstRender.current = false;
+    // first render initialization only
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
