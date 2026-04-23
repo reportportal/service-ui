@@ -23,7 +23,12 @@ import {
 } from 'react';
 import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
-import { ChevronDownDropdownIcon, MeatballMenuIcon, DragNDropIcon } from '@reportportal/ui-kit';
+import {
+  ChevronDownDropdownIcon,
+  MeatballMenuIcon,
+  DragNDropIcon,
+  FolderIcon,
+} from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { isEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
@@ -48,13 +53,14 @@ interface FolderRowProps {
   instanceKey: TMS_INSTANCE_KEY;
   searchQuery: string;
   nextNodeDepth: number;
-  enableDragAndDrop?: boolean;
+  hasHiddenActiveDescendant?: boolean;
   isDragging?: boolean;
+  enableDragAndDrop?: boolean;
   dragRef?: (element: HTMLElement | null) => void;
   style?: CSSProperties;
+  setAllTestCases: VoidFn;
   onToggleFolder: (folder: TransformedFolder) => void;
   onFolderClick: (id: number) => void;
-  setAllTestCases: VoidFn;
 }
 
 export const Folder = ({
@@ -64,6 +70,7 @@ export const Folder = ({
   searchQuery,
   nextNodeDepth,
   enableDragAndDrop = false,
+  hasHiddenActiveDescendant = false,
   isDragging: isDraggingFolder = false,
   dragRef,
   style,
@@ -158,9 +165,13 @@ export const Folder = ({
             setShowDragIcon(false);
           }}
         >
+          <FolderIcon className={cx('folders-tree__item-title--icon')} />
           <span className={cx('folders-tree__item-title--text')} title={folder.name}>
             {isDirectMatch ? highlightText(folder.name, searchQuery) : folder.name}
           </span>
+          {hasHiddenActiveDescendant && (
+            <span className={cx('folders-tree__item-title--active-descendant-indicator')} />
+          )}
           {!isEmpty(tooltipItems) && (
             <button
               className={cx('folders-tree__tools', {

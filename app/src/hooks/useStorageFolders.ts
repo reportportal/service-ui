@@ -9,6 +9,7 @@ import {
   expandedFolderIdsSelector,
   toggleFolderExpansionAction,
   expandFoldersToLevelAction,
+  setExpandedFolderIdsAction,
   foldersSelector,
 } from 'controllers/testCase';
 import {
@@ -16,6 +17,7 @@ import {
   testPlanFoldersSelector,
   toggleTestPlanFolderExpansionAction,
   expandTestPlanFoldersToLevelAction,
+  setTestPlanExpandedFolderIdsAction,
 } from 'controllers/testPlan';
 import { setTestPlanInitialExpandedFoldersAction } from 'controllers/testPlan/actionCreators';
 import {
@@ -23,6 +25,7 @@ import {
   manualLaunchFoldersSelector,
   toggleManualLaunchFolderExpansionAction,
   expandManualLaunchFoldersToLevelAction,
+  setManualLaunchExpandedFolderIdsAction,
 } from 'controllers/manualLaunch';
 import { getExpandedFoldersStorageKey } from 'controllers/testCase/utils/getExpandedFoldersStorageKey';
 
@@ -33,26 +36,34 @@ interface FolderExpansionParams {
   folders: FolderWithId[];
 }
 
+interface SetExpandedIdsParams {
+  folderIds: number[];
+}
+
 interface StorageFoldersConfigItem {
   expandedIdsSelector(state: AppState): number[];
   foldersSelector(state: AppState): FolderWithId[];
   toggleFolderAction(params: FolderExpansionParams): { type: string; payload: FolderExpansionParams };
   expandToLevelAction(params: FolderExpansionParams): { type: string; payload: FolderExpansionParams };
+  setExpandedIdsAction(
+    params: SetExpandedIdsParams,
+  ): { type: string; payload: SetExpandedIdsParams };
 }
 
-// Config mapper for each instance
 const STORAGE_FOLDERS_CONFIG: Record<TMS_INSTANCE_KEY, StorageFoldersConfigItem> = {
   [TMS_INSTANCE_KEY.TEST_CASE]: {
     expandedIdsSelector: expandedFolderIdsSelector,
     foldersSelector,
     toggleFolderAction: toggleFolderExpansionAction,
     expandToLevelAction: expandFoldersToLevelAction,
+    setExpandedIdsAction: setExpandedFolderIdsAction,
   },
   [TMS_INSTANCE_KEY.TEST_PLAN]: {
     expandedIdsSelector: testPlanExpandedFolderIdsSelector,
     foldersSelector: testPlanFoldersSelector,
     toggleFolderAction: toggleTestPlanFolderExpansionAction,
     expandToLevelAction: expandTestPlanFoldersToLevelAction,
+    setExpandedIdsAction: setTestPlanExpandedFolderIdsAction,
   },
   [TMS_INSTANCE_KEY.MANUAL_LAUNCH]: {
     expandedIdsSelector: manualLaunchExpandedFolderIdsSelector,
@@ -61,12 +72,18 @@ const STORAGE_FOLDERS_CONFIG: Record<TMS_INSTANCE_KEY, StorageFoldersConfigItem>
       toggleManualLaunchFolderExpansionAction as StorageFoldersConfigItem['toggleFolderAction'],
     expandToLevelAction:
       expandManualLaunchFoldersToLevelAction as StorageFoldersConfigItem['expandToLevelAction'],
+    setExpandedIdsAction: setManualLaunchExpandedFolderIdsAction,
   },
 };
 
 export const useStorageFolders = (instanceKey: TMS_INSTANCE_KEY) => {
-  const { expandedIdsSelector, foldersSelector, toggleFolderAction, expandToLevelAction } =
-    STORAGE_FOLDERS_CONFIG[instanceKey];
+  const {
+    expandedIdsSelector,
+    foldersSelector,
+    toggleFolderAction,
+    expandToLevelAction,
+    setExpandedIdsAction,
+  } = STORAGE_FOLDERS_CONFIG[instanceKey];
   const testPlanId = useTestPlanId();
   const storageKey = getExpandedFoldersStorageKey(instanceKey)
   const dispatch = useDispatch();
@@ -108,9 +125,17 @@ export const useStorageFolders = (instanceKey: TMS_INSTANCE_KEY) => {
     [dispatch, folders, expandToLevelAction],
   );
 
+  const setExpandedIds = useCallback(
+    (folderIds: number[]) => {
+      dispatch(setExpandedIdsAction({ folderIds }));
+    },
+    [dispatch, setExpandedIdsAction],
+  );
+
   return {
     expandedIds,
     onToggleFolder,
     expandFoldersUpToLevel,
+    setExpandedIds,
   };
 };

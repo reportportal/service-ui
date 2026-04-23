@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-@mixin text-style(
-  $size,
+@mixin text-style($size,
   $weight: var(--rp-ui-base-fw-medium),
   $color: var(--rp-ui-base-almost-black),
-  $family: var(--rp-ui-base-font-family)
-) {
+  $family: var(--rp-ui-base-font-family)) {
   font-size: $size;
   font-family: $family;
   font-weight: $weight;
@@ -137,9 +135,7 @@
           fill: var(--rp-ui-base-topaz-focused);
         }
 
-        &:focus-visible:not(:hover, .expanded-options__sidebar-actions--search-panel-open)
-          svg
-          path {
+        &:focus-visible:not(:hover, .expanded-options__sidebar-actions--search-panel-open) svg path {
           fill: var(--rp-ui-base-topaz-hover);
         }
 
@@ -169,7 +165,7 @@
     background-color: var(--rp-ui-base-bg-200);
     @include flex-center(row, center, center);
 
-    > div {
+    >div {
       max-width: 312px;
     }
   }
@@ -225,12 +221,12 @@
   }
 
   &__sidebar-folders-wrapper {
-    height: calc(100% - 112px);
+    height: calc(100% - 160px);
     position: relative;
     overflow: hidden;
 
     &--with-search {
-      height: calc(100% - 160px);
+      height: calc(100% - 208px);
     }
 
     &:has(.expanded-options__drop-placeholder) {

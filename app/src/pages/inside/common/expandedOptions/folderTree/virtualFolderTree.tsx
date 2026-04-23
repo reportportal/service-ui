@@ -40,17 +40,20 @@ export interface VirtualFolderTreeProps {
   folders: TransformedFolder[];
   expandedIds: number[];
   searchQuery: string;
-  pageSearchQuery?: string;
   activeFolderId: number | null;
   instanceKey: TMS_INSTANCE_KEY;
   isSearchFilteredLoading: boolean;
   hasSearchFilteredFolders: boolean;
   hasAnyMatch: boolean;
-  enableDragAndDrop?: boolean;
-  canDropOn?: (draggedItem: TreeDragItem, targetId: string | number) => boolean;
   onFolderClick: (id: number) => void;
   setAllTestCases: VoidFn;
   onToggleFolder: (folder: TransformedFolder) => void;
+  pageSearchQuery?: string;
+  enableDragAndDrop?: boolean;
+  isFlatView?: boolean;
+  hideEmptyFoldersInFlatView?: boolean;
+  hiddenActiveFolderIndicatorId?: number | null;
+  canDropOn?: (draggedItem: TreeDragItem, targetId: string | number) => boolean;
 }
 
 export const VirtualFolderTree = ({
@@ -64,13 +67,22 @@ export const VirtualFolderTree = ({
   hasSearchFilteredFolders,
   hasAnyMatch,
   enableDragAndDrop = false,
+  isFlatView = false,
+  hideEmptyFoldersInFlatView = false,
+  hiddenActiveFolderIndicatorId = null,
   canDropOn,
   onFolderClick,
   setAllTestCases,
   onToggleFolder,
 }: VirtualFolderTreeProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const flatFolders = useFlattenedTree(folders, expandedIds, searchQuery);
+  const flatFolders = useFlattenedTree(
+    folders,
+    expandedIds,
+    searchQuery,
+    isFlatView,
+    hideEmptyFoldersInFlatView,
+  );
   const flatFoldersRef = useRef(flatFolders);
 
   const virtualizer = useVirtualizer({
@@ -124,6 +136,7 @@ export const VirtualFolderTree = ({
       searchQuery={searchQuery}
       nextNodeDepth={nextNodeDepth}
       enableDragAndDrop={enableDragAndDrop}
+      hasHiddenActiveDescendant={node.folder.id === hiddenActiveFolderIndicatorId}
       isDragging={isDragging}
       dragRef={dragRef}
       style={style}
@@ -192,6 +205,7 @@ export const VirtualFolderTree = ({
               searchQuery={searchQuery}
               nextNodeDepth={nextNodeDepth}
               enableDragAndDrop={enableDragAndDrop}
+              hasHiddenActiveDescendant={folder.folder.id === hiddenActiveFolderIndicatorId}
               style={rowStyle}
             />
           );
