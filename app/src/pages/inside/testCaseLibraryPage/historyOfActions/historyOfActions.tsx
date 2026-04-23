@@ -21,7 +21,7 @@ import { useSelector } from 'react-redux';
 import { BubblesLoader, Pagination, Table } from '@reportportal/ui-kit';
 
 import { createClassnames, debounce } from 'common/utils';
-import { SEARCH_DEBOUNCE_MS } from 'common/constants/delayTime';
+import { SEARCH_DELAY } from 'common/constants/delayTime';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { EmptyPageState } from 'pages/common/emptyPageState/emptyPageState';
@@ -91,7 +91,7 @@ export const HistoryOfActions = () => {
       debounce((raw: string) => {
         resetToFirstPage();
         setAppliedDetailsFilter(raw.trim());
-      }, SEARCH_DEBOUNCE_MS),
+      }, SEARCH_DELAY),
     [resetToFirstPage],
   );
 
