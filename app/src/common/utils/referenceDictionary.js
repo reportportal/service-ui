@@ -83,6 +83,8 @@ export const servicesUpdate = {
 };
 
 export const widgetDocsReferences = {
+  testExecutions:
+    'https://reportportal.io/docs/features/TestExecutions/?utm_source=trigger&utm_medium=product&utm_campaign=promo_banner_tsw&utm_content=tep',
   launchStatisticsChart:
     'https://reportportal.io/docs/dashboards-and-widgets/LaunchStatisticsChart/',
   overallStatistics: 'https://reportportal.io/docs/dashboards-and-widgets/OverallStatistics/',

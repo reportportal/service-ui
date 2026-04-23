@@ -2700,5 +2700,19 @@
   "notFoundPage.pageNotExist": "La página que busca no existe.",
   "notFoundPage.toHome": "Llévame de aquí",
   "OrganizationProjectsPage.actionAssignUser": "Asignar usuario",
-  "ProjectTeamPage.assignUser": "Asignar usuario"
+  "ProjectTeamPage.assignUser": "Asignar usuario",
+  "testCaseSearch.bannerSubtitle": "A structured space for exploring and filtering test cases",
+  "testCaseSearch.bannerTitle": "Try the updated test case search",
+  "testCaseSearch.contactUsButton": "Contact us",
+  "testCaseSearch.documentationButton": "Documentation",
+  "testCaseSearch.explorePlansButton": "Explore Plans",
+  "testCaseSearch.notNowButton": "Not now",
+  "testCaseSearch.openNewSearchButton": "Open New Search",
+  "testCaseSearch.premiumBulletMore": "\u2026and many more",
+  "testCaseSearch.premiumBulletOrganizations": "Organizations",
+  "testCaseSearch.premiumBulletQualityGates": "Quality Gates",
+  "testCaseSearch.premiumBulletSSO": "Single sign-on",
+  "testCaseSearch.premiumBulletTestExecutions": "Test Executions Search",
+  "testCaseSearch.premiumPopupSubtitle": "Upgrade your plan to get the most out of ReportPortal and work more efficiently.",
+  "testCaseSearch.premiumPopupTitle": "Unlock premium features"
 }

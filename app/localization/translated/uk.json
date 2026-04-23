@@ -2700,5 +2700,19 @@
   "notFoundPage.pageNotExist": "Сторінка, яку Ви шукаєте, не існує.",
   "notFoundPage.toHome": "Заберіть мене звідси",
   "OrganizationProjectsPage.actionAssignUser": "Призначити користувача",
-  "ProjectTeamPage.assignUser": "Призначити користувача"
+  "ProjectTeamPage.assignUser": "Призначити користувача",
+  "testCaseSearch.bannerSubtitle": "Структурований простір для дослідження й фільтрації тест-кейсів",
+  "testCaseSearch.bannerTitle": "Спробуйте оновлений пошук тест-кейсів",
+  "testCaseSearch.contactUsButton": "Зв'язатися з нами",
+  "testCaseSearch.documentationButton": "Документація",
+  "testCaseSearch.explorePlansButton": "Тарифи",
+  "testCaseSearch.notNowButton": "Не зараз",
+  "testCaseSearch.openNewSearchButton": "Відкрити новий пошук",
+  "testCaseSearch.premiumBulletMore": "\u2026і багато іншого",
+  "testCaseSearch.premiumBulletOrganizations": "Організації",
+  "testCaseSearch.premiumBulletQualityGates": "Quality Gates",
+  "testCaseSearch.premiumBulletSSO": "Єдиний вхід (SSO)",
+  "testCaseSearch.premiumBulletTestExecutions": "Пошук за виконаннями тестів",
+  "testCaseSearch.premiumPopupSubtitle": "Покращте свій план, щоб отримати максимум від ReportPortal і працювати ефективніше.",
+  "testCaseSearch.premiumPopupTitle": "Відкрийте преміум-можливості"
 }
