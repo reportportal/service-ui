@@ -79,4 +79,15 @@ export const PROJECTS_PAGE_EVENTS = {
     number: pageSize,
     place: 'project_page',
   }),
+  assignSelfToProject: () => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'project_page',
+    element_name: 'assign',
+  }),
+  unassignSelfToProject: () => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'project_page',
+    element_name: 'unassign',
+    modal: 'unassign_from_project'
+  }),
 };

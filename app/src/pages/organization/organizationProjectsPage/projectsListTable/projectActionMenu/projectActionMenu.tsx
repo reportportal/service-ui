@@ -36,7 +36,6 @@ import { AssignProjectModal } from 'pages/inside/common/assignments';
 import { ProjectDetails } from 'pages/organization/constants';
 import { PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectsPageEvents';
 import { InviteUserModal, Level } from 'pages/inside/common/invitations/inviteUserModal';
-import { ORGANIZATION_PAGE_EVENTS } from 'analyticsEvents/organizationsPageEvents';
 import { userRolesSelector } from 'controllers/pages';
 import { ssoUsersOnlySelector } from 'controllers/appInfo';
 import { resolveUserRolesForProjectRow } from 'pages/inside/common/assignments/utils';
@@ -112,7 +111,7 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
         component: <AssignProjectModal project={details} onSuccess={onSuccess} />,
       }),
     );
-    trackEvent(ORGANIZATION_PAGE_EVENTS.assignToProject());
+    trackEvent(PROJECTS_PAGE_EVENTS.assignSelfToProject());
   }, [details, dispatch, trackEvent]);
 
   const handleUnassignClick = useCallback(() => {
@@ -125,7 +124,8 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
         component: <UnassignProjectModal user={user} project={details} onSuccess={onSuccess} />,
       }),
     );
-  }, [details, dispatch, user]);
+    trackEvent(PROJECTS_PAGE_EVENTS.unassignSelfToProject());
+  }, [details, dispatch, trackEvent, user]);
 
   const handleInviteUserClick = useCallback(() => {
     const onInvite = () => {
