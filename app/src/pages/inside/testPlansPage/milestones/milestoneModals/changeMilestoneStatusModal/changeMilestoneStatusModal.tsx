@@ -18,9 +18,14 @@ import { isBefore } from 'date-fns';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { formValueSelector } from 'redux-form';
 import { Toggle } from '@reportportal/ui-kit';
 
+import {
+  MILESTONES_PAGE_EVENTS,
+  type MilestoneStatusType,
+} from 'analyticsEvents/milestonesPageEvents';
 import { createClassnames } from 'common/utils';
 import { hideModalAction } from 'controllers/modal';
 import { MilestoneStatus, type TmsMilestoneType } from 'controllers/milestone';
@@ -69,7 +74,14 @@ const bold = (text: ReactNode[]) => (
 export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalProps) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const hideModal = () => dispatch(hideModalAction());
+  const trackedTargetStatus = (data?.targetStatus.toLowerCase() ??
+    'scheduled') as MilestoneStatusType;
+  const trackWithoutReplacing = () =>
+    trackEvent(MILESTONES_PAGE_EVENTS.confirmStatusWithoutReplacing(trackedTargetStatus));
+  const trackWithToday = () =>
+    trackEvent(MILESTONES_PAGE_EVENTS.confirmStatusWithToday(trackedTargetStatus));
   const [adjustMilestone, setAdjustMilestone] = useState(false);
   const flow = useMemo(
     () => (data ? getChangeMilestoneStatusFlow(data.milestone, data.targetStatus) : null),
@@ -144,6 +156,7 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
       return;
     }
 
+    trackWithoutReplacing();
     void updateMilestone(
       {
         name: milestone.name,
@@ -161,6 +174,7 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
       return;
     }
 
+    trackWithoutReplacing();
     void updateMilestone(
       { ...baseBody, status: MilestoneStatus.SCHEDULED },
       'milestoneStatusChangedToScheduledSuccess',
@@ -172,6 +186,7 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
       return;
     }
 
+    trackWithoutReplacing();
     void updateMilestone(
       { ...baseBody, status: MilestoneStatus.TESTING },
       'milestoneStatusChangedToTestingSuccess',
@@ -181,19 +196,35 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
   const toggleAdjustMilestone = () =>
     setAdjustMilestone((wasAdjustMilestoneOn) => !wasAdjustMilestoneOn);
 
-  const startTestingKeepStartDate = () => transitionMilestoneToTesting({});
+  const startTestingKeepStartDate = () => {
+    trackWithoutReplacing();
+    transitionMilestoneToTesting({});
+  };
 
-  const startTestingWithTodayStartDate = () =>
+  const startTestingWithTodayStartDate = () => {
+    trackWithToday();
     transitionMilestoneToTesting({ startDate: todayIso });
+  };
 
-  const startTestingClearStartDate = () => transitionMilestoneToTesting({ startDate: null });
+  const startTestingClearStartDate = () => {
+    trackWithoutReplacing();
+    transitionMilestoneToTesting({ startDate: null });
+  };
 
-  const completeMilestoneKeepDeadline = () => transitionMilestoneToCompleted({});
+  const completeMilestoneKeepDeadline = () => {
+    trackWithoutReplacing();
+    transitionMilestoneToCompleted({});
+  };
 
-  const completeMilestoneWithTodayDeadline = () =>
+  const completeMilestoneWithTodayDeadline = () => {
+    trackWithToday();
     transitionMilestoneToCompleted({ endDate: todayIso });
+  };
 
-  const completeMilestoneClearDeadline = () => transitionMilestoneToCompleted({ endDate: null });
+  const completeMilestoneClearDeadline = () => {
+    trackWithoutReplacing();
+    transitionMilestoneToCompleted({ endDate: null });
+  };
 
   const adjustFormValuesSelector = useMemo(
     () => formValueSelector(CHANGE_MILESTONE_STATUS_ADJUST_FORM_NAME),
