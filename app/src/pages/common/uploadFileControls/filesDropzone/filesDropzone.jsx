@@ -37,49 +37,54 @@ const messages = defineMessages({
   },
 });
 
+const pushUniqueExtension = (acc, mimeKey, extension) => {
+  if (!acc[mimeKey]) {
+    acc[mimeKey] = [];
+  }
+  if (!acc[mimeKey].includes(extension)) {
+    acc[mimeKey].push(extension);
+  }
+};
+
+const addAcceptRuleForDottedExtension = (acc, dottedExtLower) => {
+  const mimeType = mimeLookup(`file${dottedExtLower}`) || 'application/octet-stream';
+  pushUniqueExtension(acc, mimeType, dottedExtLower);
+};
+
+const addAcceptRuleForMimeType = (acc, mime) => {
+  if (!acc[mime]) {
+    acc[mime] = [];
+  }
+  const ext = mimeExtension(mime);
+  if (!ext) {
+    return;
+  }
+  pushUniqueExtension(acc, mime, `.${ext}`);
+};
+
+const appendAcceptRule = (acc, raw) => {
+  if (!raw) {
+    return;
+  }
+  const item = String(raw);
+  if (item.startsWith('.')) {
+    addAcceptRuleForDottedExtension(acc, item.toLowerCase());
+    return;
+  }
+  if (item.includes('/')) {
+    addAcceptRuleForMimeType(acc, item);
+    return;
+  }
+  addAcceptRuleForDottedExtension(acc, `.${item.toLowerCase()}`);
+};
+
 const buildAcceptObject = (acceptFileMimeTypes) => {
   if (!acceptFileMimeTypes?.length) {
     return undefined;
   }
 
   const acc = {};
-
-  acceptFileMimeTypes.forEach((raw) => {
-    if (!raw) {
-      return;
-    }
-    const item = String(raw);
-    if (item.startsWith('.')) {
-      const ext = item.toLowerCase();
-      const mimeType = mimeLookup(`file${ext}`) || 'application/octet-stream';
-      if (!acc[mimeType]) {
-        acc[mimeType] = [];
-      }
-      if (!acc[mimeType].includes(ext)) {
-        acc[mimeType].push(ext);
-      }
-    } else if (item.includes('/')) {
-      if (!acc[item]) {
-        acc[item] = [];
-      }
-      const ext = mimeExtension(item);
-      if (ext) {
-        const dotted = `.${ext}`;
-        if (!acc[item].includes(dotted)) {
-          acc[item].push(dotted);
-        }
-      }
-    } else {
-      const ext = `.${item.toLowerCase()}`;
-      const mimeType = mimeLookup(`file${ext}`) || 'application/octet-stream';
-      if (!acc[mimeType]) {
-        acc[mimeType] = [];
-      }
-      if (!acc[mimeType].includes(ext)) {
-        acc[mimeType].push(ext);
-      }
-    }
-  });
+  acceptFileMimeTypes.forEach((raw) => appendAcceptRule(acc, raw));
 
   return Object.keys(acc).length ? acc : undefined;
 };
