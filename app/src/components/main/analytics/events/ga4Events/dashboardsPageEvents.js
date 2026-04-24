@@ -163,6 +163,55 @@ export const WIDGETS_EVENTS = {
     ...getBasicClickEventParameters(DASHBOARDS),
     icon_name: 'delete_widget',
   },
+  onTcsPromoBannerImpression: (dashboardId, source) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'promo_banner_impression',
+    place: source,
+    type: 'search_widget',
+    number: dashboardId,
+  }),
+  onTcsPromoDocumentationClick: (dashboardId, source) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'documentation',
+    place: source,
+    type: 'search_widget',
+    number: dashboardId,
+  }),
+  onTcsPromoOpenNewSearchNavigate: (dashboardId, source) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'open_new_search',
+    place: source,
+    type: 'search_widget',
+    number: dashboardId,
+  }),
+  onTcsPremiumPopupImpression: (dashboardId, source) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'premium_popup_impression',
+    modal: 'premium_promo',
+    place: source,
+    number: dashboardId,
+  }),
+  onTcsPremiumExplorePlansClick: (dashboardId, source) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'explore_plans',
+    modal: 'premium_promo',
+    place: source,
+    number: dashboardId,
+  }),
+  onTcsPremiumContactUsClick: (dashboardId, source) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'contact_us',
+    modal: 'premium_promo',
+    place: source,
+    number: dashboardId,
+  }),
+  onTcsPremiumNotNowClick: (dashboardId, source) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'not_now',
+    modal: 'premium_promo',
+    place: source,
+    number: dashboardId,
+  }),
 };
 
 export const DASHBOARD_EVENTS = {

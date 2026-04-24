@@ -29,6 +29,10 @@ export const referenceDictionary = {
   rpEpamNotice: 'https://privacy.epam.com/core/interaction/showpolicy?type=CommonPrivacyNotice',
   rpEpamCommonPolicy:
     'https://privacy.epam.com/core/interaction/showpolicy?type=CommonPrivacyPolicy',
+  rpExplorePlans:
+    'https://reportportal.io/pricing/saas/?utm_source=trigger&utm_medium=product&utm_campaign=premium_popup&utm_content=tep',
+  rpContactUs:
+    'https://reportportal.io/contact-us/general/?utm_source=trigger&utm_medium=product&utm_campaign=premium_popup&utm_content=tep',
 };
 
 export const docsReferences = {
@@ -59,4 +63,6 @@ export const docsReferences = {
 
 export const widgetDocsReferences = {
   testCaseSearch: 'https://reportportal.io/docs/dashboards-and-widgets/TestCaseSearch',
+  testExecutions:
+    'https://reportportal.io/docs/features/TestExecutions/?utm_source=trigger&utm_medium=product&utm_campaign=promo_banner_tsw&utm_content=tep',
 };
