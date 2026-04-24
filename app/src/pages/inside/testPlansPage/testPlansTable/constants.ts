@@ -18,7 +18,7 @@
 export const FIXED_COLUMN_WIDTH_PX = {
   coveredTotal: 101,
   progressBar: 130,
-  coverage: 51,
-  options: 45,
-  icon: 54,
+  coverage: 72,
+  options: 48,
+  icon: 32,
 } as const;

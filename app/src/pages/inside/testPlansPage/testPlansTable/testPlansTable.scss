@@ -17,7 +17,7 @@
 @use '../../../../common/css/mixins';
 @use '../milestones/milestonesTable/milestonesShared' as ms;
 
-$test-plans-progress-column-inline-pad: 16px;
+$test-plans-progress-column-inline-pad: 0;
 
 .test-plans {
   &__table-container {
@@ -51,7 +51,7 @@ $test-plans-progress-column-inline-pad: 16px;
     }
 
     :global([class*='table-header']) {
-      @include ms.milestone-test-plans-divider;
+      border-bottom: none;
       --table-header-bg-color: transparent;
 
       :global([class*='table-header-cell']) {
@@ -82,7 +82,7 @@ $test-plans-progress-column-inline-pad: 16px;
     &-header {
       --table-header-bg-color: transparent;
       box-sizing: border-box;
-      padding-inline: 24px;
+      padding-inline: 0;
 
       > :global(button):nth-child(2),
       > :global(button):nth-child(4) {
@@ -110,6 +110,7 @@ $test-plans-progress-column-inline-pad: 16px;
     max-width: 100%;
     min-width: 0;
     padding-inline: $test-plans-progress-column-inline-pad;
+    margin-right: 16px;
   }
 
   &__plan-name-row {
@@ -146,13 +147,16 @@ $test-plans-progress-column-inline-pad: 16px;
 
   &__table-row {
     position: relative;
-    min-height: 64px;
-    box-sizing: content-box;
+    height: 48px;
+    max-height: 48px;
+    box-sizing: border-box;
 
     @include ms.milestone-test-plans-divider;
 
     :global([class*='row-content-wrapper']) {
       min-width: 0;
+      height: 100%;
+      max-height: 48px;
     }
 
     :global([class*='table-row-content']) {
@@ -161,8 +165,9 @@ $test-plans-progress-column-inline-pad: 16px;
       min-width: 0;
       border: none;
       border-radius: 0;
-      padding: 8px 24px;
-      min-height: 48px;
+      padding: 0;
+      height: 48px;
+      max-height: 48px;
       background-color: transparent;
       box-shadow: none;
     }
@@ -209,6 +214,11 @@ $test-plans-progress-column-inline-pad: 16px;
     text-align: left;
     background: transparent;
     font: inherit;
+  }
+
+  &__table-cell-clickable_name:hover &__plan-name,
+  &__table-cell-clickable_name:focus-visible &__plan-name {
+    color: var(--Text-Brand-Hover);
   }
 
   &__table-cell-clickable_chevron {
