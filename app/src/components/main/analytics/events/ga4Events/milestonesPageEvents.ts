@@ -24,6 +24,7 @@ const MILESTONES = 'milestones';
 const PLACE_PAGE = 'milestones_page';
 const PLACE_KEBAB = 'milestone_kebab_menu';
 const PLACE_EMPTY = 'expanded_milestone_empty_state';
+
 export const PLACE_TP_ROW = 'expanded_milestone_test_plan';
 
 const CLICK = getBasicClickEventParameters(MILESTONES);
@@ -92,11 +93,25 @@ export const MILESTONES_PAGE_EVENTS = {
     element_name: 'start_without_replacing',
     status,
   }),
+  confirmStatusCompleteWithToday: (status: MilestoneStatusType) => ({
+    ...CLICK,
+    place: PLACE_PAGE,
+    modal: 'change_status',
+    element_name: 'complete_with_today',
+    status,
+  }),
   confirmStatusWithToday: (status: MilestoneStatusType) => ({
     ...CLICK,
     place: PLACE_PAGE,
     modal: 'change_status',
     element_name: 'start_with_today',
+    status,
+  }),
+  confirmStatusChange: (status: MilestoneStatusType) => ({
+    ...CLICK,
+    place: PLACE_PAGE,
+    modal: 'change_status',
+    element_name: 'change',
     status,
   }),
   CLICK_CREATE_TEST_PLAN_KEBAB: {
@@ -133,6 +148,13 @@ export const MILESTONES_PAGE_EVENTS = {
     place: PLACE_TP_ROW,
     element_name: 'duplicate_test_plan',
   },
+  submitDuplicateTestPlan: (attributesCount: number) => ({
+    ...CLICK,
+    place: PLACE_TP_ROW,
+    modal: 'duplicate_test_plan',
+    element_name: 'submit_duplicate_test_plan',
+    number: attributesCount,
+  }),
   CLICK_DELETE_TEST_PLAN: {
     ...CLICK,
     place: PLACE_TP_ROW,
@@ -148,6 +170,11 @@ export const MILESTONES_PAGE_EVENTS = {
     ...CLICK,
     place: PLACE_TP_ROW,
     element_name: 'open_all_test_cases',
+  },
+  CLICK_OPEN_TEST_PLAN_DETAILS: {
+    ...CLICK,
+    place: PLACE_TP_ROW,
+    element_name: 'open_test_plan_details_page',
   },
   CLICK_MILESTONE_ROW_EXPAND: {
     ...CLICK,
