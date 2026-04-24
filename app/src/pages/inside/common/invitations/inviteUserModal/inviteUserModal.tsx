@@ -16,7 +16,7 @@
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { reduxForm } from 'redux-form';
+import { reduxForm, getFormValues } from 'redux-form';
 import { isString } from 'es-toolkit';
 import DOMPurify from 'dompurify';
 import { Modal } from '@reportportal/ui-kit';
@@ -140,6 +140,7 @@ export const InviteUser = <L extends keyof FormDataMap>({
     projectName,
   });
   const currentUser = useSelector(userInfoSelector) as UserInfo;
+  const formValues = useSelector(getFormValues(getFormName(level))) as Record<string, unknown> | undefined;
 
   const inviteUser = async (userData: InvitationRequestData, condition: InviteProjectCondition) => {
     try {
@@ -213,6 +214,11 @@ export const InviteUser = <L extends keyof FormDataMap>({
     'data-automation-id': 'cancelButton',
   };
 
+  const isSomeFieldFilled = [
+    formValues?.email,
+    (formValues?.organizations as unknown[] | undefined)?.length > 0,
+  ].some((value) => !!value);
+
   return (
     <Modal
       title={header}
@@ -221,7 +227,7 @@ export const InviteUser = <L extends keyof FormDataMap>({
       onClose={() => dispatch(hideModalAction())}
       size="large"
       className={cx('modal')}
-      allowCloseOutside={!dirty}
+      allowCloseOutside={!isSomeFieldFilled}
       scrollable
     >
       <div className={cx('modal-content')}>{content}</div>
