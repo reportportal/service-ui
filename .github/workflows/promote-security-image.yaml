@@ -1,0 +1,46 @@
+name: Promote Security Image
+
+on:
+  pull_request_review:
+    types: [submitted]
+    branches:
+      - main
+      - master
+
+jobs:
+  extract-image-tag:
+    name: Extract image tag from PR title
+    if: >-
+      github.event.review.state == 'approved' &&
+      startsWith(github.event.pull_request.head.ref, 'secure/')
+    runs-on: ubuntu-latest
+    outputs:
+      image-tag: ${{ steps.extract.outputs.image-tag }}
+    steps:
+      - name: Extract image tag from PR title
+        id: extract
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          IMAGE_TAG=$(echo "${PR_TITLE}" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+-rc?[0-9]+' | tail -1)
+          if [ -z "${IMAGE_TAG}" ]; then
+            echo "::error::Could not extract a version tag (x.x.x-rx) from PR title: '${PR_TITLE}'"
+            exit 1
+          fi
+          echo "image-tag=${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
+          echo "Extracted image tag: ${IMAGE_TAG}"
+
+  promote-to-gcr:
+    name: Promote ${{ github.event.repository.name }} to GCP Artifact Registry
+    needs: extract-image-tag
+    uses: reportportal/.github/.github/workflows/promote-ecr-to-gcr.yaml@main
+    with:
+      service: ${{ github.event.repository.name }}
+      image-tag: ${{ needs.extract-image-tag.outputs.image-tag }}
+      aws-region: ${{ vars.AWS_REGION }}
+    secrets:
+      AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+      GCP_WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+      GCP_SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+      GCR_REGION: ${{ secrets.GCR_REGION }}
+      GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
