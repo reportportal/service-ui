@@ -239,6 +239,7 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
     formValues?.[FULL_NAME_FIELD],
     formValues?.[EMAIL_FIELD],
     formValues?.[PASSWORD_FIELD],
+    formValues?.[ADMIN_RIGHTS],
     formValues?.[ORGANIZATIONS]?.length > 0,
   ].some((value) => !!value);
 
