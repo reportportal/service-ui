@@ -49,7 +49,9 @@ export const useAttachmentsWithSlider = () => {
           objectUrls.push(thumbnailSrc);
         }
       } catch (err) {
-        console.error(`Error while fetching thumbnail: ${err}`)
+        if (!abortSignal.aborted) {
+          console.error(`Error while fetching thumbnail: ${err}`);
+        }
       }
 
       return {
@@ -61,7 +63,7 @@ export const useAttachmentsWithSlider = () => {
   );
 
   const fetchFullAttachmentBlob = useCallback(
-    async (attachmentId: number, abortSignal: AbortSignal): Promise<Blob> => {
+    async (attachmentId: number, abortSignal: AbortSignal): Promise<Blob | undefined> => {
       try {
         const response = await fetch(
           URLS.tmsAttachmentDownload(projectKey, attachmentId),
@@ -71,7 +73,13 @@ export const useAttachmentsWithSlider = () => {
 
         return response.data as Blob;
       } catch (err) {
-        console.error(`Error while fetching image: ${err}`)
+        if (abortSignal.aborted) {
+          return undefined;
+        }
+
+        console.error(`Error while fetching image: ${err}`);
+
+        return undefined;
       }
     },
     [projectKey],

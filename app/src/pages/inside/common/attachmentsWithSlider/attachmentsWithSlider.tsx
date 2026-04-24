@@ -169,7 +169,7 @@ export const AttachmentsWithSlider = ({
 
     void fetchFullAttachmentBlob(requestedAttachmentId, abortController.signal)
       .then((blob) => {
-        if (abortController.signal.aborted) {
+        if (abortController.signal.aborted || !blob) {
           return;
         }
 

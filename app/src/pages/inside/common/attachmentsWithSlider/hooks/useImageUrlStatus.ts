@@ -54,7 +54,6 @@ export function useImageUrlStatus(url: string | undefined): ExternalImageStatus 
       return;
     }
 
-     
     setStatus(EXTERNAL_IMAGE_STATUS.PENDING);
 
     let cancelled = false;
