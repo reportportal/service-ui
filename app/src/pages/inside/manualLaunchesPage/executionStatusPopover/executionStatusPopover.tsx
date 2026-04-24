@@ -1,0 +1,115 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { FC, ReactNode } from 'react';
+import { useIntl } from 'react-intl';
+import { useSelector } from 'react-redux';
+import { Popover } from '@reportportal/ui-kit';
+
+import { createClassnames } from 'common/utils';
+import { manualLaunchTestCaseExecutionsSelector } from 'controllers/manualLaunch';
+import { Divider } from 'pages/inside/projectSettingsPageContainer/content/elements';
+import { ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
+
+import { STATUS_CONFIG } from '../manualLaunchExecutionPage/constants';
+import type { ExecutionStatusType } from '../manualLaunchExecutionPage/types';
+import { useExecutionStatusModal } from '../manualLaunchExecutionPage/executionStatusConfirmModal';
+import { messages } from './messages';
+import { messages as commonMessages } from '../manualLaunchExecutionPage/messages';
+
+import styles from './executionStatusPopover.scss';
+
+const cx = createClassnames(styles);
+
+interface ExecutionStatusPopoverProps {
+  executionId: number;
+  currentStatus: ExecutionStatus;
+  isOpened: boolean;
+  setIsOpened: (isOpened: boolean) => void;
+  children: ReactNode;
+}
+
+export const ExecutionStatusPopover: FC<ExecutionStatusPopoverProps> = ({
+  executionId,
+  currentStatus,
+  isOpened,
+  setIsOpened,
+  children,
+}) => {
+  const { formatMessage } = useIntl();
+  const { openModal } = useExecutionStatusModal();
+  const executions = useSelector(manualLaunchTestCaseExecutionsSelector);
+
+  const status = executions.find((e) => e.id === executionId)?.executionStatus ?? currentStatus;
+  const statusKey = status.toLowerCase() as ExecutionStatusType;
+  const availableStatuses = (Object.keys(STATUS_CONFIG) as ExecutionStatusType[]).filter(
+    (s) => s !== statusKey,
+  );
+
+  const handleStatusChange = (newStatus: string) => {
+    openModal({
+      executionId,
+      status: newStatus as ExecutionStatusType,
+      currentStatus: status,
+    });
+    setIsOpened(false);
+  };
+
+  const renderPopoverContent = () => (
+    <div className={cx('status-options')}>
+      {availableStatuses.map((status) => {
+        const config = STATUS_CONFIG[status];
+
+        return (
+          <button
+            key={status}
+            type="button"
+            className={cx('status-option')}
+            onClick={() => handleStatusChange(status)}
+          >
+            {formatMessage(messages.markAs, { status: formatMessage(config.label) })}
+          </button>
+        );
+      })}
+      {status !== ExecutionStatus.TO_RUN && (
+        <>
+          <Divider />
+          <button
+            key={status}
+            type="button"
+            className={cx('status-option')}
+            onClick={() => handleStatusChange(ExecutionStatus.TO_RUN)}
+          >
+            {formatMessage(commonMessages.clearStatus)}
+          </button>
+        </>
+      )}
+    </div>
+  );
+
+  return (
+    <Popover
+      content={renderPopoverContent()}
+      className={cx('popover')}
+      placement="bottom"
+      isOpened={isOpened}
+      setIsOpened={setIsOpened}
+      isCentered={false}
+    >
+      {children}
+    </Popover>
+  );
+};

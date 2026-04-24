@@ -45,6 +45,8 @@ export const GalleryAttachmentTile = ({
 
   return (
     <button
+      type="button"
+      disabled={!isReady}
       className={classNames(galleryItemClass, {
         [styles.notReadyButton]: !isReady,
       })}

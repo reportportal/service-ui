@@ -15,5 +15,7 @@
  */
 
 .content {
-  margin-top: 32px;
+  &.with-form {
+    margin-top: 32px;
+  }
 }

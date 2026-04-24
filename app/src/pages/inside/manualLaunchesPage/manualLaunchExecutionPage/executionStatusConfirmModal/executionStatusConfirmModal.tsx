@@ -40,13 +40,13 @@ import { projectKeySelector } from 'controllers/project';
 import { MAX_FILE_SIZE } from 'common/constants/fileConstants';
 import { useModalButtons } from 'hooks/useModalButtons';
 import { useTextareaAutoResize } from 'common/hooks';
+import { ExecutionStatus } from "pages/inside/manualLaunchesPage/types";
 
 import type { ExecutionStatusConfirmFormValues, ExecutionStatusConfirmModalProps } from '../types';
 import {
   EXECUTION_STATUS_CONFIRM_MODAL,
   EXECUTION_STATUS_CONFIRM_FORM_NAME,
   STATUS_CONFIG,
-  EXECUTION_STATUS_TO_RUN,
   EXECUTION_STATUS_FAILED,
 } from '../constants';
 import { messages } from './messages';
@@ -80,11 +80,18 @@ const ExecutionStatusConfirmModalComponent: FC<
   };
 
   const status = data?.status || 'passed';
+  const isClearStatus = status === ExecutionStatus.TO_RUN;
   const executionId = data?.executionId;
   const currentStatus = data?.currentStatus;
-  const statusLabel = formatMessage(STATUS_CONFIG[status].label);
-  const isStatusChange = currentStatus && currentStatus !== EXECUTION_STATUS_TO_RUN;
+  const statusLabel = isClearStatus ? '' : formatMessage(STATUS_CONFIG[status]?.label);
+  const title = isClearStatus
+    ? formatMessage(messages.clearStatus)
+    : formatMessage(messages.markAsStatus, { status: statusLabel });
+  const isStatusChange = currentStatus && !isClearStatus;
   const showPostIssueToBts = status === EXECUTION_STATUS_FAILED;
+  const okButtonLabel = isClearStatus
+    ? formatMessage(messages.clearStatus)
+    : formatMessage(messages.markAsStatus, { status: statusLabel });
 
   const onSubmit = (values: ExecutionStatusConfirmFormValues) => {
     if (!executionId) return;
@@ -95,16 +102,16 @@ const ExecutionStatusConfirmModalComponent: FC<
         launchId,
         executionId,
         status: status.toUpperCase(),
-        comment: values.comment,
-        postIssueToBts: values.postIssueToBts,
-        attachments: attachedFiles,
+        comment: values.clearCommentAndLinksToBTS ? '' : values.comment,
+        postIssueToBts: values.clearCommentAndLinksToBTS ? false : values.postIssueToBts,
+        attachments: values.clearCommentAndLinksToBTS ? [] : attachedFiles,
       }),
     );
     dispatch(hideModalAction());
   };
 
   const { okButton, cancelButton, hideModal } = useModalButtons({
-    okButtonText: formatMessage(messages.markAsStatus, { status: statusLabel }),
+    okButtonText: okButtonLabel,
     isLoading: false,
     isSubmitButtonDisabled: invalid,
     onSubmit: handleSubmit(onSubmit) as VoidFn,
@@ -116,7 +123,7 @@ const ExecutionStatusConfirmModalComponent: FC<
 
   return (
     <Modal
-      title={formatMessage(messages.markAsStatus, { status: statusLabel })}
+      title={title}
       onClose={hideModal}
       okButton={okButton}
       cancelButton={cancelButton}
@@ -130,7 +137,7 @@ const ExecutionStatusConfirmModalComponent: FC<
         className={cx('modal-content')}
         onSubmit={handleSubmit(onSubmit) as (event: FormEvent) => void}
       >
-        {isStatusChange ? (
+        {isStatusChange && (
           <>
             <div className={cx('confirmation-text')}>
               <div className={cx('confirmation-question')}>
@@ -151,7 +158,9 @@ const ExecutionStatusConfirmModalComponent: FC<
               </div>
             )}
           </>
-        ) : (
+        )}
+
+        {!isStatusChange && !isClearStatus && (
           <>
             <div className={cx('comment-section')}>
               <FieldProvider name="comment">
@@ -217,6 +226,20 @@ const ExecutionStatusConfirmModalComponent: FC<
               </FileDropArea>
             </div>
           </>
+        )}
+
+        {isClearStatus && (
+          <div className={cx('confirmation-text')}>
+            <div className={cx('confirmation-question')}>
+              {formatMessage(messages.clearStatusWarning)}
+            </div>
+
+            <div className={cx('checkbox-section')}>
+              <FieldProvider name="clearCommentAndLinksToBTS">
+                <InputCheckbox>{formatMessage(messages.clearCommentAndLinksToBTS)}</InputCheckbox>
+              </FieldProvider>
+            </div>
+          </div>
         )}
       </form>
     </Modal>

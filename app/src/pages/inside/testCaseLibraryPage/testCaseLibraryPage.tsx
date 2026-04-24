@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useEffect, useMemo, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
@@ -32,7 +32,6 @@ import { SEARCH_DELAY } from 'common/constants/delayTime';
 import { projectNameSelector } from 'controllers/project';
 import {
   PROJECT_DASHBOARD_PAGE,
-  urlFolderIdSelector,
   urlOrganizationAndProjectSelector,
   locationSelector,
   updatePagePropertiesAction,
@@ -63,7 +62,6 @@ export const TestCaseLibraryPage = () => {
   const dispatch = useDispatch();
   const projectName = useSelector(projectNameSelector);
   const folders = useSelector(foldersSelector);
-  const folderId = useSelector(urlFolderIdSelector);
   const areFoldersLoading = useSelector(areFoldersLoadingSelector);
   const location = useSelector(locationSelector);
   const { organizationSlug, projectSlug } = useSelector(
@@ -135,17 +133,17 @@ export const TestCaseLibraryPage = () => {
 
   const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
 
-  const currentFolderName = useMemo(
-    () => folders.find(({ id }) => id === Number(folderId))?.name,
-    [folderId, folders],
-  );
+  const hasActiveSearchOrFilters =
+    !!location?.query?.testCasesSearchParams ||
+    !!location?.query?.filterPriorities ||
+    !!location?.query?.filterTags;
 
   const renderContent = () => {
     if (areFoldersLoading) {
       return <BubblesLoader />;
     }
 
-    if (hasFolders) {
+    if (hasFolders || hasActiveSearchOrFilters) {
       return <TestCaseFolders />;
     }
 
@@ -198,7 +196,7 @@ export const TestCaseLibraryPage = () => {
                         icon={Parser(ImportIcon as unknown as string)}
                         data-automation-id="importTestCase"
                         adjustWidthOn="content"
-                        onClick={() => openImportFolderModal({ folderName: currentFolderName ?? '' })}
+                        onClick={() => openImportFolderModal()}
                       >
                         {formatMessage(COMMON_LOCALE_KEYS.IMPORT)}
                       </Button>

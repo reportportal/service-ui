@@ -26,6 +26,8 @@ import { Modal, FieldText } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
 import { ModalButtonProps } from 'types/common';
 import { useDispatch } from 'react-redux';
+import { useTracking } from 'react-tracking';
+import { PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectsPageEvents';
 import { messages } from '../../messages';
 
 const PROJECT_NAME_FIELD = 'newProjectName';
@@ -39,19 +41,21 @@ interface ModalProps {
   data: {
     onConfirm: (newProjectName: string) => void;
     projectName: string;
+    projectId: number;
   };
 }
 
 type RenameProjectModalProps = InjectedFormProps<RenameProjectFormProps, ModalProps> & ModalProps;
 
 const RenameProjectModal: FC<RenameProjectModalProps> = ({
-  data: { onConfirm, projectName },
+  data: { onConfirm, projectName, projectId },
   initialize,
   handleSubmit,
   anyTouched,
   invalid,
 }) => {
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
 
   useEffect(() => {
@@ -67,7 +71,10 @@ const RenameProjectModal: FC<RenameProjectModalProps> = ({
 
   const okButton: ModalButtonProps = {
     children: formatMessage(COMMON_LOCALE_KEYS.RENAME),
-    onClick: handleSubmit(onSubmit) as () => void,
+    onClick: () => {
+      trackEvent(PROJECTS_PAGE_EVENTS.clickRenameProjectModalSubmit(projectId));
+      (handleSubmit(onSubmit))();
+    },
     disabled: anyTouched && invalid,
     'data-automation-id': 'submitButton',
   };

@@ -58,6 +58,11 @@ export const ManualLaunchFolders = () => {
   const urlFolderId = useSelector(urlManualLaunchFolderIdSelector);
   const urlFolderIdNumber = urlFolderId ? Number(urlFolderId) : null;
 
+  const activeFolder = useMemo(
+    () => folders.find(({ id }) => id === urlFolderIdNumber),
+    [urlFolderIdNumber, folders],
+  );
+
   const transformedFolders = useMemo(
     () => filterEmptyFolders(transformFoldersToDisplay(folders)),
     [folders],
@@ -80,6 +85,8 @@ export const ManualLaunchFolders = () => {
     isSearchFilteredLoading,
     hasSearchFilteredFolders,
     handleToggleSearchFilteredFolder,
+    setAllExpandedInFilter,
+    setAllCollapsedInFilter,
     filteredTotalTestCases,
   } = useManualLaunchSearchFilteredFolders({
     searchQuery,
@@ -135,6 +142,21 @@ export const ManualLaunchFolders = () => {
     navigateToFolder();
   }, [navigateToFolder]);
 
+  useEffect(() => {
+    if (urlFolderId && !activeFolder && !isLoadingFolders) {
+      navigateToFolder();
+    }
+  }, [
+    urlFolderId,
+    activeFolder,
+    isLoadingFolders,
+    navigateToFolder,
+    dispatch,
+    filterPriorities,
+    filterTags,
+    statusFilter,
+  ]);
+
   const searchFilteredData = useMemo(
     () => ({
       searchFilteredFolders,
@@ -142,6 +164,8 @@ export const ManualLaunchFolders = () => {
       isSearchFilteredLoading,
       hasSearchFilteredFolders,
       handleToggleSearchFilteredFolder,
+      setAllExpandedInFilter,
+      setAllCollapsedInFilter,
       filteredTotalTestCases,
     }),
     [
@@ -150,6 +174,8 @@ export const ManualLaunchFolders = () => {
       isSearchFilteredLoading,
       hasSearchFilteredFolders,
       handleToggleSearchFilteredFolder,
+      setAllExpandedInFilter,
+      setAllCollapsedInFilter,
       filteredTotalTestCases,
     ],
   );
@@ -163,7 +189,8 @@ export const ManualLaunchFolders = () => {
     !isLoadingExecutions &&
     !isLoadingFolders &&
     isEmpty(executions) &&
-    executionTotal === 0;
+    executionTotal === 0 &&
+    isEmpty(transformedFolders);
 
   return (
     <ExpandedOptions

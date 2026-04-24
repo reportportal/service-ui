@@ -16,9 +16,11 @@
 
 import { useCallback, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { isEmpty } from 'es-toolkit/compat';
 import { Button, ChevronDownDropdownIcon, PlusIcon } from '@reportportal/ui-kit';
 
+import { MILESTONES_PAGE_EVENTS, PLACE_TP_ROW } from 'analyticsEvents/milestonesPageEvents';
 import { createClassnames } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 
@@ -48,6 +50,7 @@ export const MilestoneCard = ({
   onChangeMilestoneStatus,
 }: MilestoneCardProps) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const [expanded, setExpanded] = useState(false);
   const { canManageTestPlans } = useUserPermissions();
   const { openModal: openCreateTestPlanModal } = useCreateTestPlanModal();
@@ -65,7 +68,17 @@ export const MilestoneCard = ({
     [milestone.id, milestone.testPlans],
   );
 
-  const toggleExpanded = () => setExpanded((v) => !v);
+  const toggleExpanded = () => {
+    if (!expanded) {
+      trackEvent(MILESTONES_PAGE_EVENTS.CLICK_MILESTONE_ROW_EXPAND);
+    }
+    setExpanded((isExpanded) => !isExpanded);
+  };
+
+  const handleEmptyStateCreateTestPlan = () => {
+    trackEvent(MILESTONES_PAGE_EVENTS.CLICK_CREATE_TEST_PLAN_EMPTY);
+    openCreateTestPlanModal({ milestoneId: milestone.id });
+  };
 
   return (
     <div className={cx('milestone-card__group')}>
@@ -85,7 +98,7 @@ export const MilestoneCard = ({
             >
               <ChevronDownDropdownIcon />
             </span>
-            <MilestoneTypeIcon type={milestone.type} placement="card" />
+            <MilestoneTypeIcon type={milestone.type} />
             <div className={cx('milestone-card__title-block')}>
               <div className={cx('milestone-card__name')}>{milestone.name}</div>
               <div className={cx('milestone-card__dates')}>{dateRange}</div>
@@ -144,10 +157,7 @@ export const MilestoneCard = ({
                   {formatMessage(messages.noTestPlansInMilestone)}
                 </p>
                 {canManageTestPlans && (
-                  <Button
-                    variant="primary"
-                    onClick={() => openCreateTestPlanModal({ milestoneId: milestone.id })}
-                  >
+                  <Button variant="primary" onClick={handleEmptyStateCreateTestPlan}>
                     {formatMessage(messages.createTestPlanUnderMilestone)}
                   </Button>
                 )}
@@ -156,7 +166,12 @@ export const MilestoneCard = ({
           ) : (
             <>
               <div className={cx('milestone-card__test-plans')}>
-                <TestPlansTable testPlans={testPlanRows} isLoading={false} />
+                <TestPlansTable
+                  testPlans={testPlanRows}
+                  isLoading={false}
+                  showTestPlanBusinessId={false}
+                  analyticsPlace={PLACE_TP_ROW}
+                />
               </div>
               {canManageTestPlans && (
                 <div className={cx('milestone-card__test-plans-footer')}>

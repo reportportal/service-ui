@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
- .name-section {
+.name-section {
   display: flex;
   align-items: flex-start;
   gap: 8px;
@@ -29,15 +29,36 @@
   gap: 4px;
 }
 
-.test-name {
+.test-name-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  margin-bottom: 4px;
+}
+
+.business-id {
+  flex-shrink: 0;
+  font-family: $FONT-ROBOTO-MEDIUM;
   font-size: 13px;
   font-weight: 500;
-  color: var(--rp-ui-base-almost-black);
+  font-style: normal;
+  line-height: 20px;
+  letter-spacing: 0;
+  padding-left: 1px;
+  color: var(--Text-Secondary, var(--rp-ui-base-e-400));
+}
+
+.test-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--Text-Primary, var(--rp-ui-base-almost-black));
   line-height: 20px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-bottom: 4px;
 }
 
 .tags-section {

@@ -25,11 +25,13 @@ import {
   TestPlanIcon,
   SidePanel,
   BubblesLoader,
+  CopyIcon,
+  HashIcon,
 } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 import { isEmpty } from 'es-toolkit/compat';
 
-import { createClassnames } from 'common/utils';
+import { createClassnames, copyToClipboard } from 'common/utils';
 import { useOnClickOutside } from 'common/hooks';
 import { CollapsibleSection } from 'components/collapsibleSection';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
@@ -132,6 +134,14 @@ export const LaunchSidePanel = memo(
       }
     };
 
+    const launchBusinessId = launchDetails.displayId;
+
+    const handleCopyLaunchId = () => {
+      void copyToClipboard(launchBusinessId).catch((error) => {
+        console.error('Failed to copy ID:', error);
+      });
+    };
+
     const { total, passed, failed, skipped, toRun, inProgress } = launchDetails.executionStatistic;
 
     const { testPlan, owner, type, startTime } = launchDetails;
@@ -140,6 +150,21 @@ export const LaunchSidePanel = memo(
 
     const descriptionComponent = (
       <div className={cx('header-meta')}>
+        <div className={cx('meta-row')}>
+          <div className={cx('meta-item-row', 'id-row')}>
+            <HashIcon className={cx('hash-icon')} aria-hidden />
+            <span className={cx('meta-label')}>{formatMessage(messages.launchId)}</span>
+            <span className={cx('meta-value', 'meta-value-launch-id')}>{launchBusinessId}</span>
+            <button
+              type="button"
+              className={cx('copy-button')}
+              onClick={handleCopyLaunchId}
+              aria-label={formatMessage(commonMessages.copyId)}
+            >
+              <CopyIcon />
+            </button>
+          </div>
+        </div>
         <div className={cx('meta-row', 'meta-row-with-action')}>
           <div className={cx('meta-item-row')}>
             <LaunchTypeIcon className={cx('launch-type-icon')} />
@@ -246,7 +271,7 @@ export const LaunchSidePanel = memo(
       <div ref={sidePanelRef} className={cx('launch-side-panel-wrapper')}>
         <SidePanel
           className={cx('launch-side-panel')}
-          title={`${launchDetails.name} #${launchDetails.number}`}
+          title={launchDetails.name}
           descriptionComponent={isLoading ? <BubblesLoader /> : descriptionComponent}
           contentComponent={isLoading ? <BubblesLoader /> : contentComponent}
           footerComponent={footerComponent}

@@ -29,7 +29,7 @@ import { createClassnames } from 'common/utils';
 
 import { svgToBase64 } from '../utils';
 import type { AttachmentWithSlider } from './types';
-import { applyFullImageStateForAttachment } from './utils/applyFullImageStateForAttachment';
+import { applyFullImageStateForAttachment } from './utils';
 import { useAttachmentsWithSlider } from './hooks/useAttachmentsWithSlider';
 import { GalleryAttachmentTile } from './components/galleryAttachmentTile/galleryAttachmentTile';
 import { AttachmentsGallerySlider } from './components/attachmentsGallerySlider/attachmentsGallerySlider';
@@ -125,6 +125,7 @@ export const AttachmentsWithSlider = ({
     const abortController = new AbortController();
 
     shouldApplyAttachmentPreviewRef.current = true;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     getAttachments(objectUrls, abortController.signal, shouldApplyAttachmentPreviewRef);
 
     return () => {
@@ -139,8 +140,10 @@ export const AttachmentsWithSlider = ({
   useEffect(() => {
     if (!isGalleryOpen) {
       revokeFullImageCache();
+      /* eslint-disable react-hooks/set-state-in-effect */
       setGalleryFullImageUrl(null);
       setGalleryFullImageLoading(false);
+      /* eslint-enable react-hooks/set-state-in-effect */
     }
   }, [isGalleryOpen, revokeFullImageCache]);
 
@@ -167,6 +170,12 @@ export const AttachmentsWithSlider = ({
     void fetchFullAttachmentBlob(requestedAttachmentId, abortController.signal)
       .then((blob) => {
         if (abortController.signal.aborted) {
+          return;
+        }
+
+        if (!blob) {
+          console.error('Full-resolution attachment request returned an empty body');
+
           return;
         }
 

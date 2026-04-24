@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useDrop } from 'react-dnd';
 import { isEmpty } from 'es-toolkit/compat';
@@ -27,6 +27,7 @@ import type { TreeDragItem, TreeDropPosition } from '@reportportal/ui-kit/common
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { createClassnames } from 'common/utils';
 import { useStorageFolders } from 'hooks/useStorageFolders';
+import { useFlatViewPreference } from 'hooks/useFlatViewPreference';
 import { TransformedFolder, foldersSelector } from 'controllers/testCase';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import OutlineSearchIcon from 'common/img/search-outline-icon-inline.svg';
@@ -39,11 +40,13 @@ import { EmptyPageState } from 'pages/common/emptyPageState';
 
 import { messages } from './messages';
 import { VirtualFolderTree } from './folderTree/virtualFolderTree';
+import { FolderTreeFooter } from './folderTree/folderTreeFooter';
 import type { ExpandedOptionsProps } from './types';
 import { useFolderSearch } from './useFolderSearch';
 import { useSearchFilteredFolders } from './useSearchFilteredFolders';
+import { useExpandCollapseAll } from './useExpandCollapseAll';
 import { FOLDER_DRAG_TYPE, EXTERNAL_TREE_DROP_TYPE } from './constants';
-import { createTestCaseDropHandler } from './utils';
+import { createTestCaseDropHandler, getHiddenActiveFolderIndicatorId } from './utils';
 
 import styles from './expandedOptions.scss';
 
@@ -68,7 +71,8 @@ export const ExpandedOptions = ({
   onDuplicateTestCase,
 }: ExpandedOptionsProps) => {
   const { formatMessage } = useIntl();
-  const { expandedIds, onToggleFolder } = useStorageFolders(instanceKey);
+  const { expandedIds, onToggleFolder, setExpandedIds } = useStorageFolders(instanceKey);
+  const { isFlatView, setIsFlatView } = useFlatViewPreference(instanceKey);
   const allFolders = useSelector(foldersSelector);
 
   const internalSearchData = useSearchFilteredFolders({
@@ -83,6 +87,8 @@ export const ExpandedOptions = ({
     isSearchFilteredLoading,
     hasSearchFilteredFolders,
     handleToggleSearchFilteredFolder,
+    setAllExpandedInFilter,
+    setAllCollapsedInFilter,
     filteredTotalTestCases,
   } = searchFilteredData ?? internalSearchData;
 
@@ -92,7 +98,8 @@ export const ExpandedOptions = ({
     [pageSearchQuery, searchExtraFilters],
   );
 
-  const isDragAndDropEnabled = !!(onMoveFolder && onDuplicateFolder);
+  const isDragAndDropEnabled = !!(onMoveFolder && onDuplicateFolder) && !isFlatView;
+  const hideEmptyFoldersInFlatView = instanceKey !== TMS_INSTANCE_KEY.TEST_CASE;
 
   const { canDropOn } = useTreeDropValidation<TransformedFolder>({
     items: folders,
@@ -152,24 +159,37 @@ export const ExpandedOptions = ({
 
   const totalTestCases = hasFolderSidebarFilters ? filteredTotalTestCases : allTestCasesTotal;
 
-  const [prevHadFolders, setPrevHadFolders] = useState(true);
+  const sidebarFilterKey = useMemo(
+    () => `${pageSearchQuery ?? ''}|${JSON.stringify(searchExtraFilters ?? {})}`,
+    [pageSearchQuery, searchExtraFilters],
+  );
+  const [respondedSidebarFilterKey, setRespondedSidebarFilterKey] = useState<string | null>(null);
+  const prevSidebarLoadingRef = useRef(isSearchFilteredLoading);
 
   useEffect(() => {
-    if (hasFolderSidebarFilters && !isSearchFilteredLoading) {
-      setPrevHadFolders(hasSearchFilteredFolders);
+    if (prevSidebarLoadingRef.current && !isSearchFilteredLoading) {
+      setRespondedSidebarFilterKey(sidebarFilterKey);
     }
+    prevSidebarLoadingRef.current = isSearchFilteredLoading;
+  }, [isSearchFilteredLoading, sidebarFilterKey]);
 
+  const isSidebarFilterStale =
+    hasFolderSidebarFilters && respondedSidebarFilterKey !== sidebarFilterKey;
+
+  const isSidebarResolving = isSearchFilteredLoading || isSidebarFilterStale;
+  const [stableHidePageSearchSidebar, setStableHidePageSearchSidebar] = useState(false);
+
+  useEffect(() => {
     if (!hasFolderSidebarFilters) {
-      setPrevHadFolders(true);
+      setStableHidePageSearchSidebar(false);
+      return;
     }
-  }, [hasFolderSidebarFilters, isSearchFilteredLoading, hasSearchFilteredFolders]);
+    if (!isSidebarResolving) {
+      setStableHidePageSearchSidebar(!hasSearchFilteredFolders);
+    }
+  }, [hasFolderSidebarFilters, isSidebarResolving, hasSearchFilteredFolders]);
 
-  const hidePageSearchSidebar =
-    hasFolderSidebarFilters &&
-    !hasSearchFilteredFolders &&
-    (!isSearchFilteredLoading || !prevHadFolders);
-
-  const hideSidebar = hidePageSearchSidebar || hideFolderSidebar;
+  const hideSidebar = stableHidePageSearchSidebar || hideFolderSidebar;
 
   const handleMoveFolder = useCallback(
     (draggedItem: TreeDragItem, targetId: string | number, position: TreeDropPosition) => {
@@ -198,6 +218,28 @@ export const ExpandedOptions = ({
     },
     [onDuplicateTestCase],
   );
+
+  const { isExpandAllDisabled, isCollapseAllDisabled, handleExpandAll, handleCollapseAll } =
+    useExpandCollapseAll({
+      filteredFolders,
+      effectiveExpandedIds,
+      hasFolderSidebarFilters,
+      setExpandedIds,
+      setAllExpandedInFilter,
+      setAllCollapsedInFilter,
+    });
+
+  const hiddenActiveFolderIndicatorId = useMemo(() => {
+    if (isFlatView || searchQuery) {
+      return null;
+    }
+
+    return getHiddenActiveFolderIndicatorId({
+      folders: folderSearchSource,
+      activeFolderId,
+      expandedIds: effectiveExpandedIds,
+    });
+  }, [isFlatView, searchQuery, folderSearchSource, activeFolderId, effectiveExpandedIds]);
 
   const renderContent = () => (
     <>
@@ -290,15 +332,28 @@ export const ExpandedOptions = ({
                 hasSearchFilteredFolders={hasSearchFilteredFolders}
                 hasAnyMatch={hasAnyMatch}
                 enableDragAndDrop={isDragAndDropEnabled}
+                isFlatView={isFlatView}
+                hideEmptyFoldersInFlatView={hideEmptyFoldersInFlatView}
+                hiddenActiveFolderIndicatorId={hiddenActiveFolderIndicatorId}
                 canDropOn={isDragAndDropEnabled ? canDropOn : undefined}
                 setAllTestCases={setAllTestCases}
                 onToggleFolder={handleToggleFolder}
                 onFolderClick={onFolderClick}
               />
             </div>
+            {!isEmpty(filteredFolders) && (
+              <FolderTreeFooter
+                isFlatView={isFlatView}
+                isExpandAllDisabled={isExpandAllDisabled}
+                isCollapseAllDisabled={isCollapseAllDisabled}
+                onFlatViewChange={setIsFlatView}
+                onExpandAll={handleExpandAll}
+                onCollapseAll={handleCollapseAll}
+              />
+            )}
           </div>
         )}
-        {hidePageSearchSidebar ? (
+        {stableHidePageSearchSidebar ? (
           <div className={cx('expanded-options__content')}>
             <div className={cx('expanded-options__no-search-results')}>
               <EmptyPageState

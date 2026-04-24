@@ -16,7 +16,10 @@
 
 import { Page } from 'types/common';
 
-import { Launch } from 'pages/inside/manualLaunchesPage/types';
+import {
+  Launch,
+  ExecutionStatus as ExecutionStatusOptions,
+} from 'pages/inside/manualLaunchesPage/types';
 import { hasPayloadProps } from 'controllers/utils/types';
 import { ExecutionStatus } from 'types/testCase';
 
@@ -31,6 +34,12 @@ export interface GetManualLaunchesParams {
   offset?: string | number;
   limit?: string | number;
   searchQuery?: string;
+  filterStatuses?: string[];
+  filterCompletion?: string;
+  filterStartTimeFrom?: number;
+  filterEndTimeTo?: number;
+  filterTestPlan?: string;
+  filterCompositeAttribute?: string;
 }
 
 export interface GetManualLaunchParams {
@@ -78,6 +87,7 @@ export interface UpdateManualLaunchExecutionStatusParams {
   comment?: string;
   postIssueToBts?: boolean;
   attachments?: File[];
+  onSuccess?: () => void;
 }
 
 export interface ManualLaunchState {
@@ -218,7 +228,7 @@ export interface ManualScenario {
 
 export interface TestCaseExecution {
   id: number;
-  executionStatus: string;
+  executionStatus: ExecutionStatusOptions;
   executionComment?: ExecutionComment;
   startedAt?: number;
   finishedAt?: number;
@@ -226,6 +236,7 @@ export interface TestCaseExecution {
   testCaseVersionId?: number;
   testItemId?: number;
   testCaseId: number;
+  testCaseDisplayId: string;
   testCaseName: string;
   testCaseDescription?: string;
   testCasePriority?: string;

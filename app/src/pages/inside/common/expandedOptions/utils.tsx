@@ -19,6 +19,7 @@ import { isEmpty } from 'es-toolkit/compat';
 import { TreeDragItem, TreeDropPosition } from '@reportportal/ui-kit/common';
 
 import { createClassnames } from 'common/utils';
+import { getParentFoldersIds } from 'common/utils/folderUtils';
 import { TransformedFolder } from 'controllers/testCase';
 import { ExtendedTestCase } from 'types/testCase';
 
@@ -31,18 +32,18 @@ export const hasMatchInTree = (folder: TransformedFolder, query: string): boolea
   if (!query) return true;
 
   const lowerQuery = query.toLowerCase().trim();
-  if (folder.name.toLowerCase().includes(lowerQuery)) {
+  if (folder?.name?.toLowerCase().includes(lowerQuery)) {
     return true;
   }
 
-  return (folder.folders ?? []).some((child) => hasMatchInTree(child, lowerQuery));
+  return (folder?.folders ?? []).some((child) => hasMatchInTree(child, lowerQuery));
 };
 
 export const hasChildMatch = (folder: TransformedFolder, query: string): boolean => {
   if (!query) return false;
 
   const lowerQuery = query.toLowerCase().trim();
-  return (folder.folders ?? []).some((child) => hasMatchInTree(child, lowerQuery));
+  return (folder?.folders ?? []).some((child) => hasMatchInTree(child, lowerQuery));
 };
 
 export const collectFoldersToExpand = (
@@ -65,6 +66,57 @@ export const collectFoldersToExpand = (
   });
 
   return result;
+};
+
+export const getExpandableFolderIds = (
+  folders: TransformedFolder[],
+  result: number[] = [],
+): number[] => {
+  folders.forEach((folder) => {
+    if (!isEmpty(folder.folders)) {
+      result.push(folder.id);
+
+      getExpandableFolderIds(folder.folders, result);
+    }
+  });
+
+  return result;
+};
+
+interface GetHiddenActiveFolderIndicatorIdParams {
+  folders: TransformedFolder[];
+  activeFolderId: number | null;
+  expandedIds: number[];
+}
+
+const flattenFolderTree = (folders: TransformedFolder[]): TransformedFolder[] => {
+  const result: TransformedFolder[] = [];
+
+  const getFoldersRecursively = (list: TransformedFolder[]) => {
+    list.forEach((folder) => {
+      result.push(folder);
+      getFoldersRecursively(folder.folders ?? []);
+    });
+  };
+
+  getFoldersRecursively(folders);
+
+  return result;
+};
+
+export const getHiddenActiveFolderIndicatorId = ({
+  folders,
+  activeFolderId,
+  expandedIds,
+}: GetHiddenActiveFolderIndicatorIdParams): number | null => {
+  if (activeFolderId === null) {
+    return null;
+  }
+
+  const ancestorIds = getParentFoldersIds(activeFolderId, flattenFolderTree(folders)).slice(1);
+  const expandedSet = new Set(expandedIds);
+
+  return [...ancestorIds].reverse().find((id) => !expandedSet.has(id)) ?? null;
 };
 
 export const highlightText = (text: string, query: string): ReactNode => {
@@ -114,4 +166,4 @@ export const createTestCaseDropHandler = (action: TestCaseFolderActionCallback |
       void action(item.testCase, Number(targetId));
     }
   };
-}
+};

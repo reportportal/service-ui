@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
+import { useState, type MouseEvent } from 'react';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { ChevronDownDropdownIcon, Popover } from '@reportportal/ui-kit';
 
+import {
+  MILESTONES_PAGE_EVENTS,
+  type MilestoneStatusType,
+} from 'analyticsEvents/milestonesPageEvents';
+import type { TmsMilestoneStatus } from 'controllers/milestone';
 import { createClassnames } from 'common/utils';
 
 import {
@@ -40,9 +46,27 @@ export const MilestoneCardStatusButton = ({
   onChangeMilestoneStatus,
 }: MilestoneCardProps) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const [isOpened, setIsOpened] = useState(false);
   const statusModifier = milestoneStatusToCssModifier(milestone.status);
   const options = getMilestoneStatusPopoverOptions(milestone.status);
+
+  const handleMilestoneStatusOptionClick = (
+    event: MouseEvent<HTMLButtonElement>,
+    targetStatus: TmsMilestoneStatus,
+  ) => {
+    event.stopPropagation();
+    setIsOpened(false);
+
+    if (targetStatus !== milestone.status) {
+      trackEvent(
+        MILESTONES_PAGE_EVENTS.chooseMilestoneStatus(
+          targetStatus.toLowerCase() as MilestoneStatusType,
+        ),
+      );
+    }
+    onChangeMilestoneStatus?.(milestone, targetStatus);
+  };
 
   return (
     <Popover
@@ -54,11 +78,7 @@ export const MilestoneCardStatusButton = ({
               key={targetStatus}
               type="button"
               className={cx('milestone-card__status-option')}
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsOpened(false);
-                onChangeMilestoneStatus?.(milestone, targetStatus);
-              }}
+              onClick={(e) => handleMilestoneStatusOptionClick(e, targetStatus)}
             >
               {formatMessage(
                 getMilestoneStatusPopoverOptionMessageDescriptor(targetStatus, milestone.status),

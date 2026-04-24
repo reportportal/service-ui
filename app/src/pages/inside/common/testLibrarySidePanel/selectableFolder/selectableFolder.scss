@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-@use '../../../../../common/css/mixins';
-
 .selectable-tree {
   &__item {
     &-content {
@@ -62,7 +60,31 @@
     justify-content: center;
     padding: 16px;
     position: relative;
-    left: 0;
-    margin-left: -24px;
+  }
+
+  &__error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 16px;
+    position: relative;
+    color: var(--rp-ui-base-almost-black);
+    font-size: 13px;
+    box-sizing: border-box;
+
+    span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    path {
+      fill: var(--rp-ui-base-error);
+    }
+
+    button {
+      min-width: auto;
+    }
   }
 }

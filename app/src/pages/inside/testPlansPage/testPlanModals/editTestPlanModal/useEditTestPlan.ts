@@ -33,7 +33,11 @@ interface EditTestPlanFormValues extends TestPlanFormValues {
   milestoneId?: number;
 }
 
-export const useEditTestPlan = () => {
+interface UseEditTestPlanOptions {
+  onSubmitSuccess?: (attributesCount: number) => void;
+}
+
+export const useEditTestPlan = ({ onSubmitSuccess }: UseEditTestPlanOptions = {}) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
@@ -53,6 +57,7 @@ export const useEditTestPlan = () => {
         },
       });
 
+      onSubmitSuccess?.(payload.attributes?.length ?? 0);
       dispatch(hideModalAction());
       dispatch(
         showSuccessNotification({

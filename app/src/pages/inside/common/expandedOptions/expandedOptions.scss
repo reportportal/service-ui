@@ -225,12 +225,12 @@
   }
 
   &__sidebar-folders-wrapper {
-    height: calc(100% - 112px);
+    height: calc(100% - 160px);
     position: relative;
     overflow: hidden;
 
     &--with-search {
-      height: calc(100% - 160px);
+      height: calc(100% - 208px);
     }
 
     &:has(.expanded-options__drop-placeholder) {

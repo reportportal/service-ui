@@ -46,6 +46,7 @@ export class AutocompleteOptionsComponent extends Component {
     createWithoutConfirmation: PropTypes.bool,
     variant: autocompleteVariantType,
     customEmptyListMessage: PropTypes.string,
+    shouldShowEmptyListMessage: PropTypes.bool,
     intl: PropTypes.object.isRequired,
     getUniqKey: PropTypes.func,
     newItemButtonText: PropTypes.string,
@@ -66,6 +67,7 @@ export class AutocompleteOptionsComponent extends Component {
     variant: 'light',
     newItemButtonText: '',
     creatable: true,
+    shouldShowEmptyListMessage: true,
   };
 
   filterStaticOptions = () => {
@@ -147,14 +149,23 @@ export class AutocompleteOptionsComponent extends Component {
   };
 
   render() {
-    const { async, options, createWithoutConfirmation, creatable } = this.props;
+    const { async, options, createWithoutConfirmation, shouldShowEmptyListMessage, creatable } =
+      this.props;
     const availableOptions = async ? options : this.filterStaticOptions();
     const prompt = this.getPrompt(options);
     if (prompt) return prompt;
+
+    const areAvailableOptionsEmpty = isEmpty(availableOptions);
+
+    if (areAvailableOptionsEmpty && !shouldShowEmptyListMessage && createWithoutConfirmation)
+      return null;
+
     return (
       <div className={cx('container')}>
         <ScrollWrapper autoHeight autoHeightMax={140}>
-          {!isEmpty(availableOptions) ? this.renderItems(availableOptions) : this.renderEmptyList()}
+          {areAvailableOptionsEmpty
+            ? shouldShowEmptyListMessage && this.renderEmptyList()
+            : this.renderItems(availableOptions)}
         </ScrollWrapper>
         {!createWithoutConfirmation && creatable && this.renderNewItem(availableOptions)}
       </div>

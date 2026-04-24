@@ -49,7 +49,7 @@ export class SingleAutocomplete extends Component {
     setTouch: PropTypes.func,
     createWithoutConfirmation: PropTypes.bool,
     menuClassName: PropTypes.string,
-    icon: PropTypes.string,
+    icon: PropTypes.node,
     isOptionUnique: PropTypes.func,
     refFunction: PropTypes.func,
     stateReducer: PropTypes.func,
@@ -60,6 +60,7 @@ export class SingleAutocomplete extends Component {
     skipOptionCreation: PropTypes.bool,
     newItemButtonText: PropTypes.string,
     creatable: PropTypes.bool,
+    shouldShowEmptyListMessage: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -93,6 +94,7 @@ export class SingleAutocomplete extends Component {
     skipOptionCreation: false,
     newItemButtonText: '',
     creatable: true,
+    shouldShowEmptyListMessage: true,
   };
 
   getOptionProps =
@@ -144,6 +146,9 @@ export class SingleAutocomplete extends Component {
       creatable,
       ...props
     } = this.props;
+
+    const { onKeyDown: inputOnKeyDown, ...restInputProps } = inputProps || {};
+
     return (
       <Manager>
         <Downshift
@@ -174,7 +179,7 @@ export class SingleAutocomplete extends Component {
                         onFocus: () => {
                           onFocus();
                         },
-                        refFunction,
+                        ref: refFunction,
                         onKeyDown: (event) => {
                           if (event.keyCode === ENTER_KEY_CODE) {
                             event.preventDefault();
@@ -183,6 +188,7 @@ export class SingleAutocomplete extends Component {
                           if (inputValue && isOpen) {
                             this.handleKeyDown(event, setHighlightedIndex);
                           }
+                          inputOnKeyDown?.(event);
                         },
                         onBlur: (e) => {
                           const newValue = (inputValue || '').trim();
@@ -208,7 +214,7 @@ export class SingleAutocomplete extends Component {
                         error,
                         endIcon: icon,
                         variant,
-                        ...inputProps,
+                        ...restInputProps,
                       })}
                     />
                   </div>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useIntl, defineMessages } from 'react-intl';
@@ -74,6 +74,10 @@ const AllUsersPageComponent = ({
   const [searchValue, setSearchValue] = useState(null);
   const [appliedFiltersCount, setAppliedFiltersCount] = useState(0);
   const [selectedUsers, setSelectedUsers] = useState([]);
+
+  useEffect(() => {
+    trackEvent(ALL_USERS_PAGE_EVENTS.VIEW_ALL_USERS);
+  }, [trackEvent]);
 
   const handleBulkActionSuccess = useCallback(() => {
     setSelectedUsers([]);

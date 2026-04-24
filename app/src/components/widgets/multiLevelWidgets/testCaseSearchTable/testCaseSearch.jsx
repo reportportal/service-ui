@@ -28,6 +28,7 @@ import {
   searchedTestItemsSelector,
   testItemsSearchAction,
 } from 'controllers/testItem';
+import { SEARCH_DEBOUNCE_MS } from 'common/constants/delayTime';
 import { TestCaseSearchControl } from './testCaseSearchControl';
 import { TestCaseSearchContent } from './testCaseSearchContent';
 import styles from './testCaseSearch.scss';
@@ -38,7 +39,6 @@ const TRACKING_EVENTS_TRIGGER_SOURCES = {
   loadMore: 'load_more',
   status: 'test_execution_status',
 };
-const THROTTLING_SEARCH_TIME = 300;
 const THROTTLING_STATUS_CHANGE_TIME = 1000;
 
 const cx = classNames.bind(styles);
@@ -58,7 +58,7 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
   const [searchValue, setSearchValue] = useState(searchCriteria);
   const [sortingDirection, setSortingDirection] = useState(initialDirection);
   const [isTableLoading, setIsTableLoading] = useState(fetchLoading);
-  const [throttling, setThrottling] = useState(THROTTLING_SEARCH_TIME);
+  const [throttling, setThrottling] = useState(SEARCH_DEBOUNCE_MS);
   const triggerSourceRef = useRef(null);
 
   const dispatch = useDispatch();
@@ -84,7 +84,7 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
   );
 
   const handleSearch = (entity) => {
-    setThrottling(THROTTLING_SEARCH_TIME);
+    setThrottling(SEARCH_DEBOUNCE_MS);
     setIsTableLoading(true);
     triggerSourceRef.current = TRACKING_EVENTS_TRIGGER_SOURCES.creatingWidget;
     setSearchValue(entity);
@@ -99,12 +99,12 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
     setSearchValue(entity);
     setThrottling(
       !value || selectedStatuses.length === 5
-        ? THROTTLING_SEARCH_TIME
+        ? SEARCH_DEBOUNCE_MS
         : THROTTLING_STATUS_CHANGE_TIME,
     );
   };
   const handleChangeSorting = () => {
-    setThrottling(THROTTLING_SEARCH_TIME);
+    setThrottling(SEARCH_DEBOUNCE_MS);
     triggerSourceRef.current = TRACKING_EVENTS_TRIGGER_SOURCES.sorting;
     setSortingDirection(sortingDirection === SORTING_DESC ? SORTING_ASC : SORTING_DESC);
   };

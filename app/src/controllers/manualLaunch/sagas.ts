@@ -17,14 +17,15 @@
 import { Action } from 'redux';
 import { takeLatest, call, select, all, put, cancelled } from 'redux-saga/effects';
 import { isString } from 'es-toolkit';
-import { isEmpty, isNil } from 'es-toolkit/compat';
+import { isEmpty, isNil, isNumber } from 'es-toolkit/compat';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import { normalizePrioritiesForExecutionApi } from 'pages/inside/common/testCaseList/filterSidePanel/utils';
 import {
-  buildFolderFilterParams,
-  buildManualLaunchExecutionFilterParams,
-} from 'pages/inside/common/testCaseList/filterSidePanel/utils';
+  FOLDER_FILTER_KEYS,
+  MANUAL_LAUNCH_EXECUTION_FILTER_KEYS,
+} from 'pages/inside/common/testCaseList/constants';
 import { fetchSuccessAction, fetchErrorAction } from 'controllers/fetch';
 import { FETCH_START } from 'controllers/fetch/constants';
 import { AppState } from 'types/store';
@@ -59,6 +60,12 @@ import {
   MANUAL_LAUNCH_STATUS_FILTER_KEY,
   MANUAL_LAUNCH_FOLDER_SEARCH_FILTER_KEY,
   MANUAL_LAUNCH_FOLDER_STATUS_FILTER_KEY,
+  MANUAL_LAUNCH_ITEM_STATUS_FILTER_KEY,
+  MANUAL_LAUNCH_COMPLETION_FILTER_KEY,
+  MANUAL_LAUNCH_START_TIME_GT_FILTER_KEY,
+  MANUAL_LAUNCH_END_TIME_LT_FILTER_KEY,
+  MANUAL_LAUNCH_TEST_PLAN_ID_FILTER_KEY,
+  MANUAL_LAUNCH_COMPOSITE_ATTRIBUTE_FILTER_KEY,
   defaultManualLaunchesQueryParams,
 } from './constants';
 import {
@@ -99,13 +106,53 @@ function* getManualLaunches(action: GetManualLaunchesAction): Generator {
 
     const trimmedNameSearch = action.payload?.searchQuery?.trim();
 
-    const params: Record<string, string | number | undefined> = action.payload
-      ? {
-          limit: action.payload.limit,
-          offset: action.payload.offset,
-          [MANUAL_LAUNCH_NAME_FILTER_KEY]: trimmedNameSearch || undefined,
-        }
-      : defaultManualLaunchesQueryParams;
+    let params: Record<string, string | number | undefined>;
+
+    if (action.payload) {
+      const {
+        limit,
+        offset,
+        filterStatuses,
+        filterCompletion,
+        filterStartTimeFrom,
+        filterEndTimeTo,
+        filterTestPlan,
+        filterCompositeAttribute,
+      } = action.payload;
+
+      params = {
+        limit,
+        offset,
+        [MANUAL_LAUNCH_NAME_FILTER_KEY]: trimmedNameSearch || undefined,
+      };
+
+      if (filterStatuses && !isEmpty(filterStatuses)) {
+        params[MANUAL_LAUNCH_ITEM_STATUS_FILTER_KEY] = filterStatuses.join(',');
+      }
+
+      if (filterCompletion) {
+        params[MANUAL_LAUNCH_COMPLETION_FILTER_KEY] = filterCompletion;
+      }
+
+      if (isNumber(filterStartTimeFrom)) {
+        params[MANUAL_LAUNCH_START_TIME_GT_FILTER_KEY] = filterStartTimeFrom;
+      }
+
+      if (isNumber(filterEndTimeTo)) {
+        params[MANUAL_LAUNCH_END_TIME_LT_FILTER_KEY] = filterEndTimeTo;
+      }
+
+      if (filterTestPlan) {
+        params[MANUAL_LAUNCH_TEST_PLAN_ID_FILTER_KEY] = filterTestPlan;
+      }
+
+      if (filterCompositeAttribute) {
+        params[MANUAL_LAUNCH_COMPOSITE_ATTRIBUTE_FILTER_KEY] = filterCompositeAttribute;
+      }
+    } else {
+      params = { ...defaultManualLaunchesQueryParams };
+    }
+
     const data = (yield call(
       fetch,
       typedURLS.manualLaunchesListPagination(projectKey, params),
@@ -207,11 +254,18 @@ function* getManualLaunchFolders(action: GetManualLaunchFoldersAction): Generato
     const params: Record<string, string | number> = {
       offset,
       limit,
-      ...buildFolderFilterParams(filterPriorities, filterTags),
     };
 
+    if (filterPriorities) {
+      params[FOLDER_FILTER_KEYS.priority] = filterPriorities.toUpperCase();
+    }
+
+    if (filterTags) {
+      params[FOLDER_FILTER_KEYS.attributeKey] = filterTags;
+    }
+
     if (statusFilter) {
-      params[MANUAL_LAUNCH_FOLDER_STATUS_FILTER_KEY as string] = statusFilter;
+      params[MANUAL_LAUNCH_FOLDER_STATUS_FILTER_KEY] = statusFilter;
     }
 
     const data = (yield call(
@@ -266,21 +320,30 @@ function* getManualLaunchTestCaseExecutions(
     const params: Record<string, string | number> = {
       offset,
       limit,
-      ...buildManualLaunchExecutionFilterParams(filterPriorities, filterTags),
     };
 
+    const normalizedExecutionPriorities = normalizePrioritiesForExecutionApi(filterPriorities);
+
+    if (normalizedExecutionPriorities) {
+      params[MANUAL_LAUNCH_EXECUTION_FILTER_KEYS.priority] = normalizedExecutionPriorities;
+    }
+
+    if (filterTags) {
+      params[MANUAL_LAUNCH_EXECUTION_FILTER_KEYS.attributeKey] = filterTags;
+    }
+
     if (!isNil(folderId)) {
-      params[TEST_FOLDER_ID_FILTER_KEY as string] = folderId;
+      params[TEST_FOLDER_ID_FILTER_KEY] = folderId;
     }
 
     const trimmedSearch = searchQuery?.trim();
 
     if (trimmedSearch) {
-      params[MANUAL_LAUNCH_NAME_FILTER_KEY as string] = trimmedSearch;
+      params[MANUAL_LAUNCH_NAME_FILTER_KEY] = trimmedSearch;
     }
 
     if (statusFilter) {
-      params[MANUAL_LAUNCH_STATUS_FILTER_KEY as string] = statusFilter;
+      params[MANUAL_LAUNCH_STATUS_FILTER_KEY] = statusFilter;
     }
 
     const data = (yield call(
@@ -360,9 +423,7 @@ interface GetManualLaunchFilteredFoldersAction extends Action<
   payload: GetManualLaunchFilteredFoldersParams;
 }
 
-function* getManualLaunchFilteredFolders(
-  action: GetManualLaunchFilteredFoldersAction,
-): Generator {
+function* getManualLaunchFilteredFolders(action: GetManualLaunchFilteredFoldersAction): Generator {
   const projectKey = (yield select(projectKeySelector)) as string;
   const { launchId, searchQuery, filterPriorities, filterTags, statusFilter } = action.payload;
 
@@ -381,15 +442,27 @@ function* getManualLaunchFilteredFolders(
     let totalElements = Infinity;
 
     while (offset < totalElements) {
+      const folderListParams: Record<string, string | number> = {
+        offset,
+        limit,
+        [MANUAL_LAUNCH_FOLDER_SEARCH_FILTER_KEY]: searchQuery,
+      };
+
+      if (filterPriorities) {
+        folderListParams[FOLDER_FILTER_KEYS.priority] = filterPriorities.toUpperCase();
+      }
+
+      if (filterTags) {
+        folderListParams[FOLDER_FILTER_KEYS.attributeKey] = filterTags;
+      }
+
+      if (statusFilter) {
+        folderListParams[MANUAL_LAUNCH_FOLDER_STATUS_FILTER_KEY] = statusFilter;
+      }
+
       const response = (yield call(
         fetch,
-        typedURLS.manualLaunchFolders(projectKey, launchId, {
-          offset,
-          limit,
-          [MANUAL_LAUNCH_FOLDER_SEARCH_FILTER_KEY]: searchQuery,
-          ...buildFolderFilterParams(filterPriorities, filterTags),
-          ...(statusFilter && { [MANUAL_LAUNCH_FOLDER_STATUS_FILTER_KEY]: statusFilter }),
-        }),
+        typedURLS.manualLaunchFolders(projectKey, launchId, folderListParams),
       )) as ManualLaunchFoldersResponse;
 
       allFolders.push(...response.content);
@@ -485,7 +558,8 @@ function* uploadAttachments(projectKey: string, attachments?: File[]): Generator
 function* updateManualLaunchExecutionStatus(
   action: UpdateManualLaunchExecutionStatusAction,
 ): Generator {
-  const { projectKey, launchId, executionId, status, comment, attachments } = action.payload;
+  const { projectKey, launchId, executionId, status, comment, attachments, onSuccess } =
+    action.payload;
 
   try {
     const requestData: {
@@ -561,6 +635,10 @@ function* updateManualLaunchExecutionStatus(
         values: { status: capitalizedStatus },
       }),
     );
+
+    if (onSuccess) {
+      onSuccess();
+    }
   } catch {
     yield put(
       showErrorNotification({

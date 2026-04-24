@@ -14,12 +14,8 @@
  * limitations under the License.
  */
 
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useIntl } from 'react-intl';
 import type {
   MouseEvent as MouseEventFromReact,
   PointerEvent as PointerEventFromReact,
@@ -41,6 +37,7 @@ import { GalleryThumbImage } from '../galleryThumbImage/galleryThumbImage';
 import { useBodyScrollLock } from '../../hooks/useBodyScrollLock';
 import type { AttachmentWithSlider } from '../../types';
 
+import { attachmentsGalleryMessages } from './messages';
 import styles from './attachmentsGallerySlider.scss';
 
 const cx = createClassnames(styles);
@@ -80,6 +77,7 @@ export const AttachmentsGallerySlider = ({
   onClose,
   onDownloadCurrent,
 }: AttachmentsGallerySliderProps) => {
+  const { formatMessage } = useIntl();
   const overlayRef = useRef<HTMLDivElement>(null);
   const imageDragOffsetRef = useRef<ImageDragOffsetPx>(IMAGE_DRAG_OFFSET_ZERO);
   const [zoomScale, setZoomScale] = useState(1);
@@ -153,10 +151,10 @@ export const AttachmentsGallerySlider = ({
   }, [isOpen]);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    /* eslint-disable react-hooks/set-state-in-effect */
     setZoomScale(ZOOM_MIN);
-     
     setImageDragOffset(IMAGE_DRAG_OFFSET_ZERO);
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, [activeIndex]);
 
   useEffect(() => {
@@ -292,7 +290,7 @@ export const AttachmentsGallerySlider = ({
 
   const handleDownload = (event: MouseEventFromReact<HTMLButtonElement>): void => {
     event.stopPropagation();
-    void onDownloadCurrent();
+    onDownloadCurrent();
   };
 
   const handleOpenInNewTab = (event: MouseEventFromReact<HTMLButtonElement>): void => {
@@ -328,37 +326,47 @@ export const AttachmentsGallerySlider = ({
       <div className={styles.backdrop} />
       <div className={styles.toolbar}>
         <button
+          type="button"
           className={cx('toolbarButton', 'toolbarButtonZoomMinus', {
             toolbarButtonHidden: !showZoomExternalDownload,
           })}
+          aria-label={formatMessage(attachmentsGalleryMessages.zoomOut)}
           onClick={handleZoomOut}
         >
           <MinusIcon />
         </button>
         <button
+          type="button"
           className={cx('toolbarButton', 'toolbarButtonZoomPlus', {
             toolbarButtonHidden: !showZoomExternalDownload,
           })}
+          aria-label={formatMessage(attachmentsGalleryMessages.zoomIn)}
           onClick={handleZoomIn}
         >
           <PlusIcon />
         </button>
         <button
+          type="button"
           className={cx('toolbarButton')}
+          aria-label={formatMessage(attachmentsGalleryMessages.download)}
           onClick={handleDownload}
         >
           <DownloadIcon />
         </button>
         <button
+          type="button"
           className={cx('toolbarButton', {
             toolbarButtonHidden: !showZoomExternalDownload,
           })}
+          aria-label={formatMessage(attachmentsGalleryMessages.openInNewTab)}
           onClick={handleOpenInNewTab}
         >
           <ExternalLinkIcon />
         </button>
         <button
+          type="button"
           className={cx('toolbarButton', 'toolbarButtonClose')}
+          aria-label={formatMessage(attachmentsGalleryMessages.close)}
           onClick={handleClose}
         >
           <CloseIcon />
@@ -366,7 +374,9 @@ export const AttachmentsGallerySlider = ({
       </div>
       <div className={styles.stageRow}>
         <button
+          type="button"
           className={cx('navButton', 'navPrev')}
+          aria-label={formatMessage(attachmentsGalleryMessages.previous)}
           onClick={handleShowPrevImage}
         >
           <ArrowLeftIcon />
@@ -416,7 +426,7 @@ export const AttachmentsGallerySlider = ({
         <button
           type="button"
           className={cx('navButton', 'navNext')}
-          aria-label="Next"
+          aria-label={formatMessage(attachmentsGalleryMessages.next)}
           onClick={(event: MouseEventFromReact<HTMLButtonElement>) => {
             event.stopPropagation();
             goNext();

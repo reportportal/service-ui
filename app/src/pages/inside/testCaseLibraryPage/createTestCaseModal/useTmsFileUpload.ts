@@ -23,8 +23,17 @@ import { isEmpty } from 'es-toolkit/compat';
 import { useFileProcessing, BaseAttachmentFile } from 'common/hooks';
 import type { AppState } from 'types/store';
 
+import type { AttachmentFormValue } from '../types';
 import { useAttachmentUpload } from './useAttachmentUpload';
 import { messages } from './messages';
+import {
+  areAttachmentFormListsEqual,
+  normalizeAttachmentsFromUnknown,
+} from './utils';
+
+type FieldAttachmentRow = AttachmentFormValue | BaseAttachmentFile;
+
+const EMPTY_FIELD_ATTACHMENTS: FieldAttachmentRow[] = [];
 
 interface UseTmsFileUploadOptions {
   formName: string;
@@ -37,10 +46,14 @@ export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOption
   const { formatMessage } = useIntl();
   const isInitializedRef = useRef(false);
   const selector = formValueSelector(formName || 'no-form');
-  const initialAttachments =
-    useSelector<AppState, BaseAttachmentFile[] | undefined>(
-      (state) => selector(state, fieldName) as BaseAttachmentFile[] | undefined,
-    ) || [];
+  const fieldAttachmentsRaw = useSelector<
+    AppState,
+    AttachmentFormValue[] | BaseAttachmentFile[] | undefined
+  >(
+    (state) =>
+      selector(state, fieldName) as AttachmentFormValue[] | BaseAttachmentFile[] | undefined,
+  );
+  const fieldAttachments = fieldAttachmentsRaw ?? EMPTY_FIELD_ATTACHMENTS;
 
   const handleUpload = useCallback(
     async (file: File) => {
@@ -48,7 +61,7 @@ export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOption
         const response = await uploadAttachment(file);
 
         return {
-          attachmentId: response.id,
+          attachmentId: String(response.id),
         };
       } catch {
         return {
@@ -65,35 +78,67 @@ export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOption
     });
 
   useEffect(() => {
-    if (!isEmpty(initialAttachments) && isEmpty(attachedFiles) && !isInitializedRef.current) {
-      const backendAttachments: BaseAttachmentFile[] = initialAttachments
-        .filter((attachment) => attachment.id && attachment.fileName)
-        .map((attachment) => ({
-          id: attachment.id,
-          fileName: attachment.fileName || 'Attachment',
-          file: new File([], attachment.fileName || 'attachment'),
-          size: attachment.size || 0,
-          attachmentId: attachment.id,
-          isUploading: false,
-          uploadingProgress: 100,
-        }));
+    if (!isEmpty(fieldAttachments) && !isInitializedRef.current) {
+      const backendAttachments: BaseAttachmentFile[] = fieldAttachments.flatMap(
+        (attachment: FieldAttachmentRow) => {
+          const id =
+            attachment.id ??
+            ('attachmentId' in attachment ? attachment.attachmentId : undefined);
+
+          if (id == null || id === '' || !attachment.fileName) {
+            return [];
+          }
+
+          const idString = String(id);
+          const fileName = attachment.fileName || 'Attachment';
+          const blobName = attachment.fileName || 'attachment';
+
+          return [
+            {
+              id: idString,
+              fileName,
+              file: new File([], blobName),
+              size: Number(
+                attachment.size ??
+                  ('fileSize' in attachment ? attachment.fileSize : undefined) ??
+                  0,
+              ),
+              attachmentId: idString,
+              isUploading: false,
+              uploadingProgress: 100,
+            },
+          ];
+        },
+      );
 
       setAttachedFiles(backendAttachments);
       isInitializedRef.current = true;
-    }
-  }, [initialAttachments, attachedFiles.length, setAttachedFiles, fieldName]);
 
-  useEffect(() => {
-    const attachments = attachedFiles
-      .filter((file) => file.attachmentId && !file.uploadError)
-      .map(({ attachmentId, fileName, size }) => ({
-        id: attachmentId,
-        fileName,
-        size,
-      }));
+      return;
+    }
+
+    if (!isInitializedRef.current && isEmpty(fieldAttachments)) {
+      isInitializedRef.current = true;
+    }
+
+    const attachments = normalizeAttachmentsFromUnknown(
+      attachedFiles
+        .filter((file) => file.attachmentId && !file.uploadError)
+        .map(({ attachmentId, fileName, size }) => ({
+          id: attachmentId,
+          fileName,
+          size,
+        })) as unknown[],
+    );
+
+    const current = normalizeAttachmentsFromUnknown(fieldAttachments as unknown[]);
+
+    if (areAttachmentFormListsEqual(attachments, current)) {
+      return;
+    }
 
     dispatch(change(formName, fieldName, attachments));
-  }, [attachedFiles, dispatch, formName, fieldName]);
+  }, [fieldAttachments, attachedFiles, dispatch, formName, fieldName, setAttachedFiles]);
 
   return {
     attachedFiles,

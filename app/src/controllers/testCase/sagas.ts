@@ -95,6 +95,8 @@ import {
   TEST_CASE_LIBRARY_PAGE,
   urlOrganizationSlugSelector,
   urlProjectSlugSelector,
+  urlFolderIdSelector,
+  locationSelector,
 } from 'controllers/pages';
 import { MANUAL_LAUNCH_FOLDER_SEARCH_FILTER_KEY } from 'controllers/manualLaunch';
 
@@ -414,6 +416,20 @@ function* getFilteredFolders(action: GetFilteredFoldersAction) {
     })) as Folder[];
 
     yield put(setFilteredFoldersAction(folders));
+
+    const urlFolderId = (yield select(urlFolderIdSelector)) as string;
+
+    if (urlFolderId && !folders.some(({ id }) => id === Number(urlFolderId))) {
+      const organizationSlug = (yield select(urlOrganizationSlugSelector)) as string;
+      const projectSlug = (yield select(urlProjectSlugSelector)) as string;
+      const location = (yield select(locationSelector)) as { query?: Record<string, string> };
+
+      yield put({
+        type: TEST_CASE_LIBRARY_PAGE,
+        payload: { organizationSlug, projectSlug },
+        query: location?.query,
+      });
+    }
   } catch (error) {
     yield put(setFilteredFoldersAction([]));
     yield put(

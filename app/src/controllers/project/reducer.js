@@ -194,15 +194,18 @@ export const projectNotificationsReducer = (state = {}, { type, payload }) => {
         ...state,
         loading: payload,
       };
-    case FETCH_EXISTING_LAUNCH_NAMES_SUCCESS:
-      return {
-        ...state,
-        isExistingLaunchNames: payload.reduce(
-          (initialValue, launchName) => Object.assign(initialValue, { [launchName]: !!launchName }),
-          {},
-        ),
-      };
+    default:
+      return state;
+  }
+};
 
+export const existingLaunchNamesReducer = (state = {}, { type, payload }) => {
+  switch (type) {
+    case FETCH_EXISTING_LAUNCH_NAMES_SUCCESS:
+      return payload.reduce(
+        (initialValue, launchName) => Object.assign(initialValue, { [launchName]: !!launchName }),
+        {},
+      );
     default:
       return state;
   }
@@ -229,6 +232,7 @@ export const projectReducer = combineReducers({
   preferences: projectPreferencesReducer,
   infoLoading: projectInfoLoadingReducer,
   notifications: projectNotificationsReducer,
+  existingLaunchNames: existingLaunchNamesReducer,
   logTypes: queueReducers(
     fetchReducer(LOG_TYPES_NAMESPACE, { contentPath: 'items' }),
     logTypesReducer,

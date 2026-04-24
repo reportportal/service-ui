@@ -1,4 +1,14 @@
 .pattern-analysis-empty-state {
+  /* Admin view: description followed by buttons div */
+  [class*='emptyStatePage__description']:has(+ div) {
+    margin-bottom: 24px;
+  }
+
+  /* Member view: description not followed by div */
+  [class*='emptyStatePage__description'] {
+    margin-bottom: 18px;
+  }
+
   /* Add margin to link when buttons are present (admin view) */
   div + a[data-automation-id='emptyStatePageDocsLink'] {
     margin-top: 18px;

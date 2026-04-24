@@ -20,6 +20,13 @@
   display: flex;
   align-items: center;
   gap: 12px;
+
+  @include mixins.header-toolbar-search-button;
+
+  // Collapse gap between SearchField (1st) and filter control (2nd); keep gap for the rest
+  > *:nth-child(2) {
+    margin-left: -12px;
+  }
 }
 
 .filter-icon {
@@ -27,41 +34,82 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 0 12px;
-  height: 32px;
+  padding: 0 10px;
+  height: 36px;
   border: none;
-  border-radius: 12px;
   background: transparent;
   color: var(--rp-ui-base-e-400);
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
   position: relative;
   flex-shrink: 0;
 
-  &:hover {
-    background-color: var(--rp-ui-base-bg-200);
-  }
-
   svg {
-    width: 16px;
-    height: 16px;
+    @include mixins.header-toolbar-filter-icon-svg-box;
     flex-shrink: 0;
     color: var(--rp-ui-base-e-400);
-    transition: color 0.2s ease-in-out;
+
+    path {
+      fill: currentColor;
+    }
+  }
+}
+
+.filter-clear-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--rp-ui-base-e-300);
+  cursor: pointer;
+  flex-shrink: 0;
+
+  svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    color: var(--rp-ui-base-e-300);
 
     path {
       fill: currentColor;
     }
   }
 
-  &.active {
-    svg {
-      color: var(--rp-ui-base-topaz);
-    }
+  &:hover svg {
+    color: var(--rp-ui-base-e-400);
+  }
+}
 
-    &:hover {
-      background-color: var(--rp-ui-base-bg-200);
-    }
+.filter-control-divider {
+  display: inline-block;
+  width: 1px;
+  height: 24px;
+  background-color: var(--rp-ui-base-e-200);
+  flex-shrink: 0;
+}
+
+.filter-control {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  border-radius: 16px;
+  background: transparent;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease-in-out;
+
+  &:has(.filter-icon:hover, .filter-clear-button:hover) {
+    background-color: var(--rp-ui-base-bg-200);
+  }
+
+  &.active {
+    background-color: var(--rp-ui-base-bg-200);
+  }
+
+  &.active .filter-icon svg {
+    color: var(--rp-ui-base-topaz);
   }
 }
 
@@ -91,11 +139,4 @@
   align-items: center;
   justify-content: center;
   min-height: 400px;
-}
-
-.no-search-results {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: calc(100vh - 200px);
 }

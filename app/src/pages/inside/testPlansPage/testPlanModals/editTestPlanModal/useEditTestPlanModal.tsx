@@ -19,8 +19,12 @@ import { useModal } from 'common/hooks';
 
 import { EDIT_TEST_PLAN_MODAL_KEY, EditTestPlanModal } from './editTestPlanModal';
 
-export const useEditTestPlanModal = () =>
+interface UseEditTestPlanModalOptions {
+  onSubmitSuccess?: (attributesCount: number) => void;
+}
+
+export const useEditTestPlanModal = ({ onSubmitSuccess }: UseEditTestPlanModalOptions = {}) =>
   useModal<TestPlanDto>({
     modalKey: EDIT_TEST_PLAN_MODAL_KEY,
-    renderModal: (data) => <EditTestPlanModal data={data} />,
+    renderModal: (data) => <EditTestPlanModal data={data} onSubmitSuccess={onSubmitSuccess} />,
   });

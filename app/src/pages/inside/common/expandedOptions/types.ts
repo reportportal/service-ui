@@ -32,6 +32,8 @@ export interface SearchFilteredData {
   isSearchFilteredLoading: boolean;
   hasSearchFilteredFolders: boolean;
   handleToggleSearchFilteredFolder: (folder: TransformedFolder) => void;
+  setAllExpandedInFilter: () => void;
+  setAllCollapsedInFilter: () => void;
   filteredTotalTestCases: number;
 }
 

@@ -24,7 +24,7 @@ import { createClassnames } from 'common/utils';
 
 import { STATUS_CONFIG } from '../constants';
 import type { ExecutionStatusDropdownProps, ExecutionStatusType } from '../types';
-import { ExecutionStatusPopover } from '../executionStatusPopover';
+import { ExecutionStatusPopover } from '../../executionStatusPopover';
 import { messages } from './messages';
 
 import styles from './executionStatusDropdown.scss';

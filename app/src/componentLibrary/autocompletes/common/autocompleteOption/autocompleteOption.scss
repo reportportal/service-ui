@@ -61,6 +61,11 @@
   width: 100%;
   font-family: $FONT-ROBOTO-MEDIUM;
   font-size: 13px;
+
+  &.active:not(:hover) {
+    border: 1px solid $COLOR--topaz-focused;
+    padding: 3px 11px;
+  }
 }
 
 .divider {
@@ -90,11 +95,6 @@
   &.active,
   &:hover {
     background-color: $COLOR--bg-100;
-  }
-
-  &.active:not(:hover) {
-    border: 1px solid $COLOR--topaz-focused;
-    padding: 3px 11px;
   }
 }
 

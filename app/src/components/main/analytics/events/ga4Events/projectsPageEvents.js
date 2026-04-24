@@ -21,6 +21,16 @@ const PROJECTS_PAGE = 'project_page';
 const BASIC_EVENT_PARAMETERS = getBasicClickEventParameters(PROJECTS_PAGE);
 
 export const PROJECTS_PAGE_EVENTS = {
+  clickOpenCreateProjectModal: (place) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    element_name: 'create_project',
+    place,
+  }),
+  clickCreateProjectModalSubmit: () => ({
+    ...BASIC_EVENT_PARAMETERS,
+    modal: 'create_project',
+    element_name: 'create_project',
+  }),
   projectPageMenuOptionClick: (elementName, projectId) => ({
     ...BASIC_EVENT_PARAMETERS,
     place: 'project_page',
@@ -32,6 +42,23 @@ export const PROJECTS_PAGE_EVENTS = {
     place: 'project_page',
     element_name: elementName,
     modal,
+    project_id: projectId,
+  }),
+  projectsSortingArrowClick: () => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'project_page',
+    element_name: 'projects_sorting_arrow',
+  }),
+  clickRenameProjectModalSubmit: (projectId) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    modal: 'rename_project',
+    element_name: 'rename',
+    project_id: projectId,
+  }),
+  clickDeleteProjectModalSubmit: (projectId) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    modal: 'delete_project',
+    element_name: 'delete_project',
     project_id: projectId,
   }),
   SEARCH_PROJECTS_FIELD: {
@@ -51,5 +78,16 @@ export const PROJECTS_PAGE_EVENTS = {
     element_name: 'page_size_control',
     number: pageSize,
     place: 'project_page',
+  }),
+  assignSelfToProject: () => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'project_page',
+    element_name: 'assign',
+  }),
+  unassignSelfToProject: () => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'project_page',
+    element_name: 'unassign',
+    modal: 'unassign_from_project'
   }),
 };

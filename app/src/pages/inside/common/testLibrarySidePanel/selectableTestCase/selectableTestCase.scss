@@ -17,6 +17,7 @@
 .selectable-test-case {
   position: relative;
   height: 36px;
+  list-style: none;
 
   &__content {
     display: flex;
@@ -28,8 +29,8 @@
   }
 
   &__name {
-    display: flex;
-    align-items: center;
+    display: block;
+    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
