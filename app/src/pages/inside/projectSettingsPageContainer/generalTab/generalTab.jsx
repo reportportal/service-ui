@@ -296,7 +296,9 @@ export class GeneralTab extends Component {
       return {
         ...elem,
         disabled,
-        title: this.props.intl.formatMessage(settingsMessages.keepLaunchesTooltip),
+        title: disabled
+          ? this.props.intl.formatMessage(settingsMessages.keepLaunchesTooltip)
+          : undefined,
       };
     });
     return newOptions;
@@ -318,7 +320,7 @@ export class GeneralTab extends Component {
         ...elem,
         disabled,
         hidden,
-        title: this.props.intl.formatMessage(settingsMessages.keepLogsTooltip),
+        title: disabled ? this.props.intl.formatMessage(settingsMessages.keepLogsTooltip) : undefined,
       };
     });
     if (newOptions.every((v) => v.hidden)) {

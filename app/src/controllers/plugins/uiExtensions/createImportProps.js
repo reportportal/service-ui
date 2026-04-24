@@ -53,11 +53,7 @@ import { ModalLayout, ModalField } from 'components/main/modal';
 import { showModalAction, hideModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils/fetch';
 import { isEmptyObject } from 'common/utils/isEmptyObject';
-import {
-  getSessionItem,
-  setSessionItem,
-  removeSessionItem,
-} from 'common/utils/storageUtils';
+import { getSessionItem, setSessionItem, removeSessionItem } from 'common/utils/storageUtils';
 import {
   STATS_PB_TOTAL,
   STATS_AB_TOTAL,
@@ -79,8 +75,10 @@ import {
   projectInfoSelector,
   projectAttributesSelector,
   fetchProjectAction,
+  fetchExistingLaunchNamesAction,
   projectInfoLoadingSelector,
   defectTypesSelector,
+  existingLaunchNamesSelector,
   updateConfigurationAttributesAction,
 } from 'controllers/project';
 import {
@@ -384,6 +382,7 @@ export const createImportProps = (pluginName) => ({
     showSuccessNotification,
     showErrorNotification,
     fetchProjectAction,
+    fetchExistingLaunchNamesAction,
     showScreenLockAction,
     hideScreenLockAction,
     updateConfigurationAttributesAction,
@@ -405,6 +404,7 @@ export const createImportProps = (pluginName) => ({
     projectMembersSelector,
     projectInfoSelector,
     projectAttributesSelector,
+    existingLaunchNamesSelector,
     activeProjectRoleSelector,
     userRolesSelector,
     userAccountRoleSelector,

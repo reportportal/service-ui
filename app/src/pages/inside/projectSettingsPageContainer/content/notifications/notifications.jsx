@@ -27,6 +27,7 @@ import {
 } from 'controllers/project';
 import {
   fetchProjectNotificationsAction,
+  fetchExistingLaunchNamesAction,
   updateNotificationStateAction,
 } from 'controllers/project/actionCreators';
 import { notificationPluginsSelector } from 'controllers/plugins/selectors';
@@ -62,6 +63,7 @@ export const Notifications = () => {
 
   useEffect(() => {
     dispatch(fetchProjectNotificationsAction());
+    dispatch(fetchExistingLaunchNamesAction());
   }, [dispatch]);
 
   const toggleNotificationsEnabled = (isEnabled) => {
