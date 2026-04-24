@@ -167,25 +167,18 @@ export const AttachmentsWithSlider = ({
     const abortController = new AbortController();
     const requestedAttachmentId = attachment.id;
 
-    void fetchFullAttachmentBlob(requestedAttachmentId, abortController.signal)
+    fetchFullAttachmentBlob(requestedAttachmentId, abortController.signal)
       .then((blob) => {
-        if (abortController.signal.aborted || !blob) {
+        if (abortController.signal.aborted) {
           return;
         }
-
         if (!blob) {
           console.error('Full-resolution attachment request returned an empty body');
-
           return;
         }
-
         const url = URL.createObjectURL(blob);
-
         fullImageCacheRef.current.set(requestedAttachmentId, url);
-
-        const activeAttachment = displayedListRef.current[galleryIndexRef.current];
-
-        if (activeAttachment?.id === requestedAttachmentId) {
+        if (displayedListRef.current[galleryIndexRef.current]?.id === requestedAttachmentId) {
           setGalleryFullImageUrl(url);
         }
       })
@@ -196,7 +189,8 @@ export const AttachmentsWithSlider = ({
         if (!abortController.signal.aborted) {
           setGalleryFullImageLoading(false);
         }
-      });
+      })
+      .catch(() => {});
 
     return () => {
       abortController.abort();
@@ -285,7 +279,7 @@ export const AttachmentsWithSlider = ({
         onActiveIndexChange={handleActiveIndexChange}
         onClose={closeGallery}
         onDownloadCurrent={() => {
-          void handleAttachmentDownload();
+          handleAttachmentDownload().catch(() => {});
         }}
       />
     </div>
