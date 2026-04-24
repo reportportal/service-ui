@@ -124,8 +124,11 @@ export const FilesDropzone = ({
 }) => {
   const { formatMessage } = useIntl();
 
-  const isDropZoneDisabled = () =>
-    isUploadFinished(files) || isUploadInProgress(files) || (!multiple && files.length > 0);
+  const dropzoneDisabled = useMemo(
+    () =>
+      isUploadFinished(files) || isUploadInProgress(files) || (!multiple && files.length > 0),
+    [files, multiple],
+  );
 
   const onDrop = useCallback(
     (acceptedFiles, fileRejections) => {
@@ -173,9 +176,9 @@ export const FilesDropzone = ({
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     multiple,
-    disabled: isDropZoneDisabled(),
-    ...(accept ? { accept } : {}),
-    ...(maxFileSize > 0 ? { maxSize: maxFileSize } : {}),
+    disabled: dropzoneDisabled,
+    accept,
+    maxSize: maxFileSize || Infinity,
   });
 
   return (
