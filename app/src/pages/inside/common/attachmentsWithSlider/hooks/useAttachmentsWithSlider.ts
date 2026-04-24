@@ -25,76 +25,78 @@ import { AttachmentWithSlider } from 'pages/inside/common/attachmentsWithSlider/
 export const useAttachmentsWithSlider = () => {
   const projectKey = useSelector(projectKeySelector);
 
-  const getAttachmentThumbnailOnly = useCallback(
+  const fetchAttachmentPreview = useCallback(
     async (
       attachment: AttachmentWithSlider,
       objectUrls: string[],
       abortSignal: AbortSignal,
     ): Promise<AttachmentWithSlider> => {
+      if (!attachment.hasThumbnail) {
+        return { ...attachment };
+      }
+
+      let thumbnailSrc: string | undefined;
+
       try {
-        const thumbnailResult = await fetch(
+        const thumbnailResponse = await fetch(
           URLS.attachmentThumbnail(projectKey, attachment.id),
           { responseType: 'blob', signal: abortSignal },
           true,
         );
 
-        if (abortSignal.aborted || !thumbnailResult) {
-          return { ...attachment };
+        if (!abortSignal.aborted && thumbnailResponse.data) {
+          thumbnailSrc = URL.createObjectURL(thumbnailResponse.data as MediaSource);
+          objectUrls.push(thumbnailSrc);
         }
-
-        const thumbnailSrc = URL.createObjectURL(thumbnailResult.data as MediaSource);
-
-        objectUrls.push(thumbnailSrc);
-
-        return {
-          ...attachment,
-          thumbnailSrc,
-        };
-      } catch {
-        return { ...attachment };
+      } catch (err) {
+        console.error(`Error while fetching thumbnail: ${err}`)
       }
+
+      return {
+        ...attachment,
+        ...(thumbnailSrc && { thumbnailSrc }),
+      };
     },
     [projectKey],
   );
 
-  const fetchAttachmentFullImage = useCallback(
-    async (attachmentId: number, abortSignal: AbortSignal): Promise<string | undefined> => {
+  const fetchFullAttachmentBlob = useCallback(
+    async (attachmentId: number, abortSignal: AbortSignal): Promise<Blob> => {
       try {
-        const imageResult = await fetch(
+        const response = await fetch(
           URLS.tmsAttachmentDownload(projectKey, attachmentId),
           { responseType: 'blob', signal: abortSignal },
           true,
         );
 
-        if (abortSignal.aborted || !imageResult) {
-          return undefined;
-        }
-
-        return URL.createObjectURL(imageResult.data as MediaSource);
-      } catch {
-        return undefined;
+        return response.data as Blob;
+      } catch (err) {
+        console.error(`Error while fetching image: ${err}`)
       }
     },
     [projectKey],
   );
 
-  const downloadAttachment = useCallback(async (attachmentId: string, fileName: string): Promise<void> => {
-    try {
-      const response = await fetch(
-        URLS.tmsAttachmentDownload(projectKey, attachmentId),
-        { responseType: 'blob' },
-        true,
-      );
+  const downloadAttachment = useCallback(
+    async (attachmentId: string, fileName: string): Promise<void> => {
+      try {
+        const response = await fetch(
+          URLS.tmsAttachmentDownload(projectKey, attachmentId),
+          { responseType: 'blob' },
+          true,
+        );
 
-      saveAs(response.data as Blob, fileName);
-    } catch (error) {
-      console.error('Download failed:', error);
-    }
-  }, [projectKey]);
+        saveAs(response.data as Blob, fileName);
+      } catch (error) {
+        console.error('Download failed:', error);
+      }
+    },
+    [projectKey],
+  );
 
   return {
-    getAttachmentThumbnailOnly,
-    fetchAttachmentFullImage,
+    fetchAttachmentPreview,
+    fetchFullAttachmentBlob,
     downloadAttachment,
   };
 };

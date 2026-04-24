@@ -14,18 +14,10 @@
  * limitations under the License.
  */
 
-import {
-  useEffect,
-  useState,
-  useRef,
-  useCallback,
-  useMemo,
-  MutableRefObject,
-} from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, MutableRefObject } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { isEmpty } from 'es-toolkit/compat';
 import {
-  AttachedFile,
   CsvIcon,
   ImageIcon,
   JarIcon,
@@ -33,43 +25,18 @@ import {
   XlsIcon,
   FileOtherIcon,
 } from '@reportportal/ui-kit';
-import lightGallery from 'lightgallery';
-import lgThumbnail from 'lightgallery/plugins/thumbnail';
-import lgZoom from 'lightgallery/plugins/zoom';
-import { createClassnames, convertBytesToMB } from 'common/utils';
+import { createClassnames } from 'common/utils';
 
-import closeIcon from './sliderControls/close-inline.svg';
-import zoomPlusIcon from './sliderControls/zoom-plus-inline.svg';
-import zoomMinusIcon from './sliderControls/zoom-minus-inline.svg';
-import externalLinkIcon from './sliderControls/external-link-inline.svg';
-import downloadIcon from './sliderControls/download-inline.svg';
-import nextIcon from './sliderControls/next-inline.svg';
-import prevIcon from './sliderControls/prev-inline.svg';
 import { svgToBase64 } from '../utils';
-import {
-  AttachmentWithSlider,
-  GalleryItem,
-  ZoomPlugin,
-  ExtendedLightGalleryInstance,
-} from './types';
+import type { AttachmentWithSlider } from './types';
+import { applyFullImageStateForAttachment } from './utils/applyFullImageStateForAttachment';
 import { useAttachmentsWithSlider } from './hooks/useAttachmentsWithSlider';
-import { lightGalleryClassNames } from './constants';
-import {
-  PENDING_FULL_LOAD_ATTR,
-  shouldPendingHideThumbForSlide,
-  clearSlidePendingFullLoad,
-  loadFullResolutionImageForSlide,
-  shouldShowZoomAndExternalLink,
-} from './utils';
+import { GalleryAttachmentTile } from './components/galleryAttachmentTile/galleryAttachmentTile';
+import { AttachmentsGallerySlider } from './components/attachmentsGallerySlider/attachmentsGallerySlider';
 
-import 'lightgallery/css/lightgallery.css';
-import 'lightgallery/css/lg-zoom.css';
-import 'lightgallery/css/lg-thumbnail.css';
 import styles from './attachmentsWithSlider.scss';
 
 const cx = createClassnames(styles);
-
-const LIGHT_GALLERY_PLUGINS = [lgThumbnail, lgZoom];
 
 interface AttachmentWithSliderProps {
   attachments: AttachmentWithSlider[];
@@ -94,420 +61,224 @@ export const AttachmentsWithSlider = ({
   attachments,
   className = '',
 }: AttachmentWithSliderProps) => {
-  const { getAttachmentThumbnailOnly, fetchAttachmentFullImage, downloadAttachment } =
+  const { fetchAttachmentPreview, fetchFullAttachmentBlob, downloadAttachment } =
     useAttachmentsWithSlider();
-  const downloadAttachmentRef = useRef(downloadAttachment);
+  const shouldApplyAttachmentPreviewRef = useRef(true);
+  const fullImageCacheRef = useRef<Map<number, string>>(new Map());
+  const [attachmentsWithPreview, setAttachmentsWithPreview] = useState<AttachmentWithSlider[] | null>(
+    null,
+  );
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [galleryIndex, setGalleryIndex] = useState(0);
+  const [galleryFullImageUrl, setGalleryFullImageUrl] = useState<string | null>(null);
+  const [galleryFullImageLoading, setGalleryFullImageLoading] = useState(false);
+  const displayedAttachments = attachmentsWithPreview || attachments;
+  const displayedListRef = useRef<AttachmentWithSlider[]>(displayedAttachments);
+  const galleryIndexRef = useRef(galleryIndex);
 
-  const lightGalleryRef = useRef<ExtendedLightGalleryInstance | null>(null);
-  const lgContainerRef = useRef<HTMLDivElement | null>(null);
-  const isCleanedUpRef = useRef(false);
-  const [attachmentsWithPreview, setAttachmentsWithPreview] = useState<AttachmentWithSlider[] | null>(null);
-  const objectUrlsRef = useRef<string[]>([]);
-  const attachmentsListRef = useRef(attachments);
-  const fetchAttachmentFullImageRef = useRef(fetchAttachmentFullImage);
-  const loadedFullObjectUrlByAttachmentIdRef = useRef<Map<number, string>>(new Map());
-  const loadingFullImageAttachmentIdsRef = useRef<Set<number>>(new Set());
-  const fullImageFetchAbortRef = useRef<AbortController | null>(null);
+  useLayoutEffect(() => {
+    displayedListRef.current = displayedAttachments;
+    galleryIndexRef.current = galleryIndex;
+  }, [displayedAttachments, galleryIndex]);
 
-  const getFallbackIcon = (fileExtension: string): string => {
-    const FallbackIcon = svgFallbacks[fileExtension as keyof typeof svgFallbacks] || FileOtherIcon;
+  const revokeFullImageCache = useCallback(() => {
+    fullImageCacheRef.current.forEach((url) => {
+      URL.revokeObjectURL(url);
+    });
+    fullImageCacheRef.current.clear();
+  }, []);
+
+  const getFallbackIcon = (fileExtension: string | undefined): string => {
+    const FallbackIcon =
+      svgFallbacks[fileExtension as keyof typeof svgFallbacks] || FileOtherIcon;
     const svgFallbackString = renderToStaticMarkup(<FallbackIcon />);
 
     return svgToBase64(svgFallbackString);
   };
 
-  const addThumbnailSrcToAttachments = useCallback(
-    (objectUrls: string[], abortSignal: AbortSignal, cleanedUpRef: MutableRefObject<boolean>): void => {
+  const getAttachments = useCallback(
+    (
+      objectUrls: string[],
+      abortSignal: AbortSignal,
+      shouldApplyResultRef: MutableRefObject<boolean>,
+    ): void => {
       setAttachmentsWithPreview(null);
-      loadedFullObjectUrlByAttachmentIdRef.current.clear();
 
       if (!isEmpty(attachments)) {
         const promises = attachments.map(
-          async (attachment: AttachmentWithSlider): Promise<AttachmentWithSlider> => {
-            if (attachment.hasThumbnail) {
-              return getAttachmentThumbnailOnly(attachment, objectUrls, abortSignal);
-            }
-
-            return { ...attachment };
-          },
+          async (attachment: AttachmentWithSlider): Promise<AttachmentWithSlider> =>
+            fetchAttachmentPreview(attachment, objectUrls, abortSignal),
         );
 
         void Promise.all(promises).then((newList) => {
-          if (!abortSignal.aborted && !cleanedUpRef.current) {
+          if (!abortSignal.aborted && shouldApplyResultRef.current) {
             setAttachmentsWithPreview(newList);
           }
         });
       }
     },
-    [attachments, getAttachmentThumbnailOnly],
+    [attachments, fetchAttachmentPreview],
   );
 
   useEffect(() => {
     const objectUrls: string[] = [];
-
-    objectUrlsRef.current = objectUrls;
     const abortController = new AbortController();
 
-    isCleanedUpRef.current = false;
-    queueMicrotask(() => {
-      addThumbnailSrcToAttachments(objectUrls, abortController.signal, isCleanedUpRef);
-    });
+    shouldApplyAttachmentPreviewRef.current = true;
+    getAttachments(objectUrls, abortController.signal, shouldApplyAttachmentPreviewRef);
 
     return () => {
-      isCleanedUpRef.current = true;
-      fullImageFetchAbortRef.current?.abort();
-      fullImageFetchAbortRef.current = null;
+      shouldApplyAttachmentPreviewRef.current = false;
       abortController.abort();
       objectUrls.forEach((url) => {
         URL.revokeObjectURL(url);
       });
     };
-  }, [addThumbnailSrcToAttachments]);
+  }, [getAttachments]);
 
-  const updateImageToolbarVisibility = useCallback(
-    (instance: ExtendedLightGalleryInstance, slideIndex: number): void => {
-      const outerRoot = instance.outer?.get();
-      const zoomInButton = outerRoot?.querySelector(`.${lightGalleryClassNames.zoomIn}`);
-      const zoomOutButton = outerRoot?.querySelector(`.${lightGalleryClassNames.zoomOut}`);
-      const externalLinkButton = outerRoot?.querySelector(`.${lightGalleryClassNames.externalLink}`);
-      const show = shouldShowZoomAndExternalLink(
-        instance,
-        slideIndex,
-        attachmentsListRef.current,
-        loadedFullObjectUrlByAttachmentIdRef.current,
-      );
-
-      externalLinkButton?.classList.toggle('hidden', !show);
-      zoomInButton?.classList.toggle('hidden', !show);
-      zoomOutButton?.classList.toggle('hidden', !show);
-    },
-    [],
-  );
-
-  const setTollbarButtonsVisibility = useCallback((instance: ExtendedLightGalleryInstance): void => {
-    instance.LGel.on('lgBeforeSlide', (event: { detail: { index: number } }): void => {
-      updateImageToolbarVisibility(instance, event.detail.index);
-    });
-    instance.LGel.on('lgAfterOpen', (): void => {
-      updateImageToolbarVisibility(instance, instance.index);
-    });
-  }, [updateImageToolbarVisibility]);
-
-  const addCustomCloseButton = (toolbar: HTMLElement): void => {
-    const closeButton = toolbar.querySelector(`.${lightGalleryClassNames.closeButton}`);
-
-    if (closeButton) {
-      closeButton.innerHTML = closeIcon;
+  useEffect(() => {
+    if (!isGalleryOpen) {
+      revokeFullImageCache();
+      setGalleryFullImageUrl(null);
+      setGalleryFullImageLoading(false);
     }
-  };
+  }, [isGalleryOpen, revokeFullImageCache]);
 
-  const addCustomExternalLinkButton = (
-    toolbar: HTMLElement,
-    instance: ExtendedLightGalleryInstance,
-  ): void => {
-    const externalLinkButton = document.createElement('button');
+  useEffect(() => {
+    if (!isGalleryOpen) {
+      return;
+    }
 
-    externalLinkButton.className = `${lightGalleryClassNames.icon} ${lightGalleryClassNames.externalLink}`;
-    externalLinkButton.innerHTML = externalLinkIcon;
-    externalLinkButton.onclick = () => {
-      const currentItem = instance.galleryItems[instance.index];
-      const imageUrl: unknown = currentItem.src ?? currentItem.href;
-
-      if (typeof imageUrl === 'string' && imageUrl.length > 0) {
-        window.open(imageUrl, '_blank', 'noopener,noreferrer');
-      }
-    };
-
-    toolbar.append(externalLinkButton);
-  };
-
-  const addCustomDownloadButton = (
-    toolbar: HTMLElement,
-    instance: ExtendedLightGalleryInstance,
-  ): void => {
-    const downloadButton = document.createElement('button');
-
-    downloadButton.className = `${lightGalleryClassNames.icon} ${lightGalleryClassNames.customDownloadButton}`;
-    downloadButton.innerHTML = downloadIcon;
-    toolbar.appendChild(downloadButton);
-
-    downloadButton.onclick = async () => {
-      const items = instance.items as GalleryItem[];
-      const index = instance.index;
-      const currentItem = items[index];
-      const attachmentId = currentItem.dataset?.id;
-      const fileName = currentItem.download;
-
-      if (attachmentId) {
-        await downloadAttachmentRef.current(String(attachmentId), fileName);
-      }
-    };
-  };
-
-  const addCustomZoomButtons = (
-    toolbar: HTMLElement,
-    instance: ExtendedLightGalleryInstance,
-  ): void => {
-    const zoomInButton = document.createElement('button');
-
-    zoomInButton.className = `${lightGalleryClassNames.icon} ${lightGalleryClassNames.zoomIn}`;
-    zoomInButton.innerHTML = zoomPlusIcon;
-
-    const zoomOutButton = document.createElement('button');
-
-    zoomOutButton.className = `${lightGalleryClassNames.icon} ${lightGalleryClassNames.zoomOut}`;
-    zoomOutButton.innerHTML = zoomMinusIcon;
-
-    const zoomPlugin = instance.plugins?.find(
-      (plugin): plugin is ZoomPlugin => typeof (plugin as ZoomPlugin).zoomIn === 'function',
+    const attachment = displayedAttachments[galleryIndex];
+    const shouldFetchFullImage = applyFullImageStateForAttachment(
+      attachment,
+      fullImageCacheRef.current,
+      setGalleryFullImageUrl,
+      setGalleryFullImageLoading,
     );
 
-    zoomInButton.onclick = (e) => {
-      e.preventDefault();
+    if (!shouldFetchFullImage || !attachment) {
+      return;
+    }
 
-      if (zoomPlugin) {
-        zoomPlugin.zoomIn();
-      }
+    const abortController = new AbortController();
+    const requestedAttachmentId = attachment.id;
+
+    void fetchFullAttachmentBlob(requestedAttachmentId, abortController.signal)
+      .then((blob) => {
+        if (abortController.signal.aborted) {
+          return;
+        }
+
+        const url = URL.createObjectURL(blob);
+
+        fullImageCacheRef.current.set(requestedAttachmentId, url);
+
+        const activeAttachment = displayedListRef.current[galleryIndexRef.current];
+
+        if (activeAttachment?.id === requestedAttachmentId) {
+          setGalleryFullImageUrl(url);
+        }
+      })
+      .catch((err) => {
+        console.error(`Error while image fetching: ${err}`);
+      })
+      .finally(() => {
+        if (!abortController.signal.aborted) {
+          setGalleryFullImageLoading(false);
+        }
+      });
+
+    return () => {
+      abortController.abort();
     };
+  }, [isGalleryOpen, galleryIndex, displayedAttachments, fetchFullAttachmentBlob]);
 
-    zoomOutButton.onclick = (e) => {
-      e.preventDefault();
-
-      if (zoomPlugin) {
-        zoomPlugin.resetZoom();
-        zoomPlugin.init();
-      }
-    };
-
-    toolbar.append(zoomInButton);
-    toolbar.append(zoomOutButton);
-  };
-
-  const scheduleFullImageForSlide = useCallback(
-    (instance: ExtendedLightGalleryInstance, slideIndex: number) => {
-      void loadFullResolutionImageForSlide(
-        instance,
-        slideIndex,
-        fetchAttachmentFullImageRef.current,
-        attachmentsListRef.current,
-        loadedFullObjectUrlByAttachmentIdRef.current,
-        loadingFullImageAttachmentIdsRef.current,
-        objectUrlsRef.current,
-        styles['full-image-loading'],
-        fullImageFetchAbortRef,
-        (appliedSlideIndex) => {
-          const current = lightGalleryRef.current;
-
-          if (current && current.index === appliedSlideIndex) {
-            updateImageToolbarVisibility(current, appliedSlideIndex);
-          }
-        },
-      );
-    },
-    [updateImageToolbarVisibility],
-  );
-
-  const scheduleFullImageForSlideRef = useRef(scheduleFullImageForSlide);
-
-  const displayedAttachments = attachmentsWithPreview || attachments;
   const isReady = !!attachmentsWithPreview;
 
-  const attachmentContentKey = useMemo(
-    () =>
-      displayedAttachments
-        .map(
-          (a) =>
-            `${a.id}\u001f${a.thumbnailSrc ?? ''}\u001f${a.hasThumbnail ? 1 : 0}\u001f${a.fileName}\u001f${a.src ?? ''}`,
-        )
-        .join('\u001e'),
+  const primeFullImageStateForIndex = useCallback(
+    (index: number) => {
+      const attachment = displayedAttachments[index];
+      applyFullImageStateForAttachment(
+        attachment,
+        fullImageCacheRef.current,
+        setGalleryFullImageUrl,
+        setGalleryFullImageLoading,
+      );
+    },
     [displayedAttachments],
   );
 
-  const galleryElementClassName = useMemo(
-    () => cx(lightGalleryClassNames.attachmentsList, className),
-    [className],
+  const openGallery = useCallback(
+    (index: number) => {
+      setGalleryIndex(index);
+      setIsGalleryOpen(true);
+      primeFullImageStateForIndex(index);
+    },
+    [primeFullImageStateForIndex],
   );
 
-  useEffect(() => {
-    downloadAttachmentRef.current = downloadAttachment;
-    attachmentsListRef.current = attachmentsWithPreview || attachments;
-    fetchAttachmentFullImageRef.current = fetchAttachmentFullImage;
-    scheduleFullImageForSlideRef.current = scheduleFullImageForSlide;
-  }, [
-    downloadAttachment,
-    attachments,
-    attachmentsWithPreview,
-    fetchAttachmentFullImage,
-    scheduleFullImageForSlide,
-  ]);
+  const handleActiveIndexChange = useCallback(
+    (index: number) => {
+      setGalleryIndex(index);
+      primeFullImageStateForIndex(index);
+    },
+    [primeFullImageStateForIndex],
+  );
 
-  useEffect(() => {
-    const el = lgContainerRef.current;
+  const closeGallery = useCallback(() => {
+    setIsGalleryOpen(false);
+  }, []);
 
-    if (!el) {
-      return undefined;
+  const activeAttachment = displayedAttachments[galleryIndex];
+  const extension = activeAttachment?.fileName.split('.').pop()?.toLowerCase();
+  const fallbackSrc = getFallbackIcon(extension);
+  const mainImageSrc =
+    activeAttachment?.hasThumbnail && isGalleryOpen
+      ? galleryFullImageUrl || ''
+      : fallbackSrc;
+  const showZoomExternalDownload = !!(
+    mainImageSrc &&
+    !mainImageSrc.startsWith('data:image/svg+xml')
+  );
+
+  const handleAttachmentDownload = useCallback(async () => {
+    const attachment = displayedAttachments[galleryIndex];
+
+    if (attachment) {
+      await downloadAttachment(String(attachment.id), attachment.fileName);
     }
-
-    if (displayedAttachments.length === 0) {
-      lightGalleryRef.current?.destroy();
-      lightGalleryRef.current = null;
-
-      return undefined;
-    }
-
-    const scheduleFromEvent = (slideIndex: number): void => {
-      const instance = lightGalleryRef.current;
-
-      if (!instance) {
-        return;
-      }
-
-      scheduleFullImageForSlideRef.current(instance, slideIndex);
-    };
-
-    const onBeforeOpen = (): void => {
-      const instance = lightGalleryRef.current;
-
-      if (!instance) {
-        return;
-      }
-
-      scheduleFromEvent(instance.index);
-    };
-
-    const onAfterOpen = (): void => {
-      const instance = lightGalleryRef.current;
-
-      if (!instance) {
-        return;
-      }
-
-      scheduleFromEvent(instance.index);
-    };
-
-    const onAfterSlide = (event: Event): void => {
-      const detail = (event as CustomEvent<{ index?: number }>).detail;
-
-      if (typeof detail?.index === 'number') {
-        scheduleFromEvent(detail.index);
-      }
-    };
-
-    const onBeforeSlide = (event: Event): void => {
-      const detail = (event as CustomEvent<{ index?: number; prevIndex?: number }>).detail;
-      const instance = lightGalleryRef.current;
-
-      if (!instance || typeof detail?.index !== 'number') {
-        return;
-      }
-
-      if (typeof detail.prevIndex === 'number' && detail.prevIndex !== detail.index) {
-        clearSlidePendingFullLoad(instance, detail.prevIndex);
-      }
-
-      const slideEl = instance.getSlideItem(detail.index)?.get();
-
-      if (
-        slideEl &&
-        shouldPendingHideThumbForSlide(
-          instance,
-          detail.index,
-          attachmentsListRef.current,
-          loadedFullObjectUrlByAttachmentIdRef.current,
-        )
-      ) {
-        slideEl.setAttribute(PENDING_FULL_LOAD_ATTR, '');
-      }
-    };
-
-    el.addEventListener('lgBeforeOpen', onBeforeOpen);
-    el.addEventListener('lgAfterOpen', onAfterOpen);
-    el.addEventListener('lgBeforeSlide', onBeforeSlide);
-    el.addEventListener('lgAfterSlide', onAfterSlide);
-
-    const instance = lightGallery(el, {
-      speed: 500,
-      plugins: LIGHT_GALLERY_PLUGINS,
-      exThumbImage: 'data-thumb',
-      nextHtml: nextIcon,
-      prevHtml: prevIcon,
-      download: false,
-      escKey: true,
-      licenseKey: '0000-0000-000-0000',
-    });
-
-    lightGalleryRef.current = instance;
-
-    if (instance.outer) {
-      setTollbarButtonsVisibility(instance);
-
-      const toolbar = instance.outer.get()?.querySelector(`.${lightGalleryClassNames.toolbar}`);
-
-      if (toolbar instanceof HTMLElement) {
-        addCustomCloseButton(toolbar);
-
-        if (!toolbar.querySelector(`.${lightGalleryClassNames.externalLink}`)) {
-          addCustomExternalLinkButton(toolbar, instance);
-        }
-
-        if (!toolbar.querySelector(`.${lightGalleryClassNames.customDownloadButton}`)) {
-          addCustomDownloadButton(toolbar, instance);
-        }
-
-        if (!toolbar.querySelector(`.${lightGalleryClassNames.zoomIn}`)) {
-          addCustomZoomButtons(toolbar, instance);
-        }
-      }
-    }
-
-    return () => {
-      el.removeEventListener('lgBeforeOpen', onBeforeOpen);
-      el.removeEventListener('lgAfterOpen', onAfterOpen);
-      el.removeEventListener('lgBeforeSlide', onBeforeSlide);
-      el.removeEventListener('lgAfterSlide', onAfterSlide);
-      lightGalleryRef.current = null;
-      instance.destroy();
-    };
-  }, [attachmentContentKey, displayedAttachments.length, setTollbarButtonsVisibility]);
+  }, [displayedAttachments, galleryIndex, downloadAttachment]);
 
   return (
-    <div>
-      <div
-        ref={lgContainerRef}
-        className={`lg-react-element ${galleryElementClassName}`}
-      >
-        {displayedAttachments.map(({ id, fileName, fileSize, src, thumbnailSrc, hasThumbnail }: AttachmentWithSlider) => {
-          const fileExtension = fileName.split('.').pop()?.toLowerCase();
-          const svgFallback = getFallbackIcon(fileExtension);
-          const finalThumb = thumbnailSrc || svgFallback;
-          const galleryMainSrc =
-            hasThumbnail && thumbnailSrc ? thumbnailSrc : src || svgFallback;
-
-          return (
-            // eslint-disable-next-line jsx-a11y/anchor-is-valid
-            <a
-              key={id}
-              className={cx(lightGalleryClassNames.galleryItem, {
-                loading: !isReady,
-              })}
-              data-src={galleryMainSrc}
-              data-thumb={finalThumb}
-              download={fileName}
-              data-id={String(id)}
-            >
-              <AttachedFile
-                key={id}
-                fileName={fileName}
-                size={convertBytesToMB(fileSize)}
-                textPosition="bottom"
-                imageSrc={thumbnailSrc}
-                withPreview
-                isFullWidth
-              />
-            </a>
-          );
-        })}
-      </div>
+    <div className={cx('attachmentsList', className)}>
+      {displayedAttachments.map((attachment, index) => (
+        <GalleryAttachmentTile
+          key={attachment.id}
+          attachment={attachment}
+          index={index}
+          isReady={isReady}
+          galleryItemClass={styles.galleryItem}
+          onOpen={openGallery}
+        />
+      ))}
+      <AttachmentsGallerySlider
+        isOpen={isGalleryOpen}
+        activeIndex={galleryIndex}
+        attachments={displayedAttachments}
+        mainImageSrc={mainImageSrc}
+        getThumbSrc={(attachment) =>
+          attachment.thumbnailSrc || getFallbackIcon(attachment.fileName.split('.').pop()?.toLowerCase())
+        }
+        getFallbackSrc={(attachment) => getFallbackIcon(attachment.fileName.split('.').pop()?.toLowerCase())}
+        showZoomExternalDownload={showZoomExternalDownload}
+        fullImageLoading={galleryFullImageLoading}
+        onActiveIndexChange={handleActiveIndexChange}
+        onClose={closeGallery}
+        onDownloadCurrent={() => {
+          void handleAttachmentDownload();
+        }}
+      />
     </div>
   );
 };
