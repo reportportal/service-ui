@@ -16,8 +16,7 @@
 
 import { FormEvent, useMemo } from 'react';
 import { useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
-import { Field, formValueSelector, InjectedFormProps, reduxForm } from 'redux-form';
+import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
 import { createClassnames } from 'common/utils';
 
@@ -34,6 +33,7 @@ import { createMilestoneModalMessages } from '../createMilestoneModal/messages';
 import { ADJUST_FORM_DOM_ID, CHANGE_MILESTONE_STATUS_ADJUST_FORM_NAME } from './constants';
 import { changeMilestoneStatusModalMessages } from './messages';
 import type { MilestoneAdjustFormValues } from './types';
+import { useMilestoneDateBounds } from '../useMilestoneDateBounds';
 
 import styles from './changeMilestoneStatusModal.scss';
 
@@ -51,13 +51,10 @@ const BackToScheduledAdjustFormFields = ({
   onValidSubmit,
 }: InjectedFormProps<MilestoneAdjustFormValues> & AdjustFormOwnProps) => {
   const { formatMessage } = useIntl();
-  const milestoneFormValues = useMemo(
-    () => formValueSelector(CHANGE_MILESTONE_STATUS_ADJUST_FORM_NAME),
-    [],
+  const { startDate, startDateAsDate, endDateAsDate } = useMilestoneDateBounds(
+    CHANGE_MILESTONE_STATUS_ADJUST_FORM_NAME,
   );
-  const startDate = useSelector(
-    (state) => milestoneFormValues(state, 'startDate') as string | undefined,
-  );
+
   const startDateShortcuts = useMemo(
     () => [
       {
@@ -115,6 +112,7 @@ const BackToScheduledAdjustFormFields = ({
             label: formatMessage(createMilestoneModalMessages.startDateLabel),
             placeholder: formatMessage(createMilestoneModalMessages.dateFieldPlaceholder),
             disabled: isLoading,
+            maxDate: endDateAsDate,
             shortcutSlot: (
               <MilestoneDateShortcutRow items={startDateShortcuts} disabled={isLoading} />
             ),
@@ -127,6 +125,7 @@ const BackToScheduledAdjustFormFields = ({
             label: formatMessage(createMilestoneModalMessages.endDateLabel),
             placeholder: formatMessage(createMilestoneModalMessages.dateFieldPlaceholder),
             disabled: isLoading,
+            minDate: startDateAsDate,
             shortcutSlot: (
               <MilestoneDateShortcutRow items={endDateShortcuts} disabled={isLoading} />
             ),
@@ -137,9 +136,10 @@ const BackToScheduledAdjustFormFields = ({
   );
 };
 
-export const BackToScheduledAdjustFormConnected = reduxForm<MilestoneAdjustFormValues, AdjustFormOwnProps>(
-  {
-    form: CHANGE_MILESTONE_STATUS_ADJUST_FORM_NAME,
-    destroyOnUnmount: true,
-  },
-)(BackToScheduledAdjustFormFields);
+export const BackToScheduledAdjustFormConnected = reduxForm<
+  MilestoneAdjustFormValues,
+  AdjustFormOwnProps
+>({
+  form: CHANGE_MILESTONE_STATUS_ADJUST_FORM_NAME,
+  destroyOnUnmount: true,
+})(BackToScheduledAdjustFormFields);

@@ -20,7 +20,7 @@ export const GET_MILESTONES = 'getMilestones' as const;
 export const MILESTONES_NAMESPACE = 'milestones' as const;
 
 export const defaultMilestoneQueryParams = {
-  sortBy: 'createdDate,desc',
+  sort: 'startDate,desc',
   limit: 20,
   offset: 0,
 };
