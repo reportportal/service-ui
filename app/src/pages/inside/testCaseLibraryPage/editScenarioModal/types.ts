@@ -36,6 +36,7 @@ export interface ModalCommonProps {
 export interface EditScenarioModalContentProps extends ModalCommonProps {
   formName: string;
   pristine?: boolean;
+  allowCloseOutside?: boolean;
   handleSubmit: (
     handler: (formData: CreateTestCaseFormData) => void | Promise<void>,
   ) => (event: FormEvent) => void;

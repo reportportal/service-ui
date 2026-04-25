@@ -73,7 +73,8 @@ const DuplicateSelectedTestCaseModal = reduxForm<
   });
 
   const handleDuplicate = useCallback(
-    (formData: CreateTestCaseFormData) => createTestCase(formData, 'testCaseDuplicatedSuccess'),
+    (formData: CreateTestCaseFormData) =>
+      createTestCase(formData, { successMessageId: 'testCaseDuplicatedSuccess' }),
     [createTestCase],
   );
 

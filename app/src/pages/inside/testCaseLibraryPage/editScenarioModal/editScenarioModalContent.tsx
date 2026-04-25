@@ -34,6 +34,7 @@ export const EditScenarioModalContent = ({
   onSubmitHandler,
   formName,
   pristine,
+  allowCloseOutside: allowCloseOutsideFromProps,
   handleSubmit,
 }: EditScenarioModalContentProps) => {
   const { okButton, cancelButton, handleClose, handleFormSubmit } = useModalActions({
@@ -43,6 +44,7 @@ export const EditScenarioModalContent = ({
     handleSubmit,
     onSubmitHandler,
   });
+  const allowCloseOutside = allowCloseOutsideFromProps ?? pristine;
 
   return (
     <Modal
@@ -50,7 +52,7 @@ export const EditScenarioModalContent = ({
       okButton={okButton}
       className={cx('scenario-edit-modal')}
       cancelButton={cancelButton}
-      allowCloseOutside={pristine}
+      allowCloseOutside={allowCloseOutside}
       onClose={handleClose}
       scrollable
     >
