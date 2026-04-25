@@ -71,4 +71,60 @@ export const messages = defineMessages({
     id: 'testCaseSearch.testNameOrAttributeRequired',
     defaultMessage: "Add 'Test Name' or 'Attribute' to work with 'Status' filter",
   },
+  bannerTitle: {
+    id: 'testCaseSearch.bannerTitle',
+    defaultMessage: 'Try the updated test case search',
+  },
+  bannerSubtitle: {
+    id: 'testCaseSearch.bannerSubtitle',
+    defaultMessage: 'A structured space for exploring and filtering test cases',
+  },
+  documentationButton: {
+    id: 'testCaseSearch.documentationButton',
+    defaultMessage: 'Documentation',
+  },
+  openNewSearchButton: {
+    id: 'testCaseSearch.openNewSearchButton',
+    defaultMessage: 'Open New Search',
+  },
+  premiumPopupTitle: {
+    id: 'testCaseSearch.premiumPopupTitle',
+    defaultMessage: 'Unlock premium features',
+  },
+  premiumPopupSubtitle: {
+    id: 'testCaseSearch.premiumPopupSubtitle',
+    defaultMessage: 'Upgrade your plan to get the most out of ReportPortal and work more efficiently.',
+  },
+  premiumBulletQualityGates: {
+    id: 'testCaseSearch.premiumBulletQualityGates',
+    defaultMessage: 'Quality Gates',
+  },
+  premiumBulletOrganizations: {
+    id: 'testCaseSearch.premiumBulletOrganizations',
+    defaultMessage: 'Organizations',
+  },
+  premiumBulletTestExecutions: {
+    id: 'testCaseSearch.premiumBulletTestExecutions',
+    defaultMessage: 'Test Executions Search',
+  },
+  premiumBulletSSO: {
+    id: 'testCaseSearch.premiumBulletSSO',
+    defaultMessage: 'Single sign-on',
+  },
+  premiumBulletMore: {
+    id: 'testCaseSearch.premiumBulletMore',
+    defaultMessage: '\u2026and many more',
+  },
+  explorePlansButton: {
+    id: 'testCaseSearch.explorePlansButton',
+    defaultMessage: 'Explore Plans',
+  },
+  contactUsButton: {
+    id: 'testCaseSearch.contactUsButton',
+    defaultMessage: 'Contact us',
+  },
+  notNowButton: {
+    id: 'testCaseSearch.notNowButton',
+    defaultMessage: 'Not now',
+  },
 });
