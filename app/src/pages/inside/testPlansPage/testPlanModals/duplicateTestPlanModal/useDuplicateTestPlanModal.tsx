@@ -22,7 +22,7 @@ import { useModal } from 'common/hooks';
 import { DUPLICATE_TEST_PLAN_MODAL_KEY, DuplicateTestPlanModal } from './duplicateTestPlanModal';
 
 interface UseDuplicateTestPlanModalOptions {
-  onSuccess?: (testPlanId: number) => void;
+  onSuccess?: (testPlanId: number, attributesCount: number) => void;
 }
 
 export const useDuplicateTestPlanModal = ({

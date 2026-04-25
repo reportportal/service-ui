@@ -80,6 +80,11 @@ export const MilestoneCard = ({
     openCreateTestPlanModal({ milestoneId: milestone.id });
   };
 
+  const handleFooterCreateTestPlan = () => {
+    trackEvent(MILESTONES_PAGE_EVENTS.CLICK_CREATE_TEST_PLAN_EMPTY);
+    openCreateTestPlanModal({ milestoneId: milestone.id });
+  };
+
   return (
     <div className={cx('milestone-card__group')}>
       <div className={cx('milestone-card')}>
@@ -179,7 +184,7 @@ export const MilestoneCard = ({
                     variant="text"
                     adjustWidthOn="content"
                     icon={<PlusIcon />}
-                    onClick={() => openCreateTestPlanModal({ milestoneId: milestone.id })}
+                    onClick={handleFooterCreateTestPlan}
                   >
                     {formatMessage(messages.createTestPlanUnderMilestone)}
                   </Button>

@@ -169,13 +169,9 @@ export const ProjectSettingsPageContainer = () => {
   }, [formatMessage, createTabLink, mergeConfig]);
 
   const navigation = useMemo(() => {
-    if (subPage) {
-      return null;
-    } else {
-      const title = <FormattedMessage id="SettingsPage.title" defaultMessage="Project Settings" />;
-      return <Navigation items={config} title={title} />;
-    }
-  }, [config, subPage]);
+    const title = <FormattedMessage id="SettingsPage.title" defaultMessage="Project Settings" />;
+    return <Navigation items={config} title={title} />;
+  }, [config]);
 
   const content = useMemo(() => {
     if (!activeTab || !config[activeTab]) {

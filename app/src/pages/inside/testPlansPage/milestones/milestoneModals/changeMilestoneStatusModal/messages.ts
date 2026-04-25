@@ -108,7 +108,7 @@ export const changeMilestoneStatusModalMessages = defineMessages({
   backToTestingBody: {
     id: 'ChangeMilestoneStatusModal.backToTestingBody',
     defaultMessage:
-      'Are you sure you want to move the milestone \u201c<b>{name}</b>\u201d to the \u201c{status}\u201d status?',
+      'Are you sure you want to move the milestone <b>{name}</b> to the <b>{status}</b> status?',
   },
   backToScheduledTitle: {
     id: 'ChangeMilestoneStatusModal.backToScheduledTitle',
@@ -117,7 +117,7 @@ export const changeMilestoneStatusModalMessages = defineMessages({
   backToScheduledBody: {
     id: 'ChangeMilestoneStatusModal.backToScheduledBody',
     defaultMessage:
-      'Are you sure you want to move the milestone \u201c<b>{name}</b>\u201d to the \u201c{status}\u201d status?',
+      'Are you sure you want to move the milestone <b>{name}</b> to the <b>{status}</b> status?',
   },
   adjustMilestoneToggle: {
     id: 'ChangeMilestoneStatusModal.adjustMilestoneToggle',

@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-export interface AttachmentWithSlider {
-  fileName: string;
-  fileSize: number;
-  id: number;
-  fileType: string;
-  src?: string;
-  hasThumbnail?: boolean;
-  thumbnailSrc?: string;
+.thumbImage {
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  object-fit: cover;
+
+  &[src^='data:image/svg'] {
+    width: 32px;
+    height: 32px;
+    margin: auto;
+  }
 }

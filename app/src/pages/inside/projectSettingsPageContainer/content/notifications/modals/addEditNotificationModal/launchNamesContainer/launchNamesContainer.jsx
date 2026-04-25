@@ -24,7 +24,7 @@ import { URLS } from 'common/urls';
 import { AsyncMultipleAutocompleteV2 } from 'componentLibrary/autocompletes/asyncMultipleAutocompleteV2';
 import { SystemMessage } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { isExistingLaunchNamesSelector } from 'controllers/project/selectors';
+import { existingLaunchNamesSelector } from 'controllers/project/selectors';
 import { projectKeySelector } from 'controllers/project';
 
 import styles from './launchNamesContainer.scss';
@@ -56,7 +56,7 @@ export const LaunchNamesContainer = ({ highlightUnStoredItem, value, ...rest }) 
   const { formatMessage } = useIntl();
   const projectKey = useSelector(projectKeySelector);
   const [showMessage, setShowMessage] = useState(false);
-  const existingItemsMap = useSelector(isExistingLaunchNamesSelector);
+  const existingItemsMap = useSelector(existingLaunchNamesSelector);
 
   const containsNonExistingName = (names, itemsMap) => names.some((name) => !itemsMap[name]);
 

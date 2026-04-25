@@ -61,6 +61,7 @@ import {
   UPDATE_PROJECT_NOTIFICATION,
   DELETE_PROJECT_NOTIFICATION,
   FETCH_PROJECT_NOTIFICATIONS,
+  FETCH_EXISTING_LAUNCH_NAMES,
   UPDATE_LOG_TYPE,
   DELETE_LOG_TYPE,
   PREPARE_ACTIVE_PROJECT,
@@ -224,16 +225,12 @@ function* watchDeleteDefectType() {
   yield takeEvery(DELETE_DEFECT_TYPE, deleteDefectType);
 }
 
-function* fetchProjectNotifications() {
+export function* fetchProjectNotifications() {
   yield put(setProjectNotificationsLoadingAction(true));
   try {
     const projectKey = yield select(projectKeySelector);
-    const [notifications, existingLaunchNames] = yield all([
-      call(fetch, URLS.notification(projectKey)),
-      call(fetch, URLS.launchesExistingNames(projectKey)),
-    ]);
+    const notifications = yield call(fetch, URLS.notification(projectKey));
     yield put(fetchProjectNotificationsSuccessAction(notifications));
-    yield put(fetchExistingLaunchNamesSuccessAction(existingLaunchNames));
   } catch (error) {
     yield put(showDefaultErrorNotification(error));
   } finally {
@@ -243,6 +240,23 @@ function* fetchProjectNotifications() {
 
 function* watchFetchProjectNotifications() {
   yield takeEvery(FETCH_PROJECT_NOTIFICATIONS, fetchProjectNotifications);
+}
+
+export function* fetchExistingLaunchNames({ payload: payloadProjectKey }) {
+  try {
+    const projectKey = payloadProjectKey || (yield select(projectKeySelector));
+    if (!projectKey) {
+      return;
+    }
+    const existingLaunchNames = yield call(fetch, URLS.launchesExistingNames(projectKey));
+    yield put(fetchExistingLaunchNamesSuccessAction(existingLaunchNames));
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  }
+}
+
+function* watchFetchExistingLaunchNames() {
+  yield takeEvery(FETCH_EXISTING_LAUNCH_NAMES, fetchExistingLaunchNames);
 }
 
 function* updateNotificationState({
@@ -655,6 +669,7 @@ export function* projectSagas() {
     watchUpdateProjectNotification(),
     watchDeleteProjectNotification(),
     watchFetchProjectNotifications(),
+    watchFetchExistingLaunchNames(),
     watchFetchLogTypes(),
     watchCreateLogType(),
     watchUpdateLogType(),
