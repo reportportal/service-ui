@@ -14,12 +14,5 @@
  * limitations under the License.
  */
 
-export interface AttachmentWithSlider {
-  fileName: string;
-  fileSize: number;
-  id: number;
-  fileType: string;
-  src?: string;
-  hasThumbnail?: boolean;
-  thumbnailSrc?: string;
-}
+export type { AttachmentsGallerySliderProps } from './attachmentsGallerySlider';
+export { AttachmentsGallerySlider } from './attachmentsGallerySlider';

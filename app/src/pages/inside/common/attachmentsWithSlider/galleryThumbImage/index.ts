@@ -14,14 +14,5 @@
  * limitations under the License.
  */
 
-export const lightGalleryClassNames = {
-  zoomIn: 'lg-zoom-plus',
-  zoomOut: 'lg-zoom-minus',
-  externalLink: 'lg-external-link',
-  toolbar: 'lg-toolbar',
-  closeButton: 'lg-close',
-  customDownloadButton: 'lg-download-custom',
-  attachmentsList: 'attachments-list',
-  galleryItem: 'gallery-item',
-  icon: 'lg-icon',
-} as const;
+export type { GalleryThumbImageProps } from './galleryThumbImage';
+export { GalleryThumbImage } from './galleryThumbImage';

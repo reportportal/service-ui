@@ -19,67 +19,92 @@ import { useCallback } from 'react';
 import { saveAs } from 'file-saver';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { PromiseStatus } from 'pages/inside/common/constants';
 import { projectKeySelector } from 'controllers/project';
 import { AttachmentWithSlider } from 'pages/inside/common/attachmentsWithSlider/types';
 
 export const useAttachmentsWithSlider = () => {
   const projectKey = useSelector(projectKeySelector);
 
-  const getAttachmentWithThumbnail = useCallback(async (
-    attachment: AttachmentWithSlider,
-    objectUrls: string[],
-    abortSignal: AbortSignal,
-  ): Promise<AttachmentWithSlider> => {
-    const thumbnailPromise = fetch(
-      URLS.attachmentThumbnail(projectKey, attachment.id),
-      { responseType: 'blob', signal: abortSignal },
-      true
-    );
-    const imagePromise = fetch(
-      URLS.tmsAttachmentDownload(projectKey, attachment.id),
-      { responseType: 'blob', signal: abortSignal },
-      true
-    );
+  const fetchAttachmentPreview = useCallback(
+    async (
+      attachment: AttachmentWithSlider,
+      objectUrls: string[],
+      abortSignal: AbortSignal,
+    ): Promise<AttachmentWithSlider> => {
+      if (!attachment.hasThumbnail) {
+        return { ...attachment };
+      }
 
-    const [thumbnailResult, imageResult] = await Promise.allSettled([thumbnailPromise, imagePromise]);
+      let thumbnailSrc: string | undefined;
 
-    let thumbnailSrc: string | undefined;
-    let src: string | undefined;
+      try {
+        const thumbnailResponse = await fetch(
+          URLS.attachmentThumbnail(projectKey, attachment.id),
+          { responseType: 'blob', signal: abortSignal },
+          true,
+        );
 
-    if (!abortSignal.aborted && thumbnailResult.status === PromiseStatus.fulfilled) {
-      thumbnailSrc = URL.createObjectURL(thumbnailResult.value.data as MediaSource);
-      objectUrls.push(thumbnailSrc);
-    }
+        if (!abortSignal.aborted && thumbnailResponse.data) {
+          thumbnailSrc = URL.createObjectURL(thumbnailResponse.data as MediaSource);
+          objectUrls.push(thumbnailSrc);
+        }
+      } catch (err) {
+        if (!abortSignal.aborted) {
+          console.error(`Error while fetching thumbnail: ${err}`);
+        }
+      }
 
-    if (!abortSignal.aborted && imageResult.status === PromiseStatus.fulfilled) {
-      src = URL.createObjectURL(imageResult.value.data as MediaSource);
-      objectUrls.push(src);
-    }
+      return {
+        ...attachment,
+        ...(thumbnailSrc && { thumbnailSrc }),
+      };
+    },
+    [projectKey],
+  );
 
-    return {
-      ...attachment,
-      ...(thumbnailSrc && { thumbnailSrc }),
-      ...(src && { src }),
-    };
-  }, [projectKey]);
+  const fetchFullAttachmentBlob = useCallback(
+    async (attachmentId: number, abortSignal: AbortSignal): Promise<Blob | undefined> => {
+      try {
+        const response = await fetch(
+          URLS.tmsAttachmentDownload(projectKey, attachmentId),
+          { responseType: 'blob', signal: abortSignal },
+          true,
+        );
 
-  const downloadAttachment = useCallback(async (attachmentId: string, fileName: string): Promise<void> => {
-    try {
-      const response = await fetch(
-        URLS.tmsAttachmentDownload(projectKey, attachmentId),
-        { responseType: 'blob' },
-        true
-      );
+        return response.data as Blob;
+      } catch (err) {
+        if (abortSignal.aborted) {
+          return undefined;
+        }
 
-      saveAs(response.data as Blob, fileName);
-    } catch (error) {
-      console.error('Download failed:', error);
-    }
-  }, [projectKey]);
+        console.error(`Error while fetching image: ${err}`);
+
+        return undefined;
+      }
+    },
+    [projectKey],
+  );
+
+  const downloadAttachment = useCallback(
+    async (attachmentId: string, fileName: string): Promise<void> => {
+      try {
+        const response = await fetch(
+          URLS.tmsAttachmentDownload(projectKey, attachmentId),
+          { responseType: 'blob' },
+          true,
+        );
+
+        saveAs(response.data as Blob, fileName);
+      } catch (error) {
+        console.error('Download failed:', error);
+      }
+    },
+    [projectKey],
+  );
 
   return {
-    getAttachmentWithThumbnail,
+    fetchAttachmentPreview,
+    fetchFullAttachmentBlob,
     downloadAttachment,
   };
 };
