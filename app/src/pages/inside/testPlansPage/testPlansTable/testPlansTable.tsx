@@ -59,7 +59,12 @@ export const TestPlansTable = ({
           trackEvent(MILESTONES_PAGE_EVENTS.submitEditTestPlan(attributesCount))
       : undefined,
   });
-  const { openModal: openDuplicateModal } = useDuplicateTestPlanModal();
+  const { openModal: openDuplicateModal } = useDuplicateTestPlanModal({
+    onSuccess: isInMilestoneContext
+      ? (_testPlanId, attributesCount) =>
+          trackEvent(MILESTONES_PAGE_EVENTS.submitDuplicateTestPlan(attributesCount))
+      : undefined,
+  });
   const { openModal: openDeleteModal } = useDeleteTestPlanModal({
     onSuccess: isInMilestoneContext
       ? () => trackEvent(MILESTONES_PAGE_EVENTS.SUBMIT_DELETE_TEST_PLAN)
@@ -73,8 +78,12 @@ export const TestPlansTable = ({
 
   const handleRowClick = useCallback(
     (testPlanId: number, kind: TestPlanRowClickKind) => {
-      if (isInMilestoneContext && kind === 'chevron') {
-        trackEvent(MILESTONES_PAGE_EVENTS.CLICK_OPEN_ALL_TEST_CASES);
+      if (isInMilestoneContext) {
+        if (kind === 'name') {
+          trackEvent(MILESTONES_PAGE_EVENTS.CLICK_OPEN_TEST_PLAN_DETAILS);
+        } else if (kind === 'chevron') {
+          trackEvent(MILESTONES_PAGE_EVENTS.CLICK_OPEN_ALL_TEST_CASES);
+        }
       }
       dispatch({
         type: PROJECT_TEST_PLAN_DETAILS_PAGE,

@@ -82,6 +82,10 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
     trackEvent(MILESTONES_PAGE_EVENTS.confirmStatusWithoutReplacing(trackedTargetStatus));
   const trackWithToday = () =>
     trackEvent(MILESTONES_PAGE_EVENTS.confirmStatusWithToday(trackedTargetStatus));
+  const trackBackToScheduledChange = () =>
+    trackEvent(MILESTONES_PAGE_EVENTS.confirmStatusChange('scheduled'));
+  const trackCompleteWithToday = () =>
+    trackEvent(MILESTONES_PAGE_EVENTS.confirmStatusCompleteWithToday('completed'));
   const [adjustMilestone, setAdjustMilestone] = useState(false);
   const flow = useMemo(
     () => (data ? getChangeMilestoneStatusFlow(data.milestone, data.targetStatus) : null),
@@ -156,7 +160,7 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
       return;
     }
 
-    trackWithoutReplacing();
+    trackBackToScheduledChange();
     void updateMilestone(
       {
         name: milestone.name,
@@ -174,7 +178,7 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
       return;
     }
 
-    trackWithoutReplacing();
+    trackBackToScheduledChange();
     void updateMilestone(
       { ...baseBody, status: MilestoneStatus.SCHEDULED },
       'milestoneStatusChangedToScheduledSuccess',
@@ -217,7 +221,7 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
   };
 
   const completeMilestoneWithTodayDeadline = () => {
-    trackWithToday();
+    trackCompleteWithToday();
     transitionMilestoneToCompleted({ endDate: todayIso });
   };
 
