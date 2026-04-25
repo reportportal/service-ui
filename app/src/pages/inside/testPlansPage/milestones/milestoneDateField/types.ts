@@ -22,4 +22,6 @@ export type MilestoneDateFieldProps = WrappedFieldProps & {
   disabled?: boolean;
   placeholder?: string;
   shortcutSlot?: ReactNode;
+  minDate?: Date;
+  maxDate?: Date;
 };

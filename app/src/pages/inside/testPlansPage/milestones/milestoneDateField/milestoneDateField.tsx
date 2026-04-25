@@ -28,7 +28,7 @@ import type { MilestoneDateFieldProps } from './types';
 const cx = createClassnames(styles);
 
 export const MilestoneDateField = (props: MilestoneDateFieldProps) => {
-  const { input, meta, label, disabled, placeholder, shortcutSlot } = props;
+  const { input, meta, label, disabled, placeholder, shortcutSlot, minDate, maxDate } = props;
   const value = parseDateOnly(isString(input.value) ? input.value : '');
 
   return (
@@ -43,6 +43,8 @@ export const MilestoneDateField = (props: MilestoneDateFieldProps) => {
           customClassName={cx('milestone-date-field__picker')}
           dateFormat="MM-dd-yyyy"
           placeholder={placeholder}
+          minDate={minDate}
+          maxDate={maxDate}
         />
       </div>
       {shortcutSlot}

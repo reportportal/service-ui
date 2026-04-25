@@ -35,6 +35,7 @@ import {
 import { MilestoneDateShortcutRow } from '../../milestoneDateShortcutRow/milestoneDateShortcutRow';
 import { MilestoneDateField } from '../../milestoneDateField/milestoneDateField';
 import { MilestoneTypeDropdown } from '../../milestoneTypeDropdown/milestoneTypeDropdown';
+import { parseDateOnly } from '../../milestoneDateUtils';
 
 import type { MilestoneFormModalContentProps } from './types';
 
@@ -52,6 +53,19 @@ export const MilestoneFormModalContent = ({
   const startDate = useSelector(
     (state) => milestoneFormValues(state, 'startDate') as string | undefined,
   );
+  const endDate = useSelector(
+    (state) => milestoneFormValues(state, 'endDate') as string | undefined,
+  );
+
+  const startDateAsDate = useMemo((): Date | undefined => {
+    if (!startDate?.trim()) return undefined;
+    return parseDateOnly(startDate) ?? undefined;
+  }, [startDate]);
+
+  const endDateAsDate = useMemo((): Date | undefined => {
+    if (!endDate?.trim()) return undefined;
+    return parseDateOnly(endDate) ?? undefined;
+  }, [endDate]);
 
   const startDateShortcuts = useMemo(
     () => [
@@ -122,6 +136,7 @@ export const MilestoneFormModalContent = ({
               label: formatMessage(createMilestoneModalMessages.startDateLabel),
               placeholder: formatMessage(createMilestoneModalMessages.dateFieldPlaceholder),
               disabled: isLoading,
+              maxDate: endDateAsDate,
               shortcutSlot: (
                 <MilestoneDateShortcutRow items={startDateShortcuts} disabled={isLoading} />
               ),
@@ -136,6 +151,7 @@ export const MilestoneFormModalContent = ({
               label: formatMessage(createMilestoneModalMessages.endDateLabel),
               placeholder: formatMessage(createMilestoneModalMessages.dateFieldPlaceholder),
               disabled: isLoading,
+              minDate: startDateAsDate,
               shortcutSlot: (
                 <MilestoneDateShortcutRow items={endDateShortcuts} disabled={isLoading} />
               ),

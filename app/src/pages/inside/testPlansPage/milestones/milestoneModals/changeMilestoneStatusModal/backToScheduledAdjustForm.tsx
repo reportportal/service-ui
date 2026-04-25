@@ -30,6 +30,7 @@ import {
 import { MilestoneDateShortcutRow } from '../../milestoneDateShortcutRow/milestoneDateShortcutRow';
 import { MilestoneDateField } from '../../milestoneDateField/milestoneDateField';
 import { MilestoneTypeDropdown } from '../../milestoneTypeDropdown/milestoneTypeDropdown';
+import { parseDateOnly } from '../../milestoneDateUtils';
 import { createMilestoneModalMessages } from '../createMilestoneModal/messages';
 import { ADJUST_FORM_DOM_ID, CHANGE_MILESTONE_STATUS_ADJUST_FORM_NAME } from './constants';
 import { changeMilestoneStatusModalMessages } from './messages';
@@ -58,6 +59,20 @@ const BackToScheduledAdjustFormFields = ({
   const startDate = useSelector(
     (state) => milestoneFormValues(state, 'startDate') as string | undefined,
   );
+  const endDate = useSelector(
+    (state) => milestoneFormValues(state, 'endDate') as string | undefined,
+  );
+
+  const startDateAsDate = useMemo((): Date | undefined => {
+    if (!startDate?.trim()) return undefined;
+    return parseDateOnly(startDate) ?? undefined;
+  }, [startDate]);
+
+  const endDateAsDate = useMemo((): Date | undefined => {
+    if (!endDate?.trim()) return undefined;
+    return parseDateOnly(endDate) ?? undefined;
+  }, [endDate]);
+
   const startDateShortcuts = useMemo(
     () => [
       {
@@ -115,6 +130,7 @@ const BackToScheduledAdjustFormFields = ({
             label: formatMessage(createMilestoneModalMessages.startDateLabel),
             placeholder: formatMessage(createMilestoneModalMessages.dateFieldPlaceholder),
             disabled: isLoading,
+            maxDate: endDateAsDate,
             shortcutSlot: (
               <MilestoneDateShortcutRow items={startDateShortcuts} disabled={isLoading} />
             ),
@@ -127,6 +143,7 @@ const BackToScheduledAdjustFormFields = ({
             label: formatMessage(createMilestoneModalMessages.endDateLabel),
             placeholder: formatMessage(createMilestoneModalMessages.dateFieldPlaceholder),
             disabled: isLoading,
+            minDate: startDateAsDate,
             shortcutSlot: (
               <MilestoneDateShortcutRow items={endDateShortcuts} disabled={isLoading} />
             ),
