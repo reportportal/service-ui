@@ -45,7 +45,7 @@ function* getMilestones(action: GetMilestonesAction): Generator {
       ? {
           limit: action.payload.limit,
           offset: action.payload.offset,
-          sortBy: defaultMilestoneQueryParams.sortBy,
+          sort: defaultMilestoneQueryParams.sort,
         }
       : defaultMilestoneQueryParams;
 
