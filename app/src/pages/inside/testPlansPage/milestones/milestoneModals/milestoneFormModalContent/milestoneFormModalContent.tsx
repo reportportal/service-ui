@@ -16,8 +16,7 @@
 
 import { Fragment, useMemo } from 'react';
 import { useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
-import { Field, formValueSelector } from 'redux-form';
+import { Field } from 'redux-form';
 import { FieldText } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
@@ -35,7 +34,7 @@ import {
 import { MilestoneDateShortcutRow } from '../../milestoneDateShortcutRow/milestoneDateShortcutRow';
 import { MilestoneDateField } from '../../milestoneDateField/milestoneDateField';
 import { MilestoneTypeDropdown } from '../../milestoneTypeDropdown/milestoneTypeDropdown';
-import { parseDateOnly } from '../../milestoneDateUtils';
+import { useMilestoneDateBounds } from '../useMilestoneDateBounds';
 
 import type { MilestoneFormModalContentProps } from './types';
 
@@ -49,23 +48,7 @@ export const MilestoneFormModalContent = ({
   onChange,
 }: MilestoneFormModalContentProps) => {
   const { formatMessage } = useIntl();
-  const milestoneFormValues = useMemo(() => formValueSelector(formName), [formName]);
-  const startDate = useSelector(
-    (state) => milestoneFormValues(state, 'startDate') as string | undefined,
-  );
-  const endDate = useSelector(
-    (state) => milestoneFormValues(state, 'endDate') as string | undefined,
-  );
-
-  const startDateAsDate = useMemo((): Date | undefined => {
-    if (!startDate?.trim()) return undefined;
-    return parseDateOnly(startDate) ?? undefined;
-  }, [startDate]);
-
-  const endDateAsDate = useMemo((): Date | undefined => {
-    if (!endDate?.trim()) return undefined;
-    return parseDateOnly(endDate) ?? undefined;
-  }, [endDate]);
+  const { startDate, startDateAsDate, endDateAsDate } = useMilestoneDateBounds(formName);
 
   const startDateShortcuts = useMemo(
     () => [
