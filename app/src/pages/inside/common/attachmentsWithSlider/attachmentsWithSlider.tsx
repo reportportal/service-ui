@@ -29,10 +29,10 @@ import { createClassnames } from 'common/utils';
 
 import { svgToBase64 } from '../utils';
 import type { AttachmentWithSlider } from './types';
-import { applyFullImageStateForAttachment } from './utils';
+import { applyFullImageStateForAttachment, getFileExtension } from './utils';
 import { useAttachmentsWithSlider } from './hooks/useAttachmentsWithSlider';
-import { GalleryAttachmentTile } from './components/galleryAttachmentTile/galleryAttachmentTile';
-import { AttachmentsGallerySlider } from './components/attachmentsGallerySlider/attachmentsGallerySlider';
+import { GalleryAttachmentTile } from './galleryAttachmentTile';
+import { AttachmentsGallerySlider } from './attachmentsGallerySlider';
 
 import styles from './attachmentsWithSlider.scss';
 
@@ -234,7 +234,7 @@ export const AttachmentsWithSlider = ({
   }, []);
 
   const activeAttachment = displayedAttachments[galleryIndex];
-  const extension = activeAttachment?.fileName.split('.').pop()?.toLowerCase();
+  const extension = getFileExtension(activeAttachment?.fileName);
   const fallbackSrc = getFallbackIcon(extension);
   const mainImageSrc =
     activeAttachment?.hasThumbnail && isGalleryOpen
@@ -271,9 +271,9 @@ export const AttachmentsWithSlider = ({
         attachments={displayedAttachments}
         mainImageSrc={mainImageSrc}
         getThumbSrc={(attachment) =>
-          attachment.thumbnailSrc || getFallbackIcon(attachment.fileName.split('.').pop()?.toLowerCase())
+          attachment.thumbnailSrc || getFallbackIcon(getFileExtension(attachment.fileName))
         }
-        getFallbackSrc={(attachment) => getFallbackIcon(attachment.fileName.split('.').pop()?.toLowerCase())}
+        getFallbackSrc={(attachment) => getFallbackIcon(getFileExtension(attachment.fileName))}
         showZoomExternalDownload={showZoomExternalDownload}
         fullImageLoading={galleryFullImageLoading}
         onActiveIndexChange={handleActiveIndexChange}

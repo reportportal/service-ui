@@ -18,8 +18,8 @@ import classNames from 'classnames';
 import { AttachedFile } from '@reportportal/ui-kit';
 import { convertBytesToMB } from 'common/utils';
 
-import { EXTERNAL_IMAGE_STATUS, useImageUrlStatus } from '../../hooks/useImageUrlStatus';
-import type { AttachmentWithSlider } from '../../types';
+import { EXTERNAL_IMAGE_STATUS, useImageUrlStatus } from '../hooks/useImageUrlStatus';
+import type { AttachmentWithSlider } from '../types';
 
 import styles from './galleryAttachmentTile.scss';
 

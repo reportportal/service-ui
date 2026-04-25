@@ -16,6 +16,9 @@
 
 import type { AttachmentWithSlider } from './types';
 
+export const getFileExtension = (fileName: string | undefined): string | undefined =>
+  fileName?.split('.').pop()?.toLowerCase();
+
 export const applyFullImageStateForAttachment = (
   attachment: AttachmentWithSlider | undefined,
   fullImageCache: Map<number, string>,

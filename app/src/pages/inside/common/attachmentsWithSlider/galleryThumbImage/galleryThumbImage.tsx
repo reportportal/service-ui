@@ -16,7 +16,7 @@
 
 import { useState } from 'react';
 
-import type { AttachmentWithSlider } from '../../types';
+import type { AttachmentWithSlider } from '../types';
 
 import styles from './galleryThumbnailImage.scss';
 

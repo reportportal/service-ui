@@ -33,9 +33,9 @@ import {
 } from '@reportportal/ui-kit';
 import { createClassnames } from 'common/utils';
 
-import { GalleryThumbImage } from '../galleryThumbImage/galleryThumbImage';
-import { useBodyScrollLock } from '../../hooks/useBodyScrollLock';
-import type { AttachmentWithSlider } from '../../types';
+import { GalleryThumbImage } from '../galleryThumbImage';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
+import type { AttachmentWithSlider } from '../types';
 
 import { attachmentsGalleryMessages } from './messages';
 import styles from './attachmentsGallerySlider.scss';
