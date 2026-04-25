@@ -31,7 +31,7 @@ import { TestPlanFormValues } from '../testPlanModal';
 interface UseDuplicateTestPlanOptions {
   testPlanId: number;
   milestoneId?: number;
-  onSuccess?: (testPlanId: number) => void;
+  onSuccess?: (testPlanId: number, attributesCount: number) => void;
 }
 
 export const useDuplicateTestPlan = ({
@@ -66,7 +66,7 @@ export const useDuplicateTestPlan = ({
       );
       dispatch(getTestPlansAction(queryParams));
       dispatch(getMilestonesAction());
-      onSuccess(response.id);
+      onSuccess(response.id, payload.attributes?.length ?? 0);
     } catch {
       dispatch(
         showErrorNotification({

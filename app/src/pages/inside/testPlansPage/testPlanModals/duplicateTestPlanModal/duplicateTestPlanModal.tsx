@@ -27,7 +27,7 @@ export const DUPLICATE_TEST_PLAN_MODAL_KEY = 'duplicateTestPlanModalKey';
 
 interface DuplicateTestPlanModalProps {
   data: TestPlanDto;
-  onSuccess?: (testPlanId: number) => void;
+  onSuccess?: (testPlanId: number, attributesCount: number) => void;
 }
 
 export const DuplicateTestPlanModal = ({ data, onSuccess }: DuplicateTestPlanModalProps) => {
