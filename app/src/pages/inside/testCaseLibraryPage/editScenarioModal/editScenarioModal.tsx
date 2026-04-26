@@ -63,6 +63,7 @@ const EditScenarioModalComponent = ({
   return (
     <EditScenarioModalContent
       pristine={isSaveDisabled}
+      allowCloseOutside={isInitialized && pristine}
       handleSubmit={handleSubmit}
       title={formatMessage(commonMessages.editScenario)}
       submitButtonText={formatMessage(COMMON_LOCALE_KEYS.SAVE)}

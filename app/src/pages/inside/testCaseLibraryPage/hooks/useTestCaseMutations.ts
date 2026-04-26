@@ -182,12 +182,12 @@ export const useTestCaseMutations = (testCaseId?: number) => {
   const createTestCase = useCallback(
     (
       payload: CreateTestCaseFormData,
-      successMessageId: NotificationMessageKey = 'testCaseCreatedSuccess',
+      options: { successMessageId?: NotificationMessageKey } = {},
     ) =>
       handleTestCaseCreation(payload, {
         url: URLS.testCases(projectKey),
         method: 'POST',
-        successMessageId,
+        successMessageId: options.successMessageId ?? 'testCaseCreatedSuccess',
         errorMessageId: 'testCaseCreationFailed',
       }),
     [projectKey, handleTestCaseCreation],

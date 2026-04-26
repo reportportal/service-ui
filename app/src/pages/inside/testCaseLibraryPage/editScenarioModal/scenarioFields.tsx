@@ -22,6 +22,7 @@ import { noop } from 'es-toolkit';
 
 import { createClassnames } from 'common/utils';
 import { FieldProvider } from 'components/fields';
+import { normalizeExecutionEstimationTime } from '../utils/executionEstimationTimeFieldUtils';
 
 import { AttachmentArea } from '../createTestCaseModal/attachmentArea';
 import { Precondition } from '../createTestCaseModal/testCaseDetails/precondition';
@@ -55,15 +56,18 @@ export const ScenarioFields = ({ formName }: ScenarioFieldsProps) => {
 
   return (
     <div className={cx('scenario-fields')}>
-      <FieldProvider name="executionEstimationTime">
-        <div className={cx('scenario-fields__field')}>
+      <div className={cx('scenario-fields__field')}>
+        <FieldProvider
+          name="executionEstimationTime"
+          parse={normalizeExecutionEstimationTime}
+        >
           <FieldNumber
             min={1}
             label={formatMessage(commonMessages.executionTime)}
             onChange={noop}
           />
-        </div>
-      </FieldProvider>
+        </FieldProvider>
+      </div>
 
       <div className={cx('scenario-fields__field')}>
         <Requirements />

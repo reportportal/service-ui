@@ -530,7 +530,7 @@ export class NotificationList extends PureComponent {
                     duration={duration}
                     title={Parser(
                       DOMPurify.sanitize(
-                        messageId
+                        (messageId && notificationMessages[messageId])
                           ? formatMessage(notificationMessages[messageId], values)
                           : message,
                         { ADD_ATTR: ['target'] },
