@@ -235,7 +235,13 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
     }
   };
 
-  const isSomeFieldFilled = Object.values(formValues).some((value) => !!value);
+  const isSomeFieldFilled = [
+    formValues?.[FULL_NAME_FIELD],
+    formValues?.[EMAIL_FIELD],
+    formValues?.[PASSWORD_FIELD],
+    formValues?.[ADMIN_RIGHTS],
+    formValues?.[ORGANIZATIONS]?.length > 0,
+  ].some((value) => !!value);
 
   return (
     <Modal
