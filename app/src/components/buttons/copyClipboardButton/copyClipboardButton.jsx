@@ -32,6 +32,10 @@ const messages = defineMessages({
     id: 'ClipboardButton.copyToClipboard',
     defaultMessage: 'Copied to clipboard',
   },
+  copy: {
+    id: 'ClipboardButton.copy',
+    defaultMessage: 'Copy to clipboard',
+  },
 });
 
 export const ClipboardButton = ({ text, className }) => {
@@ -50,7 +54,12 @@ export const ClipboardButton = ({ text, className }) => {
           <div className={cx('popover-message')}>{Parser(IconTick)}</div>
         </Tooltip>
       ) : (
-        <button onClick={copyToClipboardHandler} className={cx('clipboard')}>
+        <button
+          type="button"
+          aria-label={formatMessage(messages.copy)}
+          onClick={copyToClipboardHandler}
+          className={cx('clipboard')}
+        >
           <CopyToClipboard className={cx('copy')} text={text}>
             {Parser(IconDuplicate)}
           </CopyToClipboard>

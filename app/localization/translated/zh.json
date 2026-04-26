@@ -525,6 +525,7 @@
   "CopySendDefectModal.headerSendTitle": "发送缺陷到最新的测试项中",
   "CopySendDefectModal.successMessage": "缺陷已更新",
   "ClipboardButton.copyToClipboard": "Copied to clipboard",
+  "ClipboardButton.copy": "复制到剪贴板",
   "CreatePatternAnalysisModal.createPatternModalCondition": "模板适用条件",
   "CreatePatternAnalysisModal.createPatternModalDescription": "以常见失败原因作为条件创建一个模板",
   "CreatePatternAnalysisModal.createPatternModalHeader": "创建模板",
