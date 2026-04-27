@@ -28,10 +28,6 @@
 .copy {
   height: 16px;
   width: 16px;
-
-  &:hover {
-    stroke: $COLOR--black-2;
-  }
 }
 
 .popover-content {
@@ -60,5 +56,6 @@
   &:focus-visible {
     outline: 2px solid var(--rp-ui-base-topaz-focused);
     border-radius: 3px;
+    padding: 2px;
   }
 }
