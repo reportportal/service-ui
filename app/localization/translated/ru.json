@@ -525,6 +525,7 @@
   "CopySendDefectModal.headerSendTitle": "Отправить результаты в последний запуск",
   "CopySendDefectModal.successMessage": "Дефекты обновлены",
   "ClipboardButton.copyToClipboard": "Скопировано в буфер обмена",
+  "ClipboardButton.copy": "Скопировать в буфер обмена",
   "CreatePatternAnalysisModal.createPatternModalCondition": "Условие паттерна",
   "CreatePatternAnalysisModal.createPatternModalDescription": "Создайте паттерн, указав условие для общей причины отказа",
   "CreatePatternAnalysisModal.createPatternModalHeader": "Создать Правило Паттерна",
