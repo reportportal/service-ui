@@ -28,6 +28,7 @@ import { showSuccessNotification, showErrorNotification } from 'controllers/noti
 
 import { LaunchFormData, LaunchMode, isLaunchObject, CreateManualLaunchDto } from './types';
 import { ExtendedTestCase } from 'types/testCase';
+import { ManualLaunchItem } from 'pages/inside/manualLaunchesPage/types';
 import { generateUUID } from './utils';
 import { messages } from './messages';
 
@@ -64,6 +65,18 @@ export const useCreateManualLaunch = (
             data: { testCaseIds },
           });
 
+          const launchDetail: ManualLaunchItem = await fetch(
+            URLS.manualLaunchById(projectKey, launchId),
+          );
+          const linkedTestPlanId = launchDetail?.testPlan?.id;
+
+          if (isNumber(linkedTestPlanId)) {
+            await fetch(URLS.testPlanTestCasesBatch(projectKey, linkedTestPlanId), {
+              method: 'POST',
+              data: { testCaseIds },
+            });
+          }
+
           dispatch(
             showSuccessNotification({
               message:
@@ -86,7 +99,7 @@ export const useCreateManualLaunch = (
             testCaseIds,
             attributes: formValues.attributes?.filter((attr) => attr.key && attr.value) || [],
             description: formValues.description || '',
-            ...(isNumber(resolvedTestPlanId) && { testPlanId: resolvedTestPlanId }),
+            ...(isNumber(resolvedTestPlanId) && { testPlan: { id: resolvedTestPlanId } }),
           };
 
           await fetch(URLS.manualLaunch(projectKey), {
