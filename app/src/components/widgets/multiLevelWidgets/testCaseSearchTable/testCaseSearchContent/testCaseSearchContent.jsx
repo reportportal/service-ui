@@ -16,7 +16,7 @@
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { useIntl } from 'react-intl';
+import { useIntl, FormattedMessage } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { WIDGETS_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
@@ -28,7 +28,7 @@ import React from 'react';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import styles from './testCaseSearchContent.scss';
 import { messages } from '../messages';
-
+import {widgetDocsReferences} from "common/utils/referenceDictionary";
 const MAXIMUM_ITEMS = 300;
 
 const cx = classNames.bind(styles);
@@ -88,7 +88,23 @@ export const TestCaseSearchContent = ({
               </Button>
             ))}
           {onLoadMore && isLoadMoreDisabled && (
-            <span className={cx('max-items-info')}>{formatMessage(messages.maximumItems)}</span>
+            <span className={cx('max-items-info')}>
+              <FormattedMessage
+                {...messages.maximumItems}
+                values={{
+                  a: (chunks) => (
+                    <a
+                      className={cx('documentation-link')}
+                      href={widgetDocsReferences.testExecutionsBase}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {chunks}
+                    </a>
+                  ),
+                }}
+              />
+            </span>
           )}
         </div>
       )}
