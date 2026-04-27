@@ -33,4 +33,20 @@ export const messages = defineMessages({
     id: 'BTSIssuesModal.ticketName',
     defaultMessage: 'Ticket name',
   },
+  postIssueSuccess: {
+    id: 'BTSIssuesModal.postIssueSuccess',
+    defaultMessage: 'Ticket has been created successfully',
+  },
+  postIssueFailed: {
+    id: 'BTSIssuesModal.postIssueFailed',
+    defaultMessage: 'Failed to post issue',
+  },
+  ticketNameLabel: {
+    id: 'LinkBTSIssueForm.ticketNameLabel',
+    defaultMessage: 'Ticket name',
+  },
+  ticketNamePlaceholder: {
+    id: 'LinkBTSIssueForm.ticketNamePlaceholder',
+    defaultMessage: 'Enter ticket name',
+  },
 });

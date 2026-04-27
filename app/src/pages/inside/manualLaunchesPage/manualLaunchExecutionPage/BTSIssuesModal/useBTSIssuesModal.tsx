@@ -22,11 +22,11 @@ import { BTS_ISSUES_MODAL } from '../constants';
 export const useBTSIssuesModal = () => {
   const dispatch = useDispatch();
 
-  const openModal = () => {
+  const openModal = (executionId?: number) => {
     dispatch(
       showModalAction({
         id: BTS_ISSUES_MODAL,
-        data: {},
+        data: { executionId },
       }),
     );
   };

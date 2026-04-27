@@ -145,4 +145,12 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'CreateMilestoneModal.addAttributes',
     defaultMessage: 'Add Attributes',
   },
+  logs: {
+    id: 'Common.logsHeader',
+    defaultMessage: 'Logs',
+  },
+  comments: {
+    id: 'Common.commentsHeader',
+    defaultMessage: 'Comments',
+  },
 });

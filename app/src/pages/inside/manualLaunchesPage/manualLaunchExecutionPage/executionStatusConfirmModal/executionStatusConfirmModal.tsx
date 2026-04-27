@@ -40,7 +40,7 @@ import { projectKeySelector } from 'controllers/project';
 import { MAX_FILE_SIZE } from 'common/constants/fileConstants';
 import { useModalButtons } from 'hooks/useModalButtons';
 import { useTextareaAutoResize } from 'common/hooks';
-import { ExecutionStatus } from "pages/inside/manualLaunchesPage/types";
+import { ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
 
 import type { ExecutionStatusConfirmFormValues, ExecutionStatusConfirmModalProps } from '../types';
 import {
@@ -112,7 +112,9 @@ const ExecutionStatusConfirmModalComponent: FC<
     );
     dispatch(hideModalAction());
 
-    if (values.postIssueToBts) openModal();
+    if (values.postIssueToBts) {
+      openModal(executionId);
+    }
   };
 
   const { okButton, cancelButton, hideModal } = useModalButtons({
