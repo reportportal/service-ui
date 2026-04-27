@@ -58,7 +58,6 @@ import { activeOrganizationNameSelector } from 'controllers/organization';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
 import { messages } from '../../messages';
 import { useTmsEnabled } from 'hooks/useTmsEnabled';
-import { useTmsMilestonesEnabled } from 'hooks/useTmsMilestonesEnabled';
 
 const ORGANIZATION_CONTROL = 'Organization control';
 
@@ -66,7 +65,6 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
   const isTmsEnabled = useTmsEnabled();
-  const isTmsMilestonesEnabled = useTmsMilestonesEnabled();
   const sidebarExtensions = useSelector(uiExtensionSidebarComponentsSelector);
   const projectPageExtensions = useSelector(uiExtensionProjectPagesSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
@@ -175,8 +173,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         {
           onClick: (isSidebarCollapsed) =>
             onClickButton({
-              itemName: (isTmsMilestonesEnabled ? messages.milestones : messages.testPlans)
-                .defaultMessage,
+              itemName: messages.milestones.defaultMessage,
               isSidebarCollapsed,
             }),
           link: {
@@ -184,9 +181,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
             payload: { organizationSlug, projectSlug },
           },
           icon: TestPlansIcon,
-          message: formatMessage(
-            isTmsMilestonesEnabled ? messages.milestones : messages.testPlans,
-          ),
+          message: formatMessage(messages.milestones),
           menuOrder: (menuCounter += menuStep),
         },
         {

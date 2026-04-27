@@ -18,7 +18,6 @@ import { tmsEnabledSelector } from './selectors';
 import { getStorageItem } from 'common/utils/storageUtils';
 
 const TMS_OVERRIDE_STORAGE_KEY = 'tms_override';
-const TMS_MILESTONES_STORAGE_KEY = 'tms_milestones';
 
 export const getTmsOverride = () => {
   try {
@@ -30,14 +29,6 @@ export const getTmsOverride = () => {
     return null;
   }
   return null;
-};
-
-export const getTmsMilestonesOverride = () => {
-  try {
-    return getStorageItem(TMS_MILESTONES_STORAGE_KEY) === true;
-  } catch {
-    return null;
-  }
 };
 
 export const isTmsEnabled = (state) => {
