@@ -16,6 +16,7 @@
 
 .owner-block {
   display: inline;
+  white-space: nowrap;
   margin-right: 20px;
 
   @media (max-width: $SCREEN_SM_MAX) {
