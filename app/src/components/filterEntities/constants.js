@@ -52,6 +52,7 @@ export const ENTITY_CREATION_DATE = 'creationDate';
 export const ENTITY_PATTERN_NAME = 'patternName';
 export const ENTITY_RETRY = 'hasRetries';
 export const ENTITY_NEW_FAILURE = 'newFailure';
+export const ENTITY_LAUNCH_TYPE = 'launchType';
 
 export const ENTITY_CREATED_AT = 'createdAt';
 export const ENTITY_EVENT_NAME = 'eventName';
