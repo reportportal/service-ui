@@ -23,7 +23,7 @@ import {
 } from 'controllers/testPlan';
 import { PROJECT_TEST_PLAN_DETAILS_PAGE, locationSelector } from 'controllers/pages';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
-import { useTestPlanActiveFolders } from 'pages/inside/testCaseLibraryPage/hooks/useTestPlanActiveFolders';
+import { useTestPlanActiveFolders } from 'pages/inside/common/hooks';
 
 import { ExpandedOptions } from '../../../common/expandedOptions';
 import { AllTestCasesPage } from './allTestCasesPage';
