@@ -184,7 +184,7 @@ const ExecutionStatusConfirmModalComponent: FC<
         onFinally: () => setIsSubmitting(false),
       }),
     );
-    if (values.postIssueToBts) openModal();
+    if (values.postIssueToBts) openModal(executionId);
   };
 
   const { okButton, cancelButton, hideModal } = useModalButtons({

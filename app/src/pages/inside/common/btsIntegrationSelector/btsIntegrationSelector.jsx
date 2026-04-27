@@ -44,6 +44,7 @@ export class BtsIntegrationSelector extends Component {
     integrationId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     onChangePluginName: PropTypes.func.isRequired,
     onChangeIntegration: PropTypes.func.isRequired,
+    theme: PropTypes.oneOf(['dark', 'light']),
   };
 
   constructor(props) {
@@ -69,12 +70,13 @@ export class BtsIntegrationSelector extends Component {
     const { intl, pluginName, onChangePluginName, integrationId, onChangeIntegration } = this.props;
 
     return (
-      <ThemeProvider theme="dark">
+      <ThemeProvider theme={this.props.theme || 'dark'}>
         <FieldElement
-          className={cx('field-wrapper')}
+          className={cx('field-wrapper', this.props.theme === 'light' && 'dark')}
           label={intl.formatMessage(messages.btsTitle)}
           labelClassName={cx('label')}
           withoutProvider
+          isRequired
         >
           <Dropdown
             value={pluginName}
@@ -84,7 +86,7 @@ export class BtsIntegrationSelector extends Component {
           />
         </FieldElement>
         <FieldElement
-          className={cx('field-wrapper')}
+          className={cx('field-wrapper', this.props.theme === 'light' && 'dark')}
           label={intl.formatMessage(messages.integrationNameTitle)}
           labelClassName={cx('label')}
           withoutProvider
