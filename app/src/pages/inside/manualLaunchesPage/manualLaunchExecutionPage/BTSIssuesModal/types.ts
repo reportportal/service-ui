@@ -1,5 +1,5 @@
-/*!
- * Copyright 2023 EPAM Systems
+/*
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,27 @@
  * limitations under the License.
  */
 
-.field-wrapper {
-  margin-bottom: 15px;
-
-  &.dark > span {
-    color: var(--rp-ui-color-text-2);
-  }
+export interface DynamicField {
+  id: string;
+  fieldName: string;
+  fieldType: string;
+  required?: boolean;
+  disabled?: boolean;
+  definedValues?: Array<{ valueId: string; valueName: string }>;
+  value?: string[];
 }
 
-.label {
-  color: $COLOR--darkmode-gray-100;
+export interface BTSIntegration {
+  id: number;
+  name: string;
+  integrationType: {
+    details: {
+      name: string;
+    };
+  };
+  integrationParameters: {
+    defectFormFields: DynamicField[];
+    project: string;
+    url: string;
+  };
 }

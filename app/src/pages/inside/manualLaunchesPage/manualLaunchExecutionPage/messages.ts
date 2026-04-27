@@ -53,4 +53,8 @@ export const messages = defineMessages({
     id: 'ExecutionStatusPopover.clearStatus',
     defaultMessage: 'Clear status',
   },
+  postIssueToBts: {
+    id: 'ExecutionStatusConfirmModal.postIssueToBts',
+    defaultMessage: 'Post or link issue to BTS',
+  },
 });

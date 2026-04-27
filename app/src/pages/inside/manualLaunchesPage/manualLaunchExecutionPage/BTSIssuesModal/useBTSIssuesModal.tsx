@@ -1,5 +1,5 @@
-/*!
- * Copyright 2023 EPAM Systems
+/*
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,22 @@
  * limitations under the License.
  */
 
-.field-wrapper {
-  margin-bottom: 15px;
+import { useDispatch } from 'react-redux';
 
-  &.dark > span {
-    color: var(--rp-ui-color-text-2);
-  }
-}
+import { showModalAction } from 'controllers/modal';
+import { BTS_ISSUES_MODAL } from '../constants';
 
-.label {
-  color: $COLOR--darkmode-gray-100;
-}
+export const useBTSIssuesModal = () => {
+  const dispatch = useDispatch();
+
+  const openModal = (executionId?: number) => {
+    dispatch(
+      showModalAction({
+        id: BTS_ISSUES_MODAL,
+        data: { executionId },
+      }),
+    );
+  };
+
+  return { openModal };
+};
