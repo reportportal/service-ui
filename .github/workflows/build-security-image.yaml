@@ -1,44 +1,41 @@
-name: Build develop Docker image
+name: Build Security Image
 
 on:
   push:
     branches:
-      - develop
-      - 'feature/orgs'
-      - 'feature/test-library'
-    paths-ignore:
-      - '.github/**'
-      - README.md
-  workflow_dispatch:
+      - 'secure/*'
+  create:
 
 jobs:
   variables-setup:
     name: Setting variables for docker build
     runs-on: ubuntu-latest
+    if: >-
+      github.event_name == 'push' ||
+      (
+        github.event_name == 'create' &&
+        github.event.ref_type == 'branch' &&
+        startsWith(github.ref_name, 'secure/')
+      )
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
       - name: Create variables
         id: vars
         run: |
-          echo "tag=$(echo ${{ github.ref_name }}-${{ github.run_number }} | tr '/' '-')" >> $GITHUB_OUTPUT
+          echo "image-tag=$(echo '${{ github.ref_name }}' | sed 's|secure/||')" >> $GITHUB_OUTPUT
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
     outputs:
-      tag: ${{ steps.vars.outputs.tag }}
+      image-tag: ${{ steps.vars.outputs.image-tag }}
       date: ${{ steps.vars.outputs.date }}
 
-  call-docker-build:
-    name: Call develop Docker build
+  build-security-image:
+    name: Build security Docker image
     needs: variables-setup
     uses: reportportal/.github/.github/workflows/build-docker-image.yaml@main
     with:
       aws-region: ${{ vars.AWS_REGION }}
       build-platforms: ${{ vars.BUILD_PLATFORMS || 'linux/amd64,linux/arm64' }}
-      image-tag: ${{ needs.variables-setup.outputs.tag }}
-      version: ${{ needs.variables-setup.outputs.tag }}
-      branch: ${{ github.ref_name }}
-      additional-tag: 'develop-latest'
+      image-tag: ${{ needs.variables-setup.outputs.image-tag }}
+      additional-tag: 'secure-latest'
       date: ${{ needs.variables-setup.outputs.date }}
     secrets:
       AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}

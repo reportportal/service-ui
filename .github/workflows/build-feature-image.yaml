@@ -19,7 +19,7 @@ jobs:
     if: (!startsWith(github.head_ref, 'dependabot/') || !startsWith(github.head_ref, 'rc/') || !startsWith(github.head_ref, 'hotfix/') || !startsWith(github.head_ref, 'master') || !startsWith(github.head_ref, 'main'))
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
 
       - name: Create variables
         id: vars
