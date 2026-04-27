@@ -28,7 +28,6 @@
 .copy {
   height: 16px;
   width: 16px;
-  stroke: $COLOR--e-300;
 
   &:hover {
     stroke: $COLOR--black-2;
@@ -55,7 +54,11 @@
 }
 
 .clipboard {
-  all: unset;
   display: flex;
   cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--rp-ui-base-topaz-focused);
+    border-radius: 3px;
+  }
 }
