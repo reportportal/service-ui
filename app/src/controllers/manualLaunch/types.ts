@@ -90,6 +90,7 @@ export interface UpdateManualLaunchExecutionStatusParams extends ManualLaunchExe
   comment?: string;
   postIssueToBts?: boolean;
   attachments?: File[];
+  removedServerAttachmentIds?: Array<string | number>;
   clearExecutionCommentAndBts?: boolean;
   preserveExistingCommentIfFormSkipped?: boolean;
   onSuccess?: () => void;

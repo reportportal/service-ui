@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-import { FC, useState, useEffect, FormEvent, useRef } from 'react';
+import { FC, useState, useEffect, useMemo, FormEvent, useRef } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { reduxForm, InjectedFormProps, initialize } from 'redux-form';
 import {
+  Button,
+  DeleteIcon,
   Modal,
   FileDropArea,
   FieldTextFlex,
@@ -45,8 +47,11 @@ import { MAX_FILE_SIZE } from 'common/constants/fileConstants';
 import { useModalButtons } from 'hooks/useModalButtons';
 import { useTextareaAutoResize } from 'common/hooks';
 import { ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
+import { AttachmentsWithSlider } from 'pages/inside/common/attachmentsWithSlider';
+import { toAttachmentWithSlider } from '../utils';
 
 import type { ExecutionStatusConfirmFormValues, ExecutionStatusConfirmModalProps } from '../types';
+import { messages as manualExecutionPageMessages } from '../messages';
 import {
   EXECUTION_STATUS_CONFIRM_MODAL,
   EXECUTION_STATUS_CONFIRM_FORM_NAME,
@@ -69,6 +74,9 @@ const ExecutionStatusConfirmModalComponent: FC<
   const launchId = useManualLaunchId();
   const activeExecution = useSelector(activeManualLaunchExecutionSelector);
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+  const [removedServerAttachmentIds, setRemovedServerAttachmentIds] = useState<Set<string>>(
+    () => new Set(),
+  );
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   useTextareaAutoResize(textareaRef);
 
@@ -82,6 +90,10 @@ const ExecutionStatusConfirmModalComponent: FC<
     if (index !== -1) {
       setAttachedFiles((prev) => prev.filter((_, i) => i !== index));
     }
+  };
+
+  const handleServerAttachmentRemove = (id: string | number) => {
+    setRemovedServerAttachmentIds((prev) => new Set([...prev, String(id)]));
   };
 
   const status = data?.status || 'passed';
@@ -99,6 +111,17 @@ const ExecutionStatusConfirmModalComponent: FC<
     : formatMessage(messages.markAsStatus, { status: statusLabel });
 
   const shouldSeedCommentForm = !isStatusChange && !isClearStatus;
+
+  const visibleServerAttachments = useMemo(() => {
+    if (!executionId || activeExecution?.id !== executionId) return [];
+    const list = activeExecution.executionComment?.attachments ?? [];
+    return list.filter((a) => !removedServerAttachmentIds.has(String(a.id)));
+  }, [
+    executionId,
+    activeExecution?.id,
+    activeExecution?.executionComment?.attachments,
+    removedServerAttachmentIds,
+  ]);
 
   useEffect(() => {
     if (!executionId || dirty || !shouldSeedCommentForm) return;
@@ -126,6 +149,7 @@ const ExecutionStatusConfirmModalComponent: FC<
 
   useEffect(() => {
     setAttachedFiles([]);
+    setRemovedServerAttachmentIds(new Set());
   }, [data?.executionId, data?.status, data?.currentStatus]);
 
   const onSubmit = (values: ExecutionStatusConfirmFormValues) => {
@@ -147,6 +171,9 @@ const ExecutionStatusConfirmModalComponent: FC<
         attachments: clearCommentCheckboxChecked ? [] : attachedFiles,
         clearExecutionCommentAndBts: isClearStatus ? clearCommentCheckboxChecked : undefined,
         preserveExistingCommentIfFormSkipped: isStatusChange,
+        ...(!isClearStatus && !isStatusChange
+          ? { removedServerAttachmentIds: Array.from(removedServerAttachmentIds) }
+          : {}),
       }),
     );
     dispatch(hideModalAction());
@@ -229,6 +256,35 @@ const ExecutionStatusConfirmModalComponent: FC<
             {showPostIssueToBts && <div className={cx('divider')} />}
 
             <div className={cx('attachments-section')}>
+              {!isEmpty(visibleServerAttachments) && (
+                <div className={cx('modal-existing-attachments')}>
+                  {visibleServerAttachments.map((att) => (
+                    <div
+                      key={String(att.id)}
+                      className={cx('modal-existing-attachments__row')}
+                    >
+                      <div className={cx('modal-existing-attachments__preview')}>
+                        <AttachmentsWithSlider
+                          attachments={[toAttachmentWithSlider(att)]}
+                          className={cx('modal-existing-attachments__slider')}
+                        />
+                      </div>
+                      <Button
+                        type="button"
+                        variant="text"
+                        adjustWidthOn="content"
+                        className={cx('modal-existing-attachments__remove')}
+                        onClick={() => handleServerAttachmentRemove(att.id)}
+                        aria-label={formatMessage(
+                          manualExecutionPageMessages.removeAttachment,
+                        )}
+                      >
+                        <DeleteIcon />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
               <FileDropArea
                 variant="overlay"
                 maxFileSize={MAX_FILE_SIZE}

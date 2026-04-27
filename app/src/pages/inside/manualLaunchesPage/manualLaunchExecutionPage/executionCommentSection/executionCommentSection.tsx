@@ -77,7 +77,6 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    setComment(savedComment);
     setPendingFiles([]);
     setRemovedAttachmentIds(new Set());
   }, [execution.id]);
@@ -172,6 +171,7 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
           value={comment}
           onChange={handleCommentChange}
           minHeight={100}
+          disabled={isSaving}
         />
         <div className={cx('execution-comment-section__divider')} />
         <div className={cx('attachments-block')}>
@@ -179,6 +179,7 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
             variant="overlay"
             maxFileSize={MAX_FILE_SIZE}
             acceptFileMimeTypes={[MIME_TYPES.jpeg, MIME_TYPES.png, MIME_TYPES.pdf]}
+            isDisabled={isSaving}
             onFilesAdded={handleFilesAdded}
             messages={{
               incorrectFileSize: formatMessage(statusModalMessages.incorrectFileSize),

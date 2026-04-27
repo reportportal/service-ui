@@ -523,16 +523,24 @@ interface UpdateManualLaunchExecutionStatusAction extends Action<
   payload: UpdateManualLaunchExecutionStatusParams;
 }
 
+type UploadedAttachmentPayload = {
+  id: string;
+  fileName: string;
+  fileType: string;
+  fileSize: number;
+};
+
+interface UploadAttachmentsResult {
+  attachments: UploadedAttachmentPayload[];
+  failureCount: number;
+}
+
 function* uploadAttachments(projectKey: string, attachments?: File[]): Generator {
-  const uploadedAttachments: Array<{
-    id: string;
-    fileName: string;
-    fileType: string;
-    fileSize: number;
-  }> = [];
+  const uploadedAttachments: UploadedAttachmentPayload[] = [];
+  let failureCount = 0;
 
   if (!attachments || attachments.length === 0) {
-    return uploadedAttachments;
+    return { attachments: uploadedAttachments, failureCount: 0 };
   }
 
   for (const file of attachments) {
@@ -552,6 +560,7 @@ function* uploadAttachments(projectKey: string, attachments?: File[]): Generator
         fileSize: file.size,
       });
     } catch {
+      failureCount += 1;
       yield put(
         showNotification({
           messageId: 'ExecutionStatusConfirmModal.attachmentUploadFailed',
@@ -564,7 +573,46 @@ function* uploadAttachments(projectKey: string, attachments?: File[]): Generator
     }
   }
 
-  return uploadedAttachments;
+  return { attachments: uploadedAttachments, failureCount };
+}
+
+function* patchManualLaunchExecutionAndSyncList(
+  projectKey: string,
+  launchId: string | number,
+  executionId: string | number,
+  requestData: unknown,
+): Generator {
+  const data = (yield call(
+    fetch,
+    URLS.manualLaunchExecutionById(projectKey, launchId, executionId),
+    {
+      method: 'PATCH',
+      data: requestData,
+    },
+  )) as TestCaseExecution;
+
+  yield put(fetchSuccessAction(ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE, data));
+
+  const executionsState = (yield select(
+    (state: AppState) => state.manualLaunchTestCaseExecutions?.data,
+  )) as { content: TestCaseExecution[]; page: Page } | null;
+
+  if (executionsState?.content) {
+    const updatedContent = executionsState.content.map((exec) =>
+      exec.id === data.id ? data : exec,
+    );
+
+    yield put(
+      fetchSuccessAction(MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE, {
+        data: {
+          content: updatedContent,
+          page: executionsState.page,
+        },
+      }),
+    );
+  }
+
+  return data;
 }
 
 function* updateManualLaunchExecutionStatus(
@@ -580,6 +628,7 @@ function* updateManualLaunchExecutionStatus(
     clearExecutionCommentAndBts,
     preserveExistingCommentIfFormSkipped,
     onSuccess,
+    removedServerAttachmentIds,
   } = action.payload;
 
   try {
@@ -596,12 +645,17 @@ function* updateManualLaunchExecutionStatus(
       status: statusUpper,
     };
 
-    const uploadedAttachments = (yield call(uploadAttachments, projectKey, attachments)) as Array<{
-      id: string;
-      fileName: string;
-      fileType: string;
-      fileSize: number;
-    }>;
+    const { attachments: uploadedAttachments, failureCount: attachmentUploadFailures } =
+      (yield call(uploadAttachments, projectKey, attachments)) as UploadAttachmentsResult;
+
+    if (attachmentUploadFailures > 0) {
+      yield put(
+        showErrorNotification({
+          messageId: 'errorOccurredTryAgain',
+        }),
+      );
+      return;
+    }
 
     const trimmedComment = isString(comment) ? comment.trim() : '';
     const hasNewAttachments = !isEmpty(uploadedAttachments);
@@ -636,7 +690,15 @@ function* updateManualLaunchExecutionStatus(
         comment: commentForRequest,
       };
 
-      if (hasNewAttachments) {
+      if (removedServerAttachmentIds !== undefined) {
+        const keptServer = (currentExecution?.executionComment?.attachments ?? []).filter(
+          (a) => !isAttachmentRemoved(a.id, removedServerAttachmentIds),
+        );
+        requestData.executionComment.attachments = [
+          ...keptServer.map(mapAttachmentForExecutionCommentPayload),
+          ...uploadedAttachments,
+        ];
+      } else if (hasNewAttachments) {
         requestData.executionComment.attachments = uploadedAttachments;
       }
 
@@ -646,35 +708,7 @@ function* updateManualLaunchExecutionStatus(
       }
     }
 
-    const data = (yield call(
-      fetch,
-      URLS.manualLaunchExecutionById(projectKey, launchId, executionId),
-      {
-        method: 'PATCH',
-        data: requestData,
-      },
-    )) as TestCaseExecution;
-
-    yield put(fetchSuccessAction(ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE, data));
-
-    const executionsState = (yield select(
-      (state: AppState) => state.manualLaunchTestCaseExecutions?.data,
-    )) as { content: TestCaseExecution[]; page: Page } | null;
-
-    if (executionsState?.content) {
-      const updatedContent = executionsState.content.map((exec) =>
-        exec.id === data.id ? data : exec,
-      );
-
-      yield put(
-        fetchSuccessAction(MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE, {
-          data: {
-            content: updatedContent,
-            page: executionsState.page,
-          },
-        }),
-      );
-    }
+    yield call(patchManualLaunchExecutionAndSyncList, projectKey, launchId, executionId, requestData);
 
     const capitalizedStatus =
       statusUpper.charAt(0).toUpperCase() + statusUpper.slice(1).toLowerCase();
@@ -729,12 +763,17 @@ function* updateManualLaunchExecutionComment(
       (a) => !isAttachmentRemoved(a.id, removedAttachmentIds),
     );
 
-    const uploadedAttachments = (yield call(uploadAttachments, projectKey, newFiles)) as Array<{
-      id: string;
-      fileName: string;
-      fileType: string;
-      fileSize: number;
-    }>;
+    const { attachments: uploadedAttachments, failureCount: attachmentUploadFailures } =
+      (yield call(uploadAttachments, projectKey, newFiles)) as UploadAttachmentsResult;
+
+    if (attachmentUploadFailures > 0) {
+      yield put(
+        showErrorNotification({
+          messageId: 'errorOccurredTryAgain',
+        }),
+      );
+      return;
+    }
 
     const attachmentPayload = [
       ...keptExisting.map(mapAttachmentForExecutionCommentPayload),
@@ -766,35 +805,7 @@ function* updateManualLaunchExecutionComment(
       executionComment,
     };
 
-    const data = (yield call(
-      fetch,
-      URLS.manualLaunchExecutionById(projectKey, launchId, executionId),
-      {
-        method: 'PATCH',
-        data: requestData,
-      },
-    )) as TestCaseExecution;
-
-    yield put(fetchSuccessAction(ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE, data));
-
-    const executionsState = (yield select(
-      (state: AppState) => state.manualLaunchTestCaseExecutions?.data,
-    )) as { content: TestCaseExecution[]; page: Page } | null;
-
-    if (executionsState?.content) {
-      const updatedContent = executionsState.content.map((exec) =>
-        exec.id === data.id ? data : exec,
-      );
-
-      yield put(
-        fetchSuccessAction(MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE, {
-          data: {
-            content: updatedContent,
-            page: executionsState.page,
-          },
-        }),
-      );
-    }
+    yield call(patchManualLaunchExecutionAndSyncList, projectKey, launchId, executionId, requestData);
 
     yield put(
       showNotification({
