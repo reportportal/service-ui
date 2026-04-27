@@ -25,6 +25,10 @@ export const messages = defineMessages({
     id: 'testCaseSearch.testNamePlaceholder',
     defaultMessage: 'Enter test name',
   },
+  startsWithOperator: {
+    id: 'testCaseSearch.startsWithOperator',
+    defaultMessage: 'starts with',
+  },
   letsSearch: {
     id: 'testCaseSearch.letsSearch',
     defaultMessage: "Let's search",
@@ -47,7 +51,8 @@ export const messages = defineMessages({
   },
   maximumItems: {
     id: 'testCaseSearch.maximumItems',
-    defaultMessage: 'You have loaded the maximum allowed number (300) of test cases.',
+    defaultMessage:
+      'You have loaded the maximum allowed number (20) of test cases. Upgrade to the Premium Feature to see more. <a>Documentation</a>',
   },
   errorLoadingData: {
     id: 'testCaseSearch.errorLoadingData',

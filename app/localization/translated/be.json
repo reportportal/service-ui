@@ -2424,7 +2424,7 @@
   "testCaseSearch.explorePlansButton": "Тарыфы",
   "testCaseSearch.letsSearch": "Пачнём пошук",
   "testCaseSearch.loadMore": "Загрузіць больш",
-  "testCaseSearch.maximumItems": "Вы загрузілі максімальна дазволеную колькасць тэставых выпадкаў (300).",
+  "testCaseSearch.maximumItems": "Вы загрузілі максімальна дазволеную колькасць (20) тэставых выпадкаў. Абнавіцеся да Premium Feature, каб убачыць больш. <a>Дакументацыя</a>",
   "testCaseSearch.notNowButton": "Не зараз",
   "testCaseSearch.oneOption": "Толькі адзін варыянт, або назва тэсту, або атрыбуты, можа быць актыўным адначасова",
   "testCaseSearch.openNewSearchButton": "Адкрыць новы пошук",

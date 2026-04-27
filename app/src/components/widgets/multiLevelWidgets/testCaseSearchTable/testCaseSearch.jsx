@@ -130,6 +130,11 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
   const handleDocumentationClick = () => {
     trackEvent(WIDGETS_EVENTS.onTcsPromoDocumentationClick(dashboardId, TCS_WIDGET_SOURCE));
   };
+  const handleLoadMoreMessageDocumentationClick = () => {
+    trackEvent(
+      WIDGETS_EVENTS.onSearchWidgetDocumentLinkClick(dashboardId, 'promotion_load_more_message'),
+    );
+  };
 
   const handleOpenNewSearch = () => {
     if (isTestExecutionPluginEnabled) {
@@ -211,6 +216,7 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
         sortingDirection={sortingDirection}
         onChangeSorting={handleChangeSorting}
         onLoadMore={isLoadMoreAvailable ? handleLoadMore : null}
+        onLoadMoreMessageDocumentationClick={handleLoadMoreMessageDocumentationClick}
         error={error}
       />
     </div>

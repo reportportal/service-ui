@@ -2424,7 +2424,7 @@
   "testCaseSearch.explorePlansButton": "Тарифы",
   "testCaseSearch.letsSearch": "Начнем искать",
   "testCaseSearch.loadMore": "Загрузить больше",
-  "testCaseSearch.maximumItems": "Вы загрузили максимально допустимое количество тестовых кейсов (300).",
+  "testCaseSearch.maximumItems": "Вы загрузили максимально допустимое количество (20) тест-кейсов. Обновитесь до Premium Feature, чтобы видеть больше. <a>Документация</a>",
   "testCaseSearch.notNowButton": "Не сейчас",
   "testCaseSearch.oneOption": "Только один вариант — либо название теста, либо атрибуты — может быть активным одновременно",
   "testCaseSearch.openNewSearchButton": "Открыть новый поиск",

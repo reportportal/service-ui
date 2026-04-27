@@ -20,10 +20,13 @@
   justify-content: space-between;
   padding: 25px 32px 24px 22px;
   background-color: $COLOR--bg-000;
-  background-image: url('~common/img/tcs-promo-banner-bg.png'),
+  background-image:
+    url('~common/img/tcs-promo-banner-bg.png'),
     linear-gradient(to right, transparent 70%, $COLOR--bg-000 70%);
   background-repeat: no-repeat, repeat;
-  background-size: 100% 100%, auto;
+  background-size:
+    100% 100%,
+    auto;
   border-top: 1px solid $COLOR--e-100;
 
   @media (max-width: $SCREEN_XS_MAX) {

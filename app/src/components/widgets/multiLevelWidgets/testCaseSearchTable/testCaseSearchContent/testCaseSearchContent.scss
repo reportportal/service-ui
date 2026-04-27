@@ -64,3 +64,18 @@
     margin-bottom: 60px;
   }
 }
+
+.documentation-link {
+  align-items: center;
+  gap: 4px;
+  font-family: $FONT-REGULAR, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+  color: $COLOR--topaz-2;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    color: $COLOR--topaz-hover-2;
+  }
+}

@@ -59,6 +59,7 @@ export class InputConditional extends Component {
     onKeyUp: PropTypes.func,
     onKeyPress: PropTypes.func,
     browserTooltipTitle: PropTypes.string,
+    hideConditionArrow: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -79,6 +80,7 @@ export class InputConditional extends Component {
     onKeyPress: () => {},
     conditions: [CONDITION_CNT, CONDITION_NOT_CNT, CONDITION_EQ, CONDITION_NOT_EQ],
     browserTooltipTitle: '',
+    hideConditionArrow: false,
   };
   state = {
     opened: false,
@@ -90,10 +92,16 @@ export class InputConditional extends Component {
     document.removeEventListener('click', this.handleClickOutside);
   }
   onClickConditionBlock = () => {
-    if (!this.props.disabled) {
-      this.setState({ opened: !this.state.opened });
+    if (this.props.disabled) {
+      return;
     }
+    const list = this.getConditions();
+    if (this.props.hideConditionArrow && list.length <= 1) {
+      return;
+    }
+    this.setState({ opened: !this.state.opened });
   };
+
   onClickConditionItem = (condition) => {
     if (condition.value !== this.props.value.condition) {
       this.setState({ opened: false });
@@ -137,18 +145,27 @@ export class InputConditional extends Component {
       conditionsBlockClassName,
       inputClassName,
       browserTooltipTitle,
+      hideConditionArrow,
     } = this.props;
+    const conditions = this.getConditions();
+    const matchedCondition =
+      value.condition && conditions.find((c) => c.value === value.condition);
+    const selectedCondition =
+      matchedCondition || (conditions.length === 1 ? conditions[0] : null);
+    const selectedShortLabel = selectedCondition?.shortLabel ?? '';
+
     return (
       <div
         className={cx('input-conditional', {
           opened: this.state.opened,
           disabled,
           'mobile-disabled': mobileDisabled,
+          'hide-condition-arrow': hideConditionArrow,
         })}
         title={browserTooltipTitle}
       >
         <input
-          type={'text'}
+          type="text"
           className={cx('input', inputClassName, { error, touched })}
           value={value.value}
           placeholder={placeholder}
@@ -165,16 +182,13 @@ export class InputConditional extends Component {
           ref={this.setConditionsBlockRef}
         >
           <div className={cx('conditions-selector')} onClick={this.onClickConditionBlock}>
-            <span className={cx('condition-selected')}>
-              {this.getConditions().length &&
-                value.condition &&
-                this.getConditions().filter((condition) => condition.value === value.condition)[0]
-                  .shortLabel}
-            </span>
-            <i className={cx('arrow', { rotated: this.state.opened })} />
+            <span className={cx('condition-selected')}>{selectedShortLabel}</span>
+            {!hideConditionArrow && (
+              <i className={cx('arrow', { rotated: this.state.opened })} />
+            )}
           </div>
           <div className={cx('conditions-list', { visible: this.state.opened })}>
-            {this.getConditions().map((condition) => (
+            {conditions.map((condition) => (
               <div
                 key={condition.value}
                 className={cx('condition', {
@@ -182,7 +196,9 @@ export class InputConditional extends Component {
                   disabled: condition.disabled,
                 })}
                 onClick={() => {
-                  !condition.disabled && this.onClickConditionItem(condition);
+                  if (!condition.disabled) {
+                    this.onClickConditionItem(condition);
+                  }
                 }}
               >
                 {condition.label}

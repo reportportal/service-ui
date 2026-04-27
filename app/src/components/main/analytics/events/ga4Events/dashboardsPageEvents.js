@@ -119,10 +119,10 @@ export const WIDGETS_EVENTS = {
     type: 'search_widget',
     number: dashboardId,
   }),
-  onSearchWidgetDocumentLinkClick: (dashboardId) => ({
+  onSearchWidgetDocumentLinkClick: (dashboardId, place = 'search_widget') => ({
     ...getBasicClickEventParameters(DASHBOARDS),
     link_name: 'documentation',
-    place: 'search_widget',
+    place,
     type: 'search_widget',
     number: dashboardId,
   }),
