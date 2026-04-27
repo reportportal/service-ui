@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { FC, useState, FormEvent, useRef } from 'react';
+import { FC, useState, useEffect, FormEvent, useRef } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
-import { reduxForm, InjectedFormProps } from 'redux-form';
+import { reduxForm, InjectedFormProps, initialize } from 'redux-form';
 import {
   Modal,
   FileDropArea,
@@ -30,17 +30,21 @@ import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { withModal, hideModalAction } from 'controllers/modal';
 import { createClassnames } from 'common/utils';
+import { isString } from 'es-toolkit';
 import { isEmpty } from 'es-toolkit/compat';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { useManualLaunchId } from 'hooks/useTypedSelector';
-import { updateManualLaunchExecutionStatusAction } from 'controllers/manualLaunch';
+import {
+  updateManualLaunchExecutionStatusAction,
+  activeManualLaunchExecutionSelector,
+} from 'controllers/manualLaunch';
 import { projectKeySelector } from 'controllers/project';
 import { MAX_FILE_SIZE } from 'common/constants/fileConstants';
 import { useModalButtons } from 'hooks/useModalButtons';
 import { useTextareaAutoResize } from 'common/hooks';
-import { ExecutionStatus } from "pages/inside/manualLaunchesPage/types";
+import { ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
 
 import type { ExecutionStatusConfirmFormValues, ExecutionStatusConfirmModalProps } from '../types';
 import {
@@ -63,6 +67,7 @@ const ExecutionStatusConfirmModalComponent: FC<
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const launchId = useManualLaunchId();
+  const activeExecution = useSelector(activeManualLaunchExecutionSelector);
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   useTextareaAutoResize(textareaRef);
@@ -93,8 +98,43 @@ const ExecutionStatusConfirmModalComponent: FC<
     ? formatMessage(messages.clearStatus)
     : formatMessage(messages.markAsStatus, { status: statusLabel });
 
+  const shouldSeedCommentForm = !isStatusChange && !isClearStatus;
+
+  useEffect(() => {
+    if (!executionId || dirty || !shouldSeedCommentForm) return;
+
+    const comment =
+      activeExecution?.id === executionId
+        ? String(activeExecution.executionComment?.comment ?? '')
+        : '';
+
+    dispatch(
+      initialize(EXECUTION_STATUS_CONFIRM_FORM_NAME, {
+        comment,
+        postIssueToBts: false,
+        clearCommentAndLinksToBTS: false,
+      }),
+    );
+  }, [
+    executionId,
+    shouldSeedCommentForm,
+    dirty,
+    dispatch,
+    activeExecution?.id,
+    activeExecution?.executionComment?.comment,
+  ]);
+
+  useEffect(() => {
+    setAttachedFiles([]);
+  }, [data?.executionId, data?.status, data?.currentStatus]);
+
   const onSubmit = (values: ExecutionStatusConfirmFormValues) => {
     if (!executionId) return;
+
+    const clearValue = values.clearCommentAndLinksToBTS as boolean | string | undefined;
+    const clearCommentCheckboxChecked = isString(clearValue)
+      ? clearValue.toLowerCase() === 'true'
+      : clearValue === true;
 
     dispatch(
       updateManualLaunchExecutionStatusAction({
@@ -102,9 +142,11 @@ const ExecutionStatusConfirmModalComponent: FC<
         launchId,
         executionId,
         status: status.toUpperCase(),
-        comment: values.clearCommentAndLinksToBTS ? '' : values.comment,
-        postIssueToBts: values.clearCommentAndLinksToBTS ? false : values.postIssueToBts,
-        attachments: values.clearCommentAndLinksToBTS ? [] : attachedFiles,
+        comment: clearCommentCheckboxChecked ? '' : values.comment,
+        postIssueToBts: clearCommentCheckboxChecked ? false : values.postIssueToBts,
+        attachments: clearCommentCheckboxChecked ? [] : attachedFiles,
+        clearExecutionCommentAndBts: isClearStatus ? clearCommentCheckboxChecked : undefined,
+        preserveExistingCommentIfFormSkipped: isStatusChange,
       }),
     );
     dispatch(hideModalAction());
@@ -246,10 +288,13 @@ const ExecutionStatusConfirmModalComponent: FC<
   );
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 export const ExecutionStatusConfirmModal = withModal(EXECUTION_STATUS_CONFIRM_MODAL)(
   reduxForm<ExecutionStatusConfirmFormValues, ExecutionStatusConfirmModalProps>({
     form: EXECUTION_STATUS_CONFIRM_FORM_NAME,
     destroyOnUnmount: true,
+    initialValues: {
+      clearCommentAndLinksToBTS: false,
+      postIssueToBts: false,
+    },
   })(ExecutionStatusConfirmModalComponent),
 );

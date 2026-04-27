@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
@@ -45,9 +45,11 @@ import { ExecutionStatusDropdown } from './executionStatusDropdown';
 import { ExecutionStatusConfirmModal } from './executionStatusConfirmModal';
 import { TextBasedContent } from './textBasedContent';
 import { StepsBasedContent } from './stepsBasedContent';
+import { ExecutionCommentSection } from './executionCommentSection/executionCommentSection';
 import { messages } from './messages';
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { messages as manualLaunchesMessages } from '../messages';
+import { hasPersistedExecutionComment } from './utils';
 
 import styles from './manualLaunchExecutionPage.scss';
 
@@ -120,6 +122,12 @@ export const ManualLaunchExecutionPage = () => {
   const isInProgress = executionStatus === ExecutionStatus.IN_PROGRESS;
   const hasStatus = executionStatus && executionStatus !== ExecutionStatus.TO_RUN && !isInProgress;
 
+  const showExecutionCommentSection = hasStatus || hasPersistedExecutionComment(execution);
+
+  useEffect(() => {
+    setShowStatusButtons(false);
+  }, [execution?.id, hasStatus]);
+
   const handleRunTestClick = () => {
     setShowStatusButtons(true);
   };
@@ -178,7 +186,9 @@ export const ManualLaunchExecutionPage = () => {
       <span className={cx('manual-launch-execution-page__title-business-id')}>
         {execution.testCaseDisplayId}
       </span>
-      <span className={cx('manual-launch-execution-page__title-name')}>{execution.testCaseName}</span>
+      <span className={cx('manual-launch-execution-page__title-name')}>
+        {execution.testCaseName}
+      </span>
     </span>
   );
 
@@ -199,6 +209,7 @@ export const ManualLaunchExecutionPage = () => {
             ) : (
               <StepsBasedContent execution={execution} />
             )}
+            {showExecutionCommentSection && <ExecutionCommentSection execution={execution} />}
           </div>
         </div>
       </ScrollWrapper>

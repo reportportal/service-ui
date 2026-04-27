@@ -14,8 +14,46 @@
  * limitations under the License.
  */
 
-import type { ManualScenarioRequirement } from 'controllers/manualLaunch';
+import { isNotNil } from 'es-toolkit';
+import { isEmpty } from 'es-toolkit/compat';
+
+import type {
+  Attachment,
+  ManualScenarioRequirement,
+  TestCaseExecution,
+} from 'controllers/manualLaunch';
 import type { Requirement } from 'types/testCase';
+import type { AttachmentWithSlider } from 'pages/inside/common/attachmentsWithSlider/types';
+import { getFileExtension } from 'pages/inside/common/attachmentsWithSlider/utils';
 
 export const requirementsToItems = (requirements?: ManualScenarioRequirement[]): Requirement[] =>
   requirements?.map((requirement) => ({ id: requirement.id, value: requirement.value })) ?? [];
+
+export function hasPersistedExecutionComment(
+  execution: TestCaseExecution | null | undefined,
+): boolean {
+  const payload = execution?.executionComment;
+  if (!payload) return false;
+
+  return Boolean(payload.comment?.trim()) || !isEmpty(payload.attachments ?? []);
+}
+
+const PREVIEWABLE_IMAGE_EXT = new Set(['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg']);
+
+export function toAttachmentWithSlider(attachment: Attachment): AttachmentWithSlider {
+  const id = Number(attachment.id);
+  const ext = getFileExtension(attachment.fileName);
+  const hasThumbFlag = (attachment as { hasThumbnail?: boolean }).hasThumbnail;
+  const hasThumbnail =
+    Boolean(hasThumbFlag) ||
+    (Boolean(attachment.fileType) && /^image\//i.test(attachment.fileType)) ||
+    (isNotNil(ext) && PREVIEWABLE_IMAGE_EXT.has(ext));
+
+  return {
+    id: Number.isFinite(id) ? id : 0,
+    fileName: attachment.fileName,
+    fileSize: attachment.fileSize,
+    fileType: attachment.fileType,
+    hasThumbnail,
+  };
+}
