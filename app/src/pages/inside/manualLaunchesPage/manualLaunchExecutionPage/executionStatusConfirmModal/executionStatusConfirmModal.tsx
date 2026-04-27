@@ -51,6 +51,7 @@ import {
   MANUAL_LAUNCHES_PAGE_EVENTS,
   type ExecutionStatusType as AnalyticsExecutionStatusType,
 } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 
 import type { ExecutionStatusConfirmFormValues, ExecutionStatusConfirmModalProps } from '../types';
 import { messages as manualExecutionPageMessages } from '../messages';
@@ -74,6 +75,7 @@ const ExecutionStatusConfirmModalComponent: FC<
 > = ({ data, handleSubmit, invalid, dirty }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
+  const { canManageExecutions} = useUserPermissions();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const launchId = useManualLaunchId();
@@ -115,7 +117,7 @@ const ExecutionStatusConfirmModalComponent: FC<
     ? formatMessage(messages.clearStatus)
     : formatMessage(messages.markAsStatus, { status: statusLabel });
   const isStatusChange = currentStatus && !isClearStatus;
-  const showPostIssueToBts = status === EXECUTION_STATUS_FAILED;
+  const showPostIssueToBts = canManageExecutions && status === EXECUTION_STATUS_FAILED;
   const okButtonLabel = isClearStatus
     ? formatMessage(messages.clearStatus)
     : formatMessage(messages.markAsStatus, { status: statusLabel });
