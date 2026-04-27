@@ -2422,7 +2422,7 @@
   "testCaseSearch.explorePlansButton": "Explore Plans",
   "testCaseSearch.letsSearch": "Let's search",
   "testCaseSearch.loadMore": "Load more",
-  "testCaseSearch.maximumItems": "You have loaded the maximum allowed number (20) of test cases. Upgrade to the Premium Feature to see more.\nPremium feature is a link to https://reportportal.io/docs/features/TestExecutions/",
+  "testCaseSearch.maximumItems": "您已加载最大允许数量（20）的测试用例。升级到高级功能以查看更多。<a>文档</a>",
   "testCaseSearch.notNowButton": "Not now",
   "testCaseSearch.oneOption": "Only one option, either test name or attributes, can be active at a time",
   "testCaseSearch.openNewSearchButton": "Open New Search",
