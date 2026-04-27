@@ -15,6 +15,7 @@
  */
 
 import { defineMessages } from 'react-intl';
+import {widgetDocsReferences} from "common/utils/referenceDictionary";
 
 export const messages = defineMessages({
   testNameTitle: {
@@ -52,8 +53,8 @@ export const messages = defineMessages({
   maximumItems: {
     id: 'testCaseSearch.maximumItems',
     defaultMessage:
-      'Text in case the limit is reached: You have loaded the maximum allowed number (20) of test cases. Upgrade to the Premium Feature to see more.\n' +
-      'Premium feature is a link to https://reportportal.io/docs/features/TestExecutions/',
+      `You have loaded the maximum allowed number (20) of test cases. Upgrade to the Premium Feature to see more.\n' +
+      'Premium feature is a link to ${widgetDocsReferences.testExecutionsBase}`,
   },
   errorLoadingData: {
     id: 'testCaseSearch.errorLoadingData',
