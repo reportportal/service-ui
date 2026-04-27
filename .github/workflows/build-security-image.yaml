@@ -21,7 +21,7 @@ jobs:
       - name: Create variables
         id: vars
         run: |
-          echo "image-tag=$(echo '${{ github.ref_name }}' | sed 's|secure/||')" >> $GITHUB_OUTPUT
+          echo "image-tag=$(echo '${{ github.ref_name }}' | sed 's|secure/||')-${{ github.run_number }}" >> $GITHUB_OUTPUT
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
     outputs:
       image-tag: ${{ steps.vars.outputs.image-tag }}
