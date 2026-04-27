@@ -172,7 +172,7 @@ export const WIDGETS_EVENTS = {
   }),
   onTcsPromoDocumentationClick: (dashboardId, source) => ({
     ...getBasicClickEventParameters(DASHBOARDS),
-    element_name: 'documentation',
+    link_name: 'documentation',
     place: source,
     type: 'search_widget',
     number: dashboardId,
@@ -196,13 +196,15 @@ export const WIDGETS_EVENTS = {
     element_name: 'explore_plans',
     modal: 'premium_promo',
     place: source,
+    type: 'search_widget',
     number: dashboardId,
   }),
   onTcsPremiumContactUsClick: (dashboardId, source) => ({
     ...getBasicClickEventParameters(DASHBOARDS),
-    element_name: 'contact_us',
+    element_name: 'start_contact_us_tep',
     modal: 'premium_promo',
     place: source,
+    type: 'search_widget',
     number: dashboardId,
   }),
   onTcsPremiumNotNowClick: (dashboardId, source) => ({
@@ -210,6 +212,7 @@ export const WIDGETS_EVENTS = {
     element_name: 'not_now',
     modal: 'premium_promo',
     place: source,
+    type: 'search_widget',
     number: dashboardId,
   }),
 };

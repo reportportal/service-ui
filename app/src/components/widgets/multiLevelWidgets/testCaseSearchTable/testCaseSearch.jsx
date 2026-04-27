@@ -46,7 +46,8 @@ const TRACKING_EVENTS_TRIGGER_SOURCES = {
 const THROTTLING_SEARCH_TIME = 300;
 const THROTTLING_STATUS_CHANGE_TIME = 1000;
 
-const TCS_WIDGET_SOURCE = 'tcs_widget';
+const PROMOTION_BANNER_SOURCE = 'promotion_banner';
+const PREMIUM_POPUP_SOURCE = 'premium_features_popup';
 const TEST_EXECUTION_PLUGIN_NAME = 'test-execution';
 const TEST_EXECUTION_PLUGIN_PAGE = 'testExecution';
 
@@ -128,7 +129,7 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
   };
 
   const handleDocumentationClick = () => {
-    trackEvent(WIDGETS_EVENTS.onTcsPromoDocumentationClick(dashboardId, TCS_WIDGET_SOURCE));
+    trackEvent(WIDGETS_EVENTS.onTcsPromoDocumentationClick(dashboardId, PROMOTION_BANNER_SOURCE));
   };
   const handleLoadMoreMessageDocumentationClick = () => {
     trackEvent(
@@ -138,30 +139,30 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
 
   const handleOpenNewSearch = () => {
     if (isTestExecutionPluginEnabled) {
-      trackEvent(WIDGETS_EVENTS.onTcsPromoOpenNewSearchNavigate(dashboardId, TCS_WIDGET_SOURCE));
+      trackEvent(WIDGETS_EVENTS.onTcsPromoOpenNewSearchNavigate(dashboardId, PROMOTION_BANNER_SOURCE));
       dispatch({
         type: PROJECT_PLUGIN_PAGE,
         payload: { projectId, pluginPage: TEST_EXECUTION_PLUGIN_PAGE },
       });
     } else {
-      trackEvent(WIDGETS_EVENTS.onTcsPremiumPopupImpression(dashboardId, TCS_WIDGET_SOURCE));
+      trackEvent(WIDGETS_EVENTS.onTcsPromoOpenNewSearchNavigate(dashboardId, PROMOTION_BANNER_SOURCE));
       dispatch(
         showModalAction({
           component: (
             <PremiumPromoModal
               onExplorePlans={() =>
                 trackEvent(
-                  WIDGETS_EVENTS.onTcsPremiumExplorePlansClick(dashboardId, TCS_WIDGET_SOURCE),
+                  WIDGETS_EVENTS.onTcsPremiumExplorePlansClick(dashboardId, PREMIUM_POPUP_SOURCE),
                 )
               }
               onContactUs={() =>
                 trackEvent(
-                  WIDGETS_EVENTS.onTcsPremiumContactUsClick(dashboardId, TCS_WIDGET_SOURCE),
+                  WIDGETS_EVENTS.onTcsPremiumContactUsClick(dashboardId, PREMIUM_POPUP_SOURCE),
                 )
               }
               onNotNow={() =>
                 trackEvent(
-                  WIDGETS_EVENTS.onTcsPremiumNotNowClick(dashboardId, TCS_WIDGET_SOURCE),
+                  WIDGETS_EVENTS.onTcsPremiumNotNowClick(dashboardId, PREMIUM_POPUP_SOURCE),
                 )
               }
             />
@@ -176,7 +177,7 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
   }, [fetchLoading]);
 
   useEffect(() => {
-    trackEvent(WIDGETS_EVENTS.onTcsPromoBannerImpression(dashboardId, TCS_WIDGET_SOURCE));
+    trackEvent(WIDGETS_EVENTS.onTcsPromoBannerImpression(dashboardId, PROMOTION_BANNER_SOURCE));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
