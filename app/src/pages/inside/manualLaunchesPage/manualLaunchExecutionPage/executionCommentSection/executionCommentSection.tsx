@@ -95,9 +95,17 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
     const savedTrimmed = savedComment.trim();
     const draftTrimmed = comment.trim();
     return (
-      draftTrimmed !== savedTrimmed || pendingFiles.length > 0 || removedAttachmentIds.size > 0
+      draftTrimmed !== savedTrimmed ||
+      !isEmpty(pendingFiles) ||
+      !isEmpty(removedAttachmentIds)
     );
-  }, [comment, pendingFiles.length, removedAttachmentIds, savedComment]);
+  }, [comment, pendingFiles, removedAttachmentIds, savedComment]);
+
+  const hasClearableContent = useMemo(
+    () =>
+      !isEmpty(comment.trim()) || !isEmpty(pendingFiles) || !isEmpty(visibleExistingAttachments),
+    [comment, pendingFiles, visibleExistingAttachments],
+  );
 
   const handleCommentChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     setComment(e.target.value);
@@ -120,9 +128,13 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
   };
 
   const handleClearLocal = () => {
-    setComment(savedComment);
+    setComment('');
     setPendingFiles([]);
-    setRemovedAttachmentIds(new Set());
+    setRemovedAttachmentIds(
+      new Set(
+        (execution.executionComment?.attachments ?? []).map((a) => String(a.id)),
+      ),
+    );
   };
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
@@ -230,7 +242,7 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
             type="button"
             variant="ghost"
             className={cx('execution-comment-section__clear')}
-            disabled={isSaving}
+            disabled={isSaving || !hasClearableContent}
             onClick={handleClearLocal}
           >
             {formatMessage(messages.clearExecutionComment)}
