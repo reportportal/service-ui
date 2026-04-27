@@ -40,6 +40,7 @@ export const TestCaseSearchContent = ({
   sortingDirection,
   onChangeSorting,
   onLoadMore,
+  onLoadMoreMessageDocumentationClick,
   isLoadingMore,
   error,
 }) => {
@@ -95,7 +96,8 @@ export const TestCaseSearchContent = ({
                   a: (chunks) => (
                     <a
                       className={cx('documentation-link')}
-                      href={widgetDocsReferences.testExecutionsBase}
+                      href={widgetDocsReferences.testExecutionsBaseTCS}
+                      onClick={onLoadMoreMessageDocumentationClick}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -120,6 +122,7 @@ TestCaseSearchContent.propTypes = {
   sortingDirection: PropTypes.string,
   onChangeSorting: PropTypes.func,
   onLoadMore: PropTypes.func,
+  onLoadMoreMessageDocumentationClick: PropTypes.func,
   isLoadingMore: PropTypes.bool,
   error: PropTypes.object,
 };
