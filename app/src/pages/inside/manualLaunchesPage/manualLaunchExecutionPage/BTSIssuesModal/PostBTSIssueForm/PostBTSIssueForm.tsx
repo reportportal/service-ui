@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, memo, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
 import { Checkbox, Dropdown, FieldText } from '@reportportal/ui-kit';
@@ -33,21 +33,30 @@ interface PostBTSIssueFormProps {
 const formatValue = (value?: string[]) => value?.[0] ?? '';
 const parseValue = (value: string) => (value ? [value] : []);
 
-const renderDynamicField = (field: DynamicField, defaultOptionValueKey: string) => {
-  const hasDefinedValues = field.definedValues && field.definedValues.length > 0;
+interface DynamicFormFieldProps {
+  field: DynamicField;
+  defaultOptionValueKey: string;
+}
 
-  if (hasDefinedValues) {
-    const options = field.definedValues.map((item) => ({
+const DynamicFormField: FC<DynamicFormFieldProps> = memo(({ field, defaultOptionValueKey }: DynamicFormFieldProps) => {
+  const { definedValues, id, fieldName, disabled, required } = field;
+  const hasDefinedValues = definedValues && !isEmpty(definedValues);
+
+  const options = useMemo(() => {
+    if (!hasDefinedValues || !definedValues) return [];
+    return definedValues.map((item) => ({
       value: item[defaultOptionValueKey as keyof typeof item] || item.valueName,
       label: item.valueName,
     }));
+  }, [definedValues, defaultOptionValueKey, hasDefinedValues]);
 
+  if (hasDefinedValues) {
     return (
-      <FieldProvider name={field.id} format={formatValue} parse={parseValue}>
+      <FieldProvider name={id} format={formatValue} parse={parseValue}>
         <Dropdown
-          label={field.fieldName}
+          label={fieldName}
           options={options}
-          disabled={field.disabled}
+          disabled={disabled}
           mobileDisabled
           value=""
           onChange={() => {}}
@@ -57,19 +66,22 @@ const renderDynamicField = (field: DynamicField, defaultOptionValueKey: string) 
   }
 
   return (
-    <FieldProvider name={field.id} format={formatValue} parse={parseValue}>
+    <FieldProvider name={id} format={formatValue} parse={parseValue}>
       <FieldErrorHint provideHint={false}>
         <FieldText
-          label={field.fieldName}
-          placeholder={`Enter ${field.fieldName.toLowerCase()}`}
-          disabled={field.disabled}
+          label={fieldName}
+          placeholder={`Enter ${fieldName.toLowerCase()}`}
+          disabled={disabled}
           defaultWidth={false}
-          isRequired={field.required}
+          isRequired={required}
         />
       </FieldErrorHint>
     </FieldProvider>
   );
-};
+});
+
+DynamicFormField.displayName = 'DynamicFormField';
+/* eslint-enable react/prop-types */
 
 export const PostBTSIssueForm: FC<PostBTSIssueFormProps> = ({
   namedBtsIntegrations,
@@ -82,20 +94,23 @@ export const PostBTSIssueForm: FC<PostBTSIssueFormProps> = ({
   const { formatMessage } = useIntl();
   const defaultOptionValueKey = getDefaultOptionValueKey(pluginName) as string;
 
-  const dataFieldsConfig = [
-    {
-      name: INCLUDE_ATTACHMENTS_KEY,
-      title: formatMessage(commonMessages.attachments),
-    },
-    {
-      name: INCLUDE_LOGS_KEY,
-      title: formatMessage(commonMessages.logs),
-    },
-    {
-      name: INCLUDE_COMMENTS_KEY,
-      title: formatMessage(commonMessages.comments),
-    },
-  ];
+  const dataFieldsConfig = useMemo(
+    () => [
+      {
+        name: INCLUDE_ATTACHMENTS_KEY,
+        title: formatMessage(commonMessages.attachments),
+      },
+      {
+        name: INCLUDE_LOGS_KEY,
+        title: formatMessage(commonMessages.logs),
+      },
+      {
+        name: INCLUDE_COMMENTS_KEY,
+        title: formatMessage(commonMessages.comments),
+      },
+    ],
+    [formatMessage],
+  );
 
   return (
     <form className={cx('post-issue-form')}>
@@ -110,7 +125,9 @@ export const PostBTSIssueForm: FC<PostBTSIssueFormProps> = ({
       <div className={cx('dynamic-fields')}>
         {!isEmpty(fields) &&
           fields.map((field) => (
-            <div key={field.id}>{renderDynamicField(field, defaultOptionValueKey)}</div>
+            <div key={field.id}>
+              <DynamicFormField field={field} defaultOptionValueKey={defaultOptionValueKey} />
+            </div>
           ))}
       </div>
       <div className={cx('included-data-config')}>

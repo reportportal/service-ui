@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { FC, useState, useMemo, useCallback, useEffect } from 'react';
+import { FC, useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { useIntl } from 'react-intl';
 import { Modal, SegmentedControl } from '@reportportal/ui-kit';
 import { InjectedFormProps, reduxForm } from 'redux-form';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { fetch } from 'common/utils';
+import { fetch, commonValidators } from 'common/utils';
 import { URLS } from 'common/urls';
 import { withModal } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
@@ -60,12 +60,14 @@ import styles from './BTSIssuesModal.scss';
 
 const cx = createClassnames(styles);
 
-let validationConfig: Record<string, unknown> | null = null;
-
 enum BTSIssueActionTypes {
   POST = 'post',
   LINK = 'link',
 }
+
+const CONTROL_TYPE_FIELD = '_controlType';
+
+let validationConfig: Record<string, unknown> | null = null;
 
 interface BTSIssuesModalOwnProps {
   data: {
@@ -83,6 +85,7 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
   invalid,
   dirty,
   reset,
+  change,
 }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -97,18 +100,27 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
   const [selectedControl, setSelectedControl] = useState(BTSIssueActionTypes.LINK);
   const [isLoading, setIsLoading] = useState(false);
 
+  const isMountedRef = useRef(true);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
   const initIntegrationFields = useCallback(
-    (defectFormFields: DynamicField[] = [], pluginName = '') => {
-      const defaultOptionValueKey = getDefaultOptionValueKey(pluginName) as string;
+    (defectFormFields: DynamicField[] = [], integrationPluginName = '') => {
+      const defaultOptionValueKey = getDefaultOptionValueKey(integrationPluginName) as string;
       const normalizedFields = normalizeFieldsWithOptions(
         defectFormFields,
         defaultOptionValueKey,
       ) as DynamicField[];
-      const fields = normalizedFields.map((item) =>
+      const processedFields = normalizedFields.map((item) =>
         item.fieldType === ISSUE_TYPE_FIELD_KEY ? { ...item, disabled: true } : item,
       );
-      validationConfig = createFieldsValidationConfig(fields);
-      return fields;
+      validationConfig = createFieldsValidationConfig(processedFields);
+      return processedFields;
     },
     [],
   );
@@ -141,11 +153,11 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
   const [pluginName, setPluginName] = useState<string>(initialConfig.pluginName);
   const [integrationId, setIntegrationId] = useState(initialConfig.integrationId);
 
-  // Initialize form with field values
   useEffect(() => {
     initialize({
       ...getDataSectionConfig(true),
       ...mapFieldsToValues(fields),
+      [CONTROL_TYPE_FIELD]: BTSIssueActionTypes.LINK,
     });
   }, [fields, initialize]);
 
@@ -161,7 +173,7 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
       }
 
       const { id, integrationParameters } = integration;
-      const defectFormFields = integrationParameters.defectFormFields;
+      const defectFormFields = integrationParameters?.defectFormFields ?? [];
       const newFields = initIntegrationFields(defectFormFields, newPluginName);
 
       setPluginName(newPluginName);
@@ -185,7 +197,7 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
         return;
       }
 
-      const defectFormFields = integration.integrationParameters.defectFormFields;
+      const defectFormFields = integration.integrationParameters?.defectFormFields ?? [];
       const newFields = initIntegrationFields(defectFormFields, pluginName);
 
       setFields(newFields);
@@ -200,7 +212,6 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
       const preparedFields = fields.map((field) => {
         const formFieldData = refinedData[field.id];
 
-        // Value should always be an array of strings for all field types
         let value: string[];
 
         if (Array.isArray(formFieldData)) {
@@ -243,6 +254,7 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
         data: issueData,
       })
         .then(() => {
+          if (!isMountedRef.current) return;
           setIsLoading(false);
           dispatch(
             showSuccessNotification({
@@ -252,6 +264,7 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
           onSuccess();
         })
         .catch((err: Error) => {
+          if (!isMountedRef.current) return;
           setIsLoading(false);
           dispatch(
             showErrorNotification({
@@ -296,6 +309,7 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
         },
       })
         .then(() => {
+          if (!isMountedRef.current) return;
           setIsLoading(false);
           dispatch(
             showSuccessNotification({
@@ -305,6 +319,7 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
           onSuccess();
         })
         .catch((err: Error) => {
+          if (!isMountedRef.current) return;
           setIsLoading(false);
           dispatch(
             showErrorNotification({
@@ -340,10 +355,30 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
     },
   });
 
-  const handleControlChange = (value: BTSIssueActionTypes) => {
-    setSelectedControl(value);
-    reset();
-  };
+  const handleControlChange = useCallback(
+    (value: BTSIssueActionTypes) => {
+      setSelectedControl(value);
+      reset();
+      change(CONTROL_TYPE_FIELD, value);
+    },
+    [reset, change],
+  );
+
+  const segmentedControlOptions = useMemo(
+    () => [
+      {
+        label: formatMessage(messages.postIssue),
+        value: BTSIssueActionTypes.POST,
+        selected: selectedControl === BTSIssueActionTypes.POST,
+      },
+      {
+        label: formatMessage(messages.linkIssue),
+        value: BTSIssueActionTypes.LINK,
+        selected: selectedControl === BTSIssueActionTypes.LINK,
+      },
+    ],
+    [formatMessage, selectedControl],
+  );
 
   if (!data) {
     return null;
@@ -364,18 +399,7 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
         <SegmentedControl
           fullWidth
           onChange={handleControlChange}
-          options={[
-            {
-              label: formatMessage(messages.postIssue),
-              value: BTSIssueActionTypes.POST,
-              selected: selectedControl === BTSIssueActionTypes.POST,
-            },
-            {
-              label: formatMessage(messages.linkIssue),
-              value: BTSIssueActionTypes.LINK,
-              selected: selectedControl === BTSIssueActionTypes.LINK,
-            },
-          ]}
+          options={segmentedControlOptions}
         />
       </div>
 
@@ -395,10 +419,25 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
   );
 };
 
+const validateForm = (formValues: Record<string, unknown>) => {
+  const controlType = formValues[CONTROL_TYPE_FIELD];
+
+  if (controlType === BTSIssueActionTypes.POST) {
+    return validate(formValues, validationConfig);
+  }
+
+  if (controlType === BTSIssueActionTypes.LINK) {
+    const ticketNameError = commonValidators.requiredField(formValues.ticketName as string);
+    return ticketNameError ? { ticketName: ticketNameError } : {};
+  }
+
+  return {};
+};
+
 export const BTSIssuesModal = withModal(BTS_ISSUES_MODAL)(
   reduxForm<Record<string, unknown>, BTSIssuesModalOwnProps>({
     form: 'btsIssuesModalForm',
     destroyOnUnmount: true,
-    validate: (fields) => validate(fields, validationConfig),
+    validate: validateForm,
   })(BTSIssuesModalComponent),
 );
