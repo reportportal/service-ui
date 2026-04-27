@@ -30,6 +30,7 @@ import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames, copyToClipboard } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { MILLISECONDS_IN_MINUTE } from 'common/constants/common';
 import { useOnClickOutside } from 'common/hooks';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
@@ -282,11 +283,11 @@ export const TestCaseSidePanel = memo(
                   </span>
                 </div>
               )}
-              {!!testCase?.lastExecution?.duration && (
+              {!!testCase?.manualScenario?.executionEstimationTime && (
                 <div className={cx('meta-item-row')}>
                   <DurationIcon />
                   <span className={cx('meta-value')}>
-                    {formatDuration(testCase.lastExecution.duration)}
+                    {formatDuration(testCase.manualScenario.executionEstimationTime * MILLISECONDS_IN_MINUTE)}
                   </span>
                 </div>
               )}
