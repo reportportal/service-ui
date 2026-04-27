@@ -16,8 +16,34 @@
 
 import { getBasicClickEventParameters } from './common/ga4Utils';
 import { LAUNCHES_PAGE } from './launchesPageEvents';
+import { FILTER_ENTITY_ID_TO_TYPE_MAP } from './common/testItemPages/constants';
+import { ENTITY_NAME, ENTITY_LAUNCH_TYPE } from 'components/filterEntities/constants';
 
 export const FILTERS_PAGE = 'filters';
+
+const shortenFilterName = (str) =>
+  str
+    .split('_')
+    .map((w) => w.slice(0, 3))
+    .join('_');
+
+const getLaunchTypeConditionKey = (value) => {
+  if (!value) return 'all';
+  const parts = value.split(',').filter(Boolean);
+  return parts.length === 1 ? parts[0].toLowerCase() : 'all';
+};
+
+export const getAddFilterTypeParam = (conditions = []) =>
+  conditions
+    .filter(({ filteringField, value }) => filteringField !== ENTITY_NAME && value)
+    .map(({ filteringField, value }) => {
+      const analyticsType = FILTER_ENTITY_ID_TO_TYPE_MAP[filteringField] || filteringField;
+      if (filteringField === ENTITY_LAUNCH_TYPE) {
+        return shortenFilterName(`${analyticsType}_${getLaunchTypeConditionKey(value)}`);
+      }
+      return shortenFilterName(analyticsType);
+    })
+    .join('#');
 
 export const getAddEditFilterModalEvents = (isEditMode) => {
   const modalType = isEditMode ? 'Edit' : 'Add';
@@ -45,11 +71,12 @@ export const getAddEditFilterModalEvents = (isEditMode) => {
           action: `Click on button ${actionType} in Modal ${modalType} Filter`,
           label: `${actionType} filter in Modal ${modalType} Filter`,
         }
-      : {
+      : (type) => ({
           ...getBasicClickEventParameters(LAUNCHES_PAGE),
           modal: 'add_filter',
           element_name: 'add',
-        },
+          ...(type && { type }),
+        }),
   };
 };
 

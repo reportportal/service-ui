@@ -21,7 +21,10 @@ import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import { reduxForm, SubmissionError } from 'redux-form';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
-import { getAddEditFilterModalEvents } from 'components/main/analytics/events';
+import {
+  getAddEditFilterModalEvents,
+  getAddFilterTypeParam,
+} from 'components/main/analytics/events';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { Input } from 'components/inputs/input';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -94,6 +97,7 @@ export class FilterEditModal extends Component {
 
   constructor(props) {
     super(props);
+    this.isCreationMode = !!props.data.creationMode;
     this.events = getAddEditFilterModalEvents(!props.data.creationMode);
   }
 
@@ -139,11 +143,19 @@ export class FilterEditModal extends Component {
       });
 
   render() {
-    const { intl, handleSubmit, tracking } = this.props;
+    const {
+      intl,
+      handleSubmit,
+      tracking,
+      data: { filter },
+    } = this.props;
     const okButton = {
       text: this.getOkButtonTitle(),
       onClick: (closeModal) => {
-        tracking.trackEvent(this.events.clickOkBtn);
+        const event = this.isCreationMode
+          ? this.events.clickOkBtn(getAddFilterTypeParam(filter?.conditions))
+          : this.events.clickOkBtn;
+        tracking.trackEvent(event);
         handleSubmit(this.saveFilterAndCloseModal(closeModal))();
       },
     };

@@ -33,6 +33,8 @@ import {
   getRefineParametersEventCreator,
   getCommonActionEvents,
   getClickBreadcrumbsEvents,
+  getChangeFilterEvent,
+  getUnsavedFilterEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getAddBtnAddNewFilterAddWidgetModal,
@@ -94,6 +96,8 @@ export const LAUNCHES_PAGE_EVENTS = {
   }),
   commonEvents: {
     getRefineParametersEvent: getRefineParametersEventCreator(LAUNCHES_PAGE),
+    getChangeFilterEvent: getChangeFilterEvent(LAUNCHES_PAGE),
+    getUnsavedFilterEvent: getUnsavedFilterEvent(LAUNCHES_PAGE),
   },
   ...getClickDonutEvents(LAUNCHES_PAGE),
   ...getClickDefectTooltipEvents(LAUNCHES_PAGE),
