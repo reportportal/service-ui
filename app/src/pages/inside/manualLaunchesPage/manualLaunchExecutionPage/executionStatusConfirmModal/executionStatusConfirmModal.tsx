@@ -41,6 +41,7 @@ import { MAX_FILE_SIZE } from 'common/constants/fileConstants';
 import { useModalButtons } from 'hooks/useModalButtons';
 import { useTextareaAutoResize } from 'common/hooks';
 import { ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 
 import type { ExecutionStatusConfirmFormValues, ExecutionStatusConfirmModalProps } from '../types';
 import {
@@ -62,6 +63,7 @@ const ExecutionStatusConfirmModalComponent: FC<
     InjectedFormProps<ExecutionStatusConfirmFormValues, ExecutionStatusConfirmModalProps>
 > = ({ data, handleSubmit, invalid, dirty }) => {
   const { formatMessage } = useIntl();
+  const { canManageExecutions} = useUserPermissions();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const launchId = useManualLaunchId();
@@ -91,7 +93,7 @@ const ExecutionStatusConfirmModalComponent: FC<
     ? formatMessage(messages.clearStatus)
     : formatMessage(messages.markAsStatus, { status: statusLabel });
   const isStatusChange = currentStatus && !isClearStatus;
-  const showPostIssueToBts = status === EXECUTION_STATUS_FAILED;
+  const showPostIssueToBts = canManageExecutions && status === EXECUTION_STATUS_FAILED;
   const okButtonLabel = isClearStatus
     ? formatMessage(messages.clearStatus)
     : formatMessage(messages.markAsStatus, { status: statusLabel });

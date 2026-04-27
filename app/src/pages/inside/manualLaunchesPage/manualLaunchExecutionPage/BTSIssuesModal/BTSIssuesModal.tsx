@@ -94,6 +94,7 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
   const projectKey = useSelector(projectKeySelector);
 
   const executionId = data?.executionId;
+  const [selectedControl, setSelectedControl] = useState(BTSIssueActionTypes.LINK);
   const [isLoading, setIsLoading] = useState(false);
 
   const initIntegrationFields = useCallback(
@@ -262,19 +263,82 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
     [projectKey, integrationId, dispatch, formatMessage],
   );
 
+  const linkIssue = useCallback(
+    (formData: Record<string, unknown>, onSuccess: () => void) => {
+      const integration = namedBtsIntegrations[pluginName]?.find(
+        (item: BTSIntegration) => item.id === integrationId,
+      );
+
+      if (!integration) {
+        return;
+      }
+
+      const {
+        integrationParameters: { project: btsProject, url: btsUrl },
+      } = integration;
+
+      const url = URLS.testItemsLinkIssues(projectKey);
+
+      setIsLoading(true);
+
+      fetch(url, {
+        method: 'PUT',
+        data: {
+          issues: [
+            {
+              ticketId: formData.ticketName,
+              btsProject,
+              btsUrl,
+              pluginName,
+            },
+          ],
+          testItemIds: [executionId],
+        },
+      })
+        .then(() => {
+          setIsLoading(false);
+          dispatch(
+            showSuccessNotification({
+              message: formatMessage(messages.linkIssueSuccess),
+            }),
+          );
+          onSuccess();
+        })
+        .catch((err: Error) => {
+          setIsLoading(false);
+          dispatch(
+            showErrorNotification({
+              message: `${formatMessage(messages.linkIssueFailed)}. ${err.message}`,
+            }),
+          );
+        });
+    },
+    [
+      projectKey,
+      executionId,
+      integrationId,
+      pluginName,
+      namedBtsIntegrations,
+      dispatch,
+      formatMessage,
+    ],
+  );
+
   const { okButton, cancelButton, hideModal } = useModalButtons({
     okButtonText: 'OK',
     isLoading,
     isSubmitButtonDisabled: invalid,
     onSubmit: () => {
       handleSubmit((values: Record<string, unknown>) => {
-        const issueData = prepareDataToSend(values);
-        postIssue(issueData, hideModal);
+        if (selectedControl === BTSIssueActionTypes.POST) {
+          const issueData = prepareDataToSend(values);
+          postIssue(issueData, hideModal);
+        } else {
+          linkIssue(values, hideModal);
+        }
       })();
     },
   });
-
-  const [selectedControl, setSelectedControl] = useState(BTSIssueActionTypes.LINK);
 
   const handleControlChange = (value: BTSIssueActionTypes) => {
     setSelectedControl(value);
