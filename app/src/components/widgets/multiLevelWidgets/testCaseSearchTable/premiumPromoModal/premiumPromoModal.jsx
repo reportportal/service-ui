@@ -103,7 +103,6 @@ export const PremiumPromoModal = ({ onExplorePlans, onContactUs, onNotNow }) => 
     <Modal
       className={cx('premium-promo-modal')}
       onClose={handleClose}
-      allowCloseOutside={false}
       createFooter={renderFooter}
     >
       <div className={cx('modal-content')}>
