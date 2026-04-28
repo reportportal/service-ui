@@ -22,7 +22,6 @@ import {
   isAdminSelector,
   activeProjectKeySelector,
 } from 'controllers/user';
-import { isTmsEnabled } from 'controllers/appInfo';
 import {
   LOGIN_PAGE,
   REGISTRATION_PAGE,
@@ -401,9 +400,7 @@ const routesMap = {
       const { searchQuery, ...query } = state.location?.query ?? {};
 
       const rawStatuses = query[MANUAL_LAUNCHES_FILTER_URL_KEYS.STATUSES];
-      const filterStatuses = rawStatuses
-        ? rawStatuses.split(',').filter(Boolean)
-        : undefined;
+      const filterStatuses = rawStatuses ? rawStatuses.split(',').filter(Boolean) : undefined;
 
       const rawStartTimeFrom = query[MANUAL_LAUNCHES_FILTER_URL_KEYS.START_TIME_FROM];
       const filterStartTimeFrom = rawStartTimeFrom ? Number(rawStartTimeFrom) : undefined;
@@ -418,8 +415,9 @@ const routesMap = {
           searchQuery,
           filterStatuses,
           filterCompletion: query[MANUAL_LAUNCHES_FILTER_URL_KEYS.COMPLETION] || undefined,
-          filterStartTimeFrom:
-            Number.isFinite(filterStartTimeFrom) ? filterStartTimeFrom : undefined,
+          filterStartTimeFrom: Number.isFinite(filterStartTimeFrom)
+            ? filterStartTimeFrom
+            : undefined,
           filterEndTimeTo: Number.isFinite(filterEndTimeTo) ? filterEndTimeTo : undefined,
           filterTestPlan: query[MANUAL_LAUNCHES_FILTER_URL_KEYS.TEST_PLAN] || undefined,
           filterCompositeAttribute: resolveFilterCompositeAttributeForApi(query),
@@ -665,17 +663,6 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
 
   if (page) {
     const { access, isTMS = false } = page;
-
-    if (isTMS && !isTmsEnabled(getState())) {
-      dispatch(
-        redirect({
-          type: PROJECT_DASHBOARD_PAGE,
-          payload: { organizationSlug, projectSlug },
-        }),
-      );
-
-      return;
-    }
 
     switch (access) {
       case ANONYMOUS_ACCESS:
