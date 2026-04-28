@@ -29,7 +29,7 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import styles from './testCaseSearchContent.scss';
 import { messages } from '../messages';
 import {widgetDocsReferences} from "common/utils/referenceDictionary";
-const MAXIMUM_ITEMS = 300;
+const MAXIMUM_ITEMS = 20;
 
 const cx = classNames.bind(styles);
 export const TestCaseSearchContent = ({
