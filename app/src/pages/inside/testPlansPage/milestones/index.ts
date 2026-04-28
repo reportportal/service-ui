@@ -50,13 +50,20 @@ export {
 export { MilestoneType, MilestoneStatus } from 'controllers/milestone';
 
 export {
+  MILESTONE_CHANGE_STATUS_MODAL_BUTTON_ELEMENT_NAME,
   MILESTONE_STATUS,
+  MILESTONE_STATUS_CHOOSE_EVENT_TYPE,
+  getMilestoneStatusChooseEventType,
   isBackToScheduledPopoverOption,
   normalizeMilestoneStatus,
   milestoneStatusToCssModifier,
   getMilestoneStatusPopoverOptions,
 } from './milestoneStatus';
-export type { MilestoneCardStatusCssModifier } from './milestoneStatus';
+export type {
+  MilestoneCardStatusCssModifier,
+  MilestoneChangeStatusModalButtonElementName,
+  MilestoneStatusDropdownChooseType,
+} from './milestoneStatus';
 export {
   getMilestoneStatusMessageDescriptor,
   getMilestoneStatusPopoverOptionMessageDescriptor,

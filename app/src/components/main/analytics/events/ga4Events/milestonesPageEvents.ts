@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
+import type {
+  MilestoneChangeStatusModalButtonElementName,
+  MilestoneStatusDropdownChooseType,
+} from 'pages/inside/testPlansPage/milestones/milestoneStatus';
+
 import {
   getBasicChooseEventParameters,
   getBasicClickEventParameters,
@@ -30,6 +35,16 @@ export const PLACE_TP_ROW = 'expanded_milestone_test_plan';
 const CLICK = getBasicClickEventParameters(MILESTONES);
 
 export type MilestoneStatusType = 'scheduled' | 'testing' | 'completed';
+
+export type {
+  MilestoneChangeStatusModalButtonElementName,
+  MilestoneStatusDropdownChooseType,
+};
+
+export {
+  MILESTONE_CHANGE_STATUS_MODAL_BUTTON_ELEMENT_NAME,
+  MILESTONE_STATUS_CHOOSE_EVENT_TYPE,
+} from 'pages/inside/testPlansPage/milestones/milestoneStatus';
 
 export const MILESTONES_PAGE_EVENTS = {
   VIEW_MILESTONES_PAGE: {
@@ -80,38 +95,21 @@ export const MILESTONES_PAGE_EVENTS = {
     modal: 'delete_milestone',
     element_name: 'submit_delete_milestone',
   },
-  chooseMilestoneStatus: (type: MilestoneStatusType) => ({
+  chooseMilestoneStatus: (type: MilestoneStatusDropdownChooseType) => ({
     ...getBasicChooseEventParameters(MILESTONES),
     place: PLACE_PAGE,
     element_name: 'milestone_status',
     type,
   }),
-  confirmStatusWithoutReplacing: (status: MilestoneStatusType) => ({
+
+  clickChangeStatusModal: (
+    elementName: MilestoneChangeStatusModalButtonElementName,
+    status: MilestoneStatusDropdownChooseType,
+  ) => ({
     ...CLICK,
     place: PLACE_PAGE,
     modal: 'change_status',
-    element_name: 'start_without_replacing',
-    status,
-  }),
-  confirmStatusCompleteWithToday: (status: MilestoneStatusType) => ({
-    ...CLICK,
-    place: PLACE_PAGE,
-    modal: 'change_status',
-    element_name: 'complete_with_today',
-    status,
-  }),
-  confirmStatusWithToday: (status: MilestoneStatusType) => ({
-    ...CLICK,
-    place: PLACE_PAGE,
-    modal: 'change_status',
-    element_name: 'start_with_today',
-    status,
-  }),
-  confirmStatusChange: (status: MilestoneStatusType) => ({
-    ...CLICK,
-    place: PLACE_PAGE,
-    modal: 'change_status',
-    element_name: 'change',
+    element_name: elementName,
     status,
   }),
   CLICK_CREATE_TEST_PLAN_KEBAB: {
