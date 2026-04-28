@@ -642,7 +642,7 @@ const routesMap = {
 export const ROUTE_ACTION_TYPES = new Set(Object.keys(routesMap));
 
 export const onBeforeRouteChange = (dispatch, getState, { action }) => {
-  const { type: nextPageType, payload: { organizationSlug, projectSlug } = {} } = action;
+  const { type: nextPageType } = action;
 
   const currentPageType = pageSelector(getState());
   const authorized = isAuthorizedSelector(getState());
@@ -662,7 +662,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
   }
 
   if (page) {
-    const { access, isTMS = false } = page;
+    const { access } = page;
 
     switch (access) {
       case ANONYMOUS_ACCESS:
