@@ -100,11 +100,11 @@ export const WIDGETS_EVENTS = {
     type: 'search_widget',
     number: dashboardId,
   }),
-  onSearchWidgetDocumentLinkClick: (dashboardId) => ({
+  onWidgetDocumentLinkClick: (widgetType, dashboardId) => ({
     ...getBasicClickEventParameters(DASHBOARDS),
     link_name: 'documentation',
-    place: 'search_widget',
-    type: 'search_widget',
+    place: 'widgets',
+    type: widgetType,
     number: dashboardId,
   }),
   onDisplayLaunchesToggle: (isDisplayedLaunches, dashboardId) => ({
