@@ -83,7 +83,7 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
 
   useEffect(() => {
     setComment(savedComment);
-  }, [savedComment]);
+  }, [execution.id, savedComment]);
 
   const visibleExistingAttachments = useMemo(() => {
     const list = execution.executionComment?.attachments ?? [];
