@@ -2427,7 +2427,7 @@
   "testCaseSearch.explorePlansButton": "Тарифи",
   "testCaseSearch.letsSearch": "Розпочнімо пошук",
   "testCaseSearch.loadMore": "Завантажити більше",
-  "testCaseSearch.maximumItems": "Ви завантажили максимально дозволену кількість (20) тестових випадків. Оновіться до Premium Feature, щоб побачити більше. <a>Документація</a>",
+  "testCaseSearch.maximumItems": "Ви завантажили максимально дозволену кількість (20) тестових випадків. Оновіться до <a>Premium Feature</a>, щоб побачити більше.",
   "testCaseSearch.notNowButton": "Не зараз",
   "testCaseSearch.oneOption": "Тільки один варіант — або назва тесту, або атрибути — може бути активним одночасно",
   "testCaseSearch.openNewSearchButton": "Відкрити новий пошук",
