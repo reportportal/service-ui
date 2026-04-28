@@ -52,7 +52,7 @@ export const messages = defineMessages({
   maximumItems: {
     id: 'testCaseSearch.maximumItems',
     defaultMessage:
-      'You have loaded the maximum allowed number (20) of test cases. Upgrade to the Premium Feature to see more. <a>Documentation</a>',
+      'You have loaded the maximum allowed number (20) of test cases. Upgrade to the <a>Premium Feature</a> to see more.',
   },
   errorLoadingData: {
     id: 'testCaseSearch.errorLoadingData',

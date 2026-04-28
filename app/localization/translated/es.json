@@ -2425,7 +2425,7 @@
   "testCaseSearch.explorePlansButton": "Explore Plans",
   "testCaseSearch.letsSearch": "Let's search",
   "testCaseSearch.loadMore": "Load more",
-  "testCaseSearch.maximumItems": "Ha cargado el número máximo permitido (20) de casos de prueba. Actualice a la función Premium para ver más. <a>Documentación</a>",
+  "testCaseSearch.maximumItems": "Ha cargado el número máximo permitido (20) de casos de prueba. Actualice a la <a>función Premium</a> para ver más.",
   "testCaseSearch.notNowButton": "Not now",
   "testCaseSearch.oneOption": "Only one option, either test name or attributes, can be active at a time",
   "testCaseSearch.openNewSearchButton": "Open New Search",
