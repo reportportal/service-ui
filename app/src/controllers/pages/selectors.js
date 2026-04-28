@@ -213,7 +213,7 @@ export const activeProjectRoleSelector = createSelector(
 export const userAssignedSelector = (projectSlug, organizationSlug) => (state) => {
   const assignedOrganizations = assignedOrganizationsSelector(state);
   const assignedProjects = assignedProjectsSelector(state);
-  const { userRole, organizationRole } = userRolesSelector(state);
+  const { userRole, organizationRole, projectRole } = userRolesSelector(state);
 
   const isAdmin = userRole === ADMINISTRATOR;
   const isManager = organizationRole === MANAGER;
@@ -246,6 +246,14 @@ export const userAssignedSelector = (projectSlug, organizationSlug) => (state) =
 
   const assignedProjectKey = assignedProject?.projectKey;
 
+  const userRoles = {
+    userRole,
+    organizationRole: organizationSlug
+      ? assignedOrganizations[organizationSlug]?.organizationRole
+      : organizationRole,
+    projectRole: assignedProject ? assignedProject.projectRole : projectRole,
+  };
+
   return {
     isAdmin,
     hasPermission,
@@ -254,6 +262,7 @@ export const userAssignedSelector = (projectSlug, organizationSlug) => (state) =
     assignmentNotRequired,
     isAssignedToTargetProject,
     isAssignedToTargetOrganization,
+    userRoles,
   };
 };
 
