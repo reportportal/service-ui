@@ -16,7 +16,7 @@
 
 import { Action } from 'redux';
 import { takeLatest, call, select, all, put, cancelled } from 'redux-saga/effects';
-import { isString } from 'es-toolkit';
+import { isString, isUndefined } from 'es-toolkit';
 import { isEmpty, isNil, isNumber } from 'es-toolkit/compat';
 
 import { URLS } from 'common/urls';
@@ -49,6 +49,7 @@ import {
   GET_MANUAL_LAUNCH_TEST_CASE_EXECUTIONS,
   GET_MANUAL_LAUNCH_EXECUTION,
   UPDATE_MANUAL_LAUNCH_EXECUTION_STATUS,
+  UPDATE_MANUAL_LAUNCH_EXECUTION_COMMENT,
   GET_MANUAL_LAUNCH_FILTERED_FOLDERS,
   MANUAL_LAUNCHES_NAMESPACE,
   ACTIVE_MANUAL_LAUNCH_NAMESPACE,
@@ -67,7 +68,12 @@ import {
   MANUAL_LAUNCH_TEST_PLAN_ID_FILTER_KEY,
   MANUAL_LAUNCH_COMPOSITE_ATTRIBUTE_FILTER_KEY,
   defaultManualLaunchesQueryParams,
+  MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE,
 } from './constants';
+import {
+  isAttachmentRemoved,
+  mapAttachmentForExecutionCommentPayload,
+} from './utils';
 import {
   GetManualLaunchesParams,
   GetManualLaunchParams,
@@ -75,13 +81,19 @@ import {
   GetManualLaunchTestCaseExecutionsParams,
   GetManualLaunchExecutionParams,
   UpdateManualLaunchExecutionStatusParams,
+  UpdateManualLaunchExecutionCommentParams,
+  BtsTicket,
   GetManualLaunchFilteredFoldersParams,
   ManualLaunchFoldersResponse,
   ManualLaunchFolder,
   TestCaseExecutionsResponse,
   TestCaseExecution,
 } from './types';
-import { manualLaunchContentSelector, activeManualLaunchSelector } from './selectors';
+import {
+  manualLaunchContentSelector,
+  activeManualLaunchSelector,
+  activeManualLaunchExecutionSelector,
+} from './selectors';
 import {
   setManualLaunchFilteredFoldersAction,
   startLoadingManualLaunchFilteredFoldersAction,
@@ -511,16 +523,24 @@ interface UpdateManualLaunchExecutionStatusAction extends Action<
   payload: UpdateManualLaunchExecutionStatusParams;
 }
 
+type UploadedAttachmentPayload = {
+  id: string;
+  fileName: string;
+  fileType: string;
+  fileSize: number;
+};
+
+interface UploadAttachmentsResult {
+  attachments: UploadedAttachmentPayload[];
+  failureCount: number;
+}
+
 function* uploadAttachments(projectKey: string, attachments?: File[]): Generator {
-  const uploadedAttachments: Array<{
-    id: string;
-    fileName: string;
-    fileType: string;
-    fileSize: number;
-  }> = [];
+  const uploadedAttachments: UploadedAttachmentPayload[] = [];
+  let failureCount = 0;
 
   if (!attachments || attachments.length === 0) {
-    return uploadedAttachments;
+    return { attachments: uploadedAttachments, failureCount: 0 };
   }
 
   for (const file of attachments) {
@@ -540,6 +560,7 @@ function* uploadAttachments(projectKey: string, attachments?: File[]): Generator
         fileSize: file.size,
       });
     } catch {
+      failureCount += 1;
       yield put(
         showNotification({
           messageId: 'ExecutionStatusConfirmModal.attachmentUploadFailed',
@@ -552,79 +573,183 @@ function* uploadAttachments(projectKey: string, attachments?: File[]): Generator
     }
   }
 
-  return uploadedAttachments;
+  return { attachments: uploadedAttachments, failureCount };
+}
+
+function* patchManualLaunchExecutionAndSyncList(
+  projectKey: string,
+  launchId: string | number,
+  executionId: string | number,
+  requestData: unknown,
+): Generator {
+  const data = (yield call(
+    fetch,
+    URLS.manualLaunchExecutionById(projectKey, launchId, executionId),
+    {
+      method: 'PATCH',
+      data: requestData,
+    },
+  )) as TestCaseExecution;
+
+  yield put(fetchSuccessAction(ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE, data));
+
+  const executionsState = (yield select(
+    (state: AppState) => state.manualLaunchTestCaseExecutions?.data,
+  )) as { content: TestCaseExecution[]; page: Page } | null;
+
+  if (executionsState?.content) {
+    const updatedContent = executionsState.content.map((exec) =>
+      exec.id === data.id ? data : exec,
+    );
+
+    yield put(
+      fetchSuccessAction(MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE, {
+        data: {
+          content: updatedContent,
+          page: executionsState.page,
+        },
+      }),
+    );
+  }
+
+  return data;
+}
+
+type ManualLaunchStatusPatchBody = {
+  status: string;
+  executionComment?: {
+    comment?: string;
+    attachments?: Array<{ id: string; fileName: string; fileType: string; fileSize: number }>;
+    btsTickets?: BtsTicket[];
+  };
+};
+
+function applyToRunCommentClearIfNeeded(
+  requestData: ManualLaunchStatusPatchBody,
+  clearExecutionCommentAndBts?: boolean,
+): void {
+  if (!clearExecutionCommentAndBts) {
+    return;
+  }
+
+  requestData.executionComment = {
+    comment: '',
+    attachments: [],
+    btsTickets: [],
+  };
+}
+
+function mergeNonToRunExecutionComment(
+  requestData: ManualLaunchStatusPatchBody,
+  params: {
+    trimmedComment: string;
+    preserveExistingCommentIfFormSkipped?: boolean;
+    currentExecution: TestCaseExecution | null;
+    uploadedAttachments: UploadedAttachmentPayload[];
+    removedServerAttachmentIds?: Array<string | number>;
+    hasNewAttachments: boolean;
+  },
+): void {
+  let commentForRequest = params.trimmedComment;
+  const savedComment = params.currentExecution?.executionComment?.comment;
+
+  if (
+    params.preserveExistingCommentIfFormSkipped &&
+    isEmpty(params.trimmedComment) &&
+    isString(savedComment) &&
+    !isEmpty(savedComment)
+  ) {
+    commentForRequest = savedComment;
+  }
+
+  requestData.executionComment = {
+    comment: commentForRequest,
+  };
+
+  const {
+    removedServerAttachmentIds,
+    uploadedAttachments,
+    hasNewAttachments,
+    currentExecution,
+  } = params;
+
+  if (removedServerAttachmentIds !== undefined) {
+    const keptServer = (currentExecution?.executionComment?.attachments ?? []).filter(
+      (a) => !isAttachmentRemoved(a.id, removedServerAttachmentIds),
+    );
+    requestData.executionComment.attachments = [
+      ...keptServer.map(mapAttachmentForExecutionCommentPayload),
+      ...uploadedAttachments,
+    ];
+  } else if (hasNewAttachments) {
+    requestData.executionComment.attachments = uploadedAttachments;
+  }
+
+  const existingBts = currentExecution?.executionComment?.btsTickets;
+  if (!isUndefined(existingBts) && existingBts.length > 0) {
+    requestData.executionComment.btsTickets = existingBts;
+  }
 }
 
 function* updateManualLaunchExecutionStatus(
   action: UpdateManualLaunchExecutionStatusAction,
 ): Generator {
-  const { projectKey, launchId, executionId, status, comment, attachments, onSuccess } =
-    action.payload;
+  const {
+    projectKey,
+    launchId,
+    executionId,
+    status,
+    comment,
+    attachments,
+    clearExecutionCommentAndBts,
+    preserveExistingCommentIfFormSkipped,
+    onSuccess,
+    removedServerAttachmentIds,
+  } = action.payload;
 
   try {
-    const requestData: {
-      status: string;
-      executionComment?: {
-        comment?: string;
-        attachments?: Array<{ id: string; fileName: string; fileType: string; fileSize: number }>;
-      };
-    } = {
-      status,
+    const statusUpper = status.toUpperCase();
+
+    const requestData: ManualLaunchStatusPatchBody = {
+      status: statusUpper,
     };
 
-    const uploadedAttachments = (yield call(uploadAttachments, projectKey, attachments)) as Array<{
-      id: string;
-      fileName: string;
-      fileType: string;
-      fileSize: number;
-    }>;
+    const { attachments: uploadedAttachments, failureCount: attachmentUploadFailures } =
+      (yield call(uploadAttachments, projectKey, attachments)) as UploadAttachmentsResult;
 
-    const trimmedComment = isString(comment) ? comment.trim() : '';
-    const hasAttachments = !isEmpty(uploadedAttachments);
-
-    if (trimmedComment || hasAttachments) {
-      requestData.executionComment = {};
-
-      if (trimmedComment) {
-        requestData.executionComment.comment = trimmedComment;
-      }
-
-      if (hasAttachments) {
-        requestData.executionComment.attachments = uploadedAttachments;
-      }
-    }
-
-    const data = (yield call(
-      fetch,
-      URLS.manualLaunchExecutionById(projectKey, launchId, executionId),
-      {
-        method: 'PATCH',
-        data: requestData,
-      },
-    )) as TestCaseExecution;
-
-    yield put(fetchSuccessAction(ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE, data));
-
-    const executionsState = (yield select(
-      (state: AppState) => state.manualLaunchTestCaseExecutions?.data,
-    )) as { content: TestCaseExecution[]; page: Page } | null;
-
-    if (executionsState?.content) {
-      const updatedContent = executionsState.content.map((exec) =>
-        exec.id === data.id ? data : exec,
-      );
-
+    if (attachmentUploadFailures > 0) {
       yield put(
-        fetchSuccessAction(MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE, {
-          data: {
-            content: updatedContent,
-            page: executionsState.page,
-          },
+        showErrorNotification({
+          messageId: 'errorOccurredTryAgain',
         }),
       );
+      return;
     }
 
-    const capitalizedStatus = status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+    const trimmedComment = isString(comment) ? comment.trim() : '';
+    const hasNewAttachments = !isEmpty(uploadedAttachments);
+
+    if (statusUpper === MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE) {
+      applyToRunCommentClearIfNeeded(requestData, clearExecutionCommentAndBts);
+    } else {
+      const currentExecution = (yield select(
+        activeManualLaunchExecutionSelector,
+      )) as TestCaseExecution | null;
+
+      mergeNonToRunExecutionComment(requestData, {
+        trimmedComment,
+        preserveExistingCommentIfFormSkipped,
+        currentExecution,
+        uploadedAttachments,
+        removedServerAttachmentIds,
+        hasNewAttachments,
+      });
+    }
+
+    yield call(patchManualLaunchExecutionAndSyncList, projectKey, launchId, executionId, requestData);
+
+    const capitalizedStatus =
+      statusUpper.charAt(0).toUpperCase() + statusUpper.slice(1).toLowerCase();
 
     yield put(
       showNotification({
@@ -648,8 +773,109 @@ function* updateManualLaunchExecutionStatus(
   }
 }
 
+interface UpdateManualLaunchExecutionCommentAction extends Action<
+  typeof UPDATE_MANUAL_LAUNCH_EXECUTION_COMMENT
+> {
+  payload: UpdateManualLaunchExecutionCommentParams;
+}
+
+function* updateManualLaunchExecutionComment(
+  action: UpdateManualLaunchExecutionCommentAction,
+): Generator {
+  const {
+    projectKey,
+    launchId,
+    executionId,
+    executionStatus,
+    comment,
+    existingAttachments,
+    newFiles,
+    removedAttachmentIds,
+    btsTickets,
+    onSuccess,
+    onFinally,
+  } = action.payload;
+
+  try {
+    const keptExisting = existingAttachments.filter(
+      (a) => !isAttachmentRemoved(a.id, removedAttachmentIds),
+    );
+
+    const { attachments: uploadedAttachments, failureCount: attachmentUploadFailures } =
+      (yield call(uploadAttachments, projectKey, newFiles)) as UploadAttachmentsResult;
+
+    if (attachmentUploadFailures > 0) {
+      yield put(
+        showErrorNotification({
+          messageId: 'errorOccurredTryAgain',
+        }),
+      );
+      return;
+    }
+
+    const attachmentPayload = [
+      ...keptExisting.map(mapAttachmentForExecutionCommentPayload),
+      ...uploadedAttachments,
+    ];
+
+    const trimmedComment = isString(comment) ? comment.trim() : '';
+
+    const executionComment: {
+      comment: string;
+      attachments: Array<{
+        id: string;
+        fileName: string;
+        fileType: string;
+        fileSize: number;
+      }>;
+      btsTickets?: BtsTicket[];
+    } = {
+      comment: trimmedComment,
+      attachments: attachmentPayload,
+    };
+
+    if (!isUndefined(btsTickets)) {
+      executionComment.btsTickets = btsTickets;
+    }
+
+    const requestData = {
+      status: executionStatus,
+      executionComment,
+    };
+
+    yield call(patchManualLaunchExecutionAndSyncList, projectKey, launchId, executionId, requestData);
+
+    yield put(
+      showNotification({
+        messageId: 'executionCommentSaved',
+        type: NOTIFICATION_TYPES.SUCCESS,
+        typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.WHITE,
+        duration: WARNING_NOTIFICATION_DURATION,
+      }),
+    );
+
+    if (onSuccess) {
+      onSuccess();
+    }
+  } catch {
+    yield put(
+      showErrorNotification({
+        messageId: 'errorOccurredTryAgain',
+      }),
+    );
+  } finally {
+    if (onFinally) {
+      onFinally();
+    }
+  }
+}
+
 function* watchUpdateManualLaunchExecutionStatus() {
   yield takeLatest(UPDATE_MANUAL_LAUNCH_EXECUTION_STATUS, updateManualLaunchExecutionStatus);
+}
+
+function* watchUpdateManualLaunchExecutionComment() {
+  yield takeLatest(UPDATE_MANUAL_LAUNCH_EXECUTION_COMMENT, updateManualLaunchExecutionComment);
 }
 
 function* watchGetManualLaunchFilteredFolders() {
@@ -664,6 +890,7 @@ export function* manualLaunchesSagas() {
     watchGetManualLaunchTestCaseExecutions(),
     watchGetManualLaunchExecution(),
     watchUpdateManualLaunchExecutionStatus(),
+    watchUpdateManualLaunchExecutionComment(),
     watchGetManualLaunchFilteredFolders(),
   ]);
 }

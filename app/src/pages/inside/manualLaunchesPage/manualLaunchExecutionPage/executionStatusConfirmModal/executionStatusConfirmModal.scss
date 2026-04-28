@@ -91,11 +91,40 @@
   flex-direction: column;
   position: relative;
   margin-top: 16px;
+  row-gap: 8px;
 
   :global(.rp-ui-fp__attached-files-list) {
     padding-top: 8px;
     padding-bottom: 16px;
   }
+}
+
+.modal-existing-attachments {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.modal-existing-attachments__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-existing-attachments__preview {
+  flex: 1;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.modal-existing-attachments__slider {
+  margin-top: 0;
+}
+
+.modal-existing-attachments__remove {
+  flex-shrink: 0;
+  align-self: center;
 }
 
 .checkbox-section + .divider {

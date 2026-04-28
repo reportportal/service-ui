@@ -431,6 +431,10 @@ export const notificationMessages = defineMessages({
     id: 'ManualLaunchesPage.executionStatusUpdated',
     defaultMessage: 'Status updated: Test marked as {status}.',
   },
+  executionCommentSaved: {
+    id: 'ManualLaunchesPage.executionCommentSaved',
+    defaultMessage: 'Execution comment saved.',
+  },
   testPlanUpdatedSuccess: {
     id: 'TestPlansPage.testPlanUpdatedSuccess',
     defaultMessage: 'Test Plan has been updated successfully.',
@@ -530,7 +534,7 @@ export class NotificationList extends PureComponent {
                     duration={duration}
                     title={Parser(
                       DOMPurify.sanitize(
-                        (messageId && notificationMessages[messageId])
+                        messageId && notificationMessages[messageId]
                           ? formatMessage(notificationMessages[messageId], values)
                           : message,
                         { ADD_ATTR: ['target'] },

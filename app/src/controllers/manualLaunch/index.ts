@@ -21,6 +21,7 @@ export {
   getManualLaunchTestCaseExecutionsAction,
   getManualLaunchExecutionAction,
   updateManualLaunchExecutionStatusAction,
+  updateManualLaunchExecutionCommentAction,
   toggleManualLaunchFolderExpansionAction,
   expandManualLaunchFoldersToLevelAction,
   setManualLaunchExpandedFolderIdsAction,
