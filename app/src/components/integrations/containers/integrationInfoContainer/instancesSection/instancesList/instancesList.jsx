@@ -31,7 +31,7 @@ export const InstancesList = ({
   blocked,
 }) => {
   const onClick = (item) => {
-    onItemClick({ ...item, blocked }, title);
+    onItemClick({ ...item, blocked }, item.name ?? '');
   };
 
   return (
