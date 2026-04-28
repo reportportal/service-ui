@@ -20,18 +20,13 @@
 .premium-promo-modal {
   width: 660px;
   max-width: 90vw;
-  aspect-ratio: 1318 / 1234;
   border-radius: 16px;
-  overflow: hidden;
+  overflow-y: auto;
   background-image: url(~common/img/premium-modal-bg.webp);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   color: $COLOR--bg-000;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    aspect-ratio: auto;
-  }
 }
 
 .modal-content {
@@ -93,13 +88,13 @@
 
 .modal-footer {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
-  padding-top: 125px;
+  padding-top: clamp(16px, 21.6%, 125px);
 
   @media (max-width: $SCREEN_XS_MAX) {
-    flex-wrap: wrap;
     justify-content: center;
     padding: 16px 20px;
   }
