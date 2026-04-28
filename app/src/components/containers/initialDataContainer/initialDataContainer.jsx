@@ -55,17 +55,32 @@ export class InitialDataContainer extends Component {
     children: null,
   };
 
+  hasPerformedInitialDispatch = false;
+
+  maybePerformInitialDispatch = () => {
+    const { isInitialDataReady, serviceAvailability } = this.props;
+    const { checked, apiUnavailable } = serviceAvailability;
+
+    if (
+      !isInitialDataReady ||
+      !checked ||
+      apiUnavailable ||
+      this.hasPerformedInitialDispatch
+    ) {
+      return;
+    }
+
+    this.hasPerformedInitialDispatch = true;
+    this.props.initialDispatch();
+  };
+
   componentDidMount() {
     this.props.fetchInitialDataAction();
+    this.maybePerformInitialDispatch();
   }
 
-  componentDidUpdate(prevProps) {
-    if (
-      prevProps.isInitialDataReady !== this.props.isInitialDataReady &&
-      this.props.isInitialDataReady
-    ) {
-      this.props.initialDispatch();
-    }
+  componentDidUpdate() {
+    this.maybePerformInitialDispatch();
   }
 
   refreshPage = () => {
