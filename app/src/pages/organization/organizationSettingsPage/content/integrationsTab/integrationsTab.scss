@@ -29,10 +29,11 @@
 
 .integrations-group-header {
   margin-bottom: 16px;
-  color: $COLOR--almost-black;
+  color: var(--rp-ui-base-almost-black);
   font-size: 15px;
   line-height: 24px;
-  font-family: $FONT-ROBOTO-MEDIUM;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-medium);
 }
 
 .plugin-card {
@@ -41,9 +42,9 @@
   margin: 0 0 16px;
   padding: 16px 24px;
   box-sizing: border-box;
-  background-color: $COLOR--white-two;
+  background-color: var(--rp-ui-base-bg-000);
   border-radius: 8px;
-  box-shadow: $BOX_SHADOW--item;
+  box-shadow: var(--rp-ui-base-shadow);
 }
 
 .plugin-icon {
@@ -59,15 +60,17 @@
 
 .plugin-name {
   margin-bottom: 8px;
-  color: $COLOR--almost-black;
+  color: var(--rp-ui-base-almost-black);
   line-height: 24px;
   font-size: 15px;
-  font-family: $FONT-ROBOTO-MEDIUM;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-medium);
 }
 
 .plugin-description {
-  color: $COLOR--almost-black;
+  color: var(--rp-ui-base-almost-black);
   line-height: 20px;
   font-size: 13px;
-  font-family: $FONT-ROBOTO-REGULAR;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
 }
