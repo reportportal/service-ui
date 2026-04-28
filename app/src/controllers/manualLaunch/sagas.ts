@@ -615,6 +615,82 @@ function* patchManualLaunchExecutionAndSyncList(
   return data;
 }
 
+type ManualLaunchStatusPatchBody = {
+  status: string;
+  executionComment?: {
+    comment?: string;
+    attachments?: Array<{ id: string; fileName: string; fileType: string; fileSize: number }>;
+    btsTickets?: BtsTicket[];
+  };
+};
+
+function applyToRunCommentClearIfNeeded(
+  requestData: ManualLaunchStatusPatchBody,
+  clearExecutionCommentAndBts?: boolean,
+): void {
+  if (!clearExecutionCommentAndBts) {
+    return;
+  }
+
+  requestData.executionComment = {
+    comment: '',
+    attachments: [],
+    btsTickets: [],
+  };
+}
+
+function mergeNonToRunExecutionComment(
+  requestData: ManualLaunchStatusPatchBody,
+  params: {
+    trimmedComment: string;
+    preserveExistingCommentIfFormSkipped?: boolean;
+    currentExecution: TestCaseExecution | null;
+    uploadedAttachments: UploadedAttachmentPayload[];
+    removedServerAttachmentIds?: Array<string | number>;
+    hasNewAttachments: boolean;
+  },
+): void {
+  let commentForRequest = params.trimmedComment;
+  const savedComment = params.currentExecution?.executionComment?.comment;
+
+  if (
+    params.preserveExistingCommentIfFormSkipped &&
+    isEmpty(params.trimmedComment) &&
+    isString(savedComment) &&
+    !isEmpty(savedComment)
+  ) {
+    commentForRequest = savedComment;
+  }
+
+  requestData.executionComment = {
+    comment: commentForRequest,
+  };
+
+  const {
+    removedServerAttachmentIds,
+    uploadedAttachments,
+    hasNewAttachments,
+    currentExecution,
+  } = params;
+
+  if (removedServerAttachmentIds !== undefined) {
+    const keptServer = (currentExecution?.executionComment?.attachments ?? []).filter(
+      (a) => !isAttachmentRemoved(a.id, removedServerAttachmentIds),
+    );
+    requestData.executionComment.attachments = [
+      ...keptServer.map(mapAttachmentForExecutionCommentPayload),
+      ...uploadedAttachments,
+    ];
+  } else if (hasNewAttachments) {
+    requestData.executionComment.attachments = uploadedAttachments;
+  }
+
+  const existingBts = currentExecution?.executionComment?.btsTickets;
+  if (!isUndefined(existingBts) && existingBts.length > 0) {
+    requestData.executionComment.btsTickets = existingBts;
+  }
+}
+
 function* updateManualLaunchExecutionStatus(
   action: UpdateManualLaunchExecutionStatusAction,
 ): Generator {
@@ -634,14 +710,7 @@ function* updateManualLaunchExecutionStatus(
   try {
     const statusUpper = status.toUpperCase();
 
-    const requestData: {
-      status: string;
-      executionComment?: {
-        comment?: string;
-        attachments?: Array<{ id: string; fileName: string; fileType: string; fileSize: number }>;
-        btsTickets?: BtsTicket[];
-      };
-    } = {
+    const requestData: ManualLaunchStatusPatchBody = {
       status: statusUpper,
     };
 
@@ -661,51 +730,20 @@ function* updateManualLaunchExecutionStatus(
     const hasNewAttachments = !isEmpty(uploadedAttachments);
 
     if (statusUpper === MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE) {
-      if (clearExecutionCommentAndBts) {
-        requestData.executionComment = {
-          comment: '',
-          attachments: [],
-          btsTickets: [],
-        };
-      }
-    
+      applyToRunCommentClearIfNeeded(requestData, clearExecutionCommentAndBts);
     } else {
       const currentExecution = (yield select(
         activeManualLaunchExecutionSelector,
       )) as TestCaseExecution | null;
 
-      let commentForRequest = trimmedComment;
-      const savedComment = currentExecution?.executionComment?.comment;
-
-      if (
-        preserveExistingCommentIfFormSkipped &&
-        isEmpty(trimmedComment) &&
-        isString(savedComment) &&
-        !isEmpty(savedComment)
-      ) {
-        commentForRequest = savedComment;
-      }
-
-      requestData.executionComment = {
-        comment: commentForRequest,
-      };
-
-      if (removedServerAttachmentIds !== undefined) {
-        const keptServer = (currentExecution?.executionComment?.attachments ?? []).filter(
-          (a) => !isAttachmentRemoved(a.id, removedServerAttachmentIds),
-        );
-        requestData.executionComment.attachments = [
-          ...keptServer.map(mapAttachmentForExecutionCommentPayload),
-          ...uploadedAttachments,
-        ];
-      } else if (hasNewAttachments) {
-        requestData.executionComment.attachments = uploadedAttachments;
-      }
-
-      const existingBts = currentExecution?.executionComment?.btsTickets;
-      if (!isUndefined(existingBts) && existingBts.length > 0) {
-        requestData.executionComment.btsTickets = existingBts;
-      }
+      mergeNonToRunExecutionComment(requestData, {
+        trimmedComment,
+        preserveExistingCommentIfFormSkipped,
+        currentExecution,
+        uploadedAttachments,
+        removedServerAttachmentIds,
+        hasNewAttachments,
+      });
     }
 
     yield call(patchManualLaunchExecutionAndSyncList, projectKey, launchId, executionId, requestData);
