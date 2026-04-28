@@ -145,9 +145,6 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         message: formatMessage(messages.projectTeam),
         menuOrder: (menuCounter += menuStep),
       },
-    ];
-
-    sidebarItems.push(
       {
         onClick: (isSidebarCollapsed) =>
           onClickButton({
@@ -190,26 +187,29 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         message: formatMessage(messages.productVersions),
         menuOrder: (menuCounter += menuStep),
       },
-    );
-
-    sidebarItems.push({
-      onClick: (isSidebarCollapsed) =>
-        onClickButton({ itemName: messages.projectsSettings.defaultMessage, isSidebarCollapsed }),
-      link: {
-        type: PROJECT_SETTINGS_PAGE,
-        payload: { organizationSlug, projectSlug },
+      {
+        onClick: (isSidebarCollapsed) =>
+          onClickButton({ itemName: messages.projectsSettings.defaultMessage, isSidebarCollapsed }),
+        link: {
+          type: PROJECT_SETTINGS_PAGE,
+          payload: { organizationSlug, projectSlug },
+        },
+        icon: SettingsIcon,
+        message: formatMessage(messages.projectsSettings),
+        menuOrder: (menuCounter += menuStep),
       },
-      icon: SettingsIcon,
-      message: formatMessage(messages.projectsSettings),
-      menuOrder: (menuCounter += menuStep),
-    });
-    projectPageExtensions.forEach(({ payload }) => {
+    ];
+
+    const pluginPageItems = projectPageExtensions.flatMap(({ payload }) => {
       const { icon, slug, name, title, iconName, menuOrder } = payload;
       const iconSvg = icon?.content || icon?.svg;
       const itemTitle = title || icon?.title || name;
-      if (iconSvg) {
-        const itemName = iconName || itemTitle;
-        sidebarItems.push({
+      if (!iconSvg) {
+        return [];
+      }
+      const itemName = iconName || itemTitle;
+      return [
+        {
           onClick: (isSidebarCollapsed) => onClickButton({ itemName, isSidebarCollapsed }),
           link: {
             type: PROJECT_PLUGIN_PAGE,
@@ -218,19 +218,20 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
           icon: iconSvg,
           message: itemTitle,
           menuOrder: menuOrder || (menuCounter += menuStep),
-        });
-      }
+        },
+      ];
     });
-    sidebarExtensions.forEach((extension) =>
-      sidebarItems.push({
-        name: extension.name,
-        component: <ExtensionLoader extension={extension} />,
-        onClick: onClickNavBtn,
-        menuOrder: (menuCounter += menuStep),
-      }),
-    );
 
-    return sidebarItems.sort((a, b) => a.menuOrder - b.menuOrder);
+    const uiExtensionItems = sidebarExtensions.map((extension) => ({
+      name: extension.name,
+      component: <ExtensionLoader extension={extension} />,
+      onClick: onClickNavBtn,
+      menuOrder: (menuCounter += menuStep),
+    }));
+
+    return [...sidebarItems, ...pluginPageItems, ...uiExtensionItems].sort(
+      (a, b) => a.menuOrder - b.menuOrder,
+    );
   };
 
   const link = { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug } };
