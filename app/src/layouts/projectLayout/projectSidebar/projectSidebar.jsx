@@ -57,14 +57,12 @@ import { projectNameSelector } from 'controllers/project';
 import { activeOrganizationNameSelector } from 'controllers/organization';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
 import { messages } from '../../messages';
-import { useTmsEnabled } from 'hooks/useTmsEnabled';
 
 const ORGANIZATION_CONTROL = 'Organization control';
 
 export const ProjectSidebar = ({ onClickNavBtn }) => {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
-  const isTmsEnabled = useTmsEnabled();
   const sidebarExtensions = useSelector(uiExtensionSidebarComponentsSelector);
   const projectPageExtensions = useSelector(uiExtensionProjectPagesSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
@@ -103,24 +101,20 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         message: formatMessage(messages.launches),
         menuOrder: (menuCounter += menuStep),
       },
-      ...(isTmsEnabled
-        ? [
-            {
-              onClick: (isSidebarCollapsed) =>
-                onClickButton({
-                  itemName: messages.manualLaunches.defaultMessage,
-                  isSidebarCollapsed,
-                }),
-              link: {
-                type: MANUAL_LAUNCHES_PAGE,
-                payload: { organizationSlug, projectSlug },
-              },
-              icon: ManualLaunchesIcon,
-              message: formatMessage(messages.manualLaunches),
-              menuOrder: (menuCounter += menuStep),
-            },
-          ]
-        : []),
+      {
+        onClick: (isSidebarCollapsed) =>
+          onClickButton({
+            itemName: messages.manualLaunches.defaultMessage,
+            isSidebarCollapsed,
+          }),
+        link: {
+          type: MANUAL_LAUNCHES_PAGE,
+          payload: { organizationSlug, projectSlug },
+        },
+        icon: ManualLaunchesIcon,
+        message: formatMessage(messages.manualLaunches),
+        menuOrder: (menuCounter += menuStep),
+      },
       {
         onClick: (isSidebarCollapsed) =>
           onClickButton({ itemName: messages.debugMode.defaultMessage, isSidebarCollapsed }),
@@ -150,75 +144,72 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         icon: MembersIcon,
         message: formatMessage(messages.projectTeam),
         menuOrder: (menuCounter += menuStep),
-      }
+      },
+      {
+        onClick: (isSidebarCollapsed) =>
+          onClickButton({
+            itemName: messages.testCaseLibrary.defaultMessage,
+            isSidebarCollapsed,
+          }),
+        link: {
+          type: TEST_CASE_LIBRARY_PAGE,
+          payload: { organizationSlug, projectSlug },
+        },
+        icon: TestCaseIcon,
+        message: formatMessage(messages.testCaseLibrary),
+        menuOrder: (menuCounter += menuStep),
+      },
+      {
+        onClick: (isSidebarCollapsed) =>
+          onClickButton({
+            itemName: messages.milestones.defaultMessage,
+            isSidebarCollapsed,
+          }),
+        link: {
+          type: PROJECT_TEST_PLANS_PAGE,
+          payload: { organizationSlug, projectSlug },
+        },
+        icon: TestPlansIcon,
+        message: formatMessage(messages.milestones),
+        menuOrder: (menuCounter += menuStep),
+      },
+      {
+        onClick: (isSidebarCollapsed) =>
+          onClickButton({
+            itemName: messages.productVersions.defaultMessage,
+            isSidebarCollapsed,
+          }),
+        link: {
+          type: PRODUCT_VERSIONS_PAGE,
+          payload: { organizationSlug, projectSlug },
+        },
+        icon: ProductVersionsIcon,
+        message: formatMessage(messages.productVersions),
+        menuOrder: (menuCounter += menuStep),
+      },
+      {
+        onClick: (isSidebarCollapsed) =>
+          onClickButton({ itemName: messages.projectsSettings.defaultMessage, isSidebarCollapsed }),
+        link: {
+          type: PROJECT_SETTINGS_PAGE,
+          payload: { organizationSlug, projectSlug },
+        },
+        icon: SettingsIcon,
+        message: formatMessage(messages.projectsSettings),
+        menuOrder: (menuCounter += menuStep),
+      },
     ];
 
-
-    if (isTmsEnabled) {
-      sidebarItems.push(
-        {
-          onClick: (isSidebarCollapsed) =>
-            onClickButton({
-              itemName: messages.testCaseLibrary.defaultMessage,
-              isSidebarCollapsed,
-            }),
-          link: {
-            type: TEST_CASE_LIBRARY_PAGE,
-            payload: { organizationSlug, projectSlug },
-          },
-          icon: TestCaseIcon,
-          message: formatMessage(messages.testCaseLibrary),
-          menuOrder: (menuCounter += menuStep),
-        },
-        {
-          onClick: (isSidebarCollapsed) =>
-            onClickButton({
-              itemName: messages.milestones.defaultMessage,
-              isSidebarCollapsed,
-            }),
-          link: {
-            type: PROJECT_TEST_PLANS_PAGE,
-            payload: { organizationSlug, projectSlug },
-          },
-          icon: TestPlansIcon,
-          message: formatMessage(messages.milestones),
-          menuOrder: (menuCounter += menuStep),
-        },
-        {
-          onClick: (isSidebarCollapsed) =>
-            onClickButton({
-              itemName: messages.productVersions.defaultMessage,
-              isSidebarCollapsed,
-            }),
-          link: {
-            type: PRODUCT_VERSIONS_PAGE,
-            payload: { organizationSlug, projectSlug },
-          },
-          icon: ProductVersionsIcon,
-          message: formatMessage(messages.productVersions),
-          menuOrder: (menuCounter += menuStep),
-        },
-      );
-    }
-
-    sidebarItems.push({
-      onClick: (isSidebarCollapsed) =>
-        onClickButton({ itemName: messages.projectsSettings.defaultMessage, isSidebarCollapsed }),
-      link: {
-        type: PROJECT_SETTINGS_PAGE,
-        payload: { organizationSlug, projectSlug },
-      },
-      icon: SettingsIcon,
-      message: formatMessage(messages.projectsSettings),
-      menuOrder: (menuCounter += menuStep),
-    });
-    projectPageExtensions.forEach(({ payload }) => {
+    const pluginPageItems = projectPageExtensions.flatMap(({ payload }) => {
       const { icon, slug, name, title, iconName, menuOrder } = payload;
       const iconSvg = icon?.content || icon?.svg;
       const itemTitle = title || icon?.title || name;
-      if (iconSvg) {
-        const itemName = iconName || itemTitle;
-        sidebarItems.push({
+      if (!iconSvg) {
+        return [];
+      }
+      const itemName = iconName || itemTitle;
+      return [
+        {
           onClick: (isSidebarCollapsed) => onClickButton({ itemName, isSidebarCollapsed }),
           link: {
             type: PROJECT_PLUGIN_PAGE,
@@ -227,19 +218,20 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
           icon: iconSvg,
           message: itemTitle,
           menuOrder: menuOrder || (menuCounter += menuStep),
-        });
-      }
+        },
+      ];
     });
-    sidebarExtensions.forEach((extension) =>
-      sidebarItems.push({
-        name: extension.name,
-        component: <ExtensionLoader extension={extension} />,
-        onClick: onClickNavBtn,
-        menuOrder: (menuCounter += menuStep),
-      }),
-    );
 
-    return sidebarItems.sort((a, b) => a.menuOrder - b.menuOrder);
+    const uiExtensionItems = sidebarExtensions.map((extension) => ({
+      name: extension.name,
+      component: <ExtensionLoader extension={extension} />,
+      onClick: onClickNavBtn,
+      menuOrder: (menuCounter += menuStep),
+    }));
+
+    return [...sidebarItems, ...pluginPageItems, ...uiExtensionItems].sort(
+      (a, b) => a.menuOrder - b.menuOrder,
+    );
   };
 
   const link = { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug } };

@@ -14,27 +14,19 @@
  * limitations under the License.
  */
 
-import { tmsEnabledSelector } from './selectors';
 import { getStorageItem } from 'common/utils/storageUtils';
 
 const TMS_OVERRIDE_STORAGE_KEY = 'tms_override';
+const OVERRIDE_ENABLED = true;
+const OVERRIDE_DISABLED = false;
 
 export const getTmsOverride = () => {
   try {
     const override = getStorageItem(TMS_OVERRIDE_STORAGE_KEY);
-    if (override === true || override === false) {
-      return Boolean(override);
-    }
+    const isValidOverride = override === OVERRIDE_ENABLED || override === OVERRIDE_DISABLED;
+
+    return isValidOverride ? override : null;
   } catch (e) {
     return null;
   }
-  return null;
-};
-
-export const isTmsEnabled = (state) => {
-  const override = getTmsOverride();
-  if (override !== null) {
-    return override;
-  }
-  return tmsEnabledSelector(state);
 };
