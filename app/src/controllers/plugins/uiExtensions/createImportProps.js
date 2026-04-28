@@ -34,6 +34,7 @@ import {
   BubblesLoader,
   Button,
   Checkbox,
+  FieldNumber,
   Toggle,
   Modal as ModalLayoutComponent,
 } from '@reportportal/ui-kit';
@@ -224,7 +225,6 @@ import {
 import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
 import { Dropdown } from 'componentLibrary/dropdown';
-import { FieldNumber } from 'componentLibrary/fieldNumber';
 import { SystemMessage } from 'componentLibrary/systemMessage';
 import { AsyncAutocomplete as AsyncAutocompleteField } from 'componentLibrary/autocompletes/asyncAutocomplete';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
