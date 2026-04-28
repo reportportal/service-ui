@@ -48,6 +48,7 @@ export const docsReferences = {
     'https://reportportal.io/docs/reportportal-configuration/ProjectConfiguration#e-mail-notifications',
   emptyStateIntegrationsDocs:
     'https://reportportal.io/docs/reportportal-configuration/IntegrationViaPlugin',
+  emptyStateOrgIntegrationsDocs: 'https://reportportal.io/docs/plugins/ManagePlugins/',
   authorizationWithUsersApiKeyForAgents:
     'https://reportportal.io/docs/reportportal-configuration/HowToGetAnAccessTokenInReportPortal/#2-authorization-with-users-api-key-for-agents',
   workWithReports: 'https://reportportal.io/docs/work-with-reports/InvestigationOfFailure',

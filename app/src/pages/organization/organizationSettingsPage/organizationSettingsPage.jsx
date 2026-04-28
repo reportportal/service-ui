@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { GENERAL } from 'common/constants/settingsTabs';
+import { GENERAL, INTEGRATIONS } from 'common/constants/settingsTabs';
 import {
   ORGANIZATION_SETTINGS_TAB_PAGE,
   settingsTabSelector,
@@ -33,6 +33,7 @@ import { useNavigationTabsExtensionsConfig } from 'common/hooks';
 import classNames from 'classnames/bind';
 import { messages } from './messages';
 import { GeneralTab } from './content/generalTab';
+import { IntegrationsTab } from './content/integrationsTab';
 import { OrganizationSettingsAnalyticsWrapper } from './organizationSettingsAnalyticsWrapper';
 import styles from './organizationSettingsPage.scss';
 
@@ -67,6 +68,12 @@ export const OrganizationSettingsPage = () => {
         name: formatMessage(messages.general),
         link: createTabLink(GENERAL),
         component: <GeneralTab />,
+        mobileDisabled: true,
+      },
+      [INTEGRATIONS]: {
+        name: formatMessage(messages.integrations),
+        link: createTabLink(INTEGRATIONS),
+        component: <IntegrationsTab />,
         mobileDisabled: true,
       },
     };
