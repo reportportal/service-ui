@@ -56,3 +56,56 @@ export const getMilestoneStatusPopoverOptions = (
       return [MilestoneStatus.TESTING, MilestoneStatus.COMPLETED];
   }
 };
+
+export const MILESTONE_STATUS_CHOOSE_EVENT_TYPE = {
+  scheduled: 'scheduled',
+  testing: 'testing',
+  completed: 'completed',
+  backToScheduled: 'back_to_scheduled',
+  backToTesting: 'back_to_testing',
+} as const;
+
+export type MilestoneStatusDropdownChooseType =
+  (typeof MILESTONE_STATUS_CHOOSE_EVENT_TYPE)[keyof typeof MILESTONE_STATUS_CHOOSE_EVENT_TYPE];
+
+export const MILESTONE_CHANGE_STATUS_MODAL_BUTTON_ELEMENT_NAME = {
+  change: 'change',
+  completeMilestone: 'complete_milestone',
+  completeWithToday: 'complete_with_today',
+  completeWithoutDeadline: 'complete_without_deadline',
+  completeWithoutReplacing: 'complete_without_replacing',
+  startTesting: 'start_testing',
+  startWithToday: 'start_with_today',
+  startWithoutADate: 'start_without_a_date',
+  startWithoutReplacing: 'start_without_replacing',
+} as const;
+
+export type MilestoneChangeStatusModalButtonElementName =
+  (typeof MILESTONE_CHANGE_STATUS_MODAL_BUTTON_ELEMENT_NAME)[keyof typeof MILESTONE_CHANGE_STATUS_MODAL_BUTTON_ELEMENT_NAME];
+
+export const getMilestoneStatusChooseEventType = (
+  option: TmsMilestoneStatus,
+  current: TmsMilestoneStatus,
+): MilestoneStatusDropdownChooseType => {
+  const normalizedOption = normalizeMilestoneStatus(option);
+  const normalizedCurrent = normalizeMilestoneStatus(current);
+  const opt = String(normalizedOption);
+  const cur = String(normalizedCurrent);
+
+  if (opt === String(MilestoneStatus.TESTING) && cur === String(MilestoneStatus.COMPLETED)) {
+    return MILESTONE_STATUS_CHOOSE_EVENT_TYPE.backToTesting;
+  }
+  if (isBackToScheduledPopoverOption(normalizedOption, normalizedCurrent)) {
+    return MILESTONE_STATUS_CHOOSE_EVENT_TYPE.backToScheduled;
+  }
+  if (opt === String(MilestoneStatus.SCHEDULED)) {
+    return MILESTONE_STATUS_CHOOSE_EVENT_TYPE.scheduled;
+  }
+  if (opt === String(MilestoneStatus.TESTING)) {
+    return MILESTONE_STATUS_CHOOSE_EVENT_TYPE.testing;
+  }
+  if (opt === String(MilestoneStatus.COMPLETED)) {
+    return MILESTONE_STATUS_CHOOSE_EVENT_TYPE.completed;
+  }
+  return MILESTONE_STATUS_CHOOSE_EVENT_TYPE.scheduled;
+};
