@@ -51,7 +51,7 @@ import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
 import { userIdSelector } from 'controllers/user';
 import { ExtendedTestCase } from 'types/testCase';
-import { findFolderById } from 'pages/inside/testCaseLibraryPage/hooks/useTestPlanActiveFolders';
+import { findFolderById } from 'pages/inside/common/hooks';
 import type { NotificationMessageKey } from 'common/hooks/useNotification';
 
 import { ExpandedOptions } from '../../common/expandedOptions';

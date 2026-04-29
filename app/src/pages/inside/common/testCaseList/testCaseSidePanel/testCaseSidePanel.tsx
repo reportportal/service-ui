@@ -25,14 +25,7 @@ import {
   TEST_CASE_MENU_ELEMENT_NAME,
   type TestCaseMenuElementName,
 } from 'analyticsEvents/testCaseLibraryPageEvents';
-import {
-  Button,
-  MeatballMenuIcon,
-  Tooltip,
-  CopyIcon,
-  RerunIcon,
-  DurationIcon,
-} from '@reportportal/ui-kit';
+import { Button, MeatballMenuIcon, Tooltip, CopyIcon, RerunIcon } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames, copyToClipboard } from 'common/utils';
@@ -57,10 +50,11 @@ import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteT
 import { useMoveTestCaseModal } from 'pages/inside/testCaseLibraryPage/moveTestCaseModal/useMoveTestCaseModal';
 import { useDuplicateSelectedTestCaseModal } from 'pages/inside/testCaseLibraryPage/duplicateSelectedTestCaseModal';
 import { AddToLaunchButton } from 'pages/inside/testCaseLibraryPage/addToLaunchButton';
+import { ExecutionEstimationTime } from 'pages/inside/common/executionEstimationTime';
 
 import { RequirementsList } from '../../requirementsList/requirementsList';
 import { TestCaseMenuAction, TestCaseManualScenario } from '../types';
-import { formatTimestamp, formatDuration, getExcludedActionsFromPermissionMap } from '../utils';
+import { formatTimestamp, getExcludedActionsFromPermissionMap } from '../utils';
 import { createTestCaseMenuItems } from '../configUtils';
 import { Scenario } from './scenario';
 import { messages } from './messages';
@@ -305,14 +299,11 @@ export const TestCaseSidePanel = memo(
                   </span>
                 </div>
               )}
-              {!!testCase?.lastExecution?.duration && (
-                <div className={cx('meta-item-row')}>
-                  <DurationIcon />
-                  <span className={cx('meta-value')}>
-                    {formatDuration(testCase.lastExecution.duration)}
-                  </span>
-                </div>
-              )}
+              <ExecutionEstimationTime
+                executionEstimationTime={testCase?.manualScenario?.executionEstimationTime}
+                className={cx('meta-item-row')}
+                valueClassName={cx('meta-value')}
+              />
             </div>
           </div>
         </div>

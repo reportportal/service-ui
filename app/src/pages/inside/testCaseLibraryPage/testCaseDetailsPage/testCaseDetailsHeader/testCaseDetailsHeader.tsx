@@ -41,6 +41,7 @@ import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'contr
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
+import { ExecutionEstimationTime } from 'pages/inside/common/executionEstimationTime';
 import { testCaseLibraryBreadcrumbsSelector } from 'controllers/pages/selectors';
 import { ExtendedTestCase } from 'types/testCase';
 
@@ -208,6 +209,11 @@ export const TestCaseDetailsHeader = ({
               {Parser(IconDuplicate as unknown as string)}
             </CopyToClipboard>
           </div>
+          <ExecutionEstimationTime
+            executionEstimationTime={testCase?.manualScenario?.executionEstimationTime}
+            className={cx('header__meta-item')}
+            valueClassName={cx('header__meta-value')}
+          />
         </div>
         <div className={cx('header__actions')}>
           {!isEmpty(items) && (
