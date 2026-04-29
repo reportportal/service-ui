@@ -90,7 +90,7 @@
     gap: 8px;
     align-items: center;
 
-    &:last-child {
+    &:nth-child(2) {
       gap: 4px;
     }
   }
