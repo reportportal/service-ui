@@ -53,4 +53,8 @@ export const messages = defineMessages({
     id: 'TestLibrarySidePanel.retry',
     defaultMessage: 'Retry',
   },
+  testCasesCount: {
+    id: 'TestLibrarySidePanel.testCasesCount',
+    defaultMessage: '{count, plural, one {# test case} other {# test cases}}',
+  },
 });

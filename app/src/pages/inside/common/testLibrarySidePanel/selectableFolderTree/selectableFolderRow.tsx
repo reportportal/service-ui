@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-import { useCallback, CSSProperties } from 'react';
+import { useCallback, useMemo, CSSProperties } from 'react';
 import { ChevronDownDropdownIcon, DragNDropIcon } from '@reportportal/ui-kit';
+import { useSelector } from 'react-redux';
 
 import { createClassnames } from 'common/utils';
+import { useUserPermissions } from 'hooks/useUserPermissions';
+import { useDraggableRow } from 'components/main/draggableTableRow';
+import { transformedFoldersSelector, TransformedFolder } from 'controllers/testCase';
 
 import { DepthAwareCheckbox } from '../depthAwareCheckbox';
 import { usePanelActions, usePanelState, CheckboxSelectionState } from '../testLibraryPanelContext';
 import { ConnectorLines, INDENT_PX } from '../../expandedOptions/folder/connectorLines';
+import { FOLDER_DRAG_TYPE, FolderDragItem } from '../constants';
+import { useFolderDragOpacity } from '../hooks/useDragOpacity';
 import type { FlatSelectableRow } from './useFlattenedSelectableTree';
 
 import treeStyles from '../../expandedOptions/folder/folder.scss';
@@ -30,6 +36,23 @@ import selectableStyles from '../selectableFolder/selectableFolder.scss';
 const cx = createClassnames(selectableStyles, treeStyles);
 
 const BASE_INDENT_PX = 48;
+const FOLDER_ROW_SELECTOR = '.selectable-folder-row-global';
+
+const getSelectableSubtreeTestsCount = (
+  folder: TransformedFolder,
+  testPlanCountByFolderId: Map<number, number>,
+): number => {
+  const addedCount = testPlanCountByFolderId.get(folder.id) ?? 0;
+  const selectableCurrentFolderCount = Math.max(0, folder.testsCount - addedCount);
+
+  return (
+    selectableCurrentFolderCount +
+    folder.folders.reduce(
+      (sum, nestedFolder) => sum + getSelectableSubtreeTestsCount(nestedFolder, testPlanCountByFolderId),
+      0,
+    )
+  );
+};
 
 type FolderRow = Extract<FlatSelectableRow, { type: 'folder' }>;
 
@@ -42,10 +65,13 @@ interface SelectableFolderRowProps {
 export const SelectableFolderRow = ({ row, nextRowDepth, style }: SelectableFolderRowProps) => {
   const { folder, depth, isOpen, hasChildren, connectorDepths, isLastChild } = row;
   const { toggleFolder, batchSelectFolder, batchDeselectFolder } = usePanelActions();
-  const { checkboxStatesMap, batchLoadingFolderIds } = usePanelState();
+  const { checkboxStatesMap, batchLoadingFolderIds, testPlanCountByFolderId } = usePanelState();
+  const { canManageTestCases } = useUserPermissions();
+  const flatFolders = useSelector(transformedFoldersSelector);
 
   const checkboxState = checkboxStatesMap.get(folder.id) ?? CheckboxSelectionState.UNCHECKED;
   const isBatchLoading = batchLoadingFolderIds.has(folder.id);
+  const canDrag = canManageTestCases && (folder.testsCount > 0 || hasChildren);
 
   const handleToggle = useCallback(() => {
     if (hasChildren) {
@@ -61,10 +87,81 @@ export const SelectableFolderRow = ({ row, nextRowDepth, style }: SelectableFold
     }
   }, [checkboxState, batchDeselectFolder, batchSelectFolder, folder]);
 
+  const flatFoldersMap = useMemo(
+    () => new Map(flatFolders.map((flatFolder) => [flatFolder.id, flatFolder])),
+    [flatFolders],
+  );
+
+  const selectedRootFolders = useMemo(() => {
+    const checkedFolderIds = new Set(
+      Array.from(checkboxStatesMap.entries())
+        .filter(([, state]) => state === CheckboxSelectionState.CHECKED)
+        .map(([id]) => id),
+    );
+
+    const rootFolders: TransformedFolder[] = [];
+
+    checkedFolderIds.forEach((id) => {
+      const checkedFolder = flatFoldersMap.get(id);
+
+      if (!checkedFolder) {
+        return;
+      }
+
+      if (!checkedFolder.parentFolderId || !checkedFolderIds.has(checkedFolder.parentFolderId)) {
+        rootFolders.push(checkedFolder);
+      }
+    });
+
+    return rootFolders;
+  }, [checkboxStatesMap, flatFoldersMap]);
+
+  const selectedRootFolderIds = useMemo(
+    () => new Set(selectedRootFolders.map(({ id }) => id)),
+    [selectedRootFolders],
+  );
+
+  const dragItem: FolderDragItem = useMemo(() => {
+    const shouldDragSelection =
+      checkboxState === CheckboxSelectionState.CHECKED &&
+      selectedRootFolders.length > 1 &&
+      selectedRootFolderIds.has(folder.id);
+    const folders = shouldDragSelection ? selectedRootFolders : [folder];
+    const testCasesCount = folders.reduce(
+      (sum, selectedFolder) =>
+        sum + getSelectableSubtreeTestsCount(selectedFolder, testPlanCountByFolderId),
+      0,
+    );
+
+    return {
+      folder,
+      folders,
+      isMulti: folders.length > 1,
+      testCasesCount,
+    };
+  }, [
+    checkboxState,
+    folder,
+    selectedRootFolderIds,
+    selectedRootFolders,
+    testPlanCountByFolderId,
+  ]);
+
+  const isDimmed = useFolderDragOpacity(folder.id, checkboxState);
+
+  const { dragSourceRef, handleDragHandleMouseDown } = useDraggableRow<FolderDragItem>({
+    type: FOLDER_DRAG_TYPE,
+    item: dragItem,
+    canDrag,
+    rowSelector: FOLDER_ROW_SELECTOR,
+  });
+
   return (
     <div
-      className={cx('folders-tree__item', 'selectable-tree__item', {
+      ref={dragSourceRef}
+      className={cx('folders-tree__item', 'selectable-tree__item', 'selectable-folder-row-global', {
         'folders-tree__item--open': isOpen,
+        'selectable-tree__item--dimmed': isDimmed,
       })}
       role="treeitem"
       tabIndex={0}
@@ -94,9 +191,16 @@ export const SelectableFolderRow = ({ row, nextRowDepth, style }: SelectableFold
             {folder.name}
           </span>
         </button>
-        <span>
-          <DragNDropIcon />
-        </span>
+        {canDrag && (
+          <span
+            className={cx('selectable-tree__item-drag-handle', {
+              'selectable-tree__item-drag-handle--draggable': canDrag,
+            })}
+            onMouseDown={handleDragHandleMouseDown}
+          >
+            <DragNDropIcon />
+          </span>
+        )}
         <DepthAwareCheckbox
           depth={depth}
           isChecked={checkboxState === CheckboxSelectionState.CHECKED}

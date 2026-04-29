@@ -16,6 +16,10 @@
 
 .selectable-tree {
   &__item {
+    &--dimmed {
+      opacity: 0.3;
+    }
+
     &-content {
       display: flex;
       justify-content: space-between;
@@ -42,6 +46,19 @@
     &-empty {
       div {
         cursor: default;
+      }
+    }
+
+    &-drag-handle {
+      display: flex;
+      align-items: center;
+
+      &--draggable {
+        cursor: grab;
+
+        &:active {
+          cursor: grabbing;
+        }
       }
     }
   }

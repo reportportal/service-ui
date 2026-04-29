@@ -14,52 +14,58 @@
  * limitations under the License.
  */
 
-.selectable-test-case {
-  position: relative;
-  height: 36px;
-  list-style: none;
+.dragged-item-preview {
+  position: fixed;
+  pointer-events: none;
+  z-index: $Z-INDEX-OVERLAY-PANEL;
+  left: -360px;
+  top: -10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 388px;
+  height: 44px;
+  padding: 12px 16px;
+  box-sizing: border-box;
+  background-color: var(--rp-ui-base-bg-000);
+  border-radius: 4px;
+  box-shadow: var(--rp-ui-base-shadow-secondary);
 
-  &--dimmed {
-    opacity: 0.3;
-  }
-
-  &__content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-left: -24px;
-    height: 36px;
-    padding-right: 8px;
-  }
-
-  &__name {
-    display: block;
+  &__text {
+    flex: 1;
     min-width: 0;
+    font-family: var(--rp-ui-base-font-family), serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--rp-ui-base-almost-black);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 13px;
-    font-family: var(--rp-ui-base-font-family), serif;
-    font-weight: 400;
-    color: var(--rp-ui-base-almost-black);
-    padding: 9px;
-
-    &--added {
-      color: var(--rp-ui-base-e-400);
-    }
   }
 
-  &__indicator {
-    cursor: pointer;
+  &__count {
+    flex-shrink: 0;
+    font-family: var(--rp-ui-base-font-family), serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--rp-ui-base-almost-black);
+    white-space: nowrap;
+  }
+
+  &__icon {
     display: flex;
     align-items: center;
 
-    &--draggable {
-      cursor: grab;
+    svg path {
+      fill: var(--rp-ui-base-topaz-pressed);
+    }
 
-      &:active {
-        cursor: grabbing;
-      }
+    &--leading svg path {
+      fill: var(--rp-ui-base-e-300);
     }
   }
 }
+

@@ -61,8 +61,8 @@ export const useBatchFolderSelection = ({
     setTestCasesMap,
   });
 
-  const batchSelectFolder = useCallback(
-    async (folder: TransformedFolder) => {
+  const getSelectionState = useCallback(
+    (folder: TransformedFolder) => {
       const allSubfolderIds = getAllSubfolderIds(folder.id, flatFolders);
       const foldersWithTestCases = new Set(
         flatFolders
@@ -79,6 +79,39 @@ export const useBatchFolderSelection = ({
       );
 
       const cachedIds = getSelectableIdsForFolders(cachedFolderIds, testCasesMapRef.current);
+
+      return {
+        cachedIds,
+        uncachedFolderIds,
+      };
+    },
+    [flatFolders],
+  );
+
+  const getFolderTestCaseIds = useCallback(
+    async (folder: TransformedFolder): Promise<number[]> => {
+      const { cachedIds, uncachedFolderIds } = getSelectionState(folder);
+
+      if (isEmpty(uncachedFolderIds)) {
+        return cachedIds;
+      }
+
+      addToSet({ setter: setBatchLoadingFolderIds, ids: [folder.id] });
+
+      try {
+        const { selectableIds: fetchedIds } = await fetchAndCache(uncachedFolderIds);
+
+        return [...cachedIds, ...fetchedIds];
+      } finally {
+        removeFromSet({ setter: setBatchLoadingFolderIds, ids: [folder.id] });
+      }
+    },
+    [fetchAndCache, getSelectionState, setBatchLoadingFolderIds],
+  );
+
+  const batchSelectFolder = useCallback(
+    async (folder: TransformedFolder) => {
+      const { cachedIds, uncachedFolderIds } = getSelectionState(folder);
       const emptyLeafIds = getEmptyLeafFolderIds(folder);
 
       if (isEmpty(uncachedFolderIds)) {
@@ -114,7 +147,7 @@ export const useBatchFolderSelection = ({
     [
       isOpenRef,
       fetchAndCache,
-      flatFolders,
+      getSelectionState,
       setSelectedTestCasesIds,
       setSelectedFolderIds,
       setBatchLoadingFolderIds,
@@ -143,5 +176,6 @@ export const useBatchFolderSelection = ({
   return {
     batchSelectFolder,
     batchDeselectFolder,
+    getFolderTestCaseIds,
   };
 };

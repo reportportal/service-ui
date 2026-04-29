@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { CheckmarkIcon, DragNDropIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { TestCase } from 'types/testCase';
+import { useDraggableRow } from 'components/main/draggableTableRow';
 
 import { DepthAwareCheckbox } from '../depthAwareCheckbox';
+import { TEST_CASE_DRAG_TYPE, TestCaseDragItem } from '../constants';
+import { useTestCaseDragOpacity } from '../hooks/useDragOpacity';
 
 import styles from './selectableTestCase.scss';
 
@@ -31,17 +34,49 @@ interface SelectableTestCaseItemProps {
   isSelected: boolean;
   isAddedToTestPlan: boolean;
   depth: number;
+  canDrag: boolean;
+  folderId: number;
+  selectedTestCases: TestCase[];
   onToggle: (id: number) => void;
 }
 
 export const SelectableTestCase = memo(
-  ({ testCase, isSelected, isAddedToTestPlan, depth, onToggle }: SelectableTestCaseItemProps) => {
+  ({
+    testCase,
+    isSelected,
+    isAddedToTestPlan,
+    depth,
+    canDrag,
+    folderId,
+    selectedTestCases,
+    onToggle,
+  }: SelectableTestCaseItemProps) => {
     const handleChange = useCallback(() => {
       onToggle(testCase.id);
     }, [onToggle, testCase.id]);
 
+    const dragItem: TestCaseDragItem = useMemo(() => {
+      const shouldDragSelection = isSelected && selectedTestCases.length > 1;
+      const items = shouldDragSelection ? selectedTestCases : [testCase];
+
+      return {
+        ids: items.map(({ id }) => id),
+        testCases: items,
+        isMulti: items.length > 1,
+      };
+    }, [isSelected, selectedTestCases, testCase]);
+
+    const isDimmed = useTestCaseDragOpacity(testCase.id, folderId);
+
+    const { dragSourceRef, handleDragHandleMouseDown } = useDraggableRow<TestCaseDragItem>({
+      type: TEST_CASE_DRAG_TYPE,
+      item: dragItem,
+      canDrag,
+      rowSelector: '.selectable-test-case-global',
+    });
+
     return (
-      <li className={cx('selectable-test-case')}>
+      <li ref={dragSourceRef} className={cx('selectable-test-case', 'selectable-test-case-global', { 'selectable-test-case--dimmed': isDimmed })}>
         <div className={cx('selectable-test-case__content')}>
           {!isAddedToTestPlan && (
             <DepthAwareCheckbox
@@ -59,7 +94,12 @@ export const SelectableTestCase = memo(
           >
             {testCase.name}
           </span>
-          <span className={cx('selectable-test-case__indicator')}>
+          <span
+            className={cx('selectable-test-case__indicator', {
+              'selectable-test-case__indicator--draggable': canDrag,
+            })}
+            onMouseDown={canDrag ? handleDragHandleMouseDown : undefined}
+          >
             {isAddedToTestPlan ? <CheckmarkIcon /> : <DragNDropIcon />}
           </span>
         </div>

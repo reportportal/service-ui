@@ -170,7 +170,7 @@ export const useTestLibraryPanel = ({
     return isSuccess;
   }, [selectedTestCasesIds, onAddTestCases, clearSelection, onClose]);
 
-  const { batchSelectFolder, batchDeselectFolder } = useBatchFolderSelection({
+  const { batchSelectFolder, batchDeselectFolder, getFolderTestCaseIds } = useBatchFolderSelection({
     isOpenRef,
     testPlanId,
     testCasesMap,
@@ -208,6 +208,7 @@ export const useTestLibraryPanel = ({
       toggleFolder,
       batchSelectFolder,
       batchDeselectFolder,
+      getFolderTestCaseIds,
     }),
     [
       isOpenRef,
@@ -217,6 +218,7 @@ export const useTestLibraryPanel = ({
       toggleFolder,
       batchSelectFolder,
       batchDeselectFolder,
+      getFolderTestCaseIds,
     ],
   );
 
@@ -232,6 +234,7 @@ export const useTestLibraryPanel = ({
       batchLoadingFolderIds,
       shouldHideAddedTestCases,
       testPlanCountByFolderId,
+      selectedTestCases,
     }),
     [
       selectedTestCasesIds,
@@ -244,6 +247,7 @@ export const useTestLibraryPanel = ({
       batchLoadingFolderIds,
       shouldHideAddedTestCases,
       testPlanCountByFolderId,
+      selectedTestCases,
     ],
   );
 
