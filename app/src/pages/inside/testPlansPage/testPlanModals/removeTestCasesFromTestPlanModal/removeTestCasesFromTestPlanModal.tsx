@@ -27,7 +27,7 @@ import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { useModalButtons } from 'hooks/useModalButtons';
 
 import { useRemoveTestCasesFromTestPlan } from './useRemoveTestCasesFromTestPlan';
-import { messages } from './messages';
+import { removeTestCasesFromTestPlanMessages } from './messages';
 import { REMOVE_TEST_CASES_FROM_TEST_PLAN_MODAL_KEY, MODAL_Z_INDEX } from './constants';
 import { RemoveTestCasesFromTestPlanModalProps } from './types';
 
@@ -40,7 +40,7 @@ const BoldText = ({ children, className }: { children: ReactNode; className?: st
 );
 
 const RemoveTestCasesFromTestPlanModal = ({ data }: RemoveTestCasesFromTestPlanModalProps) => {
-  const { selectedTestCaseIds = [], onClearSelection = noop } = data || {};
+  const { selectedTestCaseIds = [], onClearSelection = noop, testCaseName } = data || {};
 
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -69,17 +69,22 @@ const RemoveTestCasesFromTestPlanModal = ({ data }: RemoveTestCasesFromTestPlanM
 
   return (
     <Modal
-      title={formatMessage(messages.removeFromTestPlanTitle)}
+      title={formatMessage(removeTestCasesFromTestPlanMessages.removeFromTestPlanTitle)}
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={hideModal}
       zIndex={MODAL_Z_INDEX}
     >
       <div>
-        {formatMessage(messages.removeFromTestPlanDescription, {
-          count: selectedTestCaseIds.length,
-          b: renderBoldText,
-        })}
+        {testCaseName
+          ? formatMessage(removeTestCasesFromTestPlanMessages.removeFromTestPlanSingleDescription, {
+              testCaseName,
+              b: renderBoldText,
+            })
+          : formatMessage(removeTestCasesFromTestPlanMessages.removeFromTestPlanDescription, {
+              count: selectedTestCaseIds.length,
+              b: renderBoldText,
+            })}
         <ModalLoadingOverlay isVisible={isLoading} />
       </div>
     </Modal>
