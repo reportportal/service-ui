@@ -66,8 +66,4 @@ export const messages = defineMessages({
     defaultMessage:
       "Your search or filter criteria didn't match any results. Please try different keywords or adjust your filter settings.",
   },
-  removeTestCase: {
-    id: 'TestCaseList.removeTestCase',
-    defaultMessage: 'Remove test case',
-  },
 });

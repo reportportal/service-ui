@@ -17,15 +17,14 @@
 import { useIntl } from 'react-intl';
 
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { TestCaseMenuAction } from 'pages/inside/common/testCaseList/types';
 import { createTestCaseMenuItems } from 'pages/inside/common/testCaseList/configUtils';
-import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
+import { TestCaseMenuAction } from 'pages/inside/common/testCaseList/types';
 import { getExcludedActionsFromPermissionMap } from 'pages/inside/common/testCaseList/utils';
+import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
+import { useDuplicateSelectedTestCaseModal } from 'pages/inside/testCaseLibraryPage/duplicateSelectedTestCaseModal';
+import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/editSelectedTestCaseModal';
+import { useMoveTestCaseModal } from 'pages/inside/testCaseLibraryPage/moveTestCaseModal/useMoveTestCaseModal';
 import { ExtendedTestCase } from 'types/testCase';
-
-import { useEditTestCaseModal } from '../editSelectedTestCaseModal';
-import { useMoveTestCaseModal } from '../moveTestCaseModal/useMoveTestCaseModal';
-import { useDuplicateSelectedTestCaseModal } from '../duplicateSelectedTestCaseModal';
 
 interface TestCaseTooltipItemsProps {
   testCase: ExtendedTestCase;
@@ -44,7 +43,7 @@ export const useTestCaseTooltipItems = ({ testCase }: TestCaseTooltipItemsProps)
     TestCaseMenuAction.EDIT,
     TestCaseMenuAction.MOVE,
     TestCaseMenuAction.DELETE,
-  ].map(action => ({
+  ].map((action) => ({
     isAllowed: canManageTestCases,
     action,
   }));

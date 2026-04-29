@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-import { UseModalData } from 'common/hooks';
 import { VoidFn } from '@reportportal/ui-kit/common/types/commonTypes';
+
+import { UseModalData } from 'common/hooks';
 
 export interface RemoveTestCasesFromTestPlanModalData {
   selectedTestCaseIds: number[];
-  onClearSelection?: () => void;
+  testCaseName?: string;
+  onClearSelection?: VoidFn;
 }
 
 export type RemoveTestCasesFromTestPlanModalProps =
