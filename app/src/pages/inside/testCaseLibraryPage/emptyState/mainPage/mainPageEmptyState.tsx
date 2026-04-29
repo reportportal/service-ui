@@ -16,7 +16,9 @@
 
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 
+import { TEST_CASE_LIBRARY_EVENTS } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { NumerableBlock } from 'pages/common/numerableBlock';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { referenceDictionary } from 'common/utils';
@@ -31,10 +33,21 @@ import { useImportTestCaseModal } from '../../importTestCaseModal';
 
 export const MainPageEmptyState = () => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { canManageTestCases } = useUserPermissions();
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
   const { openModal: openImportTestCaseModal } = useImportTestCaseModal();
   const { openModal: openCreateFolderModal } = useCreateFolderModal();
+
+  const handleCreateTestCase = () => {
+    trackEvent(TEST_CASE_LIBRARY_EVENTS.CLICK_CREATE_TEST_CASE);
+    openCreateTestCaseModal();
+  };
+
+  const handleImportTestCase = () => {
+    trackEvent(TEST_CASE_LIBRARY_EVENTS.CLICK_IMPORT_TEST_CASES);
+    openImportTestCaseModal();
+  };
 
   const benefits = [messages.createFolder, messages.addTestCases, messages.tagTestCases].map(
     (translation) => Parser(formatMessage(translation, {}, { ignoreTag: true })),
@@ -52,14 +65,14 @@ export const MainPageEmptyState = () => {
       dataAutomationId: 'createTestCaseButton',
       isCompact: true,
       variant: 'ghost',
-      handleButton: openCreateTestCaseModal,
+      handleButton: handleCreateTestCase,
     },
     {
       name: formatMessage(COMMON_LOCALE_KEYS.IMPORT),
       dataAutomationId: 'importTestCaseButton',
       isCompact: false,
       variant: 'ghost',
-      handleButton: openImportTestCaseModal,
+      handleButton: handleImportTestCase,
     },
   ] : [];
 

@@ -15,7 +15,13 @@
  */
 
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 
+import {
+  TEST_CASE_LIBRARY_EVENTS,
+  TEST_CASE_MENU_ELEMENT_NAME,
+  type TestCaseMenuElementName,
+} from 'analyticsEvents/testCaseLibraryPageEvents';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { createTestCaseMenuItems } from 'pages/inside/common/testCaseList/configUtils';
 import { TestCaseMenuAction } from 'pages/inside/common/testCaseList/types';
@@ -32,11 +38,18 @@ interface TestCaseTooltipItemsProps {
 
 export const useTestCaseTooltipItems = ({ testCase }: TestCaseTooltipItemsProps) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { canManageTestCases } = useUserPermissions();
   const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
   const { openModal: openEditTestCaseModal } = useEditTestCaseModal();
   const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
   const { openModal: openDuplicateSelectedTestCaseModal } = useDuplicateSelectedTestCaseModal();
+
+  const trackPopoverMenu = (elementName: TestCaseMenuElementName) => {
+    trackEvent(
+      TEST_CASE_LIBRARY_EVENTS.choosePopoverMenu(elementName, testCase?.id?.toString()),
+    );
+  };
 
   const permissionMap = [
     TestCaseMenuAction.DUPLICATE,
@@ -51,10 +64,22 @@ export const useTestCaseTooltipItems = ({ testCase }: TestCaseTooltipItemsProps)
   return createTestCaseMenuItems(
     formatMessage,
     {
-      [TestCaseMenuAction.DELETE]: () => openDeleteTestCaseModal({ testCase }),
-      [TestCaseMenuAction.EDIT]: () => openEditTestCaseModal({ testCase }),
-      [TestCaseMenuAction.MOVE]: () => openMoveTestCaseModal({ testCase }),
-      [TestCaseMenuAction.DUPLICATE]: () => openDuplicateSelectedTestCaseModal({ testCase }),
+      [TestCaseMenuAction.DELETE]: () => {
+        trackPopoverMenu(TEST_CASE_MENU_ELEMENT_NAME.DELETE);
+        openDeleteTestCaseModal({ testCase });
+      },
+      [TestCaseMenuAction.EDIT]: () => {
+        trackPopoverMenu(TEST_CASE_MENU_ELEMENT_NAME.EDIT);
+        openEditTestCaseModal({ testCase });
+      },
+      [TestCaseMenuAction.MOVE]: () => {
+        trackPopoverMenu(TEST_CASE_MENU_ELEMENT_NAME.MOVE_TO);
+        openMoveTestCaseModal({ testCase });
+      },
+      [TestCaseMenuAction.DUPLICATE]: () => {
+        trackPopoverMenu(TEST_CASE_MENU_ELEMENT_NAME.DUPLICATE);
+        openDuplicateSelectedTestCaseModal({ testCase });
+      },
     },
     getExcludedActionsFromPermissionMap(permissionMap),
   );

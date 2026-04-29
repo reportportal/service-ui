@@ -16,8 +16,14 @@
 
 import { useCallback } from 'react';
 import { useIntl } from 'react-intl';
-import { reduxForm, InjectedFormProps } from 'redux-form';
+import { useTracking } from 'react-tracking';
+import { useSelector } from 'react-redux';
+import { reduxForm, InjectedFormProps, getFormInitialValues } from 'redux-form';
 
+import {
+  TEST_CASE_LIBRARY_EVENTS,
+  TEST_CASE_PLACE,
+} from 'analyticsEvents/testCaseLibraryPageEvents';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal } from 'controllers/modal';
 import { UseModalData } from 'common/hooks';
@@ -27,6 +33,13 @@ import { CreateTestCaseFormData } from '../types';
 import { TEST_CASE_FORM_INITIAL_VALUES } from '../createTestCaseModal/constants';
 import { useTestCase } from '../hooks/useTestCase';
 import { useTestCaseFormInitialization } from '../hooks/useTestCaseFormInitialization';
+import {
+  getEditedFieldsParam,
+  getTestCaseAttachmentStatus,
+  getTestCaseNumber,
+  getTestCaseTemplateIcon,
+  getTestCaseTimeCondition,
+} from '../utils/getTestCaseAnalyticsParams';
 import { EditScenarioModalContent } from './editScenarioModalContent';
 import { EDIT_SCENARIO_MODAL_KEY, EDIT_SCENARIO_FORM_NAME } from './constants';
 import { EditScenarioModalProps } from './types';
@@ -43,7 +56,11 @@ const EditScenarioModalComponent = ({
   const testCase = data?.testCase;
 
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { isLoading: isEditTestCaseLoading, editTestCase } = useTestCase(testCase?.id);
+  const initialFormValues = useSelector(
+    getFormInitialValues(EDIT_SCENARIO_FORM_NAME),
+  ) as CreateTestCaseFormData | undefined;
 
   const { isInitialized } = useTestCaseFormInitialization({
     testCase,
@@ -52,10 +69,24 @@ const EditScenarioModalComponent = ({
   });
 
   const handleUpdate = useCallback(
-    (formData: CreateTestCaseFormData) => {
-      return editTestCase(formData, testCase?.testFolder?.id, true);
+    async (formData: CreateTestCaseFormData): Promise<void> => {
+      const response = await editTestCase(formData, testCase?.testFolder?.id, true);
+
+      if (response && testCase?.id) {
+        trackEvent(
+          TEST_CASE_LIBRARY_EVENTS.submitEditTestCase({
+            testCaseId: String(testCase.id),
+            iconName: getTestCaseTemplateIcon(formData),
+            condition: getTestCaseTimeCondition(formData),
+            number: getTestCaseNumber(formData),
+            status: getTestCaseAttachmentStatus(formData),
+            editedFields: getEditedFieldsParam(initialFormValues ?? formData, formData),
+            place: TEST_CASE_PLACE.DETAILS_PAGE,
+          }),
+        );
+      }
     },
-    [editTestCase, testCase],
+    [editTestCase, testCase, trackEvent, initialFormValues],
   );
 
   const isSaveDisabled = !isInitialized || pristine || invalid;

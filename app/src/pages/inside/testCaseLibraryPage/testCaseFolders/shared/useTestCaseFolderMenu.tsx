@@ -15,7 +15,9 @@
  */
 
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 
+import { TEST_CASE_LIBRARY_EVENTS } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { TransformedFolder } from 'controllers/testCase';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PopoverItem } from 'pages/common/popoverControl';
@@ -41,6 +43,7 @@ export const useTestCaseFolderMenu = ({
   setAllTestCases,
 }: UseTestCaseFolderMenuProps) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { openModal: openDeleteModal } = useDeleteFolderModal();
   const { openModal: openRenameModal } = useRenameFolderModal();
   const { openModal: openDuplicateModal } = useDuplicateFolderModal();
@@ -64,7 +67,10 @@ export const useTestCaseFolderMenu = ({
 
   const handleMoveFolder = () => openMoveModal({ folder });
 
-  const handleImportTestCase = () => openImportTestCaseModal({ folderId: folder.id });
+  const handleImportTestCase = () => {
+    trackEvent(TEST_CASE_LIBRARY_EVENTS.CLICK_IMPORT_TEST_CASES);
+    openImportTestCaseModal({ folderId: folder.id });
+  };
 
   const handleCreateSubfolder = () => openCreateSubfolderModal({ folder });
 

@@ -36,12 +36,9 @@ const CLICK = getBasicClickEventParameters(MILESTONES);
 
 export type MilestoneStatusType = 'scheduled' | 'testing' | 'completed';
 
-export type {
-  MilestoneChangeStatusModalButtonElementName,
-  MilestoneStatusDropdownChooseType,
-};
-
 export {
+  type MilestoneChangeStatusModalButtonElementName,
+  type MilestoneStatusDropdownChooseType,
   MILESTONE_CHANGE_STATUS_MODAL_BUTTON_ELEMENT_NAME,
   MILESTONE_STATUS_CHOOSE_EVENT_TYPE,
 } from 'pages/inside/testPlansPage/milestones/milestoneStatus';
