@@ -16,8 +16,14 @@
 
 import { useCallback } from 'react';
 import { useIntl } from 'react-intl';
-import { reduxForm, InjectedFormProps } from 'redux-form';
+import { useTracking } from 'react-tracking';
+import { useSelector } from 'react-redux';
+import { reduxForm, InjectedFormProps, getFormInitialValues } from 'redux-form';
 
+import {
+  TEST_CASE_LIBRARY_EVENTS,
+  TEST_CASE_PLACE,
+} from 'analyticsEvents/testCaseLibraryPageEvents';
 import { commonValidators } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal } from 'controllers/modal';
@@ -30,6 +36,13 @@ import { TestCaseModal } from '../createTestCaseModal/testCaseModal/testCaseModa
 import { TEST_CASE_FORM_INITIAL_VALUES } from '../createTestCaseModal/constants';
 import { useTestCase } from '../hooks/useTestCase';
 import { useTestCaseFormInitialization } from '../hooks/useTestCaseFormInitialization';
+import {
+  getEditedFieldsParam,
+  getTestCaseAttachmentStatus,
+  getTestCaseNumber,
+  getTestCaseTemplateIcon,
+  getTestCaseTimeCondition,
+} from '../utils/getTestCaseAnalyticsParams';
 
 export const EDIT_SELECTED_TEST_CASE_MODAL_KEY = 'editSelectedTestCaseModalKey';
 export const EDIT_TEST_CASE_FORM_NAME: string = 'edit-test-case-modal-form';
@@ -48,7 +61,11 @@ const EditTestCaseModalComponent = ({
   const testCase = data?.testCase;
 
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { isLoading: isEditTestCaseLoading, editTestCase } = useTestCase(testCase?.id);
+  const initialFormValues = useSelector(
+    getFormInitialValues(EDIT_TEST_CASE_FORM_NAME),
+  ) as CreateTestCaseFormData | undefined;
 
   const { isInitialized } = useTestCaseFormInitialization({
     testCase,
@@ -56,10 +73,24 @@ const EditTestCaseModalComponent = ({
   });
 
   const handleUpdate = useCallback(
-    (formData: CreateTestCaseFormData) => {
-      return editTestCase(formData, testCase?.testFolder?.id);
+    async (formData: CreateTestCaseFormData): Promise<void> => {
+      const response = await editTestCase(formData, testCase?.testFolder?.id);
+
+      if (response && testCase?.id) {
+        trackEvent(
+          TEST_CASE_LIBRARY_EVENTS.submitEditTestCase({
+            testCaseId: String(testCase.id),
+            iconName: getTestCaseTemplateIcon(formData),
+            condition: getTestCaseTimeCondition(formData),
+            number: getTestCaseNumber(formData),
+            status: getTestCaseAttachmentStatus(formData),
+            editedFields: getEditedFieldsParam(initialFormValues ?? formData, formData),
+            place: TEST_CASE_PLACE.SIDE_PANEL,
+          }),
+        );
+      }
     },
-    [editTestCase, testCase?.testFolder?.id],
+    [editTestCase, testCase, trackEvent, initialFormValues],
   );
 
   return (

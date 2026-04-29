@@ -17,8 +17,10 @@
 import { useMemo, ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { InjectedFormProps, reduxForm } from 'redux-form';
 
+import { TEST_CASE_LIBRARY_EVENTS } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { testCasesSelector } from 'controllers/testCase';
@@ -46,7 +48,9 @@ const AddToLaunchModalComponent = ({
   ...reduxFormProps
 }: AddToLaunchModalProps & InjectedFormProps<LaunchFormData>) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const allTestCases = useSelector(testCasesSelector);
+  const isBulk = selectedTestCasesIds.length > 1;
 
   const testCases = useMemo(() => {
     return allTestCases.filter((testCase) => selectedTestCasesIds.includes(testCase.id));
@@ -75,6 +79,11 @@ const AddToLaunchModalComponent = ({
       className={cx('add-to-launch-modal')}
       onClearSelection={onClearSelection}
       isUncoveredTestsCheckboxAvailable={isUncoveredTestsCheckboxAvailable}
+      onSubmitClick={
+        isBulk
+          ? () => trackEvent(TEST_CASE_LIBRARY_EVENTS.SUBMIT_BULK_ADD_TO_LAUNCH)
+          : undefined
+      }
     />
   );
 };

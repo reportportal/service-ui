@@ -120,4 +120,5 @@ export interface BaseLaunchModalProps {
   isUncoveredTestsCheckboxAvailable?: boolean;
   hideTestPlanField?: boolean;
   onClearSelection?: () => void;
+  onSubmitClick?: () => void;
 }

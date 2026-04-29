@@ -17,9 +17,15 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { isEmpty, noop, countBy } from 'es-toolkit/compat';
 import { Button, MeatballMenuIcon, Pagination, Selection } from '@reportportal/ui-kit';
 
+import {
+  TEST_CASE_BULK_OPERATION_ELEMENT_NAME,
+  TEST_CASE_LIBRARY_EVENTS,
+  type TestCaseBulkOperationElementName,
+} from 'analyticsEvents/testCaseLibraryPageEvents';
 import { createClassnames } from 'common/utils';
 import { TestCaseList } from 'pages/inside/common/testCaseList';
 import {
@@ -72,7 +78,15 @@ export const AllTestCasesPage = ({
   testCasesPageData,
 }: AllTestCasesPageProps) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { organizationSlug, projectSlug } = useProjectDetails();
+
+  const trackBulkOperation = useCallback(
+    (elementName: TestCaseBulkOperationElementName) => {
+      trackEvent(TEST_CASE_LIBRARY_EVENTS.clickBulkOperation(elementName));
+    },
+    [trackEvent],
+  );
   const payload = useSelector(payloadSelector);
   const query = useSelector(locationQuerySelector);
   const { setPageNumber, setPageSize, captions, activePage, pageSize, totalPages } =
@@ -113,6 +127,7 @@ export const AllTestCasesPage = ({
     {
       label: formatMessage(messages.duplicateToFolder),
       onClick: () => {
+        trackBulkOperation(TEST_CASE_BULK_OPERATION_ELEMENT_NAME.DUPLICATE);
         openBatchDuplicateToFolderModal({
           selectedTestCaseIds: selectedRowIds,
           count: selectedRowIds.length,
@@ -123,6 +138,7 @@ export const AllTestCasesPage = ({
     {
       label: formatMessage(messages.changePriority),
       onClick: () => {
+        trackBulkOperation(TEST_CASE_BULK_OPERATION_ELEMENT_NAME.CHANGE_PRIORITY);
         dispatch(
           showModalAction({
             id: CHANGE_PRIORITY_MODAL_KEY,
@@ -138,6 +154,7 @@ export const AllTestCasesPage = ({
     {
       label: formatMessage(messages.editTags),
       onClick: () => {
+        trackBulkOperation(TEST_CASE_BULK_OPERATION_ELEMENT_NAME.EDIT_TAG);
         openBatchEditTagsModal({
           selectedTestCaseIds: selectedRowIds,
           count: selectedRowIds.length,
@@ -149,6 +166,7 @@ export const AllTestCasesPage = ({
       label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
       variant: 'destructive',
       onClick: () => {
+        trackBulkOperation(TEST_CASE_BULK_OPERATION_ELEMENT_NAME.DELETE);
         const folderDeltasMap = countBy(selectedRows, (row) => String(row.folderId));
 
         openBatchDeleteTestCasesModal({
@@ -158,17 +176,20 @@ export const AllTestCasesPage = ({
         });
       },
     },
-  ] : []; 
+  ] : [];
 
   const handleOpenAddToTestPlanModal = useCallback(() => {
+    trackBulkOperation(TEST_CASE_BULK_OPERATION_ELEMENT_NAME.ADD_TO_TEST_PLAN);
     openAddToTestPlanModal({ selectedTestCaseIds: selectedRowIds });
-  }, [selectedRowIds, openAddToTestPlanModal]);
+  }, [selectedRowIds, openAddToTestPlanModal, trackBulkOperation]);
 
   const handleOpenAddToLaunchModal = useCallback(() => {
+    trackBulkOperation(TEST_CASE_BULK_OPERATION_ELEMENT_NAME.ADD_TO_LAUNCH);
     openAddToLaunchModal();
-  }, [openAddToLaunchModal]);
+  }, [openAddToLaunchModal, trackBulkOperation]);
 
   const handleOpenMoveTestCaseModal = useCallback(() => {
+    trackBulkOperation(TEST_CASE_BULK_OPERATION_ELEMENT_NAME.MOVE_TO_FOLDER);
     const sourceFolderDeltasMap = countBy(selectedRows, (row) => String(row.folderId));
 
     openMoveTestCaseModal({
@@ -176,7 +197,7 @@ export const AllTestCasesPage = ({
       sourceFolderDeltasMap,
       onClearSelection,
     });
-  }, [selectedRowIds, selectedRows, openMoveTestCaseModal]);
+  }, [selectedRowIds, selectedRows, openMoveTestCaseModal, trackBulkOperation]);
 
   if (
     isEmpty(testCases) &&

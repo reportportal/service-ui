@@ -37,7 +37,8 @@ import { NewFolderData } from '../utils/getFolderFromFormValues';
 import { useFolderActions } from './useFolderActions';
 import { useRefetchCurrentTestCases } from './useRefetchCurrentTestCases';
 
-interface TestCaseResponse {
+export interface TestCaseResponse {
+  id?: number;
   testFolder?: {
     id: number;
   };
@@ -133,7 +134,7 @@ export const useTestCaseMutations = (testCaseId?: number) => {
         currentFolderId?: number;
         isDetailsPage?: boolean;
       },
-    ) => {
+    ): Promise<TestCaseResponse | null> => {
       try {
         showSpinner();
 
@@ -161,8 +162,11 @@ export const useTestCaseMutations = (testCaseId?: number) => {
             responseFolderId: response?.testFolder?.id,
           });
         }
+
+        return response ?? null;
       } catch {
         showErrorNotification({ messageId: options.errorMessageId });
+        return null;
       } finally {
         hideSpinner();
       }
@@ -194,14 +198,18 @@ export const useTestCaseMutations = (testCaseId?: number) => {
   );
 
   const editTestCase = useCallback(
-    async (payload: CreateTestCaseFormData, currentFolderId?: number, isDetailsPage?: boolean) => {
+    async (
+      payload: CreateTestCaseFormData,
+      currentFolderId?: number,
+      isDetailsPage?: boolean,
+    ): Promise<TestCaseResponse | null> => {
       if (!testCaseId) {
         showErrorNotification({ messageId: 'testCaseUpdateFailed' });
 
-        return;
+        return null;
       }
 
-      await handleTestCaseCreation(payload, {
+      return handleTestCaseCreation(payload, {
         url: URLS.testCaseDetails(projectKey, testCaseId.toString()),
         method: 'PUT',
         successMessageId: 'testCaseUpdatedSuccess',

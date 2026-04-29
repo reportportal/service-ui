@@ -44,6 +44,7 @@ export const BaseLaunchModal = ({
   hideTestPlanField = false,
   className,
   onClearSelection,
+  onSubmitClick,
 }: BaseLaunchModalProps & InjectedFormProps<LaunchFormData>) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
@@ -75,11 +76,19 @@ export const BaseLaunchModal = ({
     [activeMode, change],
   );
 
+  const submitHandler = handleSubmit(handleCreateLaunch) as (
+    event: MouseEvent<HTMLButtonElement>,
+  ) => void;
+  const handleOkClick = (event: MouseEvent<HTMLButtonElement>) => {
+    onSubmitClick?.();
+    submitHandler(event);
+  };
+
   const okButton = {
     children: (
       <LoadingSubmitButton isLoading={isLoading}>{formatMessage(okButtonText)}</LoadingSubmitButton>
     ),
-    onClick: handleSubmit(handleCreateLaunch) as (event: MouseEvent<HTMLButtonElement>) => void,
+    onClick: handleOkClick,
     disabled: isSubmitDisabled,
   };
 

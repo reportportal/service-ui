@@ -15,6 +15,9 @@
  */
 
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
+
+import { TEST_CASE_LIBRARY_EVENTS } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 
@@ -25,10 +28,16 @@ import { commonMessages } from '../../commonMessages';
 
 export const DetailsEmptyState = ({ testCase }: DetailsEmptyStateProps) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { canManageTestCases } = useUserPermissions();
   const { openModal } = useEditScenarioModal();
 
   const handleEditScenario = () => {
+    trackEvent(
+      TEST_CASE_LIBRARY_EVENTS.clickEditTestCaseFromDetails(
+        testCase?.id !== undefined ? String(testCase.id) : undefined,
+      ),
+    );
     openModal({ testCase });
   };
 

@@ -14,13 +14,19 @@
  * limitations under the License.
  */
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import Parser from 'html-react-parser';
 import { isEmpty } from 'es-toolkit/compat';
 import { BreadcrumbsTreeIcon, BubblesLoader, Button, FilterOutlineIcon, FilterFilledIcon } from '@reportportal/ui-kit';
 
+import {
+  FILTER_FIELD,
+  TEST_CASE_LIBRARY_EVENTS,
+  type FilterFieldType,
+} from 'analyticsEvents/testCaseLibraryPageEvents';
 import { createClassnames, debounce } from 'common/utils';
 import { ProjectDetails } from 'pages/organization/constants';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
@@ -60,6 +66,8 @@ const cx = createClassnames(styles);
 export const TestCaseLibraryPage = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
+  const searchSessionTrackedRef = useRef(false);
   const projectName = useSelector(projectNameSelector);
   const folders = useSelector(foldersSelector);
   const areFoldersLoading = useSelector(areFoldersLoadingSelector);
@@ -98,6 +106,13 @@ export const TestCaseLibraryPage = () => {
   const handleFilterChange = useCallback(
     // eslint-disable-next-line react-hooks/use-memo
     debounce((value: string) => {
+      if (value && !searchSessionTrackedRef.current) {
+        trackEvent(TEST_CASE_LIBRARY_EVENTS.CLICK_SEARCH_TEST_CASES);
+        searchSessionTrackedRef.current = true;
+      }
+      if (!value) {
+        searchSessionTrackedRef.current = false;
+      }
       dispatch(
         updatePagePropertiesAction({
           testCasesSearchParams: value,
@@ -105,7 +120,7 @@ export const TestCaseLibraryPage = () => {
         }),
       );
     }, SEARCH_DELAY),
-    [dispatch],
+    [dispatch, trackEvent],
   );
 
   const handleCloseFilterSidePanel = () => {
@@ -117,10 +132,21 @@ export const TestCaseLibraryPage = () => {
   };
 
   const handleApplyFilters = ({ priorities, tags }: FilterApplyPayload) => {
-    const filterPriorities = isEmpty(priorities)
-      ? undefined
-      : toBackendPriority(priorities);
-    const filterTags = isEmpty(tags) ? undefined : tags.join(',');
+    const hasPriorities = !isEmpty(priorities);
+    const hasTags = !isEmpty(tags);
+    const filterPriorities = hasPriorities ? toBackendPriority(priorities) : undefined;
+    const filterTags = hasTags ? tags.join(',') : undefined;
+
+    if (hasPriorities || hasTags) {
+      let filterType: FilterFieldType = FILTER_FIELD.TAG;
+
+      if (hasPriorities && hasTags) {
+        filterType = FILTER_FIELD.PRIORITY_AND_TAG;
+      } else if (hasPriorities) {
+        filterType = FILTER_FIELD.PRIORITY;
+      }
+      trackEvent(TEST_CASE_LIBRARY_EVENTS.applyFilterTestCases(filterType));
+    }
 
     dispatch(
       updatePagePropertiesAction({
@@ -196,14 +222,20 @@ export const TestCaseLibraryPage = () => {
                         icon={Parser(ImportIcon as unknown as string)}
                         data-automation-id="importTestCase"
                         adjustWidthOn="content"
-                        onClick={() => openImportFolderModal()}
+                        onClick={() => {
+                          trackEvent(TEST_CASE_LIBRARY_EVENTS.CLICK_IMPORT_TEST_CASES);
+                          openImportFolderModal();
+                        }}
                       >
                         {formatMessage(COMMON_LOCALE_KEYS.IMPORT)}
                       </Button>
                       <Button
                         variant="ghost"
                         data-automation-id="createTestCase"
-                        onClick={() => openCreateTestCaseModal()}
+                        onClick={() => {
+                          trackEvent(TEST_CASE_LIBRARY_EVENTS.CLICK_CREATE_TEST_CASE);
+                          openCreateTestCaseModal();
+                        }}
                       >
                         {formatMessage(commonMessages.createTestCase)}
                       </Button>
