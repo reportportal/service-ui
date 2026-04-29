@@ -19,16 +19,10 @@ import { isEmpty } from 'es-toolkit/compat';
 import Parser from 'html-react-parser';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import {
-  BreadcrumbsTreeIcon,
-  Button,
-  DurationIcon,
-  MeatballMenuIcon,
-} from '@reportportal/ui-kit';
+import { BreadcrumbsTreeIcon, Button, MeatballMenuIcon } from '@reportportal/ui-kit';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { createClassnames } from 'common/utils';
-import { MILLISECONDS_IN_MINUTE } from 'common/constants/common';
 import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
@@ -42,7 +36,7 @@ import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'contr
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
-import { formatDuration } from 'pages/inside/common/testCaseList/utils';
+import { ExecutionEstimationTime } from 'pages/inside/common/executionEstimationTime';
 import { testCaseLibraryBreadcrumbsSelector } from 'controllers/pages/selectors';
 import { ExtendedTestCase } from 'types/testCase';
 
@@ -185,14 +179,11 @@ export const TestCaseDetailsHeader = ({
               {Parser(IconDuplicate as unknown as string)}
             </CopyToClipboard>
           </div>
-          {!!testCase?.manualScenario?.executionEstimationTime && (
-            <div className={cx('header__meta-item')}>
-              <DurationIcon />
-              <span className={cx('header__meta-value')}>
-                {formatDuration(testCase.manualScenario.executionEstimationTime * MILLISECONDS_IN_MINUTE)}
-              </span>
-            </div>
-          )}
+          <ExecutionEstimationTime
+            executionEstimationTime={testCase?.manualScenario?.executionEstimationTime}
+            className={cx('header__meta-item')}
+            valueClassName={cx('header__meta-value')}
+          />
         </div>
         <div className={cx('header__actions')}>
           {!isEmpty(items) && (

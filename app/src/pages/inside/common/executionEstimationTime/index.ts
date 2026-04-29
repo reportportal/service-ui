@@ -14,15 +14,4 @@
  * limitations under the License.
  */
 
-.thumbImage {
-  width: 100%;
-  height: 100%;
-  border-radius: 4px;
-  object-fit: contain;
-
-  &[src^='data:image/svg'] {
-    width: 32px;
-    height: 32px;
-    margin: auto;
-  }
-}
+export { ExecutionEstimationTime } from './executionEstimationTime';
