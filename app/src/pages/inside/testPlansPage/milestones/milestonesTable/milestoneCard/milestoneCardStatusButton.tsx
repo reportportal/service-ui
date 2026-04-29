@@ -19,10 +19,7 @@ import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { ChevronDownDropdownIcon, Popover } from '@reportportal/ui-kit';
 
-import {
-  MILESTONES_PAGE_EVENTS,
-  type MilestoneStatusType,
-} from 'analyticsEvents/milestonesPageEvents';
+import { MILESTONES_PAGE_EVENTS } from 'analyticsEvents/milestonesPageEvents';
 import type { TmsMilestoneStatus } from 'controllers/milestone';
 import { createClassnames } from 'common/utils';
 
@@ -31,6 +28,7 @@ import {
   getMilestoneStatusPopoverOptionMessageDescriptor,
 } from '../../milestoneStatusMessages';
 import {
+  getMilestoneStatusChooseEventType,
   getMilestoneStatusPopoverOptions,
   milestoneStatusToCssModifier,
 } from '../../milestoneStatus';
@@ -61,7 +59,7 @@ export const MilestoneCardStatusButton = ({
     if (targetStatus !== milestone.status) {
       trackEvent(
         MILESTONES_PAGE_EVENTS.chooseMilestoneStatus(
-          targetStatus.toLowerCase() as MilestoneStatusType,
+          getMilestoneStatusChooseEventType(targetStatus, milestone.status),
         ),
       );
     }

@@ -219,6 +219,10 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.documentation',
     defaultMessage: 'Documentation',
   },
+  learnMore: {
+    id: 'Common.learnMore',
+    defaultMessage: 'Learn more',
+  },
   warning: {
     id: 'Common.warning',
     defaultMessage: 'Warning',
@@ -425,8 +429,7 @@ export const BULK_COMMON_LOCALE_KEYS = defineMessages({
   },
   INELIGIBLE_INFO_MESSAGE: {
     id: 'Common.bulk.ineligibleInfoMessage',
-    defaultMessage:
-      'You have <b>{count}</b> ineligible {count, plural, one {item} other {items}}',
+    defaultMessage: 'You have <b>{count}</b> ineligible {count, plural, one {item} other {items}}',
   },
   CANCEL_BUTTON: {
     id: 'Common.bulk.cancelButton',
@@ -434,8 +437,7 @@ export const BULK_COMMON_LOCALE_KEYS = defineMessages({
   },
   PROCEED_BUTTON: {
     id: 'Common.bulk.proceedButton',
-    defaultMessage:
-      'Proceed with {count} eligible {count, plural, one {item} other {items}}',
+    defaultMessage: 'Proceed with {count} eligible {count, plural, one {item} other {items}}',
   },
 });
 

@@ -47,10 +47,10 @@ import { useNavigationTabsExtensionsConfig } from 'common/hooks';
 import { Navigation } from 'pages/inside/common/navigation';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { useTmsEnabled } from 'hooks/useTmsEnabled';
 import { Header } from 'pages/inside/common/header';
 import { PatternAnalysis } from 'pages/inside/projectSettingsPageContainer/content/patternAnalysis';
 import { Notifications } from 'pages/inside/projectSettingsPageContainer/content/notifications';
+import { getTmsOverride } from 'controllers/appInfo/utils';
 import { GeneralTab } from './generalTab';
 import { AnalyzerContainer } from './content/analyzerContainer';
 import { TestData, Environments } from './content/testLibrary';
@@ -69,7 +69,8 @@ export const ProjectSettingsPageContainer = () => {
   const { canSeeDemoData, canUpdateSettings } = useUserPermissions();
   const { subPage } = useSelector(querySelector);
   const [headerNodes, setHeaderNodes] = useState({});
-  const isTmsEnabled = useTmsEnabled();
+  const tmsOverride = getTmsOverride();
+  const isShowTmsHiddenData = Boolean(tmsOverride);
 
   const createTabLink = useCallback(
     (tabName, extendedParams = {}, page = PROJECT_SETTINGS_TAB_PAGE) => ({
@@ -145,7 +146,7 @@ export const ProjectSettingsPageContainer = () => {
         component: <DemoDataTab />,
         mobileDisabled: true,
       },
-      ...(isTmsEnabled && {
+      ...(isShowTmsHiddenData && {
         [ENVIRONMENTS]: {
           name: formatMessage(messages.environments),
           link: createTabLink(ENVIRONMENTS),
@@ -166,7 +167,14 @@ export const ProjectSettingsPageContainer = () => {
       delete navConfig[DEMO_DATA];
     }
     return mergeConfig(navConfig);
-  }, [formatMessage, createTabLink, mergeConfig]);
+  }, [
+    formatMessage,
+    createTabLink,
+    mergeConfig,
+    canSeeDemoData,
+    canUpdateSettings,
+    isShowTmsHiddenData,
+  ]);
 
   const navigation = useMemo(() => {
     const title = <FormattedMessage id="SettingsPage.title" defaultMessage="Project Settings" />;
@@ -174,13 +182,18 @@ export const ProjectSettingsPageContainer = () => {
   }, [config]);
 
   const content = useMemo(() => {
+    if (!isShowTmsHiddenData && (activeTab === ENVIRONMENTS || activeTab === TEST_DATA)) {
+      dispatch(createTabLink(GENERAL));
+      return null;
+    }
+
     if (!activeTab || !config[activeTab]) {
       const firstItemName = Object.keys(config)[0];
       dispatch(config[firstItemName].link);
       return null;
     }
     return config[activeTab].component;
-  }, [activeTab, config, dispatch]);
+  }, [activeTab, config, dispatch, createTabLink, isShowTmsHiddenData]);
 
   return (
     <ProjectSettingsAnalyticsWrapper>

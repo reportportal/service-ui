@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,17 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  general: {
-    id: 'OrganizationSettingsPage.general',
-    defaultMessage: 'General',
+  notificationsHeader: {
+    id: 'IntegrationsTab.notificationsHeader',
+    defaultMessage: 'Notifications',
   },
-  integrations: {
-    id: 'OrganizationSettingsPage.integrations',
-    defaultMessage: 'Integrations',
+  noPluginsTitle: {
+    id: 'IntegrationsTab.noPluginsTitle',
+    defaultMessage: 'No Plugins available for integration',
+  },
+  noPluginsDescription: {
+    id: 'IntegrationsTab.noPluginsDescription',
+    defaultMessage:
+      'Currently, there are no plugins available for configuring the integration. Please check back later for availability.',
   },
 });
