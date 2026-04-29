@@ -23,6 +23,7 @@ import {
   activeProjectSelector,
   assignedOrganizationsSelector,
   assignedProjectsSelector,
+  userAccountRoleSelector,
   userIdSelector,
 } from 'controllers/user';
 import { ALL } from 'common/constants/reservedFilterIds';
@@ -40,8 +41,6 @@ import {
   locationSelector,
   payloadSelector,
 } from './typed-selectors';
-import { userRolesSelector } from './'; // TODO: circular dependency — direct import from './userRolesSelector' breaks module resolution
-
 export const searchStringSelector = (state) => locationSelector(state).search || '';
 export const isInitialDispatchDoneSelector = (state) => !!locationSelector(state).kind;
 export const currentPathSelector = (state) => {
@@ -213,27 +212,28 @@ export const activeProjectRoleSelector = createSelector(
 export const userAssignedSelector = (projectSlug, organizationSlug) => (state) => {
   const assignedOrganizations = assignedOrganizationsSelector(state);
   const assignedProjects = assignedProjectsSelector(state);
-  const { userRole, organizationRole, projectRole } = userRolesSelector(state);
+  const userRole = userAccountRoleSelector(state);
 
-  const isAdmin = userRole === ADMINISTRATOR;
-  const isManager = organizationRole === MANAGER;
-  let isAssignedToTargetOrganization = false;
+  let assignedOrganization = organizationSlug ? assignedOrganizations[organizationSlug] : undefined;
 
   const assignedProject = findAssignedProjectByOrganization(
     assignedProjects,
-    assignedOrganizations[organizationSlug]?.organizationId,
+    assignedOrganization?.organizationId,
     projectSlug,
   );
 
-  if (organizationSlug) {
-    isAssignedToTargetOrganization = organizationSlug in assignedOrganizations;
-  } else {
-    const organizationId = assignedProject?.organizationId || '';
-
-    isAssignedToTargetOrganization = Object.keys(assignedOrganizations).some(
-      (key) => assignedOrganizations[key]?.organizationId === organizationId,
+  if (!organizationSlug && assignedProject) {
+    assignedOrganization = Object.values(assignedOrganizations).find(
+      (org) => org.organizationId === assignedProject.organizationId,
     );
   }
+
+  const organizationRole = assignedOrganization?.organizationRole;
+  const projectRole = assignedProject?.projectRole;
+
+  const isAdmin = userRole === ADMINISTRATOR;
+  const isManager = organizationRole === MANAGER;
+  const isAssignedToTargetOrganization = !!assignedOrganization;
 
   const isAssignedToTargetProject =
     projectSlug && assignedProject && isAssignedToTargetOrganization;
@@ -248,10 +248,8 @@ export const userAssignedSelector = (projectSlug, organizationSlug) => (state) =
 
   const userRoles = {
     userRole,
-    organizationRole: organizationSlug
-      ? assignedOrganizations[organizationSlug]?.organizationRole
-      : organizationRole,
-    projectRole: assignedProject ? assignedProject.projectRole : projectRole,
+    organizationRole,
+    projectRole,
   };
 
   return {
