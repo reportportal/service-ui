@@ -73,7 +73,7 @@ export const buildEventParameters = (baseEventParameters, additionalParameters) 
     ...additionalParameters,
   };
 
-  if (additionalParameters && additionalParameters.test_case_id !== undefined) {
+  if (additionalParameters?.test_case_id !== undefined) {
     merged.test_case_id = withInstanceSuffix(additionalParameters.test_case_id, instanceId);
   }
 

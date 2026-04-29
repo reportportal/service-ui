@@ -76,12 +76,13 @@ export const BaseLaunchModal = ({
     [activeMode, change],
   );
 
-  const submitHandler = handleSubmit(handleCreateLaunch) as (
-    event: MouseEvent<HTMLButtonElement>,
-  ) => void;
-  const handleOkClick = (event: MouseEvent<HTMLButtonElement>) => {
+  const trackedSubmit = handleSubmit((values: LaunchFormData) => {
     onSubmitClick?.();
-    submitHandler(event);
+    return handleCreateLaunch(values);
+  }) as (event?: FormEvent | MouseEvent<HTMLButtonElement>) => void;
+
+  const handleOkClick = (event: MouseEvent<HTMLButtonElement>) => {
+    trackedSubmit(event);
   };
 
   const okButton = {
@@ -107,7 +108,7 @@ export const BaseLaunchModal = ({
       onClose={() => dispatch(hideModalAction())}
     >
       <div className={className ? `${className}__content-wrapper` : undefined}>
-        <form onSubmit={handleSubmit(handleCreateLaunch) as (event: FormEvent) => void}>
+        <form onSubmit={trackedSubmit as (event: FormEvent) => void}>
           <div className={className ? `${className}__container` : undefined}>
             <LaunchFormFields
               activeMode={activeMode}

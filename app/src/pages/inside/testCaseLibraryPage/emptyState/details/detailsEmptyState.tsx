@@ -33,11 +33,7 @@ export const DetailsEmptyState = ({ testCase }: DetailsEmptyStateProps) => {
   const { openModal } = useEditScenarioModal();
 
   const handleEditScenario = () => {
-    trackEvent(
-      TEST_CASE_LIBRARY_EVENTS.clickEditTestCaseFromDetails(
-        testCase?.id !== undefined ? String(testCase.id) : undefined,
-      ),
-    );
+    trackEvent(TEST_CASE_LIBRARY_EVENTS.clickEditTestCaseFromDetails(testCase?.id?.toString()));
     openModal({ testCase });
   };
 

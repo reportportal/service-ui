@@ -58,7 +58,7 @@ export const getTestCaseTimeCondition = (
     : TEST_CASE_TIME_CONDITION.NO_CUSTOMIZE;
 
 const countMeaningfulRequirements = (formData: CreateTestCaseFormData): number =>
-  (formData.requirements ?? []).filter(({ value }) => Boolean(value && value.trim())).length;
+  (formData.requirements ?? []).filter(({ value }) => Boolean(value?.trim())).length;
 
 const countTags = (formData: CreateTestCaseFormData): number =>
   (formData.attributes ?? []).length;
@@ -66,8 +66,8 @@ const countTags = (formData: CreateTestCaseFormData): number =>
 const countSteps = (formData: CreateTestCaseFormData): number =>
   toStepsArray(formData.steps).filter(
     (step) =>
-      Boolean(step?.instructions && step.instructions.trim()) ||
-      Boolean(step?.expectedResult && step.expectedResult.trim()) ||
+      Boolean(step?.instructions?.trim()) ||
+      Boolean(step?.expectedResult?.trim()) ||
       !isEmpty(step?.attachments),
   ).length;
 
@@ -124,39 +124,39 @@ const TEXT_EDIT_FIELDS = [
 ] as const;
 
 const areTagsEqual = (
-  a: CreateTestCaseFormData['attributes'],
-  b: CreateTestCaseFormData['attributes'],
+  tagsA: CreateTestCaseFormData['attributes'],
+  tagsB: CreateTestCaseFormData['attributes'],
 ): boolean => {
-  const left = a ?? [];
-  const right = b ?? [];
+  const left = tagsA ?? [];
+  const right = tagsB ?? [];
   if (left.length !== right.length) {
     return false;
   }
   const serialize = (list: typeof left) =>
     list
       .map(({ key, value }) => `${key ?? ''}=${value ?? ''}`)
-      .sort()
+      .sort((a, b) => a.localeCompare(b))
       .join('|');
   return serialize(left) === serialize(right);
 };
 
 const areRequirementsEqual = (
-  a: CreateTestCaseFormData['requirements'],
-  b: CreateTestCaseFormData['requirements'],
+  requirementsA: CreateTestCaseFormData['requirements'],
+  requirementsB: CreateTestCaseFormData['requirements'],
 ): boolean => {
-  const left = (a ?? []).map((r) => r?.value ?? '').filter(Boolean);
-  const right = (b ?? []).map((r) => r?.value ?? '').filter(Boolean);
+  const left = (requirementsA ?? []).map((requirement) => requirement?.value?.trim() ?? '').filter(Boolean);
+  const right = (requirementsB ?? []).map((requirement) => requirement?.value?.trim() ?? '').filter(Boolean);
   if (left.length !== right.length) {
     return false;
   }
-  const sortedLeft = [...left].sort().join('|');
-  const sortedRight = [...right].sort().join('|');
+  const sortedLeft = [...left].sort((a, b) => a.localeCompare(b)).join('|');
+  const sortedRight = [...right].sort((a, b) => a.localeCompare(b)).join('|');
   return sortedLeft === sortedRight;
 };
 
-const areStepsEqual = (a: unknown, b: unknown): boolean => {
-  const left = toStepsArray(a);
-  const right = toStepsArray(b);
+const areStepsEqual = (stepsA: unknown, stepsB: unknown): boolean => {
+  const left = toStepsArray(stepsA);
+  const right = toStepsArray(stepsB);
   if (left.length !== right.length) {
     return false;
   }
@@ -171,77 +171,49 @@ const areStepsEqual = (a: unknown, b: unknown): boolean => {
 };
 
 const areAttachmentsEqual = (
-  a: CreateTestCaseFormData,
-  b: CreateTestCaseFormData,
+  attachmentsA: CreateTestCaseFormData,
+  attachmentsB: CreateTestCaseFormData,
 ): boolean => {
-  if ((a.preconditionAttachments ?? []).length !== (b.preconditionAttachments ?? []).length) {
+  if ((attachmentsA.preconditionAttachments ?? []).length !== (attachmentsB.preconditionAttachments ?? []).length) {
     return false;
   }
-  if ((a.textAttachments ?? []).length !== (b.textAttachments ?? []).length) {
+  if ((attachmentsA.textAttachments ?? []).length !== (attachmentsB.textAttachments ?? []).length) {
     return false;
   }
-  // For step template, attachments are inside steps and tracked via areStepsEqual.
+
   return true;
+};
+
+type EditFieldKey =
+  | (typeof TEST_CASE_STEP_EDIT_FIELD)[keyof typeof TEST_CASE_STEP_EDIT_FIELD]
+  | (typeof TEST_CASE_TEXT_EDIT_FIELD)[keyof typeof TEST_CASE_TEXT_EDIT_FIELD];
+
+type EditFieldDiffer = (initial: CreateTestCaseFormData, current: CreateTestCaseFormData) => boolean;
+
+const EDIT_FIELD_DIFFERS: Record<EditFieldKey, EditFieldDiffer> = {
+  [TEST_CASE_STEP_EDIT_FIELD.TAGS]: (initial, current) =>
+    !areTagsEqual(initial.attributes, current.attributes),
+  [TEST_CASE_STEP_EDIT_FIELD.PRECONDITION]: (initial, current) =>
+    (initial.precondition ?? '') !== (current.precondition ?? ''),
+  [TEST_CASE_STEP_EDIT_FIELD.REQUIREMENTS]: (initial, current) =>
+    !areRequirementsEqual(initial.requirements, current.requirements),
+  [TEST_CASE_STEP_EDIT_FIELD.EXECUTIONS_TIME]: (initial, current) =>
+    (initial.executionEstimationTime ?? null) !== (current.executionEstimationTime ?? null),
+  [TEST_CASE_STEP_EDIT_FIELD.STEPS]: (initial, current) =>
+    !areStepsEqual(initial.steps, current.steps),
+  [TEST_CASE_TEXT_EDIT_FIELD.INSTRUCTIONS]: (initial, current) =>
+    (initial.instructions ?? '') !== (current.instructions ?? ''),
+  [TEST_CASE_TEXT_EDIT_FIELD.EXPECTED_RESULTS]: (initial, current) =>
+    (initial.expectedResult ?? '') !== (current.expectedResult ?? ''),
+  [TEST_CASE_STEP_EDIT_FIELD.ATTACHMENTS]: (initial, current) =>
+    !areAttachmentsEqual(initial, current),
 };
 
 export const getEditedFieldsParam = (
   initial: CreateTestCaseFormData,
   current: CreateTestCaseFormData,
 ): string => {
-  const isStep = isStepTemplate(current);
-  const fields = isStep ? STEP_EDIT_FIELDS : TEXT_EDIT_FIELDS;
+  const fields = isStepTemplate(current) ? STEP_EDIT_FIELDS : TEXT_EDIT_FIELDS;
 
-  const changed: string[] = [];
-
-  fields.forEach((field) => {
-    switch (field) {
-      case TEST_CASE_STEP_EDIT_FIELD.TAGS:
-        if (!areTagsEqual(initial.attributes, current.attributes)) {
-          changed.push(TEST_CASE_STEP_EDIT_FIELD.TAGS);
-        }
-        break;
-      case TEST_CASE_STEP_EDIT_FIELD.PRECONDITION:
-        if ((initial.precondition ?? '') !== (current.precondition ?? '')) {
-          changed.push(TEST_CASE_STEP_EDIT_FIELD.PRECONDITION);
-        }
-        break;
-      case TEST_CASE_STEP_EDIT_FIELD.REQUIREMENTS:
-        if (!areRequirementsEqual(initial.requirements, current.requirements)) {
-          changed.push(TEST_CASE_STEP_EDIT_FIELD.REQUIREMENTS);
-        }
-        break;
-      case TEST_CASE_STEP_EDIT_FIELD.EXECUTIONS_TIME:
-        if (
-          (initial.executionEstimationTime ?? null) !==
-          (current.executionEstimationTime ?? null)
-        ) {
-          changed.push(TEST_CASE_STEP_EDIT_FIELD.EXECUTIONS_TIME);
-        }
-        break;
-      case TEST_CASE_STEP_EDIT_FIELD.STEPS:
-        if (!areStepsEqual(initial.steps, current.steps)) {
-          changed.push(TEST_CASE_STEP_EDIT_FIELD.STEPS);
-        }
-        break;
-      case TEST_CASE_TEXT_EDIT_FIELD.INSTRUCTIONS:
-        if ((initial.instructions ?? '') !== (current.instructions ?? '')) {
-          changed.push(TEST_CASE_TEXT_EDIT_FIELD.INSTRUCTIONS);
-        }
-        break;
-      case TEST_CASE_TEXT_EDIT_FIELD.EXPECTED_RESULTS:
-        if ((initial.expectedResult ?? '') !== (current.expectedResult ?? '')) {
-          changed.push(TEST_CASE_TEXT_EDIT_FIELD.EXPECTED_RESULTS);
-        }
-        break;
-      case TEST_CASE_STEP_EDIT_FIELD.ATTACHMENTS:
-        if (!areAttachmentsEqual(initial, current)) {
-          changed.push(TEST_CASE_STEP_EDIT_FIELD.ATTACHMENTS);
-        }
-        break;
-      default:
-        break;
-    }
-  });
-
-  return changed.join('#');
+  return fields.filter((field) => EDIT_FIELD_DIFFERS[field](initial, current)).join('#');
 };

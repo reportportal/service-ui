@@ -48,10 +48,7 @@ export const useTestCaseTooltipItems = ({ testCase }: TestCaseTooltipItemsProps)
 
   const trackPopoverMenu = (elementName: TestCaseMenuElementName) => {
     trackEvent(
-      TEST_CASE_LIBRARY_EVENTS.choosePopoverMenu(
-        elementName,
-        testCase?.id !== undefined ? String(testCase.id) : undefined,
-      ),
+      TEST_CASE_LIBRARY_EVENTS.choosePopoverMenu(elementName, testCase?.id?.toString()),
     );
   };
 
