@@ -17,6 +17,7 @@
 import { getBasicClickEventParameters } from './common/ga4Utils';
 import { LAUNCHES_PAGE } from './launchesPageEvents';
 import { FILTER_ENTITY_ID_TO_TYPE_MAP } from './common/testItemPages/constants';
+import { getFilterEntityType } from './common/testItemPages/utils';
 import {
   ENTITY_NAME,
   ENTITY_LAUNCH_TYPE,
@@ -41,10 +42,10 @@ export const getAddFilterTypeParam = (conditions = []) =>
   conditions
     .filter(({ value }) => value)
     .map(({ filteringField, value }) => {
-      let analyticsType = FILTER_ENTITY_ID_TO_TYPE_MAP[filteringField] || filteringField;
       if (filteringField === ENTITY_NAME) {
-        analyticsType = FILTER_ENTITY_ID_TO_TYPE_MAP[ENTITY_LAUNCH_NAME];
+        return shortenFilterName(FILTER_ENTITY_ID_TO_TYPE_MAP[ENTITY_LAUNCH_NAME]);
       }
+      const analyticsType = getFilterEntityType({ id: filteringField });
       if (filteringField === ENTITY_LAUNCH_TYPE) {
         return shortenFilterName(`${analyticsType}_${getLaunchTypeConditionKey(value)}`);
       }
