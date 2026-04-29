@@ -214,19 +214,15 @@ export const userAssignedSelector = (projectSlug, organizationSlug) => (state) =
   const assignedProjects = assignedProjectsSelector(state);
   const userRole = userAccountRoleSelector(state);
 
-  let assignedOrganization = organizationSlug ? assignedOrganizations[organizationSlug] : undefined;
+  const assignedOrganization = organizationSlug
+    ? assignedOrganizations[organizationSlug]
+    : undefined;
 
   const assignedProject = findAssignedProjectByOrganization(
     assignedProjects,
     assignedOrganization?.organizationId,
     projectSlug,
   );
-
-  if (!organizationSlug && assignedProject) {
-    assignedOrganization = Object.values(assignedOrganizations).find(
-      (org) => org.organizationId === assignedProject.organizationId,
-    );
-  }
 
   const organizationRole = assignedOrganization?.organizationRole;
   const projectRole = assignedProject?.projectRole;
