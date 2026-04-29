@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, type ReactNode, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { Modal, FieldText } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
@@ -32,6 +32,8 @@ import { isDeleteMilestoneConfirmationValid } from './utils';
 import styles from './deleteMilestoneModal.scss';
 
 const cx = createClassnames(styles);
+
+const renderDeleteConfirmationBold = (chunks: ReactNode) => <strong>{chunks}</strong>;
 
 export const DeleteMilestoneModal = ({ data }: DeleteMilestoneModalProps) => {
   const { formatMessage } = useIntl();
@@ -71,7 +73,7 @@ export const DeleteMilestoneModal = ({ data }: DeleteMilestoneModalProps) => {
         <p className={cx('delete-milestone-modal__message')}>
           {formatMessage(messages.deleteConfirmation, {
             milestoneName: data.name,
-            b: (chunks) => <strong>{chunks}</strong>,
+            b: renderDeleteConfirmationBold,
           })}
         </p>
         <div className={cx('delete-milestone-modal__confirm-field')}>
