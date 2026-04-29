@@ -14,13 +14,7 @@
  * limitations under the License.
  */
 
-import type { TmsMilestoneRS, TmsMilestoneStatus } from 'controllers/milestone';
-
-export type MilestoneCardProps = {
-  milestone: TmsMilestoneRS;
-  onEditMilestone?: (milestone: TmsMilestoneRS) => void;
-  onDuplicateMilestone?: (milestone: TmsMilestoneRS) => void;
-  onDeleteMilestone?: (milestone: TmsMilestoneRS) => void;
-  onCreateTestPlan?: (milestone: TmsMilestoneRS) => void;
-  onChangeMilestoneStatus?: (milestone: TmsMilestoneRS, targetStatus: TmsMilestoneStatus) => void;
-};
+export { DELETE_MILESTONE_MODAL_KEY, DELETE_MILESTONE_CONFIRM_WORD } from './constants';
+export type { DeleteMilestoneModalProps } from './types';
+export { DeleteMilestoneModal } from './deleteMilestoneModal';
+export { useDeleteMilestoneModal } from './useDeleteMilestoneModal';
