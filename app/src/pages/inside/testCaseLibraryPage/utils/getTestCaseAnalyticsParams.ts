@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { isEmpty } from 'es-toolkit/compat';
+import { isEmpty, size } from 'es-toolkit/compat';
 
 import {
   TEST_CASE_PRECONDITIONS_ATTACHMENT_STATUS,
@@ -27,6 +27,8 @@ import {
   type TestCaseTemplateIconType,
   type TestCaseTimeConditionType,
 } from 'analyticsEvents/testCaseLibraryPageEvents';
+import { compareAttributes } from 'common/utils/attributeUtils';
+import { hasStepContent } from 'pages/inside/common/scenarioUtils';
 
 import { CreateTestCaseFormData, ManualScenarioType, TestStep } from '../types';
 import { DEFAULT_EXECUTION_ESTIMATION_TIME } from '../createTestCaseModal/constants';
@@ -60,16 +62,10 @@ export const getTestCaseTimeCondition = (
 const countMeaningfulRequirements = (formData: CreateTestCaseFormData): number =>
   (formData.requirements ?? []).filter(({ value }) => Boolean(value?.trim())).length;
 
-const countTags = (formData: CreateTestCaseFormData): number =>
-  (formData.attributes ?? []).length;
+const countTags = (formData: CreateTestCaseFormData): number => size(formData.attributes);
 
 const countSteps = (formData: CreateTestCaseFormData): number =>
-  toStepsArray(formData.steps).filter(
-    (step) =>
-      Boolean(step?.instructions?.trim()) ||
-      Boolean(step?.expectedResult?.trim()) ||
-      !isEmpty(step?.attachments),
-  ).length;
+  toStepsArray(formData.steps).filter(hasStepContent).length;
 
 export const getTestCaseNumber = (formData: CreateTestCaseFormData): string => {
   const tags = countTags(formData);
@@ -123,6 +119,11 @@ const TEXT_EDIT_FIELDS = [
   TEST_CASE_TEXT_EDIT_FIELD.ATTACHMENTS,
 ] as const;
 
+const sortAttributes = (list: NonNullable<CreateTestCaseFormData['attributes']>) =>
+  [...list].sort((a, b) =>
+    `${a.key ?? ''}=${a.value ?? ''}`.localeCompare(`${b.key ?? ''}=${b.value ?? ''}`),
+  );
+
 const areTagsEqual = (
   tagsA: CreateTestCaseFormData['attributes'],
   tagsB: CreateTestCaseFormData['attributes'],
@@ -132,12 +133,9 @@ const areTagsEqual = (
   if (left.length !== right.length) {
     return false;
   }
-  const serialize = (list: typeof left) =>
-    list
-      .map(({ key, value }) => `${key ?? ''}=${value ?? ''}`)
-      .sort((a, b) => a.localeCompare(b))
-      .join('|');
-  return serialize(left) === serialize(right);
+  const sortedLeft = sortAttributes(left);
+  const sortedRight = sortAttributes(right);
+  return sortedLeft.every((attr, i) => compareAttributes(attr, sortedRight[i]));
 };
 
 const areRequirementsEqual = (

@@ -30,8 +30,8 @@ export const getAutoAnalysisEventValue = (isAnalyzerAvailable, value) => {
 export const normalizeEventString = (string = '') =>
   string.trim().replace(/\s+|-/g, '_').toLowerCase();
 
-const withInstanceSuffix = (value, instanceId) => {
-  if (value === undefined || value === null || value === '') return value;
+const appendInstanceSuffix = (value, instanceId) => {
+  if (value == null || value === '') return value;
 
   const str = String(value);
 
@@ -74,7 +74,7 @@ export const buildEventParameters = (baseEventParameters, additionalParameters) 
   };
 
   if (additionalParameters?.test_case_id !== undefined) {
-    merged.test_case_id = withInstanceSuffix(additionalParameters.test_case_id, instanceId);
+    merged.test_case_id = appendInstanceSuffix(additionalParameters.test_case_id, instanceId);
   }
 
   return merged;

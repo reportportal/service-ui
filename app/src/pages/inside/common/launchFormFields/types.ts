@@ -17,6 +17,8 @@
 import { ReactNode } from 'react';
 import { MessageDescriptor } from 'react-intl';
 import { isPlainObject } from 'es-toolkit';
+import { VoidFn } from '@reportportal/ui-kit/common';
+
 import { ExtendedTestCase } from 'types/testCase';
 
 export enum LaunchMode {
@@ -120,5 +122,5 @@ export interface BaseLaunchModalProps {
   isUncoveredTestsCheckboxAvailable?: boolean;
   hideTestPlanField?: boolean;
   onClearSelection?: () => void;
-  onSubmitClick?: () => void;
+  onSubmitClick?: VoidFn;
 }
