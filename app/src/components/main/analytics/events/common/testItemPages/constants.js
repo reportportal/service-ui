@@ -32,6 +32,7 @@ import {
   ENTITY_AUTO_ANALYZED,
   ENTITY_BTS_ISSUES,
   ENTITY_LAUNCH_TYPE,
+  ENTITY_LAUNCH_NAME
 } from 'components/filterEntities/constants';
 import { POST_ISSUE, LINK_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
 
@@ -57,6 +58,7 @@ export const FILTER_ENTITY_ID_TO_TYPE_MAP = {
   [ENTITY_RETRY]: 'retry',
   [ENTITY_NEW_FAILURE]: 'new_failure',
   [ENTITY_LAUNCH_TYPE]: 'launch_type',
+  [ENTITY_LAUNCH_NAME]: 'launch_name'
 };
 
 export const DEFECT_FROM_TI_GROUP_MAP = {
