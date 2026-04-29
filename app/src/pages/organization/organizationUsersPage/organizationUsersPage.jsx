@@ -38,6 +38,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showModalAction } from 'controllers/modal';
 import { InviteUserModal, Level } from 'pages/inside/common/invitations/inviteUserModal';
 import {
+  activeOrganizationLoadingSelector,
   activeOrganizationSelector,
   fetchOrganizationBySlugAction,
 } from 'controllers/organization';
@@ -65,6 +66,7 @@ const OrganizationUsersPageComponent = ({
   const { trackEvent } = useTracking();
   const users = useSelector(usersSelector);
   const { id: organizationId, slug: organizationSlug } = useSelector(activeOrganizationSelector);
+  const isOrganizationLoading = useSelector(activeOrganizationLoadingSelector);
   const isUsersLoading = useSelector(loadingSelector);
   const [searchValue, setSearchValue] = useState(null);
   const isEmptyUsers = users.length === 0;
@@ -93,7 +95,7 @@ const OrganizationUsersPageComponent = ({
   const getEmptyPageState = () => {
     return searchValue === null ? (
       <EmptyUsersPageState
-        isLoading={isUsersLoading}
+        isLoading={isOrganizationLoading || isUsersLoading}
         isNotEmpty={!isEmptyUsers}
         hasPermission={canInviteUserToOrganization}
         showInviteUserModal={showInviteUserModal}
