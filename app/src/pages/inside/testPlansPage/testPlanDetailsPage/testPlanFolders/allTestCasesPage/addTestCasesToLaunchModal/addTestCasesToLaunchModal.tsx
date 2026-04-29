@@ -20,7 +20,7 @@ import { InjectedFormProps, reduxForm } from 'redux-form';
 
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { ExtendedTestCase } from 'types/testCase';
+import { TestCase } from 'types/testCase';
 import {
   BaseLaunchModal,
   LaunchFormData,
@@ -47,7 +47,7 @@ const AddTestCasesToLaunchModalComponent = ({
 }: AddTestCasesToLaunchModalProps & InjectedFormProps<LaunchFormData>) => {
   const { formatMessage } = useIntl();
 
-  const testCases: ExtendedTestCase[] = useMemo(() => {
+  const testCases: TestCase[] = useMemo(() => {
     return allTestCases.filter((testCase) => selectedRowsIds.includes(testCase.id));
   }, [allTestCases, selectedRowsIds]);
 

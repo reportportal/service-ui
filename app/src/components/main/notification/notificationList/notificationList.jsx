@@ -303,7 +303,7 @@ export const notificationMessages = defineMessages({
   },
   testCasesAddedToTestPlanFromLibrarySuccess: {
     id: 'TestPlanDetailsPage.testCasesAddedToTestPlanFromLibrarySuccess',
-    defaultMessage: 'Test Cases were successfully added to Test Plan.',
+    defaultMessage: '{count, plural, one {# Test Case was} other {# Test Cases were}} successfully added to Test Plan.',
   },
   testCaseUpdatedSuccess: {
     id: 'TestCaseLibraryPage.testCaseUpdatedSuccess',

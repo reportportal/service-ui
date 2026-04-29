@@ -17,6 +17,7 @@
 import { useCallback, CSSProperties } from 'react';
 
 import { createClassnames } from 'common/utils';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 
 import { usePanelActions, usePanelState } from '../testLibraryPanelContext';
 import { SelectableTestCase } from '../selectableTestCase';
@@ -39,9 +40,10 @@ interface SelectableTestCaseRowProps {
 }
 
 export const SelectableTestCaseRow = ({ row, nextRowDepth, style }: SelectableTestCaseRowProps) => {
-  const { testCase, depth, isAddedToTestPlan, connectorDepths } = row;
+  const { testCase, folderId, depth, isAddedToTestPlan, connectorDepths } = row;
   const { toggleTestCasesSelection } = usePanelActions();
-  const { selectedIds } = usePanelState();
+  const { selectedIds, selectedTestCases } = usePanelState();
+  const { canManageTestCases } = useUserPermissions();
 
   const handleToggle = useCallback(
     (testCaseId: number) => {
@@ -65,6 +67,9 @@ export const SelectableTestCaseRow = ({ row, nextRowDepth, style }: SelectableTe
         isSelected={selectedIds.has(testCase.id)}
         isAddedToTestPlan={isAddedToTestPlan}
         depth={depth}
+        folderId={folderId}
+        canDrag={canManageTestCases && !isAddedToTestPlan}
+        selectedTestCases={selectedTestCases}
         onToggle={handleToggle}
       />
     </div>

@@ -15,5 +15,6 @@
  */
 
 export { useAddTestCasesToLaunchModal } from './useAddTestCasesToLaunchModal';
+export { AddTestCasesToLaunchModal } from './addTestCasesToLaunchModal';
 export type { AddTestCasesToLaunchModalProps } from './types';
 export { ADD_TEST_CASES_TO_LAUNCH_MODAL_KEY } from './constants';
