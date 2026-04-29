@@ -29,9 +29,11 @@ import {
 } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { compareAttributes } from 'common/utils/attributeUtils';
 import { hasStepContent } from 'pages/inside/common/scenarioUtils';
+import { Attachment } from 'pages/inside/common/attachmentList';
 
 import { CreateTestCaseFormData, ManualScenarioType, TestStep } from '../types';
 import { DEFAULT_EXECUTION_ESTIMATION_TIME } from '../createTestCaseModal/constants';
+import { getMeaningfulRequirements } from './requirementsUtils';
 
 const isStepTemplate = (formData: CreateTestCaseFormData): boolean =>
   formData.manualScenarioType === ManualScenarioType.STEPS;
@@ -60,7 +62,7 @@ export const getTestCaseTimeCondition = (
     : TEST_CASE_TIME_CONDITION.NO_CUSTOMIZE;
 
 const countMeaningfulRequirements = (formData: CreateTestCaseFormData): number =>
-  (formData.requirements ?? []).filter(({ value }) => Boolean(value?.trim())).length;
+  size(getMeaningfulRequirements(formData.requirements));
 
 const countTags = (formData: CreateTestCaseFormData): number => size(formData.attributes);
 
@@ -142,14 +144,25 @@ const areRequirementsEqual = (
   requirementsA: CreateTestCaseFormData['requirements'],
   requirementsB: CreateTestCaseFormData['requirements'],
 ): boolean => {
-  const left = (requirementsA ?? []).map((requirement) => requirement?.value?.trim() ?? '').filter(Boolean);
-  const right = (requirementsB ?? []).map((requirement) => requirement?.value?.trim() ?? '').filter(Boolean);
+  const left = getMeaningfulRequirements(requirementsA).map(({ value }) => value.trim());
+  const right = getMeaningfulRequirements(requirementsB).map(({ value }) => value.trim());
   if (left.length !== right.length) {
     return false;
   }
   const sortedLeft = [...left].sort((a, b) => a.localeCompare(b)).join('|');
   const sortedRight = [...right].sort((a, b) => a.localeCompare(b)).join('|');
   return sortedLeft === sortedRight;
+};
+
+const areAttachmentListsEqual = (a?: Attachment[], b?: Attachment[]): boolean => {
+  const left = a ?? [];
+  const right = b ?? [];
+  if (size(left) !== size(right)) {
+    return false;
+  }
+  const sortedLeft = left.map(({ id }) => id).sort((x, y) => x - y);
+  const sortedRight = right.map(({ id }) => id).sort((x, y) => x - y);
+  return sortedLeft.every((id, i) => id === sortedRight[i]);
 };
 
 const areStepsEqual = (stepsA: unknown, stepsB: unknown): boolean => {
@@ -163,7 +176,7 @@ const areStepsEqual = (stepsA: unknown, stepsB: unknown): boolean => {
     return (
       step?.instructions === other?.instructions &&
       step?.expectedResult === other?.expectedResult &&
-      (step?.attachments ?? []).length === (other?.attachments ?? []).length
+      areAttachmentListsEqual(step?.attachments, other?.attachments)
     );
   });
 };
@@ -171,16 +184,11 @@ const areStepsEqual = (stepsA: unknown, stepsB: unknown): boolean => {
 const areAttachmentsEqual = (
   attachmentsA: CreateTestCaseFormData,
   attachmentsB: CreateTestCaseFormData,
-): boolean => {
-  if ((attachmentsA.preconditionAttachments ?? []).length !== (attachmentsB.preconditionAttachments ?? []).length) {
-    return false;
-  }
-  if ((attachmentsA.textAttachments ?? []).length !== (attachmentsB.textAttachments ?? []).length) {
-    return false;
-  }
-
-  return true;
-};
+): boolean =>
+  areAttachmentListsEqual(
+    attachmentsA.preconditionAttachments,
+    attachmentsB.preconditionAttachments,
+  ) && areAttachmentListsEqual(attachmentsA.textAttachments, attachmentsB.textAttachments);
 
 type EditFieldKey =
   | (typeof TEST_CASE_STEP_EDIT_FIELD)[keyof typeof TEST_CASE_STEP_EDIT_FIELD]
