@@ -814,7 +814,7 @@
   "EmailFormFields.portPlaceholder": "Увядзіце нумар порта",
   "EmailFormFields.protocolLabel": "Пратакол",
   "EmailFormFields.protocolPlaceholder": "Абярыце пратакол",
-  "EmailFormFields.usernameLabel": "Электронная пошта адпраўніка",
+  "EmailFormFields.usernameLabel": "Імя карыстальніка",
   "EmailFormFields.usernamePlaceholder": "Увядзіце імя карыстальніка",
   "EmptyHistoryItem.emptyItemCaption": "Элемент пусты",
   "EmptyHistoryItem.emptyItemTooltip": "Тэставы сцэнар не запушчаны",

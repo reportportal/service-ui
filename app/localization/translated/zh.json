@@ -814,7 +814,7 @@
   "EmailFormFields.portPlaceholder": "请输入端口号",
   "EmailFormFields.protocolLabel": "协议",
   "EmailFormFields.protocolPlaceholder": "选择协议",
-  "EmailFormFields.usernameLabel": "发送电子邮件",
+  "EmailFormFields.usernameLabel": "用户名",
   "EmailFormFields.usernamePlaceholder": "请输入用户名",
   "EmptyHistoryItem.emptyItemCaption": "测试项为空",
   "EmptyHistoryItem.emptyItemTooltip": "测试用例未执行",

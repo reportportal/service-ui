@@ -814,7 +814,7 @@
   "EmailFormFields.portPlaceholder": "Introduzca el número de puerto",
   "EmailFormFields.protocolLabel": "Protocolo",
   "EmailFormFields.protocolPlaceholder": "Seleccione el protocolo",
-  "EmailFormFields.usernameLabel": "Correo del remitente",
+  "EmailFormFields.usernameLabel": "Nombre de usuario",
   "EmailFormFields.usernamePlaceholder": "Introduzca el nombre de usuario",
   "EmptyHistoryItem.emptyItemCaption": "El elemento está vacío",
   "EmptyHistoryItem.emptyItemTooltip": "El escenario de prueba no se ha ejecutado",

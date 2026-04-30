@@ -814,7 +814,7 @@
   "EmailFormFields.portPlaceholder": "Введіть номер порту",
   "EmailFormFields.protocolLabel": "Протокол",
   "EmailFormFields.protocolPlaceholder": "Оберіть протокол",
-  "EmailFormFields.usernameLabel": "Електронна пошта відправника",
+  "EmailFormFields.usernameLabel": "Ім’я користувача",
   "EmailFormFields.usernamePlaceholder": "Введіть ім’я користувача",
   "EmptyHistoryItem.emptyItemCaption": "Елемент порожній",
   "EmptyHistoryItem.emptyItemTooltip": "Тестовий сценарій не запускався",
