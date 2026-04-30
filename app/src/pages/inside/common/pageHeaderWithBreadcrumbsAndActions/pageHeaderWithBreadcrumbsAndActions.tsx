@@ -15,11 +15,12 @@
  */
 
 import { ReactNode } from 'react';
-import { BreadcrumbsTreeIcon } from '@reportportal/ui-kit';
+import { Breadcrumbs } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
+import { useBreadCrumbsTree } from 'common/hooks';
 import { createClassnames } from 'common/utils';
-import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
+import { NavLink } from 'components/main/navLink';
 
 import styles from './pageHeaderWithBreadcrumbsAndActions.scss';
 
@@ -43,19 +44,26 @@ export const PageHeaderWithBreadcrumbsAndActions = ({
   breadcrumbDescriptors = [],
   actions,
   actionsClassName,
-}: PageHeaderWithBreadcrumbsAndActionsProps) => (
-  <header className={cx('page-header-with-breadcrumbs-and-actions')}>
-    <div className={cx('page-header-with-breadcrumbs-and-actions__breadcrumb')}>
-      <BreadcrumbsTreeIcon />
-      <Breadcrumbs descriptors={breadcrumbDescriptors} />
-    </div>
-    <div className={cx('page-header-with-breadcrumbs-and-actions__title-row')}>
-      <h1 className={cx('page-header-with-breadcrumbs-and-actions__title')}>{title}</h1>
-      {actions && (
-        <div className={cx('page-header-with-breadcrumbs-and-actions__actions', actionsClassName)}>
-          {actions}
-        </div>
-      )}
-    </div>
-  </header>
-);
+}: PageHeaderWithBreadcrumbsAndActionsProps) => {
+  const breadcrumbsTree = useBreadCrumbsTree();
+
+  return (
+    <header className={cx('page-header-with-breadcrumbs-and-actions')}>
+      <div className={cx('page-header-with-breadcrumbs-and-actions__breadcrumb')}>
+        <Breadcrumbs
+          descriptors={breadcrumbDescriptors}
+          tree={breadcrumbsTree}
+          LinkComponent={NavLink}
+        />
+      </div>
+      <div className={cx('page-header-with-breadcrumbs-and-actions__title-row')}>
+        <h1 className={cx('page-header-with-breadcrumbs-and-actions__title')}>{title}</h1>
+        {actions && (
+          <div className={cx('page-header-with-breadcrumbs-and-actions__actions', actionsClassName)}>
+            {actions}
+          </div>
+        )}
+      </div>
+    </header>
+  );
+};
