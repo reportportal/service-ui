@@ -19,3 +19,4 @@ export { useEditMilestoneModal } from './editMilestoneModal/useEditMilestoneModa
 export { useDuplicateMilestoneModal } from './duplicateMilestoneModal/useDuplicateMilestoneModal';
 export { useChangeMilestoneStatusModal } from './changeMilestoneStatusModal/useChangeMilestoneStatusModal';
 export type { ChangeMilestoneStatusModalData } from './changeMilestoneStatusModal/types';
+export { useDeleteMilestoneModal } from './deleteMilestoneModal/useDeleteMilestoneModal';

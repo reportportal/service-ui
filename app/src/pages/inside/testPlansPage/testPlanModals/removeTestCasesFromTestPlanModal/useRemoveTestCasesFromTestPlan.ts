@@ -23,10 +23,19 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
-import { getTestPlanAction, defaultTestPlanTestCasesQueryParams } from 'controllers/testPlan';
+import { fetchSuccessAction } from 'controllers/fetch';
+import {
+  getTestPlanAction,
+  defaultTestPlanTestCasesQueryParams,
+  TEST_PLAN_FOLDERS_NAMESPACE,
+  TestPlanFoldersDto,
+} from 'controllers/testPlan';
+import { PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
+import { LocationInfo } from 'controllers/pages/typed-selectors';
 import { useTestPlanId } from 'hooks/useTypedSelector';
+import { useTestPlanActiveFolders } from 'pages/inside/common/hooks';
 
-import { messages } from './messages';
+import { removeTestCasesFromTestPlanMessages } from './messages';
 import { UseRemoveTestCasesFromTestPlanOptions } from './types';
 
 export const useRemoveTestCasesFromTestPlan = ({
@@ -37,23 +46,52 @@ export const useRemoveTestCasesFromTestPlan = ({
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const testPlanId = useTestPlanId();
+  const testCasesSearchParams = useSelector(
+    (state: { location: LocationInfo }) => state.location?.query?.testCasesSearchParams,
+  );
+  const { activeFolderId, payload } = useTestPlanActiveFolders();
   const { showSuccessNotification, showErrorNotification } = useNotification();
 
   const removeTestCasesFromTestPlan = useCallback(
     async (testCaseIds: number[]) => {
+      const numericTestPlanId = Number(testPlanId);
+
       try {
         showSpinner();
 
-        await fetch(URLS.testPlanTestCasesBatch(projectKey, Number(testPlanId)), {
+        await fetch(URLS.testPlanTestCasesBatch(projectKey, numericTestPlanId), {
           method: 'delete',
           data: {
             testCaseIds,
           },
         });
 
+        const updatedFolders: TestPlanFoldersDto = await fetch(
+          URLS.testFolders(projectKey, { 'filter.eq.testPlanId': numericTestPlanId }),
+        );
+
+        dispatch(fetchSuccessAction(TEST_PLAN_FOLDERS_NAMESPACE, updatedFolders));
+
+        const isActiveFolderRemoved =
+          activeFolderId !== null &&
+          !updatedFolders.content.some((folder) => folder.id === activeFolderId);
+        const targetTestPlanRoute = isActiveFolderRemoved ? undefined : payload?.testPlanRoute;
+        const targetFolderId = isActiveFolderRemoved ? undefined : (activeFolderId ?? undefined);
+
+        dispatch({
+          type: PROJECT_TEST_PLAN_DETAILS_PAGE,
+          payload: {
+            ...payload,
+            testPlanRoute: targetTestPlanRoute,
+          },
+          meta: { query: { testCasesSearchParams } },
+        });
+
         dispatch(
           getTestPlanAction({
-            testPlanId: Number(testPlanId),
+            testPlanId: numericTestPlanId,
+            folderId: targetFolderId,
+            testCasesSearchParams,
             ...defaultTestPlanTestCasesQueryParams,
           }),
         );
@@ -66,7 +104,9 @@ export const useRemoveTestCasesFromTestPlan = ({
         onSuccess?.();
       } catch (error) {
         showErrorNotification({
-          message: (error as Error).message || formatMessage(messages.removeFromTestPlanError),
+          message:
+            (error as Error).message ||
+            formatMessage(removeTestCasesFromTestPlanMessages.removeFromTestPlanError),
         });
         throw error;
       } finally {
@@ -79,6 +119,9 @@ export const useRemoveTestCasesFromTestPlan = ({
       projectKey,
       testPlanId,
       dispatch,
+      payload,
+      activeFolderId,
+      testCasesSearchParams,
       showSuccessNotification,
       onSuccess,
       showErrorNotification,

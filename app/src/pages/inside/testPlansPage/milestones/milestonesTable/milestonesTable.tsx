@@ -40,6 +40,7 @@ interface MilestonesTableProps {
   isLoading: boolean;
   onEditMilestone?: (milestone: TmsMilestoneRS) => void;
   onDuplicateMilestone?: (milestone: TmsMilestoneRS) => void;
+  onDeleteMilestone?: (milestone: TmsMilestoneRS) => void;
   onChangeMilestoneStatus?: (milestone: TmsMilestoneRS, targetStatus: TmsMilestoneStatus) => void;
 }
 
@@ -48,6 +49,7 @@ export const MilestonesTable = ({
   isLoading,
   onEditMilestone,
   onDuplicateMilestone,
+  onDeleteMilestone,
   onChangeMilestoneStatus,
 }: MilestonesTableProps) => {
   const milestonesPageData = useSelector(milestonesPageSelector);
@@ -81,6 +83,7 @@ export const MilestonesTable = ({
               milestone={milestone}
               onEditMilestone={onEditMilestone}
               onDuplicateMilestone={onDuplicateMilestone}
+              onDeleteMilestone={onDeleteMilestone}
               onChangeMilestoneStatus={onChangeMilestoneStatus}
             />
           ))

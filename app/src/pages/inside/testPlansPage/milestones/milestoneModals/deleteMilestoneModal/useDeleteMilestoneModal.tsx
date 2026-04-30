@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,16 @@
  * limitations under the License.
  */
 
-export { TestCaseList } from './testCaseList';
-export { STATUS_TYPES, ITEMS_PER_PAGE_OPTIONS } from './constants';
-export { useTestCaseTooltipItems } from './useTestCaseTooltipItems';
+import { TmsMilestoneRS } from 'controllers/milestone';
+import { useModal } from 'common/hooks';
+
+import { DELETE_MILESTONE_MODAL_KEY } from './constants';
+import { DeleteMilestoneModal } from './deleteMilestoneModal';
+
+export const useDeleteMilestoneModal = () =>
+  useModal<TmsMilestoneRS>({
+    modalKey: DELETE_MILESTONE_MODAL_KEY,
+    renderModal: (milestoneData) => (
+      <DeleteMilestoneModal key={milestoneData?.id} data={milestoneData} />
+    ),
+  });

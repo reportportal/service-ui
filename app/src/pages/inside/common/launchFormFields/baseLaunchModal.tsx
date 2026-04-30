@@ -44,6 +44,7 @@ export const BaseLaunchModal = ({
   hideTestPlanField = false,
   className,
   onClearSelection,
+  onSubmitClick,
 }: BaseLaunchModalProps & InjectedFormProps<LaunchFormData>) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
@@ -75,11 +76,20 @@ export const BaseLaunchModal = ({
     [activeMode, change],
   );
 
+  const trackedSubmit = handleSubmit((values: LaunchFormData) => {
+    onSubmitClick?.();
+    return handleCreateLaunch(values);
+  }) as (event?: FormEvent | MouseEvent<HTMLButtonElement>) => void;
+
+  const handleOkClick = (event: MouseEvent<HTMLButtonElement>) => {
+    trackedSubmit(event);
+  };
+
   const okButton = {
     children: (
       <LoadingSubmitButton isLoading={isLoading}>{formatMessage(okButtonText)}</LoadingSubmitButton>
     ),
-    onClick: handleSubmit(handleCreateLaunch) as (event: MouseEvent<HTMLButtonElement>) => void,
+    onClick: handleOkClick,
     disabled: isSubmitDisabled,
   };
 
@@ -98,7 +108,7 @@ export const BaseLaunchModal = ({
       onClose={() => dispatch(hideModalAction())}
     >
       <div className={className ? `${className}__content-wrapper` : undefined}>
-        <form onSubmit={handleSubmit(handleCreateLaunch) as (event: FormEvent) => void}>
+        <form onSubmit={trackedSubmit as (event: FormEvent) => void}>
           <div className={className ? `${className}__container` : undefined}>
             <LaunchFormFields
               activeMode={activeMode}

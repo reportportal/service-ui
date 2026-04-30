@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
-export { TestCaseList } from './testCaseList';
-export { STATUS_TYPES, ITEMS_PER_PAGE_OPTIONS } from './constants';
-export { useTestCaseTooltipItems } from './useTestCaseTooltipItems';
+import { Requirement } from 'types/testCase';
+
+export const getMeaningfulRequirements = (requirements?: Requirement[]): Requirement[] =>
+  (requirements ?? []).filter(({ value }) => Boolean(value?.trim()));

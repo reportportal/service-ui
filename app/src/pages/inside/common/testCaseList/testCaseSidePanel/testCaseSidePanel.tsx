@@ -17,7 +17,14 @@
 import { memo, useRef, useState } from 'react';
 import { useIntl, MessageDescriptor } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import Parser from 'html-react-parser';
+
+import {
+  TEST_CASE_LIBRARY_EVENTS,
+  TEST_CASE_MENU_ELEMENT_NAME,
+  type TestCaseMenuElementName,
+} from 'analyticsEvents/testCaseLibraryPageEvents';
 import { Button, MeatballMenuIcon, Tooltip, CopyIcon, RerunIcon } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
@@ -138,6 +145,7 @@ interface TestCaseSidePanelProps {
 export const TestCaseSidePanel = memo(
   ({ testCase, isVisible, onClose }: TestCaseSidePanelProps) => {
     const dispatch = useDispatch();
+    const { trackEvent } = useTracking();
     const { canManageTestCases } = useUserPermissions();
     const { organizationSlug, projectSlug } = useSelector(
       urlOrganizationAndProjectSelector,
@@ -161,7 +169,12 @@ export const TestCaseSidePanel = memo(
 
     const testCaseBusinessId = testCase.displayId;
 
+    const trackSidePanelMenu = (elementName: TestCaseMenuElementName) => {
+      trackEvent(TEST_CASE_LIBRARY_EVENTS.clickSidePanelMenu(elementName));
+    };
+
     const handleEditTestCase = () => {
+      trackSidePanelMenu(TEST_CASE_MENU_ELEMENT_NAME.EDIT);
       openEditTestCaseModal({ testCase });
     };
 
@@ -179,10 +192,20 @@ export const TestCaseSidePanel = memo(
       formatMessage,
       {
         [TestCaseMenuAction.EDIT]: handleEditTestCase,
-        [TestCaseMenuAction.DELETE]: () => openDeleteTestCaseModal({ testCase }),
-        [TestCaseMenuAction.MOVE]: () => openMoveTestCaseModal({ testCase }),
-        [TestCaseMenuAction.DUPLICATE]: () => openDuplicateSelectedTestCaseModal({ testCase }),
+        [TestCaseMenuAction.DELETE]: () => {
+          trackSidePanelMenu(TEST_CASE_MENU_ELEMENT_NAME.DELETE);
+          openDeleteTestCaseModal({ testCase });
+        },
+        [TestCaseMenuAction.MOVE]: () => {
+          trackSidePanelMenu(TEST_CASE_MENU_ELEMENT_NAME.MOVE_TO);
+          openMoveTestCaseModal({ testCase });
+        },
+        [TestCaseMenuAction.DUPLICATE]: () => {
+          trackSidePanelMenu(TEST_CASE_MENU_ELEMENT_NAME.DUPLICATE);
+          openDuplicateSelectedTestCaseModal({ testCase });
+        },
         [TestCaseMenuAction.HISTORY]: () => {
+          trackSidePanelMenu(TEST_CASE_MENU_ELEMENT_NAME.HISTORY);
           dispatch({
             type: TEST_CASE_LIBRARY_PAGE,
             payload: {

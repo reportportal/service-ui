@@ -18,10 +18,15 @@ import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
 import Parser from 'html-react-parser';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import moment from 'moment';
 import { BreadcrumbsTreeIcon, Button, MeatballMenuIcon } from '@reportportal/ui-kit';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
+import {
+  TEST_CASE_LIBRARY_EVENTS,
+  TEST_CASE_MENU_ELEMENT_NAME,
+} from 'analyticsEvents/testCaseLibraryPageEvents';
 import { createClassnames } from 'common/utils';
 import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
@@ -68,11 +73,13 @@ export const TestCaseDetailsHeader = ({
   isScenarioEmpty = false,
 }: TestCaseDetailsHeaderProps) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { canManageTestCases } = useUserPermissions();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
   const dispatch = useDispatch();
+  const testCaseIdString = String(testCase.id);
   const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
   const { openModal: openDuplicateSelectedTestCaseModal } = useDuplicateSelectedTestCaseModal();
   const { openModal: openEditScenarioModal } = useEditScenarioModal();
@@ -86,6 +93,12 @@ export const TestCaseDetailsHeader = ({
   const testCaseBusinessId = testCase.displayId;
 
   const handleHistoryOfActions = () => {
+    trackEvent(
+      TEST_CASE_LIBRARY_EVENTS.clickTestCaseMenu(
+        TEST_CASE_MENU_ELEMENT_NAME.HISTORY,
+        testCaseIdString,
+      ),
+    );
     dispatch({
       type: TEST_CASE_LIBRARY_PAGE,
       payload: {
@@ -96,9 +109,25 @@ export const TestCaseDetailsHeader = ({
     });
   };
 
-  const handleDeleteTestCase = () => openDeleteTestCaseModal({ testCase, isDetailsPage: true });
+  const handleDeleteTestCase = () => {
+    trackEvent(
+      TEST_CASE_LIBRARY_EVENTS.clickTestCaseMenu(
+        TEST_CASE_MENU_ELEMENT_NAME.DELETE,
+        testCaseIdString,
+      ),
+    );
+    openDeleteTestCaseModal({ testCase, isDetailsPage: true });
+  };
 
-  const handleDuplicateTestCase = () => openDuplicateSelectedTestCaseModal({ testCase });
+  const handleDuplicateTestCase = () => {
+    trackEvent(
+      TEST_CASE_LIBRARY_EVENTS.clickTestCaseMenu(
+        TEST_CASE_MENU_ELEMENT_NAME.DUPLICATE,
+        testCaseIdString,
+      ),
+    );
+    openDuplicateSelectedTestCaseModal({ testCase });
+  };
 
   const getCreationDate = (timestamp: number) => {
     const date = new Date(timestamp);
@@ -125,6 +154,7 @@ export const TestCaseDetailsHeader = ({
     : [];
 
   const handleEditScenario = () => {
+    trackEvent(TEST_CASE_LIBRARY_EVENTS.clickEditTestCaseFromDetails(testCaseIdString));
     openEditScenarioModal({ testCase });
   };
 

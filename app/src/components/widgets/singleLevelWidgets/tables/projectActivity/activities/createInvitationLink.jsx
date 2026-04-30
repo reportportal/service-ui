@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-import type { TmsMilestoneRS, TmsMilestoneStatus } from 'controllers/milestone';
+import classNames from 'classnames/bind';
+import { FormattedMessage } from 'react-intl';
+import styles from './common.scss';
+import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 
-export type MilestoneCardProps = {
-  milestone: TmsMilestoneRS;
-  onEditMilestone?: (milestone: TmsMilestoneRS) => void;
-  onDuplicateMilestone?: (milestone: TmsMilestoneRS) => void;
-  onDeleteMilestone?: (milestone: TmsMilestoneRS) => void;
-  onCreateTestPlan?: (milestone: TmsMilestoneRS) => void;
-  onChangeMilestoneStatus?: (milestone: TmsMilestoneRS, targetStatus: TmsMilestoneStatus) => void;
-};
+const cx = classNames.bind(styles);
+
+export const CreateInvitationLink = ({ activity: { user } }) => (
+  <>
+    <span className={cx('user-name')}>{user}</span>
+    <FormattedMessage id="CreateInvitationLink" defaultMessage="created invitation link" />
+  </>
+);
+CreateInvitationLink.propTypes = activityItemPropTypes;
+CreateInvitationLink.defaultProps = activityItemDefaultProps;

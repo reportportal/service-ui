@@ -20,6 +20,7 @@ export {
   useEditMilestoneModal,
   useDuplicateMilestoneModal,
   useChangeMilestoneStatusModal,
+  useDeleteMilestoneModal,
 } from './milestoneModals';
 export type { ChangeMilestoneStatusModalData } from './milestoneModals';
 

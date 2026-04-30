@@ -16,13 +16,13 @@
 
 import { getStorageItem } from 'common/utils/storageUtils';
 
-const TMS_OVERRIDE_STORAGE_KEY = 'tms_override';
+const SHOW_IN_PROGRESS_TMS_FEATURES_STORAGE_KEY = 'show_in_progress_tms_features';
 const OVERRIDE_ENABLED = true;
 const OVERRIDE_DISABLED = false;
 
 export const getTmsOverride = () => {
   try {
-    const override = getStorageItem(TMS_OVERRIDE_STORAGE_KEY);
+    const override = getStorageItem(SHOW_IN_PROGRESS_TMS_FEATURES_STORAGE_KEY);
     const isValidOverride = override === OVERRIDE_ENABLED || override === OVERRIDE_DISABLED;
 
     return isValidOverride ? override : null;

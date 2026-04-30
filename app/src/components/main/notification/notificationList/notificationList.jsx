@@ -397,6 +397,10 @@ export const notificationMessages = defineMessages({
     id: 'MilestonesPage.milestoneDuplicatedSuccess',
     defaultMessage: 'Milestone has been duplicated successfully.',
   },
+  milestoneDeletedSuccess: {
+    id: 'MilestonesPage.milestoneDeletedSuccess',
+    defaultMessage: 'Milestone has been deleted successfully.',
+  },
   milestoneTestingStartedSuccess: {
     id: 'MilestonesPage.milestoneTestingStartedSuccess',
     defaultMessage: 'Testing started for the milestone.',
