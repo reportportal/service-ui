@@ -8,6 +8,7 @@
   "AccuracyFormBlock.minShouldMatchHint": "El parámetro acepta valores de '50' a '100'",
   "AccuracyFormBlock.searchLogsMinShouldMatch": "El parámetro acepta valores de '0' a '100'",
   "ActionPanel.actionsBtnTooltip": "Seleccione varios elementos para procesar",
+  "ActionPanel.mergeTypeMismatch": "No puede combinar lanzamientos de diferentes tipos.",
   "ActionPanel.addUserNotification": "Nuevo registro de usuario creado con éxito",
   "ActionPanel.btsIntegrationIsNotConfigured": "La integración BTS no está configurada. Contacte al administrador",
   "ActionPanel.editDefects": "Editar defectos",

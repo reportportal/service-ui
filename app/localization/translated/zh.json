@@ -8,6 +8,7 @@
   "AccuracyFormBlock.minShouldMatchHint": "该参数的值应该在50到100之间",
   "AccuracyFormBlock.searchLogsMinShouldMatch": "该参数的值应该在0到100之间",
   "ActionPanel.actionsBtnTooltip": "选择几个要处理的项目",
+  "ActionPanel.mergeTypeMismatch": "您无法合并不同类型的启动。",
   "ActionPanel.addUserNotification": "新账号创建成功",
   "ActionPanel.btsIntegrationIsNotConfigured": "未配置BTS插件，请联系管理员或用超级管理员用户进行配置。",
   "ActionPanel.editDefects": "编辑缺陷类型",

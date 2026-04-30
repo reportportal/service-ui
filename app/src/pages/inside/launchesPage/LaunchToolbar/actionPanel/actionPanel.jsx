@@ -51,6 +51,10 @@ const messages = defineMessages({
     id: 'ActionPanel.actionsBtnTooltip',
     defaultMessage: ' Select several items to processing',
   },
+  mergeTypeMismatch: {
+    id: 'ActionPanel.mergeTypeMismatch',
+    defaultMessage: "You can't merge launches of different types.",
+  },
 });
 
 const DisabledImportButton = () => (
@@ -164,6 +168,12 @@ export class ActionPanel extends Component {
       ? intl.formatMessage(hamburgerMessages.launchInProgress)
       : '';
 
+    const uniqueLaunchTypes = new Set(selectedLaunches.map((launch) => launch.launchType));
+    const hasMixedLaunchTypes = selectedLaunches.length >= 2 && uniqueLaunchTypes.size > 1;
+    const mergeDisabledTitle = hasMixedLaunchTypes
+      ? intl.formatMessage(messages.mergeTypeMismatch)
+      : '';
+
     return [
       {
         label: intl.formatMessage(COMMON_LOCALE_KEYS.EDIT),
@@ -182,6 +192,8 @@ export class ActionPanel extends Component {
         label: intl.formatMessage(COMMON_LOCALE_KEYS.MERGE),
         value: 'action-merge',
         hidden: debugMode,
+        disabled: hasMixedLaunchTypes,
+        title: mergeDisabledTitle,
         onClick: () => {
           onMerge();
           this.props.tracking.trackEvent(
