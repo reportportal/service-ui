@@ -796,6 +796,7 @@
   "EditWidgetModal.headerText": "编辑小部件",
   "EmailDetailsCard.encryptionLabel": "加密",
   "EmailDetailsCard.encryptionNone": "无",
+  "EmailDetailsCard.createdBy": "{creator} 于 {date}",
   "EmailFormFields.authLabel": "授权",
   "EmailFormFields.fromEmailLabel": "From Email",
   "EmailFormFields.fromNameLabel": "From name",

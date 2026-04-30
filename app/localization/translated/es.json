@@ -796,6 +796,7 @@
   "EditWidgetModal.headerText": "Editar widget",
   "EmailDetailsCard.encryptionLabel": "Cifrado",
   "EmailDetailsCard.encryptionNone": "Ninguno",
+  "EmailDetailsCard.createdBy": "{creator} el {date}",
   "EmailFormFields.authLabel": "Autorización",
   "EmailFormFields.fromEmailLabel": "From Email",
   "EmailFormFields.fromNameLabel": "From name",

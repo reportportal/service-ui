@@ -796,6 +796,7 @@
   "EditWidgetModal.headerText": "Редактировать виджет",
   "EmailDetailsCard.encryptionLabel": "Шифрование",
   "EmailDetailsCard.encryptionNone": "Нет",
+  "EmailDetailsCard.createdBy": "{creator}, {date}",
   "EmailFormFields.authLabel": "Авторизация",
   "EmailFormFields.fromEmailLabel": "From Email",
   "EmailFormFields.fromNameLabel": "From name",

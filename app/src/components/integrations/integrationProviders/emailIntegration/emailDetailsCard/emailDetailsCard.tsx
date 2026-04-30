@@ -81,6 +81,10 @@ const messages = defineMessages({
     id: 'ConnectionSection.connectionErrorMessage',
     defaultMessage: 'Connection Error',
   },
+  createdBy: {
+    id: 'EmailDetailsCard.createdBy',
+    defaultMessage: '{creator} on {date}',
+  },
 });
 
 const PASSWORD_MASK = '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022';
@@ -193,7 +197,7 @@ export function EmailDetailsCard({
           )}
         </div>
         <p className={cx('subtitle')}>
-          {creator} on {moment(creationDate).format('ll')}
+          {formatMessage(messages.createdBy, { creator, date: moment(creationDate).format('ll') })}
         </p>
       </div>
       <div className={cx('parameters-grid')}>

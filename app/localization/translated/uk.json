@@ -796,6 +796,7 @@
   "EditWidgetModal.headerText": "Віджет Редагувати",
   "EmailDetailsCard.encryptionLabel": "Шифрування",
   "EmailDetailsCard.encryptionNone": "Немає",
+  "EmailDetailsCard.createdBy": "{creator}, {date}",
   "EmailFormFields.authLabel": "Авторизація",
   "EmailFormFields.fromEmailLabel": "From Email",
   "EmailFormFields.fromNameLabel": "From name",
