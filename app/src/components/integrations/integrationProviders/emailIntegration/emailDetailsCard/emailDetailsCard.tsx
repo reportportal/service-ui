@@ -86,9 +86,9 @@ const messages = defineMessages({
 const PASSWORD_MASK = '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022';
 
 interface EmailDetailsCardProps {
-  data: IntegrationData;
-  connected: boolean;
-  isEditable: boolean;
+  readonly data: IntegrationData;
+  readonly connected: boolean;
+  readonly isEditable: boolean;
 }
 
 function getEncryptionValue(

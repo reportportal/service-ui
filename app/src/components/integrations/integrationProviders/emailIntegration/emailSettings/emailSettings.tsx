@@ -58,16 +58,16 @@ const messages = defineMessages({
 });
 
 interface EmailSettingsProps {
-  data: IntegrationData;
-  goToPreviousPage: () => void;
+  readonly data: IntegrationData;
+  readonly goToPreviousPage: () => void;
   // TODO: wire up onUpdate when edit form is implemented
   // eslint-disable-next-line react/no-unused-prop-types
-  onUpdate?: (
+  readonly onUpdate?: (
     formData: Record<string, unknown>,
     onSuccess: () => void,
     metaData: Record<string, unknown>,
   ) => void;
-  isGlobal: boolean;
+  readonly isGlobal: boolean;
 }
 
 export function EmailSettings({
