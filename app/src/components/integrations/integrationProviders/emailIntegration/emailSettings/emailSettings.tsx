@@ -124,7 +124,7 @@ export function EmailSettings({
   }, [data, projectKey, isGlobal]);
 
   useEffect(() => {
-    const queryId = query.id ? +query.id : NaN;
+    const queryId = query.id ? +query.id : Number.NaN;
     const hasId = Number.isFinite(queryId) && groupedIntegrations.some((value) => value.id === queryId);
     if (!hasId) {
       // @ts-expect-error redirect typing mismatch with redux-first-router
