@@ -8,6 +8,7 @@
   "AccuracyFormBlock.minShouldMatchHint": "Параметр принимает значения от '50' до '100'",
   "AccuracyFormBlock.searchLogsMinShouldMatch": "Параметр принимает значения от '0' до '100'",
   "ActionPanel.actionsBtnTooltip": "Выберите несколько элементов для обработки",
+  "ActionPanel.mergeTypeMismatch": "Вы не можете объединить запуски разных типов.",
   "ActionPanel.addUserNotification": "Новая запись пользователя создана успешно",
   "ActionPanel.btsIntegrationIsNotConfigured": "СОД интеграция не сконфигурирована. Свяжитесь с администратором",
   "ActionPanel.editDefects": "Редактировать дефекты",

@@ -8,6 +8,7 @@
   "AccuracyFormBlock.minShouldMatchHint": "Параметр прымае значэння ад 50 да 100",
   "AccuracyFormBlock.searchLogsMinShouldMatch": "Параметр прымае значэння ад '0' да '100'",
   "ActionPanel.actionsBtnTooltip": "Абярыце некалькі элементаў для апрацоўкі",
+  "ActionPanel.mergeTypeMismatch": "Вы не можаце аб'яднаць запускі розных тыпаў.",
   "ActionPanel.addUserNotification": "Новы ўліковы запіс быў паспяхова створаны",
   "ActionPanel.btsIntegrationIsNotConfigured": "САХ інтэграцыя не сканфігураваная. Звяжыцеся з адміністратарам",
   "ActionPanel.editDefects": "Рэдагаваць Дэфекты",
