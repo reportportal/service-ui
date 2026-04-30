@@ -26,7 +26,7 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  color: $COLOR--bg-000;
+  color: var(--rp-ui-base-bg-000);
 }
 
 .modal-content {
@@ -50,10 +50,11 @@
 
 .title {
   margin: 23px 0 15px;
-  font-family: $FONT-BOLD, sans-serif;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-bold);
   font-size: 39px;
   line-height: 47px;
-  color: $COLOR--bg-000;
+  color: var(--rp-ui-base-bg-000);
   max-width: 350px;
 
   @media (max-width: $SCREEN_XS_MAX) {
@@ -65,10 +66,11 @@
 
 .subtitle {
   margin: 0 0 16px;
-  font-family: $FONT-REGULAR, sans-serif;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
   font-size: 16px;
   line-height: 27px;
-  color: $COLOR--bg-000;
+  color: var(--rp-ui-base-bg-000);
   max-width: 400px;
 }
 
@@ -79,10 +81,11 @@
 }
 
 .feature-item {
-  font-family: $FONT-REGULAR, sans-serif;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
   font-size: 16px;
   line-height: 27px;
-  color: $COLOR--bg-000;
+  color: var(--rp-ui-base-bg-000);
   padding-left: 7px;
 }
 
@@ -108,15 +111,16 @@
   border: none;
   border-radius: 3px;
   background-color: transparent;
-  font-family: $FONT-REGULAR, sans-serif;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
   font-size: 13px;
   line-height: 18px;
-  color: $COLOR--topaz-2;
+  color: var(--rp-ui-base-topaz);
   text-decoration: none;
   cursor: pointer;
 
   &:hover {
-    color: $COLOR--topaz-hover-2;
+    color: var(--rp-ui-base-topaz-hover);
   }
 }
 
@@ -125,17 +129,18 @@
   align-items: center;
   justify-content: center;
   padding: 8px 35px;
-  border: 1px solid $COLOR--topaz-2;
+  border: 1px solid var(--rp-ui-base-topaz);
   border-radius: 3px;
   background-color: transparent;
-  font-family: $FONT-REGULAR, sans-serif;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
   font-size: 13px;
   line-height: 18px;
-  color: $COLOR--topaz-2;
+  color: var(--rp-ui-base-topaz);
   cursor: pointer;
 
   &:hover {
-    border-color: $COLOR--topaz-hover-2;
+    border-color: var(--rp-ui-base-topaz-hover);
   }
 }
 
@@ -147,16 +152,17 @@
   padding: 9px 31px;
   border: none;
   border-radius: 3px;
-  background-color: $COLOR--topaz-2;
-  font-family: $FONT-REGULAR, sans-serif;
+  background-color: var(--rp-ui-base-topaz);
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
   font-size: 13px;
   line-height: 18px;
-  color: $COLOR--bg-000;
+  color: var(--rp-ui-base-bg-000);
   text-decoration: none;
   cursor: pointer;
 
   &:hover {
-    background-color: $COLOR--topaz-hover-2;
+    background-color: var(--rp-ui-base-topaz-hover);
   }
 }
 
