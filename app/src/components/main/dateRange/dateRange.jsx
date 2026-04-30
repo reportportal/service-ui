@@ -62,15 +62,17 @@ export const DateRange = ({
   return (
     <div className={cx('time-range-wrapper')}>
       <div className={cx('title')}>{formatMessage(messages.customRange)}</div>
-      <div className={cx('date-picker-container')}>
-        <DatePicker
-          selectsRange
-          value={[startDate, endDate]}
-          onChange={handleDateChange}
-          popperClassName={popperClassName}
-          calendarClassName={calendarClassName}
-          maxDate={maxDate}
-        />
+      <div className={cx('field')}>
+        <div className={cx('date-picker-container')}>
+          <DatePicker
+            selectsRange
+            value={[startDate, endDate]}
+            onChange={handleDateChange}
+            popperClassName={popperClassName}
+            calendarClassName={calendarClassName}
+            maxDate={maxDate}
+          />
+        </div>
         {showMaxRangeHint && (
           <span className={cx('max-range-hint')}>
             {formatMessage(messages.maxRangeHint, { maxDays: Number(maxRangeDays) })}
