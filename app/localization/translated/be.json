@@ -523,6 +523,7 @@
   "DashboardTable.edit": "Рэдагаваць",
   "DashboardTable.owner": "Уласнік",
   "DateRange.customRange": "Наладжвальны дыяпазон",
+  "DateRange.maxRangeHint": "Максімальны дыяпазон — {maxDays, plural, one {# дзень} few {# дні} other {# дзён}}",
   "DateRange.from": "Ад",
   "DateRange.to": "Да",
   "DefaultProjectSettings.from": "з",

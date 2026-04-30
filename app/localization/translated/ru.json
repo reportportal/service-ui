@@ -523,6 +523,7 @@
   "DashboardTable.edit": "Редактировать",
   "DashboardTable.owner": "Владелец",
   "DateRange.customRange": "Настраиваемый диапазон",
+  "DateRange.maxRangeHint": "Максимальный диапазон — {maxDays, plural, one {# день} few {# дня} other {# дней}}",
   "DateRange.from": "От",
   "DateRange.to": "До",
   "DefaultProjectSettings.from": "с",
