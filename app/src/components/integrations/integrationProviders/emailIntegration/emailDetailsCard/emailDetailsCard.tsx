@@ -18,7 +18,7 @@ import classNames from 'classnames/bind';
 import moment from 'moment';
 import Parser from 'html-react-parser';
 import { useIntl, defineMessages } from 'react-intl';
-import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
+import { BaseIconButton, EditIcon } from '@reportportal/ui-kit';
 import Tick from 'common/img/newIcons/tick-inline.svg';
 import ErrorIcon from 'common/img/newIcons/error-inline.svg';
 import { separateFromIntoNameAndEmail } from 'common/utils';
@@ -187,13 +187,12 @@ export function EmailDetailsCard({
           </div>
           {isEditable && !blocked && (
             // TODO: onClick handler will be added when edit form is implemented
-            <button
-              type="button"
+            <BaseIconButton
               className={cx('edit-button')}
               data-automation-id="editIntegrationIcon"
             >
-              <span className={cx('edit-button-icon')}>{Parser(PencilIcon)}</span>
-            </button>
+              <EditIcon />
+            </BaseIconButton>
           )}
         </div>
         <p className={cx('subtitle')}>

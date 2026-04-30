@@ -78,37 +78,8 @@
 }
 
 .edit-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 16px;
-  padding: 0;
-  border: none;
   margin-left: auto;
-  background: none;
   flex-shrink: 0;
-  cursor: pointer;
-
-  &:focus-visible {
-    outline: 2px solid var(--rp-ui-base-topaz-focused);
-    border-radius: 2px;
-  }
-}
-
-.edit-button-icon {
-  width: 16px;
-  height: 16px;
-
-  path {
-    fill: var(--rp-ui-base-e-300);
-  }
-}
-
-.edit-button:hover .edit-button-icon {
-  path {
-    fill: var(--rp-ui-base-e-400);
-  }
 }
 
 .subtitle {
