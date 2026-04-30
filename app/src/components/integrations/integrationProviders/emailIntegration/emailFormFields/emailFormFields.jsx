@@ -75,15 +75,15 @@ const messages = defineMessages({
   },
   fromNamePlaceholder: {
     id: 'EmailFormFields.fromNamePlaceholder',
-    defaultMessage: 'Enter sender display name',
+    defaultMessage: 'Name recipients will see',
   },
   fromEmailLabel: {
     id: 'EmailFormFields.fromEmailLabel',
-    defaultMessage: 'From Email',
+    defaultMessage: 'From email',
   },
   fromEmailPlaceholder: {
     id: 'EmailFormFields.fromEmailPlaceholder',
-    defaultMessage: 'Enter sender email address',
+    defaultMessage: 'Email address to send from',
   },
   portLabel: {
     id: 'EmailFormFields.portLabel',
@@ -111,7 +111,7 @@ const messages = defineMessages({
   },
   usernamePlaceholder: {
     id: 'EmailFormFields.usernamePlaceholder',
-    defaultMessage: 'Enter username',
+    defaultMessage: 'Your email or login',
   },
   passwordLabel: {
     id: 'EmailFormFields.passwordLabel',
@@ -119,7 +119,7 @@ const messages = defineMessages({
   },
   passwordPlaceholder: {
     id: 'EmailFormFields.passwordPlaceholder',
-    defaultMessage: 'Enter password',
+    defaultMessage: 'Enter app password',
   },
   encryptionLabel: {
     id: 'EmailFormFields.encryptionLabel',
