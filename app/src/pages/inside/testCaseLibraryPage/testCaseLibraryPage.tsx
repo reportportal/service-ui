@@ -20,16 +20,17 @@ import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import Parser from 'html-react-parser';
 import { isEmpty } from 'es-toolkit/compat';
-import { BreadcrumbsTreeIcon, BubblesLoader, Button, FilterOutlineIcon, FilterFilledIcon } from '@reportportal/ui-kit';
+import { Breadcrumbs, BubblesLoader, Button, FilterOutlineIcon, FilterFilledIcon } from '@reportportal/ui-kit';
 
 import {
   FILTER_FIELD,
   TEST_CASE_LIBRARY_EVENTS,
   type FilterFieldType,
 } from 'analyticsEvents/testCaseLibraryPageEvents';
+import { useBreadCrumbsTree } from 'common/hooks';
 import { createClassnames, debounce } from 'common/utils';
 import { ProjectDetails } from 'pages/organization/constants';
-import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
+import { NavLink } from 'components/main/navLink';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import ImportIcon from 'common/img/import-thin-inline.svg';
@@ -66,6 +67,7 @@ const cx = createClassnames(styles);
 export const TestCaseLibraryPage = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const breadcrumbsTree = useBreadCrumbsTree();
   const { trackEvent } = useTracking();
   const searchSessionTrackedRef = useRef(false);
   const projectName = useSelector(projectNameSelector);
@@ -182,8 +184,11 @@ export const TestCaseLibraryPage = () => {
         <div className={cx('test-case-library-page')}>
           <div className={cx('test-case-library-page__header')}>
             <div className={cx('test-case-library-page__breadcrumb')}>
-              <BreadcrumbsTreeIcon />
-              <Breadcrumbs descriptors={breadcrumbDescriptors} />
+              <Breadcrumbs
+                descriptors={breadcrumbDescriptors}
+                tree={breadcrumbsTree}
+                LinkComponent={NavLink}
+              />
             </div>
             <div className={cx('test-case-library-page__title')}>
               {formatMessage(commonMessages.testCaseLibraryHeader)}
