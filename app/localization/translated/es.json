@@ -523,6 +523,7 @@
   "DashboardTable.edit": "Editar",
   "DashboardTable.owner": "Propietario",
   "DateRange.customRange": "Custom range",
+  "DateRange.maxRangeHint": "El rango máximo de fechas es de {maxDays, plural, one {# día} other {# días}}",
   "DateRange.from": "From",
   "DateRange.to": "To",
   "DefaultProjectSettings.from": "desde",

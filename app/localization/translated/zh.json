@@ -523,6 +523,7 @@
   "DashboardTable.edit": "编辑",
   "DashboardTable.owner": "所有者",
   "DateRange.customRange": "Custom range",
+  "DateRange.maxRangeHint": "最大日期范围为 {maxDays} 天",
   "DateRange.from": "From",
   "DateRange.to": "To",
   "DefaultProjectSettings.from": "从",
