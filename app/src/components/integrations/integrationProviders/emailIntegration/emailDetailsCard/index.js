@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { EmailSettings } from './emailSettings';
+export { EmailDetailsCard } from './emailDetailsCard';
