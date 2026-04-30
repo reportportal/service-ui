@@ -19,15 +19,15 @@
   align-items: center;
   justify-content: space-between;
   padding: 25px 32px 24px 22px;
-  background-color: $COLOR--bg-000;
+  background-color: var(--rp-ui-base-bg-000);
   background-image:
     url('~common/img/tcs-promo-banner-bg.png'),
-    linear-gradient(to right, transparent 70%, $COLOR--bg-000 70%);
+    linear-gradient(to right, transparent 70%, var(--rp-ui-base-bg-000) 70%);
   background-repeat: no-repeat, repeat;
   background-size:
     100% 100%,
     auto;
-  border-top: 1px solid $COLOR--e-100;
+  border-top: 1px solid var(--rp-ui-base-e-100);
 
   @media (max-width: $SCREEN_XS_MAX) {
     flex-direction: column;
@@ -52,8 +52,8 @@
   width: 46px;
   height: 46px;
   border-radius: 8px;
-  background: linear-gradient(180deg, $COLOR--bg-000 0%, $COLOR--bg-100 100%);
-  box-shadow: $BOX_SHADOW--item;
+  background: linear-gradient(180deg, var(--rp-ui-base-bg-000) 0%, var(--rp-ui-base-bg-100) 100%);
+  box-shadow: var(--rp-ui-base-shadow);
 
   svg {
     width: 27px;
@@ -67,19 +67,21 @@
 }
 
 .banner-title {
-  font-family: $FONT-LIGHT, sans-serif;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-light);
   font-size: 18px;
   line-height: 30px;
   letter-spacing: 0.25px;
-  color: $COLOR--almost-black;
+  color: var(--rp-ui-base-almost-black);
 }
 
 .banner-subtitle {
-  font-family: $FONT-REGULAR, sans-serif;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
   font-size: 12px;
   line-height: 16px;
   letter-spacing: 0.25px;
-  color: $COLOR--e-300;
+  color: var(--rp-ui-base-e-300);
 }
 
 .banner-actions {
@@ -98,16 +100,17 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  font-family: $FONT-REGULAR, sans-serif;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
   font-size: 13px;
   line-height: 18px;
-  color: $COLOR--topaz-2;
+  color: var(--rp-ui-base-topaz);
   text-decoration: none;
   cursor: pointer;
   white-space: nowrap;
 
   &:hover {
-    color: $COLOR--topaz-hover-2;
+    color: var(--rp-ui-base-topaz-hover);
   }
 }
 
@@ -133,15 +136,16 @@
   min-width: 120px;
   border: none;
   border-radius: 3px;
-  background-color: $COLOR--topaz-2;
-  font-family: $FONT-REGULAR, sans-serif;
+  background-color: var(--rp-ui-base-topaz);
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
   font-size: 13px;
   line-height: 18px;
-  color: $COLOR--bg-000;
+  color: var(--rp-ui-base-bg-000);
   cursor: pointer;
   white-space: nowrap;
 
   &:hover {
-    background-color: $COLOR--topaz-hover-2;
+    background-color: var(--rp-ui-base-topaz-hover);
   }
 }
