@@ -380,6 +380,7 @@ export class EmailFormFields extends Component {
               label={formatMessage(messages.passwordLabel)}
               disabled={disabled}
               className={cx('fields')}
+              validate={commonValidators.requiredField}
               isRequired
               placeholder={formatMessage(messages.passwordPlaceholder)}
             >
