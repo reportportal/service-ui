@@ -15,14 +15,12 @@
  */
 
 import classNames from 'classnames/bind';
-import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
-import { Modal } from '@reportportal/ui-kit';
+import { Button, ExternalLinkIcon, Modal } from '@reportportal/ui-kit';
 import LogoWhite from 'common/img/logo-white.svg';
-import OpenInNewTabIcon from 'common/img/open-in-new-tab-inline.svg';
 import { referenceDictionary } from 'common/utils/referenceDictionary';
 import { hideModalAction } from 'controllers/modal';
 import { messages } from '../messages';
@@ -57,56 +55,40 @@ export const PremiumPromoModal = ({ onExplorePlans, onContactUs, onNotNow }) => 
 
   const handleClose = () => dispatch(hideModalAction());
 
-  const handleExplorePlans = () => {
-    onExplorePlans?.();
-  };
-
-  const handleContactUs = () => {
-    onContactUs?.();
-  };
-
-  const renderFooter = (closeHandler) => (
-    <div className={cx('modal-footer')}>
-      <a
-        className={cx('contact-us-btn')}
-        href={referenceDictionary.rpContactUs}
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={handleContactUs}
-      >
-        {formatMessage(messages.contactUsButton)}
-      </a>
-      <button
-        type="button"
-        className={cx('not-now-btn')}
-        onClick={() => {
-          onNotNow?.();
-          closeHandler();
-        }}
-      >
-        {formatMessage(messages.notNowButton)}
-      </button>
-      <a
-        className={cx('explore-plans-btn')}
-        href={referenceDictionary.rpExplorePlans}
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={handleExplorePlans}
-      >
-        {formatMessage(messages.explorePlansButton)}
-        <span className={cx('external-link-icon')}>{Parser(OpenInNewTabIcon)}</span>
-      </a>
-    </div>
-  );
+  const modalTitle = <img className={cx('logo')} src={LogoWhite} alt="ReportPortal" />;
 
   return (
     <Modal
       className={cx('premium-promo-modal')}
+      allowCloseOutside={false}
+      title={modalTitle}
       onClose={handleClose}
-      createFooter={renderFooter}
+      footerNode={
+        <Button
+          variant="text"
+          onClick={() => {
+            onContactUs?.();
+            window.open(referenceDictionary.rpContactUs, '_blank', 'noopener,noreferrer');
+          }}
+        >
+          {formatMessage(messages.contactUsButton)}
+        </Button>
+      }
+      cancelButton={{
+        children: formatMessage(messages.notNowButton),
+        onClick: () => onNotNow?.(),
+      }}
+      okButton={{
+        children: formatMessage(messages.explorePlansButton),
+        icon: <ExternalLinkIcon />,
+        iconPlace: 'end',
+        onClick: () => {
+          onExplorePlans?.();
+          window.open(referenceDictionary.rpExplorePlans, '_blank', 'noopener,noreferrer');
+        },
+      }}
     >
       <div className={cx('modal-content')}>
-        <img className={cx('logo')} src={LogoWhite} alt="ReportPortal" />
         <h2 className={cx('title')}>{formatMessage(messages.premiumPopupTitle)}</h2>
         <p className={cx('subtitle')}>{formatMessage(messages.premiumPopupSubtitle)}</p>
         <ul className={cx('feature-list')}>
