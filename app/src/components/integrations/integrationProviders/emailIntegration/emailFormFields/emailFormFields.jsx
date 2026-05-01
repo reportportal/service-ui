@@ -26,9 +26,8 @@ import {
   bindMessageToValidator,
   composeBoundValidators,
 } from 'common/utils/validation';
-import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { Checkbox, Dropdown, FieldText } from '@reportportal/ui-kit';
+import { Dropdown, FieldText, Radio } from '@reportportal/ui-kit';
 import { INTEGRATION_FORM } from 'components/integrations/elements';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { separateFromIntoNameAndEmail } from 'common/utils';
@@ -44,6 +43,10 @@ import {
   USERNAME_KEY,
   PASSWORD_KEY,
   FROM_EMAIL_KEY,
+  ENCRYPTION_MODE_NONE,
+  ENCRYPTION_MODE_TLS,
+  ENCRYPTION_MODE_SSL,
+  PROTOCOL_SMTP,
 } from '../constants';
 import styles from './emailFormFields.scss';
 
@@ -54,33 +57,85 @@ const messages = defineMessages({
     id: 'EmailFormFields.hostLabel',
     defaultMessage: 'Host',
   },
+  hostPlaceholder: {
+    id: 'EmailFormFields.hostPlaceholder',
+    defaultMessage: 'Enter your SMTP server address',
+  },
   protocolLabel: {
     id: 'EmailFormFields.protocolLabel',
     defaultMessage: 'Protocol',
+  },
+  protocolPlaceholder: {
+    id: 'EmailFormFields.protocolPlaceholder',
+    defaultMessage: 'Select protocol',
   },
   fromNameLabel: {
     id: 'EmailFormFields.fromNameLabel',
     defaultMessage: 'From name',
   },
+  fromNamePlaceholder: {
+    id: 'EmailFormFields.fromNamePlaceholder',
+    defaultMessage: 'Name recipients will see',
+  },
   fromEmailLabel: {
     id: 'EmailFormFields.fromEmailLabel',
-    defaultMessage: 'From Email',
+    defaultMessage: 'From email',
+  },
+  fromEmailPlaceholder: {
+    id: 'EmailFormFields.fromEmailPlaceholder',
+    defaultMessage: 'Email address to send from',
   },
   portLabel: {
     id: 'EmailFormFields.portLabel',
     defaultMessage: 'Port',
   },
+  portPlaceholder: {
+    id: 'EmailFormFields.portPlaceholder',
+    defaultMessage: 'Enter port number',
+  },
   authLabel: {
     id: 'EmailFormFields.authLabel',
     defaultMessage: 'Authorization',
+  },
+  authOn: {
+    id: 'EmailFormFields.authOn',
+    defaultMessage: 'On',
+  },
+  authOff: {
+    id: 'EmailFormFields.authOff',
+    defaultMessage: 'Off',
   },
   usernameLabel: {
     id: 'EmailFormFields.usernameLabel',
     defaultMessage: 'Username',
   },
+  usernamePlaceholder: {
+    id: 'EmailFormFields.usernamePlaceholder',
+    defaultMessage: 'Your email or login',
+  },
   passwordLabel: {
     id: 'EmailFormFields.passwordLabel',
     defaultMessage: 'Password',
+  },
+  passwordPlaceholder: {
+    id: 'EmailFormFields.passwordPlaceholder',
+    defaultMessage: 'Enter app password',
+  },
+  encryptionLabel: {
+    id: 'EmailFormFields.encryptionLabel',
+    defaultMessage: 'Encryption',
+  },
+  encryptionNone: {
+    id: 'EmailFormFields.encryptionNone',
+    defaultMessage: 'None',
+  },
+  encryptionTls: {
+    id: 'EmailFormFields.encryptionTls',
+    defaultMessage: 'TLS',
+  },
+  encryptionSsl: {
+    id: 'EmailFormFields.encryptionSsl',
+    defaultMessage: 'SSL',
   },
 });
 
@@ -89,8 +144,49 @@ const portValidator = composeBoundValidators([
   bindMessageToValidator(validate.port, 'portFieldHint'),
 ]);
 
+const getEncryptionMode = (tlsEnabled, sslEnabled) => {
+  if (tlsEnabled && sslEnabled) return ENCRYPTION_MODE_TLS;
+  if (sslEnabled) return ENCRYPTION_MODE_SSL;
+  if (tlsEnabled) return ENCRYPTION_MODE_TLS;
+  return ENCRYPTION_MODE_NONE;
+};
+
+const AuthRadios = ({ value, onChange, disabled, formatMessage }) => {
+  const opts = [
+    { bool: true, label: formatMessage(messages.authOn) },
+    { bool: false, label: formatMessage(messages.authOff) },
+  ];
+  const current = value === true || value === 'true';
+  return (
+    <div className={cx('radio-row')}>
+      {opts.map(({ bool, label }) => (
+        <Radio
+          key={String(bool)}
+          disabled={disabled}
+          option={{
+            value: bool ? 'true' : 'false',
+            label,
+            disabled: !!disabled,
+          }}
+          value={current ? 'true' : 'false'}
+          onChange={() => onChange(bool ? 'true' : 'false')}
+        />
+      ))}
+    </div>
+  );
+};
+
+AuthRadios.propTypes = {
+  value: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
+  onChange: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
+  formatMessage: PropTypes.func.isRequired,
+};
+
 @connect((state) => ({
   authEnabled: formValueSelector(INTEGRATION_FORM)(state, AUTH_ENABLED_KEY),
+  tlsEnabled: formValueSelector(INTEGRATION_FORM)(state, TLS_KEY),
+  sslEnabled: formValueSelector(INTEGRATION_FORM)(state, SSL_KEY),
 }))
 @injectIntl
 export class EmailFormFields extends Component {
@@ -100,34 +196,59 @@ export class EmailFormFields extends Component {
     change: PropTypes.func.isRequired,
     disabled: PropTypes.bool,
     authEnabled: PropTypes.bool,
+    tlsEnabled: PropTypes.bool,
+    sslEnabled: PropTypes.bool,
     initialData: PropTypes.object,
   };
 
   static defaultProps = {
     disabled: false,
     authEnabled: false,
+    tlsEnabled: false,
+    sslEnabled: false,
     initialData: DEFAULT_FORM_CONFIG,
   };
 
   constructor(props) {
     super(props);
-    this.protocolOptions = [{ value: 'smtp', label: 'SMTP' }];
-    this.authOptions = [
-      { value: true, label: 'ON' },
-      { value: false, label: 'OFF' },
-    ];
+    this.protocolOptions = [{ value: PROTOCOL_SMTP, label: 'SMTP' }];
   }
 
   componentDidMount() {
     const { initialData } = this.props;
     const preparedData = separateFromIntoNameAndEmail(initialData);
     this.props.initialize(preparedData);
+    if (preparedData[TLS_KEY] && preparedData[SSL_KEY]) {
+      this.props.change(SSL_KEY, false);
+    }
   }
 
-  onChangeAuthAvailability = (event, value) => {
-    if (!value) {
+  onChangeAuthAvailability = (...args) => {
+    const raw = args.length > 1 ? args[1] : args[0];
+    const enabled = raw === true || raw === 'true';
+    if (!enabled) {
       this.props.change(USERNAME_KEY, '');
       this.props.change(PASSWORD_KEY, '');
+    }
+  };
+
+  onEncryptionChange = (mode) => {
+    const { change } = this.props;
+    switch (mode) {
+      case ENCRYPTION_MODE_NONE:
+        change(TLS_KEY, false);
+        change(SSL_KEY, false);
+        break;
+      case ENCRYPTION_MODE_TLS:
+        change(TLS_KEY, true);
+        change(SSL_KEY, false);
+        break;
+      case ENCRYPTION_MODE_SSL:
+        change(TLS_KEY, false);
+        change(SSL_KEY, true);
+        break;
+      default:
+        break;
     }
   };
 
@@ -138,8 +259,26 @@ export class EmailFormFields extends Component {
     const {
       intl: { formatMessage },
       authEnabled,
+      tlsEnabled,
+      sslEnabled,
       disabled,
     } = this.props;
+
+    const encryptionMode = getEncryptionMode(tlsEnabled, sslEnabled);
+    const encryptionOptions = [
+      {
+        mode: ENCRYPTION_MODE_NONE,
+        label: formatMessage(messages.encryptionNone),
+      },
+      {
+        mode: ENCRYPTION_MODE_TLS,
+        label: formatMessage(messages.encryptionTls),
+      },
+      {
+        mode: ENCRYPTION_MODE_SSL,
+        label: formatMessage(messages.encryptionSsl),
+      },
+    ];
 
     return (
       <Fragment>
@@ -150,6 +289,7 @@ export class EmailFormFields extends Component {
           disabled={disabled}
           className={cx('fields')}
           isRequired
+          placeholder={formatMessage(messages.hostPlaceholder)}
         >
           <FieldErrorHint provideHint={false}>
             <FieldText defaultWidth={false} />
@@ -162,7 +302,10 @@ export class EmailFormFields extends Component {
           className={cx('fields')}
         >
           <FieldErrorHint provideHint={false}>
-            <Dropdown options={this.protocolOptions} />
+            <Dropdown
+              options={this.protocolOptions}
+              placeholder={formatMessage(messages.protocolPlaceholder)}
+            />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
@@ -170,6 +313,7 @@ export class EmailFormFields extends Component {
           label={formatMessage(messages.fromNameLabel)}
           disabled={disabled}
           className={cx('fields')}
+          placeholder={formatMessage(messages.fromNamePlaceholder)}
         >
           <FieldErrorHint provideHint={false}>
             <FieldText defaultWidth={false} />
@@ -182,6 +326,7 @@ export class EmailFormFields extends Component {
           className={cx('fields')}
           validate={commonValidators.email}
           isRequired
+          placeholder={formatMessage(messages.fromEmailPlaceholder)}
         >
           <FieldErrorHint provideHint={false}>
             <FieldText defaultWidth={false} />
@@ -196,6 +341,7 @@ export class EmailFormFields extends Component {
           normalize={this.normalizeValue}
           className={cx('fields')}
           isRequired
+          placeholder={formatMessage(messages.portPlaceholder)}
         >
           <FieldErrorHint provideHint={false}>
             <FieldText defaultWidth={false} />
@@ -205,11 +351,13 @@ export class EmailFormFields extends Component {
           name={AUTH_ENABLED_KEY}
           label={formatMessage(messages.authLabel)}
           disabled={disabled}
-          format={Boolean}
+          className={cx('fields')}
+          format={(v) => (v ? 'true' : 'false')}
+          parse={(v) => v === 'true'}
           onChange={this.onChangeAuthAvailability}
         >
           <FieldErrorHint provideHint={false}>
-            <Dropdown options={this.authOptions} />
+            <AuthRadios disabled={disabled} formatMessage={formatMessage} />
           </FieldErrorHint>
         </FieldElement>
         {authEnabled && (
@@ -221,6 +369,7 @@ export class EmailFormFields extends Component {
               className={cx('fields')}
               validate={commonValidators.requiredField}
               isRequired
+              placeholder={formatMessage(messages.usernamePlaceholder)}
             >
               <FieldErrorHint provideHint={false}>
                 <FieldText defaultWidth={false} />
@@ -231,7 +380,9 @@ export class EmailFormFields extends Component {
               label={formatMessage(messages.passwordLabel)}
               disabled={disabled}
               className={cx('fields')}
+              validate={commonValidators.requiredField}
               isRequired
+              placeholder={formatMessage(messages.passwordPlaceholder)}
             >
               <FieldErrorHint provideHint={false}>
                 <FieldText defaultWidth={false} type="password" />
@@ -239,16 +390,22 @@ export class EmailFormFields extends Component {
             </FieldElement>
           </>
         )}
-        <div className={cx('checkboxes-container')}>
-          <div className={cx('checkbox-wrapper')}>
-            <FieldProvider name={TLS_KEY} disabled={disabled} format={Boolean}>
-              <Checkbox>TLS</Checkbox>
-            </FieldProvider>
-          </div>
-          <div className={cx('checkbox-wrapper')}>
-            <FieldProvider name={SSL_KEY} disabled={disabled} format={Boolean}>
-              <Checkbox>SSL</Checkbox>
-            </FieldProvider>
+        <div className={cx('fields', 'encryption-block')}>
+          <span className={cx('encryption-label')}>{formatMessage(messages.encryptionLabel)}</span>
+          <div className={cx('radio-row')}>
+            {encryptionOptions.map(({ mode, label }) => (
+              <Radio
+                key={mode}
+                disabled={disabled}
+                option={{
+                  value: mode,
+                  label,
+                  disabled: !!disabled,
+                }}
+                value={encryptionMode}
+                onChange={() => this.onEncryptionChange(mode)}
+              />
+            ))}
           </div>
         </div>
       </Fragment>

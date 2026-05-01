@@ -84,7 +84,7 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
 
   const onSubmit = (newData) => {
     if (isGlobal) {
-      if (!customProps.editAuthMode) {
+      if (!customProps?.editAuthMode) {
         trackEvent(PLUGINS_PAGE_EVENTS.clickCreateGlobalIntegration(data.instanceType));
       } else {
         trackEvent(PLUGINS_PAGE_EVENTS.clickEditGlobalIntegration(data.instanceType));
@@ -99,7 +99,7 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
     Boolean(integrationFieldsExtension);
 
   const okButton = {
-    children: customProps.editAuthMode
+    children: customProps?.editAuthMode
       ? formatMessage(COMMON_LOCALE_KEYS.SAVE)
       : formatMessage(COMMON_LOCALE_KEYS.CREATE),
     onClick: () => handleSubmit(onSubmit)(),
@@ -115,14 +115,25 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
   const editTitle = isGlobal
     ? messages.editGlobalIntegrationTitle
     : messages.editProjectIntegrationTitle;
+  const defaultTitleMessage = customProps?.editAuthMode ? editTitle : createTitle;
 
   const FieldsComponent =
     INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP[data.instanceType] ||
     (integrationFieldsExtension ? ExtensionLoader : null);
 
+  const modalTitle = customProps?.modalTitleMessage
+    ? formatMessage(customProps.modalTitleMessage)
+    : formatMessage(defaultTitleMessage);
+  const noticeCaption = customProps?.globalIntegrationsNoticeCaption
+    ? formatMessage(customProps.globalIntegrationsNoticeCaption)
+    : formatMessage(messages.globalIntegrationsSystemMessageModalCaption);
+  const noticeBody = customProps?.globalIntegrationsNoticeBody
+    ? formatMessage(customProps.globalIntegrationsNoticeBody)
+    : formatMessage(messages.globalIntegrationsSystemMessageModalText);
+
   return (
     <Modal
-      title={formatMessage(customProps.editAuthMode ? editTitle : createTitle)}
+      title={modalTitle}
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
@@ -130,12 +141,8 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
       scrollable
     >
       {data.hasWarningMessage && (
-        <SystemMessage
-          header={formatMessage(COMMON_LOCALE_KEYS.warning)}
-          mode="warning"
-          caption={formatMessage(messages.globalIntegrationsSystemMessageModalCaption)}
-        >
-          {formatMessage(messages.globalIntegrationsSystemMessageModalText)}
+        <SystemMessage mode="info" caption={noticeCaption}>
+          {noticeBody}
         </SystemMessage>
       )}
 
