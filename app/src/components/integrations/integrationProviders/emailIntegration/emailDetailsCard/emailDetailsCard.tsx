@@ -18,9 +18,8 @@ import classNames from 'classnames/bind';
 import moment from 'moment';
 import Parser from 'html-react-parser';
 import { useIntl, defineMessages } from 'react-intl';
-import { BaseIconButton, EditIcon } from '@reportportal/ui-kit';
+import { BaseIconButton, EditIcon, ErrorIcon } from '@reportportal/ui-kit';
 import Tick from 'common/img/newIcons/tick-inline.svg';
-import ErrorIcon from 'common/img/newIcons/error-inline.svg';
 import { separateFromIntoNameAndEmail } from 'common/utils';
 import type { IntegrationData, IntegrationParameters } from '../types';
 import {
@@ -177,7 +176,7 @@ export function EmailDetailsCard({
             })}
           >
             <span className={cx('connection-badge-icon')}>
-              {Parser(connected ? Tick : ErrorIcon)}
+              {connected ? Parser(Tick) : <ErrorIcon />}
             </span>
             <span className={cx('connection-badge-text')}>
               {formatMessage(

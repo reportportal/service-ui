@@ -18,8 +18,7 @@ import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
 import { useIntl, defineMessages } from 'react-intl';
-import { BubblesLoader } from '@reportportal/ui-kit';
-import Parser from 'html-react-parser';
+import { BubblesLoader, Button, DeleteIcon } from '@reportportal/ui-kit';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -39,7 +38,6 @@ import { showModalAction } from 'controllers/modal';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { redirect } from 'redux-first-router';
-import TrashBin from 'common/img/newIcons/bin-inline.svg';
 import { IntegrationData } from '../types';
 import { EmailDetailsCard } from '../emailDetailsCard';
 import styles from './emailSettings.scss';
@@ -178,15 +176,14 @@ export function EmailSettings({
               <h3 className={cx('delete-title')}>
                 {formatMessage(messages.deleteIntegrationTitle)}
               </h3>
-              <button
-                type="button"
-                className={cx('delete-button')}
+              <Button
+                variant="ghost-danger"
+                icon={<DeleteIcon />}
                 onClick={handleDeleteClick}
                 data-automation-id="deleteIntegrationButton"
               >
-                <span className={cx('delete-button-icon')}>{Parser(TrashBin)}</span>
-                <span>{formatMessage(COMMON_LOCALE_KEYS.DELETE)}</span>
-              </button>
+                {formatMessage(COMMON_LOCALE_KEYS.DELETE)}
+              </Button>
             </div>
           )}
         </>
