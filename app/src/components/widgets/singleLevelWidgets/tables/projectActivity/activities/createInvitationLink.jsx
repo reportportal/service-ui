@@ -14,4 +14,18 @@
  * limitations under the License.
  */
 
-export { EmailSettings } from './emailSettings';
+import classNames from 'classnames/bind';
+import { FormattedMessage } from 'react-intl';
+import styles from './common.scss';
+import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
+
+const cx = classNames.bind(styles);
+
+export const CreateInvitationLink = ({ activity: { user } }) => (
+  <>
+    <span className={cx('user-name')}>{user}</span>
+    <FormattedMessage id="CreateInvitationLink" defaultMessage="created invitation link" />
+  </>
+);
+CreateInvitationLink.propTypes = activityItemPropTypes;
+CreateInvitationLink.defaultProps = activityItemDefaultProps;

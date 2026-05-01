@@ -19,7 +19,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import moment from 'moment';
 import Parser from 'html-react-parser';
 import { showModalAction } from 'controllers/modal';
@@ -58,9 +57,13 @@ const messages = defineMessages({
     id: 'ConnectionSection.warningMessageDescription',
     defaultMessage: 'Global Integrations are inactive as you have configured Project Integration',
   },
+  deleteIntegrationTitle: {
+    id: 'ConnectionSection.deleteIntegrationTitle',
+    defaultMessage: 'Delete {name}',
+  },
   deleteIntegrationDescription: {
     id: 'ConnectionSection.deleteIntegrationDescription',
-    defaultMessage: 'Are you sure you want to delete Integration',
+    defaultMessage: 'Are you sure you want to delete Integration {name}?',
   },
 });
 
@@ -115,8 +118,8 @@ export class ConnectionSection extends Component {
       id: 'deleteIntegrationModal',
       data: {
         onConfirm: this.props.onRemoveIntegration,
-        modalTitle: `${formatMessage(COMMON_LOCALE_KEYS.DELETE)} ${data.name}`,
-        description: `${formatMessage(messages.deleteIntegrationDescription)} ${data.name}?`,
+        modalTitle: formatMessage(messages.deleteIntegrationTitle, { name: data.name }),
+        description: formatMessage(messages.deleteIntegrationDescription, { name: data.name }),
       },
     });
   };
