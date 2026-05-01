@@ -116,8 +116,7 @@ const ReduxFormComponent = reduxForm<CreateTestCaseFormData, EditTestCaseModalPr
   }),
   enableReinitialize: false,
 })(EditTestCaseModalComponent);
-
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+ 
 export const EditSelectedTestCaseModal = withModal(EDIT_SELECTED_TEST_CASE_MODAL_KEY)(
   ReduxFormComponent,
 );
