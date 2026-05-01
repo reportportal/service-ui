@@ -47,11 +47,11 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   deleteIntegrationDescription: {
     id: 'ConnectionSection.deleteIntegrationDescription',
-    defaultMessage: 'Are you sure you want to delete Integration',
+    defaultMessage: 'Are you sure you want to delete Integration {name}?',
   },
   deleteIntegrationTitle: {
     id: 'EmailSettings.deleteIntegrationTitle',
-    defaultMessage: 'Delete integration',
+    defaultMessage: 'Delete {name}',
   },
 });
 
@@ -147,8 +147,8 @@ export function EmailSettings({
         id: 'deleteIntegrationModal',
         data: {
           onConfirm: removeIntegration,
-          modalTitle: `${formatMessage(COMMON_LOCALE_KEYS.DELETE)} ${data.name}`,
-          description: `${formatMessage(messages.deleteIntegrationDescription)} ${data.name}?`,
+          modalTitle: formatMessage(messages.deleteIntegrationTitle, { name: data.name }),
+          description: formatMessage(messages.deleteIntegrationDescription, { name: data.name }),
         },
       }),
     );
