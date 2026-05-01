@@ -46,25 +46,27 @@ export const RecipientsContainer = ({ error, value = [], ...rest }) => {
 
   const parseEmailsString = (string) => {
     const delimiters = /[,;\n]+/;
-    const angleBracketRegex = /<([^\s<>@]+@[^\s<>@]+)>/;
+    const angleBracketRegex = /<([^\s<>@]+@[^\s<>@]+)>/g;
 
     const tokens = string
       .split(delimiters)
       .map((token) => token.trim())
       .filter(Boolean);
 
-    const result = tokens.map((token) => {
-      const match = token.match(angleBracketRegex);
-      return match ? match[1] : token;
+    const result = tokens.flatMap((token) => {
+      const angleBracketMatches = Array.from(token.matchAll(angleBracketRegex), (match) => match[1]);
+      return angleBracketMatches.length > 0 ? angleBracketMatches : [token];
     });
+
+    const uniqueResult = [...new Set(result)];
 
     // For multi-token paste, keep only valid emails and ignore garbage.
     // For single-token input, preserve existing validation flow.
-    if (result.length > 1) {
-      return [...new Set(result.filter((token) => validate.email(token)))];
+    if (uniqueResult.length > 1) {
+      return uniqueResult.filter((token) => validate.email(token));
     }
 
-    return [...new Set(result)];
+    return uniqueResult;
   };
 
   const recipientsError =
