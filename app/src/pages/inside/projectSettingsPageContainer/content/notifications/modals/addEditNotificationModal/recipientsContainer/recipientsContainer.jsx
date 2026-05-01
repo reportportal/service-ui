@@ -45,7 +45,12 @@ export const RecipientsContainer = ({ error, ...rest }) => {
     if (validate.email(email)) {
       return false;
     }
-    !recipientsWithError.includes(email) && setRecipientsWithError([...recipientsWithError, email]);
+    setRecipientsWithError((prevRecipients) => {
+      if (prevRecipients.includes(email)) {
+        return prevRecipients;
+      }
+      return [...prevRecipients, email];
+    });
 
     return 'error';
   };
@@ -55,9 +60,27 @@ export const RecipientsContainer = ({ error, ...rest }) => {
   };
 
   const parseEmailsString = (string) => {
-    const re = /<([^\s<>@]+@[^\s<>@]+)>/g;
-    const emails = Array.from(string.matchAll(re), (m) => m[1]);
-    return [...new Set(emails)];
+    const emails = new Set();
+
+    const angleBracketRegex = /<([^\s<>@]+@[^\s<>@]+)>/g;
+    const angleBracketMatches = Array.from(string.matchAll(angleBracketRegex), (m) => m[1]);
+    angleBracketMatches.forEach((email) => emails.add(email));
+
+    if (emails.size > 0) {
+      return Array.from(emails);
+    }
+
+    const delimiters = /[,;\n]+/;
+    const tokens = string
+      .split(delimiters)
+      .map((token) => token.trim())
+      .filter(Boolean);
+
+    if (tokens.length > 1) {
+      return [...new Set(tokens.filter((token) => validate.email(token)))];
+    }
+
+    return [...new Set(tokens)];
   };
 
   const recipientsError =
@@ -85,6 +108,3 @@ RecipientsContainer.propTypes = {
   error: PropTypes.string,
 };
 
-RecipientsContainer.defaultProps = {
-  error: '',
-};
