@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+.fake-input-wrapper {
+  margin-bottom: 24px;
+}
+
 .fake-input-label {
   margin-bottom: 4px;
   font-family: $FONT-ROBOTO-MEDIUM;
@@ -26,7 +30,7 @@
   box-sizing: border-box;
   width: 240px;
   padding: 7px 12px;
-  margin-bottom: 24px;
+  margin-bottom: 8px;
   background: transparent;
   color: $COLOR--almost-black;
   border: 1px solid $COLOR--e-100;
@@ -36,6 +40,25 @@
   line-height: 20px;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.info-wrapper {
+  display: flex;
+}
+
+.info {
+  display: block;
+  margin: 0 0 4px 0;
+  color: var(--rp-ui-base-e-300);
+  font-size: 11px;
+  line-height: 16px;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
+}
+
+.clipboard-button {
+  margin-top: 0;
+  height: 16px;
 }
 
 .dropdown {
