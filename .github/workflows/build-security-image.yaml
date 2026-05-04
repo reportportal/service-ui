@@ -22,9 +22,11 @@ jobs:
         id: vars
         run: |
           echo "image-tag=$(echo '${{ github.ref_name }}' | sed 's|secure/||')-${{ github.run_number }}" >> $GITHUB_OUTPUT
+          echo "version=$(echo '${{ github.ref_name }}' | sed -nE 's/.*([0-9]+\.[0-9]+\.[0-9]+).*/\1/p')" >> $GITHUB_OUTPUT
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
     outputs:
       image-tag: ${{ steps.vars.outputs.image-tag }}
+      version: ${{ steps.vars.outputs.version }}
       date: ${{ steps.vars.outputs.date }}
 
   build-security-image:
@@ -35,6 +37,7 @@ jobs:
       aws-region: ${{ vars.AWS_REGION }}
       build-platforms: ${{ vars.BUILD_PLATFORMS || 'linux/amd64,linux/arm64' }}
       image-tag: ${{ needs.variables-setup.outputs.image-tag }}
+      version: ${{ needs.variables-setup.outputs.version }}
       additional-tag: 'secure-latest'
       date: ${{ needs.variables-setup.outputs.date }}
     secrets:
