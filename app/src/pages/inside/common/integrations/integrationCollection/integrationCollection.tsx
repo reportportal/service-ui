@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,38 +14,46 @@
  * limitations under the License.
  */
 
-import PropTypes from 'prop-types';
-import classNames from 'classnames/bind';
+import { ReactNode } from 'react';
 import moment from 'moment';
+import { createClassnames } from 'common/utils';
+import { IntegrationItem } from '../types';
 import { IntegrationCollectionItem } from './integrationCollectionItem';
 import styles from './integrationCollection.scss';
 
-const cx = classNames.bind(styles);
+const cx = createClassnames(styles);
 
-export const IntegrationCollection = ({ items, disabled, openIntegration }) => (
-  <div className={cx('instances-list-wrapper')}>
+export interface IntegrationCollectionProps {
+  items: IntegrationItem[];
+  inactive?: boolean;
+  inactiveTooltip?: ReactNode;
+  openIntegration?: (item: IntegrationItem) => void;
+  testConnection?: (id: number) => Promise<unknown>;
+}
+
+export const IntegrationCollection = ({
+  items,
+  inactive,
+  inactiveTooltip,
+  openIntegration,
+  testConnection,
+}: IntegrationCollectionProps) => (
+  <div>
     <ul className={cx('instances-list')}>
       {items.map((item) => (
         <IntegrationCollectionItem
           key={item.id}
           item={item}
           id={item.id}
-          disabled={disabled}
+          inactive={inactive}
+          inactiveTooltip={inactiveTooltip}
           title={item.name}
           creator={item.creator}
           creationInfo={moment(item.creationDate).format('ll')}
           openIntegration={openIntegration}
+          testConnection={testConnection}
         />
       ))}
     </ul>
   </div>
 );
-IntegrationCollection.propTypes = {
-  items: PropTypes.array.isRequired,
-  disabled: PropTypes.bool,
-  openIntegration: PropTypes.func,
-};
-IntegrationCollection.defaultProps = {
-  disabled: false,
-  openIntegration: () => {},
-};

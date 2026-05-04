@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,11 +36,7 @@ export const messages = defineMessages({
   },
   noGlobalIntegrationsButtonAdd: {
     id: 'IntegrationsDescription.noGlobalIntegrationsButtonAdd',
-    defaultMessage: 'Add Project Integration',
-  },
-  backToIntegrations: {
-    id: 'IntegrationsDescription.backToIntegrations',
-    defaultMessage: 'Back to Integrations',
+    defaultMessage: 'Create Project Integration',
   },
   version: {
     id: 'InfoSection.version',
@@ -48,21 +44,20 @@ export const messages = defineMessages({
   },
   globalIntegrationTitle: {
     id: 'IntegrationsDescription.globalIntegrationTitle',
-    defaultMessage: 'Global Integrations',
+    defaultMessage: 'Global integrations',
   },
   globalIntegrationText: {
     id: 'IntegrationsDescription.globalIntegrationText',
     defaultMessage:
-      'Global Integrations are created on the instance level and are applied to all projects',
+      'Created at the instance level and applied to all projects unless organizational or project-specific configurations are set.',
   },
-
   projectIntegrationTitle: {
     id: 'IntegrationsDescription.projectIntegrationTitle',
-    defaultMessage: 'Project Integrations',
+    defaultMessage: 'Project integrations',
   },
   projectIntegrationText: {
     id: 'IntegrationsDescription.projectIntegrationText',
-    defaultMessage: 'Project Integrations are created per project',
+    defaultMessage: 'Default integration configurations for the project.',
   },
   projectIntegrationReset: {
     id: 'IntegrationsDescription.projectIntegrationReset',
@@ -75,11 +70,7 @@ export const messages = defineMessages({
   },
   projectIntegrationAddLimited: {
     id: 'IntegrationsDescription.projectIntegrationAddLimited',
-    defaultMessage: 'Only one Project Integration can be created',
-  },
-  settings: {
-    id: 'IntegrationsDescription.settings',
-    defaultMessage: 'Settings',
+    defaultMessage: 'Only one project integration can be added',
   },
   integrationList: {
     id: 'IntegrationsDescription.integrationList',
@@ -88,5 +79,26 @@ export const messages = defineMessages({
   linkToDocumentation: {
     id: 'IntegrationsDescription.linkToDocumentation',
     defaultMessage: 'Link to <a>Documentation</a>',
+  },
+  inactiveGlobalIntegrations: {
+    id: 'IntegrationsDescription.inactiveGlobalIntegrations',
+    defaultMessage:
+      'Global configurations are inactive because a project integration has been configured',
+  },
+  emptyStateText: {
+    id: 'IntegrationsDescription.emptyStateText',
+    defaultMessage: 'Integration is not configured yet',
+  },
+  createIntegration: {
+    id: 'IntegrationsDescription.createIntegration',
+    defaultMessage: 'Create Integration',
+  },
+  resetIntegrations: {
+    id: 'IntegrationsDescription.resetIntegrations',
+    defaultMessage: 'Reset to Global Integration',
+  },
+  integrationCreatedByOn: {
+    id: 'IntegrationsDescription.integrationCreatedByOn',
+    defaultMessage: '{creator} on {creationInfo}',
   },
 });

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { redirect } from 'redux-first-router';
 import classNames from 'classnames/bind';
@@ -40,12 +40,15 @@ import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/se
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { PROJECT_SETTINGS_INTEGRATION } from 'analyticsEvents/projectSettingsPageEvents';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
-import { EMAIL } from 'common/constants/pluginNames';
-import { combineNameAndEmailToFrom } from 'common/utils';
+import { EMAIL, SAUCE_LABS } from 'common/constants/pluginNames';
+import { combineNameAndEmailToFrom, fetch } from 'common/utils';
+import { URLS } from 'common/urls';
+import { projectKeySelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { IntegrationHeader } from './integrationHeader';
-import { AvailableIntegrations } from './availableIntegrations';
-import { messages } from './messages';
+import { IntegrationHeader } from 'pages/inside/common/integrations/integrationHeader';
+import { AvailableIntegrations } from 'pages/inside/common/integrations/availableIntegrations';
+import { messages } from 'pages/inside/common/integrations/messages';
 import styles from './integrationInfo.scss';
 
 const cx = classNames.bind(styles);
@@ -59,6 +62,8 @@ export const IntegrationInfo = (props) => {
   const { canUpdateSettings } = useUserPermissions();
   const globalIntegrations = useSelector(namedGlobalIntegrationsSelector);
   const projectIntegrations = useSelector(namedProjectIntegrationsSelector);
+  const projectKey = useSelector(projectKeySelector);
+  const activeProjectKey = useSelector(activeProjectKeySelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
   const dispatch = useDispatch();
   const {
@@ -77,6 +82,26 @@ export const IntegrationInfo = (props) => {
   );
   const isAtLeastOneIntegrationAvailable =
     availableGlobalIntegrations.length > 0 || availableProjectIntegrations.length > 0;
+
+  const isProjectIntegrationAddLimited = useMemo(
+    () => [EMAIL, SAUCE_LABS].includes(pluginName) && availableProjectIntegrations.length > 0,
+    [pluginName, availableProjectIntegrations],
+  );
+
+  const projectIntegrationCreateButtonTooltip = isProjectIntegrationAddLimited
+    ? formatMessage(messages.projectIntegrationAddLimited)
+    : undefined;
+
+  const testProjectIntegrationConnection = useCallback(
+    (integrationId) =>
+      fetch(URLS.testIntegrationConnection(projectKey || activeProjectKey, integrationId)),
+    [projectKey, activeProjectKey],
+  );
+
+  const testGlobalIntegrationConnection = useCallback(
+    (integrationId) => fetch(URLS.testGlobalIntegrationConnection(integrationId)),
+    [],
+  );
 
   useEffect(() => {
     let isGlobal = false;
@@ -188,9 +213,13 @@ export const IntegrationInfo = (props) => {
 
   const integrationListBreadcrumbs = [
     {
-      id: 'backToIntegrations',
-      title: formatMessage(messages.backToIntegrations),
+      id: 'integrationList',
+      title: formatMessage(messages.integrationList),
       link: allIntegrationListLink,
+    },
+    {
+      id: pluginName,
+      title: details.name || pluginName,
     },
   ];
   const integrationBreadcrumbs = [
@@ -201,21 +230,12 @@ export const IntegrationInfo = (props) => {
     },
     {
       id: pluginName,
-      title: `${details.name || pluginName} ${formatMessage(messages.settings)}`,
+      title: details.name || pluginName,
       link: pluginIntegrationListLink,
     },
     {
       id: updatedData.id,
       title: updatedData.name,
-      link: {
-        ...pluginIntegrationListLink,
-        meta: {
-          query: {
-            subPage: pluginName,
-            id: integrationId,
-          },
-        },
-      },
     },
   ];
 
@@ -245,6 +265,20 @@ export const IntegrationInfo = (props) => {
     trackEvent(PROJECT_SETTINGS_INTEGRATION.clickDocumentationLink('integrations'));
   };
 
+  const integrationListDocumentationLinkEvent = useMemo(
+    () =>
+      PROJECT_SETTINGS_INTEGRATION.clickDocumentationLink(
+        isAtLeastOneIntegrationAvailable && canUpdateSettings ? 'integrations' : 'no_integrations',
+        plugin.name,
+      ),
+    [isAtLeastOneIntegrationAvailable, canUpdateSettings, plugin.name],
+  );
+
+  const integrationDetailDocumentationLinkEvent = useMemo(
+    () => PROJECT_SETTINGS_INTEGRATION.clickDocumentationLink('no_integrations', plugin.name),
+    [plugin.name],
+  );
+
   const getButtons = () =>
     canUpdateSettings
       ? [
@@ -259,23 +293,30 @@ export const IntegrationInfo = (props) => {
   const renderIntegrationList = () => (
     <>
       {isAtLeastOneIntegrationAvailable ? (
-        <>
-          {availableProjectIntegrations.length > 0 && (
-            <AvailableIntegrations
-              header={formatMessage(messages.projectIntegrationTitle)}
-              text={formatMessage(messages.projectIntegrationText)}
-              integrations={availableProjectIntegrations}
-              openIntegration={openIntegration}
-            />
-          )}
+        <div className={cx('integration-list')}>
+          <AvailableIntegrations
+            header={formatMessage(messages.projectIntegrationTitle)}
+            text={formatMessage(messages.projectIntegrationText)}
+            integrations={availableProjectIntegrations}
+            openIntegration={openIntegration}
+            testConnection={testProjectIntegrationConnection}
+            withEmptyState
+            hasUpdatePermission={canUpdateSettings}
+            onCreateClick={onAddProjectIntegration}
+            onResetClick={onResetProjectIntegration}
+            createButtonDisabled={isProjectIntegrationAddLimited}
+            createButtonTooltip={projectIntegrationCreateButtonTooltip}
+          />
           <AvailableIntegrations
             header={formatMessage(messages.globalIntegrationTitle)}
             text={formatMessage(messages.globalIntegrationText)}
             integrations={availableGlobalIntegrations}
             openIntegration={openIntegration}
-            hasProjectIntegration={Boolean(availableProjectIntegrations.length)}
+            inactive={Boolean(availableProjectIntegrations.length)}
+            inactiveTooltip={formatMessage(messages.inactiveGlobalIntegrations)}
+            testConnection={testGlobalIntegrationConnection}
           />
-        </>
+        </div>
       ) : (
         <EmptyStatePage
           title={formatMessage(
@@ -294,24 +335,25 @@ export const IntegrationInfo = (props) => {
       )}
     </>
   );
+
   return (
     <>
       {!integrationId ? (
         <>
           <IntegrationHeader
             data={plugin}
-            onAddProjectIntegration={onAddProjectIntegration}
-            onResetProjectIntegration={onResetProjectIntegration}
-            isAbleToClick={canUpdateSettings}
-            availableProjectIntegrations={availableProjectIntegrations}
-            withButton={isAtLeastOneIntegrationAvailable && canUpdateSettings}
             breadcrumbs={integrationListBreadcrumbs}
+            documentationLinkEvent={integrationListDocumentationLinkEvent}
           />
           {renderIntegrationList()}
         </>
       ) : (
         <>
-          <IntegrationHeader data={plugin} breadcrumbs={integrationBreadcrumbs} />
+          <IntegrationHeader
+            data={plugin}
+            breadcrumbs={integrationBreadcrumbs}
+            documentationLinkEvent={integrationDetailDocumentationLinkEvent}
+          />
           <div className={cx('integration-settings-block')}>
             <IntegrationSettingsComponent
               data={updatedData}

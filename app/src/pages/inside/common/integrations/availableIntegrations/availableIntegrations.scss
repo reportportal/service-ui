@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,23 +22,53 @@
 }
 
 .available-integrations {
-  flex-grow: 1;
-  max-width: 908px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 820px;
   width: 100%;
   box-sizing: border-box;
-  padding: 0 32px;
-  margin: 24px auto 48px;
 }
 
 .integrations-header {
-  @include measure(15px, 24px, $COLOR--almost-black, $FONT-ROBOTO-MEDIUM);
+  @include measure(15px, 24px, var(--rp-ui-base-almost-black), var(--rp-ui-base-font-family));
+
+  font-weight: var(--rp-ui-base-fw-medium);
   margin-bottom: 4px;
 }
 
 .integrations-text {
-  @include measure(11px, 16px, $COLOR--e-300, $FONT-ROBOTO-REGULAR);
+  @include measure(11px, 16px, var(--rp-ui-base-e-300), var(--rp-ui-base-font-family));
 }
 
-.message-container {
-  margin: 16px 0px 16px 24px;
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 64px;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: var(--rp-ui-base-bg-200);
+  color: var(--rp-ui-base-e-400);
+  box-sizing: border-box;
+
+  .empty-state-text {
+    font-size: 13px;
+    line-height: 20px;
+  }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tooltip-wrapper {
+  width: fit-content;
+}
+
+.tooltip {
+  max-width: 260px;
 }
