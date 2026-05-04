@@ -52,7 +52,7 @@ import {
 import { PageHeaderWithBreadcrumbsAndActions } from '../common/pageHeaderWithBreadcrumbsAndActions';
 import { commonMessages } from './commonMessages';
 
-export const TestPlansPage = () => {
+export const MilestonesPage = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();

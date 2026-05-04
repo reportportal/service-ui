@@ -49,7 +49,7 @@ export const isLoadingSelector = (state: RootState) => Boolean(testPlanSelector(
 
 export const testPlansSelector = (state: RootState) => testPlanSelector(state).data?.content;
 
-export const testPlansPageSelector = (state: RootState) => testPlanSelector(state).data?.page;
+export const testPlanListPaginationSelector = (state: RootState) => testPlanSelector(state).data?.page;
 
 export const activeTestPlanSelector = (state: RootState) =>
   testPlanSelector(state).activeTestPlan || null;

@@ -25,7 +25,7 @@ import { SEARCH_DELAY } from 'common/constants/delayTime';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import {
-  PROJECT_TEST_PLANS_PAGE,
+  PROJECT_MILESTONES_PAGE,
   PROJECT_TEST_PLAN_DETAILS_PAGE,
   locationSelector,
   updatePagePropertiesAction,
@@ -162,7 +162,7 @@ export const TestPlanDetailsPage = () => {
   const { openModal: openDeleteModal } = useDeleteTestPlanModal({
     onSuccess: () =>
       dispatch({
-        type: PROJECT_TEST_PLANS_PAGE,
+        type: PROJECT_MILESTONES_PAGE,
         payload: { organizationSlug, projectSlug },
       }),
   });
@@ -195,7 +195,7 @@ export const TestPlanDetailsPage = () => {
       );
 
       dispatch({
-        type: PROJECT_TEST_PLANS_PAGE,
+        type: PROJECT_MILESTONES_PAGE,
         payload: { organizationSlug, projectSlug },
       });
     }
@@ -203,10 +203,10 @@ export const TestPlanDetailsPage = () => {
 
   const breadcrumbDescriptors = [
     {
-      id: 'testPlans',
+      id: 'milestones',
       title: formatMessage(commonMessages.pageTitle),
       link: {
-        type: PROJECT_TEST_PLANS_PAGE,
+        type: PROJECT_MILESTONES_PAGE,
         payload: { organizationSlug, projectSlug },
       },
     },

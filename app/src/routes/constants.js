@@ -40,7 +40,7 @@ import { NotFoundPage } from 'pages/outside/notFoundPage';
 import { RegistrationPage } from 'pages/outside/registrationPage';
 import { TestItemPage } from 'pages/inside/testItemPage';
 import { LogsPageContainer } from 'pages/inside/logsPage';
-import { TestPlansPage } from 'pages/inside/testPlansPage';
+import { MilestonesPage } from 'pages/inside/testPlansPage';
 import { TestPlanDetailsPage } from 'pages/inside/testPlansPage/testPlanDetailsPage';
 import {
   TEST_ITEM_PAGE,
@@ -66,6 +66,7 @@ import {
   PRODUCT_VERSION_TAB_PAGE,
   TEST_CASE_LIBRARY_PAGE,
   TEST_CASE_DETAILS_PAGE,
+  PROJECT_MILESTONES_PAGE,
   PROJECT_TEST_PLAN_DETAILS_PAGE,
   MANUAL_LAUNCHES_PAGE,
   MANUAL_LAUNCH_DETAILS_PAGE,
@@ -177,8 +178,8 @@ export const pageRendering = {
     layout: ProjectLayout,
     rawContent: true,
   },
-  PROJECT_TEST_PLANS_PAGE: {
-    component: TestPlansPage,
+  [PROJECT_MILESTONES_PAGE]: {
+    component: MilestonesPage,
     layout: ProjectLayout,
     rawContent: true,
     isTMS: true,

@@ -17,6 +17,7 @@
 import { Dispatch, SetStateAction, useMemo, KeyboardEvent, useCallback, MouseEvent } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { RowData } from '@reportportal/ui-kit/components/table/types';
 
 import { AbsRelTime } from 'components/main/absRelTime';
@@ -26,6 +27,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { isEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 import { MANUAL_LAUNCH_DETAILS_PAGE } from 'controllers/pages';
 import { useProjectDetails } from 'hooks/useTypedSelector';
+import { ExecutionStatus } from 'types/testCase';
 
 import { TestRunButton } from '../../testRunButton/testRunButton';
 import { ManualTestCase } from '../../../types';
@@ -41,6 +43,7 @@ export const useManualLaunchesTableData = (
 ): RowData[] => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const { organizationSlug, projectSlug } = useProjectDetails();
 
   const navigateToDetails = useCallback(
@@ -48,6 +51,17 @@ export const useManualLaunchesTableData = (
       dispatch({
         type: MANUAL_LAUNCH_DETAILS_PAGE,
         payload: { organizationSlug, projectSlug, launchId: id.toString() },
+      });
+    },
+    [dispatch, organizationSlug, projectSlug],
+  );
+
+  const navigateToDetailsToRunOnly = useCallback(
+    (id: number) => {
+      dispatch({
+        type: MANUAL_LAUNCH_DETAILS_PAGE,
+        payload: { organizationSlug, projectSlug, launchId: id.toString() },
+        meta: { query: { statusFilter: ExecutionStatus.TO_RUN } },
       });
     },
     [dispatch, organizationSlug, projectSlug],
@@ -196,12 +210,36 @@ export const useManualLaunchesTableData = (
             },
             testsToRun: {
               content: testsToRun,
-              component: <TestRunButton count={testsToRun} />,
+              component: (
+                <TestRunButton
+                  count={testsToRun}
+                  onClick={() => navigateToDetailsToRunOnly(id)}
+                  onTrackClick={() =>
+                    trackEvent({
+                      action: 'click',
+                      category: 'manual_launches',
+                      place: 'manual_launches_list',
+                      element_name: 'to_run_column',
+                      condition: 'pending',
+                      number: testsToRun,
+                    })
+                  }
+                />
+              ),
             },
             metaData: { id, name, displayId },
           };
         },
       ),
-    [data, selectedLaunchId, getHandlers, navigateToDetails, setSelectedLaunchId, formatMessage],
+    [
+      data,
+      selectedLaunchId,
+      getHandlers,
+      navigateToDetails,
+      navigateToDetailsToRunOnly,
+      setSelectedLaunchId,
+      formatMessage,
+      trackEvent,
+    ],
   );
 };

@@ -17,9 +17,9 @@
 @use '../../../../common/css/mixins';
 @use '../milestones/milestonesTable/milestonesShared' as ms;
 
-$test-plans-progress-column-inline-pad: 0;
+$milestone-test-plan-table-progress-column-inline-pad: 0;
 
-.test-plans {
+.milestone-test-plan-table {
   &__table-container {
     box-sizing: border-box;
     max-width: 100%;
@@ -98,7 +98,7 @@ $test-plans-progress-column-inline-pad: 0;
 
       > :global(button):nth-child(3) {
         box-sizing: border-box;
-        padding-inline: $test-plans-progress-column-inline-pad;
+        padding-inline: $milestone-test-plan-table-progress-column-inline-pad;
       }
     }
   }
@@ -116,7 +116,7 @@ $test-plans-progress-column-inline-pad: 0;
     width: 100%;
     max-width: 100%;
     min-width: 0;
-    padding-inline: $test-plans-progress-column-inline-pad;
+    padding-inline: $milestone-test-plan-table-progress-column-inline-pad;
     margin-right: 16px;
   }
 

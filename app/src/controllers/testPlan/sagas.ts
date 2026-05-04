@@ -29,7 +29,7 @@ import {
   showErrorNotification,
 } from 'controllers/notification';
 import { projectKeySelector } from 'controllers/project';
-import { locationSelector, PROJECT_TEST_PLANS_PAGE } from 'controllers/pages';
+import { locationSelector, PROJECT_MILESTONES_PAGE } from 'controllers/pages';
 import { LocationInfo } from 'controllers/pages/typed-selectors';
 
 import {
@@ -133,7 +133,7 @@ function* getTestPlan(action: GetTestPlanAction): Generator {
       }),
     );
     yield put({
-      type: PROJECT_TEST_PLANS_PAGE,
+      type: PROJECT_MILESTONES_PAGE,
       payload: location.payload,
     });
 

@@ -19,7 +19,7 @@ import { combineReducers } from 'redux';
 import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
-import { PROJECT_TEST_PLANS_PAGE, PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
+import { PROJECT_MILESTONES_PAGE, PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
 
 import { MILESTONES_NAMESPACE } from './constants';
 
@@ -29,6 +29,6 @@ const reducer = combineReducers({
 });
 
 export const milestoneReducer = createPageScopedReducer(reducer, [
-  PROJECT_TEST_PLANS_PAGE,
+  PROJECT_MILESTONES_PAGE,
   PROJECT_TEST_PLAN_DETAILS_PAGE,
 ]);

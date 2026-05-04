@@ -16,4 +16,6 @@
 
 export interface TestRunButtonType {
   count: number;
+  onClick?: () => void;
+  onTrackClick?: () => void;
 }

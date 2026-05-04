@@ -18,19 +18,19 @@ import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
   testPlanNameColumn: {
-    id: 'TestPlansTable.testPlanNameColumn',
+    id: 'MilestoneTestPlansTable.testPlanNameColumn',
     defaultMessage: 'Test plan name',
   },
   coveredTotal: {
-    id: 'TestPlansTable.coveredTotal',
+    id: 'MilestoneTestPlansTable.coveredTotal',
     defaultMessage: 'Covered / Total',
   },
   coverage: {
-    id: 'TestPlansTable.coverage',
+    id: 'MilestoneTestPlansTable.coverage',
     defaultMessage: 'Coverage',
   },
   viewTestPlanDetails: {
-    id: 'TestPlansTable.viewTestPlanDetails',
+    id: 'MilestoneTestPlansTable.viewTestPlanDetails',
     defaultMessage: 'View {testPlanName} details',
   },
 });

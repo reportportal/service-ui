@@ -72,7 +72,7 @@ export const useTestPlansTableData = ({
             content: ratioContent,
             component: (
               <ClickableCell {...cellProps}>
-                <span className={cx('test-plans__coverage-ratio')}>{ratioContent}</span>
+                <span className={cx('milestone-test-plan-table__coverage-ratio')}>{ratioContent}</span>
               </ClickableCell>
             ),
           },
@@ -81,9 +81,9 @@ export const useTestPlansTableData = ({
             component: (
               <ClickableCell
                 {...cellProps}
-                contentClassName={cx('test-plans__coverage-cell-wrapper')}
+                contentClassName={cx('milestone-test-plan-table__coverage-cell-wrapper')}
               >
-                <div className={cx('test-plans__table-cell-coverage')}>
+                <div className={cx('milestone-test-plan-table__table-cell-coverage')}>
                   {formatNumber(coverage, {
                     style: 'percent',
                     minimumFractionDigits: 0,
@@ -98,7 +98,7 @@ export const useTestPlansTableData = ({
             component: (
               <ClickableCell
                 {...cellProps}
-                contentClassName={cx('test-plans__cell-content_progress')}
+                contentClassName={cx('milestone-test-plan-table__cell-content_progress')}
               >
                 <ProgressBar progress={coverage * 100} />
               </ClickableCell>
