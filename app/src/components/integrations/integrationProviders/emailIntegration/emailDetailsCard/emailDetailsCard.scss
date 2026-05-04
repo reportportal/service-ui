@@ -1,0 +1,120 @@
+/*!
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.email-details-card {
+  background: var(--rp-ui-base-bg-000);
+  border-radius: 8px;
+  box-shadow: var(--rp-ui-base-shadow);
+  padding: 24px;
+}
+
+.card-header {
+  margin-bottom: 24px;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  overflow: hidden;
+  margin: 0;
+  color: var(--rp-ui-base-almost-black);
+  font-size: 20px;
+  line-height: 31px;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.connection-badge {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  min-width: 87px;
+  padding: 3px 7px 3px;
+  border: 1px solid var(--rp-ui-base-test-execution-status-passed);
+  border-radius: 6px;
+  margin-left: 16px;
+  flex-shrink: 0;
+}
+
+.connection-badge-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+}
+
+.connection-badge-text {
+  text-transform: uppercase;
+  font-size: 8px;
+  color: var(--rp-ui-base-test-execution-status-passed);
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-bold);
+}
+
+.connection-badge-error {
+  border-color: var(--rp-ui-base-error-pressed);
+  min-width: 120px;
+
+  .connection-badge-text {
+    color: var(--rp-ui-base-error-pressed);
+  }
+}
+
+.edit-button {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.subtitle {
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--rp-ui-base-e-300);
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
+  margin-top: 8px;
+}
+
+.parameters-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.parameter-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.parameter-label {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--rp-ui-base-e-300);
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
+  margin-bottom: 4px;
+}
+
+.parameter-value {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--rp-ui-base-almost-black);
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
+}

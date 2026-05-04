@@ -28,4 +28,8 @@
   border: none;
   background: none;
   cursor: pointer;
+
+  img {
+    object-fit: contain;
+  }
 }

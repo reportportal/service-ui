@@ -16,8 +16,10 @@
 
 import { useCallback } from 'react';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 
+import { TEST_CASE_LIBRARY_EVENTS } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { commonValidators } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal } from 'controllers/modal';
@@ -58,6 +60,7 @@ const DuplicateSelectedTestCaseModal = reduxForm<
   const testCase = data?.testCase;
 
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { isLoading: isCreateTestCaseLoading, createTestCase } = useTestCase();
 
   const initializeWithNameSuffix = useCallback(
@@ -73,9 +76,15 @@ const DuplicateSelectedTestCaseModal = reduxForm<
   });
 
   const handleDuplicate = useCallback(
-    (formData: CreateTestCaseFormData) =>
-      createTestCase(formData, { successMessageId: 'testCaseDuplicatedSuccess' }),
-    [createTestCase],
+    async (formData: CreateTestCaseFormData): Promise<void> => {
+      const response = await createTestCase(formData, {
+        successMessageId: 'testCaseDuplicatedSuccess',
+      });
+      if (response?.id) {
+        trackEvent(TEST_CASE_LIBRARY_EVENTS.submitDuplicateTestCase(String(response.id)));
+      }
+    },
+    [createTestCase, trackEvent],
   );
 
   return (

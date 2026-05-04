@@ -17,12 +17,15 @@
 import { useIntl } from 'react-intl';
 
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
-import { useTestCaseTooltipItems } from 'pages/inside/testCaseLibraryPage/allTestCasesPage/useTestCaseTooltipItems';
-import { ExtendedTestCase } from 'types/testCase';
 import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
+import {
+  useRemoveTestCasesFromTestPlanModal,
+  removeTestCasesFromTestPlanMessages,
+} from 'pages/inside/testPlansPage/testPlanModals';
+import { ExtendedTestCase } from 'types/testCase';
 
-import { messages } from '../messages';
+import { useTestCaseTooltipItems } from '../useTestCaseTooltipItems';
 
 interface UseTooltipItemsProps {
   instanceKey: TMS_INSTANCE_KEY;
@@ -33,16 +36,23 @@ export const useTooltipItems = ({ instanceKey, testCase }: UseTooltipItemsProps)
   const { formatMessage } = useIntl();
   const { canManageTestCases } = useUserPermissions();
   const testCaseTooltipItems = useTestCaseTooltipItems({ testCase });
-
+  const { openModal: openRemoveFromTestPlanModal } = useRemoveTestCasesFromTestPlanModal();
 
   const tooltipItemsByInstance: Partial<Record<TMS_INSTANCE_KEY, PopoverItem[]>> = {
-    [TMS_INSTANCE_KEY.TEST_PLAN]: canManageTestCases ? [
-      {
-        label: formatMessage(messages.removeTestCase) + 11,
-        variant: 'danger',
-        onClick: () => {},
-      },
-    ] : [],
+    [TMS_INSTANCE_KEY.TEST_PLAN]: canManageTestCases
+      ? [
+          {
+            label: formatMessage(removeTestCasesFromTestPlanMessages.removeFromTestPlanTitle),
+            variant: 'danger',
+            onClick: () => {
+              openRemoveFromTestPlanModal({
+                selectedTestCaseIds: [testCase.id],
+                testCaseName: testCase.name,
+              });
+            },
+          },
+        ]
+      : [],
     [TMS_INSTANCE_KEY.TEST_CASE]: testCaseTooltipItems,
     [TMS_INSTANCE_KEY.MANUAL_LAUNCH]: testCaseTooltipItems,
   };

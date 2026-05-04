@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 
+import { TEST_CASE_LIBRARY_EVENTS } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { commonValidators } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { FolderWithFullPath } from 'controllers/testCase';
@@ -27,6 +29,12 @@ import { CreateTestCaseFormData } from '../types';
 import { TestCaseModal } from './testCaseModal/testCaseModal';
 import { TEST_CASE_FORM_INITIAL_VALUES } from './constants';
 import { useTestCase } from '../hooks/useTestCase';
+import {
+  getTestCaseAttachmentStatus,
+  getTestCaseNumber,
+  getTestCaseTemplateIcon,
+  getTestCaseTimeCondition,
+} from '../utils/getTestCaseAnalyticsParams';
 
 export const CREATE_TEST_CASE_MODAL_KEY = 'createTestCaseModalKey';
 export const CREATE_TEST_CASE_FORM_NAME: string = 'create-test-case-modal-form';
@@ -49,11 +57,31 @@ const CreateTestCaseModalComponent = ({
   handleSubmit,
 }: CreateTestCaseModalProps) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { isLoading: isCreateTestCaseLoading, createTestCase } = useTestCase();
 
   useEffect(() => {
     initialize({ ...TEST_CASE_FORM_INITIAL_VALUES, folder: data?.folder });
   }, [data, initialize]);
+
+  const handleCreate = useCallback(
+    async (formData: CreateTestCaseFormData): Promise<void> => {
+      const response = await createTestCase(formData);
+
+      if (response?.id) {
+        trackEvent(
+          TEST_CASE_LIBRARY_EVENTS.submitCreateTestCase({
+            testCaseId: String(response.id),
+            iconName: getTestCaseTemplateIcon(formData),
+            condition: getTestCaseTimeCondition(formData),
+            number: getTestCaseNumber(formData),
+            status: getTestCaseAttachmentStatus(formData),
+          }),
+        );
+      }
+    },
+    [createTestCase, trackEvent],
+  );
 
   return (
     <TestCaseModal
@@ -62,7 +90,7 @@ const CreateTestCaseModalComponent = ({
       title={formatMessage(commonMessages.createTestCase)}
       submitButtonText={formatMessage(COMMON_LOCALE_KEYS.CREATE)}
       isLoading={isCreateTestCaseLoading}
-      onSubmitHandler={createTestCase}
+      onSubmitHandler={handleCreate}
       formName={CREATE_TEST_CASE_FORM_NAME}
     />
   );

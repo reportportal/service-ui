@@ -20,6 +20,7 @@ import track from 'react-tracking';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import { pluginsSelector } from 'controllers/plugins';
+import { PLUGIN_FILTER_GROUP_VALUES } from 'common/constants/pluginsFilter';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { PLUGINS_PAGE } from 'components/main/analytics/events';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
@@ -43,7 +44,7 @@ export class PluginsPage extends Component {
     plugins: PropTypes.array.isRequired,
   };
 
-  getFilterItems = () => [...new Set(this.props.plugins.map((item) => item.groupType))];
+  getFilterItems = () => [...PLUGIN_FILTER_GROUP_VALUES];
 
   breadcrumbs = [
     {

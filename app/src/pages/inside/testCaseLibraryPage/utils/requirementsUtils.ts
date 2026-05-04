@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { getTmsMilestonesOverride } from 'controllers/appInfo/utils';
+import { Requirement } from 'types/testCase';
 
-export const useTmsMilestonesEnabled = (): boolean | null => {
-  return (getTmsMilestonesOverride as () => boolean | null)();
-};
+export const getMeaningfulRequirements = (requirements?: Requirement[]): Requirement[] =>
+  (requirements ?? []).filter(({ value }) => Boolean(value?.trim()));

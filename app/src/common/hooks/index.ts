@@ -32,3 +32,4 @@ export type {
   SearchFilteredFolderRow,
   UseSearchFilteredFolderDisplayParams,
 } from './useSearchFilteredFolderDisplay';
+export { useBreadCrumbsTree } from './useBreadCrumbsTree';

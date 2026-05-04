@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,8 @@
  * limitations under the License.
  */
 
-import { useSelector } from 'react-redux';
-import { tmsEnabledSelector } from 'controllers/appInfo';
-import { getTmsOverride } from 'controllers/appInfo/utils';
+import type { TmsMilestoneRS } from 'controllers/milestone';
 
-export const useTmsEnabled = (): boolean => {
-  const override: boolean | null = getTmsOverride();
-
-  const baseEnabled: boolean = useSelector(tmsEnabledSelector);
-
-  if (override !== null) {
-    return override;
-  }
-
-  return baseEnabled;
+export type DeleteMilestoneModalProps = {
+  data?: TmsMilestoneRS | null;
 };

@@ -32,6 +32,14 @@ export const ORGANIZATION_SETTINGS_VIEWS = {
   }),
 };
 
+export const ORGANIZATION_SETTINGS_EVENTS = {
+  CLICK_DOCUMENTATION_LINK_INTEGRATIONS: {
+    ...SETTINGS_EVENT_PARAMETERS,
+    place: 'integrations',
+    link_name: 'documentation',
+  },
+};
+
 export const ORGANIZATION_PAGE_EVENTS = {
   VIEW_ALL_ORGANIZATIONS: {
     action: 'page_view',

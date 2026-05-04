@@ -186,6 +186,11 @@ $sidebar-width: calc(100vw - 408px);
   &.selected :global([class*='table-row-content']) {
     outline: 2px solid var(--rp-ui-base-topaz-focused);
   }
+
+  & > div:first-child {
+    align-self: baseline;
+    margin-top: 22px;
+  }
 }
 
 .execution-steps-cell {

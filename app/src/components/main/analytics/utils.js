@@ -30,6 +30,14 @@ export const getAutoAnalysisEventValue = (isAnalyzerAvailable, value) => {
 export const normalizeEventString = (string = '') =>
   string.trim().replace(/\s+|-/g, '_').toLowerCase();
 
+const appendInstanceSuffix = (value, instanceId) => {
+  if (value == null || value === '') return value;
+
+  const str = String(value);
+
+  return str.includes('|') ? str : `${str}|${instanceId}`;
+};
+
 export const buildEventParameters = (baseEventParameters, additionalParameters) => {
   const {
     instanceId,
@@ -47,7 +55,7 @@ export const buildEventParameters = (baseEventParameters, additionalParameters) 
   const isProjectLevel = pageLevel === APP_LEVEL.PROJECT;
   const isOrganizationLevel = pageLevel === APP_LEVEL.ORGANIZATION;
 
-  return {
+  const merged = {
     instanceID: instanceId,
     version: buildVersion,
     timestamp: Date.now(),
@@ -64,6 +72,12 @@ export const buildEventParameters = (baseEventParameters, additionalParameters) 
     }),
     ...additionalParameters,
   };
+
+  if (additionalParameters?.test_case_id !== undefined) {
+    merged.test_case_id = appendInstanceSuffix(additionalParameters.test_case_id, instanceId);
+  }
+
+  return merged;
 };
 
 export const provideEcGA = ({ eventName, baseEventParameters, additionalParameters }) => {

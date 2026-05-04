@@ -34,6 +34,7 @@ export const MilestoneCardActionsMenu = ({
   milestone,
   onEditMilestone,
   onDuplicateMilestone,
+  onDeleteMilestone,
   onCreateTestPlan,
 }: MilestoneCardProps) => {
   const { formatMessage } = useIntl();
@@ -76,12 +77,19 @@ export const MilestoneCardActionsMenu = ({
         onClick: () => {
           setIsOpened(false);
           trackEvent(MILESTONES_PAGE_EVENTS.CLICK_DELETE_MILESTONE);
-          // TODO: wire MILESTONES_PAGE_EVENTS.SUBMIT_DELETE_MILESTONE on confirm
-          // when the delete milestone confirmation modal is implemented.
+          onDeleteMilestone?.(milestone);
         },
       },
     ],
-    [formatMessage, milestone, onCreateTestPlan, onDuplicateMilestone, onEditMilestone, trackEvent],
+    [
+      formatMessage,
+      milestone,
+      onCreateTestPlan,
+      onDeleteMilestone,
+      onDuplicateMilestone,
+      onEditMilestone,
+      trackEvent,
+    ],
   );
 
   return (

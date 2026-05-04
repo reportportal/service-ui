@@ -17,8 +17,10 @@
 import { MouseEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { Modal } from '@reportportal/ui-kit';
 
+import { TEST_CASE_LIBRARY_EVENTS } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { createClassnames } from 'common/utils';
 import { UseModalData } from 'common/hooks';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -56,11 +58,15 @@ const DeleteTestCaseModalComponent = ({
 }: UseModalData<DeleteTestCaseModalData>) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { deleteTestCase, isLoading } = useDeleteTestCase({ isDetailsPage });
 
   const hideModal = () => dispatch(hideModalAction());
 
-  const onSubmit = () => deleteTestCase(testCase);
+  const onSubmit = () => {
+    trackEvent(TEST_CASE_LIBRARY_EVENTS.submitDeleteTestCase(String(testCase.id)));
+    return deleteTestCase(testCase);
+  };
 
   const okButton = {
     children: (

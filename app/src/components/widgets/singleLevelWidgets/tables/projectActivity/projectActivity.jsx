@@ -49,6 +49,7 @@ import {
   ASSIGN_USER,
   UNASSIGN_USER,
   CHANGE_ROLE,
+  CREATE_INVITATION_LINK,
   CREATE_PROJECT,
   UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
   MARK_LAUNCH_AS_IMPORTANT,
@@ -73,6 +74,7 @@ import styles from './projectActivity.scss';
 import { AssignUser } from './activities/assignUser';
 import { UnassignUser } from './activities/unassignUser';
 import { ChangeRole } from './activities/changeRole';
+import { CreateInvitationLink } from './activities/createInvitationLink';
 import { CreateProject } from './activities/createProject';
 import { UpdateAutoPatternAnalysis } from './activities/updatePatternAnalysis';
 import { LegacyNotificationActivity } from './activities/legacyNotificationActivity';
@@ -224,6 +226,9 @@ export class ProjectActivity extends Component {
 
       case CHANGE_ROLE:
         return <ChangeRole activity={activity} />;
+
+      case CREATE_INVITATION_LINK:
+        return <CreateInvitationLink activity={activity} />;
 
       case CREATE_PROJECT:
         return <CreateProject activity={activity} />;

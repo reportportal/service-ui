@@ -17,10 +17,12 @@
 import { memo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { isEmpty } from 'es-toolkit/compat';
 import { BubblesLoader, Table } from '@reportportal/ui-kit';
 import { DragLayer } from '@reportportal/ui-kit/sortable';
 
+import { TEST_CASE_LIBRARY_EVENTS } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { createClassnames } from 'common/utils';
 import { ExtendedTestCase } from 'types/testCase';
 import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
@@ -70,12 +72,20 @@ export const TestCaseList = memo(
     handleSelectedRows,
   }: TestCaseListProps) => {
     const { formatMessage } = useIntl();
+    const { trackEvent } = useTracking();
     const location = useSelector(locationSelector);
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<number | null>(null);
     const { canManageTestCases } = useUserPermissions();
 
     const isTestLibraryRoute = location.type === TEST_CASE_LIBRARY_PAGE;
     const isTestPlanRoute = location.type === PROJECT_TEST_PLAN_DETAILS_PAGE;
+
+    const handleRowOpen = (testCaseId: number) => {
+      if (isTestLibraryRoute && selectedTestCaseId !== testCaseId) {
+        trackEvent(TEST_CASE_LIBRARY_EVENTS.clickTestCaseRow(String(testCaseId)));
+      }
+      setSelectedTestCaseId(testCaseId);
+    };
 
     const handleCloseSidePanel = () => {
       setSelectedTestCaseId(null);
@@ -125,7 +135,7 @@ export const TestCaseList = memo(
           <button
             type="button"
             className={cx('cell-wrapper', { selected: testCase.id === selectedTestCaseId })}
-            onClick={() => setSelectedTestCaseId(testCase.id)}
+            onClick={() => handleRowOpen(testCase.id)}
           >
             <DraggableTestCaseNameCell
               testCase={testCase}
@@ -142,7 +152,7 @@ export const TestCaseList = memo(
           <TestCaseExecutionCell
             testCase={testCase}
             instanceKey={instanceKey}
-            onRowClick={() => setSelectedTestCaseId(testCase.id)}
+            onRowClick={() => handleRowOpen(testCase.id)}
           />
         ),
       },

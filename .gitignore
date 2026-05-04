@@ -34,3 +34,5 @@ data/
 
 ## Release dir
 release/
+
+.env

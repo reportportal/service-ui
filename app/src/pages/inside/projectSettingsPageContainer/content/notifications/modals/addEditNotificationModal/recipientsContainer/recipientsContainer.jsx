@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import { URLS } from 'common/urls';
@@ -35,33 +34,45 @@ const messages = defineMessages({
   },
 });
 
-export const RecipientsContainer = ({ error, ...rest }) => {
+export const RecipientsContainer = ({ error, value = [], ...rest }) => {
   const { formatMessage } = useIntl();
   const projectKey = useSelector(projectKeySelector);
 
-  const [recipientsWithError, setRecipientsWithError] = useState([]);
-
   const getEmailValidationError = (email) => {
-    if (validate.email(email)) {
-      return false;
-    }
-    !recipientsWithError.includes(email) && setRecipientsWithError([...recipientsWithError, email]);
-
-    return 'error';
+    return validate.email(email) ? false : 'error';
   };
 
-  const clearItemsError = () => {
-    setRecipientsWithError([]);
-  };
+  const clearItemsError = () => {};
 
   const parseEmailsString = (string) => {
-    const re = /<([^\s<>@]+@[^\s<>@]+)>/g;
-    const emails = Array.from(string.matchAll(re), (m) => m[1]);
-    return [...new Set(emails)];
+    const delimiters = /[,;\n]+/;
+    const angleBracketRegex = /<([^\s<>@]+@[^\s<>@]+)>/g;
+
+    const tokens = string
+      .split(delimiters)
+      .map((token) => token.trim())
+      .filter(Boolean);
+
+    const result = tokens.flatMap((token) => {
+      const angleBracketMatches = Array.from(token.matchAll(angleBracketRegex), (match) => match[1]);
+      return angleBracketMatches.length > 0 ? angleBracketMatches : [token];
+    });
+
+    const uniqueResult = [...new Set(result)];
+
+    // For multi-token paste, keep only valid emails and ignore garbage.
+    // For single-token input, preserve existing validation flow.
+    if (uniqueResult.length > 1) {
+      return uniqueResult.filter((token) => validate.email(token));
+    }
+
+    return uniqueResult;
   };
 
   const recipientsError =
-    recipientsWithError.length > 0 ? formatMessage(messages.recipientsError) : '';
+    Array.isArray(value) && value.some((email) => !validate.email(email))
+      ? formatMessage(messages.recipientsError)
+      : '';
 
   return (
     <AsyncMultipleAutocompleteV2
@@ -76,6 +87,7 @@ export const RecipientsContainer = ({ error, ...rest }) => {
       clearItemsError={clearItemsError}
       parseInputValueFn={parseEmailsString}
       error={error || recipientsError}
+      value={value}
       {...rest}
     />
   );
@@ -83,8 +95,6 @@ export const RecipientsContainer = ({ error, ...rest }) => {
 
 RecipientsContainer.propTypes = {
   error: PropTypes.string,
+  value: PropTypes.arrayOf(PropTypes.string),
 };
 
-RecipientsContainer.defaultProps = {
-  error: '',
-};

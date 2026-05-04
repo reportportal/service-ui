@@ -56,6 +56,7 @@ import {
   ASSIGN_USER,
   UNASSIGN_USER,
   CHANGE_ROLE,
+  CREATE_INVITATION_LINK,
   CREATE_PROJECT,
   UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
   MARK_LAUNCH_AS_IMPORTANT,
@@ -132,16 +133,10 @@ const messages = defineMessages({
     defaultMessage: 'Unassign user',
   },
   [CHANGE_ROLE]: { id: 'WidgetCriteriaOption.change_role', defaultMessage: 'Change role' },
-
-  [ASSIGN_USER]: {
-    id: 'WidgetCriteriaOption.assign_user',
-    defaultMessage: 'Assign, invite user',
+  [CREATE_INVITATION_LINK]: {
+    id: 'WidgetCriteriaOption.create_invitation_link',
+    defaultMessage: 'Create invitation link',
   },
-  [UNASSIGN_USER]: {
-    id: 'WidgetCriteriaOption.unassign_user',
-    defaultMessage: 'Unassign user',
-  },
-
   [ACTIONS_WITH_DASHBOARDS]: {
     id: 'WidgetCriteriaOption.dashboards_actions',
     defaultMessage: 'Update dashboard',
@@ -291,6 +286,7 @@ const getUserActionOptions = (formatMessage) => [
   { value: ASSIGN_USER, label: formatMessage(messages[ASSIGN_USER]) },
   { value: UNASSIGN_USER, label: formatMessage(messages[UNASSIGN_USER]) },
   { value: CHANGE_ROLE, label: formatMessage(messages[CHANGE_ROLE]) },
+  { value: CREATE_INVITATION_LINK, label: formatMessage(messages[CREATE_INVITATION_LINK]) },
   { value: ACTIONS_WITH_DASHBOARDS, label: formatMessage(messages[ACTIONS_WITH_DASHBOARDS]) },
   { value: ACTIONS_WITH_WIDGETS, label: formatMessage(messages[ACTIONS_WITH_WIDGETS]) },
   { value: ACTIONS_WITH_FILTERS, label: formatMessage(messages[ACTIONS_WITH_FILTERS]) },

@@ -16,16 +16,24 @@
 
 import { useCallback, ReactNode } from 'react';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { Modal } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
+import {
+  MOVE_DESTINATION_STATUS,
+  TEST_CASE_LIBRARY_EVENTS,
+  type MoveDestinationStatusType,
+} from 'analyticsEvents/testCaseLibraryPageEvents';
 import { UseModalData } from 'common/hooks';
 import { createClassnames } from 'common/utils';
 import { withModal } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { ExtendedTestCase } from 'types/testCase';
+
+import { ButtonSwitcherOption } from 'pages/inside/common/buttonSwitcher';
 
 import { DestinationFolderSwitch } from '../testCaseFolders/shared/DestinationFolderSwitch';
 import { commonFolderMessages } from '../testCaseFolders/modals/commonFolderMessages';
@@ -68,10 +76,16 @@ const MoveTestCaseModal = reduxForm<FolderModalFormValues, MoveTestCaseModalProp
   change,
 }: MoveTestCaseModalProps & InjectedFormProps<FolderModalFormValues, MoveTestCaseModalProps>) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { isLoading, patchTestCase, batchMove } = useTestCase();
   const { currentMode, handleModeChange } = useFolderModalMode({ change });
 
   const isBatch = selectedTestCaseIds.length > 1;
+
+  const destinationStatus: MoveDestinationStatusType =
+    currentMode === ButtonSwitcherOption.NEW
+      ? MOVE_DESTINATION_STATUS.NEW_FOLDER
+      : MOVE_DESTINATION_STATUS.EXISTING_FOLDER;
 
   const moveTestCase = useCallback(
     async (values: FolderModalFormValues) => {
@@ -109,12 +123,19 @@ const MoveTestCaseModal = reduxForm<FolderModalFormValues, MoveTestCaseModalProp
   const onSubmit = useCallback(
     async (values: FolderModalFormValues) => {
       if (isBatch) {
+        trackEvent(TEST_CASE_LIBRARY_EVENTS.submitBulkMoveToFolder(destinationStatus));
         await batchMoveTestCases(values);
       } else {
+        trackEvent(
+          TEST_CASE_LIBRARY_EVENTS.submitMoveTestCase(
+            destinationStatus,
+            testCase ? String(testCase.id) : undefined,
+          ),
+        );
         await moveTestCase(values);
       }
     },
-    [isBatch, batchMoveTestCases, moveTestCase],
+    [isBatch, batchMoveTestCases, moveTestCase, trackEvent, destinationStatus, testCase],
   );
 
   const { okButton, cancelButton, hideModal } = useModalButtons({

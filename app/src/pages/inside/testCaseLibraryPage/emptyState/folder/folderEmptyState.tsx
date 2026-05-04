@@ -15,7 +15,9 @@
  */
 
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 
+import { TEST_CASE_LIBRARY_EVENTS } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { createClassnames } from 'common/utils';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import ImportIcon from 'common/img/import-thin-inline.svg';
@@ -38,9 +40,20 @@ interface FolderEmptyStateProps {
 
 export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { canManageTestCases } = useUserPermissions();
   const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
   const { openModal: openImportTestCaseModal } = useImportTestCaseModal();
+
+  const handleCreateTestCase = () => {
+    trackEvent(TEST_CASE_LIBRARY_EVENTS.CLICK_CREATE_TEST_CASE);
+    openCreateTestCaseModal();
+  };
+
+  const handleImportTestCase = () => {
+    trackEvent(TEST_CASE_LIBRARY_EVENTS.CLICK_IMPORT_TEST_CASES);
+    openImportTestCaseModal();
+  };
 
   const buttons: ActionButton[] = canManageTestCases ? [
     {
@@ -48,7 +61,7 @@ export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
       dataAutomationId: 'createTestCaseButton',
       icon: PlusIconInline,
       isCompact: true,
-      handleButton: openCreateTestCaseModal,
+      handleButton: handleCreateTestCase,
     },
     {
       name: formatMessage(commonMessages.importTestCases),
@@ -56,7 +69,7 @@ export const FolderEmptyState = ({ folderTitle }: FolderEmptyStateProps) => {
       variant: 'ghost',
       icon: ImportIcon,
       isCompact: true,
-      handleButton: () => openImportTestCaseModal(),
+      handleButton: handleImportTestCase,
     }
   ] : [];
 

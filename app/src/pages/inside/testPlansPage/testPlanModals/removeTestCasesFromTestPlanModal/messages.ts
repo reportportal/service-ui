@@ -16,7 +16,7 @@
 
 import { defineMessages } from 'react-intl';
 
-export const messages = defineMessages({
+export const removeTestCasesFromTestPlanMessages = defineMessages({
   removeFromTestPlanTitle: {
     id: 'RemoveTestCasesFromTestPlanModal.title',
     defaultMessage: 'Remove from Test Plan',
@@ -25,6 +25,10 @@ export const messages = defineMessages({
     id: 'RemoveTestCasesFromTestPlanModal.description',
     defaultMessage:
       'Are you sure you want to remove the <b>{count, number}</b> {count, plural, one {test case} other {test cases}} from the test plan?',
+  },
+  removeFromTestPlanSingleDescription: {
+    id: 'RemoveTestCasesFromTestPlanModal.singleDescription',
+    defaultMessage: 'Are you sure you want to remove <b>{testCaseName}</b>?',
   },
   removeFromTestPlanError: {
     id: 'RemoveTestCasesFromTestPlanModal.errorMessage',

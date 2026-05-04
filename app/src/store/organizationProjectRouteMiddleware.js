@@ -76,12 +76,17 @@ export const organizationProjectRouteMiddleware = (store) => (next) => (action) 
   const { slug: organizationSlug } = activeOrganizationSelector(getState());
   const { projectSlug } = activeProjectSelector(getState());
   const user = userInfoSelector(getState());
-  const { hasPermission, hasPermissionOrganization, assignedProjectKey, assignmentNotRequired } =
-    userAssignedSelector(hashProjectSlug, hashOrganizationSlug)(getState());
+  const {
+    hasPermission,
+    hasPermissionOrganization,
+    assignedProjectKey,
+    assignmentNotRequired,
+    userRoles,
+  } = userAssignedSelector(hashProjectSlug, hashOrganizationSlug)(getState());
 
   const isProjectPage = !!hashProjectSlug;
 
-  const hasPermissionOrganizationUsers = canSeeOrganizationMembers(userRolesSelector(getState()));
+  const hasPermissionOrganizationUsers = canSeeOrganizationMembers(userRoles);
 
   // For project pages check project-level permission, for org pages — org-level
   const hasOrganizationPageAccess =

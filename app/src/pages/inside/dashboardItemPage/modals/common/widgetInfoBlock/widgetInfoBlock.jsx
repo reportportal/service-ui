@@ -139,11 +139,9 @@ export class WidgetInfoBlock extends PureComponent {
               <LinkComponent
                 to={activeWidget.documentationLink}
                 icon={ExternalLinkIcon}
-                event={activeWidget?.documentationClickEventInfo(dashboardId)}
+                event={activeWidget.documentationClickEventInfo?.(activeWidget.id, dashboardId)}
               >
-                <span className={cx('link')}>
-                  {formatMessage(COMMON_LOCALE_KEYS.documentation)}
-                </span>
+                <span className={cx('link')}>{formatMessage(COMMON_LOCALE_KEYS.learnMore)}</span>
               </LinkComponent>
             )}
           </div>

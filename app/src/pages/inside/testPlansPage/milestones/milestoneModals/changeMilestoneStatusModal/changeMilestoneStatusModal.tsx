@@ -22,10 +22,13 @@ import { useTracking } from 'react-tracking';
 import { formValueSelector } from 'redux-form';
 import { Toggle } from '@reportportal/ui-kit';
 
+import { MILESTONES_PAGE_EVENTS } from 'analyticsEvents/milestonesPageEvents';
 import {
-  MILESTONES_PAGE_EVENTS,
-  type MilestoneStatusType,
-} from 'analyticsEvents/milestonesPageEvents';
+  MILESTONE_CHANGE_STATUS_MODAL_BUTTON_ELEMENT_NAME,
+  MILESTONE_STATUS_CHOOSE_EVENT_TYPE,
+  type MilestoneChangeStatusModalButtonElementName,
+  type MilestoneStatusDropdownChooseType,
+} from 'pages/inside/testPlansPage/milestones/milestoneStatus';
 import { createClassnames } from 'common/utils';
 import { hideModalAction } from 'controllers/modal';
 import { MilestoneStatus, type TmsMilestoneType } from 'controllers/milestone';
@@ -76,16 +79,12 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
   const hideModal = () => dispatch(hideModalAction());
-  const trackedTargetStatus = (data?.targetStatus.toLowerCase() ??
-    'scheduled') as MilestoneStatusType;
-  const trackWithoutReplacing = () =>
-    trackEvent(MILESTONES_PAGE_EVENTS.confirmStatusWithoutReplacing(trackedTargetStatus));
-  const trackWithToday = () =>
-    trackEvent(MILESTONES_PAGE_EVENTS.confirmStatusWithToday(trackedTargetStatus));
-  const trackBackToScheduledChange = () =>
-    trackEvent(MILESTONES_PAGE_EVENTS.confirmStatusChange('scheduled'));
-  const trackCompleteWithToday = () =>
-    trackEvent(MILESTONES_PAGE_EVENTS.confirmStatusCompleteWithToday('completed'));
+  const analyticsChooseStatus = MILESTONE_STATUS_CHOOSE_EVENT_TYPE;
+  const analyticsModalButtonNames = MILESTONE_CHANGE_STATUS_MODAL_BUTTON_ELEMENT_NAME;
+  const trackChangeStatusModal = (
+    elementName: MilestoneChangeStatusModalButtonElementName,
+    status: MilestoneStatusDropdownChooseType,
+  ) => trackEvent(MILESTONES_PAGE_EVENTS.clickChangeStatusModal(elementName, status));
   const [adjustMilestone, setAdjustMilestone] = useState(false);
   const flow = useMemo(
     () => (data ? getChangeMilestoneStatusFlow(data.milestone, data.targetStatus) : null),
@@ -160,7 +159,7 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
       return;
     }
 
-    trackBackToScheduledChange();
+    trackChangeStatusModal(analyticsModalButtonNames.change, analyticsChooseStatus.backToScheduled);
     void updateMilestone(
       {
         name: milestone.name,
@@ -178,7 +177,7 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
       return;
     }
 
-    trackBackToScheduledChange();
+    trackChangeStatusModal(analyticsModalButtonNames.change, analyticsChooseStatus.backToScheduled);
     void updateMilestone(
       { ...baseBody, status: MilestoneStatus.SCHEDULED },
       'milestoneStatusChangedToScheduledSuccess',
@@ -190,7 +189,7 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
       return;
     }
 
-    trackWithoutReplacing();
+    trackChangeStatusModal(analyticsModalButtonNames.change, analyticsChooseStatus.backToTesting);
     void updateMilestone(
       { ...baseBody, status: MilestoneStatus.TESTING },
       'milestoneStatusChangedToTestingSuccess',
@@ -200,33 +199,43 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
   const toggleAdjustMilestone = () =>
     setAdjustMilestone((wasAdjustMilestoneOn) => !wasAdjustMilestoneOn);
 
-  const startTestingKeepStartDate = () => {
-    trackWithoutReplacing();
+  const startTestingSimpleConfirm = () => {
+    trackChangeStatusModal(analyticsModalButtonNames.startTesting, analyticsChooseStatus.testing);
+    transitionMilestoneToTesting({});
+  };
+
+  const startTestingKeepExistingStartDate = () => {
+    trackChangeStatusModal(analyticsModalButtonNames.startWithoutReplacing, analyticsChooseStatus.testing);
     transitionMilestoneToTesting({});
   };
 
   const startTestingWithTodayStartDate = () => {
-    trackWithToday();
+    trackChangeStatusModal(analyticsModalButtonNames.startWithToday, analyticsChooseStatus.testing);
     transitionMilestoneToTesting({ startDate: todayIso });
   };
 
   const startTestingClearStartDate = () => {
-    trackWithoutReplacing();
+    trackChangeStatusModal(analyticsModalButtonNames.startWithoutADate, analyticsChooseStatus.testing);
     transitionMilestoneToTesting({ startDate: null });
   };
 
-  const completeMilestoneKeepDeadline = () => {
-    trackWithoutReplacing();
+  const completeMilestoneSimpleConfirm = () => {
+    trackChangeStatusModal(analyticsModalButtonNames.completeMilestone, analyticsChooseStatus.completed);
+    transitionMilestoneToCompleted({});
+  };
+
+  const completeMilestoneKeepExistingDeadline = () => {
+    trackChangeStatusModal(analyticsModalButtonNames.completeWithoutReplacing, analyticsChooseStatus.completed);
     transitionMilestoneToCompleted({});
   };
 
   const completeMilestoneWithTodayDeadline = () => {
-    trackCompleteWithToday();
+    trackChangeStatusModal(analyticsModalButtonNames.completeWithToday, analyticsChooseStatus.completed);
     transitionMilestoneToCompleted({ endDate: todayIso });
   };
 
   const completeMilestoneClearDeadline = () => {
-    trackWithoutReplacing();
+    trackChangeStatusModal(analyticsModalButtonNames.completeWithoutDeadline, analyticsChooseStatus.completed);
     transitionMilestoneToCompleted({ endDate: null });
   };
 
@@ -354,7 +363,7 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
           createFooter={createStartTestingSimpleStatusModalFooter({
             formatMessage,
             isLoading,
-            onStart: startTestingKeepStartDate,
+            onStart: startTestingSimpleConfirm,
           })}
         >
           <p className={bodyClass}>
@@ -376,7 +385,7 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
           createFooter={createStartTestingDateChoiceStatusModalFooter({
             formatMessage,
             isLoading,
-            onKeepStartDate: startTestingKeepStartDate,
+            onKeepStartDate: startTestingKeepExistingStartDate,
             onStartWithToday: startTestingWithTodayStartDate,
           })}
         >
@@ -432,7 +441,7 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
           createFooter={createCompleteSimpleStatusModalFooter({
             formatMessage,
             isLoading,
-            onComplete: completeMilestoneKeepDeadline,
+            onComplete: completeMilestoneSimpleConfirm,
           })}
         >
           <p className={bodyClass}>
@@ -454,7 +463,7 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
           createFooter={createCompleteDateChoiceStatusModalFooter({
             formatMessage,
             isLoading,
-            onKeepDeadline: completeMilestoneKeepDeadline,
+            onKeepDeadline: completeMilestoneKeepExistingDeadline,
             onCompleteWithToday: completeMilestoneWithTodayDeadline,
           })}
         >

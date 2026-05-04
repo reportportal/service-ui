@@ -17,3 +17,4 @@
 export { useRemoveTestCasesFromTestPlanModal } from './useRemoveTestCasesFromTestPlanModal';
 export type { RemoveTestCasesFromTestPlanModalData } from './types';
 export { REMOVE_TEST_CASES_FROM_TEST_PLAN_MODAL_KEY } from './constants';
+export { removeTestCasesFromTestPlanMessages } from './messages';

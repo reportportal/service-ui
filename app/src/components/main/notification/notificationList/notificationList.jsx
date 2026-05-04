@@ -397,6 +397,10 @@ export const notificationMessages = defineMessages({
     id: 'MilestonesPage.milestoneDuplicatedSuccess',
     defaultMessage: 'Milestone has been duplicated successfully.',
   },
+  milestoneDeletedSuccess: {
+    id: 'MilestonesPage.milestoneDeletedSuccess',
+    defaultMessage: 'Milestone has been deleted successfully.',
+  },
   milestoneTestingStartedSuccess: {
     id: 'MilestonesPage.milestoneTestingStartedSuccess',
     defaultMessage: 'Testing started for the milestone.',
@@ -430,6 +434,10 @@ export const notificationMessages = defineMessages({
   executionStatusUpdated: {
     id: 'ManualLaunchesPage.executionStatusUpdated',
     defaultMessage: 'Status updated: Test marked as {status}.',
+  },
+  executionCommentSaved: {
+    id: 'ManualLaunchesPage.executionCommentSaved',
+    defaultMessage: 'Execution comment saved.',
   },
   testPlanUpdatedSuccess: {
     id: 'TestPlansPage.testPlanUpdatedSuccess',
@@ -530,7 +538,7 @@ export class NotificationList extends PureComponent {
                     duration={duration}
                     title={Parser(
                       DOMPurify.sanitize(
-                        (messageId && notificationMessages[messageId])
+                        messageId && notificationMessages[messageId]
                           ? formatMessage(notificationMessages[messageId], values)
                           : message,
                         { ADD_ATTR: ['target'] },

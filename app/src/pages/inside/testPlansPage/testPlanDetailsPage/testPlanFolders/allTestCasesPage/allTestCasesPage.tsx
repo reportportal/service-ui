@@ -35,7 +35,7 @@ import { useProjectDetails, useTestPlanId } from 'hooks/useTypedSelector';
 import { useURLBoundPagination } from 'pages/inside/common/testCaseList/useURLBoundPagination';
 
 import { useRemoveTestCasesFromTestPlanModal } from '../../../testPlanModals';
-import { messages } from '../../../testPlanModals/removeTestCasesFromTestPlanModal/messages';
+import { removeTestCasesFromTestPlanMessages } from '../../../testPlanModals/removeTestCasesFromTestPlanModal/messages';
 import { useAddTestCasesToLaunchModal } from './addTestCasesToLaunchModal';
 import { AllTestCasesPageProps } from './types';
 import styles from './allTestCasesPage.scss';
@@ -128,7 +128,7 @@ export const AllTestCasesPage = ({
                 onClick={handleOpenRemoveModal}
                 className={cx('selection-controls__remove-button')}
               >
-                {formatMessage(messages.removeFromTestPlanTitle)}
+                {formatMessage(removeTestCasesFromTestPlanMessages.removeFromTestPlanTitle)}
               </Button>
               <Button variant="primary" onClick={openAddToLaunchModal}>
                 {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}

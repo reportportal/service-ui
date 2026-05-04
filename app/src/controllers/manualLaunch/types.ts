@@ -79,15 +79,32 @@ export interface GetManualLaunchExecutionParams {
   executionId: string | number;
 }
 
-export interface UpdateManualLaunchExecutionStatusParams {
+export interface ManualLaunchExecutionActionKey {
   projectKey: string;
   launchId: string | number;
   executionId: string | number;
+}
+
+export interface UpdateManualLaunchExecutionStatusParams extends ManualLaunchExecutionActionKey {
   status: string;
   comment?: string;
   postIssueToBts?: boolean;
   attachments?: File[];
+  removedServerAttachmentIds?: Array<string | number>;
+  clearExecutionCommentAndBts?: boolean;
+  preserveExistingCommentIfFormSkipped?: boolean;
   onSuccess?: () => void;
+}
+
+export interface UpdateManualLaunchExecutionCommentParams extends ManualLaunchExecutionActionKey {
+  executionStatus: string;
+  comment: string;
+  existingAttachments: Attachment[];
+  newFiles: File[];
+  removedAttachmentIds: Array<string | number>;
+  btsTickets?: BtsTicket[];
+  onSuccess?: () => void;
+  onFinally?: () => void;
 }
 
 export interface ManualLaunchState {

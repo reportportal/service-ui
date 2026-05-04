@@ -16,3 +16,4 @@
 
 export const DEBUG = 'debug';
 export const DEFAULT = 'default';
+export const MILLISECONDS_IN_MINUTE = 60_000;

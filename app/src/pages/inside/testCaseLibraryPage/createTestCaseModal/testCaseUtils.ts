@@ -21,14 +21,13 @@ import { Attribute } from 'types/testCase';
 
 import { ManualScenarioDto, ManualScenarioType, CreateTestCaseFormData } from '../types';
 import { NewFolderData, isNewFolderData } from '../utils/getFolderFromFormValues';
+import { getMeaningfulRequirements } from '../utils/requirementsUtils';
 import { hasStepContent } from '../../common/scenarioUtils';
 
 export const buildManualScenario = (payload: CreateTestCaseFormData): ManualScenarioDto => {
   const commonData = {
     executionEstimationTime: payload.executionEstimationTime,
-    requirements: payload.requirements
-      ? payload.requirements.filter((req) => req.value?.trim())
-      : [],
+    requirements: getMeaningfulRequirements(payload.requirements),
     manualScenarioType: payload.manualScenarioType,
     preconditions: {
       value: payload.precondition,

@@ -47,6 +47,7 @@ export const MilestoneCard = ({
   milestone,
   onEditMilestone,
   onDuplicateMilestone,
+  onDeleteMilestone,
   onChangeMilestoneStatus,
 }: MilestoneCardProps) => {
   const { formatMessage } = useIntl();
@@ -144,6 +145,7 @@ export const MilestoneCard = ({
               milestone={milestone}
               onEditMilestone={onEditMilestone}
               onDuplicateMilestone={onDuplicateMilestone}
+              onDeleteMilestone={onDeleteMilestone}
               onCreateTestPlan={canManageTestPlans ? handleMenuCreateTestPlan : undefined}
             />
           </div>

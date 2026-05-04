@@ -17,7 +17,12 @@
 import { useRef } from 'react';
 import { getFormValues, InjectedFormProps } from 'redux-form';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 
+import {
+  ADD_TO_TEST_PLAN_CONDITION,
+  TEST_CASE_LIBRARY_EVENTS,
+} from 'analyticsEvents/testCaseLibraryPageEvents';
 import { projectKeySelector } from 'controllers/project';
 import { fetch } from 'common/utils';
 import { useDebouncedSpinner, useNotification } from 'common/hooks';
@@ -50,6 +55,7 @@ export const useAddTestCasesToTestPlan = ({
     hideSpinner,
   } = useDebouncedSpinner();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const projectKey = useSelector(projectKeySelector);
   const { showSuccessNotification, showErrorNotification } = useNotification();
 
@@ -85,6 +91,13 @@ export const useAddTestCasesToTestPlan = ({
       },
     })
       .then(() => {
+        trackEvent(
+          TEST_CASE_LIBRARY_EVENTS.submitAddToTestPlan(
+            isSingleTestCaseMode
+              ? ADD_TO_TEST_PLAN_CONDITION.SINGLE
+              : ADD_TO_TEST_PLAN_CONDITION.BULK,
+          ),
+        );
         dispatch(hideModalAction());
         showSuccessNotification({
           messageId: isSingleTestCaseMode

@@ -45,6 +45,7 @@ import {
   MilestonesTable,
   useChangeMilestoneStatusModal,
   useCreateMilestoneModal,
+  useDeleteMilestoneModal,
   useDuplicateMilestoneModal,
   useEditMilestoneModal,
 } from './milestones';
@@ -59,6 +60,7 @@ export const TestPlansPage = () => {
   const { openModal: openEditMilestoneModal } = useEditMilestoneModal();
   const { openModal: openDuplicateMilestoneModal } = useDuplicateMilestoneModal();
   const { openModal: openChangeMilestoneStatusModal } = useChangeMilestoneStatusModal();
+  const { openModal: openDeleteMilestoneModal } = useDeleteMilestoneModal();
   const projectName = useSelector(projectNameSelector);
   const { canManageTestPlans } = useUserPermissions();
   const { organizationSlug, projectSlug } = useSelector(
@@ -94,6 +96,7 @@ export const TestPlansPage = () => {
           isLoading={milestonesLoading}
           onEditMilestone={canManageTestPlans ? openEditMilestoneModal : undefined}
           onDuplicateMilestone={canManageTestPlans ? openDuplicateMilestoneModal : undefined}
+          onDeleteMilestone={canManageTestPlans ? openDeleteMilestoneModal : undefined}
           onChangeMilestoneStatus={
             canManageTestPlans
               ? (milestone: TmsMilestoneRS, targetStatus: MilestoneStatus) =>

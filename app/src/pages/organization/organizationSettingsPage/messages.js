@@ -21,4 +21,8 @@ export const messages = defineMessages({
     id: 'OrganizationSettingsPage.general',
     defaultMessage: 'General',
   },
+  integrations: {
+    id: 'OrganizationSettingsPage.integrations',
+    defaultMessage: 'Integrations',
+  },
 });

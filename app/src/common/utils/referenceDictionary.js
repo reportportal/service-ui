@@ -48,6 +48,7 @@ export const docsReferences = {
     'https://reportportal.io/docs/reportportal-configuration/ProjectConfiguration#e-mail-notifications',
   emptyStateIntegrationsDocs:
     'https://reportportal.io/docs/reportportal-configuration/IntegrationViaPlugin',
+  emptyStateOrgIntegrationsDocs: 'https://reportportal.io/docs/plugins/ManagePlugins/',
   authorizationWithUsersApiKeyForAgents:
     'https://reportportal.io/docs/reportportal-configuration/HowToGetAnAccessTokenInReportPortal/#2-authorization-with-users-api-key-for-agents',
   workWithReports: 'https://reportportal.io/docs/work-with-reports/InvestigationOfFailure',
@@ -82,5 +83,39 @@ export const servicesUpdate = {
 };
 
 export const widgetDocsReferences = {
-  testCaseSearch: 'https://reportportal.io/docs/dashboards-and-widgets/TestCaseSearch',
+  launchStatisticsChart:
+    'https://reportportal.io/docs/dashboards-and-widgets/LaunchStatisticsChart/',
+  overallStatistics: 'https://reportportal.io/docs/dashboards-and-widgets/OverallStatistics/',
+  launchesDurationChart:
+    'https://reportportal.io/docs/dashboards-and-widgets/LaunchesDurationChart/',
+  launchExecutionAndIssueStatistic:
+    'https://reportportal.io/docs/dashboards-and-widgets/LaunchExecutionAndIssueStatistic/',
+  projectActivityPanel: 'https://reportportal.io/docs/dashboards-and-widgets/ProjectActivityPanel/',
+  testCasesGrowthTrendChart:
+    'https://reportportal.io/docs/dashboards-and-widgets/TestCasesGrowthTrendChart/',
+  investigatedPercentageOfLaunches:
+    'https://reportportal.io/docs/dashboards-and-widgets/InvestigatedPercentageOfLaunches/',
+  launchesTable: 'https://reportportal.io/docs/dashboards-and-widgets/LaunchesTable/',
+  uniqueBugsTable: 'https://reportportal.io/docs/dashboards-and-widgets/UniqueBugsTable/',
+  mostFailedTestCasesTableTop50:
+    'https://reportportal.io/docs/dashboards-and-widgets/MostFailedTestCasesTableTop50/',
+  failedCasesTrendChart:
+    'https://reportportal.io/docs/dashboards-and-widgets/FailedCasesTrendChart/',
+  nonPassedTestCasesTrendChart:
+    'https://reportportal.io/docs/dashboards-and-widgets/NonPassedTestCasesTrendChart/',
+  differentLaunchesComparisonChart:
+    'https://reportportal.io/docs/dashboards-and-widgets/DifferentLaunchesComparisonChart/',
+  passingRatePerLaunch: 'https://reportportal.io/docs/dashboards-and-widgets/PassingRatePerLaunch/',
+  passingRateSummary: 'https://reportportal.io/docs/dashboards-and-widgets/PassingRateSummary/',
+  flakyTestCasesTableTop50:
+    'https://reportportal.io/docs/dashboards-and-widgets/FlakyTestCasesTableTop50/',
+  cumulativeTrendChart: 'https://reportportal.io/docs/dashboards-and-widgets/CumulativeTrendChart/',
+  mostPopularPatternTableTop20:
+    'https://reportportal.io/docs/dashboards-and-widgets/MostPopularPatternTableTop20/',
+  componentHealthCheck: 'https://reportportal.io/docs/dashboards-and-widgets/ComponentHealthCheck/',
+  tableComponentHealthCheck:
+    'https://reportportal.io/docs/dashboards-and-widgets/TableComponentHealthCheck/',
+  mostTimeConsumingTestCasesWidgetTop20:
+    'https://reportportal.io/docs/dashboards-and-widgets/MostTimeConsumingTestCasesWidgetTop20/',
+  testCaseSearch: 'https://reportportal.io/docs/dashboards-and-widgets/TestCaseSearch/',
 };

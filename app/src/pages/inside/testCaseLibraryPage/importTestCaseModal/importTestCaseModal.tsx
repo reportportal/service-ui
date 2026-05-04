@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import Link from 'redux-first-router-link';
 import { format } from 'date-fns';
 import { isEmpty } from 'es-toolkit/compat';
@@ -10,6 +11,13 @@ import { VoidFn } from '@reportportal/ui-kit/common';
 import { MIME_TYPES, MimeType, FileWithValidation } from '@reportportal/ui-kit/fileDropArea';
 import { AttachmentFile } from '@reportportal/ui-kit/fileDropArea/attachedFilesList';
 
+import {
+  IMPORT_DESTINATION,
+  IMPORT_TEMPLATE_CONDITION,
+  TEST_CASE_LIBRARY_EVENTS,
+  type ImportDestinationIconType,
+  type ImportTemplateConditionType,
+} from 'analyticsEvents/testCaseLibraryPageEvents';
 import { createClassnames, uniqueId } from 'common/utils';
 import { UseModalData } from 'common/hooks';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -59,6 +67,8 @@ export const ImportTestCaseModal = ({
   change,
 }: InjectedFormProps<FolderModalFormValues, ImportModalProps> & ImportModalProps) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
+  const templateAccessRef = useRef<ImportTemplateConditionType>(IMPORT_TEMPLATE_CONDITION.BROWSE);
   const [file, setFile] = useState<File | null>(null);
   const [attachedFiles, setAttachedFiles] = useState<AttachmentFile[]>([]);
   const [fileError, setFileError] = useState<string | undefined>();
@@ -91,6 +101,18 @@ export const ImportTestCaseModal = ({
     change('destinationFolder', selectedItem ?? undefined);
   };
 
+  const getDestinationIconType = (): ImportDestinationIconType => {
+    if (hasFolderId) {
+      return IMPORT_DESTINATION.EXISTING_FOLDER;
+    }
+    if (!hasFolders) {
+      return IMPORT_DESTINATION.NEW_FOLDER;
+    }
+    return currentMode === ButtonSwitcherOption.EXISTING
+      ? IMPORT_DESTINATION.NEW_FOLDER
+      : IMPORT_DESTINATION.EXISTING_FOLDER;
+  };
+
   const handleImport = async (formValues: FolderModalFormValues) => {
     if (!file) {
       return;
@@ -103,6 +125,13 @@ export const ImportTestCaseModal = ({
     if (folderId == null && !folder) {
       return;
     }
+
+    trackEvent(
+      TEST_CASE_LIBRARY_EVENTS.submitImportTestCases(
+        templateAccessRef.current,
+        getDestinationIconType(),
+      ),
+    );
 
     const result = await importTestCases({
       file,
@@ -248,7 +277,13 @@ export const ImportTestCaseModal = ({
             <p className={cx('import-test-case-modal__info-text')}>
               {formatMessage(messages.downloadDescription)}
             </p>
-            <Link to="#" className={cx('import-test-case-modal__download-link')}>
+            <Link
+              to="#"
+              className={cx('import-test-case-modal__download-link')}
+              onClick={() => {
+                templateAccessRef.current = IMPORT_TEMPLATE_CONDITION.DOWNLOAD;
+              }}
+            >
               {formatMessage(messages.downloadTemplate)}
               <ExternalLinkIcon />
             </Link>

@@ -49,6 +49,22 @@ export const messages = defineMessages({
     id: 'ManualLaunchExecutionPage.executionStatusUpdated',
     defaultMessage: 'Execution status updated to {status}',
   },
+  executionCommentTitle: {
+    id: 'ManualLaunchExecutionPage.executionCommentTitle',
+    defaultMessage: 'Execution comment',
+  },
+  clearExecutionComment: {
+    id: 'ManualLaunchExecutionPage.clearExecutionComment',
+    defaultMessage: 'Clear comment',
+  },
+  saveExecutionComment: {
+    id: 'ManualLaunchExecutionPage.saveExecutionComment',
+    defaultMessage: 'Save',
+  },
+  removeAttachment: {
+    id: 'ManualLaunchExecutionPage.removeAttachment',
+    defaultMessage: 'Remove attachment',
+  },
   clearStatus: {
     id: 'ExecutionStatusPopover.clearStatus',
     defaultMessage: 'Clear status',

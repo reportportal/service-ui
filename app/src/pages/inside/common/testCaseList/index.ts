@@ -16,3 +16,4 @@
 
 export { TestCaseList } from './testCaseList';
 export { STATUS_TYPES, ITEMS_PER_PAGE_OPTIONS } from './constants';
+export { useTestCaseTooltipItems } from './useTestCaseTooltipItems';

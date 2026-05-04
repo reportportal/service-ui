@@ -56,6 +56,8 @@ const PLUGINS_FILTER_LIST = [
   },
 ];
 
+export const PLUGIN_FILTER_GROUP_VALUES = PLUGINS_FILTER_LIST.slice(1).map((item) => item.value);
+
 export const getPluginsFilter = (values = []) =>
   PLUGINS_FILTER_LIST.filter((item) => values.includes(item.value))
     .concat(PLUGINS_FILTER_LIST[0])
