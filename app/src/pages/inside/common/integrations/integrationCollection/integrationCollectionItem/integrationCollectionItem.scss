@@ -15,10 +15,14 @@
  */
 
 .instances-list-item {
+  appearance: none;
+  background: none;
+  border: none;
   display: flex;
   justify-content: space-between;
   align-items: center;
   box-shadow: $BOX_SHADOW--item;
+  width: 100%;
   max-width: 820px;
   min-height: 111px;
   box-sizing: border-box;
@@ -35,12 +39,17 @@
       }
     }
   }
+
+  &:focus-visible {
+    outline: 2px solid var(--rp-ui-base-topaz-focused);
+  }
 }
 
 .item-data {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  align-items: flex-start;
   width: 100%;
 
   .general-info {

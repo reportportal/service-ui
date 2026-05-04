@@ -97,4 +97,8 @@ export const messages = defineMessages({
     id: 'IntegrationsDescription.resetIntegrations',
     defaultMessage: 'Reset to Global Integration',
   },
+  integrationCreatedByOn: {
+    id: 'IntegrationsDescription.integrationCreatedByOn',
+    defaultMessage: '{creator} on {creationInfo}',
+  },
 });

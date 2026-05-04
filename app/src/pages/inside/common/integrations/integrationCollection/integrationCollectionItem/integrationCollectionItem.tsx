@@ -15,10 +15,12 @@
  */
 
 import { useState, useEffect, useMemo, ReactNode } from 'react';
+import { useIntl } from 'react-intl';
 import { ArrowRightIcon } from '@reportportal/ui-kit';
 import { createClassnames } from 'common/utils';
 import { IntegrationStatusBadge, IntegrationStatus } from '../../integrationStatusBadge';
 import { IntegrationItem } from '../../types';
+import { messages } from '../../messages';
 import styles from './integrationCollectionItem.scss';
 
 const cx = createClassnames(styles);
@@ -46,6 +48,7 @@ export const IntegrationCollectionItem = ({
   openIntegration = () => {},
   testConnection,
 }: IntegrationCollectionItemProps) => {
+  const { formatMessage } = useIntl();
   const [connected, setConnected] = useState(true);
 
   useEffect(() => {
@@ -82,28 +85,32 @@ export const IntegrationCollectionItem = ({
   const itemClickHandler = () => {
     openIntegration(item);
   };
-  return (
-    <li
-      onClick={itemClickHandler}
-      role="row"
-      className={cx('instances-list-item')}
-      data-automation-id="listItem"
-    >
-      <div className={cx('item-data')}>
-        <div className={cx('general-info')}>
-          <h4 className={cx('integration-name')} title={title}>
-            {title}
-          </h4>
-          <IntegrationStatusBadge variant={statusVariant} tooltip={tooltip} />
-        </div>
-        <span className={cx('creation-info')}>
-          {creator ? `${creator} on ${creationInfo}` : creationInfo}
-        </span>
-      </div>
 
-      <div className={cx('arrow-control')} data-automation-id="openIntegrationIcon">
-        <ArrowRightIcon />
-      </div>
+  return (
+    <li>
+      <button
+        onClick={itemClickHandler}
+        className={cx('instances-list-item')}
+        data-automation-id="listItem"
+      >
+        <div className={cx('item-data')}>
+          <div className={cx('general-info')}>
+            <h4 className={cx('integration-name')} title={title}>
+              {title}
+            </h4>
+            <IntegrationStatusBadge variant={statusVariant} tooltip={tooltip} />
+          </div>
+          <span className={cx('creation-info')}>
+            {creator
+              ? formatMessage(messages.integrationCreatedByOn, { creator, creationInfo })
+              : creationInfo}
+          </span>
+        </div>
+
+        <div className={cx('arrow-control')} data-automation-id="openIntegrationIcon">
+          <ArrowRightIcon />
+        </div>
+      </button>
     </li>
   );
 };

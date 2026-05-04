@@ -1287,6 +1287,7 @@
   "IntegrationsDescription.globalIntegrationText": "Створюються на рівні екземпляра й застосовуються до всіх проєктів, якщо не встановлено організаційні або проєктні конфігурації.",
   "IntegrationsDescription.globalIntegrationTitle": "Глобальні інтеграції",
   "IntegrationsDescription.inactiveGlobalIntegrations": "Глобальні конфігурації неактивні, оскільки налаштовано інтеграцію проєкту",
+  "IntegrationsDescription.integrationCreatedByOn": "{creator}, {creationInfo}",
   "IntegrationsDescription.integrationList": "Інтеграції",
   "IntegrationsDescription.integrationStatusActive": "Активна",
   "IntegrationsDescription.integrationStatusConnected": "Підключено",

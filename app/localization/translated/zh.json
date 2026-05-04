@@ -1287,6 +1287,7 @@
   "IntegrationsDescription.globalIntegrationText": "在实例级别创建；除非已配置组织级或项目级设置，否则应用于所有项目。",
   "IntegrationsDescription.globalIntegrationTitle": "全局集成",
   "IntegrationsDescription.inactiveGlobalIntegrations": "由于已配置项目集成，全局配置处于非活动状态",
+  "IntegrationsDescription.integrationCreatedByOn": "{creator} {creationInfo}",
   "IntegrationsDescription.integrationList": "集成",
   "IntegrationsDescription.integrationStatusActive": "活跃",
   "IntegrationsDescription.integrationStatusConnected": "已连接",

@@ -32,6 +32,7 @@
 
 .integrations-header {
   @include measure(15px, 24px, var(--rp-ui-base-almost-black), var(--rp-ui-base-font-family));
+
   font-weight: var(--rp-ui-base-fw-medium);
   margin-bottom: 4px;
 }
