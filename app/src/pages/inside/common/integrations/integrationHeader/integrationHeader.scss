@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 .container {
-  background: $COLOR--bg-000;
+  background: var(--rp-ui-base-bg-000);
   padding: 12px 32px 27px 32px;
   position: sticky;
   top: 0;
@@ -65,15 +65,17 @@
 .integration-info-block {
   display: flex;
   flex-direction: column;
+  gap: 8px;
   margin-left: 24px;
 }
 
 .integration-data-block {
   display: flex;
-  flex-direction: column;
+  gap: 8px;
+  align-items: baseline;
 }
 
-@mixin integrarion-measure($font-size, $line-height, $color, $font-family) {
+@mixin integration-measure($font-size, $line-height, $color, $font-family) {
   font-size: $font-size;
   line-height: $line-height;
   color: $color;
@@ -81,29 +83,37 @@
 }
 
 .integration-name {
-  @include integrarion-measure(20px, 31px, $COLOR--almost-black, $FONT-REGULAR);
-  margin-bottom: 10.5px;
+  @include integration-measure(
+    20px,
+    31px,
+    var(--rp-ui-base-almost-black),
+    var(--rp-ui-base-font-family-heading)
+  );
 }
 
 .integration-version {
-  @include integrarion-measure(11px, 16px, $COLOR--e-400, $FONT-ROBOTO-REGULAR);
-  margin-bottom: 8px;
+  @include integration-measure(13px, 20px, var(--rp-ui-base-e-400), var(--rp-ui-base-font-family));
 }
 
 .integration-description {
-  @include integrarion-measure(13px, 20px, $COLOR--almost-black, $FONT-ROBOTO-REGULAR);
+  @include integration-measure(
+    13px,
+    20px,
+    var(--rp-ui-base-almost-black),
+    var(--rp-ui-base-font-family)
+  );
   text-indent: 1px;
   max-width: 610px;
 
   > a {
-    font-family: $FONT-ROBOTO-REGULAR;
+    font-family: var(--rp-ui-base-font-family);
     font-size: 13px;
     line-height: 20px;
-    color: $COLOR--topaz-2;
+    color: var(--rp-ui-base-topaz);
     text-decoration: none;
     &:hover {
       text-decoration: underline;
-      color: $COLOR--topaz-hover-2;
+      color: var(--rp-ui-base-topaz-hover);
     }
   }
 }

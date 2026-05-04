@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,4 +14,12 @@
  * limitations under the License.
  */
 
-export { IntegrationCollection } from './integrationCollection';
+export interface IntegrationItem {
+  id: number;
+  name: string;
+  creator?: string;
+  creationDate?: string;
+  enabled?: boolean;
+  integrationParameters?: Record<string, unknown>;
+  integrationType?: Record<string, unknown>;
+}

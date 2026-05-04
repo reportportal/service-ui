@@ -14,21 +14,4 @@
  * limitations under the License.
  */
 
-.integration-settings-block {
-  flex-grow: 1;
-  max-width: 820px;
-  width: 100%;
-  margin: 32px auto 0;
-  padding-bottom: 60px;
-}
-
-.integration-list {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-  width: 100%;
-  padding: 0 32px;
-  margin: 24px auto 48px;
-  box-sizing: border-box;
-}
+export { AvailableIntegrations } from './availableIntegrations';
