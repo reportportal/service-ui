@@ -21,7 +21,7 @@ import styles from './configExamplesBlock.scss';
 const cx = classNames.bind(styles);
 
 const CONFIG_EXAMPLES_NOTE =
-  'NOTE: <API_KEY> should be replaced with corresponding apiKey from API KEYS tab. <projectKey> should be replaced with the correspondent project key which you can find on Project settings > General tab.';
+  'NOTE: <API_KEY> should be replaced with corresponding apiKey from API KEYS tab. <projectKey> should be replaced with the corresponding project key which you can find on Project settings > General tab.';
 
 const javaConfig = () => ({
   name: 'Java',
