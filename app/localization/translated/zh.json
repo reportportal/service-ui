@@ -1258,7 +1258,7 @@
   "InstancesSection.resetToGlobalSettingsDescription": "激活全局设置。所有自定义集成都将被删除。",
   "InstancesSection.resetToGlobalSettingsTitle": "重置为全局设置",
   "InstancesSection.resetToGlobalSuccess": "已应用全局集成",
-  "InstancesSection.uninstallPluginConfirmation": "您确定要卸载{pluginName}插件吗？",
+  "InstancesSection.uninstallPluginConfirmation": "您确定要卸载<b>{pluginName}</b>插件吗？",
   "InstancesSection.uninstallPluginNote": "从ReportPortal中删除此插件并撤销所有访问和授权。",
   "InstancesSection.uninstallPluginTitle": "卸载插件",
   "InstancesSection.unlinkAndSetupManuallyDescription": "从全局设置中取消与当前项目的关联并配置您自己的集成。您随时可以将其重置为全局设置。",

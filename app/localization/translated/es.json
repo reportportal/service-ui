@@ -1259,7 +1259,7 @@
   "InstancesSection.resetToGlobalSettingsDescription": "Activa las configuraciones globales. Todas las integraciones personalizadas serán eliminadas.",
   "InstancesSection.resetToGlobalSettingsTitle": "Restablecer a configuraciones globales",
   "InstancesSection.resetToGlobalSuccess": "Integraciones globales aplicadas exitosamente",
-  "InstancesSection.uninstallPluginConfirmation": "¿Realmente desea desinstalar el plugin {pluginName}?",
+  "InstancesSection.uninstallPluginConfirmation": "¿Realmente desea desinstalar el plugin <b>{pluginName}</b>?",
   "InstancesSection.uninstallPluginNote": "Elimine este plugin de ReportPortal y cancele todos los permisos de acceso y autorización",
   "InstancesSection.uninstallPluginTitle": "Desinstalar plugin",
   "InstancesSection.unlinkAndSetupManuallyDescription": "Desvincula el proyecto actual de las configuraciones globales y configura tu propia integración. Siempre puedes volver a las configuraciones globales.",

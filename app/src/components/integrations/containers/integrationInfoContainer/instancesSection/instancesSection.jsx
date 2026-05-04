@@ -98,7 +98,7 @@ const messages = defineMessages({
   },
   uninstallPluginConfirmation: {
     id: 'InstancesSection.uninstallPluginConfirmation',
-    defaultMessage: 'Are you sure you want to uninstall {pluginName} Plugin?',
+    defaultMessage: 'Are you sure you want to uninstall <b>{pluginName}</b> plugin?',
   },
   uninstallPluginTitle: {
     id: 'InstancesSection.uninstallPluginTitle',
@@ -217,6 +217,7 @@ export class InstancesSection extends Component {
       data: {
         message: formatMessage(messages.uninstallPluginConfirmation, {
           pluginName: pluginDetails.name || instanceType,
+          b: (chunks) => `<b>${chunks}</b>`,
         }),
         onConfirm: this.removePlugin,
         title: formatMessage(messages.uninstallPluginTitle),
