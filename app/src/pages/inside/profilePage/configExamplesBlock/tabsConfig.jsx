@@ -20,7 +20,10 @@ import styles from './configExamplesBlock.scss';
 
 const cx = classNames.bind(styles);
 
-const javaConfig = (projectKey) => ({
+const CONFIG_EXAMPLES_NOTE =
+  'NOTE: <API_KEY> should be replaced with corresponding apiKey from API KEYS tab. <projectKey> should be replaced with the correspondent project key which you can find on Project settings > General tab.';
+
+const javaConfig = () => ({
   name: 'Java',
   content: (
     <div className={cx('content-wrapper')}>
@@ -30,7 +33,7 @@ const javaConfig = (projectKey) => ({
         <p>rp.endpoint = {window.location.origin}</p>
         <p>{`rp.api.key = <API_KEY>`}</p>
         <p>rp.launch = Java launch</p>
-        <p>rp.project = {projectKey}</p>
+        <p>{`rp.project = <projectKey>`}</p>
       </div>
       <h1 className={cx('h1')}>NOT REQUIRED</h1>
       <div className={cx('options')}>
@@ -44,13 +47,11 @@ const javaConfig = (projectKey) => ({
         <p>{`rp.keystore.resource = <PATH_TO_YOUR_KEYSTORE>`}</p>
         <p>{`rp.keystore.password = <PASSWORD_OF_YOUR_KEYSTORE>`}</p>
       </div>
-      <div className={cx('note')}>
-        {`NOTE: <API_KEY> should be replaced with corresponding apiKey from API KEYS tab.`}
-      </div>
+      <div className={cx('note')}>{CONFIG_EXAMPLES_NOTE}</div>
     </div>
   ),
 });
-const rubyConfig = (projectKey) => ({
+const rubyConfig = () => ({
   name: 'Ruby',
   content: (
     <div className={cx('content-wrapper')}>
@@ -58,17 +59,15 @@ const rubyConfig = (projectKey) => ({
       <div className={cx('options')}>
         <p>{`uuid: <API_KEY>`}</p>
         <p>endpoint: {window.location.origin}/api/v1</p>
-        <p>project: {projectKey}</p>
+        <p>{`project: <projectKey>`}</p>
         <p>launch: Ruby_launch</p>
         <p>attributes: [key:value, value]</p>
       </div>
-      <div className={cx('note')}>
-        {`NOTE: <API_KEY> should be replaced with corresponding apiKey from API KEYS tab.`}
-      </div>
+      <div className={cx('note')}>{CONFIG_EXAMPLES_NOTE}</div>
     </div>
   ),
 });
-const pythonConfig = (projectKey) => ({
+const pythonConfig = () => ({
   name: 'Python',
   content: (
     <div className={cx('content-wrapper')}>
@@ -80,7 +79,7 @@ const pythonConfig = (projectKey) => ({
       <p>[pytest]</p>
       <p>{`rp_endpoint = ${window.location.origin}`}</p>
       <p>{`rp_api_key = <API_KEY>`}</p>
-      <p>{`rp_project = ${projectKey}`}</p>
+      <p>{`rp_project = <projectKey>`}</p>
       <h1 className={cx('h1')}>NOT REQUIRED</h1>
       <p>rp_launch = Pytest Launch</p>
       <p>rp_launch_description = My awesome launch</p>
@@ -107,7 +106,7 @@ const pythonConfig = (projectKey) => ({
       <div className={cx('options')}>
         <p>{`--variable RP_ENDPOINT:"${window.location.origin}" \\`}</p>
         <p>{`--variable RP_API_KEY:"<API_KEY>" \\`}</p>
-        <p>{`--variable RP_PROJECT:"${projectKey}" \\`}</p>
+        <p>{`--variable RP_PROJECT:"<projectKey>" \\`}</p>
         <p>--variable RP_LAUNCH:"Robot Framework Launch" \</p>
         <p>./tests</p>
       </div>
@@ -129,7 +128,7 @@ const pythonConfig = (projectKey) => ({
       <p>[report_portal]</p>
       <p>{`endpoint = ${window.location.origin}`}</p>
       <p>{`api_key = <API_KEY>`}</p>
-      <p>{`project = ${projectKey}`}</p>
+      <p>{`project = <projectKey>`}</p>
       <h1 className={cx('h1')}>NOT REQUIRED</h1>
       <p>launch_name = Behave Launch</p>
       <p>launch_description = 'My awesome launch'</p>
@@ -143,13 +142,11 @@ const pythonConfig = (projectKey) => ({
         <p>behave -D config_file=behave.ini ./tests/features</p>
       </div>
       <p>Where './tests/features' is a folder with your feature files.</p>
-      <div className={cx('note')}>
-        {`NOTE: <API_KEY> should be replaced with corresponding apiKey from API KEYS tab.`}
-      </div>
+      <div className={cx('note')}>{CONFIG_EXAMPLES_NOTE}</div>
     </div>
   ),
 });
-const dotNetConfig = (projectName) => ({
+const dotNetConfig = () => ({
   name: '.net',
   content: (
     <div className={cx('content-wrapper')}>
@@ -163,7 +160,7 @@ const dotNetConfig = (projectName) => ({
         <p>{`"server": {`}</p>
         <div className={cx('options')}>
           <p>{`"url": "${window.location.origin}",`}</p>
-          <p>{`"project": "${projectName}",`}</p>
+          <p>{`"project": "<projectKey>",`}</p>
           <p>{`"apiKey": "<API_KEY>"`}</p>
         </div>
         <p>{`},`}</p>
@@ -177,13 +174,11 @@ const dotNetConfig = (projectName) => ({
         <p>{`}`}</p>
       </div>
       <p>{`}`}</p>
-      <div className={cx('note')}>
-        {`NOTE: <API_KEY> should be replaced with corresponding apiKey from API KEYS tab.`}
-      </div>
+      <div className={cx('note')}>{CONFIG_EXAMPLES_NOTE}</div>
     </div>
   ),
 });
-const nodejsConfig = (projectName) => ({
+const nodejsConfig = () => ({
   name: 'NodeJS',
   content: (
     <div className={cx('content-wrapper')}>
@@ -202,7 +197,7 @@ const nodejsConfig = (projectName) => ({
       <div className={cx('options')}>
         <p>{`endpoint: "${window.location.origin}/api/v1",`}</p>
         <p>{`apiKey: "<API_KEY>",`}</p>
-        <p>{`project: "${projectName}",`}</p>
+        <p>{`project: "<projectKey>",`}</p>
         <p>launch: "Launch name",</p>
         <p>description: "My awesome launch",</p>
         <p>attributes: [</p>
@@ -223,9 +218,7 @@ const nodejsConfig = (projectName) => ({
         <p>mode: 'DEFAULT',</p>
       </div>
       <p>{`}`}</p>
-      <div className={cx('note')}>
-        {`NOTE: <API_KEY> should be replaced with corresponding apiKey from API KEYS tab.`}
-      </div>
+      <div className={cx('note')}>{CONFIG_EXAMPLES_NOTE}</div>
     </div>
   ),
 });
