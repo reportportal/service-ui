@@ -51,12 +51,14 @@ $test-plans-progress-column-inline-pad: 0;
     }
 
     :global([class*='table-header']) {
-      border-bottom: none;
+      border-bottom: 1px solid var(--rp-ui-base-e-100);
       --table-header-bg-color: transparent;
 
       :global([class*='table-header-cell']) {
         padding-inline: 0;
         color: var(--Text-Secondary, var(--rp-ui-base-e-400));
+        border-bottom: none;
+        box-shadow: none;
       }
 
       :global([class*='table-cell']) {
@@ -83,6 +85,11 @@ $test-plans-progress-column-inline-pad: 0;
       --table-header-bg-color: transparent;
       box-sizing: border-box;
       padding-inline: 0;
+
+      > :global(button) {
+        border-bottom: none;
+        box-shadow: none;
+      }
 
       > :global(button):nth-child(2),
       > :global(button):nth-child(4) {
