@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { isString } from 'es-toolkit';
@@ -24,35 +24,69 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
-import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
+import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
+import { foldersSelector } from 'controllers/testCase';
+import { getAllSubfolderIds } from 'common/utils/folderUtils';
 
-import { LaunchFormData, LaunchMode, isLaunchObject, CreateManualLaunchDto } from './types';
+import { CreateManualLaunchDto, isLaunchObject, LaunchFormData, LaunchMode } from './types';
 import { ExtendedTestCase } from 'types/testCase';
 import { ManualLaunchItem } from 'pages/inside/manualLaunchesPage/types';
 import { generateUUID } from './utils';
 import { messages } from './messages';
+import { fetchAllTestCases } from '../testLibrarySidePanel/utils';
 
 export const useCreateManualLaunch = (
   testCases: ExtendedTestCase[],
   activeMode: LaunchMode,
   testPlanId?: number | null,
   selectedLaunchId?: number,
+  folderId?: number,
   onClearSelection?: () => void,
 ) => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+  const folders = useSelector(foldersSelector);
   const { formatMessage } = useIntl();
+
+  const getTestCasesForSubmit = useCallback(async () => {
+    if (!folderId) {
+      return testCases;
+    }
+
+    try {
+      return await fetchAllTestCases(projectKey, {
+        'filter.in.testFolderId': getAllSubfolderIds(folderId, folders).join(','),
+        offset: 0,
+        limit: 50,
+      });
+    } catch {
+      dispatch(
+        showErrorNotification({
+          message: formatMessage(messages.launchCreationFailed),
+        }),
+      );
+
+      return null;
+    }
+  }, [dispatch, folderId, folders, formatMessage, projectKey, testCases]);
 
   const handleSubmit = useCallback(
     async (formValues: LaunchFormData) => {
       setIsLoading(true);
 
       const resolvedTestPlanId = testPlanId ?? formValues.testPlan?.id;
+      const submitTestCases = await getTestCasesForSubmit();
+
+      if (!submitTestCases) {
+        setIsLoading(false);
+
+        return;
+      }
 
       const addedTestCases = formValues.uncoveredTestsOnly
-        ? testCases.filter((testCase) => !testCase.lastExecution)
-        : testCases;
+        ? submitTestCases.filter((testCase) => !testCase.lastExecution)
+        : submitTestCases;
 
       const testCaseIds = addedTestCases.map((testCase) => testCase.id);
 
@@ -132,10 +166,10 @@ export const useCreateManualLaunch = (
       }
     },
     [
-      testCases,
-      activeMode,
       testPlanId,
+      getTestCasesForSubmit,
       selectedLaunchId,
+      activeMode,
       onClearSelection,
       dispatch,
       projectKey,

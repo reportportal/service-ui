@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-export interface FilterOption {
-  label: string;
-  value: string;
-}
+import { Page } from 'types/common';
 
-export enum TestCaseMenuAction {
-  DUPLICATE = 'duplicate',
-  EDIT = 'edit',
-  MOVE = 'move',
-  HISTORY = 'history',
-  DELETE = 'delete',
-}
+import type { TestPlanDto, TestPlanFoldersDto, TestPlanTestCaseDto } from './types';
 
-export interface SelectedTestCaseRow {
-  id: number;
-  folderId: number;
-  name?: string;
+export interface TestPlanState {
+  data: {
+    content: TestPlanDto[] | null;
+    page: Page | null;
+  };
+  isLoading?: boolean;
+  activeTestPlan?: TestPlanDto | null;
+  testPlanFolders?: TestPlanFoldersDto | null;
+  testPlanTestCases?: TestPlanTestCaseDto | null;
+  isLoadingActive?: boolean;
+  isLoadingTestPlanTestCases?: boolean;
+  expandedFolderIds?: number[];
 }

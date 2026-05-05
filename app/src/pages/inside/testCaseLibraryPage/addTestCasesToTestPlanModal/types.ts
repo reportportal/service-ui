@@ -1,8 +1,9 @@
-import { TestPlanDto } from 'controllers/testPlan';
+import type { TestPlanDto } from 'controllers/testPlan/types';
 
 export interface AddTestCasesToTestPlanModalData {
-  selectedTestCaseIds: number[];
-  isSingleTestCaseMode?: boolean;
+  folderId?: number;
+  itemCount?: number;
+  selectedTestCaseIds?: number[];
 }
 
 export interface AddTestCasesToTestPlanModalProps {

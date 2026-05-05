@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { TestPlanDto } from 'controllers/testPlan';
+import type { TestPlanDto } from 'controllers/testPlan/types';
 
 export type TestPlanRowClickKind = 'name' | 'chevron';
 

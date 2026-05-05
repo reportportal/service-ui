@@ -17,7 +17,7 @@
 import { noop } from 'es-toolkit';
 import { VoidFn } from '@reportportal/ui-kit/common/types/commonTypes';
 
-import { TestPlanDto } from 'controllers/testPlan';
+import type { TestPlanDto } from 'controllers/testPlan/types';
 import { useModal } from 'common/hooks';
 
 import { DELETE_TEST_PLAN_MODAL_KEY, DeleteTestPlanModal } from './deleteTestPlanModal';

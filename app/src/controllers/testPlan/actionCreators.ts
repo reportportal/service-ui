@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Folder } from 'controllers/testCase';
+import { Folder } from 'controllers/testCase/types';
 
 import {
   GET_TEST_PLANS,

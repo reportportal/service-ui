@@ -27,7 +27,6 @@ import {
   PlusIcon,
   ChevronDownDropdownIcon,
 } from '@reportportal/ui-kit';
-import { messages as datasetsMessages } from '../datasets';
 import styles from './dataset.scss';
 
 const cx = classNames.bind(styles);
@@ -42,6 +41,10 @@ const messages = defineMessages({
   createdBy: {
     id: 'testData.createdBy',
     defaultMessage: 'Created by {username} on {date} at {time}',
+  },
+  createDataset: {
+    id: 'testData.createDataset',
+    defaultMessage: 'Create Dataset',
   },
 });
 
@@ -79,7 +82,7 @@ export const Dataset = ({ dataset: { datasetName, timestamp, username } }) => {
       </div>
       <div className={cx('dataset__create-dataset-wrapper')}>
         <Button variant="text" icon={<PlusIcon />}>
-          {formatMessage(datasetsMessages.createDataset)}
+          {formatMessage(messages.createDataset)}
         </Button>
       </div>
     </div>

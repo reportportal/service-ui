@@ -36,6 +36,7 @@ export const BaseLaunchModal = ({
   handleSubmit,
   change,
   testCases,
+  folderId,
   testPlanId,
   modalTitle,
   okButtonText,
@@ -56,6 +57,7 @@ export const BaseLaunchModal = ({
     activeMode,
     hideTestPlanField ? testPlanId : null,
     selectedLaunch?.id,
+    folderId,
     onClearSelection,
   );
 

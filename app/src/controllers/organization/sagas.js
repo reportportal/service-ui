@@ -24,7 +24,8 @@ import {
   showErrorNotification,
   showSuccessNotification,
 } from 'controllers/notification';
-import { fetchFilteredProjectAction, projectsSagas } from './projects';
+import { fetchFilteredProjectAction } from './projects/actionCreators';
+import { projectsSagas } from './projects/sagas';
 import {
   CREATE_ORGANIZATION,
   ERROR_CODES,
@@ -35,7 +36,7 @@ import {
   RENAME_ORGANIZATION,
   UPDATE_ORGANIZATION_SETTINGS,
 } from './constants';
-import { usersSagas } from './users';
+import { usersSagas } from './users/sagas';
 import { fetch } from 'common/utils';
 import { updateOrganizationSettingsSuccessAction } from './actionCreators';
 import { hideModalAction } from 'controllers/modal';

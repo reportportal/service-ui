@@ -34,8 +34,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { isLoadingTestCaseDetailsSelector, testCaseDetailsSelector } from 'controllers/testCase';
 import { commonMessages } from 'pages/inside/common/common-messages';
-import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
-import { ManualScenario, Tag } from 'types/testCase';
+import { ManualScenario, Tag, TestCaseManualScenario } from 'types/testCase';
 
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
 import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
@@ -212,7 +211,6 @@ export const TestCaseDetailsPage = () => {
   const handleAddToTestPlan = () => {
     openAddTestCasesToTestPlanModal({
       selectedTestCaseIds: [testCaseDetails.id],
-      isSingleTestCaseMode: true,
     });
   };
 

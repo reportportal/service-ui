@@ -25,7 +25,8 @@ import { useDebouncedSpinner, useQueryParams } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
-import { defaultQueryParams, getTestPlansAction, TestPlanDto } from 'controllers/testPlan';
+import { defaultQueryParams, getTestPlansAction } from 'controllers/testPlan';
+import type { TestPlanDto } from 'controllers/testPlan/types';
 import { getMilestonesAction } from 'controllers/milestone';
 
 import { TestPlanFormValues } from '../testPlanModal';

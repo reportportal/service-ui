@@ -25,41 +25,68 @@ import {
   RENAME_FOLDER,
   GET_FILTERED_FOLDERS,
 } from './constants';
-import type {
-  GetTestCasesByFolderIdParams,
-  GetAllTestCases,
-  CreateFolderParams,
-  DeleteFolderParams,
-  RenameFolderParams,
-  GetFoldersParams,
-  GetFilteredFoldersParams,
-} from './actionCreators';
 
-export type Folder = {
+interface BaseFolder {
   id: number;
   name: string;
   description?: string;
+  parentFolderId: number | null;
+  index?: number;
+}
+
+export interface Folder extends BaseFolder {
   countOfTestCases: number;
-  parentFolderId: number | null;
-  index?: number;
   subFolders?: Folder[];
-};
+}
 
-export type TransformedFolder = {
-  id: number;
-  name: string;
-  description?: string;
+export interface TransformedFolder extends BaseFolder {
   testsCount: number;
-  parentFolderId: number | null;
-  index?: number;
   folders: TransformedFolder[];
-};
+}
 
 export interface FolderWithFullPath {
   id: number;
   description: string;
   name: string;
   fullPath: string;
+}
+
+export interface GetAllTestCases {
+  offset: number;
+  limit: number;
+  testCasesSearchParams?: string;
+  filterPriorities?: string;
+  filterTags?: string;
+}
+
+export interface GetTestCasesByFolderIdParams extends GetAllTestCases {
+  folderId: number;
+}
+
+export interface CreateFolderParams {
+  folderName: string;
+  parentFolderId?: number;
+}
+
+export interface GetFoldersParams {
+  projectKey?: string;
+  silent?: boolean;
+}
+
+export interface DeleteFolderParams {
+  folder: TransformedFolder;
+  activeFolderId: number;
+  setAllTestCases: () => void;
+}
+
+export interface RenameFolderParams {
+  folderId: number;
+  folderName: string;
+}
+
+export interface GetFilteredFoldersParams {
+  searchQuery?: string;
+  extraFilters?: Record<string, string | number>;
 }
 
 // Action types for sagas

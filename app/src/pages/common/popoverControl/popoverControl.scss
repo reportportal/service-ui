@@ -65,5 +65,31 @@
         color: var(--rp-ui-base-error);
       }
     }
+
+    &--disabled {
+      color: var(--rp-ui-base-e-400);
+      cursor: default;
+
+      &:hover,
+      &:active,
+      &:focus {
+        color: var(--rp-ui-base-e-400);
+        background-color: transparent;
+      }
+    }
+  }
+
+  &__divider {
+    height: 1px;
+    margin: 8px 12px;
+    padding: 0;
+    list-style: none;
+    background-color: var(--rp-ui-base-e-100);
+  }
+
+  &__tooltip {
+    div {
+      white-space: nowrap;
+    }
   }
 }

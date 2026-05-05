@@ -27,7 +27,7 @@ import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import { getManualLaunchesAction, defaultManualLaunchesQueryParams } from 'controllers/manualLaunch';
 
-import { DeleteManualLaunchModalData } from './deleteManualLaunchModal';
+import { DeleteManualLaunchModalData } from './types';
 
 interface UseDeleteManualLaunchesOptions {
   onSuccess?: VoidFn;

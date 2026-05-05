@@ -22,10 +22,9 @@ import { AttachmentList } from 'pages/inside/common/attachmentList';
 import { commonMessages } from 'pages/inside/common/common-messages';
 
 import { FieldSection } from '../../../fieldSection';
-import { ManualScenario } from 'types/testCase';
+import { ManualScenario, TestCaseManualScenario } from 'types/testCase';
 import { messages } from './messages';
 import { StepsList } from '../../stepsList';
-import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 
 import styles from './scenario.scss';
 

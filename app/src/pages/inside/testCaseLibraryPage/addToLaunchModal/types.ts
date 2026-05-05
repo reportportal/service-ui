@@ -14,11 +14,24 @@
  * limitations under the License.
  */
 
+import { VoidFn } from '@reportportal/ui-kit/common';
+
 import { AddToLaunchPlace } from 'analyticsEvents/testCaseLibraryPageEvents';
 
-export interface AddToLaunchModalProps {
-  selectedTestCasesIds: number[];
+interface BaseAddToLaunchModalProps {
   isUncoveredTestsCheckboxAvailable?: boolean;
-  onClearSelection?: () => void;
   place?: AddToLaunchPlace;
+  onClearSelection?: VoidFn;
 }
+
+export type AddToLaunchModalProps =
+  | (BaseAddToLaunchModalProps & {
+      folderId: number;
+      itemCount: number;
+      selectedTestCaseIds?: never;
+    })
+  | (BaseAddToLaunchModalProps & {
+      selectedTestCaseIds: number[];
+      folderId?: never;
+      itemCount?: never;
+    });

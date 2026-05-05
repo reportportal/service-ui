@@ -32,6 +32,7 @@ interface ExecutionStatusProps {
 const STATUS_CLASS_MAP: Record<ExecutionStatus, string> = {
   [ExecutionStatus.PASSED]: 'passed',
   [ExecutionStatus.FAILED]: 'failed',
+  [ExecutionStatus.IN_PROGRESS]: 'in-progress',
   [ExecutionStatus.STOPPED]: 'stopped',
   [ExecutionStatus.INTERRUPTED]: 'interrupted',
   [ExecutionStatus.CANCELLED]: 'cancelled',

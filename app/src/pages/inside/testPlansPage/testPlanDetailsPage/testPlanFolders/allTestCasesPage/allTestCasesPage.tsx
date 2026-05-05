@@ -24,7 +24,7 @@ import { createClassnames } from 'common/utils';
 import { TestCaseList } from 'pages/inside/common/testCaseList';
 import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/common/testCaseList/constants';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { SelectedTestCaseRow } from 'pages/inside/testCaseLibraryPage/allTestCasesPage/allTestCasesPage';
+import { SelectedTestCaseRow } from 'pages/inside/common/testCaseList/types';
 import {
   defaultTestPlanTestCasesQueryParams,
   TEST_PLAN_TEST_CASES_NAMESPACE,
@@ -80,6 +80,7 @@ export const AllTestCasesPage = ({
   const handleOpenRemoveModal = () => {
     openRemoveTestCasesModal({
       selectedTestCaseIds: selectedRowIds,
+      testCaseName: selectedRows.length === 1 ? selectedRows[0]?.name : undefined,
       onClearSelection,
     });
   };
