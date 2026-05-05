@@ -112,6 +112,7 @@ export default defineConfig([
     },
     rules: {
       '@typescript-eslint/unbound-method': 'off', // conflicts with useIntl types
+      '@typescript-eslint/no-floating-promises': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],

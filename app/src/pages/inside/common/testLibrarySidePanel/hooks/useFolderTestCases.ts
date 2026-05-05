@@ -145,7 +145,7 @@ export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTe
 
     const offset = page.number * page.size;
 
-    void fetchTestCases(offset);
+    fetchTestCases(offset);
   }, [isFolderLoading, hasNextPage, page, fetchTestCases]);
 
   const retryFetch = useCallback(() => {
@@ -155,11 +155,11 @@ export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTe
     if (hasExistingTestCases && currentFolderData?.page) {
       const offset = currentFolderData.page.number * currentFolderData.page.size;
 
-      void fetchTestCases(offset);
+      fetchTestCases(offset);
     } else {
       isFetchingFirstPageRef.current = true;
 
-      void fetchTestCases(0);
+      fetchTestCases(0);
     }
   }, [testCasesMap, folderId, fetchTestCases]);
 
@@ -176,7 +176,7 @@ export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTe
 
     isFetchingFirstPageRef.current = true;
 
-    void fetchTestCases(0);
+    fetchTestCases(0);
   }, [isOpen, testsCount, isFullyCached, isFolderLoading, fetchTestCases]);
 
   return {

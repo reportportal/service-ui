@@ -76,7 +76,7 @@ export const useTestCaseDetails = ({ testCaseId, testPlanId }: UseTestCaseDetail
       }
     };
 
-    void fetchTestCaseDetails();
+    fetchTestCaseDetails();
 
     return () => {
       abortController.abort();

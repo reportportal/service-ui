@@ -60,7 +60,7 @@ const DuplicateMilestoneModalForm = ({
     const endIso = dateOnlyStringToUtcIso(values.endDate.trim());
     if (!startIso || !endIso) return;
 
-    void submitDuplicate({
+    submitDuplicate({
       name: values.name.trim(),
       type: values.type as TmsMilestoneType,
       status: MilestoneStatus.SCHEDULED,

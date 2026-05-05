@@ -80,7 +80,7 @@ export const ManualLaunchRowActions = ({
       }
     };
 
-    void fetchAndOpenModal();
+    fetchAndOpenModal();
   }, [openEditModal, metaData.id, projectKey, dispatch]);
 
   const handleDelete = useCallback(() => {

@@ -148,14 +148,18 @@ export const TestLibrarySidePanel = ({
         <Button
           variant="ghost"
           disabled={isSubmitButtonDisabled}
-          onClick={() => void handleAddAndCreateLaunch()}
+          onClick={() => {
+            handleAddAndCreateLaunch();
+          }}
         >
           {formatMessage(messages.addAndCreateLaunch)}
         </Button>
         <Button
           variant="primary"
           disabled={isSubmitButtonDisabled}
-          onClick={() => void addToTestPlan()}
+          onClick={() => {
+            addToTestPlan();
+          }}
         >
           {formatMessage(messages.addToTestPlan)}
         </Button>

@@ -121,7 +121,7 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
       return;
     }
 
-    void updateMilestone(
+    updateMilestone(
       { ...baseBody, ...overrides, status: MilestoneStatus.TESTING },
       'milestoneTestingStartedSuccess',
     );
@@ -134,7 +134,7 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
       return;
     }
 
-    void updateMilestone(
+    updateMilestone(
       { ...baseBody, ...overrides, status: MilestoneStatus.COMPLETED },
       'milestoneCompletedSuccess',
     );
@@ -160,7 +160,7 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
     }
 
     trackChangeStatusModal(analyticsModalButtonNames.change, analyticsChooseStatus.backToScheduled);
-    void updateMilestone(
+    updateMilestone(
       {
         name: milestone.name,
         type: values.type as TmsMilestoneType,
@@ -178,7 +178,7 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
     }
 
     trackChangeStatusModal(analyticsModalButtonNames.change, analyticsChooseStatus.backToScheduled);
-    void updateMilestone(
+    updateMilestone(
       { ...baseBody, status: MilestoneStatus.SCHEDULED },
       'milestoneStatusChangedToScheduledSuccess',
     );
@@ -190,7 +190,7 @@ export const ChangeMilestoneStatusModal = ({ data }: ChangeMilestoneStatusModalP
     }
 
     trackChangeStatusModal(analyticsModalButtonNames.change, analyticsChooseStatus.backToTesting);
-    void updateMilestone(
+    updateMilestone(
       { ...baseBody, status: MilestoneStatus.TESTING },
       'milestoneStatusChangedToTestingSuccess',
     );

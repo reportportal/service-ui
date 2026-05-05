@@ -76,7 +76,7 @@ export const useExecutionDetails = (executionId: number | null) => {
       }
     };
 
-    void fetchExecutionDetails();
+    fetchExecutionDetails();
 
     return () => {
       abortController.abort();

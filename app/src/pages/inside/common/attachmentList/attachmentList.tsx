@@ -46,7 +46,7 @@ export const AttachmentList = ({
       const response = await fetch(
         URLS.attachmentThumbnail(projectKey, attachment.id),
         { responseType: 'blob' },
-        true
+        true,
       );
       const src = URL.createObjectURL(response.data as MediaSource);
 
@@ -55,7 +55,7 @@ export const AttachmentList = ({
       return {
         ...attachment,
         src,
-      }
+      };
     } catch {
       return { ...attachment };
     }
@@ -64,6 +64,7 @@ export const AttachmentList = ({
   useEffect(() => {
     let isMounted = true;
     const objectUrls: string[] = [];
+
     setAttachmentsWithPreview(null);
 
     if (withPreview && !isEmpty(attachments)) {
@@ -75,7 +76,7 @@ export const AttachmentList = ({
         }
       });
 
-      void Promise.all(promises).then((newList) => {
+      Promise.all(promises).then((newList) => {
         if (isMounted) {
           setAttachmentsWithPreview(newList);
         }

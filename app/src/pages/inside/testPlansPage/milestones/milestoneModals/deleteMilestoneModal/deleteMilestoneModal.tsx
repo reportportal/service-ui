@@ -42,7 +42,7 @@ export const DeleteMilestoneModal = ({ data }: DeleteMilestoneModalProps) => {
 
   const handleSubmit = () => {
     if (!data || !isDeleteMilestoneConfirmationValid(confirmText)) return;
-    void deleteMilestone(data.id);
+    deleteMilestone(data.id);
   };
 
   const { okButton, cancelButton, hideModal } = useModalButtons({

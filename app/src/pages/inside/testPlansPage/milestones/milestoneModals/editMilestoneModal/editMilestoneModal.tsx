@@ -54,7 +54,7 @@ const EditMilestoneModalForm = ({
     const endIso = dateOnlyStringToUtcIso(values.endDate.trim());
     if (!startIso || !endIso) return;
 
-    void submitMilestone({
+    submitMilestone({
       name: values.name.trim(),
       type: values.type as TmsMilestoneType,
       status: milestone.status,

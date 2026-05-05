@@ -137,7 +137,7 @@ export const LaunchSidePanel = memo(
     const launchBusinessId = launchDetails.displayId;
 
     const handleCopyLaunchId = () => {
-      void copyToClipboard(launchBusinessId).catch((error) => {
+      copyToClipboard(launchBusinessId).catch((error) => {
         console.error('Failed to copy ID:', error);
       });
     };
