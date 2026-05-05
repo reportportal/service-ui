@@ -61,10 +61,14 @@ export const useDraggableRow = <T extends Record<string, unknown>>({
     [dragRef],
   );
 
-  const handleDragHandleMouseDown = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
+  const startDragFromHandle = useCallback(() => {
     isDragFromHandle.current = true;
   }, []);
+
+  const handleDragHandleMouseDown = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    startDragFromHandle();
+  }, [startDragFromHandle]);
 
   useEffect(() => {
     const row = rowRef.current?.closest<HTMLElement>(rowSelector) ?? null;
@@ -79,6 +83,7 @@ export const useDraggableRow = <T extends Record<string, unknown>>({
   return {
     isDragging,
     dragSourceRef,
+    startDragFromHandle,
     handleDragHandleMouseDown,
   };
 };

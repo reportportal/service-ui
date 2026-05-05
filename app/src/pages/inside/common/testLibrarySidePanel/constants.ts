@@ -14,11 +14,25 @@
  * limitations under the License.
  */
 
+import { TransformedFolder } from 'controllers/testCase';
 import { TestCase } from 'types/testCase';
 
-export interface AddTestCasesToLaunchModalProps {
-  selectedRowsIds: number[];
+export const TEST_CASE_DRAG_TYPE = 'LIBRARY_TEST_CASE_DRAG';
+export const FOLDER_DRAG_TYPE = 'LIBRARY_FOLDER_DRAG';
+
+export const TEST_PLAN_DRAG_TYPES = [TEST_CASE_DRAG_TYPE, FOLDER_DRAG_TYPE] as const;
+
+export interface TestCaseDragItem extends Record<string, unknown> {
+  ids: number[];
   testCases: TestCase[];
-  testPlanId: string;
-  onClearSelection?: () => void;
+  isMulti: boolean;
 }
+
+export interface FolderDragItem extends Record<string, unknown> {
+  folder: TransformedFolder;
+  folders: TransformedFolder[];
+  isMulti: boolean;
+  testCasesCount: number;
+}
+
+export type DragItem = TestCaseDragItem | FolderDragItem;

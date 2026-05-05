@@ -69,6 +69,7 @@ export const useAddTestCasesToCurrentTestPlan = () => {
 
         showSuccessNotification({
           messageId: 'testCasesAddedToTestPlanFromLibrarySuccess',
+          values: { count: testCaseIds.length },
         });
 
         return true;

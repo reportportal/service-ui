@@ -1,0 +1,112 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.test-plan-drop-zones {
+  --side-panel-width: 560px;
+  --app-sidebar-width: 48px;
+  --overlay-z-index: var(--rp-ui-base-z-index-overlay-panel);
+
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: var(--app-sidebar-width);
+  right: var(--side-panel-width);
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  gap: 8px;
+  z-index: calc(var(--overlay-z-index) - 1);
+
+  &__zone {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    border-radius: 2px;
+    background: var(--rp-ui-base-almost-white);
+    box-shadow: 0 2px 4px 0 rgb(31 32 36 / 20%);
+  }
+
+  &__zone--add-launch {
+    background: rgb(246 248 255 / 80%);
+  }
+
+  &__zone--add {
+    background: rgb(250 252 255 / 92%);
+  }
+
+  &__zone--cancel {
+    background: rgb(255 246 246 / 92%);
+  }
+
+  &__zone--over {
+    outline: 2px dashed var(--rp-ui-base-brand-primary);
+    outline-offset: -10px;
+  }
+
+  &__zone--disabled {
+    pointer-events: none;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    color: var(--rp-ui-base-color-topaz);
+  }
+
+  &__icon {
+    position: relative;
+    width: 24px;
+    height: 24px;
+  }
+
+  &__icon-vertical,
+  &__icon-horizontal {
+    position: absolute;
+    background: currentcolor;
+  }
+
+  &__icon-vertical {
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 100%;
+    transform: translateX(-50%);
+  }
+
+  &__icon-horizontal {
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    transform: translateY(-50%);
+  }
+
+  &__title {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  &__hint {
+    max-width: 360px;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+}

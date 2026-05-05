@@ -19,6 +19,10 @@
   height: 36px;
   list-style: none;
 
+  &--dimmed {
+    opacity: 0.3;
+  }
+
   &__content {
     display: flex;
     justify-content: space-between;
@@ -49,5 +53,16 @@
     cursor: pointer;
     display: flex;
     align-items: center;
+    border: none;
+    padding: 0;
+    background: none;
+
+    &--draggable {
+      cursor: grab;
+
+      &:active {
+        cursor: grabbing;
+      }
+    }
   }
 }

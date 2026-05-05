@@ -22,16 +22,19 @@ import { Button, SidePanel, Selection, Toggle } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { useModal } from 'common/hooks';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { commonMessages } from 'pages/inside/common/common-messages';
-
 import {
   AddTestCasesToLaunchModalProps,
   ADD_TEST_CASES_TO_LAUNCH_MODAL_KEY,
-} from '../../testPlansPage/testPlanDetailsPage/testPlanFolders/allTestCasesPage/addTestCasesToLaunchModal';
-import { AddTestCasesToLaunchModal } from '../../testPlansPage/testPlanDetailsPage/testPlanFolders/allTestCasesPage/addTestCasesToLaunchModal/addTestCasesToLaunchModal';
+  AddTestCasesToLaunchModal,
+} from 'pages/inside/testPlansPage/testPlanDetailsPage/testPlanFolders/allTestCasesPage';
+
 import { SelectableFolderTree } from './selectableFolderTree/selectableFolderTree';
 import { TestLibraryPanelProvider } from './testLibraryPanelContext';
 import { useTestLibraryPanel } from './hooks/useTestLibraryPanel';
+import { DraggedItemPreview } from './draggedItemPreview';
+import { TestPlanDropZonesContainer } from './testPlanDropZonesContainer';
 import { messages } from './messages';
 
 import styles from './testLibrarySidePanel.scss';
@@ -52,6 +55,7 @@ export const TestLibrarySidePanel = ({
   onClose,
 }: TestLibrarySidePanelProps) => {
   const { formatMessage } = useIntl();
+  const { canManageTestCases } = useUserPermissions();
   const [shouldHideAddedTestCases, setShouldHideAddedTestCases] = useState(true);
 
   const {
@@ -110,7 +114,21 @@ export const TestLibrarySidePanel = ({
 
   const contentComponent = (
     <TestLibraryPanelProvider actions={actionsValue} state={stateValue}>
-      <div className={cx('test-library-panel__content')}>{isOpen && <SelectableFolderTree />}</div>
+      <div className={cx('test-library-panel__content')}>
+        {isOpen && (
+          <>
+            <DraggedItemPreview />
+            <SelectableFolderTree />
+            {canManageTestCases && (
+              <TestPlanDropZonesContainer
+                testPlanId={testPlanId}
+                onAddTestCases={onAddTestCases}
+                onClose={onClose}
+              />
+            )}
+          </>
+        )}
+      </div>
     </TestLibraryPanelProvider>
   );
 
