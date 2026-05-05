@@ -27,21 +27,21 @@ export const messages = defineMessages({
       "Track your project's progress and achievements by creating your first milestone. Milestones aid in planning and measuring success over time.",
   },
   numerableBlockTitle: {
-    id: 'TestPlansPage.numerableBlockTitle',
+    id: 'MilestonesPage.emptyState.numerableBlockTitle',
     defaultMessage: 'Why is it beneficial?',
   },
   progressTracking: {
-    id: 'TestPlansPage.progressTracking',
+    id: 'MilestonesPage.emptyState.progressTracking',
     defaultMessage:
       '<strong>Progress tracking:</strong> Milestones provide clear checkpoints, allowing teams to easily track progress and ensure testing is aligned with project timelines',
   },
   goalAlignment: {
-    id: 'TestPlansPage.goalAlignment',
+    id: 'MilestonesPage.emptyState.goalAlignment',
     defaultMessage:
       '<strong>Goal alignment:</strong> They help align testing activities with project goals, ensuring that testing focuses on critical deliverables and objectives at each stage',
   },
   resourceManagement: {
-    id: 'TestPlansPage.resourceManagement',
+    id: 'MilestonesPage.emptyState.resourceManagement',
     defaultMessage:
       '<strong>Resource management:</strong> Milestones facilitate better planning and allocation of resources by identifying crucial testing phases and deadlines',
   },

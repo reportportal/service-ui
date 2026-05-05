@@ -29,7 +29,7 @@ import { getMilestonesAction } from 'controllers/milestone';
 import {
   defaultQueryParams,
   getTestPlansAction,
-  testPlansPageSelector,
+  testPlanListPaginationSelector,
   testPlansSelector,
 } from 'controllers/testPlan';
 import { useProjectDetails } from 'hooks/useTypedSelector';
@@ -43,7 +43,7 @@ export const useDeleteTestPlan = ({ onSuccess = noop }: UseDeleteTestPlanOptions
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const { organizationSlug, projectSlug } = useProjectDetails();
-  const testPlansPageData = useSelector(testPlansPageSelector);
+  const testPlanListPagination = useSelector(testPlanListPaginationSelector);
   const testPlans = useSelector(testPlansSelector);
   const queryParams = useQueryParams(defaultQueryParams);
 
@@ -63,7 +63,9 @@ export const useDeleteTestPlan = ({ onSuccess = noop }: UseDeleteTestPlanOptions
       );
 
       const isSingleItemOnTheLastPage =
-        testPlansPageData?.number === testPlansPageData?.totalPages && testPlans?.length === 1;
+        testPlanListPagination != null &&
+        testPlanListPagination.number === testPlanListPagination.totalPages &&
+        testPlans?.length === 1;
 
       if (isSingleItemOnTheLastPage) {
         const offset = Number(queryParams.offset) - Number(queryParams.limit);

@@ -119,7 +119,7 @@ import { LIST_OF_VERSIONS } from 'pages/inside/productVersionsPage/constants';
 import {
   PRODUCT_VERSION_PAGE,
   PRODUCT_VERSION_TAB_PAGE,
-  PROJECT_TEST_PLANS_PAGE,
+  PROJECT_MILESTONES_PAGE,
   PROJECT_TEST_PLAN_DETAILS_PAGE,
 } from 'controllers/pages/constants';
 import { DOCUMENTATION } from 'pages/inside/productVersionPage/constants';
@@ -605,7 +605,7 @@ const routesMap = {
     path: '/organizations/:organizationSlug/projects/:projectSlug/productVersions/listOfVersions/:productVersionId/:productVersionTab',
   },
 
-  [PROJECT_TEST_PLANS_PAGE]: {
+  [PROJECT_MILESTONES_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug/milestones',
     thunk: (dispatch, getState) => {
       const state = getState();

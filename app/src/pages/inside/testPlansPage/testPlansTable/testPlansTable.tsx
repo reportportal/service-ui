@@ -105,9 +105,9 @@ export const TestPlansTable = ({
     (testPlanId: number, testPlanName: string, children: ReactNode, kind: TestPlanRowClickKind) => (
       <button
         type="button"
-        className={cx('test-plans__table-cell-clickable', {
-          'test-plans__table-cell-clickable_name': kind === 'name',
-          'test-plans__table-cell-clickable_chevron': kind === 'chevron',
+        className={cx('milestone-test-plan-table__table-cell-clickable', {
+          'milestone-test-plan-table__table-cell-clickable_name': kind === 'name',
+          'milestone-test-plan-table__table-cell-clickable_chevron': kind === 'chevron',
         })}
         aria-label={formatMessage(messages.viewTestPlanDetails, { testPlanName })}
         onClick={() => handleRowClick(testPlanId, kind)}
@@ -154,14 +154,14 @@ export const TestPlansTable = ({
         const testPlanDisplayId = rowTestPlan?.displayId;
 
         const nameCell = showTestPlanBusinessId ? (
-          <span className={cx('test-plans__plan-name-row')}>
+          <span className={cx('milestone-test-plan-table__plan-name-row')}>
             {testPlanDisplayId ? (
-              <span className={cx('test-plans__plan-business-id')}>{testPlanDisplayId}</span>
+              <span className={cx('milestone-test-plan-table__plan-business-id')}>{testPlanDisplayId}</span>
             ) : null}
-            <span className={cx('test-plans__plan-name')}>{testPlanName}</span>
+            <span className={cx('milestone-test-plan-table__plan-name')}>{testPlanName}</span>
           </span>
         ) : (
-          <span className={cx('test-plans__plan-name')}>{testPlanName}</span>
+          <span className={cx('milestone-test-plan-table__plan-name')}>{testPlanName}</span>
         );
 
         const contentForRow = showTestPlanBusinessId
@@ -236,7 +236,7 @@ export const TestPlansTable = ({
   );
 
   return (
-    <div className={cx('test-plans__table-container')}>
+    <div className={cx('milestone-test-plan-table__table-container')}>
       {isLoading ? (
         <PageLoader />
       ) : (
@@ -245,9 +245,9 @@ export const TestPlansTable = ({
           fixedColumns={fixedColumns}
           primaryColumn={primaryColumn}
           sortableColumns={[]}
-          className={cx('test-plans__table')}
-          rowClassName={cx('test-plans__table-row')}
-          headerClassName={cx('test-plans__table-header')}
+          className={cx('milestone-test-plan-table__table')}
+          rowClassName={cx('milestone-test-plan-table__table-row')}
+          headerClassName={cx('milestone-test-plan-table__table-header')}
         />
       )}
     </div>

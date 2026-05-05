@@ -369,16 +369,16 @@ export const notificationMessages = defineMessages({
       'The item you are trying to access may have been deleted or doesn’t exist. You have been redirected to the Test Case Library.',
   },
   testPlanCreatedSuccess: {
-    id: 'TestPlansPage.testPlanCreatedSuccess',
+    id: 'MilestonesPage.testPlanCreatedSuccess',
     defaultMessage: 'Test Plan has been created successfully.',
   },
   testPlanCreatedButNotLinkedToMilestone: {
-    id: 'TestPlansPage.testPlanCreatedButNotLinkedToMilestone',
+    id: 'MilestonesPage.testPlanCreatedButNotLinkedToMilestone',
     defaultMessage:
       'Test Plan was created, but it could not be linked to the Milestone. You can link it manually later.',
   },
   testPlanLoadingFailed: {
-    id: 'TestPlansPage.testPlanLoadingFailed',
+    id: 'MilestonesPage.testPlanLoadingFailed',
     defaultMessage: 'Failed to load Test Plans.',
   },
   milestoneLoadingFailed: {
@@ -418,7 +418,7 @@ export const notificationMessages = defineMessages({
     defaultMessage: 'The status has been changed to Scheduled.',
   },
   testPlanRedirectWarningMessage: {
-    id: 'TestPlansPage.testPlanRedirectWarningMessage',
+    id: 'MilestonesPage.testPlanRedirectWarningMessage',
     defaultMessage:
       "The item you are trying to access may have been deleted or doesn't exist. You have been redirected to Test Plans.",
   },
@@ -440,15 +440,15 @@ export const notificationMessages = defineMessages({
     defaultMessage: 'Execution comment saved.',
   },
   testPlanUpdatedSuccess: {
-    id: 'TestPlansPage.testPlanUpdatedSuccess',
+    id: 'MilestonesPage.testPlanUpdatedSuccess',
     defaultMessage: 'Test Plan has been updated successfully.',
   },
   testPlanDuplicatedSuccess: {
-    id: 'TestPlansPage.testPlanDuplicatedSuccess',
+    id: 'MilestonesPage.testPlanDuplicatedSuccess',
     defaultMessage: 'Test Plan has been duplicated successfully.',
   },
   testPlanDeletedSuccess: {
-    id: 'TestPlansPage.testPlanDeletedSuccess',
+    id: 'MilestonesPage.testPlanDeletedSuccess',
     defaultMessage: 'Test Plan has been deleted successfully.',
   },
   removeFromTestPlanSuccess: {

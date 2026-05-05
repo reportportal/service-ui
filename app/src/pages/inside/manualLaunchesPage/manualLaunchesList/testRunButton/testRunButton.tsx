@@ -15,8 +15,9 @@
  */
 
 import { Button } from '@reportportal/ui-kit';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useIntl } from 'react-intl';
+import type { MouseEvent } from 'react';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { createClassnames } from 'common/utils';
@@ -28,10 +29,21 @@ import styles from '../manualLaunchesList.scss';
 
 const cx = createClassnames(styles);
 
-export const TestRunButton = ({ count }: TestRunButtonType) => {
+export const TestRunButton = ({ count, onClick, onTrackClick }: TestRunButtonType) => {
   const { formatMessage } = useIntl();
 
   const areTestsToRunAvailable = count > 0;
+
+  const handleClick = useCallback(
+    (event: MouseEvent<HTMLButtonElement>) => {
+      event.stopPropagation();
+      if (areTestsToRunAvailable) {
+        onTrackClick?.();
+        onClick?.();
+      }
+    },
+    [areTestsToRunAvailable, onClick, onTrackClick],
+  );
 
   const content = useMemo(() => {
     if (!areTestsToRunAvailable) {
@@ -45,6 +57,7 @@ export const TestRunButton = ({ count }: TestRunButtonType) => {
     <Button
       disabled={!areTestsToRunAvailable}
       className={cx('manual-launches-list-table-cell-tests-to-run')}
+      onClick={areTestsToRunAvailable ? handleClick : undefined}
     >
       {content}
     </Button>

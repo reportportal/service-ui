@@ -21,12 +21,8 @@ export const commonMessages = defineMessages({
     id: 'MilestonesPage.title',
     defaultMessage: 'Milestones',
   },
-  pageTestPlansTitle: {
-    id: 'TestPlansPage.title',
-    defaultMessage: 'Test Plans',
-  },
   refreshPage: {
-    id: 'TestPlansPage.refreshPage',
+    id: 'MilestonesPage.refreshPage',
     defaultMessage: 'Refresh Page',
   },
   createMilestone: {
@@ -34,23 +30,23 @@ export const commonMessages = defineMessages({
     defaultMessage: 'Create Milestone',
   },
   createTestPlan: {
-    id: 'TestPlansPage.createTestPlan',
+    id: 'TestPlanModal.createTestPlan',
     defaultMessage: 'Create Test Plan',
   },
   editTestPlan: {
-    id: 'TestPlansPage.editTestPlan',
+    id: 'TestPlanModal.editTestPlan',
     defaultMessage: 'Edit test plan',
   },
   duplicateTestPlan: {
-    id: 'TestPlansPage.duplicateTestPlan',
+    id: 'TestPlanModal.duplicateTestPlan',
     defaultMessage: 'Duplicate test plan',
   },
   deleteTestPlan: {
-    id: 'TestPlansPage.deleteTestPlan',
+    id: 'TestPlanModal.deleteTestPlan',
     defaultMessage: 'Delete test plan',
   },
   addTestsFromLibrary: {
-    id: 'TestPlansPage.addTestsFromLibrary',
+    id: 'TestPlanModal.addTestsFromLibrary',
     defaultMessage: 'Add Tests from Library',
   },
 });

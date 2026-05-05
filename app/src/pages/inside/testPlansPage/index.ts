@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export { TestPlansPage } from './testPlansPage';
+export { MilestonesPage } from './milestonesPage';
 export { TestPlanDetailsPage } from './testPlanDetailsPage';
 export {
   CREATE_TEST_PLAN_MODAL_KEY,

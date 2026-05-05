@@ -14,9 +14,9 @@ export const messages = defineMessages({
     defaultMessage:
       'You can either create a new Launch from an existing Test Plan or directly in the Test Case Library.',
   },
-  testPlansLink: {
-    id: 'ManualLaunchesPage.testPlansLink',
-    defaultMessage: 'Go to Test Plans',
+  milestonesLink: {
+    id: 'ManualLaunchesPage.milestonesLink',
+    defaultMessage: 'Go to Milestones',
   },
   testLibraryLink: {
     id: 'ManualLaunchesPage.testLibraryLink',

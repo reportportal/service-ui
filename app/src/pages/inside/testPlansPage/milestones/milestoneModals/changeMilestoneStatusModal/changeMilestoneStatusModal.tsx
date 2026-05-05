@@ -28,7 +28,7 @@ import {
   MILESTONE_STATUS_CHOOSE_EVENT_TYPE,
   type MilestoneChangeStatusModalButtonElementName,
   type MilestoneStatusDropdownChooseType,
-} from 'pages/inside/testPlansPage/milestones/milestoneStatus';
+} from '../../milestoneStatus';
 import { createClassnames } from 'common/utils';
 import { hideModalAction } from 'controllers/modal';
 import { MilestoneStatus, type TmsMilestoneType } from 'controllers/milestone';

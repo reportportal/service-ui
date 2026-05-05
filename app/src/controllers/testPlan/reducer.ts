@@ -20,7 +20,7 @@ import { isEmpty } from 'es-toolkit/compat';
 import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
-import { PROJECT_TEST_PLANS_PAGE, PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
+import { PROJECT_MILESTONES_PAGE, PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
 import { getStorageItem } from 'common/utils/storageUtils';
 import { getFolderAndDescendantIds } from 'controllers/utils/folderReducerUtils';
 import { hasPayloadProps } from 'controllers/utils/types';
@@ -182,6 +182,6 @@ const reducer = combineReducers({
 });
 
 export const testPlanReducer = createPageScopedReducer(reducer, [
-  PROJECT_TEST_PLANS_PAGE,
+  PROJECT_MILESTONES_PAGE,
   PROJECT_TEST_PLAN_DETAILS_PAGE,
 ]);

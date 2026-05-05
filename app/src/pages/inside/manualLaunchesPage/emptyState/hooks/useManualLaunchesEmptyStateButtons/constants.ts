@@ -15,12 +15,12 @@
  */
 
 import { Buttons } from './types';
-import { PROJECT_TEST_PLANS_PAGE, TEST_CASE_LIBRARY_PAGE } from 'controllers/pages';
+import { PROJECT_MILESTONES_PAGE, TEST_CASE_LIBRARY_PAGE } from 'controllers/pages';
 
 export const EMPTY_STATE_BUTTONS: Buttons[] = [
   {
-    name: 'testPlansLink',
-    type: PROJECT_TEST_PLANS_PAGE,
+    name: 'milestonesLink',
+    type: PROJECT_MILESTONES_PAGE,
   },
   {
     name: 'testLibraryLink',
