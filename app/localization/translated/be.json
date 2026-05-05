@@ -1257,7 +1257,7 @@
   "InstancesSection.resetToGlobalSettingsDescription": "Актывуе глабальныя налады. Усе карыстацкія інтэграцыі будуць выдалены.",
   "InstancesSection.resetToGlobalSettingsTitle": "Вярнуцца да Глабальных Налад",
   "InstancesSection.resetToGlobalSuccess": "Глабальныя інтэграцыі паспяхова ўжытыя",
-  "InstancesSection.uninstallPluginConfirmation": "Вы сапраўды жадаеце выдаліць {pluginName} плагін?",
+  "InstancesSection.uninstallPluginConfirmation": "Вы сапраўды жадаеце выдаліць <b>{pluginName}</b> плагін?",
   "InstancesSection.uninstallPluginNote": "Выдаліце гэты плагін з ReportPortal і адмяніце ўсе правы доступу і аўтарызацыі",
   "InstancesSection.uninstallPluginTitle": "Выдаліць плагін",
   "InstancesSection.unlinkAndSetupManuallyDescription": "Адлучыце бягучы праект ад глабальных налад і наладзьце сваю ўласную інтэграцыю. Вы заўсёды можаце вярнуцца да глабальных налад.",

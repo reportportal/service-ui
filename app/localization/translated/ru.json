@@ -1258,7 +1258,7 @@
   "InstancesSection.resetToGlobalSettingsDescription": "Активирует глобальные настройки. Все пользовательские интеграции будут удалены.",
   "InstancesSection.resetToGlobalSettingsTitle": "Вернуться к Глобальным настройкам",
   "InstancesSection.resetToGlobalSuccess": "Глобальные интеграции успешно применены",
-  "InstancesSection.uninstallPluginConfirmation": "Вы действительно хотите удалить {pluginName} плагин?",
+  "InstancesSection.uninstallPluginConfirmation": "Вы действительно хотите удалить <b>{pluginName}</b> плагин?",
   "InstancesSection.uninstallPluginNote": "Удалите этот плагин из ReportPortal и отмените все права доступа и авторизации",
   "InstancesSection.uninstallPluginTitle": "Удалить плагин",
   "InstancesSection.unlinkAndSetupManuallyDescription": "Отсоедините текущий проект от глобальных настроек и настройте свою собственную интеграцию. Вы всегда можете вернуться к глобальным настройкам.",

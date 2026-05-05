@@ -19,6 +19,7 @@ import classNames from 'classnames/bind';
 import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
+import DOMPurify from 'dompurify';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -98,7 +99,7 @@ const messages = defineMessages({
   },
   uninstallPluginConfirmation: {
     id: 'InstancesSection.uninstallPluginConfirmation',
-    defaultMessage: 'Are you sure you want to uninstall {pluginName} Plugin?',
+    defaultMessage: 'Are you sure you want to uninstall <b>{pluginName}</b> plugin?',
   },
   uninstallPluginTitle: {
     id: 'InstancesSection.uninstallPluginTitle',
@@ -217,6 +218,7 @@ export class InstancesSection extends Component {
       data: {
         message: formatMessage(messages.uninstallPluginConfirmation, {
           pluginName: pluginDetails.name || instanceType,
+          b: (chunks) => DOMPurify.sanitize(`<b>${chunks}</b>`),
         }),
         onConfirm: this.removePlugin,
         title: formatMessage(messages.uninstallPluginTitle),
