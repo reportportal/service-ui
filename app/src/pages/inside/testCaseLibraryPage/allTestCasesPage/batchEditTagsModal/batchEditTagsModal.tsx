@@ -130,7 +130,7 @@ const BatchEditTagsModal = reduxForm<BatchEditTagsModalFormValues, BatchEditTags
       testCaseIds: selectedTestCaseIds,
       attributeKeysToRemove: values.tagsToRemove,
       attributeKeysToAdd: values.tagsToAdd,
-    }).catch(noop);
+    });
   };
 
   const { okButton, cancelButton, hideModal } = useModalButtons({

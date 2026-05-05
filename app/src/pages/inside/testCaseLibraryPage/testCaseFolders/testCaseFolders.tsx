@@ -158,7 +158,14 @@ export const TestCaseFolders = () => {
         ...(query?.filterTags && { filterTags: query.filterTags }),
       },
     });
-  }, [dispatch, organizationSlug, projectSlug, query?.testCasesSearchParams, query?.filterPriorities, query?.filterTags]);
+  }, [
+    dispatch,
+    organizationSlug,
+    projectSlug,
+    query?.testCasesSearchParams,
+    query?.filterPriorities,
+    query?.filterTags,
+  ]);
 
   useEffect(() => {
     if (urlFolderId && !activeFolder) {
@@ -189,7 +196,14 @@ export const TestCaseFolders = () => {
       dispatch(getAllTestCasesAction(queryParams));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [urlFolderId, queryParams.limit, queryParams.offset, queryParams.testCasesSearchParams, queryParams.filterPriorities, queryParams.filterTags]);
+  }, [
+    urlFolderId,
+    queryParams.limit,
+    queryParams.offset,
+    queryParams.testCasesSearchParams,
+    queryParams.filterPriorities,
+    queryParams.filterTags,
+  ]);
 
   const handleFolderClick = (id: number) => {
     navigateToFolder({ folderId: id });
@@ -211,10 +225,10 @@ export const TestCaseFolders = () => {
   const { handleMoveFolder, handleDuplicateFolder } = useFolderDragDrop({
     folders: initialFolders,
     onMove: (params) => {
-      moveFolder({ ...params, parentTestFolderId: params.parentFolderId }).catch(noop);
+      moveFolder({ ...params, parentTestFolderId: params.parentFolderId });
     },
     onDuplicate: (params) => {
-      duplicateFolder(params).catch(noop);
+      duplicateFolder(params);
     },
   });
 

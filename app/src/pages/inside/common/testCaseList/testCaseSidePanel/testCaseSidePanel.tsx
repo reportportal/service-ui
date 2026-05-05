@@ -242,7 +242,7 @@ export const TestCaseSidePanel = memo(
     };
 
     const handleCopyId = () => {
-      void copyToClipboard(testCaseBusinessId).catch((error) => {
+      copyToClipboard(testCaseBusinessId).catch((error) => {
         console.error('Failed to copy ID:', error);
       });
     };

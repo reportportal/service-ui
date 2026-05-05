@@ -213,10 +213,18 @@ export const TestPlanDropZonesContainer = ({
     <TestPlanDropZones
       isAddToTestPlanLoading={isAddToTestPlanLoading}
       isAddToLaunchLoading={isAddToLaunchLoading}
-      onAddTestCasesToTestPlan={(testCases) => void addTestCases(testCases)}
-      onAddTestCasesAndCreateLaunch={(testCases) => void addTestCasesAndCreateLaunch(testCases)}
-      onAddFolderToTestPlan={(folder) => void addFolder(folder)}
-      onAddFolderAndCreateLaunch={(folder) => void addFolderAndCreateLaunch(folder)}
+      onAddTestCasesToTestPlan={(testCases) => {
+        addTestCases(testCases);
+      }}
+      onAddTestCasesAndCreateLaunch={(testCases) => {
+        addTestCasesAndCreateLaunch(testCases);
+      }}
+      onAddFolderToTestPlan={(folder) => {
+        addFolder(folder);
+      }}
+      onAddFolderAndCreateLaunch={(folder) => {
+        addFolderAndCreateLaunch(folder);
+      }}
     />
   );
 };

@@ -85,7 +85,7 @@ export const SelectableFolderRow = ({ row, nextRowDepth, style }: SelectableFold
     if (checkboxState === CheckboxSelectionState.CHECKED) {
       batchDeselectFolder(folder);
     } else {
-      void batchSelectFolder(folder);
+      batchSelectFolder(folder);
     }
   }, [checkboxState, batchDeselectFolder, batchSelectFolder, folder]);
 

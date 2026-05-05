@@ -163,7 +163,7 @@ export const createTestCaseDropHandler = (action: TestCaseFolderActionCallback |
   return (draggedItem: TreeDragItem, targetId: string | number, _position: TreeDropPosition) => {
     const item = draggedItem as TreeDragItem & { testCase?: ExtendedTestCase };
     if (item.testCase && action) {
-      void action(item.testCase, Number(targetId));
+      action(item.testCase, Number(targetId));
     }
   };
 };

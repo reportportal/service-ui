@@ -17,14 +17,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, MutableRefObject } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { isEmpty } from 'es-toolkit/compat';
-import {
-  CsvIcon,
-  ImageIcon,
-  JarIcon,
-  PdfIcon,
-  XlsIcon,
-  FileOtherIcon,
-} from '@reportportal/ui-kit';
+import { CsvIcon, ImageIcon, JarIcon, PdfIcon, XlsIcon, FileOtherIcon } from '@reportportal/ui-kit';
 import { createClassnames } from 'common/utils';
 
 import { svgToBase64 } from '../utils';
@@ -65,9 +58,9 @@ export const AttachmentsWithSlider = ({
     useAttachmentsWithSlider();
   const shouldApplyAttachmentPreviewRef = useRef(true);
   const fullImageCacheRef = useRef<Map<number, string>>(new Map());
-  const [attachmentsWithPreview, setAttachmentsWithPreview] = useState<AttachmentWithSlider[] | null>(
-    null,
-  );
+  const [attachmentsWithPreview, setAttachmentsWithPreview] = useState<
+    AttachmentWithSlider[] | null
+  >(null);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [galleryFullImageUrl, setGalleryFullImageUrl] = useState<string | null>(null);
@@ -89,8 +82,7 @@ export const AttachmentsWithSlider = ({
   }, []);
 
   const getFallbackIcon = (fileExtension: string | undefined): string => {
-    const FallbackIcon =
-      svgFallbacks[fileExtension as keyof typeof svgFallbacks] || FileOtherIcon;
+    const FallbackIcon = svgFallbacks[fileExtension as keyof typeof svgFallbacks] || FileOtherIcon;
     const svgFallbackString = renderToStaticMarkup(<FallbackIcon />);
 
     return svgToBase64(svgFallbackString);
@@ -110,7 +102,7 @@ export const AttachmentsWithSlider = ({
             fetchAttachmentPreview(attachment, objectUrls, abortSignal),
         );
 
-        void Promise.all(promises).then((newList) => {
+        Promise.all(promises).then((newList) => {
           if (!abortSignal.aborted && shouldApplyResultRef.current) {
             setAttachmentsWithPreview(newList);
           }
@@ -237,12 +229,9 @@ export const AttachmentsWithSlider = ({
   const extension = getFileExtension(activeAttachment?.fileName);
   const fallbackSrc = getFallbackIcon(extension);
   const mainImageSrc =
-    activeAttachment?.hasThumbnail && isGalleryOpen
-      ? galleryFullImageUrl || ''
-      : fallbackSrc;
+    activeAttachment?.hasThumbnail && isGalleryOpen ? galleryFullImageUrl || '' : fallbackSrc;
   const showZoomExternalDownload = !!(
-    mainImageSrc &&
-    !mainImageSrc.startsWith('data:image/svg+xml')
+    mainImageSrc && !mainImageSrc.startsWith('data:image/svg+xml')
   );
 
   const handleAttachmentDownload = useCallback(async () => {

@@ -75,7 +75,7 @@ export const useLaunchDetails = (launchId: number | null) => {
       }
     };
 
-    void fetchLaunchDetails();
+    fetchLaunchDetails();
 
     return () => {
       abortController.abort();
