@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
@@ -71,18 +71,15 @@ export const AttributeEditor = ({
   const [valueTouched, setTouchValue] = useState(false);
   const [forcedTouched, setForcedTouched] = useState(false);
 
-  const getAttributeKeyValidator = (key) =>
-    isAttributeKeyRequired ? requiredAttributeKeyValidator(key) : attributeKeyValidator(key);
-
-  const getAttributeValueValidator = (value) =>
-    isAttributeValueRequired
-      ? attributeValueValidator(value)
-      : attributeFilterValueValidator(value);
-
-  const getValidationErrors = (key, value) => ({
-    key: getAttributeKeyValidator(key),
-    value: getAttributeValueValidator(value),
-  });
+  const getValidationErrors = useCallback(
+    (key, value) => ({
+      key: isAttributeKeyRequired ? requiredAttributeKeyValidator(key) : attributeKeyValidator(key),
+      value: isAttributeValueRequired
+        ? attributeValueValidator(value)
+        : attributeFilterValueValidator(value),
+    }),
+    [isAttributeKeyRequired, isAttributeValueRequired],
+  );
 
   const keyEditorRef = useRef(null);
 
