@@ -109,7 +109,13 @@ export class InfoSection extends Component {
     } = this.props;
     const { isEnabled } = this.state;
 
-    showToggleConfirmationModal(isEnabled, title || name, this.toggleActiveHandler, pluginLocation);
+    showToggleConfirmationModal(
+      isEnabled,
+      title || name,
+      this.toggleActiveHandler,
+      pluginLocation,
+      name,
+    );
   };
 
   render() {

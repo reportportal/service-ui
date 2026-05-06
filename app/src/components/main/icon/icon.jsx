@@ -25,6 +25,7 @@ export const Icon = ({ type, onClick, className, disabled }) => (
   <button
     className={cx('icon', type, className, { disabled })}
     onClick={disabled ? null : onClick}
+    disabled={disabled}
   />
 );
 

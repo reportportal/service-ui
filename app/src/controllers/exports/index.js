@@ -14,4 +14,14 @@
  * limitations under the License.
  */
 
-export { addExportAction, removeExportAction, cancelExportsAction } from './actionCreators';
+export {
+  addExportAction,
+  removeExportAction,
+  cancelExportsAction,
+  setExportsBannerVariantAction,
+  resetExportsBannerVariantAction,
+} from './actionCreators';
+export {
+  EXPORTS_BANNER_VARIANT_DEFAULT,
+  EXPORTS_BANNER_VARIANT_MODERN,
+} from './constants';

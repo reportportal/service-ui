@@ -14,4 +14,20 @@
  * limitations under the License.
  */
 
-export const exportsSelector = (state) => state.exports || [];
+import { createSelector } from 'reselect';
+import { EXPORTS_BANNER_VARIANT_DEFAULT } from './constants';
+
+export const exportsSelector = (state) => state.exports?.items ?? [];
+
+export const exportsBannerVariantSelector = (state) =>
+  state.exports?.bannerVariant ?? EXPORTS_BANNER_VARIANT_DEFAULT;
+
+export const uniqueEventsInfoByGroupSelector = createSelector(exportsSelector, (items) => {
+  const byGroup = {};
+  items.forEach((item) => {
+    const eventsInfo = item.eventsInfo ?? {};
+    const groupId = eventsInfo.groupId ?? 'default';
+    if (!byGroup[groupId]) byGroup[groupId] = eventsInfo;
+  });
+  return Object.values(byGroup);
+});

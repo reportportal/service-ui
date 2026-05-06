@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
-import track from 'react-tracking';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import React, { useCallback } from 'react';
+import { useTracking } from 'react-tracking';
+import { useDispatch, useSelector } from 'react-redux';
 import DOMPurify from 'dompurify';
 import { Fullscreen } from 'components/containers/fullscreen';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages } from 'react-intl';
+import { useIntl, defineMessages } from 'react-intl';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import {
@@ -35,8 +34,8 @@ import {
   toggleFullScreenModeAction,
   deleteDashboardAction,
   updateDashboardAction,
+  loadingSelector,
 } from 'controllers/dashboard';
-import { userRolesType } from 'common/constants/projectRoles';
 import { userInfoSelector } from 'controllers/user';
 import { projectKeySelector } from 'controllers/project';
 import {
@@ -58,6 +57,11 @@ import AddWidgetIcon from 'common/img/add-widget-inline.svg';
 import ExportIcon from 'common/img/export-inline.svg';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { canWorkWithWidgets } from 'common/utils/permissions/permissions';
+import { useCanLockDashboard } from 'common/hooks/useCanLockDashboard';
+import { updateDashboardLockedAction } from 'controllers/dashboard/actionCreators';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { LockedDashboardTooltip } from '../common/lockedDashboardTooltip';
+import { LockedIcon } from '../common/lockedIcon';
 import { getUpdatedWidgetsList } from './modals/common/utils';
 import EditIcon from './img/edit-inline.svg';
 import CancelIcon from './img/cancel-inline.svg';
@@ -111,131 +115,43 @@ const messages = defineMessages({
     id: 'DashboardPage.print',
     defaultMessage: 'Print',
   },
+  lockedDashboard: {
+    id: 'DashboardPage.lockedDashboard',
+    defaultMessage: 'Locked dashboard',
+  },
+  lock: {
+    id: 'DashboardPage.lock',
+    defaultMessage: 'Lock',
+  },
+  unlock: {
+    id: 'DashboardPage.unlock',
+    defaultMessage: 'Unlock',
+  },
 });
 
-@injectIntl
-@connect(
-  (state) => ({
-    slugs: urlOrganizationAndProjectSelector(state),
-    projectKey: projectKeySelector(state),
-    dashboard: activeDashboardItemSelector(state),
-    userInfo: userInfoSelector(state),
-    fullWidthMode: dashboardFullWidthModeSelector(state),
-    fullScreenMode: dashboardFullScreenModeSelector(state),
-    activeDashboardId: activeDashboardIdSelector(state),
-    userRoles: userRolesSelector(state),
-    query: pagePropertiesSelector(state),
-  }),
-  {
-    showModalAction,
-    updateDashboardWidgetsAction,
-    showNotification,
-    hideScreenLockAction,
-    changeFullWidthModeAction,
-    changeFullScreenModeAction,
-    toggleFullScreenModeAction,
-    deleteDashboard: deleteDashboardAction,
-    editDashboard: updateDashboardAction,
-  },
-)
-@track()
-export class DashboardItemPage extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    showModalAction: PropTypes.func.isRequired,
-    updateDashboardWidgetsAction: PropTypes.func.isRequired,
-    showNotification: PropTypes.func.isRequired,
-    hideScreenLockAction: PropTypes.func.isRequired,
-    dashboard: PropTypes.object.isRequired,
-    userInfo: PropTypes.object.isRequired,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
-    fullWidthMode: PropTypes.bool,
-    fullScreenMode: PropTypes.bool,
-    changeFullWidthModeAction: PropTypes.func.isRequired,
-    changeFullScreenModeAction: PropTypes.func.isRequired,
-    toggleFullScreenModeAction: PropTypes.func.isRequired,
-    deleteDashboard: PropTypes.func.isRequired,
-    editDashboard: PropTypes.func.isRequired,
-    activeDashboardId: PropTypes.number,
-    slugs: PropTypes.shape({
-      organizationSlug: PropTypes.string.isRequired,
-      projectSlug: PropTypes.string.isRequired,
-    }),
-    projectKey: PropTypes.string.isRequired,
-    userRoles: userRolesType,
-    query: PropTypes.object,
-  };
+export const DashboardItemPage = () => {
+  const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
+  const dispatch = useDispatch();
+  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
+  const projectKey = useSelector(projectKeySelector);
+  const dashboard = useSelector(activeDashboardItemSelector);
+  const userInfo = useSelector(userInfoSelector);
+  const fullWidthMode = useSelector(dashboardFullWidthModeSelector);
+  const fullScreenMode = useSelector(dashboardFullScreenModeSelector);
+  const activeDashboardId = useSelector(activeDashboardIdSelector);
+  const userRoles = useSelector(userRolesSelector);
+  const isWorkWithWidgets = canWorkWithWidgets(userRoles);
+  const query = useSelector(pagePropertiesSelector);
+  const loading = useSelector(loadingSelector);
+  const canLock = useCanLockDashboard();
+  const isDisabled = dashboard?.locked && !canLock;
+  const isCurrentDashboard = dashboard?.id && +dashboard.id === +activeDashboardId;
 
-  static defaultProps = {
-    fullWidthMode: false,
-    fullScreenMode: false,
-    activeDashboardId: undefined,
-    userRoles: {},
-    query: {},
-  };
-
-  onDeleteDashboard = () => {
-    const {
-      intl: { formatMessage },
-      userInfo: { userId },
-      deleteDashboard,
-      dashboard,
-      tracking: { trackEvent },
-    } = this.props;
-    const { id } = dashboard;
-
-    const warning =
-      dashboard.owner === userId ? '' : formatMessage(messages.deleteModalWarningMessage);
-    trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('delete', id));
-    this.props.showModalAction({
-      id: 'deleteItemsModal',
-      data: {
-        items: [dashboard],
-        onConfirm: () => deleteDashboard(dashboard),
-        header: formatMessage(messages.deleteModalTitle),
-        mainContent: formatMessage(messages.deleteModalConfirmationText, {
-          b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
-          name: `'<b>${dashboard.name}</b>'`,
-        }),
-        warning,
-        eventsInfo: {
-          deleteBtn: DASHBOARD_EVENTS.clickOnButtonDeleteInModalDeleteDashboard(id),
-        },
-      },
-    });
-  };
-
-  onEditDashboardItem = () => {
-    const {
-      showModalAction: showModal,
-      editDashboard,
-      dashboard,
-      tracking: { trackEvent },
-    } = this.props;
-
-    trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('edit', dashboard.id));
-    showModal({
-      id: 'dashboardAddEditModal',
-      data: {
-        dashboardItem: dashboard,
-        onSubmit: editDashboard,
-        type: 'edit',
-      },
-    });
-  };
-
-  getBreadcrumbs = () => {
-    const {
-      intl,
-      query,
-      slugs: { organizationSlug, projectSlug },
-    } = this.props;
+  const getBreadcrumbs = useCallback(() => {
     return [
       {
-        title: intl.formatMessage(messages.pageTitle),
+        title: formatMessage(messages.pageTitle),
         link: {
           type: PROJECT_DASHBOARD_PAGE,
           payload: { organizationSlug, projectSlug },
@@ -244,183 +160,235 @@ export class DashboardItemPage extends Component {
           },
         },
       },
-      {
-        title: this.getDashboardName(),
-      },
+      { title: dashboard?.name || '' },
     ];
-  };
+  }, [projectKey, query, formatMessage, dashboard?.name]);
 
-  getDashboardName = () => this.props.dashboard?.name || '';
+  const onDeleteDashboard = useCallback(() => {
+    const warning =
+      dashboard.owner === userInfo.userId ? '' : formatMessage(messages.deleteModalWarningMessage);
+    trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('delete', dashboard.id));
+    dispatch(
+      showModalAction({
+        id: 'deleteItemsModal',
+        data: {
+          items: [dashboard],
+          onConfirm: () => dispatch(deleteDashboardAction(dashboard)),
+          header: formatMessage(messages.deleteModalTitle),
+          mainContent: formatMessage(messages.deleteModalConfirmationText, {
+            b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
+            name: `'<b>${dashboard.name}</b>'`,
+          }),
+          warning,
+          eventsInfo: {
+            deleteBtn: DASHBOARD_EVENTS.clickOnButtonDeleteInModalDeleteDashboard(dashboard.id),
+          },
+        },
+      }),
+    );
+  }, [dashboard, userInfo.userId, formatMessage, trackEvent, dispatch]);
 
-  addWidget = (widget, closeModal) => {
-    const {
-      intl: { formatMessage },
-      projectKey,
-      dashboard,
-    } = this.props;
+  const onEditDashboardItem = useCallback(() => {
+    trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('edit', dashboard.id));
+    dispatch(
+      showModalAction({
+        id: 'dashboardAddEditModal',
+        data: {
+          dashboardItem: dashboard,
+          onSubmit: (data) => dispatch(updateDashboardAction(data)),
+          type: 'edit',
+        },
+      }),
+    );
+  }, [dashboard, trackEvent, dispatch]);
 
-    return fetch(URLS.addDashboardWidget(projectKey, dashboard.id), {
-      method: 'put',
-      data: { addWidget: widget },
-    })
-      .then(() =>
-        this.props.updateDashboardWidgetsAction({
-          ...this.props.dashboard,
-          widgets: getUpdatedWidgetsList(dashboard.widgets, widget),
-        }),
-      )
-      .then(() => {
-        this.props.hideScreenLockAction();
-        closeModal();
-        this.props.showNotification({
-          message: formatMessage(messages.addWidgetSuccess),
-          type: NOTIFICATION_TYPES.SUCCESS,
-        });
+  const addWidget = useCallback(
+    (widget, closeModal) => {
+      return fetch(URLS.addDashboardWidget(projectKey, dashboard.id), {
+        method: 'put',
+        data: { addWidget: widget },
       })
-      .catch((err) => {
-        this.props.hideScreenLockAction();
-        this.props.showNotification({ message: err.message, type: NOTIFICATION_TYPES.ERROR });
-      });
+        .then(() =>
+          dispatch(
+            updateDashboardWidgetsAction({
+              ...dashboard,
+              widgets: getUpdatedWidgetsList(dashboard.widgets, widget),
+            }),
+          ),
+        )
+        .then(() => {
+          dispatch(hideScreenLockAction());
+          closeModal();
+          dispatch(
+            showNotification({
+              message: formatMessage(messages.addWidgetSuccess),
+              type: NOTIFICATION_TYPES.SUCCESS,
+            }),
+          );
+        })
+        .catch((err) => {
+          dispatch(hideScreenLockAction());
+          dispatch(showNotification({ message: err.message, type: NOTIFICATION_TYPES.ERROR }));
+        });
+    },
+    [projectKey, dashboard, formatMessage, dispatch],
+  );
+
+  const toggleFullscreen = useCallback(() => {
+    trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('full_screen', dashboard.id));
+    dispatch(toggleFullScreenModeAction());
+  }, [dashboard?.id, trackEvent, dispatch]);
+
+  const onOpenDashboardLayoutSettings = () => {
+    trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('dashboard_layout', dashboard.id));
   };
 
-  toggleFullscreen = () => {
-    const {
-      dashboard: { id },
-      tracking: { trackEvent },
-    } = this.props;
-    trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('full_screen', id));
-    this.props.toggleFullScreenModeAction();
-  };
-
-  onOpenDashboardLayoutSettings = () => {
-    const {
-      dashboard: { id },
-      tracking: { trackEvent },
-    } = this.props;
-
-    trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('dashboard_layout', id));
-  };
-
-  toggleFullWidthMode = () => {
-    const {
-      fullWidthMode,
-      changeFullWidthModeAction,
-      tracking: { trackEvent },
-    } = this.props;
+  const toggleFullWidthMode = () => {
     const newValue = !fullWidthMode;
-    
+
     requestAnimationFrame(() => {
       globalThis.dispatchEvent(new Event('resize'));
     });
     trackEvent(DASHBOARD_EVENTS.clickOnFullWidthModeCheckbox(newValue));
-    changeFullWidthModeAction(newValue);
+    dispatch(changeFullWidthModeAction(newValue));
   };
 
-  onPrintDashboard = () => {
-    const {
-      dashboard: { id },
-      tracking: { trackEvent },
-    } = this.props;
-    trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('print', id));
-  };
+  const onPrintDashboard = useCallback(() => {
+    trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('print', dashboard.id));
+  }, [dashboard?.id, trackEvent]);
 
-  showWidgetWizard = () => {
-    const dashboardId = this.props.activeDashboardId;
-    const modalId = 'widgetWizardModal';
-    this.props.tracking.trackEvent(DASHBOARD_EVENTS.clickOnAddNewWidgetButton(dashboardId));
-    this.props.showModalAction({
-      id: modalId,
-      data: {
-        onConfirm: this.addWidget,
-      },
-    });
-  };
-
-  render() {
-    const {
-      intl: { formatMessage },
-      dashboard,
-      projectKey,
-      fullWidthMode,
-      fullScreenMode,
-      changeFullScreenModeAction: changeFullScreenMode,
-      slugs: { organizationSlug, projectSlug },
-      userRoles,
-    } = this.props;
-
-    const isWorkWithWidgets = canWorkWithWidgets(userRoles);
-
-    return (
-      <PageLayout fullWidth={fullWidthMode}>
-        <PageHeader breadcrumbs={this.getBreadcrumbs()}>
-          <DashboardPageHeader />
-        </PageHeader>
-        <PageSection>
-          <div className={cx('dashboard-item')}>
-            <div className={cx('buttons-container')}>
-              <div className={cx('buttons-block')}>
-                {isWorkWithWidgets && (
-                  <GhostButton icon={AddWidgetIcon} onClick={this.showWidgetWizard}>
-                    {formatMessage(messages.addNewWidget)}
-                  </GhostButton>
-                )}
-              </div>
-              <div className={cx('buttons-block')}>
-                <DashboardLayoutSettings
-                  className={cx('dashboard-layout-settings-control')}
-                  fullWidthMode={fullWidthMode}
-                  onOpen={this.onOpenDashboardLayoutSettings}
-                  onToggleFullWidthMode={this.toggleFullWidthMode}
-                />
-                {isWorkWithWidgets && (
-                  <GhostButton icon={EditIcon} onClick={this.onEditDashboardItem}>
-                    {formatMessage(messages.editDashboard)}
-                  </GhostButton>
-                )}
-                <GhostButton icon={FullscreenIcon} onClick={this.toggleFullscreen}>
-                  {formatMessage(messages.fullscreen)}
-                </GhostButton>
-                {isWorkWithWidgets && (
-                  <GhostButton icon={CancelIcon} onClick={this.onDeleteDashboard}>
-                    {formatMessage(messages.delete)}
-                  </GhostButton>
-                )}
-                <Link
-                  to={{
-                    type: PROJECT_DASHBOARD_PRINT_PAGE,
-                    payload: {
-                      projectSlug,
-                      dashboardId: this.props.activeDashboardId,
-                      organizationSlug,
-                    },
-                  }}
-                  target={'_blank'}
-                  className={cx('print-button')}
-                  onClick={this.onPrintDashboard}
-                >
-                  <GhostButton icon={ExportIcon}>{formatMessage(messages.print)}</GhostButton>
-                </Link>
-              </div>
-            </div>
-            <Fullscreen enabled={fullScreenMode} onChange={changeFullScreenMode}>
-              <WidgetsGrid
-                isModifiable={!fullScreenMode}
-                dashboard={dashboard}
-                isFullscreen={fullScreenMode}
-                showWidgetWizard={this.showWidgetWizard}
-                projectKey={projectKey}
-                showNotification={this.props.showNotification}
-                updateDashboardWidgetsAction={this.props.updateDashboardWidgetsAction}
-              />
-              {fullScreenMode && (
-                <i className={cx('icon-close')} onClick={this.toggleFullscreen}>
-                  {Parser(CancelIcon)}
-                </i>
-              )}
-            </Fullscreen>
-          </div>
-        </PageSection>
-      </PageLayout>
+  const showWidgetWizard = useCallback(() => {
+    trackEvent(DASHBOARD_EVENTS.clickOnAddNewWidgetButton(activeDashboardId));
+    dispatch(
+      showModalAction({
+        id: 'widgetWizardModal',
+        data: {
+          onConfirm: addWidget,
+        },
+      }),
     );
-  }
-}
+  }, [activeDashboardId, addWidget, trackEvent, dispatch]);
+
+  const onChangeLockedState = () => {
+    const newValue = !dashboard.locked;
+    const iconName = `${dashboard.locked ? 'un' : ''}lock_dashboard`;
+
+    trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard(iconName, dashboard.id));
+    dispatch(updateDashboardLockedAction(newValue, dashboard));
+  };
+
+  return (
+    <PageLayout fullWidth={fullWidthMode}>
+      {!isCurrentDashboard || loading ? (
+        <PageSection>
+          <SpinningPreloader />
+        </PageSection>
+      ) : (
+        <>
+          <PageHeader breadcrumbs={getBreadcrumbs()}>
+            <DashboardPageHeader />
+          </PageHeader>
+          <PageSection>
+            <div className={cx('dashboard-item')}>
+              <div className={cx('buttons-container')}>
+                <div className={cx('buttons-block')}>
+                  {isWorkWithWidgets && (
+                    <LockedDashboardTooltip locked={dashboard.locked}>
+                      <GhostButton
+                        icon={AddWidgetIcon}
+                        onClick={showWidgetWizard}
+                        disabled={isDisabled}
+                        appearance="faded"
+                      >
+                        {formatMessage(messages.addNewWidget)}
+                      </GhostButton>
+                    </LockedDashboardTooltip>
+                  )}
+                </div>
+                {isDisabled && (
+                  <div className={cx('locked-dashboard')}>
+                    <LockedDashboardTooltip locked={dashboard.locked}>
+                      <LockedIcon />
+                    </LockedDashboardTooltip>
+                    <span>{formatMessage(messages.lockedDashboard)}</span>
+                  </div>
+                )}
+                <div className={cx('buttons-block')}>
+                  <DashboardLayoutSettings
+                    className={cx('dashboard-layout-settings-control')}
+                    fullWidthMode={fullWidthMode}
+                    onOpen={onOpenDashboardLayoutSettings}
+                    onToggleFullWidthMode={toggleFullWidthMode}
+                  />
+                  {canLock && (
+                    <GhostButton
+                      icon={<LockedIcon locked={!dashboard.locked} />}
+                      onClick={onChangeLockedState}
+                    >
+                      {formatMessage(dashboard.locked ? messages.unlock : messages.lock)}
+                    </GhostButton>
+                  )}
+                  <LockedDashboardTooltip locked={dashboard.locked}>
+                    <GhostButton
+                      icon={EditIcon}
+                      onClick={onEditDashboardItem}
+                      disabled={isDisabled}
+                      appearance="faded"
+                    >
+                      {formatMessage(messages.editDashboard)}
+                    </GhostButton>
+                  </LockedDashboardTooltip>
+                  <GhostButton icon={FullscreenIcon} onClick={toggleFullscreen}>
+                    {formatMessage(messages.fullscreen)}
+                  </GhostButton>
+                  <LockedDashboardTooltip locked={dashboard.locked}>
+                    <GhostButton
+                      icon={CancelIcon}
+                      onClick={onDeleteDashboard}
+                      disabled={isDisabled}
+                      appearance="faded"
+                    >
+                      {formatMessage(messages.delete)}
+                    </GhostButton>
+                  </LockedDashboardTooltip>
+                  <Link
+                    to={{
+                      type: PROJECT_DASHBOARD_PRINT_PAGE,
+                      payload: { projectSlug, organizationSlug, dashboardId: activeDashboardId },
+                    }}
+                    target="_blank"
+                    className={cx('print-button')}
+                    onClick={onPrintDashboard}
+                  >
+                    <GhostButton icon={ExportIcon}>{formatMessage(messages.print)}</GhostButton>
+                  </Link>
+                </div>
+              </div>
+              <Fullscreen
+                enabled={fullScreenMode}
+                onChange={(mode) => dispatch(changeFullScreenModeAction(mode))}
+              >
+                <WidgetsGrid
+                  isModifiable={!fullScreenMode && !isDisabled}
+                  dashboard={dashboard}
+                  isFullscreen={fullScreenMode}
+                  showWidgetWizard={showWidgetWizard}
+                  projectKey={projectKey}
+                  showNotification={(payload) => dispatch(showNotification(payload))}
+                  updateDashboardWidgetsAction={(payload) =>
+                    dispatch(updateDashboardWidgetsAction(payload))
+                  }
+                />
+                {fullScreenMode && (
+                  <button className={cx('icon-close')} onClick={toggleFullscreen}>
+                    {Parser(CancelIcon)}
+                  </button>
+                )}
+              </Fullscreen>
+            </div>
+          </PageSection>
+        </>
+      )}
+    </PageLayout>
+  );
+};

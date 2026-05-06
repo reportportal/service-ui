@@ -15,20 +15,27 @@
  */
 
 import React from 'react';
+import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { Icon } from 'components/main/icon';
+import Parser from 'html-react-parser';
+import IconLocked from 'common/img/locked-inline.svg';
+import IconUnlocked from 'common/img/unlocked-inline.svg';
+import styles from './lockedIcon.scss';
 
-export const DeleteFilterButton = ({ onDelete, filter, disabled }) => (
-  <Icon type="icon-delete" onClick={() => onDelete(filter)} disabled={disabled} />
+const cx = classNames.bind(styles);
+
+export const LockedIcon = ({ className, locked = true }) => (
+  <div className={cx('locked-icon', className)}>
+    {Parser(locked ? IconLocked : IconUnlocked)}
+  </div>
 );
 
-DeleteFilterButton.propTypes = {
-  onDelete: PropTypes.func,
-  filter: PropTypes.object,
-  disabled: PropTypes.bool,
+LockedIcon.propTypes = {
+  className: PropTypes.string,
+  locked: PropTypes.bool,
 };
-DeleteFilterButton.defaultProps = {
-  onDelete: () => {},
-  filter: {},
-  disabled: false,
+
+LockedIcon.defaultProps = {
+  className: '',
+  locked: true,
 };

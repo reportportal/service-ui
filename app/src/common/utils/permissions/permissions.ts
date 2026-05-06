@@ -49,6 +49,7 @@ export const canChangeTestItemStatus = checkPermission(ACTIONS.CHANGE_TEST_ITEM_
 export const canMakeDecision = checkPermission(ACTIONS.MAKE_DECISION);
 export const canManageBTSIssues = checkPermission(ACTIONS.MANAGE_BTS_ISSUES);
 export const canMergeLaunches = checkPermission(ACTIONS.MERGE_LAUNCHES);
+export const canImportLaunches = checkPermission(ACTIONS.IMPORT_LAUNCHES);
 export const canWorkWithFilters = checkPermission(ACTIONS.WORK_WITH_FILTERS);
 export const canWorkWithOrganizationFilter = checkPermission(ACTIONS.WORK_WITH_ORGANIZATION_FILTER);
 export const canReadData = checkPermission(ACTIONS.READ_DATA);
@@ -74,6 +75,7 @@ export const canUpdateUserInstanceRole = checkPermission(ACTIONS.UPDATE_USER_INS
 export const canExportOrganizations = checkPermission(ACTIONS.EXPORT_ORGANIZATIONS);
 export const canSeeActivityOption = checkPermission(ACTIONS.ACTIVITY_OPTION);
 export const canSeeInstanceLevelPluginsPages = checkPermission(ACTIONS.INSTANCE_LEVEL_PLUGIN_PAGES);
+export const canChangeStatus = checkPermission(ACTIONS.CHANGE_STATUS);
 export const canLockDashboard = checkPermission(ACTIONS.LOCK_DASHBOARD);
 
 // TMS FEATURES:

@@ -118,10 +118,12 @@ export class ComponentHealthCheckControls extends Component {
     projectKey: PropTypes.string.isRequired,
     changeField: PropTypes.func.isRequired,
     untouchField: PropTypes.func.isRequired,
+    isMainControlsDisabled: PropTypes.bool,
   };
 
   static defaultProps = {
     eventsInfo: {},
+    isMainControlsDisabled: false,
   };
 
   constructor(props) {
@@ -164,6 +166,7 @@ export class ComponentHealthCheckControls extends Component {
       projectKey,
       intl: { formatMessage },
       widgetSettings: { contentParameters, filters },
+      isMainControlsDisabled,
     } = this.props;
     const filterId = filters?.length && filters[0].value;
     const isLatest =
@@ -175,7 +178,7 @@ export class ComponentHealthCheckControls extends Component {
         fieldValidator={fieldValidator}
         maxAttributesAmount={MAX_ATTRIBUTES_AMOUNT}
         showRemainingLevels
-        disabled={!filterId}
+        disabled={!filterId || isMainControlsDisabled}
         inputTooltip={filterId ? null : formatMessage(messages.attributeKeyInput)}
         addButtonTooltip={filterId ? null : formatMessage(messages.addAttributeKeyButton)}
         getURI={URLS.itemAttributeKeysAllSearch(
@@ -194,6 +197,7 @@ export class ComponentHealthCheckControls extends Component {
       formAppearance,
       onFormAppearanceChange,
       eventsInfo,
+      isMainControlsDisabled,
     } = this.props;
 
     return (
@@ -216,10 +220,15 @@ export class ComponentHealthCheckControls extends Component {
                   [CHART_MODES.ALL_LAUNCHES, CHART_MODES.LATEST_LAUNCHES],
                   formatMessage,
                 )}
+                disabled={isMainControlsDisabled}
               />
             </FieldProvider>
             <FieldProvider name="contentParameters.widgetOptions.excludeSkipped" format={Boolean}>
-              <CheckboxControl fieldLabel=" " text={formatMessage(messages.excludeSkipped)} />
+              <CheckboxControl
+                fieldLabel=" "
+                text={formatMessage(messages.excludeSkipped)}
+                disabled={isMainControlsDisabled}
+              />
             </FieldProvider>
             <FieldProvider
               name="contentParameters.widgetOptions.minPassingRate"
@@ -233,6 +242,7 @@ export class ComponentHealthCheckControls extends Component {
                 maxLength="3"
                 hintType={'top-right'}
                 inputBadge={'%'}
+                disabled={isMainControlsDisabled}
               />
             </FieldProvider>
             <FieldArray

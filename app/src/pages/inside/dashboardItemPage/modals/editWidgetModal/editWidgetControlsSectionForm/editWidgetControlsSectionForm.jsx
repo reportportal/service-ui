@@ -56,11 +56,13 @@ export class EditWidgetControlsSectionForm extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     buttonsMessages: PropTypes.object,
+    isMainControlsDisabled: PropTypes.bool,
   };
 
   static defaultProps = {
     previousFilter: [],
     buttonsMessages: {},
+    isMainControlsDisabled: false,
   };
 
   onClickCancel = () => {
@@ -81,6 +83,7 @@ export class EditWidgetControlsSectionForm extends Component {
       formAppearance,
       handleFormAppearanceChange,
       buttonsMessages,
+      isMainControlsDisabled,
     } = this.props;
     const ControlsForm = widget.controls;
 
@@ -93,12 +96,14 @@ export class EditWidgetControlsSectionForm extends Component {
             onFormAppearanceChange={handleFormAppearanceChange}
             initializeControlsForm={initializeWidgetControls}
             widgetSettings={widgetSettings}
+            isMainControlsDisabled={isMainControlsDisabled}
           />
         )}
         {!formAppearance.isMainControlsLocked && (
           <div className={cx('common-controls-wrapper')}>
             <CommonWidgetControls
               widgetId={widgetId}
+              isMainControlsDisabled={isMainControlsDisabled}
             />
           </div>
         )}

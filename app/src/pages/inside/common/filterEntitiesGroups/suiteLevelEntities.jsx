@@ -19,6 +19,7 @@ import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import { URLS } from 'common/urls';
+import { FILTER_DESCRIPTION_MAX_LENGTH } from 'common/constants/validation';
 import { commonValidators } from 'common/utils/validation';
 import {
   STATS_TOTAL,
@@ -219,7 +220,7 @@ export class SuiteLevelEntities extends Component {
         removable: true,
         customProps: {
           placeholder: intl.formatMessage(messages.DESCRIPTION_PLACEHOLDER),
-          maxLength: 18,
+          maxLength: FILTER_DESCRIPTION_MAX_LENGTH,
         },
       },
       {

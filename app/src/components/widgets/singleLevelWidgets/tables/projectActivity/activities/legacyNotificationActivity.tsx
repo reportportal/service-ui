@@ -23,7 +23,7 @@ import type { ProjectActivityActor, ProjectActivityLinkContext } from './activit
 import { getProjectSettingTabPageLink } from './utils';
 import styles from './common.scss';
 
-const cx = createClassnames(styles as Record<string, string>);
+const cx = createClassnames(styles);
 
 const messages = defineMessages({
   updatedLegacyNotifications: {

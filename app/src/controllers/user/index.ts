@@ -28,6 +28,7 @@ export {
   LOGS_SIZE_KEY,
   LOGS_FULL_WIDTH_MODE_KEY,
   LOGS_COLORIZED_BACKGROUND_KEY,
+  LOG_TIME_FORMAT_STORAGE_KEY,
 } from './constants';
 export {
   fetchUserAction,
@@ -91,4 +92,6 @@ export {
   setLogsSizeInStorage,
   setLogsFullWidthModeInStorage,
   setLogsColorizedBackgroundInStorage,
+  getLogTimeFormatFromStorage,
+  setLogTimeFormatInStorage,
 } from './storageUtils';

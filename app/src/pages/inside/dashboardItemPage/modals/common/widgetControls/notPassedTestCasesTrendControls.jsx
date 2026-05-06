@@ -44,10 +44,12 @@ export class NotPassedTestCasesTrendControls extends Component {
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
     eventsInfo: PropTypes.object,
+    isMainControlsDisabled: PropTypes.bool,
   };
 
   static defaultProps = {
     eventsInfo: {},
+    isMainControlsDisabled: false,
   };
 
   constructor(props) {
@@ -73,6 +75,7 @@ export class NotPassedTestCasesTrendControls extends Component {
       formAppearance,
       onFormAppearanceChange,
       eventsInfo,
+      isMainControlsDisabled,
     } = this.props;
 
     return (
@@ -99,6 +102,7 @@ export class NotPassedTestCasesTrendControls extends Component {
                 inputWidth={ITEMS_INPUT_WIDTH}
                 maxLength="3"
                 hintType={'top-right'}
+                disabled={isMainControlsDisabled}
               />
             </FieldProvider>
           </Fragment>

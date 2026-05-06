@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ import {
 import {
   CREATE_DASHBOARD,
   UPDATE_DASHBOARD,
+  UPDATE_DASHBOARD_STATE,
   DELETE_DASHBOARD,
   CREATE_WIDGET,
   UPDATE_WIDGET,
@@ -94,6 +95,10 @@ export const actionMessages = defineMessages({
     defaultMessage: 'Create dashboard',
   },
   [UPDATE_DASHBOARD]: {
+    id: 'EventActions.updateDashboard',
+    defaultMessage: 'Update dashboard',
+  },
+  [UPDATE_DASHBOARD_STATE]: {
     id: 'EventActions.updateDashboard',
     defaultMessage: 'Update dashboard',
   },

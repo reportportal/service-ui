@@ -140,10 +140,12 @@ export class ComponentHealthCheckTableViewControls extends Component {
     }).isRequired,
     changeField: PropTypes.func.isRequired,
     untouchField: PropTypes.func.isRequired,
+    isMainControlsDisabled: PropTypes.bool,
   };
 
   static defaultProps = {
     eventsInfo: {},
+    isMainControlsDisabled: false,
   };
 
   constructor(props) {
@@ -207,6 +209,7 @@ export class ComponentHealthCheckTableViewControls extends Component {
     const {
       widgetSettings: { filters },
       intl: { formatMessage },
+      isMainControlsDisabled,
     } = this.props;
     const url = this.getItemAttributeKeysAllSearchURL();
     const isInputDisabled = !filters?.length;
@@ -218,7 +221,7 @@ export class ComponentHealthCheckTableViewControls extends Component {
         maxAttributesAmount={MAX_ATTRIBUTES_AMOUNT}
         showRemainingLevels
         getURI={url}
-        disabled={isInputDisabled}
+        disabled={isInputDisabled || isMainControlsDisabled}
         inputTooltip={isInputDisabled ? formatMessage(messages.attributeKeyInput) : null}
         addButtonTooltip={isInputDisabled ? formatMessage(messages.addAttributeKeyButton) : null}
       />
@@ -246,6 +249,7 @@ export class ComponentHealthCheckTableViewControls extends Component {
       formAppearance,
       onFormAppearanceChange,
       eventsInfo,
+      isMainControlsDisabled,
     } = this.props;
     const attrUrlKeys = this.getItemAttributeKeysAllSearchURL();
     const sortObj = this.getSortObj();
@@ -272,10 +276,15 @@ export class ComponentHealthCheckTableViewControls extends Component {
                     [CHART_MODES.ALL_LAUNCHES, CHART_MODES.LATEST_LAUNCHES],
                     formatMessage,
                   )}
+                  disabled={isMainControlsDisabled}
                 />
               </FieldProvider>
               <FieldProvider name="contentParameters.widgetOptions.excludeSkipped" format={Boolean}>
-                <CheckboxControl fieldLabel=" " text={formatMessage(messages.excludeSkipped)} />
+                <CheckboxControl
+                  fieldLabel=" "
+                  text={formatMessage(messages.excludeSkipped)}
+                  disabled={isMainControlsDisabled}
+                />
               </FieldProvider>
               <FieldProvider
                 name="contentParameters.widgetOptions.minPassingRate"
@@ -289,6 +298,7 @@ export class ComponentHealthCheckTableViewControls extends Component {
                   maxLength="3"
                   hintType={'top-right'}
                   inputBadge={'%'}
+                  disabled={isMainControlsDisabled}
                 />
               </FieldProvider>
               <FieldArray
@@ -310,7 +320,7 @@ export class ComponentHealthCheckTableViewControls extends Component {
                 >
                   <FieldErrorHint hintType="top">
                     <AsyncAutocomplete
-                      disabled={disabled}
+                      disabled={disabled || isMainControlsDisabled}
                       getURI={attrUrlKeys}
                       minLength={1}
                       creatable
@@ -329,6 +339,7 @@ export class ComponentHealthCheckTableViewControls extends Component {
               <SortingControl
                 sortingColumn={sortObj?.sortingColumn}
                 sortingDirection={sortObj?.asc}
+                disabled={isMainControlsDisabled}
               />
             </FieldProvider>
           </Fragment>

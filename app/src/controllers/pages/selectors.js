@@ -29,8 +29,8 @@ import {
 import { ALL } from 'common/constants/reservedFilterIds';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { MANAGER } from 'common/constants/projectRoles';
-import { getAlternativePaginationAndSortParams } from 'controllers/pagination';
-import { findAssignedProjectByOrganization } from 'common/utils';
+import { getAlternativePaginationAndSortParams } from 'controllers/pagination/utils';
+import { findAssignedProjectByOrganization } from 'common/utils/findAssignedProjectByOrganization';
 import { pageNames, NO_PAGE, TEST_CASE_LIBRARY_PAGE, APP_LEVEL } from './constants';
 import { stringToArray } from './utils';
 import {

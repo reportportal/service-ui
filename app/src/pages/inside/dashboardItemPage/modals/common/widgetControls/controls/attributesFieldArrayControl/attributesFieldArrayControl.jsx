@@ -73,6 +73,7 @@ export class AttributesFieldArrayControl extends Component {
     showRemainingLevels: false,
     inputTooltip: null,
     addButtonTooltip: null,
+    disabled: false,
   };
 
   constructor(props) {
@@ -118,7 +119,7 @@ export class AttributesFieldArrayControl extends Component {
               labelWidth={FIELD_LABEL_WIDTH}
               className={cx('attribute-modal-field')}
             >
-              <div className={cx({ 'attr-selector': !isFirstItem })}>
+              <div className={cx({ 'attr-selector': !isFirstItem && !disabled })}>
                 <ConditionalTooltip content={inputTooltip}>
                   <FieldProvider name={item} validate={fieldValidator(attributes)}>
                     <FieldErrorHint hintType="top">
@@ -134,7 +135,7 @@ export class AttributesFieldArrayControl extends Component {
                   </FieldProvider>
                 </ConditionalTooltip>
               </div>
-              {!isFirstItem && (
+              {!isFirstItem && !disabled && (
                 <button
                   className={cx('remove-button', 'button')}
                   onClick={() => fields.remove(index)}
@@ -145,7 +146,7 @@ export class AttributesFieldArrayControl extends Component {
             </ModalField>
           );
         })}
-        {canAddNewItems ? (
+        {canAddNewItems && !disabled ? (
           <ModalField label=" " labelWidth={FIELD_LABEL_WIDTH}>
             <ConditionalTooltip
               content={addButtonTooltip}

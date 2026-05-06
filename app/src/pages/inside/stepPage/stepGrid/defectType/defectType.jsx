@@ -75,9 +75,9 @@ export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events, 
   const { trackEvent } = useTracking();
   const { canManageBTSIssues, canWorkWithDefectTypes } = useUserPermissions();
   const eventData = issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
-  const onClickEdit = (event) => {
+  const onClickEdit = (event, actionPlace = '') => {
     event && trackEvent(event);
-    onEdit();
+    onEdit(actionPlace);
   };
 
   const onClickIssue = (pluginName) => {
@@ -105,7 +105,7 @@ export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events, 
         {canWorkWithDefectTypes && (
           <div
             className={cx('edit-icon')}
-            onClick={() => onClickEdit(events.onEditEvent?.(eventData, 'edit'))}
+            onClick={() => onClickEdit(events.onEditEvent?.(eventData, 'edit'), 'edit')}
           >
             {Parser(PencilIcon)}
           </div>
