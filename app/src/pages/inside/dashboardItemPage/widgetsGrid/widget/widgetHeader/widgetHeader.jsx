@@ -34,7 +34,6 @@ import {
 import { STATE_RENDERING } from 'components/widgets/common/constants';
 import { MATERIALIZED_VIEW_WIDGETS } from 'components/widgets';
 import { canWorkWithWidgets } from 'common/utils/permissions/permissions';
-import { userRolesType } from 'common/constants/projectRoles';
 import { userRolesSelector } from 'controllers/pages';
 import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardTooltip';
 import { useCanLockDashboard } from 'common/hooks';

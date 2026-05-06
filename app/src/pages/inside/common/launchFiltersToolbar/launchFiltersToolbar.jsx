@@ -41,7 +41,6 @@ import FilterIcon from 'common/img/newIcons/filter-inline.svg';
 import { ClearIcon } from '@reportportal/ui-kit';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { canWorkWithFilters } from 'common/utils/permissions';
-import { userRolesType } from 'common/constants/projectRoles';
 import { userRolesSelector } from 'controllers/pages';
 import { CUSTOM_FILTER_ID } from 'common/constants/reservedFilterIds';
 import { FilterList } from './filterList';
