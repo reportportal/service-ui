@@ -275,11 +275,11 @@ export const TEST_CASE_LIBRARY_EVENTS = {
     ...CLICK,
     element_name: TEST_CASE_ELEMENT.SEARCH,
   },
-  applyFilterTestCases: (type: FilterFieldType) => ({
+  applyFilterTestCases: (type?: FilterFieldType) => ({
     ...CLICK,
     modal: TEST_CASE_MODAL.FILTER_TEST_CASES,
     element_name: TEST_CASE_ELEMENT.APPLY_FILTER,
-    type,
+    ...(type !== undefined && { type }),
   }),
   clickTestCaseRow: (testCaseId: string) => ({
     ...CLICK,

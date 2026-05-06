@@ -138,17 +138,19 @@ export const TestCaseLibraryPage = () => {
     const hasTags = !isEmpty(tags);
     const filterPriorities = hasPriorities ? toBackendPriority(priorities) : undefined;
     const filterTags = hasTags ? tags.join(',') : undefined;
+    let filterType: FilterFieldType | undefined;
 
     if (hasPriorities || hasTags) {
-      let filterType: FilterFieldType = FILTER_FIELD.TAG;
+      filterType = FILTER_FIELD.TAG;
 
       if (hasPriorities && hasTags) {
         filterType = FILTER_FIELD.PRIORITY_AND_TAG;
       } else if (hasPriorities) {
         filterType = FILTER_FIELD.PRIORITY;
       }
-      trackEvent(TEST_CASE_LIBRARY_EVENTS.applyFilterTestCases(filterType));
     }
+
+    trackEvent(TEST_CASE_LIBRARY_EVENTS.applyFilterTestCases(filterType));
 
     dispatch(
       updatePagePropertiesAction({

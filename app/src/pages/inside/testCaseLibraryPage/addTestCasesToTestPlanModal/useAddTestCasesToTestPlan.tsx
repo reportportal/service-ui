@@ -77,6 +77,10 @@ export const useAddTestCasesToTestPlan = ({
 
   const addTestCasesToTestPlan = (values: AddTestCasesToTestPlanFormData): void => {
     const testPlan = values?.[SELECTED_TEST_PLAN_FIELD_NAME];
+    const addToTestPlanCondition =
+      selectedTestCaseIds.length === 1
+        ? ADD_TO_TEST_PLAN_CONDITION.SINGLE
+        : ADD_TO_TEST_PLAN_CONDITION.BULK;
 
     const fetchPath = (
       URLS.testPlanTestCasesBatch as (projectKey: string, testPlanId: number) => string
@@ -92,11 +96,7 @@ export const useAddTestCasesToTestPlan = ({
     })
       .then(() => {
         trackEvent(
-          TEST_CASE_LIBRARY_EVENTS.submitAddToTestPlan(
-            isSingleTestCaseMode
-              ? ADD_TO_TEST_PLAN_CONDITION.SINGLE
-              : ADD_TO_TEST_PLAN_CONDITION.BULK,
-          ),
+          TEST_CASE_LIBRARY_EVENTS.submitAddToTestPlan(addToTestPlanCondition),
         );
         dispatch(hideModalAction());
         showSuccessNotification({
