@@ -57,7 +57,7 @@ const AttributeListField = ({ input, meta, ...rest }: AttributeListFieldProps) =
     attributes={input.value || []}
     onChange={input.onChange}
     customClass=""
-    showValidationErrors={Boolean(meta?.submitFailed)}
+    showValidationErrors={meta?.submitFailed ? 1 : 0}
   />
 );
 
