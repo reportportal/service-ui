@@ -60,23 +60,22 @@ export const PremiumPromoModal = ({ onExplorePlans, onContactUs, onNotNow }) => 
   return (
     <Modal
       className={cx('premium-promo-modal')}
-      allowCloseOutside={false}
       title={modalTitle}
       onClose={handleClose}
       footerNode={
-        <Button
-          variant="text"
-          onClick={() => {
-            onContactUs?.();
-            window.open(referenceDictionary.rpContactUs, '_blank', 'noopener,noreferrer');
-          }}
-        >
-          {formatMessage(messages.contactUsButton)}
+        <Button className={cx('not-now-button')} variant="text" onClick={() => { onNotNow?.(); handleClose(); }}>
+          {formatMessage(messages.notNowButton)}
         </Button>
       }
       cancelButton={{
-        children: formatMessage(messages.notNowButton),
-        onClick: () => onNotNow?.(),
+        children: formatMessage(messages.contactUsButton),
+        variant: 'ghost',
+        icon: <ExternalLinkIcon />,
+        iconPlace: 'end',
+        onClick: () => {
+          onContactUs?.();
+          window.open(referenceDictionary.rpContactUs, '_blank', 'noopener,noreferrer');
+        },
       }}
       okButton={{
         children: formatMessage(messages.explorePlansButton),

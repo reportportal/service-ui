@@ -14,19 +14,26 @@
  * limitations under the License.
  */
 
-// Override the default ui-kit Modal styles for the premium promo:
-// - dark background image instead of the default white panel
-// - white text and tighter content layout
 .premium-promo-modal {
+  display: flex;
+  flex-direction: column;
   width: 660px;
   max-width: 90vw;
+  aspect-ratio: 1318 / 1234;
   border-radius: 16px;
-  overflow-y: auto;
   background-image: url(~common/img/premium-modal-bg.webp);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   color: var(--rp-ui-base-bg-000);
+
+  > :last-child {
+    margin-top: auto;
+  }
+}
+
+.not-now-button {
+  margin-left: auto;
 }
 
 .modal-content {
@@ -35,21 +42,15 @@
   flex-direction: column;
   flex: 1;
   padding: 0 15px;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    padding: 24px 20px 16px;
-  }
 }
 
 .logo {
-  position: relative;
-  bottom: 12px;
   width: 118px;
-  height: 24.71px;
+  margin: 13px;
 }
 
 .title {
-  margin: 23px 0 15px;
+  margin-bottom: 15px;
   font-family: var(--rp-ui-base-font-family);
   font-weight: var(--rp-ui-base-fw-bold);
   font-size: 39px;
@@ -60,7 +61,6 @@
   @media (max-width: $SCREEN_XS_MAX) {
     font-size: 28px;
     line-height: 34px;
-    margin: 20px 0 10px;
   }
 }
 
