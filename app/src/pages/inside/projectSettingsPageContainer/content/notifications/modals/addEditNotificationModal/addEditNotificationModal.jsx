@@ -213,6 +213,7 @@ const AddEditNotificationModal = ({
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const [isEditorShown, setShowEditor] = React.useState(data.notification.attributes.length > 0);
+  const [forceAttributeErrors, setForceAttributeErrors] = React.useState(0);
   const attributesValue =
     useSelector((state) => attributesValueSelector(state, ATTRIBUTES_FIELD_KEY)) ?? [];
 
@@ -223,6 +224,12 @@ const AddEditNotificationModal = ({
   // Initialization should be called only once when the modal is opened 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!attributesValue.some((attr) => attr.edited)) {
+      setForceAttributeErrors(0);
+    }
+  }, [attributesValue]);
 
   const caseOptions = [
     {
@@ -289,7 +296,12 @@ const AddEditNotificationModal = ({
         ? formatMessage(COMMON_LOCALE_KEYS.SAVE)
         : formatMessage(COMMON_LOCALE_KEYS.CREATE),
     onClick: () => {
-      handleSubmit(submitActions)();
+      const hasOpenAttributeEditor = isEditorShown && attributesValue.some((attr) => attr.edited);
+      if (hasOpenAttributeEditor) {
+        setForceAttributeErrors((prev) => prev + 1);
+      } else {
+        handleSubmit(submitActions)();
+      }
     },
     'data-automation-id': 'submitButton',
   };
@@ -422,6 +434,7 @@ const AddEditNotificationModal = ({
             changeValue={change}
             attributesNote={formatMessage(messages.attributesNote)}
             autocompleteProps={{ useFixedPositioning: true }}
+            showValidationErrors={forceAttributeErrors}
           />
         </FieldElement>
         {attributesValue.length > 0 && isEditorShown && (
