@@ -68,6 +68,11 @@ export class ProjectActivityControls extends Component {
     widgetSettings: PropTypes.object.isRequired,
     projectKey: PropTypes.string.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,
+    isMainControlsDisabled: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    isMainControlsDisabled: false,
   };
 
   constructor(props) {
@@ -127,6 +132,7 @@ export class ProjectActivityControls extends Component {
     const {
       intl: { formatMessage },
       projectKey,
+      isMainControlsDisabled,
     } = this.props;
 
     return (
@@ -142,6 +148,7 @@ export class ProjectActivityControls extends Component {
             multiple
             selectAll
             options={this.criteria}
+            disabled={isMainControlsDisabled}
           />
         </FieldProvider>
         <FieldProvider
@@ -156,6 +163,7 @@ export class ProjectActivityControls extends Component {
             fieldLabel={formatMessage(messages.ItemsFieldLabel)}
             inputWidth={ITEMS_INPUT_WIDTH}
             maxLength="3"
+            disabled={isMainControlsDisabled}
           />
         </FieldProvider>
         <FieldProvider
@@ -171,6 +179,7 @@ export class ProjectActivityControls extends Component {
             getURI={URLS.projectUsernamesSearch(projectKey)}
             makeOptions={this.formatUsernames}
             multi
+            disabled={isMainControlsDisabled}
           />
         </FieldProvider>
       </Fragment>

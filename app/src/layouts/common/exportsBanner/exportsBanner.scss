@@ -1,3 +1,13 @@
+.exports-banner-container {
+  width: 100%;
+  box-sizing: border-box;
+
+  &.variant-modern {
+    padding: 8px 30px;
+    background-color: var(--rp-ui-base-bg-000);
+  }
+}
+
 .exports-banner {
   display: flex;
   align-items: center;
@@ -10,6 +20,15 @@
   color: $COLOR--charcoal-grey;
   font-family: $FONT-REGULAR;
   font-size: 13px;
+
+  .variant-modern & {
+    width: auto;
+    max-width: 100%;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--rp-ui-base-bg-200);
+    font-family: var(--rp-ui-base-font-family);
+  }
 }
 
 .content {
@@ -20,6 +39,11 @@
   max-width: 1370px;
   padding: 0 15px;
   margin: auto;
+
+  .variant-modern & {
+    max-width: 100%;
+    padding: 0 24px;
+  }
 }
 
 .description {
@@ -28,6 +52,11 @@
 
   b {
     font-family: $FONT-SEMIBOLD;
+  }
+
+  .variant-modern & b {
+    font-family: var(--rp-ui-base-font-family);
+    font-weight: var(--rp-ui-base-fw-bold);
   }
 }
 

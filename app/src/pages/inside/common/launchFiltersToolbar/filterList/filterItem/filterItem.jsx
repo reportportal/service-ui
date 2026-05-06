@@ -18,8 +18,8 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import Link from 'redux-first-router-link';
+import { useSelector } from 'react-redux';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
-import { connect } from 'react-redux';
 import { getLaunchFilterLinkSelector } from 'controllers/launch';
 import { urlOrganizationSlugSelector } from 'controllers/pages';
 import { FilterDescriptionTooltipIcon } from './filterDescriptionTooltipIcon';
@@ -36,7 +36,7 @@ const handleClick = (e) => {
   e.preventDefault();
 };
 
-const FilterItemBase = ({
+export const FilterItem = ({
   id,
   name,
   active,
@@ -45,49 +45,45 @@ const FilterItemBase = ({
   onRemove,
   className,
   isDisabled,
-  getLaunchFilterLink,
-  organizationSlug,
-}) => (
-  <Link
-    className={cx('filter-item', className, { active })}
-    onClick={isDisabled && handleClick}
-    to={getLaunchFilterLink(id, active, organizationSlug)}
-  >
-    <span className={cx('name')}>
-      {name}
-      {unsaved && <span className={cx('unsaved')}>*</span>}
-    </span>
-    {description && (
-      <div className={cx('icon')}>
-        <FilterDescriptionTooltipIcon tooltipContent={description} />
-      </div>
-    )}
-    {active && (
-      <div className={cx('icon')} onClick={stopPropagation(onRemove)}>
-        {Parser(CrossIcon)}
-      </div>
-    )}
-  </Link>
-);
+}) => {
+  const organizationSlug = useSelector(urlOrganizationSlugSelector);
+  const getLaunchFilterLink = useSelector(getLaunchFilterLinkSelector);
 
-export const FilterItem = connect((state) => ({
-  organizationSlug: urlOrganizationSlugSelector(state),
-  getLaunchFilterLink: getLaunchFilterLinkSelector(state),
-}))(FilterItemBase);
+  return (
+    <Link
+      className={cx('filter-item', className, { active })}
+      onClick={isDisabled && handleClick}
+      to={getLaunchFilterLink(id, active, organizationSlug)}
+    >
+      <span className={cx('name')}>
+        {name}
+        {unsaved && <span className={cx('unsaved')}>*</span>}
+      </span>
+      {description && (
+        <div className={cx('icon')}>
+          <FilterDescriptionTooltipIcon tooltipContent={description} />
+        </div>
+      )}
+      {active && (
+        <div className={cx('icon')} onClick={stopPropagation(onRemove)}>
+          {Parser(CrossIcon)}
+        </div>
+      )}
+    </Link>
+  );
+};
 
-FilterItemBase.propTypes = {
+FilterItem.propTypes = {
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   active: PropTypes.bool,
   description: PropTypes.string,
   unsaved: PropTypes.bool,
   onRemove: PropTypes.func,
-  getLaunchFilterLink: PropTypes.func.isRequired,
   className: PropTypes.string,
   isDisabled: PropTypes.bool,
-  organizationSlug: PropTypes.string.isRequired,
 };
-FilterItemBase.defaultProps = {
+FilterItem.defaultProps = {
   active: false,
   description: null,
   unsaved: false,

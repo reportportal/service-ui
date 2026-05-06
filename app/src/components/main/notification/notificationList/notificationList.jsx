@@ -175,6 +175,10 @@ export const notificationMessages = defineMessages({
     id: 'DashboardPage.addPreconfigDashboardError',
     defaultMessage: "Dashboard can't be created. Please check the pasted configuration.",
   },
+  updateDashboardLockedSuccess: {
+    id: 'DashboardPage.updateDashboardLockedSuccess',
+    defaultMessage: 'Dashboard lock status has been changed successfully',
+  },
   duplicateDashboardSuccess: {
     id: 'Notifications.duplicateDashboardSuccess',
     defaultMessage: 'Dashboard has been duplicated successfully',

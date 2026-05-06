@@ -23,7 +23,6 @@ import {
   showErrorNotification,
 } from 'controllers/notification';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
-import { getLogTimeFormatFromStorage } from 'controllers/log/storageUtils';
 import {
   getUserProjectSettingsFromStorage,
   setNoLogsCollapsingInStorage,
@@ -31,6 +30,7 @@ import {
   setLogsSizeInStorage,
   setLogsFullWidthModeInStorage,
   setLogsColorizedBackgroundInStorage,
+  getLogTimeFormatFromStorage,
 } from './storageUtils';
 import {
   assignToProjectSuccessAction,

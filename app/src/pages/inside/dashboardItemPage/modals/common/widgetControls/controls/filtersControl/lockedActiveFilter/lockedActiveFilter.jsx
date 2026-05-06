@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-import React, { PureComponent, Fragment } from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import Parser from 'html-react-parser';
-import PencilIcon from 'common/img/pencil-icon-inline.svg';
+import { Icon } from 'components/main/icon';
 import { FilterOptions } from 'pages/inside/filtersPage/filterGrid/filterOptions';
 import { FilterName } from 'pages/inside/filtersPage/filterGrid/filterName';
 import { isEmptyObject } from 'common/utils';
-import { injectIntl, defineMessages } from 'react-intl';
+import { useIntl, defineMessages } from 'react-intl';
 import styles from './lockedActiveFilter.scss';
 
 const cx = classNames.bind(styles);
@@ -34,37 +33,29 @@ const messages = defineMessages({
   },
 });
 
-@injectIntl
-export class LockedActiveFilter extends PureComponent {
-  static propTypes = {
-    filter: PropTypes.object,
-    onEdit: PropTypes.func.isRequired,
-    intl: PropTypes.object.isRequired,
-  };
+export const LockedActiveFilter = memo(({ filter, onEdit }) => {
+  const { formatMessage } = useIntl();
 
-  static defaultProps = {
-    filter: {},
-    onEdit: () => {},
-  };
+  return (
+    <div className={cx('locked-active-filter')}>
+      <Icon type="icon-pencil" onClick={onEdit} className={cx('pencil-icon')} />
 
-  render() {
-    const { filter, onEdit, intl } = this.props;
+      {isEmptyObject(filter) ? (
+        <span className={cx('not-found')}>{formatMessage(messages.filterNotFound)}</span>
+      ) : (
+        <>
+          <FilterName filter={filter} showDesc={false} editable={false} isBold />
+          <FilterOptions entities={filter.conditions} sort={filter.orders} />
+        </>
+      )}
+    </div>
+  );
+});
 
-    return (
-      <div className={cx('locked-active-filter')}>
-        <span className={cx('pencil-icon')} onClick={onEdit}>
-          {Parser(PencilIcon)}
-        </span>
-
-        {isEmptyObject(filter) ? (
-          <span className={cx('not-found')}>{intl.formatMessage(messages.filterNotFound)}</span>
-        ) : (
-          <Fragment>
-            <FilterName filter={filter} showDesc={false} editable={false} isBold />
-            <FilterOptions entities={filter.conditions} sort={filter.orders} />
-          </Fragment>
-        )}
-      </div>
-    );
-  }
-}
+LockedActiveFilter.propTypes = {
+  filter: PropTypes.object,
+  onEdit: PropTypes.func.isRequired,
+};
+LockedActiveFilter.defaultProps = {
+  filter: {},
+};

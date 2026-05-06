@@ -23,7 +23,6 @@ import { NavLink } from 'components/main/navLink';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import Parser from 'html-react-parser';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
-import IconLocked from 'common/img/locked-inline.svg';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { URLS } from 'common/urls';
@@ -31,8 +30,9 @@ import { activeProjectKeySelector } from 'controllers/user';
 import { showDefaultErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { fetch, copyToClipboard } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { LockedDashboardTooltip } from '../lockedDashboardTooltip';
-import { useCanLockDashboard } from '../hooks';
+import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardTooltip';
+import { LockedIcon } from 'pages/inside/common/lockedIcon';
+import { useCanLockDashboard } from 'common/hooks/useCanLockDashboard';
 import styles from './dashboardTable.scss';
 import { messages } from './messages';
 
@@ -43,21 +43,23 @@ export const NameColumn = ({ value, customProps: { getLink }, className }) => {
   const { id: dashboardId, name, locked } = value;
 
   return (
-    <div className={cx(className, 'name-container')}>
-      {locked && (
-        <LockedDashboardTooltip locked={locked}>
-          <div className={cx('locked-icon')}>{Parser(IconLocked)}</div>
-        </LockedDashboardTooltip>
-      )}
-      <NavLink
-        className={cx('name')}
-        to={getLink(dashboardId)}
-        onClick={() => {
-          trackEvent(DASHBOARD_EVENTS.clickOnDashboardName(dashboardId));
-        }}
-      >
-        {name}
-      </NavLink>
+    <div className={cx(className, 'name-cell')}>
+      <div className={cx('name-container')}>
+        {locked && (
+          <LockedDashboardTooltip locked={locked}>
+            <LockedIcon />
+          </LockedDashboardTooltip>
+        )}
+        <NavLink
+          className={cx('name')}
+          to={getLink(dashboardId)}
+          onClick={() => {
+            trackEvent(DASHBOARD_EVENTS.clickOnDashboardName(dashboardId));
+          }}
+        >
+          {name}
+        </NavLink>
+      </div>
     </div>
   );
 };

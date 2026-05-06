@@ -19,23 +19,24 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { Tooltip } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
-import { useCanLockDashboard } from '../hooks';
+import { useCanLockDashboard } from 'common/hooks/useCanLockDashboard';
 import { messages } from './messages';
 import styles from './lockedDashboardTooltip.scss';
 
 const cx = classNames.bind(styles);
 
-export const LockedDashboardTooltip = ({ children, locked }) => {
+export const LockedDashboardTooltip = ({ children, locked, variant }) => {
   const { formatMessage } = useIntl();
   const canLock = useCanLockDashboard();
 
   if (!locked || canLock) return children;
 
   const portalRoot = typeof document !== 'undefined' ? document.getElementById('tooltip-root') : null;
+  const message = variant === 'widget' ? messages.lockedWidget : messages.lockedDashboard;
 
   return (
     <Tooltip
-      content={formatMessage(messages.lockedDashboardTooltip)}
+      content={formatMessage(message)}
       wrapperClassName={cx('locked-tooltip-wrapper')}
       tooltipClassName={cx('locked-tooltip')}
       contentClassName={cx('locked-tooltip-content')}
@@ -49,9 +50,11 @@ export const LockedDashboardTooltip = ({ children, locked }) => {
 LockedDashboardTooltip.propTypes = {
   children: PropTypes.node,
   locked: PropTypes.bool,
+  variant: PropTypes.oneOf(['dashboard', 'widget']),
 };
 
 LockedDashboardTooltip.defaultProps = {
   children: null,
   locked: false,
+  variant: 'dashboard',
 };

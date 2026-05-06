@@ -79,7 +79,13 @@ export class PluginsItem extends Component {
     } = this.props;
     const displayName = detailsName || name;
 
-    showToggleConfirmationModal(enabled, displayName, this.toggleActiveHandler, pluginLocation);
+    showToggleConfirmationModal(
+      enabled,
+      displayName,
+      this.toggleActiveHandler,
+      pluginLocation,
+      name,
+    );
   };
 
   render() {

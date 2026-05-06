@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,19 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
+.locked-tooltip-wrapper {
+  display: inline-flex;
+  max-width: fit-content;
+}
 
-export const messages = defineMessages({
-  lockedDashboardTooltip: {
-    id: 'DashboardList.lockedDashboardTooltip',
-    defaultMessage: 'This dashboard is locked by a project manager or administrator and cannot be modified',
-  },
-});
+.locked-tooltip {
+  max-width: 220px;
+}
+
+.locked-tooltip-content {
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
+  font-size: 11px;
+  line-height: 16px;
+  text-align: center;
+}

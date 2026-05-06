@@ -71,6 +71,7 @@ export class CommonWidgetControls extends Component {
     widgetId: PropTypes.number,
     dashboards: PropTypes.arrayOf(PropTypes.object),
     activeDashboard: PropTypes.object,
+    isMainControlsDisabled: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -79,6 +80,7 @@ export class CommonWidgetControls extends Component {
     dashboards: [],
     activeDashboard: {},
     intl: {},
+    isMainControlsDisabled: false,
   };
 
   constructor(props) {
@@ -97,6 +99,7 @@ export class CommonWidgetControls extends Component {
       widgetId,
       dashboards,
       activeDashboard: { widgets = [] },
+      isMainControlsDisabled,
     } = this.props;
 
     return (
@@ -108,7 +111,7 @@ export class CommonWidgetControls extends Component {
             placeholder={formatMessage(messages.namePlaceholder)}
           >
             <FieldErrorHint>
-              <Input maxLength="128" />
+              <Input maxLength="128" disabled={isMainControlsDisabled} />
             </FieldErrorHint>
           </FieldProvider>
         </ModalField>
@@ -118,7 +121,7 @@ export class CommonWidgetControls extends Component {
             maxLength="1500"
             placeholder={formatMessage(messages.descriptionPlaceholder)}
           >
-            <InputTextArea />
+            <InputTextArea disabled={isMainControlsDisabled} />
           </FieldProvider>
         </ModalField>
         {this.isShowDashboardsList() && (

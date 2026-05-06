@@ -143,7 +143,7 @@ const ValueColumn = ({
     {value?.details?.history.map((item) => (
       <React.Fragment key={`${item.field}__${item.oldValue}__${item.newValue}`}>
         <div>{item.field}:</div>
-        <div>{item[valueType]}</div>
+        <div className={cx('value')}>{item[valueType]}</div>
       </React.Fragment>
     ))}
   </div>

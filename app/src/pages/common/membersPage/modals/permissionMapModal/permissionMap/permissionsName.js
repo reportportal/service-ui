@@ -134,9 +134,13 @@ const launchesMessages = defineMessages({
     id: 'PermissionMap.actionsWithLaunch',
     defaultMessage: 'Actions with launches (edit, force finish, merge, delete)',
   },
-  [ACTIONS.MANUAL_ANALYSIS_EXPORT_COMPARE_IMPORT]: {
-    id: 'PermissionMap.manualAnalysisExportCompareImport',
-    defaultMessage: 'Manual analysis, export, compare, import functionalities',
+  [ACTIONS.MANUAL_ANALYSIS_EXPORT_COMPARE]: {
+    id: 'PermissionMap.manualAnalysisExportCompare',
+    defaultMessage: 'Manual analysis, export, compare functionalities',
+  },
+  [ACTIONS.IMPORT_LAUNCHES]: {
+    id: 'PermissionMap.importLaunches',
+    defaultMessage: 'Import launches',
   },
 });
 
@@ -160,9 +164,33 @@ const widgetFilterDashboardMessages = defineMessages({
     id: 'PermissionMap.createItem',
     defaultMessage: 'Create item',
   },
-  [ACTIONS.EDIT_DELETE_ITEM]: {
-    id: 'PermissionMap.editDeleteItem',
-    defaultMessage: 'Edit, delete item',
+  [ACTIONS.EDIT_DELETE_DASHBOARD_LOCKED]: {
+    id: 'PermissionMap.editDeleteDashboardLocked',
+    defaultMessage: 'Edit, delete dashboard (locked)',
+  },
+  [ACTIONS.EDIT_DELETE_DASHBOARD_UNLOCKED]: {
+    id: 'PermissionMap.editDeleteDashboardUnlocked',
+    defaultMessage: 'Edit, delete dashboard (unlocked)',
+  },
+  [ACTIONS.EDIT_DELETE_WIDGETS_LOCKED]: {
+    id: 'PermissionMap.editDeleteWidgetsLocked',
+    defaultMessage: 'Edit, delete widgets (locked dashboard)\n(except updating applied filter in the widget)',
+  },
+  [ACTIONS.EDIT_WIDGETS_FILTER_ONLY_LOCKED]: {
+    id: 'PermissionMap.editWidgetsFiltersOnlyLocked',
+    defaultMessage: 'Edit widgets (locked dashboard)\n(updating applied filter in the widget)',
+  },
+  [ACTIONS.EDIT_DELETE_WIDGETS_UNLOCKED]: {
+    id: 'PermissionMap.editDeleteWidgetsUnlocked',
+    defaultMessage: 'Edit, delete widgets (unlocked dashboard)',
+  },
+  [ACTIONS.EDIT_DELETE_FILTERS]: {
+    id: 'PermissionMap.editDeleteFilters',
+    defaultMessage: 'Edit, delete filters (locked/unlocked dashboard)',
+  },
+  [ACTIONS.CHANGE_DASHBOARD_STATE]: {
+    id: 'PermissionMap.changeDashboardState',
+    defaultMessage: 'Change dashboard state (locked/unlocked)',
   },
 });
 

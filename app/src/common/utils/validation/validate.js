@@ -18,6 +18,7 @@ import {
   PASSWORD_MAX_ALLOWED_LENGTH,
   REGISTRATION_NAME_MIN_LENGTH,
   REGISTRATION_NAME_MAX_LENGTH,
+  FILTER_DESCRIPTION_MAX_LENGTH,
 } from 'common/constants/validation';
 import {
   composeValidators,
@@ -118,11 +119,13 @@ export const launchNumericEntity = composeValidators([
 ]);
 export const descriptionEntity = composeValidators([
   isNotEmpty,
-  ({ value }) => composeValidators([isNotEmpty, maxLength(18)])(value),
+  ({ value }) =>
+    composeValidators([isNotEmpty, maxLength(FILTER_DESCRIPTION_MAX_LENGTH)])(value),
 ]);
 export const descriptionStepLevelEntity = composeValidators([
   isNotEmpty,
-  ({ value }) => composeValidators([isNotEmpty, maxLength(256)])(value),
+  ({ value }) =>
+    composeValidators([isNotEmpty, maxLength(FILTER_DESCRIPTION_MAX_LENGTH)])(value),
 ]);
 
 export const port = range(1, 65535);
@@ -197,4 +200,3 @@ export const githubOrganizationNameOptional = (value) => {
   const v = trimValue(value);
   return !v?.length || githubOrganizationNameWhenPresent(v);
 };
-

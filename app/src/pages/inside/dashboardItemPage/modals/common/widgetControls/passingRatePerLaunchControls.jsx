@@ -70,10 +70,12 @@ export class PassingRatePerLaunchControls extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    isMainControlsDisabled: PropTypes.bool,
   };
 
   static defaultProps = {
     eventsInfo: {},
+    isMainControlsDisabled: false,
   };
 
   constructor(props) {
@@ -97,6 +99,7 @@ export class PassingRatePerLaunchControls extends Component {
     const {
       intl: { formatMessage },
       projectKey,
+      isMainControlsDisabled,
     } = this.props;
 
     return (
@@ -111,6 +114,7 @@ export class PassingRatePerLaunchControls extends Component {
             minLength={3}
             maxLength={256}
             getURI={URLS.launchNameSearch(projectKey)}
+            disabled={isMainControlsDisabled}
           />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.viewMode">
@@ -120,10 +124,15 @@ export class PassingRatePerLaunchControls extends Component {
               [CHART_MODES.BAR_VIEW, CHART_MODES.PIE_VIEW],
               formatMessage,
             )}
+            disabled={isMainControlsDisabled}
           />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.excludeSkipped" format={Boolean}>
-          <CheckboxControl fieldLabel=" " text={formatMessage(messages.excludeSkipped)} />
+          <CheckboxControl
+            fieldLabel=" "
+            text={formatMessage(messages.excludeSkipped)}
+            disabled={isMainControlsDisabled}
+          />
         </FieldProvider>
       </Fragment>
     );

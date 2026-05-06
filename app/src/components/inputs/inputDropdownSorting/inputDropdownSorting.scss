@@ -77,6 +77,10 @@
   &.bold-value {
     font-weight: 600;
   }
+
+  .disabled & {
+    color: $COLOR--gray-60;
+  }
 }
 .arrow {
   position: absolute;
@@ -96,6 +100,10 @@
   svg {
     display: inline-block;
     width: 9px;
+  }
+
+  .disabled & {
+    fill: $COLOR--gray-60;
   }
 }
 .select-list {

@@ -84,14 +84,15 @@ export const ActionPanel = ({
   finishedLaunchesCount,
 }) => {
   const breadcrumbs = useSelector(breadcrumbsSelector);
-  const { canBulkEditItems, canWorkWithWidgets } = useUserPermissions();
+  const { canBulkEditItems, canWorkWithWidgets, canImportLaunches } = useUserPermissions();
   const isImportPluginsAvailable = useSelector(isImportPluginsAvailableSelector);
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
 
   const isShowWidgetButton = Number.isInteger(activeFilterId) && canWorkWithWidgets;
-  const isShowImportButton = canBulkEditItems && !debugMode && !Number.isInteger(activeFilterId);
+  const isShowImportButton =
+    canBulkEditItems && !debugMode && !Number.isInteger(activeFilterId) && canImportLaunches;
   const onClickActionButton = () => trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ACTIONS_BTN);
 
   const createActionDescriptors = () => {

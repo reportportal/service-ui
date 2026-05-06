@@ -33,3 +33,4 @@ export type {
   UseSearchFilteredFolderDisplayParams,
 } from './useSearchFilteredFolderDisplay';
 export { useBreadCrumbsTree } from './useBreadCrumbsTree';
+export { useCanLockDashboard } from './useCanLockDashboard';

@@ -61,7 +61,6 @@ export const FiltersActionBar = ({
             editDisabled={editDisabled}
             saveDisabled={saveDisabled}
             discardDisabled={discardDisabled}
-            onChangeSorting={() => {}}
             onDiscard={onDiscard}
             onClone={onClone}
             onEdit={onEdit}

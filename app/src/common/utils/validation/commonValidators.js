@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { commonValidators } from 'common/utils/validation/index';
 import * as validate from './validate';
 import { bindMessageToValidator, composeBoundValidators } from './validatorHelpers';
 
@@ -138,7 +137,7 @@ export const emailInviteUserValidator = () =>
 
 export const createProjectVersionValidator = () =>
   composeBoundValidators([
-    commonValidators.requiredField,
+    requiredField,
     bindMessageToValidator(validate.projectVersionLength, 'projectVersionLengthHint'),
   ]);
 

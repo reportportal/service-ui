@@ -63,3 +63,7 @@ export const ADD_EXTENSION_MANIFEST = 'addExtensionManifest';
 export const PLUGIN_TYPE_REMOTE = 'REMOTE';
 export const PLUGIN_TYPE_EXTENSION = 'EXTENSION';
 export const PLUGIN_TYPE_BUILTIN = 'BUILTIN';
+
+// manifest overrides
+export const MANIFEST_OVERRIDES_KEY = 'overrides';
+export const MANIFEST_OVERRIDE_DISABLE_POPUP_CONTENT_KEY = 'disablePluginPopupContent';

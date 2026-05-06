@@ -60,12 +60,14 @@ export class OverallStatisticsControls extends Component {
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
     eventsInfo: PropTypes.object,
+    isMainControlsDisabled: PropTypes.bool,
   };
 
   static defaultProps = {
     formAppearance: {},
     onFormAppearanceChange: () => {},
     eventsInfo: {},
+    isMainControlsDisabled: false,
   };
 
   constructor(props) {
@@ -99,6 +101,7 @@ export class OverallStatisticsControls extends Component {
       formAppearance,
       onFormAppearanceChange,
       eventsInfo,
+      isMainControlsDisabled,
     } = this.props;
 
     return (
@@ -123,6 +126,7 @@ export class OverallStatisticsControls extends Component {
                 multiple
                 selectAll
                 options={this.criteria}
+                disabled={isMainControlsDisabled}
               />
             </FieldProvider>
             <FieldProvider
@@ -138,6 +142,7 @@ export class OverallStatisticsControls extends Component {
                 inputWidth={ITEMS_INPUT_WIDTH}
                 maxLength="3"
                 hintType={'top-right'}
+                disabled={isMainControlsDisabled}
               />
             </FieldProvider>
             <FieldProvider name="contentParameters.widgetOptions.viewMode">
@@ -147,6 +152,7 @@ export class OverallStatisticsControls extends Component {
                   [CHART_MODES.PANEL_VIEW, CHART_MODES.DONUT_VIEW],
                   formatMessage,
                 )}
+                disabled={isMainControlsDisabled}
               />
             </FieldProvider>
             <FieldProvider name="contentParameters.widgetOptions.latest">
@@ -156,6 +162,7 @@ export class OverallStatisticsControls extends Component {
                   [CHART_MODES.ALL_LAUNCHES, CHART_MODES.LATEST_LAUNCHES],
                   formatMessage,
                 )}
+                disabled={isMainControlsDisabled}
               />
             </FieldProvider>
           </Fragment>

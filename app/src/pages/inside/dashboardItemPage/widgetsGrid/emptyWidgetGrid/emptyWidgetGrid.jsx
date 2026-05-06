@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-import React, { Fragment, Component } from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
 import AddDashboardIcon from 'common/img/add-widget-inline.svg';
 import { canWorkWithWidgets } from 'common/utils/permissions/permissions';
-import { connect } from 'react-redux';
-import { userRolesType } from 'common/constants/projectRoles';
 import { userRolesSelector } from 'controllers/pages';
 import styles from './emptyWidgetGrid.scss';
+import { useCanLockDashboard } from 'common/hooks';
+import { useSelector } from 'react-redux';
+import { activeDashboardItemSelector } from 'controllers/dashboard';
+import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardTooltip';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
@@ -46,51 +48,53 @@ const messages = defineMessages({
   },
 });
 
-@connect((state) => ({
-  userRoles: userRolesSelector(state),
-}))
-@injectIntl
-export class EmptyWidgetGrid extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    action: PropTypes.func,
-    isDisable: PropTypes.bool,
-    userRoles: userRolesType,
-  };
+export const EmptyWidgetGrid = ({ action, isDisable }) => {
+  const { formatMessage } = useIntl();
+  const userRoles = useSelector(userRolesSelector);
+  const canLock = useCanLockDashboard();
+  const dashboard = useSelector(activeDashboardItemSelector);
+  const isButtonDisabled = dashboard?.locked && !canLock;
+  const isWorkWithDashboard = canWorkWithWidgets(userRoles);
 
-  static defaultProps = {
-    action: () => {},
-    isDisable: false,
-    userRoles: {},
-  };
-
-  render() {
-    const { action, intl, isDisable, userRoles } = this.props;
-    const isWorkWithDashboard = canWorkWithWidgets(userRoles);
-
-    return (
-      <div className={cx('empty-widget')}>
-        <div className={cx('empty-dashboard', { 'add-enabled': !isDisable })} />
-        <p className={cx('empty-widget-headline')}>
-          {intl.formatMessage(messages.notMyDashboardEmptyHeader)}
-        </p>
-        {!isDisable && (
-          <Fragment>
-            <p className={cx('empty-widget-text')}>
-              {isWorkWithDashboard
-                ? intl.formatMessage(messages.dashboardEmptyText)
-                : intl.formatMessage(messages.dashboardEmptyTextViewer)}
-            </p>
-            {isWorkWithDashboard && (
-              <div className={cx('empty-widget-content')}>
-                <GhostButton icon={AddDashboardIcon} onClick={action}>
-                  {intl.formatMessage(messages.addNewWidget)}
-                </GhostButton>
-              </div>
+  return (
+    <div className={cx('empty-widget')}>
+      <div className={cx('empty-dashboard', { 'add-enabled': !isDisable })} />
+      <p className={cx('empty-widget-headline')}>
+        {formatMessage(messages.notMyDashboardEmptyHeader)}
+      </p>
+      {!isDisable && (
+        <Fragment>
+          <p className={cx('empty-widget-text')}>
+            {formatMessage(
+              isWorkWithDashboard ? messages.dashboardEmptyText : messages.dashboardEmptyTextViewer,
             )}
-          </Fragment>
-        )}
-      </div>
-    );
-  }
-}
+          </p>
+          {isWorkWithDashboard && (
+            <div className={cx('empty-widget-content')}>
+              <LockedDashboardTooltip locked={dashboard?.locked}>
+                <GhostButton
+                  icon={AddDashboardIcon}
+                  onClick={action}
+                  disabled={isButtonDisabled}
+                  appearance="faded"
+                >
+                  {formatMessage(messages.addNewWidget)}
+                </GhostButton>
+              </LockedDashboardTooltip>
+            </div>
+          )}
+        </Fragment>
+      )}
+    </div>
+  );
+};
+
+EmptyWidgetGrid.propTypes = {
+  action: PropTypes.func,
+  isDisable: PropTypes.bool,
+};
+
+EmptyWidgetGrid.defaultProps = {
+  action: () => {},
+  isDisable: false,
+};

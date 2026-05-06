@@ -1,0 +1,240 @@
+diff --git a/node_modules/@sowtame/webpack-subresource-integrity/dist/cjs/index.js b/node_modules/@sowtame/webpack-subresource-integrity/dist/cjs/index.js
+index f3e5942..65c1210 100644
+--- a/node_modules/@sowtame/webpack-subresource-integrity/dist/cjs/index.js
++++ b/node_modules/@sowtame/webpack-subresource-integrity/dist/cjs/index.js
+@@ -61,8 +61,11 @@ class SubresourceIntegrityPlugin {
+                 return plugin.processAssets(records);
+             });
+             compilation.hooks.afterProcessAssets.tap(globals_1.thisPluginName, (records) => {
++                const skipUnresolvedCheck = /^(polyfills|main|main_app)\.app\./;
+                 for (const chunk of compilation.chunks.values()) {
+                     for (const chunkFile of chunk.files) {
++                        if (skipUnresolvedCheck.test(chunkFile))
++                            continue;
+                         const record = records[chunkFile];
+                         if (record && record.source().includes(util_1.placeholderPrefix)) {
+                             reporter.errorUnresolvedIntegrity(chunkFile);
+diff --git a/node_modules/@sowtame/webpack-subresource-integrity/dist/cjs/manifest.js b/node_modules/@sowtame/webpack-subresource-integrity/dist/cjs/manifest.js
+index 39eb716..9dd6e68 100644
+--- a/node_modules/@sowtame/webpack-subresource-integrity/dist/cjs/manifest.js
++++ b/node_modules/@sowtame/webpack-subresource-integrity/dist/cjs/manifest.js
+@@ -32,14 +32,12 @@ function buildTopologicallySortedChunkGraph(chunks, compilation) {
+     const edges = new Map();
+     // Chunks should have *all* chunks, not simply entry chunks
+     for (const vertex of chunks) {
+-        if ((0, util_1.wmfSharedChunk)(vertex, compilation) || (0, util_1.addIfNotExist)(vertices, vertex)) {
++        if ((0, util_1.addIfNotExist)(vertices, vertex)) {
+             continue;
+         }
+         edges.set(vertex, new Set());
+         for (const childChunk of (0, util_1.allChunksInChunkIterable)(vertex)) {
+-            if (!(0, util_1.wmfSharedChunk)(childChunk, compilation)) {
+-                (_a = edges.get(vertex)) === null || _a === void 0 ? void 0 : _a.add(childChunk);
+-            }
++            (_a = edges.get(vertex)) === null || _a === void 0 ? void 0 : _a.add(childChunk);
+         }
+     }
+     const dag = (0, scc_1.createDAGfromGraph)({ vertices, edges });
+diff --git a/node_modules/@sowtame/webpack-subresource-integrity/dist/cjs/plugin.js b/node_modules/@sowtame/webpack-subresource-integrity/dist/cjs/plugin.js
+index db34507..09673f8 100644
+--- a/node_modules/@sowtame/webpack-subresource-integrity/dist/cjs/plugin.js
++++ b/node_modules/@sowtame/webpack-subresource-integrity/dist/cjs/plugin.js
+@@ -104,6 +104,52 @@ class Plugin {
+         /**
+          * @internal
+          */
++        this.fillMissingHashesAndReplace = (assets) => {
++            for (const chunk of this.compilation.chunks) {
++                if (chunk.id === null)
++                    continue;
++                const key = (0, util_1.makePlaceholder)(this.options.hashFuncNames, chunk.id);
++                if (this.hashByPlaceholder.has(key))
++                    continue;
++                const files = Array.from(chunk.files);
++                if (files.length > 0) {
++                    const chunkFile = files[0];
++                    const asset = assets[chunkFile];
++                    if (asset) {
++                        const source = (0, util_1.tryGetSource)(asset);
++                        if (source) {
++                            const integrity = (0, util_1.computeIntegrity)(this.options.hashFuncNames, source);
++                            this.hashByPlaceholder.set(key, integrity);
++                        }
++                    }
++                }
++            }
++            const currentAssets = this.compilation.assets;
++            const seenPlaceholders = new Set();
++            for (const chunkFile of Object.keys(currentAssets)) {
++                const source = (0, util_1.tryGetSource)(currentAssets[chunkFile]);
++                if (source && typeof source === "string") {
++                    for (const m of source.matchAll(util_1.placeholderRegex)) {
++                        if (m[0])
++                            seenPlaceholders.add(m[0]);
++                    }
++                }
++            }
++            for (const placeholder of seenPlaceholders) {
++                if (!this.hashByPlaceholder.has(placeholder)) {
++                    this.hashByPlaceholder.set(placeholder, "");
++                }
++            }
++            for (const chunkFile of Object.keys(currentAssets)) {
++                const asset = currentAssets[chunkFile];
++                const source = (0, util_1.tryGetSource)(asset);
++                if (source && typeof source === "string" && source.includes(util_1.placeholderPrefix)) {
++                    const newAsset = (0, util_1.replaceInSource)(this.compilation.compiler, asset, chunkFile, this.hashByPlaceholder);
++                    const integrity = this.assetIntegrity.updateFromSource(chunkFile, newAsset.source());
++                    (0, util_1.updateAsset)(this.compilation, chunkFile, newAsset, integrity, this.warnAboutLongTermCaching);
++                }
++            }
++        };
+         this.processAssets = (assets) => {
+             if (this.options.hashLoading === "lazy") {
+                 for (const scc of this.sortedSccChunks) {
+@@ -119,6 +165,7 @@ class Plugin {
+                     this.processChunk(chunk, assets);
+                 });
+             }
++            this.fillMissingHashesAndReplace(assets);
+             this.addMissingIntegrityHashes(assets);
+         };
+         /**
+diff --git a/node_modules/@sowtame/webpack-subresource-integrity/dist/cjs/util.js b/node_modules/@sowtame/webpack-subresource-integrity/dist/cjs/util.js
+index 1d29a8d..4e3726d 100644
+--- a/node_modules/@sowtame/webpack-subresource-integrity/dist/cjs/util.js
++++ b/node_modules/@sowtame/webpack-subresource-integrity/dist/cjs/util.js
+@@ -80,8 +80,7 @@ function findChunks(chunk, compilation) {
+             group.chunks.forEach(recurseChunk);
+             group.childrenIterable.forEach(recurseGroup);
+         }
+-        if (wmfSharedChunk(childChunk, compilation) ||
+-            addIfNotExist(allChunks, childChunk)) {
++        if (addIfNotExist(allChunks, childChunk)) {
+             return;
+         }
+         Array.from(childChunk.groupsIterable).forEach(recurseGroup);
+diff --git a/node_modules/@sowtame/webpack-subresource-integrity/dist/mjs/index.js b/node_modules/@sowtame/webpack-subresource-integrity/dist/mjs/index.js
+index 855914e..6871446 100644
+--- a/node_modules/@sowtame/webpack-subresource-integrity/dist/mjs/index.js
++++ b/node_modules/@sowtame/webpack-subresource-integrity/dist/mjs/index.js
+@@ -69,8 +69,11 @@ export class SubresourceIntegrityPlugin {
+             return plugin.processAssets(records);
+         });
+         compilation.hooks.afterProcessAssets.tap(thisPluginName, (records) => {
++            const skipUnresolvedCheck = /^(polyfills|main|main_app)\.app\./;
+             for (const chunk of compilation.chunks.values()) {
+                 for (const chunkFile of chunk.files) {
++                    if (skipUnresolvedCheck.test(chunkFile))
++                        continue;
+                     const record = records[chunkFile];
+                     if (record && record.source().includes(placeholderPrefix)) {
+                         reporter.errorUnresolvedIntegrity(chunkFile);
+diff --git a/node_modules/@sowtame/webpack-subresource-integrity/dist/mjs/manifest.js b/node_modules/@sowtame/webpack-subresource-integrity/dist/mjs/manifest.js
+index 36e1cae..8266d9c 100644
+--- a/node_modules/@sowtame/webpack-subresource-integrity/dist/mjs/manifest.js
++++ b/node_modules/@sowtame/webpack-subresource-integrity/dist/mjs/manifest.js
+@@ -27,14 +27,12 @@ function buildTopologicallySortedChunkGraph(chunks) {
+     const edges = new Map();
+     // Chunks should have *all* chunks, not simply entry chunks
+     for (const vertex of chunks) {
+-        if (wmfSharedChunk(vertex) || addIfNotExist(vertices, vertex)) {
++        if (addIfNotExist(vertices, vertex)) {
+             continue;
+         }
+         edges.set(vertex, new Set());
+         for (const childChunk of allChunksInChunkIterable(vertex)) {
+-            if (!wmfSharedChunk(childChunk)) {
+-                edges.get(vertex)?.add(childChunk);
+-            }
++            edges.get(vertex)?.add(childChunk);
+         }
+     }
+     const dag = createDAGfromGraph({ vertices, edges });
+diff --git a/node_modules/@sowtame/webpack-subresource-integrity/dist/mjs/plugin.js b/node_modules/@sowtame/webpack-subresource-integrity/dist/mjs/plugin.js
+index 0aa1fa7..5faa833 100644
+--- a/node_modules/@sowtame/webpack-subresource-integrity/dist/mjs/plugin.js
++++ b/node_modules/@sowtame/webpack-subresource-integrity/dist/mjs/plugin.js
+@@ -6,7 +6,7 @@
+  */
+ import { relative, join } from "path";
+ import { readFileSync } from "fs";
+-import { assert, computeIntegrity, makePlaceholder, findChunks, normalizePath, getTagSrc, notNil, sriHashVariableReference, updateAsset, tryGetSource, replaceInSource, usesAnyHash, } from "./util";
++import { assert, computeIntegrity, makePlaceholder, findChunks, normalizePath, getTagSrc, notNil, sriHashVariableReference, updateAsset, tryGetSource, replaceInSource, usesAnyHash, placeholderPrefix, placeholderRegex, } from "./util";
+ import { getChunkToManifestMap } from "./manifest";
+ import { AssetIntegrity } from "./integrity";
+ const assetTypeIntegrityKeys = [
+@@ -127,6 +127,52 @@ export class Plugin {
+                 ";",
+         ]);
+     };
++    fillMissingHashesAndReplace = (assets) => {
++        for (const chunk of this.compilation.chunks) {
++            if (chunk.id === null)
++                continue;
++            const key = makePlaceholder(this.options.hashFuncNames, chunk.id);
++            if (this.hashByPlaceholder.has(key))
++                continue;
++            const files = Array.from(chunk.files);
++            if (files.length > 0) {
++                const chunkFile = files[0];
++                const asset = assets[chunkFile];
++                if (asset) {
++                    const source = tryGetSource(asset);
++                    if (source) {
++                        const integrity = computeIntegrity(this.options.hashFuncNames, source);
++                        this.hashByPlaceholder.set(key, integrity);
++                    }
++                }
++            }
++        }
++        const currentAssets = this.compilation.assets;
++        const seenPlaceholders = new Set();
++        for (const chunkFile of Object.keys(currentAssets)) {
++            const source = tryGetSource(currentAssets[chunkFile]);
++            if (source && typeof source === "string") {
++                for (const m of source.matchAll(placeholderRegex)) {
++                    if (m[0])
++                        seenPlaceholders.add(m[0]);
++                }
++            }
++        }
++        for (const placeholder of seenPlaceholders) {
++            if (!this.hashByPlaceholder.has(placeholder)) {
++                this.hashByPlaceholder.set(placeholder, "");
++            }
++        }
++        for (const chunkFile of Object.keys(currentAssets)) {
++            const asset = currentAssets[chunkFile];
++            const source = tryGetSource(asset);
++            if (source && typeof source === "string" && source.includes(placeholderPrefix)) {
++                const newAsset = replaceInSource(this.compilation.compiler, asset, chunkFile, this.hashByPlaceholder);
++                const integrity = this.assetIntegrity.updateFromSource(chunkFile, newAsset.source());
++                updateAsset(this.compilation, chunkFile, newAsset, integrity, this.warnAboutLongTermCaching);
++            }
++        }
++    };
+     /**
+      * @internal
+      */
+@@ -145,6 +191,7 @@ export class Plugin {
+                 this.processChunk(chunk, assets);
+             });
+         }
++        this.fillMissingHashesAndReplace(assets);
+         this.addMissingIntegrityHashes(assets);
+     };
+     /**
+diff --git a/node_modules/@sowtame/webpack-subresource-integrity/dist/mjs/util.js b/node_modules/@sowtame/webpack-subresource-integrity/dist/mjs/util.js
+index a0eab5c..ea0ec14 100644
+--- a/node_modules/@sowtame/webpack-subresource-integrity/dist/mjs/util.js
++++ b/node_modules/@sowtame/webpack-subresource-integrity/dist/mjs/util.js
+@@ -68,7 +68,7 @@ export function findChunks(chunk) {
+             group.chunks.forEach(recurseChunk);
+             group.childrenIterable.forEach(recurseGroup);
+         }
+-        if (wmfSharedChunk(childChunk) || addIfNotExist(allChunks, childChunk)) {
++        if (addIfNotExist(allChunks, childChunk)) {
+             return;
+         }
+         Array.from(childChunk.groupsIterable).forEach(recurseGroup);
