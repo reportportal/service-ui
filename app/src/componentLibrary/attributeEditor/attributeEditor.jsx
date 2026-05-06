@@ -105,12 +105,12 @@ export const AttributeEditor = ({
       keyEditorRef.current.focus();
       refFunction?.(keyEditorRef.current);
     }
-  }, []);
+  }, [refFunction]);
 
   useEffect(() => {
     const { key, value } = attribute;
     setState({ key, value, errors: getValidationErrors(key, value), isKeyEdited: false });
-  }, [attribute]);
+  }, [attribute, getValidationErrors]);
 
   const prevShowValidationErrorsRef = useRef(null);
   useEffect(() => {
