@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useDebouncedSpinner } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { showErrorNotification } from 'controllers/notification';
@@ -33,8 +32,8 @@ interface ExecutionItem {
 }
 
 export const useExecutionDetails = (executionId: number | null) => {
-  const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const [executionDetails, setExecutionDetails] = useState<ExecutionItem | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const projectKey = useSelector(projectKeySelector);
   const launchId = useManualLaunchId();
   const dispatch = useDispatch();
@@ -46,11 +45,11 @@ export const useExecutionDetails = (executionId: number | null) => {
     }
 
     const abortController = new AbortController();
+    setExecutionDetails(null);
+    setIsLoading(true);
 
     const fetchExecutionDetails = async () => {
       try {
-        showSpinner();
-
         const response = await fetch<ExecutionItem>(
           (URLS as UrlsHelper).manualLaunchExecutionById(projectKey, launchId, executionId),
           {
@@ -71,7 +70,7 @@ export const useExecutionDetails = (executionId: number | null) => {
         );
       } finally {
         if (!abortController.signal.aborted) {
-          hideSpinner();
+          setIsLoading(false);
         }
       }
     };

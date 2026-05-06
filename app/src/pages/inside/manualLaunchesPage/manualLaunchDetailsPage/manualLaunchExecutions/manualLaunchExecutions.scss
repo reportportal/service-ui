@@ -183,7 +183,7 @@ $sidebar-width: calc(100vw - 408px);
     outline: 1px solid var(--rp-ui-base-topaz-focused);
   }
 
-  &.selected :global([class*='table-row-content']) {
+  &:has(.selected) :global([class*='table-row-content']) {
     outline: 2px solid var(--rp-ui-base-topaz-focused);
   }
 

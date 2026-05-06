@@ -174,12 +174,15 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
             {executionDetails.testCaseDisplayId ?? executionDetails.testCaseId}
           </Link>
         </div>
-        {executionDetails.startedAt && (
-          <div className={cx('meta-row-item')}>
-            <RerunIcon />
-            <span className={cx('meta-value')}>{formatTimestamp(executionDetails.startedAt)}</span>
-          </div>
-        )}
+        {executionDetails.startedAt &&
+          executionDetails.executionStatus !== ExecutionStatus.TO_RUN && (
+            <div className={cx('meta-row-item')}>
+              <RerunIcon />
+              <span className={cx('meta-value')}>
+                {formatTimestamp(executionDetails.startedAt)}
+              </span>
+            </div>
+          )}
         {executionDetails.duration != null && (
           <div className={cx('meta-row-item')}>
             <DurationIcon />
@@ -259,6 +262,20 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
       >
         {isScenarioProvided && <Scenario scenario={executionDetails.manualScenario} />}
       </CollapsibleSection>
+      {executionDetails?.manualScenario?.manualScenarioType === TestCaseManualScenario.TEXT && (
+        <CollapsibleSection
+          title={formatMessage(commonMessages.attachments)}
+          defaultMessage={formatMessage(commonMessages.noAttachmentsAdded)}
+        >
+          {!isEmpty(executionDetails.manualScenario?.attachments) && (
+            <AttachmentList
+              attachments={executionDetails.manualScenario.attachments}
+              className={cx('attachments-list')}
+              withPreview
+            />
+          )}
+        </CollapsibleSection>
+      )}
     </div>
   );
 

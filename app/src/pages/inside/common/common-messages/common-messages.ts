@@ -53,6 +53,10 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'Common.noExecutions',
     defaultMessage: 'No executions',
   },
+  noAttachmentsAdded: {
+    id: 'Common.noAttachmentsAdded',
+    defaultMessage: 'No attachments added',
+  },
   copyId: {
     id: 'Common.copyId',
     defaultMessage: 'Copy ID',
