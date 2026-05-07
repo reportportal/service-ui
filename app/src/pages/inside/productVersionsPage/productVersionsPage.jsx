@@ -14,16 +14,35 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import { useEffect } from 'react';
 
-import { payloadSelector } from 'controllers/pages';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { getTmsOverride } from 'controllers/appInfo/utils';
+import { PROJECT_DASHBOARD_PAGE } from 'controllers/pages/constants';
+import { payloadSelector, urlOrganizationAndProjectSelector } from 'controllers/pages';
 
 import { ProductVersionPage } from 'pages/inside/productVersionPage';
-import { useSelector } from 'react-redux';
 import { ProductVersionsPageContent } from './productVersionsPageContent';
 
 export const ProductVersionsPage = () => {
+  const dispatch = useDispatch();
+  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
   const { productVersionId } = useSelector(payloadSelector);
+  const isShowInProgressTmsFeatures = Boolean(getTmsOverride());
+
+  useEffect(() => {
+    if (!isShowInProgressTmsFeatures) {
+      dispatch({
+        type: PROJECT_DASHBOARD_PAGE,
+        payload: { organizationSlug, projectSlug },
+      });
+    }
+  }, [dispatch, isShowInProgressTmsFeatures, organizationSlug, projectSlug]);
+
+  if (!isShowInProgressTmsFeatures) {
+    return null;
+  }
 
   if (productVersionId) {
     return <ProductVersionPage productVersionId={productVersionId} />;

@@ -56,6 +56,7 @@ import MilestonesIcon from 'common/img/sidebar/milestones-icon-inline.svg';
 import { projectNameSelector } from 'controllers/project';
 import { activeOrganizationNameSelector } from 'controllers/organization';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
+import { getTmsOverride } from 'controllers/appInfo/utils';
 import { messages } from '../../messages';
 
 const ORGANIZATION_CONTROL = 'Organization control';
@@ -80,6 +81,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
   const getSidebarItems = () => {
     let menuCounter = 0;
     const menuStep = 10;
+    const isShowInProgressTmsFeatures = Boolean(getTmsOverride());
 
     const sidebarItems = [
       {
@@ -173,20 +175,24 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         message: formatMessage(messages.milestones),
         menuOrder: (menuCounter += menuStep),
       },
-      {
-        onClick: (isSidebarCollapsed) =>
-          onClickButton({
-            itemName: messages.productVersions.defaultMessage,
-            isSidebarCollapsed,
-          }),
-        link: {
-          type: PRODUCT_VERSIONS_PAGE,
-          payload: { organizationSlug, projectSlug },
-        },
-        icon: ProductVersionsIcon,
-        message: formatMessage(messages.productVersions),
-        menuOrder: (menuCounter += menuStep),
-      },
+      ...(isShowInProgressTmsFeatures
+        ? [
+            {
+              onClick: (isSidebarCollapsed) =>
+                onClickButton({
+                  itemName: messages.productVersions.defaultMessage,
+                  isSidebarCollapsed,
+                }),
+              link: {
+                type: PRODUCT_VERSIONS_PAGE,
+                payload: { organizationSlug, projectSlug },
+              },
+              icon: ProductVersionsIcon,
+              message: formatMessage(messages.productVersions),
+              menuOrder: (menuCounter += menuStep),
+            },
+          ]
+        : []),
       {
         onClick: (isSidebarCollapsed) =>
           onClickButton({ itemName: messages.projectsSettings.defaultMessage, isSidebarCollapsed }),
