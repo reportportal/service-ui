@@ -74,6 +74,16 @@
   color: var(--rp-ui-base-almost-black);
 }
 
+.id-link {
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: none;
+    color: var(--rp-ui-base-topaz-hover)
+  }
+}
+
 .content-wrapper {
   display: flex;
   flex-direction: column;

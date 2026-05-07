@@ -191,6 +191,8 @@ export const ManualLaunchExecutions = ({
       handleExecutionNameClick(execution);
     };
 
+    const isSelected = execution.id === selectedExecutionId;
+
     return {
       id: execution.id,
       name: {
@@ -199,7 +201,7 @@ export const ManualLaunchExecutions = ({
           <div
             role="button"
             tabIndex={0}
-            className={cx('execution-name-cell', 'execution-cell-button')}
+            className={cx('execution-name-cell', 'execution-cell-button', { selected: isSelected })}
             onClick={handleOpenSidePanel}
             onKeyDown={handleNameCellKeyDown}
           >
@@ -224,13 +226,27 @@ export const ManualLaunchExecutions = ({
       steps: {
         content: stepsCount ?? '',
         component: (
-          <button type="button" className={cx('execution-steps-cell', 'execution-cell-button')} onClick={handleOpenSidePanel}>{stepsCount === null ? '—' : stepsCount}</button>
+          <button
+            type="button"
+            className={cx('execution-steps-cell', 'execution-cell-button', {
+              selected: isSelected,
+            })}
+            onClick={handleOpenSidePanel}
+          >
+            {stepsCount === null ? '—' : stepsCount}
+          </button>
         ),
       },
       status: {
         content: execution.executionStatus,
         component: (
-          <button type="button" className={cx('execution-status-cell', 'execution-cell-button')} onClick={handleOpenSidePanel}>
+          <button
+            type="button"
+            className={cx('execution-status-cell', 'execution-cell-button', {
+              selected: isSelected,
+            })}
+            onClick={handleOpenSidePanel}
+          >
             <ExecutionStatusChip status={execution.executionStatus} />
           </button>
         ),
