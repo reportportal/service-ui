@@ -169,7 +169,7 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
             }}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Open test case in a new tab"
+            aria-label={formatMessage(messages.openTestCaseInNewTab)}
           >
             {executionDetails.testCaseDisplayId ?? executionDetails.testCaseId}
           </Link>
