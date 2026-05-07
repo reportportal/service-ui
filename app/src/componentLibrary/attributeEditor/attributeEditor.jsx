@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
@@ -62,6 +62,7 @@ export const AttributeEditor = ({
   editorDefaultOpen,
   autocompleteProps,
   showValidationErrors,
+  forceValidateVersion,
   isAttributeKeyRequired,
   isAttributeValueRequired,
   allowCustomValues = true,
@@ -69,19 +70,17 @@ export const AttributeEditor = ({
 }) => {
   const [keyTouched, setTouchKey] = useState(false);
   const [valueTouched, setTouchValue] = useState(false);
+  const [forcedTouched, setForcedTouched] = useState(false);
 
-  const getAttributeKeyValidator = (key) =>
-    isAttributeKeyRequired ? requiredAttributeKeyValidator(key) : attributeKeyValidator(key);
-
-  const getAttributeValueValidator = (value) =>
-    isAttributeValueRequired
-      ? attributeValueValidator(value)
-      : attributeFilterValueValidator(value);
-
-  const getValidationErrors = (key, value) => ({
-    key: getAttributeKeyValidator(key),
-    value: getAttributeValueValidator(value),
-  });
+  const getValidationErrors = useCallback(
+    (key, value) => ({
+      key: isAttributeKeyRequired ? requiredAttributeKeyValidator(key) : attributeKeyValidator(key),
+      value: isAttributeValueRequired
+        ? attributeValueValidator(value)
+        : attributeFilterValueValidator(value),
+    }),
+    [isAttributeKeyRequired, isAttributeValueRequired],
+  );
 
   const keyEditorRef = useRef(null);
 
@@ -96,6 +95,7 @@ export const AttributeEditor = ({
     setState({ key: '', value: '', errors: getValidationErrors('', ''), isKeyEdited: false });
     setTouchValue(false);
     setTouchKey(false);
+    setForcedTouched(false);
   };
 
   useEffect(() => {
@@ -103,19 +103,25 @@ export const AttributeEditor = ({
       keyEditorRef.current.focus();
       refFunction?.(keyEditorRef.current);
     }
-  }, []);
+  }, [refFunction]);
 
   useEffect(() => {
     const { key, value } = attribute;
     setState({ key, value, errors: getValidationErrors(key, value), isKeyEdited: false });
-  }, [attribute]);
+  }, [attribute, getValidationErrors]);
 
+  // null sentinels ensure forcedTouched only fires on changes, never on initial mount
+  const prevValidationRef = useRef({ showValidationErrors: null, forceValidateVersion: null });
   useEffect(() => {
-    if (showValidationErrors) {
-      setTouchKey(true);
-      setTouchValue(true);
+    const prev = prevValidationRef.current;
+    if (
+      (prev.showValidationErrors !== null && showValidationErrors) ||
+      (prev.forceValidateVersion !== null && forceValidateVersion)
+    ) {
+      setForcedTouched(true);
     }
-  }, [showValidationErrors]);
+    prevValidationRef.current = { showValidationErrors, forceValidateVersion };
+  }, [showValidationErrors, forceValidateVersion]);
 
   const byKeyComparator = (attr, item, key, value) => attr.key === item && attr.value === value;
 
@@ -135,6 +141,7 @@ export const AttributeEditor = ({
       value,
       errors: getValidationErrors(state.key, value),
     });
+    setTouchValue(true);
   };
 
   const isAttributeUnique = () =>
@@ -152,10 +159,12 @@ export const AttributeEditor = ({
     !isAttributeEmpty() &&
     !state.isKeyEdited;
 
+  const handleShowErrors = () => {
+    setTouchKey(true);
+    setTouchValue(true);
+  };
+
   const handleSubmit = () => {
-    if (!isFormValid()) {
-      return;
-    }
     const { key, value } = state;
     onConfirm({
       key,
@@ -220,7 +229,7 @@ export const AttributeEditor = ({
       <FieldErrorHint
         provideHint={false}
         error={state.errors.key}
-        touched={keyTouched}
+        touched={keyTouched || forcedTouched}
         setTouch={setTouchKey}
         dataAutomationId="keyField"
       >
@@ -247,7 +256,7 @@ export const AttributeEditor = ({
       <FieldErrorHint
         provideHint={false}
         error={state.errors.value}
-        touched={valueTouched}
+        touched={valueTouched || forcedTouched}
         setTouch={setTouchValue}
         dataAutomationId="valueField"
       >
@@ -273,8 +282,8 @@ export const AttributeEditor = ({
           // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
           tabIndex={isValidForm ? 0 : -1}
           className={cx('check-btn', { disabled: !isValidForm })}
-          onClick={isValidForm ? handleSubmit : null}
-          onKeyDown={isValidForm ? handleKeyDown(handleSubmit) : null}
+          onClick={isValidForm ? handleSubmit : handleShowErrors}
+          onKeyDown={handleKeyDown(isValidForm ? handleSubmit : handleShowErrors)}
           data-automation-id="saveAttributeButton"
         >
           {Parser(CheckIcon)}
@@ -310,6 +319,7 @@ AttributeEditor.propTypes = {
   editorDefaultOpen: PropTypes.bool,
   autocompleteProps: PropTypes.object,
   showValidationErrors: PropTypes.bool,
+  forceValidateVersion: PropTypes.number,
   isAttributeKeyRequired: PropTypes.bool,
   isAttributeValueRequired: PropTypes.bool,
   allowCustomValues: PropTypes.bool,
@@ -332,6 +342,7 @@ AttributeEditor.defaultProps = {
   editorDefaultOpen: false,
   autocompleteProps: {},
   showValidationErrors: false,
+  forceValidateVersion: 0,
   isAttributeKeyRequired: false,
   isAttributeValueRequired: true,
   allowCustomValues: true,

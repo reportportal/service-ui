@@ -61,6 +61,7 @@ export const AttributeList = ({
   allowCustomValues,
   addButtonClassName,
   showValidationErrors,
+  forceValidateVersion,
   isAttributeKeyRequired,
   isAttributeValueRequired,
   maxCellWidth,
@@ -283,6 +284,7 @@ export const AttributeList = ({
           autocompleteProps={autocompleteProps}
           allowCustomValues={allowCustomValues}
           showValidationErrors={showValidationErrors}
+          forceValidateVersion={forceValidateVersion}
           isAttributeKeyRequired={isAttributeKeyRequired}
           isAttributeValueRequired={isAttributeValueRequired}
         />
@@ -381,6 +383,7 @@ AttributeList.propTypes = {
   allowCustomValues: PropTypes.bool,
   addButtonClassName: PropTypes.string,
   showValidationErrors: PropTypes.bool,
+  forceValidateVersion: PropTypes.number,
   isAttributeKeyRequired: PropTypes.bool,
   isAttributeValueRequired: PropTypes.bool,
   maxCellWidth: PropTypes.number,
@@ -403,6 +406,7 @@ AttributeList.defaultProps = {
   allowCustomValues: true,
   addButtonClassName: '',
   showValidationErrors: false,
+  forceValidateVersion: 0,
   isAttributeKeyRequired: false,
   isAttributeValueRequired: true,
   maxCellWidth: undefined,
