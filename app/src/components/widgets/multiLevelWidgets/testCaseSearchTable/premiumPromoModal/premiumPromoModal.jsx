@@ -63,7 +63,14 @@ export const PremiumPromoModal = ({ onExplorePlans, onContactUs, onNotNow }) => 
       title={modalTitle}
       onClose={handleClose}
       footerNode={
-        <Button className={cx('not-now-button')} variant="text" onClick={() => { onNotNow?.(); handleClose(); }}>
+        <Button
+          className={cx('not-now-button')}
+          variant="text"
+          onClick={() => {
+            onNotNow?.();
+            handleClose();
+          }}
+        >
           {formatMessage(messages.notNowButton)}
         </Button>
       }
