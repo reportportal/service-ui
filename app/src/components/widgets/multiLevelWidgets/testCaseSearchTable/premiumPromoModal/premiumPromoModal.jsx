@@ -62,10 +62,12 @@ export const PremiumPromoModal = ({ onExplorePlans, onContactUs, onNotNow }) => 
       className={cx('premium-promo-modal')}
       title={modalTitle}
       onClose={handleClose}
+      scrollable
       footerNode={
         <Button
           className={cx('not-now-button')}
           variant="text"
+          adjustWidthOn="content"
           onClick={() => {
             onNotNow?.();
             handleClose();
