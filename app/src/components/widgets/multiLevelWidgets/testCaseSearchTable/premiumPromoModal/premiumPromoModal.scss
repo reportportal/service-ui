@@ -16,6 +16,7 @@
 
 .premium-promo-modal {
   position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   width: 660px;
