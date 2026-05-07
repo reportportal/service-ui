@@ -62,6 +62,7 @@ export const AttributeEditor = ({
   editorDefaultOpen,
   autocompleteProps,
   showValidationErrors,
+  forceValidateVersion,
   isAttributeKeyRequired,
   isAttributeValueRequired,
   allowCustomValues = true,
@@ -109,13 +110,18 @@ export const AttributeEditor = ({
     setState({ key, value, errors: getValidationErrors(key, value), isKeyEdited: false });
   }, [attribute, getValidationErrors]);
 
-  const prevShowValidationErrorsRef = useRef(null);
+  // null sentinels ensure forcedTouched only fires on changes, never on initial mount
+  const prevValidationRef = useRef({ showValidationErrors: null, forceValidateVersion: null });
   useEffect(() => {
-    if (prevShowValidationErrorsRef.current !== null && showValidationErrors) {
+    const prev = prevValidationRef.current;
+    if (
+      (prev.showValidationErrors !== null && showValidationErrors) ||
+      (prev.forceValidateVersion !== null && forceValidateVersion)
+    ) {
       setForcedTouched(true);
     }
-    prevShowValidationErrorsRef.current = showValidationErrors;
-  }, [showValidationErrors]);
+    prevValidationRef.current = { showValidationErrors, forceValidateVersion };
+  }, [showValidationErrors, forceValidateVersion]);
 
   const byKeyComparator = (attr, item, key, value) => attr.key === item && attr.value === value;
 
@@ -312,7 +318,8 @@ AttributeEditor.propTypes = {
   valueLabel: PropTypes.string,
   editorDefaultOpen: PropTypes.bool,
   autocompleteProps: PropTypes.object,
-  showValidationErrors: PropTypes.number,
+  showValidationErrors: PropTypes.bool,
+  forceValidateVersion: PropTypes.number,
   isAttributeKeyRequired: PropTypes.bool,
   isAttributeValueRequired: PropTypes.bool,
   allowCustomValues: PropTypes.bool,
@@ -334,7 +341,8 @@ AttributeEditor.defaultProps = {
   valueLabel: '',
   editorDefaultOpen: false,
   autocompleteProps: {},
-  showValidationErrors: 0,
+  showValidationErrors: false,
+  forceValidateVersion: 0,
   isAttributeKeyRequired: false,
   isAttributeValueRequired: true,
   allowCustomValues: true,
