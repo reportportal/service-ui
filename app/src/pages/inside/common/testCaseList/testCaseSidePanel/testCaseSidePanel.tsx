@@ -21,8 +21,10 @@ import { useTracking } from 'react-tracking';
 import Parser from 'html-react-parser';
 
 import {
+  SIDE_PANEL_QUICK_ACTION_ELEMENT_NAME,
   TEST_CASE_LIBRARY_EVENTS,
   TEST_CASE_MENU_ELEMENT_NAME,
+  TEST_CASE_PLACE,
   type TestCaseMenuElementName,
 } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { Button, MeatballMenuIcon, Tooltip, CopyIcon, RerunIcon } from '@reportportal/ui-kit';
@@ -224,6 +226,12 @@ export const TestCaseSidePanel = memo(
     };
 
     const handleOpenDetailsClick = () => {
+      trackEvent(
+        TEST_CASE_LIBRARY_EVENTS.clickSidePanelQuickAction(
+          SIDE_PANEL_QUICK_ACTION_ELEMENT_NAME.OPEN_DETAILS,
+          testCase.id?.toString(),
+        ),
+      );
       dispatch({
         type: TEST_CASE_LIBRARY_PAGE,
         payload: {
@@ -235,6 +243,12 @@ export const TestCaseSidePanel = memo(
     };
 
     const handleAddToTestPlanClick = () => {
+      trackEvent(
+        TEST_CASE_LIBRARY_EVENTS.clickSidePanelQuickAction(
+          SIDE_PANEL_QUICK_ACTION_ELEMENT_NAME.ADD_TO_TEST_PLAN,
+          testCase.id?.toString(),
+        ),
+      );
       openAddTestCasesToTestPlanModal({
         selectedTestCaseIds: [testCase.id],
         isSingleTestCaseMode: true,
@@ -353,6 +367,7 @@ export const TestCaseSidePanel = memo(
               <AddToLaunchButton
                 manualScenario={testCase?.manualScenario}
                 testCaseId={testCase.id}
+                place={TEST_CASE_PLACE.SIDE_PANEL}
               />
               <Button
                 variant="primary"

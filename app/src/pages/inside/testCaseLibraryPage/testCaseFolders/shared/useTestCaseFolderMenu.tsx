@@ -17,7 +17,11 @@
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 
-import { TEST_CASE_LIBRARY_EVENTS } from 'analyticsEvents/testCaseLibraryPageEvents';
+import {
+  FOLDER_POPOVER_ELEMENT_NAME,
+  type FolderPopoverElementName,
+  TEST_CASE_LIBRARY_EVENTS,
+} from 'analyticsEvents/testCaseLibraryPageEvents';
 import { TransformedFolder } from 'controllers/testCase';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PopoverItem } from 'pages/common/popoverControl';
@@ -53,7 +57,12 @@ export const useTestCaseFolderMenu = ({
 
   const { canManageTestCases } = useUserPermissions();
 
+  const trackFolderPopoverMenu = (elementName: FolderPopoverElementName) => {
+    trackEvent(TEST_CASE_LIBRARY_EVENTS.chooseFolderPopoverMenu(elementName));
+  };
+
   const handleDeleteFolder = () => {
+    trackFolderPopoverMenu(FOLDER_POPOVER_ELEMENT_NAME.DELETE_FOLDER);
     openDeleteModal({
       folder,
       activeFolderId: activeFolder,
@@ -61,18 +70,30 @@ export const useTestCaseFolderMenu = ({
     });
   };
 
-  const handleRenameFolder = () => openRenameModal({ folder });
+  const handleRenameFolder = () => {
+    trackFolderPopoverMenu(FOLDER_POPOVER_ELEMENT_NAME.RENAME_FOLDER);
+    openRenameModal({ folder });
+  };
 
-  const handleDuplicateFolder = () => openDuplicateModal({ folder });
+  const handleDuplicateFolder = () => {
+    trackFolderPopoverMenu(FOLDER_POPOVER_ELEMENT_NAME.DUPLICATE_SUBFOLDER);
+    openDuplicateModal({ folder });
+  };
 
-  const handleMoveFolder = () => openMoveModal({ folder });
+  const handleMoveFolder = () => {
+    trackFolderPopoverMenu(FOLDER_POPOVER_ELEMENT_NAME.MOVE_FOLDER_TO);
+    openMoveModal({ folder });
+  };
 
   const handleImportTestCase = () => {
     trackEvent(TEST_CASE_LIBRARY_EVENTS.CLICK_IMPORT_TEST_CASES);
     openImportTestCaseModal({ folderId: folder.id });
   };
 
-  const handleCreateSubfolder = () => openCreateSubfolderModal({ folder });
+  const handleCreateSubfolder = () => {
+    trackFolderPopoverMenu(FOLDER_POPOVER_ELEMENT_NAME.CREATE_SUBFOLDER);
+    openCreateSubfolderModal({ folder });
+  };
 
   const testCaseFolderTooltipItems: PopoverItem[] = canManageTestCases
     ? [

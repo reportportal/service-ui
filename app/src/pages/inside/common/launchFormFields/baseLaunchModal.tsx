@@ -77,7 +77,7 @@ export const BaseLaunchModal = ({
   );
 
   const trackedSubmit = handleSubmit((values: LaunchFormData) => {
-    onSubmitClick?.();
+    onSubmitClick?.(activeMode);
     return handleCreateLaunch(values);
   }) as (event?: FormEvent | MouseEvent<HTMLButtonElement>) => void;
 

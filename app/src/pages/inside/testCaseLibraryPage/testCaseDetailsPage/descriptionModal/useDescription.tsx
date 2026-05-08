@@ -29,7 +29,7 @@ export const useDescription = (testCaseId: number) => {
   const projectKey = useSelector(projectKeySelector);
   const { showSuccessNotification, showErrorNotification } = useNotification();
 
-  const updateDescription = async (description: string) => {
+  const updateDescription = async (description: string): Promise<boolean> => {
     try {
       showSpinner();
 
@@ -43,10 +43,12 @@ export const useDescription = (testCaseId: number) => {
       dispatch(updateDescriptionSuccessAction(description));
       dispatch(hideModalAction());
       showSuccessNotification({ messageId: 'testCaseDescriptionUpdateSuccess' });
+      return true;
     } catch (error: unknown) {
       showErrorNotification({
         message: (error as Error).message,
       });
+      return false;
     } finally {
       hideSpinner();
     }

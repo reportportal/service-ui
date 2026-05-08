@@ -49,6 +49,15 @@ export const MainPageEmptyState = () => {
     openImportTestCaseModal();
   };
 
+  const handleDocumentationClick = () => {
+    trackEvent(TEST_CASE_LIBRARY_EVENTS.CLICK_DOCUMENTATION_LINK_EMPTY_STATE);
+  };
+
+  const handleCreateFolder = () => {
+    trackEvent(TEST_CASE_LIBRARY_EVENTS.CLICK_START_CREATE_FOLDER);
+    openCreateFolderModal();
+  };
+
   const benefits = [messages.createFolder, messages.addTestCases, messages.tagTestCases].map(
     (translation) => Parser(formatMessage(translation, {}, { ignoreTag: true })),
   );
@@ -58,7 +67,7 @@ export const MainPageEmptyState = () => {
       name: formatMessage(commonMessages.createFolder),
       dataAutomationId: 'createFolderButton',
       isCompact: true,
-      handleButton: openCreateFolderModal,
+      handleButton: handleCreateFolder,
     },
     {
       name: formatMessage(commonMessages.createTestCase),
@@ -83,6 +92,7 @@ export const MainPageEmptyState = () => {
         description={formatMessage(messages.emptyPageDescription)}
         imageType="docs"
         documentationLink={referenceDictionary.rpDoc}
+        handleDocumentationClick={handleDocumentationClick}
         buttons={buttons}
       />
       <NumerableBlock

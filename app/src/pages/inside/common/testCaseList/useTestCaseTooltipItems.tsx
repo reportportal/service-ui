@@ -21,6 +21,7 @@ import { useDispatch } from 'react-redux';
 import {
   TEST_CASE_LIBRARY_EVENTS,
   TEST_CASE_MENU_ELEMENT_NAME,
+  TEST_CASE_PLACE,
   type TestCaseMenuElementName,
 } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { TEST_CASE_LIBRARY_PAGE } from 'controllers/pages';
@@ -52,7 +53,11 @@ export const useTestCaseTooltipItems = ({ testCase }: TestCaseTooltipItemsProps)
 
   const trackPopoverMenu = (elementName: TestCaseMenuElementName) => {
     trackEvent(
-      TEST_CASE_LIBRARY_EVENTS.choosePopoverMenu(elementName, testCase?.id?.toString()),
+      TEST_CASE_LIBRARY_EVENTS.choosePopoverMenu(
+        elementName,
+        TEST_CASE_PLACE.MENU_TEST_CASE,
+        testCase?.id?.toString(),
+      ),
     );
   };
 

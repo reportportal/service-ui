@@ -20,13 +20,18 @@ import { useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { InjectedFormProps, reduxForm } from 'redux-form';
 
-import { TEST_CASE_LIBRARY_EVENTS } from 'analyticsEvents/testCaseLibraryPageEvents';
+import {
+  ADD_TO_LAUNCH_STATUS,
+  TEST_CASE_LIBRARY_EVENTS,
+  TEST_CASE_PLACE,
+} from 'analyticsEvents/testCaseLibraryPageEvents';
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { testCasesSelector } from 'controllers/testCase';
 import {
   BaseLaunchModal,
   LaunchFormData,
+  LaunchMode,
   INITIAL_LAUNCH_FORM_VALUES,
 } from 'pages/inside/common/launchFormFields';
 
@@ -45,6 +50,7 @@ const AddToLaunchModalComponent = ({
   selectedTestCasesIds,
   onClearSelection,
   isUncoveredTestsCheckboxAvailable,
+  place,
   ...reduxFormProps
 }: AddToLaunchModalProps & InjectedFormProps<LaunchFormData>) => {
   const { formatMessage } = useIntl();
@@ -69,6 +75,27 @@ const AddToLaunchModalComponent = ({
         });
   }, [selectedTestCasesIds.length, testCases, formatMessage]);
 
+  const handleSubmitClick = (mode: LaunchMode) => {
+    if (isBulk) {
+      trackEvent(TEST_CASE_LIBRARY_EVENTS.SUBMIT_BULK_ADD_TO_LAUNCH);
+      return;
+    }
+
+    if (place !== TEST_CASE_PLACE.SIDE_PANEL && place !== TEST_CASE_PLACE.DETAILS_PAGE) {
+      return;
+    }
+
+    trackEvent(
+      TEST_CASE_LIBRARY_EVENTS.submitSingleAddToLaunch({
+        place,
+        status:
+          mode === LaunchMode.NEW
+            ? ADD_TO_LAUNCH_STATUS.CREATE_NEW_LAUNCH
+            : ADD_TO_LAUNCH_STATUS.ADD_TO_EXISTING_LAUNCH,
+      }),
+    );
+  };
+
   return (
     <BaseLaunchModal
       {...reduxFormProps}
@@ -79,9 +106,7 @@ const AddToLaunchModalComponent = ({
       className={cx('add-to-launch-modal')}
       onClearSelection={onClearSelection}
       isUncoveredTestsCheckboxAvailable={isUncoveredTestsCheckboxAvailable}
-      {...(isBulk && {
-        onSubmitClick: () => trackEvent(TEST_CASE_LIBRARY_EVENTS.SUBMIT_BULK_ADD_TO_LAUNCH),
-      })}
+      onSubmitClick={handleSubmitClick}
     />
   );
 };

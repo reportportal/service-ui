@@ -26,6 +26,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import {
   TEST_CASE_LIBRARY_EVENTS,
   TEST_CASE_MENU_ELEMENT_NAME,
+  TEST_CASE_PLACE,
 } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { createClassnames } from 'common/utils';
 import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
@@ -96,6 +97,7 @@ export const TestCaseDetailsHeader = ({
     trackEvent(
       TEST_CASE_LIBRARY_EVENTS.clickTestCaseMenu(
         TEST_CASE_MENU_ELEMENT_NAME.HISTORY,
+        TEST_CASE_PLACE.DETAILS_PAGE,
         testCaseIdString,
       ),
     );
@@ -113,6 +115,7 @@ export const TestCaseDetailsHeader = ({
     trackEvent(
       TEST_CASE_LIBRARY_EVENTS.clickTestCaseMenu(
         TEST_CASE_MENU_ELEMENT_NAME.DELETE,
+        TEST_CASE_PLACE.DETAILS_PAGE,
         testCaseIdString,
       ),
     );
@@ -123,6 +126,7 @@ export const TestCaseDetailsHeader = ({
     trackEvent(
       TEST_CASE_LIBRARY_EVENTS.clickTestCaseMenu(
         TEST_CASE_MENU_ELEMENT_NAME.DUPLICATE,
+        TEST_CASE_PLACE.DETAILS_PAGE,
         testCaseIdString,
       ),
     );
@@ -238,6 +242,7 @@ export const TestCaseDetailsHeader = ({
               <AddToLaunchButton
                 manualScenario={testCase?.manualScenario}
                 testCaseId={testCase.id}
+                place={TEST_CASE_PLACE.DETAILS_PAGE}
               />
               <Button onClick={onAddToTestPlan} variant="primary">
                 {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}

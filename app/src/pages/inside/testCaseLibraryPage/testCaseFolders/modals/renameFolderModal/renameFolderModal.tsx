@@ -17,9 +17,14 @@
 import { MouseEvent, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { Modal } from '@reportportal/ui-kit';
 
+import {
+  FOLDER_POPOVER_ELEMENT_NAME,
+  TEST_CASE_LIBRARY_EVENTS,
+} from 'analyticsEvents/testCaseLibraryPageEvents';
 import { createClassnames, commonValidators } from 'common/utils';
 import { UseModalData } from 'common/hooks';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -60,6 +65,7 @@ const RenameFolderModalComponent = ({
   handleSubmit,
 }: RenameFolderModalProps & InjectedFormProps<FolderFormValues, RenameFolderModalProps>) => {
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const isLoadingFolder = useSelector(isLoadingFolderSelector);
   const { formatMessage } = useIntl();
 
@@ -70,6 +76,9 @@ const RenameFolderModalComponent = ({
   const hideModal = () => dispatch(hideModalAction());
 
   const onSubmit = (values: FolderFormValues) => {
+    trackEvent(
+      TEST_CASE_LIBRARY_EVENTS.submitFolderOperation(FOLDER_POPOVER_ELEMENT_NAME.RENAME_FOLDER),
+    );
     dispatch(
       renameFolderAction({
         folderName: values.folderName,

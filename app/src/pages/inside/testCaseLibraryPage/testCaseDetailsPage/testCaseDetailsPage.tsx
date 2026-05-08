@@ -19,8 +19,10 @@ import { isEmpty } from 'es-toolkit/compat';
 import { noop } from 'es-toolkit';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { BubblesLoader, Button, EditIcon, PlusIcon } from '@reportportal/ui-kit';
 
+import { TEST_CASE_LIBRARY_EVENTS } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { createClassnames } from 'common/utils';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
@@ -169,6 +171,7 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
 
 export const TestCaseDetailsPage = () => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { canManageTestCases } = useUserPermissions();
   const { openModal: openAddTestCasesToTestPlanModal } = useAddTestCasesToTestPlanModal();
   const { openModal: openDescriptionModal } = useDescriptionModal();
@@ -191,7 +194,11 @@ export const TestCaseDetailsPage = () => {
   const attributes = (testCaseDetails.attributes || []).filter(hasTagShape);
 
   const handleTagSelect = (tag: Tag) => {
-    addTag(tag).catch(noop);
+    addTag(tag)
+      .then(() => {
+        trackEvent(TEST_CASE_LIBRARY_EVENTS.submitAddTag(String(testCaseId)));
+      })
+      .catch(noop);
   };
 
   const handleTagRemove = (tagKey: string) => {

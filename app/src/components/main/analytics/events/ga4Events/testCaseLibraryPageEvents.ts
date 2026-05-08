@@ -25,6 +25,9 @@ export const TEST_CASE_PLACE = {
   POPOVER: 'popover',
   SIDE_PANEL: 'side_panel',
   DETAILS_PAGE: 'details_page',
+  MENU_TEST_CASE: 'menu_test_case',
+  FOLDERS_POPOVER: 'folders_popover',
+  EMPTY_STATE: 'test_case_library_empty_state',
 } as const;
 
 export type TestCasePlace = (typeof TEST_CASE_PLACE)[keyof typeof TEST_CASE_PLACE];
@@ -32,6 +35,11 @@ export type TestCasePlace = (typeof TEST_CASE_PLACE)[keyof typeof TEST_CASE_PLAC
 export const PLACE_POPOVER = TEST_CASE_PLACE.POPOVER;
 export const PLACE_SIDE_PANEL = TEST_CASE_PLACE.SIDE_PANEL;
 export const PLACE_DETAILS_PAGE = TEST_CASE_PLACE.DETAILS_PAGE;
+
+export type TestCaseMenuPlace =
+  | typeof TEST_CASE_PLACE.MENU_TEST_CASE
+  | typeof TEST_CASE_PLACE.SIDE_PANEL
+  | typeof TEST_CASE_PLACE.DETAILS_PAGE;
 
 const TEST_CASE_MODAL = {
   CREATE_TEST_CASE: 'create_test_case',
@@ -43,6 +51,16 @@ const TEST_CASE_MODAL = {
   ADD_TO_TEST_PLAN: 'add_to_test_plan',
   ADD_TO_LAUNCH: 'add_to_launch',
   MOVE_TO_FOLDER: 'move_to_folder',
+  CREATE_FOLDER: 'create_folder',
+  CREATE_SUBFOLDER: 'create_subfolder',
+  DUPLICATE_SUBFOLDER: 'duplicate_subfolder',
+  MOVE_FOLDER: 'move_folder',
+  RENAME_FOLDER: 'rename_folder',
+  DELETE_FOLDER: 'delete_folder',
+  CHANGE_PRIORITY: 'change_priority',
+  EDIT_TAGS: 'edit_tags',
+  EDIT_DESCRIPTION: 'edit_description',
+  DUPLICATE_TO_FOLDER: 'duplicate_to_folder',
 } as const;
 
 const TEST_CASE_ELEMENT = {
@@ -61,6 +79,19 @@ const TEST_CASE_ELEMENT = {
   SUBMIT_ADD_TO_TEST_PLAN: 'submit_add_to_test_plan',
   SUBMIT_BULK_ADD_TO_LAUNCH: 'submit_bulk_add_to_test_launch',
   SUBMIT_BULK_MOVE_TO_FOLDER: 'submit_bulk_move_to_folder',
+  START_CREATE_FOLDER: 'start_create_folder',
+  SUBMIT_CREATE_FOLDER: 'submit_create_folder',
+  SUBMIT_CREATE_SUBFOLDER: 'submit_create_subfolder',
+  SUBMIT_DUPLICATE_SUBFOLDER: 'submit_duplicate_subfolder',
+  SUBMIT_MOVE_FOLDER_TO: 'submit_move_folder_to',
+  SUBMIT_RENAME_FOLDER: 'submit_rename_folder',
+  SUBMIT_DELETE_FOLDER: 'submit_delete_folder',
+  SUBMIT_SINGLE_ADD_TO_LAUNCH: 'submit_single_add_to_test_launch',
+  SUBMIT_ADD_TAG: 'submit_add_tag',
+  SUBMIT_EDIT_DESCRIPTION: 'submit_edit_description',
+  SUBMIT_BULK_CHANGE_PRIORITY: 'submit_bulk_menu_change_priority',
+  SUBMIT_BULK_EDIT_TAG: 'submit_bulk_menu_edit_tag',
+  SUBMIT_BULK_DUPLICATE_TO_FOLDER: 'submit_bulk_menu_duplicate_to_folder',
 } as const;
 
 export const TEST_CASE_MENU_ELEMENT_NAME = {
@@ -82,9 +113,77 @@ export const TEST_CASE_BULK_OPERATION_ELEMENT_NAME = {
   CHANGE_PRIORITY: 'bulk_menu_change_priority',
   ADD_TO_LAUNCH: 'bulk_menu_add_to_launch',
   DELETE: 'bulk_menu_delete',
+  DUPLICATE_TO_FOLDER: 'bulk_menu_duplicate_to_folder',
 } as const;
 export type TestCaseBulkOperationElementName =
   (typeof TEST_CASE_BULK_OPERATION_ELEMENT_NAME)[keyof typeof TEST_CASE_BULK_OPERATION_ELEMENT_NAME];
+
+export const FOLDER_POPOVER_ELEMENT_NAME = {
+  DUPLICATE_SUBFOLDER: 'menu_duplicate_subfolder',
+  CREATE_SUBFOLDER: 'menu_create_subfolder',
+  MOVE_FOLDER_TO: 'menu_move_folder_to',
+  RENAME_FOLDER: 'menu_rename_folder',
+  DELETE_FOLDER: 'menu_delete_folder',
+} as const;
+export type FolderPopoverElementName =
+  (typeof FOLDER_POPOVER_ELEMENT_NAME)[keyof typeof FOLDER_POPOVER_ELEMENT_NAME];
+
+export const SIDE_PANEL_QUICK_ACTION_ELEMENT_NAME = {
+  OPEN_DETAILS: 'open_details',
+  ADD_TO_LAUNCH: 'add_to_launch',
+  ADD_TO_TEST_PLAN: 'add_to_test_plan',
+} as const;
+export type SidePanelQuickActionElementName =
+  (typeof SIDE_PANEL_QUICK_ACTION_ELEMENT_NAME)[keyof typeof SIDE_PANEL_QUICK_ACTION_ELEMENT_NAME];
+
+export const FOLDER_TREE_VIEW_CONTROL_ELEMENT_NAME = {
+  FLAT_VIEW_ACTIVE: 'flat_view_active',
+  EXPAND_ALL: 'expand_all',
+  COLLAPSE_ALL: 'collapse_all',
+} as const;
+export type FolderTreeViewControlElementName =
+  (typeof FOLDER_TREE_VIEW_CONTROL_ELEMENT_NAME)[keyof typeof FOLDER_TREE_VIEW_CONTROL_ELEMENT_NAME];
+
+export const CREATE_FOLDER_STATUS = {
+  ACTIVE_SUBFOLDER: 'active_subfolder',
+  DISABLE_SUBFOLDER: 'disable_subfolder',
+} as const;
+export type CreateFolderStatusType =
+  (typeof CREATE_FOLDER_STATUS)[keyof typeof CREATE_FOLDER_STATUS];
+
+export const ADD_TO_LAUNCH_STATUS = {
+  CREATE_NEW_LAUNCH: 'create_new_launch',
+  ADD_TO_EXISTING_LAUNCH: 'add_to_existing_launch',
+} as const;
+export type AddToLaunchStatusType =
+  (typeof ADD_TO_LAUNCH_STATUS)[keyof typeof ADD_TO_LAUNCH_STATUS];
+
+export type AddToLaunchPlace =
+  | typeof TEST_CASE_PLACE.SIDE_PANEL
+  | typeof TEST_CASE_PLACE.DETAILS_PAGE;
+
+export const FOLDER_OPERATION_SUBMIT_MAP = {
+  [FOLDER_POPOVER_ELEMENT_NAME.DUPLICATE_SUBFOLDER]: {
+    modal: TEST_CASE_MODAL.DUPLICATE_SUBFOLDER,
+    elementName: TEST_CASE_ELEMENT.SUBMIT_DUPLICATE_SUBFOLDER,
+  },
+  [FOLDER_POPOVER_ELEMENT_NAME.CREATE_SUBFOLDER]: {
+    modal: TEST_CASE_MODAL.CREATE_SUBFOLDER,
+    elementName: TEST_CASE_ELEMENT.SUBMIT_CREATE_SUBFOLDER,
+  },
+  [FOLDER_POPOVER_ELEMENT_NAME.MOVE_FOLDER_TO]: {
+    modal: TEST_CASE_MODAL.MOVE_FOLDER,
+    elementName: TEST_CASE_ELEMENT.SUBMIT_MOVE_FOLDER_TO,
+  },
+  [FOLDER_POPOVER_ELEMENT_NAME.RENAME_FOLDER]: {
+    modal: TEST_CASE_MODAL.RENAME_FOLDER,
+    elementName: TEST_CASE_ELEMENT.SUBMIT_RENAME_FOLDER,
+  },
+  [FOLDER_POPOVER_ELEMENT_NAME.DELETE_FOLDER]: {
+    modal: TEST_CASE_MODAL.DELETE_FOLDER,
+    elementName: TEST_CASE_ELEMENT.SUBMIT_DELETE_FOLDER,
+  },
+} as const;
 
 export const TEST_CASE_TEMPLATE_ICON = {
   STEP: 'step',
@@ -234,10 +333,12 @@ export const TEST_CASE_LIBRARY_EVENTS = {
   }),
   clickTestCaseMenu: (
     elementName: TestCaseMenuElementName,
+    place: TestCaseMenuPlace,
     testCaseId?: string,
   ) => ({
     ...CLICK,
     element_name: elementName,
+    place,
     ...(testCaseId !== undefined && { test_case_id: testCaseId }),
   }),
   submitDeleteTestCase: (testCaseId: string) => ({
@@ -248,10 +349,11 @@ export const TEST_CASE_LIBRARY_EVENTS = {
   }),
   choosePopoverMenu: (
     elementName: TestCaseMenuElementName,
+    place: TestCaseMenuPlace,
     testCaseId?: string,
   ) => ({
     ...CHOOSE,
-    place: TEST_CASE_PLACE.POPOVER,
+    place,
     element_name: elementName,
     ...(testCaseId !== undefined && { test_case_id: testCaseId }),
   }),
@@ -318,4 +420,85 @@ export const TEST_CASE_LIBRARY_EVENTS = {
     element_name: TEST_CASE_ELEMENT.SUBMIT_BULK_MOVE_TO_FOLDER,
     status,
   }),
+  CLICK_DOCUMENTATION_LINK_EMPTY_STATE: {
+    ...CLICK,
+    link_name: 'documentation',
+    place: TEST_CASE_PLACE.EMPTY_STATE,
+  },
+  CLICK_START_CREATE_FOLDER: {
+    ...CLICK,
+    element_name: TEST_CASE_ELEMENT.START_CREATE_FOLDER,
+  },
+  submitCreateFolder: (status: CreateFolderStatusType) => ({
+    ...CLICK,
+    modal: TEST_CASE_MODAL.CREATE_FOLDER,
+    element_name: TEST_CASE_ELEMENT.SUBMIT_CREATE_FOLDER,
+    status,
+  }),
+  chooseFolderPopoverMenu: (elementName: FolderPopoverElementName) => ({
+    ...CHOOSE,
+    place: TEST_CASE_PLACE.FOLDERS_POPOVER,
+    element_name: elementName,
+  }),
+  submitFolderOperation: (operation: FolderPopoverElementName) => {
+    const { modal, elementName } = FOLDER_OPERATION_SUBMIT_MAP[operation];
+    return {
+      ...CLICK,
+      modal,
+      element_name: elementName,
+    };
+  },
+  clickFolderTreeViewControl: (elementName: FolderTreeViewControlElementName) => ({
+    ...CLICK,
+    element_name: elementName,
+    place: TEST_CASE_PLACE.FOLDERS_POPOVER,
+  }),
+  clickSidePanelQuickAction: (
+    elementName: SidePanelQuickActionElementName,
+    testCaseId?: string,
+  ) => ({
+    ...CLICK,
+    place: TEST_CASE_PLACE.SIDE_PANEL,
+    element_name: elementName,
+    ...(testCaseId !== undefined && { test_case_id: testCaseId }),
+  }),
+  submitSingleAddToLaunch: (params: {
+    status: AddToLaunchStatusType;
+    place: AddToLaunchPlace;
+  }) => ({
+    ...CLICK,
+    modal: TEST_CASE_MODAL.ADD_TO_LAUNCH,
+    element_name: TEST_CASE_ELEMENT.SUBMIT_SINGLE_ADD_TO_LAUNCH,
+    status: params.status,
+    place: params.place,
+  }),
+  submitAddTag: (testCaseId: string) => ({
+    ...CLICK,
+    modal: TEST_CASE_MODAL.EDIT_TAGS,
+    element_name: TEST_CASE_ELEMENT.SUBMIT_ADD_TAG,
+    place: TEST_CASE_PLACE.DETAILS_PAGE,
+    test_case_id: testCaseId,
+  }),
+  submitEditDescription: (testCaseId: string) => ({
+    ...CLICK,
+    modal: TEST_CASE_MODAL.EDIT_DESCRIPTION,
+    element_name: TEST_CASE_ELEMENT.SUBMIT_EDIT_DESCRIPTION,
+    place: TEST_CASE_PLACE.DETAILS_PAGE,
+    test_case_id: testCaseId,
+  }),
+  SUBMIT_BULK_CHANGE_PRIORITY: {
+    ...CLICK,
+    modal: TEST_CASE_MODAL.CHANGE_PRIORITY,
+    element_name: TEST_CASE_ELEMENT.SUBMIT_BULK_CHANGE_PRIORITY,
+  },
+  SUBMIT_BULK_EDIT_TAG: {
+    ...CLICK,
+    modal: TEST_CASE_MODAL.EDIT_TAGS,
+    element_name: TEST_CASE_ELEMENT.SUBMIT_BULK_EDIT_TAG,
+  },
+  SUBMIT_BULK_DUPLICATE_TO_FOLDER: {
+    ...CLICK,
+    modal: TEST_CASE_MODAL.DUPLICATE_TO_FOLDER,
+    element_name: TEST_CASE_ELEMENT.SUBMIT_BULK_DUPLICATE_TO_FOLDER,
+  },
 };

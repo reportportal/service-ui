@@ -16,9 +16,16 @@
 
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { Button, Tooltip } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
+import {
+  AddToLaunchPlace,
+  SIDE_PANEL_QUICK_ACTION_ELEMENT_NAME,
+  TEST_CASE_LIBRARY_EVENTS,
+  TEST_CASE_PLACE,
+} from 'analyticsEvents/testCaseLibraryPageEvents';
 import { ManualScenario } from 'types/testCase';
 import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 import { createClassnames } from 'common/utils';
@@ -32,16 +39,20 @@ const cx = createClassnames(styles);
 interface AddToLaunchButtonProps {
   testCaseId: number;
   manualScenario: ManualScenario;
+  place: AddToLaunchPlace;
 }
 
 export const AddToLaunchButton = ({
   testCaseId,
   manualScenario,
+  place,
 }: AddToLaunchButtonProps) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { openModal: openAddToLaunchModal } = useAddToLaunchModal({
     selectedTestCasesIds: [testCaseId],
     isUncoveredTestsCheckboxAvailable: false,
+    place,
   });
 
   const isDisabled = useMemo(() => {
@@ -71,6 +82,14 @@ export const AddToLaunchButton = ({
   }, [manualScenario]);
 
   const handleAddToLaunchClick = () => {
+    if (place === TEST_CASE_PLACE.SIDE_PANEL) {
+      trackEvent(
+        TEST_CASE_LIBRARY_EVENTS.clickSidePanelQuickAction(
+          SIDE_PANEL_QUICK_ACTION_ELEMENT_NAME.ADD_TO_LAUNCH,
+          testCaseId?.toString(),
+        ),
+      );
+    }
     openAddToLaunchModal();
   };
 

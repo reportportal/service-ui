@@ -17,10 +17,15 @@
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { Modal } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
+import {
+  FOLDER_POPOVER_ELEMENT_NAME,
+  TEST_CASE_LIBRARY_EVENTS,
+} from 'analyticsEvents/testCaseLibraryPageEvents';
 import { UseModalData } from 'common/hooks';
 import { createClassnames, commonValidators } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -61,12 +66,16 @@ const CreateSubfolderModalComponent = ({
 }: CreateSubfolderModalProps & InjectedFormProps<FolderFormValues, CreateSubfolderModalProps>) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const isCreatingFolder = useSelector(isCreatingFolderSelector);
   const folders = useSelector(transformedFoldersWithFullPathSelector);
 
   const parentFolder = useMemo(() => findFolderById(folders, folder.id), [folders, folder.id]);
 
   const onSubmit = (values: FolderFormValues) => {
+    trackEvent(
+      TEST_CASE_LIBRARY_EVENTS.submitFolderOperation(FOLDER_POPOVER_ELEMENT_NAME.CREATE_SUBFOLDER),
+    );
     dispatch(
       createFoldersAction({
         folderName: values.folderName,

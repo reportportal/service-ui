@@ -127,7 +127,7 @@ export const AllTestCasesPage = ({
     {
       label: formatMessage(messages.duplicateToFolder),
       onClick: () => {
-        trackBulkOperation(TEST_CASE_BULK_OPERATION_ELEMENT_NAME.DUPLICATE);
+        trackBulkOperation(TEST_CASE_BULK_OPERATION_ELEMENT_NAME.DUPLICATE_TO_FOLDER);
         openBatchDuplicateToFolderModal({
           selectedTestCaseIds: selectedRowIds,
           count: selectedRowIds.length,

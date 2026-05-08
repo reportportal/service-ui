@@ -17,8 +17,13 @@
 import { MouseEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { Modal } from '@reportportal/ui-kit';
 
+import {
+  FOLDER_POPOVER_ELEMENT_NAME,
+  TEST_CASE_LIBRARY_EVENTS,
+} from 'analyticsEvents/testCaseLibraryPageEvents';
 import { createClassnames } from 'common/utils';
 import { UseModalData } from 'common/hooks';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -49,12 +54,16 @@ const DeleteFolderModalComponent = ({
   data: { folder, activeFolderId, setAllTestCases },
 }: UseModalData<DeleteFolderParams>) => {
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const isLoadingFolder = useSelector(isLoadingFolderSelector);
   const { formatMessage } = useIntl();
 
   const hideModal = () => dispatch(hideModalAction());
 
   const onSubmit = () => {
+    trackEvent(
+      TEST_CASE_LIBRARY_EVENTS.submitFolderOperation(FOLDER_POPOVER_ELEMENT_NAME.DELETE_FOLDER),
+    );
     dispatch(
       deleteFolderAction({
         folder,

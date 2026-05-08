@@ -16,11 +16,13 @@
 
 import { useCallback, ReactNode } from 'react';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { noop } from 'es-toolkit';
 import { Modal } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
+import { TEST_CASE_LIBRARY_EVENTS } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { UseModalData } from 'common/hooks';
 import { createClassnames } from 'common/utils';
 import { withModal } from 'controllers/modal';
@@ -78,6 +80,7 @@ const BatchDuplicateTestCasesModal = reduxForm<
 }: BatchDuplicateTestCasesModalProps &
   InjectedFormProps<FolderModalFormValues, BatchDuplicateTestCasesModalProps>) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { isLoading, batchDuplicateTestCases } = useBatchDuplicateTestCases({
     onSuccess: onClearSelection,
   });
@@ -85,6 +88,8 @@ const BatchDuplicateTestCasesModal = reduxForm<
 
   const onSubmit = useCallback(
     (values: FolderModalFormValues) => {
+      trackEvent(TEST_CASE_LIBRARY_EVENTS.SUBMIT_BULK_DUPLICATE_TO_FOLDER);
+
       if (currentMode === ButtonSwitcherOption.EXISTING) {
         const testFolderId = coerceToNumericId(values.destinationFolder?.id);
 
@@ -104,7 +109,7 @@ const BatchDuplicateTestCasesModal = reduxForm<
         }).catch(noop);
       }
     },
-    [currentMode, batchDuplicateTestCases, selectedTestCaseIds],
+    [currentMode, batchDuplicateTestCases, selectedTestCaseIds, trackEvent],
   );
 
   const { okButton, cancelButton, hideModal } = useModalButtons({

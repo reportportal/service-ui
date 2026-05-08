@@ -17,8 +17,14 @@
 import { useEffect, useMemo, useCallback, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { Button, PlusIcon } from '@reportportal/ui-kit';
 import { noop } from 'es-toolkit';
+
+import {
+  TEST_CASE_LIBRARY_EVENTS,
+  type FolderTreeViewControlElementName,
+} from 'analyticsEvents/testCaseLibraryPageEvents';
 
 import { createClassnames, getStorageItem } from 'common/utils';
 import { buildFolderFilterParams } from 'pages/inside/common/testCaseList/filterSidePanel/utils';
@@ -71,8 +77,21 @@ const cx = createClassnames(styles);
 
 export const TestCaseFolders = () => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const { openModal: openCreateFolderModal } = useCreateFolderModal();
+
+  const handleCreateFolderClick = useCallback(() => {
+    trackEvent(TEST_CASE_LIBRARY_EVENTS.CLICK_START_CREATE_FOLDER);
+    openCreateFolderModal();
+  }, [trackEvent, openCreateFolderModal]);
+
+  const handleFolderTreeViewControl = useCallback(
+    (elementName: FolderTreeViewControlElementName) => {
+      trackEvent(TEST_CASE_LIBRARY_EVENTS.clickFolderTreeViewControl(elementName));
+    },
+    [trackEvent],
+  );
   const { navigateToFolder, expandFoldersToLevel } = useNavigateToFolder();
   const urlFolderId = useSelector(urlFolderIdSelector);
   const { moveFolder } = useMoveFolder();
@@ -216,7 +235,7 @@ export const TestCaseFolders = () => {
         icon={<PlusIcon />}
         className={cx('sidebar-actions__create')}
         adjustWidthOn="content"
-        onClick={openCreateFolderModal}
+        onClick={handleCreateFolderClick}
       >
         {formatMessage(commonMessages.createFolder)}
       </Button>
@@ -292,6 +311,7 @@ export const TestCaseFolders = () => {
       onDuplicateFolder={handleDuplicateFolder}
       onMoveTestCase={handleMoveTestCase}
       onDuplicateTestCase={handleDuplicateTestCase}
+      onFolderTreeViewControl={handleFolderTreeViewControl}
     >
       <AllTestCasesPage
         testCases={testCases}
