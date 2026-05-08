@@ -8,7 +8,6 @@
 .vscode
 .devcontainer
 .scannerwork
-.cursor
 app/.env
 *.claude
 
@@ -38,6 +37,5 @@ release/
 # local working files
 .local/
 .serena/
-.cursor/
 
 .env
