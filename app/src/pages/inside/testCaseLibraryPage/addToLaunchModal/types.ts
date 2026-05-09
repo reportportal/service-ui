@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
+import { AddToLaunchPlace } from 'analyticsEvents/testCaseLibraryPageEvents';
+
 export interface AddToLaunchModalProps {
   selectedTestCasesIds: number[];
   isUncoveredTestsCheckboxAvailable?: boolean;
   onClearSelection?: () => void;
+  place?: AddToLaunchPlace;
 }

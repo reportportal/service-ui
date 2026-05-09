@@ -3,7 +3,6 @@ import { reduxForm, InjectedFormProps } from 'redux-form';
 import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
-import Link from 'redux-first-router-link';
 import { format } from 'date-fns';
 import { isEmpty } from 'es-toolkit/compat';
 import { Modal, FileDropArea, AddCsvIcon, ExternalLinkIcon } from '@reportportal/ui-kit';
@@ -55,6 +54,11 @@ const cx = createClassnames(styles);
 const MAX_FILE_SIZE_MB = 10;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 const CSV_MIME_TYPES: MimeType[] = [MIME_TYPES.csv, MIME_TYPES.xls, MIME_TYPES.plain];
+const TEMPLATE_FILE_NAME = 'test-case-import-template.csv';
+const TEMPLATE_CSV_CONTENT = [
+  'summary,description,priority,precondition,requirements,step_1_action,step_1_expected',
+  '"Verify login","User can sign in with valid credentials","HIGH","User exists","REQ-001","Open login page","Login page is displayed"',
+].join('\n');
 
 type ImportModalProps = UseModalData<ImportTestCaseModalData>;
 
@@ -183,6 +187,17 @@ export const ImportTestCaseModal = ({
     downloadFileFromBlob(file);
   };
 
+  const handleDownloadTemplate = () => {
+    templateAccessRef.current = IMPORT_TEMPLATE_CONDITION.DOWNLOAD;
+
+    downloadFileFromBlob(
+      new File([TEMPLATE_CSV_CONTENT], TEMPLATE_FILE_NAME, {
+        type: 'text/csv;charset=utf-8',
+      }),
+      TEMPLATE_FILE_NAME,
+    );
+  };
+
   const renderFolderSection = () => {
     if (hasFolderId) {
       return (
@@ -277,16 +292,14 @@ export const ImportTestCaseModal = ({
             <p className={cx('import-test-case-modal__info-text')}>
               {formatMessage(messages.downloadDescription)}
             </p>
-            <Link
-              to="#"
+            <button
+              type="button"
               className={cx('import-test-case-modal__download-link')}
-              onClick={() => {
-                templateAccessRef.current = IMPORT_TEMPLATE_CONDITION.DOWNLOAD;
-              }}
+              onClick={handleDownloadTemplate}
             >
               {formatMessage(messages.downloadTemplate)}
               <ExternalLinkIcon />
-            </Link>
+            </button>
           </section>
           <div className={cx('import-test-case-modal__uploader')}>
             <FileDropArea

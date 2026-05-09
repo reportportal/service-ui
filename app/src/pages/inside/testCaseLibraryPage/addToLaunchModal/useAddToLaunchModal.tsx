@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { AddToLaunchPlace } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { useModal } from 'common/hooks';
 import { ADD_TO_LAUNCH_MODAL_KEY } from './constants';
 import { AddToLaunchModal } from './addToLaunchModal';
@@ -22,10 +23,12 @@ export const useAddToLaunchModal = ({
   selectedTestCasesIds,
   onClearSelection,
   isUncoveredTestsCheckboxAvailable,
+  place,
 }: {
   selectedTestCasesIds: number[];
   onClearSelection?: () => void;
   isUncoveredTestsCheckboxAvailable?: boolean;
+  place?: AddToLaunchPlace;
 }) => {
   return useModal({
     modalKey: ADD_TO_LAUNCH_MODAL_KEY,
@@ -34,6 +37,7 @@ export const useAddToLaunchModal = ({
         selectedTestCasesIds={selectedTestCasesIds}
         isUncoveredTestsCheckboxAvailable={isUncoveredTestsCheckboxAvailable}
         onClearSelection={onClearSelection}
+        place={place}
       />
     ),
   });

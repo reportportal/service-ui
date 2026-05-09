@@ -16,8 +16,13 @@
 
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { reduxForm, InjectedFormProps, formValueSelector } from 'redux-form';
 
+import {
+  CREATE_FOLDER_STATUS,
+  TEST_CASE_LIBRARY_EVENTS,
+} from 'analyticsEvents/testCaseLibraryPageEvents';
 import { commonValidators } from 'common/utils/validation';
 import { createFoldersAction } from 'controllers/testCase/actionCreators';
 import { isCreatingFolderSelector } from 'controllers/testCase/selectors';
@@ -50,6 +55,7 @@ const CreateFolderModal = reduxForm<FolderFormValues>({
 })(({ dirty, handleSubmit, change }: InjectedFormProps<FolderFormValues>) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const isCreatingFolder = useSelector(isCreatingFolderSelector);
   const isSubfolderToggled = Boolean(
     useSelector((state) => selector(state, 'isToggled') as boolean | undefined),
@@ -57,6 +63,14 @@ const CreateFolderModal = reduxForm<FolderFormValues>({
 
   const onSubmit = (values: FolderFormValues) => {
     const parentFolderId = coerceToNumericId(values?.parentFolder?.id);
+
+    trackEvent(
+      TEST_CASE_LIBRARY_EVENTS.submitCreateFolder(
+        values.isToggled
+          ? CREATE_FOLDER_STATUS.ACTIVE_SUBFOLDER
+          : CREATE_FOLDER_STATUS.DISABLE_SUBFOLDER,
+      ),
+    );
 
     dispatch(
       createFoldersAction({

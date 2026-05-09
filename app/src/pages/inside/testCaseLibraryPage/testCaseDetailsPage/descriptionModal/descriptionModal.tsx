@@ -17,10 +17,12 @@
 import { MouseEvent, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { FieldTextFlex, Modal } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
+import { TEST_CASE_LIBRARY_EVENTS } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { TestCase } from 'types/testCase';
 import { commonMessages as globalCommonMessages } from 'pages/inside/common/common-messages';
 import { hideModalAction, withModal } from 'controllers/modal';
@@ -76,6 +78,7 @@ const DescriptionModalComponent = ({
   handleSubmit,
 }: DescriptionModalProps & InjectedFormProps<DescriptionFormValues, DescriptionModalProps>) => {
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const { isLoading, updateDescription } = useDescription(testCaseDetails.id);
   const { formatMessage } = useIntl();
   const testCaseDescription = testCaseDetails.description;
@@ -92,7 +95,12 @@ const DescriptionModalComponent = ({
   const hideModal = () => dispatch(hideModalAction());
 
   const onSubmit = async (values: DescriptionFormValues) => {
-    await updateDescription(values.description.trim());
+    const isSuccess = await updateDescription(values.description.trim());
+    if (isSuccess) {
+      trackEvent(
+        TEST_CASE_LIBRARY_EVENTS.submitEditDescription(String(testCaseDetails.id)),
+      );
+    }
   };
 
   const okButton = {

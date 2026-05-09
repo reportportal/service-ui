@@ -20,8 +20,10 @@ import { Button, Toggle } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { createClassnames } from 'common/utils';
+import { FOLDER_TREE_VIEW_CONTROL_ELEMENT_NAME } from 'analyticsEvents/testCaseLibraryPageEvents';
 
 import { messages } from '../messages';
+import { FolderTreeViewControlHandler } from '../types';
 
 import styles from './folderTreeFooter.scss';
 
@@ -34,6 +36,7 @@ interface FolderTreeFooterProps {
   onFlatViewChange: (value: boolean) => void;
   onExpandAll: VoidFn;
   onCollapseAll: VoidFn;
+  onTrackViewControl?: FolderTreeViewControlHandler;
 }
 
 export const FolderTreeFooter = ({
@@ -43,11 +46,26 @@ export const FolderTreeFooter = ({
   onFlatViewChange,
   onExpandAll,
   onCollapseAll,
+  onTrackViewControl,
 }: FolderTreeFooterProps) => {
   const { formatMessage } = useIntl();
 
   const handleFlatViewChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onFlatViewChange(event.currentTarget.checked);
+    const nextValue = event.currentTarget.checked;
+    if (nextValue && nextValue !== isFlatView) {
+      onTrackViewControl?.(FOLDER_TREE_VIEW_CONTROL_ELEMENT_NAME.FLAT_VIEW_ACTIVE);
+    }
+    onFlatViewChange(nextValue);
+  };
+
+  const handleExpandAll = () => {
+    onTrackViewControl?.(FOLDER_TREE_VIEW_CONTROL_ELEMENT_NAME.EXPAND_ALL);
+    onExpandAll();
+  };
+
+  const handleCollapseAll = () => {
+    onTrackViewControl?.(FOLDER_TREE_VIEW_CONTROL_ELEMENT_NAME.COLLAPSE_ALL);
+    onCollapseAll();
   };
 
   return (
@@ -61,10 +79,10 @@ export const FolderTreeFooter = ({
       </Toggle>
       {!isFlatView && (
         <div className={cx('folder-tree-footer__actions')}>
-          <Button variant="text" disabled={isExpandAllDisabled} onClick={onExpandAll}>
+          <Button variant="text" disabled={isExpandAllDisabled} onClick={handleExpandAll}>
             {formatMessage(messages.expandAll)}
           </Button>
-          <Button variant="text" disabled={isCollapseAllDisabled} onClick={onCollapseAll}>
+          <Button variant="text" disabled={isCollapseAllDisabled} onClick={handleCollapseAll}>
             {formatMessage(messages.collapseAll)}
           </Button>
         </div>

@@ -26,6 +26,9 @@ export type TestCaseFolderActionCallback = (
   targetFolderId: number,
 ) => void | Promise<void>;
 
+export type FolderTreeViewControl = 'flat_view_active' | 'expand_all' | 'collapse_all';
+export type FolderTreeViewControlHandler = (control: FolderTreeViewControl) => void;
+
 export interface SearchFilteredData {
   searchFilteredFolders: TransformedFolder[];
   searchFilteredExpandedIds: number[];
@@ -62,6 +65,7 @@ export interface ExpandedOptionsProps {
   ) => void;
   onMoveTestCase?: TestCaseFolderActionCallback;
   onDuplicateTestCase?: TestCaseFolderActionCallback;
+  onFolderTreeViewControl?: FolderTreeViewControlHandler;
 }
 
 export interface UseFolderSearchParams {

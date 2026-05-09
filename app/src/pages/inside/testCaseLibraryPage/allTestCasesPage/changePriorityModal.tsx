@@ -17,8 +17,10 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { Modal } from '@reportportal/ui-kit';
 
+import { TEST_CASE_LIBRARY_EVENTS } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { PrioritySelect } from '../prioritySelect/prioritySelect';
@@ -38,12 +40,14 @@ interface ChangePriorityModalProps {
 const ChangePriorityModal = ({ data }: ChangePriorityModalProps) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const [priority, setPriority] = useState(data.priority);
   const { batchUpdatePriority } = useTestCase();
 
   const hideModal = () => dispatch(hideModalAction());
 
   const handleSave = async () => {
+    trackEvent(TEST_CASE_LIBRARY_EVENTS.SUBMIT_BULK_CHANGE_PRIORITY);
     await batchUpdatePriority(
       {
         testCaseIds: data.selectedRowIds,

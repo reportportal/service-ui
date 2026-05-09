@@ -16,13 +16,17 @@
 
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
+import { useDispatch } from 'react-redux';
 
 import {
   TEST_CASE_LIBRARY_EVENTS,
   TEST_CASE_MENU_ELEMENT_NAME,
+  TEST_CASE_PLACE,
   type TestCaseMenuElementName,
 } from 'analyticsEvents/testCaseLibraryPageEvents';
+import { TEST_CASE_LIBRARY_PAGE } from 'controllers/pages';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { useProjectDetails } from 'hooks/useTypedSelector';
 import { createTestCaseMenuItems } from 'pages/inside/common/testCaseList/configUtils';
 import { TestCaseMenuAction } from 'pages/inside/common/testCaseList/types';
 import { getExcludedActionsFromPermissionMap } from 'pages/inside/common/testCaseList/utils';
@@ -39,6 +43,8 @@ interface TestCaseTooltipItemsProps {
 export const useTestCaseTooltipItems = ({ testCase }: TestCaseTooltipItemsProps) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
+  const dispatch = useDispatch();
+  const { organizationSlug, projectSlug } = useProjectDetails();
   const { canManageTestCases } = useUserPermissions();
   const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
   const { openModal: openEditTestCaseModal } = useEditTestCaseModal();
@@ -47,7 +53,11 @@ export const useTestCaseTooltipItems = ({ testCase }: TestCaseTooltipItemsProps)
 
   const trackPopoverMenu = (elementName: TestCaseMenuElementName) => {
     trackEvent(
-      TEST_CASE_LIBRARY_EVENTS.choosePopoverMenu(elementName, testCase?.id?.toString()),
+      TEST_CASE_LIBRARY_EVENTS.choosePopoverMenu(
+        elementName,
+        TEST_CASE_PLACE.MENU_TEST_CASE,
+        testCase?.id?.toString(),
+      ),
     );
   };
 
@@ -75,6 +85,17 @@ export const useTestCaseTooltipItems = ({ testCase }: TestCaseTooltipItemsProps)
       [TestCaseMenuAction.MOVE]: () => {
         trackPopoverMenu(TEST_CASE_MENU_ELEMENT_NAME.MOVE_TO);
         openMoveTestCaseModal({ testCase });
+      },
+      [TestCaseMenuAction.HISTORY]: () => {
+        trackPopoverMenu(TEST_CASE_MENU_ELEMENT_NAME.HISTORY);
+        dispatch({
+          type: TEST_CASE_LIBRARY_PAGE,
+          payload: {
+            organizationSlug,
+            projectSlug,
+            testCasePageRoute: `test-cases/${testCase.id}/historyOfActions`,
+          },
+        });
       },
       [TestCaseMenuAction.DUPLICATE]: () => {
         trackPopoverMenu(TEST_CASE_MENU_ELEMENT_NAME.DUPLICATE);

@@ -16,11 +16,13 @@
 
 import { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { noop } from 'es-toolkit';
 import { BubblesLoader, Button, Modal, PlusIcon } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
+import { TEST_CASE_LIBRARY_EVENTS } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { UseModalData } from 'common/hooks';
 import { createClassnames } from 'common/utils';
 import { withModal } from 'controllers/modal';
@@ -69,6 +71,7 @@ const BatchEditTagsModal = reduxForm<BatchEditTagsModalFormValues, BatchEditTags
 }: BatchEditTagsModalProps &
   InjectedFormProps<BatchEditTagsModalFormValues, BatchEditTagsModalProps>) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const [tagsList, setTagsList] = useState<Attribute[]>([]);
   const { getTags, updateTags, isLoadingTagsUpdating, isLoadingTags } = useBatchEditTags({
     onSuccess: onClearSelection,
@@ -126,6 +129,7 @@ const BatchEditTagsModal = reduxForm<BatchEditTagsModalFormValues, BatchEditTags
   };
 
   const onSubmit = (values: BatchEditTagsModalFormValues): void => {
+    trackEvent(TEST_CASE_LIBRARY_EVENTS.SUBMIT_BULK_EDIT_TAG);
     updateTags({
       testCaseIds: selectedTestCaseIds,
       attributeKeysToRemove: values.tagsToRemove,

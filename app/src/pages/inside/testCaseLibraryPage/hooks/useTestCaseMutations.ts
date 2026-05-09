@@ -108,7 +108,7 @@ export const useTestCaseMutations = (testCaseId?: number) => {
     const createdTags = await Promise.all(
       newTags.map(async (tag) => {
         try {
-          return fetch<Attribute>(URLS.createTmsAttribute(), {
+          return fetch<Attribute>(URLS.createTmsAttribute(projectKey), {
             method: 'POST',
             data: { key: tag.key, value: tag.value },
           });
@@ -121,7 +121,7 @@ export const useTestCaseMutations = (testCaseId?: number) => {
     const successfullyCreatedTags = createdTags.filter((tag): tag is Attribute => tag !== null);
 
     return [...existingTags, ...successfullyCreatedTags];
-  }, []);
+  }, [projectKey]);
 
   const handleTestCaseCreation = useCallback(
     async (
