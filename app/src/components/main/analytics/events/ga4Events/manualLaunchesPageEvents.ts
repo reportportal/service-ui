@@ -37,11 +37,7 @@ export const MANUAL_LAUNCHES_PLACE = {
   POST_LINK_BTS_MODAL: 'post_link_bts_modal',
 } as const;
 
-export type ShowToRunPlace =
-  | typeof MANUAL_LAUNCHES_PLACE.MANUAL_LAUNCHES_LIST
-  | typeof MANUAL_LAUNCHES_PLACE.LAUNCH_DETAILS_SIDEBAR;
-
-export type StartDeleteLaunchPlace =
+export type ManualLaunchListOrSidebarPlace =
   | typeof MANUAL_LAUNCHES_PLACE.MANUAL_LAUNCHES_LIST
   | typeof MANUAL_LAUNCHES_PLACE.LAUNCH_DETAILS_SIDEBAR;
 
@@ -142,7 +138,7 @@ export const MANUAL_LAUNCHES_PAGE_EVENTS = {
     place: MANUAL_LAUNCHES_PLACE.MANUAL_LAUNCHES_FILTER_PANEL,
     element_name: MANUAL_LAUNCHES_ELEMENT.APPLY_FILTER,
   },
-  clickShowToRun: (place: ShowToRunPlace) => ({
+  clickShowToRun: (place: ManualLaunchListOrSidebarPlace) => ({
     ...CLICK,
     place,
     element_name: MANUAL_LAUNCHES_ELEMENT.SHOW_TO_RUN,
@@ -158,7 +154,7 @@ export const MANUAL_LAUNCHES_PAGE_EVENTS = {
     modal: MANUAL_LAUNCHES_MODAL.EDIT_LAUNCH,
     element_name: MANUAL_LAUNCHES_ELEMENT.SUBMIT_EDIT_LAUNCH,
   },
-  clickStartDeleteLaunch: (place: StartDeleteLaunchPlace) => ({
+  clickStartDeleteLaunch: (place: ManualLaunchListOrSidebarPlace) => ({
     ...CLICK,
     place,
     element_name: MANUAL_LAUNCHES_ELEMENT.START_DELETE_LAUNCH,
