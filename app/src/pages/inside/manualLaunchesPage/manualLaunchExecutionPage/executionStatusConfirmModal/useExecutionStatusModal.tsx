@@ -16,6 +16,7 @@
 
 import { useDispatch } from 'react-redux';
 import { showModalAction } from 'controllers/modal';
+import type { ExecutionStatusChangePlace } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 import { EXECUTION_STATUS_CONFIRM_MODAL } from '../constants';
 import type { ExecutionStatusType } from '../types';
 
@@ -23,12 +24,13 @@ interface OpenModalParams {
   executionId: number;
   status: ExecutionStatusType;
   currentStatus?: string;
+  place: ExecutionStatusChangePlace;
 }
 
 export const useExecutionStatusModal = () => {
   const dispatch = useDispatch();
 
-  const openModal = ({ executionId, status, currentStatus }: OpenModalParams) => {
+  const openModal = ({ executionId, status, currentStatus, place }: OpenModalParams) => {
     dispatch(
       showModalAction({
         id: EXECUTION_STATUS_CONFIRM_MODAL,
@@ -36,6 +38,7 @@ export const useExecutionStatusModal = () => {
           executionId,
           status,
           currentStatus,
+          place,
         },
       }),
     );

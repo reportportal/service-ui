@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { isEmpty } from 'es-toolkit/compat';
 import { Button, RunManualIcon } from '@reportportal/ui-kit';
 
@@ -39,6 +40,10 @@ import {
   useManualLaunchById,
   useActiveManualLaunchLoading,
 } from 'hooks/useTypedSelector';
+import {
+  MANUAL_LAUNCHES_PAGE_EVENTS,
+  TEST_EXECUTION_TEMPLATE_TYPE,
+} from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 
 import { ExecutionStatusButtons } from './executionStatusButtons';
 import { ExecutionStatusDropdown } from './executionStatusDropdown';
@@ -57,6 +62,7 @@ const cx = createClassnames(styles);
 
 export const ManualLaunchExecutionPage = () => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { organizationSlug, projectSlug } = useProjectDetails();
   const launchId = useManualLaunchId();
   const launch = useManualLaunchById(launchId);
@@ -127,6 +133,23 @@ export const ManualLaunchExecutionPage = () => {
   useEffect(() => {
     setShowStatusButtons(false);
   }, [execution?.id, hasStatus]);
+
+  const lastViewedExecutionRef = useRef<{ id: number; type: string } | null>(null);
+
+  useEffect(() => {
+    if (!execution?.id) {
+      return;
+    }
+
+    const type = isTextBased ? TEST_EXECUTION_TEMPLATE_TYPE.TEXT : TEST_EXECUTION_TEMPLATE_TYPE.STEPS;
+    const last = lastViewedExecutionRef.current;
+
+    if (last && last.id === execution.id && last.type === type) {
+      return;
+    }
+    lastViewedExecutionRef.current = { id: execution.id, type };
+    trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.viewTestExecutionPage(type));
+  }, [execution?.id, isTextBased, trackEvent]);
 
   const handleRunTestClick = () => {
     setShowStatusButtons(true);

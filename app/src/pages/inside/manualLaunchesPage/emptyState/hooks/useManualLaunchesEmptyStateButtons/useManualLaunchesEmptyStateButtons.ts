@@ -17,9 +17,12 @@
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 
 import { activeProjectSelector } from 'controllers/user';
+import { PROJECT_MILESTONES_PAGE } from 'controllers/pages';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { MANUAL_LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 import { messages } from 'pages/inside/manualLaunchesPage/messages';
 
 import { EMPTY_STATE_BUTTONS } from './constants';
@@ -28,6 +31,7 @@ import { ActiveProject } from './types';
 export const useManualLaunchesEmptyStateButtons = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const { organizationSlug, projectSlug } = useSelector(activeProjectSelector) as ActiveProject;
   const { canCreateManualLaunch } = useUserPermissions();
 
@@ -41,7 +45,14 @@ export const useManualLaunchesEmptyStateButtons = () => {
     return EMPTY_STATE_BUTTONS.map(({ name, type }) => ({
       name: formatMessage(messages[name]),
       variant: 'text' as const,
-      handleButton: () => dispatch({ type, payload }),
+      handleButton: () => {
+        trackEvent(
+          type === PROJECT_MILESTONES_PAGE
+            ? MANUAL_LAUNCHES_PAGE_EVENTS.CLICK_GO_TO_TEST_PLANS
+            : MANUAL_LAUNCHES_PAGE_EVENTS.CLICK_OPEN_TEST_LIBRARY,
+        );
+        dispatch({ type, payload });
+      },
     }));
-  }, [organizationSlug, projectSlug, dispatch, canCreateManualLaunch, formatMessage]);
+  }, [organizationSlug, projectSlug, dispatch, canCreateManualLaunch, formatMessage, trackEvent]);
 };

@@ -16,6 +16,7 @@
 
 import { useCallback, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { isEmpty } from 'es-toolkit/compat';
 import { xor } from 'es-toolkit';
 import { Button, Selection, Table } from '@reportportal/ui-kit';
@@ -24,6 +25,10 @@ import { VoidFn } from '@reportportal/ui-kit/common';
 import { createClassnames } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import {
+  MANUAL_LAUNCHES_PAGE_EVENTS,
+  MANUAL_LAUNCHES_PLACE,
+} from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 
 import { useManualLaunchesColumns } from './hooks/useManualLaunchesColumns/useManualLaunchesColumns';
 import { Launch } from '../types';
@@ -47,6 +52,7 @@ interface ManualLaunchesListProps {
 
 export const ManualLaunchesList = ({ fullLaunches, onRefresh }: ManualLaunchesListProps) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { canManageTestCases } = useUserPermissions();
   const { openModal: openDeleteModal } = useDeleteManualLaunchModal();
   const { openModal: openBatchDeleteModal } = useBatchDeleteManualLaunchesModal();
@@ -80,11 +86,16 @@ export const ManualLaunchesList = ({ fullLaunches, onRefresh }: ManualLaunchesLi
   }, []);
 
   const handleBatchDelete = useCallback(() => {
+    trackEvent(
+      MANUAL_LAUNCHES_PAGE_EVENTS.clickStartDeleteLaunch(
+        MANUAL_LAUNCHES_PLACE.MANUAL_LAUNCHES_LIST,
+      ),
+    );
     openBatchDeleteModal({
       launchIds: selectedRowIds,
       onClearSelection: () => setSelectedRowIds([]),
     });
-  }, [openBatchDeleteModal, selectedRowIds]);
+  }, [openBatchDeleteModal, selectedRowIds, trackEvent]);
 
   const manualLaunchesTableData = useManualLaunchesTableData(
     data,

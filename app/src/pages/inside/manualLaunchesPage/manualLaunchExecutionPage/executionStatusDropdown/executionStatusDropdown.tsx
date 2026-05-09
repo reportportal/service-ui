@@ -21,6 +21,7 @@ import Parser from 'html-react-parser';
 import ArrowDownIcon from 'common/img/arrow-down-inline.svg';
 
 import { createClassnames } from 'common/utils';
+import { MANUAL_LAUNCHES_PLACE } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 
 import { STATUS_CONFIG } from '../constants';
 import type { ExecutionStatusDropdownProps, ExecutionStatusType } from '../types';
@@ -53,6 +54,7 @@ export const ExecutionStatusDropdown: FC<ExecutionStatusDropdownProps> = ({
         currentStatus={currentStatus}
         isOpened={isOpened}
         setIsOpened={setIsOpened}
+        place={MANUAL_LAUNCHES_PLACE.TEST_EXECUTION_PAGE}
       >
         <button
           type="button"

@@ -17,6 +17,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector, useStore } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { isEmpty } from 'es-toolkit/compat';
 import { Button, FilterFilledIcon, FilterOutlineIcon, RefreshIcon } from '@reportportal/ui-kit';
 
@@ -67,6 +68,7 @@ import {
 } from 'pages/inside/common/testCaseList/filterSidePanel/utils';
 import { messages as testCaseListMessages } from 'pages/inside/common/testCaseList/messages';
 import { ExecutionStatus } from 'types/testCase';
+import { MANUAL_LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 
 import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWithBreadcrumbsAndActions';
 import { PageLoader } from '../../testPlansPage/pageLoader';
@@ -84,6 +86,7 @@ export const ManualLaunchDetailsPage = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const store = useStore();
+  const { trackEvent } = useTracking();
   const { organizationSlug, projectSlug } = useProjectDetails();
   const launchId = useManualLaunchId();
   const launch = useManualLaunchById(launchId);
@@ -115,6 +118,10 @@ export const ManualLaunchDetailsPage = () => {
     setSelectedPriorities(parsePrioritiesFromQuery(queryFilterPriorities));
     setSelectedTags(parseTagsFromQuery(queryFilterTags));
   }, [queryFilterPriorities, queryFilterTags]);
+
+  useEffect(() => {
+    trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.VIEW_ALL_TEST_EXECUTIONS_PAGE);
+  }, [trackEvent]);
 
   const selectedToRunOnly =
     queryStatusFilter === MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE;
@@ -201,6 +208,8 @@ export const ManualLaunchDetailsPage = () => {
     const filterPriorities = isEmpty(priorities) ? undefined : toBackendPriority(priorities);
     const filterTags = isEmpty(tags) ? undefined : tags.join(',');
     const statusFilter = toRunOnly ? ExecutionStatus.TO_RUN : undefined;
+
+    trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.CLICK_APPLY_EXECUTIONS_FILTER);
 
     dispatch(
       updatePagePropertiesAction({

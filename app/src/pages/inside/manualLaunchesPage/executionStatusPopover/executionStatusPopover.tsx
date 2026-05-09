@@ -23,6 +23,7 @@ import { createClassnames } from 'common/utils';
 import { manualLaunchTestCaseExecutionsSelector } from 'controllers/manualLaunch';
 import { Divider } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
+import type { ExecutionStatusChangePlace } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 
 import { STATUS_CONFIG } from '../manualLaunchExecutionPage/constants';
 import type { ExecutionStatusType } from '../manualLaunchExecutionPage/types';
@@ -39,6 +40,7 @@ interface ExecutionStatusPopoverProps {
   currentStatus: ExecutionStatus;
   isOpened: boolean;
   setIsOpened: (isOpened: boolean) => void;
+  place: ExecutionStatusChangePlace;
   children: ReactNode;
 }
 
@@ -47,6 +49,7 @@ export const ExecutionStatusPopover: FC<ExecutionStatusPopoverProps> = ({
   currentStatus,
   isOpened,
   setIsOpened,
+  place,
   children,
 }) => {
   const { formatMessage } = useIntl();
@@ -64,6 +67,7 @@ export const ExecutionStatusPopover: FC<ExecutionStatusPopoverProps> = ({
       executionId,
       status: newStatus as ExecutionStatusType,
       currentStatus: status,
+      place,
     });
     setIsOpened(false);
   };
