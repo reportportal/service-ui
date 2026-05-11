@@ -99,10 +99,11 @@ export const AttributeEditor = ({
   };
 
   useEffect(() => {
-    if (keyEditorRef.current) {
-      keyEditorRef.current.focus();
-      refFunction?.(keyEditorRef.current);
-    }
+    keyEditorRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    refFunction?.(keyEditorRef.current);
   }, [refFunction]);
 
   useEffect(() => {
