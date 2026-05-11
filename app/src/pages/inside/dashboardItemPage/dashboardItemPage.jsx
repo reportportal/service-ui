@@ -328,29 +328,33 @@ export const DashboardItemPage = () => {
                       {formatMessage(dashboard.locked ? messages.unlock : messages.lock)}
                     </GhostButton>
                   )}
-                  <LockedDashboardTooltip locked={dashboard.locked}>
-                    <GhostButton
-                      icon={EditIcon}
-                      onClick={onEditDashboardItem}
-                      disabled={isDisabled}
-                      appearance="faded"
-                    >
-                      {formatMessage(messages.editDashboard)}
-                    </GhostButton>
-                  </LockedDashboardTooltip>
+                  {isWorkWithWidgets && (
+                    <LockedDashboardTooltip locked={dashboard.locked}>
+                      <GhostButton
+                        icon={EditIcon}
+                        onClick={onEditDashboardItem}
+                        disabled={isDisabled}
+                        appearance="faded"
+                      >
+                        {formatMessage(messages.editDashboard)}
+                      </GhostButton>
+                    </LockedDashboardTooltip>
+                  )}
                   <GhostButton icon={FullscreenIcon} onClick={toggleFullscreen}>
                     {formatMessage(messages.fullscreen)}
                   </GhostButton>
-                  <LockedDashboardTooltip locked={dashboard.locked}>
-                    <GhostButton
-                      icon={CancelIcon}
-                      onClick={onDeleteDashboard}
-                      disabled={isDisabled}
-                      appearance="faded"
-                    >
-                      {formatMessage(messages.delete)}
-                    </GhostButton>
-                  </LockedDashboardTooltip>
+                  {isWorkWithWidgets && (
+                    <LockedDashboardTooltip locked={dashboard.locked}>
+                      <GhostButton
+                        icon={CancelIcon}
+                        onClick={onDeleteDashboard}
+                        disabled={isDisabled}
+                        appearance="faded"
+                      >
+                        {formatMessage(messages.delete)}
+                      </GhostButton>
+                    </LockedDashboardTooltip>
+                  )}
                   <Link
                     to={{
                       type: PROJECT_DASHBOARD_PRINT_PAGE,
