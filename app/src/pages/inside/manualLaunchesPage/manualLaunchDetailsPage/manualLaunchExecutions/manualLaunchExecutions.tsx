@@ -17,6 +17,7 @@
 import { useState, useCallback, useMemo, type KeyboardEvent, type MouseEvent } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { isEmpty } from 'es-toolkit/compat';
 import {
   Pagination,
@@ -46,6 +47,7 @@ import {
   defaultManualLaunchesQueryParams,
 } from 'controllers/manualLaunch';
 import type { TestCaseExecution } from 'controllers/manualLaunch';
+import { MANUAL_LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 
 import { ManualLaunchExecutionsProps } from './types';
 import { ExecutionStatusChip } from './executionStatusChip';
@@ -66,6 +68,7 @@ export const ManualLaunchExecutions = ({
 }: ManualLaunchExecutionsProps) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const location = useSelector(locationSelector);
   const { canManageTestCases } = useUserPermissions();
   const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
@@ -132,6 +135,7 @@ export const ManualLaunchExecutions = ({
 
   const handleBatchDelete = useCallback(() => {
     if (launchId) {
+      trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.CLICK_START_BULK_DELETE_TEST_EXECUTION);
       openDeleteExecutionModal({
         type: 'batch',
         executionIds: selectedRowIds,
@@ -139,7 +143,7 @@ export const ManualLaunchExecutions = ({
         onClearSelection,
       });
     }
-  }, [selectedRowIds, launchId, openDeleteExecutionModal, onClearSelection]);
+  }, [selectedRowIds, launchId, openDeleteExecutionModal, onClearSelection, trackEvent]);
 
   const getPopoverItems = (executionId: number): PopoverItem[] => {
     if (!canManageTestCases) {
@@ -176,6 +180,9 @@ export const ManualLaunchExecutions = ({
     const tags = execution.attributes?.map((attr) => attr.key).filter(Boolean) || [];
 
     const handleOpenSidePanel = () => {
+      if (selectedExecutionId !== execution.id) {
+        trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.CLICK_OPEN_EXECUTION_SIDEBAR);
+      }
       setSelectedExecutionId(execution.id);
     };
 

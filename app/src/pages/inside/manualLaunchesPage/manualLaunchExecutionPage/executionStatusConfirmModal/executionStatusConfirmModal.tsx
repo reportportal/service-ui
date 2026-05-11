@@ -17,6 +17,7 @@
 import { FC, useState, useEffect, useMemo, FormEvent, useRef } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { reduxForm, InjectedFormProps, initialize } from 'redux-form';
 import {
   Button,
@@ -48,6 +49,10 @@ import { useModalButtons } from 'hooks/useModalButtons';
 import { useTextareaAutoResize } from 'common/hooks';
 import { ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
 import { AttachmentsWithSlider } from 'pages/inside/common/attachmentsWithSlider';
+import {
+  MANUAL_LAUNCHES_PAGE_EVENTS,
+  type ExecutionStatusType as AnalyticsExecutionStatusType,
+} from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 import { toAttachmentWithSlider } from '../utils';
 
 import type { ExecutionStatusConfirmFormValues, ExecutionStatusConfirmModalProps } from '../types';
@@ -69,6 +74,7 @@ const ExecutionStatusConfirmModalComponent: FC<
     InjectedFormProps<ExecutionStatusConfirmFormValues, ExecutionStatusConfirmModalProps>
 > = ({ data, handleSubmit, invalid, dirty }) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const launchId = useManualLaunchId();
@@ -159,6 +165,17 @@ const ExecutionStatusConfirmModalComponent: FC<
     const clearCommentCheckboxChecked = isString(clearValue)
       ? clearValue.toLowerCase() === 'true'
       : clearValue === true;
+
+    if (isClearStatus) {
+      trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.CLICK_CLEAR_TEST_STATUS);
+    } else if (data?.place) {
+      trackEvent(
+        MANUAL_LAUNCHES_PAGE_EVENTS.chooseExecutionStatus(
+          data.place,
+          status as AnalyticsExecutionStatusType,
+        ),
+      );
+    }
 
     dispatch(
       updateManualLaunchExecutionStatusAction({

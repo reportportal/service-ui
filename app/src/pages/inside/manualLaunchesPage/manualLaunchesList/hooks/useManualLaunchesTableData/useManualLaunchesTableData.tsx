@@ -14,7 +14,14 @@
  * limitations under the License.
  */
 
-import { Dispatch, SetStateAction, useMemo, KeyboardEvent, useCallback, MouseEvent } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useMemo,
+  KeyboardEvent,
+  useCallback,
+  MouseEvent,
+} from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
@@ -22,12 +29,16 @@ import { RowData } from '@reportportal/ui-kit/components/table/types';
 
 import { AbsRelTime } from 'components/main/absRelTime';
 import { SegmentStatus, SegmentedStatusBar } from 'components/statusBar';
-import { createClassnames } from 'common/utils';
+import { createClassnames, debounce } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { isEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 import { MANUAL_LAUNCH_DETAILS_PAGE } from 'controllers/pages';
 import { useProjectDetails } from 'hooks/useTypedSelector';
 import { ExecutionStatus } from 'types/testCase';
+import {
+  MANUAL_LAUNCHES_PAGE_EVENTS,
+  MANUAL_LAUNCHES_PLACE,
+} from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 
 import { TestRunButton } from '../../testRunButton/testRunButton';
 import { ManualTestCase } from '../../../types';
@@ -46,7 +57,7 @@ export const useManualLaunchesTableData = (
   const { trackEvent } = useTracking();
   const { organizationSlug, projectSlug } = useProjectDetails();
 
-  const navigateToDetails = useCallback(
+  const navigateToDetailsImpl = useCallback(
     (id: number) => {
       dispatch({
         type: MANUAL_LAUNCH_DETAILS_PAGE,
@@ -65,6 +76,29 @@ export const useManualLaunchesTableData = (
       });
     },
     [dispatch, organizationSlug, projectSlug],
+  );
+
+  const debouncedNavigateToDetails = useMemo(
+    () => debounce((id: number) => navigateToDetailsImpl(id), 500),
+    [navigateToDetailsImpl],
+  );
+
+  const navigateToDetails = useCallback(
+    (id: number) => {
+      trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.CLICK_OPEN_LAUNCH_DETAILS);
+      debouncedNavigateToDetails(id);
+    },
+    [trackEvent, debouncedNavigateToDetails],
+  );
+
+  const openLaunchSidebar = useCallback(
+    (id: number) => {
+      if (selectedLaunchId !== id) {
+        trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.CLICK_OPEN_LAUNCH_SIDEBAR);
+      }
+      setSelectedLaunchId(id);
+    },
+    [trackEvent, setSelectedLaunchId, selectedLaunchId],
   );
 
   const getHandlers = useCallback(
@@ -110,7 +144,7 @@ export const useManualLaunchesTableData = (
 
           const openSidePanelHandlers = getHandlers({
             id,
-            handler: setSelectedLaunchId,
+            handler: openLaunchSidebar,
           });
 
           const baseCellProps = {
@@ -215,14 +249,11 @@ export const useManualLaunchesTableData = (
                   count={testsToRun}
                   onClick={() => navigateToDetailsToRunOnly(id)}
                   onTrackClick={() =>
-                    trackEvent({
-                      action: 'click',
-                      category: 'manual_launches',
-                      place: 'manual_launches_list',
-                      element_name: 'to_run_column',
-                      condition: 'pending',
-                      number: testsToRun,
-                    })
+                    trackEvent(
+                      MANUAL_LAUNCHES_PAGE_EVENTS.clickShowToRun(
+                        MANUAL_LAUNCHES_PLACE.MANUAL_LAUNCHES_LIST,
+                      ),
+                    )
                   }
                 />
               ),
@@ -237,7 +268,7 @@ export const useManualLaunchesTableData = (
       getHandlers,
       navigateToDetails,
       navigateToDetailsToRunOnly,
-      setSelectedLaunchId,
+      openLaunchSidebar,
       formatMessage,
       trackEvent,
     ],
