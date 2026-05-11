@@ -1540,6 +1540,7 @@
   "LogItemInfoTabs.historyTab": "操作历史",
   "LogItemInfoTabs.logsTab": "所有日志",
   "LogItemInfoTabs.stackTab": "堆栈跟踪",
+  "LogItemInfoTabs.logTab": "远程设备",
   "LogMessageSearch.searchHint": "至少需要3个符号。",
   "LogMessageSearch.searchTitle": "日志文本",
   "LogStatusBlock.statusAllLabel": "全部",

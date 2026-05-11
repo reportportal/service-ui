@@ -1540,6 +1540,7 @@
   "LogItemInfoTabs.historyTab": "История действий",
   "LogItemInfoTabs.logsTab": "Все логи",
   "LogItemInfoTabs.stackTab": "Трассировка стека",
+  "LogItemInfoTabs.logTab": "Удалённое устройство",
   "LogMessageSearch.searchHint": "Необходимо минимум 3 символа.",
   "LogMessageSearch.searchTitle": "Содержание лога",
   "LogStatusBlock.statusAllLabel": "Все",

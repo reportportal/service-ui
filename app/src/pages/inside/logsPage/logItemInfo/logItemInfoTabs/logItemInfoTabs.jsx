@@ -20,6 +20,7 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import track from 'react-tracking';
+import { ExtensionLoader } from 'components/extensionLoader';
 import {
   lastLogActivitySelector,
   activeRetrySelector,
@@ -40,6 +41,7 @@ import ClockIcon from 'common/img/clock-inline.svg';
 import LogIcon from 'common/img/log-view-inline.svg';
 import { getSauceLabsConfig } from 'components/integrations/integrationProviders/sauceLabsIntegration/utils';
 import { availableIntegrationsByPluginNameSelector } from 'controllers/plugins';
+import { uiExtensionLogTabSelector } from 'controllers/plugins/uiExtensions';
 import { StackTrace } from 'pages/inside/common/stackTrace';
 import { SauceLabsIntegrationButton } from './sauceLabsIntegrationButton';
 import { InfoTabs } from '../infoTabs';
@@ -89,6 +91,7 @@ const ATTACHMENTS_TAB_ID = 'attachments';
     attachments: attachmentItemsSelector(state),
     activeTabId: activeTabIdSelector(state),
     noLogsCollapsing: noLogsCollapsingSelector(state),
+    logTabExtensions: uiExtensionLogTabSelector(state),
   }),
   {
     fetchFirstAttachments: fetchFirstAttachmentsAction,
@@ -117,6 +120,7 @@ export class LogItemInfoTabs extends Component {
     }).isRequired,
     activeTabId: PropTypes.string,
     noLogsCollapsing: PropTypes.bool,
+    logTabExtensions: PropTypes.array,
   };
 
   static defaultProps = {
@@ -126,6 +130,7 @@ export class LogItemInfoTabs extends Component {
     activeTabId: 'logs',
     setActiveTabId: () => {},
     noLogsCollapsing: false,
+    logTabExtensions: [],
   };
 
   state = {
@@ -191,6 +196,7 @@ export class LogItemInfoTabs extends Component {
       activeRetry,
       logItem,
       noLogsCollapsing,
+      logTabExtensions,
     } = this.props;
     const history = {
       id: 'history',
@@ -248,6 +254,29 @@ export class LogItemInfoTabs extends Component {
     if (this.isHistoryTabVisible()) {
       tabs.push(history);
     }
+
+    logTabExtensions.forEach((extension) => {
+      const isVisible = logItem.attributes?.some(
+        (attr) => attr.key === extension.payload.visibilityAttributeKey
+      );
+
+      if (!isVisible) {
+        return;
+      }
+
+      const tabId = `log-tab:${extension.pluginName}:${extension.name}`;
+      tabs.push({
+        id: tabId,
+        label: extension.name,
+        icon: extension.payload.icon,
+        component: ExtensionLoader,
+        componentProps: {
+          extension,
+          logItem,
+        },
+      });
+    });
+
     return tabs;
   };
 

@@ -1540,6 +1540,7 @@
   "LogItemInfoTabs.historyTab": "Історія дій",
   "LogItemInfoTabs.logsTab": "Всі логи",
   "LogItemInfoTabs.stackTab": "Трасування стека",
+  "LogItemInfoTabs.logTab": "Віддалений пристрій",
   "LogMessageSearch.searchHint": "Необхідно мінімум 3 символи.",
   "LogMessageSearch.searchTitle": "Зміст лода",
   "LogStatusBlock.statusAllLabel": "Усі",

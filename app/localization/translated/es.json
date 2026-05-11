@@ -1541,6 +1541,7 @@
   "LogItemInfoTabs.historyTab": "Historial de acciones",
   "LogItemInfoTabs.logsTab": "Todos los logs",
   "LogItemInfoTabs.stackTab": "Stack Trace",
+  "LogItemInfoTabs.logTab": "Dispositivo remoto",
   "LogMessageSearch.searchHint": "Se requieren al menos 3 caracteres.",
   "LogMessageSearch.searchTitle": "Contenido del log",
   "LogStatusBlock.statusAllLabel": "Todos",

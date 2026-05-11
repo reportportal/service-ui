@@ -42,4 +42,4 @@ See [../decision-sheet.md](../decision-sheet.md). Summary of forks:
   - Q9 Multi-video UX → v1 scope is single video; multi-video is a follow-up story (Fork 7).
 
 ## Approval
-- [ ] I (human) approve the contract as written.
+- [X] I (human) approve the contract as written.

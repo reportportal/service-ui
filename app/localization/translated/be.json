@@ -1539,6 +1539,7 @@
   "LogItemInfoTabs.historyTab": "Гісторыя дзеянняў",
   "LogItemInfoTabs.logsTab": "Усе логі",
   "LogItemInfoTabs.stackTab": "Трасіроўка стэка",
+  "LogItemInfoTabs.logTab": "Аддаленая прылада",
   "LogMessageSearch.searchHint": "Па меншай меры 3 сімвала патрабуецца.",
   "LogMessageSearch.searchTitle": "Змест лога",
   "LogStatusBlock.statusAllLabel": "Усе",
