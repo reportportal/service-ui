@@ -16,10 +16,12 @@
 
 import { useEffect } from 'react';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { InjectedFormProps, reduxForm } from 'redux-form';
 import { FieldText, Modal } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
+import { TEST_CASE_LIBRARY_EVENTS } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { UseModalData } from 'common/hooks';
 import { createClassnames } from 'common/utils';
 import { withModal } from 'controllers/modal';
@@ -54,10 +56,19 @@ const EditTestCaseModal = ({
   initialize,
 }: InjectedFormProps<UpdateTestCasePayload> & EditTestCaseModalProps) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { patchTestCase, isLoading } = useTestCase(testCaseId);
 
   const handleUpdate = (formData: UpdateTestCasePayload) =>
-    patchTestCase({ testCaseId, payload: formData });
+    patchTestCase({
+      testCaseId,
+      payload: formData,
+      onSuccess: () => {
+        trackEvent(
+          TEST_CASE_LIBRARY_EVENTS.submitEditTestCaseFromDetails(String(testCaseId)),
+        );
+      },
+    });
 
   const { okButton, cancelButton, hideModal } = useModalButtons({
     okButtonText: formatMessage(COMMON_LOCALE_KEYS.SAVE),
