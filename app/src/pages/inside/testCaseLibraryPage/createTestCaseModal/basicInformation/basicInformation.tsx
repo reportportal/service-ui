@@ -32,7 +32,7 @@ import { Attribute } from 'types/testCase';
 import { messages } from './messages';
 import { commonMessages } from '../../commonMessages';
 import { PrioritySelect } from '../../prioritySelect/prioritySelect';
-import { CREATE_TEST_CASE_FORM_NAME } from '../createTestCaseModal';
+import { CREATE_TEST_CASE_FORM_NAME } from '../formConstants';
 
 import styles from './basicInformation.scss';
 
@@ -52,7 +52,7 @@ export const BasicInformation = ({
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const selector = formValueSelector(formName);
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return
+  // eslint-disable-next-line react-hooks/exhaustive-deps,@typescript-eslint/no-unsafe-return
   const attributes: Attribute[] = useSelector((state) => selector(state, 'attributes')) || [];
 
   const handleTagSelect = useCallback(

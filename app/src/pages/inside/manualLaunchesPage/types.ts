@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { PageInfo } from 'controllers/testPlan';
-import type { EntityWithDisplayId } from 'types/common';
+import type { EntityWithDisplayId, Page } from 'types/common';
+export { ExecutionStatus } from 'types/testCase';
 
 export interface LaunchAttribute {
   key: string;
@@ -73,7 +73,7 @@ export interface Launch extends EntityWithDisplayId {
 
 export interface LaunchesResponse {
   content: Launch[];
-  page: PageInfo;
+  page: Page;
 }
 
 export interface ManualTestCase extends EntityWithDisplayId {
@@ -152,12 +152,4 @@ export interface UrlsHelper {
     launchId: string | number,
     executionId: string | number,
   ) => string;
-}
-
-export enum ExecutionStatus {
-  TO_RUN = 'TO_RUN',
-  IN_PROGRESS = 'IN_PROGRESS',
-  PASSED = 'PASSED',
-  FAILED = 'FAILED',
-  SKIPPED = 'SKIPPED',
 }

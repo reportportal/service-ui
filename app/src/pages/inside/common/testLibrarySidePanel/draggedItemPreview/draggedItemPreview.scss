@@ -31,6 +31,8 @@
   background-color: var(--rp-ui-base-bg-000);
   border-radius: 4px;
   box-shadow: var(--rp-ui-base-shadow-secondary);
+  opacity: 93%;
+  border: none;
 
   &__text {
     flex: 1;
@@ -58,10 +60,6 @@
   &__icon {
     display: flex;
     align-items: center;
-
-    svg path {
-      fill: var(--rp-ui-base-topaz-pressed);
-    }
 
     &--leading svg path {
       fill: var(--rp-ui-base-e-300);

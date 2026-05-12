@@ -16,4 +16,4 @@
 
 export { useDeleteManualLaunchModal, useBatchDeleteManualLaunchesModal } from './useDeleteManualLaunchModal';
 export { DELETE_MANUAL_LAUNCH_MODAL_KEY } from './deleteManualLaunchModal';
-export type { DeleteManualLaunchModalData } from './deleteManualLaunchModal';
+export type { DeleteManualLaunchModalData } from './types';

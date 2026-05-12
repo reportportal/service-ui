@@ -29,26 +29,13 @@ import { MANUAL_LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events/ga
 
 import { useDeleteManualLaunches } from './useDeleteManualLaunches';
 import { messages } from './messages';
+import { DeleteManualLaunchModalData } from './types';
 
 import styles from './deleteManualLaunchModal.scss';
 
 const cx = createClassnames(styles);
 
 export const DELETE_MANUAL_LAUNCH_MODAL_KEY = 'deleteManualLaunchModalKey';
-
-interface SingleDeleteData {
-  type: 'single';
-  id: number;
-  name: string;
-}
-
-interface BatchDeleteData {
-  type: 'batch';
-  launchIds: number[];
-  onClearSelection?: VoidFn;
-}
-
-export type DeleteManualLaunchModalData = SingleDeleteData | BatchDeleteData;
 
 interface DeleteManualLaunchModalProps {
   data: DeleteManualLaunchModalData;

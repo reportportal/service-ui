@@ -17,8 +17,14 @@
 import { FC, SVGProps, ReactNode } from 'react';
 import { isString, isObject, isNil } from 'es-toolkit/compat';
 
-import type { Tag, Attribute, Requirement, ExtendedTestCase, Step } from 'types/testCase';
-import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
+import type {
+  Tag,
+  Attribute,
+  Requirement,
+  ExtendedTestCase,
+  Step,
+  TestCasePriority,
+} from 'types/testCase';
 import { FolderWithFullPath } from 'controllers/testCase/types';
 
 import { Attachment } from '../common/attachmentList';

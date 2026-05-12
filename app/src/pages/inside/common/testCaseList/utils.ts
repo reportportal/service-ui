@@ -16,10 +16,9 @@
 
 import { formatDistanceToNow, format } from 'date-fns';
 import { enUS, ru, es, de } from 'date-fns/locale';
-import qs from 'qs';
-import { actionToPath, history } from 'redux-first-router';
+import { history } from 'redux-first-router';
 
-import routesMap from 'routes/routesMap';
+import { TEST_CASE_LIBRARY_PAGE } from 'controllers/pages/constants';
 import { TestCaseMenuAction } from 'pages/inside/common/testCaseList/types';
 import { ExecutionStatus } from 'types/testCase';
 
@@ -101,12 +100,28 @@ export const getIsManualCovered = (status?: ExecutionStatus) => {
 type RouteActionInput = {
   type: string;
   payload?: Record<string, unknown>;
-  meta?: Record<string, unknown>;
 };
 
+const getStringPayloadValue = (value: unknown): string =>
+  typeof value === 'string' ? value : '';
+
 export const openRouteInNewTab = (action: RouteActionInput) => {
-  const normalizedAction = { ...action, payload: action.payload ?? {} };
-  const path = actionToPath(normalizedAction, routesMap, qs);
+  if (action.type !== TEST_CASE_LIBRARY_PAGE) {
+    return;
+  }
+
+  const payload = action.payload ?? {};
+  const organizationSlug = getStringPayloadValue(payload.organizationSlug);
+  const projectSlug = getStringPayloadValue(payload.projectSlug);
+  const testCasePageRoute = getStringPayloadValue(payload.testCasePageRoute);
+
+  if (!organizationSlug || !projectSlug) {
+    return;
+  }
+
+  const path = `/organizations/${organizationSlug}/projects/${projectSlug}/testLibrary${
+    testCasePageRoute ? `/${testCasePageRoute}` : ''
+  }`;
   const href = history().createHref({ pathname: path });
   const url = new URL(href, window.location.href).toString();
 

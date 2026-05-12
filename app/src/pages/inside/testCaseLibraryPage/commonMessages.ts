@@ -114,4 +114,12 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'TestCaseLibraryPage.duplicateTestCase',
     defaultMessage: 'Duplicate Test Case',
   },
+  noTestCasesAvailableToAddToTestPlan: {
+    id: 'TestCaseLibraryPage.noTestCasesAvailableToAddToTestPlan',
+    defaultMessage: 'No test cases available to add to test plan',
+  },
+  noTestCasesAvailableToAddToLaunch: {
+    id: 'TestCaseLibraryPage.noTestCasesAvailableToAddToLaunch',
+    defaultMessage: 'No test cases available to add to launch',
+  },
 });

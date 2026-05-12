@@ -41,10 +41,9 @@ import { showModalAction } from 'controllers/modal';
 import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
-import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
-import { ExecutionEstimationTime } from 'pages/inside/common/executionEstimationTime';
 import { testCaseLibraryBreadcrumbsSelector } from 'controllers/pages/selectors';
-import { ExtendedTestCase } from 'types/testCase';
+import { ExecutionEstimationTime } from 'pages/inside/common/executionEstimationTime';
+import type { ExtendedTestCase, TestCasePriority } from 'types/testCase';
 
 import { messages } from './messages';
 import { commonMessages } from '../../commonMessages';

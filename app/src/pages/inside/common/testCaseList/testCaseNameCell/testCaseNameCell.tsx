@@ -17,7 +17,7 @@
 import { createClassnames } from 'common/utils';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
-import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
+import type { TestCasePriority } from 'types/testCase';
 
 import styles from './testCaseNameCell.scss';
 

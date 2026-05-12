@@ -16,26 +16,12 @@
 import { createSelector } from 'reselect';
 
 import { ExtendedTestCase } from 'types/testCase';
-import { Page } from 'types/common';
+import type { TestPlanState } from './state';
 
-import { EMPTY_FOLDERS, areFoldersFetchedSelector, foldersSelector, Folder } from '../testCase';
+import { EMPTY_FOLDERS, areFoldersFetchedSelector, foldersSelector } from '../testCase/selectors';
+import { Folder } from '../testCase/types';
 import { getParentFolders, transformFoldersToDisplay } from 'common/utils/folderUtils';
-import { TestPlanDto, TestPlanFoldersDto, TestPlanTestCaseDto } from './constants';
 import { isEmpty } from 'es-toolkit/compat';
-
-export interface TestPlanState {
-  data: {
-    content: TestPlanDto[] | null;
-    page: Page | null;
-  };
-  isLoading?: boolean;
-  activeTestPlan?: TestPlanDto | null;
-  testPlanFolders?: TestPlanFoldersDto | null;
-  testPlanTestCases?: TestPlanTestCaseDto | null;
-  isLoadingActive?: boolean;
-  isLoadingTestPlanTestCases?: boolean;
-  expandedFolderIds?: number[];
-}
 
 interface RootState {
   testPlan?: TestPlanState;
