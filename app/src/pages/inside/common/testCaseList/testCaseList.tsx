@@ -24,10 +24,9 @@ import { DragLayer } from '@reportportal/ui-kit/sortable';
 
 import { TEST_CASE_LIBRARY_EVENTS } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { createClassnames } from 'common/utils';
-import { ExtendedTestCase } from 'types/testCase';
-import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
+import type { ExtendedTestCase, TestCasePriority } from 'types/testCase';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { SelectedTestCaseRow } from 'pages/inside/testCaseLibraryPage/allTestCasesPage/allTestCasesPage';
+import { SelectedTestCaseRow } from './types';
 import { locationSelector } from 'controllers/pages/typed-selectors';
 import {
   TEST_CASE_LIBRARY_PAGE,
@@ -103,7 +102,10 @@ export const TestCaseList = memo(
       handleSelectedRows(
         isCurrentlySelected
           ? selectedRows.filter((row) => row.id !== id)
-          : [...selectedRows, { id: testCase.id, folderId: testCase.testFolder.id }],
+          : [
+              ...selectedRows,
+              { id: testCase.id, folderId: testCase.testFolder.id, name: testCase.name },
+            ],
       );
     };
 
@@ -119,7 +121,11 @@ export const TestCaseList = memo(
           ...selectedRows,
           ...testCases
             .filter((testCase) => !selectedRowIds.includes(testCase.id))
-            .map((testCase) => ({ id: testCase.id, folderId: testCase.testFolder.id })),
+            .map((testCase) => ({
+              id: testCase.id,
+              folderId: testCase.testFolder.id,
+              name: testCase.name,
+            })),
         ];
 
       handleSelectedRows(newSelectedRows);

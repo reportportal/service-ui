@@ -36,6 +36,7 @@ import {
 import { TestCase } from 'types/testCase';
 import { Page } from 'types/common';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
+import { SelectedTestCaseRow } from 'pages/inside/common/testCaseList/types';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { showModalAction } from 'controllers/modal';
 import { locationQuerySelector, payloadSelector, urlFolderIdSelector } from 'controllers/pages';
@@ -66,11 +67,6 @@ interface AllTestCasesPageProps {
   instanceKey: TMS_INSTANCE_KEY;
 }
 
-export interface SelectedTestCaseRow {
-  id: number;
-  folderId: number;
-}
-
 export const AllTestCasesPage = ({
   testCases,
   isLoading,
@@ -80,13 +76,6 @@ export const AllTestCasesPage = ({
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const { organizationSlug, projectSlug } = useProjectDetails();
-
-  const trackBulkOperation = useCallback(
-    (elementName: TestCaseBulkOperationElementName) => {
-      trackEvent(TEST_CASE_LIBRARY_EVENTS.clickBulkOperation(elementName));
-    },
-    [trackEvent],
-  );
   const payload = useSelector(payloadSelector);
   const query = useSelector(locationQuerySelector);
   const { setPageNumber, setPageSize, captions, activePage, pageSize, totalPages } =
@@ -101,82 +90,90 @@ export const AllTestCasesPage = ({
   const folderId = useSelector(urlFolderIdSelector);
   const folders = useSelector(foldersSelector);
   const dispatch = useDispatch();
-  const isAnyRowSelected = !isEmpty(selectedRows);
-  const selectedRowIds = useMemo(() => selectedRows.map((row) => row.id), [selectedRows]);
   const { openModal: openAddToTestPlanModal } = useAddTestCasesToTestPlanModal();
-  const onClearSelection = () => setSelectedRows([]);
-  const { openModal: openAddToLaunchModal } = useAddToLaunchModal({
-    selectedTestCasesIds: selectedRowIds,
-    onClearSelection,
-    isUncoveredTestsCheckboxAvailable: false,
-  });
+  const { openModal: openAddToLaunchModal } = useAddToLaunchModal();
   const { openModal: openBatchDuplicateToFolderModal } = useBatchDuplicateTestCasesModal();
   const { openModal: openBatchDeleteTestCasesModal } = useBatchDeleteTestCasesModal();
   const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
   const { openModal: openBatchEditTagsModal } = useBatchEditTagsModal();
   const { canManageTestCases } = useUserPermissions();
 
+  const isAnyRowSelected = !isEmpty(selectedRows);
+  const selectedRowIds = useMemo(() => selectedRows.map((row) => row.id), [selectedRows]);
+
+  const trackBulkOperation = useCallback(
+    (elementName: TestCaseBulkOperationElementName) => {
+      trackEvent(TEST_CASE_LIBRARY_EVENTS.clickBulkOperation(elementName));
+    },
+    [trackEvent],
+  );
+
+  const onClearSelection = useCallback(() => setSelectedRows([]), []);
+
   const handleSelectedRows = (rows: SelectedTestCaseRow[]) => setSelectedRows(rows);
 
   const folderTitle = useMemo(() => {
     const selectedFolder = folders.find((folder) => String(folder.id) === String(folderId));
+
     return selectedFolder?.name || formatMessage(COMMON_LOCALE_KEYS.ALL_TEST_CASES_TITLE);
   }, [folderId, folders, formatMessage]);
 
-  const popoverItems: PopoverItem[] = canManageTestCases ? [
-    {
-      label: formatMessage(messages.duplicateToFolder),
-      onClick: () => {
-        trackBulkOperation(TEST_CASE_BULK_OPERATION_ELEMENT_NAME.DUPLICATE_TO_FOLDER);
-        openBatchDuplicateToFolderModal({
-          selectedTestCaseIds: selectedRowIds,
-          count: selectedRowIds.length,
-          onClearSelection,
-        });
-      },
-    },
-    {
-      label: formatMessage(messages.changePriority),
-      onClick: () => {
-        trackBulkOperation(TEST_CASE_BULK_OPERATION_ELEMENT_NAME.CHANGE_PRIORITY);
-        dispatch(
-          showModalAction({
-            id: CHANGE_PRIORITY_MODAL_KEY,
-            data: {
-              priority: 'unspecified',
-              selectedRowIds,
+  const popoverItems: PopoverItem[] = canManageTestCases
+    ? [
+        {
+          label: formatMessage(messages.duplicateToFolder),
+          onClick: () => {
+            trackBulkOperation(TEST_CASE_BULK_OPERATION_ELEMENT_NAME.DUPLICATE);
+            openBatchDuplicateToFolderModal({
+              selectedTestCaseIds: selectedRowIds,
+              count: selectedRowIds.length,
               onClearSelection,
-            },
-          }),
-        );
-      },
-    },
-    {
-      label: formatMessage(messages.editTags),
-      onClick: () => {
-        trackBulkOperation(TEST_CASE_BULK_OPERATION_ELEMENT_NAME.EDIT_TAG);
-        openBatchEditTagsModal({
-          selectedTestCaseIds: selectedRowIds,
-          count: selectedRowIds.length,
-          onClearSelection,
-        });
-      },
-    },
-    {
-      label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-      variant: 'destructive',
-      onClick: () => {
-        trackBulkOperation(TEST_CASE_BULK_OPERATION_ELEMENT_NAME.DELETE);
-        const folderDeltasMap = countBy(selectedRows, (row) => String(row.folderId));
+            });
+          },
+        },
+        {
+          label: formatMessage(messages.changePriority),
+          onClick: () => {
+            trackBulkOperation(TEST_CASE_BULK_OPERATION_ELEMENT_NAME.CHANGE_PRIORITY);
+            dispatch(
+              showModalAction({
+                id: CHANGE_PRIORITY_MODAL_KEY,
+                data: {
+                  priority: 'unspecified',
+                  selectedRowIds,
+                  onClearSelection,
+                },
+              }),
+            );
+          },
+        },
+        {
+          label: formatMessage(messages.editTags),
+          onClick: () => {
+            trackBulkOperation(TEST_CASE_BULK_OPERATION_ELEMENT_NAME.EDIT_TAG);
+            openBatchEditTagsModal({
+              selectedTestCaseIds: selectedRowIds,
+              count: selectedRowIds.length,
+              onClearSelection,
+            });
+          },
+        },
+        {
+          label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+          variant: 'destructive',
+          onClick: () => {
+            trackBulkOperation(TEST_CASE_BULK_OPERATION_ELEMENT_NAME.DELETE);
+            const folderDeltasMap = countBy(selectedRows, (row) => String(row.folderId));
 
-        openBatchDeleteTestCasesModal({
-          selectedTestCaseIds: selectedRowIds,
-          folderDeltasMap,
-          onClearSelection,
-        });
-      },
-    },
-  ] : [];
+            openBatchDeleteTestCasesModal({
+              selectedTestCaseIds: selectedRowIds,
+              folderDeltasMap,
+              onClearSelection,
+            });
+          },
+        },
+      ]
+    : [];
 
   const handleOpenAddToTestPlanModal = useCallback(() => {
     trackBulkOperation(TEST_CASE_BULK_OPERATION_ELEMENT_NAME.ADD_TO_TEST_PLAN);
@@ -185,11 +182,16 @@ export const AllTestCasesPage = ({
 
   const handleOpenAddToLaunchModal = useCallback(() => {
     trackBulkOperation(TEST_CASE_BULK_OPERATION_ELEMENT_NAME.ADD_TO_LAUNCH);
-    openAddToLaunchModal();
-  }, [openAddToLaunchModal, trackBulkOperation]);
+    openAddToLaunchModal({
+      selectedTestCaseIds: selectedRowIds,
+      onClearSelection,
+      isUncoveredTestsCheckboxAvailable: false,
+    });
+  }, [openAddToLaunchModal, onClearSelection, selectedRowIds, trackBulkOperation]);
 
   const handleOpenMoveTestCaseModal = useCallback(() => {
     trackBulkOperation(TEST_CASE_BULK_OPERATION_ELEMENT_NAME.MOVE_TO_FOLDER);
+
     const sourceFolderDeltasMap = countBy(selectedRows, (row) => String(row.folderId));
 
     openMoveTestCaseModal({
@@ -197,7 +199,7 @@ export const AllTestCasesPage = ({
       sourceFolderDeltasMap,
       onClearSelection,
     });
-  }, [selectedRowIds, selectedRows, openMoveTestCaseModal, trackBulkOperation]);
+  }, [trackBulkOperation, selectedRows, openMoveTestCaseModal, selectedRowIds, onClearSelection]);
 
   if (
     isEmpty(testCases) &&

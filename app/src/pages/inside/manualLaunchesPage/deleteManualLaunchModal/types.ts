@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-export interface FilterOption {
-  label: string;
-  value: string;
-}
+import { VoidFn } from '@reportportal/ui-kit/common';
 
-export enum TestCaseMenuAction {
-  DUPLICATE = 'duplicate',
-  EDIT = 'edit',
-  MOVE = 'move',
-  HISTORY = 'history',
-  DELETE = 'delete',
-}
-
-export interface SelectedTestCaseRow {
+interface SingleDeleteData {
+  type: 'single';
   id: number;
-  folderId: number;
-  name?: string;
+  name: string;
 }
+
+interface BatchDeleteData {
+  type: 'batch';
+  launchIds: number[];
+  onClearSelection?: VoidFn;
+}
+
+export type DeleteManualLaunchModalData = SingleDeleteData | BatchDeleteData;

@@ -19,7 +19,7 @@ import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
 import { createClassnames } from 'common/utils';
-import { TestPlanDto } from 'controllers/testPlan';
+import type { TestPlanDto } from 'controllers/testPlan/types';
 
 import { ProgressBar } from '../progressBar';
 import { TestPlanActions } from '../../testPlanActions';

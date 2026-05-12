@@ -45,15 +45,15 @@ export interface VirtualFolderTreeProps {
   isSearchFilteredLoading: boolean;
   hasSearchFilteredFolders: boolean;
   hasAnyMatch: boolean;
-  onFolderClick: (id: number) => void;
-  setAllTestCases: VoidFn;
-  onToggleFolder: (folder: TransformedFolder) => void;
   pageSearchQuery?: string;
   enableDragAndDrop?: boolean;
   isFlatView?: boolean;
   hideEmptyFoldersInFlatView?: boolean;
   hiddenActiveFolderIndicatorId?: number | null;
   canDropOn?: (draggedItem: TreeDragItem, targetId: string | number) => boolean;
+  onFolderClick: (id: number) => void;
+  setAllTestCases: VoidFn;
+  onToggleFolder: (folder: TransformedFolder) => void;
 }
 
 export const VirtualFolderTree = ({
@@ -130,9 +130,6 @@ export const VirtualFolderTree = ({
       node={node}
       activeFolderId={activeFolderId}
       instanceKey={instanceKey}
-      onFolderClick={onFolderClick}
-      setAllTestCases={setAllTestCases}
-      onToggleFolder={onToggleFolder}
       searchQuery={searchQuery}
       nextNodeDepth={nextNodeDepth}
       enableDragAndDrop={enableDragAndDrop}
@@ -140,6 +137,9 @@ export const VirtualFolderTree = ({
       isDragging={isDragging}
       dragRef={dragRef}
       style={style}
+      onFolderClick={onFolderClick}
+      setAllTestCases={setAllTestCases}
+      onToggleFolder={onToggleFolder}
     />
   );
 
@@ -199,14 +199,14 @@ export const VirtualFolderTree = ({
               node={folder}
               activeFolderId={activeFolderId}
               instanceKey={instanceKey}
-              onFolderClick={onFolderClick}
-              setAllTestCases={setAllTestCases}
-              onToggleFolder={onToggleFolder}
               searchQuery={searchQuery}
               nextNodeDepth={nextNodeDepth}
               enableDragAndDrop={enableDragAndDrop}
               hasHiddenActiveDescendant={folder.folder.id === hiddenActiveFolderIndicatorId}
               style={rowStyle}
+              onFolderClick={onFolderClick}
+              setAllTestCases={setAllTestCases}
+              onToggleFolder={onToggleFolder}
             />
           );
         })}

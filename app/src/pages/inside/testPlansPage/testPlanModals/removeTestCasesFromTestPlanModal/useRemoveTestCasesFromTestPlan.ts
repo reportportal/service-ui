@@ -28,8 +28,8 @@ import {
   getTestPlanAction,
   defaultTestPlanTestCasesQueryParams,
   TEST_PLAN_FOLDERS_NAMESPACE,
-  TestPlanFoldersDto,
 } from 'controllers/testPlan';
+import type { TestPlanFoldersDto } from 'controllers/testPlan/types';
 import { PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
 import { LocationInfo } from 'controllers/pages/typed-selectors';
 import { useTestPlanId } from 'hooks/useTypedSelector';

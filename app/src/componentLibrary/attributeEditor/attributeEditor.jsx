@@ -99,11 +99,16 @@ export const AttributeEditor = ({
   };
 
   useEffect(() => {
-    if (keyEditorRef.current) {
-      keyEditorRef.current.focus();
-      refFunction?.(keyEditorRef.current);
-    }
-  }, [refFunction]);
+    keyEditorRef.current?.focus();
+  }, []);
+
+  const refFunctionRef = useRef(refFunction);
+  refFunctionRef.current = refFunction;
+
+  const inputRefFunction = useCallback((node) => {
+    keyEditorRef.current = node;
+    refFunctionRef.current?.(node);
+  }, []);
 
   useEffect(() => {
     const { key, value } = attribute;
@@ -202,10 +207,6 @@ export const AttributeEditor = ({
         }
       }
     };
-
-  const inputRefFunction = (node) => {
-    keyEditorRef.current = node;
-  };
 
   const getAutocompleteProps = (allAutocompleteProps, label) => {
     const { keyMenuClassName, valueMenuClassName, menuClassName, ...restProps } =

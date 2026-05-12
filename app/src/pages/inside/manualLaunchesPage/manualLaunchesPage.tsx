@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
@@ -88,6 +88,7 @@ export const ManualLaunchesPage = () => {
 
   const appliedSearchQuery = location?.query?.searchQuery || '';
   const [searchValue, setSearchValue] = useState(appliedSearchQuery);
+  const searchSessionTrackedRef = useRef(false);
   const [isFilterSidePanelVisible, setIsFilterSidePanelVisible] = useState(false);
   const appliedFilters = useMemo<ManualLaunchesFilterPayload>(
     () => parseFiltersFromURLQuery(location?.query),
@@ -120,8 +121,17 @@ export const ManualLaunchesPage = () => {
 
   const debouncedUpdateSearch = useMemo(
     () =>
+      // eslint-disable-next-line react-hooks/refs
       debounce((value: string) => {
         const trimmed = value.trim();
+
+        if (trimmed && !searchSessionTrackedRef.current) {
+          trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.CLICK_SEARCH_MANUAL_LAUNCHES);
+          searchSessionTrackedRef.current = true;
+        }
+        if (!trimmed) {
+          searchSessionTrackedRef.current = false;
+        }
 
         dispatch(
           updatePagePropertiesAction({
@@ -130,7 +140,7 @@ export const ManualLaunchesPage = () => {
           }),
         );
       }, SEARCH_DELAY),
-    [dispatch, appliedSearchQuery],
+    [dispatch, appliedSearchQuery, trackEvent],
   );
 
   const handleFilterChange = useCallback(

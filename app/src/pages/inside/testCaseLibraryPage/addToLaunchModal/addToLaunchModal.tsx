@@ -27,13 +27,13 @@ import {
 } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { testCasesSelector } from 'controllers/testCase';
 import {
   BaseLaunchModal,
   LaunchFormData,
   LaunchMode,
   INITIAL_LAUNCH_FORM_VALUES,
 } from 'pages/inside/common/launchFormFields';
+import { testCasesSelector } from 'controllers/testCase';
 
 import { AddToLaunchModalProps } from './types';
 import { messages } from './messages';
@@ -47,7 +47,9 @@ const BoldTestCasesCount = (parts: ReactNode[]) => (
 );
 
 const AddToLaunchModalComponent = ({
-  selectedTestCasesIds,
+  folderId,
+  itemCount,
+  selectedTestCaseIds,
   onClearSelection,
   isUncoveredTestsCheckboxAvailable,
   place,
@@ -56,24 +58,33 @@ const AddToLaunchModalComponent = ({
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const allTestCases = useSelector(testCasesSelector);
-  const isBulk = selectedTestCasesIds.length > 1;
 
-  const testCases = useMemo(() => {
-    return allTestCases.filter((testCase) => selectedTestCasesIds.includes(testCase.id));
-  }, [allTestCases, selectedTestCasesIds]);
+  const isFromFolder = folderId !== undefined;
 
-  const descriptionText = useMemo(() => {
-    // Switch description text based on the number of selected test cases
-    return selectedTestCasesIds.length > 1
-      ? formatMessage(messages.addSelectedTestCases, {
-          count: selectedTestCasesIds.length,
-          bold: BoldTestCasesCount,
-        })
-      : formatMessage(messages.addSelectedTestCase, {
-          testCaseName: testCases?.[0]?.name,
-          bold: BoldTestCasesCount,
-        });
-  }, [selectedTestCasesIds.length, testCases, formatMessage]);
+  const testCases = useMemo(
+    () =>
+      isFromFolder
+        ? []
+        : allTestCases.filter((testCase) => (selectedTestCaseIds || []).includes(testCase.id)),
+    [allTestCases, isFromFolder, selectedTestCaseIds],
+  );
+
+  const count = isFromFolder ? (itemCount ?? 0) : selectedTestCaseIds.length;
+  const isBulk = count > 1;
+
+  const descriptionText = useMemo(
+    () =>
+      isFromFolder || count > 1
+        ? formatMessage(messages.addSelectedTestCases, {
+            count,
+            bold: BoldTestCasesCount,
+          })
+        : formatMessage(messages.addSelectedTestCase, {
+            testCaseName: testCases?.[0]?.name,
+            bold: BoldTestCasesCount,
+          }),
+    [count, isFromFolder, testCases, formatMessage],
+  );
 
   const handleSubmitClick = (mode: LaunchMode) => {
     if (isBulk) {
@@ -100,6 +111,7 @@ const AddToLaunchModalComponent = ({
     <BaseLaunchModal
       {...reduxFormProps}
       testCases={testCases}
+      folderId={folderId}
       modalTitle={formatMessage(messages.addToLaunch)}
       okButtonText={COMMON_LOCALE_KEYS.ADD}
       description={descriptionText}

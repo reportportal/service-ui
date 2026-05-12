@@ -26,8 +26,7 @@ import {
   TEST_CASE_LIBRARY_EVENTS,
   TEST_CASE_PLACE,
 } from 'analyticsEvents/testCaseLibraryPageEvents';
-import { ManualScenario } from 'types/testCase';
-import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
+import { ManualScenario, TestCaseManualScenario } from 'types/testCase';
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useAddToLaunchModal } from '../addToLaunchModal';
@@ -49,11 +48,7 @@ export const AddToLaunchButton = ({
 }: AddToLaunchButtonProps) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
-  const { openModal: openAddToLaunchModal } = useAddToLaunchModal({
-    selectedTestCasesIds: [testCaseId],
-    isUncoveredTestsCheckboxAvailable: false,
-    place,
-  });
+  const { openModal: openAddToLaunchModal } = useAddToLaunchModal();
 
   const isDisabled = useMemo(() => {
     if (isEmpty(manualScenario)) {
@@ -90,7 +85,12 @@ export const AddToLaunchButton = ({
         ),
       );
     }
-    openAddToLaunchModal();
+
+    openAddToLaunchModal({
+      selectedTestCaseIds: [testCaseId],
+      isUncoveredTestsCheckboxAvailable: false,
+      place,
+    });
   };
 
   const buttonComponent = (

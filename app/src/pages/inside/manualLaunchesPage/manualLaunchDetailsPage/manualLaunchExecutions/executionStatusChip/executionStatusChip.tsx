@@ -18,7 +18,7 @@ import { memo } from 'react';
 import { createClassnames } from 'common/utils';
 import Parser from 'html-react-parser';
 
-import { ExecutionStatus } from "pages/inside/manualLaunchesPage/types";
+import { ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
 
 import { ExecutionStatusChipProps } from './types';
 import { STATUS_CLASS_MAP, STATUS_ICON_MAP } from './constants';
@@ -30,7 +30,7 @@ const cx = createClassnames(styles);
 export const ExecutionStatusChip = memo(({ status }: ExecutionStatusChipProps) => {
   const statusKey = status.toUpperCase() as ExecutionStatus;
   const statusClass = STATUS_CLASS_MAP[statusKey];
-  const statusIcon = STATUS_ICON_MAP[statusKey];
+  const statusIcon = STATUS_ICON_MAP[statusKey] as string;
 
   if (!statusIcon) {
     return null;
