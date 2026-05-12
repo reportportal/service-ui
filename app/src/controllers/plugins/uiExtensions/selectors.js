@@ -18,6 +18,7 @@ import { createSelector } from 'reselect';
 import {
   normalizeExtensionPluginModules,
   normalizeRemotePluginModules,
+  isPluginManifestAvailable,
 } from 'controllers/plugins/uiExtensions/utils';
 import {
   EXTENSION_TYPE_SETTINGS_TAB,
@@ -50,10 +51,24 @@ import {
   domainSelector,
   enabledExternalPluginsSelector,
   enabledExternalPublicPluginsSelector,
+  pluginsSelector,
 } from '../selectors';
 
 const extensionManifestsSelector = (state) =>
   domainSelector(state).uiExtensions.extensionManifests || [];
+
+export const extensionManifestsLoadPendingSelector = createSelector(
+  pluginsSelector,
+  extensionManifestsSelector,
+  (plugins, manifests) =>
+    plugins.some(
+      (p) =>
+        p.enabled &&
+        p.pluginType === PLUGIN_TYPE_EXTENSION &&
+        isPluginManifestAvailable(p) &&
+        !manifests.some((m) => m.pluginName === p.name),
+    ),
+);
 
 // Normalize different plugin types extensions to unify their processing in components
 const createExtensionSelectorByExtensionPoints = (

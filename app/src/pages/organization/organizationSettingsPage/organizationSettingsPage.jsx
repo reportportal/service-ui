@@ -27,7 +27,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Navigation } from 'pages/inside/common/navigation';
 import { Header } from 'pages/inside/common/header';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { uiExtensionOrganizationSettingsTabsSelector } from 'controllers/plugins';
+import {
+  extensionManifestsLoadPendingSelector,
+  pluginsLoadingSelector,
+  uiExtensionOrganizationSettingsTabsSelector,
+} from 'controllers/plugins';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { useNavigationTabsExtensionsConfig } from 'common/hooks';
 import classNames from 'classnames/bind';
@@ -45,6 +49,8 @@ export const OrganizationSettingsPage = () => {
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const activeTab = useSelector(settingsTabSelector);
   const extensions = useSelector(uiExtensionOrganizationSettingsTabsSelector);
+  const pluginsLoading = useSelector(pluginsLoadingSelector);
+  const extensionManifestsPending = useSelector(extensionManifestsLoadPendingSelector);
   const [headerNodes, setHeaderNodes] = useState({});
 
   const createTabLink = useCallback(
@@ -92,13 +98,21 @@ export const OrganizationSettingsPage = () => {
   }, [config]);
 
   const content = useMemo(() => {
-    if (!activeTab || !config[activeTab]) {
+    if (config[activeTab]) {
+      return config[activeTab].component;
+    }
+    if (!activeTab) {
       const firstItemName = Object.keys(config)[0];
       dispatch(config[firstItemName].link);
       return null;
     }
-    return config[activeTab].component;
-  }, [activeTab, config, dispatch]);
+    if (pluginsLoading || extensionManifestsPending) {
+      return null;
+    }
+    const firstItemName = Object.keys(config)[0];
+    dispatch(config[firstItemName].link);
+    return null;
+  }, [activeTab, config, dispatch, extensionManifestsPending, pluginsLoading]);
 
   return (
     <OrganizationSettingsAnalyticsWrapper>
