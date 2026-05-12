@@ -15,14 +15,13 @@
  */
 
 import { isEmpty } from 'es-toolkit/compat';
-import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 import {
   hasStepContent,
   hasStepsPreconditionContent,
   hasScenarioContent,
 } from 'pages/inside/common/scenarioUtils';
 
-import { ManualScenario, Tag } from 'types/testCase';
+import { ManualScenario, Tag, TestCaseManualScenario } from 'types/testCase';
 
 export const checkScenario = (manualScenario: ManualScenario | undefined): boolean => {
   if (!manualScenario) return true;

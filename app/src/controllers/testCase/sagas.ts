@@ -98,7 +98,7 @@ import {
   urlFolderIdSelector,
   locationSelector,
 } from 'controllers/pages';
-import { MANUAL_LAUNCH_FOLDER_SEARCH_FILTER_KEY } from 'controllers/manualLaunch';
+import { MANUAL_LAUNCH_FOLDER_SEARCH_FILTER_KEY } from 'controllers/manualLaunch/constants';
 
 function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generator {
   yield put(startLoadingTestCasesAction());

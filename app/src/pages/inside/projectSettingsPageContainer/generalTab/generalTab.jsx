@@ -47,6 +47,7 @@ import { userRolesType } from 'common/constants/projectRoles';
 import { userRolesSelector } from 'controllers/pages';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { langSelector } from 'controllers/lang';
+import { ClipboardButton } from 'components/buttons/copyClipboardButton';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { PROJECT_SETTINGS_GENERAL_TAB_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { settingsMessages } from 'common/constants/localization/settingsLocalization';
@@ -320,7 +321,9 @@ export class GeneralTab extends Component {
         ...elem,
         disabled,
         hidden,
-        title: disabled ? this.props.intl.formatMessage(settingsMessages.keepLogsTooltip) : undefined,
+        title: disabled
+          ? this.props.intl.formatMessage(settingsMessages.keepLogsTooltip)
+          : undefined,
       };
     });
     if (newOptions.every((v) => v.hidden)) {
@@ -345,7 +348,7 @@ export class GeneralTab extends Component {
   };
 
   render() {
-    const { intl, userRoles, isLoading, projectName } = this.props;
+    const { intl, userRoles, isLoading, projectName, projectKey } = this.props;
     const { processingData } = this.state;
     const canPerformUpdate = canUpdateSettings(userRoles);
     const isDisabled = !canPerformUpdate || processingData;
@@ -354,12 +357,20 @@ export class GeneralTab extends Component {
     ) : (
       <div className={cx('general-tab')}>
         <form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
-          <div>
+          <div className={cx('fake-input-wrapper')}>
             <div className={cx('fake-input-label')}>
               {intl.formatMessage(messages.projectNameLabel)}
             </div>
             <div className={cx('fake-input')} title={projectName}>
               {projectName}
+            </div>
+            <div className={cx('info-wrapper')}>
+              <span className={cx('info')}>
+                {intl.formatMessage(messages.projectKeyLabel)}: {projectKey}
+              </span>
+              {projectKey && (
+                <ClipboardButton className={cx('clipboard-button')} text={projectKey} />
+              )}
             </div>
           </div>
           <FieldElement

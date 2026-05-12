@@ -28,7 +28,8 @@ export const removeTestCasesFromTestPlanMessages = defineMessages({
   },
   removeFromTestPlanSingleDescription: {
     id: 'RemoveTestCasesFromTestPlanModal.singleDescription',
-    defaultMessage: 'Are you sure you want to remove <b>{testCaseName}</b>?',
+    defaultMessage:
+      'Are you sure you want to remove <b>{testCaseName}</b> test case from the test plan? This irreversible action may affect the coverage of the milestone to which the test plan belongs.',
   },
   removeFromTestPlanError: {
     id: 'RemoveTestCasesFromTestPlanModal.errorMessage',

@@ -17,7 +17,7 @@
 import { differenceInCalendarDays, parseISO, startOfDay } from 'date-fns';
 
 import type { TmsMilestoneRS, TmsTestPlanInMilestoneRS } from 'controllers/milestone';
-import type { TestPlanDto } from 'controllers/testPlan';
+import type { TestPlanDto } from 'controllers/testPlan/types';
 
 export const milestoneTestPlansAsTestPlanDtos = (
   plans: TmsTestPlanInMilestoneRS[] | undefined,

@@ -60,6 +60,7 @@ const TEST_CASE_MODAL = {
   CHANGE_PRIORITY: 'change_priority',
   EDIT_TAGS: 'edit_tags',
   EDIT_DESCRIPTION: 'edit_description',
+  EDIT_TEST_CASE: 'edit_test_case',
   DUPLICATE_TO_FOLDER: 'duplicate_to_folder',
 } as const;
 
@@ -89,6 +90,7 @@ const TEST_CASE_ELEMENT = {
   SUBMIT_SINGLE_ADD_TO_LAUNCH: 'submit_single_add_to_test_launch',
   SUBMIT_ADD_TAG: 'submit_add_tag',
   SUBMIT_EDIT_DESCRIPTION: 'submit_edit_description',
+  SUBMIT_EDIT_TEST_CASE: 'submit_edit_test_case',
   SUBMIT_BULK_CHANGE_PRIORITY: 'submit_bulk_menu_change_priority',
   SUBMIT_BULK_EDIT_TAG: 'submit_bulk_menu_edit_tag',
   SUBMIT_BULK_DUPLICATE_TO_FOLDER: 'submit_bulk_menu_duplicate_to_folder',
@@ -121,6 +123,9 @@ export type TestCaseBulkOperationElementName =
 export const FOLDER_POPOVER_ELEMENT_NAME = {
   DUPLICATE_SUBFOLDER: 'menu_duplicate_subfolder',
   CREATE_SUBFOLDER: 'menu_create_subfolder',
+  CREATE_TEST_CASE: 'menu_create_test_case',
+  ADD_TO_TEST_PLAN: 'menu_add_to_test_plan',
+  ADD_TO_LAUNCH: 'menu_add_to_launch',
   MOVE_FOLDER_TO: 'menu_move_folder_to',
   RENAME_FOLDER: 'menu_rename_folder',
   DELETE_FOLDER: 'menu_delete_folder',
@@ -170,6 +175,18 @@ export const FOLDER_OPERATION_SUBMIT_MAP = {
   [FOLDER_POPOVER_ELEMENT_NAME.CREATE_SUBFOLDER]: {
     modal: TEST_CASE_MODAL.CREATE_SUBFOLDER,
     elementName: TEST_CASE_ELEMENT.SUBMIT_CREATE_SUBFOLDER,
+  },
+  [FOLDER_POPOVER_ELEMENT_NAME.CREATE_TEST_CASE]: {
+    modal: TEST_CASE_MODAL.CREATE_TEST_CASE,
+    elementName: TEST_CASE_ELEMENT.SUBMIT_CREATE,
+  },
+  [FOLDER_POPOVER_ELEMENT_NAME.ADD_TO_TEST_PLAN]: {
+    modal: TEST_CASE_MODAL.ADD_TO_TEST_PLAN,
+    elementName: TEST_CASE_ELEMENT.SUBMIT_ADD_TO_TEST_PLAN,
+  },
+  [FOLDER_POPOVER_ELEMENT_NAME.ADD_TO_LAUNCH]: {
+    modal: TEST_CASE_MODAL.ADD_TO_LAUNCH,
+    elementName: TEST_CASE_ELEMENT.SUBMIT_BULK_ADD_TO_LAUNCH,
   },
   [FOLDER_POPOVER_ELEMENT_NAME.MOVE_FOLDER_TO]: {
     modal: TEST_CASE_MODAL.MOVE_FOLDER,
@@ -483,6 +500,13 @@ export const TEST_CASE_LIBRARY_EVENTS = {
     ...CLICK,
     modal: TEST_CASE_MODAL.EDIT_DESCRIPTION,
     element_name: TEST_CASE_ELEMENT.SUBMIT_EDIT_DESCRIPTION,
+    place: TEST_CASE_PLACE.DETAILS_PAGE,
+    test_case_id: testCaseId,
+  }),
+  submitEditTestCaseFromDetails: (testCaseId: string) => ({
+    ...CLICK,
+    modal: TEST_CASE_MODAL.EDIT_TEST_CASE,
+    element_name: TEST_CASE_ELEMENT.SUBMIT_EDIT_TEST_CASE,
     place: TEST_CASE_PLACE.DETAILS_PAGE,
     test_case_id: testCaseId,
   }),

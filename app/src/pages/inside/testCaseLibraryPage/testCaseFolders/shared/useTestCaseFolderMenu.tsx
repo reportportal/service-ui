@@ -15,23 +15,26 @@
  */
 
 import { useIntl } from 'react-intl';
+import { useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 
+import { transformedFoldersWithFullPathSelector, TransformedFolder } from 'controllers/testCase';
 import {
   FOLDER_POPOVER_ELEMENT_NAME,
   type FolderPopoverElementName,
   TEST_CASE_LIBRARY_EVENTS,
 } from 'analyticsEvents/testCaseLibraryPageEvents';
-import { TransformedFolder } from 'controllers/testCase';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PopoverItem } from 'pages/common/popoverControl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
+import { useAddToLaunchModal } from '../../addToLaunchModal';
+import { useAddTestCasesToTestPlanModal } from '../../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { useDeleteFolderModal } from '../../testCaseFolders/modals/deleteFolderModal';
 import { useRenameFolderModal } from '../../testCaseFolders/modals/renameFolderModal';
 import { useDuplicateFolderModal } from '../../testCaseFolders/modals/duplicateFolderModal';
 import { useMoveFolderModal } from '../../testCaseFolders/modals/moveFolderModal';
-import { useImportTestCaseModal } from '../../importTestCaseModal';
+import { useCreateTestCaseModal } from '../../createTestCaseModal';
 import { useCreateSubfolderModal } from '../../testCaseFolders/modals/createSubfolderModal';
 import { commonMessages } from '../../commonMessages';
 
@@ -40,6 +43,13 @@ interface UseTestCaseFolderMenuProps {
   activeFolder: number | null;
   setAllTestCases: () => void;
 }
+
+const getTotalFolderTestsCount = (folder: TransformedFolder): number => {
+  return (
+    folder.testsCount +
+    folder.folders.reduce((sum, nestedFolder) => sum + getTotalFolderTestsCount(nestedFolder), 0)
+  );
+};
 
 export const useTestCaseFolderMenu = ({
   folder,
@@ -52,8 +62,14 @@ export const useTestCaseFolderMenu = ({
   const { openModal: openRenameModal } = useRenameFolderModal();
   const { openModal: openDuplicateModal } = useDuplicateFolderModal();
   const { openModal: openMoveModal } = useMoveFolderModal();
-  const { openModal: openImportTestCaseModal } = useImportTestCaseModal();
+  const { openModal: openCreateTestCaseModal } = useCreateTestCaseModal();
+  const { openModal: openAddToTestPlanModal } = useAddTestCasesToTestPlanModal();
+  const { openModal: openAddToLaunchModal } = useAddToLaunchModal();
   const { openModal: openCreateSubfolderModal } = useCreateSubfolderModal();
+
+  const foldersWithFullPath = useSelector(transformedFoldersWithFullPathSelector);
+  const totalFolderTestsCount = getTotalFolderTestsCount(folder);
+  const isAddActionsDisabled = totalFolderTestsCount === 0;
 
   const { canManageTestCases } = useUserPermissions();
 
@@ -85,9 +101,32 @@ export const useTestCaseFolderMenu = ({
     openMoveModal({ folder });
   };
 
-  const handleImportTestCase = () => {
-    trackEvent(TEST_CASE_LIBRARY_EVENTS.CLICK_IMPORT_TEST_CASES);
-    openImportTestCaseModal({ folderId: folder.id });
+  const handleCreateTestCase = () => {
+    trackFolderPopoverMenu(FOLDER_POPOVER_ELEMENT_NAME.CREATE_TEST_CASE);
+    const selectedFolder = foldersWithFullPath.find(({ id }) => id === folder.id);
+
+    if (!selectedFolder) {
+      return;
+    }
+
+    openCreateTestCaseModal({ folder: selectedFolder });
+  };
+
+  const handleAddToTestPlan = () => {
+    trackFolderPopoverMenu(FOLDER_POPOVER_ELEMENT_NAME.ADD_TO_TEST_PLAN);
+    openAddToTestPlanModal({
+      folderId: folder.id,
+      itemCount: totalFolderTestsCount,
+    });
+  };
+
+  const handleAddToLaunch = () => {
+    trackFolderPopoverMenu(FOLDER_POPOVER_ELEMENT_NAME.ADD_TO_LAUNCH);
+    openAddToLaunchModal({
+      folderId: folder.id,
+      itemCount: totalFolderTestsCount,
+      isUncoveredTestsCheckboxAvailable: false,
+    });
   };
 
   const handleCreateSubfolder = () => {
@@ -95,38 +134,57 @@ export const useTestCaseFolderMenu = ({
     openCreateSubfolderModal({ folder });
   };
 
-  const testCaseFolderTooltipItems: PopoverItem[] = canManageTestCases
+  const testCaseFolderTooltipItems: PopoverItem[][] = canManageTestCases
     ? [
-        {
-          label: formatMessage(commonMessages.createSubfolder),
-          onClick: handleCreateSubfolder,
-        },
-        {
-          label: formatMessage(COMMON_LOCALE_KEYS.RENAME),
-          onClick: handleRenameFolder,
-        },
-        {
-          label: formatMessage(commonMessages.moveFolderTo),
-          variant: 'text' as const,
-          onClick: handleMoveFolder,
-        },
-        {
-          label: formatMessage(commonMessages.duplicateFolder),
-          variant: 'text' as const,
-          onClick: handleDuplicateFolder,
-        },
-        {
-          label: formatMessage(COMMON_LOCALE_KEYS.IMPORT),
-          variant: 'text' as const,
-          onClick: handleImportTestCase,
-        },
-        {
-          label: formatMessage(commonMessages.deleteFolder),
-          variant: 'destructive' as const,
-          onClick: handleDeleteFolder,
-        },
+        [
+          {
+            label: formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN),
+            onClick: handleAddToTestPlan,
+            disabled: isAddActionsDisabled,
+            tooltip: isAddActionsDisabled
+              ? formatMessage(commonMessages.noTestCasesAvailableToAddToTestPlan)
+              : undefined,
+          },
+          {
+            label: formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH),
+            onClick: handleAddToLaunch,
+            disabled: isAddActionsDisabled,
+            tooltip: isAddActionsDisabled
+              ? formatMessage(commonMessages.noTestCasesAvailableToAddToLaunch)
+              : undefined,
+          },
+        ],
+        [
+          {
+            label: formatMessage(commonMessages.createSubfolder),
+            onClick: handleCreateSubfolder,
+          },
+          {
+            label: formatMessage(commonMessages.createTestCase),
+            onClick: handleCreateTestCase,
+          },
+        ],
+        [
+          {
+            label: formatMessage(COMMON_LOCALE_KEYS.RENAME),
+            onClick: handleRenameFolder,
+          },
+          {
+            label: formatMessage(commonMessages.moveFolderTo),
+            onClick: handleMoveFolder,
+          },
+          {
+            label: formatMessage(commonMessages.duplicateFolder),
+            onClick: handleDuplicateFolder,
+          },
+          {
+            label: formatMessage(commonMessages.deleteFolder),
+            variant: 'destructive' as const,
+            onClick: handleDeleteFolder,
+          },
+        ],
       ]
-    : [];
+    : [[]];
 
   return {
     testCaseFolderTooltipItems,

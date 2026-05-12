@@ -77,6 +77,7 @@ const MANUAL_LAUNCHES_ELEMENT = {
   START_DELETE_TEST_EXECUTION: 'start_delete_test_execution',
   START_BULK_DELETE_TEST_EXECUTION: 'start_bulk_delete_test_execution',
   CONTINUE_TESTING: 'continue_testing',
+  SEARCH_MANUAL_LAUNCHES: 'search_manual_launches',
 } as const;
 
 export const TEST_EXECUTION_TEMPLATE_TYPE = {
@@ -247,5 +248,9 @@ export const MANUAL_LAUNCHES_PAGE_EVENTS = {
     ...CLICK,
     place: MANUAL_LAUNCHES_PLACE.EXECUTION_DETAILS_SIDEBAR,
     element_name: MANUAL_LAUNCHES_ELEMENT.CONTINUE_TESTING,
+  },
+  CLICK_SEARCH_MANUAL_LAUNCHES: {
+    ...CLICK,
+    element_name: MANUAL_LAUNCHES_ELEMENT.SEARCH_MANUAL_LAUNCHES,
   },
 };

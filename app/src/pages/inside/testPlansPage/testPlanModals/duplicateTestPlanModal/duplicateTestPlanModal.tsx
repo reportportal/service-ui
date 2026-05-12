@@ -17,7 +17,7 @@
 import { useIntl } from 'react-intl';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { TestPlanDto } from 'controllers/testPlan';
+import type { TestPlanDto } from 'controllers/testPlan/types';
 
 import { TestPlanModal } from '../testPlanModal';
 import { commonMessages } from '../../commonMessages';

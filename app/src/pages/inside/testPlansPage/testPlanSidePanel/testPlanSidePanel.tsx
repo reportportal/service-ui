@@ -49,7 +49,7 @@ import {
 import { ProjectDetails } from 'pages/organization/constants';
 import { Scenario } from 'pages/inside/common/testCaseList/testCaseSidePanel/scenario';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
-import { TestPlanDto } from 'controllers/testPlan';
+import type { TestPlanDto } from 'controllers/testPlan/types';
 import { ExtendedTestCase } from 'types/testCase';
 import { formatDuration, openRouteInNewTab } from 'pages/inside/common/testCaseList/utils';
 
@@ -101,6 +101,7 @@ export const TestPlanSidePanel = memo(
     const handleRemoveFromTestPlan = () => {
       openRemoveTestCasesModal({
         selectedTestCaseIds: [testPlan.id],
+        testCaseName: testCaseDetails.name,
         onClearSelection: () => {
           onClose();
         },

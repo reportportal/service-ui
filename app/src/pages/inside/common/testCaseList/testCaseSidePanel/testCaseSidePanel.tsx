@@ -45,7 +45,7 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import { AttachmentList } from 'pages/inside/common/attachmentList';
-import { ManualScenario, ExtendedTestCase, Requirement } from 'types/testCase';
+import { ManualScenario, ExtendedTestCase, Requirement, TestCaseManualScenario } from 'types/testCase';
 import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
 import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
@@ -55,7 +55,7 @@ import { AddToLaunchButton } from 'pages/inside/testCaseLibraryPage/addToLaunchB
 import { ExecutionEstimationTime } from 'pages/inside/common/executionEstimationTime';
 
 import { RequirementsList } from '../../requirementsList/requirementsList';
-import { TestCaseMenuAction, TestCaseManualScenario } from '../types';
+import { TestCaseMenuAction } from '../types';
 import { formatTimestamp, getExcludedActionsFromPermissionMap } from '../utils';
 import { createTestCaseMenuItems } from '../configUtils';
 import { Scenario } from './scenario';
@@ -251,7 +251,6 @@ export const TestCaseSidePanel = memo(
       );
       openAddTestCasesToTestPlanModal({
         selectedTestCaseIds: [testCase.id],
-        isSingleTestCaseMode: true,
       });
     };
 

@@ -7,8 +7,8 @@ import { showErrorNotification } from 'controllers/notification';
 import { projectKeySelector } from 'controllers/project';
 import { Attribute, ExecutionComment, TestFolder } from 'controllers/manualLaunch/types';
 import { useManualLaunchId } from 'hooks/useTypedSelector';
-import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
 import { UrlsHelper, ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
+import type { TestCasePriority } from 'types/testCase';
 import { ManualScenario, Requirement } from 'types/testCase';
 
 interface ExecutionItem {

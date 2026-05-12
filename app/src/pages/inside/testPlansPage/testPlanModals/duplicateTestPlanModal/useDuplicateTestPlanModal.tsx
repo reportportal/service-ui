@@ -16,7 +16,7 @@
 
 import { noop } from 'es-toolkit';
 
-import { TestPlanDto } from 'controllers/testPlan';
+import type { TestPlanDto } from 'controllers/testPlan/types';
 import { useModal } from 'common/hooks';
 
 import { DUPLICATE_TEST_PLAN_MODAL_KEY, DuplicateTestPlanModal } from './duplicateTestPlanModal';

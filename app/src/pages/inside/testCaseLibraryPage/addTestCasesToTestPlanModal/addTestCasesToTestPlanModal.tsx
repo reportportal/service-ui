@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { size } from 'es-toolkit/compat';
 import { ReactNode, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { InjectedFormProps, reduxForm, SubmitHandler } from 'redux-form';
@@ -29,13 +28,14 @@ import { commonValidators } from 'common/utils/validation';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { projectKeySelector } from 'controllers/project';
-import { TestPlanDto } from 'controllers/testPlan';
+import type { TestPlanDto } from 'controllers/testPlan/types';
 import { URLS } from 'common/urls';
 import { LAUNCH_NAME_FILTER_KEY } from 'pages/inside/common/constants';
 
 import { messages } from './messages';
 import { AddTestCasesToTestPlanFormData, AddTestCasesToTestPlanModalProps } from './types';
 import { useAddTestCasesToTestPlan } from './useAddTestCasesToTestPlan';
+import { ADD_TO_TEST_PLAN_MODAL_FORM } from './constants';
 
 import styles from './addTestCasesToTestPlanModal.module.scss';
 
@@ -47,23 +47,20 @@ type AddTestCasesSubmitHandler = SubmitHandler<
 const cx = createClassnames(styles);
 
 export const ADD_TO_TEST_PLAN_MODAL_KEY = 'addToTestPlanModalKey';
-export const ADD_TO_TEST_PLAN_MODAL_FORM = 'add-to-test-plan-form';
-export const SELECTED_TEST_PLAN_FIELD_NAME = 'selectedTestPlan';
 
 export const AddTestCasesToTestPlanModal = ({
   change,
   handleSubmit,
-  data,
+  data: { folderId, itemCount, selectedTestCaseIds },
   invalid,
 }: AddTestCasesToTestPlanModalProps &
   InjectedFormProps<AddTestCasesToTestPlanFormData, AddTestCasesToTestPlanModalProps>) => {
-  const { selectedTestCaseIds, isSingleTestCaseMode } = data;
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-
   const projectKey = useSelector(projectKeySelector);
 
-  const selectedTestCasesLength = size(selectedTestCaseIds);
+  const isFromFolder = folderId && !selectedTestCaseIds;
+  const testCaseCount = isFromFolder ? itemCount : selectedTestCaseIds?.length || 0;
 
   const {
     isAddTestCasesToTestPlanLoading,
@@ -72,23 +69,25 @@ export const AddTestCasesToTestPlanModal = ({
     addTestCasesToTestPlan,
     inputRefFunction,
   } = useAddTestCasesToTestPlan({
+    folderId,
+    itemCount,
     selectedTestCaseIds,
-    isSingleTestCaseMode,
     change,
   });
 
   const makeTestPlansOptions = (response: { content: TestPlanDto[] }) => response.content;
 
-  const description = useMemo(() => {
-    return (
+  const description = useMemo(
+    () => (
       <p className={cx('description')}>
         {formatMessage(messages.description, {
-          testPlansQuantity: selectedTestCasesLength,
+          testPlansQuantity: testCaseCount,
           bold: (value: ReactNode) => <b className={cx('selected-test-cases')}>{value}</b>,
         })}
       </p>
-    );
-  }, [formatMessage, selectedTestCasesLength]);
+    ),
+    [formatMessage, testCaseCount],
+  );
 
   const retrieveTestPlans = (value: string) =>
     URLS.testPlan(projectKey, value ? { [LAUNCH_NAME_FILTER_KEY]: value } : {});
@@ -114,7 +113,7 @@ export const AddTestCasesToTestPlanModal = ({
     >
       <form onSubmit={handleSubmit(addTestCasesToTestPlan) as AddTestCasesSubmitHandler}>
         <div>
-          {!isSingleTestCaseMode && description}
+          {testCaseCount > 1 && description}
           <div className={cx('autocomplete-wrapper')}>
             <FieldLabel>{formatMessage(COMMON_LOCALE_KEYS.TEST_PLAN_LABEL)}</FieldLabel>
             <AsyncAutocompleteV2

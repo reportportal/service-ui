@@ -21,7 +21,7 @@ import { Modal } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { TestPlanDto } from 'controllers/testPlan';
+import type { TestPlanDto } from 'controllers/testPlan/types';
 import { hideModalAction } from 'controllers/modal';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 

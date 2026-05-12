@@ -25,7 +25,7 @@ import {
 
 import { createClassnames } from 'common/utils';
 
-import { TestCasePriority } from './types';
+import type { TestCasePriority } from 'types/testCase';
 
 import styles from './priorityIcon.scss';
 
