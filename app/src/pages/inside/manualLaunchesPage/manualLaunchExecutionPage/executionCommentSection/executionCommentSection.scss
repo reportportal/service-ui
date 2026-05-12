@@ -119,6 +119,10 @@
 
   &__attachments {
     padding: 16px;
+
+    :global([class*='file-drop-area--overlay']) :global([class*='file-drop-area']) {
+      top: -16px;
+    }
   }
 }
 
@@ -207,18 +211,10 @@
 
   &__list {
     max-width: 400px;
-    margin-top: 0 !important;
 
     :global(*) {
       max-width: 400px !important;
-      margin-top: 0 !important;
       grid-template-columns: none !important;
     }
-  }
-}
-
-.execution-comment-section__attachments {
-  :global([class*='file-drop-area--overlay']) :global([class*='file-drop-area']) {
-    top: -16px;
   }
 }

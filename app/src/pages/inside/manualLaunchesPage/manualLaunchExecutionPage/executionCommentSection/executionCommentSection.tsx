@@ -114,6 +114,8 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
   ) => {
     handleFilesAddedFromHook(filesWithValidation);
 
+    if (!launchId || isSaving) return;
+
     const uniqueFiles = filesWithValidation
       .map((f) => f.file)
       .filter(
@@ -121,13 +123,10 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
           f.size > 0 &&
           !visibleExistingAttachments.some(
             (a) => a.fileName.toLowerCase() === f.name.toLowerCase(),
-          ) &&
-          !pendingFiles.some((pf) => pf.name.toLowerCase() === f.name.toLowerCase()),
+          ),
       );
 
-    if (isEmpty(uniqueFiles) || !launchId || isSaving) return;
-
-    setPendingFiles((prev) => [...prev, ...uniqueFiles]);
+    if (isEmpty(uniqueFiles)) return;
     setIsSaving(true);
     dispatch(
       updateManualLaunchExecutionCommentAction({

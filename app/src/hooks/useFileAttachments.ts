@@ -88,7 +88,7 @@ export const useFileAttachments = ({
         id: String(att.id),
         fileName: att.fileName,
         size: convertBytesToMB(att.fileSize),
-        file: undefined as unknown as File,
+        file: undefined!,
       })),
     [visibleExistingAttachments],
   );

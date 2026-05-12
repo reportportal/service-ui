@@ -84,7 +84,8 @@ export const useManualLaunchId = (): string =>
     if (payloadLaunchId) return payloadLaunchId;
 
     const pathname: string = state.location?.pathname || '';
-    const match = pathname.match(/\/manualLaunches\/([^/]+)\//);
+    const regex = /\/manualLaunches\/([^/]+)\//;
+    const match = regex.exec(pathname);
     return match?.[1] || '';
   }) || '';
 
