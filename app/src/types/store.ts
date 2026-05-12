@@ -46,6 +46,7 @@ export interface LocationQuery {
 
 export interface BaseAppState {
   location?: {
+    pathname?: string;
     payload?: ProjectDetails & {
       testPlanId?: string;
       testCaseId?: string;

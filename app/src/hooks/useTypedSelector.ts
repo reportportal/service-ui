@@ -78,8 +78,15 @@ export const useTestPlanById = (testPlanId: string) =>
 export const useTestPlanFolders = () =>
   useTestPlanSelector((state) => state.testPlan?.testPlanFolders?.content || []);
 
-export const useManualLaunchId = () =>
-  useBaseSelector((state) => state.location?.payload?.launchId) || '';
+export const useManualLaunchId = (): string =>
+  useBaseSelector<string>((state) => {
+    const payloadLaunchId = state.location?.payload?.launchId;
+    if (payloadLaunchId) return payloadLaunchId;
+
+    const pathname: string = state.location?.pathname || '';
+    const match = pathname.match(/\/manualLaunches\/([^/]+)\//);
+    return match?.[1] || '';
+  }) || '';
 
 export const useManualLaunchById = (launchId: string | number) =>
   useFullSelector(manualLaunchByIdSelector(launchId));

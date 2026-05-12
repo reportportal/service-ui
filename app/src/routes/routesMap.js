@@ -425,6 +425,19 @@ const routesMap = {
       );
     },
   },
+  [MANUAL_LAUNCH_EXECUTION_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/manualLaunches/:launchId/testCase/:testCaseId/execution/:executionId',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      const { launchId, executionId } = state.location?.payload || {};
+
+      if (launchId && executionId) {
+        dispatch(getManualLaunchAction({ launchId }));
+        dispatch(getManualLaunchFoldersAction({ launchId }));
+        dispatch(getManualLaunchExecutionAction({ launchId, executionId }));
+      }
+    },
+  },
   [MANUAL_LAUNCH_DETAILS_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug/manualLaunches/:launchId/:manualLaunchPageRoute*',
     thunk: (dispatch, getState) => {
@@ -452,19 +465,6 @@ const routesMap = {
         if (executionsParams) {
           dispatch(getManualLaunchTestCaseExecutionsAction(executionsParams));
         }
-      }
-    },
-  },
-  [MANUAL_LAUNCH_EXECUTION_PAGE]: {
-    path: '/organizations/:organizationSlug/projects/:projectSlug/manualLaunches/:launchId/testCase/:testCaseId/execution/:executionId',
-    thunk: (dispatch, getState) => {
-      const state = getState();
-      const { launchId, executionId } = state.location?.payload || {};
-
-      if (launchId && executionId) {
-        dispatch(getManualLaunchAction({ launchId }));
-        dispatch(getManualLaunchFoldersAction({ launchId }));
-        dispatch(getManualLaunchExecutionAction({ launchId, executionId }));
       }
     },
   },

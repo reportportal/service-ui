@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@use '../mixins.scss' as *;
+
 @mixin modal-text-base {
   font-size: 13px;
   line-height: 20px;
@@ -40,6 +42,14 @@
   border-radius: 16px;
   padding: 32px 40px;
 
+  :global {
+    .rp-ui-modal__content,
+    [class*='modal__content'],
+    [class*='Modal__content'] {
+      padding: 0 !important;
+    }
+  }
+
   &--simple {
     .checkbox-section {
       padding-bottom: 0;
@@ -56,6 +66,8 @@
   display: flex;
   flex-direction: column;
   overflow: auto;
+  padding: 0 !important;
+  margin: 0 0 -16px 0 !important;
 }
 
 .comment-section {
@@ -75,7 +87,7 @@
 }
 
 .checkbox-section {
-  margin-top: 16px;
+  margin: 16px 0;
 
   label {
     @include modal-text-regular;
@@ -96,35 +108,22 @@
   :global(.rp-ui-fp__attached-files-list) {
     padding-top: 8px;
     padding-bottom: 16px;
+
+    > * {
+      max-width: 400px;
+    }
   }
 }
 
-.modal-existing-attachments {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 4px;
-}
+.attachments-list {
+  max-width: 400px;
+  margin-top: 0 !important;
 
-.modal-existing-attachments__row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.modal-existing-attachments__preview {
-  flex: 1;
-  min-width: 0;
-  max-width: 100%;
-}
-
-.modal-existing-attachments__slider {
-  margin-top: 0;
-}
-
-.modal-existing-attachments__remove {
-  flex-shrink: 0;
-  align-self: center;
+  :global(*) {
+    max-width: 400px !important;
+    margin-top: 0 !important;
+    grid-template-columns: none !important;
+  }
 }
 
 .checkbox-section + .divider {
@@ -135,15 +134,21 @@
   margin-top: 0;
 }
 
+.attachments-file-drop {
+  @include file-droparea-wrapper('dropzone');
+}
+
 .dropzone {
+  @include file-dropzone-base;
+
   width: 400px;
   height: 54px;
-  border-radius: 4px;
-  border: 2px dashed var(--rp-ui-base-e-200);
-  background: transparent;
-  position: absolute;
-  top: 0;
-  left: 0;
+}
+
+.dropzone:global(.rp-ui-fp__dropzone--active),
+.dropzone:global(.rp-ui-fp__drop-zone--active),
+.dropzone:global(.rp-ui-fp__dropzone--drag-active) {
+  @include file-dropzone-active;
 }
 
 .attachment-header {
