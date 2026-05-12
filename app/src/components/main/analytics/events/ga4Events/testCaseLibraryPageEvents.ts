@@ -60,6 +60,7 @@ const TEST_CASE_MODAL = {
   CHANGE_PRIORITY: 'change_priority',
   EDIT_TAGS: 'edit_tags',
   EDIT_DESCRIPTION: 'edit_description',
+  EDIT_TEST_CASE: 'edit_test_case',
   DUPLICATE_TO_FOLDER: 'duplicate_to_folder',
 } as const;
 
@@ -89,6 +90,7 @@ const TEST_CASE_ELEMENT = {
   SUBMIT_SINGLE_ADD_TO_LAUNCH: 'submit_single_add_to_test_launch',
   SUBMIT_ADD_TAG: 'submit_add_tag',
   SUBMIT_EDIT_DESCRIPTION: 'submit_edit_description',
+  SUBMIT_EDIT_TEST_CASE: 'submit_edit_test_case',
   SUBMIT_BULK_CHANGE_PRIORITY: 'submit_bulk_menu_change_priority',
   SUBMIT_BULK_EDIT_TAG: 'submit_bulk_menu_edit_tag',
   SUBMIT_BULK_DUPLICATE_TO_FOLDER: 'submit_bulk_menu_duplicate_to_folder',
@@ -483,6 +485,13 @@ export const TEST_CASE_LIBRARY_EVENTS = {
     ...CLICK,
     modal: TEST_CASE_MODAL.EDIT_DESCRIPTION,
     element_name: TEST_CASE_ELEMENT.SUBMIT_EDIT_DESCRIPTION,
+    place: TEST_CASE_PLACE.DETAILS_PAGE,
+    test_case_id: testCaseId,
+  }),
+  submitEditTestCaseFromDetails: (testCaseId: string) => ({
+    ...CLICK,
+    modal: TEST_CASE_MODAL.EDIT_TEST_CASE,
+    element_name: TEST_CASE_ELEMENT.SUBMIT_EDIT_TEST_CASE,
     place: TEST_CASE_PLACE.DETAILS_PAGE,
     test_case_id: testCaseId,
   }),
