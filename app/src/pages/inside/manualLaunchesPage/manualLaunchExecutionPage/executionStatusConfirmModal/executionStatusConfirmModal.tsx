@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-import { FC, useState, useEffect, useMemo, FormEvent, useRef } from 'react';
+import { FC, useState, useEffect, FormEvent, useRef } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { reduxForm, InjectedFormProps, initialize } from 'redux-form';
 import {
-  Button,
-  DeleteIcon,
   Modal,
   FileDropArea,
   FieldTextFlex,
   PlusIcon,
   DragAndDropIcon,
 } from '@reportportal/ui-kit';
-import { MIME_TYPES, FileWithValidation } from '@reportportal/ui-kit/fileDropArea';
+import { MIME_TYPES } from '@reportportal/ui-kit/fileDropArea';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { withModal, hideModalAction } from 'controllers/modal';
@@ -39,6 +37,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { useManualLaunchId } from 'hooks/useTypedSelector';
+import { useFileAttachments } from 'hooks/useFileAttachments';
 import {
   updateManualLaunchExecutionStatusAction,
   activeManualLaunchExecutionSelector,
@@ -48,12 +47,10 @@ import { MAX_FILE_SIZE } from 'common/constants/fileConstants';
 import { useModalButtons } from 'hooks/useModalButtons';
 import { useTextareaAutoResize } from 'common/hooks';
 import { ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
-import { AttachmentsWithSlider } from 'pages/inside/common/attachmentsWithSlider';
 import {
   MANUAL_LAUNCHES_PAGE_EVENTS,
   type ExecutionStatusType as AnalyticsExecutionStatusType,
 } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
-import { toAttachmentWithSlider } from '../utils';
 
 import type { ExecutionStatusConfirmFormValues, ExecutionStatusConfirmModalProps } from '../types';
 import { messages as manualExecutionPageMessages } from '../messages';
@@ -79,32 +76,36 @@ const ExecutionStatusConfirmModalComponent: FC<
   const projectKey = useSelector(projectKeySelector);
   const launchId = useManualLaunchId();
   const activeExecution = useSelector(activeManualLaunchExecutionSelector);
-  const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
-  const [removedServerAttachmentIds, setRemovedServerAttachmentIds] = useState<Set<string>>(
-    () => new Set(),
-  );
+
+  const modalKey = `${data?.executionId}-${data?.status}-${data?.currentStatus}`;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   useTextareaAutoResize(textareaRef);
-
-  const handleFilesAdded = (filesWithValidation: FileWithValidation[]) => {
-    const files = filesWithValidation.map((f) => f.file);
-    setAttachedFiles((prev) => [...prev, ...files]);
-  };
-
-  const handleFileRemove = (fileId: string) => {
-    const index = attachedFiles.findIndex((f, i) => `${f.name}-${i}` === fileId);
-    if (index !== -1) {
-      setAttachedFiles((prev) => prev.filter((_, i) => i !== index));
-    }
-  };
-
-  const handleServerAttachmentRemove = (id: string | number) => {
-    setRemovedServerAttachmentIds((prev) => new Set([...prev, String(id)]));
-  };
 
   const status = data?.status || 'passed';
   const isClearStatus = status === ExecutionStatus.TO_RUN;
   const executionId = data?.executionId;
+
+  const {
+    pendingFiles: attachedFiles,
+    removedAttachmentIds: removedServerAttachmentIds,
+    existingAttachmentsData,
+    pendingFilesData,
+    handleFilesAdded,
+    handlePendingRemove: handleFileRemove,
+    handleExistingRemove: handleServerAttachmentRemove,
+  } = useFileAttachments({
+    resetKey: modalKey,
+    existingAttachments:
+      executionId && activeExecution?.id === executionId
+        ? (activeExecution.executionComment?.attachments ?? [])
+        : [],
+    messages: {
+      duplicateFileNames: manualExecutionPageMessages.duplicateFileNames,
+      emptyFiles: manualExecutionPageMessages.emptyFiles,
+    },
+  });
   const currentStatus = data?.currentStatus;
   const statusLabel = isClearStatus ? '' : formatMessage(STATUS_CONFIG[status]?.label);
   const title = isClearStatus
@@ -117,17 +118,6 @@ const ExecutionStatusConfirmModalComponent: FC<
     : formatMessage(messages.markAsStatus, { status: statusLabel });
 
   const shouldSeedCommentForm = !isStatusChange && !isClearStatus;
-
-  const visibleServerAttachments = useMemo(() => {
-    if (!executionId || activeExecution?.id !== executionId) return [];
-    const list = activeExecution.executionComment?.attachments ?? [];
-    return list.filter((a) => !removedServerAttachmentIds.has(String(a.id)));
-  }, [
-    executionId,
-    activeExecution?.id,
-    activeExecution?.executionComment?.attachments,
-    removedServerAttachmentIds,
-  ]);
 
   useEffect(() => {
     if (!executionId || dirty || !shouldSeedCommentForm) return;
@@ -153,11 +143,6 @@ const ExecutionStatusConfirmModalComponent: FC<
     activeExecution?.executionComment?.comment,
   ]);
 
-  useEffect(() => {
-    setAttachedFiles([]);
-    setRemovedServerAttachmentIds(new Set());
-  }, [data?.executionId, data?.status, data?.currentStatus]);
-
   const onSubmit = (values: ExecutionStatusConfirmFormValues) => {
     if (!executionId) return;
 
@@ -177,6 +162,7 @@ const ExecutionStatusConfirmModalComponent: FC<
       );
     }
 
+    setIsSubmitting(true);
     dispatch(
       updateManualLaunchExecutionStatusAction({
         projectKey,
@@ -191,14 +177,15 @@ const ExecutionStatusConfirmModalComponent: FC<
         ...(!isClearStatus && !isStatusChange
           ? { removedServerAttachmentIds: Array.from(removedServerAttachmentIds) }
           : {}),
+        onSuccess: () => dispatch(hideModalAction()),
+        onFinally: () => setIsSubmitting(false),
       }),
     );
-    dispatch(hideModalAction());
   };
 
   const { okButton, cancelButton, hideModal } = useModalButtons({
     okButtonText: okButtonLabel,
-    isLoading: false,
+    isLoading: isSubmitting,
     isSubmitButtonDisabled: invalid,
     onSubmit: handleSubmit(onSubmit) as VoidFn,
   });
@@ -210,10 +197,10 @@ const ExecutionStatusConfirmModalComponent: FC<
   return (
     <Modal
       title={title}
-      onClose={hideModal}
+      onClose={isSubmitting ? undefined : hideModal}
       okButton={okButton}
       cancelButton={cancelButton}
-      allowCloseOutside={!dirty}
+      allowCloseOutside={!dirty && !isSubmitting}
       scrollable
       className={cx('execution-status-confirm-modal', {
         'execution-status-confirm-modal--simple': isStatusChange,
@@ -273,72 +260,48 @@ const ExecutionStatusConfirmModalComponent: FC<
             {showPostIssueToBts && <div className={cx('divider')} />}
 
             <div className={cx('attachments-section')}>
-              {!isEmpty(visibleServerAttachments) && (
-                <div className={cx('modal-existing-attachments')}>
-                  {visibleServerAttachments.map((att) => (
-                    <div
-                      key={String(att.id)}
-                      className={cx('modal-existing-attachments__row')}
-                    >
-                      <div className={cx('modal-existing-attachments__preview')}>
-                        <AttachmentsWithSlider
-                          attachments={[toAttachmentWithSlider(att)]}
-                          className={cx('modal-existing-attachments__slider')}
-                        />
-                      </div>
-                      <Button
-                        type="button"
-                        variant="text"
-                        adjustWidthOn="content"
-                        className={cx('modal-existing-attachments__remove')}
-                        onClick={() => handleServerAttachmentRemove(att.id)}
-                        aria-label={formatMessage(
-                          manualExecutionPageMessages.removeAttachment,
-                        )}
-                      >
-                        <DeleteIcon />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              )}
-              <FileDropArea
-                variant="overlay"
-                maxFileSize={MAX_FILE_SIZE}
-                acceptFileMimeTypes={[MIME_TYPES.jpeg, MIME_TYPES.png, MIME_TYPES.pdf]}
-                onFilesAdded={handleFilesAdded}
-                messages={{
-                  incorrectFileSize: formatMessage(messages.incorrectFileSize),
-                  incorrectFileFormat: formatMessage(messages.incorrectFileFormat),
-                }}
-              >
-                <FileDropArea.DropZone className={cx('dropzone')} icon={<div />} />
-                <div className={cx('attachment-header')}>
-                  <span className={cx('attachment-title')}>
-                    {formatMessage(messages.attachments)}
-                  </span>
-                  <div className={cx('add-attachment')}>
-                    <span className={cx('dropzone-text')}>
-                      <DragAndDropIcon />
-                      {formatMessage(messages.dropFilesHere)}
+              <div className={cx('attachments-file-drop')}>
+                <FileDropArea
+                  variant="overlay"
+                  maxFileSize={MAX_FILE_SIZE}
+                  acceptFileMimeTypes={[MIME_TYPES.jpeg, MIME_TYPES.png, MIME_TYPES.pdf]}
+                  onFilesAdded={handleFilesAdded}
+                  messages={{
+                    incorrectFileSize: formatMessage(messages.incorrectFileSize),
+                    incorrectFileFormat: formatMessage(messages.incorrectFileFormat),
+                  }}
+                >
+                  <FileDropArea.DropZone className={cx('dropzone')} icon={<div />} />
+                  <div className={cx('attachment-header')}>
+                    <span className={cx('attachment-title')}>
+                      {formatMessage(messages.attachments)}
                     </span>
-                    <FileDropArea.BrowseButton icon={<PlusIcon />}>
-                      {formatMessage(messages.add)}
-                    </FileDropArea.BrowseButton>
+                    <div className={cx('add-attachment')}>
+                      <span className={cx('dropzone-text')}>
+                        <DragAndDropIcon />
+                        {formatMessage(messages.dropFilesHere)}
+                      </span>
+                      <FileDropArea.BrowseButton icon={<PlusIcon />}>
+                        {formatMessage(messages.add)}
+                      </FileDropArea.BrowseButton>
+                    </div>
                   </div>
-                </div>
-                {!isEmpty(attachedFiles) && (
-                  <FileDropArea.AttachedFilesList
-                    files={attachedFiles.map((file, index) => ({
-                      id: `${file.name}-${index}`,
-                      fileName: file.name,
-                      file,
-                      size: file.size,
-                    }))}
-                    onRemoveFile={handleFileRemove}
-                  />
-                )}
-              </FileDropArea>
+                  {!isEmpty(existingAttachmentsData) && (
+                    <FileDropArea.AttachedFilesList
+                      className={cx('attachments-list')}
+                      files={existingAttachmentsData}
+                      onRemoveFile={(id) => handleServerAttachmentRemove(id)}
+                    />
+                  )}
+                  {!isEmpty(pendingFilesData) && (
+                    <FileDropArea.AttachedFilesList
+                      className={cx('attachments-list')}
+                      files={pendingFilesData}
+                      onRemoveFile={handleFileRemove}
+                    />
+                  )}
+                </FileDropArea>{' '}
+              </div>{' '}
             </div>
           </>
         )}

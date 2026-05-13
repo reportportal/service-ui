@@ -90,6 +90,7 @@ export interface UpdateManualLaunchExecutionStatusParams extends ManualLaunchExe
   clearExecutionCommentAndBts?: boolean;
   preserveExistingCommentIfFormSkipped?: boolean;
   onSuccess?: () => void;
+  onFinally?: () => void;
 }
 
 export interface UpdateManualLaunchExecutionCommentParams extends ManualLaunchExecutionActionKey {

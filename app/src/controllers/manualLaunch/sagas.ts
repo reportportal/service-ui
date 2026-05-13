@@ -704,6 +704,7 @@ function* updateManualLaunchExecutionStatus(
     clearExecutionCommentAndBts,
     preserveExistingCommentIfFormSkipped,
     onSuccess,
+    onFinally,
     removedServerAttachmentIds,
   } = action.payload;
 
@@ -770,6 +771,10 @@ function* updateManualLaunchExecutionStatus(
         messageId: 'errorOccurredTryAgain',
       }),
     );
+  } finally {
+    if (onFinally) {
+      onFinally();
+    }
   }
 }
 
