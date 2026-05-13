@@ -69,6 +69,7 @@ export {
   uiExtensionIntegrationSettingsSelector,
   uiExtensionIntegrationFormFieldsSelector,
   uiExtensionPostIssueFormSelector,
+  extensionManifestsLoadPendingSelector,
 } from './uiExtensions';
 export type {
   Plugin,
