@@ -23,7 +23,13 @@ import styles from './locationHeaderLayout.scss';
 
 const cx = classNames.bind(styles);
 
-export const LocationHeaderLayout = ({ title, children, breadcrumbs, tree }) => {
+export const LocationHeaderLayout = ({
+  title,
+  children,
+  breadcrumbs,
+  tree,
+  titleEllipsis = true,
+}) => {
   const isLastClickable = Boolean(breadcrumbs?.[breadcrumbs.length - 1]?.link);
   const isSingleItemClickable = tree?.length && isLastClickable;
   const shouldShowBreadcrumbs = breadcrumbs?.length || tree?.length;
@@ -31,23 +37,24 @@ export const LocationHeaderLayout = ({ title, children, breadcrumbs, tree }) => 
   return (
     <div className={cx('location-header-container')}>
       {shouldShowBreadcrumbs && (
-        <Breadcrumbs 
-          descriptors={breadcrumbs} 
-          tree={tree} 
-          LinkComponent={NavLink} 
-          className={cx('crumbs')} 
-          isLastClickable={isLastClickable} 
-          isSingleItemClickable={isSingleItemClickable} />
+        <Breadcrumbs
+          descriptors={breadcrumbs}
+          tree={tree}
+          LinkComponent={NavLink}
+          className={cx('crumbs')}
+          isLastClickable={isLastClickable}
+          isSingleItemClickable={isSingleItemClickable}
+        />
       )}
       <div className={cx('header')}>
-        <span className={cx('title')}>{title}</span>
+        {(title ?? '').trim() ? (
+          <span className={cx('title', { 'title--no-ellipsis': !titleEllipsis })}>{title}</span>
+        ) : null}
         {children}
       </div>
     </div>
   );
-}
-
-
+};
 
 const breadcrumbItemShape = {
   title: PropTypes.string.isRequired,
@@ -69,8 +76,10 @@ LocationHeaderLayout.propTypes = {
   children: PropTypes.node,
   breadcrumbs: PropTypes.arrayOf(breadcrumbItemPropType),
   tree: PropTypes.arrayOf(treeItemPropType),
+  titleEllipsis: PropTypes.bool,
 };
 
 LocationHeaderLayout.defaultProps = {
   children: null,
+  titleEllipsis: true,
 };
