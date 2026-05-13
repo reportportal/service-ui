@@ -36,6 +36,8 @@ const CLICK = getBasicClickEventParameters(MILESTONES);
 
 export type MilestoneStatusType = 'scheduled' | 'testing' | 'completed';
 
+export type MilestonesPageViewType = 'populated' | 'empty';
+
 export {
   type MilestoneChangeStatusModalButtonElementName,
   type MilestoneStatusDropdownChooseType,
@@ -44,10 +46,11 @@ export {
 } from 'pages/inside/testPlansPage/milestones/milestoneStatus';
 
 export const MILESTONES_PAGE_EVENTS = {
-  VIEW_MILESTONES_PAGE: {
+  viewMilestonesPage: (type: MilestonesPageViewType) => ({
     ...getBasicEventParameters('page_view', MILESTONES),
     place: PLACE_PAGE,
-  },
+    type,
+  }),
   CLICK_CREATE_MILESTONE: {
     ...CLICK,
     place: PLACE_PAGE,

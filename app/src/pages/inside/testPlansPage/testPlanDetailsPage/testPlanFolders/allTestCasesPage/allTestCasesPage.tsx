@@ -17,9 +17,11 @@
 import { useState, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { isEmpty } from 'es-toolkit/compat';
 import { Pagination, Button, Selection } from '@reportportal/ui-kit';
 
+import { TEST_PLANS_PAGE_EVENTS } from 'analyticsEvents/testPlansPageEvents';
 import { createClassnames } from 'common/utils';
 import { TestCaseList } from 'pages/inside/common/testCaseList';
 import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/common/testCaseList/constants';
@@ -49,6 +51,7 @@ export const AllTestCasesPage = ({
   folderName,
 }: AllTestCasesPageProps) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const testPlansTestCasesPageData = useSelector(testPlanTestCasesPageSelector);
   const payload = useSelector(payloadSelector);
   const { organizationSlug, projectSlug } = useProjectDetails();
@@ -82,6 +85,11 @@ export const AllTestCasesPage = ({
       selectedTestCaseIds: selectedRowIds,
       onClearSelection,
     });
+  };
+
+  const handleOpenAddToLaunchModal = () => {
+    trackEvent(TEST_PLANS_PAGE_EVENTS.clickStartBulkAddToLaunch(selectedRowIds.length));
+    openAddToLaunchModal();
   };
 
   return (
@@ -130,7 +138,7 @@ export const AllTestCasesPage = ({
               >
                 {formatMessage(removeTestCasesFromTestPlanMessages.removeFromTestPlanTitle)}
               </Button>
-              <Button variant="primary" onClick={openAddToLaunchModal}>
+              <Button variant="primary" onClick={handleOpenAddToLaunchModal}>
                 {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}
               </Button>
             </div>

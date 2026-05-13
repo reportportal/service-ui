@@ -18,8 +18,14 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
+import { useTracking } from 'react-tracking';
 import { Button } from '@reportportal/ui-kit';
 
+import {
+  ADD_TESTS_SIDEBAR_CONDITION,
+  TEST_PLAN_DETAILS_VIEW_TYPE,
+  TEST_PLANS_PAGE_EVENTS,
+} from 'analyticsEvents/testPlansPageEvents';
 import { createClassnames } from 'common/utils';
 import { SEARCH_DELAY } from 'common/constants/delayTime';
 import { SettingsLayout } from 'layouts/settingsLayout';
@@ -72,6 +78,7 @@ import {
 } from '../testPlanModals';
 import { useAddTestCasesToCurrentTestPlan } from '../testPlanModals';
 import { TestPlanFolders } from './testPlanFolders';
+import { KEBAB_START_EVENT_MAP } from './constants';
 
 import styles from './testPlanDetailsPage.scss';
 
@@ -80,6 +87,7 @@ const cx = createClassnames(styles);
 export const TestPlanDetailsPage = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
   const { organizationSlug, projectSlug } = useProjectDetails();
   const { canManageTestCases, canCreateManualLaunch } = useUserPermissions();
   const [isTestLibrarySidePanelOpen, setIsTestLibrarySidePanelOpen] = useState(false);
@@ -151,23 +159,47 @@ export const TestPlanDetailsPage = () => {
     [dispatch],
   );
 
-  const { openModal: openEditModal } = useEditTestPlanModal();
+  const { openModal: openEditModal } = useEditTestPlanModal({
+    onSubmitSuccess: ({ attributesCount, editedFieldsCondition }) =>
+      trackEvent(
+        TEST_PLANS_PAGE_EVENTS.submitEditTestPlan({
+          number: attributesCount,
+          condition: editedFieldsCondition,
+        }),
+      ),
+  });
   const { openModal: openDuplicateModal } = useDuplicateTestPlanModal({
-    onSuccess: (newTestPlanId) =>
+    onSuccess: (newTestPlanId) => {
+      trackEvent(TEST_PLANS_PAGE_EVENTS.SUBMIT_DUPLICATE_TEST_PLAN);
       dispatch({
         type: PROJECT_TEST_PLAN_DETAILS_PAGE,
         payload: { organizationSlug, projectSlug, testPlanId: newTestPlanId },
-      }),
+      });
+    },
   });
   const { openModal: openDeleteModal } = useDeleteTestPlanModal({
-    onSuccess: () =>
+    onSuccess: () => {
+      trackEvent(TEST_PLANS_PAGE_EVENTS.SUBMIT_DELETE_TEST_PLAN);
       dispatch({
         type: PROJECT_MILESTONES_PAGE,
         payload: { organizationSlug, projectSlug },
-      }),
+      });
+    },
   });
 
   const { openModal: openCreateLaunchModal } = useCreateLaunchModal(testCases || []);
+
+  const handleOpenCreateLaunchModal = () => {
+    trackEvent(TEST_PLANS_PAGE_EVENTS.CLICK_START_CREATE_LAUNCH_FROM_PLAN);
+    openCreateLaunchModal();
+  };
+
+  const handleOpenTestLibrarySidePanel = () => {
+    trackEvent(
+      TEST_PLANS_PAGE_EVENTS.clickOpenAddTestsSidebar(ADD_TESTS_SIDEBAR_CONDITION.ADD_TESTS_BUTTON),
+    );
+    setIsTestLibrarySidePanelOpen(true);
+  };
 
   const actionsMap = {
     edit: openEditModal,
@@ -177,11 +209,32 @@ export const TestPlanDetailsPage = () => {
 
   const openActionModal = (action: keyof typeof actionsMap) => () => {
     if (testPlan) {
+      trackEvent(KEBAB_START_EVENT_MAP[action]);
       actionsMap[action](testPlan);
     }
   };
 
   const { addTestCasesToCurrentTestPlan, isAddingTestCases } = useAddTestCasesToCurrentTestPlan();
+
+  const lastTrackedTestPlanIdRef = useRef<string | number | null>(null);
+
+  useEffect(() => {
+    if (isLoading || areFoldersLoading || !testPlan || testPlanId == null) {
+      return;
+    }
+    if (lastTrackedTestPlanIdRef.current === testPlanId) {
+      return;
+    }
+    lastTrackedTestPlanIdRef.current = testPlanId;
+
+    const isEmptyPlan = !testPlan.executionStatistic.total && isEmpty(testPlanFolders);
+
+    trackEvent(
+      TEST_PLANS_PAGE_EVENTS.viewTestPlanDetailsPage(
+        isEmptyPlan ? TEST_PLAN_DETAILS_VIEW_TYPE.EMPTY : TEST_PLAN_DETAILS_VIEW_TYPE.POPULATED,
+      ),
+    );
+  }, [isLoading, areFoldersLoading, testPlan, testPlanFolders, testPlanId, trackEvent]);
 
   useEffect(() => {
     if (!isLoading && isEmpty(testPlan)) {
@@ -242,7 +295,7 @@ export const TestPlanDetailsPage = () => {
             <Button
               variant="ghost"
               data-automation-id="addTestsFromLibraryButton"
-              onClick={() => setIsTestLibrarySidePanelOpen(true)}
+              onClick={handleOpenTestLibrarySidePanel}
             >
               {formatMessage(commonMessages.addTestsFromLibrary)}
             </Button>
@@ -251,7 +304,7 @@ export const TestPlanDetailsPage = () => {
             <Button
               variant="primary"
               data-automation-id="createLaunchButton"
-              onClick={openCreateLaunchModal}
+              onClick={handleOpenCreateLaunchModal}
             >
               {formatMessage(messages.addToLaunch)}
             </Button>

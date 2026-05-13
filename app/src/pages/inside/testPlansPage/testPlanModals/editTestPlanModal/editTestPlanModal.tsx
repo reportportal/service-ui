@@ -23,17 +23,32 @@ import { TestPlanDto } from 'controllers/testPlan';
 import { TestPlanModal, TestPlanFormValues } from '../testPlanModal';
 import { commonMessages } from '../../commonMessages';
 import { useEditTestPlan } from './useEditTestPlan';
+import { EditTestPlanSubmitMeta } from './useEditTestPlanModal';
+import { buildEditedFieldsCondition } from './utils';
 
 export const EDIT_TEST_PLAN_MODAL_KEY = 'editTestPlanModalKey';
 
 interface EditTestPlanModalProps {
   data: TestPlanDto;
-  onSubmitSuccess?: (attributesCount: number) => void;
+  onSubmitSuccess?: (meta: EditTestPlanSubmitMeta) => void;
 }
 
 export const EditTestPlanModal = ({ data, onSubmitSuccess }: EditTestPlanModalProps) => {
   const { formatMessage } = useIntl();
-  const { isLoading, submitTestPlan } = useEditTestPlan({ onSubmitSuccess });
+  const initialValues = {
+    name: data.name,
+    description: data.description,
+    attributes: data.attributes || [],
+  };
+  const { isLoading, submitTestPlan } = useEditTestPlan({
+    onSubmitSuccess: onSubmitSuccess
+      ? (submittedValues, attributesCount) =>
+          onSubmitSuccess({
+            attributesCount,
+            editedFieldsCondition: buildEditedFieldsCondition(initialValues, submittedValues),
+          })
+      : undefined,
+  });
 
   const handleSubmit = async (formValues: TestPlanFormValues) => {
     const payload = {
@@ -51,11 +66,7 @@ export const EditTestPlanModal = ({ data, onSubmitSuccess }: EditTestPlanModalPr
       submitButtonText={formatMessage(COMMON_LOCALE_KEYS.SAVE)}
       isLoading={isLoading}
       formName="edit-test-plan-modal-form"
-      initialValues={{
-        name: data.name,
-        description: data.description,
-        attributes: data.attributes || [],
-      }}
+      initialValues={initialValues}
       requiresChanges
       onSubmit={handleSubmit}
     />

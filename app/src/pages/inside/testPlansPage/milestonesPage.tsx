@@ -18,7 +18,7 @@ import { useIntl } from 'react-intl';
 import { isNotNil, isUndefined } from 'es-toolkit';
 import { isEmpty } from 'es-toolkit/compat';
 import { useSelector, useDispatch } from 'react-redux';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useTracking } from 'react-tracking';
 import { Button, RefreshIcon } from '@reportportal/ui-kit';
 
@@ -79,9 +79,17 @@ export const MilestonesPage = () => {
     }
   }, [dispatch, milestones, milestonesLoading, queryParams]);
 
+  const hasTrackedViewRef = useRef(false);
+
   useEffect(() => {
-    trackEvent(MILESTONES_PAGE_EVENTS.VIEW_MILESTONES_PAGE);
-  }, [trackEvent]);
+    if (hasTrackedViewRef.current || milestonesLoading || !isNotNil(milestones)) {
+      return;
+    }
+    hasTrackedViewRef.current = true;
+    trackEvent(
+      MILESTONES_PAGE_EVENTS.viewMilestonesPage(isEmpty(milestones) ? 'empty' : 'populated'),
+    );
+  }, [milestones, milestonesLoading, trackEvent]);
 
   const handleCreateMilestone = () => {
     trackEvent(MILESTONES_PAGE_EVENTS.CLICK_CREATE_MILESTONE);
