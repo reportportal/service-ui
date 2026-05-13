@@ -37,6 +37,21 @@ const SIDEBAR_CSS_VARS = {
   '--sidebar-open-duration': `${SIDEBAR_OPEN_DURATION_MS}ms`,
 };
 
+const getSidebarItemKey = ({ name, link, message }) => {
+  if (name) {
+    return name;
+  }
+
+  if (!link) {
+    return message;
+  }
+
+  const { type, payload = {} } = link;
+  return [type, payload.pluginPage, payload.organizationSlug, payload.projectSlug]
+    .filter(Boolean)
+    .join(':');
+};
+
 export const Sidebar = ({
   logoBlock,
   createMainBlock,
@@ -144,17 +159,20 @@ export const Sidebar = ({
         </div>
         {items.length > 0 && (
           <div className={cx('items-block')}>
-            {items.map(({ icon, link, onClick, message, component }) => {
+            {items.map(({ icon, link, onClick, message, component, name }) => {
+              const itemKey = getSidebarItemKey({ name, link, message });
               const handleClick = () => {
                 onClick(getIsSidebarCollapsed());
                 onLeaveSidebar();
               };
 
               return component ? (
-                <div onClick={handleClick}>{component}</div>
+                <div key={itemKey} onClick={handleClick}>
+                  {component}
+                </div>
               ) : (
                 <SidebarButton
-                  key={link.type}
+                  key={itemKey}
                   icon={icon}
                   link={link}
                   onClick={handleClick}

@@ -206,27 +206,30 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       },
     ];
 
-    const pluginPageItems = projectPageExtensions.flatMap(({ payload }) => {
-      const { icon, slug, name, title, iconName, menuOrder } = payload;
-      const iconSvg = icon?.content || icon?.svg;
-      const itemTitle = title || icon?.title || name;
-      if (!iconSvg) {
-        return [];
-      }
-      const itemName = iconName || itemTitle;
-      return [
-        {
-          onClick: (isSidebarCollapsed) => onClickButton({ itemName, isSidebarCollapsed }),
-          link: {
-            type: PROJECT_PLUGIN_PAGE,
-            payload: { organizationSlug, projectSlug, pluginPage: slug || name },
+    const pluginPageItems = projectPageExtensions.flatMap(
+      ({ payload, pluginName, name: extensionName, url }) => {
+        const { icon, slug, name, title, iconName, menuOrder } = payload;
+        const iconSvg = icon?.content || icon?.svg;
+        const itemTitle = title || icon?.title || name;
+        if (!iconSvg) {
+          return [];
+        }
+        const itemName = iconName || itemTitle;
+        return [
+          {
+            name: [pluginName, extensionName, slug || name, url].filter(Boolean).join(':'),
+            onClick: (isSidebarCollapsed) => onClickButton({ itemName, isSidebarCollapsed }),
+            link: {
+              type: PROJECT_PLUGIN_PAGE,
+              payload: { organizationSlug, projectSlug, pluginPage: slug || name },
+            },
+            icon: iconSvg,
+            message: itemTitle,
+            menuOrder: menuOrder || (menuCounter += menuStep),
           },
-          icon: iconSvg,
-          message: itemTitle,
-          menuOrder: menuOrder || (menuCounter += menuStep),
-        },
-      ];
-    });
+        ];
+      },
+    );
 
     const uiExtensionItems = sidebarExtensions.map((extension) => ({
       name: extension.name,
