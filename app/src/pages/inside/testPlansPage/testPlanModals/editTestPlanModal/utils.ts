@@ -40,5 +40,7 @@ export const buildEditedFieldsCondition = (
     edited.push('attributes');
   }
 
-  return edited.sort().join('#');
+  const sortedEdited = [...edited].sort((a, b) => a.localeCompare(b));
+
+  return sortedEdited.join('#');
 };

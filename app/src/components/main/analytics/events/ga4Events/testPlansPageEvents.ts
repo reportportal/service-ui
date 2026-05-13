@@ -48,7 +48,12 @@ export const DND_DROP_TARGET = {
 } as const;
 export type DndDropTarget = (typeof DND_DROP_TARGET)[keyof typeof DND_DROP_TARGET];
 
-export type DndItemCountType = 'single' | 'multi';
+export const DND_ITEM_COUNT_TYPE = {
+  SINGLE: 'single',
+  MULTI: 'multi',
+} as const;
+export type DndItemCountType =
+  (typeof DND_ITEM_COUNT_TYPE)[keyof typeof DND_ITEM_COUNT_TYPE];
 
 export const TEST_PLANS_PAGE_EVENTS = {
   viewTestPlanDetailsPage: (type: TestPlanDetailsViewType) => ({

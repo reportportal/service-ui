@@ -36,7 +36,12 @@ const CLICK = getBasicClickEventParameters(MILESTONES);
 
 export type MilestoneStatusType = 'scheduled' | 'testing' | 'completed';
 
-export type MilestonesPageViewType = 'populated' | 'empty';
+export const MILESTONES_PAGE_VIEW_TYPE = {
+  POPULATED: 'populated',
+  EMPTY: 'empty',
+} as const;
+export type MilestonesPageViewType =
+  (typeof MILESTONES_PAGE_VIEW_TYPE)[keyof typeof MILESTONES_PAGE_VIEW_TYPE];
 
 export {
   type MilestoneChangeStatusModalButtonElementName,

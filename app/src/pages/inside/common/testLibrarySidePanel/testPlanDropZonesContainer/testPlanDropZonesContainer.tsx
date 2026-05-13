@@ -20,6 +20,7 @@ import { isEmpty } from 'es-toolkit/compat';
 
 import {
   DND_DROP_TARGET,
+  DND_ITEM_COUNT_TYPE,
   DndDropTarget,
   TEST_PLANS_PAGE_EVENTS,
 } from 'analyticsEvents/testPlansPageEvents';
@@ -65,7 +66,7 @@ export const TestPlanDropZonesContainer = ({
       trackEvent(
         TEST_PLANS_PAGE_EVENTS.dragDropTestCaseToPlan({
           switcher,
-          type: count === 1 ? 'single' : 'multi',
+          type: count === 1 ? DND_ITEM_COUNT_TYPE.SINGLE : DND_ITEM_COUNT_TYPE.MULTI,
           number: count,
         }),
       );
