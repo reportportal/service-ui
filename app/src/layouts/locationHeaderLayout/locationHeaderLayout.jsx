@@ -28,6 +28,7 @@ export const LocationHeaderLayout = ({
   children,
   breadcrumbs,
   tree,
+  className,
   titleEllipsis = true,
 }) => {
   const isLastClickable = Boolean(breadcrumbs?.[breadcrumbs.length - 1]?.link);
@@ -35,7 +36,7 @@ export const LocationHeaderLayout = ({
   const shouldShowBreadcrumbs = breadcrumbs?.length || tree?.length;
 
   return (
-    <div className={cx('location-header-container')}>
+    <div className={cx('location-header-container', className)}>
       {shouldShowBreadcrumbs && (
         <Breadcrumbs
           descriptors={breadcrumbs}
@@ -76,10 +77,12 @@ LocationHeaderLayout.propTypes = {
   children: PropTypes.node,
   breadcrumbs: PropTypes.arrayOf(breadcrumbItemPropType),
   tree: PropTypes.arrayOf(treeItemPropType),
+  className: PropTypes.string,
   titleEllipsis: PropTypes.bool,
 };
 
 LocationHeaderLayout.defaultProps = {
   children: null,
+  className: '',
   titleEllipsis: true,
 };
