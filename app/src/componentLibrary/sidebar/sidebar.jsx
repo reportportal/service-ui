@@ -167,9 +167,14 @@ export const Sidebar = ({
               };
 
               return component ? (
-                <div key={itemKey} onClick={handleClick}>
+                <button
+                  key={itemKey}
+                  type="button"
+                  className={cx('custom-item-button')}
+                  onClick={handleClick}
+                >
                   {component}
-                </div>
+                </button>
               ) : (
                 <SidebarButton
                   key={itemKey}
