@@ -28,6 +28,11 @@
   display: flex;
   min-height: 31px;
   justify-content: space-between;
+
+  > *:only-child {
+    flex: 1;
+    min-width: 0;
+  }
 }
 
 .title {
@@ -39,6 +44,12 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  &--no-ellipsis {
+    overflow: visible;
+    text-overflow: clip;
+    flex-shrink: 0;
+  }
 }
 
 .crumbs {
