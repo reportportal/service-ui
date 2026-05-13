@@ -44,6 +44,8 @@ import styles from './allTestCasesPage.scss';
 
 const cx = createClassnames(styles);
 
+const BULK_ADD_TO_LAUNCH_MIN_SELECTION = 2;
+
 export const AllTestCasesPage = ({
   testCases,
   loading,
@@ -88,7 +90,9 @@ export const AllTestCasesPage = ({
   };
 
   const handleOpenAddToLaunchModal = () => {
-    trackEvent(TEST_PLANS_PAGE_EVENTS.clickStartBulkAddToLaunch(selectedRowIds.length));
+    if (selectedRowIds.length >= BULK_ADD_TO_LAUNCH_MIN_SELECTION) {
+      trackEvent(TEST_PLANS_PAGE_EVENTS.clickStartBulkAddToLaunch(selectedRowIds.length));
+    }
     openAddToLaunchModal();
   };
 
