@@ -15,7 +15,12 @@
  */
 
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 
+import {
+  ADD_TESTS_SIDEBAR_CONDITION,
+  TEST_PLANS_PAGE_EVENTS,
+} from 'analyticsEvents/testPlansPageEvents';
 import { createClassnames } from 'common/utils';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 
@@ -32,6 +37,14 @@ interface EmptyTestPlanProps {
 
 export const EmptyTestPlan = ({ onOpenTestLibrary }: EmptyTestPlanProps) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
+
+  const handleOpenTestLibrary = () => {
+    trackEvent(
+      TEST_PLANS_PAGE_EVENTS.clickOpenAddTestsSidebar(ADD_TESTS_SIDEBAR_CONDITION.EMPTY_PLAN_CTA),
+    );
+    onOpenTestLibrary();
+  };
 
   return (
     <div className={cx('empty-test-plan')}>
@@ -44,7 +57,7 @@ export const EmptyTestPlan = ({ onOpenTestLibrary }: EmptyTestPlanProps) => {
             name: formatMessage(commonMessages.addTestsFromLibrary),
             dataAutomationId: 'addTestsFromLibraryButton',
             isCompact: true,
-            handleButton: onOpenTestLibrary,
+            handleButton: handleOpenTestLibrary,
           },
         ]}
       />

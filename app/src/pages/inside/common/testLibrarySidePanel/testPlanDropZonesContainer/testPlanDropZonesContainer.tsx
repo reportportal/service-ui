@@ -15,8 +15,15 @@
  */
 
 import { useCallback, useRef, useState } from 'react';
+import { useTracking } from 'react-tracking';
 import { isEmpty } from 'es-toolkit/compat';
 
+import {
+  DND_DROP_TARGET,
+  DND_ITEM_COUNT_TYPE,
+  DndDropTarget,
+  TEST_PLANS_PAGE_EVENTS,
+} from 'analyticsEvents/testPlansPageEvents';
 import { useModal } from 'common/hooks';
 import { TestCase } from 'types/testCase';
 import { TransformedFolder } from 'controllers/testCase';
@@ -41,6 +48,7 @@ export const TestPlanDropZonesContainer = ({
   onAddTestCases,
   onClose,
 }: TestPlanDropZonesContainerProps) => {
+  const { trackEvent } = useTracking();
   const { getFolderTestCaseIds } = usePanelActions();
   const { testCasesMap } = usePanelState();
   const [isAddToTestPlanLoading, setIsAddToTestPlanLoading] = useState(false);
@@ -49,6 +57,22 @@ export const TestPlanDropZonesContainer = ({
   const testCasesMapRef = useRef(testCasesMap);
 
   testCasesMapRef.current = testCasesMap;
+
+  const trackDropSuccess = useCallback(
+    (switcher: DndDropTarget, count: number) => {
+      if (count <= 0) {
+        return;
+      }
+      trackEvent(
+        TEST_PLANS_PAGE_EVENTS.dragDropTestCaseToPlan({
+          switcher,
+          type: count === 1 ? DND_ITEM_COUNT_TYPE.SINGLE : DND_ITEM_COUNT_TYPE.MULTI,
+          number: count,
+        }),
+      );
+    },
+    [trackEvent],
+  );
 
   const { openModal: openAddToLaunchModal } = useModal<AddTestCasesToLaunchModalProps>({
     modalKey: ADD_TEST_CASES_TO_LAUNCH_MODAL_KEY,
@@ -96,9 +120,11 @@ export const TestPlanDropZonesContainer = ({
       setIsAddToTestPlanLoading(true);
 
       try {
-        const isSuccess = await onAddTestCases(testCases.map(({ id }) => id));
+        const ids = testCases.map(({ id }) => id);
+        const isSuccess = await onAddTestCases(ids);
 
         if (isSuccess) {
+          trackDropSuccess(DND_DROP_TARGET.PLAN_LIST, ids.length);
           onClose();
         }
       } finally {
@@ -106,7 +132,7 @@ export const TestPlanDropZonesContainer = ({
         setIsAddInFlight(false);
       }
     },
-    [isAddInFlight, onAddTestCases, onClose],
+    [isAddInFlight, onAddTestCases, onClose, trackDropSuccess],
   );
 
   const addTestCasesAndCreateLaunch = useCallback(
@@ -123,6 +149,7 @@ export const TestPlanDropZonesContainer = ({
         const isSuccess = await onAddTestCases(ids);
 
         if (isSuccess) {
+          trackDropSuccess(DND_DROP_TARGET.ADD_AND_CREATE_LAUNCH, ids.length);
           onClose();
           openAddToLaunchModal({
             selectedRowsIds: ids,
@@ -135,7 +162,7 @@ export const TestPlanDropZonesContainer = ({
         setIsAddInFlight(false);
       }
     },
-    [isAddInFlight, onAddTestCases, onClose, openAddToLaunchModal, testPlanId],
+    [isAddInFlight, onAddTestCases, onClose, openAddToLaunchModal, testPlanId, trackDropSuccess],
   );
 
   const addFolder = useCallback(
@@ -157,6 +184,7 @@ export const TestPlanDropZonesContainer = ({
         const isSuccess = await onAddTestCases(ids);
 
         if (isSuccess) {
+          trackDropSuccess(DND_DROP_TARGET.PLAN_LIST, ids.length);
           onClose();
         }
       } finally {
@@ -164,7 +192,7 @@ export const TestPlanDropZonesContainer = ({
         setIsAddInFlight(false);
       }
     },
-    [getFolderIds, isAddInFlight, onAddTestCases, onClose],
+    [getFolderIds, isAddInFlight, onAddTestCases, onClose, trackDropSuccess],
   );
 
   const addFolderAndCreateLaunch = useCallback(
@@ -186,6 +214,7 @@ export const TestPlanDropZonesContainer = ({
         const isSuccess = await onAddTestCases(ids);
 
         if (isSuccess) {
+          trackDropSuccess(DND_DROP_TARGET.ADD_AND_CREATE_LAUNCH, ids.length);
           onClose();
           openAddToLaunchModal({
             selectedRowsIds: ids,
@@ -206,6 +235,7 @@ export const TestPlanDropZonesContainer = ({
       onClose,
       openAddToLaunchModal,
       testPlanId,
+      trackDropSuccess,
     ],
   );
 

@@ -16,10 +16,12 @@
 
 import { useIntl } from 'react-intl';
 import { useCallback, useState } from 'react';
+import { useTracking } from 'react-tracking';
 import { isEmpty } from 'es-toolkit/compat';
 import { VoidFn } from '@reportportal/ui-kit/common';
 import { Button, SidePanel, Selection, Toggle } from '@reportportal/ui-kit';
 
+import { TEST_PLANS_PAGE_EVENTS } from 'analyticsEvents/testPlansPageEvents';
 import { createClassnames } from 'common/utils';
 import { useModal } from 'common/hooks';
 import { useUserPermissions } from 'hooks/useUserPermissions';
@@ -55,6 +57,7 @@ export const TestLibrarySidePanel = ({
   onClose,
 }: TestLibrarySidePanelProps) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { canManageTestCases } = useUserPermissions();
   const [shouldHideAddedTestCases, setShouldHideAddedTestCases] = useState(true);
 
@@ -99,6 +102,15 @@ export const TestLibrarySidePanel = ({
       });
     }
   }, [addToTestPlan, openAddToLaunchModal, testPlanId, selectedTestCases]);
+
+  const handleSubmitAddToTestPlan = useCallback(async () => {
+    const count = selectedTestCases.length;
+    const isSuccess = await addToTestPlan();
+
+    if (isSuccess) {
+      trackEvent(TEST_PLANS_PAGE_EVENTS.submitAddTestsFromLibrary(count));
+    }
+  }, [addToTestPlan, selectedTestCases, trackEvent]);
 
   const titleComponent = (
     <div className={cx('test-library-panel__title')}>
@@ -158,7 +170,7 @@ export const TestLibrarySidePanel = ({
           variant="primary"
           disabled={isSubmitButtonDisabled}
           onClick={() => {
-            addToTestPlan();
+            handleSubmitAddToTestPlan();
           }}
         >
           {formatMessage(messages.addToTestPlan)}

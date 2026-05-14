@@ -18,6 +18,7 @@ import { memo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { isEmpty } from 'es-toolkit/compat';
 import {
   Button,
@@ -31,6 +32,7 @@ import {
 } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
+import { TEST_PLANS_PAGE_EVENTS } from 'analyticsEvents/testPlansPageEvents';
 import { createClassnames, copyToClipboard } from 'common/utils';
 import { useOnClickOutside } from 'common/hooks';
 import { CollapsibleSection } from 'components/collapsibleSection';
@@ -72,6 +74,7 @@ interface TestPlanSidePanelProps {
 export const TestPlanSidePanel = memo(
   ({ testPlan, isVisible, onClose }: TestPlanSidePanelProps) => {
     const { formatMessage } = useIntl();
+    const { trackEvent } = useTracking();
     const sidePanelRef = useRef<HTMLDivElement>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { canManageTestCases } = useUserPermissions();
@@ -110,6 +113,7 @@ export const TestPlanSidePanel = memo(
     };
 
     const handleOpenInLibraryClick = () => {
+      trackEvent(TEST_PLANS_PAGE_EVENTS.CLICK_OPEN_TEST_CASE_IN_LIBRARY);
       openRouteInNewTab({
         type: TEST_CASE_LIBRARY_PAGE,
         payload: {

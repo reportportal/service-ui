@@ -19,8 +19,13 @@ import { useModal } from 'common/hooks';
 
 import { EDIT_TEST_PLAN_MODAL_KEY, EditTestPlanModal } from './editTestPlanModal';
 
+export interface EditTestPlanSubmitMeta {
+  attributesCount: number;
+  editedFieldsCondition: string;
+}
+
 interface UseEditTestPlanModalOptions {
-  onSubmitSuccess?: (attributesCount: number) => void;
+  onSubmitSuccess?: (meta: EditTestPlanSubmitMeta) => void;
 }
 
 export const useEditTestPlanModal = ({ onSubmitSuccess }: UseEditTestPlanModalOptions = {}) =>

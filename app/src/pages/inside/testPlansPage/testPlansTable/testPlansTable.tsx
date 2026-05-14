@@ -55,7 +55,7 @@ export const TestPlansTable = ({
   const isInMilestoneContext = analyticsPlace === PLACE_TP_ROW;
   const { openModal: openEditModal } = useEditTestPlanModal({
     onSubmitSuccess: isInMilestoneContext
-      ? (attributesCount) =>
+      ? ({ attributesCount }) =>
           trackEvent(MILESTONES_PAGE_EVENTS.submitEditTestPlan(attributesCount))
       : undefined,
   });
