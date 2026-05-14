@@ -142,6 +142,7 @@
     &__details-button {
       @include mixins.button-reset();
 
+      color: var(--rp-ui-base-almost-black);
       border-radius: 50%;
       margin: 8px 0;
     }
@@ -161,7 +162,10 @@
       font-style: normal;
       line-height: 20px;
       letter-spacing: 0;
-      color: var(--Text-Primary);
+    }
+
+    &-cell-launch-name {
+      font-weight: var(--rp-ui-base-fw-medium);
     }
   }
 }
@@ -172,6 +176,7 @@
   cursor: pointer;
   display: flex;
   align-items: center;
+  color: var(--rp-ui-base-almost-black);
 
   &:focus {
     outline: none;
