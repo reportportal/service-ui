@@ -40,7 +40,7 @@ import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/se
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { PROJECT_SETTINGS_INTEGRATION } from 'analyticsEvents/projectSettingsPageEvents';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
-import { EMAIL, SAUCE_LABS } from 'common/constants/pluginNames';
+import { EMAIL, MOBITRU, SAUCE_LABS } from 'common/constants/pluginNames';
 import { combineNameAndEmailToFrom, fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
@@ -84,7 +84,8 @@ export const IntegrationInfo = (props) => {
     availableGlobalIntegrations.length > 0 || availableProjectIntegrations.length > 0;
 
   const isProjectIntegrationAddLimited = useMemo(
-    () => [EMAIL, SAUCE_LABS].includes(pluginName) && availableProjectIntegrations.length > 0,
+    () =>
+      [EMAIL, MOBITRU, SAUCE_LABS].includes(pluginName) && availableProjectIntegrations.length > 0,
     [pluginName, availableProjectIntegrations],
   );
 
