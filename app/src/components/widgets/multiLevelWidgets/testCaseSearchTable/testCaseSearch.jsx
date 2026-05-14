@@ -26,6 +26,7 @@ import { activeDashboardIdSelector, projectIdSelector } from 'controllers/pages'
 import { PROJECT_PLUGIN_PAGE } from 'controllers/pages/constants';
 import { enabledPluginSelector } from 'controllers/plugins';
 import { showModalAction } from 'controllers/modal';
+import { referenceDictionary } from 'common/utils/referenceDictionary';
 import {
   loadMoreSearchedItemsAction,
   searchedTestItemsSelector,
@@ -145,16 +146,22 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
         showModalAction({
           component: (
             <PremiumPromoModal
-              onExplorePlans={() =>
+              onExplorePlans={() => {
                 trackEvent(
                   WIDGETS_EVENTS.onTcsPremiumExplorePlansClick(dashboardId, PREMIUM_POPUP_SOURCE),
-                )
-              }
-              onContactUs={() =>
+                );
+                window.open(
+                  referenceDictionary.rpExplorePlans,
+                  '_blank',
+                  'noopener,noreferrer',
+                );
+              }}
+              onContactUs={() => {
                 trackEvent(
                   WIDGETS_EVENTS.onTcsPremiumContactUsClick(dashboardId, PREMIUM_POPUP_SOURCE),
-                )
-              }
+                );
+                window.open(referenceDictionary.rpContactUs, '_blank', 'noopener,noreferrer');
+              }}
               onNotNow={() =>
                 trackEvent(
                   WIDGETS_EVENTS.onTcsPremiumNotNowClick(dashboardId, PREMIUM_POPUP_SOURCE),

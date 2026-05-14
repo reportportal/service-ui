@@ -30,6 +30,7 @@ export const SAML = 'saml';
 export const LDAP = 'ldap';
 export const GITHUB = 'github';
 export const ORGANIZATION = 'organization';
+export const QUALITY_GATE = 'quality gate';
 
 // TODO: calculate it dynamically
 export const PLUGIN_NAMES_BY_GROUP_TYPES_MAP = {

@@ -79,19 +79,13 @@ export const PremiumPromoModal = ({ onExplorePlans, onContactUs, onNotNow }) => 
         variant: 'ghost',
         icon: <ExternalLinkIcon />,
         iconPlace: 'end',
-        onClick: () => {
-          onContactUs?.();
-          window.open(referenceDictionary.rpContactUs, '_blank', 'noopener,noreferrer');
-        },
+        onClick: () => onContactUs?.(),
       }}
       okButton={{
         children: formatMessage(messages.explorePlansButton),
         icon: <ExternalLinkIcon />,
         iconPlace: 'end',
-        onClick: () => {
-          onExplorePlans?.();
-          window.open(referenceDictionary.rpExplorePlans, '_blank', 'noopener,noreferrer');
-        },
+        onClick: () => onExplorePlans?.(),
       }}
     >
       <div className={cx('modal-content')}>

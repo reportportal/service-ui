@@ -57,4 +57,8 @@ export const messages = defineMessages({
     id: 'SettingsPage.logTypes',
     defaultMessage: 'Log types',
   },
+  qualityGates: {
+    id: 'SettingsPage.qualityGates',
+    defaultMessage: 'Quality Gates',
+  },
 });

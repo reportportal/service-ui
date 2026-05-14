@@ -34,6 +34,7 @@ import {
   LOG_TYPES,
   NOTIFICATIONS,
   PATTERN_ANALYSIS,
+  QUALITY_GATES,
   ENVIRONMENTS,
   TEST_DATA,
 } from 'common/constants/settingsTabs';
@@ -49,6 +50,7 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { Header } from 'pages/inside/common/header';
 import { PatternAnalysis } from 'pages/inside/projectSettingsPageContainer/content/patternAnalysis';
+import { QualityGates } from 'pages/inside/projectSettingsPageContainer/content/qualityGates';
 import { Notifications } from 'pages/inside/projectSettingsPageContainer/content/notifications';
 import { getTmsOverride } from 'controllers/appInfo/utils';
 import { GeneralTab } from './generalTab';
@@ -64,6 +66,14 @@ export const ProjectSettingsPageContainer = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const extensions = useSelector(uiExtensionSettingsTabsSelector);
+  const qgExtension = useMemo(
+    () => extensions.find((ext) => ext.name === QUALITY_GATES),
+    [extensions],
+  );
+  const extensionsWithoutQG = useMemo(
+    () => extensions.filter((ext) => ext.name !== QUALITY_GATES),
+    [extensions],
+  );
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
   const activeTab = useSelector(settingsTabSelector);
   const { canSeeDemoData, canUpdateSettings } = useUserPermissions();
@@ -81,7 +91,7 @@ export const ProjectSettingsPageContainer = () => {
   );
 
   const { mergeConfig } = useNavigationTabsExtensionsConfig({
-    extensions,
+    extensions: extensionsWithoutQG,
     createTabLink,
     setHeaderNodes,
     ExtensionLoaderComponent: ExtensionLoader,
@@ -146,6 +156,13 @@ export const ProjectSettingsPageContainer = () => {
         component: <DemoDataTab />,
         mobileDisabled: true,
       },
+      [QUALITY_GATES]: {
+        name: formatMessage(messages.qualityGates),
+        link: createTabLink(QUALITY_GATES),
+        component: <QualityGates extension={qgExtension} />,
+        mobileDisabled: true,
+        hideHeader: true,
+      },
       ...(isShowTmsHiddenData && {
         [ENVIRONMENTS]: {
           name: formatMessage(messages.environments),
@@ -174,6 +191,7 @@ export const ProjectSettingsPageContainer = () => {
     canSeeDemoData,
     canUpdateSettings,
     isShowTmsHiddenData,
+    qgExtension,
   ]);
 
   const navigation = useMemo(() => {
@@ -200,7 +218,7 @@ export const ProjectSettingsPageContainer = () => {
       <SettingsLayout navigation={navigation}>
         <ScrollWrapper resetRequired>
           <div className={cx('settings-page-content-wrapper')}>
-            {!subPage && (
+            {!subPage && !config[activeTab]?.hideHeader && (
               <div className={cx('header')}>
                 <Header title={config[activeTab]?.name} titleNode={headerNodes.titleNode}>
                   {headerNodes.children}
