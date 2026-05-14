@@ -2698,19 +2698,5 @@
   "notFoundPage.pageNotExist": "您要查找的页面不存在。",
   "notFoundPage.toHome": "带我离开这里",
   "OrganizationProjectsPage.actionAssignUser": "分配用户",
-  "ProjectTeamPage.assignUser": "分配用户",
-  "testCaseSearch.bannerSubtitle": "A structured space for exploring and filtering test cases",
-  "testCaseSearch.bannerTitle": "Try the updated test case search",
-  "testCaseSearch.documentationButton": "Documentation",
-  "testCaseSearch.openNewSearchButton": "Open New Search",
-  "premiumPromoModal.contactUsButton": "Contact us",
-  "premiumPromoModal.explorePlansButton": "Explore Plans",
-  "premiumPromoModal.feature.more": "\u2026and many more",
-  "premiumPromoModal.feature.organizations": "Organizations",
-  "premiumPromoModal.feature.qualityGates": "Quality Gates",
-  "premiumPromoModal.feature.sso": "Single sign-on",
-  "premiumPromoModal.feature.testExecutions": "Test Executions Search",
-  "premiumPromoModal.notNowButton": "Not now",
-  "premiumPromoModal.subtitle": "Upgrade your plan to get the most out of ReportPortal and work more efficiently.",
-  "premiumPromoModal.title": "Unlock premium features"
+  "ProjectTeamPage.assignUser": "分配用户"
 }

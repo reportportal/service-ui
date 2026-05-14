@@ -22,11 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { WIDGETS_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { SORTING_ASC, SORTING_DESC } from 'controllers/sorting';
 import { debounce } from 'common/utils';
-import { activeDashboardIdSelector, projectIdSelector } from 'controllers/pages';
-import { PROJECT_PLUGIN_PAGE } from 'controllers/pages/constants';
-import { enabledPluginSelector } from 'controllers/plugins';
-import { showModalAction } from 'controllers/modal';
-import { referenceDictionary } from 'common/utils/referenceDictionary';
+import { activeDashboardIdSelector } from 'controllers/pages';
 import {
   loadMoreSearchedItemsAction,
   searchedTestItemsSelector,
@@ -35,8 +31,6 @@ import {
 import { SEARCH_DEBOUNCE_MS } from 'common/constants/delayTime';
 import { TestCaseSearchControl } from './testCaseSearchControl';
 import { TestCaseSearchContent } from './testCaseSearchContent';
-import { TestExecutionsPromoBanner } from './testExecutionsPromoBanner';
-import { PremiumPromoModal } from 'components/premiumPromoModal';
 import styles from './testCaseSearch.scss';
 
 const TRACKING_EVENTS_TRIGGER_SOURCES = {
@@ -47,18 +41,9 @@ const TRACKING_EVENTS_TRIGGER_SOURCES = {
 };
 const THROTTLING_STATUS_CHANGE_TIME = 1000;
 
-const PROMOTION_BANNER_SOURCE = 'promotion_banner';
-const PREMIUM_POPUP_SOURCE = 'premium_features_popup';
-const TEST_EXECUTION_PLUGIN_NAME = 'test-execution';
-const TEST_EXECUTION_PLUGIN_PAGE = 'testExecution';
-
 const cx = classNames.bind(styles);
 export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }) => {
   const dashboardId = useSelector(activeDashboardIdSelector);
-  const projectId = useSelector(projectIdSelector);
-  const isTestExecutionPluginEnabled = useSelector((state) =>
-    enabledPluginSelector(state, TEST_EXECUTION_PLUGIN_NAME),
-  );
   const searchDetails = useSelector(searchedTestItemsSelector);
   const targetWidgetSearch = searchDetails[widgetId] || {};
   const {
@@ -129,59 +114,9 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
     dispatch(loadMoreSearchedItemsAction({ widgetId, trackPerformance, isDisplayedLaunches }));
   };
 
-  const handleDocumentationClick = () => {
-    trackEvent(WIDGETS_EVENTS.onTcsPromoDocumentationClick(dashboardId, PROMOTION_BANNER_SOURCE));
-  };
-
-  const handleOpenNewSearch = () => {
-    if (isTestExecutionPluginEnabled) {
-      trackEvent(WIDGETS_EVENTS.onTcsPromoOpenNewSearchNavigate(dashboardId, PROMOTION_BANNER_SOURCE));
-      dispatch({
-        type: PROJECT_PLUGIN_PAGE,
-        payload: { projectId, pluginPage: TEST_EXECUTION_PLUGIN_PAGE },
-      });
-    } else {
-      trackEvent(WIDGETS_EVENTS.onTcsPromoOpenNewSearchNavigate(dashboardId, PROMOTION_BANNER_SOURCE));
-      dispatch(
-        showModalAction({
-          component: (
-            <PremiumPromoModal
-              onExplorePlans={() => {
-                trackEvent(
-                  WIDGETS_EVENTS.onTcsPremiumExplorePlansClick(dashboardId, PREMIUM_POPUP_SOURCE),
-                );
-                window.open(
-                  referenceDictionary.rpExplorePlans,
-                  '_blank',
-                  'noopener,noreferrer',
-                );
-              }}
-              onContactUs={() => {
-                trackEvent(
-                  WIDGETS_EVENTS.onTcsPremiumContactUsClick(dashboardId, PREMIUM_POPUP_SOURCE),
-                );
-                window.open(referenceDictionary.rpContactUs, '_blank', 'noopener,noreferrer');
-              }}
-              onNotNow={() =>
-                trackEvent(
-                  WIDGETS_EVENTS.onTcsPremiumNotNowClick(dashboardId, PREMIUM_POPUP_SOURCE),
-                )
-              }
-            />
-          ),
-        }),
-      );
-    }
-  };
-
   useEffect(() => {
     setIsTableLoading(fetchLoading);
   }, [fetchLoading]);
-
-  useEffect(() => {
-    trackEvent(WIDGETS_EVENTS.onTcsPromoBannerImpression(dashboardId, PROMOTION_BANNER_SOURCE));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     if (isSearchValueEmpty) return () => {};
@@ -205,10 +140,6 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
         onSearchChange={handleSearch}
         onClear={handleClear}
         onStatusChange={handleStatusChange}
-      />
-      <TestExecutionsPromoBanner
-        onOpenNewSearch={handleOpenNewSearch}
-        onDocumentationClick={handleDocumentationClick}
       />
       <TestCaseSearchContent
         listView={isDisplayedLaunches}

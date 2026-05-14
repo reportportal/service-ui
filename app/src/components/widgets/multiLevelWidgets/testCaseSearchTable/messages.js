@@ -65,20 +65,4 @@ export const messages = defineMessages({
     id: 'testCaseSearch.testNameOrAttributeRequired',
     defaultMessage: "Add 'Test Name' or 'Attribute' to work with 'Status' filter",
   },
-  bannerTitle: {
-    id: 'testCaseSearch.bannerTitle',
-    defaultMessage: 'Try the updated test case search',
-  },
-  bannerSubtitle: {
-    id: 'testCaseSearch.bannerSubtitle',
-    defaultMessage: 'A structured space for exploring and filtering test cases',
-  },
-  documentationButton: {
-    id: 'testCaseSearch.documentationButton',
-    defaultMessage: 'Documentation',
-  },
-  openNewSearchButton: {
-    id: 'testCaseSearch.openNewSearchButton',
-    defaultMessage: 'Open New Search',
-  },
 });
