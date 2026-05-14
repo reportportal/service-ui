@@ -26,6 +26,7 @@ export const RALLY = 'rally';
 export const EMAIL = 'email';
 export const SAUCE_LABS = 'saucelabs';
 export const SAUCE_LABS_TITLE = 'Sauce Labs';
+export const MOBITRU = 'mobitru';
 export const SAML = 'saml';
 export const LDAP = 'ldap';
 export const GITHUB = 'github';
@@ -35,7 +36,7 @@ export const ORGANIZATION = 'organization';
 export const PLUGIN_NAMES_BY_GROUP_TYPES_MAP = {
   [BTS_GROUP_TYPE]: [JIRA, RALLY],
   [NOTIFICATION_GROUP_TYPE]: [EMAIL],
-  [OTHER_GROUP_TYPE]: [SAUCE_LABS],
+  [OTHER_GROUP_TYPE]: [SAUCE_LABS, MOBITRU],
   [AUTHORIZATION_GROUP_TYPE]: [SAML, LDAP, GITHUB],
 };
 
@@ -48,4 +49,5 @@ export const GROUP_TYPES_BY_PLUGIN_NAMES_MAP = {
   [LDAP]: AUTHORIZATION_GROUP_TYPE,
   [GITHUB]: AUTHORIZATION_GROUP_TYPE,
   [SAUCE_LABS]: OTHER_GROUP_TYPE,
+  [MOBITRU]: OTHER_GROUP_TYPE,
 };
