@@ -15,18 +15,14 @@
  */
 
 import React from 'react';
-import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { useIntl } from 'react-intl';
 
 import { showModalAction } from 'controllers/modal';
-import { enabledPluginSelector } from 'controllers/plugins';
-import { QUALITY_GATE } from 'common/constants/pluginNames';
 import { referenceDictionary } from 'common/utils/referenceDictionary';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PremiumPromoModal } from 'components/premiumPromoModal';
-import { ExtensionLoader } from 'components/extensionLoader';
 import discoverPluginsIcon from 'common/img/discover-icon-inline.svg';
 import billingIcon from 'common/img/billing-icon-inline.svg';
 import openInNewTabIcon from 'common/img/open-in-new-tab-inline.svg';
@@ -35,17 +31,11 @@ import { PROJECT_SETTINGS_QUALITY_GATES_EVENTS } from 'analyticsEvents/projectSe
 import { messages } from './messages';
 import { QualityGatesPromoLayout } from './qualityGatesPromoLayout';
 
-export const QualityGates = ({ extension }) => {
+export const QualityGates = () => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
-
-  const isPluginEnabled = useSelector((state) => enabledPluginSelector(state, QUALITY_GATE));
   const { canUpdateSettings } = useUserPermissions();
-
-  if (isPluginEnabled && extension) {
-    return <ExtensionLoader extension={extension} withPreloader silentOnError={false} />;
-  }
 
   const handleButtonClick = () => {
     trackEvent(PROJECT_SETTINGS_QUALITY_GATES_EVENTS.CLICK_CREATE_QUALITY_GATE_WITHOUT_PLUGIN);
@@ -111,8 +101,4 @@ export const QualityGates = ({ extension }) => {
       showButton={canUpdateSettings}
     />
   );
-};
-
-QualityGates.propTypes = {
-  extension: PropTypes.object,
 };

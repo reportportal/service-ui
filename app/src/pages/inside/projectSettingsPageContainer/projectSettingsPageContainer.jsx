@@ -66,14 +66,6 @@ export const ProjectSettingsPageContainer = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const extensions = useSelector(uiExtensionSettingsTabsSelector);
-  const qgExtension = useMemo(
-    () => extensions.find((ext) => ext.name === QUALITY_GATES),
-    [extensions],
-  );
-  const extensionsWithoutQG = useMemo(
-    () => extensions.filter((ext) => ext.name !== QUALITY_GATES),
-    [extensions],
-  );
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
   const activeTab = useSelector(settingsTabSelector);
   const { canSeeDemoData, canUpdateSettings } = useUserPermissions();
@@ -91,7 +83,7 @@ export const ProjectSettingsPageContainer = () => {
   );
 
   const { mergeConfig } = useNavigationTabsExtensionsConfig({
-    extensions: extensionsWithoutQG,
+    extensions,
     createTabLink,
     setHeaderNodes,
     ExtensionLoaderComponent: ExtensionLoader,
@@ -159,7 +151,7 @@ export const ProjectSettingsPageContainer = () => {
       [QUALITY_GATES]: {
         name: formatMessage(messages.qualityGates),
         link: createTabLink(QUALITY_GATES),
-        component: <QualityGates extension={qgExtension} />,
+        component: <QualityGates />,
         mobileDisabled: true,
         hideHeader: true,
       },
@@ -191,7 +183,6 @@ export const ProjectSettingsPageContainer = () => {
     canSeeDemoData,
     canUpdateSettings,
     isShowTmsHiddenData,
-    qgExtension,
   ]);
 
   const navigation = useMemo(() => {
