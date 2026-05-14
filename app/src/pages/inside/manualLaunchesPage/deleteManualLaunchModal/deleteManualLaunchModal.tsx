@@ -16,6 +16,7 @@
 
 import { ReactNode, useCallback } from 'react';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { noop } from 'es-toolkit';
 import { Modal } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
@@ -24,29 +25,17 @@ import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { useModalButtons } from 'hooks/useModalButtons';
+import { MANUAL_LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 
 import { useDeleteManualLaunches } from './useDeleteManualLaunches';
 import { messages } from './messages';
+import { DeleteManualLaunchModalData } from './types';
 
 import styles from './deleteManualLaunchModal.scss';
 
 const cx = createClassnames(styles);
 
 export const DELETE_MANUAL_LAUNCH_MODAL_KEY = 'deleteManualLaunchModalKey';
-
-interface SingleDeleteData {
-  type: 'single';
-  id: number;
-  name: string;
-}
-
-interface BatchDeleteData {
-  type: 'batch';
-  launchIds: number[];
-  onClearSelection?: VoidFn;
-}
-
-export type DeleteManualLaunchModalData = SingleDeleteData | BatchDeleteData;
 
 interface DeleteManualLaunchModalProps {
   data: DeleteManualLaunchModalData;
@@ -58,13 +47,19 @@ export const DeleteManualLaunchModal = ({
   onSuccess = noop,
 }: DeleteManualLaunchModalProps) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const isBatch = data.type === 'batch';
 
   const { isLoading, deleteLaunches } = useDeleteManualLaunches({ onSuccess, data });
 
   const handleDelete = useCallback(() => {
+    if (data.type === 'batch' && data.launchIds.length > 1) {
+      trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.confirmBulkDeleteLaunches(data.launchIds.length));
+    } else {
+      trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.CONFIRM_DELETE_LAUNCH);
+    }
     deleteLaunches(data).catch(noop);
-  }, [deleteLaunches, data]);
+  }, [deleteLaunches, data, trackEvent]);
 
   const { okButton, cancelButton, hideModal } = useModalButtons({
     okButtonText: (

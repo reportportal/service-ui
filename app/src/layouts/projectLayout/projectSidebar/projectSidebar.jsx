@@ -56,6 +56,7 @@ import MilestonesIcon from 'common/img/sidebar/milestones-icon-inline.svg';
 import { projectNameSelector } from 'controllers/project';
 import { activeOrganizationNameSelector } from 'controllers/organization';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
+import { getTmsOverride } from 'controllers/appInfo/utils';
 import { messages } from '../../messages';
 
 const ORGANIZATION_CONTROL = 'Organization control';
@@ -80,6 +81,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
   const getSidebarItems = () => {
     let menuCounter = 0;
     const menuStep = 10;
+    const isShowInProgressTmsFeatures = Boolean(getTmsOverride());
 
     const sidebarItems = [
       {
@@ -173,20 +175,24 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         message: formatMessage(messages.milestones),
         menuOrder: (menuCounter += menuStep),
       },
-      {
-        onClick: (isSidebarCollapsed) =>
-          onClickButton({
-            itemName: messages.productVersions.defaultMessage,
-            isSidebarCollapsed,
-          }),
-        link: {
-          type: PRODUCT_VERSIONS_PAGE,
-          payload: { organizationSlug, projectSlug },
-        },
-        icon: ProductVersionsIcon,
-        message: formatMessage(messages.productVersions),
-        menuOrder: (menuCounter += menuStep),
-      },
+      ...(isShowInProgressTmsFeatures
+        ? [
+            {
+              onClick: (isSidebarCollapsed) =>
+                onClickButton({
+                  itemName: messages.productVersions.defaultMessage,
+                  isSidebarCollapsed,
+                }),
+              link: {
+                type: PRODUCT_VERSIONS_PAGE,
+                payload: { organizationSlug, projectSlug },
+              },
+              icon: ProductVersionsIcon,
+              message: formatMessage(messages.productVersions),
+              menuOrder: (menuCounter += menuStep),
+            },
+          ]
+        : []),
       {
         onClick: (isSidebarCollapsed) =>
           onClickButton({ itemName: messages.projectsSettings.defaultMessage, isSidebarCollapsed }),
@@ -200,27 +206,30 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       },
     ];
 
-    const pluginPageItems = projectPageExtensions.flatMap(({ payload }) => {
-      const { icon, slug, name, title, iconName, menuOrder } = payload;
-      const iconSvg = icon?.content || icon?.svg;
-      const itemTitle = title || icon?.title || name;
-      if (!iconSvg) {
-        return [];
-      }
-      const itemName = iconName || itemTitle;
-      return [
-        {
-          onClick: (isSidebarCollapsed) => onClickButton({ itemName, isSidebarCollapsed }),
-          link: {
-            type: PROJECT_PLUGIN_PAGE,
-            payload: { organizationSlug, projectSlug, pluginPage: slug || name },
+    const pluginPageItems = projectPageExtensions.flatMap(
+      ({ payload, pluginName, name: extensionName, url }) => {
+        const { icon, slug, name, title, iconName, menuOrder } = payload;
+        const iconSvg = icon?.content || icon?.svg;
+        const itemTitle = title || icon?.title || name;
+        if (!iconSvg) {
+          return [];
+        }
+        const itemName = iconName || itemTitle;
+        return [
+          {
+            name: [pluginName, extensionName, slug || name, url].filter(Boolean).join(':'),
+            onClick: (isSidebarCollapsed) => onClickButton({ itemName, isSidebarCollapsed }),
+            link: {
+              type: PROJECT_PLUGIN_PAGE,
+              payload: { organizationSlug, projectSlug, pluginPage: slug || name },
+            },
+            icon: iconSvg,
+            message: itemTitle,
+            menuOrder: menuOrder || (menuCounter += menuStep),
           },
-          icon: iconSvg,
-          message: itemTitle,
-          menuOrder: menuOrder || (menuCounter += menuStep),
-        },
-      ];
-    });
+        ];
+      },
+    );
 
     const uiExtensionItems = sidebarExtensions.map((extension) => ({
       name: extension.name,

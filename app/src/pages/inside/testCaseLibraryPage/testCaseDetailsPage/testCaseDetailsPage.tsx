@@ -19,8 +19,10 @@ import { isEmpty } from 'es-toolkit/compat';
 import { noop } from 'es-toolkit';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { BubblesLoader, Button, EditIcon, PlusIcon } from '@reportportal/ui-kit';
 
+import { TEST_CASE_LIBRARY_EVENTS } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { createClassnames } from 'common/utils';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
@@ -32,8 +34,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { isLoadingTestCaseDetailsSelector, testCaseDetailsSelector } from 'controllers/testCase';
 import { commonMessages } from 'pages/inside/common/common-messages';
-import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
-import { ManualScenario, Tag } from 'types/testCase';
+import { ManualScenario, Tag, TestCaseManualScenario } from 'types/testCase';
 
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
 import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
@@ -169,6 +170,7 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
 
 export const TestCaseDetailsPage = () => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { canManageTestCases } = useUserPermissions();
   const { openModal: openAddTestCasesToTestPlanModal } = useAddTestCasesToTestPlanModal();
   const { openModal: openDescriptionModal } = useDescriptionModal();
@@ -191,7 +193,11 @@ export const TestCaseDetailsPage = () => {
   const attributes = (testCaseDetails.attributes || []).filter(hasTagShape);
 
   const handleTagSelect = (tag: Tag) => {
-    addTag(tag).catch(noop);
+    addTag(tag)
+      .then(() => {
+        trackEvent(TEST_CASE_LIBRARY_EVENTS.submitAddTag(String(testCaseId)));
+      })
+      .catch(noop);
   };
 
   const handleTagRemove = (tagKey: string) => {
@@ -205,7 +211,6 @@ export const TestCaseDetailsPage = () => {
   const handleAddToTestPlan = () => {
     openAddTestCasesToTestPlanModal({
       selectedTestCaseIds: [testCaseDetails.id],
-      isSingleTestCaseMode: true,
     });
   };
 

@@ -18,36 +18,13 @@ import { createSelector } from 'reselect';
 
 import { transformFoldersToDisplay } from 'common/utils/folderUtils';
 import { transformFoldersWithFullPath } from 'controllers/testCase/utils';
-import { ExtendedTestCase, TestCase } from 'types/testCase';
+import { TestCase } from 'types/testCase';
 import { Page } from 'types/common';
 import { Folder } from './types';
-import { InitialStateType } from './reducer';
-
-export interface TestCaseState {
-  folders?: {
-    data?: Folder[];
-    isCreatingFolder?: boolean;
-    isLoadingFolder?: boolean;
-    activeFolderId?: number | null;
-    expandedFolderIds?: number[];
-    loading?: boolean;
-    areFoldersFetched?: boolean;
-    filteredFolders?: Folder[];
-    isLoadingFilteredFolders?: boolean;
-  };
-  testCases?: {
-    isLoading?: boolean;
-    list?: TestCase[];
-    page: Page | null;
-  };
-  details?: {
-    data?: ExtendedTestCase;
-    loading: boolean;
-  };
-}
+import type { TestCaseState } from './state';
 
 interface RootState {
-  testCase?: TestCaseState & InitialStateType;
+  testCase?: TestCaseState;
 }
 
 export const testCaseSelector = (state: RootState): TestCaseState => state.testCase || {};

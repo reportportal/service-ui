@@ -69,6 +69,7 @@ export const ExpandedOptions = ({
   onDuplicateFolder,
   onMoveTestCase,
   onDuplicateTestCase,
+  onFolderTreeViewControl,
 }: ExpandedOptionsProps) => {
   const { formatMessage } = useIntl();
   const { expandedIds, onToggleFolder, setExpandedIds } = useStorageFolders(instanceKey);
@@ -349,6 +350,7 @@ export const ExpandedOptions = ({
                 onFlatViewChange={setIsFlatView}
                 onExpandAll={handleExpandAll}
                 onCollapseAll={handleCollapseAll}
+                onTrackViewControl={onFolderTreeViewControl}
               />
             )}
           </div>

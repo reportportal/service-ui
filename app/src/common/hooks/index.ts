@@ -21,7 +21,7 @@ export { useModal } from './useModal';
 export type { UseModalData } from './useModal';
 export { useFileUploadProgressSimulation } from './useFileUploadProgressSimulation';
 export { useFileProcessing } from './useFileProcessing';
-export type { BaseAttachmentFile } from './useFileProcessing';
+export type { BaseAttachmentFile } from 'common/utils/fileUtils';
 export { useQueryParams } from './useQueryParams';
 export { useNavigationTabsExtensionsConfig } from './useNavigationTabsExtensionsConfig';
 export { useNotification } from './useNotification';

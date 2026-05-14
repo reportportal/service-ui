@@ -21,6 +21,7 @@ export {
   testItemDetailsAddonSelector,
   uiExtensionProjectPagesSelector,
   extensionManifestSelector,
+  extensionManifestsLoadPendingSelector,
   disablePluginPopupContentSelector,
 } from './selectors';
 export { uiExtensionsReducer } from './reducer';

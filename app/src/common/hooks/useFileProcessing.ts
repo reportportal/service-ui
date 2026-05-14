@@ -18,26 +18,12 @@ import { useCallback, useState, useEffect } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { isEmpty, keyBy } from 'es-toolkit/compat';
 import { noop } from 'es-toolkit';
-import type { FileWithValidation, FileValidationError } from '@reportportal/ui-kit/fileDropArea';
+import type { FileWithValidation } from '@reportportal/ui-kit/fileDropArea';
 
 import { uniqueId } from 'common/utils';
-import { downloadFileFromBlob, getFileKey } from 'common/utils/fileUtils';
+import { downloadFileFromBlob, getFileKey, type BaseAttachmentFile } from 'common/utils/fileUtils';
 
 import { useFileUploadProgressSimulation } from './useFileUploadProgressSimulation';
-
-export interface BaseAttachmentFile {
-  fileSize?: number;
-  id: string;
-  fileName: string;
-  file: File;
-  size: number;
-  uploadingProgress?: number;
-  isUploading?: boolean;
-  validationErrors?: FileValidationError[];
-  customErrorMessage?: string;
-  attachmentId?: string;
-  uploadError?: string;
-}
 
 export interface UploadResult {
   attachmentId?: string;

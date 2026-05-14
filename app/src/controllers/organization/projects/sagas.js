@@ -41,7 +41,7 @@ import {
   SELF_ASSIGN_TO_PROJECT,
   CHANGE_PROJECT_ROLE,
 } from './constants';
-import { fetchOrganizationBySlugAction } from '..';
+import { fetchOrganizationBySlugAction } from '../actionCreators';
 import { querySelector } from './selectors';
 import { activeOrganizationIdSelector, activeOrganizationSelector } from '../selectors';
 import { fetchOrganizationProjectsAction } from './actionCreators';

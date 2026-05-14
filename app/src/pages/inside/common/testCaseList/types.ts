@@ -27,7 +27,8 @@ export enum TestCaseMenuAction {
   DELETE = 'delete',
 }
 
-export enum TestCaseManualScenario {
-  TEXT = 'TEXT',
-  STEPS = 'STEPS',
+export interface SelectedTestCaseRow {
+  id: number;
+  folderId: number;
+  name?: string;
 }

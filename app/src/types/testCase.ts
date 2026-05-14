@@ -14,9 +14,21 @@
  * limitations under the License.
  */
 
-import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
-import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
-import { Attachment } from 'pages/inside/common/attachmentList';
+export type TestCasePriority = 'blocker' | 'critical' | 'high' | 'medium' | 'low' | 'unspecified';
+
+export enum TestCaseManualScenario {
+  TEXT = 'TEXT',
+  STEPS = 'STEPS',
+}
+
+export interface Attachment {
+  fileName: string;
+  fileSize: number;
+  id: number;
+  fileType: string;
+  src?: string;
+  hasThumbnail?: boolean;
+}
 
 export type Tag = {
   key: string;
@@ -46,6 +58,7 @@ export interface Step {
 export enum ExecutionStatus {
   PASSED = 'PASSED',
   FAILED = 'FAILED',
+  IN_PROGRESS = 'IN_PROGRESS',
   STOPPED = 'STOPPED',
   SKIPPED = 'SKIPPED',
   INTERRUPTED = 'INTERRUPTED',

@@ -36,9 +36,6 @@ import {
   GET_TEST_PLANS,
   GET_TEST_PLAN,
   TEST_PLANS_NAMESPACE,
-  TestPlanDto,
-  TestPlanFoldersDto,
-  TestPlanTestCaseDto,
   defaultQueryParams,
   ACTIVE_TEST_PLAN_NAMESPACE,
   TEST_PLAN_FOLDERS_NAMESPACE,
@@ -46,6 +43,7 @@ import {
   defaultTestPlanTestCasesQueryParams,
 } from './constants';
 import { GetTestPlansParams, GetTestPlanParams } from './actionCreators';
+import type { TestPlanDto, TestPlanFoldersDto, TestPlanTestCaseDto } from './types';
 import { Page } from '../../types/common';
 
 interface GetTestPlansAction extends Action<typeof GET_TEST_PLANS> {

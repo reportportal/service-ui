@@ -17,9 +17,14 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { noop } from 'es-toolkit';
 
+import {
+  FOLDER_POPOVER_ELEMENT_NAME,
+  TEST_CASE_LIBRARY_EVENTS,
+} from 'analyticsEvents/testCaseLibraryPageEvents';
 import { UseModalData } from 'common/hooks';
 import { createClassnames } from 'common/utils';
 import { withModal } from 'controllers/modal';
@@ -67,6 +72,7 @@ const DuplicateFolderModal = reduxForm<DuplicateFolderFormValues, DuplicateFolde
 }: DuplicateFolderModalProps &
   InjectedFormProps<DuplicateFolderFormValues, DuplicateFolderModalProps>) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const folders = useSelector(transformedFoldersWithFullPathSelector);
   const { duplicateFolder, isLoading: isDuplicating } = useDuplicateFolder();
   const shouldMoveToRoot = useBooleanFormFieldValue<DuplicateFolderFormValues>({
@@ -94,6 +100,12 @@ const DuplicateFolderModal = reduxForm<DuplicateFolderFormValues, DuplicateFolde
     const parentFolderId = values.moveToRoot
       ? null
       : coerceToNumericId(values.destinationFolder?.id);
+
+    trackEvent(
+      TEST_CASE_LIBRARY_EVENTS.submitFolderOperation(
+        FOLDER_POPOVER_ELEMENT_NAME.DUPLICATE_SUBFOLDER,
+      ),
+    );
 
     duplicateFolder({ folderId, folderName: values.folderName, parentFolderId }).catch(noop);
   };

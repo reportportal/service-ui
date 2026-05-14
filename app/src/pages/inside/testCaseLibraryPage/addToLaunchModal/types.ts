@@ -14,8 +14,24 @@
  * limitations under the License.
  */
 
-export interface AddToLaunchModalProps {
-  selectedTestCasesIds: number[];
+import { VoidFn } from '@reportportal/ui-kit/common';
+
+import { AddToLaunchPlace } from 'analyticsEvents/testCaseLibraryPageEvents';
+
+interface BaseAddToLaunchModalProps {
   isUncoveredTestsCheckboxAvailable?: boolean;
-  onClearSelection?: () => void;
+  place?: AddToLaunchPlace;
+  onClearSelection?: VoidFn;
 }
+
+export type AddToLaunchModalProps =
+  | (BaseAddToLaunchModalProps & {
+      folderId: number;
+      itemCount: number;
+      selectedTestCaseIds?: never;
+    })
+  | (BaseAddToLaunchModalProps & {
+      selectedTestCaseIds: number[];
+      folderId?: never;
+      itemCount?: never;
+    });

@@ -17,8 +17,10 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { noop } from 'es-toolkit';
 
+import { TEST_PLANS_PAGE_EVENTS } from 'analyticsEvents/testPlansPageEvents';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { useDebouncedSpinner, useNotification } from 'common/hooks';
@@ -28,8 +30,8 @@ import {
   getTestPlanAction,
   defaultTestPlanTestCasesQueryParams,
   TEST_PLAN_FOLDERS_NAMESPACE,
-  TestPlanFoldersDto,
 } from 'controllers/testPlan';
+import type { TestPlanFoldersDto } from 'controllers/testPlan/types';
 import { PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
 import { LocationInfo } from 'controllers/pages/typed-selectors';
 import { useTestPlanId } from 'hooks/useTypedSelector';
@@ -42,6 +44,7 @@ export const useRemoveTestCasesFromTestPlan = ({
   onSuccess = noop,
 }: UseRemoveTestCasesFromTestPlanOptions) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
@@ -96,6 +99,8 @@ export const useRemoveTestCasesFromTestPlan = ({
           }),
         );
 
+        trackEvent(TEST_PLANS_PAGE_EVENTS.SUBMIT_REMOVE_TEST_FROM_PLAN);
+
         showSuccessNotification({
           messageId: 'removeFromTestPlanSuccess',
           values: { count: testCaseIds.length },
@@ -126,6 +131,7 @@ export const useRemoveTestCasesFromTestPlan = ({
       onSuccess,
       showErrorNotification,
       hideSpinner,
+      trackEvent,
     ],
   );
 

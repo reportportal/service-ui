@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-import { ExtendedTestCase, Attribute } from 'types/testCase';
-import type { EntityWithDisplayId } from 'types/common';
-import { Folder } from 'controllers/testCase';
-
 export const GET_TEST_PLANS = 'getTestPlans' as const;
 export const GET_TEST_PLAN = 'getTestPlan' as const;
 export const TEST_PLANS_NAMESPACE = 'testPlans' as const;
@@ -33,34 +29,6 @@ export const defaultSortParam = 'createdDate,desc';
 export const defaultTestPlanTestCasesQueryParams = {
   limit: 50,
   offset: 0,
-};
-
-export type TestPlanDto = EntityWithDisplayId & {
-  name: string;
-  executionStatistic: {
-    covered: number;
-    total: number;
-  };
-  description?: string;
-  attributes?: Attribute[];
-  milestoneId?: number;
-};
-
-export interface PageInfo {
-  number: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
-}
-
-export type TestPlanFoldersDto = {
-  content: Folder[];
-  page: PageInfo;
-};
-
-export type TestPlanTestCaseDto = {
-  content: ExtendedTestCase[];
-  page: PageInfo;
 };
 
 export const TOGGLE_TEST_PLAN_FOLDER_EXPANSION = 'toggleTestPlanFolderExpansion' as const;

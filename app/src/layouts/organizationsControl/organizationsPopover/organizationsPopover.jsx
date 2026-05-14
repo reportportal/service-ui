@@ -32,8 +32,8 @@ import { NavLink } from 'components/main/navLink';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { useTracking } from 'react-tracking';
-import routesMap from 'routes/routesMap';
 import { OrganizationsItem } from './organizationsItem';
+
 import styles from './organizationsPopover.scss';
 
 const cx = classNames.bind(styles);
@@ -64,7 +64,7 @@ export const OrganizationsPopover = ({ closePopover, closeSidebar }) => {
   const { trackEvent } = useTracking();
   const maxHeightPopover = window.innerHeight - MARGIN_TOP_AND_MARGIN_BOTTOM;
   const location = useSelector(locationSelector);
-  const isAllOrganizationPage = location.pathname === routesMap.ORGANIZATIONS_PAGE.path;
+  const isAllOrganizationPage = location.type === ORGANIZATIONS_PAGE;
 
   const filteredProjects = useMemo(
     () =>

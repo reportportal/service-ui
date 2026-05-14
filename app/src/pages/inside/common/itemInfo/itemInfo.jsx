@@ -40,6 +40,7 @@ import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import RetryIcon from 'common/img/retry-inline.svg';
 import StarIcon from 'common/img/star-inline.svg';
 import SauceLabsIcon from 'common/img/plugins/sauce-labs-gray-inline.svg';
+import AgenticIcon from 'common/img/agentic-icon-inline.svg';
 import { NameLink } from 'pages/inside/common/nameLink';
 import { DurationBlock } from 'pages/inside/common/durationBlock';
 import { withTooltip } from 'components/main/tooltips/tooltip';
@@ -130,6 +131,8 @@ export class ItemInfo extends Component {
     }
     return null;
   };
+
+  checkIsAgenticLaunch = () => this.props.value.attributes?.some((attr = {}) => attr.key === 'check_suite');
 
   render() {
     const {
@@ -230,6 +233,14 @@ export class ItemInfo extends Component {
                   approxTime: value.approximateDuration,
                 }}
               />
+            </span>
+          )}
+          {this.checkIsAgenticLaunch() && (
+            <span className={cx('agentic-label')}>
+              <i className={cx('agentic-icon')} aria-hidden="true">
+                {Parser(AgenticIcon)}
+              </i>
+              <span>Agentic</span>
             </span>
           )}
           {!!startTime && <div className={cx('mobile-start-time')}>{fromNowFormat(startTime)}</div>}

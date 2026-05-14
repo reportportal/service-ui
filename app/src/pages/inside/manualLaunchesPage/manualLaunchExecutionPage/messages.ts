@@ -55,7 +55,7 @@ export const messages = defineMessages({
   },
   clearExecutionComment: {
     id: 'ManualLaunchExecutionPage.clearExecutionComment',
-    defaultMessage: 'Clear comment',
+    defaultMessage: 'Clear Comment',
   },
   saveExecutionComment: {
     id: 'ManualLaunchExecutionPage.saveExecutionComment',
@@ -64,6 +64,14 @@ export const messages = defineMessages({
   removeAttachment: {
     id: 'ManualLaunchExecutionPage.removeAttachment',
     defaultMessage: 'Remove attachment',
+  },
+  duplicateFileNames: {
+    id: 'ManualLaunchExecutionPage.duplicateFileNames',
+    defaultMessage: 'File(s) with the same name already attached: {files}',
+  },
+  emptyFiles: {
+    id: 'ManualLaunchExecutionPage.emptyFiles',
+    defaultMessage: 'Cannot attach empty file(s): {files}',
   },
   clearStatus: {
     id: 'ExecutionStatusPopover.clearStatus',

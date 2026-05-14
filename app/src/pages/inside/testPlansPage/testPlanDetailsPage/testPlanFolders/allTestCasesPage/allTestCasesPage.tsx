@@ -17,14 +17,16 @@
 import { useState, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { isEmpty } from 'es-toolkit/compat';
 import { Pagination, Button, Selection } from '@reportportal/ui-kit';
 
+import { TEST_PLANS_PAGE_EVENTS } from 'analyticsEvents/testPlansPageEvents';
 import { createClassnames } from 'common/utils';
 import { TestCaseList } from 'pages/inside/common/testCaseList';
 import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/common/testCaseList/constants';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { SelectedTestCaseRow } from 'pages/inside/testCaseLibraryPage/allTestCasesPage/allTestCasesPage';
+import { SelectedTestCaseRow } from 'pages/inside/common/testCaseList/types';
 import {
   defaultTestPlanTestCasesQueryParams,
   TEST_PLAN_TEST_CASES_NAMESPACE,
@@ -42,6 +44,8 @@ import styles from './allTestCasesPage.scss';
 
 const cx = createClassnames(styles);
 
+const BULK_ADD_TO_LAUNCH_MIN_SELECTION = 2;
+
 export const AllTestCasesPage = ({
   testCases,
   loading,
@@ -49,6 +53,7 @@ export const AllTestCasesPage = ({
   folderName,
 }: AllTestCasesPageProps) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const testPlansTestCasesPageData = useSelector(testPlanTestCasesPageSelector);
   const payload = useSelector(payloadSelector);
   const { organizationSlug, projectSlug } = useProjectDetails();
@@ -80,8 +85,16 @@ export const AllTestCasesPage = ({
   const handleOpenRemoveModal = () => {
     openRemoveTestCasesModal({
       selectedTestCaseIds: selectedRowIds,
+      testCaseName: selectedRows.length === 1 ? selectedRows[0]?.name : undefined,
       onClearSelection,
     });
+  };
+
+  const handleOpenAddToLaunchModal = () => {
+    if (selectedRowIds.length >= BULK_ADD_TO_LAUNCH_MIN_SELECTION) {
+      trackEvent(TEST_PLANS_PAGE_EVENTS.clickStartBulkAddToLaunch(selectedRowIds.length));
+    }
+    openAddToLaunchModal();
   };
 
   return (
@@ -130,7 +143,7 @@ export const AllTestCasesPage = ({
               >
                 {formatMessage(removeTestCasesFromTestPlanMessages.removeFromTestPlanTitle)}
               </Button>
-              <Button variant="primary" onClick={openAddToLaunchModal}>
+              <Button variant="primary" onClick={handleOpenAddToLaunchModal}>
                 {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}
               </Button>
             </div>

@@ -17,24 +17,11 @@
 import { useModal } from 'common/hooks';
 import { ADD_TO_LAUNCH_MODAL_KEY } from './constants';
 import { AddToLaunchModal } from './addToLaunchModal';
+import { AddToLaunchModalProps } from './types';
 
-export const useAddToLaunchModal = ({
-  selectedTestCasesIds,
-  onClearSelection,
-  isUncoveredTestsCheckboxAvailable,
-}: {
-  selectedTestCasesIds: number[];
-  onClearSelection?: () => void;
-  isUncoveredTestsCheckboxAvailable?: boolean;
-}) => {
-  return useModal({
+export const useAddToLaunchModal = () => {
+  return useModal<AddToLaunchModalProps>({
     modalKey: ADD_TO_LAUNCH_MODAL_KEY,
-    renderModal: () => (
-      <AddToLaunchModal
-        selectedTestCasesIds={selectedTestCasesIds}
-        isUncoveredTestsCheckboxAvailable={isUncoveredTestsCheckboxAvailable}
-        onClearSelection={onClearSelection}
-      />
-    ),
+    renderModal: (data) => <AddToLaunchModal {...data} />,
   });
 };

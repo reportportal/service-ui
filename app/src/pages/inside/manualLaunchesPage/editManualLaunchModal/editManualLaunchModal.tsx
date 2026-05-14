@@ -16,6 +16,7 @@
 
 import { useMemo, FC, useRef } from 'react';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { Modal } from '@reportportal/ui-kit';
 import { noop } from 'es-toolkit';
@@ -30,6 +31,7 @@ import { LaunchFormData, Attribute } from 'pages/inside/common/launchFormFields/
 import { NewLaunchFields } from 'pages/inside/common/launchFormFields/newLaunchFields';
 import { LAUNCH_FORM_FIELD_NAMES } from 'pages/inside/common/launchFormFields/constants';
 import { useModalButtons } from 'hooks/useModalButtons';
+import { MANUAL_LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 
 import { useEditManualLaunch } from './useEditManualLaunch';
 import { EditManualLaunchModalProps } from './types';
@@ -49,6 +51,7 @@ const EditManualLaunchModalComponent = ({
   dirty,
 }: EditManualLaunchModalProps & InjectedFormProps<LaunchFormData, EditManualLaunchModalProps>) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
 
   useTextareaAutoResize(descriptionRef);
@@ -60,9 +63,10 @@ const EditManualLaunchModalComponent = ({
 
   const onSubmit = useMemo(
     () => (formValues: LaunchFormData) => {
+      trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.SUBMIT_EDIT_LAUNCH);
       handleEditLaunch(formValues).catch(noop);
     },
-    [handleEditLaunch],
+    [handleEditLaunch, trackEvent],
   );
 
   const { okButton, cancelButton, hideModal } = useModalButtons({

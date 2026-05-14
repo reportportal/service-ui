@@ -75,6 +75,7 @@ import { isAdminSelector, activeProjectKeySelector } from 'controllers/user';
 import {
   projectMembersSelector,
   projectInfoSelector,
+  projectNameSelector,
   projectAttributesSelector,
   fetchProjectAction,
   fetchExistingLaunchNamesAction,
@@ -105,7 +106,10 @@ import {
   userRolesSelector,
   ORGANIZATION_SETTINGS_TAB_PAGE,
   ORGANIZATION_PROJECTS_PAGE,
+  ORGANIZATIONS_PAGE,
+  PROJECT_DASHBOARD_PAGE,
   urlOrganizationSlugSelector,
+  urlProjectSlugSelector,
   locationSelector,
 } from 'controllers/pages';
 import { attributesArray, isNotEmptyArray } from 'common/utils/validation/validate';
@@ -159,6 +163,7 @@ import { DottedPreloader } from 'components/preloaders/dottedPreloader';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { SimpleBreadcrumbs } from 'components/main/simpleBreadcrumbs';
+import { LocationHeaderLayout } from 'layouts/locationHeaderLayout';
 import { statisticsLinkSelector, defectLinkSelector, launchSelector } from 'controllers/testItem';
 import { NameLink } from 'pages/inside/common/nameLink';
 import { Grid } from 'components/main/grid';
@@ -238,7 +243,7 @@ import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { PlainTable } from 'componentLibrary/plainTable';
 import { ProjectName } from 'pages/organization/organizationProjectsPage/projectsListTable/projectName';
 import { SidebarButton } from 'componentLibrary/sidebar/sidebarButton';
-import { activeOrganizationSelector } from 'controllers/organization';
+import { activeOrganizationSelector, activeOrganizationNameSelector } from 'controllers/organization';
 import { AdaptiveIssueList } from 'pages/inside/common/adaptiveIssueList';
 import { withFilter } from 'controllers/filter';
 import { SORTING_KEY, withSortingURL } from 'controllers/sorting';
@@ -358,6 +363,7 @@ export const createImportProps = (pluginName) => ({
     BubblesPreloader: BubblesLoader,
     DateRangeFormField,
     AdaptiveIssueList,
+    LocationHeaderLayout,
   },
   componentLibrary: { DraggableRuleList },
   HOCs: {
@@ -388,6 +394,8 @@ export const createImportProps = (pluginName) => ({
     BTS_FIELDS_FORM,
     ORGANIZATION_SETTINGS_TAB_PAGE,
     ORGANIZATION_PROJECTS_PAGE,
+    ORGANIZATIONS_PAGE,
+    PROJECT_DASHBOARD_PAGE,
     SORTING_KEY,
     PAGE_KEY,
     ERROR_CANCELED,
@@ -425,6 +433,7 @@ export const createImportProps = (pluginName) => ({
     globalIntegrationsSelector: createGlobalNamedIntegrationsSelector(pluginName),
     projectMembersSelector,
     projectInfoSelector,
+    projectNameSelector,
     projectAttributesSelector,
     existingLaunchNamesSelector,
     activeProjectRoleSelector,
@@ -441,7 +450,9 @@ export const createImportProps = (pluginName) => ({
     publicPluginsSelector,
     querySelector,
     activeOrganizationSelector,
+    activeOrganizationNameSelector,
     urlOrganizationSlugSelector,
+    urlProjectSlugSelector,
     logsSizeSelector,
     analyticsEnabledSelector,
     baseEventParametersSelector,

@@ -24,7 +24,8 @@ import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import { getMilestonesAction } from 'controllers/milestone';
-import { defaultQueryParams, getTestPlansAction, TestPlanDto } from 'controllers/testPlan';
+import { defaultQueryParams, getTestPlansAction } from 'controllers/testPlan';
+import type { TestPlanDto } from 'controllers/testPlan/types';
 
 import { TestPlanFormValues } from '../testPlanModal';
 

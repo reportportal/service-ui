@@ -23,7 +23,7 @@ import { isNotNil } from 'es-toolkit';
 import { usePagination } from 'hooks/usePagination';
 import { locationQuerySelector } from 'controllers/pages';
 import { PaginationOffsetLimit } from 'types/common';
-import { PageInfo } from 'controllers/testPlan';
+import type { PageInfo } from 'controllers/testPlan/types';
 
 type UseURLBoundPagination = {
   pageData: PageInfo;

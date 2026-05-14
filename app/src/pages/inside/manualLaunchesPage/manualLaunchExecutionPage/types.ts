@@ -18,6 +18,7 @@ import type { MessageDescriptor } from 'react-intl';
 
 import type { TestCaseExecution } from 'controllers/manualLaunch';
 import type { UseModalData } from 'common/hooks';
+import type { ExecutionStatusChangePlace } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 import { ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
 
 export type ExecutionStatusType = 'passed' | 'failed' | 'skipped';
@@ -49,6 +50,7 @@ export interface ExecutionStatusData {
   executionId: number;
   status: ExecutionStatusType | ExecutionStatus.TO_RUN;
   currentStatus?: string;
+  place: ExecutionStatusChangePlace;
 }
 
 export type ExecutionStatusConfirmModalData = ExecutionStatusData;

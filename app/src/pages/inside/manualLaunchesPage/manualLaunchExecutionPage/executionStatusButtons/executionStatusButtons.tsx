@@ -17,6 +17,7 @@
 import { useIntl } from 'react-intl';
 
 import { createClassnames } from 'common/utils';
+import { MANUAL_LAUNCHES_PLACE } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 
 import { STATUS_BUTTONS } from '../constants';
 import type { ExecutionStatusButtonsProps, ExecutionStatusType } from '../types';
@@ -34,6 +35,7 @@ export const ExecutionStatusButtons = ({ executionId }: ExecutionStatusButtonsPr
     openModal({
       executionId,
       status: status as ExecutionStatusType,
+      place: MANUAL_LAUNCHES_PLACE.TEST_EXECUTION_PAGE,
     });
   };
 

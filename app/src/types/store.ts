@@ -15,18 +15,18 @@
  */
 
 import { ProjectDetails } from 'pages/organization/constants';
-import { TestPlanState } from 'controllers/testPlan/selectors';
-import { MilestoneState } from 'controllers/milestone/types';
-import { TestCaseState } from 'controllers/testCase/selectors';
-import {
+import type { TestPlanState } from 'controllers/testPlan/state';
+import type { MilestoneState } from 'controllers/milestone/types';
+import type { TestCaseState } from 'controllers/testCase/state';
+import type {
   ManualLaunchState,
   ManualLaunchFoldersState,
   ManualLaunchTestCaseExecutionsState,
   ActiveManualLaunchExecutionState,
 } from 'controllers/manualLaunch/types';
-import { UserState } from 'controllers/user/types';
-import { NotificationState } from 'controllers/notification/types';
-import { ModalState } from 'controllers/modal/types';
+import type { UserState } from 'controllers/user/types';
+import type { NotificationState } from 'controllers/notification/types';
+import type { ModalState } from 'controllers/modal/types';
 
 export interface LocationQuery {
   offset?: string;
@@ -46,6 +46,7 @@ export interface LocationQuery {
 
 export interface BaseAppState {
   location?: {
+    pathname?: string;
     payload?: ProjectDetails & {
       testPlanId?: string;
       testCaseId?: string;

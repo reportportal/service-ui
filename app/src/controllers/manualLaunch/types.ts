@@ -16,12 +16,8 @@
 
 import { Page } from 'types/common';
 
-import {
-  Launch,
-  ExecutionStatus as ExecutionStatusOptions,
-} from 'pages/inside/manualLaunchesPage/types';
+import { Launch, ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
 import { hasPayloadProps } from 'controllers/utils/types';
-import { ExecutionStatus } from 'types/testCase';
 
 import {
   TOGGLE_MANUAL_LAUNCH_FOLDER_EXPANSION,
@@ -94,6 +90,7 @@ export interface UpdateManualLaunchExecutionStatusParams extends ManualLaunchExe
   clearExecutionCommentAndBts?: boolean;
   preserveExistingCommentIfFormSkipped?: boolean;
   onSuccess?: () => void;
+  onFinally?: () => void;
 }
 
 export interface UpdateManualLaunchExecutionCommentParams extends ManualLaunchExecutionActionKey {
@@ -245,7 +242,7 @@ export interface ManualScenario {
 
 export interface TestCaseExecution {
   id: number;
-  executionStatus: ExecutionStatusOptions;
+  executionStatus: ExecutionStatus;
   executionComment?: ExecutionComment;
   startedAt?: number;
   finishedAt?: number;

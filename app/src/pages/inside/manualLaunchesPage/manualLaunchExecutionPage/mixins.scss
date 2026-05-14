@@ -1,0 +1,25 @@
+@mixin file-dropzone-base {
+  border-radius: 4px;
+  border: 2px dashed var(--rp-ui-base-e-200);
+  background: transparent;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+@mixin file-dropzone-active {
+  border-color: var(--rp-ui-base-topaz-focused) !important;
+  background-color: rgba(0, 176, 209, 0.06) !important;
+}
+
+@mixin file-droparea-wrapper($dropzone-class) {
+  /* stylelint-disable selector-pseudo-class-no-unknown */
+  :global(.rp-ui-fp__dropzone--active),
+  :global(.rp-ui-fp__drop-zone--active),
+  :global(.rp-ui-fp__dropzone--drag-active) {
+    .#{$dropzone-class} {
+      @include file-dropzone-active;
+    }
+  }
+  /* stylelint-enable selector-pseudo-class-no-unknown */
+}

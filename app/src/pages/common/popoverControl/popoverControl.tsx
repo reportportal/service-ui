@@ -15,8 +15,11 @@
  */
 
 import { ComponentProps, ReactElement, ReactNode } from 'react';
+import { compact } from 'es-toolkit';
+import { isArray, isEmpty } from 'es-toolkit/compat';
+import { Popover, Tooltip } from '@reportportal/ui-kit';
+import { VoidFn } from '@reportportal/ui-kit/common';
 
-import { Popover } from '@reportportal/ui-kit';
 import { createClassnames } from 'common/utils';
 
 import styles from './popoverControl.scss';
@@ -28,12 +31,22 @@ export interface PopoverItem {
   icon?: ReactElement;
   /** @deprecated Consider defining a variant instead */
   className?: string;
-  onClick?: () => void;
+  disabled?: boolean;
+  tooltip?: string;
   variant?: 'destructive' | 'danger' | 'text';
+  onClick?: VoidFn;
 }
 
+const normalizeItemGroups = (items: PopoverItem[] | PopoverItem[][]): PopoverItem[][] => {
+  if (isEmpty(items)) {
+    return [[]];
+  }
+
+  return isArray(items[0]) ? (items as PopoverItem[][]) : [items as PopoverItem[]];
+};
+
 interface PopoverControlProps {
-  items: PopoverItem[];
+  items: PopoverItem[] | PopoverItem[][];
   placement?: ComponentProps<typeof Popover>['placement'];
   strategy?: ComponentProps<typeof Popover>['strategy'];
   shouldUsePortal?: ComponentProps<typeof Popover>['shouldUsePortal'];
@@ -50,32 +63,73 @@ export const PopoverControl = ({
   children,
   isOpened,
   setIsOpened,
-}: PopoverControlProps) => (
-  <Popover
-    className={cx('popover-control')}
-    isOpened={isOpened}
-    content={
-      <ul>
-        {items.map(({ label, icon, className = '', onClick, variant }) => (
-          <li key={label}>
-            <button
-              type="button"
-              className={cx('popover-control__item-button', className, {
-                [`popover-control__item-button--${variant}`]: !!variant,
-              })}
-              onClick={onClick}
+}: PopoverControlProps) => {
+  const renderItem = (item: PopoverItem, groupIndex: number, itemIndex: number) => {
+    const { label, icon, className = '', variant, disabled, tooltip, onClick } = item;
+
+    const buttonContent = (
+      <>
+        {icon} {label}
+      </>
+    );
+
+    return (
+      <li key={`popover-control-g${groupIndex}-i${itemIndex}-${label}`}>
+        <button
+          type="button"
+          className={cx('popover-control__item-button', className, {
+            [`popover-control__item-button--${variant}`]: Boolean(variant),
+            'popover-control__item-button--disabled': Boolean(disabled),
+          })}
+          disabled={disabled}
+          onClick={disabled ? undefined : onClick}
+        >
+          {tooltip ? (
+            <Tooltip
+              content={tooltip}
+              placement="right"
+              tooltipClassName={cx('popover-control__tooltip')}
             >
-              {icon} {label}
-            </button>
-          </li>
-        ))}
-      </ul>
-    }
-    placement={placement}
-    strategy={strategy}
-    shouldUsePortal={shouldUsePortal}
-    setIsOpened={setIsOpened}
-  >
-    {children}
-  </Popover>
-);
+              {buttonContent}
+            </Tooltip>
+          ) : (
+            buttonContent
+          )}
+        </button>
+      </li>
+    );
+  };
+
+  const renderGroup = (group: PopoverItem[], groupIndex: number) => {
+    const divider =
+      groupIndex > 0 ? (
+        <li
+          key={`popover-control-g${groupIndex}-divider`}
+          className={cx('popover-control__divider')}
+          role="presentation"
+        />
+      ) : null;
+
+    return compact([
+      divider,
+      ...group.map((item, itemIndex) => renderItem(item, groupIndex, itemIndex)),
+    ]);
+  };
+
+  const renderList = () =>
+    normalizeItemGroups(items).flatMap((group, groupIndex) => renderGroup(group, groupIndex));
+
+  return (
+    <Popover
+      className={cx('popover-control')}
+      isOpened={isOpened}
+      content={<ul>{renderList()}</ul>}
+      placement={placement}
+      strategy={strategy}
+      shouldUsePortal={shouldUsePortal}
+      setIsOpened={setIsOpened}
+    >
+      {children}
+    </Popover>
+  );
+};

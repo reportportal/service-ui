@@ -26,6 +26,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import {
   TEST_CASE_LIBRARY_EVENTS,
   TEST_CASE_MENU_ELEMENT_NAME,
+  TEST_CASE_PLACE,
 } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { createClassnames } from 'common/utils';
 import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
@@ -40,10 +41,9 @@ import { showModalAction } from 'controllers/modal';
 import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
-import { TestCasePriority } from 'pages/inside/common/priorityIcon/types';
-import { ExecutionEstimationTime } from 'pages/inside/common/executionEstimationTime';
 import { testCaseLibraryBreadcrumbsSelector } from 'controllers/pages/selectors';
-import { ExtendedTestCase } from 'types/testCase';
+import { ExecutionEstimationTime } from 'pages/inside/common/executionEstimationTime';
+import type { ExtendedTestCase, TestCasePriority } from 'types/testCase';
 
 import { messages } from './messages';
 import { commonMessages } from '../../commonMessages';
@@ -96,6 +96,7 @@ export const TestCaseDetailsHeader = ({
     trackEvent(
       TEST_CASE_LIBRARY_EVENTS.clickTestCaseMenu(
         TEST_CASE_MENU_ELEMENT_NAME.HISTORY,
+        TEST_CASE_PLACE.DETAILS_PAGE,
         testCaseIdString,
       ),
     );
@@ -113,6 +114,7 @@ export const TestCaseDetailsHeader = ({
     trackEvent(
       TEST_CASE_LIBRARY_EVENTS.clickTestCaseMenu(
         TEST_CASE_MENU_ELEMENT_NAME.DELETE,
+        TEST_CASE_PLACE.DETAILS_PAGE,
         testCaseIdString,
       ),
     );
@@ -123,6 +125,7 @@ export const TestCaseDetailsHeader = ({
     trackEvent(
       TEST_CASE_LIBRARY_EVENTS.clickTestCaseMenu(
         TEST_CASE_MENU_ELEMENT_NAME.DUPLICATE,
+        TEST_CASE_PLACE.DETAILS_PAGE,
         testCaseIdString,
       ),
     );
@@ -238,6 +241,7 @@ export const TestCaseDetailsHeader = ({
               <AddToLaunchButton
                 manualScenario={testCase?.manualScenario}
                 testCaseId={testCase.id}
+                place={TEST_CASE_PLACE.DETAILS_PAGE}
               />
               <Button onClick={onAddToTestPlan} variant="primary">
                 {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}

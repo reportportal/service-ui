@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { isEmpty } from 'es-toolkit/compat';
 import {
   Button,
@@ -49,6 +50,7 @@ import {
   defaultManualLaunchesQueryParams,
 } from 'controllers/manualLaunch';
 import { SearchField } from 'components/fields/searchField';
+import { MANUAL_LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 
 import { messages } from './messages';
 import { ManualLaunchesPageContent } from './manualLaunchesPageContent';
@@ -73,6 +75,7 @@ const cx = createClassnames(styles);
 export const ManualLaunchesPage = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
 
   const projectName = useSelector(projectNameSelector);
   const content = useSelector(manualLaunchContentSelector);
@@ -85,6 +88,7 @@ export const ManualLaunchesPage = () => {
 
   const appliedSearchQuery = location?.query?.searchQuery || '';
   const [searchValue, setSearchValue] = useState(appliedSearchQuery);
+  const searchSessionTrackedRef = useRef(false);
   const [isFilterSidePanelVisible, setIsFilterSidePanelVisible] = useState(false);
   const appliedFilters = useMemo<ManualLaunchesFilterPayload>(
     () => parseFiltersFromURLQuery(location?.query),
@@ -109,12 +113,25 @@ export const ManualLaunchesPage = () => {
     setSearchValue(appliedSearchQuery);
   }, [appliedSearchQuery]);
 
+  useEffect(() => {
+    trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.VIEW_MANUAL_LAUNCHES_PAGE);
+  }, [trackEvent]);
+
   const isSearchLoading = searchValue.trim() !== appliedSearchQuery || isLoading;
 
   const debouncedUpdateSearch = useMemo(
     () =>
+      // eslint-disable-next-line react-hooks/refs
       debounce((value: string) => {
         const trimmed = value.trim();
+
+        if (trimmed && !searchSessionTrackedRef.current) {
+          trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.CLICK_SEARCH_MANUAL_LAUNCHES);
+          searchSessionTrackedRef.current = true;
+        }
+        if (!trimmed) {
+          searchSessionTrackedRef.current = false;
+        }
 
         dispatch(
           updatePagePropertiesAction({
@@ -123,7 +140,7 @@ export const ManualLaunchesPage = () => {
           }),
         );
       }, SEARCH_DELAY),
-    [dispatch, appliedSearchQuery],
+    [dispatch, appliedSearchQuery, trackEvent],
   );
 
   const handleFilterChange = useCallback(
@@ -152,6 +169,7 @@ export const ManualLaunchesPage = () => {
 
   const handleApplyFilters = useCallback(
     (payload: ManualLaunchesFilterPayload) => {
+      trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.CLICK_APPLY_LAUNCHES_FILTER);
       dispatch(
         updatePagePropertiesAction({
           ...buildURLQueryFromFilters(payload),
@@ -159,7 +177,7 @@ export const ManualLaunchesPage = () => {
         }),
       );
     },
-    [dispatch],
+    [dispatch, trackEvent],
   );
 
   const handleClearAllFiltersFromToolbar = useCallback(() => {

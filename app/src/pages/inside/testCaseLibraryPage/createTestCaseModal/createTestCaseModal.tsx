@@ -28,6 +28,7 @@ import { commonMessages } from '../commonMessages';
 import { CreateTestCaseFormData } from '../types';
 import { TestCaseModal } from './testCaseModal/testCaseModal';
 import { TEST_CASE_FORM_INITIAL_VALUES } from './constants';
+import { CREATE_TEST_CASE_FORM_NAME } from './formConstants';
 import { useTestCase } from '../hooks/useTestCase';
 import {
   getTestCaseAttachmentStatus,
@@ -37,7 +38,6 @@ import {
 } from '../utils/getTestCaseAnalyticsParams';
 
 export const CREATE_TEST_CASE_MODAL_KEY = 'createTestCaseModalKey';
-export const CREATE_TEST_CASE_FORM_NAME: string = 'create-test-case-modal-form';
 
 interface CreateTestCaseModalData {
   folder?: FolderWithFullPath;

@@ -36,6 +36,7 @@ export const BaseLaunchModal = ({
   handleSubmit,
   change,
   testCases,
+  folderId,
   testPlanId,
   modalTitle,
   okButtonText,
@@ -56,6 +57,7 @@ export const BaseLaunchModal = ({
     activeMode,
     hideTestPlanField ? testPlanId : null,
     selectedLaunch?.id,
+    folderId,
     onClearSelection,
   );
 
@@ -77,7 +79,7 @@ export const BaseLaunchModal = ({
   );
 
   const trackedSubmit = handleSubmit((values: LaunchFormData) => {
-    onSubmitClick?.();
+    onSubmitClick?.(activeMode);
     return handleCreateLaunch(values);
   }) as (event?: FormEvent | MouseEvent<HTMLButtonElement>) => void;
 

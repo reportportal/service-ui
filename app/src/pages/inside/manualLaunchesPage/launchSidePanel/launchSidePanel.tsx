@@ -17,6 +17,7 @@
 import { memo, useRef, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import {
   Button,
   RerunIcon,
@@ -42,6 +43,10 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ExecutionStatus } from 'types/testCase';
 
 import { commonMessages } from 'pages/inside/common/common-messages';
+import {
+  MANUAL_LAUNCHES_PAGE_EVENTS,
+  MANUAL_LAUNCHES_PLACE,
+} from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 import { LaunchAttribute } from '../launchAttribute';
 import { TestStatisticsChart } from '../testStatisticsChart';
 import { useEditManualLaunchModal } from '../editManualLaunchModal';
@@ -63,6 +68,7 @@ export const LaunchSidePanel = memo(
   ({ launchId, isVisible, onClose, onRefresh }: LaunchSidePanelProps) => {
     const { formatMessage } = useIntl();
     const dispatch = useDispatch();
+    const { trackEvent } = useTracking();
     const { organizationSlug, projectSlug } = useProjectDetails();
     const sidePanelRef = useRef<HTMLDivElement>(null);
     const { launchDetails, isLoading, refetchLaunchDetails } = useLaunchDetails(launchId);
@@ -86,8 +92,9 @@ export const LaunchSidePanel = memo(
         attributes: attributes || [],
       };
 
+      trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.CLICK_START_EDIT_LAUNCH);
       openEditModal(modalData);
-    }, [launchDetails, openEditModal]);
+    }, [launchDetails, openEditModal, trackEvent]);
 
     useOnClickOutside(sidePanelRef, onClose);
 
@@ -115,6 +122,9 @@ export const LaunchSidePanel = memo(
 
     const handleToRunClick = () => {
       if (launchId) {
+        trackEvent(
+          MANUAL_LAUNCHES_PAGE_EVENTS.clickShowToRun(MANUAL_LAUNCHES_PLACE.LAUNCH_DETAILS_SIDEBAR),
+        );
         dispatch({
           type: MANUAL_LAUNCH_DETAILS_PAGE,
           payload: { organizationSlug, projectSlug, launchId: launchId.toString() },

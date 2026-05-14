@@ -24,7 +24,7 @@ import { MILESTONES_PAGE_EVENTS, PLACE_TP_ROW } from 'analyticsEvents/milestones
 import { createClassnames } from 'common/utils';
 import { PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
 import { useProjectDetails } from 'hooks/useTypedSelector';
-import { TestPlanDto } from 'controllers/testPlan';
+import type { TestPlanDto } from 'controllers/testPlan/types';
 
 import { FIXED_COLUMN_WIDTH_PX } from './constants';
 import { messages } from './messages';
@@ -55,7 +55,7 @@ export const TestPlansTable = ({
   const isInMilestoneContext = analyticsPlace === PLACE_TP_ROW;
   const { openModal: openEditModal } = useEditTestPlanModal({
     onSubmitSuccess: isInMilestoneContext
-      ? (attributesCount) =>
+      ? ({ attributesCount }) =>
           trackEvent(MILESTONES_PAGE_EVENTS.submitEditTestPlan(attributesCount))
       : undefined,
   });

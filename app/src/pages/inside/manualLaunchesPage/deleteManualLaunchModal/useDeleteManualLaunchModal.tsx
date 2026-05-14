@@ -23,8 +23,8 @@ import { useModal } from 'common/hooks';
 import {
   DELETE_MANUAL_LAUNCH_MODAL_KEY,
   DeleteManualLaunchModal,
-  DeleteManualLaunchModalData,
 } from './deleteManualLaunchModal';
+import { DeleteManualLaunchModalData } from './types';
 
 interface UseDeleteManualLaunchModalOptions {
   onSuccess?: VoidFn;

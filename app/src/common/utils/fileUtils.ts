@@ -14,7 +14,21 @@
  * limitations under the License.
  */
 
-import { BaseAttachmentFile } from 'common/hooks';
+import type { FileValidationError } from '@reportportal/ui-kit/fileDropArea';
+
+export interface BaseAttachmentFile {
+  fileSize?: number;
+  id: string;
+  fileName: string;
+  file: File;
+  size: number;
+  uploadingProgress?: number;
+  isUploading?: boolean;
+  validationErrors?: FileValidationError[];
+  customErrorMessage?: string;
+  attachmentId?: string;
+  uploadError?: string;
+}
 
 export const downloadFileFromBlob = (file: File, fileName?: string) => {
   const url = URL.createObjectURL(file);

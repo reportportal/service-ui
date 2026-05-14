@@ -18,7 +18,7 @@ import ToRunIcon from 'common/img/execution-status/to-run-inline.svg';
 import PassedIcon from 'common/img/execution-status/passed-inline.svg';
 import InProgressIcon from 'common/img/execution-status/in-progress-inline.svg';
 import FailedIcon from 'common/img/execution-status/failed-inline.svg';
-import { ExecutionStatus } from "pages/inside/manualLaunchesPage/types";
+import { ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
 
 export const STATUS_CLASS_MAP: Record<ExecutionStatus, string> = {
   [ExecutionStatus.TO_RUN]: 'to-run',
@@ -26,12 +26,17 @@ export const STATUS_CLASS_MAP: Record<ExecutionStatus, string> = {
   [ExecutionStatus.PASSED]: 'passed',
   [ExecutionStatus.FAILED]: 'failed',
   [ExecutionStatus.SKIPPED]: 'skipped',
+  [ExecutionStatus.STOPPED]: 'stopped',
+  [ExecutionStatus.INTERRUPTED]: 'interrupted',
+  [ExecutionStatus.CANCELLED]: 'cancelled',
+  [ExecutionStatus.INFO]: 'info',
+  [ExecutionStatus.WARN]: 'warn',
 };
 
-export const STATUS_ICON_MAP: Record<ExecutionStatus, string> = {
-  [ExecutionStatus.TO_RUN]: ToRunIcon as unknown as string,
-  [ExecutionStatus.IN_PROGRESS]: InProgressIcon as unknown as string,
-  [ExecutionStatus.PASSED]: PassedIcon as unknown as string,
-  [ExecutionStatus.FAILED]: FailedIcon as unknown as string,
-  [ExecutionStatus.SKIPPED]: ToRunIcon as unknown as string,
+export const STATUS_ICON_MAP = {
+  [ExecutionStatus.TO_RUN]: ToRunIcon,
+  [ExecutionStatus.IN_PROGRESS]: InProgressIcon,
+  [ExecutionStatus.PASSED]: PassedIcon,
+  [ExecutionStatus.FAILED]: FailedIcon,
+  [ExecutionStatus.SKIPPED]: ToRunIcon,
 };

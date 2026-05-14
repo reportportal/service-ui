@@ -34,7 +34,7 @@ interface EditTestPlanFormValues extends TestPlanFormValues {
 }
 
 interface UseEditTestPlanOptions {
-  onSubmitSuccess?: (attributesCount: number) => void;
+  onSubmitSuccess?: (submittedValues: TestPlanFormValues, attributesCount: number) => void;
 }
 
 export const useEditTestPlan = ({ onSubmitSuccess }: UseEditTestPlanOptions = {}) => {
@@ -57,7 +57,7 @@ export const useEditTestPlan = ({ onSubmitSuccess }: UseEditTestPlanOptions = {}
         },
       });
 
-      onSubmitSuccess?.(payload.attributes?.length ?? 0);
+      onSubmitSuccess?.(payload, payload.attributes?.length ?? 0);
       dispatch(hideModalAction());
       dispatch(
         showSuccessNotification({

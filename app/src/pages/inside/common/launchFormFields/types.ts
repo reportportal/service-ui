@@ -17,7 +17,6 @@
 import { ReactNode } from 'react';
 import { MessageDescriptor } from 'react-intl';
 import { isPlainObject } from 'es-toolkit';
-import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { ExtendedTestCase } from 'types/testCase';
 
@@ -114,6 +113,7 @@ export interface NewLaunchFieldsProps {
 
 export interface BaseLaunchModalProps {
   testCases: ExtendedTestCase[];
+  folderId?: number;
   testPlanId?: number;
   modalTitle: string;
   okButtonText: MessageDescriptor;
@@ -122,5 +122,5 @@ export interface BaseLaunchModalProps {
   isUncoveredTestsCheckboxAvailable?: boolean;
   hideTestPlanField?: boolean;
   onClearSelection?: () => void;
-  onSubmitClick?: VoidFn;
+  onSubmitClick?: (mode: LaunchMode) => void;
 }

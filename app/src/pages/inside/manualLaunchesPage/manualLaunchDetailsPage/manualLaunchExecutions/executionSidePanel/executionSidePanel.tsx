@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { isEmpty } from 'es-toolkit/compat';
 import Link from 'redux-first-router-link';
 import {
@@ -41,7 +42,6 @@ import { InfoBlock } from 'pages/inside/common/infoBlock';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { RequirementsList } from 'pages/inside/common/requirementsList/requirementsList';
 import { Scenario } from 'pages/inside/common/testCaseList/testCaseSidePanel/scenario';
-import { TestCaseManualScenario } from 'pages/inside/common/testCaseList/types';
 import { formatTimestamp } from 'pages/inside/common/testCaseList/utils';
 import { ExecutionStatusPopover } from 'pages/inside/manualLaunchesPage/executionStatusPopover';
 import { Divider } from 'pages/inside/projectSettingsPageContainer/content/elements';
@@ -49,6 +49,11 @@ import { AttachmentList, type Attachment } from 'pages/inside/common/attachmentL
 import { IN_PROGRESS } from 'common/constants/testStatuses';
 import { projectKeySelector } from 'controllers/project';
 import { ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
+import { TestCaseManualScenario } from 'types/testCase';
+import {
+  MANUAL_LAUNCHES_PAGE_EVENTS,
+  MANUAL_LAUNCHES_PLACE,
+} from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 
 import { messages } from './messages';
 import { useExecutionDetails } from './useExecutionDetails';
@@ -64,6 +69,7 @@ interface ExecutionSidePanelProps {
 
 export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelProps) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const launchId = useManualLaunchId();
   const { canManageExecutions } = useUserPermissions();
   const { organizationSlug, projectSlug } = useProjectDetails();
@@ -101,6 +107,7 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
   };
 
   const onRunTestClick = () => {
+    trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.CLICK_RUN_TEST);
     dispatch(
       updateManualLaunchExecutionStatusAction({
         projectKey,
@@ -287,6 +294,7 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
           isOpened={isStatusPopoverOpen}
           setIsOpened={setIsStatusPopoverOpen}
           currentStatus={currentStatus}
+          place={MANUAL_LAUNCHES_PLACE.EXECUTION_DETAILS_SIDEBAR}
         >
           <Button
             variant="ghost"

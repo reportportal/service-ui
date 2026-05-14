@@ -80,7 +80,7 @@ const MoveTestCaseModal = reduxForm<FolderModalFormValues, MoveTestCaseModalProp
   const { isLoading, patchTestCase, batchMove } = useTestCase();
   const { currentMode, handleModeChange } = useFolderModalMode({ change });
 
-  const isBatch = selectedTestCaseIds.length > 1;
+  const isBatch = selectedTestCaseIds.length > 0;
 
   const destinationStatus: MoveDestinationStatusType =
     currentMode === ButtonSwitcherOption.NEW

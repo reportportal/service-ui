@@ -64,11 +64,15 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    padding: 0;
+    border: none;
+    background: none;
     font-size: 13px;
     color: var(--rp-ui-base-topaz);
     font-weight: 500;
     line-height: 20px;
     text-decoration: none;
+    cursor: pointer;
   }
 
   &__location-title {

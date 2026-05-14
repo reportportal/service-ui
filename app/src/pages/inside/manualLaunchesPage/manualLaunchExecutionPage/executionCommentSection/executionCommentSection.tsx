@@ -14,26 +14,16 @@
  * limitations under the License.
  */
 
-import {
-  FC,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  FormEventHandler,
-  ChangeEventHandler,
-} from 'react';
+import { FC, useMemo, useRef, useState, FormEventHandler, ChangeEventHandler } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
-  DeleteIcon,
   DragAndDropIcon,
   FieldTextFlex,
   FileDropArea,
   PlusIcon,
 } from '@reportportal/ui-kit';
-import { MIME_TYPES, FileWithValidation } from '@reportportal/ui-kit/fileDropArea';
 import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
@@ -45,14 +35,18 @@ import {
   type TestCaseExecution,
 } from 'controllers/manualLaunch';
 import { useManualLaunchId } from 'hooks/useTypedSelector';
+import { useFileAttachments } from 'hooks/useFileAttachments';
 
-import { AttachmentsWithSlider } from 'pages/inside/common/attachmentsWithSlider';
 import { messages as statusModalMessages } from '../executionStatusConfirmModal/messages';
 import { messages } from '../messages';
-import { toAttachmentWithSlider } from '../utils';
 import { commonMessages } from 'pages/inside/common/common-messages';
 
 import styles from './executionCommentSection.scss';
+import {
+  EXECUTION_COMMENT_ACCEPT_MIME_TYPES,
+  EXECUTION_COMMENT_MAX_LENGTH,
+  EXECUTION_COMMENT_TEXTAREA_MIN_HEIGHT,
+} from './constants';
 
 const cx = createClassnames(styles);
 
@@ -71,32 +65,37 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
 
   const savedComment = execution.executionComment?.comment ?? '';
 
+  const [prevExecutionId, setPrevExecutionId] = useState(execution.id);
   const [comment, setComment] = useState(savedComment);
-  const [pendingFiles, setPendingFiles] = useState<File[]>([]);
-  const [removedAttachmentIds, setRemovedAttachmentIds] = useState<Set<string>>(new Set());
   const [isSaving, setIsSaving] = useState(false);
 
-  useEffect(() => {
-    setPendingFiles([]);
-    setRemovedAttachmentIds(new Set());
-  }, [execution.id]);
+  const {
+    pendingFiles,
+    removedAttachmentIds,
+    visibleExistingAttachments,
+    existingAttachmentsData,
+    pendingFilesData,
+    handleFilesAdded: handleFilesAddedFromHook,
+    handlePendingRemove,
+    handleExistingRemove,
+    setPendingFiles,
+    setRemovedAttachmentIds,
+  } = useFileAttachments({
+    resetKey: String(execution.id),
+    existingAttachments: execution.executionComment?.attachments ?? [],
+    messages,
+  });
 
-  useEffect(() => {
+  if (execution.id !== prevExecutionId) {
+    setPrevExecutionId(execution.id);
     setComment(savedComment);
-  }, [execution.id, savedComment]);
-
-  const visibleExistingAttachments = useMemo(() => {
-    const list = execution.executionComment?.attachments ?? [];
-    return list.filter((a) => !removedAttachmentIds.has(String(a.id)));
-  }, [execution.executionComment?.attachments, removedAttachmentIds]);
+  }
 
   const isDirty = useMemo(() => {
     const savedTrimmed = savedComment.trim();
     const draftTrimmed = comment.trim();
     return (
-      draftTrimmed !== savedTrimmed ||
-      !isEmpty(pendingFiles) ||
-      !isEmpty(removedAttachmentIds)
+      draftTrimmed !== savedTrimmed || !isEmpty(pendingFiles) || !isEmpty(removedAttachmentIds)
     );
   }, [comment, pendingFiles, removedAttachmentIds, savedComment]);
 
@@ -110,29 +109,73 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
     setComment(e.target.value);
   };
 
-  const handleFilesAdded = (filesWithValidation: FileWithValidation[]) => {
-    const files = filesWithValidation.map((f) => f.file);
-    setPendingFiles((prev) => [...prev, ...files]);
+  const handleFilesAdded = (
+    filesWithValidation: Parameters<typeof handleFilesAddedFromHook>[0],
+  ) => {
+    handleFilesAddedFromHook(filesWithValidation);
+
+    if (!launchId || isSaving) return;
+
+    const uniqueFiles = filesWithValidation
+      .map((f) => f.file)
+      .filter(
+        (f) =>
+          f.size > 0 &&
+          !visibleExistingAttachments.some(
+            (a) => a.fileName.toLowerCase() === f.name.toLowerCase(),
+          ),
+      );
+
+    if (isEmpty(uniqueFiles)) return;
+    setIsSaving(true);
+    dispatch(
+      updateManualLaunchExecutionCommentAction({
+        projectKey,
+        launchId,
+        executionId: execution.id,
+        executionStatus: execution.executionStatus,
+        comment,
+        existingAttachments: execution.executionComment?.attachments ?? [],
+        newFiles: uniqueFiles,
+        removedAttachmentIds: Array.from(removedAttachmentIds),
+        btsTickets: execution.executionComment?.btsTickets,
+        onSuccess: () => {
+          setPendingFiles([]);
+          setRemovedAttachmentIds(new Set());
+        },
+        onFinally: () => setIsSaving(false),
+      }),
+    );
   };
 
-  const handlePendingRemove = (fileId: string) => {
-    const index = pendingFiles.findIndex((f, i) => `${f.name}-${i}` === fileId);
-    if (index !== -1) {
-      setPendingFiles((prev) => prev.filter((_, i) => i !== index));
-    }
-  };
-
-  const handleExistingRemove = (id: string | number) => {
-    setRemovedAttachmentIds((prev) => new Set([...prev, String(id)]));
+  const handleExistingRemoveWithSave = (id: string | number) => {
+    handleExistingRemove(id);
+    if (!launchId || isSaving) return;
+    const nextRemoved = new Set([...removedAttachmentIds, String(id)]);
+    setRemovedAttachmentIds(nextRemoved);
+    setIsSaving(true);
+    dispatch(
+      updateManualLaunchExecutionCommentAction({
+        projectKey,
+        launchId,
+        executionId: execution.id,
+        executionStatus: execution.executionStatus,
+        comment,
+        existingAttachments: execution.executionComment?.attachments ?? [],
+        newFiles: [],
+        removedAttachmentIds: Array.from(nextRemoved),
+        btsTickets: execution.executionComment?.btsTickets,
+        onSuccess: () => setRemovedAttachmentIds(new Set()),
+        onFinally: () => setIsSaving(false),
+      }),
+    );
   };
 
   const handleClearLocal = () => {
     setComment('');
     setPendingFiles([]);
     setRemovedAttachmentIds(
-      new Set(
-        (execution.executionComment?.attachments ?? []).map((a) => String(a.id)),
-      ),
+      new Set((execution.executionComment?.attachments ?? []).map((a) => String(a.id))),
     );
   };
 
@@ -164,98 +207,90 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
   return (
     <section className={cx('execution-comment-section')}>
       <form className={cx('execution-comment-section__form')} onSubmit={handleSubmit}>
-        <FieldTextFlex
-          ref={textareaRef}
-          label={formatMessage(messages.executionCommentTitle)}
-          placeholder={formatMessage(statusModalMessages.commentPlaceholder)}
-          value={comment}
-          onChange={handleCommentChange}
-          minHeight={100}
-          disabled={isSaving}
-        />
-        <div className={cx('execution-comment-section__divider')} />
-        <div className={cx('attachments-block')}>
-          <FileDropArea
-            variant="overlay"
-            maxFileSize={MAX_FILE_SIZE}
-            acceptFileMimeTypes={[MIME_TYPES.jpeg, MIME_TYPES.png, MIME_TYPES.pdf]}
-            isDisabled={isSaving}
-            onFilesAdded={handleFilesAdded}
-            messages={{
-              incorrectFileSize: formatMessage(statusModalMessages.incorrectFileSize),
-              incorrectFileFormat: formatMessage(statusModalMessages.incorrectFileFormat),
-            }}
-          >
-            <FileDropArea.DropZone className={cx('attachments-block__dropzone')} icon={<div />} />
-            <div className={cx('attachments-block__header')}>
-              <span className={cx('attachments-block__title')}>
-                {formatMessage(commonMessages.attachments)}
-              </span>
-              <div className={cx('attachments-block__add')}>
-                <span className={cx('attachments-block__hint')}>
-                  <DragAndDropIcon />
-                  {formatMessage(statusModalMessages.dropFilesHere)}
-                </span>
-                <FileDropArea.BrowseButton icon={<PlusIcon />}>
-                  {formatMessage(statusModalMessages.add)}
-                </FileDropArea.BrowseButton>
-              </div>
+        <div className={cx('execution-comment-section__body')}>
+          <div className={cx('execution-comment-section__comment-block')}>
+            <FieldTextFlex
+              ref={textareaRef}
+              label={formatMessage(messages.executionCommentTitle)}
+              placeholder={formatMessage(statusModalMessages.commentPlaceholder)}
+              value={comment}
+              onChange={handleCommentChange}
+              minHeight={EXECUTION_COMMENT_TEXTAREA_MIN_HEIGHT}
+              maxLength={EXECUTION_COMMENT_MAX_LENGTH}
+              disabled={isSaving}
+              className={cx('execution-comment-section__comment')}
+            />
+            <div className={cx('execution-comment-section__counter')}>
+              {comment.length}/{EXECUTION_COMMENT_MAX_LENGTH}
             </div>
-            {!isEmpty(visibleExistingAttachments) && (
-              <div className={cx('attachments-block__existing')}>
-                {visibleExistingAttachments.map((att) => (
-                  <div key={String(att.id)} className={cx('attachments-block__existing-row')}>
-                    <div className={cx('attachments-block__existing-preview')}>
-                      <AttachmentsWithSlider
-                        attachments={[toAttachmentWithSlider(att)]}
-                        className={cx('attachments-block__slider')}
-                      />
-                    </div>
-                    <Button
-                      type="button"
-                      variant="text"
-                      adjustWidthOn="content"
-                      className={cx('attachments-block__remove')}
-                      onClick={() => handleExistingRemove(att.id)}
-                      aria-label={formatMessage(messages.removeAttachment)}
-                    >
-                      <DeleteIcon />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            )}
-            {!isEmpty(pendingFiles) && (
-              <FileDropArea.AttachedFilesList
-                files={pendingFiles.map((file, index) => ({
-                  id: `${file.name}-${index}`,
-                  fileName: file.name,
-                  file,
-                  size: file.size,
-                }))}
-                onRemoveFile={handlePendingRemove}
-              />
-            )}
-          </FileDropArea>
+          </div>
+          <div className={cx('execution-comment-section__footer')}>
+            <Button
+              type="button"
+              variant="ghost"
+              className={cx('execution-comment-section__clear')}
+              disabled={isSaving || !hasClearableContent}
+              onClick={handleClearLocal}
+            >
+              {formatMessage(messages.clearExecutionComment)}
+            </Button>
+            <Button
+              type="submit"
+              variant="primary"
+              disabled={isSaving || !isDirty}
+              className={cx('execution-comment-section__save')}
+            >
+              {formatMessage(messages.saveExecutionComment)}
+            </Button>
+          </div>
         </div>
-        <div className={cx('execution-comment-section__footer')}>
-          <Button
-            type="button"
-            variant="ghost"
-            className={cx('execution-comment-section__clear')}
-            disabled={isSaving || !hasClearableContent}
-            onClick={handleClearLocal}
-          >
-            {formatMessage(messages.clearExecutionComment)}
-          </Button>
-          <Button
-            type="submit"
-            variant="primary"
-            disabled={isSaving || !isDirty}
-            className={cx('execution-comment-section__save')}
-          >
-            {formatMessage(messages.saveExecutionComment)}
-          </Button>
+        <div className={cx('execution-comment-section__divider')} />
+        <div className={cx('execution-comment-section__attachments')}>
+          <div className={cx('attachments-file-drop')}>
+            <FileDropArea
+              variant="overlay"
+              maxFileSize={MAX_FILE_SIZE}
+              acceptFileMimeTypes={EXECUTION_COMMENT_ACCEPT_MIME_TYPES}
+              isDisabled={isSaving}
+              onFilesAdded={handleFilesAdded}
+              messages={{
+                incorrectFileSize: formatMessage(statusModalMessages.incorrectFileSize),
+                incorrectFileFormat: formatMessage(statusModalMessages.incorrectFileFormat),
+              }}
+            >
+              <FileDropArea.DropZone className={cx('attachments-block__dropzone')} icon={<div />} />
+              <div className={cx('attachments-block__header')}>
+                <span className={cx('attachments-block__title')}>
+                  {formatMessage(commonMessages.attachments)}
+                </span>
+                <div className={cx('attachments-block__add')}>
+                  <span className={cx('attachments-block__hint')}>
+                    <DragAndDropIcon />
+                    <span className={cx('attachments-block__hint-text')}>
+                      {formatMessage(statusModalMessages.dropFilesHere)}
+                    </span>
+                  </span>
+                  <FileDropArea.BrowseButton icon={<PlusIcon />}>
+                    {formatMessage(statusModalMessages.add)}
+                  </FileDropArea.BrowseButton>
+                </div>
+              </div>
+              {!isEmpty(existingAttachmentsData) && (
+                <FileDropArea.AttachedFilesList
+                  className={cx('attachments-block__list')}
+                  files={existingAttachmentsData}
+                  onRemoveFile={(id) => handleExistingRemoveWithSave(id)}
+                />
+              )}
+              {!isEmpty(pendingFilesData) && (
+                <FileDropArea.AttachedFilesList
+                  className={cx('attachments-block__list')}
+                  files={pendingFilesData}
+                  onRemoveFile={handlePendingRemove}
+                />
+              )}
+            </FileDropArea>{' '}
+          </div>{' '}
         </div>
       </form>
     </section>

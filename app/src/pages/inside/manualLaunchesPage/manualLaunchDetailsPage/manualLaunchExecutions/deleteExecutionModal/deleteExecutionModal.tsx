@@ -16,6 +16,7 @@
 
 import { FC, ReactNode, useCallback } from 'react';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { noop } from 'es-toolkit';
 import { Modal } from '@reportportal/ui-kit';
 
@@ -26,6 +27,7 @@ import { withModal } from 'controllers/modal';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { useModalButtons } from 'hooks/useModalButtons';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
+import { MANUAL_LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 
 import { useDeleteExecution } from './useDeleteExecution';
 import { DELETE_EXECUTION_MODAL_KEY } from './constants';
@@ -44,12 +46,20 @@ const boldFormatter = (chunks: ReactNode) => <BoldText>{chunks}</BoldText>;
 
 const DeleteExecutionModalComponent = ({ data }: UseModalData<DeleteExecutionModalData>) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const isBatch = data.type === 'batch';
   const { deleteExecutions, isLoading } = useDeleteExecution();
 
   const handleSubmit = useCallback(() => {
+    if (isBatch) {
+      trackEvent(
+        MANUAL_LAUNCHES_PAGE_EVENTS.submitBulkDeleteTestExecution(data.executionIds.length),
+      );
+    } else {
+      trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.SUBMIT_DELETE_TEST_EXECUTION);
+    }
     deleteExecutions(data).catch(noop);
-  }, [deleteExecutions, data]);
+  }, [deleteExecutions, data, trackEvent]);
 
   const { okButton, cancelButton, hideModal } = useModalButtons({
     okButtonText: (

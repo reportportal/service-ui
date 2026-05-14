@@ -18,11 +18,11 @@ import { useIntl } from 'react-intl';
 import { isNotNil, isUndefined } from 'es-toolkit';
 import { isEmpty } from 'es-toolkit/compat';
 import { useSelector, useDispatch } from 'react-redux';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useTracking } from 'react-tracking';
 import { Button, RefreshIcon } from '@reportportal/ui-kit';
 
-import { MILESTONES_PAGE_EVENTS } from 'analyticsEvents/milestonesPageEvents';
+import { MILESTONES_PAGE_EVENTS, MILESTONES_PAGE_VIEW_TYPE } from 'analyticsEvents/milestonesPageEvents';
 
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
@@ -79,9 +79,19 @@ export const MilestonesPage = () => {
     }
   }, [dispatch, milestones, milestonesLoading, queryParams]);
 
+  const hasTrackedViewRef = useRef(false);
+
   useEffect(() => {
-    trackEvent(MILESTONES_PAGE_EVENTS.VIEW_MILESTONES_PAGE);
-  }, [trackEvent]);
+    if (hasTrackedViewRef.current || milestonesLoading || !isNotNil(milestones)) {
+      return;
+    }
+    hasTrackedViewRef.current = true;
+    trackEvent(
+      MILESTONES_PAGE_EVENTS.viewMilestonesPage(
+        isEmpty(milestones) ? MILESTONES_PAGE_VIEW_TYPE.EMPTY : MILESTONES_PAGE_VIEW_TYPE.POPULATED,
+      ),
+    );
+  }, [milestones, milestonesLoading, trackEvent]);
 
   const handleCreateMilestone = () => {
     trackEvent(MILESTONES_PAGE_EVENTS.CLICK_CREATE_MILESTONE);

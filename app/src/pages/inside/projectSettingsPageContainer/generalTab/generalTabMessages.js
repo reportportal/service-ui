@@ -21,6 +21,10 @@ export const messages = defineMessages({
     id: 'GeneralTab.projectNameLabel',
     defaultMessage: 'Name',
   },
+  projectKeyLabel: {
+    id: 'GeneralTab.projectKeyLabel',
+    defaultMessage: 'Project key',
+  },
   interruptedJob: {
     id: 'GeneralTab.interruptedJob',
     defaultMessage: 'Launch inactivity timeout',

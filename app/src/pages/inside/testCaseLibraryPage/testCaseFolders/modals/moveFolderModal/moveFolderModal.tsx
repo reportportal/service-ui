@@ -16,11 +16,16 @@
 
 import { useCallback } from 'react';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 import { noop } from 'es-toolkit';
 import { Modal } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
+import {
+  FOLDER_POPOVER_ELEMENT_NAME,
+  TEST_CASE_LIBRARY_EVENTS,
+} from 'analyticsEvents/testCaseLibraryPageEvents';
 import { UseModalData } from 'common/hooks';
 import { createClassnames } from 'common/utils';
 import { withModal } from 'controllers/modal';
@@ -69,6 +74,7 @@ const MoveFolderModal = reduxForm<FolderModalFormValues, MoveFolderModalProps>({
   change,
 }: MoveFolderModalProps & InjectedFormProps<FolderModalFormValues, MoveFolderModalProps>) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { isLoading, moveFolder } = useMoveFolder();
   const { currentMode, handleModeChange } = useFolderModalMode({ change });
 
@@ -80,12 +86,16 @@ const MoveFolderModal = reduxForm<FolderModalFormValues, MoveFolderModalProps>({
         return;
       }
 
+      trackEvent(
+        TEST_CASE_LIBRARY_EVENTS.submitFolderOperation(FOLDER_POPOVER_ELEMENT_NAME.MOVE_FOLDER_TO),
+      );
+
       moveFolder({
         folderId: folder.id,
         ...getFolderDestinationFromFormValues(values),
       }).catch(noop);
     },
-    [folder, moveFolder],
+    [folder, moveFolder, trackEvent],
   );
 
   const { okButton, cancelButton, hideModal } = useModalButtons({
