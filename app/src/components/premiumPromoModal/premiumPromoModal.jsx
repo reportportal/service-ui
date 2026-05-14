@@ -21,14 +21,13 @@ import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { Button, ExternalLinkIcon, Modal } from '@reportportal/ui-kit';
 import LogoWhite from 'common/img/logo-white.svg';
-import { referenceDictionary } from 'common/utils/referenceDictionary';
 import { hideModalAction } from 'controllers/modal';
-import { messages } from '../messages';
+import { messages } from './messages';
 import styles from './premiumPromoModal.scss';
 
 const cx = classNames.bind(styles);
 
-const PREMIUM_FEATURES = [
+const DEFAULT_FEATURE_MESSAGES = [
   messages.premiumBulletQualityGates,
   messages.premiumBulletOrganizations,
   messages.premiumBulletTestExecutions,
@@ -36,17 +35,33 @@ const PREMIUM_FEATURES = [
   messages.premiumBulletMore,
 ];
 
-export const PremiumPromoModal = ({ onExplorePlans, onContactUs, onNotNow }) => {
+const messageDescriptorPropType = PropTypes.shape({
+  id: PropTypes.string.isRequired,
+  defaultMessage: PropTypes.string,
+});
+
+export const PremiumPromoModal = ({
+  titleMessage,
+  subtitleMessage,
+  featureMessages,
+  explorePlansLabelMessage,
+  contactUsLabelMessage,
+  notNowLabelMessage,
+  onExplorePlans,
+  onContactUs,
+  onNotNow,
+}) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const previouslyFocusedElementRef = useRef(null);
 
-  // Save the element that triggered the modal so focus can be restored on close.
   useEffect(() => {
     previouslyFocusedElementRef.current =
       document.activeElement instanceof HTMLElement ? document.activeElement : null;
+
     return () => {
       const target = previouslyFocusedElementRef.current;
+
       if (target && typeof target.focus === 'function') {
         target.focus();
       }
@@ -71,30 +86,30 @@ export const PremiumPromoModal = ({ onExplorePlans, onContactUs, onNotNow }) => 
             handleClose();
           }}
         >
-          {formatMessage(messages.notNowButton)}
+          {formatMessage(notNowLabelMessage)}
         </Button>
       }
       cancelButton={{
-        children: formatMessage(messages.contactUsButton),
+        children: formatMessage(contactUsLabelMessage),
         variant: 'ghost',
         icon: <ExternalLinkIcon />,
         iconPlace: 'end',
         onClick: () => onContactUs?.(),
       }}
       okButton={{
-        children: formatMessage(messages.explorePlansButton),
+        children: formatMessage(explorePlansLabelMessage),
         icon: <ExternalLinkIcon />,
         iconPlace: 'end',
         onClick: () => onExplorePlans?.(),
       }}
     >
       <div className={cx('modal-content')}>
-        <h2 className={cx('title')}>{formatMessage(messages.premiumPopupTitle)}</h2>
-        <p className={cx('subtitle')}>{formatMessage(messages.premiumPopupSubtitle)}</p>
+        <h2 className={cx('title')}>{formatMessage(titleMessage)}</h2>
+        <p className={cx('subtitle')}>{formatMessage(subtitleMessage)}</p>
         <ul className={cx('feature-list')}>
-          {PREMIUM_FEATURES.map((feature) => (
-            <li key={feature.id} className={cx('feature-item')}>
-              {formatMessage(feature)}
+          {featureMessages.map((featureMessage) => (
+            <li key={featureMessage.id} className={cx('feature-item')}>
+              {formatMessage(featureMessage)}
             </li>
           ))}
         </ul>
@@ -104,7 +119,22 @@ export const PremiumPromoModal = ({ onExplorePlans, onContactUs, onNotNow }) => 
 };
 
 PremiumPromoModal.propTypes = {
+  titleMessage: messageDescriptorPropType,
+  subtitleMessage: messageDescriptorPropType,
+  featureMessages: PropTypes.arrayOf(messageDescriptorPropType),
+  explorePlansLabelMessage: messageDescriptorPropType,
+  contactUsLabelMessage: messageDescriptorPropType,
+  notNowLabelMessage: messageDescriptorPropType,
   onExplorePlans: PropTypes.func,
   onContactUs: PropTypes.func,
   onNotNow: PropTypes.func,
+};
+
+PremiumPromoModal.defaultProps = {
+  titleMessage: messages.premiumPopupTitle,
+  subtitleMessage: messages.premiumPopupSubtitle,
+  featureMessages: DEFAULT_FEATURE_MESSAGES,
+  explorePlansLabelMessage: messages.explorePlansButton,
+  contactUsLabelMessage: messages.contactUsButton,
+  notNowLabelMessage: messages.notNowButton,
 };

@@ -15,3 +15,4 @@
  */
 
 export { PremiumPromoModal } from './premiumPromoModal';
+export { messages as premiumPromoModalMessages } from './messages';

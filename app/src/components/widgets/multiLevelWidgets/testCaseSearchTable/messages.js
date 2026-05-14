@@ -81,44 +81,4 @@ export const messages = defineMessages({
     id: 'testCaseSearch.openNewSearchButton',
     defaultMessage: 'Open New Search',
   },
-  premiumPopupTitle: {
-    id: 'testCaseSearch.premiumPopupTitle',
-    defaultMessage: 'Unlock premium features',
-  },
-  premiumPopupSubtitle: {
-    id: 'testCaseSearch.premiumPopupSubtitle',
-    defaultMessage: 'Upgrade your plan to get the most out of ReportPortal and work more efficiently.',
-  },
-  premiumBulletQualityGates: {
-    id: 'testCaseSearch.premiumBulletQualityGates',
-    defaultMessage: 'Quality Gates',
-  },
-  premiumBulletOrganizations: {
-    id: 'testCaseSearch.premiumBulletOrganizations',
-    defaultMessage: 'Organizations',
-  },
-  premiumBulletTestExecutions: {
-    id: 'testCaseSearch.premiumBulletTestExecutions',
-    defaultMessage: 'Test Executions Search',
-  },
-  premiumBulletSSO: {
-    id: 'testCaseSearch.premiumBulletSSO',
-    defaultMessage: 'Single sign-on',
-  },
-  premiumBulletMore: {
-    id: 'testCaseSearch.premiumBulletMore',
-    defaultMessage: '\u2026and many more',
-  },
-  explorePlansButton: {
-    id: 'testCaseSearch.explorePlansButton',
-    defaultMessage: 'Explore Plans',
-  },
-  contactUsButton: {
-    id: 'testCaseSearch.contactUsButton',
-    defaultMessage: 'Contact us',
-  },
-  notNowButton: {
-    id: 'testCaseSearch.notNowButton',
-    defaultMessage: 'Not now',
-  },
 });

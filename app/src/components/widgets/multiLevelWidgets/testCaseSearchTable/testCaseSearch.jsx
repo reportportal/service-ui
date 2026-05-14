@@ -36,7 +36,7 @@ import { SEARCH_DEBOUNCE_MS } from 'common/constants/delayTime';
 import { TestCaseSearchControl } from './testCaseSearchControl';
 import { TestCaseSearchContent } from './testCaseSearchContent';
 import { TestExecutionsPromoBanner } from './testExecutionsPromoBanner';
-import { PremiumPromoModal } from './premiumPromoModal';
+import { PremiumPromoModal } from 'components/premiumPromoModal';
 import styles from './testCaseSearch.scss';
 
 const TRACKING_EVENTS_TRIGGER_SOURCES = {

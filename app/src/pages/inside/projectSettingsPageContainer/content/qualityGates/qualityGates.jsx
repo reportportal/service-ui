@@ -25,7 +25,7 @@ import { enabledPluginSelector } from 'controllers/plugins';
 import { QUALITY_GATE } from 'common/constants/pluginNames';
 import { referenceDictionary } from 'common/utils/referenceDictionary';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { PremiumPromoModal } from 'components/widgets/multiLevelWidgets/testCaseSearchTable/premiumPromoModal';
+import { PremiumPromoModal } from 'components/premiumPromoModal';
 import { ExtensionLoader } from 'components/extensionLoader';
 import discoverPluginsIcon from 'common/img/discover-icon-inline.svg';
 import billingIcon from 'common/img/billing-icon-inline.svg';
