@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ export const NAMESPACE = 'plugins';
 export const SET_PROJECT_INTEGRATIONS = 'setProjectIntegrations';
 export const FETCH_GLOBAL_INTEGRATIONS = 'fetchGlobalIntegrations';
 export const FETCH_GLOBAL_INTEGRATIONS_SUCCESS = 'fetchGlobalIntegrationsSuccess';
+export const SET_ORGANIZATION_INTEGRATIONS = 'setOrganizationIntegrations';
 
 export const FETCH_PLUGINS = 'fetchPlugins';
 export const FETCH_PUBLIC_PLUGINS = 'fetchPublicPlugins';
@@ -42,6 +43,7 @@ export const REMOVE_PROJECT_INTEGRATION_SUCCESS = 'removeProjectIntegrationSucce
 
 export const GLOBAL_INTEGRATIONS = 'globalIntegrations';
 export const PROJECT_INTEGRATIONS = 'projectIntegrations';
+export const ORGANIZATION_INTEGRATIONS = 'organizationIntegrations';
 export const PUBLIC_PLUGINS = 'publicPlugins';
 
 export const SECRET_FIELDS_KEY = 'rp_secretFieldsToClear';

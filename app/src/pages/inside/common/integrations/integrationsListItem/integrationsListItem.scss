@@ -19,11 +19,10 @@
   max-width: 820px;
   min-height: 104px;
   height: auto;
-  margin: 0 0 16px 24px;
   padding: 16px 24px;
   box-sizing: border-box;
   cursor: pointer;
-  background-color: $COLOR--white-two;
+  background-color: var(--rp-ui-base-bg-000);
   border-radius: 8px;
   box-shadow: $BOX_SHADOW--item;
 
@@ -35,11 +34,12 @@
   }
 }
 
-@mixin integration-info($color, $line-height, $size, $font-family) {
+@mixin integration-info($color, $line-height, $size, $font-weight) {
   color: $color;
   line-height: $line-height;
   font-size: $size;
-  font-family: $font-family;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: $font-weight;
 }
 .integration-image {
   width: 44px;
@@ -60,14 +60,24 @@
 
 .integration-name {
   margin-right: 16px;
-  @include integration-info($COLOR--almost-black, 24px, 15px, $FONT-ROBOTO-MEDIUM);
+  @include integration-info(
+    var(--rp-ui-base-almost-black),
+    24px,
+    15px,
+    var(--rp-ui-base-fw-medium)
+  );
 }
 
 .integration-version {
-  @include integration-info($COLOR--e-400, 16px, 11px, $FONT-ROBOTO-REGULAR);
+  @include integration-info(var(--rp-ui-base-e-400), 16px, 11px, var(--rp-ui-base-fw-regular));
 }
 
 .integration-description {
   text-indent: 1px;
-  @include integration-info($COLOR--almost-black, 20px, 13px, $FONT-ROBOTO-REGULAR);
+  @include integration-info(
+    var(--rp-ui-base-almost-black),
+    20px,
+    13px,
+    var(--rp-ui-base-fw-regular)
+  );
 }

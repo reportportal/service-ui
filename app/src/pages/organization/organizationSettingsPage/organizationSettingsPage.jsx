@@ -17,6 +17,7 @@
 import { GENERAL, INTEGRATIONS } from 'common/constants/settingsTabs';
 import {
   ORGANIZATION_SETTINGS_TAB_PAGE,
+  querySelector,
   settingsTabSelector,
   urlOrganizationSlugSelector,
 } from 'controllers/pages';
@@ -52,6 +53,7 @@ export const OrganizationSettingsPage = () => {
   const pluginsLoading = useSelector(pluginsLoadingSelector);
   const extensionManifestsPending = useSelector(extensionManifestsLoadPendingSelector);
   const [headerNodes, setHeaderNodes] = useState({});
+  const { subPage } = useSelector(querySelector);
 
   const createTabLink = useCallback(
     (tabName, extendedParams = {}, page = ORGANIZATION_SETTINGS_TAB_PAGE) => ({
@@ -119,12 +121,14 @@ export const OrganizationSettingsPage = () => {
       <SettingsLayout navigation={navigation}>
         <ScrollWrapper resetRequired>
           <div className={cx('settings-page-content-wrapper')}>
-            <div className={cx('header')}>
-              <Header title={config[activeTab]?.name} titleNode={headerNodes.titleNode}>
-                {headerNodes.children}
-              </Header>
-            </div>
-            <div className={cx('content', 'main-page')}>{content}</div>
+            {!subPage && (
+              <div className={cx('header')}>
+                <Header title={config[activeTab]?.name} titleNode={headerNodes.titleNode}>
+                  {headerNodes.children}
+                </Header>
+              </div>
+            )}
+            <div className={cx('content', { 'main-page': !subPage })}>{content}</div>
           </div>
         </ScrollWrapper>
       </SettingsLayout>

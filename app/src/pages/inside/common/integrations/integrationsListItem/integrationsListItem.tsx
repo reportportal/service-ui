@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { defineMessages, useIntl } from 'react-intl';
-import PropTypes from 'prop-types';
-import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { PLUGIN_DESCRIPTIONS_MAP } from 'components/integrations/messages';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
+import type { Plugin } from 'controllers/plugins';
+import { createClassnames } from 'common/utils';
 import styles from './integrationsListItem.scss';
 
-const cx = classNames.bind(styles);
+const cx = createClassnames(styles);
 
 export const messages = defineMessages({
   version: {
@@ -32,19 +31,24 @@ export const messages = defineMessages({
   },
 });
 
-export const IntegrationsListItem = (props) => {
+export interface IntegrationsListItemProps {
+  integrationType: Plugin;
+  onItemClick?: (plugin: Plugin) => void;
+}
+
+export const IntegrationsListItem = ({
+  integrationType,
+  onItemClick = () => {},
+}: IntegrationsListItemProps) => {
   const { formatMessage } = useIntl();
-  const {
-    integrationType: { name, details = { name } },
-    integrationType,
-    onItemClick,
-  } = props;
+  const { name, details } = integrationType;
 
   const displayName = details.name || name;
 
   const itemClickHandler = () => {
     onItemClick(integrationType);
   };
+
   return (
     <div
       className={cx('integrations-list-item')}
@@ -69,12 +73,4 @@ export const IntegrationsListItem = (props) => {
       </div>
     </div>
   );
-};
-IntegrationsListItem.propTypes = {
-  integrationType: PropTypes.object.isRequired,
-  onItemClick: PropTypes.func,
-};
-IntegrationsListItem.defaultProps = {
-  integrationType: {},
-  onItemClick: () => {},
 };

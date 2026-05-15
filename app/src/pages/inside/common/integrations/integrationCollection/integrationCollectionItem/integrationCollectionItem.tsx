@@ -52,7 +52,7 @@ export const IntegrationCollectionItem = ({
   const [connected, setConnected] = useState(true);
 
   useEffect(() => {
-    if (!testConnection || id == null) {
+    if (!testConnection || id == null || inactive) {
       return undefined;
     }
     let cancelled = false;
@@ -70,7 +70,7 @@ export const IntegrationCollectionItem = ({
     return () => {
       cancelled = true;
     };
-  }, [testConnection, id]);
+  }, [testConnection, id, inactive]);
 
   const statusVariant = useMemo(() => {
     if (!connected) return IntegrationStatus.ERROR;

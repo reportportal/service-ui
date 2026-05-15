@@ -23,6 +23,7 @@ import {
   UPDATE_ORGANIZATION_SETTINGS_SUCCESS,
   CREATE_ORGANIZATION,
   RENAME_ORGANIZATION,
+  FETCH_ORGANIZATION_INTEGRATIONS,
 } from './constants';
 
 export const prepareActiveOrganizationProjectsAction = (payload) => ({
@@ -30,9 +31,9 @@ export const prepareActiveOrganizationProjectsAction = (payload) => ({
   payload,
 });
 
-export const fetchOrganizationBySlugAction = (payload) => ({
+export const fetchOrganizationBySlugAction = (slug, withIntegrations = false) => ({
   type: FETCH_ORGANIZATION_BY_SLUG,
-  payload,
+  payload: { slug, withIntegrations },
 });
 
 export const setActiveOrganizationAction = (payload) => ({
@@ -63,4 +64,9 @@ export const createOrganizationAction = (payload) => ({
 export const renameOrganizationAction = (organizationId, newOrganizationName, onSuccess) => ({
   type: RENAME_ORGANIZATION,
   payload: { organizationId, newOrganizationName, onSuccess },
+});
+
+export const fetchOrganizationIntegrationsAction = (organizationId) => ({
+  type: FETCH_ORGANIZATION_INTEGRATIONS,
+  payload: { organizationId },
 });

@@ -32,6 +32,8 @@ export const UPDATE_ORGANIZATION_SETTINGS_SUCCESS = 'updateOrganizationSettingsS
 export const CREATE_ORGANIZATION = 'createOrganization';
 export const RENAME_ORGANIZATION = 'renameOrganization';
 
+export const FETCH_ORGANIZATION_INTEGRATIONS = 'fetchOrganizationIntegrations';
+
 export const ERROR_CODES = {
   ORGANIZATION_EXISTS: [4091, 4095, 40016],
 };

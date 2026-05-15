@@ -36,6 +36,7 @@ import {
   REMOVE_PROJECT_INTEGRATIONS_BY_TYPE_SUCCESS,
   REMOVE_GLOBAL_INTEGRATIONS_BY_TYPE_SUCCESS,
   PUBLIC_PLUGINS,
+  SET_ORGANIZATION_INTEGRATIONS,
 } from './constants';
 
 const addIntegration = (state, type, payload) => ({
@@ -97,6 +98,11 @@ export const integrationsReducer = (state = {}, { type = '', payload = {} }) => 
       return {
         ...state,
         projectIntegrations: payload,
+      };
+    case SET_ORGANIZATION_INTEGRATIONS:
+      return {
+        ...state,
+        organizationIntegrations: payload,
       };
     case ADD_GLOBAL_INTEGRATION_SUCCESS:
       return addIntegration(state, GLOBAL_INTEGRATIONS, payload);

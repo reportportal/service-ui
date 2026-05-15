@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import {
   FETCH_GLOBAL_INTEGRATIONS,
   FETCH_GLOBAL_INTEGRATIONS_SUCCESS,
   REMOVE_GLOBAL_INTEGRATIONS_BY_TYPE_SUCCESS,
+  SET_ORGANIZATION_INTEGRATIONS,
 } from './constants';
 
 export const fetchPluginsAction = () => ({
@@ -134,4 +135,9 @@ export const removeProjectIntegrationsByTypeSuccessAction = (instanceType) => ({
 export const removeGlobalIntegrationsByTypeSuccessAction = (instanceType) => ({
   type: REMOVE_GLOBAL_INTEGRATIONS_BY_TYPE_SUCCESS,
   payload: instanceType,
+});
+
+export const setOrganizationIntegrationsAction = (organizationIntegrations) => ({
+  type: SET_ORGANIZATION_INTEGRATIONS,
+  payload: organizationIntegrations,
 });

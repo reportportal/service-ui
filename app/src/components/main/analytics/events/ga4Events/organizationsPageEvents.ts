@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { getBasicChooseEventParameters, getBasicClickEventParameters } from '../common/ga4Utils';
+import {
+  getBasicChooseEventParameters,
+  getBasicClickEventParameters,
+  normalizeEventParameter,
+} from '../common/ga4Utils';
 import { InviteProjectCondition } from 'pages/inside/common/invitations/inviteUserModal/types';
 
 const ORGANIZATION_PAGE = 'organization';
@@ -27,7 +31,7 @@ export const ORGANIZATION_SETTINGS_VIEWS = {
   getOrganizationSettingsPageView: (settingsTab: string, subTab?: string) => ({
     action: 'page_view',
     place: subTab
-      ? `${SETTINGS_PAGE}_${settingsTab.toLowerCase()}_${subTab.toLowerCase()}`
+      ? `${SETTINGS_PAGE}_${settingsTab.toLowerCase()}_${normalizeEventParameter(subTab)}`
       : `${SETTINGS_PAGE}_${settingsTab.toLowerCase()}`,
   }),
 };

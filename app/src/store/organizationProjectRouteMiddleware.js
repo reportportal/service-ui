@@ -108,7 +108,7 @@ export const organizationProjectRouteMiddleware = (store) => (next) => (action) 
 
   // Organization changed — fetch its data (runs independently of project change)
   if (isChangedOrganization) {
-    dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug));
+    dispatch(fetchOrganizationBySlugAction(hashOrganizationSlug, true));
   }
 
   if (isProjectPage && isChangedProject) {

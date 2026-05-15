@@ -161,6 +161,12 @@ export const URLS = {
   organizationSettings: (organizationId) =>
     `${urlCommonBase}organizations/${organizationId}/settings`,
   organizationById: (organizationId) => `${urlCommonBase}organizations/${organizationId}`,
+  organizationIntegrations: (organizationId) =>
+    `${urlCommonBase}organizations/${organizationId}/integrations`,
+  organizationIntegrationById: (organizationId, integrationId) =>
+    `${urlCommonBase}organizations/${organizationId}/integrations/${integrationId}`,
+  testOrganizationIntegrationConnection: (organizationId, integrationId) =>
+    `${urlCommonBase}organizations/${organizationId}/integrations/${integrationId}/connection`,
 
   projectByName: (projectKey) => `${urlBase}project/${projectKey}`,
   project: (ids = []) => `${urlBase}project?ids=${ids.join(',')}`,
