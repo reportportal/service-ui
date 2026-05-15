@@ -40,10 +40,7 @@ import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { createClassnames, fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import {
-  IntegrationHeader,
-  type IntegrationHeaderPluginData,
-} from 'pages/inside/common/integrations/integrationHeader/integrationHeader';
+import { IntegrationHeader } from 'pages/inside/common/integrations/integrationHeader/integrationHeader';
 import { AvailableIntegrations } from 'pages/inside/common/integrations/availableIntegrations';
 import { messages } from 'pages/inside/common/integrations/messages';
 import type { IntegrationItem } from 'pages/inside/common/integrations/types';
@@ -308,7 +305,7 @@ export const IntegrationInfo = ({ plugin, integrationId = '' }: IntegrationInfoP
       {!integrationId ? (
         <>
           <IntegrationHeader
-            data={plugin as unknown as IntegrationHeaderPluginData}
+            data={plugin}
             breadcrumbs={integrationListBreadcrumbs}
             documentationLinkEvent={null}
           />
@@ -317,7 +314,7 @@ export const IntegrationInfo = ({ plugin, integrationId = '' }: IntegrationInfoP
       ) : (
         <>
           <IntegrationHeader
-            data={plugin as unknown as IntegrationHeaderPluginData}
+            data={plugin}
             breadcrumbs={integrationBreadcrumbs}
             documentationLinkEvent={null}
           />
