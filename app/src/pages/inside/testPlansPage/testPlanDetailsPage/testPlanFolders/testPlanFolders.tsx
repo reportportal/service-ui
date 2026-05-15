@@ -81,6 +81,7 @@ export const TestPlanFolders = ({ isLoading = false }: TestPlanFoldersProps) => 
       activeFolderId={activeFolderId}
       folders={transformedFolders}
       instanceKey={TMS_INSTANCE_KEY.TEST_PLAN}
+      flatViewScopeId={payload.testPlanId}
       searchQuery={testCasesSearchParams}
       searchExtraFilters={searchExtraFilters}
       searchAllFolders={folders}

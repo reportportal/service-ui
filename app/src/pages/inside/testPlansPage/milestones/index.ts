@@ -48,6 +48,8 @@ export {
   formatIsoDateShortDashed,
 } from './milestoneDateUtils';
 
+export { milestoneTestPlansAsTestPlanDtos } from './milestonesTable/milestoneUtils';
+
 export { MilestoneType, MilestoneStatus } from 'controllers/milestone';
 
 export {

@@ -56,6 +56,7 @@ export const ExpandedOptions = ({
   folders,
   activeFolderId,
   instanceKey,
+  flatViewScopeId,
   children,
   searchQuery: pageSearchQuery,
   searchExtraFilters,
@@ -73,7 +74,10 @@ export const ExpandedOptions = ({
 }: ExpandedOptionsProps) => {
   const { formatMessage } = useIntl();
   const { expandedIds, onToggleFolder, setExpandedIds } = useStorageFolders(instanceKey);
-  const { isFlatView, setIsFlatView } = useFlatViewPreference(instanceKey);
+  const { isFlatView, setIsFlatView } = useFlatViewPreference({
+    instanceKey,
+    flatViewScopeId,
+  });
   const allFolders = useSelector(foldersSelector);
 
   const internalSearchData = useSearchFilteredFolders({
@@ -100,7 +104,6 @@ export const ExpandedOptions = ({
   );
 
   const isDragAndDropEnabled = !!(onMoveFolder && onDuplicateFolder) && !isFlatView;
-  const hideEmptyFoldersInFlatView = instanceKey !== TMS_INSTANCE_KEY.TEST_CASE;
 
   const { canDropOn } = useTreeDropValidation<TransformedFolder>({
     items: folders,
@@ -301,12 +304,7 @@ export const ExpandedOptions = ({
                 />
               </div>
             )}
-            <div
-              ref={dropZoneRef}
-              className={cx('expanded-options__sidebar-folders-wrapper', {
-                'expanded-options__sidebar-folders-wrapper--with-search': isSearchVisible,
-              })}
-            >
+            <div ref={dropZoneRef} className={cx('expanded-options__sidebar-folders-wrapper')}>
               {isDraggingAny && !isOverFoldersZone && (
                 <div className={cx('expanded-options__drop-placeholder')}>
                   <div className={cx('expanded-options__drop-placeholder-content')}>
@@ -334,7 +332,6 @@ export const ExpandedOptions = ({
                 hasAnyMatch={hasAnyMatch}
                 enableDragAndDrop={isDragAndDropEnabled}
                 isFlatView={isFlatView}
-                hideEmptyFoldersInFlatView={hideEmptyFoldersInFlatView}
                 hiddenActiveFolderIndicatorId={hiddenActiveFolderIndicatorId}
                 canDropOn={isDragAndDropEnabled ? canDropOn : undefined}
                 setAllTestCases={setAllTestCases}

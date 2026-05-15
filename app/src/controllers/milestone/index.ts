@@ -35,3 +35,4 @@ export { milestoneSagas } from './sagas';
 export { milestoneReducer } from './reducer';
 export { milestonesSelector, milestonesPageSelector, milestonesLoadingSelector } from './selectors';
 export type { MilestoneState, MilestoneSelectorsRootState, GetMilestonesAction } from './types';
+export { milestoneTestPlansAsTestPlanDtos } from './utils';

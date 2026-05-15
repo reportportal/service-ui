@@ -60,7 +60,6 @@ export const SelectableTestCaseRow = ({ row, nextRowDepth, style }: SelectableTe
         nextRowDepth={nextRowDepth}
         isLastChild={row.isLastChild}
         baseIndent={BASE_INDENT_PX}
-        showCorner={false}
       />
       <SelectableTestCase
         testCase={testCase}

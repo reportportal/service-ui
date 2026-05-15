@@ -42,7 +42,6 @@ interface FlattenTreeOptions {
   parentId?: number | null;
   hasAncestorDirectMatch?: boolean;
   isFlatView?: boolean;
-  hideEmptyFoldersInFlatView?: boolean;
 }
 
 interface FolderContext {
@@ -55,7 +54,6 @@ interface FolderContext {
   searchQuery: string;
   lowerQuery: string;
   isFlatView: boolean;
-  hideEmptyFoldersInFlatView: boolean;
 }
 
 const buildFlatNode = (
@@ -87,14 +85,12 @@ const flattenChildrenInFlatView = ({
   folder,
   expandedIds,
   searchQuery,
-  hideEmptyFoldersInFlatView,
 }: FolderContext): FlatFolderNode[] =>
   flattenTree({
     folders: folder.folders,
     expandedIds,
     searchQuery,
     isFlatView: true,
-    hideEmptyFoldersInFlatView,
   });
 
 const flattenChildrenInTreeView = (
@@ -124,8 +120,7 @@ const isHiddenBySearch = (
 const processFolder = (
   ctx: FolderContext,
 ): { nodes: FlatFolderNode[]; contributed: boolean } => {
-  const { folder, searchQuery, lowerQuery, isFlatView, hideEmptyFoldersInFlatView, expandedIds } =
-    ctx;
+  const { folder, searchQuery, lowerQuery, isFlatView, expandedIds } = ctx;
   const hasChildren = !isEmpty(folder?.folders);
   const folderName = folder?.name ?? '';
   const isDirectMatch = searchQuery ? folderName.toLowerCase().includes(lowerQuery) : false;
@@ -138,13 +133,8 @@ const processFolder = (
     return { nodes: [], contributed: false };
   }
 
-  const isEmptyInFlatView =
-    isFlatView && hideEmptyFoldersInFlatView && (folder?.testsCount ?? 0) === 0;
   const nodes: FlatFolderNode[] = [];
-
-  if (!isEmptyInFlatView) {
-    nodes.push(buildFlatNode(ctx, hasChildren, isDirectMatch));
-  }
+  nodes.push(buildFlatNode(ctx, hasChildren, isDirectMatch));
 
   if (isFlatView && hasChildren) {
     nodes.push(...flattenChildrenInFlatView(ctx));
@@ -152,7 +142,7 @@ const processFolder = (
     nodes.push(...flattenChildrenInTreeView(ctx, isDirectMatch));
   }
 
-  return { nodes, contributed: !isEmptyInFlatView };
+  return { nodes, contributed: true };
 };
 
 const flattenTree = ({
@@ -163,7 +153,6 @@ const flattenTree = ({
   parentId = null,
   hasAncestorDirectMatch = false,
   isFlatView = false,
-  hideEmptyFoldersInFlatView = false,
 }: FlattenTreeOptions): FlatFolderNode[] => {
   const lowerQuery = searchQuery.toLowerCase().trim();
   const result: FlatFolderNode[] = [];
@@ -180,7 +169,6 @@ const flattenTree = ({
       searchQuery,
       lowerQuery,
       isFlatView,
-      hideEmptyFoldersInFlatView,
     });
 
     result.push(...nodes);
@@ -233,7 +221,6 @@ export const useFlattenedTree = (
   expandedIds: number[],
   searchQuery: string,
   isFlatView = false,
-  hideEmptyFoldersInFlatView = false,
 ): FlatFolderNode[] =>
   useMemo(() => {
     const result = flattenTree({
@@ -241,7 +228,6 @@ export const useFlattenedTree = (
       expandedIds,
       searchQuery,
       isFlatView,
-      hideEmptyFoldersInFlatView,
     });
 
     if (!isFlatView) {
@@ -249,4 +235,4 @@ export const useFlattenedTree = (
     }
 
     return result;
-  }, [folders, expandedIds, searchQuery, isFlatView, hideEmptyFoldersInFlatView]);
+  }, [folders, expandedIds, searchQuery, isFlatView]);

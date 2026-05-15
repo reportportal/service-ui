@@ -25,15 +25,20 @@
 
   &__content {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 8px;
     margin-left: -24px;
     height: 36px;
+    padding-left: 8px;
     padding-right: 8px;
   }
 
+  &__icon {
+    flex-shrink: 0;
+  }
+
   &__name {
-    display: block;
+    flex: 1;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -42,7 +47,6 @@
     font-family: var(--rp-ui-base-font-family), serif;
     font-weight: 400;
     color: var(--rp-ui-base-almost-black);
-    padding: 9px;
 
     &--added {
       color: var(--rp-ui-base-e-400);

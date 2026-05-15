@@ -197,6 +197,7 @@ export const ManualLaunchFolders = () => {
       activeFolderId={urlFolderIdNumber}
       folders={transformedFolders}
       instanceKey={TMS_INSTANCE_KEY.MANUAL_LAUNCH}
+      flatViewScopeId={launchId}
       searchQuery={searchQuery}
       searchAllFolders={folders}
       searchFilteredData={searchFilteredData}
