@@ -67,7 +67,9 @@
 }
 
 .expanded-options {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: 1fr;
   position: relative;
   width: 100%;
   height: 100%;
@@ -245,13 +247,19 @@
     }
   }
 
+  &--no-sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  &__content-scroll {
+    min-width: 580px;
+    overflow: hidden;
+  }
+
   &__content {
     width: 100%;
-    min-width: 580px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
   }
 
   &__no-search-results {

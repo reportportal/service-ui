@@ -31,7 +31,6 @@ import { useBreadCrumbsTree } from 'common/hooks';
 import { createClassnames, debounce } from 'common/utils';
 import { ProjectDetails } from 'pages/organization/constants';
 import { NavLink } from 'components/main/navLink';
-import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import ImportIcon from 'common/img/import-thin-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -181,9 +180,8 @@ export const TestCaseLibraryPage = () => {
   };
 
   return (
-    <SettingsLayout>
-      <ScrollWrapper resetRequired>
-        <div className={cx('test-case-library-page')}>
+    <SettingsLayout fitContent>
+      <div className={cx('test-case-library-page')}>
           <div className={cx('test-case-library-page__header')}>
             <div className={cx('test-case-library-page__breadcrumb')}>
               <Breadcrumbs
@@ -269,7 +267,6 @@ export const TestCaseLibraryPage = () => {
             onApply={handleApplyFilters}
           />
         </div>
-      </ScrollWrapper>
     </SettingsLayout>
   );
 };

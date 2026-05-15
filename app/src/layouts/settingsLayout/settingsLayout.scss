@@ -39,4 +39,10 @@
 .section-content {
   width: 100%;
   flex: 1 0 auto;
+
+  &--fit {
+    position: relative;
+    flex: 1 1 0;
+    overflow: hidden;
+  }
 }

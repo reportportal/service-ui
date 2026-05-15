@@ -15,6 +15,7 @@
  */
 
 import { memo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
@@ -247,20 +248,24 @@ export const TestCaseList = memo(
                 />
               </>
             )}
-            {isTestLibraryRoute && (
-              <TestCaseSidePanel
-                testCase={selectedTestPlan}
-                isVisible={!!selectedTestCaseId}
-                onClose={handleCloseSidePanel}
-              />
-            )}
-            {isTestPlanRoute && (
-              <TestPlanSidePanel
-                testPlan={selectedTestPlan}
-                isVisible={!!selectedTestCaseId}
-                onClose={handleCloseSidePanel}
-              />
-            )}
+            {isTestLibraryRoute &&
+              createPortal(
+                <TestCaseSidePanel
+                  testCase={selectedTestPlan}
+                  isVisible={!!selectedTestCaseId}
+                  onClose={handleCloseSidePanel}
+                />,
+                document.body,
+              )}
+            {isTestPlanRoute &&
+              createPortal(
+                <TestPlanSidePanel
+                  testPlan={selectedTestPlan}
+                  isVisible={!!selectedTestCaseId}
+                  onClose={handleCloseSidePanel}
+                />,
+                document.body,
+              )}
           </>
         )}
       </div>
