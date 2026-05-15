@@ -85,7 +85,7 @@ export const IntegrationsTab = () => {
   );
 
   useEffect(() => {
-    if (loading || organizationLoading) {
+    if (loading || organizationLoading || !query.subPage) {
       return undefined;
     }
 

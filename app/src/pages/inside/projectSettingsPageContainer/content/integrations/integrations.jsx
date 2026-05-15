@@ -58,14 +58,22 @@ export const Integrations = () => {
   );
 
   useEffect(() => {
-    const { subPage: pluginName } = query;
-    const certainPlugin = plugins.find(({ name }) => name === pluginName);
-    if (pluginName && certainPlugin) {
-      setPlugin(certainPlugin);
-    } else {
-      dispatch(redirect(initialPage));
+    if (loading || !query.subPage) {
+      return undefined;
     }
-  }, [query, plugins]);
+
+    const definePlugin = () => {
+      const { subPage: pluginName } = query;
+      const certainPlugin = plugins.find(({ name }) => name === pluginName);
+      if (pluginName && certainPlugin) {
+        setPlugin(certainPlugin);
+      } else {
+        dispatch(redirect(initialPage));
+      }
+    }
+
+    definePlugin();
+  }, [query, plugins, loading, dispatch, initialPage]);
 
   if (loading) {
     return <BubblesLoader className={cx('preloader')} />;
