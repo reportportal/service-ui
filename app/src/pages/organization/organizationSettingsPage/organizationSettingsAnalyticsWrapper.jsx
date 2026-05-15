@@ -26,10 +26,9 @@ export const OrganizationSettingsAnalyticsWrapper = ({ children }) => {
   const { trackEvent } = useTracking();
   const payload = useSelector(payloadSelector);
   const query = useSelector(querySelector);
+  const pluginName = payload.settingsTab === INTEGRATIONS && query.subPage ? query.subPage : null;
   const plugin = useSelector((state) =>
-    payload.settingsTab === INTEGRATIONS && query.subPage
-      ? pluginByNameSelector(state, query.subPage)
-      : undefined,
+    pluginName ? pluginByNameSelector(state, pluginName) : undefined,
   );
   const subPage = plugin ? plugin.details?.name || plugin.name : query.subPage;
 

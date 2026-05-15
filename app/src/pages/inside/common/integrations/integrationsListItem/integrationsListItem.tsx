@@ -50,7 +50,7 @@ export const IntegrationsListItem = ({
   };
 
   return (
-    <div
+    <button
       className={cx('integrations-list-item')}
       onClick={itemClickHandler}
       data-automation-id="listItem"
@@ -71,6 +71,6 @@ export const IntegrationsListItem = ({
           {PLUGIN_DESCRIPTIONS_MAP[name] || (details.description && Parser(details.description))}
         </p>
       </div>
-    </div>
+    </button>
   );
 };

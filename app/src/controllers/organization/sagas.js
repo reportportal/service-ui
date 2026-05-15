@@ -44,7 +44,10 @@ import { hideModalAction } from 'controllers/modal';
 import { normalizeIntegrationItem } from 'controllers/plugins/utils';
 import { setOrganizationIntegrationsAction } from 'controllers/plugins/actionCreators';
 import { withActiveOrganization } from './withActiveOrganizationSaga';
-import { fetchOrganizationIntegrationsAction, updateOrganizationSettingsSuccessAction } from './actionCreators';
+import {
+  fetchOrganizationIntegrationsAction,
+  updateOrganizationSettingsSuccessAction,
+} from './actionCreators';
 import { activeOrganizationIdSelector } from './selectors';
 
 function* fetchOrganizationBySlug({ payload: { slug, withIntegrations } }) {
@@ -190,7 +193,7 @@ function* watchRenameOrganization() {
 function* fetchOrganizationIntegrations({ payload: { organizationId } }) {
   try {
     const response = yield call(fetch, URLS.organizationIntegrations(organizationId));
-    const rawItems = response?.items || [];
+    const rawItems = Array.isArray(response?.items) ? response.items : [];
     const items = rawItems.map((item) => normalizeIntegrationItem(item));
     yield put(setOrganizationIntegrationsAction(items));
   } catch (error) {

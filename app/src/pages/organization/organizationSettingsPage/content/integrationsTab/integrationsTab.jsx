@@ -60,10 +60,10 @@ export const IntegrationsTab = () => {
   const [plugin, setPlugin] = useState({});
 
   const availableIntegrations = useMemo(() => {
-    const orgIntegrationsPlugins = [EMAIL];
+    const orgIntegrationsPlugins = new Set([EMAIL]);
 
     return Object.entries(availableGroupedPlugins).reduce((acc, [groupId, plugins]) => {
-      const filteredPlugins = plugins.filter((p) => orgIntegrationsPlugins.includes(p.name));
+      const filteredPlugins = plugins.filter((p) => orgIntegrationsPlugins.has(p.name));
 
       if (filteredPlugins.length > 0) {
         acc[groupId] = filteredPlugins;

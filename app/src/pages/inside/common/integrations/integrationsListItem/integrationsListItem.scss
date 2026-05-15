@@ -1,5 +1,5 @@
 /*!
- * Copyright 2022 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,11 @@
  */
 
 .integrations-list-item {
+  appearance: none;
+  background: none;
+  border: none;
   display: flex;
+  width: 100%;
   max-width: 820px;
   min-height: 104px;
   height: auto;
@@ -29,8 +33,13 @@
   &:last-child {
     margin-bottom: 0;
   }
+
   &:hover {
     box-shadow: $BOX_SHADOW--item-hover;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--rp-ui-base-topaz-focused);
   }
 }
 
@@ -41,6 +50,7 @@
   font-family: var(--rp-ui-base-font-family);
   font-weight: $font-weight;
 }
+
 .integration-image {
   width: 44px;
   height: 44px;
@@ -50,6 +60,7 @@
 .integration-info-block {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
 }
 
 .integration-data-block {
@@ -60,6 +71,7 @@
 
 .integration-name {
   margin-right: 16px;
+
   @include integration-info(
     var(--rp-ui-base-almost-black),
     24px,
@@ -74,6 +86,8 @@
 
 .integration-description {
   text-indent: 1px;
+  text-align: left;
+
   @include integration-info(
     var(--rp-ui-base-almost-black),
     20px,
