@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import { combineReducers } from 'redux';
+import { combineReducers, AnyAction } from 'redux';
 import { isEmpty, isNil } from 'es-toolkit/compat';
 
 import { getParentFoldersIds } from 'common/utils/folderUtils';
 import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
+import { FETCH_PROJECT_SUCCESS } from 'controllers/project';
 import { getInitialExpandedFolderIds } from 'controllers/utils/folderReducerUtils';
 import { hasPayloadProps } from 'controllers/utils/types';
 import {
@@ -383,21 +384,31 @@ const expandedFolderIdsReducer = (
   }
 };
 
+const foldersReducer = combineReducers({
+  data: queueReducers(
+    fetchReducer(NAMESPACE, { initialState: [], contentPath: 'content' }),
+    folderReducer,
+  ),
+  expandedFolderIds: expandedFolderIdsReducer,
+  isCreatingFolder: isCreatingFolderReducer,
+  isLoadingFolder: isLoadingFolderReducer,
+  loading: loadingReducer(NAMESPACE),
+  areFoldersFetched: areFoldersFetchedReducer,
+  filteredFolders: filteredFoldersReducer,
+  isLoadingFilteredFolders: isLoadingFilteredFoldersReducer,
+});
+
+const resettableFoldersReducer = (
+  state: ReturnType<typeof foldersReducer> | undefined,
+  action: AnyAction,
+) =>
+  action.type === FETCH_PROJECT_SUCCESS
+    ? foldersReducer(undefined, action)
+    : foldersReducer(state, action);
+
 const reducer = combineReducers({
   details: testCaseDetailsReducer,
-  folders: combineReducers({
-    data: queueReducers(
-      fetchReducer(NAMESPACE, { initialState: [], contentPath: 'content' }),
-      folderReducer,
-    ),
-    expandedFolderIds: expandedFolderIdsReducer,
-    isCreatingFolder: isCreatingFolderReducer,
-    isLoadingFolder: isLoadingFolderReducer,
-    loading: loadingReducer(NAMESPACE),
-    areFoldersFetched: areFoldersFetchedReducer,
-    filteredFolders: filteredFoldersReducer,
-    isLoadingFilteredFolders: isLoadingFilteredFoldersReducer,
-  }),
+  folders: resettableFoldersReducer,
   testCases: testCasesReducer,
 });
 
