@@ -159,17 +159,9 @@ export const useManualLaunchesTableData = (
               content: displayId,
               component: (
                 <div {...baseCellProps} {...openSidePanelHandlers}>
-                  <button
-                    {...navigateToDetailsHandlers}
-                    className={cx(
-                      'manual-launches-list-table__details-button',
-                      'manual-launches-list-table-cell-launch-id',
-                      'manual-launches-list-table-cell-hoverable',
-                    )}
-                    type="button"
-                  >
+                  <span className={cx('manual-launches-list-table-cell-launch-id')}>
                     {displayId}
-                  </button>
+                  </span>
                 </div>
               ),
             },
@@ -181,6 +173,7 @@ export const useManualLaunchesTableData = (
                     {...navigateToDetailsHandlers}
                     className={cx(
                       'manual-launches-list-table__details-button',
+                      'manual-launches-list-table-cell-launch-name',
                       'manual-launches-list-table-cell-hoverable',
                     )}
                     type="button"
