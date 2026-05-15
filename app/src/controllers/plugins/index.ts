@@ -28,6 +28,7 @@ export {
   removeProjectIntegrationsByTypeAction,
   updateIntegrationAction,
   setProjectIntegrationsAction,
+  setOrganizationIntegrationsAction,
 } from './actionCreators';
 export {
   filterAvailablePlugins,
@@ -46,6 +47,7 @@ export {
   createNamedIntegrationsSelector,
   namedGlobalIntegrationsSelector,
   namedProjectIntegrationsSelector,
+  namedOrganizationIntegrationsSelector,
   availableBtsIntegrationsSelector,
   namedAvailableBtsIntegrationsSelector,
   availableIntegrationsByPluginNameSelector,
@@ -78,4 +80,6 @@ export type {
   PluginDeveloper,
   PluginMetadata,
   PluginRuleField,
+  Integration,
+  IntegrationType,
 } from './types';

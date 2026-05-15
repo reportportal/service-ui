@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,4 +76,24 @@ export interface Plugin {
   pluginType: string;
   groupType: string;
   details: PluginDetails;
+}
+
+export interface IntegrationType {
+  type?: number;
+  name: string;
+  enabled: boolean;
+  creationDate: string;
+  groupType: string;
+  details: PluginDetails;
+  pluginType?: string;
+}
+
+export interface Integration {
+  id: number;
+  name: string;
+  enabled: boolean;
+  integrationType: IntegrationType;
+  integrationParameters: Record<string, unknown>;
+  creator?: string;
+  creationDate?: string;
 }

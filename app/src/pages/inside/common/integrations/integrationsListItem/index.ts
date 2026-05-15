@@ -14,16 +14,5 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
-
-export const messages = defineMessages({
-  noPluginsTitle: {
-    id: 'IntegrationsTab.noPluginsTitle',
-    defaultMessage: 'No Plugins available for integration',
-  },
-  noPluginsDescription: {
-    id: 'IntegrationsTab.noPluginsDescription',
-    defaultMessage:
-      'Currently, there are no plugins available for configuring the integration. Please check back later for availability.',
-  },
-});
+export { IntegrationsListItem } from './integrationsListItem';
+export type { IntegrationsListItemProps } from './integrationsListItem';

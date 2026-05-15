@@ -32,13 +32,15 @@
 
 .integrations-group-header {
   margin-bottom: 16px;
-  color: $COLOR--almost-black;
+  color: var(--rp-ui-base-almost-black);
   font-size: 15px;
   line-height: 24px;
-  font-family: $FONT-ROBOTO-MEDIUM;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-medium);
 }
 
 .integrations-group-items {
   display: flex;
   flex-direction: column;
+  gap: 16px;
 }

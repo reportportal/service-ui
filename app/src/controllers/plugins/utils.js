@@ -14,12 +14,22 @@
  * limitations under the License.
  */
 
-import { GROUP_TYPES_BY_PLUGIN_NAMES_MAP } from 'common/constants/pluginNames';
+import {
+  EMAIL,
+  GROUP_TYPES_BY_PLUGIN_NAMES_MAP,
+  MOBITRU,
+  SAUCE_LABS,
+} from 'common/constants/pluginNames';
 import { AUTHORIZATION_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import {
   PLUGIN_TYPE_EXTENSION,
   PLUGIN_TYPE_REMOTE,
 } from 'controllers/plugins/uiExtensions/constants';
+
+export const LIMITED_INTEGRATION_PLUGINS = [EMAIL, MOBITRU, SAUCE_LABS];
+
+export const isLimitedIntegrationPlugin = (pluginName) =>
+  LIMITED_INTEGRATION_PLUGINS.includes(pluginName);
 
 export const filterIntegrationsByName = (integrations, integrationName) =>
   integrations.filter((integration) => integration.integrationType.name === integrationName);
@@ -60,3 +70,50 @@ export const filterAvailablePlugins = (plugins = []) =>
 
     return item.enabled && item.groupType !== AUTHORIZATION_GROUP_TYPE && isEmbedded;
   });
+
+const INTEGRATION_NORMALIZATION_MAPS = {
+  root: {
+    created_at: 'creationDate',
+    integration_type: 'integrationType',
+    parameters: 'integrationParameters',
+  },
+  integrationType: {
+    plugin_type: 'pluginType',
+    group_type: 'groupType',
+    created_at: 'creationDate',
+  },
+};
+
+const renameFields = (obj, fieldsMap) => {
+  if (!obj || typeof obj !== 'object') {
+    return obj;
+  }
+
+  const normalized = { ...obj };
+
+  for (const [oldKey, newKey] of Object.entries(fieldsMap)) {
+    if (newKey in normalized) {
+      continue;
+    }
+
+    if (oldKey in normalized) {
+      normalized[newKey] = normalized[oldKey];
+      delete normalized[oldKey];
+    }
+  }
+
+  return normalized;
+};
+
+export const normalizeIntegrationItem = (item) => {
+  const normalizedItem = renameFields(item, INTEGRATION_NORMALIZATION_MAPS.root);
+
+  if (normalizedItem.integrationType) {
+    normalizedItem.integrationType = renameFields(
+      normalizedItem.integrationType,
+      INTEGRATION_NORMALIZATION_MAPS.integrationType,
+    );
+  }
+
+  return normalizedItem;
+};

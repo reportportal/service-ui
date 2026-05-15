@@ -53,6 +53,8 @@ export const globalIntegrationsSelector = (state) =>
   domainSelector(state).integrations?.globalIntegrations || [];
 const projectIntegrationsSelector = (state) =>
   domainSelector(state).integrations.projectIntegrations || [];
+const organizationIntegrationsSelector = (state) =>
+  domainSelector(state).integrations.organizationIntegrations || [];
 
 export const availablePluginsSelector = createSelector(pluginsSelector, filterAvailablePlugins);
 
@@ -124,6 +126,9 @@ export const namedGlobalIntegrationsSelector = createIntegrationsMapSelector(
 );
 export const namedProjectIntegrationsSelector = createIntegrationsMapSelector(
   projectIntegrationsSelector,
+);
+export const namedOrganizationIntegrationsSelector = createIntegrationsMapSelector(
+  organizationIntegrationsSelector,
 );
 
 export const availableIntegrationsByPluginNameSelector = (state, pluginName) => {
