@@ -92,6 +92,9 @@ export const TestCaseDetailsHeader = ({
   const breadcrumbs = useSelector(testCaseLibraryBreadcrumbsSelector(breadcrumbsTitles));
   const testCaseBusinessId = testCase.displayId;
 
+  const testCasePriority = (testCase.priority?.toLowerCase() ||
+    'unspecified') as TestCasePriority;
+
   const handleHistoryOfActions = () => {
     trackEvent(
       TEST_CASE_LIBRARY_EVENTS.clickTestCaseMenu(
@@ -168,7 +171,7 @@ export const TestCaseDetailsHeader = ({
         data: {
           initialValues: {
             name: testCase.name,
-            priority: testCase.priority.toLowerCase(),
+            priority: testCasePriority,
             testFolderId: testCase.testFolder.id,
           },
           testCaseId: testCase.id,
@@ -184,10 +187,7 @@ export const TestCaseDetailsHeader = ({
         <Breadcrumbs descriptors={breadcrumbs} />
       </div>
       <div className={cx('header__title')}>
-        <PriorityIcon
-          priority={testCase.priority.toLocaleLowerCase() as TestCasePriority}
-          className={cx('header__title-icon')}
-        />
+        <PriorityIcon priority={testCasePriority} className={cx('header__title-icon')} />
         {testCase.name}
         {canManageTestCases && (
           <button
