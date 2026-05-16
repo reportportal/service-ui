@@ -19,8 +19,12 @@ import { isString } from 'es-toolkit';
 
 import { Attribute } from 'types/testCase';
 
-import { hasAttributeValue } from '../types';
-import { ManualScenarioDto, ManualScenarioType, CreateTestCaseFormData } from '../types';
+import {
+  hasAttributeValue,
+  ManualScenarioDto,
+  ManualScenarioType,
+  CreateTestCaseFormData,
+} from '../types';
 import { NewFolderData, isNewFolderData } from '../utils/getFolderFromFormValues';
 import { getMeaningfulRequirements } from '../utils/requirementsUtils';
 import { hasStepContent } from '../../common/scenarioUtils';
