@@ -100,7 +100,7 @@ export interface TestCase {
   id: number;
   displayId: string;
   name: string;
-  priority: TestCasePriority;
+  priority?: TestCasePriority;
   createdAt: number;
   description?: string;
   path: string[];
