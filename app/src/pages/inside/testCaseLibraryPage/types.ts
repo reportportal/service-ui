@@ -128,6 +128,7 @@ export interface UseTestCaseTagsParams {
 export enum TagError {
   TAG_ALREADY_ADDED = 'tagAlreadyAdded',
   CREATE_TAG_FAILED = 'createTagFailed',
+  TAG_SEARCH_FAILED = 'tagSearchFailed',
 }
 
 export interface AttributesResponse {

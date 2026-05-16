@@ -21,7 +21,7 @@ import {
   hasScenarioContent,
 } from 'pages/inside/common/scenarioUtils';
 
-import { ManualScenario, Tag, TestCaseManualScenario } from 'types/testCase';
+import { ManualScenario, TestCaseManualScenario } from 'types/testCase';
 
 export const checkScenario = (manualScenario: ManualScenario | undefined): boolean => {
   if (!manualScenario) return true;
@@ -38,11 +38,4 @@ export const checkScenario = (manualScenario: ManualScenario | undefined): boole
   const hasScenario = hasScenarioContent(manualScenario);
 
   return !hasRequirements && !hasScenario && isEmpty(manualScenario.attachments);
-};
-
-export const convertKeysToTags = (keys: string[]): Tag[] => {
-  return keys.map((key, index) => ({
-    id: -Date.now() - index,
-    key,
-  }));
 };
