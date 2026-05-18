@@ -27,6 +27,8 @@ import {
   urlOrganizationAndProjectSelector,
   querySelector,
   PROJECT_SETTINGS_TAB_PAGE,
+  pageLevelSelector,
+  APP_LEVEL,
 } from 'controllers/pages';
 import { projectKeySelector } from 'controllers/project';
 import {
@@ -80,7 +82,10 @@ export function EmailSettings({
   const projectIntegrations = useSelector(namedProjectIntegrationsSelector) as Record<string, IntegrationData[]>;
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector) as Record<string, string>;
   const projectKey = useSelector(projectKeySelector);
-  const { canUpdateSettings } = useUserPermissions();
+  const pageLevel = useSelector(pageLevelSelector);
+  const { canUpdateSettings, canUpdateOrganizationSettings } = useUserPermissions();
+  const canManageIntegration =
+    pageLevel === APP_LEVEL.ORGANIZATION ? canUpdateOrganizationSettings : canUpdateSettings;
   const query = useSelector(querySelector) as Record<string, string>;
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
@@ -155,7 +160,7 @@ export function EmailSettings({
   };
 
   const blocked = data.blocked ?? false;
-  const showDeleteSection = canUpdateSettings && !blocked;
+  const showDeleteSection = canManageIntegration && !blocked;
 
   return (
     <div className={cx('email-settings')}>
@@ -167,7 +172,7 @@ export function EmailSettings({
             <EmailDetailsCard
               data={data}
               connected={connected}
-              isEditable={canUpdateSettings}
+              isEditable={canManageIntegration}
             />
           </div>
 
