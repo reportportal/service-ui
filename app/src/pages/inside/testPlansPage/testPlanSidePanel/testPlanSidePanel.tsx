@@ -137,7 +137,7 @@ export const TestPlanSidePanel = memo(
     };
 
     const isScenarioEmpty = checkScenario(testCaseDetails?.manualScenario);
-    const isAddToLaunchDisabled = !canManageTestCases || isScenarioEmpty;
+    const isAddToLaunchDisabled = !canManageTestCases || isScenarioEmpty || !testPlanId;
 
     const handleAddToLaunchClick = () => {
       openAddToLaunchModal();
