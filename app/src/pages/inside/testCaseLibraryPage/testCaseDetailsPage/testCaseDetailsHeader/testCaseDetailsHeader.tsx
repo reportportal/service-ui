@@ -92,7 +92,7 @@ export const TestCaseDetailsHeader = ({
   const breadcrumbs = useSelector(testCaseLibraryBreadcrumbsSelector(breadcrumbsTitles));
   const testCaseBusinessId = testCase.displayId;
 
-  const testCasePriority = (testCase.priority?.toLowerCase() ||
+  const testCasePriority = (testCase.priority?.toLowerCase() ??
     'unspecified') as TestCasePriority;
 
   const handleHistoryOfActions = () => {
