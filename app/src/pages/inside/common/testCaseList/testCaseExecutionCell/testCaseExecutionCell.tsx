@@ -54,6 +54,10 @@ export const TestCaseExecutionCell = ({
   const isCoveredManually = isTestPlan && getIsManualCovered(testCase.lastExecution?.status);
 
   const handleExecutionKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.target !== event.currentTarget) {
+      return;
+    }
+
     if (isEnterOrSpaceKey(event)) {
       event.preventDefault();
       onRowClick();
