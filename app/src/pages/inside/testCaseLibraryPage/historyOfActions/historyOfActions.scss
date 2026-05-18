@@ -87,7 +87,7 @@
   &__table {
     /* Mirrors primary + fixed column widths in historyOfActions.tsx; minmax(0, …) so tracks
        can shrink below ui-kit’s default 225px/160px/330px (plain px tracks never shrink in grid). */
-    --history-of-actions-grid: minmax(120px, 1fr) minmax(0, 225px) minmax(0, 160px) minmax(0, 330px)
+    --history-of-actions-grid: 160px minmax(0, 265px) minmax(0, 160px) minmax(0, 330px)
       minmax(0, 330px);
 
     width: 100%;
@@ -121,7 +121,7 @@
   }
 
   &__table > div > button:first-child {
-    flex: 0 0 155px;
+    flex: 0 0 160px;
   }
 
   &__table-row {
@@ -135,15 +135,6 @@
       > div {
         white-space: normal !important;
         padding-top: 0;
-
-        &:first-child {
-          flex: 0 1 120px;
-          min-width: 120px;
-        }
-
-        div:has(.history-of-actions__table-cell-user) {
-          overflow: visible !important;
-        }
       }
     }
 
@@ -181,12 +172,12 @@
 
   &__table-cell-time {
     box-sizing: border-box;
-    min-width: 120px;
     font-family: var(--rp-ui-base-font-family);
     color: inherit;
     min-height: auto;
     font-weight: 400;
     line-height: 20px;
+    white-space: nowrap;
   }
 
   &__table-cell-user {
