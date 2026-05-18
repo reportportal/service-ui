@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { formatDistanceToNow, format } from 'date-fns';
+import { format } from 'date-fns';
 import { enUS, ru, es, de } from 'date-fns/locale';
 import { history } from 'redux-first-router';
 
@@ -58,20 +58,6 @@ export const formatDuration = (milliseconds: number): string => {
     return remainingMinutes > 0 ? `${hours} h ${remainingMinutes} min` : `${hours}h`;
   }
   return `${minutes} min`;
-};
-
-/**
- * Formats a timestamp to relative time using date-fns for better accuracy and internationalization support
- * @param timestamp - Timestamp in milliseconds
- * @param locale - Optional locale for internationalization (defaults to English)
- * @returns Formatted relative time string (e.g., "2 days ago", "about 1 hour ago")
- */
-export const formatRelativeTime = (timestamp: number, locale = 'enUS'): string => {
-  return formatDistanceToNow(new Date(timestamp), {
-    addSuffix: true,
-    includeSeconds: true,
-    locale: dateFnsLocales[locale],
-  });
 };
 
 export const getExcludedActionsFromPermissionMap = (
