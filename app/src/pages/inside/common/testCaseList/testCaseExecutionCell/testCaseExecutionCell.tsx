@@ -59,29 +59,20 @@ export const TestCaseExecutionCell = ({
 
   return (
     <div className={cx('execution-content')}>
-      <button type="button" className={cx('execution-open-area')} onClick={onRowClick}>
-        <div>
-          {isCoveredManually && (
-            <>
-              <div className={cx('covered-manually')}>
-                <CoveredManuallyIcon /> {formatMessage(commonMessages.coveredManually)}
-              </div>
-              <AbsRelTime
-                startTime={testCase.updatedAt}
-                customClass={cx('execution-time', 'execution-time--full-width')}
-                onClick={handleTimeClick}
-              />
-            </>
-          )}
-          {!isTestPlan && (
-            <AbsRelTime
-              startTime={testCase.updatedAt}
-              customClass={cx('execution-time')}
-              onClick={handleTimeClick}
-            />
-          )}
-        </div>
-      </button>
+      <div>
+        {isCoveredManually && (
+          <button type="button" className={cx('execution-open-area')} onClick={onRowClick}>
+            <CoveredManuallyIcon /> {formatMessage(commonMessages.coveredManually)}
+          </button>
+        )}
+        {(isCoveredManually || !isTestPlan) && (
+          <AbsRelTime
+            startTime={testCase.updatedAt}
+            customClass={cx('execution-time', { 'execution-time--full-width': isCoveredManually })}
+            onClick={handleTimeClick}
+          />
+        )}
+      </div>
       {!isEmpty(tooltipItems) && (
         <div
           role="menuitem"
