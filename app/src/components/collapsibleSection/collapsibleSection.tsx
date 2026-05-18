@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { ChevronDownDropdownIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
@@ -37,6 +37,10 @@ export const CollapsibleSection = ({
   isInitiallyExpanded = true,
 }: CollapsibleSectionProps) => {
   const [isExpanded, setIsExpanded] = useState(isInitiallyExpanded);
+
+  useEffect(() => {
+    setIsExpanded(isInitiallyExpanded);
+  }, [isInitiallyExpanded]);
 
   const handleToggle = () => {
     setIsExpanded((prevState) => !prevState);
@@ -80,6 +84,10 @@ export const CollapsibleSectionWithHeaderControl = ({
   isInitiallyExpanded = true,
 }: CollapsibleSectionWithHeaderControlProps) => {
   const [isExpanded, setIsExpanded] = useState(isInitiallyExpanded);
+
+  useEffect(() => {
+    setIsExpanded(isInitiallyExpanded);
+  }, [isInitiallyExpanded]);
 
   const handleToggle = () => {
     setIsExpanded((prevState) => !prevState);

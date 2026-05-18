@@ -331,6 +331,7 @@ export const TestCaseSidePanel = memo(
               key={titleKey}
               title={safeGetMessage(titleKey, formatMessage)}
               defaultMessage={safeGetMessage(defaultMessageKey, formatMessage)}
+              isInitiallyExpanded={!!childComponent}
             >
               {childComponent}
             </CollapsibleSection>
