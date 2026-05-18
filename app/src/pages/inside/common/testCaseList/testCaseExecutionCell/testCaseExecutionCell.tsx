@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import type { KeyboardEvent, MouseEvent } from 'react';
 import { useState } from 'react';
 import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
@@ -22,12 +23,13 @@ import { MeatballMenuIcon, CoveredManuallyIcon } from '@reportportal/ui-kit';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { createClassnames } from 'common/utils';
 import { PopoverControl } from 'pages/common/popoverControl';
-import { handleEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
+import { handleEnterOrSpaceKey, isEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 import { ExtendedTestCase } from 'types/testCase';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
+import { AbsRelTime } from 'components/main/absRelTime';
 
 import { useTooltipItems } from '../testCaseExecutionCell/useTooltipItems';
-import { formatRelativeTime, getIsManualCovered } from '../utils';
+import { getIsManualCovered } from '../utils';
 
 import styles from './testCaseExecutionCell.scss';
 
@@ -44,30 +46,51 @@ export const TestCaseExecutionCell = ({
   onRowClick,
   instanceKey,
 }: TestCaseExecutionCellProps) => {
-  const { formatMessage, locale } = useIntl();
+  const { formatMessage } = useIntl();
   const tooltipItems = useTooltipItems({ instanceKey, testCase });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const isTestPlan = instanceKey === TMS_INSTANCE_KEY.TEST_PLAN;
   const isCoveredManually = isTestPlan && getIsManualCovered(testCase.lastExecution?.status);
 
+  const handleExecutionKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (isEnterOrSpaceKey(event)) {
+      event.preventDefault();
+      onRowClick();
+    }
+  };
+
+  const handleTimeClick = (event: MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+  };
+
   return (
-    <button type="button" className={cx('execution-content')} onClick={onRowClick}>
+    <div
+      role="button"
+      tabIndex={0}
+      className={cx('execution-content')}
+      onClick={onRowClick}
+      onKeyDown={handleExecutionKeyDown}
+    >
       <div>
         {isCoveredManually && (
           <>
             <div className={cx('covered-manually')}>
               <CoveredManuallyIcon /> {formatMessage(commonMessages.coveredManually)}
             </div>
-            <div className={cx('execution-time', 'execution-time--full-width')}>
-              {formatRelativeTime(testCase.updatedAt, locale)}
-            </div>
+            <AbsRelTime
+              startTime={testCase.updatedAt}
+              customClass={cx('execution-time', 'execution-time--full-width')}
+              onClick={handleTimeClick}
+            />
           </>
         )}
         {!isTestPlan && (
-          <div className={cx('execution-time')}>
-            {formatRelativeTime(testCase.updatedAt, locale)}
-          </div>
+          <AbsRelTime
+            startTime={testCase.updatedAt}
+            customClass={cx('execution-time')}
+            onClick={handleTimeClick}
+          />
         )}
       </div>
       {!isEmpty(tooltipItems) && (
@@ -90,6 +113,6 @@ export const TestCaseExecutionCell = ({
           </PopoverControl>
         </div>
       )}
-    </button>
+    </div>
   );
 };
