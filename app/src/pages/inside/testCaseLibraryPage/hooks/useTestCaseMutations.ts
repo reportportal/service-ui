@@ -97,31 +97,38 @@ export const useTestCaseMutations = (testCaseId?: number) => {
     [processFolderDestinationAndComplete],
   );
 
-  const createNewTags = useCallback(async (attributes: Attribute[] = []) => {
-    const newTags = attributes.filter(({ id }) => id < 0);
-    const existingTags = attributes.filter(({ id }) => id >= 0);
+  const createNewTags = useCallback(
+    async (attributes: Attribute[] = []) => {
+      const newTags = attributes.filter(({ id }) => id < 0);
+      const existingTags = attributes.filter(({ id }) => id >= 0);
 
-    if (isEmpty(newTags)) {
-      return attributes;
-    }
+      if (isEmpty(newTags)) {
+        return attributes;
+      }
 
-    const createdTags = await Promise.all(
-      newTags.map(async (tag) => {
-        try {
-          return fetch<Attribute>(URLS.createTmsAttribute(projectKey), {
-            method: 'POST',
-            data: { key: tag.key, value: tag.value },
-          });
-        } catch {
-          return null;
-        }
-      }),
-    );
+      if (!projectKey) {
+        return existingTags;
+      }
 
-    const successfullyCreatedTags = createdTags.filter((tag): tag is Attribute => tag !== null);
+      const createdTags = await Promise.all(
+        newTags.map(async (tag) => {
+          try {
+            return fetch<Attribute>(URLS.createTmsAttribute(projectKey), {
+              method: 'POST',
+              data: { key: tag.key, value: tag.value },
+            });
+          } catch {
+            return null;
+          }
+        }),
+      );
 
-    return [...existingTags, ...successfullyCreatedTags];
-  }, [projectKey]);
+      const successfullyCreatedTags = createdTags.filter((tag): tag is Attribute => tag !== null);
+
+      return [...existingTags, ...successfullyCreatedTags];
+    },
+    [projectKey],
+  );
 
   const handleTestCaseCreation = useCallback(
     async (
