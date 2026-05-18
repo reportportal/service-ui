@@ -240,6 +240,7 @@ export const TestCaseDetailsPage = () => {
         key={titleKey}
         title={formatMessage(commonMessages[titleKey])}
         defaultMessage={formatMessage(defaultMessage)}
+        isInitiallyExpanded={!!childComponent}
       >
         {childComponent}
       </CollapsibleSectionWithHeaderControl>
@@ -272,6 +273,7 @@ export const TestCaseDetailsPage = () => {
                 title={formatMessage(commonMessages[titleKey])}
                 defaultMessage={formatMessage(defaultMessage)}
                 headerControlComponent={headerControl}
+                isInitiallyExpanded={!!childComponent}
               >
                 {childComponent}
               </CollapsibleSectionWithHeaderControl>
