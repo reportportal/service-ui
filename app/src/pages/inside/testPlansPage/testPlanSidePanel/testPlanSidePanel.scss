@@ -17,7 +17,6 @@
 .test-plan-side-panel {
   min-width: 560px;
   max-width: 560px;
-  z-index: $Z-INDEX-OVERLAY-PANEL;
 
   :global([class*='header-section']) {
     > :first-child {

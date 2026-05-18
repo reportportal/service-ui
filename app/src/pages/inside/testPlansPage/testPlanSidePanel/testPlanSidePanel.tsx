@@ -24,7 +24,6 @@ import {
   Button,
   SidePanel,
   ExternalLinkIcon,
-  RunManualIcon,
   MeatballMenuIcon,
   DurationIcon,
   CopyIcon,
@@ -35,6 +34,7 @@ import { VoidFn } from '@reportportal/ui-kit/common';
 import { TEST_PLANS_PAGE_EVENTS } from 'analyticsEvents/testPlansPageEvents';
 import { createClassnames, copyToClipboard } from 'common/utils';
 import { useOnClickOutside } from 'common/hooks';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { CollapsibleSection } from 'components/collapsibleSection';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { FolderBreadcrumbs } from 'components/folderBreadcrumbs';
@@ -54,8 +54,10 @@ import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCases
 import type { TestPlanDto } from 'controllers/testPlan/types';
 import { ExtendedTestCase } from 'types/testCase';
 import { formatDuration, openRouteInNewTab } from 'pages/inside/common/testCaseList/utils';
+import { checkScenario } from 'pages/inside/testCaseLibraryPage/testCaseDetailsPage/utils';
 
 import { useRemoveTestCasesFromTestPlanModal } from '../testPlanModals';
+import { useAddTestCasesToLaunchModal } from '../testPlanDetailsPage/testPlanFolders/allTestCasesPage/addTestCasesToLaunchModal';
 import { messages } from './messages';
 import { CoverStatusCard } from './coverStatusCard';
 import { ExecutionStatusCard } from './executionStatusCard';
@@ -91,6 +93,16 @@ export const TestPlanSidePanel = memo(
     });
     const { openModal: openRemoveTestCasesModal } = useRemoveTestCasesFromTestPlanModal();
 
+    const selectedTestCaseIds = testPlan?.id ? [testPlan.id] : [];
+    const testCasesForLaunch = testCaseDetails ? [testCaseDetails] : [];
+    const testPlanIdString = testPlanId ? String(testPlanId) : '';
+
+    const { openModal: openAddToLaunchModal } = useAddTestCasesToLaunchModal({
+      selectedRowsIds: selectedTestCaseIds,
+      testCases: testCasesForLaunch,
+      testPlanId: testPlanIdString,
+    });
+
     const folderId = testCaseDetails?.testFolder?.id;
 
     useOnClickOutside(sidePanelRef, onClose);
@@ -124,8 +136,11 @@ export const TestPlanSidePanel = memo(
       });
     };
 
-    const handleQuickRunClick = () => {
-      // TODO: Implement quick run functionality
+    const isScenarioEmpty = checkScenario(testCaseDetails?.manualScenario);
+    const isAddToLaunchDisabled = !canManageTestCases || isScenarioEmpty;
+
+    const handleAddToLaunchClick = () => {
+      openAddToLaunchModal();
     };
 
     const menuItems = [];
@@ -260,12 +275,11 @@ export const TestPlanSidePanel = memo(
           </Button>
           <Button
             variant="primary"
-            className={cx('action-button')}
-            onClick={handleQuickRunClick}
-            data-automation-id="test-plan-quick-run"
+            onClick={handleAddToLaunchClick}
+            data-automation-id="test-plan-add-to-launch"
+            disabled={isAddToLaunchDisabled}
           >
-            {formatMessage(messages.quickRun)}
-            <RunManualIcon />
+            {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}
           </Button>
         </div>
       </div>
