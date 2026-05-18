@@ -83,7 +83,7 @@ export const IntegrationInfo = ({ plugin, integrationId = '' }: IntegrationInfoP
   const [integrationInfo, setIntegrationInfo] = useState<Partial<IntegrationInfoItem>>({});
   const [updatedParameters, setUpdatedParameters] = useState<Partial<IntegrationInfoItem>>({});
   const settingsExtensions = useSelector(uiExtensionIntegrationSettingsSelector) as Extension[];
-  const { canUpdateSettings } = useUserPermissions();
+  const { canUpdateOrganizationSettings } = useUserPermissions();
   const globalIntegrations: NamedIntegrations = useSelector(namedGlobalIntegrationsSelector);
   const organizationIntegrations: NamedIntegrations = useSelector(
     namedOrganizationIntegrationsSelector,
@@ -251,7 +251,7 @@ export const IntegrationInfo = ({ plugin, integrationId = '' }: IntegrationInfoP
   };
 
   const getButtons = () =>
-    canUpdateSettings
+    canUpdateOrganizationSettings
       ? [
           {
             name: formatMessage(messages.noIntegrationsOrganizationButtonAdd),
@@ -272,7 +272,7 @@ export const IntegrationInfo = ({ plugin, integrationId = '' }: IntegrationInfoP
             openIntegration={openIntegration}
             testConnection={testOrganizationIntegrationConnection}
             withEmptyState
-            hasUpdatePermission={canUpdateSettings}
+            hasUpdatePermission={canUpdateOrganizationSettings}
             onCreateClick={onAddOrganizationIntegration}
             onResetClick={onResetOrganizationIntegration}
             createButtonDisabled={isOrganizationIntegrationAddLimited}

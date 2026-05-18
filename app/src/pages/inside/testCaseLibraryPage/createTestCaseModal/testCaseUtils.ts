@@ -19,7 +19,12 @@ import { isString } from 'es-toolkit';
 
 import { Attribute } from 'types/testCase';
 
-import { ManualScenarioDto, ManualScenarioType, CreateTestCaseFormData } from '../types';
+import {
+  hasAttributeValue,
+  ManualScenarioDto,
+  ManualScenarioType,
+  CreateTestCaseFormData,
+} from '../types';
 import { NewFolderData, isNewFolderData } from '../utils/getFolderFromFormValues';
 import { getMeaningfulRequirements } from '../utils/requirementsUtils';
 import { hasStepContent } from '../../common/scenarioUtils';
@@ -101,6 +106,21 @@ export const processFolder = (
   };
 };
 
+export const mapAttributesForApi = (attributes: Attribute[]) =>
+  attributes.map((attr) => {
+    const payload: { id?: number; key: string; value?: string } = { key: attr.key };
+
+    if (attr.id > 0) {
+      payload.id = attr.id;
+    }
+
+    if (hasAttributeValue(attr)) {
+      payload.value = attr.value;
+    }
+
+    return payload;
+  });
+
 export const buildTestCaseData = (
   payload: CreateTestCaseFormData,
   manualScenario: ManualScenarioDto,
@@ -114,6 +134,6 @@ export const buildTestCaseData = (
     ...folderPayload,
     priority: payload.priority?.toUpperCase(),
     manualScenario,
-    attributes: attributes.map(({ key: _key, ...rest }) => rest),
+    attributes: mapAttributesForApi(attributes),
   };
 };
