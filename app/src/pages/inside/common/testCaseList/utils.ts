@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { formatDistanceToNow, format } from 'date-fns';
+import { format } from 'date-fns';
 import { enUS, ru, es, de } from 'date-fns/locale';
 import { history } from 'redux-first-router';
 
