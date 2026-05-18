@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { KeyboardEvent, MouseEvent } from 'react';
+import type { MouseEvent } from 'react';
 import { useState } from 'react';
 import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
@@ -23,7 +23,7 @@ import { MeatballMenuIcon, CoveredManuallyIcon } from '@reportportal/ui-kit';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { createClassnames } from 'common/utils';
 import { PopoverControl } from 'pages/common/popoverControl';
-import { handleEnterOrSpaceKey, isEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
+import { handleEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 import { ExtendedTestCase } from 'types/testCase';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 import { AbsRelTime } from 'components/main/absRelTime';
@@ -53,50 +53,35 @@ export const TestCaseExecutionCell = ({
   const isTestPlan = instanceKey === TMS_INSTANCE_KEY.TEST_PLAN;
   const isCoveredManually = isTestPlan && getIsManualCovered(testCase.lastExecution?.status);
 
-  const handleExecutionKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.target !== event.currentTarget) {
-      return;
-    }
-
-    if (isEnterOrSpaceKey(event)) {
-      event.preventDefault();
-      onRowClick();
-    }
-  };
-
   const handleTimeClick = (event: MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   };
 
   return (
-    <div
-      role="button"
-      tabIndex={0}
-      className={cx('execution-content')}
-      onClick={onRowClick}
-      onKeyDown={handleExecutionKeyDown}
-    >
-      <div>
-        {isCoveredManually && (
-          <>
-            <div className={cx('covered-manually')}>
-              <CoveredManuallyIcon /> {formatMessage(commonMessages.coveredManually)}
-            </div>
+    <div className={cx('execution-content')}>
+      <button type="button" className={cx('execution-open-area')} onClick={onRowClick}>
+        <div>
+          {isCoveredManually && (
+            <>
+              <div className={cx('covered-manually')}>
+                <CoveredManuallyIcon /> {formatMessage(commonMessages.coveredManually)}
+              </div>
+              <AbsRelTime
+                startTime={testCase.updatedAt}
+                customClass={cx('execution-time', 'execution-time--full-width')}
+                onClick={handleTimeClick}
+              />
+            </>
+          )}
+          {!isTestPlan && (
             <AbsRelTime
               startTime={testCase.updatedAt}
-              customClass={cx('execution-time', 'execution-time--full-width')}
+              customClass={cx('execution-time')}
               onClick={handleTimeClick}
             />
-          </>
-        )}
-        {!isTestPlan && (
-          <AbsRelTime
-            startTime={testCase.updatedAt}
-            customClass={cx('execution-time')}
-            onClick={handleTimeClick}
-          />
-        )}
-      </div>
+          )}
+        </div>
+      </button>
       {!isEmpty(tooltipItems) && (
         <div
           role="menuitem"
