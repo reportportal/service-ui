@@ -23,9 +23,14 @@ import { InviteProjectCondition } from 'pages/inside/common/invitations/inviteUs
 
 const ORGANIZATION_PAGE = 'organization';
 const SETTINGS_PAGE = 'organization_settings';
+const INTEGRATIONS = 'integrations';
 
 const BASIC_EVENT_PARAMETERS = getBasicClickEventParameters(ORGANIZATION_PAGE);
 const SETTINGS_EVENT_PARAMETERS = getBasicClickEventParameters(SETTINGS_PAGE);
+const BASIC_EVENT_PARAMETERS_INTEGRATIONS = {
+  ...SETTINGS_EVENT_PARAMETERS,
+  place: INTEGRATIONS,
+};
 
 export const ORGANIZATION_SETTINGS_VIEWS = {
   getOrganizationSettingsPageView: (settingsTab: string, subTab?: string) => ({
@@ -36,12 +41,17 @@ export const ORGANIZATION_SETTINGS_VIEWS = {
   }),
 };
 
-export const ORGANIZATION_SETTINGS_EVENTS = {
+export const ORGANIZATION_SETTINGS_INTEGRATION = {
   CLICK_DOCUMENTATION_LINK_INTEGRATIONS: {
-    ...SETTINGS_EVENT_PARAMETERS,
-    place: 'integrations',
+    ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
     link_name: 'documentation',
   },
+
+  clickCreateIntegrationModal: (type: string) => ({
+    ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
+    element_name: 'submit_create_organization_integration',
+    type: normalizeEventParameter(type),
+  }),
 };
 
 export const ORGANIZATION_PAGE_EVENTS = {

@@ -28,7 +28,7 @@ import {
   pluginsLoadingSelector,
 } from 'controllers/plugins';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
-import { ORGANIZATION_SETTINGS_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
+import { ORGANIZATION_SETTINGS_INTEGRATION } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { createClassnames, docsReferences } from 'common/utils';
 import { IntegrationsListItem } from 'pages/inside/common/integrations/integrationsListItem';
 import { messages as integrationsMessages } from 'pages/inside/common/integrations/messages';
@@ -105,7 +105,7 @@ export const IntegrationsTab = () => {
   const hasIntegrations = Object.keys(availableIntegrations).length > 0;
 
   const handleDocumentationClick = () => {
-    trackEvent(ORGANIZATION_SETTINGS_EVENTS.CLICK_DOCUMENTATION_LINK_INTEGRATIONS);
+    trackEvent(ORGANIZATION_SETTINGS_INTEGRATION.CLICK_DOCUMENTATION_LINK_INTEGRATIONS);
   };
 
   const onItemClick = (pluginData) => {

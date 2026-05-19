@@ -145,7 +145,7 @@ export const notificationMessages = defineMessages({
   },
   addIntegrationSuccess: {
     id: 'InstancesSection.addIntegrationSuccess',
-    defaultMessage: 'Integration successfully added',
+    defaultMessage: 'Integration has been created successfully',
   },
   removePluginSuccess: {
     id: 'InstancesSection.removePluginSuccess',

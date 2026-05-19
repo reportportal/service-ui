@@ -16,11 +16,13 @@
 
 import classNames from 'classnames/bind';
 import moment from 'moment';
-import Parser from 'html-react-parser';
 import { useIntl, defineMessages } from 'react-intl';
-import { BaseIconButton, EditIcon, ErrorIcon } from '@reportportal/ui-kit';
-import Tick from 'common/img/newIcons/tick-inline.svg';
+import { BaseIconButton, EditIcon } from '@reportportal/ui-kit';
 import { separateFromIntoNameAndEmail } from 'common/utils';
+import {
+  IntegrationStatusBadge,
+  IntegrationStatus,
+} from 'pages/inside/common/integrations/integrationStatusBadge';
 import type { IntegrationData, IntegrationParameters } from '../types';
 import {
   AUTH_ENABLED_KEY,
@@ -71,14 +73,6 @@ const messages = defineMessages({
   encryptionNone: {
     id: 'EmailDetailsCard.encryptionNone',
     defaultMessage: 'None',
-  },
-  connectedMessage: {
-    id: 'ConnectionSection.connectedMessage',
-    defaultMessage: 'Connected',
-  },
-  connectionErrorMessage: {
-    id: 'ConnectionSection.connectionErrorMessage',
-    defaultMessage: 'Connection Error',
   },
   createdBy: {
     id: 'EmailDetailsCard.createdBy',
@@ -170,20 +164,9 @@ export function EmailDetailsCard({
           <h1 className={cx('title')} title={name}>
             {name}
           </h1>
-          <div
-            className={cx('connection-badge', {
-              'connection-badge-error': !connected,
-            })}
-          >
-            <span className={cx('connection-badge-icon')}>
-              {connected ? Parser(Tick) : <ErrorIcon />}
-            </span>
-            <span className={cx('connection-badge-text')}>
-              {formatMessage(
-                connected ? messages.connectedMessage : messages.connectionErrorMessage,
-              )}
-            </span>
-          </div>
+          <IntegrationStatusBadge
+            variant={connected ? IntegrationStatus.CONNECTED : IntegrationStatus.ERROR}
+          />
           {isEditable && !blocked && (
             // TODO: onClick handler will be added when edit form is implemented
             <BaseIconButton

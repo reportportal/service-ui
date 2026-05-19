@@ -21,10 +21,17 @@ import {
   SAUCE_LABS,
 } from 'common/constants/pluginNames';
 import { AUTHORIZATION_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
+import { URLS } from 'common/urls';
+import { fetch } from 'common/utils';
 import {
   PLUGIN_TYPE_EXTENSION,
   PLUGIN_TYPE_REMOTE,
 } from 'controllers/plugins/uiExtensions/constants';
+import {
+  addGlobalIntegrationSuccessAction,
+  addOrganizationIntegrationSuccessAction,
+  addProjectIntegrationSuccessAction,
+} from './actionCreators';
 
 export const LIMITED_INTEGRATION_PLUGINS = [EMAIL, MOBITRU, SAUCE_LABS];
 
@@ -116,4 +123,45 @@ export const normalizeIntegrationItem = (item) => {
   }
 
   return normalizedItem;
+};
+
+export const getAddIntegrationUrl = ({ isGlobal, isOrganizational, pluginName, context }) => {
+  const { projectKey, organizationId } = context;
+
+  switch (true) {
+    case isGlobal:
+      return URLS.newGlobalIntegration(pluginName);
+    case isOrganizational:
+      return URLS.organizationIntegrations(organizationId);
+    default:
+      return URLS.newProjectIntegration(projectKey, pluginName);
+  }
+};
+
+export const getAddIntegrationSuccessAction = ({ isGlobal, isOrganizational }) => {
+  switch (true) {
+    case isGlobal:
+      return addGlobalIntegrationSuccessAction;
+    case isOrganizational:
+      return addOrganizationIntegrationSuccessAction;
+    default:
+      return addProjectIntegrationSuccessAction;
+  }
+};
+
+export const getTestIntegrationConnection = ({ isGlobal = false, isOrganizational = false, context = {} }) => {
+  const { projectKey, organizationId } = context;
+
+  return (integrationId) => {
+    switch (true) {
+      case isGlobal:
+        return fetch(URLS.testGlobalIntegrationConnection(integrationId));
+      case isOrganizational:
+        return fetch(URLS.testOrganizationIntegrationConnection(organizationId, integrationId), {
+          method: 'POST',
+        });
+      default:
+        return fetch(URLS.testIntegrationConnection(projectKey, integrationId));
+    }
+  };
 };

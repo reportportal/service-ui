@@ -157,6 +157,11 @@ export const messages = defineMessages({
     id: 'IntegrationsDescription.organizationIntegrationAddLimited',
     defaultMessage: 'Only one organizational integration can be added',
   },
+  organizationIntegrationNoticeBody: {
+    id: 'IntegrationsDescription.organizationIntegrationNoticeBody',
+    defaultMessage:
+      'The integration will be unlinked from the Global configuration and will auto-apply to all Organization projects without existing individual configuration.',
+  },
   noIntegrationsConfiguredYet: {
     id: 'IntegrationsDescription.noIntegrationsConfiguredYet',
     defaultMessage: 'No integrations configured yet',
