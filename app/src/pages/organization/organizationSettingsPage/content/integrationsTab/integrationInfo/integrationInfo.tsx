@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState, useEffect, useMemo, useCallback, type ComponentType } from 'react';
+import { useState, useEffect, useMemo, type ComponentType } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { redirect } from 'redux-first-router';
 import { useIntl } from 'react-intl';
@@ -27,32 +27,40 @@ import {
 import { uiExtensionIntegrationSettingsSelector } from 'controllers/plugins/uiExtensions/selectors';
 import { showModalAction } from 'controllers/modal';
 import {
+  addIntegrationAction,
   namedGlobalIntegrationsSelector,
   namedOrganizationIntegrationsSelector,
   type Plugin,
   type PluginDetails,
 } from 'controllers/plugins';
-import { isLimitedIntegrationPlugin } from 'controllers/plugins/utils';
+import {
+  getTestIntegrationConnection,
+  isLimitedIntegrationPlugin,
+} from 'controllers/plugins/utils';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/settingsComponentsMap';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
-import { createClassnames, fetch } from 'common/utils';
-import { URLS } from 'common/urls';
+import { combineNameAndEmailToFrom, createClassnames } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { IntegrationHeader } from 'pages/inside/common/integrations/integrationHeader/integrationHeader';
 import { AvailableIntegrations } from 'pages/inside/common/integrations/availableIntegrations';
 import { messages } from 'pages/inside/common/integrations/messages';
-import type { IntegrationItem } from 'pages/inside/common/integrations/types';
+import type { IntegrationItem, NamedIntegrations } from 'pages/inside/common/integrations/types';
 import DeleteIntegraionModal from 'components/integrations/modals/deleteIntegrationModal/deleteIntegraionModal';
 import AddIntegrationModal from 'components/integrations/modals/addIntegrationModal/addIntegrationModal';
 import { activeOrganizationIdSelector } from 'controllers/organization';
 
 import styles from './integrationInfo.scss';
+import { EMAIL } from 'common/constants/pluginNames';
 
 const cx = createClassnames(styles);
 
-type IntegrationInfoItem = IntegrationItem & { blocked?: boolean };
+type IntegrationInfoItem = IntegrationItem & {
+  blocked?: boolean;
+  isGlobal?: boolean;
+  isOrganizational?: boolean;
+};
 
 interface Extension {
   pluginName: string;
@@ -66,14 +74,14 @@ interface IntegrationSettingsViewProps {
   extension?: Extension;
   withPreloader?: boolean;
   silentOnError?: boolean;
+  isGlobal?: boolean;
+  isOrganizational?: boolean;
 }
 
 export interface IntegrationInfoProps {
   plugin: Plugin;
   integrationId?: string;
 }
-
-type NamedIntegrations = Record<string, IntegrationItem[]>;
 
 export const IntegrationInfo = ({ plugin, integrationId = '' }: IntegrationInfoProps) => {
   const { formatMessage } = useIntl();
@@ -111,34 +119,43 @@ export const IntegrationInfo = ({ plugin, integrationId = '' }: IntegrationInfoP
     ? formatMessage(messages.organizationIntegrationAddLimited)
     : undefined;
 
-  const testOrganizationIntegrationConnection = useCallback(
-    (connectionIntegrationId: number) =>
-      fetch(URLS.testOrganizationIntegrationConnection(organizationId, connectionIntegrationId), {
-        method: 'POST',
-      }),
+  const testOrganizationIntegrationConnection = useMemo(
+    () => getTestIntegrationConnection({ isOrganizational: true, context: { organizationId } }),
     [organizationId],
   );
 
-  const testGlobalIntegrationConnection = useCallback(
-    (connectionIntegrationId: number) =>
-      fetch(URLS.testGlobalIntegrationConnection(connectionIntegrationId)),
+  const testGlobalIntegrationConnection = useMemo(
+    () => getTestIntegrationConnection({ isGlobal: true }),
     [],
   );
 
   useEffect(() => {
-    let isGlobal = false;
-    let integration = availableOrganizationIntegrations.find(
-      (value) => value.id === +integrationId,
-    );
-    if (!integration) {
-      integration = availableGlobalIntegrations.find((value) => value.id === +integrationId);
-      isGlobal = !!integration;
+    if (!integrationId) {
+      return;
     }
 
-    if (integration) {
-      setUpdatedParameters({});
-      setIntegrationInfo({ ...integration, blocked: isGlobal });
+    const organizationIntegration = availableOrganizationIntegrations.find(
+      (value) => value.id === +integrationId,
+    );
+    const globalIntegration = availableGlobalIntegrations.find(
+      (value) => value.id === +integrationId,
+    );
+    const integration = organizationIntegration ?? globalIntegration;
+
+    if (!integration) {
+      return;
     }
+
+    const isGlobal = Boolean(globalIntegration);
+    const isOrganizational = Boolean(organizationIntegration);
+
+    setUpdatedParameters({});
+    setIntegrationInfo({
+      ...integration,
+      blocked: isGlobal,
+      isGlobal,
+      isOrganizational,
+    });
   }, [availableGlobalIntegrations, availableOrganizationIntegrations, integrationId]);
 
   const integrationSettingsExtension = settingsExtensions?.find(
@@ -161,8 +178,22 @@ export const IntegrationInfo = ({ plugin, integrationId = '' }: IntegrationInfoP
     setIntegrationInfo(integration);
   };
 
-  const addOrganizationIntegration = () => {
-    // TODO: to be implemented in the future
+  const addOrganizationIntegration = (
+    formData: Record<string, unknown>,
+    metaData: Record<string, unknown>,
+  ) => {
+    const isOrganizational = true;
+    const updatedFormData: Record<string, unknown> =
+      pluginName === EMAIL ? combineNameAndEmailToFrom(formData) : formData;
+    const newData = {
+      enabled: true,
+      parameters: updatedFormData,
+      name: updatedFormData.integrationName || details.name,
+      plugin_id: details.id,
+    };
+    dispatch(
+      addIntegrationAction(newData, false, pluginName, openIntegration, metaData, isOrganizational),
+    );
   };
 
   const onAddOrganizationIntegration = () => {
@@ -175,6 +206,8 @@ export const IntegrationInfo = ({ plugin, integrationId = '' }: IntegrationInfoP
       onConfirm: addOrganizationIntegration,
       customProps: {
         pluginDetails,
+        modalTitleMessage: formatMessage(messages.noIntegrationsOrganizationButtonAdd),
+        globalIntegrationsNoticeBody: formatMessage(messages.organizationIntegrationNoticeBody),
       },
     };
     dispatch(showModalAction({ component: <AddIntegrationModal data={data} /> }));
@@ -327,6 +360,8 @@ export const IntegrationInfo = ({ plugin, integrationId = '' }: IntegrationInfoP
                 extension={integrationSettingsExtension}
                 withPreloader
                 silentOnError={false}
+                isGlobal={integrationInfo.isGlobal}
+                isOrganizational={integrationInfo.isOrganizational}
               />
             ) : null}
           </div>

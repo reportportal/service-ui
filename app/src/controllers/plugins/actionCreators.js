@@ -29,6 +29,7 @@ import {
   ADD_PROJECT_INTEGRATION_SUCCESS,
   UPDATE_PROJECT_INTEGRATION_SUCCESS,
   REMOVE_PROJECT_INTEGRATION_SUCCESS,
+  ADD_ORGANIZATION_INTEGRATION_SUCCESS,
   ADD_GLOBAL_INTEGRATION_SUCCESS,
   UPDATE_GLOBAL_INTEGRATION_SUCCESS,
   REMOVE_GLOBAL_INTEGRATION_SUCCESS,
@@ -81,9 +82,16 @@ export const updateIntegrationAction = (data, isGlobal, id, pluginName, callback
   meta: metaData,
 });
 
-export const addIntegrationAction = (data, isGlobal, pluginName, callback, metaData) => ({
+export const addIntegrationAction = (
+  data,
+  isGlobal,
+  pluginName,
+  callback,
+  metaData,
+  isOrganizational = false,
+) => ({
   type: ADD_INTEGRATION,
-  payload: { data, isGlobal, pluginName, callback },
+  payload: { data, isGlobal, isOrganizational, pluginName, callback },
   meta: metaData,
 });
 
@@ -109,6 +117,11 @@ export const updateProjectIntegrationSuccessAction = (data, id) => ({
 
 export const addProjectIntegrationSuccessAction = (integration) => ({
   type: ADD_PROJECT_INTEGRATION_SUCCESS,
+  payload: integration,
+});
+
+export const addOrganizationIntegrationSuccessAction = (integration) => ({
+  type: ADD_ORGANIZATION_INTEGRATION_SUCCESS,
   payload: integration,
 });
 

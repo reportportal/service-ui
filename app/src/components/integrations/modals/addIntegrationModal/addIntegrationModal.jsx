@@ -117,19 +117,19 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
     ? messages.editGlobalIntegrationTitle
     : messages.editProjectIntegrationTitle;
   const defaultTitleMessage = customProps?.editAuthMode ? editTitle : createTitle;
+  const modalTitle = customProps?.modalTitleMessage ?? formatMessage(defaultTitleMessage);
 
   const FieldsComponent =
     INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP[data.instanceType] ||
     (integrationFieldsExtension ? ExtensionLoader : null);
 
-  const modalTitle = customProps?.modalTitleMessage
-    ? formatMessage(customProps.modalTitleMessage)
-    : formatMessage(defaultTitleMessage);
-  const noticeCaption = customProps?.globalIntegrationsNoticeCaption
-    ? formatMessage(customProps.globalIntegrationsNoticeCaption)
+  const hasCustomNotice =
+    customProps?.globalIntegrationsNoticeCaption || customProps?.globalIntegrationsNoticeBody;
+  const noticeCaption = hasCustomNotice
+    ? customProps?.globalIntegrationsNoticeCaption
     : formatMessage(messages.globalIntegrationsSystemMessageModalCaption);
-  const noticeBody = customProps?.globalIntegrationsNoticeBody
-    ? formatMessage(customProps.globalIntegrationsNoticeBody)
+  const noticeBody = hasCustomNotice
+    ? customProps?.globalIntegrationsNoticeBody
     : formatMessage(messages.globalIntegrationsSystemMessageModalText);
 
   return (
@@ -141,7 +141,7 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
       allowCloseOutside={!dirty}
       scrollable
     >
-      {data.hasWarningMessage && (
+      {data.hasWarningMessage && (noticeCaption || noticeBody) && (
         <SystemMessage mode="info" caption={noticeCaption}>
           {noticeBody}
         </SystemMessage>
