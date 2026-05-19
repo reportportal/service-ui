@@ -62,6 +62,7 @@ export const EmptyStatePage = ({
   title = '',
   containerClassName = '',
   descriptionClassName = '',
+  documentationLinkClassName = '',
   handleDocumentationClick = null,
   imageType = 'plus',
   documentationDataAutomationId = 'emptyStatePageDocsLink',
@@ -99,7 +100,7 @@ export const EmptyStatePage = ({
       )}
       {documentationLink && (
         <ExternalLink
-          className={cx('link')}
+          className={cx('link', documentationLinkClassName)}
           href={documentationLink}
           dataAutomationId={documentationDataAutomationId}
           onClick={handleDocumentationClick}
@@ -117,6 +118,7 @@ EmptyStatePage.propTypes = {
   documentationLink: PropTypes.string,
   containerClassName: PropTypes.string,
   descriptionClassName: PropTypes.string,
+  documentationLinkClassName: PropTypes.string,
   handleDocumentationClick: PropTypes.oneOfType([PropTypes.func, PropTypes.instanceOf(null)]),
   imageType: PropTypes.oneOf([
     'plus',

@@ -49,15 +49,6 @@ export const messages = defineMessages({
     id: 'MilestonesTable.createTestPlanUnderMilestone',
     defaultMessage: 'Create Test Plan',
   },
-  emptyTitle: {
-    id: 'MilestonesTable.emptyTitle',
-    defaultMessage: 'No Milestones created yet',
-  },
-  emptyDescription: {
-    id: 'MilestonesTable.emptyDescription',
-    defaultMessage:
-      'Track your project progress by creating milestones. They group test plans and help measure coverage over time.',
-  },
   statusScheduled: {
     id: 'MilestonesTable.statusScheduled',
     defaultMessage: 'Scheduled',

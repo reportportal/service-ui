@@ -117,7 +117,9 @@ export const MilestonesPage = () => {
       );
     }
 
-    return <EmptyMilestones />;
+    return (
+      <EmptyMilestones onCreateMilestone={canManageTestPlans ? handleCreateMilestone : undefined} />
+    );
   };
 
   const loading = milestonesLoading;
