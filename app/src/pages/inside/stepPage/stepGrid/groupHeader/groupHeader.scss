@@ -24,7 +24,7 @@
   font: 14px/20px $FONT-REGULAR;
   padding-left: 10px;
   transition: background-color 0.2s ease 0s;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 
   &.disabled {
     background: $COLOR--gray-light;

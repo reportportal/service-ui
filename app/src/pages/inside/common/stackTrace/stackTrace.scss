@@ -45,7 +45,7 @@
 
 .message-cell {
   flex-grow: 10;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
   white-space: pre-wrap;
 }
 

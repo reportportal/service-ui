@@ -44,7 +44,7 @@
   text-indent: 1px;
   color: $COLOR--almost-black;
   box-sizing: border-box;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
   cursor: default;
 
   &.validation-error {
