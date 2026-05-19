@@ -18,6 +18,7 @@ import { useState, useEffect, useMemo, type ComponentType } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { redirect } from 'redux-first-router';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 
 import {
   updatePagePropertiesAction,
@@ -50,6 +51,7 @@ import type { IntegrationItem, NamedIntegrations } from 'pages/inside/common/int
 import DeleteIntegraionModal from 'components/integrations/modals/deleteIntegrationModal/deleteIntegraionModal';
 import AddIntegrationModal from 'components/integrations/modals/addIntegrationModal/addIntegrationModal';
 import { activeOrganizationIdSelector } from 'controllers/organization';
+import { ORGANIZATION_SETTINGS_INTEGRATION } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 
 import styles from './integrationInfo.scss';
 import { EMAIL } from 'common/constants/pluginNames';
@@ -85,6 +87,7 @@ export interface IntegrationInfoProps {
 
 export const IntegrationInfo = ({ plugin, integrationId = '' }: IntegrationInfoProps) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const pluginName = plugin.name;
   const details: Partial<PluginDetails> = plugin.details ?? {};
@@ -191,6 +194,11 @@ export const IntegrationInfo = ({ plugin, integrationId = '' }: IntegrationInfoP
       name: updatedFormData.integrationName || details.name,
       plugin_id: details.id,
     };
+    trackEvent(
+      ORGANIZATION_SETTINGS_INTEGRATION.clickCreateIntegrationModal(
+        plugin.details?.name || pluginName,
+      ),
+    );
     dispatch(
       addIntegrationAction(newData, false, pluginName, openIntegration, metaData, isOrganizational),
     );
