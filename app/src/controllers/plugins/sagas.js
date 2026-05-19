@@ -75,7 +75,7 @@ function* addIntegration({
   yield put(showScreenLockAction());
   try {
     const context = yield resolveIntegrationContext();
-    const url = getAddIntegrationUrl({ isGlobal, isOrganizational, context });
+    const url = getAddIntegrationUrl({ isGlobal, isOrganizational, pluginName, context });
     const response = yield call(fetch, url, {
       method: 'post',
       data,
