@@ -821,7 +821,7 @@
   "EmailFormFields.protocolPlaceholder": "选择协议",
   "EmailFormFields.usernameLabel": "用户名",
   "EmailFormFields.usernamePlaceholder": "您的邮箱或登录名",
-  "EmailSettings.deleteIntegrationTitle": "删除 {name}",
+  "EmailSettings.deleteIntegrationTitle": "删除集成",
   "EmptyHistoryItem.emptyItemCaption": "测试项为空",
   "EmptyHistoryItem.emptyItemTooltip": "测试用例未执行",
   "EmptyUniqueErr.button": "执行独特错误分析",

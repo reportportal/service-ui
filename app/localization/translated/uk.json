@@ -821,7 +821,7 @@
   "EmailFormFields.protocolPlaceholder": "Оберіть протокол",
   "EmailFormFields.usernameLabel": "Ім’я користувача",
   "EmailFormFields.usernamePlaceholder": "Ваш email або логін",
-  "EmailSettings.deleteIntegrationTitle": "Видалити {name}",
+  "EmailSettings.deleteIntegrationTitle": "Видалити інтеграцію",
   "EmptyHistoryItem.emptyItemCaption": "Елемент порожній",
   "EmptyHistoryItem.emptyItemTooltip": "Тестовий сценарій не запускався",
   "EmptyUniqueErr.button": "Запустити аналіз унікальних помилок",

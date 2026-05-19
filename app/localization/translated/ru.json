@@ -821,7 +821,7 @@
   "EmailFormFields.protocolPlaceholder": "Выберите протокол",
   "EmailFormFields.usernameLabel": "Имя пользователя",
   "EmailFormFields.usernamePlaceholder": "Ваш email или логин",
-  "EmailSettings.deleteIntegrationTitle": "Удалить {name}",
+  "EmailSettings.deleteIntegrationTitle": "Удалить интеграцию",
   "EmptyHistoryItem.emptyItemCaption": "Элемент пуст",
   "EmptyHistoryItem.emptyItemTooltip": "Тестовый сценарий не запускался",
   "EmptyUniqueErr.button": "Запустить анализ уникальных ошибок",
