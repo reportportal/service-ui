@@ -176,7 +176,7 @@ export const TestCaseList = memo(
       {
         key: 'lastExecution',
         header: formatMessage(messages.executionHeader),
-        width: instanceKey === TMS_INSTANCE_KEY.TEST_CASE ? 164 : 190,
+        width: instanceKey === TMS_INSTANCE_KEY.TEST_CASE ? 190 : 220,
         align: 'left' as const,
       },
     ];

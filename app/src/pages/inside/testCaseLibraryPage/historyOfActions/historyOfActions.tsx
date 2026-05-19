@@ -222,7 +222,7 @@ export const HistoryOfActions = () => {
   const primaryColumn = {
     key: 'time',
     header: formatMessage(messages.time),
-    width: 120,
+    width: 160,
     align: 'left' as const,
   };
 
@@ -230,7 +230,7 @@ export const HistoryOfActions = () => {
     {
       key: 'user',
       header: formatMessage(messages.user),
-      width: 225,
+      width: 265,
       align: 'left' as const,
     },
     {
