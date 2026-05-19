@@ -295,7 +295,7 @@
 
   &__test-plans-empty-bar-wrap {
     box-sizing: border-box;
-    padding: 16px 52px 16px 104px;
+    padding: 12px 48px 24px 104px;
     background: var(--rp-ui-kit-colors-bg-secondary);
     border-top: 1px solid var(--rp-ui-kit-colors-border-primary);
     border-radius: 0 0 8px 8px;
@@ -308,6 +308,7 @@
     gap: 16px;
     box-sizing: border-box;
     min-height: 52px;
+    margin-inline-end: -8px;
     padding: 0 16px;
     background: var(--Background-Tertiary, var(--rp-ui-base-bg-200));
     border-radius: 4px;
