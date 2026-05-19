@@ -58,7 +58,7 @@
   color: var(--rp-ui-base-bg-000);
   max-width: 350px;
 
-  @media (max-width: var(--rp-ui-base-screen-xs-max)) {
+  @media (max-width: $SCREEN_XS_MAX) {
     font-size: 28px;
     line-height: 34px;
   }
