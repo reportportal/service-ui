@@ -93,15 +93,10 @@ export const IntegrationInfo = (props) => {
     ? formatMessage(messages.projectIntegrationAddLimited)
     : undefined;
 
-  const testProjectIntegrationConnection = useCallback(
+  const testIntegrationConnection = useCallback(
     (integrationId) =>
       fetch(URLS.testIntegrationConnection(projectKey || activeProjectKey, integrationId)),
     [projectKey, activeProjectKey],
-  );
-
-  const testGlobalIntegrationConnection = useCallback(
-    (integrationId) => fetch(URLS.testGlobalIntegrationConnection(integrationId)),
-    [],
   );
 
   useEffect(() => {
@@ -300,7 +295,7 @@ export const IntegrationInfo = (props) => {
             text={formatMessage(messages.projectIntegrationText)}
             integrations={availableProjectIntegrations}
             openIntegration={openIntegration}
-            testConnection={testProjectIntegrationConnection}
+            testConnection={testIntegrationConnection}
             withEmptyState
             hasUpdatePermission={canUpdateSettings}
             onCreateClick={onAddProjectIntegration}
@@ -316,7 +311,7 @@ export const IntegrationInfo = (props) => {
               openIntegration={openIntegration}
               inactive={Boolean(availableProjectIntegrations.length)}
               inactiveTooltip={formatMessage(messages.inactiveGlobalIntegrations)}
-              testConnection={testGlobalIntegrationConnection}
+              testConnection={testIntegrationConnection}
             />
           )}
         </div>
