@@ -821,7 +821,7 @@
   "EmailFormFields.protocolPlaceholder": "Seleccione el protocolo",
   "EmailFormFields.usernameLabel": "Nombre de usuario",
   "EmailFormFields.usernamePlaceholder": "Su correo electrónico o usuario",
-  "EmailSettings.deleteIntegrationTitle": "Eliminar {name}",
+  "EmailSettings.deleteIntegrationTitle": "Eliminar integración",
   "EmptyHistoryItem.emptyItemCaption": "El elemento está vacío",
   "EmptyHistoryItem.emptyItemTooltip": "El escenario de prueba no se ha ejecutado",
   "EmptyUniqueErr.button": "Iniciar análisis de errores únicos",

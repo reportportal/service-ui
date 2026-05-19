@@ -55,7 +55,7 @@ const messages = defineMessages({
   },
   deleteIntegrationTitle: {
     id: 'EmailSettings.deleteIntegrationTitle',
-    defaultMessage: 'Delete {name}',
+    defaultMessage: 'Delete integration',
   },
 });
 
@@ -169,7 +169,7 @@ export function EmailSettings({
         id: 'deleteIntegrationModal',
         data: {
           onConfirm: removeIntegration,
-          modalTitle: formatMessage(messages.deleteIntegrationTitle, { name: data.name }),
+          modalTitle: formatMessage(messages.deleteIntegrationTitle),
           description: formatMessage(messages.deleteIntegrationDescription, { name: data.name }),
         },
       }),

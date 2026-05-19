@@ -45,7 +45,7 @@
   border-radius: 4px;
   box-sizing: content-box;
 
-  & > div:first-child {
+  &:global([class*='_selectable_']) > div:first-child {
     align-self: baseline;
     margin-top: 14px;
   }

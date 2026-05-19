@@ -821,7 +821,7 @@
   "EmailFormFields.protocolPlaceholder": "Абярыце пратакол",
   "EmailFormFields.usernameLabel": "Імя карыстальніка",
   "EmailFormFields.usernamePlaceholder": "Ваш email або лагін",
-  "EmailSettings.deleteIntegrationTitle": "Выдаліць {name}",
+  "EmailSettings.deleteIntegrationTitle": "Выдаліць інтэграцыю",
   "EmptyHistoryItem.emptyItemCaption": "Элемент пусты",
   "EmptyHistoryItem.emptyItemTooltip": "Тэставы сцэнар не запушчаны",
   "EmptyUniqueErr.button": "Запусціць аналіз унікальных памылак",
