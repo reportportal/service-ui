@@ -43,14 +43,18 @@ export const MilestoneCardActionsMenu = ({
 
   const items = useMemo(
     () => [
-      {
-        label: formatMessage(messages.menuEditMilestone),
-        onClick: () => {
-          setIsOpened(false);
-          trackEvent(MILESTONES_PAGE_EVENTS.CLICK_EDIT_MILESTONE);
-          onEditMilestone?.(milestone);
-        },
-      },
+      ...(onEditMilestone
+        ? [
+            {
+              label: formatMessage(messages.menuEditMilestone),
+              onClick: () => {
+                setIsOpened(false);
+                trackEvent(MILESTONES_PAGE_EVENTS.CLICK_EDIT_MILESTONE);
+                onEditMilestone(milestone);
+              },
+            },
+          ]
+        : []),
       ...(onCreateTestPlan
         ? [
             {
@@ -63,23 +67,31 @@ export const MilestoneCardActionsMenu = ({
             },
           ]
         : []),
-      {
-        label: formatMessage(messages.menuDuplicateMilestone),
-        onClick: () => {
-          setIsOpened(false);
-          trackEvent(MILESTONES_PAGE_EVENTS.CLICK_DUPLICATE_MILESTONE);
-          onDuplicateMilestone?.(milestone);
-        },
-      },
-      {
-        label: formatMessage(messages.menuDeleteMilestone),
-        destructive: true,
-        onClick: () => {
-          setIsOpened(false);
-          trackEvent(MILESTONES_PAGE_EVENTS.CLICK_DELETE_MILESTONE);
-          onDeleteMilestone?.(milestone);
-        },
-      },
+      ...(onDuplicateMilestone
+        ? [
+            {
+              label: formatMessage(messages.menuDuplicateMilestone),
+              onClick: () => {
+                setIsOpened(false);
+                trackEvent(MILESTONES_PAGE_EVENTS.CLICK_DUPLICATE_MILESTONE);
+                onDuplicateMilestone(milestone);
+              },
+            },
+          ]
+        : []),
+      ...(onDeleteMilestone
+        ? [
+            {
+              label: formatMessage(messages.menuDeleteMilestone),
+              destructive: true,
+              onClick: () => {
+                setIsOpened(false);
+                trackEvent(MILESTONES_PAGE_EVENTS.CLICK_DELETE_MILESTONE);
+                onDeleteMilestone(milestone);
+              },
+            },
+          ]
+        : []),
     ],
     [
       formatMessage,
@@ -91,6 +103,10 @@ export const MilestoneCardActionsMenu = ({
       trackEvent,
     ],
   );
+
+  if (!items.length) {
+    return null;
+  }
 
   return (
     <Popover

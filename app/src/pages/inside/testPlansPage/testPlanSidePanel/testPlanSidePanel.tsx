@@ -79,7 +79,7 @@ export const TestPlanSidePanel = memo(
     const { trackEvent } = useTracking();
     const sidePanelRef = useRef<HTMLDivElement>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const { canManageTestCases } = useUserPermissions();
+    const { canManageTestCases, canCreateManualLaunch } = useUserPermissions();
     const { organizationSlug, projectSlug } = useSelector(
       urlOrganizationAndProjectSelector,
     ) as ProjectDetails;
@@ -137,7 +137,7 @@ export const TestPlanSidePanel = memo(
     };
 
     const isScenarioEmpty = checkScenario(testCaseDetails?.manualScenario);
-    const isAddToLaunchDisabled = !canManageTestCases || isScenarioEmpty || !testPlanId;
+    const isAddToLaunchDisabled = isScenarioEmpty || !testPlanId;
 
     const handleAddToLaunchClick = () => {
       openAddToLaunchModal();
@@ -273,14 +273,16 @@ export const TestPlanSidePanel = memo(
             {formatMessage(messages.openInLibrary)}
             <ExternalLinkIcon />
           </Button>
-          <Button
-            variant="primary"
-            onClick={handleAddToLaunchClick}
-            data-automation-id="test-plan-add-to-launch"
-            disabled={isAddToLaunchDisabled}
-          >
-            {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}
-          </Button>
+          {canCreateManualLaunch && (
+            <Button
+              variant="primary"
+              onClick={handleAddToLaunchClick}
+              data-automation-id="test-plan-add-to-launch"
+              disabled={isAddToLaunchDisabled}
+            >
+              {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}
+            </Button>
+          )}
         </div>
       </div>
     );
