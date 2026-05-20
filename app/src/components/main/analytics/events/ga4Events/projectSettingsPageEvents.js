@@ -354,3 +354,47 @@ export const PROJECT_SETTINGS_LOG_TYPES_EVENTS = {
     link_name: 'documentation',
   },
 };
+
+const QUALITY_GATES = 'quality_gates';
+
+const BASIC_EVENT_PARAMETERS_QUALITY_GATES = {
+  ...getBasicClickEventParameters(PROJECT_SETTINGS),
+  place: QUALITY_GATES,
+};
+
+export const PROJECT_SETTINGS_QUALITY_GATES_EVENTS = {
+  CLICK_CREATE_QUALITY_GATE_WITHOUT_PLUGIN: {
+    ...BASIC_EVENT_PARAMETERS_QUALITY_GATES,
+    element_name: 'button_create_quality_gate',
+    condition: 'without_plugin',
+  },
+
+  CLICK_CREATE_QUALITY_GATE_WITH_PLUGIN: {
+    ...BASIC_EVENT_PARAMETERS_QUALITY_GATES,
+    element_name: 'button_create_quality_gate',
+    condition: 'with_plugin',
+  },
+
+  clickPromoLink: (linkName) => ({
+    ...BASIC_EVENT_PARAMETERS_QUALITY_GATES,
+    link_name: linkName,
+  }),
+
+  CLICK_EXPLORE_PLANS_POPUP: {
+    ...BASIC_EVENT_PARAMETERS_QUALITY_GATES,
+    element_name: 'explore_plans',
+    modal: 'premium_promo',
+  },
+
+  CLICK_NOT_NOW_POPUP: {
+    ...BASIC_EVENT_PARAMETERS_QUALITY_GATES,
+    element_name: 'not_now',
+    modal: 'premium_promo',
+  },
+
+  CLICK_CONTACT_US_POPUP: {
+    ...BASIC_EVENT_PARAMETERS_QUALITY_GATES,
+    element_name: 'contact_us',
+    modal: 'premium_promo',
+  },
+};

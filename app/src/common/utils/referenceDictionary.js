@@ -30,6 +30,18 @@ export const referenceDictionary = {
   rpEpamNotice: 'https://privacy.epam.com/core/interaction/showpolicy?type=CommonPrivacyNotice',
   rpEpamCommonPolicy:
     'https://privacy.epam.com/core/interaction/showpolicy?type=CommonPrivacyPolicy',
+  rpExplorePlans:
+    'https://reportportal.io/pricing/saas/?utm_source=trigger&utm_medium=product&utm_campaign=premium_popup&utm_content=tep',
+  rpContactUs:
+    'https://reportportal.io/contact-us/general/?utm_source=trigger&utm_medium=product&utm_campaign=premium_popup&utm_content=tep',
+  rpExploreBillingPlansQG:
+    'https://reportportal.io/pricing/saas/?utm_source=trigger&utm_medium=product&utm_campaign=promo_page&utm_content=qg',
+  rpExplorePremiumFeaturesQG:
+    'https://reportportal.io/docs/premium-features/?utm_source=trigger&utm_medium=product&utm_campaign=promo_page&utm_content=qg',
+  rpQualityGatesDocsQG:
+    'https://reportportal.io/docs/analysis/quality-gates/?utm_source=trigger&utm_medium=product&utm_campaign=promo_page&utm_content=qg',
+  rpContactUsQG:
+    'https://reportportal.io/contact-us/general/?utm_source=trigger&utm_medium=product&utm_campaign=premium_popup&utm_content=qg',
 };
 
 export const docsReferences = {
@@ -83,6 +95,8 @@ export const servicesUpdate = {
 };
 
 export const widgetDocsReferences = {
+  testExecutions:
+    'https://reportportal.io/docs/features/TestExecutions/?utm_source=trigger&utm_medium=product&utm_campaign=promo_banner_tsw&utm_content=tep',
   launchStatisticsChart:
     'https://reportportal.io/docs/dashboards-and-widgets/LaunchStatisticsChart/',
   overallStatistics: 'https://reportportal.io/docs/dashboards-and-widgets/OverallStatistics/',

@@ -34,6 +34,7 @@ import {
   LOG_TYPES,
   NOTIFICATIONS,
   PATTERN_ANALYSIS,
+  QUALITY_GATES,
   ENVIRONMENTS,
   TEST_DATA,
 } from 'common/constants/settingsTabs';
@@ -49,6 +50,7 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { Header } from 'pages/inside/common/header';
 import { PatternAnalysis } from 'pages/inside/projectSettingsPageContainer/content/patternAnalysis';
+import { QualityGates } from 'pages/inside/projectSettingsPageContainer/content/qualityGates';
 import { Notifications } from 'pages/inside/projectSettingsPageContainer/content/notifications';
 import { getTmsOverride } from 'controllers/appInfo/utils';
 import { GeneralTab } from './generalTab';
@@ -146,6 +148,13 @@ export const ProjectSettingsPageContainer = () => {
         component: <DemoDataTab />,
         mobileDisabled: true,
       },
+      [QUALITY_GATES]: {
+        name: formatMessage(messages.qualityGates),
+        link: createTabLink(QUALITY_GATES),
+        component: <QualityGates />,
+        mobileDisabled: true,
+        hideHeader: true,
+      },
       ...(isShowTmsHiddenData && {
         [ENVIRONMENTS]: {
           name: formatMessage(messages.environments),
@@ -200,7 +209,7 @@ export const ProjectSettingsPageContainer = () => {
       <SettingsLayout navigation={navigation}>
         <ScrollWrapper resetRequired>
           <div className={cx('settings-page-content-wrapper')}>
-            {!subPage && (
+            {!subPage && !config[activeTab]?.hideHeader && (
               <div className={cx('header')}>
                 <Header title={config[activeTab]?.name} titleNode={headerNodes.titleNode}>
                   {headerNodes.children}

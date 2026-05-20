@@ -2704,5 +2704,15 @@
   "notFoundPage.pageNotExist": "La página que busca no existe.",
   "notFoundPage.toHome": "Llévame de aquí",
   "OrganizationProjectsPage.actionAssignUser": "Asignar usuario",
-  "ProjectTeamPage.assignUser": "Asignar usuario"
+  "ProjectTeamPage.assignUser": "Asignar usuario",
+  "premiumPromoModal.contactUsButton": "Contáctanos",
+  "premiumPromoModal.explorePlansButton": "Explorar planes",
+  "premiumPromoModal.feature.more": "…y mucho más",
+  "premiumPromoModal.feature.organizations": "Organizaciones",
+  "premiumPromoModal.feature.qualityGates": "Compuertas de calidad",
+  "premiumPromoModal.feature.sso": "Inicio de sesión único",
+  "premiumPromoModal.feature.testExecutions": "Búsqueda de ejecuciones de prueba",
+  "premiumPromoModal.notNowButton": "Ahora no",
+  "premiumPromoModal.subtitle": "Actualiza tu plan para aprovechar al máximo ReportPortal y trabajar de forma más eficiente.",
+  "premiumPromoModal.title": "Desbloquea funciones premium"
 }

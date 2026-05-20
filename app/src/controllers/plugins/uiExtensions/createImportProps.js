@@ -54,6 +54,7 @@ import { showModalAction, hideModalAction } from 'controllers/modal';
 import { fetch, ERROR_CANCELED } from 'common/utils/fetch';
 import { downloadFile } from 'common/utils/downloadFile';
 import { isEmptyObject } from 'common/utils/isEmptyObject';
+import { referenceDictionary } from 'common/utils/referenceDictionary';
 import { getSessionItem, setSessionItem, removeSessionItem } from 'common/utils/storageUtils';
 import {
   STATS_PB_TOTAL,
@@ -136,6 +137,8 @@ import ArrowIcon from 'common/img/arrow-down-inline.svg';
 import CircleCrossIcon from 'common/img/circle-cross-icon-inline.svg';
 import CircleCheckIcon from 'common/img/circle-check-inline.svg';
 import PencilIcon from 'common/img/pencil-empty-inline.svg';
+import DiscoverPluginsIcon from 'common/img/discover-icon-inline.svg';
+import OpenInNewTabIcon from 'common/img/open-in-new-tab-inline.svg';
 import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { InputRadio } from 'components/inputs/inputRadio';
@@ -230,6 +233,8 @@ import {
   DraggableRuleList,
 } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
+import { QualityGatesPromoLayout } from 'pages/inside/projectSettingsPageContainer/content/qualityGates/qualityGatesPromoLayout';
+import { messages as qualityGatesMessages } from 'pages/inside/projectSettingsPageContainer/content/qualityGates/messages';
 import { AsyncAutocomplete as AsyncAutocompleteField } from 'componentLibrary/autocompletes/asyncAutocomplete';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
 import { Tabs } from 'components/main/tabs';
@@ -346,6 +351,7 @@ export const createImportProps = (pluginName) => ({
     Checkbox,
     Toggle,
     EmptyStatePage,
+    QualityGatesPromoLayout,
     Dropdown,
     FieldNumber,
     SystemMessage,
@@ -463,6 +469,8 @@ export const createImportProps = (pluginName) => ({
     CircleCheckIcon,
     CircleCrossIcon,
     RefreshIcon,
+    DiscoverPluginsIcon,
+    OpenInNewTabIcon,
   },
   utils: {
     fetch,
@@ -490,6 +498,8 @@ export const createImportProps = (pluginName) => ({
     setSessionItem,
     removeSessionItem,
     canDeleteTestItem,
+    referenceDictionary,
+    qualityGatesMessages,
   },
   validators: {
     attributesArray,
