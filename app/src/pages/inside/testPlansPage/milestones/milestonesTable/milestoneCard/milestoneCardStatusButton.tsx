@@ -48,6 +48,7 @@ export const MilestoneCardStatusButton = ({
   const [isOpened, setIsOpened] = useState(false);
   const statusModifier = milestoneStatusToCssModifier(milestone.status);
   const options = getMilestoneStatusPopoverOptions(milestone.status);
+  const isReadOnly = !onChangeMilestoneStatus;
 
   const handleMilestoneStatusOptionClick = (
     event: MouseEvent<HTMLButtonElement>,
@@ -56,6 +57,10 @@ export const MilestoneCardStatusButton = ({
     event.stopPropagation();
     setIsOpened(false);
 
+    if (!onChangeMilestoneStatus) {
+      return;
+    }
+
     if (targetStatus !== milestone.status) {
       trackEvent(
         MILESTONES_PAGE_EVENTS.chooseMilestoneStatus(
@@ -63,8 +68,38 @@ export const MilestoneCardStatusButton = ({
         ),
       );
     }
-    onChangeMilestoneStatus?.(milestone, targetStatus);
+    onChangeMilestoneStatus(milestone, targetStatus);
   };
+
+  const statusButton = (
+    <button
+      type="button"
+      className={cx(
+        'milestone-card__status-toggle',
+        `milestone-card__status-toggle_${statusModifier}`,
+      )}
+      aria-expanded={isReadOnly ? undefined : isOpened}
+      aria-haspopup={isReadOnly ? undefined : 'listbox'}
+      disabled={isReadOnly}
+    >
+      <span className={cx('milestone-card__status-toggle-label')}>
+        {formatMessage(getMilestoneStatusMessageDescriptor(milestone.status))}
+      </span>
+      {!isReadOnly && (
+        <span
+          className={cx('milestone-card__status-chevron', {
+            'milestone-card__status-chevron_open': isOpened,
+          })}
+        >
+          <ChevronDownDropdownIcon />
+        </span>
+      )}
+    </button>
+  );
+
+  if (isReadOnly) {
+    return statusButton;
+  }
 
   return (
     <Popover
@@ -90,26 +125,7 @@ export const MilestoneCardStatusButton = ({
       setIsOpened={setIsOpened}
       isCentered={false}
     >
-      <button
-        type="button"
-        className={cx(
-          'milestone-card__status-toggle',
-          `milestone-card__status-toggle_${statusModifier}`,
-        )}
-        aria-expanded={isOpened}
-        aria-haspopup="listbox"
-      >
-        <span className={cx('milestone-card__status-toggle-label')}>
-          {formatMessage(getMilestoneStatusMessageDescriptor(milestone.status))}
-        </span>
-        <span
-          className={cx('milestone-card__status-chevron', {
-            'milestone-card__status-chevron_open': isOpened,
-          })}
-        >
-          <ChevronDownDropdownIcon />
-        </span>
-      </button>
+      {statusButton}
     </Popover>
   );
 };

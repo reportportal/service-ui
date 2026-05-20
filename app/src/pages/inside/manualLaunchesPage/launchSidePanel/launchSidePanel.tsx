@@ -38,6 +38,7 @@ import { CollapsibleSection } from 'components/collapsibleSection';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { formatTimestampForSidePanel } from 'pages/inside/common/testCaseList/utils';
 import { MANUAL_LAUNCH_DETAILS_PAGE } from 'controllers/pages';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useProjectDetails } from 'hooks/useTypedSelector';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ExecutionStatus } from 'types/testCase';
@@ -70,6 +71,7 @@ export const LaunchSidePanel = memo(
     const dispatch = useDispatch();
     const { trackEvent } = useTracking();
     const { organizationSlug, projectSlug } = useProjectDetails();
+    const { canEditLaunch } = useUserPermissions();
     const sidePanelRef = useRef<HTMLDivElement>(null);
     const { launchDetails, isLoading, refetchLaunchDetails } = useLaunchDetails(launchId);
     const { openModal: openEditModal } = useEditManualLaunchModal({
@@ -255,14 +257,16 @@ export const LaunchSidePanel = memo(
         >
           {formatMessage(messages.openDetails)}
         </Button>
-        <Button
-          variant="ghost"
-          className={cx('action-button')}
-          onClick={handleEditLaunchClick}
-          data-automation-id="launch-edit-launch"
-        >
-          {formatMessage(messages.editLaunch)}
-        </Button>
+        {canEditLaunch && (
+          <Button
+            variant="ghost"
+            className={cx('action-button')}
+            onClick={handleEditLaunchClick}
+            data-automation-id="launch-edit-launch"
+          >
+            {formatMessage(messages.editLaunch)}
+          </Button>
+        )}
         <Button
           variant="primary"
           className={cx('action-button', 'last-button')}

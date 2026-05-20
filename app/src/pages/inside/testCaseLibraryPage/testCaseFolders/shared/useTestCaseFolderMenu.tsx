@@ -184,7 +184,7 @@ export const useTestCaseFolderMenu = ({
           },
         ],
       ]
-    : [[]];
+    : [];
 
   return {
     testCaseFolderTooltipItems,

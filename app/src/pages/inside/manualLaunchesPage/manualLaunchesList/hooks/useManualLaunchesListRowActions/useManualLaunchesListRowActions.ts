@@ -31,13 +31,14 @@ export const useManualLaunchesListRowActions = ({
   onDelete,
 }: UseManualLaunchesListRowActionsParams): ActionItem[] => {
   const { formatMessage } = useIntl();
-  const { canDeleteLaunch } = useUserPermissions();
+  const { canDeleteLaunch, canEditLaunch } = useUserPermissions();
 
   return useMemo(
     () => [
       {
         label: formatMessage(messages.editLaunch),
         onClick: onEdit,
+        hasPermission: canEditLaunch,
       },
       {
         label: formatMessage(messages.deleteLaunch),
@@ -46,6 +47,6 @@ export const useManualLaunchesListRowActions = ({
         hasPermission: canDeleteLaunch,
       },
     ],
-    [formatMessage, onEdit, onDelete, canDeleteLaunch],
+    [formatMessage, onEdit, onDelete, canDeleteLaunch, canEditLaunch],
   );
 };
