@@ -56,6 +56,7 @@ export const IntegrationCollectionItem = ({
 
   useEffect(() => {
     if (!testConnection || id == null || inactive) {
+      setIsConnectionLoading(false);
       return undefined;
     }
 
