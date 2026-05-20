@@ -18,13 +18,13 @@ import { VoidFn } from '@reportportal/ui-kit/common/types/commonTypes';
 
 import { UseModalData } from 'common/hooks';
 
-import { RemoveTestFromPlanSource } from 'analyticsEvents/testPlansPageEvents';
+import { ActionSource } from 'analyticsEvents/testPlansPageEvents';
 
 export interface RemoveTestCasesFromTestPlanModalData {
   selectedTestCaseIds: number[];
   testCaseName?: string;
   onClearSelection?: VoidFn;
-  source?: RemoveTestFromPlanSource;
+  source?: ActionSource;
 }
 
 export type RemoveTestCasesFromTestPlanModalProps =
@@ -32,5 +32,5 @@ export type RemoveTestCasesFromTestPlanModalProps =
 
 export interface UseRemoveTestCasesFromTestPlanOptions {
   onSuccess?: VoidFn;
-  source?: RemoveTestFromPlanSource;
+  source?: ActionSource;
 }

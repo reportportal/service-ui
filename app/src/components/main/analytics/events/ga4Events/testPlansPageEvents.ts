@@ -19,6 +19,9 @@ import {
   getBasicEventParameters,
   getBasicSearchEventParameters,
 } from '../common/ga4Utils';
+import { ADD_TO_LAUNCH_STATUS, type AddToLaunchStatusType } from './testCaseLibraryPageEvents';
+
+export { ADD_TO_LAUNCH_STATUS, type AddToLaunchStatusType };
 
 const TEST_PLANS = 'test_plans';
 
@@ -40,14 +43,6 @@ export const ACTION_SOURCE = {
   SINGLE: 'single',
 } as const;
 export type ActionSource = (typeof ACTION_SOURCE)[keyof typeof ACTION_SOURCE];
-export type AddToTestLaunchSource = ActionSource;
-export type RemoveTestFromPlanSource = ActionSource;
-
-export const ADD_TO_LAUNCH_STATUS = {
-  CREATE_NEW_LAUNCH: 'create_new_launch',
-  ADD_TO_EXISTING_LAUNCH: 'add_to_existing_launch',
-} as const;
-export type AddToTestLaunchStatus = (typeof ADD_TO_LAUNCH_STATUS)[keyof typeof ADD_TO_LAUNCH_STATUS];
 
 export const TEST_PLAN_DETAILS_VIEW_TYPE = {
   POPULATED: 'populated',
@@ -119,7 +114,7 @@ export const TEST_PLANS_PAGE_EVENTS = {
     type: params.type,
     number: params.number,
   }),
-  submitRemoveTestFromPlan: (source: RemoveTestFromPlanSource) => ({
+  submitRemoveTestFromPlan: (source: ActionSource) => ({
     ...CLICK,
     place: PLACE_DETAILS,
     element_name: `submit_${source}_remove_test_from_plan`,
@@ -146,9 +141,9 @@ export const TEST_PLANS_PAGE_EVENTS = {
     element_name: 'start_add_and_create_launch',
   },
   submitAddToTestLaunch: (params: {
-    source: AddToTestLaunchSource;
+    source: ActionSource;
     place: AddToTestLaunchPlace;
-    status: AddToTestLaunchStatus;
+    status: AddToLaunchStatusType;
   }) => ({
     ...CLICK,
     place: params.place,
