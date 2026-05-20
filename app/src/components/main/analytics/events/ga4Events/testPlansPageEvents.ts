@@ -19,9 +19,8 @@ import {
   getBasicEventParameters,
   getBasicSearchEventParameters,
 } from '../common/ga4Utils';
-import { ADD_TO_LAUNCH_STATUS, type AddToLaunchStatusType } from './testCaseLibraryPageEvents';
-
-export { ADD_TO_LAUNCH_STATUS, type AddToLaunchStatusType };
+export { ADD_TO_LAUNCH_STATUS, type AddToLaunchStatusType } from './testCaseLibraryPageEvents';
+import type { AddToLaunchStatusType } from './testCaseLibraryPageEvents';
 
 const TEST_PLANS = 'test_plans';
 
