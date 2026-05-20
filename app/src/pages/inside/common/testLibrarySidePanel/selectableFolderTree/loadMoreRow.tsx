@@ -26,24 +26,16 @@ const cx = createClassnames(styles);
 
 interface LoadMoreRowProps {
   row: { folderId: number; depth: number; connectorDepths: number[]; isLastChild: boolean };
-  nextRowDepth: number;
   fetchNextPageMapRef: MutableRefObject<Map<number, VoidFn>>;
   style?: CSSProperties;
 }
 
-export const LoadMoreRow = ({ row, nextRowDepth, fetchNextPageMapRef, style }: LoadMoreRowProps) => {
+export const LoadMoreRow = ({ row, fetchNextPageMapRef, style }: LoadMoreRowProps) => {
   const { folderId } = row;
 
   useEffect(() => {
     fetchNextPageMapRef.current.get(folderId)?.();
   }, [folderId, fetchNextPageMapRef]);
 
-  return (
-    <LoadingRow
-      row={row}
-      nextRowDepth={nextRowDepth}
-      className={cx('selectable-folder__load-more')}
-      style={style}
-    />
-  );
+  return <LoadingRow className={cx('selectable-folder__load-more')} style={style} />;
 };

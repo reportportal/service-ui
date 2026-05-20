@@ -78,12 +78,8 @@ const FolderFetcher = ({
 export const SelectableFolderTree = () => {
   const folders = useSelector(transformedFoldersSelector);
   const { setScrollElement } = usePanelActions();
-  const {
-    expandedFolderIds,
-    testCasesMap,
-    shouldHideAddedTestCases,
-    testPlanCountByFolderId,
-  } = usePanelState();
+  const { expandedFolderIds, testCasesMap, shouldHideAddedTestCases, testPlanCountByFolderId } =
+    usePanelState();
   const scrollRef = useRef<HTMLDivElement>(null);
   const fetchNextPageMapRef = useRef<FetchNextPageMap>(new Map());
   const fetchRetryMapRef = useRef<FetchRetryMap>(new Map());
@@ -126,17 +122,20 @@ export const SelectableFolderTree = () => {
 
     switch (row.type) {
       case 'folder':
-        return <SelectableFolderRow key={key} row={row} nextRowDepth={nextRowDepth} style={style} />;
+        return (
+          <SelectableFolderRow key={key} row={row} nextRowDepth={nextRowDepth} style={style} />
+        );
       case 'testCase':
-        return <SelectableTestCaseRow key={key} row={row} nextRowDepth={nextRowDepth} style={style} />;
+        return (
+          <SelectableTestCaseRow key={key} row={row} nextRowDepth={nextRowDepth} style={style} />
+        );
       case 'loading':
-        return <LoadingRow key={key} row={row} nextRowDepth={nextRowDepth} style={style} />;
+        return <LoadingRow key={key} style={style} />;
       case 'loadMore':
         return (
           <LoadMoreRow
             key={key}
             row={row}
-            nextRowDepth={nextRowDepth}
             fetchNextPageMapRef={fetchNextPageMapRef}
             style={style}
           />

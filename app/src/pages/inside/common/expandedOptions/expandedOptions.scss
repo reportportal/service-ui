@@ -75,13 +75,18 @@
   height: 100%;
 
   &__sidebar {
+    display: flex;
+    flex-direction: column;
     min-width: 360px;
     max-width: 360px;
+    min-height: 0;
+    height: 100%;
     border-right: 1px solid var(--rp-ui-base-e-100);
     background-color: var(--rp-ui-base-bg-000);
   }
 
   &__sidebar-separator {
+    flex-shrink: 0;
     width: 312px;
     height: 1px;
     margin: 8px auto;
@@ -91,11 +96,13 @@
   &__sidebar-actions {
     @include flex-center(row, space-between, center);
 
+    flex-shrink: 0;
     padding: 8px 32px;
 
     &--title {
-      margin-right: auto;
       @include text-style(15px);
+
+      margin-right: auto;
     }
 
     &--search {
@@ -167,9 +174,11 @@
   }
 
   &__search-wrapper {
+    @include flex-center(row, center, center);
+    
+    flex-shrink: 0;
     padding: 7px 8px;
     background-color: var(--rp-ui-base-bg-200);
-    @include flex-center(row, center, center);
 
     > div {
       max-width: 312px;
@@ -227,13 +236,10 @@
   }
 
   &__sidebar-folders-wrapper {
-    height: calc(100% - 160px);
+    flex: 1 1 0;
+    min-height: 0;
     position: relative;
     overflow: hidden;
-
-    &--with-search {
-      height: calc(100% - 208px);
-    }
 
     &:has(.expanded-options__drop-placeholder) {
       .folders-tree {
@@ -282,6 +288,7 @@
 }
 
 .sidebar-header {
+  flex-shrink: 0;
   padding: 20px 24px 0 24px;
 
   &__title {

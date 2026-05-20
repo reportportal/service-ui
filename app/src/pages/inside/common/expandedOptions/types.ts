@@ -47,6 +47,7 @@ export interface ExpandedOptionsProps {
   onFolderClick: (id: number) => void;
   children: ReactNode;
   instanceKey: TMS_INSTANCE_KEY;
+  flatViewScopeId?: string | number | null;
   searchQuery?: string;
   searchExtraFilters?: Record<string, string | number>;
   searchAllFolders?: Folder[];

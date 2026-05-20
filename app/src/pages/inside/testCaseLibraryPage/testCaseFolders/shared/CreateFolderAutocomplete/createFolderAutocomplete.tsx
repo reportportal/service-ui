@@ -53,6 +53,10 @@ interface CreateFolderAutocompleteProps {
   touched?: boolean;
   shouldDisplayNewFolderButton?: boolean;
   excludeFolderIds?: number[];
+  withMenuFlip?: boolean;
+  useFixedPositioning?: boolean;
+  dropdownMatchInputWidth?: boolean;
+  menuClassName?: string;
   onStateChange?: SingleAutocompleteOnStateChange;
   onChange?: (value: FolderWithFullPath | NewFolderData) => void;
 }
@@ -68,6 +72,10 @@ export const CreateFolderAutocomplete = ({
   touched,
   shouldDisplayNewFolderButton = false,
   excludeFolderIds = [],
+  withMenuFlip = false,
+  useFixedPositioning = false,
+  dropdownMatchInputWidth = false,
+  menuClassName,
   onStateChange = noop,
   onChange = noop,
 }: CreateFolderAutocompleteProps) => {
@@ -188,7 +196,10 @@ export const CreateFolderAutocomplete = ({
       <SingleAutocomplete<FolderWithFullPath | string>
         createWithoutConfirmation={hideNewFolderButton}
         optionVariant=""
-        useFixedPositioning={false}
+        useFixedPositioning={useFixedPositioning}
+        withMenuFlip={withMenuFlip}
+        dropdownMatchInputWidth={dropdownMatchInputWidth}
+        menuClassName={menuClassName}
         value={getTargetFolder()}
         error={error}
         touched={touched}

@@ -41,6 +41,10 @@
       background: none;
       box-sizing: content-box;
       overflow: hidden;
+
+      &--text {
+        font-weight: 400;
+      }
     }
 
     &-empty {
@@ -71,8 +75,10 @@
   &__loader {
     display: flex;
     justify-content: center;
-    padding: 16px;
+    align-items: center;
+    height: 36px;
     position: relative;
+    box-sizing: border-box;
   }
 
   &__load-more {

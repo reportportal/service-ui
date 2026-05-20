@@ -15,7 +15,7 @@
  */
 
 import { KeyboardEvent, memo, useCallback, useMemo } from 'react';
-import { CheckmarkIcon, DragNDropIcon } from '@reportportal/ui-kit';
+import { CheckmarkIcon, DragNDropIcon, TestCaseIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { TestCase } from 'types/testCase';
@@ -99,6 +99,7 @@ export const SelectableTestCase = memo(
               onChange={handleChange}
             />
           )}
+          <TestCaseIcon className={cx('selectable-test-case__icon')} />
           <span
             className={cx('selectable-test-case__name', {
               'selectable-test-case__name--added': isAddedToTestPlan,

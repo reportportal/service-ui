@@ -15,7 +15,7 @@
  */
 
 import { useCallback, CSSProperties, KeyboardEvent } from 'react';
-import { ChevronDownDropdownIcon, DragNDropIcon } from '@reportportal/ui-kit';
+import { ChevronDownDropdownIcon, DragNDropIcon, FolderIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
@@ -118,6 +118,7 @@ export const SelectableFolderRow = ({ row, nextRowDepth, style }: SelectableFold
           className={cx('folders-tree__item-title', 'selectable-tree__item-title')}
           onClick={handleToggle}
         >
+          <FolderIcon className={cx('folders-tree__item-title--icon')} />
           <span className={cx('folders-tree__item-title--text')} title={folder.name}>
             {folder.name}
           </span>

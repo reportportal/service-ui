@@ -254,6 +254,10 @@ export const ImportTestCaseModal = ({
                 <CreateFolderAutocomplete
                   label={formatMessage(messages.importDropdownLabel)}
                   placeholder={formatMessage(messages.typeToSearchOrSelect)}
+                  withMenuFlip
+                  useFixedPositioning
+                  dropdownMatchInputWidth
+                  menuClassName={cx('import-test-case-modal__folder-menu')}
                   onChange={handleFolderSelect}
                 />
               </FieldErrorHint>

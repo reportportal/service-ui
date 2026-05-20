@@ -14,22 +14,79 @@
  * limitations under the License.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 
+import { getStorageItem, updateStorageItem } from 'common/utils';
+import { userIdSelector } from 'controllers/user';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
-import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 
-const FLAT_VIEW_STORAGE_KEY = 'folderTreeFlatView';
+type FlatViewSettingsFieldFn = (scopeId: string | number | null | undefined) => string;
 
-const getFlatViewStorageKey = (instanceKey: TMS_INSTANCE_KEY) =>
-  `${FLAT_VIEW_STORAGE_KEY}_${instanceKey}`;
+const FLAT_VIEW_SETTINGS_FIELD_BY_INSTANCE: Record<TMS_INSTANCE_KEY, FlatViewSettingsFieldFn> = {
+  [TMS_INSTANCE_KEY.TEST_CASE]: () => 'testCaseLibraryFolderTreeFlatView',
+  [TMS_INSTANCE_KEY.TEST_PLAN]: (scopeId) => `testPlanFolderTreeFlatView_${String(scopeId)}`,
+  [TMS_INSTANCE_KEY.MANUAL_LAUNCH]: (scopeId) =>
+    `manualLaunchFolderTreeFlatView_${String(scopeId)}`,
+};
 
-export const useFlatViewPreference = (instanceKey: TMS_INSTANCE_KEY) => {
-  const storageKey = getFlatViewStorageKey(instanceKey);
-  const [isFlatView, setIsFlatView] = useState<boolean>(() =>
-    Boolean(getStorageItem(storageKey)),
-  );
+export interface UseFlatViewPreferenceParams {
+  instanceKey: TMS_INSTANCE_KEY;
+  flatViewScopeId?: string | number | null;
+}
+
+const getSettingsFieldKey = (
+  instanceKey: TMS_INSTANCE_KEY,
+  scopeId: string | number | null | undefined,
+) => {
+  if (
+    (scopeId === null || scopeId === undefined || scopeId === '') &&
+    instanceKey !== TMS_INSTANCE_KEY.TEST_CASE
+  ) {
+    return null;
+  }
+
+  return FLAT_VIEW_SETTINGS_FIELD_BY_INSTANCE[instanceKey](scopeId);
+};
+
+const getFlatViewSettings = (userId: string, fieldKey: string) => {
+  const settings = getStorageItem(`${userId}_settings`) as Record<string, unknown> | undefined;
+  const value = settings?.[fieldKey];
+
+  if (typeof value === 'boolean') {
+    return value;
+  }
+};
+
+const getFlatViewValue = (userId: string | undefined, fieldKey: string | null) => {
+  if (!fieldKey) {
+    return false;
+  }
+
+  if (userId) {
+    const fromSettings = getFlatViewSettings(userId, fieldKey);
+
+    if (typeof fromSettings === 'boolean') {
+      return fromSettings;
+    }
+  }
+
+  return false;
+};
+
+export const useFlatViewPreference = ({
+  instanceKey,
+  flatViewScopeId,
+}: UseFlatViewPreferenceParams) => {
+  const userId = useSelector(userIdSelector) as string | undefined;
+  const fieldKey = getSettingsFieldKey(instanceKey, flatViewScopeId);
+  const settingsStorageKey = userId ? `${userId}_settings` : null;
+  const [isFlatView, setIsFlatView] = useState(() => getFlatViewValue(userId, fieldKey));
   const isMountedRef = useRef(false);
+
+  useLayoutEffect(() => {
+    setIsFlatView(getFlatViewValue(userId, fieldKey));
+  }, [userId, fieldKey]);
 
   useEffect(() => {
     if (!isMountedRef.current) {
@@ -38,12 +95,12 @@ export const useFlatViewPreference = (instanceKey: TMS_INSTANCE_KEY) => {
       return;
     }
 
-    setStorageItem(storageKey, isFlatView);
-  }, [isFlatView, storageKey]);
+    if (!settingsStorageKey || !fieldKey) {
+      return;
+    }
 
-  useEffect(() => {
-    setIsFlatView(Boolean(getStorageItem(storageKey)));
-  }, [storageKey]);
+    updateStorageItem(settingsStorageKey, { [fieldKey]: isFlatView });
+  }, [isFlatView, settingsStorageKey, fieldKey]);
 
   return {
     isFlatView,

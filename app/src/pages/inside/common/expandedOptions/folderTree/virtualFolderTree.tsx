@@ -48,7 +48,6 @@ export interface VirtualFolderTreeProps {
   pageSearchQuery?: string;
   enableDragAndDrop?: boolean;
   isFlatView?: boolean;
-  hideEmptyFoldersInFlatView?: boolean;
   hiddenActiveFolderIndicatorId?: number | null;
   canDropOn?: (draggedItem: TreeDragItem, targetId: string | number) => boolean;
   onFolderClick: (id: number) => void;
@@ -68,7 +67,6 @@ export const VirtualFolderTree = ({
   hasAnyMatch,
   enableDragAndDrop = false,
   isFlatView = false,
-  hideEmptyFoldersInFlatView = false,
   hiddenActiveFolderIndicatorId = null,
   canDropOn,
   onFolderClick,
@@ -76,13 +74,7 @@ export const VirtualFolderTree = ({
   onToggleFolder,
 }: VirtualFolderTreeProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const flatFolders = useFlattenedTree(
-    folders,
-    expandedIds,
-    searchQuery,
-    isFlatView,
-    hideEmptyFoldersInFlatView,
-  );
+  const flatFolders = useFlattenedTree(folders, expandedIds, searchQuery, isFlatView);
   const flatFoldersRef = useRef(flatFolders);
 
   const virtualizer = useVirtualizer({
