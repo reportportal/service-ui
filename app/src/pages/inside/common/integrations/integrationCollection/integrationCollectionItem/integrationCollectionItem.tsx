@@ -16,7 +16,7 @@
 
 import { useState, useEffect, useMemo, ReactNode } from 'react';
 import { useIntl } from 'react-intl';
-import { ArrowRightIcon } from '@reportportal/ui-kit';
+import { ArrowRightIcon, BubblesLoader } from '@reportportal/ui-kit';
 import { createClassnames } from 'common/utils';
 import { IntegrationStatusBadge, IntegrationStatus } from '../../integrationStatusBadge';
 import { IntegrationItem } from '../../types';
@@ -50,23 +50,40 @@ export const IntegrationCollectionItem = ({
 }: IntegrationCollectionItemProps) => {
   const { formatMessage } = useIntl();
   const [connected, setConnected] = useState(true);
+  const [isConnectionLoading, setIsConnectionLoading] = useState(() =>
+    Boolean(testConnection && id != null && !inactive),
+  );
 
   useEffect(() => {
     if (!testConnection || id == null || inactive) {
+      setIsConnectionLoading(false);
       return undefined;
     }
+
     let cancelled = false;
-    testConnection(id)
-      .then(() => {
-        if (!cancelled) {
-          setConnected(true);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setConnected(false);
-        }
-      });
+    const checkConnection = () => {
+      setIsConnectionLoading(true);
+
+      testConnection(id)
+        .then(() => {
+          if (!cancelled) {
+            setConnected(true);
+          }
+        })
+        .catch(() => {
+          if (!cancelled) {
+            setConnected(false);
+          }
+        })
+        .finally(() => {
+          if (!cancelled) {
+            setIsConnectionLoading(false);
+          }
+        });
+    };
+
+    checkConnection();
+
     return () => {
       cancelled = true;
     };
@@ -98,7 +115,11 @@ export const IntegrationCollectionItem = ({
             <h4 className={cx('integration-name')} title={title}>
               {title}
             </h4>
-            <IntegrationStatusBadge variant={statusVariant} tooltip={tooltip} />
+            {isConnectionLoading ? (
+              <BubblesLoader />
+            ) : (
+              <IntegrationStatusBadge variant={statusVariant} tooltip={tooltip} />
+            )}
           </div>
           <span className={cx('creation-info')}>
             {creator
