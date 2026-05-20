@@ -285,6 +285,7 @@ export const ImportTestCaseModal = ({
       className={cx('import-test-case-modal')}
       cancelButton={cancelButton}
       onClose={hideModal}
+      scrollable
     >
       <form onSubmit={handleSubmit(handleImport) as VoidFn}>
         <div className={cx('import-test-case-modal__content')}>

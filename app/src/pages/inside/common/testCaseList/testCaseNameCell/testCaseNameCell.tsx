@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { createClassnames } from 'common/utils';
+import { createClassnames, highlightText } from 'common/utils';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import type { TestCasePriority } from 'types/testCase';
@@ -28,9 +28,16 @@ interface TestCaseNameCellProps {
   priority: TestCasePriority;
   name: string;
   tags: string[];
+  searchQuery?: string;
 }
 
-export const TestCaseNameCell = ({ displayId, priority, name, tags }: TestCaseNameCellProps) => {
+export const TestCaseNameCell = ({
+  displayId,
+  priority,
+  name,
+  tags,
+  searchQuery,
+}: TestCaseNameCellProps) => {
   const title = `${displayId} ${name}`;
 
   return (
@@ -38,8 +45,12 @@ export const TestCaseNameCell = ({ displayId, priority, name, tags }: TestCaseNa
       {priority && <PriorityIcon priority={priority} />}
       <div className={cx('name-content')}>
         <div className={cx('test-name-row')} title={title}>
-          <span className={cx('business-id')}>{displayId}</span>
-          <span className={cx('test-name')}>{name}</span>
+          <span className={cx('business-id')}>
+            {highlightText(displayId, searchQuery || '', cx('highlight'))}
+          </span>
+          <span className={cx('test-name')}>
+            {highlightText(name, searchQuery || '', cx('highlight'))}
+          </span>
         </div>
         <div className={cx('tags-section')}>
           <AdaptiveTagList tags={tags} isShowAllView />

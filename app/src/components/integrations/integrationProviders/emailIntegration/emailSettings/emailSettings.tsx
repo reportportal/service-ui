@@ -16,11 +16,10 @@
 
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import classNames from 'classnames/bind';
+import { redirect } from 'redux-first-router';
 import { useIntl, defineMessages } from 'react-intl';
 import { BubblesLoader, Button, DeleteIcon } from '@reportportal/ui-kit';
-import { fetch } from 'common/utils';
-import { URLS } from 'common/urls';
+
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { omit } from 'common/utils/omit';
 import {
@@ -29,20 +28,25 @@ import {
   PROJECT_SETTINGS_TAB_PAGE,
 } from 'controllers/pages';
 import { projectKeySelector } from 'controllers/project';
+import { activeOrganizationIdSelector } from 'controllers/organization';
 import {
   removeIntegrationAction,
   namedGlobalIntegrationsSelector,
   namedProjectIntegrationsSelector,
+  namedOrganizationIntegrationsSelector,
 } from 'controllers/plugins';
+import { getTestIntegrationConnection } from 'controllers/plugins/utils';
 import { showModalAction } from 'controllers/modal';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { redirect } from 'redux-first-router';
+import { createClassnames } from 'common/utils';
+import { NamedIntegrations } from 'pages/inside/common/integrations/types';
+
 import { IntegrationData } from '../types';
 import { EmailDetailsCard } from '../emailDetailsCard';
 import styles from './emailSettings.scss';
 
-const cx = classNames.bind(styles);
+const cx = createClassnames(styles);
 
 const messages = defineMessages({
   deleteIntegrationDescription: {
@@ -51,7 +55,7 @@ const messages = defineMessages({
   },
   deleteIntegrationTitle: {
     id: 'EmailSettings.deleteIntegrationTitle',
-    defaultMessage: 'Delete {name}',
+    defaultMessage: 'Delete integration',
   },
 });
 
@@ -65,31 +69,41 @@ interface EmailSettingsProps {
     onSuccess: () => void,
     metaData: Record<string, unknown>,
   ) => void;
-  readonly isGlobal: boolean;
+  readonly isGlobal?: boolean;
+  readonly isOrganizational?: boolean;
 }
 
 export function EmailSettings({
   data,
   goToPreviousPage,
   isGlobal = false,
+  isOrganizational = false,
 }: EmailSettingsProps) {
   const [connected, setConnected] = useState(true);
   const [loading, setLoading] = useState(true);
 
-  const globalIntegrations = useSelector(namedGlobalIntegrationsSelector) as Record<string, IntegrationData[]>;
-  const projectIntegrations = useSelector(namedProjectIntegrationsSelector) as Record<string, IntegrationData[]>;
-  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector) as Record<string, string>;
+  const globalIntegrations: NamedIntegrations = useSelector(namedGlobalIntegrationsSelector);
+  const organizationIntegrations: NamedIntegrations = useSelector(
+    namedOrganizationIntegrationsSelector,
+  );
+  const projectIntegrations: NamedIntegrations = useSelector(namedProjectIntegrationsSelector);
+  const { organizationSlug, projectSlug } = useSelector(
+    urlOrganizationAndProjectSelector,
+  ) as Record<string, string>;
   const projectKey = useSelector(projectKeySelector);
-  const { canUpdateSettings } = useUserPermissions();
+  const organizationId = useSelector(activeOrganizationIdSelector);
+  const { canUpdateSettings, canUpdateOrganizationSettings } = useUserPermissions();
+  const canManageIntegration = isOrganizational ? canUpdateOrganizationSettings : canUpdateSettings;
   const query = useSelector(querySelector) as Record<string, string>;
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
 
   const groupedIntegrations = useMemo(() => {
     const availableGlobal = globalIntegrations[query.subPage] || [];
+    const availableOrganization = organizationIntegrations[query.subPage] || [];
     const availableProject = projectIntegrations[query.subPage] || [];
-    return [...availableGlobal, ...availableProject];
-  }, [globalIntegrations, projectIntegrations, query.subPage]);
+    return [...availableGlobal, ...availableOrganization, ...availableProject];
+  }, [globalIntegrations, organizationIntegrations, projectIntegrations, query.subPage]);
 
   const namedSubPage = useMemo(
     () => ({
@@ -102,14 +116,21 @@ export function EmailSettings({
     [organizationSlug, projectSlug, query],
   );
 
+  const testConnection = useMemo(
+    () =>
+      getTestIntegrationConnection({
+        isGlobal,
+        isOrganizational,
+        context: { projectKey, organizationId },
+      }),
+    [projectKey, organizationId, isGlobal, isOrganizational],
+  );
+
   const testIntegrationConnection = useCallback(() => {
     if ('id' in data) {
       setLoading(true);
-      const fetchConnection = isGlobal
-        ? fetch(URLS.testGlobalIntegrationConnection(data.id))
-        : fetch(URLS.testIntegrationConnection(projectKey, data.id));
 
-      fetchConnection
+      testConnection(data.id)
         .then(() => {
           setConnected(true);
           setLoading(false);
@@ -119,12 +140,13 @@ export function EmailSettings({
           setConnected(false);
         });
     }
-  }, [data, projectKey, isGlobal]);
+  }, [data, testConnection]);
 
   useEffect(() => {
     if (!query.id) return;
     const queryId = Number(query.id);
-    const isKnownIntegration = Number.isFinite(queryId) && groupedIntegrations.some(({ id }) => id === queryId);
+    const isKnownIntegration =
+      Number.isFinite(queryId) && groupedIntegrations.some(({ id }) => id === queryId);
     if (!isKnownIntegration) {
       // @ts-expect-error redirect typing mismatch with redux-first-router
       dispatch(redirect(namedSubPage));
@@ -147,7 +169,7 @@ export function EmailSettings({
         id: 'deleteIntegrationModal',
         data: {
           onConfirm: removeIntegration,
-          modalTitle: formatMessage(messages.deleteIntegrationTitle, { name: data.name }),
+          modalTitle: formatMessage(messages.deleteIntegrationTitle),
           description: formatMessage(messages.deleteIntegrationDescription, { name: data.name }),
         },
       }),
@@ -155,7 +177,7 @@ export function EmailSettings({
   };
 
   const blocked = data.blocked ?? false;
-  const showDeleteSection = canUpdateSettings && !blocked;
+  const showDeleteSection = canManageIntegration && !blocked;
 
   return (
     <div className={cx('email-settings')}>
@@ -164,11 +186,7 @@ export function EmailSettings({
       ) : (
         <>
           <div>
-            <EmailDetailsCard
-              data={data}
-              connected={connected}
-              isEditable={canUpdateSettings}
-            />
+            <EmailDetailsCard data={data} connected={connected} isEditable={canManageIntegration} />
           </div>
 
           {showDeleteSection && (

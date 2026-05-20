@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,12 +29,14 @@ import {
   ADD_PROJECT_INTEGRATION_SUCCESS,
   UPDATE_PROJECT_INTEGRATION_SUCCESS,
   REMOVE_PROJECT_INTEGRATION_SUCCESS,
+  ADD_ORGANIZATION_INTEGRATION_SUCCESS,
   ADD_GLOBAL_INTEGRATION_SUCCESS,
   UPDATE_GLOBAL_INTEGRATION_SUCCESS,
   REMOVE_GLOBAL_INTEGRATION_SUCCESS,
   FETCH_GLOBAL_INTEGRATIONS,
   FETCH_GLOBAL_INTEGRATIONS_SUCCESS,
   REMOVE_GLOBAL_INTEGRATIONS_BY_TYPE_SUCCESS,
+  SET_ORGANIZATION_INTEGRATIONS,
 } from './constants';
 
 export const fetchPluginsAction = () => ({
@@ -80,9 +82,16 @@ export const updateIntegrationAction = (data, isGlobal, id, pluginName, callback
   meta: metaData,
 });
 
-export const addIntegrationAction = (data, isGlobal, pluginName, callback, metaData) => ({
+export const addIntegrationAction = (
+  data,
+  isGlobal,
+  pluginName,
+  callback,
+  metaData,
+  isOrganizational = false,
+) => ({
   type: ADD_INTEGRATION,
-  payload: { data, isGlobal, pluginName, callback },
+  payload: { data, isGlobal, isOrganizational, pluginName, callback },
   meta: metaData,
 });
 
@@ -111,6 +120,11 @@ export const addProjectIntegrationSuccessAction = (integration) => ({
   payload: integration,
 });
 
+export const addOrganizationIntegrationSuccessAction = (integration) => ({
+  type: ADD_ORGANIZATION_INTEGRATION_SUCCESS,
+  payload: integration,
+});
+
 export const removeIntegrationAction = (id, isGlobal, callback) => ({
   type: REMOVE_INTEGRATION,
   payload: { id, isGlobal, callback },
@@ -134,4 +148,9 @@ export const removeProjectIntegrationsByTypeSuccessAction = (instanceType) => ({
 export const removeGlobalIntegrationsByTypeSuccessAction = (instanceType) => ({
   type: REMOVE_GLOBAL_INTEGRATIONS_BY_TYPE_SUCCESS,
   payload: instanceType,
+});
+
+export const setOrganizationIntegrationsAction = (organizationIntegrations) => ({
+  type: SET_ORGANIZATION_INTEGRATIONS,
+  payload: organizationIntegrations,
 });

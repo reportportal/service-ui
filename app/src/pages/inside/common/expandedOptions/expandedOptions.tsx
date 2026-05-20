@@ -254,7 +254,7 @@ export const ExpandedOptions = ({
           }}
         />
       )}
-      <div className={cx('expanded-options')}>
+      <div className={cx('expanded-options', { 'expanded-options--no-sidebar': hideSidebar })}>
         {hideSidebar || (
           <div className={cx('expanded-options__sidebar')}>
             <div className={cx('sidebar-header')}>
@@ -356,17 +356,19 @@ export const ExpandedOptions = ({
           </div>
         )}
         {stableHidePageSearchSidebar ? (
-          <div className={cx('expanded-options__content')}>
-            <div className={cx('expanded-options__no-search-results')}>
-              <EmptyPageState
-                label={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
-                description={formatMessage(testCaseListMessages.noResultsDescription)}
-                emptyIcon={NoResultsIcon}
-              />
+          <div className={cx('expanded-options__content-scroll')}>
+            <div className={cx('expanded-options__content')}>
+              <div className={cx('expanded-options__no-search-results')}>
+                <EmptyPageState
+                  label={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
+                  description={formatMessage(testCaseListMessages.noResultsDescription)}
+                  emptyIcon={NoResultsIcon}
+                />
+              </div>
             </div>
           </div>
         ) : (
-          <ScrollWrapper>
+          <ScrollWrapper className={cx('expanded-options__content-scroll')}>
             <div className={cx('expanded-options__content')}>{children}</div>
           </ScrollWrapper>
         )}

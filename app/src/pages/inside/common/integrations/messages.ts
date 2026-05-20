@@ -15,8 +15,46 @@
  */
 
 import { defineMessages } from 'react-intl';
+import {
+  NOTIFICATION_GROUP_TYPE,
+  AUTHORIZATION_GROUP_TYPE,
+  BTS_GROUP_TYPE,
+  OTHER_GROUP_TYPE,
+} from 'common/constants/pluginsGroupTypes';
 
 export const messages = defineMessages({
+  [BTS_GROUP_TYPE]: {
+    id: 'IntegrationsList.bts',
+    defaultMessage: 'Bug Tracking Systems',
+  },
+  [NOTIFICATION_GROUP_TYPE]: {
+    id: 'IntegrationsList.notification',
+    defaultMessage: 'Notifications',
+  },
+  [AUTHORIZATION_GROUP_TYPE]: {
+    id: 'IntegrationsList.authorization',
+    defaultMessage: 'Authorization',
+  },
+  [OTHER_GROUP_TYPE]: {
+    id: 'IntegrationsList.other',
+    defaultMessage: 'Other',
+  },
+  noIntegrationsMessage: {
+    id: 'IntegrationsCase.noIntegrationsMessage',
+    defaultMessage: 'No integrations',
+  },
+  noIntegrationsDescription: {
+    id: 'IntegrationsCase.noIntegrationsDescription',
+    defaultMessage: 'Your project has no integrations yet',
+  },
+  noIntegrationsYet: {
+    id: 'IntegrationsCase.noIntegrationsYet',
+    defaultMessage: 'No integrations yet',
+  },
+  noIntegrationsYetDescription: {
+    id: 'IntegrationsCase.noIntegrationsYetDescription',
+    defaultMessage: 'Integration will appear here once plugins are configured by your team',
+  },
   noGlobalIntegrationsMessage: {
     id: 'IntegrationsDescription.noGlobalIntegrationsMessage',
     defaultMessage: 'No Integrations',
@@ -100,5 +138,41 @@ export const messages = defineMessages({
   integrationCreatedByOn: {
     id: 'IntegrationsDescription.integrationCreatedByOn',
     defaultMessage: '{creator} on {creationInfo}',
+  },
+  organizationIntegrationTitle: {
+    id: 'IntegrationsDescription.organizationIntegrationTitle',
+    defaultMessage: 'Organization integrations',
+  },
+  organizationIntegrationText: {
+    id: 'IntegrationsDescription.organizationIntegrationText',
+    defaultMessage:
+      'Default integrations are applicable across all projects within the organization unless project-specific configurations have been defined.',
+  },
+  organizationIntegrationResetDescription: {
+    id: 'IntegrationsDescription.organizationIntegrationResetDescription',
+    defaultMessage:
+      'Are you sure you want to reset to Global integration configurations? This will permanently delete all your Organizational integrations.',
+  },
+  organizationIntegrationAddLimited: {
+    id: 'IntegrationsDescription.organizationIntegrationAddLimited',
+    defaultMessage: 'Only one organizational integration can be added',
+  },
+  organizationIntegrationNoticeBody: {
+    id: 'IntegrationsDescription.organizationIntegrationNoticeBody',
+    defaultMessage:
+      'The integration will be unlinked from the Global configuration and will auto-apply to all Organization projects without existing individual configuration.',
+  },
+  noIntegrationsConfiguredYet: {
+    id: 'IntegrationsDescription.noIntegrationsConfiguredYet',
+    defaultMessage: 'No integrations configured yet',
+  },
+  noIntegrationsConfiguredDescription: {
+    id: 'IntegrationsDescription.noIntegrationsConfiguredDescription',
+    defaultMessage:
+      'All integrations that are configured for the Organization will be automatically applied to every project within it',
+  },
+  noIntegrationsOrganizationButtonAdd: {
+    id: 'IntegrationsDescription.noIntegrationsOrganizationButtonAdd',
+    defaultMessage: 'Create Organizational Integration',
   },
 });

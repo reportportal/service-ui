@@ -14,40 +14,110 @@
  * limitations under the License.
  */
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
-import classNames from 'classnames/bind';
-import { EMAIL } from 'common/constants/pluginNames';
-import { availablePluginsSelector, pluginsLoadingSelector } from 'controllers/plugins';
-import { PLUGIN_DESCRIPTIONS_MAP } from 'components/integrations/messages';
-import { PluginIcon } from 'components/integrations/elements/pluginIcon';
-import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { BubblesLoader } from '@reportportal/ui-kit';
-import { ORGANIZATION_SETTINGS_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
-import { docsReferences } from 'common/utils';
+import { redirect } from 'redux-first-router';
+
+import { EMAIL } from 'common/constants/pluginNames';
+import {
+  availableGroupedPluginsSelector,
+  availablePluginsSelector,
+  pluginsLoadingSelector,
+} from 'controllers/plugins';
+import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
+import { ORGANIZATION_SETTINGS_INTEGRATION } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
+import { createClassnames, docsReferences } from 'common/utils';
+import { IntegrationsListItem } from 'pages/inside/common/integrations/integrationsListItem';
+import { messages as integrationsMessages } from 'pages/inside/common/integrations/messages';
+import {
+  ORGANIZATION_SETTINGS_TAB_PAGE,
+  querySelector,
+  updatePagePropertiesAction,
+  urlOrganizationSlugSelector,
+} from 'controllers/pages';
+import { INTEGRATIONS } from 'common/constants/settingsTabs';
+import { activeOrganizationLoadingSelector } from 'controllers/organization';
+
 import { messages } from './messages';
+import { IntegrationInfo } from './integrationInfo';
 import styles from './integrationsTab.scss';
 
-const cx = classNames.bind(styles);
+const cx = createClassnames(styles);
 
 export const IntegrationsTab = () => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
-  const availablePlugins = useSelector(availablePluginsSelector);
+  const dispatch = useDispatch();
+  const organizationSlug = useSelector(urlOrganizationSlugSelector);
+  const plugins = useSelector(availablePluginsSelector);
+  const availableGroupedPlugins = useSelector(availableGroupedPluginsSelector);
   const loading = useSelector(pluginsLoadingSelector);
+  const organizationLoading = useSelector(activeOrganizationLoadingSelector);
+  const query = useSelector(querySelector);
+  const [plugin, setPlugin] = useState({});
 
-  const emailPlugin = useMemo(
-    () => availablePlugins.find((plugin) => plugin.name === EMAIL),
-    [availablePlugins],
+  const availableIntegrations = useMemo(() => {
+    const orgIntegrationsPlugins = new Set([EMAIL]);
+
+    return Object.entries(availableGroupedPlugins).reduce((acc, [groupId, plugins]) => {
+      const filteredPlugins = plugins.filter((p) => orgIntegrationsPlugins.has(p.name));
+
+      if (filteredPlugins.length > 0) {
+        acc[groupId] = filteredPlugins;
+      }
+
+      return acc;
+    }, {});
+  }, [availableGroupedPlugins]);
+
+  const initialPage = useMemo(
+    () => ({
+      type: ORGANIZATION_SETTINGS_TAB_PAGE,
+      payload: {
+        settingsTab: INTEGRATIONS,
+        organizationSlug,
+      },
+    }),
+    [organizationSlug],
   );
 
+  useEffect(() => {
+    if (loading || organizationLoading || !query.subPage) {
+      return undefined;
+    }
+
+    const definePlugin = () => {
+      const { subPage: pluginName } = query;
+      const certainPlugin = plugins.find(({ name }) => name === pluginName);
+      if (pluginName && certainPlugin) {
+        setPlugin(certainPlugin);
+      } else {
+        dispatch(redirect(initialPage));
+      }
+    };
+
+    definePlugin();
+  }, [query, plugins, initialPage, dispatch, loading, organizationLoading]);
+
+  const hasIntegrations = Object.keys(availableIntegrations).length > 0;
+
   const handleDocumentationClick = () => {
-    trackEvent(ORGANIZATION_SETTINGS_EVENTS.CLICK_DOCUMENTATION_LINK_INTEGRATIONS);
+    trackEvent(ORGANIZATION_SETTINGS_INTEGRATION.CLICK_DOCUMENTATION_LINK_INTEGRATIONS);
   };
 
-  if (loading) {
+  const onItemClick = (pluginData) => {
+    dispatch(
+      updatePagePropertiesAction({
+        subPage: pluginData.name,
+      }),
+    );
+    setPlugin(pluginData);
+  };
+
+  if (loading || organizationLoading) {
     return (
       <div className={cx('loader')}>
         <BubblesLoader variant="large" />
@@ -55,7 +125,11 @@ export const IntegrationsTab = () => {
     );
   }
 
-  if (!emailPlugin) {
+  if (query.subPage && !!Object.keys(plugin).length) {
+    return <IntegrationInfo plugin={plugin} integrationId={query.id} />;
+  }
+
+  if (!hasIntegrations) {
     return (
       <EmptyStatePage
         title={formatMessage(messages.noPluginsTitle)}
@@ -67,20 +141,24 @@ export const IntegrationsTab = () => {
     );
   }
 
-  const displayName = emailPlugin.details?.name || emailPlugin.name;
-
   return (
     <div className={cx('integrations-tab')}>
-      <div className={cx('integrations-group-header')}>
-        {formatMessage(messages.notificationsHeader)}
-      </div>
-      <div className={cx('plugin-card')}>
-        <PluginIcon className={cx('plugin-icon')} pluginData={emailPlugin} alt={displayName} />
-        <div className={cx('plugin-info-block')}>
-          <span className={cx('plugin-name')}>{displayName}</span>
-          <p className={cx('plugin-description')}>{PLUGIN_DESCRIPTIONS_MAP[emailPlugin.name]}</p>
+      {Object.keys(availableIntegrations).map((key) => (
+        <div key={key} className={cx('integrations-group')}>
+          <div className={cx('integrations-group-header')}>
+            {integrationsMessages[key] ? formatMessage(integrationsMessages[key]) : key}
+          </div>
+          <div className={cx('integrations-group-items')}>
+            {availableIntegrations[key].map((item) => (
+              <IntegrationsListItem
+                key={item.name}
+                integrationType={item}
+                onItemClick={onItemClick}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      ))}
     </div>
   );
 };

@@ -16,14 +16,14 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { isNotNil } from 'es-toolkit';
 
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
 import { Tag } from 'types/testCase';
 
-import { TagError } from '../types';
-import { convertKeysToTags } from '../testCaseDetailsPage/utils';
+import { TagError, AttributesResponse } from '../types';
 
 export const useTagSearch = (searchValue: string = '') => {
   const [allTags, setAllTags] = useState<Tag[]>([]);
@@ -33,11 +33,18 @@ export const useTagSearch = (searchValue: string = '') => {
   const projectKey = useSelector(projectKeySelector);
 
   const fetchAllTags = useCallback(async () => {
+    if (!projectKey) {
+      setAllTags([]);
+      return;
+    }
+
     try {
       setLoading(true);
 
-      const keys = await fetch<string[]>(URLS.tmsAttributeKeysSearch(projectKey, {}));
-      setAllTags(convertKeysToTags(keys));
+      const response = await fetch<AttributesResponse>(URLS.tmsAttributes(projectKey, {}));
+      const tagsOnly = (response.content || []).filter((attr) => !attr.value);
+
+      setAllTags(tagsOnly);
     } catch {
       setAllTags([]);
     } finally {
@@ -46,6 +53,11 @@ export const useTagSearch = (searchValue: string = '') => {
   }, [projectKey]);
 
   const fetchFilteredTags = useCallback(async () => {
+    if (!projectKey) {
+      setTags([]);
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
@@ -56,14 +68,18 @@ export const useTagSearch = (searchValue: string = '') => {
         }),
       );
 
-      setTags(convertKeysToTags(keys));
+      const matchedTags = keys
+        .map((key) => allTags.find((tag) => tag.key === key))
+        .filter(isNotNil);
+
+      setTags(matchedTags);
     } catch {
       setTags([]);
-      setError(null);
+      setError(TagError.TAG_SEARCH_FAILED);
     } finally {
       setLoading(false);
     }
-  }, [projectKey, searchValue]);
+  }, [projectKey, searchValue, allTags]);
 
   const createTag = useCallback(
     (tagKey: string, selectedTags: Tag[] = []) => {
@@ -93,12 +109,10 @@ export const useTagSearch = (searchValue: string = '') => {
   );
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     fetchAllTags();
   }, [fetchAllTags]);
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     fetchFilteredTags();
   }, [fetchFilteredTags]);
 

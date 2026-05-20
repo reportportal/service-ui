@@ -14,30 +14,44 @@
  * limitations under the License.
  */
 
-import { getBasicChooseEventParameters, getBasicClickEventParameters } from '../common/ga4Utils';
+import {
+  getBasicChooseEventParameters,
+  getBasicClickEventParameters,
+  normalizeEventParameter,
+} from '../common/ga4Utils';
 import { InviteProjectCondition } from 'pages/inside/common/invitations/inviteUserModal/types';
 
 const ORGANIZATION_PAGE = 'organization';
 const SETTINGS_PAGE = 'organization_settings';
+const INTEGRATIONS = 'integrations';
 
 const BASIC_EVENT_PARAMETERS = getBasicClickEventParameters(ORGANIZATION_PAGE);
 const SETTINGS_EVENT_PARAMETERS = getBasicClickEventParameters(SETTINGS_PAGE);
+const BASIC_EVENT_PARAMETERS_INTEGRATIONS = {
+  ...SETTINGS_EVENT_PARAMETERS,
+  place: INTEGRATIONS,
+};
 
 export const ORGANIZATION_SETTINGS_VIEWS = {
   getOrganizationSettingsPageView: (settingsTab: string, subTab?: string) => ({
     action: 'page_view',
     place: subTab
-      ? `${SETTINGS_PAGE}_${settingsTab.toLowerCase()}_${subTab.toLowerCase()}`
+      ? `${SETTINGS_PAGE}_${settingsTab.toLowerCase()}_${normalizeEventParameter(subTab)}`
       : `${SETTINGS_PAGE}_${settingsTab.toLowerCase()}`,
   }),
 };
 
-export const ORGANIZATION_SETTINGS_EVENTS = {
+export const ORGANIZATION_SETTINGS_INTEGRATION = {
   CLICK_DOCUMENTATION_LINK_INTEGRATIONS: {
-    ...SETTINGS_EVENT_PARAMETERS,
-    place: 'integrations',
+    ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
     link_name: 'documentation',
   },
+
+  clickCreateIntegrationModal: (type: string) => ({
+    ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
+    element_name: 'submit_create_organization_integration',
+    type: normalizeEventParameter(type),
+  }),
 };
 
 export const ORGANIZATION_PAGE_EVENTS = {

@@ -41,10 +41,6 @@ export const messages = defineMessages({
     id: 'TestPlanSidePanel.openInLibrary',
     defaultMessage: 'Open in Library',
   },
-  quickRun: {
-    id: 'TestPlanSidePanel.quickRun',
-    defaultMessage: 'Quick Run',
-  },
   removeFromTestPlan: {
     id: 'TestPlanSidePanel.removeFromTestPlan',
     defaultMessage: 'Remove from Test Plan',

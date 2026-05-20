@@ -42,6 +42,7 @@ interface DraggableTestCaseNameCellProps {
   priority: TestCasePriority;
   name: string;
   tags: string[];
+  searchQuery?: string;
 }
 
 export const DraggableTestCaseNameCell = ({
@@ -49,6 +50,7 @@ export const DraggableTestCaseNameCell = ({
   priority,
   name,
   tags,
+  searchQuery,
 }: DraggableTestCaseNameCellProps) => {
   const { canManageTestCases } = useUserPermissions();
 
@@ -77,12 +79,10 @@ export const DraggableTestCaseNameCell = ({
         priority={priority}
         name={name}
         tags={tags}
+        searchQuery={searchQuery}
       />
       {canManageTestCases && (
-        <div
-          className={cx('drag-handle')}
-          onMouseDown={handleDragHandleMouseDown}
-        >
+        <div className={cx('drag-handle')} onMouseDown={handleDragHandleMouseDown}>
           <DragNDropIcon />
         </div>
       )}

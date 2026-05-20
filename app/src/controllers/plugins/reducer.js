@@ -33,9 +33,12 @@ import {
   ADD_PROJECT_INTEGRATION_SUCCESS,
   UPDATE_PROJECT_INTEGRATION_SUCCESS,
   REMOVE_PROJECT_INTEGRATION_SUCCESS,
+  ADD_ORGANIZATION_INTEGRATION_SUCCESS,
   REMOVE_PROJECT_INTEGRATIONS_BY_TYPE_SUCCESS,
   REMOVE_GLOBAL_INTEGRATIONS_BY_TYPE_SUCCESS,
   PUBLIC_PLUGINS,
+  SET_ORGANIZATION_INTEGRATIONS,
+  ORGANIZATION_INTEGRATIONS,
 } from './constants';
 
 const addIntegration = (state, type, payload) => ({
@@ -98,6 +101,11 @@ export const integrationsReducer = (state = {}, { type = '', payload = {} }) => 
         ...state,
         projectIntegrations: payload,
       };
+    case SET_ORGANIZATION_INTEGRATIONS:
+      return {
+        ...state,
+        organizationIntegrations: payload,
+      };
     case ADD_GLOBAL_INTEGRATION_SUCCESS:
       return addIntegration(state, GLOBAL_INTEGRATIONS, payload);
     case UPDATE_GLOBAL_INTEGRATION_SUCCESS:
@@ -110,6 +118,8 @@ export const integrationsReducer = (state = {}, { type = '', payload = {} }) => 
       return updateIntegration(state, PROJECT_INTEGRATIONS, payload);
     case REMOVE_PROJECT_INTEGRATION_SUCCESS:
       return removeIntegration(state, PROJECT_INTEGRATIONS, payload);
+    case ADD_ORGANIZATION_INTEGRATION_SUCCESS:
+      return addIntegration(state, ORGANIZATION_INTEGRATIONS, payload);
     case REMOVE_PROJECT_INTEGRATIONS_BY_TYPE_SUCCESS:
       return removeIntegrationByType(state, PROJECT_INTEGRATIONS, payload);
     case REMOVE_GLOBAL_INTEGRATIONS_BY_TYPE_SUCCESS:

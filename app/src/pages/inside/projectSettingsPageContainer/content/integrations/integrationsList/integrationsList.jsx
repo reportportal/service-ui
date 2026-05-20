@@ -23,8 +23,8 @@ import { PROJECT_SETTINGS_INTEGRATION } from 'analyticsEvents/projectSettingsPag
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { docsReferences } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { IntegrationsListItem } from './integrationsListItem';
-import { messages } from './messages';
+import { IntegrationsListItem } from 'pages/inside/common/integrations/integrationsListItem';
+import { messages } from 'pages/inside/common/integrations/messages';
 import styles from './integrationsList.scss';
 
 const cx = classNames.bind(styles);

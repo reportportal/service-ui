@@ -14,12 +14,8 @@
  * limitations under the License.
  */
 
-export interface IntegrationItem {
-  id: number;
-  name: string;
-  creator?: string;
-  creationDate?: string;
-  enabled?: boolean;
-  integrationParameters?: Record<string, unknown>;
-  integrationType?: Record<string, unknown>;
-}
+import type { Integration } from 'controllers/plugins';
+
+export type IntegrationItem = Integration;
+
+export type NamedIntegrations = Record<string, IntegrationItem[]>;

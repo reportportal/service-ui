@@ -112,7 +112,9 @@ export const ManualLaunchesList = ({ fullLaunches, onRefresh }: ManualLaunchesLi
         fixedColumns={fixedColumns}
         primaryColumn={primaryColumn}
         sortableColumns={[]}
-        className={cx('manual-launches-list-table')}
+        className={cx('manual-launches-list-table', {
+          'manual-launches-list-table_selectable': canManageTestCases,
+        })}
         rowClassName={cx('manual-launches-list-table-row')}
         headerClassName={cx('manual-launches-list-table-header')}
         onToggleRowSelection={handleRowSelect}

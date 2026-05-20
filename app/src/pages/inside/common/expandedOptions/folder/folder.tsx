@@ -32,12 +32,12 @@ import {
 import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { isEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
-import { createClassnames } from 'common/utils';
+import { createClassnames, highlightText } from 'common/utils';
 import { TransformedFolder } from 'controllers/testCase';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 
 import { PopoverControl } from 'pages/common/popoverControl';
-import { highlightText, hasChildMatch } from '../utils';
+import { hasChildMatch } from '../utils';
 import { messages } from '../messages';
 import { useFolderTooltipItems } from './useFolderTooltipItems';
 import { ConnectorLines, INDENT_PX } from './connectorLines';
@@ -167,7 +167,7 @@ export const Folder = ({
         >
           <FolderIcon className={cx('folders-tree__item-title--icon')} />
           <span className={cx('folders-tree__item-title--text')} title={folder.name}>
-            {isDirectMatch ? highlightText(folder.name, searchQuery) : folder.name}
+            {isDirectMatch ? highlightText(folder.name, searchQuery, cx('highlight')) : folder.name}
           </span>
           {hasHiddenActiveDescendant && (
             <span className={cx('folders-tree__item-title--active-descendant-indicator')} />

@@ -17,23 +17,31 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
-import { payloadSelector } from 'controllers/pages';
+import { INTEGRATIONS } from 'common/constants/settingsTabs';
+import { pluginByNameSelector } from 'controllers/plugins';
+import { payloadSelector, querySelector } from 'controllers/pages';
 import { ORGANIZATION_SETTINGS_VIEWS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 
 export const OrganizationSettingsAnalyticsWrapper = ({ children }) => {
   const { trackEvent } = useTracking();
   const payload = useSelector(payloadSelector);
+  const query = useSelector(querySelector);
+  const pluginName = payload.settingsTab === INTEGRATIONS && query.subPage ? query.subPage : null;
+  const plugin = useSelector((state) =>
+    pluginName ? pluginByNameSelector(state, pluginName) : undefined,
+  );
+  const subPage = plugin ? plugin.details?.name || plugin.name : query.subPage;
 
   useEffect(() => {
     if (payload.settingsTab) {
       trackEvent(
         ORGANIZATION_SETTINGS_VIEWS.getOrganizationSettingsPageView(
           payload.settingsTab,
-          payload.subTab,
+          payload.subTab || subPage,
         ),
       );
     }
-  }, [payload, trackEvent]);
+  }, [payload, trackEvent, subPage]);
 
   return children;
 };

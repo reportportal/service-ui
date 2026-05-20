@@ -14,19 +14,14 @@
  * limitations under the License.
  */
 
-import { ReactNode } from 'react';
 import { isEmpty } from 'es-toolkit/compat';
 import { TreeDragItem, TreeDropPosition } from '@reportportal/ui-kit/common';
 
-import { createClassnames } from 'common/utils';
 import { getParentFoldersIds } from 'common/utils/folderUtils';
 import { TransformedFolder } from 'controllers/testCase';
 import { ExtendedTestCase } from 'types/testCase';
 
-import styles from './folder/folder.scss';
 import type { TestCaseFolderActionCallback } from './types';
-
-const cx = createClassnames(styles);
 
 export const hasMatchInTree = (folder: TransformedFolder, query: string): boolean => {
   if (!query) return true;
@@ -117,46 +112,6 @@ export const getHiddenActiveFolderIndicatorId = ({
   const expandedSet = new Set(expandedIds);
 
   return [...ancestorIds].reverse().find((id) => !expandedSet.has(id)) ?? null;
-};
-
-export const highlightText = (text: string, query: string): ReactNode => {
-  if (!query || !text) return text;
-
-  const trimmedQuery = query.trim();
-  if (!trimmedQuery) return text;
-
-  const escapedQuery = trimmedQuery.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`); // NOSONAR
-
-  const regex = new RegExp(`(${escapedQuery})`, 'gi');
-  const parts = text.split(regex);
-
-  if (parts.length === 1) return text;
-
-  const nodes = parts.reduce<{ nodes: ReactNode[]; counter: number }>(
-    (acc, part) => {
-      if (!part) return acc;
-
-      const currentKey = acc.counter;
-
-      const isMatch = part.toLowerCase() === trimmedQuery.toLowerCase();
-
-      const newNode = isMatch ? (
-        <span key={`highlight-${currentKey}`} className={cx('highlight')}>
-          {part}
-        </span>
-      ) : (
-        <span key={`text-${currentKey}`}>{part}</span>
-      );
-
-      return {
-        nodes: [...acc.nodes, newNode],
-        counter: acc.counter + 1,
-      };
-    },
-    { nodes: [], counter: 0 },
-  );
-
-  return <>{nodes.nodes}</>;
 };
 
 export const createTestCaseDropHandler = (action: TestCaseFolderActionCallback | undefined) => {

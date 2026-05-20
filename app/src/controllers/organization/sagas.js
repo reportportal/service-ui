@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import { takeEvery, all, put, call } from 'redux-saga/effects';
-import { fetchDataAction } from 'controllers/fetch';
+import { takeEvery, all, put, call, select, take } from 'redux-saga/effects';
+import { fetchDataAction, createFetchPredicate } from 'controllers/fetch';
+import { FETCH_SUCCESS } from 'controllers/fetch/constants';
 import { redirect } from 'redux-first-router';
 import { ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages';
 import { URLS } from 'common/urls';
@@ -35,16 +36,32 @@ import {
   PREPARE_ACTIVE_ORGANIZATION_SETTINGS,
   RENAME_ORGANIZATION,
   UPDATE_ORGANIZATION_SETTINGS,
+  FETCH_ORGANIZATION_INTEGRATIONS,
 } from './constants';
 import { usersSagas } from './users/sagas';
 import { fetch } from 'common/utils';
-import { updateOrganizationSettingsSuccessAction } from './actionCreators';
 import { hideModalAction } from 'controllers/modal';
+import { normalizeIntegrationItem } from 'controllers/plugins/utils';
+import { setOrganizationIntegrationsAction } from 'controllers/plugins/actionCreators';
 import { withActiveOrganization } from './withActiveOrganizationSaga';
+import {
+  fetchOrganizationIntegrationsAction,
+  updateOrganizationSettingsSuccessAction,
+} from './actionCreators';
+import { activeOrganizationIdSelector } from './selectors';
 
-function* fetchOrganizationBySlug({ payload: slug }) {
+function* fetchOrganizationBySlug({ payload: { slug, withIntegrations } }) {
   try {
     yield put(fetchDataAction(FETCH_ORGANIZATION_BY_SLUG)(URLS.organizationList({ slug })));
+    if (withIntegrations) {
+      const fetchResult = yield take(createFetchPredicate(FETCH_ORGANIZATION_BY_SLUG));
+      if (fetchResult.type === FETCH_SUCCESS) {
+        const organizationId = yield select(activeOrganizationIdSelector);
+        if (organizationId) {
+          yield put(fetchOrganizationIntegrationsAction(organizationId));
+        }
+      }
+    }
   } catch (error) {
     yield put(showDefaultErrorNotification(error));
   }
@@ -173,6 +190,21 @@ function* watchRenameOrganization() {
   yield takeEvery(RENAME_ORGANIZATION, renameOrganization);
 }
 
+function* fetchOrganizationIntegrations({ payload: { organizationId } }) {
+  try {
+    const response = yield call(fetch, URLS.organizationIntegrations(organizationId));
+    const rawItems = Array.isArray(response?.items) ? response.items : [];
+    const items = rawItems.map((item) => normalizeIntegrationItem(item));
+    yield put(setOrganizationIntegrationsAction(items));
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  }
+}
+
+function* watchFetchOrganizationIntegrations() {
+  yield takeEvery(FETCH_ORGANIZATION_INTEGRATIONS, fetchOrganizationIntegrations);
+}
+
 export function* organizationSagas() {
   yield all([
     watchFetchOrganizationProjects(),
@@ -182,6 +214,7 @@ export function* organizationSagas() {
     watchUpdateOrganizationSettings(),
     watchCreateOrganization(),
     watchRenameOrganization(),
+    watchFetchOrganizationIntegrations(),
     projectsSagas(),
     usersSagas(),
   ]);

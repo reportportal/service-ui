@@ -20,6 +20,7 @@ import {
   showNotification,
   showDefaultErrorNotification,
   NOTIFICATION_TYPES,
+  showSuccessNotification,
 } from 'controllers/notification';
 import { fetchDataAction, createFetchPredicate } from 'controllers/fetch';
 import { hideModalAction } from 'controllers/modal';
@@ -27,6 +28,7 @@ import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLo
 import { fetch, omit } from 'common/utils';
 import { userIdSelector } from 'controllers/user';
 import { projectKeySelector } from 'controllers/project/selectors';
+import { activeOrganizationIdSelector } from 'controllers/organization';
 import {
   NAMESPACE,
   FETCH_PLUGINS,
@@ -44,25 +46,36 @@ import {
 import { pluginByNameSelector } from './selectors';
 import {
   removePluginSuccessAction,
-  addProjectIntegrationSuccessAction,
   updateProjectIntegrationSuccessAction,
   removeProjectIntegrationSuccessAction,
   removeProjectIntegrationsByTypeSuccessAction,
-  addGlobalIntegrationSuccessAction,
   removeGlobalIntegrationSuccessAction,
   updateGlobalIntegrationSuccessAction,
   fetchGlobalIntegrationsSuccessAction,
   removeGlobalIntegrationsByTypeSuccessAction,
 } from './actionCreators';
 import { fetchExtensionManifests, fetchExtensionManifest } from './uiExtensions';
+import {
+  getAddIntegrationSuccessAction,
+  getAddIntegrationUrl,
+  normalizeIntegrationItem,
+} from './utils';
 
-function* addIntegration({ payload: { data, isGlobal, pluginName, callback }, meta }) {
+function* resolveIntegrationContext() {
+  const projectKey = yield select(projectKeySelector);
+  const organizationId = yield select(activeOrganizationIdSelector);
+
+  return { projectKey, organizationId };
+}
+
+function* addIntegration({
+  payload: { data, isGlobal, isOrganizational, pluginName, callback },
+  meta,
+}) {
   yield put(showScreenLockAction());
   try {
-    const projectKey = yield select(projectKeySelector);
-    const url = isGlobal
-      ? URLS.newGlobalIntegration(pluginName)
-      : URLS.newProjectIntegration(projectKey, pluginName);
+    const context = yield resolveIntegrationContext();
+    const url = getAddIntegrationUrl({ isGlobal, isOrganizational, pluginName, context });
     const response = yield call(fetch, url, {
       method: 'post',
       data,
@@ -70,23 +83,20 @@ function* addIntegration({ payload: { data, isGlobal, pluginName, callback }, me
 
     const integrationType = yield select(pluginByNameSelector, pluginName);
     const creator = yield select(userIdSelector);
+    const normalizedData = normalizeIntegrationItem(data);
     const newIntegration = {
-      ...data,
-      integrationParameters: omit(data.integrationParameters, meta[SECRET_FIELDS_KEY]),
+      ...normalizedData,
+      integrationParameters: omit(normalizedData.integrationParameters, meta[SECRET_FIELDS_KEY]),
       id: response.id,
       integrationType,
       creator,
     };
-    const addIntegrationSuccessAction = isGlobal
-      ? addGlobalIntegrationSuccessAction(newIntegration)
-      : addProjectIntegrationSuccessAction(newIntegration);
-    yield put(addIntegrationSuccessAction);
-    yield put(
-      showNotification({
-        messageId: 'addIntegrationSuccess',
-        type: NOTIFICATION_TYPES.SUCCESS,
-      }),
-    );
+    const addIntegrationSuccessAction = getAddIntegrationSuccessAction({
+      isGlobal,
+      isOrganizational,
+    });
+    yield put(addIntegrationSuccessAction(newIntegration));
+    yield put(showSuccessNotification({ messageId: 'addIntegrationSuccess' }));
     yield put(hideModalAction());
     yield call(callback, newIntegration);
   } catch (error) {

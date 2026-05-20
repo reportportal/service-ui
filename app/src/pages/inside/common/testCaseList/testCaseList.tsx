@@ -15,6 +15,7 @@
  */
 
 import { memo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
@@ -28,10 +29,7 @@ import type { ExtendedTestCase, TestCasePriority } from 'types/testCase';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { SelectedTestCaseRow } from './types';
 import { locationSelector } from 'controllers/pages/typed-selectors';
-import {
-  TEST_CASE_LIBRARY_PAGE,
-  PROJECT_TEST_PLAN_DETAILS_PAGE,
-} from 'controllers/pages';
+import { TEST_CASE_LIBRARY_PAGE, PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { TestPlanSidePanel } from 'pages/inside/testPlansPage/testPlanSidePanel';
 import { EmptyPageState } from 'pages/common';
@@ -76,6 +74,8 @@ export const TestCaseList = memo(
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<number | null>(null);
     const { canManageTestCases } = useUserPermissions();
 
+    const searchQuery = location?.query?.testCasesSearchParams || '';
+
     const isTestLibraryRoute = location.type === TEST_CASE_LIBRARY_PAGE;
     const isTestPlanRoute = location.type === PROJECT_TEST_PLAN_DETAILS_PAGE;
 
@@ -118,15 +118,15 @@ export const TestCaseList = memo(
       const newSelectedRows = isAllCurrentPageSelected
         ? selectedRows.filter((row) => !currentPageTestCaseIds.includes(row.id))
         : [
-          ...selectedRows,
-          ...testCases
-            .filter((testCase) => !selectedRowIds.includes(testCase.id))
-            .map((testCase) => ({
-              id: testCase.id,
-              folderId: testCase.testFolder.id,
-              name: testCase.name,
-            })),
-        ];
+            ...selectedRows,
+            ...testCases
+              .filter((testCase) => !selectedRowIds.includes(testCase.id))
+              .map((testCase) => ({
+                id: testCase.id,
+                folderId: testCase.testFolder.id,
+                name: testCase.name,
+              })),
+          ];
 
       handleSelectedRows(newSelectedRows);
     };
@@ -148,6 +148,7 @@ export const TestCaseList = memo(
               priority={testCase.priority?.toLowerCase() as TestCasePriority}
               name={testCase.name}
               tags={testCase?.attributes?.map(({ key }) => key)}
+              searchQuery={searchQuery}
             />
           </button>
         ),
@@ -175,7 +176,7 @@ export const TestCaseList = memo(
       {
         key: 'lastExecution',
         header: formatMessage(messages.executionHeader),
-        width: instanceKey === TMS_INSTANCE_KEY.TEST_CASE ? 164 : 190,
+        width: instanceKey === TMS_INSTANCE_KEY.TEST_CASE ? 190 : 220,
         align: 'left' as const,
       },
     ];
@@ -247,20 +248,24 @@ export const TestCaseList = memo(
                 />
               </>
             )}
-            {isTestLibraryRoute && (
-              <TestCaseSidePanel
-                testCase={selectedTestPlan}
-                isVisible={!!selectedTestCaseId}
-                onClose={handleCloseSidePanel}
-              />
-            )}
-            {isTestPlanRoute && (
-              <TestPlanSidePanel
-                testPlan={selectedTestPlan}
-                isVisible={!!selectedTestCaseId}
-                onClose={handleCloseSidePanel}
-              />
-            )}
+            {isTestLibraryRoute &&
+              createPortal(
+                <TestCaseSidePanel
+                  testCase={selectedTestPlan}
+                  isVisible={!!selectedTestCaseId}
+                  onClose={handleCloseSidePanel}
+                />,
+                document.body,
+              )}
+            {isTestPlanRoute &&
+              createPortal(
+                <TestPlanSidePanel
+                  testPlan={selectedTestPlan}
+                  isVisible={!!selectedTestCaseId}
+                  onClose={handleCloseSidePanel}
+                />,
+                document.body,
+              )}
           </>
         )}
       </div>

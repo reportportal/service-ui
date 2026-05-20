@@ -35,12 +35,13 @@ import {
   updateIntegrationAction,
   removeProjectIntegrationsByTypeAction,
 } from 'controllers/plugins';
+import { isLimitedIntegrationPlugin } from 'controllers/plugins/utils';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/settingsComponentsMap';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { PROJECT_SETTINGS_INTEGRATION } from 'analyticsEvents/projectSettingsPageEvents';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
-import { EMAIL, MOBITRU, SAUCE_LABS } from 'common/constants/pluginNames';
+import { EMAIL } from 'common/constants/pluginNames';
 import { combineNameAndEmailToFrom, fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
@@ -84,8 +85,7 @@ export const IntegrationInfo = (props) => {
     availableGlobalIntegrations.length > 0 || availableProjectIntegrations.length > 0;
 
   const isProjectIntegrationAddLimited = useMemo(
-    () =>
-      [EMAIL, MOBITRU, SAUCE_LABS].includes(pluginName) && availableProjectIntegrations.length > 0,
+    () => isLimitedIntegrationPlugin(pluginName) && availableProjectIntegrations.length > 0,
     [pluginName, availableProjectIntegrations],
   );
 
@@ -93,15 +93,10 @@ export const IntegrationInfo = (props) => {
     ? formatMessage(messages.projectIntegrationAddLimited)
     : undefined;
 
-  const testProjectIntegrationConnection = useCallback(
+  const testIntegrationConnection = useCallback(
     (integrationId) =>
       fetch(URLS.testIntegrationConnection(projectKey || activeProjectKey, integrationId)),
     [projectKey, activeProjectKey],
-  );
-
-  const testGlobalIntegrationConnection = useCallback(
-    (integrationId) => fetch(URLS.testGlobalIntegrationConnection(integrationId)),
-    [],
   );
 
   useEffect(() => {
@@ -300,7 +295,7 @@ export const IntegrationInfo = (props) => {
             text={formatMessage(messages.projectIntegrationText)}
             integrations={availableProjectIntegrations}
             openIntegration={openIntegration}
-            testConnection={testProjectIntegrationConnection}
+            testConnection={testIntegrationConnection}
             withEmptyState
             hasUpdatePermission={canUpdateSettings}
             onCreateClick={onAddProjectIntegration}
@@ -308,15 +303,17 @@ export const IntegrationInfo = (props) => {
             createButtonDisabled={isProjectIntegrationAddLimited}
             createButtonTooltip={projectIntegrationCreateButtonTooltip}
           />
-          <AvailableIntegrations
-            header={formatMessage(messages.globalIntegrationTitle)}
-            text={formatMessage(messages.globalIntegrationText)}
-            integrations={availableGlobalIntegrations}
-            openIntegration={openIntegration}
-            inactive={Boolean(availableProjectIntegrations.length)}
-            inactiveTooltip={formatMessage(messages.inactiveGlobalIntegrations)}
-            testConnection={testGlobalIntegrationConnection}
-          />
+          {availableGlobalIntegrations.length > 0 && (
+            <AvailableIntegrations
+              header={formatMessage(messages.globalIntegrationTitle)}
+              text={formatMessage(messages.globalIntegrationText)}
+              integrations={availableGlobalIntegrations}
+              openIntegration={openIntegration}
+              inactive={Boolean(availableProjectIntegrations.length)}
+              inactiveTooltip={formatMessage(messages.inactiveGlobalIntegrations)}
+              testConnection={testIntegrationConnection}
+            />
+          )}
         </div>
       ) : (
         <EmptyStatePage

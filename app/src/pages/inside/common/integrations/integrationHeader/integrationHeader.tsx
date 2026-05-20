@@ -41,7 +41,7 @@ export interface IntegrationHeaderPluginDetails {
 
 export interface IntegrationHeaderPluginData {
   name: string;
-  creationDate?: number;
+  creationDate?: string;
   enabled?: boolean;
   groupType?: string;
   type?: number;
