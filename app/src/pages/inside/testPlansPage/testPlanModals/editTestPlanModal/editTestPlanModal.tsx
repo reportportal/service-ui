@@ -23,10 +23,14 @@ import type { TestPlanDto } from 'controllers/testPlan/types';
 import { TestPlanModal, TestPlanFormValues } from '../testPlanModal';
 import { commonMessages } from '../../commonMessages';
 import { useEditTestPlan } from './useEditTestPlan';
-import { EditTestPlanSubmitMeta } from './useEditTestPlanModal';
 import { buildEditedFieldsCondition } from './utils';
 
 export const EDIT_TEST_PLAN_MODAL_KEY = 'editTestPlanModalKey';
+
+export interface EditTestPlanSubmitMeta {
+  attributesCount: number;
+  editedFieldsCondition: string;
+}
 
 interface EditTestPlanModalProps {
   data: TestPlanDto;

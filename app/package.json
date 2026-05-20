@@ -200,7 +200,8 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "eslint --fix"
+      "eslint --fix",
+      "madge --circular"
     ],
     "*.scss": [
       "stylelint --fix",
