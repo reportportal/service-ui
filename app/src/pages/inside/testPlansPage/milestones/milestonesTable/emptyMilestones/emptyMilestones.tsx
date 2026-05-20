@@ -14,25 +14,61 @@
  * limitations under the License.
  */
 
+import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
 
-import { createClassnames } from 'common/utils';
-
-import { messages } from '../messages';
+import { createClassnames, referenceDictionary } from 'common/utils';
+import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
+import { NumerableBlock } from 'pages/common/numerableBlock';
+import { commonMessages } from 'pages/inside/testPlansPage/commonMessages';
+import { messages as emptyStateMessages } from 'pages/inside/testPlansPage/emptyTestPlans/messages';
 
 import styles from './emptyMilestones.scss';
 
 const cx = createClassnames(styles);
 
-export const EmptyMilestones = () => {
+interface EmptyMilestonesProps {
+  onCreateMilestone?: () => void;
+}
+
+const benefitMessages = [
+  emptyStateMessages.progressTracking,
+  emptyStateMessages.goalAlignment,
+  emptyStateMessages.resourceManagement,
+];
+
+export const EmptyMilestones = ({ onCreateMilestone }: EmptyMilestonesProps) => {
   const { formatMessage } = useIntl();
+  const benefits = benefitMessages.map((translation) =>
+    Parser(formatMessage(translation, {}, { ignoreTag: true })),
+  );
+  const buttons = onCreateMilestone
+    ? [
+        {
+          name: formatMessage(commonMessages.createMilestone),
+          dataAutomationId: 'createMilestoneEmptyStateButton',
+          isCompact: true,
+          handleButton: onCreateMilestone,
+        },
+      ]
+    : [];
 
   return (
     <div className={cx('empty-milestones')}>
-      <h3 className={cx('empty-milestones__title')}>{formatMessage(messages.emptyTitle)}</h3>
-      <p className={cx('empty-milestones__description')}>
-        {formatMessage(messages.emptyDescription)}
-      </p>
+      <EmptyStatePage
+        title={formatMessage(emptyStateMessages.pageHeader)}
+        description={formatMessage(emptyStateMessages.pageDescription)}
+        imageType="flag"
+        documentationLink={referenceDictionary.rpDoc}
+        documentationLinkClassName={cx('empty-milestones__documentation-link')}
+        buttons={buttons}
+      />
+      <NumerableBlock
+        items={benefits}
+        title={formatMessage(emptyStateMessages.numerableBlockTitle)}
+        className={cx('empty-milestones__numerable-block')}
+        fullWidth
+      />
     </div>
   );
 };
