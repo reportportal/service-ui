@@ -21,7 +21,12 @@ import { isEmpty } from 'es-toolkit/compat';
 import { VoidFn } from '@reportportal/ui-kit/common';
 import { Button, SidePanel, Selection, Toggle } from '@reportportal/ui-kit';
 
-import { TEST_PLANS_PAGE_EVENTS } from 'analyticsEvents/testPlansPageEvents';
+import {
+  TEST_PLANS_PAGE_EVENTS,
+  PLACE_TEST_CASE_LIBRARY_SIDE_PANEL,
+  ACTION_SOURCE,
+} from 'analyticsEvents/testPlansPageEvents';
+import { BULK_ADD_TO_LAUNCH_MIN_SELECTION } from 'pages/inside/common/constants';
 import { createClassnames } from 'common/utils';
 import { useModal } from 'common/hooks';
 import { useUserPermissions } from 'hooks/useUserPermissions';
@@ -84,24 +89,31 @@ export const TestLibrarySidePanel = ({
         selectedRowsIds={data.selectedRowsIds}
         testCases={data.testCases}
         testPlanId={data.testPlanId}
+        source={data.source}
+        place={data.place}
       />
     ),
   });
 
   const handleAddAndCreateLaunch = useCallback(async () => {
+    trackEvent(TEST_PLANS_PAGE_EVENTS.CLICK_START_ADD_AND_CREATE_LAUNCH);
     const testCases = [...selectedTestCases];
     const testCaseIds = testCases.map(({ id }) => id);
 
     const isSuccess = await addToTestPlan();
 
     if (isSuccess && !isEmpty(testCaseIds) && testPlanId != null) {
+      const source =
+        testCaseIds.length >= BULK_ADD_TO_LAUNCH_MIN_SELECTION ? ACTION_SOURCE.BULK : ACTION_SOURCE.SINGLE;
       openAddToLaunchModal({
         selectedRowsIds: testCaseIds,
         testCases,
         testPlanId: String(testPlanId),
+        source,
+        place: PLACE_TEST_CASE_LIBRARY_SIDE_PANEL,
       });
     }
-  }, [addToTestPlan, openAddToLaunchModal, testPlanId, selectedTestCases]);
+  }, [addToTestPlan, openAddToLaunchModal, testPlanId, selectedTestCases, trackEvent]);
 
   const handleSubmitAddToTestPlan = useCallback(async () => {
     const count = selectedTestCases.length;
@@ -117,7 +129,11 @@ export const TestLibrarySidePanel = ({
       <h3>{formatMessage(messages.testLibrary)}</h3>
       <Toggle
         value={shouldHideAddedTestCases}
-        onChange={(event) => setShouldHideAddedTestCases(event.currentTarget.checked)}
+        onChange={(event) => {
+          const isOn = event.currentTarget.checked;
+          setShouldHideAddedTestCases(isOn);
+          trackEvent(TEST_PLANS_PAGE_EVENTS.clickHideAddedToggle(isOn));
+        }}
       >
         {formatMessage(messages.hideAdded)}
       </Toggle>

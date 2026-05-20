@@ -17,16 +17,37 @@
 import {
   getBasicClickEventParameters,
   getBasicEventParameters,
+  getBasicSearchEventParameters,
 } from '../common/ga4Utils';
 
 const TEST_PLANS = 'test_plans';
 
-const PLACE_DETAILS = 'test_plan_details';
+export const PLACE_DETAILS = 'test_plan_details';
 const PLACE_ADD_TESTS_SIDEBAR = 'add_tests_sidebar';
 const PLACE_KEBAB = 'test_plan_kebab_menu';
 const PLACE_LIST = 'test_plans_list';
+export const PLACE_TEST_CASE_LIBRARY_SIDE_PANEL = 'test_case_library_side_panel';
 
 const CLICK = getBasicClickEventParameters(TEST_PLANS);
+const SEARCH = getBasicSearchEventParameters(TEST_PLANS);
+
+export type AddToTestLaunchPlace =
+  | typeof PLACE_DETAILS
+  | typeof PLACE_TEST_CASE_LIBRARY_SIDE_PANEL;
+
+export const ACTION_SOURCE = {
+  BULK: 'bulk',
+  SINGLE: 'single',
+} as const;
+export type ActionSource = (typeof ACTION_SOURCE)[keyof typeof ACTION_SOURCE];
+export type AddToTestLaunchSource = ActionSource;
+export type RemoveTestFromPlanSource = ActionSource;
+
+export const ADD_TO_LAUNCH_STATUS = {
+  CREATE_NEW_LAUNCH: 'create_new_launch',
+  ADD_TO_EXISTING_LAUNCH: 'add_to_existing_launch',
+} as const;
+export type AddToTestLaunchStatus = (typeof ADD_TO_LAUNCH_STATUS)[keyof typeof ADD_TO_LAUNCH_STATUS];
 
 export const TEST_PLAN_DETAILS_VIEW_TYPE = {
   POPULATED: 'populated',
@@ -38,6 +59,7 @@ export type TestPlanDetailsViewType =
 export const ADD_TESTS_SIDEBAR_CONDITION = {
   ADD_TESTS_BUTTON: 'add_tests_button',
   EMPTY_PLAN_CTA: 'empty_plan_cta',
+  EMPTY_FOLDER_CTA: 'empty_folder_cta',
 } as const;
 export type AddTestsSidebarCondition =
   (typeof ADD_TESTS_SIDEBAR_CONDITION)[keyof typeof ADD_TESTS_SIDEBAR_CONDITION];
@@ -97,16 +119,47 @@ export const TEST_PLANS_PAGE_EVENTS = {
     type: params.type,
     number: params.number,
   }),
-  SUBMIT_REMOVE_TEST_FROM_PLAN: {
+  submitRemoveTestFromPlan: (source: RemoveTestFromPlanSource) => ({
     ...CLICK,
     place: PLACE_DETAILS,
-    element_name: 'submit_remove_test_from_plan',
+    element_name: `submit_${source}_remove_test_from_plan`,
     modal: 'remove_test_from_plan',
-  },
+  }),
   CLICK_OPEN_TEST_CASE_IN_LIBRARY: {
     ...CLICK,
     place: PLACE_DETAILS,
     element_name: 'open_test_case_in_library',
+  },
+  clickStartAddToLaunch: (place: AddToTestLaunchPlace) => ({
+    ...CLICK,
+    place,
+    element_name: 'start_add_to_launch',
+  }),
+  clickHideAddedToggle: (isOn: boolean) => ({
+    ...CLICK,
+    place: PLACE_TEST_CASE_LIBRARY_SIDE_PANEL,
+    icon_name: isOn ? 'hide_added_on' : 'hide_added_off',
+  }),
+  CLICK_START_ADD_AND_CREATE_LAUNCH: {
+    ...CLICK,
+    place: PLACE_TEST_CASE_LIBRARY_SIDE_PANEL,
+    element_name: 'start_add_and_create_launch',
+  },
+  submitAddToTestLaunch: (params: {
+    source: AddToTestLaunchSource;
+    place: AddToTestLaunchPlace;
+    status: AddToTestLaunchStatus;
+  }) => ({
+    ...CLICK,
+    place: params.place,
+    element_name: `submit_${params.source}_add_to_test_launch`,
+    modal: 'add_to_launch',
+    status: params.status,
+  }),
+  SEARCH_TEST_PLANS: {
+    ...SEARCH,
+    place: PLACE_DETAILS,
+    element_name: 'search_test_plans',
   },
   CLICK_START_EDIT_TEST_PLAN: {
     ...CLICK,

@@ -148,6 +148,9 @@ export const TestPlanDetailsPage = () => {
       }
       searchDebounceTimeoutRef.current = setTimeout(() => {
         searchDebounceTimeoutRef.current = null;
+        if (value) {
+          trackEvent(TEST_PLANS_PAGE_EVENTS.SEARCH_TEST_PLANS);
+        }
         dispatch(
           updatePagePropertiesAction({
             testCasesSearchParams: value,
@@ -156,7 +159,7 @@ export const TestPlanDetailsPage = () => {
         );
       }, SEARCH_DELAY);
     },
-    [dispatch],
+    [dispatch, trackEvent],
   );
 
   const { openModal: openEditModal } = useEditTestPlanModal({

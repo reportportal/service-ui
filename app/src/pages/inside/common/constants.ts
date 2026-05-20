@@ -80,3 +80,5 @@ export const PromiseStatus = {
   fulfilled: 'fulfilled',
   rejected: 'rejected',
 } as const;
+
+export const BULK_ADD_TO_LAUNCH_MIN_SELECTION = 2;

@@ -31,7 +31,11 @@ import {
 } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
-import { TEST_PLANS_PAGE_EVENTS } from 'analyticsEvents/testPlansPageEvents';
+import {
+  TEST_PLANS_PAGE_EVENTS,
+  PLACE_TEST_CASE_LIBRARY_SIDE_PANEL,
+  ACTION_SOURCE,
+} from 'analyticsEvents/testPlansPageEvents';
 import { createClassnames, copyToClipboard } from 'common/utils';
 import { useOnClickOutside } from 'common/hooks';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -101,6 +105,8 @@ export const TestPlanSidePanel = memo(
       selectedRowsIds: selectedTestCaseIds,
       testCases: testCasesForLaunch,
       testPlanId: testPlanIdString,
+      source: ACTION_SOURCE.SINGLE,
+      place: PLACE_TEST_CASE_LIBRARY_SIDE_PANEL,
     });
 
     const folderId = testCaseDetails?.testFolder?.id;
@@ -120,6 +126,7 @@ export const TestPlanSidePanel = memo(
         onClearSelection: () => {
           onClose();
         },
+        source: ACTION_SOURCE.SINGLE,
       });
       setIsMenuOpen(false);
     };
@@ -140,6 +147,9 @@ export const TestPlanSidePanel = memo(
     const isAddToLaunchDisabled = !canManageTestCases || isScenarioEmpty || !testPlanId;
 
     const handleAddToLaunchClick = () => {
+      trackEvent(
+        TEST_PLANS_PAGE_EVENTS.clickStartAddToLaunch(PLACE_TEST_CASE_LIBRARY_SIDE_PANEL),
+      );
       openAddToLaunchModal();
     };
 
