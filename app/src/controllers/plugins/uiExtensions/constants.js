@@ -39,6 +39,7 @@ export const EXTENSION_TYPE_MAKE_DECISION_DEFECT_TYPE_ADDON =
   'uiExtension:makeDecisionDefectTypeAddon';
 export const EXTENSION_TYPE_LOG_STACKTRACE_ADDON = 'uiExtension:logStacktraceAddon';
 export const EXTENSION_TYPE_TEST_ITEM_DETAILS_ADDON = 'uiExtension:testItemDetailsAddon';
+export const EXTENSION_TYPE_LOG_TAB = 'uiExtension:logTab';
 export const EXTENSION_TYPE_PROJECT_PAGE = 'uiExtension:projectPage';
 
 export const REMOTE_EXTENSION_POINT_PROJECT_PAGE = 'projectPages';

@@ -19,6 +19,7 @@ export {
   makeDecisionDefectTypeAddonSelector,
   logStackTraceAddonSelector,
   testItemDetailsAddonSelector,
+  uiExtensionLogTabSelector,
   uiExtensionProjectPagesSelector,
   extensionManifestSelector,
   extensionManifestsLoadPendingSelector,

@@ -39,6 +39,7 @@ import {
   EXTENSION_TYPE_MAKE_DECISION_DEFECT_COMMENT_ADDON,
   EXTENSION_TYPE_MAKE_DECISION_DEFECT_TYPE_ADDON,
   EXTENSION_TYPE_LOG_STACKTRACE_ADDON,
+  EXTENSION_TYPE_LOG_TAB,
   EXTENSION_TYPE_TEST_ITEM_DETAILS_ADDON,
   EXTENSION_TYPE_PROJECT_PAGE,
   PLUGIN_TYPE_REMOTE,
@@ -170,6 +171,9 @@ export const logStackTraceAddonSelector = createExtensionSelectorByExtensionPoin
 ]);
 export const testItemDetailsAddonSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_TEST_ITEM_DETAILS_ADDON,
+]);
+export const uiExtensionLogTabSelector = createExtensionSelectorByExtensionPoints([
+  EXTENSION_TYPE_LOG_TAB,
 ]);
 
 export const extensionManifestSelector = (state, pluginName) => {
