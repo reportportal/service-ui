@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,29 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
+import { Modal } from '@reportportal/ui-kit';
+
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal } from 'components/main/modal';
-import { Modal } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
+import { createClassnames } from 'common/utils';
+import { UseModalData } from 'common/hooks';
+import { ModalButtonProps } from 'types/common';
 
-const DeleteIntegrationModal = ({ data }) => {
+import styles from './deleteIntegrationModal.scss';
+
+const cx = createClassnames(styles);
+
+interface DeleteIntegrationModalData {
+  onConfirm: () => void;
+  modalTitle: string;
+  description: string;
+  isReset?: boolean;
+}
+
+const DeleteIntegrationModal = ({ data }: UseModalData<DeleteIntegrationModalData>) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
 
@@ -39,7 +52,8 @@ const DeleteIntegrationModal = ({ data }) => {
     onClick: onDelete,
     variant: 'danger',
     'data-automation-id': 'submitButton',
-  };
+  } satisfies ModalButtonProps;
+
   const cancelButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
     'data-automation-id': 'cancelButton',
@@ -52,25 +66,9 @@ const DeleteIntegrationModal = ({ data }) => {
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
     >
-      {data.description}
+      <div className={cx('modal-content')}>{data.description}</div>
     </Modal>
   );
-};
-DeleteIntegrationModal.propTypes = {
-  data: PropTypes.shape({
-    onConfirm: PropTypes.func,
-    modalTitle: PropTypes.string,
-    description: PropTypes.string,
-    isReset: PropTypes.bool,
-  }),
-};
-DeleteIntegrationModal.defaultProps = {
-  data: {
-    onConfirm: () => {},
-    modalTitle: '',
-    description: '',
-    isReset: false,
-  },
 };
 
 export default withModal('deleteIntegrationModal')(DeleteIntegrationModal);

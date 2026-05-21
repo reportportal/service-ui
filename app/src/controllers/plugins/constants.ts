@@ -42,6 +42,7 @@ export const UPDATE_PROJECT_INTEGRATION_SUCCESS = 'updateProjectIntegrationSucce
 export const REMOVE_PROJECT_INTEGRATION_SUCCESS = 'removeProjectIntegrationSuccess';
 
 export const ADD_ORGANIZATION_INTEGRATION_SUCCESS = 'addOrganizationIntegrationSuccess';
+export const REMOVE_ORGANIZATION_INTEGRATION_SUCCESS = 'removeOrganizationIntegrationSuccess';
 
 export const GLOBAL_INTEGRATIONS = 'globalIntegrations';
 export const PROJECT_INTEGRATIONS = 'projectIntegrations';

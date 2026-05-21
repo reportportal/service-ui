@@ -41,6 +41,8 @@ import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { createClassnames } from 'common/utils';
 import { NamedIntegrations } from 'pages/inside/common/integrations/types';
+import { messages as integrationsMessages } from 'pages/inside/common/integrations/messages';
+import { DeleteIntegrationModal } from 'components/integrations/modals/deleteIntegrationModal';
 
 import { IntegrationData } from '../types';
 import { EmailDetailsCard } from '../emailDetailsCard';
@@ -71,6 +73,7 @@ interface EmailSettingsProps {
   ) => void;
   readonly isGlobal?: boolean;
   readonly isOrganizational?: boolean;
+  readonly onRemoveConfirm?: () => void;
 }
 
 export function EmailSettings({
@@ -78,7 +81,10 @@ export function EmailSettings({
   goToPreviousPage,
   isGlobal = false,
   isOrganizational = false,
+  onRemoveConfirm,
 }: EmailSettingsProps) {
+  const dispatch = useDispatch();
+  const { formatMessage } = useIntl();
   const [connected, setConnected] = useState(true);
   const [loading, setLoading] = useState(true);
 
@@ -95,8 +101,6 @@ export function EmailSettings({
   const { canUpdateSettings, canUpdateOrganizationSettings } = useUserPermissions();
   const canManageIntegration = isOrganizational ? canUpdateOrganizationSettings : canUpdateSettings;
   const query = useSelector(querySelector) as Record<string, string>;
-  const dispatch = useDispatch();
-  const { formatMessage } = useIntl();
 
   const groupedIntegrations = useMemo(() => {
     const availableGlobal = globalIntegrations[query.subPage] || [];
@@ -160,20 +164,32 @@ export function EmailSettings({
   }, [query.id, data.id, testIntegrationConnection]);
 
   const removeIntegration = () => {
-    dispatch(removeIntegrationAction(data.id, isGlobal, goToPreviousPage));
+    onRemoveConfirm?.();
+    dispatch(removeIntegrationAction(data.id, isGlobal, goToPreviousPage, isOrganizational));
   };
 
   const handleDeleteClick = () => {
-    dispatch(
-      showModalAction({
-        id: 'deleteIntegrationModal',
-        data: {
-          onConfirm: removeIntegration,
-          modalTitle: formatMessage(messages.deleteIntegrationTitle),
-          description: formatMessage(messages.deleteIntegrationDescription, { name: data.name }),
-        },
-      }),
-    );
+    const getDescription = () => {
+      if (!isOrganizational) {
+        return formatMessage(messages.deleteIntegrationDescription, { name: data.name });
+      }
+
+      const integrationsCount = (organizationIntegrations[query.subPage] || []).length;
+      return integrationsCount > 1
+        ? formatMessage(messages.deleteIntegrationDescription, { name: data.name })
+        : formatMessage(integrationsMessages.deleteModalDescriptionOrganizationLast, {
+            name: data.name,
+            b: (chunks: React.ReactNode) => <b>{chunks}</b>,
+          });
+    };
+
+    const modalData = {
+      onConfirm: removeIntegration,
+      modalTitle: formatMessage(messages.deleteIntegrationTitle),
+      description: getDescription(),
+    };
+
+    dispatch(showModalAction({ component: <DeleteIntegrationModal data={modalData} /> }));
   };
 
   const blocked = data.blocked ?? false;

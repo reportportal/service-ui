@@ -1290,6 +1290,7 @@
   "IntegrationsDescription.GlobalIntegrationsSystemMessageModalCaption": "全局集成和项目集成不能同时工作。",
   "IntegrationsDescription.GlobalIntegrationsSystemMessageModalText": "请注意！如果您创建了项目集成，全局集成将被取消关联！",
   "IntegrationsDescription.createIntegration": "创建集成",
+  "IntegrationsDescription.delete.modalDescriptionOrganizationLast": "您确定要删除<b>组织级集成{name}</b>吗？如果已配置全局集成，它将自动应用于您的组织和项目。",
   "IntegrationsDescription.emptyStateText": "尚未配置集成",
   "IntegrationsDescription.globalIntegrationText": "在实例级别创建；除非已配置组织级或项目级设置，否则应用于所有项目。",
   "IntegrationsDescription.globalIntegrationTitle": "全局集成",

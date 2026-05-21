@@ -48,7 +48,7 @@ import { IntegrationHeader } from 'pages/inside/common/integrations/integrationH
 import { AvailableIntegrations } from 'pages/inside/common/integrations/availableIntegrations';
 import { messages } from 'pages/inside/common/integrations/messages';
 import type { IntegrationItem, NamedIntegrations } from 'pages/inside/common/integrations/types';
-import DeleteIntegraionModal from 'components/integrations/modals/deleteIntegrationModal/deleteIntegraionModal';
+import DeleteIntegrationModal from 'components/integrations/modals/deleteIntegrationModal/deleteIntegrationModal';
 import AddIntegrationModal from 'components/integrations/modals/addIntegrationModal/addIntegrationModal';
 import { activeOrganizationIdSelector } from 'controllers/organization';
 import { ORGANIZATION_SETTINGS_INTEGRATION } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
@@ -73,6 +73,7 @@ interface IntegrationSettingsViewProps {
   data: IntegrationItem;
   onUpdate: (formData: Record<string, unknown>, onConfirm: () => void, metaData?: unknown) => void;
   goToPreviousPage: () => void;
+  onRemoveConfirm?: () => void;
   extension?: Extension;
   withPreloader?: boolean;
   silentOnError?: boolean;
@@ -225,6 +226,14 @@ export const IntegrationInfo = ({ plugin, integrationId = '' }: IntegrationInfoP
     // TODO: to be implemented in the future
   };
 
+  const onRemoveOrganizationIntegration = () => {
+    trackEvent(
+      ORGANIZATION_SETTINGS_INTEGRATION.clickDeleteIntegrationModal(
+        plugin.details?.name || pluginName,
+      ),
+    );
+  };
+
   const updatedData = {
     ...integrationInfo,
     name: updatedParameters.name || integrationInfo.name || '',
@@ -288,7 +297,7 @@ export const IntegrationInfo = ({ plugin, integrationId = '' }: IntegrationInfoP
       description: formatMessage(messages.organizationIntegrationResetDescription),
       isReset: true,
     };
-    dispatch(showModalAction({ component: <DeleteIntegraionModal data={data} /> }));
+    dispatch(showModalAction({ component: <DeleteIntegrationModal data={data} /> }));
   };
 
   const getButtons = () =>
@@ -364,6 +373,7 @@ export const IntegrationInfo = ({ plugin, integrationId = '' }: IntegrationInfoP
               <IntegrationSettingsComponent
                 data={updatedData}
                 onUpdate={onUpdate}
+                onRemoveConfirm={onRemoveOrganizationIntegration}
                 goToPreviousPage={goToPluginIntegrationList}
                 extension={integrationSettingsExtension}
                 withPreloader

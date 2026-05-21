@@ -31,6 +31,9 @@ import {
   addGlobalIntegrationSuccessAction,
   addOrganizationIntegrationSuccessAction,
   addProjectIntegrationSuccessAction,
+  removeGlobalIntegrationSuccessAction,
+  removeOrganizationIntegrationSuccessAction,
+  removeProjectIntegrationSuccessAction,
 } from './actionCreators';
 
 export const LIMITED_INTEGRATION_PLUGINS = [EMAIL, MOBITRU, SAUCE_LABS];
@@ -149,7 +152,11 @@ export const getAddIntegrationSuccessAction = ({ isGlobal, isOrganizational }) =
   }
 };
 
-export const getTestIntegrationConnection = ({ isGlobal = false, isOrganizational = false, context = {} }) => {
+export const getTestIntegrationConnection = ({
+  isGlobal = false,
+  isOrganizational = false,
+  context = {},
+}) => {
   const { projectKey, organizationId } = context;
 
   return (integrationId) => {
@@ -164,4 +171,28 @@ export const getTestIntegrationConnection = ({ isGlobal = false, isOrganizationa
         return fetch(URLS.testIntegrationConnection(projectKey, integrationId));
     }
   };
+};
+
+export const getRemoveIntegrationUrl = ({ isGlobal, isOrganizational, id, context }) => {
+  const { projectKey, organizationId } = context;
+
+  switch (true) {
+    case isGlobal:
+      return URLS.globalIntegration(id);
+    case isOrganizational:
+      return URLS.organizationIntegrationById(organizationId, id);
+    default:
+      return URLS.projectIntegration(projectKey, id);
+  }
+};
+
+export const getRemoveIntegrationSuccessAction = ({ isGlobal, isOrganizational }) => {
+  switch (true) {
+    case isGlobal:
+      return removeGlobalIntegrationSuccessAction;
+    case isOrganizational:
+      return removeOrganizationIntegrationSuccessAction;
+    default:
+      return removeProjectIntegrationSuccessAction;
+  }
 };

@@ -47,9 +47,7 @@ import { pluginByNameSelector } from './selectors';
 import {
   removePluginSuccessAction,
   updateProjectIntegrationSuccessAction,
-  removeProjectIntegrationSuccessAction,
   removeProjectIntegrationsByTypeSuccessAction,
-  removeGlobalIntegrationSuccessAction,
   updateGlobalIntegrationSuccessAction,
   fetchGlobalIntegrationsSuccessAction,
   removeGlobalIntegrationsByTypeSuccessAction,
@@ -58,6 +56,8 @@ import { fetchExtensionManifests, fetchExtensionManifest } from './uiExtensions'
 import {
   getAddIntegrationSuccessAction,
   getAddIntegrationUrl,
+  getRemoveIntegrationUrl,
+  getRemoveIntegrationSuccessAction,
   normalizeIntegrationItem,
 } from './utils';
 
@@ -147,26 +147,19 @@ function* watchUpdateIntegration() {
   yield takeEvery(UPDATE_INTEGRATION, updateIntegration);
 }
 
-function* removeIntegration({ payload: { id, isGlobal, callback } }) {
+function* removeIntegration({ payload: { id, isGlobal, isOrganizational, callback } }) {
   yield put(showScreenLockAction());
   try {
-    const projectKey = yield select(projectKeySelector);
-    const url = isGlobal ? URLS.globalIntegration(id) : URLS.projectIntegration(projectKey, id);
+    const context = yield resolveIntegrationContext();
+    const url = getRemoveIntegrationUrl({ isGlobal, isOrganizational, id, context });
 
     yield call(fetch, url, {
       method: 'delete',
     });
 
-    const removeIntegrationSuccessAction = isGlobal
-      ? removeGlobalIntegrationSuccessAction(id)
-      : removeProjectIntegrationSuccessAction(id);
-    yield put(removeIntegrationSuccessAction);
-    yield put(
-      showNotification({
-        messageId: 'removeIntegrationSuccess',
-        type: NOTIFICATION_TYPES.SUCCESS,
-      }),
-    );
+    const removeIntegrationSuccessAction = getRemoveIntegrationSuccessAction({ isGlobal, isOrganizational });
+    yield put(removeIntegrationSuccessAction(id));
+    yield put(showSuccessNotification({ messageId: 'removeIntegrationSuccess' }));
     yield call(callback);
   } catch (error) {
     yield put(showDefaultErrorNotification(error));
