@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { ReactNode } from 'react';
 import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { Modal } from '@reportportal/ui-kit';
@@ -31,8 +32,8 @@ const cx = createClassnames(styles);
 
 interface DeleteIntegrationModalData {
   onConfirm: () => void;
-  modalTitle: string;
-  description: string;
+  modalTitle: ReactNode | string;
+  description: ReactNode | string;
   isReset?: boolean;
 }
 

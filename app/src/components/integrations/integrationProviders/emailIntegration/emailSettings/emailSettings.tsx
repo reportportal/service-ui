@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useEffect, useState, useMemo, useCallback, ReactNode } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { redirect } from 'redux-first-router';
 import { useIntl, defineMessages } from 'react-intl';
@@ -75,6 +75,8 @@ interface EmailSettingsProps {
   readonly isOrganizational?: boolean;
   readonly onRemoveConfirm?: () => void;
 }
+
+const Bold = (chunks: ReactNode) => <b>{chunks}</b>;
 
 export function EmailSettings({
   data,
@@ -179,7 +181,7 @@ export function EmailSettings({
         ? formatMessage(messages.deleteIntegrationDescription, { name: data.name })
         : formatMessage(integrationsMessages.deleteModalDescriptionOrganizationLast, {
             name: data.name,
-            b: (chunks: React.ReactNode) => <b>{chunks}</b>,
+            b: Bold,
           });
     };
 
