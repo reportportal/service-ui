@@ -76,12 +76,14 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
     );
   }
 
+  const preconditionValue = scenario.preconditions?.value;
+
   return (
     <div className={cx('scenario-wrapper')}>
       <div className={cx('scenario', 'full-view')}>
-        {scenario.preconditions?.value && (
+        {preconditionValue && (
           <FieldSection title={formatMessage(messages.precondition)} className={cx('sub-header')}>
-            <div className={cx('precondition-text')}>{scenario.preconditions.value}</div>
+            <div className={cx('precondition-text')}>{preconditionValue}</div>
           </FieldSection>
         )}
         {scenario.instructions && (
