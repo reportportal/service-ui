@@ -49,16 +49,16 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
           <div className={cx('scenario', 'steps-scenario', 'with-attachments')}>
             {preconditionValue && (
               <FieldSection title={formatMessage(messages.precondition)}>
-                <div className={cx('precondition-text')}>{scenario.preconditions.value}</div>
+                <div className={cx('precondition-text')}>{preconditionValue}</div>
               </FieldSection>
             )}
             {hasPreconditionAttachments && (
               <>
                 {preconditionValue && <div className={cx('section-border')} />}
                 <FieldSection
-                  title={`${formatMessage(commonMessages.attachments)} ${scenario.preconditions.attachments?.length}`}
+                  title={`${formatMessage(commonMessages.attachments)} ${scenario.preconditions?.attachments?.length}`}
                 >
-                  <AttachmentList attachments={scenario.preconditions.attachments} />
+                  <AttachmentList attachments={scenario.preconditions?.attachments} />
                 </FieldSection>
               </>
             )}

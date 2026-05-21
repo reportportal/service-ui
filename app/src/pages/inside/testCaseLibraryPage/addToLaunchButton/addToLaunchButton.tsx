@@ -37,7 +37,7 @@ const cx = createClassnames(styles);
 
 interface AddToLaunchButtonProps {
   testCaseId: number;
-  manualScenario: ManualScenario;
+  manualScenario?: ManualScenario;
   place: AddToLaunchPlace;
 }
 
@@ -59,13 +59,16 @@ export const AddToLaunchButton = ({
       !isEmpty(instructions) || !isEmpty(expectedResult) || !isEmpty(attachments);
 
     if (manualScenario.manualScenarioType === TestCaseManualScenario.TEXT) {
-      const {
-        preconditions: { value, attachments },
-        instructions,
-        expectedResult,
-      } = manualScenario;
+      const { preconditions, instructions, expectedResult } = manualScenario;
 
-      return isEmpty(value) && !hasContent({ instructions, expectedResult, attachments });
+      return (
+        isEmpty(preconditions?.value) &&
+        !hasContent({
+          instructions,
+          expectedResult,
+          attachments: preconditions?.attachments,
+        })
+      );
     }
 
     return (
