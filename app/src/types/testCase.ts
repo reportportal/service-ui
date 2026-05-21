@@ -85,9 +85,9 @@ export interface ManualScenario {
   id: number;
   executionEstimationTime: number;
   requirements: Requirement[];
-  preconditions: {
-    value: string;
-    attachments: Attachment[];
+  preconditions?: {
+    value?: string;
+    attachments?: Attachment[];
   };
   attributes?: Tag[];
   steps: Step[];

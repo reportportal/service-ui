@@ -29,8 +29,8 @@ const cx = createClassnames(styles);
 
 interface PreconditionProps {
   preconditions: {
-    value: string;
-    attachments: Attachment[];
+    value?: string;
+    attachments?: Attachment[];
   };
 }
 
@@ -47,7 +47,7 @@ export const Precondition = ({ preconditions }: PreconditionProps) => {
         {!isEmpty(preconditions.attachments) && (
           <div className={cx('precondition__attachments-wrapper')}>
             <h4>
-              {formatMessage(commonMessages.attachments)} {preconditions.attachments.length}
+              {formatMessage(commonMessages.attachments)} {preconditions.attachments?.length}
             </h4>
             <AttachmentsWithSlider
               attachments={preconditions.attachments}

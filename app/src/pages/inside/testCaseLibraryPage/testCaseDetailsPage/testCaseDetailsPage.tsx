@@ -127,9 +127,10 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
       {
         titleKey: 'precondition',
         defaultMessage: messages.noPrecondition,
-        childComponent: hasStepsPreconditionContent(manualScenario?.preconditions) && (
-          <Precondition preconditions={manualScenario.preconditions} />
-        ),
+        childComponent: hasStepsPreconditionContent(manualScenario?.preconditions) &&
+          manualScenario?.preconditions && (
+            <Precondition preconditions={manualScenario.preconditions} />
+          ),
       },
       {
         titleKey: 'steps',
