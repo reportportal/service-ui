@@ -26,6 +26,9 @@ import {
   urlOrganizationAndProjectSelector,
   querySelector,
   PROJECT_SETTINGS_TAB_PAGE,
+  ORGANIZATION_SETTINGS_TAB_PAGE,
+  pageLevelSelector,
+  APP_LEVEL,
 } from 'controllers/pages';
 import { projectKeySelector } from 'controllers/project';
 import { activeOrganizationIdSelector } from 'controllers/organization';
@@ -103,6 +106,7 @@ export function EmailSettings({
   const { canUpdateSettings, canUpdateOrganizationSettings } = useUserPermissions();
   const canManageIntegration = isOrganizational ? canUpdateOrganizationSettings : canUpdateSettings;
   const query = useSelector(querySelector) as Record<string, string>;
+  const pageLevel = useSelector(pageLevelSelector);
 
   const groupedIntegrations = useMemo(() => {
     const availableGlobal = globalIntegrations[query.subPage] || [];
@@ -113,13 +117,19 @@ export function EmailSettings({
 
   const namedSubPage = useMemo(
     () => ({
-      type: PROJECT_SETTINGS_TAB_PAGE,
-      payload: { organizationSlug, projectSlug, settingsTab: INTEGRATIONS },
-      meta: {
-        query: omit(query, ['id']),
+      type:
+        pageLevel === APP_LEVEL.ORGANIZATION
+          ? ORGANIZATION_SETTINGS_TAB_PAGE
+          : PROJECT_SETTINGS_TAB_PAGE,
+      payload:
+        pageLevel === APP_LEVEL.ORGANIZATION
+          ? { organizationSlug, settingsTab: INTEGRATIONS }
+          : { organizationSlug, projectSlug, settingsTab: INTEGRATIONS },
+      query: {
+        ...omit(query, ['id']),
       },
     }),
-    [organizationSlug, projectSlug, query],
+    [organizationSlug, projectSlug, query, pageLevel],
   );
 
   const testConnection = useMemo(
@@ -154,7 +164,6 @@ export function EmailSettings({
     const isKnownIntegration =
       Number.isFinite(queryId) && groupedIntegrations.some(({ id }) => id === queryId);
     if (!isKnownIntegration) {
-      // @ts-expect-error redirect typing mismatch with redux-first-router
       dispatch(redirect(namedSubPage));
     }
   }, [query, groupedIntegrations, dispatch, namedSubPage]);
