@@ -52,6 +52,12 @@ export const ORGANIZATION_SETTINGS_INTEGRATION = {
     element_name: 'submit_create_organization_integration',
     type: normalizeEventParameter(type),
   }),
+
+  clickDeleteIntegrationModal: (type: string) => ({
+    ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
+    element_name: 'submit_delete_organization_integration',
+    type: normalizeEventParameter(type),
+  }),
 };
 
 export const ORGANIZATION_PAGE_EVENTS = {

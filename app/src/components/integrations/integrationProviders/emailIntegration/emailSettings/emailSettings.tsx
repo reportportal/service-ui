@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useEffect, useState, useMemo, useCallback, ReactNode } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { redirect } from 'redux-first-router';
 import { useIntl, defineMessages } from 'react-intl';
@@ -26,6 +26,9 @@ import {
   urlOrganizationAndProjectSelector,
   querySelector,
   PROJECT_SETTINGS_TAB_PAGE,
+  ORGANIZATION_SETTINGS_TAB_PAGE,
+  pageLevelSelector,
+  APP_LEVEL,
 } from 'controllers/pages';
 import { projectKeySelector } from 'controllers/project';
 import { activeOrganizationIdSelector } from 'controllers/organization';
@@ -41,6 +44,8 @@ import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { createClassnames } from 'common/utils';
 import { NamedIntegrations } from 'pages/inside/common/integrations/types';
+import { messages as integrationsMessages } from 'pages/inside/common/integrations/messages';
+import { DeleteIntegrationModal } from 'components/integrations/modals/deleteIntegrationModal';
 
 import { IntegrationData } from '../types';
 import { EmailDetailsCard } from '../emailDetailsCard';
@@ -71,14 +76,20 @@ interface EmailSettingsProps {
   ) => void;
   readonly isGlobal?: boolean;
   readonly isOrganizational?: boolean;
+  readonly onRemoveConfirm?: () => void;
 }
+
+const Bold = (chunks: ReactNode) => <b>{chunks}</b>;
 
 export function EmailSettings({
   data,
   goToPreviousPage,
   isGlobal = false,
   isOrganizational = false,
+  onRemoveConfirm,
 }: EmailSettingsProps) {
+  const dispatch = useDispatch();
+  const { formatMessage } = useIntl();
   const [connected, setConnected] = useState(true);
   const [loading, setLoading] = useState(true);
 
@@ -95,8 +106,7 @@ export function EmailSettings({
   const { canUpdateSettings, canUpdateOrganizationSettings } = useUserPermissions();
   const canManageIntegration = isOrganizational ? canUpdateOrganizationSettings : canUpdateSettings;
   const query = useSelector(querySelector) as Record<string, string>;
-  const dispatch = useDispatch();
-  const { formatMessage } = useIntl();
+  const pageLevel = useSelector(pageLevelSelector);
 
   const groupedIntegrations = useMemo(() => {
     const availableGlobal = globalIntegrations[query.subPage] || [];
@@ -107,13 +117,19 @@ export function EmailSettings({
 
   const namedSubPage = useMemo(
     () => ({
-      type: PROJECT_SETTINGS_TAB_PAGE,
-      payload: { organizationSlug, projectSlug, settingsTab: INTEGRATIONS },
-      meta: {
-        query: omit(query, ['id']),
+      type:
+        pageLevel === APP_LEVEL.ORGANIZATION
+          ? ORGANIZATION_SETTINGS_TAB_PAGE
+          : PROJECT_SETTINGS_TAB_PAGE,
+      payload:
+        pageLevel === APP_LEVEL.ORGANIZATION
+          ? { organizationSlug, settingsTab: INTEGRATIONS }
+          : { organizationSlug, projectSlug, settingsTab: INTEGRATIONS },
+      query: {
+        ...omit(query, ['id']),
       },
     }),
-    [organizationSlug, projectSlug, query],
+    [organizationSlug, projectSlug, query, pageLevel],
   );
 
   const testConnection = useMemo(
@@ -148,7 +164,6 @@ export function EmailSettings({
     const isKnownIntegration =
       Number.isFinite(queryId) && groupedIntegrations.some(({ id }) => id === queryId);
     if (!isKnownIntegration) {
-      // @ts-expect-error redirect typing mismatch with redux-first-router
       dispatch(redirect(namedSubPage));
     }
   }, [query, groupedIntegrations, dispatch, namedSubPage]);
@@ -160,20 +175,32 @@ export function EmailSettings({
   }, [query.id, data.id, testIntegrationConnection]);
 
   const removeIntegration = () => {
-    dispatch(removeIntegrationAction(data.id, isGlobal, goToPreviousPage));
+    onRemoveConfirm?.();
+    dispatch(removeIntegrationAction(data.id, isGlobal, goToPreviousPage, isOrganizational));
   };
 
   const handleDeleteClick = () => {
-    dispatch(
-      showModalAction({
-        id: 'deleteIntegrationModal',
-        data: {
-          onConfirm: removeIntegration,
-          modalTitle: formatMessage(messages.deleteIntegrationTitle),
-          description: formatMessage(messages.deleteIntegrationDescription, { name: data.name }),
-        },
-      }),
-    );
+    const getDescription = () => {
+      if (!isOrganizational) {
+        return formatMessage(messages.deleteIntegrationDescription, { name: data.name });
+      }
+
+      const integrationsCount = (organizationIntegrations[query.subPage] || []).length;
+      return integrationsCount > 1
+        ? formatMessage(messages.deleteIntegrationDescription, { name: data.name })
+        : formatMessage(integrationsMessages.deleteModalDescriptionOrganizationLast, {
+            name: data.name,
+            b: Bold,
+          });
+    };
+
+    const modalData = {
+      onConfirm: removeIntegration,
+      modalTitle: formatMessage(messages.deleteIntegrationTitle),
+      description: getDescription(),
+    };
+
+    dispatch(showModalAction({ component: <DeleteIntegrationModal data={modalData} /> }));
   };
 
   const blocked = data.blocked ?? false;

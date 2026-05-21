@@ -1291,6 +1291,7 @@
   "IntegrationsDescription.GlobalIntegrationsSystemMessageModalCaption": "Las integraciones globales y del proyecto no pueden funcionar simultáneamente.",
   "IntegrationsDescription.GlobalIntegrationsSystemMessageModalText": "Ten en cuenta que las integraciones globales se desactivarán si configuras una integración de proyecto.",
   "IntegrationsDescription.createIntegration": "Crear integración",
+  "IntegrationsDescription.delete.modalDescriptionOrganizationLast": "¿Está seguro de que desea eliminar la <b>integración organizacional {name}</b>? Si la integración global está configurada, se aplicará automáticamente a su organización y a sus proyectos.",
   "IntegrationsDescription.emptyStateText": "La integración aún no está configurada",
   "IntegrationsDescription.globalIntegrationText": "Se crean a nivel de instancia y se aplican a todos los proyectos salvo que existan configuraciones a nivel organizativo o de proyecto.",
   "IntegrationsDescription.globalIntegrationTitle": "Integraciones globales",

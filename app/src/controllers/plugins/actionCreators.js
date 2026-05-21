@@ -30,6 +30,7 @@ import {
   UPDATE_PROJECT_INTEGRATION_SUCCESS,
   REMOVE_PROJECT_INTEGRATION_SUCCESS,
   ADD_ORGANIZATION_INTEGRATION_SUCCESS,
+  REMOVE_ORGANIZATION_INTEGRATION_SUCCESS,
   ADD_GLOBAL_INTEGRATION_SUCCESS,
   UPDATE_GLOBAL_INTEGRATION_SUCCESS,
   REMOVE_GLOBAL_INTEGRATION_SUCCESS,
@@ -125,9 +126,14 @@ export const addOrganizationIntegrationSuccessAction = (integration) => ({
   payload: integration,
 });
 
-export const removeIntegrationAction = (id, isGlobal, callback) => ({
+export const removeOrganizationIntegrationSuccessAction = (id) => ({
+  type: REMOVE_ORGANIZATION_INTEGRATION_SUCCESS,
+  payload: id,
+});
+
+export const removeIntegrationAction = (id, isGlobal, callback, isOrganizational = false) => ({
   type: REMOVE_INTEGRATION,
-  payload: { id, isGlobal, callback },
+  payload: { id, isGlobal, callback, isOrganizational },
 });
 
 export const removeProjectIntegrationSuccessAction = (id) => ({

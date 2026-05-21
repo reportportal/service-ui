@@ -157,7 +157,7 @@ export const notificationMessages = defineMessages({
   },
   removeIntegrationSuccess: {
     id: 'ConnectionSection.removeIntegrationSuccess',
-    defaultMessage: 'Integration successfully deleted',
+    defaultMessage: 'Integration has been deleted successfully',
   },
   addDashboardSuccess: {
     id: 'DashboardPage.addDashboardSuccess',

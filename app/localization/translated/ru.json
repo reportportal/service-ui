@@ -1290,6 +1290,7 @@
   "IntegrationsDescription.GlobalIntegrationsSystemMessageModalCaption": "Глобальная и проектная интеграции не могут работать одновременно.",
   "IntegrationsDescription.GlobalIntegrationsSystemMessageModalText": "Обратите внимание, что глобальные интеграции будут отключены, если вы создадите интеграцию проекта!",
   "IntegrationsDescription.createIntegration": "Создать интеграцию",
+  "IntegrationsDescription.delete.modalDescriptionOrganizationLast": "Вы уверены, что хотите удалить <b>организационную интеграцию {name}</b>? Если настроена глобальная интеграция, она будет автоматически применена к вашей организации и проектам.",
   "IntegrationsDescription.emptyStateText": "Интеграция ещё не настроена",
   "IntegrationsDescription.globalIntegrationText": "Создаются на уровне экземпляра и применяются ко всем проектам, если не заданы организационные или проектные конфигурации.",
   "IntegrationsDescription.globalIntegrationTitle": "Глобальные интеграции",

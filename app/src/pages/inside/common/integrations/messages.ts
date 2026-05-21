@@ -175,4 +175,9 @@ export const messages = defineMessages({
     id: 'IntegrationsDescription.noIntegrationsOrganizationButtonAdd',
     defaultMessage: 'Create Organizational Integration',
   },
+  deleteModalDescriptionOrganizationLast: {
+    id: 'IntegrationsDescription.delete.modalDescriptionOrganizationLast',
+    defaultMessage:
+      'Are you sure you want to delete the <b>Organizational {name} integration</b>? If Global integration is configured, it will be automatically applied to your organization and projects.',
+  },
 });
