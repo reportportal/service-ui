@@ -40,7 +40,12 @@ const BoldText = ({ children, className }: { children: ReactNode; className?: st
 );
 
 const RemoveTestCasesFromTestPlanModal = ({ data }: RemoveTestCasesFromTestPlanModalProps) => {
-  const { selectedTestCaseIds = [], onClearSelection = noop, testCaseName } = data || {};
+  const {
+    selectedTestCaseIds = [],
+    onClearSelection = noop,
+    testCaseName,
+    source,
+  } = data || {};
 
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -49,6 +54,7 @@ const RemoveTestCasesFromTestPlanModal = ({ data }: RemoveTestCasesFromTestPlanM
       dispatch(hideModalAction());
       onClearSelection();
     },
+    source,
   });
 
   const handleRemove = useCallback(() => {

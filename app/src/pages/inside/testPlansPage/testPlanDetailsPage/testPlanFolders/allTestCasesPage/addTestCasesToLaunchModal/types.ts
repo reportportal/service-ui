@@ -15,10 +15,13 @@
  */
 
 import { TestCase } from 'types/testCase';
+import { ActionSource, AddToTestLaunchPlace } from 'analyticsEvents/testPlansPageEvents';
 
 export interface AddTestCasesToLaunchModalProps {
   selectedRowsIds: number[];
   testCases: TestCase[];
   testPlanId: string;
   onClearSelection?: () => void;
+  source?: ActionSource;
+  place?: AddToTestLaunchPlace;
 }

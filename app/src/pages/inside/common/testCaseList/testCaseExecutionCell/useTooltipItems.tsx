@@ -16,6 +16,7 @@
 
 import { useIntl } from 'react-intl';
 
+import { ACTION_SOURCE } from 'analyticsEvents/testPlansPageEvents';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
@@ -48,6 +49,7 @@ export const useTooltipItems = ({ instanceKey, testCase }: UseTooltipItemsProps)
               openRemoveFromTestPlanModal({
                 selectedTestCaseIds: [testCase.id],
                 testCaseName: testCase.name,
+                source: ACTION_SOURCE.SINGLE,
               });
             },
           },

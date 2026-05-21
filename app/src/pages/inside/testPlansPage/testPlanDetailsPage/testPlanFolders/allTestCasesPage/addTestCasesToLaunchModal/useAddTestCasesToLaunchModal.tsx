@@ -25,6 +25,8 @@ export const useAddTestCasesToLaunchModal = ({
   testCases,
   testPlanId,
   onClearSelection,
+  source,
+  place,
 }: AddTestCasesToLaunchModalProps) => {
   return useModal({
     modalKey: ADD_TEST_CASES_TO_LAUNCH_MODAL_KEY,
@@ -34,6 +36,8 @@ export const useAddTestCasesToLaunchModal = ({
         testCases={testCases}
         testPlanId={testPlanId}
         onClearSelection={onClearSelection}
+        source={source}
+        place={place}
       />
     ),
   });

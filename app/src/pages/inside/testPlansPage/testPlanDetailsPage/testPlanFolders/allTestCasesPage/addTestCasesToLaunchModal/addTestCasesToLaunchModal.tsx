@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { useMemo, ReactNode } from 'react';
+import { useMemo, ReactNode, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { InjectedFormProps, reduxForm } from 'redux-form';
+import { useTracking } from 'react-tracking';
 
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -25,7 +26,12 @@ import {
   BaseLaunchModal,
   LaunchFormData,
   INITIAL_LAUNCH_FORM_VALUES,
+  LaunchMode,
 } from 'pages/inside/common/launchFormFields';
+import {
+  TEST_PLANS_PAGE_EVENTS,
+  ADD_TO_LAUNCH_STATUS,
+} from 'analyticsEvents/testPlansPageEvents';
 
 import { AddTestCasesToLaunchModalProps } from './types';
 import { messages } from './messages';
@@ -43,9 +49,12 @@ const AddTestCasesToLaunchModalComponent = ({
   testCases: allTestCases,
   testPlanId,
   onClearSelection,
+  source,
+  place,
   ...reduxFormProps
 }: AddTestCasesToLaunchModalProps & InjectedFormProps<LaunchFormData>) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
 
   const testCases: TestCase[] = useMemo(() => {
     return allTestCases.filter((testCase) => selectedRowsIds.includes(testCase.id));
@@ -64,6 +73,25 @@ const AddTestCasesToLaunchModalComponent = ({
         });
   }, [testCases, formatMessage]);
 
+  const handleSubmitClick = useCallback(
+    (mode: LaunchMode) => {
+      if (!source || !place) {
+        return;
+      }
+      trackEvent(
+        TEST_PLANS_PAGE_EVENTS.submitAddToTestLaunch({
+          source,
+          place,
+          status:
+            mode === LaunchMode.NEW
+              ? ADD_TO_LAUNCH_STATUS.CREATE_NEW_LAUNCH
+              : ADD_TO_LAUNCH_STATUS.ADD_TO_EXISTING_LAUNCH,
+        }),
+      );
+    },
+    [trackEvent, source, place],
+  );
+
   return (
     <BaseLaunchModal
       {...reduxFormProps}
@@ -76,6 +104,7 @@ const AddTestCasesToLaunchModalComponent = ({
       hideTestPlanField
       className={cx('add-test-cases-to-launch-modal')}
       onClearSelection={onClearSelection}
+      onSubmitClick={handleSubmitClick}
     />
   );
 };

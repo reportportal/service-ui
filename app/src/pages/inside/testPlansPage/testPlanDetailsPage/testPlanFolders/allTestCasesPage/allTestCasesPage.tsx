@@ -21,12 +21,17 @@ import { useTracking } from 'react-tracking';
 import { isEmpty } from 'es-toolkit/compat';
 import { Pagination, Button, Selection } from '@reportportal/ui-kit';
 
-import { TEST_PLANS_PAGE_EVENTS } from 'analyticsEvents/testPlansPageEvents';
+import {
+  TEST_PLANS_PAGE_EVENTS,
+  PLACE_DETAILS,
+  ACTION_SOURCE,
+} from 'analyticsEvents/testPlansPageEvents';
 import { createClassnames } from 'common/utils';
 import { TestCaseList } from 'pages/inside/common/testCaseList';
 import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/common/testCaseList/constants';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { SelectedTestCaseRow } from 'pages/inside/common/testCaseList/types';
+import { BULK_ADD_TO_LAUNCH_MIN_SELECTION } from 'pages/inside/common/constants';
 import {
   defaultTestPlanTestCasesQueryParams,
   TEST_PLAN_TEST_CASES_NAMESPACE,
@@ -43,8 +48,6 @@ import { AllTestCasesPageProps } from './types';
 import styles from './allTestCasesPage.scss';
 
 const cx = createClassnames(styles);
-
-const BULK_ADD_TO_LAUNCH_MIN_SELECTION = 2;
 
 export const AllTestCasesPage = ({
   testCases,
@@ -73,11 +76,17 @@ export const AllTestCasesPage = ({
   const onClearSelection = () => setSelectedRows([]);
 
   const { openModal: openRemoveTestCasesModal } = useRemoveTestCasesFromTestPlanModal();
+  const addToLaunchSource =
+    selectedRowIds.length >= BULK_ADD_TO_LAUNCH_MIN_SELECTION
+      ? ACTION_SOURCE.BULK
+      : ACTION_SOURCE.SINGLE;
   const { openModal: openAddToLaunchModal } = useAddTestCasesToLaunchModal({
     selectedRowsIds: selectedRowIds,
     testCases,
     testPlanId,
     onClearSelection,
+    source: addToLaunchSource,
+    place: PLACE_DETAILS,
   });
 
   const isAnyRowSelected = !isEmpty(selectedRows);
@@ -87,6 +96,7 @@ export const AllTestCasesPage = ({
       selectedTestCaseIds: selectedRowIds,
       testCaseName: selectedRows.length === 1 ? selectedRows[0]?.name : undefined,
       onClearSelection,
+      source: ACTION_SOURCE.BULK,
     });
   };
 

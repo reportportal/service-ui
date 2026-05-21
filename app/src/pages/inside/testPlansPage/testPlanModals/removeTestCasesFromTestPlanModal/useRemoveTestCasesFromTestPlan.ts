@@ -20,7 +20,10 @@ import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { noop } from 'es-toolkit';
 
-import { TEST_PLANS_PAGE_EVENTS } from 'analyticsEvents/testPlansPageEvents';
+import {
+  TEST_PLANS_PAGE_EVENTS,
+  ACTION_SOURCE,
+} from 'analyticsEvents/testPlansPageEvents';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { useDebouncedSpinner, useNotification } from 'common/hooks';
@@ -42,6 +45,7 @@ import { UseRemoveTestCasesFromTestPlanOptions } from './types';
 
 export const useRemoveTestCasesFromTestPlan = ({
   onSuccess = noop,
+  source = ACTION_SOURCE.BULK,
 }: UseRemoveTestCasesFromTestPlanOptions) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
@@ -99,7 +103,7 @@ export const useRemoveTestCasesFromTestPlan = ({
           }),
         );
 
-        trackEvent(TEST_PLANS_PAGE_EVENTS.SUBMIT_REMOVE_TEST_FROM_PLAN);
+        trackEvent(TEST_PLANS_PAGE_EVENTS.submitRemoveTestFromPlan(source));
 
         showSuccessNotification({
           messageId: 'removeFromTestPlanSuccess',
@@ -132,6 +136,7 @@ export const useRemoveTestCasesFromTestPlan = ({
       showErrorNotification,
       hideSpinner,
       trackEvent,
+      source,
     ],
   );
 
