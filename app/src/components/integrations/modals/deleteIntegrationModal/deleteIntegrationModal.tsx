@@ -34,6 +34,7 @@ interface DeleteIntegrationModalData {
   onConfirm: () => void;
   modalTitle: ReactNode | string;
   description: ReactNode | string;
+  okButtonLabel?: ReactNode | string;
   isReset?: boolean;
 }
 
@@ -47,9 +48,11 @@ const DeleteIntegrationModal = ({ data }: UseModalData<DeleteIntegrationModalDat
   };
 
   const okButton = {
-    children: data.isReset
-      ? formatMessage(COMMON_LOCALE_KEYS.RESET)
-      : formatMessage(COMMON_LOCALE_KEYS.DELETE),
+    children:
+      data.okButtonLabel ||
+      (data.isReset
+        ? formatMessage(COMMON_LOCALE_KEYS.RESET)
+        : formatMessage(COMMON_LOCALE_KEYS.DELETE)),
     onClick: onDelete,
     variant: 'danger',
     'data-automation-id': 'submitButton',

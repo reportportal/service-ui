@@ -26,6 +26,8 @@ import {
   SET_PROJECT_INTEGRATIONS,
   REMOVE_PROJECT_INTEGRATIONS_BY_TYPE,
   REMOVE_PROJECT_INTEGRATIONS_BY_TYPE_SUCCESS,
+  REMOVE_ORGANIZATION_INTEGRATIONS_BY_TYPE,
+  REMOVE_ORGANIZATION_INTEGRATIONS_BY_TYPE_SUCCESS,
   ADD_PROJECT_INTEGRATION_SUCCESS,
   UPDATE_PROJECT_INTEGRATION_SUCCESS,
   REMOVE_PROJECT_INTEGRATION_SUCCESS,
@@ -148,6 +150,16 @@ export const removeProjectIntegrationsByTypeAction = (instanceType) => ({
 
 export const removeProjectIntegrationsByTypeSuccessAction = (instanceType) => ({
   type: REMOVE_PROJECT_INTEGRATIONS_BY_TYPE_SUCCESS,
+  payload: instanceType,
+});
+
+export const removeOrganizationIntegrationsByTypeAction = (instanceType) => ({
+  type: REMOVE_ORGANIZATION_INTEGRATIONS_BY_TYPE,
+  payload: instanceType,
+});
+
+export const removeOrganizationIntegrationsByTypeSuccessAction = (instanceType) => ({
+  type: REMOVE_ORGANIZATION_INTEGRATIONS_BY_TYPE_SUCCESS,
   payload: instanceType,
 });
 

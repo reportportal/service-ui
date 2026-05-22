@@ -163,6 +163,8 @@ export const URLS = {
   organizationById: (organizationId) => `${urlCommonBase}organizations/${organizationId}`,
   organizationIntegrations: (organizationId) =>
     `${urlCommonBase}organizations/${organizationId}/integrations`,
+  removeOrganizationIntegrationsByType: (organizationId, type) =>
+    `${urlCommonBase}organizations/${organizationId}/integrations${getQueryParams({ type })}`,
   organizationIntegrationById: (organizationId, integrationId) =>
     `${urlCommonBase}organizations/${organizationId}/integrations/${integrationId}`,
   testOrganizationIntegrationConnection: (organizationId, integrationId) =>
