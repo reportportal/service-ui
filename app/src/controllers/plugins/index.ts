@@ -26,6 +26,7 @@ export {
   addIntegrationAction,
   removeIntegrationAction,
   removeProjectIntegrationsByTypeAction,
+  removeOrganizationIntegrationsByTypeAction,
   updateIntegrationAction,
   setProjectIntegrationsAction,
   setOrganizationIntegrationsAction,

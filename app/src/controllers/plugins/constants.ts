@@ -36,6 +36,9 @@ export const REMOVE_GLOBAL_INTEGRATION_SUCCESS = 'removeGlobalIntegrationSuccess
 
 export const REMOVE_PROJECT_INTEGRATIONS_BY_TYPE = 'removeProjectIntegrationsByType';
 export const REMOVE_PROJECT_INTEGRATIONS_BY_TYPE_SUCCESS = 'removeProjectIntegrationsByTypeSuccess';
+export const REMOVE_ORGANIZATION_INTEGRATIONS_BY_TYPE = 'removeOrganizationIntegrationsByType';
+export const REMOVE_ORGANIZATION_INTEGRATIONS_BY_TYPE_SUCCESS =
+  'removeOrganizationIntegrationsByTypeSuccess';
 export const REMOVE_GLOBAL_INTEGRATIONS_BY_TYPE_SUCCESS = 'removeGlobalIntegrationsByTypeSuccess';
 export const ADD_PROJECT_INTEGRATION_SUCCESS = 'addProjectIntegrationSuccess';
 export const UPDATE_PROJECT_INTEGRATION_SUCCESS = 'updateProjectIntegrationSuccess';

@@ -407,6 +407,7 @@
   "Common.requirementsAreNotSpecified": "Los requisitos no están especificados",
   "Common.requirementsLinkHint": "Introduzca una URL válida con el formato: https://example.com.",
   "Common.reset": "Restablecer",
+  "Common.resetAndDelete": "Restablecer y eliminar",
   "Common.runTest": "Ejecutar prueba",
   "Common.saturday": "Sábado",
   "Common.save": "Guardar",

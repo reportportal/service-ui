@@ -31,6 +31,7 @@ import {
   addIntegrationAction,
   namedGlobalIntegrationsSelector,
   namedOrganizationIntegrationsSelector,
+  removeOrganizationIntegrationsByTypeAction,
   type Plugin,
   type PluginDetails,
 } from 'controllers/plugins';
@@ -42,6 +43,7 @@ import { ExtensionLoader } from 'components/extensionLoader';
 import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/settingsComponentsMap';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { combineNameAndEmailToFrom, createClassnames } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { IntegrationHeader } from 'pages/inside/common/integrations/integrationHeader/integrationHeader';
@@ -92,6 +94,7 @@ export const IntegrationInfo = ({ plugin, integrationId = '' }: IntegrationInfoP
   const dispatch = useDispatch();
   const pluginName = plugin.name;
   const details: Partial<PluginDetails> = plugin.details ?? {};
+  const analyticsPluginName = plugin.details?.name || pluginName;
   const [integrationInfo, setIntegrationInfo] = useState<Partial<IntegrationInfoItem>>({});
   const [updatedParameters, setUpdatedParameters] = useState<Partial<IntegrationInfoItem>>({});
   const settingsExtensions = useSelector(uiExtensionIntegrationSettingsSelector) as Extension[];
@@ -195,11 +198,7 @@ export const IntegrationInfo = ({ plugin, integrationId = '' }: IntegrationInfoP
       name: updatedFormData.integrationName || details.name,
       plugin_id: details.id,
     };
-    trackEvent(
-      ORGANIZATION_SETTINGS_INTEGRATION.clickCreateIntegrationModal(
-        plugin.details?.name || pluginName,
-      ),
-    );
+    trackEvent(ORGANIZATION_SETTINGS_INTEGRATION.clickCreateIntegrationModal(analyticsPluginName));
     dispatch(
       addIntegrationAction(newData, false, pluginName, openIntegration, metaData, isOrganizational),
     );
@@ -227,11 +226,7 @@ export const IntegrationInfo = ({ plugin, integrationId = '' }: IntegrationInfoP
   };
 
   const onRemoveOrganizationIntegration = () => {
-    trackEvent(
-      ORGANIZATION_SETTINGS_INTEGRATION.clickDeleteIntegrationModal(
-        plugin.details?.name || pluginName,
-      ),
-    );
+    trackEvent(ORGANIZATION_SETTINGS_INTEGRATION.clickDeleteIntegrationModal(analyticsPluginName));
   };
 
   const updatedData = {
@@ -287,14 +282,22 @@ export const IntegrationInfo = ({ plugin, integrationId = '' }: IntegrationInfoP
   };
 
   const resetOrganizationIntegrations = () => {
-    // TODO: to be implemented in the future
+    trackEvent(
+      ORGANIZATION_SETTINGS_INTEGRATION.clickResetToGlobalIntegrationModal(analyticsPluginName),
+    );
+    dispatch(removeOrganizationIntegrationsByTypeAction(pluginName));
   };
 
   const onResetOrganizationIntegration = () => {
+    trackEvent(
+      ORGANIZATION_SETTINGS_INTEGRATION.clickResetToGlobalIntegration(analyticsPluginName),
+    );
+
     const data = {
       onConfirm: resetOrganizationIntegrations,
       modalTitle: formatMessage(messages.resetIntegrations),
       description: formatMessage(messages.organizationIntegrationResetDescription),
+      okButtonLabel: formatMessage(COMMON_LOCALE_KEYS.RESET_AND_DELETE),
       isReset: true,
     };
     dispatch(showModalAction({ component: <DeleteIntegrationModal data={data} /> }));

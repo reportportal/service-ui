@@ -35,6 +35,7 @@ import {
   FETCH_PUBLIC_PLUGINS,
   REMOVE_PLUGIN,
   REMOVE_PROJECT_INTEGRATIONS_BY_TYPE,
+  REMOVE_ORGANIZATION_INTEGRATIONS_BY_TYPE,
   ADD_INTEGRATION,
   UPDATE_INTEGRATION,
   REMOVE_INTEGRATION,
@@ -48,6 +49,7 @@ import {
   removePluginSuccessAction,
   updateProjectIntegrationSuccessAction,
   removeProjectIntegrationsByTypeSuccessAction,
+  removeOrganizationIntegrationsByTypeSuccessAction,
   updateGlobalIntegrationSuccessAction,
   fetchGlobalIntegrationsSuccessAction,
   removeGlobalIntegrationsByTypeSuccessAction,
@@ -157,7 +159,10 @@ function* removeIntegration({ payload: { id, isGlobal, isOrganizational, callbac
       method: 'delete',
     });
 
-    const removeIntegrationSuccessAction = getRemoveIntegrationSuccessAction({ isGlobal, isOrganizational });
+    const removeIntegrationSuccessAction = getRemoveIntegrationSuccessAction({
+      isGlobal,
+      isOrganizational,
+    });
     yield put(removeIntegrationSuccessAction(id));
     yield put(showSuccessNotification({ messageId: 'removeIntegrationSuccess' }));
     yield call(callback);
@@ -180,12 +185,7 @@ function* removeIntegrationsByType({ payload: instanceType }) {
       method: 'delete',
     });
     yield put(removeProjectIntegrationsByTypeSuccessAction(instanceType));
-    yield put(
-      showNotification({
-        messageId: 'resetToGlobalSuccess',
-        type: NOTIFICATION_TYPES.SUCCESS,
-      }),
-    );
+    yield put(showSuccessNotification({ messageId: 'resetToGlobalSuccess' }));
   } catch (error) {
     yield put(showDefaultErrorNotification(error));
   } finally {
@@ -195,6 +195,26 @@ function* removeIntegrationsByType({ payload: instanceType }) {
 
 function* watchRemoveIntegrationsByType() {
   yield takeEvery(REMOVE_PROJECT_INTEGRATIONS_BY_TYPE, removeIntegrationsByType);
+}
+
+function* removeOrganizationIntegrationsByType({ payload: instanceType }) {
+  yield put(showScreenLockAction());
+  try {
+    const organizationId = yield select(activeOrganizationIdSelector);
+    yield call(fetch, URLS.removeOrganizationIntegrationsByType(organizationId, instanceType), {
+      method: 'delete',
+    });
+    yield put(removeOrganizationIntegrationsByTypeSuccessAction(instanceType));
+    yield put(showSuccessNotification({ messageId: 'resetToGlobalSuccess' }));
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  } finally {
+    yield put(hideScreenLockAction());
+  }
+}
+
+function* watchRemoveOrganizationIntegrationsByType() {
+  yield takeEvery(REMOVE_ORGANIZATION_INTEGRATIONS_BY_TYPE, removeOrganizationIntegrationsByType);
 }
 
 function* fetchGlobalIntegrations() {
@@ -269,6 +289,7 @@ export function* pluginSagas() {
     watchUpdateIntegration(),
     watchRemoveIntegration(),
     watchRemoveIntegrationsByType(),
+    watchRemoveOrganizationIntegrationsByType(),
     watchFetchGlobalIntegrations(),
     watchFetchPlugins(),
     watchFetchPublicPlugins(),

@@ -147,6 +147,10 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.reset',
     defaultMessage: 'Reset',
   },
+  RESET_AND_DELETE: {
+    id: 'Common.resetAndDelete',
+    defaultMessage: 'Reset & Delete',
+  },
   SEARCH: {
     id: 'Common.search',
     defaultMessage: 'Search',
