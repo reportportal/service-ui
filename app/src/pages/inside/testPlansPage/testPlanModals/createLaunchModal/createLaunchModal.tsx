@@ -14,19 +14,28 @@
  * limitations under the License.
  */
 
+import { useMemo, ReactNode, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { InjectedFormProps, reduxForm } from 'redux-form';
-import { useMemo, ReactNode } from 'react';
+import { useTracking } from 'react-tracking';
 
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useActiveTestPlan } from 'hooks/useTypedSelector';
+import { BULK_ADD_TO_LAUNCH_MIN_SELECTION } from 'pages/inside/common/constants';
 import {
   BaseLaunchModal,
   LaunchFormData,
   INITIAL_LAUNCH_FORM_VALUES,
+  LaunchMode,
   messages as launchFormMessages,
 } from 'pages/inside/common/launchFormFields';
+import {
+  TEST_PLANS_PAGE_EVENTS,
+  PLACE_DETAILS,
+  ACTION_SOURCE,
+  ADD_TO_LAUNCH_STATUS,
+} from 'analyticsEvents/testPlansPageEvents';
 
 import { CreateLaunchModalProps } from './types';
 import { messages } from './messages';
@@ -42,6 +51,7 @@ const CreateLaunchModalComponent = ({
   ...reduxFormProps
 }: CreateLaunchModalProps & InjectedFormProps<LaunchFormData>) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const activeTestPlan = useActiveTestPlan();
 
   const testPlanName = activeTestPlan?.name;
@@ -54,6 +64,27 @@ const CreateLaunchModalComponent = ({
     });
   }, [testPlanName, formatMessage]);
 
+  const handleSubmitSuccess = useCallback(
+    (mode: LaunchMode) => {
+      const source =
+        testCases.length >= BULK_ADD_TO_LAUNCH_MIN_SELECTION
+          ? ACTION_SOURCE.BULK
+          : ACTION_SOURCE.SINGLE;
+
+      trackEvent(
+        TEST_PLANS_PAGE_EVENTS.submitAddToTestLaunch({
+          source,
+          place: PLACE_DETAILS,
+          status:
+            mode === LaunchMode.NEW
+              ? ADD_TO_LAUNCH_STATUS.CREATE_NEW_LAUNCH
+              : ADD_TO_LAUNCH_STATUS.ADD_TO_EXISTING_LAUNCH,
+        }),
+      );
+    },
+    [testCases.length, trackEvent],
+  );
+
   return (
     <BaseLaunchModal
       {...reduxFormProps}
@@ -64,6 +95,7 @@ const CreateLaunchModalComponent = ({
       description={descriptionText}
       hideTestPlanField
       className={cx('create-launch-modal')}
+      onSubmitSuccess={handleSubmitSuccess}
     />
   );
 };

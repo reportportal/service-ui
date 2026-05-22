@@ -86,7 +86,7 @@ const AddToLaunchModalComponent = ({
     [count, isFromFolder, testCases, formatMessage],
   );
 
-  const handleSubmitClick = (mode: LaunchMode) => {
+  const handleSubmitSuccess = (mode: LaunchMode) => {
     if (isBulk) {
       trackEvent(TEST_CASE_LIBRARY_EVENTS.SUBMIT_BULK_ADD_TO_LAUNCH);
       return;
@@ -118,7 +118,7 @@ const AddToLaunchModalComponent = ({
       className={cx('add-to-launch-modal')}
       onClearSelection={onClearSelection}
       isUncoveredTestsCheckboxAvailable={isUncoveredTestsCheckboxAvailable}
-      onSubmitClick={handleSubmitClick}
+      onSubmitSuccess={handleSubmitSuccess}
     />
   );
 };

@@ -42,6 +42,7 @@ export const useCreateManualLaunch = (
   selectedLaunchId?: number,
   folderId?: number,
   onClearSelection?: () => void,
+  onSubmitSuccess?: (mode: LaunchMode) => void,
 ) => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
@@ -151,6 +152,7 @@ export const useCreateManualLaunch = (
           return;
         }
 
+        onSubmitSuccess?.(activeMode);
         onClearSelection?.();
         dispatch(hideModalAction());
       } catch (error: unknown) {
@@ -171,6 +173,7 @@ export const useCreateManualLaunch = (
       selectedLaunchId,
       activeMode,
       onClearSelection,
+      onSubmitSuccess,
       dispatch,
       projectKey,
       formatMessage,

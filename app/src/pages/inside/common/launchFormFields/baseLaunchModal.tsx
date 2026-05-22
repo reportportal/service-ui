@@ -45,7 +45,7 @@ export const BaseLaunchModal = ({
   hideTestPlanField = false,
   className,
   onClearSelection,
-  onSubmitClick,
+  onSubmitSuccess,
 }: BaseLaunchModalProps & InjectedFormProps<LaunchFormData>) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
@@ -59,6 +59,7 @@ export const BaseLaunchModal = ({
     selectedLaunch?.id,
     folderId,
     onClearSelection,
+    onSubmitSuccess,
   );
 
   const isSubmitDisabled =
@@ -78,10 +79,9 @@ export const BaseLaunchModal = ({
     [activeMode, change],
   );
 
-  const trackedSubmit = handleSubmit((values: LaunchFormData) => {
-    onSubmitClick?.(activeMode);
-    return handleCreateLaunch(values);
-  }) as (event?: FormEvent | MouseEvent<HTMLButtonElement>) => void;
+  const trackedSubmit = handleSubmit((values: LaunchFormData) =>
+    handleCreateLaunch(values),
+  ) as (event?: FormEvent | MouseEvent<HTMLButtonElement>) => void;
 
   const handleOkClick = (event: MouseEvent<HTMLButtonElement>) => {
     trackedSubmit(event);
