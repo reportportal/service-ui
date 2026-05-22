@@ -56,6 +56,7 @@ interface CreateFolderAutocompleteProps {
   withMenuFlip?: boolean;
   useFixedPositioning?: boolean;
   dropdownMatchInputWidth?: boolean;
+  placement?: ComponentProps<typeof SingleAutocomplete>['placement'];
   menuClassName?: string;
   onStateChange?: SingleAutocompleteOnStateChange;
   onChange?: (value: FolderWithFullPath | NewFolderData) => void;
@@ -75,6 +76,7 @@ export const CreateFolderAutocomplete = ({
   withMenuFlip = false,
   useFixedPositioning = false,
   dropdownMatchInputWidth = false,
+  placement,
   menuClassName,
   onStateChange = noop,
   onChange = noop,
@@ -199,6 +201,7 @@ export const CreateFolderAutocomplete = ({
         useFixedPositioning={useFixedPositioning}
         withMenuFlip={withMenuFlip}
         dropdownMatchInputWidth={dropdownMatchInputWidth}
+        placement={placement}
         menuClassName={menuClassName}
         value={getTargetFolder()}
         error={error}

@@ -12,7 +12,6 @@ import { Folder, FolderWithFullPath, foldersSelector } from 'controllers/testCas
 import { createFoldersBatchSuccessAction } from 'controllers/testCase/actionCreators';
 import { useNavigateToFolder } from '../hooks/useNavigateToFolder';
 import { NewFolderData, isNewFolderData } from '../utils/getFolderFromFormValues';
-
 import { messages } from './messages';
 
 type ImportQuery = {
@@ -33,14 +32,12 @@ type ApiError = {
 
 type ImportResponse = Folder[];
 
-const API_ERROR_PREFIXES: Array<[string, keyof typeof messages]> = [
-  ['CSV file is missing required header', 'csvMissingRequiredHeader'],
-  ['File contains no valid data rows to import', 'noValidDataRows'],
-];
+const KNOWN_ERROR_CODES = new Set([40016]);
 
-const API_ERROR_CODE_MAP: Partial<Record<number, keyof typeof messages>> = {
-  40016: 'csvMissingRequiredHeader',
-};
+const KNOWN_ERROR_PREFIXES = [
+  'CSV file is missing required header',
+  'File contains no valid data rows to import',
+];
 
 const createQuery = ({ testFolderId, testFolderName }: ImportQuery): ImportQuery => {
   if (isNumber(testFolderId)) {
@@ -128,12 +125,12 @@ export const useImportTestCase = () => {
         const errorCode = apiError?.errorCode;
         const apiMessage = apiError?.message;
 
-        const codeKey = errorCode != null ? API_ERROR_CODE_MAP[errorCode] : undefined;
-        const prefixKey = API_ERROR_PREFIXES.find(([prefix]) => apiMessage?.startsWith(prefix))?.[1];
-        const messageKey = codeKey ?? prefixKey;
+        const isKnownError =
+          (errorCode != null && KNOWN_ERROR_CODES.has(errorCode)) ||
+          KNOWN_ERROR_PREFIXES.some((prefix) => apiMessage?.startsWith(prefix));
 
-        if (messageKey) {
-          return formatMessage(messages[messageKey]);
+        if (isKnownError) {
+          return formatMessage(messages.noValidDataRows);
         }
 
         showErrorNotification({

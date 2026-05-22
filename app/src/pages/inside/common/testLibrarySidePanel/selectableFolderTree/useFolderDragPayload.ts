@@ -15,9 +15,8 @@
  */
 
 import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
 
-import { transformedFoldersSelector, TransformedFolder } from 'controllers/testCase';
+import { TransformedFolder } from 'controllers/testCase';
 
 import { CheckboxSelectionState, usePanelState } from '../testLibraryPanelContext';
 import {
@@ -27,8 +26,9 @@ import {
   FolderDragItem,
   TestCaseDragItem,
 } from '../constants';
+import { useSelectedRootFolders } from '../hooks/useSelectedRootFolders';
 
-const getFlatFoldersIndex = (folders: TransformedFolder[]) => {
+export const getFlatFoldersIndex = (folders: TransformedFolder[]) => {
   const foldersIndex = new Map<number, TransformedFolder>();
 
   const indexFolderAndDescendants = (foldersList: TransformedFolder[]) => {
@@ -43,14 +43,14 @@ const getFlatFoldersIndex = (folders: TransformedFolder[]) => {
   return foldersIndex;
 };
 
-const isWithinSelectedRoots = (
+export const isWithinSelectedRoots = (
   folderId: number,
   flatFoldersMap: Map<number, TransformedFolder>,
   selectedRootFolderIds: Set<number>,
-) => {
+): boolean => {
   const folder = flatFoldersMap.get(folderId);
 
-  if (!folder || !folder?.parentFolderId) {
+  if (!folder) {
     return false;
   }
 
@@ -58,10 +58,14 @@ const isWithinSelectedRoots = (
     return true;
   }
 
+  if (!folder.parentFolderId) {
+    return false;
+  }
+
   return isWithinSelectedRoots(folder.parentFolderId, flatFoldersMap, selectedRootFolderIds);
 };
 
-const getSelectableSubtreeTestsCount = (
+export const getSelectableSubtreeTestsCount = (
   folder: TransformedFolder,
   testPlanCountByFolderId: Map<number, number>,
 ): number => {
@@ -92,39 +96,8 @@ export const useFolderDragPayload = ({
   folder,
   checkboxState,
 }: UseFolderDragPayloadParams): FolderDragPayload => {
-  const { checkboxStatesMap, testPlanCountByFolderId, selectedTestCases } = usePanelState();
-  const flatFolders = useSelector(transformedFoldersSelector);
-
-  const flatFoldersMap = useMemo(() => getFlatFoldersIndex(flatFolders), [flatFolders]);
-
-  const selectedRootFolders = useMemo(() => {
-    const checkedFolderIds = new Set(
-      Array.from(checkboxStatesMap.entries())
-        .filter(([, state]) => state === CheckboxSelectionState.CHECKED)
-        .map(([id]) => id),
-    );
-
-    const rootFolders: TransformedFolder[] = [];
-
-    checkedFolderIds.forEach((id) => {
-      const checkedFolder = flatFoldersMap.get(id);
-
-      if (!checkedFolder) {
-        return;
-      }
-
-      if (!checkedFolder.parentFolderId || !checkedFolderIds.has(checkedFolder.parentFolderId)) {
-        rootFolders.push(checkedFolder);
-      }
-    });
-
-    return rootFolders;
-  }, [checkboxStatesMap, flatFoldersMap]);
-
-  const selectedRootFolderIds = useMemo(
-    () => new Set(selectedRootFolders.map(({ id }) => id)),
-    [selectedRootFolders],
-  );
+  const { testPlanCountByFolderId, selectedTestCases } = usePanelState();
+  const { flatFoldersMap, selectedRootFolders, selectedRootFolderIds } = useSelectedRootFolders();
 
   return useMemo<FolderDragPayload>(() => {
     const isDraggedFolderWithinSelectedRoots =
