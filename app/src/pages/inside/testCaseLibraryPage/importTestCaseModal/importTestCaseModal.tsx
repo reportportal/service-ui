@@ -6,7 +6,6 @@ import { useTracking } from 'react-tracking';
 import { format } from 'date-fns';
 import { isEmpty } from 'es-toolkit/compat';
 import { Modal, FileDropArea, AddCsvIcon, ExternalLinkIcon } from '@reportportal/ui-kit';
-import { VoidFn } from '@reportportal/ui-kit/common';
 import { MIME_TYPES, MimeType, FileWithValidation } from '@reportportal/ui-kit/fileDropArea';
 import { AttachmentFile } from '@reportportal/ui-kit/fileDropArea/attachedFilesList';
 
@@ -31,10 +30,7 @@ import { FolderNameField } from 'pages/inside/testCaseLibraryPage/testCaseFolder
 import { CreateFolderAutocomplete } from 'pages/inside/testCaseLibraryPage/testCaseFolders/shared/CreateFolderAutocomplete';
 import { ButtonSwitcherOption } from 'pages/inside/common/buttonSwitcher';
 
-import {
-  FolderModalFormValues,
-  FOLDER_MODAL_INITIAL_VALUES,
-} from '../utils/folderModalFormConfig';
+import { FolderModalFormValues, FOLDER_MODAL_INITIAL_VALUES } from '../utils/folderModalFormConfig';
 import { validateFolderModalForm } from '../utils/validateFolderModalForm';
 import { getFolderFromFormValues } from '../utils/getFolderFromFormValues';
 import { useImportTestCase } from './useImportTestCase';
@@ -85,7 +81,7 @@ export const ImportTestCaseModal = ({
   const selectedFolderName = folders.find((folder) => folder.id === folderId)?.name ?? '';
 
   const hasFolderId = folderId != null;
-  const hasFolders = folders.length > 0;
+  const hasFolders = !isEmpty(folders);
 
   const handleModeChange = (mode: ButtonSwitcherOption) => {
     setCurrentMode(mode);
@@ -254,9 +250,9 @@ export const ImportTestCaseModal = ({
                 <CreateFolderAutocomplete
                   label={formatMessage(messages.importDropdownLabel)}
                   placeholder={formatMessage(messages.typeToSearchOrSelect)}
-                  withMenuFlip
                   useFixedPositioning
                   dropdownMatchInputWidth
+                  placement="top-start"
                   menuClassName={cx('import-test-case-modal__folder-menu')}
                   onChange={handleFolderSelect}
                 />
@@ -279,7 +275,7 @@ export const ImportTestCaseModal = ({
     okButtonText: formatMessage(COMMON_LOCALE_KEYS.IMPORT),
     isLoading: isImportingTestCases,
     isSubmitButtonDisabled: !file || !!fileError || (!hasFolderId && invalid),
-    onSubmit: handleSubmit(handleImport) as () => void,
+    onSubmit: handleSubmit(handleImport),
   });
 
   return (
@@ -291,7 +287,7 @@ export const ImportTestCaseModal = ({
       onClose={hideModal}
       scrollable
     >
-      <form onSubmit={handleSubmit(handleImport) as VoidFn}>
+      <form onSubmit={handleSubmit(handleImport)}>
         <div className={cx('import-test-case-modal__content')}>
           <section className={cx('import-test-case-modal__info-block')}>
             <p className={cx('import-test-case-modal__info-text')}>

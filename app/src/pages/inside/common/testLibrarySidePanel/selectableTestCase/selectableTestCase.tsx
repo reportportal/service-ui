@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { KeyboardEvent, memo, useCallback, useMemo } from 'react';
+import { KeyboardEvent, memo, useCallback } from 'react';
 import { CheckmarkIcon, DragNDropIcon, TestCaseIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
@@ -22,9 +22,10 @@ import { TestCase } from 'types/testCase';
 import { useDraggableRow } from 'components/main/draggableTableRow';
 
 import { DepthAwareCheckbox } from '../depthAwareCheckbox';
-import { TEST_CASE_DRAG_TYPE, TestCaseDragItem } from '../constants';
+import { DragItem } from '../constants';
 import { useTestCaseDragOpacity } from '../hooks/useDragOpacity';
 import { startDragOnKeyboard } from '../utils';
+import { useTestCaseDragPayload } from './useTestCaseDragPayload';
 
 import styles from './selectableTestCase.scss';
 
@@ -56,22 +57,18 @@ export const SelectableTestCase = memo(
       onToggle(testCase.id);
     }, [onToggle, testCase.id]);
 
-    const dragItem: TestCaseDragItem = useMemo(() => {
-      const shouldDragSelection = isSelected && selectedTestCases.length > 1;
-      const items = shouldDragSelection ? selectedTestCases : [testCase];
-
-      return {
-        ids: items.map(({ id }) => id),
-        testCases: items,
-        isMulti: items.length > 1,
-      };
-    }, [isSelected, selectedTestCases, testCase]);
+    const { type: dragType, item: dragItem } = useTestCaseDragPayload({
+      testCase,
+      isSelected,
+      selectedTestCases,
+      folderId,
+    });
 
     const isDimmed = useTestCaseDragOpacity(testCase.id, folderId);
 
     const { dragSourceRef, handleDragHandleMouseDown, startDragFromHandle } =
-      useDraggableRow<TestCaseDragItem>({
-        type: TEST_CASE_DRAG_TYPE,
+      useDraggableRow<DragItem>({
+        type: dragType,
         item: dragItem,
         canDrag,
         rowSelector: '.selectable-test-case-global',

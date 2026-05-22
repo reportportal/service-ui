@@ -49,7 +49,7 @@ export const useDraggableRow = <T extends Record<string, unknown>>({
 
   useEffect(() => {
     dragPreviewRef(getEmptyImage(), { captureDraggingState: true });
-  }, [dragPreviewRef]);
+  }, [dragPreviewRef, type]);
 
   const rowRef = useRef<HTMLElement | null>(null);
 

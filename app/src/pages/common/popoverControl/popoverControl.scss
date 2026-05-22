@@ -68,13 +68,15 @@
     }
 
     &--disabled {
-      color: var(--rp-ui-base-e-400);
       cursor: default;
+
+      div:first-child {
+        opacity: 0.3;
+      }
 
       &:hover,
       &:active,
       &:focus {
-        color: var(--rp-ui-base-e-400);
         background-color: transparent;
       }
     }
