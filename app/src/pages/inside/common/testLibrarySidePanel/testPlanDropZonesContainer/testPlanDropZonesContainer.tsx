@@ -23,8 +23,11 @@ import {
   DND_ITEM_COUNT_TYPE,
   DndDropTarget,
   TEST_PLANS_PAGE_EVENTS,
+  ACTION_SOURCE,
+  PLACE_TEST_CASE_LIBRARY_SIDE_PANEL,
 } from 'analyticsEvents/testPlansPageEvents';
 import { useModal } from 'common/hooks';
+import { BULK_ADD_TO_LAUNCH_MIN_SELECTION } from 'pages/inside/common/constants';
 import { TestCase } from 'types/testCase';
 import { TransformedFolder } from 'controllers/testCase';
 import {
@@ -81,6 +84,8 @@ export const TestPlanDropZonesContainer = ({
         selectedRowsIds={data.selectedRowsIds}
         testCases={data.testCases}
         testPlanId={data.testPlanId}
+        source={data.source}
+        place={data.place}
       />
     ),
   });
@@ -155,6 +160,11 @@ export const TestPlanDropZonesContainer = ({
             selectedRowsIds: ids,
             testCases,
             testPlanId: String(testPlanId),
+            source:
+              ids.length >= BULK_ADD_TO_LAUNCH_MIN_SELECTION
+                ? ACTION_SOURCE.BULK
+                : ACTION_SOURCE.SINGLE,
+            place: PLACE_TEST_CASE_LIBRARY_SIDE_PANEL,
           });
         }
       } finally {
@@ -220,6 +230,11 @@ export const TestPlanDropZonesContainer = ({
             selectedRowsIds: ids,
             testCases: getTestCasesFromIds(ids),
             testPlanId: String(testPlanId),
+            source:
+              ids.length >= BULK_ADD_TO_LAUNCH_MIN_SELECTION
+                ? ACTION_SOURCE.BULK
+                : ACTION_SOURCE.SINGLE,
+            place: PLACE_TEST_CASE_LIBRARY_SIDE_PANEL,
           });
         }
       } finally {

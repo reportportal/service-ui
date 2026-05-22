@@ -73,7 +73,7 @@ const AddTestCasesToLaunchModalComponent = ({
         });
   }, [testCases, formatMessage]);
 
-  const handleSubmitClick = useCallback(
+  const handleSubmitSuccess = useCallback(
     (mode: LaunchMode) => {
       if (!source || !place) {
         return;
@@ -104,7 +104,7 @@ const AddTestCasesToLaunchModalComponent = ({
       hideTestPlanField
       className={cx('add-test-cases-to-launch-modal')}
       onClearSelection={onClearSelection}
-      onSubmitClick={handleSubmitClick}
+      onSubmitSuccess={handleSubmitSuccess}
     />
   );
 };
