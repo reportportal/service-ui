@@ -52,8 +52,10 @@ export const useStepsManagement = ({
   const [steps, setSteps] = useState<Step[]>(normalizedSteps);
 
   useEffect(() => {
-    setSteps(normalizedSteps);
-  }, [normalizedSteps]);
+    if (isEditMode) {
+      setSteps(normalizedSteps);
+    }
+  }, [normalizedSteps, isEditMode]);
 
   const buildStepsObjectWithPositions = useCallback(
     (updatedSteps: Step[]) =>
