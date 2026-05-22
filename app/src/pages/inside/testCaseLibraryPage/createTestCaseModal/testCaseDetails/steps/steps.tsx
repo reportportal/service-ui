@@ -132,58 +132,56 @@ export const Steps = ({
           const isDraggingThis = draggingIndex === index;
 
           return (
-            <>
-              <SortableItem
-                key={id}
-                id={id}
-                index={index}
-                type={STEP_DRAG_TYPE}
-                onDrop={handleDrop}
-                hideDefaultPreview
-                dropDetectionMode={DROP_DETECTION_MODE.HOVER}
-                isLast={isLast}
-                className={cx('steps__step-container', {
-                  'steps__step-container--just-dropped': justDroppedId === id,
-                  'steps__step-container--last': isLast,
-                  'steps__step-container--is-dragging': isDraggingThis,
-                })}
-                draggingClassName={cx('steps__step-container--dragging')}
-                dropTargetClassName={cx('steps__step-container--drop-target')}
-              >
-                {({ dragRef, isDragging }) => (
-                  <HideOnDrag
-                    isDragging={isDragging}
+            <SortableItem
+              key={id}
+              id={id}
+              index={index}
+              type={STEP_DRAG_TYPE}
+              onDrop={handleDrop}
+              hideDefaultPreview
+              dropDetectionMode={DROP_DETECTION_MODE.HOVER}
+              isLast={isLast}
+              className={cx('steps__step-container', {
+                'steps__step-container--just-dropped': justDroppedId === id,
+                'steps__step-container--last': isLast,
+                'steps__step-container--is-dragging': isDraggingThis,
+              })}
+              draggingClassName={cx('steps__step-container--dragging')}
+              dropTargetClassName={cx('steps__step-container--drop-target')}
+            >
+              {({ dragRef, isDragging }) => (
+                <HideOnDrag
+                  isDragging={isDragging}
+                  index={index}
+                  draggingIndex={draggingIndex}
+                  onDraggingChange={setDraggingIndex}
+                >
+                  <AttachmentArea
+                    isDraggable
                     index={index}
-                    draggingIndex={draggingIndex}
-                    onDraggingChange={setDraggingIndex}
+                    totalCount={steps.length}
+                    formName={formName}
+                    acceptFileMimeTypes={[MIME_TYPES.jpeg, MIME_TYPES.png]}
+                    dropZoneDescription={formatMessage(commonMessages.dropFileDescription, {
+                      browseButton: formatMessage(commonMessages.browseText),
+                    })}
+                    attachmentFieldName={`steps.${fieldKey}.attachments`}
+                    fileSizeMessage={formatMessage(commonMessages.fileSizeInfo)}
+                    onRemove={() => onRemoveStep(id)}
+                    onMove={(direction) => onMoveStep({ stepId: id, direction })}
+                    dragHandleRef={dragRef as Ref<HTMLButtonElement>}
+                    isDraggingActive={isDragging}
                   >
-                    <AttachmentArea
-                      isDraggable
-                      index={index}
-                      totalCount={steps.length}
-                      formName={formName}
-                      acceptFileMimeTypes={[MIME_TYPES.jpeg, MIME_TYPES.png]}
-                      dropZoneDescription={formatMessage(commonMessages.dropFileDescription, {
-                        browseButton: formatMessage(commonMessages.browseText),
-                      })}
-                      attachmentFieldName={`steps.${fieldKey}.attachments`}
-                      fileSizeMessage={formatMessage(commonMessages.fileSizeInfo)}
-                      onRemove={() => onRemoveStep(id)}
-                      onMove={(direction) => onMoveStep({ stepId: id, direction })}
-                      dragHandleRef={dragRef as Ref<HTMLButtonElement>}
-                      isDraggingActive={isDragging}
-                    >
-                      <Step
-                        stepId={fieldKey}
-                        instructions={instructions}
-                        expectedResult={expectedResult}
-                      />
-                    </AttachmentArea>
-                    {renderBetweenStepsArea(index)}
-                  </HideOnDrag>
-                )}
-              </SortableItem>
-            </>
+                    <Step
+                      stepId={fieldKey}
+                      instructions={instructions}
+                      expectedResult={expectedResult}
+                    />
+                  </AttachmentArea>
+                  {renderBetweenStepsArea(index)}
+                </HideOnDrag>
+              )}
+            </SortableItem>
           );
         })}
       </div>
