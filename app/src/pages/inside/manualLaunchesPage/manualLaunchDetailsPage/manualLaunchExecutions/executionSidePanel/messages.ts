@@ -33,6 +33,10 @@ export const messages = defineMessages({
     id: 'ExecutionSidePanel.changeStatus',
     defaultMessage: 'Change Status',
   },
+  continueTesting: {
+    id: 'ExecutionSidePanel.continueTesting',
+    defaultMessage: 'Continue Testing',
+  },
   openTestCaseInNewTab : {
     id: 'ExecutionSidePanel.openTestCaseInNewTab',
     defaultMessage: 'Open test case in a new tab',

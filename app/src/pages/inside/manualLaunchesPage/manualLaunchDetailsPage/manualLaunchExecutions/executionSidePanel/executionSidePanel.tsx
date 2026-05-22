@@ -106,6 +106,19 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
     onClose();
   };
 
+  const navigateToExecutionPage = () => {
+    dispatch({
+      type: MANUAL_LAUNCH_EXECUTION_PAGE,
+      payload: {
+        organizationSlug,
+        projectSlug,
+        launchId,
+        testCaseId: executionDetails.testCaseId,
+        executionId: executionDetails.id,
+      },
+    });
+  };
+
   const onRunTestClick = () => {
     trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.CLICK_RUN_TEST);
     dispatch(
@@ -114,20 +127,14 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
         launchId,
         executionId,
         status: IN_PROGRESS,
-        onSuccess: () => {
-          dispatch({
-            type: MANUAL_LAUNCH_EXECUTION_PAGE,
-            payload: {
-              organizationSlug,
-              projectSlug,
-              launchId,
-              testCaseId: executionDetails.testCaseId,
-              executionId: executionDetails.id,
-            },
-          });
-        },
+        onSuccess: navigateToExecutionPage,
       }),
     );
+  };
+
+  const onContinueTestingClick = () => {
+    trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.CLICK_CONTINUE_TESTING);
+    navigateToExecutionPage();
   };
 
   const convertBTSTicketsToIssues = (tickets: BtsTicket[]): Issue[] => {
@@ -313,6 +320,17 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
             data-automation-id="test-plan-quick-run"
           >
             {formatMessage(commonMessages.runTest)}
+            <RunManualIcon />
+          </Button>
+        )}
+        {currentStatus === ExecutionStatus.IN_PROGRESS && (
+          <Button
+            variant="primary"
+            className={cx('action-button')}
+            onClick={onContinueTestingClick}
+            data-automation-id="test-plan-continue-testing"
+          >
+            {formatMessage(messages.continueTesting)}
             <RunManualIcon />
           </Button>
         )}
