@@ -18,8 +18,7 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { useTracking } from 'react-tracking';
-import { BaseIconButton, Button, PlusIcon, Tooltip } from '@reportportal/ui-kit';
+import { BaseIconButton, Button, PlusIcon } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
 import { SearchField } from 'components/fields/searchField';
 import { SEARCH_KEY } from 'controllers/organization/projects/constants';
@@ -29,7 +28,6 @@ import { organizationsListLoadingSelector } from 'controllers/instance/organizat
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { createFilterEntitiesURLContainer } from 'components/filterEntities/containers';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { organizationPluginSelector } from 'controllers/plugins';
 import { OrganizationsFilter } from './organizationsFilter';
 import PanelViewIcon from '../img/panel-view-inline.svg';
 import TableViewIcon from '../img/table-view-inline.svg';
@@ -59,15 +57,9 @@ export const OrganizationsPageHeader = ({
   onCreateOrganization,
 }) => {
   const { formatMessage } = useIntl();
-  const { trackEvent } = useTracking();
   const projectsLoading = useSelector(organizationsListLoadingSelector);
   const { canWorkWithOrganizationFilter, canWorkWithOrganizationsSorting, canExportOrganizations } =
     useUserPermissions();
-  const organizationPlugin = useSelector(organizationPluginSelector);
-
-  const onMouseEnter = () => {
-    trackEvent(ORGANIZATION_PAGE_EVENTS.HOVER_CREATE_BUTTON);
-  };
 
   return (
     <div className={cx('organizations-page-header-container')}>
@@ -120,36 +112,11 @@ export const OrganizationsPageHeader = ({
                 <OrganizationsExport appliedFiltersCount={appliedFiltersCount} />
               )}
             </div>
-            {hasPermission &&
-              (organizationPlugin?.enabled ? (
-                <Button variant={'ghost'} icon={<PlusIcon />} onClick={onCreateOrganization}>
-                  {formatMessage(messages.createOrganization)}
-                </Button>
-              ) : (
-                <Tooltip
-                  content={formatMessage(
-                    organizationPlugin
-                      ? messages.pluginIsDisabledMessage
-                      : messages.notUploadedPluginMessage,
-                  )}
-                  tooltipClassName={cx(
-                    organizationPlugin ? 'tooltip-not-uploaded' : 'tooltip-disabled',
-                  )}
-                  wrapperClassName={cx('tooltip-wrapper')}
-                  placement="bottom"
-                >
-                  <div onMouseEnter={onMouseEnter}>
-                    <Button
-                      variant={'ghost'}
-                      icon={<PlusIcon />}
-                      onClick={onCreateOrganization}
-                      disabled
-                    >
-                      {formatMessage(messages.createOrganization)}
-                    </Button>
-                  </div>
-                </Tooltip>
-              ))}
+            {hasPermission && (
+              <Button variant={'ghost'} icon={<PlusIcon />} onClick={onCreateOrganization}>
+                {formatMessage(messages.createOrganization)}
+              </Button>
+            )}
           </div>
         )}
       </div>
