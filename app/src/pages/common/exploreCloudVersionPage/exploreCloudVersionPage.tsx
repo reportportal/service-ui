@@ -116,7 +116,11 @@ export const ExploreCloudVersionPage = (): ReactElement => {
             ))}
           </div>
           <div className={cx('footer')}>
-            <HelpPanel items={helpItems} className={cx('help-panel')} />
+            <HelpPanel
+              items={helpItems}
+              className={cx('help-panel')}
+              contentClassName={cx('help-panel-content')}
+            />
           </div>
         </div>
       </PageSection>

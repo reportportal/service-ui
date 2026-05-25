@@ -22,10 +22,10 @@
   color: inherit;
 
   &:hover {
-    background-color: $COLOR--darkmode-gray-500;
+    background-color: var(--rp-ui-base-dark-e-500);
 
     .title {
-      color: $COLOR--white-two;
+      color: var(--rp-ui-base-bg-000);
     }
   }
 }
@@ -49,10 +49,11 @@
   align-items: center;
   flex-grow: 1;
   padding: 0 16px;
-  font-family: $FONT-ROBOTO-MEDIUM;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-medium);
   font-size: 13px;
   line-height: 20px;
-  color: $COLOR--darkmode-gray-100;
+  color: var(--rp-ui-base-dark-e-100);
 
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
@@ -66,9 +67,9 @@
 }
 
 .active {
-  background-color: $COLOR--darkmode-gray-500;
+  background-color: var(--rp-ui-base-dark-e-500);
 
   .title {
-    color: $COLOR--white-two;
+    color: var(--rp-ui-base-bg-000);
   }
 }
