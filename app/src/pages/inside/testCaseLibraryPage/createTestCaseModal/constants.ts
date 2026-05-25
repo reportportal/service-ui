@@ -1,6 +1,8 @@
 import { uniqueId } from 'common/utils';
 import { ManualScenarioType } from '../types';
 
+export const MODAL_Z_INDEX = 110 as const;
+
 export const DEFAULT_EXECUTION_ESTIMATION_TIME = 5;
 
 export const TEST_CASE_FORM_INITIAL_VALUES = {
