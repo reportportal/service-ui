@@ -192,7 +192,7 @@ const OrganizationsPageComponent = ({
         buttonTitle={formatMessage(messages.createOrganization)}
         onClick={() => onCreateOrganization('empty_state')}
         tooltipContent={tooltipMessage && formatMessage(tooltipMessage)}
-        isButtonDisabled={!organizationPlugin?.enabled}
+        isButtonDisabled={false}
       />
     ) : (
       <EmptyPageState
