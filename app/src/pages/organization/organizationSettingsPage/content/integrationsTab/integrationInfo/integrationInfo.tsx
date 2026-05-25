@@ -29,6 +29,7 @@ import { uiExtensionIntegrationSettingsSelector } from 'controllers/plugins/uiEx
 import { showModalAction } from 'controllers/modal';
 import {
   addIntegrationAction,
+  updateIntegrationAction,
   namedGlobalIntegrationsSelector,
   namedOrganizationIntegrationsSelector,
   removeOrganizationIntegrationsByTypeAction,
@@ -45,6 +46,7 @@ import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { combineNameAndEmailToFrom, createClassnames } from 'common/utils';
+import { applyIntegrationFormPrepare } from 'components/integrations/integrationFormPrepareMap';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { IntegrationHeader } from 'pages/inside/common/integrations/integrationHeader/integrationHeader';
 import { AvailableIntegrations } from 'pages/inside/common/integrations/availableIntegrations';
@@ -73,7 +75,11 @@ interface Extension {
 
 interface IntegrationSettingsViewProps {
   data: IntegrationItem;
-  onUpdate: (formData: Record<string, unknown>, onConfirm: () => void, metaData?: unknown) => void;
+  onUpdate: (
+    formData: Record<string, unknown>,
+    onConfirm: () => void,
+    metaData: Record<string, unknown>,
+  ) => void;
   goToPreviousPage: () => void;
   onRemoveConfirm?: () => void;
   extension?: Extension;
@@ -221,8 +227,42 @@ export const IntegrationInfo = ({ plugin, integrationId = '' }: IntegrationInfoP
     dispatch(showModalAction({ component: <AddIntegrationModal data={data} /> }));
   };
 
-  const onUpdate = () => {
-    // TODO: to be implemented in the future
+  const onUpdate = (
+    formData: Record<string, unknown>,
+    onConfirm: () => void,
+    metaData: Record<string, unknown>,
+  ) => {
+    if (!integrationInfo.id) {
+      return;
+    }
+
+    const updatedFormData = applyIntegrationFormPrepare(pluginName, formData);
+    const newData: Record<string, unknown> = {
+      enabled: true,
+      parameters: updatedFormData,
+    };
+
+    if (updatedFormData.integrationName) {
+      newData.name = updatedFormData.integrationName;
+    }
+
+    dispatch(
+      updateIntegrationAction(
+        newData,
+        false,
+        integrationInfo.id,
+        pluginName,
+        (normalizedData: IntegrationSettingsViewProps['data']) => {
+          setUpdatedParameters(normalizedData);
+          onConfirm();
+          trackEvent(
+            ORGANIZATION_SETTINGS_INTEGRATION.clickEditIntegrationModal(analyticsPluginName),
+          );
+        },
+        metaData,
+        true,
+      ),
+    );
   };
 
   const onRemoveOrganizationIntegration = () => {

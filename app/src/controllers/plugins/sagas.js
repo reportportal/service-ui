@@ -47,10 +47,8 @@ import {
 import { pluginByNameSelector } from './selectors';
 import {
   removePluginSuccessAction,
-  updateProjectIntegrationSuccessAction,
   removeProjectIntegrationsByTypeSuccessAction,
   removeOrganizationIntegrationsByTypeSuccessAction,
-  updateGlobalIntegrationSuccessAction,
   fetchGlobalIntegrationsSuccessAction,
   removeGlobalIntegrationsByTypeSuccessAction,
 } from './actionCreators';
@@ -58,8 +56,9 @@ import { fetchExtensionManifests, fetchExtensionManifest } from './uiExtensions'
 import {
   getAddIntegrationSuccessAction,
   getAddIntegrationUrl,
-  getRemoveIntegrationUrl,
+  getIntegrationByIdUrl,
   getRemoveIntegrationSuccessAction,
+  getUpdateIntegrationSuccessAction,
   normalizeIntegrationItem,
 } from './utils';
 
@@ -112,31 +111,31 @@ function* watchAddIntegration() {
   yield takeEvery(ADD_INTEGRATION, addIntegration);
 }
 
-function* updateIntegration({ payload: { data, isGlobal, pluginName, id, callback }, meta }) {
+function* updateIntegration({
+  payload: { data, isGlobal, isOrganizational, id, callback },
+  meta = {},
+}) {
   yield put(showScreenLockAction());
   try {
-    const projectKey = yield select(projectKeySelector);
-    const url = isGlobal ? URLS.globalIntegration(id) : URLS.projectIntegration(projectKey, id);
+    const context = yield resolveIntegrationContext();
+    const url = getIntegrationByIdUrl({ isGlobal, isOrganizational, id, context });
 
     yield call(fetch, url, {
       method: 'put',
       data,
     });
 
+    const normalizedData = normalizeIntegrationItem(data);
     const integration = {
-      ...data,
-      integrationParameters: omit(data.integrationParameters, meta[SECRET_FIELDS_KEY]),
+      ...normalizedData,
+      integrationParameters: omit(normalizedData.integrationParameters, meta[SECRET_FIELDS_KEY]),
     };
-    const updateIntegrationSuccessAction = isGlobal
-      ? updateGlobalIntegrationSuccessAction(integration, id)
-      : updateProjectIntegrationSuccessAction(integration, id);
+    const updateIntegrationSuccessAction = getUpdateIntegrationSuccessAction({
+      isGlobal,
+      isOrganizational,
+    })(integration, id);
     yield put(updateIntegrationSuccessAction);
-    yield put(
-      showNotification({
-        messageId: 'updateIntegrationSuccess',
-        type: NOTIFICATION_TYPES.SUCCESS,
-      }),
-    );
+    yield put(showSuccessNotification({ messageId: 'updateIntegrationSuccess' }));
     yield call(callback, integration);
   } catch (error) {
     yield put(showDefaultErrorNotification(error));
@@ -153,7 +152,7 @@ function* removeIntegration({ payload: { id, isGlobal, isOrganizational, callbac
   yield put(showScreenLockAction());
   try {
     const context = yield resolveIntegrationContext();
-    const url = getRemoveIntegrationUrl({ isGlobal, isOrganizational, id, context });
+    const url = getIntegrationByIdUrl({ isGlobal, isOrganizational, id, context });
 
     yield call(fetch, url, {
       method: 'delete',

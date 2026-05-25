@@ -86,6 +86,7 @@ interface EmailDetailsCardProps {
   readonly data: IntegrationData;
   readonly connected: boolean;
   readonly isEditable: boolean;
+  readonly onEditClick?: () => void;
 }
 
 function getEncryptionValue(
@@ -102,6 +103,7 @@ export function EmailDetailsCard({
   data,
   connected,
   isEditable,
+  onEditClick,
 }: EmailDetailsCardProps) {
   const { formatMessage } = useIntl();
   const { name, creator, creationDate, integrationParameters } = data;
@@ -168,10 +170,10 @@ export function EmailDetailsCard({
             variant={connected ? IntegrationStatus.CONNECTED : IntegrationStatus.ERROR}
           />
           {isEditable && !blocked && (
-            // TODO: onClick handler will be added when edit form is implemented
             <BaseIconButton
               className={cx('edit-button')}
               data-automation-id="editIntegrationIcon"
+              onClick={onEditClick}
             >
               <EditIcon />
             </BaseIconButton>

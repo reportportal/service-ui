@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { useTracking } from 'react-tracking';
@@ -29,11 +28,11 @@ import { INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP } from 'components/integrations
 import { uiExtensionIntegrationFormFieldsSelector } from 'controllers/plugins';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { INTEGRATION_FORM } from 'components/integrations/elements';
-import { trimStringValues } from 'common/utils';
+import { createClassnames, trimStringValues } from 'common/utils';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './addIntegrationModal.scss';
 
-const cx = classNames.bind(styles);
+const cx = createClassnames(styles);
 
 const messages = defineMessages({
   globalIntegrationsSystemMessageModalCaption: {
@@ -68,7 +67,15 @@ const messages = defineMessages({
   },
 });
 
-const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) => {
+const AddIntegrationModal = ({
+  data,
+  initialize,
+  change,
+  handleSubmit,
+  dirty,
+  anyTouched,
+  invalid,
+}) => {
   const [metaData, setMetaData] = useState({});
   const fieldsExtensions = useSelector(uiExtensionIntegrationFormFieldsSelector);
   const dispatch = useDispatch();
@@ -100,12 +107,14 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
     Boolean(integrationFieldsExtension);
 
   const okButton = {
-    children: customProps?.editAuthMode
-      ? formatMessage(COMMON_LOCALE_KEYS.SAVE)
-      : formatMessage(COMMON_LOCALE_KEYS.CREATE),
+    children:
+      customProps?.okButtonLabel ||
+      (customProps?.editAuthMode
+        ? formatMessage(COMMON_LOCALE_KEYS.SAVE)
+        : formatMessage(COMMON_LOCALE_KEYS.CREATE)),
     onClick: () => handleSubmit(onSubmit)(),
     'data-automation-id': 'submitButton',
-    disabled: !hasFormFields,
+    disabled: !hasFormFields || (anyTouched && invalid),
   };
   const cancelButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -141,24 +150,25 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
       allowCloseOutside={!dirty}
       scrollable
     >
-      {data.hasWarningMessage && (noticeCaption || noticeBody) && (
-        <SystemMessage mode="info" caption={noticeCaption}>
-          {noticeBody}
-        </SystemMessage>
-      )}
-
-      <div className={cx('content', { 'with-form': hasFormFields })}>
-        {FieldsComponent ? (
-          <FieldsComponent
-            initialize={initialize}
-            change={change}
-            updateMetaData={updateMetaData}
-            extension={integrationFieldsExtension}
-            {...customProps}
-          />
-        ) : (
-          <SystemMessage mode="info">{formatMessage(messages.formNotAvailable)}</SystemMessage>
+      <div className={cx('content')}>
+        {data.hasWarningMessage && (noticeCaption || noticeBody) && (
+          <SystemMessage mode="info" caption={noticeCaption}>
+            {noticeBody}
+          </SystemMessage>
         )}
+        <div>
+          {FieldsComponent ? (
+            <FieldsComponent
+              initialize={initialize}
+              change={change}
+              updateMetaData={updateMetaData}
+              extension={integrationFieldsExtension}
+              {...customProps}
+            />
+          ) : (
+            <SystemMessage mode="info">{formatMessage(messages.formNotAvailable)}</SystemMessage>
+          )}
+        </div>
       </div>
     </Modal>
   );
@@ -169,6 +179,8 @@ AddIntegrationModal.propTypes = {
   change: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   dirty: PropTypes.bool.isRequired,
+  anyTouched: PropTypes.bool.isRequired,
+  invalid: PropTypes.bool.isRequired,
 };
 
 export default withModal('addIntegrationModal')(

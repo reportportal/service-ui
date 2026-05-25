@@ -65,10 +65,15 @@ export const ORGANIZATION_SETTINGS_INTEGRATION = {
     type: normalizeEventParameter(type),
   }),
 
-
   clickResetToGlobalIntegrationModal: (type: string) => ({
     ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
     element_name: 'submit_reset_global_organization_integration',
+    type: normalizeEventParameter(type),
+  }),
+
+  clickEditIntegrationModal: (type: string) => ({
+    ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
+    element_name: 'submit_edit_organization_integration',
     type: normalizeEventParameter(type),
   }),
 };

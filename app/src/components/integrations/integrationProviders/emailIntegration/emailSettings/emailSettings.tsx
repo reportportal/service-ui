@@ -39,13 +39,14 @@ import {
   namedOrganizationIntegrationsSelector,
 } from 'controllers/plugins';
 import { getTestIntegrationConnection } from 'controllers/plugins/utils';
-import { showModalAction } from 'controllers/modal';
+import { showModalAction, hideModalAction } from 'controllers/modal';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { createClassnames } from 'common/utils';
 import { NamedIntegrations } from 'pages/inside/common/integrations/types';
 import { messages as integrationsMessages } from 'pages/inside/common/integrations/messages';
 import { DeleteIntegrationModal } from 'components/integrations/modals/deleteIntegrationModal';
+import AddIntegrationModal from 'components/integrations/modals/addIntegrationModal/addIntegrationModal';
 
 import { IntegrationData } from '../types';
 import { EmailDetailsCard } from '../emailDetailsCard';
@@ -62,13 +63,15 @@ const messages = defineMessages({
     id: 'EmailSettings.deleteIntegrationTitle',
     defaultMessage: 'Delete integration',
   },
+  editOrganizationIntegrationTitle: {
+    id: 'EmailSettings.editOrganizationIntegrationTitle',
+    defaultMessage: 'Edit Organizational Integration',
+  },
 });
 
 interface EmailSettingsProps {
   readonly data: IntegrationData;
   readonly goToPreviousPage: () => void;
-  // TODO: wire up onUpdate when edit form is implemented
-  // eslint-disable-next-line react/no-unused-prop-types
   readonly onUpdate?: (
     formData: Record<string, unknown>,
     onSuccess: () => void,
@@ -86,6 +89,7 @@ export function EmailSettings({
   goToPreviousPage,
   isGlobal = false,
   isOrganizational = false,
+  onUpdate,
   onRemoveConfirm,
 }: EmailSettingsProps) {
   const dispatch = useDispatch();
@@ -142,11 +146,13 @@ export function EmailSettings({
     [projectKey, organizationId, isGlobal, isOrganizational],
   );
 
+  const integrationId = data.id;
+
   const testIntegrationConnection = useCallback(() => {
-    if ('id' in data) {
+    if (integrationId) {
       setLoading(true);
 
-      testConnection(data.id)
+      testConnection(integrationId)
         .then(() => {
           setConnected(true);
           setLoading(false);
@@ -156,7 +162,7 @@ export function EmailSettings({
           setConnected(false);
         });
     }
-  }, [data, testConnection]);
+  }, [integrationId, testConnection]);
 
   useEffect(() => {
     if (!query.id) return;
@@ -169,10 +175,10 @@ export function EmailSettings({
   }, [query, groupedIntegrations, dispatch, namedSubPage]);
 
   useEffect(() => {
-    if (query.id || data.id) {
+    if (query.id || integrationId) {
       testIntegrationConnection();
     }
-  }, [query.id, data.id, testIntegrationConnection]);
+  }, [query.id, integrationId, testIntegrationConnection]);
 
   const removeIntegration = () => {
     onRemoveConfirm?.();
@@ -203,6 +209,45 @@ export function EmailSettings({
     dispatch(showModalAction({ component: <DeleteIntegrationModal data={modalData} /> }));
   };
 
+  const handleEditClick = () => {
+    if (!onUpdate) {
+      return;
+    }
+
+    const getConfirmationFunc = (
+      data: Record<string, unknown>,
+      metaData: Record<string, unknown>,
+    ) => {
+      onUpdate(
+        data,
+        () => {
+          dispatch(hideModalAction());
+          testIntegrationConnection();
+        },
+        metaData,
+      );
+    };
+
+    const modalData = {
+      isGlobal,
+      instanceType: data.integrationType.name,
+      onConfirm: getConfirmationFunc,
+      customProps: {
+        initialData: {
+          ...data.integrationParameters,
+          integrationName: data.name,
+        },
+        editAuthMode: true,
+        okButtonLabel: formatMessage(COMMON_LOCALE_KEYS.SAVE_CHANGES),
+        ...(isOrganizational && {
+          modalTitleMessage: formatMessage(messages.editOrganizationIntegrationTitle),
+        }),
+      },
+    };
+
+    dispatch(showModalAction({ component: <AddIntegrationModal data={modalData} /> }));
+  };
+
   const blocked = data.blocked ?? false;
   const showDeleteSection = canManageIntegration && !blocked;
 
@@ -213,7 +258,12 @@ export function EmailSettings({
       ) : (
         <>
           <div>
-            <EmailDetailsCard data={data} connected={connected} isEditable={canManageIntegration} />
+            <EmailDetailsCard
+              data={data}
+              connected={connected}
+              isEditable={canManageIntegration}
+              onEditClick={handleEditClick}
+            />
           </div>
 
           {showDeleteSection && (

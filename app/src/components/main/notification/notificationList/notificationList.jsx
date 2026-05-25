@@ -153,7 +153,7 @@ export const notificationMessages = defineMessages({
   },
   updateIntegrationSuccess: {
     id: 'IntegrationSettingsContainer.updateIntegrationSuccess',
-    defaultMessage: 'Integration successfully updated',
+    defaultMessage: 'Integration has been updated successfully',
   },
   removeIntegrationSuccess: {
     id: 'ConnectionSection.removeIntegrationSuccess',
