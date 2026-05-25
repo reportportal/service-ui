@@ -32,7 +32,7 @@ import { messages } from '../../messages';
 
 const PROJECT_NAME_FIELD = 'projectName';
 
-export const AddProjectModal = ({ data = {}, handleSubmit, anyTouched, invalid }) => {
+export const AddProjectModal = ({ data = {}, handleSubmit, anyTouched, invalid, dirty }) => {
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
@@ -57,6 +57,7 @@ export const AddProjectModal = ({ data = {}, handleSubmit, anyTouched, invalid }
         children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
       }}
       onClose={hideModal}
+      allowCloseOutside={!dirty}
     >
       <FieldProvider name={PROJECT_NAME_FIELD}>
         <FieldErrorHint provideHint={false}>
@@ -77,6 +78,7 @@ AddProjectModal.propTypes = {
   handleSubmit: PropTypes.func,
   anyTouched: PropTypes.bool.isRequired,
   invalid: PropTypes.bool.isRequired,
+  dirty: PropTypes.bool.isRequired,
 };
 
 export default withModal('addProjectModal')(
