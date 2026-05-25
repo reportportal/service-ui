@@ -25,6 +25,7 @@ import { CreateTestCaseFormData } from '../../types';
 import { useModalActions } from '../../hooks/useModalActions';
 import { BasicInformation } from '../basicInformation';
 import { TestCaseDetails } from '../testCaseDetails';
+import { MODAL_Z_INDEX } from '../constants';
 
 import styles from '../testCaseModal.scss';
 
@@ -67,6 +68,7 @@ export const TestCaseModal = ({
       cancelButton={cancelButton}
       allowCloseOutside={pristine}
       onClose={handleClose}
+      zIndex={MODAL_Z_INDEX}
     >
       <div className={cx('test-case-modal__content-wrapper')}>
         <form onSubmit={handleFormSubmit}>
