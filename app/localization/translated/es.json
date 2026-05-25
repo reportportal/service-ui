@@ -2108,7 +2108,6 @@
   "Plugins.disabled.notification": "no se mostrará en la configuración del proyecto. Los usuarios no podrán recibir notificaciones sobre las ejecuciones completadas ni enviar invitaciones",
   "Plugins.disabled.other": "no se mostrará en la configuración del proyecto",
   "PluginsFilter.all": "Todos",
-  "PluginsFilter.analyzer": "Analizador",
   "PluginsFilter.auth": "Autorización",
   "PluginsFilter.bts": "Sistema de seguimiento de defectos",
   "PluginsFilter.import": "Importar Ejecuciones",

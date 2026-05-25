@@ -2108,7 +2108,6 @@
   "Plugins.disabled.notification": "не буде показаний в настроюваннях проекту. Користувачі не зможуть отримувати оповіщення про завершених запусках, а також не зможуть відсилати запрошення",
   "Plugins.disabled.other": "не буде показаний в настроюваннях проекту",
   "PluginsFilter.all": "Усі",
-  "PluginsFilter.analyzer": "Аналізатор",
   "PluginsFilter.auth": "Авторизація",
   "PluginsFilter.bts": "Система відстеження дефектів",
   "PluginsFilter.import": "Запуски імпорту",

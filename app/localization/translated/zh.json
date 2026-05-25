@@ -2106,7 +2106,6 @@
   "Plugins.disabled.notification": "{name}将在项目设置中隐藏。用户将无法收到通知并为新用户发送邀请",
   "Plugins.disabled.other": "{name}将在项目设置中隐藏",
   "PluginsFilter.all": "全部",
-  "PluginsFilter.analyzer": "分析器",
   "PluginsFilter.auth": "授权",
   "PluginsFilter.bts": "错误跟踪系统",
   "PluginsFilter.import": "Import Launches",

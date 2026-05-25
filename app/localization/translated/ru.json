@@ -2108,7 +2108,6 @@
   "Plugins.disabled.notification": "не будет показан в настройках проекта. Пользователи не смогут получать оповещения о завершенных запусках, а также не смогут отправлять приглашения",
   "Plugins.disabled.other": "не будет показан в настройках проекта",
   "PluginsFilter.all": "Все",
-  "PluginsFilter.analyzer": "Анализатор",
   "PluginsFilter.auth": "Авторизация",
   "PluginsFilter.bts": "Система отслеживания дефектов",
   "PluginsFilter.import": "Импорт Запусков",
