@@ -35,10 +35,6 @@ const PLUGINS_FILTER_LIST = [
     label: <FormattedMessage id={'PluginsFilter.other'} defaultMessage={'Other'} />,
   },
   {
-    value: ANALYZER_GROUP_TYPE,
-    label: <FormattedMessage id={'PluginsFilter.analyzer'} defaultMessage={'Analyzer'} />,
-  },
-  {
     value: AUTHORIZATION_GROUP_TYPE,
     label: <FormattedMessage id={'PluginsFilter.auth'} defaultMessage={'Authorization'} />,
   },
