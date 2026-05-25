@@ -28,21 +28,6 @@ import {
 } from '../constants';
 import { useSelectedRootFolders } from '../hooks/useSelectedRootFolders';
 
-export const getFlatFoldersIndex = (folders: TransformedFolder[]) => {
-  const foldersIndex = new Map<number, TransformedFolder>();
-
-  const indexFolderAndDescendants = (foldersList: TransformedFolder[]) => {
-    foldersList.forEach((node) => {
-      foldersIndex.set(node.id, node);
-      indexFolderAndDescendants(node.folders);
-    });
-  };
-
-  indexFolderAndDescendants(folders);
-
-  return foldersIndex;
-};
-
 export const isWithinSelectedRoots = (
   folderId: number,
   flatFoldersMap: Map<number, TransformedFolder>,

@@ -20,7 +20,21 @@ import { useSelector } from 'react-redux';
 import { transformedFoldersSelector, TransformedFolder } from 'controllers/testCase';
 
 import { CheckboxSelectionState, usePanelState } from '../testLibraryPanelContext';
-import { getFlatFoldersIndex } from '../selectableFolderTree/useFolderDragPayload';
+
+const getFlatFoldersIndex = (folders: TransformedFolder[]) => {
+  const foldersIndex = new Map<number, TransformedFolder>();
+
+  const indexFolderAndDescendants = (foldersList: TransformedFolder[]) => {
+    foldersList.forEach((node) => {
+      foldersIndex.set(node.id, node);
+      indexFolderAndDescendants(node.folders);
+    });
+  };
+
+  indexFolderAndDescendants(folders);
+
+  return foldersIndex;
+};
 
 export const useSelectedRootFolders = () => {
   const { checkboxStatesMap } = usePanelState();
