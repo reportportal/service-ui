@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { Button, FilterOutlineIcon } from '@reportportal/ui-kit';
+import { Button } from '@reportportal/ui-kit';
 import {
   ORGANIZATION_PROJECTS_PAGE,
   ORGANIZATIONS_PAGE,
@@ -88,8 +87,6 @@ export const ProjectTeamPageHeader = ({
     lastCrumb = projectCrumb;
   }
 
- 
-
   return (
     <LocationHeaderLayout
       title={formatMessage(messages.projectTeamTitle)}
@@ -108,9 +105,6 @@ export const ProjectTeamPageHeader = ({
                   placeholder={formatMessage(messages.searchPlaceholder)}
                   event={PROJECT_PAGE_EVENTS.SEARCH_PROJECT_TEAM_FIELD}
                 />
-                <i className={cx('filters-icon')}>
-                  <FilterOutlineIcon />
-                </i>
               </div>
             </div>
             {hasPermission && (
