@@ -31,6 +31,7 @@ import {
   PASSWORD_MAX_ALLOWED_LENGTH,
   PASSWORD_MIN_ALLOWED_LENGTH,
 } from 'common/constants/validation';
+import { isHostedInstanceType } from './isHostedInstanceType';
 import {
   ANALYTICS_INSTANCE_KEY,
   ANALYTICS_ALL_KEY,
@@ -98,6 +99,8 @@ export const flushDataInSelector = (state) =>
 export const gaMeasurementIdSelector = (state) => environmentSelector(state)[GA_MEASUREMENT_ID];
 export const instanceTypeSelector = (state) =>
   environmentSelector(state)[INSTANCE_TYPE] || NOT_PROVIDED;
+export const shouldShowExploreCloudPromoSelector = (state) =>
+  !isHostedInstanceType(instanceTypeSelector(state));
 export const allowDeleteAccountSelector = (state) =>
   environmentSelector(state)[ALLOW_DELETE_ACCOUNT] === 'true';
 export const tmsEnabledSelector = (state) => environmentSelector(state)[TMS_ENABLED_KEY] === 'true';

@@ -58,4 +58,9 @@ export const SIDEBAR_EVENTS = {
     icon_name: normalizeEventString(itemName),
     place: isSidebarCollapsed ? 'sidebar' : 'sidebar_hover',
   }),
+  CLICK_EXPLORE_CLOUD_VERSION: ({ isSidebarCollapsed }) => ({
+    ...getBasicClickEventParameters(SIDEBAR),
+    icon_name: 'explore_cloud_version',
+    place: isSidebarCollapsed ? 'sidebar' : 'sidebar_hover',
+  }),
 };
