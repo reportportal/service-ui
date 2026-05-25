@@ -56,9 +56,8 @@ import { fetchExtensionManifests, fetchExtensionManifest } from './uiExtensions'
 import {
   getAddIntegrationSuccessAction,
   getAddIntegrationUrl,
-  getRemoveIntegrationUrl,
+  getIntegrationByIdUrl,
   getRemoveIntegrationSuccessAction,
-  getUpdateIntegrationUrl,
   getUpdateIntegrationSuccessAction,
   normalizeIntegrationItem,
 } from './utils';
@@ -112,11 +111,14 @@ function* watchAddIntegration() {
   yield takeEvery(ADD_INTEGRATION, addIntegration);
 }
 
-function* updateIntegration({ payload: { data, isGlobal, isOrganizational, id, callback }, meta }) {
+function* updateIntegration({
+  payload: { data, isGlobal, isOrganizational, id, callback },
+  meta = {},
+}) {
   yield put(showScreenLockAction());
   try {
     const context = yield resolveIntegrationContext();
-    const url = getUpdateIntegrationUrl({ isGlobal, isOrganizational, id, context });
+    const url = getIntegrationByIdUrl({ isGlobal, isOrganizational, id, context });
 
     yield call(fetch, url, {
       method: 'put',
@@ -150,7 +152,7 @@ function* removeIntegration({ payload: { id, isGlobal, isOrganizational, callbac
   yield put(showScreenLockAction());
   try {
     const context = yield resolveIntegrationContext();
-    const url = getRemoveIntegrationUrl({ isGlobal, isOrganizational, id, context });
+    const url = getIntegrationByIdUrl({ isGlobal, isOrganizational, id, context });
 
     yield call(fetch, url, {
       method: 'delete',

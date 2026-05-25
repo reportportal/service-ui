@@ -67,7 +67,15 @@ const messages = defineMessages({
   },
 });
 
-const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) => {
+const AddIntegrationModal = ({
+  data,
+  initialize,
+  change,
+  handleSubmit,
+  dirty,
+  anyTouched,
+  invalid,
+}) => {
   const [metaData, setMetaData] = useState({});
   const fieldsExtensions = useSelector(uiExtensionIntegrationFormFieldsSelector);
   const dispatch = useDispatch();
@@ -106,7 +114,7 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
         : formatMessage(COMMON_LOCALE_KEYS.CREATE)),
     onClick: () => handleSubmit(onSubmit)(),
     'data-automation-id': 'submitButton',
-    disabled: !hasFormFields,
+    disabled: !hasFormFields || (anyTouched && invalid),
   };
   const cancelButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -171,6 +179,8 @@ AddIntegrationModal.propTypes = {
   change: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   dirty: PropTypes.bool.isRequired,
+  anyTouched: PropTypes.bool.isRequired,
+  invalid: PropTypes.bool.isRequired,
 };
 
 export default withModal('addIntegrationModal')(

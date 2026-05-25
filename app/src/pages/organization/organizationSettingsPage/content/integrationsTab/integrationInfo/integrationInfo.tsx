@@ -75,7 +75,11 @@ interface Extension {
 
 interface IntegrationSettingsViewProps {
   data: IntegrationItem;
-  onUpdate: (formData: Record<string, unknown>, onConfirm: () => void, metaData?: unknown) => void;
+  onUpdate: (
+    formData: Record<string, unknown>,
+    onConfirm: () => void,
+    metaData: Record<string, unknown>,
+  ) => void;
   goToPreviousPage: () => void;
   onRemoveConfirm?: () => void;
   extension?: Extension;

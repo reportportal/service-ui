@@ -176,20 +176,7 @@ export const getTestIntegrationConnection = ({
   };
 };
 
-export const getRemoveIntegrationUrl = ({ isGlobal, isOrganizational, id, context }) => {
-  const { projectKey, organizationId } = context;
-
-  switch (true) {
-    case isGlobal:
-      return URLS.globalIntegration(id);
-    case isOrganizational:
-      return URLS.organizationIntegrationById(organizationId, id);
-    default:
-      return URLS.projectIntegration(projectKey, id);
-  }
-};
-
-export const getUpdateIntegrationUrl = ({ isGlobal, isOrganizational, id, context }) => {
+export const getIntegrationByIdUrl = ({ isGlobal, isOrganizational, id, context }) => {
   const { projectKey, organizationId } = context;
 
   switch (true) {
