@@ -20,7 +20,6 @@ import {
   BTS_GROUP_TYPE,
   NOTIFICATION_GROUP_TYPE,
   AUTHORIZATION_GROUP_TYPE,
-  ANALYZER_GROUP_TYPE,
   OTHER_GROUP_TYPE,
   IMPORT_GROUP_TYPE,
 } from './pluginsGroupTypes';
@@ -33,10 +32,6 @@ const PLUGINS_FILTER_LIST = [
   {
     value: OTHER_GROUP_TYPE,
     label: <FormattedMessage id={'PluginsFilter.other'} defaultMessage={'Other'} />,
-  },
-  {
-    value: ANALYZER_GROUP_TYPE,
-    label: <FormattedMessage id={'PluginsFilter.analyzer'} defaultMessage={'Analyzer'} />,
   },
   {
     value: AUTHORIZATION_GROUP_TYPE,
