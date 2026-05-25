@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { InputFilter } from 'components/inputs/inputFilter';
 import { FilterEntitiesURLContainer } from 'components/filterEntities/containers';
-import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
+import { PageHeader } from 'layouts/pageLayout';
 import { ACTIVITIES } from 'components/filterEntities/constants';
 import { activeOrganizationNameSelector } from 'controllers/organization';
 import {
@@ -69,9 +69,7 @@ export const EventsToolbar = () => {
 
   return (
     <div className={cx('events-toolbar')}>
-      <div className={cx('top-breadcrumbs')}>
-        <Breadcrumbs descriptors={breadcrumbs} />
-      </div>
+      <PageHeader breadcrumbs={breadcrumbs} />
       <div className={cx('filter')}>
         <FilterEntitiesURLContainer
           debounced={false}
