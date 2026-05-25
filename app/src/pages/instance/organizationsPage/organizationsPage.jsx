@@ -32,8 +32,13 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { getStorageItem, updateStorageItem } from 'common/utils/storageUtils';
 import { assignedOrganizationsSelector, userIdSelector } from 'controllers/user';
-import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
+import {
+  ORGANIZATION_PAGE_EVENTS,
+  ORGANIZATION_PROMO_EVENTS,
+} from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { showModalAction } from 'controllers/modal';
+import { referenceDictionary } from 'common/utils/referenceDictionary';
+import { PremiumPromoModal } from 'components/premiumPromoModal';
 import EmptyIcon from './img/empty-organizations-inline.svg';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { OrganizationsPageHeader } from './organizationsPageHeader';
@@ -82,6 +87,8 @@ const OrganizationsPageComponent = ({
     trackEvent(ORGANIZATION_PAGE_EVENTS.VIEW_ALL_ORGANIZATIONS);
   }, [trackEvent]);
 
+  const isPluginActive = organizationPlugin?.enabled;
+
   const isEmptyOrganizations = !isOrganizationsLoading && organizationsList.length === 0;
   const [isOpenTableView, setIsOpenTableView] = useState(
     getStorageItem(`${userId}_settings`)?.organizationsPanel === TABLE_VIEW,
@@ -111,6 +118,36 @@ const OrganizationsPageComponent = ({
   };
 
   const onCreateOrganization = (element = '') => {
+    if (!isPluginActive) {
+      trackEvent(ORGANIZATION_PROMO_EVENTS.CLICK_CREATE_ORGANIZATION_WITHOUT_PLUGIN);
+      dispatch(
+        showModalAction({
+          component: (
+            <PremiumPromoModal
+              onExplorePlans={() => {
+                trackEvent(ORGANIZATION_PROMO_EVENTS.CLICK_EXPLORE_PLANS_POPUP);
+                window.open(
+                  referenceDictionary.rpExplorePlansOrg,
+                  '_blank',
+                  'noopener,noreferrer',
+                );
+              }}
+              onContactUs={() => {
+                trackEvent(ORGANIZATION_PROMO_EVENTS.CLICK_CONTACT_US_POPUP);
+                window.open(
+                  referenceDictionary.rpContactUsOrg,
+                  '_blank',
+                  'noopener,noreferrer',
+                );
+              }}
+              onNotNow={() => trackEvent(ORGANIZATION_PROMO_EVENTS.CLICK_NOT_NOW_POPUP)}
+            />
+          ),
+        }),
+      );
+      return;
+    }
+
     dispatch(
       showModalAction({
         component: <CreateOrganizationModal onSubmit={onSubmitCreateOrganization} />,

@@ -24,6 +24,8 @@ import { InviteProjectCondition } from 'pages/inside/common/invitations/inviteUs
 const ORGANIZATION_PAGE = 'organization';
 const SETTINGS_PAGE = 'organization_settings';
 const INTEGRATIONS = 'integrations';
+const PROMO = 'organizations_promo';
+const PREMIUM_FEATURES_POPUP = 'premium_features_popup';
 
 const BASIC_EVENT_PARAMETERS = getBasicClickEventParameters(ORGANIZATION_PAGE);
 const SETTINGS_EVENT_PARAMETERS = getBasicClickEventParameters(SETTINGS_PAGE);
@@ -230,4 +232,33 @@ export const ORGANIZATION_PAGE_EVENTS = {
     element_name: elementName,
     modal: 'assign_project',
   }),
+};
+
+export const ORGANIZATION_PROMO_EVENTS = {
+  CLICK_CREATE_ORGANIZATION_WITHOUT_PLUGIN: {
+    ...getBasicClickEventParameters(ORGANIZATION_PAGE),
+    place: PROMO,
+    element_name: 'create_organization',
+  },
+
+  CLICK_EXPLORE_PLANS_POPUP: {
+    ...getBasicClickEventParameters(ORGANIZATION_PAGE),
+    place: PREMIUM_FEATURES_POPUP,
+    type: 'organizations',
+    element_name: 'explore_plans',
+  },
+
+  CLICK_NOT_NOW_POPUP: {
+    ...getBasicClickEventParameters(ORGANIZATION_PAGE),
+    place: PREMIUM_FEATURES_POPUP,
+    type: 'organizations',
+    element_name: 'not_now',
+  },
+
+  CLICK_CONTACT_US_POPUP: {
+    ...getBasicClickEventParameters(ORGANIZATION_PAGE),
+    place: PREMIUM_FEATURES_POPUP,
+    type: 'organizations',
+    element_name: 'start_contact_us_org',
+  },
 };
