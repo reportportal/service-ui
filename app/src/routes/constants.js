@@ -22,6 +22,7 @@ import { ServerSettingsPage } from 'pages/instance/serverSettingsPage';
 import { PluginsPage } from 'pages/instance/pluginsPage';
 
 import { ApiPage } from 'pages/inside/apiPage';
+import { ExploreCloudVersionPage } from 'pages/common/exploreCloudVersionPage';
 import { DashboardPage } from 'pages/inside/dashboardPage';
 import { DashboardItemPage } from 'pages/inside/dashboardItemPage';
 import { DashboardPrintPage } from 'pages/inside/dashboardItemPage/dashboardPrintPage';
@@ -113,6 +114,18 @@ export const pageRendering = {
   API_PAGE_INSTANCE_LEVEL: { component: ApiPage, layout: InstanceLayout },
   API_PAGE_ORGANIZATION_LEVEL: { component: ApiPage, layout: OrganizationLayout },
   API_PAGE_PROJECT_LEVEL: { component: ApiPage, layout: ProjectLayout },
+  EXPLORE_CLOUD_PAGE_INSTANCE_LEVEL: {
+    component: ExploreCloudVersionPage,
+    layout: InstanceLayout,
+  },
+  EXPLORE_CLOUD_PAGE_ORGANIZATION_LEVEL: {
+    component: ExploreCloudVersionPage,
+    layout: OrganizationLayout,
+  },
+  EXPLORE_CLOUD_PAGE_PROJECT_LEVEL: {
+    component: ExploreCloudVersionPage,
+    layout: ProjectLayout,
+  },
   [ORGANIZATION_USERS_PAGE]: {
     component: OrganizationUsersPage,
     layout: OrganizationLayout,

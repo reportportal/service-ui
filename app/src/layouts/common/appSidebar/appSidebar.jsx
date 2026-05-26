@@ -25,8 +25,12 @@ import { Sidebar } from 'componentLibrary/sidebar';
 import { userIdSelector } from 'controllers/user';
 import { useTracking } from 'react-tracking';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
-import { instanceTypeSelector } from 'controllers/appInfo/selectors';
+import {
+  instanceTypeSelector,
+  shouldShowExploreCloudPromoSelector,
+} from 'controllers/appInfo/selectors';
 import { SAAS, EPAM } from 'controllers/appInfo/constants';
+import { ExploreCloudVersionControl } from './exploreCloudVersionControl';
 import { getFAQOpenStatus } from './utils';
 import { ServiceWithPopover } from './helpAndService';
 import LogoLeftIcon from './img/logo-icon-inline.svg';
@@ -50,6 +54,7 @@ export const AppSidebar = ({
   const { trackEvent } = useTracking();
   const [isFaqTouched, setIsFaqTouched] = useState(!!getFAQOpenStatus(userId));
   const instanceType = useSelector(instanceTypeSelector);
+  const showExploreCloudPromo = useSelector(shouldShowExploreCloudPromoSelector);
   const isEnabled = instanceType === SAAS || instanceType === EPAM;
 
   const { formatMessage } = useIntl();
@@ -77,6 +82,9 @@ export const AppSidebar = ({
             <i className={cx('policy-block-icon')}>{Parser(OpenOutsideIcon)}</i>
           </a>
         </div>
+      )}
+      {showExploreCloudPromo && (
+        <ExploreCloudVersionControl getIsSidebarCollapsed={getIsSidebarCollapsed} />
       )}
       <ServiceWithPopover
         closeSidebar={closeSidebar}

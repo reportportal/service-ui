@@ -32,6 +32,7 @@ export {
   flushDataInSelector,
   isDemoInstanceSelector,
   instanceTypeSelector,
+  shouldShowExploreCloudPromoSelector,
   baseEventParametersSelector,
   ssoUsersOnlySelector,
   sessionExpirationTimeSelector,

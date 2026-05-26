@@ -256,6 +256,11 @@ const routesMap = {
   API_PAGE_ORGANIZATION_LEVEL: '/organizations/:organizationSlug/api',
   API_PAGE_PROJECT_LEVEL: '/organizations/:organizationSlug/projects/:projectSlug/api',
 
+  EXPLORE_CLOUD_PAGE_INSTANCE_LEVEL: '/explore-cloud',
+  EXPLORE_CLOUD_PAGE_ORGANIZATION_LEVEL: '/organizations/:organizationSlug/explore-cloud',
+  EXPLORE_CLOUD_PAGE_PROJECT_LEVEL:
+    '/organizations/:organizationSlug/projects/:projectSlug/explore-cloud',
+
   [ALL_USERS_PAGE]: {
     path: '/users',
     thunk: (dispatch) => dispatch(fetchAllUsersAction()),

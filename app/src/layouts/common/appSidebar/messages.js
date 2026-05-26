@@ -128,6 +128,10 @@ export const messages = defineMessages({
     id: 'AppSidebar.privacyPolicy',
     defaultMessage: 'Privacy Policy',
   },
+  exploreCloudVersion: {
+    id: 'AppSidebar.exploreCloudVersion',
+    defaultMessage: 'Explore Cloud version',
+  },
   firstNameLabel: {
     id: 'ServiceModal.firstNameLabel',
     defaultMessage: 'First name',
