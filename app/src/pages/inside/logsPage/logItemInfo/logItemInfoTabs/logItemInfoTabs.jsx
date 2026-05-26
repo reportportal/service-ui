@@ -79,6 +79,10 @@ const messages = defineMessages({
 
 const ATTACHMENTS_TAB_ID = 'attachments';
 
+const LOG_TAB_ELEMENT_EVENTS = {
+  remote_device: LOG_PAGE_EVENTS.REMOTE_DEVICE_TAB,
+};
+
 @injectIntl
 @connect(
   (state) => ({
@@ -265,10 +269,12 @@ export class LogItemInfoTabs extends Component {
       }
 
       const tabId = `log-tab:${extension.pluginName}:${extension.name}`;
+      const tabElementName = extension.payload?.tabElementName;
       tabs.push({
         id: tabId,
         label: extension.name,
         icon: extension.payload.icon,
+        eventInfo: LOG_TAB_ELEMENT_EVENTS[tabElementName],
         component: ExtensionLoader,
         componentProps: {
           extension,

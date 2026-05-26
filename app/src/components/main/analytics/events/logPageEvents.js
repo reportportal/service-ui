@@ -116,6 +116,10 @@ export const LOG_PAGE_EVENTS = {
     ...basicLogPageClickEventParameters,
     element_name: 'history_of_actions',
   },
+  REMOTE_DEVICE_TAB: {
+    ...basicLogPageClickEventParameters,
+    element_name: 'remote_device',
+  },
   EXPAND_LOG_MSG: getClickOnExpandEvent(LOG_PAGE, 'all_logs'),
   EXPAND_STACK_TRACE: getClickOnExpandEvent(LOG_PAGE, 'stack_trace'),
   getClickOnLogLevelFilterEvent: (logLevel) => ({
