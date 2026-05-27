@@ -29,6 +29,8 @@ export {
   LOGS_SIZE_KEY,
   LOGS_FULL_WIDTH_MODE_KEY,
   LOGS_COLORIZED_BACKGROUND_KEY,
+  LAUNCH_EXPORT_INCLUDE_ATTACHMENTS_KEY,
+  LAUNCH_EXPORT_FLAT_ATTACHMENTS_KEY,
   LOG_TIME_FORMAT_STORAGE_KEY,
 } from './constants';
 export {
@@ -54,6 +56,8 @@ export {
   setLogsSizeAction,
   setLogsFullWidthModeAction,
   setLogsColorizedBackgroundAction,
+  setLaunchExportIncludeAttachmentsAction,
+  setLaunchExportFlatAttachmentsAction,
 } from './actionCreators';
 export { userReducer } from './reducer';
 export {
@@ -78,6 +82,8 @@ export {
   logsSizeSelector,
   logsFullWidthModeSelector,
   logsColorizedBackgroundSelector,
+  launchExportIncludeAttachmentsSelector,
+  launchExportFlatAttachmentsSelector,
 } from './selectors';
 export { userSagas } from './sagas';
 export {
@@ -90,6 +96,8 @@ export {
   setLogsSizeInStorage,
   setLogsFullWidthModeInStorage,
   setLogsColorizedBackgroundInStorage,
+  setLaunchExportIncludeAttachmentsInStorage,
+  setLaunchExportFlatAttachmentsInStorage,
   getLogTimeFormatFromStorage,
   setLogTimeFormatInStorage,
 } from './storageUtils';

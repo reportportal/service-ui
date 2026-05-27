@@ -20,6 +20,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
+import { IN_PROGRESS } from 'common/constants/launchStatuses';
 import { canBulkEditItems, canImportLaunches } from 'common/utils/permissions';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -31,6 +32,7 @@ import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
 import { PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE } from 'components/integrations/messages';
+import { messages as hamburgerMessages } from 'pages/inside/common/launchSuiteGrid/hamburger/messages';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { IMPORT_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import AddWidgetIcon from 'common/img/add-widget-inline.svg';
@@ -48,6 +50,10 @@ const messages = defineMessages({
   actionsBtnTooltip: {
     id: 'ActionPanel.actionsBtnTooltip',
     defaultMessage: ' Select several items to processing',
+  },
+  mergeTypeMismatch: {
+    id: 'ActionPanel.mergeTypeMismatch',
+    defaultMessage: "You can't merge launches of different types.",
   },
 });
 
@@ -97,6 +103,7 @@ export class ActionPanel extends Component {
     onMove: PropTypes.func,
     onForceFinish: PropTypes.func,
     onDelete: PropTypes.func,
+    onExportReport: PropTypes.func,
     breadcrumbs: PropTypes.arrayOf(breadcrumbDescriptorShape),
     restorePath: PropTypes.func,
     tracking: PropTypes.shape({
@@ -125,6 +132,7 @@ export class ActionPanel extends Component {
     onMove: () => {},
     onForceFinish: () => {},
     onDelete: () => {},
+    onExportReport: () => {},
     breadcrumbs: [],
     restorePath: () => {},
     activeFilterId: null,
@@ -145,12 +153,26 @@ export class ActionPanel extends Component {
       onMove,
       onForceFinish,
       onDelete,
+      onExportReport,
       accountRole,
       projectRole,
       onEditItems,
       onEditItem,
       selectedLaunches,
     } = this.props;
+
+    const isLaunchInProgress = (launch) => String(launch?.status || '').toLowerCase() === IN_PROGRESS;
+    const hasLaunchInProgressInSelection = selectedLaunches.some(isLaunchInProgress);
+    const exportReportDisabled = !selectedLaunches.length || hasLaunchInProgressInSelection;
+    const exportReportTitle = hasLaunchInProgressInSelection
+      ? intl.formatMessage(hamburgerMessages.launchInProgress)
+      : '';
+
+    const uniqueLaunchTypes = new Set(selectedLaunches.map((launch) => launch.launchType));
+    const hasMixedLaunchTypes = selectedLaunches.length >= 2 && uniqueLaunchTypes.size > 1;
+    const mergeDisabledTitle = hasMixedLaunchTypes
+      ? intl.formatMessage(messages.mergeTypeMismatch)
+      : '';
 
     return [
       {
@@ -170,6 +192,8 @@ export class ActionPanel extends Component {
         label: intl.formatMessage(COMMON_LOCALE_KEYS.MERGE),
         value: 'action-merge',
         hidden: debugMode,
+        disabled: hasMixedLaunchTypes,
+        title: mergeDisabledTitle,
         onClick: () => {
           onMerge();
           this.props.tracking.trackEvent(
@@ -223,6 +247,16 @@ export class ActionPanel extends Component {
           this.props.tracking.trackEvent(
             LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('delete'),
           );
+        },
+      },
+      {
+        label: intl.formatMessage(hamburgerMessages.exportReport),
+        value: 'action-export-report',
+        disabled: exportReportDisabled,
+        title: exportReportTitle,
+        onClick: () => {
+          onExportReport(selectedLaunches);
+          this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EXPORT_REPORT);
         },
       },
     ];

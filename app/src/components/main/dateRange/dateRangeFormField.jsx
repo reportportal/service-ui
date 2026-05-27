@@ -21,6 +21,7 @@ export const DateRangeFormField = ({
   input,
   popperClassName = '',
   calendarClassName = '',
+  maxRangeDays,
 }) => {
   const { value = {}, onChange } = input;
 
@@ -31,6 +32,7 @@ export const DateRangeFormField = ({
       onChange={onChange}
       popperClassName={popperClassName}
       calendarClassName={calendarClassName}
+      maxRangeDays={maxRangeDays}
     />
   );
 };
@@ -42,4 +44,5 @@ DateRangeFormField.propTypes = {
   }).isRequired,
   popperClassName: PropTypes.string,
   calendarClassName: PropTypes.string,
+  maxRangeDays: PropTypes.number,
 };

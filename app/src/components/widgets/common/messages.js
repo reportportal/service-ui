@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,10 @@ export const messages = defineMessages({
     id: 'Charts.total',
     defaultMessage: 'Total {type}',
   },
+  totalCaption: {
+    id: 'Charts.totalCaption',
+    defaultMessage: 'Total',
+  },
   passed: {
     id: 'Charts.passed',
     defaultMessage: 'Passed',
@@ -41,6 +45,10 @@ export const messages = defineMessages({
   skipped: {
     id: 'Charts.skipped',
     defaultMessage: 'Skipped',
+  },
+  interrupted: {
+    id: 'Charts.interrupted',
+    defaultMessage: 'Interrupted',
   },
   notPassed: {
     id: 'Charts.notPassed',

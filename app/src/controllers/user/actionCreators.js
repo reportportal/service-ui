@@ -41,6 +41,8 @@ import {
   SET_LOGS_SIZE,
   SET_LOGS_FULL_WIDTH_MODE,
   SET_LOGS_COLORIZED_BACKGROUND,
+  SET_LAUNCH_EXPORT_INCLUDE_ATTACHMENTS,
+  SET_LAUNCH_EXPORT_FLAT_ATTACHMENTS,
 } from './constants';
 
 export const fetchUserSuccessAction = (user) => ({
@@ -163,5 +165,15 @@ export const setLogsFullWidthModeAction = (value) => ({
 
 export const setLogsColorizedBackgroundAction = (value) => ({
   type: SET_LOGS_COLORIZED_BACKGROUND,
+  payload: { value },
+});
+
+export const setLaunchExportIncludeAttachmentsAction = (value) => ({
+  type: SET_LAUNCH_EXPORT_INCLUDE_ATTACHMENTS,
+  payload: { value },
+});
+
+export const setLaunchExportFlatAttachmentsAction = (value) => ({
+  type: SET_LAUNCH_EXPORT_FLAT_ATTACHMENTS,
   payload: { value },
 });

@@ -21,6 +21,22 @@
   box-sizing: border-box;
   background-color: $COLOR--white-two;
 
+  &.hide-condition-arrow {
+    .conditions-selector {
+      cursor: default;
+    }
+
+    .conditions-block {
+      width: auto;
+      min-width: 88px;
+      max-width: 42%;
+    }
+
+    .input {
+      padding-left: 96px;
+    }
+  }
+
   &.disabled {
     .conditions-block {
       cursor: default;
@@ -72,7 +88,9 @@
   font-size: 13px;
   color: $COLOR--charcoal-grey;
   box-shadow: none;
-  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  transition:
+    border-color ease-in-out 0.15s,
+    box-shadow ease-in-out 0.15s;
 
   &:hover {
     border-color: $COLOR--gray-47;

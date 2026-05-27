@@ -22,7 +22,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { WIDGETS_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { SORTING_ASC, SORTING_DESC } from 'controllers/sorting';
 import { debounce } from 'common/utils';
-import { activeDashboardIdSelector } from 'controllers/pages';
+import { activeDashboardIdSelector, projectIdSelector } from 'controllers/pages';
+import { PROJECT_PLUGIN_PAGE } from 'controllers/pages/constants';
+import { enabledPluginSelector } from 'controllers/plugins';
+import { showModalAction } from 'controllers/modal';
 import {
   loadMoreSearchedItemsAction,
   searchedTestItemsSelector,
@@ -30,6 +33,8 @@ import {
 } from 'controllers/testItem';
 import { TestCaseSearchControl } from './testCaseSearchControl';
 import { TestCaseSearchContent } from './testCaseSearchContent';
+import { TestExecutionsPromoBanner } from './testExecutionsPromoBanner';
+import { PremiumPromoModal } from './premiumPromoModal';
 import styles from './testCaseSearch.scss';
 
 const TRACKING_EVENTS_TRIGGER_SOURCES = {
@@ -41,9 +46,18 @@ const TRACKING_EVENTS_TRIGGER_SOURCES = {
 const THROTTLING_SEARCH_TIME = 300;
 const THROTTLING_STATUS_CHANGE_TIME = 1000;
 
+const PROMOTION_BANNER_SOURCE = 'promotion_banner';
+const PREMIUM_POPUP_SOURCE = 'premium_features_popup';
+const TEST_EXECUTION_PLUGIN_NAME = 'test-execution';
+const TEST_EXECUTION_PLUGIN_PAGE = 'testExecution';
+
 const cx = classNames.bind(styles);
 export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }) => {
   const dashboardId = useSelector(activeDashboardIdSelector);
+  const projectId = useSelector(projectIdSelector);
+  const isTestExecutionPluginEnabled = useSelector((state) =>
+    enabledPluginSelector(state, TEST_EXECUTION_PLUGIN_NAME),
+  );
   const searchDetails = useSelector(searchedTestItemsSelector);
   const targetWidgetSearch = searchDetails[widgetId] || {};
   const {
@@ -114,9 +128,58 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
     dispatch(loadMoreSearchedItemsAction({ widgetId, trackPerformance, isDisplayedLaunches }));
   };
 
+  const handleDocumentationClick = () => {
+    trackEvent(WIDGETS_EVENTS.onTcsPromoDocumentationClick(dashboardId, PROMOTION_BANNER_SOURCE));
+  };
+  const handleLoadMoreMessageDocumentationClick = () => {
+    trackEvent(
+      WIDGETS_EVENTS.onSearchWidgetDocumentLinkClick(dashboardId, 'promotion_load_more_message'),
+    );
+  };
+
+  const handleOpenNewSearch = () => {
+    if (isTestExecutionPluginEnabled) {
+      trackEvent(WIDGETS_EVENTS.onTcsPromoOpenNewSearchNavigate(dashboardId, PROMOTION_BANNER_SOURCE));
+      dispatch({
+        type: PROJECT_PLUGIN_PAGE,
+        payload: { projectId, pluginPage: TEST_EXECUTION_PLUGIN_PAGE },
+      });
+    } else {
+      trackEvent(WIDGETS_EVENTS.onTcsPromoOpenNewSearchNavigate(dashboardId, PROMOTION_BANNER_SOURCE));
+      dispatch(
+        showModalAction({
+          component: (
+            <PremiumPromoModal
+              onExplorePlans={() =>
+                trackEvent(
+                  WIDGETS_EVENTS.onTcsPremiumExplorePlansClick(dashboardId, PREMIUM_POPUP_SOURCE),
+                )
+              }
+              onContactUs={() =>
+                trackEvent(
+                  WIDGETS_EVENTS.onTcsPremiumContactUsClick(dashboardId, PREMIUM_POPUP_SOURCE),
+                )
+              }
+              onNotNow={() =>
+                trackEvent(
+                  WIDGETS_EVENTS.onTcsPremiumNotNowClick(dashboardId, PREMIUM_POPUP_SOURCE),
+                )
+              }
+            />
+          ),
+        }),
+      );
+    }
+  };
+
   useEffect(() => {
     setIsTableLoading(fetchLoading);
   }, [fetchLoading]);
+
+  useEffect(() => {
+    trackEvent(WIDGETS_EVENTS.onTcsPromoBannerImpression(dashboardId, PROMOTION_BANNER_SOURCE));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (isSearchValueEmpty) return () => {};
@@ -141,6 +204,10 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
         onClear={handleClear}
         onStatusChange={handleStatusChange}
       />
+      <TestExecutionsPromoBanner
+        onOpenNewSearch={handleOpenNewSearch}
+        onDocumentationClick={handleDocumentationClick}
+      />
       <TestCaseSearchContent
         listView={isDisplayedLaunches}
         isEmptyState={isSearchValueEmpty}
@@ -150,6 +217,7 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
         sortingDirection={sortingDirection}
         onChangeSorting={handleChangeSorting}
         onLoadMore={isLoadMoreAvailable ? handleLoadMore : null}
+        onLoadMoreMessageDocumentationClick={handleLoadMoreMessageDocumentationClick}
         error={error}
       />
     </div>

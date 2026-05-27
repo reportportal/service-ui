@@ -272,6 +272,17 @@ export const LOG_PAGE_EVENTS = {
     place: 'settings',
     condition: logsSize,
   }),
+  getClickLogPaginationEvent: (place = 'footer_toolbar') => ({
+    ...basicLogPageClickEventParameters,
+    place,
+    icon_name: 'pagination',
+  }),
+  getChooseLogPaginationPagesEvent: (number) => ({
+    ...basicLogPageChooseEventParameters,
+    place: 'footer_toolbar',
+    icon_name: 'pagination_pages',
+    number,
+  }),
   getToggleFullWidthModeEvent: (isEnabled) => ({
     ...basicLogPageClickEventParameters,
     element_name: 'full_width_size',

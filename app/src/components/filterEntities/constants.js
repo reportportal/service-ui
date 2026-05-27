@@ -15,6 +15,7 @@
  */
 
 export const CONDITION_CNT = 'cnt';
+export const CONDITION_SWT = 'swt';
 export const CONDITION_NOT_CNT = '!cnt';
 export const CONDITION_NOT_CNT_EVENTS = 'non_cnt';
 export const CONDITION_EQ = 'eq';
@@ -51,6 +52,8 @@ export const ENTITY_CREATION_DATE = 'creationDate';
 export const ENTITY_PATTERN_NAME = 'patternName';
 export const ENTITY_RETRY = 'hasRetries';
 export const ENTITY_NEW_FAILURE = 'newFailure';
+export const ENTITY_LAUNCH_TYPE = 'launchType';
+export const ENTITY_LAUNCH_NAME = 'launchName';
 
 export const ENTITY_CREATED_AT = 'createdAt';
 export const ENTITY_EVENT_NAME = 'eventName';

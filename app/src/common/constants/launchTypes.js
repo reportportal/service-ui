@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { FieldNumber } from './fieldNumber';
-
-export { FieldNumber };
-
-export default FieldNumber;
+export const LAUNCH_TYPES = {
+  AGENTIC: 'AGENTIC',
+  AUTOMATION: 'AUTOMATION',
+};

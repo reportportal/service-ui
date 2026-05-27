@@ -28,7 +28,20 @@
   line-height: 24px;
 }
 
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .date-picker-container {
   width: 100%;
   box-sizing: border-box;
+}
+
+.max-range-hint {
+  color: var(--rp-ui-color-text-secondary);
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 11px;
+  line-height: 16px;
 }

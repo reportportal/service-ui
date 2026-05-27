@@ -18,6 +18,7 @@ export {
   FILTERS_PAGE_EVENTS,
   FILTERS_PAGE,
   getAddEditFilterModalEvents,
+  getAddFilterTypeParam,
 } from './filtersPageEvents';
 export {
   LAUNCHES_PAGE_EVENTS,

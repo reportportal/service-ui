@@ -30,7 +30,13 @@ import { addExportAction, removeExportAction } from 'controllers/exports';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { ERROR_CANCELED } from 'common/utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { activeProjectSelector } from 'controllers/user';
+import {
+  activeProjectSelector,
+  launchExportIncludeAttachmentsSelector,
+  launchExportFlatAttachmentsSelector,
+  setLaunchExportIncludeAttachmentsAction,
+  setLaunchExportFlatAttachmentsAction,
+} from 'controllers/user';
 import { PDF_EXPORT, XLS_EXPORT, HTML_EXPORT } from './constants';
 import styles from './launchExportModal.scss';
 
@@ -42,9 +48,19 @@ const LAUNCHES_EXPORT_EVENTS_INFO = {
   clickInterruptModal: LAUNCHES_PAGE_EVENTS.CLICK_INTERRUPT_EXPORT_MODAL_BTN,
 };
 
+const GA_FOLDER_STRUCTURE = {
+  ACTIVE: 'active_folder_structure',
+  DISABLE: 'disable_folder_structure',
+};
+
+const getFolderStructureCondition = (includeAttachments, exportWithoutPreservingFolders) =>
+  includeAttachments && exportWithoutPreservingFolders
+    ? GA_FOLDER_STRUCTURE.ACTIVE
+    : GA_FOLDER_STRUCTURE.DISABLE;
+
 const messages = defineMessages({
   title: {
-    id: 'LaunchExportModal.title',
+    id: 'Hamburger.exportReport',
     defaultMessage: 'Export report',
   },
   formatFieldLabel: {
@@ -54,11 +70,15 @@ const messages = defineMessages({
   description: {
     id: 'LaunchExportModal.description',
     defaultMessage:
-      '<strong>Do not refresh the page</strong> while the report is being generated - you’ll see a progress banner at the top. Attachments, if included, will be saved in a structured archive but may slow down the process.',
+      '<strong>Do not refresh the page</strong> while the report is being generated - you’ll see a progress banner at the top. Attachments, if included, are saved in the export archive and may slow down the process.',
   },
   includeAttachments: {
     id: 'LaunchExportModal.includeAttachments',
     defaultMessage: 'Include Attachments',
+  },
+  exportAttachmentsWithoutPreservingFolders: {
+    id: 'LaunchExportModal.exportAttachmentsWithoutPreservingFolders',
+    defaultMessage: 'Export attachments without preserving folder structure',
   },
   export: {
     id: 'LaunchExportModal.export',
@@ -78,13 +98,27 @@ const messages = defineMessages({
   },
 });
 
-export const LaunchExportModal = ({ id, name }) => {
+const normalizeLaunches = (launchesProp, id, name) => {
+  if (launchesProp?.length) {
+    return launchesProp.map((l) => ({ id: l.id, name: l.name ?? '' }));
+  }
+  if (id != null) {
+    return [{ id, name: name ?? '' }];
+  }
+  return [];
+};
+
+export const LaunchExportModal = ({ id, name, launches: launchesProp }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const [exportType, setExportType] = useState(PDF_EXPORT);
-  const [isWithAttachments, setIsWithAttachments] = useState(false);
   const dispatch = useDispatch();
   const projectId = useSelector(activeProjectSelector);
+  const includeAttachments = useSelector(launchExportIncludeAttachmentsSelector);
+  const exportFlatAttachments = useSelector(launchExportFlatAttachmentsSelector);
+  const exportAttachmentsWithoutPreservingFolders =
+    includeAttachments && exportFlatAttachments;
+  const launches = normalizeLaunches(launchesProp, id, name);
 
   const exportOptions = [
     {
@@ -105,20 +139,31 @@ export const LaunchExportModal = ({ id, name }) => {
     setExportType(value);
   };
 
-  const toggleWithAttachments = () => {
-    setIsWithAttachments((currentState) => !currentState);
+  const onToggleIncludeAttachments = () => {
+    dispatch(setLaunchExportIncludeAttachmentsAction(!includeAttachments));
   };
 
-  const onExportLaunch = async () => {
-    const requestId = `${id}_${Date.now()}`;
+  const onToggleExportWithoutPreservingFolders = () => {
+    dispatch(setLaunchExportFlatAttachmentsAction(!exportFlatAttachments));
+  };
+
+  const runExportForLaunch = async (launchId, launchName) => {
+    const requestId = `${launchId}_${Date.now()}`;
     const messageParams = {
       exportType,
-      launchName: name,
+      launchName,
     };
 
+    const queryParams = {
+      includeAttachments,
+    };
+    if (includeAttachments) {
+      queryParams.flatAttachments = exportAttachmentsWithoutPreservingFolders;
+    }
+
     try {
-      await downloadFile(URLS.exportLaunch(projectId, id, exportType), {
-        params: { includeAttachments: isWithAttachments },
+      await downloadFile(URLS.exportLaunch(projectId, launchId, exportType), {
+        params: queryParams,
         abort: (cancelRequest) =>
           dispatch(
             addExportAction({
@@ -146,9 +191,20 @@ export const LaunchExportModal = ({ id, name }) => {
     }
   };
 
+  const onExportLaunch = () =>
+    launches.reduce(
+      (chain, { id: launchId, name: launchName }) =>
+        chain.then(() => runExportForLaunch(launchId, launchName)),
+      Promise.resolve(),
+    );
+
   const exportAndClose = (closeModal) => {
     trackEvent(
-      LAUNCHES_MODAL_EVENTS.getClickExportLaunchBtnModalEvent(exportType, isWithAttachments),
+      LAUNCHES_MODAL_EVENTS.getClickExportLaunchBtnModalEvent(
+        exportType,
+        includeAttachments,
+        getFolderStructureCondition(includeAttachments, exportAttachmentsWithoutPreservingFolders),
+      ),
     );
     dispatch(
       showSuccessNotification({
@@ -182,10 +238,18 @@ export const LaunchExportModal = ({ id, name }) => {
         />
         <InputCheckbox
           className={cx('include-attachments-field')}
-          value={isWithAttachments}
-          onChange={toggleWithAttachments}
+          value={includeAttachments}
+          onChange={onToggleIncludeAttachments}
         >
           {formatMessage(messages.includeAttachments)}
+        </InputCheckbox>
+        <InputCheckbox
+          className={cx('export-without-folder-structure-field')}
+          value={includeAttachments && exportFlatAttachments}
+          disabled={!includeAttachments}
+          onChange={onToggleExportWithoutPreservingFolders}
+        >
+          {formatMessage(messages.exportAttachmentsWithoutPreservingFolders)}
         </InputCheckbox>
       </ModalField>
       <p className={cx('description')}>
@@ -197,6 +261,17 @@ export const LaunchExportModal = ({ id, name }) => {
   );
 };
 LaunchExportModal.propTypes = {
-  id: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired,
+  id: PropTypes.number,
+  name: PropTypes.string,
+  launches: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string,
+    }),
+  ),
+};
+LaunchExportModal.defaultProps = {
+  id: undefined,
+  name: undefined,
+  launches: undefined,
 };

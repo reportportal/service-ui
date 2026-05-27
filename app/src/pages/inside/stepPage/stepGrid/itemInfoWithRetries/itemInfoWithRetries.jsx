@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, createRef } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import track from 'react-tracking';
@@ -44,8 +44,6 @@ export class ItemInfoWithRetries extends Component {
 
   constructor(props) {
     super(props);
-
-    this.retriesNode = createRef();
   }
 
   state = {
@@ -62,11 +60,7 @@ export class ItemInfoWithRetries extends Component {
       this.props.tracking.trackEvent(STEP_PAGE_EVENTS.CLICK_ON_RETRIES_BTN);
       this.props.toggleExpand();
     }
-    this.setState({ retriesVisible: true }, () => {
-      if (this.retriesNode.current) {
-        this.retriesNode.current.scrollIntoView({ block: 'start', behavior: 'smooth' });
-      }
-    });
+    this.setState({ retriesVisible: true });
   };
 
   render() {
@@ -79,7 +73,6 @@ export class ItemInfoWithRetries extends Component {
         <ItemInfo onClickRetries={this.showRetries} {...rest} />
         {this.isRetriesVisible() && (
           <RetriesBlock
-            ref={this.retriesNode}
             testItemId={this.props.value.id}
             retries={this.getRetries()}
             collapsed={!rest.expanded}

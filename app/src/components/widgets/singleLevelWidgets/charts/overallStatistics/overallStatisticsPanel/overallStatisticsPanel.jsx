@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import {
 } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
 import { getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
+import { isSeparateInterrupted } from '../isSeparateInterrupted';
 import { TotalStatistics } from './totalStatistics';
 import { OverallDefects } from './overallDefects';
 import styles from './overallStatisticsPanel.scss';
@@ -117,16 +118,24 @@ export class OverallStatisticsPanel extends React.PureComponent {
       newValues[field] = values[field] || 0;
     });
 
+    if (isSeparateInterrupted(widget)) {
+      newValues.statistics$executions$interrupted = values.statistics$executions$interrupted ?? 0;
+    }
+
     return newValues;
   };
 
   render() {
-    const { isPreview } = this.props;
+    const { isPreview, widget } = this.props;
 
     return (
       <div className={cx('container')}>
         <div className={cx('total')}>
-          <TotalStatistics onChartClick={this.onTotalStatisticsClick} values={this.getTotals()} />
+          <TotalStatistics
+            onChartClick={this.onTotalStatisticsClick}
+            values={this.getTotals()}
+            separateInterrupted={isSeparateInterrupted(widget)}
+          />
         </div>
 
         {!isPreview && (

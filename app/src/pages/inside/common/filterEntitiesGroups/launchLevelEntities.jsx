@@ -34,6 +34,7 @@ import {
   EntitySearch,
   EntityContains,
   EntityInputConditionalAttributes,
+  EntityDropdown,
 } from 'components/filterEntities';
 import { bindDefaultValue } from 'components/filterEntities/utils';
 import {
@@ -50,7 +51,9 @@ import {
   CONDITION_LESS_EQ,
   CONDITION_EQ,
   ENTITY_ATTRIBUTE,
+  ENTITY_LAUNCH_TYPE,
 } from 'components/filterEntities/constants';
+import { LAUNCH_TYPES } from 'common/constants/launchTypes';
 import { defectTypesSelector } from 'controllers/project';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
@@ -157,6 +160,18 @@ const messages = defineMessages({
     id: 'LaunchLevelEntities.ownerName.placeholder',
     defaultMessage: 'Enter owner name',
   },
+  ExecutionTypeTitle: {
+    id: 'LaunchLevelEntities.ExecutionTypeTitle',
+    defaultMessage: 'Execution type',
+  },
+  ExecutionTypeAgentic: {
+    id: 'LaunchLevelEntities.ExecutionTypeAgenticOption',
+    defaultMessage: 'Agentic',
+  },
+  ExecutionTypeAutomation: {
+    id: 'LaunchLevelEntities.ExecutionTypeAutomationOption',
+    defaultMessage: 'Automation',
+  },
 });
 
 @injectIntl
@@ -209,6 +224,30 @@ export class LaunchLevelEntities extends Component {
         customProps: {
           conditions: [CONDITION_EQ, CONDITION_GREATER_EQ, CONDITION_LESS_EQ],
           placeholder: intl.formatMessage(messages.LAUNCH_NUMBER_PLACEHOLDER),
+        },
+      },
+      {
+        id: ENTITY_LAUNCH_TYPE,
+        component: EntityDropdown,
+        value: this.bindDefaultValue(ENTITY_LAUNCH_TYPE, {
+          condition: CONDITION_IN,
+        }),
+        title: intl.formatMessage(messages.ExecutionTypeTitle),
+        active: visibleFilters.includes(ENTITY_LAUNCH_TYPE),
+        removable: true,
+        customProps: {
+          options: [
+            {
+              label: intl.formatMessage(messages.ExecutionTypeAutomation),
+              value: LAUNCH_TYPES.AUTOMATION,
+            },
+            {
+              label: intl.formatMessage(messages.ExecutionTypeAgentic),
+              value: LAUNCH_TYPES.AGENTIC,
+            },
+          ],
+          multiple: true,
+          selectAll: true,
         },
       },
       {

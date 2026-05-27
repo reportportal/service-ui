@@ -268,6 +268,12 @@ export const Hamburger = ({ launch, customProps }) => {
             disabled={!enabledPatterns.length}
           />
           <HamburgerMenuItem
+            text={formatMessage(messages.exportReport)}
+            disabled={isLaunchInProgress}
+            onClick={onExportReport}
+            title={isLaunchInProgress ? formatMessage(messages.launchInProgress) : ''}
+          />
+          <HamburgerMenuItem
             text={formatMessage(COMMON_LOCALE_KEYS.DELETE)}
             disabled={
               !canDeleteLaunch(accountRole, projectRole, userId === launch.owner) ||
@@ -278,12 +284,6 @@ export const Hamburger = ({ launch, customProps }) => {
               customProps.onDeleteItem(launch);
             }}
             title={getDeleteItemTooltip()}
-          />
-          <HamburgerMenuItem
-            text={formatMessage(messages.exportReport)}
-            disabled={isLaunchInProgress}
-            onClick={onExportReport}
-            title={isLaunchInProgress ? formatMessage(messages.launchInProgress) : ''}
           />
         </div>
       </div>

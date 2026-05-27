@@ -28,6 +28,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';
 import { LinkComponent } from 'pages/inside/projectSettingsPageContainer/content/notifications/LinkComponent';
 import { injectIntl } from 'react-intl';
+import { OVERALL_STATISTICS } from 'common/constants/widgetTypes';
 import { WIDGETS_STATIC_PREVIEWS } from '../widgets';
 import { WidgetPreview } from '../widgetPreview';
 import styles from './widgetInfoBlock.scss';
@@ -65,6 +66,14 @@ export class WidgetInfoBlock extends PureComponent {
     if (prevProps.activeWidget.id !== this.props.activeWidget.id) {
       this.resetPrevWidgetData();
       return;
+    }
+
+    const prevSeparateInterrupted =
+      prevProps.widgetSettings.contentParameters?.widgetOptions?.separateInterrupted;
+    const nextSeparateInterrupted = contentParameters.widgetOptions?.separateInterrupted;
+    const isPanelView = contentParameters.widgetOptions?.viewMode === 'panel';
+    if (isPanelView && prevSeparateInterrupted !== nextSeparateInterrupted) {
+      this.setState({ widgetData: null, loading: true });
     }
 
     const prevData = {
@@ -128,6 +137,12 @@ export class WidgetInfoBlock extends PureComponent {
       dashboardId,
     } = this.props;
     const { loading, widgetData } = this.state;
+    const widgetOptions = this.props.widgetSettings.contentParameters?.widgetOptions;
+    const isSeparateInterrupted =
+      activeWidget.id === OVERALL_STATISTICS &&
+      widgetOptions?.viewMode === 'panel' &&
+      widgetOptions?.separateInterrupted;
+    const isExpanded = isSeparateInterrupted && (loading || !!widgetData);
 
     return (
       <div className={cx('edit-widget-info-section')}>
@@ -153,6 +168,7 @@ export class WidgetInfoBlock extends PureComponent {
           loading={loading}
           widgetType={activeWidget.id}
           data={widgetData}
+          className={cx({ expanded: isExpanded })}
         />
       </div>
     );

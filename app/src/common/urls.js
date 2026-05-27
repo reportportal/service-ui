@@ -124,7 +124,7 @@ export const URLS = {
   launchImport: (activeProject) => `${urlBase}${activeProject}/launch/import`,
   exportLaunch: (projectId, launchId, exportType) =>
     `${urlBase}${projectId}/launch/${launchId}/report${getQueryParams({
-      view: exportType,
+      view: String(exportType).toLowerCase(),
     })}`,
   launchAnalyze: (activeProject) => `${urlBase}${activeProject}/launch/analyze`,
   login: () => `${uatBase}sso/oauth/token`,

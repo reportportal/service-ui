@@ -33,8 +33,13 @@ export const TestsTableWidget = ({
   hideInfoBlock,
   onItemClick,
   opensLinkInNewTab,
+  passFullRowOnItemClick,
+  omitLaunchExecutionNumber,
 }) => {
-  const launchName = launch.number ? `${launch.name} #${launch.number}` : launch.name;
+  const launchName =
+    omitLaunchExecutionNumber || !launch.number
+      ? launch.name
+      : `${launch.name} #${launch.number}`;
 
   return (
     <div className={cx('tests-table-widget')}>
@@ -46,6 +51,7 @@ export const TestsTableWidget = ({
           getMatrixTooltip={getMatrixTooltip}
           onItemClick={onItemClick}
           opensLinkInNewTab={opensLinkInNewTab}
+          passFullRowOnItemClick={passFullRowOnItemClick}
         />
       </div>
     </div>
@@ -61,6 +67,8 @@ TestsTableWidget.propTypes = {
   onItemClick: func,
   hideInfoBlock: bool,
   opensLinkInNewTab: bool,
+  passFullRowOnItemClick: bool,
+  omitLaunchExecutionNumber: bool,
 };
 
 TestsTableWidget.defaultProps = {
@@ -69,4 +77,6 @@ TestsTableWidget.defaultProps = {
   getMatrixTooltip: null,
   onItemClick: null,
   opensLinkInNewTab: false,
+  passFullRowOnItemClick: false,
+  omitLaunchExecutionNumber: false,
 };
