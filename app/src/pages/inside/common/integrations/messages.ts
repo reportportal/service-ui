@@ -123,6 +123,11 @@ export const messages = defineMessages({
     defaultMessage:
       'Global configurations are inactive because a project integration has been configured',
   },
+  inactiveGlobalIntegrationsOrganization: {
+    id: 'IntegrationsDescription.inactiveGlobalIntegrationsOrganization',
+    defaultMessage:
+      'Global configurations are inactive because an organizational integration has been configured',
+  },
   emptyStateText: {
     id: 'IntegrationsDescription.emptyStateText',
     defaultMessage: 'Integration is not configured yet',
