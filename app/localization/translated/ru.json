@@ -1310,6 +1310,7 @@
   "IntegrationsDescription.globalIntegrationText": "Создаются на уровне экземпляра и применяются ко всем проектам, если не заданы организационные или проектные конфигурации.",
   "IntegrationsDescription.globalIntegrationTitle": "Глобальные интеграции",
   "IntegrationsDescription.inactiveGlobalIntegrations": "Глобальные конфигурации неактивны, так как настроена интеграция проекта",
+  "IntegrationsDescription.inactiveGlobalIntegrationsOrganization": "Глобальные конфигурации неактивны, так как настроена организационная интеграция",
   "IntegrationsDescription.integrationCreatedByOn": "{creator}, {creationInfo}",
   "IntegrationsDescription.integrationList": "Интеграции",
   "IntegrationsDescription.integrationStatusActive": "Активна",

@@ -1309,6 +1309,7 @@
   "IntegrationsDescription.globalIntegrationText": "Ствараюцца на ўзроўні экзэмпляра і ўжываюцца да ўсіх праектаў, калі не зададзены арганізацыйныя або праектныя канфігурацыі.",
   "IntegrationsDescription.globalIntegrationTitle": "Глабальныя інтэграцыі",
   "IntegrationsDescription.inactiveGlobalIntegrations": "Глабальныя канфігурацыі неактыўныя, паколькі наладжана інтэграцыя праекта",
+  "IntegrationsDescription.inactiveGlobalIntegrationsOrganization": "Глабальныя канфігурацыі неактыўныя, паколькі наладжана арганізацыйная інтэграцыя",
   "IntegrationsDescription.integrationCreatedByOn": "{creator}, {creationInfo}",
   "IntegrationsDescription.integrationList": "Інтэграцыі",
   "IntegrationsDescription.integrationStatusActive": "Актыўна",

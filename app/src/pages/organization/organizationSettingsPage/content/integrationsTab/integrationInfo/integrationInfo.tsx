@@ -378,7 +378,7 @@ export const IntegrationInfo = ({ plugin, integrationId = '' }: IntegrationInfoP
               integrations={availableGlobalIntegrations}
               openIntegration={openIntegration}
               inactive={Boolean(availableOrganizationIntegrations.length)}
-              inactiveTooltip={formatMessage(messages.inactiveGlobalIntegrations)}
+              inactiveTooltip={formatMessage(messages.inactiveGlobalIntegrationsOrganization)}
               testConnection={testGlobalIntegrationConnection}
             />
           )}
