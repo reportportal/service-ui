@@ -31,7 +31,7 @@
   box-sizing: border-box;
   margin-bottom: 10px;
   word-break: normal;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 
   @media (max-width: $SCREEN_SM_MAX) {
     max-width: 100%;
@@ -167,7 +167,7 @@
 .item-description {
   width: 100%;
   margin-top: 10px;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 .mobile-info {
