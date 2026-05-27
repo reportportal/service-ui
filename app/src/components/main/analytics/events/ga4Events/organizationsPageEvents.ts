@@ -24,7 +24,7 @@ import { InviteProjectCondition } from 'pages/inside/common/invitations/inviteUs
 const ORGANIZATION_PAGE = 'organization';
 const SETTINGS_PAGE = 'organization_settings';
 const INTEGRATIONS = 'integrations';
-const PROMO = 'organizations_promo';
+const PROMO = 'all_organizations_without_plugin';
 const PREMIUM_FEATURES_POPUP = 'premium_features_popup';
 
 const BASIC_EVENT_PARAMETERS = getBasicClickEventParameters(ORGANIZATION_PAGE);
@@ -188,7 +188,7 @@ export const ORGANIZATION_PAGE_EVENTS = {
   },
   clickCreateOrganization: (element = '') => ({
     ...BASIC_EVENT_PARAMETERS,
-    place: 'all_organizations',
+    place: 'all_organizations_with_plugin',
     element_name: element ? `create_organization_${element}` : 'create_organization',
   }),
   CLICK_CREATE_BUTTON: {
