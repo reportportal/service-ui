@@ -30,20 +30,12 @@ import { ExtensionLoader } from 'components/extensionLoader';
 import { INTEGRATION_FORM } from 'components/integrations/elements';
 import { createClassnames, trimStringValues } from 'common/utils';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { messages as integrationMessages } from 'pages/inside/common/integrations/messages';
 import styles from './addIntegrationModal.scss';
 
 const cx = createClassnames(styles);
 
 const messages = defineMessages({
-  globalIntegrationsSystemMessageModalCaption: {
-    id: 'IntegrationsDescription.GlobalIntegrationsSystemMessageModalCaption',
-    defaultMessage: 'Global and Project Integrations can’t work at the same time.',
-  },
-  globalIntegrationsSystemMessageModalText: {
-    id: 'IntegrationsDescription.GlobalIntegrationsSystemMessageModalText',
-    defaultMessage:
-      'Note that Global integrations will be unlinked if you create a Project Integration!',
-  },
   createProjectTitle: {
     id: 'AddIntegrationModal.createProjectTitle',
     defaultMessage: 'Create Project Integration',
@@ -136,10 +128,10 @@ const AddIntegrationModal = ({
     customProps?.globalIntegrationsNoticeCaption || customProps?.globalIntegrationsNoticeBody;
   const noticeCaption = hasCustomNotice
     ? customProps?.globalIntegrationsNoticeCaption
-    : formatMessage(messages.globalIntegrationsSystemMessageModalCaption);
+    : formatMessage(integrationMessages.globalIntegrationsSystemMessageModalCaption);
   const noticeBody = hasCustomNotice
     ? customProps?.globalIntegrationsNoticeBody
-    : formatMessage(messages.globalIntegrationsSystemMessageModalText);
+    : formatMessage(integrationMessages.globalIntegrationsSystemMessageModalText);
 
   return (
     <Modal

@@ -97,14 +97,15 @@ export const messages = defineMessages({
     id: 'IntegrationsDescription.projectIntegrationText',
     defaultMessage: 'Default integration configurations for the project.',
   },
-  projectIntegrationReset: {
-    id: 'IntegrationsDescription.projectIntegrationReset',
-    defaultMessage: 'Reset to Global Integrations',
-  },
   projectIntegrationResetDescription: {
     id: 'IntegrationsDescription.projectIntegrationResetDescription',
     defaultMessage:
       'Are you sure you want to reset to Global Integrations? All your Project Integrations will be deleted without the ability to recover.',
+  },
+  projectIntegrationResetToOrganizationalDescription: {
+    id: 'IntegrationsDescription.projectIntegrationResetToOrganizationalDescription',
+    defaultMessage:
+      'Are you sure you want to reset to Organizational Integrations? All your Project Integrations will be deleted without the ability to recover.',
   },
   projectIntegrationAddLimited: {
     id: 'IntegrationsDescription.projectIntegrationAddLimited',
@@ -122,6 +123,11 @@ export const messages = defineMessages({
     id: 'IntegrationsDescription.inactiveGlobalIntegrations',
     defaultMessage:
       'Global configurations are inactive because a project integration has been configured',
+  },
+  inactiveOrganizationIntegrations: {
+    id: 'IntegrationsDescription.inactiveOrganizationIntegrations',
+    defaultMessage:
+      'Organizational configurations are inactive because a project integration has been configured',
   },
   inactiveGlobalIntegrationsOrganization: {
     id: 'IntegrationsDescription.inactiveGlobalIntegrationsOrganization',
@@ -167,6 +173,24 @@ export const messages = defineMessages({
     defaultMessage:
       'The integration will be unlinked from the Global configuration and will auto-apply to all Organization projects without existing individual configuration.',
   },
+  globalIntegrationsSystemMessageModalCaption: {
+    id: 'IntegrationsDescription.GlobalIntegrationsSystemMessageModalCaption',
+    defaultMessage: 'Global and Project Integrations can’t work at the same time.',
+  },
+  globalIntegrationsSystemMessageModalText: {
+    id: 'IntegrationsDescription.GlobalIntegrationsSystemMessageModalText',
+    defaultMessage:
+      'Note that Global integrations will be unlinked if you create a Project Integration!',
+  },
+  projectIntegrationOrganizationalNoticeCaption: {
+    id: 'IntegrationsDescription.projectIntegrationOrganizationalNoticeCaption',
+    defaultMessage: 'Organizational and Project Integrations can’t work at the same time.',
+  },
+  projectIntegrationOrganizationalNoticeBody: {
+    id: 'IntegrationsDescription.projectIntegrationOrganizationalNoticeBody',
+    defaultMessage:
+      'Note that Organizational integrations will be unlinked if you create a Project Integration!',
+  },
   noIntegrationsConfiguredYet: {
     id: 'IntegrationsDescription.noIntegrationsConfiguredYet',
     defaultMessage: 'No integrations configured yet',
@@ -184,5 +208,18 @@ export const messages = defineMessages({
     id: 'IntegrationsDescription.delete.modalDescriptionOrganizationLast',
     defaultMessage:
       'Are you sure you want to delete the <b>Organizational {name} integration</b>? If Global integration is configured, it will be automatically applied to your organization and projects.',
+  },
+  organizationalIntegrationTitle: {
+    id: 'IntegrationsDescription.organizationalIntegrationTitle',
+    defaultMessage: 'Organizational integrations',
+  },
+  organizationalIntegrationText: {
+    id: 'IntegrationsDescription.organizationalIntegrationText',
+    defaultMessage:
+      'Created at the organizational level and applied to all projects unless project-specific configurations are set.',
+  },
+  resetIntegrationsToOrganizational: {
+    id: 'IntegrationsDescription.resetIntegrationsToOrganizational',
+    defaultMessage: 'Reset to Organizational Integration',
   },
 });
