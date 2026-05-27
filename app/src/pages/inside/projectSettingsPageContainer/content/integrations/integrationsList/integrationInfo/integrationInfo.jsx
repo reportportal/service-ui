@@ -30,12 +30,17 @@ import { uiExtensionIntegrationSettingsSelector } from 'controllers/plugins/uiEx
 import { showModalAction } from 'controllers/modal';
 import {
   namedGlobalIntegrationsSelector,
+  namedOrganizationIntegrationsSelector,
   namedProjectIntegrationsSelector,
   addIntegrationAction,
   updateIntegrationAction,
   removeProjectIntegrationsByTypeAction,
 } from 'controllers/plugins';
-import { isLimitedIntegrationPlugin } from 'controllers/plugins/utils';
+import { activeOrganizationIdSelector } from 'controllers/organization';
+import {
+  getTestIntegrationConnection,
+  isLimitedIntegrationPlugin,
+} from 'controllers/plugins/utils';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/settingsComponentsMap';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
@@ -62,10 +67,12 @@ export const IntegrationInfo = (props) => {
   const settingsExtensions = useSelector(uiExtensionIntegrationSettingsSelector);
   const { canUpdateSettings } = useUserPermissions();
   const globalIntegrations = useSelector(namedGlobalIntegrationsSelector);
+  const organizationIntegrations = useSelector(namedOrganizationIntegrationsSelector);
   const projectIntegrations = useSelector(namedProjectIntegrationsSelector);
   const projectKey = useSelector(projectKeySelector);
   const activeProjectKey = useSelector(activeProjectKeySelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
+  const organizationId = useSelector(activeOrganizationIdSelector);
   const dispatch = useDispatch();
   const {
     plugin: { name: pluginName, details = {} },
@@ -81,8 +88,22 @@ export const IntegrationInfo = (props) => {
     () => projectIntegrations[pluginName] || [],
     [projectIntegrations, pluginName],
   );
+  const availableOrganizationIntegrations = useMemo(
+    () => organizationIntegrations[pluginName] || [],
+    [organizationIntegrations, pluginName],
+  );
   const isAtLeastOneIntegrationAvailable =
-    availableGlobalIntegrations.length > 0 || availableProjectIntegrations.length > 0;
+    availableGlobalIntegrations.length > 0 ||
+    availableOrganizationIntegrations.length > 0 ||
+    availableProjectIntegrations.length > 0;
+
+  const showOrganizationalIntegrations = Boolean(availableOrganizationIntegrations.length);
+  const showGlobalIntegrations =
+    Boolean(availableGlobalIntegrations.length) && !showOrganizationalIntegrations;
+
+  const resetButtonText = showOrganizationalIntegrations
+    ? formatMessage(messages.resetIntegrationsToOrganizational)
+    : formatMessage(messages.resetIntegrations);
 
   const isProjectIntegrationAddLimited = useMemo(
     () => isLimitedIntegrationPlugin(pluginName) && availableProjectIntegrations.length > 0,
@@ -99,9 +120,19 @@ export const IntegrationInfo = (props) => {
     [projectKey, activeProjectKey],
   );
 
+  const testOrganizationIntegrationConnection = useMemo(
+    () => getTestIntegrationConnection({ isOrganizational: true, context: { organizationId } }),
+    [organizationId],
+  );
+
   useEffect(() => {
     let isGlobal = false;
+    let isOrganizational = false;
     let integration = availableProjectIntegrations.find((value) => value.id === +integrationId);
+    if (!integration) {
+      integration = availableOrganizationIntegrations.find((value) => value.id === +integrationId);
+      isOrganizational = !!integration;
+    }
     if (!integration) {
       integration = availableGlobalIntegrations.find((value) => value.id === +integrationId);
       isGlobal = !!integration;
@@ -109,9 +140,19 @@ export const IntegrationInfo = (props) => {
 
     if (integration) {
       setUpdatedParameters({});
-      setIntegrationInfo({ ...integration, blocked: isGlobal });
+      setIntegrationInfo({
+        ...integration,
+        blocked: isGlobal || isOrganizational,
+        isGlobal,
+        isOrganizational,
+      });
     }
-  }, [availableGlobalIntegrations, availableProjectIntegrations, integrationId]);
+  }, [
+    availableGlobalIntegrations,
+    availableOrganizationIntegrations,
+    availableProjectIntegrations,
+    integrationId,
+  ]);
 
   const integrationSettingsExtension = settingsExtensions.find(
     (ext) => ext.pluginName === pluginName,
@@ -143,17 +184,27 @@ export const IntegrationInfo = (props) => {
 
   const onAddProjectIntegration = () => {
     const pluginDetails = { ...details };
+    const warningNoticeCaption = showOrganizationalIntegrations
+      ? formatMessage(messages.projectIntegrationOrganizationalNoticeCaption)
+      : formatMessage(messages.globalIntegrationsSystemMessageModalCaption);
+    const warningNoticeBody = showOrganizationalIntegrations
+      ? formatMessage(messages.projectIntegrationOrganizationalNoticeBody)
+      : formatMessage(messages.globalIntegrationsSystemMessageModalText);
+
     dispatch(
       showModalAction({
         id: 'addIntegrationModal',
         data: {
           hasWarningMessage: Boolean(
-            availableGlobalIntegrations.length && availableProjectIntegrations.length === 0,
+            (availableGlobalIntegrations.length || availableOrganizationIntegrations.length) &&
+            availableProjectIntegrations.length === 0,
           ),
           instanceType: pluginName,
           onConfirm: addProjectIntegration,
           customProps: {
             pluginDetails,
+            globalIntegrationsNoticeCaption: warningNoticeCaption,
+            globalIntegrationsNoticeBody: warningNoticeBody,
           },
         },
       }),
@@ -248,8 +299,12 @@ export const IntegrationInfo = (props) => {
         id: 'deleteIntegrationModal',
         data: {
           onConfirm: resetProjectIntegrations,
-          modalTitle: formatMessage(messages.projectIntegrationReset),
-          description: formatMessage(messages.projectIntegrationResetDescription),
+          modalTitle: showOrganizationalIntegrations
+            ? formatMessage(messages.resetIntegrationsToOrganizational)
+            : formatMessage(messages.resetIntegrations),
+          description: showOrganizationalIntegrations
+            ? formatMessage(messages.projectIntegrationResetToOrganizationalDescription)
+            : formatMessage(messages.projectIntegrationResetDescription),
           isReset: true,
         },
       }),
@@ -302,8 +357,20 @@ export const IntegrationInfo = (props) => {
             onResetClick={onResetProjectIntegration}
             createButtonDisabled={isProjectIntegrationAddLimited}
             createButtonTooltip={projectIntegrationCreateButtonTooltip}
+            resetButtonText={resetButtonText}
           />
-          {availableGlobalIntegrations.length > 0 && (
+          {showOrganizationalIntegrations && (
+            <AvailableIntegrations
+              header={formatMessage(messages.organizationalIntegrationTitle)}
+              text={formatMessage(messages.organizationalIntegrationText)}
+              integrations={availableOrganizationIntegrations}
+              openIntegration={openIntegration}
+              inactive={Boolean(availableProjectIntegrations.length)}
+              inactiveTooltip={formatMessage(messages.inactiveOrganizationIntegrations)}
+              testConnection={testOrganizationIntegrationConnection}
+            />
+          )}
+          {showGlobalIntegrations && (
             <AvailableIntegrations
               header={formatMessage(messages.globalIntegrationTitle)}
               text={formatMessage(messages.globalIntegrationText)}
@@ -360,6 +427,8 @@ export const IntegrationInfo = (props) => {
               extension={integrationSettingsExtension}
               withPreloader
               silentOnError={false}
+              isGlobal={integrationInfo.isGlobal}
+              isOrganizational={integrationInfo.isOrganizational}
             />
           </div>
         </>
