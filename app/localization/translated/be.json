@@ -1310,6 +1310,7 @@
   "IntegrationsDescription.globalIntegrationTitle": "Глабальныя інтэграцыі",
   "IntegrationsDescription.inactiveGlobalIntegrations": "Глабальныя канфігурацыі неактыўныя, паколькі наладжана інтэграцыя праекта",
   "IntegrationsDescription.inactiveGlobalIntegrationsOrganization": "Глабальныя канфігурацыі неактыўныя, паколькі наладжана арганізацыйная інтэграцыя",
+  "IntegrationsDescription.inactiveOrganizationIntegrations": "Арганізацыйныя канфігурацыі неактыўныя, паколькі наладжана інтэграцыя праекта",
   "IntegrationsDescription.integrationCreatedByOn": "{creator}, {creationInfo}",
   "IntegrationsDescription.integrationList": "Інтэграцыі",
   "IntegrationsDescription.integrationStatusActive": "Актыўна",

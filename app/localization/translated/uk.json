@@ -1311,6 +1311,7 @@
   "IntegrationsDescription.globalIntegrationTitle": "Глобальні інтеграції",
   "IntegrationsDescription.inactiveGlobalIntegrations": "Глобальні конфігурації неактивні, оскільки налаштовано інтеграцію проєкту",
   "IntegrationsDescription.inactiveGlobalIntegrationsOrganization": "Глобальні конфігурації неактивні, оскільки налаштовано організаційну інтеграцію",
+  "IntegrationsDescription.inactiveOrganizationIntegrations": "Організаційні конфігурації неактивні, оскільки налаштовано інтеграцію проєкту",
   "IntegrationsDescription.integrationCreatedByOn": "{creator}, {creationInfo}",
   "IntegrationsDescription.integrationList": "Інтеграції",
   "IntegrationsDescription.integrationStatusActive": "Активна",

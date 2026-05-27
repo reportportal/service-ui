@@ -1312,6 +1312,7 @@
   "IntegrationsDescription.globalIntegrationTitle": "Integraciones globales",
   "IntegrationsDescription.inactiveGlobalIntegrations": "Las configuraciones globales están inactivas porque se ha configurado una integración de proyecto",
   "IntegrationsDescription.inactiveGlobalIntegrationsOrganization": "Las configuraciones globales están inactivas porque se ha configurado una integración organizativa",
+  "IntegrationsDescription.inactiveOrganizationIntegrations": "Las configuraciones organizativas están inactivas porque se ha configurado una integración de proyecto",
   "IntegrationsDescription.integrationCreatedByOn": "{creator}, {creationInfo}",
   "IntegrationsDescription.integrationList": "Lista de integraciones",
   "IntegrationsDescription.integrationStatusActive": "Activa",
