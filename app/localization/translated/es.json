@@ -1538,7 +1538,7 @@
   "LocalizationBlock.russian": "Ruso",
   "LocalizationBlock.spanish": "Español",
   "LocalizationBlock.ukrainian": "Ucraniano",
-  "LockedDashboardTooltip.lockedDashboard": "This dashboard is locked by a project manager or administrator and cannot be modified",
+  "LockedDashboardTooltip.lockedDashboard": "Este panel está bloqueado por un usuario con permisos de editor o un administrador y no se puede modificar",
   "LockedDashboardTooltip.lockedWidget": "Este widget forma parte de un panel bloqueado. Solo se pueden modificar los ajustes de los filtros.",
   "LogItemActivity.changedByAnalyzer": "AA cambió el tipo de error",
   "LogItemActivity.issueLoadByAnalyzer": "AA cargó el error",

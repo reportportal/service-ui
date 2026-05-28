@@ -1537,7 +1537,7 @@
   "LocalizationBlock.russian": "俄语",
   "LocalizationBlock.spanish": "西班牙语",
   "LocalizationBlock.ukrainian": "乌克兰语",
-  "LockedDashboardTooltip.lockedDashboard": "This dashboard is locked by a project manager or administrator and cannot be modified",
+  "LockedDashboardTooltip.lockedDashboard": "此仪表板已被具有编辑权限的用户或管理员锁定，无法修改",
   "LockedDashboardTooltip.lockedWidget": "该小组件属于已锁定的仪表板。只能修改筛选器设置。",
   "LogItemActivity.changedByAnalyzer": "自动分析服务已更改缺陷类型",
   "LogItemActivity.issueLoadByAnalyzer": "自动分析服务已关联问题",
