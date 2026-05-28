@@ -21,7 +21,7 @@ import classNames from 'classnames/bind';
 import { SKIPPED, FAILED, INTERRUPTED } from 'common/constants/testStatuses';
 import { calculateFontColor } from 'common/utils';
 import CommentIcon from 'common/img/comment-inline.svg';
-import TagIcon from 'common/img/tag-inline.svg';
+import BugIcon from 'common/img/bug-inline.svg';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { HistoryLineItemTooltip } from 'pages/inside/logsPage/historyLine/historyLineItem/historyLineItemTooltip';
 import { updateItemsHistoryLaunchAttributesAction } from 'controllers/itemsHistory';
@@ -158,7 +158,7 @@ export class HistoryItem extends Component {
               <MessageBadge data={[{ comment: issue.comment }]} icon={CommentIcon} />
             )}
             {issue.externalSystemIssues && issue.externalSystemIssues.length > 0 && (
-              <MessageBadge data={issue.externalSystemIssues} icon={TagIcon} />
+              <MessageBadge data={issue.externalSystemIssues} icon={BugIcon} />
             )}
           </>
         )}
