@@ -1536,7 +1536,7 @@
   "LocalizationBlock.russian": "Рускі",
   "LocalizationBlock.spanish": "Iспанська",
   "LocalizationBlock.ukrainian": "Ukrainian",
-  "LockedDashboardTooltip.lockedDashboard": "Гэты дашборд заблакіраваны менеджэрам праекта або адміністратарам і не можа быць зменены",
+  "LockedDashboardTooltip.lockedDashboard": "Гэты дашборд заблакіраваны карыстальнікам з правамі рэдактара або адміністратарам і не можа быць зменены",
   "LockedDashboardTooltip.lockedWidget": "Гэты віджэт з'яўляецца часткай заблакаванага дашборда. Можна змяняць толькі налады фільтраў.",
   "LogItemActivity.changedByAnalyzer": "АА змяніў тып дэфекту",
   "LogItemActivity.issueLoadByAnalyzer": "AA прывязаў памылку",

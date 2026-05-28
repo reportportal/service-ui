@@ -20,7 +20,7 @@ export const messages = defineMessages({
   lockedDashboard: {
     id: 'LockedDashboardTooltip.lockedDashboard',
     defaultMessage:
-      'This dashboard is locked by a project manager or administrator and cannot be modified',
+      'This dashboard is locked by a user with editor permissions or an administrator and cannot be modified',
   },
   lockedWidget: {
     id: 'LockedDashboardTooltip.lockedWidget',
