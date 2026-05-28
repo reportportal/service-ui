@@ -94,7 +94,7 @@ export const RallySettings = (props) => {
     onClick: editAuthorizationClickHandler,
   });
 
-  const { data, goToPreviousPage, isGlobal } = props;
+  const { data, goToPreviousPage, isGlobal, submitTrackEvent, deleteConfirmTrackEvent } = props;
   return (
     <IntegrationSettings
       data={data}
@@ -105,6 +105,8 @@ export const RallySettings = (props) => {
       editAuthConfig={getEditAuthConfig()}
       isGlobal={isGlobal}
       isEmptyConfiguration={!data.integrationParameters.defectFormFields?.length}
+      submitTrackEvent={submitTrackEvent}
+      deleteConfirmTrackEvent={deleteConfirmTrackEvent}
     />
   );
 };
@@ -114,6 +116,8 @@ RallySettings.propTypes = {
   goToPreviousPage: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
   isGlobal: PropTypes.bool,
+  submitTrackEvent: PropTypes.object,
+  deleteConfirmTrackEvent: PropTypes.func,
 };
 
 RallySettings.defaultProps = {

@@ -260,10 +260,32 @@ export const PROJECT_SETTINGS_INTEGRATION = {
     type: normalizeEventString(type),
   }),
 
-  CLICK_RESET_TO_GLOBAL_INTEGRATION: {
+  CLICK_SUBMIT_CONFIGURATION: (type) => ({
+    ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
+    element_name: 'submit',
+    place: 'configuration_view',
+    type: normalizeEventParameter(type),
+  }),
+
+  CLICK_RESET_TO_GLOBAL_INTEGRATION: (type) => ({
     ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
     element_name: 'button_reset',
-  },
+    type: normalizeEventParameter(type),
+  }),
+
+  CLICK_RESET_CONFIRM: (type) => ({
+    ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
+    element_name: 'button_reset',
+    modal: 'reset_to_global_integration',
+    type: normalizeEventParameter(type),
+  }),
+
+  CLICK_DELETE_CONFIRM: (type) => ({
+    ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
+    element_name: 'button_delete',
+    modal: 'delete_integration',
+    type: normalizeEventParameter(type),
+  }),
 };
 
 export const PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS = {

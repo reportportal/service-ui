@@ -88,6 +88,7 @@ export class ConnectionSection extends Component {
     editAuthConfig: PropTypes.object,
     pluginName: PropTypes.string,
     isEditable: PropTypes.bool.isRequired,
+    deleteConfirmTrackEvent: PropTypes.func,
     data: PropTypes.shape({
       creationDate: PropTypes.number,
       creator: PropTypes.string,
@@ -106,18 +107,21 @@ export class ConnectionSection extends Component {
     connected: true,
     editAuthConfig: null,
     pluginName: null,
+    deleteConfirmTrackEvent: null,
   };
 
   removeIntegrationHandler = () => {
     const {
       intl: { formatMessage },
       data,
+      deleteConfirmTrackEvent,
     } = this.props;
 
     this.props.showModalAction({
       id: 'deleteIntegrationModal',
       data: {
         onConfirm: this.props.onRemoveIntegration,
+        onConfirmTrackEvent: deleteConfirmTrackEvent || undefined,
         modalTitle: formatMessage(messages.deleteIntegrationTitle, { name: data.name }),
         description: formatMessage(messages.deleteIntegrationDescription, { name: data.name }),
       },

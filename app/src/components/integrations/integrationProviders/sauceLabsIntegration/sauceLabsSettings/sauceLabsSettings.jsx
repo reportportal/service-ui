@@ -18,13 +18,22 @@ import PropTypes from 'prop-types';
 import { IntegrationSettings } from 'components/integrations/elements';
 import { SauceLabsFormFields } from '../sauceLabsFormFields';
 
-export const SauceLabsSettings = ({ data, goToPreviousPage, onUpdate, isGlobal }) => (
+export const SauceLabsSettings = ({
+  data,
+  goToPreviousPage,
+  onUpdate,
+  isGlobal,
+  submitTrackEvent,
+  deleteConfirmTrackEvent,
+}) => (
   <IntegrationSettings
     data={data}
     onUpdate={onUpdate}
     goToPreviousPage={goToPreviousPage}
     isGlobal={isGlobal}
     formFieldsComponent={SauceLabsFormFields}
+    submitTrackEvent={submitTrackEvent}
+    deleteConfirmTrackEvent={deleteConfirmTrackEvent}
   />
 );
 
@@ -33,6 +42,8 @@ SauceLabsSettings.propTypes = {
   goToPreviousPage: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
   isGlobal: PropTypes.bool,
+  submitTrackEvent: PropTypes.object,
+  deleteConfirmTrackEvent: PropTypes.func,
 };
 SauceLabsSettings.defaultProps = {
   isGlobal: false,

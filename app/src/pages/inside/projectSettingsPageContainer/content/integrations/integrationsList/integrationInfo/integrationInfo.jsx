@@ -299,6 +299,8 @@ export const IntegrationInfo = (props) => {
         id: 'deleteIntegrationModal',
         data: {
           onConfirm: resetProjectIntegrations,
+          onConfirmTrackEvent: () =>
+            trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_RESET_CONFIRM(pluginName)),
           modalTitle: showOrganizationalIntegrations
             ? formatMessage(messages.resetIntegrationsToOrganizational)
             : formatMessage(messages.resetIntegrations),
@@ -309,7 +311,7 @@ export const IntegrationInfo = (props) => {
         },
       }),
     );
-    trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_RESET_TO_GLOBAL_INTEGRATION);
+    trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_RESET_TO_GLOBAL_INTEGRATION(pluginName));
   };
 
   const handleDocumentationClick = () => {
@@ -429,6 +431,10 @@ export const IntegrationInfo = (props) => {
               silentOnError={false}
               isGlobal={integrationInfo.isGlobal}
               isOrganizational={integrationInfo.isOrganizational}
+              submitTrackEvent={PROJECT_SETTINGS_INTEGRATION.CLICK_SUBMIT_CONFIGURATION(pluginName)}
+              deleteConfirmTrackEvent={() =>
+                trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_DELETE_CONFIRM(pluginName))
+              }
             />
           </div>
         </>

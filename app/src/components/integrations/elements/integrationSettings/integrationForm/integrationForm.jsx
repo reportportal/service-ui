@@ -64,6 +64,7 @@ export class IntegrationForm extends Component {
     pluginName: PropTypes.string.isRequired,
     isEditable: PropTypes.bool.isRequired,
     isGlobal: PropTypes.bool,
+    submitTrackEvent: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -72,6 +73,7 @@ export class IntegrationForm extends Component {
 
   static defaultProps = {
     isGlobal: false,
+    submitTrackEvent: null,
   };
 
   state = {
@@ -100,7 +102,8 @@ export class IntegrationForm extends Component {
     );
 
     this.props.tracking.trackEvent(
-      PLUGINS_PAGE_EVENTS.pluginConfigureClickSubmit(this.props.pluginName),
+      this.props.submitTrackEvent ||
+        PLUGINS_PAGE_EVENTS.pluginConfigureClickSubmit(this.props.pluginName),
     );
   };
 
