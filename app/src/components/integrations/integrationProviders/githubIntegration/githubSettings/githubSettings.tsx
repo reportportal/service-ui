@@ -26,8 +26,6 @@ export interface GithubSettingsProps {
     metaData: Record<string, unknown>,
   ) => void;
   isGlobal: boolean;
-  submitTrackEvent?: object;
-  deleteConfirmTrackEvent?: () => void;
 }
 
 export const GithubSettings = ({
@@ -35,8 +33,6 @@ export const GithubSettings = ({
   goToPreviousPage,
   onUpdate,
   isGlobal,
-  submitTrackEvent,
-  deleteConfirmTrackEvent,
 }: GithubSettingsProps) => {
   return (
     <IntegrationSettings
@@ -46,8 +42,6 @@ export const GithubSettings = ({
       isGlobal={isGlobal}
       formFieldsComponent={GithubFormFields}
       preventTestConnection
-      submitTrackEvent={submitTrackEvent}
-      deleteConfirmTrackEvent={deleteConfirmTrackEvent}
     />
   );
 };

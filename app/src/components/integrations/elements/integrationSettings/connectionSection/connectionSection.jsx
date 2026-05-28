@@ -29,6 +29,7 @@ import TrashBin from 'common/img/newIcons/bin-inline.svg';
 import Tick from 'common/img/newIcons/tick-inline.svg';
 import ErrorIcon from 'common/img/newIcons/error-inline.svg';
 import styles from './connectionSection.scss';
+import { IntegrationAnalyticsContext } from 'components/integrations/integrationAnalyticsContext';
 
 const cx = classNames.bind(styles);
 
@@ -88,7 +89,6 @@ export class ConnectionSection extends Component {
     editAuthConfig: PropTypes.object,
     pluginName: PropTypes.string,
     isEditable: PropTypes.bool.isRequired,
-    deleteConfirmTrackEvent: PropTypes.func,
     data: PropTypes.shape({
       creationDate: PropTypes.number,
       creator: PropTypes.string,
@@ -107,21 +107,23 @@ export class ConnectionSection extends Component {
     connected: true,
     editAuthConfig: null,
     pluginName: null,
-    deleteConfirmTrackEvent: null,
   };
+
+  static contextType = IntegrationAnalyticsContext;
 
   removeIntegrationHandler = () => {
     const {
       intl: { formatMessage },
       data,
-      deleteConfirmTrackEvent,
     } = this.props;
 
     this.props.showModalAction({
       id: 'deleteIntegrationModal',
       data: {
         onConfirm: this.props.onRemoveIntegration,
-        onConfirmTrackEvent: deleteConfirmTrackEvent || undefined,
+        onConfirmTrackEvent: this.context?.deleteConfirmEvent
+          ? () => this.context.deleteConfirmEvent(this.props.pluginName)
+          : undefined,
         modalTitle: formatMessage(messages.deleteIntegrationTitle, { name: data.name }),
         description: formatMessage(messages.deleteIntegrationDescription, { name: data.name }),
       },

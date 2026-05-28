@@ -98,7 +98,7 @@ export const JiraSettings = (props) => {
     onClick: editAuthorizationClickHandler,
   });
 
-  const { data, goToPreviousPage, isGlobal, submitTrackEvent, deleteConfirmTrackEvent } = props;
+  const { data, goToPreviousPage, isGlobal } = props;
   return (
     <IntegrationSettings
       data={data}
@@ -109,8 +109,6 @@ export const JiraSettings = (props) => {
       editAuthConfig={getEditAuthConfig()}
       isGlobal={isGlobal}
       isEmptyConfiguration={!data.integrationParameters.defectFormFields?.length}
-      submitTrackEvent={submitTrackEvent}
-      deleteConfirmTrackEvent={deleteConfirmTrackEvent}
     />
   );
 };
@@ -120,8 +118,6 @@ JiraSettings.propTypes = {
   goToPreviousPage: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
   isGlobal: PropTypes.bool,
-  submitTrackEvent: PropTypes.object,
-  deleteConfirmTrackEvent: PropTypes.func,
 };
 
 JiraSettings.defaultProps = {

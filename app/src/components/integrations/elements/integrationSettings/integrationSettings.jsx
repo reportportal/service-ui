@@ -124,8 +124,6 @@ export const IntegrationSettings = (props) => {
     isEmptyConfiguration,
     formKey,
     isGlobal,
-    submitTrackEvent,
-    deleteConfirmTrackEvent,
   } = props;
   const pluginName = data.integrationType?.name;
   const isLdap = pluginName === LDAP;
@@ -146,7 +144,6 @@ export const IntegrationSettings = (props) => {
             data={data}
             isGlobal={isGlobal}
             isEditable={canUpdateSettings}
-            deleteConfirmTrackEvent={deleteConfirmTrackEvent}
           />
           {!isLdap && (
             <IntegrationForm
@@ -159,7 +156,6 @@ export const IntegrationSettings = (props) => {
               formFieldsComponent={formFieldsComponent}
               isEmptyConfiguration={isEmptyConfiguration}
               isEditable={canUpdateSettings}
-              submitTrackEvent={submitTrackEvent}
             />
           )}
         </>
@@ -177,8 +173,6 @@ IntegrationSettings.propTypes = {
   isEmptyConfiguration: PropTypes.bool,
   isGlobal: PropTypes.bool,
   formKey: PropTypes.string,
-  submitTrackEvent: PropTypes.object,
-  deleteConfirmTrackEvent: PropTypes.func,
 };
 IntegrationSettings.defaultProps = {
   editAuthConfig: null,
@@ -186,6 +180,4 @@ IntegrationSettings.defaultProps = {
   isEmptyConfiguration: false,
   isGlobal: false,
   formKey: INTEGRATION_FORM,
-  submitTrackEvent: null,
-  deleteConfirmTrackEvent: null,
 };

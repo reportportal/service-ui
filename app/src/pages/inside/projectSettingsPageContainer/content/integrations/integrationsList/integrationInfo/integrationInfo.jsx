@@ -45,6 +45,7 @@ import { ExtensionLoader } from 'components/extensionLoader';
 import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/settingsComponentsMap';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { PROJECT_SETTINGS_INTEGRATION } from 'analyticsEvents/projectSettingsPageEvents';
+import { IntegrationAnalyticsContext } from 'components/integrations/integrationAnalyticsContext';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { EMAIL } from 'common/constants/pluginNames';
 import { combineNameAndEmailToFrom, fetch } from 'common/utils';
@@ -64,6 +65,16 @@ export const IntegrationInfo = (props) => {
   const [updatedParameters, setUpdatedParameters] = useState({});
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
+
+  const integrationAnalyticsContextValue = useMemo(
+    () => ({
+      submitEvent: (pluginName) =>
+        trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_SUBMIT_CONFIGURATION(pluginName)),
+      deleteConfirmEvent: (pluginName) =>
+        trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_DELETE_CONFIRM(pluginName)),
+    }),
+    [trackEvent],
+  );
   const settingsExtensions = useSelector(uiExtensionIntegrationSettingsSelector);
   const { canUpdateSettings } = useUserPermissions();
   const globalIntegrations = useSelector(namedGlobalIntegrationsSelector);
@@ -422,20 +433,18 @@ export const IntegrationInfo = (props) => {
             documentationLinkEvent={integrationDetailDocumentationLinkEvent}
           />
           <div className={cx('integration-settings-block')}>
-            <IntegrationSettingsComponent
-              data={updatedData}
-              onUpdate={onUpdate}
-              goToPreviousPage={goToPluginIntegrationList}
-              extension={integrationSettingsExtension}
-              withPreloader
-              silentOnError={false}
-              isGlobal={integrationInfo.isGlobal}
-              isOrganizational={integrationInfo.isOrganizational}
-              submitTrackEvent={PROJECT_SETTINGS_INTEGRATION.CLICK_SUBMIT_CONFIGURATION(pluginName)}
-              deleteConfirmTrackEvent={() =>
-                trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_DELETE_CONFIRM(pluginName))
-              }
-            />
+            <IntegrationAnalyticsContext.Provider value={integrationAnalyticsContextValue}>
+              <IntegrationSettingsComponent
+                data={updatedData}
+                onUpdate={onUpdate}
+                goToPreviousPage={goToPluginIntegrationList}
+                extension={integrationSettingsExtension}
+                withPreloader
+                silentOnError={false}
+                isGlobal={integrationInfo.isGlobal}
+                isOrganizational={integrationInfo.isOrganizational}
+              />
+            </IntegrationAnalyticsContext.Provider>
           </div>
         </>
       )}

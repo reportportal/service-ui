@@ -18,14 +18,7 @@ import PropTypes from 'prop-types';
 import { IntegrationSettings } from 'components/integrations/elements';
 import { SamlFormFields } from '../samlFormFields';
 
-export const SamlSettings = ({
-  data,
-  goToPreviousPage,
-  onUpdate,
-  isGlobal,
-  submitTrackEvent,
-  deleteConfirmTrackEvent,
-}) => (
+export const SamlSettings = ({ data, goToPreviousPage, onUpdate, isGlobal }) => (
   <IntegrationSettings
     data={data}
     onUpdate={onUpdate}
@@ -33,8 +26,6 @@ export const SamlSettings = ({
     isGlobal={isGlobal}
     formFieldsComponent={SamlFormFields}
     preventTestConnection
-    submitTrackEvent={submitTrackEvent}
-    deleteConfirmTrackEvent={deleteConfirmTrackEvent}
   />
 );
 
@@ -43,8 +34,6 @@ SamlSettings.propTypes = {
   goToPreviousPage: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
   isGlobal: PropTypes.bool,
-  submitTrackEvent: PropTypes.object,
-  deleteConfirmTrackEvent: PropTypes.func,
 };
 SamlSettings.defaultProps = {
   isGlobal: false,
