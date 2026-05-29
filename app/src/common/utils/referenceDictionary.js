@@ -42,6 +42,16 @@ export const referenceDictionary = {
     'https://reportportal.io/docs/analysis/quality-gates/?utm_source=trigger&utm_medium=product&utm_campaign=promo_page&utm_content=qg',
   rpContactUsQG:
     'https://reportportal.io/contact-us/general/?utm_source=trigger&utm_medium=product&utm_campaign=premium_popup&utm_content=qg',
+  rpExploreBillingPlansTEP:
+    'https://reportportal.io/pricing/saas/?utm_source=trigger&utm_medium=product&utm_campaign=promo_page&utm_content=tep',
+  rpExplorePremiumFeaturesTEP:
+    'https://reportportal.io/docs/premium-features/?utm_source=trigger&utm_medium=product&utm_campaign=promo_page&utm_content=tep',
+  rpTestExecutionsDocsTEP:
+    'https://reportportal.io/docs/working-with-test-results/test-executions/?utm_source=trigger&utm_medium=product&utm_campaign=promo_page&utm_content=tep',
+  rpExplorePlansTEP:
+    'https://reportportal.io/pricing/saas/?utm_source=trigger&utm_medium=product&utm_campaign=premium_popup&utm_content=tep_page',
+  rpContactUsTEP:
+    'https://reportportal.io/contact-us/general/?utm_source=trigger&utm_medium=product&utm_campaign=premium_popup&utm_content=tep_page',
   rpExplorePlansOrg:
     'https://reportportal.io/pricing/saas/?utm_source=trigger&utm_medium=product&utm_campaign=premium_popup&utm_content=org',
   rpContactUsOrg:
