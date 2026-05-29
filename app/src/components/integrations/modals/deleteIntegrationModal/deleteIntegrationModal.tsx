@@ -32,6 +32,7 @@ const cx = createClassnames(styles);
 
 interface DeleteIntegrationModalData {
   onConfirm: () => void;
+  onConfirmTrackEvent?: () => void;
   modalTitle: ReactNode | string;
   description: ReactNode | string;
   okButtonLabel?: ReactNode | string;
@@ -44,6 +45,7 @@ const DeleteIntegrationModal = ({ data }: UseModalData<DeleteIntegrationModalDat
 
   const onDelete = () => {
     data.onConfirm();
+    data.onConfirmTrackEvent?.();
     dispatch(hideModalAction());
   };
 

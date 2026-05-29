@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useEffect, useState, useMemo, useCallback, ReactNode } from 'react';
+import { useEffect, useState, useMemo, useCallback, useContext, ReactNode } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { redirect } from 'redux-first-router';
 import { useIntl, defineMessages } from 'react-intl';
@@ -47,6 +47,7 @@ import { NamedIntegrations } from 'pages/inside/common/integrations/types';
 import { messages as integrationsMessages } from 'pages/inside/common/integrations/messages';
 import { DeleteIntegrationModal } from 'components/integrations/modals/deleteIntegrationModal';
 import AddIntegrationModal from 'components/integrations/modals/addIntegrationModal/addIntegrationModal';
+import { IntegrationAnalyticsContext } from 'components/integrations/integrationAnalyticsContext';
 
 import { IntegrationData } from '../types';
 import { EmailDetailsCard } from '../emailDetailsCard';
@@ -94,6 +95,7 @@ export function EmailSettings({
 }: EmailSettingsProps) {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
+  const analyticsContext = useContext(IntegrationAnalyticsContext);
   const [connected, setConnected] = useState(true);
   const [loading, setLoading] = useState(true);
 
@@ -202,6 +204,9 @@ export function EmailSettings({
 
     const modalData = {
       onConfirm: removeIntegration,
+      onConfirmTrackEvent: analyticsContext?.deleteConfirmEvent
+        ? () => analyticsContext.deleteConfirmEvent(data.integrationType?.name)
+        : undefined,
       modalTitle: formatMessage(messages.deleteIntegrationTitle),
       description: getDescription(),
     };

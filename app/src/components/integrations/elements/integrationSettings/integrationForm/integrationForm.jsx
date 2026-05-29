@@ -24,6 +24,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { Button } from '@reportportal/ui-kit';
 import { isIntegrationSupportsMultipleInstances } from 'components/integrations/utils';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { IntegrationAnalyticsContext } from 'components/integrations/integrationAnalyticsContext';
 import { removeNoneValues } from 'components/fields/dynamicFieldsSection/utils';
 import { trimStringValues } from 'common/utils';
 import styles from './integrationForm.scss';
@@ -74,6 +75,8 @@ export class IntegrationForm extends Component {
     isGlobal: false,
   };
 
+  static contextType = IntegrationAnalyticsContext;
+
   state = {
     disabled: !this.props.isEmptyConfiguration,
     metaData: {},
@@ -99,9 +102,13 @@ export class IntegrationForm extends Component {
       this.state.metaData,
     );
 
-    this.props.tracking.trackEvent(
-      PLUGINS_PAGE_EVENTS.pluginConfigureClickSubmit(this.props.pluginName),
-    );
+    if (this.context?.submitEvent) {
+      this.context.submitEvent(this.props.pluginName);
+    } else {
+      this.props.tracking.trackEvent(
+        PLUGINS_PAGE_EVENTS.pluginConfigureClickSubmit(this.props.pluginName),
+      );
+    }
   };
 
   updateMetaData = (metaData) => {
