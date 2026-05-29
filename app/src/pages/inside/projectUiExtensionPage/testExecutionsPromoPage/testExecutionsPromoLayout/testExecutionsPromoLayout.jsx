@@ -79,6 +79,7 @@ export const TestExecutionsPromoLayout = ({
                 adjustWidthOn="content"
                 icon={<PlusIcon />}
                 className={cx('add-attribute-button')}
+                disabled
               >
                 {formatMessage(messages.addAttribute)}
               </Button>

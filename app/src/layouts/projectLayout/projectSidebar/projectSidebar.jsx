@@ -62,6 +62,7 @@ import { messages } from '../../messages';
 
 const ORGANIZATION_CONTROL = 'Organization control';
 const TEST_EXECUTIONS_SLUG = 'testExecution';
+const TEST_EXECUTIONS_MENU_ORDER = 25;
 
 export const ProjectSidebar = ({ onClickNavBtn }) => {
   const { trackEvent } = useTracking();
@@ -114,7 +115,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         },
         icon: TestExecutionsIcon,
         message: formatMessage(messages.testExecutions),
-        menuOrder: 25,
+        menuOrder: (menuCounter = TEST_EXECUTIONS_MENU_ORDER),
       },
       {
         onClick: (isSidebarCollapsed) =>
