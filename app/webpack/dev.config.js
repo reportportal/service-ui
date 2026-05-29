@@ -93,12 +93,6 @@ module.exports = () => {
       port: 3000,
       proxy: [
         {
-          context: ['/api/v1/plugin/public/test-execution/'],
-          target: 'http://localhost:9090',
-          changeOrigin: true,
-          pathRewrite: { '^/api/v1/plugin/public/test-execution/file': '' },
-        },
-        {
           context: ['/composite', '/api/'],
           target: process.env.PROXY_PATH,
           changeOrigin: true,
