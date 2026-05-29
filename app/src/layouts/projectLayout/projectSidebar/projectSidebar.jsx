@@ -53,6 +53,7 @@ import SettingsIcon from 'common/img/sidebar/settings-icon-inline.svg';
 import ProductVersionsIcon from 'common/img/sidebar/product-versions-inline.svg';
 import TestCaseIcon from 'common/img/sidebar/test-case-icon-inline.svg';
 import MilestonesIcon from 'common/img/sidebar/milestones-icon-inline.svg';
+import TestExecutionsIcon from 'common/img/sidebar/test-executions-icon-inline.svg';
 import { projectNameSelector } from 'controllers/project';
 import { activeOrganizationNameSelector } from 'controllers/organization';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
@@ -60,6 +61,8 @@ import { getTmsOverride } from 'controllers/appInfo/utils';
 import { messages } from '../../messages';
 
 const ORGANIZATION_CONTROL = 'Organization control';
+const TEST_EXECUTIONS_SLUG = 'testExecution';
+const TEST_EXECUTIONS_MENU_ORDER = 25;
 
 export const ProjectSidebar = ({ onClickNavBtn }) => {
   const { trackEvent } = useTracking();
@@ -102,6 +105,17 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         icon: LaunchesIcon,
         message: formatMessage(messages.launches),
         menuOrder: (menuCounter += menuStep),
+      },
+      {
+        onClick: (isSidebarCollapsed) =>
+          onClickButton({ itemName: messages.testExecutions.defaultMessage, isSidebarCollapsed }),
+        link: {
+          type: PROJECT_PLUGIN_PAGE,
+          payload: { organizationSlug, projectSlug, pluginPage: TEST_EXECUTIONS_SLUG },
+        },
+        icon: TestExecutionsIcon,
+        message: formatMessage(messages.testExecutions),
+        menuOrder: (menuCounter = TEST_EXECUTIONS_MENU_ORDER),
       },
       {
         onClick: (isSidebarCollapsed) =>
@@ -209,6 +223,9 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
     const pluginPageItems = projectPageExtensions.flatMap(
       ({ payload, pluginName, name: extensionName, url }) => {
         const { icon, slug, name, title, iconName, menuOrder } = payload;
+        if ((slug || name) === TEST_EXECUTIONS_SLUG) {
+          return [];
+        }
         const iconSvg = icon?.content || icon?.svg;
         const itemTitle = title || icon?.title || name;
         if (!iconSvg) {

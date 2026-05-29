@@ -1,0 +1,189 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  overflow-y: auto;
+}
+
+.page-header {
+  box-sizing: border-box;
+  border-bottom: none;
+}
+
+.disabled-controls {
+  opacity: 0.4;
+  pointer-events: none;
+  user-select: none;
+}
+
+.location-header {
+  border-bottom: none;
+  position: static;
+  background: none;
+}
+
+.header-actions {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.header-filters {
+  display: flex;
+  gap: 16px;
+  padding: 0 32px 12px;
+  align-items: flex-end;
+}
+
+.filter-start-time {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filter-label {
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: var(--rp-ui-base-fw-medium);
+  color: var(--rp-ui-base-almost-black);
+}
+
+.filter-dropdown {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 240px;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--rp-ui-base-e-200);
+  border-radius: 4px;
+  background: var(--rp-ui-base-bg-000);
+  box-sizing: border-box;
+  gap: 8px;
+}
+
+.filter-dropdown-value {
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 13px;
+  color: var(--rp-ui-base-almost-black);
+}
+
+.filter-dropdown-arrow {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid var(--rp-ui-base-e-300);
+  flex-shrink: 0;
+}
+
+.filter-names {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filter-input {
+  display: flex;
+  align-items: center;
+  width: 280px;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--rp-ui-base-e-200);
+  border-radius: 4px;
+  background: var(--rp-ui-base-bg-000);
+  box-sizing: border-box;
+}
+
+.filter-input-placeholder {
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 13px;
+  color: var(--rp-ui-base-e-300);
+}
+
+.filter-attributes {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filter-attribute {
+  display: flex;
+  align-items: center;
+  width: 280px;
+  height: 36px;
+  padding: 0 12px 0 0;
+  border: none;
+  box-sizing: border-box;
+}
+
+.filter-add-attribute {
+  text-transform: capitalize;
+}
+
+.promo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  font-family: var(--rp-ui-base-font-family-heading);
+  font-weight: var(--rp-ui-base-fw-regular);
+  font-size: 32px;
+  line-height: 42px;
+  margin-top: 55px;
+  color: var(--rp-ui-base-e-400);
+}
+
+.description {
+  margin-top: 15px;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
+  font-size: 13px;
+  line-height: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  max-width: 445px;
+  color: var(--rp-ui-base-almost-black);
+}
+
+.start-button-box {
+  width: 144px;
+  margin-top: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.start-button {
+  width: 100%;
+}
+
+.bg-image {
+  margin-top: -20px;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 735 / 477;
+}
+
+.footer {
+  margin-top: -90px;
+  margin-bottom: 88px;
+}
