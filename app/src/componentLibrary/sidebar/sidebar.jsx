@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-import React, { useRef, useState, useCallback, useEffect } from 'react';
+import React, { useRef, useState, useCallback, useEffect, useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { Popover } from '@reportportal/ui-kit';
 import { useOnClickOutside } from 'common/hooks';
 import { SidebarButton } from './sidebarButton';
+import { ShowMoreButton } from './showMoreButton';
 import styles from './sidebar.scss';
 
 const cx = classNames.bind(styles);
@@ -28,6 +30,7 @@ const SIDEBAR_FULL_WIDTH_PX = 328;
 const SIDEBAR_TRANSITION_DELAY_MS = 500;
 const SIDEBAR_TRANSITION_DURATION_MS = 300;
 const SIDEBAR_OPEN_DURATION_MS = SIDEBAR_TRANSITION_DELAY_MS + SIDEBAR_TRANSITION_DURATION_MS;
+const DEFAULT_ITEM_HEIGHT_PX = 40;
 
 const SIDEBAR_CSS_VARS = {
   '--sidebar-collapsed-width': `${COLLAPSED_WIDTH_PX}px`,
@@ -60,10 +63,69 @@ export const Sidebar = ({
   shouldBeCollapsedOnLeave,
 }) => {
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(items.length);
+  const [isShowMorePopoverOpen, setIsShowMorePopoverOpen] = useState(false);
 
   const sidebarRef = useRef(null);
   const openTimerRef = useRef(null);
   const openRequestIdRef = useRef(0);
+  const itemsBlockRef = useRef(null);
+  const itemRefsMap = useRef(new Map());
+  const showMoreRef = useRef(null);
+
+  const setItemRef = useCallback((key, element) => {
+    if (element) {
+      itemRefsMap.current.set(key, element);
+    } else {
+      itemRefsMap.current.delete(key);
+    }
+  }, []);
+
+  const calculateLayout = useCallback(() => {
+    const container = itemsBlockRef.current;
+    if (!container || items.length === 0) {
+      return;
+    }
+
+    const availableHeight = container.offsetHeight;
+    const itemHeights = items.map((item) => {
+      const element = itemRefsMap.current.get(getSidebarItemKey(item));
+      return element?.offsetHeight || DEFAULT_ITEM_HEIGHT_PX;
+    });
+    const showMoreHeight = showMoreRef.current?.offsetHeight || DEFAULT_ITEM_HEIGHT_PX;
+
+    const totalHeight = itemHeights.reduce((sum, h) => sum + h, 0);
+    if (totalHeight <= availableHeight) {
+      setVisibleCount(items.length);
+      setIsShowMorePopoverOpen(false);
+      return;
+    }
+
+    for (let count = items.length - 1; count >= 0; count -= 1) {
+      const neededHeight =
+        itemHeights.slice(0, count).reduce((sum, h) => sum + h, 0) + showMoreHeight;
+      if (neededHeight <= availableHeight) {
+        setVisibleCount(count);
+        return;
+      }
+    }
+    setVisibleCount(0);
+  }, [items]);
+
+  // Sync calc before paint to avoid a brief flash of ShowMore on mount / when items change.
+  useLayoutEffect(() => {
+    calculateLayout();
+  }, [calculateLayout]);
+
+  useEffect(() => {
+    const container = itemsBlockRef.current;
+    if (!container) {
+      return undefined;
+    }
+    const resizeObserver = new ResizeObserver(() => calculateLayout());
+    resizeObserver.observe(container);
+    return () => resizeObserver.disconnect();
+  }, [calculateLayout]);
 
   const onCloseSidebar = () => {
     openRequestIdRef.current += 1;
@@ -85,13 +147,50 @@ export const Sidebar = ({
     setIsOpenSidebar(true);
   };
 
-  const onLeaveSidebar = () => {
+  const collapseSidebarOnLeave = () => {
     if (shouldBeCollapsedOnLeave) {
       onCloseSidebar();
     }
   };
 
+  const onLeaveSidebar = () => {
+    if (!isShowMorePopoverOpen) {
+      collapseSidebarOnLeave();
+    }
+  };
+
   const getIsSidebarCollapsed = () => COLLAPSED_WIDTH_PX === sidebarRef.current?.offsetWidth;
+
+  const renderItem = (item, isInPopover = false) => {
+    const { icon, link, message, component } = item;
+    const itemKey = getSidebarItemKey(item);
+    const handleClick = () => {
+      item.onClick?.(getIsSidebarCollapsed());
+      if (isInPopover) {
+        setIsShowMorePopoverOpen(false);
+      }
+      collapseSidebarOnLeave();
+    };
+
+    return component ? (
+      <button
+        type="button"
+        key={itemKey}
+        className={cx('custom-item-button')}
+        onClick={handleClick}
+      >
+        {component}
+      </button>
+    ) : (
+      <SidebarButton
+        key={itemKey}
+        icon={icon}
+        link={link}
+        onClick={handleClick}
+        message={message}
+      />
+    );
+  };
 
   const afterOpenSidebar = (callback) => {
     const el = sidebarRef.current;
@@ -158,37 +257,49 @@ export const Sidebar = ({
           {createMainBlock(onOpenSidebar, onCloseSidebar, getIsSidebarCollapsed, afterOpenSidebar)}
         </div>
         {items.length > 0 && (
-          <div className={cx('items-block')}>
-            {items.map(({ icon, link, onClick, message, component, name }) => {
-              const itemKey = getSidebarItemKey({ name, link, message });
-              const handleClick = () => {
-                onClick(getIsSidebarCollapsed());
-                onLeaveSidebar();
-              };
+          <div ref={itemsBlockRef} className={cx('items-block')}>
+            {items.map((item, idx) => {
+              const itemKey = getSidebarItemKey(item);
+              const isHidden = idx >= visibleCount;
 
-              return component ? (
-                <button
+              return (
+                <div
                   key={itemKey}
-                  type="button"
-                  className={cx('custom-item-button')}
-                  onClick={handleClick}
+                  ref={(el) => setItemRef(itemKey, el)}
+                  className={cx('item-wrapper', { hidden: isHidden })}
                 >
-                  {component}
-                </button>
-              ) : (
-                <SidebarButton
-                  key={itemKey}
-                  icon={icon}
-                  link={link}
-                  onClick={handleClick}
-                  message={message}
-                />
+                  {renderItem(item)}
+                </div>
               );
             })}
+            <div
+              ref={showMoreRef}
+              className={cx('show-more-wrapper', { hidden: visibleCount >= items.length })}
+            >
+              <Popover
+                className={cx('show-more-popover')}
+                placement="right-start"
+                isOpened={isShowMorePopoverOpen}
+                setIsOpened={setIsShowMorePopoverOpen}
+                strategy="fixed"
+                content={
+                  <div className={cx('show-more-content')}>
+                    {items.slice(visibleCount).map((item) => renderItem(item, true))}
+                  </div>
+                }
+              >
+                <ShowMoreButton isActive={isShowMorePopoverOpen} />
+              </Popover>
+            </div>
           </div>
         )}
         <div className={cx('footer-block')}>
-          {createFooterBlock(onOpenSidebar, onCloseSidebar, getIsSidebarCollapsed, afterOpenSidebar)}
+          {createFooterBlock(
+            onOpenSidebar,
+            onCloseSidebar,
+            getIsSidebarCollapsed,
+            afterOpenSidebar,
+          )}
         </div>
       </aside>
     </div>

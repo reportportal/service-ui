@@ -16,11 +16,10 @@
 
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
+import { ArrowRightIcon } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
 import HelpIcon from 'common/img/help-inline.svg';
-
-import ArrowRightIcon from '../img/arrow-right-inline.svg';
 
 import styles from './previewPopover.scss';
 
@@ -42,7 +41,7 @@ export const PreviewPopover = ({ title, isFaqTouched, onClick }: PreviewPopoverP
         <div className={cx('content')}>
           <span className={cx('title')}>{title}</span>
           <div className={cx('arrow-icon', { untouched: !isFaqTouched })}>
-            {Parser(ArrowRightIcon)}
+            <ArrowRightIcon />
           </div>
         </div>
       </div>
