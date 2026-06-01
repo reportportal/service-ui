@@ -130,6 +130,7 @@ export const Sidebar = ({
   const onCloseSidebar = () => {
     openRequestIdRef.current += 1;
     clearTimeout(openTimerRef.current);
+    setIsShowMorePopoverOpen(false);
     setIsOpenSidebar(false);
   };
 
