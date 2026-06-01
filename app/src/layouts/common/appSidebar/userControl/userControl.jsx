@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import { Popover } from '@reportportal/ui-kit';
+import { ArrowRightIcon, Popover } from '@reportportal/ui-kit';
 import { useSelector } from 'react-redux';
-import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
@@ -24,7 +23,6 @@ import { userInfoSelector, photoTimeStampSelector } from 'controllers/user';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { ProfileMenu } from './profileMenu';
-import ArrowRightIcon from '../img/arrow-right-inline.svg';
 import styles from './userControl.scss';
 
 const cx = classNames.bind(styles);
@@ -54,7 +52,7 @@ const UserControl = ({ onClick }) => {
                   <FormattedMessage id={'UserBlock.adminBadge'} defaultMessage={'admin'} />
                 </div>
               )}
-              {Parser(ArrowRightIcon)}
+              <ArrowRightIcon />
             </div>
           </div>
           <div className={cx('user-email')}>{email}</div>

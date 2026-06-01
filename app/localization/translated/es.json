@@ -2350,7 +2350,7 @@
   "Sidebar.membersBtn": "Project Team",
   "Sidebar.services.requestService": "Request professional service",
   "Sidebar.settingsBtn": "Project Settings",
-  "Sidebar.testExecutionsBtn": "Test executions",
+  "Sidebar.showMore": "Mostrar más",
   "SimilarItems.searchLogsMinShouldMatch": "El mínimo debe coincidir con elementos similares de To Investigate",
   "SimilarItems.searchLogsMinShouldMatchDescription": "Porcentaje de coincidencia de palabras entre el registro del elemento de prueba en cuestión y el registro del elemento To Investigate en el motor de búsqueda. Si el registro del motor de búsqueda tiene un valor inferior al establecido, este registro no se mostrará en la sección de elementos similares de To Investigate",
   "SimilarItems.tabDescription": "Además de los problemas conocidos con los tipos de defectos seleccionados, puede haber problemas con una causa similar, marcada como tipos de defectos \"To investigate\". Todos estos elementos se muestran en la sección \"Similar a To investigate\" en el editor de defectos modal. Puede leer más información sobre elementos similares en la <a>Documentación</a>",

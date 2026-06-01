@@ -41,7 +41,7 @@
   padding: 16px 0px 24px 0;
   box-sizing: border-box;
   height: 100%;
-  gap: 32px;
+  gap: 8px;
   background-image: linear-gradient(
     to right,
     $COLOR--darkmode-gray-500 0 var(--sidebar-collapsed-width),
@@ -62,11 +62,52 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.item-wrapper,
+.show-more-wrapper {
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.show-more-wrapper {
+  display: flex;
+  align-items: center;
+
+  & > div:first-child {
+    width: 100%;
+  }
+}
+
+.hidden {
+  visibility: hidden;
+  position: absolute;
+  pointer-events: none;
+}
+
+.show-more-popover {
+  padding: 8px 0;
+  background-color: var(--rp-ui-base-dark-e-450);
+
+  & > svg {
+    fill: var(--rp-ui-base-dark-e-450);
+  }
+}
+
+.show-more-content {
+  display: flex;
+  flex-direction: column;
+  min-width: 240px;
 }
 
 .custom-item-button {
   display: block;
   width: 100%;
+  flex-shrink: 0;
   margin: 0;
   padding: 0;
   border: 0;
@@ -136,8 +177,6 @@
   display: flex;
   flex-direction: column;
   align-items: start;
-  justify-content: end;
-  flex-grow: 1;
   gap: 8px;
   width: 100%;
 }
