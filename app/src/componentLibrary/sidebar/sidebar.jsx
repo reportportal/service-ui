@@ -281,7 +281,14 @@ export const Sidebar = ({
                 className={cx('show-more-popover')}
                 placement="right-start"
                 isOpened={isShowMorePopoverOpen}
-                setIsOpened={setIsShowMorePopoverOpen}
+                setIsOpened={(open) => {
+                  if (open) {
+                    onOpenSidebar();
+                    afterOpenSidebar(() => setIsShowMorePopoverOpen(true));
+                  } else {
+                    setIsShowMorePopoverOpen(false);
+                  }
+                }}
                 strategy="fixed"
                 content={
                   <div className={cx('show-more-content')}>
