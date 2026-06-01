@@ -29,6 +29,7 @@ import {
   querySelector,
   urlOrganizationAndProjectSelector,
 } from 'controllers/pages';
+import { organizationIntegrationsLoadingSelector } from 'controllers/organization';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { redirect } from 'redux-first-router';
 import { IntegrationInfo } from './integrationsList/integrationInfo';
@@ -39,6 +40,7 @@ const cx = classNames.bind(styles);
 
 export const Integrations = () => {
   const loading = useSelector(pluginsLoadingSelector);
+  const integrationsLoading = useSelector(organizationIntegrationsLoadingSelector);
   const availableGroupedPlugins = useSelector(availableGroupedPluginsSelector);
   const plugins = useSelector(availablePluginsSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
@@ -58,7 +60,7 @@ export const Integrations = () => {
   );
 
   useEffect(() => {
-    if (loading || !query.subPage) {
+    if (loading || integrationsLoading || !query.subPage) {
       return undefined;
     }
 
@@ -70,12 +72,12 @@ export const Integrations = () => {
       } else {
         dispatch(redirect(initialPage));
       }
-    }
+    };
 
     definePlugin();
-  }, [query, plugins, loading, dispatch, initialPage]);
+  }, [query, plugins, loading, integrationsLoading, dispatch, initialPage]);
 
-  if (loading) {
+  if (loading || integrationsLoading) {
     return <BubblesLoader className={cx('preloader')} />;
   }
   const onItemClick = (pluginData) => {

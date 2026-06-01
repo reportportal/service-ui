@@ -33,6 +33,7 @@ export const CREATE_ORGANIZATION = 'createOrganization';
 export const RENAME_ORGANIZATION = 'renameOrganization';
 
 export const FETCH_ORGANIZATION_INTEGRATIONS = 'fetchOrganizationIntegrations';
+export const SET_ORGANIZATION_INTEGRATIONS_LOADING = 'setOrganizationIntegrationsLoading';
 
 export const ERROR_CODES = {
   ORGANIZATION_EXISTS: [4091, 4095, 40016],

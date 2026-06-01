@@ -28,6 +28,7 @@ export {
   activeOrganizationIdSelector,
   activeOrganizationSettingsSelector,
   activeOrganizationLoadingSelector,
+  organizationIntegrationsLoadingSelector,
   activeOrganizationTypeSelector,
 } from './selectors';
 export { organizationSagas } from './sagas';
