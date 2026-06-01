@@ -24,6 +24,7 @@ import {
   CREATE_ORGANIZATION,
   RENAME_ORGANIZATION,
   FETCH_ORGANIZATION_INTEGRATIONS,
+  SET_ORGANIZATION_INTEGRATIONS_LOADING,
 } from './constants';
 
 export const prepareActiveOrganizationProjectsAction = (payload) => ({
@@ -69,4 +70,9 @@ export const renameOrganizationAction = (organizationId, newOrganizationName, on
 export const fetchOrganizationIntegrationsAction = (organizationId) => ({
   type: FETCH_ORGANIZATION_INTEGRATIONS,
   payload: { organizationId },
+});
+
+export const setOrganizationIntegrationsLoadingAction = (loading) => ({
+  type: SET_ORGANIZATION_INTEGRATIONS_LOADING,
+  payload: loading,
 });

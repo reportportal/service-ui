@@ -47,6 +47,7 @@ import { withActiveOrganization } from './withActiveOrganizationSaga';
 import {
   fetchOrganizationIntegrationsAction,
   updateOrganizationSettingsSuccessAction,
+  setOrganizationIntegrationsLoadingAction,
 } from './actionCreators';
 import { activeOrganizationIdSelector } from './selectors';
 
@@ -192,12 +193,15 @@ function* watchRenameOrganization() {
 
 function* fetchOrganizationIntegrations({ payload: { organizationId } }) {
   try {
+    yield put(setOrganizationIntegrationsLoadingAction(true));
     const response = yield call(fetch, URLS.organizationIntegrations(organizationId));
     const rawItems = Array.isArray(response?.items) ? response.items : [];
     const items = rawItems.map((item) => normalizeIntegrationItem(item));
     yield put(setOrganizationIntegrationsAction(items));
   } catch (error) {
     yield put(showDefaultErrorNotification(error));
+  } finally {
+    yield put(setOrganizationIntegrationsLoadingAction(false));
   }
 }
 

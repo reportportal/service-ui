@@ -23,7 +23,8 @@ import { BubblesLoader, Button, DeleteIcon } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { omit } from 'common/utils/omit';
 import {
-  urlOrganizationAndProjectSelector,
+  urlOrganizationSlugSelector,
+  urlProjectSlugSelector,
   querySelector,
   PROJECT_SETTINGS_TAB_PAGE,
   ORGANIZATION_SETTINGS_TAB_PAGE,
@@ -104,9 +105,8 @@ export function EmailSettings({
     namedOrganizationIntegrationsSelector,
   );
   const projectIntegrations: NamedIntegrations = useSelector(namedProjectIntegrationsSelector);
-  const { organizationSlug, projectSlug } = useSelector(
-    urlOrganizationAndProjectSelector,
-  ) as Record<string, string>;
+  const organizationSlug = useSelector(urlOrganizationSlugSelector);
+  const projectSlug = useSelector(urlProjectSlugSelector);
   const projectKey = useSelector(projectKeySelector);
   const organizationId = useSelector(activeOrganizationIdSelector);
   const { canUpdateSettings, canUpdateOrganizationSettings } = useUserPermissions();

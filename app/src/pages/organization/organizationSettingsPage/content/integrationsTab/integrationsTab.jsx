@@ -39,7 +39,10 @@ import {
   urlOrganizationSlugSelector,
 } from 'controllers/pages';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
-import { activeOrganizationLoadingSelector } from 'controllers/organization';
+import {
+  activeOrganizationLoadingSelector,
+  organizationIntegrationsLoadingSelector,
+} from 'controllers/organization';
 
 import { messages } from './messages';
 import { IntegrationInfo } from './integrationInfo';
@@ -56,6 +59,7 @@ export const IntegrationsTab = () => {
   const availableGroupedPlugins = useSelector(availableGroupedPluginsSelector);
   const loading = useSelector(pluginsLoadingSelector);
   const organizationLoading = useSelector(activeOrganizationLoadingSelector);
+  const integrationsLoading = useSelector(organizationIntegrationsLoadingSelector);
   const query = useSelector(querySelector);
   const [plugin, setPlugin] = useState({});
 
@@ -85,7 +89,7 @@ export const IntegrationsTab = () => {
   );
 
   useEffect(() => {
-    if (loading || organizationLoading || !query.subPage) {
+    if (loading || organizationLoading || integrationsLoading || !query.subPage) {
       return undefined;
     }
 
@@ -100,7 +104,7 @@ export const IntegrationsTab = () => {
     };
 
     definePlugin();
-  }, [query, plugins, initialPage, dispatch, loading, organizationLoading]);
+  }, [query, plugins, initialPage, dispatch, loading, organizationLoading, integrationsLoading]);
 
   const hasIntegrations = Object.keys(availableIntegrations).length > 0;
 
@@ -117,7 +121,7 @@ export const IntegrationsTab = () => {
     setPlugin(pluginData);
   };
 
-  if (loading || organizationLoading) {
+  if (loading || organizationLoading || integrationsLoading) {
     return (
       <div className={cx('loader')}>
         <BubblesLoader variant="large" />
