@@ -42,7 +42,7 @@ const messages = defineMessages({
   },
   previewDescription: {
     id: 'LinksAndBrandingTab.previewDescription',
-    defaultMessage: `You can configure the necessary links in the sidebar 'Help and Service versions' block of the application.`,
+    defaultMessage: `You can configure the necessary links in the sidebar 'Help & Service versions' block of the application.`,
   },
   deleteLinkHeader: {
     id: 'DeleteLinkDialog.deleteLinkHeader',

@@ -60,7 +60,7 @@ export const messages = defineMessages({
   },
   helpAndServiceVersions: {
     id: 'Service.helpAndServiceVersions',
-    defaultMessage: 'Help and Service versions',
+    defaultMessage: 'Help & Service versions',
   },
   FAQ: {
     id: 'Service.FAQcontent',
