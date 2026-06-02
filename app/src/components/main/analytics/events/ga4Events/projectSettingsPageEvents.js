@@ -275,15 +275,13 @@ export const PROJECT_SETTINGS_INTEGRATION = {
 
   CLICK_RESET_CONFIRM: (type) => ({
     ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
-    element_name: 'button_reset',
-    modal: 'reset_to_global_integration',
+    element_name: 'submit_reset_global_integrations',
     type: normalizeEventParameter(type),
   }),
 
   CLICK_DELETE_CONFIRM: (type) => ({
     ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
-    element_name: 'button_delete',
-    modal: 'delete_integration',
+    element_name: 'submit_delete_integration',
     type: normalizeEventParameter(type),
   }),
 };
