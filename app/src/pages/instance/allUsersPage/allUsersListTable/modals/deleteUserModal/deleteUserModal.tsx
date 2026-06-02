@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useIntl, defineMessages } from 'react-intl';
 import { createClassnames } from 'common/utils';
+import { fetch } from 'common/utils/fetch';
 import { Modal } from '@reportportal/ui-kit';
 import { hideModalAction } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalButtonProps } from 'types/common';
+import { ApiError } from 'types/api';
+import { URLS } from 'common/urls';
 import styles from './deleteUserModal.scss';
-import { deleteUserAccountAction } from 'controllers/user';
 import { useTracking } from 'react-tracking';
 import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
-import { showSuccessNotification } from 'controllers/notification';
+import { showSuccessNotification, showDefaultErrorNotification } from 'controllers/notification';
 
 const cx = createClassnames(styles);
 
@@ -56,19 +59,25 @@ export const DeleteUserModal = ({ user, onSuccess }: DeleteUserModalProps) => {
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleConfirm = () => {
-    const handleDeleteSuccess = () => {
-      dispatch(
-        showSuccessNotification({
-          message: formatMessage(messages.successfully, { name: user.fullName }),
-        }),
-      );
-      dispatch(hideModalAction());
-      onSuccess?.();
-      trackEvent(ALL_USERS_PAGE_EVENTS.DELETE_USER);
-    };
-    dispatch(deleteUserAccountAction(handleDeleteSuccess, user.id));
+    setIsLoading(true);
+    fetch(URLS.userInfo(user.id), { method: 'delete' })
+      .then(() => {
+        dispatch(
+          showSuccessNotification({
+            message: formatMessage(messages.successfully, { name: user.fullName }),
+          }),
+        );
+        dispatch(hideModalAction());
+        onSuccess?.();
+        trackEvent(ALL_USERS_PAGE_EVENTS.DELETE_USER);
+      })
+      .catch((error: ApiError) => {
+        dispatch(showDefaultErrorNotification(error));
+        setIsLoading(false);
+      });
   };
 
   const okButton: ModalButtonProps = {
@@ -76,11 +85,13 @@ export const DeleteUserModal = ({ user, onSuccess }: DeleteUserModalProps) => {
     children: formatMessage(COMMON_LOCALE_KEYS.DELETE),
     variant: 'danger',
     onClick: handleConfirm,
+    disabled: isLoading,
     'data-automation-id': 'submitButton',
   };
 
   const cancelButton: ModalButtonProps = {
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    disabled: isLoading,
     'data-automation-id': 'cancelButton',
   };
 
