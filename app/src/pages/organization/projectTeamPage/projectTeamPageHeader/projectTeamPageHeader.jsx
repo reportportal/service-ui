@@ -21,7 +21,6 @@ import { Button } from '@reportportal/ui-kit';
 import {
   ORGANIZATION_PROJECTS_PAGE,
   ORGANIZATIONS_PAGE,
-  PROJECT_DASHBOARD_PAGE,
 } from 'controllers/pages/constants';
 import { useIntl } from 'react-intl';
 import { projectMembersSelector, projectNameSelector } from 'controllers/project';
@@ -72,7 +71,6 @@ export const ProjectTeamPageHeader = ({
 
   const projectCrumb = {
     title: projectName,
-    link: { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } },
   };
 
   let lastCrumb = rootCrumb;
