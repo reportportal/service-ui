@@ -36,7 +36,7 @@
 
 .breadcrumb:last-child {
   .breadcrumb-text {
-    color: $COLOR--e-200;
+    color: var(--rp-ui-base-e-300);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

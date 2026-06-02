@@ -95,7 +95,9 @@ $sidebar-width: calc(100vw - 408px);
 }
 
 .executions-table {
-  width: 100%;
+  margin-left: -32px;
+  width: calc(100% + 32px);
+
   :global([class*='_header-cell_']) {
     font-family: var(--rp-ui-base-font-family);
     font-weight: var(--rp-ui-base-fw-medium);
