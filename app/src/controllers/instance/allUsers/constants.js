@@ -24,7 +24,7 @@ export const DEFAULT_SORT_COLUMN = 'full_name';
 export const DEFAULT_SORTING = formatSortingString([DEFAULT_SORT_COLUMN], SORTING_ASC);
 export const SEARCH_KEY = 'filter.CNT.full_name';
 export const SORTING_KEY = 'order';
-export const DEFAULT_LIMITATION = 20;
+export const DEFAULT_LIMITATION = 50;
 
 export const initialPaginationState = {
   size: DEFAULT_LIMITATION,
