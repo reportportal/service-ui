@@ -46,10 +46,10 @@ export const useDeleteUsersAction = ({ onSuccess }: UseDeleteUsersActionProps): 
   const { trackEvent } = useTracking();
 
   const deleteUsers = useCallback(
-    (items: BulkPanelItem[]) => {
+    (items: BulkPanelItem[]): Promise<void> => {
       const ids = items.map((item) => item.id).join(',');
 
-      fetch(URLS.deleteUsers(ids), { method: 'delete' })
+      return fetch(URLS.deleteUsers(ids), { method: 'delete' })
         .then(() => {
           dispatch(hideModalAction());
           dispatch(
@@ -68,9 +68,9 @@ export const useDeleteUsersAction = ({ onSuccess }: UseDeleteUsersActionProps): 
 
   const handleProceed = useCallback(
     (eligibleItems: BulkPanelItem[]) => {
-      const onConfirm = () => {
+      const onConfirm = (): Promise<void> => {
         trackEvent(ALL_USERS_PAGE_EVENTS.bulkDeleteUsersModal(eligibleItems.length));
-        deleteUsers(eligibleItems);
+        return deleteUsers(eligibleItems);
       };
 
       trackEvent(ALL_USERS_PAGE_EVENTS.BULK_DELETE_USERS);
