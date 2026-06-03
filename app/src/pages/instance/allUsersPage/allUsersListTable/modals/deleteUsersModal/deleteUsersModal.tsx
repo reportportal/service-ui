@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useIntl, defineMessages } from 'react-intl';
 import { Modal } from '@reportportal/ui-kit';
@@ -42,22 +42,30 @@ const Bold = (chunks: ReactNode) => <b>{chunks}</b>;
 
 interface DeleteUsersModalProps {
   count: number;
-  onConfirm: () => void;
+  onConfirm: () => Promise<void>;
 }
 
 export const DeleteUsersModal = ({ count, onConfirm }: DeleteUsersModalProps) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleConfirm = () => {
+    setIsLoading(true);
+    onConfirm().finally(() => setIsLoading(false));
+  };
 
   const okButton: ModalButtonProps = {
     text: formatMessage(COMMON_LOCALE_KEYS.DELETE),
     children: formatMessage(COMMON_LOCALE_KEYS.DELETE),
     variant: 'danger',
-    onClick: onConfirm,
+    onClick: handleConfirm,
+    disabled: isLoading,
   };
 
   const cancelButton: ModalButtonProps = {
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    disabled: isLoading,
   };
 
   return (
@@ -66,6 +74,7 @@ export const DeleteUsersModal = ({ count, onConfirm }: DeleteUsersModalProps) =>
       title={formatMessage(messages.title)}
       okButton={okButton}
       cancelButton={cancelButton}
+      allowCloseOutside={!isLoading}
       onClose={() => dispatch(hideModalAction())}
     >
       {formatMessage(messages.description, {

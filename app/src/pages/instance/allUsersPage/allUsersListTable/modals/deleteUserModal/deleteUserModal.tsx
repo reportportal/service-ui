@@ -101,6 +101,7 @@ export const DeleteUserModal = ({ user, onSuccess }: DeleteUserModalProps) => {
       title={formatMessage(messages.title)}
       okButton={okButton}
       cancelButton={cancelButton}
+      allowCloseOutside={!isLoading}
       onClose={() => dispatch(hideModalAction())}
     >
       {formatMessage(messages.description, {
