@@ -90,6 +90,10 @@ export const ProjectSettingsPageContainer = () => {
   });
 
   const config = useMemo(() => {
+    const isQualityGatePluginEnabled = extensions.some(
+      (extension) => extension.name === QUALITY_GATES,
+    );
+
     const navConfig = {
       [GENERAL]: {
         name: formatMessage(messages.general),
@@ -153,7 +157,7 @@ export const ProjectSettingsPageContainer = () => {
         link: createTabLink(QUALITY_GATES),
         component: <QualityGates />,
         mobileDisabled: true,
-        hideHeader: true,
+        hideHeader: !isQualityGatePluginEnabled,
       },
       ...(isShowTmsHiddenData && {
         [ENVIRONMENTS]: {
@@ -183,6 +187,7 @@ export const ProjectSettingsPageContainer = () => {
     canSeeDemoData,
     canUpdateSettings,
     isShowTmsHiddenData,
+    extensions,
   ]);
 
   const navigation = useMemo(() => {
