@@ -22,8 +22,10 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { BubblesLoader, Dropdown, Popover } from '@reportportal/ui-kit';
 import { fetch } from 'common/utils';
-import { projectKeySelector } from 'controllers/project';
+import { projectInfoIdSelector, projectKeySelector } from 'controllers/project';
+import { activeOrganizationIdSelector } from 'controllers/organization';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { buildPluginCommandRQ } from 'controllers/plugins/utils';
 import {
   COMMAND_GET_ISSUE_TYPES,
   COMMAND_GET_ISSUE_FIELDS,
@@ -95,6 +97,8 @@ ShowWithPopover.propTypes = {
 @connect(
   (state) => ({
     projectKey: projectKeySelector(state),
+    projectId: projectInfoIdSelector(state),
+    organizationId: activeOrganizationIdSelector(state),
   }),
   {
     showNotification,
@@ -119,6 +123,8 @@ export class BtsPropertiesForIssueForm extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     projectKey: PropTypes.string.isRequired,
+    projectId: PropTypes.number,
+    organizationId: PropTypes.number,
   };
 
   static defaultProps = {
@@ -313,12 +319,24 @@ export class BtsPropertiesForIssueForm extends Component {
       });
     });
 
+  getPluginCommandContext = () => {
+    const { integrationId, isGlobal, organizationId, projectId, projectKey } = this.props;
+
+    return {
+      integrationId,
+      isGlobal,
+      organizationId,
+      projectId,
+      projectKey,
+    };
+  };
+
   fetchFieldsSet = (issueTypeValue) => {
-    // TODO: There was a case when projectName (projectKey) was empty using this component on Admin page.
     const {
       pluginDetails: { allowedCommands },
       isGlobal,
       integrationId,
+      pluginName,
       projectKey,
     } = this.props;
     const isCommandAvailable = allowedCommands
@@ -328,12 +346,15 @@ export class BtsPropertiesForIssueForm extends Component {
     let url;
 
     if (isCommandAvailable) {
-      url = URLS.projectIntegrationByIdCommand(projectKey, integrationId, COMMAND_GET_ISSUE_FIELDS);
-      requestParams.method = 'PUT';
-      requestParams.data = {
-        projectKey,
-        issueType: issueTypeValue,
-      };
+      url = URLS.pluginsCommandsCommon(pluginName, COMMAND_GET_ISSUE_FIELDS);
+      requestParams.method = 'POST';
+      requestParams.data = buildPluginCommandRQ({
+        ...this.getPluginCommandContext(),
+        arguments: {
+          projectKey,
+          issueType: issueTypeValue,
+        },
+      });
     } else {
       url = isGlobal
         ? URLS.btsGlobalIntegrationFieldsSet(integrationId, issueTypeValue)
@@ -358,21 +379,25 @@ export class BtsPropertiesForIssueForm extends Component {
       pluginDetails: { allowedCommands },
       isGlobal,
       integrationId,
+      pluginName,
       projectKey,
     } = this.props;
     const isCommandAvailable = allowedCommands
-      ? allowedCommands.indexOf(COMMAND_GET_ISSUE_FIELDS) !== -1
+      ? allowedCommands.indexOf(COMMAND_GET_ISSUE_TYPES) !== -1
       : false;
 
     const requestParams = {};
     let url;
 
     if (isCommandAvailable) {
-      url = URLS.projectIntegrationByIdCommand(projectKey, integrationId, COMMAND_GET_ISSUE_TYPES);
-      requestParams.method = 'PUT';
-      requestParams.data = {
-        projectKey,
-      };
+      url = URLS.pluginsCommandsCommon(pluginName, COMMAND_GET_ISSUE_TYPES);
+      requestParams.method = 'POST';
+      requestParams.data = buildPluginCommandRQ({
+        ...this.getPluginCommandContext(),
+        arguments: {
+          projectKey,
+        },
+      });
     } else {
       url = isGlobal
         ? URLS.btsGlobalIntegrationIssueTypes(integrationId)
@@ -390,12 +415,17 @@ export class BtsPropertiesForIssueForm extends Component {
   };
 
   render() {
-    const { intl, disabled, integrationId, projectKey } = this.props;
+    const { intl, disabled, integrationId, pluginName, projectKey, organizationId, projectId, isGlobal } =
+      this.props;
     const { loading } = this.state;
     const preparedFields = this.prepareFieldsToRender();
     const integrationInfo = {
       projectKey,
       integrationId,
+      pluginName,
+      organizationId,
+      projectId,
+      isGlobal,
     };
 
     return (

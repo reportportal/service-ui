@@ -210,3 +210,30 @@ export const getRemoveIntegrationSuccessAction = ({ isGlobal, isOrganizational }
       return removeProjectIntegrationSuccessAction;
   }
 };
+
+export const buildPluginCommandRQ = ({
+  integrationId,
+  organizationId,
+  projectId,
+  projectKey,
+  isGlobal = false,
+  arguments: commandArguments = {},
+}) => {
+  const context = { integration_id: integrationId };
+
+  if (!isGlobal) {
+    if (projectKey && projectId != null) {
+      context.project_id = projectId;
+      if (organizationId != null) {
+        context.org_id = organizationId;
+      }
+    } else if (organizationId != null) {
+      context.org_id = organizationId;
+    }
+  }
+
+  return {
+    context,
+    arguments: commandArguments,
+  };
+};
