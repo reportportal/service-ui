@@ -59,6 +59,8 @@ export const AttributeEditor = ({
   autocompleteProps,
   isAttributeValueRequired,
   allowCustomValues = true,
+  hideActionButtons = false,
+  onValuesChange,
 }) => {
   const [keyTouched, setTouchKey] = useState(false);
   const [valueTouched, setTouchValue] = useState(false);
@@ -164,6 +166,14 @@ export const AttributeEditor = ({
 
   const isValidForm = isFormValid();
 
+  useEffect(() => {
+    onValuesChange?.({
+      key: state.key || '',
+      value: state.value || '',
+      isValid: isFormValid(),
+    });
+  }, [state.key, state.value, state.errors, state.isKeyEdited, attributes, isAttributeValueRequired]);
+
   const handleKeyDown = (handler) => ({ keyCode }) => {
     if (keyCode === ENTER_KEY_CODE) {
       handler();
@@ -247,26 +257,28 @@ export const AttributeEditor = ({
           {...valueAutocompleteProps}
         />
       </FieldErrorHint>
-      <div className={cx('buttons')}>
-        <div
-          tabIndex={isValidForm ? 0 : -1}
-          className={cx('check-btn', { disabled: !isValidForm })}
-          onClick={isValidForm ? handleSubmit : null}
-          onKeyDown={isValidForm ? handleKeyDown(handleSubmit) : null}
-          data-automation-id="saveAttributeButton"
-        >
-          {Parser(CheckIcon)}
+      {!hideActionButtons && (
+        <div className={cx('buttons')}>
+          <div
+            tabIndex={isValidForm ? 0 : -1}
+            className={cx('check-btn', { disabled: !isValidForm })}
+            onClick={isValidForm ? handleSubmit : null}
+            onKeyDown={isValidForm ? handleKeyDown(handleSubmit) : null}
+            data-automation-id="saveAttributeButton"
+          >
+            {Parser(CheckIcon)}
+          </div>
+          <div
+            tabIndex={!isCancelButtonDisabled ? 0 : -1}
+            className={cx('cross-btn', { disabled: isCancelButtonDisabled })}
+            onClick={handleCancel}
+            onKeyDown={handleKeyDown(handleCancel)}
+            data-automation-id="cancelAttributeButton"
+          >
+            {Parser(CrossIcon)}
+          </div>
         </div>
-        <div
-          tabIndex={!isCancelButtonDisabled ? 0 : -1}
-          className={cx('cross-btn', { disabled: isCancelButtonDisabled })}
-          onClick={handleCancel}
-          onKeyDown={handleKeyDown(handleCancel)}
-          data-automation-id="cancelAttributeButton"
-        >
-          {Parser(CrossIcon)}
-        </div>
-      </div>
+      )}
     </div>
   );
 };
@@ -289,6 +301,8 @@ AttributeEditor.propTypes = {
   autocompleteProps: PropTypes.object,
   isAttributeValueRequired: PropTypes.bool,
   allowCustomValues: PropTypes.bool,
+  hideActionButtons: PropTypes.bool,
+  onValuesChange: PropTypes.func,
 };
 AttributeEditor.defaultProps = {
   attributes: [],
@@ -308,4 +322,6 @@ AttributeEditor.defaultProps = {
   autocompleteProps: {},
   isAttributeValueRequired: true,
   allowCustomValues: true,
+  hideActionButtons: false,
+  onValuesChange: undefined,
 };
