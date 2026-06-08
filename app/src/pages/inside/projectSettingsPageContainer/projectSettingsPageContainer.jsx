@@ -214,7 +214,7 @@ export const ProjectSettingsPageContainer = () => {
       <SettingsLayout navigation={navigation}>
         <ScrollWrapper resetRequired>
           <div className={cx('settings-page-content-wrapper')}>
-            {!subPage && !config[activeTab]?.hideHeader && (
+            {!subPage && !config[activeTab]?.hideHeader && !headerNodes?.hideHeader && (
               <div className={cx('header')}>
                 <Header title={config[activeTab]?.name} titleNode={headerNodes.titleNode}>
                   {headerNodes.children}
