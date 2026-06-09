@@ -65,6 +65,8 @@ export const MembersListTable = ({
       <div className={cx('members-list-table-wrapper')}>
         <Table
           className={cx('members-list-table')}
+          wrapperClassName={cx('table-wrapper-fix')}
+          checkboxColumnClassName={cx('checkbox-column-fix')}
           headerClassName={cx('table-header')}
           rowClassName={cx('table-row')}
           data={data}
