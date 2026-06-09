@@ -44,6 +44,7 @@
       flex-direction: column;
       gap: 2px;
       width: 240px;
+      margin-top: 4px;
 
       p {
         font-size: 11px;
@@ -57,6 +58,31 @@
 
 .item-title {
   white-space: nowrap;
+}
+
+.help-panel-container--clamped-titles {
+  .item-content-wrapper {
+    min-width: 0;
+    gap: 4px;
+
+    > a {
+      display: inline;
+      height: auto;
+      line-height: 16px;
+
+      > i {
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 8px;
+      }
+    }
+  }
+
+  .item-title {
+    display: inline;
+    white-space: normal;
+    overflow-wrap: break-word;
+  }
 }
 
 .icon > svg,
