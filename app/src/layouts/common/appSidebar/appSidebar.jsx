@@ -144,6 +144,9 @@ export const AppSidebar = ({
       shouldBeCollapsedOnLeave={
         !(isOpenAvatarPopover || isOpenOrganizationPopover || isOpenSupportPopover)
       }
+      onShowMoreClick={(isSidebarCollapsed) =>
+        trackEvent(SIDEBAR_EVENTS.onClickShowMore(isSidebarCollapsed))
+      }
     />
   );
 };
