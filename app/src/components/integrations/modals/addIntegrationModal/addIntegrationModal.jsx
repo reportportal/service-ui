@@ -65,8 +65,6 @@ const AddIntegrationModal = ({
   change,
   handleSubmit,
   dirty,
-  anyTouched,
-  invalid,
 }) => {
   const [metaData, setMetaData] = useState({});
   const fieldsExtensions = useSelector(uiExtensionIntegrationFormFieldsSelector);
@@ -171,8 +169,6 @@ AddIntegrationModal.propTypes = {
   change: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   dirty: PropTypes.bool.isRequired,
-  anyTouched: PropTypes.bool.isRequired,
-  invalid: PropTypes.bool.isRequired,
 };
 
 export default withModal('addIntegrationModal')(
