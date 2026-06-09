@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { useState, useEffect, useRef } from 'react';
 import { useTracking } from 'react-tracking';
 import { Pagination, BulkPanel } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
@@ -42,6 +43,16 @@ export const PaginationWrapper = ({
   const isBulkPanelVisible = bulkPanelProps?.items?.length > 0;
   const bulkPanelPortalRoot = document.getElementById('modal-root') || document.body;
 
+  const [resetScroll, setResetScroll] = useState(false);
+  const prevActivePageRef = useRef(paginationProps.activePage);
+
+  useEffect(() => {
+    if (prevActivePageRef.current !== paginationProps.activePage) {
+      prevActivePageRef.current = paginationProps.activePage;
+      setResetScroll(true);
+    }
+  }, [paginationProps.activePage]);
+
   const changePageSizeHandle = (newSize) => {
     changePageSize(newSize);
     trackEvent(changePageSizeEvent(newSize));
@@ -49,7 +60,14 @@ export const PaginationWrapper = ({
 
   return (
     <div className={cx('pagination-wrapper', className)}>
-      <ScrollWrapper withBackToTop className={cx('scroll')} classNameBackToTop={cx('back-to-top')}>
+      <ScrollWrapper
+        key={paginationProps.pageSize}
+        withBackToTop
+        className={cx('scroll')}
+        classNameBackToTop={cx('back-to-top')}
+        resetRequired={resetScroll}
+        onReset={() => setResetScroll(false)}
+      >
         {children}
       </ScrollWrapper>
       {showPagination && (
