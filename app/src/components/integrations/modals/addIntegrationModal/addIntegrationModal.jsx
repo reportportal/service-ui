@@ -106,7 +106,7 @@ const AddIntegrationModal = ({
         : formatMessage(COMMON_LOCALE_KEYS.CREATE)),
     onClick: () => handleSubmit(onSubmit)(),
     'data-automation-id': 'submitButton',
-    disabled: !hasFormFields || (anyTouched && invalid),
+    disabled: !hasFormFields,
   };
   const cancelButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
