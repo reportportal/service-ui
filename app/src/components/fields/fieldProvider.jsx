@@ -38,7 +38,7 @@ const InnerComponent = ({
     name,
     error: error || submitError,
     active,
-    touched: touched || (!!submitError && submitFailed),
+    touched: touched || submitFailed,
     asyncValidating,
     ...rest,
   });
