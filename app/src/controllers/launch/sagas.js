@@ -52,6 +52,9 @@ function* fetchLaunchesWithParams({ payload }) {
   const params = yield select(queryParametersSelector);
   const isDebugMode = yield select(debugModeSelector);
   const queryParams = { ...params, ...payload };
+  if (!isDebugMode) {
+    queryParams['filter.in.launchType'] = 'AUTOMATION';
+  }
   const launchDistinct = yield select(launchDistinctSelector);
   const urlCreator = launchDistinct === LATEST ? URLS.launchesLatest : URLS.launches;
   yield put(

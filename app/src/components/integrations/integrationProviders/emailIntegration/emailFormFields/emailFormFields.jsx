@@ -28,6 +28,7 @@ import {
 } from 'common/utils/validation';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Dropdown, FieldText, Radio } from '@reportportal/ui-kit';
+import { SECRET_FIELDS_KEY } from 'controllers/plugins';
 import { INTEGRATION_FORM } from 'components/integrations/elements';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { separateFromIntoNameAndEmail } from 'common/utils';
@@ -199,6 +200,8 @@ export class EmailFormFields extends Component {
     tlsEnabled: PropTypes.bool,
     sslEnabled: PropTypes.bool,
     initialData: PropTypes.object,
+    editAuthMode: PropTypes.bool,
+    updateMetaData: PropTypes.func,
   };
 
   static defaultProps = {
@@ -207,6 +210,8 @@ export class EmailFormFields extends Component {
     tlsEnabled: false,
     sslEnabled: false,
     initialData: DEFAULT_FORM_CONFIG,
+    editAuthMode: false,
+    updateMetaData: () => {},
   };
 
   constructor(props) {
@@ -215,12 +220,18 @@ export class EmailFormFields extends Component {
   }
 
   componentDidMount() {
-    const { initialData } = this.props;
+    const { initialData, editAuthMode, updateMetaData } = this.props;
     const preparedData = separateFromIntoNameAndEmail(initialData);
+    if (editAuthMode) {
+      preparedData[PASSWORD_KEY] = '';
+    }
     this.props.initialize(preparedData);
     if (preparedData[TLS_KEY] && preparedData[SSL_KEY]) {
       this.props.change(SSL_KEY, false);
     }
+    updateMetaData({
+      [SECRET_FIELDS_KEY]: [PASSWORD_KEY],
+    });
   }
 
   onChangeAuthAvailability = (...args) => {
