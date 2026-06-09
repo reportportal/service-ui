@@ -50,15 +50,22 @@
 }
 
 .title {
+  display: -webkit-box;
   margin-bottom: 15px;
+  overflow: hidden;
+  max-width: 450px;
+  max-height: calc(47px * 2);
   font-family: var(--rp-ui-base-font-family);
   font-weight: var(--rp-ui-base-fw-bold);
   font-size: 39px;
   line-height: 47px;
   color: var(--rp-ui-base-bg-000);
-  max-width: 350px;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 
   @media (max-width: $SCREEN_XS_MAX) {
+    max-height: calc(34px * 2);
     font-size: 28px;
     line-height: 34px;
   }
