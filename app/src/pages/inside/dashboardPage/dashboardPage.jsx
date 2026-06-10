@@ -19,7 +19,6 @@ import track from 'react-tracking';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
-import DOMPurify from 'dompurify';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import {
   changeVisibilityTypeAction,
@@ -42,6 +41,7 @@ import { userInfoSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { withFilter } from 'controllers/filter';
 import { DashboardPageHeader } from 'pages/inside/common/dashboardPageHeader';
+import { DeleteDashboardConfirmationMessage } from 'pages/inside/common/modals/deleteDashboardConfirmationMessage';
 import { DashboardList } from './dashboardList';
 import { DashboardPageToolbar } from './dashboardPageToolbar';
 
@@ -66,11 +66,6 @@ const messages = defineMessages({
   deleteModalTitle: {
     id: 'DashboardPage.modal.deleteModalTitle',
     defaultMessage: 'Delete Dashboard',
-  },
-  deleteModalConfirmationText: {
-    id: 'DashboardPage.modal.deleteModalConfirmationText',
-    defaultMessage:
-      "Are you sure you want to delete dashboard ''<b>{name}</b>''? It will no longer exist.",
   },
   deleteModalSubmitButtonText: {
     id: 'DashboardPage.modal.deleteModalSubmitButtonText',
@@ -166,10 +161,7 @@ export class DashboardPage extends Component {
         items: [item],
         onConfirm: () => deleteDashboard(item),
         header: formatMessage(messages.deleteModalTitle),
-        mainContent: formatMessage(messages.deleteModalConfirmationText, {
-          b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
-          name: item.name,
-        }),
+        mainContent: <DeleteDashboardConfirmationMessage name={item.name} />,
         warning,
         eventsInfo: {
           closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_DELETE_DASHBOARD_MODAL,
