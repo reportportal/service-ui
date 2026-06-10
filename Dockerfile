@@ -19,6 +19,9 @@ FROM nginxinc/nginx-unprivileged:alpine
 
 USER root
 
+# TODO: Remove when nginxinc/nginx-unprivileged:alpine includes libxml2 >= 2.13.9-r1 (CVE-2026-6732 fix)
+RUN apk upgrade --no-cache libxml2
+
 COPY --from=build-frontend /usr/src/app/build /usr/share/nginx/html
 COPY --from=generate-build-info /usr/src/app/build /usr/share/nginx/html
 COPY config.template.json /usr/share/nginx/html/config.template.json
