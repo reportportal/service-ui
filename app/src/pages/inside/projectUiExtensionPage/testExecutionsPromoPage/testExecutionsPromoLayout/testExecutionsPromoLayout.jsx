@@ -100,7 +100,7 @@ export const TestExecutionsPromoLayout = ({
         )}
         <img className={cx('bg-image')} src={bgImage} alt="" width="735" height="477" />
         <div className={cx('footer')}>
-          <HelpPanel items={helpItems} className="help-panel-container--clamped-titles" />
+          <HelpPanel items={helpItems} className={cx('help-titles')} />
         </div>
       </div>
     </div>

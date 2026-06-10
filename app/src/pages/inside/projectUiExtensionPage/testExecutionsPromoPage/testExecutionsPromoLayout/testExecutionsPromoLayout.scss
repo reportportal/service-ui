@@ -187,3 +187,28 @@
   margin-top: -90px;
   margin-bottom: 88px;
 }
+
+.help-titles {
+  > div > div {
+    min-width: 0;
+    gap: 4px;
+  }
+
+  a {
+    display: inline;
+    height: auto;
+    line-height: 16px;
+
+    > span {
+      display: inline;
+      white-space: normal;
+      overflow-wrap: break-word;
+    }
+
+    > i {
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 8px;
+    }
+  }
+}
