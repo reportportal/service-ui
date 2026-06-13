@@ -20,7 +20,7 @@ import { Modal, SegmentedControl } from '@reportportal/ui-kit';
 import { InjectedFormProps, reduxForm } from 'redux-form';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { fetch, commonValidators } from 'common/utils';
+import { fetch, commonValidators, uniqueId } from 'common/utils';
 import { URLS } from 'common/urls';
 import { withModal } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
@@ -57,6 +57,9 @@ import { PostBTSIssueForm } from './PostBTSIssueForm/PostBTSIssueForm';
 import { DynamicField, BTSIntegration } from './types';
 
 import styles from './BTSIssuesModal.scss';
+import { activeManualLaunchExecutionSelector } from 'controllers/manualLaunch';
+import { getManualLaunchExecutionAction } from 'controllers/manualLaunch';
+import { useManualLaunchId } from 'hooks/useTypedSelector';
 
 const cx = createClassnames(styles);
 
@@ -95,8 +98,11 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
   >;
   const userId = useSelector(userIdSelector);
   const projectKey = useSelector(projectKeySelector);
+  const launchId = useManualLaunchId();
+  const execution = useSelector(activeManualLaunchExecutionSelector);
 
-  const executionId = data?.executionId;
+  const executionId = execution.id;
+
   const [selectedControl, setSelectedControl] = useState(BTSIssueActionTypes.LINK);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -158,6 +164,7 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
       ...getDataSectionConfig(true),
       ...mapFieldsToValues(fields),
       [CONTROL_TYPE_FIELD]: BTSIssueActionTypes.LINK,
+      linkedIssues: [{ id: uniqueId(), linkToIssue: '', issueId: '' }],
     });
   }, [fields, initialize]);
 
@@ -233,15 +240,26 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
         [INCLUDE_ATTACHMENTS_KEY]: refinedData[INCLUDE_ATTACHMENTS_KEY],
         [INCLUDE_LOGS_KEY]: refinedData[INCLUDE_LOGS_KEY],
         logQuantity: LOG_QUANTITY,
-        item: executionId,
+        item: execution.testItemId || executionId,
         fields: preparedFields,
-        backLinks: {
-          [executionId]: window.location.href,
-        },
+        backLinks: {},
       };
     },
-    [fields, executionId],
+    [fields, executionId, execution],
   );
+
+  const refreshExecutionData = useCallback(() => {
+    if (!launchId || !executionId) {
+      return;
+    }
+
+    dispatch(
+      getManualLaunchExecutionAction({
+        launchId,
+        executionId,
+      }),
+    );
+  }, [launchId, executionId, dispatch]);
 
   const postIssue = useCallback(
     (issueData: Record<string, unknown>, onSuccess: () => void) => {
@@ -256,6 +274,7 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
         .then(() => {
           if (!isMountedRef.current) return;
           setIsLoading(false);
+          refreshExecutionData();
           dispatch(
             showSuccessNotification({
               message: formatMessage(messages.postIssueSuccess),
@@ -273,7 +292,7 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
           );
         });
     },
-    [projectKey, integrationId, dispatch, formatMessage],
+    [projectKey, integrationId, dispatch, formatMessage, refreshExecutionData],
   );
 
   const linkIssue = useCallback(
@@ -291,26 +310,59 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
       } = integration;
 
       const url = URLS.testItemsLinkIssues(projectKey);
+      const linkedIssuesData = formData.linkedIssues;
+      const issues = (Array.isArray(linkedIssuesData) ? linkedIssuesData : []).reduce<
+        Array<{
+          ticketId: string;
+          btsProject: string;
+          btsUrl: string;
+          pluginName: string;
+          url: string;
+        }>
+      >((acc, value) => {
+        if (!value || typeof value !== 'object') {
+          return acc;
+        }
+
+        const issue = value as Record<string, unknown>;
+        const linkToIssue = issue.linkToIssue;
+        const issueId = issue.issueId;
+
+        if (
+          typeof linkToIssue === 'string' &&
+          linkToIssue &&
+          typeof issueId === 'string' &&
+          issueId
+        ) {
+          acc.push({
+            ticketId: issueId,
+            btsProject,
+            btsUrl,
+            pluginName,
+            url: linkToIssue,
+          });
+        }
+
+        return acc;
+      }, []);
+
+      if (issues.length === 0) {
+        return;
+      }
 
       setIsLoading(true);
 
       fetch(url, {
         method: 'PUT',
         data: {
-          issues: [
-            {
-              ticketId: formData.ticketName,
-              btsProject,
-              btsUrl,
-              pluginName,
-            },
-          ],
-          testItemIds: [executionId],
+          issues,
+          testItemIds: [execution.testItemId],
         },
       })
         .then(() => {
           if (!isMountedRef.current) return;
           setIsLoading(false);
+          refreshExecutionData();
           dispatch(
             showSuccessNotification({
               message: formatMessage(messages.linkIssueSuccess),
@@ -330,12 +382,13 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
     },
     [
       projectKey,
-      executionId,
+      execution,
       integrationId,
       pluginName,
       namedBtsIntegrations,
       dispatch,
       formatMessage,
+      refreshExecutionData,
     ],
   );
 
@@ -414,7 +467,15 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
         />
       )}
 
-      {selectedControl === BTSIssueActionTypes.LINK && <LinkBTSIssueForm />}
+      {selectedControl === BTSIssueActionTypes.LINK && (
+        <LinkBTSIssueForm
+          namedBtsIntegrations={namedBtsIntegrations}
+          pluginName={pluginName}
+          integrationId={integrationId}
+          onChangePlugin={handlePluginChange}
+          onChangeIntegration={handleIntegrationChange}
+        />
+      )}
     </Modal>
   );
 };

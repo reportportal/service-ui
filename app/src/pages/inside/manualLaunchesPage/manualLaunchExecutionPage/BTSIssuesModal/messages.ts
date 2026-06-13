@@ -35,7 +35,7 @@ export const messages = defineMessages({
   },
   postIssueSuccess: {
     id: 'BTSIssuesModal.postIssueSuccess',
-    defaultMessage: 'Ticket has been created successfully',
+    defaultMessage: 'The issue was successfully posted to BTS',
   },
   postIssueFailed: {
     id: 'BTSIssuesModal.postIssueFailed',
@@ -43,18 +43,30 @@ export const messages = defineMessages({
   },
   linkIssueSuccess: {
     id: 'BTSIssuesModal.linkIssueSuccess',
-    defaultMessage: 'Defect link successfully added',
+    defaultMessage: 'The issue was successfully linked with BTS tiket',
   },
   linkIssueFailed: {
     id: 'BTSIssuesModal.linkIssueFailed',
     defaultMessage: 'Failed to link issue',
   },
-  ticketNameLabel: {
-    id: 'LinkBTSIssueForm.ticketNameLabel',
-    defaultMessage: 'Ticket name',
+  linkToIssue: {
+    id: 'LinkBTSIssueForm.linkToIssue',
+    defaultMessage: 'Link to issue',
   },
-  ticketNamePlaceholder: {
-    id: 'LinkBTSIssueForm.ticketNamePlaceholder',
-    defaultMessage: 'Enter ticket name',
+  linkToIssuePlaceholder: {
+    id: 'LinkBTSIssueForm.linkToIssuePlaceholder',
+    defaultMessage: 'Enter link to issue',
+  },
+  issueId: {
+    id: 'LinkBTSIssueForm.issueId',
+    defaultMessage: 'Issue ID',
+  },
+  issueIdPlaceholder: {
+    id: 'LinkBTSIssueForm.issueIdPlaceholder',
+    defaultMessage: 'Enter issue ID (e.g. EXMPL-12345)',
+  },
+  addNewIssue: {
+    id: 'LinkBTSIssueForm.addNewIssue',
+    defaultMessage: 'Add New Issue',
   },
 });

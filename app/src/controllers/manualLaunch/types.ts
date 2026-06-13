@@ -184,14 +184,15 @@ export interface Attachment {
 }
 
 export interface BtsTicket {
-  id: number;
-  name?: string;
-  link: string;
+  btsProject: string;
+  btsUrl: string;
+  pluginName: string;
+  ticketId: string;
+  url: string;
 }
 
 export interface ExecutionComment {
   comment?: string;
-  btsTickets?: BtsTicket[];
   attachments?: Attachment[];
 }
 
@@ -243,6 +244,7 @@ export interface ManualScenario {
 export interface TestCaseExecution {
   id: number;
   executionStatus: ExecutionStatus;
+  btsTickets?: BtsTicket[];
   executionComment?: ExecutionComment;
   startedAt?: number;
   finishedAt?: number;

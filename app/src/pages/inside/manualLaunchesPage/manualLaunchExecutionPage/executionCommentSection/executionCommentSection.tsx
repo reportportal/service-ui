@@ -138,7 +138,7 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
         existingAttachments: execution.executionComment?.attachments ?? [],
         newFiles: uniqueFiles,
         removedAttachmentIds: Array.from(removedAttachmentIds),
-        btsTickets: execution.executionComment?.btsTickets,
+        btsTickets: execution.btsTickets,
         onSuccess: () => {
           setPendingFiles([]);
           setRemovedAttachmentIds(new Set());
@@ -164,7 +164,7 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
         existingAttachments: execution.executionComment?.attachments ?? [],
         newFiles: [],
         removedAttachmentIds: Array.from(nextRemoved),
-        btsTickets: execution.executionComment?.btsTickets,
+        btsTickets: execution.btsTickets,
         onSuccess: () => setRemovedAttachmentIds(new Set()),
         onFinally: () => setIsSaving(false),
       }),
@@ -194,7 +194,7 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
         existingAttachments: execution.executionComment?.attachments ?? [],
         newFiles: pendingFiles,
         removedAttachmentIds: Array.from(removedAttachmentIds),
-        btsTickets: execution.executionComment?.btsTickets,
+        btsTickets: execution.btsTickets,
         onSuccess: () => {
           setPendingFiles([]);
           setRemovedAttachmentIds(new Set());

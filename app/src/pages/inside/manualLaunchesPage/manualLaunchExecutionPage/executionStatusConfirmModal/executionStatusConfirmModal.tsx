@@ -75,7 +75,7 @@ const ExecutionStatusConfirmModalComponent: FC<
 > = ({ data, handleSubmit, invalid, dirty }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
-  const { canManageExecutions} = useUserPermissions();
+  const { canManageExecutions } = useUserPermissions();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const launchId = useManualLaunchId();
@@ -167,6 +167,8 @@ const ExecutionStatusConfirmModalComponent: FC<
       );
     }
 
+    const shouldOpenBtsModal = values.postIssueToBts && !clearCommentCheckboxChecked;
+
     setIsSubmitting(true);
     dispatch(
       updateManualLaunchExecutionStatusAction({
@@ -182,11 +184,16 @@ const ExecutionStatusConfirmModalComponent: FC<
         ...(!isClearStatus && !isStatusChange
           ? { removedServerAttachmentIds: Array.from(removedServerAttachmentIds) }
           : {}),
-        onSuccess: () => dispatch(hideModalAction()),
+        onSuccess: () => {
+          if (shouldOpenBtsModal) {
+            openModal(executionId);
+          } else {
+            dispatch(hideModalAction());
+          }
+        },
         onFinally: () => setIsSubmitting(false),
       }),
     );
-    if (values.postIssueToBts) openModal(executionId);
   };
 
   const { okButton, cancelButton, hideModal } = useModalButtons({

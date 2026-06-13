@@ -5,7 +5,7 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { showErrorNotification } from 'controllers/notification';
 import { projectKeySelector } from 'controllers/project';
-import { Attribute, ExecutionComment, TestFolder } from 'controllers/manualLaunch/types';
+import { Attribute, BtsTicket, ExecutionComment, TestFolder } from 'controllers/manualLaunch/types';
 import { useManualLaunchId } from 'hooks/useTypedSelector';
 import { UrlsHelper, ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
 import type { TestCasePriority } from 'types/testCase';
@@ -29,6 +29,7 @@ interface ExecutionItem {
   manualScenario: ManualScenario | null;
   attributes: Attribute[];
   requirements?: Requirement[];
+  btsTickets?: BtsTicket[];
 }
 
 export const useExecutionDetails = (executionId: number | null) => {

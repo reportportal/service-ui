@@ -53,6 +53,14 @@ export const messages = defineMessages({
     id: 'ManualLaunchExecutionPage.executionCommentTitle',
     defaultMessage: 'Execution comment',
   },
+  postOrLinkIssue: {
+    id: 'ManualLaunchExecutionPage.postOrLinkIssue',
+    defaultMessage: 'Post or Link Issue',
+  },
+  noLinkedIssuesYet: {
+    id: 'ManualLaunchExecutionPage.noLinkedIssuesYet',
+    defaultMessage: 'No linked issues yet',
+  },
   clearExecutionComment: {
     id: 'ManualLaunchExecutionPage.clearExecutionComment',
     defaultMessage: 'Clear Comment',

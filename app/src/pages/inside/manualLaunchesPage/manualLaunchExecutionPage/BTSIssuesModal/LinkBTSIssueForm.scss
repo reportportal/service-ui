@@ -14,33 +14,39 @@
  * limitations under the License.
  */
 
-export interface DynamicField {
-  id: string;
-  fieldName: string;
-  fieldType: string;
-  required?: boolean;
-  disabled?: boolean;
-  definedValues?: Array<{ valueId: string; valueName: string }>;
-  value?: string[];
+.issues-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 16px;
 }
 
-export interface BTSIntegration {
-  id: number;
-  name: string;
-  integrationType: {
-    details: {
-      name: string;
-    };
-  };
-  integrationParameters: {
-    defectFormFields: DynamicField[];
-    project: string;
-    url: string;
-  };
+.issue-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
 }
 
-export interface LinkedIssue {
-  id: string;
-  linkToIssue: string;
-  issueId: string;
+.issue-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+}
+
+.remove-button {
+  margin-top: 24px;
+  width: 36px;
+  height: 36px;
+  max-width: 36px;
+  min-width: 36px;
+  
+  i {
+    margin: 0;
+  }
+}
+
+.add-button {
+  align-self: flex-start;
+  font-weight: 500;
 }
