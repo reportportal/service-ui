@@ -43,6 +43,7 @@ import {
   activeManualLaunchExecutionSelector,
 } from 'controllers/manualLaunch';
 import { projectKeySelector } from 'controllers/project';
+import { availableBtsIntegrationsSelector } from 'controllers/plugins';
 import { MAX_FILE_SIZE } from 'common/constants/fileConstants';
 import { useModalButtons } from 'hooks/useModalButtons';
 import { useTextareaAutoResize } from 'common/hooks';
@@ -80,6 +81,7 @@ const ExecutionStatusConfirmModalComponent: FC<
   const projectKey = useSelector(projectKeySelector);
   const launchId = useManualLaunchId();
   const activeExecution = useSelector(activeManualLaunchExecutionSelector);
+  const availableBtsIntegrations = useSelector(availableBtsIntegrationsSelector);
 
   const modalKey = `${data?.executionId}-${data?.status}-${data?.currentStatus}`;
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -117,7 +119,8 @@ const ExecutionStatusConfirmModalComponent: FC<
     ? formatMessage(messages.clearStatus)
     : formatMessage(messages.markAsStatus, { status: statusLabel });
   const isStatusChange = currentStatus && !isClearStatus;
-  const showPostIssueToBts = canManageExecutions && status === EXECUTION_STATUS_FAILED;
+  const showPostIssueToBts =
+    canManageExecutions && status === EXECUTION_STATUS_FAILED && !isEmpty(availableBtsIntegrations);
   const okButtonLabel = isClearStatus
     ? formatMessage(messages.clearStatus)
     : formatMessage(messages.markAsStatus, { status: statusLabel });

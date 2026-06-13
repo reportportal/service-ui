@@ -72,7 +72,7 @@ export class BtsIntegrationSelector extends Component {
     return (
       <ThemeProvider theme={this.props.theme || 'dark'}>
         <FieldElement
-          className={cx('field-wrapper', this.props.theme === 'light' && 'dark')}
+          className={cx('field-wrapper', this.props.theme)}
           label={intl.formatMessage(messages.btsTitle)}
           labelClassName={cx('label')}
           withoutProvider
@@ -86,7 +86,7 @@ export class BtsIntegrationSelector extends Component {
           />
         </FieldElement>
         <FieldElement
-          className={cx('field-wrapper', this.props.theme === 'light' && 'dark')}
+          className={cx('field-wrapper', this.props.theme)}
           label={intl.formatMessage(messages.integrationNameTitle)}
           labelClassName={cx('label')}
           withoutProvider

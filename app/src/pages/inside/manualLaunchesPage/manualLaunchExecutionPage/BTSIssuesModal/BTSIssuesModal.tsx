@@ -163,10 +163,10 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
     initialize({
       ...getDataSectionConfig(true),
       ...mapFieldsToValues(fields),
-      [CONTROL_TYPE_FIELD]: BTSIssueActionTypes.LINK,
+      [CONTROL_TYPE_FIELD]: selectedControl,
       linkedIssues: [{ id: uniqueId(), linkToIssue: '', issueId: '' }],
     });
-  }, [fields, initialize]);
+  }, [fields, initialize, selectedControl]);
 
   const handlePluginChange = useCallback(
     (newPluginName: string) => {
