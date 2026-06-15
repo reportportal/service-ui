@@ -87,6 +87,7 @@ export const LoginPage = () => {
         <a
           href={referenceDictionary.rpLanding}
           target="_blank"
+          rel="noopener noreferrer"
           onClick={() => trackEvent(LOGIN_PAGE_EVENTS.CLICK_ON_RPP_LOGO)}
         >
           <ReportPortalIcon />

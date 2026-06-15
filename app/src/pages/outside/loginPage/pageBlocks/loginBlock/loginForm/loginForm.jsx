@@ -57,7 +57,7 @@ const messages = defineMessages({
   },
   loginAttemptsExceededMessage: {
     id: 'LoginForm.loginAttemptsExceededMessage',
-    defaultMessage: 'You entered incorrectly login or password many times.',
+    defaultMessage: 'You entered an incorrect login or password many times.',
   },
   loginAttemptsExceededBlockedFor: {
     id: 'LoginForm.loginAttemptsExceededBlockedFor',
@@ -82,8 +82,8 @@ const getLoginLimitState = (lastFailedLoginTime) => {
     return { blockTime: null, isLoginLimitExceeded: false };
   }
 
-  const loginExceededDuration = Number(((Date.now() - lastFailedLoginTime) / 1000).toFixed());
-  const isLoginLimitExceeded = loginExceededDuration <= LOGIN_LIMIT_EXCEEDED_BLOCK_DURATION;
+  const loginExceededDuration = Math.floor((Date.now() - lastFailedLoginTime) / 1000);
+  const isLoginLimitExceeded = loginExceededDuration < LOGIN_LIMIT_EXCEEDED_BLOCK_DURATION;
 
   return {
     blockTime: isLoginLimitExceeded ? LOGIN_LIMIT_EXCEEDED_BLOCK_DURATION - loginExceededDuration : null,

@@ -16,19 +16,16 @@
 
 import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
-import fetchJsonp from 'fetch-jsonp';
 import { FormattedMessage, defineMessages, useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { referenceDictionary } from 'common/utils';
 import { EPAM, SAAS } from 'controllers/appInfo/constants';
 import { instanceTypeSelector } from 'controllers/appInfo/selectors';
 import { showModalAction } from 'controllers/modal';
-import { VersionsOfConnectedServicesModal } from 'layouts/common/appSidebar/helpAndService/modals/versionsOfConnectedServicesModal';
+import 'layouts/common/appSidebar/helpAndService/modals/versionsOfConnectedServicesModal/versionsOfConnectedServicesModal';
 import styles from './outsideLoginFooter.scss';
 
 const cx = classNames.bind(styles);
-
-void VersionsOfConnectedServicesModal;
 
 const messages = defineMessages({
   serviceVersion: {
@@ -46,9 +43,7 @@ export const OutsideLoginFooter = () => {
   const showPrivacyPolicy = instanceType === EPAM || instanceType === SAAS;
 
   useEffect(() => {
-    fetchJsonp('https://status.reportportal.io/versions', {
-      jsonpCallback: 'jsonp',
-    })
+    fetch('https://status.reportportal.io/versions')
       .then((res) => res.json())
       .then((latestVersions) => setLatestServiceVersions(latestVersions))
       .catch(() => {});

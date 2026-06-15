@@ -26,6 +26,9 @@ const cx = classNames.bind(styles);
 const MAX_TWEETS = 3;
 const STACK_STEP_PX = 34;
 
+const getTweetKey = (tweet, index) =>
+  tweet.id ?? tweet.created_at ?? tweet.date ?? tweet.createdAt ?? `tweet-${index}`;
+
 export const NewsBlock = ({ tweets, onExpandedChange }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const visibleTweets = tweets.slice(0, MAX_TWEETS);
@@ -65,8 +68,8 @@ export const NewsBlock = ({ tweets, onExpandedChange }) => {
                 : null;
 
             return (
-              <PostBlock
-                key={tweet.id || index}
+            <PostBlock
+                key={getTweetKey(tweet, index)}
                 tweetData={tweet}
                 stackLayer={stackLayer}
                 isStacked={isStacked}

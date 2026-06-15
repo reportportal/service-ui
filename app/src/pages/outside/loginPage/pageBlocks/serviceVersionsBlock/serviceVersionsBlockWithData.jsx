@@ -107,7 +107,7 @@ export const ServiceVersionsBlockWithData = () => {
         <span className={cx('current-version')}>
           <FormattedMessage
             id={'ServiceVersionsBlock.currentVersion'}
-            defaultMessage={'Service version'}
+            defaultMessage={'Service Version'}
           />
         </span>
       )}

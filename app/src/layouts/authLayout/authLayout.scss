@@ -21,7 +21,7 @@
   justify-content: center;
   width: 100%;
   min-height: 100%;
-  background-color: $COLOR--topaz;
+  background-color: var(--rp-ui-base-topaz);
   background-image: url(~common/img/auth-page-background.png);
   background-repeat: no-repeat;
   background-position: center;

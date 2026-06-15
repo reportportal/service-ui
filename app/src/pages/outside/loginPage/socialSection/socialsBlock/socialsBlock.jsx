@@ -29,9 +29,18 @@ const socials = {
   x: 'X',
   linkedin: 'LinkedIn',
   youtube: 'YouTube',
-  mail: 'mail',
+  mail: 'Email',
   github: 'GitHub',
 };
+
+const socialLinks = [
+  { key: 'slack', href: referenceDictionary.rpSlack, className: 'slk-icon', external: true },
+  { key: 'x', href: referenceDictionary.rpTwitter, className: 'tw-icon', external: true },
+  { key: 'linkedin', href: referenceDictionary.rpLinkedin, className: 'linkedin-icon', external: true },
+  { key: 'youtube', href: referenceDictionary.rpYoutube, className: 'yt-icon', external: true },
+  { key: 'mail', href: referenceDictionary.rpEmail, className: 'mail-icon', external: false },
+  { key: 'github', href: referenceDictionary.rpGitHub, className: 'gh-icon', external: true },
+];
 
 @track()
 export class SocialsBlock extends Component {
@@ -41,62 +50,23 @@ export class SocialsBlock extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
   };
+
   render() {
     const { tracking } = this.props;
+
     return (
       <div className={cx('socials-block')}>
-        <a
-          onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.clickOnSocialIcon(socials.slack))}
-          href={referenceDictionary.rpSlack}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={cx('social-link', 'slk-icon')}
-        >
-          {}
-        </a>
-        <a
-          onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.clickOnSocialIcon(socials.x))}
-          href={referenceDictionary.rpTwitter}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={cx('social-link', 'tw-icon')}
-        >
-          {}
-        </a>
-        <a
-          onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.clickOnSocialIcon(socials.linkedin))}
-          href={referenceDictionary.rpLinkedin}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={cx('social-link', 'linkedin-icon')}
-        >
-          {}
-        </a>
-        <a
-          onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.clickOnSocialIcon(socials.youtube))}
-          href={referenceDictionary.rpYoutube}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={cx('social-link', 'yt-icon')}
-        >
-          {}
-        </a>
-        <a
-          onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.clickOnSocialIcon(socials.mail))}
-          href={referenceDictionary.rpEmail}
-          className={cx('social-link', 'mail-icon')}
-        >
-          {}
-        </a>
-        <a
-          onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.clickOnSocialIcon(socials.github))}
-          href={referenceDictionary.rpGitHub}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={cx('social-link', 'gh-icon')}
-        >
-          {}
-        </a>
+        {socialLinks.map(({ key, href, className, external }) => (
+          <a
+            key={key}
+            href={href}
+            aria-label={socials[key]}
+            title={socials[key]}
+            onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.clickOnSocialIcon(socials[key]))}
+            {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+            className={cx('social-link', className)}
+          />
+        ))}
       </div>
     );
   }

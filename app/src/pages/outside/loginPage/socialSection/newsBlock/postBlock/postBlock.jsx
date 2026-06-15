@@ -18,6 +18,7 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import DOMPurify from 'dompurify';
+import { useIntl } from 'react-intl';
 import { marked } from 'marked-lts';
 
 import styles from './postBlock.scss';
@@ -54,7 +55,7 @@ marked.use(
 
 const getPostContent = (text) => marked.parse(text);
 
-const formatTweetDate = (tweetData) => {
+const formatTweetDate = (tweetData, locale) => {
   const dateValue = tweetData.created_at || tweetData.date || tweetData.createdAt;
   if (!dateValue) {
     return null;
@@ -65,11 +66,12 @@ const formatTweetDate = (tweetData) => {
     return null;
   }
 
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return date.toLocaleDateString(locale, { month: 'short', day: 'numeric' });
 };
 
 export const PostBlock = ({ tweetData, stackLayer, isStacked, isStackFront, stackTopOffset, isExpanded }) => {
-  const formattedDate = formatTweetDate(tweetData);
+  const { locale } = useIntl();
+  const formattedDate = formatTweetDate(tweetData, locale);
 
   return (
     <div

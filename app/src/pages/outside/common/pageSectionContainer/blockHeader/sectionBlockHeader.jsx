@@ -34,10 +34,12 @@ export const SectionBlockHeader = injectIntl(({
     <span className={cx('huge-message')}>{formatMessage(header)}</span>
     <span className={cx('section-hint-message')}>
       {Parser(
-        formatMessage(hint, {
-          b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
-          ...hintParams,
-        }),
+        DOMPurify.sanitize(
+          formatMessage(hint, {
+            b: (data) => `<b>${data}</b>`,
+            ...hintParams,
+          }),
+        ),
       )}
     </span>
   </span>
