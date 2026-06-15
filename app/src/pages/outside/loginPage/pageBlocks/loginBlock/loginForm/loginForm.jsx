@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import { useCallback, useEffect, useReducer, useRef } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import Parser from 'html-react-parser';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { reduxForm, stopSubmit } from 'redux-form';
-import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
+import { FormattedMessage, useIntl, defineMessages } from 'react-intl';
 import Link from 'redux-first-router-link';
-import track from 'react-tracking';
+import { useTracking } from 'react-tracking';
+import { FieldText } from '@reportportal/ui-kit';
 import { commonValidators } from 'common/utils/validation';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { isDemoInstanceSelector } from 'controllers/appInfo';
@@ -33,11 +33,8 @@ import {
   LOGIN_PAGE_EVENTS,
 } from 'components/main/analytics/events/ga4Events/loginPageEvents';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import LoginIcon from 'common/img/login-field-icon-inline.svg';
-import PasswordIcon from 'common/img/password-field-icon-inline.svg';
 import { DEFAULT_USER_CREDENTIALS } from './constants';
 import styles from './loginForm.scss';
 
@@ -54,10 +51,17 @@ const messages = defineMessages({
     id: 'LoginForm.passwordPlaceholder',
     defaultMessage: 'Password',
   },
+  loginAttemptsExceededHeading: {
+    id: 'LoginForm.loginAttemptsExceededHeading',
+    defaultMessage: 'Hold on for a while...',
+  },
   loginAttemptsExceededMessage: {
     id: 'LoginForm.loginAttemptsExceededMessage',
-    defaultMessage:
-      'You entered incorrectly login or password many times. <br />Login form is blocked for',
+    defaultMessage: 'You entered incorrectly login or password many times.',
+  },
+  loginAttemptsExceededBlockedFor: {
+    id: 'LoginForm.loginAttemptsExceededBlockedFor',
+    defaultMessage: 'Login form is blocked for',
   },
   loginAttemptsExceededTime: {
     id: 'LoginForm.loginAttemptsExceededTime',
@@ -69,221 +73,158 @@ const messages = defineMessages({
   },
   badCredentials: {
     id: 'LoginForm.badCredentials',
-    defaultMessage: 'Bad Credentials',
+    defaultMessage: 'Bad credentials',
   },
 });
 
-@connect(
-  (state) => ({
-    lastFailedLoginTime: lastFailedLoginTimeSelector(state),
-    badCredentials: badCredentialsSelector(state),
-    isDemoInstance: isDemoInstanceSelector(state),
-  }),
-  {
-    authorize: loginAction,
-  },
-)
-@reduxForm({
+const getLoginLimitState = (lastFailedLoginTime) => {
+  if (!lastFailedLoginTime) {
+    return { blockTime: null, isLoginLimitExceeded: false };
+  }
+
+  const loginExceededDuration = Number(((Date.now() - lastFailedLoginTime) / 1000).toFixed());
+  const isLoginLimitExceeded = loginExceededDuration <= LOGIN_LIMIT_EXCEEDED_BLOCK_DURATION;
+
+  return {
+    blockTime: isLoginLimitExceeded ? LOGIN_LIMIT_EXCEEDED_BLOCK_DURATION - loginExceededDuration : null,
+    isLoginLimitExceeded,
+  };
+};
+
+const LoginFormComponent = ({ handleSubmit, initialize, form }) => {
+  const dispatch = useDispatch();
+  const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
+
+  const lastFailedLoginTime = useSelector(lastFailedLoginTimeSelector);
+  const badCredentials = useSelector(badCredentialsSelector);
+  const isDemoInstance = useSelector(isDemoInstanceSelector);
+
+  const [, forceCountdownTick] = useReducer((tick) => tick + 1, 0);
+  const prevBadCredentialsRef = useRef(badCredentials);
+
+  const { blockTime, isLoginLimitExceeded } = getLoginLimitState(lastFailedLoginTime);
+
+  useEffect(() => {
+    if (!isLoginLimitExceeded) {
+      return undefined;
+    }
+
+    const intervalId = setInterval(() => {
+      forceCountdownTick();
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [isLoginLimitExceeded, lastFailedLoginTime]);
+
+  useEffect(() => {
+    if (isDemoInstance) {
+      initialize(DEFAULT_USER_CREDENTIALS);
+    }
+  }, [initialize, isDemoInstance]);
+
+  useEffect(() => {
+    if (badCredentials && !prevBadCredentialsRef.current) {
+      dispatch(
+        stopSubmit(form, {
+          login: formatMessage(messages.badCredentials),
+          password: formatMessage(messages.badCredentials),
+        }),
+      );
+    }
+
+    prevBadCredentialsRef.current = badCredentials;
+  }, [badCredentials, dispatch, form, formatMessage]);
+
+  const clickEventHandler = () => {
+    trackEvent(LOGIN_PAGE_EVENTS.clickOnLoginButton(LOGIN));
+  };
+
+  const onLoginSubmit = useCallback(
+    (values) => dispatch(loginAction(values)),
+    [dispatch],
+  );
+
+  return (
+    <form className={cx('login-form')} onSubmit={handleSubmit(onLoginSubmit)}>
+      {!isLoginLimitExceeded ? (
+        <>
+          <div className={cx('login-field')}>
+            <FieldProvider name="login">
+              <FieldErrorHint provideHint={false}>
+                <FieldText
+                  label={formatMessage(messages.login)}
+                  type="email"
+                  maxLength={128}
+                  defaultWidth={false}
+                />
+              </FieldErrorHint>
+            </FieldProvider>
+          </div>
+          <div className={cx('password-field')}>
+            <FieldProvider name="password">
+              <FieldErrorHint provideHint={false}>
+                <FieldText
+                  label={formatMessage(messages.password)}
+                  type="password"
+                  defaultWidth={false}
+                  autoComplete="off"
+                />
+              </FieldErrorHint>
+            </FieldProvider>
+          </div>
+          <Link
+            to={{ type: LOGIN_PAGE, payload: { query: { forgotPass: 'true' } } }}
+            className={cx('forgot-pass')}
+          >
+            <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot your password?'} />
+          </Link>
+          <div className={cx('login-button-container')}>
+            <BigButton
+              className={cx('login-button')}
+              roundedCorners
+              type="submit"
+              color={'base-topaz'}
+              onClick={clickEventHandler}
+            >
+              {formatMessage(COMMON_LOCALE_KEYS.LOGIN)}
+            </BigButton>
+          </div>
+        </>
+      ) : (
+        <div className={cx('attempts-exceeded-block')}>
+          <p className={cx('attempts-exceeded-heading')}>
+            {formatMessage(messages.loginAttemptsExceededHeading)}
+          </p>
+          <div className={cx('attempts-exceeded-block-content')}>
+            <span>{formatMessage(messages.loginAttemptsExceededMessage)}</span>
+            <span className={cx('blocked-for-line')}>
+              {formatMessage(messages.loginAttemptsExceededBlockedFor)}{' '}
+              <b>{formatMessage(messages.loginAttemptsExceededTime, { time: blockTime })}</b>
+            </span>
+          </div>
+          <Link
+            to={{ type: LOGIN_PAGE, payload: { query: { forgotPass: 'true' } } }}
+            className={cx('forgot-pass', 'attempts-exceed')}
+          >
+            <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot your password?'} />
+          </Link>
+        </div>
+      )}
+    </form>
+  );
+};
+
+LoginFormComponent.propTypes = {
+  handleSubmit: PropTypes.func.isRequired,
+  initialize: PropTypes.func.isRequired,
+  form: PropTypes.string.isRequired,
+};
+
+export const LoginForm = reduxForm({
   form: 'loginPage',
   validate: ({ login, password }) => ({
     login: commonValidators.login(login),
     password: commonValidators.oldPassword(password),
   }),
-})
-@track()
-@injectIntl
-export class LoginForm extends React.Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    handleSubmit: PropTypes.func.isRequired,
-    authorize: PropTypes.func.isRequired,
-    lastFailedLoginTime: PropTypes.number,
-    badCredentials: PropTypes.bool.isRequired,
-    form: PropTypes.string.isRequired,
-    dispatch: PropTypes.func.isRequired,
-    isDemoInstance: PropTypes.bool,
-    initialize: PropTypes.func.isRequired,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
-  };
-
-  static defaultProps = {
-    lastFailedLoginTime: null,
-    isDemoInstance: false,
-  };
-
-  constructor(props) {
-    super(props);
-    this.state = this.calculateLoginLimitState();
-  }
-
-  componentDidMount() {
-    const { isDemoInstance, initialize } = this.props;
-
-    if (isDemoInstance) {
-      initialize(DEFAULT_USER_CREDENTIALS);
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    const { badCredentials, isDemoInstance, initialize } = this.props;
-
-    if (prevProps.lastFailedLoginTime !== this.props.lastFailedLoginTime) {
-      this.blockLoginForm();
-    }
-
-    if (badCredentials !== prevProps.badCredentials && badCredentials) {
-      this.badCredentialsHandler();
-    }
-
-    if (isDemoInstance !== prevProps.isDemoInstance && isDemoInstance) {
-      initialize(DEFAULT_USER_CREDENTIALS);
-    }
-  }
-
-  componentWillUnmount() {
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-    }
-  }
-
-  getLoginExceededDuration = () => ((Date.now() - this.props.lastFailedLoginTime) / 1000).toFixed();
-
-  blockLoginForm = () => {
-    const data = this.calculateLoginLimitState();
-
-    this.setState(data);
-  };
-
-  calculateLoginLimitState = () => {
-    const loginExceededDuration = this.getLoginExceededDuration();
-    const isLoginLimitExceeded = loginExceededDuration <= LOGIN_LIMIT_EXCEEDED_BLOCK_DURATION;
-    let blockTime = null;
-
-    if (isLoginLimitExceeded) {
-      blockTime = LOGIN_LIMIT_EXCEEDED_BLOCK_DURATION - loginExceededDuration;
-      this.blockFormCountdown(blockTime);
-    }
-
-    return {
-      blockTime,
-      isLoginLimitExceeded,
-    };
-  };
-
-  blockFormCountdown = (seconds) => {
-    let blockTime = seconds;
-    this.intervalId = setInterval(() => {
-      blockTime -= 1;
-      if (blockTime <= 0) {
-        clearInterval(this.intervalId);
-        this.setState({
-          isLoginLimitExceeded: false,
-        });
-      } else {
-        this.setState({
-          blockTime,
-        });
-      }
-    }, 1000);
-  };
-
-  badCredentialsHandler = () => {
-    const {
-      form,
-      dispatch,
-      intl: { formatMessage },
-    } = this.props;
-    dispatch(
-      stopSubmit(form, {
-        login: formatMessage(messages.badCredentials),
-        password: formatMessage(messages.badCredentials),
-      }),
-    );
-  };
-
-  clickEventHandler = () => {
-    const { tracking } = this.props;
-    tracking.trackEvent(LOGIN_PAGE_EVENTS.clickOnLoginButton(LOGIN));
-  };
-
-  render() {
-    const {
-      intl: { formatMessage },
-      handleSubmit,
-      authorize,
-    } = this.props;
-    const { blockTime, isLoginLimitExceeded } = this.state;
-
-    return (
-      <form className={cx('login-form')} onSubmit={handleSubmit(authorize)}>
-        {!isLoginLimitExceeded ? (
-          <>
-            <div className={cx('login-field')}>
-              <FieldProvider name="login">
-                <FieldErrorHint provideHint={false}>
-                  <InputOutside
-                    icon={LoginIcon}
-                    placeholder={formatMessage(messages.login)}
-                    maxLength="128"
-                    hasDynamicValidation
-                    provideErrorHint
-                  />
-                </FieldErrorHint>
-              </FieldProvider>
-            </div>
-            <div className={cx('password-field')}>
-              <FieldProvider name="password">
-                <FieldErrorHint provideHint={false}>
-                  <InputOutside
-                    icon={PasswordIcon}
-                    placeholder={formatMessage(messages.password)}
-                    type="password"
-                    hasDynamicValidation
-                    provideErrorHint
-                    autoComplete="off"
-                  />
-                </FieldErrorHint>
-              </FieldProvider>
-            </div>
-            <Link
-              to={{ type: LOGIN_PAGE, payload: { query: { forgotPass: 'true' } } }}
-              className={cx('forgot-pass')}
-            >
-              <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot password?'} />
-            </Link>
-            <div className={cx('login-button-container')}>
-              <BigButton
-                roundedCorners
-                type="submit"
-                color={'organish'}
-                onClick={this.clickEventHandler}
-              >
-                {formatMessage(COMMON_LOCALE_KEYS.LOGIN)}
-              </BigButton>
-            </div>
-          </>
-        ) : (
-          <div className={cx('attempts-exceeded-block')}>
-            <div className={cx('attempts-exceeded-block-content')}>
-              <span>{Parser(formatMessage(messages.loginAttemptsExceededMessage))}</span>
-              <span className={cx('time')}>
-                <b>
-                  {Parser(formatMessage(messages.loginAttemptsExceededTime, { time: blockTime }))}
-                </b>
-              </span>
-            </div>
-            <Link
-              to={{ type: LOGIN_PAGE, payload: { query: { forgotPass: 'true' } } }}
-              className={cx('forgot-pass', 'attempts-exceed')}
-            >
-              <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot password?'} />
-            </Link>
-          </div>
-        )}
-      </form>
-    );
-  }
-}
+})(LoginFormComponent);

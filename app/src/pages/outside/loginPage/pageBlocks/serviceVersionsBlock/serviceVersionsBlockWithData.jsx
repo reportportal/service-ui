@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import classNames from 'classnames/bind';
 import { useSelector } from 'react-redux';
 import fetchJsonp from 'fetch-jsonp';
@@ -29,76 +29,65 @@ const cx = classNames.bind(styles);
 export const ServiceVersionsBlockWithData = () => {
   const appInfo = useSelector(appInfoSelector);
 
-  const [services, setServices] = useState({});
-  const [isDeprecated, setIsDeprecated] = useState(false);
   const [latestVersions, setLatestVersions] = useState(null);
 
-  const fetchVersions = async () => {
-    try {
-      const response = await fetchJsonp('https://status.reportportal.io/versions', {
-        jsonpCallback: 'jsonp',
-      });
-
-      const latestServiceVersions = await response.json();
-      setLatestVersions(latestServiceVersions);
-    } catch (error) {
-      console.error('Error fetching versions:', error);
-    }
-  };
-
-  const calculateServices = useCallback(
-    (latestServiceVersions) => {
-      const calculatedServices = {};
-      let hasDeprecated = false;
-
-      Object.keys(appInfo).forEach((serviceKey) => {
-        const service = appInfo[serviceKey];
-        const { build } = service || {};
-
-        if (!build?.version) return false;
-
-        const currentVersion = build.version;
-        const latestVersion = latestServiceVersions[build.repo];
-        const serviceIsDeprecated =
-          build.repo &&
-          latestVersion &&
-          (() => {
-            try {
-              return semverDiff(currentVersion, latestVersion);
-            } catch {
-              return false;
-            }
-          })();
-
-        if (serviceIsDeprecated) hasDeprecated = true;
-
-        calculatedServices[serviceKey] = {
-          name: build.name,
-          version: currentVersion,
-          newVersion: latestVersion || null,
-          repo: build.repo || null,
-          isDeprecated: serviceIsDeprecated,
-        };
-
-        return true;
-      });
-
-      setIsDeprecated(hasDeprecated);
-      return calculatedServices;
-    },
-    [appInfo],
-  );
-
   useEffect(() => {
+    const fetchVersions = async () => {
+      try {
+        const response = await fetchJsonp('https://status.reportportal.io/versions', {
+          jsonpCallback: 'jsonp',
+        });
+
+        const latestServiceVersions = await response.json();
+        setLatestVersions(latestServiceVersions);
+      } catch (error) {
+        console.error('Error fetching versions:', error);
+      }
+    };
+
     fetchVersions();
   }, []);
 
-  useEffect(() => {
-    if (Object.keys(appInfo).length > 0 && latestVersions) {
-      const calculatedServices = calculateServices(latestVersions);
-      setServices(calculatedServices);
+  const { services, isDeprecated } = useMemo(() => {
+    if (Object.keys(appInfo).length === 0 || !latestVersions) {
+      return { services: {}, isDeprecated: false };
     }
-  }, [appInfo, latestVersions, calculateServices]);
+
+    const calculatedServices = {};
+    let hasDeprecated = false;
+
+    Object.keys(appInfo).forEach((serviceKey) => {
+      const service = appInfo[serviceKey];
+      const { build } = service || {};
+
+      if (!build?.version) return;
+
+      const currentVersion = build.version;
+      const latestVersion = latestVersions[build.repo];
+      const serviceIsDeprecated =
+        build.repo &&
+        latestVersion &&
+        (() => {
+          try {
+            return semverDiff(currentVersion, latestVersion);
+          } catch {
+            return false;
+          }
+        })();
+
+      if (serviceIsDeprecated) hasDeprecated = true;
+
+      calculatedServices[serviceKey] = {
+        name: build.name,
+        version: currentVersion,
+        newVersion: latestVersion || null,
+        repo: build.repo || null,
+        isDeprecated: serviceIsDeprecated,
+      };
+    });
+
+    return { services: calculatedServices, isDeprecated: hasDeprecated };
+  }, [appInfo, latestVersions]);
 
   return (
     <div className={cx('service-versions-block')}>
@@ -118,7 +107,7 @@ export const ServiceVersionsBlockWithData = () => {
         <span className={cx('current-version')}>
           <FormattedMessage
             id={'ServiceVersionsBlock.currentVersion'}
-            defaultMessage={'Current version'}
+            defaultMessage={'Service version'}
           />
         </span>
       )}

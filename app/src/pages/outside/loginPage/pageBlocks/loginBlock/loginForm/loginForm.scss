@@ -15,35 +15,31 @@
  */
 
 .login-form {
-  width: 380px;
-  margin: auto;
+  width: 100%;
+  max-width: 400px;
+  margin: 0;
   font-family: $FONT-REGULAR;
 
   @media (max-width: $SCREEN_XS_MAX) {
-    width: 100%;
+    max-width: 280px;
   }
 }
 .login-field {
-  width: 380px;
-  margin-bottom: 30px;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    width: 280px;
-  }
+  width: 100%;
+  margin-bottom: 16px;
 }
 .password-field {
-  width: 380px;
-  margin-bottom: 10px;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    width: 280px;
-  }
+  width: 100%;
+  margin-bottom: 16px;
 }
 .forgot-pass {
+  font-family: $FONT-ROBOTO-REGULAR;
+  text-decoration-line: none;
   display: block;
-  margin-bottom: 30px;
+  margin-bottom: 16px;
   font-size: 13px;
-  color: $COLOR--tealish;
+  color: $COLOR--topaz-2;
+  line-height: 20px;
   text-align: left;
   cursor: pointer;
 
@@ -59,10 +55,9 @@
   }
 }
 .login-button-container {
-  width: 160px;
-  height: 40px;
-  margin: 0 auto;
-
+  width: 120px;
+  height: 36px;
+  margin: 0;
   @media (max-width: $SCREEN_SM_MAX) {
     margin-bottom: 0;
   }
@@ -71,11 +66,26 @@
     margin-bottom: 34px;
   }
 }
+
+.login-button {
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: var(--rp-ui-base-fw-medium);
+  font-family: var(--rp-ui-base-font-family);
+}
 .attempts-exceeded-block {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-bottom: 16px;
+}
+
+.attempts-exceeded-heading {
+  margin: 0 0 8px;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 16px;
+  color: $COLOR--charcoal-grey;
+  text-align: center;
 }
 
 .attempts-exceeded-block-content {
@@ -90,16 +100,18 @@
   font-family: $FONT-REGULAR;
   line-height: 16px;
 
-  .time {
-    padding-top: 16px;
-    line-height: 30px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 280px;
   }
+}
+
+.blocked-for-line {
+  margin-top: 8px;
 
   b {
     font-size: 36px;
-  }
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    width: 280px;
+    line-height: 1.2;
+    display: block;
+    color: $COLOR--charcoal-grey;
   }
 }

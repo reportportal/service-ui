@@ -16,81 +16,93 @@
 
 .login-page {
   position: relative;
-  width: 1000px;
+  max-width: 1170px;
+  width: 100%;
   height: 764px;
   margin: 0 auto;
-  padding: 20px 0;
+  padding: 20px;
   box-sizing: border-box;
 
-  @media (max-width: $SCREEN_SM_MAX) {
-    width: 768px;
-    height: 1044px;
-    padding-bottom: 20px;
-  }
-  @media (max-width: $SCREEN_XS_MAX) {
-    width: 320px;
+  @media (max-width: $SCREEN_MD_MAX) {
     height: auto;
-    padding-bottom: 0;
+    min-height: 764px;
+  }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    height: auto;
+    min-height: 0;
+    max-width: 100%;
+    padding: 16px;
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding: 12px;
   }
 }
+
 .login-page-content {
   position: relative;
+  display: flex;
   width: 100%;
   height: 100%;
-  border-radius: 2px;
-  box-shadow: 0 1px 3px 0 $COLOR--skipped;
-  background-color: $COLOR--white-two;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
   box-sizing: border-box;
+  overflow: hidden;
 
   @media (max-width: $SCREEN_SM_MAX) {
-    padding: 80px 50px 0;
-  }
-  @media (max-width: $SCREEN_XS_MAX) {
-    padding: 0;
-    overflow: hidden;
+    flex-direction: column;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
   }
 }
-.background {
-  position: absolute;
-  top: 0;
-  left: 0;
+
+.login-form-side {
+  display: flex;
+  flex-direction: column;
   width: 50%;
   height: 100%;
-  background-image: url(./img/login-page-bgc.svg);
-  background-color: $COLOR--light-blue;
-  background-repeat: no-repeat;
-  background-size: 100%;
+  min-height: 0;
+  padding: 64px 64px 28px;
+  background-color: $COLOR--white-two;
+  border-radius: 12px 0 0 12px;
+  box-sizing: border-box;
+
+  @media (max-width: $SCREEN_MD_MAX) {
+    padding: 48px 40px 28px;
+  }
 
   @media (max-width: $SCREEN_SM_MAX) {
     width: 100%;
-    background-image: url(./img/login-page-tablet-bgc.svg);
+    height: auto;
+    padding: 32px 32px 16px;
+    border-radius: 12px 12px 0 0;
   }
+
   @media (max-width: $SCREEN_XS_MAX) {
-    width: 100%;
-    height: 145px;
-    background-image: url(./img/login-page-mobile-bgc.svg);
+    padding: 24px 20px 12px;
   }
 }
+
 .logo {
-  position: absolute;
-  top: 30px;
-  left: 60px;
-  width: 140px;
-  height: 30px;
-  background-image: url(~common/img/logo.svg);
+  flex-shrink: 0;
+  width: 146px;
+  height: 32px;
+  margin-bottom: 100px;
   background-repeat: no-repeat;
   background-size: 100%;
   cursor: pointer;
-  z-index: 1;
+  z-index: 2;
 
   @media (max-width: $SCREEN_SM_MAX) {
-    left: 50px;
+    margin-bottom: 24px;
   }
+
   @media (max-width: $SCREEN_XS_MAX) {
-    top: 15px;
-    left: 20px;
-    width: 100px;
-    height: 25px;
+    width: 120px;
+    height: 26px;
+    margin-bottom: 20px;
   }
 }
 

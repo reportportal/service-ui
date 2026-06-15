@@ -17,23 +17,52 @@
 .block-header {
   display: block;
   width: 100%;
-  margin-bottom: 32px;
   font-family: $FONT-REGULAR;
   font-size: 24px;
   color: $COLOR--steel-grey;
-  text-align: center;
-  line-height: 1.4;
+  margin-bottom: 32px;
+
+  &.left-aligned {
+    margin-bottom: 24px;
+  }
 
   @media (max-width: $SCREEN_XS_MAX) {
     font-size: 16px;
-    margin-bottom: 60px;
+    margin-bottom: 24px;
+
+    &.left-aligned {
+      margin-bottom: 20px;
+    }
   }
 }
+
 .huge-message {
+  margin-top: 100px;
+  font-family: $FONT-REGULAR;
   font-size: 32px;
-  color: $COLOR--charcoal-grey;
+  color: var(--rp-ui-base-almost-black);
+  line-height: 42px;
 
   @media (max-width: $SCREEN_XS_MAX) {
     font-size: 24px;
+  }
+}
+
+.section-hint-message {
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0;
+  font-weight: normal;
+  color: var(--rp-ui-base-almost-black);
+}
+
+.left-aligned {
+  text-align: left;
+
+  .huge-message {
+    display: block;
+    margin-top: 0;
+    margin-bottom: 8px;
   }
 }

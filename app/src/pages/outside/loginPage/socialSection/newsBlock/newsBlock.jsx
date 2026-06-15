@@ -15,60 +15,88 @@
  */
 
 import classNames from 'classnames/bind';
-import React, { Component } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
-import { ScrollWrapper } from 'components/main/scrollWrapper';
 import styles from './newsBlock.scss';
 import { PostBlock } from './postBlock';
 
 const cx = classNames.bind(styles);
 
-export class NewsBlock extends Component {
-  static propTypes = {
-    tweets: PropTypes.array,
+const MAX_TWEETS = 3;
+const STACK_STEP_PX = 34;
+
+export const NewsBlock = ({ tweets, onExpandedChange }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const visibleTweets = tweets.slice(0, MAX_TWEETS);
+  const hasMoreTweets = visibleTweets.length > 1;
+  const isStacked = !isExpanded && visibleTweets.length > 1;
+  const stackedTweets = isStacked ? [...visibleTweets].reverse() : visibleTweets;
+  const maxStackLayer = visibleTweets.length - 1;
+  const stackPaddingTop = isStacked ? maxStackLayer * STACK_STEP_PX : 0;
+
+  const handleToggle = () => {
+    const nextExpanded = !isExpanded;
+    setIsExpanded(nextExpanded);
+    onExpandedChange?.(nextExpanded);
   };
 
-  static defaultProps = {
-    tweets: [],
-  };
-  constructor(props) {
-    super(props);
-    window.addEventListener('resize', this.windowResizeHandler, false);
-  }
-  state = { twitterBlockHeight: window.innerWidth < 992 ? 160 : 500 };
-  componentWillUnmount = () => {
-    window.removeEventListener('resize', this.windowResizeHandler, false);
-  };
-  windowResizeHandler = (e) => {
-    if (this.state.twitterBlockHeight === 500 && e.target.innerWidth < 992) {
-      this.setState({ twitterBlockHeight: 160 });
-    }
-    if (this.state.twitterBlockHeight === 160 && e.target.innerWidth > 991) {
-      this.setState({ twitterBlockHeight: 500 });
-    }
-  };
+  return (
+    <div className={cx('news-block', { 'news-block--expanded': isExpanded })}>
+      <div
+        className={cx('posts-stack', {
+          'posts-stack--stacked': isStacked,
+          'posts-stack--expanded': isExpanded,
+        })}
+        style={
+          isStacked
+            ? { paddingTop: `${stackPaddingTop}px` }
+            : { paddingTop: 0 }
+        }
+      >
+        {(isExpanded ? [...stackedTweets].reverse() : stackedTweets).map(
+          (tweet, index) => {
+            const stackLayer = isStacked ? visibleTweets.length - 1 - index : null;
+            const isStackFront = stackLayer === 0;
+            const adjustedStep = STACK_STEP_PX - (index * 2);
+            const stackTopOffset =
+              isStacked && stackLayer > 0
+                ? (maxStackLayer - stackLayer) * adjustedStep
+                : null;
 
-  render() {
-    return (
-      <div className={cx('news-block')}>
-        <div className={cx('twitter-block')}>
-          <div className={cx('twitter-title')}>
-            <div className={cx('twitter-icon')} />
-            <FormattedMessage
-              id={'NewsBlock.twitterTitle'}
-              defaultMessage={'Be informed with our latest tweets'}
-            />
-          </div>
-          <div className={cx('twitter-news')}>
-            <ScrollWrapper autoHeight autoHeightMax={this.state.twitterBlockHeight}>
-              {this.props.tweets.map((tweet, index) => (
-                <PostBlock key={tweet.id || index} tweetData={tweet} />
-              ))}
-            </ScrollWrapper>
-          </div>
-        </div>
+            return (
+              <PostBlock
+                key={tweet.id || index}
+                tweetData={tweet}
+                stackLayer={stackLayer}
+                isStacked={isStacked}
+                isStackFront={isStackFront}
+                stackTopOffset={stackTopOffset}
+                isExpanded={isExpanded}
+              />
+            );
+          }
+        )}
       </div>
-    );
-  }
-}
+      {hasMoreTweets && (
+        <button type="button" className={cx('toggle-button')} onClick={handleToggle}>
+          {isExpanded ? (
+            <FormattedMessage id="NewsBlock.close" defaultMessage="Close" />
+          ) : (
+            <FormattedMessage id="NewsBlock.openMoreNews" defaultMessage="Open more news" />
+          )}
+        </button>
+      )}
+    </div>
+  );
+};
+
+NewsBlock.propTypes = {
+  tweets: PropTypes.array,
+  onExpandedChange: PropTypes.func,
+};
+
+NewsBlock.defaultProps = {
+  tweets: [],
+  onExpandedChange: null,
+};

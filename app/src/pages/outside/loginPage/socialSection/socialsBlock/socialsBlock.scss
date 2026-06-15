@@ -15,84 +15,77 @@
  */
 
 .socials-block {
+  display: flex;
+  justify-content: space-between;
   width: 100%;
+  flex-shrink: 0;
   text-align: center;
 }
 
 .social-link {
   display: inline-block;
-  width: 22px;
-  height: 22px;
-  margin-right: 33px;
+  width: 28px;
+  height: 28px;
   background-repeat: no-repeat;
   background-position: center;
 
   @media (max-width: $SCREEN_SM_MAX) {
-    margin-right: 60px;
+    margin-right: 48px;
   }
 
-  &.gh-icon {
-    background-image: url(./img/socialGh.svg);
+  &.slk-icon {
+    background-image: url(img/social-slack-icon.svg);
     &:hover {
-      background-image: url(./img/socialGh-hv.svg);
+      filter: brightness(1.2);
     }
     &:active {
-      background-image: url(./img/socialGh-act.svg);
-    }
-  }
-  &.fb-icon {
-    background-image: url(./img/social-cuk.svg);
-    &:hover {
-      background-image: url(./img/social-cuk-hv.svg);
-    }
-    &:active {
-      background-image: url(./img/social-cuk-act.svg);
+      filter: brightness(0.8);
     }
   }
   &.tw-icon {
-    background-image: url(./img/socialTw.svg);
+    background-image: url(./img/social-x-icon.svg);
     &:hover {
-      background-image: url(./img/socialTw-hv.svg);
+      filter: brightness(1.2);
     }
     &:active {
-      background-image: url(./img/socialTw-act.svg);
+      filter: brightness(0.8);
     }
   }
   &.linkedin-icon {
-    background-image: url(./img/socialLinkedin.svg);
+    background-image: url(./img/social-linkedin-icon.svg);
     &:hover {
-      background-image: url(./img/socialLinkedin-hv.svg);
+      filter: brightness(1.2);
     }
     &:active {
-      background-image: url(./img/socialLinkedin-act.svg);
+      filter: brightness(0.8);
     }
   }
   &.yt-icon {
-    background-image: url(./img/socialYt.svg);
+    background-image: url(./img/social-youtube-icon.svg);
     &:hover {
-      background-image: url(./img/socialYt-hv.svg);
+      filter: brightness(1.2);
     }
     &:active {
-      background-image: url(./img/socialYt-act.svg);
-    }
-  }
-  &.slk-icon {
-    background-image: url(./img/socialSl.svg);
-    &:hover {
-      background-image: url(./img/socialSl-hv.svg);
-    }
-    &:active {
-      background-image: url(./img/socialSl-act.svg);
+      filter: brightness(0.8);
     }
   }
   &.mail-icon {
-    background-image: url(./img/socialMl.svg);
+    background-image: url(./img/social-email-icon.svg);
     &:hover {
-      background-image: url(./img/socialMl-hv.svg);
+      filter: brightness(1.2);
     }
     &:active {
-      background-image: url(./img/socialMl-act.svg);
+      filter: brightness(0.8);
     }
+  }
+  &.gh-icon {
     margin-right: 0;
+    background-image: url(./img/social-github-icon.svg);
+    &:hover {
+      filter: brightness(1.2);
+    }
+    &:active {
+      filter: brightness(0.8);
+    }
   }
 }

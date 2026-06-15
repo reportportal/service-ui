@@ -15,8 +15,6 @@
  */
 
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { PageBlockContainer } from 'pages/outside/common/pageBlockContainer';
-import React from 'react';
 import { isEmptyObject } from 'common/utils';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { useSelector } from 'react-redux';
@@ -26,17 +24,18 @@ import { uiExtensionLoginBlockSelector } from 'controllers/plugins/uiExtensions'
 import { ExternalLoginBlock } from './loginForm/externalLoginBlock';
 import styles from './loginBlock.scss';
 import { LoginForm } from './loginForm';
+import {PageSectionContainer} from "pages/outside/common/pageSectionContainer";
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
   welcome: {
     id: 'LoginBlock.welcome',
-    defaultMessage: 'Welcome,',
+    defaultMessage: 'Welcome',
   },
   login: {
     id: 'LoginBlock.login',
-    defaultMessage: 'login to your account',
+    defaultMessage: 'Enter your email and password to log in:',
   },
 });
 
@@ -46,7 +45,7 @@ export const LoginBlock = () => {
 
   return (
     <>
-      <PageBlockContainer header={messages.welcome} hint={messages.login}>
+      <PageSectionContainer header={messages.welcome} hint={messages.login} leftAligned>
         {!isEmptyObject(externalAuth) ? (
           <>
             <ExternalLoginBlock externalAuth={externalAuth} />
@@ -59,7 +58,7 @@ export const LoginBlock = () => {
           </>
         ) : null}
         <LoginForm />
-      </PageBlockContainer>
+      </PageSectionContainer>
       <div className={cx('bottom-content')}>
         {extensions &&
           extensions.length !== 0 &&

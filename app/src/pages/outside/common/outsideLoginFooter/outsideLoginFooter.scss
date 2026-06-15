@@ -1,5 +1,5 @@
 /*!
- * Copyright 2023 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,38 @@
  * limitations under the License.
  */
 
-.policy-block {
+.outside-login-footer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: auto;
+  padding-top: 16px;
   box-sizing: border-box;
-  text-align: left;
-  padding: 8px 0 8px 60px;
 
-  a {
-    text-decoration: none;
-    color: $COLOR--tealish;
-    font-size: 12px;
-    font-family: $FONT-REGULAR;
+  @media (max-width: $SCREEN_SM_MAX) {
+    padding-top: 8px;
+    gap: 16px;
   }
+}
 
-  @media (max-width: $SCREEN_XS_MAX) {
-    padding: 12px 0;
+.footer-link {
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 20px;
+  color: $COLOR--topaz-2;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
   }
+}
+
+.service-version-link {
+  margin-right: 8px;
 }

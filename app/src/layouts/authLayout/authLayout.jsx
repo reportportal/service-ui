@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,15 @@
  * limitations under the License.
  */
 
+import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { useState } from 'react';
-import styles from './socialSection.scss';
-import { NewsBlock } from './newsBlock';
-import { SocialsBlock } from './socialsBlock';
+import styles from './authLayout.scss';
 
 const cx = classNames.bind(styles);
 
-export const SocialSection = () => {
-  const [isNewsExpanded, setIsNewsExpanded] = useState(false);
+export const AuthLayout = ({ children = null }) => <div className={cx('auth-layout')}>{children}</div>;
 
-  return (
-    <div className={cx('social-section', { 'social-section--news-expanded': isNewsExpanded })}>
-      <NewsBlock onExpandedChange={setIsNewsExpanded} />
-      <div className={cx('social-section__footer')}>
-        <SocialsBlock />
-      </div>
-    </div>
-  );
+AuthLayout.propTypes = {
+  children: PropTypes.node,
 };

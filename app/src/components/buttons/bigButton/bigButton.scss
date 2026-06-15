@@ -119,6 +119,19 @@
       border-color: color.adjust($COLOR--topaz, $lightness: -30%);
     }
   }
+  &.color-base-topaz {
+    background-color: $COLOR--topaz-2;
+    border-color: $COLOR--topaz-2;
+
+    &:hover:not(.disabled) {
+      background-color: color.adjust($COLOR--topaz-2, $lightness: -15%);
+      border-color: color.adjust($COLOR--topaz-2, $lightness: -15%);
+    }
+    &:active:not(.disabled) {
+      background-color: color.adjust($COLOR--topaz-2, $lightness: -30%);
+      border-color: color.adjust($COLOR--topaz-2, $lightness: -30%);
+    }
+  }
 }
 
 .mobile-disabled {

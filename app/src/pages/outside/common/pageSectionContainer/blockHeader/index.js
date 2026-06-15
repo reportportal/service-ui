@@ -1,5 +1,5 @@
-/*!
- * Copyright 2023 EPAM Systems
+/*
+ * Copyright 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,8 @@
  * limitations under the License.
  */
 
-.policy-block {
-  box-sizing: border-box;
-  text-align: left;
-  padding: 8px 0 8px 60px;
+import { SectionBlockHeader } from './sectionBlockHeader';
 
-  a {
-    text-decoration: none;
-    color: $COLOR--tealish;
-    font-size: 12px;
-    font-family: $FONT-REGULAR;
-  }
+export { SectionBlockHeader };
 
-  @media (max-width: $SCREEN_XS_MAX) {
-    padding: 12px 0;
-  }
-}
+export default SectionBlockHeader;
