@@ -119,21 +119,23 @@ export const RegistrationPage = ({
           )}
         </RegistrationPageSection>
         <RegistrationPageSection failed={!tokenActive || !tokenProvided}>
-          {tokenProvided && tokenActive ? (
-            <div className={cx('main-content')}>
-              <BlockHeader header={messages.welcome} hint={messages.registration} />
-              <RegistrationForm
-                email={email}
-                submitForm={onRegistrationSubmit}
-                loading={loading}
-                initialData={initialData}
-                submitButtonTitle={submitButtonTitle}
-              />
-              <OutsideLoginFooter />
-            </div>
-          ) : (
-            <TokenErrorSection tokenProvided={tokenProvided} />
-          )}
+          <div className={cx('main-content')}>
+            {tokenProvided && tokenActive ? (
+              <>
+                <BlockHeader header={messages.welcome} hint={messages.registration} />
+                <RegistrationForm
+                  email={email}
+                  submitForm={onRegistrationSubmit}
+                  loading={loading}
+                  initialData={initialData}
+                  submitButtonTitle={submitButtonTitle}
+                />
+              </>
+            ) : (
+              <TokenErrorSection tokenProvided={tokenProvided} />
+            )}
+            <OutsideLoginFooter />
+          </div>
         </RegistrationPageSection>
       </div>
     </div>

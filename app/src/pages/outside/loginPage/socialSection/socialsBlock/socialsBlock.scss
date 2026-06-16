@@ -29,6 +29,11 @@
   background-repeat: no-repeat;
   background-position: center;
 
+  &:focus-visible {
+    outline: 2px solid var(--rp-ui-base-topaz-focused);
+    outline-offset: 2px;
+  }
+
   @media (max-width: $SCREEN_SM_MAX) {
     margin-right: 48px;
   }
