@@ -16,20 +16,28 @@
 
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import styles from './loginPageSection.scss';
+import { SectionBlockHeader } from './blockHeader';
+import styles from './pageSectionContainer.scss';
 
 const cx = classNames.bind(styles);
 
-export const LoginPageSection = ({ social, children }) => (
-  <div className={cx('login-page-section', { social })}>{children}</div>
+export const PageSectionContainer = ({ header, hint, hintParams, leftAligned, children }) => (
+  <div className={cx('page-block-container')}>
+    <SectionBlockHeader header={header} hint={hint} hintParams={hintParams} leftAligned={leftAligned} />
+    {children}
+  </div>
 );
-
-LoginPageSection.propTypes = {
+PageSectionContainer.propTypes = {
+  header: PropTypes.object,
+  hint: PropTypes.object,
+  hintParams: PropTypes.object,
+  leftAligned: PropTypes.bool,
   children: PropTypes.node,
-  social: PropTypes.bool,
 };
-
-LoginPageSection.defaultProps = {
+PageSectionContainer.defaultProps = {
+  header: {},
+  hint: {},
+  hintParams: {},
+  leftAligned: false,
   children: null,
-  social: false,
 };

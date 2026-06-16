@@ -14,29 +14,23 @@
  * limitations under the License.
  */
 
-.external-login-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.external-auth-btn {
-  display: inline-block;
-  height: 40px;
-  margin-bottom: 10px;
+.page-block-container {
+  width: 100%;
+  box-sizing: border-box;
+  height: 100%;
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0;
+  font-family: $FONT-ROBOTO-REGULAR;
 
-  svg {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    margin-top: 2px;
-    margin-right: 8px;
-    color: var(--rp-ui-base-bg-000);
-    fill: var(--rp-ui-base-bg-000);
-    vertical-align: top;
+  b {
+    font-family: $FONT-SEMIBOLD;
   }
 
-  a {
-    color: inherit;
-    text-decoration: none;
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    height: auto;
   }
 }

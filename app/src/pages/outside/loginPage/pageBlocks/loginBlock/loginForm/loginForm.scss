@@ -15,35 +15,31 @@
  */
 
 .login-form {
-  width: 380px;
-  margin: auto;
-  font-family: $FONT-REGULAR;
+  width: 100%;
+  max-width: 400px;
+  margin: 0;
+  font-family: var(--rp-ui-base-font-family-heading);
 
   @media (max-width: $SCREEN_XS_MAX) {
-    width: 100%;
+    max-width: 280px;
   }
 }
 .login-field {
-  width: 380px;
-  margin-bottom: 30px;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    width: 280px;
-  }
+  width: 100%;
+  margin-bottom: 16px;
 }
 .password-field {
-  width: 380px;
-  margin-bottom: 10px;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    width: 280px;
-  }
+  width: 100%;
+  margin-bottom: 16px;
 }
 .forgot-pass {
+  font-family: var(--rp-ui-base-font-family);
+  text-decoration-line: none;
   display: block;
-  margin-bottom: 30px;
+  margin-bottom: 16px;
   font-size: 13px;
-  color: $COLOR--tealish;
+  color: var(--rp-ui-base-topaz);
+  line-height: 20px;
   text-align: left;
   cursor: pointer;
 
@@ -59,10 +55,9 @@
   }
 }
 .login-button-container {
-  width: 160px;
-  height: 40px;
-  margin: 0 auto;
-
+  width: 120px;
+  height: 36px;
+  margin: 0;
   @media (max-width: $SCREEN_SM_MAX) {
     margin-bottom: 0;
   }
@@ -71,11 +66,27 @@
     margin-bottom: 34px;
   }
 }
+
+.login-button {
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: var(--rp-ui-base-fw-medium);
+  font-family: var(--rp-ui-base-font-family);
+}
 .attempts-exceeded-block {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-bottom: 16px;
+}
+
+.attempts-exceeded-heading {
+  margin: 0 0 8px;
+  font-family: var(--rp-ui-base-font-family-heading);
+  font-weight: var(--rp-ui-base-fw-semi-bold);
+  font-size: 16px;
+  color: var(--rp-ui-base-charcoal);
+  text-align: center;
 }
 
 .attempts-exceeded-block-content {
@@ -85,21 +96,23 @@
   text-align: center;
   margin-top: 10px;
   margin-bottom: 16px;
-  color: $COLOR--steel-grey;
+  color: var(--rp-ui-base-e-400);
   font-size: 12px;
-  font-family: $FONT-REGULAR;
+  font-family: var(--rp-ui-base-font-family-heading);
   line-height: 16px;
-
-  .time {
-    padding-top: 16px;
-    line-height: 30px;
-  }
-
-  b {
-    font-size: 36px;
-  }
 
   @media (max-width: $SCREEN_XS_MAX) {
     width: 280px;
+  }
+}
+
+.blocked-for-line {
+  margin-top: 8px;
+
+  b {
+    font-size: 36px;
+    line-height: 1.2;
+    display: block;
+    color: var(--rp-ui-base-charcoal);
   }
 }

@@ -15,17 +15,22 @@
  */
 
 import classNames from 'classnames/bind';
+import { useState } from 'react';
 import styles from './socialSection.scss';
 import { NewsBlock } from './newsBlock';
-import { SectionsSeparator } from './sectionsSeparator';
 import { SocialsBlock } from './socialsBlock';
 
 const cx = classNames.bind(styles);
 
-export const SocialSection = () => (
-  <div className={cx('social-section')}>
-    <NewsBlock />
-    <SectionsSeparator />
-    <SocialsBlock />
-  </div>
-);
+export const SocialSection = () => {
+  const [isNewsExpanded, setIsNewsExpanded] = useState(false);
+
+  return (
+    <div className={cx('social-section', { 'social-section--news-expanded': isNewsExpanded })}>
+      <NewsBlock onExpandedChange={setIsNewsExpanded} />
+      <div className={cx('social-section__footer')}>
+        <SocialsBlock />
+      </div>
+    </div>
+  );
+};

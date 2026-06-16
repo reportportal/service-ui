@@ -165,7 +165,7 @@ export const COMMON_LOCALE_KEYS = defineMessages({
   },
   LOGIN: {
     id: 'Common.login',
-    defaultMessage: 'Login',
+    defaultMessage: 'Log In',
   },
   MOVE_TO_DEBUG: {
     id: 'Common.moveToDebug',

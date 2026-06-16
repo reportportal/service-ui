@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,29 +14,16 @@
  * limitations under the License.
  */
 
-.external-login-block {
+.auth-layout {
+  position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
-}
-.external-auth-btn {
-  display: inline-block;
-  height: 40px;
-  margin-bottom: 10px;
-
-  svg {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    margin-top: 2px;
-    margin-right: 8px;
-    color: var(--rp-ui-base-bg-000);
-    fill: var(--rp-ui-base-bg-000);
-    vertical-align: top;
-  }
-
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
+  justify-content: center;
+  width: 100%;
+  min-height: 100%;
+  background-color: var(--rp-ui-base-topaz);
+  background-image: url(~common/img/auth-page-background.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }

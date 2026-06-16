@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,29 +14,15 @@
  * limitations under the License.
  */
 
-.external-login-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.external-auth-btn {
-  display: inline-block;
-  height: 40px;
-  margin-bottom: 10px;
+import React from 'react';
+import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
+import styles from './authLayout.scss';
 
-  svg {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    margin-top: 2px;
-    margin-right: 8px;
-    color: var(--rp-ui-base-bg-000);
-    fill: var(--rp-ui-base-bg-000);
-    vertical-align: top;
-  }
+const cx = classNames.bind(styles);
 
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-}
+export const AuthLayout = ({ children = null }) => <div className={cx('auth-layout')}>{children}</div>;
+
+AuthLayout.propTypes = {
+  children: PropTypes.node,
+};

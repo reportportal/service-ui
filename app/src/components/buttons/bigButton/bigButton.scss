@@ -119,6 +119,19 @@
       border-color: color.adjust($COLOR--topaz, $lightness: -30%);
     }
   }
+  &.color-base-topaz {
+    background-color: var(--rp-ui-base-topaz);
+    border-color: var(--rp-ui-base-topaz);
+
+    &:hover:not(.disabled) {
+      background-color: var(--rp-ui-base-topaz-hover);
+      border-color: var(--rp-ui-base-topaz-hover);
+    }
+    &:active:not(.disabled) {
+      background-color: var(--rp-ui-base-topaz-pressed);
+      border-color: var(--rp-ui-base-topaz-pressed);
+    }
+  }
 }
 
 .mobile-disabled {

@@ -19,7 +19,7 @@ export const referenceDictionary = {
   rpDoc: 'https://reportportal.io/docs',
   rpGitHub: 'https://github.com/reportportal',
   rpFacebook: 'https://www.facebook.com/ReportPortal.io',
-  rpTwitter: 'http://twitter.com/ReportPortal_io',
+  rpTwitter: 'https://x.com/ReportPortal_io',
   rpYoutube: 'https://youtube.com/c/ReportPortal',
   rpLinkedin: 'https://linkedin.com/company/reportportal',
   rpSlack: 'https://slack.epmrpp.reportportal.io',

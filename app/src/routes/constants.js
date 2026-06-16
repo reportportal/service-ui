@@ -16,6 +16,7 @@
 
 import { NOT_FOUND } from 'redux-first-router';
 import { EmptyLayout } from 'layouts/emptyLayout';
+import { AuthLayout } from 'layouts/authLayout';
 
 import { AllUsersPage } from 'pages/instance/allUsersPage';
 import { ServerSettingsPage } from 'pages/instance/serverSettingsPage';
@@ -94,13 +95,13 @@ export const ADMIN_ACCESS = 'admin';
 export const pageRendering = {
   [NOT_FOUND]: { component: NotFoundPage, layout: EmptyLayout },
 
-  LOGIN_PAGE: { component: LoginPage, layout: EmptyLayout, access: ANONYMOUS_ACCESS },
+  LOGIN_PAGE: { component: LoginPage, layout: AuthLayout, access: ANONYMOUS_ACCESS },
   [ACCOUNT_REMOVED_PAGE]: {
     component: AccountRemovedPage,
     layout: EmptyLayout,
     access: ANONYMOUS_ACCESS,
   },
-  REGISTRATION_PAGE: { component: RegistrationPage, layout: EmptyLayout, access: ANONYMOUS_ACCESS },
+  REGISTRATION_PAGE: { component: RegistrationPage, layout: AuthLayout, access: ANONYMOUS_ACCESS },
   [OAUTH_SUCCESS]: { component: EmptyLayout, layout: EmptyLayout, access: ANONYMOUS_ACCESS },
   [USER_PROFILE_PAGE]: { component: ProfilePage, layout: InstanceLayout },
   [USER_PROFILE_SUB_PAGE]: { component: ProfilePage, layout: InstanceLayout },

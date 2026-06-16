@@ -25,12 +25,13 @@ import { RegistrationPageSection } from './registrationPageSection';
 import { RegistrationFailBlock } from './registrationFailBlock';
 import { RegistrationForm } from './registrationForm';
 import type { RegistrationFormValues } from './registrationForm/registrationForm';
+import { OutsideLoginFooter } from '../common/outsideLoginFooter';
 import styles from './registrationPage.scss';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 const cx = createClassnames(styles);
 
-// TODO: remove it when BlockHeader will be converted to TS and will accept MessageDescriptor as header and hint props
+// TODO: remove it when SectionBlockHeader will be converted to TS and will accept MessageDescriptor as header and hint props
 const BlockHeader = BlockHeaderBase as ComponentType<{
   header?: MessageDescriptor;
   hint?: MessageDescriptor;
@@ -118,20 +119,23 @@ export const RegistrationPage = ({
           )}
         </RegistrationPageSection>
         <RegistrationPageSection failed={!tokenActive || !tokenProvided}>
-          {tokenProvided && tokenActive ? (
-            <div className={cx('main-content')}>
-              <BlockHeader header={messages.welcome} hint={messages.registration} />
-              <RegistrationForm
-                email={email}
-                submitForm={onRegistrationSubmit}
-                loading={loading}
-                initialData={initialData}
-                submitButtonTitle={submitButtonTitle}
-              />
-            </div>
-          ) : (
-            <TokenErrorSection tokenProvided={tokenProvided} />
-          )}
+          <div className={cx('main-content')}>
+            {tokenProvided && tokenActive ? (
+              <>
+                <BlockHeader header={messages.welcome} hint={messages.registration} />
+                <RegistrationForm
+                  email={email}
+                  submitForm={onRegistrationSubmit}
+                  loading={loading}
+                  initialData={initialData}
+                  submitButtonTitle={submitButtonTitle}
+                />
+              </>
+            ) : (
+              <TokenErrorSection tokenProvided={tokenProvided} />
+            )}
+            <OutsideLoginFooter />
+          </div>
         </RegistrationPageSection>
       </div>
     </div>
