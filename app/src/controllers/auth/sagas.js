@@ -24,10 +24,6 @@ import {
   updateStorageItem,
 } from 'common/utils/storageUtils';
 import { URLS } from 'common/urls';
-import {
-  ERROR_CODE_LOGIN_BAD_CREDENTIALS,
-  ERROR_CODE_LOGIN_MAX_LIMIT,
-} from 'common/constants/apiErrorCodes';
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { fetchAppInfoAction } from 'controllers/appInfo';
@@ -54,9 +50,12 @@ import {
   resetTokenAction,
   setTokenAction,
   setLastFailedLoginTimeAction,
+  setFailedLoginAttemptsAction,
+  clearLoginLockoutAction,
   loginSuccessAction,
   setBadCredentialsAction,
 } from './actionCreators';
+import { isLoginLockoutActive, shouldStartLoginLockout } from './loginLockout';
 import {
   LOGIN,
   LOGOUT,
@@ -66,7 +65,7 @@ import {
   LOGIN_SUCCESS,
   ANONYMOUS_REDIRECT_PATH_STORAGE_KEY,
 } from './constants';
-import { tokenSelector } from './selectors';
+import { tokenSelector, lastFailedLoginTimeSelector, failedLoginAttemptsSelector } from './selectors';
 
 // TODO: clear cookie on logout
 function* handleLogout({ payload }) {
@@ -93,6 +92,7 @@ function* watchLogout() {
 
 function* loginSuccessHandler({ payload }) {
   setStorageItem(ACTIVITY_TIMESTAMP, Date.now());
+  yield put(clearLoginLockoutAction());
 
   yield put(
     setTokenAction({
@@ -139,7 +139,27 @@ function* watchLoginSuccess() {
   yield takeEvery(LOGIN_SUCCESS, loginSuccessHandler);
 }
 
+function* registerFailedLoginAttempt() {
+  const failedAttempts = (yield select(failedLoginAttemptsSelector)) + 1;
+  yield put(setFailedLoginAttemptsAction(failedAttempts));
+
+  if (shouldStartLoginLockout(failedAttempts)) {
+    const lastFailedLoginTime = Date.now();
+    updateStorageItem(APPLICATION_SETTINGS, { lastFailedLoginTime });
+    yield put(setLastFailedLoginTimeAction(lastFailedLoginTime));
+    return true;
+  }
+
+  yield put(setBadCredentialsAction());
+  return false;
+}
+
 function* handleLogin({ payload }) {
+  const lastFailedLoginTime = yield select(lastFailedLoginTimeSelector);
+  if (isLoginLockoutActive(lastFailedLoginTime)) {
+    return;
+  }
+
   try {
     const result = yield call(fetch, URLS.login(), {
       method: 'POST',
@@ -158,21 +178,17 @@ function* handleLogin({ payload }) {
     };
 
     yield put(loginSuccessAction(token));
-  } catch ({ message: error, errorCode }) {
-    yield put(
-      showNotification({
-        messageId: 'failureDefault',
-        type: NOTIFICATION_TYPES.ERROR,
-        values: { error },
-      }),
-    );
-    if (errorCode === ERROR_CODE_LOGIN_BAD_CREDENTIALS) {
-      yield put(setBadCredentialsAction());
-    }
-    if (errorCode === ERROR_CODE_LOGIN_MAX_LIMIT) {
-      const lastFailedLoginTime = Date.now();
-      updateStorageItem(APPLICATION_SETTINGS, { lastFailedLoginTime });
-      yield put(setLastFailedLoginTimeAction(lastFailedLoginTime));
+  } catch ({ message: error }) {
+    const isLockedOut = yield call(registerFailedLoginAttempt);
+
+    if (!isLockedOut) {
+      yield put(
+        showNotification({
+          messageId: 'failureDefault',
+          type: NOTIFICATION_TYPES.ERROR,
+          values: { error },
+        }),
+      );
     }
   }
 }

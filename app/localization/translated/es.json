@@ -1631,6 +1631,7 @@
   "LoginForm.loginAttemptsExceededMessage": "Has introducido un nombre de usuario o contraseña incorrectos varias veces.",
   "LoginForm.loginAttemptsExceededBlockedFor": "El formulario de inicio de sesión está bloqueado durante",
   "LoginForm.loginAttemptsExceededTime": "{time} segundos",
+  "LoginForm.loginAttemptsExceededTimeSuffix": "segundos",
   "LoginForm.loginPlaceholder": "Correo electrónico",
   "LoginForm.loginHint": "El correo electrónico es incorrecto. Introduce una dirección de correo electrónico válidos",
   "LoginForm.or": "o",

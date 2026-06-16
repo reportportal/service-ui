@@ -1630,6 +1630,7 @@
   "LoginForm.loginAttemptsExceededMessage": "Ви ввели невірний логін або пароль багато разів.",
   "LoginForm.loginAttemptsExceededBlockedFor": "Форма входу заблокована на",
   "LoginForm.loginAttemptsExceededTime": "{time} сек.",
+  "LoginForm.loginAttemptsExceededTimeSuffix": "сек.",
   "LoginForm.loginPlaceholder": "Електронна пошта",
   "LoginForm.loginHint": "Неправильна адреса електронної пошти. Введіть правильну адресу електронної пошти",
   "LoginForm.or": "або",

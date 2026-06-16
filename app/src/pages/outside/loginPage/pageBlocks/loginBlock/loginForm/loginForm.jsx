@@ -26,7 +26,13 @@ import { FieldText } from '@reportportal/ui-kit';
 import { commonValidators } from 'common/utils/validation';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { isDemoInstanceSelector } from 'controllers/appInfo';
-import { loginAction, lastFailedLoginTimeSelector, badCredentialsSelector } from 'controllers/auth';
+import {
+  loginAction,
+  lastFailedLoginTimeSelector,
+  badCredentialsSelector,
+  clearLoginLockoutAction,
+} from 'controllers/auth';
+import { getLoginLockoutState } from 'controllers/auth/loginLockout';
 import { LOGIN_PAGE } from 'controllers/pages';
 import {
   LOGIN,
@@ -39,8 +45,6 @@ import { DEFAULT_USER_CREDENTIALS } from './constants';
 import styles from './loginForm.scss';
 
 const cx = classNames.bind(styles);
-
-const LOGIN_LIMIT_EXCEEDED_BLOCK_DURATION = 30;
 
 const messages = defineMessages({
   login: {
@@ -57,15 +61,15 @@ const messages = defineMessages({
   },
   loginAttemptsExceededMessage: {
     id: 'LoginForm.loginAttemptsExceededMessage',
-    defaultMessage: 'You entered an incorrect login or password many times.',
+    defaultMessage: 'You entered incorrectly login or password many times.',
   },
   loginAttemptsExceededBlockedFor: {
     id: 'LoginForm.loginAttemptsExceededBlockedFor',
     defaultMessage: 'Login form is blocked for',
   },
-  loginAttemptsExceededTime: {
-    id: 'LoginForm.loginAttemptsExceededTime',
-    defaultMessage: '{time} sec.',
+  loginAttemptsExceededTimeSuffix: {
+    id: 'LoginForm.loginAttemptsExceededTimeSuffix',
+    defaultMessage: 'sec.',
   },
   errorMessage: {
     id: 'LoginForm.errorMessage',
@@ -76,20 +80,6 @@ const messages = defineMessages({
     defaultMessage: 'Bad credentials',
   },
 });
-
-const getLoginLimitState = (lastFailedLoginTime) => {
-  if (!lastFailedLoginTime) {
-    return { blockTime: null, isLoginLimitExceeded: false };
-  }
-
-  const loginExceededDuration = Math.floor((Date.now() - lastFailedLoginTime) / 1000);
-  const isLoginLimitExceeded = loginExceededDuration < LOGIN_LIMIT_EXCEEDED_BLOCK_DURATION;
-
-  return {
-    blockTime: isLoginLimitExceeded ? LOGIN_LIMIT_EXCEEDED_BLOCK_DURATION - loginExceededDuration : null,
-    isLoginLimitExceeded,
-  };
-};
 
 const LoginFormComponent = ({ handleSubmit, initialize, form }) => {
   const dispatch = useDispatch();
@@ -103,10 +93,15 @@ const LoginFormComponent = ({ handleSubmit, initialize, form }) => {
   const [, forceCountdownTick] = useReducer((tick) => tick + 1, 0);
   const prevBadCredentialsRef = useRef(badCredentials);
 
-  const { blockTime, isLoginLimitExceeded } = getLoginLimitState(lastFailedLoginTime);
+  const { blockTime, isLoginLimitExceeded } = getLoginLockoutState(lastFailedLoginTime);
 
   useEffect(() => {
+    if (!lastFailedLoginTime) {
+      return undefined;
+    }
+
     if (!isLoginLimitExceeded) {
+      dispatch(clearLoginLockoutAction());
       return undefined;
     }
 
@@ -115,7 +110,7 @@ const LoginFormComponent = ({ handleSubmit, initialize, form }) => {
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, [isLoginLimitExceeded, lastFailedLoginTime]);
+  }, [dispatch, isLoginLimitExceeded, lastFailedLoginTime]);
 
   useEffect(() => {
     if (isDemoInstance) {
@@ -146,7 +141,10 @@ const LoginFormComponent = ({ handleSubmit, initialize, form }) => {
   );
 
   return (
-    <form className={cx('login-form')} onSubmit={handleSubmit(onLoginSubmit)}>
+    <form
+      className={cx('login-form', { 'login-form--lockout': isLoginLimitExceeded })}
+      onSubmit={handleSubmit(onLoginSubmit)}
+    >
       {!isLoginLimitExceeded ? (
         <>
           <div className={cx('login-field')}>
@@ -193,22 +191,17 @@ const LoginFormComponent = ({ handleSubmit, initialize, form }) => {
         </>
       ) : (
         <div className={cx('attempts-exceeded-block')}>
-          <p className={cx('attempts-exceeded-heading')}>
+          <h2 className={cx('attempts-exceeded-heading')}>
             {formatMessage(messages.loginAttemptsExceededHeading)}
+          </h2>
+          <p className={cx('attempts-exceeded-message')}>
+            {formatMessage(messages.loginAttemptsExceededMessage)}
           </p>
-          <div className={cx('attempts-exceeded-block-content')}>
-            <span>{formatMessage(messages.loginAttemptsExceededMessage)}</span>
-            <span className={cx('blocked-for-line')}>
-              {formatMessage(messages.loginAttemptsExceededBlockedFor)}{' '}
-              <b>{formatMessage(messages.loginAttemptsExceededTime, { time: blockTime })}</b>
-            </span>
-          </div>
-          <Link
-            to={{ type: LOGIN_PAGE, payload: { query: { forgotPass: 'true' } } }}
-            className={cx('forgot-pass', 'attempts-exceed')}
-          >
-            <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot your password?'} />
-          </Link>
+          <p className={cx('attempts-exceeded-message')}>
+            {formatMessage(messages.loginAttemptsExceededBlockedFor)}{' '}
+            <b className={cx('attempts-exceeded-count')}>{blockTime}</b>{' '}
+            {formatMessage(messages.loginAttemptsExceededTimeSuffix)}
+          </p>
         </div>
       )}
     </form>

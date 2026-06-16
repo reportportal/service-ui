@@ -21,9 +21,18 @@ import styles from './pageSectionContainer.scss';
 
 const cx = classNames.bind(styles);
 
-export const PageSectionContainer = ({ header, hint, hintParams, leftAligned, children }) => (
+export const PageSectionContainer = ({
+  header,
+  hint,
+  hintParams,
+  leftAligned,
+  hideHeader,
+  children,
+}) => (
   <div className={cx('page-block-container')}>
-    <SectionBlockHeader header={header} hint={hint} hintParams={hintParams} leftAligned={leftAligned} />
+    {!hideHeader && header?.id && (
+      <SectionBlockHeader header={header} hint={hint} hintParams={hintParams} leftAligned={leftAligned} />
+    )}
     {children}
   </div>
 );
@@ -32,6 +41,7 @@ PageSectionContainer.propTypes = {
   hint: PropTypes.object,
   hintParams: PropTypes.object,
   leftAligned: PropTypes.bool,
+  hideHeader: PropTypes.bool,
   children: PropTypes.node,
 };
 PageSectionContainer.defaultProps = {
@@ -39,5 +49,6 @@ PageSectionContainer.defaultProps = {
   hint: {},
   hintParams: {},
   leftAligned: false,
+  hideHeader: false,
   children: null,
 };

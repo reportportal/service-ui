@@ -27,4 +27,6 @@ export const tokenSelector = (state) => tokenStringSelector(state);
 
 export const lastFailedLoginTimeSelector = (state) => authSelector(state).lastFailedLoginTime;
 
+export const failedLoginAttemptsSelector = (state) => authSelector(state).failedLoginAttempts;
+
 export const badCredentialsSelector = (state) => authSelector(state).badCredentials;

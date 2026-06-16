@@ -19,6 +19,8 @@ import { isEmptyObject } from 'common/utils';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { useSelector } from 'react-redux';
 import { authExtensionsSelector } from 'controllers/appInfo';
+import { lastFailedLoginTimeSelector } from 'controllers/auth';
+import { getLoginLockoutState } from 'controllers/auth/loginLockout';
 import classNames from 'classnames/bind';
 import { uiExtensionLoginBlockSelector } from 'controllers/plugins/uiExtensions';
 import { ExternalLoginBlock } from './loginForm/externalLoginBlock';
@@ -42,11 +44,18 @@ const messages = defineMessages({
 export const LoginBlock = () => {
   const externalAuth = useSelector(authExtensionsSelector);
   const extensions = useSelector(uiExtensionLoginBlockSelector);
+  const lastFailedLoginTime = useSelector(lastFailedLoginTimeSelector);
+  const { isLoginLimitExceeded } = getLoginLockoutState(lastFailedLoginTime);
 
   return (
     <>
-      <PageSectionContainer header={messages.welcome} hint={messages.login} leftAligned>
-        {!isEmptyObject(externalAuth) ? (
+      <PageSectionContainer
+        hideHeader={isLoginLimitExceeded}
+        header={messages.welcome}
+        hint={messages.login}
+        leftAligned
+      >
+        {!isLoginLimitExceeded && !isEmptyObject(externalAuth) ? (
           <>
             <ExternalLoginBlock externalAuth={externalAuth} />
             <div className={cx('separator')}>
