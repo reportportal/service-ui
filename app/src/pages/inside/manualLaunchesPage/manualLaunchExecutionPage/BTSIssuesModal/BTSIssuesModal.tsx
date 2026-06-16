@@ -20,13 +20,12 @@ import { Modal, SegmentedControl } from '@reportportal/ui-kit';
 import { InjectedFormProps, reduxForm } from 'redux-form';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { fetch, commonValidators, uniqueId } from 'common/utils';
+import { fetch, commonValidators, uniqueId, createClassnames } from 'common/utils';
 import { URLS } from 'common/urls';
 import { withModal } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import { projectKeySelector } from 'controllers/project';
 import { useModalButtons } from 'hooks/useModalButtons';
-import { createClassnames } from 'common/utils';
 import {
   getDefaultIssueModalConfig,
   getDefaultOptionValueKey,
@@ -57,8 +56,7 @@ import { PostBTSIssueForm } from './PostBTSIssueForm/PostBTSIssueForm';
 import { DynamicField, BTSIntegration } from './types';
 
 import styles from './BTSIssuesModal.scss';
-import { activeManualLaunchExecutionSelector } from 'controllers/manualLaunch';
-import { getManualLaunchExecutionAction } from 'controllers/manualLaunch';
+import { activeManualLaunchExecutionSelector, getManualLaunchExecutionAction } from 'controllers/manualLaunch';
 import { useManualLaunchId } from 'hooks/useTypedSelector';
 
 const cx = createClassnames(styles);
@@ -222,7 +220,7 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
         let value: string[];
 
         if (Array.isArray(formFieldData)) {
-          value = formFieldData.map((item) => String(item));
+          value = formFieldData.map(String);
         } else if (typeof formFieldData === 'string' || typeof formFieldData === 'number') {
           value = [String(formFieldData)];
         } else {
@@ -488,7 +486,7 @@ const validateForm = (formValues: Record<string, unknown>) => {
   }
 
   if (controlType === BTSIssueActionTypes.LINK) {
-    const ticketNameError = commonValidators.requiredField(formValues.ticketName as string);
+    const ticketNameError = commonValidators.requiredField(formValues.ticketName);
     return ticketNameError ? { ticketName: ticketNameError } : {};
   }
 

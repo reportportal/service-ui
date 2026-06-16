@@ -55,7 +55,6 @@ import {
 import { useUserPermissions } from 'hooks/useUserPermissions';
 
 import type { ExecutionStatusConfirmFormValues, ExecutionStatusConfirmModalProps } from '../types';
-import { messages as manualExecutionPageMessages } from '../messages';
 import {
   EXECUTION_STATUS_CONFIRM_MODAL,
   EXECUTION_STATUS_CONFIRM_FORM_NAME,
@@ -109,8 +108,8 @@ const ExecutionStatusConfirmModalComponent: FC<
         ? (activeExecution.executionComment?.attachments ?? [])
         : [],
     messages: {
-      duplicateFileNames: manualExecutionPageMessages.duplicateFileNames,
-      emptyFiles: manualExecutionPageMessages.emptyFiles,
+      duplicateFileNames: commonMessages.duplicateFileNames,
+      emptyFiles: commonMessages.emptyFiles,
     },
   });
   const currentStatus = data?.currentStatus;
