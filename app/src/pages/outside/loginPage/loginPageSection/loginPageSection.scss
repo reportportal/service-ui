@@ -30,7 +30,7 @@
 
   &.social {
     justify-content: flex-end;
-    background-color: rgba($COLOR--white-two, 0.2);
+    background-color: color-mix(in srgb, var(--rp-ui-base-bg-000) 20%, transparent);
     backdrop-filter: blur(84px);
     -webkit-backdrop-filter: blur(84px);
     border-radius: 0 12px 12px 0;

@@ -76,10 +76,10 @@
   padding: 0;
   border: none;
   background: transparent;
-  font-family: $FONT-ROBOTO-REGULAR;
+  font-family: var(--rp-ui-base-font-family);
   font-weight: var(--rp-ui-base-fw-medium);
   font-size: 13px;
-  color: $COLOR--white-two;
+  color: var(--rp-ui-base-bg-000);
   cursor: pointer;
   text-decoration: none;
   margin-top: 3px;

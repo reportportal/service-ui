@@ -18,7 +18,7 @@
   width: 100%;
   max-width: 400px;
   margin: 0;
-  font-family: $FONT-REGULAR;
+  font-family: var(--rp-ui-base-font-family-heading);
 
   @media (max-width: $SCREEN_XS_MAX) {
     max-width: 280px;
@@ -33,12 +33,12 @@
   margin-bottom: 16px;
 }
 .forgot-pass {
-  font-family: $FONT-ROBOTO-REGULAR;
+  font-family: var(--rp-ui-base-font-family);
   text-decoration-line: none;
   display: block;
   margin-bottom: 16px;
   font-size: 13px;
-  color: $COLOR--topaz-2;
+  color: var(--rp-ui-base-topaz);
   line-height: 20px;
   text-align: left;
   cursor: pointer;
@@ -82,9 +82,10 @@
 
 .attempts-exceeded-heading {
   margin: 0 0 8px;
-  font-family: $FONT-SEMIBOLD;
+  font-family: var(--rp-ui-base-font-family-heading);
+  font-weight: var(--rp-ui-base-fw-semi-bold);
   font-size: 16px;
-  color: $COLOR--charcoal-grey;
+  color: var(--rp-ui-base-charcoal);
   text-align: center;
 }
 
@@ -95,9 +96,9 @@
   text-align: center;
   margin-top: 10px;
   margin-bottom: 16px;
-  color: $COLOR--steel-grey;
+  color: var(--rp-ui-base-e-400);
   font-size: 12px;
-  font-family: $FONT-REGULAR;
+  font-family: var(--rp-ui-base-font-family-heading);
   line-height: 16px;
 
   @media (max-width: $SCREEN_XS_MAX) {
@@ -112,6 +113,6 @@
     font-size: 36px;
     line-height: 1.2;
     display: block;
-    color: $COLOR--charcoal-grey;
+    color: var(--rp-ui-base-charcoal);
   }
 }

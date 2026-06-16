@@ -20,10 +20,10 @@
   width: 100%;
   padding: 13px 35px 15px 19px;
   border-radius: 16px;
-  background-color: $COLOR--white-two;
-  font-family: $FONT-REGULAR;
+  background-color: var(--rp-ui-base-bg-000);
+  font-family: var(--rp-ui-base-font-family-heading);
   font-size: 13px;
-  color: $COLOR--charcoal-grey;
+  color: var(--rp-ui-base-charcoal);
   line-height: 18px;
   box-sizing: border-box;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -45,11 +45,11 @@
   }
 
   .twit-link {
-    color: $COLOR--topaz;
+    color: var(--rp-ui-base-dark-topaz-main);
     text-decoration: none;
 
     &:hover {
-      color: $COLOR--tealish;
+      color: var(--rp-ui-base-topaz-hover);
     }
   }
 }
@@ -127,14 +127,15 @@
 }
 
 .post-name {
-  font-family: $FONT-SEMIBOLD;
-  color: $COLOR--charcoal-grey;
+  font-family: var(--rp-ui-base-font-family-heading);
+  font-weight: var(--rp-ui-base-fw-semi-bold);
+  color: var(--rp-ui-base-charcoal);
 }
 
 .post-handle,
 .post-separator,
 .post-date {
-  color: $COLOR--steel-grey;
+  color: var(--rp-ui-base-e-400);
 }
 
 .post-content {
