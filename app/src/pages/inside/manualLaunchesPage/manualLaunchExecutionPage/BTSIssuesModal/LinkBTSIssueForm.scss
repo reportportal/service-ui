@@ -1,5 +1,5 @@
-/*!
- * Copyright 2023 EPAM Systems
+/*
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,39 @@
  * limitations under the License.
  */
 
-.field-wrapper {
-  margin-bottom: 15px;
+.issues-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 16px;
+}
 
-  &.light > span {
-    color: var(--rp-ui-color-text-2);
+.issue-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.issue-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+}
+
+.remove-button {
+  margin-top: 24px;
+  width: 36px;
+  height: 36px;
+  max-width: 36px;
+  min-width: 36px;
+  
+  i {
+    margin: 0;
   }
 }
 
-.label {
-  color: $COLOR--darkmode-gray-100;
+.add-button {
+  align-self: flex-start;
+  font-weight: 500;
 }

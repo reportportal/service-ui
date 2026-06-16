@@ -46,3 +46,4 @@ export const STATUS_CONFIG: Record<ExecutionStatusType, StatusConfig> = {
 
 export const EXECUTION_STATUS_CONFIRM_MODAL = 'executionStatusConfirmModal';
 export const EXECUTION_STATUS_CONFIRM_FORM_NAME = 'executionStatusConfirmForm';
+export const BTS_ISSUES_MODAL = 'btsIssuesModal';

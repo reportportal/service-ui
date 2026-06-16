@@ -48,6 +48,7 @@ import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelect
 import { DarkModalLayout, ModalFooter } from 'components/main/modal/darkModalLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { hideModalAction } from 'controllers/modal';
+import { commonMessages } from 'pages/inside/common/common-messages';
 import ErrorInlineIcon from 'common/img/error-inline.svg';
 import Parser from 'html-react-parser';
 import { COMMAND_POST_ISSUE } from 'controllers/plugins/uiExtensions/constants';
@@ -88,18 +89,6 @@ const messages = defineMessages({
   includeDataHeader: {
     id: 'PostIssueModal.includeDataHeader',
     defaultMessage: 'Include data',
-  },
-  attachmentsHeader: {
-    id: 'PostIssueModal.attachmentsHeader',
-    defaultMessage: 'Attachments',
-  },
-  logsHeader: {
-    id: 'PostIssueModal.logsHeader',
-    defaultMessage: 'Logs',
-  },
-  commentsHeader: {
-    id: 'PostIssueModal.commentsHeader',
-    defaultMessage: 'Comments',
   },
   noDefaultPropertiesMessage: {
     id: 'PostIssueModal.noDefaultPropertiesMessage',
@@ -248,15 +237,15 @@ export class PostIssueModal extends Component {
   dataFieldsConfig = [
     {
       name: INCLUDE_ATTACHMENTS_KEY,
-      title: this.props.intl.formatMessage(messages.attachmentsHeader),
+      title: this.props.intl.formatMessage(commonMessages.attachments),
     },
     {
       name: INCLUDE_LOGS_KEY,
-      title: this.props.intl.formatMessage(messages.logsHeader),
+      title: this.props.intl.formatMessage(commonMessages.logs),
     },
     {
       name: INCLUDE_COMMENTS_KEY,
-      title: this.props.intl.formatMessage(messages.commentsHeader),
+      title: this.props.intl.formatMessage(commonMessages.comments),
     },
   ];
 
