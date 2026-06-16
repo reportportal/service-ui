@@ -24,13 +24,12 @@ export const getLoginLockoutState = (lastFailedLoginTime) => {
     return { blockTime: null, isLoginLimitExceeded: false };
   }
 
-  const elapsedSec = Math.floor((Date.now() - lastFailedLoginTime) / 1000);
-  const isLoginLimitExceeded = elapsedSec < LOGIN_LOCKOUT_BLOCK_DURATION_SEC;
+  const elapsedSec = Math.max(0, Math.floor((Date.now() - lastFailedLoginTime) / 1000));
+  const remainingSec = LOGIN_LOCKOUT_BLOCK_DURATION_SEC - elapsedSec;
+  const isLoginLimitExceeded = remainingSec > 0;
 
   return {
-    blockTime: isLoginLimitExceeded
-      ? Math.max(0, LOGIN_LOCKOUT_BLOCK_DURATION_SEC - elapsedSec)
-      : null,
+    blockTime: isLoginLimitExceeded ? remainingSec : null,
     isLoginLimitExceeded,
   };
 };
@@ -52,3 +51,5 @@ export const sanitizeStoredLockoutTime = (timestamp) => {
 
   return null;
 };
+
+export const isTransientLoginFailure = (rawError) => rawError instanceof Error;

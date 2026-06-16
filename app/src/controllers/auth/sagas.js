@@ -55,7 +55,7 @@ import {
   loginSuccessAction,
   setBadCredentialsAction,
 } from './actionCreators';
-import { isLoginLockoutActive, shouldStartLoginLockout } from './loginLockout';
+import { isLoginLockoutActive, isTransientLoginFailure, shouldStartLoginLockout } from './loginLockout';
 import {
   LOGIN,
   LOGOUT,
@@ -178,15 +178,20 @@ function* handleLogin({ payload }) {
     };
 
     yield put(loginSuccessAction(token));
-  } catch ({ message: error }) {
-    const isLockedOut = yield call(registerFailedLoginAttempt);
+  } catch (rawError) {
+    const errorMessage = String(
+      rawError?.message || rawError?.error_description || rawError?.error || 'Unknown error',
+    );
+    const isLockedOut = isTransientLoginFailure(rawError)
+      ? false
+      : yield call(registerFailedLoginAttempt);
 
     if (!isLockedOut) {
       yield put(
         showNotification({
           messageId: 'failureDefault',
           type: NOTIFICATION_TYPES.ERROR,
-          values: { error },
+          values: { error: errorMessage },
         }),
       );
     }
