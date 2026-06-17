@@ -48,6 +48,7 @@ import {
   PROJECT_ACTIVITY,
   TEST_CASES_GROWTH_TREND,
   UNIQUE_BUGS_TABLE,
+  TEST_STABILITY_FLAKINESS,
 } from 'common/constants/widgetTypes';
 import { getDefectTypeLabel } from '../../common/utils';
 
@@ -208,6 +209,10 @@ export const WIDGET_FIELD_EVENT_NAME_BY_TYPE = {
   [FLAKY_TEST_CASES_TABLE]: {
     'contentParameters.itemsCount': 'launches_count',
     'contentParameters.widgetOptions.launchNameFilter': 'launch_name',
+    'contentParameters.widgetOptions.includeMethods': 'include_before_and_after_methods',
+  },
+  [TEST_STABILITY_FLAKINESS]: {
+    'contentParameters.itemsCount': 'executions_per_launch',
     'contentParameters.widgetOptions.includeMethods': 'include_before_and_after_methods',
   },
   [MOST_POPULAR_PATTERNS]: {

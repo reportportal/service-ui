@@ -17,6 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown, ThemeProvider } from '@reportportal/ui-kit';
+import { toDisplayOption } from '../utils';
 import { DynamicField } from '../dynamicField';
 
 export class DropdownField extends Component {
@@ -32,9 +33,22 @@ export class DropdownField extends Component {
       label: item.valueName,
     }));
 
-  parseDropdownValue = (value) => value && [value];
+  parseDropdownValue = (value) => {
+    if (!value) {
+      return undefined;
+    }
+    const storedValue = typeof value === 'object' ? value.value : value;
+    return storedValue && [storedValue];
+  };
 
-  formatDropdownValue = (value) => value?.[0];
+  formatDropdownValue = (value) => {
+    const storedValue = value?.[0];
+    if (!storedValue) {
+      return undefined;
+    }
+    const { field, defaultOptionValueKey } = this.props;
+    return toDisplayOption(storedValue, field.definedValues, defaultOptionValueKey);
+  };
 
   render() {
     const { field, darkView, ...rest } = this.props;

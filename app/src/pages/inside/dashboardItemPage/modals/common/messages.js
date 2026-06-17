@@ -37,6 +37,7 @@ import {
   PROJECT_ACTIVITY,
   TEST_CASE_SEARCH,
   TEST_CASES_GROWTH_TREND,
+  TEST_STABILITY_FLAKINESS,
   UNIQUE_BUGS_TABLE,
 } from 'common/constants/widgetTypes';
 
@@ -128,6 +129,10 @@ export const widgetTypesMessages = defineMessages({
   [TEST_CASE_SEARCH]: {
     id: 'Widgets.Name.testCaseSearchTable',
     defaultMessage: 'Test case search',
+  },
+  [TEST_STABILITY_FLAKINESS]: {
+    id: 'Widgets.Name.testStabilityFlakiness',
+    defaultMessage: 'Test stability (flakiness)',
   },
   /*
   [PRODUCT_STATUS]: {

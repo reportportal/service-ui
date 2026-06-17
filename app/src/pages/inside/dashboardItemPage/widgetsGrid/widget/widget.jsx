@@ -277,34 +277,50 @@ export class SimpleWidget extends Component {
           ...params,
         };
 
-        if (
+        const shouldUpdateState =
           this.state.loading ||
           !isEqual(queryParameters, this.state.queryParameters) ||
-          !isEqual(widget, this.state.widget)
-        ) {
-          this.setState({
-            queryParameters,
-            widget,
-            loading: false,
-            hasError: false,
-            error: null,
+          !isEqual(widget, this.state.widget);
+
+        const scheduleSilentUpdate = () => {
+          if (!this.props.isPrintMode) {
+            this.clearSilentUpdater();
+            this.silentUpdaterId = setTimeout(
+              this.fetchWidget,
+              isFullscreen ? SILENT_UPDATE_TIMEOUT_FULLSCREEN : SILENT_UPDATE_TIMEOUT,
+            );
+          }
+        };
+
+        if (shouldUpdateState) {
+          return new Promise((resolve) => {
+            this.setState(
+              {
+                queryParameters,
+                widget,
+                loading: false,
+                hasError: false,
+                error: null,
+              },
+              () => {
+                scheduleSilentUpdate();
+                resolve(widget);
+              },
+            );
           });
         }
-        if (!this.props.isPrintMode) {
-          this.clearSilentUpdater();
-          this.silentUpdaterId = setTimeout(
-            this.fetchWidget,
-            isFullscreen ? SILENT_UPDATE_TIMEOUT_FULLSCREEN : SILENT_UPDATE_TIMEOUT,
-          );
-        }
+
+        scheduleSilentUpdate();
+        return widget;
       })
-      .catch(() => {
+      .catch((error) => {
         if (shouldClearQueryParams && !isEmptyObject(this.state.queryParameters)) {
           this.clearQueryParams();
         }
         this.setState({
           loading: false,
         });
+        return Promise.reject(error);
       });
   };
 

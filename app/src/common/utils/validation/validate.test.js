@@ -605,6 +605,16 @@ describe('validate.flakyWidgetNumberOfLaunches', () => {
   });
 });
 
+describe('validate.stabilityWidgetNumberOfLaunches', () => {
+  test('validation should be correct', () => {
+    expect(validate.stabilityWidgetNumberOfLaunches(2)).toBe(true);
+    expect(validate.stabilityWidgetNumberOfLaunches(600)).toBe(true);
+  });
+  test('Validation should not be correct', () => {
+    expect(validate.stabilityWidgetNumberOfLaunches(601)).toBe(false);
+  });
+});
+
 describe('validate.launchesWidgetContentFields', () => {
   test('validation should be correct', () => {
     expect(validate.launchesWidgetContentFields(['1', '2', '3', '4'])).toBe(true);

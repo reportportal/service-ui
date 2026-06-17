@@ -65,9 +65,10 @@ import { isLoginCredentialFailure, isLoginLockoutActive, isServerLoginLockFailur
 import {
   LOGIN,
   LOGOUT,
-  TOKEN_KEY,
-  GRANT_TYPES,
   SET_TOKEN,
+  DEFAULT_TOKEN,
+  GRANT_TYPES,
+  TOKEN_KEY,
   LOGIN_SUCCESS,
   ANONYMOUS_REDIRECT_PATH_STORAGE_KEY,
 } from './constants';
@@ -188,10 +189,16 @@ function* handleLogin({ payload }) {
   }
 
   try {
+    // Always use OAuth client credentials for the token request — a stale Bearer
+    // token in storage would otherwise be sent and UAT returns 4003.
+    yield put(resetTokenAction());
+    yield call(updateToken, `${DEFAULT_TOKEN.type} ${DEFAULT_TOKEN.value}`);
+
     const result = yield call(fetch, URLS.login(), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `${DEFAULT_TOKEN.type} ${DEFAULT_TOKEN.value}`,
       },
       data: stringify({
         grant_type: GRANT_TYPES.PASSWORD,

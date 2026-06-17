@@ -33,6 +33,7 @@ import {
   PASSING_RATE_PER_LAUNCH,
   PASSING_RATE_SUMMARY,
   FLAKY_TEST_CASES_TABLE,
+  TEST_STABILITY_FLAKINESS,
   CUMULATIVE_TREND,
   MOST_POPULAR_PATTERNS,
   COMPONENT_HEALTH_CHECK,
@@ -63,6 +64,7 @@ import {
   PassingRatePerLaunchControls,
   PassingRateSummaryControls,
   FlakyTestCasesTableControls,
+  TestStabilityFlakinessControls,
   CumulativeTrendControls,
   MostPopularPatternsControls,
   ComponentHealthCheckControls,
@@ -356,6 +358,20 @@ export const getWidgets = (formatMessage) => [
     documentationClickEventInfo: WIDGETS_EVENTS.onWidgetDocumentLinkClick,
   },
   {
+    id: TEST_STABILITY_FLAKINESS,
+    title: formatMessage(widgetTypesMessages[TEST_STABILITY_FLAKINESS]),
+    description: (
+      <FormattedMessage
+        id={'Widgets.Description.testStabilityFlakiness'}
+        defaultMessage={
+          'Lists tests classified by stability bands across all launches matching the filter; configure how many recent executions per launch name feed the score.'
+        }
+      />
+    ),
+    preview: Parser(FLAKY_TEST_CASES_TABLE_PREVIEW),
+    controls: TestStabilityFlakinessControls,
+  },
+  {
     id: CUMULATIVE_TREND,
     title: formatMessage(widgetTypesMessages[CUMULATIVE_TREND]),
     description: (
@@ -502,6 +518,7 @@ export const getWidgets = (formatMessage) => [
 
 export const WIDGETS_STATIC_PREVIEWS = {
   [FLAKY_TEST_CASES_TABLE]: Parser(FLAKY_TEST_CASES_TABLE_PREVIEW),
+  [TEST_STABILITY_FLAKINESS]: Parser(FLAKY_TEST_CASES_TABLE_PREVIEW),
   [LAUNCHES_TABLE]: Parser(LAUNCHES_TABLE_PREVIEW),
   [MOST_FAILED_TEST_CASES_TABLE]: Parser(MOST_FAILED_TEST_CASES_TABLE_PREVIEW),
   [PROJECT_ACTIVITY]: Parser(PROJECT_ACTIVITY_PREVIEW),

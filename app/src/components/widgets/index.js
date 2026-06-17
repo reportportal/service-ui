@@ -33,6 +33,7 @@ import {
   LaunchesTable,
   UniqueBugsTable,
   FlakyTests,
+  TestStabilityFlaky,
   MostFailedTests,
   ProjectActivity,
   ProductStatus,
@@ -42,6 +43,7 @@ import {
   topPatternsFormatParams,
   componentHealthCheckFormatParams,
   componentHealthCheckTableFormatParams,
+  testStabilityMultilevelFormatParams,
 } from './utils';
 import { MostTimeConsumingTestCases } from './singleLevelWidgets/mostTimeConsumingTestCases';
 import {
@@ -66,6 +68,7 @@ const CHARTS = {
   [widgetTypes.LAUNCHES_TABLE]: LaunchesTable,
   [widgetTypes.UNIQUE_BUGS_TABLE]: UniqueBugsTable,
   [widgetTypes.FLAKY_TEST_CASES_TABLE]: FlakyTests,
+  [widgetTypes.TEST_STABILITY_FLAKINESS]: TestStabilityFlaky,
   [widgetTypes.MOST_FAILED_TEST_CASES_TABLE]: MostFailedTests,
   [widgetTypes.PROJECT_ACTIVITY]: ProjectActivity,
   [widgetTypes.PRODUCT_STATUS]: ProductStatus,
@@ -91,6 +94,9 @@ const MULTI_LEVEL_WIDGETS_MAP = {
   },
   [widgetTypes.COMPONENT_HEALTH_CHECK_TABLE]: {
     formatter: componentHealthCheckTableFormatParams,
+  },
+  [widgetTypes.TEST_STABILITY_FLAKINESS]: {
+    formatter: testStabilityMultilevelFormatParams,
   },
 };
 

@@ -36,7 +36,9 @@ export const TEST_ITEMS_TYPE_LIST = 'list';
 export const PARENT_ITEMS_NAMESPACE = `${NAMESPACE}/parentItems`;
 export const FILTERED_ITEM_STATISTICS_NAMESPACE = `${NAMESPACE}/filteredItemStatistics`;
 export const DEFAULT_SORTING = formatSortingString(['startTime'], SORTING_ASC);
-export const DEFAULT_LAUNCHES_LIMIT = 600;
+export const DEFAULT_LAUNCHES_LIMIT = 100000;
+/** Item list scope for stability drill-down links (launches filter provider). */
+export const STABILITY_WIDGET_ITEM_LIST_LAUNCH_LIMIT = 100000;
 export const COMPOSITE_ATTRIBUTES_FILTER = 'filter.has.compositeAttribute';
 export const LEVEL_ATTRIBUTES_FILTER = 'filter.has.levelAttribute';
 export const CURRENT_ITEM_LEVEL = 'currentItemLevel';

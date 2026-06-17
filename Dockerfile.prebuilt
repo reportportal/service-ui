@@ -1,0 +1,29 @@
+# Pack an existing webpack output from the host (service-ui/app/build) into the nginx image.
+# Avoids npm ci + webpack inside Docker (helps when BuildKit hits rpc/EOF during long builds).
+# Run from repo root after: (cd service-ui/app && npm ci --legacy-peer-deps && npm run build)
+#
+# Example:
+#   docker build -f service-ui/Dockerfile.prebuilt -t reportportal/service-ui:tag \
+#     --build-arg APP_VERSION=tag service-ui
+
+FROM alpine:3.20.3 AS generate-build-info
+RUN mkdir -p /usr/src/app/build
+WORKDIR /usr/src
+ARG APP_VERSION=develop
+ARG BUILD_BRANCH
+ARG BUILD_DATE
+RUN echo {\"build\": { \"version\": \"${APP_VERSION}\", \"branch\": \"${BUILD_BRANCH}\", \"build_date\": \"${BUILD_DATE}\", \"name\": \"Service UI\", \"repo\": \"reportportal/service-ui\"}} > ./app/build/buildInfo.json
+
+FROM nginxinc/nginx-unprivileged:alpine
+
+USER root
+
+COPY ./app/build /usr/share/nginx/html
+COPY --from=generate-build-info /usr/src/app/build /usr/share/nginx/html
+
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/nginx.conf
+
+USER nginx
+
+EXPOSE 8080

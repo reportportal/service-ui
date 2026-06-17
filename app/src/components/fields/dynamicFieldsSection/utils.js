@@ -41,6 +41,56 @@ const AUTOCOMPLETE_TYPES = [
 const normalizeDefinedValue = (item) =>
   !item[VALUE_ID_KEY] ? { ...item, [VALUE_ID_KEY]: item[VALUE_NAME_KEY] } : item;
 
+export const findDefinedOption = (entry, definedValues, optionValueKey = VALUE_NAME_KEY) =>
+  definedValues?.find(
+    (definedValue) =>
+      definedValue[optionValueKey] === entry ||
+      definedValue[VALUE_ID_KEY] === entry ||
+      definedValue[VALUE_NAME_KEY] === entry ||
+      String(definedValue[VALUE_ID_KEY]) === String(entry),
+  );
+
+export const toDisplayOption = (entry, definedValues, optionValueKey = VALUE_NAME_KEY) => {
+  if (entry && typeof entry === 'object' && entry.label) {
+    return entry;
+  }
+  const match = findDefinedOption(entry, definedValues, optionValueKey);
+  if (match) {
+    return { label: match[VALUE_NAME_KEY], value: match[optionValueKey] };
+  }
+  return { label: String(entry), value: entry };
+};
+
+// Normalize saved defaults to the key used in form state (display names for Jira Cloud UI).
+const coerceFieldValuesToOptionKey = (field, optionValueKey) => {
+  if (!field.value?.length || !field.definedValues?.length) {
+    return field.value;
+  }
+  return field.value.map((entry) => {
+    const match = findDefinedOption(entry, field.definedValues, optionValueKey);
+    return match ? match[optionValueKey] : entry;
+  });
+};
+
+// Jira Cloud plugin resolves option labels to {id} via create-meta allowedValues.
+// fixVersions is special-cased in the plugin and expects version IDs in value[].
+const JIRA_CLOUD_VERSION_FIELD_IDS = new Set(['fixVersions', 'versions']);
+
+export const mapFieldValuesForApi = (field, values, pluginName) => {
+  if (pluginName !== JIRA_CLOUD || !values?.length) {
+    return values;
+  }
+  const sendVersionId = JIRA_CLOUD_VERSION_FIELD_IDS.has(field.id);
+  const toApiValue = (entry) => {
+    const match = findDefinedOption(entry, field.definedValues, VALUE_NAME_KEY);
+    if (!match) {
+      return entry;
+    }
+    return sendVersionId ? match[VALUE_ID_KEY] : match[VALUE_NAME_KEY];
+  };
+  return Array.isArray(values) ? values.map(toApiValue) : values;
+};
+
 export const normalizeFieldsWithOptions = (fields, defaultOptionValueKey = VALUE_NAME_KEY) =>
   fields.map((field) => {
     if (!field?.definedValues?.length) {
@@ -53,7 +103,7 @@ export const normalizeFieldsWithOptions = (fields, defaultOptionValueKey = VALUE
       field.definedValues.unshift({ [VALUE_NAME_KEY]: VALUE_NONE });
     }
     const definedValues = field.definedValues.map(normalizeDefinedValue);
-    let value = field.value;
+    let value = coerceFieldValuesToOptionKey({ ...field, definedValues }, defaultOptionValueKey);
     if (!value?.length && field.fieldType !== ARRAY_TYPE) {
       value = [definedValues[0][defaultOptionValueKey]];
     }

@@ -153,6 +153,8 @@ export const widgetNumberOfLaunches = composeValidators([isNotEmpty, range(1, 60
 export const cumulativeItemsValidation = composeValidators([isNotEmpty, range(1, 20000)]);
 export const healthCheckWidgetPassingRate = composeValidators([isNotEmpty, range(50, 100)]);
 export const flakyWidgetNumberOfLaunches = composeValidators([isNotEmpty, range(2, 100)]);
+/** Test stability widget — executions per logical launch; align with TestStabilityFlakinessMultilevelValidator.MAX_EXECUTIONS_PER_LAUNCH */
+export const stabilityWidgetNumberOfLaunches = composeValidators([isNotEmpty, range(2, 600)]);
 export const launchesWidgetContentFields = composeValidators([isNotEmptyArray, minLength(4)]);
 export const mostFailedWidgetNumberOfLaunches = composeValidators([isNotEmpty, range(2, 100)]);
 export const footerLinkNameLength = composeValidators([isNotEmpty, lengthRange(3, 30)]);

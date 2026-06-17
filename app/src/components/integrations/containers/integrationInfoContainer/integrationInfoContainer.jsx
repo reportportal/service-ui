@@ -96,6 +96,7 @@ export class IntegrationInfoContainer extends Component {
           isGlobal={isGlobal}
           title={pluginTitle}
           events={events}
+          integrationTypeEnabled={integrationType?.enabled !== false}
         />
       </Fragment>
     );

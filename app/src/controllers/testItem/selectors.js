@@ -58,6 +58,8 @@ import {
   TEST_ITEMS_TYPE_LIST,
   COMPOSITE_ATTRIBUTES_FILTER,
   LEVEL_ATTRIBUTES_FILTER,
+  PROVIDER_TYPE_FILTER,
+  PROVIDER_TYPE_LAUNCH,
   PROVIDER_TYPE_MODIFIERS_ID_MAP,
 } from './constants';
 import {
@@ -452,25 +454,57 @@ export const defectLinkSelector = createSelector(
 
 export const testCaseNameLinkSelector = (state) => (ownProps) => {
   const { organizationSlug, projectSlug } = urlOrganizationAndProjectSelector(state);
+  const filterId = ownProps.filterId ?? ALL;
   const payload = {
     projectSlug,
-    filterId: ALL,
+    filterId,
     organizationSlug,
   };
+
+  const namespacedParams = {
+    'filter.eq.hasStats': true,
+    'filter.eq.hasChildren': false,
+  };
+  if (ownProps.linkByTestName && ownProps.testCaseName) {
+    namespacedParams['filter.eq.name'] = ownProps.testCaseName;
+  } else {
+    namespacedParams['filter.eq.uniqueId'] = ownProps.uniqueId;
+  }
+
+  /**
+   * When opening a deep link for a specific launch, use the launch data provider so items are
+   * loaded for that launch only. The filter provider joins test items to the filter's latest-N
+   * launches; if that launch is outside N, the list is empty even with filter.eq.launchId.
+   */
+  const hasExplicitLaunch =
+    ownProps.launchId != null && ownProps.launchId !== '';
+
+  if (hasExplicitLaunch) {
+    namespacedParams.providerType = PROVIDER_TYPE_LAUNCH;
+    namespacedParams.launchId = ownProps.launchId;
+  }
+
+  const launchesLimit = ownProps.launchesLimit;
+  const needsFilterProvider =
+    !hasExplicitLaunch &&
+    launchesLimit != null &&
+    filterId !== ALL &&
+    filterId !== undefined &&
+    filterId !== null &&
+    !FILTER_TITLES[filterId];
+
+  if (needsFilterProvider) {
+    namespacedParams.providerType = PROVIDER_TYPE_FILTER;
+    namespacedParams.filterId = filterId;
+    namespacedParams.launchesLimit = launchesLimit;
+  }
 
   return createLink(
     ownProps.testItemIds,
     ownProps.itemId,
     payload,
     {
-      ...createNamespacedQuery(
-        {
-          'filter.eq.hasStats': true,
-          'filter.eq.uniqueId': ownProps.uniqueId,
-          'filter.eq.hasChildren': false,
-        },
-        getQueryNamespace(0),
-      ),
+      ...createNamespacedQuery(namespacedParams, getQueryNamespace(0)),
     },
     TEST_ITEM_PAGE,
   );

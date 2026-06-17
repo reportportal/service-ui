@@ -32,6 +32,10 @@ export const componentHealthCheckFormatParams = (params = {}) => ({
   attributes: (params.attributes || []).join(','),
 });
 
+export const testStabilityMultilevelFormatParams = (params = {}) => ({
+  attributes: (params.attributes || []).join(','),
+});
+
 export const componentHealthCheckTableFormatParams = (params = {}) => ({
   ...(params.refresh && { refresh: params.refresh }),
   attributes: (params.attributes || []).join(','),

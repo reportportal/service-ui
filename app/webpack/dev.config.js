@@ -27,6 +27,7 @@ module.exports = () => {
     console.log('========== Specify the PROXY_PATH variable in the .env file =========');
     process.exit(1);
   }
+
   return {
     devtool: 'eval-source-map',
     mode: 'development',
