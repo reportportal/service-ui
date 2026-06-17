@@ -41,6 +41,8 @@ import {
   isJiraCloudAssigneeField,
 } from 'components/fields/dynamicFieldsSection/utils';
 import { projectInfoSelector, projectKeySelector } from 'controllers/project';
+import { activeOrganizationIdSelector } from 'controllers/organization';
+import { buildPluginCommandRQ } from 'controllers/plugins/utils';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { Checkbox } from '@reportportal/ui-kit';
 import { ISSUE_TYPE_FIELD_KEY } from 'components/integrations/elements/bts/constants';
@@ -122,6 +124,7 @@ const messages = defineMessages({
     userId: userIdSelector(state),
     getBtsIntegrationBackLink: (itemId) => btsIntegrationBackLinkSelector(state, itemId),
     postIssueExtensions: uiExtensionPostIssueFormSelector(state),
+    organizationId: activeOrganizationIdSelector(state),
   }),
   {
     showScreenLockAction,
@@ -157,6 +160,7 @@ export class PostIssueModal extends Component {
     hideModalAction: PropTypes.func,
     invalid: PropTypes.bool,
     projectKey: PropTypes.string.isRequired,
+    organizationId: PropTypes.number,
   };
 
   static defaultProps = {
@@ -314,6 +318,7 @@ export class PostIssueModal extends Component {
       projectKey,
       projectInfo,
       userId,
+      organizationId,
     } = this.props;
     const { pluginName, integrationId } = this.state;
     const {
@@ -329,12 +334,18 @@ export class PostIssueModal extends Component {
     let url = URLS.btsIntegrationPostTicket(projectKey, integrationId);
 
     if (isCommandAvailable) {
-      url = URLS.projectIntegrationByIdCommand(projectKey, integrationId, COMMAND_POST_ISSUE);
-      requestParams.method = 'PUT';
-      requestParams.data = {
+      url = URLS.pluginsCommandsCommon(pluginName, COMMAND_POST_ISSUE);
+      requestParams.method = 'POST';
+      requestParams.data = buildPluginCommandRQ({
+        integrationId,
+        organizationId,
         projectId: projectInfo.projectId,
-        entity: data,
-      };
+        projectKey,
+        arguments: {
+          projectId: projectInfo.projectId,
+          entity: data,
+        },
+      });
     }
     this.props.showScreenLockAction();
 
@@ -426,12 +437,17 @@ export class PostIssueModal extends Component {
       intl: { formatMessage },
       data: { items },
       projectKey,
+      projectInfo,
+      organizationId,
     } = this.props;
     const { pluginName, integrationId, fields } = this.state;
     const currentExtension = this.getCurrentExtension();
     const integrationInfo = {
       projectKey,
       integrationId,
+      pluginName,
+      organizationId,
+      projectId: projectInfo.projectId,
     };
 
     return (

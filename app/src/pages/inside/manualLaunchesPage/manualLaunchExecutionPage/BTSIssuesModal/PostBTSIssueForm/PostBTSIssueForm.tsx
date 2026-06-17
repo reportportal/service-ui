@@ -81,7 +81,7 @@ const DynamicFormField: FC<DynamicFormFieldProps> = memo(({ field, defaultOption
 });
 
 DynamicFormField.displayName = 'DynamicFormField';
-/* eslint-enable react/prop-types */
+ 
 
 export const PostBTSIssueForm: FC<PostBTSIssueFormProps> = ({
   namedBtsIntegrations,

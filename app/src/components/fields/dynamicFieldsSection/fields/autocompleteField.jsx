@@ -19,17 +19,24 @@ import PropTypes from 'prop-types';
 import { AsyncAutocomplete } from 'componentLibrary/autocompletes/asyncAutocomplete';
 import { URLS } from 'common/urls';
 import { isEmptyObject } from 'common/utils';
+import { buildPluginCommandRQ } from 'controllers/plugins/utils';
 import { DynamicField } from '../dynamicField';
 
 export const AutocompleteField = ({ field, darkView, integrationInfo, ...rest }) => {
   const getUri = () =>
-    URLS.projectIntegrationByIdCommand(
-      integrationInfo.projectKey,
-      integrationInfo.integrationId,
-      field.commandName,
-    );
+    URLS.pluginsCommandsCommon(integrationInfo.pluginName, field.commandName);
 
-  const getRequestParams = (term) => ({ method: 'PUT', data: { term } });
+  const getRequestParams = (term) => ({
+    method: 'POST',
+    data: buildPluginCommandRQ({
+      integrationId: integrationInfo.integrationId,
+      organizationId: integrationInfo.organizationId,
+      projectId: integrationInfo.projectId,
+      projectKey: integrationInfo.projectKey,
+      isGlobal: integrationInfo.isGlobal,
+      arguments: { term },
+    }),
+  });
 
   const parseValueToString = (value) => (value ? value.name : '');
 
