@@ -25,20 +25,36 @@ import styles from './postBlock.scss';
 
 const cx = classNames.bind(styles);
 
+const POST_CONTENT_SANITIZE_CONFIG = { ADD_ATTR: ['target', 'rel'] };
+
+const ensureLinkOpensInNewTab = (node) => {
+  if (node.tagName === 'A') {
+    node.setAttribute('target', '_blank');
+    node.setAttribute('rel', 'noopener noreferrer');
+  }
+};
+
+const sanitizePostContent = (html) => {
+  DOMPurify.addHook('afterSanitizeAttributes', ensureLinkOpensInNewTab);
+  const sanitized = DOMPurify.sanitize(html, POST_CONTENT_SANITIZE_CONFIG);
+  DOMPurify.removeHook('afterSanitizeAttributes', ensureLinkOpensInNewTab);
+
+  return sanitized;
+};
+
 export const renderer = {
   link(href, text, title) {
+    const className = cx('twit-link');
+
     if (text && title) {
-      return `<a class=${cx(
-        'twit-link',
-      )} href="${href}" target="_blank" rel="noopener noreferrer" title="${text}">${title}</a>`;
-    } else if (title) {
-      return `<a class=${cx(
-        'twit-link',
-      )} href="${href}" target="_blank" rel="noopener noreferrer"">${title}</a>`;
+      return `<a class="${className}" href="${href}" target="_blank" rel="noopener noreferrer" title="${text}">${title}</a>`;
     }
-    return `<a class=${cx(
-      'twit-link',
-    )} href="${href}" target="_blank" rel="noopener noreferrer"">${href}</a>`;
+
+    if (title) {
+      return `<a class="${className}" href="${href}" target="_blank" rel="noopener noreferrer">${title}</a>`;
+    }
+
+    return `<a class="${className}" href="${href}" target="_blank" rel="noopener noreferrer">${href}</a>`;
   },
 };
 
@@ -100,7 +116,7 @@ export const PostBlock = ({ tweetData, stackLayer, isStacked, isStackFront, stac
         </div>
       </div>
       <div className={cx('post-content')}>
-        {Parser(DOMPurify.sanitize(getPostContent(tweetData.text)))}
+        {Parser(sanitizePostContent(getPostContent(tweetData.text)))}
       </div>
     </div>
   );

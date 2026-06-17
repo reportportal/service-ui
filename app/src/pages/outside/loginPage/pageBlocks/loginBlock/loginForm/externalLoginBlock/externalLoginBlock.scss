@@ -16,7 +16,8 @@
 
 .external-login-block {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  gap: 8px;
   align-items: center;
 }
 .external-auth-btn {
@@ -33,10 +34,5 @@
     color: var(--rp-ui-base-bg-000);
     fill: var(--rp-ui-base-bg-000);
     vertical-align: top;
-  }
-
-  a {
-    color: inherit;
-    text-decoration: none;
   }
 }

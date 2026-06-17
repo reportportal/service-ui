@@ -22,6 +22,8 @@ import {
   SET_TOKEN,
   DEFAULT_TOKEN,
   SET_LAST_FAILED_LOGIN_TIME,
+  CLEAR_LOGIN_LOCKOUT,
+  SET_FAILED_LOGIN_ATTEMPTS,
   LOGIN_SUCCESS,
   SET_BAD_CREDENTIALS,
 } from './constants';
@@ -52,6 +54,15 @@ export const resetTokenAction = () => setTokenAction(DEFAULT_TOKEN);
 export const setLastFailedLoginTimeAction = (time) => ({
   type: SET_LAST_FAILED_LOGIN_TIME,
   payload: time,
+});
+
+export const setFailedLoginAttemptsAction = (attempts) => ({
+  type: SET_FAILED_LOGIN_ATTEMPTS,
+  payload: attempts,
+});
+
+export const clearLoginLockoutAction = () => ({
+  type: CLEAR_LOGIN_LOCKOUT,
 });
 
 export const setBadCredentialsAction = () => ({

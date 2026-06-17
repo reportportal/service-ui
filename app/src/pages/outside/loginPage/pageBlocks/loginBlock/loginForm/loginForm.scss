@@ -23,15 +23,29 @@
   @media (max-width: $SCREEN_XS_MAX) {
     max-width: 280px;
   }
+
+  &--lockout {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    max-width: none;
+    min-height: 86px;
+    text-align: start;
+  }
 }
+
 .login-field {
   width: 100%;
   margin-bottom: 16px;
 }
+
 .password-field {
   width: 100%;
   margin-bottom: 16px;
 }
+
 .forgot-pass {
   font-family: var(--rp-ui-base-font-family);
   text-decoration-line: none;
@@ -46,18 +60,13 @@
   &:hover {
     text-decoration: underline;
   }
-
-  &.attempts-exceed {
-    @media (max-width: $SCREEN_XS_MAX) {
-      position: initial;
-      margin-bottom: 0;
-    }
-  }
 }
+
 .login-button-container {
   width: 120px;
   height: 36px;
   margin: 0;
+
   @media (max-width: $SCREEN_SM_MAX) {
     margin-bottom: 0;
   }
@@ -73,46 +82,39 @@
   font-weight: var(--rp-ui-base-fw-medium);
   font-family: var(--rp-ui-base-font-family);
 }
+
 .attempts-exceeded-block {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin-bottom: 16px;
+  align-items: start;
+  width: 100%;
+  max-width: 360px;
+  box-sizing: border-box;
+  margin-top: 39px;
 }
 
 .attempts-exceeded-heading {
-  margin: 0 0 8px;
+  margin-bottom: 4px;
   font-family: var(--rp-ui-base-font-family-heading);
-  font-weight: var(--rp-ui-base-fw-semi-bold);
-  font-size: 16px;
-  color: var(--rp-ui-base-charcoal);
-  text-align: center;
-}
-
-.attempts-exceeded-block-content {
-  display: flex;
-  flex-direction: column;
-  width: 320px;
-  text-align: center;
-  margin-top: 10px;
-  margin-bottom: 16px;
-  color: var(--rp-ui-base-e-400);
-  font-size: 12px;
-  font-family: var(--rp-ui-base-font-family-heading);
-  line-height: 16px;
+  font-weight: var(--rp-ui-base-fw-regular);
+  font-size: 32px;
+  line-height: 42px;
+  color: var(--rp-ui-base-almost-black);
 
   @media (max-width: $SCREEN_XS_MAX) {
-    width: 280px;
+    font-size: 24px;
+    line-height: 32px;
   }
 }
 
-.blocked-for-line {
-  margin-top: 8px;
+.attempts-exceeded-message {
+  margin: 0;
+  color: var(--rp-ui-base-almost-black);
+  font-size: 13px;
+  font-family: var(--rp-ui-base-font-family);
+  line-height: 20px;
+}
 
-  b {
-    font-size: 36px;
-    line-height: 1.2;
-    display: block;
-    color: var(--rp-ui-base-charcoal);
-  }
+.attempts-exceeded-count {
+  font-weight: var(--rp-ui-base-fw-semibold);
 }

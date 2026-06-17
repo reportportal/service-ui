@@ -14,33 +14,36 @@
  * limitations under the License.
  */
 
-import { useCallback, useEffect, useReducer, useRef } from 'react';
+import {useCallback, useEffect, useReducer, useRef} from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { useDispatch, useSelector } from 'react-redux';
-import { reduxForm, stopSubmit } from 'redux-form';
-import { FormattedMessage, useIntl, defineMessages } from 'react-intl';
+import {useDispatch, useSelector} from 'react-redux';
+import {reduxForm, stopSubmit} from 'redux-form';
+import {defineMessages, FormattedMessage, useIntl} from 'react-intl';
 import Link from 'redux-first-router-link';
-import { useTracking } from 'react-tracking';
-import { FieldText } from '@reportportal/ui-kit';
-import { commonValidators } from 'common/utils/validation';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { isDemoInstanceSelector } from 'controllers/appInfo';
-import { loginAction, lastFailedLoginTimeSelector, badCredentialsSelector } from 'controllers/auth';
-import { LOGIN_PAGE } from 'controllers/pages';
+import {useTracking} from 'react-tracking';
+import {FieldText} from '@reportportal/ui-kit';
+import {commonValidators} from 'common/utils/validation';
+import {COMMON_LOCALE_KEYS} from 'common/constants/localization';
+import {isDemoInstanceSelector} from 'controllers/appInfo';
 import {
-  LOGIN,
-  LOGIN_PAGE_EVENTS,
-} from 'components/main/analytics/events/ga4Events/loginPageEvents';
-import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { BigButton } from 'components/buttons/bigButton';
-import { FieldProvider } from 'components/fields/fieldProvider';
-import { DEFAULT_USER_CREDENTIALS } from './constants';
+  badCredentialsSelector,
+  clearLoginLockoutAction,
+  lastFailedLoginTimeSelector,
+  loginAction,
+} from 'controllers/auth';
+import {getLoginLockoutState} from 'controllers/auth/loginLockout';
+import {LOGIN_PAGE} from 'controllers/pages';
+import {LOGIN, LOGIN_PAGE_EVENTS,} from 'components/main/analytics/events/ga4Events/loginPageEvents';
+import {FieldErrorHint} from 'components/fields/fieldErrorHint';
+import {BigButton} from 'components/buttons/bigButton';
+import {FieldProvider} from 'components/fields/fieldProvider';
+import {DEFAULT_USER_CREDENTIALS} from './constants';
 import styles from './loginForm.scss';
 
 const cx = classNames.bind(styles);
 
-const LOGIN_LIMIT_EXCEEDED_BLOCK_DURATION = 30;
+const BoldBlockTime = (parts) => <b className={cx('attempts-exceeded-count')}>{parts}</b>;
 
 const messages = defineMessages({
   login: {
@@ -61,11 +64,7 @@ const messages = defineMessages({
   },
   loginAttemptsExceededBlockedFor: {
     id: 'LoginForm.loginAttemptsExceededBlockedFor',
-    defaultMessage: 'Login form is blocked for',
-  },
-  loginAttemptsExceededTime: {
-    id: 'LoginForm.loginAttemptsExceededTime',
-    defaultMessage: '{time} sec.',
+    defaultMessage: 'Login form is blocked for <bold>{seconds, number}</bold> sec.',
   },
   errorMessage: {
     id: 'LoginForm.errorMessage',
@@ -76,20 +75,6 @@ const messages = defineMessages({
     defaultMessage: 'Bad credentials',
   },
 });
-
-const getLoginLimitState = (lastFailedLoginTime) => {
-  if (!lastFailedLoginTime) {
-    return { blockTime: null, isLoginLimitExceeded: false };
-  }
-
-  const loginExceededDuration = Math.floor((Date.now() - lastFailedLoginTime) / 1000);
-  const isLoginLimitExceeded = loginExceededDuration < LOGIN_LIMIT_EXCEEDED_BLOCK_DURATION;
-
-  return {
-    blockTime: isLoginLimitExceeded ? LOGIN_LIMIT_EXCEEDED_BLOCK_DURATION - loginExceededDuration : null,
-    isLoginLimitExceeded,
-  };
-};
 
 const LoginFormComponent = ({ handleSubmit, initialize, form }) => {
   const dispatch = useDispatch();
@@ -103,10 +88,15 @@ const LoginFormComponent = ({ handleSubmit, initialize, form }) => {
   const [, forceCountdownTick] = useReducer((tick) => tick + 1, 0);
   const prevBadCredentialsRef = useRef(badCredentials);
 
-  const { blockTime, isLoginLimitExceeded } = getLoginLimitState(lastFailedLoginTime);
+  const { blockTime, isLoginLimitExceeded } = getLoginLockoutState(lastFailedLoginTime);
 
   useEffect(() => {
+    if (!lastFailedLoginTime) {
+      return undefined;
+    }
+
     if (!isLoginLimitExceeded) {
+      dispatch(clearLoginLockoutAction());
       return undefined;
     }
 
@@ -115,7 +105,7 @@ const LoginFormComponent = ({ handleSubmit, initialize, form }) => {
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, [isLoginLimitExceeded, lastFailedLoginTime]);
+  }, [dispatch, isLoginLimitExceeded, lastFailedLoginTime]);
 
   useEffect(() => {
     if (isDemoInstance) {
@@ -146,7 +136,10 @@ const LoginFormComponent = ({ handleSubmit, initialize, form }) => {
   );
 
   return (
-    <form className={cx('login-form')} onSubmit={handleSubmit(onLoginSubmit)}>
+       <form
+      className={cx('login-form', { 'login-form--lockout': isLoginLimitExceeded })}
+      onSubmit={handleSubmit(onLoginSubmit)}
+    >
       {!isLoginLimitExceeded ? (
         <>
           <div className={cx('login-field')}>
@@ -193,22 +186,18 @@ const LoginFormComponent = ({ handleSubmit, initialize, form }) => {
         </>
       ) : (
         <div className={cx('attempts-exceeded-block')}>
-          <p className={cx('attempts-exceeded-heading')}>
+          <h2 className={cx('attempts-exceeded-heading')}>
             {formatMessage(messages.loginAttemptsExceededHeading)}
+          </h2>
+          <p className={cx('attempts-exceeded-message')}>
+            {formatMessage(messages.loginAttemptsExceededMessage)}
           </p>
-          <div className={cx('attempts-exceeded-block-content')}>
-            <span>{formatMessage(messages.loginAttemptsExceededMessage)}</span>
-            <span className={cx('blocked-for-line')}>
-              {formatMessage(messages.loginAttemptsExceededBlockedFor)}{' '}
-              <b>{formatMessage(messages.loginAttemptsExceededTime, { time: blockTime })}</b>
-            </span>
-          </div>
-          <Link
-            to={{ type: LOGIN_PAGE, payload: { query: { forgotPass: 'true' } } }}
-            className={cx('forgot-pass', 'attempts-exceed')}
-          >
-            <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot your password?'} />
-          </Link>
+          <p className={cx('attempts-exceeded-message')}>
+            {formatMessage(messages.loginAttemptsExceededBlockedFor, {
+              seconds: blockTime,
+              bold: BoldBlockTime,
+            })}
+          </p>
         </div>
       )}
     </form>

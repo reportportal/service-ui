@@ -21,6 +21,7 @@ export {
   authSuccessAction,
   setTokenAction,
   resetTokenAction,
+  clearLoginLockoutAction,
 } from './actionCreators';
 export { authReducer } from './reducer';
 export {
