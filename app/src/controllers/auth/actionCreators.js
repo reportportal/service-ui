@@ -26,6 +26,7 @@ import {
   SET_FAILED_LOGIN_ATTEMPTS,
   LOGIN_SUCCESS,
   SET_BAD_CREDENTIALS,
+  SET_LOGIN_LOADING,
 } from './constants';
 
 export const authSuccessAction = () => ({ type: AUTH_SUCCESS });
@@ -67,4 +68,9 @@ export const clearLoginLockoutAction = () => ({
 
 export const setBadCredentialsAction = () => ({
   type: SET_BAD_CREDENTIALS,
+});
+
+export const setLoginLoadingAction = (isLoading) => ({
+  type: SET_LOGIN_LOADING,
+  payload: isLoading,
 });

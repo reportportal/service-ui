@@ -31,12 +31,14 @@ import {
   clearLoginLockoutAction,
   lastFailedLoginTimeSelector,
   loginAction,
+  loginLoadingSelector,
 } from 'controllers/auth';
 import {getLoginLockoutState} from 'controllers/auth/loginLockout';
 import {LOGIN_PAGE} from 'controllers/pages';
 import {LOGIN, LOGIN_PAGE_EVENTS,} from 'components/main/analytics/events/ga4Events/loginPageEvents';
 import {FieldErrorHint} from 'components/fields/fieldErrorHint';
 import {BigButton} from 'components/buttons/bigButton';
+import {LoadingSubmitButton} from 'components/loadingSubmitButton';
 import {FieldProvider} from 'components/fields/fieldProvider';
 import {DEFAULT_USER_CREDENTIALS} from './constants';
 import styles from './loginForm.scss';
@@ -83,6 +85,7 @@ const LoginFormComponent = ({ handleSubmit, initialize, form }) => {
 
   const lastFailedLoginTime = useSelector(lastFailedLoginTimeSelector);
   const badCredentials = useSelector(badCredentialsSelector);
+  const isLoginLoading = useSelector(loginLoadingSelector);
   const isDemoInstance = useSelector(isDemoInstanceSelector);
 
   const [, forceCountdownTick] = useReducer((tick) => tick + 1, 0);
@@ -127,12 +130,22 @@ const LoginFormComponent = ({ handleSubmit, initialize, form }) => {
   }, [badCredentials, dispatch, form, formatMessage]);
 
   const clickEventHandler = () => {
+    if (isLoginLoading) {
+      return;
+    }
+
     trackEvent(LOGIN_PAGE_EVENTS.clickOnLoginButton(LOGIN));
   };
 
   const onLoginSubmit = useCallback(
-    (values) => dispatch(loginAction(values)),
-    [dispatch],
+    (values) => {
+      if (isLoginLoading) {
+        return;
+      }
+
+      dispatch(loginAction(values));
+    },
+    [dispatch, isLoginLoading],
   );
 
   return (
@@ -178,9 +191,12 @@ const LoginFormComponent = ({ handleSubmit, initialize, form }) => {
               roundedCorners
               type="submit"
               color={'base-topaz'}
+              disabled={isLoginLoading}
               onClick={clickEventHandler}
             >
-              {formatMessage(COMMON_LOCALE_KEYS.LOGIN)}
+              <LoadingSubmitButton isLoading={isLoginLoading}>
+                {formatMessage(COMMON_LOCALE_KEYS.LOGIN)}
+              </LoadingSubmitButton>
             </BigButton>
           </div>
         </>

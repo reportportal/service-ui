@@ -59,6 +59,7 @@ import {
   clearLoginLockoutAction,
   loginSuccessAction,
   setBadCredentialsAction,
+  setLoginLoadingAction,
 } from './actionCreators';
 import { isLoginCredentialFailure, isLoginLockoutActive, isServerLoginLockFailure, shouldStartLoginLockout } from './loginLockout';
 import {
@@ -121,6 +122,7 @@ function* loginSuccessHandler({ payload }) {
   yield put(fetchUserAction());
   const userResult = yield take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]);
   if (userResult.error) {
+    yield put(setLoginLoadingAction(false));
     return;
   }
 
@@ -181,6 +183,7 @@ function* registerFailedLoginAttempt() {
 function* handleLogin({ payload }) {
   const lastFailedLoginTime = yield select(lastFailedLoginTimeSelector);
   if (isLoginLockoutActive(lastFailedLoginTime)) {
+    yield put(setLoginLoadingAction(false));
     return;
   }
 
@@ -203,6 +206,8 @@ function* handleLogin({ payload }) {
 
     yield put(loginSuccessAction(token));
   } catch (rawError) {
+    yield put(setLoginLoadingAction(false));
+
     if (isServerLoginLockFailure(rawError)) {
       yield call(startServerLoginLockout);
       return;
