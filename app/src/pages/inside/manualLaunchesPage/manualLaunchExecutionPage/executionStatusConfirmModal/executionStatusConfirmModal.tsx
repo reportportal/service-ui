@@ -43,6 +43,7 @@ import {
   activeManualLaunchExecutionSelector,
 } from 'controllers/manualLaunch';
 import { projectKeySelector } from 'controllers/project';
+import { availableBtsIntegrationsSelector } from 'controllers/plugins';
 import { MAX_FILE_SIZE } from 'common/constants/fileConstants';
 import { useModalButtons } from 'hooks/useModalButtons';
 import { useTextareaAutoResize } from 'common/hooks';
@@ -51,9 +52,9 @@ import {
   MANUAL_LAUNCHES_PAGE_EVENTS,
   type ExecutionStatusType as AnalyticsExecutionStatusType,
 } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 
 import type { ExecutionStatusConfirmFormValues, ExecutionStatusConfirmModalProps } from '../types';
-import { messages as manualExecutionPageMessages } from '../messages';
 import {
   EXECUTION_STATUS_CONFIRM_MODAL,
   EXECUTION_STATUS_CONFIRM_FORM_NAME,
@@ -61,6 +62,8 @@ import {
   EXECUTION_STATUS_FAILED,
 } from '../constants';
 import { messages } from './messages';
+import { messages as commonMessages } from '../messages';
+import { useBTSIssuesModal } from '../BTSIssuesModal/useBTSIssuesModal';
 
 import styles from './executionStatusConfirmModal.scss';
 
@@ -72,16 +75,19 @@ const ExecutionStatusConfirmModalComponent: FC<
 > = ({ data, handleSubmit, invalid, dirty }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
+  const { canManageExecutions } = useUserPermissions();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const launchId = useManualLaunchId();
   const activeExecution = useSelector(activeManualLaunchExecutionSelector);
+  const availableBtsIntegrations = useSelector(availableBtsIntegrationsSelector);
 
   const modalKey = `${data?.executionId}-${data?.status}-${data?.currentStatus}`;
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   useTextareaAutoResize(textareaRef);
+  const { openModal } = useBTSIssuesModal();
 
   const status = data?.status || 'passed';
   const isClearStatus = status === ExecutionStatus.TO_RUN;
@@ -102,8 +108,8 @@ const ExecutionStatusConfirmModalComponent: FC<
         ? (activeExecution.executionComment?.attachments ?? [])
         : [],
     messages: {
-      duplicateFileNames: manualExecutionPageMessages.duplicateFileNames,
-      emptyFiles: manualExecutionPageMessages.emptyFiles,
+      duplicateFileNames: commonMessages.duplicateFileNames,
+      emptyFiles: commonMessages.emptyFiles,
     },
   });
   const currentStatus = data?.currentStatus;
@@ -112,7 +118,8 @@ const ExecutionStatusConfirmModalComponent: FC<
     ? formatMessage(messages.clearStatus)
     : formatMessage(messages.markAsStatus, { status: statusLabel });
   const isStatusChange = currentStatus && !isClearStatus;
-  const showPostIssueToBts = status === EXECUTION_STATUS_FAILED;
+  const showPostIssueToBts =
+    canManageExecutions && status === EXECUTION_STATUS_FAILED && !isEmpty(availableBtsIntegrations);
   const okButtonLabel = isClearStatus
     ? formatMessage(messages.clearStatus)
     : formatMessage(messages.markAsStatus, { status: statusLabel });
@@ -162,6 +169,8 @@ const ExecutionStatusConfirmModalComponent: FC<
       );
     }
 
+    const shouldOpenBtsModal = values.postIssueToBts && !clearCommentCheckboxChecked;
+
     setIsSubmitting(true);
     dispatch(
       updateManualLaunchExecutionStatusAction({
@@ -177,7 +186,13 @@ const ExecutionStatusConfirmModalComponent: FC<
         ...(!isClearStatus && !isStatusChange
           ? { removedServerAttachmentIds: Array.from(removedServerAttachmentIds) }
           : {}),
-        onSuccess: () => dispatch(hideModalAction()),
+        onSuccess: () => {
+          if (shouldOpenBtsModal) {
+            openModal(executionId);
+          } else {
+            dispatch(hideModalAction());
+          }
+        },
         onFinally: () => setIsSubmitting(false),
       }),
     );
@@ -226,7 +241,7 @@ const ExecutionStatusConfirmModalComponent: FC<
             {showPostIssueToBts && (
               <div className={cx('checkbox-section')}>
                 <FieldProvider name="postIssueToBts">
-                  <InputCheckbox>{formatMessage(messages.postIssueToBts)}</InputCheckbox>
+                  <InputCheckbox>{formatMessage(commonMessages.postIssueToBts)}</InputCheckbox>
                 </FieldProvider>
               </div>
             )}
@@ -252,7 +267,7 @@ const ExecutionStatusConfirmModalComponent: FC<
             {showPostIssueToBts && (
               <div className={cx('checkbox-section')}>
                 <FieldProvider name="postIssueToBts">
-                  <InputCheckbox>{formatMessage(messages.postIssueToBts)}</InputCheckbox>
+                  <InputCheckbox>{formatMessage(commonMessages.postIssueToBts)}</InputCheckbox>
                 </FieldProvider>
               </div>
             )}

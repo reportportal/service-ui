@@ -42,7 +42,7 @@ export const QualityGatesPromoLayout = ({ showButton, onButtonClick, helpItems }
       )}
       <img className={cx('bg-image')} src={bgImage} alt="" width="743" height="452" />
       <div className={cx('footer')}>
-        <HelpPanel items={helpItems} />
+        <HelpPanel items={helpItems} className={cx('help-titles')} />
       </div>
     </div>
   );

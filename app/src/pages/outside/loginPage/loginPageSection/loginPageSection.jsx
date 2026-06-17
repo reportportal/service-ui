@@ -20,16 +20,16 @@ import styles from './loginPageSection.scss';
 
 const cx = classNames.bind(styles);
 
-export const LoginPageSection = ({ left, children }) => (
-  <div className={cx('login-page-section', { left })}>{children}</div>
+export const LoginPageSection = ({ social, children }) => (
+  <div className={cx('login-page-section', { social })}>{children}</div>
 );
 
 LoginPageSection.propTypes = {
   children: PropTypes.node,
-  left: PropTypes.bool,
+  social: PropTypes.bool,
 };
 
 LoginPageSection.defaultProps = {
   children: null,
-  left: false,
+  social: false,
 };

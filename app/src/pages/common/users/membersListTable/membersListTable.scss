@@ -24,6 +24,15 @@
   box-sizing: border-box;
 }
 
+.table-wrapper-fix {
+  height: auto;
+  align-items: flex-start;
+}
+
+.checkbox-column-fix {
+  max-height: none;
+}
+
 .members-list-table {
   max-width: inherit;
 }

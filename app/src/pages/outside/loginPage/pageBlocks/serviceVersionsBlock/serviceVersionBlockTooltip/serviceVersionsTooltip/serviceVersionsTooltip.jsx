@@ -28,7 +28,7 @@ export const ServiceVersionsTooltip = ({ services, className }) => {
       <span className={cx('current-version')}>
         <FormattedMessage
           id={'ServiceVersionsBlock.currentVersion'}
-          defaultMessage={'Current version:'}
+          defaultMessage={'Service Version:'}
         />
       </span>
       <span className={cx('versions-list')}>

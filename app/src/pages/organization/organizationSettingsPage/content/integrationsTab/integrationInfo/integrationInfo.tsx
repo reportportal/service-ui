@@ -202,7 +202,7 @@ export const IntegrationInfo = ({ plugin, integrationId = '' }: IntegrationInfoP
       enabled: true,
       parameters: updatedFormData,
       name: updatedFormData.integrationName || details.name,
-      plugin_id: details.id,
+      integration_type: details.id,
     };
     trackEvent(ORGANIZATION_SETTINGS_INTEGRATION.clickCreateIntegrationModal(analyticsPluginName));
     dispatch(

@@ -16,6 +16,10 @@
 
 .field-wrapper {
   margin-bottom: 15px;
+
+  &.light > span {
+    color: var(--rp-ui-color-text-2);
+  }
 }
 
 .label {

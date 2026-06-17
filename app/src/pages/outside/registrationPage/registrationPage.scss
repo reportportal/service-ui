@@ -155,6 +155,10 @@
   text-decoration: none;
 }
 .main-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+
   @media (max-width: $SCREEN_SM_MAX) {
     margin-top: 56px;
   }

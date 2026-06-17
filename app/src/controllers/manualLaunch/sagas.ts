@@ -70,10 +70,7 @@ import {
   defaultManualLaunchesQueryParams,
   MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE,
 } from './constants';
-import {
-  isAttachmentRemoved,
-  mapAttachmentForExecutionCommentPayload,
-} from './utils';
+import { isAttachmentRemoved, mapAttachmentForExecutionCommentPayload } from './utils';
 import {
   GetManualLaunchesParams,
   GetManualLaunchParams,
@@ -617,10 +614,10 @@ function* patchManualLaunchExecutionAndSyncList(
 
 type ManualLaunchStatusPatchBody = {
   status: string;
+  btsTickets?: BtsTicket[];
   executionComment?: {
     comment?: string;
     attachments?: Array<{ id: string; fileName: string; fileType: string; fileSize: number }>;
-    btsTickets?: BtsTicket[];
   };
 };
 
@@ -632,11 +629,8 @@ function applyToRunCommentClearIfNeeded(
     return;
   }
 
-  requestData.executionComment = {
-    comment: '',
-    attachments: [],
-    btsTickets: [],
-  };
+  requestData.executionComment = {};
+  requestData.btsTickets = [];
 }
 
 function mergeNonToRunExecutionComment(
@@ -666,12 +660,8 @@ function mergeNonToRunExecutionComment(
     comment: commentForRequest,
   };
 
-  const {
-    removedServerAttachmentIds,
-    uploadedAttachments,
-    hasNewAttachments,
-    currentExecution,
-  } = params;
+  const { removedServerAttachmentIds, uploadedAttachments, hasNewAttachments, currentExecution } =
+    params;
 
   if (removedServerAttachmentIds !== undefined) {
     const keptServer = (currentExecution?.executionComment?.attachments ?? []).filter(
@@ -685,9 +675,9 @@ function mergeNonToRunExecutionComment(
     requestData.executionComment.attachments = uploadedAttachments;
   }
 
-  const existingBts = currentExecution?.executionComment?.btsTickets;
+  const existingBts = currentExecution?.btsTickets;
   if (!isUndefined(existingBts) && existingBts.length > 0) {
-    requestData.executionComment.btsTickets = existingBts;
+    requestData.btsTickets = existingBts;
   }
 }
 
@@ -747,7 +737,13 @@ function* updateManualLaunchExecutionStatus(
       });
     }
 
-    yield call(patchManualLaunchExecutionAndSyncList, projectKey, launchId, executionId, requestData);
+    yield call(
+      patchManualLaunchExecutionAndSyncList,
+      projectKey,
+      launchId,
+      executionId,
+      requestData,
+    );
 
     const capitalizedStatus =
       statusUpper.charAt(0).toUpperCase() + statusUpper.slice(1).toLowerCase();
@@ -848,7 +844,13 @@ function* updateManualLaunchExecutionComment(
       executionComment,
     };
 
-    yield call(patchManualLaunchExecutionAndSyncList, projectKey, launchId, executionId, requestData);
+    yield call(
+      patchManualLaunchExecutionAndSyncList,
+      projectKey,
+      launchId,
+      executionId,
+      requestData,
+    );
 
     yield put(
       showNotification({

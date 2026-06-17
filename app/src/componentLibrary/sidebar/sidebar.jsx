@@ -61,6 +61,7 @@ export const Sidebar = ({
   items,
   createFooterBlock,
   shouldBeCollapsedOnLeave,
+  onShowMoreClick,
 }) => {
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
   const [visibleCount, setVisibleCount] = useState(items.length);
@@ -283,6 +284,7 @@ export const Sidebar = ({
                 isOpened={isShowMorePopoverOpen}
                 setIsOpened={(open) => {
                   if (open) {
+                    onShowMoreClick?.(getIsSidebarCollapsed());
                     onOpenSidebar();
                     afterOpenSidebar(() => setIsShowMorePopoverOpen(true));
                   } else {
@@ -320,6 +322,7 @@ Sidebar.propTypes = {
   createMainBlock: PropTypes.func,
   createFooterBlock: PropTypes.func,
   shouldBeCollapsedOnLeave: PropTypes.bool,
+  onShowMoreClick: PropTypes.func,
 };
 
 Sidebar.defaultProps = {
@@ -328,4 +331,5 @@ Sidebar.defaultProps = {
   items: [],
   shouldBeCollapsedOnLeave: false,
   createFooterBlock: () => {},
+  onShowMoreClick: null,
 };

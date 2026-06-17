@@ -28,6 +28,7 @@ import { PageHeaderWithBreadcrumbsAndActions } from 'pages/inside/common/pageHea
 import { PageLoader } from 'pages/inside/testPlansPage/pageLoader';
 import { ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
 import { MANUAL_LAUNCHES_PAGE, MANUAL_LAUNCH_DETAILS_PAGE } from 'controllers/pages';
+import { availableBtsIntegrationsSelector } from 'controllers/plugins';
 import {
   activeManualLaunchExecutionSelector,
   isLoadingActiveManualLaunchExecutionSelector,
@@ -55,6 +56,8 @@ import { messages } from './messages';
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { messages as manualLaunchesMessages } from '../messages';
 import { hasPersistedExecutionComment } from './utils';
+import { BTSIssuesModal } from './BTSIssuesModal/BTSIssuesModal';
+import { LinkedToBTSSection } from './LinkedToBTSSection/LinkedToBTSSection';
 
 import styles from './manualLaunchExecutionPage.scss';
 
@@ -70,6 +73,7 @@ export const ManualLaunchExecutionPage = () => {
   const execution = useSelector(activeManualLaunchExecutionSelector);
   const folders = useSelector(manualLaunchFoldersSelector);
   const isExecutionLoading = useSelector(isLoadingActiveManualLaunchExecutionSelector);
+  const availableBtsIntegrations = useSelector(availableBtsIntegrationsSelector);
   const [showStatusButtons, setShowStatusButtons] = useState(false);
 
   const launchName = launch?.name ?? '';
@@ -141,7 +145,9 @@ export const ManualLaunchExecutionPage = () => {
       return;
     }
 
-    const type = isTextBased ? TEST_EXECUTION_TEMPLATE_TYPE.TEXT : TEST_EXECUTION_TEMPLATE_TYPE.STEPS;
+    const type = isTextBased
+      ? TEST_EXECUTION_TEMPLATE_TYPE.TEXT
+      : TEST_EXECUTION_TEMPLATE_TYPE.STEPS;
     const last = lastViewedExecutionRef.current;
 
     if (last && last.id === execution.id && last.type === type) {
@@ -150,6 +156,12 @@ export const ManualLaunchExecutionPage = () => {
     lastViewedExecutionRef.current = { id: execution.id, type };
     trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.viewTestExecutionPage(type));
   }, [execution?.id, isTextBased, trackEvent]);
+
+  useEffect(() => {
+    if (hasStatus) {
+      setShowStatusButtons(false);
+    }
+  }, [hasStatus]);
 
   const handleRunTestClick = () => {
     setShowStatusButtons(true);
@@ -232,11 +244,13 @@ export const ManualLaunchExecutionPage = () => {
             ) : (
               <StepsBasedContent execution={execution} />
             )}
+            {!isEmpty(availableBtsIntegrations) && <LinkedToBTSSection execution={execution} />}
             {showExecutionCommentSection && <ExecutionCommentSection execution={execution} />}
           </div>
         </div>
       </ScrollWrapper>
       <ExecutionStatusConfirmModal />
+      <BTSIssuesModal />
     </SettingsLayout>
   );
 };

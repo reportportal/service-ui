@@ -141,8 +141,8 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
     return tickets.map(
       (ticket) =>
         ({
-          key: String(ticket.id),
-          name: ticket.name || ticket.id,
+          key: String(ticket.ticketId),
+          name: ticket.ticketId,
           ...ticket,
         }) as Issue,
     );
@@ -211,11 +211,11 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
     <div className={cx('content-wrapper')}>
       {executionDetails?.executionComment?.comment && (
         <div className={cx('execution-info')}>
-          {!isEmpty(executionDetails.executionComment.btsTickets) && (
+          {!isEmpty(executionDetails?.btsTickets) && (
             <div className={cx('info-item')}>
               <span className={cx('info-label')}>{formatMessage(messages.linkedToBTS)}</span>
               <IssueList
-                issues={convertBTSTicketsToIssues(executionDetails.executionComment.btsTickets)}
+                issues={convertBTSTicketsToIssues(executionDetails.btsTickets)}
                 className={cx('bts-issues')}
               />
             </div>
