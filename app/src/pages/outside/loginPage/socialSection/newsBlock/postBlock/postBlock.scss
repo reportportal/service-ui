@@ -106,55 +106,84 @@
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 4px;
-  font-size: 14px;
-  line-height: 16px;
+  gap: 5px;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-medium);
+  letter-spacing: 0;
 
-  .post-block--stack-layer-2 & {
-    font-size: 10px;
-    line-height: 14px;
+  .post-block--stacked.post-block--stack-layer-2 & {
+    font-size: 11px;
+    line-height: 18px;
   }
 
-  .post-block--stack-layer-1 & {
-    font-size: 12px;
-    line-height: 16px;
+  .post-block--stacked.post-block--stack-layer-1 & {
+    font-size: 13px;
+    line-height: 21px;
   }
 
-  .post-block--stack-layer-0 & {
-    font-size: 14px;
-    line-height: 16px;
+  .post-block--stacked.post-block--stack-layer-0 & {
+    font-size: 15px;
+    line-height: 24px;
   }
 }
 
 .post-name {
-  font-family: var(--rp-ui-base-font-family-heading);
-  font-weight: var(--rp-ui-base-fw-semi-bold);
-  color: var(--rp-ui-base-charcoal);
+  color: rgb(0 0 0);
+
+  .post-block--stacked & {
+    font-family: var(--rp-ui-base-font-family);
+    font-weight: var(--rp-ui-base-fw-medium);
+  }
+
+  .post-block--expanded & {
+    font-family: var(--rp-ui-base-font-family);
+    font-weight: var(--rp-ui-base-fw-medium);
+    font-size: 15px;
+    line-height: 24px;
+    letter-spacing: 0;
+    color: rgb(0 0 0);
+  }
 }
 
-.post-handle,
+.post-handle {
+  color: var(--rp-ui-base-e-300);
+  font-size: 14px;
+  line-height: 24px;
+
+  .post-block--expanded & {
+    font-family: var(--rp-ui-base-font-family);
+    font-weight: var(--rp-ui-base-fw-medium);
+    font-size: 14px;
+    line-height: 24px;
+    letter-spacing: 0;
+    color: var(--rp-ui-base-e-300);
+  }
+
+  .post-block--stacked.post-block--stack-layer-1 & {
+    font-size: 12.25px;
+    line-height: 20.99px;
+  }
+
+  .post-block--stacked.post-block--stack-layer-2 & {
+    font-size: 10.38px;
+    line-height: 17.79px;
+  }
+}
+
 .post-separator,
 .post-date {
-  color: var(--rp-ui-base-e-400);
+  color: var(--rp-ui-base-e-300);
 }
 
 .post-content {
   overflow-wrap: break-word;
-
-  .post-block--stack-layer-2 & {
-    font-size: 10px;
-    line-height: 14px;
-  }
-
-  .post-block--stack-layer-1 & {
-    font-size: 12px;
-    line-height: 15px;
-  }
-
-  .post-block--stack-layer-0 & {
-    font-size: 13px;
-    line-height: 18px;
-  }
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
+  font-size: 13px;
+  line-height: 20px;
+  text-indent: 1px;
+  letter-spacing: 0;
+  color: rgb(0 0 0);
 }
 
 .post-block--stacked {
