@@ -136,6 +136,7 @@ export const URLS = {
     })}`,
   launchAnalyze: (projectKey) => `${urlBase}${projectKey}/launch/analyze`,
   login: () => `${urlCommonBase}sso/oauth/token`,
+  logout: () => `${urlBase}auth/logout`,
   sessionToken: () => `${urlCommonBase}sso/me`,
 
   apiKeys: (userId) => `${urlBase}users/${userId}/api-keys`,

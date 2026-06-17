@@ -31,7 +31,12 @@ import {
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { fetchAppInfoAction } from 'controllers/appInfo';
-import { OAUTH_SUCCESS, pagePropertiesSelector, LOGIN_PAGE } from 'controllers/pages';
+import {
+  OAUTH_SUCCESS,
+  pagePropertiesSelector,
+  LOGIN_PAGE,
+  ACCOUNT_REMOVED_PAGE,
+} from 'controllers/pages';
 import {
   FETCH_USER_ERROR,
   FETCH_USER_SUCCESS,
@@ -68,8 +73,21 @@ import {
 } from './constants';
 import { tokenSelector } from './selectors';
 
+function* logoutOnServer(redirectedPage) {
+  if (redirectedPage === ACCOUNT_REMOVED_PAGE) {
+    return;
+  }
+
+  try {
+    yield call(fetch, URLS.logout(), { method: 'POST' });
+  } catch {
+    // proceed with local logout regardless of API errors
+  }
+}
+
 // TODO: clear cookie on logout
 function* handleLogout({ payload }) {
+  yield call(logoutOnServer, payload);
   yield put(resetTokenAction());
   yield put(fetchPublicPluginsAction());
   yield put(fetchAppInfoAction());
