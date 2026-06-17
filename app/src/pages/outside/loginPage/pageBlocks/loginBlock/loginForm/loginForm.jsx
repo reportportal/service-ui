@@ -14,37 +14,36 @@
  * limitations under the License.
  */
 
-import { useCallback, useEffect, useReducer, useRef } from 'react';
+import {useCallback, useEffect, useReducer, useRef} from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { useDispatch, useSelector } from 'react-redux';
-import { reduxForm, stopSubmit } from 'redux-form';
-import { FormattedMessage, useIntl, defineMessages } from 'react-intl';
+import {useDispatch, useSelector} from 'react-redux';
+import {reduxForm, stopSubmit} from 'redux-form';
+import {defineMessages, FormattedMessage, useIntl} from 'react-intl';
 import Link from 'redux-first-router-link';
-import { useTracking } from 'react-tracking';
-import { FieldText } from '@reportportal/ui-kit';
-import { commonValidators } from 'common/utils/validation';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { isDemoInstanceSelector } from 'controllers/appInfo';
+import {useTracking} from 'react-tracking';
+import {FieldText} from '@reportportal/ui-kit';
+import {commonValidators} from 'common/utils/validation';
+import {COMMON_LOCALE_KEYS} from 'common/constants/localization';
+import {isDemoInstanceSelector} from 'controllers/appInfo';
 import {
-  loginAction,
-  lastFailedLoginTimeSelector,
   badCredentialsSelector,
   clearLoginLockoutAction,
+  lastFailedLoginTimeSelector,
+  loginAction,
 } from 'controllers/auth';
-import { getLoginLockoutState } from 'controllers/auth/loginLockout';
-import { LOGIN_PAGE } from 'controllers/pages';
-import {
-  LOGIN,
-  LOGIN_PAGE_EVENTS,
-} from 'components/main/analytics/events/ga4Events/loginPageEvents';
-import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { BigButton } from 'components/buttons/bigButton';
-import { FieldProvider } from 'components/fields/fieldProvider';
-import { DEFAULT_USER_CREDENTIALS } from './constants';
+import {getLoginLockoutState} from 'controllers/auth/loginLockout';
+import {LOGIN_PAGE} from 'controllers/pages';
+import {LOGIN, LOGIN_PAGE_EVENTS,} from 'components/main/analytics/events/ga4Events/loginPageEvents';
+import {FieldErrorHint} from 'components/fields/fieldErrorHint';
+import {BigButton} from 'components/buttons/bigButton';
+import {FieldProvider} from 'components/fields/fieldProvider';
+import {DEFAULT_USER_CREDENTIALS} from './constants';
 import styles from './loginForm.scss';
 
 const cx = classNames.bind(styles);
+
+const BoldBlockTime = (parts) => <b className={cx('attempts-exceeded-count')}>{parts}</b>;
 
 const messages = defineMessages({
   login: {
@@ -61,15 +60,11 @@ const messages = defineMessages({
   },
   loginAttemptsExceededMessage: {
     id: 'LoginForm.loginAttemptsExceededMessage',
-    defaultMessage: 'You entered incorrectly login or password many times.',
+    defaultMessage: 'You entered an incorrect login or password many times.',
   },
   loginAttemptsExceededBlockedFor: {
     id: 'LoginForm.loginAttemptsExceededBlockedFor',
-    defaultMessage: 'Login form is blocked for',
-  },
-  loginAttemptsExceededTimeSuffix: {
-    id: 'LoginForm.loginAttemptsExceededTimeSuffix',
-    defaultMessage: 'sec.',
+    defaultMessage: 'Login form is blocked for <bold>{seconds, number}</bold> sec.',
   },
   errorMessage: {
     id: 'LoginForm.errorMessage',
@@ -141,7 +136,7 @@ const LoginFormComponent = ({ handleSubmit, initialize, form }) => {
   );
 
   return (
-    <form
+       <form
       className={cx('login-form', { 'login-form--lockout': isLoginLimitExceeded })}
       onSubmit={handleSubmit(onLoginSubmit)}
     >
@@ -198,9 +193,10 @@ const LoginFormComponent = ({ handleSubmit, initialize, form }) => {
             {formatMessage(messages.loginAttemptsExceededMessage)}
           </p>
           <p className={cx('attempts-exceeded-message')}>
-            {formatMessage(messages.loginAttemptsExceededBlockedFor)}{' '}
-            <b className={cx('attempts-exceeded-count')}>{blockTime}</b>{' '}
-            {formatMessage(messages.loginAttemptsExceededTimeSuffix)}
+            {formatMessage(messages.loginAttemptsExceededBlockedFor, {
+              seconds: blockTime,
+              bold: BoldBlockTime,
+            })}
           </p>
         </div>
       )}

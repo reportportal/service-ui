@@ -18,6 +18,7 @@ import {
   LOGIN_LOCKOUT_BLOCK_DURATION_SEC,
   MAX_FAILED_LOGIN_ATTEMPTS,
 } from './constants';
+import { ERROR_CODE_LOGIN_BAD_CREDENTIALS, ERROR_CODE_LOGIN_MAX_LIMIT } from 'common/constants/apiErrorCodes';
 
 export const getLoginLockoutState = (lastFailedLoginTime) => {
   if (!lastFailedLoginTime) {
@@ -52,4 +53,19 @@ export const sanitizeStoredLockoutTime = (timestamp) => {
   return null;
 };
 
-export const isTransientLoginFailure = (rawError) => rawError instanceof Error;
+export const isLoginCredentialFailure = (rawError) =>
+  rawError?.errorCode === ERROR_CODE_LOGIN_BAD_CREDENTIALS;
+
+const ADDRESS_LOCKED_MESSAGE_PATTERN = /address is locked/i;
+
+export const isServerLoginLockFailure = (rawError) => {
+  if (!rawError || typeof rawError !== 'object' || rawError instanceof Error) {
+    return false;
+  }
+
+  if (rawError.errorCode === ERROR_CODE_LOGIN_MAX_LIMIT) {
+    return true;
+  }
+
+  return ADDRESS_LOCKED_MESSAGE_PATTERN.test(String(rawError.message || ''));
+};

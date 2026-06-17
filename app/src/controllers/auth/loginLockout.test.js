@@ -16,15 +16,17 @@
 
 import {
   getLoginLockoutState,
+  isLoginCredentialFailure,
   isLoginLockoutActive,
-  isTransientLoginFailure,
+  isServerLoginLockFailure,
   shouldStartLoginLockout,
 } from './loginLockout';
+import { MAX_FAILED_LOGIN_ATTEMPTS } from './constants';
 
 describe('loginLockout', () => {
-  test('allows up to 4 failed attempts before lockout', () => {
-    expect(shouldStartLoginLockout(4)).toBe(false);
-    expect(shouldStartLoginLockout(5)).toBe(true);
+  test('allows failures up to threshold before lockout', () => {
+    expect(shouldStartLoginLockout(MAX_FAILED_LOGIN_ATTEMPTS)).toBe(false);
+    expect(shouldStartLoginLockout(MAX_FAILED_LOGIN_ATTEMPTS + 1)).toBe(true);
   });
 
   describe('lockout timing', () => {
@@ -59,19 +61,42 @@ describe('loginLockout', () => {
     });
   });
 
-  test('counts API failures but not transient network errors', () => {
+  test('counts only bad-credentials API errors toward lockout', () => {
     expect(
-      isTransientLoginFailure({
+      isLoginCredentialFailure({
         errorCode: 4003,
         message: 'You do not have enough permissions. Bad credentials',
       }),
-    ).toBe(false);
+    ).toBe(true);
     expect(
-      isTransientLoginFailure({
+      isLoginCredentialFailure({
         errorCode: 4004,
         message: 'Address is locked due to several incorrect login attempts',
       }),
     ).toBe(false);
-    expect(isTransientLoginFailure(new Error('Network Error'))).toBe(true);
+    expect(isLoginCredentialFailure(new Error('Network Error'))).toBe(false);
+    expect(isLoginCredentialFailure({ errorCode: 500, message: 'Server error' })).toBe(false);
+  });
+
+  test('detects server-side login lock responses', () => {
+    expect(
+      isServerLoginLockFailure({
+        errorCode: 4004,
+        message: 'Address is locked due to several incorrect login attempts',
+      }),
+    ).toBe(true);
+    expect(
+      isServerLoginLockFailure({
+        errorCode: 4003,
+        message: 'Address is locked due to several incorrect login attempts',
+      }),
+    ).toBe(true);
+    expect(
+      isServerLoginLockFailure({
+        errorCode: 4003,
+        message: 'You do not have enough permissions. Bad credentials',
+      }),
+    ).toBe(false);
+    expect(isServerLoginLockFailure(new Error('Network Error'))).toBe(false);
   });
 });

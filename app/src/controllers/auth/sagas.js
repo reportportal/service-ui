@@ -55,7 +55,7 @@ import {
   loginSuccessAction,
   setBadCredentialsAction,
 } from './actionCreators';
-import { isLoginLockoutActive, isTransientLoginFailure, shouldStartLoginLockout } from './loginLockout';
+import { isLoginCredentialFailure, isLoginLockoutActive, isServerLoginLockFailure, shouldStartLoginLockout } from './loginLockout';
 import {
   LOGIN,
   LOGOUT,
@@ -139,6 +139,12 @@ function* watchLoginSuccess() {
   yield takeEvery(LOGIN_SUCCESS, loginSuccessHandler);
 }
 
+function* startServerLoginLockout() {
+  const lastFailedLoginTime = Date.now();
+  updateStorageItem(APPLICATION_SETTINGS, { lastFailedLoginTime });
+  yield put(setLastFailedLoginTimeAction(lastFailedLoginTime));
+}
+
 function* registerFailedLoginAttempt() {
   const failedAttempts = (yield select(failedLoginAttemptsSelector)) + 1;
   yield put(setFailedLoginAttemptsAction(failedAttempts));
@@ -179,22 +185,27 @@ function* handleLogin({ payload }) {
 
     yield put(loginSuccessAction(token));
   } catch (rawError) {
+    if (isServerLoginLockFailure(rawError)) {
+      yield call(startServerLoginLockout);
+      return;
+    }
+
+    if (isLoginCredentialFailure(rawError)) {
+      yield call(registerFailedLoginAttempt);
+      return;
+    }
+
     const errorMessage = String(
       rawError?.message || rawError?.error_description || rawError?.error || 'Unknown error',
     );
-    const isLockedOut = isTransientLoginFailure(rawError)
-      ? false
-      : yield call(registerFailedLoginAttempt);
 
-    if (!isLockedOut) {
-      yield put(
-        showNotification({
-          messageId: 'failureDefault',
-          type: NOTIFICATION_TYPES.ERROR,
-          values: { error: errorMessage },
-        }),
-      );
-    }
+    yield put(
+      showNotification({
+        messageId: 'failureDefault',
+        type: NOTIFICATION_TYPES.ERROR,
+        values: { error: errorMessage },
+      }),
+    );
   }
 }
 

@@ -15,10 +15,11 @@
  */
 
 import React, { PureComponent } from 'react';
-import Link from 'redux-first-router-link';
 import classNames from 'classnames/bind';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { redirect } from 'redux-first-router';
 import Parser from 'html-react-parser';
 import { LOGIN_PAGE } from 'controllers/pages';
 import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
@@ -30,9 +31,11 @@ import styles from './externalLoginBlock.scss';
 const cx = classNames.bind(styles);
 
 @track()
+@connect(null, { redirect })
 export class ExternalLoginBlock extends PureComponent {
   static propTypes = {
     externalAuth: PropTypes.object,
+    redirect: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -46,9 +49,16 @@ export class ExternalLoginBlock extends PureComponent {
     authInProgress: false,
   };
 
-  getExternalAuthClickHandler = (path) => () => {
+  getExternalAuthClickHandler = (authType, val) => () => {
+    this.clickEventHandler(authType);
+
+    if (val.providers) {
+      this.props.redirect({ type: LOGIN_PAGE, payload: { query: { multipleAuth: authType } } });
+      return;
+    }
+
     this.setState({ authInProgress: true });
-    setWindowLocationToNewPath(normalizePathWithPrefix(path));
+    setWindowLocationToNewPath(normalizePathWithPrefix(val.path));
   };
 
   clickEventHandler = (authType) => {
@@ -66,15 +76,9 @@ export class ExternalLoginBlock extends PureComponent {
           <BigButton
             roundedCorners
             color="booger"
-            onClick={val.providers ? null : () => this.clickEventHandler(authType)}
+            onClick={this.getExternalAuthClickHandler(authType, val)}
           >
-            {val.providers ? (
-              <Link to={{ type: LOGIN_PAGE, payload: { query: { multipleAuth: authType } } }}>
-                {Parser(val.button)}
-              </Link>
-            ) : (
-              <span onClick={this.getExternalAuthClickHandler(val.path)}>{Parser(val.button)}</span>
-            )}
+            {Parser(val.button)}
           </BigButton>
         </div>
       );

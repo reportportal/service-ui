@@ -55,18 +55,18 @@ export const LoginBlock = () => {
         hint={messages.login}
         leftAligned
       >
+        <LoginForm />
         {!isLoginLimitExceeded && !isEmptyObject(externalAuth) ? (
           <>
-            <ExternalLoginBlock externalAuth={externalAuth} />
             <div className={cx('separator')}>
               <div className={cx('line')} />
               <div className={cx('or')}>
                 <FormattedMessage id={'LoginForm.or'} defaultMessage={'or'} />
               </div>
             </div>
+            <ExternalLoginBlock externalAuth={externalAuth} />
           </>
         ) : null}
-        <LoginForm />
       </PageSectionContainer>
       <div className={cx('bottom-content')}>
         {extensions &&
