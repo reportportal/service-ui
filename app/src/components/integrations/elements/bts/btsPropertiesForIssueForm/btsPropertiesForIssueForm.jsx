@@ -340,7 +340,7 @@ export class BtsPropertiesForIssueForm extends Component {
       projectKey,
     } = this.props;
     const isCommandAvailable = allowedCommands
-      ? allowedCommands.indexOf(COMMAND_GET_ISSUE_FIELDS) !== -1
+      ? allowedCommands.includes(COMMAND_GET_ISSUE_FIELDS)
       : false;
     const requestParams = {};
     let url;
@@ -383,7 +383,7 @@ export class BtsPropertiesForIssueForm extends Component {
       projectKey,
     } = this.props;
     const isCommandAvailable = allowedCommands
-      ? allowedCommands.indexOf(COMMAND_GET_ISSUE_TYPES) !== -1
+      ? allowedCommands.includes(COMMAND_GET_ISSUE_TYPES)
       : false;
 
     const requestParams = {};
