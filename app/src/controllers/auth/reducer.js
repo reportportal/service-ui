@@ -29,6 +29,7 @@ import {
   CLEAR_LOGIN_LOCKOUT,
   SET_FAILED_LOGIN_ATTEMPTS,
   SET_BAD_CREDENTIALS,
+  SET_LOGIN_LOADING,
 } from './constants';
 
 const getStoredSettings = () => getStorageItem(APPLICATION_SETTINGS) || {};
@@ -113,10 +114,25 @@ export const lastFailedLoginTimeReducer = (
   }
 };
 
+const loginLoadingReducer = (state = false, { type = '', payload = false }) => {
+  switch (type) {
+    case LOGIN:
+      return true;
+    case SET_LOGIN_LOADING:
+      return payload;
+    case AUTH_SUCCESS:
+    case LOGOUT:
+      return false;
+    default:
+      return state;
+  }
+};
+
 export const authReducer = combineReducers({
   authorized: authorizedReducer,
   token: tokenReducer,
   lastFailedLoginTime: lastFailedLoginTimeReducer,
   failedLoginAttempts: failedLoginAttemptsReducer,
   badCredentials: badCredentialsReducer,
+  loginLoading: loginLoadingReducer,
 });

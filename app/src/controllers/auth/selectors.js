@@ -30,3 +30,5 @@ export const lastFailedLoginTimeSelector = (state) => authSelector(state).lastFa
 export const failedLoginAttemptsSelector = (state) => authSelector(state).failedLoginAttempts;
 
 export const badCredentialsSelector = (state) => authSelector(state).badCredentials;
+
+export const loginLoadingSelector = (state) => !!authSelector(state).loginLoading;

@@ -24,6 +24,7 @@ export const SET_LAST_FAILED_LOGIN_TIME = 'setLastFailedLoginTime';
 export const CLEAR_LOGIN_LOCKOUT = 'clearLoginLockout';
 export const SET_FAILED_LOGIN_ATTEMPTS = 'setFailedLoginAttempts';
 export const SET_BAD_CREDENTIALS = 'setBadCredentials';
+export const SET_LOGIN_LOADING = 'setLoginLoading';
 export const LOGIN_LOCKOUT_BLOCK_DURATION_SEC = 30;
 export const MAX_FAILED_LOGIN_ATTEMPTS = 4;
 export const AUTH_ERROR = 'authErrorAction';
