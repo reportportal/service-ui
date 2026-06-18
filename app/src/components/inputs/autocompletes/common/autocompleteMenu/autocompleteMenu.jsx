@@ -63,14 +63,16 @@ export const AutocompleteMenu = React.forwardRef(
       inputValue,
       beforeSearchPrompt,
       showDynamicSearchPrompt,
+      pinnedOptions,
       ...props
     },
     ref,
   ) => {
-    const menuContent = !isReadyForSearch(minLength, inputValue) ? (
+    const isReady = isReadyForSearch(minLength, inputValue) || pinnedOptions.length > 0;
+    const menuContent = !isReady ? (
       getBeforeSearchPrompt(minLength, inputValue, beforeSearchPrompt, showDynamicSearchPrompt)
     ) : (
-      <AutocompleteOptions inputValue={inputValue} {...props} />
+      <AutocompleteOptions inputValue={inputValue} pinnedOptions={pinnedOptions} {...props} />
     );
 
     return (
@@ -98,6 +100,7 @@ AutocompleteMenu.propTypes = {
   inputValue: PropTypes.string,
   beforeSearchPrompt: PropTypes.node,
   showDynamicSearchPrompt: PropTypes.bool,
+  pinnedOptions: PropTypes.array,
 };
 
 AutocompleteMenu.defaultProps = {
@@ -108,4 +111,5 @@ AutocompleteMenu.defaultProps = {
   inputValue: '',
   beforeSearchPrompt: null,
   showDynamicSearchPrompt: false,
+  pinnedOptions: [],
 };

@@ -17,14 +17,21 @@
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { injectIntl } from 'react-intl';
 import { Breadcrumbs } from 'components/widgets/multiLevelWidgets/common/breadcrumbs';
+import {
+  LAUNCH_OWNER_LEVEL_KEY,
+  launchOwnerLevelMessages,
+} from 'common/constants/launchOwnerLevel';
 import { ComponentHealthCheckColorScheme } from './componentHealthCheckColorScheme';
 import styles from './componentHealthCheckLegend.scss';
 
 const cx = classNames.bind(styles);
 
+@injectIntl
 export class ComponentHealthCheckLegend extends PureComponent {
   static propTypes = {
+    intl: PropTypes.object.isRequired,
     breadcrumbs: PropTypes.array,
     activeBreadcrumbs: PropTypes.array,
     onClickBreadcrumbs: PropTypes.func,
@@ -39,7 +46,13 @@ export class ComponentHealthCheckLegend extends PureComponent {
   };
 
   render() {
-    const { breadcrumbs, activeBreadcrumbs, onClickBreadcrumbs, passingRate } = this.props;
+    const {
+      intl: { formatMessage },
+      breadcrumbs,
+      activeBreadcrumbs,
+      onClickBreadcrumbs,
+      passingRate,
+    } = this.props;
 
     return (
       <div className={cx('legend')}>
@@ -47,6 +60,11 @@ export class ComponentHealthCheckLegend extends PureComponent {
           breadcrumbs={breadcrumbs}
           activeBreadcrumbs={activeBreadcrumbs}
           onClickBreadcrumbs={onClickBreadcrumbs}
+          getKeyLabel={(key) =>
+            key === LAUNCH_OWNER_LEVEL_KEY
+              ? formatMessage(launchOwnerLevelMessages.ownerLevelOption)
+              : key
+          }
         />
         <ComponentHealthCheckColorScheme passingRate={passingRate} />
       </div>

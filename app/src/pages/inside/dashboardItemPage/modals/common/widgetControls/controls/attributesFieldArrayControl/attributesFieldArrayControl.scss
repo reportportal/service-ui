@@ -54,3 +54,24 @@
   font-size: 13px;
   font-family: $FONT-REGULAR;
 }
+
+.owner-option {
+  display: inline-flex;
+  align-items: center;
+}
+
+.owner-icon {
+  display: inline-flex;
+  width: 13px;
+  height: 13px;
+  margin-right: 8px;
+
+  svg {
+    width: 13px;
+    height: 13px;
+
+    path {
+      fill: $COLOR--lima;
+    }
+  }
+}
