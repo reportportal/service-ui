@@ -368,6 +368,7 @@ export class FieldErrorHint extends Component {
     provideHint: PropTypes.bool,
     errorsWithHint: PropTypes.arrayOf(PropTypes.string),
     touched: PropTypes.bool,
+    suppressError: PropTypes.bool,
     dataAutomationId: PropTypes.string,
     className: PropTypes.string,
   };
@@ -384,6 +385,7 @@ export class FieldErrorHint extends Component {
     provideHint: true,
     errorsWithHint: [],
     touched: false,
+    suppressError: false,
     dataAutomationId: '',
     className: '',
   };
@@ -411,19 +413,21 @@ export class FieldErrorHint extends Component {
       errorsWithHint,
       dataAutomationId,
       className,
+      suppressError,
       ...rest
     } = this.props;
     const showHintWithError = errorsWithHint.includes(error);
     const classes = cx('field-error-hint', `type-${hintType}`, className);
+    const formattedError =
+      error && messages[error]
+        ? intl.formatMessage(messages[error], MESSAGE_VALUES[error] || {})
+        : error;
 
     return (
       <div className={classes} data-automation-id={dataAutomationId}>
         {children &&
           cloneElement(children, {
-            error:
-              error && messages[error]
-                ? intl.formatMessage(messages[error], MESSAGE_VALUES[error] || {})
-                : error,
+            error: suppressError ? undefined : formattedError,
             active,
             showHintWithError,
             ...rest,
