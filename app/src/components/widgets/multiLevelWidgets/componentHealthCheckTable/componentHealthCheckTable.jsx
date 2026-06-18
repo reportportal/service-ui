@@ -43,6 +43,10 @@ import {
   getBreadcrumbs,
   getNewActiveBreadcrumbs,
 } from 'components/widgets/multiLevelWidgets/common/utils';
+import {
+  LAUNCH_OWNER_LEVEL_KEY,
+  launchOwnerLevelMessages,
+} from 'common/constants/launchOwnerLevel';
 import { STATE_READY } from 'components/widgets/common/constants';
 import isEqual from 'fast-deep-equal';
 import {
@@ -337,6 +341,7 @@ export class ComponentHealthCheckTable extends Component {
     const { activeBreadcrumbs, activeBreadcrumbId, isLoading } = this.state;
     const {
       widget: { contentParameters },
+      intl: { formatMessage },
     } = this.props;
     const state = contentParameters?.widgetOptions.state;
     const attributes = contentParameters?.widgetOptions.attributeKeys;
@@ -351,6 +356,11 @@ export class ComponentHealthCheckTable extends Component {
             breadcrumbs={breadcrumbs}
             activeBreadcrumbs={activeBreadcrumbs}
             onClickBreadcrumbs={this.onClickBreadcrumbs}
+            getKeyLabel={(key) =>
+              key === LAUNCH_OWNER_LEVEL_KEY
+                ? formatMessage(launchOwnerLevelMessages.ownerLevelOption)
+                : key
+            }
           />
         </div>
         {data && state === STATE_READY && !isLoading ? (

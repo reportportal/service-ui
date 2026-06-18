@@ -20,10 +20,16 @@ import { injectIntl, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
+import OwnerIcon from 'common/img/owner-icon-inline.svg';
 import { ModalField } from 'components/main/modal';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
+import { AutocompleteOption } from 'components/inputs/autocompletes/common/autocompleteOption';
+import {
+  LAUNCH_OWNER_LEVEL_KEY,
+  launchOwnerLevelMessages,
+} from 'common/constants/launchOwnerLevel';
 import { FIELD_LABEL_WIDTH } from '../constants';
 import styles from './attributesFieldArrayControl.scss';
 
@@ -63,12 +69,14 @@ export class AttributesFieldArrayControl extends Component {
     attributeKeyFieldViewLabels: PropTypes.array,
     showRemainingLevels: PropTypes.bool,
     disabled: PropTypes.bool,
+    withOwnerLevel: PropTypes.bool,
   };
 
   static defaultProps = {
     attributeKeyFieldViewLabels: [],
     showRemainingLevels: false,
     disabled: false,
+    withOwnerLevel: false,
   };
 
   constructor(props) {
@@ -86,6 +94,46 @@ export class AttributesFieldArrayControl extends Component {
 
   filterAttribute = (item) => !this.getAttributes().includes(item);
 
+  isOwnerLevelAvailable = (index) =>
+    !this.getAttributes().some((value, i) => i !== index && value === LAUNCH_OWNER_LEVEL_KEY);
+
+  parseLevelValueToString = (value) =>
+    value === LAUNCH_OWNER_LEVEL_KEY
+      ? this.props.intl.formatMessage(launchOwnerLevelMessages.ownerLevelOption)
+      : value || '';
+
+  // keep the stored value as the 'owner' key even when onBlur commits the displayed label
+  normalizeLevelValue = (value) =>
+    value === this.props.intl.formatMessage(launchOwnerLevelMessages.ownerLevelOption)
+      ? LAUNCH_OWNER_LEVEL_KEY
+      : value;
+
+  renderLevelOption = (item, index, isNew, getItemProps) =>
+    item === LAUNCH_OWNER_LEVEL_KEY ? (
+      <AutocompleteOption key={item} {...getItemProps({ item, index })}>
+        <span className={cx('owner-option')}>
+          <i className={cx('owner-icon')}>{Parser(OwnerIcon)}</i>
+          {this.props.intl.formatMessage(launchOwnerLevelMessages.ownerLevelOption)}
+        </span>
+      </AutocompleteOption>
+    ) : (
+      <AutocompleteOption key={item} {...getItemProps({ item, index })} isNew={isNew}>
+        {item}
+      </AutocompleteOption>
+    );
+
+  getOwnerLevelProps = (index) => {
+    const { withOwnerLevel } = this.props;
+    if (!withOwnerLevel) return {};
+
+    return {
+      pinnedOptions: this.isOwnerLevelAvailable(index) ? [LAUNCH_OWNER_LEVEL_KEY] : [],
+      renderOption: this.renderLevelOption,
+      parseValueToString: this.parseLevelValueToString,
+      createNewAtBottom: true,
+    };
+  };
+
   render() {
     const {
       intl: { formatMessage },
@@ -96,6 +144,7 @@ export class AttributesFieldArrayControl extends Component {
       attributeKeyFieldViewLabels,
       showRemainingLevels,
       disabled,
+      withOwnerLevel,
     } = this.props;
     const attributes = this.getAttributes();
     const canAddNewItems = fields.length < maxAttributesAmount;
@@ -115,7 +164,11 @@ export class AttributesFieldArrayControl extends Component {
               className={cx('attribute-modal-field')}
             >
               <div className={cx({ 'attr-selector': !isFirstItem && !disabled })}>
-                <FieldProvider name={item} validate={fieldValidator(attributes)}>
+                <FieldProvider
+                  name={item}
+                  validate={fieldValidator(attributes)}
+                  normalize={withOwnerLevel ? this.normalizeLevelValue : undefined}
+                >
                   <FieldErrorHint hintType="top">
                     <AsyncAutocomplete
                       getURI={getURI}
@@ -124,6 +177,7 @@ export class AttributesFieldArrayControl extends Component {
                       creatable
                       filterOption={this.filterAttribute}
                       disabled={disabled}
+                      {...this.getOwnerLevelProps(index)}
                     />
                   </FieldErrorHint>
                 </FieldProvider>
