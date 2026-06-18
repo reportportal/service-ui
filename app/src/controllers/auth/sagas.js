@@ -61,7 +61,7 @@ import {
   setBadCredentialsAction,
   setLoginLoadingAction,
 } from './actionCreators';
-import { isLoginCredentialFailure, isLoginLockoutActive, isServerLoginLockFailure, shouldStartLoginLockout } from './loginLockout';
+import { isLoginCredentialFailure, isLoginLockoutActive, isServerLoginLockFailure, LOGIN_ADDRESS_LOCKED_MESSAGE, shouldStartLoginLockout } from './loginLockout';
 import {
   LOGIN,
   LOGOUT,
@@ -180,6 +180,22 @@ function* registerFailedLoginAttempt() {
   return false;
 }
 
+function getLoginErrorMessage(rawError) {
+  return String(
+    rawError?.message || rawError?.error_description || rawError?.error || 'Unknown error',
+  );
+}
+
+function* showLoginFailureNotification(errorMessage) {
+  yield put(
+    showNotification({
+      messageId: 'failureDefault',
+      type: NOTIFICATION_TYPES.ERROR,
+      values: { error: errorMessage },
+    }),
+  );
+}
+
 function* handleLogin({ payload }) {
   const lastFailedLoginTime = yield select(lastFailedLoginTimeSelector);
   if (isLoginLockoutActive(lastFailedLoginTime)) {
@@ -210,25 +226,21 @@ function* handleLogin({ payload }) {
 
     if (isServerLoginLockFailure(rawError)) {
       yield call(startServerLoginLockout);
+      yield call(showLoginFailureNotification, getLoginErrorMessage(rawError));
       return;
     }
 
     if (isLoginCredentialFailure(rawError)) {
-      yield call(registerFailedLoginAttempt);
+      const isLockedOut = yield call(registerFailedLoginAttempt);
+
+      yield call(
+        showLoginFailureNotification,
+        isLockedOut ? LOGIN_ADDRESS_LOCKED_MESSAGE : getLoginErrorMessage(rawError),
+      );
       return;
     }
 
-    const errorMessage = String(
-      rawError?.message || rawError?.error_description || rawError?.error || 'Unknown error',
-    );
-
-    yield put(
-      showNotification({
-        messageId: 'failureDefault',
-        type: NOTIFICATION_TYPES.ERROR,
-        values: { error: errorMessage },
-      }),
-    );
+    yield call(showLoginFailureNotification, getLoginErrorMessage(rawError));
   }
 }
 
