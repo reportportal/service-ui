@@ -163,6 +163,7 @@ const LoginFormComponent = ({ handleSubmit, initialize, form }) => {
                   type="email"
                   maxLength={128}
                   defaultWidth={false}
+                  disabled={isLoginLoading}
                 />
               </FieldErrorHint>
             </FieldProvider>
@@ -176,6 +177,7 @@ const LoginFormComponent = ({ handleSubmit, initialize, form }) => {
                   maxLength={256}
                   defaultWidth={false}
                   autoComplete="off"
+                  disabled={isLoginLoading}
                 />
               </FieldErrorHint>
             </FieldProvider>
