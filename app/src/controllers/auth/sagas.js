@@ -226,7 +226,13 @@ function* handleLogin({ payload }) {
 
     if (isServerLoginLockFailure(rawError)) {
       yield call(startServerLoginLockout);
-      yield call(showLoginFailureNotification, getLoginErrorMessage(rawError));
+      const errorMessage = getLoginErrorMessage(rawError);
+           yield call(
+               showLoginFailureNotification,
+               errorMessage === 'Unknown error'
+                ? LOGIN_ADDRESS_LOCKED_MESSAGE
+                   : errorMessage,
+             );
       return;
     }
 
