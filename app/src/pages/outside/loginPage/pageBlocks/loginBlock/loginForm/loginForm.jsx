@@ -173,6 +173,7 @@ const LoginFormComponent = ({ handleSubmit, initialize, form }) => {
                 <FieldText
                   label={formatMessage(messages.password)}
                   type="password"
+                  maxLength={256}
                   defaultWidth={false}
                   autoComplete="off"
                 />
