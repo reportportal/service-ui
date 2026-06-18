@@ -43,10 +43,6 @@ const messages = defineMessages({
     id: 'IssueInfoTooltip.issueCreatedTitle',
     defaultMessage: 'Created',
   },
-  issueFixVersionsTitle: {
-    id: 'IssueInfoTooltip.issueFixVersionsTitle',
-    defaultMessage: 'Fix version',
-  },
   issueSeverityTitle: {
     id: 'IssueInfoTooltip.issueSeverityTitle',
     defaultMessage: 'Severity',
@@ -120,12 +116,6 @@ export const IssueInfo = ({ issue }) => {
                   label={formatMessage(messages.issueStatusTitle)}
                   value={issueInfo.status}
                   resolved={isResolved(issueInfo.status)}
-                />
-              )}
-              {issueInfo.fixVersions && (
-                <IssueDetailRow
-                  label={formatMessage(messages.issueFixVersionsTitle)}
-                  value={issueInfo.fixVersions}
                 />
               )}
               {issueInfo.severity && (

@@ -73,20 +73,16 @@ const coerceFieldValuesToOptionKey = (field, optionValueKey) => {
 };
 
 // Jira Cloud plugin resolves option labels to {id} via create-meta allowedValues.
-// fixVersions is special-cased in the plugin and expects version IDs in value[].
-const JIRA_CLOUD_VERSION_FIELD_IDS = new Set(['fixVersions', 'versions']);
-
 export const mapFieldValuesForApi = (field, values, pluginName) => {
   if (pluginName !== JIRA_CLOUD || !values?.length) {
     return values;
   }
-  const sendVersionId = JIRA_CLOUD_VERSION_FIELD_IDS.has(field.id);
   const toApiValue = (entry) => {
     const match = findDefinedOption(entry, field.definedValues, VALUE_NAME_KEY);
     if (!match) {
       return entry;
     }
-    return sendVersionId ? match[VALUE_ID_KEY] : match[VALUE_NAME_KEY];
+    return match[VALUE_NAME_KEY];
   };
   return Array.isArray(values) ? values.map(toApiValue) : values;
 };
