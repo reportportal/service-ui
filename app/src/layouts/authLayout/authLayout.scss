@@ -16,14 +16,23 @@
 
 .auth-layout {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 100%;
-  min-height: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
   background-color: var(--rp-ui-base-topaz);
   background-image: url(~common/img/auth-page-background.png);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
+}
+
+.auth-layout-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
+  padding: 20px 0;
 }
