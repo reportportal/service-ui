@@ -14,23 +14,32 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
+import { defineMessages, FormattedMessage} from 'react-intl';
 import { PageBlockContainer } from 'pages/outside/common/pageBlockContainer';
 import { ForgotPasswordForm } from './forgotPasswordForm';
+import {PageSectionContainer} from "pages/outside/common/pageSectionContainer";
+import {LoginForm} from "pages/outside/loginPage/pageBlocks/loginBlock/loginForm";
+import {isEmptyObject} from "common/utils";
+import {ExternalLoginBlock} from "pages/outside/loginPage/pageBlocks/loginBlock/loginForm/externalLoginBlock";
 
 const messages = defineMessages({
   forgotPass: {
     id: 'ForgotPasswordBlock.forgotPass',
-    defaultMessage: 'Forgot password?',
+    defaultMessage: 'Restore password',
   },
   enterEmail: {
     id: 'ForgotPasswordBlock.enterEmail',
-    defaultMessage: 'enter your email to restore',
+    defaultMessage: 'Enter your email address and we will send you the recovery link',
   },
 });
 
 export const ForgotPasswordBlock = () => (
-  <PageBlockContainer header={messages.forgotPass} hint={messages.enterEmail}>
-    <ForgotPasswordForm />
-  </PageBlockContainer>
+<PageSectionContainer
+  header={messages.forgotPass}
+  hint={messages.enterEmail}
+  leftAligned
+  // header={messages.forgotPass} hint={messages.enterEmail}
+>
+  <ForgotPasswordForm />
+</PageSectionContainer>
 );
