@@ -265,8 +265,10 @@ function* getManualLaunchFolders(action: GetManualLaunchFoldersAction): Generato
       limit,
     };
 
-    if (filterPriorities) {
-      params[FOLDER_FILTER_KEYS.priority] = filterPriorities.toUpperCase();
+    const normalizedFolderPriorities = normalizePrioritiesForExecutionApi(filterPriorities);
+
+    if (normalizedFolderPriorities) {
+      params[FOLDER_FILTER_KEYS.priority] = normalizedFolderPriorities;
     }
 
     if (filterTags) {
@@ -457,8 +459,10 @@ function* getManualLaunchFilteredFolders(action: GetManualLaunchFilteredFoldersA
         [MANUAL_LAUNCH_FOLDER_SEARCH_FILTER_KEY]: searchQuery,
       };
 
-      if (filterPriorities) {
-        folderListParams[FOLDER_FILTER_KEYS.priority] = filterPriorities.toUpperCase();
+      const normalizedFolderPriorities = normalizePrioritiesForExecutionApi(filterPriorities);
+
+      if (normalizedFolderPriorities) {
+        folderListParams[FOLDER_FILTER_KEYS.priority] = normalizedFolderPriorities;
       }
 
       if (filterTags) {
