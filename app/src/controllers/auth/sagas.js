@@ -61,7 +61,7 @@ import {
   setBadCredentialsAction,
   setLoginLoadingAction,
 } from './actionCreators';
-import { isLoginCredentialFailure, isLoginLockoutActive, isServerLoginLockFailure, LOGIN_ADDRESS_LOCKED_MESSAGE, shouldStartLoginLockout } from './loginLockout';
+import { isLoginCredentialFailure, isLoginLockoutActive, isServerLoginLockFailure, shouldStartLoginLockout } from './loginLockout';
 import {
   LOGIN,
   LOGOUT,
@@ -196,6 +196,15 @@ function* showLoginFailureNotification(errorMessage) {
   );
 }
 
+function* showLoginLockoutNotification() {
+  yield put(
+    showNotification({
+      messageId: 'loginAddressLocked',
+      type: NOTIFICATION_TYPES.ERROR,
+    }),
+  );
+}
+
 function* handleLogin({ payload }) {
   const lastFailedLoginTime = yield select(lastFailedLoginTimeSelector);
   if (isLoginLockoutActive(lastFailedLoginTime)) {
@@ -226,23 +235,18 @@ function* handleLogin({ payload }) {
 
     if (isServerLoginLockFailure(rawError)) {
       yield call(startServerLoginLockout);
-      const errorMessage = getLoginErrorMessage(rawError);
-           yield call(
-               showLoginFailureNotification,
-               errorMessage === 'Unknown error'
-                ? LOGIN_ADDRESS_LOCKED_MESSAGE
-                   : errorMessage,
-             );
+      yield call(showLoginLockoutNotification);
       return;
     }
 
     if (isLoginCredentialFailure(rawError)) {
       const isLockedOut = yield call(registerFailedLoginAttempt);
 
-      yield call(
-        showLoginFailureNotification,
-        isLockedOut ? LOGIN_ADDRESS_LOCKED_MESSAGE : getLoginErrorMessage(rawError),
-      );
+      if (isLockedOut) {
+        yield call(showLoginLockoutNotification);
+      } else {
+        yield call(showLoginFailureNotification, getLoginErrorMessage(rawError));
+      }
       return;
     }
 

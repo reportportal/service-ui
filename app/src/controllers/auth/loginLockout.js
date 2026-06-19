@@ -58,9 +58,6 @@ export const isLoginCredentialFailure = (rawError) =>
 
 const ADDRESS_LOCKED_MESSAGE_PATTERN = /address is locked/i;
 
-export const LOGIN_ADDRESS_LOCKED_MESSAGE =
-  'Address is locked due to several incorrect login attempts';
-
 export const isServerLoginLockFailure = (rawError) => {
   if (!rawError || typeof rawError !== 'object' || rawError instanceof Error) {
     return false;

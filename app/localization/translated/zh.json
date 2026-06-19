@@ -1893,6 +1893,7 @@
   "NotificationCase.recipientsLabel": "收件人",
   "NotificationCase.recipientsPlaceholder": "请选择团队成员",
   "NotificationItem.failureDefault": "连接服务器时出错：{error}",
+  "NotificationItem.loginAddressLocked": "连接服务器时出错：由于多次登录尝试失败，地址已被锁定",
   "NotificationItem.infoLogout": "退出登录成功",
   "NotificationItem.successLogin": "登录成功",
   "NotificationRule.launchNameLabel": "测试任务名称",
