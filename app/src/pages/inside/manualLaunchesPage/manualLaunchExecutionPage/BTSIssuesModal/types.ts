@@ -44,3 +44,7 @@ export interface LinkedIssue {
   linkToIssue: string;
   issueId: string;
 }
+
+export interface BTSIssuesModalData {
+  executionId?: number;
+}

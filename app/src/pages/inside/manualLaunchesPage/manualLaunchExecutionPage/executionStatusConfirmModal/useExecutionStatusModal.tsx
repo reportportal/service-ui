@@ -14,35 +14,14 @@
  * limitations under the License.
  */
 
-import { useDispatch } from 'react-redux';
-import { showModalAction } from 'controllers/modal';
-import type { ExecutionStatusChangePlace } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
+import { useModal } from 'common/hooks';
+
+import { ExecutionStatusConfirmModal } from './executionStatusConfirmModal';
 import { EXECUTION_STATUS_CONFIRM_MODAL } from '../constants';
-import type { ExecutionStatusType } from '../types';
+import type { ExecutionStatusConfirmModalData } from '../types';
 
-interface OpenModalParams {
-  executionId: number;
-  status: ExecutionStatusType;
-  currentStatus?: string;
-  place: ExecutionStatusChangePlace;
-}
-
-export const useExecutionStatusModal = () => {
-  const dispatch = useDispatch();
-
-  const openModal = ({ executionId, status, currentStatus, place }: OpenModalParams) => {
-    dispatch(
-      showModalAction({
-        id: EXECUTION_STATUS_CONFIRM_MODAL,
-        data: {
-          executionId,
-          status,
-          currentStatus,
-          place,
-        },
-      }),
-    );
-  };
-
-  return { openModal };
-};
+export const useExecutionStatusModal = () =>
+  useModal<ExecutionStatusConfirmModalData>({
+    modalKey: EXECUTION_STATUS_CONFIRM_MODAL,
+    renderModal: (data) => <ExecutionStatusConfirmModal data={data} />,
+  });
