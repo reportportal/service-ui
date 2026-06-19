@@ -15,11 +15,14 @@
  */
 
 import {
+  STATUS_TYPES,
   TEST_CASE_FILTER_KEYS,
   FOLDER_FILTER_KEYS,
   MANUAL_LAUNCH_EXECUTION_FILTER_KEYS,
   type FilterKeyMap,
 } from '../constants';
+
+const ALL_PRIORITY_VALUES = Object.values(STATUS_TYPES);
 
 export const ensureArray = <T>(value?: T | T[] | null): T[] => {
   if (value === null || value === undefined) {
@@ -35,6 +38,18 @@ export const normalizeSelection = (values: string[]) => {
 
 export const toBackendPriority = (priorities: string[]): string =>
   priorities.map((priority) => priority.toUpperCase()).join(',');
+
+export const isAllPrioritiesSelected = (priorities: string[]): boolean => {
+  const uniqueNormalized = normalizeSelection(
+    priorities.map((priority) => priority.toLowerCase().trim()),
+  );
+
+  if (uniqueNormalized.length !== ALL_PRIORITY_VALUES.length) {
+    return false;
+  }
+
+  return ALL_PRIORITY_VALUES.every((priority) => uniqueNormalized.includes(priority));
+};
 
 const buildFilterParams = (
   keys: FilterKeyMap,
@@ -58,21 +73,34 @@ export const parseTagsFromQuery = (raw?: string): string[] =>
   raw ? raw.split(',') : [];
 
 export const buildTestCaseFilterParams = (filterPriorities?: string, filterTags?: string) =>
-  buildFilterParams(TEST_CASE_FILTER_KEYS, filterPriorities, filterTags);
+  buildFilterParams(
+    TEST_CASE_FILTER_KEYS,
+    normalizePrioritiesForExecutionApi(filterPriorities),
+    filterTags,
+  );
 
 export const buildFolderFilterParams = (filterPriorities?: string, filterTags?: string) =>
-  buildFilterParams(FOLDER_FILTER_KEYS, filterPriorities, filterTags);
+  buildFilterParams(
+    FOLDER_FILTER_KEYS,
+    normalizePrioritiesForExecutionApi(filterPriorities),
+    filterTags,
+  );
 
 export const normalizePrioritiesForExecutionApi = (filterPriorities?: string): string | undefined => {
   if (!filterPriorities?.trim()) {
     return undefined;
   }
 
-  const normalized = filterPriorities
+  const parsedPriorities = filterPriorities
     .split(',')
-    .map((priority) => priority.trim().toUpperCase())
-    .filter(Boolean)
-    .join(',');
+    .map((priority) => priority.trim())
+    .filter(Boolean);
+
+  if (isAllPrioritiesSelected(parsedPriorities)) {
+    return undefined;
+  }
+
+  const normalized = parsedPriorities.map((priority) => priority.toUpperCase()).join(',');
 
   return normalized || undefined;
 };
