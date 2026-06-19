@@ -180,6 +180,31 @@ function* registerFailedLoginAttempt() {
   return false;
 }
 
+function getLoginErrorMessage(rawError) {
+  return String(
+    rawError?.message || rawError?.error_description || rawError?.error || 'Unknown error',
+  );
+}
+
+function* showLoginFailureNotification(errorMessage) {
+  yield put(
+    showNotification({
+      messageId: 'failureDefault',
+      type: NOTIFICATION_TYPES.ERROR,
+      values: { error: errorMessage },
+    }),
+  );
+}
+
+function* showLoginLockoutNotification() {
+  yield put(
+    showNotification({
+      messageId: 'loginAddressLocked',
+      type: NOTIFICATION_TYPES.ERROR,
+    }),
+  );
+}
+
 function* handleLogin({ payload }) {
   const lastFailedLoginTime = yield select(lastFailedLoginTimeSelector);
   if (isLoginLockoutActive(lastFailedLoginTime)) {
@@ -210,25 +235,22 @@ function* handleLogin({ payload }) {
 
     if (isServerLoginLockFailure(rawError)) {
       yield call(startServerLoginLockout);
+      yield call(showLoginLockoutNotification);
       return;
     }
 
     if (isLoginCredentialFailure(rawError)) {
-      yield call(registerFailedLoginAttempt);
+      const isLockedOut = yield call(registerFailedLoginAttempt);
+
+      if (isLockedOut) {
+        yield call(showLoginLockoutNotification);
+      } else {
+        yield call(showLoginFailureNotification, getLoginErrorMessage(rawError));
+      }
       return;
     }
 
-    const errorMessage = String(
-      rawError?.message || rawError?.error_description || rawError?.error || 'Unknown error',
-    );
-
-    yield put(
-      showNotification({
-        messageId: 'failureDefault',
-        type: NOTIFICATION_TYPES.ERROR,
-        values: { error: errorMessage },
-      }),
-    );
+    yield call(showLoginFailureNotification, getLoginErrorMessage(rawError));
   }
 }
 

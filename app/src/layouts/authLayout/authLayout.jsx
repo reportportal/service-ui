@@ -21,7 +21,11 @@ import styles from './authLayout.scss';
 
 const cx = classNames.bind(styles);
 
-export const AuthLayout = ({ children = null }) => <div className={cx('auth-layout')}>{children}</div>;
+export const AuthLayout = ({ children = null }) => (
+  <div className={cx('auth-layout')}>
+    <div className={cx('auth-layout-content')}>{children}</div>
+  </div>
+);
 
 AuthLayout.propTypes = {
   children: PropTypes.node,

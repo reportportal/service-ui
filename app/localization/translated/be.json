@@ -1893,6 +1893,7 @@
   "NotificationCase.recipientsLabel": "Атрымальнікі",
   "NotificationCase.recipientsPlaceholder": "Вылучыце ўдзельнікаў каманды",
   "NotificationItem.failureDefault": "Адбылася памылка пры падключэнні да сервера: {error}",
+  "NotificationItem.loginAddressLocked": "Адбылася памылка пры падключэнні да сервера: Адрас заблакаваны з-за некалкіх няўдаліх спробаў уваходу",
   "NotificationItem.infoLogout": "Вы выйшлі",
   "NotificationItem.successLogin": "Паспяховы ўваход",
   "NotificationRule.launchNameLabel": "Імя запуску",

@@ -1895,6 +1895,7 @@
   "NotificationCase.recipientsLabel": "Destinatarios",
   "NotificationCase.recipientsPlaceholder": "Seleccionar miembros del equipo",
   "NotificationItem.failureDefault": "Se produjo un error al conectar con el servidor: {error}",
+  "NotificationItem.loginAddressLocked": "Se produjo un error al conectarse al servidor: la dirección ha sido bloqueada debido a varios intentos de inicio de sesión incorrectos",
   "NotificationItem.infoLogout": "Ha cerrado sesión",
   "NotificationItem.successLogin": "Inicio de sesión exitoso",
   "NotificationRule.launchNameLabel": "Nombre de la ejecución",

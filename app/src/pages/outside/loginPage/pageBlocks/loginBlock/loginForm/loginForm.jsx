@@ -160,7 +160,6 @@ const LoginFormComponent = ({ handleSubmit, initialize, form }) => {
               <FieldErrorHint provideHint={false} suppressError={isLoginLoading}>
                 <FieldText
                   label={formatMessage(messages.login)}
-                  type="email"
                   maxLength={128}
                   defaultWidth={false}
                   disabled={isLoginLoading}

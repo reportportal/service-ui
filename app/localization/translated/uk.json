@@ -1894,6 +1894,7 @@
   "NotificationCase.recipientsLabel": "Одержувачі",
   "NotificationCase.recipientsPlaceholder": "Виберіть команди учасників",
   "NotificationItem.failureDefault": "Во время соединения с сервером возникла ошибка: {error}",
+  "NotificationItem.loginAddressLocked": "Во время соединения с сервером виникла помилка: Адресу заблоковано через кілька невдалих спроб входу",
   "NotificationItem.infoLogout": "Ви вийшли",
   "NotificationItem.successLogin": "Успішний вхід",
   "NotificationRule.launchNameLabel": "Назва запуску",
