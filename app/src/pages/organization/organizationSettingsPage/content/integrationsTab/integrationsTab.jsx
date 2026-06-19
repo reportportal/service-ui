@@ -140,6 +140,8 @@ export const IntegrationsTab = () => {
         description={formatMessage(messages.noPluginsDescription)}
         documentationLink={docsReferences.emptyStateOrgIntegrationsDocs}
         handleDocumentationClick={handleDocumentationClick}
+        descriptionClassName={cx('no-plugins-empty-description')}
+        documentationLinkClassName={cx('no-plugins-empty-link')}
         imageType="plugins"
       />
     );
