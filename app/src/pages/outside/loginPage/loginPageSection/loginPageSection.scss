@@ -34,6 +34,7 @@
     backdrop-filter: blur(84px);
     -webkit-backdrop-filter: blur(84px);
     border-radius: 0 12px 12px 0;
+    height: auto;
   }
 
   @media (max-width: $SCREEN_SM_MAX) {
