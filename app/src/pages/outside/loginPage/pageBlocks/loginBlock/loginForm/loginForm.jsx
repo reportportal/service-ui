@@ -157,24 +157,28 @@ const LoginFormComponent = ({ handleSubmit, initialize, form }) => {
         <>
           <div className={cx('login-field')}>
             <FieldProvider name="login">
-              <FieldErrorHint provideHint={false}>
+              <FieldErrorHint provideHint={false} suppressError={isLoginLoading}>
                 <FieldText
                   label={formatMessage(messages.login)}
                   maxLength={128}
                   defaultWidth={false}
+                  disabled={isLoginLoading}
+                  displayError={!isLoginLoading}
                 />
               </FieldErrorHint>
             </FieldProvider>
           </div>
           <div className={cx('password-field')}>
             <FieldProvider name="password">
-              <FieldErrorHint provideHint={false}>
+              <FieldErrorHint provideHint={false} suppressError={isLoginLoading}>
                 <FieldText
                   label={formatMessage(messages.password)}
                   type="password"
                   maxLength={256}
                   defaultWidth={false}
                   autoComplete="off"
+                  disabled={isLoginLoading}
+                  displayError={!isLoginLoading}
                 />
               </FieldErrorHint>
             </FieldProvider>
