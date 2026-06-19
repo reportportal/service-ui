@@ -40,13 +40,15 @@ export const toBackendPriority = (priorities: string[]): string =>
   priorities.map((priority) => priority.toUpperCase()).join(',');
 
 export const isAllPrioritiesSelected = (priorities: string[]): boolean => {
-  if (priorities.length !== ALL_PRIORITY_VALUES.length) {
+  const uniqueNormalized = normalizeSelection(
+    priorities.map((priority) => priority.toLowerCase().trim()),
+  );
+
+  if (uniqueNormalized.length !== ALL_PRIORITY_VALUES.length) {
     return false;
   }
 
-  const normalized = normalizeSelection(priorities.map((priority) => priority.toLowerCase()));
-
-  return ALL_PRIORITY_VALUES.every((priority) => normalized.includes(priority));
+  return ALL_PRIORITY_VALUES.every((priority) => uniqueNormalized.includes(priority));
 };
 
 const buildFilterParams = (
