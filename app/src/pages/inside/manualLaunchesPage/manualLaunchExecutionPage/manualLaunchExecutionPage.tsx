@@ -48,7 +48,6 @@ import {
 
 import { ExecutionStatusButtons } from './executionStatusButtons';
 import { ExecutionStatusDropdown } from './executionStatusDropdown';
-import { ExecutionStatusConfirmModal } from './executionStatusConfirmModal';
 import { TextBasedContent } from './textBasedContent';
 import { StepsBasedContent } from './stepsBasedContent';
 import { ExecutionCommentSection } from './executionCommentSection/executionCommentSection';
@@ -56,7 +55,6 @@ import { messages } from './messages';
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { messages as manualLaunchesMessages } from '../messages';
 import { hasPersistedExecutionComment } from './utils';
-import { BTSIssuesModal } from './BTSIssuesModal/BTSIssuesModal';
 import { LinkedToBTSSection } from './LinkedToBTSSection/LinkedToBTSSection';
 
 import styles from './manualLaunchExecutionPage.scss';
@@ -249,8 +247,6 @@ export const ManualLaunchExecutionPage = () => {
           </div>
         </div>
       </ScrollWrapper>
-      <ExecutionStatusConfirmModal />
-      <BTSIssuesModal />
     </SettingsLayout>
   );
 };

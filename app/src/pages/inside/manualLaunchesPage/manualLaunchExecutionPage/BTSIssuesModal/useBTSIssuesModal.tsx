@@ -14,22 +14,26 @@
  * limitations under the License.
  */
 
-import { useDispatch } from 'react-redux';
+import { useCallback } from 'react';
 
-import { showModalAction } from 'controllers/modal';
+import { useModal } from 'common/hooks';
+
+import { BTSIssuesModal } from './BTSIssuesModal';
 import { BTS_ISSUES_MODAL } from '../constants';
+import type { BTSIssuesModalData } from './types';
 
 export const useBTSIssuesModal = () => {
-  const dispatch = useDispatch();
+  const { openModal: openRawModal } = useModal<BTSIssuesModalData>({
+    modalKey: BTS_ISSUES_MODAL,
+    renderModal: (data) => <BTSIssuesModal data={data} />,
+  });
 
-  const openModal = (executionId?: number) => {
-    dispatch(
-      showModalAction({
-        id: BTS_ISSUES_MODAL,
-        data: { executionId },
-      }),
-    );
-  };
+  const openModal = useCallback(
+    (executionId?: number) => {
+      openRawModal({ executionId });
+    },
+    [openRawModal],
+  );
 
   return { openModal };
 };
