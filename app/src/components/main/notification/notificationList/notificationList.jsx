@@ -34,6 +34,11 @@ export const notificationMessages = defineMessages({
     id: 'NotificationItem.failureDefault',
     defaultMessage: 'An error occurred while connecting to server: {error}',
   },
+  loginAddressLocked: {
+    id: 'NotificationItem.loginAddressLocked',
+    defaultMessage:
+      'An error occurred while connecting to server: Address is locked due to several incorrect login attempts',
+  },
   infoLogout: { id: 'NotificationItem.infoLogout', defaultMessage: 'You have been logged out' },
   assignSuccess: {
     id: 'ProjectsPage.assignSuccess',
