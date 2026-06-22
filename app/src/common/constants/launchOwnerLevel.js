@@ -16,7 +16,7 @@
 
 import { defineMessages } from 'react-intl';
 
-export const LAUNCH_OWNER_LEVEL_KEY = 'owner';
+export const LAUNCH_OWNER_LEVEL_KEY = '$launchOwner';
 
 export const launchOwnerLevelMessages = defineMessages({
   ownerLevelOption: {
