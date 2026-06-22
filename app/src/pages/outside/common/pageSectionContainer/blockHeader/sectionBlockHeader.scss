@@ -26,12 +26,28 @@
     margin-bottom: 32px;
   }
 
+  &.compact-bottom-spacing {
+    margin-bottom: 16px;
+
+    &.left-aligned {
+      margin-bottom: 16px;
+    }
+  }
+
   @media (max-width: $SCREEN_XS_MAX) {
     font-size: 16px;
     margin-bottom: 24px;
 
     &.left-aligned {
       margin-bottom: 20px;
+    }
+
+    &.compact-bottom-spacing {
+      margin-bottom: 16px;
+
+      &.left-aligned {
+        margin-bottom: 16px;
+      }
     }
   }
 }

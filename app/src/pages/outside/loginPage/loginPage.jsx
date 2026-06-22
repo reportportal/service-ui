@@ -50,8 +50,6 @@ const getCurrentBlock = ({ forgotPass, reset, multipleAuth, registration, extens
   return <LoginBlock />;
 };
 
-
-
 export const LoginPage = () => {
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
@@ -95,7 +93,7 @@ export const LoginPage = () => {
         </div>
         <LoginPageSection>
           {currentBlock}
-          {!registration && <OutsideLoginFooter />}
+          {!registration && !forgotPass && <OutsideLoginFooter />}
         </LoginPageSection>
         </div>
         <LoginPageSection social>

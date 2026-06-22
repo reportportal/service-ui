@@ -29,8 +29,14 @@ export const SectionBlockHeader = injectIntl(({
   hint = {}, 
   hintParams = {}, 
   leftAligned = false,
+  compactBottomSpacing = false,
 }) => (
-  <span className={cx('block-header', { 'left-aligned': leftAligned })}>
+  <span
+    className={cx('block-header', {
+      'left-aligned': leftAligned,
+      'compact-bottom-spacing': compactBottomSpacing,
+    })}
+  >
     <span className={cx('huge-message')}>{formatMessage(header)}</span>
     <span className={cx('section-hint-message')}>
       {Parser(
@@ -49,4 +55,5 @@ SectionBlockHeader.propTypes = {
   hint: PropTypes.object,
   hintParams: PropTypes.object,
   leftAligned: PropTypes.bool,
+  compactBottomSpacing: PropTypes.bool,
 };
