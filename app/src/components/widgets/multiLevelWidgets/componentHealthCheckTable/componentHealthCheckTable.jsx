@@ -19,6 +19,8 @@ import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
+import Parser from 'html-react-parser';
+import OwnerIcon from 'common/img/owner-icon-inline.svg';
 import {
   STATS_TOTAL,
   STATS_SKIPPED,
@@ -361,6 +363,7 @@ export class ComponentHealthCheckTable extends Component {
                 ? formatMessage(launchOwnerLevelMessages.ownerLevelOption)
                 : key
             }
+            getKeyIcon={(key) => (key === LAUNCH_OWNER_LEVEL_KEY ? Parser(OwnerIcon) : null)}
           />
         </div>
         {data && state === STATE_READY && !isLoading ? (

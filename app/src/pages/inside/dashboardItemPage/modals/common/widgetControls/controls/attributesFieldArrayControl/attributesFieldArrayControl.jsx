@@ -102,12 +102,6 @@ export class AttributesFieldArrayControl extends Component {
       ? this.props.intl.formatMessage(launchOwnerLevelMessages.ownerLevelOption)
       : value || '';
 
-  // keep the stored value as the 'owner' key even when onBlur commits the displayed label
-  normalizeLevelValue = (value) =>
-    value === this.props.intl.formatMessage(launchOwnerLevelMessages.ownerLevelOption)
-      ? LAUNCH_OWNER_LEVEL_KEY
-      : value;
-
   renderLevelOption = (item, index, isNew, getItemProps) =>
     item === LAUNCH_OWNER_LEVEL_KEY ? (
       <AutocompleteOption key={item} {...getItemProps({ item, index })}>
@@ -122,6 +116,17 @@ export class AttributesFieldArrayControl extends Component {
       </AutocompleteOption>
     );
 
+  getOwnerLevelBlurHandler = (index) => (e) => {
+    const { intl } = this.props;
+    const attributes = this.getAttributes();
+    if (
+      attributes[index] === LAUNCH_OWNER_LEVEL_KEY &&
+      e.target.value === intl.formatMessage(launchOwnerLevelMessages.ownerLevelOption)
+    ) {
+      e.preventDefault();
+    }
+  };
+
   getOwnerLevelProps = (index) => {
     const { withOwnerLevel } = this.props;
     if (!withOwnerLevel) return {};
@@ -130,6 +135,12 @@ export class AttributesFieldArrayControl extends Component {
       pinnedOptions: this.isOwnerLevelAvailable(index) ? [LAUNCH_OWNER_LEVEL_KEY] : [],
       renderOption: this.renderLevelOption,
       parseValueToString: this.parseLevelValueToString,
+      isOptionExist: (inputValue, options) =>
+        options.some(
+          (option) =>
+            option !== LAUNCH_OWNER_LEVEL_KEY &&
+            this.parseLevelValueToString(option) === inputValue,
+        ),
       createNewAtBottom: true,
     };
   };
@@ -164,23 +175,31 @@ export class AttributesFieldArrayControl extends Component {
               className={cx('attribute-modal-field')}
             >
               <div className={cx({ 'attr-selector': !isFirstItem && !disabled })}>
-                <FieldProvider
-                  name={item}
-                  validate={fieldValidator(attributes)}
-                  normalize={withOwnerLevel ? this.normalizeLevelValue : undefined}
-                >
-                  <FieldErrorHint hintType="top">
-                    <AsyncAutocomplete
-                      getURI={getURI}
-                      minLength={1}
-                      placeholder={formatMessage(messages.attributeKeyFieldPlaceholder)}
-                      creatable
-                      filterOption={this.filterAttribute}
-                      disabled={disabled}
-                      {...this.getOwnerLevelProps(index)}
-                    />
-                  </FieldErrorHint>
-                </FieldProvider>
+                <div className={cx('owner-value-wrap')}>
+                  {withOwnerLevel && attributes[index] === LAUNCH_OWNER_LEVEL_KEY && (
+                    <div className={cx('owner-selected-overlay')}>
+                      <i className={cx('owner-icon')}>{Parser(OwnerIcon)}</i>
+                      {formatMessage(launchOwnerLevelMessages.ownerLevelOption)}
+                    </div>
+                  )}
+                  <FieldProvider
+                    name={item}
+                    validate={fieldValidator(attributes)}
+                    onBlur={withOwnerLevel ? this.getOwnerLevelBlurHandler(index) : undefined}
+                  >
+                    <FieldErrorHint hintType="top">
+                      <AsyncAutocomplete
+                        getURI={getURI}
+                        minLength={1}
+                        placeholder={formatMessage(messages.attributeKeyFieldPlaceholder)}
+                        creatable
+                        filterOption={this.filterAttribute}
+                        disabled={disabled}
+                        {...this.getOwnerLevelProps(index)}
+                      />
+                    </FieldErrorHint>
+                  </FieldProvider>
+                </div>
               </div>
               {!isFirstItem && !disabled && (
                 <span

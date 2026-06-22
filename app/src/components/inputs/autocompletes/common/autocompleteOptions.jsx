@@ -35,6 +35,7 @@ export class AutocompleteOptions extends Component {
     async: PropTypes.bool,
     notFoundPrompt: PropTypes.node,
     isOptionUnique: PropTypes.func,
+    isOptionExist: PropTypes.func,
     pinnedOptions: PropTypes.array,
     createNewAtBottom: PropTypes.bool,
   };
@@ -55,6 +56,7 @@ export class AutocompleteOptions extends Component {
       <FormattedMessage id={'AsyncAutocomplete.notFound'} defaultMessage={'No matches found'} />
     ),
     isOptionUnique: null,
+    isOptionExist: null,
     pinnedOptions: [],
     createNewAtBottom: false,
   };
@@ -87,7 +89,9 @@ export class AutocompleteOptions extends Component {
   };
 
   isOptionExist = (inputValue, options) =>
-    options.some((option) => this.props.parseValueToString(option) === inputValue);
+    this.props.isOptionExist
+      ? this.props.isOptionExist(inputValue, options)
+      : options.some((option) => this.props.parseValueToString(option) === inputValue);
 
   isOptionUnique = (inputValue, options) =>
     !this.props.isOptionUnique || this.props.isOptionUnique(inputValue, options);
