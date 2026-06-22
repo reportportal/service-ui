@@ -21,6 +21,7 @@ import classNames from 'classnames/bind';
 import { PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE } from 'components/integrations/messages';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
+import { PLUGIN_TIERS } from '../../availablePluginsCatalog';
 import styles from './pluginsItem.scss';
 
 const cx = classNames.bind(styles);
@@ -29,6 +30,14 @@ const messages = defineMessages({
   titleVersion: {
     id: 'PluginItem.titleVersion',
     defaultMessage: '{version}',
+  },
+  free: {
+    id: 'PluginItem.free',
+    defaultMessage: 'Free',
+  },
+  premium: {
+    id: 'PluginItem.premium',
+    defaultMessage: 'Premium',
   },
 });
 
@@ -39,13 +48,15 @@ export class PluginsItem extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     data: PropTypes.object.isRequired,
-    onToggleActive: PropTypes.func.isRequired,
-    showToggleConfirmationModal: PropTypes.func.isRequired,
+    onToggleActive: PropTypes.func,
+    showToggleConfirmationModal: PropTypes.func,
     toggleable: PropTypes.bool,
     onClick: PropTypes.func,
   };
 
   static defaultProps = {
+    onToggleActive: () => {},
+    showToggleConfirmationModal: () => {},
     toggleable: true,
     onClick: () => {},
   };
@@ -96,18 +107,20 @@ export class PluginsItem extends Component {
         uploadedBy,
         enabled,
         groupType,
+        tier,
         details: { name: detailsName, version, disabledPluginTooltip } = {},
       },
       toggleable,
     } = this.props;
     const displayName = detailsName || name;
+    const isInAvailablePluginList = Boolean(tier);
 
     return (
       <div
         className={cx('plugins-list-item')}
         onClick={this.itemClickHandler}
         title={
-          enabled
+          enabled || isInAvailablePluginList
             ? ''
             : disabledPluginTooltip ||
               formatMessage(PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE[groupType], {
@@ -122,20 +135,27 @@ export class PluginsItem extends Component {
             alt={displayName}
           />
           <div className={cx('plugins-info')}>
-            <span className={cx('plugins-name')}>{displayName}</span>
-            <span className={cx('plugins-author')}>{`by ${uploadedBy || 'ReportPortal'}`}</span>
-            <span
-              className={cx('plugins-version')}
-              title={
-                version && version.length > maxVersionLengthForTitle
-                  ? formatMessage(messages.titleVersion, { version })
-                  : ''
-              }
-            >{`${version || ''}`}</span>
+            <div className={cx('plugins-info-content')}>
+              <span className={cx('plugins-name')}>{displayName}</span>
+              <span className={cx('plugins-author')}>{`by ${uploadedBy || 'ReportPortal'}`}</span>
+              <span
+                className={cx('plugins-version')}
+                title={
+                  version && version.length > maxVersionLengthForTitle
+                    ? formatMessage(messages.titleVersion, { version })
+                    : ''
+                }
+              >{`${version || ''}`}</span>
+            </div>
+            {isInAvailablePluginList && (
+              <span className={cx('plugins-tier', { premium: tier === PLUGIN_TIERS.PREMIUM })}>
+                {formatMessage(tier === PLUGIN_TIERS.PREMIUM ? messages.premium : messages.free)}
+              </span>
+            )}
           </div>
         </div>
         <div className={cx('plugins-additional-block')}>
-          {toggleable && (
+          {toggleable && !isInAvailablePluginList && (
             <button className={cx('plugins-switcher')} onClick={(e) => e.stopPropagation()}>
               <InputSwitcher value={this.state.isEnabled} onChange={this.onChangeHandler} />
             </button>

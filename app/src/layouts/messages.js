@@ -87,7 +87,7 @@ export const messages = defineMessages({
   },
   plugins: {
     id: 'InstanceSidebar.plugins',
-    defaultMessage: 'Plugins',
+    defaultMessage: 'Instance plugins',
   },
   projects: {
     id: 'OrganizationSidebar.projectsBtn',

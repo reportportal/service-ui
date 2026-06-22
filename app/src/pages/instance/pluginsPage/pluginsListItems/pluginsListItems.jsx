@@ -26,6 +26,7 @@ import {
   ANALYZER_GROUP_TYPE,
   OTHER_GROUP_TYPE,
   IMPORT_GROUP_TYPE,
+  AVAILABLE_PLUGINS_TYPE,
 } from 'common/constants/pluginsGroupTypes';
 import styles from './pluginsListItems.scss';
 import { PluginsItem } from './pluginsItem/index';
@@ -33,6 +34,10 @@ import { PluginsItem } from './pluginsItem/index';
 const cx = classNames.bind(styles);
 
 const pluginTitle = defineMessages({
+  [AVAILABLE_PLUGINS_TYPE]: {
+    id: 'PluginsList.availableToInstall',
+    defaultMessage: 'Available to install',
+  },
   [ALL_GROUP_TYPE]: {
     id: 'PluginsList.all',
     defaultMessage: 'Installed plugins',
@@ -69,13 +74,15 @@ export class PluginsListItems extends Component {
     intl: PropTypes.object.isRequired,
     title: PropTypes.string.isRequired,
     items: PropTypes.array.isRequired,
-    onToggleActive: PropTypes.func.isRequired,
-    showToggleConfirmationModal: PropTypes.func.isRequired,
+    onToggleActive: PropTypes.func,
+    showToggleConfirmationModal: PropTypes.func,
     onItemClick: PropTypes.func,
     filterMobileBlock: PropTypes.element,
   };
 
   static defaultProps = {
+    onToggleActive: () => {},
+    showToggleConfirmationModal: () => {},
     filterMobileBlock: null,
     onItemClick: () => {},
   };
@@ -98,7 +105,7 @@ export class PluginsListItems extends Component {
         <div className={cx('plugins-content-list')}>
           {items.map((item) => (
             <PluginsItem
-              key={item.type}
+              key={item.type || item.name}
               onClick={onItemClick}
               data={item}
               onToggleActive={onToggleActive}

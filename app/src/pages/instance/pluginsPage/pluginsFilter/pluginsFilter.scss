@@ -14,14 +14,23 @@
  * limitations under the License.
  */
 
+.plugins-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.plugins-filter-title {
+  font-size: 16px;
+  line-height: normal;
+  font-family: $FONT-BOLD;
+  color: $COLOR--black-2;
+}
+
 .plugins-filter-list {
   display: flex;
   flex-direction: column;
-  min-width: 160px;
-  margin-right: 80px;
-  @media (max-width: $SCREEN_XS_MAX) {
-    display: none;
-  }
+  max-width: 160px;
 }
 .plugins-filter-button {
   height: 26px;

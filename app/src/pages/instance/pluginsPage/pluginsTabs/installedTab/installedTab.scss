@@ -23,18 +23,34 @@
 .plugins-content-wrapper {
   display: flex;
   justify-content: space-between;
+  gap: 24px;
   width: 830px;
   @media (max-width: $SCREEN_SM_MAX) {
     width: 100%;
   }
 }
 
+.plugins-sidebar {
+  display: flex;
+  flex-direction: column;
+  min-width: 174px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
 .plugins-sub-content-wrapper {
-  width: 830px;
+  width: 810px;
 }
 
 .plugins-content {
   width: 100%;
+  max-width: 570px;
+}
+
+.available-section {
+  margin-bottom: 40px;
 }
 
 .plugins-filter-mobile {

@@ -25,7 +25,7 @@ export const PLUGINS_PAGE_EVENTS = {
   CLICK_UPLOAD_BTN: {
     ...BASIC_PLUGINS_EVENT_PARAMS,
     element_name: 'upload',
-    place: 'navigation_panel',
+    place: 'instance_plugins_page',
   },
   clickUploadModalBtn: (type) => ({
     ...BASIC_PLUGINS_EVENT_PARAMS,
