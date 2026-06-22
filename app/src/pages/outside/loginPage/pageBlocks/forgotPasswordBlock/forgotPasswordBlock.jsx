@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-import { useCallback, useState } from 'react';
-import classNames from 'classnames/bind';
-import { useDispatch } from 'react-redux';
 import { defineMessages } from 'react-intl';
-import { showDefaultErrorNotification } from 'controllers/notification';
-import { fetch } from 'common/utils/fetch';
-import { URLS } from 'common/urls';
 import { PageSectionContainer } from 'pages/outside/common/pageSectionContainer';
 import { OutsideLoginFooter } from 'pages/outside/common/outsideLoginFooter';
 import { ForgotPasswordForm } from './forgotPasswordForm';
-import { ForgotPasswordConfirmation } from './forgotPasswordForm/forgotPasswordConfirmation';
-import styles from './forgotPasswordBlock.scss';
+
+// import { useCallback, useState } from 'react';
+// import classNames from 'classnames/bind';
+// import { useDispatch } from 'react-redux';
+// import { showDefaultErrorNotification } from 'controllers/notification';
+// import { fetch } from 'common/utils/fetch';
+// import { URLS } from 'common/urls';
+// import { ForgotPasswordConfirmation } from './forgotPasswordForm/forgotPasswordConfirmation';
+// import styles from './forgotPasswordBlock.scss';
 
 const messages = defineMessages({
   forgotPass: {
@@ -36,15 +37,28 @@ const messages = defineMessages({
     id: 'ForgotPasswordBlock.enterEmail',
     defaultMessage: 'Enter your email address and we will send you the recovery link',
   },
-  confirmationHint: {
-    id: 'ForgotPasswordBlock.confirmationHint',
-    defaultMessage:
-      'We\u2019ve sent you an email to confirm your password change. Please check your inbox:',
-  },
+  // confirmationHint: {
+  //   id: 'ForgotPasswordBlock.confirmationHint',
+  //   defaultMessage:
+  //     'We\u2019ve sent you an email to confirm your password change. Please check your inbox:',
+  // },
 });
 
-const cx = classNames.bind(styles);
+// const cx = classNames.bind(styles);
 
+export const ForgotPasswordBlock = () => (
+  <>
+    <PageSectionContainer header={messages.forgotPass} hint={messages.enterEmail} leftAligned>
+      <ForgotPasswordForm />
+    </PageSectionContainer>
+    <OutsideLoginFooter />
+  </>
+);
+
+/*
+ * Inline confirmation + resend flow (Figma) — reserved for future use.
+ * US-RST-001 v0.2: on success redirect to Login + success notification instead.
+ *
 export const ForgotPasswordBlock = () => {
   const dispatch = useDispatch();
   const [confirmation, setConfirmation] = useState(null);
@@ -101,3 +115,4 @@ export const ForgotPasswordBlock = () => {
     </>
   );
 };
+*/

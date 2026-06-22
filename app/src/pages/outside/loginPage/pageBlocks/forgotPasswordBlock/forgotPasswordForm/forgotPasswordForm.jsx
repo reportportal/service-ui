@@ -19,8 +19,13 @@ import classNames from 'classnames/bind';
 import { Button, FieldText } from '@reportportal/ui-kit';
 import { useDispatch, useSelector } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
+import { redirect } from 'redux-first-router';
 import { FormattedMessage, defineMessages, useIntl } from 'react-intl';
-import { showDefaultErrorNotification } from 'controllers/notification';
+import {
+  showNotification,
+  showDefaultErrorNotification,
+  NOTIFICATION_TYPES,
+} from 'controllers/notification';
 import Link from 'redux-first-router-link';
 import PropTypes from 'prop-types';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -42,7 +47,14 @@ const placeholders = defineMessages({
   },
 });
 
-const ForgotPasswordFormComponent = ({ handleSubmit, onSuccess }) => {
+const notifications = defineMessages({
+  successSendEmail: {
+    id: 'ForgotPasswordForm.successSendEmail',
+    defaultMessage: 'Password recovery instructions have been sent to email {email}',
+  },
+});
+
+const ForgotPasswordFormComponent = ({ handleSubmit }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const emailValue = useSelector((state) => emailValueSelector(state, 'email') ?? '');
@@ -64,14 +76,20 @@ const ForgotPasswordFormComponent = ({ handleSubmit, onSuccess }) => {
         },
       })
         .then(() => {
-          onSuccess(email);
+          dispatch(
+            showNotification({
+              type: NOTIFICATION_TYPES.SUCCESS,
+              message: formatMessage(notifications.successSendEmail, { email }),
+            }),
+          );
+          dispatch(redirect({ type: LOGIN_PAGE }));
         })
         .catch((error) => dispatch(showDefaultErrorNotification(error)))
         .then(() => {
           setIsLoading(false);
         });
     },
-    [dispatch, isLoading, onSuccess],
+    [dispatch, formatMessage, isLoading],
   );
 
   return (
@@ -117,7 +135,6 @@ const ForgotPasswordFormComponent = ({ handleSubmit, onSuccess }) => {
 
 ForgotPasswordFormComponent.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
-  onSuccess: PropTypes.func.isRequired,
 };
 
 export const ForgotPasswordForm = reduxForm({
