@@ -37,8 +37,6 @@ const messages = defineMessages({
   },
 });
 
-const BoldCountdown = (parts) => <b className={cx('countdown-value')}>{parts}</b>;
-
 export const ForgotPasswordConfirmation = ({ email, lastSentTime, isResending, onResend }) => {
   const { formatMessage } = useIntl();
   const [, forceCountdownTick] = useReducer((tick) => tick + 1, 0);
@@ -69,10 +67,7 @@ export const ForgotPasswordConfirmation = ({ email, lastSentTime, isResending, o
       <p className={cx('email-value')}>{email}</p>
       <p className={cx('resend-message')}>
         {isResendLocked
-          ? formatMessage(messages.resendCountdown, {
-              seconds: remainingSec,
-              bold: BoldCountdown,
-            })
+          ? formatMessage(messages.resendCountdown, { seconds: remainingSec })
           : formatMessage(messages.resendAvailable)}
       </p>
       <div className={cx('resend-button-container')}>
