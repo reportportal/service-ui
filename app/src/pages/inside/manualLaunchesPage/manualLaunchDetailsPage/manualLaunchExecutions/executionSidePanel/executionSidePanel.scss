@@ -22,26 +22,26 @@
   & [class*='bubbles-loader']:nth-child(2) {
     padding: 24px;
   }
-}
 
-.title-wrapper {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-
-  .title-business-id {
-    flex-shrink: 0;
-    font-family: $FONT-ROBOTO-MEDIUM;
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 20px;
-    padding-left: 1px;
-    letter-spacing: 0;
-    color: var(--Text-Secondary, var(--rp-ui-base-e-400));
+  .header-title-wrapper {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    min-width: 0;
+    max-width: 100%;
   }
 
-  .title-name {
+  .priority-icon {
+    flex-shrink: 0;
+  }
+
+  .header-title {
+    flex: 1;
+    min-width: 0;
     font-size: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
@@ -80,7 +80,7 @@
 
   &:hover {
     text-decoration: none;
-    color: var(--rp-ui-base-topaz-hover)
+    color: var(--rp-ui-base-topaz-hover);
   }
 }
 

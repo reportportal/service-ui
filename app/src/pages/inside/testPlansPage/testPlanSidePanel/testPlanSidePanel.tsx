@@ -169,10 +169,12 @@ export const TestPlanSidePanel = memo(
       });
     };
 
-    const titleComponent = (
-      <div className={cx('test-plan-title')}>
+    const headerComponent = (
+      <div className={cx('header-title-wrapper')}>
         <PriorityIcon priority={testCaseDetails?.priority} className={cx('priority-icon')} />
-        <span>{testPlan.name}</span>
+        <span className={cx('header-title')} title={testPlan.name}>
+          {testPlan.name}
+        </span>
       </div>
     );
 
@@ -301,7 +303,7 @@ export const TestPlanSidePanel = memo(
       <div ref={sidePanelRef}>
         <SidePanel
           className={cx('test-plan-side-panel')}
-          title={titleComponent}
+          headerComponent={headerComponent}
           descriptionComponent={isLoading ? <BubblesLoader /> : descriptionComponent}
           contentComponent={isLoading ? <BubblesLoader /> : contentComponent}
           footerComponent={footerComponent}
