@@ -41,7 +41,8 @@ export class Breadcrumbs extends PureComponent {
   };
 
   render() {
-    const { breadcrumbs, activeBreadcrumbs, onClickBreadcrumbs, getKeyLabel, getKeyIcon } = this.props;
+    const { breadcrumbs, activeBreadcrumbs, onClickBreadcrumbs, getKeyLabel, getKeyIcon } =
+      this.props;
     const actualBreadcrumbs = activeBreadcrumbs || breadcrumbs;
 
     return (
@@ -54,7 +55,11 @@ export class Breadcrumbs extends PureComponent {
               {!item.isStatic && !item.isActive ? (
                 <a className={cx('link')} onClick={() => onClickBreadcrumbs(item.id)}>
                   <span className={cx('link-key')} title={keyLabel}>
-                    {keyIcon && <i className={cx('key-icon')}>{keyIcon}</i>}
+                    {keyIcon && (
+                      <i className={cx('key-icon')} aria-hidden="true">
+                        {keyIcon}
+                      </i>
+                    )}
                     {keyLabel}
                   </span>
                   <span className={cx('link-value')}>
@@ -70,7 +75,11 @@ export class Breadcrumbs extends PureComponent {
                 </a>
               ) : (
                 <span className={cx('item-name')} title={keyLabel}>
-                  {keyIcon && <i className={cx('key-icon')}>{keyIcon}</i>}
+                  {keyIcon && (
+                    <i className={cx('key-icon')} aria-hidden="true">
+                      {keyIcon}
+                    </i>
+                  )}
                   {keyLabel}
                 </span>
               )}
