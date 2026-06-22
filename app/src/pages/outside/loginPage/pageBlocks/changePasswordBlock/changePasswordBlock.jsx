@@ -53,12 +53,19 @@ const ChangePasswordBlockComponent = ({ reset }) => {
 
     fetch(URLS.userPasswordResetToken(reset), {
       method: 'get',
-    }).then((response) => {
-      if (isMounted) {
-        setValid(response.is);
-        setLoading(false);
-      }
-    });
+    })
+      .then((response) => {
+        if (isMounted) {
+          setValid(response.is);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setValid(false);
+          setLoading(false);
+        }
+      });
 
     return () => {
       isMounted = false;
