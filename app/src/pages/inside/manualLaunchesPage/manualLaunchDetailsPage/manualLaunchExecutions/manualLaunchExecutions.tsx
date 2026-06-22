@@ -214,11 +214,15 @@ export const ManualLaunchExecutions = ({
           >
             <div className={cx('first-row')}>
               {execution.testCasePriority && (
-                <PriorityIcon priority={execution.testCasePriority as TestCasePriority} />
+                <PriorityIcon
+                  priority={execution.testCasePriority as TestCasePriority}
+                  className={cx('priority-icon')}
+                />
               )}
               <button
                 type="button"
                 className={cx('test-name-link')}
+                title={execution.testCaseName}
                 onClick={handleTestNameLinkClick}
               >
                 {execution.testCaseName}

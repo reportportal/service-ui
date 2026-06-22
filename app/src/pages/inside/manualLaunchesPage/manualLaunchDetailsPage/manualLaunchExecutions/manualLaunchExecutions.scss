@@ -108,6 +108,10 @@ $sidebar-width: calc(100vw - 408px);
   }
 
   :global([class*='_cell_']) {
+    &:first-child {
+      min-width: 0;
+    }
+
     &:not(:first-child) {
       display: flex;
       align-items: center;
@@ -124,16 +128,27 @@ $sidebar-width: calc(100vw - 408px);
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .first-row {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
 }
 
-.test-name,
+.priority-icon {
+  flex-shrink: 0;
+}
+
 .test-name-link {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-family: var(--rp-ui-base-font-family);
   font-weight: var(--rp-ui-base-fw-medium);
   font-size: 13px;
@@ -141,6 +156,10 @@ $sidebar-width: calc(100vw - 408px);
   color: var(--rp-ui-base-almost-black);
   cursor: pointer;
   transition: color 0.2s ease-in-out;
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: left;
 
   &:hover {
     color: var(--rp-ui-base-topaz);
@@ -149,13 +168,6 @@ $sidebar-width: calc(100vw - 408px);
   &:active {
     color: var(--rp-ui-base-topaz-pressed);
   }
-}
-
-.test-name-link {
-  background: none;
-  border: none;
-  padding: 0;
-  text-align: left;
 
   &:focus-visible {
     outline: 2px solid var(--rp-ui-base-topaz-focused);
@@ -213,6 +225,8 @@ $sidebar-width: calc(100vw - 408px);
   cursor: pointer;
   display: block;
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .execution-status-cell {

@@ -148,13 +148,18 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
     );
   };
 
-  const titleComponent = (
-    <div className={cx('title-wrapper')}>
+  const headerComponent = (
+    <div className={cx('header-title-wrapper')}>
       {executionDetails?.testCasePriority && (
-        <PriorityIcon priority={executionDetails.testCasePriority} />
+        <PriorityIcon
+          priority={executionDetails.testCasePriority}
+          className={cx('priority-icon')}
+        />
       )}
       {executionDetails?.testCaseName && (
-        <span className={cx('title-name')}>{executionDetails.testCaseName}</span>
+        <span className={cx('header-title')} title={executionDetails.testCaseName}>
+          {executionDetails.testCaseName}
+        </span>
       )}
     </div>
   );
@@ -341,7 +346,7 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
     <div ref={sidePanelRef}>
       <SidePanel
         className={cx('execution-side-panel')}
-        title={isLoading ? <BubblesLoader /> : titleComponent}
+        headerComponent={isLoading ? <BubblesLoader /> : headerComponent}
         descriptionComponent={isLoading ? <BubblesLoader /> : descriptionComponent}
         contentComponent={isLoading ? <BubblesLoader /> : contentComponent}
         footerComponent={isLoading ? <BubblesLoader /> : footerComponent}

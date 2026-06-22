@@ -24,26 +24,28 @@
     }
   }
 
-  .priority-icon {
-    flex-shrink: 0;
-    margin-top: 8px;
-  }
-
-  .test-plan-title {
+  .header-title-wrapper {
     display: flex;
     align-items: center;
     gap: 8px;
+    min-width: 0;
+    max-width: 100%;
+  }
 
-    .priority-icon {
-      margin-top: 0;
-    }
+  .header-title {
+    flex: 1;
+    min-width: 0;
+    font-family: $FONT-REGULAR;
+    font-size: 20px;
+    line-height: 31px;
+    color: var(--rp-ui-base-almost-black);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
-    span {
-      font-family: $FONT-REGULAR;
-      font-size: 20px;
-      line-height: 31px;
-      color: var(--rp-ui-base-almost-black);
-    }
+  .priority-icon {
+    flex-shrink: 0;
   }
 
   .description-wrapper {
