@@ -93,7 +93,7 @@ export const LoginPage = () => {
         </div>
         <LoginPageSection>
           {currentBlock}
-          {!registration && !forgotPass && <OutsideLoginFooter />}
+          {!registration && !forgotPass && !reset && <OutsideLoginFooter />}
         </LoginPageSection>
         </div>
         <LoginPageSection social>

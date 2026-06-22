@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import React, { PureComponent } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { defineMessages } from 'react-intl';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { redirect as rfrRedirect } from 'redux-first-router';
 import { fetch, connectRouter } from 'common/utils';
 import { URLS } from 'common/urls';
 import { LOGIN_PAGE } from 'controllers/pages';
-import { isAuthorizedSelector } from 'controllers/auth';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { PageBlockContainer } from 'pages/outside/common/pageBlockContainer';
+import { PageSectionContainer } from 'pages/outside/common/pageSectionContainer';
+import { OutsideLoginFooter } from 'pages/outside/common/outsideLoginFooter';
 import { ChangePasswordForm } from './changePasswordForm';
 
 const messages = defineMessages({
@@ -34,49 +34,69 @@ const messages = defineMessages({
   },
   enterEmail: {
     id: 'ChangePasswordBlock.enterEmail',
-    defaultMessage: 'enter new password and confirm it',
+    defaultMessage: 'Enter new password and confirm it:',
   },
 });
 
-@connectRouter(({ reset }) => ({ reset }))
-@connect(
-  (state) => ({
-    authorized: isAuthorizedSelector(state),
-  }),
-  (dispatch) => ({
-    redirectToLoginPage: () => dispatch(rfrRedirect({ type: LOGIN_PAGE })),
-  }),
-)
-export class ChangePasswordBlock extends PureComponent {
-  static propTypes = {
-    reset: PropTypes.string,
-    redirectToLoginPage: PropTypes.func.isRequired,
-  };
-  static defaultProps = {
-    reset: '',
-  };
-  state = {
-    loading: true,
-    valid: true,
-  };
-  componentDidMount() {
-    fetch(URLS.userPasswordResetToken(this.props.reset), {
-      method: 'get',
-    }).then((response) => {
-      this.setState({ valid: response.is, loading: false });
-    });
-  }
-  render() {
-    if (!this.state.loading && !this.state.valid) {
-      this.props.redirectToLoginPage();
+const ChangePasswordBlockComponent = ({ reset }) => {
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
+  const [valid, setValid] = useState(true);
+
+  useEffect(() => {
+    if (!reset) {
+      dispatch(rfrRedirect({ type: LOGIN_PAGE }));
+      return;
     }
 
-    return this.state.loading ? (
-      <SpinningPreloader />
-    ) : (
-      <PageBlockContainer header={messages.changePass} hint={messages.enterEmail}>
-        <ChangePasswordForm />
-      </PageBlockContainer>
-    );
+    let isMounted = true;
+
+    fetch(URLS.userPasswordResetToken(reset), {
+      method: 'get',
+    }).then((response) => {
+      if (isMounted) {
+        setValid(response.is);
+        setLoading(false);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [dispatch, reset]);
+
+  useEffect(() => {
+    if (!loading && !valid) {
+      dispatch(rfrRedirect({ type: LOGIN_PAGE }));
+    }
+  }, [dispatch, loading, valid]);
+
+  if (loading) {
+    return <SpinningPreloader />;
   }
-}
+
+  if (!valid) {
+    return null;
+  }
+
+  return (
+    <>
+      <PageSectionContainer header={messages.changePass} hint={messages.enterEmail} leftAligned>
+        <ChangePasswordForm />
+      </PageSectionContainer>
+      <OutsideLoginFooter />
+    </>
+  );
+};
+
+ChangePasswordBlockComponent.propTypes = {
+  reset: PropTypes.string,
+};
+
+ChangePasswordBlockComponent.defaultProps = {
+  reset: '',
+};
+
+export const ChangePasswordBlock = connectRouter(({ reset }) => ({ reset }))(
+  ChangePasswordBlockComponent,
+);

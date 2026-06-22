@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,38 +14,4 @@
  * limitations under the License.
  */
 
-.change-password-form {
-  width: 100%;
-  max-width: 400px;
-  margin: 0;
-  font-family: var(--rp-ui-base-font-family-heading);
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    max-width: 280px;
-  }
-}
-
-.new-password-field {
-  width: 100%;
-  margin-bottom: 16px;
-}
-
-.confirm-new-password-field {
-  width: 100%;
-  margin-bottom: 16px;
-
-  &--inactive {
-    label {
-      color: var(--rp-ui-color-disabled);
-    }
-  }
-}
-
-.change-password-button {
-  width: 120px;
-  margin: 0;
-}
-
-.action-button {
-  width: 100%;
-}
+export { PasswordRequirementsList } from './passwordRequirementsList';
