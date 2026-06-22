@@ -28,10 +28,18 @@ export const PageSectionContainer = ({
   leftAligned,
   hideHeader,
   children,
+  customClassName,
+  compactHeaderSpacing,
 }) => (
-  <div className={cx('page-block-container')}>
+  <div className={cx('page-section-container', customClassName)}>
     {!hideHeader && header?.id && (
-      <SectionBlockHeader header={header} hint={hint} hintParams={hintParams} leftAligned={leftAligned} />
+      <SectionBlockHeader
+        header={header}
+        hint={hint}
+        hintParams={hintParams}
+        leftAligned={leftAligned}
+        compactBottomSpacing={compactHeaderSpacing}
+      />
     )}
     {children}
   </div>
@@ -43,6 +51,8 @@ PageSectionContainer.propTypes = {
   leftAligned: PropTypes.bool,
   hideHeader: PropTypes.bool,
   children: PropTypes.node,
+  customClassName: PropTypes.string,
+  compactHeaderSpacing: PropTypes.bool,
 };
 PageSectionContainer.defaultProps = {
   header: {},
@@ -51,4 +61,6 @@ PageSectionContainer.defaultProps = {
   leftAligned: false,
   hideHeader: false,
   children: null,
+  customClassName: '',
+  compactHeaderSpacing: false,
 };

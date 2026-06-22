@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,19 @@
  * limitations under the License.
  */
 
-.forgot-password-form {
-  width: 100%;
-  max-width: 400px;
-  margin: 0;
-  font-family: var(--rp-ui-base-font-family-heading);
+export const RESTORE_PASSWORD_RESEND_COOLDOWN_SEC = 30;
 
-  @media (max-width: $SCREEN_XS_MAX) {
-    max-width: 280px;
+export const getRestoreResendLockoutState = (lastSentTime) => {
+  if (!lastSentTime) {
+    return { remainingSec: 0, isResendLocked: false };
   }
-}
 
-.email-field {
-  width: 100%;
-  margin-bottom: 16px;
-}
+  const elapsedSec = Math.max(0, Math.floor((Date.now() - lastSentTime) / 1000));
+  const remainingSec = RESTORE_PASSWORD_RESEND_COOLDOWN_SEC - elapsedSec;
+  const isResendLocked = remainingSec > 0;
 
-.button-link {
-  text-decoration: none;
-}
-
-.forgot-password-buttons-container {
-  display: flex;
-  gap: 16px;
-  margin: 0;
-}
+  return {
+    remainingSec: isResendLocked ? remainingSec : 0,
+    isResendLocked,
+  };
+};

@@ -14,129 +14,115 @@
  * limitations under the License.
  */
 
-import { PureComponent } from 'react';
+import { useCallback, useState } from 'react';
 import classNames from 'classnames/bind';
-import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
-import { redirect } from 'redux-first-router';
-import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
-import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
-import {
-  showNotification,
-  showDefaultErrorNotification,
-  NOTIFICATION_TYPES,
-} from 'controllers/notification';
+import { Button, FieldText } from '@reportportal/ui-kit';
+import { useDispatch, useSelector } from 'react-redux';
+import { reduxForm, formValueSelector } from 'redux-form';
+import { FormattedMessage, defineMessages, useIntl } from 'react-intl';
+import { showDefaultErrorNotification } from 'controllers/notification';
 import Link from 'redux-first-router-link';
 import PropTypes from 'prop-types';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { InputOutside } from 'components/inputs/inputOutside';
-import { BigButton } from 'components/buttons/bigButton';
+import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { fetch } from 'common/utils/fetch';
 import { commonValidators } from 'common/utils/validation';
 import { URLS } from 'common/urls';
 import { LOGIN_PAGE } from 'controllers/pages';
-import EmailIcon from './img/email-icon-inline.svg';
 import styles from './forgotPasswordForm.scss';
 
 const cx = classNames.bind(styles);
+const emailValueSelector = formValueSelector('forgotPassword');
 
 const placeholders = defineMessages({
   email: {
     id: 'ForgotPasswordForm.emailPlaceholder',
-    defaultMessage: 'Enter email',
-  },
-});
-const notifications = defineMessages({
-  successSendEmail: {
-    id: 'ForgotPasswordForm.successSendEmail',
-    defaultMessage: 'Password recovery instructions have been sent to email { email }',
+    defaultMessage: 'Enter',
   },
 });
 
-@connect(null, {
-  showScreenLockAction,
-  hideScreenLockAction,
-  showNotification,
-  showDefaultErrorNotification,
-  redirect,
-})
-@reduxForm({
+const ForgotPasswordFormComponent = ({ handleSubmit, onSuccess }) => {
+  const dispatch = useDispatch();
+  const { formatMessage } = useIntl();
+  const emailValue = useSelector((state) => emailValueSelector(state, 'email') ?? '');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const isEmailValid = !commonValidators.email(emailValue);
+
+  const submitForm = useCallback(
+    ({ email }) => {
+      if (isLoading) {
+        return;
+      }
+
+      setIsLoading(true);
+      fetch(URLS.userPasswordRestore(), {
+        method: 'post',
+        data: {
+          email,
+        },
+      })
+        .then(() => {
+          onSuccess(email);
+        })
+        .catch((error) => dispatch(showDefaultErrorNotification(error)))
+        .then(() => {
+          setIsLoading(false);
+        });
+    },
+    [dispatch, isLoading, onSuccess],
+  );
+
+  return (
+    <form className={cx('forgot-password-form')} onSubmit={handleSubmit(submitForm)}>
+      <div className={cx('email-field')}>
+        <FieldProvider name="email">
+          <FieldErrorHint provideHint={false} suppressError={isLoading}>
+            <FieldText
+              label={formatMessage(placeholders.email)}
+              maxLength={128}
+              defaultWidth={false}
+              autoComplete="off"
+              disabled={isLoading}
+              displayError={!isLoading}
+            />
+          </FieldErrorHint>
+        </FieldProvider>
+      </div>
+      <div className={cx('forgot-password-buttons-container')}>
+        <div className={cx('forgot-password-button')}>
+          <Link to={{ type: LOGIN_PAGE }} className={cx('button-link')}>
+            <Button variant={'ghost'} className={cx('action-button')}>
+              <FormattedMessage id={'ForgotPasswordForm.cancel'} defaultMessage={'Cancel'} />
+            </Button>
+          </Link>
+        </div>
+        <div className={cx('forgot-password-button')}>
+          <Button
+            type="submit"
+            variant={'primary'}
+            className={cx('action-button')}
+            disabled={!isEmailValid || isLoading}
+          >
+            <LoadingSubmitButton isLoading={isLoading}>
+              <FormattedMessage id={'ForgotPasswordForm.sendEmail'} defaultMessage={'Send'} />
+            </LoadingSubmitButton>
+          </Button>
+        </div>
+      </div>
+    </form>
+  );
+};
+
+ForgotPasswordFormComponent.propTypes = {
+  handleSubmit: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func.isRequired,
+};
+
+export const ForgotPasswordForm = reduxForm({
   form: 'forgotPassword',
   validate: ({ email }) => ({
     email: commonValidators.email(email),
   }),
-})
-@injectIntl
-export class ForgotPasswordForm extends PureComponent {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    showScreenLockAction: PropTypes.func.isRequired,
-    hideScreenLockAction: PropTypes.func.isRequired,
-    showNotification: PropTypes.func.isRequired,
-    showDefaultErrorNotification: PropTypes.func.isRequired,
-    handleSubmit: PropTypes.func.isRequired,
-    redirect: PropTypes.func.isRequired,
-  };
-
-  static defaultProps = {
-    intl: {},
-  };
-
-  submitForm = ({ email }) => {
-    this.props.showScreenLockAction();
-    fetch(URLS.userPasswordRestore(), {
-      method: 'post',
-      data: {
-        email,
-      },
-    })
-      .then(() => {
-        this.props.showNotification({
-          type: NOTIFICATION_TYPES.SUCCESS,
-          message: this.props.intl.formatMessage(notifications.successSendEmail, { email }),
-        });
-        this.props.redirect({ type: LOGIN_PAGE });
-      })
-      .catch(this.props.showDefaultErrorNotification)
-      .then(() => {
-        this.props.hideScreenLockAction();
-      });
-  };
-
-  render() {
-    const { intl, handleSubmit } = this.props;
-    const { formatMessage } = intl;
-    return (
-      <form className={cx('forgot-password-form')} onSubmit={handleSubmit(this.submitForm)}>
-        <div className={cx('email-field')}>
-          <FieldProvider name="email">
-            <FieldErrorHint provideHint={false}>
-              <InputOutside
-                icon={EmailIcon}
-                autoComplete="off"
-                placeholder={formatMessage(placeholders.email)}
-                hasDynamicValidation
-                provideErrorHint
-              />
-            </FieldErrorHint>
-          </FieldProvider>
-        </div>
-        <div className={cx('forgot-password-buttons-container')}>
-          <div className={cx('forgot-password-button')}>
-            <Link to={{ type: LOGIN_PAGE }} className={cx('button-link')}>
-              <BigButton type={'button'} roundedCorners color={'gray-60'}>
-                <FormattedMessage id={'ForgotPasswordForm.cancel'} defaultMessage={'Cancel'} />
-              </BigButton>
-            </Link>
-          </div>
-          <div className={cx('forgot-password-button')}>
-            <BigButton type={'submit'} roundedCorners color={'organish'}>
-              <FormattedMessage id={'ForgotPasswordForm.sendEmail'} defaultMessage={'Send email'} />
-            </BigButton>
-          </div>
-        </div>
-      </form>
-    );
-  }
-}
+})(ForgotPasswordFormComponent);
