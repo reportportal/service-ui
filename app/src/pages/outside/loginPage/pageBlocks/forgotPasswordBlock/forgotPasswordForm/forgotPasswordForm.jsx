@@ -111,7 +111,7 @@ const ForgotPasswordFormComponent = ({ handleSubmit }) => {
       <div className={cx('forgot-password-buttons-container')}>
         <div className={cx('forgot-password-button')}>
           <Link to={{ type: LOGIN_PAGE }} className={cx('button-link')}>
-            <Button variant={'ghost'} className={cx('action-button')}>
+            <Button variant="ghost" className={cx('action-button')}>
               <FormattedMessage id={'ForgotPasswordForm.cancel'} defaultMessage={'Cancel'} />
             </Button>
           </Link>
@@ -119,7 +119,7 @@ const ForgotPasswordFormComponent = ({ handleSubmit }) => {
         <div className={cx('forgot-password-button')}>
           <Button
             type="submit"
-            variant={'primary'}
+            variant="primary"
             className={cx('action-button')}
             disabled={!isEmailValid || isLoading}
           >

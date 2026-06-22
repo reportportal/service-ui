@@ -49,7 +49,7 @@ export const EmptyPageState = ({
 }: EmptyPageStateProps) => {
   const renderButton = () => (
     <Button
-      variant={'primary'}
+      variant="primary"
       className={cx('button')}
       icon={icon}
       onClick={onClick}

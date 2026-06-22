@@ -72,7 +72,7 @@ export const ForgotPasswordConfirmation = ({ email, lastSentTime, isResending, o
       </p>
       <div className={cx('resend-button-container')}>
         <Button
-          variant={"ghost"}
+          variant="ghost"
           disabled={isResendLocked || isResending}
           onClick={handleResendClick}
         >
