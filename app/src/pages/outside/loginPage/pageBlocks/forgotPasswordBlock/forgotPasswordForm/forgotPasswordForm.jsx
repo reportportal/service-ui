@@ -43,7 +43,7 @@ const emailValueSelector = formValueSelector('forgotPassword');
 const placeholders = defineMessages({
   email: {
     id: 'ForgotPasswordForm.emailPlaceholder',
-    defaultMessage: 'Enter',
+    defaultMessage: 'Enter email',
   },
 });
 
@@ -124,7 +124,7 @@ const ForgotPasswordFormComponent = ({ handleSubmit }) => {
             disabled={!isEmailValid || isLoading}
           >
             <LoadingSubmitButton isLoading={isLoading}>
-              <FormattedMessage id={'ForgotPasswordForm.sendEmail'} defaultMessage={'Send'} />
+              <FormattedMessage id={'ForgotPasswordForm.sendEmail'} defaultMessage={'Send email'} />
             </LoadingSubmitButton>
           </Button>
         </div>
