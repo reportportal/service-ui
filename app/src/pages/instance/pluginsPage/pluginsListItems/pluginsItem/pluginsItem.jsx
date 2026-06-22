@@ -55,7 +55,7 @@ export class PluginsItem extends Component {
   };
 
   static defaultProps = {
-    onToggleActive: () => {},
+    onToggleActive: () => Promise.resolve(),
     showToggleConfirmationModal: () => {},
     toggleable: true,
     onClick: () => {},
