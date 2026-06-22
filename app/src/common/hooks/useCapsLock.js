@@ -37,12 +37,7 @@ export const useCapsLock = () => {
     [syncCapsLockState],
   );
 
-  const handleKeyUp = useCallback(
-    (event) => {
-      syncCapsLockState(event);
-    },
-    [syncCapsLockState],
-  );
+  const handleKeyUp = syncCapsLockState;
 
   return {
     capsLockOn,

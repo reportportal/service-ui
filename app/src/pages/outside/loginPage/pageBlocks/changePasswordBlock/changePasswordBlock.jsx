@@ -38,7 +38,7 @@ const messages = defineMessages({
   },
 });
 
-const ChangePasswordBlockComponent = ({ reset }) => {
+const ChangePasswordBlockComponent = ({ reset = '' }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [valid, setValid] = useState(true);
@@ -98,10 +98,6 @@ const ChangePasswordBlockComponent = ({ reset }) => {
 
 ChangePasswordBlockComponent.propTypes = {
   reset: PropTypes.string,
-};
-
-ChangePasswordBlockComponent.defaultProps = {
-  reset: '',
 };
 
 export const ChangePasswordBlock = connectRouter(({ reset }) => ({ reset }))(

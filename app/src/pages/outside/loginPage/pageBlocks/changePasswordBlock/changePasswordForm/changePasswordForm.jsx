@@ -92,7 +92,7 @@ const messages = defineMessages({
   },
 });
 
-const ChangePasswordFormComponent = ({ handleSubmit, resetQueryParam }) => {
+const ChangePasswordFormComponent = ({ handleSubmit, resetQueryParam = '' }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const minLength = useSelector(passwordMinLengthSelector);
@@ -255,10 +255,6 @@ const ChangePasswordFormComponent = ({ handleSubmit, resetQueryParam }) => {
 ChangePasswordFormComponent.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   resetQueryParam: PropTypes.string,
-};
-
-ChangePasswordFormComponent.defaultProps = {
-  resetQueryParam: '',
 };
 
 const ConnectedChangePasswordForm = connectRouter(({ reset: resetQueryParam }) => ({

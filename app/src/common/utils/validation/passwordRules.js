@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
+const PASSWORD_SPECIAL_SYMBOL_PATTERN = /[^a-zA-Z\d\s]/;
+
 export const PASSWORD_RULE_IDS = ['minLength', 'specialSymbol', 'uppercase', 'lowercase'];
 
 export const getPasswordRuleStatus = (password = '', minLength = 8) => ({
   minLength: password.length >= minLength,
-  specialSymbol: /[^a-zA-Z\d\s]/.test(password),
+  specialSymbol: PASSWORD_SPECIAL_SYMBOL_PATTERN.test(password),
   uppercase: /[A-Z]/.test(password),
   lowercase: /[a-z]/.test(password),
 });
