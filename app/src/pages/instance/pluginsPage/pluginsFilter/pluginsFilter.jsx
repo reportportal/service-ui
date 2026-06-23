@@ -16,6 +16,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { defineMessages, useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import { getPluginsFilter } from 'common/constants/pluginsFilter';
@@ -24,7 +25,15 @@ import styles from './pluginsFilter.scss';
 
 const cx = classNames.bind(styles);
 
+const messages = defineMessages({
+  categories: {
+    id: 'PluginsFilter.categories',
+    defaultMessage: 'Categories',
+  },
+});
+
 export const PluginsFilter = ({ filterItems, onFilterChange, activeItem }) => {
+  const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const getFilterItems = () => getPluginsFilter(filterItems);
 
@@ -36,19 +45,22 @@ export const PluginsFilter = ({ filterItems, onFilterChange, activeItem }) => {
   };
 
   return (
-    <ul className={cx('plugins-filter-list')}>
-      {getFilterItems().map((item) => (
-        <li key={item.value} className={cx('plugins-filter-item')}>
-          <button
-            className={cx('plugins-filter-button', { active: activeItem === item.value })}
-            onClick={changeFilterItem}
-            id={item.value}
-          >
-            {item.label}
-          </button>
-        </li>
-      ))}
-    </ul>
+    <div className={cx('plugins-filter')}>
+      <h3 className={cx('plugins-filter-title')}>{formatMessage(messages.categories)}</h3>
+      <ul className={cx('plugins-filter-list')}>
+        {getFilterItems().map((item) => (
+          <li key={item.value} className={cx('plugins-filter-item')}>
+            <button
+              className={cx('plugins-filter-button', { active: activeItem === item.value })}
+              onClick={changeFilterItem}
+              id={item.value}
+            >
+              {item.label}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 

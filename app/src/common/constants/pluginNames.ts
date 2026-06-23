@@ -22,16 +22,25 @@ import {
 } from './pluginsGroupTypes';
 
 export const JIRA = 'jira';
+export const JIRA_CLOUD = 'JIRA Cloud';
+export const AZURE_DEV_OPS = 'Azure DevOps';
+export const GITLAB = 'GitLab';
+export const MONDAY = 'Monday';
 export const RALLY = 'rally';
 export const EMAIL = 'email';
+export const SLACK = 'slack';
+export const TELEGRAM = 'telegram';
 export const SAUCE_LABS = 'saucelabs';
 export const SAUCE_LABS_TITLE = 'Sauce Labs';
 export const MOBITRU = 'mobitru';
+export const JUNIT = 'junit';
+export const ROBOT_FRAMEWORK = 'RobotFramework';
 export const SAML = 'saml';
 export const LDAP = 'ldap';
 export const GITHUB = 'github';
 export const ORGANIZATION = 'organization';
 export const QUALITY_GATE = 'quality gate';
+export const TEST_EXECUTION = 'test-execution';
 
 // TODO: calculate it dynamically
 export const PLUGIN_NAMES_BY_GROUP_TYPES_MAP = {

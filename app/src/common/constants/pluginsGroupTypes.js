@@ -21,3 +21,4 @@ export const BTS_GROUP_TYPE = 'BTS';
 export const ANALYZER_GROUP_TYPE = 'ANALYZER';
 export const IMPORT_GROUP_TYPE = 'IMPORT';
 export const OTHER_GROUP_TYPE = 'OTHER';
+export const AVAILABLE_PLUGINS_TYPE = 'AVAILABLE';

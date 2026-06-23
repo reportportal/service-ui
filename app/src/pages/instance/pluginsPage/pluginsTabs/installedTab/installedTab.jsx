@@ -21,8 +21,8 @@ import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import { getPluginsFilter } from 'common/constants/pluginsFilter';
-import { ALL_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
+import { getPluginsFilter, INSTALLED_GROUP_TYPE } from 'common/constants/pluginsFilter';
+import { ALL_GROUP_TYPE, AVAILABLE_PLUGINS_TYPE } from 'common/constants/pluginsGroupTypes';
 import { updatePluginSuccessAction } from 'controllers/plugins';
 import { disablePluginPopupContentSelector } from 'controllers/plugins/uiExtensions';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -44,6 +44,8 @@ import {
 import styles from './installedTab.scss';
 import { PluginsFilter } from '../../pluginsFilter';
 import { PluginsListItems } from '../../pluginsListItems';
+import { ActionPanel } from '../../actionPanel';
+import { AVAILABLE_PLUGINS_CATALOG } from '../../availablePluginsCatalog';
 
 const cx = classNames.bind(styles);
 
@@ -231,26 +233,40 @@ export class InstalledTab extends Component {
             goToPreviousPage={this.goToCachedSubPageHandler}
           />
         );
-      default:
+      default: {
+        const installedPlugins = this.getInstalledPluginsList(activeFilterItem);
+        const availablePlugins = this.getAvailablePluginsList(activeFilterItem);
+
         return (
           <div className={cx('plugins-content-wrapper')}>
-            <PluginsFilter
-              filterItems={filterItems}
-              activeItem={activeFilterItem}
-              onFilterChange={this.handleFilterChange}
-            />
-            <div className={cx('plugins-content')}>
-              <PluginsListItems
-                title={activeFilterItem}
-                items={this.getFilterPluginsList(activeFilterItem)}
-                filterMobileBlock={this.renderFilterMobileBlock()}
-                showToggleConfirmationModal={this.showToggleConfirmationModal}
-                onToggleActive={this.onToggleActive}
-                onItemClick={this.installedPluginsSubPageHandler}
+            <div className={cx('plugins-sidebar')}>
+              <PluginsFilter
+                filterItems={filterItems}
+                activeItem={activeFilterItem}
+                onFilterChange={this.handleFilterChange}
               />
+              <ActionPanel />
+            </div>
+            <div className={cx('plugins-content')}>
+              {this.renderFilterMobileBlock()}
+              {availablePlugins.length > 0 && (
+                <div className={cx('available-section')}>
+                  <PluginsListItems title={AVAILABLE_PLUGINS_TYPE} items={availablePlugins} />
+                </div>
+              )}
+              {installedPlugins.length > 0 && (
+                <PluginsListItems
+                  title={ALL_GROUP_TYPE}
+                  items={installedPlugins}
+                  showToggleConfirmationModal={this.showToggleConfirmationModal}
+                  onToggleActive={this.onToggleActive}
+                  onItemClick={this.installedPluginsSubPageHandler}
+                />
+              )}
             </div>
           </div>
         );
+      }
     }
   };
 
@@ -268,14 +284,28 @@ export class InstalledTab extends Component {
     return breadcrumbs;
   };
 
-  getFilterPluginsList = (activeFilterItem) => {
+  getInstalledPluginsList = (activeFilterItem) => {
     const { plugins } = this.props;
 
-    if (activeFilterItem === ALL_GROUP_TYPE) {
+    if (activeFilterItem === ALL_GROUP_TYPE || activeFilterItem === INSTALLED_GROUP_TYPE) {
       return plugins;
     }
 
     return plugins.filter((item) => item.groupType === activeFilterItem);
+  };
+
+  getAvailablePluginsList = (activeFilterItem) => {
+    if (activeFilterItem === INSTALLED_GROUP_TYPE) {
+      return [];
+    }
+
+    const installedNames = this.props.plugins.map((plugin) => plugin.name);
+
+    return AVAILABLE_PLUGINS_CATALOG.filter(
+      (entry) =>
+        !installedNames.includes(entry.name) &&
+        (activeFilterItem === ALL_GROUP_TYPE || entry.groupType === activeFilterItem),
+    );
   };
 
   generateOptions = () =>

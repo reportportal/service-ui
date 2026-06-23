@@ -220,11 +220,6 @@ export const pageRendering = {
     layout: InstanceLayout,
     rawContent: true,
   },
-  PLUGINS_TAB_PAGE: {
-    component: PluginsPage,
-    layout: InstanceLayout,
-    rawContent: true,
-  },
   [TEST_ITEM_PAGE]: { component: TestItemPage, layout: ProjectLayout },
   [PROJECT_LOG_PAGE]: { component: LogsPageContainer, layout: ProjectLayout, rawContent: true },
   [PROJECT_USERDEBUG_LOG_PAGE]: {

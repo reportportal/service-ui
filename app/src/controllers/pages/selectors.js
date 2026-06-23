@@ -63,7 +63,6 @@ export const logItemIdSelector = createSelector(
 );
 
 export const settingsTabSelector = (state) => payloadSelector(state).settingsTab;
-export const pluginsTabSelector = (state) => payloadSelector(state).pluginsTab;
 
 export const pluginPageSelector = (state) => payloadSelector(state).pluginPage;
 export const pluginRouteSelector = (state) => payloadSelector(state).pluginRoute;

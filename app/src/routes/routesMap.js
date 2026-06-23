@@ -44,7 +44,6 @@ import {
   MANUAL_LAUNCH_EXECUTION_PAGE,
   PROJECT_LAUNCHES_PAGE,
   PLUGINS_PAGE,
-  PLUGINS_TAB_PAGE,
   NOT_FOUND,
   OAUTH_SUCCESS,
   HOME_PAGE,
@@ -77,7 +76,6 @@ import {
   LINKS_AND_BRANDING,
   FEATURES,
 } from 'common/constants/settingsTabs';
-import { INSTALLED, STORE } from 'common/constants/pluginsTabs';
 import { ANONYMOUS_REDIRECT_PATH_STORAGE_KEY, isAuthorizedSelector } from 'controllers/auth';
 import {
   fetchDashboardsAction,
@@ -270,18 +268,13 @@ const routesMap = {
     payload: { settingsTab: ACCESS_CONFIGURATION },
   })),
   [SERVER_SETTINGS_TAB_PAGE]: `/settings/:settingsTab(${ACCESS_CONFIGURATION}|${FEATURES}|${ANALYTICS}|${LINKS_AND_BRANDING})`,
-  [PLUGINS_PAGE]: redirectRoute(
-    '/plugins',
-    () => ({
-      type: PLUGINS_TAB_PAGE,
-      payload: { pluginsTab: INSTALLED },
-    }),
-    (dispatch) => {
+  [PLUGINS_PAGE]: {
+    path: '/plugins',
+    thunk: (dispatch) => {
       dispatch(fetchPluginsAction());
       dispatch(fetchGlobalIntegrationsAction());
     },
-  ),
-  [PLUGINS_TAB_PAGE]: `/plugins/:pluginsTab(${INSTALLED}|${STORE})`,
+  },
 
   [ORGANIZATIONS_PAGE]: {
     path: '/organizations',
