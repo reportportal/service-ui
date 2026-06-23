@@ -43,7 +43,7 @@ const emailValueSelector = formValueSelector('forgotPassword');
 const placeholders = defineMessages({
   email: {
     id: 'ForgotPasswordForm.emailPlaceholder',
-    defaultMessage: 'Enter',
+    defaultMessage: 'Email',
   },
 });
 

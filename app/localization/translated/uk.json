@@ -1108,7 +1108,7 @@
   "ForgotPasswordBlock.enterEmail": "Введіть адресу електронної пошти, і ми надішлемо вам посилання для відновлення",
   "ForgotPasswordBlock.forgotPass": "Відновити пароль",
   "ForgotPasswordForm.cancel": "Скасувати",
-  "ForgotPasswordForm.emailPlaceholder": "Введіть",
+  "ForgotPasswordForm.emailPlaceholder": "Електронна пошта",
   "ForgotPasswordForm.sendEmail": "Надіслати",
   "ForgotPasswordForm.successSendEmail": "Інтсрукції щодо відновлення паролю відправлені вам на елентронну пошту {email}",
   "Fullscreen.exitNote": "Натисніть <b>Еку</b> дозволяє вийти з повноекранного режиму щоб",
