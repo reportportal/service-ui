@@ -41,16 +41,16 @@ const PLUGINS_FILTER_LIST = [
     label: <FormattedMessage id={'PluginsFilter.auth'} defaultMessage={'Authorization'} />,
   },
   {
-    value: BTS_GROUP_TYPE,
-    label: <FormattedMessage id={'PluginsFilter.bts'} defaultMessage={'Bug Tracking Systems'} />,
-  },
-  {
     value: NOTIFICATION_GROUP_TYPE,
     label: <FormattedMessage id={'PluginsFilter.notifications'} defaultMessage={'Notifications'} />,
   },
   {
     value: IMPORT_GROUP_TYPE,
     label: <FormattedMessage id={'PluginsFilter.import'} defaultMessage={'Launches Import'} />,
+  },
+  {
+    value: BTS_GROUP_TYPE,
+    label: <FormattedMessage id={'PluginsFilter.bts'} defaultMessage={'Bug Tracking Systems'} />,
   },
   {
     value: OTHER_GROUP_TYPE,
