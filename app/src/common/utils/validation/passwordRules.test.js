@@ -38,6 +38,13 @@ describe('passwordRules.getPasswordRuleStatus', () => {
     });
   });
 
+  test('does not treat non-English letters as special symbols', () => {
+    expect(getPasswordRuleStatus('ф', 8).specialSymbol).toBe(false);
+    expect(getPasswordRuleStatus('中', 8).specialSymbol).toBe(false);
+    expect(getPasswordRuleStatus('Password1ф', 8).specialSymbol).toBe(false);
+    expect(getPasswordRuleStatus('Password1!', 8).specialSymbol).toBe(true);
+  });
+
   test('uses configured minimum length', () => {
     expect(getPasswordRuleStatus('QwertY_1', 12).minLength).toBe(false);
     expect(getPasswordRuleStatus('QwertY_12345', 12).minLength).toBe(true);
