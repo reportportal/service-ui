@@ -17,8 +17,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { pluginByNameSelector, isPluginSupportsCommonCommand } from 'controllers/plugins';
+import { buildPluginCommandRQ } from 'controllers/plugins/utils';
 import { COMMAND_GET_ISSUE } from 'controllers/plugins/uiExtensions/constants';
 import { projectInfoIdSelector, projectKeySelector } from 'controllers/project';
+import { activeOrganizationIdSelector } from 'controllers/organization';
 import { getStorageItem, updateStorageItem } from 'common/utils';
 import { ERROR_CANCELED, fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
@@ -36,6 +38,7 @@ const getStoredIssueData = (projectKey, btsProject, ticketId) => {
 export const useIssueInfo = (issue, pluginName) => {
   const projectKey = useSelector(projectKeySelector);
   const projectId = useSelector(projectInfoIdSelector);
+  const organizationId = useSelector(activeOrganizationIdSelector);
   const plugin = useSelector((state) => pluginByNameSelector(state, pluginName));
 
   const { ticketId, btsProject, btsUrl } = issue;
@@ -63,12 +66,10 @@ export const useIssueInfo = (issue, pluginName) => {
     [projectKey, btsProject, ticketId],
   );
 
-  const fetchData = useCallback(() => {
+  const runFetch = useCallback(() => {
     const cancelRequestFunc = (cancel) => {
       cancelRequestRef.current = cancel;
     };
-
-    setState((prev) => ({ ...prev, loading: true }));
 
     const isCommonCommandSupported =
       plugin && isPluginSupportsCommonCommand(plugin, COMMAND_GET_ISSUE);
@@ -76,19 +77,24 @@ export const useIssueInfo = (issue, pluginName) => {
     let data;
 
     if (isCommonCommandSupported) {
-      url = URLS.pluginCommandCommon(projectKey, plugin.name, COMMAND_GET_ISSUE);
-      data = {
-        ticketId,
-        url: btsUrl,
-        project: btsProject,
+      url = URLS.pluginsCommandsCommon(plugin.name, COMMAND_GET_ISSUE);
+      data = buildPluginCommandRQ({
         projectId,
-      };
+        projectKey,
+        organizationId,
+        arguments: {
+          ticketId,
+          url: btsUrl,
+          project: btsProject,
+          projectId,
+        },
+      });
     } else {
       url = URLS.btsTicket(projectKey, ticketId, btsProject, btsUrl);
     }
 
     fetch(url, {
-      method: isCommonCommandSupported ? 'PUT' : 'GET',
+      method: isCommonCommandSupported ? 'POST' : 'GET',
       data,
       abort: cancelRequestFunc,
     })
@@ -103,18 +109,22 @@ export const useIssueInfo = (issue, pluginName) => {
         updateIssueInStorage({ lastTime: Date.now() });
         setState((prev) => ({ ...prev, loading: false, error: true }));
       });
-  }, [projectKey, btsProject, btsUrl, plugin, projectId, ticketId, updateIssueInStorage]);
+  }, [projectKey, btsProject, btsUrl, plugin, projectId, organizationId, ticketId, updateIssueInStorage]);
 
   useEffect(() => {
-    if (shouldFetchRef.current) {
-      shouldFetchRef.current = false;
-      fetchData();
+    if (!shouldFetchRef.current) {
+      return () => {
+        cancelRequestRef.current();
+      };
     }
+
+    shouldFetchRef.current = false;
+    runFetch();
 
     return () => {
       cancelRequestRef.current();
     };
-  }, [fetchData]);
+  }, [runFetch]);
 
   return state;
 };

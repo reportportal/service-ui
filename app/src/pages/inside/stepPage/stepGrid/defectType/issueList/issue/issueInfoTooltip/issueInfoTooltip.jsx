@@ -21,8 +21,10 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { URLS } from 'common/urls';
 import { pluginByNameSelector, isPluginSupportsCommonCommand } from 'controllers/plugins';
+import { buildPluginCommandRQ } from 'controllers/plugins/utils';
 import { COMMAND_GET_ISSUE } from 'controllers/plugins/uiExtensions/constants';
 import { projectInfoIdSelector, projectKeySelector } from 'controllers/project';
+import { activeOrganizationIdSelector } from 'controllers/organization';
 import { getStorageItem, updateStorageItem } from 'common/utils';
 import { ERROR_CANCELED, fetch } from 'common/utils/fetch';
 import { DottedPreloader } from 'components/preloaders/dottedPreloader';
@@ -60,6 +62,7 @@ const FETCH_ISSUE_INTERVAL = 900000; // min request interval = 15 min
   projectKey: projectKeySelector(state),
   plugin: pluginByNameSelector(state, ownProps.pluginName),
   projectId: projectInfoIdSelector(state),
+  organizationId: activeOrganizationIdSelector(state),
 }))
 @injectIntl
 export class IssueInfoTooltip extends Component {
@@ -71,6 +74,7 @@ export class IssueInfoTooltip extends Component {
     btsUrl: PropTypes.string.isRequired,
     plugin: PropTypes.object,
     projectKey: PropTypes.string.isRequired,
+    organizationId: PropTypes.number,
   };
 
   static defaultProps = {
@@ -126,7 +130,8 @@ export class IssueInfoTooltip extends Component {
   };
 
   fetchData = () => {
-    const { projectId, ticketId, btsProject, btsUrl, plugin, projectKey } = this.props;
+    const { projectId, ticketId, btsProject, btsUrl, plugin, projectKey, organizationId } =
+      this.props;
     const cancelRequestFunc = (cancel) => {
       this.cancelRequest = cancel;
     };
@@ -137,19 +142,24 @@ export class IssueInfoTooltip extends Component {
     let data;
 
     if (isCommonCommandSupported) {
-      url = URLS.pluginCommandCommon(projectKey, plugin.name, COMMAND_GET_ISSUE);
-      data = {
-        ticketId,
-        url: btsUrl,
-        project: btsProject,
+      url = URLS.pluginsCommandsCommon(plugin.name, COMMAND_GET_ISSUE);
+      data = buildPluginCommandRQ({
         projectId,
-      };
+        projectKey,
+        organizationId,
+        arguments: {
+          ticketId,
+          url: btsUrl,
+          project: btsProject,
+          projectId,
+        },
+      });
     } else {
       url = URLS.btsTicket(projectKey, ticketId, btsProject, btsUrl);
     }
 
     fetch(url, {
-      method: isCommonCommandSupported ? 'PUT' : 'GET',
+      method: isCommonCommandSupported ? 'POST' : 'GET',
       data,
       abort: cancelRequestFunc,
     })

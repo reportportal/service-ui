@@ -219,7 +219,11 @@ export const buildPluginCommandRQ = ({
   isGlobal = false,
   arguments: commandArguments = {},
 }) => {
-  const context = { integration_id: integrationId };
+  const context = {};
+
+  if (integrationId != null) {
+    context.integration_id = integrationId;
+  }
 
   if (!isGlobal) {
     if (projectKey && projectId != null) {
