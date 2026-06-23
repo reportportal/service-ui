@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-const PASSWORD_SPECIAL_SYMBOL_PATTERN = /[^a-zA-Z\d\s]/;
+// Punctuation (\p{P}) and symbols (\p{S}) only — letters from any language are excluded.
+const PASSWORD_SPECIAL_SYMBOL_PATTERN = /[\p{P}\p{S}]/u;
 
 export const PASSWORD_RULE_IDS = ['minLength', 'specialSymbol', 'uppercase', 'lowercase'];
 
