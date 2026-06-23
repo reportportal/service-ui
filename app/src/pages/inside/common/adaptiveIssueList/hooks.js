@@ -17,7 +17,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { pluginByNameSelector, isPluginSupportsCommonCommand } from 'controllers/plugins';
+import { buildPluginCommandRQ } from 'controllers/plugins/utils';
 import { COMMAND_GET_ISSUE } from 'controllers/plugins/uiExtensions/constants';
+import { activeOrganizationIdSelector } from 'controllers/organization';
 import { projectInfoIdSelector, projectKeySelector } from 'controllers/project';
 import { getStorageItem, updateStorageItem } from 'common/utils';
 import { ERROR_CANCELED, fetch } from 'common/utils/fetch';
@@ -36,6 +38,7 @@ const getStoredIssueData = (projectKey, btsProject, ticketId) => {
 export const useIssueInfo = (issue, pluginName) => {
   const projectKey = useSelector(projectKeySelector);
   const projectId = useSelector(projectInfoIdSelector);
+  const organizationId = useSelector(activeOrganizationIdSelector);
   const plugin = useSelector((state) => pluginByNameSelector(state, pluginName));
 
   const { ticketId, btsProject, btsUrl } = issue;
@@ -73,25 +76,30 @@ export const useIssueInfo = (issue, pluginName) => {
     const isCommonCommandSupported =
       plugin && isPluginSupportsCommonCommand(plugin, COMMAND_GET_ISSUE);
     let url;
-    let data;
+    let requestParams = { abort: cancelRequestFunc };
 
     if (isCommonCommandSupported) {
-      url = URLS.pluginCommandCommon(projectKey, plugin.name, COMMAND_GET_ISSUE);
-      data = {
-        ticketId,
-        url: btsUrl,
-        project: btsProject,
-        projectId,
+      url = URLS.pluginsCommandsCommon(plugin.name, COMMAND_GET_ISSUE);
+      requestParams = {
+        ...requestParams,
+        method: 'POST',
+        data: buildPluginCommandRQ({
+          organizationId,
+          projectId,
+          projectKey,
+          arguments: {
+            ticketId,
+            url: btsUrl,
+            project: btsProject,
+          },
+        }),
       };
     } else {
       url = URLS.btsTicket(projectKey, ticketId, btsProject, btsUrl);
+      requestParams = { ...requestParams, method: 'GET' };
     }
 
-    fetch(url, {
-      method: isCommonCommandSupported ? 'PUT' : 'GET',
-      data,
-      abort: cancelRequestFunc,
-    })
+    fetch(url, requestParams)
       .then((fetchedIssue) => {
         updateIssueInStorage({ issue: fetchedIssue, lastTime: Date.now() });
         setState({ issueInfo: fetchedIssue, loading: false, error: false });
@@ -103,7 +111,16 @@ export const useIssueInfo = (issue, pluginName) => {
         updateIssueInStorage({ lastTime: Date.now() });
         setState((prev) => ({ ...prev, loading: false, error: true }));
       });
-  }, [projectKey, btsProject, btsUrl, plugin, projectId, ticketId, updateIssueInStorage]);
+  }, [
+    projectKey,
+    btsProject,
+    btsUrl,
+    plugin,
+    projectId,
+    organizationId,
+    ticketId,
+    updateIssueInStorage,
+  ]);
 
   useEffect(() => {
     if (shouldFetchRef.current) {
