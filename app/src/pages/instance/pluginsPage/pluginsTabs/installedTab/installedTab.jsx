@@ -21,7 +21,11 @@ import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import { getPluginsFilter, INSTALLED_GROUP_TYPE } from 'common/constants/pluginsFilter';
+import {
+  getPluginsFilter,
+  INSTALLED_GROUP_TYPE,
+  PLUGIN_FILTER_GROUP_VALUES,
+} from 'common/constants/pluginsFilter';
 import { ALL_GROUP_TYPE, AVAILABLE_PLUGINS_TYPE } from 'common/constants/pluginsGroupTypes';
 import { updatePluginSuccessAction } from 'controllers/plugins';
 import { disablePluginPopupContentSelector } from 'controllers/plugins/uiExtensions';
@@ -45,9 +49,23 @@ import styles from './installedTab.scss';
 import { PluginsFilter } from '../../pluginsFilter';
 import { PluginsListItems } from '../../pluginsListItems';
 import { ActionPanel } from '../../actionPanel';
-import { AVAILABLE_PLUGINS_CATALOG } from '../../availablePluginsCatalog';
+import { AVAILABLE_PLUGINS_CATALOG, PLUGIN_TIERS } from '../../availablePluginsCatalog';
 
 const cx = classNames.bind(styles);
+
+const groupRank = (groupType) => {
+  const idx = PLUGIN_FILTER_GROUP_VALUES.indexOf(groupType);
+  return idx < 0 ? PLUGIN_FILTER_GROUP_VALUES.length : idx;
+};
+
+const getDisplayName = ({ details, name }) => details?.name || name || '';
+
+const sortByGroupAndName = (a, b) =>
+  groupRank(a.groupType) - groupRank(b.groupType) ||
+  getDisplayName(a).localeCompare(getDisplayName(b));
+
+const sortByTierGroupAndName = (a, b) =>
+  (a.tier !== PLUGIN_TIERS.PREMIUM) - (b.tier !== PLUGIN_TIERS.PREMIUM) || sortByGroupAndName(a, b);
 
 const messages = defineMessages({
   disabledPluginMessage: {
@@ -287,11 +305,12 @@ export class InstalledTab extends Component {
   getInstalledPluginsList = (activeFilterItem) => {
     const { plugins } = this.props;
 
-    if (activeFilterItem === ALL_GROUP_TYPE || activeFilterItem === INSTALLED_GROUP_TYPE) {
-      return plugins;
-    }
+    const filtered =
+      activeFilterItem === ALL_GROUP_TYPE || activeFilterItem === INSTALLED_GROUP_TYPE
+        ? plugins
+        : plugins.filter((item) => item.groupType === activeFilterItem);
 
-    return plugins.filter((item) => item.groupType === activeFilterItem);
+    return [...filtered].sort(sortByGroupAndName);
   };
 
   getAvailablePluginsList = (activeFilterItem) => {
@@ -301,11 +320,13 @@ export class InstalledTab extends Component {
 
     const installedNames = this.props.plugins.map((plugin) => plugin.name);
 
-    return AVAILABLE_PLUGINS_CATALOG.filter(
+    const filtered = AVAILABLE_PLUGINS_CATALOG.filter(
       (entry) =>
         !installedNames.includes(entry.name) &&
         (activeFilterItem === ALL_GROUP_TYPE || entry.groupType === activeFilterItem),
     );
+
+    return [...filtered].sort(sortByTierGroupAndName);
   };
 
   generateOptions = () =>

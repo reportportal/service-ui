@@ -37,6 +37,10 @@ const PLUGINS_FILTER_LIST = [
     label: <FormattedMessage id={'PluginsFilter.installed'} defaultMessage={'Installed'} />,
   },
   {
+    value: AUTHORIZATION_GROUP_TYPE,
+    label: <FormattedMessage id={'PluginsFilter.auth'} defaultMessage={'Authorization'} />,
+  },
+  {
     value: BTS_GROUP_TYPE,
     label: <FormattedMessage id={'PluginsFilter.bts'} defaultMessage={'Bug Tracking Systems'} />,
   },
@@ -47,10 +51,6 @@ const PLUGINS_FILTER_LIST = [
   {
     value: IMPORT_GROUP_TYPE,
     label: <FormattedMessage id={'PluginsFilter.import'} defaultMessage={'Launches Import'} />,
-  },
-  {
-    value: AUTHORIZATION_GROUP_TYPE,
-    label: <FormattedMessage id={'PluginsFilter.auth'} defaultMessage={'Authorization'} />,
   },
   {
     value: OTHER_GROUP_TYPE,
