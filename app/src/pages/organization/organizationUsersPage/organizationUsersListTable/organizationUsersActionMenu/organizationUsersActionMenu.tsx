@@ -50,10 +50,10 @@ export const OrganizationUsersActionMenu = ({ user }: OrganizationUsersActionMen
   const canUnassign = useCanUnassignOrganization();
 
   const onUnassign = useCallback(() => {
-    dispatch(fetchOrganizationUsersAction(organization.id));
-
     if (currentUserId === user.id && !isAdmin) {
       dispatch(redirect({ type: ORGANIZATIONS_PAGE }));
+    } else {
+      dispatch(fetchOrganizationUsersAction(organization.id));
     }
   }, [currentUserId, dispatch, organization.id, user.id, isAdmin]);
 
