@@ -1937,7 +1937,7 @@
   "OrganizationProjectsPage.actionInviteUser": "Invite user",
   "OrganizationProjectsPage.actionUnassign": "Unassign",
   "OrganizationProjectsPage.allOrganizations": "All organizations",
-  "OrganizationProjectsPage.confirmDeleteProjectMessage": "Are you sure you want to delete the \"{projectName}\" project? This irreversible action will delete all its data.",
+  "OrganizationProjectsPage.confirmDeleteProjectMessage": "¿Está seguro de que desea eliminar el proyecto <b>{projectName}</b>? Esta acción irreversible eliminará todos sus datos.",
   "OrganizationProjectsPage.confirmProjectNameEntry": "To confirm, please enter the name of the project",
   "OrganizationProjectsPage.createProject": "Create project",
   "OrganizationProjectsPage.deleteProject": "Delete project",

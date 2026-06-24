@@ -1936,7 +1936,7 @@
   "OrganizationProjectsPage.actionInviteUser": "Invite user",
   "OrganizationProjectsPage.actionUnassign": "Unassign",
   "OrganizationProjectsPage.allOrganizations": "所有组织",
-  "OrganizationProjectsPage.confirmDeleteProjectMessage": "Are you sure you want to delete the \"{projectName}\" project? This irreversible action will delete all its data.",
+  "OrganizationProjectsPage.confirmDeleteProjectMessage": "您确定要删除项目<b>{projectName}</b>吗？此不可逆操作将删除其所有数据。",
   "OrganizationProjectsPage.confirmProjectNameEntry": "To confirm, please enter the name of the project",
   "OrganizationProjectsPage.createProject": "创建项目",
   "OrganizationProjectsPage.deleteProject": "Delete project",
