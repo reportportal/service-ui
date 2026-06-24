@@ -31,7 +31,7 @@ import {
   pageLevelSelector,
   APP_LEVEL,
 } from 'controllers/pages';
-import { projectKeySelector } from 'controllers/project';
+import { projectInfoIdSelector, projectKeySelector } from 'controllers/project';
 import { activeOrganizationIdSelector } from 'controllers/organization';
 import {
   removeIntegrationAction,
@@ -107,6 +107,7 @@ export function EmailSettings({
   const projectIntegrations: NamedIntegrations = useSelector(namedProjectIntegrationsSelector);
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const projectSlug = useSelector(urlProjectSlugSelector);
+  const projectId = useSelector(projectInfoIdSelector);
   const projectKey = useSelector(projectKeySelector);
   const organizationId = useSelector(activeOrganizationIdSelector);
   const { canUpdateSettings, canUpdateOrganizationSettings } = useUserPermissions();
@@ -138,14 +139,17 @@ export function EmailSettings({
     [organizationSlug, projectSlug, query, pageLevel],
   );
 
+  const pluginName = data.integrationType?.name ?? query.subPage;
+
   const testConnection = useMemo(
     () =>
       getTestIntegrationConnection({
+        pluginName,
         isGlobal,
         isOrganizational,
-        context: { projectKey, organizationId },
+        context: { projectId, projectKey, organizationId },
       }),
-    [projectKey, organizationId, isGlobal, isOrganizational],
+    [pluginName, projectId, projectKey, organizationId, isGlobal, isOrganizational],
   );
 
   const integrationId = data.id;

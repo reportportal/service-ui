@@ -168,8 +168,6 @@ export const URLS = {
     `${urlCommonBase}organizations/${organizationId}/integrations${getQueryParams({ type })}`,
   organizationIntegrationById: (organizationId, integrationId) =>
     `${urlCommonBase}organizations/${organizationId}/integrations/${integrationId}`,
-  testOrganizationIntegrationConnection: (organizationId, integrationId) =>
-    `${urlCommonBase}organizations/${organizationId}/integrations/${integrationId}/connection`,
 
   projectByName: (projectKey) => `${urlBase}project/${projectKey}`,
   project: (ids = []) => `${urlBase}project?ids=${ids.join(',')}`,
@@ -367,10 +365,6 @@ export const URLS = {
   globalIntegration: (integrationId) => `${urlBase}integration/${integrationId}`,
   removeProjectIntegrationByType: (projectKey, type) =>
     `${urlBase}integration/${projectKey}/all/${type}`,
-  testIntegrationConnection: (projectKey, integrationId) =>
-    `${urlBase}integration/${projectKey}/${integrationId}/connection/test`,
-  testGlobalIntegrationConnection: (integrationId) =>
-    `${urlBase}integration/${integrationId}/connection/test`,
   pluginFileImport: (projectKey, pluginName) =>
     `${urlBase}plugin/${projectKey}/${pluginName}/import`,
 
