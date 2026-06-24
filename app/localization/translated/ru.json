@@ -1937,7 +1937,7 @@
   "OrganizationProjectsPage.actionInviteUser": "Пригласить пользователя",
   "OrganizationProjectsPage.actionUnassign": "Отменить назначение",
   "OrganizationProjectsPage.allOrganizations": "Все организации",
-  "OrganizationProjectsPage.confirmDeleteProjectMessage": "Вы уверены, что хотите удалить проект \"{projectName}\"? Это необратимое действие удалит все его данные.",
+  "OrganizationProjectsPage.confirmDeleteProjectMessage": "Вы уверены, что хотите удалить проект <b>{projectName}</b>? Это необратимое действие удалит все его данные.",
   "OrganizationProjectsPage.confirmProjectNameEntry": "Для подтверждения введите название проекта",
   "OrganizationProjectsPage.createProject": "Создать проект",
   "OrganizationProjectsPage.deleteProject": "Удалить проект",

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { InjectedFormProps, reduxForm } from 'redux-form';
@@ -36,6 +36,8 @@ import { messages } from '../../messages';
 import styles from './deleteProjectModal.scss';
 
 const cx = createClassnames(styles);
+
+const Bold = (chunks: ReactNode) => <b>{chunks}</b>;
 
 const PROJECT_NAME_FIELD = 'projectName';
 const DELETE_PROJECT_FORM = 'deleteProjectForm';
@@ -87,18 +89,23 @@ const DeleteProjectModal: FC<DeleteProjectModalProps> = ({
       cancelButton={cancelButton}
       onClose={hideModal}
     >
-      <p className={cx('message')}>
-        {formatMessage(messages.confirmDeleteProjectMessage, { projectName })}
-      </p>
-      <FieldProvider name={PROJECT_NAME_FIELD}>
-        <FieldErrorHint provideHint={false}>
-          <FieldText
-            label={formatMessage(messages.confirmProjectNameEntry)}
-            defaultWidth={false}
-            placeholder={formatMessage(messages.projectName)}
-          />
-        </FieldErrorHint>
-      </FieldProvider>
+      <div className={cx('modal-content')}>
+        <p>
+          {formatMessage(messages.confirmDeleteProjectMessage, {
+            projectName,
+            b: Bold,
+          })}
+        </p>
+        <FieldProvider name={PROJECT_NAME_FIELD}>
+          <FieldErrorHint provideHint={false}>
+            <FieldText
+              label={formatMessage(messages.confirmProjectNameEntry)}
+              defaultWidth={false}
+              placeholder={formatMessage(messages.projectName)}
+            />
+          </FieldErrorHint>
+        </FieldProvider>
+      </div>
     </Modal>
   );
 };
