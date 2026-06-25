@@ -92,6 +92,8 @@ export const useDuplicateFolder = () => {
         dispatch(fetchSuccessAction(NAMESPACE, { content: updatedFolders }));
       } catch {
         handleOperationError({ fromDragDrop: isDragDropOperation });
+
+        return;
       }
 
       const { folderName: originalFolderName, targetFolderName } = getFolderNames(
