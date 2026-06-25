@@ -44,6 +44,10 @@ export const ExternalLoginBlock = ({ externalAuth, inline }) => {
 
   const startAuthFlow = useCallback(
     (val, authType) => {
+      if (!val) {
+        return;
+      }
+
       if (val.providers && Object.keys(val.providers).length > 1) {
         dispatch(redirect({ type: LOGIN_PAGE, payload: { query: { multipleAuth: authType } } }));
         return;
@@ -70,12 +74,20 @@ export const ExternalLoginBlock = ({ externalAuth, inline }) => {
     const [authType] = authTypes;
     const val = externalAuth[authType];
 
+    if (!val) {
+      return;
+    }
+
     trackEvent(LOGIN_PAGE_EVENTS.clickOnLoginButton(authType));
     startAuthFlow(val, authType);
   }, [dispatch, externalAuth, startAuthFlow, trackEvent]);
 
   if (authInProgress) {
     return <SpinningPreloader />;
+  }
+
+  if (Object.keys(externalAuth).length === 0) {
+    return null;
   }
 
   return (
