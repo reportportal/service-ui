@@ -14,82 +14,97 @@
  * limitations under the License.
  */
 
-import React, { PureComponent } from 'react';
+import { useCallback, useState } from 'react';
 import classNames from 'classnames/bind';
-import track from 'react-tracking';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { redirect } from 'redux-first-router';
-import Parser from 'html-react-parser';
+import { FormattedMessage, defineMessages } from 'react-intl';
+import { useTracking } from 'react-tracking';
+import { Button } from '@reportportal/ui-kit';
 import { LOGIN_PAGE } from 'controllers/pages';
 import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
-import { BigButton } from 'components/buttons/bigButton';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { normalizePathWithPrefix, setWindowLocationToNewPath } from 'pages/outside/common/utils';
 import styles from './externalLoginBlock.scss';
 
 const cx = classNames.bind(styles);
 
-@track()
-@connect(null, { redirect })
-export class ExternalLoginBlock extends PureComponent {
-  static propTypes = {
-    externalAuth: PropTypes.object,
-    redirect: PropTypes.func.isRequired,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
-  };
-  static defaultProps = {
-    externalAuth: {},
-  };
+const messages = defineMessages({
+  loginWithSso: {
+    id: 'ExternalLoginBlock.loginWithSso',
+    defaultMessage: 'Login with SSO',
+  },
+});
 
-  state = {
-    authInProgress: false,
-  };
+export const ExternalLoginBlock = ({ externalAuth, inline }) => {
+  const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
+  const [authInProgress, setAuthInProgress] = useState(false);
 
-  getExternalAuthClickHandler = (authType, val) => () => {
-    this.clickEventHandler(authType);
+  const startAuthFlow = useCallback(
+    (val, authType) => {
+      if (!val) {
+        return;
+      }
 
-    if (val.providers) {
-      this.props.redirect({ type: LOGIN_PAGE, payload: { query: { multipleAuth: authType } } });
+      if (val.providers && Object.keys(val.providers).length > 1) {
+        dispatch(redirect({ type: LOGIN_PAGE, payload: { query: { multipleAuth: authType } } }));
+        return;
+      }
+
+      const path = val.path || (val.providers && Object.values(val.providers)[0]);
+
+      if (path) {
+        setAuthInProgress(true);
+        setWindowLocationToNewPath(normalizePathWithPrefix(path));
+      }
+    },
+    [dispatch],
+  );
+
+  const handleSsoClick = useCallback(() => {
+    const authTypes = Object.keys(externalAuth);
+
+    if (authTypes.length > 1) {
+      dispatch(redirect({ type: LOGIN_PAGE, payload: { query: { selectSso: 'true' } } }));
       return;
     }
 
-    this.setState({ authInProgress: true });
-    setWindowLocationToNewPath(normalizePathWithPrefix(val.path));
-  };
+    const [authType] = authTypes;
+    const val = externalAuth[authType];
 
-  clickEventHandler = (authType) => {
-    const { tracking } = this.props;
-    tracking.trackEvent(LOGIN_PAGE_EVENTS.clickOnLoginButton(authType));
-  };
+    if (!val) {
+      return;
+    }
 
-  renderButtons = () => {
-    const { externalAuth } = this.props;
-    return Object.keys(externalAuth).map((authType) => {
-      const val = externalAuth[authType];
+    trackEvent(LOGIN_PAGE_EVENTS.clickOnLoginButton(authType));
+    startAuthFlow(val, authType);
+  }, [dispatch, externalAuth, startAuthFlow, trackEvent]);
 
-      return (
-        <div className={cx('external-auth-btn')} key={authType}>
-          <BigButton
-            roundedCorners
-            color="booger"
-            onClick={this.getExternalAuthClickHandler(authType, val)}
-          >
-            {Parser(val.button)}
-          </BigButton>
-        </div>
-      );
-    });
-  };
-
-  render() {
-    return (
-      <div className={cx('external-login-block')}>
-        {this.state.authInProgress ? <SpinningPreloader /> : this.renderButtons()}
-      </div>
-    );
+  if (authInProgress) {
+    return <SpinningPreloader />;
   }
-}
+
+  if (Object.keys(externalAuth).length === 0) {
+    return null;
+  }
+
+  return (
+    <div className={cx('external-login-block', { inline })}>
+      <Button variant="ghost" className={cx('sso-button')} onClick={handleSsoClick}>
+        <FormattedMessage {...messages.loginWithSso} />
+      </Button>
+    </div>
+  );
+};
+
+ExternalLoginBlock.propTypes = {
+  externalAuth: PropTypes.object,
+  inline: PropTypes.bool,
+};
+
+ExternalLoginBlock.defaultProps = {
+  externalAuth: {},
+  inline: false,
+};

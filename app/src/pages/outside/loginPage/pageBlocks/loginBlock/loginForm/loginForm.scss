@@ -62,6 +62,20 @@
   }
 }
 
+.login-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.or-separator {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--rp-ui-base-e-400);
+  text-transform: uppercase;
+}
+
 .login-button-container {
   width: 120px;
   height: 36px;
