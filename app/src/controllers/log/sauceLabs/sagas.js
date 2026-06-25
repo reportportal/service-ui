@@ -18,8 +18,10 @@ import { takeEvery, put, call, all, select, take } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { SAUCE_LABS } from 'common/constants/pluginNames';
 import { availableIntegrationsByPluginNameSelector } from 'controllers/plugins';
+import { buildPluginCommandRQ } from 'controllers/plugins/utils';
 import { fetchDataAction, createFetchPredicate } from 'controllers/fetch';
-import { projectKeySelector } from 'controllers/project';
+import { activeOrganizationIdSelector } from 'controllers/organization';
+import { projectKeySelector, projectInfoIdSelector } from 'controllers/project';
 import {
   EXECUTE_SAUCE_LABS_COMMAND_ACTION,
   BULK_EXECUTE_SAUCE_LABS_COMMAND_ACTION,
@@ -29,11 +31,22 @@ import { updateLoadingAction } from './actionCreators';
 
 function* executeSauceLabsCommand({ payload: { command, integrationId, data = {} } }) {
   const projectKey = yield select(projectKeySelector);
+  const projectId = yield select(projectInfoIdSelector);
+  const organizationId = yield select(activeOrganizationIdSelector);
 
   yield put(
     fetchDataAction(SAUCE_LABS_COMMANDS_NAMESPACES_MAP[command])(
-      URLS.projectIntegrationByIdCommand(projectKey, integrationId, command),
-      { data, method: 'put' },
+      URLS.pluginsCommandsCommon(SAUCE_LABS, command),
+      {
+        data: buildPluginCommandRQ({
+          integrationId,
+          projectKey,
+          projectId,
+          organizationId,
+          arguments: data,
+        }),
+        method: 'post',
+      },
     ),
   );
 }
