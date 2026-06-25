@@ -24,6 +24,7 @@ import { AUTHORIZATION_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import {
+  COMMAND_TEST_CONNECTION,
   PLUGIN_TYPE_EXTENSION,
   PLUGIN_TYPE_REMOTE,
 } from 'controllers/plugins/uiExtensions/constants';
@@ -156,24 +157,24 @@ export const getAddIntegrationSuccessAction = ({ isGlobal, isOrganizational }) =
 };
 
 export const getTestIntegrationConnection = ({
+  pluginName,
   isGlobal = false,
   isOrganizational = false,
   context = {},
 }) => {
-  const { projectKey, organizationId } = context;
+  const { projectId, projectKey, organizationId } = context;
 
-  return (integrationId) => {
-    switch (true) {
-      case isGlobal:
-        return fetch(URLS.testGlobalIntegrationConnection(integrationId));
-      case isOrganizational:
-        return fetch(URLS.testOrganizationIntegrationConnection(organizationId, integrationId), {
-          method: 'POST',
-        });
-      default:
-        return fetch(URLS.testIntegrationConnection(projectKey, integrationId));
-    }
-  };
+  return (integrationId) =>
+    fetch(URLS.pluginsCommandsCommon(pluginName, COMMAND_TEST_CONNECTION), {
+      method: 'POST',
+      data: buildPluginCommandRQ({
+        integrationId,
+        projectId: isOrganizational ? undefined : projectId,
+        projectKey: isOrganizational || isGlobal ? undefined : projectKey,
+        organizationId: isGlobal ? undefined : organizationId,
+        isGlobal,
+      }),
+    });
 };
 
 export const getIntegrationByIdUrl = ({ isGlobal, isOrganizational, id, context }) => {

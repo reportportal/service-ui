@@ -49,6 +49,7 @@ export const COMMAND_GET_ISSUE_FIELDS = 'getIssueFields';
 export const COMMAND_POST_ISSUE = 'postTicket';
 export const COMMAND_GET_ISSUE = 'getIssue';
 export const COMMAND_GET_CLUSTERS = 'getClusters';
+export const COMMAND_TEST_CONNECTION = 'testConnection';
 
 // core files keys
 export const MANIFEST_FILE_KEY = 'metadata';

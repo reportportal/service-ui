@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { redirect } from 'redux-first-router';
 import classNames from 'classnames/bind';
@@ -48,10 +48,8 @@ import { PROJECT_SETTINGS_INTEGRATION } from 'analyticsEvents/projectSettingsPag
 import { IntegrationAnalyticsContext } from 'components/integrations/integrationAnalyticsContext';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { EMAIL } from 'common/constants/pluginNames';
-import { combineNameAndEmailToFrom, fetch } from 'common/utils';
-import { URLS } from 'common/urls';
-import { projectKeySelector } from 'controllers/project';
-import { activeProjectKeySelector } from 'controllers/user';
+import { combineNameAndEmailToFrom } from 'common/utils';
+import { projectInfoIdSelector, projectKeySelector } from 'controllers/project';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { IntegrationHeader } from 'pages/inside/common/integrations/integrationHeader';
 import { AvailableIntegrations } from 'pages/inside/common/integrations/availableIntegrations';
@@ -80,8 +78,8 @@ export const IntegrationInfo = (props) => {
   const globalIntegrations = useSelector(namedGlobalIntegrationsSelector);
   const organizationIntegrations = useSelector(namedOrganizationIntegrationsSelector);
   const projectIntegrations = useSelector(namedProjectIntegrationsSelector);
+  const projectId = useSelector(projectInfoIdSelector);
   const projectKey = useSelector(projectKeySelector);
-  const activeProjectKey = useSelector(activeProjectKeySelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
   const organizationId = useSelector(activeOrganizationIdSelector);
   const dispatch = useDispatch();
@@ -125,15 +123,28 @@ export const IntegrationInfo = (props) => {
     ? formatMessage(messages.projectIntegrationAddLimited)
     : undefined;
 
-  const testIntegrationConnection = useCallback(
-    (integrationId) =>
-      fetch(URLS.testIntegrationConnection(projectKey || activeProjectKey, integrationId)),
-    [projectKey, activeProjectKey],
+  const testProjectIntegrationConnection = useMemo(
+    () =>
+      getTestIntegrationConnection({
+        pluginName,
+        context: { projectId, projectKey, organizationId },
+      }),
+    [pluginName, projectId, projectKey, organizationId],
   );
 
   const testOrganizationIntegrationConnection = useMemo(
-    () => getTestIntegrationConnection({ isOrganizational: true, context: { organizationId } }),
-    [organizationId],
+    () =>
+      getTestIntegrationConnection({
+        pluginName,
+        isOrganizational: true,
+        context: { organizationId },
+      }),
+    [pluginName, organizationId],
+  );
+
+  const testGlobalIntegrationConnection = useMemo(
+    () => getTestIntegrationConnection({ pluginName, isGlobal: true }),
+    [pluginName],
   );
 
   useEffect(() => {
@@ -363,7 +374,7 @@ export const IntegrationInfo = (props) => {
             text={formatMessage(messages.projectIntegrationText)}
             integrations={availableProjectIntegrations}
             openIntegration={openIntegration}
-            testConnection={testIntegrationConnection}
+            testConnection={testProjectIntegrationConnection}
             withEmptyState
             hasUpdatePermission={canUpdateSettings}
             onCreateClick={onAddProjectIntegration}
@@ -391,7 +402,7 @@ export const IntegrationInfo = (props) => {
               openIntegration={openIntegration}
               inactive={Boolean(availableProjectIntegrations.length)}
               inactiveTooltip={formatMessage(messages.inactiveGlobalIntegrations)}
-              testConnection={testIntegrationConnection}
+              testConnection={testGlobalIntegrationConnection}
             />
           )}
         </div>
