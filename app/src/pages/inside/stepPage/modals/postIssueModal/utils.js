@@ -104,6 +104,7 @@ export const getDefaultIssueModalConfig = (namedIntegrations, userId) => {
   };
 };
 
+// Form state and dropdown labels use valueName. Jira Cloud IDs are applied in mapFieldValuesForApi at submit.
 const OPTION_VALUES_BY_PLUGIN = {
   [JIRA]: VALUE_NAME_KEY,
   [RALLY]: VALUE_ID_KEY,

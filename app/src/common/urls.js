@@ -53,6 +53,9 @@ export const URLS = {
     })}`,
   widgetPreview: (projectKey) => `${urlBase}${projectKey}/widget/preview`,
 
+  widgetStabilityStream: (projectKey, widgetId) =>
+    `${urlBase}${projectKey}/widget/${widgetId}/stability-stream`,
+
   dashboardWidget: (projectKey, dashboardId, widgetId) =>
     removeTrailingSlash(`${urlBase}${projectKey}/dashboard/${dashboardId}/${widgetId}`),
 

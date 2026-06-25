@@ -1,0 +1,215 @@
+.stability-table-widget {
+  height: 100%;
+  min-height: 0;
+  font-size: 13px;
+  color: $COLOR--black-2;
+
+  .legend-wrap {
+    margin-bottom: 8px;
+  }
+
+  .crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .crumb-item {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .crumb-btn {
+    padding: 0;
+    border: none;
+    background: none;
+    font: inherit;
+    color: $COLOR--windows-blue;
+    cursor: pointer;
+    text-decoration: underline;
+
+    &:hover {
+      opacity: 0.88;
+    }
+  }
+
+  .crumb-sep {
+    margin: 0 6px;
+    color: $COLOR--gray-60;
+    user-select: none;
+  }
+
+  .section-title {
+    margin: 0 0 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: $COLOR--black-2;
+  }
+
+  .leaf-summary {
+    margin: 0 0 8px;
+    font-size: 12px;
+    color: $COLOR--gray-60;
+  }
+
+  .loading {
+    display: flex;
+    justify-content: center;
+    padding: 24px 0;
+  }
+
+  .sortable {
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      color: $COLOR--black-2;
+    }
+  }
+
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: normal;
+    color: $COLOR--gray-60;
+    border-bottom: 1px solid $COLOR--gray-91;
+  }
+
+  .row {
+    cursor: pointer;
+    border-bottom: 1px solid $COLOR--gray-91;
+
+    &:hover {
+      background-color: $COLOR--white-two;
+    }
+
+    td {
+      padding: 8px 12px;
+      vertical-align: top;
+    }
+  }
+
+  .name-cell {
+    max-width: 200px;
+  }
+
+  .name {
+    display: block;
+    word-break: break-word;
+  }
+
+  .uid {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    color: $COLOR--gray-60;
+  }
+
+  .cell-link {
+    color: $COLOR--windows-blue;
+    text-decoration: none;
+    border: none;
+    background: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    text-align: inherit;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .icon-link {
+    display: inline-flex;
+    color: $COLOR--windows-blue;
+
+    &:hover {
+      opacity: 0.85;
+    }
+  }
+
+  .ext-col {
+    width: 36px;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 12px;
+  }
+
+  .badge-flaky {
+    color: $COLOR--warning;
+    background-color: $COLOR--warning-light;
+    border: 1px solid $COLOR--warning;
+  }
+
+  .badge-stable {
+    color: $COLOR--passed;
+    background-color: rgba($COLOR--passed, 0.12);
+    border: 1px solid $COLOR--passed;
+  }
+
+  .badge-transitional {
+    color: $COLOR--skipped;
+    background-color: rgba($COLOR--skipped, 0.12);
+    border: 1px solid $COLOR--skipped;
+  }
+
+  .badge-failed {
+    color: $COLOR--failed;
+    background-color: rgba($COLOR--failed, 0.08);
+    border: 1px solid $COLOR--failed;
+  }
+
+  .crumb-static {
+    margin-left: 6px;
+    max-width: 240px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: $COLOR--black-2;
+  }
+
+  .stability-filter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .stability-filter-label {
+    color: $COLOR--gray-60;
+    font-size: 12px;
+  }
+
+  .filter-empty {
+    padding: 16px 12px;
+    font-size: 13px;
+    color: $COLOR--gray-60;
+  }
+
+  .stability-select {
+    min-width: 140px;
+    padding: 4px 8px;
+    font-size: 13px;
+    border: 1px solid $COLOR--gray-91;
+    border-radius: 2px;
+    background: $COLOR--white-two;
+  }
+
+  .row-drillable .name {
+    font-weight: 600;
+  }
+}
+

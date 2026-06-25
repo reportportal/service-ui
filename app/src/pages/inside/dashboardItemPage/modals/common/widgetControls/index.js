@@ -30,6 +30,7 @@ export { DifferentLaunchesComparisonControls } from './differentLaunchesComparis
 export { PassingRatePerLaunchControls } from './passingRatePerLaunchControls';
 export { PassingRateSummaryControls } from './passingRateSummaryControls';
 export { FlakyTestCasesTableControls } from './flakyTestCasesTableControls';
+export { TestStabilityFlakinessControls } from './testStabilityFlakinessControls';
 export { CumulativeTrendControls } from './cumulativeTrendControls';
 export { ProductStatusControls } from './productStatusControls';
 export { MostTimeConsumingTestCasesControls } from './mostTimeConsumingTestCasesControls';

@@ -28,11 +28,15 @@ import { projectInfoIdSelector, projectKeySelector } from 'controllers/project';
 import { getStorageItem, updateStorageItem } from 'common/utils';
 import { ERROR_CANCELED, fetch } from 'common/utils/fetch';
 import { DottedPreloader } from 'components/preloaders/dottedPreloader';
+import { dateFormat } from 'common/utils/timeDateUtils';
+
 import styles from './issueInfoTooltip.scss';
 
 const cx = classNames.bind(styles);
 
 const STATUS_RESOLVED = 'RESOLVED';
+
+const TICKET_CACHE_VERSION = '2';
 
 const messages = defineMessages({
   issueSummaryTitle: {
@@ -42,6 +46,22 @@ const messages = defineMessages({
   issueStatusTitle: {
     id: 'IssueInfoTooltip.issueStatusTitle',
     defaultMessage: 'Status',
+  },
+  issueReporterTitle: {
+    id: 'IssueInfoTooltip.issueReporterTitle',
+    defaultMessage: 'Reporter',
+  },
+  issueAssigneeTitle: {
+    id: 'IssueInfoTooltip.issueAssigneeTitle',
+    defaultMessage: 'Assigned Developer(s)',
+  },
+  issueCreatedTitle: {
+    id: 'IssueInfoTooltip.issueCreatedTitle',
+    defaultMessage: 'Created',
+  },
+  issueSeverityTitle: {
+    id: 'IssueInfoTooltip.issueSeverityTitle',
+    defaultMessage: 'Severity',
   },
   issueNotFoundTitle: {
     id: 'IssueInfoTooltip.issueNotFoundTitle',
@@ -53,8 +73,26 @@ const messages = defineMessages({
   },
 });
 
-const isResolved = (status) => status.toUpperCase() === STATUS_RESOLVED;
-const getStorageKey = (projectKey) => `${projectKey}_tickets`;
+const isResolved = (status = '') => status.toUpperCase() === STATUS_RESOLVED;
+const getStorageKey = (projectKey) => `${projectKey}_tickets_v${TICKET_CACHE_VERSION}`;
+const formatCreatedDate = (created) => (created ? dateFormat(new Date(created).getTime()) : null);
+
+const IssueFieldRow = ({ label, value, resolved }) => (
+  <div className={cx('row')}>
+    <h4 className={cx('header')}>{label}</h4>
+    <p className={cx('content', { resolved })}>{value}</p>
+  </div>
+);
+
+IssueFieldRow.propTypes = {
+  label: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  resolved: PropTypes.bool,
+};
+
+IssueFieldRow.defaultProps = {
+  resolved: false,
+};
 
 const FETCH_ISSUE_INTERVAL = 900000; // min request interval = 15 min
 
@@ -193,19 +231,40 @@ export class IssueInfoTooltip extends Component {
 
     return issue ? (
       <Fragment>
-        <h4 className={cx('header')}>{formatMessage(messages.issueSummaryTitle)}</h4>
-        <p className={cx('content')}>{issue.summary}</p>
+        <IssueFieldRow
+          label={formatMessage(messages.issueSummaryTitle)}
+          value={issue.summary}
+        />
+        {issue.reporter && (
+          <IssueFieldRow
+            label={formatMessage(messages.issueReporterTitle)}
+            value={issue.reporter}
+          />
+        )}
+        {issue.assignee && (
+          <IssueFieldRow
+            label={formatMessage(messages.issueAssigneeTitle)}
+            value={issue.assignee}
+          />
+        )}
+        {issue.created && (
+          <IssueFieldRow
+            label={formatMessage(messages.issueCreatedTitle)}
+            value={formatCreatedDate(issue.created)}
+          />
+        )}
         {issue.status && (
-          <>
-            <h4 className={cx('header')}>{formatMessage(messages.issueStatusTitle)}</h4>
-            <p
-              className={cx('content', {
-                resolved: isResolved(issue.status),
-              })}
-            >
-              {issue.status}
-            </p>
-          </>
+          <IssueFieldRow
+            label={formatMessage(messages.issueStatusTitle)}
+            value={issue.status}
+            resolved={isResolved(issue.status)}
+          />
+        )}
+        {issue.severity && (
+          <IssueFieldRow
+            label={formatMessage(messages.issueSeverityTitle)}
+            value={issue.severity}
+          />
         )}
       </Fragment>
     ) : (

@@ -37,6 +37,7 @@ import { DynamicFieldsSection } from 'components/fields/dynamicFieldsSection';
 import {
   normalizeFieldsWithOptions,
   mapFieldsToValues,
+  mapFieldValuesForApi,
   removeNoneValues,
   isJiraCloudAssigneeField,
 } from 'components/fields/dynamicFieldsSection/utils';
@@ -283,6 +284,9 @@ export class PostIssueModal extends Component {
       let preparedFormFieldData = formFieldData;
       if (!Array.isArray(formFieldData)) {
         preparedFormFieldData = formFieldData ? [formFieldData] : [];
+      }
+      if (!isAutocomplete) {
+        preparedFormFieldData = mapFieldValuesForApi(field, preparedFormFieldData, pluginName);
       }
       return {
         ...field,

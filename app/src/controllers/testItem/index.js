@@ -43,6 +43,7 @@ export {
   UNIQUE_ERRORS_VIEW,
   TEST_ITEMS_TYPE_LIST,
   DEFAULT_LAUNCHES_LIMIT,
+  STABILITY_WIDGET_ITEM_LIST_LAUNCH_LIMIT,
 } from './constants';
 export {
   launchSelector,

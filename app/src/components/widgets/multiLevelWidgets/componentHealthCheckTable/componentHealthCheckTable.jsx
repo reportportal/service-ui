@@ -156,11 +156,13 @@ export class ComponentHealthCheckTable extends Component {
       organizationSlug: PropTypes.string.isRequired,
       projectSlug: PropTypes.string.isRequired,
     }),
+    queryParameters: PropTypes.object,
   };
 
   static defaultProps = {
     clearQueryParams: () => {},
     fetchWidget: () => {},
+    queryParameters: {},
   };
 
   state = {
@@ -170,11 +172,82 @@ export class ComponentHealthCheckTable extends Component {
     isLoading: false,
   };
 
-  componentDidUpdate(prevProps) {
+  componentDidMount() {
+    this.syncDrillStateFromQueryParameters();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
     if (!isEqual(prevProps.widget.contentParameters, this.props.widget.contentParameters)) {
       this.clearState();
+      return;
+    }
+
+    if (
+      !isEqual(prevProps.queryParameters, this.props.queryParameters) &&
+      !this.state.isLoading
+    ) {
+      this.syncDrillStateFromQueryParameters();
+    }
+
+    if (prevState.isLoading && this.state.isLoading && this.props.widget !== prevProps.widget) {
+      this.setState({ isLoading: false });
     }
   }
+
+  syncDrillStateFromQueryParameters = () => {
+    const { queryParameters, widget } = this.props;
+    const attributeKeys = widget.contentParameters?.widgetOptions.attributeKeys || [];
+    const values = queryParameters?.attributes || [];
+
+    if (!values.length) {
+      if (this.state.activeBreadcrumbId !== 0 || this.state.activeAttributes.length) {
+        this.setState({
+          activeBreadcrumbId: 0,
+          activeAttributes: [],
+          activeBreadcrumbs: null,
+        });
+      }
+      return;
+    }
+
+    const activeAttributes = values.map((value, idx) => ({
+      key: attributeKeys[idx],
+      value,
+    }));
+    const activeBreadcrumbId = values.length;
+    let activeBreadcrumbs = getBreadcrumbs(attributeKeys, 0);
+
+    values.forEach((value, depth) => {
+      const row = widget.content?.result?.find((item) => item.name === value);
+      activeBreadcrumbs = getNewActiveBreadcrumbs(
+        depth + 1,
+        activeBreadcrumbs,
+        depth,
+        attributeKeys,
+        {
+          value,
+          passingRate: row?.passingRate ?? null,
+          color: null,
+        },
+      );
+    });
+
+    this.setState({
+      activeBreadcrumbId,
+      activeAttributes,
+      activeBreadcrumbs,
+    });
+  };
+
+  fetchDrillLevel = (attributes) => {
+    return this.props
+      .fetchWidget({
+        attributes: attributes.map((item) => item.value),
+      })
+      .catch(() => {
+        this.setState({ isLoading: false });
+      });
+  };
 
   onClickBreadcrumbs = (id) => {
     const { activeBreadcrumbs, activeAttributes, activeBreadcrumbId } = this.state;
@@ -182,11 +255,7 @@ export class ComponentHealthCheckTable extends Component {
       widget: { contentParameters },
     } = this.props;
     const attributes = contentParameters?.widgetOptions.attributeKeys;
-    const newActiveAttributes = getNewActiveAttributes(
-      activeBreadcrumbs[id].key,
-      activeBreadcrumbs[id].additionalProperties.value,
-      activeAttributes,
-    );
+    const newActiveAttributes = activeAttributes.slice(0, id);
     const newActiveBreadcrumbs = getNewActiveBreadcrumbs(
       id,
       activeBreadcrumbs,
@@ -194,21 +263,15 @@ export class ComponentHealthCheckTable extends Component {
       attributes,
     );
 
-    this.setState({
-      activeBreadcrumbs: newActiveBreadcrumbs,
-      activeBreadcrumbId: id,
-      activeAttributes: newActiveAttributes,
-      isLoading: true,
-    });
-    this.props
-      .fetchWidget({
-        attributes: newActiveAttributes.map((item) => item.value),
-      })
-      .then(() => {
-        this.setState({
-          isLoading: false,
-        });
-      });
+    this.setState(
+      {
+        activeBreadcrumbs: newActiveBreadcrumbs,
+        activeBreadcrumbId: id,
+        activeAttributes: newActiveAttributes,
+        isLoading: true,
+      },
+      () => this.fetchDrillLevel(newActiveAttributes),
+    );
   };
 
   onClickAttribute = (value, passingRate, color) => {
@@ -236,21 +299,15 @@ export class ComponentHealthCheckTable extends Component {
       activeAttributes,
     );
 
-    this.setState({
-      activeBreadcrumbs: newActiveBreadcrumbs,
-      activeBreadcrumbId: newActiveBreadcrumbId,
-      activeAttributes: newActiveAttributes,
-      isLoading: true,
-    });
-    this.props
-      .fetchWidget({
-        attributes: newActiveAttributes.map((item) => item.value),
-      })
-      .then(() => {
-        this.setState({
-          isLoading: false,
-        });
-      });
+    this.setState(
+      {
+        activeBreadcrumbs: newActiveBreadcrumbs,
+        activeBreadcrumbId: newActiveBreadcrumbId,
+        activeAttributes: newActiveAttributes,
+        isLoading: true,
+      },
+      () => this.fetchDrillLevel(newActiveAttributes),
+    );
   };
 
   getCustomColumn = () => this.props.widget.contentParameters?.widgetOptions.customColumn;

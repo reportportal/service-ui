@@ -40,6 +40,10 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx', '.sass', '.scss', '.css'],
     alias: {
+      // Pin singleton shared deps so nested copies (e.g. swagger-ui-react’s react-redux 9.x)
+      // are not bundled as the Module Federation provider version.
+      'react-redux': path.resolve(__dirname, '../node_modules/react-redux'),
+      classnames: path.resolve(__dirname, '../node_modules/classnames'),
       components: path.resolve(__dirname, '../src/components'),
       componentLibrary: path.resolve(__dirname, '../src/componentLibrary'),
       controllers: path.resolve(__dirname, '../src/controllers'),

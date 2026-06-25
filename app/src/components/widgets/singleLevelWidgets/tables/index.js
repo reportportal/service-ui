@@ -15,6 +15,7 @@
  */
 
 import { FlakyTests } from './flakyTests';
+import { TestStabilityFlaky } from './testStabilityFlaky/testStabilityFlaky';
 import { MostFailedTests } from './mostFailedTests';
 import { UniqueBugsTable } from './uniqueBugsTable';
 import { LaunchesTable } from './launchesTable';
@@ -23,6 +24,7 @@ import { ProductStatus } from './productStatus';
 
 export {
   FlakyTests,
+  TestStabilityFlaky,
   MostFailedTests,
   UniqueBugsTable,
   LaunchesTable,

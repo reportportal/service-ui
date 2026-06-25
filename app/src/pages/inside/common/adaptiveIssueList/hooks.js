@@ -26,8 +26,9 @@ import { ERROR_CANCELED, fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 
 const FETCH_ISSUE_INTERVAL = 900000; // 15 min
+const TICKET_CACHE_VERSION = '2';
 
-const getStorageKey = (projectKey) => `${projectKey}_tickets`;
+const getStorageKey = (projectKey) => `${projectKey}_tickets_v${TICKET_CACHE_VERSION}`;
 
 const getStoredIssueData = (projectKey, btsProject, ticketId) => {
   const storageKey = getStorageKey(projectKey);

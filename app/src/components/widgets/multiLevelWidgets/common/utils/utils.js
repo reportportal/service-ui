@@ -22,7 +22,7 @@ export const getNewActiveAttributes = (key, value, activeAttributes) => {
   const activeAttributeIndex = activeAttributes?.findIndex((item) => item.key === key);
 
   if (activeAttributeIndex !== -1) {
-    return activeAttributes.slice(0, activeAttributeIndex);
+    return [...activeAttributes.slice(0, activeAttributeIndex), activeAttribute];
   }
 
   return [...activeAttributes, activeAttribute];

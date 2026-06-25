@@ -12,7 +12,8 @@ README.md
 LICENSE
 .vscode
 
-build/
+# Only root /build (dev artifacts), not app/build (webpack output for Dockerfile.prebuilt).
+/build
 #bin/
 .idea/
 vendor/

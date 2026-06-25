@@ -18,6 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { MultipleAutocomplete } from 'componentLibrary/autocompletes/multipleAutocomplete';
 import { isString } from 'common/utils';
+import { findDefinedOption } from '../utils';
 import { DynamicField } from '../dynamicField';
 
 export class ArrayField extends Component {
@@ -43,15 +44,14 @@ export class ArrayField extends Component {
     const { field, defaultOptionValueKey } = this.props;
     const values = [];
     tags?.forEach((item) => {
-      const foundedItems = field.definedValues.find(
-        (defValue) => defValue[defaultOptionValueKey] === item,
-      );
+      const foundedItems = findDefinedOption(item, field.definedValues, defaultOptionValueKey);
       foundedItems && values.push(foundedItems);
     });
     return this.formatOptions(values);
   };
 
-  parseValueToString = (option) => (isString(option) ? option.trim() : option?.value || '');
+  parseValueToString = (option) =>
+    isString(option) ? option.trim() : option?.label || option?.valueName || option?.value || '';
 
   parseTags = (options) => options?.map(this.parseValueToString).filter(Boolean) || undefined;
 

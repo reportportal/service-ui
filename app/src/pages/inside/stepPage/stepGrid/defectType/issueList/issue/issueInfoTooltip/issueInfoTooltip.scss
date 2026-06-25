@@ -19,6 +19,19 @@
   justify-content: center;
 }
 
+.issue-tooltip {
+  min-width: 280px;
+  max-width: 360px;
+}
+
+.row {
+  padding-bottom: 12px;
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+}
+
 .header {
   color: $COLOR--gray-47;
   font-family: $FONT-SEMIBOLD;

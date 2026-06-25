@@ -366,7 +366,7 @@ export class InstalledTab extends Component {
     this.changeSubPage({
       type: INSTALLED_PLUGINS_SUBPAGE,
       data: pageData,
-      title: pageData.details.name || pageData.name,
+      title: pageData.details?.name || pageData.name,
     });
 
   renderFilterMobileBlock = () => (

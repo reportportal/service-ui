@@ -29,7 +29,7 @@ import {
   removePluginAction,
   addIntegrationAction,
   removeProjectIntegrationsByTypeAction,
-  enabledPluginSelector,
+  pluginByNameSelector,
 } from 'controllers/plugins';
 import { showModalAction } from 'controllers/modal';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -113,10 +113,19 @@ const messages = defineMessages({
 });
 
 @connect(
-  (state, ownProps) => ({
-    userRoles: userRolesSelector(state),
-    isEnabled: enabledPluginSelector(state, ownProps.instanceType),
-  }),
+  (state, ownProps) => {
+    const fromList = pluginByNameSelector(state, ownProps.instanceType);
+    const isEnabled =
+      ownProps.integrationTypeEnabled === false
+        ? false
+        : fromList != null
+          ? fromList.enabled !== false
+          : ownProps.integrationTypeEnabled !== false;
+    return {
+      userRoles: userRolesSelector(state),
+      isEnabled,
+    };
+  },
   {
     showModalAction,
     removeProjectIntegrationsByTypeAction,
@@ -151,6 +160,7 @@ export class InstancesSection extends Component {
     title: PropTypes.string,
     pluginId: PropTypes.number,
     events: PropTypes.object,
+    integrationTypeEnabled: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -162,6 +172,7 @@ export class InstancesSection extends Component {
     pluginId: null,
     events: {},
     userRoles: {},
+    integrationTypeEnabled: true,
   };
 
   constructor(props) {

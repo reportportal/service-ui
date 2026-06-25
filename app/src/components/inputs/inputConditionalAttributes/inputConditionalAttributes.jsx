@@ -136,11 +136,12 @@ export class InputConditionalAttributes extends Component {
     return attributes.map((attr) => formatAttribute(attr)).join(',');
   };
 
-  onRemove = (attributes) => {
+  onAttributesChange = (attributes) => {
     this.setState({ attributes }, () =>
       this.props.onChange({
         attributes: this.state.attributes,
         value: this.formatAttributesToString(attributes),
+        condition: this.props.value.condition,
       }),
     );
   };
@@ -173,8 +174,10 @@ export class InputConditionalAttributes extends Component {
           <AttributeListField
             value={this.state.attributes}
             showButton={false}
-            editable={false}
-            onChange={this.onRemove}
+            editable={!disabled}
+            keyURLCreator={keyURLCreator}
+            valueURLCreator={valueURLCreator}
+            onChange={this.onAttributesChange}
           />
           {!hideEdit && (
             <AttributeEditor
