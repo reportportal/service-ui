@@ -23,6 +23,7 @@ import { getFoldersAction } from 'controllers/testCase/actionCreators';
 
 interface UseFolderOperationUIParams {
   fromDragDrop: boolean;
+  skipFolderRefresh?: boolean;
   successMessageId?: NotificationMessageKey;
   messageValues?: Record<string, string | number>;
 }
@@ -42,8 +43,13 @@ export const useFolderOperationUI = () => {
   );
 
   const handleOperationSuccess = useCallback(
-    ({ fromDragDrop, successMessageId, messageValues }: UseFolderOperationUIParams) => {
-      if (fromDragDrop) {
+    ({
+      fromDragDrop,
+      skipFolderRefresh,
+      successMessageId,
+      messageValues,
+    }: UseFolderOperationUIParams) => {
+      if (fromDragDrop && !skipFolderRefresh) {
         dispatch(getFoldersAction({ silent: true }));
         if (successMessageId) {
           showSuccessNotification({ messageId: successMessageId, values: messageValues });
