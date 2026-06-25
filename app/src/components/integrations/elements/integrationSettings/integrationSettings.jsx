@@ -19,8 +19,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { BubblesLoader } from '@reportportal/ui-kit';
-import { fetch } from 'common/utils';
-import { URLS } from 'common/urls';
 import { LDAP } from 'common/constants/pluginNames';
 import { omit } from 'common/utils/omit';
 import {
@@ -28,12 +26,14 @@ import {
   querySelector,
   PROJECT_SETTINGS_TAB_PAGE,
 } from 'controllers/pages';
-import { projectKeySelector } from 'controllers/project';
+import { projectInfoIdSelector, projectKeySelector } from 'controllers/project';
+import { activeOrganizationIdSelector } from 'controllers/organization';
 import {
   removeIntegrationAction,
   namedGlobalIntegrationsSelector,
   namedProjectIntegrationsSelector,
 } from 'controllers/plugins';
+import { getTestIntegrationConnection } from 'controllers/plugins/utils';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { redirect } from 'redux-first-router';
 import { INTEGRATION_FORM } from './integrationForm/constants';
@@ -45,12 +45,28 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 const cx = classNames.bind(styles);
 
 export const IntegrationSettings = (props) => {
+  const {
+    data,
+    onUpdate,
+    formFieldsComponent,
+    editAuthConfig,
+    isEmptyConfiguration,
+    formKey,
+    isGlobal,
+    goToPreviousPage,
+    isOrganizational = false,
+    preventTestConnection = false,
+  } = props;
+  const pluginName = data.integrationType?.name;
+
   const [connected, setConnected] = useState(true);
-  const [loading, setLoading] = useState(!props.data.isNew && !props.preventTestConnection);
+  const [loading, setLoading] = useState(!data.isNew && !preventTestConnection);
   const globalIntegrations = useSelector(namedGlobalIntegrationsSelector);
   const projectIntegrations = useSelector(namedProjectIntegrationsSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
+  const projectId = useSelector(projectInfoIdSelector);
   const projectKey = useSelector(projectKeySelector);
+  const organizationId = useSelector(activeOrganizationIdSelector);
   const { canUpdateSettings } = useUserPermissions();
   const query = useSelector(querySelector);
   const dispatch = useDispatch();
@@ -74,14 +90,17 @@ export const IntegrationSettings = (props) => {
   );
 
   const testIntegrationConnection = useCallback(() => {
-    if ('id' in props.data && !props.preventTestConnection) {
+    if ('id' in data && !preventTestConnection && pluginName) {
       setLoading(true);
-      const { isGlobal } = props;
-      const fetchConnection = isGlobal
-        ? fetch(URLS.testGlobalIntegrationConnection(props.data.id))
-        : fetch(URLS.testIntegrationConnection(projectKey, props.data.id));
 
-      fetchConnection
+      const fetchConnection = getTestIntegrationConnection({
+        pluginName,
+        isGlobal,
+        isOrganizational,
+        context: { projectId, projectKey, organizationId },
+      });
+
+      fetchConnection(data.id)
         .then(() => {
           setConnected(true);
           setLoading(false);
@@ -91,7 +110,16 @@ export const IntegrationSettings = (props) => {
           setConnected(false);
         });
     }
-  }, [props.data, projectKey, props.preventTestConnection]);
+  }, [
+    data,
+    preventTestConnection,
+    isGlobal,
+    isOrganizational,
+    pluginName,
+    projectKey,
+    projectId,
+    organizationId,
+  ]);
 
   useEffect(() => {
     const hasId = groupedIntegrations.some((value) => value.id === +query.id);
@@ -101,31 +129,15 @@ export const IntegrationSettings = (props) => {
   }, [query, groupedIntegrations, dispatch, namedSubPage]);
 
   useEffect(() => {
-    if (query.id || props.data) {
+    if (query.id || data) {
       testIntegrationConnection();
     }
-  }, [query.id, props.data, testIntegrationConnection]);
+  }, [query.id, data, testIntegrationConnection]);
 
   const removeIntegration = () => {
-    const {
-      data: { id },
-      isGlobal,
-      goToPreviousPage,
-    } = props;
-
-    dispatch(removeIntegrationAction(id, isGlobal, goToPreviousPage));
+    dispatch(removeIntegrationAction(data.id, isGlobal, goToPreviousPage));
   };
 
-  const {
-    data,
-    onUpdate,
-    formFieldsComponent,
-    editAuthConfig,
-    isEmptyConfiguration,
-    formKey,
-    isGlobal,
-  } = props;
-  const pluginName = data.integrationType?.name;
   const isLdap = pluginName === LDAP;
 
   return (
@@ -172,6 +184,7 @@ IntegrationSettings.propTypes = {
   preventTestConnection: PropTypes.bool,
   isEmptyConfiguration: PropTypes.bool,
   isGlobal: PropTypes.bool,
+  isOrganizational: PropTypes.bool,
   formKey: PropTypes.string,
 };
 IntegrationSettings.defaultProps = {
@@ -179,5 +192,6 @@ IntegrationSettings.defaultProps = {
   preventTestConnection: false,
   isEmptyConfiguration: false,
   isGlobal: false,
+  isOrganizational: false,
   formKey: INTEGRATION_FORM,
 };

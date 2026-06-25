@@ -133,13 +133,18 @@ export const IntegrationInfo = ({ plugin, integrationId = '' }: IntegrationInfoP
     : undefined;
 
   const testOrganizationIntegrationConnection = useMemo(
-    () => getTestIntegrationConnection({ isOrganizational: true, context: { organizationId } }),
-    [organizationId],
+    () =>
+      getTestIntegrationConnection({
+        pluginName,
+        isOrganizational: true,
+        context: { organizationId },
+      }),
+    [pluginName, organizationId],
   );
 
   const testGlobalIntegrationConnection = useMemo(
-    () => getTestIntegrationConnection({ isGlobal: true }),
-    [],
+    () => getTestIntegrationConnection({ pluginName, isGlobal: true }),
+    [pluginName],
   );
 
   useEffect(() => {
