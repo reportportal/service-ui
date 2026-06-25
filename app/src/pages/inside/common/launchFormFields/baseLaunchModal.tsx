@@ -102,6 +102,7 @@ export const BaseLaunchModal = ({
 
   return (
     <Modal
+      scrollable
       title={modalTitle}
       okButton={okButton}
       className={className}
