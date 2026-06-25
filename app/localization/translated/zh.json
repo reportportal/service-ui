@@ -1845,6 +1845,8 @@
   "MoveToDebugModal.moveToDebugSuccessMessage": "已将测试任务转移至调试组",
   "MultipleAuthBlock.chooseAuth": "请选择必须的认证提供方",
   "MultipleAuthBlock.externalLogin": "外部认证",
+  "MultipleAuthBlock.logInWithEmail": "使用 Email 登录",
+  "MultipleAuthBlock.selectSamlProvider": "请选择要登录的 SAML 提供商：",
   "MultipleAuthBlock.loginWith": "您可以使用“<b>{providerName}</b>”登录",
   "MultipleAuthBlock.wrongAuthType": "找不到身份验证类型“{authType}”",
   "NestedGridRow.loadCurrentStep": "加载当前步骤",

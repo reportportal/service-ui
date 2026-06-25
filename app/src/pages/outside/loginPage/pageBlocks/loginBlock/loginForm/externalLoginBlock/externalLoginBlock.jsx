@@ -37,7 +37,7 @@ const messages = defineMessages({
   },
 });
 
-export const ExternalLoginBlock = ({ externalAuth, inline }) => {
+export const ExternalLoginBlock = ({ externalAuth = {}, inline = false }) => {
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
   const [authInProgress, setAuthInProgress] = useState(false);
@@ -102,9 +102,4 @@ export const ExternalLoginBlock = ({ externalAuth, inline }) => {
 ExternalLoginBlock.propTypes = {
   externalAuth: PropTypes.object,
   inline: PropTypes.bool,
-};
-
-ExternalLoginBlock.defaultProps = {
-  externalAuth: {},
-  inline: false,
 };

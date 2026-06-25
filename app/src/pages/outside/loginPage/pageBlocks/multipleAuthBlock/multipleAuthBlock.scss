@@ -14,31 +14,42 @@
  * limitations under the License.
  */
 
-.actions-block {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 25px;
+.multiple-auth-block {
+  width: 100%;
+  max-width: 400px;
+  margin: 0;
+  font-family: var(--rp-ui-base-font-family-heading);
 
   @media (max-width: $SCREEN_XS_MAX) {
-    flex-direction: column-reverse;
-    align-items: center;
-    margin-bottom: 220px;
+    max-width: 280px;
   }
 }
 
-.actions-block-button {
-  display: inline-block;
-  width: 160px;
-  height: 40px;
+.provider-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
 
-  @media (max-width: $SCREEN_XS_MAX) {
-    &:first-child {
-      margin-top: 10px;
-    }
+.provider-button {
+  .provider-action-button {
+    width: 100%;
   }
+}
 
-  a {
-    color: inherit;
-    text-decoration: none;
+.log-in-with-email {
+  margin-top: 32px;
+}
+
+.log-in-with-email-link {
+  color: var(--rp-ui-base-topaz);
+  font-weight: var(--rp-ui-base-fw-medium);
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
   }
 }
