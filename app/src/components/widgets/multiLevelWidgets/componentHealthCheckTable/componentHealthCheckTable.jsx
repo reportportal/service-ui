@@ -267,17 +267,33 @@ export class ComponentHealthCheckTable extends Component {
   getPassingRateValue = () =>
     Number(this.props.widget.contentParameters?.widgetOptions.minPassingRate);
 
-  getCompositeAttributes = (value) => {
+  getActiveCompositeAttributes = (value) => {
     const { activeBreadcrumbId, activeAttributes } = this.state;
     const { widget } = this.props;
     const attributes = widget.contentParameters?.widgetOptions.attributeKeys;
-    const compositeAttributes = getNewActiveAttributes(
+
+    return getNewActiveAttributes(
       getBreadcrumbs(attributes, activeBreadcrumbId)[activeBreadcrumbId].key,
       value,
       activeAttributes,
     );
+  };
 
-    return compositeAttributes.map(formatAttribute).join(',');
+  getCompositeAttributes = (value) => {
+    const compositeAttributes = this.getActiveCompositeAttributes(value);
+
+    return (
+      compositeAttributes
+        .filter((attribute) => attribute.key !== LAUNCH_OWNER_LEVEL_KEY)
+        .map(formatAttribute)
+        .join(',') || undefined
+    );
+  };
+
+  getLaunchOwner = (value) => {
+    const compositeAttributes = this.getActiveCompositeAttributes(value);
+
+    return compositeAttributes.find((attribute) => attribute.key === LAUNCH_OWNER_LEVEL_KEY)?.value;
   };
 
   isClickableAttribute = () => {
@@ -300,6 +316,8 @@ export class ComponentHealthCheckTable extends Component {
       project,
       widget,
     } = this.props;
+    const attributes = widget.contentParameters?.widgetOptions.attributeKeys;
+    const hasLaunchOwner = attributes?.includes(LAUNCH_OWNER_LEVEL_KEY) ?? false;
     const customProps = {
       minPassingRate: this.getPassingRateValue(),
       formatMessage,
@@ -310,6 +328,8 @@ export class ComponentHealthCheckTable extends Component {
         testItemIds: TEST_ITEMS_TYPE_LIST,
       },
       getCompositeAttributes: this.getCompositeAttributes,
+      getLaunchOwner: this.getLaunchOwner,
+      launchOwnerFilter: hasLaunchOwner,
       onClickAttribute: this.onClickAttribute,
       isClickableAttribute: this.isClickableAttribute(),
       excludeSkipped: widget.contentParameters?.widgetOptions.excludeSkipped,

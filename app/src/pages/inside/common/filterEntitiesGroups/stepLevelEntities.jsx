@@ -43,6 +43,7 @@ import {
   EntityInputConditionalTags,
   EntityDropdown,
   EntityInputConditionalAttributes,
+  EntitySearch,
 } from 'components/filterEntities';
 import { bindDefaultValue } from 'components/filterEntities/utils';
 import {
@@ -66,6 +67,7 @@ import {
   ENTITY_RETRY,
   ENTITY_ATTRIBUTE,
   ENTITY_NEW_FAILURE,
+  ENTITY_LAUNCH_OWNER,
 } from 'components/filterEntities/constants';
 import { defectTypesSelector, patternsSelector } from 'controllers/project';
 import { launchIdSelector } from 'controllers/pages';
@@ -81,6 +83,7 @@ import { connectRouter } from 'common/utils';
 import { createNamespacedQuery } from 'common/utils/routingUtils';
 import { PROVIDER_TYPE_BASELINE } from 'controllers/testItem/constants';
 import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
+import { launchOwnerLevelMessages } from 'common/constants/launchOwnerLevel';
 
 const messages = defineMessages({
   NameTitle: {
@@ -654,6 +657,24 @@ export class StepLevelEntities extends Component {
         },
       },
       ...this.getPatternNameEntity(),
+      ...(query.launchOwnerFilter
+        ? [
+            {
+              id: ENTITY_LAUNCH_OWNER,
+              component: EntitySearch,
+              value: this.bindDefaultValue(ENTITY_LAUNCH_OWNER, {
+                condition: CONDITION_IN,
+              }),
+              title: intl.formatMessage(launchOwnerLevelMessages.ownerFilterTitle),
+              active: visibleFilters.includes(ENTITY_LAUNCH_OWNER),
+              removable: true,
+              customProps: {
+                getURI: URLS.launchOwnersSearch(projectId),
+                placeholder: intl.formatMessage(launchOwnerLevelMessages.ownerFilterPlaceholder),
+              },
+            },
+          ]
+        : []),
     ];
 
     if (query.baselineLaunchId) {

@@ -23,4 +23,12 @@ export const launchOwnerLevelMessages = defineMessages({
     id: 'AttributesFieldArrayControl.ownerLevelOption',
     defaultMessage: 'Owner',
   },
+  ownerFilterTitle: {
+    id: 'LaunchLevelEntities.OwnerTitle',
+    defaultMessage: 'Owner',
+  },
+  ownerFilterPlaceholder: {
+    id: 'LaunchLevelEntities.ownerName.placeholder',
+    defaultMessage: 'Enter owner name',
+  },
 });

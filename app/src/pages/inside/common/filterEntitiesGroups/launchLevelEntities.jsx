@@ -58,6 +58,7 @@ import { defectTypesSelector } from 'controllers/project';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
 import { NO_DEFECT } from 'common/constants/defectTypes';
+import { launchOwnerLevelMessages } from 'common/constants/launchOwnerLevel';
 
 const messages = defineMessages({
   NameTitle: {
@@ -75,10 +76,6 @@ const messages = defineMessages({
   StartTimeTitle: {
     id: 'LaunchLevelEntities.StartTimeTitle',
     defaultMessage: 'Start time',
-  },
-  OwnerTitle: {
-    id: 'LaunchLevelEntities.OwnerTitle',
-    defaultMessage: 'Owner',
   },
   Attribute: {
     id: 'LaunchLevelEntities.AttributeTitle',
@@ -155,10 +152,6 @@ const messages = defineMessages({
   LAUNCH_NAME_PLACEHOLDER: {
     id: 'LaunchLevelEntities.launchName.placeholder',
     defaultMessage: 'Enter name',
-  },
-  OWNER_NAME_PLACEHOLDER: {
-    id: 'LaunchLevelEntities.ownerName.placeholder',
-    defaultMessage: 'Enter owner name',
   },
   ExecutionTypeTitle: {
     id: 'LaunchLevelEntities.ExecutionTypeTitle',
@@ -271,12 +264,12 @@ export class LaunchLevelEntities extends Component {
         value: this.bindDefaultValue(ENTITY_USER, {
           condition: CONDITION_IN,
         }),
-        title: intl.formatMessage(messages.OwnerTitle),
+        title: intl.formatMessage(launchOwnerLevelMessages.ownerFilterTitle),
         active: visibleFilters.includes(ENTITY_USER),
         removable: true,
         customProps: {
           getURI: URLS.launchOwnersSearch(activeProject),
-          placeholder: intl.formatMessage(messages.OWNER_NAME_PLACEHOLDER),
+          placeholder: intl.formatMessage(launchOwnerLevelMessages.ownerFilterPlaceholder),
         },
       },
       {
