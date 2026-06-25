@@ -40,6 +40,7 @@ import {FieldErrorHint} from 'components/fields/fieldErrorHint';
 import {BigButton} from 'components/buttons/bigButton';
 import {LoadingSubmitButton} from 'components/loadingSubmitButton';
 import {FieldProvider} from 'components/fields/fieldProvider';
+import {ExternalLoginBlock} from './externalLoginBlock';
 import {DEFAULT_USER_CREDENTIALS} from './constants';
 import styles from './loginForm.scss';
 
@@ -78,7 +79,7 @@ const messages = defineMessages({
   },
 });
 
-const LoginFormComponent = ({ handleSubmit, initialize, form }) => {
+const LoginFormComponent = ({ handleSubmit, initialize, form, externalAuth }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
@@ -189,19 +190,29 @@ const LoginFormComponent = ({ handleSubmit, initialize, form }) => {
           >
             <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot your password?'} />
           </Link>
-          <div className={cx('login-button-container')}>
-            <BigButton
-              className={cx('login-button')}
-              roundedCorners
-              type="submit"
-              color={'base-topaz'}
-              disabled={isLoginLoading}
-              onClick={clickEventHandler}
-            >
-              <LoadingSubmitButton isLoading={isLoginLoading}>
-                {formatMessage(COMMON_LOCALE_KEYS.LOGIN)}
-              </LoadingSubmitButton>
-            </BigButton>
+          <div className={cx('login-actions-row')}>
+            <div className={cx('login-button-container')}>
+              <BigButton
+                className={cx('login-button')}
+                roundedCorners
+                type="submit"
+                color={'base-topaz'}
+                disabled={isLoginLoading}
+                onClick={clickEventHandler}
+              >
+                <LoadingSubmitButton isLoading={isLoginLoading}>
+                  {formatMessage(COMMON_LOCALE_KEYS.LOGIN)}
+                </LoadingSubmitButton>
+              </BigButton>
+            </div>
+            {externalAuth && (
+              <>
+                <div className={cx('or-separator')}>
+                  <FormattedMessage id={'LoginForm.or'} defaultMessage={'or'} />
+                </div>
+                <ExternalLoginBlock externalAuth={externalAuth} inline />
+              </>
+            )}
           </div>
         </>
       ) : (
@@ -228,6 +239,11 @@ LoginFormComponent.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   initialize: PropTypes.func.isRequired,
   form: PropTypes.string.isRequired,
+  externalAuth: PropTypes.object,
+};
+
+LoginFormComponent.defaultProps = {
+  externalAuth: null,
 };
 
 export const LoginForm = reduxForm({

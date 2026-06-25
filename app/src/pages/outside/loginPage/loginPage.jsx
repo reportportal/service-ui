@@ -31,6 +31,7 @@ import { LoginBlock } from './pageBlocks/loginBlock';
 import { ForgotPasswordBlock } from './pageBlocks/forgotPasswordBlock';
 import { ChangePasswordBlock } from './pageBlocks/changePasswordBlock';
 import { MultipleAuthBlock } from './pageBlocks/multipleAuthBlock';
+import { SelectSsoProviderBlock } from './pageBlocks/selectSsoProviderBlock';
 import { OutsideLoginFooter } from '../common/outsideLoginFooter';
 import { ReportPortalIcon } from './reportPortalIcon/ReportPortalIcon';
 const cx = classNames.bind(styles);
@@ -38,12 +39,13 @@ const cx = classNames.bind(styles);
 
 const shownErrors = new Set();
 
-const getCurrentBlock = ({ forgotPass, reset, multipleAuth, registration, extensions }) => {
+const getCurrentBlock = ({ forgotPass, reset, multipleAuth, selectSso, registration, extensions }) => {
   if (registration && extensions?.length) {
     return extensions.map((extension) => (
       <ExtensionLoader key={extension.name} extension={extension} withPreloader />
     ));
   }
+  if (selectSso) return <SelectSsoProviderBlock />;
   if (multipleAuth) return <MultipleAuthBlock multipleAuthKey={multipleAuth} />;
   if (reset) return <ChangePasswordBlock />;
   if (forgotPass) return <ForgotPasswordBlock />;
@@ -54,7 +56,7 @@ export const LoginPage = () => {
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
 
-  const { forgotPass, reset, errorAuth, multipleAuth, registration } =
+  const { forgotPass, reset, errorAuth, multipleAuth, selectSso, registration } =
     useSelector(pagePropertiesSelector) ?? {};
   const extensions = useSelector(uiExtensionLoginPageSelector);
 
@@ -75,7 +77,14 @@ export const LoginPage = () => {
     }
   }, [dispatch, errorAuth]);
 
-  const currentBlock = getCurrentBlock({ forgotPass, reset, multipleAuth, registration, extensions });
+  const currentBlock = getCurrentBlock({
+    forgotPass,
+    reset,
+    multipleAuth,
+    selectSso,
+    registration,
+    extensions,
+  });
 
   return (
     <div className={cx('login-page')}>
@@ -93,7 +102,7 @@ export const LoginPage = () => {
         </div>
         <LoginPageSection>
           {currentBlock}
-          {!registration && !forgotPass && !reset && <OutsideLoginFooter />}
+          {!registration && !forgotPass && !reset && !selectSso && <OutsideLoginFooter />}
         </LoginPageSection>
         </div>
         <LoginPageSection social>

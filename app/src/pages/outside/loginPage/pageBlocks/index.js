@@ -18,4 +18,5 @@ export { ServiceVersionsBlock } from './serviceVersionsBlock';
 export { ChangePasswordBlock } from './changePasswordBlock';
 export { ForgotPasswordBlock } from './forgotPasswordBlock';
 export { MultipleAuthBlock } from './multipleAuthBlock';
+export { SelectSsoProviderBlock } from './selectSsoProviderBlock';
 export { LoginBlock } from './loginBlock';

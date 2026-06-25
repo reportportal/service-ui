@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages } from 'react-intl';
 import { isEmptyObject } from 'common/utils';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { useSelector } from 'react-redux';
@@ -23,10 +23,9 @@ import { lastFailedLoginTimeSelector } from 'controllers/auth';
 import { getLoginLockoutState } from 'controllers/auth/loginLockout';
 import classNames from 'classnames/bind';
 import { uiExtensionLoginBlockSelector } from 'controllers/plugins/uiExtensions';
-import { ExternalLoginBlock } from './loginForm/externalLoginBlock';
 import styles from './loginBlock.scss';
 import { LoginForm } from './loginForm';
-import {PageSectionContainer} from "pages/outside/common/pageSectionContainer";
+import { PageSectionContainer } from 'pages/outside/common/pageSectionContainer';
 
 const cx = classNames.bind(styles);
 
@@ -55,18 +54,9 @@ export const LoginBlock = () => {
         hint={messages.login}
         leftAligned
       >
-        <LoginForm />
-        {!isLoginLimitExceeded && !isEmptyObject(externalAuth) ? (
-          <>
-            <div className={cx('separator')}>
-              <div className={cx('line')} />
-              <div className={cx('or')}>
-                <FormattedMessage id={'LoginForm.or'} defaultMessage={'or'} />
-              </div>
-            </div>
-            <ExternalLoginBlock externalAuth={externalAuth} />
-          </>
-        ) : null}
+        <LoginForm
+          externalAuth={!isLoginLimitExceeded && !isEmptyObject(externalAuth) ? externalAuth : null}
+        />
       </PageSectionContainer>
       <div className={cx('bottom-content')}>
         {extensions &&

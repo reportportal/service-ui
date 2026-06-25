@@ -57,7 +57,7 @@ export const NewsBlock = ({ tweets, onExpandedChange }) => {
             : { paddingTop: 0 }
         }
       >
-        {(isExpanded ? [...stackedTweets].reverse() : stackedTweets).map(
+        {stackedTweets.map(
           (tweet, index) => {
             const stackLayer = isStacked ? visibleTweets.length - 1 - index : null;
             const isStackFront = stackLayer === 0;
