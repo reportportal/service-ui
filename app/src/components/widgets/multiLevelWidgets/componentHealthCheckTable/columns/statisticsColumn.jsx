@@ -32,7 +32,14 @@ const cx = classNames.bind(styles);
 export const StatisticsColumn = (
   { className, value },
   name,
-  { isLatest, getCompositeAttributes, linkPayload, excludeSkipped },
+  {
+    isLatest,
+    getCompositeAttributes,
+    getLaunchOwner,
+    launchOwnerFilter,
+    linkPayload,
+    excludeSkipped,
+  },
 ) => {
   const itemValue = Number(value.statistics?.[name]);
   const totalValue = Number(value.total?.statistics?.[name]);
@@ -46,6 +53,8 @@ export const StatisticsColumn = (
       isLatest,
       launchesLimit: DEFAULT_LAUNCHES_LIMIT,
       compositeAttribute: getCompositeAttributes(value.attributeValue),
+      launchOwner: getLaunchOwner(value.attributeValue),
+      launchOwnerFilter,
     },
     ownLinkParams: {
       type: TEST_ITEM_PAGE,

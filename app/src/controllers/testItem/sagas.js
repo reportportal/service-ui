@@ -209,6 +209,8 @@ function* fetchTestItems({ payload = {} }) {
         ...{ ...query, ...payloadParams },
       };
 
+  delete params.launchOwnerFilter;
+
   if (!query.providerType) {
     const [providerType, id] = isTestItemsList
       ? [PROVIDER_TYPE_FILTER, filterId]
