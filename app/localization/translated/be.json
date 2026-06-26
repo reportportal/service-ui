@@ -1845,6 +1845,8 @@
   "MoveToDebugModal.moveToDebugSuccessMessage": "Запуск паспяхова перамешчаны ў Адладку",
   "MultipleAuthBlock.chooseAuth": "Калі ласка, выберыце неабходнага пастаўшчыка аўтарызацыі",
   "MultipleAuthBlock.externalLogin": "Знешняя аўтарызацыя",
+  "MultipleAuthBlock.logInWithEmail": "Увайсці праз Email",
+  "MultipleAuthBlock.selectSamlProvider": "Выберыце SAML-пастаўшчыка для ўваходу:",
   "MultipleAuthBlock.loginWith": "вы можаце ўвайсці, выкарыстоўваючы тып аўтарызацыі '<b>{providerName}</b>'",
   "MultipleAuthBlock.wrongAuthType": "Немагчыма знайсці тып аўтарызацыі ''{authType}''",
   "NestedGridRow.loadCurrentStep": "Загрузіць бягучы крок",

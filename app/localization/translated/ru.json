@@ -1846,6 +1846,8 @@
   "MoveToDebugModal.moveToDebugSuccessMessage": "Запуск успешно перемещён в Отладку",
   "MultipleAuthBlock.chooseAuth": "Пожалуйста, выберите нужного поставщика авторизации",
   "MultipleAuthBlock.externalLogin": "Внешняя авторизация",
+  "MultipleAuthBlock.logInWithEmail": "Войти через Email",
+  "MultipleAuthBlock.selectSamlProvider": "Выберите SAML-провайдера для входа:",
   "MultipleAuthBlock.loginWith": "вы можете войти, используя тип авторизации '<b>{providerName}</b>'",
   "MultipleAuthBlock.wrongAuthType": "Невозможно найти тип авторизации ''{authType}''",
   "NestedGridRow.loadCurrentStep": "Загрузить текущий шаг",

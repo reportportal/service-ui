@@ -18,33 +18,31 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
 import { connect } from 'react-redux';
-import DOMPurify from 'dompurify';
-import { injectIntl, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import Link from 'redux-first-router-link';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { Button } from '@reportportal/ui-kit';
 import { authExtensionsSelector } from 'controllers/appInfo';
 import { LOGIN_PAGE } from 'controllers/pages';
-import { InputDropdown } from 'components/inputs/inputDropdown';
-import { BigButton } from 'components/buttons/bigButton';
 import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
-import { PageBlockContainer } from 'pages/outside/common/pageBlockContainer';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { PageSectionContainer } from 'pages/outside/common/pageSectionContainer';
 import { normalizePathWithPrefix, setWindowLocationToNewPath } from 'pages/outside/common/utils';
 import styles from './multipleAuthBlock.scss';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  externalLogin: {
-    id: 'MultipleAuthBlock.externalLogin',
-    defaultMessage: 'External auth',
+  welcome: {
+    id: 'LoginBlock.welcome',
+    defaultMessage: 'Welcome',
   },
-  chooseAuth: {
-    id: 'MultipleAuthBlock.chooseAuth',
-    defaultMessage: 'please choose the necessary auth provider',
+  selectSamlProvider: {
+    id: 'MultipleAuthBlock.selectSamlProvider',
+    defaultMessage: 'Select SAML provider you want to log in:',
   },
-  loginWith: {
-    id: 'MultipleAuthBlock.loginWith',
-    defaultMessage: "you can login with ''<b>{providerName}</b>'' provider",
+  logInWithEmail: {
+    id: 'MultipleAuthBlock.logInWithEmail',
+    defaultMessage: 'Log in with Email',
   },
   wrongAuthType: {
     id: 'MultipleAuthBlock.wrongAuthType',
@@ -101,81 +99,57 @@ export class MultipleAuthBlock extends Component {
     selectedAuthPath: null,
     multipleAuthKey: null,
     authOptions: [],
+    authInProgress: false,
   };
 
-  authPathChangeHandler = (selectedAuthPath) =>
-    this.setState({
-      selectedAuthPath,
-    });
-
-  externalAuthClickHandler = () => {
-    const { multipleAuthKey } = this.props;
-    const { tracking } = this.props;
+  getProviderClickHandler = (selectedAuthPath) => () => {
+    const { multipleAuthKey, tracking } = this.props;
     tracking.trackEvent(LOGIN_PAGE_EVENTS.clickOnLoginButton(multipleAuthKey));
 
-    setWindowLocationToNewPath(normalizePathWithPrefix(this.state.selectedAuthPath));
+    this.setState({ authInProgress: true });
+    setWindowLocationToNewPath(normalizePathWithPrefix(selectedAuthPath));
   };
 
-  renderProviders = (isSingleAuth) => {
-    const { selectedAuthPath, authOptions } = this.state;
+  render() {
+    const { authOptions, authInProgress } = this.state;
     const {
       intl: { formatMessage },
       multipleAuthKey,
     } = this.props;
 
-    if (selectedAuthPath) {
-      return (
-        !isSingleAuth && (
-          <InputDropdown
-            options={authOptions}
-            value={selectedAuthPath}
-            onChange={this.authPathChangeHandler}
-          />
-        )
-      );
-    }
-
-    return formatMessage(messages.wrongAuthType, {
-      b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
-      authType: multipleAuthKey,
-    });
-  };
-
-  render() {
-    const { selectedAuthPath, authOptions } = this.state;
-    const {
-      intl: { formatMessage },
-    } = this.props;
-    const isSingleAuth = authOptions.length === 1;
-
     return (
-      <PageBlockContainer
-        header={messages.externalLogin}
-        hint={isSingleAuth ? messages.loginWith : messages.chooseAuth}
-        hintParams={{ providerName: authOptions[0] ? authOptions[0].label : '' }}
-      >
-        {this.renderProviders(isSingleAuth)}
-        <div className={cx('actions-block')}>
-          <div className={cx('actions-block-button')}>
-            <Link to={{ type: LOGIN_PAGE }}>
-              <BigButton type={'button'} roundedCorners color={'gray-60'}>
-                {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
-              </BigButton>
-            </Link>
-          </div>
-          <div className={cx('actions-block-button')}>
-            <BigButton
-              type={'button'}
-              roundedCorners
-              color="booger"
-              onClick={this.externalAuthClickHandler}
-              disabled={!selectedAuthPath}
-            >
-              {formatMessage(COMMON_LOCALE_KEYS.LOGIN)}
-            </BigButton>
-          </div>
+      <PageSectionContainer header={messages.welcome} hint={messages.selectSamlProvider} leftAligned>
+        <div className={cx('multiple-auth-block')}>
+          {authInProgress ? (
+            <SpinningPreloader />
+          ) : (
+            <>
+              {authOptions.length ? (
+                <div className={cx('provider-buttons')}>
+                  {authOptions.map((option) => (
+                    <div className={cx('provider-button')} key={option.label}>
+                      <Button
+                        variant="ghost"
+                        className={cx('provider-action-button')}
+                        onClick={this.getProviderClickHandler(option.value)}
+                      >
+                        {option.label}
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                formatMessage(messages.wrongAuthType, { authType: multipleAuthKey })
+              )}
+              <div className={cx('log-in-with-email')}>
+                <Link to={{ type: LOGIN_PAGE }} className={cx('log-in-with-email-link')}>
+                  <FormattedMessage {...messages.logInWithEmail} />
+                </Link>
+              </div>
+            </>
+          )}
         </div>
-      </PageBlockContainer>
+      </PageSectionContainer>
     );
   }
 }

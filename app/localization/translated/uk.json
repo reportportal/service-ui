@@ -1846,6 +1846,8 @@
   "MoveToDebugModal.moveToDebugSuccessMessage": "Запуск успішно перенесено в Налагодження",
   "MultipleAuthBlock.chooseAuth": "Будь ласка, виберіть потрібного постачальника авторизації",
   "MultipleAuthBlock.externalLogin": "Зовнішня авторизація",
+  "MultipleAuthBlock.logInWithEmail": "Увійти через Email",
+  "MultipleAuthBlock.selectSamlProvider": "Виберіть SAML-провайдера для входу:",
   "MultipleAuthBlock.loginWith": "ви можете увійти, використовуючи тип авторизації '<b>{providerName}</b>'",
   "MultipleAuthBlock.wrongAuthType": "Невозможно найти тип авторизации ''{authType}''",
   "NestedGridRow.loadCurrentStep": "Завантажити поточний крок",

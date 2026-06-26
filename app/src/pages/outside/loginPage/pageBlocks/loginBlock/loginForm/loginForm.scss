@@ -76,28 +76,6 @@
   text-transform: uppercase;
 }
 
-.login-button-container {
-  width: 120px;
-  height: 36px;
-  margin: 0;
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    margin-bottom: 0;
-  }
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    margin-bottom: 34px;
-  }
-}
-
-.login-button {
-  font-size: 13px;
-  line-height: 20px;
-  font-weight: var(--rp-ui-base-fw-medium);
-  font-family: var(--rp-ui-base-font-family);
-  justify-items: center;
-}
-
 .attempts-exceeded-block {
   display: flex;
   flex-direction: column;
