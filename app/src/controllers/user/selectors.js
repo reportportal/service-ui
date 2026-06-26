@@ -54,8 +54,9 @@ export const userAccountRoleSelector = (state) => userInfoSelector(state).userRo
 export const isAdminSelector = (state) => userInfoSelector(state).userRole === ADMINISTRATOR;
 
 export const availableProjectsSelector = createSelector(
-  userInfoSelector,
-  ({ assignedProjects, assignedOrganizations }) => {
+  assignedProjectsSelector,
+  assignedOrganizationsSelector,
+  (assignedProjects, assignedOrganizations) => {
     const assignedProjectMap = Object.keys(assignedProjects).map(
       (assignedProject) => assignedProjects[assignedProject],
     );
