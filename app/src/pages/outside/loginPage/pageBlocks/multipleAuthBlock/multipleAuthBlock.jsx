@@ -38,7 +38,7 @@ const messages = defineMessages({
   },
   selectSamlProvider: {
     id: 'MultipleAuthBlock.selectSamlProvider',
-    defaultMessage: 'Select SAML provider you want to login:',
+    defaultMessage: 'Select SAML provider you want to log in:',
   },
   logInWithEmail: {
     id: 'MultipleAuthBlock.logInWithEmail',
