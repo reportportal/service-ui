@@ -20,7 +20,7 @@ import track from 'react-tracking';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import Link from 'redux-first-router-link';
-import { Button } from '@reportportal/ui-kit';
+import { Button, useEllipsisTitle } from '@reportportal/ui-kit';
 import { authExtensionsSelector } from 'controllers/appInfo';
 import { LOGIN_PAGE } from 'controllers/pages';
 import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
@@ -49,6 +49,24 @@ const messages = defineMessages({
     defaultMessage: "Couldn't find ''{authType}'' auth type",
   },
 });
+
+const ProviderButton = ({ label, onClick }) => {
+  const { ref, title } = useEllipsisTitle(label);
+
+  return (
+    <div className={cx('provider-button')}>
+      <Button variant="ghost" className={cx('provider-action-button')} onClick={onClick}>
+        <span ref={ref} title={title} className={cx('provider-name')}>
+          {label}
+        </span>
+      </Button>
+    </div>
+  );
+};
+ProviderButton.propTypes = {
+  label: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
+};
 
 @connect((state) => ({
   externalAuthExtensions: authExtensionsSelector(state),
@@ -127,17 +145,11 @@ export class MultipleAuthBlock extends Component {
               {authOptions.length ? (
                 <div className={cx('provider-buttons')}>
                   {authOptions.map((option) => (
-                    <div className={cx('provider-button')} key={option.label}>
-                      <Button
-                        variant="ghost"
-                        className={cx('provider-action-button')}
-                        onClick={this.getProviderClickHandler(option.value)}
-                      >
-                        <span className={cx('provider-name')} title={option.label}>
-                          {option.label}
-                        </span>
-                      </Button>
-                    </div>
+                    <ProviderButton
+                      key={option.label}
+                      label={option.label}
+                      onClick={this.getProviderClickHandler(option.value)}
+                    />
                   ))}
                 </div>
               ) : (

@@ -15,13 +15,14 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { redirect } from 'redux-first-router';
-import { Button } from '@reportportal/ui-kit';
+import { Button, useEllipsisTitle } from '@reportportal/ui-kit';
 import { authExtensionsSelector } from 'controllers/appInfo';
 import { LOGIN_PAGE } from 'controllers/pages';
 import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
@@ -47,6 +48,24 @@ const messages = defineMessages({
     defaultMessage: 'Log in with Email',
   },
 });
+
+const ProviderButton = ({ label, onClick }) => {
+  const { ref, title } = useEllipsisTitle(label);
+
+  return (
+    <div className={cx('provider-button')}>
+      <Button variant="ghost" className={cx('provider-action-button')} onClick={onClick}>
+        <span ref={ref} title={title} className={cx('provider-name')}>
+          {label}
+        </span>
+      </Button>
+    </div>
+  );
+};
+ProviderButton.propTypes = {
+  label: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
+};
 
 export const SelectSsoProviderBlock = () => {
   const externalAuth = useSelector(authExtensionsSelector);
@@ -95,17 +114,11 @@ export const SelectSsoProviderBlock = () => {
             <>
               <div className={cx('provider-buttons')}>
                 {authTypes.map((authType) => (
-                  <div className={cx('provider-button')} key={authType}>
-                    <Button
-                      variant="ghost"
-                      className={cx('provider-action-button')}
-                      onClick={handleProviderClick(authType, externalAuth[authType])}
-                    >
-                      <span className={cx('provider-name')} title={authType.toUpperCase()}>
-                        {authType.toUpperCase()}
-                      </span>
-                    </Button>
-                  </div>
+                  <ProviderButton
+                    key={authType}
+                    label={authType.toUpperCase()}
+                    onClick={handleProviderClick(authType, externalAuth[authType])}
+                  />
                 ))}
               </div>
               <div className={cx('log-in-with-email')}>
