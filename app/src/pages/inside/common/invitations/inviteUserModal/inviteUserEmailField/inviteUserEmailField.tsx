@@ -14,86 +14,32 @@
  * limitations under the License.
  */
 
-import { useCallback, useRef } from 'react';
+import { useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { change } from 'redux-form';
 import { FieldText } from '@reportportal/ui-kit';
 
-import { createClassnames, fetch } from 'common/utils';
-import { email as isValidEmail } from 'common/utils/validation/validate';
+import { createClassnames } from 'common/utils';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { messages } from 'common/constants/localization/invitationsLocalization';
-import { URLS } from 'common/urls';
 
 import styles from './inviteUserEmailField.scss';
 
 const cx = createClassnames(styles);
 
-interface UserSearchItem {
-  id?: number;
-  email?: string;
-}
-
-interface UserSearchResponse {
-  items?: UserSearchItem[];
-}
-
 interface InviteUserEmailFieldProps {
   formName: string;
-  onUserSelect?: (userId: number | null) => void;
 }
 
-export const InviteUserEmailField = ({ formName, onUserSelect }: InviteUserEmailFieldProps) => {
+export const InviteUserEmailField = ({ formName }: InviteUserEmailFieldProps) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const emailValueRef = useRef<string>('');
-  const lookupIdRef = useRef(0);
 
   const handleClear = useCallback(() => {
     dispatch(change(formName, 'email', ''));
-    emailValueRef.current = '';
-    lookupIdRef.current += 1;
-    onUserSelect?.(null);
-  }, [dispatch, formName, onUserSelect]);
-
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    emailValueRef.current = e.target.value ?? '';
-  }, []);
-
-  const handleBlur = useCallback(
-    () => {
-      const email = emailValueRef.current.trim();
-      const lookupId = (lookupIdRef.current += 1);
-
-      if (!email || isValidEmail(email) !== true) {
-        onUserSelect?.(null);
-        return;
-      }
-
-      fetch(URLS.searchAllUsers(), {
-        method: 'post',
-        data: {
-          limit: 1,
-          search_criteria: [{ filter_key: 'email', operation: 'EQ', value: email }],
-        },
-      })
-        .then((response: UserSearchResponse) => {
-          if (lookupId !== lookupIdRef.current || emailValueRef.current.trim() !== email) {
-            return;
-          }
-          const user = response.items?.[0];
-          onUserSelect?.(user?.id ?? null);
-        })
-        .catch(() => {
-          if (lookupId === lookupIdRef.current && emailValueRef.current.trim() === email) {
-            onUserSelect?.(null);
-          }
-        });
-    },
-    [onUserSelect],
-  );
+  }, [dispatch, formName]);
 
   return (
     <FieldElement name="email" className={cx('email')}>
@@ -106,8 +52,6 @@ export const InviteUserEmailField = ({ formName, onUserSelect }: InviteUserEmail
           type="email"
           clearable
           onClear={handleClear}
-          onChange={handleChange}
-          onBlur={handleBlur}
         />
       </FieldErrorHint>
     </FieldElement>

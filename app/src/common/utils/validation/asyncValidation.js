@@ -16,6 +16,7 @@
 
 import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
+import { email as isValidEmail } from 'common/utils/validation/validate';
 
 export const projectNameUnique = (projectName) =>
   fetch(URLS.searchProjectNames(), { params: { term: projectName } }).then((names) => {
@@ -38,3 +39,30 @@ export const filterNameUnique = (projectKey, filterId, filterName) =>
       };
     }
   });
+
+export const organizationUserEmailUnique = async (organizationId, email) => {
+  const normalizedEmail = email?.trim() ?? '';
+
+  if (!normalizedEmail || isValidEmail(normalizedEmail) !== true) {
+    return;
+  }
+
+  let response;
+  try {
+    response = await fetch(
+      URLS.organizationUsers(organizationId, {
+        email: normalizedEmail,
+      }),
+    );
+  } catch {
+    // Skip uniqueness check when the validation request fails (e.g. 504), so the form can still be submitted
+    return;
+  }
+
+  const isDuplicate = (response?.items ?? []).length > 0;
+
+  if (isDuplicate) {
+    // eslint-disable-next-line no-throw-literal
+    throw { email: 'duplicationOrganization' };
+  }
+};
