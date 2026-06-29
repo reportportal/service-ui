@@ -32,9 +32,19 @@
 }
 
 .provider-button {
+  min-width: 0;
+
   .provider-action-button {
     width: 100%;
   }
+}
+
+.provider-name {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .log-in-with-email {

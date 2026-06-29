@@ -133,7 +133,9 @@ export class MultipleAuthBlock extends Component {
                         className={cx('provider-action-button')}
                         onClick={this.getProviderClickHandler(option.value)}
                       >
-                        {option.label}
+                        <span className={cx('provider-name')} title={option.label}>
+                          {option.label}
+                        </span>
                       </Button>
                     </div>
                   ))}

@@ -101,7 +101,9 @@ export const SelectSsoProviderBlock = () => {
                       className={cx('provider-action-button')}
                       onClick={handleProviderClick(authType, externalAuth[authType])}
                     >
-                      {authType.toUpperCase()}
+                      <span className={cx('provider-name')} title={authType.toUpperCase()}>
+                        {authType.toUpperCase()}
+                      </span>
                     </Button>
                   </div>
                 ))}
