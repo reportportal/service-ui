@@ -27,6 +27,7 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { PageSectionContainer } from 'pages/outside/common/pageSectionContainer';
 import { normalizePathWithPrefix, setWindowLocationToNewPath } from 'pages/outside/common/utils';
 import { ProviderButton } from '../providerButton';
+import { ProviderButtonsGrid } from '../providerButtonsGrid';
 import styles from './multipleAuthBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -125,7 +126,7 @@ export class MultipleAuthBlock extends Component {
           ) : (
             <>
               {authOptions.length ? (
-                <div className={cx('provider-buttons')}>
+                <ProviderButtonsGrid>
                   {authOptions.map((option) => (
                     <ProviderButton
                       key={option.label}
@@ -133,7 +134,7 @@ export class MultipleAuthBlock extends Component {
                       onClick={this.getProviderClickHandler(option.value)}
                     />
                   ))}
-                </div>
+                </ProviderButtonsGrid>
               ) : (
                 formatMessage(messages.wrongAuthType, { authType: multipleAuthKey })
               )}
