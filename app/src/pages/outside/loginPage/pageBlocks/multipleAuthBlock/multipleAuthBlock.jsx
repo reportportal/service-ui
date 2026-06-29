@@ -20,13 +20,13 @@ import track from 'react-tracking';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import Link from 'redux-first-router-link';
-import { Button, useEllipsisTitle } from '@reportportal/ui-kit';
 import { authExtensionsSelector } from 'controllers/appInfo';
 import { LOGIN_PAGE } from 'controllers/pages';
 import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { PageSectionContainer } from 'pages/outside/common/pageSectionContainer';
 import { normalizePathWithPrefix, setWindowLocationToNewPath } from 'pages/outside/common/utils';
+import { ProviderButton } from '../providerButton';
 import styles from './multipleAuthBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -49,24 +49,6 @@ const messages = defineMessages({
     defaultMessage: "Couldn't find ''{authType}'' auth type",
   },
 });
-
-const ProviderButton = ({ label, onClick }) => {
-  const { ref, title } = useEllipsisTitle(label);
-
-  return (
-    <div className={cx('provider-button')}>
-      <Button variant="ghost" className={cx('provider-action-button')} onClick={onClick}>
-        <span ref={ref} title={title} className={cx('provider-name')}>
-          {label}
-        </span>
-      </Button>
-    </div>
-  );
-};
-ProviderButton.propTypes = {
-  label: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
-};
 
 @connect((state) => ({
   externalAuthExtensions: authExtensionsSelector(state),

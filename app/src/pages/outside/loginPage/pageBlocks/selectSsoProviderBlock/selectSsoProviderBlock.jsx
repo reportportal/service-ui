@@ -15,14 +15,12 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { redirect } from 'redux-first-router';
-import { Button, useEllipsisTitle } from '@reportportal/ui-kit';
 import { authExtensionsSelector } from 'controllers/appInfo';
 import { LOGIN_PAGE } from 'controllers/pages';
 import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
@@ -30,6 +28,7 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { PageSectionContainer } from 'pages/outside/common/pageSectionContainer';
 import { OutsideLoginFooter } from 'pages/outside/common/outsideLoginFooter';
 import { normalizePathWithPrefix, setWindowLocationToNewPath } from 'pages/outside/common/utils';
+import { ProviderButton } from '../providerButton';
 import styles from './selectSsoProviderBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -48,24 +47,6 @@ const messages = defineMessages({
     defaultMessage: 'Log in with Email',
   },
 });
-
-const ProviderButton = ({ label, onClick }) => {
-  const { ref, title } = useEllipsisTitle(label);
-
-  return (
-    <div className={cx('provider-button')}>
-      <Button variant="ghost" className={cx('provider-action-button')} onClick={onClick}>
-        <span ref={ref} title={title} className={cx('provider-name')}>
-          {label}
-        </span>
-      </Button>
-    </div>
-  );
-};
-ProviderButton.propTypes = {
-  label: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
-};
 
 export const SelectSsoProviderBlock = () => {
   const externalAuth = useSelector(authExtensionsSelector);

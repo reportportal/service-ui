@@ -14,36 +14,18 @@
  * limitations under the License.
  */
 
-.select-sso-provider-block {
-  width: 100%;
-  max-width: 400px;
-  margin: 0;
-  font-family: var(--rp-ui-base-font-family-heading);
+.provider-button {
+  min-width: 0;
 
-  @media (max-width: $SCREEN_XS_MAX) {
-    max-width: 280px;
+  .provider-action-button {
+    width: 100%;
   }
 }
 
-.provider-buttons {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.log-in-with-email {
-  margin-top: 32px;
-}
-
-.log-in-with-email-link {
-  color: var(--rp-ui-base-topaz);
-  font-weight: var(--rp-ui-base-fw-medium);
-  font-size: 13px;
-  line-height: 20px;
-  letter-spacing: 0;
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
+.provider-name {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
