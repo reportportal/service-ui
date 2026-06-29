@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useMemo } from 'react';
+import { type ReactNode, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 
@@ -28,9 +28,10 @@ import { activeOrganizationNameSelector } from 'controllers/organization';
 import { projectNameSelector } from 'controllers/project';
 import { ProjectDetails } from 'pages/organization/constants';
 import { messages } from 'pages/organization/messages';
+import { PreservedText } from 'components/preservedText';
 
 interface BreadcrumbTreeNode {
-  title: string;
+  title: string | ReactNode;
   link: object;
   children?: BreadcrumbTreeNode[];
 }
@@ -52,7 +53,7 @@ export const useBreadCrumbsTree = (): BreadcrumbTreeNode[] => {
 
     if (organizationSlug) {
       const organizationCrumb: BreadcrumbTreeNode = {
-        title: organizationName,
+        title: <PreservedText>{organizationName}</PreservedText>,
         link: { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug } },
         children: [],
       };

@@ -32,6 +32,7 @@ import { ssoUsersOnlySelector } from 'controllers/appInfo';
 import { activeOrganizationNameSelector } from 'controllers/organization';
 import { urlOrganizationSlugSelector, urlProjectSlugSelector } from 'controllers/pages';
 import { LocationHeaderLayout } from 'layouts/locationHeaderLayout';
+import { PreservedText } from 'components/preservedText';
 import { messages } from '../../messages';
 import styles from './projectTeamPageHeader.scss';
 
@@ -64,7 +65,7 @@ export const ProjectTeamPageHeader = ({
   };
 
   const organizationCrumb = {
-    title: organizationName,
+    title: <PreservedText>{organizationName}</PreservedText>,
     link: { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug } },
     children: []
   };
