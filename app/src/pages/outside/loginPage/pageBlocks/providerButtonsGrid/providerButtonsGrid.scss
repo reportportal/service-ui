@@ -18,14 +18,4 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px 8px;
-  max-height: 280px;
-  overflow-y: auto;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    max-height: 220px;
-  }
-
-  &.with-scroll {
-    width: calc(100% + var(--scrollbar-width, 0px));
-  }
 }

@@ -14,48 +14,20 @@
  * limitations under the License.
  */
 
-import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import styles from './providerButtonsGrid.scss';
 
 const cx = classNames.bind(styles);
 
-export const ProviderButtonsGrid = ({ children }) => {
-  const gridRef = useRef(null);
-  const [hasScroll, setHasScroll] = useState(false);
-  const [scrollbarWidth, setScrollbarWidth] = useState(0);
+const MAX_HEIGHT = 280;
 
-  useEffect(() => {
-    const grid = gridRef.current;
-    if (!grid) {
-      return undefined;
-    }
-
-    const updateHasScroll = () => {
-      const isScrollable = grid.scrollHeight > grid.clientHeight;
-      setHasScroll(isScrollable);
-      setScrollbarWidth(isScrollable ? grid.offsetWidth - grid.clientWidth : 0);
-    };
-
-    updateHasScroll();
-
-    const observer = new ResizeObserver(updateHasScroll);
-    observer.observe(grid);
-
-    return () => observer.disconnect();
-  }, [children]);
-
-  return (
-    <div
-      ref={gridRef}
-      className={cx('provider-buttons', { 'with-scroll': hasScroll })}
-      style={hasScroll ? { '--scrollbar-width': `${scrollbarWidth}px` } : undefined}
-    >
-      {children}
-    </div>
-  );
-};
+export const ProviderButtonsGrid = ({ children }) => (
+  <ScrollWrapper autoHeight autoHeightMax={MAX_HEIGHT} hideTracksWhenNotNeeded>
+    <div className={cx('provider-buttons')}>{children}</div>
+  </ScrollWrapper>
+);
 ProviderButtonsGrid.propTypes = {
   children: PropTypes.node,
 };
