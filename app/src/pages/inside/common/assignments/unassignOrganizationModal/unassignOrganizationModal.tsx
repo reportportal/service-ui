@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import type { ReactNode } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { Modal } from '@reportportal/ui-kit';
@@ -26,11 +27,18 @@ import { idSelector, UserInfo } from 'controllers/user';
 import { messages } from 'common/constants/localization/assignmentsLocalization';
 import { unassignFromOrganizationAction } from 'controllers/organization/users';
 import { Organization } from 'controllers/organization';
+import { PreservedText } from 'components/preservedText';
 import { useHandleUnassignSuccess } from '../hooks';
 
 import styles from './unassignOrganizationModal.scss';
 
 const cx = createClassnames(styles);
+
+const BoldOrganizationName = (chunks: ReactNode) => (
+  <PreservedText wrap>
+    <b>{chunks}</b>
+  </PreservedText>
+);
 
 interface UnassignOrganizationModalProps {
   user: UserInfo;
@@ -80,7 +88,7 @@ export const UnassignOrganizationModal = ({
         {formatMessage(descriptionMessage, {
           name: user.fullName,
           organization: organization.name,
-          b: (innerData) => <b>{innerData}</b>,
+          b: BoldOrganizationName,
         })}
       </div>
     </Modal>

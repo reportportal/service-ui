@@ -35,6 +35,7 @@ import {
   ENTITY_PROJECT_NAME,
   ENTITY_SUBJECT_TYPE,
 } from 'components/filterEntities/constants';
+import { PreservedText } from 'components/preservedText';
 
 import styles from './eventsGrid.scss';
 
@@ -131,7 +132,9 @@ const ObjectTypeColumn = ({
 );
 
 const ObjectNameColumn = ({ className, value = {} }: BaseColumnComponentProps) => (
-  <div className={cx('object-name-col', className)}>{value.object_name}</div>
+  <div className={cx('object-name-col', className)}>
+    <PreservedText wrap>{value.object_name}</PreservedText>
+  </div>
 );
 
 const ValueColumn = ({
@@ -143,7 +146,9 @@ const ValueColumn = ({
     {value?.details?.history.map((item) => (
       <React.Fragment key={`${item.field}__${item.oldValue}__${item.newValue}`}>
         <div>{item.field}:</div>
-        <div className={cx('value')}>{item[valueType]}</div>
+        <div className={cx('value')}>
+          <PreservedText wrap>{item[valueType]}</PreservedText>
+        </div>
       </React.Fragment>
     ))}
   </div>

@@ -27,6 +27,7 @@ import { activeOrganizationSelector } from 'controllers/organization';
 import { InviteUserButton } from 'pages/inside/common/invitations';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { LocationHeaderLayout } from 'layouts/locationHeaderLayout';
+import { PreservedText } from 'components/preservedText';
 import { messages } from '../../messages';
 import styles from './organizationUsersPageHeader.scss';
 
@@ -58,7 +59,7 @@ export const OrganizationUsersPageHeader = ({
 
   if (organizationSlug) {
     breadcrumbs.push({
-      title: organizationName,
+      title: <PreservedText>{organizationName}</PreservedText>,
       link: { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug } },
     });
   }

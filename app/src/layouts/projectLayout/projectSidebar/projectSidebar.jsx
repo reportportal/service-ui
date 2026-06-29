@@ -58,6 +58,7 @@ import { projectNameSelector } from 'controllers/project';
 import { activeOrganizationNameSelector } from 'controllers/organization';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
 import { getTmsOverride } from 'controllers/appInfo/utils';
+import { PreservedText } from 'components/preservedText';
 import { messages } from '../../messages';
 
 const ORGANIZATION_CONTROL = 'Organization control';
@@ -267,7 +268,11 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
   };
   const titles = {
     shortTitle: `${projectName[0]}${projectName[projectName.length - 1]}`,
-    topTitle: `${formatMessage(messages.organization)}: ${organizationName}`,
+    topTitle: (
+      <PreservedText>
+        {formatMessage(messages.organization)}: {organizationName}
+      </PreservedText>
+    ),
     bottomTitle: projectName,
     level: 'project',
   };

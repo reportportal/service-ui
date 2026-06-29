@@ -37,6 +37,7 @@ import {
   activeOrganizationSelector,
 } from 'controllers/organization';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
+import { PreservedText } from 'components/preservedText';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
 import { messages } from '../../messages';
 import { useUserPermissions } from 'hooks/useUserPermissions';
@@ -116,7 +117,7 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
   const titles = {
     shortTitle: `${organizationName?.[0]}${organizationName?.[organizationName.length - 1]}`,
     topTitle: formatMessage(messages.allOrganizations),
-    bottomTitle: organizationName,
+    bottomTitle: <PreservedText>{organizationName}</PreservedText>,
     level: 'organization',
   };
 
