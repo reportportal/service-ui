@@ -28,6 +28,7 @@ import {
   urlOrganizationSlugSelector,
 } from 'controllers/pages';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
+import { PreservedText } from 'components/preservedText';
 import { EventsEntities } from '../eventsEntities';
 import styles from './eventsToolbar.scss';
 
@@ -59,7 +60,7 @@ export const EventsToolbar = () => {
       link: { type: ORGANIZATIONS_PAGE },
     },
     {
-      title: organizationName,
+      title: <PreservedText>{organizationName}</PreservedText>,
       link: { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug } },
     },
     {

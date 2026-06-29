@@ -32,6 +32,7 @@ import { commonValidators } from 'common/utils/validation';
 import { ModalButtonProps } from 'types/common';
 import { messages } from 'pages/instance/organizationsPage/messages';
 import { deleteOrganizationAction } from 'controllers/instance/organizations/actionCreators';
+import { PreservedText } from 'components/preservedText';
 
 import styles from './deleteOrganizationModal.scss';
 
@@ -92,7 +93,11 @@ const DeleteOrganizationModal = ({
         <p>
           {formatMessage(messages.confirmDeleteOrganizationMessage, {
             name: organization.name,
-            b: (data) => <b>{data}</b>,
+            b: (data) => (
+              <PreservedText>
+                <b>{data}</b>
+              </PreservedText>
+            ),
           })}
         </p>
         <FieldProvider name={ORGANIZATION_NAME_FIELD}>

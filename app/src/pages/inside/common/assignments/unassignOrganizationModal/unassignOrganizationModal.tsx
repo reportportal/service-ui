@@ -26,6 +26,7 @@ import { idSelector, UserInfo } from 'controllers/user';
 import { messages } from 'common/constants/localization/assignmentsLocalization';
 import { unassignFromOrganizationAction } from 'controllers/organization/users';
 import { Organization } from 'controllers/organization';
+import { PreservedText } from 'components/preservedText';
 import { useHandleUnassignSuccess } from '../hooks';
 
 import styles from './unassignOrganizationModal.scss';
@@ -80,7 +81,11 @@ export const UnassignOrganizationModal = ({
         {formatMessage(descriptionMessage, {
           name: user.fullName,
           organization: organization.name,
-          b: (innerData) => <b>{innerData}</b>,
+          b: (innerData) => (
+            <PreservedText>
+              <b>{innerData}</b>
+            </PreservedText>
+          ),
         })}
       </div>
     </Modal>
