@@ -16,14 +16,14 @@
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { reduxForm, getFormValues } from 'redux-form';
+import { reduxForm, getFormValues, SubmissionError } from 'redux-form';
 import { isString } from 'es-toolkit';
 import DOMPurify from 'dompurify';
 import { Modal } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
-import { commonValidators } from 'common/utils/validation';
+import { commonValidators, validateAsync } from 'common/utils/validation';
 import { showSuccessNotification } from 'controllers/notification';
 import { hideModalAction, showModalAction } from 'controllers/modal';
 import { ModalButtonProps } from 'types/common';
@@ -88,6 +88,31 @@ function validateOrganization(
   return errors;
 }
 
+const asyncValidateOrganizationEmail = ({
+  email,
+  organization,
+}: FormDataMap[Level.ORGANIZATION]) => {
+  if (!organization?.id) {
+    return Promise.resolve();
+  }
+
+  return validateAsync.organizationUserEmailUnique(organization.id, email);
+};
+
+const shouldAsyncValidateOrganizationEmail = ({
+  trigger,
+  syncValidationPasses,
+}: {
+  trigger: string;
+  syncValidationPasses: boolean;
+}) => {
+  if (!syncValidationPasses) {
+    return false;
+  }
+
+  return trigger !== 'submit';
+};
+
 type InviteUserFormInnerProps = InviteUserProps<Level> & { content: ReactNode };
 
 const InviteUserFormInner = (props: InviteUserFormInnerProps) => (
@@ -112,6 +137,9 @@ const InviteUserFormOrganization = reduxForm<FormDataMap[Level.ORGANIZATION]>({
   validate: validateOrganization as Parameters<
     typeof reduxForm<FormDataMap[Level.ORGANIZATION]>
   >[0]['validate'],
+  asyncValidate: asyncValidateOrganizationEmail,
+  asyncBlurFields: ['email'],
+  shouldAsyncValidate: shouldAsyncValidateOrganizationEmail,
   enableReinitialize: true,
 })(InviteUserFormInner as ComponentType<FormInnerProps<FormDataMap[Level.ORGANIZATION]>>);
 
@@ -130,6 +158,7 @@ export const InviteUser = <L extends keyof FormDataMap>({
   handleSubmit,
   dirty,
   invalid,
+  submitting,
   projectId,
   projectName,
 }: InviteUserProps<L>) => {
@@ -163,7 +192,7 @@ export const InviteUser = <L extends keyof FormDataMap>({
     }
   };
 
-  const inviteUserAndCloseModal = async (formData: FormDataMap[L]) => {
+  const completeInvite = async (formData: FormDataMap[L]) => {
     const userData = buildUserData(formData) as InvitationRequestData;
     const getCondition = (): InviteProjectCondition => {
       if (level === Level.PROJECT) return 'without_project';
@@ -202,10 +231,27 @@ export const InviteUser = <L extends keyof FormDataMap>({
     }
   };
 
+  const inviteUserAndCloseModal = async (formData: FormDataMap[L]) => {
+    if (level === Level.ORGANIZATION) {
+      const orgFormData = formData as FormDataMap[Level.ORGANIZATION];
+      const { id: organizationId } = orgFormData.organization ?? {};
+
+      if (organizationId != null) {
+        try {
+          await validateAsync.organizationUserEmailUnique(organizationId, orgFormData.email);
+        } catch (error: unknown) {
+          throw new SubmissionError(error);
+        }
+      }
+    }
+
+    return completeInvite(formData);
+  };
+
   const okButton: ModalButtonProps = {
     children: okButtonTitle,
     onClick: handleSubmit(inviteUserAndCloseModal) as () => void,
-    disabled: !dirty || invalid,
+    disabled: !dirty || invalid || submitting,
     'data-automation-id': 'submitButton',
   };
 
