@@ -30,6 +30,7 @@ import { SEARCH_KEY, NAMESPACE } from 'controllers/organization/projects/constan
 import { withFilter } from 'controllers/filter';
 import { createFilterEntitiesURLContainer } from 'components/filterEntities/containers';
 import { PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectsPageEvents';
+import { PreservedText } from 'components/preservedText';
 import { ProjectsFilter } from './projectsFilter';
 import projectsIcon from './img/projects-inline.svg';
 import userIcon from './img/user-inline.svg';
@@ -69,7 +70,7 @@ export const ProjectsPageHeader = ({
 
   if (organizationName) {
     breadcrumbs.push({
-      title: organizationName,
+      title: <PreservedText>{organizationName}</PreservedText>,
     });
   }
 
@@ -80,7 +81,7 @@ export const ProjectsPageHeader = ({
       </div>
       <div className={cx('header')}>
         <div className={cx('main-content')}>
-          <span className={cx('title')}>{organizationName}</span>
+          <PreservedText className={cx('title')}>{organizationName}</PreservedText>
           {isNotEmpty && hasPermission && (
             <div className={cx('details')}>
               <div className={cx('details-item')}>

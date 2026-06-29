@@ -24,6 +24,7 @@ import { NavLink } from 'components/main/navLink';
 import { ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages/constants';
 import { useTracking } from 'react-tracking';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
+import { PreservedText } from 'components/preservedText';
 import ArrowDownIcon from './img/arrow-down-inline.svg';
 import ArrowRightIcon from './img/arrow-right-inline.svg';
 import OpenIcon from './img/open-inline.svg';
@@ -124,7 +125,9 @@ export const OrganizationsItem = ({
         onBlur={onBlurCollapseButton}
       >
         {Parser(ArrowIcon)}
-        <div className={cx('organization-name', { active: isActive })}>{organizationName}</div>
+        <div className={cx('organization-name', { active: isActive })}>
+          <PreservedText>{organizationName}</PreservedText>
+        </div>
       </button>
       <NavLink
         to={{

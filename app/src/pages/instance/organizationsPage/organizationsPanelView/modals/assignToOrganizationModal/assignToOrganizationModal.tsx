@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import type { ReactNode } from 'react';
 import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
@@ -26,12 +27,19 @@ import { ModalButtonProps } from 'types/common';
 import { Organization } from 'controllers/organization';
 import { assignToOrganizationAction } from 'controllers/organization/users';
 import { fetchUserInfoAction } from 'controllers/user';
+import { PreservedText } from 'components/preservedText';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 import { messages } from 'pages/instance/organizationsPage/messages';
 
 import styles from './assignToOrganizationModal.scss';
 
 const cx = createClassnames(styles);
+
+const BoldOrganizationName = (chunks: ReactNode) => (
+  <PreservedText wrap>
+    <b>{chunks}</b>
+  </PreservedText>
+);
 
 interface AssignToOrganizationModalProps {
   organization: Organization;
@@ -76,7 +84,7 @@ export const AssignToOrganizationModal = ({
       <div className={cx('modal-content')}>
         {formatMessage(messages.assignToOrganizationModalDescription, {
           organizationName: organization.name,
-          b: (data) => <b>{data}</b>,
+          b: BoldOrganizationName,
         })}
       </div>
     </Modal>
