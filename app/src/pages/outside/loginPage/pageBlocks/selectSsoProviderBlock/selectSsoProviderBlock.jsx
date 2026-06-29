@@ -21,7 +21,6 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { redirect } from 'redux-first-router';
-import { Button } from '@reportportal/ui-kit';
 import { authExtensionsSelector } from 'controllers/appInfo';
 import { LOGIN_PAGE } from 'controllers/pages';
 import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
@@ -29,6 +28,7 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { PageSectionContainer } from 'pages/outside/common/pageSectionContainer';
 import { OutsideLoginFooter } from 'pages/outside/common/outsideLoginFooter';
 import { normalizePathWithPrefix, setWindowLocationToNewPath } from 'pages/outside/common/utils';
+import { ProviderButton } from '../providerButton';
 import styles from './selectSsoProviderBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -95,15 +95,11 @@ export const SelectSsoProviderBlock = () => {
             <>
               <div className={cx('provider-buttons')}>
                 {authTypes.map((authType) => (
-                  <div className={cx('provider-button')} key={authType}>
-                    <Button
-                      variant="ghost"
-                      className={cx('provider-action-button')}
-                      onClick={handleProviderClick(authType, externalAuth[authType])}
-                    >
-                      {authType.toUpperCase()}
-                    </Button>
-                  </div>
+                  <ProviderButton
+                    key={authType}
+                    label={authType.toUpperCase()}
+                    onClick={handleProviderClick(authType, externalAuth[authType])}
+                  />
                 ))}
               </div>
               <div className={cx('log-in-with-email')}>

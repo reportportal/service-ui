@@ -20,13 +20,13 @@ import track from 'react-tracking';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import Link from 'redux-first-router-link';
-import { Button } from '@reportportal/ui-kit';
 import { authExtensionsSelector } from 'controllers/appInfo';
 import { LOGIN_PAGE } from 'controllers/pages';
 import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { PageSectionContainer } from 'pages/outside/common/pageSectionContainer';
 import { normalizePathWithPrefix, setWindowLocationToNewPath } from 'pages/outside/common/utils';
+import { ProviderButton } from '../providerButton';
 import styles from './multipleAuthBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -127,15 +127,11 @@ export class MultipleAuthBlock extends Component {
               {authOptions.length ? (
                 <div className={cx('provider-buttons')}>
                   {authOptions.map((option) => (
-                    <div className={cx('provider-button')} key={option.label}>
-                      <Button
-                        variant="ghost"
-                        className={cx('provider-action-button')}
-                        onClick={this.getProviderClickHandler(option.value)}
-                      >
-                        {option.label}
-                      </Button>
-                    </div>
+                    <ProviderButton
+                      key={option.label}
+                      label={option.label}
+                      onClick={this.getProviderClickHandler(option.value)}
+                    />
                   ))}
                 </div>
               ) : (
