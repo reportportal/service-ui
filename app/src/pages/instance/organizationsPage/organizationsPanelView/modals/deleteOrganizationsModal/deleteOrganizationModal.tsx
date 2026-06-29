@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import type { ReactNode } from 'react';
 import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
@@ -37,6 +38,12 @@ import { PreservedText } from 'components/preservedText';
 import styles from './deleteOrganizationModal.scss';
 
 const cx = createClassnames(styles);
+
+const BoldOrganizationName = (chunks: ReactNode) => (
+  <PreservedText wrap>
+    <b>{chunks}</b>
+  </PreservedText>
+);
 
 const ORGANIZATION_NAME_FIELD = 'organizationName';
 const DELETE_ORGANIZATION_FORM = 'deleteOrganizationForm';
@@ -93,11 +100,7 @@ const DeleteOrganizationModal = ({
         <p>
           {formatMessage(messages.confirmDeleteOrganizationMessage, {
             name: organization.name,
-            b: (data) => (
-              <PreservedText>
-                <b>{data}</b>
-              </PreservedText>
-            ),
+            b: BoldOrganizationName,
           })}
         </p>
         <FieldProvider name={ORGANIZATION_NAME_FIELD}>

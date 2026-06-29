@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import type { ReactNode } from 'react';
 import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
@@ -33,6 +34,12 @@ import { messages } from 'pages/instance/organizationsPage/messages';
 import styles from './assignToOrganizationModal.scss';
 
 const cx = createClassnames(styles);
+
+const BoldOrganizationName = (chunks: ReactNode) => (
+  <PreservedText wrap>
+    <b>{chunks}</b>
+  </PreservedText>
+);
 
 interface AssignToOrganizationModalProps {
   organization: Organization;
@@ -77,11 +84,7 @@ export const AssignToOrganizationModal = ({
       <div className={cx('modal-content')}>
         {formatMessage(messages.assignToOrganizationModalDescription, {
           organizationName: organization.name,
-          b: (data) => (
-            <PreservedText>
-              <b>{data}</b>
-            </PreservedText>
-          ),
+          b: BoldOrganizationName,
         })}
       </div>
     </Modal>
