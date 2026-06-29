@@ -24,6 +24,7 @@ const cx = classNames.bind(styles);
 export const ProviderButtonsGrid = ({ children }) => {
   const gridRef = useRef(null);
   const [hasScroll, setHasScroll] = useState(false);
+  const [scrollbarWidth, setScrollbarWidth] = useState(0);
 
   useEffect(() => {
     const grid = gridRef.current;
@@ -31,7 +32,11 @@ export const ProviderButtonsGrid = ({ children }) => {
       return undefined;
     }
 
-    const updateHasScroll = () => setHasScroll(grid.scrollHeight > grid.clientHeight);
+    const updateHasScroll = () => {
+      const isScrollable = grid.scrollHeight > grid.clientHeight;
+      setHasScroll(isScrollable);
+      setScrollbarWidth(isScrollable ? grid.offsetWidth - grid.clientWidth : 0);
+    };
 
     updateHasScroll();
 
@@ -42,7 +47,11 @@ export const ProviderButtonsGrid = ({ children }) => {
   }, [children]);
 
   return (
-    <div ref={gridRef} className={cx('provider-buttons', { 'with-scroll': hasScroll })}>
+    <div
+      ref={gridRef}
+      className={cx('provider-buttons', { 'with-scroll': hasScroll })}
+      style={hasScroll ? { '--scrollbar-width': `${scrollbarWidth}px` } : undefined}
+    >
       {children}
     </div>
   );

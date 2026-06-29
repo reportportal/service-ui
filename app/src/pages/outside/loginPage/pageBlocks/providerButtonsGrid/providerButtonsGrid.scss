@@ -26,6 +26,6 @@
   }
 
   &.with-scroll {
-    width: calc(100% + 9px);
+    width: calc(100% + var(--scrollbar-width, 0px));
   }
 }
