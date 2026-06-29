@@ -141,9 +141,10 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
     return tickets.map(
       (ticket) =>
         ({
+          ...ticket,
           key: String(ticket.ticketId),
           name: ticket.ticketId,
-          ...ticket,
+          link: ticket.url,
         }) as Issue,
     );
   };

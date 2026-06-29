@@ -44,7 +44,7 @@ const convertBTSTicketsToIssues = (tickets: BtsTicket[]): Issue[] =>
         ...ticket,
         key: String(ticket.ticketId),
         name: String(ticket.ticketId),
-        url: ticket.url,
+        link: ticket.url,
       }) as Issue,
   );
 
