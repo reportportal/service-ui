@@ -96,7 +96,10 @@ const asyncValidateOrganizationEmail = ({
     return Promise.resolve();
   }
 
-  return validateAsync.organizationUserEmailUnique(organization.id, email);
+  return validateAsync.organizationUserEmailUnique(
+    organization.id,
+    extractEmailString(email).trim(),
+  );
 };
 
 const shouldAsyncValidateOrganizationEmail = ({
@@ -238,7 +241,10 @@ export const InviteUser = <L extends keyof FormDataMap>({
 
       if (organizationId != null) {
         try {
-          await validateAsync.organizationUserEmailUnique(organizationId, orgFormData.email);
+          await validateAsync.organizationUserEmailUnique(
+            organizationId,
+            extractEmailString(orgFormData.email).trim(),
+          );
         } catch (error: unknown) {
           throw new SubmissionError(error);
         }
