@@ -21,6 +21,7 @@ import {
   NOTIFICATION_GROUP_TYPE,
 } from 'common/constants/pluginsGroupTypes';
 import { EMAIL, ORGANIZATION } from 'common/constants/pluginNames';
+import { APP_LEVEL, pageLevelSelector } from 'controllers/pages';
 import {
   filterAvailablePlugins,
   sortItemsByGroupType,
@@ -137,10 +138,30 @@ export const availableIntegrationsByPluginNameSelector = (state, pluginName) => 
   if (!selectedPlugin) {
     return [];
   }
-  let availableIntegrations = namedProjectIntegrationsSelector(state)[pluginName] || [];
-  if (!availableIntegrations.length) {
-    availableIntegrations = namedGlobalIntegrationsSelector(state)[pluginName] || [];
+
+  const pageLevel = pageLevelSelector(state);
+  const projectIntegrations = namedProjectIntegrationsSelector(state)[pluginName] || [];
+  const organizationIntegrations = namedOrganizationIntegrationsSelector(state)[pluginName] || [];
+  const globalIntegrations = namedGlobalIntegrationsSelector(state)[pluginName] || [];
+
+  let availableIntegrations = globalIntegrations;
+
+  if (pageLevel === APP_LEVEL.ORGANIZATION) {
+    availableIntegrations = organizationIntegrations.length
+      ? organizationIntegrations
+      : globalIntegrations;
   }
+
+  if (pageLevel === APP_LEVEL.PROJECT) {
+    if (projectIntegrations.length) {
+      availableIntegrations = projectIntegrations;
+    } else if (organizationIntegrations.length) {
+      availableIntegrations = organizationIntegrations;
+    } else {
+      availableIntegrations = globalIntegrations;
+    }
+  }
+
   return availableIntegrations.filter((item) => item.enabled);
 };
 
