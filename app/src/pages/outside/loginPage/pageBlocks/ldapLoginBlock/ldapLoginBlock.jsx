@@ -25,7 +25,7 @@ import { LOGIN_PAGE } from 'controllers/pages';
 import { PageSectionContainer } from 'pages/outside/common/pageSectionContainer';
 import { OutsideLoginFooter } from 'pages/outside/common/outsideLoginFooter';
 import { isLdapAuthType } from 'pages/outside/common/utils';
-import { LdapLoginForm } from './ldapLoginForm/ldapLoginForm';
+import { LdapLoginForm } from '../loginBlock/loginForm/loginForm';
 
 const messages = defineMessages({
   welcome: {
