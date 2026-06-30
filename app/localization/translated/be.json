@@ -1517,6 +1517,7 @@
   "LdapFormFields.urlLabel": "Спасылка",
   "LdapFormFields.userDnPatternLabel": "Карыстальнік DN шаблон",
   "LdapFormFields.userSearchFilterLabel": "Фільтр пошуку карыстальніка",
+  "LdapLoginBlock.hint": "Увядзіце email і пароль LDAP для ўваходу праз LDAP",
   "LinkIssueModal.addIssueButtonTitle": "Дадаць новую памылку",
   "LinkIssueModal.issueIdHint": "ID памылкі павінен быць памерам ад 1 да 128",
   "LinkIssueModal.issueIdLabel": "Id памылкі",

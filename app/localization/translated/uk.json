@@ -1518,6 +1518,7 @@
   "LdapFormFields.urlLabel": "Посилання",
   "LdapFormFields.userDnPatternLabel": "Шаблон користувача ДУ",
   "LdapFormFields.userSearchFilterLabel": "Фільтр пошуку користувача",
+  "LdapLoginBlock.hint": "Введіть email і пароль LDAP для входу через LDAP",
   "LinkIssueModal.addIssueButtonTitle": "Додати нову помилку",
   "LinkIssueModal.issueIdHint": "Код помилки повинно бути довжиною від 1 до 128",
   "LinkIssueModal.issueIdLabel": "Код помилки",

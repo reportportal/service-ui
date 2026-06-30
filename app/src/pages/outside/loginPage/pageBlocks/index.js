@@ -19,4 +19,5 @@ export { ChangePasswordBlock } from './changePasswordBlock';
 export { ForgotPasswordBlock } from './forgotPasswordBlock';
 export { MultipleAuthBlock } from './multipleAuthBlock';
 export { SelectSsoProviderBlock } from './selectSsoProviderBlock';
+export { LdapLoginBlock } from './ldapLoginBlock';
 export { LoginBlock } from './loginBlock';

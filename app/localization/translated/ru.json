@@ -1518,6 +1518,7 @@
   "LdapFormFields.urlLabel": "Ссылка",
   "LdapFormFields.userDnPatternLabel": "Шаблон DN пользователя",
   "LdapFormFields.userSearchFilterLabel": "Фильтр поиска пользователя",
+  "LdapLoginBlock.hint": "Введите email и пароль LDAP для входа через LDAP",
   "LinkIssueModal.addIssueButtonTitle": "Добавить новую ошибку",
   "LinkIssueModal.issueIdHint": "ID ошибки должно быть длиной от 1 до 128",
   "LinkIssueModal.issueIdLabel": "ID ошибки",

@@ -25,7 +25,11 @@ import { Button } from '@reportportal/ui-kit';
 import { LOGIN_PAGE } from 'controllers/pages';
 import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { normalizePathWithPrefix, setWindowLocationToNewPath } from 'pages/outside/common/utils';
+import {
+  isLdapAuthType,
+  normalizePathWithPrefix,
+  setWindowLocationToNewPath,
+} from 'pages/outside/common/utils';
 import styles from './externalLoginBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -45,6 +49,11 @@ export const ExternalLoginBlock = ({ externalAuth = {}, inline = false }) => {
   const startAuthFlow = useCallback(
     (val, authType) => {
       if (!val) {
+        return;
+      }
+
+      if (isLdapAuthType(authType)) {
+        dispatch(redirect({ type: LOGIN_PAGE, payload: { query: { ldapLogin: 'true' } } }));
         return;
       }
 
