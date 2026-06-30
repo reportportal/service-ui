@@ -48,16 +48,19 @@ interface ExternalUserInvitationModalProps {
   email: string;
   link: string;
   header?: string;
+  isOrgEmailIntegrationAvailable?: boolean;
 }
 
 export const ExternalUserInvitationModal = ({
   email,
   link,
   header,
+  isOrgEmailIntegrationAvailable = false,
 }: ExternalUserInvitationModalProps) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const isEmailIntegrationAvailable = useSelector(isEmailIntegrationAvailableSelector);
+  const isEmailIntegrationAvailableFromStore = useSelector(isEmailIntegrationAvailableSelector);
+  const isEmailIntegrationAvailable = isEmailIntegrationAvailableFromStore || isOrgEmailIntegrationAvailable;
   const modalTitle = header || formatMessage(messages.header);
   const fullLink = getFullInvitationLink(link);
   const invitationMessageText = formatMessage(messages.invitationMessage, {
