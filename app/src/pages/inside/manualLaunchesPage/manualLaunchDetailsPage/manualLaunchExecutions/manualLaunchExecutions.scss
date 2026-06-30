@@ -130,6 +130,10 @@ $sidebar-width: calc(100vw - 408px);
   gap: 8px;
   min-width: 0;
   max-width: 100%;
+
+  &.execution-cell-button {
+    padding: 0px 16px;
+  }
 }
 
 .first-row {
@@ -191,6 +195,12 @@ $sidebar-width: calc(100vw - 408px);
     height: 80px;
     min-height: 72px;
     cursor: pointer;
+    padding: 0;
+
+    :global([class*='table-cell']) {
+      height: 76px;
+      padding: 0;
+    }
   }
 
   &:hover :global([class*='table-row-content']) {
@@ -218,15 +228,22 @@ $sidebar-width: calc(100vw - 408px);
   line-height: 20px;
   letter-spacing: 0;
   color: var(--rp-ui-base-almost-black);
+
+  &.execution-cell-button {
+    padding: 0px 16px;
+  }
 }
 
 .execution-cell-button {
   all: unset;
   cursor: pointer;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   width: 100%;
   min-width: 0;
   max-width: 100%;
+  height: 76px;
 }
 
 .execution-status-cell {
@@ -238,7 +255,9 @@ $sidebar-width: calc(100vw - 408px);
 .execution-actions-cell {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  width: 100%;
+  height: 100%;
+  justify-content: flex-start;
 
   :global([class*='_popover_']) {
     min-height: unset;
