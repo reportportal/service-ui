@@ -139,6 +139,9 @@ export const availableIntegrationsByPluginNameSelector = (state, pluginName) => 
   }
   let availableIntegrations = namedProjectIntegrationsSelector(state)[pluginName] || [];
   if (!availableIntegrations.length) {
+    availableIntegrations = namedOrganizationIntegrationsSelector(state)[pluginName] || [];
+  }
+  if (!availableIntegrations.length) {
     availableIntegrations = namedGlobalIntegrationsSelector(state)[pluginName] || [];
   }
   return availableIntegrations.filter((item) => item.enabled);
