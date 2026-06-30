@@ -31,6 +31,3 @@ export const ProviderButtonsGrid = ({ children }) => (
 ProviderButtonsGrid.propTypes = {
   children: PropTypes.node,
 };
-ProviderButtonsGrid.defaultProps = {
-  children: null,
-};
