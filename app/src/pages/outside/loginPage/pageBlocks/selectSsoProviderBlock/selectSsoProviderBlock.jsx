@@ -29,6 +29,7 @@ import { PageSectionContainer } from 'pages/outside/common/pageSectionContainer'
 import { OutsideLoginFooter } from 'pages/outside/common/outsideLoginFooter';
 import { normalizePathWithPrefix, setWindowLocationToNewPath } from 'pages/outside/common/utils';
 import { ProviderButton } from '../providerButton';
+import { ProviderButtonsGrid } from '../providerButtonsGrid';
 import styles from './selectSsoProviderBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -93,7 +94,7 @@ export const SelectSsoProviderBlock = () => {
             <SpinningPreloader />
           ) : (
             <>
-              <div className={cx('provider-buttons')}>
+              <ProviderButtonsGrid>
                 {authTypes.map((authType) => (
                   <ProviderButton
                     key={authType}
@@ -101,7 +102,7 @@ export const SelectSsoProviderBlock = () => {
                     onClick={handleProviderClick(authType, externalAuth[authType])}
                   />
                 ))}
-              </div>
+              </ProviderButtonsGrid>
               <div className={cx('log-in-with-email')}>
                 <Link to={{ type: LOGIN_PAGE }} className={cx('log-in-with-email-link')}>
                   <FormattedMessage {...messages.logInWithEmail} />

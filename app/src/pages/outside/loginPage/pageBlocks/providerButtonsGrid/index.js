@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,18 +14,4 @@
  * limitations under the License.
  */
 
-.provider-button {
-  min-width: 0;
-  max-width: 192px;
-  .provider-action-button {
-    width: 100%;
-  }
-}
-
-.provider-name {
-  display: block;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+export { ProviderButtonsGrid } from './providerButtonsGrid';

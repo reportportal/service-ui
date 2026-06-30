@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-.provider-button {
-  min-width: 0;
-  max-width: 192px;
-  .provider-action-button {
-    width: 100%;
-  }
-}
+import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
+import styles from './providerButtonsGrid.scss';
 
-.provider-name {
-  display: block;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+const cx = classNames.bind(styles);
+
+const MAX_HEIGHT = 280;
+
+export const ProviderButtonsGrid = ({ children }) => (
+  <ScrollWrapper autoHeight autoHeightMax={MAX_HEIGHT} hideTracksWhenNotNeeded>
+    <div className={cx('provider-buttons')}>{children}</div>
+  </ScrollWrapper>
+);
+ProviderButtonsGrid.propTypes = {
+  children: PropTypes.node,
+};

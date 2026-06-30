@@ -70,8 +70,10 @@
 }
 
 .or-separator {
-  font-size: 13px;
-  line-height: 20px;
+  font-size: 11px;
+  font-weight: var(--rp-ui-base-fw-bold);
+  font-family: var(--rp-ui-base-font-family);
+  line-height: 16px;
   color: var(--rp-ui-base-e-400);
   text-transform: uppercase;
 }
