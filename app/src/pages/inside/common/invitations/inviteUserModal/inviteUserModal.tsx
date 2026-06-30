@@ -21,11 +21,14 @@ import { isString } from 'es-toolkit';
 import DOMPurify from 'dompurify';
 import { Modal } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { EMAIL } from 'common/constants/pluginNames';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { commonValidators, validateAsync } from 'common/utils/validation';
 import { showSuccessNotification } from 'controllers/notification';
 import { hideModalAction, showModalAction } from 'controllers/modal';
+import { Integration } from 'controllers/plugins';
+import { normalizeIntegrationItem } from 'controllers/plugins/utils';
 import { ModalButtonProps } from 'types/common';
 import { ApiError } from 'types/api';
 import { BoundValidator } from 'common/utils/validation/types';
@@ -213,6 +216,15 @@ export const InviteUser = <L extends keyof FormDataMap>({
     }
 
     if (invitedUser?.status === InvitationStatus.PENDING) {
+      let isOrgEmailIntegrationAvailable = false;
+      if (level === Level.INSTANCE && userData.organizations?.length === 1) {
+        const { items = [] } = await fetch<{ items: Integration[] }>(
+          URLS.organizationIntegrations(userData.organizations[0].id),
+        ).catch(() => ({ items: [] }));
+        isOrgEmailIntegrationAvailable = items
+          .map(normalizeIntegrationItem)
+          .some((item: Integration) => item.integrationType?.name === EMAIL && item.enabled);
+      }
       dispatch(
         showModalAction({
           component: (
@@ -220,6 +232,7 @@ export const InviteUser = <L extends keyof FormDataMap>({
               email={invitedUser.email}
               link={invitedUser.link}
               header={header}
+              isOrgEmailIntegrationAvailable={isOrgEmailIntegrationAvailable}
             />
           ),
         }),
