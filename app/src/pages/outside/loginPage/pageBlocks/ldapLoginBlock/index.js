@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,4 @@
  * limitations under the License.
  */
 
-export { ServiceVersionsBlock } from './serviceVersionsBlock';
-export { ChangePasswordBlock } from './changePasswordBlock';
-export { ForgotPasswordBlock } from './forgotPasswordBlock';
-export { MultipleAuthBlock } from './multipleAuthBlock';
-export { SelectSsoProviderBlock } from './selectSsoProviderBlock';
 export { LdapLoginBlock } from './ldapLoginBlock';
-export { LoginBlock } from './loginBlock';

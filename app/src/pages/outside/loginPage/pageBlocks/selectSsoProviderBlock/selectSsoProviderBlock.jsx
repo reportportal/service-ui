@@ -27,7 +27,7 @@ import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/lo
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { PageSectionContainer } from 'pages/outside/common/pageSectionContainer';
 import { OutsideLoginFooter } from 'pages/outside/common/outsideLoginFooter';
-import { normalizePathWithPrefix, setWindowLocationToNewPath } from 'pages/outside/common/utils';
+import { startSsoAuthFlow } from 'pages/outside/common/utils';
 import { ProviderButton } from '../providerButton';
 import { ProviderButtonsGrid } from '../providerButtonsGrid';
 import styles from './selectSsoProviderBlock.scss';
@@ -66,18 +66,12 @@ export const SelectSsoProviderBlock = () => {
   const handleProviderClick = useCallback(
     (authType, val) => () => {
       trackEvent(LOGIN_PAGE_EVENTS.clickOnLoginButton(authType));
-
-      if (val.providers && Object.keys(val.providers).length > 1) {
-        dispatch(redirect({ type: LOGIN_PAGE, payload: { query: { multipleAuth: authType } } }));
-        return;
-      }
-
-      const path = val.path || (val.providers && Object.values(val.providers)[0]);
-
-      if (path) {
-        setAuthInProgress(true);
-        setWindowLocationToNewPath(normalizePathWithPrefix(path));
-      }
+      startSsoAuthFlow({
+        dispatch,
+        authType,
+        val,
+        onExternalRedirect: () => setAuthInProgress(true),
+      });
     },
     [dispatch, trackEvent],
   );

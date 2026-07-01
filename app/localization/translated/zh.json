@@ -1518,6 +1518,7 @@
   "LdapFormFields.urlLabel": "URL",
   "LdapFormFields.userDnPatternLabel": "用户标识（DN）模板",
   "LdapFormFields.userSearchFilterLabel": "用户搜索过滤器",
+  "LdapLoginBlock.hint": "输入 LDAP 邮箱和密码以使用 LDAP 登录",
   "LinkIssueModal.addIssueButtonTitle": "添加新问题",
   "LinkIssueModal.issueIdHint": "问题ID的长度应为1到128",
   "LinkIssueModal.issueIdLabel": "问题ID",

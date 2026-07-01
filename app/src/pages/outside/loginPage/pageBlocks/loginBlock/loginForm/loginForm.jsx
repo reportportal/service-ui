@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-import {useCallback, useEffect, useReducer, useRef} from 'react';
+import { useCallback, useEffect, useReducer, useRef } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import {useDispatch, useSelector} from 'react-redux';
-import {reduxForm, stopSubmit} from 'redux-form';
-import {defineMessages, FormattedMessage, useIntl} from 'react-intl';
+import { useDispatch, useSelector } from 'react-redux';
+import { reduxForm, stopSubmit } from 'redux-form';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import Link from 'redux-first-router-link';
-import {Button, FieldText} from "@reportportal/ui-kit";
-import {useTracking} from 'react-tracking';
-import {commonValidators} from 'common/utils/validation';
-import {COMMON_LOCALE_KEYS} from 'common/constants/localization';
-import {isDemoInstanceSelector} from 'controllers/appInfo';
+import { Button, FieldText } from '@reportportal/ui-kit';
+import { useTracking } from 'react-tracking';
+import { commonValidators } from 'common/utils/validation';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { isDemoInstanceSelector } from 'controllers/appInfo';
 import {
   badCredentialsSelector,
   clearLoginLockoutAction,
@@ -33,14 +33,14 @@ import {
   loginAction,
   loginLoadingSelector,
 } from 'controllers/auth';
-import {getLoginLockoutState} from 'controllers/auth/loginLockout';
-import {LOGIN_PAGE} from 'controllers/pages';
-import {LOGIN, LOGIN_PAGE_EVENTS,} from 'components/main/analytics/events/ga4Events/loginPageEvents';
-import {FieldErrorHint} from 'components/fields/fieldErrorHint';
-import {LoadingSubmitButton} from 'components/loadingSubmitButton';
-import {FieldProvider} from 'components/fields/fieldProvider';
-import {ExternalLoginBlock} from './externalLoginBlock';
-import {DEFAULT_USER_CREDENTIALS} from './constants';
+import { getLoginLockoutState } from 'controllers/auth/loginLockout';
+import { LOGIN_PAGE } from 'controllers/pages';
+import { LOGIN, LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
+import { LoadingSubmitButton } from 'components/loadingSubmitButton';
+import { FieldProvider } from 'components/fields/fieldProvider';
+import { ExternalLoginBlock } from './externalLoginBlock';
+import { DEFAULT_USER_CREDENTIALS } from './constants';
 import styles from './loginForm.scss';
 
 const cx = classNames.bind(styles);
@@ -68,17 +68,28 @@ const messages = defineMessages({
     id: 'LoginForm.loginAttemptsExceededBlockedFor',
     defaultMessage: 'Login form is blocked for <bold>{seconds, number}</bold> sec.',
   },
-  errorMessage: {
-    id: 'LoginForm.errorMessage',
-    defaultMessage: 'Error',
-  },
   badCredentials: {
     id: 'LoginForm.badCredentials',
     defaultMessage: 'Bad credentials',
   },
+  logInWithEmail: {
+    id: 'SelectSsoProviderBlock.logInWithEmail',
+    defaultMessage: 'Log in with Email',
+  },
 });
 
-const LoginFormComponent = ({ handleSubmit, initialize, form, externalAuth= null }) => {
+const credentialsValidate = ({ login, password }) => ({
+  login: commonValidators.login(login),
+  password: commonValidators.oldPassword(password),
+});
+
+const LoginFormComponent = ({
+  handleSubmit,
+  initialize,
+  form,
+  externalAuth = null,
+  ldapLogin = false,
+}) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
@@ -111,10 +122,10 @@ const LoginFormComponent = ({ handleSubmit, initialize, form, externalAuth= null
   }, [dispatch, isLoginLimitExceeded, lastFailedLoginTime]);
 
   useEffect(() => {
-    if (isDemoInstance) {
+    if (isDemoInstance && !ldapLogin) {
       initialize(DEFAULT_USER_CREDENTIALS);
     }
-  }, [initialize, isDemoInstance]);
+  }, [initialize, isDemoInstance, ldapLogin]);
 
   useEffect(() => {
     if (badCredentials && !prevBadCredentialsRef.current) {
@@ -148,83 +159,107 @@ const LoginFormComponent = ({ handleSubmit, initialize, form, externalAuth= null
     [dispatch, isLoginLoading],
   );
 
+  const submitButton = (
+    <Button variant="primary" type="submit" disabled={isLoginLoading} onClick={clickEventHandler}>
+      <LoadingSubmitButton isLoading={isLoginLoading}>
+        {formatMessage(COMMON_LOCALE_KEYS.LOGIN)}
+      </LoadingSubmitButton>
+    </Button>
+  );
+
+  const renderCredentialsFields = () => (
+    <>
+      <div className={cx('login-field')}>
+        <FieldProvider name="login">
+          <FieldErrorHint provideHint={false} suppressError={isLoginLoading}>
+            <FieldText
+              label={formatMessage(messages.login)}
+              maxLength={128}
+              defaultWidth={false}
+              disabled={isLoginLoading}
+              displayError={!isLoginLoading}
+            />
+          </FieldErrorHint>
+        </FieldProvider>
+      </div>
+      <div className={cx('password-field')}>
+        <FieldProvider name="password">
+          <FieldErrorHint provideHint={false} suppressError={isLoginLoading}>
+            <FieldText
+              label={formatMessage(messages.password)}
+              type="password"
+              maxLength={256}
+              defaultWidth={false}
+              autoComplete="off"
+              disabled={isLoginLoading}
+              displayError={!isLoginLoading}
+            />
+          </FieldErrorHint>
+        </FieldProvider>
+      </div>
+    </>
+  );
+
+  const renderLockout = () => (
+    <div className={cx('attempts-exceeded-block')}>
+      <h2 className={cx('attempts-exceeded-heading')}>
+        {formatMessage(messages.loginAttemptsExceededHeading)}
+      </h2>
+      <p className={cx('attempts-exceeded-message')}>
+        {formatMessage(messages.loginAttemptsExceededMessage)}
+      </p>
+      <p className={cx('attempts-exceeded-message')}>
+        {formatMessage(messages.loginAttemptsExceededBlockedFor, {
+          seconds: blockTime,
+          bold: BoldBlockTime,
+        })}
+      </p>
+    </div>
+  );
+
+  const renderLdapActions = () => (
+    <>
+      <div className={cx('login-button')}>{submitButton}</div>
+      <Link to={{ type: LOGIN_PAGE }} className={cx('log-in-with-email-link')}>
+        <FormattedMessage {...messages.logInWithEmail} />
+      </Link>
+    </>
+  );
+
+  const renderStandardActions = () => (
+    <>
+      <Link
+        to={{ type: LOGIN_PAGE, payload: { query: { forgotPass: 'true' } } }}
+        className={cx('forgot-pass')}
+      >
+        <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot your password?'} />
+      </Link>
+      <div className={cx('login-actions-row')}>
+        {submitButton}
+        {externalAuth && (
+          <>
+            <div className={cx('or-separator')}>
+              <FormattedMessage id={'LoginForm.or'} defaultMessage={'or'} />
+            </div>
+            <ExternalLoginBlock externalAuth={externalAuth} inline />
+          </>
+        )}
+      </div>
+    </>
+  );
+
   return (
-       <form
+    <form
       className={cx('login-form', { 'login-form--lockout': isLoginLimitExceeded })}
       onSubmit={handleSubmit(onLoginSubmit)}
     >
-      {!isLoginLimitExceeded ? (
-        <>
-          <div className={cx('login-field')}>
-            <FieldProvider name="login">
-              <FieldErrorHint provideHint={false} suppressError={isLoginLoading}>
-                <FieldText
-                  label={formatMessage(messages.login)}
-                  maxLength={128}
-                  defaultWidth={false}
-                  disabled={isLoginLoading}
-                  displayError={!isLoginLoading}
-                />
-              </FieldErrorHint>
-            </FieldProvider>
-          </div>
-          <div className={cx('password-field')}>
-            <FieldProvider name="password">
-              <FieldErrorHint provideHint={false} suppressError={isLoginLoading}>
-                <FieldText
-                  label={formatMessage(messages.password)}
-                  type="password"
-                  maxLength={256}
-                  defaultWidth={false}
-                  autoComplete="off"
-                  disabled={isLoginLoading}
-                  displayError={!isLoginLoading}
-                />
-              </FieldErrorHint>
-            </FieldProvider>
-          </div>
-          <Link
-            to={{ type: LOGIN_PAGE, payload: { query: { forgotPass: 'true' } } }}
-            className={cx('forgot-pass')}
-          >
-            <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot your password?'} />
-          </Link>
-          <div className={cx('login-actions-row')}>
-              <Button
-                variant='primary'
-                type="submit"
-                disabled={isLoginLoading}
-                onClick={clickEventHandler}
-              >
-                <LoadingSubmitButton isLoading={isLoginLoading}>
-                  {formatMessage(COMMON_LOCALE_KEYS.LOGIN)}
-                </LoadingSubmitButton>
-              </Button>
-            {externalAuth && (
-              <>
-                <div className={cx('or-separator')}>
-                  <FormattedMessage id={'LoginForm.or'} defaultMessage={'or'} />
-                </div>
-                <ExternalLoginBlock externalAuth={externalAuth} inline />
-              </>
-            )}
-          </div>
-        </>
+      {isLoginLimitExceeded ? (
+        renderLockout()
       ) : (
-        <div className={cx('attempts-exceeded-block')}>
-          <h2 className={cx('attempts-exceeded-heading')}>
-            {formatMessage(messages.loginAttemptsExceededHeading)}
-          </h2>
-          <p className={cx('attempts-exceeded-message')}>
-            {formatMessage(messages.loginAttemptsExceededMessage)}
-          </p>
-          <p className={cx('attempts-exceeded-message')}>
-            {formatMessage(messages.loginAttemptsExceededBlockedFor, {
-              seconds: blockTime,
-              bold: BoldBlockTime,
-            })}
-          </p>
-        </div>
+        <>
+          {renderCredentialsFields()}
+          {ldapLogin ? renderLdapActions() : renderStandardActions()}
+        </>
       )}
     </form>
   );
@@ -235,12 +270,17 @@ LoginFormComponent.propTypes = {
   initialize: PropTypes.func.isRequired,
   form: PropTypes.string.isRequired,
   externalAuth: PropTypes.object,
+  ldapLogin: PropTypes.bool,
 };
+
+const LdapLoginFormComponent = (props) => <LoginFormComponent {...props} ldapLogin />;
 
 export const LoginForm = reduxForm({
   form: 'loginPage',
-  validate: ({ login, password }) => ({
-    login: commonValidators.login(login),
-    password: commonValidators.oldPassword(password),
-  }),
+  validate: credentialsValidate,
 })(LoginFormComponent);
+
+export const LdapLoginForm = reduxForm({
+  form: 'ldapLoginPage',
+  validate: credentialsValidate,
+})(LdapLoginFormComponent);

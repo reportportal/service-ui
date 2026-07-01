@@ -1518,6 +1518,7 @@
   "LdapFormFields.urlLabel": "URL",
   "LdapFormFields.userDnPatternLabel": "Patrón DN de Usuario",
   "LdapFormFields.userSearchFilterLabel": "Filtro de Búsqueda de Usuario",
+  "LdapLoginBlock.hint": "Introduce el email y la contraseña de LDAP para iniciar sesión con LDAP",
   "LinkIssueModal.addIssueButtonTitle": "Agregar nuevo error",
   "LinkIssueModal.issueIdHint": "El ID del error debe tener entre 1 y 128 caracteres",
   "LinkIssueModal.issueIdLabel": "ID del error",

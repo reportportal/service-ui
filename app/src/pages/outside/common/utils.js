@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
+import { LDAP } from 'common/constants/pluginNames';
 import { API_PATH } from 'common/urls';
+import { redirect } from 'redux-first-router';
+import { LOGIN_PAGE } from 'controllers/pages';
+
+export const isLdapAuthType = (authType) => authType?.toLowerCase() === LDAP;
 
 export const normalizePathWithPrefix = (path) => {
   if (path.indexOf(API_PATH) === -1) {
@@ -25,4 +30,27 @@ export const normalizePathWithPrefix = (path) => {
 
 export const setWindowLocationToNewPath = (path) => {
   window.location = path;
+};
+
+export const startSsoAuthFlow = ({ dispatch, authType, val, onExternalRedirect }) => {
+  if (!val) {
+    return;
+  }
+
+  if (isLdapAuthType(authType)) {
+    dispatch(redirect({ type: LOGIN_PAGE, payload: { query: { ldapLogin: 'true' } } }));
+    return;
+  }
+
+  if (val.providers && Object.keys(val.providers).length > 1) {
+    dispatch(redirect({ type: LOGIN_PAGE, payload: { query: { multipleAuth: authType } } }));
+    return;
+  }
+
+  const path = val.path || (val.providers && Object.values(val.providers)[0]);
+
+  if (path) {
+    onExternalRedirect?.();
+    setWindowLocationToNewPath(normalizePathWithPrefix(path));
+  }
 };
