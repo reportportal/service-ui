@@ -39,5 +39,6 @@ release/
 .local/
 .serena/
 .cursor/
+graphify-out
 
 .env
