@@ -159,7 +159,7 @@ export const IntegrationSettings = (props) => {
             isGlobal={isGlobal}
             isEditable={canUpdateSettings}
           />
-          {!shouldHideInlineForm && (
+          {!shouldHideInlineForm && formFieldsComponent && (
             <IntegrationForm
               form={formKey}
               data={data}
