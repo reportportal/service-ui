@@ -56,6 +56,7 @@ export const IntegrationSettings = (props) => {
     goToPreviousPage,
     isOrganizational = false,
     preventTestConnection = false,
+    hideInlineForm = false,
   } = props;
   const pluginName = data.integrationType?.name;
 
@@ -139,6 +140,7 @@ export const IntegrationSettings = (props) => {
   };
 
   const isLdap = pluginName === LDAP;
+  const shouldHideInlineForm = isLdap || hideInlineForm;
 
   return (
     <div className={cx('integration-settings')}>
@@ -157,7 +159,7 @@ export const IntegrationSettings = (props) => {
             isGlobal={isGlobal}
             isEditable={canUpdateSettings}
           />
-          {!isLdap && (
+          {!shouldHideInlineForm && formFieldsComponent && (
             <IntegrationForm
               form={formKey}
               data={data}
@@ -177,7 +179,7 @@ export const IntegrationSettings = (props) => {
 };
 IntegrationSettings.propTypes = {
   data: PropTypes.object.isRequired,
-  formFieldsComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
+  formFieldsComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
   goToPreviousPage: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
   editAuthConfig: PropTypes.object,
@@ -186,12 +188,15 @@ IntegrationSettings.propTypes = {
   isGlobal: PropTypes.bool,
   isOrganizational: PropTypes.bool,
   formKey: PropTypes.string,
+  hideInlineForm: PropTypes.bool,
 };
 IntegrationSettings.defaultProps = {
+  formFieldsComponent: null,
   editAuthConfig: null,
   preventTestConnection: false,
   isEmptyConfiguration: false,
   isGlobal: false,
   isOrganizational: false,
   formKey: INTEGRATION_FORM,
+  hideInlineForm: false,
 };
