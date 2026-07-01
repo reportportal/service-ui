@@ -43,6 +43,7 @@ export {
   pluginsSelector,
   pluginByNameSelector,
   enabledPluginSelector,
+  isEpamPluginEnabledSelector,
   availablePluginsSelector,
   availableGroupedPluginsSelector,
   createNamedIntegrationsSelector,

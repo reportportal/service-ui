@@ -20,7 +20,7 @@ import {
   IMPORT_GROUP_TYPE,
   NOTIFICATION_GROUP_TYPE,
 } from 'common/constants/pluginsGroupTypes';
-import { EMAIL, ORGANIZATION } from 'common/constants/pluginNames';
+import { EMAIL, EPAM, ORGANIZATION } from 'common/constants/pluginNames';
 import { APP_LEVEL, pageLevelSelector } from 'controllers/pages';
 import {
   filterAvailablePlugins,
@@ -43,6 +43,8 @@ export const pluginByNameSelector = (state, name) =>
 
 export const enabledPluginSelector = (state, name) =>
   pluginByNameSelector(state, name)?.enabled || false;
+
+export const isEpamPluginEnabledSelector = (state) => enabledPluginSelector(state, EPAM);
 
 export const organizationPluginSelector = (state) => pluginByNameSelector(state, ORGANIZATION);
 

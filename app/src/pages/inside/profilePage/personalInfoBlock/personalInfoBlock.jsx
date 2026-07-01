@@ -29,7 +29,7 @@ import { showModalAction } from 'controllers/modal';
 import { photoTimeStampSelector, userInfoSelector } from 'controllers/user';
 import { logoutAction } from 'controllers/auth';
 import { isDemoInstanceSelector } from 'controllers/appInfo';
-import { enabledPluginSelector } from 'controllers/plugins';
+import { isEpamPluginEnabledSelector } from 'controllers/plugins';
 import { COMMAND_SYNCHRONIZE } from 'controllers/plugins/uiExtensions/constants';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { Image } from 'components/main/image';
@@ -85,7 +85,7 @@ export const PersonalInfoBlock = () => {
   const { userId: userLogin, id: userId, accountType } = useSelector(userInfoSelector);
   const isDemoInstance = useSelector(isDemoInstanceSelector);
   const photoTimeStamp = useSelector(photoTimeStampSelector);
-  const isEpamAuthEnabled = useSelector((state) => enabledPluginSelector(state, EPAM));
+  const isEpamAuthEnabled = useSelector(isEpamPluginEnabledSelector);
   const [forceUpdateInProgress, setForceUpdateInProgress] = useState(false);
   const [avatarPreviewSource, setAvatarPreviewSource] = useState(null);
 
