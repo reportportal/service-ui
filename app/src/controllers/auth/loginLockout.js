@@ -90,10 +90,10 @@ const getRedirectErrorAuth = (location = '') => {
 export const isLoginLockoutRedirect = (location = '') =>
   isLoginLockoutErrorAuthMessage(getRedirectErrorAuth(location));
 
-// POST /oauth/token password grant: backend lockout may return 302 without an
-// "address is locked" body (inconsistent BE behavior). With maxRedirects: 0 axios
-// surfaces the redirect here instead of following it. A successful login is always
-// 200 + token body, so any redirect from this endpoint is treated as a lockout.
+// POST /oauth/token password grant: backend lockout may return 302. In the browser axios
+// follows redirects automatically (maxRedirects is Node-only), so the saga usually sees
+// the final response instead of the intermediate 302. Lockout is detected via backend
+// signals (4003/4004 error bodies, isLastAttempt handling) or a non-token 200 response.
 export const isLoginRedirectLockout = (response) => {
   if (!response) {
     return false;

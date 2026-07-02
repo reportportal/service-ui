@@ -227,7 +227,6 @@ function* submitLoginRequest(payload) {
     URLS.login(),
     {
       method: 'POST',
-      maxRedirects: 0,
       validateStatus: () => true,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
