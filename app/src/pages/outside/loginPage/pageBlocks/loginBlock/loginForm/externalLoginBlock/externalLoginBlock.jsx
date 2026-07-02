@@ -85,7 +85,6 @@ export const ExternalLoginBlock = ({ externalAuth = {}, inline = false }) => {
     <div className={cx('external-login-block', { inline })}>
       <Button
         variant="ghost"
-        className={cx('sso-button')}
         disabled={authInProgress}
         onClick={handleSsoClick}
       >
