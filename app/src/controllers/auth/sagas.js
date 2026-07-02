@@ -61,7 +61,16 @@ import {
   setBadCredentialsAction,
   setLoginLoadingAction,
 } from './actionCreators';
-import { isLoginCredentialFailure, isLoginLockoutActive, isServerLoginLockFailure, shouldStartLoginLockout } from './loginLockout';
+import {
+  hasExpiredLoginLockout,
+  isLoginAttemptsExceeded,
+  isLoginCredentialFailure,
+  isLoginLockoutActive,
+  isLoginRedirectLockout,
+  isServerLoginLockFailure,
+  isValidLoginTokenResponse,
+  shouldStartLoginLockout,
+} from './loginLockout';
 import {
   LOGIN,
   LOGOUT,
@@ -199,25 +208,73 @@ function* showLoginLockoutNotification() {
   );
 }
 
-function* handleLogin({ payload }) {
+function* clearExpiredLoginLockoutState() {
   const lastFailedLoginTime = yield select(lastFailedLoginTimeSelector);
+
+  if (hasExpiredLoginLockout(lastFailedLoginTime)) {
+    yield put(clearLoginLockoutAction());
+  }
+}
+
+function* handleLogin({ payload }) {
+  yield call(clearExpiredLoginLockoutState);
+
+  const lastFailedLoginTime = yield select(lastFailedLoginTimeSelector);
+
   if (isLoginLockoutActive(lastFailedLoginTime)) {
     yield put(setLoginLoadingAction(false));
     return;
   }
 
+  const failedAttempts = yield select(failedLoginAttemptsSelector);
+  const isLastAttempt = isLoginAttemptsExceeded(failedAttempts);
+
   try {
-    const result = yield call(fetch, URLS.login(), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+    const response = yield call(
+      fetch,
+      URLS.login(),
+      {
+        method: 'POST',
+        maxRedirects: 0,
+        validateStatus: () => true,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        data: stringify({
+          grant_type: GRANT_TYPES.PASSWORD,
+          username: payload.login,
+          password: payload.password,
+        }),
       },
-      data: stringify({
-        grant_type: GRANT_TYPES.PASSWORD,
-        username: payload.login,
-        password: payload.password,
-      }),
-    });
+      true,
+    );
+
+    // Any redirect means server blocked the attempt (302 from AuthFailureHandler)
+    if (isLoginRedirectLockout(response)) {
+      yield put(setLoginLoadingAction(false));
+      yield call(startServerLoginLockout);
+      return;
+    }
+
+    // 5th attempt with any non-success response → lockout regardless of status/body
+    if (isLastAttempt && response.status >= 400) {
+      yield put(setLoginLoadingAction(false));
+      yield call(startServerLoginLockout);
+      return;
+    }
+
+    if (response.status >= 400) {
+      throw response.data;
+    }
+
+    const result = response.data;
+
+    if (!isValidLoginTokenResponse(result)) {
+      yield put(setLoginLoadingAction(false));
+      yield call(startServerLoginLockout);
+      return;
+    }
+
     const token = {
       type: result.token_type,
       value: result.access_token,
@@ -228,6 +285,13 @@ function* handleLogin({ payload }) {
     yield put(setLoginLoadingAction(false));
 
     if (isServerLoginLockFailure(rawError)) {
+      yield call(startServerLoginLockout);
+      yield call(showLoginLockoutNotification);
+      return;
+    }
+
+    // 5th attempt failed by any uncaught error (network, unexpected) → lockout
+    if (isLastAttempt) {
       yield call(startServerLoginLockout);
       yield call(showLoginLockoutNotification);
       return;

@@ -16,15 +16,21 @@
 
 import {
   getLoginLockoutState,
+  hasExpiredLoginLockout,
+  isLoginAttemptsExceeded,
   isLoginCredentialFailure,
   isLoginLockoutActive,
+  isLoginLockoutRedirect,
+  isLoginRedirectLockout,
   isServerLoginLockFailure,
   shouldStartLoginLockout,
 } from './loginLockout';
 import { MAX_FAILED_LOGIN_ATTEMPTS } from './constants';
 
 describe('loginLockout', () => {
-  test('allows failures up to threshold before lockout', () => {
+  test('allows failures below threshold before lockout', () => {
+    expect(isLoginAttemptsExceeded(MAX_FAILED_LOGIN_ATTEMPTS - 1)).toBe(false);
+    expect(isLoginAttemptsExceeded(MAX_FAILED_LOGIN_ATTEMPTS)).toBe(true);
     expect(shouldStartLoginLockout(MAX_FAILED_LOGIN_ATTEMPTS)).toBe(false);
     expect(shouldStartLoginLockout(MAX_FAILED_LOGIN_ATTEMPTS + 1)).toBe(true);
   });
@@ -58,6 +64,14 @@ describe('loginLockout', () => {
       const lastFailedLoginTime = fixedNow.getTime() + 5 * 1000;
 
       expect(getLoginLockoutState(lastFailedLoginTime).blockTime).toBe(30);
+    });
+
+    test('detects expired client lockout state', () => {
+      const lastFailedLoginTime = fixedNow.getTime() - 31 * 1000;
+
+      expect(hasExpiredLoginLockout(lastFailedLoginTime)).toBe(true);
+      expect(hasExpiredLoginLockout(null)).toBe(false);
+      expect(hasExpiredLoginLockout(fixedNow.getTime())).toBe(false);
     });
   });
 
@@ -98,5 +112,23 @@ describe('loginLockout', () => {
       }),
     ).toBe(false);
     expect(isServerLoginLockFailure(new Error('Network Error'))).toBe(false);
+  });
+
+  test('detects login lockout redirects', () => {
+    expect(
+      isLoginRedirectLockout({
+        status: 302,
+        headers: { location: '/ui/#login?errorAuth=Address%20is%20locked%20due%20to%20several%20incorrect%20login%20attempts' },
+      }),
+    ).toBe(true);
+    expect(
+      isLoginRedirectLockout({
+        status: 400,
+        data: { errorCode: 4003, message: 'Bad credentials' },
+      }),
+    ).toBe(false);
+    expect(isLoginLockoutRedirect('/ui/#login?errorAuth=Address is locked due to several incorrect login attempts')).toBe(
+      true,
+    );
   });
 });

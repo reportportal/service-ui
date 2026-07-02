@@ -38,6 +38,12 @@ export const getLoginLockoutState = (lastFailedLoginTime) => {
 export const isLoginLockoutActive = (lastFailedLoginTime) =>
   getLoginLockoutState(lastFailedLoginTime).isLoginLimitExceeded;
 
+export const hasExpiredLoginLockout = (lastFailedLoginTime) =>
+  Boolean(lastFailedLoginTime && !isLoginLockoutActive(lastFailedLoginTime));
+
+export const isLoginAttemptsExceeded = (failedAttempts) =>
+  failedAttempts >= MAX_FAILED_LOGIN_ATTEMPTS;
+
 export const shouldStartLoginLockout = (failedAttempts) =>
   failedAttempts > MAX_FAILED_LOGIN_ATTEMPTS;
 
@@ -57,6 +63,51 @@ export const isLoginCredentialFailure = (rawError) =>
   rawError?.errorCode === ERROR_CODE_LOGIN_BAD_CREDENTIALS;
 
 const ADDRESS_LOCKED_MESSAGE_PATTERN = /address is locked/i;
+
+export const isLoginLockoutErrorAuthMessage = (message) =>
+  ADDRESS_LOCKED_MESSAGE_PATTERN.test(String(message || ''));
+
+const getRedirectErrorAuth = (location = '') => {
+  if (!location) {
+    return '';
+  }
+
+  try {
+    const url = new URL(location, window.location.origin);
+    const queryErrorAuth = url.searchParams.get('errorAuth');
+
+    if (queryErrorAuth) {
+      return queryErrorAuth;
+    }
+
+    const hashQuery = url.hash.includes('?') ? url.hash.split('?')[1] : '';
+    return new URLSearchParams(hashQuery).get('errorAuth') || '';
+  } catch {
+    return '';
+  }
+};
+
+export const isLoginLockoutRedirect = (location = '') =>
+  isLoginLockoutErrorAuthMessage(getRedirectErrorAuth(location));
+
+export const isLoginRedirectLockout = (response) => {
+  if (!response) {
+    return false;
+  }
+
+  const { status, headers = {} } = response;
+
+  if (status >= 300 && status < 400) {
+    const location = headers.location || headers.Location;
+
+    return isLoginLockoutRedirect(location) || Boolean(location);
+  }
+
+  return false;
+};
+
+export const isValidLoginTokenResponse = (data) =>
+  Boolean(data && typeof data === 'object' && typeof data.access_token === 'string');
 
 export const isServerLoginLockFailure = (rawError) => {
   if (!rawError || typeof rawError !== 'object' || rawError instanceof Error) {
