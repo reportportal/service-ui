@@ -38,6 +38,7 @@ export const ROBOT_FRAMEWORK = 'RobotFramework';
 export const SAML = 'saml';
 export const LDAP = 'ldap';
 export const GITHUB = 'github';
+export const EPAM = 'epam';
 export const ORGANIZATION = 'organization';
 export const QUALITY_GATE = 'quality gate';
 export const TEST_EXECUTION = 'test-execution';
