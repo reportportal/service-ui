@@ -216,6 +216,80 @@ function* clearExpiredLoginLockoutState() {
   }
 }
 
+function* stopLoadingAndActivateLockout() {
+  yield put(setLoginLoadingAction(false));
+  yield call(startServerLoginLockout);
+}
+
+function* submitLoginRequest(payload) {
+  return yield call(
+    fetch,
+    URLS.login(),
+    {
+      method: 'POST',
+      maxRedirects: 0,
+      validateStatus: () => true,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      data: stringify({
+        grant_type: GRANT_TYPES.PASSWORD,
+        username: payload.login,
+        password: payload.password,
+      }),
+    },
+    true,
+  );
+}
+
+function* handleLoginResponse(response, isLastAttempt) {
+  if (isLoginRedirectLockout(response) || (isLastAttempt && response.status >= 400 && response.status < 500)) {
+    yield call(stopLoadingAndActivateLockout);
+    return;
+  }
+
+  if (response.status >= 400) {
+    throw response.data;
+  }
+
+  const result = response.data;
+
+  if (!isValidLoginTokenResponse(result)) {
+    yield call(stopLoadingAndActivateLockout);
+    return;
+  }
+
+  yield put(
+    loginSuccessAction({
+      type: result.token_type,
+      value: result.access_token,
+    }),
+  );
+}
+
+function* handleLoginFailure(rawError, isLastAttempt) {
+  yield put(setLoginLoadingAction(false));
+
+  if (isServerLoginLockFailure(rawError) || isLastAttempt) {
+    yield call(startServerLoginLockout);
+    yield call(showLoginLockoutNotification);
+    return;
+  }
+
+  if (isLoginCredentialFailure(rawError)) {
+    const isLockedOut = yield call(registerFailedLoginAttempt);
+
+    if (isLockedOut) {
+      yield call(showLoginLockoutNotification);
+    } else {
+      yield call(showLoginFailureNotification, getLoginErrorMessage(rawError));
+    }
+    return;
+  }
+
+  yield call(showLoginFailureNotification, getLoginErrorMessage(rawError));
+}
+
 function* handleLogin({ payload }) {
   yield call(clearExpiredLoginLockoutState);
 
@@ -230,85 +304,10 @@ function* handleLogin({ payload }) {
   const isLastAttempt = isLoginAttemptsExceeded(failedAttempts);
 
   try {
-    const response = yield call(
-      fetch,
-      URLS.login(),
-      {
-        method: 'POST',
-        maxRedirects: 0,
-        validateStatus: () => true,
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        data: stringify({
-          grant_type: GRANT_TYPES.PASSWORD,
-          username: payload.login,
-          password: payload.password,
-        }),
-      },
-      true,
-    );
-
-    // Any redirect means server blocked the attempt (302 from AuthFailureHandler)
-    if (isLoginRedirectLockout(response)) {
-      yield put(setLoginLoadingAction(false));
-      yield call(startServerLoginLockout);
-      return;
-    }
-
-    // 5th attempt with any non-success response → lockout regardless of status/body
-    if (isLastAttempt && response.status >= 400) {
-      yield put(setLoginLoadingAction(false));
-      yield call(startServerLoginLockout);
-      return;
-    }
-
-    if (response.status >= 400) {
-      throw response.data;
-    }
-
-    const result = response.data;
-
-    if (!isValidLoginTokenResponse(result)) {
-      yield put(setLoginLoadingAction(false));
-      yield call(startServerLoginLockout);
-      return;
-    }
-
-    const token = {
-      type: result.token_type,
-      value: result.access_token,
-    };
-
-    yield put(loginSuccessAction(token));
+    const response = yield call(submitLoginRequest, payload);
+    yield call(handleLoginResponse, response, isLastAttempt);
   } catch (rawError) {
-    yield put(setLoginLoadingAction(false));
-
-    if (isServerLoginLockFailure(rawError)) {
-      yield call(startServerLoginLockout);
-      yield call(showLoginLockoutNotification);
-      return;
-    }
-
-    // 5th attempt failed by any uncaught error (network, unexpected) → lockout
-    if (isLastAttempt) {
-      yield call(startServerLoginLockout);
-      yield call(showLoginLockoutNotification);
-      return;
-    }
-
-    if (isLoginCredentialFailure(rawError)) {
-      const isLockedOut = yield call(registerFailedLoginAttempt);
-
-      if (isLockedOut) {
-        yield call(showLoginLockoutNotification);
-      } else {
-        yield call(showLoginFailureNotification, getLoginErrorMessage(rawError));
-      }
-      return;
-    }
-
-    yield call(showLoginFailureNotification, getLoginErrorMessage(rawError));
+    yield call(handleLoginFailure, rawError, isLastAttempt);
   }
 }
 

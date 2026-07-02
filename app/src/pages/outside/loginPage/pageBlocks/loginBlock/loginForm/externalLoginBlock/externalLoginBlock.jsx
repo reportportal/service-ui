@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
@@ -41,14 +41,19 @@ export const ExternalLoginBlock = ({ externalAuth = {}, inline = false }) => {
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
   const [authInProgress, setAuthInProgress] = useState(false);
+  const clearAuthTimeoutRef = useRef(() => {});
+
+  useEffect(() => () => clearAuthTimeoutRef.current(), []);
 
   const startAuthFlow = useCallback(
     (val, authType) => {
-      startSsoAuthFlow({
+      clearAuthTimeoutRef.current();
+      clearAuthTimeoutRef.current = startSsoAuthFlow({
         dispatch,
         authType,
         val,
         onExternalRedirect: () => setAuthInProgress(true),
+        onError: () => setAuthInProgress(false),
       });
     },
     [dispatch],

@@ -90,6 +90,10 @@ const getRedirectErrorAuth = (location = '') => {
 export const isLoginLockoutRedirect = (location = '') =>
   isLoginLockoutErrorAuthMessage(getRedirectErrorAuth(location));
 
+// POST /oauth/token password grant: backend lockout may return 302 without an
+// "address is locked" body (inconsistent BE behavior). With maxRedirects: 0 axios
+// surfaces the redirect here instead of following it. A successful login is always
+// 200 + token body, so any redirect from this endpoint is treated as a lockout.
 export const isLoginRedirectLockout = (response) => {
   if (!response) {
     return false;
@@ -107,7 +111,12 @@ export const isLoginRedirectLockout = (response) => {
 };
 
 export const isValidLoginTokenResponse = (data) =>
-  Boolean(data && typeof data === 'object' && typeof data.access_token === 'string');
+  Boolean(
+    data &&
+      typeof data === 'object' &&
+      typeof data.access_token === 'string' &&
+      typeof data.token_type === 'string',
+  );
 
 export const isServerLoginLockFailure = (rawError) => {
   if (!rawError || typeof rawError !== 'object' || rawError instanceof Error) {
