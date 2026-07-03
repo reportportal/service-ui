@@ -103,7 +103,7 @@ export class AutocompleteOptions extends Component {
     return options.length ? options.map((item, index) => this.renderItem(item, index)) : '';
   };
 
-  renderNewItem = (options) => {
+  renderNewItem = (options, showDivider = false) => {
     const { inputValue, getItemProps, optionVariant, variant } = this.props;
     const index = options.length;
     const isNew = true;
@@ -114,6 +114,7 @@ export class AutocompleteOptions extends Component {
           optionVariant={optionVariant}
           {...getItemProps({ item: inputValue, index })}
           isNew={isNew}
+          showDivider={showDivider}
           variant={variant}
         >
           {this.props.parseValueToString(inputValue)}
@@ -132,7 +133,9 @@ export class AutocompleteOptions extends Component {
         <ScrollWrapper autoHeight autoHeightMax={140}>
           {this.renderItems(availableOptions)}
         </ScrollWrapper>
-        {!createWithoutConfirmation && creatable && this.renderNewItem(availableOptions)}
+        {!createWithoutConfirmation &&
+          creatable &&
+          this.renderNewItem(availableOptions, availableOptions.length > 0)}
       </div>
     );
   }
