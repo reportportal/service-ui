@@ -32,25 +32,46 @@ export const setWindowLocationToNewPath = (path) => {
   window.location = path;
 };
 
-export const startSsoAuthFlow = ({ dispatch, authType, val, onExternalRedirect }) => {
+const SSO_AUTH_REDIRECT_RESET_MS = 5000;
+
+export const startSsoAuthFlow = ({ dispatch, authType, val, onExternalRedirect, onError }) => {
+  const noop = () => {};
+
   if (!val) {
-    return;
+    onError?.();
+    return noop;
   }
 
   if (isLdapAuthType(authType)) {
     dispatch(redirect({ type: LOGIN_PAGE, payload: { query: { ldapLogin: 'true' } } }));
-    return;
+    return noop;
   }
 
   if (val.providers && Object.keys(val.providers).length > 1) {
     dispatch(redirect({ type: LOGIN_PAGE, payload: { query: { multipleAuth: authType } } }));
-    return;
+    return noop;
   }
 
   const path = val.path || (val.providers && Object.values(val.providers)[0]);
 
-  if (path) {
+  if (!path) {
+    onError?.();
+    return noop;
+  }
+
+  try {
     onExternalRedirect?.();
     setWindowLocationToNewPath(normalizePathWithPrefix(path));
+
+    if (!onError) {
+      return noop;
+    }
+
+    const timeoutId = window.setTimeout(onError, SSO_AUTH_REDIRECT_RESET_MS);
+
+    return () => window.clearTimeout(timeoutId);
+  } catch {
+    onError?.();
+    return noop;
   }
 };
