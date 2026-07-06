@@ -23,6 +23,7 @@ describe('passwordRules.getPasswordRuleStatus', () => {
   test('returns all rules unmet for empty password', () => {
     expect(getPasswordRuleStatus('', 8)).toEqual({
       minLength: false,
+      digit: false,
       specialSymbol: false,
       uppercase: false,
       lowercase: false,
@@ -32,6 +33,7 @@ describe('passwordRules.getPasswordRuleStatus', () => {
   test('returns met rules for a valid password', () => {
     expect(getPasswordRuleStatus('QwertY_1', 8)).toEqual({
       minLength: true,
+      digit: true,
       specialSymbol: true,
       uppercase: true,
       lowercase: true,
@@ -56,6 +58,7 @@ describe('passwordRules.areAllPasswordRulesMet', () => {
     expect(
       areAllPasswordRulesMet({
         minLength: true,
+        digit: true,
         specialSymbol: true,
         uppercase: true,
         lowercase: true,
@@ -65,6 +68,7 @@ describe('passwordRules.areAllPasswordRulesMet', () => {
     expect(
       areAllPasswordRulesMet({
         minLength: true,
+        digit: false,
         specialSymbol: false,
         uppercase: true,
         lowercase: true,
