@@ -14,13 +14,27 @@
  * limitations under the License.
  */
 
-import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { ArrowUpIcon, FieldText, Tooltip } from '@reportportal/ui-kit';
 import { useCapsLock } from 'common/hooks/useCapsLock';
 import styles from './outsidePasswordField.scss';
+import React from "react";
 
 const cx = classNames.bind(styles);
+
+interface OutsidePasswordFieldProps {
+  capsLockMessage: string,
+  value?: string,
+  onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void,
+  onKeyUp?: (event: React.KeyboardEvent<HTMLInputElement>) => void,
+  disabled?: boolean,
+  label?: string,
+  maxLength?: number,
+  defaultWidth: boolean
+  autoComplete?: string,
+  displayError: boolean
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+}
 
 export const OutsidePasswordField = ({
   value = '',
@@ -29,7 +43,7 @@ export const OutsidePasswordField = ({
   capsLockMessage,
   disabled = false,
   ...rest
-}) => {
+}: OutsidePasswordFieldProps) => {
   const { capsLockOn, handleKeyDown, handleKeyUp } = useCapsLock();
   const showCapsLock = capsLockOn && value.length >= 1 && !disabled;
 
@@ -58,12 +72,4 @@ export const OutsidePasswordField = ({
       {...rest}
     />
   );
-};
-
-OutsidePasswordField.propTypes = {
-  value: PropTypes.string,
-  onKeyDown: PropTypes.func,
-  onKeyUp: PropTypes.func,
-  capsLockMessage: PropTypes.string.isRequired,
-  disabled: PropTypes.bool,
 };
