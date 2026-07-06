@@ -14,56 +14,99 @@
  * limitations under the License.
  */
 
-import { useEffect, type FormEventHandler } from 'react';
+import { useCallback, useEffect, useMemo, useState, type FormEventHandler } from 'react';
 import { createClassnames } from 'common/utils/createClassnames';
-import { injectIntl, defineMessages, IntlShape } from 'react-intl';
-import { reduxForm, InjectedFormProps } from 'redux-form';
-import { connect } from 'react-redux';
+import { defineMessages, useIntl } from 'react-intl';
+import { reduxForm, formValueSelector, InjectedFormProps } from 'redux-form';
+import { useSelector } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { InputOutside } from 'components/inputs/inputOutside';
-import { BigButton } from 'components/buttons/bigButton';
+import { PasswordRequirementsList } from 'components/passwordRequirementsList';
+import { Button, FieldText } from '@reportportal/ui-kit';
+import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import {
   PASSWORD_MAX_ALLOWED_LENGTH,
   REGISTRATION_NAME_MIN_LENGTH,
   REGISTRATION_NAME_MAX_LENGTH,
 } from 'common/constants/validation';
 import { commonValidators } from 'common/utils/validation';
+import {
+  areAllPasswordRulesMet,
+  getPasswordRuleStatus,
+} from 'common/utils/validation/passwordRules';
 import { passwordMinLengthSelector } from 'controllers/appInfo';
-import { validationLocalization } from 'common/constants/localization/validationLocalization';
-import NameIcon from './img/name-icon-inline.svg';
-import EmailIcon from './img/email-icon-inline.svg';
-import PasswordIcon from './img/password-icon-inline.svg';
+import { OutsidePasswordField } from 'pages/outside/common/outsidePasswordField';
 import styles from './registrationForm.scss';
 
 const cx = createClassnames(styles);
 
-const ERROR_MESSAGE_KEYS = {
-  REQUIRED_FIELD_WITH_PERIOD: 'requiredFieldWithPeriodHint',
-  CONFIRM_PASSWORD_HINT_MESSAGE: 'confirmPasswordHint',
-} as const;
+const formSelector = formValueSelector('registration');
 
 const messages = defineMessages({
-  name: {
-    id: 'RegistrationForm.namePlaceholder',
-    defaultMessage: 'Enter Full Name',
+  fullNameLabel: {
+    id: 'RegistrationForm.fullNameLabel',
+    defaultMessage: 'Full Name',
   },
-  password: {
-    id: 'RegistrationForm.passwordPlaceholder',
-    defaultMessage: 'Create Password',
+  emailLabel: {
+    id: 'RegistrationForm.emailLabel',
+    defaultMessage: 'Email',
   },
-  confirmPassword: {
-    id: 'RegistrationForm.passwordConfirmPlaceholder',
+  passwordLabel: {
+    id: 'RegistrationForm.passwordLabel',
+    defaultMessage: 'Password',
+  },
+  confirmPasswordLabel: {
+    id: 'RegistrationForm.confirmPasswordLabel',
     defaultMessage: 'Confirm Password',
+  },
+  ruleMinLength: {
+    id: 'RegistrationForm.ruleMinLength',
+    defaultMessage: 'At least {minLength} characters',
+  },
+  ruleDigit: {
+    id: 'RegistrationForm.ruleDigit',
+    defaultMessage: 'Digits included',
+  },
+  ruleSpecialSymbol: {
+    id: 'RegistrationForm.ruleSpecialSymbol',
+    defaultMessage: 'A special symbol',
+  },
+  ruleUppercase: {
+    id: 'RegistrationForm.ruleUppercase',
+    defaultMessage: 'Upper-case (A - Z)',
+  },
+  ruleLowercase: {
+    id: 'RegistrationForm.ruleLowercase',
+    defaultMessage: 'Lower-case',
+  },
+  passwordPolicySummary: {
+    id: 'RegistrationForm.passwordPolicySummary',
+    defaultMessage:
+      'Minimum {minLength} characters, including uppercase, lowercase, digit, special symbol. No spaces.',
+  },
+  passwordRequirementsError: {
+    id: 'RegistrationForm.passwordRequirementsError',
+    defaultMessage: "Password doesn't meet some of the following requirements:",
+  },
+  passwordsDoNotMatch: {
+    id: 'RegistrationForm.passwordsDoNotMatch',
+    defaultMessage: 'Passwords do not match',
   },
   nameHint: {
     id: 'RegistrationForm.nameHint',
     defaultMessage:
       'Full name may contain {minLength}-{maxLength} characters, using only Latin letters, numbers, spaces, dots, hyphens, underscores, and apostrophes.',
   },
+  requiredField: {
+    id: 'Common.requiredFieldHint',
+    defaultMessage: 'Field is required',
+  },
+  capsLockOn: {
+    id: 'ChangePasswordForm.capsLockOn',
+    defaultMessage: 'Caps Lock is on',
+  },
   register: {
     id: 'RegistrationForm.register',
-    defaultMessage: 'Register',
+    defaultMessage: 'Create',
   },
 });
 
@@ -74,42 +117,37 @@ export interface RegistrationFormValues {
   confirmPassword: string;
 }
 
-interface InitialData {
-  fullName?: string;
-  password?: string;
-  [key: string]: string | undefined;
-}
-
 interface OwnProps {
   submitForm?: (values: RegistrationFormValues) => Promise<unknown>;
   email?: string;
   loading?: boolean;
-  initialData?: InitialData;
+  initialData?: Record<string, string | undefined>;
   submitButtonTitle?: string;
 }
 
-interface ConnectedProps {
-  minLength: number;
-  intl: IntlShape;
-}
-
-type Props = InjectedFormProps<RegistrationFormValues, OwnProps & ConnectedProps> &
-  OwnProps &
-  ConnectedProps;
+type Props = InjectedFormProps<RegistrationFormValues, OwnProps> & OwnProps;
 
 const RegistrationFormComponent = ({
   handleSubmit,
   initialize,
-  intl,
-  invalid,
   loading = false,
   submitButtonTitle = '',
   submitForm = () => Promise.resolve(),
   email = '',
   initialData = {},
-  minLength,
 }: Props) => {
-  const { formatMessage } = intl;
+  const { formatMessage } = useIntl();
+  const minLength = useSelector(passwordMinLengthSelector);
+
+  const password = useSelector((state) => (formSelector(state, 'password') as string) ?? '');
+  const confirmPassword = useSelector(
+    (state) => (formSelector(state, 'confirmPassword') as string) ?? '',
+  );
+  const name = useSelector((state) => (formSelector(state, 'name') as string) ?? '');
+
+  // Password errors are shown only after blur or submit — not while typing.
+  const [showPasswordValidation, setShowPasswordValidation] = useState(false);
+  const [submitAttempted, setSubmitAttempted] = useState(false);
 
   useEffect(() => {
     initialize({
@@ -121,7 +159,94 @@ const RegistrationFormComponent = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const submitHandler = (values: RegistrationFormValues) => submitForm(values);
+  const ruleStatus = useMemo(
+    () => getPasswordRuleStatus(password, minLength),
+    [password, minLength],
+  );
+  const allRulesMet = areAllPasswordRulesMet(ruleStatus);
+  const hasSpace = password.length > 0 && /\s/.test(password);
+  const passwordFullyValid = allRulesMet && !hasSpace;
+
+  const ruleLabels = useMemo(
+    () => ({
+      minLength: formatMessage(messages.ruleMinLength, { minLength }),
+      digit: formatMessage(messages.ruleDigit),
+      specialSymbol: formatMessage(messages.ruleSpecialSymbol),
+      uppercase: formatMessage(messages.ruleUppercase),
+      lowercase: formatMessage(messages.ruleLowercase),
+    }),
+    [formatMessage, minLength],
+  );
+
+  // Fail styling on checklist items only when rules themselves are unmet (not when space is the only issue)
+  const showPasswordFailState =
+    showPasswordValidation && !allRulesMet && password.length > 0;
+
+  const passwordError = useMemo(() => {
+    if (!showPasswordValidation) return undefined;
+    if (!password) return formatMessage(messages.requiredField);
+    if (allRulesMet && hasSpace) {
+      return formatMessage(messages.passwordPolicySummary, { minLength });
+    }
+    if (!allRulesMet) {
+      return formatMessage(messages.passwordRequirementsError);
+    }
+    return undefined;
+  }, [showPasswordValidation, password, allRulesMet, hasSpace, minLength, formatMessage]);
+
+  const hasMismatch = confirmPassword.length > 0 && password !== confirmPassword;
+
+  const confirmPasswordError = useMemo(() => {
+    if (!submitAttempted) return undefined;
+    if (!confirmPassword.trim()) return formatMessage(messages.requiredField);
+    if (hasMismatch) return formatMessage(messages.passwordsDoNotMatch);
+    return undefined;
+  }, [submitAttempted, confirmPassword, hasMismatch, formatMessage]);
+
+  const nameError = useMemo(() => {
+    if (!submitAttempted) return undefined;
+    if (!name.trim()) return formatMessage(messages.requiredField);
+    if (commonValidators.userName(name)) {
+      return formatMessage(messages.nameHint, {
+        minLength: Number(REGISTRATION_NAME_MIN_LENGTH),
+        maxLength: Number(REGISTRATION_NAME_MAX_LENGTH),
+      });
+    }
+    return undefined;
+  }, [submitAttempted, name, formatMessage]);
+
+  const hasActiveErrors = !!(passwordError || confirmPasswordError || nameError);
+  const isCreateDisabled = loading || hasActiveErrors;
+  const isConfirmDisabled = !passwordFullyValid || loading;
+
+  const capsLockMessage = formatMessage(messages.capsLockOn);
+
+  const handlePasswordChange = useCallback(() => {
+    setShowPasswordValidation(false);
+  }, []);
+
+  const handlePasswordBlur = useCallback(() => {
+    if (password.length > 0) {
+      setShowPasswordValidation(true);
+    }
+  }, [password]);
+
+  const submitHandler = useCallback(
+    (values: RegistrationFormValues) => {
+      setSubmitAttempted(true);
+      setShowPasswordValidation(true);
+
+      const nameValid = name.trim() && !commonValidators.userName(name);
+      const confirmValid = confirmPassword === password && confirmPassword.trim();
+
+      if (!nameValid || !passwordFullyValid || !confirmValid) {
+        return;
+      }
+
+      return submitForm(values);
+    },
+    [name, password, confirmPassword, passwordFullyValid, submitForm],
+  );
 
   return (
     <form
@@ -129,111 +254,85 @@ const RegistrationFormComponent = ({
       onSubmit={handleSubmit(submitHandler) as FormEventHandler<HTMLFormElement>}
     >
       <div className={cx('name-field')}>
-        <FieldProvider name="name">
-          <FieldErrorHint
-            provideHint={false}
-            errorsWithHint={[ERROR_MESSAGE_KEYS.REQUIRED_FIELD_WITH_PERIOD]}
-          >
-            <InputOutside
-              icon={NameIcon}
-              maxLength={Number(REGISTRATION_NAME_MAX_LENGTH)}
-              placeholder={formatMessage(messages.name)}
-              hasDynamicValidation
-              hint={formatMessage(messages.nameHint, {
-                minLength: Number(REGISTRATION_NAME_MIN_LENGTH),
-                maxLength: Number(REGISTRATION_NAME_MAX_LENGTH),
-              })}
-              provideErrorHint
-            />
-          </FieldErrorHint>
-        </FieldProvider>
-      </div>
-      <div className={cx('email-field')}>
-        <FieldProvider name="email">
-          <InputOutside icon={EmailIcon} disabled />
-        </FieldProvider>
-      </div>
-      <div className={cx('password-field')}>
-        <FieldProvider name="password">
-          <FieldErrorHint provideHint={false} errorsWithHint={[ERROR_MESSAGE_KEYS.REQUIRED_FIELD_WITH_PERIOD]}>
-            <InputOutside
-              type={'password'}
-              icon={PasswordIcon}
-              maxLength={PASSWORD_MAX_ALLOWED_LENGTH}
-              placeholder={formatMessage(messages.password)}
-              hasDynamicValidation
-              hint={formatMessage(validationLocalization.passwordHint, { minLength })}
-              provideErrorHint
-            />
-          </FieldErrorHint>
-        </FieldProvider>
-      </div>
-      <div className={cx('confirm-password-field')}>
-        <FieldProvider name="confirmPassword">
-          <FieldErrorHint
-            formPath={'user.registrationForm'}
-            fieldName={'confirmPassword'}
-            provideHint={false}
-          >
-            <InputOutside
-              type={'password'}
-              icon={PasswordIcon}
-              maxLength={PASSWORD_MAX_ALLOWED_LENGTH}
-              placeholder={formatMessage(messages.confirmPassword)}
-              hasDynamicValidation
-              provideErrorHint
-            />
-          </FieldErrorHint>
+        <FieldProvider name="name" error={nameError} touched={!!nameError}>
+          <FieldText
+            label={formatMessage(messages.fullNameLabel)}
+            maxLength={Number(REGISTRATION_NAME_MAX_LENGTH)}
+            defaultWidth={false}
+            displayError={!!nameError}
+            disabled={loading}
+          />
         </FieldProvider>
       </div>
 
-      <div className={cx('buttons-container')}>
-        <div className={cx('button-register')}>
-          <BigButton type={'submit'} roundedCorners color={'booger'} disabled={loading || invalid}>
+      <div className={cx('email-field')}>
+        <FieldProvider name="email">
+          <FieldText
+            label={formatMessage(messages.emailLabel)}
+            defaultWidth={false}
+            disabled
+          />
+        </FieldProvider>
+      </div>
+
+      <div className={cx('password-field')} onBlur={handlePasswordBlur}>
+        <FieldProvider name="password" error={passwordError} touched={!!passwordError}>
+          <OutsidePasswordField
+            label={formatMessage(messages.passwordLabel)}
+            maxLength={PASSWORD_MAX_ALLOWED_LENGTH}
+            defaultWidth={false}
+            autoComplete="off"
+            disabled={loading}
+            displayError={!!passwordError}
+            capsLockMessage={capsLockMessage}
+            onChange={handlePasswordChange}
+          />
+        </FieldProvider>
+        <PasswordRequirementsList
+          ruleStatus={ruleStatus}
+          ruleLabels={ruleLabels}
+          showFailState={showPasswordFailState}
+        />
+      </div>
+
+      <div
+        className={cx('confirm-password-field', {
+          'confirm-password-field--inactive': isConfirmDisabled,
+        })}
+      >
+        <FieldProvider
+          name="confirmPassword"
+          error={confirmPasswordError}
+          touched={!!confirmPasswordError}
+        >
+          <OutsidePasswordField
+            label={formatMessage(messages.confirmPasswordLabel)}
+            maxLength={PASSWORD_MAX_ALLOWED_LENGTH}
+            defaultWidth={false}
+            autoComplete="off"
+            disabled={isConfirmDisabled}
+            displayError={!!confirmPasswordError}
+            capsLockMessage={capsLockMessage}
+          />
+        </FieldProvider>
+      </div>
+
+      <div className={cx('register-button')}>
+        <Button
+          type="submit"
+          variant="primary"
+          className={cx('action-button')}
+          disabled={isCreateDisabled}
+        >
+          <LoadingSubmitButton isLoading={loading}>
             {submitButtonTitle || formatMessage(messages.register)}
-          </BigButton>
-        </div>
+          </LoadingSubmitButton>
+        </Button>
       </div>
     </form>
   );
 };
 
-export const RegistrationForm = connect((state) => ({
-  minLength: passwordMinLengthSelector(state),
-}))(
-  injectIntl(
-    reduxForm<RegistrationFormValues, OwnProps & ConnectedProps>({
-      form: 'registration',
-      validate: ({ name, password, confirmPassword }, { minLength, intl }) => {
-        const passwordMessage = intl.formatMessage(validationLocalization.passwordHint, {
-          minLength,
-        });
-        const passwordValidator = commonValidators.createPasswordValidator(
-          minLength,
-          passwordMessage,
-        );
-
-        const passwordErrorMessage = password?.trim()
-          ? passwordValidator(password)
-          : ERROR_MESSAGE_KEYS.REQUIRED_FIELD_WITH_PERIOD;
-
-        let confirmPasswordErrorMessage: string | undefined;
-        if (!confirmPassword?.trim()) {
-          confirmPasswordErrorMessage = ERROR_MESSAGE_KEYS.REQUIRED_FIELD_WITH_PERIOD;
-        } else if (confirmPassword !== password) {
-          confirmPasswordErrorMessage = ERROR_MESSAGE_KEYS.CONFIRM_PASSWORD_HINT_MESSAGE;
-        }
-
-        const nameErrorMessage = name?.trim()
-          ? commonValidators.userName(name)
-          : ERROR_MESSAGE_KEYS.REQUIRED_FIELD_WITH_PERIOD;
-
-        return {
-          password: passwordErrorMessage,
-          confirmPassword: confirmPasswordErrorMessage,
-          name: nameErrorMessage,
-        };
-      },
-    })(RegistrationFormComponent),
-  ),
-);
+export const RegistrationForm = reduxForm<RegistrationFormValues, OwnProps>({
+  form: 'registration',
+})(RegistrationFormComponent);

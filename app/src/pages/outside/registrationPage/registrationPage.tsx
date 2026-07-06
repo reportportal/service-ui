@@ -14,67 +14,49 @@
  * limitations under the License.
  */
 
-import { ComponentType } from 'react';
-import { createClassnames } from 'common/utils/createClassnames';
-import { referenceDictionary } from 'common/utils';
-import { useIntl, defineMessages, type MessageDescriptor } from 'react-intl';
+import classNames from 'classnames/bind';
+import { docsReferences, referenceDictionary } from 'common/utils';
+import { useIntl, defineMessages } from 'react-intl';
 import Link from 'redux-first-router-link';
+import { Button } from '@reportportal/ui-kit';
 import { LOGIN_PAGE } from 'controllers/pages';
-import { BlockHeader as BlockHeaderBase } from '../common/pageBlockContainer/blockHeader';
-import { RegistrationPageSection } from './registrationPageSection';
-import { RegistrationFailBlock } from './registrationFailBlock';
+import { PageSectionContainer } from '../common/pageSectionContainer';
+import { OutsideLoginFooter } from '../common/outsideLoginFooter';
+import { LoginPageSection } from '../loginPage/loginPageSection';
+import { SocialSection } from '../loginPage/socialSection';
+import { ReportPortalIcon } from '../loginPage/reportPortalIcon/ReportPortalIcon';
+import loginPageStyles from '../loginPage/loginPage.scss';
 import { RegistrationForm } from './registrationForm';
 import type { RegistrationFormValues } from './registrationForm/registrationForm';
-import { OutsideLoginFooter } from '../common/outsideLoginFooter';
 import styles from './registrationPage.scss';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
-const cx = createClassnames(styles);
-
-// TODO: remove it when SectionBlockHeader will be converted to TS and will accept MessageDescriptor as header and hint props
-const BlockHeader = BlockHeaderBase as ComponentType<{
-  header?: MessageDescriptor;
-  hint?: MessageDescriptor;
-  hintParams?: Record<string, unknown>;
-}>;
+const loginCx = classNames.bind(loginPageStyles);
+const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  welcome: {
-    id: 'RegistrationPage.welcome',
-    defaultMessage: 'Welcome,',
-  },
   registration: {
     id: 'RegistrationPage.registration',
-    defaultMessage: 'create your account',
+    defaultMessage: 'Create your account',
   },
-  coupleMinutes: {
-    id: 'RegistrationPage.coupleMinutes',
-    defaultMessage: 'It only takes a couple of minutes to get started',
-  },
-  oops:
-  {
+  oops: {
     id: 'RegistrationPage.oops',
-    defaultMessage: 'Oops',
+    defaultMessage: 'Oops...',
   },
   tokenExpired: {
     id: 'RegistrationPage.tokenExpired',
-    defaultMessage: 'this invitation has expired or already used',
+    defaultMessage: 'This invitation has expired or already used.',
   },
   tokenNotProvided: {
     id: 'RegistrationPage.tokenNotProvided',
-    defaultMessage: 'invitation token was not provided in URL parameters',
-  },
-  visit: {
-    id: 'RegistrationPage.visit',
-    defaultMessage: 'Visit',
+    defaultMessage: 'Invitation token was not provided in URL parameters.',
   },
   login: {
     id: 'RegistrationPage.login',
-    defaultMessage: 'Log In',
+    defaultMessage: 'Log in',
   },
-  again: {
-    id: 'RegistrationPage.again',
-    defaultMessage: 'again',
+  readMore: {
+    id: 'RegistrationPage.readMore',
+    defaultMessage: 'Read more',
   },
 });
 
@@ -97,79 +79,88 @@ export const RegistrationPage = ({
   initialData = {},
   submitButtonTitle = '',
 }: RegistrationPageProps) => {
-  const backgroundClasses = {
-    background: true,
-    failed: !tokenProvided || !tokenActive,
-  };
-
-  const { formatMessage } = useIntl();
+  const isFormVisible = tokenProvided && tokenActive;
 
   return (
-    <div className={cx('registration-page')}>
-      <div className={cx('registration-page-content')}>
-        <div className={cx(backgroundClasses)} />
-        <a href={referenceDictionary.rpLanding} target="_blank" rel="noopener noreferrer" aria-label="ReportPortal landing page">
-          <div className={cx('logo')} />
-        </a>
-        <RegistrationPageSection left>
-          {tokenProvided && tokenActive && (
-            <div className={cx('couple-minutes')}>
-              {formatMessage(messages.coupleMinutes)}
-            </div>
-          )}
-        </RegistrationPageSection>
-        <RegistrationPageSection failed={!tokenActive || !tokenProvided}>
-          <div className={cx('main-content')}>
-            {tokenProvided && tokenActive ? (
+    <div className={loginCx('login-page')}>
+      <div className={loginCx('login-page-content')}>
+        <div className={loginCx('login-form-side')}>
+          <div className={`${loginCx('logo')} ${cx('registrationLogo')}`}>
+            <a
+              href={referenceDictionary.rpLanding}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="ReportPortal landing page"
+            >
+              <ReportPortalIcon />
+            </a>
+          </div>
+          <LoginPageSection>
+            {isFormVisible ? (
               <>
-                <BlockHeader header={messages.welcome} hint={messages.registration} />
-                <RegistrationForm
-                  email={email}
-                  submitForm={onRegistrationSubmit}
-                  loading={loading}
-                  initialData={initialData}
-                  submitButtonTitle={submitButtonTitle}
-                />
+                <div className={cx('registration-scroll-area')}>
+                  <PageSectionContainer
+                    header={messages.registration}
+                    leftAligned
+                    compactHeaderSpacing
+                  >
+                    <RegistrationForm
+                      email={email}
+                      submitForm={onRegistrationSubmit}
+                      loading={loading}
+                      initialData={initialData}
+                      submitButtonTitle={submitButtonTitle}
+                    />
+                  </PageSectionContainer>
+                </div>
+                <div className={cx('registration-footer')}>
+                  <OutsideLoginFooter />
+                </div>
               </>
             ) : (
-              <TokenErrorSection tokenProvided={tokenProvided} />
+              <>
+                <div className={cx('registration-scroll-area')}>
+                  <PageSectionContainer
+                    header={messages.oops}
+                    hint={tokenProvided ? messages.tokenExpired : messages.tokenNotProvided}
+                    leftAligned
+                  >
+                    <TokenErrorActions />
+                  </PageSectionContainer>
+                </div>
+                <div className={cx('registration-footer')}>
+                  <OutsideLoginFooter />
+                </div>
+              </>
             )}
-            <OutsideLoginFooter />
-          </div>
-        </RegistrationPageSection>
+          </LoginPageSection>
+        </div>
+        <LoginPageSection social>
+          <SocialSection />
+        </LoginPageSection>
       </div>
     </div>
   );
 };
 
-interface TokenErrorSectionProps {
-  tokenProvided?: boolean;
-}
-
-const TokenErrorSection = ({ tokenProvided = false }: TokenErrorSectionProps) => {
-
+const TokenErrorActions = () => {
   const { formatMessage } = useIntl();
 
   return (
-    <RegistrationFailBlock>
-      <span className={cx('fail-msg')}>
-        <span className={cx('big')}>{formatMessage(messages.oops)},</span>
-        <br />
-        {formatMessage(tokenProvided ? messages.tokenExpired : messages.tokenNotProvided)}
-      </span>
-      <div className={cx('visit-rp')}>
-        {`${formatMessage(messages.visit)} `}
-        <a className={cx('backlink')} href={referenceDictionary.rpLanding}>
-          ReportPortal.io
-        </a>
-        <br />
-        {`${formatMessage(COMMON_LOCALE_KEYS.OR).toLocaleLowerCase()} `}
-        <Link to={{ type: LOGIN_PAGE }} className={cx('backlink')}>
+    <div className={cx('fail-actions')}>
+      <Link to={{ type: LOGIN_PAGE }} className={cx('button-link')}>
+        <Button variant="ghost" className={cx('action-button')}>
           {formatMessage(messages.login)}
-        </Link>
-        {` ${formatMessage(messages.again)}`}
-      </div>
-    </RegistrationFailBlock>
+        </Button>
+      </Link>
+      <a
+        className={cx('read-more-link')}
+        href={docsReferences.userManagement}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {formatMessage(messages.readMore)}
+      </a>
+    </div>
   );
 };
-

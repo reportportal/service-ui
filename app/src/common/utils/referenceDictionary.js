@@ -89,6 +89,7 @@ export const docsReferences = {
   implementOwnIntegrationDocs:
     'https://reportportal.io/docs/log-data-in-reportportal/ImplementOwnIntegration/',
   logTypesDocs: 'https://reportportal.io/docs/configuration/ProjectSettings#log-types',
+  userManagement: 'https://reportportal.io/docs/configuration/UserManagement/'
 };
 
 export const faqDictionary = {

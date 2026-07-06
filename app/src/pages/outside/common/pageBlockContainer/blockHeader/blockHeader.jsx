@@ -23,15 +23,19 @@ import styles from './blockHeader.scss';
 
 const cx = classNames.bind(styles);
 
-export const BlockHeader = injectIntl(({ intl: { formatMessage }, header, hint, hintParams }) => (
+export const BlockHeader = injectIntl(({ intl: { formatMessage }, header={}, hint = undefined, hintParams = {} }) => (
   <span className={cx('block-header')}>
     <span className={cx('huge-message')}>{formatMessage(header)}</span>
-    <br />
-    {Parser(
-      formatMessage(hint, {
-        b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
-        ...hintParams,
-      }),
+    {hint?.id && (
+      <>
+        <br />
+        {Parser(
+          formatMessage(hint, {
+            b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
+            ...hintParams,
+          }),
+        )}
+      </>
     )}
   </span>
 ));
@@ -40,8 +44,4 @@ BlockHeader.propTypes = {
   hint: PropTypes.object,
   hintParams: PropTypes.object,
 };
-BlockHeader.defaultProps = {
-  header: {},
-  hint: {},
-  hintParams: {},
-};
+

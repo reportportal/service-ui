@@ -17,10 +17,11 @@
 // Punctuation (\p{P}) and symbols (\p{S}) only — letters from any language are excluded.
 const PASSWORD_SPECIAL_SYMBOL_PATTERN = /[\p{P}\p{S}]/u;
 
-export const PASSWORD_RULE_IDS = ['minLength', 'specialSymbol', 'uppercase', 'lowercase'];
+export const PASSWORD_RULE_IDS = ['minLength', 'digit', 'specialSymbol', 'uppercase', 'lowercase'];
 
 export const getPasswordRuleStatus = (password = '', minLength = 8) => ({
   minLength: password.length >= minLength,
+  digit: /\d/.test(password),
   specialSymbol: PASSWORD_SPECIAL_SYMBOL_PATTERN.test(password),
   uppercase: /[A-Z]/.test(password),
   lowercase: /[a-z]/.test(password),
