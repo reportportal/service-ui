@@ -22,15 +22,15 @@ import styles from './pageSectionContainer.scss';
 const cx = classNames.bind(styles);
 
 export const PageSectionContainer = ({
-  header= {},
-  hint=  {},
-  hintParams=  {},
-  leftAligned= false,
+  header = {},
+  hint =  {},
+  hintParams =  {},
+  leftAligned = false,
   hideHeader = false,
-  children= null,
-  customClassName= '',
-  compactHeaderSpacing= false,
-  headerStyle= null,
+  children = null,
+  customClassName = '',
+  compactHeaderSpacing = false,
+  headerStyle = null,
 }) => (
   <div className={cx('page-section-container', customClassName)}>
     {!hideHeader && header?.id && (

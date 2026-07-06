@@ -23,7 +23,7 @@ import styles from './blockHeader.scss';
 
 const cx = classNames.bind(styles);
 
-export const BlockHeader = injectIntl(({ intl: { formatMessage }, header={}, hint = undefined, hintParams = {} }) => (
+export const BlockHeader = injectIntl(({ intl: { formatMessage }, header = {}, hint = undefined, hintParams = {} }) => (
   <span className={cx('block-header')}>
     <span className={cx('huge-message')}>{formatMessage(header)}</span>
     {hint?.id && (
