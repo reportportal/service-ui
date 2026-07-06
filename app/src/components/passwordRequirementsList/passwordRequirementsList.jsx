@@ -73,12 +73,14 @@ export const PasswordRequirementsList = ({
 PasswordRequirementsList.propTypes = {
   ruleStatus: PropTypes.shape({
     minLength: PropTypes.bool,
+    digit: PropTypes.bool,
     specialSymbol: PropTypes.bool,
     uppercase: PropTypes.bool,
     lowercase: PropTypes.bool,
   }).isRequired,
   ruleLabels: PropTypes.shape({
     minLength: PropTypes.string.isRequired,
+    digit: PropTypes.string.isRequired,
     specialSymbol: PropTypes.string.isRequired,
     uppercase: PropTypes.string.isRequired,
     lowercase: PropTypes.string.isRequired,

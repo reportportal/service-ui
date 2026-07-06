@@ -54,6 +54,10 @@ const messages = defineMessages({
     id: 'ChangePasswordForm.ruleMinLength',
     defaultMessage: 'At least {minLength} characters',
   },
+  ruleDigit: {
+    id: 'ChangePasswordForm.ruleDigit',
+    defaultMessage: 'Digits included',
+  },
   ruleSpecialSymbol: {
     id: 'ChangePasswordForm.ruleSpecialSymbol',
     defaultMessage: 'A special symbol',
@@ -115,6 +119,7 @@ const ChangePasswordFormComponent = ({ handleSubmit, resetQueryParam = '' }) => 
   const ruleLabels = useMemo(
     () => ({
       minLength: formatMessage(messages.ruleMinLength, { minLength }),
+      digit: formatMessage(messages.ruleDigit),
       specialSymbol: formatMessage(messages.ruleSpecialSymbol),
       uppercase: formatMessage(messages.ruleUppercase),
       lowercase: formatMessage(messages.ruleLowercase),
