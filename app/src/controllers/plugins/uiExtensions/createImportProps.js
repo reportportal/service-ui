@@ -222,6 +222,7 @@ import { formatMethodType } from 'common/utils/localizationUtils';
 import {
   publicPluginsSelector,
   createGlobalNamedIntegrationsSelector,
+  availableIntegrationsByPluginNameSelector,
 } from 'controllers/plugins/selectors';
 import { loginAction } from 'controllers/auth';
 import { AttributeEditor } from 'componentLibrary/attributeEditor';
@@ -431,6 +432,8 @@ export const createImportProps = (pluginName) => ({
     urlOrganizationAndProjectSelector,
     // TODO: must be removed when the common plugin commands will be used
     globalIntegrationsSelector: createGlobalNamedIntegrationsSelector(pluginName),
+    availableIntegrationsSelector: (state) =>
+      availableIntegrationsByPluginNameSelector(state, pluginName),
     projectMembersSelector,
     projectInfoSelector,
     projectNameSelector,
