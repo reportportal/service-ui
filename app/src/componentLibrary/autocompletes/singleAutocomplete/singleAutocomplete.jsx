@@ -22,6 +22,7 @@ import { FieldText } from 'componentLibrary/fieldText';
 import { ENTER_KEY_CODE, TAB_KEY_CODE } from 'common/constants/keyCodes';
 import { AutocompleteMenu } from '../common/autocompleteMenu';
 import { autocompleteVariantType, singleAutocompleteOptionVariantType } from '../common/propTypes';
+import { scrollIntoAutocompleteMenu } from '../common/scrollIntoAutocompleteMenu';
 
 const DEFAULT_OPTIONS_INDEX = 0;
 
@@ -143,6 +144,7 @@ export class SingleAutocomplete extends Component {
           onStateChange={onStateChange}
           defaultHighlightedIndex={DEFAULT_OPTIONS_INDEX}
           stateReducer={stateReducer}
+          scrollIntoView={scrollIntoAutocompleteMenu}
         >
           {({
             getInputProps,
