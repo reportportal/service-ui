@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
@@ -24,7 +24,7 @@ import { useTracking } from 'react-tracking';
 import { Button } from '@reportportal/ui-kit';
 import { LOGIN_PAGE } from 'controllers/pages';
 import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
-import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { startSsoAuthFlow } from 'pages/outside/common/utils';
 import styles from './externalLoginBlock.scss';
 
@@ -41,20 +41,29 @@ export const ExternalLoginBlock = ({ externalAuth = {}, inline = false }) => {
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
   const [authInProgress, setAuthInProgress] = useState(false);
+  const clearAuthTimeoutRef = useRef(() => {});
+
+  useEffect(() => () => clearAuthTimeoutRef.current(), []);
 
   const startAuthFlow = useCallback(
     (val, authType) => {
-      startSsoAuthFlow({
+      clearAuthTimeoutRef.current();
+      clearAuthTimeoutRef.current = startSsoAuthFlow({
         dispatch,
         authType,
         val,
         onExternalRedirect: () => setAuthInProgress(true),
+        onError: () => setAuthInProgress(false),
       });
     },
     [dispatch],
   );
 
   const handleSsoClick = useCallback(() => {
+    if (authInProgress) {
+      return;
+    }
+
     const authTypes = Object.keys(externalAuth);
 
     if (authTypes.length > 1) {
@@ -71,11 +80,7 @@ export const ExternalLoginBlock = ({ externalAuth = {}, inline = false }) => {
 
     trackEvent(LOGIN_PAGE_EVENTS.clickOnLoginButton(authType));
     startAuthFlow(val, authType);
-  }, [dispatch, externalAuth, startAuthFlow, trackEvent]);
-
-  if (authInProgress) {
-    return <SpinningPreloader />;
-  }
+  }, [authInProgress, dispatch, externalAuth, startAuthFlow, trackEvent]);
 
   if (Object.keys(externalAuth).length === 0) {
     return null;
@@ -83,8 +88,14 @@ export const ExternalLoginBlock = ({ externalAuth = {}, inline = false }) => {
 
   return (
     <div className={cx('external-login-block', { inline })}>
-      <Button variant="ghost" className={cx('sso-button')} onClick={handleSsoClick}>
-        <FormattedMessage {...messages.loginWithSso} />
+      <Button
+        variant="ghost"
+        disabled={authInProgress}
+        onClick={handleSsoClick}
+      >
+        <LoadingSubmitButton isLoading={authInProgress} loaderColor="topaz">
+          <FormattedMessage {...messages.loginWithSso} />
+        </LoadingSubmitButton>
       </Button>
     </div>
   );

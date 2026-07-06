@@ -61,7 +61,16 @@ import {
   setBadCredentialsAction,
   setLoginLoadingAction,
 } from './actionCreators';
-import { isLoginCredentialFailure, isLoginLockoutActive, isServerLoginLockFailure, shouldStartLoginLockout } from './loginLockout';
+import {
+  hasExpiredLoginLockout,
+  isLoginAttemptsExceeded,
+  isLoginCredentialFailure,
+  isLoginLockoutActive,
+  isLoginRedirectLockout,
+  isServerLoginLockFailure,
+  isValidLoginTokenResponse,
+  shouldStartLoginLockout,
+} from './loginLockout';
 import {
   LOGIN,
   LOGOUT,
@@ -199,16 +208,26 @@ function* showLoginLockoutNotification() {
   );
 }
 
-function* handleLogin({ payload }) {
+function* clearExpiredLoginLockoutState() {
   const lastFailedLoginTime = yield select(lastFailedLoginTimeSelector);
-  if (isLoginLockoutActive(lastFailedLoginTime)) {
-    yield put(setLoginLoadingAction(false));
-    return;
-  }
 
-  try {
-    const result = yield call(fetch, URLS.login(), {
+  if (hasExpiredLoginLockout(lastFailedLoginTime)) {
+    yield put(clearLoginLockoutAction());
+  }
+}
+
+function* stopLoadingAndActivateLockout() {
+  yield put(setLoginLoadingAction(false));
+  yield call(startServerLoginLockout);
+}
+
+function* submitLoginRequest(payload) {
+  return yield call(
+    fetch,
+    URLS.login(),
+    {
       method: 'POST',
+      validateStatus: () => true,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
@@ -217,34 +236,77 @@ function* handleLogin({ payload }) {
         username: payload.login,
         password: payload.password,
       }),
-    });
-    const token = {
+    },
+    true,
+  );
+}
+
+function* handleLoginResponse(response, isLastAttempt) {
+  if (isLoginRedirectLockout(response) || (isLastAttempt && response.status >= 400 && response.status < 500)) {
+    yield call(stopLoadingAndActivateLockout);
+    return;
+  }
+
+  if (response.status >= 400) {
+    throw response.data;
+  }
+
+  const result = response.data;
+
+  if (!isValidLoginTokenResponse(result)) {
+    yield call(stopLoadingAndActivateLockout);
+    return;
+  }
+
+  yield put(
+    loginSuccessAction({
       type: result.token_type,
       value: result.access_token,
-    };
+    }),
+  );
+}
 
-    yield put(loginSuccessAction(token));
-  } catch (rawError) {
-    yield put(setLoginLoadingAction(false));
+function* handleLoginFailure(rawError, isLastAttempt) {
+  yield put(setLoginLoadingAction(false));
 
-    if (isServerLoginLockFailure(rawError)) {
-      yield call(startServerLoginLockout);
+  if (isServerLoginLockFailure(rawError) || isLastAttempt) {
+    yield call(startServerLoginLockout);
+    yield call(showLoginLockoutNotification);
+    return;
+  }
+
+  if (isLoginCredentialFailure(rawError)) {
+    const isLockedOut = yield call(registerFailedLoginAttempt);
+
+    if (isLockedOut) {
       yield call(showLoginLockoutNotification);
-      return;
+    } else {
+      yield call(showLoginFailureNotification, getLoginErrorMessage(rawError));
     }
+    return;
+  }
 
-    if (isLoginCredentialFailure(rawError)) {
-      const isLockedOut = yield call(registerFailedLoginAttempt);
+  yield call(showLoginFailureNotification, getLoginErrorMessage(rawError));
+}
 
-      if (isLockedOut) {
-        yield call(showLoginLockoutNotification);
-      } else {
-        yield call(showLoginFailureNotification, getLoginErrorMessage(rawError));
-      }
-      return;
-    }
+function* handleLogin({ payload }) {
+  yield call(clearExpiredLoginLockoutState);
 
-    yield call(showLoginFailureNotification, getLoginErrorMessage(rawError));
+  const lastFailedLoginTime = yield select(lastFailedLoginTimeSelector);
+
+  if (isLoginLockoutActive(lastFailedLoginTime)) {
+    yield put(setLoginLoadingAction(false));
+    return;
+  }
+
+  const failedAttempts = yield select(failedLoginAttemptsSelector);
+  const isLastAttempt = isLoginAttemptsExceeded(failedAttempts);
+
+  try {
+    const response = yield call(submitLoginRequest, payload);
+    yield call(handleLoginResponse, response, isLastAttempt);
+  } catch (rawError) {
+    yield call(handleLoginFailure, rawError, isLastAttempt);
   }
 }
 

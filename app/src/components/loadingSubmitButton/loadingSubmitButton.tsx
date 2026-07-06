@@ -25,10 +25,16 @@ const cx = createClassnames(styles);
 
 interface LoadingSubmitButtonProps {
   isLoading: boolean;
+  loaderColor?: string;
 }
 
 export const LoadingSubmitButton = ({
   isLoading,
+  loaderColor = 'white',
   children,
 }: PropsWithChildren<LoadingSubmitButtonProps>) =>
-  isLoading ? <BubblesLoader className={cx('loading-submit-button')} color="white" /> : children;
+  isLoading ? (
+    <BubblesLoader className={cx('loading-submit-button')} color={loaderColor} />
+  ) : (
+    children
+  );

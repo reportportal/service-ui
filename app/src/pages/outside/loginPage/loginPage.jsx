@@ -19,8 +19,17 @@ import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
 import { referenceDictionary } from 'common/utils';
+import { updateStorageItem } from 'common/utils/storageUtils';
+import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import { pagePropertiesSelector } from 'controllers/pages';
 import { showDefaultErrorNotification } from 'controllers/notification';
+import { lastFailedLoginTimeSelector } from 'controllers/auth';
+import { setLastFailedLoginTimeAction } from 'controllers/auth/actionCreators';
+import {
+  hasExpiredLoginLockout,
+  isLoginLockoutActive,
+  isLoginLockoutErrorAuthMessage,
+} from 'controllers/auth/loginLockout';
 import { uiExtensionLoginPageSelector } from 'controllers/plugins/uiExtensions';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
@@ -69,8 +78,23 @@ export const LoginPage = () => {
   const { forgotPass, reset, errorAuth, multipleAuth, selectSso, ldapLogin, registration } =
     useSelector(pagePropertiesSelector) ?? {};
   const extensions = useSelector(uiExtensionLoginPageSelector);
+  const lastFailedLoginTime = useSelector(lastFailedLoginTimeSelector);
 
   const prevErrorRef = useRef(null);
+
+  useEffect(() => {
+    if (!isLoginLockoutErrorAuthMessage(errorAuth)) {
+      return;
+    }
+
+    if (isLoginLockoutActive(lastFailedLoginTime) || hasExpiredLoginLockout(lastFailedLoginTime)) {
+      return;
+    }
+
+    const lockoutStartedAt = Date.now();
+    updateStorageItem(APPLICATION_SETTINGS, { lastFailedLoginTime: lockoutStartedAt });
+    dispatch(setLastFailedLoginTimeAction(lockoutStartedAt));
+  }, [dispatch, errorAuth, lastFailedLoginTime]);
 
   useEffect(() => {
     const showErrorIfNeeded = (error) => {

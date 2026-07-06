@@ -39,7 +39,7 @@ const messages = defineMessages({
 });
 
 export const LdapLoginBlock = () => {
-  const externalAuth = useSelector(authExtensionsSelector);
+  const externalAuth = useSelector(authExtensionsSelector) || {};
   const lastFailedLoginTime = useSelector(lastFailedLoginTimeSelector);
   const dispatch = useDispatch();
 
