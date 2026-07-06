@@ -96,43 +96,34 @@ export const RegistrationPage = ({
             </a>
           </div>
           <LoginPageSection>
-            {isFormVisible ? (
-              <>
-                <div className={cx('registration-scroll-area')}>
-                  <PageSectionContainer
-                    header={messages.registration}
-                    leftAligned
-                    compactHeaderSpacing
-                  >
-                    <RegistrationForm
-                      email={email}
-                      submitForm={onRegistrationSubmit}
-                      loading={loading}
-                      initialData={initialData}
-                      submitButtonTitle={submitButtonTitle}
-                    />
-                  </PageSectionContainer>
-                </div>
-                <div className={cx('registration-footer')}>
-                  <OutsideLoginFooter />
-                </div>
-              </>
-            ) : (
-              <>
-                <div className={cx('registration-scroll-area')}>
-                  <PageSectionContainer
-                    header={messages.oops}
-                    hint={tokenProvided ? messages.tokenExpired : messages.tokenNotProvided}
-                    leftAligned
-                  >
-                    <TokenErrorActions />
-                  </PageSectionContainer>
-                </div>
-                <div className={cx('registration-footer')}>
-                  <OutsideLoginFooter />
-                </div>
-              </>
-            )}
+            <div className={cx('registration-scroll-area')}>
+              {isFormVisible ? (
+                <PageSectionContainer
+                  header={messages.registration}
+                  leftAligned
+                  compactHeaderSpacing
+                >
+                  <RegistrationForm
+                    email={email}
+                    submitForm={onRegistrationSubmit}
+                    loading={loading}
+                    initialData={initialData}
+                    submitButtonTitle={submitButtonTitle}
+                  />
+                </PageSectionContainer>
+              ) : (
+                <PageSectionContainer
+                  header={messages.oops}
+                  hint={tokenProvided ? messages.tokenExpired : messages.tokenNotProvided}
+                  leftAligned
+                >
+                  <TokenErrorActions />
+                </PageSectionContainer>
+              )}
+            </div>
+            <div className={cx('registration-footer')}>
+              <OutsideLoginFooter />
+            </div>
           </LoginPageSection>
         </div>
         <LoginPageSection social>

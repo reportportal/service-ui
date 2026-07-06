@@ -2293,7 +2293,7 @@
   "RegistrationPage.login": "Увійти",
   "RegistrationPage.oops": "Упс...",
   "RegistrationPage.or": "або ",
-  "RegistrationPage.readMore": "Read more",
+  "RegistrationPage.readMore": "Читати далі",
   "RegistrationPage.registration": "Створіть обліковий запис",
   "RegistrationPage.tokenExpired": "Термін дії цього запрошення закінчився або воно вже використовувалося.",
   "RegistrationPage.tokenNotProvided": "Токен запрошення не виявлено в параметрах URL.",

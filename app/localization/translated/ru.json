@@ -2293,7 +2293,7 @@
   "RegistrationPage.login": "Войти",
   "RegistrationPage.oops": "Упс...",
   "RegistrationPage.or": "или ",
-  "RegistrationPage.readMore": "Read more",
+  "RegistrationPage.readMore": "Читать далее",
   "RegistrationPage.registration": "Создайте аккаунт",
   "RegistrationPage.tokenExpired": "Срок действия этого приглашения истёк или оно уже использовалось.",
   "RegistrationPage.tokenNotProvided": "Токен приглашения не обнаружен в параметрах URL.",
