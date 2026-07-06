@@ -24,6 +24,7 @@ import { NavLink } from 'components/main/navLink';
 import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardTooltip';
 import { LockedIcon } from 'pages/inside/common/lockedIcon';
 import { useCanLockDashboard } from 'common/hooks/useCanLockDashboard';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import styles from './dashboardGridItem.scss';
 
 const cx = classNames.bind(styles);
@@ -33,6 +34,7 @@ const calculateGridPreviewBaseOnWidgetId = (id) => id % 14;
 export const DashboardGridItem = ({ item, onEdit, onDelete }) => {
   const getDashboardItemPageLink = useSelector(getDashboardItemPageLinkSelector);
   const canLock = useCanLockDashboard();
+  const { canWorkWithDashboard } = useUserPermissions();
   const { name, description, owner, id, locked } = item;
   const isDisabled = locked && !canLock;
 
@@ -68,6 +70,7 @@ export const DashboardGridItem = ({ item, onEdit, onDelete }) => {
           <p>{description}</p>
         </div>
         <div className={cx('grid-cell', 'owner')}>{owner}</div>
+        {canWorkWithDashboard && (
         <>
           <div className={cx('grid-cell', 'edit')}>
             <LockedDashboardTooltip locked={locked}>
@@ -80,6 +83,7 @@ export const DashboardGridItem = ({ item, onEdit, onDelete }) => {
             </LockedDashboardTooltip>
           </div>
         </>
+        )}
       </NavLink>
     </div>
   );
