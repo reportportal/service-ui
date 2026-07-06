@@ -29,7 +29,7 @@ const STACK_STEP_PX = 34;
 const getTweetKey = (tweet, index) =>
   tweet.id ?? tweet.created_at ?? tweet.date ?? tweet.createdAt ?? `tweet-${index}`;
 
-export const NewsBlock = ({ tweets, onExpandedChange }) => {
+export const NewsBlock = ({ tweets = [], onExpandedChange }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const visibleTweets = tweets.slice(0, MAX_TWEETS);
   const hasMoreTweets = visibleTweets.length > 1;
