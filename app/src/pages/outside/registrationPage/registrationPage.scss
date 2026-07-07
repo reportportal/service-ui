@@ -17,7 +17,7 @@
 .fail-actions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 32px;
   margin: 0;
 }
 
@@ -40,6 +40,10 @@
 // Scoped registration-page overrides
 .registrationLogo {
   margin-bottom: 54px;
+
+  &.registrationLogoError {
+    margin-bottom: 140px;
+  }
 }
 
 // Form scrolls when errors expand; footer stays pinned below and never overlays Create.
