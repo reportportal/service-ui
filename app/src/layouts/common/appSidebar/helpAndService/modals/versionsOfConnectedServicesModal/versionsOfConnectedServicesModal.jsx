@@ -28,17 +28,29 @@ import { hideModalAction, withModal } from 'controllers/modal';
 import { servicesUpdate } from 'common/utils/referenceDictionary';
 import { LinkItem } from 'layouts/common/appSidebar/helpAndService/linkItem';
 import { messages } from 'layouts/common/appSidebar/messages';
+import { useTracking } from 'react-tracking';
+import {
+  LOGIN_PAGE_EVENTS,
+  SIDEBAR_CATEGORY,
+} from 'components/main/analytics/events/ga4Events/loginPageEvents';
 import { PRODUCT_VERSION, PRODUCT_VERSION_LINK } from './constants';
 import { ServiceVersion } from './serviceVersion';
 import styles from './versionsOfConnectedServicesModal.scss';
 
 const cx = classNames.bind(styles);
 
-const VersionsOfConnectedServices = ({ data: { latestServiceVersions } }) => {
+const VersionsOfConnectedServices = ({ data: { latestServiceVersions, analyticsCategory } }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const appInfo = useSelector(appInfoSelector);
   const hideModal = () => dispatch(hideModalAction());
+  const releaseNotesCategory = analyticsCategory || SIDEBAR_CATEGORY;
+  const productVersionLabel = formatMessage(messages.productVersion, { version: PRODUCT_VERSION });
+
+  const handleReleaseNotesClick = () => {
+    trackEvent(LOGIN_PAGE_EVENTS.clickOnReleaseNotesLink(releaseNotesCategory, productVersionLabel));
+  };
 
   const calculateServices = () => {
     const versionsServices = [];
@@ -87,9 +99,10 @@ const VersionsOfConnectedServices = ({ data: { latestServiceVersions } }) => {
         <img className={cx('logo')} src={Logo} alt="ReportPortal" />
         <LinkItem
           link={PRODUCT_VERSION_LINK}
-          content={formatMessage(messages.productVersion, { version: PRODUCT_VERSION })}
+          content={productVersionLabel}
           className={cx('version-link')}
           icon={OpenIcon}
+          onClick={handleReleaseNotesClick}
         />
       </div>
       <div className={cx('title')}>{formatMessage(messages.titleServicesVersionsModal)}</div>
@@ -109,7 +122,10 @@ const VersionsOfConnectedServices = ({ data: { latestServiceVersions } }) => {
 };
 
 VersionsOfConnectedServices.propTypes = {
-  data: PropTypes.string.isRequired,
+  data: PropTypes.shape({
+    latestServiceVersions: PropTypes.object,
+    analyticsCategory: PropTypes.string,
+  }).isRequired,
 };
 
 export const VersionsOfConnectedServicesModal = withModal('versionsOfConnectedServicesModal')(

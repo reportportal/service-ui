@@ -22,6 +22,11 @@ import {
 const HELP_AND_SERVICE_VERSIONS = 'help_and_service_versions';
 
 export const HELP_AND_SERVICE_VERSIONS_EVENTS = {
+  clickOnVersionsOfConnectedServices: (version) => ({
+    ...getBasicClickEventParameters(HELP_AND_SERVICE_VERSIONS),
+    place: 'sidebar',
+    link_name: normalizeEventParameter(`Version ${version}`),
+  }),
   onClickPopoverItem: (linkName) => ({
     ...getBasicClickEventParameters(HELP_AND_SERVICE_VERSIONS),
     place: 'popover',

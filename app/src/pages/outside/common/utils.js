@@ -21,6 +21,12 @@ import { LOGIN_PAGE } from 'controllers/pages';
 
 export const isLdapAuthType = (authType) => authType?.toLowerCase() === LDAP;
 
+export const hasMultipleAuthProviders = (val) =>
+  Boolean(val?.providers && Object.keys(val.providers).length > 1);
+
+export const shouldTrackLoginButtonClick = (authType, val) =>
+  !isLdapAuthType(authType) && !hasMultipleAuthProviders(val);
+
 export const normalizePathWithPrefix = (path) => {
   if (path.indexOf(API_PATH) === -1) {
     return `${API_PATH}${path}`;
@@ -47,7 +53,7 @@ export const startSsoAuthFlow = ({ dispatch, authType, val, onExternalRedirect, 
     return noop;
   }
 
-  if (val.providers && Object.keys(val.providers).length > 1) {
+  if (hasMultipleAuthProviders(val)) {
     dispatch(redirect({ type: LOGIN_PAGE, payload: { query: { multipleAuth: authType } } }));
     return noop;
   }

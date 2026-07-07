@@ -18,10 +18,15 @@ import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import { FormattedMessage, defineMessages, useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { referenceDictionary } from 'common/utils';
 import { EPAM, SAAS } from 'controllers/appInfo/constants';
 import { instanceTypeSelector } from 'controllers/appInfo/selectors';
 import { showModalAction } from 'controllers/modal';
+import {
+  LOGIN_PAGE_CATEGORY,
+  LOGIN_PAGE_EVENTS,
+} from 'components/main/analytics/events/ga4Events/loginPageEvents';
 import 'layouts/common/appSidebar/helpAndService/modals/versionsOfConnectedServicesModal/versionsOfConnectedServicesModal';
 import styles from './outsideLoginFooter.scss';
 
@@ -37,6 +42,7 @@ const messages = defineMessages({
 export const OutsideLoginFooter = () => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const instanceType = useSelector(instanceTypeSelector);
   const [latestServiceVersions, setLatestServiceVersions] = useState({});
 
@@ -50,11 +56,13 @@ export const OutsideLoginFooter = () => {
   }, []);
 
   const openServiceVersionsModal = () => {
+    trackEvent(LOGIN_PAGE_EVENTS.clickOnFooterLink('service_version'));
     dispatch(
       showModalAction({
         id: 'versionsOfConnectedServicesModal',
         data: {
           latestServiceVersions,
+          analyticsCategory: LOGIN_PAGE_CATEGORY,
         },
       }),
     );
@@ -71,6 +79,7 @@ export const OutsideLoginFooter = () => {
           target="_blank"
           rel="noopener noreferrer"
           className={cx('footer-link')}
+          onClick={() => trackEvent(LOGIN_PAGE_EVENTS.clickOnFooterLink('privacy_policy'))}
         >
           <FormattedMessage id="PolicyBlock.privacyPolicy" defaultMessage="Privacy Policy" />
         </a>

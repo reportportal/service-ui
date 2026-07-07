@@ -23,6 +23,7 @@ import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import Link from 'redux-first-router-link';
 import { Button, FieldText } from '@reportportal/ui-kit';
 import { useTracking } from 'react-tracking';
+import { LDAP } from 'common/constants/pluginNames';
 import { commonValidators } from 'common/utils/validation';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { isDemoInstanceSelector } from 'controllers/appInfo';
@@ -145,7 +146,7 @@ const LoginFormComponent = ({
       return;
     }
 
-    trackEvent(LOGIN_PAGE_EVENTS.clickOnLoginButton(LOGIN));
+    trackEvent(LOGIN_PAGE_EVENTS.clickOnLoginButton(ldapLogin ? LDAP : LOGIN));
   };
 
   const onLoginSubmit = useCallback(
