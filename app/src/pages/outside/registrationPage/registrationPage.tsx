@@ -17,9 +17,11 @@
 import classNames from 'classnames/bind';
 import { docsReferences, referenceDictionary } from 'common/utils';
 import { useIntl, defineMessages } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import Link from 'redux-first-router-link';
 import { Button } from '@reportportal/ui-kit';
 import { LOGIN_PAGE } from 'controllers/pages';
+import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
 import { PageSectionContainer } from '../common/pageSectionContainer';
 import { OutsideLoginFooter } from '../common/outsideLoginFooter';
 import { LoginPageSection } from '../loginPage/loginPageSection';
@@ -136,6 +138,7 @@ export const RegistrationPage = ({
 
 const TokenErrorActions = () => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
 
   return (
     <div className={cx('fail-actions')}>
@@ -149,6 +152,7 @@ const TokenErrorActions = () => {
         href={docsReferences.userManagement}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => trackEvent(LOGIN_PAGE_EVENTS.CLICK_ON_READ_MORE)}
       >
         {formatMessage(messages.readMore)}
       </a>

@@ -33,6 +33,15 @@ const socials = {
   github: 'GitHub',
 };
 
+const socialAnalyticsNames = {
+  slack: 'slack',
+  x: 'twitter',
+  linkedin: 'linkedin',
+  youtube: 'youtube',
+  mail: 'mail',
+  github: 'github',
+};
+
 const socialLinks = [
   { key: 'slack', href: referenceDictionary.rpSlack, className: 'slk-icon', external: true },
   { key: 'x', href: referenceDictionary.rpTwitter, className: 'tw-icon', external: true },
@@ -62,7 +71,9 @@ export class SocialsBlock extends Component {
             href={href}
             aria-label={socials[key]}
             title={socials[key]}
-            onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.clickOnSocialIcon(socials[key]))}
+            onClick={() =>
+              tracking.trackEvent(LOGIN_PAGE_EVENTS.clickOnSocialIcon(socialAnalyticsNames[key]))
+            }
             {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
             className={cx('social-link', className)}
           />

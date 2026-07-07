@@ -31,6 +31,8 @@ import { useEffect, useState } from 'react';
 import fetchJsonp from 'fetch-jsonp';
 import { useTracking } from 'react-tracking';
 import { HELP_AND_SERVICE_VERSIONS_EVENTS } from 'analyticsEvents/helpAndServiceVersionsEvents';
+import { SIDEBAR_CATEGORY } from 'components/main/analytics/events/ga4Events/loginPageEvents';
+import { PRODUCT_VERSION } from '../modals/versionsOfConnectedServicesModal/constants';
 import { LinkItem } from '../linkItem';
 import { serverSidebarLinksSelector } from 'controllers/appInfo';
 import { FAQWithPopover } from '../faqWithPopover';
@@ -103,11 +105,11 @@ export const ServicesContent = ({ closePopover, closeSidebar, isFaqTouched, onOp
         id: 'versionsOfConnectedServicesModal',
         data: {
           latestServiceVersions,
+          analyticsCategory: SIDEBAR_CATEGORY,
         },
       }),
     );
-    const linkName = messages.servicesVersions.defaultMessage;
-    trackEvent(HELP_AND_SERVICE_VERSIONS_EVENTS.onClickPopoverItem(linkName));
+    trackEvent(HELP_AND_SERVICE_VERSIONS_EVENTS.clickOnVersionsOfConnectedServices(PRODUCT_VERSION));
   };
 
   return (

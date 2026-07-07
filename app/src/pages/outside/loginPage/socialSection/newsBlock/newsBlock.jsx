@@ -18,6 +18,8 @@ import classNames from 'classnames/bind';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
+import { useTracking } from 'react-tracking';
+import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
 import styles from './newsBlock.scss';
 import { PostBlock } from './postBlock';
 
@@ -30,6 +32,7 @@ const getTweetKey = (tweet, index) =>
   tweet.id ?? tweet.created_at ?? tweet.date ?? tweet.createdAt ?? `tweet-${index}`;
 
 export const NewsBlock = ({ tweets = [], onExpandedChange }) => {
+  const { trackEvent } = useTracking();
   const [isExpanded, setIsExpanded] = useState(false);
   const visibleTweets = tweets.slice(0, MAX_TWEETS);
   const hasMoreTweets = visibleTweets.length > 1;
@@ -40,6 +43,11 @@ export const NewsBlock = ({ tweets = [], onExpandedChange }) => {
 
   const handleToggle = () => {
     const nextExpanded = !isExpanded;
+
+    if (nextExpanded) {
+      trackEvent(LOGIN_PAGE_EVENTS.CLICK_ON_OPEN_MORE_NEWS);
+    }
+
     setIsExpanded(nextExpanded);
     onExpandedChange?.(nextExpanded);
   };
