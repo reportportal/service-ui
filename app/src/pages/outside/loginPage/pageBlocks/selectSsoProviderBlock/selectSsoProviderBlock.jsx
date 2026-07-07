@@ -27,7 +27,7 @@ import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/lo
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { PageSectionContainer } from 'pages/outside/common/pageSectionContainer';
 import { OutsideLoginFooter } from 'pages/outside/common/outsideLoginFooter';
-import { isLdapAuthType, shouldTrackLoginButtonClick, startSsoAuthFlow } from 'pages/outside/common/utils';
+import { shouldTrackLoginButtonClick, startSsoAuthFlow } from 'pages/outside/common/utils';
 import { ProviderButton } from '../providerButton';
 import { ProviderButtonsGrid } from '../providerButtonsGrid';
 import styles from './selectSsoProviderBlock.scss';
