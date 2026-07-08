@@ -17,7 +17,7 @@
 @use '../../../../common/css/mixins';
 
 .projects-list-table {
-  margin: 16px auto;
+  margin: 16px auto 3px;
   padding: 0 32px;
   max-width: calc(var(--rp-ui-base-max-page-width) + 64px);
   width: 100%;
