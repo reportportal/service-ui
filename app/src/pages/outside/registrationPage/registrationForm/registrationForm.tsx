@@ -147,6 +147,8 @@ const RegistrationFormComponent = ({
 
   // Password errors are shown only after blur or submit — not while typing.
   const [showPasswordValidation, setShowPasswordValidation] = useState(false);
+  const [showConfirmPasswordValidation, setShowConfirmPasswordValidation] = useState(false);
+  const [isConfirmPasswordFocused, setIsConfirmPasswordFocused] = useState(false);
   const [submitAttempted, setSubmitAttempted] = useState(false);
 
   useEffect(() => {
@@ -195,13 +197,20 @@ const RegistrationFormComponent = ({
   }, [showPasswordValidation, password, allRulesMet, hasSpace, minLength, formatMessage]);
 
   const hasMismatch = confirmPassword.length > 0 && password !== confirmPassword;
+  const shouldShowConfirmPasswordValidation =
+    showConfirmPasswordValidation && !isConfirmPasswordFocused;
 
   const confirmPasswordError = useMemo(() => {
-    if (!submitAttempted) return undefined;
+    if (!shouldShowConfirmPasswordValidation) return undefined;
     if (!confirmPassword.trim()) return formatMessage(messages.requiredField);
     if (hasMismatch) return formatMessage(messages.passwordsDoNotMatch);
     return undefined;
-  }, [submitAttempted, confirmPassword, hasMismatch, formatMessage]);
+  }, [
+    shouldShowConfirmPasswordValidation,
+    confirmPassword,
+    hasMismatch,
+    formatMessage,
+  ]);
 
   const nameError = useMemo(() => {
     if (!submitAttempted) return undefined;
@@ -231,10 +240,24 @@ const RegistrationFormComponent = ({
     }
   }, [password]);
 
+  const handleConfirmPasswordFocus = useCallback(() => {
+    setIsConfirmPasswordFocused(true);
+  }, []);
+
+  const handleConfirmPasswordBlur = useCallback(() => {
+    setIsConfirmPasswordFocused(false);
+
+    if (confirmPassword.length > 0) {
+      setShowConfirmPasswordValidation(true);
+    }
+  }, [confirmPassword]);
+
   const submitHandler = useCallback(
     (values: RegistrationFormValues) => {
       setSubmitAttempted(true);
       setShowPasswordValidation(true);
+      setShowConfirmPasswordValidation(true);
+      setIsConfirmPasswordFocused(false);
 
       const nameValid = name.trim() && !commonValidators.userName(name);
       const confirmValid = confirmPassword === password && confirmPassword.trim();
@@ -299,6 +322,8 @@ const RegistrationFormComponent = ({
         className={cx('confirm-password-field', {
           'confirm-password-field--inactive': isConfirmDisabled,
         })}
+        onFocus={handleConfirmPasswordFocus}
+        onBlur={handleConfirmPasswordBlur}
       >
         <FieldProvider
           name="confirmPassword"

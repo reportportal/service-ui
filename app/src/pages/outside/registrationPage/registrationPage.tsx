@@ -81,13 +81,17 @@ export const RegistrationPage = ({
   initialData = {},
   submitButtonTitle = '',
 }: RegistrationPageProps) => {
-  const isFormVisible = tokenProvided && tokenActive;
+  const isRegistrationFormVisible = tokenProvided && tokenActive;
 
   return (
     <div className={loginCx('login-page')}>
       <div className={loginCx('login-page-content')}>
         <div className={loginCx('login-form-side')}>
-          <div className={`${loginCx('logo')} ${cx('registrationLogo')}`}>
+          <div
+            className={`${loginCx('logo')} ${cx('registrationLogo', {
+              registrationLogoError: !isRegistrationFormVisible,
+            })}`}
+          >
             <a
               href={referenceDictionary.rpLanding}
               target="_blank"
@@ -99,7 +103,7 @@ export const RegistrationPage = ({
           </div>
           <LoginPageSection>
             <div className={cx('registration-scroll-area')}>
-              {isFormVisible ? (
+              {isRegistrationFormVisible ? (
                 <PageSectionContainer
                   header={messages.registration}
                   leftAligned
