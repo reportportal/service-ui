@@ -58,7 +58,7 @@ export const PROJECT_SETTINGS_VIEWS = {
     action: 'page_view',
     page: PROJECT_SETTINGS,
     place: subTab
-      ? `${PROJECT_SETTINGS}_${settingsTab.toLowerCase()}_${subTab.toLowerCase()}`
+      ? `${PROJECT_SETTINGS}_${settingsTab.toLowerCase()}_${normalizeEventParameter(subTab)}`
       : `${PROJECT_SETTINGS}_${settingsTab.toLowerCase()}`,
   }),
 };
