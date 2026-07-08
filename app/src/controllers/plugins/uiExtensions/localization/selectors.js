@@ -27,7 +27,7 @@ const flattenedExtensionMessagesSelector = createSelector(
   extensionMessagesSelector,
   (messagesByPlugin) =>
     Object.keys(messagesByPlugin)
-      .sort()
+      .sort((a, b) => a.localeCompare(b))
       .reduce((acc, pluginName) => ({ ...acc, ...messagesByPlugin[pluginName] }), {}),
 );
 
@@ -35,5 +35,5 @@ const flattenedExtensionMessagesSelector = createSelector(
 export const mergedMessagesSelector = createSelector(
   langSelector,
   flattenedExtensionMessagesSelector,
-  (lang, extensionMessages) => ({ ...(CORE_MESSAGES[lang] || {}), ...extensionMessages }),
+  (lang, extensionMessages) => ({ ...CORE_MESSAGES[lang], ...extensionMessages }),
 );

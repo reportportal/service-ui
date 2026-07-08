@@ -26,7 +26,7 @@ export const resolveLocaleFileName = (template, lang) => template.replace('{lang
  */
 export const fetchExtensionLocalizationFile = ({ pluginName, baseUrl, fileName }) => {
   if (baseUrl) {
-    return window.fetch(`${baseUrl.replace(/\/+$/, '')}/${fileName}`).then((response) => {
+    return window.fetch(new URL(`/${fileName}`, baseUrl)).then((response) => {
       if (!response.ok) {
         throw new Error(`Failed to load extension localization file (${response.status})`);
       }

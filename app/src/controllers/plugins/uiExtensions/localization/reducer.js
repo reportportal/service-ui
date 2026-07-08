@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { omit } from 'common/utils/omit';
 import { CHANGE_LANG_ACTION } from 'controllers/lang/constants';
 import { UPDATE_EXTENSION_MANIFEST } from '../constants';
 import { REGISTER_EXTENSION_MESSAGES } from './constants';
@@ -25,13 +26,8 @@ export const extensionMessagesReducer = (state = {}, { type = '', payload = {} }
       return { ...state, [payload.pluginName]: payload.messages };
     // Manifest override changes the plugin source: drop its strings so the loader
     // re-fetches from the new URL.
-    case UPDATE_EXTENSION_MANIFEST: {
-      if (!state[payload.pluginName]) {
-        return state;
-      }
-      const { [payload.pluginName]: removed, ...rest } = state;
-      return rest;
-    }
+    case UPDATE_EXTENSION_MANIFEST:
+      return omit(state, [payload.pluginName]);
     // Strings belong to the previous language: drop all, loaders re-fetch under new lang.
     case CHANGE_LANG_ACTION:
       return {};
