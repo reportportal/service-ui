@@ -135,6 +135,15 @@ describe('MarkdownViewer', () => {
     const wrapper = mount(<MarkdownViewer value={code} />);
     const codeElement = wrapper.find('.markdown-viewer code');
     expect(codeElement).toHaveLength(1);
-    expect(codeElement.contains('<span>test code</span>')).toBeTruthy();
+    expect(wrapper.find('.markdown-viewer code span')).toHaveLength(0);
+  });
+  test('raw HTML in markdown is rendered as escaped text', () => {
+    const xssPayload =
+      '<div id="phish" style="position:fixed;top:0;left:0;width:100%;height:100%"><form><button>Login</button></form></div>';
+    const wrapper = mount(<MarkdownViewer value={xssPayload} />);
+
+    expect(wrapper.find('form')).toHaveLength(0);
+    expect(wrapper.find('button')).toHaveLength(0);
+    expect(wrapper.find('#phish')).toHaveLength(0);
   });
 });

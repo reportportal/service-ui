@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { isString, capitalize, stringEqual, compareStringsLocale } from './stringUtils';
+import { isString, capitalize, stringEqual, compareStringsLocale, escapeHtmlEntities } from './stringUtils';
 
 describe('isString', () => {
   test('should return true for string values', () => {
@@ -58,12 +58,6 @@ describe('capitalize', () => {
   });
 });
 
-describe('compareStringsLocale', () => {
-  test('should sort strings in locale order when used as Array.sort comparator', () => {
-    expect(['b', 'a', 'c'].sort(compareStringsLocale)).toEqual(['a', 'b', 'c']);
-  });
-});
-
 describe('stringEqual', () => {
   test('should return true for equal string values', () => {
     expect(stringEqual('hello', 'hello')).toBe(true);
@@ -89,5 +83,24 @@ describe('stringEqual', () => {
     expect(stringEqual(undefined, 'undefined')).toBe(true);
     expect(stringEqual(true, 'true')).toBe(true);
     expect(stringEqual(false, 'false')).toBe(true);
+  });
+});
+
+describe('compareStringsLocale', () => {
+  test('should sort strings in locale order when used as Array.sort comparator', () => {
+    expect(['b', 'a', 'c'].sort(compareStringsLocale)).toEqual(['a', 'b', 'c']);
+  });
+});
+
+describe('escapeHtmlEntities', () => {
+  test('should escape ampersand and less-than characters', () => {
+    expect(escapeHtmlEntities('<div>"test" & value</div>')).toBe(
+      '&lt;div>"test" &amp; value&lt;/div>',
+    );
+  });
+
+  test('should return non-string values as is', () => {
+    expect(escapeHtmlEntities(123)).toBe(123);
+    expect(escapeHtmlEntities(null)).toBe(null);
   });
 });

@@ -19,6 +19,7 @@ import Parser from 'html-react-parser';
 import DOMPurify from 'dompurify';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { escapeHtmlEntities } from 'common/utils';
 import { SingletonMarkdownObject } from '../singletonMarkdownObject';
 import { MODE_DEFAULT } from '../constants';
 import styles from './markdownViewer.scss';
@@ -82,7 +83,11 @@ export class MarkdownViewer extends Component {
           ref={this.container}
           className={cx('markdown-viewer', { [`mode-${mode}`]: mode }, this.props.className)}
         >
-          {Parser(DOMPurify.sanitize(this.simpleMDE.markdown(value || '').trim()))}
+          {Parser(
+            DOMPurify.sanitize(
+              this.simpleMDE.markdown(escapeHtmlEntities(value || '').trim()),
+            ),
+          )}
         </div>
       </div>
     );

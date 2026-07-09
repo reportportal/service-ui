@@ -28,3 +28,11 @@ export const capitalize = (str) => {
 export const stringEqual = (value1, value2) => String(value1) === String(value2);
 
 export const compareStringsLocale = (a, b) => a.localeCompare(b);
+
+export const escapeHtmlEntities = (str) => {
+  if (!isString(str)) {
+    return str;
+  }
+
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+};
