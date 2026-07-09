@@ -101,6 +101,6 @@ describe('escapeHtmlEntities', () => {
 
   test('should return non-string values as is', () => {
     expect(escapeHtmlEntities(123)).toBe(123);
-    expect(escapeHtmlEntities(null)).toBe(null);
+    expect(escapeHtmlEntities(null)).toBeNull();
   });
 });
