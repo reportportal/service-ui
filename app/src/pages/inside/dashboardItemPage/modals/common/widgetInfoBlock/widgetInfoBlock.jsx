@@ -29,6 +29,7 @@ import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';
 import { LinkComponent } from 'pages/inside/common/LinkComponent';
 import { injectIntl } from 'react-intl';
 import { OVERALL_STATISTICS } from 'common/constants/widgetTypes';
+import { normalizeSeparateInterrupted } from 'components/main/analytics/events/common/widgetPages/utils';
 import { WIDGETS_STATIC_PREVIEWS } from '../widgets';
 import { WidgetPreview } from '../widgetPreview';
 import styles from './widgetInfoBlock.scss';
@@ -68,9 +69,12 @@ export class WidgetInfoBlock extends PureComponent {
       return;
     }
 
-    const prevSeparateInterrupted =
-      prevProps.widgetSettings.contentParameters?.widgetOptions?.separateInterrupted;
-    const nextSeparateInterrupted = contentParameters.widgetOptions?.separateInterrupted;
+    const prevSeparateInterrupted = normalizeSeparateInterrupted(
+      prevProps.widgetSettings.contentParameters?.widgetOptions?.separateInterrupted,
+    );
+    const nextSeparateInterrupted = normalizeSeparateInterrupted(
+      contentParameters.widgetOptions?.separateInterrupted,
+    );
     const isPanelView = contentParameters.widgetOptions?.viewMode === 'panel';
     if (isPanelView && prevSeparateInterrupted !== nextSeparateInterrupted) {
       this.setState({ widgetData: null, loading: true });
@@ -141,7 +145,7 @@ export class WidgetInfoBlock extends PureComponent {
     const isSeparateInterrupted =
       activeWidget.id === OVERALL_STATISTICS &&
       widgetOptions?.viewMode === 'panel' &&
-      widgetOptions?.separateInterrupted;
+      normalizeSeparateInterrupted(widgetOptions?.separateInterrupted);
     const isExpanded = isSeparateInterrupted && (loading || !!widgetData);
 
     return (

@@ -20,6 +20,7 @@ import { fetch, updateStorageItem, waitForSelector } from 'common/utils';
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import { fetchDataAction } from 'controllers/fetch';
 import { ALL, LATEST } from 'common/constants/reservedFilterIds';
+import { LAUNCH_TYPES } from 'common/constants/launchTypes';
 import {
   activeFilterSelector,
   changeActiveFilterAction,
@@ -52,8 +53,8 @@ function* fetchLaunchesWithParams({ payload }) {
   const params = yield select(queryParametersSelector);
   const isDebugMode = yield select(debugModeSelector);
   const queryParams = { ...params, ...payload };
-  if (!isDebugMode) {
-    queryParams['filter.in.launchType'] = 'AUTOMATION';
+  if (!isDebugMode && !queryParams['filter.in.launchType']) {
+    queryParams['filter.in.launchType'] = `${LAUNCH_TYPES.AGENTIC},${LAUNCH_TYPES.AUTOMATION}`;
   }
   const launchDistinct = yield select(launchDistinctSelector);
   const urlCreator = launchDistinct === LATEST ? URLS.launchesLatest : URLS.launches;
