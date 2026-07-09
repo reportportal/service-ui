@@ -30,6 +30,8 @@ import {
   setLogsSizeInStorage,
   setLogsFullWidthModeInStorage,
   setLogsColorizedBackgroundInStorage,
+  setLaunchExportIncludeAttachmentsInStorage,
+  setLaunchExportFlatAttachmentsInStorage,
   getLogTimeFormatFromStorage,
 } from './storageUtils';
 import {
@@ -59,11 +61,15 @@ import {
   SET_LOGS_SIZE,
   SET_LOGS_FULL_WIDTH_MODE,
   SET_LOGS_COLORIZED_BACKGROUND,
+  SET_LAUNCH_EXPORT_INCLUDE_ATTACHMENTS,
+  SET_LAUNCH_EXPORT_FLAT_ATTACHMENTS,
   LOGS_SIZE_KEY,
   NO_LOGS_COLLAPSING_KEY,
   LOGS_PAGINATION_ENABLED_KEY,
   LOGS_FULL_WIDTH_MODE_KEY,
   LOGS_COLORIZED_BACKGROUND_KEY,
+  LAUNCH_EXPORT_INCLUDE_ATTACHMENTS_KEY,
+  LAUNCH_EXPORT_FLAT_ATTACHMENTS_KEY,
 } from './constants';
 import { activeProjectKeySelector, userIdSelector, userInfoSelector } from './selectors';
 
@@ -137,7 +143,7 @@ function* loadProjectSettingsWorker({ payload: projectKey }) {
   yield put(setActiveProjectSettingsAction(projectSettings));
 }
 
-function* updateLogsSetting({ payload, setInStorage, settingKey }) {
+function* updateUserProjectSettings({ payload, setInStorage, settingKey }) {
   const { value } = payload;
   const userId = yield select(userIdSelector);
   const projectKey = yield select(activeProjectKeySelector);
@@ -147,7 +153,7 @@ function* updateLogsSetting({ payload, setInStorage, settingKey }) {
 }
 
 function* setNoLogsCollapsing({ payload }) {
-  yield call(updateLogsSetting, {
+  yield call(updateUserProjectSettings, {
     payload,
     setInStorage: setNoLogsCollapsingInStorage,
     settingKey: NO_LOGS_COLLAPSING_KEY,
@@ -155,7 +161,7 @@ function* setNoLogsCollapsing({ payload }) {
 }
 
 function* setLogsPaginationEnabled({ payload }) {
-  yield call(updateLogsSetting, {
+  yield call(updateUserProjectSettings, {
     payload,
     setInStorage: setLogsPaginationEnabledInStorage,
     settingKey: LOGS_PAGINATION_ENABLED_KEY,
@@ -163,7 +169,7 @@ function* setLogsPaginationEnabled({ payload }) {
 }
 
 function* setLogsSize({ payload }) {
-  yield call(updateLogsSetting, {
+  yield call(updateUserProjectSettings, {
     payload,
     setInStorage: setLogsSizeInStorage,
     settingKey: LOGS_SIZE_KEY,
@@ -171,7 +177,7 @@ function* setLogsSize({ payload }) {
 }
 
 function* setLogsFullWidthMode({ payload }) {
-  yield call(updateLogsSetting, {
+  yield call(updateUserProjectSettings, {
     payload,
     setInStorage: setLogsFullWidthModeInStorage,
     settingKey: LOGS_FULL_WIDTH_MODE_KEY,
@@ -179,10 +185,37 @@ function* setLogsFullWidthMode({ payload }) {
 }
 
 function* setLogsColorizedBackground({ payload }) {
-  yield call(updateLogsSetting, {
+  yield call(updateUserProjectSettings, {
     payload,
     setInStorage: setLogsColorizedBackgroundInStorage,
     settingKey: LOGS_COLORIZED_BACKGROUND_KEY,
+  });
+}
+
+function* setLaunchExportIncludeAttachments({ payload }) {
+  const { value } = payload;
+  const userId = yield select(userIdSelector);
+  const projectKey = yield select(activeProjectKeySelector);
+
+  yield call(setLaunchExportIncludeAttachmentsInStorage, userId, projectKey, value);
+  if (value) {
+    yield put(updateActiveProjectSettingsAction({ [LAUNCH_EXPORT_INCLUDE_ATTACHMENTS_KEY]: value }));
+  } else {
+    yield call(setLaunchExportFlatAttachmentsInStorage, userId, projectKey, false);
+    yield put(
+      updateActiveProjectSettingsAction({
+        [LAUNCH_EXPORT_INCLUDE_ATTACHMENTS_KEY]: false,
+        [LAUNCH_EXPORT_FLAT_ATTACHMENTS_KEY]: false,
+      }),
+    );
+  }
+}
+
+function* setLaunchExportFlatAttachments({ payload }) {
+  yield call(updateUserProjectSettings, {
+    payload,
+    setInStorage: setLaunchExportFlatAttachmentsInStorage,
+    settingKey: LAUNCH_EXPORT_FLAT_ATTACHMENTS_KEY,
   });
 }
 
@@ -344,6 +377,14 @@ function* watchSetLogsColorizedBackground() {
   yield takeEvery(SET_LOGS_COLORIZED_BACKGROUND, setLogsColorizedBackground);
 }
 
+function* watchSetLaunchExportIncludeAttachments() {
+  yield takeEvery(SET_LAUNCH_EXPORT_INCLUDE_ATTACHMENTS, setLaunchExportIncludeAttachments);
+}
+
+function* watchSetLaunchExportFlatAttachments() {
+  yield takeEvery(SET_LAUNCH_EXPORT_FLAT_ATTACHMENTS, setLaunchExportFlatAttachments);
+}
+
 function* watchFetchUser() {
   yield takeEvery(FETCH_USER, fetchUserWorker);
 }
@@ -367,6 +408,8 @@ export function* userSagas() {
     watchSetLogsSize(),
     watchSetLogsFullWidthMode(),
     watchSetLogsColorizedBackground(),
+    watchSetLaunchExportIncludeAttachments(),
+    watchSetLaunchExportFlatAttachments(),
     watchAddApiKey(),
     watchFetchApiKeys(),
     watchDeleteApiKey(),

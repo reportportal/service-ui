@@ -73,6 +73,7 @@ import { RefineFiltersPanel } from 'pages/inside/common/refineFiltersPanel';
 import { canBulkEditItems } from 'common/utils/permissions';
 import { DebugFiltersContainer } from './debugFiltersContainer';
 import { LaunchToolbar } from './LaunchToolbar';
+import { LaunchExportModal } from './modals/launchExportModal';
 import { NoItemsDemo } from './noItemsDemo';
 
 const messages = defineMessages({
@@ -475,6 +476,12 @@ export class LaunchesPage extends Component {
     });
   };
 
+  exportReport = (launches) => {
+    this.props.showModalAction({
+      component: <LaunchExportModal launches={launches} />,
+    });
+  };
+
   finishForceLaunches = (eventData) => {
     const launches = eventData?.id ? [eventData] : this.props.selectedLaunches;
     this.props.forceFinishLaunchesAction(launches, {
@@ -707,6 +714,7 @@ export class LaunchesPage extends Component {
                 onImportLaunch={this.openImportModal}
                 debugMode={debugMode}
                 onDelete={this.deleteItems}
+                onExportReport={this.exportReport}
                 activeFilterId={debugMode ? ALL : activeFilterId}
                 onAddNewWidget={this.showWidgetWizard}
                 finishedLaunchesCount={finishedLaunchesCount}

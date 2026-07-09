@@ -31,4 +31,13 @@
       height: 125px;
     }
   }
+
+  &.expanded {
+    height: 190px;
+
+    svg {
+      height: 190px;
+      max-height: 190px;
+    }
+  }
 }

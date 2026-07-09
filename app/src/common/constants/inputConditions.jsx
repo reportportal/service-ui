@@ -17,6 +17,7 @@
 import { FormattedMessage } from 'react-intl';
 import {
   CONDITION_CNT,
+  CONDITION_SWT,
   CONDITION_EQ,
   CONDITION_NOT_CNT,
   CONDITION_NOT_EQ,
@@ -33,6 +34,11 @@ const INPUT_CONDITIONS_LIST = [
     value: CONDITION_CNT,
     label: <FormattedMessage id={'Conditions.cnt'} defaultMessage={'Contains'} />,
     shortLabel: <FormattedMessage id={'Conditions.cntShort'} defaultMessage={'cnt'} />,
+  },
+  {
+    value: CONDITION_SWT,
+    label: <FormattedMessage id={'Conditions.swt'} defaultMessage={'Starts with'} />,
+    shortLabel: <FormattedMessage id={'Conditions.swtShort'} defaultMessage={'swt'} />,
   },
   {
     value: CONDITION_NOT_CNT,

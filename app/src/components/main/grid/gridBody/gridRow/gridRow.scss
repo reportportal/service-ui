@@ -289,7 +289,7 @@ $LEVEL_OFFSET_STEP: 20px;
 }
 
 .description {
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 @media (max-width: $SCREEN_SM_MAX) {

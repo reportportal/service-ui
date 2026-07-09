@@ -32,6 +32,7 @@ import {
   getRefineParametersEventCreator,
   getCommonActionEvents,
   getClickBreadcrumbsEvents,
+  getUnsavedFilterEvent,
 } from './common/testItemPages/actionEventsCreators';
 import { getBasicClickEventParameters } from './common/ga4Utils';
 import { LAUNCH_ANALYZE_TYPES_TO_ANALYTICS_TITLES_MAP } from './common/constants';
@@ -78,6 +79,7 @@ export const LAUNCHES_PAGE_EVENTS = {
   }),
   commonEvents: {
     getRefineParametersEvent: getRefineParametersEventCreator(LAUNCHES_PAGE),
+    getUnsavedFilterEvent: getUnsavedFilterEvent(LAUNCHES_PAGE),
   },
   ...getClickDonutEvents(LAUNCHES_PAGE),
   ...getClickDefectTooltipEvents(LAUNCHES_PAGE),
@@ -249,12 +251,13 @@ export const LAUNCHES_MODAL_EVENTS = {
     element_name: 'delete',
     condition: isBulk ? 'bulk' : 'single',
   }),
-  getClickExportLaunchBtnModalEvent: (type, isWithAttachments) => ({
+  getClickExportLaunchBtnModalEvent: (type, isWithAttachments, folderStructureCondition) => ({
     ...basicClickEventParametersLaunchPage,
     modal: 'export_report',
     element_name: 'export',
-    type,
+    type: String(type).toLowerCase(),
     status: isWithAttachments ? 'active' : 'disable',
+    condition: folderStructureCondition,
   }),
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(LAUNCHES_PAGE),
 };

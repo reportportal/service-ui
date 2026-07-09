@@ -116,6 +116,7 @@ export const servicesUpdate = {
 };
 
 export const widgetDocsReferences = {
+  testExecutionsBaseTCS:'https://reportportal.io/docs/features/TestExecutions/?utm_source=trigger&utm_medium=product&utm_campaign=promo_message_tsw&utm_content=tep',
   testExecutions:
     'https://reportportal.io/docs/features/TestExecutions/?utm_source=trigger&utm_medium=product&utm_campaign=promo_banner_tsw&utm_content=tep',
   launchStatisticsChart:

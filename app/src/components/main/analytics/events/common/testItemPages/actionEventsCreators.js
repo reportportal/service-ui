@@ -92,6 +92,16 @@ export const getRefineParametersEventCreator = (category) => (entity) => ({
   element_name: 'parameter_refine',
   type: getFilterEntityType(entity),
 });
+export const getUnsavedFilterEvent = (category) => (entityId, selectedValues) => ({
+  ...getBasicClickEventParameters(category),
+  element_name: 'unsaved_filter',
+  modal: 'unsaved_filter',
+  type: getFilterEntityType({ id: entityId }),
+  condition:
+    Array.isArray(selectedValues) && selectedValues.length === 1
+      ? selectedValues[0].toLowerCase()
+      : 'all',
+});
 export const getClickOnAttributesEvent = (category) => ({
   ...getBasicClickEventParameters(category),
   icon_name: 'icon_attributes',

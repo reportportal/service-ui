@@ -57,6 +57,8 @@ export const SET_LOGS_PAGINATION_ENABLED = 'setLogsPaginationEnabled';
 export const SET_LOGS_SIZE = 'setLogsSize';
 export const SET_LOGS_FULL_WIDTH_MODE = 'setLogsFullWidthMode';
 export const SET_LOGS_COLORIZED_BACKGROUND = 'setLogsColorizedBackground';
+export const SET_LAUNCH_EXPORT_INCLUDE_ATTACHMENTS = 'setLaunchExportIncludeAttachments';
+export const SET_LAUNCH_EXPORT_FLAT_ATTACHMENTS = 'setLaunchExportFlatAttachments';
 
 export const NO_LOGS_COLLAPSING_KEY = 'noLogsCollapsing';
 export const LOGS_PAGINATION_ENABLED_KEY = 'logsPaginationEnabled';
@@ -64,6 +66,8 @@ export const LOGS_SIZE_KEY = 'logsSize';
 export const LOGS_FULL_WIDTH_MODE_KEY = 'logsFullWidthMode';
 export const LOGS_COLORIZED_BACKGROUND_KEY = 'logsColorizedBackground';
 export const LOG_TIME_FORMAT_STORAGE_KEY = 'logTimeFormat';
+export const LAUNCH_EXPORT_INCLUDE_ATTACHMENTS_KEY = 'launchExportIncludeAttachments';
+export const LAUNCH_EXPORT_FLAT_ATTACHMENTS_KEY = 'launchExportFlatAttachments';
 
 export const ACTIVE_PROJECT_SETTINGS_INITIAL_STATE = {
   [NO_LOGS_COLLAPSING_KEY]: false,
@@ -71,4 +75,6 @@ export const ACTIVE_PROJECT_SETTINGS_INITIAL_STATE = {
   [LOGS_SIZE_KEY]: DEFAULT_LOGS_SIZE,
   [LOGS_FULL_WIDTH_MODE_KEY]: false,
   [LOGS_COLORIZED_BACKGROUND_KEY]: false,
+  [LAUNCH_EXPORT_INCLUDE_ATTACHMENTS_KEY]: false,
+  [LAUNCH_EXPORT_FLAT_ATTACHMENTS_KEY]: false,
 };

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { getJoinedFieldEventNamesByType } from 'components/main/analytics/events/common/widgetPages/utils';
+import {
+  getJoinedFieldEventNamesByType,
+  getOverallStatisticsInterruptAnalyticsToken,
+  mergeOverallStatisticsAnalyticsCondition,
+} from 'components/main/analytics/events/common/widgetPages/utils';
+import { OVERALL_STATISTICS } from 'common/constants/widgetTypes';
 import {
   getBasicClickEventParameters,
   getBasicPerformanceEventParameters,
@@ -46,6 +51,8 @@ export const WIDGETS_EVENTS = {
     isEditModal = false,
     isExcludeSkippedTests = null,
     isLocked = false,
+    initialSeparateInterrupted,
+    finalSeparateInterrupted,
   }) => {
     const actionType = isEditModal
       ? {
@@ -58,9 +65,19 @@ export const WIDGETS_EVENTS = {
           modal: 'add_new_widget',
         };
 
+    let condition = getJoinedFieldEventNamesByType(type, modifiedFields);
+    if (type === OVERALL_STATISTICS) {
+      const interruptToken = getOverallStatisticsInterruptAnalyticsToken({
+        isEdit: isEditModal,
+        initialSeparateInterrupted,
+        finalSeparateInterrupted,
+      });
+      condition = mergeOverallStatisticsAnalyticsCondition(condition, interruptToken);
+    }
+
     return {
       ...getBasicClickEventParameters(DASHBOARDS),
-      condition: getJoinedFieldEventNamesByType(type, modifiedFields),
+      condition,
       number: dashboardId,
       link_name: isWidgetDescriptionChanged,
       status: isWidgetNameChanged,
@@ -102,10 +119,10 @@ export const WIDGETS_EVENTS = {
     type: 'search_widget',
     number: dashboardId,
   }),
-  onWidgetDocumentLinkClick: (widgetType, dashboardId) => ({
+  onWidgetDocumentLinkClick: (widgetType, dashboardId, place = 'widgets') => ({
     ...getBasicClickEventParameters(DASHBOARDS),
     link_name: 'documentation',
-    place: 'widgets',
+    place,
     type: widgetType,
     number: dashboardId,
   }),
@@ -146,6 +163,58 @@ export const WIDGETS_EVENTS = {
     ...getBasicClickEventParameters(DASHBOARDS),
     icon_name: 'delete_widget',
   },
+  onTcsPromoBannerImpression: (dashboardId, source) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'promo_banner_impression',
+    place: source,
+    type: 'search_widget',
+    number: dashboardId,
+  }),
+  onTcsPromoDocumentationClick: (dashboardId, source) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    link_name: 'documentation',
+    place: source,
+    type: 'search_widget',
+    number: dashboardId,
+  }),
+  onTcsPromoOpenNewSearchNavigate: (dashboardId, source) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'open_new_search',
+    place: source,
+    type: 'search_widget',
+    number: dashboardId,
+  }),
+  onTcsPremiumPopupImpression: (dashboardId, source) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'premium_popup_impression',
+    modal: 'premium_promo',
+    place: source,
+    number: dashboardId,
+  }),
+  onTcsPremiumExplorePlansClick: (dashboardId, source) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'explore_plans',
+    modal: 'premium_promo',
+    place: source,
+    type: 'search_widget',
+    number: dashboardId,
+  }),
+  onTcsPremiumContactUsClick: (dashboardId, source) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'start_contact_us_tep',
+    modal: 'premium_promo',
+    place: source,
+    type: 'search_widget',
+    number: dashboardId,
+  }),
+  onTcsPremiumNotNowClick: (dashboardId, source) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'not_now',
+    modal: 'premium_promo',
+    place: source,
+    type: 'search_widget',
+    number: dashboardId,
+  }),
 };
 
 export const DASHBOARD_EVENTS = {
