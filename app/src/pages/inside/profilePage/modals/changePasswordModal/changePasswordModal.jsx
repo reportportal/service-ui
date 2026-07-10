@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import { passwordMinLengthSelector } from 'controllers/appInfo';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { validationLocalization } from 'common/constants/localization/validationLocalization';
 import { ERROR_CODE_LOGIN_BAD_CREDENTIALS } from 'common/constants/apiErrorCodes';
+import { PASSWORD_MAX_ALLOWED_LENGTH } from 'common/constants/validation';
 import { reduxForm, SubmissionError } from 'redux-form';
 import { Input } from 'components/inputs/input';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
@@ -217,7 +218,7 @@ export class ChangePasswordModal extends Component {
                 <Input
                   placeholder={intl.formatMessage(messages.newPasswordPlaceholder)}
                   type={this.state.showPassword ? 'text' : 'password'}
-                  maxLength="256"
+                  maxLength={PASSWORD_MAX_ALLOWED_LENGTH}
                 />
               </FieldErrorHint>
             </FieldProvider>
@@ -228,7 +229,7 @@ export class ChangePasswordModal extends Component {
                 <Input
                   placeholder={intl.formatMessage(messages.confirmPlaceholder)}
                   type={this.state.showPassword ? 'text' : 'password'}
-                  maxLength="256"
+                  maxLength={PASSWORD_MAX_ALLOWED_LENGTH}
                 />
               </FieldErrorHint>
             </FieldProvider>

@@ -2057,7 +2057,7 @@
   "PassingRateSummaryControls.ItemsFieldLabel": "测试项",
   "PassingRateSummaryControls.ItemsValidationError": "测试项的数量应为1到600个",
   "PassingRateSummaryControls.excludeSkipped": "Exclude Skipped tests from statistics",
-  "PasswordForm.description": "Minimum number of characters required for the password. Allowed range: 8 to 256 characters.",
+  "PasswordForm.description": "密码所需的最少字符数。允许范围：{min} 到 {max} 个字符。",
   "PasswordForm.formHeader": "Password",
   "PasswordForm.label": "Password length",
   "PasswordForm.successNotification": "The minimum password length has been updated successfully",

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ const messages = defineMessages({
   description: {
     id: 'PasswordForm.description',
     defaultMessage:
-      'Minimum number of characters required for the password. Allowed range: 8 to 256 characters.',
+      'Minimum number of characters required for the password. Allowed range: {min} to {max} characters.',
   },
   successNotification: {
     id: 'PasswordForm.successNotification',
@@ -96,7 +96,10 @@ export const PasswordForm = () => {
     <SectionLayout header={formatMessage(messages.formHeader)}>
       <ServerSettingsField
         label={formatMessage(messages.label)}
-        description={formatMessage(messages.description)}
+        description={formatMessage(messages.description, {
+          min: PASSWORD_MIN_ALLOWED_LENGTH,
+          max: PASSWORD_MAX_ALLOWED_LENGTH,
+        })}
       >
         <FieldNumber
           min={PASSWORD_MIN_ALLOWED_LENGTH}
