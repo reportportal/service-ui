@@ -17,11 +17,10 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import Parser from 'html-react-parser';
-import DOMPurify from 'dompurify';
 import Link from 'redux-first-router-link';
 import { Icon } from 'components/main/icon';
 import { MarkdownViewer } from 'components/main/markdown';
+import { highlightText } from 'common/utils/textHighlight';
 import styles from './filterName.scss';
 
 const cx = classNames.bind(styles);
@@ -55,18 +54,7 @@ export const FilterName = ({
   isLink,
   nameLink,
 }) => {
-  const getHighlightName = () => {
-    const name = filter.name || '';
-
-    if (!search.length) {
-      return name;
-    }
-
-    return name.replace(
-      new RegExp(search, 'i'),
-      (match) => `<span class=${cx('name-highlight')}>${match}</span>`,
-    );
-  };
+  const name = filter.name || '';
 
   return (
     <Fragment>
@@ -79,7 +67,7 @@ export const FilterName = ({
             })}
             onClick={() => onClickName(filter)}
           >
-            {Parser(DOMPurify.sanitize(getHighlightName()))}
+            {highlightText(name, search, cx('name-highlight'))}
           </span>
         </NameLink>
         {editable && onEdit && (
