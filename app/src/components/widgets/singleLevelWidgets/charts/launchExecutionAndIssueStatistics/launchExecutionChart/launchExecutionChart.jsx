@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { statisticsLinkSelector } from 'controllers/testItem';
 import { FAILED, INTERRUPTED } from 'common/constants/testStatuses';
+import { isSeparateInterrupted } from 'components/widgets/singleLevelWidgets/charts/overallStatistics/isSeparateInterrupted';
 import { DonutChart } from '../common/donutChart';
 import { getColumns } from './utils';
 
@@ -61,20 +62,24 @@ export class LaunchExecutionChart extends Component {
 
   getLinkParametersStatuses = ({ defectType }) => {
     if (defectType.toUpperCase() === FAILED) {
-      return [FAILED, INTERRUPTED];
+      return isSeparateInterrupted(this.props.widget) ? [FAILED] : [FAILED, INTERRUPTED];
     }
     return [defectType.toUpperCase()];
   };
 
   render() {
-    const { getStatisticsLink, ...props } = this.props;
+    const { widget, ...props } = this.props;
 
     return (
       <DonutChart
         {...props}
+        widget={widget}
         chartText={'SUM'}
         getLink={this.getChartClickLink}
-        configParams={{ getColumns }}
+        configParams={{
+          getColumns,
+          separateInterrupted: isSeparateInterrupted(widget),
+        }}
       />
     );
   }

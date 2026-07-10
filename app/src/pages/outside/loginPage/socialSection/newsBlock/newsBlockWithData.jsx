@@ -37,7 +37,8 @@ export class NewsBlockWithData extends Component {
       jsonpCallback: 'jsonp',
     })
       .then((res) => res.json())
-      .then((tweets) => this.setState({ tweets }));
+      .then((tweets) => this.setState({ tweets: Array.isArray(tweets) ? tweets : [] }))
+      .catch(() => this.setState({ tweets: [] }));
   }
 
   render() {

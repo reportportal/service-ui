@@ -324,6 +324,7 @@ export const statisticsLinkSelector = createSelector(
       baselineLaunchId,
       launchId,
       statuses,
+      defects,
       startTime,
       types,
     } = ownProps;
@@ -353,6 +354,9 @@ export const statisticsLinkSelector = createSelector(
     };
     if (statuses) {
       params['filter.in.status'] = statuses.join(',');
+    }
+    if (defects?.length) {
+      params['filter.in.issueType'] = getDefectsString(defects);
     }
     if (startTime) {
       params['filter.btw.startTime'] = startTime.join(',');

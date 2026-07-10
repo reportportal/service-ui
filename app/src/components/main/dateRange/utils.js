@@ -83,3 +83,15 @@ export const setEndOfDay = (date) => {
   dateObj.setHours(23, 59);
   return dateObj;
 };
+
+/** Inclusive N-day span from `start`: last allowed end (EoD). When `end` is still null (choosing end). */
+export const getMaxAllowedEndDate = (maxRangeDays, start, end) => {
+  if (maxRangeDays > 0 && start && !end) {
+    return moment(start)
+      .startOf('day')
+      .add(maxRangeDays - 1, 'days')
+      .endOf('day')
+      .toDate();
+  }
+  return undefined;
+};

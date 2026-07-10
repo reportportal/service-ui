@@ -19,8 +19,13 @@ import classNames from 'classnames/bind';
 import { useIntl, defineMessages } from 'react-intl';
 import { DatePicker } from '@reportportal/ui-kit';
 import styles from './dateRangeFormField.scss';
-import { parseFormattedDate, formatDateRangeToMinutesString, setEndOfDay } from './utils';
-import { useCallback } from 'react';
+import {
+  parseFormattedDate,
+  formatDateRangeToMinutesString,
+  setEndOfDay,
+  getMaxAllowedEndDate,
+} from './utils';
+import { useCallback, useMemo } from 'react';
 
 const cx = classNames.bind(styles);
 
@@ -29,6 +34,10 @@ export const messages = defineMessages({
     id: 'DateRange.customRange',
     defaultMessage: 'Custom range',
   },
+  maxRangeHint: {
+    id: 'DateRange.maxRangeHint',
+    defaultMessage: 'The maximum date range is {maxDays, plural, one {# day} other {# days}}',
+  },
 });
 
 export const DateRangeFormField = ({
@@ -36,10 +45,18 @@ export const DateRangeFormField = ({
   popperClassName = '',
   calendarClassName = '',
   onClose,
+  maxRangeDays,
 }) => {
   const { formatMessage } = useIntl();
   const { value = '', onChange } = input;
+  const isObjectValue = value && typeof value === 'object';
   const { startDate, endDate } = parseFormattedDate(value);
+  const showMaxRangeHint = maxRangeDays > 0;
+
+  const maxDate = useMemo(
+    () => getMaxAllowedEndDate(maxRangeDays, startDate, endDate),
+    [maxRangeDays, startDate, endDate],
+  );
 
   const handleDateChange = useCallback(
     ([startDate, endDate] = []) => {
@@ -47,15 +64,17 @@ export const DateRangeFormField = ({
         startDate,
         endDate: setEndOfDay(endDate),
       };
-      const formattedValue = formatDateRangeToMinutesString(normalizedDateRange);
+      const nextValue = isObjectValue
+        ? normalizedDateRange
+        : formatDateRangeToMinutesString(normalizedDateRange);
 
-      onChange(formattedValue);
+      onChange(nextValue);
 
       if (startDate && endDate && startDate <= endDate) {
         onClose();
       }
     },
-    [onChange, onClose],
+    [isObjectValue, onChange, onClose],
   );
 
   return (
@@ -68,8 +87,14 @@ export const DateRangeFormField = ({
           onChange={handleDateChange}
           popperClassName={popperClassName}
           calendarClassName={calendarClassName}
+          maxDate={maxDate}
         />
       </div>
+      {showMaxRangeHint && (
+        <span className={cx('max-range-hint')}>
+          {formatMessage(messages.maxRangeHint, { maxDays: Number(maxRangeDays) })}
+        </span>
+      )}
     </div>
   );
 };
@@ -81,6 +106,7 @@ DateRangeFormField.propTypes = {
   onClose: PropTypes.func,
   popperClassName: PropTypes.string,
   calendarClassName: PropTypes.string,
+  maxRangeDays: PropTypes.number,
 };
 DateRangeFormField.defaultProps = {
   onClose: () => {},

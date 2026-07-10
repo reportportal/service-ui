@@ -260,6 +260,12 @@ export const Hamburger = ({ launch, customProps }) => {
                 disabled={!enabledPatterns.length}
               />
               <HamburgerMenuItem
+                text={formatMessage(messages.exportReport)}
+                disabled={isLaunchInProgress}
+                onClick={onExportReport}
+                title={isLaunchInProgress ? formatMessage(messages.launchInProgress) : ''}
+              />
+              <HamburgerMenuItem
                 text={formatMessage(COMMON_LOCALE_KEYS.DELETE)}
                 disabled={!canDeleteLaunch || isLaunchInProgress}
                 onClick={() => {
@@ -270,12 +276,6 @@ export const Hamburger = ({ launch, customProps }) => {
               />
             </Fragment>
           )}
-          <HamburgerMenuItem
-            text={formatMessage(messages.exportReport)}
-            disabled={isLaunchInProgress}
-            onClick={onExportReport}
-            title={isLaunchInProgress ? formatMessage(messages.launchInProgress) : ''}
-          />
         </div>
       </div>
     </div>

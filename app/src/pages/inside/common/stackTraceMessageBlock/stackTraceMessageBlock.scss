@@ -118,7 +118,7 @@
 .design-mode-dark.row {
   color: $COLOR--dark-gray;
   border: none;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
   white-space: pre-wrap;
 }
 .design-mode-dark.accordion-block {
