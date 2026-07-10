@@ -155,4 +155,13 @@ describe('MarkdownViewer', () => {
     expect(wrapper.find('.markdown-viewer code')).toHaveLength(1);
     expect(wrapper.find('.markdown-viewer code').text()).toEqual('<span>test code</span>');
   });
+  test('raw HTML with unsafe overlay markup is not rendered', () => {
+    const xssPayload =
+      '"><style>#phish{position:fixed;top:0;left:0;width:100%;height:100%}</style><div id=phish><form><button>Login</button></form></div>';
+    const wrapper = mount(<MarkdownViewer value={xssPayload} />);
+
+    expect(wrapper.find('form')).toHaveLength(0);
+    expect(wrapper.find('button')).toHaveLength(0);
+    expect(wrapper.html()).not.toContain('position:fixed');
+  });
 });
