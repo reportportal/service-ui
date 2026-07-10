@@ -18,7 +18,7 @@ import { useCallback, useEffect, useReducer, useRef } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
-import { reduxForm, stopSubmit } from 'redux-form';
+import { reduxForm, stopSubmit, clearSubmitErrors, formValueSelector } from 'redux-form';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import Link from 'redux-first-router-link';
 import { Button, FieldText } from '@reportportal/ui-kit';
@@ -100,9 +100,14 @@ const LoginFormComponent = ({
   const badCredentials = useSelector(badCredentialsSelector);
   const isLoginLoading = useSelector(loginLoadingSelector);
   const isDemoInstance = useSelector(isDemoInstanceSelector);
+  const loginValue = useSelector((state) => formValueSelector(form)(state, 'login') ?? '');
+  const passwordValue = useSelector((state) => formValueSelector(form)(state, 'password') ?? '');
 
   const [, forceCountdownTick] = useReducer((tick) => tick + 1, 0);
   const prevBadCredentialsRef = useRef(badCredentials);
+  const hadBadCredentialsSubmitErrorRef = useRef(false);
+  const prevLoginValueRef = useRef(loginValue);
+  const prevPasswordValueRef = useRef(passwordValue);
 
   const { blockTime, isLoginLimitExceeded } = getLoginLockoutState(lastFailedLoginTime);
 
@@ -137,10 +142,24 @@ const LoginFormComponent = ({
           password: formatMessage(messages.badCredentials),
         }),
       );
+      hadBadCredentialsSubmitErrorRef.current = true;
     }
 
     prevBadCredentialsRef.current = badCredentials;
   }, [badCredentials, dispatch, form, formatMessage]);
+
+  useEffect(() => {
+    const loginChanged = loginValue !== prevLoginValueRef.current;
+    const passwordChanged = passwordValue !== prevPasswordValueRef.current;
+
+    if (hadBadCredentialsSubmitErrorRef.current && (loginChanged || passwordChanged)) {
+      dispatch(clearSubmitErrors(form));
+      hadBadCredentialsSubmitErrorRef.current = false;
+    }
+
+    prevLoginValueRef.current = loginValue;
+    prevPasswordValueRef.current = passwordValue;
+  }, [dispatch, form, loginValue, passwordValue]);
 
   const clickEventHandler = () => {
     if (isLoginLoading) {
