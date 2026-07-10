@@ -2052,7 +2052,7 @@
   "PassingRateSummaryControls.ItemsFieldLabel": "Elementos",
   "PassingRateSummaryControls.ItemsValidationError": "La cantidad de elementos debe estar entre '1' y '600'",
   "PassingRateSummaryControls.excludeSkipped": "Excluir pruebas omitidas de las estadísticas",
-  "PasswordForm.description": "Número mínimo de caracteres requeridos para la contraseña. Rango permitido: {mín} a {máx} caracteres.",
+  "PasswordForm.description": "Número mínimo de caracteres requeridos para la contraseña. Rango permitido: {min} a {max} caracteres.",
   "PasswordForm.formHeader": "Password",
   "PasswordForm.label": "Password length",
   "PasswordForm.successNotification": "The minimum password length has been updated successfully",
