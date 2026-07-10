@@ -70,6 +70,11 @@ const messages = defineMessages({
     id: 'ChangePasswordForm.ruleLowercase',
     defaultMessage: 'Lower-case',
   },
+  passwordPolicySummary: {
+    id: 'ChangePasswordForm.passwordPolicySummary',
+    defaultMessage:
+      'Minimum {minLength} characters, including uppercase, lowercase, digit, special symbol. No spaces.',
+  },
   passwordRequirementsError: {
     id: 'ChangePasswordForm.passwordRequirementsError',
     defaultMessage: "Password doesn't meet some of the following requirements:",
@@ -77,6 +82,10 @@ const messages = defineMessages({
   passwordsDoNotMatch: {
     id: 'ChangePasswordForm.passwordsDoNotMatch',
     defaultMessage: 'Passwords do not match',
+  },
+  requiredField: {
+    id: 'Common.requiredFieldHint',
+    defaultMessage: 'Field is required',
   },
   capsLockOn: {
     id: 'ChangePasswordForm.capsLockOn',
@@ -106,15 +115,18 @@ const ChangePasswordFormComponent = ({ handleSubmit, resetQueryParam = '' }) => 
   );
 
   const [isLoading, setIsLoading] = useState(false);
+  // Password errors are shown only after blur or submit — not while typing.
+  const [showPasswordValidation, setShowPasswordValidation] = useState(false);
+  const [showConfirmPasswordValidation, setShowConfirmPasswordValidation] = useState(false);
+  const [isConfirmPasswordFocused, setIsConfirmPasswordFocused] = useState(false);
 
   const ruleStatus = useMemo(
     () => getPasswordRuleStatus(password, minLength),
     [password, minLength],
   );
   const allRulesMet = areAllPasswordRulesMet(ruleStatus);
-  const passwordsMatch = passwordRepeat.length > 0 && password === passwordRepeat;
-  const hasMismatch = passwordRepeat.length > 0 && password !== passwordRepeat;
-  const showPasswordRequirementsError = password.length > 0 && !allRulesMet;
+  const hasSpace = password.length > 0 && /\s/.test(password);
+  const passwordFullyValid = allRulesMet && !hasSpace;
 
   const ruleLabels = useMemo(
     () => ({
@@ -127,25 +139,80 @@ const ChangePasswordFormComponent = ({ handleSubmit, resetQueryParam = '' }) => 
     [formatMessage, minLength],
   );
 
+  // Fail styling on checklist items only when rules themselves are unmet (not when space is the only issue)
+  const showPasswordFailState = showPasswordValidation && !allRulesMet && password.length > 0;
+
   const passwordError = useMemo(() => {
-    if (showPasswordRequirementsError) {
+    if (!showPasswordValidation) {
+      return undefined;
+    }
+
+    if (!password) {
+      return formatMessage(messages.requiredField);
+    }
+
+    if (allRulesMet && hasSpace) {
+      return formatMessage(messages.passwordPolicySummary, { minLength });
+    }
+
+    if (!allRulesMet) {
       return formatMessage(messages.passwordRequirementsError);
     }
 
     return undefined;
-  }, [formatMessage, showPasswordRequirementsError]);
+  }, [showPasswordValidation, password, allRulesMet, hasSpace, minLength, formatMessage]);
+
+  const hasMismatch = passwordRepeat.length > 0 && password !== passwordRepeat;
+  const shouldShowConfirmPasswordValidation =
+    showConfirmPasswordValidation && !isConfirmPasswordFocused;
 
   const confirmPasswordError = useMemo(() => {
+    if (!shouldShowConfirmPasswordValidation) {
+      return undefined;
+    }
+
+    if (!passwordRepeat.trim()) {
+      return formatMessage(messages.requiredField);
+    }
+
     if (hasMismatch) {
       return formatMessage(messages.passwordsDoNotMatch);
     }
 
     return undefined;
-  }, [formatMessage, hasMismatch]);
+  }, [
+    shouldShowConfirmPasswordValidation,
+    passwordRepeat,
+    hasMismatch,
+    formatMessage,
+  ]);
 
-  const isSaveDisabled = !allRulesMet || !passwordsMatch || isLoading;
-  const isConfirmDisabled = !allRulesMet || isLoading;
+  const hasActiveErrors = !!(passwordError || confirmPasswordError);
+  const isSaveDisabled = isLoading || hasActiveErrors;
+  const isConfirmDisabled = !passwordFullyValid || isLoading;
   const capsLockMessage = formatMessage(messages.capsLockOn);
+
+  const handlePasswordChange = useCallback(() => {
+    setShowPasswordValidation(false);
+  }, []);
+
+  const handlePasswordBlur = useCallback(() => {
+    if (password.length > 0) {
+      setShowPasswordValidation(true);
+    }
+  }, [password]);
+
+  const handleConfirmPasswordFocus = useCallback(() => {
+    setIsConfirmPasswordFocused(true);
+  }, []);
+
+  const handleConfirmPasswordBlur = useCallback(() => {
+    setIsConfirmPasswordFocused(false);
+
+    if (passwordRepeat.length > 0) {
+      setShowConfirmPasswordValidation(true);
+    }
+  }, [passwordRepeat]);
 
   const changePassword = useCallback(
     ({ password: newPassword }) => {
@@ -153,7 +220,13 @@ const ChangePasswordFormComponent = ({ handleSubmit, resetQueryParam = '' }) => 
         return;
       }
 
-      if (!allRulesMet || !passwordsMatch) {
+      setShowPasswordValidation(true);
+      setShowConfirmPasswordValidation(true);
+      setIsConfirmPasswordFocused(false);
+
+      const confirmValid = passwordRepeat === password && passwordRepeat.trim();
+
+      if (!passwordFullyValid || !confirmValid) {
         return;
       }
 
@@ -187,18 +260,19 @@ const ChangePasswordFormComponent = ({ handleSubmit, resetQueryParam = '' }) => 
         });
     },
     [
-      allRulesMet,
       dispatch,
       formatMessage,
       isLoading,
-      passwordsMatch,
+      password,
+      passwordRepeat,
+      passwordFullyValid,
       resetQueryParam,
     ],
   );
 
   return (
     <form className={cx('change-password-form')} onSubmit={handleSubmit(changePassword)}>
-      <div className={cx('new-password-field')}>
+      <div className={cx('new-password-field')} onBlur={handlePasswordBlur}>
         <FieldProvider
           name="password"
           error={passwordError}
@@ -212,18 +286,21 @@ const ChangePasswordFormComponent = ({ handleSubmit, resetQueryParam = '' }) => 
             autoComplete="off"
             disabled={isLoading}
             displayError={!!passwordError}
+            onChange={handlePasswordChange}
           />
         </FieldProvider>
         <PasswordRequirementsList
           ruleStatus={ruleStatus}
           ruleLabels={ruleLabels}
-          showFailState={showPasswordRequirementsError}
+          showFailState={showPasswordFailState}
         />
       </div>
       <div
         className={cx('confirm-new-password-field', {
           'confirm-new-password-field--inactive': isConfirmDisabled,
         })}
+        onFocus={handleConfirmPasswordFocus}
+        onBlur={handleConfirmPasswordBlur}
       >
         <FieldProvider
           name="passwordRepeat"
