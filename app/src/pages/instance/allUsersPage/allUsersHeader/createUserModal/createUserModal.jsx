@@ -40,6 +40,7 @@ import { fetchAllUsersAction, ERROR_CODES } from 'controllers/instance/allUsers'
 import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
 import { URLS } from 'common/urls';
 import { ADMINISTRATOR, USER } from 'common/constants/accountRoles';
+import { PASSWORD_MAX_ALLOWED_LENGTH } from 'common/constants/validation';
 import { OrganizationType } from 'controllers/organization';
 import {
   CREATE_USER_FORM,
@@ -305,6 +306,7 @@ export const CreateUserModal = ({ handleSubmit, invalid }) => {
                   defaultWidth={false}
                   placeholder={formatMessage(messages.passwordPlaceholder)}
                   type="password"
+                  maxLength={PASSWORD_MAX_ALLOWED_LENGTH}
                   helpText={formatMessage(messages.passwordValidateMessage, { minLength })}
                   classNameHelpText={cx('help-text')}
                   isRequired

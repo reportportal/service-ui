@@ -2053,7 +2053,7 @@
   "PassingRateSummaryControls.ItemsFieldLabel": "Елементи",
   "PassingRateSummaryControls.ItemsValidationError": "Кількість елементів приймає значення від '1' до '600'",
   "PassingRateSummaryControls.excludeSkipped": "Виключити пропущені тести зі статистики",
-  "PasswordForm.description": "Мінімальна кількість символів, необхідних для пароля. Допустимий діапазон: від 8 до 256 символів.",
+  "PasswordForm.description": "Мінімальна кількість символів, необхідних для пароля. Допустимий діапазон: від {min} до {max} символів.",
   "PasswordForm.formHeader": "Пароль",
   "PasswordForm.label": "Довжина пароля",
   "PasswordForm.successNotification": "Мінімальну довжину пароля успішно оновлено",

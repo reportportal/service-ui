@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import { useTracking } from 'react-tracking';
 import { LDAP } from 'common/constants/pluginNames';
 import { commonValidators } from 'common/utils/validation';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { PASSWORD_MAX_ALLOWED_LENGTH } from 'common/constants/validation';
 import { isDemoInstanceSelector } from 'controllers/appInfo';
 import {
   badCredentialsSelector,
@@ -189,7 +190,7 @@ const LoginFormComponent = ({
             <FieldText
               label={formatMessage(messages.password)}
               type="password"
-              maxLength={256}
+              maxLength={PASSWORD_MAX_ALLOWED_LENGTH}
               defaultWidth={false}
               autoComplete="off"
               disabled={isLoginLoading}
