@@ -103,6 +103,20 @@ export class MultipleAuthBlock extends Component {
     authInProgress: false,
   };
 
+  componentDidMount() {
+    window.addEventListener('pageshow', this.handlePageShow);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('pageshow', this.handlePageShow);
+  }
+
+  handlePageShow = (event) => {
+    if (event.persisted) {
+      this.setState({ authInProgress: false });
+    }
+  };
+
   getProviderClickHandler = (selectedAuthPath) => () => {
     const { multipleAuthKey, tracking } = this.props;
     tracking.trackEvent(LOGIN_PAGE_EVENTS.clickOnLoginButton(multipleAuthKey));

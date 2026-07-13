@@ -46,6 +46,7 @@ function* fetchInitialData() {
   const appInfoResult = yield take(createFetchPredicate(APP_INFO_NAMESPACE));
 
   if (appInfoResult.error) {
+    yield put(setInitialDataReadyAction());
     return;
   }
 
