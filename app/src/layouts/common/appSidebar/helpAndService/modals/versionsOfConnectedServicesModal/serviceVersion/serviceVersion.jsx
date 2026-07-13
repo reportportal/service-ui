@@ -26,7 +26,7 @@ import VectorIcon from 'common/img/newIcons/vector-inline.svg';
 import { LinkItem } from 'layouts/common/appSidebar/helpAndService/linkItem';
 import { messages } from 'layouts/common/appSidebar/messages';
 import { useTracking } from 'react-tracking';
-import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
+import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
 import styles from './serviceVersion.scss';
 
 const cx = classNames.bind(styles);
@@ -89,11 +89,15 @@ VectorWithTooltip.propTypes = {
   formatMessage: PropTypes.func.isRequired,
 };
 
-export const ServiceVersion = ({ service, content }) => {
+export const ServiceVersion = ({ service, content, analyticsCategory }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const { name, version, linkTo, isNewVersion } = service;
   const isError = !version;
+
+  const handleUpdateClick = () => {
+    trackEvent(LOGIN_PAGE_EVENTS.clickOnServiceUpdateLink(analyticsCategory, name));
+  };
 
   return (
     <div className={cx('service-version')}>
@@ -109,7 +113,7 @@ export const ServiceVersion = ({ service, content }) => {
           content={content}
           className={cx('link')}
           icon={OpenIcon}
-          onClick={() => trackEvent(SIDEBAR_EVENTS.onClickUpdateLink(name))}
+          onClick={handleUpdateClick}
         />
       )}
     </div>
@@ -119,4 +123,5 @@ export const ServiceVersion = ({ service, content }) => {
 ServiceVersion.propTypes = {
   service: PropTypes.object.isRequired,
   content: PropTypes.string.isRequired,
+  analyticsCategory: PropTypes.string.isRequired,
 };
