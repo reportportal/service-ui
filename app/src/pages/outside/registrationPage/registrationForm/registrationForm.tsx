@@ -29,12 +29,9 @@ import {
   REGISTRATION_NAME_MAX_LENGTH,
 } from 'common/constants/validation';
 import { commonValidators } from 'common/utils/validation';
-import {
-  areAllPasswordRulesMet,
-  getPasswordRuleStatus,
-} from 'common/utils/validation/passwordRules';
 import { passwordMinLengthSelector } from 'controllers/appInfo';
 import { OutsidePasswordField } from 'pages/outside/common/outsidePasswordField';
+import { usePasswordValidation } from 'pages/outside/common/usePasswordValidation';
 import styles from './registrationForm.scss';
 
 const cx = createClassnames(styles);
@@ -145,10 +142,6 @@ const RegistrationFormComponent = ({
   );
   const name = useSelector((state) => (formSelector(state, 'name') as string) ?? '');
 
-  // Password errors are shown only after blur or submit — not while typing.
-  const [showPasswordValidation, setShowPasswordValidation] = useState(false);
-  const [showConfirmPasswordValidation, setShowConfirmPasswordValidation] = useState(false);
-  const [isConfirmPasswordFocused, setIsConfirmPasswordFocused] = useState(false);
   const [submitAttempted, setSubmitAttempted] = useState(false);
 
   useEffect(() => {
@@ -161,56 +154,27 @@ const RegistrationFormComponent = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const ruleStatus = useMemo(
-    () => getPasswordRuleStatus(password, minLength),
-    [password, minLength],
-  );
-  const allRulesMet = areAllPasswordRulesMet(ruleStatus);
-  const hasSpace = password.length > 0 && /\s/.test(password);
-  const passwordFullyValid = allRulesMet && !hasSpace;
-
-  const ruleLabels = useMemo(
-    () => ({
-      minLength: formatMessage(messages.ruleMinLength, { minLength }),
-      digit: formatMessage(messages.ruleDigit),
-      specialSymbol: formatMessage(messages.ruleSpecialSymbol),
-      uppercase: formatMessage(messages.ruleUppercase),
-      lowercase: formatMessage(messages.ruleLowercase),
-    }),
-    [formatMessage, minLength],
-  );
-
-  // Fail styling on checklist items only when rules themselves are unmet (not when space is the only issue)
-  const showPasswordFailState =
-    showPasswordValidation && !allRulesMet && password.length > 0;
-
-  const passwordError = useMemo(() => {
-    if (!showPasswordValidation) return undefined;
-    if (!password) return formatMessage(messages.requiredField);
-    if (allRulesMet && hasSpace) {
-      return formatMessage(messages.passwordPolicySummary, { minLength });
-    }
-    if (!allRulesMet) {
-      return formatMessage(messages.passwordRequirementsError);
-    }
-    return undefined;
-  }, [showPasswordValidation, password, allRulesMet, hasSpace, minLength, formatMessage]);
-
-  const hasMismatch = confirmPassword.length > 0 && password !== confirmPassword;
-  const shouldShowConfirmPasswordValidation =
-    showConfirmPasswordValidation && !isConfirmPasswordFocused;
-
-  const confirmPasswordError = useMemo(() => {
-    if (!shouldShowConfirmPasswordValidation) return undefined;
-    if (!confirmPassword.trim()) return formatMessage(messages.requiredField);
-    if (hasMismatch) return formatMessage(messages.passwordsDoNotMatch);
-    return undefined;
-  }, [
-    shouldShowConfirmPasswordValidation,
+  const {
+    ruleStatus,
+    passwordFullyValid,
+    ruleLabels,
+    showPasswordFailState,
+    passwordError,
+    confirmPasswordError,
+    setShowPasswordValidation,
+    setShowConfirmPasswordValidation,
+    setIsConfirmPasswordFocused,
+    handlePasswordChange,
+    handlePasswordBlur,
+    handleConfirmPasswordFocus,
+    handleConfirmPasswordBlur,
+  } = usePasswordValidation({
+    password,
     confirmPassword,
-    hasMismatch,
+    minLength,
     formatMessage,
-  ]);
+    messages,
+  });
 
   const nameError = useMemo(() => {
     if (!submitAttempted) return undefined;
@@ -230,28 +194,6 @@ const RegistrationFormComponent = ({
 
   const capsLockMessage = formatMessage(messages.capsLockOn);
 
-  const handlePasswordChange = useCallback(() => {
-    setShowPasswordValidation(false);
-  }, []);
-
-  const handlePasswordBlur = useCallback(() => {
-    if (password.length > 0) {
-      setShowPasswordValidation(true);
-    }
-  }, [password]);
-
-  const handleConfirmPasswordFocus = useCallback(() => {
-    setIsConfirmPasswordFocused(true);
-  }, []);
-
-  const handleConfirmPasswordBlur = useCallback(() => {
-    setIsConfirmPasswordFocused(false);
-
-    if (confirmPassword.length > 0) {
-      setShowConfirmPasswordValidation(true);
-    }
-  }, [confirmPassword]);
-
   const submitHandler = useCallback(
     (values: RegistrationFormValues) => {
       setSubmitAttempted(true);
@@ -268,7 +210,7 @@ const RegistrationFormComponent = ({
 
       return submitForm(values);
     },
-    [name, password, confirmPassword, passwordFullyValid, submitForm],
+    [name, password, confirmPassword, passwordFullyValid, submitForm, setShowPasswordValidation, setShowConfirmPasswordValidation, setIsConfirmPasswordFocused],
   );
 
   return (

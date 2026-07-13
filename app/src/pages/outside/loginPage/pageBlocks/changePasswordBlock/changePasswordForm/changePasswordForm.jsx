@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,10 +24,6 @@ import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { Button } from '@reportportal/ui-kit';
 import { fetch, connectRouter } from 'common/utils';
 import { PASSWORD_MAX_ALLOWED_LENGTH } from 'common/constants/validation';
-import {
-  areAllPasswordRulesMet,
-  getPasswordRuleStatus,
-} from 'common/utils/validation/passwordRules';
 import { passwordMinLengthSelector } from 'controllers/appInfo';
 import { URLS } from 'common/urls';
 import { LOGIN_PAGE } from 'controllers/pages';
@@ -36,6 +32,7 @@ import { PasswordRequirementsList } from 'components/passwordRequirementsList';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { OutsidePasswordField } from 'pages/outside/common/outsidePasswordField';
+import { usePasswordValidation } from 'pages/outside/common/usePasswordValidation';
 import styles from './changePasswordForm.scss';
 
 const cx = classNames.bind(styles);
@@ -91,10 +88,6 @@ const messages = defineMessages({
     id: 'ChangePasswordForm.capsLockOn',
     defaultMessage: 'Caps Lock is on',
   },
-  save: {
-    id: 'ChangePasswordForm.save',
-    defaultMessage: 'Save',
-  },
   successChange: {
     id: 'ChangePasswordForm.successChange',
     defaultMessage: 'Your password has been changed successfully',
@@ -115,104 +108,33 @@ const ChangePasswordFormComponent = ({ handleSubmit, resetQueryParam = '' }) => 
   );
 
   const [isLoading, setIsLoading] = useState(false);
-  // Password errors are shown only after blur or submit — not while typing.
-  const [showPasswordValidation, setShowPasswordValidation] = useState(false);
-  const [showConfirmPasswordValidation, setShowConfirmPasswordValidation] = useState(false);
-  const [isConfirmPasswordFocused, setIsConfirmPasswordFocused] = useState(false);
 
-  const ruleStatus = useMemo(
-    () => getPasswordRuleStatus(password, minLength),
-    [password, minLength],
-  );
-  const allRulesMet = areAllPasswordRulesMet(ruleStatus);
-  const hasSpace = password.length > 0 && /\s/.test(password);
-  const passwordFullyValid = allRulesMet && !hasSpace;
-
-  const ruleLabels = useMemo(
-    () => ({
-      minLength: formatMessage(messages.ruleMinLength, { minLength }),
-      digit: formatMessage(messages.ruleDigit),
-      specialSymbol: formatMessage(messages.ruleSpecialSymbol),
-      uppercase: formatMessage(messages.ruleUppercase),
-      lowercase: formatMessage(messages.ruleLowercase),
-    }),
-    [formatMessage, minLength],
-  );
-
-  // Fail styling on checklist items only when rules themselves are unmet (not when space is the only issue)
-  const showPasswordFailState = showPasswordValidation && !allRulesMet && password.length > 0;
-
-  const passwordError = useMemo(() => {
-    if (!showPasswordValidation) {
-      return undefined;
-    }
-
-    if (!password) {
-      return formatMessage(messages.requiredField);
-    }
-
-    if (allRulesMet && hasSpace) {
-      return formatMessage(messages.passwordPolicySummary, { minLength });
-    }
-
-    if (!allRulesMet) {
-      return formatMessage(messages.passwordRequirementsError);
-    }
-
-    return undefined;
-  }, [showPasswordValidation, password, allRulesMet, hasSpace, minLength, formatMessage]);
-
-  const hasMismatch = passwordRepeat.length > 0 && password !== passwordRepeat;
-  const shouldShowConfirmPasswordValidation =
-    showConfirmPasswordValidation && !isConfirmPasswordFocused;
-
-  const confirmPasswordError = useMemo(() => {
-    if (!shouldShowConfirmPasswordValidation) {
-      return undefined;
-    }
-
-    if (!passwordRepeat.trim()) {
-      return formatMessage(messages.requiredField);
-    }
-
-    if (hasMismatch) {
-      return formatMessage(messages.passwordsDoNotMatch);
-    }
-
-    return undefined;
-  }, [
-    shouldShowConfirmPasswordValidation,
-    passwordRepeat,
-    hasMismatch,
+  const {
+    ruleStatus,
+    passwordFullyValid,
+    ruleLabels,
+    showPasswordFailState,
+    passwordError,
+    confirmPasswordError,
+    setShowPasswordValidation,
+    setShowConfirmPasswordValidation,
+    setIsConfirmPasswordFocused,
+    handlePasswordChange,
+    handlePasswordBlur,
+    handleConfirmPasswordFocus,
+    handleConfirmPasswordBlur,
+  } = usePasswordValidation({
+    password,
+    confirmPassword: passwordRepeat,
+    minLength,
     formatMessage,
-  ]);
+    messages,
+  });
 
   const hasActiveErrors = !!(passwordError || confirmPasswordError);
   const isSaveDisabled = isLoading || hasActiveErrors;
   const isConfirmDisabled = !passwordFullyValid || isLoading;
   const capsLockMessage = formatMessage(messages.capsLockOn);
-
-  const handlePasswordChange = useCallback(() => {
-    setShowPasswordValidation(false);
-  }, []);
-
-  const handlePasswordBlur = useCallback(() => {
-    if (password.length > 0) {
-      setShowPasswordValidation(true);
-    }
-  }, [password]);
-
-  const handleConfirmPasswordFocus = useCallback(() => {
-    setIsConfirmPasswordFocused(true);
-  }, []);
-
-  const handleConfirmPasswordBlur = useCallback(() => {
-    setIsConfirmPasswordFocused(false);
-
-    if (passwordRepeat.length > 0) {
-      setShowConfirmPasswordValidation(true);
-    }
-  }, [passwordRepeat]);
 
   const changePassword = useCallback(
     ({ password: newPassword }) => {
@@ -267,6 +189,9 @@ const ChangePasswordFormComponent = ({ handleSubmit, resetQueryParam = '' }) => 
       passwordRepeat,
       passwordFullyValid,
       resetQueryParam,
+      setShowPasswordValidation,
+      setShowConfirmPasswordValidation,
+      setIsConfirmPasswordFocused,
     ],
   );
 
