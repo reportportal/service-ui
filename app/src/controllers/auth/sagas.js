@@ -65,6 +65,7 @@ import {
   hasExpiredLoginLockout,
   isLoginAttemptsExceeded,
   isLoginCredentialFailure,
+  isLoginBadCredentialsFailure,
   isLoginLockoutActive,
   isLoginRedirectLockout,
   isServerLoginLockFailure,
@@ -168,7 +169,7 @@ function* startServerLoginLockout() {
   yield put(setLastFailedLoginTimeAction(lastFailedLoginTime));
 }
 
-function* registerFailedLoginAttempt() {
+function* registerFailedLoginAttempt(shouldSetBadCredentials = true) {
   const failedAttempts = (yield select(failedLoginAttemptsSelector)) + 1;
   yield put(setFailedLoginAttemptsAction(failedAttempts));
 
@@ -179,7 +180,11 @@ function* registerFailedLoginAttempt() {
     return true;
   }
 
-  yield put(setBadCredentialsAction());
+  // Field errors only; lockout counter above is unchanged regardless of this flag.
+  if (shouldSetBadCredentials) {
+    yield put(setBadCredentialsAction());
+  }
+
   return false;
 }
 
@@ -276,13 +281,15 @@ function* handleLoginFailure(rawError, isLastAttempt) {
   }
 
   if (isLoginCredentialFailure(rawError)) {
-    const isLockedOut = yield call(registerFailedLoginAttempt);
+    const isBadCredentials = isLoginBadCredentialsFailure(rawError);
+    const isLockedOut = yield call(registerFailedLoginAttempt, isBadCredentials);
 
     if (isLockedOut) {
       yield call(showLoginLockoutNotification);
-    } else {
+    } else if (!isBadCredentials) {
       yield call(showLoginFailureNotification, getLoginErrorMessage(rawError));
     }
+
     return;
   }
 

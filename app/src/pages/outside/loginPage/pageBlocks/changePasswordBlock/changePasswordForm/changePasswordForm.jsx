@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,10 +24,6 @@ import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { Button } from '@reportportal/ui-kit';
 import { fetch, connectRouter } from 'common/utils';
 import { PASSWORD_MAX_ALLOWED_LENGTH } from 'common/constants/validation';
-import {
-  areAllPasswordRulesMet,
-  getPasswordRuleStatus,
-} from 'common/utils/validation/passwordRules';
 import { passwordMinLengthSelector } from 'controllers/appInfo';
 import { URLS } from 'common/urls';
 import { LOGIN_PAGE } from 'controllers/pages';
@@ -36,6 +32,7 @@ import { PasswordRequirementsList } from 'components/passwordRequirementsList';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { OutsidePasswordField } from 'pages/outside/common/outsidePasswordField';
+import { usePasswordValidation } from 'pages/outside/common/usePasswordValidation';
 import styles from './changePasswordForm.scss';
 
 const cx = classNames.bind(styles);
@@ -70,6 +67,11 @@ const messages = defineMessages({
     id: 'ChangePasswordForm.ruleLowercase',
     defaultMessage: 'Lower-case',
   },
+  passwordPolicySummary: {
+    id: 'ChangePasswordForm.passwordPolicySummary',
+    defaultMessage:
+      'Minimum {minLength} characters, including uppercase, lowercase, digit, special symbol. No spaces.',
+  },
   passwordRequirementsError: {
     id: 'ChangePasswordForm.passwordRequirementsError',
     defaultMessage: "Password doesn't meet some of the following requirements:",
@@ -78,13 +80,13 @@ const messages = defineMessages({
     id: 'ChangePasswordForm.passwordsDoNotMatch',
     defaultMessage: 'Passwords do not match',
   },
+  requiredField: {
+    id: 'Common.requiredFieldHint',
+    defaultMessage: 'Field is required',
+  },
   capsLockOn: {
     id: 'ChangePasswordForm.capsLockOn',
     defaultMessage: 'Caps Lock is on',
-  },
-  save: {
-    id: 'ChangePasswordForm.save',
-    defaultMessage: 'Save',
   },
   successChange: {
     id: 'ChangePasswordForm.successChange',
@@ -107,44 +109,31 @@ const ChangePasswordFormComponent = ({ handleSubmit, resetQueryParam = '' }) => 
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const ruleStatus = useMemo(
-    () => getPasswordRuleStatus(password, minLength),
-    [password, minLength],
-  );
-  const allRulesMet = areAllPasswordRulesMet(ruleStatus);
-  const passwordsMatch = passwordRepeat.length > 0 && password === passwordRepeat;
-  const hasMismatch = passwordRepeat.length > 0 && password !== passwordRepeat;
-  const showPasswordRequirementsError = password.length > 0 && !allRulesMet;
+  const {
+    ruleStatus,
+    passwordFullyValid,
+    ruleLabels,
+    showPasswordFailState,
+    passwordError,
+    confirmPasswordError,
+    setShowPasswordValidation,
+    setShowConfirmPasswordValidation,
+    setIsConfirmPasswordFocused,
+    handlePasswordChange,
+    handlePasswordBlur,
+    handleConfirmPasswordFocus,
+    handleConfirmPasswordBlur,
+  } = usePasswordValidation({
+    password,
+    confirmPassword: passwordRepeat,
+    minLength,
+    formatMessage,
+    messages,
+  });
 
-  const ruleLabels = useMemo(
-    () => ({
-      minLength: formatMessage(messages.ruleMinLength, { minLength }),
-      digit: formatMessage(messages.ruleDigit),
-      specialSymbol: formatMessage(messages.ruleSpecialSymbol),
-      uppercase: formatMessage(messages.ruleUppercase),
-      lowercase: formatMessage(messages.ruleLowercase),
-    }),
-    [formatMessage, minLength],
-  );
-
-  const passwordError = useMemo(() => {
-    if (showPasswordRequirementsError) {
-      return formatMessage(messages.passwordRequirementsError);
-    }
-
-    return undefined;
-  }, [formatMessage, showPasswordRequirementsError]);
-
-  const confirmPasswordError = useMemo(() => {
-    if (hasMismatch) {
-      return formatMessage(messages.passwordsDoNotMatch);
-    }
-
-    return undefined;
-  }, [formatMessage, hasMismatch]);
-
-  const isSaveDisabled = !allRulesMet || !passwordsMatch || isLoading;
-  const isConfirmDisabled = !allRulesMet || isLoading;
+  const hasActiveErrors = !!(passwordError || confirmPasswordError);
+  const isSaveDisabled = isLoading || hasActiveErrors;
+  const isConfirmDisabled = !passwordFullyValid || isLoading;
   const capsLockMessage = formatMessage(messages.capsLockOn);
 
   const changePassword = useCallback(
@@ -153,7 +142,13 @@ const ChangePasswordFormComponent = ({ handleSubmit, resetQueryParam = '' }) => 
         return;
       }
 
-      if (!allRulesMet || !passwordsMatch) {
+      setShowPasswordValidation(true);
+      setShowConfirmPasswordValidation(true);
+      setIsConfirmPasswordFocused(false);
+
+      const confirmValid = passwordRepeat === password && passwordRepeat.trim();
+
+      if (!passwordFullyValid || !confirmValid) {
         return;
       }
 
@@ -187,18 +182,22 @@ const ChangePasswordFormComponent = ({ handleSubmit, resetQueryParam = '' }) => 
         });
     },
     [
-      allRulesMet,
       dispatch,
       formatMessage,
       isLoading,
-      passwordsMatch,
+      password,
+      passwordRepeat,
+      passwordFullyValid,
       resetQueryParam,
+      setShowPasswordValidation,
+      setShowConfirmPasswordValidation,
+      setIsConfirmPasswordFocused,
     ],
   );
 
   return (
     <form className={cx('change-password-form')} onSubmit={handleSubmit(changePassword)}>
-      <div className={cx('new-password-field')}>
+      <div className={cx('new-password-field')} onBlur={handlePasswordBlur}>
         <FieldProvider
           name="password"
           error={passwordError}
@@ -212,18 +211,21 @@ const ChangePasswordFormComponent = ({ handleSubmit, resetQueryParam = '' }) => 
             autoComplete="off"
             disabled={isLoading}
             displayError={!!passwordError}
+            onChange={handlePasswordChange}
           />
         </FieldProvider>
         <PasswordRequirementsList
           ruleStatus={ruleStatus}
           ruleLabels={ruleLabels}
-          showFailState={showPasswordRequirementsError}
+          showFailState={showPasswordFailState}
         />
       </div>
       <div
         className={cx('confirm-new-password-field', {
           'confirm-new-password-field--inactive': isConfirmDisabled,
         })}
+        onFocus={handleConfirmPasswordFocus}
+        onBlur={handleConfirmPasswordBlur}
       >
         <FieldProvider
           name="passwordRepeat"

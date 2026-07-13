@@ -72,7 +72,7 @@ const messages = defineMessages({
   },
   badCredentials: {
     id: 'LoginForm.badCredentials',
-    defaultMessage: 'Bad credentials',
+    defaultMessage: 'Email or password is incorrect',
   },
   logInWithEmail: {
     id: 'SelectSsoProviderBlock.logInWithEmail',
