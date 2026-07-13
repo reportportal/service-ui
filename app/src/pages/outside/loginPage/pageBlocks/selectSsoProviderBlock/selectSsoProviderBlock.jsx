@@ -61,6 +61,18 @@ export const SelectSsoProviderBlock = () => {
   useEffect(() => () => clearAuthTimeoutRef.current(), []);
 
   useEffect(() => {
+    const handlePageShow = (event) => {
+      if (event.persisted) {
+        clearAuthTimeoutRef.current();
+        clearAuthTimeoutRef.current = () => {};
+        setAuthInProgress(false);
+      }
+    };
+    window.addEventListener('pageshow', handlePageShow);
+    return () => window.removeEventListener('pageshow', handlePageShow);
+  }, []);
+
+  useEffect(() => {
     if (authTypes.length <= 1) {
       dispatch(redirect({ type: LOGIN_PAGE }));
     }

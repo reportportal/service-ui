@@ -45,6 +45,18 @@ export const ExternalLoginBlock = ({ externalAuth = {}, inline = false }) => {
 
   useEffect(() => () => clearAuthTimeoutRef.current(), []);
 
+  useEffect(() => {
+    const handlePageShow = (event) => {
+      if (event.persisted) {
+        clearAuthTimeoutRef.current();
+        clearAuthTimeoutRef.current = () => {};
+        setAuthInProgress(false);
+      }
+    };
+    window.addEventListener('pageshow', handlePageShow);
+    return () => window.removeEventListener('pageshow', handlePageShow);
+  }, []);
+
   const startAuthFlow = useCallback(
     (val, authType) => {
       clearAuthTimeoutRef.current();
