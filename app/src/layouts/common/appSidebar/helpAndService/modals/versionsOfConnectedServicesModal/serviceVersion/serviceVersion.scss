@@ -17,8 +17,9 @@
 .service-version {
   display: flex;
   align-items: center;
-  height: 32px;
+  height: 44px;
   border-bottom: 1px solid $COLOR--e-100;
+  box-sizing: border-box;
 }
 
 .name {
