@@ -19,7 +19,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
+import { BubblesLoader } from '@reportportal/ui-kit';
 import { loadingSelector, membersSelector, fetchMembersAction } from 'controllers/members';
+import { querySelector } from 'controllers/members/selectors';
+import { SEARCH_KEY } from 'controllers/members/constants';
 import { showModalAction } from 'controllers/modal';
 import {
   fetchProjectAction,
@@ -48,10 +51,13 @@ export const ProjectTeamPage = () => {
   const { canInviteInternalUser } = useUserPermissions();
   const members = useSelector(membersSelector);
   const isMembersLoading = useSelector(loadingSelector);
+  const membersQuery = useSelector(querySelector);
   const projectKey = useSelector(projectKeySelector);
   const projectId = useSelector(projectInfoIdSelector);
   const [searchValue, setSearchValue] = useState(null);
   const isEmptyMembers = members.length === 0;
+  const appliedSearch = membersQuery?.[SEARCH_KEY];
+  const hasPendingSearchClear = !searchValue && Boolean(appliedSearch?.trim());
 
   useEffect(() => {
     trackEvent(PROJECT_TEAM_PAGE_VIEWS.PROJECT_TEAM);
@@ -73,9 +79,16 @@ export const ProjectTeamPage = () => {
   };
 
   const getEmptyPageState = () => {
-    return searchValue === null ? (
+    if (isMembersLoading || hasPendingSearchClear) {
+      return (
+        <div className={cx('loader')}>
+          <BubblesLoader />
+        </div>
+      );
+    }
+
+    return !searchValue ? (
       <EmptyMembersPageState
-        isLoading={isMembersLoading}
         hasPermission={canInviteInternalUser}
         showInviteUserModal={showInviteUserModal}
       />
