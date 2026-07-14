@@ -22,6 +22,7 @@ import { reduxForm, stopSubmit, clearSubmitErrors, formValueSelector } from 'red
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import Link from 'redux-first-router-link';
 import { Button, FieldText } from '@reportportal/ui-kit';
+import { OutsidePasswordField } from 'pages/outside/common/outsidePasswordField';
 import { useTracking } from 'react-tracking';
 import { LDAP } from 'common/constants/pluginNames';
 import { commonValidators } from 'common/utils/validation';
@@ -77,6 +78,10 @@ const messages = defineMessages({
   logInWithEmail: {
     id: 'SelectSsoProviderBlock.logInWithEmail',
     defaultMessage: 'Log in with Email',
+  },
+  capsLockOn: {
+    id: 'ChangePasswordForm.capsLockOn',
+    defaultMessage: 'Caps Lock is on',
   },
 });
 
@@ -161,6 +166,8 @@ const LoginFormComponent = ({
     prevPasswordValueRef.current = passwordValue;
   }, [dispatch, form, loginValue, passwordValue]);
 
+  const capsLockMessage = formatMessage(messages.capsLockOn);
+
   const clickEventHandler = () => {
     if (isLoginLoading) {
       return;
@@ -206,9 +213,9 @@ const LoginFormComponent = ({
       <div className={cx('password-field')}>
         <FieldProvider name="password">
           <FieldErrorHint provideHint={false} suppressError={isLoginLoading}>
-            <FieldText
+            <OutsidePasswordField
               label={formatMessage(messages.password)}
-              type="password"
+              capsLockMessage={capsLockMessage}
               maxLength={PASSWORD_MAX_ALLOWED_LENGTH}
               defaultWidth={false}
               autoComplete="off"
