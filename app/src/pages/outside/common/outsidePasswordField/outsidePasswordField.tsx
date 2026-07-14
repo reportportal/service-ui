@@ -14,62 +14,13 @@
  * limitations under the License.
  */
 
-import classNames from 'classnames/bind';
-import { ArrowUpIcon, FieldText, Tooltip } from '@reportportal/ui-kit';
-import { useCapsLock } from 'common/hooks/useCapsLock';
-import styles from './outsidePasswordField.scss';
-import React from "react";
+import { ComponentProps } from 'react';
+import { FieldText } from '@reportportal/ui-kit';
 
-const cx = classNames.bind(styles);
-
-interface OutsidePasswordFieldProps {
-  capsLockMessage: string,
-  value?: string,
-  onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void,
-  onKeyUp?: (event: React.KeyboardEvent<HTMLInputElement>) => void,
-  disabled?: boolean,
-  label?: string,
-  maxLength?: number,
-  defaultWidth: boolean
-  autoComplete?: string,
-  displayError: boolean
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+interface OutsidePasswordFieldProps extends Omit<ComponentProps<typeof FieldText>, 'type'> {
+  capsLockMessage: string;
 }
 
-export const OutsidePasswordField = ({
-  value = '',
-  onKeyDown,
-  onKeyUp,
-  capsLockMessage,
-  disabled = false,
-  ...rest
-}: OutsidePasswordFieldProps) => {
-  const { capsLockOn, handleKeyDown, handleKeyUp } = useCapsLock();
-  const showCapsLock = capsLockOn && value.length >= 1 && !disabled;
-
-  const capsLockIcon = showCapsLock ? (
-    <Tooltip content={capsLockMessage} wrapperClassName={cx('caps-lock-tooltip')}>
-      <span className={cx('caps-lock-icon')}>
-        <ArrowUpIcon />
-      </span>
-    </Tooltip>
-  ) : null;
-
-  return (
-    <FieldText
-      value={value}
-      type="password"
-      disabled={disabled}
-      endIcon={capsLockIcon}
-      onKeyDown={(event) => {
-        handleKeyDown(event);
-        onKeyDown?.(event);
-      }}
-      onKeyUp={(event) => {
-        handleKeyUp(event);
-        onKeyUp?.(event);
-      }}
-      {...rest}
-    />
-  );
-};
+export const OutsidePasswordField = ({ capsLockMessage, ...rest }: OutsidePasswordFieldProps) => (
+  <FieldText type="password" capsLockMessage={capsLockMessage} {...rest} />
+);
