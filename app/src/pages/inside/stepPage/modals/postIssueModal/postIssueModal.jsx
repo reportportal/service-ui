@@ -189,10 +189,16 @@ export class PostIssueModal extends Component {
       fields,
       pluginName,
       integrationId: id,
+      isSubmitting: false,
     };
   }
 
   onPost = () => {
+    // Prevent double-submit while the request / screen lock is in progress.
+    if (this.state.isSubmitting) {
+      return;
+    }
+
     const { handleSubmit } = this.props;
     handleSubmit(this.prepareDataToSend)();
   };
@@ -347,6 +353,7 @@ export class PostIssueModal extends Component {
         },
       });
     }
+    this.setState({ isSubmitting: true });
     this.props.showScreenLockAction();
 
     trackEvent(eventsInfo.postBtn(data));
@@ -391,6 +398,7 @@ export class PostIssueModal extends Component {
         });
       })
       .catch((err) => {
+        this.setState({ isSubmitting: false });
         this.props.hideScreenLockAction();
         this.props.showNotification({
           message: `${formatMessage(messages.postIssueFailed)}. ${err.message}`,
@@ -415,6 +423,7 @@ export class PostIssueModal extends Component {
         color="''"
         appearance="topaz"
         transparentBackground
+        disabled={this.state.isSubmitting}
       >
         {this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
       </GhostButton>
@@ -422,7 +431,7 @@ export class PostIssueModal extends Component {
     okButton: (
       <GhostButton
         onClick={this.onPost}
-        disabled={this.props.invalid}
+        disabled={this.props.invalid || this.state.isSubmitting}
         color="''"
         appearance="topaz"
       >
