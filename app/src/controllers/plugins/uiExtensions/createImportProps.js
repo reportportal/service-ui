@@ -113,7 +113,7 @@ import {
   locationSelector,
 } from 'controllers/pages';
 import { attributesArray, isNotEmptyArray } from 'common/utils/validation/validate';
-import { canDeleteTestItem } from 'common/utils/permissions';
+import { canDeleteTestItem, canUpdateSettings } from 'common/utils/permissions';
 import {
   requiredField,
   btsUrl,
@@ -507,6 +507,7 @@ export const createImportProps = (pluginName) => ({
     setSessionItem,
     removeSessionItem,
     canDeleteTestItem,
+    canUpdateSettings,
     referenceDictionary,
     qualityGatesMessages,
   },
