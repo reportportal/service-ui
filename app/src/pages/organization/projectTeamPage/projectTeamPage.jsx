@@ -23,11 +23,14 @@ import { BubblesLoader } from '@reportportal/ui-kit';
 import { loadingSelector, membersSelector, fetchMembersAction } from 'controllers/members';
 import { querySelector } from 'controllers/members/selectors';
 import { SEARCH_KEY } from 'controllers/members/constants';
+import { createClearedMembersSearchQuery } from 'controllers/members/utils';
+import { updatePagePropertiesAction } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import {
   fetchProjectAction,
   projectInfoIdSelector,
   projectKeySelector,
+  projectMembersSelector,
 } from 'controllers/project';
 import { EmptyPageState } from 'pages/common';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
@@ -52,16 +55,27 @@ export const ProjectTeamPage = () => {
   const members = useSelector(membersSelector);
   const isMembersLoading = useSelector(loadingSelector);
   const membersQuery = useSelector(querySelector);
+  const projectMembers = useSelector(projectMembersSelector);
   const projectKey = useSelector(projectKeySelector);
   const projectId = useSelector(projectInfoIdSelector);
+  const isProjectLoaded = Boolean(projectId);
   const [searchValue, setSearchValue] = useState(null);
   const isEmptyMembers = members.length === 0;
+  const hasProjectMembers = projectMembers.length > 0;
   const appliedSearch = membersQuery?.[SEARCH_KEY];
-  const hasPendingSearchClear = !searchValue && Boolean(appliedSearch?.trim());
+  const effectiveSearchValue = hasProjectMembers ? searchValue : null;
+  const hasPendingSearchClear =
+    hasProjectMembers && !effectiveSearchValue && Boolean(appliedSearch?.trim());
 
   useEffect(() => {
     trackEvent(PROJECT_TEAM_PAGE_VIEWS.PROJECT_TEAM);
   }, [trackEvent]);
+
+  useEffect(() => {
+    if (isProjectLoaded && !hasProjectMembers && appliedSearch) {
+      dispatch(updatePagePropertiesAction(createClearedMembersSearchQuery(membersQuery)));
+    }
+  }, [isProjectLoaded, hasProjectMembers, appliedSearch, dispatch, membersQuery]);
 
   const onInvite = () => {
     dispatch(fetchMembersAction());
@@ -87,17 +101,29 @@ export const ProjectTeamPage = () => {
       );
     }
 
-    return !searchValue ? (
-      <EmptyMembersPageState
-        hasPermission={canInviteInternalUser}
-        showInviteUserModal={showInviteUserModal}
-      />
-    ) : (
+    if (!hasProjectMembers) {
+      return (
+        <EmptyMembersPageState
+          isLoading={!isProjectLoaded || isMembersLoading}
+          hasPermission={canInviteInternalUser}
+          showInviteUserModal={showInviteUserModal}
+        />
+      );
+    }
+
+    const hasActiveSearch = Boolean(effectiveSearchValue?.trim() || appliedSearch?.trim());
+
+    return hasActiveSearch ? (
       <EmptyPageState
         label={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
         description={formatMessage(messages.noResultsDescription)}
         emptyIcon={NoResultsIcon}
         hasPermission={false}
+      />
+    ) : (
+      <EmptyMembersPageState
+        hasPermission={canInviteInternalUser}
+        showInviteUserModal={showInviteUserModal}
       />
     );
   };
