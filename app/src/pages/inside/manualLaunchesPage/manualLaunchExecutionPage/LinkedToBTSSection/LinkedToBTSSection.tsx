@@ -20,6 +20,7 @@ import { Button, IssueList, PlusIcon } from '@reportportal/ui-kit';
 import type { Issue } from '@reportportal/ui-kit/issueList';
 import { isEmpty } from 'es-toolkit/compat';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 
 import { createClassnames, fetch } from 'common/utils';
 import { BtsTicket, TestCaseExecution } from 'controllers/manualLaunch';
@@ -32,6 +33,10 @@ import { ExecutionStatus } from 'types/testCase';
 import { messages as executionPageMessages } from '../messages';
 import { messages as executionSidePanelMessages } from '../../manualLaunchDetailsPage/manualLaunchExecutions/executionSidePanel/messages';
 import { useBTSIssuesModal } from '../BTSIssuesModal/useBTSIssuesModal';
+import {
+  MANUAL_LAUNCHES_PAGE_EVENTS,
+  MANUAL_LAUNCHES_PLACE,
+} from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 
 import styles from './LinkedToBTSSection.scss';
 
@@ -68,6 +73,7 @@ const getTicketId = (value: unknown): string | null => {
 
 export const LinkedToBTSSection: FC<LinkedToBTSSectionProps> = ({ execution }) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const { openModal } = useBTSIssuesModal();
@@ -112,6 +118,19 @@ export const LinkedToBTSSection: FC<LinkedToBTSSectionProps> = ({ execution }) =
     [displayedBtsTickets, projectKey, testItemId, dispatch],
   );
 
+  const handleOpenBtsModal = useCallback(() => {
+    openModal(MANUAL_LAUNCHES_PLACE.TEST_EXECUTION_PAGE_BTS_SECTION, execution.id);
+  }, [openModal, execution.id]);
+
+  const handleIssueClick = useCallback(
+    (issue: Issue) => {
+      const pluginName =
+        'pluginName' in issue && typeof issue.pluginName === 'string' ? issue.pluginName : '';
+      trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.clickIssueTicket(pluginName));
+    },
+    [trackEvent],
+  );
+
   return (
     <section className={cx('linked-to-bts-section')}>
       <div className={cx('linked-to-bts-section__header')}>
@@ -123,7 +142,7 @@ export const LinkedToBTSSection: FC<LinkedToBTSSectionProps> = ({ execution }) =
             variant="text"
             iconPlace="start"
             icon={<PlusIcon />}
-            onClick={() => openModal(execution.id)}
+            onClick={handleOpenBtsModal}
             className={cx('linked-to-bts-section__action')}
           >
             {formatMessage(executionPageMessages.postOrLinkIssue)}
@@ -136,6 +155,7 @@ export const LinkedToBTSSection: FC<LinkedToBTSSectionProps> = ({ execution }) =
           <IssueList
             issues={btsIssues}
             className={cx('linked-to-bts-section__issue')}
+            onIssueClick={handleIssueClick}
             onIssueRemove={handleIssueRemove}
           />
         </div>
@@ -154,7 +174,7 @@ export const LinkedToBTSSection: FC<LinkedToBTSSectionProps> = ({ execution }) =
               variant="text"
               iconPlace="start"
               icon={<PlusIcon />}
-              onClick={() => openModal(execution.id)}
+              onClick={handleOpenBtsModal}
               className={cx('linked-to-bts-section__action')}
             >
               {formatMessage(executionPageMessages.postOrLinkIssue)}

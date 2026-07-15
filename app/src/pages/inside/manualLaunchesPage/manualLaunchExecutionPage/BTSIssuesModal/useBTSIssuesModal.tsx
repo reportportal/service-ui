@@ -18,6 +18,8 @@ import { useCallback } from 'react';
 
 import { useModal } from 'common/hooks';
 
+import type { BtsModalEntryPlace } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
+
 import { BTSIssuesModal } from './BTSIssuesModal';
 import { BTS_ISSUES_MODAL } from '../constants';
 import type { BTSIssuesModalData } from './types';
@@ -29,8 +31,8 @@ export const useBTSIssuesModal = () => {
   });
 
   const openModal = useCallback(
-    (executionId?: number) => {
-      openRawModal({ executionId });
+    (entryPlace: BtsModalEntryPlace, executionId?: number) => {
+      openRawModal({ executionId, entryPlace });
     },
     [openRawModal],
   );

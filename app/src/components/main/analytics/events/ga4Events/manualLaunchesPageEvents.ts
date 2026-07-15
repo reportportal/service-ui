@@ -18,6 +18,7 @@ import {
   getBasicChooseEventParameters,
   getBasicClickEventParameters,
   getBasicEventParameters,
+  normalizeEventParameter,
 } from '../common/ga4Utils';
 
 const MANUAL_LAUNCHES = 'manual_launches';
@@ -33,8 +34,10 @@ export const MANUAL_LAUNCHES_PLACE = {
   EXECUTION_DETAILS_SIDEBAR: 'execution_details_sidebar',
   DELETE_TEST_EXECUTION_MODAL: 'delete_test_execution_modal',
   TEST_EXECUTION_PAGE: 'test_execution_page',
+  TEST_EXECUTION_PAGE_HEADER: 'test_execution_page_header',
+  TEST_EXECUTION_PAGE_BTS_SECTION: 'test_execution_page_bts_section',
+  EXECUTION_DETAILS_SIDEBAR_FAILED: 'execution_details_sidebar_failed',
   CLEAR_STATUS_MODAL: 'clear_status_modal',
-  POST_LINK_BTS_MODAL: 'post_link_bts_modal',
 } as const;
 
 export type ManualLaunchListOrSidebarPlace =
@@ -44,6 +47,18 @@ export type ManualLaunchListOrSidebarPlace =
 export type ExecutionStatusChangePlace =
   | typeof MANUAL_LAUNCHES_PLACE.EXECUTION_DETAILS_SIDEBAR
   | typeof MANUAL_LAUNCHES_PLACE.TEST_EXECUTION_PAGE;
+
+export type BtsModalEntryPlace =
+  | typeof MANUAL_LAUNCHES_PLACE.TEST_EXECUTION_PAGE_HEADER
+  | typeof MANUAL_LAUNCHES_PLACE.TEST_EXECUTION_PAGE_BTS_SECTION
+  | typeof MANUAL_LAUNCHES_PLACE.EXECUTION_DETAILS_SIDEBAR_FAILED;
+
+export const getBtsModalEntryPlaceFromStatusChangePlace = (
+  place: ExecutionStatusChangePlace,
+): BtsModalEntryPlace =>
+  place === MANUAL_LAUNCHES_PLACE.EXECUTION_DETAILS_SIDEBAR
+    ? MANUAL_LAUNCHES_PLACE.EXECUTION_DETAILS_SIDEBAR_FAILED
+    : MANUAL_LAUNCHES_PLACE.TEST_EXECUTION_PAGE_HEADER;
 
 const MANUAL_LAUNCHES_MODAL = {
   EDIT_LAUNCH: 'edit_launch',
@@ -74,6 +89,9 @@ const MANUAL_LAUNCHES_ELEMENT = {
   SUBMIT_BULK_DELETE_TEST_EXECUTION: 'submit_bulk_delete_test_execution',
   SUBMIT_ADD_TO_TEST_PLAN: 'submit_add_to_test_plan',
   SUBMIT_BTS_ACTION: 'submit_bts_action',
+  ISSUE_TICKET: 'issue_ticket',
+  SAVE_ATTACHMENTS: 'save_attachments',
+  SAVE_EXECUTION_COMMENT: 'save_execution_comment',
   START_DELETE_TEST_EXECUTION: 'start_delete_test_execution',
   START_BULK_DELETE_TEST_EXECUTION: 'start_bulk_delete_test_execution',
   CONTINUE_TESTING: 'continue_testing',
@@ -227,13 +245,29 @@ export const MANUAL_LAUNCHES_PAGE_EVENTS = {
     modal: MANUAL_LAUNCHES_MODAL.ADD_TO_TEST_PLAN,
     element_name: MANUAL_LAUNCHES_ELEMENT.SUBMIT_ADD_TO_TEST_PLAN,
   },
-  submitBtsAction: (type: BtsActionType) => ({
+  submitBtsAction: (place: BtsModalEntryPlace, type: BtsActionType) => ({
     ...CLICK,
-    place: MANUAL_LAUNCHES_PLACE.POST_LINK_BTS_MODAL,
+    place,
     modal: MANUAL_LAUNCHES_MODAL.POST_LINK_BTS,
     element_name: MANUAL_LAUNCHES_ELEMENT.SUBMIT_BTS_ACTION,
     type,
   }),
+  clickIssueTicket: (pluginName: string) => ({
+    ...CLICK,
+    place: MANUAL_LAUNCHES_PLACE.TEST_EXECUTION_PAGE,
+    element_name: MANUAL_LAUNCHES_ELEMENT.ISSUE_TICKET,
+    type: normalizeEventParameter(pluginName || 'BTS'),
+  }),
+  CLICK_SAVE_ATTACHMENTS: {
+    ...CLICK,
+    place: MANUAL_LAUNCHES_PLACE.TEST_EXECUTION_PAGE,
+    element_name: MANUAL_LAUNCHES_ELEMENT.SAVE_ATTACHMENTS,
+  },
+  CLICK_SAVE_EXECUTION_COMMENT: {
+    ...CLICK,
+    place: MANUAL_LAUNCHES_PLACE.TEST_EXECUTION_PAGE,
+    element_name: MANUAL_LAUNCHES_ELEMENT.SAVE_EXECUTION_COMMENT,
+  },
   CLICK_START_DELETE_TEST_EXECUTION: {
     ...CLICK,
     place: MANUAL_LAUNCHES_PLACE.EXECUTION_DETAILS_SIDEBAR,

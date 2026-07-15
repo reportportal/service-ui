@@ -45,6 +45,9 @@ export interface LinkedIssue {
   issueId: string;
 }
 
+import type { BtsModalEntryPlace } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
+
 export interface BTSIssuesModalData {
   executionId?: number;
+  entryPlace: BtsModalEntryPlace;
 }
