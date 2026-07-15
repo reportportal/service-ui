@@ -50,6 +50,7 @@ import { useTextareaAutoResize } from 'common/hooks';
 import { ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
 import {
   MANUAL_LAUNCHES_PAGE_EVENTS,
+  MANUAL_LAUNCHES_PLACE,
   getBtsModalEntryPlaceFromStatusChangePlace,
   type ExecutionStatusType as AnalyticsExecutionStatusType,
 } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
@@ -188,8 +189,11 @@ const ExecutionStatusConfirmModalComponent: FC<
           ? { removedServerAttachmentIds: Array.from(removedServerAttachmentIds) }
           : {}),
         onSuccess: () => {
-          if (shouldOpenBtsModal && data?.place) {
-            openModal(getBtsModalEntryPlaceFromStatusChangePlace(data.place), executionId);
+          if (shouldOpenBtsModal) {
+            const entryPlace = data?.place
+              ? getBtsModalEntryPlaceFromStatusChangePlace(data.place)
+              : MANUAL_LAUNCHES_PLACE.TEST_EXECUTION_PAGE_HEADER;
+            openModal(entryPlace, executionId);
           } else {
             dispatch(hideModalAction());
           }
