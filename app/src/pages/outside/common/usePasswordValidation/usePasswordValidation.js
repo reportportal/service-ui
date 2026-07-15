@@ -20,6 +20,16 @@ import {
   getPasswordRuleStatus,
 } from 'common/utils/validation/passwordRules';
 
+const isFocusMovingToSubmit = (event) => {
+  const relatedTarget = event?.relatedTarget;
+
+  if (!(relatedTarget instanceof HTMLElement)) {
+    return false;
+  }
+
+  return relatedTarget.closest('button[type="submit"], input[type="submit"]') !== null;
+};
+
 /**
  * Shared hook for password + confirm-password validation used by the
  * Registration and Change-Password forms.
@@ -117,7 +127,13 @@ export const usePasswordValidation = ({
 
   // Always reveal validation on blur — including empty fields — so "Field is required" appears
   // immediately when the user tabs away without typing, not only after submit.
-  const handlePasswordBlur = useCallback(() => {
+  // Skip when focus moves to the submit button: blur fires before click and would disable the
+  // button early, swallowing the click; the submit handler reveals validation instead.
+  const handlePasswordBlur = useCallback((event) => {
+    if (isFocusMovingToSubmit(event)) {
+      return;
+    }
+
     setIsPasswordFocused(false);
     setShowPasswordValidation(true);
   }, []);
