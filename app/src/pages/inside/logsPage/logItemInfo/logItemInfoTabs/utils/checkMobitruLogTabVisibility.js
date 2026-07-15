@@ -19,8 +19,7 @@ import { URLS } from 'common/urls';
 export const MOBITRU_VIDEO_SUBTREE_VISIBILITY_MODE = 'mobitruVideoSubtree';
 
 export const isMobitruVideoSubtreeTab = (extension) =>
-  extension.payload?.visibilityMode === MOBITRU_VIDEO_SUBTREE_VISIBILITY_MODE ||
-  extension.payload?.tabElementName === 'remote_device';
+  extension.payload?.visibilityMode === MOBITRU_VIDEO_SUBTREE_VISIBILITY_MODE;
 
 export const checkMobitruLogTabVisibility = async ({
   fetchFn,

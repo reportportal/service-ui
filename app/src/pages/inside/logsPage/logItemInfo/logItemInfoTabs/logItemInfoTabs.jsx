@@ -156,6 +156,8 @@ export class LogItemInfoTabs extends Component {
     logTabVisibility: {},
   };
 
+  logTabVisibilityRequestId = 0;
+
   static getDerivedStateFromProps(props) {
     return props.loading
       ? {
@@ -207,10 +209,13 @@ export class LogItemInfoTabs extends Component {
     const { activeRetry, projectKey, logId, retryId, logTabExtensions } = this.props;
     const mobitruExtensions = logTabExtensions.filter(isMobitruVideoSubtreeTab);
 
+    this.logTabVisibilityRequestId += 1;
+
     if (!mobitruExtensions.length || !activeRetry?.path || !projectKey) {
       return;
     }
 
+    const requestId = this.logTabVisibilityRequestId;
     const excludedRetryParentId = logId === retryId ? retryId : undefined;
     const loadingState = mobitruExtensions.reduce(
       (acc, extension) => ({
@@ -237,6 +242,10 @@ export class LogItemInfoTabs extends Component {
         excludedRetryParentId,
       })
         .then((isVisible) => {
+          if (requestId !== this.logTabVisibilityRequestId) {
+            return;
+          }
+
           this.setState((prevState) => ({
             logTabVisibility: {
               ...prevState.logTabVisibility,
@@ -245,6 +254,10 @@ export class LogItemInfoTabs extends Component {
           }));
         })
         .catch(() => {
+          if (requestId !== this.logTabVisibilityRequestId) {
+            return;
+          }
+
           this.setState((prevState) => ({
             logTabVisibility: {
               ...prevState.logTabVisibility,
@@ -268,10 +281,12 @@ export class LogItemInfoTabs extends Component {
       );
     }
 
-    return false;
+    return true;
   };
 
   componentWillUnmount() {
+    this.logTabVisibilityRequestId += 1;
+
     if (this.props.isSauceLabsIntegrationView) {
       this.props.onToggleSauceLabsIntegrationView();
     }
@@ -320,8 +335,9 @@ export class LogItemInfoTabs extends Component {
         return;
       }
 
-      setActiveTabId('logs');
-      fetchLogAction(logInfo, () => {}, true);
+      fetchLogAction(logInfo, () => {
+        setActiveTabId('logs');
+      }, true);
     } catch {
       // non-blocking: keep user on Remote device tab when navigation fails
     }

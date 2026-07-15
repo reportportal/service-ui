@@ -14,7 +14,29 @@
  * limitations under the License.
  */
 
-import { checkMobitruLogTabVisibility } from './checkMobitruLogTabVisibility';
+import {
+  checkMobitruLogTabVisibility,
+  isMobitruVideoSubtreeTab,
+  MOBITRU_VIDEO_SUBTREE_VISIBILITY_MODE,
+} from './checkMobitruLogTabVisibility';
+
+describe('isMobitruVideoSubtreeTab', () => {
+  test('should return true when visibilityMode is mobitruVideoSubtree', () => {
+    expect(
+      isMobitruVideoSubtreeTab({
+        payload: { visibilityMode: MOBITRU_VIDEO_SUBTREE_VISIBILITY_MODE },
+      }),
+    ).toBe(true);
+  });
+
+  test('should return false for legacy remote_device tab without visibilityMode', () => {
+    expect(
+      isMobitruVideoSubtreeTab({
+        payload: { tabElementName: 'remote_device', visibilityAttributeKey: 'MBID' },
+      }),
+    ).toBe(false);
+  });
+});
 
 describe('checkMobitruLogTabVisibility', () => {
   test('should return true when mobitru video logs exist in subtree', async () => {
