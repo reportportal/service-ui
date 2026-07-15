@@ -35,10 +35,4 @@
 .confirm-password-field {
   width: 100%;
   margin-bottom: 16px;
-
-  &--inactive {
-    label {
-      color: var(--rp-ui-color-disabled);
-    }
-  }
 }

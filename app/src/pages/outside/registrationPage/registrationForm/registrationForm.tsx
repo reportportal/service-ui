@@ -143,6 +143,8 @@ const RegistrationFormComponent = ({
   const name = useSelector((state) => (formSelector(state, 'name') as string) ?? '');
 
   const [submitAttempted, setSubmitAttempted] = useState(false);
+  const [showNameValidation, setShowNameValidation] = useState(false);
+  const [isNameFocused, setIsNameFocused] = useState(false);
 
   useEffect(() => {
     initialize({
@@ -157,6 +159,7 @@ const RegistrationFormComponent = ({
   const {
     ruleStatus,
     passwordFullyValid,
+    isPasswordSubmitReady,
     ruleLabels,
     showPasswordFailState,
     passwordError,
@@ -164,7 +167,9 @@ const RegistrationFormComponent = ({
     setShowPasswordValidation,
     setShowConfirmPasswordValidation,
     setIsConfirmPasswordFocused,
+    setIsPasswordFocused,
     handlePasswordChange,
+    handlePasswordFocus,
     handlePasswordBlur,
     handleConfirmPasswordFocus,
     handleConfirmPasswordBlur,
@@ -176,8 +181,11 @@ const RegistrationFormComponent = ({
     messages,
   });
 
+  const shouldValidateName =
+    submitAttempted || showNameValidation || (!isNameFocused && name.length > 0);
+
   const nameError = useMemo(() => {
-    if (!submitAttempted) return undefined;
+    if (!shouldValidateName) return undefined;
     if (!name.trim()) return formatMessage(messages.requiredField);
     if (commonValidators.userName(name)) {
       return formatMessage(messages.nameHint, {
@@ -186,20 +194,34 @@ const RegistrationFormComponent = ({
       });
     }
     return undefined;
-  }, [submitAttempted, name, formatMessage]);
+  }, [shouldValidateName, name, formatMessage]);
 
-  const hasActiveErrors = !!(passwordError || confirmPasswordError || nameError);
-  const isCreateDisabled = loading || hasActiveErrors;
-  const isConfirmDisabled = !passwordFullyValid || loading;
+  const nameValid = name.trim() && !commonValidators.userName(name);
+  const isCreateDisabled = loading || !nameValid || !isPasswordSubmitReady;
+
+  const handleNameFocus = useCallback(() => {
+    setIsNameFocused(true);
+  }, []);
+
+  const handleNameBlur = useCallback(() => {
+    setIsNameFocused(false);
+    setShowNameValidation(true);
+  }, []);
+
+  const handleNameChange = useCallback(() => {
+    setShowNameValidation(false);
+  }, []);
 
   const capsLockMessage = formatMessage(messages.capsLockOn);
 
   const submitHandler = useCallback(
     (values: RegistrationFormValues) => {
       setSubmitAttempted(true);
+      setShowNameValidation(true);
       setShowPasswordValidation(true);
       setShowConfirmPasswordValidation(true);
       setIsConfirmPasswordFocused(false);
+      setIsPasswordFocused(false);
 
       const nameValid = name.trim() && !commonValidators.userName(name);
       const confirmValid = confirmPassword === password && confirmPassword.trim();
@@ -210,7 +232,7 @@ const RegistrationFormComponent = ({
 
       return submitForm(values);
     },
-    [name, password, confirmPassword, passwordFullyValid, submitForm, setShowPasswordValidation, setShowConfirmPasswordValidation, setIsConfirmPasswordFocused],
+    [name, password, confirmPassword, passwordFullyValid, submitForm, setShowPasswordValidation, setShowConfirmPasswordValidation, setIsConfirmPasswordFocused, setIsPasswordFocused],
   );
 
   return (
@@ -218,7 +240,7 @@ const RegistrationFormComponent = ({
       className={cx('registration-form')}
       onSubmit={handleSubmit(submitHandler) as FormEventHandler<HTMLFormElement>}
     >
-      <div className={cx('name-field')}>
+      <div className={cx('name-field')} onFocus={handleNameFocus} onBlur={handleNameBlur}>
         <FieldProvider name="name" error={nameError} touched={!!nameError}>
           <FieldText
             label={formatMessage(messages.fullNameLabel)}
@@ -226,6 +248,7 @@ const RegistrationFormComponent = ({
             defaultWidth={false}
             displayError={!!nameError}
             disabled={loading}
+            onChange={handleNameChange}
           />
         </FieldProvider>
       </div>
@@ -240,7 +263,7 @@ const RegistrationFormComponent = ({
         </FieldProvider>
       </div>
 
-      <div className={cx('password-field')} onBlur={handlePasswordBlur}>
+      <div className={cx('password-field')} onFocus={handlePasswordFocus} onBlur={handlePasswordBlur}>
         <FieldProvider name="password" error={passwordError} touched={!!passwordError}>
           <OutsidePasswordField
             label={formatMessage(messages.passwordLabel)}
@@ -261,9 +284,7 @@ const RegistrationFormComponent = ({
       </div>
 
       <div
-        className={cx('confirm-password-field', {
-          'confirm-password-field--inactive': isConfirmDisabled,
-        })}
+        className={cx('confirm-password-field')}
         onFocus={handleConfirmPasswordFocus}
         onBlur={handleConfirmPasswordBlur}
       >
@@ -277,7 +298,7 @@ const RegistrationFormComponent = ({
             maxLength={PASSWORD_MAX_ALLOWED_LENGTH}
             defaultWidth={false}
             autoComplete="off"
-            disabled={isConfirmDisabled}
+            disabled={loading}
             displayError={!!confirmPasswordError}
             capsLockMessage={capsLockMessage}
           />

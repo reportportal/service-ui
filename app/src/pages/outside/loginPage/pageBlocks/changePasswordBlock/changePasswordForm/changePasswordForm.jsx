@@ -112,6 +112,7 @@ const ChangePasswordFormComponent = ({ handleSubmit, resetQueryParam = '' }) => 
   const {
     ruleStatus,
     passwordFullyValid,
+    isPasswordSubmitReady,
     ruleLabels,
     showPasswordFailState,
     passwordError,
@@ -119,7 +120,9 @@ const ChangePasswordFormComponent = ({ handleSubmit, resetQueryParam = '' }) => 
     setShowPasswordValidation,
     setShowConfirmPasswordValidation,
     setIsConfirmPasswordFocused,
+    setIsPasswordFocused,
     handlePasswordChange,
+    handlePasswordFocus,
     handlePasswordBlur,
     handleConfirmPasswordFocus,
     handleConfirmPasswordBlur,
@@ -131,9 +134,7 @@ const ChangePasswordFormComponent = ({ handleSubmit, resetQueryParam = '' }) => 
     messages,
   });
 
-  const hasActiveErrors = !!(passwordError || confirmPasswordError);
-  const isSaveDisabled = isLoading || hasActiveErrors;
-  const isConfirmDisabled = !passwordFullyValid || isLoading;
+  const isSaveDisabled = isLoading || !isPasswordSubmitReady;
   const capsLockMessage = formatMessage(messages.capsLockOn);
 
   const changePassword = useCallback(
@@ -145,6 +146,7 @@ const ChangePasswordFormComponent = ({ handleSubmit, resetQueryParam = '' }) => 
       setShowPasswordValidation(true);
       setShowConfirmPasswordValidation(true);
       setIsConfirmPasswordFocused(false);
+      setIsPasswordFocused(false);
 
       const confirmValid = passwordRepeat === password && passwordRepeat.trim();
 
@@ -192,12 +194,13 @@ const ChangePasswordFormComponent = ({ handleSubmit, resetQueryParam = '' }) => 
       setShowPasswordValidation,
       setShowConfirmPasswordValidation,
       setIsConfirmPasswordFocused,
+      setIsPasswordFocused,
     ],
   );
 
   return (
     <form className={cx('change-password-form')} onSubmit={handleSubmit(changePassword)}>
-      <div className={cx('new-password-field')} onBlur={handlePasswordBlur}>
+      <div className={cx('new-password-field')} onFocus={handlePasswordFocus} onBlur={handlePasswordBlur}>
         <FieldProvider
           name="password"
           error={passwordError}
@@ -221,9 +224,7 @@ const ChangePasswordFormComponent = ({ handleSubmit, resetQueryParam = '' }) => 
         />
       </div>
       <div
-        className={cx('confirm-new-password-field', {
-          'confirm-new-password-field--inactive': isConfirmDisabled,
-        })}
+        className={cx('confirm-new-password-field')}
         onFocus={handleConfirmPasswordFocus}
         onBlur={handleConfirmPasswordBlur}
       >
@@ -238,7 +239,7 @@ const ChangePasswordFormComponent = ({ handleSubmit, resetQueryParam = '' }) => 
             maxLength={PASSWORD_MAX_ALLOWED_LENGTH}
             defaultWidth={false}
             autoComplete="off"
-            disabled={isConfirmDisabled}
+            disabled={isLoading}
             displayError={!!confirmPasswordError}
           />
         </FieldProvider>

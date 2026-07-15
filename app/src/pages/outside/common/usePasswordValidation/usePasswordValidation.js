@@ -37,6 +37,12 @@ import {
  *                                               ruleSpecialSymbol, ruleUppercase, ruleLowercase,
  *                                               passwordPolicySummary, passwordRequirementsError,
  *                                               passwordsDoNotMatch, requiredField)
+ *
+ * Returns `isPasswordSubmitReady` for the submit button:
+ * - while typing in **New Password** before validation is revealed: enabled (non-empty value);
+ * - when validation errors are visible (after blur/submit): disabled until password is fully valid
+ *   and confirm matches — including when the field is re-focused with errors still showing;
+ * - otherwise: requires non-empty password, all rules met (no spaces), and matching confirm.
  */
 export const usePasswordValidation = ({
   password,
@@ -47,6 +53,7 @@ export const usePasswordValidation = ({
 }) => {
   const [showPasswordValidation, setShowPasswordValidation] = useState(false);
   const [showConfirmPasswordValidation, setShowConfirmPasswordValidation] = useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [isConfirmPasswordFocused, setIsConfirmPasswordFocused] = useState(false);
 
   const ruleStatus = useMemo(
@@ -56,6 +63,17 @@ export const usePasswordValidation = ({
   const allRulesMet = areAllPasswordRulesMet(ruleStatus);
   const hasSpace = password.length > 0 && /\s/.test(password);
   const passwordFullyValid = allRulesMet && !hasSpace;
+  const isPasswordSubmitReady = useMemo(() => {
+    if (isPasswordFocused && password.length > 0 && !showPasswordValidation) {
+      return true;
+    }
+
+    return (
+      password.length > 0 &&
+      passwordFullyValid &&
+      password === confirmPassword
+    );
+  }, [isPasswordFocused, password, confirmPassword, passwordFullyValid, showPasswordValidation]);
 
   const ruleLabels = useMemo(
     () => ({
@@ -93,9 +111,14 @@ export const usePasswordValidation = ({
     setShowPasswordValidation(false);
   }, []);
 
+  const handlePasswordFocus = useCallback(() => {
+    setIsPasswordFocused(true);
+  }, []);
+
   // Always reveal validation on blur — including empty fields — so "Field is required" appears
   // immediately when the user tabs away without typing, not only after submit.
   const handlePasswordBlur = useCallback(() => {
+    setIsPasswordFocused(false);
     setShowPasswordValidation(true);
   }, []);
 
@@ -112,6 +135,7 @@ export const usePasswordValidation = ({
     ruleStatus,
     allRulesMet,
     passwordFullyValid,
+    isPasswordSubmitReady,
     ruleLabels,
     showPasswordValidation,
     setShowPasswordValidation,
@@ -119,12 +143,15 @@ export const usePasswordValidation = ({
     setShowConfirmPasswordValidation,
     isConfirmPasswordFocused,
     setIsConfirmPasswordFocused,
+    isPasswordFocused,
+    setIsPasswordFocused,
     showPasswordFailState,
     passwordError,
     hasMismatch,
     shouldShowConfirmPasswordValidation,
     confirmPasswordError,
     handlePasswordChange,
+    handlePasswordFocus,
     handlePasswordBlur,
     handleConfirmPasswordFocus,
     handleConfirmPasswordBlur,
