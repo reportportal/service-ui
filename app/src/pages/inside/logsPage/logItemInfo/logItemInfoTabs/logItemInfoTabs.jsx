@@ -357,14 +357,11 @@ export class LogItemInfoTabs extends Component {
         return;
       }
 
-      setStorageItem(
-        MOBITRU_JUMP_LOG_INFO_KEY,
-        JSON.stringify({
-          logInfo,
-          logId,
-          shouldClearSearchFilter: Boolean(logQuery[LOG_MESSAGE_FILTER_KEY]),
-        }),
-      );
+      setStorageItem(MOBITRU_JUMP_LOG_INFO_KEY, {
+        logInfo,
+        logId,
+        shouldClearSearchFilter: Boolean(logQuery[LOG_MESSAGE_FILTER_KEY]),
+      });
       setActiveTabId('logs');
     } catch {
       showNotificationAction({

@@ -228,12 +228,12 @@ export class LogsGridWrapper extends Component {
           });
         this.props.fetchLog(errorLogs[errorLogIndex], fetchLogCb);
       } else {
-        const mobitruJumpLogInfo = getStorageItem(MOBITRU_JUMP_LOG_INFO_KEY);
-        if (mobitruJumpLogInfo) {
-          try {
-            const { logInfo, logId, shouldClearSearchFilter } = JSON.parse(mobitruJumpLogInfo);
+        try {
+          const mobitruJumpLogInfo = getStorageItem(MOBITRU_JUMP_LOG_INFO_KEY);
+          if (mobitruJumpLogInfo) {
+            const { logInfo, logId, shouldClearSearchFilter } = mobitruJumpLogInfo;
+            removeStorageItem(MOBITRU_JUMP_LOG_INFO_KEY);
             const fetchMobitruLogCb = () => {
-              removeStorageItem(MOBITRU_JUMP_LOG_INFO_KEY);
               this.setState({
                 highlightedRowId: +logId,
                 isGridRowHighlighted: true,
@@ -241,9 +241,9 @@ export class LogsGridWrapper extends Component {
             };
 
             this.props.fetchLog(logInfo, fetchMobitruLogCb, shouldClearSearchFilter);
-          } catch {
-            removeStorageItem(MOBITRU_JUMP_LOG_INFO_KEY);
           }
+        } catch {
+          removeStorageItem(MOBITRU_JUMP_LOG_INFO_KEY);
         }
       }
     }
