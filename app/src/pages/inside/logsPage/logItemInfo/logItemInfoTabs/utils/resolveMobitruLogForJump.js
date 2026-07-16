@@ -15,6 +15,7 @@
  */
 
 import { URLS } from 'common/urls';
+import { omit } from 'common/utils/omit';
 import { LOG_MESSAGE_FILTER_KEY } from 'controllers/log/constants';
 import { PAGE_KEY } from 'controllers/pagination';
 
@@ -29,11 +30,8 @@ const LOCATION_QUERY_VARIANTS = [
 const findLogInLocationsPage = (content, logId) =>
   content?.find((log) => +log.id === +logId && log.pagesLocation?.length);
 
-const buildLocationQueryParams = (logQuery = {}) => {
-  const { [LOG_MESSAGE_FILTER_KEY]: _messageFilter, [PAGE_KEY]: _page, ...rest } = logQuery;
-
-  return rest;
-};
+const buildLocationQueryParams = (logQuery = {}) =>
+  omit(logQuery, [LOG_MESSAGE_FILTER_KEY, PAGE_KEY]);
 
 const normalizeLocationsResponse = (response) => {
   if (Array.isArray(response)) {
