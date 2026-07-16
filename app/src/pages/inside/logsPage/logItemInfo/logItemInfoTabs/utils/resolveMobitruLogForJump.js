@@ -16,10 +16,11 @@
 
 import { URLS } from 'common/urls';
 import { omit } from 'common/utils/omit';
-import { LOG_MESSAGE_FILTER_KEY } from 'controllers/log/constants';
+import { LOG_LEVEL_FILTER_KEY, LOG_MESSAGE_FILTER_KEY } from 'controllers/log/constants';
 import { PAGE_KEY } from 'controllers/pagination';
 
 const LOCATIONS_PAGE_SIZE = 300;
+const LEVEL_FILTER_KEYS = [LOG_LEVEL_FILTER_KEY, 'filter.eq.level'];
 
 const LOCATION_QUERY_VARIANTS = [
   { 'filter.eq.level': 'mobitru' },
@@ -31,6 +32,9 @@ const findLogInLocationsPage = (content, logId) =>
 
 const buildLocationQueryParams = (logQuery = {}) =>
   omit(logQuery, [LOG_MESSAGE_FILTER_KEY, PAGE_KEY]);
+
+const buildNestedGridQueryParams = (logQueryParams = {}) =>
+  omit(logQueryParams, LEVEL_FILTER_KEYS);
 
 const normalizePageResponse = (response) => {
   if (Array.isArray(response)) {
@@ -119,10 +123,11 @@ const searchWithQueryVariants = async ({
 };
 
 const fetchNestedLogsPage = async ({ fetchFn, projectKey, parentItemId, logQueryParams, page }) => {
-  const pageSize = logQueryParams['page.size'] || LOCATIONS_PAGE_SIZE;
+  const nestedQueryParams = buildNestedGridQueryParams(logQueryParams);
+  const pageSize = nestedQueryParams['page.size'] || LOCATIONS_PAGE_SIZE;
   const response = await fetchFn(URLS.logItems(projectKey, parentItemId), {
     params: {
-      ...logQueryParams,
+      ...nestedQueryParams,
       'page.size': pageSize,
       'page.page': page,
     },
@@ -225,11 +230,14 @@ const findLogPathRecursively = async ({
   totalPages = 1,
   visitedItemIds = new Set(),
 }) => {
-  if (page > totalPages || visitedItemIds.has(+parentItemId)) {
+  if (page > totalPages) {
     return null;
   }
 
   if (page === 1) {
+    if (visitedItemIds.has(+parentItemId)) {
+      return null;
+    }
     visitedItemIds.add(+parentItemId);
   }
 
@@ -342,7 +350,7 @@ export const resolveMobitruLogForJump = async ({
   logId,
   logQuery,
 }) => {
-  const url = URLS.searchLogs(projectKey, retryId);
+  const url = URLS.searchLogs(projectKey, retryId).replace(/\?.*$/, '');
   const logQueryParams = buildLocationQueryParams(logQuery);
 
   const logInfoFromLocations = await searchWithQueryVariants({
