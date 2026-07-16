@@ -24,7 +24,6 @@ const LOCATIONS_PAGE_SIZE = 300;
 const LOCATION_QUERY_VARIANTS = [
   { 'filter.eq.level': 'mobitru' },
   { 'filter.gte.level': 'mobitru' },
-  {},
 ];
 
 const findLogInLocationsPage = (content, logId) =>
@@ -33,7 +32,7 @@ const findLogInLocationsPage = (content, logId) =>
 const buildLocationQueryParams = (logQuery = {}) =>
   omit(logQuery, [LOG_MESSAGE_FILTER_KEY, PAGE_KEY]);
 
-const normalizeLocationsResponse = (response) => {
+const normalizePageResponse = (response) => {
   if (Array.isArray(response)) {
     return { content: response, page: { totalPages: 1 } };
   }
@@ -69,7 +68,7 @@ const searchLocationsPage = async ({
   }
 
   const response = await fetchLocationsPage({ fetchFn, url, page, logQueryParams, extraParams });
-  const { content, page: pageInfo } = normalizeLocationsResponse(response);
+  const { content, page: pageInfo } = normalizePageResponse(response);
   const logInfo = findLogInLocationsPage(content, logId);
 
   if (logInfo) {
@@ -119,6 +118,19 @@ const searchWithQueryVariants = async ({
   });
 };
 
+const fetchNestedLogsPage = async ({ fetchFn, projectKey, parentItemId, logQueryParams, page }) => {
+  const pageSize = logQueryParams['page.size'] || LOCATIONS_PAGE_SIZE;
+  const response = await fetchFn(URLS.logItems(projectKey, parentItemId), {
+    params: {
+      ...logQueryParams,
+      'page.size': pageSize,
+      'page.page': page,
+    },
+  });
+
+  return normalizePageResponse(response);
+};
+
 const findItemPageInNestedLogs = async ({
   fetchFn,
   projectKey,
@@ -132,16 +144,13 @@ const findItemPageInNestedLogs = async ({
     return null;
   }
 
-  const pageSize = logQueryParams['page.size'] || LOCATIONS_PAGE_SIZE;
-  const response = await fetchFn(URLS.logItems(projectKey, parentItemId), {
-    params: {
-      ...logQueryParams,
-      'page.size': pageSize,
-      'page.page': page,
-    },
+  const { content, page: pageInfo } = await fetchNestedLogsPage({
+    fetchFn,
+    projectKey,
+    parentItemId,
+    logQueryParams,
+    page,
   });
-
-  const content = response?.content ?? [];
   const isFound = content.some((item) => +item.id === +targetId);
 
   if (isFound) {
@@ -155,7 +164,115 @@ const findItemPageInNestedLogs = async ({
     targetId,
     logQueryParams,
     page: page + 1,
-    totalPages: response?.page?.totalPages || 1,
+    totalPages: pageInfo?.totalPages || 1,
+  });
+};
+
+const isNestedStepItem = (item) => Boolean(item?.hasContent);
+
+const searchNestedStepsSequentially = ({
+  fetchFn,
+  projectKey,
+  nestedSteps,
+  logId,
+  logQueryParams,
+  pathPrefix,
+  page,
+  visitedItemIds,
+  stepIndex = 0,
+}) => {
+  if (stepIndex >= nestedSteps.length) {
+    return Promise.resolve(null);
+  }
+
+  const step = nestedSteps[stepIndex];
+
+  return findLogPathRecursively({
+    fetchFn,
+    projectKey,
+    parentItemId: step.id,
+    logId,
+    logQueryParams,
+    pathPrefix: [...pathPrefix, { [step.id]: page }],
+    visitedItemIds,
+  }).then((nestedResult) => {
+    if (nestedResult) {
+      return nestedResult;
+    }
+
+    return searchNestedStepsSequentially({
+      fetchFn,
+      projectKey,
+      nestedSteps,
+      logId,
+      logQueryParams,
+      pathPrefix,
+      page,
+      visitedItemIds,
+      stepIndex: stepIndex + 1,
+    });
+  });
+};
+
+const findLogPathRecursively = async ({
+  fetchFn,
+  projectKey,
+  parentItemId,
+  logId,
+  logQueryParams,
+  pathPrefix = [],
+  page = 1,
+  totalPages = 1,
+  visitedItemIds = new Set(),
+}) => {
+  if (page > totalPages || visitedItemIds.has(+parentItemId)) {
+    return null;
+  }
+
+  if (page === 1) {
+    visitedItemIds.add(+parentItemId);
+  }
+
+  const { content, page: pageInfo } = await fetchNestedLogsPage({
+    fetchFn,
+    projectKey,
+    parentItemId,
+    logQueryParams,
+    page,
+  });
+
+  if (content.some((item) => +item.id === +logId)) {
+    return {
+      id: logId,
+      pagesLocation: [...pathPrefix, { [logId]: page }],
+    };
+  }
+
+  const nestedResult = await searchNestedStepsSequentially({
+    fetchFn,
+    projectKey,
+    nestedSteps: content.filter(isNestedStepItem),
+    logId,
+    logQueryParams,
+    pathPrefix,
+    page,
+    visitedItemIds,
+  });
+
+  if (nestedResult) {
+    return nestedResult;
+  }
+
+  return findLogPathRecursively({
+    fetchFn,
+    projectKey,
+    parentItemId,
+    logId,
+    logQueryParams,
+    pathPrefix,
+    page: page + 1,
+    totalPages: pageInfo?.totalPages || 1,
+    visitedItemIds,
   });
 };
 
@@ -167,7 +284,7 @@ const resolveMobitruLogFromNestedGrid = async ({
   logId,
   logQueryParams,
 }) => {
-  if (+itemId === +retryId) {
+  if (itemId != null && +itemId === +retryId) {
     const logPage = await findItemPageInNestedLogs({
       fetchFn,
       projectKey,
@@ -176,41 +293,45 @@ const resolveMobitruLogFromNestedGrid = async ({
       logQueryParams,
     });
 
-    if (!logPage) {
-      return null;
+    if (logPage) {
+      return { id: logId, pagesLocation: [{ [logId]: logPage }] };
     }
-
-    return { id: logId, pagesLocation: [{ [logId]: logPage }] };
   }
 
-  const stepPage = await findItemPageInNestedLogs({
+  if (itemId != null && +itemId !== +retryId) {
+    const stepPage = await findItemPageInNestedLogs({
+      fetchFn,
+      projectKey,
+      parentItemId: retryId,
+      targetId: itemId,
+      logQueryParams,
+    });
+
+    if (stepPage) {
+      const logPage = await findItemPageInNestedLogs({
+        fetchFn,
+        projectKey,
+        parentItemId: itemId,
+        targetId: logId,
+        logQueryParams,
+      });
+
+      if (logPage) {
+        return {
+          id: logId,
+          pagesLocation: [{ [itemId]: stepPage }, { [logId]: logPage }],
+        };
+      }
+    }
+  }
+
+  return findLogPathRecursively({
     fetchFn,
     projectKey,
     parentItemId: retryId,
-    targetId: itemId,
+    logId,
     logQueryParams,
   });
-
-  if (!stepPage) {
-    return null;
-  }
-
-  const logPage = await findItemPageInNestedLogs({
-    fetchFn,
-    projectKey,
-    parentItemId: itemId,
-    targetId: logId,
-    logQueryParams,
-  });
-
-  if (!logPage) {
-    return null;
-  }
-
-  return {
-    id: logId,
-    pagesLocation: [{ [itemId]: stepPage }, { [logId]: logPage }],
-  };
 };
 
 export const resolveMobitruLogForJump = async ({
@@ -221,7 +342,7 @@ export const resolveMobitruLogForJump = async ({
   logId,
   logQuery,
 }) => {
-  const url = URLS.errorLogs(projectKey, retryId);
+  const url = URLS.searchLogs(projectKey, retryId);
   const logQueryParams = buildLocationQueryParams(logQuery);
 
   const logInfoFromLocations = await searchWithQueryVariants({
