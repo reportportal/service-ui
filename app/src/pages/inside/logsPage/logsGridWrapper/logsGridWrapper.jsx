@@ -40,6 +40,7 @@ import {
   fetchLog,
   RETRY_ID,
   ERROR_LOG_INDEX_KEY,
+  MOBITRU_JUMP_LOG_INFO_KEY,
   loadMoreLogsAction,
   fetchLogItemsForPageAction,
   loadedPagesRangeSelector,
@@ -226,6 +227,23 @@ export class LogsGridWrapper extends Component {
             isGridRowHighlighted: true,
           });
         this.props.fetchLog(errorLogs[errorLogIndex], fetchLogCb);
+      } else {
+        const mobitruJumpLogInfo = getStorageItem(MOBITRU_JUMP_LOG_INFO_KEY);
+        if (mobitruJumpLogInfo) {
+          removeStorageItem(MOBITRU_JUMP_LOG_INFO_KEY);
+          try {
+            const { logInfo, logId, shouldClearSearchFilter } = JSON.parse(mobitruJumpLogInfo);
+            const fetchMobitruLogCb = () =>
+              this.setState({
+                highlightedRowId: +logId,
+                isGridRowHighlighted: true,
+              });
+
+            this.props.fetchLog(logInfo, fetchMobitruLogCb, shouldClearSearchFilter);
+          } catch {
+            // ignore invalid pending jump payload
+          }
+        }
       }
     }
 
