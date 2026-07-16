@@ -35,14 +35,15 @@ export const OrganizationsControl = ({
   isPopoverOpen,
   closeSidebar,
   onClick,
+  isSidebarExpanded = true,
 }) => {
   const { trackEvent } = useTracking();
   return (
-    <button className={cx('organizations-control-wrapper')} onClick={onClick} tabIndex={0}>
-      <button className={cx('short-title', { 'no-uppercase': !isExtendedNav })}>
+    <button type="button" className={cx('organizations-control-wrapper')} onClick={onClick}>
+      <span className={cx('short-title', { 'no-uppercase': !isExtendedNav })}>
         {titles.shortTitle}
-      </button>
-      <button className={cx('organizations-control')} tabIndex={-1}>
+      </span>
+      <span className={cx('organizations-control')} inert={!isSidebarExpanded || undefined}>
         <div className={cx('organizations-control-content')}>
           <div
             className={cx('organization-btn-wrapper', {
@@ -54,6 +55,7 @@ export const OrganizationsControl = ({
                 <NavLink
                   to={link}
                   className={cx('organization-btn')}
+                  tabIndex={isSidebarExpanded ? 0 : -1}
                   onClick={() => {
                     closeSidebar();
                     trackEvent(SIDEBAR_EVENTS.onClickLevelHigher(titles.level));
@@ -76,7 +78,7 @@ export const OrganizationsControl = ({
         >
           {Parser(OpenPopoverIcon)}
         </i>
-      </button>
+      </span>
     </button>
   );
 };
@@ -88,6 +90,7 @@ OrganizationsControl.propTypes = {
   isPopoverOpen: PropTypes.bool.isRequired,
   closeSidebar: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
+  isSidebarExpanded: PropTypes.bool,
 };
 
 export const OrganizationsControlWithPopover = ({
@@ -98,6 +101,7 @@ export const OrganizationsControlWithPopover = ({
   closeSidebar,
   onClick,
   togglePopover,
+  isSidebarExpanded = true,
 }) => {
   const closePopover = () => {
     togglePopover(false);
@@ -121,6 +125,7 @@ export const OrganizationsControlWithPopover = ({
           isExtendedNav={isExtendedNav}
           closeSidebar={closeSidebar}
           onClick={onClick}
+          isSidebarExpanded={isSidebarExpanded}
         />
       </Popover>
     </div>
@@ -135,4 +140,5 @@ OrganizationsControlWithPopover.propTypes = {
   closeSidebar: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
   togglePopover: PropTypes.func.isRequired,
+  isSidebarExpanded: PropTypes.bool,
 };

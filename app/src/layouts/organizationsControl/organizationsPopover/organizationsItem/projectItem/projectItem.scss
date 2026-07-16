@@ -36,11 +36,10 @@
   padding: 8px 0 8px 32px;
   border-radius: 4px;
   height: 36px;
-  border: 2px solid transparent;
+  outline: none;
 
   &:focus-visible {
-    outline: none;
-    border: 2px solid $COLOR--topaz-focused;
+    box-shadow: inset 0 0 0 2px var(--rp-ui-base-topaz-focused);
   }
 
   span {

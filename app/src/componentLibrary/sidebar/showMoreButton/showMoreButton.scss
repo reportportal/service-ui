@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
+@use '../sidebarItemFocus' as *;
+
 .show-more-button {
+  position: relative;
   display: flex;
   align-items: center;
   width: 100%;
   height: 40px;
   padding: 0;
   margin: 0;
-  border: 2px solid transparent;
+  border: none;
   background: transparent;
   color: var(--rp-ui-base-dark-e-100);
   text-align: left;
@@ -30,9 +33,9 @@
   cursor: pointer;
   font-family: var(--rp-ui-base-font-family);
   outline: none;
+  @include sidebar-item-focus-visible;
 
   &:focus-visible {
-    border-color: var(--rp-ui-base-topaz-focused);
     background-color: transparent;
   }
 

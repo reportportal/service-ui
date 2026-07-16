@@ -109,7 +109,9 @@ export const ServicesContent = ({ closePopover, closeSidebar, isFaqTouched, onOp
         },
       }),
     );
-    trackEvent(HELP_AND_SERVICE_VERSIONS_EVENTS.clickOnVersionsOfConnectedServices(PRODUCT_VERSION));
+    trackEvent(
+      HELP_AND_SERVICE_VERSIONS_EVENTS.clickOnVersionsOfConnectedServices(PRODUCT_VERSION),
+    );
   };
 
   return (
@@ -140,11 +142,9 @@ export const ServicesContent = ({ closePopover, closeSidebar, isFaqTouched, onOp
           key={contentItem.url.type || contentItem.url}
         />
       ))}
-      <LinkItem
-        className={cx('menu-item', 'with-divider')}
-        onClick={openModal}
-        content={formatMessage(messages.servicesVersions)}
-      />
+      <button type="button" className={cx('menu-item', 'with-divider')} onClick={openModal}>
+        {formatMessage(messages.servicesVersions)}
+      </button>
       <p className={cx('menu-item', 'rights')}>{formatMessage(messages.rights, { currentYear })}</p>
     </>
   );

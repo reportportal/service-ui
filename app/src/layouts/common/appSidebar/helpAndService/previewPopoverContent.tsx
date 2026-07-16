@@ -29,22 +29,32 @@ interface PreviewPopoverProps {
   title: string;
   isFaqTouched: boolean;
   onClick?: VoidFn;
+  focusVariant?: 'default' | 'sidebar';
 }
 
-export const PreviewPopover = ({ title, isFaqTouched, onClick }: PreviewPopoverProps) => (
-  <button className={cx('service-wrapper')} onClick={onClick} tabIndex={0}>
-    <button className={cx('service-block', { untouched: !isFaqTouched })}>
+export const PreviewPopover = ({
+  title,
+  isFaqTouched,
+  onClick,
+  focusVariant = 'default',
+}: PreviewPopoverProps) => (
+  <button
+    type="button"
+    className={cx('service-wrapper', `focus-${focusVariant}`)}
+    onClick={onClick}
+  >
+    <span className={cx('service-block', { untouched: !isFaqTouched })}>
       <i>{Parser(HelpIcon)}</i>
-    </button>
-    <button className={cx('service-control')}>
-      <div className={cx('preview')}>
-        <div className={cx('content')}>
+    </span>
+    <span className={cx('service-control')}>
+      <span className={cx('preview')}>
+        <span className={cx('content')}>
           <span className={cx('title')}>{title}</span>
-          <div className={cx('arrow-icon', { untouched: !isFaqTouched })}>
+          <span className={cx('arrow-icon', { untouched: !isFaqTouched })}>
             <ArrowRightIcon />
-          </div>
-        </div>
-      </div>
-    </button>
+          </span>
+        </span>
+      </span>
+    </span>
   </button>
 );

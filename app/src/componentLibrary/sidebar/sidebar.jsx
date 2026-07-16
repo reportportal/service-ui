@@ -175,14 +175,9 @@ export const Sidebar = ({
     };
 
     return component ? (
-      <button
-        type="button"
-        key={itemKey}
-        className={cx('custom-item-button')}
-        onClick={handleClick}
-      >
+      <div key={itemKey} className={cx('custom-item')} role="presentation" onClick={handleClick}>
         {component}
-      </button>
+      </div>
     ) : (
       <SidebarButton
         key={itemKey}
@@ -190,6 +185,7 @@ export const Sidebar = ({
         link={link}
         onClick={handleClick}
         message={message}
+        focusVariant={isInPopover ? 'default' : 'sidebar'}
       />
     );
   };
@@ -256,7 +252,13 @@ export const Sidebar = ({
       <aside className={cx('sidebar')}>
         {logoBlock}
         <div className={cx('main-block-wrapper')}>
-          {createMainBlock(onOpenSidebar, onCloseSidebar, getIsSidebarCollapsed, afterOpenSidebar)}
+          {createMainBlock(
+            onOpenSidebar,
+            onCloseSidebar,
+            getIsSidebarCollapsed,
+            afterOpenSidebar,
+            isOpenSidebar,
+          )}
         </div>
         {items.length > 0 && (
           <div ref={itemsBlockRef} className={cx('items-block')}>
@@ -309,6 +311,7 @@ export const Sidebar = ({
             onCloseSidebar,
             getIsSidebarCollapsed,
             afterOpenSidebar,
+            isOpenSidebar,
           )}
         </div>
       </aside>

@@ -68,7 +68,13 @@ export const AppSidebar = ({
     </div>
   );
 
-  const createFooterBlock = (openSidebar, closeSidebar, getIsSidebarCollapsed, afterOpenSidebar) => (
+  const createFooterBlock = (
+    openSidebar,
+    closeSidebar,
+    getIsSidebarCollapsed,
+    afterOpenSidebar,
+    isSidebarExpanded,
+  ) => (
     <>
       {isEnabled && (
         <div className={cx('policy-block')}>
@@ -77,6 +83,7 @@ export const AppSidebar = ({
             href={referenceDictionary.rpEpamPolicy}
             onClick={() => trackEvent(SIDEBAR_EVENTS.CLICK_PRIVACY_POLICY_LINK)}
             target="_blank"
+            tabIndex={isSidebarExpanded ? undefined : -1}
           >
             {formatMessage(messages.privacyPolicy)}
             <i className={cx('policy-block-icon')}>{Parser(OpenOutsideIcon)}</i>

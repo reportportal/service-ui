@@ -32,15 +32,15 @@ const UserControl = ({ onClick }) => {
   const photoTimeStamp = useSelector(photoTimeStampSelector);
 
   return (
-    <button className={cx('user-block-wrapper')} onClick={onClick} tabIndex={0}>
-      <button className={cx('avatar-block')}>
+    <button type="button" className={cx('user-block-wrapper')} onClick={onClick}>
+      <span className={cx('avatar-block')}>
         <UserAvatar
           className={cx('user-avatar')}
           userId={id}
           timestamp={photoTimeStamp}
           thumbnail
         />
-      </button>
+      </span>
       <div className={cx('user-control')}>
         <div className={cx('user-details')}>
           <div className={cx('username-wrapper')}>
