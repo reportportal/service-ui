@@ -191,4 +191,37 @@ describe('resolveMobitruLogForJump', () => {
     expect(fetchFn.mock.calls[0][1].params).not.toHaveProperty('filter.cnt.message');
     expect(fetchFn.mock.calls[0][1].params['page.page']).toBe(1);
   });
+
+  test('should propagate locations API errors to caller', async () => {
+    const fetchFn = jest.fn().mockRejectedValue(new Error('Network error'));
+
+    await expect(
+      resolveMobitruLogForJump({
+        fetchFn,
+        projectKey: 'default_personal',
+        retryId: 100,
+        itemId: 100,
+        logId: 10,
+      }),
+    ).rejects.toThrow('Network error');
+  });
+
+  test('should propagate nested grid API errors to caller', async () => {
+    const fetchFn = jest
+      .fn()
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockRejectedValue(new Error('Nested grid unavailable'));
+
+    await expect(
+      resolveMobitruLogForJump({
+        fetchFn,
+        projectKey: 'default_personal',
+        retryId: 100,
+        itemId: 100,
+        logId: 163839,
+      }),
+    ).rejects.toThrow('Nested grid unavailable');
+  });
 });

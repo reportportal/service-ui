@@ -230,18 +230,19 @@ export class LogsGridWrapper extends Component {
       } else {
         const mobitruJumpLogInfo = getStorageItem(MOBITRU_JUMP_LOG_INFO_KEY);
         if (mobitruJumpLogInfo) {
-          removeStorageItem(MOBITRU_JUMP_LOG_INFO_KEY);
           try {
             const { logInfo, logId, shouldClearSearchFilter } = JSON.parse(mobitruJumpLogInfo);
-            const fetchMobitruLogCb = () =>
+            const fetchMobitruLogCb = () => {
+              removeStorageItem(MOBITRU_JUMP_LOG_INFO_KEY);
               this.setState({
                 highlightedRowId: +logId,
                 isGridRowHighlighted: true,
               });
+            };
 
             this.props.fetchLog(logInfo, fetchMobitruLogCb, shouldClearSearchFilter);
           } catch {
-            // ignore invalid pending jump payload
+            removeStorageItem(MOBITRU_JUMP_LOG_INFO_KEY);
           }
         }
       }
