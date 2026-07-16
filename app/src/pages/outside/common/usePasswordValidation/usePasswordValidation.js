@@ -49,10 +49,16 @@ const isFocusMovingToSubmit = (event) => {
  *                                               passwordsDoNotMatch, requiredField)
  *
  * Returns `isPasswordSubmitReady` for the submit button:
- * - while typing in **New Password** before validation is revealed: enabled (non-empty value);
- * - when validation errors are visible (after blur/submit): disabled until password is fully valid
- *   and confirm matches — including when the field is re-focused with errors still showing;
+ * - while typing in **New Password** before password validation is revealed: enabled
+ *   (non-empty value), unless another field already shows an error (confirm, or
+ *   optional `hasBlockingExternalError` e.g. full name);
+ * - when password validation errors are visible (after blur/submit): disabled until
+ *   password is fully valid and confirm matches — including when the field is
+ *   re-focused with errors still showing;
  * - otherwise: requires non-empty password, all rules met (no spaces), and matching confirm.
+ *
+ * @param {boolean} [params.hasBlockingExternalError] - when true (e.g. visible Full Name
+ *   error on registration), typing in password must not re-enable submit
  */
 export const usePasswordValidation = ({
   password,
@@ -60,6 +66,7 @@ export const usePasswordValidation = ({
   minLength,
   formatMessage,
   messages,
+  hasBlockingExternalError = false,
 }) => {
   const [showPasswordValidation, setShowPasswordValidation] = useState(false);
   const [showConfirmPasswordValidation, setShowConfirmPasswordValidation] = useState(false);
@@ -73,8 +80,29 @@ export const usePasswordValidation = ({
   const allRulesMet = areAllPasswordRulesMet(ruleStatus);
   const hasSpace = password.length > 0 && /\s/.test(password);
   const passwordFullyValid = allRulesMet && !hasSpace;
+
+  const hasMismatch = confirmPassword.length > 0 && password !== confirmPassword;
+  const shouldShowConfirmPasswordValidation =
+    showConfirmPasswordValidation && !isConfirmPasswordFocused;
+
+  const confirmPasswordError = useMemo(() => {
+    if (!shouldShowConfirmPasswordValidation) return undefined;
+    if (!confirmPassword.trim()) return formatMessage(messages.requiredField);
+    if (hasMismatch) return formatMessage(messages.passwordsDoNotMatch);
+    return undefined;
+  }, [shouldShowConfirmPasswordValidation, confirmPassword, hasMismatch, formatMessage, messages]);
+
   const isPasswordSubmitReady = useMemo(() => {
-    if (isPasswordFocused && password.length > 0 && !showPasswordValidation) {
+    const hasOtherFieldError = !!confirmPasswordError || hasBlockingExternalError;
+
+    // While typing in password (errors not yet revealed for this field), keep Save
+    // enabled — but not if confirm / another field already shows a validation error.
+    if (
+      isPasswordFocused &&
+      password.length > 0 &&
+      !showPasswordValidation &&
+      !hasOtherFieldError
+    ) {
       return true;
     }
 
@@ -83,7 +111,15 @@ export const usePasswordValidation = ({
       passwordFullyValid &&
       password === confirmPassword
     );
-  }, [isPasswordFocused, password, confirmPassword, passwordFullyValid, showPasswordValidation]);
+  }, [
+    isPasswordFocused,
+    password,
+    confirmPassword,
+    passwordFullyValid,
+    showPasswordValidation,
+    confirmPasswordError,
+    hasBlockingExternalError,
+  ]);
 
   const ruleLabels = useMemo(
     () => ({
@@ -106,16 +142,6 @@ export const usePasswordValidation = ({
     if (!allRulesMet) return formatMessage(messages.passwordRequirementsError);
     return undefined;
   }, [showPasswordValidation, password, allRulesMet, hasSpace, minLength, formatMessage, messages]);
-
-  const hasMismatch = confirmPassword.length > 0 && password !== confirmPassword;
-  const shouldShowConfirmPasswordValidation = showConfirmPasswordValidation && !isConfirmPasswordFocused;
-
-  const confirmPasswordError = useMemo(() => {
-    if (!shouldShowConfirmPasswordValidation) return undefined;
-    if (!confirmPassword.trim()) return formatMessage(messages.requiredField);
-    if (hasMismatch) return formatMessage(messages.passwordsDoNotMatch);
-    return undefined;
-  }, [shouldShowConfirmPasswordValidation, confirmPassword, hasMismatch, formatMessage, messages]);
 
   const handlePasswordChange = useCallback(() => {
     setShowPasswordValidation(false);
