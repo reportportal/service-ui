@@ -21,7 +21,7 @@
   height: 40px;
   padding: 0;
   margin: 0;
-  border: 0;
+  border: 2px solid transparent;
   background: transparent;
   color: var(--rp-ui-base-dark-e-100);
   text-align: left;
@@ -29,6 +29,12 @@
   border-radius: 4px;
   cursor: pointer;
   font-family: var(--rp-ui-base-font-family);
+  outline: none;
+
+  &:focus-visible {
+    border-color: var(--rp-ui-base-topaz-focused);
+    background-color: transparent;
+  }
 
   &:hover,
   &.active {
@@ -43,11 +49,6 @@
     .dots-icon svg path {
       fill: var(--rp-ui-base-bg-000);
     }
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--rp-ui-base-topaz-focused);
-    outline-offset: -2px;
   }
 }
 

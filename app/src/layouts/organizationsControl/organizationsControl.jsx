@@ -43,7 +43,7 @@ export const OrganizationsControl = ({
         {titles.shortTitle}
       </button>
       <button className={cx('organizations-control')} tabIndex={-1}>
-        <div>
+        <div className={cx('organizations-control-content')}>
           <div
             className={cx('organization-btn-wrapper', {
               'not-extended': !isExtendedNav,
@@ -51,7 +51,6 @@ export const OrganizationsControl = ({
           >
             {isExtendedNav ? (
               <>
-                <i className={cx('arrow-icon')}>{Parser(ArrowLeftIcon)}</i>
                 <NavLink
                   to={link}
                   className={cx('organization-btn')}
@@ -60,6 +59,7 @@ export const OrganizationsControl = ({
                     trackEvent(SIDEBAR_EVENTS.onClickLevelHigher(titles.level));
                   }}
                 >
+                  <i className={cx('arrow-icon')}>{Parser(ArrowLeftIcon)}</i>
                   <div className={cx('top-title')}>{titles.topTitle}</div>
                 </NavLink>
               </>

@@ -61,7 +61,14 @@
   color: var(--rp-ui-base-dark-e-100);
   text-decoration: none;
   text-align: center;
+  border: 2px solid transparent;
   border-radius: 4px;
+  outline: none;
+
+  &:focus-visible {
+    border-color: var(--rp-ui-base-topaz-focused);
+    background-color: transparent;
+  }
 
   &:hover {
     background-color: var(--rp-ui-base-dark-e-500);

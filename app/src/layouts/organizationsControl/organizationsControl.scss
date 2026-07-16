@@ -28,105 +28,157 @@
 
   &:hover {
     .short-title {
-      color: $COLOR--white-two;
-      background-color: $COLOR--darkmode-gray-350;
+      color: var(--rp-ui-base-bg-000);
+      background-color: var(--rp-ui-base-dark-e-350);
     }
 
     .organizations-control {
-      background-color: $COLOR--darkmode-gray-350;
+      background-color: var(--rp-ui-base-dark-e-350);
     }
 
     .bottom-title {
-      color: $COLOR--white-two;
+      color: var(--rp-ui-base-bg-000);
     }
 
     .open-popover:not(.action) path {
-      fill: $COLOR--white-two;
+      fill: var(--rp-ui-base-bg-000);
     }
   }
 }
 
 .organizations-control {
-  width: 280px;
+  width: 264px;
   height: 60px;
-  background-color: $COLOR--darkmode-gray-300;
+  background-color: var(--rp-ui-base-dark-e-300);
   border-radius: 8px;
   cursor: pointer;
   box-sizing: border-box;
   padding: 0px 12px;
   display: flex;
+  gap: 10px;
   align-items: center;
   justify-content: space-between;
   background-clip: padding-box;
   border: none;
   outline: none;
-  margin-left: 12px;
-  margin-right: 4px;
+  margin: 0 8px;
+}
+
+.organizations-control-content {
+  flex-shrink: 1;
+  min-width: 0;
 }
 
 .hover {
-  background-color: $COLOR--darkmode-gray-350;
+  background-color: var(--rp-ui-base-dark-e-350);
 
   .bottom-title {
-    color: $COLOR--white-two;
+    color: var(--rp-ui-base-bg-000);
   }
 }
 
 .organization-btn-wrapper {
   display: flex;
-  height: 16px;
+  align-items: center;
+  max-width: 100%;
+  min-width: 0;
+  height: 24px;
 }
 
 .organization-btn {
   display: flex;
-  border: none;
-  padding: 0;
+  align-items: center;
+  gap: 4px;
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+  height: 24px;
+  padding-right: 4px;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  outline: none;
   background: transparent;
-  color: $COLOR--darkmode-gray-100;
-  line-height: 16px;
-  font-size: 11px;
-  font-family: $FONT-ROBOTO-REGULAR;
+  color: var(--rp-ui-base-dark-e-100);
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
   text-decoration: none;
   cursor: pointer;
+
+  path {
+    fill: var(--rp-ui-base-dark-e-100);
+  }
+
+  &:hover {
+    color: var(--rp-ui-base-bg-000);
+
+    path {
+      fill: var(--rp-ui-base-bg-000);
+    }
+  }
+
+  &:focus-visible {
+    border-color: var(--rp-ui-base-topaz-focused);
+    color: var(--rp-ui-base-bg-000);
+
+    path {
+      fill: var(--rp-ui-base-bg-000);
+    }
+  }
+
+  &:active {
+    color: var(--rp-ui-base-dark-topaz-pressed);
+
+    path {
+      fill: var(--rp-ui-base-dark-topaz-pressed);
+    }
+  }
 }
 
 .arrow-icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+
   svg {
     width: 16px;
     height: 16px;
   }
-  margin-right: 4px;
 }
 
 .action {
   path {
-    fill: $COLOR--darkmode-topaz-text;
+    fill: var(--rp-ui-base-dark-topaz-text);
   }
 }
 
 .top-title {
-  @include truncate(200px);
+  @include truncate(100%);
+  min-width: 0;
   text-align: start;
+  font-size: 11px;
+  line-height: 16px;
 }
 
 .extended-top-title {
-  color: $COLOR--darkmode-gray-100;
+  color: var(--rp-ui-base-dark-e-100);
   line-height: 20px;
   font-size: 13px;
-  font-family: $FONT-ROBOTO-MEDIUM;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-medium);
 }
 
 .bottom-title {
-  @include truncate(220px);
-  color: $COLOR--darkmode-gray-100;
+  @include truncate(100%);
+  color: var(--rp-ui-base-dark-e-100);
   font-size: 13px;
-  font-family: $FONT-ROBOTO-MEDIUM;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-medium);
   line-height: 20px;
-  margin-top: 4px;
   text-align: start;
 }
 
 .open-popover {
+  flex-shrink: 0;
   width: 16px;
   height: 16px;
 }
@@ -139,7 +191,7 @@
     fill: var(--rp-ui-base-dark-e-450);
   }
   &::after {
-    border-right-color: $COLOR--darkmode-gray-400;
+    border-right-color: var(--rp-ui-base-dark-e-400);
   }
 }
 
@@ -151,7 +203,7 @@
   border: 0;
 
   &:focus-visible {
-    box-shadow: 0px 0px 0px 2px $COLOR--topaz-focused inset;
+    box-shadow: 0px 0px 0px 2px var(--rp-ui-base-topaz-focused) inset;
   }
 }
 
@@ -162,21 +214,22 @@
   width: 40px;
   min-width: 40px;
   height: 60px;
-  background-color: $COLOR--darkmode-gray-300;
+  background-color: var(--rp-ui-base-dark-e-300);
   border-radius: 8px;
   cursor: pointer;
-  color: $COLOR--darkmode-gray-100;
+  color: var(--rp-ui-base-dark-e-100);
   text-transform: uppercase;
   text-align: center;
   font-size: 13px;
   line-height: 20px;
-  font-family: $FONT-ROBOTO-BOLD;
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-bold);
   border: none;
-  margin-left: 4px;
+  margin: 0 4px;
 
   &:focus-visible {
     outline: none;
-    border: 2px solid $COLOR--topaz-focused;
+    border: 2px solid var(--rp-ui-base-topaz-focused);
   }
 }
 

@@ -2389,7 +2389,7 @@
   "Sidebar.footer.serviceName": "Service name",
   "Sidebar.footer.servicesVersions": "Versions of connected services",
   "Sidebar.footer.titleServicesVersionsModal": "Check the availability status and versions of various ReportPortal services:",
-  "Sidebar.launchesBtn": "Ejecuciones",
+  "Sidebar.launchesBtn": "Ejecuciones automatizadas",
   "Sidebar.membersBtn": "Project Team",
   "Sidebar.services.requestService": "Request professional service",
   "Sidebar.settingsBtn": "Project Settings",

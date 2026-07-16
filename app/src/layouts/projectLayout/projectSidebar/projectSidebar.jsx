@@ -64,6 +64,7 @@ import { messages } from '../../messages';
 const ORGANIZATION_CONTROL = 'Organization control';
 const TEST_EXECUTIONS_SLUG = 'testExecution';
 const TEST_EXECUTIONS_MENU_ORDER = 25;
+const DEBUG_MENU_ORDER = 90;
 
 export const ProjectSidebar = ({ onClickNavBtn }) => {
   const { trackEvent } = useTracking();
@@ -134,32 +135,16 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       },
       {
         onClick: (isSidebarCollapsed) =>
-          onClickButton({ itemName: messages.debugMode.defaultMessage, isSidebarCollapsed }),
+          onClickButton({
+            itemName: messages.milestones.defaultMessage,
+            isSidebarCollapsed,
+          }),
         link: {
-          type: PROJECT_USERDEBUG_PAGE,
-          payload: { projectSlug, filterId: ALL, organizationSlug },
-        },
-        icon: DebugIcon,
-        message: formatMessage(messages.debugMode),
-        menuOrder: (menuCounter += menuStep),
-      },
-      {
-        onClick: (isSidebarCollapsed) =>
-          onClickButton({ itemName: messages.filters.defaultMessage, isSidebarCollapsed }),
-        link: { type: PROJECT_FILTERS_PAGE, payload: { organizationSlug, projectSlug } },
-        icon: FiltersIcon,
-        message: formatMessage(messages.filters),
-        menuOrder: (menuCounter += menuStep),
-      },
-      {
-        onClick: (isSidebarCollapsed) =>
-          onClickButton({ itemName: messages.projectTeam.defaultMessage, isSidebarCollapsed }),
-        link: {
-          type: PROJECT_MEMBERS_PAGE,
+          type: PROJECT_MILESTONES_PAGE,
           payload: { organizationSlug, projectSlug },
         },
-        icon: MembersIcon,
-        message: formatMessage(messages.projectTeam),
+        icon: MilestonesIcon,
+        message: formatMessage(messages.milestones),
         menuOrder: (menuCounter += menuStep),
       },
       {
@@ -174,20 +159,6 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         },
         icon: TestCaseIcon,
         message: formatMessage(messages.testCaseLibrary),
-        menuOrder: (menuCounter += menuStep),
-      },
-      {
-        onClick: (isSidebarCollapsed) =>
-          onClickButton({
-            itemName: messages.milestones.defaultMessage,
-            isSidebarCollapsed,
-          }),
-        link: {
-          type: PROJECT_MILESTONES_PAGE,
-          payload: { organizationSlug, projectSlug },
-        },
-        icon: MilestonesIcon,
-        message: formatMessage(messages.milestones),
         menuOrder: (menuCounter += menuStep),
       },
       ...(isShowInProgressTmsFeatures
@@ -208,6 +179,36 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
             },
           ]
         : []),
+      {
+        onClick: (isSidebarCollapsed) =>
+          onClickButton({ itemName: messages.debugMode.defaultMessage, isSidebarCollapsed }),
+        link: {
+          type: PROJECT_USERDEBUG_PAGE,
+          payload: { projectSlug, filterId: ALL, organizationSlug },
+        },
+        icon: DebugIcon,
+        message: formatMessage(messages.debugMode),
+        menuOrder: (menuCounter = DEBUG_MENU_ORDER),
+      },
+      {
+        onClick: (isSidebarCollapsed) =>
+          onClickButton({ itemName: messages.filters.defaultMessage, isSidebarCollapsed }),
+        link: { type: PROJECT_FILTERS_PAGE, payload: { organizationSlug, projectSlug } },
+        icon: FiltersIcon,
+        message: formatMessage(messages.filters),
+        menuOrder: (menuCounter += menuStep),
+      },
+      {
+        onClick: (isSidebarCollapsed) =>
+          onClickButton({ itemName: messages.projectTeam.defaultMessage, isSidebarCollapsed }),
+        link: {
+          type: PROJECT_MEMBERS_PAGE,
+          payload: { organizationSlug, projectSlug },
+        },
+        icon: MembersIcon,
+        message: formatMessage(messages.projectTeam),
+        menuOrder: (menuCounter += menuStep),
+      },
       {
         onClick: (isSidebarCollapsed) =>
           onClickButton({ itemName: messages.projectsSettings.defaultMessage, isSidebarCollapsed }),

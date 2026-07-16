@@ -2402,7 +2402,7 @@
   "Sidebar.footer.serviceName": "Назва сервіса",
   "Sidebar.footer.servicesVersions": "Версії підключених сервісів",
   "Sidebar.footer.titleServicesVersionsModal": "Перевірте статус доступності та версії різних сервісів ReportPortal:",
-  "Sidebar.launchesBtn": "Запуски",
+  "Sidebar.launchesBtn": "Автоматичні запуски",
   "Sidebar.membersBtn": "Команда Проекту",
   "Sidebar.services.requestService": "Запитуйте професійне обслуговування",
   "Sidebar.settingsBtn": "Налаштування Проекту",
