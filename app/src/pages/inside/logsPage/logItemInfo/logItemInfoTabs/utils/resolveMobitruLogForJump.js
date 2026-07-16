@@ -350,7 +350,7 @@ export const resolveMobitruLogForJump = async ({
   logId,
   logQuery,
 }) => {
-  const url = URLS.searchLogs(projectKey, retryId).replace(/\?.*$/, '');
+  const url = URLS.searchLogs(projectKey, retryId).split('?')[0];
   const logQueryParams = buildLocationQueryParams(logQuery);
 
   const logInfoFromLocations = await searchWithQueryVariants({
