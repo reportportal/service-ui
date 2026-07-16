@@ -65,3 +65,4 @@ export const PREVIOUS = LOADING_DIRECTIONS.PREVIOUS;
 export const NEXT = LOADING_DIRECTIONS.NEXT;
 export const ALL = 'all';
 export const ERROR_LOG_INDEX_KEY = 'errorLogIndex';
+export const MOBITRU_JUMP_LOG_INFO_KEY = 'mobitruJumpLogInfo';

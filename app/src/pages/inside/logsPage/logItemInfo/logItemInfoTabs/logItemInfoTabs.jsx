@@ -29,12 +29,17 @@ import {
   activeLogSelector,
   activeTabIdSelector,
   setActiveTabIdAction,
-  fetchLog,
+  LOG_MESSAGE_FILTER_KEY,
+  MOBITRU_JUMP_LOG_INFO_KEY,
+  NAMESPACE,
 } from 'controllers/log';
+import { querySelector } from 'controllers/log/selectors';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { noLogsCollapsingSelector } from 'controllers/user';
 import { projectKeySelector } from 'controllers/project';
 import { fetchFirstAttachmentsAction, attachmentItemsSelector } from 'controllers/log/attachments';
 import { fetch } from 'common/utils/fetch';
+import { setStorageItem } from 'common/utils';
 import { SAUCE_LABS } from 'common/constants/pluginNames';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import StackTraceIcon from 'common/img/stack-trace-inline.svg';
@@ -83,6 +88,10 @@ const messages = defineMessages({
     id: 'LogItemInfoTabs.historyTab',
     defaultMessage: 'History of actions',
   },
+  jumpToLogFailed: {
+    id: 'LogItemInfoTabs.jumpToLogFailed',
+    defaultMessage: 'Target log could not be found',
+  },
 });
 
 const ATTACHMENTS_TAB_ID = 'attachments';
@@ -105,11 +114,12 @@ const LOG_TAB_ELEMENT_EVENTS = {
     noLogsCollapsing: noLogsCollapsingSelector(state),
     logTabExtensions: uiExtensionLogTabSelector(state),
     projectKey: projectKeySelector(state),
+    logQuery: querySelector(state, NAMESPACE),
   }),
   {
     fetchFirstAttachments: fetchFirstAttachmentsAction,
     setActiveTabId: setActiveTabIdAction,
-    fetchLog,
+    showNotification,
   },
 )
 @track()
@@ -127,7 +137,6 @@ export class LogItemInfoTabs extends Component {
     sauceLabsIntegrations: PropTypes.array.isRequired,
     fetchFirstAttachments: PropTypes.func,
     setActiveTabId: PropTypes.func,
-    fetchLog: PropTypes.func,
     attachments: PropTypes.array,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -137,6 +146,8 @@ export class LogItemInfoTabs extends Component {
     noLogsCollapsing: PropTypes.bool,
     logTabExtensions: PropTypes.array,
     projectKey: PropTypes.string,
+    logQuery: PropTypes.object,
+    showNotification: PropTypes.func,
   };
 
   static defaultProps = {
@@ -145,10 +156,11 @@ export class LogItemInfoTabs extends Component {
     attachments: [],
     activeTabId: 'logs',
     setActiveTabId: () => {},
-    fetchLog: () => {},
     noLogsCollapsing: false,
     logTabExtensions: [],
     projectKey: '',
+    logQuery: {},
+    showNotification: () => {},
   };
 
   state = {
@@ -315,31 +327,47 @@ export class LogItemInfoTabs extends Component {
   };
 
   handleJumpToMobitruLog = async (logId, itemId) => {
-    const { projectKey, retryId, setActiveTabId, fetchLog: fetchLogAction, tracking } = this.props;
+    const {
+      projectKey,
+      retryId,
+      logQuery,
+      setActiveTabId,
+      showNotification: showNotificationAction,
+      intl: { formatMessage },
+      tracking,
+    } = this.props;
 
     tracking.trackEvent(LOG_PAGE_EVENTS.clickJumpToLog('remote_device'));
 
     try {
-      let logInfo = await resolveMobitruLogForJump({
+      const logInfo = await resolveMobitruLogForJump({
         fetchFn: fetch,
         projectKey,
         retryId,
+        itemId,
         logId,
+        logQuery,
       });
 
-      if (!logInfo && itemId === retryId) {
-        logInfo = { id: logId, pagesLocation: [{ [logId]: 1 }] };
-      }
-
       if (!logInfo?.pagesLocation?.length) {
+        showNotificationAction({
+          message: formatMessage(messages.jumpToLogFailed),
+          type: NOTIFICATION_TYPES.ERROR,
+        });
         return;
       }
 
-      fetchLogAction(logInfo, () => {
-        setActiveTabId('logs');
-      }, true);
+      setStorageItem(MOBITRU_JUMP_LOG_INFO_KEY, {
+        logInfo,
+        logId,
+        shouldClearSearchFilter: Boolean(logQuery[LOG_MESSAGE_FILTER_KEY]),
+      });
+      setActiveTabId('logs');
     } catch {
-      // non-blocking: keep user on Remote device tab when navigation fails
+      showNotificationAction({
+        message: formatMessage(messages.jumpToLogFailed),
+        type: NOTIFICATION_TYPES.ERROR,
+      });
     }
   };
 

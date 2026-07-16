@@ -40,6 +40,7 @@ import {
   fetchLog,
   RETRY_ID,
   ERROR_LOG_INDEX_KEY,
+  MOBITRU_JUMP_LOG_INFO_KEY,
   loadMoreLogsAction,
   fetchLogItemsForPageAction,
   loadedPagesRangeSelector,
@@ -226,6 +227,24 @@ export class LogsGridWrapper extends Component {
             isGridRowHighlighted: true,
           });
         this.props.fetchLog(errorLogs[errorLogIndex], fetchLogCb);
+      } else {
+        try {
+          const mobitruJumpLogInfo = getStorageItem(MOBITRU_JUMP_LOG_INFO_KEY);
+          if (mobitruJumpLogInfo) {
+            const { logInfo, logId, shouldClearSearchFilter } = mobitruJumpLogInfo;
+            removeStorageItem(MOBITRU_JUMP_LOG_INFO_KEY);
+            const fetchMobitruLogCb = () => {
+              this.setState({
+                highlightedRowId: +logId,
+                isGridRowHighlighted: true,
+              });
+            };
+
+            this.props.fetchLog(logInfo, fetchMobitruLogCb, shouldClearSearchFilter);
+          }
+        } catch {
+          removeStorageItem(MOBITRU_JUMP_LOG_INFO_KEY);
+        }
       }
     }
 
