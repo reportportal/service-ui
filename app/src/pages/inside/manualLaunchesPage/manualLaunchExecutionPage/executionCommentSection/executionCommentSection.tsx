@@ -17,6 +17,7 @@
 import { FC, useMemo, useRef, useState, FormEventHandler, ChangeEventHandler } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import {
   Button,
   DragAndDropIcon,
@@ -40,6 +41,7 @@ import { useFileAttachments } from 'hooks/useFileAttachments';
 import { messages as statusModalMessages } from '../executionStatusConfirmModal/messages';
 import { messages } from '../messages';
 import { commonMessages } from 'pages/inside/common/common-messages';
+import { MANUAL_LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 
 import styles from './executionCommentSection.scss';
 import {
@@ -56,6 +58,7 @@ export interface ExecutionCommentSectionProps {
 
 export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ execution }) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const launchId = useManualLaunchId();
@@ -140,6 +143,7 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
         removedAttachmentIds: Array.from(removedAttachmentIds),
         btsTickets: execution.btsTickets,
         onSuccess: () => {
+          trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.CLICK_SAVE_ATTACHMENTS);
           setPendingFiles([]);
           setRemovedAttachmentIds(new Set());
         },
@@ -196,6 +200,7 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
         removedAttachmentIds: Array.from(removedAttachmentIds),
         btsTickets: execution.btsTickets,
         onSuccess: () => {
+          trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.CLICK_SAVE_EXECUTION_COMMENT);
           setPendingFiles([]);
           setRemovedAttachmentIds(new Set());
         },

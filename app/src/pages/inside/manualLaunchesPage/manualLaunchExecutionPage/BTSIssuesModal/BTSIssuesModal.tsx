@@ -19,6 +19,7 @@ import { useIntl } from 'react-intl';
 import { Modal, SegmentedControl } from '@reportportal/ui-kit';
 import { InjectedFormProps, reduxForm } from 'redux-form';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 
 import { fetch, commonValidators, uniqueId, createClassnames } from 'common/utils';
 import { URLS } from 'common/urls';
@@ -53,7 +54,12 @@ import { messages } from './messages';
 import { BTS_ISSUES_MODAL } from '../constants';
 import { LinkBTSIssueForm } from './LinkBTSIssueForm';
 import { PostBTSIssueForm } from './PostBTSIssueForm/PostBTSIssueForm';
-import { DynamicField, BTSIntegration } from './types';
+import { DynamicField, BTSIntegration, BTSIssuesModalData } from './types';
+import {
+  BTS_ACTION_TYPE,
+  MANUAL_LAUNCHES_PAGE_EVENTS,
+  type BtsActionType,
+} from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 
 import styles from './BTSIssuesModal.scss';
 import { activeManualLaunchExecutionSelector, getManualLaunchExecutionAction } from 'controllers/manualLaunch';
@@ -71,9 +77,7 @@ const CONTROL_TYPE_FIELD = '_controlType';
 let validationConfig: Record<string, unknown> | null = null;
 
 interface BTSIssuesModalOwnProps {
-  data: {
-    executionId: number;
-  };
+  data: BTSIssuesModalData;
 }
 
 type BTSIssuesModalProps = BTSIssuesModalOwnProps &
@@ -89,6 +93,7 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
   change,
 }) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const namedBtsIntegrations = useSelector(namedAvailableBtsIntegrationsSelector) as Record<
     string,
@@ -396,11 +401,21 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
     isSubmitButtonDisabled: invalid,
     onSubmit: () => {
       handleSubmit((values: Record<string, unknown>) => {
+        const btsActionType: BtsActionType =
+          selectedControl === BTSIssueActionTypes.POST
+            ? BTS_ACTION_TYPE.POST
+            : BTS_ACTION_TYPE.LINK;
+
+        const onSuccess = () => {
+          trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.submitBtsAction(data.entryPlace, btsActionType));
+          hideModal();
+        };
+
         if (selectedControl === BTSIssueActionTypes.POST) {
           const issueData = prepareDataToSend(values);
-          postIssue(issueData, hideModal);
+          postIssue(issueData, onSuccess);
         } else {
-          linkIssue(values, hideModal);
+          linkIssue(values, onSuccess);
         }
       })();
     },
