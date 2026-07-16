@@ -156,6 +156,21 @@ const RegistrationFormComponent = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const shouldValidateName =
+    submitAttempted || showNameValidation || (!isNameFocused && name.length > 0);
+
+  const nameError = useMemo(() => {
+    if (!shouldValidateName) return undefined;
+    if (!name.trim()) return formatMessage(messages.requiredField);
+    if (commonValidators.userName(name)) {
+      return formatMessage(messages.nameHint, {
+        minLength: Number(REGISTRATION_NAME_MIN_LENGTH),
+        maxLength: Number(REGISTRATION_NAME_MAX_LENGTH),
+      });
+    }
+    return undefined;
+  }, [shouldValidateName, name, formatMessage]);
+
   const {
     ruleStatus,
     passwordFullyValid,
@@ -179,22 +194,8 @@ const RegistrationFormComponent = ({
     minLength,
     formatMessage,
     messages,
+    hasBlockingExternalError: !!nameError,
   });
-
-  const shouldValidateName =
-    submitAttempted || showNameValidation || (!isNameFocused && name.length > 0);
-
-  const nameError = useMemo(() => {
-    if (!shouldValidateName) return undefined;
-    if (!name.trim()) return formatMessage(messages.requiredField);
-    if (commonValidators.userName(name)) {
-      return formatMessage(messages.nameHint, {
-        minLength: Number(REGISTRATION_NAME_MIN_LENGTH),
-        maxLength: Number(REGISTRATION_NAME_MAX_LENGTH),
-      });
-    }
-    return undefined;
-  }, [shouldValidateName, name, formatMessage]);
 
   const nameValid = name.trim() && !commonValidators.userName(name);
   const isCreateDisabled = loading || !nameValid || !isPasswordSubmitReady;
