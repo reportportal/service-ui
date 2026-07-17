@@ -30,3 +30,9 @@ export const getTmsOverride = () => {
     return null;
   }
 };
+
+export const composeAppInfo = (apiInfo, uiInfo = {}) => ({
+  api: apiInfo,
+  ui: uiInfo,
+  jobs: apiInfo?.jobsInfo || {},
+});

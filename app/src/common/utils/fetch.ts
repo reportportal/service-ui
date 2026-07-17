@@ -96,7 +96,7 @@ export const updateToken = (newToken: string): void => {
   axios.defaults.headers.common.Authorization = newToken;
 };
 
-const isCompositeInfoRequest = (url = ''): boolean => /\/composite\/info/.test(url);
+const isAppInfoApiRequest = (url = ''): boolean => /\/api\/info(?:\?|$)/.test(url);
 const isServiceUnavailableError = (error: AxiosError): boolean => {
   const status = error.response?.status;
   return (
@@ -114,8 +114,7 @@ const isApiServiceAvailable = (data: unknown): boolean => {
     return false;
   }
   const responseData = data as Record<string, unknown>;
-  const api = responseData.api as Record<string, unknown> | undefined;
-  const build = api?.build as Record<string, unknown> | undefined;
+  const build = responseData.build as Record<string, unknown> | undefined;
   return build?.name === 'API Service';
 };
 
@@ -124,7 +123,7 @@ export const initAuthInterceptor = (store: Store): void => {
     (response: AxiosResponse) => {
       const responseUrl = response.config?.url || '';
 
-      if (isCompositeInfoRequest(responseUrl)) {
+      if (isAppInfoApiRequest(responseUrl)) {
         store.dispatch(setServiceAvailabilityAction({ 
           checked: true, 
           apiUnavailable: !isApiServiceAvailable(response.data) 
@@ -143,7 +142,7 @@ export const initAuthInterceptor = (store: Store): void => {
         }
       }
 
-      if (isCompositeInfoRequest(requestUrl) && isServiceUnavailableError(error)) {
+      if (isAppInfoApiRequest(requestUrl) && isServiceUnavailableError(error)) {
         store.dispatch(setServiceAvailabilityAction({ checked: true, apiUnavailable: true }));
       }
 

@@ -43,13 +43,12 @@ describe('initAuthInterceptor', () => {
     clearResponseInterceptors();
   });
 
-  test('marks API available on successful composite info response with valid API service', async () => {
-    axiosMock.onGet('/composite/info').reply(200, { 
-      api: { build: { name: 'API Service' } },
-      uat: true 
+  test('marks API available on successful api info response with valid API service', async () => {
+    axiosMock.onGet('/api/info').reply(200, {
+      build: { name: 'API Service' },
     });
 
-    await axios.get('/composite/info');
+    await axios.get('/api/info');
 
     expect(store.dispatch).toHaveBeenCalledWith({
       type: 'setServiceAvailability',
@@ -60,27 +59,10 @@ describe('initAuthInterceptor', () => {
     });
   });
 
-  test('marks API unavailable when api.build.name is missing', async () => {
-    axiosMock.onGet('/composite/info').reply(200, { api: { build: {} }, uat: true });
+  test('marks API unavailable when build.name is missing', async () => {
+    axiosMock.onGet('/api/info').reply(200, { build: {} });
 
-    await axios.get('/composite/info');
-
-    expect(store.dispatch).toHaveBeenCalledWith({
-      type: 'setServiceAvailability',
-      payload: {
-        checked: true,
-        apiUnavailable: true,
-      },
-    });
-  });
-
-  test('marks API unavailable when api.build.name is not "API Service"', async () => {
-    axiosMock.onGet('/composite/info').reply(200, { 
-      api: { build: { name: 'Unknown Service' } },
-      uat: true 
-    });
-
-    await axios.get('/composite/info');
+    await axios.get('/api/info');
 
     expect(store.dispatch).toHaveBeenCalledWith({
       type: 'setServiceAvailability',
@@ -91,10 +73,12 @@ describe('initAuthInterceptor', () => {
     });
   });
 
-  test('marks API unavailable when api is missing', async () => {
-    axiosMock.onGet('/composite/info').reply(200, { uat: true });
+  test('marks API unavailable when build.name is not "API Service"', async () => {
+    axiosMock.onGet('/api/info').reply(200, {
+      build: { name: 'Unknown Service' },
+    });
 
-    await axios.get('/composite/info');
+    await axios.get('/api/info');
 
     expect(store.dispatch).toHaveBeenCalledWith({
       type: 'setServiceAvailability',
@@ -105,27 +89,10 @@ describe('initAuthInterceptor', () => {
     });
   });
 
-  test('marks API unavailable when api.build is missing', async () => {
-    axiosMock.onGet('/composite/info').reply(200, { api: {}, uat: true });
+  test('marks API unavailable when build is missing', async () => {
+    axiosMock.onGet('/api/info').reply(200, {});
 
-    await axios.get('/composite/info');
-
-    expect(store.dispatch).toHaveBeenCalledWith({
-      type: 'setServiceAvailability',
-      payload: {
-        checked: true,
-        apiUnavailable: true,
-      },
-    });
-  });
-
-  test.each([
-    { api: false, label: 'boolean value' },
-    { api: 'string', label: 'string value' },
-  ])('marks API unavailable when api is a non-object ($label)', async ({ api }) => {
-    axiosMock.onGet('/composite/info').reply(200, { api, uat: true });
-
-    await axios.get('/composite/info');
+    await axios.get('/api/info');
 
     expect(store.dispatch).toHaveBeenCalledWith({
       type: 'setServiceAvailability',
@@ -136,10 +103,20 @@ describe('initAuthInterceptor', () => {
     });
   });
 
-  test('marks API unavailable when composite info response is empty', async () => {
-    axiosMock.onGet('/composite/info').reply(200, {});
+  test('does not mark availability for ui info responses', async () => {
+    axiosMock.onGet('/ui/info').reply(200, {
+      build: { name: 'Service UI' },
+    });
 
-    await axios.get('/composite/info');
+    await axios.get('/ui/info');
+
+    expect(store.dispatch).not.toHaveBeenCalled();
+  });
+
+  test('marks API unavailable on api info gateway error', async () => {
+    axiosMock.onGet('/api/info').reply(503);
+
+    await expect(axios.get('/api/info')).rejects.toBeTruthy();
 
     expect(store.dispatch).toHaveBeenCalledWith({
       type: 'setServiceAvailability',
@@ -150,24 +127,10 @@ describe('initAuthInterceptor', () => {
     });
   });
 
-  test('marks API unavailable on composite info gateway error', async () => {
-    axiosMock.onGet('/composite/info').reply(503);
+  test('marks API unavailable on api info internal server error', async () => {
+    axiosMock.onGet('/api/info').reply(500);
 
-    await expect(axios.get('/composite/info')).rejects.toBeTruthy();
-
-    expect(store.dispatch).toHaveBeenCalledWith({
-      type: 'setServiceAvailability',
-      payload: {
-        checked: true,
-        apiUnavailable: true,
-      },
-    });
-  });
-
-  test('marks API unavailable on composite info internal server error', async () => {
-    axiosMock.onGet('/composite/info').reply(500);
-
-    await expect(axios.get('/composite/info')).rejects.toBeTruthy();
+    await expect(axios.get('/api/info')).rejects.toBeTruthy();
 
     expect(store.dispatch).toHaveBeenCalledWith({
       type: 'setServiceAvailability',
@@ -178,24 +141,10 @@ describe('initAuthInterceptor', () => {
     });
   });
 
-  test('marks API unavailable on composite info request timeout', async () => {
-    axiosMock.onGet('/composite/info').reply(408);
+  test('marks API unavailable on api info request timeout', async () => {
+    axiosMock.onGet('/api/info').reply(408);
 
-    await expect(axios.get('/composite/info')).rejects.toBeTruthy();
-
-    expect(store.dispatch).toHaveBeenCalledWith({
-      type: 'setServiceAvailability',
-      payload: {
-        checked: true,
-        apiUnavailable: true,
-      },
-    });
-  });
-
-  test('marks API unavailable on composite info rate limiting', async () => {
-    axiosMock.onGet('/composite/info').reply(429);
-
-    await expect(axios.get('/composite/info')).rejects.toBeTruthy();
+    await expect(axios.get('/api/info')).rejects.toBeTruthy();
 
     expect(store.dispatch).toHaveBeenCalledWith({
       type: 'setServiceAvailability',
@@ -206,24 +155,10 @@ describe('initAuthInterceptor', () => {
     });
   });
 
-  test('marks API unavailable on composite info bad gateway error', async () => {
-    axiosMock.onGet('/composite/info').reply(502);
+  test('marks API unavailable on api info rate limiting', async () => {
+    axiosMock.onGet('/api/info').reply(429);
 
-    await expect(axios.get('/composite/info')).rejects.toBeTruthy();
-
-    expect(store.dispatch).toHaveBeenCalledWith({
-      type: 'setServiceAvailability',
-      payload: {
-        checked: true,
-        apiUnavailable: true,
-      },
-    });
-  });
-
-  test('marks API unavailable on composite info gateway timeout', async () => {
-    axiosMock.onGet('/composite/info').reply(504);
-
-    await expect(axios.get('/composite/info')).rejects.toBeTruthy();
+    await expect(axios.get('/api/info')).rejects.toBeTruthy();
 
     expect(store.dispatch).toHaveBeenCalledWith({
       type: 'setServiceAvailability',
@@ -234,10 +169,10 @@ describe('initAuthInterceptor', () => {
     });
   });
 
-  test('marks API unavailable on composite info network error', async () => {
-    axiosMock.onGet('/composite/info').networkError();
+  test('marks API unavailable on api info bad gateway error', async () => {
+    axiosMock.onGet('/api/info').reply(502);
 
-    await expect(axios.get('/composite/info')).rejects.toBeTruthy();
+    await expect(axios.get('/api/info')).rejects.toBeTruthy();
 
     expect(store.dispatch).toHaveBeenCalledWith({
       type: 'setServiceAvailability',
@@ -248,4 +183,31 @@ describe('initAuthInterceptor', () => {
     });
   });
 
+  test('marks API unavailable on api info gateway timeout', async () => {
+    axiosMock.onGet('/api/info').reply(504);
+
+    await expect(axios.get('/api/info')).rejects.toBeTruthy();
+
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: 'setServiceAvailability',
+      payload: {
+        checked: true,
+        apiUnavailable: true,
+      },
+    });
+  });
+
+  test('marks API unavailable on api info network error', async () => {
+    axiosMock.onGet('/api/info').networkError();
+
+    await expect(axios.get('/api/info')).rejects.toBeTruthy();
+
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: 'setServiceAvailability',
+      payload: {
+        checked: true,
+        apiUnavailable: true,
+      },
+    });
+  });
 });

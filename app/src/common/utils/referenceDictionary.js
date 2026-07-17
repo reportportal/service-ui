@@ -109,7 +109,6 @@ export const faqDictionary = {
 
 export const servicesUpdate = {
   api: 'https://github.com/reportportal/service-api/releases',
-  index: 'https://github.com/reportportal/service-index/releases',
   jobs: 'https://github.com/reportportal/service-jobs/releases',
   ui: 'https://github.com/reportportal/service-ui/releases',
   analyzer: 'https://github.com/reportportal/service-auto-analyzer/releases',

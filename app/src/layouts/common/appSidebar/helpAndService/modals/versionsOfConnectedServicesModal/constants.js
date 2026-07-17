@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-export const PRODUCT_VERSION = '26.0.2';
-export const PRODUCT_VERSION_LINK = 'https://reportportal.io/docs/releases/Version26.0.2/';
+export const PRODUCT_VERSION = '26.1';
+export const PRODUCT_VERSION_LINK = 'https://reportportal.io/docs/releases/Version26.1/';
