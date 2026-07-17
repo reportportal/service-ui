@@ -35,9 +35,12 @@ describe('resolveMobitruLogForJump', () => {
     expect(result).toEqual(logInfo);
     expect(fetchFn).toHaveBeenCalledTimes(1);
     expect(fetchFn).toHaveBeenCalledWith(
-      expect.any(String),
+      expect.stringMatching(/\/log\/locations\/search\/\d+$/),
       expect.objectContaining({
-        params: expect.objectContaining({ 'filter.eq.level': 'mobitru' }),
+        params: expect.objectContaining({
+          'filter.eq.level': 'mobitru',
+          excludeLogContent: true,
+        }),
       }),
     );
   });
@@ -87,7 +90,6 @@ describe('resolveMobitruLogForJump', () => {
       .fn()
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([])
       .mockResolvedValueOnce({
         content: [{ id: 1 }],
         page: { totalPages: 2 },
@@ -107,7 +109,7 @@ describe('resolveMobitruLogForJump', () => {
     });
 
     expect(result).toEqual({ id: 163839, pagesLocation: [{ 163839: 2 }] });
-    expect(fetchFn).toHaveBeenCalledTimes(5);
+    expect(fetchFn).toHaveBeenCalledTimes(4);
   });
 
   test('should resolve nested step mobitru log via nested grid fallback', async () => {
@@ -115,9 +117,8 @@ describe('resolveMobitruLogForJump', () => {
       .fn()
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([])
       .mockResolvedValueOnce({
-        content: [{ id: 200, type: 'STEP' }],
+        content: [{ id: 200, hasContent: true }],
         page: { totalPages: 1 },
       })
       .mockResolvedValueOnce({
@@ -136,6 +137,139 @@ describe('resolveMobitruLogForJump', () => {
     expect(result).toEqual({
       id: 300,
       pagesLocation: [{ 200: 1 }, { 300: 1 }],
+    });
+  });
+
+  test('should resolve deeply nested mobitru log via recursive nested grid fallback', async () => {
+    const fetchFn = jest
+      .fn()
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce({
+        content: [{ id: 200, hasContent: true }],
+        page: { totalPages: 1 },
+      })
+      .mockResolvedValueOnce({
+        content: [{ id: 200, hasContent: true }],
+        page: { totalPages: 1 },
+      })
+      .mockResolvedValueOnce({
+        content: [{ id: 300, hasContent: true }],
+        page: { totalPages: 1 },
+      })
+      .mockResolvedValueOnce({
+        content: [{ id: 400, level: 'mobitru' }],
+        page: { totalPages: 1 },
+      });
+
+    const result = await resolveMobitruLogForJump({
+      fetchFn,
+      projectKey: 'default_personal',
+      retryId: 100,
+      itemId: 300,
+      logId: 400,
+    });
+
+    expect(result).toEqual({
+      id: 400,
+      pagesLocation: [{ 200: 1 }, { 300: 1 }, { 400: 1 }],
+    });
+  });
+
+  test('should resolve nested log by recursion when itemId is missing', async () => {
+    const fetchFn = jest
+      .fn()
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce({
+        content: [{ id: 200, hasContent: true }],
+        page: { totalPages: 1 },
+      })
+      .mockResolvedValueOnce({
+        content: [{ id: 300, level: 'mobitru' }],
+        page: { totalPages: 1 },
+      });
+
+    const result = await resolveMobitruLogForJump({
+      fetchFn,
+      projectKey: 'default_personal',
+      retryId: 100,
+      itemId: undefined,
+      logId: 300,
+    });
+
+    expect(result).toEqual({
+      id: 300,
+      pagesLocation: [{ 200: 1 }, { 300: 1 }],
+    });
+  });
+
+  test('should resolve nested log on page two via recursive nested grid fallback', async () => {
+    const fetchFn = jest
+      .fn()
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce({
+        content: [{ id: 1 }],
+        page: { totalPages: 2 },
+      })
+      .mockResolvedValueOnce({
+        content: [{ id: 200, hasContent: true }],
+        page: { totalPages: 2 },
+      })
+      .mockResolvedValueOnce({
+        content: [{ id: 300, level: 'mobitru' }],
+        page: { totalPages: 1 },
+      });
+
+    const result = await resolveMobitruLogForJump({
+      fetchFn,
+      projectKey: 'default_personal',
+      retryId: 100,
+      itemId: undefined,
+      logId: 300,
+    });
+
+    expect(result).toEqual({
+      id: 300,
+      pagesLocation: [{ 200: 2 }, { 300: 1 }],
+    });
+  });
+
+  test('should omit caller level filters in nested grid fallback', async () => {
+    const fetchFn = jest
+      .fn()
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce({
+        content: [{ id: 200, hasContent: true }],
+        page: { totalPages: 1 },
+      })
+      .mockResolvedValueOnce({
+        content: [{ id: 300, level: 'mobitru' }],
+        page: { totalPages: 1 },
+      });
+
+    const result = await resolveMobitruLogForJump({
+      fetchFn,
+      projectKey: 'default_personal',
+      retryId: 100,
+      itemId: 200,
+      logId: 300,
+      logQuery: { 'filter.gte.level': 'error', 'page.size': 50 },
+    });
+
+    expect(result).toEqual({
+      id: 300,
+      pagesLocation: [{ 200: 1 }, { 300: 1 }],
+    });
+
+    const nestedCalls = fetchFn.mock.calls.filter(([url]) => String(url).includes('/log/nested/'));
+    expect(nestedCalls.length).toBeGreaterThan(0);
+    nestedCalls.forEach(([, options]) => {
+      expect(options.params).not.toHaveProperty('filter.gte.level');
+      expect(options.params).not.toHaveProperty('filter.eq.level');
+      expect(String(nestedCalls[0][0])).not.toContain('filter.gte.level');
     });
   });
 
@@ -179,12 +313,13 @@ describe('resolveMobitruLogForJump', () => {
     });
 
     expect(fetchFn).toHaveBeenCalledWith(
-      expect.any(String),
+      expect.stringMatching(/\/log\/locations\/search\/\d+$/),
       expect.objectContaining({
         params: expect.objectContaining({
           'page.size': 50,
           'page.sort': 'logTime,ASC',
           'filter.eq.level': 'mobitru',
+          excludeLogContent: true,
         }),
       }),
     );
@@ -209,7 +344,6 @@ describe('resolveMobitruLogForJump', () => {
   test('should propagate nested grid API errors to caller', async () => {
     const fetchFn = jest
       .fn()
-      .mockResolvedValueOnce([])
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce([])
       .mockRejectedValue(new Error('Nested grid unavailable'));
