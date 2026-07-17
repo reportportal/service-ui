@@ -62,6 +62,13 @@ export const NewLaunchFields = ({
   );
 
   const projectKey = useSelector(projectKeySelector);
+  const menuPortalRoot = document.getElementById('tooltip-root') || document.body;
+  const resolvedAutocompleteProps = {
+    useFixedPositioning: true,
+    keyMenuClassName: cx('modal-autocomplete-menu'),
+    valueMenuClassName: cx('modal-autocomplete-menu'),
+    ...autocompleteProps,
+  };
 
   const retrieveTestPlans = (value: string) =>
     URLS.testPlan(
@@ -101,8 +108,9 @@ export const NewLaunchFields = ({
       skipOptionCreation
       isDropdownMode
       minLength={0}
-      useFixedPositioning={!!testPlanMenuClassName}
-      menuClassName={testPlanMenuClassName}
+      menuClassName={cx('modal-autocomplete-menu', testPlanMenuClassName)}
+      menuPortalRoot={menuPortalRoot}
+      dropdownMatchInputWidth
     />
   );
 
@@ -164,7 +172,7 @@ export const NewLaunchFields = ({
             defaultOpen={false}
             getURIKey={getURIKey}
             getURIValue={getURIValue}
-            autocompleteProps={autocompleteProps}
+            autocompleteProps={resolvedAutocompleteProps}
             isAttributeKeyRequired
             isAttributeValueRequired
           />
