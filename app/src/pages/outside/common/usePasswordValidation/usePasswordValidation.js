@@ -34,9 +34,8 @@ const isFocusMovingToSubmit = (event) => {
  * Shared hook for password + confirm-password validation used by the
  * Registration and Change-Password forms.
  *
- * Errors are revealed only after the field is blurred or the form is submitted
- * (not while the user is actively typing). Blurring an empty field immediately
- * shows "Field is required".
+ * Errors are revealed after blur or submit. While a field is focused, its error
+ * is hidden (same pattern as other forms in the app) — not cleared on typing.
  *
  * @param {object} params
  * @param {string}   params.password           - current password field value
@@ -49,12 +48,8 @@ const isFocusMovingToSubmit = (event) => {
  *                                               passwordsDoNotMatch, requiredField)
  *
  * Returns `isPasswordSubmitReady` for the submit button:
- * - while typing in **New Password** before password validation is revealed: enabled
- *   (non-empty value), unless another field already shows an error (confirm, or
- *   optional `hasBlockingExternalError` e.g. full name);
- * - when password validation errors are visible (after blur/submit): disabled until
- *   password is fully valid and confirm matches — including when the field is
- *   re-focused with errors still showing;
+ * - while **New Password** is focused and non-empty: enabled unless confirm / another
+ *   field already shows an error;
  * - otherwise: requires non-empty password, all rules met (no spaces), and matching confirm.
  *
  * @param {boolean} [params.hasBlockingExternalError] - when true (e.g. visible Full Name
@@ -82,6 +77,7 @@ export const usePasswordValidation = ({
   const passwordFullyValid = allRulesMet && !hasSpace;
 
   const hasMismatch = confirmPassword.length > 0 && password !== confirmPassword;
+  const shouldShowPasswordValidation = showPasswordValidation && !isPasswordFocused;
   const shouldShowConfirmPasswordValidation =
     showConfirmPasswordValidation && !isConfirmPasswordFocused;
 
@@ -95,14 +91,9 @@ export const usePasswordValidation = ({
   const isPasswordSubmitReady = useMemo(() => {
     const hasOtherFieldError = !!confirmPasswordError || hasBlockingExternalError;
 
-    // While typing in password (errors not yet revealed for this field), keep Save
-    // enabled — but not if confirm / another field already shows a validation error.
-    if (
-      isPasswordFocused &&
-      password.length > 0 &&
-      !showPasswordValidation &&
-      !hasOtherFieldError
-    ) {
+    // While editing password (focused), keep Save enabled — but not if confirm /
+    // another field already shows a validation error.
+    if (isPasswordFocused && password.length > 0 && !hasOtherFieldError) {
       return true;
     }
 
@@ -116,7 +107,6 @@ export const usePasswordValidation = ({
     password,
     confirmPassword,
     passwordFullyValid,
-    showPasswordValidation,
     confirmPasswordError,
     hasBlockingExternalError,
   ]);
@@ -133,19 +123,24 @@ export const usePasswordValidation = ({
   );
 
   // Fail styling on checklist rows only when rules are unmet (not when space is the sole issue)
-  const showPasswordFailState = showPasswordValidation && !allRulesMet && password.length > 0;
+  const showPasswordFailState =
+    shouldShowPasswordValidation && !allRulesMet && password.length > 0;
 
   const passwordError = useMemo(() => {
-    if (!showPasswordValidation) return undefined;
+    if (!shouldShowPasswordValidation) return undefined;
     if (!password) return formatMessage(messages.requiredField);
     if (allRulesMet && hasSpace) return formatMessage(messages.passwordPolicySummary, { minLength });
     if (!allRulesMet) return formatMessage(messages.passwordRequirementsError);
     return undefined;
-  }, [showPasswordValidation, password, allRulesMet, hasSpace, minLength, formatMessage, messages]);
-
-  const handlePasswordChange = useCallback(() => {
-    setShowPasswordValidation(false);
-  }, []);
+  }, [
+    shouldShowPasswordValidation,
+    password,
+    allRulesMet,
+    hasSpace,
+    minLength,
+    formatMessage,
+    messages,
+  ]);
 
   const handlePasswordFocus = useCallback(() => {
     setIsPasswordFocused(true);
@@ -192,7 +187,6 @@ export const usePasswordValidation = ({
     hasMismatch,
     shouldShowConfirmPasswordValidation,
     confirmPasswordError,
-    handlePasswordChange,
     handlePasswordFocus,
     handlePasswordBlur,
     handleConfirmPasswordFocus,

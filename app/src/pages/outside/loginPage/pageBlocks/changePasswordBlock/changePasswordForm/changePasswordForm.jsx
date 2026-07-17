@@ -121,7 +121,6 @@ const ChangePasswordFormComponent = ({ handleSubmit, resetQueryParam = '' }) => 
     setShowConfirmPasswordValidation,
     setIsConfirmPasswordFocused,
     setIsPasswordFocused,
-    handlePasswordChange,
     handlePasswordFocus,
     handlePasswordBlur,
     handleConfirmPasswordFocus,
@@ -214,7 +213,6 @@ const ChangePasswordFormComponent = ({ handleSubmit, resetQueryParam = '' }) => 
             autoComplete="off"
             disabled={isLoading}
             displayError={!!passwordError}
-            onChange={handlePasswordChange}
           />
         </FieldProvider>
         <PasswordRequirementsList
