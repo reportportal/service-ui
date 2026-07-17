@@ -31,6 +31,7 @@ import { createClassnames } from 'common/utils';
 import { withModal } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
+import { MODAL_Z_INDEX } from 'common/constants/zIndex';
 import { ExtendedTestCase } from 'types/testCase';
 
 import { ButtonSwitcherOption } from 'pages/inside/common/buttonSwitcher';
@@ -166,6 +167,7 @@ const MoveTestCaseModal = reduxForm<FolderModalFormValues, MoveTestCaseModalProp
       cancelButton={cancelButton}
       allowCloseOutside={!dirty}
       onClose={hideModal}
+      zIndex={MODAL_Z_INDEX}
     >
       <form className={cx('move-test-case-modal__form')}>
         <DestinationFolderSwitch

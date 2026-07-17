@@ -24,6 +24,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction } from 'controllers/modal';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
+import { MODAL_Z_INDEX } from 'common/constants/zIndex';
 
 import { LaunchFormFields } from './launchFormFields';
 import { LaunchFormData, LaunchMode, LaunchOption, BaseLaunchModalProps } from './types';
@@ -109,6 +110,7 @@ export const BaseLaunchModal = ({
       cancelButton={cancelButton}
       allowCloseOutside={!dirty}
       onClose={() => dispatch(hideModalAction())}
+      zIndex={MODAL_Z_INDEX}
     >
       <div className={className ? `${className}__content-wrapper` : undefined}>
         <form onSubmit={trackedSubmit as (event: FormEvent) => void}>

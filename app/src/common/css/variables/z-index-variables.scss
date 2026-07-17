@@ -27,5 +27,8 @@ $Z-INDEX-HINT: 15;
 $Z-INDEX_AUTOCOMPLETE: 16;
 $Z-INDEX-OVERLAY-PANEL: 100;
 
+// ui-kit Modal above side panels (Modal uses this via MODAL_Z_INDEX in JS).
+$Z-INDEX-MODAL: 110;
+
 // Topmost app overlay — must cover modals, popups, and side panels during async operations.
-$Z-INDEX-SCREEN-LOCK: 101;
+$Z-INDEX-SCREEN-LOCK: 120;

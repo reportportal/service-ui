@@ -17,6 +17,7 @@
 import { FormEvent } from 'react';
 import { Modal } from '@reportportal/ui-kit';
 
+import { MODAL_Z_INDEX } from 'common/constants/zIndex';
 import { createClassnames } from 'common/utils';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 
@@ -25,7 +26,6 @@ import { CreateTestCaseFormData } from '../../types';
 import { useModalActions } from '../../hooks/useModalActions';
 import { BasicInformation } from '../basicInformation';
 import { TestCaseDetails } from '../testCaseDetails';
-import { MODAL_Z_INDEX } from '../constants';
 
 import styles from '../testCaseModal.scss';
 

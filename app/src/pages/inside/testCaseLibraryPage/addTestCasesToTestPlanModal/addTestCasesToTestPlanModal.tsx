@@ -29,6 +29,7 @@ import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { projectKeySelector } from 'controllers/project';
 import type { TestPlanDto } from 'controllers/testPlan/types';
+import { MODAL_Z_INDEX } from 'common/constants/zIndex';
 
 import { ADD_TO_TEST_PLAN_MODAL_FORM } from './constants';
 import { filterTestPlansByName } from './fetchMilestoneTestPlans';
@@ -111,6 +112,7 @@ export const AddTestCasesToTestPlanModal = ({
   return (
     <Modal
       title={formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
+      zIndex={MODAL_Z_INDEX}
       onClose={() => dispatch(hideModalAction())}
       okButton={{
         children: (

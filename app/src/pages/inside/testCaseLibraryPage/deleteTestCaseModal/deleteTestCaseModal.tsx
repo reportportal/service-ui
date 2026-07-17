@@ -26,6 +26,7 @@ import { UseModalData } from 'common/hooks';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
+import { MODAL_Z_INDEX } from 'common/constants/zIndex';
 import { TestCase } from 'types/testCase';
 
 import { useDeleteTestCase } from './useDeleteTestCase';
@@ -91,6 +92,7 @@ const DeleteTestCaseModalComponent = ({
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={hideModal}
+      zIndex={MODAL_Z_INDEX}
     >
       {formatMessage(messages.deleteTestCaseText, {
         b: (data) => <span className={cx('delete-test-case-modal__text--bold')}>{data}</span>,
