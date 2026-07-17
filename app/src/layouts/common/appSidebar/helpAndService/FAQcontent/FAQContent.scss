@@ -36,7 +36,13 @@
   align-items: center;
   padding: 8px 16px;
   border: none;
+  border-radius: 4px;
   width: 100%;
+  outline: none;
+
+  &:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--rp-ui-base-topaz-focused);
+  }
 
   &:hover:not(.active) {
     color: $COLOR--white-two;
@@ -89,12 +95,18 @@
     color: $COLOR--darkmode-topaz-main;
     text-decoration: none;
     cursor: pointer;
+    border-radius: 2px;
+    outline: none;
 
     svg {
       width: 16px;
       height: 16px;
       margin-left: 4px;
       transform: translateY(2px);
+    }
+
+    &:focus-visible {
+      box-shadow: inset 0 0 0 2px var(--rp-ui-base-topaz-focused);
     }
   }
 }

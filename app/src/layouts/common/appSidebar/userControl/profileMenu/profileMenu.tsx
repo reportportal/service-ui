@@ -60,7 +60,12 @@ export const ProfileMenu = ({
         {Parser(MyProfileIcon as unknown as string)}
         <FormattedMessage id={'UserBlock.profile'} defaultMessage={'My profile'} />
       </NavLink>
-      <Button className={cx('menu-item')} onClick={onClickLogout} variant="text">
+      <Button
+        className={cx('menu-item')}
+        onClick={onClickLogout}
+        variant="text"
+        adjustWidthOn="parent"
+      >
         {Parser(LogoutIcon as unknown as string)}
         <FormattedMessage id={'UserBlock.logout'} defaultMessage={'Log out'} />
       </Button>

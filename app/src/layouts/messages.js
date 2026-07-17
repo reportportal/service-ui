@@ -51,7 +51,7 @@ export const messages = defineMessages({
   },
   launches: {
     id: 'Sidebar.launchesBtn',
-    defaultMessage: 'Launches',
+    defaultMessage: 'Automated Launches',
   },
   manualLaunches: {
     id: 'Sidebar.manualLaunchesBtn',

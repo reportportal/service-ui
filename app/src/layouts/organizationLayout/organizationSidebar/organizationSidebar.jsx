@@ -121,7 +121,13 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
     level: 'organization',
   };
 
-  const createMainBlock = (openSidebar, closeSidebar, getIsSidebarCollapsed, afterOpenSidebar) => (
+  const createMainBlock = (
+    openSidebar,
+    closeSidebar,
+    getIsSidebarCollapsed,
+    afterOpenSidebar,
+    isSidebarExpanded,
+  ) => (
     <OrganizationsControlWithPopover
       closeSidebar={closeSidebar}
       isOpenPopover={isOpenOrganizationPopover}
@@ -145,6 +151,7 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
       link={link}
       titles={titles}
       isExtendedNav
+      isSidebarExpanded={isSidebarExpanded}
     />
   );
 

@@ -55,7 +55,12 @@ export const ServiceWithPopover = ({
           />
         }
       >
-        <PreviewPopover title={title} isFaqTouched={isFaqTouched} onClick={onClick} />
+        <PreviewPopover
+          title={title}
+          isFaqTouched={isFaqTouched}
+          onClick={onClick}
+          focusVariant="sidebar"
+        />
       </Popover>
     </div>
   );
