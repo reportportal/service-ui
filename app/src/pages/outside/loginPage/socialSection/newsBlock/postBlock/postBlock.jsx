@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { forwardRef } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
@@ -26,6 +27,7 @@ import styles from './postBlock.scss';
 const cx = classNames.bind(styles);
 
 const POST_CONTENT_SANITIZE_CONFIG = { ADD_ATTR: ['target', 'rel'] };
+const MAX_VISIBLE_STACK_LAYER = 2;
 
 const ensureLinkOpensInNewTab = (node) => {
   if (node.tagName === 'A') {
@@ -85,57 +87,77 @@ const formatTweetDate = (tweetData, locale) => {
   return date.toLocaleDateString(locale, { month: 'short', day: 'numeric' });
 };
 
-export const PostBlock = ({ tweetData, stackLayer, isStacked, isStackFront, stackTopOffset, isExpanded }) => {
-  const { locale } = useIntl();
-  const formattedDate = formatTweetDate(tweetData, locale);
+export const PostBlock = forwardRef(
+  (
+    {
+      tweetData = {},
+      stackLayer = null,
+      isStacked = false,
+      isStackFront = false,
+      isHidden = false,
+      isDismissing = false,
+      isPeeking = false,
+      isExpanded = false,
+      style = null,
+      onClick = null,
+    },
+    ref,
+  ) => {
+    const { locale } = useIntl();
+    const formattedDate = formatTweetDate(tweetData, locale);
+    const visibleLayer = stackLayer === null ? null : Math.min(stackLayer, MAX_VISIBLE_STACK_LAYER);
 
-  return (
-    <div
-      className={cx('post-block', {
-        'post-block--stacked': isStacked && stackLayer !== null,
-        'post-block--stack-front': isStacked && isStackFront,
-        'post-block--stack-back': isStacked && !isStackFront,
-        [`post-block--stack-layer-${stackLayer}`]: isStacked && stackLayer !== null,
-        'post-block--expanded': isExpanded,
-      })}
-      style={stackTopOffset !== null ? { top: `${stackTopOffset}px` } : undefined}
-    >
-      <div className={cx('post-header')}>
-        <div className={cx('post-avatar')} />
-        <div className={cx('post-meta')}>
-          <div className={cx('post-author')}>
-            <span className={cx('post-name')}>ReportPortal.io</span>
-            <span className={cx('post-handle')}>@ReportPortal.io</span>
-            {formattedDate && (
-              <>
-                <span className={cx('post-separator')}>•</span>
-                <span className={cx('post-date')}>{formattedDate}</span>
-              </>
-            )}
+    return (
+      <div
+        ref={ref}
+        className={cx('post-block', {
+          'post-block--stacked': isStacked && stackLayer !== null,
+          'post-block--stack-front': isStacked && isStackFront,
+          'post-block--stack-back': isStacked && !isStackFront,
+          [`post-block--stack-layer-${visibleLayer}`]:
+            isStacked && visibleLayer !== null && !isHidden,
+          'post-block--stack-hidden': isStacked && isHidden,
+          'post-block--dismissing': isDismissing,
+          'post-block--peeking': isPeeking,
+          'post-block--expanded': isExpanded,
+        })}
+        style={style}
+        onClick={onClick}
+      >
+        <div className={cx('post-header')}>
+          <div className={cx('post-avatar')} />
+          <div className={cx('post-meta')}>
+            <div className={cx('post-author')}>
+              <span className={cx('post-name')}>ReportPortal.io</span>
+              <span className={cx('post-handle')}>@ReportPortal.io</span>
+              {formattedDate && (
+                <>
+                  <span className={cx('post-separator')}>•</span>
+                  <span className={cx('post-date')}>{formattedDate}</span>
+                </>
+              )}
+            </div>
           </div>
         </div>
+        <div className={cx('post-content')}>
+          {Parser(sanitizePostContent(getPostContent(tweetData.text)))}
+        </div>
       </div>
-      <div className={cx('post-content')}>
-        {Parser(sanitizePostContent(getPostContent(tweetData.text)))}
-      </div>
-    </div>
-  );
-};
+    );
+  },
+);
+
+PostBlock.displayName = 'PostBlock';
 
 PostBlock.propTypes = {
   tweetData: PropTypes.object,
   stackLayer: PropTypes.number,
   isStacked: PropTypes.bool,
   isStackFront: PropTypes.bool,
-  stackTopOffset: PropTypes.number,
+  isHidden: PropTypes.bool,
+  isDismissing: PropTypes.bool,
+  isPeeking: PropTypes.bool,
   isExpanded: PropTypes.bool,
-};
-
-PostBlock.defaultProps = {
-  tweetData: {},
-  stackLayer: null,
-  isStacked: false,
-  isStackFront: false,
-  stackTopOffset: null,
-  isExpanded: false,
+  style: PropTypes.object,
+  onClick: PropTypes.func,
 };
