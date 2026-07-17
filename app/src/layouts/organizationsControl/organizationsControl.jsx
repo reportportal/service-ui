@@ -51,20 +51,18 @@ export const OrganizationsControl = ({
             })}
           >
             {isExtendedNav ? (
-              <>
-                <NavLink
-                  to={link}
-                  className={cx('organization-btn')}
-                  tabIndex={isSidebarExpanded ? 0 : -1}
-                  onClick={() => {
-                    closeSidebar();
-                    trackEvent(SIDEBAR_EVENTS.onClickLevelHigher(titles.level));
-                  }}
-                >
-                  <i className={cx('arrow-icon')}>{Parser(ArrowLeftIcon)}</i>
-                  <div className={cx('top-title')}>{titles.topTitle}</div>
-                </NavLink>
-              </>
+              <NavLink
+                to={link}
+                className={cx('organization-btn')}
+                tabIndex={isSidebarExpanded ? 0 : -1}
+                onClick={() => {
+                  closeSidebar();
+                  trackEvent(SIDEBAR_EVENTS.onClickLevelHigher(titles.level));
+                }}
+              >
+                <i className={cx('arrow-icon')}>{Parser(ArrowLeftIcon)}</i>
+                <div className={cx('top-title')}>{titles.topTitle}</div>
+              </NavLink>
             ) : (
               <div className={cx('extended-top-title')}>{titles.topTitle}</div>
             )}

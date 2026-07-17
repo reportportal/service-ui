@@ -164,6 +164,7 @@
 
 .top-title {
   @include truncate(100%);
+
   min-width: 0;
   text-align: start;
   font-size: 11px;
@@ -180,6 +181,7 @@
 
 .bottom-title {
   @include truncate(100%);
+
   color: var(--rp-ui-base-dark-e-100);
   font-size: 13px;
   font-family: var(--rp-ui-base-font-family);
