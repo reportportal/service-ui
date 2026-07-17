@@ -17,10 +17,11 @@
 import { URLS } from 'common/urls';
 import { omit } from 'common/utils/omit';
 import { LOG_LEVEL_FILTER_KEY, LOG_MESSAGE_FILTER_KEY } from 'controllers/log/constants';
-import { PAGE_KEY } from 'controllers/pagination';
+import { PAGINATION_OFFSET } from 'controllers/log/nestedSteps/constants';
+import { DEFAULT_PAGE_SIZE, PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 
-const LOCATIONS_PAGE_SIZE = 300;
 const LEVEL_FILTER_KEYS = [LOG_LEVEL_FILTER_KEY, 'filter.eq.level'];
+const NESTED_QUERY_OMIT_KEYS = [...LEVEL_FILTER_KEYS, PAGE_KEY, SIZE_KEY];
 
 const LOCATION_QUERY_VARIANTS = [
   { 'filter.eq.level': 'mobitru' },
@@ -33,8 +34,11 @@ const findLogInLocationsPage = (content, logId) =>
 const buildLocationQueryParams = (logQuery = {}) =>
   omit(logQuery, [LOG_MESSAGE_FILTER_KEY, PAGE_KEY]);
 
+const getRootPageSize = (logQueryParams = {}) =>
+  Number(logQueryParams[SIZE_KEY]) || DEFAULT_PAGE_SIZE;
+
 const buildNestedGridQueryParams = (logQueryParams = {}) =>
-  omit(logQueryParams, LEVEL_FILTER_KEYS);
+  omit(logQueryParams, NESTED_QUERY_OMIT_KEYS);
 
 const normalizePageResponse = (response) => {
   if (Array.isArray(response)) {
@@ -51,8 +55,8 @@ const fetchLocationsPage = ({ fetchFn, url, page, logQueryParams, extraParams })
   fetchFn(url, {
     params: {
       excludeLogContent: true,
-      'page.size': logQueryParams['page.size'] || LOCATIONS_PAGE_SIZE,
-      'page.page': page,
+      [SIZE_KEY]: getRootPageSize(logQueryParams),
+      [PAGE_KEY]: page,
       ...logQueryParams,
       ...extraParams,
     },
@@ -122,14 +126,20 @@ const searchWithQueryVariants = async ({
   });
 };
 
-const fetchNestedLogsPage = async ({ fetchFn, projectKey, parentItemId, logQueryParams, page }) => {
+const fetchNestedLogsPage = async ({
+  fetchFn,
+  projectKey,
+  parentItemId,
+  logQueryParams,
+  page,
+  pageSize,
+}) => {
   const nestedQueryParams = buildNestedGridQueryParams(logQueryParams);
-  const pageSize = nestedQueryParams['page.size'] || LOCATIONS_PAGE_SIZE;
   const response = await fetchFn(URLS.logItems(projectKey, parentItemId), {
     params: {
       ...nestedQueryParams,
-      'page.size': pageSize,
-      'page.page': page,
+      [SIZE_KEY]: pageSize,
+      [PAGE_KEY]: page,
     },
   });
 
@@ -142,6 +152,7 @@ const findItemPageInNestedLogs = async ({
   parentItemId,
   targetId,
   logQueryParams,
+  pageSize,
   page = 1,
   totalPages = 1,
 }) => {
@@ -155,6 +166,7 @@ const findItemPageInNestedLogs = async ({
     parentItemId,
     logQueryParams,
     page,
+    pageSize,
   });
   const isFound = content.some((item) => +item.id === +targetId);
 
@@ -168,6 +180,7 @@ const findItemPageInNestedLogs = async ({
     parentItemId,
     targetId,
     logQueryParams,
+    pageSize,
     page: page + 1,
     totalPages: pageInfo?.totalPages || 1,
   });
@@ -199,6 +212,7 @@ const searchNestedStepsSequentially = ({
     logId,
     logQueryParams,
     pathPrefix: [...pathPrefix, { [step.id]: page }],
+    pageSize: PAGINATION_OFFSET,
     visitedItemIds,
   }).then((nestedResult) => {
     if (nestedResult) {
@@ -226,6 +240,7 @@ const findLogPathRecursively = async ({
   logId,
   logQueryParams,
   pathPrefix = [],
+  pageSize,
   page = 1,
   totalPages = 1,
   visitedItemIds = new Set(),
@@ -247,6 +262,7 @@ const findLogPathRecursively = async ({
     parentItemId,
     logQueryParams,
     page,
+    pageSize,
   });
 
   if (content.some((item) => +item.id === +logId)) {
@@ -278,6 +294,7 @@ const findLogPathRecursively = async ({
     logId,
     logQueryParams,
     pathPrefix,
+    pageSize,
     page: page + 1,
     totalPages: pageInfo?.totalPages || 1,
     visitedItemIds,
@@ -292,6 +309,8 @@ const resolveMobitruLogFromNestedGrid = async ({
   logId,
   logQueryParams,
 }) => {
+  const rootPageSize = getRootPageSize(logQueryParams);
+
   if (itemId != null && +itemId === +retryId) {
     const logPage = await findItemPageInNestedLogs({
       fetchFn,
@@ -299,6 +318,7 @@ const resolveMobitruLogFromNestedGrid = async ({
       parentItemId: retryId,
       targetId: logId,
       logQueryParams,
+      pageSize: rootPageSize,
     });
 
     if (logPage) {
@@ -313,6 +333,7 @@ const resolveMobitruLogFromNestedGrid = async ({
       parentItemId: retryId,
       targetId: itemId,
       logQueryParams,
+      pageSize: rootPageSize,
     });
 
     if (stepPage) {
@@ -322,6 +343,7 @@ const resolveMobitruLogFromNestedGrid = async ({
         parentItemId: itemId,
         targetId: logId,
         logQueryParams,
+        pageSize: PAGINATION_OFFSET,
       });
 
       if (logPage) {
@@ -339,6 +361,7 @@ const resolveMobitruLogFromNestedGrid = async ({
     parentItemId: retryId,
     logId,
     logQueryParams,
+    pageSize: rootPageSize,
   });
 };
 
@@ -353,18 +376,7 @@ export const resolveMobitruLogForJump = async ({
   const url = URLS.searchLogs(projectKey, retryId).split('?')[0];
   const logQueryParams = buildLocationQueryParams(logQuery);
 
-  const logInfoFromLocations = await searchWithQueryVariants({
-    fetchFn,
-    url,
-    logId,
-    logQueryParams,
-  });
-
-  if (logInfoFromLocations) {
-    return logInfoFromLocations;
-  }
-
-  return resolveMobitruLogFromNestedGrid({
+  const nestedResult = await resolveMobitruLogFromNestedGrid({
     fetchFn,
     projectKey,
     retryId,
@@ -372,4 +384,17 @@ export const resolveMobitruLogForJump = async ({
     logId,
     logQueryParams,
   });
+
+  if (nestedResult) {
+    return nestedResult;
+  }
+
+  const logInfoFromLocations = await searchWithQueryVariants({
+    fetchFn,
+    url,
+    logId,
+    logQueryParams,
+  });
+
+  return logInfoFromLocations;
 };
