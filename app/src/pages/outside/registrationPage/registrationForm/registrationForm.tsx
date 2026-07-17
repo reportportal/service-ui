@@ -157,7 +157,7 @@ const RegistrationFormComponent = ({
   }, []);
 
   const shouldValidateName =
-    submitAttempted || showNameValidation || (!isNameFocused && name.length > 0);
+    !isNameFocused && (submitAttempted || showNameValidation || name.length > 0);
 
   const nameError = useMemo(() => {
     if (!shouldValidateName) return undefined;
@@ -183,7 +183,6 @@ const RegistrationFormComponent = ({
     setShowConfirmPasswordValidation,
     setIsConfirmPasswordFocused,
     setIsPasswordFocused,
-    handlePasswordChange,
     handlePasswordFocus,
     handlePasswordBlur,
     handleConfirmPasswordFocus,
@@ -207,10 +206,6 @@ const RegistrationFormComponent = ({
   const handleNameBlur = useCallback(() => {
     setIsNameFocused(false);
     setShowNameValidation(true);
-  }, []);
-
-  const handleNameChange = useCallback(() => {
-    setShowNameValidation(false);
   }, []);
 
   const capsLockMessage = formatMessage(messages.capsLockOn);
@@ -249,7 +244,6 @@ const RegistrationFormComponent = ({
             defaultWidth={false}
             displayError={!!nameError}
             disabled={loading}
-            onChange={handleNameChange}
           />
         </FieldProvider>
       </div>
@@ -274,7 +268,6 @@ const RegistrationFormComponent = ({
             disabled={loading}
             displayError={!!passwordError}
             capsLockMessage={capsLockMessage}
-            onChange={handlePasswordChange}
           />
         </FieldProvider>
         <PasswordRequirementsList
