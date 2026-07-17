@@ -17,4 +17,5 @@
 // Keep in sync with app/src/common/css/variables/z-index-variables.scss
 export const OVERLAY_PANEL_Z_INDEX = 100 as const;
 export const MODAL_Z_INDEX = 110 as const;
+export const MODAL_POPUP_Z_INDEX = 111 as const;
 export const SCREEN_LOCK_Z_INDEX = 120 as const;

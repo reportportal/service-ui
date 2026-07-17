@@ -28,6 +28,10 @@
   margin-top: 16px;
 }
 
+.modal-autocomplete-menu {
+  z-index: $Z-INDEX-MODAL-POPUP;
+}
+
 .description-field {
   margin-top: 16px;
 

@@ -36,6 +36,7 @@ const cx = createClassnames(styles);
 export const ExistingLaunchFields = ({ onLaunchSelect }: ExistingLaunchFieldsProps) => {
   const { formatMessage } = useIntl();
   const projectKey = useSelector(projectKeySelector);
+  const menuPortalRoot = document.getElementById('tooltip-root') || document.body;
 
   const retrieveLaunches = (value: string) =>
     URLS.manualLaunchesListPagination(
@@ -57,7 +58,6 @@ export const ExistingLaunchFields = ({ onLaunchSelect }: ExistingLaunchFieldsPro
   const renderLaunchField = ({ input }: WrappedFieldProps) => {
     return (
       <AsyncAutocompleteV2
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         value={input.value}
         name={input.name}
         onBlur={input.onBlur}
@@ -73,6 +73,9 @@ export const ExistingLaunchFields = ({ onLaunchSelect }: ExistingLaunchFieldsPro
         minLength={0}
         limitOptions={PAGE_SIZE}
         limitationText={formatMessage(messages.tooManyLaunchesResult)}
+        menuClassName={cx('modal-autocomplete-menu')}
+        menuPortalRoot={menuPortalRoot}
+        dropdownMatchInputWidth
       />
     );
   };
