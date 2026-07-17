@@ -14,4 +14,7 @@
  * limitations under the License.
  */
 
-export const REMOVE_TEST_CASES_FROM_TEST_PLAN_MODAL_KEY = 'removeTestCasesFromTestPlanModalKey';
+// Keep in sync with app/src/common/css/variables/z-index-variables.scss
+export const OVERLAY_PANEL_Z_INDEX = 100 as const;
+export const MODAL_Z_INDEX = 110 as const;
+export const SCREEN_LOCK_Z_INDEX = 120 as const;

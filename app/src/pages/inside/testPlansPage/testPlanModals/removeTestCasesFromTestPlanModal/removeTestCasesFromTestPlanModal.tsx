@@ -28,7 +28,8 @@ import { useModalButtons } from 'hooks/useModalButtons';
 
 import { useRemoveTestCasesFromTestPlan } from './useRemoveTestCasesFromTestPlan';
 import { removeTestCasesFromTestPlanMessages } from './messages';
-import { REMOVE_TEST_CASES_FROM_TEST_PLAN_MODAL_KEY, MODAL_Z_INDEX } from './constants';
+import { MODAL_Z_INDEX } from 'common/constants/zIndex';
+import { REMOVE_TEST_CASES_FROM_TEST_PLAN_MODAL_KEY } from './constants';
 import { RemoveTestCasesFromTestPlanModalProps } from './types';
 
 import styles from './removeTestCasesFromTestPlanModal.scss';
