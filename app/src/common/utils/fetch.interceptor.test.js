@@ -113,78 +113,15 @@ describe('initAuthInterceptor', () => {
     expect(store.dispatch).not.toHaveBeenCalled();
   });
 
-  test('marks API unavailable on api info gateway error', async () => {
-    axiosMock.onGet('/api/info').reply(503);
-
-    await expect(axios.get('/api/info')).rejects.toBeTruthy();
-
-    expect(store.dispatch).toHaveBeenCalledWith({
-      type: 'setServiceAvailability',
-      payload: {
-        checked: true,
-        apiUnavailable: true,
-      },
-    });
-  });
-
-  test('marks API unavailable on api info internal server error', async () => {
-    axiosMock.onGet('/api/info').reply(500);
-
-    await expect(axios.get('/api/info')).rejects.toBeTruthy();
-
-    expect(store.dispatch).toHaveBeenCalledWith({
-      type: 'setServiceAvailability',
-      payload: {
-        checked: true,
-        apiUnavailable: true,
-      },
-    });
-  });
-
-  test('marks API unavailable on api info request timeout', async () => {
-    axiosMock.onGet('/api/info').reply(408);
-
-    await expect(axios.get('/api/info')).rejects.toBeTruthy();
-
-    expect(store.dispatch).toHaveBeenCalledWith({
-      type: 'setServiceAvailability',
-      payload: {
-        checked: true,
-        apiUnavailable: true,
-      },
-    });
-  });
-
-  test('marks API unavailable on api info rate limiting', async () => {
-    axiosMock.onGet('/api/info').reply(429);
-
-    await expect(axios.get('/api/info')).rejects.toBeTruthy();
-
-    expect(store.dispatch).toHaveBeenCalledWith({
-      type: 'setServiceAvailability',
-      payload: {
-        checked: true,
-        apiUnavailable: true,
-      },
-    });
-  });
-
-  test('marks API unavailable on api info bad gateway error', async () => {
-    axiosMock.onGet('/api/info').reply(502);
-
-    await expect(axios.get('/api/info')).rejects.toBeTruthy();
-
-    expect(store.dispatch).toHaveBeenCalledWith({
-      type: 'setServiceAvailability',
-      payload: {
-        checked: true,
-        apiUnavailable: true,
-      },
-    });
-  });
-
-  test('marks API unavailable on api info gateway timeout', async () => {
-    axiosMock.onGet('/api/info').reply(504);
+  test.each([
+    { status: 503, label: 'gateway error' },
+    { status: 500, label: 'internal server error' },
+    { status: 408, label: 'request timeout' },
+    { status: 429, label: 'rate limiting' },
+    { status: 502, label: 'bad gateway error' },
+    { status: 504, label: 'gateway timeout' },
+  ])('marks API unavailable on api info $label', async ({ status }) => {
+    axiosMock.onGet('/api/info').reply(status);
 
     await expect(axios.get('/api/info')).rejects.toBeTruthy();
 
