@@ -25,7 +25,7 @@ import {
   serviceAvailabilitySelector,
   LAST_VISITED_PATH_STORAGE_KEY,
 } from 'controllers/initialData';
-import { getSessionItem, removeSessionItem } from 'common/utils';
+import { removeSessionItem } from 'common/utils';
 import { ServiceUnavailableScreen } from './serviceUnavailableScreen';
 
 @connect(
@@ -62,28 +62,15 @@ export class InitialDataContainer extends Component {
   componentDidUpdate(prevProps) {
     if (
       prevProps.isInitialDataReady !== this.props.isInitialDataReady &&
-      this.props.isInitialDataReady
+      this.props.isInitialDataReady &&
+      !this.props.serviceAvailability.apiUnavailable
     ) {
       this.props.initialDispatch();
     }
   }
 
   refreshPage = () => {
-    const storedLastPath = getSessionItem(LAST_VISITED_PATH_STORAGE_KEY);
     removeSessionItem(LAST_VISITED_PATH_STORAGE_KEY);
-
-    const currentPath = window.location.hash.replace(/^#/, '');
-    const fallbackPath = currentPath.startsWith('/') ? currentPath : '/login';
-    const targetPath =
-      typeof storedLastPath === 'string' && storedLastPath.startsWith('/')
-        ? storedLastPath
-        : fallbackPath;
-    const normalizedHash = targetPath.startsWith('#') ? targetPath : `#${targetPath}`;
-
-    if (window.location.hash !== normalizedHash) {
-      window.location.hash = normalizedHash;
-    }
-
     window.location.reload();
   };
 
