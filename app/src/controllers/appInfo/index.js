@@ -42,7 +42,7 @@ export {
   tmsEnabledSelector,
   passwordMinLengthSelector,
 } from './selectors';
-export { serverSettingsSagas } from './sagas';
+export { serverSettingsSagas, appInfoSagas } from './sagas';
 export {
   ANALYTICS_ALL_KEY,
   SERVER_SESSION_EXPIRATION_KEY,

@@ -61,7 +61,6 @@ const VersionsOfConnectedServices = ({ data: { latestServiceVersions, analyticsC
 
     const versionsServicesNames = {
       api: 'API Service',
-      index: 'Index Service',
       jobs: 'Jobs Service',
       ui: 'Service UI',
     };

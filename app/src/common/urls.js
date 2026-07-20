@@ -22,11 +22,11 @@ export const API_PATH = '/api';
 
 export const DEFAULT_API_URL_PREFIX = '../api/v1';
 export const DEFAULT_COMMON_API_URL_PREFIX = '../api';
-export const COMPOSITE_API_URL_PREFIX = '../composite/';
+export const UI_INFO_URL_PREFIX = '../ui/';
 
 const urlBase = `${DEFAULT_API_URL_PREFIX}/`;
 const urlCommonBase = `${DEFAULT_COMMON_API_URL_PREFIX}/`;
-const compositeBase = COMPOSITE_API_URL_PREFIX;
+const uiInfoBase = UI_INFO_URL_PREFIX;
 const getQueryParams = (paramsObj, options = {}) =>
   stringify(paramsObj, { addQueryPrefix: true, ...options });
 const removeTrailingSlash = (url) => (url.endsWith('/') ? url.slice(0, -1) : url);
@@ -340,7 +340,8 @@ export const URLS = {
       ...createFilterQuery(filterEntities),
     })}`,
 
-  appInfo: () => `${compositeBase}info`,
+  appInfoApi: () => `${urlCommonBase}info`,
+  appInfoUi: () => `${uiInfoBase}info`,
 
   plugin: () => `${urlBase}plugin`,
   pluginById: (pluginId) => `${urlBase}plugin/${pluginId}`,
