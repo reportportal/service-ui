@@ -48,6 +48,11 @@ export type TmsTestPlanInMilestoneRS = {
   name: string;
   description?: string;
   milestoneId?: number;
+  attributes?: {
+    id: number;
+    key: string;
+    value: string;
+  }[];
   executionStatistic: {
     covered: number;
     total: number;

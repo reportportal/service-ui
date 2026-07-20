@@ -12,6 +12,7 @@ export const milestoneTestPlansAsTestPlanDtos = (
     name: plan.name,
     description: plan.description,
     milestoneId: plan.milestoneId ?? milestoneId,
+    attributes: plan.attributes ?? [],
     executionStatistic: {
       covered: plan.executionStatistic?.covered ?? 0,
       total: plan.executionStatistic?.total ?? 0,
