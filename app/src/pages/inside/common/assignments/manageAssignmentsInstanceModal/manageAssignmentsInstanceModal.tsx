@@ -62,6 +62,7 @@ import {
 } from 'controllers/instance/organizations';
 import { ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/allUsersPage';
 import { ApiError } from 'types/api';
+import { fetchUserInfoAction, idSelector } from 'controllers/user';
 
 import styles from './manageAssignmentsInstanceModal.scss';
 
@@ -107,6 +108,8 @@ const ManageAssignmentsInstanceModalView = ({
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
+  const currentUserId = useSelector(idSelector) as number;
+  const isCurrentUser = currentUserId === user.id;
 
   const [isSavingAssignments, setIsSavingAssignments] = useState(false);
   const [organizationsLoading, setOrganizationsLoading] = useState(false);
@@ -316,6 +319,14 @@ const ManageAssignmentsInstanceModalView = ({
         return;
       }
 
+      const handleSuccess = () => {
+        if (isCurrentUser) {
+          dispatch(fetchUserInfoAction());
+        }
+        onSuccess?.();
+        dispatch(hideModalAction());
+      };
+
       if (someFailed) {
         const failedOrgNames = failedNames.filter(Boolean).join(', ');
         dispatch(
@@ -325,8 +336,7 @@ const ManageAssignmentsInstanceModalView = ({
             }),
           }),
         );
-        onSuccess?.();
-        dispatch(hideModalAction());
+        handleSuccess();
         return;
       }
 
@@ -335,8 +345,7 @@ const ManageAssignmentsInstanceModalView = ({
           message: formatMessage(messages.assignmentUpdatedSuccess, { name: user.fullName }),
         }),
       );
-      onSuccess?.();
-      dispatch(hideModalAction());
+      handleSuccess();
     } finally {
       setIsSavingAssignments(false);
     }

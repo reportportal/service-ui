@@ -29,7 +29,7 @@ import { useTracking } from 'react-tracking';
 import { createClassnames, referenceDictionary } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ExternalLink } from 'pages/inside/common/externalLink';
-import { idSelector } from 'controllers/user';
+import { fetchUserInfoAction, idSelector } from 'controllers/user';
 import {
   fetchUserAssignmentsAction,
   unassignFromOrganizationAction,
@@ -166,6 +166,9 @@ const ManageAssignmentsOrganizationModalView = ({
         user.id,
         payload,
         () => {
+          if (isCurrentUser) {
+            dispatch(fetchUserInfoAction());
+          }
           resetModalState();
           dispatch(hideModalAction());
         },
