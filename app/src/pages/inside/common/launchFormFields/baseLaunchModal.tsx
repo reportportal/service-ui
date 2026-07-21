@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { FormEvent, MouseEvent, useState, useCallback } from 'react';
+import { FormEvent, MouseEvent, useState, useCallback, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { InjectedFormProps } from 'redux-form';
@@ -26,6 +26,7 @@ import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { MODAL_Z_INDEX } from 'common/constants/zIndex';
 
+import { getIsManualCovered } from '../testCaseList/utils';
 import { LaunchFormFields } from './launchFormFields';
 import { LaunchFormData, LaunchMode, LaunchOption, BaseLaunchModalProps } from './types';
 import { useCreateManualLaunch } from './useCreateManualLaunch';
@@ -61,6 +62,13 @@ export const BaseLaunchModal = ({
     folderId,
     onClearSelection,
     onSubmitSuccess,
+  );
+
+  const areAllTestCasesCovered = useMemo(
+    () =>
+      testCases.length > 0 &&
+      testCases.every((tc) => getIsManualCovered(tc.lastExecution?.status)),
+    [testCases],
   );
 
   const isSubmitDisabled =
@@ -121,6 +129,7 @@ export const BaseLaunchModal = ({
               onLaunchSelect={setSelectedLaunch}
               description={description}
               isUncoveredTestsCheckboxAvailable={isUncoveredTestsCheckboxAvailable}
+              areAllTestCasesCovered={areAllTestCasesCovered}
               hideTestPlanField={hideTestPlanField}
             />
           </div>

@@ -49,6 +49,10 @@ export const messages = defineMessages({
     id: 'LaunchFormFields.addOnlyUncoveredTestCases',
     defaultMessage: 'Add only uncovered test cases',
   },
+  allTestCasesAlreadyCovered: {
+    id: 'LaunchFormFields.allTestCasesAlreadyCovered',
+    defaultMessage: 'All test cases within the Test Plan are already covered',
+  },
   addTestCasesFromTestPlan: {
     id: 'LaunchFormFields.addTestCasesFromTestPlan',
     defaultMessage:
