@@ -76,6 +76,7 @@ export interface LaunchFormFieldsProps {
   onLaunchSelect?: OnLaunchChangeHandler;
   description?: ReactNode;
   isUncoveredTestsCheckboxAvailable?: boolean;
+  areAllTestCasesCovered?: boolean;
   hideTestPlanField?: boolean;
 }
 

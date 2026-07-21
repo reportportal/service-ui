@@ -19,7 +19,9 @@ import { useIntl } from 'react-intl';
 import { Field, WrappedFieldProps } from 'redux-form';
 
 import { createClassnames } from 'common/utils';
+import { MODAL_POPUP_Z_INDEX } from 'common/constants/zIndex';
 import { ButtonSwitcher } from 'pages/inside/common/buttonSwitcher';
+import { ConditionalTooltip } from 'components/main/conditionalTooltip';
 import { Checkbox } from '@reportportal/ui-kit';
 
 import { LaunchFormFieldsProps, LaunchMode } from './types';
@@ -38,11 +40,16 @@ export const LaunchFormFields = ({
   onLaunchSelect,
   description,
   isUncoveredTestsCheckboxAvailable = true,
+  areAllTestCasesCovered = false,
   hideTestPlanField = false,
 }: LaunchFormFieldsProps) => {
   const { formatMessage } = useIntl();
 
   const isExistingMode = activeMode === LaunchMode.EXISTING;
+  const tooltipRoot = document.getElementById('tooltip-root');
+  const allCoveredTooltipContent = areAllTestCasesCovered
+    ? formatMessage(messages.allTestCasesAlreadyCovered)
+    : null;
 
   const handleModeChange = (mode: string) => {
     if (onModeChange) {
@@ -52,15 +59,24 @@ export const LaunchFormFields = ({
 
   const renderUncoveredTestsCheckbox = useCallback(
     ({ input }: WrappedFieldProps) => (
-      <Checkbox
-        value={Boolean(input.value)}
-        onChange={(e: ChangeEvent<HTMLInputElement>) => input.onChange(e.target.checked)}
-        className={cx('checkbox')}
+      <ConditionalTooltip
+        content={allCoveredTooltipContent}
+        placement="top"
+        wrapperClassName={cx('checkbox-tooltip-wrapper')}
+        zIndex={MODAL_POPUP_Z_INDEX}
+        portalRoot={tooltipRoot}
       >
-        {formatMessage(messages.addOnlyUncoveredTestCases)}
-      </Checkbox>
+        <Checkbox
+          value={areAllTestCasesCovered ? false : Boolean(input.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => input.onChange(e.target.checked)}
+          className={cx('checkbox')}
+          disabled={areAllTestCasesCovered}
+        >
+          {formatMessage(messages.addOnlyUncoveredTestCases)}
+        </Checkbox>
+      </ConditionalTooltip>
     ),
-    [formatMessage],
+    [allCoveredTooltipContent, areAllTestCasesCovered, formatMessage, tooltipRoot],
   );
 
   return (

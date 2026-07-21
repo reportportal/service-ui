@@ -28,6 +28,7 @@ import { showErrorNotification, showSuccessNotification } from 'controllers/noti
 import { foldersSelector } from 'controllers/testCase';
 import { getAllSubfolderIds } from 'common/utils/folderUtils';
 
+import { getIsManualCovered } from 'pages/inside/common/testCaseList/utils';
 import { CreateManualLaunchDto, isLaunchObject, LaunchFormData, LaunchMode } from './types';
 import { ExtendedTestCase } from 'types/testCase';
 import { ManualLaunchItem } from 'pages/inside/manualLaunchesPage/types';
@@ -86,7 +87,9 @@ export const useCreateManualLaunch = (
       }
 
       const addedTestCases = formValues.uncoveredTestsOnly
-        ? submitTestCases.filter((testCase) => !testCase.lastExecution)
+        ? submitTestCases.filter(
+            (testCase) => !getIsManualCovered(testCase.lastExecution?.status),
+          )
         : submitTestCases;
 
       const testCaseIds = addedTestCases.map((testCase) => testCase.id);
