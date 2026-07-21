@@ -730,14 +730,13 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
     <div className={cx('news-block', { 'news-block--expanded': isExpanded })}>
       {!isEmptied && (
         // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
-        <div
+        <section
           ref={deckRef}
           className={cx('posts-stack', {
             'posts-stack--stacked': isStacked,
             'posts-stack--expanded': isExpanded,
             'posts-stack--dragging': isDragging,
           })}
-          role="region"
           aria-roledescription="carousel"
           aria-label={formatMessage(messages.deckLabel)}
           // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
@@ -789,7 +788,7 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
               />
             );
           })}
-        </div>
+        </section>
       )}
       {isEmptied && (
         <div className={cx('empty-state')}>
