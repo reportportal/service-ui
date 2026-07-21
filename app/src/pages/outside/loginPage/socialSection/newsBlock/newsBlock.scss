@@ -78,15 +78,21 @@ $stack-speed: 420ms;
   }
 
   &--expanded {
-    flex: 1;
-    min-height: 0;
     width: 100%;
     max-width: 479px;
-    overflow-y: auto;
+    min-height: 100%;
     padding-top: 0;
     align-content: end;
     touch-action: auto;
+    box-sizing: border-box;
   }
+}
+
+.posts-scroll {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  max-width: 479px;
 }
 
 .deck-controls {

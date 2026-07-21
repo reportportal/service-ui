@@ -20,6 +20,7 @@ import PropTypes from 'prop-types';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import styles from './newsBlock.scss';
 import { PostBlock } from './postBlock';
 
@@ -726,70 +727,78 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
     onExpandedChange?.(nextExpanded);
   };
 
+  const postsStack = (
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+    <section
+      ref={deckRef}
+      className={cx('posts-stack', {
+        'posts-stack--stacked': isStacked,
+        'posts-stack--expanded': isExpanded,
+        'posts-stack--dragging': isDragging,
+      })}
+      aria-roledescription="carousel"
+      aria-label={formatMessage(messages.deckLabel)}
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+      tabIndex={hasNews ? 0 : -1}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerCancel}
+      onClick={handleDeckClick}
+      onKeyDown={handleKeyDown}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      {visibleTweets.map((tweet, index) => {
+        const layer = layerByCard[index];
+        const isInStack = layer !== undefined;
+        const isDismissingThis = dismissingCard?.index === index;
+        let effectiveLayer = null;
+        if (isInStack) {
+          effectiveLayer = layer;
+        } else if (isDismissingThis) {
+          effectiveLayer = 0;
+        }
+        let style;
+        if (hiddenCards.includes(index)) {
+          style = { display: 'none' };
+        } else if (isDismissingThis) {
+          style = { top: `${dismissingCard.top}px` };
+        } else if (!isExpanded && isInStack && order.length > 1) {
+          style = { top: `${getLayerTop(Math.min(layer, MAX_VISIBLE_LAYERS), maxLayer)}px` };
+        }
+
+        return (
+          <PostBlock
+            key={getTweetKey(tweet, index)}
+            ref={(node) => {
+              cardRefs.current[index] = node;
+            }}
+            tweetData={tweet}
+            stackLayer={effectiveLayer}
+            isStacked={isStacked || isDismissingThis}
+            isStackFront={effectiveLayer === 0}
+            isHidden={isInStack && layer > MAX_VISIBLE_LAYERS}
+            isDismissing={isDismissingThis || demotingCard === index}
+            isPeeking={peekingCard === index}
+            isExpanded={isExpanded}
+            style={style}
+          />
+        );
+      })}
+    </section>
+  );
+
   return (
     <div className={cx('news-block', { 'news-block--expanded': isExpanded })}>
-      {!isEmptied && (
-        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
-        <section
-          ref={deckRef}
-          className={cx('posts-stack', {
-            'posts-stack--stacked': isStacked,
-            'posts-stack--expanded': isExpanded,
-            'posts-stack--dragging': isDragging,
-          })}
-          aria-roledescription="carousel"
-          aria-label={formatMessage(messages.deckLabel)}
-          // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
-          tabIndex={hasNews ? 0 : -1}
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
-          onPointerCancel={handlePointerCancel}
-          onClick={handleDeckClick}
-          onKeyDown={handleKeyDown}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
-        >
-          {visibleTweets.map((tweet, index) => {
-            const layer = layerByCard[index];
-            const isInStack = layer !== undefined;
-            const isDismissingThis = dismissingCard?.index === index;
-            // a card that is flying out keeps its front-card geometry
-            let effectiveLayer = null;
-            if (isInStack) {
-              effectiveLayer = layer;
-            } else if (isDismissingThis) {
-              effectiveLayer = 0;
-            }
-            let style;
-            if (hiddenCards.includes(index)) {
-              style = { display: 'none' };
-            } else if (isDismissingThis) {
-              style = { top: `${dismissingCard.top}px` };
-            } else if (!isExpanded && isInStack && order.length > 1) {
-              style = { top: `${getLayerTop(Math.min(layer, MAX_VISIBLE_LAYERS), maxLayer)}px` };
-            }
-
-            return (
-              <PostBlock
-                key={getTweetKey(tweet, index)}
-                ref={(node) => {
-                  cardRefs.current[index] = node;
-                }}
-                tweetData={tweet}
-                stackLayer={effectiveLayer}
-                isStacked={isStacked || isDismissingThis}
-                isStackFront={effectiveLayer === 0}
-                isHidden={isInStack && layer > MAX_VISIBLE_LAYERS}
-                isDismissing={isDismissingThis || demotingCard === index}
-                isPeeking={peekingCard === index}
-                isExpanded={isExpanded}
-                style={style}
-              />
-            );
-          })}
-        </section>
-      )}
+      {!isEmptied &&
+        (isExpanded ? (
+          <ScrollWrapper className={cx('posts-scroll')} hideTracksWhenNotNeeded>
+            {postsStack}
+          </ScrollWrapper>
+        ) : (
+          postsStack
+        ))}
       {isEmptied && (
         <div className={cx('empty-state')}>
           <span>{formatMessage(messages.allCaughtUp)}</span>
