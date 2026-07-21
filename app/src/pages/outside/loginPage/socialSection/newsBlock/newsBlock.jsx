@@ -129,9 +129,14 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const visibleTweets = tweets;
+  const stackSize = Math.min(MAX_TWEETS, visibleTweets.length);
 
-  // order[0] is the index (into visibleTweets) of the front card
-  const initialOrder = useMemo(() => visibleTweets.map((_, index) => index), [visibleTweets]);
+  // order[0] is the index (into visibleTweets) of the front card;
+  // the interactive stack always uses at most MAX_TWEETS cards
+  const initialOrder = useMemo(
+    () => Array.from({ length: stackSize }, (_, index) => index),
+    [stackSize],
+  );
   const [order, setOrder] = useState(initialOrder);
   const [dismissedStack, setDismissedStack] = useState([]);
   const [hiddenCards, setHiddenCards] = useState([]);
@@ -424,15 +429,20 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
     commitDismissed([]);
     setHiddenCards([]);
     setDismissingCard(null);
-    commitOrder(visibleTweets.map((_, index) => index));
+    commitOrder(Array.from({ length: Math.min(MAX_TWEETS, visibleTweets.length) }, (_, index) => index));
     hideUndo();
   }, [visibleTweets, commitOrder, commitDismissed, hideUndo]);
 
   const hasNews = visibleTweets.length > 0;
-  // keep the deck mounted while the last card is still flying out
+  // keep the deck mounted while the last card is still flying out;
+  // if the feed has more than the stack size, dismissing the stack is not "all caught up"
   const isEmptied =
-    hasNews && order.length === 0 && dismissedStack.length > 0 && !dismissingCard;
-  const hasMoreTweets = order.length > 1;
+    hasNews &&
+    order.length === 0 &&
+    dismissedStack.length > 0 &&
+    !dismissingCard &&
+    visibleTweets.length <= MAX_TWEETS;
+  const hasMoreTweets = visibleTweets.length > 1;
   const isStacked = !isExpanded && order.length > 1;
   const maxLayer = Math.min(Math.max(order.length - 1, 0), MAX_VISIBLE_LAYERS);
   const layerByCard = {};
@@ -760,7 +770,7 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
           effectiveLayer = 0;
         }
         let style;
-        if (hiddenCards.includes(index)) {
+        if (hiddenCards.includes(index) || (!isExpanded && index >= MAX_TWEETS)) {
           style = { display: 'none' };
         } else if (isDismissingThis) {
           style = { top: `${dismissingCard.top}px` };
@@ -792,6 +802,7 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
   return (
     <div className={cx('news-block', { 'news-block--expanded': isExpanded })}>
       {!isEmptied &&
+        (order.length > 0 || isExpanded) &&
         (isExpanded ? (
           <ScrollWrapper className={cx('posts-scroll')} hideTracksWhenNotNeeded>
             {postsStack}
@@ -826,7 +837,7 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
         </div>
         {isStacked && (
           <div className={cx('stack-dots')} aria-label={formatMessage(messages.selectNews)}>
-            {visibleTweets.map((tweet, index) =>
+            {visibleTweets.slice(0, MAX_TWEETS).map((tweet, index) =>
               dismissedStack.includes(index) ? null : (
                 <button
                   key={getTweetKey(tweet, index)}
@@ -834,7 +845,7 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
                   className={cx('stack-dot', { 'stack-dot--active': order[0] === index })}
                   aria-label={formatMessage(messages.newsPosition, {
                     position: index + 1,
-                    total: visibleTweets.length,
+                    total: Math.min(visibleTweets.length, MAX_TWEETS),
                   })}
                   onClick={() => promote(index)}
                 />
@@ -856,7 +867,7 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
         {hasNews && order.length
           ? formatMessage(messages.newsPosition, {
               position: order[0] + 1,
-              total: visibleTweets.length,
+              total: Math.min(visibleTweets.length, MAX_TWEETS),
             })
           : ''}
       </span>
@@ -870,11 +881,10 @@ NewsDeck.propTypes = {
 };
 
 export const NewsBlock = ({ tweets = [], onExpandedChange = null }) => {
-  const visibleTweets = useMemo(() => tweets.slice(0, MAX_TWEETS), [tweets]);
   // remount the deck whenever the feed changes so its state starts fresh
-  const deckKey = visibleTweets.map((tweet, index) => getTweetKey(tweet, index)).join('|');
+  const deckKey = tweets.map((tweet, index) => getTweetKey(tweet, index)).join('|');
 
-  return <NewsDeck key={deckKey} tweets={visibleTweets} onExpandedChange={onExpandedChange} />;
+  return <NewsDeck key={deckKey} tweets={tweets} onExpandedChange={onExpandedChange} />;
 };
 
 NewsBlock.propTypes = {

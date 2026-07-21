@@ -33,7 +33,7 @@ export class NewsBlockWithData extends Component {
   };
 
   componentDidMount() {
-    fetchJsonp('https://status.reportportal.io/twitter?count=3', {
+    fetchJsonp('https://status.reportportal.io/twitter', {
       jsonpCallback: 'jsonp',
     })
       .then((res) => res.json())
