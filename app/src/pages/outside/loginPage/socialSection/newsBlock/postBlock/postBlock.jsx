@@ -99,7 +99,6 @@ export const PostBlock = forwardRef(
       isPeeking = false,
       isExpanded = false,
       style = null,
-      onClick = null,
     },
     ref,
   ) => {
@@ -122,7 +121,6 @@ export const PostBlock = forwardRef(
           'post-block--expanded': isExpanded,
         })}
         style={style}
-        onClick={onClick}
       >
         <div className={cx('post-header')}>
           <div className={cx('post-avatar')} />
@@ -159,5 +157,4 @@ PostBlock.propTypes = {
   isPeeking: PropTypes.bool,
   isExpanded: PropTypes.bool,
   style: PropTypes.object,
-  onClick: PropTypes.func,
 };

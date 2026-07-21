@@ -274,7 +274,7 @@ $stack-speed: 420ms;
   }
 }
 
-.post-block--dismissing {
+.post-block--stacked.post-block--dismissing {
   z-index: 5;
 }
 

@@ -97,6 +97,33 @@ const prefersReducedMotion = () =>
   !!window.matchMedia &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+const clearInlineTransitions = (nodes) => {
+  nodes.forEach((node) => {
+    node.style.transition = '';
+  });
+};
+
+const runStaggerIn = (nodes) => {
+  if (prefersReducedMotion()) {
+    return;
+  }
+  nodes.forEach((node) => {
+    node.style.transition = 'none';
+    node.style.opacity = '0';
+    node.style.transform = 'translateY(16px) scale(0.98)';
+  });
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      nodes.forEach((node, index) => {
+        node.style.transition = `opacity 300ms ease ${index * 55}ms, transform 430ms cubic-bezier(0.34, 1.3, 0.64, 1) ${index * 55}ms`;
+        node.style.opacity = '';
+        node.style.transform = '';
+      });
+      setTimeout(() => clearInlineTransitions(nodes), 430 + nodes.length * 55);
+    });
+  });
+};
+
 const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
@@ -132,6 +159,11 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
   const promoteTimerRef = useRef(null);
   const lastDragEndRef = useRef(0);
   const pendingCollapseRectsRef = useRef(null);
+  const onExpandedChangeRef = useRef(onExpandedChange);
+
+  useEffect(() => {
+    onExpandedChangeRef.current = onExpandedChange;
+  }, [onExpandedChange]);
 
   const commitOrder = useCallback((next) => {
     orderRef.current = next;
@@ -154,6 +186,9 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
       clearTimeout(promoteTimerRef.current);
       dismissTimersRef.current.forEach((timer) => clearTimeout(timer));
       dismissTimersRef.current.clear();
+      if (expandedRef.current) {
+        onExpandedChangeRef.current?.(false);
+      }
     },
     [],
   );
@@ -211,12 +246,22 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
 
   useEffect(() => {
     const remeasure = () => measureStack();
+    let cancelled = false;
     window.addEventListener('resize', remeasure);
-    if (document.fonts?.ready) {
-      document.fonts.ready.then(remeasure).catch(() => {});
+    if (document.fonts) {
+      document.fonts.ready
+        .then(() => {
+          if (!cancelled) {
+            remeasure();
+          }
+        })
+        .catch(() => {});
     }
 
-    return () => window.removeEventListener('resize', remeasure);
+    return () => {
+      cancelled = true;
+      window.removeEventListener('resize', remeasure);
+    };
   }, [measureStack]);
 
   const cycle = useCallback(
@@ -405,8 +450,11 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
       if (expandedRef.current) {
         return; // native scroll in list mode
       }
+      if (orderRef.current.length < 2) {
+        return;
+      }
       event.preventDefault();
-      if (animatingRef.current || dragRef.current || orderRef.current.length < 2) {
+      if (animatingRef.current || dragRef.current) {
         return;
       }
       wheelAccRef.current += event.deltaY;
@@ -460,7 +508,7 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
       return;
     }
     const front = getFrontNode();
-    if (!front || !front.contains(event.target) || event.target.closest('a')) {
+    if (!front?.contains(event.target) || event.target.closest('a')) {
       return;
     }
     dragRef.current = {
@@ -517,20 +565,13 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
     }
   };
 
-  const handlePointerUp = () => {
+  const resetPointerGesture = () => {
     const drag = dragRef.current;
-    if (!drag) {
-      return;
-    }
     const front = getFrontNode();
-    const wasPeeking = peekingRef.current;
-    const { axis, dx, dy } = drag;
     cancelPeek();
-    // reset the drag state BEFORE acting: dismiss() is guarded by the
-    // drag ref, and stale deltas must not leak into later interactions
     dragRef.current = null;
     setIsDragging(false);
-    if (axis) {
+    if (drag?.axis) {
       lastDragEndRef.current = performance.now();
     }
     if (front) {
@@ -538,8 +579,26 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
       front.style.transform = '';
       front.style.opacity = '';
     }
+
+    return { drag, front };
+  };
+
+  const handlePointerCancel = () => {
+    if (!dragRef.current) {
+      return;
+    }
+    resetPointerGesture();
+  };
+
+  const handlePointerUp = () => {
+    const drag = dragRef.current;
+    if (!drag) {
+      return;
+    }
+    const wasPeeking = peekingRef.current;
+    const { axis, dx, dy } = drag;
+    const { front } = resetPointerGesture();
     if (wasPeeking) {
-      // released a long-press without dragging: open the post
       const link = front?.querySelector('a');
       if (link) {
         window.open(link.href, '_blank', 'noopener');
@@ -555,13 +614,20 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
     }
   };
 
-  const handleCardClick = (cardIndex) => (event) => {
+  const handleDeckClick = (event) => {
     if (expandedRef.current || event.target.closest('a')) {
       return;
     }
     if (performance.now() - lastDragEndRef.current < CLICK_SUPPRESS_AFTER_DRAG_MS) {
-      return; // that was a drag, not a click
+      return;
     }
+    const cardEntry = Object.entries(cardRefs.current).find(([, node]) =>
+      node?.contains(event.target),
+    );
+    if (!cardEntry) {
+      return;
+    }
+    const cardIndex = Number(cardEntry[0]);
     if (orderRef.current[0] !== cardIndex) {
       promote(cardIndex);
     }
@@ -604,33 +670,6 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
       deckRef.current.style.transform = '';
     }
   };
-
-  const runStaggerIn = useCallback((nodes) => {
-    if (prefersReducedMotion()) {
-      return;
-    }
-    nodes.forEach((node) => {
-      node.style.transition = 'none';
-      node.style.opacity = '0';
-      node.style.transform = 'translateY(16px) scale(0.98)';
-    });
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        nodes.forEach((node, index) => {
-          node.style.transition = `opacity 300ms ease ${index * 55}ms, transform 430ms cubic-bezier(0.34, 1.3, 0.64, 1) ${index * 55}ms`;
-          node.style.opacity = '';
-          node.style.transform = '';
-        });
-        setTimeout(
-          () =>
-            nodes.forEach((node) => {
-              node.style.transition = '';
-            }),
-          430 + nodes.length * 55,
-        );
-      });
-    });
-  }, []);
 
   // FLIP: glide the cards from the expanded list back into the stack
   useLayoutEffect(() => {
@@ -698,7 +737,7 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
             'posts-stack--expanded': isExpanded,
             'posts-stack--dragging': isDragging,
           })}
-          role="group"
+          role="region"
           aria-roledescription="carousel"
           aria-label={formatMessage(messages.deckLabel)}
           // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
@@ -706,7 +745,8 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
-          onPointerCancel={handlePointerUp}
+          onPointerCancel={handlePointerCancel}
+          onClick={handleDeckClick}
           onKeyDown={handleKeyDown}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
@@ -746,7 +786,6 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
                 isPeeking={peekingCard === index}
                 isExpanded={isExpanded}
                 style={style}
-                onClick={handleCardClick(index)}
               />
             );
           })}
@@ -767,7 +806,13 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
               ? formatMessage(messages.newsDismissedCount, { count: dismissedStack.length })
               : formatMessage(messages.newsDismissed)}
           </span>
-          <button type="button" className={cx('undo-button')} onClick={undoDismiss}>
+          <button
+            type="button"
+            className={cx('undo-button')}
+            onClick={undoDismiss}
+            tabIndex={isUndoShown ? 0 : -1}
+            aria-hidden={!isUndoShown}
+          >
             {formatMessage(messages.undo)}
           </button>
         </div>

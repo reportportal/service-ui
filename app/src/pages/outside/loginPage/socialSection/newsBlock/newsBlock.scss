@@ -55,6 +55,11 @@ $stack-speed: 420ms;
   max-width: 100%;
   outline: none;
 
+  &:focus-visible {
+    border-radius: 18px;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85);
+  }
+
   &--stacked {
     cursor: grab;
     /* both axes are consumed by the deck gestures */
@@ -62,11 +67,6 @@ $stack-speed: 420ms;
     transition:
       height $stack-speed $stack-soft-easing,
       transform 300ms $stack-soft-easing;
-
-    &:focus-visible {
-      border-radius: 18px;
-      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85);
-    }
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
@@ -110,11 +110,13 @@ $stack-speed: 420ms;
   font-size: 12px;
   color: var(--rp-ui-base-bg-000);
   opacity: 0;
+  visibility: hidden;
   transform: translateY(6px) scale(0.92);
   pointer-events: none;
   transition:
     opacity 240ms ease,
-    transform 340ms $stack-spring-easing;
+    transform 340ms $stack-spring-easing,
+    visibility 0s linear 340ms;
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;
@@ -122,8 +124,13 @@ $stack-speed: 420ms;
 
   &--shown {
     opacity: 1;
+    visibility: visible;
     transform: none;
     pointer-events: auto;
+    transition:
+      opacity 240ms ease,
+      transform 340ms $stack-spring-easing,
+      visibility 0s;
   }
 }
 
@@ -145,28 +152,43 @@ $stack-speed: 420ms;
 
 .stack-dots {
   display: flex;
-  gap: 7px;
+  gap: 0;
 }
 
 .stack-dot {
-  width: 6px;
-  height: 6px;
+  position: relative;
+  width: 20px;
+  height: 20px;
   padding: 0;
   border: none;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.4);
+  background: transparent;
   cursor: pointer;
-  transition:
-    background 200ms ease,
-    transform 200ms ease;
 
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
+  &::before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: translate(-50%, -50%);
+    transition:
+      background 200ms ease,
+      transform 200ms ease;
+    content: '';
   }
 
-  &:hover {
+  @media (prefers-reduced-motion: reduce) {
+    &::before {
+      transition: none;
+    }
+  }
+
+  &:hover::before {
     background: rgba(255, 255, 255, 0.75);
-    transform: scale(1.25);
+    transform: translate(-50%, -50%) scale(1.25);
   }
 
   &:focus-visible {
@@ -174,7 +196,7 @@ $stack-speed: 420ms;
     outline-offset: 2px;
   }
 
-  &--active {
+  &--active::before {
     background: var(--rp-ui-base-bg-000);
   }
 }
