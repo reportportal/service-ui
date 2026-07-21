@@ -58,10 +58,6 @@ export const LOGIN_PAGE_EVENTS = {
     ...getBasicClickEventParameters(category),
     link_name: normalizeEventParameter(linkText),
   }),
-  clickOnServiceVersionsModal: (category) => ({
-    ...getBasicClickEventParameters(category),
-    modal: 'versions_of_connected_services',
-  }),
   clickOnServiceUpdateLink: (category, serviceType) => ({
     ...getBasicClickEventParameters(category),
     element_name: 'update',

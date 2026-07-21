@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
@@ -47,10 +47,6 @@ const VersionsOfConnectedServices = ({ data: { latestServiceVersions, analyticsC
   const hideModal = () => dispatch(hideModalAction());
   const releaseNotesCategory = analyticsCategory || SIDEBAR_CATEGORY;
   const productVersionLabel = formatMessage(messages.productVersion, { version: PRODUCT_VERSION });
-
-  useEffect(() => {
-    trackEvent(LOGIN_PAGE_EVENTS.clickOnServiceVersionsModal(releaseNotesCategory));
-  }, [releaseNotesCategory, trackEvent]);
 
   const handleReleaseNotesClick = () => {
     trackEvent(LOGIN_PAGE_EVENTS.clickOnReleaseNotesLink(releaseNotesCategory, productVersionLabel));
