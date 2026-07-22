@@ -27,6 +27,13 @@ export const PLUGINS_PAGE_EVENTS = {
     element_name: 'upload',
     place: 'instance_plugins_page',
   },
+  // GA4 event #17 — available-to-install plugin detail page_view
+  // KB: place = plugin_detail_view_[plugin_name] (e.g. plugin_detail_view_gitlab)
+  availablePluginDetailPageView: (pluginName) => ({
+    action: 'page_view',
+    page: PLUGINS_PAGE,
+    place: `plugin_detail_view_${normalizeEventParameter(pluginName)}`,
+  }),
   clickUploadModalBtn: (type) => ({
     ...BASIC_PLUGINS_EVENT_PARAMS,
     element_name: 'upload',

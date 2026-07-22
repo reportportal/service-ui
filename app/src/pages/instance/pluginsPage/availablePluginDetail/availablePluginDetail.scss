@@ -1,0 +1,184 @@
+@use 'sass:color';
+
+/*!
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.available-plugin-detail {
+  display: flex;
+  padding-left: 5px;
+  // ui-kit: OpenSans (body default --rp-ui-base-font-family is Roboto)
+  font-family: var(--rp-ui-base-font-family-heading);
+}
+
+.logo {
+  width: 100px;
+  height: 100px;
+  margin-right: 40px;
+  flex-shrink: 0;
+
+  svg {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.info {
+  min-width: 0;
+}
+
+.title {
+  padding: 5px 0;
+  color: $COLOR--black-2;
+  font-size: 22px;
+  font-family: var(--rp-ui-base-font-family-heading);
+  font-weight: var(--rp-ui-base-fw-bold);
+}
+
+.tier-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.tier {
+  display: inline-flex;
+  align-items: center;
+  height: 16px;
+  width: fit-content;
+  border-radius: 12px;
+  padding: 0 10px;
+  color: $COLOR--white-two;
+  background-color: $COLOR--plugin-tier-free;
+  font-size: 9px;
+  line-height: normal;
+  font-family: var(--rp-ui-base-font-family-heading);
+  font-weight: var(--rp-ui-base-fw-semi-bold);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+
+  &.premium {
+    background-color: $COLOR--plugin-tier-premium;
+  }
+}
+
+.tier-description {
+  font-size: 11px;
+  font-family: var(--rp-ui-base-font-family-heading);
+  font-weight: var(--rp-ui-base-fw-regular);
+  color: $COLOR--black-2;
+  line-height: 100%;
+  letter-spacing: 0;
+}
+
+// ui-kit primary uses --rp-ui-base-topaz (#00829b). Figma CTA is #1A9CB0 =
+// --rp-ui-base-dark-topaz-main.
+.discover-button[class] {
+  flex-shrink: 0;
+  width: 143px;
+  height: 30px;
+  padding: 6px 15px;
+  background-color: var(--rp-ui-base-dark-topaz-main);
+  border-color: var(--rp-ui-base-dark-topaz-main);
+  border-radius: 2px;
+  font-family: var(--rp-ui-base-font-family-heading);
+  font-weight: var(--rp-ui-base-fw-regular);
+  font-size: 13px;
+
+  &:hover:not(:disabled) {
+    background-color: var(--rp-ui-base-dark-topaz-hover);
+    border-color: var(--rp-ui-base-dark-topaz-hover);
+  }
+}
+
+// ui-kit has no green variant — override primary for FREE Install only.
+.install-button[class] {
+  flex-shrink: 0;
+  width: 77px;
+  height: 30px;
+  padding: 6px 19px;
+  line-height: 100%;
+  background-color: $COLOR--booger;
+  border-color: $COLOR--booger;
+  border-radius: 2px;
+  font-family: var(--rp-ui-base-font-family-heading);
+  font-weight: var(--rp-ui-base-fw-semi-bold);
+
+  &:hover:not(:disabled) {
+    background-color: color.adjust($COLOR--booger, $lightness: -10%);
+    border-color: color.adjust($COLOR--booger, $lightness: -10%);
+  }
+}
+
+.description {
+  height: auto;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  color: $COLOR--black-2;
+  font-size: 13px;
+  font-family: var(--rp-ui-base-font-family-heading);
+  font-weight: var(--rp-ui-base-fw-regular);
+  line-height: 1.54;
+  word-break: break-word;
+}
+
+@media (max-width: $SCREEN_SM_MAX) {
+  .header {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: $SCREEN_XS_MAX) {
+  .available-plugin-detail {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding-left: 0;
+  }
+
+  .logo {
+    width: 64px;
+    height: 64px;
+    margin-right: 0;
+
+    svg {
+      width: 64px;
+      height: 64px;
+    }
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+}
