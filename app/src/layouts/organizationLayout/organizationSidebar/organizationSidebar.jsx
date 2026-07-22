@@ -115,7 +115,7 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
     payload: { organizationSlug },
   };
   const titles = {
-    shortTitle: `${organizationName?.[0]}${organizationName?.[organizationName.length - 1]}`,
+    entityName: organizationName,
     topTitle: formatMessage(messages.allOrganizations),
     bottomTitle: <PreservedText>{organizationName}</PreservedText>,
     level: 'organization',
