@@ -26,8 +26,7 @@ import { DEFAULT_USER_ID } from 'common/constants/accountRoles';
 import DefaultUserImage from 'common/img/default-user-avatar.png';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { showModalAction } from 'controllers/modal';
-import { photoTimeStampSelector, userInfoSelector } from 'controllers/user';
-import { logoutAction } from 'controllers/auth';
+import { fetchUserInfoAction, photoTimeStampSelector, userInfoSelector } from 'controllers/user';
 import { isDemoInstanceSelector } from 'controllers/appInfo';
 import { isEpamPluginEnabledSelector } from 'controllers/plugins';
 import { COMMAND_SYNCHRONIZE } from 'controllers/plugins/uiExtensions/constants';
@@ -123,12 +122,7 @@ export const PersonalInfoBlock = () => {
     })
       .then(() => {
         dispatch(showSuccessNotification({ message: formatMessage(messages.synchronize) }));
-        dispatch(
-          showModalAction({
-            id: 'forceUpdateModal',
-            data: { onForceUpdate: () => dispatch(logoutAction()) },
-          }),
-        );
+        dispatch(fetchUserInfoAction());
       })
       .catch(() => {
         dispatch(showErrorNotification({ message: formatMessage(messages.synchronizeError) }));
