@@ -268,7 +268,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
     payload: { organizationSlug, projectSlug },
   };
   const titles = {
-    shortTitle: `${projectName[0]}${projectName[projectName.length - 1]}`,
+    entityName: projectName,
     topTitle: (
       <PreservedText>
         {formatMessage(messages.organization)}: {organizationName}

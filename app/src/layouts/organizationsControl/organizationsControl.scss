@@ -230,7 +230,6 @@
   border-radius: 8px;
   cursor: pointer;
   color: var(--rp-ui-base-dark-e-100);
-  text-transform: uppercase;
   text-align: center;
   font-size: 13px;
   line-height: 20px;
@@ -247,8 +246,4 @@
     font-size: 13px;
     line-height: 20px;
   }
-}
-
-.no-uppercase {
-  text-transform: none;
 }

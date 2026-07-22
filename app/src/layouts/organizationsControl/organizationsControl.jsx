@@ -24,6 +24,7 @@ import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import ArrowLeftIcon from './img/arrow-left-inline.svg';
 import OpenPopoverIcon from './img/open-popover-inline.svg';
 import { OrganizationsPopover } from './organizationsPopover/organizationsPopover';
+import { useShortTitle } from './useShortTitle';
 import styles from './organizationsControl.scss';
 
 const cx = classNames.bind(styles);
@@ -38,11 +39,11 @@ export const OrganizationsControl = ({
   isSidebarExpanded = true,
 }) => {
   const { trackEvent } = useTracking();
+  const shortTitle = useShortTitle(titles.entityName, titles.shortTitle);
+
   return (
     <button type="button" className={cx('organizations-control-wrapper')} onClick={onClick}>
-      <span className={cx('short-title', { 'no-uppercase': !isExtendedNav })}>
-        {titles.shortTitle}
-      </span>
+      <span className={cx('short-title')}>{shortTitle}</span>
       <span className={cx('organizations-control')} inert={!isSidebarExpanded || undefined}>
         <div className={cx('organizations-control-content')}>
           <div
