@@ -58,6 +58,8 @@ export interface AvailablePlugin {
   };
   // English-only until Product supplies translations (US-PLG-005).
   description: string;
+  // Free plugins only — opens in a new tab on Install (US-PLG-007).
+  documentationUrl?: string;
 }
 
 // Hardcoded "Available to install" catalog (EPMRPP-114877 / US-PLG-004 + descriptions US-PLG-005).
@@ -71,6 +73,7 @@ export const AVAILABLE_PLUGINS_CATALOG: AvailablePlugin[] = [
     details: { name: 'Jira Server' },
     description:
       'The integration provides an exchange of information between ReportPortal and the Jira Server, such as posting issues and linking issues, getting updates on their statuses.',
+    documentationUrl: 'https://github.com/reportportal/plugin-bts-jira/packages',
   },
   {
     name: JIRA_CLOUD,
@@ -79,6 +82,7 @@ export const AVAILABLE_PLUGINS_CATALOG: AvailablePlugin[] = [
     details: { name: 'Jira Cloud' },
     description:
       'The integration provides an exchange of information between ReportPortal and the Jira Cloud, such as posting issues and linking issues, getting updates on their statuses.',
+    documentationUrl: 'https://github.com/reportportal/plugin-bts-jira-cloud/packages',
   },
   {
     name: AZURE_DEV_OPS,
@@ -87,6 +91,7 @@ export const AVAILABLE_PLUGINS_CATALOG: AvailablePlugin[] = [
     details: { name: 'Azure DevOps' },
     description:
       'The integration provides an exchange of information between ReportPortal and the Azure DevOps, such as posting issues and linking issues, getting updates on their statuses.',
+    documentationUrl: 'https://github.com/reportportal/plugin-bts-azure/packages',
   },
   {
     name: GITLAB,
@@ -95,6 +100,7 @@ export const AVAILABLE_PLUGINS_CATALOG: AvailablePlugin[] = [
     details: { name: 'GitLab' },
     description:
       'The integration provides an exchange of information between ReportPortal and the GitLab, such as posting issues and linking issues, getting updates on their statuses.',
+    documentationUrl: 'https://github.com/reportportal/plugin-bts-gitlab/packages',
   },
   {
     name: MONDAY,
@@ -103,6 +109,7 @@ export const AVAILABLE_PLUGINS_CATALOG: AvailablePlugin[] = [
     details: { name: 'Monday' },
     description:
       'The integration provides an exchange of information between ReportPortal and the Monday, such as posting issues and linking issues, getting updates on their statuses.',
+    documentationUrl: 'https://github.com/reportportal/plugin-bts-monday/packages',
   },
   {
     name: RALLY,
@@ -111,6 +118,7 @@ export const AVAILABLE_PLUGINS_CATALOG: AvailablePlugin[] = [
     details: { name: 'Rally' },
     description:
       'The integration provides an exchange of information between ReportPortal and the Rally, such as posting issues and linking issues, getting updates on their statuses.',
+    documentationUrl: 'https://github.com/reportportal/plugin-bts-rally/packages',
   },
   {
     name: SAUCE_LABS,
@@ -119,6 +127,7 @@ export const AVAILABLE_PLUGINS_CATALOG: AvailablePlugin[] = [
     details: { name: 'Sauce Labs' },
     description:
       'Configure an integration with Sauce Labs and watch video of test executions right in the ReportPortal application. For that carry out three easy steps: 1. Configure an integration with Sauce Labs 2. Add attributes to test items SLID: N (where N - # of job in Sauce Labs) and SLDC: M (where M is US or EU) 3. Watch video on the log level.',
+    documentationUrl: 'https://github.com/reportportal/plugin-saucelabs/packages',
   },
   {
     name: SLACK,
@@ -127,6 +136,7 @@ export const AVAILABLE_PLUGINS_CATALOG: AvailablePlugin[] = [
     details: { name: 'Slack' },
     description:
       'Reinforce your ReportPortal instance with Slack integration. Be informed about test result finish in real time in your Slack channel.',
+    documentationUrl: 'https://github.com/reportportal/plugin-slack/packages',
   },
   {
     name: TELEGRAM,
@@ -135,6 +145,7 @@ export const AVAILABLE_PLUGINS_CATALOG: AvailablePlugin[] = [
     details: { name: 'Telegram' },
     description:
       'Reinforce your ReportPortal instance with Telegram integration. Be informed about test result finish in real time in your Telegram channel.',
+    documentationUrl: 'https://github.com/reportportal/plugin-telegram/packages',
   },
   {
     name: JUNIT,
@@ -142,7 +153,8 @@ export const AVAILABLE_PLUGINS_CATALOG: AvailablePlugin[] = [
     groupType: IMPORT_GROUP_TYPE,
     details: { name: 'JUnit' },
     description:
-      'Reinforce you ReportPortal instance with JUnit import functionality and easily upload your log files right to ReportPortal.',
+      'Reinforce your ReportPortal instance with JUnit import functionality and easily upload your log files right to ReportPortal.',
+    documentationUrl: 'https://github.com/reportportal/plugin-import-junit/packages',
   },
   {
     name: ROBOT_FRAMEWORK,
@@ -151,6 +163,7 @@ export const AVAILABLE_PLUGINS_CATALOG: AvailablePlugin[] = [
     details: { name: 'Robot Framework' },
     description:
       'Reinforce your ReportPortal instance with RobotFramework Import functionality and easily upload your log files right to ReportPortal.',
+    documentationUrl: 'https://github.com/reportportal/plugin-import-robot/packages',
   },
   {
     name: MOBITRU,
@@ -159,6 +172,7 @@ export const AVAILABLE_PLUGINS_CATALOG: AvailablePlugin[] = [
     details: { name: 'Mobitru' },
     description:
       'Reinforce your ReportPortal instance with Mobitru integration and watch video of test executions right in the ReportPortal application.',
+    documentationUrl: 'https://github.com/orgs/reportportal/packages/',
   },
   {
     name: GITHUB,

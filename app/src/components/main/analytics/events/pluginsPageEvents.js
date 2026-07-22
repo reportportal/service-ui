@@ -34,6 +34,39 @@ export const PLUGINS_PAGE_EVENTS = {
     page: PLUGINS_PAGE,
     place: `plugin_detail_view_${normalizeEventParameter(pluginName)}`,
   }),
+  // GA4 event #12 — Install on free available plugin detail
+  clickInstallAvailablePlugin: (pluginName) => ({
+    ...BASIC_PLUGINS_EVENT_PARAMS,
+    element_name: 'install',
+    place: 'instance_plugin_detail',
+    type: normalizeEventParameter(pluginName),
+  }),
+  // GA4 event #13 — Discover Premium on premium available plugin detail
+  clickDiscoverPremium: (pluginName) => ({
+    ...BASIC_PLUGINS_EVENT_PARAMS,
+    element_name: 'discover_premium',
+    place: 'instance_plugin_detail',
+    type: normalizeEventParameter(pluginName),
+  }),
+  // GA4 events #14–#16 — Unlock premium features modal actions
+  clickPremiumModalNotNow: {
+    ...BASIC_PLUGINS_EVENT_PARAMS,
+    element_name: 'not_now',
+    place: 'instance_plugin_detail',
+    modal: 'unlock_premium_features',
+  },
+  clickPremiumModalExplorePlans: {
+    ...BASIC_PLUGINS_EVENT_PARAMS,
+    element_name: 'explore_plans',
+    place: 'instance_plugin_detail',
+    modal: 'unlock_premium_features',
+  },
+  clickPremiumModalContactUs: {
+    ...BASIC_PLUGINS_EVENT_PARAMS,
+    element_name: 'contact_us',
+    place: 'instance_plugin_detail',
+    modal: 'unlock_premium_features',
+  },
   clickUploadModalBtn: (type) => ({
     ...BASIC_PLUGINS_EVENT_PARAMS,
     element_name: 'upload',

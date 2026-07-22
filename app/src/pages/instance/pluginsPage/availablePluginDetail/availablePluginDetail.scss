@@ -19,6 +19,7 @@
 .available-plugin-detail {
   display: flex;
   padding-left: 5px;
+
   // ui-kit: OpenSans (body default --rp-ui-base-font-family is Roboto)
   font-family: var(--rp-ui-base-font-family-heading);
 }
@@ -98,17 +99,24 @@
 
 // ui-kit primary uses --rp-ui-base-topaz (#00829b). Figma CTA is #1A9CB0 =
 // --rp-ui-base-dark-topaz-main.
-.discover-button[class] {
+.discover-button[class],
+.install-button[class] {
   flex-shrink: 0;
-  width: 143px;
+  width: auto;
+  min-width: 77px;
   height: 30px;
-  padding: 6px 15px;
-  background-color: var(--rp-ui-base-dark-topaz-main);
-  border-color: var(--rp-ui-base-dark-topaz-main);
+  padding: 6px 16px;
   border-radius: 2px;
   font-family: var(--rp-ui-base-font-family-heading);
-  font-weight: var(--rp-ui-base-fw-regular);
   font-size: 13px;
+  line-height: 100%;
+  white-space: nowrap;
+}
+
+.discover-button[class] {
+  background-color: var(--rp-ui-base-dark-topaz-main);
+  border-color: var(--rp-ui-base-dark-topaz-main);
+  font-weight: var(--rp-ui-base-fw-regular);
 
   &:hover:not(:disabled) {
     background-color: var(--rp-ui-base-dark-topaz-hover);
@@ -118,15 +126,8 @@
 
 // ui-kit has no green variant — override primary for FREE Install only.
 .install-button[class] {
-  flex-shrink: 0;
-  width: 77px;
-  height: 30px;
-  padding: 6px 19px;
-  line-height: 100%;
   background-color: $COLOR--booger;
   border-color: $COLOR--booger;
-  border-radius: 2px;
-  font-family: var(--rp-ui-base-font-family-heading);
   font-weight: var(--rp-ui-base-fw-semi-bold);
 
   &:hover:not(:disabled) {
@@ -143,7 +144,7 @@
   font-family: var(--rp-ui-base-font-family-heading);
   font-weight: var(--rp-ui-base-fw-regular);
   line-height: 20px;
-  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 @media (max-width: $SCREEN_SM_MAX) {

@@ -18,10 +18,14 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
+import { useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { Button } from '@reportportal/ui-kit';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
+import { PremiumPromoModal } from 'components/premiumPromoModal';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { showModalAction } from 'controllers/modal';
+import { referenceDictionary } from 'common/utils/referenceDictionary';
 import { PLUGIN_TIERS } from '../availablePluginsCatalog';
 import styles from './availablePluginDetail.scss';
 
@@ -57,6 +61,7 @@ const messages = defineMessages({
 export const AvailablePluginDetail = ({ plugin }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
+  const dispatch = useDispatch();
   const title = plugin.details?.name || plugin.name;
   const isPremium = plugin.tier === PLUGIN_TIERS.PREMIUM;
 
@@ -65,6 +70,40 @@ export const AvailablePluginDetail = ({ plugin }) => {
     // Fire once per detail open; do not re-fire on Install / Discover Premium (US-PLG-006/007).
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title]);
+
+  const handleInstall = () => {
+    if (!plugin.documentationUrl) {
+      return;
+    }
+
+    trackEvent(PLUGINS_PAGE_EVENTS.clickInstallAvailablePlugin(title));
+    window.open(plugin.documentationUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleDiscoverPremium = () => {
+    trackEvent(PLUGINS_PAGE_EVENTS.clickDiscoverPremium(title));
+    dispatch(
+      showModalAction({
+        component: (
+          <PremiumPromoModal
+            onExplorePlans={() => {
+              trackEvent(PLUGINS_PAGE_EVENTS.clickPremiumModalExplorePlans);
+              window.open(
+                referenceDictionary.rpExplorePlansPlugins,
+                '_blank',
+                'noopener,noreferrer',
+              );
+            }}
+            onContactUs={() => {
+              trackEvent(PLUGINS_PAGE_EVENTS.clickPremiumModalContactUs);
+              window.open(referenceDictionary.rpContactUsPlugins, '_blank', 'noopener,noreferrer');
+            }}
+            onNotNow={() => trackEvent(PLUGINS_PAGE_EVENTS.clickPremiumModalNotNow)}
+          />
+        ),
+      }),
+    );
+  };
 
   return (
     <div className={cx('available-plugin-detail')}>
@@ -86,6 +125,8 @@ export const AvailablePluginDetail = ({ plugin }) => {
             variant="primary"
             adjustWidthOn="content"
             className={cx(isPremium ? 'discover-button' : 'install-button')}
+            onClick={isPremium ? handleDiscoverPremium : handleInstall}
+            disabled={!isPremium && !plugin.documentationUrl}
           >
             {formatMessage(isPremium ? messages.discoverPremium : messages.install)}
           </Button>
@@ -101,6 +142,7 @@ AvailablePluginDetail.propTypes = {
     name: PropTypes.string.isRequired,
     tier: PropTypes.string.isRequired,
     description: PropTypes.string,
+    documentationUrl: PropTypes.string,
     details: PropTypes.shape({
       name: PropTypes.string,
     }),
