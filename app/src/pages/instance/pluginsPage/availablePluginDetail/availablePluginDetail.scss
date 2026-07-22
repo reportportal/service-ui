@@ -52,7 +52,6 @@
 }
 
 .title {
-  padding: 5px 0;
   color: $COLOR--black-2;
   font-size: 22px;
   font-family: var(--rp-ui-base-font-family-heading);
@@ -64,6 +63,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
+  margin-top: 8px;
 }
 
 .tier {
@@ -137,13 +137,12 @@
 
 .description {
   height: auto;
-  margin-top: 15px;
-  margin-bottom: 5px;
+  margin-top: 16px;
   color: $COLOR--black-2;
   font-size: 13px;
   font-family: var(--rp-ui-base-font-family-heading);
   font-weight: var(--rp-ui-base-fw-regular);
-  line-height: 1.54;
+  line-height: 20px;
   word-break: break-word;
 }
 
