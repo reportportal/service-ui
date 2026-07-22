@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+$stack-spring-easing: cubic-bezier(0.34, 1.45, 0.64, 1);
+$stack-soft-easing: cubic-bezier(0.33, 1, 0.42, 1);
+$stack-speed: 420ms;
+
 .news-block {
   display: flex;
   flex-direction: column;
@@ -49,24 +53,196 @@
   position: relative;
   width: 479px;
   max-width: 100%;
+  outline: none;
+
+  &:focus-visible {
+    border-radius: 18px;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85);
+  }
 
   &--stacked {
-    position: relative;
-    padding-bottom: 8px;
-    min-height: 120px;
+    cursor: grab;
+    /* both axes are consumed by the deck gestures */
+    touch-action: none;
+    transition:
+      height $stack-speed $stack-soft-easing,
+      transform 300ms $stack-soft-easing;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  &--dragging {
+    cursor: grabbing;
   }
 
   &--expanded {
-    flex: 1;
-    min-height: 0;
     width: 100%;
     max-width: 479px;
-    overflow-y: auto;
+    min-height: 100%;
     padding-top: 0;
     align-content: end;
-    .post-block + .post-block {
-      margin-top: 16px;
+    touch-action: auto;
+    box-sizing: border-box;
+  }
+}
+
+.posts-scroll {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  max-width: 479px;
+}
+
+.deck-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.undo-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(20px);
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-medium);
+  font-size: 12px;
+  color: var(--rp-ui-base-bg-000);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px) scale(0.92);
+  pointer-events: none;
+  transition:
+    opacity 240ms ease,
+    transform 340ms $stack-spring-easing,
+    visibility 0s linear 340ms;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
+  &--shown {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    pointer-events: auto;
+    transition:
+      opacity 240ms ease,
+      transform 340ms $stack-spring-easing,
+      visibility 0s;
+  }
+}
+
+.undo-button {
+  padding: 3px 10px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--rp-ui-base-dark-topaz-main);
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-medium);
+  font-size: 12px;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--rp-ui-base-bg-000);
+  }
+}
+
+.stack-dots {
+  display: flex;
+  gap: 0;
+}
+
+.stack-dot {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+
+  &::before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: translate(-50%, -50%);
+    transition:
+      background 200ms ease,
+      transform 200ms ease;
+    content: '';
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::before {
+      transition: none;
     }
+  }
+
+  &:hover::before {
+    background: rgba(255, 255, 255, 0.75);
+    transform: translate(-50%, -50%) scale(1.25);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--rp-ui-base-bg-000);
+    outline-offset: 2px;
+  }
+
+  &--active::before {
+    background: var(--rp-ui-base-bg-000);
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 479px;
+  max-width: 100%;
+  padding: 28px 20px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(20px);
+  color: var(--rp-ui-base-bg-000);
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-medium);
+  font-size: 14px;
+  text-align: center;
+  box-sizing: border-box;
+  animation: empty-state-pop-in 420ms $stack-spring-easing;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+.restore-link {
+  border: none;
+  background: transparent;
+  color: var(--rp-ui-base-bg-000);
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 12px;
+  text-decoration: underline;
+  cursor: pointer;
+  opacity: 0.85;
+
+  &:hover {
+    opacity: 1;
   }
 }
 
@@ -82,9 +258,29 @@
   color: var(--rp-ui-base-bg-000);
   cursor: pointer;
   text-decoration: none;
-  margin-top: 3px;
 
   &:hover {
     opacity: 1;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@keyframes empty-state-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
