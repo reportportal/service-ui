@@ -56,13 +56,10 @@ export interface AvailablePlugin {
   details: {
     name: string;
   };
-  // English-only until Product supplies translations (US-PLG-005).
   description: string;
-  // Free plugins only — opens in a new tab on Install (US-PLG-007).
   documentationUrl?: string;
 }
 
-// Hardcoded "Available to install" catalog (EPMRPP-114877 / US-PLG-004 + descriptions US-PLG-005).
 // `name` matches the server plugin name (GET /api/v1/plugin) to detect already installed entries.
 // Icons are resolved via PLUGIN_IMAGES_MAP in integrations/constants.js.
 export const AVAILABLE_PLUGINS_CATALOG: AvailablePlugin[] = [

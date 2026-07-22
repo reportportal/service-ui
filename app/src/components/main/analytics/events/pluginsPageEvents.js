@@ -27,28 +27,23 @@ export const PLUGINS_PAGE_EVENTS = {
     element_name: 'upload',
     place: 'instance_plugins_page',
   },
-  // GA4 event #17 — available-to-install plugin detail page_view
-  // KB: place = plugin_detail_view_[plugin_name] (e.g. plugin_detail_view_gitlab)
   availablePluginDetailPageView: (pluginName) => ({
     action: 'page_view',
     page: PLUGINS_PAGE,
     place: `plugin_detail_view_${normalizeEventParameter(pluginName)}`,
   }),
-  // GA4 event #12 — Install on free available plugin detail
   clickInstallAvailablePlugin: (pluginName) => ({
     ...BASIC_PLUGINS_EVENT_PARAMS,
     element_name: 'install',
     place: 'instance_plugin_detail',
     type: normalizeEventParameter(pluginName),
   }),
-  // GA4 event #13 — Discover Premium on premium available plugin detail
   clickDiscoverPremium: (pluginName) => ({
     ...BASIC_PLUGINS_EVENT_PARAMS,
     element_name: 'discover_premium',
     place: 'instance_plugin_detail',
     type: normalizeEventParameter(pluginName),
   }),
-  // GA4 events #14–#16 — Unlock premium features modal actions
   clickPremiumModalNotNow: {
     ...BASIC_PLUGINS_EVENT_PARAMS,
     element_name: 'not_now',

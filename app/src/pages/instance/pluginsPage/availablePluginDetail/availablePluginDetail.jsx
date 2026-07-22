@@ -67,9 +67,7 @@ export const AvailablePluginDetail = ({ plugin }) => {
 
   useEffect(() => {
     trackEvent(PLUGINS_PAGE_EVENTS.availablePluginDetailPageView(title));
-    // Fire once per detail open; do not re-fire on Install / Discover Premium (US-PLG-006/007).
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [title]);
+  }, [title, trackEvent]);
 
   const handleInstall = () => {
     if (!plugin.documentationUrl) {
