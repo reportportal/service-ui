@@ -21,6 +21,11 @@ import { LOGIN_PAGE } from 'controllers/pages';
 
 export const isLdapAuthType = (authType) => authType?.toLowerCase() === LDAP;
 
+export const isSoleLdapAuth = (externalAuth = {}) => {
+  const authTypes = Object.keys(externalAuth);
+  return authTypes.length === 1 && isLdapAuthType(authTypes[0]);
+};
+
 export const hasMultipleAuthProviders = (val) =>
   Boolean(val?.providers && Object.keys(val.providers).length > 1);
 
