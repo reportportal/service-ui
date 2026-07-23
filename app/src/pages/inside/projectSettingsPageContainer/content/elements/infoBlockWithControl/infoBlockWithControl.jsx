@@ -28,7 +28,7 @@ export const InfoBlockWithControl = ({ label, control, className = '' }) => (
 );
 
 InfoBlockWithControl.propTypes = {
-  label: PropTypes.string.isRequired,
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired,
   control: PropTypes.node,
   className: PropTypes.string,
 };

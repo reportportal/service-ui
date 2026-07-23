@@ -35,7 +35,9 @@ export const EmptyRuleState = ({ ruleName, onCreateClick }) => {
   return (
     <div className={cx('empty-rule-state')}>
       <InfoBlockWithControl
-        label={formatMessage(messages.noItemsMessage, { ruleName })}
+        label={formatMessage(messages.noItemsMessage, {
+          ruleName: <span className={cx('capitalized')}>{ruleName}</span>,
+        })}
         {...(canUpdateSettings && {
           control: (
             <Button
