@@ -35,7 +35,7 @@ export const PLUGINS_PAGE_EVENTS = {
   clickInstallAvailablePlugin: (pluginName) => ({
     ...BASIC_PLUGINS_EVENT_PARAMS,
     element_name: 'install',
-    place: 'instance_plugin_detail',
+    place: 'plugin_detail_view',
     type: normalizeEventParameter(pluginName),
   }),
   clickDiscoverPremium: (pluginName) => ({
