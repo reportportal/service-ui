@@ -42,13 +42,16 @@ import { InputDropdown } from 'components/inputs/inputDropdown';
 import {
   INSTALLED_PLUGINS_SUBPAGE,
   INSTALLED_PLUGINS_SETTINGS_SUBPAGE,
+  AVAILABLE_PLUGIN_DETAIL_SUBPAGE,
   SUB_PAGES_SEQUENCE,
   DEFAULT_BREADCRUMB,
+  AVAILABLE_PLUGIN_DETAIL_BREADCRUMB,
 } from './constants';
 import styles from './installedTab.scss';
 import { PluginsFilter } from '../../pluginsFilter';
 import { PluginsListItems } from '../../pluginsListItems';
 import { ActionPanel } from '../../actionPanel';
+import { AvailablePluginDetail } from '../../availablePluginDetail';
 import { AVAILABLE_PLUGINS_CATALOG, PLUGIN_TIERS } from '../../availablePluginsCatalog';
 
 const cx = classNames.bind(styles);
@@ -251,6 +254,8 @@ export class InstalledTab extends Component {
             goToPreviousPage={this.goToCachedSubPageHandler}
           />
         );
+      case AVAILABLE_PLUGIN_DETAIL_SUBPAGE:
+        return <AvailablePluginDetail key={data.name} plugin={data} />;
       default: {
         const installedPlugins = this.getInstalledPluginsList(activeFilterItem);
         const availablePlugins = this.getAvailablePluginsList(activeFilterItem);
@@ -269,7 +274,11 @@ export class InstalledTab extends Component {
               {this.renderFilterMobileBlock()}
               {availablePlugins.length > 0 && (
                 <div className={cx('available-section')}>
-                  <PluginsListItems title={AVAILABLE_PLUGINS_TYPE} items={availablePlugins} />
+                  <PluginsListItems
+                    title={AVAILABLE_PLUGINS_TYPE}
+                    items={availablePlugins}
+                    onItemClick={this.availablePluginDetailSubPageHandler}
+                  />
                 </div>
               )}
               {installedPlugins.length > 0 && (
@@ -290,6 +299,11 @@ export class InstalledTab extends Component {
 
   getBreadcrumbs = () => {
     const { subPage } = this.state;
+
+    if (subPage.type === AVAILABLE_PLUGIN_DETAIL_SUBPAGE) {
+      return [AVAILABLE_PLUGIN_DETAIL_BREADCRUMB, subPage];
+    }
+
     const breadcrumbs = [DEFAULT_BREADCRUMB];
 
     SUB_PAGES_SEQUENCE.some((pageType) => {
@@ -365,6 +379,13 @@ export class InstalledTab extends Component {
   installedPluginsSubPageHandler = (pageData) =>
     this.changeSubPage({
       type: INSTALLED_PLUGINS_SUBPAGE,
+      data: pageData,
+      title: pageData.details.name || pageData.name,
+    });
+
+  availablePluginDetailSubPageHandler = (pageData) =>
+    this.changeSubPage({
+      type: AVAILABLE_PLUGIN_DETAIL_SUBPAGE,
       data: pageData,
       title: pageData.details.name || pageData.name,
     });

@@ -42,6 +42,10 @@
 
 .plugins-sub-content-wrapper {
   width: 810px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+  }
 }
 
 .plugins-content {

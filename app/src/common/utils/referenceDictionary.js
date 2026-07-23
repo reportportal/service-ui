@@ -56,6 +56,10 @@ export const referenceDictionary = {
     'https://reportportal.io/pricing/saas/?utm_source=trigger&utm_medium=product&utm_campaign=premium_popup&utm_content=org',
   rpContactUsOrg:
     'https://reportportal.io/contact-us/general/?utm_source=trigger&utm_medium=product&utm_campaign=premium_popup&utm_content=org',
+  rpExplorePlansPlugins:
+    'https://reportportal.io/pricing/saas/?utm_source=trigger&utm_medium=product&utm_campaign=premium_popup&utm_content=plugins',
+  rpContactUsPlugins:
+    'https://reportportal.io/contact-us/general/?utm_source=trigger&utm_medium=product&utm_campaign=premium_popup&utm_content=plugins',
   rpRequestCloudAccessCloud:
     'https://reportportal.io/contact-us/general/?utm_source=trigger&utm_medium=product&utm_campaign=promo_page&utm_content=cloud_version',
   rpExploreBillingPlansCloud:
