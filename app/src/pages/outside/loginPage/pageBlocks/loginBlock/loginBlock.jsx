@@ -23,9 +23,10 @@ import { lastFailedLoginTimeSelector } from 'controllers/auth';
 import { getLoginLockoutState } from 'controllers/auth/loginLockout';
 import classNames from 'classnames/bind';
 import { uiExtensionLoginBlockSelector } from 'controllers/plugins/uiExtensions';
+import { isSoleLdapAuth } from 'pages/outside/common/utils';
+import { PageSectionContainer } from 'pages/outside/common/pageSectionContainer';
 import styles from './loginBlock.scss';
 import { LoginForm } from './loginForm';
-import { PageSectionContainer } from 'pages/outside/common/pageSectionContainer';
 
 const cx = classNames.bind(styles);
 
@@ -45,6 +46,8 @@ export const LoginBlock = () => {
   const extensions = useSelector(uiExtensionLoginBlockSelector);
   const lastFailedLoginTime = useSelector(lastFailedLoginTimeSelector);
   const { isLoginLimitExceeded } = getLoginLockoutState(lastFailedLoginTime);
+  const showExternalAuth =
+    !isLoginLimitExceeded && !isEmptyObject(externalAuth) && !isSoleLdapAuth(externalAuth);
 
   return (
     <>
@@ -54,9 +57,7 @@ export const LoginBlock = () => {
         hint={messages.login}
         leftAligned
       >
-        <LoginForm
-          externalAuth={!isLoginLimitExceeded && !isEmptyObject(externalAuth) ? externalAuth : null}
-        />
+        <LoginForm externalAuth={showExternalAuth ? externalAuth : null} />
       </PageSectionContainer>
       <div className={cx('bottom-content')}>
         {extensions &&

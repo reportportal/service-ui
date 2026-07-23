@@ -24,7 +24,7 @@ import { getLoginLockoutState } from 'controllers/auth/loginLockout';
 import { LOGIN_PAGE } from 'controllers/pages';
 import { PageSectionContainer } from 'pages/outside/common/pageSectionContainer';
 import { OutsideLoginFooter } from 'pages/outside/common/outsideLoginFooter';
-import { isLdapAuthType } from 'pages/outside/common/utils';
+import { isLdapAuthType, isSoleLdapAuth } from 'pages/outside/common/utils';
 import { LdapLoginForm } from '../loginBlock/loginForm/loginForm';
 
 const messages = defineMessages({
@@ -44,15 +44,16 @@ export const LdapLoginBlock = () => {
   const dispatch = useDispatch();
 
   const hasLdap = Object.keys(externalAuth).some(isLdapAuthType);
+  const isSoleLdap = isSoleLdapAuth(externalAuth);
   const { isLoginLimitExceeded } = getLoginLockoutState(lastFailedLoginTime);
 
   useEffect(() => {
-    if (!hasLdap) {
+    if (!hasLdap || isSoleLdap) {
       dispatch(redirect({ type: LOGIN_PAGE }));
     }
-  }, [dispatch, hasLdap]);
+  }, [dispatch, hasLdap, isSoleLdap]);
 
-  if (!hasLdap) {
+  if (!hasLdap || isSoleLdap) {
     return null;
   }
 

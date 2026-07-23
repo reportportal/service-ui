@@ -25,7 +25,11 @@ import { Button } from '@reportportal/ui-kit';
 import { LOGIN_PAGE } from 'controllers/pages';
 import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
-import { shouldTrackLoginButtonClick, startSsoAuthFlow } from 'pages/outside/common/utils';
+import {
+  isSoleLdapAuth,
+  shouldTrackLoginButtonClick,
+  startSsoAuthFlow,
+} from 'pages/outside/common/utils';
 import styles from './externalLoginBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -97,7 +101,7 @@ export const ExternalLoginBlock = ({ externalAuth = {}, inline = false }) => {
     startAuthFlow(val, authType);
   }, [authInProgress, dispatch, externalAuth, startAuthFlow, trackEvent]);
 
-  if (Object.keys(externalAuth).length === 0) {
+  if (Object.keys(externalAuth).length === 0 || isSoleLdapAuth(externalAuth)) {
     return null;
   }
 
