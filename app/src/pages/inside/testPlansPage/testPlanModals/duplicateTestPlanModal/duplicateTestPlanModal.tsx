@@ -47,7 +47,7 @@ export const DuplicateTestPlanModal = ({ data, onSuccess }: DuplicateTestPlanMod
       initialValues={{
         name: `${data.name} (1)`,
         description: data.description,
-        attributes: [],
+        attributes: data.attributes || [],
       }}
       onSubmit={duplicateTestPlan}
     />
