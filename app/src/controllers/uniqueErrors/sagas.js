@@ -16,7 +16,8 @@
 
 import { all, call, put, select, take, takeEvery } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
-import { projectKeySelector } from 'controllers/project';
+import { projectKeySelector, projectInfoIdSelector } from 'controllers/project';
+import { activeOrganizationIdSelector } from 'controllers/organization';
 import { fetchParentItems, fetchParentLaunch, launchSelector } from 'controllers/testItem';
 import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import {
@@ -30,6 +31,7 @@ import { SORTING_KEY } from 'controllers/sorting';
 import { unselectAllItemsAction } from 'controllers/groupOperations';
 import { NAMESPACE as PLUGINS_NAMESPACE } from 'controllers/plugins/constants';
 import { pluginsSelector } from 'controllers/plugins';
+import { buildPluginCommandRQ } from 'controllers/plugins/utils';
 import { COMMAND_GET_CLUSTERS } from 'controllers/plugins/uiExtensions/constants';
 import { queryParametersSelector } from './selectors';
 import {
@@ -63,6 +65,8 @@ function* fetchClusters(payload = {}) {
   const launchId = yield select(launchIdSelector);
   const parentLaunch = yield select(launchSelector);
   const projectKey = yield select(projectKeySelector);
+  const projectId = yield select(projectInfoIdSelector);
+  const organizationId = yield select(activeOrganizationIdSelector);
   const isPathNameChanged = yield select(pathnameChangedSelector);
   const selectedItems = yield select(selectedClusterItemsSelector);
 
@@ -83,16 +87,21 @@ function* fetchClusters(payload = {}) {
   const requestParams = {};
   const plugin = yield call(getPlugin);
   if (plugin) {
-    url = URLS.pluginCommandCommon(projectKey, plugin.name, COMMAND_GET_CLUSTERS);
-    requestParams.method = 'PUT';
+    url = URLS.pluginsCommandsCommon(plugin.name, COMMAND_GET_CLUSTERS);
+    requestParams.method = 'POST';
     const uniqueErrorsParams = yield select(pagePropertiesSelector, NAMESPACE);
-    requestParams.data = {
-      launchId,
-      ...uniqueErrorsParams,
-      pageNumber: query[PAGE_KEY],
-      pageSize: query[SIZE_KEY],
-      pageSort: query[SORTING_KEY],
-    };
+    requestParams.data = buildPluginCommandRQ({
+      projectKey,
+      projectId,
+      organizationId,
+      arguments: {
+        launchId,
+        ...uniqueErrorsParams,
+        pageNumber: query[PAGE_KEY],
+        pageSize: query[SIZE_KEY],
+        pageSort: query[SORTING_KEY],
+      },
+    });
   } else {
     url = URLS.clusterByLaunchId(projectKey, launchId, {
       [PAGE_KEY]: query[PAGE_KEY],
