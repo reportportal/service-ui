@@ -42,6 +42,7 @@ export const EPAM = 'epam';
 export const ORGANIZATION = 'organization';
 export const QUALITY_GATE = 'quality gate';
 export const TEST_EXECUTION = 'test-execution';
+export const TEAMS = 'teams';
 
 // TODO: calculate it dynamically
 export const PLUGIN_NAMES_BY_GROUP_TYPES_MAP = {

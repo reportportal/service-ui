@@ -29,6 +29,7 @@ import {
   SAML,
   LDAP,
   GITHUB,
+  TEAMS,
 } from 'common/constants/pluginNames';
 import JiraIcon from 'common/img/plugins/jira.svg';
 import AzureDevOpsIcon from 'common/img/plugins/azure-dev-ops.svg';
@@ -43,6 +44,7 @@ import MobitruIcon from 'common/img/plugins/mobitru.svg';
 import SamlIcon from 'common/img/plugins/saml.png';
 import LdapIcon from 'common/img/plugins/ldap.png';
 import GithubIcon from 'common/img/plugins/github.svg';
+import TeamsIcon from 'common/img/plugins/teams.svg';
 import DefaultPluginIcon from 'common/img/plugins/default-plugin-icon.svg';
 
 export const PLUGIN_IMAGES_MAP = {
@@ -60,6 +62,7 @@ export const PLUGIN_IMAGES_MAP = {
   [SAML]: SamlIcon,
   [LDAP]: LdapIcon,
   [GITHUB]: GithubIcon,
+  [TEAMS]: TeamsIcon,
 };
 
 export const PLUGIN_DEFAULT_IMAGE = DefaultPluginIcon;

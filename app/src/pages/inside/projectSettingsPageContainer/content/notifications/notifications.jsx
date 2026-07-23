@@ -30,6 +30,7 @@ import {
   fetchExistingLaunchNamesAction,
   updateNotificationStateAction,
 } from 'controllers/project/actionCreators';
+import { EMAIL } from 'common/constants/pluginNames';
 import { notificationPluginsSelector } from 'controllers/plugins/selectors';
 import { projectNotificationsLoadingSelector } from 'controllers/project/selectors';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -97,16 +98,18 @@ export const Notifications = () => {
           </div>
         </FieldElement>
       </Layout>
-      {allNotificationPlugins.map((item) => (
-        <RuleGroup
-          ruleDescription={item.details.ruleDescription}
-          ruleFields={item.details.ruleFields}
-          key={`rule-section-${item.name}`}
-          pluginName={item.name}
-          isPluginEnabled={item.enabled}
-          rules={notificationRulesByTypes[item.name] || []}
-        />
-      ))}
+      {allNotificationPlugins
+        .filter((item) => item.enabled || item.name === EMAIL)
+        .map((item) => (
+          <RuleGroup
+            ruleDescription={item.details.ruleDescription}
+            ruleFields={item.details.ruleFields}
+            key={`rule-section-${item.name}`}
+            pluginName={item.name}
+            isPluginEnabled={item.enabled}
+            rules={notificationRulesByTypes[item.name] || []}
+          />
+        ))}
       <NotificationsFooter isReadOnly={!canUpdateSettings} />
     </SettingsPageContent>
   );

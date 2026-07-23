@@ -40,6 +40,7 @@ import {
   GITHUB,
   TEST_EXECUTION,
   ORGANIZATION,
+  TEAMS,
 } from 'common/constants/pluginNames';
 
 export const PLUGIN_TIERS = {
@@ -143,6 +144,14 @@ export const AVAILABLE_PLUGINS_CATALOG: AvailablePlugin[] = [
     description:
       'Reinforce your ReportPortal instance with Telegram integration. Be informed about test result finish in real time in your Telegram channel.',
     documentationUrl: 'https://github.com/reportportal/plugin-telegram/packages',
+  },
+  {
+    name: TEAMS,
+    tier: PLUGIN_TIERS.PREMIUM,
+    groupType: NOTIFICATION_GROUP_TYPE,
+    details: { name: 'Teams' },
+    description:
+      'Reinforce your ReportPortal instance with Teams integration. Be informed about test result finish in real time in your Teams channel.',
   },
   {
     name: JUNIT,
