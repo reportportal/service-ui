@@ -68,7 +68,7 @@ const searchLogLocationById = async ({ fetchFn, projectKey, retryId, logId, logQ
 
   const { content } = normalizePageResponse(response);
 
-  return findLogInLocationsPage(content, logId) || null;
+  return content?.some((log) => +log.id === +logId) || null;
 };
 
 const fetchLocationsPage = ({ fetchFn, url, page, logQueryParams, extraParams }) =>

@@ -96,6 +96,31 @@ describe('resolveMobitruLogForJump', () => {
     expect(fetchFn.mock.calls[2][1].params['page.page']).toBe(2);
   });
 
+  test('should treat search hit without pagesLocation as existing and resolve via nested grid', async () => {
+    const fetchFn = jest
+      .fn()
+      .mockResolvedValueOnce({
+        content: [{ id: 10 }],
+        page: { totalPages: 1, totalElements: 1 },
+      })
+      .mockResolvedValueOnce({
+        content: [{ id: 10, level: 'mobitru' }],
+        page: { totalPages: 1 },
+      });
+
+    const result = await resolveMobitruLogForJump({
+      fetchFn,
+      projectKey: 'default_personal',
+      retryId: 100,
+      itemId: 100,
+      logId: 10,
+    });
+
+    expect(result).toEqual({ id: 10, pagesLocation: [{ 10: 1 }] });
+    expect(fetchFn).toHaveBeenCalledTimes(2);
+    expect(fetchFn.mock.calls[1][0]).toContain('/log/nested/');
+  });
+
   test('should use nested step page size matching loadStep pagination offset', async () => {
     const fetchFn = jest
       .fn()
