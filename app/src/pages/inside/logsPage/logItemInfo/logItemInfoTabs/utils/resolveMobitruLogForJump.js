@@ -22,6 +22,7 @@ import { DEFAULT_PAGE_SIZE, PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 
 const LEVEL_FILTER_KEYS = [LOG_LEVEL_FILTER_KEY, 'filter.eq.level'];
 const NESTED_QUERY_OMIT_KEYS = [...LEVEL_FILTER_KEYS, PAGE_KEY, SIZE_KEY];
+const LOG_ID_FILTER_KEY = 'filter.eq.logId';
 
 const LOCATION_QUERY_VARIANTS = [
   { 'filter.eq.level': 'mobitru' },
@@ -40,6 +41,9 @@ const getRootPageSize = (logQueryParams = {}) =>
 const buildNestedGridQueryParams = (logQueryParams = {}) =>
   omit(logQueryParams, NESTED_QUERY_OMIT_KEYS);
 
+const getLocationsSearchUrl = (projectKey, retryId) =>
+  URLS.searchLogs(projectKey, retryId).split('?')[0];
+
 const normalizePageResponse = (response) => {
   if (Array.isArray(response)) {
     return { content: response, page: { totalPages: 1 } };
@@ -49,6 +53,22 @@ const normalizePageResponse = (response) => {
     content: response?.content ?? [],
     page: response?.page ?? { totalPages: 1 },
   };
+};
+
+const searchLogLocationById = async ({ fetchFn, projectKey, retryId, logId, logQueryParams }) => {
+  const response = await fetchFn(getLocationsSearchUrl(projectKey, retryId), {
+    params: {
+      excludeLogContent: true,
+      [SIZE_KEY]: getRootPageSize(logQueryParams),
+      [PAGE_KEY]: 1,
+      ...(logQueryParams['page.sort'] ? { 'page.sort': logQueryParams['page.sort'] } : {}),
+      [LOG_ID_FILTER_KEY]: logId,
+    },
+  });
+
+  const { content } = normalizePageResponse(response);
+
+  return findLogInLocationsPage(content, logId) || null;
 };
 
 const fetchLocationsPage = ({ fetchFn, url, page, logQueryParams, extraParams }) =>
@@ -365,17 +385,14 @@ const resolveMobitruLogFromNestedGrid = async ({
   });
 };
 
-export const resolveMobitruLogForJump = async ({
+const resolveMobitruLogViaLegacyFallback = async ({
   fetchFn,
   projectKey,
   retryId,
   itemId,
   logId,
-  logQuery,
+  logQueryParams,
 }) => {
-  const url = URLS.searchLogs(projectKey, retryId).split('?')[0];
-  const logQueryParams = buildLocationQueryParams(logQuery);
-
   const nestedResult = await resolveMobitruLogFromNestedGrid({
     fetchFn,
     projectKey,
@@ -389,12 +406,53 @@ export const resolveMobitruLogForJump = async ({
     return nestedResult;
   }
 
-  const logInfoFromLocations = await searchWithQueryVariants({
+  return searchWithQueryVariants({
     fetchFn,
-    url,
+    url: getLocationsSearchUrl(projectKey, retryId),
     logId,
     logQueryParams,
   });
+};
 
-  return logInfoFromLocations;
+export const resolveMobitruLogForJump = async ({
+  fetchFn,
+  projectKey,
+  retryId,
+  itemId,
+  logId,
+  logQuery,
+}) => {
+  const logQueryParams = buildLocationQueryParams(logQuery);
+
+  try {
+    const logInfoFromSearch = await searchLogLocationById({
+      fetchFn,
+      projectKey,
+      retryId,
+      logId,
+      logQueryParams,
+    });
+
+    if (!logInfoFromSearch) {
+      return null;
+    }
+  } catch {
+    return resolveMobitruLogViaLegacyFallback({
+      fetchFn,
+      projectKey,
+      retryId,
+      itemId,
+      logId,
+      logQueryParams,
+    });
+  }
+
+  return resolveMobitruLogViaLegacyFallback({
+    fetchFn,
+    projectKey,
+    retryId,
+    itemId,
+    logId,
+    logQueryParams,
+  });
 };

@@ -18,9 +18,44 @@ import { PAGINATION_OFFSET } from 'controllers/log/nestedSteps/constants';
 import { resolveMobitruLogForJump } from './resolveMobitruLogForJump';
 
 describe('resolveMobitruLogForJump', () => {
-  test('should resolve log via nested grid using active root page size', async () => {
+  test('should fail fast with null when locations search has no hit', async () => {
+    const fetchFn = jest.fn().mockResolvedValue({
+      content: [],
+      page: { totalPages: 1, totalElements: 0 },
+    });
+
+    const result = await resolveMobitruLogForJump({
+      fetchFn,
+      projectKey: 'default_personal',
+      retryId: 100,
+      itemId: 100,
+      logId: 99,
+    });
+
+    expect(result).toBeNull();
+    expect(fetchFn).toHaveBeenCalledTimes(1);
+    expect(fetchFn).toHaveBeenCalledWith(
+      expect.stringMatching(/\/log\/locations\/search\/\d+$/),
+      expect.objectContaining({
+        params: expect.objectContaining({
+          'filter.eq.logId': 99,
+          excludeLogContent: true,
+        }),
+      }),
+    );
+  });
+
+  test('should ignore search pagesLocation and resolve via nested grid when log exists', async () => {
+    const wrongSearchLocation = {
+      id: 10,
+      pagesLocation: [{ 10: 1 }],
+    };
     const fetchFn = jest
       .fn()
+      .mockResolvedValueOnce({
+        content: [wrongSearchLocation],
+        page: { totalPages: 1, totalElements: 1 },
+      })
       .mockResolvedValueOnce({
         content: [{ id: 1 }],
         page: { totalPages: 2 },
@@ -40,6 +75,14 @@ describe('resolveMobitruLogForJump', () => {
     });
 
     expect(result).toEqual({ id: 10, pagesLocation: [{ 10: 2 }] });
+    expect(fetchFn.mock.calls[0][0]).toMatch(/\/log\/locations\/search\/\d+$/);
+    expect(fetchFn.mock.calls[0][1].params).toEqual(
+      expect.objectContaining({
+        'filter.eq.logId': 10,
+        'page.size': 10,
+        'page.sort': 'logTime,ASC',
+      }),
+    );
     expect(fetchFn).toHaveBeenCalledWith(
       expect.stringContaining('/log/nested/'),
       expect.objectContaining({
@@ -49,13 +92,17 @@ describe('resolveMobitruLogForJump', () => {
         }),
       }),
     );
-    expect(fetchFn.mock.calls[1][1].params['page.size']).toBe(10);
-    expect(fetchFn.mock.calls[1][1].params['page.page']).toBe(2);
+    expect(fetchFn.mock.calls[2][1].params['page.size']).toBe(10);
+    expect(fetchFn.mock.calls[2][1].params['page.page']).toBe(2);
   });
 
   test('should use nested step page size matching loadStep pagination offset', async () => {
     const fetchFn = jest
       .fn()
+      .mockResolvedValueOnce({
+        content: [{ id: 300, pagesLocation: [{ 200: 1 }, { 300: 1 }] }],
+        page: { totalPages: 1, totalElements: 1 },
+      })
       .mockResolvedValueOnce({
         content: [{ id: 200, hasContent: true }],
         page: { totalPages: 1 },
@@ -82,14 +129,18 @@ describe('resolveMobitruLogForJump', () => {
       id: 300,
       pagesLocation: [{ 200: 1 }, { 300: 2 }],
     });
-    expect(fetchFn.mock.calls[0][1].params['page.size']).toBe(10);
-    expect(fetchFn.mock.calls[1][1].params['page.size']).toBe(PAGINATION_OFFSET);
+    expect(fetchFn.mock.calls[1][1].params['page.size']).toBe(10);
     expect(fetchFn.mock.calls[2][1].params['page.size']).toBe(PAGINATION_OFFSET);
+    expect(fetchFn.mock.calls[3][1].params['page.size']).toBe(PAGINATION_OFFSET);
   });
 
   test('should resolve nested step mobitru log via nested grid', async () => {
     const fetchFn = jest
       .fn()
+      .mockResolvedValueOnce({
+        content: [{ id: 300, pagesLocation: [{ 200: 9 }, { 300: 9 }] }],
+        page: { totalPages: 1, totalElements: 1 },
+      })
       .mockResolvedValueOnce({
         content: [{ id: 200, hasContent: true }],
         page: { totalPages: 1 },
@@ -116,6 +167,10 @@ describe('resolveMobitruLogForJump', () => {
   test('should resolve deeply nested mobitru log via recursive nested grid', async () => {
     const fetchFn = jest
       .fn()
+      .mockResolvedValueOnce({
+        content: [{ id: 400, pagesLocation: [{ 200: 1 }, { 300: 1 }, { 400: 1 }] }],
+        page: { totalPages: 1, totalElements: 1 },
+      })
       .mockResolvedValueOnce({
         content: [{ id: 200, hasContent: true }],
         page: { totalPages: 1 },
@@ -145,14 +200,18 @@ describe('resolveMobitruLogForJump', () => {
       id: 400,
       pagesLocation: [{ 200: 1 }, { 300: 1 }, { 400: 1 }],
     });
-    expect(fetchFn.mock.calls[0][1].params['page.size']).toBe(50);
-    expect(fetchFn.mock.calls[2][1].params['page.size']).toBe(PAGINATION_OFFSET);
+    expect(fetchFn.mock.calls[1][1].params['page.size']).toBe(50);
     expect(fetchFn.mock.calls[3][1].params['page.size']).toBe(PAGINATION_OFFSET);
+    expect(fetchFn.mock.calls[4][1].params['page.size']).toBe(PAGINATION_OFFSET);
   });
 
   test('should resolve nested log by recursion when itemId is missing', async () => {
     const fetchFn = jest
       .fn()
+      .mockResolvedValueOnce({
+        content: [{ id: 300, pagesLocation: [{ 200: 1 }, { 300: 1 }] }],
+        page: { totalPages: 1, totalElements: 1 },
+      })
       .mockResolvedValueOnce({
         content: [{ id: 200, hasContent: true }],
         page: { totalPages: 1 },
@@ -179,6 +238,10 @@ describe('resolveMobitruLogForJump', () => {
   test('should resolve nested log on page two via recursive nested grid', async () => {
     const fetchFn = jest
       .fn()
+      .mockResolvedValueOnce({
+        content: [{ id: 300, pagesLocation: [{ 200: 1 }, { 300: 1 }] }],
+        page: { totalPages: 1, totalElements: 1 },
+      })
       .mockResolvedValueOnce({
         content: [{ id: 1 }],
         page: { totalPages: 2 },
@@ -210,6 +273,10 @@ describe('resolveMobitruLogForJump', () => {
     const fetchFn = jest
       .fn()
       .mockResolvedValueOnce({
+        content: [{ id: 300, pagesLocation: [{ 200: 1 }, { 300: 1 }] }],
+        page: { totalPages: 1, totalElements: 1 },
+      })
+      .mockResolvedValueOnce({
         content: [{ id: 200, hasContent: true }],
         page: { totalPages: 1 },
       })
@@ -240,10 +307,14 @@ describe('resolveMobitruLogForJump', () => {
     });
   });
 
-  test('should fall back to locations search when nested grid cannot resolve log', async () => {
+  test('should fall back to locations level variants when nested grid cannot resolve log', async () => {
     const logInfo = { id: 10, pagesLocation: [{ 10: 1 }] };
     const fetchFn = jest
       .fn()
+      .mockResolvedValueOnce({
+        content: [logInfo],
+        page: { totalPages: 1, totalElements: 1 },
+      })
       .mockResolvedValueOnce({
         content: [],
         page: { totalPages: 1 },
@@ -277,25 +348,38 @@ describe('resolveMobitruLogForJump', () => {
     );
   });
 
-  test('should return null when log is not found', async () => {
-    const fetchFn = jest.fn().mockResolvedValue({
-      content: [],
-      page: { totalPages: 1 },
-    });
+  test('should fall back to nested grid when locations search request fails', async () => {
+    const fetchFn = jest
+      .fn()
+      .mockRejectedValueOnce(new Error('Search unavailable'))
+      .mockResolvedValueOnce({
+        content: [{ id: 200, hasContent: true }],
+        page: { totalPages: 1 },
+      })
+      .mockResolvedValueOnce({
+        content: [{ id: 300, level: 'mobitru' }],
+        page: { totalPages: 1 },
+      });
 
     const result = await resolveMobitruLogForJump({
       fetchFn,
       projectKey: 'default_personal',
       retryId: 100,
-      itemId: 100,
-      logId: 99,
+      itemId: 200,
+      logId: 300,
     });
 
-    expect(result).toBeNull();
+    expect(result).toEqual({
+      id: 300,
+      pagesLocation: [{ 200: 1 }, { 300: 1 }],
+    });
   });
 
-  test('should propagate nested grid API errors to caller', async () => {
-    const fetchFn = jest.fn().mockRejectedValue(new Error('Nested grid unavailable'));
+  test('should propagate nested grid API errors when locations search fails', async () => {
+    const fetchFn = jest
+      .fn()
+      .mockRejectedValueOnce(new Error('Search unavailable'))
+      .mockRejectedValueOnce(new Error('Nested grid unavailable'));
 
     await expect(
       resolveMobitruLogForJump({
@@ -311,6 +395,7 @@ describe('resolveMobitruLogForJump', () => {
   test('should propagate locations API errors when nested grid misses the log', async () => {
     const fetchFn = jest
       .fn()
+      .mockRejectedValueOnce(new Error('Search unavailable'))
       .mockResolvedValueOnce({
         content: [],
         page: { totalPages: 1 },
