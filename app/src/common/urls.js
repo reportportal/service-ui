@@ -377,11 +377,6 @@ export const URLS = {
     `${urlBase}bts/${integrationId}/fields-set?issueType=${issueType}`,
   btsIntegrationPostTicket: (projectKey, integrationId) =>
     `${urlBase}bts/${projectKey}/${integrationId}/ticket`,
-  btsTicket: (projectKey, issueId, btsProject, btsUrl) =>
-    `${urlBase}bts/${projectKey}/ticket/${issueId}${getQueryParams({
-      btsProject,
-      btsUrl,
-    })}`,
   runUniqueErrorAnalysis: (projectKey) => `${urlBase}${projectKey}/launch/cluster`,
   clusterByLaunchId: (projectKey, launchId, query) =>
     `${urlBase}${projectKey}/launch/cluster/${launchId}${getQueryParams(query)}`,

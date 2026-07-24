@@ -16,7 +16,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { pluginByNameSelector, isPluginSupportsCommonCommand } from 'controllers/plugins';
+import { pluginByNameSelector } from 'controllers/plugins';
 import { buildPluginCommandRQ } from 'controllers/plugins/utils';
 import { COMMAND_GET_ISSUE } from 'controllers/plugins/uiExtensions/constants';
 import { activeOrganizationIdSelector } from 'controllers/organization';
@@ -73,31 +73,21 @@ export const useIssueInfo = (issue, pluginName) => {
 
     setState((prev) => ({ ...prev, loading: true }));
 
-    const isCommonCommandSupported =
-      plugin && isPluginSupportsCommonCommand(plugin, COMMAND_GET_ISSUE);
-    let url;
-    let requestParams = { abort: cancelRequestFunc };
-
-    if (isCommonCommandSupported) {
-      url = URLS.pluginsCommandsCommon(plugin.name, COMMAND_GET_ISSUE);
-      requestParams = {
-        ...requestParams,
-        method: 'POST',
-        data: buildPluginCommandRQ({
-          organizationId,
-          projectId,
-          projectKey,
-          arguments: {
-            ticketId,
-            url: btsUrl,
-            project: btsProject,
-          },
-        }),
-      };
-    } else {
-      url = URLS.btsTicket(projectKey, ticketId, btsProject, btsUrl);
-      requestParams = { ...requestParams, method: 'GET' };
-    }
+    const url = URLS.pluginsCommandsCommon(plugin?.name, COMMAND_GET_ISSUE);
+    const requestParams = {
+      abort: cancelRequestFunc,
+      method: 'POST',
+      data: buildPluginCommandRQ({
+        organizationId,
+        projectId,
+        projectKey,
+        arguments: {
+          ticketId,
+          url: btsUrl,
+          project: btsProject,
+        },
+      }),
+    };
 
     fetch(url, requestParams)
       .then((fetchedIssue) => {
