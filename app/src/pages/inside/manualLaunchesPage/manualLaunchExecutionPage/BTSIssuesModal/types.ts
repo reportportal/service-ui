@@ -30,6 +30,7 @@ export interface BTSIntegration {
   integrationType: {
     details: {
       name: string;
+      allowedCommands?: string[];
     };
   };
   integrationParameters: {
