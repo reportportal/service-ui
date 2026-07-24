@@ -306,6 +306,8 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
 
       setIsLoading(true);
 
+      const testItemId = execution.testItemId || executionId;
+
       fetch(url, requestParams)
         .then((response: { id: string; url: string }) => {
           return fetch(URLS.testItemsLinkIssues(projectKey), {
@@ -320,7 +322,7 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
                   pluginName,
                 },
               ],
-              testItemIds: [execution.testItemId],
+              testItemIds: [testItemId],
             },
           });
         })
@@ -414,13 +416,15 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
         return;
       }
 
+      const testItemId = execution.testItemId || executionId;
+
       setIsLoading(true);
 
       fetch(url, {
         method: 'PUT',
         data: {
           issues,
-          testItemIds: [execution.testItemId],
+          testItemIds: [testItemId],
         },
       })
         .then(() => {
