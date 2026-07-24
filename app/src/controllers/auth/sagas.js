@@ -65,7 +65,6 @@ import {
   hasExpiredLoginLockout,
   isLoginAttemptsExceeded,
   isLoginCredentialFailure,
-  isLoginBadCredentialsFailure,
   isLoginLockoutActive,
   isLoginRedirectLockout,
   isServerLoginLockFailure,
@@ -281,13 +280,11 @@ function* handleLoginFailure(rawError, isLastAttempt) {
   }
 
   if (isLoginCredentialFailure(rawError)) {
-    const isBadCredentials = isLoginBadCredentialsFailure(rawError);
-    const isLockedOut = yield call(registerFailedLoginAttempt, isBadCredentials);
+    // Any 4003: field errors only (no toaster), same as classic "Bad credentials".
+    const isLockedOut = yield call(registerFailedLoginAttempt, true);
 
     if (isLockedOut) {
       yield call(showLoginLockoutNotification);
-    } else if (!isBadCredentials) {
-      yield call(showLoginFailureNotification, getLoginErrorMessage(rawError));
     }
 
     return;

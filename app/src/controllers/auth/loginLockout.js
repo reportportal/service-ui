@@ -59,17 +59,8 @@ export const sanitizeStoredLockoutTime = (timestamp) => {
   return null;
 };
 
-const BAD_CREDENTIALS_MESSAGE_PATTERN = /bad credentials/i;
-
-const getLoginErrorText = (rawError) =>
-  String(rawError?.message || rawError?.error_description || rawError?.error || '');
-
 export const isLoginCredentialFailure = (rawError) =>
   rawError?.errorCode === ERROR_CODE_LOGIN_BAD_CREDENTIALS;
-
-export const isLoginBadCredentialsFailure = (rawError) =>
-  isLoginCredentialFailure(rawError) &&
-  BAD_CREDENTIALS_MESSAGE_PATTERN.test(getLoginErrorText(rawError));
 
 const ADDRESS_LOCKED_MESSAGE_PATTERN = /address is locked/i;
 
