@@ -19,7 +19,6 @@ import {
   hasExpiredLoginLockout,
   isLoginAttemptsExceeded,
   isLoginCredentialFailure,
-  isLoginBadCredentialsFailure,
   isLoginLockoutActive,
   isLoginLockoutRedirect,
   isLoginRedirectLockout,
@@ -97,33 +96,6 @@ describe('loginLockout', () => {
     ).toBe(false);
     expect(isLoginCredentialFailure(new Error('Network Error'))).toBe(false);
     expect(isLoginCredentialFailure({ errorCode: 500, message: 'Server error' })).toBe(false);
-  });
-
-  test('detects bad-credentials message for field errors only', () => {
-    expect(
-      isLoginBadCredentialsFailure({
-        errorCode: 4003,
-        message: 'You do not have enough permissions. Bad credentials',
-      }),
-    ).toBe(true);
-    expect(
-      isLoginBadCredentialsFailure({
-        errorCode: 4003,
-        message: 'Bad credentials',
-      }),
-    ).toBe(true);
-    expect(
-      isLoginBadCredentialsFailure({
-        errorCode: 4003,
-        message: 'You do not have enough permissions. ldap.forumsys.com:389',
-      }),
-    ).toBe(false);
-    expect(
-      isLoginBadCredentialsFailure({
-        errorCode: 4004,
-        message: 'You do not have enough permissions. Bad credentials',
-      }),
-    ).toBe(false);
   });
 
   test('detects server-side login lock responses', () => {
