@@ -178,7 +178,7 @@ export const AVAILABLE_PLUGINS_CATALOG: AvailablePlugin[] = [
     details: { name: 'Mobitru' },
     description:
       'Reinforce your ReportPortal instance with Mobitru integration and watch video of test executions right in the ReportPortal application.',
-    documentationUrl: 'https://github.com/orgs/reportportal/packages/',
+    documentationUrl: 'https://github.com/reportportal/plugin-mobitru/packages',
   },
   {
     name: GITHUB,
@@ -187,6 +187,7 @@ export const AVAILABLE_PLUGINS_CATALOG: AvailablePlugin[] = [
     details: { name: 'GitHub Auth' },
     description:
       'Integration with GitHub, can help to speed up the process of user creation and login to ReportPortal. Integration provides an exchange of information between ReportPortal and GitHub, such as possibility to login to ReportPortal with GitHub credentials.',
+      documentationUrl:'https://github.com/reportportal/plugin-auth-github/packages'
   },
   {
     name: QUALITY_GATE,
@@ -202,7 +203,7 @@ export const AVAILABLE_PLUGINS_CATALOG: AvailablePlugin[] = [
     groupType: AUTHORIZATION_GROUP_TYPE,
     details: { name: 'LDAP Auth' },
     description:
-      'Integration with LDAP, can be help to speed up the process user creation and login to ReportPortal. Integration provides an exchange of information between ReportPortal and LDAP, such as possibility to login to ReportPortal with LDAP credentials.',
+      'Integration with LDAP, can help to speed up the process of user creation and login to ReportPortal. Integration provides an exchange of information between ReportPortal and LDAP, such as possibility to login to ReportPortal with LDAP credentials',
   },
   {
     name: SAML,
@@ -210,7 +211,7 @@ export const AVAILABLE_PLUGINS_CATALOG: AvailablePlugin[] = [
     groupType: AUTHORIZATION_GROUP_TYPE,
     details: { name: 'SAML Auth' },
     description:
-      'Integration with SAML, can be help to speed up the process user creation and login to ReportPortal. Integration provides an exchange of information between ReportPortal and SAML, such as possibility to login to ReportPortal with SAML credentials.',
+      'Integration with SAML, can help to speed up the process of user creation and login to ReportPortal. Integration provides an exchange of information between ReportPortal and SAML, such as possibility to login to ReportPortal with SAML credentials.',
   },
   {
     name: TEST_EXECUTION,

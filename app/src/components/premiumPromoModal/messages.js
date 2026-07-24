@@ -44,7 +44,7 @@ export const messages = defineMessages({
   },
   premiumBulletMore: {
     id: 'premiumPromoModal.feature.more',
-    defaultMessage: '\u2026and many more',
+    defaultMessage: 'and many more\u2026',
   },
   explorePlansButton: {
     id: 'premiumPromoModal.explorePlansButton',
