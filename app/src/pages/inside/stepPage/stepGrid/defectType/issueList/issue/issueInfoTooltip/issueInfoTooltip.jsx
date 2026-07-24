@@ -20,7 +20,6 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { URLS } from 'common/urls';
-import { pluginByNameSelector } from 'controllers/plugins';
 import { buildPluginCommandRQ } from 'controllers/plugins/utils';
 import { COMMAND_GET_ISSUE } from 'controllers/plugins/uiExtensions/constants';
 import { activeOrganizationIdSelector } from 'controllers/organization';
@@ -58,9 +57,8 @@ const getStorageKey = (projectKey) => `${projectKey}_tickets`;
 
 const FETCH_ISSUE_INTERVAL = 900000; // min request interval = 15 min
 
-@connect((state, ownProps) => ({
+@connect((state) => ({
   projectKey: projectKeySelector(state),
-  plugin: pluginByNameSelector(state, ownProps.pluginName),
   projectId: projectInfoIdSelector(state),
   organizationId: activeOrganizationIdSelector(state),
 }))
@@ -73,12 +71,11 @@ export class IssueInfoTooltip extends Component {
     ticketId: PropTypes.string.isRequired,
     btsProject: PropTypes.string.isRequired,
     btsUrl: PropTypes.string.isRequired,
-    plugin: PropTypes.object,
+    pluginName: PropTypes.string.isRequired,
     projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
-    plugin: null,
     organizationId: null,
   };
 
@@ -131,13 +128,13 @@ export class IssueInfoTooltip extends Component {
   };
 
   fetchData = () => {
-    const { projectId, ticketId, btsProject, btsUrl, plugin, projectKey, organizationId } =
+    const { projectId, ticketId, btsProject, btsUrl, pluginName, projectKey, organizationId } =
       this.props;
     const cancelRequestFunc = (cancel) => {
       this.cancelRequest = cancel;
     };
     this.setState({ loading: true });
-    const url = URLS.pluginsCommandsCommon(plugin?.name, COMMAND_GET_ISSUE);
+    const url = URLS.pluginsCommandsCommon(pluginName, COMMAND_GET_ISSUE);
     const requestParams = {
       abort: cancelRequestFunc,
       method: 'POST',

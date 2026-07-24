@@ -16,7 +16,6 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { pluginByNameSelector } from 'controllers/plugins';
 import { buildPluginCommandRQ } from 'controllers/plugins/utils';
 import { COMMAND_GET_ISSUE } from 'controllers/plugins/uiExtensions/constants';
 import { activeOrganizationIdSelector } from 'controllers/organization';
@@ -39,7 +38,6 @@ export const useIssueInfo = (issue, pluginName) => {
   const projectKey = useSelector(projectKeySelector);
   const projectId = useSelector(projectInfoIdSelector);
   const organizationId = useSelector(activeOrganizationIdSelector);
-  const plugin = useSelector((state) => pluginByNameSelector(state, pluginName));
 
   const { ticketId, btsProject, btsUrl } = issue;
 
@@ -73,7 +71,7 @@ export const useIssueInfo = (issue, pluginName) => {
 
     setState((prev) => ({ ...prev, loading: true }));
 
-    const url = URLS.pluginsCommandsCommon(plugin?.name, COMMAND_GET_ISSUE);
+    const url = URLS.pluginsCommandsCommon(pluginName, COMMAND_GET_ISSUE);
     const requestParams = {
       abort: cancelRequestFunc,
       method: 'POST',
@@ -105,7 +103,7 @@ export const useIssueInfo = (issue, pluginName) => {
     projectKey,
     btsProject,
     btsUrl,
-    plugin,
+    pluginName,
     projectId,
     organizationId,
     ticketId,
