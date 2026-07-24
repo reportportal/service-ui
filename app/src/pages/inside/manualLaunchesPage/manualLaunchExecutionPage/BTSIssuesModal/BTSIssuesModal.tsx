@@ -25,8 +25,11 @@ import { fetch, commonValidators, uniqueId, createClassnames } from 'common/util
 import { URLS } from 'common/urls';
 import { withModal } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
-import { projectKeySelector } from 'controllers/project';
+import { projectKeySelector, projectInfoSelector } from 'controllers/project';
+import { activeOrganizationIdSelector } from 'controllers/organization';
 import { useModalButtons } from 'hooks/useModalButtons';
+import { buildPluginCommandRQ } from 'controllers/plugins/utils';
+import { COMMAND_POST_ISSUE } from 'controllers/plugins/uiExtensions/constants';
 import {
   getDefaultIssueModalConfig,
   getDefaultOptionValueKey,
@@ -101,6 +104,8 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
   >;
   const userId = useSelector(userIdSelector);
   const projectKey = useSelector(projectKeySelector);
+  const projectInfo = useSelector(projectInfoSelector);
+  const organizationId = useSelector(activeOrganizationIdSelector);
   const launchId = useManualLaunchId();
   const execution = useSelector(activeManualLaunchExecutionSelector);
 
@@ -266,14 +271,59 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
 
   const postIssue = useCallback(
     (issueData: Record<string, unknown>, onSuccess: () => void) => {
-      const url = URLS.btsIntegrationPostTicket(projectKey, integrationId);
+      const integration = namedBtsIntegrations[pluginName]?.find(
+        (item: BTSIntegration) => item.id === integrationId,
+      );
+
+      if (!integration) {
+        return;
+      }
+
+      const {
+        integrationParameters: { project: btsProject, url: btsUrl },
+      } = integration;
+      const allowedCommands: string[] = integration.integrationType?.details?.allowedCommands ?? [];
+      const isCommandAvailable = allowedCommands.includes(COMMAND_POST_ISSUE);
+      const requestParams: { data: Record<string, unknown>; method: string } = {
+        data: issueData,
+        method: 'POST',
+      };
+      let url = URLS.btsIntegrationPostTicket(projectKey, integrationId);
+
+      if (isCommandAvailable) {
+        url = URLS.pluginsCommandsCommon(pluginName, COMMAND_POST_ISSUE);
+        requestParams.data = buildPluginCommandRQ({
+          integrationId,
+          organizationId,
+          projectId: projectInfo.projectId,
+          projectKey,
+          arguments: {
+            projectId: projectInfo.projectId,
+            entity: issueData,
+          },
+        });
+      }
 
       setIsLoading(true);
 
-      fetch(url, {
-        method: 'POST',
-        data: issueData,
-      })
+      fetch(url, requestParams)
+        .then((response: { id: string; url: string }) => {
+          return fetch(URLS.testItemsLinkIssues(projectKey), {
+            method: 'PUT',
+            data: {
+              issues: [
+                {
+                  ticketId: response.id,
+                  url: response.url,
+                  btsProject,
+                  btsUrl,
+                  pluginName,
+                },
+              ],
+              testItemIds: [execution.testItemId],
+            },
+          });
+        })
         .then(() => {
           if (!isMountedRef.current) return;
           setIsLoading(false);
@@ -295,7 +345,18 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
           );
         });
     },
-    [projectKey, integrationId, dispatch, formatMessage, refreshExecutionData],
+    [
+      projectKey,
+      integrationId,
+      pluginName,
+      namedBtsIntegrations,
+      organizationId,
+      projectInfo,
+      execution,
+      dispatch,
+      formatMessage,
+      refreshExecutionData,
+    ],
   );
 
   const linkIssue = useCallback(
