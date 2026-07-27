@@ -122,7 +122,14 @@ export const LaunchSidePanel = memo(
       );
     }
 
+    const { total, passed, failed, skipped, toRun, inProgress } = launchDetails.executionStatistic;
+
     const handleToRunClick = () => {
+      if (toRun === 0) {
+        onClose();
+        return;
+      }
+
       if (launchId) {
         trackEvent(
           MANUAL_LAUNCHES_PAGE_EVENTS.clickShowToRun(MANUAL_LAUNCHES_PLACE.LAUNCH_DETAILS_SIDEBAR),
@@ -153,8 +160,6 @@ export const LaunchSidePanel = memo(
         console.error('Failed to copy ID:', error);
       });
     };
-
-    const { total, passed, failed, skipped, toRun, inProgress } = launchDetails.executionStatistic;
 
     const { testPlan, owner, type, startTime } = launchDetails;
 
@@ -271,7 +276,6 @@ export const LaunchSidePanel = memo(
           variant="primary"
           className={cx('action-button', 'last-button')}
           onClick={handleToRunClick}
-          disabled={toRun === 0}
           data-automation-id="launch-to-run"
         >
           {formatMessage(toRun ? messages.toRunWithCount : COMMON_LOCALE_KEYS.DONE, {
