@@ -239,6 +239,7 @@ import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { QualityGatesPromoLayout } from 'pages/inside/projectSettingsPageContainer/content/qualityGates/qualityGatesPromoLayout';
 import { messages as qualityGatesMessages } from 'pages/inside/projectSettingsPageContainer/content/qualityGates/messages';
 import { AsyncAutocomplete as AsyncAutocompleteField } from 'componentLibrary/autocompletes/asyncAutocomplete';
+import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
 import { Tabs } from 'components/main/tabs';
 import { withTooltip } from 'components/main/tooltips/tooltip';
@@ -359,6 +360,7 @@ export const createImportProps = (pluginName) => ({
     FieldNumber,
     SystemMessage,
     AsyncAutocompleteField,
+    AsyncAutocompleteV2,
     RuleListComponent,
     AttributeListFormField,
     Breadcrumbs,
