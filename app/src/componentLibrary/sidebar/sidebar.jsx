@@ -283,6 +283,7 @@ export const Sidebar = ({
               <Popover
                 className={cx('show-more-popover')}
                 placement="right-start"
+                fallbackPlacements={['right-end', 'right']}
                 isOpened={isShowMorePopoverOpen}
                 setIsOpened={(open) => {
                   if (open) {
